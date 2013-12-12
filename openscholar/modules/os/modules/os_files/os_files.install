@@ -830,3 +830,34 @@ function os_files_update_7016(&$sandbox) {
     $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
   }
 }
+
+/**
+ * Remove old reference of field site logo.
+ */
+function os_files_update_7017() {
+  // Loop over all the site logo fields.
+  $results = db_select('field_data_field_site_logo', 'f')
+    ->condition('f.bundle', array('department', 'personal', 'project'), 'IN')
+    ->fields('f', array('field_site_logo_fid','entity_id'))
+    ->execute()
+    ->fetchAllAssoc('field_site_logo_fid');
+
+  $nids = array();
+  foreach ($results as $result) {
+    if (!file_load($result->field_site_logo_fid)) {
+      // Gather all the node ids.
+      $nids[] = $result->entity_id;
+    }
+  }
+
+  if (empty($nids)) {
+    return;
+  }
+
+  // Load all the nodes and remove the reference for the file.
+  $nodes = node_load_multiple($nids);
+  foreach ($nodes as $node) {
+    $node->field_site_logo = NULL;
+    node_save($node);
+  }
+}
