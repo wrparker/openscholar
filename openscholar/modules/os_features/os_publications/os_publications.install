@@ -1052,13 +1052,22 @@ function os_publications_update_7013() {
 }
 
 /**
- * 	Add "American chemical society.csl" to Biblio.
+ * Add "American chemical society.csl" and "American chemical society with titles.csl"
+ * to Biblio.
  */
 function os_publications_update_7014() {
   module_load_include('inc', 'biblio_citeproc', 'biblio_citeproc.admin');
-  // Read the CSL file from the directory.
-  $csl = file_get_contents(drupal_get_path('module', 'biblio_citeproc') . '/style/american-chemical-society.csl');
-  _install_csl('american-chemical-society.csl', $csl);
+
+  $files = array(
+    'american-chemical-society',
+    'american-chemical-society-with-titles',
+  );
+
+  foreach ($files as $file) {
+    // Read the CSL file from the directory.
+    $csl = file_get_contents(drupal_get_path('module', 'biblio_citeproc') . '/style/' . $file . '.csl');
+    _install_csl($file . '.csl', $csl);
+  }
 }
 
 /**

@@ -272,6 +272,13 @@ function os_publications_theme_registry_alter(&$reg) {
 function os_publications_form_biblio_node_form_alter(&$form, $form_state) {
   if (!isset($form['#node']->nid)) {
     drupal_set_title(t('Create @name', array('@name' => 'Publication')), PASS_THROUGH);
+
+    // Since Biblio requires first selecting the type of the biblio, in
+    // og_field_widget_form() the "admin" field mode is populated with an invalid
+    // group -- the same group that is also set for the "default" field mode.
+    // To overcome this problem, we will override the values of the that field
+    // mode.
+    unset($form[OG_AUDIENCE_FIELD][LANGUAGE_NONE][0]['admin']);
   }
   else {
     drupal_set_title(t('<em>Edit @type</em> @title', array('@type' => 'Publication', '@title' => $form['#node']->title)), PASS_THROUGH);

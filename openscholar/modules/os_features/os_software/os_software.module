@@ -28,6 +28,9 @@ function os_software_os_app_info() {
         'csv' => 'os_software',
       ),
     ),
+    'require_parent_node' => array(
+      'software_release'=> TRUE,
+    ),
   );
 
   return $apps;

@@ -1298,7 +1298,9 @@ function os_files_file_view($file, $view_mode, $langcode) {
   if ($file->type == 'html' || !in_array($view_mode, array('os_files_title', 'teaser', 'full', 'os_files_thumbnail'))) {
     return;
   }
-
+  
+  $file->content['og_vocabulary'] = array(); //don't print this until it's useful.  terms only work with sv lists right now.
+  
   $icon = array(
     '#theme' => 'file_icon',
     '#file' => $file,

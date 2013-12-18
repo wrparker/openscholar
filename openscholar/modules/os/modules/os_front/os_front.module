@@ -71,7 +71,10 @@ function os_front_preprocess_html(&$vars) {
 function os_front_theme() {
   return array(
     'os_front_boxcontent_sample' => array(
-      'variables' => array('header' => NULL),
+      'variables' => array(
+        'header' => NULL,
+        'images' => NULL,
+      ),
     ),
   );
 }

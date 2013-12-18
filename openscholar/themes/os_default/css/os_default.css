@@ -583,6 +583,7 @@ body.sitewide-front {
     line-height: 19px;
 }
 
+#block-os-search-solr-site-search #edit-submit,
 #block-os-search-db-site-search #edit-submit {
     background: #919191;
     background-image: -webkit-linear-gradient(top, #919191, #6b6b6b);
@@ -595,10 +596,10 @@ body.sitewide-front {
     border-radius: 3px;
     color: #ffffff;
     font-size: 20px;
-
     text-decoration: none;
 }
 
+#block-os-search-solr-site-search #edit-submit:hover,
 #block-os-search-db-site-search #edit-submit:hover {
     background: #df1f25;
     background-image: -webkit-linear-gradient(top, #df1f25, #BB2127);
@@ -672,4 +673,8 @@ body.sitewide-front {
     background-image: -o-linear-gradient(top, #df1f25, #BB2127);
     background-image: linear-gradient(to bottom, #df1f25, #BB2127);
     text-decoration: none;
+}
+
+.os-align-center {
+    text-align: center;
 }

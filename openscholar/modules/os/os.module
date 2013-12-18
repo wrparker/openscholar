@@ -1695,6 +1695,7 @@ function os_app_info($app_name = NULL) {
             // Determine if author should be indexed in Solr.
             'index author' => FALSE,
             'importers' => array(),
+            'require_parent_node' => FALSE,
           );
 
           // Adds the module information.

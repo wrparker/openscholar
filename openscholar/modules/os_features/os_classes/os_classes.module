@@ -28,6 +28,9 @@ function os_classes_os_app_info() {
         'csv' => 'os_classes',
       ),
     ),
+    'require_parent_node' => array(
+      'class_material'=> TRUE,
+    ),
   );
 
   return $apps;

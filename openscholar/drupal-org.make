@@ -295,7 +295,7 @@ projects[pinserver][subdir] = "contrib"
 projects[pinserver][type] = module
 projects[pinserver][download][type] = git
 projects[pinserver][download][url] = "git://github.com/openscholar/pinserver.git"
-projects[pinserver][download][tag] = 7.x-3.4.5
+projects[pinserver][download][tag] = 7.x-3.4.6
 
 projects[purl][subdir] = "contrib"
 ;: projects[purl][version] = 1.0-beta1+11-dev
@@ -367,6 +367,7 @@ projects[views][subdir] = "contrib"
 projects[views][download][type] = git
 projects[views][download][branch] = 7.x-3.x
 projects[views][download][revision] = 7173513
+projects[views][patch][] = "https://drupal.org/files/issues/views-jquery_dialog-2125261-1.patch"
 
 projects[views_bulk_operations][subdir] = "contrib"
 projects[views_bulk_operations][version] = 3.0
