@@ -1005,7 +1005,7 @@ function theme_os_taxonomy_tagged_nodes($variables) {
     'nodeorder' => FALSE,
   );
   $taxonomy_term = $variables['taxonomy_term'];
-  $vocabulary = $variables['vocabulary'];
+  $vocabulary = !empty($variables['vocabulary']) ? $variables['vocabulary'] : NULL;
   if(!$vocabulary && !($vocabulary = taxonomy_vocabulary_load($taxonomy_term->vid))){
     // Somthing bad has happened we don't have a vocab or term.
     return FALSE;

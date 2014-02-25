@@ -86,7 +86,7 @@ function hwpi_basetheme_preprocess_node(&$vars) {
     return;
   }
 
-  if (!empty($vars['field_person_photo'])) {
+  if (!empty($vars['node']->field_person_photo)) {
     $vars['classes_array'][] = 'with-person-photo';
   }
   else {
@@ -130,7 +130,7 @@ function hwpi_basetheme_preprocess_node(&$vars) {
       $vars['content']['pic_bio']['field_person_photo'][0] = array('#markup' => $image);
 
       // If 'body' is empty make sure image is displayed.
-      if (empty($vars['body'])) {
+      if (empty($vars['body'][$vars['language']])) {
         $vars['content']['pic_bio']['#access'] = TRUE;
       }
     }
@@ -644,8 +644,6 @@ function hwpi_basetheme_date_formatter_pre_view_alter(&$entity, $vars) {
   if (!$entity->view = views_get_current_view()) {
     return;
   }
-
-
 
   // Don't remove the field date when exporting the calendar. This the unique
   // identifier of Google calendar.

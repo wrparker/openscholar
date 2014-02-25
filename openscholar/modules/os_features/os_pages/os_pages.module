@@ -22,7 +22,7 @@ function os_pages_os_app_info() {
     'browse_pages' => array(
       'page' => array(
         'url' => 'browse/pages',
-        'title' => t('Browse pages'),
+        'title' => t('Pages'),
         'display_mode' => 'teaser',
         'menu_item' => 'pages',
       ),

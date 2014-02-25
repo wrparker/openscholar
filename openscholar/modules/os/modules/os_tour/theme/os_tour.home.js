@@ -80,7 +80,7 @@
                 },
                 {
                   title: 'Appearance: Try on a new look',
-                  content: 'Switch up your color pallet, or try a completely different look and feel from many available themes.',
+                  content: 'Switch up your color palette, or try a completely different look and feel from many available themes.',
                   target: document.querySelector('#toolbar-menu'),
                   placement: "bottom",
                   xOffset: 160

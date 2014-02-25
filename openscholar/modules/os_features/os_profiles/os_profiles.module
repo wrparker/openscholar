@@ -30,7 +30,7 @@ function os_profiles_os_app_info() {
     'browse_pages' => array(
       'person' => array(
         'url' => 'browse/people',
-        'title' => t('Browse people'),
+        'title' => t('People'),
         'display_mode' => 'teaser',
         'menu_item' => 'people',
       ),
@@ -105,14 +105,17 @@ function os_profiles_init() {
     $handler->update($node->nid, $data->values);
 
     // We need to replace the field ID in the field with the new file ID we got.
+    $file = NULL;
     if ($person_photo) {
       $file_info = os_profiles_get_origin_node_values($person_photo['file']['uri'] . '.json', array('url'));
       $copy_file = os_copy_file($file_info->values['url'], TRUE);
 
       if ($copy_file['type'] == 'file') {
-        os_profiles_insert_image($node, $copy_file['file'], $data->data['person_photo_dimension']);
+        $file = $copy_file['file'];
       }
     }
+
+    os_profiles_insert_image($node, $file, $data->data['person_photo_dimension']);
   }
 
   // Delete the UUID that needs to be updated and the time in which the UUID
@@ -674,9 +677,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
 
   $node = node_load($nid);
 
-  if ($file) {
-    os_profiles_insert_image($node, $file, $photo_dimension);
-  }
+  os_profiles_insert_image($node, $file, $photo_dimension);
 
   $params = array(
     '@title' => $node->title,
@@ -698,15 +699,21 @@ function os_profiles_sync_profile_submit($form, $form_state) {
  *  The image field crop settings.
  */
 function os_profiles_insert_image($node, $file, $dimensions) {
-  $node->field_person_photo[$node->language][0] = array(
-    'fid' => $file->fid,
-    'display' => 1,
-    'description' => '',
-    'cropbox_x' => $dimensions['cropbox_x'],
-    'cropbox_y' => $dimensions['cropbox_y'],
-    'cropbox_height' => $dimensions['cropbox_height'],
-    'cropbox_width' => $dimensions['cropbox_width'],
-  );
+  if (!$file) {
+    // The file is empty. Truncating the file field.
+    unset($node->field_person_photo[$node->language][0]);
+  }
+  else {
+    $node->field_person_photo[$node->language][0] = array(
+      'fid' => $file->fid,
+      'display' => 1,
+      'description' => '',
+      'cropbox_x' => $dimensions['cropbox_x'],
+      'cropbox_y' => $dimensions['cropbox_y'],
+      'cropbox_height' => $dimensions['cropbox_height'],
+      'cropbox_width' => $dimensions['cropbox_width'],
+    );
+  }
 
   node_save($node);
 }
@@ -728,13 +735,21 @@ function os_profiles_get_origin_node_values($address, $fields) {
   // to get un-cached node we need to add the time stamp to the query string.
   $request = drupal_http_request(url($address, array('query' => array('REST_CALL' => 1, 'override_cache' => time()))));
   $data = drupal_json_decode($request->data);
+  $values = array();
 
-  foreach ($fields as $key) {
-    if (empty($data[$key])) {
-      continue;
+  foreach ($fields as $field) {
+    $info = field_info_field($field);
+    if (empty($data[$field])) {
+      // The field value in the original node is empty. Entity metadata wrapper
+      // need NULL to delete the field. Multiple cardinality field need array
+      // and because the field empty we need to pass array(NULL).
+      $value = $info['cardinality'] == 1 ? NULL : array(NULL);
+    }
+    else {
+      $value = $data[$field];
     }
 
-    $values[$key] = $data[$key];
+    $values[$field] = $value;
   }
 
   return (object) array(

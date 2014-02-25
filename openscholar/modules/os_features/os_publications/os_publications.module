@@ -27,7 +27,7 @@ function os_publications_os_app_info() {
     'browse_pages' => array(
       'biblio' => array(
         'url' => 'browse/publications',
-        'title' => t('Browse publications'),
+        'title' => t('Publications'),
         'display_mode' => 'teaser',
         'menu_item' => 'publications',
       ),

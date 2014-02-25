@@ -29,7 +29,7 @@ function os_image_gallery_os_app_info() {
     'browse_pages' => array(
       'media_gallery' => array(
         'url' => 'browse/gallery',
-        'title' => t('Browse gallery'),
+        'title' => t('Media Galleries'),
         'display_mode' => 'teaser',
         'menu_item' => 'galleries',
       ),

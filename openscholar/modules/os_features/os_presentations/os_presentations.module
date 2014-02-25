@@ -31,7 +31,7 @@ function os_presentations_os_app_info() {
     'browse_pages' => array(
       'presentation' => array(
         'url' => 'browse/presentations',
-        'title' => t('Browse presentations'),
+        'title' => t('Presentations'),
         'display_mode' => 'teaser',
         'menu_item' => 'presentations',
       ),

@@ -34,7 +34,7 @@ function os_software_os_app_info() {
     'browse_pages' => array(
       'software_project' => array(
         'url' => 'browse/projects',
-        'title' => t('Browse projects'),
+        'title' => t('Software'),
         'display_mode' => 'teaser',
         'menu_item' => 'software',
       ),
