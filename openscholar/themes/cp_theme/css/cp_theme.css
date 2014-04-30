@@ -373,6 +373,10 @@ table.spaces td.option, table.spaces td.storage {
  }
 
  .cp-add-new-user ul {list-style-type:none;}
+ 
+ table th label {
+ 	text-transform:none;
+ 	}
 
 /* CP/BUILD MENU */
 .page-cp-build-menu table thead {
