@@ -59,6 +59,10 @@ abstract class os_boxes_widget_collection extends os_boxes_default {
         '#type' => 'select',
         '#options' => $options,
         '#field_suffix' => '<a class="button add-new">Add</a>'
+      ),
+      'help_text' => array(
+        '#markup' => t('Note that any widgets added must have content or they WILL NOT display in this widget.
+        If you add a widget to a page normally and it doesn\'t render, it won\'t render in this widget either.')
       )
     );
 
