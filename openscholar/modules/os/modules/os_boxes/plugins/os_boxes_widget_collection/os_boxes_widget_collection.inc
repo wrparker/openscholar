@@ -43,7 +43,12 @@ abstract class os_boxes_widget_collection extends os_boxes_default {
       if (isset($info['info']) && $info['delta'] != $this->delta) {
         // not everything we get back from hook_os_widget has an info field.
         // also, don't list yourself because infinite loops are bad
-        $options[$wgt] = $info['info'];
+        if (!empty($info['title'])) {
+          $options[$wgt] = $info['title'];
+        }
+        else {
+          $options[$wgt] = $info['info'];
+        }
       }
     }
 
@@ -54,6 +59,10 @@ abstract class os_boxes_widget_collection extends os_boxes_default {
         '#type' => 'select',
         '#options' => $options,
         '#field_suffix' => '<a class="button add-new">Add</a>'
+      ),
+      'help_text' => array(
+        '#markup' => t('Note that any widgets added must have content or they WILL NOT display in this widget.
+        If you add a widget to a page normally and it doesn\'t appear, it won\'t appear in this widget either.')
       )
     );
 
