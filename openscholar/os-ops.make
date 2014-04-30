@@ -11,11 +11,6 @@ projects[integrated_support][download][type] = git
 projects[integrated_support][download][branch] = master
 projects[integrated_support][download][url] = "http://github.com/openscholar/integrated_support.git"
 
-projects[os_board][type] = module
-projects[os_board][download][type] = git
-projects[os_board][download][branch] = 7.x-1.x-alpha
-projects[os_board][download][url] = "https://github.com/openscholar/os_board.git"
-
 ; Libraries.
 libraries[tapir][type] = "libraries"
 libraries[tapir][download][type] = "git"
