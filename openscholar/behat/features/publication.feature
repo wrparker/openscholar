@@ -63,4 +63,27 @@ Feature:
     Given I am logging in as "admin"
     When I visit "/john/node/add/biblio"
     And I add publication title "Hello Roy"
-    And show last response
+
+  @javascript @first @foo
+     When I visit "/john/node/add/biblio"
+#     And I fill in "title_field[und][0][value]" with "Journal publication"
+      And I fill in "biblio_year" with "2013"
+      And I press "Save"
+     Then I should see "Journal publication"
+
+  @api @first @foo
+  Scenario: Test the Publication form year validation when submitting the form.
+    Given I am logging in as "john"
+      And I visit "john/node/add/biblio"
+      And I fill in "title" with "Example title"
+      And I fill in "edit-biblio-year" with "199"
+     When I click "Save"
+     Then I should see "Year value must be in a YYYY format."
+
+  @javascript @first @foo
+  Scenario: Test the JS Publication form year validation.
+    Given I am logging in as "john"
+      And I visit "john/node/add/biblio"
+      And I fill in "title" with "Example title"
+     When I fill in "edit-biblio-year" with "199"
+     Then I should see "Input must be in the form YYYY. Only numerical digits are allowed."
