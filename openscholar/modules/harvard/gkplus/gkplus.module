@@ -74,7 +74,10 @@ function gkplus_nodeorder_form($js = NULL, $tid = NULL) {
 }
 
 /**
- * Generate main blocks administration form.
+ * Generate main nodeorder administration form.
+ *
+ * @see nodeorder_admin_display_form
+ * This is a copy of the above form using custom OS ordering
  */
 function gkplus_nodeorder_admin_display_form($form, &$form_state, $tid) {
   global $pager_page_array, $pager_total, $pager_total_items;
