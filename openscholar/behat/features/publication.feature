@@ -89,19 +89,19 @@ Feature:
     Given I am logging in as "john"
       And I visit "/john/publications/goblet-fire"
       And I edit current node
-      And I sleep for "1"
+      And I sleep for "2"
      When I click "Post Created/Edited By"
       And I click "Menu options"
       And I sleep for "1"
      Then I should see "Posted on"
-      And I sleep for "1"
+      And I sleep for "2"
       And I select another month on "edit-date"
       And I sleep for "1"
       And I should see "Posted on"
       And I press "Save"
 
   @javascript @first
-  Scenario: Verify tooltip hoover works
+  Scenario: Verify tooltip hover works
     Given I am logging in as "john"
       And I visit "/john/publications/goblet-fire"
       And I sleep for "1"
