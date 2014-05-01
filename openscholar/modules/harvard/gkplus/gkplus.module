@@ -74,6 +74,64 @@ function gkplus_nodeorder_form($js = NULL, $tid = NULL) {
 }
 
 /**
+ * Generate main blocks administration form.
+ */
+function gkplus_nodeorder_admin_display_form($form, &$form_state, $tid) {
+  global $pager_page_array, $pager_total, $pager_total_items;
+
+  $page            = isset($_GET['page']) ? $_GET['page'] : 0;
+  $page_increment  = variable_get('taxonomy_terms_per_page_admin', 100);  // Number of terms per page.
+  $page_entries    = 0;   // Elements shown on this page.
+  $before_entries  = 0;   // Elements at the root level before this page.
+  $after_entries   = 0;   // Elements at the root level after this page.
+  $root_entries    = 0;   // Elements at the root level on this page.
+
+  $term = taxonomy_term_load($tid);
+  // Build form tree
+  $form = array(
+    '#tree' => TRUE,
+    '#parent_fields' => FALSE,
+    '#term' => $term,
+  );
+  drupal_set_title(t('Order nodes for <em>%term_name</em>', array('%term_name' => $term->name)), PASS_THROUGH);
+
+  $nodes_attached = os_taxonomy_list_attached_entities($tid);
+  $nodes = array();
+  foreach ($nodes_attached as $info) {
+  	if($info['entity_type'] == 'node') {
+  	  $nodes[] = node_load($info['entity_id']);
+  	}
+  }
+  $node_count = count($nodes);
+
+  // Weights range from -delta to +delta, so delta should be at least half
+  // of the amount of blocks present. This makes sure all blocks in the same
+  // region get an unique weight.
+  $weight_delta = round($node_count / 2);
+
+  foreach ($nodes as $node) {
+    $form[$node->nid]['#node'] = $node;
+    $form[$node->nid]['title'] = array(
+      '#markup' => check_plain($node->title));
+    $form[$node->nid]['weight'] = array(
+      '#type' => 'weight',
+      '#title' => t('Weight for @title', array('@title' => $node->title)),
+      '#title_display' => 'invisible',
+      '#delta' => 10,
+      '#default_value' => $node->weight,
+    );
+  }
+
+  $form['#theme'] = 'anodeorder_admin_display_form';
+  $form['#submit'] = array('nodeorder_admin_display_form_submit');
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save order'),
+  );
+  return $form;
+}
+
+/**
  * Page callback; accesses $_POST to upload file from a shell script (curl).
  *
  * 4-digit error codes indicate the validity of the 4 curl POST parameters.
