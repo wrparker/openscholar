@@ -1934,11 +1934,14 @@ class FeatureContext extends DrupalContext {
       $month = 10;
     }
 
+    sleep(2);
+
     // Find month selector and select new month.
     if (!$selector = $page->find('xpath', "//select[@class='ui-datepicker-month']")) {
       throw new Exception("Failed to find month field");
     }
 
+    sleep(2);
     if (!$s2 = $selector->find('xpath', "//option[@value='$month']")) {
       throw new Exception("Failed to find month field");
     }
