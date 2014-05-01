@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Convert a year entry, yyyy,  to a full date in the form dd/mm/yyyy.
+ * Convert a year entry, yyyy, to a full date in the form dd/mm/yyyy.
  */
 
 $plugin = array(
