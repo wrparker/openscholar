@@ -65,6 +65,7 @@ Feature:
     And I add publication title "Hello Roy"
 
   @javascript @first @foo
+  Scenario: Test the Publication form year validation when submitting the form.
      When I visit "/john/node/add/biblio"
 #     And I fill in "title_field[und][0][value]" with "Journal publication"
       And I fill in "biblio_year" with "2013"
