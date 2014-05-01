@@ -120,3 +120,18 @@ Feature:
       And I select "Artwork" from "edit-biblio-type"
      Then I should see "Secondary Title"
       And I should not see "Title of the Journal"
+
+  @javascript @first @shushu2
+  Scenario: Verify year element
+    Given I am logging in as "john"
+      And I visit "/john/publications/goblet-fire"
+      And I edit current node
+      And I sleep for "1"
+     When text field "biblio_year" value should be "1997"
+      And I should not see "Input must be in the form"
+      And I choose id "edit-biblio-year-coded-10040" from radio id "edit-biblio-year-coded"
+      And text field "biblio_year" value should not be "1997"
+      And I fill in "biblio_year" with "123"
+     Then I should see "Input must be in the form"
+      And I fill in "biblio_year" with "1999"
+      And I should not see "Input must be in the form"

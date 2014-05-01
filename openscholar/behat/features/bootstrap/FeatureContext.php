@@ -1141,6 +1141,17 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I choose id "([^"]*)" from radio id "([^"]*)"$/
+   */
+  public function iChooseIdFromRadioId($option, $field) {
+    $page = $this->getSession()->getPage();
+    if (!$element = $page->find('xpath', "//div[@id='$field']//input[@id='$option']")) {
+      throw new Exception(sprintf("didn't get the output"));
+    }
+    $element->press();
+  }
+
+  /**
    * @Given /^I put mouse over "([^"]*)" under "([^"]*)"$/
    */
   public function iPutMouseOverUnder($text, $container) {
@@ -1950,4 +1961,35 @@ class FeatureContext extends DrupalContext {
     );
   }
 
+  /**
+   * @Given /^text field "([^"]*)" value should be "([^"]*)"$/
+   */
+  public function textFieldValueShouldBe($fieldName, $fieldValue) {
+    $field = $this->getTextFieldValue($fieldName);
+    $value = $field->getValue();
+
+    if ($value != $fieldValue) {
+      throw new Exception("Field value is \"$value\", and not \"$fieldValue\" as expected.");
+    }
+  }
+
+  /**
+   * @Given /^text field "([^"]*)" value should not be "([^"]*)"$/
+   */
+  public function textFieldValueShouldNotBe($fieldName, $fieldValue) {
+    $field = $this->getTextFieldValue($fieldName);
+    $value = $field->getValue();
+
+    if ($value == $fieldValue) {
+      throw new Exception("Field value is \"$value\", as it should not be.");
+    }
+  }
+
+  public function getTextFieldValue($fieldName) {
+    $page = $this->getSession()->getPage();
+    if (!$field = $page->find('xpath', "//input[@name='$fieldName']")) {
+      throw new Exception("Failed to find field by name $fieldName");
+    }
+    return $field;
+  }
 }
