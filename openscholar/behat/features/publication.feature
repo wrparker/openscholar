@@ -108,3 +108,13 @@ Feature:
      Then I should see the text "Help" under "image-widget"
       And I put mouse over "Help" under "image-widget"
       And I check "Wand" under "image-widget" is not visible
+
+  @javascript @first
+  Scenario: Verify changing biblio types changes fields
+    Given I am logging in as "admin"
+     When I visit "/john/node/add/biblio"
+     Then I should see "Title of the Journal"
+      And I should not see "Secondary Title"
+      And I select "Artwork" from "edit-biblio-type"
+     Then I should see "Secondary Title"
+      And I should not see "Title of the Journal"
