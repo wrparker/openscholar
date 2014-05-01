@@ -96,7 +96,12 @@ class FeatureContext extends DrupalContext {
       // Log in.
       // Go to the user page.
       $element = $this->getSession()->getPage();
+
       $this->getSession()->visit($this->locatePath('/user'));
+
+      // @todo: Trying to make login work always with an extra reload.
+      $this->getSession()->reload();
+
       $element->fillField('Username', $username);
       $element->fillField('Password', $password);
       $submit = $element->findButton('Log in');
