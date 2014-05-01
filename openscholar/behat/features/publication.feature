@@ -73,10 +73,24 @@ Feature:
      When I click "Save"
      Then I should see "Year value must be in a YYYY format."
 
-  @javascript @first @me
+  @javascript @first
   Scenario: Test the JS Publication form year validation.
     Given I am logging in as "john"
      When I visit "john/node/add/biblio"
       And I add publication title "New publication"
       And I fill in "edit-biblio-year" with "199"
      Then I should see "Input must be in the form YYYY. Only numerical digits are allowed."
+
+  @javascript @first @me
+  Scenario: Testing the trash can functionality.
+    Given I am logging in as "john"
+     When I visit "john/node/add/biblio"
+      And I add publication title "New publication"
+      And I add the author "John" in position "1"
+      And I press "Add person"
+      And I add the author "Lincoln" in position "2"
+      And I press "Save"
+      And I click "Edit"
+      And I remove author at position "0"
+     Then I add persong
+      And I should not see the author "Lincoln" at position "2"
