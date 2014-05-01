@@ -89,6 +89,17 @@ function os_publications_menu_alter(&$items) {
 }
 
 /**
+ * Implements hook_theme().
+ */
+function os_publications_theme() {
+  return array(
+    'os_publications_preview' => array(
+      'template' => 'os-publication-preview',
+      'path' => drupal_get_path('module', 'os_publications') . '/templates',
+    ),
+  );
+}
+/**
  * Menu access; Make sure publications export can be seen by privileged users
  * only inside a VSite context, to prevent from loading too many nodes.
  */
@@ -300,6 +311,7 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
   $form['#attached']['js'][] = drupal_get_path('module', 'os_publications') . '/misc/os_publications.js';
   $form['#attached']['css'][] = drupal_get_path('module', 'os_publications') . '/misc/os_publications.css';
 
+  $node = FALSE;
   if (!isset($form['#node']->nid)) {
     drupal_set_title(t('Create @name', array('@name' => 'Publication')), PASS_THROUGH);
 
@@ -404,13 +416,16 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
     // Each delta is in the name of the op (e.g. delete_1, delete_2).
     $delta = explode('_', $form_state['values']['op']);
     unset($form['biblio_tabs']['biblio_authors']['biblio_contributors'][$delta[1]]);
-    unset($node->biblio_contributors[$delta[1]]);
+
+    if ($node) {
+      unset($node->biblio_contributors[$delta[1]]);
+    }
     $form_state['biblio_contrib_count']--;
   }
 
   // Adding remove author button via AJAX.
   foreach (array_keys($form['biblio_tabs']['biblio_authors']['biblio_contributors']) as $key) {
-    if (!is_int($key) || !$key) {
+    if (!is_int($key)) {
       continue;
     }
 
@@ -506,9 +521,12 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
   // Change the Notes field's description to include a link to the settings form
   ctools_include('ajax');
   ctools_include('modal');
+  $app_settings_path = (($purl = vsite_get_purl()) ? "$purl/cp/build/#overlay=$purl/cp/build/features/os_publications" : "/cp/build/#overlay=cp/build/features/os_publications");
+  $change_settings_text = t('<a href="@href" target="_blank">@settings.</a>', array('@href' => $app_settings_path, '@settings' => 'App settings'));
+
   $form['biblio_tabs'][7]['biblio_notes']['#description'] = t('Add an annotation for this work. Your notes are currently set to <strong>:privacy</strong>.  You can make this change in the publications section of your control panel\'s !link', array(
     ':privacy' => (variable_get('os_publications_note_in_teaser', FALSE) ? 'public' : 'private'),
-    '!link' => l('App settings.', 'cp/build/features/os_publications'),
+    '!link' => $change_settings_text,
   ));
 
   unset($form['biblio_tabs']['biblio_authors']);
@@ -549,6 +567,10 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
   $form['url']['#weight'] = 4;
   unset($form['publication_extras']['biblio_tabs'][5]['url']);
 
+  // Remove labels from biblio url section and add a placeholder.
+  unset($form['url']['biblio_url_title']['#description']);
+  unset($form['url']['#prefix']);
+  $form['url']['biblio_url_title']['#default_value'] = t('Publisher\'s Version');
 
   // Add in a new validation for patents
   $form['#validate'][] = 'os_publications_biblio_form_patent_validate';
@@ -665,7 +687,7 @@ function os_publications_alter_year_field(&$form, &$form_state) {
  */
 function os_publications_validate_year_field($form, &$form_state) {
   // Validate a year is numeric and that it's only four digits long.
-  if ($form_state['values']['biblio_year'] && !is_numeric($form_state['values']['biblio_year']) || is_numeric($form_state['values']['biblio_year']) && $form_state['values']['biblio_year'] > 9999) {
+  if ($form_state['values']['biblio_year'] && !is_numeric($form_state['values']['biblio_year']) || is_numeric($form_state['values']['biblio_year']) && ($form_state['values']['biblio_year'] < 1000 || $form_state['values']['biblio_year'] > 9999)) {
     form_set_error('biblio_year', t('Year value must be in a YYYY format.'));
     return;
   }
@@ -706,10 +728,13 @@ function os_publications_biblio_rearrange($form, $form_state) {
 /**
  * After build; Alter markup of the biblio form.
  */
-function os_publications_biblio_image_after_build($element) {
+function os_publications_biblio_image_after_build(&$element) {
+  $element[LANGUAGE_NONE][0]['remove_button']['#prefix'] = theme('os_publications_preview');
   $element[LANGUAGE_NONE][0]['droppable_area']['#theme'] = 'os_publications_dnd_upload_droppable_area_image';
-  $element[LANGUAGE_NONE][0]['#pdf_image'] = array('#markup' => theme('image', array('path' => drupal_get_path('module', 'os_publications') . '/misc/application-pdf.png')));
-  $element[LANGUAGE_NONE][0]['#cover_image'] = array('#markup' => theme('image', array('path' => drupal_get_path('module', 'os_publications') . '/misc/publication-cover.png')));
+  $popup_text = t('File must be less than <strong>256 MB</strong>.<br />Allowed file types: <strong>png gif jpg jpeg</strong>');
+
+  $popup_markup = '<a href="#" class="biblio-pop os-publications-image-help" data-popbox="pop1"><span>Help</span></a><span id="pop1" class="biblio-stylebox1">' . $popup_text . '</span>';
+  $element['und'][0]['#description'] = t('For example, book cover, journal cover' . $popup_markup);
   return $element;
 }
 
@@ -938,10 +963,9 @@ function os_publications_node_view_alter(&$build, $type) {
       	$build['field_biblio_image']['#access'] = FALSE;
       }
 
-      // Remove the Google Scholar link that appears at the bottom of full view publications.
-      if (isset($build['links']['biblio_google_scholar'])) {
-        unset($build['links']['biblio_google_scholar']);
-      }
+      // Remove the second export links that appear at the bottom of full view
+      // of a publication.
+      unset($build['links']['biblio_tagged'], $build['links']['biblio_xml'], $build['links']['biblio_bibtex'], $build['links']['biblio_google_scholar']);
       break;
 
     case 'slide_teaser':

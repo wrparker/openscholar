@@ -139,4 +139,6 @@ h1.biblio-type-prefix {
   font-weight: normal;
 }
 
-
+#edit-citation-distribute .fieldset-wrapper {
+  padding-top: 25px;
+}

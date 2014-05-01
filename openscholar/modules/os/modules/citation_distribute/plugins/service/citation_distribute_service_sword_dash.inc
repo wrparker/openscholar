@@ -8,7 +8,7 @@ $plugin = array(
   'class' => 'citation_distribute_service_sword_dash',
   'file' => 'citation_distribute_service_sword_dash.inc',
   'parent' => 'citation_distribute_service_sword',
-  'title' => t('DASH'),
+  'title' => l(t('DASH'), 'http://dash.harvard.edu', array('attributes' => array('target' => '_blank'))),
   'name' => 'dash',
   'description' => 'Harvard\'s open access repository',
 );

@@ -1173,3 +1173,13 @@ function os_publications_update_7023() {
 
   features_revert($revert);
 }
+
+/**
+ * Updating field description.
+ */
+function os_publications_update_7024() {
+  db_update('biblio_field_type_data')
+  ->fields(array('hint' => ''))
+  ->condition('ftdid', 22)
+  ->execute();
+}

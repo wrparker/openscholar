@@ -10,7 +10,7 @@ $plugin = array(
   'class' => 'citation_distribute_service_googlescholar',
   'file' => 'citation_distribute_service_googlescholar.inc',
   'parent' => 'citation_distribute_service',
-  'title' => t('Google Scholar'),
+  'title' => l(t('Google Scholar'), 'http://scholar.google.com', array('attributes' => array('target' => '_blank'))),
   'name' => 'googlescholar',
   'description' => 'Google\'s searchable index of citations',
   'type' => 'metadata'

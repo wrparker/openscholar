@@ -217,7 +217,7 @@ function os_publications_field_default_field_instances() {
           0 => 'image',
         ),
         'browser_plugins' => array(),
-        'droppable_area_text' => 'Drop files here to upload',
+        'droppable_area_text' => 'Drag your files here',
         'multiupload' => 0,
         'preview_image_style' => 'thumbnail',
         'progress_indicator' => 'throbber',
