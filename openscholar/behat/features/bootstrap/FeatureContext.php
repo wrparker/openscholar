@@ -1853,4 +1853,11 @@ class FeatureContext extends DrupalContext {
       throw new Exception(sprintf('The feed items has been imported %s times.', $count));
     }
   }
+
+/**
+ * @Given /^I set tinymce "([^"]*)"$/
+ */
+public function iSetTinymce($arg1) {
+  $this->getSession()->executeScript("tinymce.get()[0].setContent('" . $arg1 . "');");
+}
 }

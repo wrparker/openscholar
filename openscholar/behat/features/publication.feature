@@ -61,5 +61,6 @@ Feature:
   @javascript @first @me
   Scenario: Verify user can create a publication.
     Given I am logging in as "admin"
-    And I visit "/john/node/add/biblio"
-    Then I should see "Create Publication"
+    When I visit "/john/node/add/biblio"
+    And I add publication title "Hello Roy"
+    And show last response
