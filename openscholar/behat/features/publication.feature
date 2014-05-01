@@ -89,8 +89,10 @@ Feature:
   Scenario: Test the JS Publication form year validation.
     Given I am logging in as "john"
      When I set the widget of vocabulary "food" to "tree"
+      And I sleep for "15"
       And I visit "john/node/add/biblio"
-     When I click "Publication Details"
+      And I click "Publication Details"
       And I should not see "Burger"
+      And I sleep for "5"
      Then I click "Expand Terms"
       And I should see "Burger"
