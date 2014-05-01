@@ -1216,18 +1216,3 @@ function os_publications_import_type($name, $field_settings) {
       ->execute();
   }
 }
-
-/**
- * Implements hook_form_FORM_ID_alter().
- *
- * Alters the publication delete confirm form to redirect the user back to the
- * edit form of the publication when pressing the "cancel" button.
- */
-function os_publications_form_node_delete_confirm_alter(&$form, &$form_state) {
-  if ($form['#node']->type != 'biblio') {
-    return;
-  }
-
-  // The "#href" is in the form "node/%nid" so we add an "/edit" suffix.
-  $form['actions']['cancel']['#href'] .= '/edit';
-}
