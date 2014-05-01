@@ -26,7 +26,7 @@ function os_importer_year_to_date_form($importer, $element_key, $settings) {
  * Tamper callback.
  *
  * In order for a date given in years to be processed correctly we need to
- * convert the date in years to a full date
+ * convert the date in years to a full date.
  */
 function os_importer_year_to_date_convert($result, $item_key, $element_key, &$field, $settings, $source) {
   if (is_array($field)) {
