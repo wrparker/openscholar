@@ -1556,6 +1556,12 @@ class FeatureContext extends DrupalContext {
    * @When /^I login as "([^"]*)" in "([^"]*)"$/
    */
   public function iLoginAsIn($username, $site) {
+
+    // Force logout.
+    if ($this->loggedIn()) {
+      $this->logout();
+    }
+
     $title = str_replace("'", "\'", $site);
 
     $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'{$title}'"));
