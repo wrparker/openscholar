@@ -497,6 +497,7 @@ function gkplus_form_node_form_alter(&$form, &$form_state, $form_id) {
     '#weight' => 98,
     '#group' => 'additional_settings',
     '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
   );
   $form['gkplus']['gkplus_minitheme'] = array(
     '#title' => t('Remove branding'),
