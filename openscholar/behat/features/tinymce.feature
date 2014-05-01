@@ -1,7 +1,7 @@
 Feature:
   Testing the tiny MCE is enabled.
 
-  @javascript @shushu
+  @javascript
   Scenario: Verify the tiny MCE is enabled.
     Given I visit "user/logout"
       And I am logging in as "admin"

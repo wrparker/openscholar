@@ -94,6 +94,7 @@ Feature:
       And I click "Menu options"
       And I sleep for "1"
      Then I should see "Posted on"
+      And I sleep for "1"
       And I select another month on "edit-date"
       And I sleep for "1"
       And I should see "Posted on"
@@ -121,7 +122,7 @@ Feature:
      Then I should see "Secondary Title"
       And I should not see "Title of the Journal"
 
-  @javascript @first @shushu2
+  @javascript @first
   Scenario: Verify year element
     Given I am logging in as "john"
       And I visit "/john/publications/goblet-fire"
