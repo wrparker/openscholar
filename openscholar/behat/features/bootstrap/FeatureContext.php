@@ -1141,6 +1141,36 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I put mouse over "([^"]*)" under "([^"]*)"$/
+   */
+  public function iPutMouseOverUnder($text, $container) {
+    if (!$element = $this->searchForLinkUnderElement($text, $container)) {
+      throw new Exception(sprintf("The link %s was not found in %s", $text, $container));
+    }
+    $element->mouseOver();
+  }
+
+  /**
+   * @Given /^I check "([^"]*)" under "([^"]*)" is visible$/
+   */
+  public function iCheckUnderIsVisible($text, $container) {
+    if (!$element = $this->searchForLinkUnderElement($text, $container)) {
+      return FALSE;
+    }
+    return $element->isVisible();
+  }
+
+  /**
+   * @Given /^I check "([^"]*)" under "([^"]*)" is not visible$/
+   */
+  public function iCheckUnderIsNotVisible($text, $container) {
+    if (!$element = $this->searchForLinkUnderElement($text, $container)) {
+      return TRUE;
+    }
+    return !$element->isVisible();
+  }
+
+  /**
    * Searching a link under an element with class
    */
   private function searchForLinkUnderElement($text, $container) {
@@ -1741,7 +1771,7 @@ class FeatureContext extends DrupalContext {
     if ($element) {
       throw new Exception("A button with id|name|value equal to '$button' was found.");
     }
-}
+  }
 
   /**
    * @Given /^I set feature "([^"]*)" to "([^"]*)" on "([^"]*)"$/
@@ -1847,7 +1877,7 @@ class FeatureContext extends DrupalContext {
     );
   }
 
- /**
+  /**
    * @Given /^I re import feed item "([^"]*)"$/
    */
   public function iReImportFeedItem($node) {

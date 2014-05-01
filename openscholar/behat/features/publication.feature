@@ -98,3 +98,13 @@ Feature:
       And I should see "Posted on"
       And I press "Save"
 
+  @javascript @first
+  Scenario: Verify tooltip hoover works
+    Given I am logging in as "john"
+      And I visit "/john/publications/goblet-fire"
+      And I edit current node
+      And I check "Wand" under "image-widget" is not visible
+      And I click "Publication Details"
+     Then I should see the text "Help" under "image-widget"
+      And I put mouse over "Help" under "image-widget"
+      And I check "Wand" under "image-widget" is not visible
