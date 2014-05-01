@@ -48,7 +48,7 @@ function gkplus_nodeorder_form($js = NULL, $tid = NULL) {
   }
   // Gracefully degrades if $js is not set.
   if (!$js) {
-    return drupal_get_form('nodeorder_admin_display_form', $tid);
+    return drupal_get_form('gkplus_nodeorder_admin_display_form', $tid);
   }
 
   ctools_include('ajax');
@@ -63,7 +63,7 @@ function gkplus_nodeorder_form($js = NULL, $tid = NULL) {
     ),
   );
 
-  $output = ctools_modal_form_wrapper('nodeorder_admin_display_form', $form_state);
+  $output = ctools_modal_form_wrapper('gkplus_nodeorder_admin_display_form', $form_state);
 
   if ($form_state['submitted'] && form_get_errors() == FALSE) {
     $output = array();
@@ -95,7 +95,9 @@ function gkplus_nodeorder_admin_display_form($form, &$form_state, $tid) {
   );
   drupal_set_title(t('Order nodes for <em>%term_name</em>', array('%term_name' => $term->name)), PASS_THROUGH);
 
-  $nodes_attached = os_taxonomy_list_attached_entities($tid);
+  $bundles = os_taxonomy_og_vocabulary_bundles($term->vid, GKPLUS_SID);
+  $bundles = array_map(function($o) {return $o->bundle;}, $bundles);
+  $nodes_attached = os_taxonomy_list_attached_entities($tid, $bundles);
   $nodes = array();
   foreach ($nodes_attached as $info) {
   	if($info['entity_type'] == 'node') {
@@ -635,6 +637,7 @@ function gkplus_preprocess_os_taxonomy_tagged_nodes(&$vars) {
   if (!isset($vars['taxonomy_term']->tid) || !isset($vars['taxonomy_term']->vid)) {
     return;
   }
+
   $vocab = taxonomy_vocabulary_load($vars['taxonomy_term']->vid);
   if ($vocab->name !== 'Research Interests') {
     return;
