@@ -89,7 +89,6 @@ Feature:
     Given I am logging in as "john"
       And I visit "/john/publications/goblet-fire"
       And I edit current node
-      And I sleep for "2"
      When I click "Post Created/Edited By"
       And I click "Menu options"
       And I sleep for "1"
@@ -127,7 +126,6 @@ Feature:
     Given I am logging in as "john"
       And I visit "/john/publications/goblet-fire"
       And I edit current node
-      And I sleep for "2"
      When text field "biblio_year" value should be "1997"
       And I should not see "Input must be in the form"
       And I choose id "edit-biblio-year-coded-10040" from radio id "edit-biblio-year-coded"

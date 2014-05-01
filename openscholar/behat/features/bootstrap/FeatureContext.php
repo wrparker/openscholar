@@ -1963,6 +1963,7 @@ class FeatureContext extends DrupalContext {
 
     return array(
       new Step\When('I visit "/node/' . $matches[1] . '/edit"'),
+      new Step\When('I sleep for "3"'),
     );
   }
 
