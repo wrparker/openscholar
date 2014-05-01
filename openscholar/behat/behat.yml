@@ -1,8 +1,21 @@
 default:
+  context:
+    parameters:
+      drupal_users:
+        admin:
+          'admin'
+        john:
+          'jfk'
+        michelle:
+          'FourMoreYears'
+      # the node ID of the group
+      vsite:
+        1
   paths:
     features: 'features'
   extensions:
     Behat\MinkExtension\Extension:
+      show_cmd: 'open -a Firefox.app %s'
       goutte: ~
       selenium2: ~
     Drupal\DrupalExtension\Extension:
