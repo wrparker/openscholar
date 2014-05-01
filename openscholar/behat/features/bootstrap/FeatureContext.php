@@ -1919,12 +1919,19 @@ class FeatureContext extends DrupalContext {
     }
 
     // Find month selector and select new month.
-    $selector = $page->find('xpath', "//select[@class='ui-datepicker-month']");
-    $s2 = $selector->find('xpath', "//option[@value='$month']");
+    if (!$selector = $page->find('xpath', "//select[@class='ui-datepicker-month']")) {
+      throw new Exception("Failed to find month field");
+    }
+
+    if (!$s2 = $selector->find('xpath', "//option[@value='$month']")) {
+      throw new Exception("Failed to find month field");
+    }
     $s2->press();
 
     // Press on the first day of the month
-    $day = $page->find('xpath', "//td[@data-handler='selectDay']");
+    if (!$day = $page->find('xpath', "//td[@data-handler='selectDay']")) {
+      throw new Exception("Failed to find day field.");
+    }
     $day->press();
   }
 
