@@ -629,7 +629,7 @@ function os_publications_biblio_contributors_add_more_callback($form, &$form_sta
  */
 function os_publications_alter_year_field(&$form, &$form_state) {
   // Biblio year value can be standard YYYY year number, or a coded number
-  // defined in the "biblio_yeasrs_text" variable. Both _biblio_numeric_year()
+  // defined in the "biblio_years_text" variable. Both _biblio_numeric_year()
   // and _biblio_text_year() are used to convert between code and numeric.
   $year_value = $form['biblio_year']['#default_value'];
   $year_coded_value = '';
@@ -644,7 +644,7 @@ function os_publications_alter_year_field(&$form, &$form_state) {
   $years = variable_get('biblio_years_text', array(9999 => t('Submitted'), 9998 => t('In Press')));
   $form['biblio_year_group'] = array(
     '#type' => 'fieldset',
-    '#title' => $form['biblio_year']['#title'],
+    '#title' => $form['biblio_year']['#title'] . ' <span class="form-required" title="' . t('This field is required.') . '">*</span>',
     '#collapsible' => FALSE,
     '#weight' => $form['biblio_year']['#weight'],
   );
