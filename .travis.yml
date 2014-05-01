@@ -8,6 +8,11 @@ mysql:
   username: root
   encoding: utf8
 
+env:
+  - TEST_SUITE=first
+  - TEST_SUITE=last
+
+
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - composer global require drush/drush:6.*@dev
@@ -80,7 +85,7 @@ script:
   - java -jar selenium-server-standalone-2.40.0.jar -p 4444 &
   - sleep 5
 
-  - ./bin/behat --tags=me
+  - ./bin/behat --tags=$TEST_SUITE
 
 after_script:
     - sudo cat /var/log/apache2/error.log

@@ -58,21 +58,13 @@ Feature:
       And I go to "john/publications/authors"
     Then I should get a "403" HTTP response
 
-  @javascript @first @me
+  @javascript @first
   Scenario: Verify user can create a publication.
     Given I am logging in as "admin"
     When I visit "/john/node/add/biblio"
-    And I add publication title "Hello Roy"
+    And I add publication title "New publication"
 
-  @javascript @first @foo
-  Scenario: Test the Publication form year validation when submitting the form.
-     When I visit "/john/node/add/biblio"
-#     And I fill in "title_field[und][0][value]" with "Journal publication"
-      And I fill in "biblio_year" with "2013"
-      And I press "Save"
-     Then I should see "Journal publication"
-
-  @api @first @foo
+  @api
   Scenario: Test the Publication form year validation when submitting the form.
     Given I am logging in as "john"
       And I visit "john/node/add/biblio"
@@ -81,10 +73,10 @@ Feature:
      When I click "Save"
      Then I should see "Year value must be in a YYYY format."
 
-  @javascript @first @foo
+  @javascript @first @me
   Scenario: Test the JS Publication form year validation.
     Given I am logging in as "john"
-      And I visit "john/node/add/biblio"
-      And I fill in "title" with "Example title"
-     When I fill in "edit-biblio-year" with "199"
+     When I visit "john/node/add/biblio"
+      And I add publication title "New publication"
+      And I fill in "edit-biblio-year" with "199"
      Then I should see "Input must be in the form YYYY. Only numerical digits are allowed."
