@@ -716,9 +716,6 @@ function os_publications_biblio_rearrange($form, $form_state) {
   $form['author']['date']['date']['#title'] = '';
   $form['author']['date']['date']['#description'] = '';
 
-  // Add description to the "Posted by" field in the author fieldset.
-  $form['author']['name']['#description'] = t('You may change this if posting on behalf of someone else.');
-
   // Change labels and descriptions in the path fieldset.
   $form['path']['#title'] = t('URL');
   $form['path']['alias']['#title'] = t('URL');
