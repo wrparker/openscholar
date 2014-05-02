@@ -971,13 +971,9 @@ function os_form_node_form_alter(&$form, $form_state) {
     $delete = array(
       '#type' => 'item',
       '#markup' => l($text, 'node/' . $form['#node']->nid . '/delete', $options),
-      '#weight' => 10,
+      '#weight' => 99,
     );
     $form['actions']['delete'] = $form['actions_top']['delete'] = $delete;
-
-    // Hides "Cancel" button entirely from existing node edit forms.
-    hide($form['actions']['cancel']);
-    hide($form['actions_top']['cancel']);
   }
 }
 
