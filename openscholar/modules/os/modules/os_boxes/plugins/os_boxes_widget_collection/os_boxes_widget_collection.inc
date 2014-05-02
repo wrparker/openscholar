@@ -184,28 +184,31 @@ abstract class os_boxes_widget_collection extends os_boxes_default {
  * Removing a tab and adding a new one should handle the same as editting an existing
  */
 function os_boxes_widget_collection_add_new_rows(&$element, &$form_state, &$form) {
-  for ($i = $element['#default_value']; $i < $element['#value']; $i++) {
-    $new = 'widget-' . $i;
-    $form['options']['widgets'][$new] = array(
-      '#attributes' => array('id' => $i),
-      '#parents' => array('widgets', $new),
-      '#array_parents' => array('options', 'widgets', $new),
-      '#tree' => TRUE,
-    );
-    $form['options']['widgets'][$new] += $form['options']['widgets']['widget-new'];
-    foreach ($form['options']['widgets'][$new] as $key => & $child) {
-      if (strpos($key, '#') !== 0) {
-        unset($child['#parents']);
-        unset($child['#name']);
-        unset($child['#value']);
+  if (!empty($form_state['input'])) {
+    $new_widgets = array_diff_key($form_state['input']['widgets'], $form_state['values']['widgets']);
+    foreach ($new_widgets as $new => $w) {
+      $id = str_replace('widget-', '', $new);
+      $form['options']['widgets'][$new] = array(
+        '#attributes' => array('id' => $id),
+        '#parents' => array('widgets', $new),
+        '#array_parents' => array('options', 'widgets', $new),
+        '#tree' => TRUE,
+      );
+      $form['options']['widgets'][$new] += $form['options']['widgets']['widget-new'];
+      foreach ($form['options']['widgets'][$new] as $key => & $child) {
+        if (strpos($key, '#') !== 0) {
+          unset($child['#parents']);
+          unset($child['#name']);
+          unset($child['#value']);
+        }
       }
+      form_builder($form['form_id']['#value'], $form['options']['widgets'][$new], $form_state);
     }
-    form_builder($form['form_id']['#value'], $form['options']['widgets'][$new], $form_state);
   }
   unset($form_state['values']['widgets']['widget-new']);
 
   // Removes nids that aren't in the post
-  if (is_array($form_state['values'])) {
+  if (!empty($form_state['values']['widgets'])) {
     foreach ($form_state['values']['widgets'] as $k => $v) {
       if (!isset($form_state['input']['widgets'][$k]) || !isset($form_state['input']['widgets'][$k]['bid']) || $form_state['input']['widgets'][$k]['bid'] == 'os_boxes_wc-remove') {
         unset($form_state['values']['widgets'][$k]);
