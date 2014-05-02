@@ -1266,11 +1266,22 @@ function os_context_registry() {
 /**
  * Implements hook_cron().
  *
- * Allows another method for cleaning out the page_cache for non-memcache entries
+ * Allows another method for cleaning out the page_cache for non-memcache entries.  We consistantly clear out
+ * the page cache (but not the block cache) every 15 minutes.  This will assure that our cache does not get too
+ * old.  If the page cache is handles by memcache we pass a constant to tell it that we want to update the expire
+ * time.  Note that this does not remove everything from the page cache, just expired items.  This is also done
+ * whenever a node is saved with a call to cache_clear_all()
  */
 function os_cron() {
+
+  $class = variable_get('cache_class_cache_page');
+  if (!isset($class)) {
+    $class = variable_get('cache_default_class', 'DrupalDatabaseCache');
+  }
+
   //Clear expired Items from page cache
-  cache_clear_all(NULL, 'cache_page');
+  $cid = ($class == 'MemCacheDrupal') ? MEMCACHE_CONTENT_CLEAR : NULL;
+  cache_clear_all($cid, 'cache_page');
 }
 
 /**
