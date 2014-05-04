@@ -9,6 +9,8 @@ mysql:
   encoding: utf8
 
 env:
+  - TEST_SUITE=first
+  - TEST_SUITE=last
   - TEST_SUITE=javascript
 
 before_script:
