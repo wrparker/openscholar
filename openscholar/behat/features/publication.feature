@@ -58,11 +58,14 @@ Feature:
       And I go to "john/publications/authors"
      Then I should get a "403" HTTP response
 
-  @javascript @first
+  @javascript @first @momo
   Scenario: Verify user can create a publication.
     Given I am logging in as "admin"
      When I visit "/john/node/add/biblio"
-      And I add publication title "New publication"
+      And I fill in the publication title with random string
+      And I fill in "biblio_year" with "2013"
+      And I press "Save"
+     Then I should see the random string
 
   @api @first
   Scenario: Test the Publication form year validation when submitting the form.
@@ -132,7 +135,7 @@ Feature:
       And I fill in "biblio_year" with "1999"
       And I should not see "Input must be in the form"
 
-  @javascript @first @momo
+  @javascript @first
   Scenario: Test the JS Publication terms
     Given I am logging in as "john"
      When I set the widget of vocabulary "food" to "tree"

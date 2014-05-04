@@ -1939,6 +1939,14 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I fill in the publication title with random string$/
+   */
+  public function iFillInThePublicationTitleWithRandomString() {
+    $this->randomizeMe();
+    $this->getSession()->executeScript("tinymce.get()[0].setContent('" . $this->randomText . "');");
+  }
+
+  /**
    * @Then /^I verify the feed item "([^"]*)" exists only "([^"]*)" time for "([^"]*)"$/
    */
   public function iVerifyTheFeedItemeExistsOnlyTimeFor($node, $time, $vsite) {
