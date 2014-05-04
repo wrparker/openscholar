@@ -605,6 +605,13 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I wait for it$/
+   */
+  public function iWaitForIt() {
+    $this->getSession()->wait(10000, "jQuery.active == 0");
+  }
+
+  /**
    * Invoking a php code with drush.
    *
    *  @param $function
