@@ -10,14 +10,14 @@ Feature: Testing the creation of the a new site.
       And I visit the site "random"
      Then I should see "Your site's front page is set to display your bio by default."
 
-  @api @last
+  @javascript
   Scenario: Make sure all types of a site are presented to an authenticated user.
     Given I am logging in as "michelle"
      When I visit "site/register"
+      And I wait for it
      Then I should see the options "Department Site,Personal Site,Project Site" under "bundle"
-
-  # @todo add "@javascript" tag after selenium 2 is configured
-  #    @fixme requires selenium for javascript support.
-  #    @see waitForPageActionsToComplete()
-  #    And I wait for page actions to complete
-  #    Then I should see "Success! The new site has been created."
+      And I fill in "edit-domain" with "onetwothreefour"
+      And I wait for it
+      And I press "edit-submit"
+      And I wait for it
+     Then I should see "Success! Your new site has been created."

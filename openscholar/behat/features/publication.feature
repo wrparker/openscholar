@@ -150,7 +150,7 @@ Feature:
       And I wait for it
       And I should see "Burger"
 
-  @javascript @momo
+  @javascript
   Scenario: Testing the trash can functionality.
     Given I am logging in as "john"
      When I visit "john/node/add/biblio"
