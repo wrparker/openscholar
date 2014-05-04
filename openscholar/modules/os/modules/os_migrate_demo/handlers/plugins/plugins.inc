@@ -3,47 +3,43 @@
 /**
  * Migrating plugins.
  */
-class MigrateBoxes extends MigrateDestination {
+class MigrateBoxes extends Migration {
+  public $csvColumns = array(
+    array('id', 'Unique ID'),
+    array('title', 'Tile'),
+    array('description', 'Description'),
+    array('page', 'Page'),
+    array('location', 'Location'),
+    array('delta', 'Delta'),
+  );
 
   /**
-   * @inheritdoc
+   * Constructing the class.
    */
-  public function __toString() {
-    return "";
-  }
+  public function __construct() {
+    parent::__construct();
+    $this->description = t('Import plugins.');
 
-  /**
-   * @inheritdoc
-   */
-  public function fields() {
-    return array();
-  }
+    $this->addFieldMapping('title', 'name');
+    $this->addFieldMapping('description', 'pass');
+    $this->addFieldMapping('page', 'mail');
+    $this->addFieldMapping('location', 'first_name');
+    $this->addFieldMapping('delta', 'last_name');
 
-  /**
-   * @inheritdoc
-   */
-  public function import(stdClass $object, stdClass $row) {
-  }
+    // Create a map object for tracking the relationships between source rows
+    $key = array(
+      'id' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+    );
 
-  /**
-   * @inheritdoc
-   */
-  public function getCreated() {
-    return $this->numCreated;
-  }
+    $destination_handler = new MigrateDestinationUser();
+    $this->map = new MigrateSQLMap($this->machineName, $key, $destination_handler->getKeySchema());
 
-  /**
-   * @inheritdoc
-   */
-  public function getUpdated() {
-    return $this->numUpdated;
-  }
-
-  /**
-   * @inheritdoc
-   */
-  public function resetStats() {
-    $this->numCreated = 0;
-    $this->numUpdated = 0;
+    // Create a MigrateSource object.
+    $this->source = new MigrateSourceCSV(drupal_get_path('module', 'os_migrate_demo') . '/csv/boxes/plugins.csv', $this->csvColumns, array('header_rows' => 1));
+    $this->destination = new MigrateDestinationUser();
   }
 }
