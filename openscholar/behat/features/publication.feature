@@ -58,7 +58,7 @@ Feature:
       And I go to "john/publications/authors"
      Then I should get a "403" HTTP response
 
-  @javascript @first
+  @javascript
   Scenario: Verify user can create a publication.
     Given I am logging in as "john"
      When I visit "/john/node/add/biblio"
@@ -76,7 +76,7 @@ Feature:
      When I click "Save"
      Then I should see "Year value must be in a YYYY format."
 
-  @javascript @first
+  @javascript
   Scenario: Test the JS Publication form year validation.
     Given I am logging in as "john"
      When I visit "john/node/add/biblio"
@@ -84,7 +84,7 @@ Feature:
       And I fill in "edit-biblio-year" with "199"
      Then I should see "Input must be in the form YYYY. Only numerical digits are allowed."
 
-  @javascript @first
+  @javascript
   Scenario: Verify date picker for posting date
     Given I am logging in as "john"
       And I visit "/john/publications/goblet-fire"
@@ -99,7 +99,7 @@ Feature:
       And I should see "Posted on"
       And I press "Save"
 
-  @javascript @first
+  @javascript
   Scenario: Verify tooltip hover works
     Given I am logging in as "john"
       And I visit "/john/publications/goblet-fire"
@@ -111,7 +111,7 @@ Feature:
       And I put mouse over "Help" under "image-widget"
       And I check "Wand" under "image-widget" is not visible
 
-  @javascript @first
+  @javascript
   Scenario: Verify changing biblio types changes fields
     Given I am logging in as "john"
      When I visit "/john/node/add/biblio"
@@ -121,7 +121,7 @@ Feature:
      Then I should see "Secondary Title"
       And I should not see "Title of the Journal"
 
-  @javascript @first
+  @javascript
   Scenario: Verify year element
     Given I am logging in as "john"
       And I visit "/john/publications/goblet-fire"
@@ -135,7 +135,7 @@ Feature:
       And I fill in "biblio_year" with "1999"
       And I should not see "Input must be in the form"
 
-  @javascript @first
+  @javascript
   Scenario: Test the JS Publication terms
     Given I am logging in as "john"
      When I set the widget of vocabulary "food" to "tree"
@@ -147,3 +147,23 @@ Feature:
      Then I click "Expand Terms"
       And I sleep for "2"
       And I should see "Burger"
+
+  @javascript
+  Scenario: Testing the trash can functionality.
+    Given I am logging in as "john"
+     When I visit "john/node/add/biblio"
+      And I add publication title "testing author field"
+      And I press "Add person"
+      And I sleep for "2"
+      And I fill in "biblio_contributors[0][name]" with "First Author"
+      And I fill in "biblio_contributors[1][name]" with "Second Author"
+      And I fill in "biblio_year" with "1999"
+      And I press "Save"
+      And I sleep for "10"
+     Then I should see "Author F, Author S"
+      And I edit current node
+      And I press "edit-biblio-contributors-1-delete"
+      And I sleep for "2"
+      And I press "Save"
+      And I should not see "Author F, Author S"
+      And I should see "Author F"
