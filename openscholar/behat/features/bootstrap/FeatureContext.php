@@ -99,16 +99,16 @@ class FeatureContext extends DrupalContext {
 
       $this->getSession()->visit($this->locatePath('/user'));
 
-      // @todo: Trying to make login work always with an extra reload.
-      $this->getSession()->reload();
+      // @todo: Instead of reload() trying to wait for loading.
+      $this->getSession()->wait(5000, "jQuery.active == 0");
 
       $element->fillField('Username', $username);
       $element->fillField('Password', $password);
       $submit = $element->findButton('Log in');
       $submit->click();
 
-      // @todo: We need to reload for some reason, for the login to work.
-      $this->getSession()->reload();
+      // @todo: Instead of reload() trying to wait for loading.
+      $this->getSession()->wait(5000, "jQuery.active == 0");
     }
   }
 
