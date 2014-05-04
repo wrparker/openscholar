@@ -77,6 +77,20 @@ class OsMigrateFamilyTaxonomyTerm extends OsMigrate {
 
   public $ogVocab = TRUE;
 }
+/**
+ * Migrate "Food" terms.
+ */
+class OsMigrateFoodTaxonomyTerm extends OsMigrate {
+
+  public $dependencies = array(
+    'OsMigratePersonalNode',
+  );
+
+  public $entityType = 'taxonomy_term';
+  public $bundle = 'food';
+
+  public $ogVocab = TRUE;
+}
 
 ///////////////////////
 // Nodes

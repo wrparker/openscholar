@@ -1,0 +1,4 @@
+ID,Name,Description,Site,Parent
+foodTerm1,Pizza,,,personal1
+foodTerm3,Sushi,,,personal1
+foodTerm2,Burger,,foodTerm1,personal1

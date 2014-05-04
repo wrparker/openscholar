@@ -1908,6 +1908,25 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I set the widget of vocabulary "([^"]*)" to "([^"]*)"$/
+   */
+  public function iSetTheWidgetOfVocabularyTo($vocab, $widget) {
+    $links = array(
+      'food' => "john/cp/build/taxonomy/food_personal1",
+    );
+
+    $widgets = array(
+      'tree' => 'term_reference_tree',
+    );
+
+    return array(
+      new Step\When('I visit "' . $links[$vocab] . '/edit"'),
+      new Step\When('I select the radio button named "widget_type" with value "' . $widgets[$widget] . '"'),
+      new Step\When('I press "Save"'),
+    );
+  }
+
+  /**
    * @Given /^I re import feed item "([^"]*)"$/
    */
   public function iReImportFeedItem($node) {
@@ -2015,4 +2034,5 @@ class FeatureContext extends DrupalContext {
     }
     return $field;
   }
+
 }

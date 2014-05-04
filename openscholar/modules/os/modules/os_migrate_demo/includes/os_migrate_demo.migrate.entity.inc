@@ -34,10 +34,12 @@ abstract class OsMigrate extends Migration {
         array('id', 'ID'),
         array('name', 'Name'),
         array('description', 'Description'),
+        array('parent', 'Parent'),
       );
+
       $this->addFieldMapping('name', 'name');
       $this->addFieldMapping('description', 'description');
-
+      $this->addFieldMapping('parent', 'parent')->sourceMigration($this->getMachineName());
 
       if ($this->ogVocab) {
         $this

@@ -131,3 +131,16 @@ Feature:
      Then I should see "Input must be in the form"
       And I fill in "biblio_year" with "1999"
       And I should not see "Input must be in the form"
+
+  @javascript @first @momo
+  Scenario: Test the JS Publication terms
+    Given I am logging in as "john"
+     When I set the widget of vocabulary "food" to "tree"
+      And I sleep for "15"
+      And I visit "john/node/add/biblio"
+      And I click "Publication Details"
+      And I should not see "Burger"
+      And I sleep for "5"
+     Then I click "Expand Terms"
+      And I sleep for "2"
+      And I should see "Burger"
