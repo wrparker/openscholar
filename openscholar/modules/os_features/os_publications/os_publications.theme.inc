@@ -142,7 +142,7 @@ function theme_os_publications_tabular(&$vars) {
       'path' => $book_image['uri'],
       'title' => $book_image['title'],
     ));
-    $book_output = '<div class="publication-cover-container">' . $theme_image . '</div>';
+    $book_output = '<div id="pub-cover-content-wrapper"><div class="publication-cover-container">' . $theme_image . '</div>';
     // Add the image to the output under the citation.
     $output .= $book_output;
   }
@@ -165,6 +165,9 @@ function theme_os_publications_tabular(&$vars) {
   // End PubContent Wrapper
   $output .= '</div>';
 
+  $output .= '</div>';
+
+  // End "pub-cover-content-wrapper" div.
   $output .= '</div>';
 
   return $output;

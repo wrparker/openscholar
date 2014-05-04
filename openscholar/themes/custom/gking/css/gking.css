@@ -1373,6 +1373,17 @@ clear: both;
 	text-decoration:underline;
 }
 
+#pub-cover-content-wrapper {
+display: table;
+clear: both;
+padding-top: 20px;
+}
+
+
+.pubcontent-wrapper {
+vertical-align: top;
+}
+
 /* TAXONOMY */
 
 body.section-category .node-teaser,

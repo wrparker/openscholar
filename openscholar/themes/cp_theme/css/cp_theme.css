@@ -500,6 +500,9 @@ table#field-biblio-extra-values td {
 table.biblio-contributors td {
 	padding: 0;
 }
+#edit-biblio-authors table td.biblio-contributor-type {
+  padding-right: 1em;
+}
 
 .biblio-contributors .draggable {
 	height: 40px;
@@ -529,28 +532,32 @@ border-radius: 0;
 }
 
 .biblio-contributor input.form-submit {
-cursor: pointer;
-padding: 0;
-margin-bottom: 0;
-margin-right: 0;
-color: #5a5a5a;
-text-align: center;
-font-weight: normal;
-font-size: 1em;
-font-family: "Lucida Grande", Verdana, sans-serif;
-border: none;
-border-bottom: none;
-border-left-color: none;
-border-right-color: none;
-background: url(../images/scholarbase-sprite.png) 0 -411px no-repeat;
--moz-border-radius: none;
--webkit-border-radius: none;
-border-radius: none;
-text-indent: 100%;
-white-space: nowrap;
-overflow: hidden;
-width:20px;
-display: inline-block;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 0;
+  margin-right: 0;
+  color: #5a5a5a;
+  text-align: center;
+  font-weight: normal;
+  font-size: 1em;
+  font-family: "Lucida Grande", Verdana, sans-serif;
+  border: none;
+  border-bottom: none;
+  border-left-color: none;
+  border-right-color: none;
+  background: url(../images/scholarbase-sprite.png) 0 -411px no-repeat;
+  -moz-border-radius: none;
+  -webkit-border-radius: none;
+  border-radius: none;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  width:20px;
+  display: inline-block;
+}
+
+table.biblio-contributors tr:first-child input.form-submit {
+  display: none;
 }
 
 .biblio-contributor input.form-text {
@@ -788,6 +795,10 @@ form.node-form.overlay-processed .form-region-right fieldset {
      width: 100%;
 }
 
+form.node-form.overlay-processed .form-region-right fieldset.citation-distribute-form {
+  margin-bottom: 2em;
+}
+
 form.node-form.overlay-processed .form-region-right fieldset legend {
      background: none repeat scroll 0% 0% #F1F1F1;
 }
@@ -947,7 +958,7 @@ width: 195px;
 
 #edit-biblio-url-title {
 	border:none;
-	background: url('../images/scholarbase-sprite.png') no-repeat 0 -475px #FFFFFF;
+	background: url('../images/scholarbase-sprite.png?apr2014') no-repeat 0 -475px #FFFFFF;
     padding-left:25px;
 	color: #0074BD;
 	text-decoration:underline;
@@ -963,8 +974,9 @@ color: #444;
 
 
 
-
-
+#edit-url .form-item-biblio-url .description {
+	width: 600px;
+}
 
 
 

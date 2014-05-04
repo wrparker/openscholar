@@ -951,6 +951,9 @@ function os_form_node_form_alter(&$form, $form_state) {
 
   $form['actions_top'] = $form['actions'];
 
+  // Add description to the name field in the author fieldset.
+  $form['author']['name']['#description'] = t('You may change this if posting on behalf of someone else.');
+
   // Alters action buttons for existing nodes.
   if (isset($form['#node']->nid, $form['#node']->type)) {
     // Adds "Delete this post" link specifying node type if available.
@@ -968,13 +971,9 @@ function os_form_node_form_alter(&$form, $form_state) {
     $delete = array(
       '#type' => 'item',
       '#markup' => l($text, 'node/' . $form['#node']->nid . '/delete', $options),
-      '#weight' => 10,
+      '#weight' => 99,
     );
     $form['actions']['delete'] = $form['actions_top']['delete'] = $delete;
-
-    // Hides "Cancel" button entirely from existing node edit forms.
-    hide($form['actions']['cancel']);
-    hide($form['actions_top']['cancel']);
   }
 }
 
