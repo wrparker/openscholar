@@ -58,9 +58,9 @@ Feature:
       And I go to "john/publications/authors"
      Then I should get a "403" HTTP response
 
-  @javascript @first @momo
+  @javascript @first
   Scenario: Verify user can create a publication.
-    Given I am logging in as "admin"
+    Given I am logging in as "john"
      When I visit "/john/node/add/biblio"
       And I fill in the publication title with random string
       And I fill in "biblio_year" with "2013"
@@ -113,7 +113,7 @@ Feature:
 
   @javascript @first
   Scenario: Verify changing biblio types changes fields
-    Given I am logging in as "admin"
+    Given I am logging in as "john"
      When I visit "/john/node/add/biblio"
      Then I should see "Title of the Journal"
       And I should not see "Secondary Title"
