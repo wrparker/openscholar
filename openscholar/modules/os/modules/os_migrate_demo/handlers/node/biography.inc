@@ -3,7 +3,7 @@
 /**
  * Migrate "Biography" node.
  */
-class OsMigrateBioagrphyNode extends OsMigrate {
+class OsMigrateBiographyNode extends OsMigrate {
   public $entityType = 'node';
   public $bundle = 'bio';
 

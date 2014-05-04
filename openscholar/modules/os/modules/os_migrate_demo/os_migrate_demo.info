@@ -5,11 +5,10 @@ core = 7.x
 dependencies[] = migrate
 dependencies[] = migrate_extras
 
-;files[] = os_migrate_demo.migrate.inc
 files[] = includes/os_migrate_demo.migrate.entity.inc
 
 ; Nodes.
-files[] = handlers/node/bioagrphy.inc
+files[] = handlers/node/biography.inc
 files[] = handlers/node/blog.inc
 files[] = handlers/node/book.inc
 files[] = handlers/node/classes.inc
