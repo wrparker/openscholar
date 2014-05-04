@@ -109,3 +109,9 @@ function os_events_update_7007() {
   variable_del('calendar_add_colorbox');
 }
 
+/**
+ * Cancel the time zone conversion of the file date.
+ */
+function os_events_update_7008() {
+  features_revert(array('os_events' => array('field_base')));
+}
