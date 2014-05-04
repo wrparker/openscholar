@@ -30,7 +30,7 @@ class sv_list_node_event extends sv_list_plugin  {
    */
   public function sort_event($options, $efq) {
     $efq->fieldOrderBy('field_date', 'value');
-    $efq->fieldCondition('field_date', 'value2', date('Y-m-d'), '>=');
+    $efq->fieldCondition('field_date', 'value', date('Y-m-d H:i:s'), '>=');
   }
   
   /**
@@ -47,7 +47,7 @@ class sv_list_node_event extends sv_list_plugin  {
     //split repeated event into many nodes - one for each instance of event
     //key them by timestamp for easy sorting.
     $exploded = array();
-    $now = strtotime(date('Y-m-d'));
+    $now = strtotime(date('Y-m-d H:i:s'));
     foreach ($entities as $entity) {
       foreach ($entity->field_date[LANGUAGE_NONE] as $delta => $date) {
         $time_index = strtotime($date['value']);
