@@ -28,9 +28,9 @@ class sv_list_node_event extends sv_list_plugin  {
    * Custom sort for events.  Uses event date, but only for
    * upcoming events that haven't taken place yet.
    */
-  public function sort_event($options, $efq) {
+  public function sort_event($options, EntityFieldQuery $efq) {
     $efq->fieldOrderBy('field_date', 'value');
-    $efq->fieldCondition('field_date', 'value', date('Y-m-d H:i:s'), '>=');
+    $efq->addTag('events_between_start_to_end');
   }
   
   /**

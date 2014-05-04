@@ -1071,3 +1071,18 @@ function os_events_mail_alter(&$message) {
 function os_events_form_event_node_form_alter(&$form, &$form_state) {
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
 }
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function os_events_query_events_between_start_to_end_alter(QueryAlterableInterface $query) {
+  $date_field = _field_sql_storage_tablename(field_info_field('field_date'));
+
+  $query->leftJoin($date_field, 'date', 'date.entity_id = node.nid');
+
+  $or = db_or();
+  $or->condition('date.field_date_value', date('Y-m-d H:i:s'), '<=');
+  $or->condition('date.field_date_value2', date('Y-m-d H:i:s'), '>=');
+
+  $query->condition($or);
+}
