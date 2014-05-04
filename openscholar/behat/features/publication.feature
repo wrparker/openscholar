@@ -49,25 +49,22 @@ Feature:
       And I visit "john/publications"
      Then I should not see "Export"
       And I go to "john/publications/export/bibtex"
-    Then I should get a "403" HTTP response
+     Then I should get a "403" HTTP response
 
   @api @first
   Scenario: Verify authors page is not available
     Given I go to "/publications/authors"
      Then I should get a "403" HTTP response
       And I go to "john/publications/authors"
-    Then I should get a "403" HTTP response
+     Then I should get a "403" HTTP response
 
-  @javascript-wip @first @foo
+  @javascript @first
   Scenario: Verify user can create a publication.
     Given I am logging in as "admin"
      When I visit "/john/node/add/biblio"
-#     And I fill in "title_field[und][0][value]" with "Journal publication"
-      And I fill in "biblio_year" with "2013"
-      And I press "Save"
-     Then I should see "Journal publication"
+      And I add publication title "New publication"
 
-  @api @first @foo
+  @api @first
   Scenario: Test the Publication form year validation when submitting the form.
     Given I am logging in as "john"
       And I visit "john/node/add/biblio"
@@ -76,12 +73,12 @@ Feature:
      When I click "Save"
      Then I should see "Year value must be in a YYYY format."
 
-  @javascript-wip @first @foo
+  @javascript @first
   Scenario: Test the JS Publication form year validation.
     Given I am logging in as "john"
-      And I visit "john/node/add/biblio"
-      And I fill in "title" with "Example title"
-     When I fill in "edit-biblio-year" with "199"
+     When I visit "john/node/add/biblio"
+      And I add publication title "New publication"
+      And I fill in "edit-biblio-year" with "199"
      Then I should see "Input must be in the form YYYY. Only numerical digits are allowed."
 
   @javascript @first

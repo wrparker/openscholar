@@ -1254,6 +1254,20 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I set tinymce "([^"]*)"$/
+   */
+  public function iSetTinymce($arg1) {
+    $this->getSession()->executeScript("tinymce.get()[0].setContent('" . $arg1 . "');");
+  }
+
+  /**
+   * @Given /^I add publication title "([^"]*)"$/
+   */
+  public function iAddPublicationTitle($arg1) {
+    $this->iSetTinymce($arg1);
+  }
+
+  /**
    * @When /^I select the radio button named "([^"]*)" with value "([^"]*)"$/
    */
   public function iSelectRadioNamedWithValue($name, $value) {
