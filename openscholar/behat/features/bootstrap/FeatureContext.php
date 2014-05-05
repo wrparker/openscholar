@@ -547,7 +547,10 @@ class FeatureContext extends DrupalContext {
    */
   public function responseHeaderShouldBe($key, $result) {
     $headers = $this->getSession()->getResponseHeaders();
-    if (empty($headers[$key]) || $headers[$key][0] !== $result) {
+    if (empty($headers[$key])) {
+      throw new Exception(sprintf('The "%s" key in the response header does not exist.', $key));
+    }
+    elseif ($headers[$key][0] !== $result) {
       throw new Exception(sprintf('The "%s" key in the response header is "%s" instead of the expected "%s".', $key, $headers[$key][0], $result));
     }
   }
