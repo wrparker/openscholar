@@ -13,6 +13,7 @@ class OsMigratePageNode extends OsMigrate {
     array('body', 'Body'),
     array(OG_AUDIENCE_FIELD, 'Site'),
     array('files', 'Files'),
+    array('parent', 'Parent'),
     array('uid', 'UID'),
   );
 
@@ -38,5 +39,34 @@ class OsMigratePageNode extends OsMigrate {
 
     $this->addFieldMapping('uid', 'uid')
       ->sourceMigration('OsMigrateUsers');
+  }
+
+  public function prepare($entity, $row) {
+    $entity->book = array(
+      'bid' => 'new',
+    );
+  }
+
+  public function complete($entity, $row) {
+    if (!$row->parent) {
+      return;
+    }
+
+    // Get the parent node by title (given in the CSV).
+    $query = new entityFieldQuery();
+    $result = $query
+      ->entityCondition('entity_type', 'node')
+      ->propertyCondition('title', $row->parent)
+      ->execute();
+    $parent = node_load(reset($result['node'])->nid);
+
+    // Make the current entity the child of the parent.
+    $entity->book['bid'] = $parent->book['bid'];
+    $entity->book['depth'] += 1;
+    $entity->book['menu_name'] = $parent->book['menu_name'];
+    $entity->book['p2'] = $entity->book['p1'];
+    $entity->book['p1'] = $entity->book['plid'];
+
+    entity_save('node', $entity);
   }
 }
