@@ -18,6 +18,12 @@ Feature:
       And cache is "disabled" for anonymous users
 
   @api @first
+  Scenario: Not a test, just disabling the caching, to avoid failures in
+            following tests in case the last test failed.
+    Given I am logging in as "admin"
+     Then cache is "disabled" for anonymous users
+    
+  @api @first
   Scenario: Test the Authors field in Publication form
     Given I am logging in as "john"
      When I edit the node "The Little Prince"
