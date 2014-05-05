@@ -259,7 +259,7 @@ function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar
     $blocks['boxes-' . $box->delta]['region'] = $region;
 
     // Initialize the module and the delta.
-    if (!isset($blocks['boxes-' . $box->delta]) || !array_key_exists($blocks['boxes-' . $box->delta], array('module', 'delta'))) {
+    if (!is_array($blocks['boxes-' . $box->delta]) || !array_key_exists($blocks['boxes-' . $box->delta], array('module', 'delta'))) {
       $blocks['boxes-' . $box->delta]['delta'] = $options['delta'];
       $blocks['boxes-' . $box->delta]['module'] = 'boxes';
     }
