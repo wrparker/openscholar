@@ -33,7 +33,7 @@ class MigrateBoxes extends Migration {
     $this->addFieldMapping('location', 'location');
     $this->addFieldMapping('delta', 'delta');
     $this->addFieldMapping(OG_AUDIENCE_FIELD, OG_AUDIENCE_FIELD)
-      ->sourceMigration('OsMigratePersonalNode');
+      ->sourceMigration(array('OsMigratePersonalNode', 'OsMigrateProjectNode'));
 
     // Create a map object for tracking the relationships between source rows
     $key = array(

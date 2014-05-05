@@ -7,7 +7,7 @@ function os_migrate_demo_entity_info() {
   $info = array();
 
   $info['spaces_overrides'] = array(
-    'title' => t('Spaces overrides'),
+    'label' => t('Spaces overrides'),
     'base table' => 'spaces_overrides',
     'entity keys' => array(
       'id' => 'id',
