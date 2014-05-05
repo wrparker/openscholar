@@ -79,32 +79,25 @@ class spacesOverridesDestination extends MigrateDestinationEntity {
   public function import(stdClass $space_override, stdClass $row) {
     // Invoke migration prepare handlers
     $this->prepare($space_override, $row);
+
     $updating = isset($space_override->id) && !(isset($space_override->is_new) && $space_override->is_new);
     $updating ? $this->numUpdated++ : $this->numCreated++;
 
-    // Define the box.
-    $delta = 'box-' . strtolower(str_replace(" ", "-", $space_override->delta));
-    $options = array(
-      'delta' => $delta,
-      'title' => $space_override->description,
-      'description' => $space_override->title,
-    );
+    // todo: load the options from somewhere.
+    $space_override->options = '';
 
-    // Create the box.
-    $box = boxes_box::factory($space_override->delta, $options);
-    $box->save();
-    $blocks['boxes-' . $box->delta]['region'] = $space_override->location;
-
-    // Initialize the module ad the delta.
-    if (!array_key_exists($blocks['boxes-' . $box->delta], array('module', 'delta'))) {
-      $blocks['boxes-' . $box->delta]['delta'] = $options['delta'];
-      $blocks['boxes-' . $box->delta]['module'] = 'boxes';
+    // Creating the box.
+    $box = boxes_factory($space_override->delta, $space_override->options);
+    if (module_exists('spaces') && $space = spaces_get_space()) {
+      $space->controllers->boxes->set($box->delta, $box);
+    }
+    else {
+      $box->save();
     }
 
-    $vsite = spaces_load('og', $space_override->og_group_ref['destid1']);
-    $vsite->controllers->context->set($space_override->page . ":reaction:block", array(
-      'blocks' => $blocks,
-    ));
+    // Set this in the correct place.
+    $blocks = os_layout_get_multiple($space_override->delta, false, true);
+    dpm($blocks);
 
     $this->complete($space_override, $row);
     return TRUE;
