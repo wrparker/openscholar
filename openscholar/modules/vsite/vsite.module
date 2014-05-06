@@ -321,7 +321,7 @@ function vsite_node_term_form_after_build($form, &$form_state) {
     // Also, it originally says "don't use trailing slash or it won't work",
     // but this type of input is automatically removed via javascript.
     // @see vsite.pathauto.js
-    $form['path']['alias']['#description'] = t('Optionally specify an alternative URL by which this content can be accessed. For example, type "about" when writing an about page.');
+    $form['path']['alias']['#description'] = t('');
   }
 
   // If this is a vsite...

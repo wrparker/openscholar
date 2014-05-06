@@ -1335,7 +1335,7 @@ float: left;
 }
 
 
-.page-node.node-type-biblio #citation-wrapper {
+.page-node.node-type-biblio #citation-wrapper.has-attached {
 width: 73%;
 float: right;
 vertical-align: top;

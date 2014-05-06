@@ -109,3 +109,14 @@
     }
   };
 })(jQuery);
+
+jQuery(document).ready(function() {
+	if (jQuery('#biblio-node').find('div.biblio-upload-wrapper').length) {
+		jQuery('#citation-wrapper').addClass('has-attached');
+	}
+});
+
+
+
+
+

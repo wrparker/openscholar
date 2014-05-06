@@ -524,7 +524,7 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
   $app_settings_path = (($purl = vsite_get_purl()) ? "$purl/cp/build/#overlay=$purl/cp/build/features/os_publications" : "/cp/build/#overlay=cp/build/features/os_publications");
   $change_settings_text = t('<a href="@href" target="_blank">@settings.</a>', array('@href' => $app_settings_path, '@settings' => 'App settings'));
 
-  $form['biblio_tabs'][7]['biblio_notes']['#description'] = t('Add an annotation for this work. Your notes are currently set to <strong>:privacy</strong>.  You can make this change in the publications section of your control panel\'s !link', array(
+  $form['biblio_tabs'][7]['biblio_notes']['#description'] = t('This note will appear after the abstract. Your notes are currently set to <strong>:privacy</strong>.  You can make this change in the publications section of your control panel\'s !link', array(
     ':privacy' => (variable_get('os_publications_note_in_teaser', FALSE) ? 'public' : 'private'),
     '!link' => $change_settings_text,
   ));
@@ -718,9 +718,9 @@ function os_publications_biblio_rearrange($form, $form_state) {
 
   // Change labels and descriptions in the path fieldset.
   $form['path']['#title'] = t('URL');
-  $form['path']['alias']['#title'] = t('URL');
+  $form['path']['alias']['#title'] = '';
   $form['path']['pathauto']['#title'] = t('Generate automatic URL');
-  $form['path']['pathauto']['#description'] = t('Uncheck this to create a custom URL');
+  $form['path']['pathauto']['#description'] = t('Uncheck to create a custom URL');
 
   return $form;
 }
