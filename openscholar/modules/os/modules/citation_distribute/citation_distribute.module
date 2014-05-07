@@ -383,10 +383,9 @@ function citation_distribute_form_biblio_node_form_alter(&$form, &$form_state, $
   foreach(_citation_distribute_plugins() as $plugin) {
     if (isset($plugin['title']) && _citation_distribute_is_service_configured($plugin)) {
       $name = $plugin['name'];
-
       $form['citation_distribute'][$name] = array(
         '#type' => 'checkbox',
-        '#title' => $plugin['title'],
+        '#title' => l($plugin['title'], $plugin['href'], array('attributes' => array('target' => '_blank'))),
         '#description' => (isset($plugin['description'])) ? $plugin['description'] : '',
         '#disabled' => FALSE,
         '#default_value' => _citation_distribute_checked($plugin, $form['nid']['#value']),
@@ -433,7 +432,7 @@ function citation_distribute_form_cp_app_settings_form_alter(&$form, &$state, $i
 }
 
 /**
- * Implements hook_flag_default_flags
+ * Implements hook_flag_default_flags().
  */
 function citation_distribute_flag_default_flags() {
   foreach (_citation_distribute_plugins() as $plugin) {
