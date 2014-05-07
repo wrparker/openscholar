@@ -20,7 +20,7 @@ default:
           'klark'
       # the node ID of the group
       vsite:
-        1
+        2
   paths:
     features: 'features'
   extensions:
