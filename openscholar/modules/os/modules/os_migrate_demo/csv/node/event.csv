@@ -4,3 +4,5 @@ event2,Lou Gehrig birthday,Lou's 90th birthday,2013-06-19 21:00:00;2013-06-19 21
 event3,2016 election day,The election day in 2016,2016-11-06 21:00:00;2016-11-06 21:00:00,personal2,,user2
 event4,Halley's Comet,Halley's Comet appearing,2062-05-29 21:00:00;2062-05-29 21:00:00,personal1,authorTerm1|authorTerm2|authorTerm3,user2
 event5,Testing event,Testing event,now;now,personal1,authorTerm2,user2
+event6,Techlab,Presentation about the Techlab project: http://cern.ch/techlab,tomorrow;tomorrow,project2,authorTerm2,user2
+event7,Development of a large SciFi tracker for LHCb,"Scintillating plastic fibres have been used for more than 30 years in tracking detectors. The advent of a new type of photodetector, the so-called Silicon Photomultiplier (SiPM), allows for new applications of the elegant and flexible SciFi technology.",next week;next week,project2,authorTerm2,user2
