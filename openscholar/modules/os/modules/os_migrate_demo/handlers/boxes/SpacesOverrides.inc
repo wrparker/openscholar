@@ -81,12 +81,16 @@ class SpacesOverridesDestination extends MigrateDestinationEntity {
     }
 
     // Get the delta.
-    $boxes_mappings = os_migrate_demo_boxes_mapping();
-    $delta = $boxes_mappings[$space_override->delta];
+    $deltas = os_migrate_demo_boxes_mapping();
+    $delta = $deltas[$space_override->delta];
 
     // Get the page machine name.
     $pages = os_migrate_demo_pages_mapping();
     $page = $pages[$space_override->page];
+
+    // Get the region.
+    $regions = os_migrate_demo_regions_mapping();
+    $region = $regions[$space_override->location];
 
     $options = array(
       'delta' => $delta,
@@ -108,7 +112,7 @@ class SpacesOverridesDestination extends MigrateDestinationEntity {
 
     // Set this in the correct place.
     $blocks = os_layout_get_multiple(array($page, 'os_public'), FALSE, TRUE);
-    $blocks['boxes-' . $box->delta]['region'] = $space_override->location;
+    $blocks['boxes-' . $box->delta]['region'] = $region;
 
     $blocks['boxes-' . $delta]['delta'] = $options['delta'];
     $blocks['boxes-' . $delta]['module'] = 'boxes';

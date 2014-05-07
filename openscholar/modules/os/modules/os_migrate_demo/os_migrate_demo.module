@@ -245,21 +245,21 @@ function os_migrate_demo_pages_mapping() {
  */
 function os_migrate_demo_regions_mapping() {
   return array(
-    '' => 'header_first',
-    '' => 'header_second',
-    '' => 'header_third',
-    '' => 'menu_bar',
-    '' => 'sidebar_first',
-    'content',
-    'sidebar_second',
-    'content_top',
-    'content_first',
-    'content_second',
-    'content_bottom',
-    'footer_first',
-    'footer',
-    'footer_third',
-    'footer_bottom',
+    'Header first' => 'header_first',
+    'Header middle' => 'header_second',
+    'Header last' => 'header_third',
+    'Menu bar' => 'menu_bar',
+    'Sidebar first' => 'sidebar_first',
+    'Content' => 'content',
+    'Sidebar second' => 'sidebar_second',
+    'Content top' => 'content_top',
+    'Content first' => 'content_first',
+    'Content second' => 'content_second',
+    'Content bottom' => 'content_bottom',
+    'Footer first' => 'footer_first',
+    'Footer' => 'footer',
+    'Footer third' => 'footer_third',
+    'Footer bottom' => 'footer_bottom',
   );
 }
 
