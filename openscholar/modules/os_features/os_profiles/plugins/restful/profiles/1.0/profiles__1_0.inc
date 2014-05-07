@@ -5,7 +5,7 @@ $plugin = array(
   'resource' => 'profiles',
   'name' => 'profiles__1_0',
   'entity_type' => 'node',
-  'bundle' => 'profile',
+  'bundle' => 'person',
   'description' => t('Expose the profile content type.'),
   'class' => 'OsProfilesResource',
 );
