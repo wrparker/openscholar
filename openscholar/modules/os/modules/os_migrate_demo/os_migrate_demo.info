@@ -41,3 +41,6 @@ files[] = handlers/taxonomy_terms/bilogy.inc
 files[] = handlers/taxonomy_terms/family.inc
 files[] = handlers/taxonomy_terms/math.inc
 files[] = handlers/taxonomy_terms/science.inc
+files[] = handlers/taxonomy_terms/country.inc
+files[] = handlers/taxonomy_terms/expiry.inc
+files[] = handlers/taxonomy_terms/appointed.inc
