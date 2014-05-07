@@ -37,7 +37,7 @@ files[] = handlers/user/users.inc
 
 ; Boxes.
 files[] = handlers/boxes/boxes.inc
-files[] = handlers/boxes/spacesOverrides.inc
+files[] = handlers/boxes/SpacesOverrides.inc
 
 ; Taxonomy terms.
 files[] = handlers/taxonomy_terms/authors.inc

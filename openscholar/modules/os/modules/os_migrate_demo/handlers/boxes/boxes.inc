@@ -44,7 +44,7 @@ class MigrateBoxes extends Migration {
       ),
     );
 
-    $destination_handler = new spacesOverridesDestination();
+    $destination_handler = new SpacesOverridesDestination();
     $this->map = new MigrateSQLMap($this->machineName, $key, $destination_handler->getKeySchema());
 
     // Create a MigrateSource object.

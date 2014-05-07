@@ -1,6 +1,6 @@
 <?php
 
-class spacesOverridesDestination extends MigrateDestinationEntity {
+class SpacesOverridesDestination extends MigrateDestinationEntity {
   static public function getKeySchema() {
     return array(
       'id' => array(
@@ -75,19 +75,27 @@ class spacesOverridesDestination extends MigrateDestinationEntity {
 
     // todo: load the options from somewhere.
     $migration = Migration::currentMigration();
-    $method = $this->camelCase($space_override->delta);
-    if (method_exists($migration, $method . 'Settings')) {
-      $space_override->options = call_user_func(array($migration, $method . 'Settings'));
+    $method = $this->convertToCamelCase($space_override->delta) . 'Settings';
+    if (method_exists($migration, $method)) {
+      $space_override->options = call_user_func(array($migration, $method));
     }
 
+    // Get the delta.
+    $boxes_mappings = os_migrate_demo_boxes_mapping();
+    $delta = $boxes_mappings[$space_override->delta];
+
+    // Get the page machine name.
+    $pages = os_migrate_demo_pages_mapping();
+    $page = $pages[$space_override->page];
+
     $options = array(
-      'delta' => $space_override->delta,
+      'delta' => $delta,
       'title' => $space_override->title,
       'description' => $space_override->descritpion,
     );
 
     // Create the box.
-    $box = boxes_box::factory($space_override->delta, $options);
+    $box = boxes_box::factory($delta, $options);
     $box->options = $space_override->options;
     $box->save();
 
@@ -99,26 +107,27 @@ class spacesOverridesDestination extends MigrateDestinationEntity {
     }
 
     // Set this in the correct place.
-    $blocks = os_layout_get_multiple(array($space_override->page, 'os_public'), false, true);
+    $blocks = os_layout_get_multiple(array($page, 'os_public'), FALSE, TRUE);
     $blocks['boxes-' . $box->delta]['region'] = $space_override->location;
 
-    $blocks['boxes-' . $space_override->delta]['delta'] = $options['delta'];
-    $blocks['boxes-' . $space_override->delta]['module'] = 'boxes';
+    $blocks['boxes-' . $delta]['delta'] = $options['delta'];
+    $blocks['boxes-' . $delta]['module'] = 'boxes';
 
     $vsite = spaces_load('og', $space_override->{OG_AUDIENCE_FIELD}['destid1']);
-    $vsite->controllers->context->set($space_override->page . ":reaction:block", array(
+    $vsite->controllers->context->set($page . ":reaction:block", array(
       'blocks' => $blocks,
     ));
 
     $this->complete($space_override, $row);
 
-    return $space_override->{OG_AUDIENCE_FIELD}['destid1'];
+    // todo: check is this OK.
+    return array($space_override->{OG_AUDIENCE_FIELD}['destid1']);
   }
 
   /**
    * Convert the delta into camel case.
    */
-  private function camelCase($delta) {
+  private function convertToCamelCase($delta) {
     $words = explode("_", $delta);
     foreach ($words as &$word) {
       $word = ucfirst($word);
