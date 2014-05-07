@@ -173,9 +173,6 @@ class os_taxonomy_fbt extends os_boxes_default {
   }
 
   function options_submit($form, $form_state) {
-    if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
-      os_taxonomy_invalidate_cache($vsite->id);
-    }
 
     // Only continues the user is selecting individual types.
     // For "All types" and "Determine for me", this value is overridden in
@@ -200,89 +197,72 @@ class os_taxonomy_fbt extends os_boxes_default {
     }
 
     $block = parent::render();
-    $cid = 'os_taxonomy:' . $vsite->id . ":" . $this->delta;
-    if ($cache = cache_get($cid)) {
-      $content = $cache->data;
-    }
-    else {
-      $do_cache = TRUE;
-      if (empty($this->options['vocabulary'])) {
-        $this->options['vocabulary'] = current(array_keys(self::get_all_vocabularies()));
+    if (empty($this->options['vocabulary'])) {
+      $this->options['vocabulary'] = current(array_keys(self::get_all_vocabularies()));
 
-        if(empty($this->options['vocabulary'])){
-          // There are no vocabularies defined in the VSite.
-          return $block;
-        }
+      if(empty($this->options['vocabulary'])){
+        // There are no vocabularies defined in the VSite.
+        return $block;
       }
-      ctools_include('layout', 'os');
+    }
+    ctools_include('layout', 'os');
 
-      if ($this->options['behavior'] == '--all--') {
+    if ($this->options['behavior'] == '--all--') {
+      $this->options['bundles'] = array();
+    }
+    else if (!empty($this->options['behavior']) && $this->options['behavior'] == 'contextual' && ($feature = os_get_active_feature())) {
+      if (isset($feature->info['features']['node'])) {
+        // Building a list of the bundles in two ways:
+        // 1. Selected bundles from a list
+        // 2. If the widget defined as a "Determine for me" set the bundles
+        //    which related to the app.
+        $paths = os_get_app_path();
+        $menu = menu_get_item();
+
         $this->options['bundles'] = array();
-      }
-      else if (!empty($this->options['behavior']) && $this->options['behavior'] == 'contextual' && ($feature = os_get_active_feature())) {
-        if (isset($feature->info['features']['node'])) {
-          // Building a list of the bundles in two ways:
-          // 1. Selected bundles from a list
-          // 2. If the widget defined as a "Determine for me" set the bundles
-          //    which related to the app.
-          $paths = os_get_app_path();
-          $menu = menu_get_item();
-
-          $this->options['bundles'] = array();
-          if ($menu['map'][0] == 'node') {
-            $this->options['bundles'] = array($menu['map'][1]->type);
-          }
-          else {
-            foreach ($paths as $bundle => $path) {
-              if ($path == $menu['original_map'][0]) {
-                $this->options['bundles'][] = $bundle;
-              }
+        if ($menu['map'][0] == 'node') {
+          $this->options['bundles'] = array($menu['map'][1]->type);
+        }
+        else {
+          foreach ($paths as $bundle => $path) {
+            if ($path == $menu['original_map'][0]) {
+              $this->options['bundles'][] = $bundle;
             }
           }
         }
-      }
-      elseif ($this->options['behavior'] != 'select') {
-        // Avoid caching in case behavior is 'contextual' but we don't have
-        // context.
-        $do_cache = FALSE;
-      }
-      else if ($this->options['behavior'] == 'select') {
-        // For specified node type behavior but non-string value, default to all
-        // and try to grab any first value of an array.
-        $bundles = $this->options['bundles'];
-        $this->options['bundles'] = FALSE;
-        if (is_array($bundles)) {
-          foreach ($bundles as $value) {
-            if (!empty($value)) {
-              $this->options['bundles'] = array($value);
-              break;
-            }
-          }
-        }
-        else if (is_string($bundles)) {
-          $this->options['bundles'] = array($bundles);
-        }
-      }
-
-      if (is_array($this->options['vocabulary'])) {
-        $t = array_filter($this->options['vocabulary']);
-        $this->options['vocabulary'] = current($t);
-      }
-
-      if ($this->options['as_nav']) {
-        $this->options['additional_classes'] = 'navigation';
-      }
-
-      $content = theme('os_taxonomy_vocabulary_item_list', array(
-        'vid' => $this->options['vocabulary'],
-        'options' => $this->options,
-      ));
-
-      // Set the cache.
-      if ($do_cache) {
-        cache_set($cid, $content);
       }
     }
+    else if ($this->options['behavior'] == 'select') {
+      // For specified node type behavior but non-string value, default to all
+      // and try to grab any first value of an array.
+      $bundles = $this->options['bundles'];
+      $this->options['bundles'] = FALSE;
+      if (is_array($bundles)) {
+        foreach ($bundles as $value) {
+          if (!empty($value)) {
+            $this->options['bundles'] = array($value);
+            break;
+          }
+        }
+      }
+      else if (is_string($bundles)) {
+        $this->options['bundles'] = array($bundles);
+      }
+    }
+
+    if (is_array($this->options['vocabulary'])) {
+      $t = array_filter($this->options['vocabulary']);
+      $this->options['vocabulary'] = current($t);
+    }
+
+    if ($this->options['as_nav']) {
+      $this->options['additional_classes'] = 'navigation';
+    }
+
+    $content = theme('os_taxonomy_vocabulary_item_list', array(
+      'vid' => $this->options['vocabulary'],
+      'options' => $this->options,
+    ));
 
     $block['content'] = $content;
 
