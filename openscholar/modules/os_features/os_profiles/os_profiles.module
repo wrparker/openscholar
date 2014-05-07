@@ -44,12 +44,12 @@ function os_profiles_os_app_info() {
  * Implements hook_init().
  */
 function os_profiles_init() {
-  if (variable_get('os_profiles_no_restws', FALSE) || !module_exists('restws')) {
-    // No RestWS.
+  if (variable_get('os_profiles_no_restws', FALSE) || !module_exists('restful')) {
+    // RESTful module is disabled.
     return;
   }
 
-  if (!($uuid = variable_get('os_profiles_nodes_uuid'))) {
+  if (!$uuid = variable_get('os_profiles_nodes_uuid')) {
     // Return if no UUID is set that is, no profile nodes need to be updated.
     return;
   }
