@@ -1,6 +1,25 @@
 <?php
 
 /**
+ * Implements hook_entity_info().
+ */
+function os_migrate_demo_entity_info() {
+  $info = array();
+
+  $info['spaces_overrides'] = array(
+    'label' => t('Spaces overrides'),
+    'base table' => 'spaces_overrides',
+    'entity keys' => array(
+      'id' => 'id',
+      'bundle' => 'type',
+      'label' => 'object_id',
+    ),
+  );
+
+  return $info;
+}
+
+/**
  * Enable the harvard courses.
  */
 function os_migrate_demo_define_harvard_courses() {
@@ -168,6 +187,7 @@ function os_migrate_demo_migrate_api() {
     'OsMigrateFamilyTaxonomyTerm',
     'OsMigrateDepartmentNode',
     'OsMigratePageNode',
+    'MigrateBoxes',
   );
 
   foreach ($classes as $class_name) {
@@ -179,6 +199,68 @@ function os_migrate_demo_migrate_api() {
     'migrations' => $migrations,
   );
   return $api;
+}
+
+/**
+ * Return the boxes mapping.
+ */
+function os_migrate_demo_boxes_mapping() {
+  return array(
+    'Filter by term' => 'os_taxonomy_fbt',
+    'Simple view list' => 'os_sv_list_box',
+    'Search' => 'os_search_db-site-search',
+    'Active book TOC' => 'os_boxes_booktoc',
+    'Bio' => 'os_boxes_bio',
+    'RSS feed' => 'os_boxes_rss',
+    'Image gallery' => 'os_boxes_slideshow',
+    'Faceted taxonomy' => 'os_boxes_facetapi_vocabulary',
+    'Add this' => 'os_boxes_addthis',
+  );
+}
+
+/**
+ * Return the page mappings.
+ */
+function os_migrate_demo_pages_mapping() {
+  return array(
+    'News' => 'news_news',
+    'Blog' => 'blog_blog',
+    'Bio' => 'biocv_biocv',
+    'Link' => 'links_links',
+    'Reader' => 'reader_reader',
+    'Calendar' => 'events_events',
+    'Classes' => 'classes_classes',
+    'People' => 'profiles_profiles',
+    'Data' => 'dataverse_dataverse',
+    'Galleries' => 'gallery_gallery',
+    'Software' => 'software_software',
+    'Documents' => 'booklets_booklets',
+    'Publications' => 'publications_publications',
+    'Presentations' => 'presentations_presentations',
+  );
+}
+
+/**
+ * Regions mapping.
+ */
+function os_migrate_demo_regions_mapping() {
+  return array(
+    'Header first' => 'header_first',
+    'Header middle' => 'header_second',
+    'Header last' => 'header_third',
+    'Menu bar' => 'menu_bar',
+    'Sidebar first' => 'sidebar_first',
+    'Content' => 'content',
+    'Sidebar second' => 'sidebar_second',
+    'Content top' => 'content_top',
+    'Content first' => 'content_first',
+    'Content second' => 'content_second',
+    'Content bottom' => 'content_bottom',
+    'Footer first' => 'footer_first',
+    'Footer' => 'footer',
+    'Footer third' => 'footer_third',
+    'Footer bottom' => 'footer_bottom',
+  );
 }
 
 /**
@@ -201,36 +283,12 @@ function os_migrate_demo_migrate_api() {
 function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar_second', $delta_suffix = '') {
   ctools_include('layout', 'os');
   // Mapping for all the pages.
-  $page_mapping = array(
-    'News' => 'news_news',
-    'Blog' => 'blog_blog',
-    'Bio' => 'biocv_biocv',
-    'Link' => 'links_links',
-    'Reader' => 'reader_reader',
-    'Calendar' => 'events_events',
-    'Classes' => 'classes_classes',
-    'People' => 'profiles_profiles',
-    'Data' => 'dataverse_dataverse',
-    'Galleries' => 'gallery_gallery',
-    'Software' => 'software_software',
-    'Documents' => 'booklets_booklets',
-    'Publications' => 'publications_publications',
-    'Presentations' => 'presentations_presentations',
-  );
+  $page_mapping = os_migrate_demo_pages_mapping();
 
   // Mapping widgets we want to tests. The array build in the format of:
   //  The key hold the mapped name for the widget
   //  If this is a block, the value will be MODULE-BLOCK_DELTA-BLOCK.
-  $boxes_mapping = array(
-    'Filter by term' => 'os_taxonomy_fbt',
-    'Simple view list' => 'os_sv_list_box',
-    'Search' => 'os_search_db-site-search',
-    'Active book TOC' => 'os_boxes_booktoc',
-    'Bio' => 'os_boxes_bio',
-    'RSS feed' => 'os_boxes_rss',
-    'Image gallery' => 'os_boxes_slideshow',
-    'Faceted taxonomy' => 'os_boxes_facetapi_vocabulary',
-  );
+  $boxes_mapping = os_migrate_demo_boxes_mapping();
 
   $contexts = array(
     $page_mapping[$page],
