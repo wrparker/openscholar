@@ -14,6 +14,7 @@ class OsMigratePageNode extends OsMigrate {
     array(OG_AUDIENCE_FIELD, 'Site'),
     array('files', 'Files'),
     array('parent', 'Parent'),
+    array('weight', 'Weight'),
     array('uid', 'UID'),
   );
 
@@ -66,6 +67,7 @@ class OsMigratePageNode extends OsMigrate {
     $entity->book['menu_name'] = $parent->book['menu_name'];
     $entity->book['p2'] = $entity->book['p1'];
     $entity->book['p1'] = $entity->book['plid'];
+    $entity->book['weight'] = $row->weight;
 
     entity_save('node', $entity);
   }
