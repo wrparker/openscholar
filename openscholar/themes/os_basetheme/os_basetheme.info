@@ -31,6 +31,11 @@
   regions[branding_header]   = branding_header
   regions[branding_footer]   = branding_footer
   
+ ;----------// A place to house the responsive menu where other content can't be placed
+  
+  regions[responsive_menu]   = responsive_menu
+ 
+  
 ;----------// Gpanel Regions
 
   ; If you are using Gpanels copy and paste the region definitions here. You will find them

@@ -143,8 +143,9 @@ function os_blog_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'media',
+      'module' => 'media_draggable',
       'settings' => array(
+        'allow_replace' => 0,
         'allowed_schemes' => array(
           'embed' => 'embed',
           'oembed' => 'oembed',
@@ -153,6 +154,7 @@ function os_blog_field_default_field_instances() {
         'allowed_types' => array(
           'audio' => 'audio',
           'default' => 'default',
+          'document' => 'document',
           'executable' => 'executable',
           'html' => 'html',
           'image' => 'image',
@@ -164,9 +166,14 @@ function os_blog_field_default_field_instances() {
           'media_internet' => 'media_internet',
           'upload' => 'upload',
         ),
+        'droppable_area_text' => 'Drop files here to upload',
+        'multiupload' => 0,
         'progress_indicator' => 'throbber',
+        'standard_upload' => 1,
+        'upload_button_text' => 'Upload',
+        'upload_event' => 'auto',
       ),
-      'type' => 'media_generic',
+      'type' => 'media_draggable_file',
       'weight' => 33,
     ),
   );

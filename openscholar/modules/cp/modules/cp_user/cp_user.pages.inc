@@ -15,48 +15,54 @@ function cp_user_get_member_rows($gid) {
 
   // Defines end-user text for these values.
   $default_status = t('Active');
-  $owner_role = t('Manager');
-  $role_edit_text = t('edit');
+  $owner_role = '<strong>' . t('Site owner') . '</strong>';
   $status_edit_text = t('remove');
+  $change_site_owner_text = t('Change owner');
 
-  // Loads information for each member of the vsite.
-  $member_uids = cp_user_get_member_uids($gid);
-  foreach ($member_uids as $uid) {
+  // Load the members accounts.
+  $accounts = user_load_multiple(cp_user_get_member_uids($gid));
 
-    // Loads the user object in order to get first and last names if available.
-    $user = user_load($uid);
+  foreach ($accounts as $account) {
 
     // Loads the user's full name-- first and last name.
-    $name = _cp_user_get_full_name($user);
+    $name = _cp_user_get_full_name($account);
 
     // Checks to see if the user is the admin of this group.
     $vsite = spaces_get_space();
     // Checks if the current user is this vsite's author (owner).
-    $is_owner = (bool) ($vsite->group->uid == $uid);
+    $is_owner = (bool) ($vsite->group->uid == $account->uid);
 
     // If the user is the owner, return a special row with no edit links.
     if ($is_owner) {
+      $role_edit_text = '';
       $role = $owner_role;
-      $role_edit_link = '';
       $status_edit_link = '';
+
+      $options = array('attributes' => array('class' => array('cp-user-change-site-owner')));
+      $change_ownership = l($change_site_owner_text, "cp/users/change_site_owner", $options);
+
+      $options = array('attributes' => array('class' => array('cp-user-float-right')));
+      $role_edit_link = l($role_edit_text, "cp/users/edit_membership/{$account->uid}", $options);
     }
 
     // Otherwise, checks the current user's OG roles.
     // The member's role could be one of: Vsite admin, Content Editor, or Member.
     else {
+      $role_edit_text = t('edit');
+      $change_ownership = '';
       $human_name = TRUE;
-      $role = _cp_user_get_role($uid, $vsite->group->nid, $human_name);
+      $role = _cp_user_get_role($account->uid, $vsite->group->nid, $human_name);
       $options = array('attributes' => array('class' => array('cp-user-float-right')));
-      $role_edit_link = l($role_edit_text, "cp/users/edit_membership/{$uid}", $options);
-      $status_edit_link = l($status_edit_text, "cp/users/delete_membership/{$uid}", $options);
+      $role_edit_link = l($role_edit_text, "cp/users/edit_membership/{$account->uid}", $options);
+      $status_edit_link = l($status_edit_text, "cp/users/delete_membership/{$account->uid}", $options);
     }
 
     // Prepare the row to be used by theme_table().
     // @see cp_user_user_management_page()
     $row = array(
       'name' => $name,
-      'username' => $user->name,
-      'role' => $role . $role_edit_link,
+      'username' => $account->name,
+      'role' => $role . $role_edit_link . $change_ownership,
       'status' => $default_status . $status_edit_link,
     );
 
@@ -76,17 +82,24 @@ function cp_user_get_member_rows($gid) {
  *   The list of members' User IDs in the specified vsite.
  */
 function cp_user_get_member_uids($gid) {
-  $query = db_select('og_membership', 'ogm');
-  $query->condition('ogm.gid', $gid);
-  $query->condition('entity_type', 'user');
-  $query->fields('ogm', array('etid'));
-  $results = $query->execute()->fetchAll();
+  $query = new EntityFieldQuery();
+  $results = $query
+    ->entityCondition('entity_type', 'og_membership')
+    ->propertyCondition('gid', $gid)
+    ->propertyCondition('entity_type', 'user')
+    ->execute();
+
+  if (empty($results['og_membership'])) {
+    // No members.
+    return array();
+  }
+
+  $og_memberships = og_membership_load_multiple(array_keys($results['og_membership']));
 
   $member_uids = array();
-  foreach ($results as $record => $values) {
-    if (isset($values->etid) && $values->etid != 0) {
-      $member_uids[] = $values->etid;
-    }
+
+  foreach ($og_memberships as $og_membership) {
+    $member_uids[$og_membership->etid] = $og_membership->etid;
   }
 
   return $member_uids;
@@ -199,6 +212,81 @@ function cp_user_remove_membership_confirm_submit($form, &$form_state) {
 }
 
 /**
+ * Builds the "Change site owner" form.
+ */
+function cp_user_change_site_owner_form($form_state) {
+  $vsite = vsite_get_vsite();
+  $site_name = $vsite->group->title;
+
+  // Form sets.
+  $form['gid'] = array('#type' => 'value', '#value' => $vsite->group->nid);
+  $form['bundle'] = array('#type' => 'value', '#value' => $vsite->group->type);
+  $form['site_name'] = array('#type' => 'value', '#value' => $site_name);
+
+  $form['title'] = array(
+    '#type' => 'markup',
+    '#markup' => '<h2>' . t('Make an existing member the site owner') . '</h2>',
+  );
+
+  // Get all VSite members UIDs.
+  $members_uids = cp_user_get_member_uids($vsite->group->nid);
+  // Remove the VSite owner from the list.
+  unset($members_uids[$vsite->group->uid]);
+
+  $options = array();
+  if (!empty($members_uids)) {
+    $accounts = user_load_multiple($members_uids);
+
+    foreach ($accounts as $account) {
+      $options[$account->uid] = $account->name;
+    }
+  }
+
+  $form['new_site_owner'] = array(
+    '#type' => 'select',
+    '#title' => t('User name'),
+    '#required' => TRUE,
+    '#description' => t('Select the site member.'),
+    '#options' => $options,
+  );
+
+
+  $params = array(
+    '@site' => $site_name,
+  );
+
+  // Builds and returns a confirmation form.
+  return confirm_form($form, t('Change the owner of the site <em>@site</em>', $params), 'cp/users', '', t('Save'), t('Cancel'));
+}
+
+/**
+ * Submit callback; Changes owner of the site after confirmation.
+ */
+function cp_user_change_site_owner_form_submit($form, &$form_state) {
+  // Accesses values from the form.
+  $bundle = $form_state['values']['bundle'];
+  $gid = $form_state['values']['gid'];
+
+  $node = node_load($gid);
+  $account = user_load($form_state['values']['new_site_owner']);
+
+  // Make sure previous owner remains "vsite admin".
+  _cp_user_set_role($node->uid, $gid, OS_USER_ROLE_ADMIN, $bundle);
+
+  // Set site owner (VSite manager).
+  $node->uid = $account->uid;
+  node_save($node);
+
+  // Give the new owner the "vsite admin" role and revoke other roles.
+  _cp_user_set_role($form_state['values']['new_site_owner'], $gid, OS_USER_ROLE_ADMIN, $bundle);
+
+  // Set the message and redirect back to the cp/users page
+  $site_name = $form_state['values']['site_name'];
+  drupal_set_message(t('The user %user is now the owner of the site %site.', array('%user' => $account->name, '%site' => $site_name)));
+  drupal_goto('cp/users');
+}
+
+/**
  * Form builder; provides the options for the "Edit membership" form.
  */
 function cp_user_edit_membership_form($form_state, $user_load) {
@@ -206,16 +294,16 @@ function cp_user_edit_membership_form($form_state, $user_load) {
   if (!isset($user_load['build_info']['args'][0]->uid)) {
     return;
   }
-  $user = $user_load['build_info']['args'][0];
+  $group_user = $user_load['build_info']['args'][0];
 
   // Prepares replacement value text for the modal form.
-  $name = _cp_user_get_full_name($user);
+  $name = _cp_user_get_full_name($group_user);
   $site = $space->group->title;
 
   // Form sets.
   $form['gid'] = array('#type' => 'value', '#value' => $space->group->nid);
   $form['bundle'] = array('#type' => 'value', '#value' => $space->group->type);
-  $form['uid'] = array('#type' => 'value', '#value' => $user->uid);
+  $form['uid'] = array('#type' => 'value', '#value' => $group_user->uid);
   $form['user_name'] = array('#type' => 'value', '#value' => $name);
   $form['site_name'] = array('#type' => 'value', '#value' => $site);
   $form['title'] = array(
@@ -232,7 +320,19 @@ function cp_user_edit_membership_form($form_state, $user_load) {
     '#type' => 'radios',
     // Each option is themed and includes a description.
     '#options' => _cp_user_list_roles('options', $space->group->type, $space->group->nid),
-    '#default_value' => _cp_user_get_role($user->uid, $space->group->nid),
+    '#default_value' => _cp_user_get_role($group_user->uid, $space->group->nid),
+  );
+
+  // Show the option to change site owner only for the current owner or
+  // a support team member.
+  global $user;
+
+  $form['edit_membership']['group_manager'] = array(
+    '#type' => 'checkbox',
+    // Theme the checkbox label to look like the radio options.
+    '#title' => _cp_user_role_option(t('Set as site manager'), t('Make <em>@name</em> the site owner.', array('@name' => $name))),
+    '#default_value' => $space->group->uid == $group_user->uid,
+    '#access' => in_array('support team', $user->roles) || $space->group->uid == $user->uid,
   );
 
   // Builds and returns a confirmation form.
@@ -251,10 +351,26 @@ function cp_user_edit_membership_form_submit($form, &$form_state) {
   // Accesses values from the form.
   $bundle = $form_state['values']['bundle'];
   $new_role = $form_state['values']['edit_role'];
+  $group_manager = $form_state['values']['group_manager'];
   $gid = $form_state['values']['gid'];
   $uid = $form_state['values']['uid'];
+
   // Grants the new role and revokes other roles.
   _cp_user_set_role($uid, $gid, $new_role, $bundle);
+
+  if ($group_manager) {
+    $node = node_load($gid);
+
+    // Make sure previous owner remains "vsite admin".
+    _cp_user_set_role($node->uid, $gid, OS_USER_ROLE_ADMIN, $bundle);
+
+    // Set VSite manager.
+    $node->uid = $uid;
+    node_save($node);
+
+    // Give the new manager the "vsite admin" role and revoke other roles.
+    _cp_user_set_role($uid, $gid, OS_USER_ROLE_ADMIN, $bundle);
+  }
 
   // Set the message and redirect back to the cp/users page
   $user = $form_state['values']['user_name'];

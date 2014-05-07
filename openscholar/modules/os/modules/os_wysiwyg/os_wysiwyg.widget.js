@@ -53,10 +53,17 @@
         parent = editor.parents('.form-item'),
         iframe = $('iframe', editor);
 
-      settings[this.id] = {
-        height: iframe.height()
-      };
-      localStorage.osWysiwygExpandableTextarea = JSON.stringify(settings);
+      if (!editor.hasClass('os-wysiwyg-collapsed')) {
+        settings[this.id] = {
+          height: iframe.height()
+        };
+        localStorage.osWysiwygExpandableTextarea = JSON.stringify(settings);
+      }
+
+      // prevents listboxes from being out of place
+      if (this.id == target_id) {
+        return;
+      }
 
       editor.css('height', '')
         .addClass('os-wysiwyg-collapsed');

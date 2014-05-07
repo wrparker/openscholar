@@ -31,12 +31,15 @@ function os_activity_default_message_type() {
     "argument_keys" : [],
     "argument" : [],
     "category" : "message_type",
-    "data" : { "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" } },
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
     "language" : "",
     "arguments" : null,
     "message_text" : { "und" : [
         {
-          "value" : "\\u003Ca href=\\u0022@{message:field-group:url}\\u0022\\u003E@{message:field-group:title}\\u003C\\/a\\u003E created @{message:field-node-reference:content-type:name}: \\u003Ca href=\\u0027@{message:field-node-reference:url}\\u0027\\u003E@{message:field-node-reference:title}\\u003C\\/a\\u003E",
+          "value" : "\\u003Ca href=\\u0022@{message:field-group:url}\\u0022\\u003E@{message:field-group:title}\\u003C\\/a\\u003E created @{message:field-node-reference:content-type:name}: \\u003Ca href=\\u0027@{message:field-node-reference:url}\\u0027\\u003E!title\\u003C\\/a\\u003E",
           "format" : "full_html"
         }
       ]
@@ -49,12 +52,15 @@ function os_activity_default_message_type() {
     "argument_keys" : [],
     "argument" : [],
     "category" : "message_type",
-    "data" : { "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" } },
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
     "language" : "",
     "arguments" : null,
     "message_text" : { "und" : [
         {
-          "value" : "\\u003Ca href=\\u0022@{message:field-group:url}\\u0022\\u003E@{message:field-group:title}\\u003C\\/a\\u003E edited @{message:field-node-reference:content-type:name}: \\u003Ca href=\\u0027@{message:field-node-reference:url}\\u0027\\u003E@{message:field-node-reference:title}\\u003C\\/a\\u003E",
+          "value" : "\\u003Ca href=\\u0022@{message:field-group:url}\\u0022\\u003E@{message:field-group:title}\\u003C\\/a\\u003E edited @{message:field-node-reference:content-type:name}: \\u003Ca href=\\u0027@{message:field-node-reference:url}\\u0027\\u003E!title\\u003C\\/a\\u003E",
           "format" : "full_html"
         }
       ]

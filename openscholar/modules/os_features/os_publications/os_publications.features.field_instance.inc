@@ -82,7 +82,7 @@ function os_publications_field_default_field_instances() {
     'bundle' => 'biblio',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'You may use these fields to add extra information about your publication that may not be common to publications if this type. For example, key "Publication Global ID" and value "http://hdl.handle.net/1902.1".',
+    'description' => 'You may use these fields to add extra information about your publication that may not be common to publications if this type. For example, key "Publication Global ID" and value "http://hdl.handle.net/1902.1". These fields will be displayed at the bottom of the detail page of this publication.',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -142,7 +142,7 @@ function os_publications_field_default_field_instances() {
   $field_instances['node-biblio-field_biblio_image'] = array(
     'bundle' => 'biblio',
     'deleted' => 0,
-    'description' => 'Image should not be less than 150px wide.',
+    'description' => 'For example, book cover, journal cover.',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -205,13 +205,28 @@ function os_publications_field_default_field_instances() {
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'module' => 'image',
+      'active' => 1,
+      'module' => 'dragndrop_upload_image',
       'settings' => array(
+        'allow_replace' => 0,
+        'allowed_schemes' => array(
+          0 => 'public',
+          1 => 'private',
+        ),
+        'allowed_types' => array(
+          0 => 'image',
+        ),
+        'browser_plugins' => array(),
+        'droppable_area_text' => 'Drag your files here',
+        'multiupload' => 0,
         'preview_image_style' => 'thumbnail',
         'progress_indicator' => 'throbber',
+        'standard_upload' => 1,
+        'upload_button_text' => 'Upload',
+        'upload_event' => 'auto',
       ),
-      'type' => 'image_image',
-      'weight' => 31,
+      'type' => 'dragndrop_upload_image',
+      'weight' => 60,
     ),
   );
 
@@ -314,7 +329,7 @@ function os_publications_field_default_field_instances() {
           'media_internet' => 'media_internet',
           'upload' => 'upload',
         ),
-        'droppable_area_text' => 'Drop files here to upload',
+        'droppable_area_text' => 'Drag your files here',
         'multiupload' => 0,
         'progress_indicator' => 'throbber',
         'standard_upload' => 1,

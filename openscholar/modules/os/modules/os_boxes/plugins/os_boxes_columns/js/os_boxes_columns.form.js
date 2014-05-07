@@ -32,40 +32,6 @@
   var textContent;
 
   /**
-   * Filters the list of layouts by the number of columns they contain
-   */
-  function filterLayouts(e) {
-    if (e.currentTarget.value != "0") {
-      $('#edit-layout .form-type-radio').hide().find('input').each(function (){
-        var layout_count = this.value.split('-')[0];
-        switch (layout_count) {
-          case 'two':
-            layout_count = 2;
-            break;
-          case 'three':
-            layout_count = 3;
-            break;
-          case 'four':
-            layout_count = 4;
-            break;
-          case 'five':
-            layout_count = 5;
-            break;
-          default:
-            layout_count = 0;
-        }
-
-        if (layout_count == e.currentTarget.value) {
-          $(this).parents('.form-type-radio').show();
-        }
-      });
-    }
-    else {
-      $('#edit-layout .form-type-radio').show();
-    }
-  }
-
-  /**
    * Changes out the classes
    */
   function changeLayout(new_layout) {
@@ -140,7 +106,7 @@
       $('.cp-layout-widget', this).each(function () {
         ids.push(this.id);
       })
-      $('.region_storage[data-region_id="'+rid+'"').val(ids.join('|'));
+      $('.region_storage[data-region_id="'+rid+'"]').val(ids.join('|'));
     })
   }
 
@@ -149,7 +115,6 @@
       textContent = typeof document.body.textContent !== 'undefined';
       changeLayout(layout = $('input[name="layout"]:checked').val());
 
-      $('input[name="num_cols"]:radio').change(filterLayouts);
       $('input[name="layout"]:radio').change(function(e) {
         changeLayout(e.currentTarget.value);
       });

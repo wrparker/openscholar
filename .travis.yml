@@ -8,10 +8,14 @@ mysql:
   username: root
   encoding: utf8
 
+env:
+  - TEST_SUITE=first
+  - TEST_SUITE=last
+
+
 before_script:
-  # Install Drush
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  - composer global require drush/drush:6.*
+  - composer global require drush/drush:6.*@dev
   # Install apache
   - sudo apt-get update
   - sudo apt-get install apache2
@@ -59,6 +63,9 @@ before_script:
   - drush en os_search_solr -y
   - drush solr-mark-all
   - drush solr-index
+  # Trying to execute the internal solr commit
+  - sleep 10
+  - wget http://localhost:8983/solr/update?commit=true
 
   # Copy Behat configuration file.
   - cd profiles/openscholar/behat
@@ -68,7 +75,7 @@ before_script:
   - sudo cat /var/log/apache2/error.log
 
 script:
-  - ./bin/behat --tags=~wip
+  - ./bin/behat --tags=$TEST_SUITE
 
 after_script:
     - sudo cat /var/log/apache2/error.log

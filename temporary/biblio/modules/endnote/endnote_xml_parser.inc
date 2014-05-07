@@ -54,7 +54,7 @@ class EndNoteXMLParser {
 
       while ($data = fread($fp, 2048)) {
         // $data = fread($fp, 2048);
-        set_time_limit(300);
+        // set_time_limit(300);
         if (!xml_parse($this->parser, $data, feof($fp))) {
           drupal_set_message(sprintf("XML error: %s at line %d",
           xml_error_string(xml_get_error_code($this->parser)),

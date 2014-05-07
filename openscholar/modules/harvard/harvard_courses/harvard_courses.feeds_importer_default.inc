@@ -201,7 +201,7 @@ function harvard_courses_feeds_importer_default() {
           ),
         ),
         'update_existing' => '2',
-        'input_format' => 'plain_text',
+        'input_format' => 'filtered_html',
         'skip_hash_check' => FALSE,
         'authorize' => TRUE,
       ),

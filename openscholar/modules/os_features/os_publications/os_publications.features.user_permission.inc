@@ -123,6 +123,7 @@ function os_publications_user_default_permissions() {
     'name' => 'show export links',
     'roles' => array(
       'administrator' => 'administrator',
+      'anonymous user' => 'anonymous user',
       'authenticated user' => 'authenticated user',
       'manager' => 'manager',
       'vsite admin' => 'vsite admin',

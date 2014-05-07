@@ -29,6 +29,7 @@ function os_blog_context_default_contexts() {
       'values' => array(
         'blog' => 'blog',
         'blog/*' => 'blog/*',
+        'browse/blogs' => 'browse/blogs',
       ),
     ),
     'views' => array(

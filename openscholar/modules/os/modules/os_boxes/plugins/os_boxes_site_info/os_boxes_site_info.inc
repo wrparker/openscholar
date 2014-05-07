@@ -110,9 +110,10 @@ class os_boxes_site_info extends os_boxes_default {
     }
 
     $output = '';
+    $tags = array('br', 'a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd');
 
     $output = '<h1>'.l($this->options['site_title'], '<front>').'</h1>
-    '.(!empty($this->options['descrip'])?'<h2>'.filter_xss($this->options['descrip']).'</h2>':'').'
+    '.(!empty($this->options['descrip'])?'<h2>'.filter_xss($this->options['descrip'], $tags).'</h2>':'').'
     <p>'.((!empty($this->options['address1']) || !empty($this->options['address2']))?
         filter_xss($this->options['address1']).'<br>'.filter_xss($this->options['address2']):'').'
     '.((user_is_logged_in() || $anon_contact)?l('(email)', 'contact_owner'):'').'</p>';

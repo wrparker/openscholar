@@ -287,6 +287,10 @@ function _os_breadcrumbs_build_taxonomy_breadcrumb($path) {
   $tid = array_pop($terms_array);
   // Load all the parent term.
   $term_hierarchy = taxonomy_get_parents_all($tid);
+  if (empty($term_hierarchy)) {
+    return $links;
+  };
+
   // Load the vid.
   $vid = $term_hierarchy[0]->vid;
   

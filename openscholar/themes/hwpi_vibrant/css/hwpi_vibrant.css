@@ -345,6 +345,10 @@ h1.node-title,
   margin-bottom: 18px;
 }
 
+.block-boxes-os_boxes_columns .boxes-box-content h2 {
+	margin-bottom: 0;
+}
+
 h1.node-title {
   font-weight: bold;
 }
@@ -455,8 +459,7 @@ ul.primary {
   box-sizing: border-box;
 }
 
-.sidebar .block.block-boxes-os_boxes_rand_widget,
-.front #content-column .block.block-boxes-os_boxes_rand_widget,
+
 .front #content-column .block.block-boxes-os_boxes_columns {
   border: none;
   background: none;
@@ -468,8 +471,7 @@ ul.primary {
   box-sizing: none;
 }
 
-.sidebar .block.block-boxes-os_boxes_rand_widget .block-content:first-child,
-.front #content-column .block.block-boxes-os_boxes_rand_widget .block-content:first-child,
+
 .front #content-column .block.block-boxes-os_boxes_columns .block-content:first-child {
 	border-top:none;
 	padding:0;
@@ -492,16 +494,22 @@ ul.primary {
   font-weight: bold;
 }
 
+
+.not-front #content-column #content-panels h2.block-title {
+   color: #000;
+  font-size: 16px;
+  line-height: 20px;
+
+  text-transform: capitalize;
+  font-weight: bold;
+}
+
+
 .front #content-panels .block-content,
 .sidebar .block-content {
   padding: 15px;
   border-top: 1px solid #f2f2f2;
 }
-
-.block-boxes-os_boxes_rand_widget h2.block-title {
-	margin-bottom:0;
-}
-
 
 
 .front #content-panels .region-content-top .block-boxes-os_slideshow_box .block-content {

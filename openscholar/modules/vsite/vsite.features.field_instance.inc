@@ -84,7 +84,7 @@ function vsite_field_default_field_instances() {
 
   // Exported field_instance: 'node-department-field_meta_description'
   $field_instances['node-department-field_meta_description'] = array(
-    'bundle' => 'page',
+    'bundle' => 'department',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => 'Best if 150 characters or less. Used as a meta description tag for your site\'s home page in search results.',
@@ -128,7 +128,7 @@ function vsite_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_meta_description',
-    'label' => 'Site description',
+    'label' => 'Meta description',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -730,7 +730,7 @@ function vsite_field_default_field_instances() {
 
   // Exported field_instance: 'node-personal-field_meta_description'
   $field_instances['node-personal-field_meta_description'] = array(
-    'bundle' => 'page',
+    'bundle' => 'personal',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => 'Best if 150 characters or less. Used as a meta description tag for your site\'s home page in search results.',
@@ -774,7 +774,7 @@ function vsite_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_meta_description',
-    'label' => 'Site description',
+    'label' => 'Meta description',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -1376,7 +1376,7 @@ function vsite_field_default_field_instances() {
 
   // Exported field_instance: 'node-project-field_meta_description'
   $field_instances['node-project-field_meta_description'] = array(
-    'bundle' => 'page',
+    'bundle' => 'project',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => 'Best if 150 characters or less. Used as a meta description tag for your site\'s home page in search results.',
@@ -1420,7 +1420,7 @@ function vsite_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_meta_description',
-    'label' => 'Site description',
+    'label' => 'Meta description',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -1938,6 +1938,7 @@ function vsite_field_default_field_instances() {
   t('Domain(s) entered here will be available to your subsites.');
   t('Group');
   t('Group Homepage Path');
+  t('Meta description');
   t('Organization');
   t('Site Address');
   t('Site Description');

@@ -34,6 +34,7 @@ function os_faq_context_default_contexts() {
       'values' => array(
         'faq' => 'faq',
         'faq/*' => 'faq/*',
+        'browse/faq' => 'browse/faq',
       ),
     ),
     'views' => array(

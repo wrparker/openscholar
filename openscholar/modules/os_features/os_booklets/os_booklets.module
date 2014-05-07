@@ -70,6 +70,7 @@ function os_booklets_menu_alter(&$items) {
     $item['type'] = MENU_LOCAL_TASK;
     $item['context'] = MENU_CONTEXT_INLINE;
     $item['weight'] = 0;
+    $item['theme callback'] = 'cp_theme_name';
   }
 
   if (isset($items['book'])) {
@@ -80,7 +81,7 @@ function os_booklets_menu_alter(&$items) {
   }
 }
 
-/** 
+/**
  * Checks that node is book before allowing access to outline
  */
 function _os_booklets_outline_access($node) {

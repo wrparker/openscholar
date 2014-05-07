@@ -3,6 +3,26 @@
 include_once ('os_search_solr.features.inc');
 
 /**
+ * Implements hook_boxes_plugins().
+ */
+function os_search_solr_boxes_plugins() {
+  $plugins = array();
+
+  $plugins['os_search_solr_more_like_this'] = array(
+    'title' => t('More like this'),
+    'tags' => array('Content'),
+    'handler' => array(
+      'class' => 'os_search_solr_more_like_this',
+      'file' => 'os_search_solr_more_like_this.inc',
+      'path' => drupal_get_path('module', 'os_search_solr') . '/plugins/os_search_solr_more_like_this',
+      'parent' => 'os_boxes_default',
+    ),
+  );
+
+  return $plugins;
+}
+
+/**
  * Implements hook_block_info().
  */
 function os_search_solr_block_info() {
@@ -112,16 +132,11 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
  */
 function os_search_solr_get_searcher_name() {
   $searcher_name = '';
-  if(module_exists('facetapi')) {
-	// Get the searcher info.
-    $searcher_array = facetapi_get_searcher_info();
-    // First element is the default.
-    $search = array_shift($searcher_array);
-    if(array_key_exists('name', $search)) {
-      $searcher_name = $search['name'];
-    }
+  if (module_exists('facetapi')) {
+    $default = apachesolr_default_environment();
+    // Prefix seems to be hardcoded in facetapi code.
+    $searcher_name = 'apachesolr@' . $default;
   }
-
   return $searcher_name;
 }
 
@@ -512,10 +527,6 @@ function os_search_solr_context_default_contexts() {
   $export = array();
   $export['os_search'] = os_search_solr_setup_core_search_context();
 
-  foreach (os_search_solr_get_browse_pages_info() as $bundle_name => $bundle_info) {
-    $export['browse_' . $bundle_name] = os_search_solr_setup_bundle_context($bundle_name, $bundle_info['title'], $bundle_info['url'], $bundle_info['menu_item']);
-  }
-
   return $export;
 }
 
@@ -541,60 +552,6 @@ function os_search_solr_get_browse_pages_info() {
     }
   }
   return $browse_pages_info;
-}
-
-/**
- * Setup blocks for browse context.
- *
- * @param $bundle_name
- *   Bundle machine name.
- * @param $bundle_title
- *   Bundle label.
- *
- * @return stdClass
- *   Bundle context information.
- */
-function os_search_solr_setup_bundle_context($bundle_name, $bundle_title, $bundle_url, $menu_item) {
-  $searcher_name = os_search_solr_get_searcher_name();
-  // Gets delta map
-  if (!$map = facetapi_get_delta_map()) {
-    return;
-  }
-
-  // Filter by OG vocab.
-  $string_og_vocab = facetapi_build_delta($searcher_name, 'block', 'sm_og_vocabulary');
-  $delta_og_vocab = array_search($string_og_vocab, $map);
-
-  $context = new stdClass();
-
-  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
-  $context->api_version = 3;
-  $context->name = 'browse_' . $bundle_name;
-  $context->description = $bundle_title;
-  $context->tag = 'OpenScholar';
-  $context->conditions = array(
-    'path' => array(
-      'values' => array(
-        $bundle_url => $bundle_url,
-      ),
-    ),
-  );
-  $context->reactions = array(
-    'block' => array(
-      'blocks' => array(
-        'boxes-vocabulary_filter_' . $bundle_name => array(
-          'module' => 'boxes',
-          'delta' => 'vocabulary_filter_' . $bundle_name,
-          'title' => t('Filter by taxonomy'),
-          'region' => 'sidebar_second',
-          'weight' => '-10',
-        ),
-      ),
-    ),
-    'menu' => $menu_item,
-  );
-  $context->condition_mode = 1;
-  return $context;
 }
 
 /**
@@ -860,16 +817,25 @@ function os_search_solr_save_view_mode_from_form($form, &$form_state) {
  */
 function os_search_solr_save_view_mode($page_id, $view_mode) {
   // Get Solr View Modes
-  $solr_view_modes = variable_get('os_search_solr_display_mode', '');
-
-  // Set View Modes
-  $solr_view_modes[$page_id] = $view_mode;
+  $solr_view_modes = variable_get('os_search_solr_display_mode', array());
 
   // Save Apache Solr View Modes. Use VSite if exists.
   if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
+    // Set View Mode
+    $solr_view_modes[$page_id] = $view_mode;
+
     $vsite->controllers->variable->set('os_search_solr_display_mode', $solr_view_modes);
   }
   else {
+    // The vsite controller has logic to prevent saving the default and performs cleanup.
+    // This code prevents un-needed vset's when the cache is cleared.
+    if (isset($solr_view_modes[$page_id]) && $solr_view_modes[$page_id] == $view_mode) {
+      //Already set correctly.
+      return;
+    }
+    // Set View Mode if not set.
+    $solr_view_modes[$page_id] = $view_mode;
+
     variable_set('os_search_solr_display_mode', $solr_view_modes);
   }
 }
@@ -908,54 +874,6 @@ function os_search_solr_preprocess_search_results(&$variables) {
 }
 
 /**
- * Implements hook_default_box_alter().
- */
-function os_search_solr_default_box_alter(&$items) {
-  foreach (array_keys(os_search_solr_get_browse_pages_info()) as $bundle_name) {
-    $items['vocabulary_filter_' . $bundle_name] = os_search_solr_vocabulary_filter_box($bundle_name);
-  }
-}
-
-/**
- * Utility function to create vocabulary filter box.
- *
- * @return stdClass
- *   Vocabulary filter box object.
- */
-function os_search_solr_vocabulary_filter_box($bundle_name) {
-  $box = new stdClass();
-  $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
-  $box->api_version = 1;
-  $box->delta = 'vocabulary_filter_' . $bundle_name;
-  $box->plugin_key = 'os_boxes_facetapi_vocabulary';
-  $box->title = t('Filter by taxonomy');
-  $box->description = 'Vocabulary filter';
-
-  return $box;
-}
-
-/**
- * Implements hook os_layout_get_alter()
- */
-function os_search_solr_os_layout_get_alter($context_name, &$blocks){
-  // Only allow the facet browse contexts, to use facet boxes.
-  if (strpos($context_name, "browse_") === 0) {
-    $context = context_load($context_name);
-    if($context && $context->export_module == "os_search_solr"){
-      return;
-    }
-  }
-
-  // Remove default boxes added by this module.
-  foreach ($blocks as $key => $block) {
-    if(strpos($key, "boxes-vocabulary_filter") === 0 && !empty($block['plugin']) && $block['plugin'] == 'os_boxes_facetapi_vocabulary') {
-      // Remove facet blocks that do not belong here
-      unset($blocks[$key]);
-    }
-  }
-}
-
-/**
  * Implements hook_theme_registry_alter().
  *
  * @param $theme_registry
@@ -964,4 +882,102 @@ function os_search_solr_theme_registry_alter(&$theme_registry) {
   $path = drupal_get_path('module', 'os_search_solr');
   $theme_registry['search_results']['path'] = $path;
   $theme_registry['search_results']['template'] = 'search-results';
+}
+
+function os_search_solr_bundle_selected_form_element($bundle, $default_values) {
+  $element = array(
+    '#options' => array('all' => 'All vocabularies') + os_search_solr_get_bundle_vocabularies($bundle),
+    '#type' => 'checkboxes',
+    '#default_value' => $default_values,
+    '#multiple' => TRUE,
+    '#prefix' => '<div id="vocabularies-div">',
+    '#suffix' => '</div>',
+    '#title' => 'Select vocabularies',
+    //'#states' => array('invisible' => array(':input[name="bundle"]' => array('value' => ""), ), ),
+  );
+  return $element;
+}
+
+function os_search_solr_bundle_selected($form, $form_state) {
+  $bundle = $form_state['values']['bundle'];
+  $default_value = $form_state['values']['vocabularies'];
+  return os_search_solr_bundle_selected_form_element($bundle, $default_value);
+}
+
+function os_search_solr_get_bundle_vocabularies($bundle) {
+  ctools_include('taxonomy', 'os');
+  $taxonomy_vocabularies = os_get_vocabularies_by_bundle('node', $bundle);
+
+  $vocabularies = array();
+
+  if ($taxonomy_vocabularies) {
+    foreach ($taxonomy_vocabularies as $taxonomy_vocabulary) {
+      $vocabularies[$taxonomy_vocabulary->machine_name] = $taxonomy_vocabulary->name;
+    }
+  }
+
+  return $vocabularies;
+}
+
+/**
+ * Implements hook_apachesolr_field_mappings_alter().
+ */
+function os_search_solr_apachesolr_field_mappings_alter(&$mappings, $entity) {
+  $mappings['entityreference']['indexing_callback'] = 'os_search_solr_entityreference_indexing_callback';
+}
+
+/**
+ * OS search solr indexing for the entity reference field. The "more like this"
+ * block functionallity for terms is possible because the term reference
+ * indexing function indexed the terms names. We need to index the label of the
+ * entity when the entity reference field is referencing to taxonomy terms.
+ *
+ * @see https://drupal.org/node/2206633
+ */
+function os_search_solr_entityreference_indexing_callback($entity, $field_name, $index_key, $field_info) {
+  $fields = array();
+  if (!empty($entity->{$field_name}) && array_key_exists(LANGUAGE_NONE, $entity->$field_name)) {
+
+    // Gets entity type and index key. We need to prefix the ID with the entity
+    // type so we know what entity we are dealing with in the mapping callback.
+    $entity_type = $field_info['field']['settings']['target_type'];
+    $index_key = apachesolr_index_key($field_info);
+
+    // Iterates over all references and adds them to the fields.
+    foreach ($entity->{$field_name}[LANGUAGE_NONE] as $reference) {
+      if ($id = (!empty($reference['target_id'])) ? $reference['target_id'] : FALSE) {
+        $fields[] = array(
+          'key' => $index_key,
+          'value' => $entity_type . ':' . $id,
+        );
+      }
+
+      $ids[] = $id;
+    }
+
+    if ($entity_type == 'taxonomy_term') {
+      // Index the term names into a text field for MLT queries and keyword
+      // searching.
+      $terms = entity_load($entity_type, $ids);
+      foreach ($terms as $term) {
+        $vid = $term->vid;
+
+        $fields[] = array(
+          'key' => 'tm_vid_' . $vid . '_names',
+          'value' => $term->name,
+        );
+      }
+    }
+  }
+
+  return $fields;
+}
+
+/**
+ * Validate handler for the "More like this" block.
+ */
+function os_search_solr_more_like_this_bundles_element_validate($element, &$form_state) {
+  if (!$form_state['values']['results_from_type'] && empty($element['#value'])) {
+    form_error($element, t('You must select at least one node type when leaving the related posts checkbox un-checked.'));
+  }
 }

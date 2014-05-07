@@ -1,6 +1,6 @@
 Feature: Testing the importer.
 
-  @api
+  @api @first
   Scenario Outline: Testing the csv importing for content types.
     Given I am logging in as "admin"
      When I visit <import-address>
@@ -22,7 +22,7 @@ Feature: Testing the importer.
     | "john/os-importer-demo/person"            | "john/people"                             | "Person from csv"       | "Testing import of people"    |
     | "john/os-importer-demo/media_gallery"     | "john/galleries"                          | "Gallery from csv"      | "Testing import of gallery"   |
 
-  @api
+  @api @first
   Scenario: Verify that the vocabularies and terms from the CSV created
   successfully.
     Given I visit "john/blog/blog-csv"
@@ -31,13 +31,13 @@ Feature: Testing the importer.
       And I should see "Chuck Berry"
       And I should see "Red hot chili peppers"
 
-  @api
+  @api @first
   Scenario: Verify the hebrew text was imported.
     Given I visit "john/blog"
      Then I should see "בדיקה של כותרת"
       And I should see "בדיקה של תוכן"
 
-  @api
+  @api @first
   Scenario: Verify the spanish text was imported.
     Given I visit "john/news"
      Then I should see "Text in spanish"

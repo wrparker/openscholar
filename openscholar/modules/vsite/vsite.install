@@ -583,7 +583,33 @@ function vsite_update_7020() {
 
 /**
  * Revert field instance exports for meta description to vsite group bundles.
- */
+*/
 function vsite_update_7021() {
   features_revert(array('vsite' => array('field_instance')));
+  return t('Meta description fields should now appear on vsite node edit forms.');
+}
+
+/**
+ * Show meta description fields on vsite node page view.
+ */
+function vsite_update_7022() {
+  features_revert(array('vsite' => array('field_instance', 'metatag')));
+  return t('Meta description fields should now appear on vsite node page view.');
+}
+
+/**
+ * Set "vsite admin" permissions for edit and administer boxes.
+ */
+function vsite_update_7023() {
+  $permissions = array(
+    'administer boxes',
+    'edit boxes',
+  );
+  $group_bundles = og_get_all_group_bundle();
+
+  foreach (array_keys($group_bundles['node']) as $bundle) {
+    $og_roles = og_roles('node', $bundle);
+    $rid = array_search('vsite admin', $og_roles);
+    og_role_grant_permissions($rid, $permissions);
+  }
 }

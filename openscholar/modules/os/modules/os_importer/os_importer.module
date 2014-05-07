@@ -44,6 +44,19 @@ function os_importer_ctools_plugin_directory($module, $plugin) {
 }
 
 /**
+ * Implements hook_os_app_info().
+ */
+function os_importer_os_app_info() {
+  return array(
+    'os_importer' => array(
+      'exclude_from_rss' => array(
+        'feed_importer',
+      ),
+    ),
+  );
+}
+
+/**
  * Implements hook_node_insert().
  *
  * Import feed item when the user add the feed importer for the first time.
@@ -248,7 +261,7 @@ function os_importer_import_access($bundle, $feed = TRUE) {
     $source = feeds_source($bundle);
     $config = $source->importer->getConfig();
 
-    if (!$bundle = $config['processor']['config']['content_type']) {
+    if (!$config['processor']['config']['content_type']) {
       return FALSE;
     }
   }

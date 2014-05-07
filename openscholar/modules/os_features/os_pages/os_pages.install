@@ -106,11 +106,11 @@ function os_pages_update_7005() {
   // "Revert" just one variable value using variable API.
   $name = 'nodeformscols_field_placements_page_default';
   $value = variable_get($name, array());
-  $value['os_advanced'] = array(
+  $value['os_seo'] = array(
     'region' => 'right',
     'weight' => '7',
     'has_required' => FALSE,
-    'title' => 'Advanced options',
+    'title' => 'SEO',
     'collapsed' => 1,
     'hidden' => 0,
   );

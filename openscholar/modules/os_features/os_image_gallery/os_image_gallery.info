@@ -67,6 +67,7 @@ features[variable][] = comment_anonymous_media_gallery
 features[variable][] = comment_default_mode_media_gallery
 features[variable][] = comment_default_per_page_media_gallery
 features[variable][] = comment_media_gallery
+features[variable][] = diff_show_preview_changes_node_media_gallery
 features[variable][] = node_options_media_gallery
 features[variable][] = node_submitted_media_gallery
 features[variable][] = nodeformscols_field_placements_media_gallery_default

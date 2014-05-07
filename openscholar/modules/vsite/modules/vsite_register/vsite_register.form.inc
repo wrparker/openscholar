@@ -892,6 +892,7 @@ function _vsite_register_notify_author_body_text($current_user, $author) {
       . "Sincerely,\nThe !sitewide_name Team";
   }
 
+  drupal_alter('vsite_register_notify_author_body_text', $body_text);
   return $body_text;
 }
 

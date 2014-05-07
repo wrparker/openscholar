@@ -282,15 +282,12 @@ ul.nice-menu-down li ul li ul {
     background-position: 2px -373px;
 }
 
-#columns .sidebar .block-boxes-os_boxes_rand_widget .boxes-box-content h2.block-title,
+
 .sidebar .block-title {
     background-color: #687781;
     border-bottom: medium none;
     color: #FFFFFF;
     font-weight: normal;
-    padding: 7px 15px;
-    font-size:16px;
-    line-height:20px;
 }
 
 .front #content-panels .block-content, .sidebar .block-content {

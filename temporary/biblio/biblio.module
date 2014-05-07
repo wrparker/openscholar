@@ -1149,8 +1149,8 @@ function biblio_form($node, &$form_state) {
   $fields = array();
   $form['biblio_tabs'] = $tabs = array();
 
-  $tid = !empty($form_state['biblio_type']) ? $form_state['biblio_type'] :
-          ( isset($node->biblio_type) ? $node->biblio_type : 0);
+  $node->biblio_type = !empty($node->biblio_type) ? $node->biblio_type : 102;
+  $tid = $form_state['biblio_type'] = !empty($form_state['biblio_type']) ? $form_state['biblio_type'] : $node->biblio_type;
 
   $step_two = !empty($tid);
 

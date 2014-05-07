@@ -473,6 +473,17 @@ function os_user_default_permissions() {
     'module' => 'file_entity',
   );
 
+  // Exported permission: 'edit meta tags'.
+  $permissions['edit meta tags'] = array(
+    'name' => 'edit meta tags',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'content editor' => 'content editor',
+      'manager' => 'manager',
+      'vsite admin' => 'vsite admin',
+    ),
+    'module' => 'metatag',
+  );
   // Exported permission: 'import media'.
   $permissions['import media'] = array(
     'name' => 'import media',

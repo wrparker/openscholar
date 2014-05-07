@@ -1,7 +1,7 @@
 Feature:
   Testing the active book TOC widget.
 
-  @api
+  @api @last
   Scenario: Verify that the active book TOC widget works fine.
      Given I am logging in as "john"
        And the widget "Active book TOC" is set in the "Publications" page with the following <settings>:

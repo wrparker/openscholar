@@ -47,8 +47,18 @@
           $display_style.children('option').each(function() {
             var this_display = $(this).attr('value');
             if ($('#edit-layout').length>0) {
+              // User can select a layout.
+              // In certain types of data, for example "List of Files" when the
+              // file is of type "Image", it is possible to select a layout,
+              // for example "list" or "grid". So if the "Layout" field is shown
+              // we must consider the layout type when enabling display types.
               var this_layout =  $('#edit-layout').attr('value').toLowerCase();              
               var hide = ($.inArray(this_display, Drupal.settings.entity_view_modes[this_layout][content_type]) == -1)
+              $(this).attr('hidden', hide).attr('disabled', hide);
+            }
+            else {
+              // User cannot select a layout, so the default layout is "list".
+              var hide = ($.inArray(this_display, Drupal.settings.entity_view_modes['list'][content_type]) == -1)
               $(this).attr('hidden', hide).attr('disabled', hide);
             }
           });
@@ -98,7 +108,7 @@
       //console.log($('#vocabs', context).find('.form-select:not(.select2-processed)'))
       $("#edit-vocabs", context).addClass('select2-processed').find('.form-select:not(.select2-processed)').select2({
         placeholder: Drupal.t("Click here to select terms"),
-        width: '20em',
+        width: '20em'
       });
     }
   };

@@ -54,6 +54,7 @@ features[variable][] = comment_form_location_presentation
 features[variable][] = comment_presentation
 features[variable][] = comment_preview_presentation
 features[variable][] = comment_subject_field_presentation
+features[variable][] = diff_show_preview_changes_node_presentation
 features[variable][] = menu_options_presentation
 features[variable][] = menu_parent_presentation
 features[variable][] = node_options_presentation

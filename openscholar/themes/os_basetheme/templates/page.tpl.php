@@ -1,3 +1,7 @@
+<!--REGION TO HOUSE RESPONSIVE MENU. OTHER CONTENT CAN'T BE PLACED HERE-->
+<div class="responive-menu-container clearfix">
+  <?php print render($page['responsive_menu']); ?>
+</div>
 
 <!--FLEXIBLE ADMIN HEADER FOR USE BY SELECT GROUPS USING OS-->
 <?php if ($branding_header = render($page['branding_header'])): ?>
@@ -55,14 +59,14 @@
 
 						<?php if ($is_front || $use_content_regions): ?>
 							<?php print render($title_prefix); ?>
-                            <a name="<?php echo $skip_link; ?>"></a>
+              <a name="<?php echo $skip_link; ?>"></a>
 							<?php if (!$is_front && $title): ?>
 								<header id="main-content-header">
 									<a name="<?php echo $skip_link; ?>"></a>
-      									<h1 id="page-title"<?php print $attributes; ?>>
-      									        <?php print $title; ?>
-      									</h1>
-      								</header>
+                    <h1 id="page-title"<?php print $attributes; ?>>
+                      <?php print $title; ?>
+                    </h1>
+                </header>
 							<?php endif; ?>
 							<?php print render($title_suffix); ?>
 
@@ -146,7 +150,7 @@
 			$page['footer_third'] ||
 			$page['footer_bottom']
 			): ?>
-	  
+
 			<div class="at-panel gpanel panel-display footer clearfix">
 				<?php print render($page['footer_top']); ?>
 				<?php print render($page['footer_first']); ?>
@@ -154,12 +158,12 @@
 				<?php print render($page['footer_third']); ?>
 				<?php print render($page['footer_bottom']); ?>
 			</div>
-		
+
 		<!--footer region end-->
   <?php endif; ?>
   <div id="powerby-login">
   	<?php if (isset($login_link)) {
-    print render($login_link); 
+    print render($login_link);
   } ?>
   	<div id="powered-by"><a href="http://theopenscholar.org">OpenScholar</a></div>
     </div>

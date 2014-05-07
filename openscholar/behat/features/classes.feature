@@ -4,7 +4,7 @@ Feature:
   I should be able to filter by terms
   And see nodes of the content-type that are also attached to the selected term.
 
-  @api
+  @api @first
   Scenario: Test the Classes tab
     Given I visit "john"
       And I click "Classes"

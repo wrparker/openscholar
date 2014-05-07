@@ -2,7 +2,7 @@ Feature:
   Testing ability to subscribe as support team for privileged users,
   that creates an expirable membership.
 
-  @api
+  @api @first
   Scenario: Test subscribe for user with permission
     Given I am logging in as "bill"
     When I visit "obama"
@@ -10,14 +10,14 @@ Feature:
     And I press "Join"
     Then I should see "Unsubscribe Obama"
 
-  @api
+  @api @first
   Scenario: Test expiring membership on cron, of an existing member
     Given I am logging in as "bill"
     When I visit "obama"
     And I execute vsite cron
     Then I should not see "Support obama"
 
-  @api
+  @api @first
   Scenario: Test expiring membership on cron, of an existing member
     Given I am logging in as "bill"
     When I visit "obama"
@@ -26,7 +26,7 @@ Feature:
     And I visit "obama"
     Then I should see "Support obama"
 
-  @api
+  @api @first
   Scenario: Test subscribe for user without permission
     Given I am logging in as "michelle"
     When I visit "obama"

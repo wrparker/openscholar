@@ -559,6 +559,7 @@ function vsite_preset_spaces_presets() {
         'os_classes' => '1',
       ),
       'spaces_features_available' => array(
+        'os_biocv',
         'os_blog',
         'os_booklets',
         'os_classes',
@@ -744,7 +745,6 @@ function vsite_preset_spaces_presets() {
     'og_tasks' => array(
       0 => 'vsite_preset_section_about',
       1 => 'vsite_preset_section_program',
-      2 => 'vsite_preset_section_speakers',
       3 => 'vsite_preset_section_register',
       4 => 'vsite_preset_section_logistics',
       5 => 'vsite_preset_menu_order',

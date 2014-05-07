@@ -34,6 +34,7 @@ function os_image_gallery_context_default_contexts() {
       'values' => array(
         'galleries' => 'galleries',
         'galleries/*' => 'galleries/*',
+        'browse/gallery' => 'browse/gallery',
       ),
     ),
     'views' => array(

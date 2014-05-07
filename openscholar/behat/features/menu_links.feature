@@ -1,7 +1,7 @@
 Feature:
   Testing ability to add links to the primary menu.
 
-  @api
+  @api @first
   Scenario Outline: Test adding a link.
     Given I am logging in as "john"
      When I visit "john/cp/menu/nojs/new/primary-menu"

@@ -13,6 +13,14 @@ define('CP_MENU_OFF', 'off');
 define('CP_MENU_MINI', 'mini');
 define('CP_MENU_FULL', 'full');
 
+
+/**
+ * Theme callback for admin pages when the CP theme isn't applied.
+ */
+function cp_theme_name() {
+  return 'cp_theme';
+}
+
 /**
  * Defines the default maximum number of allowed URL redirects per site.
  */
@@ -89,6 +97,7 @@ function cp_menu() {
     'weight' => 10,
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_overview_vocabularies'),
+    'access callback' => 'vsite_og_user_access',
     'access arguments' => array('administer taxonomy'),
     'file' => 'taxonomy.admin.inc',
     'file path' => drupal_get_path('module', 'taxonomy'),
@@ -99,6 +108,7 @@ function cp_menu() {
     'title' => 'Add vocabulary',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_vocabulary'),
+    'access callback' => 'vsite_og_user_access',
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_ACTION,
     'file' => 'taxonomy.admin.inc',
@@ -199,21 +209,26 @@ function cp_menu() {
  * Implements hook_menu_alter().
  */
 function cp_menu_alter(&$items) {
-  // Makes all menu items with path like "cp*" part of the same "cp" menu.
-  foreach ($items as $path => $item) {
-    if (strpos($path, 'cp') === 0) {
-      if (!array_key_exists('menu_name', $item)) {
-        $items[$path]['menu_name'] = 'cp';
-      }
+  foreach ($items as $path => &$item) {
+    if (strpos($path, 'cp/') !== 0) {
+      // Not CP menu item.
+      continue;
+    }
 
-      // @todo maybe provide our own permission instead ?
-      if (!array_key_exists('access callback', $item)) $items[$path]['access arguments'] = array(
+    if (!isset($item['menu_name'])) {
+      // Make all menu items with path like "cp/*" part of the same "cp" menu.
+      $item['menu_name'] = 'cp';
+    }
+
+    if (!isset($item['access callback']) && !isset($item['access arguments'])) {
+      // No access callback and arguments, default to "access control panel".
+      $item['access arguments'] = array(
         'access control panel',
       );
     }
   }
 
-  // Prevents vsite admins from accessing all sitewide redirects.
+  // Prevent VSite admins from accessing all sitewide redirects.
   $restricted = array(
     'admin/config/search/redirect',
     'admin/config/search/redirect/list',
@@ -343,9 +358,11 @@ function cp_form_spaces_features_form_alter(&$form, &$form_state, $form_id) {
     $spaces_features_available = FALSE;
   }
 
+  cp_sort_features_by_human_name($form);
+
   foreach (array_keys($form['spaces_features']) as $app_name) {
     // Skips render array markup.
-    if ($app_name[0] == '#') {
+    if (!element_child($app_name)) {
       continue;
     }
 
@@ -386,6 +403,41 @@ function cp_form_spaces_features_form_alter(&$form, &$form_state, $form_id) {
     '#weight' => 100,
     '#access' => user_access('administer spaces'),
   );
+}
+
+/**
+ * Sort features on the form based on human names.
+ *
+ * @param $form
+ *   spaces_features form.
+ */
+function cp_sort_features_by_human_name(&$form) {
+  $original_features = $form['spaces_features'];
+  $ordered_features = array();
+  $spaces_features = spaces_features();
+  $new_form_spaces_features = array();
+
+  foreach ($original_features as $app_name => $value) {
+    // Skips render array markup.
+    if (!element_child($app_name)) {
+      $new_form_spaces_features[$app_name] = $value;
+      continue;
+    }
+
+    $human_name = $spaces_features[$app_name]->info['name'];
+    $ordered_features[$human_name] = $app_name;
+  }
+
+  // Sort by the human name.
+  ksort($ordered_features);
+
+  // Put elements back in the new order.
+  foreach ($ordered_features as $human_name => $app_name) {
+    $new_form_spaces_features[$app_name] = $original_features[$app_name];
+  }
+
+  // Override form element.
+  $form['spaces_features'] = $new_form_spaces_features;
 }
 
 /**

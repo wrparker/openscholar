@@ -53,3 +53,30 @@ function os_news_update_7002() {
 function os_news_update_7003() {
   features_revert(array('os_news' => array('field_instance')));
 }
+
+/**
+ * Refreshes exported variables of the News app
+ */
+function os_news_update_7004() {
+  $revert = array(
+    'os_news' => array(
+      'variable'
+    )
+  );
+
+  features_revert($revert);
+}
+
+/**
+ * Refreshes exported field and image for News app
+ */
+function os_news_update_7005() {
+  $revert = array(
+    'os_news' => array(
+      'image',
+      'field_instance',
+    )
+  );
+
+  features_revert($revert);
+}

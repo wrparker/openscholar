@@ -103,6 +103,15 @@ function _os_publications_cache_key($args) {
 }
 
 function os_publications_export($format = "tagged", $nid = NULL, $popup = FALSE) {
+  // Since the access callback for the "publications/export" can't be used to
+  // distinguish between the export of single or multiple publications, we deny
+  // access here if the user is anonymous and no nid is provided (that is when,
+  // exporting multiple publications).
+  if (user_is_anonymous() && !$nid) {
+    drupal_access_denied();
+    return;
+  }
+
   module_load_include('inc', 'biblio', 'includes/biblio.import.export');
 
   $title = 'publications';

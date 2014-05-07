@@ -15,7 +15,7 @@ function media_draggable_field_widget_info() {
         'allow_replace' => 0,
         'upload_event' => 'automatic',
         'upload_button_text' => t('Upload'),
-        'droppable_area_text' => t('Drop files here to upload'),
+        'droppable_area_text' => t('Drag your files here'),
         // This settings allows to drop multiple files at once.
         'multiupload' => 0,
         'allowed_types' => array('image'),
@@ -28,6 +28,12 @@ function media_draggable_field_widget_info() {
       ),
     )
   );
+}
+
+function media_draggable_file_load($files) {
+  foreach ($files as $file) {
+    $file->icon = file_icon_url($file);
+  }
 }
 
 /**
@@ -51,9 +57,6 @@ function media_draggable_field_widget_settings_form($field, $instance) {
 function media_draggable_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $field_settings = $instance['settings'];
   $widget_settings = $instance['widget']['settings'];
-
-  ctools_include('modal');
-  ctools_modal_add_js();
 
   $element += array(
     '#field' => $field,
@@ -142,7 +145,7 @@ function media_draggable_field_widget_form(&$form, &$form_state, $field, $instan
     ),
     '#process' => array(
       'media_draggable_field_widget_indiv_process',
-    )
+    ),
   );
 
   foreach ($items as $delta => $item) {
@@ -162,9 +165,9 @@ function media_draggable_field_widget_form(&$form, &$form_state, $field, $instan
  * Processes files input by adding or removing rows to the form, based on the user's input
  */
 function media_draggable_field_widget_process($element, &$form_state, &$form) {
-
-  if (!empty($form_state['input'])) {
-    $copy = &$form_state['input']['field_upload'][LANGUAGE_NONE];
+  $field_name = $element['#field_name'];
+  if (!empty($form_state['input'][$field_name])) {
+    $copy = &$form_state['input'][$field_name][LANGUAGE_NONE];
     unset($copy['drop'], $copy['template']);
 
     $current = array();
@@ -188,6 +191,7 @@ function media_draggable_field_widget_process($element, &$form_state, &$form) {
       $temp = $element['template'];
       $temp['fid']['#default_value'] = $fid;
       $temp['#file'] = file_load($fid);
+      unset($temp['#attributes']['hidden']);
       $element[$k] = $temp;
     }
   }
@@ -202,6 +206,10 @@ function media_draggable_field_widget_process($element, &$form_state, &$form) {
  */
 function media_draggable_field_widget_indiv_process($element) {
   $file = $element['#file'];
+
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_modal_add_js();
 
   if (!$file) {
     $file = (object)array(
@@ -225,9 +233,12 @@ function media_draggable_field_widget_indiv_process($element) {
     '#links' => array(
       'edit' => array(
         'href' => 'media/'.$file->fid.'/edit/nojs',
-        'title' => t('Edit'),
+        'title' => t('Edit/Replace'),
         'attributes' => array(
-          'class' => 'use-ajax',
+          'class' => array(
+            'use-ajax',
+            'ctools-use-modal',
+          )
         )
       ),
       'remove' => array(
@@ -236,6 +247,11 @@ function media_draggable_field_widget_indiv_process($element) {
         'external' => true,
       )
     ),
+    '#attached' => array(
+      'library' => array(
+        array('system', 'drupal.ajax')
+      )
+    )
   );
 
   return $element;
@@ -247,6 +263,17 @@ function media_draggable_field_widget_indiv_process($element) {
 function media_draggable_dnd_pre_render($element) {
   if (!empty($element['#value']['fid'])) {
     $file = $element['#file'];
+
+    // files added through dragging are never given the Permanent status
+    // without it, they could be deleted during a cron
+    // Since we always want files users upload to be permanent, we set the
+    // status to 1 when the user uploads them.
+    if (!$file->status) {
+      $file->status = 1;
+      file_save($file);
+    }
+
+    $file->icon = file_icon_url($file);
 
     module_load_include('inc', 'media', 'includes/media.browser');
     media_browser_build_media_item($file);
@@ -274,4 +301,23 @@ function media_draggable_file_presave($file) {
   if (isset($file->original)) {
     $file->timestamp = $file->original->timestamp;
   }
+}
+
+/**
+ * Adds a submit handler to the file edit form, so we can dump the file back to the parent page
+ */
+function media_draggable_form_file_entity_edit_alter(&$form, &$form_state) {
+  $form['actions']['submit']['#submit'][] = 'media_draggable_file_edit_submit';
+}
+
+/**
+ * Dumps the editted file back to the parent page, so it can update itself
+ */
+function media_draggable_file_edit_submit($form, $form_state) {
+  $file = $form_state['file'];
+  drupal_add_js(array(
+    'mediaDraggable' => array(
+      'editedFile' => $file
+    )
+  ), 'setting');
 }

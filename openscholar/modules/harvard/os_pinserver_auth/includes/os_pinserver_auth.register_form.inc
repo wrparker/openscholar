@@ -2,24 +2,6 @@
 include_once (drupal_get_path('module', 'vsite_register') . '/vsite_register.form.inc');
 
 /**
- * Register menu_alter
- */
-function _os_pinserver_auth_register_menu_alter(&$items) {
-
-  // Alters page callback
-	$items['site/register']['page callback'] = 'os_pinserver_auth_vsite_register_form_page';
-	$items['site/register']['module'] = 'os_pinserver_auth';
-	$items['site/register']['access callback'] = 'os_pinserver_auth_register_access';
-	$items['user/register']['page callback'] = 'os_pinserver_auth_vsite_register_form_page';
-	$items['user/register']['module'] = 'os_pinserver_auth';
-	$items['user/register']['access callback'] = 'os_pinserver_auth_register_access';
-
-	// Removes page arguments and adds file values.
-	unset($items['site/register']['page arguments'], $items['user/register']['page arguments']);
-	unset($items['site/register']['file'], $items['user/register']['file']);
-}
-
-/**
  * Menu callback; provides vsite_register_form for authorized users.
  */
 function os_pinserver_auth_vsite_register_form_page() {

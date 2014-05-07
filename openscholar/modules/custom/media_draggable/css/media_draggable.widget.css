@@ -12,6 +12,8 @@
 .field-widget-media-draggable-file .droppable-message {
   line-height: inherit;
   padding: 10px 0;
+  height:30px;
+  line-height: 30px
 }
 
 .field-widget-media-draggable-file .droppable-standard-upload {
@@ -38,4 +40,33 @@
 .field-widget-media-draggable-file .file-list-single ul li {
   display: inline-block;
   width: 45%;
+}
+
+.droppable-message,
+.droppable-standard-upload span {
+	font-weight:bold;
+	}
+
+
+.field-name-field-biblio-image .droppable {
+float: none;
+background-color: #f0f0ee;
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+border-radius: 3px;
+padding: 2px;
+border: 1px solid #ccc;
+text-align: center;
+margin: 5px 0;
+width: 550px;
+}
+
+.droppable-standard-upload {
+	display: inline-block;
+}
+
+
+.field-name-field-biblio-image.field-widget-dragndrop-upload-image .droppable-message {
+	height:50px;
+	line-height: 50px;
 }

@@ -121,7 +121,9 @@ features[variable][] = os_vsites_per_user
 features[variable][] = theme_settings
 features[views_view][] = os_subsites
 features[views_view][] = os_websites
+
 files[] = plugins/vsite.inc
 files[] = tests/vsite_access.test
 files[] = tests/vsite_user.test
 files[] = includes/spaces.views.inc
+files[] = views/vsite_views_og_cache_plugin_cache_time.inc

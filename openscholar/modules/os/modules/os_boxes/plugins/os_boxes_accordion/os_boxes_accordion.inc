@@ -18,7 +18,7 @@ class os_boxes_accordion extends os_boxes_widget_collection {
     $form['collapsed'] = array(
       '#type' => 'checkbox',
       '#default_value' => $this->options['collapsed'],
-      '#title' => t('Open First Panel Automatically?'),
+      '#title' => t('All Panels Closed?'),
       '#description' => t('By default, the first panel of the Accordion will be opened. Checking this will leave it
         closed until the user opens it.')
     );
@@ -44,7 +44,8 @@ class os_boxes_accordion extends os_boxes_widget_collection {
               'os_boxes' => array(
                 'accordion' => array(
                   $this->delta => array(
-                    'active' => $this->options['collapsed']?false:0,
+                    'active' => $this->options['collapsed'] ? FALSE : 0,
+                    'delta' => $this->delta,
                   )
                 )
               )
@@ -53,7 +54,6 @@ class os_boxes_accordion extends os_boxes_widget_collection {
         ),
       )
     );
-
 
     foreach ($this->options['widgets'] as $k => $w) {
       $block_output = $this->render_widget($k);

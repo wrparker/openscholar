@@ -1,7 +1,7 @@
 Feature:
   Testing the term tagged items pager.
 
-  @api
+  @api @first
   Scenario: Testing the term tagged items pager.
      Given I am logging in as "john"
       When I assign the node "John F. Kennedy" to the term "Stephen William Hawking"

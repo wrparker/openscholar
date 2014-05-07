@@ -44,6 +44,7 @@ features[variable][] = comment_faq
 features[variable][] = comment_form_location_faq
 features[variable][] = comment_preview_faq
 features[variable][] = comment_subject_field_faq
+features[variable][] = diff_show_preview_changes_node_faq
 features[variable][] = menu_options_faq
 features[variable][] = menu_parent_faq
 features[variable][] = node_options_faq

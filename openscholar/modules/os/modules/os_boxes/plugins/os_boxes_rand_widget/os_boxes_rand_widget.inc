@@ -10,9 +10,11 @@ class os_boxes_rand_widget extends os_boxes_widget_collection {
     $block = parent::render();
 
     $k = array_rand($this->options['widgets']);
-    $widget = $this->render_widget($k);
-
-    $block['content'] = drupal_render($widget);
+    list(,$delta) = explode('-', $this->options['widgets'][$k]['bid'], 2);
+    $box = boxes_box_load($delta);
+    if ($box instanceof boxes_box) {
+      return $box->render();
+    }
 
     return $block;
   }

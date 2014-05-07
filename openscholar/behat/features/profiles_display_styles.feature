@@ -1,7 +1,7 @@
 Feature:
   Testing the os_profiles app settings.
 
-  @api
+  @api @first
   Scenario: Test that changing the display type affects the "/people" path,
             with display type "title".
     Given I am logging in as "john"
@@ -12,7 +12,7 @@ Feature:
       And I visit "john/people"
      Then I should not see "Drupal developer at Gizra.inc"
 
-  @api
+  @api @first
   Scenario: Test that changing the display type affects the people term pages,
             for example: "john/people/science/air".
     Given I am logging in as "john"
@@ -24,7 +24,7 @@ Feature:
      Then I should see "Actress"
       And I should not see "AKA Marilyn Monroe"
 
-  @api
+  @api @first
   Scenario: Test that changing the display type affects in a vsite, doesn't affect
             other vsites.
     Given I am logging in as "john"
@@ -35,7 +35,7 @@ Feature:
       And I visit "obama/people"
      Then I should see "michelle@whitehouse.gov"
 
-  @api
+  @api @first
   Scenario: Test that changing the display type affects the "/people" path,
             With display type "teaser".
     Given I am logging in as "john"

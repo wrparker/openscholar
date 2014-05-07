@@ -91,7 +91,7 @@ background: #698da2;
 .os-topheadings {
 	color:#FFF;
 	font-size:13px;
-	padding: 6px 0 0 50px;
+	padding: 0 0 15px 50px;
 }
 
 .os-topheadings a {
@@ -106,8 +106,7 @@ background: #698da2;
 
 .os-leftcol ul {
     float: right;
-    margin-left: 20px;
-    margin-top: 30px;
+    margin: 5px 0 0 20px;
 }
 
 .os-leftcol li {
@@ -130,16 +129,16 @@ background: none repeat scroll 0 0 #EDEEF1;
 .os-featuredSites {
     float: left;
     height: 19px;
-     margin: 19px 327px 0 0;
+     margin: 3px 327px 0 0;
     width: 162px;
 }
  @-moz-document url-prefix() { 
 .os-featuredSites {
-     margin: 17px 327px 0 0;
+     margin: 1px 327px 0 0;
  }
 }
 
-.os-learnmore {margin-left:5px;}
+.os-learnmore {margin-left:5px;display:none;}
 
 .os-leftcol ul li a:hover {
 background: #FE8716;

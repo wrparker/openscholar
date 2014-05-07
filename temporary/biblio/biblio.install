@@ -21,7 +21,7 @@ function biblio_install() {
   // Save the content type
   node_type_save($content_type);
 
-  set_time_limit(300);
+  // set_time_limit(300);
 
   $result[] = _add_db_field_data();
 
@@ -252,7 +252,7 @@ function _enable_biblio_collection_vocabulary() {
  * @return none
  */
 function _add_biblio_keywords() {
-  set_time_limit(300);
+  // set_time_limit(300);
   $kw_sep = variable_get('biblio_keyword_sep', ',');
   $vid = ($vid = variable_get('biblio_keyword_vocabulary', 0))? $vid:_enable_biblio_keyword_vocabulary();
   if ($vid ) {

@@ -41,8 +41,8 @@ function os_news_image_default_styles() {
   $styles = array();
 
   // Exported image style: os_news_full_140_x_180.
-  $styles['os_news_full_140_x_180'] = array(
-    'name' => 'os_news_full_140_x_180',
+  $styles['os_news_full'] = array(
+    'name' => 'os_news_full',
     'effects' => array(
       1 => array(
         'label' => 'Scale and crop',
@@ -54,13 +54,13 @@ function os_news_image_default_styles() {
         'module' => 'image',
         'name' => 'image_scale_and_crop',
         'data' => array(
-          'width' => 140,
+          'width' => 180,
           'height' => 180,
         ),
         'weight' => 1,
       ),
     ),
-    'label' => 'os_news_full_140_x_180',
+    'label' => 'os_news_full',
   );
 
   return $styles;

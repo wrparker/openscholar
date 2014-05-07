@@ -23,11 +23,11 @@ projects[calendar][version] = 3.4
 projects[calendar][patch][] = "http://raw.github.com/openscholar/openscholar/72d63ee3537c31505b7481975886ec13789feeb5/patches/calendar-fix-week-view-overflow.patch"
 
 projects[colorbox][subdir] = "contrib"
-; projects[colorbox][version] = 1.3
-projects[colorbox][version] = 2.4
+projects[colorbox][version] = 2.5
 
 projects[comment_sources][subdir] = "contrib"
 projects[comment_sources][version] = 2.0
+projects[comment_sources][patch][] = "https://drupal.org/files/issues/22086870-comment-source-wrong-query-field-1.patch"
 
 projects[context][subdir] = "contrib"
 projects[context][version] = 3.0-beta4
@@ -88,10 +88,8 @@ projects[entityreference][version] = 1.1
 projects[entityreference][patch][] = "http://drupal.org/files/1802916-er-show-identifier-14.patch"
 
 projects[entityreference_prepopulate][subdir] = "contrib"
-; projects[entityreference_prepopulate][version] = 1.3
-projects[entityreference_prepopulate][download][type] = git
-projects[entityreference_prepopulate][download][revision] = e2c2811
-projects[entityreference_prepopulate][patch][] = "http://drupal.org/files/2007746-er-hide-access-5.patch"
+projects[entityreference_prepopulate][version] = 1.5
+projects[entityreference_prepopulate][patch][] = "https://drupal.org/files/issues/1994702-er-ajax-9.patch"
 
 projects[elysia_cron][subdir] = "contrib"
 projects[elysia_cron][version] = 2.1
@@ -267,9 +265,8 @@ projects[oembed][patch][] = "http://drupalcode.org/project/oembed.git/patch/a27a
 projects[oembed][patch][] = "http://drupal.org/files/issues/oembed.2134415.wysiwyg_dimensions.patch"
 
 projects[og][subdir] = "contrib"
-projects[og][version] = 2.4
-projects[og][patch][] = "https://drupal.org/files/issues/2153555-og-role-maintain-on-revert-6.patch"
-projects[og][patch][] = "https://drupal.org/files/issues/redirect-after-unsubscribe-1794294.patch"
+projects[og][version] = 2.6
+projects[og][patch][] = "https://drupal.org/files/issues/2231217-og-save-no-entity-load-1.patch"
 
 projects[og_moderation][subdir] = "contrib"
 projects[og_moderation][version] = 2.0
@@ -286,7 +283,10 @@ projects[og_views][version] = 1.0
 
 projects[og_vocab][subdir] = "contrib"
 projects[og_vocab][version] = 1.2
+projects[og_vocab][patch][] = "https://drupal.org/files/issues/2224007-og-vocab-set-value-1.patch"
 projects[og_vocab][patch][] = "https://drupal.org/files/issues/og-vocab-reset-to-alpahbetical-2174907-4.patch"
+projects[og_vocab][patch][] = "https://drupal.org/files/issues/og-vocab-widget-settings-from-entity.patch"
+projects[og_vocab][patch][] = "https://drupal.org/files/issues/hide-field-when-empty-2243091-1.patch"
 
 projects[olark][subdir] = "contrib"
 projects[olark][version] = 1.0-beta1
@@ -330,6 +330,7 @@ projects[redirect][version] = 1.0-rc1
 
 projects[robotstxt][subdir] = "contrib"
 projects[robotstxt][version] = "1.1"
+projects[robotstxt][patch][] = "http://drupal.org/files/issues/send_cache_headers-1923838-5.patch"
 
 projects[restws][subdir] = "contrib"
 projects[restws][version] = "2.0-alpha3"
@@ -354,6 +355,7 @@ projects[spaces][subdir] = "contrib"
 projects[spaces][revision] = "eac3a7e"
 projects[spaces][patch][] = "http://drupal.org/files/1470434-spaces-og-28.patch"
 projects[spaces][patch][] = "http://drupal.org/files/spaces_ui-show_disabled-1662918-1.patch"
+projects[spaces][patch][] = "https://raw.github.com/openscholar/openscholar/5a4fe7c322656962de9037e3c2a29e9e5fac41f7/patches/spaces.disabled_features.patch"
 projects[spaces][download][type] = git
 projects[spaces][download][branch] = 7.x-3.x
 projects[spaces][download][revision] = eac3a7e
@@ -363,6 +365,10 @@ projects[stringoverrides][subdir] = "contrib"
 
 projects[strongarm][subdir] = "contrib"
 projects[strongarm][version] = 2.0-rc1
+
+projects[term_reference_tree][subdir] = "contrib"
+projects[term_reference_tree][version] = 1.x-dev
+projects[term_reference_tree][patch][] = "https://drupal.org/files/issues/2235057-term-er-3.patch"
 
 projects[title][subdir] = "contrib"
 projects[title][version] = 1.0-alpha7
@@ -389,9 +395,8 @@ projects[views_bulk_operations][subdir] = "contrib"
 projects[views_bulk_operations][version] = 3.0
 
 projects[views_og_cache][subdir] = "contrib"
-projects[views_og_cache][download][type] = git
-projects[views_og_cache][download][branch] = 7.x-1.x-dev
-projects[views_og_cache][download][revision] = dddbfa2
+projects[views_og_cache][version] = 1.1
+projects[views_og_cache][patch][] = "https://drupal.org/files/issues/2226219-easy-key-data-override-2.patch"
 
 projects[views_slideshow][subdir] = "contrib"
 projects[views_slideshow][version] = 3.0

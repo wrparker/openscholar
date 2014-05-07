@@ -1010,50 +1010,12 @@ function _cp_appearance_pull_subtheme_git(&$form, &$form_state, $info) {
     $branches[$branch] = $branch;
   }
 
-  $branch = !empty($form_state['values']['branch']) ? $form_state['values']['branch'] : NULL;
-
   $form['branches']['branch'] = array(
     '#type' => 'select',
     '#title' => t('Branch'),
     '#options' => $branches,
     '#default_value' => $selected_branch,
     '#description' => t('Change the new branch or select the old one and update.'),
-    '#ajax' => array(
-      'callback' => 'cp_appearance_git_method_update_branch',
-      'wrapper' => 'checkboxes-div',
-    ),
-  );
-
-  $text = '';
-  if ($branch) {
-    try {
-      cp_appearance_git_checkout($git, $branch);
-    }
-    catch (GitException $e) {
-      drupal_set_message($e->getMessage(), 'error');
-    }
-
-    // Pulling hte data from the git repository.
-    try {
-      $git->pull();
-    }
-    catch (GitException $e) {
-      drupal_set_message($e->getMessage(), 'error');
-    }
-
-    $params = array(
-      '%branch' => $branch,
-    );
-
-    drupal_set_message(t('The branch changed to %branch.', $params));
-    $text = theme('status_messages');
-  }
-
-  $form['branches']['result'] = array(
-    '#prefix' => '<div id="checkboxes-div">',
-    '#suffix' => '</div>',
-    '#type' => 'item',
-    '#markup' => $text,
   );
 
   $form['actions'] = array(
@@ -1064,16 +1026,12 @@ function _cp_appearance_pull_subtheme_git(&$form, &$form_state, $info) {
     ),
     'description' => array(
       '#type' => 'item',
-      '#markup' => t('This action will pull the latest version of the theme code n GitHub into OpenScholar.'),
+      '#markup' => t('This action will pull the latest version of the theme code from GitHub into OpenScholar.'),
     ),
   );
 
   $form['#attached']['css'][] = drupal_get_path('module', 'cp_appearance') . '/theme/cp_appearance.css';
   $form['#attached']['js'][] = drupal_get_path('module', 'cp_appearance') . '/theme/cp_appearance_theme_picker.js';
-}
-
-function cp_appearance_git_method_update_branch($form, $form_state) {
-  return $form['branches']['result'];
 }
 
 /**

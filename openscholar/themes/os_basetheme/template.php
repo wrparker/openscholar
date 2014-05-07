@@ -70,7 +70,7 @@ function os_basetheme_preprocess_page(&$vars) {
   }
 
   if (!isset($vars['use_content_regions'])) {
-    $vars['use_content_regions'] = false;
+    $vars['use_content_regions'] = FALSE;
   }
 
   // Do not show the login button on the following pages, redundant.
@@ -88,7 +88,7 @@ function os_basetheme_preprocess_page(&$vars) {
   $vars['secondary_local_tasks'] = $vars['tabs']['#secondary'];
 
   $theme_name = $GLOBALS['theme_key'];
-  
+
   // Adds skip link var to page template
   $vars['skip_link'] = 'main-content';
   if (at_get_setting('skip_link_target', $theme_name)) {
@@ -181,14 +181,14 @@ function os_basetheme_preprocess_node(&$vars) {
       $vars['classes_array'][] = 'event-start';
     }
   }
-  
+
   // Event persons, change title markup to h1
   if ($vars['type'] == 'person') {
     if (!$vars['teaser'] && $vars['view_mode'] != 'sidebar_teaser') {
       $vars['title_prefix']['#suffix'] = '<h1 class="node-title">' . $vars['title'] . '</h1>';
-      
+
       if ($vars['view_mode'] == 'slide_teaser') {
-        $vars['title_prefix']['#suffix'] = '<div class="toggle">' . $vars['title_prefix']['#suffix'] . '</div>'; 
+        $vars['title_prefix']['#suffix'] = '<div class="toggle">' . $vars['title_prefix']['#suffix'] . '</div>';
       }
     }
   }
@@ -220,13 +220,13 @@ function os_basetheme_menu_tree(&$variables) {
   if (isset($variables['os_nice_menus']) && $variables['os_nice_menus']) {
     return $variables['tree'];
   }
-  
+
   return adaptivetheme_menu_tree($variables);
 }
 
 /**
  * Implements template_preprocess_HOOK() for theme_menu_tree().
- * 
+ *
  * template_preprocess_menu_tree has been removed.  This replaces it and sets a flag
  * when we're using nice_menus.
  */

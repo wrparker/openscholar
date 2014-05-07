@@ -72,11 +72,11 @@ textarea {
 #og-vocabulary-add-more-wrapper select.form-select {height:120px;}
 
 html.js input.form-autocomplete {
-  background-position: 100% 8px;  
+  background-position: 100% 21px;
 }
 
 html.js input.throbbing {
-  background-position: 100% -13px !important;
+  background-position: 100% -15px !important;
 }
 
 #block-os-powered-by {
@@ -109,7 +109,7 @@ html.js input.throbbing {
 
 .view-os-files-private ul {list-style-type: none !important;
  list-style: none !important;}
- 
+
 .view-os-files-private .cp-controls-wrapper .add_new {
     background: url("/themes/seven/images/add.png") no-repeat scroll 0 center #FFF !important;
     line-height: 30px;
@@ -147,12 +147,29 @@ a.form-cancel:hover {
  text-decoration:none;
 }
 
+.form-actions .form-submit,
+.form-actions #edit-delete,
+.form-actions #edit-delete--2 {
+	display:inline-block;
+}
+
+.form-actions .os-delete-link {
+  color: #f83535;
+  text-decoration: underline;
+  font-size: 1.1em;
+}
+
+
 /* CTools MODAL OVERRIDES */
 
 #modalContent {
   top: 0 !important;
   color: #666;
   position: fixed !important;
+}
+
+div.ctools-modal-content .form-item label {
+float: none;
 }
 
 div.ctools-modal-content {
@@ -232,8 +249,8 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 	margin-top: 10px;
 	display: block;
 		}
-		
-		
+
+
 
 .downarrow {
 	padding-right: 12px;
@@ -243,25 +260,25 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 .helper.columns {
 	width: 968px !important;
 		}
-		
+
 .helper.columns .downarrow {
 	background-position: 51px -553px;
 		}
-	
+
 .formlabel {color: #444;
 font-size: 12px;
 font-weight: bold;}
 
 /** OVERLAY MODAL OVERRIDES **/
-	
+
 #overlay-close, #overlay-close:hover {
     background: url('../../../themes/os_basetheme/images/icon-close-window.png') no-repeat;
 	width:30px;
 	height:30px;
 	position: relative;
- 	margin: -28px 10px;   
+ 	margin: -28px 10px;
 }
-	
+
 #overlay-titlebar {
     padding: 7px 10px 17px;
     position: relative;
@@ -280,10 +297,16 @@ font-weight: bold;}
     font-size:24px;
     font-weight: normal;
 }
-	
+
 #overlay-tabs {
  	margin: -30px 0 0;
  	right: 50px;
+}
+
+.page-node-add.page-node-add-biblio #overlay,
+.page-node-edit.node-type-biblio #overlay {
+max-width: 930px;
+min-width: 850px;
 }
 
  /* OVERRIDES WITH TABS IN MODAL - EXPERIMENTAL */
@@ -312,10 +335,10 @@ font-weight: bold;}
      margin-bottom: -1px;
      padding-bottom: 0px;
 }
- 
+
 
 /** CP TABLE STYLES **/
-	
+
 table.spaces td.option, table.spaces td.storage {
     width: 13%;
 }
@@ -340,25 +363,29 @@ table.spaces td.option, table.spaces td.storage {
 #edit-menu-table td:first-child {
     width: 40%;
 }
- 
- 
- 
+
+
+
  #user-register-form {
  	background:#f1f1f1;
     padding:15px;
     border: 1px solid #CCC;
  }
- 
- .cp-add-new-user ul {list-style-type:none;}
 
-/* CP/BUILD MENU */ 
+ .cp-add-new-user ul {list-style-type:none;}
+ 
+ table th label {
+ 	text-transform:none;
+ 	}
+
+/* CP/BUILD MENU */
 .page-cp-build-menu table thead {
 	display:none;
-	
+
     }
-    
+
 #edit-menu-table,
-#cp-menu-build-form {width:775px;}   
+#cp-menu-build-form {width:775px;}
 
 
 #cp-appearance-theme-picker-form select {max-width:90px;overflow:hidden;}
@@ -369,7 +396,7 @@ table.spaces td.option, table.spaces td.storage {
 #cp-appearance-theme-picker-form #theme-header-featured p {color:#777;font-size:15px;margin:-8px 0 28px 0;}
 
 
-/* CP/BUILD LAYOUT */   
+/* CP/BUILD LAYOUT */
 .page-cp-build-layout #content {width:854px;}
 
 
@@ -388,7 +415,7 @@ form#spaces-features-form td.actions a {
 }
 
 
-/** VSITE OS LOGIN CONTAINER STYLES **/	
+/** VSITE OS LOGIN CONTAINER STYLES **/
 body.page-cp.page-cp-account {
 	background:#EEE;
 }
@@ -408,7 +435,7 @@ body.page-cp.page-cp-account #messages {
 	border:3px solid #8996A0;
 }
 
-.page-cp.page-cp-account #columns #main-content-header { 
+.page-cp.page-cp-account #columns #main-content-header {
 	background: #DDD;
 	margin:-10px -8px;
 	padding:7px;
@@ -416,6 +443,10 @@ body.page-cp.page-cp-account #messages {
 
 
 /* PUBLICATIONS SETTING FORM IN MODAL */
+
+fieldset .fieldset-legend {text-transform:none;}
+
+
 .os_publications-customize-form .column-left,
 .os_publications-customize-form #comment_settings {
 	float:left;
@@ -438,36 +469,246 @@ body.page-cp.page-cp-account #messages {
 	clear:right;
 	margin-bottom:20px;
 }
- 
+
 .tabledrag-toggle-weight-wrapper {
   display: none;
 }
-	
-	
-	
-/**	 QUICK TAB CREATION **/	
-	
+
+table.biblio-contributors {
+	min-width: 550px;
+	max-width: 650px;
+}
+
+.field-name-og-vocabulary table,
+.field-name-og-vocabulary table th,
+.field-name-og-vocabulary table tr,
+table#field-biblio-extra-values,
+table#field-biblio-extra-values th,
+#edit-biblio-authors table,
+#edit-biblio-authors table tr,
+#edit-biblio-authors table,
+table.biblio-contributors,
+table.biblio-contributors tr.odd,
+table.biblio-contributors tr.even {
+	border:none;
+	background:#FFF;
+	margin:0;
+}
+
+.field-name-og-vocabulary table td,
+table#field-biblio-extra-values td {
+	padding: 8px 0;
+}
+
+#edit-biblio-authors table td,
+table.biblio-contributors td {
+	padding: 0;
+}
+#edit-biblio-authors table td.biblio-contributor-type {
+  padding-right: 1em;
+}
+
+.biblio-contributors .draggable {
+	height: 40px;
+}
+
+#edit-og-vocabulary input.form-submit,
+.node-biblio-form #edit-field-biblio-extra input.form-submit,
+#edit-biblio-authors #edit-add-more {
+cursor: pointer;
+padding: 0;
+margin-bottom: 1em;
+margin-right: 1em;
+margin-left: 2.99em;
+color: #0074BD;
+text-align: center;
+font-weight: normal;
+font-size: 1em;
+font-family: "Lucida Grande", Verdana, sans-serif;
+border: none;
+border-bottom: 1px solid #0074BD;
+border-left-color: transparent;
+border-right-color: transparent;
+background: none;
+-moz-border-radius: 0;
+-webkit-border-radius: 0;
+border-radius: 0;
+}
+
+.biblio-contributor input.form-submit {
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 0;
+  margin-right: 0;
+  color: #5a5a5a;
+  text-align: center;
+  font-weight: normal;
+  font-size: 1em;
+  font-family: "Lucida Grande", Verdana, sans-serif;
+  border: none;
+  border-bottom: none;
+  border-left-color: none;
+  border-right-color: none;
+  background: url(../images/scholarbase-sprite.png) 0 -411px no-repeat;
+  -moz-border-radius: none;
+  -webkit-border-radius: none;
+  border-radius: none;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  width:20px;
+  display: inline-block;
+}
+
+table.biblio-contributors tr:first-child input.form-submit {
+  display: none;
+}
+
+.biblio-contributor input.form-text {
+float: left;
+margin-right: 8px;
+}
+
+.form-item-biblio-url,
+.form-item-biblio-url-title,
+.node-biblio-form .form-item-biblio-section,
+.node-biblio-form .form-item-biblio-number-of-volumes,
+.node-biblio-form .form-item-biblio-number,
+.node-biblio-form .form-item-biblio-date,
+.node-biblio-form .form-item-biblio-edition,
+.node-biblio-form .form-item-biblio-volume,
+.node-biblio-form .form-item-biblio-issue,
+.node-biblio-form .form-item-biblio-pages {
+	display:inline-block;
+	margin-right:15px;
+	vertical-align: top;
+	width:165px;
+}
+
+.form-item-biblio-url,
+.form-item-biblio-url-title {
+	width:255px;
+}
+
+.form-item-biblio-url input.form-text,
+.form-item-biblio-url-title input.form-text,
+.node-biblio-form .form-item-biblio-section input.form-text,
+.node-biblio-form .form-item-biblio-number-of-volumes input.form-text,
+.node-biblio-form .form-item-biblio-number input.form-text,
+.node-biblio-form .form-item-biblio-date input.form-text,
+.node-biblio-form .form-item-biblio-edition input.form-text,
+.node-biblio-form .form-item-biblio-volume input.form-text,
+.node-biblio-form .form-item-biblio-issue input.form-text,
+.node-biblio-form .form-item-biblio-pages input.form-text {
+	width:100px;
+}
+
+.form-item-biblio-url .description,
+.form-item-biblio-url-title .description,
+.form-item-biblio-url input.form-text,
+.form-item-biblio-url-title input.form-text {
+	width:270px;
+}
+
+
+#edit-biblio-notes-value,
+#edit-biblio-abst-e-value {
+	height:60px;
+}
+
+.form-item-biblio-abst-e-value ~ .description {
+	margin-bottom:20px;
+}
+
+.form-item-biblio-year {margin-top:10px;}
+
+#edit-biblio-year {
+	width:50px;
+}
+
+.form-item.form-type-radio {
+	margin-left:10px;
+	font-size:1em;
+	font-weight:normal;
+}
+
+
+fieldset#edit-biblio-year-group {
+background: none;
+border: none;
+font-weight:bold;
+}
+
+fieldset#edit-biblio-year-group .fieldset-legend,
+fieldset#edit-biblio-year-group .fieldset-wrapper {
+padding-left: 0;
+}
+
+
+html.js fieldset.collapsible#edit-publication-extras .fieldset-wrapper .fieldset-legend {
+background: none;
+padding-left: 0;
+}
+
+
+
+.field-name-field-biblio-extra table.field-multiple-table,
+.field-name-field-biblio-extra table.field-multiple-table tr,
+.field-name-field-biblio-extra table.field-multiple-table th,
+html.js fieldset.collapsible#edit-publication-extras .fieldset-wrapper fieldset {
+background-color: #FFF;
+border:none;
+}
+
+
+#edit-publication-extras {
+background-color: #FFF;
+}
+
+html.js fieldset.collapsible#edit-publication-extras .fieldset-wrapper {
+padding-left:15px;
+}
+
+
+html.js fieldset.collapsible#edit-publication-extras .form-wrapper .fieldset-wrapper {
+padding-left:0;
+}
+
+
+.field-widget-image-image {
+	background:#f1f1f1;
+	padding:10px;
+	border:1px solid #ccc;
+	width: 94%;
+	margin:20px 0;
+}
+
+#edit-field-biblio-extra .description {margin-left:35px;}
+
+
+/**	 QUICK TAB CREATION **/
+
 .page-os-widget #tabs {
     background:  #F1F1F1;
     border: 1px solid #CCCCCC;
     padding-left:10px;
-}	
-	
+}
+
 .page-os-widget #tabs .panel,
 .page-os-widget #tabs fieldset .fieldset-wrapper {
   padding: 0;
-} 
+}
 
 .page-os-widget .ui-state-disabled, .ui-widget-content .ui-state-disabled {
     opacity: 1;
-}	
+}
 
 .page-os-widget .ui-tabs .ui-tabs-nav li a {
     border-radius: 10px 10px 0 0;
     -webkit-border-radius: 10px 10px 0 0;
     -moz-border-radius: 10px 10px 0 0;
     padding: 5px;
-} 	
+}
 
 /* Shrinks the node form to take up less vertical space. */
 
@@ -488,18 +729,25 @@ form.node-form fieldset {
 	margin: 1em 0px 0.5em;
 }
 
+
+fieldset#edit-5 {
+	padding-top: 0;
+}
+
 /* Shrinks the biblio node form to take up less vertical space. */
 
+
+.field-name-field-biblio-extra table.field-multiple-table td .form-item.form-type-textfield,
 #field-biblio-extra-values td .form-item.form-type-textfield {
 	float: left;
-	width:43%;
+	width:45%;
 	padding-right: 4%;
 }
 
 fieldset#edit-biblio-authors {
 	background-color: transparent;
 	border: 0 none;
-  padding: 1.5em 0 0;
+  padding: 0;
   margin: 0;
 }
 
@@ -536,7 +784,7 @@ form.node-form .form-region-main input a,
 
 form.node-form .form-region-right input.form-text{
     width: 85% !important;
-   
+
 }
 
 form.node-form .form-region-main input.form-text {
@@ -551,15 +799,27 @@ form.node-form.overlay-processed .form-region-right fieldset {
      width: 100%;
 }
 
+form.node-form.overlay-processed .form-region-right fieldset.citation-distribute-form {
+  margin-bottom: 2em;
+}
+
 form.node-form.overlay-processed .form-region-right fieldset legend {
      background: none repeat scroll 0% 0% #F1F1F1;
 }
 
-form.node-form.overlay-processed .form-region-right .fieldset-legend span.summary {
+form.node-form.overlay-processed .fieldset-legend span.summary {
      color: #777;
      display: block;
      font-size: 0.8em;
      margin-left: 0px;
+}
+
+form.node-form.overlay-processed .form-region-main .fieldset-legend span.summary {
+	display: inline;
+     }
+
+.field-name-field-biocv-pdf-upload {
+  margin-bottom: 40px;
 }
 
 
@@ -575,14 +835,17 @@ form.node-form.overlay-processed .form-region-right  fieldset.collapsed .fieldse
      width: 89%;
 }
 
+
+
 html.js .form-region-right  fieldset.collapsible .fieldset-legend {
     background: url("../../../../../misc/menu-expanded.png") no-repeat scroll 5px 9px #F5F5F5;
- 
+
 }
 
-
+.form-region-main a.fieldset-title,
 form.node-form.overlay-processed .form-region-right .fieldset-title {
      font-size: 1.08em;
+     font-weight: normal;
 }
 
 form.node-form.overlay-processed {
@@ -621,4 +884,128 @@ font-size: 11px;
   background: url('../../os_basetheme/images/scholarbase-sprite.png') 0 -651px no-repeat #0a4476;
   padding: 15px 7px 8px 22px;
 }
+
+form#cp-user-edit-membership-form .form-item-group-manager {
+  margin: 15px 0 0;
+}
+
+h1.biblio-type-prefix {
+  float: left;
+  margin: 18px 10px 0px 0px;
+  padding: 0.3em 0;
+  color: #666;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.form-item-biblio-type select {
+font-size: 18px;
+color: #666;
+}
+
+.form-item-biblio-type span.form-required {
+  visibility: hidden;
+}
+
+#field-biblio-extra-values thead tr th {
+  text-transform: none;
+}
+
+/* Term tree reference */
+.term-reference-tree {
+  border: 1px solid #CCC;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.term-reference-tree > ul {
+  margin-left: 0;
+}
+
+ul.term-reference-tree-level {
+  list-style-type: none;
+}
+
+.term-reference-tree-button,
+.no-term-reference-tree-button {
+  float: left;
+}
+
+.no-term-reference-tree-button {
+  background: none;
+}
+
+.term-reference-tree-button {
+  background: url('../images/scholarbase-sprite.png') 2px -449px no-repeat;
+}
+
+.term-reference-tree-button.term-reference-tree-collapsed {
+  background: url('../images/scholarbase-sprite.png') 6px -433px no-repeat;
+}
+
+
+.field-widget-og-vocab-complex .expand {
+	 background: url('../images/scholarbase-sprite.png?sddff') 0 -509px no-repeat;
+	 padding-left:14px;
+}
+
+.field-widget-og-vocab-complex .collapse {
+	 background: url('../images/scholarbase-sprite.png?sddff') 0 -529px no-repeat;
+	 padding-left:14px;
+	 margin-left:10px;
+}
+
+
+
+
+
+/* PUB FORM EXTERNAL URL SECTIONON */
+
+#edit-url .form-item-biblio-url-title {
+margin-right:0;
+width: 138px;
+}
+
+#edit-url .form-item-biblio-url-title.editing {
+width: 195px;
+
+}
+
+#edit-url .form-item-biblio-url-title.editing #edit-biblio-url-title {
+ text-align:right;
+}
+
+
+#edit-biblio-url-title {
+	border:none;
+	background: url('../images/scholarbase-sprite.png?apr2014') no-repeat 0 -475px #FFFFFF;
+    padding-left:25px;
+	color: #0074BD;
+	text-decoration:underline;
+cursor:pointer;
+}
+#edit-biblio-url-title:focus {
+background: url('../../../themes/os_basetheme/images/form-input-bg.gif') repeat-x scroll left top #FFFFFF;
+border: 1px solid #CDCDCD;
+padding-left:0;
+color: #444;
+text-decoration:none;
+}
+
+
+#edit-url .form-item-biblio-url .description {
+	width: 450px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -29,6 +29,7 @@ function os_publications_context_default_contexts() {
       'values' => array(
         'publications' => 'publications',
         'publications/*' => 'publications/*',
+        'browse/publications' => 'browse/publications',
       ),
     ),
   );

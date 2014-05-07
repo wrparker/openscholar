@@ -196,7 +196,7 @@ function os_news_field_default_field_instances() {
         'module' => 'image',
         'settings' => array(
           'image_link' => '',
-          'image_style' => 'os_news_full_140_x_180',
+          'image_style' => 'os_news_full',
         ),
         'type' => 'image',
         'weight' => 0,
@@ -206,7 +206,7 @@ function os_news_field_default_field_instances() {
         'module' => 'image',
         'settings' => array(
           'image_link' => '',
-          'image_style' => 'os_news_full_140_x_180',
+          'image_style' => 'os_news_full',
         ),
         'type' => 'image',
         'weight' => 0,

@@ -33,7 +33,6 @@ function vsite_preset_og_tasks_info($entity_type, $entity) {
         'Schedule',
       ),
     ),
-    'Speakers' => array(),
     'Register' => array(),
     'Logistics' => array(),
   );

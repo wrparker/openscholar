@@ -1,44 +1,57 @@
 @import url(http://fonts.googleapis.com/css?family=News+Cycle);
 
-
-body, .not-front #content-column p,.front #content-column p {font-family:georgia;color: #444;}
-h1,h2,h3,h4,
-h1 a,h2 a,h3 a,h4 a,
-#footer,
-.header-container a,
-#boxes-box-site_info a, #branding_header a, #branding_footer, #branding_footer a,
-h1.page-title, .breadcrumb a, #content-column p,h1#page-title,.block-boxes-os_boxes_sectionnav.section-nav {font-family:'News Cycle',arial;}
-
-
-#boxes-box-site_info h1 a {font-weight:bold;font-size:30px;}
-
-h1#page-title {color:#D16103;font-size: 27px;}
-
-#menu-bar {
-background: #1769a0;
+body {
+	font-family:arial;color: #444;
 }
 
+h1,h2,h3,h4,
+h1 a,h2 a,h3 a,h4 a,
+#boxes-box-site_info a, 
+h1.page-title, 
+ h1#page-title {
+	font-family:'News Cycle',arial;
+	}
+
+.not-front #content-column p,
+#content-column p {
+	font-family:georgia;
+	}
+
+#boxes-box-site_info {
+	color: #777;
+	}
+
+#boxes-box-site_info h1 a {
+	font-weight:bold;
+	font-size:30px;
+	color: #D16103;
+	}
+
+h1#page-title {
+	color:#D16103;font-size: 27px;
+	}
+
+#menu-bar {
+background: #D16103;
+}
 
 
 #menu-bar ul.nice-menu a.active,
 #menu-bar ul.nice-menu a:hover {
-  background: #e1e1e1;
+  background: #F3F3F1;
 
 }
-
-
 
 #menu-bar ul.nice-menu .menuparent.over > a,
 #menu-bar ul.nice-menu .menuparent a:hover,
 #menu-bar ul.nice-menu .menuparent a.active {
-    background: url(/profiles/openscholar/themes/hwpi_basetheme/images/menu_down_arrowOff.gif) right center no-repeat #e1e1e1;
+    background: url(/profiles/openscholar/themes/hwpi_basetheme/images/menu_down_arrowOff.gif) right center no-repeat #F3F3F1;
 }
 
 
 #menu-bar ul.nice-menu ul {
-    background:#e1e1e1;
+    background:#F3F3F1;
 }
-
 
 
 #menu-bar ul.nice-menu .menuparent ul li a.active,
@@ -47,18 +60,18 @@ background: #1769a0;
 #menu-bar ul.nice-menu .menuparent ul li a,
 #menu-bar ul.nice-menu .menuparent.over > a,
 #menu-bar ul.nice-menu .menuparent a:hover, 
-#menu-bar ul.nice-menu .menuparent a.active {color:#1769a0;}
+#menu-bar ul.nice-menu .menuparent a.active {color:#215990;}
 
 #menu-bar ul.nice-menu .menuparent ul li a:hover {color:#4E84C4;}
 
 #header {
-background: #4E84C4;
+background: #F3F3F1;
 
 }
 
 
 .region-header-third ul.nice-menu a {
-color: #fff;
+color: #215990;
 }
 
 
@@ -75,28 +88,37 @@ color:#FFF;
 
 
 .section-nav .menu-depth-1 > a {
-background-color: #434343 !important;
+background-color: #8996A0 !important;
 }
+
+.section-nav .expanded.menu-depth-2 > a {
+background-color: #999;
+}
+
+.section-nav .expanded.menu-depth-2 > a:hover {
+background-color: #777 !important;
+}
+
 
 .front #content-column .block, 
 .node-person .block-inner, 
 .comment-wrapper,
 #content-column .block.block-boxes-os_boxes_manual_list {
-border-top: 2px dotted #999;
+border-top: 2px dotted #ccc;
 
 }
 
 .node-type-person #content-column .node-person h2.block-title, 
 .sidebar .block h2.block-title {
-background: #e1e1e1;
+background: #F3F3F1;
 color: #000;
-font-size: 1.1em;
+font-size: 1.14em;
 line-height: 18px;
 }
 
 
 #search-block-form .form-item label {
-color: #fff;
+color: #3d3d3d;
 }
 
 
@@ -128,7 +150,10 @@ padding: 0;
 font-size: 13px;
 }
 
-#search-block-form input.form-submit, #search-block-form #edit-submit, #search-form #edit-submit {
-background: url("/profiles/openscholar/themes/hwpi_basetheme/images/hwpi_basesprite.png") no-repeat scroll 2px -440px #D16103;
+.ui-tabs ul.ui-tabs-nav li.ui-tabs-active {
+background: #D16103 !important;
 }
 
+#search-block-form input.form-submit, #search-block-form #edit-submit, #search-form #edit-submit {
+background: url(/profiles/openscholar/themes/hwpi_basetheme/images/hwpi_basesprite.png) no-repeat scroll 2px -440px #D16103;
+}

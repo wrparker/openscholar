@@ -42,6 +42,7 @@ features[variable][] = comment_default_per_page_blog
 features[variable][] = comment_form_location_blog
 features[variable][] = comment_preview_blog
 features[variable][] = comment_subject_field_blog
+features[variable][] = diff_show_preview_changes_node_blog
 features[variable][] = menu_options_blog
 features[variable][] = menu_parent_blog
 features[variable][] = node_options_blog

@@ -73,6 +73,7 @@ function os_menu() {
     'page callback' => 'os_boxes_placeholder',
     'type' => MENU_LOCAL_TASK,
     'file' => 'os_boxes.admin.inc',
+    'file path' => drupal_get_path('module', 'os_boxes'),
     'context' => MENU_CONTEXT_INLINE,
     'weight' => 1,
     'menu_name' => 'widgets',
@@ -106,19 +107,16 @@ function os_menu_alter(&$items) {
   // Use custom callbacks for these menu items that will display a message
   // if site is in read-only mode. Access callbacks are altered to TRUE to get
   // to the page callback which will check the default access callback.
-  $items['user/login']['page callback'] = 'os_in_read_mode_login';
-  $items['user/register']['page callback'] = 'os_in_read_mode_register';
-  $items['user/register']['access callback'] = TRUE;
-  $items['user/password']['page callback'] = 'os_in_read_mode_password';
-
-  // Check if Pinserver should take over registration menu entries.
-  if (variable_get('os_pinserver_registration', FALSE)){
-    $items['site/register']['page callback'] = 'os_in_read_mode_site_register_pinserver';
-  }
-  else {
-    $items['site/register']['page callback'] = 'os_in_read_mode_site_register';
-  }
-  $items['site/register']['access callback'] = TRUE;
+  $items['user/login']['page callback'] = 'os_in_readonly_mode';
+  $items['user/login']['page arguments'] = array('login');
+  $items['user/register']['page callback'] = 'os_in_readonly_mode';
+  $items['user/register']['page arguments'] = array('register');
+  $items['user/password']['page callback'] = 'os_in_readonly_mode';
+  $items['user/password']['page arguments'] = array('password');
+  // Keep the original access callback for site/register because users need
+  // permissions to create VSites.
+  $items['site/register']['page callback'] = 'os_in_readonly_mode';
+  $items['site/register']['page arguments'] = array('site_register');
 
   // Displays 404 Not Found instead of default /node page.
   if (isset($items['node'])) {
@@ -132,76 +130,66 @@ function os_menu_alter(&$items) {
   $items['user/autocomplete']['access arguments'] = array(
     'access user autocomplete',
   );
-}
 
-/**
- * Page callback for user/login.
- */
-function os_in_read_mode_login() {
-  if (variable_get('os_readonly_mode', FALSE)) {
+  // Apply CP theme for book revision page.
+  $items['node/%node/revisions']['theme callback'] = 'cp_theme_name';
+}
+function os_in_readonly_mode($page) {
+  // Callback data for each page.
+  switch ($page) {
+    case 'login':
+      // Callback data for user/login.
+      $drupal_default_form = 'user_login';
+      $custom_callback_variable = 'os_readonly_login_callback';
+      break;
+
+    case 'register':
+      // Callback data for user/register.
+      $drupal_default_form = 'user_register_form';
+      $custom_callback_variable = 'os_readonly_register_callback';
+      break;
+
+    case 'password':
+      // Callback data for user/password.
+      $drupal_default_form = 'user_pass';
+      $custom_callback_variable = 'os_readonly_password_callback';
+      break;
+
+    case 'site_register':
+      // Callback data for site/register.
+      $drupal_default_form = 'vsite_register_form';
+      $custom_callback_variable = 'os_readonly_site_register_callback';
+      break;
+  }
+
+  global $user;
+
+  if (variable_get('os_readonly_mode', FALSE) && $user->uid != 1) {
+    // Read-only mode is active.
     return variable_get('os_readonly_mode_message', OS_READONLY_MODE_MESSAGE);
   }
 
   if (user_is_anonymous()) {
-    return drupal_get_form('user_login');
+    // Get custom callback function from variable.
+    $function = variable_get($custom_callback_variable, NULL);
+    if ($function) {
+      // Use the custom function.
+      return call_user_func($function);
+    }
+
+    // Use Drupal's default form.
+    return drupal_get_form($drupal_default_form);
+  }
+
+  // The default form should be displayed if the user is admin or in case the user
+  // tries to access "site/register" and he can create a VSite.
+  if (user_access('administer site configuration') || (_vsite_user_access_create_vsite() && $page == 'site_register')) {
+    return drupal_get_form($drupal_default_form);
   }
 
   drupal_access_denied();
 }
 
-/**
- * Page callback for user/register.
- */
-function os_in_read_mode_register() {
-  if (variable_get('os_readonly_mode', FALSE)) {
-    return variable_get('os_readonly_mode_message', OS_READONLY_MODE_MESSAGE);
-  }
-
-  if (user_register_access()) {
-    return drupal_get_form('user_register_form');
-  }
-
-  drupal_access_denied();
-}
-
-/**
- * Page callback for user/password.
- */
-function os_in_read_mode_password() {
-  if (variable_get('os_readonly_mode', FALSE)) {
-    return variable_get('os_readonly_mode_message', OS_READONLY_MODE_MESSAGE);
-  }
-
-  return drupal_get_form('user_pass');
-}
-
-/**
- * Page callback for site/register, pinserver authentication.
- */
-function os_in_read_mode_site_register_pinserver() {
-  if (variable_get('os_readonly_mode', FALSE)) {
-    return variable_get('os_readonly_mode_message', OS_READONLY_MODE_MESSAGE);
-  }
-
-  if (module_exists('os_pinserver_auth') && os_pinserver_auth_register_access()) {
-    return os_pinserver_auth_vsite_register_form_page();
-  }
-
-  return drupal_get_form('vsite_register_form');
-}
-
-/**
- * Page callback for site/register.
- */
-function os_in_read_mode_site_register() {
-  if (variable_get('os_readonly_mode', FALSE)) {
-    return variable_get('os_readonly_mode_message', OS_READONLY_MODE_MESSAGE);
-  }
-
-  if (vsite_vsite_exists_access()) {
-    return drupal_get_form('vsite_register_form');
-  }
-}
 
 /**
  * Implements hook_entity_info_alter().
@@ -519,7 +507,9 @@ function os_module_implements_alter(&$implementations, $hook) {
   elseif ($hook == 'init') {
     unset($implementations['purl']);
   }
-  elseif ($hook == 'form_alter') {
+  elseif ($hook == 'form_alter' || $hook == 'menu_alter') {
+    // Make the os implementation of menu_alter last so os_pinserver_auth won't
+    // override the "/user" page callback.
     unset($implementations['os']);
     $implementations['os'] = FALSE;
   }
@@ -691,8 +681,18 @@ function os_preprocess_page(&$vars) {
       if (isset($a->conditions['node']['values']) && $a->conditions['node']['options']['node_form'] == 0) {
         if (in_array($type, $a->conditions['node']['values'])) {
           $printed = TRUE;
-          $context = $a->name;
           $module  = $a->export_module;
+        }
+      }
+      else {
+        // Allow non-nodes context to use the settings link.
+        if (!empty($a->export_module) && !empty($a->conditions['path']['values']) && !empty($a->settings_link)) {
+          foreach ($a->conditions['path']['values'] as $path) {
+            if (drupal_match_path($_GET['q'], $path)) {
+              // The path of the context match the current path.
+              $module  = $a->export_module;
+            }
+          }
         }
       }
     }
@@ -900,14 +900,23 @@ function os_form_alter(&$form, &$form_state, $form_id) {
  * @see os_form_alter()
  */
 function os_entity_form_after_build($form, $form_state) {
-  $node = isset($form['#node'])?$form['#node']:NULL;
+  // Triggers context_node_condition() for this node type, defaults to "page".
+  $node = isset($form['#node']) ? $form['#node'] : NULL;
   if (!isset($node) && isset($form['#entity']) && !isset($form['#entity']->comment)) {
      // dummy node
-    $node = (object)array('type' => 'page');
+    $node = (object) array('type' => 'page');
   }
   if (isset($node)) {
     context_node_condition($node, 'form');
   }
+
+  // Hides the metatags and redirect fieldsets from all users.
+  foreach (array('metatags', 'redirect') as $element) {
+    if (isset($form[$element])) {
+      $form[$element]['#access'] = FALSE;
+    }
+  }
+
   return $form;
 }
 
@@ -917,7 +926,13 @@ function os_entity_form_after_build($form, $form_state) {
  * Cleans up some advanced settings and places them in a fieldset.
  */
 function os_form_node_form_alter(&$form, $form_state) {
+  // Removes "Promoted to front page" checkbox.
   unset($form['options']['promote']);
+
+  // Removes "Revision information" fieldset.
+  $form['revision_information']['#access'] = FALSE;
+
+
   $form['path']['pathauto']['#description'] = t('Uncheck this to create a custom alias below.');
   if (isset($form['field_upload']['und']['add_more']['#value'])) {
     $form['field_upload']['und']['add_more']['#value'] = t('Add media');
@@ -928,10 +943,38 @@ function os_form_node_form_alter(&$form, $form_state) {
 
   unset($form['additional_settings']);
   foreach (element_children($form) as $c) {
+    if (isset($form[$c]['#type']) && $form[$c]['#type'] == 'fieldset' && isset($form[$c]['#group'])) {
+      $form[$c]['#collapsed'] = true;
+    }
     unset($form[$c]['#group']);
   }
 
   $form['actions_top'] = $form['actions'];
+
+  // Add description to the name field in the author fieldset.
+  $form['author']['name']['#description'] = t('You may change this if posting on behalf of someone else.');
+
+  // Alters action buttons for existing nodes.
+  if (isset($form['#node']->nid, $form['#node']->type)) {
+    // Adds "Delete this post" link specifying node type if available.
+    $text = t('Delete this post');
+    $names = node_type_get_names();
+    if (isset($names[$form['#node']->type])) {
+      $name = strtolower($names[$form['#node']->type]);
+      $text = t('Delete this @name', array('@name' => $name));
+    }
+    $options = array(
+      'attributes' => array(
+        'class' => array('os-delete-link', 'os-' . $form['#node']->type . '-delete-link'),
+      ),
+    );
+    $delete = array(
+      '#type' => 'item',
+      '#markup' => l($text, 'node/' . $form['#node']->nid . '/delete', $options),
+      '#weight' => 99,
+    );
+    $form['actions']['delete'] = $form['actions_top']['delete'] = $delete;
+  }
 }
 
 /**
@@ -1219,11 +1262,22 @@ function os_context_registry() {
 /**
  * Implements hook_cron().
  *
- * Allows another method for cleaning out the page_cache for non-memcache entries
+ * Allows another method for cleaning out the page_cache for non-memcache entries.  We consistantly clear out
+ * the page cache (but not the block cache) every 15 minutes.  This will assure that our cache does not get too
+ * old.  If the page cache is handles by memcache we pass a constant to tell it that we want to update the expire
+ * time.  Note that this does not remove everything from the page cache, just expired items.  This is also done
+ * whenever a node is saved with a call to cache_clear_all()
  */
 function os_cron() {
+
+  $class = variable_get('cache_class_cache_page');
+  if (!isset($class)) {
+    $class = variable_get('cache_default_class', 'DrupalDatabaseCache');
+  }
+
   //Clear expired Items from page cache
-  cache_clear_all(NULL, 'cache_page');
+  $cid = ($class == 'MemCacheDrupal') ? MEMCACHE_CONTENT_CLEAR : NULL;
+  cache_clear_all($cid, 'cache_page');
 }
 
 /**
@@ -2108,9 +2162,9 @@ function os_preprocess_node(&$vars) {
 }
 
 /**
- * Implements hook_field_display_node_alter 
+ * Implements hook_field_display_node_alter
  *
- * Makes the slide_teaser display mode just like teaser.  
+ * Makes the slide_teaser display mode just like teaser.
  */
 function os_field_display_node_alter(&$display, $context) {
   if ($context['view_mode'] == 'slide_teaser') {
@@ -2172,4 +2226,26 @@ function os_file_copy_set_error($message, $exception) {
     'type' => 'error',
     'message' => $message,
   );
+}
+
+/**
+ * Implements hook_drupal_goto_alter().
+ */
+function os_drupal_goto_alter(&$path, &$options, &$http_response_code) {
+  if (!module_exists('redirect')) {
+    return;
+  }
+
+  if ($http_response_code != 301) {
+    return;
+  }
+
+  // Serves 301 redirects with redirect_redirect(), to allow caching.
+  $options['absolute'] = TRUE;
+  $redirect = (object) array(
+    'redirect' => url($path, $options),
+    'status_code' => 301,
+    'type' => 'global',
+  );
+  redirect_redirect($redirect);
 }

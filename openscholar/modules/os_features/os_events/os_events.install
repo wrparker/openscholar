@@ -9,9 +9,6 @@ function os_events_install() {
 
   //Don't store the 'last_viewed' date, This is annoying
   variable_set('calendar_track_date', 0);
-
-  //Use colorbox for the calendar
-  variable_set('calendar_add_colorbox', 1);
 }
 
 /**
@@ -104,3 +101,11 @@ function os_events_update_7005() {
 function os_events_update_7006() {
   features_revert(array('os_events' => array('field_instance')));
 }
+
+/**
+ * Remove calendar_add_colorbox variable since we decided not to use colorbox.
+ */
+function os_events_update_7007() {
+  variable_del('calendar_add_colorbox');
+}
+

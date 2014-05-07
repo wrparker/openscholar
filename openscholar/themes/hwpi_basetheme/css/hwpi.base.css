@@ -48,6 +48,7 @@ p:empty {
 
 table, th, td, tr {
   border-color: #CACACA;
+  color: inherit;
 }
 table {
   margin-bottom: 15px;
@@ -589,9 +590,15 @@ article.node-teaser.node-person .field-name-field-person-photo ~ .node-content {
 }
 
 /* An empty div styling in case of no default image */
-.node-person .no-default-image {
+.node-person.node-teaser .no-default-image {
   width: 75px;
   height: 75px;
+  float: left;
+}
+
+/* Kile the empty div when in a sidebar */
+.sidebar .node-person .no-default-image {
+display: none;
 }
 
 .node-type-person #content .node-person .field-name-body {
@@ -643,6 +650,13 @@ article.node-teaser.node-person .field-name-field-person-photo ~ .node-content {
   padding: 15px 0 30px;
 }
 
+
+@-moz-document url-prefix() { 
+  .node-teaser.node-person {
+  display: table;
+	}
+}
+
 .block-boxes-os_boxes_manual_list .node-teaser.node-person {
   padding: 0 0 30px;
 }
@@ -650,6 +664,7 @@ article.node-teaser.node-person .field-name-field-person-photo ~ .node-content {
 .person-teaser-wrapper {
 	display:table-cell;
 	vertical-align:top;
+	width: 100%;
 }
 
 .node-link.node-teaser {
@@ -665,7 +680,9 @@ article.node-teaser.node-person .field-name-field-person-photo ~ .node-content {
 	display:inline;
 }
 
-
+.block-boxes-os_sv_list_box .os_sv_list_box.sv-list-link.sv-list-view-links h1 a {
+	font-family:arial;
+	}
 
 /**
 LIST OF POSTS - PERSON TEASER IN SIDEBAR

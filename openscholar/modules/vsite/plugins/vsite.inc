@@ -1,6 +1,4 @@
 <?php
-// $Id$
-
 
 /**
  * VSite space object
@@ -18,17 +16,19 @@ class vsite extends space_og {
   // Allows for a multi-provider system.
   public $purl_provider = FALSE;
 
-  // Provides our own states different from the default Disabled/Enabled
+  /**
+   * Provides our own states; different from the default Disabled/Enabled.
+   */
   function feature_options() {
     return array(
       0 => t('Disabled'),
       1 => t('Public'),
-      2 => 'Private',
+      2 => t('Private'),
     );
   }
 
   /**
-   * Returns the absolute URL to this vsite
+   * Returns the absolute URL to this vsite.
    */
   public function get_absolute_url($path = "") {
     // If this is an inactive site get the homepage path from the group node
@@ -47,10 +47,9 @@ class vsite extends space_og {
   }
 
   /**
-   * Overrides activate().
+   * Overrides parent::activate().
    */
   function activate() {
-
     // Check if the current user has access to activate this space.
     if (!$this->access_space()) {
       module_invoke_all('vsite_access_denied', $this);
@@ -58,43 +57,62 @@ class vsite extends space_og {
       drupal_exit();
     }
 
-    // Test purl paths
+    // Test purl paths.
     $this->activate_purl_modifier();
 
-    if (parent::activate()) {
-      // Sets up user roles (call before menu_get_item caches access info)
-      $this->activate_user_roles();
-
-      $router_items = &drupal_static('menu_get_item');
-      // Have the menu access params already been set?
-      if (isset($router_items[$_GET['q']])) {
-        // If the current menu item may rely on the space so we reset the cached access information
-        unset($router_items[$_GET['q']]);
-      }
-
-      return TRUE;
+    if (!parent::activate()) {
+      return FALSE;
     }
 
-    return FALSE;
+    // We cannot rely on parent::activate() to check excluded path, as our URL
+    // is prefixed with the PURL if we are using the path method, thus
+    // drupal_match_path() never finds a matching path.
+    // Instead, we remvoe the PURL from the path and check it ourself.
+    // So for example instead of checking john/user/1/edit we check on
+    // user/1/edit.
+    if ($this->purl_provider == 'spaces_og') {
+      $paths = implode("\n", $this->excluded_paths());
+      $path = explode('/', $_GET['q']);
+      if ($path[0] == $this->group->purl) {
+        unset($path[0]);
+      }
+      $path = implode('/', $path);
+      if (drupal_match_path($path, $paths)) {
+        $this->deactivate();
+        return FALSE;
+      }
+    }
+
+    // Sets up user roles (call before menu_get_item caches access info)
+    $this->activate_user_roles();
+
+    $router_items = &drupal_static('menu_get_item');
+    // Have the menu access params already been set?
+    if (isset($router_items[$_GET['q']])) {
+      // If the current menu item may rely on the space so we reset the cached access information
+      unset($router_items[$_GET['q']]);
+    }
+
+    return TRUE;
   }
 
   /**
-   * Deactivate Space
+   * Overrides parent::deactivate().
    */
-  function deactivate(){
+  function deactivate() {
     // If variable controller had been init'ed reset it.
     // This prevent overridden variables from interacting
     // with the page.
-    if(isset($this->controllers->variable)){
+    if (isset($this->controllers->variable)) {
       global $conf;
-      $conf = $this->controllers->variable->get(NULL,'original');
+      $conf = $this->controllers->variable->get(NULL, 'original');
     }
 
     parent::deactivate();
   }
 
   /**
-   * Implements space->router().
+   * Overrides parent::router().
    */
   public function router($op, $node = NULL) {
     global $user;
@@ -123,7 +141,7 @@ class vsite extends space_og {
         break;
 
       case 'init':
-        if(!$this->active) {
+        if (!$this->active) {
           break;
         }
 
@@ -142,10 +160,10 @@ class vsite extends space_og {
             else {
               purl_goto("<front>", array(
                   'purl' => array(
-                      'provider' => $this->purl_provider,
-                      'id' => $this->id
-                  )
-              ));
+                    'provider' => $this->purl_provider,
+                    'id' => $this->id,
+                  ),
+                ));
             }
           }
         }
@@ -180,13 +198,14 @@ class vsite extends space_og {
             //  - the current page we are on does not use that alias value,
             $path = $_GET['q'];
             $aliased_path = url($path);
-            $request_has_alias = (bool) ($path != $aliased_path);
+            $request_has_alias = (bool)($path != $aliased_path);
             $path_parts = explode('/', _purl_cache_q());
             if ($request_has_alias && sizeof($path_parts) < 4) {
               // Handles both types of requests:
               // "mysite/node/123" AND "node/123" (on sites with custom domains)
               if ((sizeof($path_parts) == 3 && $path_parts[1] == 'node' && $path_parts[2] == $node->nid)
-               || (sizeof($path_parts) == 2 && $path_parts[0] == 'node' && $path_parts[1] == $node->nid)) {
+                || (sizeof($path_parts) == 2 && $path_parts[0] == 'node' && $path_parts[1] == $node->nid)
+              ) {
                 // Redirects to the aliased node path.
                 $path = $this->get_absolute_url("node/$node->nid");
                 drupal_goto($path);
@@ -200,7 +219,7 @@ class vsite extends space_og {
   }
 
   /**
-   * Overrides access_feature().
+   * Overrides parent::access_feature().
    */
   function access_feature($op = 'view', $feature, $account = NULL) {
     if ($feature == 'vsite' && $op == 'view' && user_access('access content')) {
@@ -238,6 +257,7 @@ class vsite extends space_og {
       // Handles privacy levels that are not simple Public/Disabled
       switch ($features[$feature]) {
         // Private
+
         case 2:
           // Admin or group member?
           if (!og_is_member($this->group_type, $this->id, 'user', $account) && !user_access('administer nodes')) {
@@ -245,6 +265,7 @@ class vsite extends space_og {
           }
           break;
         // Unknown Privacy Level
+
         default:
           $access = FALSE;
           break;
@@ -256,7 +277,7 @@ class vsite extends space_og {
   }
 
   /**
-   * verify_purl()
+   * Overrides parent::verify_purl()
    *
    * If this space is loaded outside a active context (ie externally from the
    * home page), then determine which purl_provider would be best domain if they
@@ -303,7 +324,7 @@ class vsite extends space_og {
   }
 
   /**
-   * Overrides excluded_paths().
+   * Overrides parent::excluded_paths().
    *
    * The parent exlcudes 'features' and 'features/*'
    * We want them back
@@ -338,6 +359,7 @@ class vsite extends space_og {
    * Checks to see if a path is excluded.
    *
    * @param string $q
+   *
    * @return bool
    */
   public static function is_excluded_path($q) {
@@ -387,9 +409,9 @@ class vsite extends space_og {
   }
 
   /**
-   * Modify permissions on the fly, based on the VSite.
+   * Modifies permissions on the fly, based on the VSite.
    *
-   * Maintain a corrolation between the VSite level roles, and the site-wide
+   * Maintain a correlation between the VSite level roles, and the site-wide
    * roles.
    *
    * The site-wide "vsite user", "vsite admin", and "content editor" roles are
@@ -399,6 +421,10 @@ class vsite extends space_og {
    */
   protected function activate_user_roles() {
     global $user;
+    if (user_is_anonymous()) {
+      // Anon users never get any special permissions.
+      return;
+    }
 
     $roles = $user->roles;
     $role_names = array(
@@ -407,17 +433,12 @@ class vsite extends space_og {
       'vsite user',
     );
 
-    $og_roles = og_get_user_roles('node', $this->id);
-
-    if (!$add_role_names = array_intersect($role_names, $og_roles)) {
-      // No site-wide roles to add.
-      return;
-    }
+    $og_roles = og_get_user_roles('node', $this->id, NULL, FALSE);
 
     // Re-populate "user_access" static.
     $perm = &drupal_static('user_access');
 
-    foreach ($add_role_names as $role_name) {
+    foreach (array_intersect($role_names, $og_roles) as $role_name) {
       // Add site-wide roles, based on the VSite roles.
       $role = user_role_load_by_name($role_name);
       $roles[$role->rid] = $role->name;
@@ -448,7 +469,7 @@ class vsite extends space_og {
   }
 
   /**
-   * Overrides access_space().
+   * Overrides parent::access_space().
    */
   function access_space($account = NULL) {
     if (user_access('subscribe as support team', $account)) {
@@ -461,10 +482,13 @@ class vsite extends space_og {
   }
 
   /**
-   * Check if the user is a group administator.
+   * Overrides parent::og_is_group_admin().
+   *
+   * Checks if the user is a group administator.
    */
-  function og_is_group_admin($group, $account){
+  function og_is_group_admin($group, $account) {
     list($nid) = entity_extract_ids($this->group_type, $group);
     return og_user_access('node', $nid, 'administer group', $account);
   }
 }
+

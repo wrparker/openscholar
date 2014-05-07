@@ -95,7 +95,7 @@ function os_profiles_feeds_importer_default() {
           ),
         ),
         'update_existing' => '0',
-        'input_format' => 'plain_text',
+        'input_format' => 'filtered_html',
         'skip_hash_check' => 0,
         'file_field' => 'field_upload',
         'content_type' => 'person',

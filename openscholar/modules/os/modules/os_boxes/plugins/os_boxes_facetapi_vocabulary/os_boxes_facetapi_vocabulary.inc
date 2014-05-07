@@ -1,11 +1,11 @@
 <?php
+
 class os_boxes_facetapi_vocabulary extends os_boxes_default {
 
   /**
    * Create a new box.
    */
   protected function __construct() {
-    ctools_include('taxonomy', 'os');
     parent::__construct();
     $this->title = t('Filter by taxonomy');
   }
@@ -15,7 +15,8 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
    */
   public function options_defaults() {
     $options = parent::options_defaults();
-    $options['vocabularies'] = $this->get_bundle_vocabularies();
+    $options['bundle'] = FALSE;
+    $options['vocabularies'] = array();
 
     return $options;
   }
@@ -26,14 +27,120 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
   public function options_form(&$form_state) {
     $form = parent::options_form($form_state);
 
-    $form['vocabularies'] = array(
-      '#type' => 'checkboxes',
-      '#title' => t('Vocabularies'),
-      '#description' => t('Select which vocabularies to show. No selection will show all vocabularies.'),
-      '#options' => $this->get_bundle_vocabularies(),
-      '#default_value' => (!empty($this->options['vocabularies']) ? $this->options['vocabularies'] : array()),
+    $bundle = $this->options['bundle'];
+    $selected_vocab = $this->options['vocabularies'];
+
+    if (!empty($form_state['values']['bundle'])) {
+      // We have the bundle from the AJAX.
+      $bundle = $form_state['values']['bundle'];
+      $selected_vocab = 'all';
+    }
+
+    $form['bundle'] = array(
+      '#type' => 'select',
+      '#description' => t('Which bundle would you like to use.'),
+      '#title' => t('Content type'),
+      '#options' => os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP)),
+      '#default_value' => $bundle,
+      '#required' => TRUE,
+      '#default_value' => $bundle,
+      '#ajax' => array(
+        'callback' => 'os_boxes_facetapi_vocabulary_ajax_callback',
+        'wrapper' => 'vocab-wrapper',
+      ),
+    );
+
+    $form['vocab_wrapper'] = array(
+      '#prefix' => '<div id="vocab-wrapper">',
+      '#suffix' => '</div>',
+      '#parents' => array('vocab_wrapper'),
+    );
+
+    $vocabs = os_search_solr_get_bundle_vocabularies($bundle);
+    $options = array('all' => t('All vocabularies')) + $vocabs;
+
+    $form['vocab_wrapper']['vocabularies'] = array(
+      '#title' => t('Select vocabularies'),
+      '#type' => 'select',
+      '#options' => $options,
+      '#multiple' => TRUE,
+      '#default_value' => $selected_vocab,
     );
     return $form;
+  }
+
+  /**
+   * Check whether an empty Solr search is needed.
+   *
+   * @return $browse_page
+   *   Solr search page id in case empty search is needed, FALSE otherwise.
+   */
+  public function is_empty_search_needed() {
+    if (!$feature = os_get_active_feature()) {
+      // No active feature.
+      return;
+    }
+    if (!$app_info = os_app_info($feature->name)) {
+      // No app information available.
+      return;
+    }
+    if (!$browse_page = reset(array_keys($app_info['browse_pages']))) {
+      // No browse_pages.
+      return;
+    }
+
+    $page_id = 'browse_' . $browse_page;
+    $search_page = apachesolr_search_page_load($page_id);
+    $env_id = $search_page['env_id'];
+
+    if (apachesolr_has_searched($env_id)) {
+      // Search was executed already.
+      return;
+    }
+    $page_id = 'browse_' . $browse_page;
+    return $page_id;
+  }
+
+  /**
+   * Facet widgets that in a non-solr search page must fake a search page in
+   * order to show the facet. To do so we execute a "silent" search on solr
+   * without showing the results.
+   */
+  public function call_empty_search_if_needed() {
+    if (!$page_id = $this->is_empty_search_needed()) {
+      return;
+    }
+
+    // Execute the query.
+    try {
+      $search_page = apachesolr_search_page_load($page_id);
+      $env_id = $search_page['env_id'];
+
+      if (apachesolr_has_searched($env_id)) {
+        // Search was executed already.
+        return;
+      }
+      $solr = apachesolr_get_solr($env_id);
+
+      $conditions = apachesolr_search_conditions_default($search_page);
+
+      // Initializes params for empty query.
+      $params = array(
+        'spellcheck' => 'false',
+        'fq' => isset($conditions['fq']) ? $conditions['fq'] : array(),
+        'rows' => 1,
+      );
+      $context['page_id'] = $page_id;
+      $context['search_type'] = 'apachesolr_search_show_facets';
+      apachesolr_search_run_empty('apachesolr', $params, $search_page['search_path'], $solr, $context);
+
+      // Returning TRUE means there was an empty search, and we will cache the
+      // block.
+      return TRUE;
+    }
+    catch (Exception $e) {
+      watchdog('Apache Solr', nl2br(check_plain($e->getMessage())), NULL, WATCHDOG_ERROR);
+    }
   }
 
   /**
@@ -41,74 +148,87 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
    */
   public function render() {
     $block = parent::render();
-
     $searcher_name = os_search_solr_get_searcher_name();
     // Gets delta map
     if (!$map = facetapi_get_delta_map()) {
       return $block;
     }
 
+    $delta = $block['delta'];
+
     // Filter by OG vocab.
     $string_og_vocab = facetapi_build_delta($searcher_name, 'block', 'sm_og_vocabulary');
     $delta_og_vocab = array_search($string_og_vocab, $map);
 
-    $delta = $block['delta'];
-    $block = module_invoke('facetapi', 'block_view', $delta_og_vocab);
-    $block['delta'] = $delta;
-
-    // Set block subject/title from box configuration.
-    $block['subject'] = $this->title;
-    $block['title'] = $this->title;
-
-    if (empty($block['content'])) {
-      // Block content must be defined, even if it is empty, to avoid errors.
-      $block['content'] = '';
+    $cid = 'sm_og_vocabulary:' . $delta_og_vocab;
+    // Verify the cache is still valid, based on time since created.
+    if ($this->is_empty_search_needed() && ($cache = cache_get($cid)) && $cache->created > REQUEST_TIME - variable_get('facetapi_vocabulary_cache_timeout', 300)) {
+      $block = $cache->data;
     }
     else {
-      if (!empty($this->options['vocabularies'])) {
-        // Get the list of selected vocabularies
-        $selected = array();
-        foreach ($this->options['vocabularies'] as $vocabulary_name => $value) {
-          if ($value) {
-            $selected[$vocabulary_name] = $value;
+      // Verify the facet block has something to work on (means - it is in a solr
+      // search page). If not - execute the empty solr search without showing
+      // the results.
+      // If empty search happened, we will cache the block.
+      $set_cache = $this->call_empty_search_if_needed();
+
+      $block = module_invoke('facetapi', 'block_view', $delta_og_vocab);
+      $block['delta'] = $delta;
+
+      // Set block subject/title from box configuration.
+      $block['subject'] = check_plain($this->title);
+      $block['title'] = check_plain($this->title);
+
+      if (empty($block['content'])) {
+        // Block content must be defined, even if it is empty, to avoid errors.
+        // os_boxes_widget_submit() renders blocks into a 'dummy' region, but
+        // gives errors in case the content is empty, hence the space.
+        $block['content'] = ' ';
+      }
+      else {
+        if (!empty($this->options['vocabularies'])) {
+          // Get the list of selected vocabularies
+          $selected = array();
+          foreach ($this->options['vocabularies'] as $vocabulary_name => $value) {
+            if ($value == "all") {
+              $selected = array();
+              break;
+            }
+            if ($value) {
+              $selected[$vocabulary_name] = $value;
+            }
           }
-        }
-        // If no selection - show all. If there is selection - show only them.
-        if (count($selected) > 0) {
-          foreach (array_keys($block['content']['sm_og_vocabulary']) as $vocabulary_name) {
-            if (empty($selected[$vocabulary_name])) {
-              unset($block['content']['sm_og_vocabulary'][$vocabulary_name]);
+          // If no selection - show all. If there is selection - show only them.
+          if (count($selected)) {
+            foreach (array_keys($block['content']['sm_og_vocabulary']) as $vocabulary_name) {
+              if (empty($selected[$vocabulary_name])) {
+                unset($block['content']['sm_og_vocabulary'][$vocabulary_name]);
+              }
             }
           }
         }
-      }
 
-      if (!empty($block['content']['sm_og_vocabulary'])) {
-        // Sort by vocab's title.
-        ksort($block['content']['sm_og_vocabulary']);
-      }
+        if (!empty($block['content']['sm_og_vocabulary'])) {
+          // Sort by vocab's title.
+          ksort($block['content']['sm_og_vocabulary']);
+        }
 
-      $block['content'] = render($block['content']);
+        $block['content'] = render($block['content']);
+        if ($set_cache) {
+          cache_set($cid, $block);
+        }
+      }
     }
     return $block;
   }
+}
 
-  /**
-   * Get all the vocabularies id using the taxonomy terms, relevant to the
-   * current bundle.
-   */
-  private function get_bundle_vocabularies() {
-
-    $taxonomy_vocabularies = os_get_vocabularies_by_bundle('node', str_replace("vocabulary_filter_", "", $this->delta));
-
-    $vocabularies = array();
-
-    if ($taxonomy_vocabularies) {
-      foreach ($taxonomy_vocabularies as $taxonomy_vocabulary) {
-        $vocabularies[$taxonomy_vocabulary->machine_name] = $taxonomy_vocabulary->name;
-      }
-    }
-
-    return $vocabularies;
-  }
+/**
+ * AJAX callback to attach the vocab to the form.
+ *
+ * Since the controlling logic for populating the form is in the form builder
+ * function, all we do here is select the element and return it to be updated.
+ */
+function os_boxes_facetapi_vocabulary_ajax_callback($form, &$form_state) {
+  return $form['options']['vocab_wrapper'];
 }

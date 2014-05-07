@@ -1,13 +1,13 @@
 Feature:
   Testing the blog tab.
 
-  @api
+  @api @first
   Scenario: Test the Blog tab
      Given I visit "john"
       When I click "Blog"
       Then I should see "First blog"
 
-  @api
+  @api @first
   Scenario: Test the Blog archive
     Given I visit "john"
       And I click "Blog"

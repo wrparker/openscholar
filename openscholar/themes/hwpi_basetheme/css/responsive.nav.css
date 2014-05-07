@@ -1,15 +1,22 @@
 
 @media (max-width: 1008px) {
 /*Header*/
-.region-header-second {
-    /*max-height: 160px!important;*/
+
+
+.logged-in.toolbar-drawer .toolbar-right {
+	float: left;
 }
+
 .branding-right {
     display: none; 
 }
 #branding_footer, #branding_header {
     width: 100%;
 }
+
+#header-container .gpanel .region.region-header-third {
+    position:static !important;
+} 
   
 .region-header-third ul.nice-menu {
     float: left!important;
@@ -20,13 +27,40 @@
 }
 
 /*Primary menu*/
+
+.responive-menu-container {
+	position: absolute;
+	right: 0;
+	z-index: 2000;
+	}
+
 #menu-bar #block-os-primary-menu{
 		display:none;
 }
+
+.region-header-third #block-os-search-solr-site-search.opened,
+.region-header-third #block-os-secondary-menu.opened, 
+.region-header-third .os-custom-menu.opened,
 #menu-bar #block-os-primary-menu.opened{
-	display:block;
+	display: block;
     padding: 0;
+	position: absolute;
+	top: 38px;
+	width: 305px !important;
+	right: 0;
+    z-index: 2000;
 }
+
+#search-block-form .container-inline .form-item .form-text {
+    width: 90% !important;
+}
+
+.region-header-third #block-os-secondary-menu.opened,
+.region-header-third .os-custom-menu.opened {
+    background-color: #2A527A;
+ 
+}
+
 #menu-bar #block-os-primary-menu ul:after {
     clear: both;
     content: ".";
@@ -61,7 +95,7 @@
     display: block;
     margin: 0 auto;
     max-width: 1008px;
-    padding: 12px 30px !important;
+    padding: 8px 20px !important;
 }
 #menu-bar #block-os-primary-menu a {
     color: #FFFFFF;
@@ -111,18 +145,11 @@ background: none !important;
     background-color: #1E1E1E;
     display: block;
     padding: 12px 0;
-    position: static;
-    width: 95% !important;
-    margin: 0 15px;
+    position: absolute;
+    width: 305px !important;
+ 
 }
-.region-header-third #block-os-secondary-menu.opened,
-.region-header-third .os-custom-menu.opened {
-    background-color: #2A527A;
-    display: block;
-    position: static;
-    width:95% !important;
-    margin: 0 15px;
-}
+
 
 .region-header-third .os-custom-menu,
 .region-header-third #block-os-secondary-menu{
@@ -182,11 +209,6 @@ background: none !important;
 }
 ul.mobile-buttons {
     display: block !important;
-  	margin-bottom: 0;
-  	margin-left: 15px;
-  	position: absolute;
-	bottom: -7px;
-	width: 95%;
 }
 
 .mobile-buttons li {
@@ -197,21 +219,25 @@ ul.mobile-buttons {
 }
 .link-count-mobi-main {
     text-align: left !important;
-    width: 60%;
 }
 .link-count-mobi-main a {
     background: url("../images/icon_menu.png") no-repeat scroll 15px center transparent;
 }
 .mobile-buttons a {
     color: #FFFFFF!important;
-    display: block;
-    font: bold 16px arial,sans-serif;
-    height: 20px !important;
-    letter-spacing: 1px;
-    padding: 12px 15px !important;
-    text-decoration: none;
-    text-transform: uppercase;
+display: block;
+font: bold 13px arial,sans-serif;
+height: 22px !important;
+letter-spacing: 1px;
+padding: 8px 12px !important;
+text-decoration: none;
+text-transform: uppercase;
 }
+
+.link-count-mobi-search a {
+padding: 8px 8px !important;
+}
+
 .mobile-buttons a span {
     font-weight: normal;
     padding-left: 25px;
@@ -228,12 +254,8 @@ ul.mobile-buttons {
     background: url("../images/icon_plus.png") no-repeat scroll center center transparent;
     min-height: 20px;
 }
-.link-count-mobi-util {
-    width: 20%;
-}
-.link-count-mobi-search {
-    width: 20%;
-}
+
+
 .link-count-mobi-search a {
        background: url("../images/icon_search.png") no-repeat scroll center center transparent;
       min-height: 20px;
@@ -260,9 +282,7 @@ ul.primary li a {
 /*--------------------------------------------------------*/
 @media (max-width: 768px) {
 	
-.region-header-second {
-    min-height: 145px !important;
-}
+
 .block.block-boxes.block-boxes-os_boxes_site_logo {
     width: 100%!important;
 }
@@ -273,14 +293,8 @@ ul.primary li a {
 .link-count-mobi-util a {
     min-height: 20px;
 }
-.region-header-third #block-os-secondary-menu.opened,
-.region-header-third .os-custom-menu.opened {
-    top: 65px!important;
-    z-index: 3;
-}	
-.region-header-third #block-os-search-solr-site-search.opened {
-    top: 65px!important;
-}
+	
+
 .region-header-third {
     margin-left: 15px!important;
     width: 100%!important;
@@ -290,14 +304,10 @@ ul.primary li a {
 
 /*--------------------------------------------------------*/
 @media (max-width:400px){
-	
-#search-block-form .container-inline .form-item .form-text {
-    width: 75% !important;
-}
 
-.region-header-second {
-    min-height: 165px !important;
-}
+
+
+
 }
 
 @media (max-width:240px){

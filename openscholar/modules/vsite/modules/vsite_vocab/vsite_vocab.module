@@ -59,9 +59,12 @@ function vsite_vocab_entity_info_alter(&$info) {
  * Adding custom paths to the vocabulary actions.
  */
 function vsite_vocab_menu_alter(&$items) {
-  $items['cp/build/taxonomy/%taxonomy_vocabulary_machine_name'] = $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name'];
-  $items['cp/build/taxonomy/%taxonomy_vocabulary_machine_name/add'] = $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/add'];
-  $items['cp/build/taxonomy/%taxonomy_vocabulary_machine_name/edit'] = $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/edit'];
+  $path_parts = array('', '/add', '/edit');
+  foreach ($path_parts as $path_part) {
+    $items['cp/build/taxonomy/%taxonomy_vocabulary_machine_name' . $path_part] = $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name' . $path_part];
+    $items['cp/build/taxonomy/%taxonomy_vocabulary_machine_name' . $path_part]['access callback'] = 'vsite_og_user_access';
+    $items['cp/build/taxonomy/%taxonomy_vocabulary_machine_name' . $path_part]['access arguments'] = array('administer taxonomy');
+  }
 
   if (variable_get('og_vocab_term_page_access', FALSE)) {
     $items['taxonomy/term/%taxonomy_term']['access callback'] = 'vsite_vocab_term_page_access';
@@ -70,6 +73,7 @@ function vsite_vocab_menu_alter(&$items) {
     $items['taxonomy/term/%taxonomy_term/feed']['access callback'] = 'vsite_vocab_term_page_access';
     $items['taxonomy/term/%taxonomy_term/feed']['access arguments'] = array(2);
   }
+
 }
 
 /**
@@ -224,6 +228,7 @@ function vsite_vocab_form_taxonomy_form_vocabulary_alter(&$form, $form_state) {
       'entityreference_autocomplete' => t('Autocomplete'),
       'options_select' => t('Select list'),
       'options_buttons' => t('Check boxes / Radio buttons'),
+      'term_reference_tree' => t('Tree'),
     ),
     '#dependency' => array('radio:widget_type_autocomplete' => array('entityreference_autocomplete')),
 
@@ -351,6 +356,11 @@ function vsite_vocab_form_taxonomy_form_vocabulary_submit(&$form, &$form_state) 
         $og_vocab->settings['cardinality'] = $values['cardinality'];
         $values['widget_type'] = $values['widget_type_autocomplete'] == 'entityreference_autocomplete' ? $values['widget_type'] : $values['widget_type_autocomplete'];
         $og_vocab->settings['widget_type'] = $values['widget_type'];
+
+        if ($values['widget_type'] == 'term_reference_tree') {
+          $og_vocab->settings['widget']['start_minimized'] = TRUE;
+        }
+
         $og_vocab->save();
       }
     }

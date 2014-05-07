@@ -50,6 +50,12 @@
         $(target).css('top', topD).css('left', leftD);
       });
 
+      // When clicking on the name of the display mode we need to check the
+      // radio button.
+      $('a.profile-pop').click(function() {
+        var target = "#" + $(this).parent().attr('for');
+        $(target).click();
+      });
     }
   }
 })(jQuery);

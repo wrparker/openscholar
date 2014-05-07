@@ -26,8 +26,8 @@ function hwpi_basetheme_preprocess_html(&$vars) {
  * Adds mobile menu controls to menubar.
  */
 function hwpi_basetheme_page_alter(&$page) {
-  $page['header_second']['#sorted'] = false;
-  $page['header_second']['mobile'] = array(
+  $page['responsive_menu']['#sorted'] = false;
+  $page['responsive_menu']['mobile'] = array(
     '#theme' => 'links',
     '#attributes' => array(
       'class' => array('mobile-buttons'),
@@ -36,7 +36,7 @@ function hwpi_basetheme_page_alter(&$page) {
     '#links' => array(
       'mobi-main' => array(
         'href' => '#',
-        'title' => '<span aria-hidden="true" class="icon-menu"></span>Menu',
+        'title' => '<span aria-hidden="true" class="icon-menu"></span>',
         'external' => true,
         'html' => true,
         'attributes' => array(
@@ -90,91 +90,66 @@ function hwpi_basetheme_preprocess_node(&$vars) {
     $vars['classes_array'][] = 'with-person-photo';
   }
   else {
-    // If node is in teaser view mode, load a default image. If node is displayed
-    // in "List of posts" widget or in full display mode, load a bigger default image.
-    if (in_array($vars['view_mode'], array('teaser'))) {
-      // Check if profile is in a widget.
-      if (!empty($vars['sv_list'])) {
-        // Use default image.
-        $path = variable_get('os_person_default_image', drupal_get_path('theme', 'hwpi_basetheme') . '/images/person-default-image.png');
-        $image = '<div class="field-name-field-person-photo">' . theme('image',  array('path' => $path)) . '</div>';
-        $vars['content']['field_person_photo'][0] = array('#markup' => $image);
-      }
-      // Profile is not in a widget. Check if default image is disabled. If it is, print an empty div.
-      elseif (variable_get('os_profiles_disable_default_image', FALSE)){
-        $vars['content']['field_person_photo'][0] = array('#markup' => '<div class="no-default-image"></div>');
-      }
-      else {
-        if ($custom_default_image = variable_get('os_profiles_default_image_file', 0)) {
-          // Use custom default image.
-          $image_file = file_load($custom_default_image);
-          $path = $image_file->uri;
-          $options = array(
-            'path' => $path,
-            'style_name' => 'profile_thumbnail',
-          );
-          $image = '<div class="field-name-field-person-photo">' . theme('image_style',  $options) . '</div>';
-        }
-        else {
-          // Use default image.
-          $path = variable_get('os_person_default_image', drupal_get_path('theme', 'hwpi_basetheme') . '/images/person-default-image.png');
-          $image = '<div class="field-name-field-person-photo">' . theme('image',  array('path' => $path)) . '</div>';
-        }
-        $vars['content']['field_person_photo'][0] = array('#markup' => $image);
-      }
+    if (!in_array($vars['view_mode'], array('teaser', 'sidebar_teaser', 'full'))) {
+      return;
     }
-    elseif ((!empty($vars['os_sv_list_box']) && $vars['os_sv_list_box']) || $vars['view_mode'] == 'full') {
-      $path = variable_get('os_person_default_image_big', drupal_get_path('theme', 'hwpi_basetheme') . '/images/person-default-image-big.png');
-      $image = '<div class="field-name-field-person-photo">' . theme('image',  array('path' => $path)) . '</div>';
-      // Big image.
-      $vars['content']['pic_bio']['field_person_photo'][0] = array('#markup' => $image);
 
-      // If 'body' is empty make sure image is displayed.
-      if (empty($vars['body'][$vars['language']])) {
-        $vars['content']['pic_bio']['#access'] = TRUE;
-      }
-    }
-    elseif ($vars['view_mode'] == 'sidebar_teaser') {
-      // Check if profile is in a widget.
-      if (!empty($vars['sv_list'])) {
-        // Use default image.
-        $path = variable_get('os_person_default_image', drupal_get_path('theme', 'hwpi_basetheme') . '/images/person-default-image.png');
-        $image = '<div class="field-name-field-person-photo">' . theme('image',  array('path' => $path)) . '</div>';
-        $vars['content']['pic_bio']['field_person_photo'][0] = array('#markup' => $image);
-      }
-      // Profile is not in a widget. Check if default image is disabled. If it is, print an empty div.
-      elseif (variable_get('os_profiles_disable_default_image', FALSE)){
-        $vars['content']['pic_bio']['field_person_photo'][0] = array('#markup' => '<div class="no-default-image"></div>');
-      }
-      else {
-        if ($custom_default_image = variable_get('os_profiles_default_image_file', 0)) {
-          // Use custom default image.
-          $image_file = file_load($custom_default_image);
-          $path = $image_file->uri;
-          $options = array(
-            'path' => $path,
-            'style_name' => 'profile_thumbnail',
-          );
-          $image = '<div class="field-name-field-person-photo">' . theme('image_style',  $options) . '</div>';
-        }
-        else {
-          // Use default image.
-          $path = variable_get('os_person_default_image', drupal_get_path('theme', 'hwpi_basetheme') . '/images/person-default-image.png');
-          $image = '<div class="field-name-field-person-photo">' . theme('image',  array('path' => $path)) . '</div>';
-        }
-        $vars['content']['pic_bio']['field_person_photo'][0] = array('#markup' => $image);
-      }
-      // Make sure image will be displayed.
+    if (in_array($vars['view_mode'], array('sidebar_teaser', 'full'))) {
+      // On sidebar tease view mode the content in $vars['content']['pic_bio'].
+      $key = &$vars['content']['pic_bio'];
       $vars['content']['pic_bio']['#access'] = TRUE;
     }
+    else {
+      $key = &$vars['content'];
+    }
+
+    // Set up the size of the picture.
+    $size = (!empty($vars['os_sv_list_box']) && $vars['os_sv_list_box']) || $vars['view_mode'] == 'full' ? 'big' : 'small';
+
+    $key['field_person_photo'][0] = array('#markup' => hwpi_basetheme_profile_default_image($size));
   }
+}
+
+/**
+ * Helper function; Return the markup of the profile image by the next logic:
+ * When there is no profile picture the node display the uploaded image.
+ * When there is no uploaded image display the default image.
+ *
+ * @param string $size
+ *  Determine the size of the profile picture. Optional values: small or big.
+ *
+ * @return string
+ *  The markup of the image.
+ */
+function hwpi_basetheme_profile_default_image($size = 'small') {
+
+  if (variable_get('os_profiles_disable_default_image', FALSE)) {
+    return '<div class="no-default-image"></div>';
+  }
+
+  if ($custom_default_image = variable_get('os_profiles_default_image_file', 0)) {
+    // Use custom default image.
+    $image_file = file_load($custom_default_image);
+    $path = $image_file->uri;
+    $options = array(
+      'path' => $path,
+      'style_name' => 'profile_thumbnail',
+    );
+
+    return '<div class="field-name-field-person-photo">' . theme('image_style',  $options) . '</div>';
+  }
+
+  // Use default image.
+  $image = $size == 'small' ? 'person-default-image.png' : 'person-default-image-big.png';
+  $path = variable_get('os_person_default_image', drupal_get_path('theme', 'hwpi_basetheme') . '/images/' . $image);
+  return '<div class="field-name-field-person-photo">' . theme('image',  array('path' => $path)) . '</div>';
 }
 
 /**
  * Process variables for comment.tpl.php
  */
 function hwpi_basetheme_process_node(&$vars) {
-  // Event persons, change title markup to h1
+  // Event persons, change title markup to h1.
   if ($vars['type'] == 'person') {
     if ($vars['view_mode'] == 'title') {
       $vars['title_prefix']['#suffix'] = '<h1 class="node-title">' . l($vars['title'], 'node/' . $vars['nid']) . '</h1>';
@@ -183,7 +158,7 @@ function hwpi_basetheme_process_node(&$vars) {
     elseif (!$vars['teaser'] && $vars['view_mode'] != 'sidebar_teaser') {
       $vars['title_prefix']['#suffix'] = '<h1 class="node-title">' . $vars['title'] . '</h1>';
       $vars['title'] = NULL;
-      
+
       if ($vars['view_mode'] == 'slide_teaser') {
         $vars['title_prefix']['#suffix'] = '<div class="toggle">' . $vars['title_prefix']['#suffix'] . '</div>';
       }
@@ -613,7 +588,7 @@ function hwpi_basetheme_status_messages($vars) {
     if (count($messages) > 1) {
       $output .= " <ul>";
       foreach ($messages as $message) {
-        if (strpos($message, 'Biblio') === 0) {
+        if (strpos($message, 'Biblio') === 0 || strpos($message, 'Publication') === 0) {
           // Allow some tags in messages about a Biblio.
           $output .= '  <li>' . strip_tags(html_entity_decode($message), $allowed_html_elements) . "</li>";
         }

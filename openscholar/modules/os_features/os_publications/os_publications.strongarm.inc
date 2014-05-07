@@ -117,6 +117,13 @@ function os_publications_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_biblio';
+  $strongarm->value = 0;
+  $export['diff_show_preview_changes_node_biblio'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'menu_options_biblio';
   $strongarm->value = array(
     0 => 'primary-menu',
@@ -165,7 +172,7 @@ function os_publications_strongarm() {
     ),
     'revision_information' => array(
       'region' => 'right',
-      'weight' => '6',
+      'weight' => '7',
       'has_required' => FALSE,
       'title' => 'Revision information',
       'collapsed' => 1,
@@ -173,7 +180,7 @@ function os_publications_strongarm() {
     ),
     'author' => array(
       'region' => 'right',
-      'weight' => '4',
+      'weight' => '5',
       'has_required' => FALSE,
       'title' => 'Authoring information',
       'collapsed' => 1,
@@ -224,7 +231,7 @@ function os_publications_strongarm() {
     ),
     'comment_settings' => array(
       'region' => 'right',
-      'weight' => '5',
+      'weight' => '6',
       'has_required' => FALSE,
       'title' => 'Comment settings',
       'collapsed' => 1,
@@ -283,6 +290,34 @@ function os_publications_strongarm() {
       'weight' => '0',
       'has_required' => FALSE,
       'title' => 'Save',
+      'hidden' => 0,
+    ),
+    'title_field' => array(
+      'region' => 'main',
+      'weight' => '-5',
+      'has_required' => TRUE,
+      'title' => 'Title',
+    ),
+    'metatags' => array(
+      'region' => 'main',
+      'weight' => '40',
+      'has_required' => FALSE,
+      'title' => 'Meta tags',
+      'collapsed' => 1,
+      'hidden' => 0,
+    ),
+    'citation_distribute' => array(
+      'region' => 'right',
+      'weight' => '4',
+      'has_required' => FALSE,
+      'title' => 'Citation Distribute',
+      'hidden' => 0,
+    ),
+    'gkplus' => array(
+      'region' => 'right',
+      'weight' => 80,
+      'has_required' => FALSE,
+      'title' => 'Custom theme settings',
       'hidden' => 0,
     ),
   );

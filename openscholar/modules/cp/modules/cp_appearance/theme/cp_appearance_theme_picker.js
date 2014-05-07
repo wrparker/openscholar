@@ -53,14 +53,4 @@
     }
   };
 
-  /**
-   * The update of the branch is done via AJAX. We don't need to display the
-   * update button to the user.
-   */
-  Drupal.behaviors.CpHideUpdateButton = {
-    attach: function (context, settings) {
-      $(".page-cp-appearance-update-subtheme #edit-actions").hide();
-    }
-  };
-
 })(jQuery);

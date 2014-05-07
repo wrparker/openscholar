@@ -38,14 +38,17 @@ function os_user_page() {
   global $user;
   module_load_include('pages.inc', 'user');
 
-  if ($user->uid && isset($_GET['destination']) && $_GET['destination'] != 'user'){
-    //Redirect to destination
+  if (user_is_anonymous()) {
+    // Display login page.
+    return os_in_readonly_mode('login');
+  }
+
+  if (isset($_GET['destination']) && $_GET['destination'] != 'user') {
+    // Redirect to destination.
     drupal_goto();
-  }elseif ($user->uid) {
-    menu_set_active_item('user/' . $user->uid);
-    return menu_execute_active_handler(NULL, FALSE);
   }
-  else {
-    return drupal_get_form('user_login');
-  }
+
+  // Display user page.
+  menu_set_active_item('user/' . $user->uid);
+  return menu_execute_active_handler(NULL, FALSE);
 }

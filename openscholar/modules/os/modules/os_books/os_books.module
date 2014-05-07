@@ -154,20 +154,22 @@ function _os_books_build_tree_recursive($tree, $flatten = FALSE) {
 function os_books_node_view($node, $view_mode) {
   if ($view_mode == 'full') {
     if ($node->type == 'book' && isset($node->book) && $node->book) {
-      $content = $node->content;
-      // Drupal destroys $node->content during its build process.
-      // Without it, we get fatal errors.
-      $pages = os_books_build_tree($node, true);
-      $node->content = $content;
-      // This is the page's node, not one we render through os_books.
-      if ($pages) {
-        drupal_add_js(array(
-          'os_books' => array(
-            'pages' => $pages,
-            'settings' => _os_books_get_book_settings($node->book['bid']),
-          ),
-        ), 'setting');
-        $node->content['#attached']['js'][] = drupal_get_path('module', 'os_books').'/os_books.js';
+      if (variable_get('os_books_swap_enabled', FALSE)) {
+        $content = $node->content;
+        // Drupal destroys $node->content during its build process.
+        // Without it, we get fatal errors.
+        $pages = os_books_build_tree($node, true);
+        $node->content = $content;
+        // This is the page's node, not one we render through os_books.
+        if ($pages) {
+          drupal_add_js(array(
+            'os_books' => array(
+              'pages' => $pages,
+              'settings' => _os_books_get_book_settings($node->book['bid']),
+            ),
+          ), 'setting');
+          $node->content['#attached']['js'][] = drupal_get_path('module', 'os_books').'/os_books.js';
+        }
       }
 
       // Unset the book navigation links.

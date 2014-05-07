@@ -2,7 +2,7 @@ Feature:
   Testing that after deleting a term  which is assigned to a page,
   keeps the page accessible.
 
-  @api
+  @api @first
   Scenario: Test deletion of a term.
     Given I am logging in as "john"
       And I create the term "Water" in vocabulary "science"

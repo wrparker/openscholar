@@ -18,11 +18,6 @@ define('OS_PINSERVER_INTRANET_ACCESS', 5);
  * Implements hook_menu_alter().
  */
 function os_pinserver_auth_menu_alter(&$items) {
-  //Should pinserver take over registration menu entries
-  if(variable_get('os_pinserver_registration', FALSE)){
-    _os_pinserver_auth_register_menu_alter($items);
-  }
-
   // Add wrapper for "pinserver/auth"
   $items['pinserver/auth']['page callback'] = 'os_pinserver_auth_init_check_user';
 

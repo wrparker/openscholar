@@ -30,6 +30,7 @@ function os_classes_context_default_contexts() {
       'values' => array(
         'classes' => 'classes',
         'classes/*' => 'classes/*',
+        'browse/classes' => 'browse/classes',
       ),
     ),
     'views' => array(

@@ -212,8 +212,7 @@ h2.block-title {
   border-top: 6px solid #e1e1e1;
 }
 
-.front #content-column .block.block-boxes-os_boxes_rand_widget,
-.block.block-boxes-os_boxes_rand_widget,
+
 .front #content-column .block.block-boxes-os_boxes_columns,
 .block-boxes.block-boxes-os_sv_list_box .block-inner,
 .block-boxes-os_boxes_manual_list,
@@ -224,18 +223,6 @@ h2.block-title {
   border-top: none;
 }
 
-
-#content-panels .block-boxes-os_boxes_rand_widget .block-inner:first-child {
-	margin-top:0;
-}
-
-#content-panels .block-boxes-os_boxes_rand_widget .block-inner:first-child .block .block-inner {
-	margin-top:15px;
-}
-
-#content-panels .block-boxes-os_boxes_rand_widget h2.block-title {
-	margin-bottom:0;
-}
 
 
 /* Blocks */

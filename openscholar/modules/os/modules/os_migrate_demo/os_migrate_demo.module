@@ -198,7 +198,7 @@ function os_migrate_demo_migrate_api() {
  *    the context page mapping.
  *    If the function called from CLI the function will print the string.
  */
-function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar_second') {
+function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar_second', $delta_suffix = '') {
   ctools_include('layout', 'os');
   // Mapping for all the pages.
   $page_mapping = array(
@@ -229,6 +229,7 @@ function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar
     'Bio' => 'os_boxes_bio',
     'RSS feed' => 'os_boxes_rss',
     'Image gallery' => 'os_boxes_slideshow',
+    'Faceted taxonomy' => 'os_boxes_facetapi_vocabulary',
   );
 
   $contexts = array(
@@ -241,8 +242,12 @@ function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar
   // Changing the region differently for box and block.
   if (empty($blocks[$boxes_mapping[$box]])) {
     // Define the box.
+    $delta = 'box-' . strtolower(str_replace(" ", "-", $box));
+    if ($delta_suffix) {
+      $delta .= '-' . $delta_suffix;
+    }
     $options = array(
-      'delta' => 'box-' . strtolower(str_replace(" ", "-", $box)),
+      'delta' => $delta,
       'title' => $box,
       'description' => $box,
     );
@@ -306,8 +311,9 @@ function os_migrate_demo_hide_box($nid, $plugin, $delta, $page) {
   if (empty($blocks[$plugin])) {
     $blocks['boxes-' . $delta]['region'] = FALSE;
     // Delete the box.
-    $box = boxes_box::factory($plugin, array());
-    $box->delete();
+    if ($box = boxes_box::factory($plugin, array())) {
+      $box->delete();
+    }
   }
   else {
     $blocks[$plugin]['region'] = FALSE;
@@ -485,10 +491,21 @@ function os_migrate_demo_check_user_role_in_group($name, $role, $group) {
 }
 
 /**
- * Get a user id.
+ * Get a user id by name.
+ *
+ * @param $name
+ *    The user's name.
+ * @param $return
+ *    If set to TRUE the uid is returned.
+ *    If set to FALSE the uid is printed. Defaults to FALSE.
  */
-function os_migrate_demo_get_user_by_name($name) {
+function os_migrate_demo_get_user_by_name($name, $return = FALSE) {
   $user = user_load_by_name($name);
+
+  if ($return) {
+    return $user->uid;
+  }
+
   print($user->uid);
 }
 
@@ -835,4 +852,42 @@ function os_migrate_demo_vsite_set_variable($vsite, $name, $value) {
   $nid = array_keys($result['node']);
   $vsite = vsite_get_vsite(reset($nid));
   $vsite->controllers->variable->set($name, $value);
+}
+
+function os_migrate_demo_set_read_only($value) {
+  variable_set('os_readonly_mode', $value);
+}
+
+/**
+ * Return the number of times the feed item exists.
+ *
+ * @param $title
+ *  The title of the feed item.
+ * @param $vsite
+ *  The vsite name.
+ */
+function os_migrate_demo_count_node_instances($title, $vsite) {
+  $nid = os_migrate_demo_get_node_id($vsite, TRUE);
+  $query = new EntityFieldQuery();
+
+  $results = $query
+    ->entityCondition('entity_type', 'os_feed_item')
+    ->propertyCondition('title', $title)
+    ->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $nid)
+    ->count()
+    ->execute();
+
+  print $results;
+}
+
+/**
+ * Get the uid of the owner of a group.
+ *
+ * @param $group
+ *    The group for which to get the owner's uid.
+ */
+function os_migrate_demo_get_vsite_owner_uid($group) {
+  $nid = os_migrate_demo_get_node_id($group, TRUE);
+  $node = node_load($nid);
+  print $node->uid;
 }

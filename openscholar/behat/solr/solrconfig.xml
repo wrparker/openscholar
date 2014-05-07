@@ -176,8 +176,8 @@
          maxTime - oldest uncommited update (in ms) is this long ago
     -->
     <autoCommit>
-      <maxDocs>2000</maxDocs>
-      <maxTime>2000</maxTime>
+      <maxDocs>10</maxDocs>
+      <maxTime>1000</maxTime>
     </autoCommit>
 
 

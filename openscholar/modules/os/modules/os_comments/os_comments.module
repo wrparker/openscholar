@@ -283,8 +283,7 @@ function os_comments_node_view($node, $view_mode) {
   }
 
   // Does nothing if the node type is a group bundle.
-  $group_bundles = og_get_all_group_bundle();
-  if (in_array($node->type, $group_bundles['node'])) {
+  if (og_is_group('node', $node)) {
     return;
   }
 
@@ -404,7 +403,12 @@ function os_comments_form_node_form_alter(&$form, $form_state, $form_id) {
   // Hides settings for inappropriate comment types
   $node = $form['#node'];
   $source = comment_sources_get_source($node);
-  $action = $source ? 'change or disable' : 'enable';
+
+  // If no sources - hide the form element.
+  if (!$source) {
+    unset($form['comment_settings']);
+    return;
+  }
 
   // Prepare description with link to app settings page for this app.
   // If vsite is enabled and app can be determined from node type,
@@ -442,7 +446,7 @@ function os_comments_form_node_form_alter(&$form, $form_state, $form_id) {
     }
     // Multi tenant
     if ($purl) {
-      $app_settings_path = "/$purl/cp/build/#overlay=$purl/cp/build/features/$app";
+      $app_settings_path = "$purl/cp/build/#overlay=$purl/cp/build/features/$app";
     }
     // Single tenant
     else {
@@ -450,13 +454,15 @@ function os_comments_form_node_form_alter(&$form, $form_state, $form_id) {
     }
   }
 
-  $change_settings_text = t('Go to <a href="@href" target="_blank">@settings</a> to @action comments on new posts.', array('@href' => $app_settings_path, '@action' => $action, '@settings' => $settings));
+  $change_settings_text = t('Go to <a href="@href" target="_blank">@settings</a> to change or disable comments on new posts.', array('@href' => $app_settings_path, '@settings' => $settings));
   $form['comment_settings']['os_comments'] = array(
     '#markup' => "<br/>$change_settings_text",
     '#weight' => 10,
   );
 
   $form['comment_settings']['no_comment']['#options'] = empty($form['comment_settings']['no_comment']['#options']) ? array() : $form['comment_settings']['no_comment']['#options'];
+
+  // Change title to "Private comments".
   if ($source == 'comment' && isset($form['comment_settings']['comment_status']['#title'])) {
     $form['comment_settings']['comment_status']['#title'] = t('Private comments');
   }

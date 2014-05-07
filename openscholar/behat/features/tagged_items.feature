@@ -2,7 +2,7 @@ Feature: Testing the tagged items.
   Testing that two nodes tagged to one term and only one node tagged to another
   term.
 
-  @api
+  @api @first
   Scenario Outline: verify that the tagged items filter work as expected.
       Given I visit "<first link>"
         And I should see "<first node>"
@@ -26,7 +26,7 @@ Feature: Testing the tagged items.
      | john/software      | john/software/science/air       | Mac OSX                   | Windows 7                   |
      #| john/galleries     | john/galleries/air              | Kittens gallery           | JFK                         |
 
-  @api
+  @api @first
   Scenario: Verify that terms which their vocab is not bind with the content
             type will be display in the field.
     Given I am logging in as "john"

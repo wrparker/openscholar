@@ -508,8 +508,7 @@ padding-left:35px;
 
 
 .region-content-top .block-boxes .os-embed-link {
-    bottom: 120px;
-right: -160px;
+	 right: -160px;
      z-index: 1000;
      color:#fff;
      width:250px;

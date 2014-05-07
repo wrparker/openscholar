@@ -10,6 +10,7 @@ class os_boxes_follow extends os_boxes_default {
     return parent::options_defaults() + array(
       'links' => array(),
       'display_service_name' => 1,
+      'use_rss' => 0,
     );
   }
 
@@ -102,6 +103,13 @@ class os_boxes_follow extends os_boxes_default {
       '#options' => array(t('Yes'), t('No')),
     );
 
+    $form['use_rss'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Add link to RSS Feed page to list.'),
+      '#description' => t('Adds a link the page where users can select an RSS feed to subscribe to.'),
+      '#default_value' => isset($this->options['use_rss']) ? $this->options['use_rss'] : 0,
+    );
+
     $form['count'] = array(
       '#type' => 'hidden',
       '#default_value' => count($this->options['links'])-1,
@@ -117,10 +125,47 @@ class os_boxes_follow extends os_boxes_default {
     drupal_add_css(drupal_get_path('module', 'os_boxes').'/plugins/os_boxes_follow/misc/os_follow.css');
     $links = array();
     $list_class = 'follow-me-links';
-    if(!$this->options['links']) {
-      $block['content'] = '';
+
+    $block['content'] = '';
+
+    if (!empty($this->options['use_rss']) && empty($this->options['links'])) {
+      $block['content'] .= theme('image', array('path' => 'misc/feed.png', 'title' => t('Syndicate content')));
+      $block['content'] .= l(t('RSS'), 'rss', array('attributes' => array('class' => array('rss-feed-icon'))));
+    }
+
+    if (!$this->options['links']) {
       return $block;
     }
+
+    $links = array();
+
+    if (!empty($this->options['use_rss'])) {
+      $image = theme('image', array(
+        'path' => drupal_get_path('module', 'os_boxes').'/plugins/os_boxes_rss/images/rss_square-24.png',
+        'title' => t('Syndicate content'),
+        'alt' => t('RSS Feed'),
+        'width' => 24,
+        'height' => 28
+      ));
+      $l = l($image, 'rss', array(
+        'attributes' => array(
+          'class' => array('rss-follow-icon'),
+        ),
+        'html' => TRUE,
+      ));
+      if (isset($this->options['display_service_name']) && $this->options['display_service_name'] == 0) {
+        $service_name = '<span class="service-name-span">'.l('RSS', 'rss', array('attributes' => array(
+            'class' => array(
+              'follow-icon-service-name',
+            )
+          ))).'</span>';
+        $links[0] = $l . $service_name;
+      }
+      else {
+        $links[0] = $l;
+      }
+    }
+
     foreach ($this->options['links'] as $n) {
       // Build the image link.
       $l = l($n['title'], $n['title'], array(
@@ -152,7 +197,7 @@ class os_boxes_follow extends os_boxes_default {
       $list_class = 'follow-me-links-vertical';
     }
     // Add the links to theme item_list funciton.
-    $block['content'] = theme('item_list', array(
+    $block['content'] .= theme('item_list', array(
       'items' => $items,
       'title' => '',
       'type' => 'ul',

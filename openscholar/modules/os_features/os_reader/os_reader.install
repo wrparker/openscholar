@@ -67,6 +67,12 @@ function os_reader_schema() {
     'primary key' => array('id'),
   );
 
+  if (module_exists('entitycache')) {
+    $cache_schema = drupal_get_schema_unprocessed('system', 'cache');
+    $schema["cache_entity_os_feed_item"] = $cache_schema;
+    $schema["cache_entity_os_feed_item"]['description'] = "Cache table used to store OS feed item entity records.";
+  }
+
   return $schema;
 }
 
@@ -77,6 +83,19 @@ function os_reader_install() {
   // Turn comments off by default.
   variable_set('comment_feed', COMMENT_NODE_CLOSED);
   variable_set('comment_feed_item', COMMENT_NODE_CLOSED);
+
+  $og_field = og_fields_info(OG_AUDIENCE_FIELD);
+
+  // Enable Entity reference pre-populate.
+  $og_field['instance']['settings']['behaviors']['prepopulate'] = array(
+    'status' => TRUE,
+    'action' => 'hide',
+    'fallback' => 'hide',
+    'skip_perm' => FALSE,
+    'og_context' => TRUE,
+    'action_on_edit' => TRUE
+  );
+  og_create_field(OG_AUDIENCE_FIELD, 'os_feed_item', 'feed_item', $og_field);
 }
 
 /**
@@ -103,7 +122,7 @@ function os_reader_update_7001() {
  */
 function os_reader_update_7002() {
   $og_field = og_fields_info(OG_AUDIENCE_FIELD);
-  // Enable Entity reference prepopulate.
+  // Enable Entity reference pre-populate.
   $og_field['instance']['settings']['behaviors']['prepopulate'] = array(
     'status' => TRUE,
     'action' => 'hide',
@@ -238,4 +257,26 @@ function _os_reader_update_7003($feed_items, &$unique, &$feed_item_id) {
         ->execute();
     }
   }
+}
+
+/**
+ * Integrate between the Entity cache module to OS reader module.
+ */
+function os_reader_update_7004() {
+  if (!module_exists('entitycache')) {
+    return;
+  }
+
+  $cache_schema = drupal_get_schema_unprocessed('system', 'cache');
+  $schema["cache_entity_os_feed_item"] = $cache_schema;
+  $schema["cache_entity_os_feed_item"]['description'] = "Cache table used to store OS feed item entity records.";
+
+  db_create_table('cache_entity_os_feed_item', $schema["cache_entity_os_feed_item"]);
+}
+
+/**
+ * Delete duplicate feed items.
+ */
+function os_reader_update_7005(&$sandbox) {
+  os_reader_update_7003($sandbox);
 }

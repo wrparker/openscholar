@@ -34,6 +34,7 @@ function os_booklets_context_default_contexts() {
       'values' => array(
         'documents' => 'documents',
         'book/*' => 'book/*',
+        'browse/documents' => 'browse/documents',
       ),
     ),
     'views' => array(

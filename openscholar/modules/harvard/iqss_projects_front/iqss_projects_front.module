@@ -2,6 +2,43 @@
 include_once('iqss_projects_front.features.inc');
 
 /**
+ * Implements hook_block_info.
+ */
+function iqss_projects_front_block_info() {
+  $info = array();
+  $info['iqss_projects_front_info'] = array(
+    'info' => 'Projects Front Page Info Block',
+    'cache' => DRUPAL_CACHE_PER_USER
+  );
+  $info['iqss_projects_front_nav'] = array(
+    'info' => 'Projects Front Page Nav Block',
+    'cache' => DRUPAL_CACHE_PER_USER
+  );
+
+  return $info;
+}
+
+/**
+ * Implements hook_block_view.
+ */
+function iqss_projects_front_block_view($delta) {
+  $block = array(
+    'subject' => '',
+    'content' => array(),
+  );
+  switch ($delta) {
+    case 'iqss_projects_front_info':
+      $block['content'] = iqss_projects_front_infoblock_content();
+    break;
+    case 'iqss_projects_front_nav':
+      $block['content'] = iqss_projects_front_navblock_content();
+    break;
+  }
+
+  return $block;
+}
+
+/**
  * Implements of hook_context_default_contexts_alter().
  */
 function iqss_projects_front_context_default_contexts_alter(&$contexts){
@@ -9,9 +46,9 @@ function iqss_projects_front_context_default_contexts_alter(&$contexts){
   if (isset($contexts['os_sitewide_front'])) {
     $fp_blocks = &$contexts['os_sitewide_front']->reactions['block']['blocks'];
 
-    $fp_blocks['boxes-iqss_projects_fp_infoblock'] = array(
-      'module' => 'boxes',
-      'delta' => 'iqss_projects_fp_infoblock',
+    $fp_blocks['iqss_projects_front-iqss_projects_front_info'] = array(
+      'module' => 'iqss_projects_front',
+      'delta' => 'iqss_projects_front_info',
       'weight' => -100,
       'region' => 'content_top',
     );
@@ -37,9 +74,9 @@ function iqss_projects_front_context_default_contexts_alter(&$contexts){
       'region' => 'footer',
     );
 
-    $fp_blocks['boxes-iqss_projects_fp_navblock'] = array(
-      'module' => 'boxes',
-      'delta' => 'iqss_projects_fp_navblock',
+    $fp_blocks['iqss_projects_front-iqss_projects_front_nav'] = array(
+      'module' => 'iqss_projects_front',
+      'delta' => 'iqss_projects_front_nav',
       'weight' => -100,
       'region' => 'header_second',
     );
@@ -71,9 +108,9 @@ function iqss_projects_front_context_default_contexts_alter(&$contexts){
     );
 
     // Add the projects nav links.
-    $fp_blocks['boxes-iqss_projects_fp_navblock'] = array(
-      'module' => 'boxes',
-      'delta' => 'iqss_projects_fp_navblock',
+    $fp_blocks['iqss_projects_front-iqss_projects_front_nav'] = array(
+      'module' => 'iqss_projects_front',
+      'delta' => 'iqss_projects_front_nav',
       'region' => 'header_second',
       'weight' => '-10',
     );
@@ -188,41 +225,29 @@ function iqss_projects_front_navblock_content() {
       '#type' => 'link',
     );
   }
-}
 
-/**
- * Implements hook_default_box_alter().
- */
-function iqss_projects_front_default_box_alter(&$items) {
-  $box = new stdClass();
-  $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
-  $box->api_version = 1;
-  $box->delta = 'iqss_projects_fp_infoblock';
-  $box->plugin_key = 'simple';
-  $box->title = '';
-  $box->description = 'Projects Info text';
-  $box->options = array(
-    'body' => array(
-      'value' => iqss_projects_front_infoblock_content(),
-      'format' => 'filtered_html',
-    ),
-    'additional_classes' => '',
+  $items[] = array(
+    '#title' => t('Need a Personal Site?'),
+    '#href' => 'http://scholar.harvard.edu',
+    '#type' => 'link',
   );
-  $items['iqss_projects_fp_infoblock'] = $box;
 
-  $box = new stdClass();
-  $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
-  $box->api_version = 1;
-  $box->delta = 'iqss_projects_fp_navblock';
-  $box->plugin_key = 'simple';
-  $box->title = '';
-  $box->description = 'OpenScholar: Top Links';
-  $box->options = array(
-    'body' => array(
-      'value' => iqss_projects_front_navblock_content(),
-      'format' => 'filtered_html',
-    ),
-    'additional_classes' => '',
+  $links = array();
+  foreach ($items as $i) {
+    $links[] = array(
+      'data' => l($i['#title'], $i['#href']),
+    );
+  }
+
+  $vars = array(
+    'items' => $links,
+    'title' => '',
+    'type' => 'ul',
+    'attributes' => array(
+      'id' => 'top-front',
+      'class' => array(),
+    )
   );
-  $items['iqss_projects_fp_navblock'] = $box;
+
+  return theme('item_list', $vars);
 }

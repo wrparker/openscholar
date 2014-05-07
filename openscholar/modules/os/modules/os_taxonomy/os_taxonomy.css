@@ -23,3 +23,12 @@
 .os-taxonomy-select-submit {
   display: none;
 }
+
+.field-name-og-vocabulary ul.toggle-wrapper {
+  display: inline-block;
+  float: right; /* LTR */
+}
+
+.field-name-og-vocabulary ul.toggle-wrapper li {
+  display: inline-block;
+}

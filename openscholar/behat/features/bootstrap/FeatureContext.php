@@ -105,6 +105,43 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * Authenticates a user with password from configuration.
+   *
+   * @Given /^I am logging in as "([^"]*)" in the domain "([^"]*)"$/
+   */
+  public function iAmLoggingInAsInDomain($username, $domain) {
+
+    try {
+      $password = $this->users[$username];
+    }
+    catch (Exception $e) {
+      throw new Exception("Password not found for '$username'.");
+    }
+
+    if ($this->getDriver() instanceof Drupal\Driver\DrushDriver) {
+      // We are using a cli, log in with meta step.
+
+      return array(
+        new Step\When('I am not logged in'),
+        new Step\When('I visit "http://' . $domain . '/user"'),
+        new Step\When('I fill in "Username" with "' . $username . '"'),
+        new Step\When('I fill in "Password" with "' . $password . '"'),
+        new Step\When('I press "edit-submit"'),
+      );
+    }
+    else {
+      // Log in.
+      // Go to the user page.
+      $element = $this->getSession()->getPage();
+      $this->getSession()->visit($this->locatePath('/user'));
+      $element->fillField('Username', $username);
+      $element->fillField('Password', $password);
+      $submit = $element->findButton('Log in');
+      $submit->click();
+    }
+  }
+
+  /**
    * @Given /^I am on a "([^"]*)" page titled "([^"]*)"(?:, in the tab "([^"]*)"|)$/
    */
   public function iAmOnAPageTitled($page_type, $title, $subpage = NULL) {
@@ -311,6 +348,17 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @When /^I create a new "([^"]*)" entry with the name "([^"]*)" in the group "([^"]*)"$/
+   */
+  public function iCreateANewEntryWithTheNameInGroup($type, $name, $group) {
+    return array(
+      new Step\When('I visit "' . $group . '/node/add/' . $type . '"'),
+      new Step\When('I fill in "Title" with "'. $name . '"'),
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
    * @When /^I change privacy of the site "([^"]*)" to "([^"]*)"$/
    */
   public function iChangePrivacyTo($vsite, $visibility) {
@@ -357,7 +405,14 @@ class FeatureContext extends DrupalContext {
    * @Given /^the widget "([^"]*)" is set in the "([^"]*)" page with the following <settings>:$/
    */
   public function theWidgetIsSetInThePageWithSettings($page, $widget, TableNode $table) {
-    $code = "os_migrate_demo_set_box_in_region({$this->nid}, '$page', '$widget');";
+    return $this->theWidgetIsSetInThePageBytheNameWithSettings($page, $widget, '', $table);
+  }
+
+  /**
+   * @Given /^the widget "([^"]*)" is set in the "([^"]*)" page by the name "([^"]*)" with the following <settings>:$/
+   */
+  public function theWidgetIsSetInThePageBytheNameWithSettings($page, $widget, $name, TableNode $table) {
+    $code = "os_migrate_demo_set_box_in_region({$this->nid}, '$page', '$widget', 'sidebar_second', '$name');";
     $this->box[] = $this->getDriver()->drush("php-eval \"{$code}\"");
     $hash = $table->getRows();
 
@@ -610,6 +665,103 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Then /^I should see the following message <json>:$/
+   */
+  public function iShouldSeeTheFollowingMessageJson(TableNode $table) {
+    // Get the json output and decode it.
+    $json_output = $this->getSession()->getPage()->getContent();
+    $json = json_decode($json_output);
+
+    // Hashing table, and define variables for later.
+    $hash = $table->getRows();
+
+    if (isset($json->messages)) {
+      foreach ($json->messages as $message) {
+        $error = array();
+        foreach ($hash as $table_row) {
+          if (isset($message->arguments->{$table_row[0]})) {
+            if ($message->arguments->{$table_row[0]} != $table_row[1]) {
+              $error['values'][$table_row[0]] = ' not equal to ' . $table_row[1];
+            }
+          }
+          else {
+            $error['not_found'][$table_row[0]] = " doesn't exist.";
+          }
+        }
+        if (empty($error)) {
+          break;
+        }
+      }
+    }
+    else {
+      $error = "No messages were found.";
+    }
+
+    // Build the error string if needed.
+    if (!empty($error)) {
+      $string = array();
+
+      if (!empty($error['values'])) {
+        foreach ($error['values'] as $variable => $message) {
+          $string[] = '  ' . $variable . $message;
+        }
+      }
+      if (!empty($error['not_found'])) {
+        foreach ($error['not_found'] as $variable => $message) {
+          $string[] = '  ' . $variable . $message;
+        }
+      }
+
+      if (is_string($error)) {
+        $string[] = $error;
+      }
+
+      throw new Exception("Some errors were found:\n" . implode("\n", $string));
+    }
+  }
+
+  /**
+   * @Then /^I should not see the following message <json>:$/
+   */
+  public function iShouldNotSeeTheFollowingMessageJson(TableNode $table) {
+    // Get the json output and decode it.
+    $json_output = $this->getSession()->getPage()->getContent();
+    $json = json_decode($json_output);
+
+    // Hashing table, and define variables for later.
+    $hash = $table->getRows();
+
+    if (isset($json->messages)) {
+      foreach ($json->messages as $message) {
+        $error = array();
+        foreach ($hash as $table_row) {
+          if (isset($message->arguments->{$table_row[0]})) {
+            if ($message->arguments->{$table_row[0]} != $table_row[1]) {
+              $error['values'][$table_row[0]] = ' not equal to ' . $table_row[1];
+            }
+          }
+          else {
+            $error['not_found'][$table_row[0]] = " doesn't exist.";
+          }
+        }
+        if (empty($error)) {
+          break;
+        }
+      }
+    }
+    else {
+      $error = "No messages were found.";
+    }
+
+    if (empty($error)) {
+      throw new Exception("Message with the given properties appear on the page when it shouldn't have");
+    }
+    elseif (is_string($error)) {
+      throw new Exception("{$error}");
+    }
+  }
+
+  /**
    * Generate random text.
    */
   private function randomizeMe($length = 10) {
@@ -674,6 +826,26 @@ class FeatureContext extends DrupalContext {
 
     if (!$element) {
       throw new Exception("The pager wasn't found.");
+    }
+  }
+
+  /**
+   * @Then /^I should see the options "([^"]*)" under "([^"]*)"$/
+   */
+  public function iShouldSeeOptions($options, $container) {
+    $options = explode(',',$options);
+
+    $element = FALSE;
+    $page = $this->getSession()->getPage();
+    foreach ($options as $option) {
+      $element = $page->find('xpath', "//select[@name='{$container}']//option[contains(.,'{$option}')]");
+      if (!$element) {
+        break;
+      }
+    }
+
+    if (!$element) {
+      throw new Exception("The option {$option} is missing.");
     }
   }
 
@@ -898,6 +1070,19 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I should see the meta tag "([^"]*)" with value "([^"]*)"$/
+   */
+  public function iShouldSeeTheMetaTag($tag, $value) {
+    $page = $this->getSession()->getPage();
+    if (!$text = $page->find('xpath', "//meta[@name='{$tag}']/@content")) {
+      throw new Exception("The meta tag {$tag} does not exist");
+    }
+    if ($text->getText() != $value) {
+      throw new Exception("The meta tag {$tag} value is not {$value}");
+    }
+  }
+
+  /**
    * @Given /^I should see the text "([^"]*)" under "([^"]*)"$/
    */
   public function iShouldSeeTheTextUnder($text, $container) {
@@ -983,7 +1168,7 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Given /^I remove the role "([^"]*)" in the group "([^"]*)" the permission "([^"]*)"$/
+   * @Given /^I remove from the role "([^"]*)" in the group "([^"]*)" the permission "([^"]*)"$/
    */
   public function iRemoveTheRoleThePermissionInTheGroup($role, $group, $permission) {
     $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'{$group}'"));
@@ -991,7 +1176,7 @@ class FeatureContext extends DrupalContext {
 
     return array(
       new Step\When('I visit "' . $group . '/group/node/' . $nid . '/admin/permission/' . $rid . '/edit"'),
-      new Step\When('I uncheck the box "' . $permission . '"'),
+      new Step\When('I uncheck the box "edit-' . $rid . '-' . $permission . '"'),
       new Step\When('I press "Save permissions"'),
     );
   }
@@ -1168,6 +1353,18 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @When /^I edit the page meta data of "([^"]*)" in "([^"]*)"$/
+   */
+  public function iEditTheMetaTags($title, $group) {
+    $title = str_replace("'", "\'", $title);
+    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'{$title}'"));
+
+    return array(
+      new Step\When('I visit "' . $group . '/os/pages/' . $nid . '/meta"'),
+    );
+  }
+
+  /**
    * @When /^I edit the node of type "([^"]*)" named "([^"]*)" using contextual link$/
    */
   public function iEditTheNodeOfTypeNamedUsingContextualLink($type, $title) {
@@ -1295,6 +1492,17 @@ class FeatureContext extends DrupalContext {
   public function iGoToTheAppSettingsInVsite($app_name, $vsite) {
     return array(
       new Step\When('I visit "' . $vsite . '/cp/build/features/' . $app_name . '"'),
+    );
+  }
+
+  /**
+   * @Then /^I change site title to "([^"]*)" in the site "([^"]*)"$/
+   */
+  public function iChangeSiteTitleTo($title, $vsite) {
+    return array(
+      new Step\When('I visit "' . $vsite . '/cp/settings"'),
+      new Step\When('I fill in "Site title" with "' . $title . '"'),
+      new Step\When('I press "edit-submit"'),
     );
   }
 
@@ -1489,6 +1697,22 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Then /^I should verify the next week calendar is displayed correctly$/
+   */
+  public function iShouldVerifyNextWeekDisplayed() {
+    $str_next_sunday_date = date('F-j-Y', strtotime('next Sunday'));
+    $parts = explode('-', $str_next_sunday_date);
+    $week_header = 'Week of ' . $parts[0] . ' ' . $parts[1] . ', ' . $parts[2];
+    $page = $this->getSession()->getPage();
+    $element = $page->find('xpath', "//h3[.='$week_header']");
+
+    if (!$element) {
+      $element = $page->find('xpath', "//h3");
+      throw new Exception("The weekly calendar for the '$week_header' is not displayed correctly. It was '" . $element->getText() ."'");
+    }
+  }
+
+  /**
    * @Then /^I should not see the button "([^"]*)"$/
    */
   public function iShouldNotSeeTheButton($button) {
@@ -1498,7 +1722,7 @@ class FeatureContext extends DrupalContext {
     if ($element) {
       throw new Exception("A button with id|name|value equal to '$button' was found.");
     }
-  }
+}
 
   /**
    * @Given /^I set feature "([^"]*)" to "([^"]*)" on "([^"]*)"$/
@@ -1552,5 +1776,78 @@ class FeatureContext extends DrupalContext {
    */
   public function iMakeRegistrationToEventWithoutJavascriptUnavailable() {
     $this->invoke_code('os_migrate_demo_event_registration_link');
+  }
+
+  /**
+   * @When /^I enable read-only mode$/
+   */
+  public function iEnableReadOnlyMode() {
+    $this->invoke_code('os_migrate_demo_set_read_only', array(TRUE));
+  }
+
+  /**
+   * @Then /^I disable read-only mode$/
+   */
+  public function iDisableReadOnlyMode() {
+    $this->invoke_code('os_migrate_demo_set_read_only', array(FALSE));
+  }
+
+  /**
+   * @Then /^I enable pinserver$/
+   */
+  public function iEnablePinserver() {
+    $this->invoke_code('module_enable', array('array(\'pinserver\', \'pinserver_authenticate\', \'os_pinserver_auth\')'));
+  }
+
+  /**
+   * @Then /^I disable pinserver$/
+   */
+  public function iDisablePinserver() {
+    $this->invoke_code('module_disable', array('array(\'pinserver\', \'pinserver_authenticate\', \'os_pinserver_auth\')'));
+  }
+
+  /**
+   * @Given /^I verify that "([^"]*)" is the owner of vsite "([^"]*)"$/
+   */
+  public function iVerifyThatIsTheOwnerOfVsite($username, $group) {
+    $uid = $this->invoke_code('os_migrate_demo_get_user_by_name', array($username));
+    $author_uid = $this->invoke_code('os_migrate_demo_get_vsite_owner_uid', array($group));
+
+    if ($uid != $author_uid) {
+      throw new Exception("User '$username' is not the owner of vsite '$group'.");
+    }
+  }
+
+  /**
+   * @Given /^I edit the membership of "([^"]*)" in vsite "([^"]*)"$/
+   */
+  public function iEditTheMembershipOfInVsite($username, $group) {
+    $uid = $this->invoke_code('os_migrate_demo_get_user_by_name', array($username));
+    return array(
+      new Step\When('I visit "' . $group . '/cp/users/edit_membership/' . $uid . '"'),
+    );
+  }
+
+ /**
+   * @Given /^I re import feed item "([^"]*)"$/
+   */
+  public function iReImportFeedItem($node) {
+    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'$node'"));
+
+    return array(
+      new Step\When('I visit "node/' . $nid . '/import"'),
+      new Step\When('I press "Import"'),
+    );
+  }
+
+  /**
+   * @Then /^I verify the feed item "([^"]*)" exists only "([^"]*)" time for "([^"]*)"$/
+   */
+  public function iVerifyTheFeedItemeExistsOnlyTimeFor($node, $time, $vsite) {
+    $count = $this->invoke_code('os_migrate_demo_count_node_instances', array("'$node'", "'$vsite'"));
+
+    if ($count != $time) {
+      throw new Exception(sprintf('The feed items has been imported %s times.', $count));
+    }
   }
 }

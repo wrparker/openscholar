@@ -14,10 +14,7 @@ function harvard_courses_os_app_info() {
 
   $apps['harvard_courses'] = array(
     'path' => 'courses',
-    'nodetypes' => array(
-      /* Note: only provides App-related, listable group content,
-       * so, omits "harvard_api_importer".
-       */
+    'exclude_from_rss' => array(
       'harvard_course',
     ),
     'browse_pages' => array(
@@ -119,26 +116,23 @@ function  harvard_courses_block_view($delta) {
  * Return links for filter the harvard courses.
  */
 function harvard_courses_courses_filter() {
-  if (!$space = spaces_get_space()) {
+  if (!$vsite = vsite_get_vsite()) {
     return;
   }
 
-  $query = new entityFieldQuery();
-  $result = $query
-    ->entityCondition('entity_type', 'node')
-    ->propertyCondition('type', 'harvard_course')
-    ->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $space->id)
-    ->execute();
+  // Block shows just list of semesters, therefore using direct db_select()
+  // instead of loading nodes.
+  $query = db_select('og_membership', 'ogm')
+    ->fields('f', array('field_term_value'))
+    ->distinct();
+    $query->join('node', 'n', 'ogm.etid = n.nid');
+    $query->join('field_data_field_term', 'f', 'f.entity_id = n.nid AND f.entity_type =\'node\'');
+    $query->condition('ogm.gid', $vsite->id);
+    $query->condition('n.type', 'harvard_course');
+    $query->condition('ogm.entity_type', 'node');
 
-  if (empty($result['node'])) {
-    return;
-  }
-
-  $nodes = node_load_multiple(array_keys($result['node']));
-  $semester = array();
-  foreach ($nodes as $node) {
-    $wrapper = entity_metadata_wrapper('node', $node);
-    $text = check_plain($wrapper->field_term->value());
+  foreach ($query->execute() as $result) {
+    $text = check_plain($result->field_term_value);
     $query_params = array(
       'term' => $text,
     );

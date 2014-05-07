@@ -45,6 +45,7 @@ features[variable][] = comment_default_per_page_book
 features[variable][] = comment_form_location_book
 features[variable][] = comment_preview_book
 features[variable][] = comment_subject_field_book
+features[variable][] = diff_show_preview_changes_node_book
 features[variable][] = menu_options_book
 features[variable][] = menu_parent_book
 features[variable][] = node_options_book

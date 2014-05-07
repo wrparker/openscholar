@@ -517,10 +517,12 @@ line-height:20px;
   top: 75%;
 }
 
+/* COMMENTING OUT FOR NOW. DON'T THINK ITS NEEDED */
 .lt-ie9 #layout_16_9_side .rslides_tabs {
   position: absolute;
-  top: 250px;
+ /* top: 250px;*/
 }
+ 
 
 #layout_16_9_side .rslides_tabs li {
   display: inline-block;

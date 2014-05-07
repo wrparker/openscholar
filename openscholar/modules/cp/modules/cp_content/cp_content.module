@@ -49,22 +49,29 @@ function cp_content_views_pre_render(&$view) {
 }
 
 /**
- * Same as _node_add_access but just for os bundles
+ * Access callback; For "Add new content" page.
+ *
  * @return boolean
+ *   Returns TRUE if the user has the permission to create nodes of any type that
+ *   is currently active on the VSite, or if the user has the permission to create
+ *   new content types. Returns FALSE otherwise.
  */
 function cp_content_add_page_access() {
+  if (user_access('administer content types')) {
+    // User has the permission to administer the content types, so grant access
+    // to the page anyway.
+    return TRUE;
+  }
+
+  // Access is TRUE if at least one of the OS bundles returns access TRUE.
   $bundles = os_get_bundles();
-  foreach ($bundles as $type => $name) {
-    if (node_hook($type, 'form') && node_access('create', $type)) {
+  foreach (array_keys($bundles) as $type) {
+    $item = menu_get_item('node/add/' . $type);
+    if ($item && $item['access']) {
       return TRUE;
     }
   }
-  if (user_access('administer content types')) {
-    // There are no content types defined that the user has permission to create,
-    // but the user does have the permission to administer the content types, so
-    // grant them access to the page anyway.
-    return TRUE;
-  }
+
   return FALSE;
 }
 

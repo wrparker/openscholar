@@ -631,6 +631,9 @@ function os_files_update_7010(&$sb) {
   if (!isset($sb['progress'])) {
     $sb['progress'] = 0;
     $sb['total'] = $q->countQuery()->execute()->fetchField();
+    if ($sb['total'] == 0) {
+      return t('No data to move from Media description to OS Files Description.');
+    }
     $sb['limit'] = 50;
   }
 
@@ -660,6 +663,9 @@ function os_files_update_7011(&$sb) {
   if (!isset($sb['progress'])) {
     $sb['progress'] = 0;
     $sb['count'] = $q->countQuery()->execute()->fetchField();
+    if ($sb['count'] == 0) {
+      return t('No Media Titles to migrate.');
+    }
     $sb['limit'] = 50;
   }
 
@@ -746,5 +752,21 @@ function os_files_update_7015() {
     $instance_info = field_info_instance('file', 'os_file_description', $bundle_name);
     $instance_info['display']['teaser']['settings']['trim_length'] = variable_get('os_files_teaser_length', 160);
     field_update_instance($instance_info);
+  }
+}
+
+/**
+ * Remove erroneous desscription fields
+ */
+function os_files_update_7016() {
+  $info = entity_get_info('file');
+  $instances = field_info_instances('file');
+
+  $bad = array_diff_key($instances, $info['bundles']);
+
+  foreach ($bad as $k => $fields) {
+    foreach ($fields as $f => $def) {
+      field_delete_instance($def);
+    }
   }
 }

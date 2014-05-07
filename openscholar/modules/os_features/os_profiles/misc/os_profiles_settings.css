@@ -49,3 +49,16 @@ a.profile-pop {
 .dummy-content .dummy-professional-title {
   font-weight: bold;
 }
+
+h1.dummy-header {
+  font-weight: normal;
+}
+
+.dummy-slider {
+  color: black;
+  position: static;
+  width: auto;
+  background: #F1F1F1;
+  border: 1px solid #C0C5CC;
+  padding: 1em;
+}

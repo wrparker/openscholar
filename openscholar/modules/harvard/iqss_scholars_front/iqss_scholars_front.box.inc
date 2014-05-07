@@ -41,7 +41,7 @@ function iqss_scholars_front_default_box() {
   $box->description = 'Front page header text';
   $box->options = array(
     'body' => array(
-      'value' => '<div class="os-topheadings">Personal Websites Exclusively for Harvard Scholars<br> <a href="http://openscholar.harvard.edu/">Not a Harvard Scholar? Find out how to create a similar site at your institution.</a></div>',
+      'value' => '<div class="os-topheadings">Personal websites created by Harvard scholars using <a href="http://openscholar.harvard.edu/">OpenScholar@Harvard</a>,<br> a web publishing service provided by <a href="http://hwp.harvard.edu/">Harvard Web Publishing</a>. <br><a href="http://openscholar.harvard.edu/">Not a Harvard Scholar? Find out how to create a similar site at your institution.</a></div>',
       'format' => 'filtered_html',
     ),
     'additional_classes' => '',
@@ -57,12 +57,12 @@ function iqss_scholars_front_default_box() {
   $box->description = 'Scholars Info text with video link';
   $box->options = array(
     'body' => array(
-      'value' => '<div class="os-leftcol"><strong>Scholars at Harvard</strong> offers you the next generation scholarly web site. With it, you can easily create and manage a highly dynamic, powerful, and customizable site, with an easy-to-use interface and a look and feel that is uniquely yours.
-<ul>
-<li><a href="profiles/openscholar/themes/custom/scholars_harvard/Info-sheet-Scholars-at-Harvard-H-2011.03.17.pdf">Fact Sheet (PDF)</a></li>
+      'value' => '<div class="os-leftcol">
+  
+  Hosted by <a href="http://hwp.harvard.edu/">Harvard Web Publishing</a>, and powered by <a href="http://theopenscholar.org/">OpenScholar</a> software, <a href="http://openscholar.harvard.edu/">OpenScholar@Harvard</a> offers you the next generation scholarly web site. With it, you can easily create and manage a highly dynamic, powerful, and customizable site, with an easy-to-use interface and a look and feel that is uniquely yours.
+<ul><li><a href="profiles/openscholar/themes/custom/scholars_harvard/Info-sheet-Scholars-at-Harvard-H-2011.03.17.pdf">Fact Sheet (PDF)</a></li>
 <li><a href="http://player.vimeo.com/video/9887585?title=0&amp;byline=0&amp;portrait=0">Video Intro</a></li>
-</ul>
-</div>
+</ul></div>
 <div class="os-featuredSites"><a href="/websites"><img src="/profiles/openscholar/themes/custom/scholars_harvard/images/featuredSites.png"></a></div>',
       'format' => 'filtered_html',
     ),
@@ -80,7 +80,7 @@ function iqss_scholars_front_default_box() {
   $box->options = array(
     'body' => array(
       'value' => '<div class="os-rightcol">
-<p class="os-leadin">Scholars at Harvard is a free web site building tool available to faculty, graduate students and visiting scholars at Harvard.</p>
+<p class="os-leadin">OpenScholar@Harvard is a free web site building tool available to faculty, graduate students and visiting scholars at Harvard.</p>
 <ul>
 <li><span>Create a beautiful academic web site in seconds.</span></li>
 <li><span>Receive more web visibility.</span></li>

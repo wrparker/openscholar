@@ -1,7 +1,7 @@
 Feature:
   Testing scenarios for cache invalidate.
 
-  @api
+  @api @wip
   Scenario: Verify the cache is invalidate.
     Given I am logging in as "john"
      When I set the variable "views_og_cache_invalidate_node" to "1"
@@ -14,7 +14,7 @@ Feature:
       And I visit "john/people"
      Then I should see "Foo Bar"
 
-  @api
+  @api @wip
   Scenario: Verify the cache is not invalidate.
     Given I am logging in as "john"
      When I set the variable "views_og_cache_invalidate_node" to "0"

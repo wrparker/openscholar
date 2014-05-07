@@ -105,7 +105,33 @@ function theme_os_publications_tabular(&$vars) {
 
   $output = '<div id="biblio-node">';
   $output .= filter_xss($node->biblio_coins, array('span'));
-  $output .= '<h3>Citation:</h3><div id="citation-wrapper">' . $citation . '' . theme('biblio_export_links', array('node' => $node)) . '</div>';
+  $field_upload = '';
+  if (isset($vars['node']->field_upload[LANGUAGE_NONE])) {
+    $build = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array(
+          'biblio-upload-wrapper',
+        ),
+      ),
+      'label' => array(
+        '#theme' => 'html_tag',
+        '#tag' => 'label',
+        '#attributes' => array(
+          'class' => 'biblio-download-links-label',
+        ),
+        '#value' => t('Download'),
+      ),
+      'field_upload' => field_view_field('node', $vars['node'], 'field_upload', 'full'),
+    );
+    $field_upload .= drupal_render($build);
+    unset($vars['node']->field_upload[LANGUAGE_NONE]);
+  }
+
+  // Add label to the table of uploaded files.
+  $output .= '<div id="citation-wrapper">' . $citation . '' . theme('biblio_export_links', array('node' => $node)) . '</div>';
+  // Add Upload Div.
+  $output .= $field_upload;
 
   // Move publication image up under the citation.
   $book_images = field_get_items('node',$node,'field_biblio_image', $node->language);
@@ -116,10 +142,13 @@ function theme_os_publications_tabular(&$vars) {
       'path' => $book_image['uri'],
       'title' => $book_image['title'],
     ));
-    $book_output = '<div class="publication-cover-container">' . $theme_image . '</div>';
+    $book_output = '<div id="pub-cover-content-wrapper"><div class="publication-cover-container">' . $theme_image . '</div>';
     // Add the image to the output under the citation.
     $output .= $book_output;
   }
+
+  // Wrap all remaining content in a div.
+  $output .= '<div class="pubcontent-wrapper">';
 
   foreach ($rows as $row) {
     if (isset($row[0]['data']) && $row[0]['data']) {
@@ -133,6 +162,12 @@ function theme_os_publications_tabular(&$vars) {
     $output .= check_markup($node->body[LANGUAGE_NONE][0]['value'], $node->body[LANGUAGE_NONE][0]['format'], FALSE);
   }
 
+  // End PubContent Wrapper
+  $output .= '</div>';
+
+  $output .= '</div>';
+
+  // End "pub-cover-content-wrapper" div.
   $output .= '</div>';
 
   return $output;
@@ -190,7 +225,7 @@ function _os_publications_plain_citation($node) {
   }
 }', 'inline');
 
-  $citation = "<div class=\"biblio-citation\" onclick=\"if (event.target) { selectText(event.target); } else{ selectText(this);} \">{$citation}</div>";
+  $citation = "<h3>Citation:</h3><div class=\"biblio-citation\" onclick=\"if (event.target) { selectText(event.target); } else{ selectText(this);} \">{$citation}</div>";
 
   return $citation;
 }
@@ -221,16 +256,11 @@ function theme_os_publications_export_links($variables) {
 }
 
 /**
- *
- * @param $form
- *
- * @return unknown_type
+ * Overrides theme_biblio_contributors().
  */
 function theme_os_publications_contributors($variables) {
   $form         = $variables['form'];
   $rows         = array();
-  $display_role = TRUE;
-  $headers      = array('', t('Name'), t('Role'), t('Weight'));
   drupal_add_tabledrag($form['#id'], 'order', 'sibling', 'rank');
 
   foreach (element_children($form) as $key) {
@@ -241,16 +271,16 @@ function theme_os_publications_contributors($variables) {
 
     // Build the table row.
     $row = array('');
-    $row[] = array('data' => drupal_render($form[$key]['name']) . drupal_render($form[$key]['auth_category']),
-      'class' => array('biblio-contributor', 'biblio-contributor-category'),
-    );
     $row[] = array('data' => drupal_render($form[$key]['auth_type']),
       'class' => array('biblio-contributor-type'),
+    );
+    $row[] = array('data' => drupal_render($form[$key]['name']) . drupal_render($form[$key]['auth_category']) . drupal_render($form[$key]['delete']),
+      'class' => array('biblio-contributor', 'biblio-contributor-category'),
     );
     $row[] = drupal_render($form[$key]['rank']);
     $rows[] = array('data' => $row, 'class' => array('draggable'));
   }
-  $output = theme('table', array('header' => $headers, 'rows' => $rows, 'attributes' => array('id' => $form['#id'])));
+  $output = theme('table', array('rows' => $rows, 'attributes' => array('id' => $form['#id'], 'class' => 'biblio-contributors')));
   //$output .= drupal_render_children($form);
   return $output;
 }

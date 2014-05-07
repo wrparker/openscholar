@@ -668,3 +668,42 @@ function os_update_7030() {
     ->condition('module', 'menu')
     ->execute();
 }
+
+/**
+ * Remove 'Preview Changes' button from every node form
+ */
+function os_update_7031() {
+  $apps = array(
+    'os_biocv',
+    'os_blog',
+    'os_booklets',
+    'os_classes',
+    'os_events',
+    'os_faq',
+    'os_image_gallery',
+    'os_links',
+    'os_news',
+    'os_pages',
+    'os_presentations',
+    'os_profiles',
+    'os_reader',
+    'os_software'
+  );
+  $to_revert = array_fill_keys($apps, array('variable'));
+  features_revert($to_revert);
+  return t('Variable components of App features reverted.');
+}
+
+/**
+ * Enable the OS RSS module.
+ */
+function os_update_7032() {
+  module_enable(array('os_rss'));
+}
+
+/**
+ * Disable the RDF module.
+ */
+function os_update_7033() {
+  module_disable(array('rdf'));
+}

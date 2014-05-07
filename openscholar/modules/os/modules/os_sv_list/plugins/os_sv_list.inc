@@ -35,10 +35,11 @@ class os_sv_list extends os_boxes_default {
       'sort_by' => 'sort_newest',
     );
 
-    //get options from plugins
+    // Get options from plugins.
     if (empty($this->entity_type) && get_class($this) == 'os_sv_list_file') {
       $this->entity_type = 'file';
-    } elseif (empty($this->entity_type) && get_class($this) == 'os_sv_list_box') {
+    }
+    elseif (empty($this->entity_type) && get_class($this) == 'os_sv_list_box') {
       $this->entity_type = 'node';
     }
     
@@ -65,16 +66,15 @@ class os_sv_list extends os_boxes_default {
     
     $form['#submit'] = array('os_sv_list_form_submit');
     $form['#attached'] = array(
-      'css' => array(drupal_get_path('module', 'os_sv_list') . '/os_sv_list.css',),
+      'css' => array(drupal_get_path('module', 'os_sv_list') . '/os_sv_list.css'),
     );
 
-     $form['filters'] = $form['details'] = $form['vocabs'] = $form['content'] = array(
+    $form['filters'] = $form['details'] = $form['vocabs'] = $form['content'] = array(
       '#type' => 'fieldset',
       '#collapsible' => FALSE,
     );
 
-    
-    //content fieldset
+    // Content fieldset.
     $form['content']['content_type'] = array(
       '#type' => 'select',
       '#title' => t('Content Type'),
@@ -118,7 +118,8 @@ class os_sv_list extends os_boxes_default {
       '#title' => 'Display style',
       '#default_value' => $this->options['display'],
       '#options' => $this->_display_options(),
-      // Subsite content can only show titles, so hide this element when subsites are active
+      // Subsite content can only show titles, so hide this element when
+      // subsites are active.
       '#states' => array(
         'visible' => array(// action to take.
           ':input[name="query_scope[subsites]"]' => array('checked' => FALSE),
@@ -139,8 +140,6 @@ class os_sv_list extends os_boxes_default {
       )
     );
   
-
-
     //details fieldset
     $form['details']['more_div'] = array(
       '#prefix' => '<div class="more-wrapper">',
@@ -157,7 +156,7 @@ class os_sv_list extends os_boxes_default {
     // Unset the values from the text field, as otherwise FAPI will add
     // it to the #value of the form-element.
     // @see http://drupal.org/node/1024962#comment-4021826
-        unset($form_state['input']['more_link']);
+      unset($form_state['input']['more_link']);
     }
     
     $form['details']['more_div']['more_link'] = array(
@@ -174,8 +173,8 @@ class os_sv_list extends os_boxes_default {
       '#attached' => array(
         'js' => array(
           array('data' => array('more_link_defaults' => $this->_more_link_defaults(),),'type' => 'setting',)
-        )
-      )
+        ),
+      ),
     );
     
     $form['details']['more_div']['more_text'] = array(
@@ -184,8 +183,9 @@ class os_sv_list extends os_boxes_default {
       '#type' => 'textfield',
       '#default_value' => $this->options['more_text'],
         '#states' => array(
-          'visible' => array('input[name=more]' => array('checked' => TRUE)),
+          'visible' => array('input[name=more]' => array('checked' => TRUE),
         ),
+      ),
     );
     
     $form['details']['pager'] = array(
@@ -201,10 +201,10 @@ class os_sv_list extends os_boxes_default {
       '#default_value' => $this->options['number_of_items'],
     );
     
-    //get options from plugins
+    // Get options from plugins.
     $this->_plugins_invoke('options_form', $form);
 
-    //hide empty fieldsets.  plugins _could_ empty some of the defaults
+    // Hide empty fieldsets. Plugins _could_ empty some of the defaults
     foreach (array('details', 'content', 'filters', 'vocabs') as $fieldset) {
       if (isset($form[$fieldset]) && count($form[$fieldset]) <= 2) {
         unset($form[$fieldset]);
@@ -228,7 +228,7 @@ class os_sv_list extends os_boxes_default {
     $page = 0;
     $ids = $this->get_ids($page_num, $page);
    
-    //add the pager
+    // add the pager.
     if ($this->options['pager'] && $ids) {
       $parameters = array(
         'sv_list_box_delta' => $this->delta,
@@ -249,11 +249,12 @@ class os_sv_list extends os_boxes_default {
       global $pager_page_array, $pager_total;
       $pager_current = $pager_page_array[$parameters['pager_id']] + 1;
       $pager_max = $pager_total[$parameters['pager_id']];
-    } else {
+    }
+    else {
       $pager = '';
     }
         
-    //truncate items and prepare the more link
+    // Truncate items and prepare the more link.
     $more = '';
     if (count($ids) > $this->options['number_of_items'] || ($this->options['pager'] && $ids && $pager_current < $pager_max)) {
       $ids = array_slice($ids, 0, $this->options['number_of_items']);

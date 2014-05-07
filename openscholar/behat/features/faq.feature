@@ -1,7 +1,7 @@
 Feature:
   Testing the faq app.
 
-  @api
+  @api @first
   Scenario: Testing the migration of FAQ
     Given I am logging in as "john"
       And I visit "john/faq"
@@ -9,7 +9,7 @@ Feature:
      When I click "What does JFK stands for?"
      Then I should see "JFK stands for: John Fitzgerald Kennedy."
 
-  @api
+  @api @first
   Scenario: Testing the migration of FAQ
     Given I am logging in as "john"
       And I visit "john/faq"

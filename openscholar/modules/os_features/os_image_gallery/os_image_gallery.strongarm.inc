@@ -41,6 +41,13 @@ function os_image_gallery_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_media_gallery';
+  $strongarm->value = 0;
+  $export['diff_show_preview_changes_node_media_gallery'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'nodeformscols_field_placements_media_gallery_default';
   $strongarm->value = array(
     'title' => array(

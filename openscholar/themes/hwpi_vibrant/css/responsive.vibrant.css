@@ -51,14 +51,14 @@
 }
 /* Dropdown menu */
 
-#block-os-primary-menu a {
+#menu-bar #block-os-primary-menu a {
     color: #000000 !important;
 }
-#block-os-primary-menu a:hover,
-#block-os-primary-menu a:focus{
+#menu-bar #block-os-primary-menu a:hover,
+#menu-bar #block-os-primary-menu a:focus{
 	background-color:#24527a!important;
 }
-#block-os-primary-menu li {
+#menu-bar #block-os-primary-menu li {
     border-bottom: 1px solid #f4f4f4!important;
     border-top: none!important;
         display: block;

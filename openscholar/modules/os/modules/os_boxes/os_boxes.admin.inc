@@ -79,14 +79,18 @@ function os_boxes_widget_submit($form, $form_state) {
         break;
 
       default:
-        // coming from public view
-        // can only edit boxes from this view
+        // Coming from public view can only edit boxes from this view.
         module_load_include('module', 'block', 'block');
         $b     = (object)os_boxes_os_widget($box);
         $t     = _block_render_blocks(array($b));
         $block = array_shift($t);
-        // do this or else notices will throw. absolutely nothing is done with it but whatever
+
+        // Do this or else notices will throw. absolutely nothing is done with
+        // it but whatever.
         $block->region = 'dummy';
+        $block->module = 'dummy';
+        $block->delta = 'dummy';
+        $block->subject = 'dummy';
         $array         = array('#theme' => 'block', '#block' => $block);
         $html          = drupal_render($array);
         $target        = '#boxes-box-' . $box->delta;
@@ -255,4 +259,11 @@ function os_boxes_embed_code($box, $embed_style) {
   }
   print '';
   exit;
+}
+
+/**
+ * Placeholder function. Always returns a 404.
+ */
+function os_boxes_placeholder() {
+  return MENU_NOT_FOUND;
 }

@@ -206,6 +206,7 @@ function os_events_date_formatter_pre_view_alter(&$entity, $vars) {
 
   if (!isset($entity->date_id)) {
     if ($entity->view = views_get_current_view()
+      && isset($entity->view->plugin_name)
       && $entity->view->plugin_name == 'date_ical'
       && isset($entity->view->row_index)
       && isset($entity->view->result[$entity->view->row_index])) {
@@ -628,7 +629,13 @@ function os_events_url_outbound_alter(&$path, &$options, $original_path) {
   $data = explode('/', $original_path);
   $path = $data[0];
 
-  $format = array('year' => 'Y', 'month' => 'Y-m', 'week' => 'Y-\W', 'day' => 'Y-m-d');
+  // The format for week, "Y-\WW", is interpreted by date functions like so:
+  // The string consists of three parts delimited by dashes "-",
+  // The first part "Y" stands for the year in 4 digits,
+  // The second part "\WW" is actually "\W" and "W", meaning the first W is
+  // escaped and would be written as "W" and the second W is not escaped and
+  // thus stands for the number of the week,
+  $format = array('year' => 'Y', 'month' => 'Y-m', 'week' => 'Y-\WW', 'day' => 'Y-m-d');
   $date_format = new DateTime;
 
   if (isset($_GET[$data[1]])) {
@@ -642,12 +649,7 @@ function os_events_url_outbound_alter(&$path, &$options, $original_path) {
     $date_format->setTimestamp($time);
   }
 
-  if ($data[1] == 'week') {
-    $date = date_format($date_format, $format[$data[1]]) . date_week(date_format($date_format, 'Y-m-d'));
-  }
-  else {
-    $date = date_format($date_format, $format[$data[1]]);
-  }
+  $date = date_format($date_format, $format[$data[1]]);
 
   $type = $data[1];
 

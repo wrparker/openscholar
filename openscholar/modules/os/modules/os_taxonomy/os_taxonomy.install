@@ -18,3 +18,10 @@ function os_taxonomy_update_7000() {
 function os_taxonomy_update_7001() {
   variable_set('pathauto_taxonomy_vocabulary_pattern', 'vocab/[vocabulary:name]');
 }
+
+/**
+ * Enable Term reference tree module.
+ */
+function os_taxonomy_update_7002() {
+  module_enable(array('term_reference_tree'));
+}

@@ -2089,7 +2089,7 @@ $biblio_field_type_data = array(
   array('ftdid' => 19, 'title' => 'Pages', 'hint' => 'e.g. 23-25'),
   array('ftdid' => 20, 'title' => 'Date Published', 'hint' => '(mm/yyyy)'),
   array('ftdid' => 21, 'title' => 'Publication Language', 'hint' => ''),
-  array('ftdid' => 22, 'title' => 'Abstract', 'hint' => 'The citable summary of this work'),
+  array('ftdid' => 22, 'title' => 'Abstract', 'hint' => ''),
   array('ftdid' => 23, 'title' => 'French Abstract', 'hint' => ''),
   array('ftdid' => 24, 'title' => 'Keywords', 'hint' => ''),
   array('ftdid' => 25, 'title' => 'Type of Work', 'hint' => 'Masters Thesis'),

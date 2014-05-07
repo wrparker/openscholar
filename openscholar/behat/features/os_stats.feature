@@ -9,7 +9,7 @@ Feature:
       {"success":true,"filesize":{"value":"{{*}}","text":"Total uploaded"},"filesize_bytes":{"value":"{{*}}","text":"Total uploaded bytes"},"users":{"value":"{{*}}","text":"Users"},"websites":{"value":"{{*}}","text":"Websites"},"posts":{"value":"{{*}}","text":"Posts"},"publications":{"value":"{{*}}","text":"Publications"},"files":{"value":"{{*}}","text":"Uploaded files"},"href":"{{*}}","os_version":"{{*}}"}
       """
 
-  @api
+  @api @first
   Scenario: Verify for the json output for a specific node.
     Given I visit "geckoboard"
     And I should get:

@@ -297,6 +297,25 @@ body.node-type-biblio .node-type-biblio .field-field-biblio-image {
 	padding:3px 6px;
 } 
 
+.os-files-other-list tr td.file,
+.os-files-other-list tr td.mime,
+.os-files-other-list tr td.size {
+	padding:3px;
+} 
+
+
+.os-files-other-list tr td.mime {
+	width:18px;
+} 
+
+.os-files-other-list tr td.size {
+	font-size:10px;
+	font-weight: bold;
+	width: 40px;
+	text-align:right;
+} 
+
+
 .node-teaser.node-type-biblio .itu-attachment-list td {
   padding: 0 .4em;
   }
@@ -334,6 +353,10 @@ body.node-type-biblio .biblio-export {
   overflow: visible;
   padding:10px;
   margin-bottom:8px;
+  }
+  
+ #citation-wrapper h3{
+  margin-top:0;
   }
 
 dd.biblio-citation {

@@ -1,7 +1,7 @@
 Feature:
   Testing the bio tab.
 
-  @api
+  @api @first
   Scenario: Test the Bio tab
     Given I visit "john"
      When I click "Bio"

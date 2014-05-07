@@ -117,7 +117,11 @@ class os_boxes_columns extends os_boxes_default {
     $blocks = os_layout_get_multiple(array('os_public'), true, true);
 
     $regions = array();
-    foreach ($this->options['widgets'] as $region => $widgets) {
+    $temp = $this->options['widgets'];
+    if (!empty($form_state['input']) && !$form_state['submitted']) {
+      $temp = $form_state['input']['widgets'];
+    }
+    foreach ($temp as $region => $widgets) {
       $regions[$region] = explode('|', $widgets);
     }
 
@@ -146,6 +150,9 @@ class os_boxes_columns extends os_boxes_default {
 
     // add all the js and css we're gonna need
     $form['#attached'] = array(
+      'library' => array(
+        array('system', 'ui.sortable'),
+      ),
       'js' => array(
         drupal_get_path('module', 'os_boxes').'/plugins/os_boxes_columns/js/os_boxes_columns.form.js'
       ),

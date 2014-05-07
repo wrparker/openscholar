@@ -44,7 +44,12 @@ function os_profiles_os_app_info() {
  * Implements hook_init().
  */
 function os_profiles_init() {
-  if (!$uuid = variable_get('os_profiles_nodes_uuid')) {
+  if (variable_get('os_profiles_no_restws', FALSE) || !module_exists('restws')) {
+    // No RestWS.
+    return;
+  }
+
+  if (!($uuid = variable_get('os_profiles_nodes_uuid'))) {
     // Return if no UUID is set that is, no profile nodes need to be updated.
     return;
   }
@@ -101,7 +106,13 @@ function os_profiles_init() {
     // it for later.
     $person_photo = $data->values['field_person_photo'];
     unset($data->values['field_person_photo']);
-    $handler->update($node->nid, $data->values);
+    try {
+      $handler->update($node->nid, $data->values);
+    }
+    catch (RestWSException $e) {
+      // TODO: watchdog message
+      return;
+    }
 
     // We need to replace the field ID in the field with the new file ID we got.
     $file = NULL;
@@ -134,6 +145,7 @@ function os_profiles_menu() {
     'title' => 'Sync',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_profiles_sync_profile'),
+    'access callback' => 'vsite_og_user_access',
     'access arguments' => array('create person content'),
   );
 
@@ -175,7 +187,7 @@ function os_profiles_admin_paths() {
  */
 function os_profiles_os_entity_view_modes() {
   return array('node' => array(
-    'person' => array('sidebar_teaser'),
+    'person' => array('sidebar_teaser', 'no_image_teaser'),
   ));
 }
 
@@ -249,7 +261,7 @@ function os_profiles_process_node(&$vars) {
   if (isset($vars['content']['field_email'])) {
     $email_plain = $vars['content']['field_email'][0]['#markup'];
     if ($email_plain) {
-      $vars['content']['field_email'][0]['#markup'] = '<a href="mailto:' . $email_plain . '">email</a>';
+      $vars['content']['field_email'][0]['#markup'] = '<a href="mailto:' . $email_plain . '" title="'.$vars['title'].'\'s e-mail">email</a>';
     }
   }
   if (isset($vars['content']['field_phone'])) {
@@ -316,6 +328,7 @@ function os_profiles_field_access($op, $field, $entity_type, $entity, $account) 
   if (!empty($entity) && $field['field_name'] == 'field_url' && $entity_type == 'node' && $entity->type == 'person' && $op == 'edit') {
     return user_access('bypass redirection', $account);
   }
+
   return TRUE;
 }
 
@@ -563,6 +576,11 @@ function os_profiles_profiles_fields() {
  * Submit handler; Importing person profile from external source.
  */
 function os_profiles_sync_profile_submit($form, $form_state) {
+  if (variable_get('os_profiles_no_restws', FALSE) || !module_exists('restws')) {
+    // No RestWS.
+    return;
+  }
+
   global $base_url, $user;
   $keys = os_profiles_profiles_fields();
   $values = $data = array();
@@ -971,12 +989,16 @@ function os_profiles_form_cp_app_settings_form_alter(&$form, &$form_state) {
     '#weight' => -99,
   );
 
-  $profile_styles = array(
-    'title' => t('Name only'),
-    'teaser' => t('Teaser'),
-    'sidebar_teaser' => t('Name, image, and professional title'),
-    'no_image_teaser' => t('No image teaser'),
-  );
+  $entity_info = entity_get_info('node');
+  foreach ($entity_info['view modes'] as $name => $info) {
+    if (!$info['custom settings'] || $name == 'links') {
+      // Display only display modes the user turned on. The "links" view mode is
+      // disabled in the case of a "person" content type.
+      continue;
+    }
+
+    $profile_styles[$name] = $info['label'];
+  }
 
   $profile_styles_hover = array();
   $counter = 0;
@@ -999,7 +1021,7 @@ function os_profiles_form_cp_app_settings_form_alter(&$form, &$form_state) {
   // level value.
   $form['dummy__os_profiles_display_type'] = array(
     '#type' => 'radios',
-    '#title' => t('Display Types'),
+    '#title' => t('Display types'),
     '#default_value' => variable_get('os_profiles_display_type', 'teaser'),
     '#options' => $profile_styles_hover,
     '#description' => t('Choose the display type of a person in the "/people" page.'),
@@ -1031,8 +1053,13 @@ function os_profiles_form_cp_app_settings_form_alter(&$form, &$form_state) {
 
   // Form element for uploading a default image.
   $allowed_file_types = 'gif png jpg jpeg';
+  global $language;
+
   $form['file'] = array(
     '#type' => 'managed_file',
+    '#field_parents' => array(),
+    '#field_name' => array(),
+    '#language' => $language->language,
     '#title' => t('Default image'),
     '#field_prefix' => '<div class="">',
     '#field_suffix' => '</div>' . $image,
@@ -1423,7 +1450,7 @@ function _os_profiles_build_display_style_example($style) {
         </div>
         <div class="dummy-content">
           <h1><a>John Fitzgerald Kennedy</a></h1>
-				  <div class="dummy-professional-title">Drupal developer at Gizra.inc<br>QA person at Gizra.inc</div>
+				  <div class="dummy-professional-title">commander of Motor Torpedo Boats PT-109 and PT-59 during World War II<br />Massachusetts\'s 11th congressional district</div>
 				  <div>Often referred to by his initials JFK, was the 35th President of the United States, serving from 1961 until his assassination in 1963.</div>
 				  <div>555-1234</div>
 				  <div><a>example@address.com</a></div>
@@ -1437,7 +1464,20 @@ function _os_profiles_build_display_style_example($style) {
         </div>
         <div class="dummy-content">
           <h1><a>John Fitzgerald Kennedy</a></h1>
-				  <div class="dummy-professional-title">Drupal developer at Gizra.inc, QA person at Gizra.inc</div>
+				  <div class="dummy-professional-title">commander of Motor Torpedo Boats PT-109 and PT-59 during World War II<br />Massachusetts\'s 11th congressional district</div>
+        </div>
+      ';
+      break;
+    case 'slide_teaser':
+      $result = '
+        <h1 class="dummy-header">John Fitzgerald Kennedy</h1>
+        <div class="dummy-slider">
+          <div class="dummy-content">
+            <div class="dummy-professional-title">commander of Motor Torpedo Boats PT-109 and PT-59 during World War II<br />Massachusetts\'s 11th congressional district</div>
+          </div>
+          <div>Often referred to by his initials JFK, was the 35th President of the United States, serving from 1961 until his assassination in 1963.</div>
+				  <div>555-1234</div>
+				  <div><a>example@address.com</a></div>
         </div>
       ';
       break;
@@ -1445,7 +1485,7 @@ function _os_profiles_build_display_style_example($style) {
       $result = '
         <div class="dummy-content">
           <h1><a>John Fitzgerald Kennedy</a></h1>
-				  <div class="dummy-professional-title">Drupal developer at Gizra.inc<br>QA person at Gizra.inc</div>
+				  <div class="dummy-professional-title">commander of Motor Torpedo Boats PT-109 and PT-59 during World War II<br />Massachusetts\'s 11th congressional district</div>
 				  <div>Often referred to by his initials JFK, was the 35th President of the United States, serving from 1961 until his assassination in 1963.</div>
        	  <div>555-1234</div>
 				  <div><a>example@address.com</a></div>

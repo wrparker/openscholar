@@ -1,7 +1,7 @@
 Feature:
   Testing the simple view widget.
 
-  @api
+  @api @last
   Scenario: Verify the simple view widget works after tagging node to term.
      Given I am logging in as "john"
       When I assign the node "First blog" with the type "blog" to the term "Stephen William Hawking"

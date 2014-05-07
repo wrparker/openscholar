@@ -335,9 +335,11 @@ div.sidebar {
 .footer-right .region-footer-third {
     width: 100% !important;
 }
-.at-panel .region, .panel-row {
+
+#content-panels.at-panel .region, .panel-row {
     float: none!important;
 }
+
 th, 
 td {
     padding: 0.3em 0 0.3em 0.3em !important;

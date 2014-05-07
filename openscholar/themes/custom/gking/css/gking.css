@@ -72,6 +72,7 @@ h3, h4 {
   margin: 0;
   }
 
+.biblio-download-links-label,
 h3 {
   color: #6e7a7a;
   margin-top:0px;
@@ -698,7 +699,7 @@ padding:0 32px 0 0;
   }
 
 #menu-bar ul li {
-  font-size: 14px;
+  font-size: 1.15em;
   letter-spacing: 1.5px;
   }
 
@@ -1327,6 +1328,61 @@ margin-top:5px;
   margin: 0 0.6em 0 0;
   }
 
+/* STYLES THE ATTACHED FILES TABLE IN BIBLIO PAGE VIEW */
+.page-node.node-type-biblio .biblio-upload-wrapper {
+width: 23%;
+float: left;
+}
+
+
+.page-node.node-type-biblio #citation-wrapper.has-attached {
+width: 73%;
+float: right;
+vertical-align: top;
+}
+
+.pubcontent-wrapper,
+.publication-cover-container {
+	display: table-cell;
+}
+
+.publication-cover-container {
+	min-width: 150px;
+}
+
+.biblio-upload-wrapper + .pubcontent-wrapper {
+display: block;
+clear: both;
+}
+
+.os-files-other-list tr {
+	border: none;
+	background: #D95C00;
+} 
+.os-files-other-list tr:hover {
+	background:#D95C00;
+}
+
+.os-files-other-list td,
+.os-files-other-list,
+.os-files-other-list a {
+	color:#fff;
+}
+
+.os-files-other-list a {
+	text-decoration:underline;
+}
+
+#pub-cover-content-wrapper {
+display: table;
+clear: both;
+padding-top: 20px;
+}
+
+
+.pubcontent-wrapper {
+vertical-align: top;
+}
 
 /* TAXONOMY */
 

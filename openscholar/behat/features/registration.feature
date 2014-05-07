@@ -26,7 +26,7 @@ Feature:
       And I should see "Sign up for Halley's Comet"
      Then I delete "john" registration
 
-  @api
+  @api @first
   Scenario: Test adding event.
     Given I am logging in as "john"
       And I visit "john/node/add/event"

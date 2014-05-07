@@ -1,7 +1,7 @@
 Feature:
   Testing the bio teaser widget.
 
-  @api
+  @api @last
   Scenario: Verify the bio teaser widget works fine.
      Given I am logging in as "john"
        And the widget "Bio" is set in the "Classes" page with the following <settings>:

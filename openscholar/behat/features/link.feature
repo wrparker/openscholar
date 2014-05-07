@@ -1,7 +1,7 @@
 Feature:
   Testing the link tab.
 
-  @api
+  @api @first
   Scenario: Test the Links tab
     Given I visit "john"
      When I click "Links"

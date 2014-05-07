@@ -17,4 +17,7 @@ function os_search_solr_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "facetapi" && $api == "facetapi_defaults") {
     return array("version" => "1");
   }
+  if ($module == 'boxes' && $api == 'box') {
+    return array('version' => 1);
+  }
 }

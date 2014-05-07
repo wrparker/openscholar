@@ -85,7 +85,6 @@ function os_slideshow_form_slideshow_slide_node_form_alter(&$form, &$state, $for
     $box = boxes_box_load($widget);
   }
 
-  //$form['field_image']['und'][0]['#upload_validators']['imagefield_crop_upload_validate'][1]['widget']['settings']['resolution'] = '900x100';
   if ($widget) {
     $form['widget'] = array('#type' => 'hidden', '#value' => $widget);
   }
@@ -96,11 +95,9 @@ function os_slideshow_form_slideshow_slide_node_form_alter(&$form, &$state, $for
   unset($form['options']['#type']);
   unset($form['options']['#group']);
 
-  // Hide additional settings except publishing options.
-  foreach ($form as $name => &$item) {
-    if (is_array($item) && isset($item['#group']) && ($item['#group'] == 'additional_settings')) {
-      $item['#type'] = 'hidden';
-    }
+  //Hide additional settings that are no longer grouped as such
+  foreach (array('revision_information', 'author', 'comment_settings', 'path', 'metatags', 'actions_top') as $elem) {
+    $form[$elem]['#type'] = 'hidden'; 
   }
 
   // Hide title. it will be automatically generated later.
@@ -126,7 +123,7 @@ function os_slideshow_form_slideshow_slide_node_form_alter(&$form, &$state, $for
  * Changes the imagefield_crop widget to use our custom ratio.
  */
 function os_slideshow_imagefield_crop_instance_alter(&$instance, $context) {
-  if (isset($context['form']) && $context['form']['#id'] == 'slideshow-slide-node-form') {
+  if (isset($context['form']) && strpos($context['form']['#id'], 'slideshow-slide-node-form') === 0) {
     $widget = $context['form']['widget']['#value'];
   }
   elseif (isset($context['entity']) && isset($context['entity']->widget)) {
@@ -146,36 +143,62 @@ function os_slideshow_imagefield_crop_instance_alter(&$instance, $context) {
 }
 
 /**
- * Implements hook_node_insert
+ * Implements hook_node_insert().
  *
- * When a slideshow_slide is created, add its nid to the widget it was created for
+ * When a slideshow_slide is created, add its nid to the widget it was created for.
  */
 function os_slideshow_node_insert($node) {
   if ($node->type != 'slideshow_slide') {
     return;
   }
+  if (!isset($node->widget)) {
+    return;
+  }
+  os_slideshow_handle_slide_update($node->nid, $node->widget, 'insert');
+}
 
-  if (isset($node->widget)) {
-    if (module_exists('spaces') && $space = spaces_get_space()) {
-      $box = $space->controllers->boxes->get($node->widget);
-    }
-    else {
-      $box = boxes_box_load($node->widget);
-    }
+/**
+ * Utility function to keep widget updated when a slide is inserted/deleted.
+ *
+ * @param $nid
+ *   Relevant node id.
+ * @param $widget
+ *   Relevant widget id.
+ * @param $action
+ *   Either 'insert' or 'delete'.
+ */
+function os_slideshow_handle_slide_update($nid, $widget, $action) {
+  // Load the box.
+  if (module_exists('spaces') && $space = spaces_get_space()) {
+    $box = $space->controllers->boxes->get($widget);
+  }
+  else {
+    $box = boxes_box_load($widget);
+  }
 
+  if (!$box) {
+    // Couldn't find any box related.
+    return;
+  }
+
+  if ($action == 'insert') {
     // Array reduce's anon function gets the highest weight of all the slides,
     // so the newly inserted one can come last.
-    $box->options['nodes'][(int)$node->nid] = array(
-      'nid' => (int)$node->nid,
+    $box->options['nodes'][$nid] = array(
+      'nid' => $nid,
       'weight' => 1 + array_reduce($box->options['nodes'], create_function('$val, $next', 'return ($next["weight"]>$val) ? $next["weight"] : $val;'), 0),
-	  );
+    );
+  }
+  elseif ($action == 'delete') {
+    unset($box->options['nodes'][$nid]);
+  }
 
-    if ($space) {
-      $space->controllers->boxes->set($box->delta, $box);
-    }
-    else {
-      $box->save();
-    }
+  // Save the box after changes.
+  if ($space) {
+    $space->controllers->boxes->set($box->delta, $box);
+  }
+  else {
+    $box->save();
   }
 }
 
@@ -206,7 +229,7 @@ function os_slideshow_node_presave($node) {
 /**
  * @function os_slideshow_process_form_nodes
  *
- * Form #process function.  After form is saved, remove the nids that were deleted.
+ * Form #process function. After form is saved, remove the nids that were deleted.
  */
 function os_slideshow_process_form_nodes($element, &$state, &$form) {
   // Bail out while the form is being built.
@@ -219,6 +242,10 @@ function os_slideshow_process_form_nodes($element, &$state, &$form) {
   foreach($form['options']['nodes_list']['#value'] as $nid) {
     if (!in_array($nid, $nodes_left)) {
       unset($element[$nid]);
+
+      // The node is a slide, if it is being removed from the slideshow, it should
+      // be deleted.
+      node_delete($nid);
     }
   }
 
@@ -323,9 +350,31 @@ function os_slideshow_preprocess_os_slideshow_slide(&$vars) {
   $vars['headline'] = ($node->field_headline) ? $node->field_headline[$lang][0]['value'] : '';
   $vars['description'] = ($node->field_description) ? $node->field_description[$lang][0]['value'] : '';
 
+  if ($files = field_get_items('node', $node, 'field_image')) {
+    $file = reset($files);
+  }
   $img = ($node->field_image) ? $node->field_image[$lang][0]['uri'] : '';
   $img_vars = array('path' => $img, 'style_name' => $vars['style_name']);
-  $img_vars['alt'] = (count($node->field_image[$lang][0]['field_file_image_alt_text'])) ? $node->field_image[$lang][0]['field_file_image_alt_text'][$lang][0]['safe_value'] : $node->field_image[$lang][0]['filename'];
+  
+  if ($items = field_get_items('node', $node, 'field_slideshow_alt_text')) {
+    $item = reset($items);
+  }
+  elseif (isset($file) && $items = field_get_items('file', (object)$file, 'field_file_image_alt_text')) {
+    $item = reset($items);
+  }
+  if (!empty($item)) {
+    $img_vars['alt'] = $item['safe_value'];
+  }
+
+  if ($items = field_get_items('node', $node, 'field_slideshow_title_text')) {
+    $item = reset($items);
+  }
+  elseif (isset($file) && $items = field_get_items('file', (object)$file, 'field_file_image_title_text')) {
+    $item = reset($items);
+  }
+  if (!empty($item)) {
+    $img_vars['title'] = $item['safe_value'];
+  }
 
   $vars['image'] = theme('image_style', $img_vars);
   $url = ($node->field_link) ? $node->field_link[$lang][0]['url'] : '';
@@ -360,33 +409,58 @@ function os_slideshow_preprocess_os_slideshow_slideshow(&$vars) {
   _os_slideshow_add_css();
 
   // Prepare images.
-  $nodes = $vars['nodes'];
-  foreach ($nodes as $nid => $node) {
-    $nodes[$nid]['#weight'] = $node['weight'];
+  $node_ids = $vars['nodes'];
+  $sorted_nodes = array();
+  foreach ($node_ids as $nid => $node) {
+    $sorted_nodes[$nid]['#weight'] = $node['weight'];
   }
-  uasort($nodes, 'element_sort');
+  uasort($sorted_nodes, 'element_sort');
 
-  // Get slides - image with descriptionץ
-  $nodes = node_load_multiple(array_keys($nodes));
+  // Get slides - image with description
+  $nodes = node_load_multiple(array_keys($sorted_nodes));
   $vars['slides'] = array();
   $slide_vars = array('style_name' => _os_slideshow_get_style_name($vars['layout'], $vars['box_delta']));
-  foreach ($nodes as $nid => $node) {
-    if ($node->status) {
-      $slide_vars['node'] = $node;
-      $vars['slides'][] = theme('os_slideshow_slide', $slide_vars);
+  $nids_to_remove = array();
+  foreach (array_keys($sorted_nodes) as $nid) {
+    if (isset($nodes[$nid])) {
+      $node = $nodes[$nid];
+      if ($node->status) {
+        $slide_vars['node'] = $node;
+        $vars['slides'][] = theme('os_slideshow_slide', $slide_vars);
+      }
+      else {
+        // Controls should only know about published images so remove the
+        // unpublished ones
+        unset($nodes[$nid]);
+      }
     }
     else {
-      // Controls should only know about published images so remove the
-      // unpublished ones
-      unset($nodes[$nid]);
+      // Node wasn't loaded, hence need to be removed from the widget.
+      $nids_to_remove[] = $nid;
     }
   }
 
   // Get controls.
   $control_vars = array('node_count' => count($nodes));
   $vars['controls'] = theme('os_slideshow_controls', $control_vars);
+
+  // Remove missing nodes from the box.
+  os_slideshow_remove_missing_nodes($nids_to_remove, $vars['box_delta']);
 }
 
+/**
+ * Utility function to remove list of nodes from widget.
+ *
+ * @param $nids_to_remove
+ *   Array of nids to remove from the widget.
+ * @param $widget
+ *   Widget id.
+ */
+function os_slideshow_remove_missing_nodes($nids_to_remove, $widget) {
+  foreach ($nids_to_remove as $nid) {
+    os_slideshow_handle_slide_update($nid, $widget, 'delete');
+  }
+}
 /**
  * @function _os_slideshow_get_animation_direction
  *

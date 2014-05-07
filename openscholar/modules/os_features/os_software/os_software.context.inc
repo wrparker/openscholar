@@ -30,6 +30,8 @@ function os_software_context_default_contexts() {
       'values' => array(
         'software' => 'software',
         'software/*' => 'software/*',
+        'browse/projects' => 'browse/projects',
+        'browse/releases' => 'browse/releases',
       ),
     ),
     'views' => array(

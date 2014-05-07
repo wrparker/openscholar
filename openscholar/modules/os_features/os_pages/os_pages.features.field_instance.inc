@@ -126,7 +126,7 @@ function os_pages_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_meta_description',
-    'label' => 'Summary description',
+    'label' => 'Meta description',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,

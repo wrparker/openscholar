@@ -257,13 +257,13 @@ ul#top-front li {
   float: left;
   font-weight: normal;
   margin-left: 20px;
-  line-height:42px;
   margin-top: 21px;
   }
 
 ul#top-front li a,
 ul#top-front li a:visited {
-  color: #FFF;
+  color: #005C9C;
+font-size: 14px;
   }
 
 ul#top-front li a:hover {
@@ -660,7 +660,7 @@ td, td.description {
   background:#fff;
   position:relative;
  margin: -14px 0 0 0;
- height:240px;
+ /*height:240px;*/
   }
 
 #block-views-os-websites-block .views-row {

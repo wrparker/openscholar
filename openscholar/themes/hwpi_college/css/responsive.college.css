@@ -10,6 +10,11 @@ ul.mobile-buttons {
     padding: 0 20px !important;
 }
 
+#columns .block-boxes-os_boxes_columns .region-inner {
+ 	padding:0 !important;
+}
+
+
 #columns .sidebar .region-inner {
     padding: 0 20px 20px 0 !important;
 }
@@ -66,7 +71,7 @@ ul.mobile-buttons {
     background: none!important;
     border-bottom: none !important;
 }
-#block-os-primary-menu{
+#menu-bar #block-os-primary-menu{
     background: none repeat scroll 0 0 #A23338;
 
 }
@@ -75,8 +80,8 @@ ul.mobile-buttons {
     background: none repeat scroll 0 0 #1E1E1E;
 
 }
-#block-os-primary-menu a:hover,
-#block-os-primary-menu a:focus{
+#menu-bar #block-os-primary-menu a:hover,
+#menu-bar #block-os-primary-menu a:focus{
 	background-color:#303030!important;
 }
 #menu-bar {
@@ -87,7 +92,7 @@ ul.mobile-buttons {
     background: none repeat scroll 0 0 #80282C!important;
 }
 
-#block-os-primary-menu li {
+#menu-bar #block-os-primary-menu li {
     border-bottom: 1px solid #80282C!important;
     border-top: 1px solid #AB383E!important;
         display: block;

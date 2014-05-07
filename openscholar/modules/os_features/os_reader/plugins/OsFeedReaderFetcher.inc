@@ -42,7 +42,7 @@ class OsFeedReaderFetcher extends FeedsProcessor {
    * Save a imported entity.
    */
   protected function entitySave($entity) {
-    $node = node_load($entity->feeds_item->feed_nid);
+    $node_wrapper = entity_metadata_wrapper('node', $entity->feeds_item->feed_nid);
     $values = array(
       'title' => $entity->title,
       'description' => $entity->description,
@@ -50,9 +50,14 @@ class OsFeedReaderFetcher extends FeedsProcessor {
       'guid' => $entity->feeds_item->guid,
       'url' => $entity->feeds_item->url,
       'importer_nid' => $entity->feeds_item->feed_nid,
-      'importer_type' => $node->type == 'blog_import' ? 'blog' : 'news',
+      'importer_type' => $node_wrapper->getBundle() == 'blog_import' ? 'blog' : 'news',
     );
-    os_reader_feed_item_create($values)->save();
+
+    $feed_item = os_reader_feed_item_create($values);
+
+    $wrapper = entity_metadata_wrapper('os_feed_item', $feed_item);
+    $wrapper->{OG_AUDIENCE_FIELD}->set($node_wrapper->{OG_AUDIENCE_FIELD}->value(array('identifier' => TRUE)));
+    $wrapper->save();
   }
 
   /**

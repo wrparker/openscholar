@@ -49,11 +49,21 @@
     id = id.replace('template', count);
 
     var $row = $(str),
-      icon = $(file.preview).find('img.file-icon');
-    $row.find('img.file-icon').replaceWith(icon);
+      icon = file.icon;
+    $row.find('img.file-icon').attr('src', icon);
+    $row.find('.ctools-use-modal-process').removeClass('ctools-use-modal-processed');
+    $row.find('.ajax-processed').removeClass('ajax-processed');
     var $wrapper = $row.wrapAll('<div class="file-list-single form-wrapper media-draggable-processed" id="id"></div>').parent();
     setupRowHandlers.call($wrapper);
     $('.file-list-single').parent().append($wrapper);
+    Drupal.attachBehaviors($wrapper);
+  }
+
+  function editRow(file) {
+    // find the row
+    var row = $('.file-list-single input[value="'+file.fid+'"]').parents('.file-list-single'),
+      image = row.find('span img');
+    row.find('span').text(" "+file.filename).prepend(image);
   }
 
   function setupRowHandlers() {
@@ -72,11 +82,15 @@
 
       $('.field-widget-media-draggable-file .file-list-single').once('media-draggable', setupRowHandlers);
 
-      if (typeof settings.mediaDraggable != 'undefined'
-          && typeof settings.mediaDraggable.newFile != 'undefined'
-          && $(ctx).prop('tagName') == 'FORM') {
-        addRow(settings.mediaDraggable.newFile);
-        settings.mediaDraggable.newFile = false;
+      if (typeof settings.mediaDraggable != 'undefined' && $(ctx).prop('tagName') == 'FORM') {
+        if (typeof settings.mediaDraggable.newFile != 'undefined') {
+          addRow(settings.mediaDraggable.newFile);
+          delete settings.mediaDraggable.newFile;
+        }
+        else if (typeof settings.mediaDraggable.editedFile != 'undefined') {
+          editRow(settings.mediaDraggable.editedFile);
+          delete settings.mediaDraggable.editedFile;
+        }
       }
     }
   };

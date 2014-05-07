@@ -148,7 +148,7 @@ user/login';
     'os_image_gallery' => '1',
     'os_links' => '1',
     'os_publications' => '1',
-    'os_events' => '1',
+    'os_events' => '0',
     'os_blog' => '1',
     'os_presentations' => '1',
     'os_profiles' => '1',

@@ -61,6 +61,26 @@ function os_publications_install() {
       }
     }
   }
+
+
+  $default_bibyears = array(9998 => 'In Press', 9999 => 'Submitted');
+  $scholar_bibyears = array(9999 => 'Submitted', 9998 => 'In Press', 10000 => 'Forthcoming');
+  $new_bibyears = array(10000=>'Forthcoming', 10010=>'Submitted', 10020=>'In Preparation', 10030=>'In Press', 10040=>'Working Paper');
+  $current_bibyears = variable_get('biblio_years_text', $default_bibyears);
+
+  ksort($current_bibyears);
+  ksort($scholar_bibyears);
+  ksort($default_bibyears);
+
+  $text_to_year = array_flip($new_bibyears);
+  foreach($current_bibyears as $year => $text) {
+    db_update('biblio')
+      ->condition('biblio_year', $year)
+      ->fields(array('biblio_year' => $text_to_year[$text]))
+      ->execute();
+  }
+
+  variable_set('biblio_years_text', $new_bibyears);
 }
 
 // Implements hook_schema_alter().
@@ -342,7 +362,7 @@ function os_publications_update_7007() {
  * Set biblio to use views_litepager
  */
 function os_publications_update_7008() {
-  variable_set('biblio_pager', 'pager_lite'); 
+  variable_set('biblio_pager', 'pager_lite');
 }
 
 /**
@@ -1116,4 +1136,50 @@ function os_publications_update_7019() {
   $revert = array('os_publications' => array('user_permission'));
 
   features_revert($revert);
+}
+
+/**
+ * Reverting publications user permission.
+ */
+function os_publications_update_7020() {
+  $revert = array('os_publications' => array('user_permission'));
+
+  features_revert($revert);
+}
+
+/**
+ * Reverting publications user permission.
+ */
+function os_publications_update_7021() {
+  $revert = array('os_publications' => array('user_permission'));
+
+  features_revert($revert);
+}
+
+/**
+ * Updating the widget of the publication image field.
+ */
+function os_publications_update_7022() {
+  $revert = array('os_publications' => array('field_instance'));
+
+  features_revert($revert);
+}
+
+/**
+ * Updating the nodeformcol settings.
+ */
+function os_publications_update_7023() {
+  $revert = array('os_publications' => array('variable'));
+
+  features_revert($revert);
+}
+
+/**
+ * Updating field description.
+ */
+function os_publications_update_7024() {
+  db_update('biblio_field_type_data')
+  ->fields(array('hint' => ''))
+  ->condition('ftdid', 22)
+  ->execute();
 }

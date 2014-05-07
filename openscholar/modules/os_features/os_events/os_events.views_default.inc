@@ -26,7 +26,11 @@ function os_events_views_default_views() {
   $handler->display->display_options['link_display'] = 'page_1';
   $handler->display->display_options['access']['type'] = 'spaces_feature';
   $handler->display->display_options['access']['spaces_feature'] = 'os_events';
-  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['cache']['type'] = 'vsite_time_per_group';
+  $handler->display->display_options['cache']['results_lifespan'] = '518400';
+  $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
+  $handler->display->display_options['cache']['output_lifespan'] = '518400';
+  $handler->display->display_options['cache']['output_lifespan_custom'] = '0';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['distinct'] = TRUE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
@@ -44,32 +48,10 @@ function os_events_views_default_views() {
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
-  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = FALSE;
-  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Field: Content: Rendered Node */
-  $handler->display->display_options['fields']['rendered_entity']['id'] = 'rendered_entity';
-  $handler->display->display_options['fields']['rendered_entity']['table'] = 'views_entity_node';
-  $handler->display->display_options['fields']['rendered_entity']['field'] = 'rendered_entity';
-  $handler->display->display_options['fields']['rendered_entity']['label'] = '';
-  $handler->display->display_options['fields']['rendered_entity']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['rendered_entity']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['rendered_entity']['link_to_entity'] = 1;
-  $handler->display->display_options['fields']['rendered_entity']['display'] = 'view';
-  $handler->display->display_options['fields']['rendered_entity']['view_mode'] = 'teaser';
-  /* Field: Colorbox: Colorbox trigger */
-  $handler->display->display_options['fields']['colorbox']['id'] = 'colorbox';
-  $handler->display->display_options['fields']['colorbox']['table'] = 'colorbox';
-  $handler->display->display_options['fields']['colorbox']['field'] = 'colorbox';
-  $handler->display->display_options['fields']['colorbox']['label'] = '';
-  $handler->display->display_options['fields']['colorbox']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['colorbox']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['colorbox']['trigger_field'] = 'title';
-  $handler->display->display_options['fields']['colorbox']['popup'] = '[rendered_entity]';
-  $handler->display->display_options['fields']['colorbox']['gid'] = 1;
   /* Field: Content: Date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
@@ -125,8 +107,6 @@ function os_events_views_default_views() {
   $handler->display->display_options['style_options']['theme_style'] = '1';
   $handler->display->display_options['style_options']['max_items'] = '0';
   $handler->display->display_options['style_options']['multiday_hidden'] = array(
-    'title' => 'title',
-    'rendered_entity' => 'rendered_entity',
     'field_date' => 'field_date',
   );
   $handler->display->display_options['defaults']['style_options'] = FALSE;
@@ -172,8 +152,6 @@ function os_events_views_default_views() {
   $handler->display->display_options['style_options']['theme_style'] = '1';
   $handler->display->display_options['style_options']['max_items'] = '0';
   $handler->display->display_options['style_options']['multiday_hidden'] = array(
-    'title' => 'title',
-    'rendered_entity' => 'rendered_entity',
     'field_date' => 'field_date',
   );
   $handler->display->display_options['defaults']['style_options'] = FALSE;
@@ -214,8 +192,6 @@ function os_events_views_default_views() {
   $handler->display->display_options['style_options']['theme_style'] = '1';
   $handler->display->display_options['style_options']['max_items'] = '0';
   $handler->display->display_options['style_options']['multiday_hidden'] = array(
-    'title' => 'title',
-    'rendered_entity' => 'rendered_entity',
     'field_date' => 'field_date',
   );
   $handler->display->display_options['defaults']['style_options'] = FALSE;
@@ -331,33 +307,11 @@ function os_events_views_default_views() {
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
-  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Field: Content: Rendered Node */
-  $handler->display->display_options['fields']['rendered_entity']['id'] = 'rendered_entity';
-  $handler->display->display_options['fields']['rendered_entity']['table'] = 'views_entity_node';
-  $handler->display->display_options['fields']['rendered_entity']['field'] = 'rendered_entity';
-  $handler->display->display_options['fields']['rendered_entity']['label'] = '';
-  $handler->display->display_options['fields']['rendered_entity']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['rendered_entity']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['rendered_entity']['link_to_entity'] = 1;
-  $handler->display->display_options['fields']['rendered_entity']['display'] = 'view';
-  $handler->display->display_options['fields']['rendered_entity']['view_mode'] = 'teaser';
-  /* Field: Colorbox: Colorbox trigger */
-  $handler->display->display_options['fields']['colorbox']['id'] = 'colorbox';
-  $handler->display->display_options['fields']['colorbox']['table'] = 'colorbox';
-  $handler->display->display_options['fields']['colorbox']['field'] = 'colorbox';
-  $handler->display->display_options['fields']['colorbox']['label'] = '';
-  $handler->display->display_options['fields']['colorbox']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['colorbox']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['colorbox']['trigger_field'] = 'title';
-  $handler->display->display_options['fields']['colorbox']['popup'] = '[rendered_entity]';
-  $handler->display->display_options['fields']['colorbox']['gid'] = 0;
-  $handler->display->display_options['fields']['colorbox']['custom_gid'] = 'os_gallery-block';
   /* Field: Content: Date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
@@ -413,33 +367,10 @@ function os_events_views_default_views() {
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
-  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = FALSE;
-  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Field: Content: Rendered Node */
-  $handler->display->display_options['fields']['rendered_entity']['id'] = 'rendered_entity';
-  $handler->display->display_options['fields']['rendered_entity']['table'] = 'views_entity_node';
-  $handler->display->display_options['fields']['rendered_entity']['field'] = 'rendered_entity';
-  $handler->display->display_options['fields']['rendered_entity']['label'] = '';
-  $handler->display->display_options['fields']['rendered_entity']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['rendered_entity']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['rendered_entity']['link_to_entity'] = 1;
-  $handler->display->display_options['fields']['rendered_entity']['display'] = 'view';
-  $handler->display->display_options['fields']['rendered_entity']['view_mode'] = 'teaser';
-  /* Field: Colorbox: Colorbox trigger */
-  $handler->display->display_options['fields']['colorbox']['id'] = 'colorbox';
-  $handler->display->display_options['fields']['colorbox']['table'] = 'colorbox';
-  $handler->display->display_options['fields']['colorbox']['field'] = 'colorbox';
-  $handler->display->display_options['fields']['colorbox']['label'] = '';
-  $handler->display->display_options['fields']['colorbox']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['colorbox']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['colorbox']['trigger_field'] = 'title';
-  $handler->display->display_options['fields']['colorbox']['popup'] = '[rendered_entity]';
-  $handler->display->display_options['fields']['colorbox']['gid'] = 0;
-  $handler->display->display_options['fields']['colorbox']['custom_gid'] = 'os_gallery-upcoming';
   /* Field: Content: Date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
@@ -606,7 +537,7 @@ function os_events_views_default_views() {
   $handler->display->display_options['title'] = 'Ical';
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['defaults']['cache'] = FALSE;
-  $handler->display->display_options['cache']['type'] = 'time_per_gorup';
+  $handler->display->display_options['cache']['type'] = 'vsite_time_per_group';
   $handler->display->display_options['cache']['results_lifespan'] = '518400';
   $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
   $handler->display->display_options['cache']['output_lifespan'] = '518400';
@@ -680,7 +611,7 @@ function os_events_views_default_views() {
   $handler->display->display_options['title'] = 'Ical';
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['defaults']['cache'] = FALSE;
-  $handler->display->display_options['cache']['type'] = 'time_per_gorup';
+  $handler->display->display_options['cache']['type'] = 'vsite_time_per_group';
   $handler->display->display_options['cache']['results_lifespan'] = '518400';
   $handler->display->display_options['cache']['results_lifespan_custom'] = '0';
   $handler->display->display_options['cache']['output_lifespan'] = '518400';

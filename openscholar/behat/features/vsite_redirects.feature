@@ -2,7 +2,7 @@ Feature:
   In order to have content at a single URL as a visitor i want to be redirected
   to a canonical URL.
 
-  @api
+  @api @last
   Scenario: Non-aliased node paths redirect on sites without domains.
     Given I should be redirected in the following <cases>:
    #  | Request                                 | Code  | Final URL                     |
@@ -29,15 +29,21 @@ Feature:
       | "john"          | 301  | ""        |
       | "john/news"     | 301  | "news"    |
 
-  @api
+  @api @last
   Scenario: Verifying redirect of sites with a share domain.
     Given I visit "http://lincoln.local/john/blog/first-blog"
      Then I should be on "john/blog/first-blog"
 
-  @api
+  @api @last
   Scenario: Verifying redirect of sites without a share domain.
     Given I login as "admin" in "Abraham"
       And I set the Share domain name to "0"
      When I visit "http://lincoln.local/john/blog/first-blog"
      Then I should be on "john/blog/first-blog"
 
+  @api @last
+  Scenario: Verify that when viewing the group node the redirect has a 301
+            HTTP response status.
+    Given I should be redirected in the following <cases>:
+     #  | Request                                 | Code  | Final URL                     |
+        | john/node/2                             | 301   | john                          |

@@ -69,6 +69,13 @@ function os_news_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'diff_show_preview_changes_node_news';
+  $strongarm->value = 0;
+  $export['diff_show_preview_changes_node_news'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_node__news';
   $strongarm->value = array(
     'view_modes' => array(
@@ -164,7 +171,7 @@ function os_news_strongarm() {
     ),
     'revision_information' => array(
       'region' => 'right',
-      'weight' => '5',
+      'weight' => '6',
       'has_required' => FALSE,
       'title' => 'Revision information',
       'collapsed' => 1,
@@ -188,7 +195,7 @@ function os_news_strongarm() {
     ),
     'comment_settings' => array(
       'region' => 'right',
-      'weight' => '6',
+      'weight' => '5',
       'has_required' => FALSE,
       'title' => 'Comment settings',
       'collapsed' => 1,
@@ -215,6 +222,14 @@ function os_news_strongarm() {
       'weight' => '0',
       'has_required' => FALSE,
       'title' => 'Save',
+      'hidden' => 0,
+    ),
+    'metatags' => array(
+      'region' => 'main',
+      'weight' => '40',
+      'has_required' => FALSE,
+      'title' => 'Meta tags',
+      'collapsed' => 1,
       'hidden' => 0,
     ),
   );

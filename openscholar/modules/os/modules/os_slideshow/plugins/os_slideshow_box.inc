@@ -229,15 +229,3 @@ function os_slideshow_draggable_table($element) {
   drupal_add_tabledrag('slideshow-slides-list', 'order', 'sibling', 'field-weight');
   return $element;
 }
-
-/**
- * Ensures the value given is within acceptable ranges
- */
-// function os_slideshow_accepted_range($element, &$form_state) {
-//   $defaults = $form_state['box']->options_defaults();
-//   if ($element['#value'] < $defaults['min_width'] || $element['#value'] > $defaults['max_width']) {
-//     form_error($element, t('Slideshow width out of bounds: Width should be between %min and %max pixels.', array('%min'=>$defaults['min_width'], '%max'=>$defaults['max_width'])));
-//   }
-//   $element['#value'] = (int)$element['#value'];
-// }
-

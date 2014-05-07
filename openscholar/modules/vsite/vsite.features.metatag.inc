@@ -14,6 +14,9 @@ function vsite_metatag_export_default() {
   $config['node:department'] = array(
     'instance' => 'node:department',
     'config' => array(
+      'description' => array(
+        'value' => '[node:field_meta_description]',
+      ),
       'og:type' => array(
         'value' => 'university',
       ),
@@ -27,6 +30,9 @@ function vsite_metatag_export_default() {
   $config['node:personal'] = array(
     'instance' => 'node:personal',
     'config' => array(
+      'description' => array(
+        'value' => '[node:field_meta_description]',
+      ),
       'og:type' => array(
         'value' => 'profile',
       ),
@@ -40,6 +46,9 @@ function vsite_metatag_export_default() {
   $config['node:project'] = array(
     'instance' => 'node:project',
     'config' => array(
+      'description' => array(
+        'value' => '[node:field_meta_description]',
+      ),
       'og:type' => array(
         'value' => 'company',
       ),

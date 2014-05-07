@@ -3,7 +3,7 @@ Feature:
   I need to be able to issue a query via URL
   And get XML results
 
-  @api
+  @api @first
   Scenario: Test a query with unknown VSite, where the answer should be "unknown".
     Given I visit "harvard_activity_reports"
     Then I should get:
@@ -14,7 +14,7 @@ Feature:
     </response>
     """
 
-  @api
+  @api @first
   Scenario: Test a query with invalid VSite, where the answer should be "error".
     Given I visit "harvard_activity_reports?id=foo"
     Then I should get:
@@ -39,7 +39,7 @@ Feature:
           <yearOfPublication>1943</yearOfPublication>
     """
 
-  @api
+  @api @first
   Scenario: Test a query withing a VSite for a year with no publication, where the answer should be "ok".
     Given I visit "john/harvard_activity_reports"
     Then I should get:

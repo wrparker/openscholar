@@ -207,20 +207,19 @@ body#widget {display: inline-block;}
 
   /* Footer panels */
 
- .footer .region-footer {
+ .at-panel.footer .region-footer {
     	width: 100%;
   	}
   	
- .footer .region {
+ .at-panel.footer .region {
     	display: inline-block;
   	} 	  	  	
  
- .footer .region.region-footer-bottom {
+ .at-panel.footer .region.region-footer-bottom {
     	display: block !important;
   	} 
  
- 
- 
+
   .footer.footer-right .region-footer,
   .footer-left.footer .region-footer {
     	width: 74%;
@@ -734,7 +733,8 @@ div.ctools-modal-content .modal-content {
 }
 
 div.ctools-modal-content .modal-content .messages {
-  width: 680px;
+  width: 95%;
+  padding: 0;
 }
 
 #modalContent .spaces-customize-form .buttons input.form-submit {
@@ -813,6 +813,84 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
  	right: 50px;
  }	
  
+ /** MODAL OVERRIDES for OS ORG ROADMAP PAGE **/
+
+.page-roadmap .ui-dialog {
+z-index: 500;
+-webkit-box-shadow: 5px 5px 5px 0px rgba(50, 50, 50, 0.4);
+-moz-box-shadow:    5px 5px 5px 0px rgba(50, 50, 50, 0.4);
+box-shadow:         5px 5px 5px 0px rgba(50, 50, 50, 0.4);
+}	
+	
+.page-roadmap .ui-dialog-titlebar {
+padding: 7px 10px 17px;
+position: relative;
+white-space: nowrap;
+z-index: 100;
+background: #EFEFEF !important;
+border-bottom: 2px solid #C4C2C2;
+height: 24px;
+}
+
+
+.page-roadmap .ui-dialog-title {
+float: left;
+margin: 0;
+padding: 0.3em 0;
+color: #666;
+font-size: 24px;
+font-weight: normal;
+font: "Lucida Grande","Lucida Sans Unicode",sans-serif;
+}
+
+
+.page-roadmap .roadmap-gs-link {
+display:block;
+margin-bottom:20px;
+}
+
+.page-roadmap  .ui-dialog .ui-dialog-content {
+padding: 2em;
+width: 100% !important;
+}
+
+@-moz-document url-prefix() { 
+.page-roadmap  .ui-dialog .ui-dialog-content {
+width: calc(100% - 4em) !important;
+	}
+}
+
+
+.page-roadmap .ui-icon-closethick {
+background: url('../images/icon-close-window.png') no-repeat;
+width: 30px;
+height: 30px;
+position: relative;
+margin: -5px -20px;
+}
+
+
+.page-roadmap .ui-button.ui-widget.ui-state-default {
+border: none;
+background: none;
+}
+
+ 
+.page-roadmap strong:first-child {
+font-size:18px;
+} 
+
+
+.page-roadmap .ui-dialog-content {
+max-height: 570px !important;
+}
+
+
+.page-roadmap .ui-dialog-content strong:first-child {
+display: block;
+margin: 15px 0;
+font-size: 16px;
+}
  
 /** MEDIA BROWSER MODAL OVERRIDES **/
 	
@@ -1004,9 +1082,15 @@ border-top:1px solid #ccc;
     color: #333;
 }
 
+
 .accordion .ui-widget-content {
      color: inherit;
 }
+
+.accordion .ui-widget-content a {
+     color: #215990;
+}
+
 
 .ui-widget-content {
      color: inherit;
@@ -1096,12 +1180,12 @@ img.recent-images-list:hover {
  background: none;
 }
 
-.field-name-body img.media-element.file-default {
+img.media-element.file-default {
 	padding-right:15px;
 	}
 
-.lt-ie9	.field-name-body img.media-element.file-default[style*="FLOAT:"][style*="RIGHT;"],
-.field-name-body img.media-element.file-default[style*="float:"][style*="right;"] {
+.lt-ie9	img.media-element.file-default[style*="FLOAT:"][style*="RIGHT;"],
+img.media-element.file-default[style*="float:"][style*="right;"] {
 	padding-left:15px;
 	padding-right:0;
 	}	
@@ -1125,6 +1209,12 @@ img.recent-images-list:hover {
   float: right;
   margin-left: 1em;
 }
+
+
+.block-boxes-os_sv_list_box .os_sv_list_box.sv-list-link.sv-list-view-links h1 a {
+	font-weight:normal;
+	font-size:initial;
+	}
 
 /**
 LIST OF POSTS - PERSON TEASER IN SIDEBAR

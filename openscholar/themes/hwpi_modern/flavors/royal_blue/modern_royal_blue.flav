@@ -1,6 +1,0 @@
-name = Royal Blue
-description = A royal blue version of the Modern theme
-screenshot = screenshot.png
-
-css[] = royal_blue.css
-css[] = responsive.royal_blue.css

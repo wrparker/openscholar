@@ -14,7 +14,7 @@ function os_reader_menu() {
     'page arguments' => array(2, 3, 4),
     'access callback' => 'os_reader_ajax_copy_feed_to_news_access',
     'access arguments' => array(2, 3, 5),
-    'theme callback' => 'os_reader_ajax_theme_name',
+    'theme callback' => 'cp_theme_name',
   );
 
   return $items;
@@ -25,15 +25,6 @@ function os_reader_menu() {
  */
 function os_reader_import_page_title($type) {
   return t('import @type', array('@type' => $type));
-}
-
-/**
- * Callback function for the theme name. When the ajax action for import the
- * feed item, the theme may changed. This will prevent from the loading other
- * themes.
- */
-function os_reader_ajax_theme_name() {
-  return 'cp_theme';
 }
 
 /**
@@ -74,18 +65,17 @@ function _os_reader_feed_importer_access_callback($op) {
  * Implements hook_theme().
  */
 function os_reader_theme() {
-  $items = array();
-
-  $items['os_reader'] = array(
-    'variables' => array(
-      'view' => '',
-      'importers' => '',
-      'add_new' => '',
+  return array(
+    'os_reader' => array(
+      'variables' => array(
+        'view' => '',
+        'importers' => '',
+        'add_new' => '',
+      ),
+      'template' => 'os-reader',
+      'path' => drupal_get_path('module', 'os_reader') . '/template',
     ),
-    'template' => 'os-reader',
   );
-
-  return $items;
 }
 
 /**
@@ -286,6 +276,10 @@ function os_reader_os_app_info() {
         'csv' => 'os_feed',
       ),
     ),
+    'exclude_from_rss' => array(
+      'feed',
+      'feed_importer'
+    )
   );
 
   return $apps;
@@ -404,13 +398,13 @@ function os_reader_feeds_plugins() {
     ),
   );
   $info['OsFeedFetcher'] = array(
-    'name'        => t('OS feed fetcher'),
+    'name' => t('OS feed fetcher'),
     'description' => t('Fetch feed item from urls.'),
     'handler' => array(
       'parent' => 'FeedsFetcher',
-      'class'  => 'OsFeedFetcher',
-      'file'   => 'OsFeedFetcher.inc',
-      'path'   => drupal_get_path('module', 'os_reader') . '/plugins',
+      'class' => 'OsFeedFetcher',
+      'file' => 'OsFeedFetcher.inc',
+      'path' => drupal_get_path('module', 'os_reader') . '/plugins',
     ),
   );
   return $info;

@@ -97,7 +97,7 @@ class os_taxonomy_fbt extends os_boxes_default {
       '#options' => array(
         'contextual' => t("Determine for me"),
         '--all--' => t('All posts'),
-        'select' => t('Select post types'),
+        'select' => t('Select post type'),
       ),
       '#default_value' => $this->options['behavior'],
       '#description' => t('The post types that will included in the count. Determine for me will filter the content on the "current page".'),
@@ -105,10 +105,10 @@ class os_taxonomy_fbt extends os_boxes_default {
 
     $form['bundles'] = array(
       '#type' => 'select',
-      '#title' => t('Select Post types'),
+      '#title' => t('Select Post type'),
       '#options' => os_get_bundles(array(1,2)),
       '#description' => t('The post types that will be included in the count'),
-      '#multiple' => TRUE,
+      '#multiple' => FALSE,
       '#size' => count(os_get_bundles(array(1,2))) / 2,
       '#dependency' => array(
         'edit-behavior' => array('select'),
@@ -172,11 +172,27 @@ class os_taxonomy_fbt extends os_boxes_default {
     return $form;
   }
 
+  function options_submit($form, $form_state) {
+
+    // Only continues the user is selecting individual types.
+    // For "All types" and "Determine for me", this value is overridden in
+    // $this::render().
+    if ($form_state['values']['behavior'] != 'select') {
+      return;
+    }
+
+    // The user can select only one bundle at a time there for when there is
+    // multiple bundles we need to select the first one.
+    if (is_array($this->options['bundles'])) {
+      $this->options['bundles'] = reset($this->options['bundles']);
+    }
+  }
+
   /**
    * Implements boxes_content::render().
    */
   public function render() {
-    if (module_exists('vsite') && !vsite_get_vsite()) {
+    if (module_exists('vsite') && !$vsite = vsite_get_vsite()) {
       return;
     }
 
@@ -199,7 +215,7 @@ class os_taxonomy_fbt extends os_boxes_default {
         // Building a list of the bundles in two ways:
         // 1. Selected bundles from a list
         // 2. If the widget defined as a "Determine for me" set the bundles
-        //    whcih related to the app.
+        //    which related to the app.
         $paths = os_get_app_path();
         $menu = menu_get_item();
 
@@ -216,6 +232,23 @@ class os_taxonomy_fbt extends os_boxes_default {
         }
       }
     }
+    else if ($this->options['behavior'] == 'select') {
+      // For specified node type behavior but non-string value, default to all
+      // and try to grab any first value of an array.
+      $bundles = $this->options['bundles'];
+      $this->options['bundles'] = FALSE;
+      if (is_array($bundles)) {
+        foreach ($bundles as $value) {
+          if (!empty($value)) {
+            $this->options['bundles'] = array($value);
+            break;
+          }
+        }
+      }
+      else if (is_string($bundles)) {
+        $this->options['bundles'] = array($bundles);
+      }
+    }
 
     if (is_array($this->options['vocabulary'])) {
       $t = array_filter($this->options['vocabulary']);
@@ -226,10 +259,12 @@ class os_taxonomy_fbt extends os_boxes_default {
       $this->options['additional_classes'] = 'navigation';
     }
 
-    $block['content'] = theme('os_taxonomy_vocabulary_item_list', array(
+    $content = theme('os_taxonomy_vocabulary_item_list', array(
       'vid' => $this->options['vocabulary'],
       'options' => $this->options,
     ));
+
+    $block['content'] = $content;
 
     return $block;
   }
@@ -243,7 +278,6 @@ class os_taxonomy_fbt extends os_boxes_default {
    * Get all the vocabularies id using the taxonomy terms.
    */
   private function get_all_vocabularies() {
-
     ctools_include('taxonomy', 'os');
     $taxonomy_vocabularies = os_get_vocabularies();
     $vocabularies = array();
@@ -255,4 +289,3 @@ class os_taxonomy_fbt extends os_boxes_default {
     return $vocabularies;
   }
 }
-

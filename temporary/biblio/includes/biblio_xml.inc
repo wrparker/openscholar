@@ -25,7 +25,7 @@
  * @return unknown_type
  */
 function biblio_xml_export($result) {
-  set_time_limit(300);
+  // set_time_limit(300);
   $nid=0;
   $dom = new DOMDocument('1.0', 'UTF-8');
   $biblio_collection = $dom->appendChild(new DOMElement('biblio_collection'));

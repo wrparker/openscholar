@@ -503,10 +503,6 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['title']['spaces'] = array(
-    'type' => 'spaces_og',
-    'frontpage' => 0,
-  );
   /* Field: Content: Type */
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'node';
@@ -683,7 +679,7 @@ function cp_content_views_default_views() {
     ),
     'timestamp' => array(
       'sortable' => 1,
-      'default_sort_order' => 'asc',
+      'default_sort_order' => 'desc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -714,7 +710,7 @@ function cp_content_views_default_views() {
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['empty'] = TRUE;
-  $handler->display->display_options['header']['area']['content'] = '<div class="cp-controls-wrapper"><ul><li><a href="../../file/add" class="add_new">Add File</a></li></ul></div>';
+  $handler->display->display_options['header']['area']['content'] = '<div class="cp-controls-wrapper"><ul><li><a href="../../file/add" class="add_new">Add file</a></li></ul></div>';
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   /* Relationship: File Usage: Content */
   $handler->display->display_options['relationships']['file_to_node']['id'] = 'file_to_node';
@@ -792,6 +788,10 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing_1']['label'] = 'Manage';
   $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '[edit] [delete]';
+  $handler->display->display_options['filter_groups']['groups'] = array(
+    1 => 'AND',
+    2 => 'OR',
+  );
   /* Filter criterion: Spaces: Content in current space */
   $handler->display->display_options['filters']['current']['id'] = 'current';
   $handler->display->display_options['filters']['current']['table'] = 'spaces';
@@ -805,6 +805,7 @@ function cp_content_views_default_views() {
   $handler->display->display_options['filters']['schema_type']['value'] = array(
     'private' => 'private',
   );
+  $handler->display->display_options['filters']['schema_type']['group'] = 1;
   /* Filter criterion: File: File name or title */
   $handler->display->display_options['filters']['file_name_title']['id'] = 'file_name_title';
   $handler->display->display_options['filters']['file_name_title']['table'] = 'file_managed';
@@ -877,7 +878,21 @@ function cp_content_views_default_views() {
   $handler->display->display_options['filters']['status']['value'] = array(
     1 => '1',
   );
-
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  /* Filter criterion: File Usage: Module */
+  $handler->display->display_options['filters']['module_1']['id'] = 'module_1';
+  $handler->display->display_options['filters']['module_1']['table'] = 'file_usage';
+  $handler->display->display_options['filters']['module_1']['field'] = 'module';
+  $handler->display->display_options['filters']['module_1']['operator'] = 'empty';
+  $handler->display->display_options['filters']['module_1']['group'] = 2;
+  /* Filter criterion: File Usage: Module */
+  $handler->display->display_options['filters']['module']['id'] = 'module';
+  $handler->display->display_options['filters']['module']['table'] = 'file_usage';
+  $handler->display->display_options['filters']['module']['field'] = 'module';
+  $handler->display->display_options['filters']['module']['operator'] = '!=';
+  $handler->display->display_options['filters']['module']['value'] = 'imagefield_crop';
+  $handler->display->display_options['filters']['module']['group'] = 2;
+  
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;

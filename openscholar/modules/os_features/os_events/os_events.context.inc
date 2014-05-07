@@ -29,6 +29,7 @@ function os_events_context_default_contexts() {
       'values' => array(
         'calendar' => 'calendar',
         'calendar/*' => 'calendar/*',
+        'browse/events' => 'browse/events',
       ),
     ),
     'views' => array(

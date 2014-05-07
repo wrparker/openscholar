@@ -441,10 +441,11 @@ html.js .page-cp-build-layout div.ctools-dropdown div.ctools-dropdown-container 
 .page-cp-build-layout div.ctools-dropdown div.ctools-dropdown-container ul li a.os-help-link {
   float:right;
   display:inline;
-  width:10%;
+  width:2%;
   background: url("../../../../../themes/cp_theme/images/scholarbase-sprite.png") no-repeat scroll 0 -297px transparent;
   height: 19px;
   text-indent: -999em;
+  padding-left: 25px;
 }
 
 .page-cp-build-layout div.ctools-dropdown div.ctools-dropdown-container ul li span.group {

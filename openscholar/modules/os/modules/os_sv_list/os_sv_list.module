@@ -215,7 +215,6 @@ function os_sv_list_terms_element_validate($element, &$form_state) {
   form_set_value($terms_element, $tids, $form_state);
 }
 
-
 /**
  * @function os_sv_list_vocabs_content_type
  * 

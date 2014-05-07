@@ -1,7 +1,7 @@
 Feature:
   Testing the term tagged items pager.
 
-  @api
+  @api @first
   Scenario: Testing the term tagged items pager.
     Given I am adding the subtheme "subtheme" in "john"
       And I define the subtheme "subtheme" of the theme "cleanblue" as the theme of "john"

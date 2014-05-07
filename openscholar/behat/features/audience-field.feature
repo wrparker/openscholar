@@ -1,7 +1,7 @@
 Feature:
   Testing the appearance of OG audience field
 
-  @api
+  @api @first
   Scenario: Check that the OG audience field will be shown when editing content.
     Given I am logging in as "john"
       And I visit "john/blog"

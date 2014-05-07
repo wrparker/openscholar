@@ -1,6 +1,6 @@
 Feature: Testing the deletion for a class material.
 
-  @api
+  @api @first
   Scenario: Verify when a class is deleted, the class material will also deleted.
     Given I am logging in as "john"
      When I create a new "class" entry with the name "Dummy class entry"
