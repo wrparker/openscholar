@@ -354,7 +354,7 @@ class FeatureContext extends DrupalContext {
     $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'$parent_title'"));
     return array(
       new Step\When('I visit "john/node/add/page?parent_node=' . $nid . '&destination=node/' . $nid . '"'),
-      new Step\When('I fill in "Title" with "'. $child_title . '"'),
+      new Step\When('I fill in "Title" with "' . $child_title . '"'),
       new Step\When('I press "edit-submit"'),
     );
   }
@@ -487,7 +487,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I assign the page "([^"]*)" to the term "([^"]*)"$/
    */
   public function iAssignThePageToTheTerm($node, $term) {
-    $this->invoke_code('os_migrate_demo_assign_node_to_term', array("'$node'","'$term'", 'page'));
+    $this->invoke_code('os_migrate_demo_assign_node_to_term', array("'$node'", "'$term'", 'page'));
   }
 
   /**
