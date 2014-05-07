@@ -322,6 +322,9 @@ projects[registration][subdir] = "contrib"
 projects[registration][version] = 1.1
 projects[registration][patch][] = "https://drupal.org/files/issues/2183509-registration-broadcast-context-1.patch"
 
+projects[restful][subdir] = "contrib"
+projects[restful][version] = 1.x-dev
+
 projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
 
