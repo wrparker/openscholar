@@ -51,4 +51,11 @@ class MigrateBoxes extends Migration {
     $this->source = new MigrateSourceCSV(drupal_get_path('module', 'os_migrate_demo') . '/csv/boxes/boxes.csv', $this->csvColumns, array('header_rows' => 1));
     $this->destination = $destination_handler;
   }
+
+  /**
+   * OsBoxesAddthis settings callback.
+   */
+  function OsBoxesAddthisSettings() {
+    return array('widget_type' => 'toolbox_small');
+  }
 }

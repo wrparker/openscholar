@@ -12,18 +12,6 @@ class spacesOverridesDestination extends MigrateDestinationEntity {
   }
 
   /**
-   * Return an options array for node destinations.
-   *
-   * @param string $language
-   *  Default language for nodes created via this destination class.
-   * @param string $text_format
-   *  Default text format for nodes created via this destination class.
-   */
-  static public function options($language, $text_format) {
-    return compact('language', 'text_format');
-  }
-
-  /**
    * Basic initialization
    */
   public function __construct() {
@@ -86,7 +74,11 @@ class spacesOverridesDestination extends MigrateDestinationEntity {
     $updating ? $this->numUpdated++ : $this->numCreated++;
 
     // todo: load the options from somewhere.
-    $space_override->options = '';
+    $migration = Migration::currentMigration();
+    $method = $this->camelCase($space_override->delta);
+    if (method_exists($migration, $method . 'Settings')) {
+      $space_override->options = call_user_func(array($migration, $method . 'Settings'));
+    }
 
     $options = array(
       'delta' => $space_override->delta,
@@ -96,6 +88,7 @@ class spacesOverridesDestination extends MigrateDestinationEntity {
 
     // Create the box.
     $box = boxes_box::factory($space_override->delta, $options);
+    $box->options = $space_override->options;
     $box->save();
 
     if (module_exists('spaces') && $space = spaces_get_space()) {
@@ -120,5 +113,17 @@ class spacesOverridesDestination extends MigrateDestinationEntity {
     $this->complete($space_override, $row);
 
     return $space_override->{OG_AUDIENCE_FIELD}['destid1'];
+  }
+
+  /**
+   * Convert the delta into camel case.
+   */
+  private function camelCase($delta) {
+    $words = explode("_", $delta);
+    foreach ($words as &$word) {
+      $word = ucfirst($word);
+    }
+
+    return implode("", $words);
   }
 }
