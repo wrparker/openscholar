@@ -77,6 +77,8 @@ class spacesOverridesDestination extends MigrateDestinationEntity {
    *  successful. FALSE on failure.
    */
   public function import(stdClass $space_override, stdClass $row) {
+    ctools_include('layout', 'os');
+
     // Invoke migration prepare handlers
     $this->prepare($space_override, $row);
 
@@ -86,8 +88,16 @@ class spacesOverridesDestination extends MigrateDestinationEntity {
     // todo: load the options from somewhere.
     $space_override->options = '';
 
-    // Creating the box.
-    $box = boxes_factory($space_override->delta, $space_override->options);
+    $options = array(
+      'delta' => $space_override->delta,
+      'title' => $space_override->title,
+      'description' => $space_override->descritpion,
+    );
+
+    // Create the box.
+    $box = boxes_box::factory($space_override->delta, $options);
+    $box->save();
+
     if (module_exists('spaces') && $space = spaces_get_space()) {
       $space->controllers->boxes->set($box->delta, $box);
     }
@@ -96,10 +106,19 @@ class spacesOverridesDestination extends MigrateDestinationEntity {
     }
 
     // Set this in the correct place.
-    $blocks = os_layout_get_multiple($space_override->delta, false, true);
-    dpm($blocks);
+    $blocks = os_layout_get_multiple(array($space_override->page, 'os_public'), false, true);
+    $blocks['boxes-' . $box->delta]['region'] = $space_override->location;
+
+    $blocks['boxes-' . $space_override->delta]['delta'] = $options['delta'];
+    $blocks['boxes-' . $space_override->delta]['module'] = 'boxes';
+
+    $vsite = spaces_load('og', $space_override->{OG_AUDIENCE_FIELD}['destid1']);
+    $vsite->controllers->context->set($space_override->page . ":reaction:block", array(
+      'blocks' => $blocks,
+    ));
 
     $this->complete($space_override, $row);
-    return TRUE;
+
+    return $space_override->{OG_AUDIENCE_FIELD}['destid1'];
   }
 }

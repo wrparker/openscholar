@@ -51,11 +51,4 @@ class MigrateBoxes extends Migration {
     $this->source = new MigrateSourceCSV(drupal_get_path('module', 'os_migrate_demo') . '/csv/boxes/boxes.csv', $this->csvColumns, array('header_rows' => 1));
     $this->destination = $destination_handler;
   }
-
-  /**
-   * Complete function. Add the plugin to the vsite.
-   */
-  public function complete($entity, $row) {
-    dpm(func_get_args());
-  }
 }
