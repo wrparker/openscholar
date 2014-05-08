@@ -593,11 +593,18 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   $new_file = file_save_data($file_content, $file->uri, FILE_EXISTS_REPLACE);
   $form_state['values']['file'] = $new_file->fid;
 
-  // Parse file's headers.
   feeds_include_library('ParserCSV.inc', 'ParserCSV');
   $parser = new ParserCSV();
   $parser->setDelimiter(',');
   $iterator = new ParserCSVIterator($new_file->uri);
+  $rows = $parser->parse($iterator);
+
+  // Check for empty rows with no values.
+  if (_os_importer_check_empty_rows($rows)) {
+    form_set_error('file', t('The CSV file you uploaded contains empty rows. Please remove them from the file and upload the file again.'));
+  }
+
+  // Parse file's headers.
   $header = _os_importer_parse_header($parser, $iterator);
 
   // Check what missing in the uploaded CSV file and display message if needed.
@@ -605,6 +612,24 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     $params = array('!missing' => theme('item_list', array('items' => $missing)));
     form_set_error('file', t('The next columns are missing in you CSV: !missing', $params));
   }
+}
+
+/**
+ * Check if there are empty rows in the uploaded CSV file.
+ *
+ * @param $rows
+ *  The array of file rows.
+ * @return bool
+ *  Returns TRUE if there's an empty row. FALSE otherwise.
+ */
+function _os_importer_check_empty_rows($rows) {
+  foreach ($rows as $row) {
+    if (!implode($row)) {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
 }
 
 /**
