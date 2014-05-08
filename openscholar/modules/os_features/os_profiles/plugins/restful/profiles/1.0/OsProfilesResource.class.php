@@ -50,6 +50,11 @@ class OsProfilesResource extends RestfulEntityBaseNode {
       'property' => 'field_person_photo',
       'process_callback' => array($this, 'processPhoto'),
     );
+
+    $public_fields['uuid'] = array(
+      'property' => 'field_uuid',
+    );
+
     return $public_fields;
   }
 
