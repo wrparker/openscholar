@@ -418,6 +418,7 @@ projects[wysiwyg][subdir] = "contrib"
 projects[wysiwyg][version] = 2.2
 projects[wysiwyg][patch][] = "http://drupal.org/files/wysiwyg-remove-breaks-1964806-2.patch"
 projects[wysiwyg][patch][] = "http://drupal.org/files/wysiwyg-table-format.patch"
+projects[wysiwyg][patch][] = "https://drupal.org/files/wysiwyg-ckeditor-4.1853550.136.patch"
 
 projects[wysiwyg_filter][subdir] = "contrib"
 projects[wysiwyg_filter][version] = 1.6-rc2
