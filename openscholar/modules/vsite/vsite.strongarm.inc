@@ -191,6 +191,7 @@ function vsite_strongarm() {
     'hwp_project' => 'hwp_project',
     'hwp_personal' => 'hwp_personal',
     'hwp_event_conference' => 'hwp_event_conference',
+    'cern' => 'cern',
   );
   $export['os_enabled_spaces_presets'] = $strongarm;
 

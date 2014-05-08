@@ -28,6 +28,7 @@ function vsite_preset_update_7000() {
     'hwp_lab_research_group' => 'hwp_lab_research_group',
     'hwp_project' => 'hwp_project',
     'hwp_personal' => 'hwp_personal',
+    'cern' => 'cern',
   );
   $presets = variable_get($name, $default);
   $presets['hwp_event_conference'] = 'hwp_event_conference';
@@ -37,4 +38,13 @@ function vsite_preset_update_7000() {
   module_load_include('inc', 'os', 'includes/update');
   $message .= _os_update_strongarm($variables);
   return $message;
+}
+
+/**
+ * Adding cern as a preset.
+ */
+function vsite_preset_update_7001() {
+  $presets = variable_get('os_enabled_spaces_presets');
+  $presets['cern'] = 'cern';
+  variable_set('os_enabled_spaces_presets', $presets);
 }
