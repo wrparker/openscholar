@@ -82,11 +82,11 @@ script:
 
   # Run selenium.
   - wget http://selenium-release.storage.googleapis.com/2.40/selenium-server-standalone-2.40.0.jar
-  - java -jar selenium-server-standalone-2.40.0.jar -p 4444 > /var/log/selenium-server.log &
+  - java -jar selenium-server-standalone-2.40.0.jar -p 4444 > /tmp/selenium-server.log &
   - sleep 10
 
   - ./bin/behat --tags=$TEST_SUITE
 
 after_script:
     - sudo cat /var/log/apache2/error.log
-    - sudo cat /var/log/selenium-server.log
+    - sudo cat /tmp/selenium-server.log
