@@ -8,7 +8,7 @@ Feature:
       And I click "The Little Prince"
      Then I should see "The Little Prince. United States; 1943."
 
-  @api @first @momo
+  @api @first
   Scenario: Test the Publication tab allows caching of anonymous user
     Given cache is "enabled" for anonymous users
      When I visit "john/publications"
@@ -146,7 +146,7 @@ Feature:
       And I click "Publication Details"
       And I should not see "Burger"
       And I wait for it
-     Then I click "Expand Terms"
+     Then I click "Expand"
       And I wait for it
       And I should see "Burger"
 
