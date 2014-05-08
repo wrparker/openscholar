@@ -120,6 +120,7 @@ Feature:
      Then I should see "Title of the Journal"
       And I should not see "Secondary Title"
       And I select "Artwork" from "edit-biblio-type"
+      And I wait for it
      Then I should see "Secondary Title"
       And I should not see "Title of the Journal"
 
