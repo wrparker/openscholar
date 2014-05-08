@@ -72,6 +72,7 @@ Feature:
       And I fill in the publication title with random string
       And I fill in "biblio_year" with "2013"
       And I press "Save"
+      And I wait for it
      Then I should see the random string
 
   @javascript
@@ -79,7 +80,9 @@ Feature:
     Given I am logging in as "john"
      When I visit "john/node/add/biblio"
       And I add publication title "New publication"
+      And I wait for it
       And I fill in "edit-biblio-year" with "199"
+      And I wait for it
      Then I should see "Input must be in the form YYYY. Only numerical digits are allowed."
 
   @javascript
