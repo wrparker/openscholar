@@ -893,7 +893,6 @@ function os_search_solr_bundle_selected_form_element($bundle, $default_values) {
     '#prefix' => '<div id="vocabularies-div">',
     '#suffix' => '</div>',
     '#title' => 'Select vocabularies',
-    //'#states' => array('invisible' => array(':input[name="bundle"]' => array('value' => ""), ), ),
   );
   return $element;
 }
