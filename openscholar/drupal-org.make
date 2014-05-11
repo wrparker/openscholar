@@ -286,7 +286,7 @@ projects[og_vocab][version] = 1.2
 projects[og_vocab][patch][] = "https://drupal.org/files/issues/2224007-og-vocab-set-value-1.patch"
 projects[og_vocab][patch][] = "https://drupal.org/files/issues/og-vocab-reset-to-alpahbetical-2174907-4.patch"
 projects[og_vocab][patch][] = "https://drupal.org/files/issues/og-vocab-widget-settings-from-entity.patch"
-projects[og_vocab][patch][] = "https://drupal.org/files/issues/hide-empty-vocab-from-form.patch"
+projects[og_vocab][patch][] = "https://drupal.org/files/issues/hide-field-when-empty-2243091-1.patch"
 
 projects[olark][subdir] = "contrib"
 projects[olark][version] = 1.0-beta1

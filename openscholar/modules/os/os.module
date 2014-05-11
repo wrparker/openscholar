@@ -951,6 +951,9 @@ function os_form_node_form_alter(&$form, $form_state) {
 
   $form['actions_top'] = $form['actions'];
 
+  // Add description to the name field in the author fieldset.
+  $form['author']['name']['#description'] = t('You may change this if posting on behalf of someone else.');
+
   // Alters action buttons for existing nodes.
   if (isset($form['#node']->nid, $form['#node']->type)) {
     // Adds "Delete this post" link specifying node type if available.
@@ -968,13 +971,9 @@ function os_form_node_form_alter(&$form, $form_state) {
     $delete = array(
       '#type' => 'item',
       '#markup' => l($text, 'node/' . $form['#node']->nid . '/delete', $options),
-      '#weight' => 10,
+      '#weight' => 99,
     );
     $form['actions']['delete'] = $form['actions_top']['delete'] = $delete;
-
-    // Hides "Cancel" button entirely from existing node edit forms.
-    hide($form['actions']['cancel']);
-    hide($form['actions_top']['cancel']);
   }
 }
 
@@ -1263,11 +1262,22 @@ function os_context_registry() {
 /**
  * Implements hook_cron().
  *
- * Allows another method for cleaning out the page_cache for non-memcache entries
+ * Allows another method for cleaning out the page_cache for non-memcache entries.  We consistantly clear out
+ * the page cache (but not the block cache) every 15 minutes.  This will assure that our cache does not get too
+ * old.  If the page cache is handles by memcache we pass a constant to tell it that we want to update the expire
+ * time.  Note that this does not remove everything from the page cache, just expired items.  This is also done
+ * whenever a node is saved with a call to cache_clear_all()
  */
 function os_cron() {
+
+  $class = variable_get('cache_class_cache_page');
+  if (!isset($class)) {
+    $class = variable_get('cache_default_class', 'DrupalDatabaseCache');
+  }
+
   //Clear expired Items from page cache
-  cache_clear_all(NULL, 'cache_page');
+  $cid = ($class == 'MemCacheDrupal') ? MEMCACHE_CONTENT_CLEAR : NULL;
+  cache_clear_all($cid, 'cache_page');
 }
 
 /**

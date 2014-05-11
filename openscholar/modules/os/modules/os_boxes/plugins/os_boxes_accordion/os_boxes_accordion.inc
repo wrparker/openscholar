@@ -18,7 +18,7 @@ class os_boxes_accordion extends os_boxes_widget_collection {
     $form['collapsed'] = array(
       '#type' => 'checkbox',
       '#default_value' => $this->options['collapsed'],
-      '#title' => t('Open First Panel Automatically?'),
+      '#title' => t('All Panels Closed?'),
       '#description' => t('By default, the first panel of the Accordion will be opened. Checking this will leave it
         closed until the user opens it.')
     );

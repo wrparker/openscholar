@@ -524,7 +524,7 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
   $app_settings_path = (($purl = vsite_get_purl()) ? "$purl/cp/build/#overlay=$purl/cp/build/features/os_publications" : "/cp/build/#overlay=cp/build/features/os_publications");
   $change_settings_text = t('<a href="@href" target="_blank">@settings.</a>', array('@href' => $app_settings_path, '@settings' => 'App settings'));
 
-  $form['biblio_tabs'][7]['biblio_notes']['#description'] = t('Add an annotation for this work. Your notes are currently set to <strong>:privacy</strong>.  You can make this change in the publications section of your control panel\'s !link', array(
+  $form['biblio_tabs'][7]['biblio_notes']['#description'] = t('This note will appear after the abstract. Your notes are currently set to <strong>:privacy</strong>.  You can make this change in the publications section of your control panel\'s !link', array(
     ':privacy' => (variable_get('os_publications_note_in_teaser', FALSE) ? 'public' : 'private'),
     '!link' => $change_settings_text,
   ));
@@ -629,7 +629,7 @@ function os_publications_biblio_contributors_add_more_callback($form, &$form_sta
  */
 function os_publications_alter_year_field(&$form, &$form_state) {
   // Biblio year value can be standard YYYY year number, or a coded number
-  // defined in the "biblio_yeasrs_text" variable. Both _biblio_numeric_year()
+  // defined in the "biblio_years_text" variable. Both _biblio_numeric_year()
   // and _biblio_text_year() are used to convert between code and numeric.
   $year_value = $form['biblio_year']['#default_value'];
   $year_coded_value = '';
@@ -644,7 +644,7 @@ function os_publications_alter_year_field(&$form, &$form_state) {
   $years = variable_get('biblio_years_text', array(9999 => t('Submitted'), 9998 => t('In Press')));
   $form['biblio_year_group'] = array(
     '#type' => 'fieldset',
-    '#title' => $form['biblio_year']['#title'],
+    '#title' => $form['biblio_year']['#title'] . ' <span class="form-required" title="' . t('This field is required.') . '">*</span>',
     '#collapsible' => FALSE,
     '#weight' => $form['biblio_year']['#weight'],
   );
@@ -718,9 +718,9 @@ function os_publications_biblio_rearrange($form, $form_state) {
 
   // Change labels and descriptions in the path fieldset.
   $form['path']['#title'] = t('URL');
-  $form['path']['alias']['#title'] = t('URL');
+  $form['path']['alias']['#title'] = '';
   $form['path']['pathauto']['#title'] = t('Generate automatic URL');
-  $form['path']['pathauto']['#description'] = t('Uncheck this to create a custom URL');
+  $form['path']['pathauto']['#description'] = t('Uncheck to create a custom URL');
 
   return $form;
 }
