@@ -76,27 +76,11 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
    *   Solr search page id in case empty search is needed, FALSE otherwise.
    */
   public function is_empty_search_needed() {
-    if ($feature = os_get_active_feature()) {
-      if (!$app_info = os_app_info($feature->name)) {
-        // No app information available.
-        return;
-      }
-      $browse_page = reset(array_keys($app_info['browse_pages']));
-    }
-    else if ($ctx = context_get()) {
-      // Special case for os_pages context.
-      if (!strstr(reset(array_keys($ctx['context'])), 'os_pages')) {
-        return;
-      }
-      $browse_page = 'browse_pages';
-    }
-
-    if (!$browse_page) {
-      // No browse_pages.
+    if (!$bundle = $this->options['bundle']) {
       return;
     }
 
-    $page_id = 'browse_' . $browse_page;
+    $page_id = 'browse_' . $bundle;
     $search_page = apachesolr_search_page_load($page_id);
     $env_id = $search_page['env_id'];
 
@@ -104,7 +88,6 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
       // Search was executed already.
       return;
     }
-    $page_id = 'browse_' . $browse_page;
     return $page_id;
   }
 
