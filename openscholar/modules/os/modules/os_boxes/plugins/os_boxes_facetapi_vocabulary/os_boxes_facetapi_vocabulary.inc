@@ -76,15 +76,21 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
    *   Solr search page id in case empty search is needed, FALSE otherwise.
    */
   public function is_empty_search_needed() {
-    if (!$feature = os_get_active_feature()) {
-      // No active feature.
-      return;
+    if ($feature = os_get_active_feature()) {
+      if (!$app_info = os_app_info($feature->name)) {
+        // No app information available.
+        return;
+      }
+      $browse_page = reset(array_keys($app_info['browse_pages']));
     }
-    if (!$app_info = os_app_info($feature->name)) {
-      // No app information available.
-      return;
+    else if ($ctx = context_get()) {
+      if (!strstr(reset(array_keys($ctx['context'])), 'os_pages')) {
+        return;
+      }
+      $browse_page = 'browse_pages';
     }
-    if (!$browse_page = reset(array_keys($app_info['browse_pages']))) {
+
+    if (!$browse_page) {
       // No browse_pages.
       return;
     }
