@@ -40,7 +40,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
       '#type' => 'select',
       '#description' => t('Which bundle would you like to use.'),
       '#title' => t('Content type'),
-      '#options' => os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP)),
+      '#options' => array('autodetect' => 'Auto detect') + os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP)),
       '#default_value' => $bundle,
       '#required' => TRUE,
       '#default_value' => $bundle,
@@ -80,7 +80,25 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
       return;
     }
 
-    $page_id = 'browse_' . $bundle;
+    if ($bundle == 'autodetect') {
+      // Autodetection - get browse page from context.
+      if (!$feature = os_get_active_feature()) {
+        // No active feature.
+        return;
+      }
+      if (!$app_info = os_app_info($feature->name)) {
+        // No app information available.
+        return;
+      }
+      if (!$browse_page = reset(array_keys($app_info['browse_pages']))) {
+        // No browse_pages.
+        return;
+      }
+      $page_id = 'browse_' . $browse_page;
+    }
+    else {
+      $page_id = 'browse_' . $bundle;
+    }
     $search_page = apachesolr_search_page_load($page_id);
     $env_id = $search_page['env_id'];
 
