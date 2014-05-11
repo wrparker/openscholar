@@ -48,7 +48,72 @@ function os_migrate_demo_menu() {
     'page arguments' => array(1),
   );
 
+  $items['os-importer-demo-generate'] = array(
+    'title' => 'Converting into dummy site.',
+    'page callback' => 'drupal_get_form',
+    'access callback' => TRUE,
+    'page arguments' => array('os_migrate_demo_convert_to_dummy'),
+  );
+
   return $items;
+}
+
+/**
+ * Convert a site into a dummy site.
+ */
+function os_migrate_demo_convert_to_dummy($form, $form_state) {
+  $form['actions'] = array(
+    '#type' => 'actions',
+    'submit' => array(
+      '#type' => 'submit',
+      '#value' => t('Convert this site into a dummy site!'),
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit handler; Coverting a site into a dummy site.
+ */
+function os_migrate_demo_convert_to_dummy_submit($form, $form_state) {
+  $preset = spaces_preset_load('cern');
+
+  foreach ($preset->value['context'] as $context => $contexts) {
+    foreach ($contexts as $blocks) {
+      foreach ($blocks as $delta => $block) {
+        @list($block_module, $block_delta) = explode("_", $delta);
+        if ($block_module == 'os-migrate-demo') {
+
+          $delta = time();
+          $options = array(
+            'delta' => $delta,
+            'title' => $block['title'],
+            'description' => $block['title'],
+          );
+
+          $box = boxes_factory($block['delta'], $options);
+          $box->options = $block['options'];
+          $box->save();
+
+          if (module_exists('spaces') && $space = spaces_get_space()) {
+            $space->controllers->boxes->set($delta, $box);
+          }
+          else {
+            $box->save();
+          }
+
+          $block['delta'] = $delta;
+          $blocks['os-migrate-demo_feature-posts'] = $block;
+        }
+      }
+
+      $vsite = spaces_load('og', vsite_get_vsite()->id);
+      $vsite->controllers->context->set($context, array(
+        'blocks' => $blocks,
+      ));
+    }
+  }
 }
 
 /**

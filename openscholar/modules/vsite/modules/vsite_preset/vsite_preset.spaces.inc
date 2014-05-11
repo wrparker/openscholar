@@ -1095,13 +1095,22 @@ function vsite_preset_spaces_presets() {
             'status' => 0,
             'title' => '',
           ),
-          'boxes-1399539903' => array(
+          'os-migrate-demo_feature-posts' => array(
             'module' => 'boxes',
-            'delta' => 1399539903,
+            'delta' => 'os_boxes_manual_list',
             'title' => 'Introduction',
             'region' => 'content_top',
             'status' => 0,
             'weight' => 0,
+            'options' => array(
+              'style' => 'full',
+              'random' => FALSE,
+              'nodes' => array(
+                array(
+                  'nid' => 74, 'title' => 'Who was JFK?', 'weight' => 1,
+                ),
+              ),
+            ),
           ),
           'boxes-hwp_personal_contact_html' => array(
             'module' => 'boxes',
@@ -1118,14 +1127,6 @@ function vsite_preset_spaces_presets() {
             'region' => 'header_first',
             'status' => 0,
             'weight' => 0,
-          ),
-          'boxes-1399539054' => array(
-            'module' => 'boxes',
-            'delta' => 1399539054,
-            'title' => 'Images',
-            'region' => 'content_top',
-            'status' => 0,
-            'weight' => 1,
           ),
         ),
       ),
