@@ -84,6 +84,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
       $browse_page = reset(array_keys($app_info['browse_pages']));
     }
     else if ($ctx = context_get()) {
+      // Special case for os_pages context.
       if (!strstr(reset(array_keys($ctx['context'])), 'os_pages')) {
         return;
       }
