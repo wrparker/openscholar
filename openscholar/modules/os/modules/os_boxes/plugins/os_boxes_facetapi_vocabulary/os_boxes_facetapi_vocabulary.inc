@@ -221,6 +221,22 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     }
     return $block;
   }
+
+  public function options_submit() {
+    $searcher_name = os_search_solr_get_searcher_name();
+    // Gets delta map
+    if (!$map = facetapi_get_delta_map()) {
+      return;
+    }
+
+    // Filter by OG vocab.
+    $string_og_vocab = facetapi_build_delta($searcher_name, 'block', 'sm_og_vocabulary');
+    $delta_og_vocab = array_search($string_og_vocab, $map);
+
+    $cid = 'sm_og_vocabulary:' . $delta_og_vocab;
+    dpm($cid);
+    cache_clear_all($cid, 'cache');
+  }
 }
 
 /**
@@ -232,3 +248,4 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
 function os_boxes_facetapi_vocabulary_ajax_callback($form, &$form_state) {
   return $form['options']['vocab_wrapper'];
 }
+
