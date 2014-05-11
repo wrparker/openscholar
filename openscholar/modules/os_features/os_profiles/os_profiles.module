@@ -897,7 +897,7 @@ function os_profiles_unlink_listeners() {
  *    'action' => 'unlink',
  *    'uuid' => 'foobar',
  *    'origin_deleted' => TRUE,
- *    'origin_rul' => http://www.example.com/<vsite>/node/<nid>.json
+ *    'origin_url' => http://www.example.com/john/node/1.json
  *  );
  * @endcode
  *
