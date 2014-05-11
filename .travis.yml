@@ -85,7 +85,7 @@ script:
   - java -jar selenium-server-standalone-2.40.0.jar -p 4444 &
   - sleep 5
 
-  - ./bin/behat --tags=$TEST_SUITE
+  - ./bin/behat --tags=$TEST_SUITE&&~wip
 
 after_script:
     - sudo cat /var/log/apache2/error.log
