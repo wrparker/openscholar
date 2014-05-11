@@ -40,7 +40,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
       '#type' => 'select',
       '#description' => t('Which bundle would you like to use.'),
       '#title' => t('Content type'),
-      '#options' => array('autodetect' => 'Auto detect') + os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP)),
+      '#options' => array('autodetect' => t('Auto detect')) + os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP)),
       '#default_value' => $bundle,
       '#required' => TRUE,
       '#default_value' => $bundle,
