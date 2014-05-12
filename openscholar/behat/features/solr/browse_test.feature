@@ -1,7 +1,7 @@
 Feature:
   Testing browse function using apache solr.
 
-  @api @wip
+  @api @last
   Scenario: Test basic people browse with apache solr
     Given I am logging in as "john"
       And the widget "Faceted taxonomy" is set in the "People" page by the name "people" with the following <settings>:
@@ -14,7 +14,7 @@ Feature:
      Then I click "Air"
       And I should not see "Norma"
 
-  @api @wip
+  @api @last
   Scenario: Test browse with one term not showing categories block
     Given I am logging in as "john"
       And I change privacy of the site "obama" to "Public on the web. "
@@ -24,7 +24,7 @@ Feature:
       And I should see the text "Blog" under "content-inner"
       And I should see "Me and michelle obama"
 
-  @api @wip
+  @api @last
   Scenario: Test direct browsing of category
     Given I am logging in as "john"
       And the widget "Faceted taxonomy" is set in the "Galleries" page by the name "galleries" with the following <settings>:

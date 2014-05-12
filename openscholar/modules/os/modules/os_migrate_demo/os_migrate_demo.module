@@ -232,8 +232,17 @@ function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar
     'Faceted taxonomy' => 'os_boxes_facetapi_vocabulary',
   );
 
+  if (isset($page_mapping[$page])) {
+    $page_name = $page_mapping[$page];
+  }
+  elseif ($page_nid = os_migrate_demo_get_node_id($page, TRUE)) {
+    $page_name = 'os_pages-page-' . $page_nid;
+  }
+  else {
+    throw new Exception("Page $page is not known.");
+  }
   $contexts = array(
-    $page_mapping[$page],
+    $page_name,
     'os_public',
   );
 
@@ -253,7 +262,9 @@ function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar
     );
 
     // Create the box.
-    $box = boxes_box::factory($boxes_mapping[$box], $options);
+    if (!$box = boxes_box::factory($boxes_mapping[$box], $options)) {
+      throw new Exception("Failed to create box.");
+    }
     $box->save();
     $blocks['boxes-' . $box->delta]['region'] = $region;
 
