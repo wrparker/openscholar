@@ -9,7 +9,8 @@ $plugin = array(
   'class' => 'citation_distribute_service_repec',
   'file' => 'citation_distribute_service_repec.inc',
   'parent' => 'citation_distribute_service',
-  'title' => l(t('RePEc'), 'http://repec.org', array('attributes' => array('target' => '_blank'))),
+  'title' => t('RePEc'),
+  'href' => 'http://repec.org',
   'name' => 'repec',
   'description' => 'Research Papers in Economics',
 );
