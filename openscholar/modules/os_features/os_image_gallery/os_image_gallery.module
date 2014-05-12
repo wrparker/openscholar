@@ -17,6 +17,7 @@ function os_image_gallery_os_app_info() {
     'path' => 'galleries',
   	'nodetypes' => array(
   	  'media_gallery',
+      'slideshow_slide',
     ),
     'views tabs' => array(
       'os_image_gallery' => array('page'),
