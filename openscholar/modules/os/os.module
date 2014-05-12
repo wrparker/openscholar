@@ -954,6 +954,21 @@ function os_form_node_form_alter(&$form, $form_state) {
   // Add description to the name field in the author fieldset.
   $form['author']['name']['#description'] = t('You may change this if posting on behalf of someone else.');
 
+  // Allow access to the following form elements if the user can create or edit
+  // the current node type.
+  if (node_access('create', $form['#node']->type) || node_access('edit', $form['#node']->type)) {
+    $elements = array(
+      'comment_settings',
+      'os_menu',
+      'author',
+      'options',
+    );
+    
+    foreach ($elements as $element) {
+      $form[$element]['#access'] = TRUE;
+    }
+  }
+
   // Alters action buttons for existing nodes.
   if (isset($form['#node']->nid, $form['#node']->type)) {
     // Adds "Delete this post" link specifying node type if available.
