@@ -35,3 +35,14 @@ Feature:
       And I should see the text "Media Galleries" under "content-inner"
       And I should not see "John doe biography"
       And I should see "Kittens gallery"
+
+  @api @last
+  Scenario: Test faceted taxonomy widget from page
+    Given I am logging in as "john"
+      And the widget "Faceted taxonomy" is set in the "about" page by the name "about" with the following <settings>:
+        | Content type           | Publication              | select list |
+      And I am not logged in
+    Given I visit "john/about"
+     Then I should see "Wind"
+      And I click "Wind"
+      And I should see "The Little Prince"
