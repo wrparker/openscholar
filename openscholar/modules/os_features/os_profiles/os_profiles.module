@@ -209,7 +209,7 @@ function os_profiles_process_node(&$vars) {
   }
 
   // Adding a header for determining the node ID.
-  drupal_add_http_header('node_json', url('node/' . $vars['nid'] . '.json', array('absolute' => TRUE)));
+  drupal_add_http_header('X-SELF-JSON', url('node/' . $vars['nid'] . '.json', array('absolute' => TRUE)));
 
   // Helps poor theme developers find these changes to $variables
   $vars['classes'] .= ' modified-in-os_profiles_process_node';
@@ -534,12 +534,12 @@ function os_profiles_sync_profile_validate($form, &$form_state) {
     //}
 
     // When addressing the URL of the profile that is imported, an http header
-    // named "node_json" is added to the response. This is done in order for the
+    // named "X-SELF-JSON" is added to the response. This is done in order for the
     // importing side to get the JSON address of the node. It will be saved in
     // the field "field_original_destination_url".
     foreach ($headers as $header) {
-      if (strpos($header, 'node_json: ') === 0) {
-        $form_state['json_address'] = str_replace('node_json: ', '', $header);
+      if (strpos($header, 'X-SELF-JSON: ') === 0) {
+        $form_state['json_address'] = str_replace('X-SELF-JSON: ', '', $header);
         return;
       }
     }
