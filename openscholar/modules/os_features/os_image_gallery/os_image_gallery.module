@@ -15,9 +15,9 @@ function os_image_gallery_os_app_info() {
 
   $apps['os_image_gallery'] = array(
     'path' => 'galleries',
-  	'nodetypes' => array(
-  	  'media_gallery',
+    'nodetypes' => array(
       'slideshow_slide',
+      'media_gallery',
     ),
     'views tabs' => array(
       'os_image_gallery' => array('page'),
