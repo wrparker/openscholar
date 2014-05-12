@@ -35,7 +35,7 @@ function os_events_field_default_field_bases() {
       'repeat' => 1,
       'timezone_db' => 'UTC',
       'todate' => 'optional',
-      'tz_handling' => 'none',
+      'tz_handling' => 'site',
     ),
     'translatable' => 0,
     'type' => 'datetime',

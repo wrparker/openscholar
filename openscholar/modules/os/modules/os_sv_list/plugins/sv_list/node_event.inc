@@ -29,8 +29,8 @@ class sv_list_node_event extends sv_list_plugin  {
    * upcoming events that haven't taken place yet.
    */
   public function sort_event($options, EntityFieldQuery $efq) {
-    $efq->fieldOrderBy('field_date', 'value');
-    $efq->addTag('events_between_start_to_end');
+    $efq->fieldOrderBy('field_date', 'value', 'DESC');
+    $efq->fieldCondition('field_date', 'value2', date('Y-m-d H:i:s'), '>=');
   }
   
   /**
@@ -43,7 +43,7 @@ class sv_list_node_event extends sv_list_plugin  {
     if ($options['content_type'] != 'event' || $options['sort_by'] != 'sort_event') {
       return;
     }
-    
+
     //split repeated event into many nodes - one for each instance of event
     //key them by timestamp for easy sorting.
     $exploded = array();
@@ -54,11 +54,11 @@ class sv_list_node_event extends sv_list_plugin  {
         while (array_key_exists($time_index, $exploded)) {
           $time_index += 1; //don't clobber events that start at same time.
         }
-        
-        if (max(strtotime($date['value'] . ' ' . $date['timezone']), strtotime($date['value2'] . ' ' . $date['timezone'])) >= $now) {
+
+        if (strtotime($date['value2']) >= $now) {
           $new = clone $entity;
           $new->field_date[LANGUAGE_NONE][0] = $date;
-          $new->date_id = implode('.', array('date', $new->nid, 'field_date', $delta));   
+          $new->date_id = implode('.', array('date', $new->nid, 'field_date', $delta));
           $exploded[$time_index] = $new;
         }
       }
