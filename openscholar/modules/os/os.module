@@ -967,6 +967,11 @@ function os_form_node_form_alter(&$form, $form_state) {
       'attributes' => array(
         'class' => array('os-delete-link', 'os-' . $form['#node']->type . '-delete-link'),
       ),
+      // We add this to make the "cancel" link on the node delete confirm form
+      // to redirect us back to the node edit form.
+      'query' => array(
+        'destination' => 'node/' . $form['#node']->nid . '/edit',
+      ),
     );
     $delete = array(
       '#type' => 'item',
