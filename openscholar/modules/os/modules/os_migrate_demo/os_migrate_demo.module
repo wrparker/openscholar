@@ -198,7 +198,7 @@ function os_migrate_demo_migrate_api() {
  *    the context page mapping.
  *    If the function called from CLI the function will print the string.
  */
-function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar_second', $delta_suffix = '') {
+function os_migrate_demo_set_box_in_region($nid, $box_name, $page, $region = 'sidebar_second', $delta_suffix = '') {
   ctools_include('layout', 'os');
   // Mapping for all the pages.
   $page_mapping = array(
@@ -232,8 +232,8 @@ function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar
     'Faceted taxonomy' => 'os_boxes_facetapi_vocabulary',
   );
 
-  if (!isset($boxes_mapping[$box])) {
-    throw new Exception("There is no box mapping for '$box'");
+  if (!isset($boxes_mapping[$box_name])) {
+    throw new Exception("There is no box mapping for '$box_name'");
   }
   if (isset($page_mapping[$page])) {
     $page_name = $page_mapping[$page];
@@ -252,21 +252,21 @@ function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar
   $blocks = os_layout_get_multiple($contexts, FALSE, TRUE);
 
   // Changing the region differently for box and block.
-  if (empty($blocks[$boxes_mapping[$box]])) {
+  if (empty($blocks[$boxes_mapping[$box_name]])) {
     // Define the box.
-    $delta = 'box-' . strtolower(str_replace(" ", "-", $box));
+    $delta = 'box-' . strtolower(str_replace(" ", "-", $box_name));
     if ($delta_suffix) {
       $delta .= '-' . $delta_suffix;
     }
     $options = array(
       'delta' => $delta,
-      'title' => $box,
-      'description' => $box,
+      'title' => $box_name,
+      'description' => $box_name,
     );
 
     // Create the box.
-    if (!$box = boxes_box::factory($boxes_mapping[$box], $options)) {
-      throw new Exception("Failed to create box '$box'', mapped value is '" . $boxes_mapping[$box] . "'. Delta is '$delta'");
+    if (!$box = boxes_box::factory($boxes_mapping[$box_name], $options)) {
+      throw new Exception("Failed to create box '$box_name', mapped value is '" . $boxes_mapping[$box_name] . "'. Delta is '$delta'");
     }
     $box->save();
     $blocks['boxes-' . $box->delta]['region'] = $region;
@@ -280,8 +280,8 @@ function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar
     $stringToPrint = $box->plugin_key . ',' . $options['delta'] . ',' . $page_mapping[$page];
   }
   else {
-    $blocks[$boxes_mapping[$box]]['region'] = $region;
-    $stringToPrint = $boxes_mapping[$box] . ',' . $options['delta'] . ',' . $page_mapping[$page];
+    $blocks[$boxes_mapping[$box_name]]['region'] = $region;
+    $stringToPrint = $boxes_mapping[$box_name] . ',' . $options['delta'] . ',' . $page_mapping[$page];
   }
 
   // Save the widget in the region.
