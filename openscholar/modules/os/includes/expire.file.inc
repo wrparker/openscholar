@@ -25,10 +25,13 @@ class OSExpireFile extends ExpireFile {
     parent::expire($file, $action, $skip_action_check);
 
     $styles = image_styles();
+    $expire_urls = array();
+    
     foreach ($styles as $style) {
       $image_path = image_style_path($style['name'], $file->uri);
       if (file_exists($image_path)) {
         $path = file_create_url($image_path);
+        watchdog('OSExpireFile', "Add [".print_r($path,TRUE)."] image derivitive for clearing.");
         $expire_urls[$path] = $path;
       }
     }
