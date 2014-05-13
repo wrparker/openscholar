@@ -144,9 +144,9 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
       $context['search_type'] = 'apachesolr_search_show_facets';
       apachesolr_search_run_empty('apachesolr', $params, $search_page['search_path'], $solr, $context);
 
-      // Returning TRUE means there was an empty search, and we will cache the
+      // Returning page id means there was an empty search, and we will cache the
       // block.
-      return TRUE;
+      return $page_id;
     }
     catch (Exception $e) {
       watchdog('Apache Solr', nl2br(check_plain($e->getMessage())), NULL, WATCHDOG_ERROR);
@@ -170,9 +170,13 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     $string_og_vocab = facetapi_build_delta($searcher_name, 'block', 'sm_og_vocabulary');
     $delta_og_vocab = array_search($string_og_vocab, $map);
 
-    $cid = 'sm_og_vocabulary:' . $delta_og_vocab;
+    $page_id = $this->is_empty_search_needed();
+    if ($page_id = $this->is_empty_search_needed()) {
+      //$cid = 'sm_og_vocabulary:' . $delta_og_vocab . ':' . $page_id;
+      $cid = 'sm_og_vocabulary:' . $delta_og_vocab;
+    }
     // Verify the cache is still valid, based on time since created.
-    if ($this->is_empty_search_needed() && ($cache = cache_get($cid)) && $cache->created > REQUEST_TIME - variable_get('facetapi_vocabulary_cache_timeout', 300)) {
+    if ($cid && ($cache = cache_get($cid)) && $cache->created > REQUEST_TIME - variable_get('facetapi_vocabulary_cache_timeout', 300)) {
       $block = $cache->data;
     }
     else {
@@ -225,6 +229,8 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
 
         $block['content'] = render($block['content']);
         if ($set_cache) {
+          $cid = 'sm_og_vocabulary:' . $delta_og_vocab . ':' . $set_cache;
+          $cid = 'sm_og_vocabulary:' . $delta_og_vocab;
           cache_set($cid, $block);
         }
       }
