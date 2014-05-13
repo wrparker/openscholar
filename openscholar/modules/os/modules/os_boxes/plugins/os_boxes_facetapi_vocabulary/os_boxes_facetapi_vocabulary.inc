@@ -80,26 +80,10 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
       return;
     }
 
-    if ($bundle == 'autodetect') {
-      // Autodetection - get browse page from context.
-      if (!$feature = os_get_active_feature()) {
-        // No active feature.
-        return;
-      }
-      if (!$app_info = os_app_info($feature->name)) {
-        // No app information available.
-        return;
-      }
-      if (!$browse_page = reset(array_keys($app_info['browse_pages']))) {
-        // No browse_pages.
-        return;
-      }
-      $page_id = 'browse_' . $browse_page;
+    $page_id = 'browse_' . $bundle;
+    if (!$search_page = apachesolr_search_page_load($page_id)) {
+      return;
     }
-    else {
-      $page_id = 'browse_' . $bundle;
-    }
-    $search_page = apachesolr_search_page_load($page_id);
     $env_id = $search_page['env_id'];
 
     if (apachesolr_has_searched($env_id)) {
@@ -170,7 +154,6 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     $string_og_vocab = facetapi_build_delta($searcher_name, 'block', 'sm_og_vocabulary');
     $delta_og_vocab = array_search($string_og_vocab, $map);
 
-    $page_id = $this->is_empty_search_needed();
     if ($page_id = $this->is_empty_search_needed()) {
       $cid = 'sm_og_vocabulary:' . $delta_og_vocab . ':' . $page_id;
     }
