@@ -1175,20 +1175,20 @@ function os_publications_update_7023() {
 }
 
 /**
- * Updating the allowed export types.
+ * Updating field description.
  */
 function os_publications_update_7024() {
-  $revert = array('os_publications' => array('variable'));
-
-  features_revert($revert);
+  db_update('biblio_field_type_data')
+    ->fields(array('hint' => ''))
+    ->condition('ftdid', 22)
+    ->execute();
 }
 
 /**
- * Updating field description.
+ * Updating the allowed export types.
  */
 function os_publications_update_7025() {
-  db_update('biblio_field_type_data')
-  ->fields(array('hint' => ''))
-  ->condition('ftdid', 22)
-  ->execute();
+  $revert = array('os_publications' => array('variable'));
+
+  features_revert($revert);
 }
