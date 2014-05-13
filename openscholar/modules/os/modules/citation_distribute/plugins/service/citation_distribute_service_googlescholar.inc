@@ -11,6 +11,7 @@ $plugin = array(
   'file' => 'citation_distribute_service_googlescholar.inc',
   'parent' => 'citation_distribute_service',
   'title' => t('Google Scholar'),
+  'href' => 'http://scholar.google.com',
   'name' => 'googlescholar',
   'description' => 'Google\'s searchable index of citations',
   'type' => 'metadata'

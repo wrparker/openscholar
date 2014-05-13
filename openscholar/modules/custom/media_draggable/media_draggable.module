@@ -15,7 +15,7 @@ function media_draggable_field_widget_info() {
         'allow_replace' => 0,
         'upload_event' => 'automatic',
         'upload_button_text' => t('Upload'),
-        'droppable_area_text' => t('Drop files here to upload'),
+        'droppable_area_text' => t('Drag your files here'),
         // This settings allows to drop multiple files at once.
         'multiupload' => 0,
         'allowed_types' => array('image'),

@@ -1786,58 +1786,6 @@ function _os_taxonomy_create_default_context($vocabulary) {
 }
 
 /**
- * Invalidate os taxonomy cache.
- *
- * @param $vid
- *  The vsite id.
- */
-function os_taxonomy_invalidate_cache($vid) {
-  cache_clear_all('os_taxonomy:' . $vid . ':', 'cache', TRUE);
-}
-
-/**
- * When a node is changed, edited or inserted we need to invalidate the cache
- * for the taxonomies widget.
- *
- * @param $node
- *  The node object or ID.
- */
-function os_taxonomy_node_changed($node) {
-  $wrapper = entity_metadata_wrapper('node', $node);
-
-  if (!og_is_group_content_type('node', $wrapper->getBundle())) {
-    return;
-  }
-
-  $vsites = $wrapper->{OG_AUDIENCE_FIELD}->value(array('identifier' => TRUE));
-
-  foreach ($vsites as $vsite) {
-    os_taxonomy_invalidate_cache($vsite);
-  }
-}
-
-/**
- * Implements hook_node_insert().
- */
-function os_taxonomy_node_insert($node) {
-  os_taxonomy_node_changed($node);
-}
-
-/**
- * Implements hook_node_delete().
- */
-function os_taxonomy_node_delete($node) {
-  os_taxonomy_node_changed($node);
-}
-
-/**
- * Implements hook_node_update().
- */
-function os_taxonomy_node_update($node) {
-  os_taxonomy_node_changed($node);
-}
-
-/**
  * Implements hook_form_FORM_ID_alter() for taxonomy_form_term().
  */
 function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {
@@ -1866,8 +1814,8 @@ function os_taxonomy_field_widget_form_alter(&$element, &$form_state, $context) 
   }
 
   $items = array(
-    '<a href="#" class="expand">' . t('Expand Terms') . '</a>',
-    '<a href="#" class="collapse">' . t('Collapse Terms') . '</a>',
+    '<a href="#" class="expand">' . t('Expand') . '</a>',
+    '<a href="#" class="collapse">' . t('Collapse') . '</a>',
   );
 
   $attributes['class'] = 'toggle-wrapper';

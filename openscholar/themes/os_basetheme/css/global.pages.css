@@ -851,6 +851,13 @@ margin-bottom:20px;
 
 .page-roadmap  .ui-dialog .ui-dialog-content {
 padding: 2em;
+width: 93% !important;
+}
+
+@-moz-document url-prefix() { 
+.page-roadmap  .ui-dialog .ui-dialog-content {
+width: calc(100% - 4em) !important;
+	}
 }
 
 
@@ -861,6 +868,13 @@ height: 30px;
 position: relative;
 margin: -5px -20px;
 }
+
+
+.page-roadmap .ui-button.ui-widget.ui-state-default {
+border: none;
+background: none;
+}
+
  
 .page-roadmap strong:first-child {
 font-size:18px;
