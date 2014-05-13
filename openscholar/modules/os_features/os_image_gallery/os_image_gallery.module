@@ -19,6 +19,9 @@ function os_image_gallery_os_app_info() {
       'slideshow_slide',
       'media_gallery',
     ),
+    'hide from toolbar' => array(
+      'slideshow_slide',
+    ),
     'views tabs' => array(
       'os_image_gallery' => array('page'),
     ),
