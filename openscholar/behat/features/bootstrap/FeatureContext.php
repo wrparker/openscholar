@@ -612,8 +612,7 @@ class FeatureContext extends DrupalContext {
    * @BeforeStep
    */
   static public function doSomethingBeforeStep(StepEvent $event) {
-    echo "---------------";
-    $event->getContext()->getSession()->wait(10000, "jQuery.active == 0");
+    $event->getContext()->getSession()->wait(10000, "typeof jQuery === 'undefined' || jQuery.active == 0");
   }
   /**
    * Invoking a php code with drush.
