@@ -263,7 +263,7 @@ function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar
 
     // Create the box.
     if (!$box = boxes_box::factory($boxes_mapping[$box], $options)) {
-      throw new Exception("Failed to create box.");
+      throw new Exception("Failed to create box $box, mapped value is " . $boxes_mapping[$box] . ". Delta is $delta");
     }
     $box->save();
     $blocks['boxes-' . $box->delta]['region'] = $region;
