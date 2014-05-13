@@ -121,7 +121,9 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
 
     // Execute the query.
     try {
-      $search_page = apachesolr_search_page_load($page_id);
+      if (!$search_page = apachesolr_search_page_load($page_id)) {
+        throw new Exception("Failed to load search page information $search_page");
+      }
       $env_id = $search_page['env_id'];
 
       if (apachesolr_has_searched($env_id)) {
