@@ -68,11 +68,9 @@ Feature:
   Scenario: Verify user can create a publication.
     Given I am logging in as "john"
      When I visit "/john/node/add/biblio"
-      And I wait for it
       And I fill in the publication title with random string
       And I fill in "biblio_year" with "2013"
       And I press "Save"
-      And I wait for it
      Then I should see the random string
 
   @javascript
@@ -80,9 +78,7 @@ Feature:
     Given I am logging in as "john"
      When I visit "john/node/add/biblio"
       And I add publication title "New publication"
-      And I wait for it
       And I fill in "edit-biblio-year" with "199"
-      And I wait for it
      Then I should see "Input must be in the form YYYY. Only numerical digits are allowed."
 
   @javascript
@@ -92,11 +88,8 @@ Feature:
       And I edit current node
      When I click "Post Created/Edited By"
       And I click "Menu options"
-      And I wait for it
      Then I should see "Posted on"
-      And I wait for it
       And I select another month on "edit-date"
-      And I wait for it
       And I should see "Posted on"
       And I press "Save"
 
@@ -104,7 +97,6 @@ Feature:
   Scenario: Verify tooltip hover works
     Given I am logging in as "john"
       And I visit "/john/publications/goblet-fire"
-      And I wait for it
      When I edit current node
       And I check "Wand" under "image-widget" is not visible
       And I click "Publication Details"
@@ -116,11 +108,9 @@ Feature:
   Scenario: Verify changing biblio types changes fields
     Given I am logging in as "john"
      When I visit "/john/node/add/biblio"
-      And I wait for it
      Then I should see "Title of the Journal"
       And I should not see "Secondary Title"
       And I select "Artwork" from "edit-biblio-type"
-      And I wait for it
      Then I should see "Secondary Title"
       And I should not see "Title of the Journal"
 
@@ -142,13 +132,10 @@ Feature:
   Scenario: Test the JS Publication terms
     Given I am logging in as "john"
      When I set the widget of vocabulary "food" to "tree"
-      And I wait for it
       And I visit "john/node/add/biblio"
       And I click "Publication Details"
       And I should not see "Burger"
-      And I wait for it
      Then I click "Expand"
-      And I wait for it
       And I should see "Burger"
 
   @javascript
@@ -157,16 +144,13 @@ Feature:
      When I visit "john/node/add/biblio"
       And I add publication title "testing author field"
       And I press "Add person"
-      And I wait for it
       And I fill in "biblio_contributors[0][name]" with "First Author"
       And I fill in "biblio_contributors[1][name]" with "Second Author"
       And I fill in "biblio_year" with "1999"
       And I press "Save"
-      And I wait for it
      Then I should see "Author F, Author S"
       And I edit current node
       And I press "edit-biblio-contributors-1-delete"
-      And I wait for it
       And I press "Save"
       And I should not see "Author F, Author S"
       And I should see "Author F"

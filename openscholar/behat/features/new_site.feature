@@ -14,10 +14,7 @@ Feature: Testing the creation of the a new site.
   Scenario: Make sure all types of a site are presented to an authenticated user.
     Given I am logging in as "michelle"
      When I visit "site/register"
-      And I wait for it
      Then I should see the options "Department Site,Personal Site,Project Site" under "bundle"
       And I fill in "edit-domain" with "onetwothreefour"
-      And I wait for it
       And I press "edit-submit"
-      And I wait for it
      Then I should see "Success! Your new site has been created."

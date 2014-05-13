@@ -7,6 +7,7 @@ use Behat\Gherkin\Node\PyStringNode;
 use Guzzle\Service\Client;
 use Behat\Behat\Context\Step;
 use Behat\Behat\Context\Step\When;
+use Behat\Behat\Event\StepEvent;
 
 require 'vendor/autoload.php';
 
@@ -608,12 +609,12 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Given /^I wait for it$/
+   * @BeforeStep
    */
-  public function iWaitForIt() {
-    $this->getSession()->wait(10000, "jQuery.active == 0");
+  static public function doSomethingBeforeStep(StepEvent $event) {
+    echo "---------------";
+    $event->getContext()->getSession()->wait(10000, "jQuery.active == 0");
   }
-
   /**
    * Invoking a php code with drush.
    *
