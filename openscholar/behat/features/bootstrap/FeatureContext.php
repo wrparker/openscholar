@@ -411,8 +411,8 @@ class FeatureContext extends DrupalContext {
   /**
    * @Given /^the widget "([^"]*)" is set in the "([^"]*)" page by the name "([^"]*)" with the following <settings>:$/
    */
-  public function theWidgetIsSetInThePageBytheNameWithSettings($page, $widget, $name, TableNode $table) {
-    $code = "os_migrate_demo_set_box_in_region({$this->nid}, '$page', '$widget', 'sidebar_second', '$name');";
+  public function theWidgetIsSetInThePageBytheNameWithSettings($widget, $page, $name, TableNode $table) {
+    $code = "os_migrate_demo_set_box_in_region({$this->nid}, '$widget', '$page', 'sidebar_second', '$name');";
     $this->box[] = $this->getDriver()->drush("php-eval \"{$code}\"");
     $hash = $table->getRows();
 

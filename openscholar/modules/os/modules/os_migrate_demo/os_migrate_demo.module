@@ -232,6 +232,9 @@ function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar
     'Faceted taxonomy' => 'os_boxes_facetapi_vocabulary',
   );
 
+  if (!isset($boxes_mapping[$box])) {
+    throw new Exception("There is no box mapping for '$box'");
+  }
   if (isset($page_mapping[$page])) {
     $page_name = $page_mapping[$page];
   }
@@ -263,7 +266,7 @@ function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar
 
     // Create the box.
     if (!$box = boxes_box::factory($boxes_mapping[$box], $options)) {
-      throw new Exception("Failed to create box $box, mapped value is " . $boxes_mapping[$box] . ". Delta is $delta");
+      throw new Exception("Failed to create box '$box'', mapped value is '" . $boxes_mapping[$box] . "'. Delta is '$delta'");
     }
     $box->save();
     $blocks['boxes-' . $box->delta]['region'] = $region;
