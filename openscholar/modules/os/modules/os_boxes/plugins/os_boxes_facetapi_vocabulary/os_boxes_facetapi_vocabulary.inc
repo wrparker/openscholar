@@ -172,8 +172,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
 
     $page_id = $this->is_empty_search_needed();
     if ($page_id = $this->is_empty_search_needed()) {
-      //$cid = 'sm_og_vocabulary:' . $delta_og_vocab . ':' . $page_id;
-      $cid = 'sm_og_vocabulary:' . $delta_og_vocab;
+      $cid = 'sm_og_vocabulary:' . $delta_og_vocab . ':' . $page_id;
     }
     // Verify the cache is still valid, based on time since created.
     if ($cid && ($cache = cache_get($cid)) && $cache->created > REQUEST_TIME - variable_get('facetapi_vocabulary_cache_timeout', 300)) {
@@ -230,7 +229,6 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
         $block['content'] = render($block['content']);
         if ($set_cache) {
           $cid = 'sm_og_vocabulary:' . $delta_og_vocab . ':' . $set_cache;
-          $cid = 'sm_og_vocabulary:' . $delta_og_vocab;
           cache_set($cid, $block);
         }
       }
