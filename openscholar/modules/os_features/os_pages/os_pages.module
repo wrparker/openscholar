@@ -787,7 +787,7 @@ function os_pages_add_subpage_form($form, &$form_state, $node) {
     'cancel' => array(
       '#type' => 'submit',
       '#limit_validation_errors' => array(),
-      '#submit' => 'os_pages_cancel_form',
+      '#submit' => array('os_pages_cancel_form'),
       '#value' => t('Cancel'),
     )
   );
@@ -819,8 +819,9 @@ function os_pages_add_subpage_submit($form, &$form_state) {
  * From cancel buttons
  * Close the overlay without doing anything
  */
-function os_pages_cancel_form() {
+function os_pages_cancel_form($form, &$form_state) {
   overlay_close_dialog();
+  $form_state['no_redirect'] = true;
 }
 
 /**
