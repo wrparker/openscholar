@@ -712,6 +712,8 @@ function os_pages_preprocess_page(&$page) {
     $section_links['page-header'] = array(
       'title' => t('This Page'),
     );
+
+    $page['classes_array'][] = 'os_pages-section-'.$node->book['bid'];
   }
 
   $section_links['page-layout'] = array(
