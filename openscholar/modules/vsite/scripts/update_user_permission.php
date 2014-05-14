@@ -6,9 +6,9 @@
  * Updating overriding sites permissions.
  *
  * @code
- * Using the script: os scr folder_path/update_user_permission.php
- * Using the script with a given NID: os scr folder_path/update_user_permission.php --id=10403
- * Using the script with a given number of batches: os scr folder_path/update_user_permission.php --batch=20
+ * Using the script: drush scr folder_path/update_user_permission.php
+ * Using the script with a given NID: drush scr folder_path/update_user_permission.php --id=10403
+ * Using the script with a given number of batches: drush scr folder_path/update_user_permission.php --batch=20
  * @encode
  */
 
@@ -89,6 +89,7 @@ while ($max > $i) {
     $params = array(
       '@nid' => $node->nid,
       '@title' => $node->title,
+      '@max' => $max,
     );
 
     drush_log(dt($i + 1 . '\ @max) Processing the permission for the vsite @title(nid: @nid).', $params), 'success');
