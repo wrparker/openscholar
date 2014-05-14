@@ -59,7 +59,7 @@ $max = $query
 $i = 0;
 
 while ($max > $i) {
-  // Collect the messages in batches.
+  // Collect the node in batches.
   $query = new EntityFieldQuery();
   $result = $query
     ->entityCondition('entity_type', 'node')
