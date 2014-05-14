@@ -12,6 +12,7 @@ env:
   - TEST_SUITE=browse_test
 
 before_script:
+  - exit 1
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - composer global require drush/drush:6.*@dev
   # Install apache
