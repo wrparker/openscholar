@@ -612,8 +612,11 @@ class FeatureContext extends DrupalContext {
    * @BeforeStep
    */
   static public function doSomethingBeforeStep(StepEvent $event) {
-    $event->getContext()->getSession()->wait(10000, "typeof jQuery === 'undefined' || jQuery.active == 0");
+    if ($event->getContext()->getDriver() instanceof Selenium2Driver) {
+      $event->getContext()->getSession()->wait(10000, "typeof jQuery === 'undefined' || jQuery.active == 0");
+    }
   }
+
   /**
    * Invoking a php code with drush.
    *
