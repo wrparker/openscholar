@@ -9,7 +9,8 @@ mysql:
   encoding: utf8
 
 env:
-  - TEST_SUITE=browse_test
+  - TEST_SUITE=first
+  - TEST_SUITE=last
 
 before_script:
   - set -e
