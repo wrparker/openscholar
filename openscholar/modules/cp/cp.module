@@ -308,10 +308,14 @@ function cp_custom_theme() {
  * Returns TRUE/FALSE, whether or not to use cp theme.
  */
 function cp_use_cp_theme() {
+  $ops = array('edit', 'usage', 'delete', 'devel');
   if (in_array(arg(0), array('cp', 'os', 'media'))) {
     return TRUE;
   } elseif (in_array(arg(0), array('file', 'node'))) {
-    return (arg(1) == 'add' || in_array(arg(2), array('edit', 'usage', 'delete')));
+    return (arg(1) == 'add' || in_array(arg(2), $ops));
+  }
+  elseif (arg(0) == 'taxonomy') {
+    return (arg(2) == 'add' || in_array(arg(3), $ops));
   }
 
   return FALSE;
@@ -693,6 +697,19 @@ function cp_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {
 function _cp_form_alter_remove_redirect_element(&$form) {
   if (isset($form['redirect'])) {
     $form['redirect']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Activates the cp context on any entity edit form
+ */
+function cp_form_alter(&$form, $form_state) {
+  if (isset($form['#entity_type']) && isset($form['#bundle'])) {
+    if ($plugin = context_get_plugin('condition', 'node')) {
+      // we want some of the node condition, but it only works for actual node types
+      // fake it for every entity form.
+      $plugin->execute((object)array('type' => 'page'), 'form');
+    }
   }
 }
 
