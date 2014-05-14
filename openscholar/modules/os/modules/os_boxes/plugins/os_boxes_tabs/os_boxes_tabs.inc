@@ -23,7 +23,17 @@ class os_boxes_tabs extends os_boxes_widget_collection {
 
   public function options_form(&$form_state) {
     if (!empty($this->options['tabs'])) {
-      $this->options['widgets'] = $this->options['tabs'];
+      foreach ($this->options['tabs'] as $k => $v) {
+        $k = str_replace('tab-', '', $k);
+        if (strpos($k, 'widget-') === FALSE) {
+          $id = 'widget-' . $k;
+        }
+        else {
+          $id = $k;
+        }
+
+        $this->options['widgets'][$id] = $v;
+      }
     }
     return parent::options_form($form_state);
   }
@@ -61,6 +71,11 @@ class os_boxes_tabs extends os_boxes_widget_collection {
         $block_tab->region = $this->delta;
         if ($block_arr = _block_render_blocks(array($block_tab))) {
           if (!empty($block_arr["{$block_tab->module}_{$block_tab->delta}"]->content)) {
+
+            $k = str_replace('tab-', '', $k);
+            if (strpos($k, 'widget-') === FALSE) {
+              $k = 'widget-'.$k;
+            }
 
             $render['links']['#links'][$tab['weight']] = array(
               'title' => $tab['title'],
