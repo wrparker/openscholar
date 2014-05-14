@@ -60,11 +60,12 @@ before_script:
 
   # Index site using Apache solr
   - drush en os_search_solr -y
-  - sleep 30
+  - sleep 60
   - drush solr-mark-all
   - drush solr-index
   # Trying to execute the internal solr commit
-  - sleep 30
+  - sleep 60
+  - drush cc all
   - wget http://localhost:8983/solr/update?commit=true
 
   # Copy Behat configuration file.
