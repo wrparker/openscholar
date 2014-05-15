@@ -876,10 +876,10 @@ function cp_module_implements_alter(&$implementations, $hook) {
  * Implements hook_og_permission().
  */
 function cp_og_permission() {
-	return array(
-		'clear site cache' => array(
-			'title' => t('Clear site cache'),
-			'description' => t('Allow the user to clear the site cache for this site.'),
-		),
-	);
+  return array(
+    'clear site cache' => array(
+      'title' => t('Clear site cache'),
+      'description' => t('Allow the user to clear the site cache for this site.'),
+    ),
+  );
 }
