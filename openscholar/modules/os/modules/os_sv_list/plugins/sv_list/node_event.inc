@@ -44,8 +44,8 @@ class sv_list_node_event extends sv_list_plugin  {
       return;
     }
 
-    //split repeated event into many nodes - one for each instance of event
-    //key them by timestamp for easy sorting.
+    // Split repeated event into many nodes - one for each instance of event
+    // key them by timestamp for easy sorting.
     $exploded = array();
     $now = strtotime(date('Y-m-d H:i:s'));
     foreach ($entities as $entity) {
@@ -69,7 +69,7 @@ class sv_list_node_event extends sv_list_plugin  {
         }
       }
     }
-    
+
     ksort($exploded);    //now sort by timestamp
     $entities = array_slice(array_values($exploded), 0, $options['number_of_items']);  //and re-apply the item limit
   }
