@@ -23,8 +23,8 @@ class os_boxes_tabs extends os_boxes_widget_collection {
 
   public function options_form(&$form_state) {
     // tabs widgets created before os_boxes_widget_collection was abstracted out will have keys that begin with tab-,
-    // instead of the new widgets-. They also had a bug where you could something like tab-tab-tab-tab-1 as a key.
-    // This replaces all occurences of tab- with a single widget- in the key, so older tab widgets will slowly be
+    // instead of the new widget-. They also had a bug where you could get something like tab-tab-tab-tab-1 as a key.
+    // This replaces all occurrences of tab- with a single widget- in the key, so older tab widgets will slowly be
     // migrated over to the new format over time, as they're edited.
     if (!empty($this->options['tabs'])) {
       foreach ($this->options['tabs'] as $k => $v) {
@@ -77,9 +77,9 @@ class os_boxes_tabs extends os_boxes_widget_collection {
           if (!empty($block_arr["{$block_tab->module}_{$block_tab->delta}"]->content)) {
 
             // tabs widgets created before os_boxes_widget_collection was abstracted out will have keys that begin with tab-,
-            // instead of the new widgets-. They also had a bug where you could something like tab-tab-tab-tab-1 as a key.
-            // This replaces all occurences of tab- with a single widget- in the key, so older tab widgets will slowly be
-            // migrated over to the new format over time, as they're edited.  
+            // instead of the new widget-. They also had a bug where you could get something like tab-tab-tab-tab-1 as a key.
+            // This replaces all occurrences of tab- with a single widget- in the key, so older tab widgets will slowly be
+            // migrated over to the new format over time, as they're edited.
             $k = str_replace('tab-', '', $k);
             if (strpos($k, 'widget-') === FALSE) {
               $k = 'widget-'.$k;
