@@ -7,6 +7,7 @@ use Behat\Gherkin\Node\PyStringNode;
 use Guzzle\Service\Client;
 use Behat\Behat\Context\Step;
 use Behat\Behat\Context\Step\When;
+use Behat\Behat\Event\StepEvent;
 
 require 'vendor/autoload.php';
 
@@ -96,11 +97,19 @@ class FeatureContext extends DrupalContext {
       // Log in.
       // Go to the user page.
       $element = $this->getSession()->getPage();
+
       $this->getSession()->visit($this->locatePath('/user'));
+
+      // @todo: Instead of reload() trying to wait for loading.
+      $this->getSession()->wait(5000, "jQuery.active == 0");
+
       $element->fillField('Username', $username);
       $element->fillField('Password', $password);
       $submit = $element->findButton('Log in');
       $submit->click();
+
+      // @todo: Instead of reload() trying to wait for loading.
+      $this->getSession()->wait(5000, "jQuery.active == 0");
     }
   }
 
@@ -539,7 +548,10 @@ class FeatureContext extends DrupalContext {
    */
   public function responseHeaderShouldBe($key, $result) {
     $headers = $this->getSession()->getResponseHeaders();
-    if (empty($headers[$key]) || $headers[$key][0] !== $result) {
+    if (empty($headers[$key])) {
+      throw new Exception(sprintf('The "%s" key in the response header does not exist.', $key));
+    }
+    elseif ($headers[$key][0] !== $result) {
       throw new Exception(sprintf('The "%s" key in the response header is "%s" instead of the expected "%s".', $key, $headers[$key][0], $result));
     }
   }
@@ -594,6 +606,17 @@ class FeatureContext extends DrupalContext {
    */
   public function iSleepFor($sec) {
     sleep($sec);
+  }
+
+  /**
+   * @BeforeStep
+   */
+  static public function doSomethingBeforeStep(StepEvent $event) {
+    try {
+      $event->getContext()->getSession()->wait(10000, "typeof jQuery === 'undefined' || jQuery.active == 0");
+    }
+    catch (Behat\Mink\Exception\UnsupportedDriverActionException $e) {
+    }
   }
 
   /**
@@ -1128,6 +1151,57 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I click on "([^"]*)" under "([^"]*)"$/
+   */
+  public function iClickOnUnder($text, $container) {
+    if (!$element = $this->searchForLinkUnderElement($text, $container)) {
+      throw new Exception(sprintf("The link %s was not found in %s", $text, $container));
+    }
+    $element->press();
+  }
+
+  /**
+   * @Given /^I choose id "([^"]*)" from radio id "([^"]*)"$/
+   */
+  public function iChooseIdFromRadioId($option, $field) {
+    $page = $this->getSession()->getPage();
+    if (!$element = $page->find('xpath', "//div[@id='$field']//input[@id='$option']")) {
+      throw new Exception(sprintf("didn't get the output"));
+    }
+    $element->press();
+  }
+
+  /**
+   * @Given /^I put mouse over "([^"]*)" under "([^"]*)"$/
+   */
+  public function iPutMouseOverUnder($text, $container) {
+    if (!$element = $this->searchForLinkUnderElement($text, $container)) {
+      throw new Exception(sprintf("The link %s was not found in %s", $text, $container));
+    }
+    $element->mouseOver();
+  }
+
+  /**
+   * @Given /^I check "([^"]*)" under "([^"]*)" is visible$/
+   */
+  public function iCheckUnderIsVisible($text, $container) {
+    if (!$element = $this->searchForLinkUnderElement($text, $container)) {
+      return FALSE;
+    }
+    return $element->isVisible();
+  }
+
+  /**
+   * @Given /^I check "([^"]*)" under "([^"]*)" is not visible$/
+   */
+  public function iCheckUnderIsNotVisible($text, $container) {
+    if (!$element = $this->searchForLinkUnderElement($text, $container)) {
+      return TRUE;
+    }
+    return !$element->isVisible();
+  }
+
+  /**
    * Searching a link under an element with class
    */
   private function searchForLinkUnderElement($text, $container) {
@@ -1180,7 +1254,7 @@ class FeatureContext extends DrupalContext {
       new Step\When('I press "Save permissions"'),
     );
   }
-  
+
   /**
    * @Then /^I should verify that the user "([^"]*)" has a role of "([^"]*)" in the group "([^"]*)"$/
    */
@@ -1192,6 +1266,20 @@ class FeatureContext extends DrupalContext {
     elseif ($user_has_role == 1) {
       throw new Exception("The user {$name} doesn't have the role {$role} in the group {$group}");
     }
+  }
+
+  /**
+   * @Given /^I set tinymce "([^"]*)"$/
+   */
+  public function iSetTinymce($arg1) {
+    $this->getSession()->executeScript("tinymce.get()[0].setContent('" . $arg1 . "');");
+  }
+
+  /**
+   * @Given /^I add publication title "([^"]*)"$/
+   */
+  public function iAddPublicationTitle($arg1) {
+    $this->iSetTinymce($arg1);
   }
 
   /**
@@ -1722,7 +1810,7 @@ class FeatureContext extends DrupalContext {
     if ($element) {
       throw new Exception("A button with id|name|value equal to '$button' was found.");
     }
-}
+  }
 
   /**
    * @Given /^I set feature "([^"]*)" to "([^"]*)" on "([^"]*)"$/
@@ -1828,7 +1916,26 @@ class FeatureContext extends DrupalContext {
     );
   }
 
- /**
+  /**
+   * @Given /^I set the widget of vocabulary "([^"]*)" to "([^"]*)"$/
+   */
+  public function iSetTheWidgetOfVocabularyTo($vocab, $widget) {
+    $links = array(
+      'food' => "john/cp/build/taxonomy/food_personal1",
+    );
+
+    $widgets = array(
+      'tree' => 'term_reference_tree',
+    );
+
+    return array(
+      new Step\When('I visit "' . $links[$vocab] . '/edit"'),
+      new Step\When('I select the radio button named "widget_type" with value "' . $widgets[$widget] . '"'),
+      new Step\When('I press "Save"'),
+    );
+  }
+
+  /**
    * @Given /^I re import feed item "([^"]*)"$/
    */
   public function iReImportFeedItem($node) {
@@ -1841,6 +1948,14 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I fill in the publication title with random string$/
+   */
+  public function iFillInThePublicationTitleWithRandomString() {
+    $this->randomizeMe();
+    $this->getSession()->executeScript("tinymce.get()[0].setContent('" . $this->randomText . "');");
+  }
+
+  /**
    * @Then /^I verify the feed item "([^"]*)" exists only "([^"]*)" time for "([^"]*)"$/
    */
   public function iVerifyTheFeedItemeExistsOnlyTimeFor($node, $time, $vsite) {
@@ -1850,4 +1965,91 @@ class FeatureContext extends DrupalContext {
       throw new Exception(sprintf('The feed items has been imported %s times.', $count));
     }
   }
+
+  /**
+   * @Given /^I select another month on "([^"]*)"$/
+   */
+  public function iSelectAnotherMonthOn($elementId) {
+    $page = $this->getSession()->getPage();
+
+    // Focus on the date field to open the pop-up date selector.
+    $element = $page->find('xpath', "//div[@id='{$elementId}']");
+    $field = $element->find('xpath', "//input");
+    $field->press();
+
+    // Month values are 1-12, but in the form they are 0-11.
+    $month = date('n');
+
+    if ($month == 12) {
+      $month = 10;
+    }
+
+    sleep(2);
+
+    // Find month selector and select new month.
+    if (!$selector = $page->find('xpath', "//select[@class='ui-datepicker-month']")) {
+      throw new Exception("Failed to find month field");
+    }
+
+    sleep(2);
+    if (!$s2 = $selector->find('xpath', "//option[@value='$month']")) {
+      throw new Exception("Failed to find month field");
+    }
+    $s2->press();
+
+    // Press on the first day of the month
+    if (!$day = $page->find('xpath', "//td[@data-handler='selectDay']")) {
+      throw new Exception("Failed to find day field.");
+    }
+    $day->press();
+  }
+
+  /**
+   * @Given /^I edit current node$/
+   */
+  public function iEditCurrentNode() {
+    $page = $this->getSession()->getPage();
+    $pattern = '/<link[\s\S]*href=[\s\S]*node\/([\S]*)\"/';
+    if (!preg_match($pattern, $page->getHtml(), $matches)) {
+      throw new Exception("Could not find edit link for current node.");
+    }
+
+    return array(
+      new Step\When('I visit "/node/' . $matches[1] . '/edit"'),
+      new Step\When('I sleep for "3"'),
+    );
+  }
+
+  /**
+   * @Given /^text field "([^"]*)" value should be "([^"]*)"$/
+   */
+  public function textFieldValueShouldBe($fieldName, $fieldValue) {
+    $field = $this->getTextFieldValue($fieldName);
+    $value = $field->getValue();
+
+    if ($value != $fieldValue) {
+      throw new Exception("Field value is \"$value\", and not \"$fieldValue\" as expected.");
+    }
+  }
+
+  /**
+   * @Given /^text field "([^"]*)" value should not be "([^"]*)"$/
+   */
+  public function textFieldValueShouldNotBe($fieldName, $fieldValue) {
+    $field = $this->getTextFieldValue($fieldName);
+    $value = $field->getValue();
+
+    if ($value == $fieldValue) {
+      throw new Exception("Field value is \"$value\", as it should not be.");
+    }
+  }
+
+  public function getTextFieldValue($fieldName) {
+    $page = $this->getSession()->getPage();
+    if (!$field = $page->find('xpath', "//input[@name='$fieldName']")) {
+      throw new Exception("Failed to find field by name $fieldName");
+    }
+    return $field;
+  }
+
 }
