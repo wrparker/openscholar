@@ -673,7 +673,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
 
     // Validate row according to content type.
     $values = array_combine($mappings, explode(',', $row));
-    foreach ($fields as $field) {
+    foreach ($fields as $name => $field) {
       // Check if field is required.
       if (is_string($field) && empty($values[$field])) {
         $params = array('@key' => $key, '@field' => $field);
@@ -683,9 +683,17 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       elseif (is_array($field)) {
         // Create validation function's name, e.g os_importer_validate_semester.
         $function = 'os_importer_' . reset($field);
-        $message = $function(reset($field), $values[reset($field)], $key);
-        if ($message) {
-          form_set_error('file', t($message));
+        $arguments = array(
+          $name,
+          $values[$name],
+          $key,
+        );
+
+        if (function_exists($function)){
+          $message = call_user_func_array($function, $arguments);
+          if ($message) {
+            form_set_error('file', t($message));
+          }
         }
       }
     }
