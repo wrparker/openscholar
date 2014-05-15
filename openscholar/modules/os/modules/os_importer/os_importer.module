@@ -607,30 +607,48 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     form_set_error('file', t('The next columns are missing in you CSV: !missing', $params));
   }
 
-  // Array of bundles with array of required fields. When a field is array that
-  // means: it is required and have validation callback.
+  // Array of bundles with array of required fields. When a field is an array,
+  // that means it is required and have validation callback.
   $bundles = array(
     'blog' => array('title'),
-    'faq' => array('title'),
-    'page' => array('title'),
-    'software_project' => array('title'),
     'class' => array(
       'title',
       'semester' => array('validate_semester'),
+      'year' => array('validate_year'),
     ),
     'event' => array(
       'title',
       'end_date' => array('validate_end_date'),
       'start_date' => array('validate_start_date'),
     ),
+    'faq' => array('title'),
     'feed' => array(
       'title',
-      'url'
+      'url',
     ),
     'link' => array(
       'title',
-      'url'
+      'url',
     ),
+    'media_gallery' => array(
+      'title',
+      'rows' => array('validate_rows_cols'),
+      'columns' => array('validate_rows_cols'),
+    ),
+    'news' => array(
+      'title',
+      'date',
+    ),
+    'page' => array('title'),
+    'person' => array(
+      'first name',
+      'last name',
+    ),
+    'presentation' => array(
+      'title',
+      'date' => array('validate_date'),
+    ),
+    'software_project' => array('title'),
   );
 
   $fields = !empty($bundles[$form_state['type']]) ? $bundles[$form_state['type']] : array();
@@ -654,17 +672,18 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     }
 
     // Validate row according to content type.
-    $values = array_combine($mappings, explode(',',$row));
-
+    $values = array_combine($mappings, explode(',', $row));
     foreach ($fields as $field) {
+      // Check if field is required.
       if (is_string($field) && empty($values[$field])) {
-        $message = 'Row number ' . $key . ' is missing the title value.';
-        form_set_error('file', t($message));
+        $params = array('@key' => $key, '@field' => $field);
+        form_set_error('file', t('Row number @key is missing the @field value.', $params));
       }
+      // Validate the field.
       elseif (is_array($field)) {
         // Create validation function's name, e.g os_importer_validate_semester.
         $function = 'os_importer_' . reset($field);
-        $message = $function($values[reset($field)], $key);
+        $message = $function(reset($field), $values[reset($field)], $key);
         if ($message) {
           form_set_error('file', t($message));
         }
@@ -676,7 +695,19 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   $form_state['values']['file'] = $new_file->fid;
 }
 
-function os_importer_validate_semester($value, $row) {
+/**
+ * Validate function for "Semester" value in a CSV for importing a class.
+ *
+ * @param $field
+ *  The field we validate.
+ * @param $value
+ *  The value as given in the CSV row.
+ * @param $row
+ *  The row number in the CSV file.
+ * @return string
+ *  An error message if needed.
+ */
+function os_importer_validate_semester($field, $value, $row) {
   $allowed_values = array(
     'N/A',
     'Spring',
@@ -685,15 +716,53 @@ function os_importer_validate_semester($value, $row) {
     'Winter',
   );
   $params = array(
+    '@field' => $field,
     '!semesters' => theme('item_list', array('items' => $allowed_values)),
     '@row' => $row,
   );
-  if (!in_array($value, $allowed_values)) {
-    return t('The semester value in row @row is invalid. Semester should be one of the following: !semesters', $params);
-  }
 
-  return '';
+  if (!in_array($value, $allowed_values)) {
+    return t('The @field value in row @row is invalid. It should be one of the following: !semesters', $params);
+  }
 }
+
+/**
+ * Validate function for "Year" value in a CSV for importing a class.
+ *
+ * @param $field
+ *  The field we validate.
+ * @param $value
+ *  The value as given in the CSV row.
+ * @param $row
+ *  The row number in the CSV file.
+ * @return string
+ *  An error message if needed.
+ */
+function os_importer_validate_year($field, $value, $row) {
+  if (!is_numeric($value) || (is_numeric($value) && $value > 9999)) {
+    return t('file', t('The @field value in row @row is invalid', array('@field' => $field, '@row' => $row)));
+  }
+}
+
+/**
+ * Validate function for "Rows" and "Columns" value in a CSV for importing a
+ * media gallery.
+ *
+ * @param $field
+ *  The field we validate.
+ * @param $value
+ *  The value as given in the CSV row.
+ * @param $row
+ *  The row number in the CSV file.
+ * @return string
+ *  An error message if needed.
+ */
+function os_importer_validate_rows_cols($field, $value, $row) {
+  if (!is_int($value) || (is_int($value) && $value < 0)) {
+    return t('file', t('The @field value in row @row is invalid', array('@field' => $field, '@row' => $row)));
+  }
+}
+
 /**
  * Parsing the header.
  */
