@@ -155,7 +155,8 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     $delta_og_vocab = array_search($string_og_vocab, $map);
 
     if ($page_id = $this->is_empty_search_needed()) {
-      $cid = 'sm_og_vocabulary:' . $delta_og_vocab . ':' . $page_id;
+      // Block delta is needed since $delta_og_vocab is not unique between sites
+      $cid = 'sm_og_vocabulary:' . $delta . ':' . $delta_og_vocab . ':' . $page_id;
     }
     // Verify the cache is still valid, based on time since created.
     if ($cid && ($cache = cache_get($cid)) && $cache->created > REQUEST_TIME - variable_get('facetapi_vocabulary_cache_timeout', 300)) {
