@@ -21,11 +21,11 @@ class OSExpireFile extends ExpireFile {
    */
    function expire($file, $action, $skip_action_check = FALSE) {
 
-   	if (empty($file->fid)) {
-   		return;
-   	}
+    if (empty($file->fid)) {
+      return;
+    }
    	
-   	//Expire the standard File URI's
+    //Expire the standard File URI's
     parent::expire($file, $action, $skip_action_check);
     
     $styles = image_styles();
