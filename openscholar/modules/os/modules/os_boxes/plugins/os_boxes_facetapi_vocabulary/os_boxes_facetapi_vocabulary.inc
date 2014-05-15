@@ -212,7 +212,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
 
         $block['content'] = render($block['content']);
         if ($set_cache) {
-          $cid = 'sm_og_vocabulary:' . $delta_og_vocab . ':' . $set_cache;
+          $cid = 'sm_og_vocabulary:' . $delta . ':' . $delta_og_vocab . ':' . $page_id;
           cache_set($cid, $block);
         }
       }
