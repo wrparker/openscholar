@@ -422,7 +422,7 @@ function vsite_form_node_delete_confirm_alter(&$form, $form_state) {
   }
 
   $form['vsite_name'] = array(
-    '#title' => t('Warning! You are about to delete your VSITE!'),
+    '#title' => t('Warning! You are about to delete your site!'),
     '#description' => t('Enter the word DELETE to delete your site.'),
     '#type' => 'textfield',
     '#required' => TRUE,
