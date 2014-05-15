@@ -271,3 +271,21 @@ function os_image_gallery_preprocess_media_gallery_meta(&$vars) {
     $vars['title'] = $file->filename;
   }
 }
+
+/**
+ * Adds contextual links to the Galleries view
+ */
+function os_image_gallery_preprocess_views_view_list(&$vars) {
+  if ($vars['view']->name == 'os_image_gallery') {
+    foreach ($vars['rows'] as $k => $str) {
+      $nid = $vars['view']->result[$k]->nid;
+      $psuedo = array(
+        '#type' => 'contextual_links',
+        '#contextual_links' => array(array('node', array($nid))),
+        '#element' => array(),
+      );
+      $vars['rows'][$k] = drupal_render($psuedo).$str;
+      $vars['classes_array'][$k] .= ' contextual-links-region';
+    }
+  }
+}
