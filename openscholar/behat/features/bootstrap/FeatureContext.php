@@ -612,8 +612,10 @@ class FeatureContext extends DrupalContext {
    * @BeforeStep
    */
   static public function doSomethingBeforeStep(StepEvent $event) {
-    if ($event->getContext()->getDriver() instanceof Selenium2Driver) {
+    try {
       $event->getContext()->getSession()->wait(10000, "typeof jQuery === 'undefined' || jQuery.active == 0");
+    }
+    catch (Behat\Mink\Exception\UnsupportedDriverActionException $e) {
     }
   }
 
