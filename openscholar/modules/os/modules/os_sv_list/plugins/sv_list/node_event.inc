@@ -56,6 +56,12 @@ class sv_list_node_event extends sv_list_plugin  {
         }
 
         if (strtotime($date['value2']) >= $now) {
+          // Remove the events which their starting date is less then half hour
+          // ago.
+          if ($this->VerifyStartDate($now, $date['value'])) {
+            continue;
+          }
+
           $new = clone $entity;
           $new->field_date[LANGUAGE_NONE][0] = $date;
           $new->date_id = implode('.', array('date', $new->nid, 'field_date', $delta));
@@ -67,7 +73,23 @@ class sv_list_node_event extends sv_list_plugin  {
     ksort($exploded);    //now sort by timestamp
     $entities = array_slice(array_values($exploded), 0, $options['number_of_items']);  //and re-apply the item limit
   }
-  
+
+  /**
+   * Verify the start date accouter no longer then 30 minutes ago.
+   */
+  protected function VerifyStartDate($now, $start_date) {
+    $time_zone = date_default_timezone();
+
+    // Ge the string of the date and define it as UTC time.
+    $date = new DateTime($start_date, new DateTimeZone('UTC'));
+
+    // Affect the time object according to the current time zone.
+    $date->setTimezone(new DateTimeZone($time_zone));
+
+    // Check if the event start date was no longer then 30 minutes ago.
+    return ($now - (30 * 60)) >= $date->getTimestamp();
+  }
+
   /**
    * @function render
    * 
