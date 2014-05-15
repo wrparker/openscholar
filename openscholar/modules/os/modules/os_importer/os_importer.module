@@ -592,31 +592,100 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   $file_content = str_replace("\r", "\n", $file_content);
   $rows = explode("\n", $file_content);
 
-  // Iterate over the rows and remove empty rows.
+  feeds_include_library('ParserCSV.inc', 'ParserCSV');
+  $parser = new ParserCSV();
+  $parser->setDelimiter(',');
+  $iterator = new ParserCSVIterator($file->uri);
+
+  // Parse file's headers.
+  $header = _os_importer_parse_header($parser, $iterator);
+
+  // Check what columns are missing from the uploaded CSV file and display
+  // message if needed.
+  if ($missing = array_diff($mappings, $header)) {
+    $params = array('!missing' => theme('item_list', array('items' => $missing)));
+    form_set_error('file', t('The next columns are missing in you CSV: !missing', $params));
+  }
+
+  // Iterate over the rows for field validation and removing empty rows.
   foreach ($rows as $key => $row) {
+    // Don't check the header.
+    if (!$key) {
+      continue;
+    }
+
+    // Check if row is empty.
     if (!implode("", explode(",", $row))) {
       unset($rows[$key]);
+      continue;
+    }
+
+    // Validate row according to content type.
+    $values = array_combine($mappings, explode(',',$row));
+    switch ($form_state['type']) {
+      case 'blog':
+      case 'faq':
+      case 'page':
+      case 'software_project':
+        $required_fields = array('title');
+        if ($message = os_importer_check_required_fields($required_fields, $values, $key)) {
+          form_set_error('file', t($message));
+        }
+        break;
+      case 'feed':
+      case 'link':
+        $required_fields = array(
+          'title',
+          'url',
+        );
+        if ($message = os_importer_check_required_fields($required_fields, $values, $key)) {
+          form_set_error('file', t($message));
+        }
+        break;
+      case 'class':
+        $required_fields = array('title');
+        if ($message = os_importer_check_required_fields($required_fields, $values, $key)) {
+          form_set_error('file', t($message));
+        }
+
+        // Validate "year" value.
+        if (!is_numeric($values['year']) || (is_numeric($values['year']) && $values['year'] > 9999)) {
+          form_set_error('file', t('The year value in row @key is invalid', array('@key' => $key)));
+        }
+
+        // Validate "semester" semester.
+        $allowed_values = array(
+          'N/A',
+          'Spring',
+          'Summer',
+          'Fall',
+          'Winter',
+        );
+        $params = array(
+          '!semesters' => theme('item_list', array('items' => $allowed_values)),
+          '@key' => $key,
+        );
+        if (!in_array($values['semester'], $allowed_values)) {
+          form_set_error('file', t('The semester value in row @key is invalid. Semester should be one of the following: !semesters', $params));
+        }
+        break;
     }
   }
 
   $new_file = file_save_data(implode("\n", $rows), $file->uri, FILE_EXISTS_REPLACE);
   $form_state['values']['file'] = $new_file->fid;
-
-  feeds_include_library('ParserCSV.inc', 'ParserCSV');
-  $parser = new ParserCSV();
-  $parser->setDelimiter(',');
-  $iterator = new ParserCSVIterator($new_file->uri);
-
-  // Parse file's headers.
-  $header = _os_importer_parse_header($parser, $iterator);
-
-  // Check what missing in the uploaded CSV file and display message if needed.
-  if ($missing = array_diff($mappings, $header)) {
-    $params = array('!missing' => theme('item_list', array('items' => $missing)));
-    form_set_error('file', t('The next columns are missing in you CSV: !missing', $params));
-  }
 }
 
+function os_importer_check_required_fields($required_fields, $values, $key) {
+  foreach ($required_fields as $field) {
+    if (empty($values[$field])) {
+      $message = 'Row number ' . $key . ' is missing the title value.';
+      return $message;
+    }
+  }
+
+  return '';
+}
 /**
  * Parsing the header.
  */
