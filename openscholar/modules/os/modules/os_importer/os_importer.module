@@ -607,6 +607,34 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     form_set_error('file', t('The next columns are missing in you CSV: !missing', $params));
   }
 
+  // Array of bundles with array of required fields. When a field is array that
+  // means: it is required and have validation callback.
+  $bundles = array(
+    'blog' => array('title'),
+    'faq' => array('title'),
+    'page' => array('title'),
+    'software_project' => array('title'),
+    'class' => array(
+      'title',
+      'semester' => array('validate_semester'),
+    ),
+    'event' => array(
+      'title',
+      'end_date' => array('validate_end_date'),
+      'start_date' => array('validate_start_date'),
+    ),
+    'feed' => array(
+      'title',
+      'url'
+    ),
+    'link' => array(
+      'title',
+      'url'
+    ),
+  );
+
+  $fields = !empty($bundles[$form_state['type']]) ? $bundles[$form_state['type']] : array();
+
   // Iterate over the rows for field validation and removing empty rows.
   foreach ($rows as $key => $row) {
     // Don't check the header.
@@ -620,55 +648,27 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       continue;
     }
 
+    // Check if there are fields to validate.
+    if (!$fields) {
+      continue;
+    }
+
     // Validate row according to content type.
     $values = array_combine($mappings, explode(',',$row));
-    switch ($form_state['type']) {
-      case 'blog':
-      case 'faq':
-      case 'page':
-      case 'software_project':
-        $required_fields = array('title');
-        if ($message = os_importer_check_required_fields($required_fields, $values, $key)) {
-          form_set_error('file', t($message));
-        }
-        break;
-      case 'feed':
-      case 'link':
-        $required_fields = array(
-          'title',
-          'url',
-        );
-        if ($message = os_importer_check_required_fields($required_fields, $values, $key)) {
-          form_set_error('file', t($message));
-        }
-        break;
-      case 'class':
-        $required_fields = array('title');
-        if ($message = os_importer_check_required_fields($required_fields, $values, $key)) {
-          form_set_error('file', t($message));
-        }
 
-        // Validate "year" value.
-        if (!is_numeric($values['year']) || (is_numeric($values['year']) && $values['year'] > 9999)) {
-          form_set_error('file', t('The year value in row @key is invalid', array('@key' => $key)));
+    foreach ($fields as $field) {
+      if (is_string($field) && empty($values[$field])) {
+        $message = 'Row number ' . $key . ' is missing the title value.';
+        form_set_error('file', t($message));
+      }
+      elseif (is_array($field)) {
+        // Create validation function's name, e.g os_importer_validate_semester.
+        $function = 'os_importer_' . reset($field);
+        $message = $function($values[reset($field)], $key);
+        if ($message) {
+          form_set_error('file', t($message));
         }
-
-        // Validate "semester" semester.
-        $allowed_values = array(
-          'N/A',
-          'Spring',
-          'Summer',
-          'Fall',
-          'Winter',
-        );
-        $params = array(
-          '!semesters' => theme('item_list', array('items' => $allowed_values)),
-          '@key' => $key,
-        );
-        if (!in_array($values['semester'], $allowed_values)) {
-          form_set_error('file', t('The semester value in row @key is invalid. Semester should be one of the following: !semesters', $params));
-        }
-        break;
+      }
     }
   }
 
@@ -676,12 +676,20 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   $form_state['values']['file'] = $new_file->fid;
 }
 
-function os_importer_check_required_fields($required_fields, $values, $key) {
-  foreach ($required_fields as $field) {
-    if (empty($values[$field])) {
-      $message = 'Row number ' . $key . ' is missing the title value.';
-      return $message;
-    }
+function os_importer_validate_semester($value, $row) {
+  $allowed_values = array(
+    'N/A',
+    'Spring',
+    'Summer',
+    'Fall',
+    'Winter',
+  );
+  $params = array(
+    '!semesters' => theme('item_list', array('items' => $allowed_values)),
+    '@row' => $row,
+  );
+  if (!in_array($value, $allowed_values)) {
+    return t('The semester value in row @row is invalid. Semester should be one of the following: !semesters', $params);
   }
 
   return '';
