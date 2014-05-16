@@ -1638,6 +1638,7 @@ function os_js_alter(&$javascript) {
       $file = drupal_get_path('module', 'os') . '/theme/os_colorbox.js';
       $javascript[$file] = drupal_js_defaults($file);
     }
+    $javascript[$url]['scope'] = 'footer';
   }
 }
 
