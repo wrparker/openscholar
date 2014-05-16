@@ -15,8 +15,29 @@ class OSPublicStreamWrapper extends DrupalPublicStreamWrapper {
    */
   function getExternalUrl() {
     $path = str_replace('\\', '/', $this->getTarget());
+    dpm($path);
+    $domain = $GLOBALS['base_url'];
+    if ($this->useStatic($path)) {
+      $domain = variable_get('os_files_static_domain');
+    }
 
-    return $GLOBALS['base_url'] . '/' . self::getExternalDirectoryPath() . '/' . drupal_encode_path($path);
+    return $domain . '/' . self::getExternalDirectoryPath() . '/' . drupal_encode_path($path);
+  }
+
+  /**
+   * Determines if the path we're given should use the static domain
+   */
+  private function useStatic($path) {
+    if (strpos($path, 'js/js_')) {
+      // aggregated js file.
+      return true;
+    }
+    elseif (0) {
+      // keep adding things here as they come up
+    }
+    else {
+      return false;
+    }
   }
 
   /**
