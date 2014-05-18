@@ -29,8 +29,12 @@ class sv_list_node_event extends sv_list_plugin  {
    * upcoming events that haven't taken place yet.
    */
   public function sort_event($options, EntityFieldQuery $efq) {
+    $time_zone = date_default_timezone();
+    $date = new DateTime(date('c'), new DateTimeZone($time_zone));
+    $date->setTimezone(new DateTimeZone('UTC'));
+
     $efq->fieldOrderBy('field_date', 'value', 'DESC');
-    $efq->fieldCondition('field_date', 'value2', date('Y-m-d H:i:s'), '>=');
+    $efq->fieldCondition('field_date', 'value2', $date->format('Y-m-d H:i:s'), '>=');
   }
   
   /**
