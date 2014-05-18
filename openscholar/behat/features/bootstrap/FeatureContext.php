@@ -247,6 +247,14 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Then /^I should print page to file "([^"]*)"$/
+   */
+  public function iShouldPrintPageToFile($file) {
+    $element = $this->getSession()->getPage();
+    file_put_contents($file, $element->getContent());
+  }
+
+  /**
    * @Then /^I should see the images:$/
    */
   public function iShouldSeeTheImages(TableNode $table) {
