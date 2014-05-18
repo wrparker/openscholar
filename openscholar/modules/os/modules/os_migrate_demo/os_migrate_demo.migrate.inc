@@ -619,7 +619,7 @@ class OsMigrateEventsNode extends OsMigrate {
     $date = explode(';', $row->field_date);
 
     if ($strtotime = strtotime($date[0])) {
-      $date[0] = date('Y-m-d H:i', $strtotime);
+      $date[0] = $this->toUtc($strtotime);
     }
 
     $entity->field_date[LANGUAGE_NONE][0] = array(
@@ -630,10 +630,26 @@ class OsMigrateEventsNode extends OsMigrate {
     // Adding the end date of the event.
     if (isset($date[1])) {
       if ($strtotime = strtotime($date[1])) {
-        $date[1] = date('Y-m-d H:i', $strtotime);
+        $date[1] = $this->toUtc($strtotime);
       }
       $entity->field_date[LANGUAGE_NONE][0]['value2'] = $date[1];
     }
+  }
+
+  /**
+   * Utility function; converts timestamp to a UTC formatted date/time.
+   *
+   * @param $timestamp
+   *   Unix timestamp.
+   *
+   * @return string
+   *   Date field formatted value.
+   */
+  private function toUtc($timestamp) {
+    $time_zone = date_default_timezone();
+    $date = new DateTime(date('c', $timestamp), new DateTimeZone($time_zone));
+    $date->setTimezone(new DateTimeZone('UTC'));
+    return $date->format('Y-m-d H:i');
   }
 }
 

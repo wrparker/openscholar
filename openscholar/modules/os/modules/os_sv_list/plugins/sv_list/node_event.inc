@@ -80,7 +80,7 @@ class sv_list_node_event extends sv_list_plugin  {
   protected function VerifyStartDate($now, $start_date) {
     $time_zone = date_default_timezone();
 
-    // Ge the string of the date and define it as UTC time.
+    // Get the string of the date and define it as UTC time.
     $date = new DateTime($start_date, new DateTimeZone('UTC'));
 
     // Affect the time object according to the current time zone.
