@@ -49,10 +49,22 @@ Feature: Testing OpenScholar calendar page.
      Given I go to "calendar"
       Then I should get a "403" HTTP response
 
-
-  @api
+  @api @wip
   Scenario: Test the week tab and
     Given I visit "john/calendar"
       And I click "Week"
       And I click "Navigate to next week"
      Then I should verify the next week calendar is displayed correctly
+
+  @api @momo
+  Scenario: Test list of posts widget with events
+            Including ongoing and near future events.
+    Given I am logging in as "john"
+      And the widget "Simple view list" is set in the "Classes" page by the name "events" with the following <settings>:
+          | Content Type                   | Event       | select list |
+          | Sorted By                      | Event Date  | select list |
+      And I visit "john/classes"
+      And I should see the text "My ongoing event" under "sv-list-event"
+      And I should see the text "My upcoming event 1" under "sv-list-event"
+      And I should see the text "My upcoming event 2" under "sv-list-event"
+      And I should see the text "My upcoming event 3" under "sv-list-event"
