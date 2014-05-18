@@ -40,13 +40,6 @@
           });
         }
 
-        // Enable the "save" buttons if not using automatic alias.
-        $('#edit-path-pathauto').change(function() {
-          if (!$(this).attr('checked')) {
-            toggle_submit(false);
-          }
-        });
-
         /**
          * Adds the AJAX handler to generate pathauto aliases for preview.
          */
@@ -70,9 +63,6 @@
                 // If we got a successful AJAX response...
                 if (json.status) {
 
-                  // Enable submit buttons.
-                  toggle_submit(false);
-
                   // Prepares the alias, removing purl.
                   var alias = json.data;
                   var base_url = Drupal.settings.alias_preview.prefix;
@@ -93,9 +83,6 @@
                   // Updates the title input field description to alert the user that the page name should be changed.
                   var description = '<span class="error">' + Drupal.t('The title of this page is already in use. Please enter a new title.') + '</span>';
                   $('.form-item-title .description').html(description);
-
-                  // Disable submit buttons.
-                  toggle_submit(true);
                 }
               });
             }
@@ -113,16 +100,6 @@
           }
         }
 
-        /**
-        * Toggle the submit buttons of the node form.
-        */
-        function toggle_submit(disabled) {
-          var buttons = $('#edit-submit, #edit-submit--2');
-
-          buttons.each(function() {
-            $( this ).attr('disabled', disabled);
-          });
-        }
       });
     }
   };

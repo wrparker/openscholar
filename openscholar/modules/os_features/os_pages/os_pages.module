@@ -395,6 +395,7 @@ function os_pages_form_page_node_form_alter(&$form, &$form_state) {
     ),
   );
   $form['#validate'][] = '_os_pages_node_form_summary_submit';
+  $form['#validate'][] = '_os_pages_node_title_validate';
 
   // Adds JS and CSS to display ajax node alias (pathauto) preview.
   os_pages_form_node_form_alter_add_assets($form, $form['#node']->type);
@@ -414,13 +415,22 @@ function os_pages_form_page_node_form_alter(&$form, &$form_state) {
   );
 }
 
-
 /**
  * Submit callback; syncs body summary value with field_meta_summary.
  */
 function _os_pages_node_form_summary_submit($form, &$form_state) {
   $summary = $form_state['values']['field_meta_description'][LANGUAGE_NONE][0]['value'];
   $form_state['values']['body'][LANGUAGE_NONE][0]['summary'] = $summary;
+}
+
+/**
+ * Verify the title of the node won't caused to the path of the node to take
+ * over existing menu item.
+ */
+function _os_pages_node_title_validate($form, $form_state) {
+  if (_vsite_form_alias_validate('node', $form_state['node'], $form_state['values']['title'])) {
+    form_set_error('title', t('The path is already taken by the system. Please select another path.'));
+  }
 }
 
 /**
