@@ -30,7 +30,7 @@ class sv_list_node_event extends sv_list_plugin  {
    */
   public function sort_event($options, EntityFieldQuery $efq) {
     $efq->fieldOrderBy('field_date', 'value', 'DESC');
-    $efq->fieldCondition('field_date', 'value2', date('Y-m-d H:i:s'), '>=');
+    //$efq->fieldCondition('field_date', 'value2', date('Y-m-d H:i:s'), '>=');
   }
   
   /**
@@ -50,12 +50,16 @@ class sv_list_node_event extends sv_list_plugin  {
     $now = strtotime(date('Y-m-d H:i:s'));
     foreach ($entities as $entity) {
       foreach ($entity->field_date[LANGUAGE_NONE] as $delta => $date) {
+
+        $end_date = new DateTime($date['value2'], new DateTimeZone($date['timezone_db']));
+        $end_date->setTimezone(new DateTimeZone(date_default_timezone()));
+
         $time_index = strtotime($date['value']);
         while (array_key_exists($time_index, $exploded)) {
           $time_index += 1; //don't clobber events that start at same time.
         }
 
-        if (strtotime($date['value2']) >= $now) {
+        if ($end_date->getTimestamp() >= $now) {
           // Remove the events which their starting date is less then half hour
           // ago.
           if ($this->VerifyStartDate($now, $date['value'])) {

@@ -8,4 +8,5 @@ event6,My ongoing event 1,Between an hour ago and till next hour,now - 1 hour;no
 event7,My upcoming event 1,Starts in an hour,now + 1 hour;now + 2 hours,personal1,authorTerm2,user2
 event8,My upcoming event 2,Starts in couple of hours with no ending time,now + 2 hours,personal1,authorTerm2,user2
 event9,My upcoming event 3,Tomorrow,now + 1 day;now + 2 days,personal1,authorTerm2,user2
-event10,My ongoing event 2,Between 10 minutes ago and till next hour,now - 10 minutes;now + 1 hour,personal1,authorTerm2,user2
+event10,My ongoing event 2,Between 2 minutes ago and till next hour,now - 2 minutes;now + 1 hour,personal1,authorTerm2,user2
+event11,My Passed event 1,Between 2 minutes ago and till a minute ago,now - 2 minutes;now - 1 minute,personal1,authorTerm2,user2

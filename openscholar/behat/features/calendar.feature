@@ -64,6 +64,7 @@ Feature: Testing OpenScholar calendar page.
           | Content Type                   | Event       | select list |
           | Sorted By                      | Event Date  | select list |
       And I visit "john/classes"
+      And I should not see the text "My passed event 1" under "sv-list-event"
       And I should not see the text "My ongoing event 1" under "sv-list-event"
       And I should see the text "My ongoing event 2" under "sv-list-event"
       And I should see the text "My upcoming event 1" under "sv-list-event"

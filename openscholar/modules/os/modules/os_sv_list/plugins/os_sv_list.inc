@@ -276,8 +276,7 @@ class os_sv_list extends os_boxes_default {
       $render = $this->_plugins_invoke('render', $entities);
       $render = ($render) ? $render : entity_view($this->entity_type, $entities, $this->options['display']);
     }
-    
-    
+
     $layout_func = 'layout_' . $this->options['layout'];    
     if ($this->options['layout'] != 'List' && method_exists($this, $layout_func)) {
       $this->$layout_func($render);
@@ -300,7 +299,7 @@ class os_sv_list extends os_boxes_default {
   }
   
   public function get_ids($page_num, $page) {    
-    //query for all content of our type
+    // Query for all content of our type
     $query = $this->query();
     $this->_plugins_invoke('query_alter', $query);
     
@@ -309,9 +308,7 @@ class os_sv_list extends os_boxes_default {
       //any special hook here?
     }
     
-    
-    
-    //pager
+    // Pager
     if ($this->options['pager'] && is_int($page)) {
       $query->pager($this->options['number_of_items']);
       $this->pager_element = $query->pager['element'];
@@ -328,11 +325,7 @@ class os_sv_list extends os_boxes_default {
     }
     $this->_plugins_invoke('sort_alter', $query);
     
-    //person, !image
-    //event exception.  dletas.
-
-    
-    //execute
+    // Execute
     $result = $query->execute();
     return (isset($result[$this->entity_type])) ? array_keys($result[$this->entity_type]) : array();
   }
@@ -347,8 +340,7 @@ class os_sv_list extends os_boxes_default {
     
     return $efq;
   }
-  
-  
+
   /**
    * @function _set_plugins
    * 
