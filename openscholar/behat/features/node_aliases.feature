@@ -96,3 +96,13 @@ Feature:
      When I press "Save"
      Then I should see "The alias is already in use."
 
+  @api @first
+  Scenario: Verify the user can't give a title for a page that is a reserved
+            system path when using automatic alias.
+    Given I am logging in as "john"
+      And I visit "john/node/add/page"
+          # Trying to use a system path such as "contact"
+      And I fill in "Title" with "contact"
+      And I check the box "Generate automatic URL alias"
+     When I press "Save"
+     Then I should see "The path is already taken by the system. Please select another path."
