@@ -278,6 +278,17 @@ function os_events_process_node(&$variables) {
     }
   }
 
+  $registrations_type = !empty($variables['node']->field_event_registration[LANGUAGE_NONE][0]['registration_type']);
+  $register = '';
+
+  // Show the signup link if capacity isn't reached and no repeat rule is used.
+  if ($registrations_type && os_events_event_registration_reach_capacity($variables['node']) && !$variables['field_date'][0]['rrule'] ) {
+    $register = os_events_generate_modal_register_link($variables['node']->nid, array(), $variables['view_mode']);
+  }
+  elseif ($registrations_type) {
+    $register = t('Sorry, the event is full');
+  }
+
   if ($variables['page']) {
     $options = array('absolute' => TRUE, 'attributes' => array('class' => array('subscribe')));
     $subscribe = l(t('subscribe'), 'calendar/export.ics/' . $variables['node']->nid, $options);
@@ -290,16 +301,6 @@ function os_events_process_node(&$variables) {
 
     $ical = l(t('iCal'), 'calendar/export.ics/' . $variables['node']->nid, array('attributes' => array('class' => array('ical'))));
 
-    $registrations_type = !empty($variables['node']->field_event_registration[LANGUAGE_NONE][0]['registration_type']);
-
-    // Show the signup link uf capacity isn't reached and no repeat rule is used.
-    if ($registrations_type && os_events_event_registration_reach_capacity($variables['node']) && !$variables['field_date'][0]['rrule'] ) {
-      $register = os_events_generate_modal_register_link($variables['node']->nid);
-    }
-    else {
-      $register = '';
-    }
-
     $params = array(
       'register' => $register,
       'ical' => $ical,
@@ -310,8 +311,14 @@ function os_events_process_node(&$variables) {
       '#weight' => 10,
     );
   }
-  
-  //hide the repeat rule summary from sidebar_teaser
+
+  // In case of a "teaser" view mode, put the link before the date.
+  if ($variables['view_mode'] == 'teaser') {
+    $register = '<div class="register-link-teaser">' . $register . '</div>';
+    $variables['content']['field_date'][0]['#markup'] = $register . $variables['content']['field_date'][0]['#markup'];
+  }
+
+  // Hide the repeat rule summary from sidebar_teaser.
   if ($variables['view_mode'] == 'sidebar_teaser' && $variables['content']['field_date']['#items']) {
     $rule = theme_date_repeat_display(array('item' => array('rrule' => $variables['content']['field_date']['#items'][0]['rrule'])));
     $variables['content']['field_date'][0]['#markup'] = str_replace($rule, '', $variables['content']['field_date'][0]['#markup'] );
@@ -325,11 +332,13 @@ function os_events_process_node(&$variables) {
  *  The event NID.
  * @param $modal_settings
  *  Ctools modal settings.
+ * @param $view_mode
+ *  The view mode of the node the link is in.
  *
  * @return string
  *  Link for the revealing the modal.
  */
-function os_events_generate_modal_register_link($nid, $modal_settings = array()) {
+function os_events_generate_modal_register_link($nid, $modal_settings = array(), $view_mode) {
   $modal_settings += array(
     'modalSize' => array(
       'type' => 'fixed',
@@ -350,7 +359,9 @@ function os_events_generate_modal_register_link($nid, $modal_settings = array())
   );
   drupal_add_js($modal_style, 'setting');
 
-  return ctools_ajax_text_button(t('Sign up for this event'), 'os_events/nojs/registration/' . $nid, '', 'ctools-use-modal ctools-modal-events-modal-style register use-ajax');
+  $link_text = $view_mode == 'full' ? 'Sign up for this event' : 'Register';
+
+  return ctools_ajax_text_button(t($link_text), 'os_events/nojs/registration/' . $nid, '', 'ctools-use-modal ctools-modal-events-modal-style register use-ajax');
 }
 
 /**
