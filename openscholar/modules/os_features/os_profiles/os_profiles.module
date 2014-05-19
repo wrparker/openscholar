@@ -569,17 +569,17 @@ function os_profiles_sync_profile_validate($form, &$form_state) {
  */
 function os_profiles_profiles_fields() {
   return array(
-    'title',
-    'body',
-    'field_first_name',
-    'field_last_name',
-    'field_address',
-    'field_phone',
-    'field_email',
-    'field_middle_name_or_initial',
-    'field_professional_title',
-    'field_website',
-    'field_person_photo',
+    'title' => 'label',
+    'body' => 'description',
+    'field_first_name' => 'first_name',
+    'field_last_name' => 'last_name',
+    'field_middle_name_or_initial' => 'middle_name',
+    'field_address' => 'address',
+    'field_phone' => 'phone',
+    'field_email' => 'email',
+    'field_professional_title' => 'professional_title',
+    'field_website' => 'website',
+    'field_person_photo' => 'photo',
   );
 }
 
