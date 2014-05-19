@@ -553,6 +553,12 @@ padding-left:35px;
 margin-top: 3px;
 width: 368px;
 display:inline-block;
+vertical-align: top;
+}
+
+#most-viewedpages a,
+#most-viewedsites a {
+	margin-right:8px;
 }
 
 #most-viewedsites {
