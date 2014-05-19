@@ -235,7 +235,7 @@ function os_profiles_process_node(&$vars) {
     //move the title inside
     $vars['content']['node_title'] = array(
       '#weight' => -50,
-      '#markup' => '<h1 ' . $vars['title_attributes'] . '><a href="' . $vars['node_url'] . '">' . $vars['title'] . '</a></h1>'
+      '#markup' => '<h1 ' . $vars['title_attributes'] . '><a href="' . $vars['node_url'] . '">' . $vars['title'] . '</a></h1>',
     );
 
     $vars['title'] = NULL;
@@ -246,7 +246,7 @@ function os_profiles_process_node(&$vars) {
     // Move the title inside.
     $vars['content']['node_title'] = array(
       '#weight' => -99,
-      '#markup' => '<h1 ' . $vars['title_attributes'] . '><a href="' . $vars['node_url'] . '">' . $vars['title'] . '</a></h1>'
+      '#markup' => '<h1 ' . $vars['title_attributes'] . '><a href="' . $vars['node_url'] . '">' . $vars['title'] . '</a></h1>',
     );
     $vars['title'] = NULL;
   }
