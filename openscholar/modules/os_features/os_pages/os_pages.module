@@ -424,10 +424,16 @@ function _os_pages_node_form_summary_submit($form, &$form_state) {
 }
 
 /**
- * Verify the title of the node won't caused to the path of the node to take
+ * Verify the title of the node won't cause to the path of the node to take
  * over existing menu item.
  */
 function _os_pages_node_title_validate($form, $form_state) {
+  // If the user doesn't use automatic alias don't validate the title.
+  if (!$form_state['values']['path']['pathauto']) {
+    return;
+  }
+
+  // Automatic alias is being used so check the title value of the page.
   if (_vsite_form_alias_validate('node', $form_state['node'], $form_state['values']['title'])) {
     form_set_error('title', t('The path is already taken by the system. Please select another path.'));
   }

@@ -81,7 +81,7 @@
                 }
                 else if (!json.status && json.path_taken) {
                   // Updates the title input field description to alert the user that the page name should be changed.
-                  var description = '<span class="error">' + Drupal.t('The title of this page is already in use. Please enter a new title.') + '</span>';
+                  var description = '<span class="error">' + Drupal.t('The path is already taken by the system. Please select another path.') + '</span>';
                   $('.form-item-title .description').html(description);
                 }
               });
