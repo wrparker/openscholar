@@ -271,3 +271,32 @@ function os_image_gallery_preprocess_media_gallery_meta(&$vars) {
     $vars['title'] = $file->filename;
   }
 }
+
+/**
+ * Adds contextual links to the Galleries view
+ *
+ * The View is constructed using the Fields option, instead of rendering the whole node with a view mode. We need to
+ * add the contextual links manually.
+ */
+function os_image_gallery_preprocess_views_view_list(&$vars) {
+  if ($vars['view']->name == 'os_image_gallery') {
+    // at this point, the rows are already rendered, we need to build, render and prepend the contextual links to the
+    // html
+    foreach ($vars['rows'] as $k => $str) {
+      // I'm hoping that the rows are in the same order as the results on the view. I don't see any reason they wouldn't
+      $nid = $vars['view']->result[$k]->nid;
+      // this is what the contextual module builds for itself when it's used normally.
+      // except #element isn't an empty array normally.
+      $psuedo = array(
+        '#type' => 'contextual_links',
+        '#contextual_links' => array(array('node', array($nid))),
+        '#element' => array(),
+      );
+      // render out the contextual links and prepend to the existing html.
+      $vars['rows'][$k] = drupal_render($psuedo).$str;
+      // add the class or none of the css will work.
+      // Despite the name, classes_array is just a string at this point.
+      $vars['classes_array'][$k] .= ' contextual-links-region';
+    }
+  }
+}
