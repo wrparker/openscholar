@@ -209,7 +209,7 @@ function os_profiles_process_node(&$vars) {
   }
 
   // Adding a header for determining the node ID.
-  drupal_add_http_header('X-SELF-JSON', url('node/' . $vars['nid'] . '.json', array('absolute' => TRUE)));
+  drupal_add_http_header('X-SELF-JSON', url('api/v1/profiles/' . $vars['nid'], array('absolute' => TRUE)));
 
   // Helps poor theme developers find these changes to $variables
   $vars['classes'] .= ' modified-in-os_profiles_process_node';
@@ -219,6 +219,7 @@ function os_profiles_process_node(&$vars) {
     if ($vars['view_mode'] != 'slide_teaser') {
       $vars['title_prefix'] += $vars['content']['field_person_photo'];
     }
+
     unset($vars['content']['field_person_photo']);
   }
 
@@ -236,6 +237,7 @@ function os_profiles_process_node(&$vars) {
       '#weight' => -50,
       '#markup' => '<h1 ' . $vars['title_attributes'] . '><a href="' . $vars['node_url'] . '">' . $vars['title'] . '</a></h1>'
     );
+
     $vars['title'] = NULL;
   }
 
