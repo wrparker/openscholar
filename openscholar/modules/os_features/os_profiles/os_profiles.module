@@ -627,8 +627,8 @@ function os_profiles_sync_profile_submit($form, $form_state) {
       }
     }
 
-    if (isset($values['restful'])) {
-      $photo_dimension = $values['photo'];
+    if (isset($data['restful'])) {
+      $photo_dimension = $data['photo'];
       unset($photo_dimension['url']);
     }
     else {
@@ -794,7 +794,7 @@ function os_profiles_get_origin_node_values($address, $fields) {
       $value = $data[$field_name];
     }
 
-    $values[$field] = $value;
+    $values[$key] = $value;
   }
 
   return (object) array(
