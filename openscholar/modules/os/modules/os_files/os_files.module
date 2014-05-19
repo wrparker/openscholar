@@ -2302,7 +2302,15 @@ function os_files_file_url_alter(&$uri) {
   // They'll be handled in the public stream wrapper
   // Also, make sure the variable is set so we don't do something stupid with it
   if (!file_uri_scheme($uri) && _os_files_use_static_domain($uri) && $domain = variable_get('os_files_static_domain')) {
-      $uri = $domain.'/'.$uri;
+    $uri = $domain.'/'.$uri;
+    $link = array(
+      '#type' => 'html_tag',
+      '#tag' => 'link',
+      '#attributes' => array(
+        'rel' => 'dns-prefetch',
+        'href' => $domain
+      )
+    );
+    drupal_add_html_head($link, 'dns-prefetch');
   }
-
 }
