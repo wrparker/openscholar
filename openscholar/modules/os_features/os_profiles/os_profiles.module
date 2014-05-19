@@ -1,12 +1,15 @@
 <?php
-// $Id$
 
 /**
  * @file
  * Code for the Profiles feature.
  */
-
 include_once 'os_profiles.features.inc';
+
+/**
+ * Store the prefix of the json output of the node.
+ */
+define('OS_PROFILE_JSON_PREFIX', 'api/v1/profiles/');
 
 /**
  * Implements hook_os_app_info().
@@ -580,6 +583,7 @@ function os_profiles_profiles_fields() {
     'field_professional_title' => 'professional_title',
     'field_website' => 'website',
     'field_person_photo' => 'photo',
+    'field_uuid' => 'uuid',
   );
 }
 
@@ -603,22 +607,38 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $data = $origin->data;
 
     // Get the URL of the original node.
-    $url = str_replace('/node/' . $data['nid'] . '.json', '', $form_state['json_address']);
+    $url = str_replace(array('/node/' . $data['nid'] . '.json', OS_PROFILE_JSON_PREFIX . $data['nid']), '', $form_state['json_address']);
 
     // Get the original node's UUID.
-    $values['field_uuid'] = $data['field_uuid'];
+    $values['field_uuid'] = $data[$keys['field_uuid']];
 
     // Save the original address of the JSON.
     $values['field_original_destination_url'] = $form_state['json_address'];
 
-    // Set the file JSON url.
-    $file_json_url = !empty($values['field_person_photo']) ? $values['field_person_photo']['file']['uri'] . '.json' : '';
-    $photo_dimension = $data['person_photo_dimension'];
+    // Get the url of the file.
+    if ($data['restful']) {
+      $file_url = $data['photo']['url'];
+    }
+    else {
+      // The site using the old version.
+      if (!empty($values['field_person_photo'])) {
+        $file_info = os_profiles_get_origin_node_values($values['field_person_photo']['file']['uri'] . '.json', array('url'));
+        $file_url = $file_info->values['url'];
+      }
+    }
+
+    if (isset($values['restful'])) {
+      $photo_dimension = $values['photo'];
+      unset($photo_dimension['url']);
+    }
+    else {
+      $photo_dimension = $data['person_photo_dimension'];
+    }
   }
   else {
     // Import a person node using the auto-complete field.
     $wrapper = entity_metadata_wrapper('node', $form_state['autocomplete_nid']);
-    foreach ($keys as $key) {
+    foreach (array_keys($keys) as $key) {
       if (isset($wrapper->{$key}) && $value = $wrapper->{$key}->value()) {
         $values[$key] = $value;
       }
@@ -635,10 +655,11 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     _os_profiles_restws_request_alter($form_state['autocomplete_nid']);
 
     // Save the original address of the JSON.
-    $values['field_original_destination_url'] = $url . '/node/' . $form_state['autocomplete_nid'] . '.json';
+    $values['field_original_destination_url'] = $url . OS_PROFILE_JSON_PREFIX . $form_state['autocomplete_nid'];
 
     // Set the file JSON url.
-    $file_json_url = !empty($values['field_person_photo']) ? $base_url . '/file/' . $values['field_person_photo']['fid'] . '.json' : '';
+    $file = file_load($values['field_person_photo']['fid']);
+    $file_url = file_create_url($file->uri);
 
     $photo_dimension = $wrapper->person_photo_dimension->value();
   }
@@ -646,8 +667,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
   // Retrieve the file from the original node.
   $file = NULL;
   if (!empty($file_json_url)) {
-    $file_info = os_profiles_get_origin_node_values($file_json_url, array('url'));
-    $copy_file = os_copy_file($file_info->values['url'], TRUE);
+    $copy_file = os_copy_file($file_url, TRUE);
 
     if ($copy_file['type'] == 'file') {
       $file = $copy_file['file'];
@@ -761,16 +781,17 @@ function os_profiles_get_origin_node_values($address, $fields) {
   $data = drupal_json_decode($request->data);
   $values = array();
 
-  foreach ($fields as $field) {
+  foreach ($fields as $key => $field) {
     $info = field_info_field($field);
-    if (empty($data[$field])) {
+    $field_name = isset($data['restful']) ? $data[$field] : $data[$key];
+    if (empty($data[$field_name])) {
       // The field value in the original node is empty. Entity metadata wrapper
       // need NULL to delete the field. Multiple cardinality field need array
       // and because the field empty we need to pass array(NULL).
       $value = $info['cardinality'] == 1 ? NULL : array(NULL);
     }
     else {
-      $value = $data[$field];
+      $value = $data[$field_name];
     }
 
     $values[$field] = $value;
