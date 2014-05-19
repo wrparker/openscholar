@@ -673,6 +673,15 @@ ul ul ul ul {
   border-bottom:none !important;
 }
 
+div.register-link-teaser {
+  margin-bottom: 0 !important;
+}
+
+div.register-link-teaser .register {
+  font-weight: normal;
+  border-bottom:none !important;
+}
+
 .rss {
 background:url('../images/rss_icon.gif') no-repeat !important;
 padding:3px 0 3px 25px !important;
