@@ -30,6 +30,10 @@ class OsProfilesResource extends RestfulEntityBaseNode {
       'property' => 'field_first_name',
     );
 
+    $public_fields['middle_name'] = array(
+      'property' => 'field_middle_name_or_initial',
+    );
+
     $public_fields['last_name'] = array(
       'property' => 'field_last_name',
     );
@@ -62,6 +66,12 @@ class OsProfilesResource extends RestfulEntityBaseNode {
    * Process callback; Return the URI value of an image.
    */
   protected function processPhoto($value) {
-    return $value['uri'];
+    return array(
+      'cropbox_height' => $value['cropbox_height'],
+      'cropbox_width' => $value['cropbox_width'],
+      'cropbox_x' => $value['cropbox_x'],
+      'cropbox_y' => $value['cropbox_y'],
+      'uri' => file_create_url($value['uri']),
+    );
   }
 }
