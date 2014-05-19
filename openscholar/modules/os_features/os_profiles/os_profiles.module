@@ -607,7 +607,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $data = $origin->data;
 
     // Get the URL of the original node.
-    $url = str_replace(array('/node/' . $data['nid'] . '.json', OS_PROFILE_JSON_PREFIX . $data['nid']), '', $form_state['json_address']);
+    $url = isset($data['restful']) ? $data['url'] : str_replace('/node/' . $data['nid'] . '.json', '', $form_state['json_address']);
 
     // Get the original node's UUID.
     $values['field_uuid'] = $data[$keys['field_uuid']];
@@ -783,7 +783,7 @@ function os_profiles_get_origin_node_values($address, $fields) {
 
   foreach ($fields as $key => $field) {
     $info = field_info_field($field);
-    $field_name = isset($data['restful']) ? $data[$field] : $data[$key];
+    $field_name = isset($data['restful']) ? $field : $key;
     if (empty($data[$field_name])) {
       // The field value in the original node is empty. Entity metadata wrapper
       // need NULL to delete the field. Multiple cardinality field need array

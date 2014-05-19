@@ -63,6 +63,10 @@ class OsProfilesResource extends RestfulEntityBaseNode {
       'callback' => array($this, 'restful'),
     );
 
+    $public_fields['url'] = array(
+      'callback' => array($this, 'url'),
+    );
+
     return $public_fields;
   }
 
@@ -87,5 +91,12 @@ class OsProfilesResource extends RestfulEntityBaseNode {
    */
   protected function restful() {
     return TRUE;
+  }
+
+  /**
+   * Provide the url of the site.
+   */
+  protected function url() {
+    return url('', array('absolute' => TRUE));
   }
 }
