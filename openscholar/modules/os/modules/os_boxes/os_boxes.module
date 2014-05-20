@@ -572,6 +572,6 @@ function os_boxes_node_update($node) {
 function _os_boxes_invalidate_cache($node) {
   $wrapper = entity_metadata_wrapper('node', $node);
   $gid = $wrapper->{OG_AUDIENCE_FIELD}->get(0)->getIdentifier();
-  $cid = 'os_boxes_cache:' . $gid . ':' . $node->type . ':*';
-  cache_clear_all($cid);
+  $cid = 'os_boxes_cache:' . $gid . ':' . $node->type;
+  cache_clear_all($cid, 'cache', TRUE);
 }

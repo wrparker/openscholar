@@ -130,6 +130,21 @@ abstract class os_boxes_default extends boxes_box {
   protected function setCache($cache) {
     cache_set($this->cache_id, $cache);
   }
+
+  /**
+   * When submitting a box we to invalidate here
+   */
+  public function options_submit() {
+    if (module_exists('vsite') && !$vsite = vsite_get_vsite()) {
+      return;
+    }
+
+    $cid = 'os_boxes_cache:' . $vsite->id;
+    $cid .= empty($this->options['content_type']) || is_array($this->options['content_type']) ? ':any_bundle' : ':' . $this->options['content_type'];
+    $cid .= ':' . $this->delta;
+
+    cache_clear_all($cid, 'cache', TRUE);
+  }
 }
 
 function _os_boxes_default_advanced_handler($element, $form_state) {
