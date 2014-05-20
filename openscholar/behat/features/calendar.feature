@@ -56,7 +56,7 @@ Feature: Testing OpenScholar calendar page.
       And I click "Navigate to next week"
      Then I should verify the next week calendar is displayed correctly
 
-  @api @momo
+  @api @last
   Scenario: Test list of posts widget with events
             Including ongoing and near future events.
     Given I am logging in as "john"
