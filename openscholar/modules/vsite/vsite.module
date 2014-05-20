@@ -1597,7 +1597,7 @@ function vsite_load_user_sites($user_id) {
     $items[] = l($node->title, $site->get_absolute_url());
     if (node_access('delete', $node)) {
       $items[] = array(
-        'data' => l(t('Delete site'), $site->get_absolute_url('node/' . $node->nid . '/delete')),
+        'data' => l(t('Delete site'), $site->get_absolute_url('vsite/delete'), array('attributes' => array('class' => 'ctools-use-modal'))),
         'class' => 'delete-link',
       );
     }
@@ -1644,6 +1644,8 @@ function vsite_load_user_membership($user_id){
  */
 function vsite_user_view_alter(&$build){
   global $user;
+  ctools_include('modal');
+  ctools_modal_add_js();
 
   // Removal section.
   // Remove the "history" and "member for" info if it's there.
@@ -2062,7 +2064,7 @@ function vsite_menu(){
   );
 
   // VSite delete modal
-  $items['vsite/delete'] = array(
+  $items['vsite/delete/%ctools_js'] = array(
     'type' => MENU_CALLBACK,
     'title' => t('Delete website request'),
     'page callback' => 'vsite_delete_request',
@@ -2097,7 +2099,7 @@ function vsite_delete_request($vsite) {
     $commands = array();
 
     ctools_add_js('ajax-responder');
-    $commands[] = ctools_modal_command_dismiss();
+  //  $commands[] = ctools_modal_command_dismiss();
   }
 
   // add CSS class to Modal-Frame
@@ -2105,6 +2107,12 @@ function vsite_delete_request($vsite) {
 
   print ajax_render($commands);
   exit;
+}
+
+function vsite_vsite_delete_request_form($form, &$form_state) {
+  $form['#submit'][] = 'vsite_vsite_delete_request_submit';
+
+  return $form;
 }
 
 function vsite_delete_request_access($vsite) {
