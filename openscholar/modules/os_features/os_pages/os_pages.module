@@ -864,8 +864,9 @@ function os_pages_alias_preview_ajax() {
 /**
  * Implements hook_pathauto_alias_alter().
  *
- * Here we mimic the process being done in pathauto module and in case
- * the path is a system path, we add a suffix to it.
+ * Mimic the process being done in pathauto module and in case
+ * the path is taken (and is a system path) to create a unique alias.
+ *
  * @see pathauto_alias_uniquify()
  *
  * @param $alias
