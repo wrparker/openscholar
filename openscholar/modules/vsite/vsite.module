@@ -2257,6 +2257,32 @@ function vsite_contact_mail_owner_submit($form, &$form_state){
 }
 
 /**
+ * Processes the personal contact page form submission.
+ */
+function vsite_vsite_delete_request_submit($form, &$form_state){
+  global $user, $language;
+
+  if ($user->uid != 0) {
+    $from = $user->mail;
+  }
+
+  // Save both users and all form values for email composition.
+  $values = $form_state['values'];
+  $values['user'] = $user;
+  $values['vsite'] = $space;
+
+  // Send the e-mail in the requested user language.
+  drupal_mail('vsite', 'user_mail', $to, user_preferred_language($account), $values, $from);
+
+  watchdog('mail', '%name-from request delete of vsite %vsite.', array(
+    '%name-from' => $user->name,
+    '%vsite' => $vsite,
+
+  ));
+  drupal_set_message(t('The delete request has been sent.'));
+}
+
+/**
  * Only allows access if user is authenticated and space is set.
  *
  * @return contact_page
@@ -2304,6 +2330,10 @@ function vsite_mail($key, &$message, $params){
       // This is done so that when the recipient auto-reply is on, the response
       // won't be sent to the site email (held in the site_mail variable).
       $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
+      break;
+    case 'vsite_delete' :
+      $reason = $params['reason'];
+      $message['body'][] = t('The reason for the delete request was: "!reason".', array('!reason' => $reason));
       break;
   }
 }
