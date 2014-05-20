@@ -1597,7 +1597,7 @@ function vsite_load_user_sites($user_id) {
     $items[] = l($node->title, $site->get_absolute_url());
     if (node_access('delete', $node)) {
       $items[] = array(
-        'data' => l(t('Delete site'), $site->get_absolute_url('vsite/delete'), array('attributes' => array('class' => 'ctools-use-modal'))),
+        'data' => l(t('Delete site'), $site->get_absolute_url('vsite/delete/' . $node->nid . '/nojs'), array('attributes' => array('class' => 'ctools-use-modal'))),
         'class' => 'delete-link',
       );
     }
@@ -2064,30 +2064,30 @@ function vsite_menu(){
   );
 
   // VSite delete modal
-  $items['vsite/delete/%ctools_js'] = array(
+  $items['vsite/delete/%node/%ctools_js'] = array(
     'type' => MENU_CALLBACK,
     'title' => t('Delete website request'),
     'page callback' => 'vsite_delete_request',
-    'page arguments' => array(3),
+    'page arguments' => array(2, 3),
     'access callback' => 'vsite_delete_request_access',
-    'access arguments' => array(3),
+    'access arguments' => array(2, 3),
     'description' => t('Delete VSite'),
   );
 
   return $items;
 }
 
-function vsite_delete_request($vsite) {
+function vsite_delete_request($node, $ajax) {
   $commands = array();
 
   ctools_include('modal');
   ctools_include('ajax');
 
   $form_state = array(
-    'title' => t('dfdf'),
+    'title' => t('Delete website request'),
     'ajax'  => TRUE,
     'build_info' => array(
-      'args'  => array($vsite),
+      'args'  => array($node, $ajax),
     ),
   );
 
@@ -2099,7 +2099,7 @@ function vsite_delete_request($vsite) {
     $commands = array();
 
     ctools_add_js('ajax-responder');
-  //  $commands[] = ctools_modal_command_dismiss();
+    $commands[] = ctools_modal_command_dismiss();
   }
 
   // add CSS class to Modal-Frame
@@ -2110,7 +2110,24 @@ function vsite_delete_request($vsite) {
 }
 
 function vsite_vsite_delete_request_form($form, &$form_state) {
-  $form['#submit'][] = 'vsite_vsite_delete_request_submit';
+  $form = array();
+
+  $form['message'] = array(
+    '#markup' => t('Please provide a reason for deleting this website. We will process this request as soon as possible.'),
+  );
+  $form['request'] = array(
+    '#type' => 'textarea',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+  );
 
   return $form;
 }
@@ -2129,7 +2146,7 @@ function vsite_site_contact(){
     return MENU_ACCESS_DENIED;
   }
   $space = spaces_get_space();
-  if (! empty($space)) {
+  if (!empty($space)) {
     // Get the vsite_users_contact_form_anonymous varible
     $contact_anon = $space->controllers->variable->get('vsite_users_contact_form_anonymous', 'space');
   }
