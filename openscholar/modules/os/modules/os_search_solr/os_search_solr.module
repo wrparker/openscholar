@@ -112,7 +112,7 @@ function os_search_solr_os_widget() {
  */
 function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) {
   
-  // Only get public conatent, this excludes content with privacy = 1.
+  // Only get public content, this excludes content with privacy = 1.
   $query->addFilter('bs_private', 1, TRUE);
   
   if (module_exists('vsite') && ($vsite = spaces_get_space())) {
