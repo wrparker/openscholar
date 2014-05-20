@@ -56,7 +56,7 @@ Feature: Testing OpenScholar calendar page.
       And I click "Navigate to next week"
      Then I should verify the next week calendar is displayed correctly
 
-  @api @last
+  @api @last @momo
   Scenario: Test list of posts widget with events
             Including ongoing and near future events.
     Given I am logging in as "john"
@@ -70,3 +70,4 @@ Feature: Testing OpenScholar calendar page.
       And I should see the text "My upcoming event 1" under "sv-list-event"
       And I should not see the text "My upcoming event 2" under "sv-list-event"
       And I should see the text "My upcoming event 3" under "sv-list-event"
+      And I should see "My upcoming event 1" before "My upcoming event 3" and after "My ongoing event 2"

@@ -1858,4 +1858,15 @@ class FeatureContext extends DrupalContext {
       throw new Exception(sprintf('The feed items has been imported %s times.', $count));
     }
   }
+
+  /**
+   * @Then /^I should see "([^"]*)" before "([^"]*)" and after "([^"]*)"$/
+   */
+  public function iShouldSeeBeforeAndAfter($first, $second, $third) {
+    $page = $this->getSession()->getPage();
+    $pattern = '/[\s\S]*' . $third . '[\s\S]*' . $first . '[\s\S]*' . $second . '[\s\S]*/';
+    if (!preg_match($pattern, $page->getContent())) {
+      throw new Exception(sprintf("The order of %s, %s, %s is not correct", $third, $first, $second));
+    }
+  }
 }
