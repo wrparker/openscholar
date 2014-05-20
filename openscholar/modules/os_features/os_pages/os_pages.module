@@ -395,7 +395,6 @@ function os_pages_form_page_node_form_alter(&$form, &$form_state) {
     ),
   );
   $form['#validate'][] = '_os_pages_node_form_summary_submit';
-  $form['#validate'][] = '_os_pages_node_title_validate';
 
   // Adds JS and CSS to display ajax node alias (pathauto) preview.
   os_pages_form_node_form_alter_add_assets($form, $form['#node']->type);
@@ -424,19 +423,20 @@ function _os_pages_node_form_summary_submit($form, &$form_state) {
 }
 
 /**
- * Verify the title of the node won't cause to the path of the node to take
- * over existing menu item.
+ * Helper function; Checks if a given alias is a system path.
+ *
+ * @param $alias
+ *  The alias to check.
+ * @return bool
+ *  Returns TRUE if the path is a system path. FALSE otherwise.
  */
-function _os_pages_node_title_validate($form, $form_state) {
-  // If the user doesn't use automatic alias don't validate the title.
-  if (!$form_state['values']['path']['pathauto']) {
-    return;
+function _os_pages_alias_exists($alias) {
+  $item = menu_get_item($alias);
+  if ($item['href'] == $alias) {
+    return TRUE;
   }
 
-  // Automatic alias is being used so check the title value of the page.
-  if (_vsite_form_alias_validate('node', $form_state['node'], $form_state['values']['title'])) {
-    form_set_error('title', t('The path is already taken by the system. Please select another path.'));
-  }
+  return FALSE;
 }
 
 /**
@@ -851,20 +851,7 @@ function os_pages_cancel_form($form, &$form_state) {
 function os_pages_alias_preview_ajax() {
   $path = _os_pages_make_alias($_GET['gid'], $_GET['type'], $_GET['title'], $_GET['purl']);
 
-  $parts = explode('/', $path);
-
-  // Check if the alias is a system path.
-  $alias = $parts[1];
-  $item = menu_get_item($alias);
-  $alias_taken = FALSE;
-  if ($item['href'] == $alias) {
-    $alias_taken = TRUE;
-  }
-
-  if ($alias_taken) {
-    $json = array('status' => FALSE, 'path_taken' => TRUE);
-  }
-  elseif ($path) {
+  if ($path) {
     $json = array('status' => TRUE, 'data' => $path, 'prefix' => $_GET['prefix']);
   }
   else {
@@ -872,6 +859,43 @@ function os_pages_alias_preview_ajax() {
   }
 
   drupal_json_output($json);
+}
+
+/**
+ * Implements hook_pathauto_alias_alter().
+ *
+ * Here we mimic the process being done in pathauto module and in case
+ * the path is a system path, we add a suffix to it.
+ * @see pathauto_alias_uniquify()
+ *
+ * @param $alias
+ *  The alias to modify if needed.
+ */
+function os_pages_pathauto_alias_alter(&$alias) {
+  module_load_include('inc', 'pathauto');
+
+  // The alias is in the form <purl>/<path>.
+  $parts = explode('/', $alias);
+  $path = $parts[1];
+  if (!_os_pages_alias_exists($path)) {
+    return;
+  }
+
+  $maxlength = min(variable_get('pathauto_max_length', 100), _pathauto_get_schema_alias_maxlength());
+  $separator = variable_get('pathauto_separator', '-');
+  $original_path = $path;
+
+  $i = 0;
+  do {
+    // Append an incrementing numeric suffix until we find a unique alias.
+    $unique_suffix = $separator . $i;
+    $path = truncate_utf8($original_path, $maxlength - drupal_strlen($unique_suffix, TRUE)) . $unique_suffix;
+    $i++;
+  }
+  while (_os_pages_alias_exists($path));
+
+  // Rebuild the alias if needed.
+  $alias = $parts[0] . '/' . $path;
 }
 
 /**

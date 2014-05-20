@@ -79,11 +79,6 @@
 
                   alias_preview_scroll();
                 }
-                else if (!json.status && json.path_taken) {
-                  // Updates the title input field description to alert the user that the page name should be changed.
-                  var description = '<span class="error">' + Drupal.t('The path is already taken by the system. Please select another path.') + '</span>';
-                  $('.form-item-title .description').html(description);
-                }
               });
             }
           }
