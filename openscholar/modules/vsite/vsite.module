@@ -2061,7 +2061,54 @@ function vsite_menu(){
     'access arguments' => array('access user profiles'),
   );
 
+  // VSite delete modal
+  $items['vsite/delete'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => t('Delete website request'),
+    'page callback' => 'vsite_delete_request',
+    'page arguments' => array(3),
+    'access callback' => 'vsite_delete_request_access',
+    'access arguments' => array(3),
+    'description' => t('Delete VSite'),
+  );
+
   return $items;
+}
+
+function vsite_delete_request($vsite) {
+  $commands = array();
+
+  ctools_include('modal');
+  ctools_include('ajax');
+
+  $form_state = array(
+    'title' => t('dfdf'),
+    'ajax'  => TRUE,
+    'build_info' => array(
+      'args'  => array($vsite),
+    ),
+  );
+
+  $commands = ctools_modal_form_wrapper('vsite_vsite_delete_request_form', $form_state);
+
+  if (!empty($form_state['executed']) && empty($form_state['rebuild'])) {
+
+    // overwrite commands.
+    $commands = array();
+
+    ctools_add_js('ajax-responder');
+    $commands[] = ctools_modal_command_dismiss();
+  }
+
+  // add CSS class to Modal-Frame
+  $commands[] = ajax_command_invoke('#modalContent', 'addClass', array('vsite-delete-request-form'));
+
+  print ajax_render($commands);
+  exit;
+}
+
+function vsite_delete_request_access($vsite) {
+  return TRUE;
 }
 
 /**
