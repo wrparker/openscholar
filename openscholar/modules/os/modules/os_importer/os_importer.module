@@ -870,7 +870,6 @@ function _os_importer_create_vocab($name, $terms, $group_type, $gid, $entity_typ
     }
   }
 
-
   // Create the OG vocabulary and the relation to the group.
   if (!og_vocab_load_og_vocab($vocabulary->vid, $entity_type, $bundle)) {
     og_vocab_create_og_vocab($vocabulary->vid, $entity_type, $bundle)->save();
