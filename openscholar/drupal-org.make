@@ -233,7 +233,7 @@ projects[module_filter][subdir] = "contrib"
 projects[module_filter][version] = 1.7
 
 projects[memcache][subdir] = "contrib"
-projects[memcache][version] = 1.0
+projects[memcache][version] = 1.1-beta5
 
 projects[migrate][subdir] = "contrib"
 projects[migrate][version] = 2.5
