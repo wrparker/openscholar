@@ -852,22 +852,24 @@ function _os_importer_create_vocab($name, $terms, $group_type, $gid, $entity_typ
 
   // Creating the terms for the new vocabulary if terms are provided.
   $taxonomy_terms = explode("|", $terms);
-  if (!empty($terms)) {
-    foreach ($taxonomy_terms as $taxonomy_term) {
-      $term = taxonomy_get_term_by_name($taxonomy_term, $vocabulary->machine_name);
+  foreach ($taxonomy_terms as $taxonomy_term) {
+    if (empty($taxonomy_term)) {
+      continue;
+    }
+    $term = taxonomy_get_term_by_name($taxonomy_term, $vocabulary->machine_name);
 
-      if (!$term) {
-        $term = new stdClass();
-        $term->name = $taxonomy_term;
-        $term->vid = $vocabulary->vid;
-        taxonomy_term_save($term);
-        $tids[] = $term->tid;
-      }
-      else {
-        $tids[] = reset($term)->tid;
-      }
+    if (!$term) {
+      $term = new stdClass();
+      $term->name = $taxonomy_term;
+      $term->vid = $vocabulary->vid;
+      taxonomy_term_save($term);
+      $tids[] = $term->tid;
+    }
+    else {
+      $tids[] = reset($term)->tid;
     }
   }
+
 
   // Create the OG vocabulary and the relation to the group.
   if (!og_vocab_load_og_vocab($vocabulary->vid, $entity_type, $bundle)) {
