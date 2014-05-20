@@ -98,11 +98,13 @@ abstract class os_boxes_default extends boxes_box {
    *
    * @param $bundle
    *  The bundle of the current widget.
+   * @param $page
+   *  Passing the page number when we handling a pager.
    *
    * @return String
    *  The cache ID string.
    */
-  protected function getCacheID($bundle) {
+  protected function getCacheID($bundle, $page = NULL) {
     if (module_exists('vsite') && !$vsite = vsite_get_vsite()) {
       return;
     }
@@ -112,6 +114,8 @@ abstract class os_boxes_default extends boxes_box {
     $this->cache_id .= is_array($bundle) ? ':any_bundle' : ':' . $bundle;
 
     $this->cache_id .= ':' . $this->delta;
+
+    $this->cache_id .= ':' . $page;
   }
 
   /**

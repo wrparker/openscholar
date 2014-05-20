@@ -222,33 +222,36 @@ class os_sv_list extends os_boxes_default {
     $bundle = ($this->options['content_type'] != 'all') ? $this->options['content_type'] : NULL;
     $block = parent::render();
 
-    $this->getCacheID($bundle);
+    drupal_add_library('system', 'drupal.ajax');
+    drupal_add_js(drupal_get_path('module', 'os_sv_list'). '/os_sv_list_display.js');
+    $page_num = (isset($_GET['page'])) ? $_GET['page'] : 0;
+
+    $this->options += $this->options_defaults();
+    $page = 0;
+    $ids = $this->get_ids($page_num, $page);
+
+    $this->getCacheID($bundle, $page_num);
     if (!$block['content'] = $this->getCache()) {
       $this->_set_plugins($this->entity_type, $bundle);
 
-      $this->options += $this->options_defaults();
-      $page_num = (isset($_GET['page'])) ? $_GET['page'] : 0;
-      $page = 0;
-      $ids = $this->get_ids($page_num, $page);
-
-      // add the pager.
+      // Add the pager.
       if ($this->options['pager'] && $ids) {
         $parameters = array(
           'sv_list_box_delta' => $this->delta,
           'pager_id' => $this->pager_element,
           'destination' => $_GET['q'],
         );
+
         $use_pager = 'views_mini_pager';
+
         $pager = theme($use_pager , array(
           'parameters' => $parameters,
           'element' => $this->pager_element,
           'quantity' => $this->options['number_of_items'],
         ));
 
-        drupal_add_library('system', 'drupal.ajax');
-        drupal_add_js(drupal_get_path('module', 'os_sv_list'). '/os_sv_list_display.js');
-
-        //if the pager is active, the more link needs its vars to know whether or not to display.
+        // If the pager is active, the more link needs its vars to know whether
+        // or not to display.
         global $pager_page_array, $pager_total;
         $pager_current = $pager_page_array[$parameters['pager_id']] + 1;
         $pager_max = $pager_total[$parameters['pager_id']];
@@ -264,7 +267,8 @@ class os_sv_list extends os_boxes_default {
         $more = ($this->options['more']) ? l($this->options['more_text'], $this->options['more_link'], array('attributes' => array('class' => array('more-link')))) : '';
       }
 
-      //give plguins a chance to alter the entities after loading but before rendering.  see events.
+      // Give plugins a chance to alter the entities after loading but before
+      // rendering. see events.
       $entities = entity_load($this->entity_type, $ids);
       $entities = array_map(function ($e) { $e->sv_list = TRUE; return $e; }, $entities);
       $this->_plugins_invoke('entities_alter', $entities);
@@ -274,26 +278,26 @@ class os_sv_list extends os_boxes_default {
 
       if ($this->options['display'] == 'title') {
         $render = $this->display_title($entities);
-      } else {
+      }
+      else {
         //let a plugin do the rendering.  if they don't, use the default.
         $render = $this->_plugins_invoke('render', $entities);
         $render = ($render) ? $render : entity_view($this->entity_type, $entities, $this->options['display']);
       }
-
 
       $layout_func = 'layout_' . $this->options['layout'];
       if ($this->options['layout'] != 'List' && method_exists($this, $layout_func)) {
         $this->$layout_func($render);
       }
 
-      //now render to html.
+      // Now render to html.
       $content = drupal_render($render);
       $delta = $this->delta;
       $class = strtolower(implode(' ', array(
         'os-sv-list',
         $this->plugin_key,
-        'sv-list-'.$this->options['content_type'],
-        'sv-list-view-'.$this->options['display'],
+        'sv-list-' . $this->options['content_type'],
+        'sv-list-view-' . $this->options['display'],
         'sv-list-layout-' . $this->options['layout'],
         'sv-grid-' . $this->options['grid_columns'],
       )));
@@ -301,6 +305,7 @@ class os_sv_list extends os_boxes_default {
       $block['content'] = "<div id='box-${delta}-page' data-page='${page_num}' data-delta='${delta}' class='${class}'>${content}</div>${pager}{$more}";
       $this->setCache($block['content']);
     }
+
     return $block;
   }
   
