@@ -22,6 +22,11 @@ abstract class os_boxes_default extends boxes_box {
   public $changed;
 
   /**
+   * Holds the cache id.
+   */
+  protected $cache_id;
+
+  /**
    * Given an embed type, return a label
    */
   public function embed_label($type) {
@@ -86,6 +91,43 @@ abstract class os_boxes_default extends boxes_box {
       $block['embed_link'] = true;
     }
     return $block;
+  }
+
+  /**
+   * Get the caching of the box.
+   *
+   * @param $bundle
+   *  The bundle of the current widget.
+   *
+   * @return String
+   *  The cache ID string.
+   */
+  protected function getCacheID($bundle) {
+    if (module_exists('vsite') && !$vsite = vsite_get_vsite()) {
+      return;
+    }
+
+    $this->cache_id = 'os_boxes_cache:' . $vsite->id;
+
+    $this->cache_id .= is_array($bundle) ? ':any_bundle' : ':' . $bundle;
+
+    $this->cache_id .= ':' . $this->delta;
+  }
+
+  /**
+   * Retrieve the cache.
+   */
+  protected function getCache() {
+    if ($cache = cache_get($this->cache_id)) {
+      return $cache->data;
+    }
+  }
+
+  /**
+   * Set the cache for the next time.
+   */
+  protected function setCache($cache) {
+    cache_set($this->cache_id, $cache);
   }
 }
 
