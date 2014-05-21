@@ -79,6 +79,12 @@ function os_events_menu() {
 
 /**
  * Check the capacity if the event reach it's capacity.
+ *
+ * @param $node
+ *  The event to check capacity for.
+ * @return bool
+ *  Returns FALSE if capacity isn't reached yet. Else, check if user can
+ *  signup for events and return TRUE/FALSE accordingly.
  */
 function os_events_event_registration_reach_capacity($node) {
   // Check how much registration exists for this event.
@@ -429,6 +435,13 @@ function os_events_modal_submit($form, &$form_state) {
   $commands[] = ctools_modal_command_dismiss();
   // Display messages.
   $commands[] = ajax_command_before('#columns', theme('status_messages'));
+
+  // In case event is full update the register links via ajax.
+  $event = node_load($form_state['registration']->entity_id);
+  if (!os_events_event_registration_reach_capacity($event)) {
+    $commands[] = ajax_command_html('.register-link-teaser', t('Sorry, the event is full'));
+    $commands[] = ajax_command_html('.os_events_export_links .first', t('Sorry, the event is full'));
+  }
 
   // Clean any message.
   drupal_get_messages();
