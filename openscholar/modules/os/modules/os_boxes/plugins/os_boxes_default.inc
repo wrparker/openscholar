@@ -189,6 +189,7 @@ abstract class os_boxes_default extends boxes_box {
     $cid .= ':' . $this->delta;
 
     cache_clear_all($cid, 'cache', TRUE);
+    cache_clear_all('assets:' . $cid, 'cache', TRUE);
   }
 }
 
