@@ -1620,11 +1620,18 @@ function vsite_load_user_sites($user_id) {
     $items = array();
     $items[] = l($node->title, $site->get_absolute_url());
     if (node_access('delete', $node)) {
-      $items[] = array(
+      $delete_link = array(
+        'data' => l(t('Delete site'), $site->get_absolute_url('node/' . $node->nid . '/delete')),
+        'class' => 'delete-link',
+      );
+    }
+    else {
+      $delete_link = array(
         'data' => l(t('Delete site'), $site->get_absolute_url('vsite/delete/' . $node->nid . '/nojs'), array('attributes' => array('class' => 'ctools-use-modal'))),
         'class' => 'delete-link',
       );
     }
+    $items[] = $delete_link;
     // Prepare them for theme_list_item.
     $sites_array[] = theme('item_list', array('items' => $items, 'attributes' => array('class' => array('inline'))));
   }
@@ -2124,16 +2131,6 @@ function vsite_delete_request($node, $ajax) {
   if (!empty($form_state['ajax_commands'])) {
     $commands = $form_state['ajax_commands'];
   }
-  /**
-  if (!empty($form_state['executed']) && empty($form_state['rebuild'])) {
-
-    // overwrite commands.
-    $commands = array();
-
-    ctools_add_js('ajax-responder');
-    $commands[] = ctools_modal_command_dismiss();
-  }
-   */
 
   // add CSS class to Modal-Frame
   //$commands[] = ajax_command_invoke('#modalContent', 'addClass', array('vsite-delete-request-form'));
@@ -2150,6 +2147,7 @@ function vsite_vsite_delete_request_form($form, &$form_state) {
   );
   $form['request'] = array(
     '#type' => 'textarea',
+    '#required' => TRUE,
   );
 
   $form['submit'] = array(
@@ -2391,7 +2389,6 @@ function vsite_vsite_delete_request_submit($form, &$form_state) {
     '%vsite' => $vsite,
 
   ));
-  drupal_set_message(t('The delete request has been sent.'));
 }
 
 /**
