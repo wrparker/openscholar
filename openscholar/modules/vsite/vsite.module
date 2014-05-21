@@ -565,7 +565,7 @@ function vsite_group_default_homepage_value($entity_type, $entity, $field, $inst
  * Deny access to create node outside of a VSite for non-privileged user.
  * Deny access to creating groups from within a VSite (e.g.
  * john/node/add/personal) as they are handled via site/register.
- * Deny access to deleting group for non support team members.
+ * Deny access to deleting vsite for non-privileged user.
  */
 function vsite_node_access($node, $op, $account) {
   $group_types = array_keys(array_intersect(module_invoke_all('vsite_og_node_type_info'), array('group')));
@@ -595,8 +595,7 @@ function vsite_node_access($node, $op, $account) {
         // Ignore deletion of non-groups.
         return NODE_ACCESS_IGNORE;
       }
-      return user_access('delete vsite');
-
+      return !user_access('delete vsite') ? NODE_ACCESS_DENY : NODE_ACCESS_IGNORE;
       break;
 
     // Ignore any other operator:
@@ -2131,9 +2130,6 @@ function vsite_delete_request($node, $ajax) {
   if (!empty($form_state['ajax_commands'])) {
     $commands = $form_state['ajax_commands'];
   }
-
-  // add CSS class to Modal-Frame
-  //$commands[] = ajax_command_invoke('#modalContent', 'addClass', array('vsite-delete-request-form'));
 
   print ajax_render($commands);
   drupal_exit;
