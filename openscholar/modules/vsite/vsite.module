@@ -562,29 +562,49 @@ function vsite_group_default_homepage_value($entity_type, $entity, $field, $inst
 /**
  * Implements hook_node_access().
  *
- * Deny access to create node outside of a VSite for non-privileged user. Also
- * deny access to creating groups from within a VSite (e.g.
+ * Deny access to create node outside of a VSite for non-privileged user.
+ * Deny access to creating groups from within a VSite (e.g.
  * john/node/add/personal) as they are handled via site/register.
+ * Deny access to deleting group for non support team members.
  */
 function vsite_node_access($node, $op, $account) {
-  if ($op != 'create' || user_access('administer group')) {
-    return NODE_ACCESS_IGNORE;
-  }
-
-  // @todo: Just remove from the permissions list?
   $group_types = array_keys(array_intersect(module_invoke_all('vsite_og_node_type_info'), array('group')));
-  if (in_array($node,  $group_types)) {
-    // Deny direct access to creating groups.
-    return NODE_ACCESS_DENY;
+
+  switch ($op) {
+    // Handle 'create' cases:
+    case 'create':
+      if (user_access('administer group')) {
+        return NODE_ACCESS_IGNORE;
+      }
+
+      if (in_array($node, $group_types)) {
+        // Deny direct access to creating groups.
+        return NODE_ACCESS_DENY;
+      }
+      if (!$vsite = vsite_get_vsite()) {
+        // Deny access when outside of VSite.
+        return NODE_ACCESS_DENY;
+      }
+      // Check the user's permission to create new content in the current VSite.
+      return !og_user_access('node', $vsite->group->nid, 'create ' . $node . ' content', $account) ? NODE_ACCESS_DENY : NODE_ACCESS_IGNORE;
+      break;
+
+    // Handle 'delete' cases:
+    case 'delete':
+      if (!in_array($node->type, $group_types)) {
+        // Ignore deletion of non-groups.
+        return NODE_ACCESS_IGNORE;
+      }
+      return user_access('delete vsite');
+
+      break;
+
+    // Ignore any other operator:
+    default:
+      return NODE_ACCESS_IGNORE;
   }
 
-  if (!$vsite = vsite_get_vsite()) {
-    // Deny access when outside of VSite.
-    return NODE_ACCESS_DENY;
-  }
 
-  // Check the user's permission to create new content in the current VSite.
-  return !og_user_access('node', $vsite->group->nid, 'create ' . $node . ' content', $account) ? NODE_ACCESS_DENY : NODE_ACCESS_IGNORE;
 }
 
 /**
@@ -856,7 +876,11 @@ function vsite_permission(){
     'subscribe as support team' => array(
       'title' => t('Subscribe as support team'),
       'description' => t('Allow users to subscribe as a supporter.')
-    )
+    ),
+    'delete vsite' => array(
+      'title' => t('Delete VSite'),
+      'description' => t('Allow users to delete vsite.')
+    ),
   );
 }
 
