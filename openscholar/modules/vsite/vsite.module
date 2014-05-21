@@ -2078,6 +2078,10 @@ function vsite_menu(){
 }
 
 function vsite_delete_request($node, $ajax) {
+  if (!$ajax) {
+    return drupal_get_form('vsite_vsite_delete_request_form');
+  }
+
   $commands = array();
 
   ctools_include('modal');
@@ -2093,6 +2097,10 @@ function vsite_delete_request($node, $ajax) {
 
   $commands = ctools_modal_form_wrapper('vsite_vsite_delete_request_form', $form_state);
 
+  if (!empty($form_state['ajax_commands'])) {
+    $commands = $form_state['ajax_commands'];
+  }
+  /**
   if (!empty($form_state['executed']) && empty($form_state['rebuild'])) {
 
     // overwrite commands.
@@ -2101,12 +2109,13 @@ function vsite_delete_request($node, $ajax) {
     ctools_add_js('ajax-responder');
     $commands[] = ctools_modal_command_dismiss();
   }
+   */
 
   // add CSS class to Modal-Frame
-  $commands[] = ajax_command_invoke('#modalContent', 'addClass', array('vsite-delete-request-form'));
+  //$commands[] = ajax_command_invoke('#modalContent', 'addClass', array('vsite-delete-request-form'));
 
   print ajax_render($commands);
-  exit;
+  drupal_exit;
 }
 
 function vsite_vsite_delete_request_form($form, &$form_state) {
@@ -2129,6 +2138,7 @@ function vsite_vsite_delete_request_form($form, &$form_state) {
     '#value' => t('Cancel'),
   );
 
+  $form['#submit'][] = 'vsite_vsite_delete_request_submit';
   return $form;
 }
 
@@ -2331,8 +2341,14 @@ function vsite_contact_mail_owner_submit($form, &$form_state){
 /**
  * Processes the personal contact page form submission.
  */
-function vsite_vsite_delete_request_submit($form, &$form_state){
+function vsite_vsite_delete_request_submit($form, &$form_state) {
   global $user, $language;
+
+  // Just dismiss the modal in case of a cancellation.
+  if ($form_state['clicked_button']['#value'] == 'Cancel') {
+    $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
+    return;
+  }
 
   if ($user->uid != 0) {
     $from = $user->mail;
