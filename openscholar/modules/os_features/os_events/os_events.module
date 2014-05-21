@@ -283,7 +283,14 @@ function os_events_process_node(&$variables) {
 
   // Show the signup link if capacity isn't reached and no repeat rule is used.
   if ($registrations_type && os_events_event_registration_reach_capacity($variables['node']) && !$variables['field_date'][0]['rrule'] ) {
-    $register = os_events_generate_modal_register_link($variables['node']->nid, array(), $variables['view_mode']);
+    // In full view mode show a link to a modal.
+    if ($variables['view_mode'] == 'full') {
+      $register = os_events_generate_modal_register_link($variables['node']->nid, array());
+    }
+    // In teaser view mode link to the event page.
+    elseif ($variables['view_mode'] == 'teaser') {
+      $register = '<div class="register-link-teaser">' . l(t('Registration is required'), 'node/' . $variables['node']->nid) . '</div>';
+    }
   }
   elseif ($registrations_type) {
     $register = t('Sorry, the event is full');
@@ -314,7 +321,6 @@ function os_events_process_node(&$variables) {
 
   // In case of a "teaser" view mode, put the link before the date.
   if ($variables['view_mode'] == 'teaser') {
-    $register = '<div class="register-link-teaser">' . $register . '</div>';
     $variables['content']['field_date'][0]['#markup'] = $register . $variables['content']['field_date'][0]['#markup'];
   }
 
@@ -332,13 +338,11 @@ function os_events_process_node(&$variables) {
  *  The event NID.
  * @param $modal_settings
  *  Ctools modal settings.
- * @param $view_mode
- *  The view mode of the node the link is in.
  *
  * @return string
  *  Link for the revealing the modal.
  */
-function os_events_generate_modal_register_link($nid, $modal_settings = array(), $view_mode) {
+function os_events_generate_modal_register_link($nid, $modal_settings = array()) {
   $modal_settings += array(
     'modalSize' => array(
       'type' => 'fixed',
@@ -359,9 +363,7 @@ function os_events_generate_modal_register_link($nid, $modal_settings = array(),
   );
   drupal_add_js($modal_style, 'setting');
 
-  $link_text = $view_mode == 'full' ? 'Sign up for this event' : 'Register';
-
-  return ctools_ajax_text_button(t($link_text), 'os_events/nojs/registration/' . $nid, '', 'ctools-use-modal ctools-modal-events-modal-style register use-ajax');
+  return ctools_ajax_text_button(t('Sign up for this event'), 'os_events/nojs/registration/' . $nid, '', 'ctools-use-modal ctools-modal-events-modal-style register use-ajax');
 }
 
 /**
