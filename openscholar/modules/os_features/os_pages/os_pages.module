@@ -452,9 +452,9 @@ function os_pages_form_cp_layout_full_form_alter(&$form, &$form_state) {
  * Alters the node delete confirm form to redirect to the parent page
  */
 function os_pages_form_node_delete_confirm_alter(&$form, &$form_state) {
-  // If the destination is empty we are in a delete form that's triggered from
-  // the "Delete this page" link in the node form. If so, make the "Cancel"
-  // to direct us to the node form.
+  // When the destination is empty that mean we came here from the delete
+  // button in the node edit form. We need to change the cancel href to the node
+  // edit form.
   if (empty($_GET['destination'])) {
     $form['actions']['cancel']['#href'] = 'node/' . $form['#node']->nid . '/edit';
   }
