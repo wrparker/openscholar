@@ -120,7 +120,38 @@ abstract class os_boxes_default extends boxes_box {
    */
   protected function getCache() {
     if ($cache = cache_get($this->cache_id)) {
+
+      if ($js_cache = cache_get('js:' . $this->cache_id)) {
+        $assets = unserialize($js_cache->data);
+        $this->addAssets($assets);
+      }
+
       return $cache->data;
+    }
+  }
+
+
+  /**
+   * @param $assets
+   */
+  private function addAssets($assets) {
+    foreach ($assets as $key => $asset) {
+      if ($key == 'library') {
+        foreach ($asset as $library) {
+          drupal_add_library($library[0], $library[1]);
+        }
+      }
+      elseif ($key == 'js') {
+        foreach ($asset as $js) {
+          if (!is_array($js)) {
+            drupal_add_js($js);
+          }
+          else {
+            // Try a better code.
+            drupal_add_js(end($js), reset($js));
+          }
+        }
+      }
     }
   }
 
@@ -129,6 +160,17 @@ abstract class os_boxes_default extends boxes_box {
    */
   protected function setCache($cache) {
     cache_set($this->cache_id, $cache);
+  }
+
+  /**
+   * Caching JS elements relate to the plugin.
+   *
+   * @param $js
+   *  Serialized array of JS.
+   */
+  protected function setJsCache($js) {
+    $cache_id = 'js:' . $this->cache_id;
+    cache_set($cache_id, serialize($js));
   }
 
   /**
