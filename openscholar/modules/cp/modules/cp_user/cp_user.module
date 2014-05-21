@@ -301,6 +301,7 @@ function cp_user_og_ui_admin_permissions($variables) {
   ksort($allowed_permissions);
 
   $rows_per_category = array();
+
   foreach (element_children($form['permission']) as $key) {
     if (is_numeric($key)) {
       // Module name, not for display in the UI.
@@ -312,21 +313,22 @@ function cp_user_og_ui_admin_permissions($variables) {
     }
 
     if (!in_array($key, array_keys($allowed_permissions))) {
-      
+
     	if(!user_access('administer permissions')) {
         // Do not show this permission in the UI.
         // Not including it in the table is not enough, because later we call the
         // function drupal_render_children() which will render it anyway unless
         // we unset it.
         unset($form['permission'][$key]);
-      		
+
         // We must also unset all the checkboxes related to the permission, one
         // for each role, so they would not be rendered later.
         foreach (element_children($form['checkboxes']) as $rid) {
         	unset($form['checkboxes'][$rid][$key]);
         }
         continue;
-    	} else {
+    	}
+      else {
         // This is an super-admin type user
         $form['permission'][$key]['#markup'] .= " **Admin Only**";
     	}
@@ -386,6 +388,43 @@ function cp_user_og_ui_admin_permissions($variables) {
   $output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'permissions')));
   $output .= drupal_render_children($form);
   return $output;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function cp_user_form_og_ui_admin_permissions_alter(&$form, &$form_state) {
+  // Hold the permissions the user doesn't have access to.
+  $allowed_permissions = array();
+
+  // In addition to CRUD permissions, the permission 'Change theme' is the only
+  // non-CRUD permission that should be displayed on the list.
+  foreach (vsite_get_os_override_permissions() as $permission) {
+    $allowed_permissions[$permission] = 'general';
+  }
+  $allowed_permissions['change theme'] = 'general';
+  $allowed_permissions['administer taxonomy'] = 'general';
+  $allowed_permissions['edit terms'] = 'general';
+  $allowed_permissions['delete terms'] = 'general';
+
+  foreach (os_get_bundles_per_app(array(OS_PUBLIC_APP, OS_PRIVATE_APP)) as $app_name => $bundles) {
+    foreach (array_keys($bundles) as $bundle) {
+      // Get bundle permissions with their related app name.
+      $bundle_permissions = array_fill_keys(array_keys(og_list_permissions($bundle)), $app_name);
+
+      // Merge bundle permissions to all permissions.
+      $allowed_permissions = array_merge($allowed_permissions, $bundle_permissions);
+    }
+  }
+
+  $form['#validate'][] = 'cp_user_og_ui_admin_permissions_validate';
+}
+
+/**
+ * Validate handler; Add the missing permissions.
+ */
+function cp_user_og_ui_admin_permissions_validate($form, &$form_state) {
+  dpm($form_state);
 }
 
 /**
