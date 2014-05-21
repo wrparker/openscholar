@@ -423,20 +423,29 @@ function _os_pages_node_form_summary_submit($form, &$form_state) {
 }
 
 /**
- * Helper function; Checks if a given alias is a system path.
+ * Helper function; Checks if a given alias is already used.
  *
- * @param $alias
- *  The alias to check.
+ * @param $purl
+ *  The purl of the VSite, i.e "john".
+ * @param $path
+ *  The path fo the page.
+ * @param $source
+ *  The source of the new page, i.e node/%nid
+ *
  * @return bool
- *  Returns TRUE if the path is a system path. FALSE otherwise.
+ *  Returns TRUE if the alias is taken. FALSE otherwise.
  */
-function _os_pages_alias_exists($alias) {
-  $item = menu_get_item($alias);
-  if ($item['href'] == $alias) {
+function _os_pages_alias_exists($purl, $path, $source) {
+  // First check if the path is a system path.
+  $item = menu_get_item($path);
+  if ($item['href'] == $path) {
     return TRUE;
   }
 
-  return FALSE;
+  $alias = $purl . '/' . $path;
+
+  // Also ensure that the alias does not exist yet.
+  return _pathauto_alias_exists($alias, $source);
 }
 
 /**
@@ -865,20 +874,33 @@ function os_pages_alias_preview_ajax() {
  * Implements hook_pathauto_alias_alter().
  *
  * Mimic the process being done in pathauto module and in case
- * the path is taken (and is a system path) to create a unique alias.
- *
- * @see pathauto_alias_uniquify()
+ * the path is taken (or is a system path) to create a unique alias.
  *
  * @param $alias
  *  The alias to modify if needed.
+ *
+ * @param array $context
+ *   An associative array of additional options.
+ *
+ * @see pathauto_alias_uniquify()
  */
-function os_pages_pathauto_alias_alter(&$alias) {
+function os_pages_pathauto_alias_alter(&$alias, array &$context) {
+  // Don't alter the alias if not creating a page.
+  if ($context['type'] != 'page') {
+    return;
+  }
+
+  if ($context['op'] != 'insert') {
+    return;
+  }
+
   module_load_include('inc', 'pathauto');
 
   // The alias is in the form <purl>/<path>.
   $parts = explode('/', $alias);
+  $purl = $parts[0];
   $path = $parts[1];
-  if (!_os_pages_alias_exists($path)) {
+  if (!_os_pages_alias_exists($purl, $path, $context['source'])) {
     return;
   }
 
@@ -893,10 +915,10 @@ function os_pages_pathauto_alias_alter(&$alias) {
     $path = truncate_utf8($original_path, $maxlength - drupal_strlen($unique_suffix, TRUE)) . $unique_suffix;
     $i++;
   }
-  while (_os_pages_alias_exists($path));
+  while (_os_pages_alias_exists($purl, $path, $context['source']));
 
   // Rebuild the alias if needed.
-  $alias = $parts[0] . '/' . $path;
+  $alias = $purl . '/' . $path;
 }
 
 /**
