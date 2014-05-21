@@ -546,21 +546,21 @@ function _os_image_remove_handler($form, $form_state) {
  * Implements hook_node_insert().
  */
 function os_boxes_node_insert($node) {
-  _os_boxes_invalidate_cache($node);
+  os_boxes_invalidate_cache($node);
 }
 
 /**
  * Implements hook_node_delete().
  */
 function os_boxes_node_delete($node) {
-  _os_boxes_invalidate_cache($node);
+  os_boxes_invalidate_cache($node);
 }
 
 /**
  * Implements hook_node_update().
  */
 function os_boxes_node_update($node) {
-  _os_boxes_invalidate_cache($node);
+  os_boxes_invalidate_cache($node);
 }
 
 /**
@@ -569,7 +569,7 @@ function os_boxes_node_update($node) {
  * @pram $node
  *  The node object which got affected by create/delete/update action.
  */
-function _os_boxes_invalidate_cache($node) {
+function os_boxes_invalidate_cache($node) {
   $wrapper = entity_metadata_wrapper('node', $node);
   $gid = $wrapper->{OG_AUDIENCE_FIELD}->get(0)->getIdentifier();
   $cid = 'os_boxes_cache:' . $gid . ':' . $node->type;
