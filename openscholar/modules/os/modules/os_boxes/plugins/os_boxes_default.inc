@@ -28,8 +28,14 @@ abstract class os_boxes_default extends boxes_box {
 
   /**
    * Holds the unix time stamp until when the plugin suppose to be cached.
+   *
+   * The value can be a string which the function strtotime accept i.e 5 minutes
+   * from now or a unix time. When set to NULL the caching will be kept until:
+   *  - User created/updated or deleted a content.
+   *  - Update the plugin settings
+   *  - The cache was clear.
    */
-  protected $cache_time;
+  protected $cache_time = NULL;
 
   /**
    * Given an embed type, return a label
@@ -125,7 +131,6 @@ abstract class os_boxes_default extends boxes_box {
    */
   protected function getCache() {
     if ($cache = cache_get($this->cache_id)) {
-
       if ($js_cache = cache_get('assets:' . $this->cache_id)) {
         $assets = unserialize($js_cache->data);
         $this->addAssets($assets);
@@ -134,7 +139,6 @@ abstract class os_boxes_default extends boxes_box {
       return $cache->data;
     }
   }
-
 
   /**
    * Adding the cached assets.
@@ -172,7 +176,15 @@ abstract class os_boxes_default extends boxes_box {
    *  The assets of the js. Optional.
    */
   protected function setCache($cache, $js = NULL) {
-    $expire = $this->cache_time ? $this->cache_time : CACHE_PERMANENT;
+    if (!empty($this->cache_time)) {
+      $expire = is_string($this->cache_time) ? strtotime($this->cache_time) : $this->cache_time;
+    }
+    else {
+      $expire = CACHE_PERMANENT;
+    }
+
+    dpm($expire);
+
     cache_set($this->cache_id, $cache, $expire);
 
     if ($js) {

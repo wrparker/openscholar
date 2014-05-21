@@ -13,6 +13,8 @@ class os_sv_list extends os_boxes_default {
   public function __construct() {
     parent::__construct();
     $this->entity_type = $this->bundle = NULL;
+
+    $this->cache_time = "5 minutes";
   }
   
   /**
@@ -305,6 +307,9 @@ class os_sv_list extends os_boxes_default {
       $block['content'] = "<div id='box-${delta}-page' data-page='${page_num}' data-delta='${delta}' class='${class}'>${content}</div>${pager}{$more}";
       $this->setCache($block['content']);
     }
+    else {
+      dpm('cached');
+    }
 
     return $block;
   }
@@ -494,7 +499,7 @@ class os_sv_list extends os_boxes_default {
     return $return;
   }
 
-  function sort_random(&$efq) {
+  function sort_random(EntityFieldQuery &$efq) {
     $efq->addTag('random');
   }
   
