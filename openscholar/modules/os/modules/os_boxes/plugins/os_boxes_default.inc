@@ -121,7 +121,7 @@ abstract class os_boxes_default extends boxes_box {
   protected function getCache() {
     if ($cache = cache_get($this->cache_id)) {
 
-      if ($js_cache = cache_get('js:' . $this->cache_id)) {
+      if ($js_cache = cache_get('assets:' . $this->cache_id)) {
         $assets = unserialize($js_cache->data);
         $this->addAssets($assets);
       }
@@ -132,7 +132,10 @@ abstract class os_boxes_default extends boxes_box {
 
 
   /**
+   * Adding the cached assets.
+   *
    * @param $assets
+   *  Lists of assets.
    */
   private function addAssets($assets) {
     foreach ($assets as $key => $asset) {
@@ -168,8 +171,8 @@ abstract class os_boxes_default extends boxes_box {
    * @param $js
    *  Serialized array of JS.
    */
-  protected function setJsCache($js) {
-    $cache_id = 'js:' . $this->cache_id;
+  protected function setAssetsCache($js) {
+    $cache_id = 'assets:' . $this->cache_id;
     cache_set($cache_id, serialize($js));
   }
 

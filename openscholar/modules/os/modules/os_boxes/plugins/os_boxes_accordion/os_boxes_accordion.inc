@@ -78,13 +78,15 @@ class os_boxes_accordion extends os_boxes_widget_collection {
       }
 
       $output['content'] = drupal_render($content);
-      $this->setJsCache($content['#attached']);
+      $this->setAssetsCache($content['#attached']);
       $this->setCache($output['content']);
-      dpm($content['#attached']['js']);
+      dpm('not cached');
     }
     else {
       dpm('cached');
     }
+
+    dpm($this->cache_id);
 
     return $output;
   }
