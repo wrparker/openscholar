@@ -14,7 +14,7 @@ class os_sv_list extends os_boxes_default {
     parent::__construct();
     $this->entity_type = $this->bundle = NULL;
 
-    $this->cache_time = "5 minutes";
+    $this->cache_time = "30 seconds";
   }
   
   /**
@@ -306,6 +306,7 @@ class os_sv_list extends os_boxes_default {
 
       $block['content'] = "<div id='box-${delta}-page' data-page='${page_num}' data-delta='${delta}' class='${class}'>${content}</div>${pager}{$more}";
       $this->setCache($block['content']);
+      dpm('not_cache');
     }
     else {
       dpm('cached');
