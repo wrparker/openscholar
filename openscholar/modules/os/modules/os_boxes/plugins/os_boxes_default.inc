@@ -27,6 +27,11 @@ abstract class os_boxes_default extends boxes_box {
   protected $cache_id;
 
   /**
+   * Holds the unix time stamp until when the plugin suppose to be cached.
+   */
+  protected $cache_time;
+
+  /**
    * Given an embed type, return a label
    */
   public function embed_label($type) {
@@ -160,20 +165,20 @@ abstract class os_boxes_default extends boxes_box {
 
   /**
    * Set the cache for the next time.
-   */
-  protected function setCache($cache) {
-    cache_set($this->cache_id, $cache);
-  }
-
-  /**
-   * Caching JS elements relate to the plugin.
    *
+   * @param $cache
+   *  The information we want to cache.
    * @param $js
-   *  Serialized array of JS.
+   *  The assets of the js. Optional.
    */
-  protected function setAssetsCache($js) {
-    $cache_id = 'assets:' . $this->cache_id;
-    cache_set($cache_id, serialize($js));
+  protected function setCache($cache, $js = NULL) {
+    $expire = $this->cache_time ? $this->cache_time : CACHE_PERMANENT;
+    cache_set($this->cache_id, $cache, $expire);
+
+    if ($js) {
+      $cache_id = 'assets:' . $this->cache_id;
+      cache_set($cache_id, serialize($js), $expire);
+    }
   }
 
   /**
