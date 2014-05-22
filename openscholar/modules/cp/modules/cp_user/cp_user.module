@@ -394,10 +394,11 @@ function cp_user_og_ui_admin_permissions($variables) {
  * Implements hook_form_FORM_ID_alter().
  */
 function cp_user_form_og_ui_admin_permissions_alter(&$form, &$form_state) {
-  if ($vsite = vsite_get_vsite()) {
+  if (!$vsite = vsite_get_vsite()) {
     // Outside if a VSite context.
     return;
   }
+
 
   $item = menu_get_item();
   if (strpos($item['path'], 'admin/') === 0) {
@@ -413,7 +414,9 @@ function cp_user_form_og_ui_admin_permissions_alter(&$form, &$form_state) {
   $form['hidden_permissions']['#tree'] = TRUE;
 
   // @todo: Populate this variable.
-  $hidden_permissions = array();
+  $hidden_permissions = array(
+    'run og task',
+  );
 
   $bundle = $vsite->group->type;
   $system_roles = array(
@@ -436,8 +439,9 @@ function cp_user_form_og_ui_admin_permissions_alter(&$form, &$form_state) {
   // Get the roles' permissions from the default group.
   $roles_permissions = og_role_permissions($rids);
 
-  foreach ($roles_permissions as $default_rid => $permissions) {
-    $role_name = $default_roles[$default_rid];
+  dpm($group_roles);
+
+  foreach ($roles_permissions as $role_name => $permissions) {
     if (!in_array($role_name, $system_roles)) {
       // Not a system role.
       continue;
