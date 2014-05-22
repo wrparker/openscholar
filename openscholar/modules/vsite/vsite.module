@@ -2658,6 +2658,10 @@ function vsite_taxonomy_term_presave($term) {
  * Validate handler; Prevent duplicate aliases.
  */
 function vsite_form_alias_validate($form, &$form_state) {
+  if (!empty($form_state['term']) && $form_state['triggering_element']['#type'] == 'submit' && $form_state['triggering_element']['#value'] == 'Delete') {
+    return;
+  }
+
   if (!empty($form['#entity_type'])) {
     $entity_type = $form['#entity_type'];
   }
