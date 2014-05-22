@@ -2149,7 +2149,7 @@ function vsite_vsite_delete_request_form($form, &$form_state) {
   $form['message'] = array(
     '#markup' => t('Please provide a reason for deleting this website. We will process this request as soon as possible.'),
   );
-  $form['request'] = array(
+  $form['reason'] = array(
     '#type' => 'textarea',
     '#required' => TRUE,
   );
@@ -2390,6 +2390,7 @@ function vsite_vsite_delete_request_submit($form, &$form_state) {
   // Save both users and all form values for email composition.
   $values = $form_state['values'];
   $values['user'] = $user;
+  $values['node'] = $form_state['build_info']['args'][0];
 
   // Send the e-mail in the requested user language.
   drupal_mail('vsite', 'vsite_delete', $to, $language, $values, $user->mail);
@@ -2441,8 +2442,17 @@ function vsite_mail($key, &$message, $params){
       break;
 
     case 'vsite_delete' :
-      $reason = $params['reason'];
+      $reason = check_plain($params['reason']);
+      $node = $params['node'];
+      $user = $params['user'];
+
+      $message['body'][] = t('The user !user asked to delete the site "!site".', array('!user' => $user->name, '!site' => $node->title));
       $message['body'][] = t('The reason for the delete request was: "!reason".', array('!reason' => $reason));
+      $message['body'][] = t('Please review the request and if approved delete the site via !url.',
+        array('!url' => url('node/' . $node->nid . '/delete', array(
+          'absolute' => TRUE,
+          'language' => $language,
+        ))));
       break;
   }
 }
