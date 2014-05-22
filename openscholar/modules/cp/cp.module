@@ -506,6 +506,9 @@ function cp_cp_settings() {
         '#access' => user_access('administer varnish'),
       ),
     );
+    if ($vsite = vsite_get_vsite()) {
+    	$settings['cp_clear_cache']['form']['#access'] = og_user_access('node', $vsite->group->nid, 'clear site cache', NULL, FALSE, TRUE);
+    }
   }
 
   return $settings;
@@ -867,4 +870,16 @@ function cp_module_implements_alter(&$implementations, $hook) {
   $group = $implementations['cp'];
   unset($implementations['cp']);
   $implementations['cp'] = $group;
+}
+
+/**
+ * Implements hook_og_permission().
+ */
+function cp_og_permission() {
+  return array(
+    'clear site cache' => array(
+      'title' => t('Clear site cache'),
+      'description' => t('Allow the user to clear the site cache for this site.'),
+    ),
+  );
 }

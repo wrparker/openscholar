@@ -378,7 +378,7 @@ line-height: 24px;
 font-size: 3em;
 color: #818181;
 display: block;
-margin: 77px auto;
+margin: 115px auto;
 text-align: center;
 font-weight: bold;
 }
@@ -546,6 +546,14 @@ padding-left:35px;
 #osactivity .time {float:left;color:#666;margin-right:5px;}
 
 
+
+
+.top-visited ul {
+	height:225px;
+	width: 380px;
+	overflow:auto;
+}
+
 #most-viewedpages,
 #most-viewedsites {
 	background:#F6f6f6;
@@ -554,11 +562,13 @@ margin-top: 3px;
 width: 368px;
 display:inline-block;
 vertical-align: top;
+font-size:12px;
 }
 
 #most-viewedpages a,
 #most-viewedsites a {
 	margin-right:8px;
+	font-size:1.2em;
 }
 
 #most-viewedsites {
