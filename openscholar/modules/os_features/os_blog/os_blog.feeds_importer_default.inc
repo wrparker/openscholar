@@ -49,11 +49,16 @@ function os_blog_feeds_importer_default() {
             'unique' => FALSE,
           ),
           1 => array(
+            'source' => 'Date',
+            'target' => 'field_blog_date:start',
+            'unique' => FALSE,
+          ),
+          2 => array(
             'source' => 'Body',
             'target' => 'body',
             'unique' => FALSE,
           ),
-          2 => array(
+          3 => array(
             'source' => 'Files',
             'target' => 'file',
             'unique' => FALSE,

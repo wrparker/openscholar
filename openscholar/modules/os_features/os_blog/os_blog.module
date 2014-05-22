@@ -100,3 +100,15 @@ function os_blog_os_widget_alter(&$widget) {
     $widget['info'] = 'Blog Archive';
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_blog_form_node_form_alter(&$form, &$form_state) {
+  if ($form['#node']->type != 'blog') {
+    return;
+  }
+
+  // Move the blog date field under the title.
+  $form['field_blog_date']['#weight'] = 0;
+}
