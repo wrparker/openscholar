@@ -751,7 +751,14 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
   unset($form['token_tree']);
 
   // Default value of the From field should be the author of the event's e-mail
-  $from_default_value = $wrapper->author->mail->value();
+  // in case it hasn't been changed yet (if it hasn't been changed yet, the email
+  // will be set by default as the site owner email address).
+  if ($form['settings']['from_address']['#default_value'] == variable_get('site_mail')) {
+    $from_default_value = $wrapper->author->mail->value();
+  }
+  else {
+    $from_default_value = $form['settings']['from_address']['#default_value'];
+  }
 
   $form['status']['#title'] = t('Enable registrations');
   $form['status']['#description'] = t('Users must register their attendance in advance.');
@@ -821,6 +828,20 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
   $form['reminder']['#weight'] = 9;
   $form['scheduling']['#weight'] = 10;
   $form['save']['#weight'] = 11;
+
+  // Add handler to populate the "from_address" field in the form with the value
+  // submitted in the "from" field. This is done since the registration module needs
+  // the email value to be in the "settings" element which is given a
+  // "#access = FALSE".
+  $form['#validate'][] = '_os_events_update_from_address';
+}
+
+/**
+ * Helper function; Populates the settings of the registration with the "from"
+ * email address.
+ */
+function _os_events_update_from_address(&$form, &$form_state) {
+  $form_state['values']['settings']['from_address'] = $form_state['values']['from'];
 }
 
 /**
