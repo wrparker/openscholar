@@ -115,7 +115,7 @@ abstract class os_boxes_default extends boxes_box {
    * @return String
    *  The cache ID string.
    */
-  protected function getCacheID($bundle, $page = NULL) {
+  protected function setCacheID($bundle, $page = NULL) {
     if (module_exists('vsite') && !$vsite = vsite_get_vsite()) {
       return;
     }
