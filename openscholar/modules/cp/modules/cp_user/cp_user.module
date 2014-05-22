@@ -394,13 +394,67 @@ function cp_user_og_ui_admin_permissions($variables) {
  * Implements hook_form_FORM_ID_alter().
  */
 function cp_user_form_og_ui_admin_permissions_alter(&$form, &$form_state) {
-  $form['#validate'][] = 'cp_user_og_ui_admin_permissions_validate';
+  if ($vsite = vsite_get_vsite()) {
+    // Outside if a VSite context.
+    return;
+  }
+
+  $item = menu_get_item();
+  if (strpos($item['path'], 'admin/') === 0) {
+    // Inside the admin, use OG's theme function.
+    return;
+  }
+
+  if (og_is_group_default_access('node', $vsite->id)) {
+    // Group is using default permissions.
+    return;
+  }
 
   $form['hidden_permissions']['#tree'] = TRUE;
-  $form['hidden_permissions'][6]['run og tasks'] = array(
-    '#type' => 'value',
-    '#value' => TRUE,
+
+  // @todo: Populate this variable.
+  $hidden_permissions = array();
+
+  $bundle = $vsite->group->type;
+  $system_roles = array(
+    'vsite user',
+    'vsite admin',
+    'content editor',
   );
+
+  $group_roles = og_roles('node', $bundle, $vsite->id);
+  $default_roles = og_roles('node', $bundle);
+
+  $rids = array();
+  // Iterate over the default roles.
+  foreach ($default_roles as $rid => $name) {
+    if (in_array($name, $system_roles)) {
+      $rids[$name] = $rid;
+    }
+  }
+
+  // Get the roles' permissions from the default group.
+  $roles_permissions = og_role_permissions($rids);
+
+  foreach ($roles_permissions as $default_rid => $permissions) {
+    $role_name = $default_roles[$default_rid];
+    if (!in_array($role_name, $system_roles)) {
+      // Not a system role.
+      continue;
+    }
+
+    // Get the role ID in the group role.
+    $group_rid = array_search($role_name, $group_roles);
+
+    foreach ($hidden_permissions as $hidden_permission => $value) {
+      $form['hidden_permissions'][$group_rid][$hidden_permission] = array(
+        '#type' => 'value',
+        '#value' => $value,
+      );
+    }
+  }
+
+  $form['#validate'][] = 'cp_user_og_ui_admin_permissions_validate';
 }
 
 /**
