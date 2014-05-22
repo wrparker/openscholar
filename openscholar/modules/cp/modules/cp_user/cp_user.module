@@ -394,53 +394,27 @@ function cp_user_og_ui_admin_permissions($variables) {
  * Implements hook_form_FORM_ID_alter().
  */
 function cp_user_form_og_ui_admin_permissions_alter(&$form, &$form_state) {
-  // Hold the permissions the user doesn't have access to.
-  $allowed_permissions = array();
-
-  // In addition to CRUD permissions, the permission 'Change theme' is the only
-  // non-CRUD permission that should be displayed on the list.
-  foreach (vsite_get_os_override_permissions() as $permission) {
-    $allowed_permissions[$permission] = 'general';
-  }
-  $allowed_permissions['change theme'] = 'general';
-  $allowed_permissions['administer taxonomy'] = 'general';
-  $allowed_permissions['edit terms'] = 'general';
-  $allowed_permissions['delete terms'] = 'general';
-
-  foreach (os_get_bundles_per_app(array(OS_PUBLIC_APP, OS_PRIVATE_APP)) as $app_name => $bundles) {
-    foreach (array_keys($bundles) as $bundle) {
-      // Get bundle permissions with their related app name.
-      $bundle_permissions = array_fill_keys(array_keys(og_list_permissions($bundle)), $app_name);
-
-      // Merge bundle permissions to all permissions.
-      $allowed_permissions = array_merge($allowed_permissions, $bundle_permissions);
-    }
-  }
-
   $form['#validate'][] = 'cp_user_og_ui_admin_permissions_validate';
+
+  $form['hidden_permissions']['#tree'] = TRUE;
+  $form['hidden_permissions'][6]['run og tasks'] = array(
+    '#type' => 'value',
+    '#value' => TRUE,
+  );
 }
 
 /**
  * Validate handler; Add the missing permissions.
  */
 function cp_user_og_ui_admin_permissions_validate($form, &$form_state) {
-  if (user_access('administer permissions')) {
-    // The user own the permission to set the permissions as he want. No need
-    // the populate the permissions.
+  if (empty($form_state['values']['hidden_permissions'])) {
+    // No permissions are hidden.
     return;
   }
 
-  foreach ($form_state['values'] as $rid => $permissions) {
-    if (!is_numeric($rid)) {
-      continue;
-    }
-
-    foreach ($permissions as $permission => $selected) {
-
-      if ($selected) {
-        // The permission was checked. No need for further checking.
-        continue;
-      }
+  foreach ($form_state['values']['hidden_permissions'] as $rid => $permissions) {
+    foreach ($permissions as $permission => $value) {
+      $form_state['values'][$rid][$permission] = $value;
     }
   }
 }
