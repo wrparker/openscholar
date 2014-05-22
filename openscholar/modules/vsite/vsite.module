@@ -587,7 +587,7 @@ function vsite_node_access($node, $op, $account) {
 
     // Handle 'delete' cases:
     case 'delete':
-      if (og_is_group_type('node', $node->type)) {
+      if (!og_is_group_type('node', $node->type)) {
         // Ignore deletion of non-groups.
         return NODE_ACCESS_IGNORE;
       }
