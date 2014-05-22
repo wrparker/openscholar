@@ -2181,7 +2181,7 @@ function vsite_delete_request_access($node) {
  *
  * @return contact_page
  */
-function vsite_site_contact(){
+function vsite_site_contact() {
   if (! ($space = spaces_get_space()) || ! ($user = user_load($space->group->uid))) {
     return MENU_ACCESS_DENIED;
   }
@@ -2320,7 +2320,7 @@ function vsite_contact_mail_owner($form, &$form_state, $recipient){
 /**
  * Processes the personal contact page form submission.
  */
-function vsite_contact_mail_owner_submit($form, &$form_state){
+function vsite_contact_mail_owner_submit($form, &$form_state) {
   global $user, $language;
 
   $account = $form_state['values']['recipient'];
