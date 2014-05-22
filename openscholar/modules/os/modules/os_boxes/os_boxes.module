@@ -154,15 +154,15 @@ function os_boxes_get_boxes_plugins($name = NULL) {
     ctools_include('plugins');
     $boxes = ctools_get_plugins('boxes', 'plugins');
     drupal_alter('boxes_plugins', $boxes);
-    
+
     unset($boxes['twitter']);
   }
-    
-  
+
+
   if (isset($name)) {
     return isset($boxes[$name]) ? $boxes[$name] : FALSE;
   }
-  
+
   return $boxes;
 }
 
@@ -564,10 +564,11 @@ function os_boxes_node_update($node) {
 }
 
 /**
- * Invalidating the ache for the vsite.
+ * Invalidating the boxes cache of the VSite.
  *
- * @pram $node
- *  The node object which got affected by create/delete/update action.
+ * @param $node
+ *  The node object which got affected by CRUD operation or widget settings
+ *  change.
  */
 function os_boxes_invalidate_cache($node) {
   $wrapper = entity_metadata_wrapper('node', $node);
