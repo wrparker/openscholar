@@ -130,14 +130,22 @@ abstract class os_boxes_default extends boxes_box {
    * Retrieve the cache.
    */
   protected function getCache() {
-    if ($cache = cache_get($this->cache_id)) {
-      if ($js_cache = cache_get('assets:' . $this->cache_id)) {
-        $assets = unserialize($js_cache->data);
-        $this->addAssets($assets);
-      }
-
-      return $cache->data;
+    if (!$cache = cache_get($this->cache_id)) {
+      // No cache exists.
+      return;
     }
+
+    if ($cache->expire < REQUEST_TIME) {
+      // Cache object was expired.
+      return;
+    }
+
+    if ($js_cache = cache_get('assets:' . $this->cache_id)) {
+      $assets = unserialize($js_cache->data);
+      $this->addAssets($assets);
+    }
+
+    return $cache->data;
   }
 
   /**
