@@ -879,7 +879,7 @@ function os_pages_alias_preview_ajax() {
  * @param $alias
  *  The alias to modify if needed.
  * @param array $context
- *   An associative array of additional options.
+ *  An associative array of additional options.
  *
  * @see pathauto_alias_uniquify()
  */
