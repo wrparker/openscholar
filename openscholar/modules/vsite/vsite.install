@@ -635,3 +635,10 @@ function vsite_update_7023() {
     og_role_grant_permissions($rid, $permissions);
   }
 }
+
+/**
+ * Give support team and administrators vsite delete privileges
+ */
+function vsite_update_7024() {
+  features_revert(array('vsite' => array('user_permission')));
+}
