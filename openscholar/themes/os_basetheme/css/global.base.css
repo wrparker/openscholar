@@ -142,7 +142,7 @@ h1.node-title {
 .node-teaser .field-name-body h2,
 .node-teaser .field-name-body h3,
 .node-teaser .field-name-body h4 {
-	font-size:1em;
+	font-size:1em !important;
 }
 
 .sub_title {
@@ -920,8 +920,10 @@ header[role=banner],
 span[style*="float: left;"] iframe {
 	padding-right:15px;
 	}
-.lt-ie9	span[style*="FLOAT: RIGHT;"] iframe,
-span[style*="float: right;"] iframe {
+	
+	
+.lt-ie9	span[style*="FLOAT:"][style*="RIGHT;"] iframe,
+span[style*="float:"][style*="right;"] iframe {
 	padding-left:15px;
 	}
 

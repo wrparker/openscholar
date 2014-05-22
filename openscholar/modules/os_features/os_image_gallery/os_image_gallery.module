@@ -252,7 +252,8 @@ function os_image_gallery_theme($existing, $type, $theme, $path) {
  * Theme function for thumbnails of flash objects.  
  */
 function theme_os_image_gallery_file_field_inline($variables) {
-  $img = $variables['element']['#embed']->thumbnail_url;
+  $embed = (array)$variables['element']['#embed'];
+  $img = $embed['thumbnail_url'];
   $clear = drupal_get_path('module', 'os_image_gallery') . '/trans.gif';
   
   $attributes = array('style' => "background: url('$img') no-repeat center; background-size: auto 100%;");
