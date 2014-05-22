@@ -128,6 +128,9 @@ abstract class os_boxes_default extends boxes_box {
 
   /**
    * Retrieve the cache.
+   *
+   * @return
+   *   The cached data, or NULL if no cache exists or is expired.
    */
   protected function getCache() {
     if (!$cache = cache_get($this->cache_id)) {
