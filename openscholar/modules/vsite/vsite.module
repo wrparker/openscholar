@@ -415,8 +415,7 @@ function vsite_alias_has_purl_prefix($alias, $vsite_id) {
  */
 function vsite_form_node_delete_confirm_alter(&$form, $form_state) {
   $node = $form['#node'];
-  $group_types = array_keys(array_intersect(module_invoke_all('vsite_og_node_type_info'), array('group')));
-  if (!in_array($node->type, $group_types)) {
+  if (!og_is_group_type('node', $node->type)) {
     // Not a group node.
     return;
   }
@@ -568,16 +567,13 @@ function vsite_group_default_homepage_value($entity_type, $entity, $field, $inst
  * Deny access to deleting vsite for non-privileged user.
  */
 function vsite_node_access($node, $op, $account) {
-  $group_types = array_keys(array_intersect(module_invoke_all('vsite_og_node_type_info'), array('group')));
-
   switch ($op) {
     // Handle 'create' cases:
     case 'create':
       if (user_access('administer group')) {
         return NODE_ACCESS_IGNORE;
       }
-
-      if (in_array($node, $group_types)) {
+      if (og_is_group_type('node', $node)) {
         // Deny direct access to creating groups.
         return NODE_ACCESS_DENY;
       }
@@ -591,7 +587,7 @@ function vsite_node_access($node, $op, $account) {
 
     // Handle 'delete' cases:
     case 'delete':
-      if (!in_array($node->type, $group_types)) {
+      if (og_is_group_type('node', $node->type)) {
         // Ignore deletion of non-groups.
         return NODE_ACCESS_IGNORE;
       }
@@ -2100,19 +2096,28 @@ function vsite_menu(){
     'page callback' => 'vsite_delete_request',
     'page arguments' => array(2, 3),
     'access callback' => 'vsite_delete_request_access',
-    'access arguments' => array(2, 3),
+    'access arguments' => array(2),
     'description' => t('Delete VSite'),
   );
 
   return $items;
 }
 
+/**
+ * Page callback; Sending VSite delete request.
+ *
+ * @param $node
+ *   VSite node to delete.
+ * @param $ajax
+ *   Either AJAX or not.
+ *
+ * @return array|mixed
+ *   Nothing in case of AJAX (print and exit), form otherwise.
+ */
 function vsite_delete_request($node, $ajax) {
   if (!$ajax) {
     return drupal_get_form('vsite_vsite_delete_request_form');
   }
-
-  $commands = array();
 
   ctools_include('modal');
   ctools_include('ajax');
@@ -2135,6 +2140,9 @@ function vsite_delete_request($node, $ajax) {
   drupal_exit;
 }
 
+/**
+ * Delete request form.
+ */
 function vsite_vsite_delete_request_form($form, &$form_state) {
   $form = array();
 
@@ -2160,8 +2168,11 @@ function vsite_vsite_delete_request_form($form, &$form_state) {
   return $form;
 }
 
-function vsite_delete_request_access($vsite) {
-  return TRUE;
+/**
+ * Access callback.
+ */
+function vsite_delete_request_access($node) {
+  return node_access('delete', $node);
 }
 
 /**
@@ -2357,7 +2368,7 @@ function vsite_contact_mail_owner_submit($form, &$form_state){
 }
 
 /**
- * Processes the personal contact page form submission.
+ * Processes the site delete request form.
  */
 function vsite_vsite_delete_request_submit($form, &$form_state) {
   global $user, $language;
@@ -2367,6 +2378,10 @@ function vsite_vsite_delete_request_submit($form, &$form_state) {
     $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
     return;
   }
+  drupal_set_message(t('The delete request has been sent.'));
+
+  $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
+ // $form_state['ajax_commands'][] = ctools_modal_command_reload();
 
   if ($user->uid != 0) {
     $from = $user->mail;
@@ -2378,7 +2393,7 @@ function vsite_vsite_delete_request_submit($form, &$form_state) {
   $values['vsite'] = $space;
 
   // Send the e-mail in the requested user language.
-  drupal_mail('vsite', 'user_mail', $to, user_preferred_language($account), $values, $from);
+  drupal_mail('vsite', 'user_mail', $to, user_preferred_language($user), $values, $from);
 
   watchdog('mail', '%name-from request delete of vsite %vsite.', array(
     '%name-from' => $user->name,
@@ -2396,13 +2411,7 @@ function vsite_site_contact_access(){
   if (! ($space = spaces_get_space()) || ! ($user = user_load($space->group->uid))) {
     return FALSE;
   }
-
   return TRUE;
-  /*
-  $contact_anon = $vsite->controllers->variable->get('vsite_users_contact_anonymous');
-  // there was a contact form var here, but I don't know where it's set from
-  return ($contact_anon !== 0 || user_is_logged_in());
-  */
 }
 
 /**
@@ -2436,6 +2445,7 @@ function vsite_mail($key, &$message, $params){
       // won't be sent to the site email (held in the site_mail variable).
       $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
       break;
+
     case 'vsite_delete' :
       $reason = $params['reason'];
       $message['body'][] = t('The reason for the delete request was: "!reason".', array('!reason' => $reason));
