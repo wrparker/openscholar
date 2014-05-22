@@ -14,7 +14,7 @@ class os_sv_list extends os_boxes_default {
     parent::__construct();
     $this->entity_type = $this->bundle = NULL;
 
-    $this->cache_time = "30 seconds";
+    $this->cache_time = "5 minutes";
   }
   
   /**
@@ -224,15 +224,13 @@ class os_sv_list extends os_boxes_default {
     $bundle = ($this->options['content_type'] != 'all') ? $this->options['content_type'] : NULL;
     $block = parent::render();
 
-    drupal_add_library('system', 'drupal.ajax');
-    drupal_add_js(drupal_get_path('module', 'os_sv_list'). '/os_sv_list_display.js');
     $page_num = (isset($_GET['page'])) ? $_GET['page'] : 0;
 
     $this->options += $this->options_defaults();
     $page = 0;
     $ids = $this->get_ids($page_num, $page);
 
-    $this->getCacheID($bundle, $page_num);
+    $this->setCacheID($bundle, $page_num);
     if (!$block['content'] = $this->getCache()) {
       $this->_set_plugins($this->entity_type, $bundle);
 
@@ -261,6 +259,9 @@ class os_sv_list extends os_boxes_default {
       else {
         $pager = '';
       }
+
+      drupal_add_library('system', 'drupal.ajax');
+      drupal_add_js(drupal_get_path('module', 'os_sv_list'). '/os_sv_list_display.js');
 
       // Truncate items and prepare the more link.
       $more = '';
@@ -304,12 +305,17 @@ class os_sv_list extends os_boxes_default {
         'sv-grid-' . $this->options['grid_columns'],
       )));
 
+      $assets = array(
+        'library' => array(
+          'system', 'drupal.ajax',
+        ),
+        'js' => array(
+          drupal_get_path('module', 'os_sv_list') . '/os_sv_list_display.js',
+        ),
+      );
+
       $block['content'] = "<div id='box-${delta}-page' data-page='${page_num}' data-delta='${delta}' class='${class}'>${content}</div>${pager}{$more}";
-      $this->setCache($block['content']);
-      dpm('not_cache');
-    }
-    else {
-      dpm('cached');
+      $this->setCache($block['content'], $assets);
     }
 
     return $block;
@@ -324,9 +330,7 @@ class os_sv_list extends os_boxes_default {
       $query->propertyCondition('type', $this->options['content_type']);
       //any special hook here?
     }
-    
-    
-    
+
     //pager
     if ($this->options['pager'] && is_int($page)) {
       $query->pager($this->options['number_of_items']);
