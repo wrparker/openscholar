@@ -426,11 +426,11 @@ function _os_pages_node_form_summary_submit($form, &$form_state) {
  * Helper function; Checks if a given alias is already used.
  *
  * @param $purl
- *  The purl of the VSite, i.e "john".
+ *  The purl of the VSite, for example "john".
  * @param $path
  *  The path fo the page.
  * @param $source
- *  The source of the new page, i.e node/%nid
+ *  The source of the new page, e.g. node/%nid
  *
  * @return bool
  *  Returns TRUE if the alias is taken. FALSE otherwise.
@@ -878,7 +878,6 @@ function os_pages_alias_preview_ajax() {
  *
  * @param $alias
  *  The alias to modify if needed.
- *
  * @param array $context
  *   An associative array of additional options.
  *
