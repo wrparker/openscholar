@@ -389,7 +389,7 @@ function os_pages_translated_menu_link_alter(&$link, $map) {
     else {
       // children check
       $visible_children = _os_pages_get_link_children($link, true);
-      $link['has_children'] = !empty($visible_children);
+      $link['has_children'] = (int) !empty($visible_children);
     }
   }
 }
