@@ -62,6 +62,24 @@ Feature:
      When I visit "john/publications"
      Then I should not see the link "Links" under "ctools-dropdown-link-wrapper"
 
+  @api @last
+  Scenario: Testing vsite owner cannot delete its own vsite, only to request a delete.
+    Given I am logging in as "john"
+    When I visit "user"
+    And I should see "Delete site"
+    And I click "Delete site"
+    Then I should see "Delete website request"
+    And I should not see ""
+
+  @api @wip
+  Scenario: Testing support team can delete vsite.
+    Given I am logging in as "bill"
+    When I visit "user"
+    And I should see "Delete site"
+    And I click "Delete site"
+    Then I should see "Delete website request"
+    And I should not see ""
+
 # content editor
   @api @last
   Scenario: Testing content editor can edit any content on his group.
