@@ -2172,7 +2172,8 @@ function vsite_vsite_delete_request_form($form, &$form_state) {
  * Access callback.
  */
 function vsite_delete_request_access($node) {
-  return node_access('delete', $node);
+  global $user;
+  return og_user_access_entity('administer group', 'node', $node, $user);
 }
 
 /**
