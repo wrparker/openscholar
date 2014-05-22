@@ -71,14 +71,13 @@ Feature:
     Then I should see "Delete website request"
     And I should not see ""
 
-  @api @wip
-  Scenario: Testing support team can delete vsite.
-    Given I am logging in as "bill"
-    When I visit "user"
-    And I should see "Delete site"
-    And I click "Delete site"
-    Then I should see "Delete website request"
-    And I should not see ""
+  @api @momo
+  Scenario: Testing admin can delete vsite.
+    Given I am logging in as "admin"
+     When I visit "users/john"
+      And I should see "Delete site"
+      And I click "Delete site"
+     Then I should not see "Delete website request"
 
 # content editor
   @api @last
