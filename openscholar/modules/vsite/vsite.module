@@ -2384,23 +2384,16 @@ function vsite_vsite_delete_request_submit($form, &$form_state) {
   $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
  // $form_state['ajax_commands'][] = ctools_modal_command_reload();
 
-  if ($user->uid != 0) {
-    $from = $user->mail;
-  }
+  // Send to admin
+  $to = variable_get('site_mail', ini_get('sendmail_from'));
 
   // Save both users and all form values for email composition.
   $values = $form_state['values'];
   $values['user'] = $user;
-  $values['vsite'] = $space;
 
   // Send the e-mail in the requested user language.
-  drupal_mail('vsite', 'user_mail', $to, user_preferred_language($user), $values, $from);
-
-  watchdog('mail', '%name-from request delete of vsite %vsite.', array(
-    '%name-from' => $user->name,
-    '%vsite' => $vsite,
-
-  ));
+  drupal_mail('vsite', 'vsite_delete', $to, $language, $values, $user->mail);
+  return;
 }
 
 /**
