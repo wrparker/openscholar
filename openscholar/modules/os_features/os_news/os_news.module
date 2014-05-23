@@ -140,3 +140,23 @@ function os_news_field_attach_load($entity_type, $entities, $view_mode) {
   }
 }
 
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Adds additional display setting(s) for the os_news app.
+ */
+function os_news_form_cp_app_settings_form_alter(&$form, &$form_state) {
+  if ($form['#feature'] != 'os_news') {
+    return;
+  }
+  // Form element for enabling main photo caption
+  $form['os_news_enable_photo_caption'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable photo captions'),
+    '#default_value' => variable_get('os_news_enable_photo_caption', FALSE),
+    '#description' => t('If checked, the main photo associated with each news item can include a caption.'),
+    '#weight' => -99,
+  );
+
+}
+

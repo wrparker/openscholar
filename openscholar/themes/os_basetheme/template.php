@@ -256,3 +256,60 @@ function os_basetheme_process_pager_link($variables) {
 function os_basetheme_theme_registry_alter(&$theme_registry) {
   array_unshift($theme_registry['image_formatter']['preprocess functions'], "os_profiles_preprocess_image_formatter");
 }
+
+/**
+ * Implements hook_field()
+ * Output news photo field as figure with figcaption for caption
+ */
+function os_basetheme_field__field_photo($variables) {
+  $output = "";
+ // Render the label, if it's not hidden.
+  if (!$variables['label_hidden']) {
+    $output .= '<h2 class="field-label"' . $variables['title_attributes'] . '>' . $variables['label'] . ':&nbsp;</h2>';
+  }
+
+  // Render the items
+  $output .= '<div class="field-items"' . $variables['content_attributes'] . '>';
+
+  foreach ($variables['items'] as $delta => $item) {
+    $classes = 'field-item ' . ($delta % 2 ? 'odd' : 'even');
+    $output .= '<figure class="clearfix ' . $classes . '"' . $variables['item_attributes'][$delta] .'>';
+    $output .= drupal_render($item);
+
+    // add caption if they've been enabled
+	if (isset($item['#item']['os_file_description']) && variable_get('os_news_enable_photo_caption', FALSE) && $variables['field_view_mode'] == 'full') {
+      $styles = get_themed_image_width($item) ? 'style="width:' . get_themed_image_width($item) . 'px"' : '';
+      $output .= '<figcaption class="caption full-caption"' . $styles .'>' . $item['#item']['os_file_description']['und'][0]['value'] . '</figcaption>';
+    }
+    $output .= '</figure>';
+  }
+
+  $output .= '</div>';
+
+  // Render the top-level wrapper element.
+  $tag = $variables['tag'];
+  $output = "<$tag class=\"" . $variables['classes'] . '"' . $variables['attributes'] . '>' . $output . "</$tag>";
+
+  return $output;
+}
+
+/**
+ * Helper function to get width of image
+ */
+function get_themed_image_width ($image) {
+  // let's see if there's image style info we can use
+  $image_style = image_style_load($image['#image_style']);
+  $width = "";
+  foreach ($image_style['effects'] as $delta => $effect) {
+	if (isset($effect['data']['width'])) {
+	  $width = $effect['data']['width'];
+	}
+  }
+
+  // otherwise, grab it from the rendered HTML
+  if (!$width) {
+      preg_match('/< *img[^>]*width *= *["\']?([^"\']*)/i', $image['#children'], $matches);
+      $width = $matches[1];
+  }
+  return $width;
+}
