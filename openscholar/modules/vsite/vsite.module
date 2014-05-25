@@ -2160,8 +2160,7 @@ function vsite_vsite_delete_request_form($form, &$form_state) {
   );
 
   $form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => t('Cancel'),
+    '#markup' => l(t('Cancel'), "#",  array('attributes' => array('class' => 'ctools-close-modal'))),
   );
 
   $form['#submit'][] = 'vsite_vsite_delete_request_submit';
