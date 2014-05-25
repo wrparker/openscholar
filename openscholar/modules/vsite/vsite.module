@@ -2430,7 +2430,7 @@ function vsite_vsite_delete_request_submit($form, &$form_state) {
   // Send the e-mail in the requested user language.
   drupal_mail('vsite', 'vsite_delete', $to, $language, $values, $user->mail);
 
-  // Dismiss modal
+  // Dismiss modal.
   $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
 
   // Show message using AJAX.
