@@ -1615,23 +1615,62 @@ function vsite_load_user_sites($user_id) {
     $items = array();
     $items[] = l($node->title, $site->get_absolute_url());
     if (node_access('delete', $node)) {
-      $delete_link = array(
-        'data' => l(t('Delete site'), $site->get_absolute_url('node/' . $node->nid . '/delete')),
-        'class' => 'delete-link',
-      );
+      $delete_link = l(t('Delete site'), $site->get_absolute_url('node/' . $node->nid . '/delete'));
     }
     else {
-      $delete_link = array(
-        'data' => l(t('Delete site'), $site->get_absolute_url('vsite/delete/' . $node->nid . '/nojs'), array('attributes' => array('class' => 'ctools-use-modal'))),
+      $delete_link = vsite_delete_vsite_modal(array(
+        'text' => t('Delete site'),
+        'href' => $site->get_absolute_url('vsite/delete/' . $node->nid),
         'class' => 'delete-link',
-      );
+        'modal_settings' => array(
+          'modalSize' => array(
+            'type' => 'fixed',
+            'width' => 700,
+            'height' => 220,
+            'addWidth' => 0,
+            'addHeight' => 0,
+            'contentRight' => 0,
+            'contentBottom' => 0,
+          ),
+          'modalOptions' => array('opacity' => .6),
+          'animation' => 'fadeIn',
+        ),
+      ));
     }
-    $items[] = $delete_link;
+    $items[] = array(
+      'data' => $delete_link,
+      'class' => 'delete-link',
+    );
     // Prepare them for theme_list_item.
     $sites_array[] = theme('item_list', array('items' => $items, 'attributes' => array('class' => array('inline'))));
   }
 
   return $sites_array;
+}
+
+/**
+ * Utility function; create a text button to open a ctools modal.
+ *
+ * @param $info
+ *  Modal configuration array.
+ *
+ * @return string
+ *   Link button.
+ */
+function vsite_delete_vsite_modal($info) {
+  // Include the CTools tools that we need.
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_modal_add_js();
+
+  // Ctools modal settings.
+  $modal_settings = array(
+    $info['class'] => $info['modal_settings'],
+  );
+  drupal_add_js($modal_settings, 'setting');
+
+  $href = $info['href'] . '/nojs';
+  return ctools_modal_text_button($info['text'], $href, '', 'ctools-modal-' . $info['class']);
 }
 
 /**
@@ -2115,12 +2154,14 @@ function vsite_menu(){
  *   Nothing in case of AJAX (print and exit), form otherwise.
  */
 function vsite_delete_request($node, $ajax) {
+
   if (!$ajax) {
     return drupal_get_form('vsite_vsite_delete_request_form');
   }
 
   ctools_include('modal');
   ctools_include('ajax');
+  drupal_add_css(drupal_get_path('module', 'vsite') . '/css/vsite.css');
 
   $form_state = array(
     'title' => t('Delete website request'),
