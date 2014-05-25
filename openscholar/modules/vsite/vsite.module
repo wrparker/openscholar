@@ -2379,10 +2379,6 @@ function vsite_vsite_delete_request_submit($form, &$form_state) {
     $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
     return;
   }
-  drupal_set_message(t('The delete request has been sent.'));
-
-  $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
- // $form_state['ajax_commands'][] = ctools_modal_command_reload();
 
   // Send to admin
   $to = variable_get('site_mail', ini_get('sendmail_from'));
@@ -2394,7 +2390,19 @@ function vsite_vsite_delete_request_submit($form, &$form_state) {
 
   // Send the e-mail in the requested user language.
   drupal_mail('vsite', 'vsite_delete', $to, $language, $values, $user->mail);
-  return;
+
+  // Dismiss modal
+  $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
+
+  // Show message using AJAX.
+  // Add new message.
+  drupal_set_message(t('The delete request has been sent.'));
+
+  // Add status messages.
+  $form_state['ajax_commands'][] = ajax_command_before('#columns', theme('status_messages'));
+
+  // Clean messages.
+  drupal_get_messages();
 }
 
 /**
