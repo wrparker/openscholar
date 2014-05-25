@@ -1655,7 +1655,7 @@ function vsite_load_user_sites($user_id) {
  *  Modal configuration array.
  *
  * @return string
- *   Link button.
+ *  Link button.
  */
 function vsite_delete_vsite_modal($info) {
   // Include the CTools tools that we need.
@@ -2128,7 +2128,7 @@ function vsite_menu(){
     'access arguments' => array('access user profiles'),
   );
 
-  // VSite delete modal
+  // VSite delete modal.
   $items['vsite/delete/%node/%ctools_js'] = array(
     'type' => MENU_CALLBACK,
     'title' => t('Delete website request'),
@@ -2212,8 +2212,7 @@ function vsite_vsite_delete_request_form($form, &$form_state) {
  * Access callback.
  */
 function vsite_delete_request_access($node) {
-  global $user;
-  return og_user_access_entity('administer group', 'node', $node, $user);
+  return og_user_access_entity('administer group', 'node', $node);
 }
 
 /**
