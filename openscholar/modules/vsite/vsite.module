@@ -1652,10 +1652,10 @@ function vsite_load_user_sites($user_id) {
  * Utility function; create a text button to open a ctools modal.
  *
  * @param $info
- *  Modal configuration array.
+ *   Modal configuration array.
  *
  * @return string
- *  Link button.
+ *   Link button.
  */
 function vsite_delete_vsite_modal($info) {
   // Include the CTools tools that we need.
