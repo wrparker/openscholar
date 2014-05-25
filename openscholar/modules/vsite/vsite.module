@@ -2658,6 +2658,9 @@ function vsite_taxonomy_term_presave($term) {
  * Validate handler; Prevent duplicate aliases.
  */
 function vsite_form_alias_validate($form, &$form_state) {
+  // When deleting a term we are still validating the path alias as it is the
+  // still the same form as editing the term. Validation is not needed when a
+  // term is deleted.
   if (!empty($form_state['term']) && $form_state['triggering_element']['#type'] == 'submit' && $form_state['triggering_element']['#value'] == 'Delete') {
     return;
   }
