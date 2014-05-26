@@ -579,9 +579,11 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   $config = $source->importer->getConfig();
 
   // Get the mappings of the current importer.
+  $mappings_diff = array();
   $mappings = array();
   foreach ($config['processor']['config']['mappings'] as $mapping) {
-    $mappings[] = strtolower($mapping['source']);
+    $mappings_diff[] = strtolower($mapping['source']);
+    $mappings[] = $mapping['target'];
   }
 
   // Load the uploaded file and parse his headers.
@@ -602,56 +604,10 @@ function os_importer_verify_uploaded_file($form, $form_state) {
 
   // Check what columns are missing from the uploaded CSV file and display
   // message if needed.
-  if ($missing = array_diff($mappings, $header)) {
+  if ($missing = array_diff($mappings_diff, $header)) {
     $params = array('!missing' => theme('item_list', array('items' => $missing)));
     form_set_error('file', t('The next columns are missing in you CSV: !missing', $params));
   }
-
-  // Array of bundles with array of required fields. When a field is an array,
-  // that means it is required and have validation callback.
-  $bundles = array(
-    'blog' => array('title'),
-    'class' => array(
-      'title',
-      'semester' => array('validate_semester'),
-      'year' => array('validate_year'),
-    ),
-    'event' => array(
-      'title',
-      'end_date' => array('validate_end_date'),
-      'start_date' => array('validate_start_date'),
-    ),
-    'faq' => array('title'),
-    'feed' => array(
-      'title',
-      'url',
-    ),
-    'link' => array(
-      'title',
-      'url',
-    ),
-    'media_gallery' => array(
-      'title',
-      'rows' => array('validate_rows_cols'),
-      'columns' => array('validate_rows_cols'),
-    ),
-    'news' => array(
-      'title',
-      'date',
-    ),
-    'page' => array('title'),
-    'person' => array(
-      'first name',
-      'last name',
-    ),
-    'presentation' => array(
-      'title',
-      'date' => array('validate_date'),
-    ),
-    'software_project' => array('title'),
-  );
-
-  $fields = !empty($bundles[$form_state['type']]) ? $bundles[$form_state['type']] : array();
 
   // Iterate over the rows for field validation and removing empty rows.
   foreach ($rows as $key => $row) {
@@ -666,36 +622,26 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       continue;
     }
 
-    // Check if there are fields to validate.
-    if (!$fields) {
-      continue;
-    }
+    // Build the form values - break down the row.
+    $row_values = explode(",", $row);
 
-    // Validate row according to content type.
-    $values = array_combine($mappings, explode(',', $row));
-    foreach ($fields as $name => $field) {
-      // Check if field is required.
-      if (is_string($field) && empty($values[$field])) {
-        $params = array('@key' => $key, '@field' => $field);
-        form_set_error('file', t('Row number @key is missing the @field value.', $params));
+    $form_values = array();
+    foreach ($row_values as $delta => $value) {
+      if ($mappings[$delta] == 'title') {
+        $form_values[$mappings[$delta]] = $value;
       }
-      // Validate the field.
-      elseif (is_array($field)) {
-        // Create validation function's name, e.g os_importer_validate_semester.
-        $function = 'os_importer_' . reset($field);
-        $arguments = array(
-          $name,
-          $values[$name],
-          $key,
-        );
-
-        if (function_exists($function)){
-          $message = call_user_func_array($function, $arguments);
-          if ($message) {
-            form_set_error('file', t($message));
-          }
+      else {
+        $default_fields = _os_importer_default_field_structure();
+        if (!empty($form_values[$mappings[$delta]])) {
+          $form_values[$mappings[$delta]] = $default_fields[$mappings[$delta]] + array(
+            'value' => $value,
+          );
         }
       }
+    }
+
+    if (!$errors = _os_importer_validate_node($form_state['type'], $form_values)) {
+      return;
     }
   }
 
