@@ -655,7 +655,11 @@ function os_importer_verify_uploaded_file($form, $form_state) {
  */
 function os_importer_pre_validate(NodeValidate $nodeValidate) {
   $fields = $nodeValidate->getFields();
-  $fields['body'] = array('value' => $fields['body']);
+
+  if (in_array('body', array_keys($fields))) {
+    $fields['body'] = array('value' => $fields['body']);
+  }
+  
   $nodeValidate->setFields($fields);
 }
 
