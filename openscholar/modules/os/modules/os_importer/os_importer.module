@@ -622,26 +622,30 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       continue;
     }
 
+    $validator = new NodeValidate();
+    $validator
+      ->setBundle($form_state['type'])
+      ->setErrorLevel(0);
+
     // Build the form values - break down the row.
     $row_values = explode(",", $row);
 
-    $form_values = array();
     foreach ($row_values as $delta => $value) {
       if ($mappings[$delta] == 'title') {
-        $form_values[$mappings[$delta]] = $value;
+        $validator->setLabel($value);
       }
       else {
-        $default_fields = _os_importer_default_field_structure();
-        if (!empty($form_values[$mappings[$delta]])) {
-          $form_values[$mappings[$delta]] = $default_fields[$mappings[$delta]] + array(
-            'value' => $value,
-          );
-        }
+        $validator->addField($mappings[$delta], $value);
       }
     }
 
-    if (!$errors = _os_importer_validate_node($form_state['type'], $form_values)) {
-      return;
+    $validator->validate();
+
+    if ($errors = $validator->getErrors()) {
+      $params = array(
+        '!errors' => theme('item_list', array('items' => $errors,)),
+      );
+      form_set_error('', t('It seems there some validation problem: !errors', $params));
     }
   }
 
