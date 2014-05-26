@@ -420,6 +420,7 @@ function cp_user_form_og_ui_admin_permissions_alter(&$form, &$form_state) {
   $form['hidden_permissions']['#tree'] = TRUE;
 
   $allowed_permissions = cp_user_get_allowed_permissions();
+  $hidden_permissions = array();
 
   foreach (element_children($form['permission']) as $key) {
     if (is_numeric($key)) {
