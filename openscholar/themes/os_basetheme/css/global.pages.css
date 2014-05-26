@@ -1270,6 +1270,11 @@ LIST OF POSTS - PERSON TEASER IN SIDEBAR
 }
 
 
+.sidebar .block-boxes-os_sv_list_box .node.node-person.article.modified-in-os_profiles_process_node .pic-bio {
+ 	float:none;
+}
+
+
 
 .block-boxes-os_sv_list_box .node.node-news.node-promoted.article .field-type-image ~ .node-content {
 	display:block;

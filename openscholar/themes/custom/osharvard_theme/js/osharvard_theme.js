@@ -5,17 +5,3 @@
    // jQuery('.block-boxes-os_boxes_html:eq(4)').addClass('custhtml about');
   // });
   
-
-function equalHeight(group) {
-   tallest = 0;
-   group.each(function() {
-      thisHeight = jQuery(this).height();
-      if(thisHeight > tallest) {
-         tallest = thisHeight;
-      }
-   });
-   group.height(tallest);
-}
-jQuery(document).ready(function() {
-   equalHeight(jQuery("#top-five-wrapper .top-five"));
-});
