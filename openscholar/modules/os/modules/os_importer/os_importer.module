@@ -672,8 +672,15 @@ function os_importer_pre_validate(NodeValidate $nodeValidate) {
       );
 
       $nodeValidate->setError(t('The given value(%value) is not validate and should be one of %allowed-values', $params));
+    }
 
-      // Validate the year.
+    // Validate the year.
+    $year = $fields['field_offered_year:start'];
+    if (!is_numeric($year) || (is_numeric($year) && $year > 9999)) {
+      $params = array(
+        '%value' => $year,
+      );
+      $nodeValidate->setError(t('The year field is not valid value(%value). the value should be a year.', $params));
     }
   }
 
