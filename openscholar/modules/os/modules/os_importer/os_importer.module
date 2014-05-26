@@ -631,12 +631,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     $row_values = explode(",", $row);
 
     foreach ($row_values as $delta => $value) {
-      if ($mappings[$delta] == 'title') {
-        $validator->setLabel($value);
-      }
-      else {
-        $validator->addField($mappings[$delta], $value);
-      }
+      $validator->addField($mappings[$delta], $value);
     }
 
     $validator
