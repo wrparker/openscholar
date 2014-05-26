@@ -651,7 +651,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
 }
 
 /**
- * Node validate callback.
+ * Node validate pre-validation callback.
  */
 function os_importer_pre_validate(NodeValidate $nodeValidate) {
   $fields = $nodeValidate->getFields();
@@ -659,39 +659,25 @@ function os_importer_pre_validate(NodeValidate $nodeValidate) {
   if (in_array('body', array_keys($fields))) {
     $fields['body'] = array('value' => $fields['body']);
   }
-  
-  $nodeValidate->setFields($fields);
-}
 
-/**
- * Validate function for "Semester" value in a CSV for importing a class.
- *
- * @param $field
- *  The field we validate.
- * @param $value
- *  The value as given in the CSV row.
- * @param $row
- *  The row number in the CSV file.
- * @return string
- *  An error message if needed.
- */
-function os_importer_validate_semester($field, $value, $row) {
-  $allowed_values = array(
-    'N/A',
-    'Spring',
-    'Summer',
-    'Fall',
-    'Winter',
-  );
-  $params = array(
-    '@field' => $field,
-    '!semesters' => theme('item_list', array('items' => $allowed_values)),
-    '@row' => $row,
-  );
+  if ($nodeValidate->getBundle() == 'class') {
+    $info = field_info_field('field_semester');
 
-  if (!in_array($value, $allowed_values)) {
-    return t('The @field value in row @row is invalid. It should be one of the following: !semesters', $params);
+    // Validate the semester.
+    $allowed_values = $info['settings']['allowed_values'] + array('N/A' => 'N/A');
+    if (!in_array($fields['field_semester'], $allowed_values)) {
+      $params = array(
+        '%allowed-values' => implode(', ', $allowed_values),
+        '%value' => $fields['field_semester'],
+      );
+
+      $nodeValidate->setError(t('The given value(%value) is not validate and should be one of %allowed-values', $params));
+
+      // Validate the year.
+    }
   }
+
+  $nodeValidate->setFields($fields);
 }
 
 /**
