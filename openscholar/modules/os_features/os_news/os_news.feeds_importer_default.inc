@@ -68,6 +68,11 @@ function os_news_feeds_importer_default() {
             'target' => 'field_photo',
             'unique' => FALSE,
           ),
+          5 => array(
+            'source' => 'Files',
+            'target' => 'file',
+            'unique' => FALSE,
+          ),
         ),
         'update_existing' => '0',
         'input_format' => 'filtered_html',
