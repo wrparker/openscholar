@@ -64,8 +64,8 @@ function os_news_feeds_importer_default() {
             'unique' => FALSE,
           ),
           4 => array(
-            'source' => 'Files',
-            'target' => 'file',
+            'source' => 'News image',
+            'target' => 'field_photo',
             'unique' => FALSE,
           ),
         ),
