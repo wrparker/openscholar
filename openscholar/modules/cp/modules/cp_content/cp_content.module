@@ -152,3 +152,42 @@ function cp_content_batch_alter(&$batch) {
   // Update the entities batch to the entities of the current vsite.
   $arguments[0] = $ids;
 }
+
+/**
+ * Implements hook_action_info().
+ *
+ * Adds VBO operations to assign/remove taxonomy terms to nodes.
+ */
+function cp_content_action_info() {
+  return array(
+    'cp_content_assign_taxonomy' => array(
+      'type' => 'node',
+      'label' => t('Apply Taxonomy term'),
+      'configurable' => TRUE,
+      'triggers' => array('any'),
+    ),
+    'cp_content_remove_taxonomy' => array(
+      'type' => 'node',
+      'label' => t('Remove Taxonomy term'),
+      'configurable' => TRUE,
+      'triggers' => array('any'),
+    ),
+  );
+}
+
+function cp_content_assign_taxonomy_form($context) {
+  $form = array();
+  $form['taxonomy'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Apply Term to Content.'),
+  );
+
+  $vocabs = array_keys(taxonomy_vocabulary_get_names());
+
+  $form['taxonomy']['vocabulary'] = array(
+    '#type' => 'select',
+    '#options' => $vocabs,
+  );
+
+  return $form;
+}
