@@ -639,7 +639,9 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       }
     }
 
-    $validator->validate();
+    $validator
+      ->preValidateRegister('os_importer_pre_validate')
+      ->validate();
 
     if ($errors = $validator->getErrors()) {
       $params = array(
@@ -651,6 +653,15 @@ function os_importer_verify_uploaded_file($form, $form_state) {
 
   $new_file = file_save_data(implode("\n", $rows), $file->uri, FILE_EXISTS_REPLACE);
   $form_state['values']['file'] = $new_file->fid;
+}
+
+/**
+ * Node validate callback.
+ */
+function os_importer_pre_validate(NodeValidate $nodeValidate) {
+  $fields = $nodeValidate->getFields();
+  $fields['body'] = array('value' => $fields['body']);
+  $nodeValidate->setFields($fields);
 }
 
 /**
