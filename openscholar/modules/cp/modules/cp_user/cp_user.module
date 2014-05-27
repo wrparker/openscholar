@@ -306,7 +306,7 @@ function cp_user_og_ui_admin_permissions($variables) {
         // We must also unset all the checkboxes related to the permission, one
         // for each role, so they would not be rendered later.
         foreach (element_children($form['checkboxes']) as $rid) {
-        	unset($form['checkboxes'][$rid][$key]);
+          unset($form['checkboxes'][$rid][$key]);
         }
         continue;
     	}
@@ -413,9 +413,44 @@ function cp_user_form_og_ui_admin_permissions_alter(&$form, &$form_state) {
     return;
   }
 
-  $form['hidden_permissions']['#tree'] = TRUE;
-
   $allowed_permissions = cp_user_get_allowed_permissions();
+
+  $form['hidden_checkboxes'] = $form['checkboxes'];
+  $form['hidden_checkboxes']['#type'] = 'value';
+  $form['#validate'][] = 'cp_user_og_ui_admin_permissions_validate';
+
+  $admin_access = user_access('administer permissions');
+
+  foreach (element_children($form['permission']) as $key) {
+    if (is_numeric($key)) {
+      continue;
+    }
+
+    if (!in_array($key, array_keys($allowed_permissions))) {
+
+      if (!$admin_access) {
+        // Do not show this permission in the UI.
+        // Not including it in the table is not enough, because later we call the
+        // function drupal_render_children() which will render it anyway unless
+        // we unset it.
+        //$form['hidden_permissions'][$key] = $form['permission'][$key];
+        //$form['hidden_permissions'][$key]['#type'] = 'value';
+
+        // We must also unset all the checkboxes related to the permission, one
+        // for each role, so they would not be rendered later.
+        foreach (element_children($form['checkboxes']) as $rid) {
+          if (!isset($form['hidden_checkboxes'][$rid])) {
+            $form['hidden_checkboxes'][$rid] = array();
+          }
+          $form['hidden_checkboxes'][$rid][$key] = $form['checkboxes'][$rid][$key];
+          $form['hidden_checkboxes'][$rid][$key]['#type'] = 'value';
+        }
+      }
+    }
+  }
+  return;
+  //
+
   $hidden_permissions = array();
 
   foreach (element_children($form['permission']) as $key) {
@@ -476,8 +511,6 @@ function cp_user_form_og_ui_admin_permissions_alter(&$form, &$form_state) {
       );
     }
   }
-
-  $form['#validate'][] = 'cp_user_og_ui_admin_permissions_validate';
 }
 
 /**
@@ -495,12 +528,12 @@ function cp_user_og_ui_admin_permissions_validate($form, &$form_state) {
     }
   }
 
-  if (empty($form_state['values']['hidden_permissions'])) {
+  //if (empty($form_state['values']['hidden_permissions'])) {
     // No permissions are hidden.
-    return;
-  }
+  //  return;
+ // }
 
-  foreach ($form_state['values']['hidden_permissions'] as $rid => $permissions) {
+  foreach ($form_state['values']['hidden_checkboxes'] as $rid => $permissions) {
     foreach ($permissions as $permission => $value) {
       $form_state['values'][$rid][$permission] = $value;
     }
