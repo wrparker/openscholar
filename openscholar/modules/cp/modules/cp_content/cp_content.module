@@ -164,6 +164,7 @@ function cp_content_action_info() {
       'type' => 'node',
       'label' => t('Apply Taxonomy term'),
       'triggers' => array('any'),
+      'configurable' => TRUE,
     ),
     'cp_content_remove_taxonomy' => array(
       'type' => 'node',
@@ -174,104 +175,98 @@ function cp_content_action_info() {
 }
 
 /**
- * @todo: PHPDOC
+ * Form for assign taxonomy terms.
  */
-function cp_content_assign_taxonomy(&$node, $context) {
-  $message = t('Node title is %title.', array(
-    '%title' => $node->title,
-  ));
-  drupal_set_message($message);
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- */
-function cp_content_form_views_form_cp_content_page_alter(&$form ,&$form_state) {
-  if (empty($form_state['input']['operation'])) {
-    return;
-  }
-
-  $operations = array(
-    'action::cp_content_assign_taxonomy',
-    'action::cp_content_remove_taxonomy',
-  );
-
-  // Check if performing a taxonomy assign/remove operation.
-  if (!in_array($form_state['input']['operation'], $operations)) {
-    return;
-  }
-
-  $form['taxonomy'] = array(
-    '#type' => 'item',
-    '#title' => '<h3>' . t('Apply Term to Content.') . '</h3>',
-  );
-
+function cp_content_assign_taxonomy_form($form, $form_state) {
   $vocabs = _cp_content_get_vocabs();
 
-  // Get the vocabularies' names.
-  $vocab_names = array(0 => t('Select taxonomy'));
+  $vocabularies = array(
+    '---' => t('Select vocabulary'),
+  );
   foreach ($vocabs as $vid) {
-    $vocabulary = taxonomy_vocabulary_load($vid);
-    $vocab_names[$vid] = $vocabulary->name;
+    $vocab = taxonomy_vocabulary_load($vid);
+    $vocabularies[$vid] = $vocab->name;
   }
 
-  if (!empty($form_state['values']['vocabulary'])) {
-    $selected = key($form_state['values']['vocabulary']) ? $form_state['values']['vocabulary'] : $selected = array();
-  }
-  else {
-    $selected = array();
-  }
+  $form = array();
 
-  // Create select field with the vocabularies as options.
-  $form['taxonomy']['vocabulary'] = array(
+  $form['vocab'] = array(
     '#type' => 'select',
-    '#options' => $vocab_names,
-    '#default_value' => $selected,
-    '#weight' => 0,
+    '#title' => t('Select vocab'),
+    '#options' => $vocabularies,
     '#ajax' => array(
       'event' => 'change',
       'callback' => 'cp_content_select_callback',
-      'wrapper' => 'dropdown-terms-replace',
+      'wrapper' => 'select-terms',
     ),
   );
 
-  // Select list for the terms.
-  $form['taxonomy']['terms'] = array(
-    '#type' => 'select',
-    '#prefix' => '<div id="dropdown-terms-replace">',
+  $form['terms'] = array(
+    '#prefix' => '<div id="select-terms">',
     '#suffix' => '</div>',
-    '#options' => _cp_content_get_terms_options($selected),
   );
 
-  $form['taxonomy']['description'] = !empty($form['description']) ? $form['description'] : '';
-  unset($form['description']);
+  $vid = !empty($form_state['values']['vocab']) ? $form_state['values']['vocab'] : 0;
+  if ($vid) {
+    $terms = taxonomy_get_tree($vid);
+    $vocabulary = taxonomy_vocabulary_load($vid);
+
+    $options = array();
+    foreach ($terms as $term) {
+      $options[$term->tid] = $term->name;
+    }
+
+    // todo: Handle multiple using select 2.
+    $form['terms'] = array(
+      '#type' => 'select',
+      '#multiple' => TRUE,
+      '#title' => $vocabulary->name,
+      '#prefix' => '<div id="select-terms">',
+      '#suffix' => '</div>',
+      '#options' => $options,
+      '#required' => TRUE,
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Submit handler; Add the terms to the checked nodes.
+ */
+function cp_content_assign_taxonomy_submit($form, $form_state) {
+  $nodes = node_load_multiple($form_state['selection']);
+
+  $titles = array();
+  foreach ($nodes as $node) {
+    $wrapper = entity_metadata_wrapper('node', $node);
+    $wrapper->{OG_VOCAB_FIELD}->set($form_state['values']['terms']);
+    $wrapper->save();
+    $titles[] = $wrapper->label();
+  }
+
+  $terms = taxonomy_term_load_multiple($form_state['values']['terms']);
+  $names = array();
+  foreach ($terms as $term) {
+    $names[] = $term->name;
+  }
+
+  // @todo: use format plural.
+  $params = array(
+    '%terms' => implode(",", $names),
+    '%nodes' => implode(",", $titles),
+  );
+
+  drupal_set_message(t('The taxonomy terms %terms was applied on the nodes %nodes', $params));
+
+  drupal_goto('cp/content');
 }
 
 /**
  * Ajax callback to update the list of terms of the form.
  */
 function cp_content_select_callback($form, $form_state) {
-  return $form['taxonomy']['terms'];
-}
-
-/**
- * Helper function; gets the list of terms based on selected vocabulary.
- */
-function _cp_content_get_terms_options($selected) {
-  if (empty($selected)) {
-    return array(0 => 'Select term');
-  }
-
-  $vid = key($selected);
-
-  // Get the vocabulary's terms.
-  $terms = array();
-  foreach (taxonomy_get_tree($vid) as $item) {
-    $term = taxonomy_term_load($item->tid);
-    $terms[$term->tid] = $term->name;
-  }
-
-  return $terms;
+  return $form['terms'];
 }
 
 /**
