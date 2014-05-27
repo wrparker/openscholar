@@ -41,6 +41,9 @@ function os_importer_ctools_plugin_directory($module, $plugin) {
   if ($module == 'feeds_tamper') {
     return 'plugins';
   }
+  else if ($module == 'entity_validator') {
+    return 'plugins/' . $plugin;
+  }
 }
 
 /**
@@ -622,10 +625,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       continue;
     }
 
-    $validator = new NodeValidate();
-    $validator
-      ->setBundle($form_state['type'])
-      ->setErrorLevel(0);
+    $validator = entity_validator_load_validator('node', $form_state['type']);
 
     // Build the form values - break down the row.
     $row_values = explode(",", $row);
@@ -634,15 +634,11 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       $validator->addField($mappings[$delta], $value);
     }
 
-    $validator
-      ->preValidateRegister('os_importer_pre_validate')
-      ->validate();
-
-    if ($errors = $validator->getErrors()) {
-      $params = array(
-        '!errors' => theme('item_list', array('items' => $errors,)),
-      );
-      form_set_error('', t('It seems there some validation problem: !errors', $params));
+    try {
+      $validator
+        ->validate();
+    } catch (Exception $e) {
+      form_set_error('', $e->getMessage());
     }
   }
 
@@ -656,32 +652,8 @@ function os_importer_verify_uploaded_file($form, $form_state) {
 function os_importer_pre_validate(NodeValidate $nodeValidate) {
   $fields = $nodeValidate->getFields();
 
-  if (in_array('body', array_keys($fields))) {
-    $fields['body'] = array('value' => $fields['body']);
-  }
-
   if ($nodeValidate->getBundle() == 'class') {
-    $info = field_info_field('field_semester');
 
-    // Validate the semester.
-    $allowed_values = $info['settings']['allowed_values'] + array('N/A' => 'N/A');
-    if (!in_array($fields['field_semester'], $allowed_values)) {
-      $params = array(
-        '%allowed-values' => implode(', ', $allowed_values),
-        '%value' => $fields['field_semester'],
-      );
-
-      $nodeValidate->setError(t('The given value(%value) is not validate and should be one of %allowed-values', $params));
-    }
-
-    // Validate the year.
-    $year = $fields['field_offered_year:start'];
-    if (!is_numeric($year) || (is_numeric($year) && $year > 9999)) {
-      $params = array(
-        '%value' => $year,
-      );
-      $nodeValidate->setError(t('The year field is not valid value(%value). the value should be a year.', $params));
-    }
   }
 
   $nodeValidate->setFields($fields);
