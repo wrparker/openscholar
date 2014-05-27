@@ -450,16 +450,14 @@ function cp_user_form_og_ui_admin_permissions_alter(&$form, &$form_state) {
   $rids = array_keys($group_roles);
 
   // Get the roles' permissions from the default group.
-  $roles_permissions = og_role_permissions($rids);
+  $roles_permissions = og_role_permissions(drupal_map_assoc($rids));
 
-  foreach ($roles_permissions as $role_name => $permissions) {
-    // Get the role ID in the group role.
-    $group_rid = array_search($role_name, $group_roles);
+  foreach ($roles_permissions as $rid => $role_permissions) {
 
-    foreach ($hidden_permissions as $hidden_permission => $value) {
-      $form['hidden_permissions'][$group_rid][$hidden_permission] = array(
+    foreach ($hidden_permissions as $hidden_permission) {
+      $form['hidden_permissions'][$rid][$hidden_permission] = array(
         '#type' => 'value',
-        '#value' => $value,
+        '#value' => !empty($role_permissions[$hidden_permission]),
       );
     }
   }
