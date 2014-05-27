@@ -256,11 +256,11 @@ projects[nice_menus][version] = 2.1
 projects[nodeformcols][subdir] = "contrib"
 projects[nodeformcols][version] = 1.0
 
-projects[node_validator][subdir] = "contrib"
-projects[node_validator][type] = module
-projects[node_validator][download][type] = git
-projects[node_validator][download][url] = "https://github.com/RoySegall/node_validator.git"
-projects[node_validator][download][branch] = "master"
+projects[entity_validator][subdir] = "contrib"
+projects[entity_validator][type] = module
+projects[entity_validator][download][type] = git
+projects[entity_validator][download][url] = "https://github.com/RoySegall/entity_validator.git"
+projects[entity_validator][download][branch] = "7.x-1.x"
 
 projects[nodeorder][subdir] = "contrib"
 projects[nodeorder][version] = 1.1
