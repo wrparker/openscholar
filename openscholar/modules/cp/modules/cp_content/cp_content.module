@@ -178,14 +178,14 @@ function cp_content_action_info() {
  * Form for assign taxonomy terms.
  */
 function cp_content_assign_taxonomy_form($form, $form_state) {
-  $vocabs = _cp_content_get_vocabs();
+  module_load_include('inc', 'vsite_vocab', 'includes/taxonomy');
+  $vocabs = vsite_vocab_get_vocabularies();
 
   $vocabularies = array(
     '---' => t('Select vocabulary'),
   );
-  foreach ($vocabs as $vid) {
-    $vocab = taxonomy_vocabulary_load($vid);
-    $vocabularies[$vid] = $vocab->name;
+  foreach ($vocabs as $vocab) {
+    $vocabularies[$vocab->vid] = $vocab->name;
   }
 
   $form = array();
@@ -270,26 +270,11 @@ function cp_content_select_callback($form, $form_state) {
 }
 
 /**
- * Helper function;
+ * Remove all the terms from a given nodes.
  */
-function _cp_content_get_vocabs() {
-  $query = db_select('og_vocab_relation', 'ogr')
-    ->fields('ogr', array('vid'));
-
-  if (module_exists('spaces') && $space = spaces_get_space()) {
-    $query->condition('gid', $space->id);
-  }
-
-  $query->join('og_vocab', 'ogv', 'ogr.vid = ogv.vid');
-  $query->condition('ogv.entity_type', 'node');
-
-  $query->groupBy('ogv.vid');
-  $result = $query->execute();
-
-  $vocabs = array();
-  while ($row = $result->fetchObject()) {
-    $vocabs[] = $row->vid;
-  }
-
-  return $vocabs;
+function cp_content_remove_taxonomy(&$node, $context) {
+  $node->{OG_VOCAB_FIELD} = array();
+  node_save($node);
+  $params = array('%title' => $node->title);
+  drupal_set_message(t('All the terms were removed from the node %title', $params));
 }
