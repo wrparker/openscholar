@@ -592,8 +592,8 @@ function os_profiles_profiles_fields() {
  * Submit handler; Importing person profile from external source.
  */
 function os_profiles_sync_profile_submit($form, $form_state) {
-  if (variable_get('os_profiles_no_restws', FALSE) || !module_exists('restws')) {
-    // No RestWS.
+  if (!module_exists('restful')) {
+    // No RESTful module.
     return;
   }
 
@@ -608,7 +608,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $data = $origin->data;
 
     // Get the URL of the original node.
-    $url = isset($data['restful']) ? $data['url'] : str_replace('/node/' . $data['nid'] . '.json', '', $form_state['json_address']);
+    $url = $data['url'];
 
     // Get the original node's UUID.
     $values['field_uuid'] = $data[$keys['field_uuid']];
@@ -617,24 +617,9 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $values['field_original_destination_url'] = $form_state['json_address'];
 
     // Get the url of the file.
-    if ($data['restful']) {
-      $file_url = $data['photo']['url'];
-    }
-    else {
-      // The site using the old version.
-      if (!empty($values['field_person_photo'])) {
-        $file_info = os_profiles_get_origin_node_values($values['field_person_photo']['file']['uri'] . '.json', array('url'));
-        $file_url = $file_info->values['url'];
-      }
-    }
+    $file_url = $data['photo']['url'];
 
-    if (isset($data['restful'])) {
-      $photo_dimension = $data['photo'];
-      unset($photo_dimension['url']);
-    }
-    else {
-      $photo_dimension = $data['person_photo_dimension'];
-    }
+    $photo_dimension = $data['photo'];
   }
   else {
     // Import a person node using the auto-complete field.
