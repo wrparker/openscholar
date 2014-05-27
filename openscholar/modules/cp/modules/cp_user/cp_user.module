@@ -444,32 +444,15 @@ function cp_user_form_og_ui_admin_permissions_alter(&$form, &$form_state) {
   }
 
   $bundle = $vsite->group->type;
-  $system_roles = array(
-    'vsite user',
-    'vsite admin',
-    'content editor',
-  );
 
+  // The role IDs of the group.
   $group_roles = og_roles('node', $bundle, $vsite->id);
-  $default_roles = og_roles('node', $bundle);
-
-  $rids = array();
-  // Iterate over the default roles.
-  foreach ($default_roles as $rid => $name) {
-    if (in_array($name, $system_roles)) {
-      $rids[$name] = $rid;
-    }
-  }
+  $rids = array_keys($group_roles);
 
   // Get the roles' permissions from the default group.
   $roles_permissions = og_role_permissions($rids);
 
   foreach ($roles_permissions as $role_name => $permissions) {
-    if (!in_array($role_name, $system_roles)) {
-      // Not a system role.
-      continue;
-    }
-
     // Get the role ID in the group role.
     $group_rid = array_search($role_name, $group_roles);
 
