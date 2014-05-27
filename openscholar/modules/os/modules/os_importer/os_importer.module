@@ -647,56 +647,6 @@ function os_importer_verify_uploaded_file($form, $form_state) {
 }
 
 /**
- * Node validate pre-validation callback.
- */
-function os_importer_pre_validate(NodeValidate $nodeValidate) {
-  $fields = $nodeValidate->getFields();
-
-  if ($nodeValidate->getBundle() == 'class') {
-
-  }
-
-  $nodeValidate->setFields($fields);
-}
-
-/**
- * Validate function for "Year" value in a CSV for importing a class.
- *
- * @param $field
- *  The field we validate.
- * @param $value
- *  The value as given in the CSV row.
- * @param $row
- *  The row number in the CSV file.
- * @return string
- *  An error message if needed.
- */
-function os_importer_validate_year($field, $value, $row) {
-  if (!is_numeric($value) || (is_numeric($value) && $value > 9999)) {
-    return t('file', t('The @field value in row @row is invalid', array('@field' => $field, '@row' => $row)));
-  }
-}
-
-/**
- * Validate function for "Rows" and "Columns" value in a CSV for importing a
- * media gallery.
- *
- * @param $field
- *  The field we validate.
- * @param $value
- *  The value as given in the CSV row.
- * @param $row
- *  The row number in the CSV file.
- * @return string
- *  An error message if needed.
- */
-function os_importer_validate_rows_cols($field, $value, $row) {
-  if (!is_int($value) || (is_int($value) && $value < 0)) {
-    return t('file', t('The @field value in row @row is invalid', array('@field' => $field, '@row' => $row)));
-  }
-}
-
-/**
  * Parsing the header.
  */
 function _os_importer_parse_header(ParserCSV $parser, ParserCSVIterator $iterator) {
