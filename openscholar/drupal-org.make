@@ -5,6 +5,9 @@ api = 2
 projects[admin_menu][subdir] = "contrib"
 projects[admin_menu][version] = 3.0-rc1
 
+projects[advagg][subdir] = "contrib"
+projects[advagg][version] = 7.x-2.6
+
 projects[apachesolr][subdir] = "contrib"
 projects[apachesolr][version] = 1.6
 
