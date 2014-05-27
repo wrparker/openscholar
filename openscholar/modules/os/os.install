@@ -712,7 +712,7 @@ function os_update_7033() {
  * Enables Advanced Aggregation modules and reverts variable exports related to it to ensure we have them.
  */
 function os_update_7034() {
-  module_enable(array('advagg_js_compress'));
+  module_enable(array('advagg_js_compress', 'imageapi_optimize'));
   features_revert(array('os' => array('variable')));
   return t('Advanced Aggregation module enabled. Variables for OS module reverted.');
 }
