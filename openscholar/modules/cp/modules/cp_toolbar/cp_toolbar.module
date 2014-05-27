@@ -274,18 +274,21 @@ function cp_toolbar_fill_drawer() {
 
   $bundles = os_get_bundles(array(1,2));
   asort($bundles);
-
   $links = array();
   $app_info = os_app_info();
   foreach ($bundles as $type => $name) {
     foreach ($app_info as $info) {
-      if (!empty($info['require_parent_node'][$type])) {
+      // A link for adding a node in the CP will not be displayed in case it has
+      // a parent node type or it is defined to be hidden from to toolbar.
+      $require_parent_node = !empty($info['require_parent_node'][$type]);
+      $hide_type = !empty($info['hide from toolbar']) && is_array($info['hide from toolbar']) && in_array($type, $info['hide from toolbar']);
+      if ($require_parent_node || $hide_type) {
         continue 2;
       }
     }
     $url_str = str_replace('_', '-', $type);
     foreach ($content as $link) {
-      if ($link['access'] && $link['link_path'] == 'node/add/'.$url_str) {
+      if ($link['access'] && $link['link_path'] == 'node/add/' . $url_str) {
         $links[] = $link;
       }
     }
