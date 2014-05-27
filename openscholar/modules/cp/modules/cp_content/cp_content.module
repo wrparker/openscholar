@@ -163,31 +163,138 @@ function cp_content_action_info() {
     'cp_content_assign_taxonomy' => array(
       'type' => 'node',
       'label' => t('Apply Taxonomy term'),
-      'configurable' => TRUE,
       'triggers' => array('any'),
     ),
     'cp_content_remove_taxonomy' => array(
       'type' => 'node',
       'label' => t('Remove Taxonomy term'),
-      'configurable' => TRUE,
       'triggers' => array('any'),
     ),
   );
 }
 
-function cp_content_assign_taxonomy_form($context) {
-  $form = array();
-  $form['taxonomy'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Apply Term to Content.'),
+/**
+ * @todo: PHPDOC
+ */
+function cp_content_assign_taxonomy(&$node, $context) {
+  $message = t('Node title is %title.', array(
+    '%title' => $node->title,
+  ));
+  drupal_set_message($message);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function cp_content_form_views_form_cp_content_page_alter(&$form ,&$form_state) {
+  if (empty($form_state['input']['operation'])) {
+    return;
+  }
+
+  $operations = array(
+    'action::cp_content_assign_taxonomy',
+    'action::cp_content_remove_taxonomy',
   );
 
-  $vocabs = array_keys(taxonomy_vocabulary_get_names());
+  // Check if performing a taxonomy assign/remove operation.
+  if (!in_array($form_state['input']['operation'], $operations)) {
+    return;
+  }
 
+  $form['taxonomy'] = array(
+    '#type' => 'item',
+    '#title' => '<h3>' . t('Apply Term to Content.') . '</h3>',
+  );
+
+  $vocabs = _cp_content_get_vocabs();
+
+  // Get the vocabularies' names.
+  $vocab_names = array(0 => t('Select taxonomy'));
+  foreach ($vocabs as $vid) {
+    $vocabulary = taxonomy_vocabulary_load($vid);
+    $vocab_names[$vid] = $vocabulary->name;
+  }
+
+  if (!empty($form_state['values']['vocabulary'])) {
+    $selected = key($form_state['values']['vocabulary']) ? $form_state['values']['vocabulary'] : $selected = array();
+  }
+  else {
+    $selected = array();
+  }
+
+  // Create select field with the vocabularies as options.
   $form['taxonomy']['vocabulary'] = array(
     '#type' => 'select',
-    '#options' => $vocabs,
+    '#options' => $vocab_names,
+    '#default_value' => $selected,
+    '#weight' => 0,
+    '#ajax' => array(
+      'event' => 'change',
+      'callback' => 'cp_content_select_callback',
+      'wrapper' => 'dropdown-terms-replace',
+    ),
   );
 
-  return $form;
+  // Select list for the terms.
+  $form['taxonomy']['terms'] = array(
+    '#type' => 'select',
+    '#prefix' => '<div id="dropdown-terms-replace">',
+    '#suffix' => '</div>',
+    '#options' => _cp_content_get_terms_options($selected),
+  );
+
+  $form['taxonomy']['description'] = !empty($form['description']) ? $form['description'] : '';
+  unset($form['description']);
+}
+
+/**
+ * Ajax callback to update the list of terms of the form.
+ */
+function cp_content_select_callback($form, $form_state) {
+  return $form['taxonomy']['terms'];
+}
+
+/**
+ * Helper function; gets the list of terms based on selected vocabulary.
+ */
+function _cp_content_get_terms_options($selected) {
+  if (empty($selected)) {
+    return array(0 => 'Select term');
+  }
+
+  $vid = key($selected);
+
+  // Get the vocabulary's terms.
+  $terms = array();
+  foreach (taxonomy_get_tree($vid) as $item) {
+    $term = taxonomy_term_load($item->tid);
+    $terms[$term->tid] = $term->name;
+  }
+
+  return $terms;
+}
+
+/**
+ * Helper function;
+ */
+function _cp_content_get_vocabs() {
+  $query = db_select('og_vocab_relation', 'ogr')
+    ->fields('ogr', array('vid'));
+
+  if (module_exists('spaces') && $space = spaces_get_space()) {
+    $query->condition('gid', $space->id);
+  }
+
+  $query->join('og_vocab', 'ogv', 'ogr.vid = ogv.vid');
+  $query->condition('ogv.entity_type', 'node');
+
+  $query->groupBy('ogv.vid');
+  $result = $query->execute();
+
+  $vocabs = array();
+  while ($row = $result->fetchObject()) {
+    $vocabs[] = $row->vid;
+  }
+
+  return $vocabs;
 }
