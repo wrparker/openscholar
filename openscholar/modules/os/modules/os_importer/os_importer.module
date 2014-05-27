@@ -590,14 +590,24 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   // Replace the \r with \n.
   $file_content = file_get_contents($file->uri);
   $file_content = str_replace("\r", "\n", $file_content);
-  $new_file = file_save_data($file_content, $file->uri, FILE_EXISTS_REPLACE);
+  $rows = explode("\n", $file_content);
+
+  // Iterate over the rows and remove empty rows.
+  foreach ($rows as $key => $row) {
+    if (!implode("", explode(",", $row))) {
+      unset($rows[$key]);
+    }
+  }
+
+  $new_file = file_save_data(implode("\n", $rows), $file->uri, FILE_EXISTS_REPLACE);
   $form_state['values']['file'] = $new_file->fid;
 
-  // Parse file's headers.
   feeds_include_library('ParserCSV.inc', 'ParserCSV');
   $parser = new ParserCSV();
   $parser->setDelimiter(',');
   $iterator = new ParserCSVIterator($new_file->uri);
+
+  // Parse file's headers.
   $header = _os_importer_parse_header($parser, $iterator);
 
   // Check what missing in the uploaded CSV file and display message if needed.
@@ -840,10 +850,12 @@ function _os_importer_create_vocab($name, $terms, $group_type, $gid, $entity_typ
 
   $tids = array();
 
-  // Creating the terms for the new vocabulary.
+  // Creating the terms for the new vocabulary if terms are provided.
   $taxonomy_terms = explode("|", $terms);
-
   foreach ($taxonomy_terms as $taxonomy_term) {
+    if (empty($taxonomy_term)) {
+      continue;
+    }
     $term = taxonomy_get_term_by_name($taxonomy_term, $vocabulary->machine_name);
 
     if (!$term) {
