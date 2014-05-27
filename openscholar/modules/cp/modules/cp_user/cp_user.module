@@ -263,8 +263,16 @@ function cp_user_og_ui_admin_permissions($variables) {
   // the vsite and use them to rename all roles on the list.
   $roles_human_names = _cp_user_list_roles('rids-human', NULL, $form['gid']['#value']);
   foreach (element_children($form['role_names']) as $rid) {
-    if (!is_numeric($rid) || empty($roles_human_names[$rid])) {
+    if (!is_numeric($rid)) {
       // Not a role.
+      continue;
+    }
+    if (empty($roles_human_names[$rid])) {
+      // No human name - remove the role from the form to avoid both showing
+      // and revoking permissions.
+      unset($form['role_names'][$rid]);
+      unset($form['role_names']['#value'][$rid]);
+      unset($form['checkboxes'][$rid]);
       continue;
     }
     $form['role_names'][$rid]['#markup'] = $roles_human_names[$rid];
@@ -317,12 +325,6 @@ function cp_user_og_ui_admin_permissions($variables) {
     );
 
     foreach (element_children($form['checkboxes']) as $rid) {
-      if (empty($roles_human_names[$rid])) {
-        // Some roles are not to be shown on the UI, for example 'non-member',
-        // so do not display roles that don't exist in the "human" names list.
-        $form['checkboxes'][$rid][$key]['#access'] = FALSE;
-        continue;
-      }
       $form['checkboxes'][$rid][$key]['#title'] = $role_names[$rid] . ': ' . $form['permission'][$key]['#markup'];
       $form['checkboxes'][$rid][$key]['#title_display'] = 'invisible';
       $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$key]), 'class' => array('checkbox'));
@@ -343,12 +345,6 @@ function cp_user_og_ui_admin_permissions($variables) {
 
   $header[] = (t('Permission'));
   foreach (element_children($form['role_names']) as $rid) {
-    if (empty($roles_human_names[$rid])) {
-      // Some roles are not to be shown on the UI, for example 'non-member',
-      // so do not display roles that don't exist in the "human" names list.
-      $form['role_names'][$rid]['#access'] = FALSE;
-      continue;
-    }
     $header[] = array('data' => drupal_render($form['role_names'][$rid]), 'class' => array('checkbox'));
   }
   $output = '';
@@ -488,6 +484,17 @@ function cp_user_form_og_ui_admin_permissions_alter(&$form, &$form_state) {
  * Validate handler; Add the missing permissions.
  */
 function cp_user_og_ui_admin_permissions_validate($form, &$form_state) {
+  // Remove irrelevant roles
+  $roles_human_names = _cp_user_list_roles('rids-human', NULL, $form['gid']['#value']);
+  foreach (array_keys($form_state['values']['role_names']) as $rid) {
+    if (empty($roles_human_names[$rid])) {
+      // No human name - remove the role from the form to avoid both showing
+      // and revoking permissions.
+      unset($form_state['values']['role_names'][$rid]);
+      unset($form_state['values'][$rid]);
+    }
+  }
+
   if (empty($form_state['values']['hidden_permissions'])) {
     // No permissions are hidden.
     return;
