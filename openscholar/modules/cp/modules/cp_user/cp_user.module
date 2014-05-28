@@ -286,6 +286,7 @@ function cp_user_og_ui_admin_permissions($variables) {
       continue;
     }
 
+    $show_permission = TRUE;
     if (!in_array($permission, array_keys($allowed_permissions))) {
 
     	if (!user_access('administer permissions')) {
@@ -300,6 +301,8 @@ function cp_user_og_ui_admin_permissions($variables) {
         foreach (element_children($form['checkboxes']) as $rid) {
           unset($form['checkboxes'][$rid][$permission]);
         }
+
+        $show_permission = FALSE;
         continue;
     	}
       else {
@@ -308,29 +311,31 @@ function cp_user_og_ui_admin_permissions($variables) {
     	}
     }
 
-    $row = array();
+    if ($show_permission) {
+      $row = array();
 
-    // Permission row.
-    $row[] = array(
-      'data' => drupal_render($form['permission'][$permission]),
-      'class' => array('permission'),
-    );
+      // Permission row.
+      $row[] = array(
+        'data' => drupal_render($form['permission'][$permission]),
+        'class' => array('permission'),
+      );
 
-    foreach (element_children($form['checkboxes']) as $rid) {
-      if (empty($roles_human_names[$rid])) {
-        // Some roles are not to be shown on the UI, for example 'non-member',
-        // so do not display roles that don't exist in the "human" names list.
-        $form['checkboxes'][$rid][$permission]['#access'] = FALSE;
-        continue;
+      foreach (element_children($form['checkboxes']) as $rid) {
+        if (empty($roles_human_names[$rid])) {
+          // Some roles are not to be shown on the UI, for example 'non-member',
+          // so do not display roles that don't exist in the "human" names list.
+          $form['checkboxes'][$rid][$permission]['#access'] = FALSE;
+          continue;
+        }
+        $form['checkboxes'][$rid][$permission]['#title'] = $role_names[$rid] . ': ' . $form['permission'][$permission]['#markup'];
+        $form['checkboxes'][$rid][$permission]['#title_display'] = 'invisible';
+        $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$permission]), 'class' => array('checkbox'));
       }
-      $form['checkboxes'][$rid][$permission]['#title'] = $role_names[$rid] . ': ' . $form['permission'][$permission]['#markup'];
-      $form['checkboxes'][$rid][$permission]['#title_display'] = 'invisible';
-      $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$permission]), 'class' => array('checkbox'));
-    }
 
-    // Add category title row.
-    $category = cp_user_add_category_title_to_table($permission, $allowed_permissions, $rows_per_category, count($row));
-    $rows_per_category[$category][] = $row;
+      // Add category title row.
+      $category = cp_user_add_category_title_to_table($permission, $allowed_permissions, $rows_per_category, count($row));
+      $rows_per_category[$category][] = $row;
+    }
   }
 
   ksort($rows_per_category);
@@ -380,12 +385,12 @@ function cp_user_get_allowed_permissions() {
   // In addition to CRUD permissions, the permission 'Change theme' is the only
   // non-CRUD permission that should be displayed on the list.
   foreach (vsite_get_os_override_permissions() as $permission) {
-    $allowed_permissions[$permission] = 'general';
+    $allowed_permissions[$permission] = t('general');
   }
-  $allowed_permissions['change theme'] = 'general';
-  $allowed_permissions['administer taxonomy'] = 'general';
-  $allowed_permissions['edit terms'] = 'general';
-  $allowed_permissions['delete terms'] = 'general';
+  $allowed_permissions['change theme'] = t('general');
+  $allowed_permissions['administer taxonomy'] = t('general');
+  $allowed_permissions['edit terms'] = t('general');
+  $allowed_permissions['delete terms'] = t('general');
 
   foreach (os_get_bundles_per_app(array(OS_PUBLIC_APP, OS_PRIVATE_APP)) as $app_name => $bundles) {
     foreach (array_keys($bundles) as $bundle) {
@@ -504,7 +509,7 @@ function cp_user_og_ui_admin_permissions_validate($form, &$form_state) {
 function cp_user_add_category_title_to_table($permission, $allowed_permissions, &$rows_per_category, $number_of_columns) {
   // Get spaces features in order to get human readable application name.
   $spaces_features = spaces_features();
-  $category = $allowed_permissions[$permission];
+  $category = !empty($allowed_permissions[$permission]) ? $allowed_permissions[$permission] : t('general');
   if (empty($rows_per_category[$category])) {
     $title = t('General permissions');
 
