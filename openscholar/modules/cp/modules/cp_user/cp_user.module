@@ -276,35 +276,35 @@ function cp_user_og_ui_admin_permissions($variables) {
 
   $rows_per_category = array();
 
-  foreach (element_children($form['permission']) as $key) {
-    if (is_numeric($key)) {
+  foreach (element_children($form['permission']) as $permission) {
+    if (is_numeric($permission)) {
       // Module name, not for display in the UI.
       // Not including it in the table is not enough, because later we call the
       // function drupal_render_children() which will render it anyway unless
       // we unset it.
-      unset($form['permission'][$key]);
+      unset($form['permission'][$permission]);
       continue;
     }
 
-    if (!in_array($key, array_keys($allowed_permissions))) {
+    if (!in_array($permission, array_keys($allowed_permissions))) {
 
     	if (!user_access('administer permissions')) {
         // Do not show this permission in the UI.
         // Not including it in the table is not enough, because later we call the
         // function drupal_render_children() which will render it anyway unless
         // we unset it.
-        unset($form['permission'][$key]);
+        unset($form['permission'][$permission]);
 
         // We must also unset all the checkboxes related to the permission, one
         // for each role, so they would not be rendered later.
         foreach (element_children($form['checkboxes']) as $rid) {
-        	unset($form['checkboxes'][$rid][$key]);
+          unset($form['checkboxes'][$rid][$permission]);
         }
         continue;
     	}
       else {
-        // This is an super-admin type user
-        $form['permission'][$key]['#markup'] .= " **Admin Only**";
+        // This is an super-admin type user.
+        $form['permission'][$permission]['#markup'] .= '**' . t('Admin Only') . '**';
     	}
     }
 
@@ -312,7 +312,7 @@ function cp_user_og_ui_admin_permissions($variables) {
 
     // Permission row.
     $row[] = array(
-      'data' => drupal_render($form['permission'][$key]),
+      'data' => drupal_render($form['permission'][$permission]),
       'class' => array('permission'),
     );
 
@@ -320,16 +320,16 @@ function cp_user_og_ui_admin_permissions($variables) {
       if (empty($roles_human_names[$rid])) {
         // Some roles are not to be shown on the UI, for example 'non-member',
         // so do not display roles that don't exist in the "human" names list.
-        $form['checkboxes'][$rid][$key]['#access'] = FALSE;
+        $form['checkboxes'][$rid][$permission]['#access'] = FALSE;
         continue;
       }
-      $form['checkboxes'][$rid][$key]['#title'] = $role_names[$rid] . ': ' . $form['permission'][$key]['#markup'];
-      $form['checkboxes'][$rid][$key]['#title_display'] = 'invisible';
-      $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$key]), 'class' => array('checkbox'));
+      $form['checkboxes'][$rid][$permission]['#title'] = $role_names[$rid] . ': ' . $form['permission'][$permission]['#markup'];
+      $form['checkboxes'][$rid][$permission]['#title_display'] = 'invisible';
+      $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$permission]), 'class' => array('checkbox'));
     }
 
     // Add category title row.
-    $category = cp_user_add_category_title_to_table($key, $allowed_permissions, $rows_per_category, count($row));
+    $category = cp_user_add_category_title_to_table($permission, $allowed_permissions, $rows_per_category, count($row));
     $rows_per_category[$category][] = $row;
   }
 
@@ -364,6 +364,11 @@ function cp_user_og_ui_admin_permissions($variables) {
   return $output;
 }
 
+/**
+ * Return the permissions are used may see.
+ *
+ * @return array
+ */
 function cp_user_get_allowed_permissions() {
   // Get the hidden permissions.
   // Only CRUD permissions should be displayed in the UI. Create an array of
