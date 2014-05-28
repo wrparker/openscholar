@@ -385,12 +385,12 @@ function cp_user_get_allowed_permissions() {
   // In addition to CRUD permissions, the permission 'Change theme' is the only
   // non-CRUD permission that should be displayed on the list.
   foreach (vsite_get_os_override_permissions() as $permission) {
-    $allowed_permissions[$permission] = t('general');
+    $allowed_permissions[$permission] = 'general';
   }
-  $allowed_permissions['change theme'] = t('general');
-  $allowed_permissions['administer taxonomy'] = t('general');
-  $allowed_permissions['edit terms'] = t('general');
-  $allowed_permissions['delete terms'] = t('general');
+  $allowed_permissions['change theme'] = 'general';
+  $allowed_permissions['administer taxonomy'] = 'general';
+  $allowed_permissions['edit terms'] = 'general';
+  $allowed_permissions['delete terms'] = 'general';
 
   foreach (os_get_bundles_per_app(array(OS_PUBLIC_APP, OS_PRIVATE_APP)) as $app_name => $bundles) {
     foreach (array_keys($bundles) as $bundle) {
