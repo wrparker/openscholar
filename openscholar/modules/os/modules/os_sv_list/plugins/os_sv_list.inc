@@ -230,8 +230,8 @@ class os_sv_list extends os_boxes_default {
     $page = 0;
     $ids = $this->get_ids($page_num, $page);
 
-    $this->setCacheID($bundle, $page_num);
-    if (!$block['content'] = $this->getCache()) {
+    $this->set_cache_id($bundle, $page_num);
+    if (!$block['content'] = $this->get_cache()) {
       $this->_set_plugins($this->entity_type, $bundle);
 
       // Add the pager.
@@ -315,7 +315,7 @@ class os_sv_list extends os_boxes_default {
       );
 
       $block['content'] = "<div id='box-${delta}-page' data-page='${page_num}' data-delta='${delta}' class='${class}'>${content}</div>${pager}{$more}";
-      $this->setCache($block['content'], $assets);
+      $this->set_cache($block['content'], $assets);
     }
 
     return $block;
