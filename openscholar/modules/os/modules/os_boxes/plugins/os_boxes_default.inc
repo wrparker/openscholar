@@ -125,7 +125,9 @@ abstract class os_boxes_default extends boxes_box {
       $this->cache_id .= ':' . $bundle;
     }
     $this->cache_id .= ':' . $this->delta;
-    $this->cache_id .= ':' . $page;
+    if ($page) {
+      $this->cache_id .= ':' . $page;
+    }
 
     return $this->cache_id;
   }
@@ -222,9 +224,16 @@ abstract class os_boxes_default extends boxes_box {
       return;
     }
 
-    $cid = 'os_boxes_cache:' . $vsite->id;
-    $cid .= empty($this->options['content_type']) || is_array($this->options['content_type']) ? '' : ':' . $this->options['content_type'];
-    $cid .= ':' . $this->delta;
+    // We try to delete the cache of a newly selected bundle, leaving the old cached
+    // info unused. If we will re-select the old bundle its cache will be cleared
+    // next time.
+    if ($this->options['content_type'] && is_string($this->options['content_type'])) {
+      $bundle = $this->options['content_type'];
+    }
+    else {
+      $bundle = NULL;
+    }
+    $cid = $this->set_cache_id($bundle);
 
     cache_clear_all($cid, 'cache', TRUE);
     cache_clear_all('assets:' . $cid, 'cache', TRUE);
