@@ -29,8 +29,8 @@ class os_boxes_accordion extends os_boxes_widget_collection {
   function render() {
     $output = parent::render();
 
-    $this->setCacheID('any_bundle');
-    if (!$output['content'] = $this->getCache()) {
+    $this->set_cache_id('any_bundle');
+    if (!$output['content'] = $this->get_cache()) {
       $content = array(
         '#prefix' => '<div class="accordion">',
         '#suffix' => '</div>',
@@ -78,7 +78,7 @@ class os_boxes_accordion extends os_boxes_widget_collection {
       }
 
       $output['content'] = drupal_render($content);
-      $this->setCache($output['content'], $content['#attached']);
+      $this->set_cache($output['content'], $content['#attached']);
     }
 
     return $output;
