@@ -2791,7 +2791,7 @@ function vsite_pathauto_alias_alter(&$alias, $context) {
   $alias = vsite_get_entity_alias($entity_type, $entity, $alias);
 
   // The alias is in the form <purl>/<path>.
-  list($purl, $path) = explode('/', $alias);
+  list($purl, $path) = explode('/', $alias, 2);
   if (!_vsite_alias_exists($purl, $path, $context['source'])) {
     return;
   }
