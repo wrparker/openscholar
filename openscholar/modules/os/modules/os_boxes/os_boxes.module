@@ -572,6 +572,10 @@ function os_boxes_node_update($node) {
  */
 function os_boxes_invalidate_cache($node) {
   $wrapper = entity_metadata_wrapper('node', $node);
+  if (!$wrapper->__isset(OG_AUDIENCE_FIELD)) {
+    return;
+  }
+
   $gid = $wrapper->{OG_AUDIENCE_FIELD}->get(0)->getIdentifier();
   $cid = 'os_boxes_cache:' . $gid . ':' . $node->type;
   $general_cid = 'os_boxes_cache:' . $gid;
