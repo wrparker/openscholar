@@ -715,6 +715,15 @@ padding:3px 0 3px 25px !important;
   padding-top: 30px;
 }
 
+.register-link-teaser a {
+font-style: italic;
+}
+
+.register-event-full {
+display: block;
+font-style: italic;
+color: #6D6D6D;
+}
 
 .node-event.article .field-name-field-default-email.field-label-above {
 	float:left;margin-top:10px;
