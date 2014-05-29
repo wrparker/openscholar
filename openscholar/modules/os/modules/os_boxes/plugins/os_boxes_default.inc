@@ -121,11 +121,8 @@ abstract class os_boxes_default extends boxes_box {
     }
 
     $this->cache_id = 'os_boxes_cache:' . $vsite->id;
-    if (is_string($bundle) && $bundle != '') {
+    if ($bundle && is_string($bundle)) {
       $this->cache_id .= ':' . $bundle;
-    }
-    else {
-      $this->cache_id .= ':any_bundle';
     }
     $this->cache_id .= ':' . $this->delta;
     $this->cache_id .= ':' . $page;
@@ -224,7 +221,7 @@ abstract class os_boxes_default extends boxes_box {
     }
 
     $cid = 'os_boxes_cache:' . $vsite->id;
-    $cid .= empty($this->options['content_type']) || is_array($this->options['content_type']) ? ':any_bundle' : ':' . $this->options['content_type'];
+    $cid .= empty($this->options['content_type']) || is_array($this->options['content_type']) ? '' : ':' . $this->options['content_type'];
     $cid .= ':' . $this->delta;
 
     cache_clear_all($cid, 'cache', TRUE);

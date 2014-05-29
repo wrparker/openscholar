@@ -29,7 +29,7 @@ class os_boxes_accordion extends os_boxes_widget_collection {
   function render() {
     $output = parent::render();
 
-    $this->set_cache_id('any_bundle');
+    $this->set_cache_id();
     if (!$output['content'] = $this->get_cache()) {
       $content = array(
         '#prefix' => '<div class="accordion">',
