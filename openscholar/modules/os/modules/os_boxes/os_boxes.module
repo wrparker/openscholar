@@ -574,9 +574,17 @@ function os_boxes_invalidate_cache($node) {
   $wrapper = entity_metadata_wrapper('node', $node);
   $gid = $wrapper->{OG_AUDIENCE_FIELD}->get(0)->getIdentifier();
   $cid = 'os_boxes_cache:' . $gid . ':' . $node->type;
+  $any_bundle_cid = 'os_boxes_cache:' . $gid . ':any_bundle';
+
   // Flush raw data.
   cache_clear_all($cid, 'cache', TRUE);
 
+  // Flush 'any_bundle' raw data.
+  cache_clear_all($any_bundle_cid, 'cache', TRUE);
+
   // Flush assets.
   cache_clear_all('assets:' . $cid, 'cache', TRUE);
+
+  // Flush 'any_bundle' assets.
+  cache_clear_all('assets:' . $any_bundle_cid, 'cache', TRUE);
 }
