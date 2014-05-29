@@ -14,7 +14,12 @@ class os_sv_list extends os_boxes_default {
     parent::__construct();
     $this->entity_type = $this->bundle = NULL;
   }
-  
+
+  public function set_cache($cache, $js = NULL) {
+    $this->cache_time = $this->_plugins_invoke('set_cache_time', $form);
+    parent::set_cache($cache, $js);
+  }
+
   /**
    * Implementation of boxes_content::options_defaults().
    */
@@ -281,7 +286,7 @@ class os_sv_list extends os_boxes_default {
         $render = $this->display_title($entities);
       }
       else {
-        //let a plugin do the rendering.  if they don't, use the default.
+        // Let a plugin do the rendering. If they don't, use the default.
         $render = $this->_plugins_invoke('render', $entities);
         $render = ($render) ? $render : entity_view($this->entity_type, $entities, $this->options['display']);
       }
