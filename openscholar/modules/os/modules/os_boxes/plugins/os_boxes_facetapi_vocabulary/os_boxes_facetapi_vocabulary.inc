@@ -156,13 +156,12 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
 
     if ($page_id = $this->is_empty_search_needed()) {
       // Block delta is needed since $delta_og_vocab is not unique between sites
-      $cid = 'sm_og_vocabulary:' . $delta . ':' . $delta_og_vocab . ':' . $page_id;
+      $cid = 'sm_og_vocabulary:' . $delta_og_vocab . ':' . $page_id;
+      $this->set_cache_id($cid);
+
     }
     // Verify the cache is still valid, based on time since created.
-    if ($cid && ($cache = cache_get($cid)) && $cache->created > REQUEST_TIME - variable_get('facetapi_vocabulary_cache_timeout', 300)) {
-      $block = $cache->data;
-    }
-    else {
+    if (!$block = $this->get_cache()) {
       // Verify the facet block has something to work on (means - it is in a solr
       // search page). If not - execute the empty solr search without showing
       // the results.
@@ -212,8 +211,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
 
         $block['content'] = render($block['content']);
         if ($set_cache) {
-          $cid = 'sm_og_vocabulary:' . $delta . ':' . $delta_og_vocab . ':' . $page_id;
-          cache_set($cid, $block);
+          $this->set_cache($block);
         }
       }
     }
