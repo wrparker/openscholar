@@ -115,13 +115,18 @@ abstract class os_boxes_default extends boxes_box {
    * @return String
    *  The cache ID string.
    */
-  protected function setCacheID($bundle, $page = NULL) {
+  protected function set_cache_id($bundle = NULL, $page = NULL) {
     if (module_exists('vsite') && !$vsite = vsite_get_vsite()) {
       return;
     }
 
     $this->cache_id = 'os_boxes_cache:' . $vsite->id;
-    $this->cache_id .= is_array($bundle) ? ':any_bundle' : ':' . $bundle;
+    if (is_string($bundle) && $bundle != '') {
+      $this->cache_id .= ':' . $bundle;
+    }
+    else {
+      $this->cache_id .= ':any_bundle';
+    }
     $this->cache_id .= ':' . $this->delta;
     $this->cache_id .= ':' . $page;
   }
@@ -132,7 +137,11 @@ abstract class os_boxes_default extends boxes_box {
    * @return
    *   The cached data, or NULL if no cache exists or is expired.
    */
-  protected function getCache() {
+  protected function get_cache() {
+    if (empty($this->cache_id)) {
+      // No valid cache id.
+      return;
+    }
     if (!$cache = cache_get($this->cache_id)) {
       // No cache exists.
       return;
@@ -145,7 +154,7 @@ abstract class os_boxes_default extends boxes_box {
 
     if ($js_cache = cache_get('assets:' . $this->cache_id)) {
       $assets = unserialize($js_cache->data);
-      $this->addAssets($assets);
+      $this->add_assets($assets);
     }
 
     return $cache->data;
@@ -157,7 +166,7 @@ abstract class os_boxes_default extends boxes_box {
    * @param $assets
    *  Lists of assets.
    */
-  private function addAssets($assets) {
+  private function add_assets($assets) {
     foreach ($assets as $key => $asset) {
       if ($key == 'library') {
         foreach ($asset as $library) {
@@ -170,7 +179,6 @@ abstract class os_boxes_default extends boxes_box {
             drupal_add_js($js);
           }
           else {
-            // Try a better code.
             drupal_add_js(end($js), reset($js));
           }
         }
@@ -186,7 +194,12 @@ abstract class os_boxes_default extends boxes_box {
    * @param $js
    *  The assets of the js. Optional.
    */
-  protected function setCache($cache, $js = NULL) {
+  protected function set_cache($cache, $js = NULL) {
+    if (empty($this->cache_id)) {
+      // No valid cache id.
+      return;
+    }
+
     if (!empty($this->cache_time)) {
       $expire = is_string($this->cache_time) ? strtotime($this->cache_time) : $this->cache_time;
     }
