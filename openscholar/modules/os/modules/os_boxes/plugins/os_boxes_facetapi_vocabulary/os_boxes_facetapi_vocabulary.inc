@@ -15,7 +15,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
    */
   public function options_defaults() {
     $options = parent::options_defaults();
-    $options['bundle'] = FALSE;
+    $options['content_type'] = FALSE;
     $options['vocabularies'] = array();
 
     return $options;
@@ -27,16 +27,16 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
   public function options_form(&$form_state) {
     $form = parent::options_form($form_state);
 
-    $bundle = $this->options['bundle'];
+    $bundle = $this->options['content_type'];
     $selected_vocab = $this->options['vocabularies'];
 
-    if (!empty($form_state['values']['bundle'])) {
+    if (!empty($form_state['values']['content_type'])) {
       // We have the bundle from the AJAX.
-      $bundle = $form_state['values']['bundle'];
+      $bundle = $form_state['values']['content_type'];
       $selected_vocab = 'all';
     }
 
-    $form['bundle'] = array(
+    $form['content_type'] = array(
       '#type' => 'select',
       '#description' => t('Which bundle would you like to use.'),
       '#title' => t('Content type'),
@@ -76,7 +76,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
    *   Solr search page id in case empty search is needed, FALSE otherwise.
    */
   public function is_empty_search_needed() {
-    if (!$bundle = $this->options['bundle']) {
+    if (!$bundle = $this->options['content_type']) {
       return;
     }
 
