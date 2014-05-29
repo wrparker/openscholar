@@ -148,7 +148,7 @@ abstract class os_boxes_default extends boxes_box {
       return;
     }
 
-    if ($cache->expire !== CACHE_PERMANENT && $cache->expire < REQUEST_TIME) {
+    if ($cache->expire != CACHE_PERMANENT && $cache->expire < REQUEST_TIME) {
       // Cache object was expired.
       return;
     }
