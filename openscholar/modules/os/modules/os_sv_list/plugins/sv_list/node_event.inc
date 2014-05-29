@@ -88,9 +88,13 @@ class sv_list_node_event extends sv_list_plugin  {
     return $render;
   }
 
-  public function set_cache_time($options) {
+  /**
+   * @param $options
+   * @return string
+   */
+  public function set_cache_time($options, &$cache_time) {
     if ($options['content_type'] == 'event' && $options['sort_by'] == 'sort_event') {
-      return "5 minutes";
+      $cache_time = "5 minutes";
     }
   }
 }
