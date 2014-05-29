@@ -126,6 +126,8 @@ abstract class os_boxes_default extends boxes_box {
     }
     $this->cache_id .= ':' . $this->delta;
     $this->cache_id .= ':' . $page;
+
+    return $this->cache_id;
   }
 
   /**
