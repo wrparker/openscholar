@@ -219,7 +219,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
   }
 
   /**
-   * When submitting a box we to invalidate here
+   * When submitting a box we need to invalidate here.
    */
   public function options_submit() {
     if (module_exists('vsite') && !$vsite = vsite_get_vsite()) {

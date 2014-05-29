@@ -217,7 +217,7 @@ abstract class os_boxes_default extends boxes_box {
   }
 
   /**
-   * When submitting a box we to invalidate here
+   * When submitting a box we need to invalidate here.
    */
   public function options_submit() {
     if (module_exists('vsite') && !$vsite = vsite_get_vsite()) {
