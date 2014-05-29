@@ -15,7 +15,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
    */
   public function options_defaults() {
     $options = parent::options_defaults();
-    $options['content_type'] = FALSE;
+    $options['bundle'] = FALSE;
     $options['vocabularies'] = array();
 
     return $options;
@@ -27,16 +27,16 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
   public function options_form(&$form_state) {
     $form = parent::options_form($form_state);
 
-    $bundle = $this->options['content_type'];
+    $bundle = $this->options['bundle'];
     $selected_vocab = $this->options['vocabularies'];
 
-    if (!empty($form_state['values']['content_type'])) {
+    if (!empty($form_state['values']['bundle'])) {
       // We have the bundle from the AJAX.
-      $bundle = $form_state['values']['content_type'];
+      $bundle = $form_state['values']['bundle'];
       $selected_vocab = 'all';
     }
 
-    $form['content_type'] = array(
+    $form['bundle'] = array(
       '#type' => 'select',
       '#description' => t('Which bundle would you like to use.'),
       '#title' => t('Content type'),
@@ -76,7 +76,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
    *   Solr search page id in case empty search is needed, FALSE otherwise.
    */
   public function is_empty_search_needed() {
-    if (!$bundle = $this->options['content_type']) {
+    if (!$bundle = $this->options['bundle']) {
       return;
     }
 
@@ -217,6 +217,31 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     }
     return $block;
   }
+
+  /**
+   * When submitting a box we to invalidate here
+   */
+  public function options_submit() {
+    if (module_exists('vsite') && !$vsite = vsite_get_vsite()) {
+      return;
+    }
+
+    // We try to delete the cache of a newly selected bundle, leaving the old cached
+    // info unused. If we will re-select the old bundle its cache will be cleared
+    // next time.
+    if ($this->options['bundle'] && is_string($this->options['bundle'])) {
+      $bundle = $this->options['bundle'];
+    }
+    else {
+      $bundle = NULL;
+    }
+    $cid = $this->set_cache_id($bundle);
+
+    cache_clear_all($cid, 'cache', TRUE);
+    cache_clear_all('assets:' . $cid, 'cache', TRUE);
+  }
+}
+
 }
 
 /**
