@@ -226,15 +226,15 @@ class os_sv_list extends os_boxes_default {
 
     $bundle = ($this->options['content_type'] != 'all') ? $this->options['content_type'] : NULL;
     $block = parent::render();
-
     $page_num = (isset($_GET['page'])) ? $_GET['page'] : 0;
 
-    $this->options += $this->options_defaults();
-    $page = 0;
-    $ids = $this->get_ids($page_num, $page);
-
     $this->set_cache_id($bundle, $page_num);
-    if (!$block['content'] = $this->get_cache()) {
+    if (($block['content'] = $this->get_cache()) === FALSE) {
+
+      $this->options += $this->options_defaults();
+      $page = 0;
+      $ids = $this->get_ids($page_num, $page);
+      
       $this->_set_plugins($this->entity_type, $bundle);
 
       // Add the pager.
@@ -278,46 +278,48 @@ class os_sv_list extends os_boxes_default {
       $entities = entity_load($this->entity_type, $ids);
       $entities = array_map(function ($e) { $e->sv_list = TRUE; return $e; }, $entities);
       $this->_plugins_invoke('entities_alter', $entities);
-      if (empty($entities)) {
-        return $block;
+      
+      // If we have entities render them out, otherwise cache (null) as the content.
+      if (!empty($entities)) {
+        
+        if ($this->options['display'] == 'title') {
+          $render = $this->display_title($entities);
+        }
+        else {
+          // Let a plugin do the rendering. If they don't, use the default.
+          $render = $this->_plugins_invoke('render', $entities);
+          $render = ($render) ? $render : entity_view($this->entity_type, $entities, $this->options['display']);
+        }
+  
+        $layout_func = 'layout_' . $this->options['layout'];
+        if ($this->options['layout'] != 'List' && method_exists($this, $layout_func)) {
+          $this->$layout_func($render);
+        }
+  
+        // Now render to html.
+        $content = drupal_render($render);
+        $delta = $this->delta;
+        $class = strtolower(implode(' ', array(
+          'os-sv-list',
+          $this->plugin_key,
+          'sv-list-' . $this->options['content_type'],
+          'sv-list-view-' . $this->options['display'],
+          'sv-list-layout-' . $this->options['layout'],
+          'sv-grid-' . $this->options['grid_columns'],
+        )));
+  
+        $assets = array(
+          'library' => array(
+            'system', 'drupal.ajax',
+          ),
+          'js' => array(
+            drupal_get_path('module', 'os_sv_list') . '/os_sv_list_display.js',
+          ),
+        );
+  
+        $block['content'] = "<div id='box-${delta}-page' data-page='${page_num}' data-delta='${delta}' class='${class}'>${content}</div>${pager}{$more}";
       }
-
-      if ($this->options['display'] == 'title') {
-        $render = $this->display_title($entities);
-      }
-      else {
-        // Let a plugin do the rendering. If they don't, use the default.
-        $render = $this->_plugins_invoke('render', $entities);
-        $render = ($render) ? $render : entity_view($this->entity_type, $entities, $this->options['display']);
-      }
-
-      $layout_func = 'layout_' . $this->options['layout'];
-      if ($this->options['layout'] != 'List' && method_exists($this, $layout_func)) {
-        $this->$layout_func($render);
-      }
-
-      // Now render to html.
-      $content = drupal_render($render);
-      $delta = $this->delta;
-      $class = strtolower(implode(' ', array(
-        'os-sv-list',
-        $this->plugin_key,
-        'sv-list-' . $this->options['content_type'],
-        'sv-list-view-' . $this->options['display'],
-        'sv-list-layout-' . $this->options['layout'],
-        'sv-grid-' . $this->options['grid_columns'],
-      )));
-
-      $assets = array(
-        'library' => array(
-          'system', 'drupal.ajax',
-        ),
-        'js' => array(
-          drupal_get_path('module', 'os_sv_list') . '/os_sv_list_display.js',
-        ),
-      );
-
-      $block['content'] = "<div id='box-${delta}-page' data-page='${page_num}' data-delta='${delta}' class='${class}'>${content}</div>${pager}{$more}";
+      
       $this->set_cache($block['content'], $assets);
     }
 
@@ -350,11 +352,7 @@ class os_sv_list extends os_boxes_default {
       $this->_plugins_invoke($sort, $query);
     }
     $this->_plugins_invoke('sort_alter', $query);
-    
-    //person, !image
-    //event exception.  dletas.
 
-    
     //execute
     $result = $query->execute();
     return (isset($result[$this->entity_type])) ? array_keys($result[$this->entity_type]) : array();
@@ -367,7 +365,7 @@ class os_sv_list extends os_boxes_default {
     if (module_exists('vsite') && $space = spaces_get_space()) {
       $efq->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $space->id);
     }
-    
+    print_r($efq);
     return $efq;
   }
   

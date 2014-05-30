@@ -136,21 +136,22 @@ abstract class os_boxes_default extends boxes_box {
    * Retrieve the cache.
    *
    * @return
-   *   The cached data, or NULL if no cache exists or is expired.
+   *   The cached data, or FALSE if no cache exists or is expired.
+   *   NULL is a valid return value for an empty box.
    */
   protected function get_cache() {
     if (empty($this->cache_id)) {
       // No valid cache id.
-      return;
+      return FALSE;
     }
     if (!$cache = cache_get($this->cache_id)) {
       // No cache exists.
-      return;
+      return FALSE;
     }
 
     if ($cache->expire != CACHE_PERMANENT && $cache->expire < REQUEST_TIME) {
       // Cache object was expired.
-      return;
+      return FALSE;
     }
 
     if ($js_cache = cache_get('assets:' . $this->cache_id)) {
