@@ -242,8 +242,6 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
   }
 }
 
-}
-
 /**
  * AJAX callback to attach the vocab to the form.
  *
