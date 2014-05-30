@@ -659,23 +659,55 @@ ul ul ul ul {
 }
 
 .ical {
-  background:url('../images/ical_icon.gif') no-repeat !important;
   padding:3px 0 3px 25px !important;
   border-bottom:none !important;
- 
+  position: relative;
 }
 
 .webcal {
-  background:url('../images/ical_icon.gif') no-repeat !important;
   padding:3px 0 3px 25px !important;
   border-bottom:none !important;
+  position: relative;
+}
 
+.webcal:before,
+.ical:before {
+  background: url('../images/scholarbase-sprite.png') no-repeat -48px -727px;
+  width: 21px;
+  height: 21px;
+  position: absolute;
+  left: 0;
+  content: '';
+}
+
+.rss {
+  padding:3px 0 3px 25px !important;
+  border-bottom:none !important;
+  position: relative;
+}
+
+.rss:before {
+  background: url('../images/scholarbase-sprite.png') no-repeat 0px -727px;
+  width: 21px;
+  height: 21px;
+  position: absolute;
+  left: 0;
+  content: '';
 }
 
 .subscribe {
-  background:url('../images/calendar_icon.gif') no-repeat !important;
   padding:3px 0 3px 25px !important;
   border-bottom:none !important;
+  position: relative;
+}
+
+.subscribe:before {
+  background: url('../images/scholarbase-sprite.png') no-repeat -24px -727px;
+  width: 21px;
+  height: 21px;
+  position: absolute;
+  left: 0;
+  content: '';
 }
 
 .register {
@@ -690,13 +722,6 @@ div.register-link-teaser {
 div.register-link-teaser .register {
   font-weight: normal;
   border-bottom:none !important;
-}
-
-.rss {
-background:url('../images/rss_icon.gif') no-repeat !important;
-padding:3px 0 3px 25px !important;
- border-bottom:none !important;
-
 }
 
 .os_events_export_links .first {
