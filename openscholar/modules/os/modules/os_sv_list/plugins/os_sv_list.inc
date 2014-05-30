@@ -226,12 +226,13 @@ class os_sv_list extends os_boxes_default {
 
     $bundle = ($this->options['content_type'] != 'all') ? $this->options['content_type'] : NULL;
     $block = parent::render();
-    $page_num = (isset($_GET['page'])) ? $_GET['page'] : 0;
-
+    $page_num = pager_find_page(PagerDefault::$maxElement);
+    
     $this->set_cache_id($bundle, $page_num);
     if (($block['content'] = $this->get_cache()) === FALSE) {
-
+      $block['content'] = NULL;
       $this->options += $this->options_defaults();
+      
       $page = 0;
       $ids = $this->get_ids($page_num, $page);
       
@@ -319,10 +320,9 @@ class os_sv_list extends os_boxes_default {
   
         $block['content'] = "<div id='box-${delta}-page' data-page='${page_num}' data-delta='${delta}' class='${class}'>${content}</div>${pager}{$more}";
       }
-      
       $this->set_cache($block['content'], $assets);
     }
-
+    $block['content'] = $block['content'];
     return $block;
   }
   
@@ -361,11 +361,9 @@ class os_sv_list extends os_boxes_default {
   public function query() {
     $efq = new EntityFieldQuery();
     $efq->entityCondition('entity_type', $this->entity_type);
-    
     if (module_exists('vsite') && $space = spaces_get_space()) {
       $efq->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $space->id);
     }
-    print_r($efq);
     return $efq;
   }
   
