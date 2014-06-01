@@ -1,12 +1,37 @@
 @media print {
-	
-/*Reset Style*/
+
+
 body {margin:0; padding:0; line-height: 1.4em; word-spacing:1px; letter-spacing:0.2px; font: 13px Arial, Helvetica,"Lucida Grande", serif; color: #000;}	
 
-#branding_header, #branding_footer, #menu-bar, .sidebar, #footer, .block-os-search-db {
+/* Links */
+a:link, a:visited {background: transparent; color:#333; text-decoration:none;}
+a:link[href^="http://"]:after, a[href^="http://"]:visited:after {content: " (" attr(href) ") "; font-size: 11px;}
+a[href^="http://"] {color:#000;} 
+
+#branding_header, 
+#branding_footer, 
+#menu-bar, 
+.sidebar, 
+#footer, 
+.block-os-search-db,
+.block-boxes-os_slideshow_box {
      display: none;
 }
+  .region,
+ #header {
+  min-height:50px;
+  border-bottom:1px solid #ccc;
+  margin-bottom:20px;
+  padding-bottom:5px;
+  }
 
+  .region.region-content-top {
+    min-height:0;
+  border:none;
+  border-bottom:none;
+  margin-bottom:0;
+  padding-bottom:0;
+  }
 
 #content-column .content-inner {
      margin: 0px ! important;
@@ -21,11 +46,49 @@ body {margin:0; padding:0; line-height: 1.4em; word-spacing:1px; letter-spacing:
 #content-column .block ul {
 margin-left: 18px;
 }
+  h2.block-title,
+  .region {
+   
+  display:block;
+  clear:both;
 
-/* Links */
-a:link, a:visited {background: transparent; color:#333; text-decoration:none;}
-a:link[href^="http://"]:after, a[href^="http://"]:visited:after {content: " (" attr(href) ") "; font-size: 11px;}
-a[href^="http://"] {color:#000;} 
+  }
+  
+
+  article,
+  .views-row {
+margin-bottom: 2.5em;
+  display:block;
+  clear:both;
+}
+  
+  .node-event.node-teaser {
+  margin-bottom: 5em;
+ 
+  }
+  
+  
+  .os_sv_list_box.sv-list-event {
+  margin-top: 5em;
+  display:block;
+  clear:both;
+  
+  }
+
+  .field .field-label {
+display: inline;
+font-size: .9em;
+font-weight: 400;
+
+}
+  
+  .event-start {
+margin-top: 0;
+padding-top: 0;
+  display:block;
+  float:none;
+}
+
 
 }
 

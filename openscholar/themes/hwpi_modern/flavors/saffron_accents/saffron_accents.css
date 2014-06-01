@@ -27,8 +27,23 @@ h1.page-title,
 	color: #D16103;
 	}
 
+#boxes-box-site_info h1 + h2 {
+margin-bottom: 0;
+}
+
+#boxes-box-site_info p {
+margin-bottom: 20px;
+font-family:arial;
+font-size: 15px;
+}
+
+#boxes-box-site_info p a {
+color:#215990;
+}
+
 h1#page-title {
-	color:#D16103;font-size: 27px;
+	color:#D16103;
+	font-size: 27px;
 	}
 
 #menu-bar {
