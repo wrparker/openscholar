@@ -456,7 +456,7 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
           $file = system_retrieve_file($src, 'public://', TRUE);
           // Images are found so delete the tags from the description before
           // assigning it to the body of the node.
-          $feed->description = _os_reader_remove_description_images($feed->description);
+          $feed->description = preg_replace('/<img[^>]+\>/i', '', $feed->description);
         }
         $wrapper->body->set(array('value' => $feed->description, 'format' => 'filtered_html'));
       }
@@ -482,18 +482,6 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
   $feed_wrapper->save();
 
   return $node;
-}
-
-/**
- * Helper function; Removes image tags from the feed's description.
- *
- * @param $description
- *  The feed's description.
- * @return mixed
- *  The description after removing the image tags.
- */
-function _os_reader_remove_description_images($description) {
-  return preg_replace('/<img[^>]+\>/i', '', $description);
 }
 
 /**
