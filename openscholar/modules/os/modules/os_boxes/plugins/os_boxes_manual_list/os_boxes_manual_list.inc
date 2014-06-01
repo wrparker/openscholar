@@ -104,45 +104,53 @@ class os_boxes_manual_list extends os_boxes_default {
 
   public function render() {
     $block = parent::render();
-    $links = array();
 
-    $nodes = $this->options['nodes'];
-    if ($this->options['random']) {
-      $nodes = array($nodes[array_rand($nodes)]);
-    }
+    // Avoid caching if set to random.
+    $random = $this->options['random'];
 
-    foreach ($nodes as $n) {
-      if ($node = node_load($n['nid'])) {
-        if ($this->options['style'] == 'teasers') {
-          // Theme the nodes as a teaser.
-  
-          // Node may not load if it has since been deleted.
-          $links[$n['weight']] = render(node_view($node, 'teaser'));
-        }
-        elseif ($this->options['style'] == 'full') {
-          $node = node_load($n['nid']);
-          $links[$n['weight']] = render(node_view($node, 'full'));
-        }
-        else {
-          $l = array(
-            'href' => 'node/' . $n['nid'],
-            'title' => $n['title'],
-          );
-          $links[$n['weight']] = $l;
+    if ($random || ($block['content'] = $this->get_cache()) === FALSE) {
+
+      $links = array();
+
+      $nodes = $this->options['nodes'];
+      if ($random) {
+        $nodes = array($nodes[array_rand($nodes)]);
+      }
+
+      foreach ($nodes as $n) {
+        if ($node = node_load($n['nid'])) {
+          if ($this->options['style'] == 'teasers') {
+            // Theme the nodes as a teaser.
+
+            // Node may not load if it has since been deleted.
+            $links[$n['weight']] = render(node_view($node, 'teaser'));
+          }
+          elseif ($this->options['style'] == 'full') {
+            $node = node_load($n['nid']);
+            $links[$n['weight']] = render(node_view($node, 'full'));
+          }
+          else {
+            $l = array(
+              'href' => 'node/' . $n['nid'],
+              'title' => $n['title'],
+            );
+            $links[$n['weight']] = $l;
+          }
         }
       }
-    }
-    ksort($links);
-    if (empty($links)) {
-      $block['title'] = '';
-      $block['subject'] = '';
-      return $block;
-    }
-    if ($this->options['style'] == 'teasers' || $this->options['style'] == 'full') {
-      $block['content'] = theme('item_list', array('items' => $links, 'attributes' => array('class' => array('featured-links'))));
-    }
-    else {
-      $block['content'] = theme('links', array('links' => $links, 'attributes' => array('class' => array('featured-links'))));
+      ksort($links);
+      if (empty($links)) {
+        $block['title'] = '';
+        $block['subject'] = '';
+        return $block;
+      }
+      if ($this->options['style'] == 'teasers' || $this->options['style'] == 'full') {
+        $block['content'] = theme('item_list', array('items' => $links, 'attributes' => array('class' => array('featured-links'))));
+      }
+      else {
+        $block['content'] = theme('links', array('links' => $links, 'attributes' => array('class' => array('featured-links'))));
+      }
+      $this->set_cache($block['content']);
     }
     return $block;
   }
