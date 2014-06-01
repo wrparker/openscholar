@@ -84,7 +84,10 @@ class os_boxes_html extends os_boxes_default {
   public function render() {
     $block = parent::render();
 
-    $block['content'] = check_markup($this->options['text']['value'], $this->options['text']['format']);
+    if (($block['content'] = $this->get_cache()) === FALSE) {
+      $block['content'] = check_markup($this->options['text']['value'], $this->options['text']['format']);
+      $this->set_cache($block['content']);
+    }
 
     return $block;
   }

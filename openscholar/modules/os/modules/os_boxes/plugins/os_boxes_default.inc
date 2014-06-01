@@ -94,6 +94,9 @@ abstract class os_boxes_default extends boxes_box {
    * Implementation of boxes_content::render().
    */
   public function render() {
+    // Default cache id set with default (NULL) bundle.
+    $this->set_cache_id();
+
     $title = isset($this->title) ? $this->title : NULL;
     $block['title'] = $title;
     $block['delta'] = $this->delta;
