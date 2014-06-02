@@ -17,7 +17,7 @@ class os_boxes_pub_type extends os_boxes_default {
   public function options_defaults() {
     $options = parent::options_defaults();
 
-    $options['whitelist'] = array('all');
+    $options['whitelist'] = array('all' => 'all');
     $options['display_num'] = 1;
 
     return $options;
@@ -59,7 +59,6 @@ class os_boxes_pub_type extends os_boxes_default {
       '#title' => t('Display number of items in category'),
       '#default_value' => $this->options['display_num'],
     );
-    //drupal_add_js(drupal_get_path('module', 'os_boxes').'/theme/js/selectAll.js');
 
     $form += parent::options_form($form_state);
     return $form;
@@ -69,7 +68,6 @@ class os_boxes_pub_type extends os_boxes_default {
    * Implementation of boxes_content::render().
    */
   public function render() {
-    //@todo
     $block = parent::render();
 
     $delta = 'publication_types-block';
@@ -98,12 +96,12 @@ class os_boxes_pub_type extends os_boxes_default {
           $view->set_item('block', 'filter', 'tid', $filter);
         }
 
-  	//Set the display num in the view (the count)
-  	$arguments = $view->display_handler->get_option('arguments');
-  	$arguments['name']['summary_options']['count'] = ($this->options['display_num'])?1:0;
-  	$view->display_handler->override_option('arguments', $arguments);
+        // Set the display num in the view (the count).
+        $arguments = $view->display_handler->get_option('arguments');
+        $arguments['name']['summary_options']['count'] = ($this->options['display_num'])?1:0;
+        $view->display_handler->override_option('arguments', $arguments);
 
-        //Tie this view to this box (this tells the view to call this box's view alter)
+        // Tie this view to this box (this tells the view to call this box's view alter).
         $view->dom_id = "boxes-".$this->delta;
 
         $output = $view->execute_display('block');
@@ -127,17 +125,9 @@ class os_boxes_pub_type extends os_boxes_default {
   /**
    * Return the cache parameters for this box
    */
-  public function cache_info(){
-
-//    //Clear when biblio nodes are saved
-//    $cache_key = array(
-//      'os_og' => array('current' => 'current'),
-//      'node' => array('biblio' => 'biblio'),
-//    );
-//
-//    return array('type' => BLOCK_CACHE_CONTENT_CACHE, 'keys' => $cache_key);
-
-  	return array(); //caching disabled so ajax pager gets init'ed
+  public function cache_info() {
+    // Caching disabled so ajax pager gets init'ed.
+  	return array();
   }
 
 }
