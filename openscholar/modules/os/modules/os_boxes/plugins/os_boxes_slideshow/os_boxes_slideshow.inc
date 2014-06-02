@@ -167,6 +167,7 @@ class os_boxes_slideshow extends os_boxes_default {
    * Implementation of boxes_content::render().
    */
   public function render() {
+
     if (module_exists('vsite') && !vsite_get_vsite()) {
       return;
     }
@@ -183,98 +184,111 @@ class os_boxes_slideshow extends os_boxes_default {
     drupal_add_css(drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_slideshow/os_boxes_slideshow.css');
 
     if ($view = views_get_view('os_image_gallery_slideshow')) {
+      $bundles = array(
+        'media_gallery',
+        'slideshow_slide'
+      );
+      $this->set_cache_id($bundles);
+      if (($block['content'] = $this->get_cache()) === FALSE) {
 
-      $view->init_display();
-      $handler = $view->display_handler;
-      $style_options = $handler->get_option('style_options');
+        $view->init_display();
+        $handler = $view->display_handler;
+        $style_options = $handler->get_option('style_options');
 
-      // Add slideshow widgets.
-      foreach(array('pager', 'controls', 'slide_counter') as $option) {
-        foreach($style_options['widgets'] as $position => $info) {
-          $style_options['widgets'][$position]['views_slideshow_' . $option]['enable'] = ($position == $this->options[$option]);
+        // Add slideshow widgets.
+        foreach(array('pager', 'controls', 'slide_counter') as $option) {
+          foreach($style_options['widgets'] as $position => $info) {
+            $style_options['widgets'][$position]['views_slideshow_' . $option]['enable'] = ($position == $this->options[$option]);
+          }
         }
-      }
 
-      // Limit to one gallery.
-      if (((int)$this->options['gallery_nid']) > 0) {
-        $filters = $handler->get_option('filters');
-        $filters['nid'] = array(
-          'id' => 'nid',
-          'table' => 'node',
-          'field' => 'nid',
-          'relationship' => 'file_to_node',
-          'group_type' => 'group',
-          'ui_name' => '',
-          'operator' => '=',
-          'group' => '1',
-          'exposed' => FALSE,
-          'expose' => array(),
-          'value' => array('min'=>'', 'max'=>'', 'value'=>$this->options['gallery_nid']),
+        // Limit to one gallery.
+        if (((int)$this->options['gallery_nid']) > 0) {
+          $filters = $handler->get_option('filters');
+          $filters['nid'] = array(
+            'id' => 'nid',
+            'table' => 'node',
+            'field' => 'nid',
+            'relationship' => 'file_to_node',
+            'group_type' => 'group',
+            'ui_name' => '',
+            'operator' => '=',
+            'group' => '1',
+            'exposed' => FALSE,
+            'expose' => array(),
+            'value' => array('min'=>'', 'max'=>'', 'value'=>$this->options['gallery_nid']),
+          );
+          $handler->set_option('filters', $filters);
+        }
+
+        // Effects.
+        $style_options['views_slideshow_cycle']['effect'] = $this->options['effect'];
+        $style_options['views_slideshow_cycle']['timeout'] = $this->options['timeout'];
+        $style_options['views_slideshow_cycle']['speed'] = $this->options['speed'];
+        $handler->set_option('style_options', $style_options);
+
+        // Title.
+        if ($this->options['show_image_titles'] == 'none') {
+          $fields = $handler->get_option('fields');
+          $fields['media_title']['exclude'] = TRUE;
+          $handler->set_option('fields', $fields);
+        }
+
+        // Number of items.
+        if ((int)$this->options['items_per_page'] > 0) {
+          $view->set_items_per_page((int) $this->options['items_per_page']);
+        }
+        else {
+          $handler->set_option('use_pager', FALSE);
+        }
+
+        $output = $view->preview();
+
+        // Dynamic size adjustments.
+        $styles = image_styles();
+        $prefix = 'slideshow_';
+        $data = array();
+        foreach ($styles as $name => $presets) {
+          if (strpos($name, $prefix) === 0) {
+            $dim = current($presets['effects']);
+            $dim = $dim['data'];
+            $data[$dim['width']] = $dim;
+          }
+        }
+        ksort($data);
+
+        foreach ($data as $width => $dim) {
+          if ($this->options['size'] <= $width) {
+            $ratio = $dim['height']/$dim['width'];
+            $preset = $prefix.$width;
+            break;
+          }
+        }
+
+        $width = $this->options['size'];
+        $height = $width * $ratio;
+
+        // Swap out the dimenions of the preset with the dimenions the user wants.
+        $patt_w = '/(<img [^>]* width=")([^"]*)("[^>]*>)/';
+        $patt_h = '/(<img [^>]* height=")([^"]*)("[^>]*>)/';
+        $patt_url = '/<img [^>]*src="([^"]*)"[^>]*>/';
+
+        $output = preg_replace($patt_w, '${1}'.($width).'px'.'${3}', $output);
+        $output = preg_replace($patt_h, '${1}'.($height).'px'.'${3}', $output);
+        $matches = array();
+        preg_match_all($patt_url, $output, $matches, PREG_SET_ORDER);
+        foreach ($matches as $m) {
+          $output = str_replace($m[1], image_style_url($preset, $m[1]), $output);
+        }
+        $assets = array(
+          'css' => array(
+            drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_slideshow/theme/os-slideshow-' . $this->options['style'] . '.css',
+            drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_slideshow/os_boxes_slideshow.css',
+          ),
         );
-        $handler->set_option('filters', $filters);
+        $block['content'] = $output;
+        $this->set_cache($block['content'], $assets);
       }
-
-      // Effects.
-      $style_options['views_slideshow_cycle']['effect'] = $this->options['effect'];
-      $style_options['views_slideshow_cycle']['timeout'] = $this->options['timeout'];
-      $style_options['views_slideshow_cycle']['speed'] = $this->options['speed'];
-      $handler->set_option('style_options', $style_options);
-
-      // Title.
-      if ($this->options['show_image_titles'] == 'none') {
-        $fields = $handler->get_option('fields');
-        $fields['media_title']['exclude'] = TRUE;
-        $handler->set_option('fields', $fields);
-      }
-
-      // Number of items.
-      if ((int)$this->options['items_per_page'] > 0) {
-        $view->set_items_per_page((int) $this->options['items_per_page']);
-      }
-      else {
-        $handler->set_option('use_pager', FALSE);
-      }
-
-      $output = $view->preview();
-
-      // Dynamic size adjustments.
-      $styles = image_styles();
-      $prefix = 'slideshow_';
-      $data = array();
-      foreach ($styles as $name => $presets) {
-        if (strpos($name, $prefix) === 0) {
-          $dim = current($presets['effects']);
-          $dim = $dim['data'];
-          $data[$dim['width']] = $dim;
-        }
-      }
-      ksort($data);
-
-      foreach ($data as $width => $dim) {
-        if ($this->options['size'] <= $width) {
-          $ratio = $dim['height']/$dim['width'];
-          $preset = $prefix.$width;
-          break;
-        }
-      }
-
-      $width = $this->options['size'];
-      $height = $width * $ratio;
-
-      // Swap out the dimenions of the preset with the dimenions the user wants.
-      $patt_w = '/(<img [^>]* width=")([^"]*)("[^>]*>)/';
-      $patt_h = '/(<img [^>]* height=")([^"]*)("[^>]*>)/';
-      $patt_url = '/<img [^>]*src="([^"]*)"[^>]*>/';
-
-      $output = preg_replace($patt_w, '${1}'.($width).'px'.'${3}', $output);
-      $output = preg_replace($patt_h, '${1}'.($height).'px'.'${3}', $output);
-      $matches = array();
-      preg_match_all($patt_url, $output, $matches, PREG_SET_ORDER);
-      foreach ($matches as $m) {
-        $output = str_replace($m[1], image_style_url($preset, $m[1]), $output);
-      }
-
-      $block['content'] = $output;
     }
 
     return $block;

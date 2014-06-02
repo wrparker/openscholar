@@ -39,8 +39,8 @@ class os_boxes_pub_year extends os_boxes_default {
    */
   public function render() {
     $block = parent::render();
+    $this->set_cache_id('biblio');
     if (($block['content'] = $this->get_cache()) === FALSE) {
-
       $delta = 'publication_years-block';
       list($name, $display_id) = explode('-', $delta);
       if ($view = views_get_view($name)) {

@@ -69,7 +69,7 @@ class os_boxes_pub_type extends os_boxes_default {
    */
   public function render() {
     $block = parent::render();
-
+    $this->set_cache_id('biblio');
     if (($block['content'] = $this->get_cache()) === FALSE) {
       $delta = 'publication_types-block';
       list($name, $display_id) = explode('-', $delta);
