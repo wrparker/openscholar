@@ -54,13 +54,15 @@ class os_boxes_media extends os_boxes_default {
   }
 
   public function options_submit($form, &$form_state) {
+    parent::options_submit($form, $form_state);
+
     $old = $form['options']['fid']['#default_value']['fid'];
 
     if ($old != $this->options['fid']) {
 
-      $id = false;
-      if (module_exists('vsite') && $space = spaces_get_space()) {
-        $id = $space->group->nid;
+      $id = FALSE;
+      if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
+        $id = $vsite->group->nid;
       }
 
       if ($id && $file = file_load($this->options['fid'])){
