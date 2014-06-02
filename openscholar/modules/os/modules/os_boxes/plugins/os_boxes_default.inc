@@ -231,7 +231,7 @@ abstract class os_boxes_default extends boxes_box {
     // We try to delete the cache of a newly selected bundle, leaving the old cached
     // info unused. If we will re-select the old bundle its cache will be cleared
     // next time.
-    if ($this->options['content_type'] && is_string($this->options['content_type'])) {
+    if (isset($this->options['content_type']) && is_string($this->options['content_type'])) {
       $bundle = $this->options['content_type'];
     }
     else {
