@@ -832,13 +832,6 @@ ul.nice-menu-down li li.menuparent:hover {
 	margin:0;
 }
 
-.section-nav ul.menu li a {
-	display: block;
-	text-decoration: none !important;
-	padding: 8px 15px;
-	border-bottom: 1px solid #ebe3df;
-}
-
 
 
 .section-nav a:hover {
