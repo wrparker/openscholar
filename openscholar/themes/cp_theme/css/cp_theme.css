@@ -205,12 +205,12 @@ div.ctools-modal-content .modal-header {
   }
 
 div.ctools-modal-content .modal-header a {
-float:right;
-color: transparent;
-background: url('../../../themes/os_basetheme/images/icon-close-window.png') no-repeat;
-width:30px;
-height:30px;
-  }
+  float:right;
+  color: transparent;
+  background: url('../../../themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 0 -772px;
+  width:30px;
+  height:30px;
+}
 
 div.ctools-modal-content .modal-content {
   padding: 12px 12px 0 12px;
@@ -272,7 +272,7 @@ font-weight: bold;}
 /** OVERLAY MODAL OVERRIDES **/
 
 #overlay-close, #overlay-close:hover {
-    background: url('../../../themes/os_basetheme/images/icon-close-window.png') no-repeat;
+  background: url('../../../themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 0 -772px;
 	width:30px;
 	height:30px;
 	position: relative;

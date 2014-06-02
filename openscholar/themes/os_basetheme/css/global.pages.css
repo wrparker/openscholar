@@ -743,17 +743,17 @@ div.ctools-modal-content {
 div.ctools-modal-content .modal-header {
   background: #EFEFEF;
   border-bottom:2px solid #C4C2C2;
- height:24px;
- padding:10px;
-  }
+  height:24px;
+  padding:10px;
+}
 
 div.ctools-modal-content .modal-header a {
-float:right;
-color: transparent;
-background: url('../images/icon-close-window.png') no-repeat;
-width:30px;
-height:30px;
-  }
+  float:right;
+  color: transparent;
+  background: url('../images/scholarbase-sprite.png') no-repeat 0 -772px;
+  width:30px;
+  height:30px;
+}
 
 div.ctools-modal-content .modal-content {
   padding: 12px 12px 0 12px;
@@ -811,9 +811,11 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 }
 
 /** OVERLAY MODAL OVERRIDES **/
-	
+
+/* The overlay should never be open with os_basetheme. This is here in case we miss
+ * a path that needs the cp_theme activated */
 #overlay-close, #overlay-close:hover {
-    background: url('../images/icon-close-window.png') no-repeat;
+  background: url('../images/scholarbase-sprite.png.png') no-repeat 0 -772px;
 	width:30px;
 	height:30px;
 	position: relative;
@@ -893,11 +895,11 @@ width: calc(100% - 4em) !important;
 
 
 .page-roadmap .ui-icon-closethick {
-background: url('../images/icon-close-window.png') no-repeat;
-width: 30px;
-height: 30px;
-position: relative;
-margin: -5px -20px;
+  background: url('../images/scholarbase-sprite.png.png') no-repeat 0 -772px;
+  width: 30px;
+  height: 30px;
+  position: relative;
+  margin: -5px -20px;
 }
 
 
