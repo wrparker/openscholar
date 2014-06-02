@@ -59,9 +59,10 @@ Feature:
      Then I should see "The alias is already in use."
 
   @api @first
-  Scenario: Verify it is impossible to use aliases if they exist without the purl.
+  Scenario: Verify that term alias is generated correctly when the term is
+            assigned to a single bundle and pathauto is used.
     Given I am logging in as "john"
-      And I create the vocabulary "test-vocab" in the group "john" assigned to bundle "blog"
+      And I create the vocabulary "Test vocab" in the group "john" assigned to bundle "blog"
       And I visit "john/cp/build/taxonomy/testvocab/add"
       And I fill in "Name" with "test-term"
       And I check the box "Generate automatic URL alias"
