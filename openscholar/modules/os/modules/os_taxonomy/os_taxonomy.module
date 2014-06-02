@@ -63,6 +63,11 @@ function os_taxonomy_entity_info_alter(&$entity_info) {
 function os_taxonomy_taxonomy_term_uri($term) {
   $path = taxonomy_term_uri($term);
 
+  // Don't add the bundle prefix when saving the term.
+  if (isset($term->op) && $term->op == t('Save')) {
+    return $path;
+  }
+
   if ($context = og_context()) {
     // Get the associated bundles with the vocabulary.
     $bundles = os_taxonomy_og_vocabulary_bundles($term->vid, $context['gid']);
