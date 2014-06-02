@@ -70,47 +70,49 @@ class os_boxes_pub_type extends os_boxes_default {
   public function render() {
     $block = parent::render();
 
-    $delta = 'publication_types-block';
-    list($name, $display_id) = explode('-', $delta);
-    if ($view = views_get_view($name)) {
-      if ($view->access($display_id)) {
-        $view->set_display('block');
-        if (!in_array('all', $this->options['whitelist']) || !$this->options['whitelist']['all']) {
-          $filter = array(
-            'operator' => 'in',
-            'value' => $this->options['whitelist'],
-            'group' => '0',
-            'exposed' => FALSE,
-            'expose' => array(
-              'operator' => FALSE,
-              'label' => '',
-            ),
-            'id' => 'tid',
-            'table' => 'biblio_types',
-            'field' => 'tid',
-            'override' => array(
-              'button' => 'Use default',
-            ),
-            'relationship' => 'none',
-          );
-          $view->set_item('block', 'filter', 'tid', $filter);
+    if (($block['content'] = $this->get_cache()) === FALSE) {
+      $delta = 'publication_types-block';
+      list($name, $display_id) = explode('-', $delta);
+      if ($view = views_get_view($name)) {
+        if ($view->access($display_id)) {
+          $view->set_display('block');
+          if (!in_array('all', $this->options['whitelist']) || !$this->options['whitelist']['all']) {
+            $filter = array(
+              'operator' => 'in',
+              'value' => $this->options['whitelist'],
+              'group' => '0',
+              'exposed' => FALSE,
+              'expose' => array(
+                'operator' => FALSE,
+                'label' => '',
+              ),
+              'id' => 'tid',
+              'table' => 'biblio_types',
+              'field' => 'tid',
+              'override' => array(
+                'button' => 'Use default',
+              ),
+              'relationship' => 'none',
+            );
+            $view->set_item('block', 'filter', 'tid', $filter);
+          }
+
+          // Set the display num in the view (the count).
+          $arguments = $view->display_handler->get_option('arguments');
+          $arguments['name']['summary_options']['count'] = ($this->options['display_num'])?1:0;
+          $view->display_handler->override_option('arguments', $arguments);
+
+          // Tie this view to this box (this tells the view to call this box's view alter).
+          $view->dom_id = "boxes-".$this->delta;
+
+          $output = $view->execute_display('block');
+          $view->destroy();
+          $block['content'] = $output['content'];
         }
-
-        // Set the display num in the view (the count).
-        $arguments = $view->display_handler->get_option('arguments');
-        $arguments['name']['summary_options']['count'] = ($this->options['display_num'])?1:0;
-        $view->display_handler->override_option('arguments', $arguments);
-
-        // Tie this view to this box (this tells the view to call this box's view alter).
-        $view->dom_id = "boxes-".$this->delta;
-
-        $output = $view->execute_display('block');
         $view->destroy();
-        $block['content'] = $output['content'];
       }
-      $view->destroy();
+      $this->set_cache($block['content']);
     }
-
     return $block;
   }
 
