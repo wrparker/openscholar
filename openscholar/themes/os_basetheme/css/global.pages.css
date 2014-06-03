@@ -1160,26 +1160,32 @@ border:1px solid #CCC;
 }
 
 
-.jcarousel-container a.jcarousel-next,
-.jcarousel-container a.jcarousel-next:hover {
- 			background-image: url('../images/jcarou-next-horizontal.png'); 
- 			background-color: transparent;
- 			right: -14px; 
- 			top: 46px;
- 			width:22px;
- 			height:22px;
- 			background-position: -3px -3px;
- 			}
+.jcarousel-container a.jcarousel-next {
+  background-image: url('../images/scholarbase-sprite.png');
+  background-color: transparent;
+  background-position: -30px 0;
+  right: -15px;
+  top: 46px;
+  width: 22px;
+  height: 22px;
+}
 
-.jcarousel-container a.jcarousel-prev,
+.jcarousel-container a.jcarousel-next:hover {
+  background-position: -30px 0;
+}
+
+.jcarousel-container a.jcarousel-prev {
+  background-image: url('../images/scholarbase-sprite.png');
+  background-position: -54px 0;
+  left: -15px;
+  top: 46px;
+  width: 22px;
+  height: 22px;
+}
+
 .jcarousel-container a.jcarousel-prev:hover {
-			background-image: url('../images/jcarou-prev-horizontal.png');
-			left: -15px; 
-			top: 46px;
-			width:22px;
-			height:22px;
-			background-position: -1px -3px;
-	       }
+  background-position: -54px 0;
+}
 	       
 	
 /* Recent Images Widget */
