@@ -1,5 +1,10 @@
 <?php
 
+function os_boxes_schema() {
+  $schema['cache_os_boxes'] = drupal_get_schema_unprocessed('system', 'cache');
+  return $schema;
+}
+
 /**
  * Enables oEmbedprovider and Web Widgets modules.
  */
@@ -11,4 +16,12 @@ function os_boxes_update_7001(&$sb) {
   module_enable($modules);
 
   return t('Enabled oEmbedprovider and Web Widgets modules');
+}
+
+/**
+ * Create new cache table {cache_os_boxes}.
+ */
+function os_boxes_update_7002(&$status) {
+  $schema['cache_os_boxes'] = drupal_get_schema_unprocessed('system', 'cache');
+  db_create_table('cache_os_boxes', $schema['cache_os_boxes']);
 }

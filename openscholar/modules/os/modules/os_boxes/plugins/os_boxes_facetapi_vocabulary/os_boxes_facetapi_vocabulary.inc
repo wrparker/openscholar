@@ -242,8 +242,8 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     }
     $cid = $this->set_cache_id($bundle);
 
-    cache_clear_all($cid, 'cache_block', TRUE);
-    cache_clear_all('assets:' . $cid, 'cache_block', TRUE);
+    cache_clear_all($cid, 'cache_os_boxes', TRUE);
+    cache_clear_all('assets:' . $cid, 'cache_os_boxes', TRUE);
   }
 }
 

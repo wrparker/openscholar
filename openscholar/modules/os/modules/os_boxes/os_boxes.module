@@ -581,14 +581,14 @@ function os_boxes_invalidate_cache($node) {
   $general_cid = 'os_boxes_cache:' . $gid;
 
   // Flush raw data.
-  cache_clear_all($cid, 'cache_block', TRUE);
+  cache_clear_all($cid, 'cache_os_boxes', TRUE);
 
   // Flush general raw data.
-  cache_clear_all($general_cid, 'cache_block', TRUE);
+  cache_clear_all($general_cid, 'cache_os_boxes', TRUE);
 
   // Flush assets.
-  cache_clear_all('assets:' . $cid, 'cache_block', TRUE);
+  cache_clear_all('assets:' . $cid, 'cache_os_boxes', TRUE);
 
   // Flush general assets.
-  cache_clear_all('assets:' . $general_cid, 'cache_block', TRUE);
+  cache_clear_all('assets:' . $general_cid, 'cache_os_boxes', TRUE);
 }

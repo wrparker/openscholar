@@ -231,6 +231,7 @@ class os_sv_list extends os_boxes_default {
     $this->set_cache_id($bundle, $page_num);
     if (($block['content'] = $this->get_cache()) === FALSE) {
       $block['content'] = NULL;
+      $assets = array();
       $this->options += $this->options_defaults();
       
       $page = 0;
