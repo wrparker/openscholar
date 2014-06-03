@@ -571,24 +571,24 @@ function os_boxes_node_update($node) {
  *  change.
  */
 function os_boxes_invalidate_cache($node) {
-  
-  if (!isset($node->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id']) || !$node->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id']) {
+  $wrapper = entity_metadata_wrapper('node', $node);
+  if (!$wrapper->__isset(OG_AUDIENCE_FIELD)) {
     return;
   }
 
-  $gid = $node->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id'];
+  $gid = $wrapper->{OG_AUDIENCE_FIELD}->get(0)->getIdentifier();
   $cid = 'os_boxes_cache:' . $gid . ':' . $node->type;
   $general_cid = 'os_boxes_cache:' . $gid;
 
   // Flush raw data.
-  cache_clear_all($cid, 'cache', TRUE);
+  cache_clear_all($cid, 'cache_block', TRUE);
 
   // Flush general raw data.
-  cache_clear_all($general_cid, 'cache', TRUE);
+  cache_clear_all($general_cid, 'cache_block', TRUE);
 
   // Flush assets.
-  cache_clear_all('assets:' . $cid, 'cache', TRUE);
+  cache_clear_all('assets:' . $cid, 'cache_block', TRUE);
 
   // Flush general assets.
-  cache_clear_all('assets:' . $general_cid, 'cache', TRUE);
+  cache_clear_all('assets:' . $general_cid, 'cache_block', TRUE);
 }
