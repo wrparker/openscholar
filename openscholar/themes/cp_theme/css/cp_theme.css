@@ -79,19 +79,6 @@ html.js input.throbbing {
   background-position: 100% -15px !important;
 }
 
-#block-os-powered-by {
-	float:right;
-	text-align:left;
-	margin-top:14px;
-	height:15px;
-}
-
-.page-cp #block-os-powered-by a,
- .page-cp #block-os-powered-by a:hover {
-    background: url("../../../themes/os_basetheme/images/poweredby.png") 0 -42px no-repeat;
-    margin-top: -43px;
-}
-
 .os-help-link {
     background: url("../../../themes/os_basetheme/images/scholarbase-sprite.png") no-repeat 0 -150px;
     display: block;

@@ -315,7 +315,7 @@ body#widget {display: inline-block;}
 
 
 #powered-by a {
-    background: url("../images/poweredby.png") no-repeat scroll 0 0 transparent;
+    background: url("../images/scholarbase-sprite.png") no-repeat scroll -13px -521px transparent;
     border: medium none !important;
     display: block;
     height: 26px;
