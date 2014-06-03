@@ -141,21 +141,20 @@ line-height:24px;
 }
 
 a.rslides_nav {
-    background: none repeat scroll 0 0 #284F76;
+    background: url('../images/scholarbase-sprite.png') repeat scroll 0 0 #284F76;
     color: white !important;
     float: none;
     font-size: 14px;
-    background: url('../images/ss_arrow.png');
     padding: 1px 13px 0;
     
 }
 
 a.rslides_nav.next {
-    background-position: -38px -4px;
+    background-position: -55px -25px;
     }
 
 a.rslides_nav.prev {
-	 background-position: -6px -4px;
+	 background-position: -21px -25px;
 }
 
 /** BASE SLIDESHOW STYLES END - SPECIFIC LAYOUT STYLE CSS BEGINS BELOW **/
