@@ -14,7 +14,7 @@ Feature:
      When I visit "john/publications"
      Then I should get a "200" HTTP response
       And I visit "john/publications"
-     Then I should get a "304" HTTP response
+     Then response header "x-drupal-cache" should be "HIT"
       And cache is "disabled" for anonymous users
 
   @api @first
