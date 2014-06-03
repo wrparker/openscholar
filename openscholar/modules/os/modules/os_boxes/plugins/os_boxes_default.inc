@@ -147,7 +147,7 @@ abstract class os_boxes_default extends boxes_box {
       // No valid cache id.
       return FALSE;
     }
-    if (!$cache = cache_get($this->cache_id,'cache_block')) {
+    if (!$cache = cache_get($this->cache_id,'cache_os_boxes')) {
       // No cache exists.
       return FALSE;
     }
@@ -157,7 +157,7 @@ abstract class os_boxes_default extends boxes_box {
       return FALSE;
     }
 
-    if ($js_cache = cache_get('assets:' . $this->cache_id, 'cache_block')) {
+    if ($js_cache = cache_get('assets:' . $this->cache_id, 'cache_os_boxes')) {
       $assets = unserialize($js_cache->data);
       $this->add_assets($assets);
     }
@@ -212,11 +212,11 @@ abstract class os_boxes_default extends boxes_box {
       $expire = CACHE_PERMANENT;
     }
 
-    cache_set($this->cache_id, $cache, 'cache_block', $expire);
+    cache_set($this->cache_id, $cache, 'cache_os_boxes', $expire);
 
     if ($js) {
       $cache_id = 'assets:' . $this->cache_id;
-      cache_set($cache_id, serialize($js), 'cache_block', $expire);
+      cache_set($cache_id, serialize($js), 'cache_os_boxes', $expire);
     }
   }
 
@@ -239,8 +239,8 @@ abstract class os_boxes_default extends boxes_box {
     }
     $cid = $this->set_cache_id($bundle);
 
-    cache_clear_all($cid, 'cache_block', TRUE);
-    cache_clear_all('assets:' . $cid, 'cache_block', TRUE);
+    cache_clear_all($cid, 'cache_os_boxes', TRUE);
+    cache_clear_all('assets:' . $cid, 'cache_os_boxes', TRUE);
   }
 }
 
