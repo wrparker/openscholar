@@ -161,6 +161,11 @@ abstract class os_boxes_default extends boxes_box {
       $assets = unserialize($js_cache->data);
       $this->add_assets($assets);
     }
+    
+    // For Admin users, add indicator that the returned block came from cache.
+    if($cache->data && user_access('administer openscholar')) {
+      $cache->data = $cache->data . "<!--From Cache CID[{$this->cache_id}]-->";
+    }
 
     return $cache->data;
   }
