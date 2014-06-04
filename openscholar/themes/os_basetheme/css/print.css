@@ -6,7 +6,11 @@ margin:0 !important;
 padding:0 !important;
 line-height: 1.4;
 word-spacing:1.1pt;
-letter-spacing:0.2pt; font-family: arial, serif; color: #000; background: none; font-size: 12pt; }
+letter-spacing:0.2pt; 
+font-family: arial, serif; 
+color: #000; 
+background: none; 
+font-size: 12pt; }
 
 /*Headings */
 h1,h2,h3,h4,h5,h6 { font-family: Helvetica, Arial, sans-serif; }
@@ -46,7 +50,7 @@ tr {page-break-inside: avoid;}
 #footer, 
 .block-os-search-db,
 .block-boxes-os_slideshow_box {
-     display: none;
+     display: none !important;
 }
 
   .region {
