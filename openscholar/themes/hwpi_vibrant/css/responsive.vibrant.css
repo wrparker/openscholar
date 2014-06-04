@@ -40,7 +40,7 @@
     background: url("../images/icon_menu.png") no-repeat scroll 15px center #FFFFFF !important;
 }
 .link-count-mobi-util a {
-    background: url("../images/icon_plus.png") no-repeat scroll center center #F7F7F7 !important;
+  background-position: -52px -527px;
 }
 .link-count-mobi-search a {
     background: url("../images/icon_search.png") no-repeat scroll center center #4077AE !important;

@@ -51,7 +51,7 @@ background: url("../../../hwpi_basetheme/images/icon_menu.png") no-repeat 15px c
 }
 
 .link-count-mobi-util a {
-background: url("../../../hwpi_basetheme/images/icon_plus_black.png") no-repeat center center;
+  background-position: -52px -527px;
 }
 
 

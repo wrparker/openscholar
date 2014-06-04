@@ -246,15 +246,18 @@ padding: 8px 8px !important;
     left: -9999px;
     position: absolute;
 }
+
 * {
-     margin: 0;
-    padding: 0;
-}
-.link-count-mobi-util a {
-    background: url("../images/icon_plus.png") no-repeat scroll center center transparent;
-    min-height: 20px;
+  margin: 0;
+  padding: 0;
 }
 
+.link-count-mobi-util a {
+  background-image: url("../images/hwpi_basesprite.png");
+  background-position: -52px -502px;
+  background-origin: content-box;
+  min-height: 20px;
+}
 
 .link-count-mobi-search a {
        background: url("../images/icon_search.png") no-repeat scroll center center transparent;
