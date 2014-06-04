@@ -221,17 +221,19 @@ ul.mobile-buttons {
     text-align: left !important;
 }
 .link-count-mobi-main a {
-    background: url("../images/icon_menu.png") no-repeat scroll 15px center transparent;
+  background-image: url("../images/hwpi_basesprite.png");
+  background-position: 0 -493px;
 }
+
 .mobile-buttons a {
-    color: #FFFFFF!important;
-display: block;
-font: bold 13px arial,sans-serif;
-height: 22px !important;
-letter-spacing: 1px;
-padding: 8px 12px !important;
-text-decoration: none;
-text-transform: uppercase;
+  color: #FFFFFF!important;
+  display: block;
+  font: bold 13px arial,sans-serif;
+  height: 22px !important;
+  letter-spacing: 1px;
+  padding: 8px 12px !important;
+  text-decoration: none;
+  text-transform: uppercase;
 }
 
 .link-count-mobi-search a {

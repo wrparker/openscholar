@@ -33,7 +33,7 @@
   }
 
   .link-count-mobi-main a {
-    background: url("../../../hwpi_basetheme/images/icon_menu.png") no-repeat 15px center #A61D31 !important;
+    background-color: #A61D31;
   }
 
   .link-count-mobi-util a {

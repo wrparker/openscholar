@@ -37,7 +37,7 @@
   border-radius: 0 0 0 0;
 }
 .link-count-mobi-main a {
-    background: url("../images/icon_menu.png") no-repeat scroll 15px center #FFFFFF !important;
+  background-position: 0 -521px;
 }
 .link-count-mobi-util a {
   background-position: -52px -527px;
