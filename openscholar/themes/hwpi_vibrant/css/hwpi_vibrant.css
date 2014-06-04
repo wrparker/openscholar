@@ -940,36 +940,34 @@ ul.links li.link-count-node-readmore a {
  color: #57ACFF;
 }
 
-
 #footer ul.menu a {
   text-transform: none;
   font-size: 16px;
 }
 
 #powered-by a {
-    background-position: 0 -25px;
-  
+  background-position-y: -546px;
 }
 
 #footer .footer-login {
-    background: none;
-    border-left: none;
-    color: #57ACFF;
-    text-shadow: none;
-    padding: 0;
-    font-size: 13px;
+  background: none;
+  border-left: none;
+  color: #57ACFF;
+  text-shadow: none;
+  padding: 0;
+  font-size: 13px;
 }
 
 /* SLIDESHOW */
 #layout_16_9_side .slide {
   background: #ac253a;
-background: -moz-linear-gradient(top, #ac253a 0%, #880f1c 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ac253a), color-stop(100%, #880f1c));
-background: -webkit-linear-gradient(top, #ac253a 0%, #880f1c 100%);
-background: -o-linear-gradient(top, #ac253a 0%, #880f1c 100%);
-background: -ms-linear-gradient(top, #ac253a 0%, #880f1c 100%);
-background: linear-gradient(to bottom, #ac253a 0%, #880f1c 100%);
-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ac253a', endColorstr='#880f1c',GradientType=0 );
+  background: -moz-linear-gradient(top, #ac253a 0%, #880f1c 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ac253a), color-stop(100%, #880f1c));
+  background: -webkit-linear-gradient(top, #ac253a 0%, #880f1c 100%);
+  background: -o-linear-gradient(top, #ac253a 0%, #880f1c 100%);
+  background: -ms-linear-gradient(top, #ac253a 0%, #880f1c 100%);
+  background: linear-gradient(to bottom, #ac253a 0%, #880f1c 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ac253a', endColorstr='#880f1c',GradientType=0 );
 }
 
 a.rslides_nav {
