@@ -2,6 +2,21 @@
 
 class OsImporterClassValidator extends NodeValidate {
 
+  public function getFieldsInfo() {
+    return parent::getFieldsInfo() +  array(
+      'body' => array(
+        'preprocess' => array(
+          array($this, 'preprocessText'),
+        ),
+      ),
+      '_field_semester' => array(
+        'validators' => array(
+          array($this, 'preprocessText'),
+        ),
+      ),
+    );
+  }
+
   public function validate() {
     $fields = $this->getFields();
 
