@@ -958,10 +958,7 @@ function os_form_node_form_alter(&$form, $form_state) {
   // the current node type.
   if (node_access('create', $form['#node']->type) || node_access('edit', $form['#node']->type)) {
     $elements = array(
-      'os_menu',
-      'author',
       'options',
-      'path',
     );
 
     foreach ($elements as $element) {
