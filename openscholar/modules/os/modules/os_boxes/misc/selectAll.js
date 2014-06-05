@@ -27,7 +27,6 @@
       // When unchecking an option that is not the "all" option, uncheck the
       // "all" checkbox.
       $cbxs.on('change', function(e) {
-        console.log(e.target);
         if (!e.target.checked && e.target.value != 'all') {
           select_all_cbx.attr('checked', false);
         }
