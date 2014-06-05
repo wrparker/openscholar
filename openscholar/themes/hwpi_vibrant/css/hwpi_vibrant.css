@@ -280,11 +280,10 @@ div.contextual-links-wrapper a,
   border-radius: 3px 3px 0 0;
 }
 
-#menu-bar ul.nice-menu .menuparent a span,
-#menu-bar ul.nice-menu .menuparent a:hover span,
-#menu-bar ul.nice-menu .menuparent a.active span {
-  background: url("../images/menu-arrow.png") no-repeat scroll right center transparent;
-  padding-right: 20px;
+#menu-bar ul.nice-menu .menuparent a:before,
+#menu-bar ul.nice-menu .menuparent a:hover:before,
+#menu-bar ul.nice-menu .menuparent a.active:before {
+  background-position: -46px -566px;
 }
 
 #menu-bar ul.nice-menu .menuparent ul a span {

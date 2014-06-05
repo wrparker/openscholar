@@ -332,12 +332,12 @@ ul.nice-menu-down li ul li ul {
   font-weight:normal;
 }
 
-#menu-bar ul.nice-menu .menuparent a span,
-#menu-bar ul.nice-menu .menuparent a:hover span,
-#menu-bar ul.nice-menu .menuparent a.active span {
-  background-image: url("../../images/menu-arrow_sh.png");
-
+#menu-bar ul.nice-menu .menuparent a:before,
+#menu-bar ul.nice-menu .menuparent a:hover:before,
+#menu-bar ul.nice-menu .menuparent a.active:before {
+  background-position: -57px -566px;
 }
+
 .not-front .field-name-body {
     font-family: open sans, arial, sans-serif;
     font-size: 16px;
