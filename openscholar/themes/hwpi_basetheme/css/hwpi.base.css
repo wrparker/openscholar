@@ -82,7 +82,8 @@ table caption {
 #footer .footer-login:after {
   position: absolute;
   content: '';
-  background-image: url('../images/readmore_arrow.gif');
+  background-image: url("../../hwpi_basetheme/images/hwpi_basesprite.png");
+  background-position: 0 -575px;
   margin: auto;
   top: 1px;
   bottom: 0;
@@ -122,7 +123,8 @@ table caption {
 .more-link:after {
   position: absolute;
   content: '';
-  background-image: url('../images/readmore_arrow.gif');
+  background-image: url("../../hwpi_basetheme/images/hwpi_basesprite.png");
+  background-position: 0 -575px;
   height: 9px;
   width: 6px;
   top: 0;
