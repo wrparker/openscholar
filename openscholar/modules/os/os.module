@@ -961,8 +961,9 @@ function os_form_node_form_alter(&$form, $form_state) {
       'os_menu',
       'author',
       'options',
+      'path',
     );
-    
+
     foreach ($elements as $element) {
       $form[$element]['#access'] = TRUE;
     }
