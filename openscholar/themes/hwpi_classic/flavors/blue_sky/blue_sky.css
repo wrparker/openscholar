@@ -115,3 +115,31 @@ background-color: #8996A0;
 .section-nav .menu-depth-1 > a {
 background: none repeat scroll 0 0 #8996A0 !important;
 }
+
+.node-event .field-name-field-date, 
+.node-event .field-name-field-event-location {
+color: #1e1e1e;
+}
+
+
+/* TEST STYLES */
+#header {
+background: #F9F9F9 !important;
+}
+
+#boxes-box-site_info a,
+#search-block-form .form-item label  {
+color: #1e1e1e; 
+}
+
+.region-header-third ul.nice-menu a {
+color: #4E84C4;
+}
+
+
+
+
+
+
+
+
