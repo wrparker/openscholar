@@ -64,15 +64,14 @@ ul.nice-menu ul {
   color: #FFF;
 }
 
-#menu-bar ul.nice-menu .menuparent a {
-    background: url(../../hwpi_basetheme/images/menu_down_arrowOn.gif) right center no-repeat;
+#menu-bar ul.nice-menu .menuparent a:before {
+  background-image: url('../../hwpi_basetheme/images/menu_down_arrowOn.gif');
 }
-
 
 #menu-bar ul.nice-menu .menuparent.over > a,
 #menu-bar ul.nice-menu .menuparent a:hover,
 #menu-bar ul.nice-menu .menuparent a.active {
-    background: url(../../hwpi_basetheme/images/menu_down_arrowOn.gif) right center no-repeat #7B272B;
+  background-color: #7B272B;
 }
 
 #menu-bar ul.nice-menu .menuparent ul li a,

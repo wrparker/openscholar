@@ -328,14 +328,14 @@ ul.nice-menu-down li ul li ul {
     box-shadow: 0 0;
 }
 
-
-
 .block-boxes-os_taxonomy_fbt.navigation a {
-	font-weight:normal;
-	}
+  font-weight:normal;
+}
 
-#menu-bar ul.nice-menu .menuparent a span, #menu-bar ul.nice-menu .menuparent a:hover span, #menu-bar ul.nice-menu .menuparent a.active span {
-    background: url("../../images/menu-arrow_sh.png") no-repeat scroll right center transparent;
+#menu-bar ul.nice-menu .menuparent a span,
+#menu-bar ul.nice-menu .menuparent a:hover span,
+#menu-bar ul.nice-menu .menuparent a.active span {
+  background-image: url("../../images/menu-arrow_sh.png");
 
 }
 .not-front .field-name-body {
