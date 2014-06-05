@@ -315,18 +315,18 @@ body#widget {display: inline-block;}
 
 
 #powered-by a {
-    background: url("../images/scholarbase-sprite.png") no-repeat scroll -13px -521px transparent;
-    border: medium none !important;
-    display: block;
-    height: 26px;
-    padding: 0 !important;
-    text-decoration: none !important;
-    text-indent: -999em;
-    width: 85px;
-    margin-right:8px;
-    float:right;
-    display:inline;
-  }
+  background: url("../images/scholarbase-sprite.png") no-repeat scroll -13px -521px transparent;
+  border: medium none !important;
+  display: block;
+  height: 26px;
+  padding: 0 !important;
+  text-decoration: none !important;
+  text-indent: -999em;
+  width: 85px;
+  margin-right:8px;
+  float:right;
+  display:inline;
+}
 
 
 
@@ -516,9 +516,8 @@ ul.class_material_field_class {
     }
 
 ul.class_material_field_class a.class_material_field_class_anchor {
-    background: url("../images/scholarbase-sprite.png") 0 -492px no-repeat;
-    padding-left: 15px;
-
+  background: url("../images/scholarbase-sprite.png") 0 -489px no-repeat;
+  padding-left: 15px;
 }
 
 /* BLOG COMMENT ICON */

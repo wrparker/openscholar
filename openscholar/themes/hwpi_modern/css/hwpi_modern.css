@@ -14,12 +14,24 @@ body {
 /* Elements */
 
 #columns a.node-readmore {
-    border-bottom: none;
-    font-size:12px;
-    font-weight:bold;
-    background: url("../../hwpi_basetheme/images/readmore_arrow.gif") no-repeat scroll right center transparent;
-    float: none;
-    padding-right: 11px;
+  border-bottom: none;
+  font-size:12px;
+  font-weight:bold;
+  float: none;
+  padding-right: 11px;
+  position: relative;
+}
+
+#columns a.node-readmore:after {
+  position: absolute;
+  content: '';
+  background-image: url("../../hwpi_basetheme/images/readmore_arrow.gif");
+  height: 9px;
+  width: 6px;
+  top: 1px;
+  bottom: 0;
+  margin: auto;
+  right: 0px;
 }
 
 
