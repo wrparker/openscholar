@@ -104,7 +104,7 @@ class os_boxes_site_logo extends os_boxes_default {
       return $form;
     }
 
-    function options_submit($form, $form_state) {
+    public function options_submit($form, $form_state) {
       // do the cropping bit now
       $file_data = $form_state['input']['file'];
 

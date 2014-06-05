@@ -545,6 +545,18 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @When /^I create the vocabulary "([^"]*)" in the group "([^"]*)" assigned to bundle "([^"]*)"$/
+   */
+  public function iCreateVocabInGroup($vocab_name, $group, $bundle) {
+    return array(
+      new Step\When('I visit "' . $group . '/cp/build/taxonomy/add"'),
+      new Step\When('I fill in "Name" with "' . $vocab_name . '"'),
+      new Step\When('I select "' . $bundle . '" from "Content types"'),
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
    * @Given /^I create the term "([^"]*)" in vocabulary "([^"]*)"$/
    */
   public function iCreateTheTermInVocab($term_name, $vocab_name) {
