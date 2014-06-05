@@ -36,7 +36,8 @@ position: relative;
 
 #menu-bar ul.nice-menu .menuparent > a:before {
   position: absolute;
-  background-image: url(../images/menu_down_arrowOff.gif);
+  background-image: url('../images/hwpi_basesprite.png');
+  background-position: -12px -566px;  /* Blue Arrow */
   background-color: transparent;
   margin: auto;
   content: '';
@@ -53,12 +54,13 @@ position: relative;
 #menu-bar ul.nice-menu .menuparent a.active {
   background-color: #1E2540;
   color:#FFF;
+}
 
-}#menu-bar ul.nice-menu .menuparent.over > a:before,
- #menu-bar ul.nice-menu .menuparent a:hover:before,
- #menu-bar ul.nice-menu .menuparent a.active:before {
-   background-image: url('../images/menu_down_arrowOn.gif');
- }
+#menu-bar ul.nice-menu .menuparent.over > a:before,
+#menu-bar ul.nice-menu .menuparent a:hover:before,
+#menu-bar ul.nice-menu .menuparent a.active:before {
+  background-position: 0 -566px; /* White Arrow */
+}
 
 /* Targets parents below top level */
 #menu-bar ul.nice-menu ul .menuparent.over > a,

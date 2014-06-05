@@ -131,7 +131,7 @@ blockquote {
 
 
 #menu-bar ul.nice-menu .menuparent a:before {
-  background-image :url('../../hwpi_basetheme/images/menu_down_arrowOn.gif');
+  background-position: 0 -566px; /* White Arrow */
 }
 
 #menu-bar ul.nice-menu .menuparent.over > a,
