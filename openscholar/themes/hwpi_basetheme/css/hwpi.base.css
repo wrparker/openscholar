@@ -464,7 +464,7 @@ ol.search-results li.search-result:last-child {
 .event-start .event-start {
   width: 55px;
   height: 67px;
-  background: url(../images/event-shield.png) no-repeat 0 0 transparent;
+  background: url('../images/event-shield.png') no-repeat 0 0 transparent;
   float: left;
   margin-top: 3px;
 }
