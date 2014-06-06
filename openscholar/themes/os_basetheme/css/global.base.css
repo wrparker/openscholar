@@ -1055,3 +1055,22 @@ div.status:before {
 div.error:before {
   background-position: -72px -231px;
 }
+
+/** Toolbar overrides */
+
+#toolbar-home a span {
+  background: url('../images/scholarbase-sprite.png') no-repeat 0 -845px;
+}
+
+#toolbar div.toolbar-menu a.toggle {
+  background: url('../images/scholarbase-sprite.png') 0 -820px no-repeat;
+}
+
+#toolbar a.toggle {
+  background-image: url('../images/scholarbase-sprite.png');
+  background-position: 0px -859px;
+}
+
+#toolbar a.toggle-active {
+  background-position: -27px -859px;
+}
