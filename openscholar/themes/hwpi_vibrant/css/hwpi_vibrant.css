@@ -693,11 +693,11 @@ table td.mini {
 }
 
 .view .date-nav-wrapper .date-next a {
-    background: url("../images/cal_rightarrow.gif") no-repeat scroll 0 1px transparent;
+    background-position: -16px -590px;
 }
 
 .view .date-nav-wrapper .date-prev a {
-    background: url("../images/cal_leftarrow.gif") no-repeat scroll 0 0 transparent;
+    background-position: 0px -590px;
 }
 
 .view .date-nav-wrapper .date-prev a, .view .date-nav-wrapper .date-next a {
