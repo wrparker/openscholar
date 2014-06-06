@@ -557,7 +557,6 @@ ul.class_material_field_class a.class_material_field_class_anchor {
     position: relative;
 }
 
-
 .video-indicator {
 	background-image: url("../images/scholarbase-sprite.png");
   background-position: -44px -85px;
@@ -572,6 +571,11 @@ ul.class_material_field_class a.class_material_field_class_anchor {
 
 .media-gallery-item:hover .video-indicator {
   background-position: -44px -133px;
+}
+
+.draggable-wrapper .draggable-handle {
+  background-image: url("../images/scholarbase-sprite.png");
+  background-position: 0 -45px;
 }
 
 /* VIDEO ATTACHED TO A NODE  */

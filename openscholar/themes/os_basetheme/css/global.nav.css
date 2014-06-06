@@ -428,8 +428,13 @@ z-index: 500;
 	
 a.contextual-links-trigger {
   padding: 0 2px !important;
+  background-image: url('../images/scholarbase-sprite.png');
+  background-position: -44px -204px;
+}
 
-}	
+a.contextual-links-trigger:hover {
+  background-position: -44px -186px;
+}
 	
 div.contextual-links-wrapper ul.contextual-links {
   -moz-border-radius: 0; /* LTR */
