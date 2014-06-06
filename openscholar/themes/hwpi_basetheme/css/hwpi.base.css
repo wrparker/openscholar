@@ -888,6 +888,7 @@ div.messages {
   padding: 0 0 0 40px;
   background-position: 0 0;
   background-repeat: no-repeat;
+  position: relative;
 }
 
 div.status,
@@ -896,14 +897,27 @@ div.warning {
   background-image: none;
 }
 
-div.status .message-wrapper {
-  background-image: url("../../../../../misc/message-24-ok.png");
+div.messages:before {
+  content: normal;
 }
-div.error .message-wrapper {
-  background-image: url("../../../../../misc/message-24-error.png");
+
+div.messages .message-wrapper:before {
+  position: absolute;
+  content: '';
+  background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
+  height: 24px;
+  width: 24px;
+  top: 0px;
+  left: 0px;
 }
-div.warning .message-wrapper {
-  background-image: url("../../../../../misc/message-24-warning.png");
+
+div.status .message-wrapper:before {
+  background-position: -38px -231px;
+}
+
+div.error .message-wrapper:before {
+  background-position: -72px -231px;
+}
 }
 
 
