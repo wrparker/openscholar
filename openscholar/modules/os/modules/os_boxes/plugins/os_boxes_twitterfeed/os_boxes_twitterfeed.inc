@@ -120,6 +120,10 @@ class os_boxes_twitterfeed extends os_boxes_default {
   public function render() {
     $block = parent::render();
 
+    if (!module_exists('twitter_pull')) {
+      return $block;
+    }
+
     if (($block['content'] = $this->get_cache()) === FALSE) {
       $twitkey = $this->options['twitter_username'];
       $num_items = $this->options['num_items'];
@@ -137,12 +141,9 @@ class os_boxes_twitterfeed extends os_boxes_default {
         }
       }
 
-      $output = '';
-      if (module_exists('twitter_pull')) {
-        $output = twitter_pull_render($twitkey, $title = NULL, $num_items);
-      }
+      $output = twitter_pull_render($twitkey, $title = NULL, $num_items);
 
-      // Appends a followme link
+      // Appends a followme link.
       if ($this->options['followme_link']) {
         $output .= '<div class="twitter-followme">' . l($this->options['followme_text'], $this->options['followme_url']) . '</div>';
       }
