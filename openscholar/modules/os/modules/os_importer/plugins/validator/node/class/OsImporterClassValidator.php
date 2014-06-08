@@ -9,44 +9,51 @@ class OsImporterClassValidator extends NodeValidate {
           array($this, 'preprocessText'),
         ),
       ),
-      '_field_semester' => array(
+      'field_semester' => array(
         'validators' => array(
-          array($this, 'preprocessText'),
+          array($this, 'SemesterValidation'),
+        ),
+      ),
+      'field_offered_year' => array(
+        'validators' => array(
+          array($this, 'offeredYearValidation'),
         ),
       ),
     );
   }
 
-  public function validate() {
-    $fields = $this->getFields();
-
-    $fields['body'] = array('value' => $fields['body']);
-
+  /**
+   * Validate the semester field.
+   *
+   * @param $value
+   */
+  function SemesterValidation($value) {
     $info = field_info_field('field_semester');
 
     // Validate the semester.
     $allowed_values = $info['settings']['allowed_values'] + array('N/A' => 'N/A');
-    if (!in_array($fields['field_semester'], $allowed_values)) {
+    if (!in_array($value, $allowed_values)) {
       $params = array(
         '@allowed-values' => implode(', ', $allowed_values),
-        '@value' => $fields['field_semester'],
+        '@value' => $value,
       );
 
-      $this->setError(t('The given value(@value) is not validate and should be one of @allowed-values', $params));
+      $this->setError(t('The given value(@value) is not validate value for the semester field and should be one of @allowed-values', $params));
     }
+  }
 
-    // Validate the year.
-    $year = $fields['field_offered_year:start'];
-    if (!is_numeric($year) || (is_numeric($year) && $year > 9999)) {
+  /**
+   * Validating the offered year.
+   *
+   * @param $value
+   */
+  public function offeredYearValidation($value) {
+    if (!is_numeric($value) || (is_numeric($value) && $value > 9999)) {
       $params = array(
-        '@value' => $year,
+        '@value' => $value,
       );
 
-      $this->setError(t('The year field is not valid value(@value). the value should be a year.', $params));
+      $this->setError(t('The value for the year field is not valid value(@value). The value should be a year.', $params));
     }
-
-    $this->setFields($fields);
-
-    parent::validate();
   }
 }
