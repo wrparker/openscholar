@@ -11,11 +11,13 @@ class OsImporterClassValidator extends NodeValidate {
       ),
       'field_semester' => array(
         'validators' => array(
+          array($this, 'isNotEmpty'),
           array($this, 'validationSemester'),
         ),
       ),
       'field_offered_year' => array(
         'preprocess' => array(
+          array($this, 'isNotEmpty'),
           array($this, 'preprocessOfferedYear'),
         ),
       ),
