@@ -173,6 +173,7 @@ class os_taxonomy_fbt extends os_boxes_default {
   }
 
   function options_submit($form, $form_state) {
+    parent::options_submit($form, $form_state);
 
     // Only continues the user is selecting individual types.
     // For "All types" and "Determine for me", this value is overridden in
@@ -200,7 +201,7 @@ class os_taxonomy_fbt extends os_boxes_default {
     if (empty($this->options['vocabulary'])) {
       $this->options['vocabulary'] = current(array_keys(self::get_all_vocabularies()));
 
-      if(empty($this->options['vocabulary'])){
+      if (empty($this->options['vocabulary'])){
         // There are no vocabularies defined in the VSite.
         return $block;
       }
@@ -272,11 +273,6 @@ class os_taxonomy_fbt extends os_boxes_default {
 
     return $block;
   }
-
-  /**
-   * Return the cache parameters for this box.
-   */
-  public function cache_info() {}
 
   /**
    * Get all the vocabularies id using the taxonomy terms.
