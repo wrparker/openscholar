@@ -1,8 +1,8 @@
 <?php
 
 $plugin = array(
-  'label' => t('Link'),
-  'description' => t('Validating the link content type.'),
+  'label' => t('Media gallery'),
+  'description' => t('Validating the media gallert content type.'),
   'bundle' => 'media_gallery',
   'entity_type' => 'node',
   'class' => 'OsImporterMediaGalleryValidator',
