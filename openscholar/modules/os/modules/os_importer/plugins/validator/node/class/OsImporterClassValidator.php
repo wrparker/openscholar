@@ -11,12 +11,12 @@ class OsImporterClassValidator extends NodeValidate {
       ),
       'field_semester' => array(
         'validators' => array(
-          array($this, 'SemesterValidation'),
+          array($this, 'validationSemester'),
         ),
       ),
       'field_offered_year' => array(
-        'validators' => array(
-          array($this, 'offeredYearValidation'),
+        'preprocess' => array(
+          array($this, 'preprocessOfferedYear'),
         ),
       ),
     );
@@ -26,9 +26,12 @@ class OsImporterClassValidator extends NodeValidate {
    * Validate the semester field.
    *
    * @param $value
+   *  The value of the field.
+   * @param $field
+   *  The field name.
    */
-  function SemesterValidation($value) {
-    $info = field_info_field('field_semester');
+  function validationSemester($value, $field) {
+    $info = field_info_field($field);
 
     // Validate the semester.
     $allowed_values = $info['settings']['allowed_values'] + array('N/A' => 'N/A');
@@ -43,17 +46,17 @@ class OsImporterClassValidator extends NodeValidate {
   }
 
   /**
-   * Validating the offered year.
-   *
-   * @param $value
+   * Preprocess the offered year and preprocess the form on the way.
    */
-  public function offeredYearValidation($value) {
-    if (!is_numeric($value) || (is_numeric($value) && $value > 9999)) {
+  function preprocessOfferedYear($value) {
+    if (!is_numeric($value['start']) || (is_numeric($value['start']) && $value['start'] > 9999)) {
       $params = array(
-        '@value' => $value,
+        '@value' => $value['start'],
       );
 
       $this->setError(t('The value for the year field is not valid value(@value). The value should be a year.', $params));
     }
+
+    return $this->preprocessDate($value['start']);
   }
 }
