@@ -6,7 +6,7 @@ class OsImporterFeedValidator extends NodeValidate {
     return parent::getFieldsInfo() + array(
       'field_url' => array(
         'validators' => array(
-          array($this, 'validatorUrlNotEmpty')
+          array($this, 'validatorUrlNotEmpty'),
         ),
       ),
     );
