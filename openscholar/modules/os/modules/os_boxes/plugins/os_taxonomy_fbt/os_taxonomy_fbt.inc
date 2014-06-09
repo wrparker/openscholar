@@ -252,8 +252,8 @@ class os_taxonomy_fbt extends os_boxes_default {
       }
     }
 
-    $this->set_cache_id(reset($this->options['bundles']));
-    if (($block['content'] = $this->get_cache()) === FALSE) {
+//    $this->set_cache_id(reset($this->options['bundles']));
+//    if (($block['content'] = $this->get_cache()) === FALSE) {
       if (is_array($this->options['vocabulary'])) {
         $t = array_filter($this->options['vocabulary']);
         $this->options['vocabulary'] = current($t);
@@ -270,7 +270,7 @@ class os_taxonomy_fbt extends os_boxes_default {
 
       $block['content'] = $content;
       $this->set_cache($block['content']);
-    }
+//    }
 
     return $block;
   }
