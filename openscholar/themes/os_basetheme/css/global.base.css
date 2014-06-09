@@ -1074,3 +1074,39 @@ div.error:before {
 #toolbar a.toggle-active {
   background-position: -27px -859px;
 }
+
+#toolbar div.toolbar-menu ul li a[data-drawer] {
+  background-image: none;
+  position: relative;
+}
+
+#toolbar div.toolbar-menu ul li a[data-drawer]:after {
+  content: '';
+  background-image: url('../images/scholarbase-sprite.png');
+  background-position: -16px -850px;
+  position: absolute;
+  width: 10px;
+  height: 5px;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  right: 10px;
+}
+
+#toolbar div.toolbar-menu ul#toolbar-help li a {
+  background-image: none;
+  position: relative;
+}
+
+#toolbar div.toolbar-menu ul#toolbar-help li a:before {
+  content: '';
+  position: absolute;
+  background-image: url('../images/scholarbase-sprite.png');
+  background-position: 0 -885px;
+  height: 15px;
+  width: 15px;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 10px;
+}
