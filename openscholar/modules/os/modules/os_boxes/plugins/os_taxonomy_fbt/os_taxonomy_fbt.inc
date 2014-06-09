@@ -207,52 +207,53 @@ class os_taxonomy_fbt extends os_boxes_default {
       }
     }
 
-    if (($block['content'] = $this->get_cache()) === FALSE) {
-      ctools_include('layout', 'os');
+    ctools_include('layout', 'os');
 
-      if ($this->options['behavior'] == '--all--') {
+    if ($this->options['behavior'] == '--all--') {
+      $this->options['bundles'] = array();
+    }
+    else if (!empty($this->options['behavior']) && $this->options['behavior'] == 'contextual' && ($feature = os_get_active_feature())) {
+      if (isset($feature->info['features']['node'])) {
+        // Building a list of the bundles in two ways:
+        // 1. Selected bundles from a list
+        // 2. If the widget defined as a "Determine for me" set the bundles
+        //    which related to the app.
+        $paths = os_get_app_path();
+        $menu = menu_get_item();
+
         $this->options['bundles'] = array();
-      }
-      else if (!empty($this->options['behavior']) && $this->options['behavior'] == 'contextual' && ($feature = os_get_active_feature())) {
-        if (isset($feature->info['features']['node'])) {
-          // Building a list of the bundles in two ways:
-          // 1. Selected bundles from a list
-          // 2. If the widget defined as a "Determine for me" set the bundles
-          //    which related to the app.
-          $paths = os_get_app_path();
-          $menu = menu_get_item();
-
-          $this->options['bundles'] = array();
-          if ($menu['map'][0] == 'node') {
-            $this->options['bundles'] = array($menu['map'][1]->type);
-          }
-          else {
-            foreach ($paths as $bundle => $path) {
-              if ($path == $menu['original_map'][0]) {
-                $this->options['bundles'][] = $bundle;
-              }
+        if ($menu['map'][0] == 'node') {
+          $this->options['bundles'] = array($menu['map'][1]->type);
+        }
+        else {
+          foreach ($paths as $bundle => $path) {
+            if ($path == $menu['original_map'][0]) {
+              $this->options['bundles'][] = $bundle;
             }
           }
         }
       }
-      else if ($this->options['behavior'] == 'select') {
-        // For specified node type behavior but non-string value, default to all
-        // and try to grab any first value of an array.
-        $bundles = $this->options['bundles'];
-        $this->options['bundles'] = FALSE;
-        if (is_array($bundles)) {
-          foreach ($bundles as $value) {
-            if (!empty($value)) {
-              $this->options['bundles'] = array($value);
-              break;
-            }
+    }
+    else if ($this->options['behavior'] == 'select') {
+      // For specified node type behavior but non-string value, default to all
+      // and try to grab any first value of an array.
+      $bundles = $this->options['bundles'];
+      $this->options['bundles'] = FALSE;
+      if (is_array($bundles)) {
+        foreach ($bundles as $value) {
+          if (!empty($value)) {
+            $this->options['bundles'] = array($value);
+            break;
           }
         }
-        else if (is_string($bundles)) {
-          $this->options['bundles'] = array($bundles);
-        }
       }
+      else if (is_string($bundles)) {
+        $this->options['bundles'] = array($bundles);
+      }
+    }
 
+    $this->set_cache_id(reset($this->options['bundles']));
+    if (($block['content'] = $this->get_cache()) === FALSE) {
       if (is_array($this->options['vocabulary'])) {
         $t = array_filter($this->options['vocabulary']);
         $this->options['vocabulary'] = current($t);
