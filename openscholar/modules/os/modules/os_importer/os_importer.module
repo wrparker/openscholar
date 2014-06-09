@@ -41,7 +41,7 @@ function os_importer_ctools_plugin_directory($module, $plugin) {
   if ($module == 'feeds_tamper') {
     return 'plugins';
   }
-  else if ($module == 'entity_validator') {
+  elseif ($module == 'entity_validator') {
     return 'plugins/' . $plugin;
   }
 }
