@@ -566,6 +566,7 @@ function os_profiles_profiles_fields() {
   return array(
     'title',
     'body',
+    'field_prefix',
     'field_first_name',
     'field_last_name',
     'field_address',
