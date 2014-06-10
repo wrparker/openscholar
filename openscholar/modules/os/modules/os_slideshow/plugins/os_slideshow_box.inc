@@ -152,19 +152,23 @@ class os_slideshow_box extends os_boxes_default {
     }
     $block = parent::render();
     $options = $this->options + $this->options_defaults();
-    $block['title'] = $block['subject'] = check_plain($this->title);
+    $random = $options['random'];
+    if (!$random || ($block['content'] = $this->get_cache()) === FALSE) {
+      $block['title'] = $block['subject'] = check_plain($this->title);
 
-    // Show Add Slide link to admins.
-    if (($vsite = vsite_get_vsite()) && og_user_access('node', $vsite->id, 'create slideshow_slide content')) {
-      $block['content'] = l('Add Slide', 'node/add/slideshow-slide', array(
-        'attributes' => array('class' => array('add_new')),
-        'query' => array('widget' => $this->delta, 'destination' => current_path()),
-      ));
+      // Show Add Slide link to admins.
+      if (($vsite = vsite_get_vsite()) && og_user_access('node', $vsite->id, 'create slideshow_slide content')) {
+        $block['content'] = l('Add Slide', 'node/add/slideshow-slide', array(
+          'attributes' => array('class' => array('add_new')),
+          'query' => array('widget' => $this->delta, 'destination' => current_path()),
+        ));
+      }
+
+      $vars = array_intersect_key($options, array_flip(array('nodes', 'timeout', 'speed', 'effect', 'layout', 'random')));
+      $vars['box_delta'] = $this->delta;
+      $block['content'] .= theme('os_slideshow_slideshow', $vars);
+      $this->set_cache($block['content'], $content['#attached']);
     }
-
-    $vars = array_intersect_key($options, array_flip(array('nodes', 'timeout', 'speed', 'effect', 'layout', 'random')));
-    $vars['box_delta'] = $this->delta;
-    $block['content'] .= theme('os_slideshow_slideshow', $vars);
     return $block;
   }
 
@@ -224,7 +228,6 @@ function os_slideshow_draggable_table($element) {
   $element['#rows'] = $rows;
   $element['#sticky'] = false;
   $element['#empty'] = true;
-  //$element['#value'] = theme('table', array(), $rows);
   $element['#theme'] = 'table';
   drupal_add_tabledrag('slideshow-slides-list', 'order', 'sibling', 'field-weight');
   return $element;
