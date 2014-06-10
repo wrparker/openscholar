@@ -997,7 +997,10 @@ text-decoration:none;
 	width: 450px;
 }
 
-
+#views-form-cp-content-page .form-item-vocab {
+  float: left;
+  margin-right: 20px;
+}
 
 
 

@@ -182,7 +182,7 @@ function cp_content_assign_taxonomy_form($form, $form_state) {
   $vocabs = vsite_vocab_get_vocabularies();
 
   $vocabularies = array(
-    '---' => t('Select vocabulary'),
+    0 => t('Select vocabulary'),
   );
   foreach ($vocabs as $vocab) {
     $vocabularies[$vocab->vid] = $vocab->name;
@@ -190,9 +190,13 @@ function cp_content_assign_taxonomy_form($form, $form_state) {
 
   $form = array();
 
+  $form['title'] = array(
+    '#type' => 'item',
+    '#markup' => '<h1>' . t('Apply Term to Content') . '</h1>',
+  );
+
   $form['vocab'] = array(
     '#type' => 'select',
-    '#title' => t('Select vocab'),
     '#options' => $vocabularies,
     '#ajax' => array(
       'event' => 'change',
@@ -202,14 +206,17 @@ function cp_content_assign_taxonomy_form($form, $form_state) {
   );
 
   $form['terms'] = array(
+    '#type' => 'select',
     '#prefix' => '<div id="select-terms">',
     '#suffix' => '</div>',
+    '#options' => array(
+      0 => t('Select term'),
+    ),
   );
 
   $vid = !empty($form_state['values']['vocab']) ? $form_state['values']['vocab'] : 0;
   if ($vid) {
     $terms = taxonomy_get_tree($vid);
-    $vocabulary = taxonomy_vocabulary_load($vid);
 
     $options = array();
     foreach ($terms as $term) {
@@ -219,14 +226,29 @@ function cp_content_assign_taxonomy_form($form, $form_state) {
     // todo: Handle multiple using select 2.
     $form['terms'] = array(
       '#type' => 'select',
-      '#multiple' => TRUE,
-      '#title' => $vocabulary->name,
       '#prefix' => '<div id="select-terms">',
       '#suffix' => '</div>',
       '#options' => $options,
       '#required' => TRUE,
     );
   }
+
+  // Build a list of node titles to which we apply the action.
+  $node_titles = array();
+  $nodes = node_load_multiple(array_filter($form_state['values']['views_bulk_operations']));
+  foreach ($nodes as $node) {
+    $node_titles[] = $node->title;
+  }
+
+  $variables = array(
+    'items' => $node_titles,
+    'title' => t('The selected term above will be applied to the following content:'),
+  );
+
+  $form['node_titles'] = array(
+    '#type' => 'item',
+    '#markup' => theme('item_list', $variables),
+  );
 
   return $form;
 }
@@ -263,6 +285,19 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
 }
 
 /**
+ * Validate handler; makes sure a vocabulary and a term are selected.
+ */
+function cp_content_assign_taxonomy_validate($form, $form_state) {
+  if (!$form_state['values']['vocab']){
+    form_set_error('vocab', t('Vocabulary field is required.'));
+  }
+
+  if (!$form_state['values']['terms']){
+    form_set_error('terms', t('Term field is required.'));
+  }
+}
+
+/**
  * Ajax callback to update the list of terms of the form.
  */
 function cp_content_select_callback($form, $form_state) {
@@ -277,4 +312,11 @@ function cp_content_remove_taxonomy(&$node, $context) {
   node_save($node);
   $params = array('%title' => $node->title);
   drupal_set_message(t('All the terms were removed from the node %title', $params));
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function cp_content_form_views_form_cp_content_page_alter(&$form, &$form_state) {
+  $form['#attached']['js'][] = drupal_get_path('module', 'cp_content') . '/cp_content.js';
 }
