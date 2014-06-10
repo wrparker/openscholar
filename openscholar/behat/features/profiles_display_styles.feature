@@ -59,5 +59,6 @@ Feature:
       And I edit the node "John Fitzgerald Kennedy"
       And I fill in "Prefix" with ""
       And I press "edit-submit"
-     When I visit "john/people"
-     Then I should see "John Fitzgerald Kennedy"
+      And I visit "john/people"
+      And I should see "John Fitzgerald Kennedy"
+      And I should not see "Mr. John Fitzgerald Kennedy"
