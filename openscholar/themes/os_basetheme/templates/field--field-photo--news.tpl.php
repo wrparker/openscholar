@@ -31,21 +31,25 @@
 /**
  * Helper function to get width of image
  */
-function get_themed_image_width ($image) {
-  // let's see if there's image style info we can use
-  $image_style = image_style_load($image['#image_style']);
-  $width = "";
-  foreach ($image_style['effects'] as $delta => $effect) {
-	if (isset($effect['data']['width'])) {
-	  $width = $effect['data']['width'];
-	}
-  }
+if (!function_exists('get_themed_image_width')) {
+  function get_themed_image_width ($image = null) {
+	if ($image) {
+		  // let's see if there's image style info we can use
+		  $image_style = image_style_load($image['#image_style']);
+		  $width = "";
+		  foreach ($image_style['effects'] as $delta => $effect) {
+			if (isset($effect['data']['width'])) {
+			  $width = $effect['data']['width'];
+			}
+		  }
 
-  // otherwise, grab it from the rendered HTML
-  if (!$width) {
-      preg_match('/< *img[^>]*width *= *["\']?([^"\']*)/i', $image['#children'], $matches);
-      $width = $matches[1];
-  }
-  return $width;
+		  // otherwise, grab it from the rendered HTML
+		  if (!$width) {
+			  preg_match('/< *img[^>]*width *= *["\']?([^"\']*)/i', $image['#children'], $matches);
+			  $width = $matches[1];
+		  }
+		  return $width;
+		}
+	}
 }
 ?>
