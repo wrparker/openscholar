@@ -15,9 +15,9 @@ class os_sv_list extends os_boxes_default {
     $this->entity_type = $this->bundle = NULL;
   }
 
-  public function set_cache($cache, $js = NULL) {
+  public function set_cache($cache, $box = NULL) {
    $this->_plugins_invoke('set_cache_time', $this->cache_time);
-    parent::set_cache($cache, $js);
+    parent::set_cache($cache, $box);
   }
 
   /**

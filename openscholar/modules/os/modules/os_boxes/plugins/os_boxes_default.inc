@@ -157,8 +157,8 @@ abstract class os_boxes_default extends boxes_box {
       return FALSE;
     }
 
-    if ($js_cache = cache_get('assets:' . $this->cache_id, 'cache_os_boxes')) {
-      $assets = unserialize($js_cache->data);
+    if ($assets_cache = cache_get('assets:' . $this->cache_id, 'cache_os_boxes')) {
+      $assets = unserialize($assets_cache->data);
       $this->add_assets($assets);
     }
     
@@ -201,10 +201,10 @@ abstract class os_boxes_default extends boxes_box {
    *
    * @param $cache
    *  The information we want to cache.
-   * @param $js
-   *  The assets of the js. Optional.
+   * @param $box
+   *  The assets of the box. Optional.
    */
-  protected function set_cache($cache, $js = NULL) {
+  protected function set_cache($cache, $box = NULL) {
     if (empty($this->cache_id)) {
       // No valid cache id.
       return;
@@ -219,9 +219,9 @@ abstract class os_boxes_default extends boxes_box {
 
     cache_set($this->cache_id, $cache, 'cache_os_boxes', $expire);
 
-    if ($js) {
+    if ($box) {
       $cache_id = 'assets:' . $this->cache_id;
-      cache_set($cache_id, serialize($js), 'cache_os_boxes', $expire);
+      cache_set($cache_id, serialize($box), 'cache_os_boxes', $expire);
     }
   }
 
