@@ -288,11 +288,11 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
  * Validate handler; makes sure a vocabulary and a term are selected.
  */
 function cp_content_assign_taxonomy_validate($form, $form_state) {
-  if (!$form_state['values']['vocab']){
+  if (!$form_state['values']['vocab']) {
     form_set_error('vocab', t('Vocabulary field is required.'));
   }
 
-  if (!$form_state['values']['terms']){
+  if (!$form_state['values']['terms']) {
     form_set_error('terms', t('Term field is required.'));
   }
 }
