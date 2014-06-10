@@ -797,10 +797,6 @@ form.node-form .form-region-right fieldset {
      width: 100%;
 }
 
-form.node-form .form-region-right fieldset.citation-distribute-form {
-  margin-bottom: 2em;
-}
-
 form.node-form .form-region-right fieldset legend {
      background: none repeat scroll 0% 0% #F1F1F1;
 }
