@@ -367,24 +367,35 @@ table.spaces td.option, table.spaces td.storage {
 
 /* CP/BUILD MENU */
 .page-cp-build-menu table thead {
-	display:none;
-
-    }
+  display:none;
+}
 
 #edit-menu-table,
-#cp-menu-build-form {width:775px;}
+#cp-menu-build-form {
+  width: 775px;
+}
 
-
-#cp-appearance-theme-picker-form select {max-width:90px;overflow:hidden;}
+#cp-appearance-theme-picker-form select {
+  max-width: 90px;
+  overflow: hidden;
+}
 
 #cp-appearance-theme-picker-form #theme-header-featured h2,
-#cp-appearance-theme-picker-form #theme-header-other h2 {font-weight:normal;}
+#cp-appearance-theme-picker-form #theme-header-other h2 {
+  font-weight:normal;
+}
 
-#cp-appearance-theme-picker-form #theme-header-featured p {color:#777;font-size:15px;margin:-8px 0 28px 0;}
+#cp-appearance-theme-picker-form #theme-header-featured p {
+  color:#777;
+  font-size:15px;
+  margin:-8px 0 28px 0;
+}
 
 
 /* CP/BUILD LAYOUT */
-.page-cp-build-layout #content {width:854px;}
+.page-cp-build-layout #content {
+  width:854px;
+}
 
 
 /* CP FEATURES */
@@ -859,11 +870,20 @@ form.node-form .form-region-right .fieldset-wrapper {
 
 
 .form-region-right .field-prefix {
-line-height: 15px;
-display: block;
-max-width: 85%;
-word-wrap: break-word;
-font-size: 11px;
+  line-height: 15px;
+  display: block;
+  max-width: 85%;
+  word-wrap: break-word;
+  font-size: 11px;
+}
+
+a.tabledrag-handle .handle {
+  background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
+  background-position-y: -15px;
+}
+
+a.tabledrag-handle-hover .handle {
+  background-position-y: -35px;
 }
 
 .delete-subtheme a {
