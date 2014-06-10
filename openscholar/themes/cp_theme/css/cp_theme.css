@@ -778,7 +778,7 @@ form.node-form .form-region-main input.form-text {
    max-width: 85%;
    }
 
-form.node-form.overlay-processed .form-region-right fieldset {
+form.node-form .form-region-right fieldset {
      background: none repeat scroll 0% 0% transparent;
      border: medium none;
      margin: 1em 0px;
@@ -786,24 +786,24 @@ form.node-form.overlay-processed .form-region-right fieldset {
      width: 100%;
 }
 
-form.node-form.overlay-processed .form-region-right fieldset.citation-distribute-form {
+form.node-form .form-region-right fieldset.citation-distribute-form {
   margin-bottom: 2em;
 }
 
-form.node-form.overlay-processed .form-region-right fieldset legend {
+form.node-form .form-region-right fieldset legend {
      background: none repeat scroll 0% 0% #F1F1F1;
 }
 
-form.node-form.overlay-processed .fieldset-legend span.summary {
+form.node-form .fieldset-legend span.summary {
      color: #777;
      display: block;
      font-size: 0.8em;
      margin-left: 0px;
 }
 
-form.node-form.overlay-processed .form-region-main .fieldset-legend span.summary {
+form.node-form .form-region-main .fieldset-legend span.summary {
 	display: inline;
-     }
+}
 
 .field-name-field-biocv-pdf-upload {
   margin-bottom: 40px;
@@ -844,11 +844,11 @@ form.node-form.overlay-processed .form-region-right .fieldset-title {
   font-weight: normal;
 }
 
-form.node-form.overlay-processed {
+form.node-form {
   border: medium none;
 }
 
-form.node-form.overlay-processed .form-region-right .fieldset-wrapper {
+form.node-form .form-region-right .fieldset-wrapper {
   border-bottom: 1px solid #CCCCCC;
   border-left: 1px solid #CCCCCC;
   border-right: 1px solid #CCCCCC;
