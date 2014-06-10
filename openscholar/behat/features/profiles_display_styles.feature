@@ -46,3 +46,18 @@ Feature:
       And I visit "john/people"
      Then I should see "Actress"
      Then I should see "AKA Marilyn Monroe"
+
+  @api @first
+  Scenario: Test that the prefix field of a profile is displayed correctly.
+    Given I am logging in as "john"
+      And I edit the node "John Fitzgerald Kennedy"
+      And I fill in "Prefix" with "Mr."
+      And I press "edit-submit"
+     When I visit "john/people"
+     Then I should see "Mr. John Fitzgerald Kennedy"
+          # Remove the Prefix.
+      And I edit the node "John Fitzgerald Kennedy"
+      And I fill in "Prefix" with ""
+      And I press "edit-submit"
+     When I visit "john/people"
+     Then I should see "John Fitzgerald Kennedy"
