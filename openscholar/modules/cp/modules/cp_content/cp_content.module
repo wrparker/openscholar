@@ -327,7 +327,8 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
       '!nodes' => theme('item_list', array('items' => $applied_titles)),
     );
 
-    drupal_set_message(t('The taxonomy term(s) %terms was applied on the content: !nodes', $params));
+    $message = format_plural(count($selected_terms), 'The taxonomy term %terms was applied on the content: !nodes', 'The @count taxonomy terms %terms were applied on the content: !nodes',$params);
+    drupal_set_message($message);
   }
 
   if (!empty($skipped_titles)) {
@@ -337,7 +338,8 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
       '!nodes' => theme('item_list', array('items' => $skipped_titles)),
     );
 
-    drupal_set_message(t('The taxonomy term(s) %terms could not be applied on the content: !nodes', $params), 'warning');
+    $message = format_plural(count($selected_terms), 'The taxonomy term %terms could not be applied on the content: !nodes', 'The @count taxonomy terms %terms could not be applied on the content: !nodes',$params);
+    drupal_set_message($message, 'warning');
   }
 
   drupal_goto('cp/content');
@@ -411,7 +413,8 @@ function cp_content_remove_taxonomy_submit($form, $form_state) {
     '!nodes' => theme('item_list', array('items' => $removed_titles)),
   );
 
-  drupal_set_message(t('The taxonomy term(s) %terms was removed from the content: !nodes', $params));
+  $message = format_plural(count($selected_terms), 'The taxonomy term %terms was removed from the content: !nodes', 'The @count taxonomy terms %terms were removed from the content: !nodes',$params);
+  drupal_set_message($message);
 
   drupal_goto('cp/content');
 }
