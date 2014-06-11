@@ -38,10 +38,12 @@ function os_importer_feeds_plugins() {
  * Implements hook_ctools_plugin_directory().
  */
 function os_importer_ctools_plugin_directory($module, $plugin) {
+  dpm($module);
   if ($module == 'feeds_tamper') {
     return 'plugins';
   }
-  elseif ($module == 'entity_validator') {
+  elseif ($module == 'validator') {
+    dpm('a');
     return 'plugins/' . $plugin;
   }
 }
@@ -625,21 +627,40 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       continue;
     }
 
-    $validator = entity_validator_load_validator('node', $form_state['type']);
-
+    $handler = entity_validator_get_validator_handler('node', $form_state['type']);
+    $node = array(
+      'type' => $form_state['type'],
+    );
+    $node = entity_create('node', $node);
+    $wrapper = entity_metadata_wrapper('node', $node);
     // Build the form values - break down the row.
     $row_values = explode(",", $row);
-
+//
     foreach ($row_values as $delta => $value) {
-      $validator->addField($mappings[$delta], $value);
+      $field = $mappings[$delta];
+      if (strpos($field, ":") !== FALSE) {
+
+      }
+      else {
+        if ($field == 'file') {
+          continue;
+        }
+
+        if ($field == 'body') {
+          $value = array('value' => $value);
+        }
+
+        $wrapper->{$field}->set($value);
+      }
     }
+
+    dpm($wrapper->value());
 
     try {
-      $validator
-        ->validate();
+      $handler->validate($node);
     } catch (Exception $e) {
-      form_set_error('', $e->getMessage());
     }
+      form_set_error('', 'foo');
   }
 
   $new_file = file_save_data(implode("\n", $rows), $file->uri, FILE_EXISTS_REPLACE);
