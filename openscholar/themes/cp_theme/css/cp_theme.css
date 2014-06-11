@@ -998,7 +998,7 @@ text-decoration:none;
 }
 
 /* LTR */
-#views-form-cp-content-page .form-item-vocab {
+.view-cp-content .form-item-vocab {
   float: left;
   margin-right: 20px;
 }

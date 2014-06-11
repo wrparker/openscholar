@@ -188,6 +188,13 @@ function cp_content_assign_taxonomy_form($form, $form_state) {
     $vocabularies[$vocab->vid] = $vocab->name;
   }
 
+  // Build a list of node titles to which we apply the action.
+  $node_titles = array();
+  $nodes = node_load_multiple($form_state['selection']);
+  foreach ($nodes as $node) {
+    $node_titles[] = $node->title;
+  }
+
   $form = array();
 
   $form['title'] = array(
@@ -233,13 +240,6 @@ function cp_content_assign_taxonomy_form($form, $form_state) {
     );
   }
 
-  // Build a list of node titles to which we apply the action.
-  $node_titles = array();
-  $nodes = node_load_multiple(array_filter($form_state['values']['views_bulk_operations']));
-  foreach ($nodes as $node) {
-    $node_titles[] = $node->title;
-  }
-
   $variables = array(
     'items' => $node_titles,
     'title' => t('The selected term above will be applied to the following content:'),
@@ -248,6 +248,11 @@ function cp_content_assign_taxonomy_form($form, $form_state) {
   $form['node_titles'] = array(
     '#type' => 'item',
     '#markup' => theme('item_list', $variables),
+  );
+
+  $form['vbo_action'] = array(
+    '#type' => 'hidden',
+    '#value' => 'apply_term',
   );
 
   return $form;
@@ -285,15 +290,39 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
 }
 
 /**
- * Validate handler; makes sure a vocabulary and a term are selected.
+ * Validate handler; makes sure a vocabulary and a term are selected correctly.
  */
 function cp_content_assign_taxonomy_validate($form, $form_state) {
   if (!$form_state['values']['vocab']) {
     form_set_error('vocab', t('Vocabulary field is required.'));
+    return;
   }
 
   if (!$form_state['values']['terms']) {
-    form_set_error('terms', t('Term field is required.'));
+    form_set_error('title', t('Term field is required.'));
+    return;
+  }
+
+  // Make sure all the nodes are associated with the selected vocabulary.
+  $vsite = vsite_get_vsite();
+  $bundles = os_taxonomy_og_vocabulary_bundles($form_state['values']['vocab'], $vsite->id);
+  $bundle_names = array();
+  foreach ($bundles as $bundle) {
+    $bundle_names[] = $bundle->bundle;
+  }
+
+  $nodes = node_load_multiple($form_state['selection']);
+  foreach ($nodes as $node) {
+    if (!in_array($node->type, $bundle_names)) {
+      $params = array(
+        '%title' => $node->title,
+        '%type' => $node->type,
+        '%vocab' => $form['vocab']['#options'][$form_state['values']['vocab']],
+      );
+
+      form_set_error('vocab', t('The type of the node %title is %type.<br> This content type is not associated with the vocabulary %vocab.', $params));
+      return;
+    }
   }
 }
 
@@ -318,5 +347,24 @@ function cp_content_remove_taxonomy(&$node, $context) {
  * Implements hook_form_FORM_ID_alter().
  */
 function cp_content_form_views_form_cp_content_page_alter(&$form, &$form_state) {
-  $form['#attached']['js'][] = drupal_get_path('module', 'cp_content') . '/cp_content.js';
+  // Adding a JS file to present help text for the VBO element.
+  if (!empty($form['views_bulk_operations'])) {
+    $form['#attached']['js'][] = drupal_get_path('module', 'cp_content') . '/cp_content.js';
+    return;
+  }
+
+  // The vocab element is present when applying/removing a term.
+  // In this case we need to buttons to match this action.
+  if (!empty($form['vocab'])) {
+    if ($form['vbo_action']['#value'] == 'apply_term') {
+      $form['actions']['submit']['#value'] = t('Apply Term');
+    }
+
+    $options = array(
+      'attributes' => array(
+        'class' => array('button'),
+      ),
+    );
+    $form['actions']['submit']['#suffix'] = l(t('Cancel'), 'cp/content', $options);
+  }
 }
