@@ -999,5 +999,5 @@ text-decoration:none;
 
 .view-cp-content .form-item-vocab {
   float: left; /* LTR */
-  margin-right: 20px;
+  margin-right: 20px; /* LTR */
 }

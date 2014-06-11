@@ -170,14 +170,39 @@ function cp_content_action_info() {
       'type' => 'node',
       'label' => t('Remove Taxonomy term'),
       'triggers' => array('any'),
+      'configurable' => TRUE,
     ),
   );
 }
 
 /**
- * Form for assign taxonomy terms.
+ * Form for assigning taxonomy terms.
  */
 function cp_content_assign_taxonomy_form($form, $form_state) {
+  $title = t('Apply Term to Content');
+  $list_title = t('The selected term above will be applied to the following content:');
+  $action = t('apply_terms');
+  $form = _cp_content_build_taxonomy_action_form($title, $list_title,  $action, $form_state);
+
+  return $form;
+}
+
+/**
+ * Form for removing taxonomy terms.
+ */
+function cp_content_remove_taxonomy_form($form, $form_state) {
+  $title = t('Remove Term from Content');
+  $list_title = t('The selected term above will be removed from the following content:');
+  $action = t('remove_terms');
+  $form = _cp_content_build_taxonomy_action_form($title, $list_title, $action, $form_state);
+
+  return $form;
+}
+
+/**
+ * Helper function; build the form for adding/removing taxonomy terms.
+ */
+function _cp_content_build_taxonomy_action_form($title, $list_title, $action, $form_state) {
   module_load_include('inc', 'vsite_vocab', 'includes/taxonomy');
   $vocabs = vsite_vocab_get_vocabularies();
 
@@ -199,7 +224,7 @@ function cp_content_assign_taxonomy_form($form, $form_state) {
 
   $form['title'] = array(
     '#type' => 'item',
-    '#markup' => '<h1>' . t('Apply Term to Content') . '</h1>',
+    '#markup' => '<h1>' . $title . '</h1>',
   );
 
   $form['vocab'] = array(
@@ -242,7 +267,7 @@ function cp_content_assign_taxonomy_form($form, $form_state) {
 
   $variables = array(
     'items' => $node_titles,
-    'title' => t('The selected term above will be applied to the following content:'),
+    'title' => $list_title,
   );
 
   $form['node_titles'] = array(
@@ -252,7 +277,7 @@ function cp_content_assign_taxonomy_form($form, $form_state) {
 
   $form['vbo_action'] = array(
     '#type' => 'hidden',
-    '#value' => 'apply_term',
+    '#value' => $action,
   );
 
   return $form;
@@ -298,7 +323,7 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
   if (!empty($applied_titles)) {
     // @todo: use format plural.
     $params = array(
-      '%terms' => implode(",", $names),
+      '%terms' => implode(", ", $names),
       '!nodes' => theme('item_list', array('items' => $applied_titles)),
     );
 
@@ -308,7 +333,7 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
   if (!empty($skipped_titles)) {
     // @todo: use format plural.
     $params = array(
-      '%terms' => implode(",", $names),
+      '%terms' => implode(", ", $names),
       '!nodes' => theme('item_list', array('items' => $skipped_titles)),
     );
 
@@ -319,9 +344,24 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
 }
 
 /**
- * Validate handler; makes sure a vocabulary and a term are selected correctly.
+ * Validate handler; makes sure a vocabulary and a term are selected.
  */
 function cp_content_assign_taxonomy_validate($form, $form_state) {
+  if (!$form_state['values']['vocab']) {
+    form_set_error('vocab', t('Vocabulary field is required.'));
+    return;
+  }
+
+  if (!$form_state['values']['terms']) {
+    form_set_error('title', t('Term field is required.'));
+    return;
+  }
+}
+
+/**
+ * Validate handler; makes sure a vocabulary and a term are selected.
+ */
+function cp_content_remove_taxonomy_validate($form, $form_state) {
   if (!$form_state['values']['vocab']) {
     form_set_error('vocab', t('Vocabulary field is required.'));
     return;
@@ -341,13 +381,43 @@ function cp_content_select_callback($form, $form_state) {
 }
 
 /**
- * Remove all the terms from a given nodes.
+ * Submit handler; removes the terms from the checked nodes.
  */
-function cp_content_remove_taxonomy(&$node, $context) {
-  $node->{OG_VOCAB_FIELD} = array();
-  node_save($node);
-  $params = array('%title' => $node->title);
-  drupal_set_message(t('All the terms were removed from the node %title', $params));
+function cp_content_remove_taxonomy_submit($form, $form_state) {
+  $selected_terms = is_array($form_state['values']['terms']) ? $form_state['values']['terms'] : array($form_state['values']['terms']);
+  $nodes = node_load_multiple($form_state['selection']);
+
+  $removed_titles = array();
+  foreach ($nodes as $node) {
+    $wrapper = entity_metadata_wrapper('node', $node);
+
+    // Remove the selected term(s) from the current node.
+    $node_terms = $wrapper->{OG_VOCAB_FIELD}->value();
+    foreach ($node_terms as $key => $term) {
+      if (in_array($term->tid, $selected_terms)) {
+        unset($node_terms[$key]);
+      }
+    }
+    $wrapper->{OG_VOCAB_FIELD}->set($node_terms);
+    $wrapper->save();
+    $removed_titles[] = $wrapper->label();
+  }
+
+  $terms = taxonomy_term_load_multiple($selected_terms);
+  $names = array();
+  foreach ($terms as $term) {
+    $names[] = $term->name;
+  }
+
+  // @todo: use format plural.
+  $params = array(
+    '%terms' => implode(", ", $names),
+    '!nodes' => theme('item_list', array('items' => $removed_titles)),
+  );
+
+  drupal_set_message(t('The taxonomy term(s) %terms was removed from the node(s): !nodes', $params));
+
+  drupal_goto('cp/content');
 }
 
 /**
@@ -363,8 +433,12 @@ function cp_content_form_views_form_cp_content_page_alter(&$form, &$form_state) 
   // The vocab element is present when applying/removing a term. In this case we
   // need to change the buttons to match this action.
   if (!empty($form['vocab'])) {
-    if ($form['vbo_action']['#value'] == 'apply_term') {
-      $form['actions']['submit']['#value'] = t('Apply Term');
+    if ($form['vbo_action']['#value'] == 'apply_terms') {
+      $form['actions']['submit']['#value'] = t('Apply Terms');
+    }
+
+    if ($form['vbo_action']['#value'] == 'remove_terms') {
+      $form['actions']['submit']['#value'] = t('Remove Terms');
     }
 
     $options = array(
