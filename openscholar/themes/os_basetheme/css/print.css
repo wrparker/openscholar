@@ -42,7 +42,8 @@ caption { background: #fff; margin-bottom:2em; text-align:left; }
 thead {display: table-header-group;}
 tr {page-break-inside: avoid;} 
 
-
+.ui-tabs-nav,
+iframe,
 #branding_header, 
 #branding_footer, 
 #menu-bar, 
@@ -121,6 +122,12 @@ margin-left: 0;
 .featured-links {
 	list-style-type:none;
 	margin-left:0;
+	
+}
+
+
+.ui-tabs-panel {
+	display:block !important;
 	
 }
 
