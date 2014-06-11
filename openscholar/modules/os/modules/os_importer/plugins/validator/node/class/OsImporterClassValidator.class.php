@@ -3,21 +3,23 @@
 class OsImporterClassValidator extends EntityValidateBase {
 
   public function setFieldsInfo() {
-    $field_names = parent::setFieldsInfo();
+    $field = parent::setFieldsInfo();
 
-    $field_names['field_semester'] = array(
+    $field['field_semester'] = array(
       'validators' => array(
         'isNotEmpty',
         'validationSemester',
       ),
     );
 
-    $field_names['field_offered_year'] = array(
+    $field['field_offered_year'] = array(
       'validators' => array(
         'isNotEmpty',
         'validateOfferedYear',
       ),
     );
+
+    return $field;
   }
 
   /**
@@ -41,13 +43,13 @@ class OsImporterClassValidator extends EntityValidateBase {
   /**
    * Preprocess the offered year and preprocess the form on the way.
    */
-  function validateOfferedYear($field_name_name,$value) {
-    if (!is_numeric($value['start']) || (is_numeric($value['start']) && $value['start'] > 9999)) {
+  function validateOfferedYear($field_name, $value) {
+    if (!is_numeric($value) || (is_numeric($value) && $value > 9999)) {
       $params = array(
-        '@value' => $value['start'],
+        '@value' => $value,
       );
 
-      $this->setError($field_name_name, 'The value for the year field is not valid value(@value). The value should be a year.', $params);
+      $this->setError($field_name, 'The value for the year field is not valid value(@value). The value should be a year.', $params);
     }
   }
 }
