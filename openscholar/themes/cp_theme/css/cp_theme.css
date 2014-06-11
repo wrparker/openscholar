@@ -65,11 +65,13 @@ textarea {
   font-size:13px;
   height: auto;
   padding: 6px 7px;
-  background: url('../../../themes/os_basetheme/images/form-input-bg.gif') repeat-x scroll left top #FFFFFF;
+  background: url('../../os_basetheme/images/form-input-bg.gif') repeat-x scroll left top #FFFFFF;
   border: 1px solid #CDCDCD;
 }
 
-#og-vocabulary-add-more-wrapper select.form-select {height:120px;}
+#og-vocabulary-add-more-wrapper select.form-select {
+  height:120px;
+}
 
 html.js input.form-autocomplete {
   background-position: 100% 8px;
@@ -80,22 +82,23 @@ html.js input.throbbing {
 }
 
 .os-help-link {
-    background: url("../../../themes/os_basetheme/images/scholarbase-sprite.png") no-repeat 0 -150px;
-    display: block;
-    float: right;
+  background: url("../images/cp-sprite.png") no-repeat 0 -150px;
+  display: block;
+  float: right;
   margin-top: 2px;
-    padding: 0;
+  padding: 0;
   height: 19px;
-    width: 19px;
+  width: 19px;
 }
 
 .os-help-link:hover {
-    background: url("../../../themes/os_basetheme/images/scholarbase-sprite.png") no-repeat 0 -170px;
+  background: url("../images/cp-sprite.png") no-repeat 0 -170px;
 }
 
-
-.view-os-files-private ul {list-style-type: none !important;
- list-style: none !important;}
+.view-os-files-private ul {
+  list-style-type: none !important;
+  list-style: none !important;
+}
 
 .view-os-files-private .cp-controls-wrapper .add_new {
     background: url("/themes/seven/images/add.png") no-repeat scroll 0 center #FFF !important;
@@ -124,7 +127,7 @@ a.form-cancel {
   border-bottom: 1px solid #b4b4b4;
   border-left-color: #d2d2d2;
   border-right-color: #d2d2d2;
-  background: url(/themes/seven/images/buttons.png) 0 0 repeat-x;
+  background: url('/themes/seven/images/buttons.png') 0 0 repeat-x;
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
   border-radius: 20px;
@@ -194,7 +197,7 @@ div.ctools-modal-content .modal-header {
 div.ctools-modal-content .modal-header a {
   float:right;
   color: transparent;
-  background: url('../../../themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 0 -772px;
+  background: url('../images/cp-sprite.png') no-repeat 0 -547px;
   width:30px;
   height:30px;
 }
@@ -232,34 +235,38 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
   margin-top: 160px;
 }
 
+
 .helper {
 	margin-top: 10px;
 	display: block;
 		}
 
 
-
+/** Column Widget Styles */
 .downarrow {
 	padding-right: 12px;
-	background: url('../../../themes/os_basetheme/images/scholarbase-sprite.png') 0 -553px no-repeat;
+	background: url('../../os_basetheme/images/scholarbase-sprite.png') 0 -553px no-repeat;
 }
 
 .helper.columns {
 	width: 968px !important;
-		}
+}
 
 .helper.columns .downarrow {
 	background-position: 51px -553px;
-		}
+}
 
-.formlabel {color: #444;
-font-size: 12px;
-font-weight: bold;}
+.formlabel {
+  color: #444;
+  font-size: 12px;
+  font-weight: bold;
+}
 
 /** OVERLAY MODAL OVERRIDES **/
 
-#overlay-close, #overlay-close:hover {
-  background: url('../../../themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 0 -772px;
+#overlay-close,
+#overlay-close:hover {
+  background: url('../images/cp-sprite.png') no-repeat 0 -547px;
 	width:30px;
 	height:30px;
 	position: relative;
@@ -400,12 +407,15 @@ table.spaces td.option, table.spaces td.storage {
 
 /* CP FEATURES */
 form#spaces-features-form td.actions a {
-    background: url("../images/featureCustGear.png") no-repeat scroll 0 0 transparent;
-    color: #105EA9;
-    height: 25px;
-    padding: 2px 0 5px 22px;
-    width: 100px;
-    margin-left: 6px;
+  background-image: url("../images/cp-sprite.png");
+  background-position: 0 -575px;
+  background-repeat: repeat-y;
+  color: #105EA9;
+  height: 25px;
+  padding: 2px 0 5px 22px;
+  width: 100px;
+  margin-left: 6px;
+  position: relative;
 }
 
 #spaces-features-form select {
@@ -818,7 +828,6 @@ form.node-form .form-region-main .fieldset-legend span.summary {
 
 html.js .form-region-right fieldset.collapsible .fieldset-legend
 /*form.node-form.overlay-processed .form-region-right  fieldset.collapsed .fieldset-legend*/ {
-  background-image: none;
   border: 1px solid #CCCCCC;
   display: block;
   font-weight: normal;
@@ -829,24 +838,29 @@ html.js .form-region-right fieldset.collapsible .fieldset-legend
   width: 89%;
 }
 
-html.js .form-region-right fieldset.collapsible .fieldset-legend:before {
+html.js fieldset.collapsible .fieldset-legend {
+  background-image: none;
+}
+
+html.js fieldset.collapsible > legend .fieldset-legend:before {
   content: '';
   position: absolute;
-  background-image: url("../../os_basetheme/images/scholarbase-sprite.png");
-  background-position: -16px -756px;
+  background-image: url("../images/cp-sprite.png");
+  background-position: -10px -452px;
+  background-repeat: no-repeat;
   width: 15px;
   height: 15px;
   top: 3px;
   left: 0;
 }
 
-html.js .form-region-right fieldset.collapsed .fieldset-legend:before
+html.js fieldset.collapsed > legend .fieldset-legend:before
 /*form.node-form.overlay-processed .form-region-right  fieldset.collapsed .fieldset-legend:before*/ {
-  background-position: -34px -756px;
+  background-position: -10px -436px;
 }
 
 .form-region-main a.fieldset-title,
-form.node-form.overlay-processed .form-region-right .fieldset-title {
+form.node-form .form-region-right .fieldset-title {
   font-size: 1.08em;
   font-weight: normal;
 }
@@ -874,7 +888,7 @@ form.node-form .form-region-right .fieldset-wrapper {
 }
 
 a.tabledrag-handle .handle {
-  background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
+  background-image: url('../images/cp-sprite.png');
   background-position-y: -15px;
 }
 
@@ -949,21 +963,21 @@ ul.term-reference-tree-level {
 }
 
 .term-reference-tree-button {
-  background: url('./../../themes/os_basetheme/images/scholarbase-sprite.png') 2px -449px no-repeat;
+  background: url('../../os_basetheme/images/scholarbase-sprite.png') 2px -449px no-repeat;
 }
 
 .term-reference-tree-button.term-reference-tree-collapsed {
-  background: url('./../../themes/os_basetheme/images/scholarbase-sprite.png') 6px -433px no-repeat;
+  background: url('../../os_basetheme/images/scholarbase-sprite.png') 6px -433px no-repeat;
 }
 
 
 .field-widget-og-vocab-complex .expand {
-	 background: url('./../../themes/os_basetheme/images/scholarbase-sprite.png') 0 -509px no-repeat;
+	 background: url('../../os_basetheme/images/scholarbase-sprite.png') 0 -509px no-repeat;
 	 padding-left:14px;
 }
 
 .field-widget-og-vocab-complex .collapse {
-	 background: url('./../../themes/os_basetheme/images/scholarbase-sprite.png') 0 -529px no-repeat;
+	 background: url('../../os_basetheme/images/scholarbase-sprite.png') 0 -529px no-repeat;
 	 padding-left:14px;
 	 margin-left:10px;
 }
@@ -986,7 +1000,7 @@ ul.term-reference-tree-level {
 
 #edit-biblio-url-title {
 	border:none;
-	background: url('./../../themes/os_basetheme/images/scholarbase-sprite.png?apr2014') no-repeat 0 -475px #FFFFFF;
+	background: url('../images/cp-sprite.png') no-repeat 0 -475px #FFFFFF;
   padding-left:25px;
 	color: #0074BD;
 	text-decoration:underline;
@@ -994,7 +1008,7 @@ ul.term-reference-tree-level {
 }
 
 #edit-biblio-url-title:focus {
-  background: url('../../../themes/os_basetheme/images/form-input-bg.gif') repeat-x scroll left top #FFFFFF;
+  background: url('../../os_basetheme/images/form-input-bg.gif') repeat-x scroll left top #FFFFFF;
   border: 1px solid #CDCDCD;
   padding-left:0;
   color: #444;
@@ -1032,7 +1046,7 @@ div.error {
 div.messages:before {
   position: absolute;
   content: '';
-  background-image: url('../../../themes/os_basetheme/images/scholarbase-sprite.png');
+  background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
   height: 24px;
   width: 24px;
   top: 8px;
@@ -1050,15 +1064,15 @@ div.error:before {
 /** Toolbar overrides */
 
 #toolbar-home a span {
-  background: url('../../../themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 0 -845px;
+  background: url('../../os_basetheme/images/scholarbase-sprite.png') no-repeat 0 -845px;
 }
 
 #toolbar div.toolbar-menu a.toggle {
-  background: url('../../../themes/os_basetheme/images/scholarbase-sprite.png') 0 -820px no-repeat;
+  background: url('../../os_basetheme/images/scholarbase-sprite.png') 0 -820px no-repeat;
 }
 
 #toolbar a.toggle {
-  background-image: url('../../../themes/os_basetheme/images/scholarbase-sprite.png');
+  background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
   background-position: 0px -859px;
 }
 
@@ -1073,7 +1087,7 @@ div.error:before {
 
 #toolbar div.toolbar-menu ul li a[data-drawer]:after {
   content: '';
-  background-image: url('../../../themes/os_basetheme/images/scholarbase-sprite.png');
+  background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
   background-position: -16px -850px;
   position: absolute;
   width: 10px;
@@ -1092,7 +1106,7 @@ div.error:before {
 #toolbar div.toolbar-menu ul#toolbar-help li a:before {
   content: '';
   position: absolute;
-  background-image: url('../../../themes/os_basetheme/images/scholarbase-sprite.png');
+  background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
   background-position: 0 -885px;
   height: 15px;
   width: 15px;
