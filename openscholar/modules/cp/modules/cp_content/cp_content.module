@@ -262,29 +262,58 @@ function cp_content_assign_taxonomy_form($form, $form_state) {
  * Submit handler; Add the terms to the checked nodes.
  */
 function cp_content_assign_taxonomy_submit($form, $form_state) {
+  // Make a list of bundles associated with the selected vocabulary.
+  $vsite = vsite_get_vsite();
+  $bundles = os_taxonomy_og_vocabulary_bundles($form_state['values']['vocab'], $vsite->id);
+  $bundle_names = array();
+  foreach ($bundles as $bundle) {
+    $bundle_names[] = $bundle->bundle;
+   }
+
   $nodes = node_load_multiple($form_state['selection']);
 
-  $titles = array();
+  $skipped_titles = array();
+  $applied_titles = array();
   foreach ($nodes as $node) {
     $wrapper = entity_metadata_wrapper('node', $node);
-    $wrapper->{OG_VOCAB_FIELD}->set($form_state['values']['terms']);
+    // Check if the bundle of the node is associated with selected vocabulary.
+    if (!in_array($node->type, $bundle_names)) {
+      $skipped_titles[] = $wrapper->label();
+      continue;
+    }
+
+    // Assign the term(s) to the current node.
+    $selected_terms = is_array($form_state['values']['terms']) ? $form_state['values']['terms'] : array($form_state['values']['terms']);
+    $wrapper->{OG_VOCAB_FIELD}->set($selected_terms);
     $wrapper->save();
-    $titles[] = $wrapper->label();
+    $applied_titles[] = $wrapper->label();
   }
 
-  $terms = taxonomy_term_load_multiple($form_state['values']['terms']);
+  $terms = taxonomy_term_load_multiple($selected_terms);
   $names = array();
   foreach ($terms as $term) {
     $names[] = $term->name;
   }
 
-  // @todo: use format plural.
-  $params = array(
-    '%terms' => implode(",", $names),
-    '%nodes' => implode(",", $titles),
-  );
+  if (!empty($applied_titles)) {
+    // @todo: use format plural.
+    $params = array(
+      '%terms' => implode(",", $names),
+      '!nodes' => theme('item_list', array('items' => $applied_titles)),
+    );
 
-  drupal_set_message(t('The taxonomy terms %terms was applied on the nodes %nodes', $params));
+    drupal_set_message(t('The taxonomy term(s) %terms was applied on the node(s): !nodes', $params));
+  }
+
+  if (!empty($skipped_titles)) {
+    // @todo: use format plural.
+    $params = array(
+      '%terms' => implode(",", $names),
+      '!nodes' => theme('item_list', array('items' => $skipped_titles)),
+    );
+
+    drupal_set_message(t('The taxonomy term(s) %terms could not be applied on the node(s): !nodes', $params), 'warning');
+  }
 
   drupal_goto('cp/content');
 }
@@ -301,28 +330,6 @@ function cp_content_assign_taxonomy_validate($form, $form_state) {
   if (!$form_state['values']['terms']) {
     form_set_error('title', t('Term field is required.'));
     return;
-  }
-
-  // Make sure all the selected nodes are associated with the selected vocabulary.
-  $vsite = vsite_get_vsite();
-  $bundles = os_taxonomy_og_vocabulary_bundles($form_state['values']['vocab'], $vsite->id);
-  $bundle_names = array();
-  foreach ($bundles as $bundle) {
-    $bundle_names[] = $bundle->bundle;
-  }
-
-  $nodes = node_load_multiple($form_state['selection']);
-  foreach ($nodes as $node) {
-    if (!in_array($node->type, $bundle_names)) {
-      $params = array(
-        '%title' => $node->title,
-        '%type' => $node->type,
-        '%vocab' => $form['vocab']['#options'][$form_state['values']['vocab']],
-      );
-
-      form_set_error('vocab', t('The type of the node %title is %type.<br> This content type is not associated with the vocabulary %vocab.', $params));
-      return;
-    }
   }
 }
 
