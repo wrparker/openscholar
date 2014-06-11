@@ -3,17 +3,18 @@
 class OsImporterEventValidator extends EntityValidateBase {
 
   public function setFieldsInfo() {
-    return parent::setFieldsInfo() + array(
-      'field_date' => array(
-        'preprocess' => array(
-          array($this, 'preprocessOsDate'),
-        ),
+    $fields = parent::setFieldsInfo();
+
+    $fields['field_date'] = array(
+      'validators' => array(
+        'validateOsDate',
       ),
-      'registration' => array(
-        'validators' => array(
-          array($this, 'isNotEmpty'),
-          array($this, 'validateSignUp'),
-        ),
+    );
+
+    $fields['registration'] = array (
+      'validators' => array(
+        'isNotEmpty',
+        'validateSignUp',
       ),
     );
   }
@@ -21,14 +22,14 @@ class OsImporterEventValidator extends EntityValidateBase {
   /**
    * Verify the start is occurring before the end date.
    */
-  public function preprocessOsDate($value) {
+  public function validateOsDate($field_name, $value) {
     // Validate the date format for the start and end date.
     if (!DateTime::createFromFormat('M j Y', $value['start'])) {
       $params = array(
         '@date' => $value['start'],
         '@format' => date('M j Y'),
       );
-      $this->setError('', 'The start date, @date, is not valid. The date should be in a format similar to @format', $params);
+      $this->setError($field_name, 'The start date, @date, is not valid. The date should be in a format similar to @format', $params);
     }
 
     // Validate the end date is after the start date.
@@ -37,16 +38,14 @@ class OsImporterEventValidator extends EntityValidateBase {
         '@date' => $value['end'],
         '@format' => date('M j Y'),
       );
-      $this->setError('', 'The start date, @date, is not valid. The date should be in a format similar to @format', $params);
+      $this->setError($field_name, 'The start date, @date, is not valid. The date should be in a format similar to @format', $params);
     }
-
-    return strtotime($value['start']);
   }
 
   /**
    * Verify the value of the sign up is one of the: true, false, on, off.
    */
-  public function validateSignUp($field_name, $value) {
+  public function validateSignUp($field_name_name, $value) {
     if (empty($value)) {
       return;
     }
@@ -57,8 +56,8 @@ class OsImporterEventValidator extends EntityValidateBase {
         '@value' => $value,
         '@values' => $values,
       );
-      
-      $this->setError($field_name, 'The field value(@value) should be of of the next values: @values', $params);
+
+      $this->setError($field_name_name, 'The field value(@value) should be of of the next values: @values', $params);
     }
   }
 }

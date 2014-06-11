@@ -7,12 +7,14 @@
 class OsImporterPresentationValidator extends EntityValidateBase {
 
   public function setFieldsInfo() {
-    return parent::setFieldsInfo() + array(
-      'field_links_link' => array(
-        'validator' => array(
-          array($this, 'validatorUrlNotEmpty'),
-        ),
+    $fields = parent::setFieldsInfo();
+
+    $fields['field_links_link'] = array (
+      'validator' => array(
+        'validatorUrlNotEmpty',
       ),
     );
+
+    return $fields;
   }
 }
