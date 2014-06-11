@@ -303,7 +303,7 @@ function cp_content_assign_taxonomy_validate($form, $form_state) {
     return;
   }
 
-  // Make sure all the nodes are associated with the selected vocabulary.
+  // Make sure all the selected nodes are associated with the selected vocabulary.
   $vsite = vsite_get_vsite();
   $bundles = os_taxonomy_og_vocabulary_bundles($form_state['values']['vocab'], $vsite->id);
   $bundle_names = array();
@@ -353,8 +353,8 @@ function cp_content_form_views_form_cp_content_page_alter(&$form, &$form_state) 
     return;
   }
 
-  // The vocab element is present when applying/removing a term.
-  // In this case we need to buttons to match this action.
+  // The vocab element is present when applying/removing a term. In this case we
+  // need to change the buttons to match this action.
   if (!empty($form['vocab'])) {
     if ($form['vbo_action']['#value'] == 'apply_term') {
       $form['actions']['submit']['#value'] = t('Apply Term');
