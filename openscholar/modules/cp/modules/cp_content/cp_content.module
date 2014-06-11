@@ -327,7 +327,7 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
       '!nodes' => theme('item_list', array('items' => $applied_titles)),
     );
 
-    drupal_set_message(t('The taxonomy term(s) %terms was applied on the node(s): !nodes', $params));
+    drupal_set_message(t('The taxonomy term(s) %terms was applied on the content: !nodes', $params));
   }
 
   if (!empty($skipped_titles)) {
@@ -337,7 +337,7 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
       '!nodes' => theme('item_list', array('items' => $skipped_titles)),
     );
 
-    drupal_set_message(t('The taxonomy term(s) %terms could not be applied on the node(s): !nodes', $params), 'warning');
+    drupal_set_message(t('The taxonomy term(s) %terms could not be applied on the content: !nodes', $params), 'warning');
   }
 
   drupal_goto('cp/content');
@@ -391,13 +391,9 @@ function cp_content_remove_taxonomy_submit($form, $form_state) {
   foreach ($nodes as $node) {
     $wrapper = entity_metadata_wrapper('node', $node);
 
-    // Remove the selected term(s) from the current node.
-    $node_terms = $wrapper->{OG_VOCAB_FIELD}->value();
-    foreach ($node_terms as $key => $term) {
-      if (in_array($term->tid, $selected_terms)) {
-        unset($node_terms[$key]);
-      }
-    }
+    // Remove the term(s) from the current node.
+    $node_terms = $wrapper->{OG_VOCAB_FIELD}->value(array('identifier' => TRUE));
+    $node_terms = array_diff($node_terms, $selected_terms);
     $wrapper->{OG_VOCAB_FIELD}->set($node_terms);
     $wrapper->save();
     $removed_titles[] = $wrapper->label();
@@ -415,7 +411,7 @@ function cp_content_remove_taxonomy_submit($form, $form_state) {
     '!nodes' => theme('item_list', array('items' => $removed_titles)),
   );
 
-  drupal_set_message(t('The taxonomy term(s) %terms was removed from the node(s): !nodes', $params));
+  drupal_set_message(t('The taxonomy term(s) %terms was removed from the content: !nodes', $params));
 
   drupal_goto('cp/content');
 }
