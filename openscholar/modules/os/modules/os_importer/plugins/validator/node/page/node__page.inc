@@ -5,5 +5,5 @@ $plugin = array(
   'description' => t('Validating the page content type.'),
   'bundle' => 'page',
   'entity_type' => 'node',
-  'class' => 'NodeValidate',
+  'class' => 'EntityValidateBase',
 );

@@ -1,9 +1,9 @@
 <?php
 
-class OsImporterEventValidator extends NodeValidate {
+class OsImporterEventValidator extends EntityValidateBase {
 
-  public function getFieldsInfo() {
-    return parent::getFieldsInfo() + array(
+  public function setFieldsInfo() {
+    return parent::setFieldsInfo() + array(
       'field_date' => array(
         'preprocess' => array(
           array($this, 'preprocessOsDate'),
@@ -28,7 +28,7 @@ class OsImporterEventValidator extends NodeValidate {
         '@date' => $value['start'],
         '@format' => date('M j Y'),
       );
-      $this->setError(t('The start date, @date, is not valid. The date should be in a format similar to @format', $params));
+      $this->setError('', 'The start date, @date, is not valid. The date should be in a format similar to @format', $params);
     }
 
     // Validate the end date is after the start date.
@@ -37,7 +37,7 @@ class OsImporterEventValidator extends NodeValidate {
         '@date' => $value['end'],
         '@format' => date('M j Y'),
       );
-      $this->setError(t('The start date, @date, is not valid. The date should be in a format similar to @format', $params));
+      $this->setError('', 'The start date, @date, is not valid. The date should be in a format similar to @format', $params);
     }
 
     return strtotime($value['start']);
@@ -46,7 +46,7 @@ class OsImporterEventValidator extends NodeValidate {
   /**
    * Verify the value of the sign up is one of the: true, false, on, off.
    */
-  public function validateSignUp($value, $field) {
+  public function validateSignUp($field_name, $value) {
     if (empty($value)) {
       return;
     }
@@ -57,7 +57,8 @@ class OsImporterEventValidator extends NodeValidate {
         '@value' => $value,
         '@values' => $values,
       );
-      $this->setError(t('The field value(@value) should be of of the next values: @values', $params));
+      
+      $this->setError($field_name, 'The field value(@value) should be of of the next values: @values', $params);
     }
   }
 }

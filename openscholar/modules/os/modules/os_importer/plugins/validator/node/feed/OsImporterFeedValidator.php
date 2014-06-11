@@ -1,9 +1,9 @@
 <?php
 
-class OsImporterFeedValidator extends NodeValidate {
+class OsImporterFeedValidator extends EntityValidateBase {
 
-  public function getFieldsInfo() {
-    return parent::getFieldsInfo() + array(
+  public function setFieldsInfo() {
+    return parent::setFieldsInfo() + array(
       'field_url' => array(
         'validators' => array(
           array($this, 'validatorUrlNotEmpty'),

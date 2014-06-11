@@ -5,5 +5,5 @@ $plugin = array(
   'description' => t('Validating the book content type.'),
   'bundle' => 'class',
   'entity_type' => 'node',
-  'class' => 'NodeValidate',
+  'class' => 'EntityValidateBase',
 );

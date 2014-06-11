@@ -1,39 +1,30 @@
 <?php
 
-class OsImporterClassValidator extends NodeValidate {
+class OsImporterClassValidator extends EntityValidateBase {
 
-  public function getFieldsInfo() {
-    return parent::getFieldsInfo() +  array(
-      'body' => array(
-        'preprocess' => array(
-          array($this, 'preprocessText'),
-        ),
+  public function setFieldsInfo() {
+    $fields = parent::setFieldsInfo();
+
+    $fields['field_semester'] = array(
+      'validators' => array(
+        'isNotEmpty',
+        'validationSemester',
       ),
-      'field_semester' => array(
-        'validators' => array(
-          array($this, 'isNotEmpty'),
-          array($this, 'validationSemester'),
-        ),
-      ),
-      'field_offered_year' => array(
-        'preprocess' => array(
-          array($this, 'isNotEmpty'),
-          array($this, 'preprocessOfferedYear'),
-        ),
+    );
+
+    $fields['field_offered_year'] = array(
+      'validators' => array(
+        'isNotEmpty',
+        'preprocessOfferedYear',
       ),
     );
   }
 
   /**
    * Validate the semester field.
-   *
-   * @param $value
-   *  The value of the field.
-   * @param $field
-   *  The field name.
    */
-  function validationSemester($value, $field) {
-    $info = field_info_field($field);
+  function validationSemester($field_name, $value) {
+    $info = field_info_field($field_name);
 
     // Validate the semester.
     $allowed_values = $info['settings']['allowed_values'] + array('N/A' => 'N/A');
@@ -43,22 +34,20 @@ class OsImporterClassValidator extends NodeValidate {
         '@value' => $value,
       );
 
-      $this->setError(t('The given value(@value) is not validate value for the semester field and should be one of @allowed-values', $params));
+      $this->setError($field_name, 'The given value(@value) is not validate value for the semester field and should be one of @allowed-values', $params);
     }
   }
 
   /**
    * Preprocess the offered year and preprocess the form on the way.
    */
-  function preprocessOfferedYear($value) {
+  function preprocessOfferedYear($field_name,$value) {
     if (!is_numeric($value['start']) || (is_numeric($value['start']) && $value['start'] > 9999)) {
       $params = array(
         '@value' => $value['start'],
       );
 
-      $this->setError(t('The value for the year field is not valid value(@value). The value should be a year.', $params));
+      $this->setError($field_name, 'The value for the year field is not valid value(@value). The value should be a year.', $params);
     }
-
-    return $this->preprocessDate($value['start']);
   }
 }
