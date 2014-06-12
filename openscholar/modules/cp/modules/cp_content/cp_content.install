@@ -3,6 +3,6 @@
 /**
  * Reverts cp_content view to add VBO for adding/removing terms from content.
  */
-function cp_menu_update_7000() {
+function cp_content_update_7000() {
   features_revert(array('cp_content' => array('views')));
 }
