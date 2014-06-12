@@ -1909,14 +1909,6 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Then /^I should print page to "([^"]*)"$/
-   */
-  public function iShouldPrintPageTo($file) {
-    $element = $this->getSession()->getPage();
-    file_put_contents($file, $element->getContent());
-  }
-
-  /**
    * @Given /^I edit the entity "([^"]*)" with title "([^"]*)"$/
    */
   public function iEditTheEntityWithTitle($entity_type, $title) {
