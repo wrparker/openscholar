@@ -147,7 +147,7 @@ abstract class os_boxes_default extends boxes_box {
       // No valid cache id.
       return FALSE;
     }
-    if (!$cache = cache_get($this->cache_id,'cache_os_boxes')) {
+    if (!$cache = cache_get($this->cache_id, 'cache_os_boxes')) {
       // No cache exists.
       return FALSE;
     }
@@ -163,9 +163,11 @@ abstract class os_boxes_default extends boxes_box {
     }
     
     // For Admin users, add indicator that the returned block came from cache.
+    if ($cache->data && user_access('administer openscholar')) {
+      $cache->data .= "<!--From Cache CID[{$this->cache_id}]-->";
+    }
     drupal_add_http_header('x-drupal-cache-os-boxes-plugin', $this->plugin_key, TRUE);
     drupal_add_http_header('x-drupal-cache-os-boxes-cache-id', $this->cache_id, TRUE);
-    $cache->data = $cache->data . "<!--From Cache CID[{$this->cache_id}]-->";
 
     return $cache->data;
   }
@@ -176,22 +178,38 @@ abstract class os_boxes_default extends boxes_box {
    * @param $assets
    *  Lists of assets.
    */
-  private function add_assets($assets) {
+  protected function add_assets($assets) {
     foreach ($assets as $key => $asset) {
-      if ($key == 'library') {
-        foreach ($asset as $library) {
-          drupal_add_library($library[0], $library[1]);
-        }
-      }
-      elseif ($key == 'js') {
-        foreach ($asset as $js) {
-          if (!is_array($js)) {
-            drupal_add_js($js);
+      switch ($key) {
+        case 'library' :
+          foreach ($asset as $library) {
+            drupal_add_library($library[0], $library[1]);
           }
-          else {
-            drupal_add_js(end($js), reset($js));
+          break;
+        case 'js' :
+          foreach ($asset as $js) {
+            if (!is_array($js)) {
+              drupal_add_js($js);
+            }
+            else {
+              drupal_add_js(end($js), reset($js));
+            }
           }
-        }
+          break;
+        case 'settings' :
+          foreach ($asset as $setting) {
+            drupal_add_js($setting, 'setting');
+          }
+          break;
+        case 'css' :
+          foreach ($asset as $css) {
+            if (!is_array($css)) {
+              drupal_add_css($css);
+            }
+          }
+          break;
+        default:
+          drupal_set_message(t('Invalid cache assets key "%key"', array('%key' => $key)), 'error');
       }
     }
   }
