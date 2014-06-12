@@ -32,4 +32,17 @@ class OsImporterClassValidator extends EntityValidateBase {
       $this->setError($field_name_name, 'The given value(@value) is not validate value for the semester field and should be one of @allowed-values', $params);
     }
   }
+
+  /**
+   * Preprocess the offered year and preprocess the form on the way.
+   */
+  function validateOfferedYear($field_name, $value) {
+    if (!is_numeric($value) || (is_numeric($value) && $value > 9999)) {
+      $params = array(
+        '@value' => $value,
+      );
+
+      $this->setError($field_name, 'The value for the year field is not valid value(@value). The value should be a year.', $params);
+    }
+  }
 }

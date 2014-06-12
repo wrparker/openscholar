@@ -4,6 +4,7 @@
  * Main file for the OS importer module.
  */
 include_once 'os_importer.features.inc';
+include_once 'os_importer_validation_callback.inc';
 
 /**
  * Implements hook_feeds_plugins().
@@ -634,15 +635,11 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     // Build the form values - break down the row.
     $row_values = explode(",", $row);
 
-    $mappers = array(
-      'field_offered_year' => 'os_importer_map_field_offered_year',
-    );
-
     foreach ($row_values as $delta => $value) {
       $field = $mappings[$delta];
       if (strpos($field, ":") !== FALSE) {
         list($local_field, $local_key) = explode(":", $field);
-        $callback = isset($mappers[$local_field]) ? $mappers[$local_field] : 'os_importer_map_default';
+        $callback = function_exists('_os_importer_' . $local_field) ? '_os_importer_' . $local_field : '_os_importer_map_default';
         $callback($wrapper->{$local_field}, $local_key, $value, $handler);
       }
       else {
@@ -668,44 +665,6 @@ function os_importer_verify_uploaded_file($form, $form_state) {
 
   $new_file = file_save_data(implode("\n", $rows), $file->uri, FILE_EXISTS_REPLACE);
   $form_state['values']['file'] = $new_file->fid;
-}
-
-
-/**
- * Setting the year for the field.
- *
- * @param EntityMetadataWrapper $field_wrapper
- *  The field wrapped with entity metadata wrapper.
- * @param $target
- *  The key target.
- * @param $value
- *  The value.
- * @param EntityValidateInterface $handler
- *  The validator handler. Used for setting errors.
- */
-function os_importer_map_default(EntityMetadataWrapper $field_wrapper, $target, $value, EntityValidateInterface $handler) {
-  $field_value = !is_array($field_wrapper->value()) ? array($value) : $field_wrapper->value();
-  $field_value[$target] = $field_value;
-  $field_wrapper->set($field_value);
-}
-
-/**
- * Setting the year for the field.
- *
- * @see os_importer_map_default();
- */
-function os_importer_map_field_offered_year(EntityMetadataWrapper $field_wrapper, $target, $value, EntityValidateInterface $handler) {
-  // Set the field as array. This will prevent errors of the field is empty.
-  if (!is_numeric($value) || (is_numeric($value) && $value > 9999)) {
-    $params = array(
-      '@value' => $value,
-    );
-
-    $handler->setError('field_offered_year', 'The value for the year field is not valid value(@value). The value should be a year.', $params);
-    return;
-  }
-
-  $field_wrapper->set(strtotime("1/1/" . $value));
 }
 
 /**
