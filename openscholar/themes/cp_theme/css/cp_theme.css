@@ -557,7 +557,7 @@ border-radius: 0;
   border-bottom: none;
   border-left-color: none;
   border-right-color: none;
-  background: url(../images/scholarbase-sprite.png) 0 -411px no-repeat;
+  background: url('../images/cp-sprite.png') 0 -411px no-repeat;
   -moz-border-radius: none;
   -webkit-border-radius: none;
   border-radius: none;
@@ -897,18 +897,17 @@ a.tabledrag-handle-hover .handle {
 }
 
 .delete-subtheme a {
-  background: url('../../os_basetheme/images/scholarbase-sprite.png') 0 -606px no-repeat;
+  background: url('../images/cp-sprite.png') 0 -600px no-repeat;
   padding-left: 17px;
 }
 
 .zip-pull-button a {
-  background: url('../../os_basetheme/images/scholarbase-sprite.png') 0 -620px no-repeat #0a4476;
+  background: url('../images/cp-sprite.png') 0 -614px no-repeat #0a4476;
   padding: 15px 7px 8px 22px;
-
 }
 
 .git-pull-button a {
-  background: url('../../os_basetheme/images/scholarbase-sprite.png') 0 -651px no-repeat #0a4476;
+  background: url('../images/cp-sprite.png') 0 -645px no-repeat #0a4476;
   padding: 15px 7px 8px 22px;
 }
 
@@ -962,6 +961,7 @@ ul.term-reference-tree-level {
   background: none;
 }
 
+/** I think these aren't used anymore, but I'd need someone who remembers what they're used for to confirm
 .term-reference-tree-button {
   background: url('../../os_basetheme/images/scholarbase-sprite.png') 2px -449px no-repeat;
 }
@@ -969,7 +969,6 @@ ul.term-reference-tree-level {
 .term-reference-tree-button.term-reference-tree-collapsed {
   background: url('../../os_basetheme/images/scholarbase-sprite.png') 6px -433px no-repeat;
 }
-
 
 .field-widget-og-vocab-complex .expand {
 	 background: url('../../os_basetheme/images/scholarbase-sprite.png') 0 -509px no-repeat;
@@ -981,7 +980,7 @@ ul.term-reference-tree-level {
 	 padding-left:14px;
 	 margin-left:10px;
 }
-
+ */
 
 /* PUB FORM EXTERNAL URL SECTIONON */
 
@@ -1039,6 +1038,7 @@ text-decoration:none;
 
 /** Message icon overrides */
 div.status,
+div.warning,
 div.error {
   background-image: none;
 }
@@ -1055,6 +1055,10 @@ div.messages:before {
 
 div.status:before {
   background-position: -38px -231px;
+}
+
+div.warning:before {
+  background-position: -38px -262px;
 }
 
 div.error:before {
