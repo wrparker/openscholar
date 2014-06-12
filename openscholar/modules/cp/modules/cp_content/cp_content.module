@@ -337,7 +337,7 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
       '!nodes' => theme('item_list', array('items' => $applied_titles)),
     );
 
-    $message = format_plural(count($selected_terms), 'Taxonomy term %terms was applied on the content: !nodes', '@count taxonomy terms %terms were applied on the content: !nodes',$params);
+    $message = format_plural(count($selected_terms), 'Taxonomy term %terms was applied on the content: !nodes', '@count taxonomy terms %terms were applied on the content: !nodes', $params);
     drupal_set_message($message);
   }
 
@@ -349,7 +349,7 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
       '!nodes' => theme('item_list', array('items' => $skipped_titles)),
     );
 
-    $message = format_plural(count($selected_terms), 'Taxonomy term %terms could not be applied on the content: !nodes', '@count taxonomy terms %terms could not be applied on the content: !nodes',$params);
+    $message = format_plural(count($selected_terms), 'Taxonomy term %terms could not be applied on the content: !nodes', '@count taxonomy terms %terms could not be applied on the content: !nodes', $params);
     drupal_set_message($message, 'warning');
   }
 
