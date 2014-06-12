@@ -341,7 +341,7 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
     drupal_set_message($message);
   }
 
-  // Notify the user on the skipped nodes (nodes who's bundle is not associated
+  // Notify the user on the skipped nodes (nodes whose bundle is not associated
   // with the selected vocabulary).
   if (!empty($skipped_titles)) {
     $params = array(
