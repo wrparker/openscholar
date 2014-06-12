@@ -163,9 +163,9 @@ abstract class os_boxes_default extends boxes_box {
     }
     
     // For Admin users, add indicator that the returned block came from cache.
-    if($cache->data && user_access('administer openscholar')) {
-      $cache->data = $cache->data . "<!--From Cache CID[{$this->cache_id}]-->";
-    }
+    drupal_add_http_header('x-drupal-cache-os-boxes-plugin', $this->plugin_key, TRUE);
+    drupal_add_http_header('x-drupal-cache-os-boxes-cache-id', $this->cache_id, TRUE);
+    $cache->data = $cache->data . "<!--From Cache CID[{$this->cache_id}]-->";
 
     return $cache->data;
   }
@@ -205,6 +205,14 @@ abstract class os_boxes_default extends boxes_box {
    *  The assets of the box. Optional.
    */
   protected function set_cache($cache, $box = NULL) {
+    // Holds boolean whether rendering is done as dummy. Needs in order to avoid
+    // caching of dummy rendering.
+    // @todo: remove the dummy rendering fully.
+    global $dummy_rendering;
+    if ($dummy_rendering) {
+      return;
+    }
+
     if (empty($this->cache_id)) {
       // No valid cache id.
       return;
@@ -237,7 +245,7 @@ abstract class os_boxes_default extends boxes_box {
     // info unused. If we will re-select the old bundle its cache will be cleared
     // next time.
     if (isset($this->options['content_type']) && is_string($this->options['content_type'])) {
-      $bundle = $this->options['content_type'];
+      $bundle = 'node:' . $this->options['content_type'];
     }
     else {
       $bundle = NULL;

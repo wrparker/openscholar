@@ -235,7 +235,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     // info unused. If we will re-select the old bundle its cache will be cleared
     // next time.
     if ($this->options['bundle'] && is_string($this->options['bundle'])) {
-      $bundle = $this->options['bundle'];
+      $bundle = 'node:' . $this->options['bundle'];
     }
     else {
       $bundle = NULL;

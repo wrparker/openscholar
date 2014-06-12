@@ -172,8 +172,24 @@ class os_taxonomy_fbt extends os_boxes_default {
     return $form;
   }
 
-  function options_submit($form, $form_state) {
-    parent::options_submit($form, $form_state);
+  /**
+   * When submitting a box we need to invalidate here.
+   */
+  public function options_submit($form, $form_state) {
+    if (module_exists('vsite') && !$vsite = vsite_get_vsite()) {
+      return;
+    }
+
+    if (isset($this->options['vocabulary'])) {
+      $id = 'vocabulary:' . $this->options['vocabulary'];
+    }
+    else {
+      $id = NULL;
+    }
+    $cid = $this->set_cache_id($id);
+
+    cache_clear_all($cid, 'cache_os_boxes', TRUE);
+    cache_clear_all('assets:' . $cid, 'cache_os_boxes', TRUE);
 
     // Only continues the user is selecting individual types.
     // For "All types" and "Determine for me", this value is overridden in
@@ -182,7 +198,7 @@ class os_taxonomy_fbt extends os_boxes_default {
       return;
     }
 
-    // The user can select only one bundle at a time there for when there is
+    // The user can select only one bundle at a time therefore when there is
     // multiple bundles we need to select the first one.
     if (is_array($this->options['bundles'])) {
       $this->options['bundles'] = reset($this->options['bundles']);
@@ -251,9 +267,9 @@ class os_taxonomy_fbt extends os_boxes_default {
         $this->options['bundles'] = array($bundles);
       }
     }
-
-//    $this->set_cache_id(reset($this->options['bundles']));
-//    if (($block['content'] = $this->get_cache()) === FALSE) {
+    $id = 'vocabulary:' . $this->options['vocabulary'];
+    $this->set_cache_id($id);
+    if (($block['content'] = $this->get_cache()) === FALSE) {
       if (is_array($this->options['vocabulary'])) {
         $t = array_filter($this->options['vocabulary']);
         $this->options['vocabulary'] = current($t);
@@ -270,7 +286,7 @@ class os_taxonomy_fbt extends os_boxes_default {
 
       $block['content'] = $content;
       $this->set_cache($block['content']);
-//    }
+    }
 
     return $block;
   }
