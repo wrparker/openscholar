@@ -563,6 +563,16 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Then /^response header "([^"]*)" should not be "([^"]*)"$/
+   */
+  public function responseHeaderShouldNotBe($key, $result) {
+    $headers = $this->getSession()->getResponseHeaders();
+    if (!empty($headers[$key]) && $headers[$key][0] == $result) {
+      throw new Exception(sprintf('The "%s" key in the response header should not be "%s", but it is.', $key, $headers[$key][0]));
+    }
+  }
+
+  /**
    * @When /^I create the vocabulary "([^"]*)" in the group "([^"]*)" assigned to bundle "([^"]*)"$/
    */
   public function iCreateVocabInGroup($vocab_name, $group, $bundle) {
