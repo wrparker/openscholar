@@ -394,7 +394,7 @@ function cp_content_remove_taxonomy_submit($form, $form_state) {
     '!nodes' => theme('item_list', array('items' => $removed_titles)),
   );
 
-  $message = format_plural(count($selected_terms), 'Taxonomy term %terms was removed from the content: !nodes', '@count taxonomy terms %terms were removed from the content: !nodes',$params);
+  $message = format_plural(count($selected_terms), 'Taxonomy term %terms was removed from the content: !nodes', '@count taxonomy terms %terms were removed from the content: !nodes', $params);
   drupal_set_message($message);
 
   drupal_goto('cp/content');
@@ -413,13 +413,7 @@ function cp_content_form_views_form_cp_content_page_alter(&$form, &$form_state) 
   // The vocab element is present when applying/removing a term. In this case we
   // need to change the buttons to match this action.
   if (!empty($form['vocab'])) {
-    if ($form['vbo_action']['#value'] == 'apply_terms') {
-      $form['actions']['submit']['#value'] = t('Apply Terms');
-    }
-
-    if ($form['vbo_action']['#value'] == 'remove_terms') {
-      $form['actions']['submit']['#value'] = t('Remove Terms');
-    }
+    $form['actions']['submit']['#value'] = $form['vbo_action']['#value'] == 'apply_terms' ? t('Apply Terms') : t('Remove Terms');
 
     $options = array(
       'attributes' => array(
