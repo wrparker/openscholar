@@ -128,7 +128,6 @@
 #edit-layout-unused-widgets .cp-layout-widget,
 .cp-layout-widget.ui-sortable-helper {
   display: inline-block !important;
-  background: url("images/widget-bg.png") no-repeat scroll 50% 10px transparent;
   color: #444545;
   cursor: move;
   font-weight: bold;
@@ -143,94 +142,94 @@
   line-height:14px;
 }
 
-#edit-layout-unused-widgets .cp-layout-widget .widget-icon {
+#edit-layout-unused-widgets .cp-layout-widget .widget-icon,
+.cp-layout-widget.ui-sortable-helper .widget-icon{
   width: 48px;
   height: 48px;
   position: absolute;
   top: 10px;
   left: 29px;
   background-image: url("images/cp-layout-sprite.png");
-  background-position: 0 0;
 }
 
 
-#edit-layout-unused-widgets .os_boxes_addthis .widget-icon {
+.os_boxes_addthis .widget-icon {
 	background-position-y: -49px
 }
 
 
-#edit-layout-unused-widgets .os_boxes_bio .widget-icon {
+.os_boxes_bio .widget-icon {
 	background-position-y: -145px;
 }
 
 
-#edit-layout-unused-widgets .os_boxes_rss .widget-icon,
-#edit-layout-unused-widgets .os_boxes_feedreader .widget-icon {
+.os_boxes_rss .widget-icon,
+.os_boxes_feedreader .widget-icon {
 	background-position-y: -670px;
 }
 
-#edit-layout-unused-widgets #boxes-os_booklets_recent_docs .widget-icon,
-#edit-layout-unused-widgets .os_boxes_booktoc .widget-icon,
-#edit-layout-unused-widgets #views-os_booklets-block .widget-icon {
+#boxes-os_booklets_recent_docs .widget-icon,
+.os_boxes_booktoc .widget-icon,
+#views-os_booklets-block .widget-icon {
   background-position-y: -193px;
 }
 
-#edit-layout-unused-widgets .os_boxes_slideshow .widget-icon,
-#edit-layout-unused-widgets .os_slideshow_box .widget-icon {
+.os_boxes_slideshow .widget-icon,
+.os_slideshow_box .widget-icon {
   background-position-y: -766px;
 }
 
-#edit-layout-unused-widgets .os_boxes_html .widget-icon {
+.os_boxes_html .widget-icon {
   background-position-y: -910px;
 }
 
-#edit-layout-unused-widgets #views-os_events-block_1 .widget-icon,
-#edit-layout-unused-widgets #views-os_events-block_2 .widget-icon {
+#views-os_events-block_1 .widget-icon,
+#views-os_events-block_2 .widget-icon {
   background-position-y: -241px;
 }
 
-#edit-layout-unused-widgets #views-os_software_releases-block_1 .widget-icon {
+#views-os_software_releases-block_1 .widget-icon {
   background-position-y: -814px;
 }
 
-#edit-layout-unused-widgets #boxes-os_news_latest .widget-icon {
+#boxes-os_news_latest .widget-icon {
   background-position-y: -97px;
 }
 
-#edit-layout-unused-widgets #boxes-os_presentations_recent .widget-icon {
+#boxes-os_presentations_recent .widget-icon {
   background-position-y: -575px;
 }
 
-#edit-layout-unused-widgets #boxes-os_publications_recent .widget-icon,
-#edit-layout-unused-widgets .os_boxes_pub_ca .widget-icon,
-#edit-layout-unused-widgets .os_boxes_pub_year .widget-icon {
+#boxes-os_publications_recent .widget-icon,
+.os_boxes_pub_ca .widget-icon,
+.os_boxes_pub_year .widget-icon {
   background-position-y: -622px;
 }
 
-#edit-layout-unused-widgets .os_boxes_media .widget-icon {
+.os_boxes_media .widget-icon {
   background-position-y: -289px;
 }
 
-#edit-layout-unused-widgets #views-os_blog-block .widget-icon {
+#views-os_blog-block .widget-icon {
   background-position-y: -528px;
 }
 
-#edit-layout-unused-widgets .fb_social_activityf .widget-icon,
-#edit-layout-unused-widgets .fb_social_recommend .widget-icon,
-#edit-layout-unused-widgets .fb_social_comments .widget-icon,
-#edit-layout-unused-widgets .fb_social_livestream .widget-icon,
-#edit-layout-unused-widgets .fb_social_facepile .widget-icon,
-#edit-layout-unused-widgets .fb_social_send .widget-icon,
-#edit-layout-unused-widgets .fb_social_likebox .widget-icon,
-#edit-layout-unused-widgets .fb_social_like .widget-icon {
+.fb_social_activityf .widget-icon,
+.fb_social_recommend .widget-icon,
+.fb_social_comments .widget-icon,
+.fb_social_livestream .widget-icon,
+.fb_social_facepile .widget-icon,
+.fb_social_send .widget-icon,
+.fb_social_likebox .widget-icon,
+.fb_social_like .widget-icon {
   background-position-y: -377px;
 }
 
-#edit-layout-unused-widgets .os_boxes_twitterfeed .widget-icon {
+.os_boxes_twitterfeed .widget-icon {
   background-position-y: -958px;
 }
 
-#edit-layout-unused-widgets .os_taxonomy_fbt .widget-icon {
+.os_taxonomy_fbt .widget-icon {
   background-position-y: -862px;
 }
 
@@ -272,7 +271,7 @@
 }
 
 #edit-layout .ui-sortable .close-this {
-  background: url("../../../../../themes/cp_theme/images/scholarbase-sprite.png") no-repeat scroll 0 0 transparent;
+  background: url("../../../../../themes/cp_theme/images/cp-sprite.png") no-repeat scroll 0 0 transparent;
   height: 12px;
   text-indent: -999em;
   width: 12px;
@@ -283,11 +282,11 @@
 
 #edit-layout a.edit {
   background: url("images/configGear.png") no-repeat scroll 0 0 transparent;
+  display: inline-block;
   color: transparent;
   text-indent: -999em;
   width:15px;
   height:15px;
-  padding-bottom:6px;
 }
 
 .widget-controls a.delete {
@@ -305,7 +304,7 @@
 
 /* WIDGET STYLES IN UNUSED WIDGET BOX */
 .widget-container a.delete {
-  background: url("../../../../../themes/cp_theme/images/scholarbase-sprite.png") no-repeat scroll 0 -226px transparent;
+  background: url("../../../../../themes/cp_theme/images/cp-sprite.png") no-repeat scroll 0 -226px transparent;
   display: block;
   height: 11px;
   left: 82px;
@@ -316,7 +315,7 @@
 }
 
 .widget-container a.delete:hover {
-  background: url("../../../../../themes/cp_theme/images/scholarbase-sprite.png") no-repeat scroll -14px -241px transparent;
+  background: url("../../../../../themes/cp_theme/images/cp-sprite.png") no-repeat scroll -14px -241px transparent;
   display: block;
   height: 11px;
   text-indent: -999em;
@@ -398,7 +397,13 @@
   position: relative;
   top: 15px;
   width: 99px;
-  background: url('images/websiteLayoutBarLabel.png') no-repeat;
+  background-color: #c0c0c0;
+  border-radius: 3px 3px 0 0;
+  font-size: smaller;
+  font-weight: bolder;
+  text-align: center;
+  vertical-align: middle;
+  padding-bottom: 4px;
 }
  
     
@@ -447,7 +452,7 @@ html.js .page-cp-build-layout div.ctools-dropdown div.ctools-dropdown-container 
   float:right;
   display:inline;
   width:2%;
-  background: url("../../../../../themes/cp_theme/images/scholarbase-sprite.png") no-repeat scroll 0 -297px transparent;
+  background: url("../../../../../themes/cp_theme/images/cp-sprite.png") no-repeat scroll 0 -297px transparent;
   height: 19px;
   text-indent: -999em;
   padding-left: 25px;

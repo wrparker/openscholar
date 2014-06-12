@@ -1120,3 +1120,39 @@ div.error:before {
   left: 10px;
 }
 
+/** End Toolbar Overrides */
+
+/** Layout Form Overrides */
+
+.widget-container a.edit {
+  background-image: url("../images/cp-sprite.png");
+  background-position: -12px -691px;
+  width: 12px;
+}
+
+.widget-container a.edit:hover {
+  background-image: url("../images/cp-sprite.png");
+  background-position: 0px -691px;
+}
+
+#cp-layout-unused-widgets div.ctools-dropdown a.ctools-dropdown-link {
+  background: none;
+  position: relative;
+}
+
+#cp-layout-unused-widgets div.ctools-dropdown a.ctools-dropdown-link:before {
+  content: '';
+  position: absolute;
+  background-image: url("../images/cp-sprite.png");
+  background-position: -10px -452px;
+  height: 15px;
+  width: 15px;
+  top: 0;
+  left: -4px;
+  background-repeat: no-repeat;
+}
+
+#edit-layout a.edit {
+  background-image: url("../images/cp-sprite.png");
+  background-position: 0 -675px;
+}
