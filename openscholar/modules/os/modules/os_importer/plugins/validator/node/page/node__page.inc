@@ -5,5 +5,5 @@ $plugin = array(
   'description' => t('Validating the page content type.'),
   'entity_type' => 'node',
   'bundle' => 'page',
-  'class' => 'EntityValidateBase',
+  'class' => 'OsImporterEntityValidateBase',
 );

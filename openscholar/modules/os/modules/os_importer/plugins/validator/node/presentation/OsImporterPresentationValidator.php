@@ -4,7 +4,7 @@
  * required title
  * validate date
  */
-class OsImporterPresentationValidator extends EntityValidateBase {
+class OsImporterPresentationValidator extends OsImporterEntityValidateBase {
 
   public function setFieldsInfo() {
     $fields = parent::setFieldsInfo();

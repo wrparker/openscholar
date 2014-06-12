@@ -5,5 +5,5 @@ $plugin = array(
   'description' => t('Validating the software content type.'),
   'entity_type' => 'node',
   'bundle' => 'software',
-  'class' => 'EntityValidateBase',
+  'class' => 'OsImporterEntityValidateBase',
 );

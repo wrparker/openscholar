@@ -1,6 +1,6 @@
 <?php
 
-class OsImporterEventValidator extends EntityValidateBase {
+class OsImporterEventValidator extends OsImporterEntityValidateBase {
 
   public function setFieldsInfo() {
     $fields = parent::setFieldsInfo();

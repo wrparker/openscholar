@@ -4,6 +4,6 @@
  * required first name, last name
  * validation photo (minimum 220x220)
  */
-class OsImporterPersonValidator extends EntityValidateBase {
+class OsImporterPersonValidator extends OsImporterEntityValidateBase {
 
 }

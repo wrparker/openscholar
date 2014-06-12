@@ -5,5 +5,5 @@ $plugin = array(
   'description' => t('Validating the FAQ content type.'),
   'entity_type' => 'node',
   'bundle' => 'faq',
-  'class' => 'EntityValidateBase',
+  'class' => 'OsImporterEntityValidateBase',
 );
