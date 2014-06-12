@@ -206,9 +206,6 @@ function _cp_content_build_taxonomy_action_form($title, $list_title, $action, $f
   module_load_include('inc', 'vsite_vocab', 'includes/taxonomy');
   $vocabs = vsite_vocab_get_vocabularies();
 
-  $vocabularies = array(
-    0 => t('Select vocabulary'),
-  );
   foreach ($vocabs as $vocab) {
     $vocabularies[$vocab->vid] = $vocab->name;
   }
@@ -229,6 +226,8 @@ function _cp_content_build_taxonomy_action_form($title, $list_title, $action, $f
 
   $form['vocab'] = array(
     '#type' => 'select',
+    '#required' => TRUE,
+    '#title' => t('Vocabulary'),
     '#options' => $vocabularies,
     '#ajax' => array(
       'event' => 'change',
@@ -238,12 +237,9 @@ function _cp_content_build_taxonomy_action_form($title, $list_title, $action, $f
   );
 
   $form['terms'] = array(
-    '#type' => 'select',
+    '#type' => 'hidden',
     '#prefix' => '<div id="select-terms">',
     '#suffix' => '</div>',
-    '#options' => array(
-      0 => t('Select term'),
-    ),
   );
 
   $vid = !empty($form_state['values']['vocab']) ? $form_state['values']['vocab'] : 0;
@@ -255,13 +251,27 @@ function _cp_content_build_taxonomy_action_form($title, $list_title, $action, $f
       $options[$term->tid] = $term->name;
     }
 
-    // todo: Handle multiple using select 2.
+    // Adding the select2 functionality for multiple selection.
     $form['terms'] = array(
       '#type' => 'select',
       '#prefix' => '<div id="select-terms">',
       '#suffix' => '</div>',
       '#options' => $options,
+      '#title' => t('Terms'),
       '#required' => TRUE,
+      '#multiple' => TRUE,
+      '#after_build' => array('os_select2_widget_after_build'),
+      '#cardinality' => -1,
+      '#attached' => array(
+        'css' => array(
+          libraries_get_path('select2') . '/select2.css',
+          drupal_get_path('module', 'os') . '/css/select2-widget.css',
+        ),
+        'js' => array(
+          libraries_get_path('select2') . '/select2.min.js',
+          drupal_get_path('module', 'os') . '/js/select2-widget.js',
+        ),
+      ),
     );
   }
 
@@ -320,8 +330,8 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
     $names[] = $term->name;
   }
 
+  // Notify the user on the applied nodes.
   if (!empty($applied_titles)) {
-    // @todo: use format plural.
     $params = array(
       '%terms' => implode(", ", $names),
       '!nodes' => theme('item_list', array('items' => $applied_titles)),
@@ -331,8 +341,9 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
     drupal_set_message($message);
   }
 
+  // Notify the user on the skipped nodes (nodes who's bundle is not associated
+  // with the selected vocabulary).
   if (!empty($skipped_titles)) {
-    // @todo: use format plural.
     $params = array(
       '%terms' => implode(", ", $names),
       '!nodes' => theme('item_list', array('items' => $skipped_titles)),
@@ -343,36 +354,6 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
   }
 
   drupal_goto('cp/content');
-}
-
-/**
- * Validate handler; makes sure a vocabulary and a term are selected.
- */
-function cp_content_assign_taxonomy_validate($form, $form_state) {
-  if (!$form_state['values']['vocab']) {
-    form_set_error('vocab', t('Vocabulary field is required.'));
-    return;
-  }
-
-  if (!$form_state['values']['terms']) {
-    form_set_error('title', t('Term field is required.'));
-    return;
-  }
-}
-
-/**
- * Validate handler; makes sure a vocabulary and a term are selected.
- */
-function cp_content_remove_taxonomy_validate($form, $form_state) {
-  if (!$form_state['values']['vocab']) {
-    form_set_error('vocab', t('Vocabulary field is required.'));
-    return;
-  }
-
-  if (!$form_state['values']['terms']) {
-    form_set_error('title', t('Term field is required.'));
-    return;
-  }
 }
 
 /**
@@ -407,7 +388,7 @@ function cp_content_remove_taxonomy_submit($form, $form_state) {
     $names[] = $term->name;
   }
 
-  // @todo: use format plural.
+  // Notify the user on the nodes which terms were being removed of.
   $params = array(
     '%terms' => implode(", ", $names),
     '!nodes' => theme('item_list', array('items' => $removed_titles)),
