@@ -648,6 +648,11 @@ function os_importer_verify_uploaded_file($form, $form_state) {
         $value = array('value' => $value);
       }
 
+      $info = $wrapper->{$field}->info();
+
+      if (!is_array($value) && $info['type'] == 'list<text>') {
+        $value = array($value);
+      }
       $wrapper->{$field}->set($value);
     }
 
@@ -841,5 +846,17 @@ function os_importer_entity_property_info_alter(&$info) {
 
   $info['node']['bundles']['feed']['properties']['field_url__url'] = $base + array(
     'label' => t('Feed url'),
+  );
+
+  $info['node']['bundles']['person']['properties']['person_photo'] = $base + array(
+    'label' => t('Person photo'),
+  );
+
+  $info['node']['bundles']['person']['properties']['field_website__url'] = $base + array(
+    'label' => t('Website URL'),
+  );
+
+  $info['node']['bundles']['person']['properties']['field_website__title'] = $base + array(
+    'label' => t('Website title'),
   );
 }
