@@ -5,5 +5,5 @@ $plugin = array(
   'description' => t('Validating the blog content type.'),
   'entity_type' => 'node',
   'bundle' => 'blog',
-  'class' => 'OsImporterOsImporterEntityValidateBase',
+  'class' => 'OsImporterEntityValidateBase',
 );

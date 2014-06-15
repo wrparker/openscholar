@@ -259,7 +259,7 @@ projects[nodeformcols][version] = 1.0
 projects[entity_validator][subdir] = "contrib"
 projects[entity_validator][type] = module
 projects[entity_validator][download][type] = git
-projects[entity_validator][download][url] = "https://github.com/gizra/entity_validator"
+projects[entity_validator][download][url] = "https://github.com/Gizra/entity_validator.git"
 projects[entity_validator][download][branch] = "7.x-1.x"
 
 projects[nodeorder][subdir] = "contrib"

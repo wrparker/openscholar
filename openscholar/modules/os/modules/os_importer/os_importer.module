@@ -636,6 +636,11 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     $row_values = explode(",", $row);
 
     foreach ($row_values as $delta => $value) {
+      // Avoid errors in case mapping does not exist.
+      if (!isset($mappings[$delta])) {
+        continue;
+        // @todo: error message ?
+      }
       $field = $mappings[$delta];
 
       $field = str_replace(':', '__', $field);
