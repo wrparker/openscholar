@@ -655,9 +655,10 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       }
     }
 
-    if ($errors = $handler->validate($node, TRUE)) {
+    if (!$handler->validate($node, TRUE)) {
+      $errors = $handler->getErrors();
       $params = array(
-        '!errors' => theme('item_list', array('items' => $errors)),
+        '!errors' => $errors,
       );
       form_set_error('', t('The validation of the field encounter errors: !errors', $params));
     }

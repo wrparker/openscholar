@@ -194,6 +194,15 @@ function _os_importer_map_default(EntityMetadataWrapper $field_wrapper, $target,
  *
  * @see os_importer_map_default();
  */
-function _os_importer_map_field_offered_year(EntityMetadataWrapper $field_wrapper, $target, $value, EntityValidateInterface $handler) {
+function _os_importer_field_offered_year(EntityMetadataWrapper $field_wrapper, $target, $value, EntityValidateInterface $handler) {
   $handler->validateOfferedYear('field_offered_year', $value);
+}
+
+/**
+ * Setting the year for the field.
+ *
+ * @see os_importer_map_default();
+ */
+function _os_importer_field_date(EntityMetadataWrapper $field_wrapper, $target, $value, EntityValidateInterface $handler) {
+  $handler->validateOsDate('field_date', $value);
 }

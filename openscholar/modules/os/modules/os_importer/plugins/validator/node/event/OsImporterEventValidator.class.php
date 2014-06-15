@@ -5,18 +5,14 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
   public function setFieldsInfo() {
     $fields = parent::setFieldsInfo();
 
-    $fields['field_date'] = array(
-      'validators' => array(
-        'validateOsDate',
-      ),
-    );
-
     $fields['registration'] = array (
       'validators' => array(
         'isNotEmpty',
         'validateSignUp',
       ),
     );
+
+    return $fields;
   }
 
   /**
@@ -24,18 +20,9 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
    */
   public function validateOsDate($field_name, $value) {
     // Validate the date format for the start and end date.
-    if (!DateTime::createFromFormat('M j Y', $value['start'])) {
+    if (!DateTime::createFromFormat('M j Y', $value)) {
       $params = array(
-        '@date' => $value['start'],
-        '@format' => date('M j Y'),
-      );
-      $this->setError($field_name, 'The start date, @date, is not valid. The date should be in a format similar to @format', $params);
-    }
-
-    // Validate the end date is after the start date.
-    if (!DateTime::createFromFormat('M j Y', $value['end'])) {
-      $params = array(
-        '@date' => $value['end'],
+        '@date' => $value,
         '@format' => date('M j Y'),
       );
       $this->setError($field_name, 'The start date, @date, is not valid. The date should be in a format similar to @format', $params);
@@ -45,7 +32,7 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
   /**
    * Verify the value of the sign up is one of the: true, false, on, off.
    */
-  public function validateSignUp($field_name_name, $value) {
+  public function validateSignUp($field_name, $value) {
     if (empty($value)) {
       return;
     }
@@ -57,7 +44,7 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
         '@values' => $values,
       );
 
-      $this->setError($field_name_name, 'The field value(@value) should be of of the next values: @values', $params);
+      $this->setError($field_name, 'The field value(@value) should be of of the next values: @values', $params);
     }
   }
 }
