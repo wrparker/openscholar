@@ -637,25 +637,21 @@ function os_importer_verify_uploaded_file($form, $form_state) {
 
     foreach ($row_values as $delta => $value) {
       $field = $mappings[$delta];
-      if (strpos($field, ":") !== FALSE) {
-        list($local_field, $local_key) = explode(":", $field);
-        $callback = function_exists('_os_importer_' . $local_field) ? '_os_importer_' . $local_field : '_os_importer_map_default';
-        $callback($wrapper->{$local_field}, $local_key, $value, $handler);
-      }
-      else {
-        if ($field == 'file') {
-          continue;
-        }
 
-        if ($field == 'body') {
-          $value = array('value' => $value);
-        }
+      $field = str_replace(':', '__', $field);
 
-        $wrapper->{$field}->set($value);
+      if ($field == 'file') {
+        continue;
       }
+
+      if ($field == 'body') {
+        $value = array('value' => $value);
+      }
+
+      $wrapper->{$field}->set($value);
     }
 
-    if (!$handler->validate($node, TRUE)) {
+    if ($handler->validate($node, TRUE) === FALSE) {
       $errors = $handler->getErrors();
       $params = array(
         '!errors' => $errors,
@@ -827,5 +823,19 @@ function os_importer_entity_property_info_alter(&$info) {
     'type' => 'unknown',
     'setter callback' => 'entity_metadata_field_verbatim_set',
     'getter callback' => 'entity_metadata_field_verbatim_get',
+  );
+
+  $base = array(
+    'type' => 'unknown',
+    'setter callback' => 'entity_metadata_field_verbatim_set',
+    'getter callback' => 'entity_metadata_field_verbatim_get',
+  );
+
+  $info['node']['bundles']['event']['properties']['field_date__start'] = $base + array(
+    'label' => t('Date start'),
+  );
+
+  $info['node']['bundles']['event']['properties']['field_date__end'] = $base + array(
+    'label' => t('Date end'),
   );
 }
