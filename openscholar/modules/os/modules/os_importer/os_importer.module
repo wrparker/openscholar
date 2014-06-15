@@ -816,3 +816,15 @@ function os_importer_import_person_photo($source, $entity, $target, $value, $map
   );
   os_profiles_insert_image($entity, $file['file'], $dimensions, FALSE);
 }
+
+/**
+ * Implements hook_entity_property_info_alter().
+ */
+function os_importer_entity_property_info_alter(&$info) {
+  $info['node']['bundles']['event']['properties']['registration'] = array(
+    'label' => t('Registration'),
+    'type' => 'unknown',
+    'setter callback' => 'entity_metadata_field_verbatim_set',
+    'getter callback' => 'entity_metadata_field_verbatim_get',
+  );
+}
