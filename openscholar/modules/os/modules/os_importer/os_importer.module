@@ -658,6 +658,10 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       if (!is_array($value) && $info['type'] == 'list<text>') {
         $value = array($value);
       }
+      elseif (!is_array($value) && $info['type'] == 'text_formatted') {
+        $value = array('value' => $value);
+      }
+
       $wrapper->{$field}->set($value);
     }
 
