@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains  OsImporterClassValidator
+ * Contains OsImporterClassValidator
  */
 class OsImporterClassValidator extends OsImporterEntityValidateBase {
 
