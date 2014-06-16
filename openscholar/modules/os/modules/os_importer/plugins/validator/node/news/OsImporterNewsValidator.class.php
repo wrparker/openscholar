@@ -1,8 +1,8 @@
 <?php
 
 /**
- * required title, date
- * validation photo (minimum 250x250)
+ * @file
+ * Contains OsImporterNewsValidator
  */
 class OsImporterNewsValidator extends OsImporterEntityValidateBase {
 
