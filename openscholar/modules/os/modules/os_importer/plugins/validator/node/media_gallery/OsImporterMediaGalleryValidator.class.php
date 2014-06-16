@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Required title, # of columns, # of rows
- * Validate # of column, # of rows (must be positive integer)
+ * @file
+ * Contains OsImporterMediaGalleryValidator
  */
 class OsImporterMediaGalleryValidator extends OsImporterEntityValidateBase {
 
@@ -18,6 +18,9 @@ class OsImporterMediaGalleryValidator extends OsImporterEntityValidateBase {
     return $fields;
   }
 
+  /**
+   * The rows and columns should be positive.
+   */
   public function validateRowsColumns($field_name, $value) {
     if (empty($value) || $value < 1) {
       $params['@value'] = $value;
