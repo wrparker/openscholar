@@ -147,7 +147,7 @@ abstract class os_boxes_default extends boxes_box {
       // No valid cache id.
       return FALSE;
     }
-    if (!$cache = cache_get($this->cache_id,'cache_os_boxes')) {
+    if (!$cache = cache_get($this->cache_id, 'cache_os_boxes')) {
       // No cache exists.
       return FALSE;
     }
@@ -157,15 +157,17 @@ abstract class os_boxes_default extends boxes_box {
       return FALSE;
     }
 
-    if ($js_cache = cache_get('assets:' . $this->cache_id, 'cache_os_boxes')) {
-      $assets = unserialize($js_cache->data);
+    if ($assets_cache = cache_get('assets:' . $this->cache_id, 'cache_os_boxes')) {
+      $assets = unserialize($assets_cache->data);
       $this->add_assets($assets);
     }
     
     // For Admin users, add indicator that the returned block came from cache.
-    if($cache->data && user_access('administer openscholar')) {
-      $cache->data = $cache->data . "<!--From Cache CID[{$this->cache_id}]-->";
+    if ($cache->data && user_access('administer openscholar')) {
+      $cache->data .= "<!--From Cache CID[{$this->cache_id}]-->";
     }
+    drupal_add_http_header('x-drupal-cache-os-boxes-plugin', $this->plugin_key, TRUE);
+    drupal_add_http_header('x-drupal-cache-os-boxes-cache-id', $this->cache_id, TRUE);
 
     return $cache->data;
   }
@@ -176,22 +178,38 @@ abstract class os_boxes_default extends boxes_box {
    * @param $assets
    *  Lists of assets.
    */
-  private function add_assets($assets) {
+  protected function add_assets($assets) {
     foreach ($assets as $key => $asset) {
-      if ($key == 'library') {
-        foreach ($asset as $library) {
-          drupal_add_library($library[0], $library[1]);
-        }
-      }
-      elseif ($key == 'js') {
-        foreach ($asset as $js) {
-          if (!is_array($js)) {
-            drupal_add_js($js);
+      switch ($key) {
+        case 'library' :
+          foreach ($asset as $library) {
+            drupal_add_library($library[0], $library[1]);
           }
-          else {
-            drupal_add_js(end($js), reset($js));
+          break;
+        case 'js' :
+          foreach ($asset as $js) {
+            if (!is_array($js)) {
+              drupal_add_js($js);
+            }
+            else {
+              drupal_add_js(end($js), reset($js));
+            }
           }
-        }
+          break;
+        case 'settings' :
+          foreach ($asset as $setting) {
+            drupal_add_js($setting, 'setting');
+          }
+          break;
+        case 'css' :
+          foreach ($asset as $css) {
+            if (!is_array($css)) {
+              drupal_add_css($css);
+            }
+          }
+          break;
+        default:
+          drupal_set_message(t('Invalid cache assets key "%key"', array('%key' => $key)), 'error');
       }
     }
   }
@@ -201,10 +219,18 @@ abstract class os_boxes_default extends boxes_box {
    *
    * @param $cache
    *  The information we want to cache.
-   * @param $js
-   *  The assets of the js. Optional.
+   * @param $box
+   *  The assets of the box. Optional.
    */
-  protected function set_cache($cache, $js = NULL) {
+  protected function set_cache($cache, $box = NULL) {
+    // Holds boolean whether rendering is done as dummy. Needs in order to avoid
+    // caching of dummy rendering.
+    // @todo: remove the dummy rendering fully.
+    global $dummy_rendering;
+    if ($dummy_rendering) {
+      return;
+    }
+
     if (empty($this->cache_id)) {
       // No valid cache id.
       return;
@@ -219,9 +245,9 @@ abstract class os_boxes_default extends boxes_box {
 
     cache_set($this->cache_id, $cache, 'cache_os_boxes', $expire);
 
-    if ($js) {
+    if ($box) {
       $cache_id = 'assets:' . $this->cache_id;
-      cache_set($cache_id, serialize($js), 'cache_os_boxes', $expire);
+      cache_set($cache_id, serialize($box), 'cache_os_boxes', $expire);
     }
   }
 
@@ -237,7 +263,7 @@ abstract class os_boxes_default extends boxes_box {
     // info unused. If we will re-select the old bundle its cache will be cleared
     // next time.
     if (isset($this->options['content_type']) && is_string($this->options['content_type'])) {
-      $bundle = $this->options['content_type'];
+      $bundle = 'node:' . $this->options['content_type'];
     }
     else {
       $bundle = NULL;
