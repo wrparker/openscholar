@@ -15,14 +15,10 @@ class OsImporterPresentationValidator extends OsImporterEntityValidateBase {
 
     $fields['field_presentation_date__start'] = array (
       'validators' => array(
-        'validatorDate',
+        'validateOsDate',
       ),
     );
 
     return $fields;
-  }
-
-  function validatorDate($field, $value) {
-    // todo: todo.
   }
 }
