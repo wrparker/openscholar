@@ -13,12 +13,16 @@ class OsImporterPresentationValidator extends OsImporterEntityValidateBase {
   public function setFieldsInfo() {
     $fields = parent::setFieldsInfo();
 
-    $fields['field_links_link__url'] = array (
+    $fields['field_presentation_date__start'] = array (
       'validators' => array(
-        'validatorUrlNotEmpty',
+        'validatorDate',
       ),
     );
 
     return $fields;
+  }
+
+  function validatorDate($field, $value) {
+    // todo: todo.
   }
 }
