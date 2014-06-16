@@ -456,6 +456,10 @@ ol {
   padding: 0;
 }
 
+.field-name-body ol {
+margin: 0 0 1.5em 21px;
+}
+
 .item-list ul,
 .item-list ol {
   margin: 0;
