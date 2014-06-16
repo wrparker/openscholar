@@ -841,60 +841,45 @@ function os_importer_import_person_photo($source, $entity, $target, $value, $map
  * Implements hook_entity_property_info_alter().
  */
 function os_importer_entity_property_info_alter(&$info) {
-  $info['node']['bundles']['event']['properties']['registration'] = array(
-    'label' => t('Registration'),
-    'type' => 'unknown',
-    'setter callback' => 'entity_metadata_field_verbatim_set',
-    'getter callback' => 'entity_metadata_field_verbatim_get',
-  );
-
   $base = array(
     'type' => 'unknown',
     'setter callback' => 'entity_metadata_field_verbatim_set',
     'getter callback' => 'entity_metadata_field_verbatim_get',
   );
 
-  $info['node']['bundles']['event']['properties']['field_date__start'] = $base + array(
-    'label' => t('Date start'),
+  $data = array(
+    'event' => array(
+      'registration' => t('Registration'),
+      'field_date__start' => t('Date start'),
+      'field_date__end' => t('Date end'),
+    ),
+    'feed' => array(
+      'field_url__url' => t('Feed url'),
+    ),
+    'person' => array(
+      'person_photo' => t('Person photo'),
+      'field_website__url' => t('Website URL'),
+      'field_website__title' => t('Website title'),
+    ),
+    'link' => array(
+      'field_links_link__url' => t('Link URL'),
+    ),
+    'presentation' => array(
+      'field_presentation_date__start' => t('Presentation date start'),
+    ),
+    'news' => array(
+      'field_news_date__start' => t('Date start'),
+      'field_news_date__end' => t('Date end'),
+      'field_url__url' => t('URL'),
+      'field_photo' => t('News photo'),
+    ),
   );
 
-  $info['node']['bundles']['event']['properties']['field_date__end'] = $base + array(
-    'label' => t('Date end'),
-  );
-
-  $info['node']['bundles']['feed']['properties']['field_url__url'] = $base + array(
-    'label' => t('Feed url'),
-  );
-
-  $info['node']['bundles']['person']['properties']['person_photo'] = $base + array(
-    'label' => t('Person photo'),
-  );
-
-  $info['node']['bundles']['person']['properties']['field_website__url'] = $base + array(
-    'label' => t('Website URL'),
-  );
-
-  $info['node']['bundles']['person']['properties']['field_website__title'] = $base + array(
-    'label' => t('Website title'),
-  );
-
-  $info['node']['bundles']['link']['properties']['field_links_link__url'] = $base + array(
-      'label' => t('Link URL'),
-  );
-
-  $info['node']['bundles']['news']['properties']['field_news_date__start'] = $base + array(
-      'label' => t('Date start'),
-  );
-
-  $info['node']['bundles']['news']['properties']['field_news_date__end'] = $base + array(
-      'label' => t('Date end'),
-  );
-
-  $info['node']['bundles']['news']['properties']['field_url__url'] = $base + array(
-      'label' => t('URL'),
-  );
-
-  $info['node']['bundles']['news']['properties']['field_photo'] = $base + array(
-      'label' => t('News photo'),
-  );
+  foreach ($data as $bundle => $fields) {
+    foreach ($fields as $field => $label) {
+      $info['node']['bundles'][$bundle]['properties'][$field] = $base + array(
+        'label' => $label,
+      );
+    }
+  }
 }
