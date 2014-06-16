@@ -33,16 +33,7 @@ class OsImporterPersonValidator extends OsImporterEntityValidateBase {
    * Validating the image is in 220X220.
    */
   public function validatorPersonPhoto($field_name, $value) {
-    list($width, $height) = getimagesize(reset($value));
-
-    if ($width != 220 && $height != 220) {
-      $params = array(
-        '@width' => $width,
-        '@height' => $height,
-      );
-
-      $this->setError($field_name, 'The size of the image need to be 220X220. The given image is @widthX@height', $params);
-    }
+    $this->validatorPhoto($field_name, reset($value), 220, 220);
   }
 
   /**
