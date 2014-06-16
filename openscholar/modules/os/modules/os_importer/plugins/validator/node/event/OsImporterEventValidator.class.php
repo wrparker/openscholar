@@ -34,25 +34,6 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
   }
 
   /**
-   * Verify the start is occurring before the end date.
-   */
-  public function validateOsDate($field_name, $value) {
-    $value = reset($value);
-    // Validate the date format for the start and end date.
-    $date = DateTime::createFromFormat('M j Y', $value);
-
-    if ($date && $date->format('M j Y') == $value) {
-      return;
-    }
-
-    $params = array(
-      '@date' => $value,
-      '@format' => date('M j Y'),
-    );
-    $this->setError($field_name, 'The start date, @date, is not valid. The date should be in a format similar to @format', $params);
-  }
-
-  /**
    * Verify the value of the sign up is one of the: true, false, on, off.
    */
   public function validateSignUp($field_name, $value) {
