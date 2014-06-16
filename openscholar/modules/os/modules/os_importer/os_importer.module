@@ -661,6 +661,9 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       elseif (!is_array($value) && $info['type'] == 'text_formatted') {
         $value = array('value' => $value);
       }
+      elseif (empty($value) && in_array($info['type'], array('integer', 'decimal'))) {
+        $value = 0;
+      }
 
       $wrapper->{$field}->set($value);
     }
