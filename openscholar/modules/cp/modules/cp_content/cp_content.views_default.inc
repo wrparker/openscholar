@@ -368,10 +368,9 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_result'] = 1;
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['entity_load_capacity'] = '10';
   $handler->display->display_options['fields']['views_bulk_operations']['vbo_operations'] = array(
-    'action::cp_content_assign_taxonomy' => array(
+    'action::cp_content_assign_taxonomy_action' => array(
       'selected' => 1,
-      'use_queue' => 0,
-      'skip_confirmation' => 0,
+      'skip_confirmation' => 1,
       'override_label' => 0,
       'label' => '',
     ),
@@ -467,10 +466,9 @@ function cp_content_views_default_views() {
       'override_label' => 0,
       'label' => '',
     ),
-    'action::cp_content_remove_taxonomy' => array(
+    'action::cp_content_remove_taxonomy_action' => array(
       'selected' => 1,
-      'use_queue' => 0,
-      'skip_confirmation' => 0,
+      'skip_confirmation' => 1,
       'override_label' => 0,
       'label' => '',
     ),

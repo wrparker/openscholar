@@ -13,7 +13,7 @@
       help_text.css('visibility', 'hidden');
 
       operation_box.on("change", function(e) {
-        if (e.target.value == Drupal.t('action::cp_content_assign_taxonomy') || e.target.value == Drupal.t('action::cp_content_remove_taxonomy')) {
+        if (e.target.value == Drupal.t('action::cp_content_assign_taxonomy_action') || e.target.value == Drupal.t('action::cp_content_remove_taxonomy_action')) {
           help_text.css('visibility', 'visible');
         }
         else {

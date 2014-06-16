@@ -160,17 +160,19 @@ function cp_content_batch_alter(&$batch) {
  */
 function cp_content_action_info() {
   return array(
-    'cp_content_assign_taxonomy' => array(
+    'cp_content_assign_taxonomy_action' => array(
       'type' => 'node',
       'label' => t('Apply Taxonomy term'),
       'triggers' => array('any'),
       'configurable' => TRUE,
+      'aggregate' => TRUE,
     ),
-    'cp_content_remove_taxonomy' => array(
+    'cp_content_remove_taxonomy_action' => array(
       'type' => 'node',
       'label' => t('Remove Taxonomy term'),
       'triggers' => array('any'),
       'configurable' => TRUE,
+      'aggregate' => TRUE,
     ),
   );
 }
@@ -178,7 +180,7 @@ function cp_content_action_info() {
 /**
  * Form for assigning taxonomy terms.
  */
-function cp_content_assign_taxonomy_form($form, $form_state) {
+function cp_content_assign_taxonomy_action_form($form, $form_state) {
   $title = t('Apply Terms to Content');
   $list_title = t('The selected terms above will be applied to the following content:');
   $action = t('apply_terms');
@@ -190,7 +192,7 @@ function cp_content_assign_taxonomy_form($form, $form_state) {
 /**
  * Form for removing taxonomy terms.
  */
-function cp_content_remove_taxonomy_form($form, $form_state) {
+function cp_content_remove_taxonomy_action_form($form, $form_state) {
   $title = t('Remove Terms from Content');
   $list_title = t('The selected terms above will be removed from the following content:');
   $action = t('remove_terms');
@@ -206,6 +208,7 @@ function _cp_content_build_taxonomy_action_form($title, $list_title, $action, $f
   module_load_include('inc', 'vsite_vocab', 'includes/taxonomy');
   $vocabs = vsite_vocab_get_vocabularies();
 
+  $vocabularies = array();
   foreach ($vocabs as $vocab) {
     $vocabularies[$vocab->vid] = $vocab->name;
   }
@@ -294,18 +297,42 @@ function _cp_content_build_taxonomy_action_form($title, $list_title, $action, $f
 }
 
 /**
- * Submit handler; Add the terms to the checked nodes.
+ * Ajax callback to update the list of terms of the form.
  */
-function cp_content_assign_taxonomy_submit($form, $form_state) {
+function cp_content_select_callback($form, $form_state) {
+  return $form['terms'];
+}
+
+/**
+ * Submit handler; Passes the selected vocabulary and terms to the action function.
+ */
+function cp_content_assign_taxonomy_action_submit($form, $form_state) {
+  $return = array();
+  $return['vocab'] = $form_state['values']['vocab'];
+  $return['terms'] = $form_state['values']['terms'];
+
+  return $return;
+}
+
+/**
+ * Action function; Assigns terms to nodes.
+ *
+ * @param $nodes
+ *  The nodes to perform the action on.
+ * @param $context
+ *  Contains information passed with the action's form submit handler.
+ */
+function cp_content_assign_taxonomy_action(&$nodes, $context) {
+  $vocabulary = $context['vocab'];
+  $terms = $context['terms'];
+
   // Make a list of bundles associated with the selected vocabulary.
   $vsite = vsite_get_vsite();
-  $bundles = os_taxonomy_og_vocabulary_bundles($form_state['values']['vocab'], $vsite->id);
+  $bundles = os_taxonomy_og_vocabulary_bundles($vocabulary, $vsite->id);
   $bundle_names = array();
   foreach ($bundles as $bundle) {
     $bundle_names[] = $bundle->bundle;
    }
-
-  $nodes = node_load_multiple($form_state['selection']);
 
   $skipped_titles = array();
   $applied_titles = array();
@@ -318,7 +345,7 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
     }
 
     // Assign the term(s) to the current node.
-    $selected_terms = is_array($form_state['values']['terms']) ? $form_state['values']['terms'] : array($form_state['values']['terms']);
+    $selected_terms = is_array($terms) ? $terms : array($terms);
     $wrapper->{OG_VOCAB_FIELD}->set($selected_terms);
     $wrapper->save();
     $applied_titles[] = $wrapper->label();
@@ -357,18 +384,27 @@ function cp_content_assign_taxonomy_submit($form, $form_state) {
 }
 
 /**
- * Ajax callback to update the list of terms of the form.
+ * Submit handler; Passes the selected terms to the action function.
  */
-function cp_content_select_callback($form, $form_state) {
-  return $form['terms'];
+function cp_content_remove_taxonomy_action_submit($form, $form_state) {
+  $return = array();
+  $return['terms'] = $form_state['values']['terms'];
+
+  return $return;
 }
 
 /**
- * Submit handler; removes the terms from the checked nodes.
+ * Action function; Removes terms from nodes.
+ *
+ * @param $nodes
+ *  The nodes to perform the action on.
+ * @param $context
+ *  Contains information passed with the action's form submit handler.
  */
-function cp_content_remove_taxonomy_submit($form, $form_state) {
-  $selected_terms = is_array($form_state['values']['terms']) ? $form_state['values']['terms'] : array($form_state['values']['terms']);
-  $nodes = node_load_multiple($form_state['selection']);
+function cp_content_remove_taxonomy_action(&$nodes, $context) {
+  $terms = $context['terms'];
+
+  $selected_terms = is_array($terms) ? $terms : array($terms);
 
   $removed_titles = array();
   foreach ($nodes as $node) {
@@ -399,13 +435,12 @@ function cp_content_remove_taxonomy_submit($form, $form_state) {
 
   drupal_goto('cp/content');
 }
-
 /**
  * Implements hook_form_FORM_ID_alter().
  */
 function cp_content_form_views_form_cp_content_page_alter(&$form, &$form_state) {
   // Adding a JS file to present help text for the VBO element.
-  if (!empty($form['views_bulk_operations'])) {
+  if (!empty($form['views_bulk_operations']) && !empty($form['#space'])) {
     $form['#attached']['js'][] = drupal_get_path('module', 'cp_content') . '/cp_content.js';
     return;
   }
