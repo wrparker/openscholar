@@ -94,6 +94,7 @@ border-top: 1px solid #efefef;
      color:#FFF;
 }
 
+#menu-bar ul.nice-menu a.active,
 #menu-bar ul.nice-menu ul,
 #menu-bar ul.nice-menu a:hover {
     background: #8996A0;
