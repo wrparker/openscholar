@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file
+ * Contains  OsImporterClassValidator
+ */
 class OsImporterClassValidator extends OsImporterEntityValidateBase {
 
   public function setFieldsInfo() {

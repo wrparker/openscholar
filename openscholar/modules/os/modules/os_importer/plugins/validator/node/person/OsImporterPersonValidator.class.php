@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file
  * Contains OsImporterPersonValidator
  */
 class OsImporterPersonValidator extends OsImporterEntityValidateBase {
