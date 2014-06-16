@@ -160,7 +160,7 @@ h1#page-title {
 
 h2.block-title {
   padding:10px 0;
-  text-transform:uppercase;
+  text-transform:none;
   font-size:12px;
   font-weight:normal;
   letter-spacing:0.1em;

@@ -590,14 +590,24 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   // Replace the \r with \n.
   $file_content = file_get_contents($file->uri);
   $file_content = str_replace("\r", "\n", $file_content);
-  $new_file = file_save_data($file_content, $file->uri, FILE_EXISTS_REPLACE);
+  $rows = explode("\n", $file_content);
+
+  // Iterate over the rows and remove empty rows.
+  foreach ($rows as $key => $row) {
+    if (!implode("", explode(",", $row))) {
+      unset($rows[$key]);
+    }
+  }
+
+  $new_file = file_save_data(implode("\n", $rows), $file->uri, FILE_EXISTS_REPLACE);
   $form_state['values']['file'] = $new_file->fid;
 
-  // Parse file's headers.
   feeds_include_library('ParserCSV.inc', 'ParserCSV');
   $parser = new ParserCSV();
   $parser->setDelimiter(',');
   $iterator = new ParserCSVIterator($new_file->uri);
+
+  // Parse file's headers.
   $header = _os_importer_parse_header($parser, $iterator);
 
   // Check what missing in the uploaded CSV file and display message if needed.
@@ -840,10 +850,12 @@ function _os_importer_create_vocab($name, $terms, $group_type, $gid, $entity_typ
 
   $tids = array();
 
-  // Creating the terms for the new vocabulary.
+  // Creating the terms for the new vocabulary if terms are provided.
   $taxonomy_terms = explode("|", $terms);
-
   foreach ($taxonomy_terms as $taxonomy_term) {
+    if (empty($taxonomy_term)) {
+      continue;
+    }
     $term = taxonomy_get_term_by_name($taxonomy_term, $vocabulary->machine_name);
 
     if (!$term) {
@@ -877,4 +889,45 @@ function _os_importer_create_vocab($name, $terms, $group_type, $gid, $entity_typ
  */
 function os_importer_form_biblio_import_form_alter(&$form, $form_state) {
   $_GET['destination'] = 'cp/os-importer/biblio';
+}
+
+/**
+ * Implements hook_feeds_processor_targets_alter().
+ */
+function os_importer_feeds_processor_targets_alter(&$targets, $entity_type, $bundle_name) {
+  if ($bundle_name != 'person') {
+    return;
+  }
+
+  $targets['person_photo'] = array(
+    'name' => t('Personal photo'),
+    'description' => t('Importing a personal photo from external soource.'),
+    'callback' => 'os_importer_import_person_photo',
+  );
+}
+
+/**
+ * Feeds callback; Importing a personal picture from external source.
+ *
+ * @param $source
+ *   Field mapper source settings.
+ * @param $entity
+ *   An entity object, for instance a node object.
+ * @param $target
+ *   A string identifying the target on the node.
+ * @param $value
+ *   The value to populate the target with.
+ * @param $mapping
+ *  Associative array of the mapping settings from the per mapping
+ *  configuration form.
+ */
+function os_importer_import_person_photo($source, $entity, $target, $value, $mapping) {
+  $file = os_copy_file($value);
+  $dimensions = array(
+    'cropbox_x' => 0,
+    'cropbox_y' => 0,
+    'cropbox_height' => 0,
+    'cropbox_width' => 0,
+  );
+  os_profiles_insert_image($entity, $file['file'], $dimensions, FALSE);
 }

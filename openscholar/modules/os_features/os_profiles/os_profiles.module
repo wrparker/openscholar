@@ -330,7 +330,8 @@ function os_profiles_field_access($op, $field, $entity_type, $entity, $account) 
     $fields = array('field_uuid', 'field_original_destination_url', 'field_destination_url');
 
     // When the node is listening to other node, hide the field we syncing.
-    if (!empty($entity->field_original_destination_url[$entity->language])) {
+    $wrapper = entity_metadata_wrapper('node', $entity);
+    if ($wrapper->field_original_destination_url->value()) {
       $fields = array_merge($fields, os_profiles_profiles_fields());
     }
 
@@ -741,8 +742,10 @@ function os_profiles_sync_profile_submit($form, $form_state) {
  *  The file object.
  * @param $dimensions
  *  The image field crop settings.
+ * @param $save
+ *  Determine if we need to save the node. Default set to TRUE.
  */
-function os_profiles_insert_image($node, $file, $dimensions) {
+function os_profiles_insert_image($node, $file, $dimensions, $save = TRUE) {
   if (!$file) {
     // The file is empty. Truncating the file field.
     unset($node->field_person_photo[$node->language][0]);
@@ -759,7 +762,9 @@ function os_profiles_insert_image($node, $file, $dimensions) {
     );
   }
 
-  node_save($node);
+  if ($save) {
+    node_save($node);
+  }
 }
 
 /**
@@ -865,6 +870,7 @@ function os_profiles_unlink_listeners() {
     ->entityCondition('entity_type', 'node')
     ->propertyCondition('type', 'person')
     ->fieldCondition('field_uuid', 'value', $_GET['UUID'])
+    ->fieldCondition('field_original_destination_url', 'value', $_GET['origin_url'])
     ->execute();
 
   if (!$results['node']) {
@@ -927,6 +933,7 @@ function os_profiles_unlink_listeners() {
  *    'action' => 'unlink',
  *    'uuid' => 'foobar',
  *    'origin_deleted' => TRUE,
+ *    'origin_url' => http://www.example.com/john/node/1.json
  *  );
  * @endcode
  *
@@ -1440,8 +1447,9 @@ function os_profiles_node_delete($node) {
     return;
   }
   else {
+    $arguments['origin_deleted'] = TRUE;
+    $arguments['origin_url'] = url('node/' . $node->nid . '.json', array('absolute' => TRUE));
     foreach ($destinations as $destination) {
-      $arguments['origin_deleted'] = TRUE;
       os_profiles_manage_synced_profiles($destination, $arguments);
     }
   }

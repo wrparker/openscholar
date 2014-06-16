@@ -143,6 +143,7 @@ display:none;
 #menu-bar {
     margin: 0;
     padding: 0 15px !important;
+    position: static !important;
 }	
 #menu-bar .contextual-links-trigger{
 	display:none!important;
@@ -461,4 +462,10 @@ display: inline !important;
 #branding_footer{
     padding-bottom: 20px;
 }
+
+.region-header-second img {
+    width: 98%;
+}
+
+
 }

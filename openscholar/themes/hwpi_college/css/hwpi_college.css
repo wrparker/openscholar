@@ -244,6 +244,7 @@ margin-top:-2px;
 }
 
 #page-title,
+#content-column h2,
 #content-column h3,
 #content-column h4,
 #tinymce h2,
@@ -253,9 +254,10 @@ margin-top:-2px;
     font-weight: normal;
 }
 
+#content-column .block-boxes-os_boxes_html .boxes-box-content h2,
 #tinymce h2,
 #content-column .field-name-body h2 {
-	font-size: 25px;
+	font-size: 24px;
 	padding-bottom: 0;
 }
 
@@ -456,9 +458,9 @@ h1#page-title {
 h2.block-title {
     background: none repeat scroll 0 0 transparent;
  	color: #1F1F1F;
-    font-family: arial,sans-serif;
+    font-family: arial,sans-serif !important;
     font-size: 0.75em;
-    font-weight: bold;
+    font-weight: bold !important;
     letter-spacing: 0;
     line-height: 16px;
     text-transform: uppercase;
@@ -914,6 +916,9 @@ a.rslides_nav {
  	padding:0 !important;
 }
 
+.no-sidebars .region-content-top .block-boxes-os_slideshow_box + .block {
+padding:0 20px;
+}
 
 
 

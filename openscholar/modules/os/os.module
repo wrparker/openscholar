@@ -867,7 +867,9 @@ function os_form_alter(&$form, &$form_state, $form_id) {
   // /people
   if ($form_id == 'node_delete_confirm') {
     $paths = os_get_app_path();
-    $_GET['destination'] = $paths[$form['#node']->type];
+    if (isset($paths[$form['#node']->type])) {
+      $_GET['destination'] = $paths[$form['#node']->type];
+    }
   }
 
   // Add a cancel link to node forms.
@@ -954,6 +956,18 @@ function os_form_node_form_alter(&$form, $form_state) {
   // Add description to the name field in the author fieldset.
   $form['author']['name']['#description'] = t('You may change this if posting on behalf of someone else.');
 
+  // Allow access to the following form elements if the user can create or edit
+  // the current node type.
+  if (node_access('create', $form['#node']->type) || node_access('edit', $form['#node']->type)) {
+    $elements = array(
+      'options',
+    );
+
+    foreach ($elements as $element) {
+      $form[$element]['#access'] = TRUE;
+    }
+  }
+
   // Alters action buttons for existing nodes.
   if (isset($form['#node']->nid, $form['#node']->type)) {
     // Adds "Delete this post" link specifying node type if available.
@@ -968,6 +982,14 @@ function os_form_node_form_alter(&$form, $form_state) {
         'class' => array('os-delete-link', 'os-' . $form['#node']->type . '-delete-link'),
       ),
     );
+
+    if ($form['#node']->type != 'page') {
+      // We add this to make the "cancel" link on the node delete confirm form
+      // to redirect us back to the node edit form. For pages we add this in
+      // os_pages_form_node_delete_confirm_alter().
+      $options['query']['destination'] = 'node/' . $form['#node']->nid . '/edit';
+    }
+
     $delete = array(
       '#type' => 'item',
       '#markup' => l($text, 'node/' . $form['#node']->nid . '/delete', $options),

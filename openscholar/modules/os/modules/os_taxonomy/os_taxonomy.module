@@ -61,6 +61,14 @@ function os_taxonomy_entity_info_alter(&$entity_info) {
  *  Array contains the path of the term.
  */
 function os_taxonomy_taxonomy_term_uri($term) {
+  // The property "add_prefix is set to FALSE in
+  // os_taxonomy_taxonomy_term_presave() to avoid adding the bundle prefix only
+  // when inserting a term.
+  if (isset($term->add_prefix) && $term->add_prefix == FALSE) {
+    $path = taxonomy_term_uri($term);
+    return $path;
+  }
+
   $path = taxonomy_term_uri($term);
 
   if ($context = og_context()) {
@@ -1823,4 +1831,14 @@ function os_taxonomy_field_widget_form_alter(&$element, &$form_state, $context) 
   $element['#prefix'] = theme('item_list', array('items' => $items, 'attributes' => $attributes));
   $element['#attached']['css'][] = drupal_get_path('module', 'os_taxonomy') . '/os_taxonomy.css';
   $element['#attached']['js'][] = drupal_get_path('module', 'os_taxonomy') . '/os_taxonomy.js';
+}
+
+/**
+ * Implements hook_taxonomy_term_presave().
+ *
+ * Adds the "add_prefix" property to a term to signal us not to change its URI
+ * in os_taxonomy_taxonomy_term_uri() when inserting a term.
+ */
+function os_taxonomy_taxonomy_term_presave($term){
+  $term->add_prefix = FALSE;
 }

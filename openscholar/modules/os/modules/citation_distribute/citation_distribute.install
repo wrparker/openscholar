@@ -81,3 +81,54 @@ function citation_distribute_uninstall(){
   }
 }
 
+/**
+ * Change the names of the citations flags.
+ */
+function citation_distribute_update_7000() {
+  $flags = array(
+    'dash' => array(
+      'title' => t('DASH'),
+      'flag' => array(
+        'text' => t('Send to DASH'),
+        'description' => t('Send to DASH repository'),
+      ),
+      'unflag' => array(
+        'text' => t('Remove from DASH'),
+        'description' => t('Remove from DASH repository'),
+      ),
+    ),
+    'repec' => array(
+      'title' => t('RePEc'),
+      'flag' => array(
+        'text' => t('Send to RePEc'),
+        'description' => t('Send to RePEc repository'),
+      ),
+      'unflag' => array(
+        'text' => t('Remove from RePEc'),
+        'description' => t('Remove from RePEc repository'),
+      ),
+    ),
+    'googlescholar' => array(
+      'title' => t('Google Scholar'),
+      'flag' => array(
+        'text' => t('Send to Google Scholar'),
+        'description' => t('Send to Google Scholar repository'),
+      ),
+      'unflag' => array(
+        'text' => t('Remove from Google Scholar'),
+        'description' => t('Remove from Google Scholar repository'),
+      ),
+    ),
+  );
+
+  foreach ($flags as $flag => $update) {
+    $flag = flag_load($flag);
+    $flag->title = $update['title'];
+    $flag->flag_short = $update['flag']['text'];
+    $flag->flag_long = $update['flag']['description'];
+    $flag->unflag_short = $update['unflag']['text'];
+    $flag->unflag_long = $update['unflag']['description'];
+    $flag->save();
+  }
+}
+
