@@ -9,8 +9,8 @@ class OsImporterPresentationValidator extends OsImporterEntityValidateBase {
   public function setFieldsInfo() {
     $fields = parent::setFieldsInfo();
 
-    $fields['field_links_link'] = array (
-      'validator' => array(
+    $fields['field_links_link__url'] = array (
+      'validators' => array(
         'validatorUrlNotEmpty',
       ),
     );
