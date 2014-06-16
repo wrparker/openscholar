@@ -611,6 +611,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   if ($missing = array_diff($mappings_diff, $header)) {
     $params = array('!missing' => theme('item_list', array('items' => $missing)));
     form_set_error('file', t('The next columns are missing in you CSV: !missing', $params));
+    return;
   }
 
   // Iterate over the rows for field validation and removing empty rows.
@@ -636,10 +637,14 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     $row_values = explode(",", $row);
 
     foreach ($row_values as $delta => $value) {
-      // Avoid errors in case mapping does not exist.
+      // Fail in case mapping does not exist.
       if (!isset($mappings[$delta])) {
-        continue;
-        // @todo: error message ?
+        $params = array(
+          '@delta' => $delta,
+          '@value' => $value,
+        );
+        form_set_error('file', t('Mapping of CSV file is incorrect for delta @delta with value @value', $params));
+        return;
       }
       $field = $mappings[$delta];
 
