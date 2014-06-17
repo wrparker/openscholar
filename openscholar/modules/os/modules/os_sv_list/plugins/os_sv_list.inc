@@ -234,10 +234,16 @@ class os_sv_list extends os_boxes_default {
     }
 
     $bundle = ($this->options['content_type'] != 'all') ? $this->options['content_type'] : NULL;
+    if ($bundle) {
+      $cid = 'node' . $bundle;
+    }
+    else {
+      $cid = NULL;
+    }
     $block = parent::render();
     $page_num = pager_find_page(PagerDefault::$maxElement);
     
-    $this->set_cache_id('node:' . $bundle, $page_num);
+    $this->set_cache_id($cid, $page_num);
     if (($block['content'] = $this->get_cache()) === FALSE) {
       $block['content'] = NULL;
       $assets = array();
