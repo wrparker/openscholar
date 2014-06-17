@@ -21,7 +21,7 @@ Feature:
       Then I should see "First blog"
        And response header "x-drupal-cache-os-boxes-plugin" should be "os_sv_list_box"
 
-  @api @last
+  @api @last @foo
   Scenario: Verify the simple view widget pager and cache
       Given I am logging in as "john"
        When the widget "Simple view list" is set in the "Classes" page with the following <settings>:

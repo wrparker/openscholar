@@ -235,7 +235,7 @@ class os_sv_list extends os_boxes_default {
 
     $bundle = ($this->options['content_type'] != 'all') ? $this->options['content_type'] : NULL;
     if ($bundle) {
-      $cid = 'node' . $bundle;
+      $cid = 'node:' . $bundle;
     }
     else {
       $cid = NULL;
@@ -338,7 +338,7 @@ class os_sv_list extends os_boxes_default {
       }
       $this->set_cache($block['content'], $assets);
     }
-    $block['content'] = $block['content'];
+
     return $block;
   }
   
