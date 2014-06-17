@@ -170,6 +170,7 @@ class os_slideshow_box extends os_boxes_default {
       $this->add_assets($assets);
 
       $block['content'] .= theme('os_slideshow_slideshow', $vars);
+      $block['assets'] = $assets;
       $this->set_cache($block['content'], $assets);
     }
     return $block;

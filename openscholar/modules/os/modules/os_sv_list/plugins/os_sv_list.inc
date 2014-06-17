@@ -227,7 +227,6 @@ class os_sv_list extends os_boxes_default {
     $bundle = ($this->options['content_type'] != 'all') ? $this->options['content_type'] : NULL;
     $block = parent::render();
     $page_num = pager_find_page(PagerDefault::$maxElement);
-    
     $this->set_cache_id($bundle, $page_num);
     if (($block['content'] = $this->get_cache()) === FALSE) {
       $block['content'] = NULL;
@@ -312,18 +311,20 @@ class os_sv_list extends os_boxes_default {
   
         $assets = array(
           'library' => array(
-            'system', 'drupal.ajax',
+            array(
+              'system', 'drupal.ajax',
+            ),
           ),
           'js' => array(
             drupal_get_path('module', 'os_sv_list') . '/os_sv_list_display.js',
           ),
         );
-  
+
+        $block['assets'] = $assets;
         $block['content'] = "<div id='box-${delta}-page' data-page='${page_num}' data-delta='${delta}' class='${class}'>${content}</div>${pager}{$more}";
       }
       $this->set_cache($block['content'], $assets);
     }
-    $block['content'] = $block['content'];
     return $block;
   }
   
