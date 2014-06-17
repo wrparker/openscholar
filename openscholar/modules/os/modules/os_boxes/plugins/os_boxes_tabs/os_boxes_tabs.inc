@@ -47,7 +47,6 @@ class os_boxes_tabs extends os_boxes_widget_collection {
    */
   public function render() {
     $block = parent::render();
-
     if (($block['content'] = $this->get_cache()) === FALSE) {
       $plugin = context_get_plugin('reaction', 'block');
       $blocks = $plugin->get_blocks();
@@ -75,8 +74,12 @@ class os_boxes_tabs extends os_boxes_widget_collection {
         if ($block_tab = $blocks[$tab['bid']]) {
           $block_tab->region = $this->delta;
           if ($block_arr = _block_render_blocks(array($block_tab))) {
-            if (!empty($block_arr["{$block_tab->module}_{$block_tab->delta}"]->content)) {
+            if (!empty($block_arr["{$block_tab->module}_{$block_tab->delta}"]->assets)) {
+              $sub_assets = $block_arr["{$block_tab->module}_{$block_tab->delta}"]->assets;
+              $render['#attached'] = array_merge_recursive($sub_assets, $render['#attached']);
+            }
 
+            if (!empty($block_arr["{$block_tab->module}_{$block_tab->delta}"]->content)) {
               // tabs widgets created before os_boxes_widget_collection was abstracted out will have keys that begin with tab-,
               // instead of the new widget-. They also had a bug where you could get something like tab-tab-tab-tab-1 as a key.
               // This replaces all occurrences of tab- with a single widget- in the key, so older tab widgets will slowly be
@@ -107,8 +110,10 @@ class os_boxes_tabs extends os_boxes_widget_collection {
 
       ksort($render['links']['#links']);
       $block['content'] = drupal_render($render);
+      $block['assets'] = $render['#attached'];
       $this->set_cache($block['content'], $render['#attached']);
     }
+
 
     return $block;
   }

@@ -104,6 +104,9 @@ abstract class os_boxes_default extends boxes_box {
     if (!empty($this->options['make_embeddable'])) {
       $block['embed_link'] = true;
     }
+
+    // Get the assets from the cache.
+    $block['assets'] = $this->get_assets();
     return $block;
   }
 
@@ -157,19 +160,29 @@ abstract class os_boxes_default extends boxes_box {
       return FALSE;
     }
 
-    if ($assets_cache = cache_get('assets:' . $this->cache_id, 'cache_os_boxes')) {
-      $assets = unserialize($assets_cache->data);
+    if ($assets = $this->get_assets()) {
       $this->add_assets($assets);
     }
-    
+
     // For Admin users, add indicator that the returned block came from cache.
     if ($cache->data && user_access('administer openscholar')) {
       $cache->data .= "<!--From Cache CID[{$this->cache_id}]-->";
     }
+
     drupal_add_http_header('x-drupal-cache-os-boxes-plugin', $this->plugin_key, TRUE);
     drupal_add_http_header('x-drupal-cache-os-boxes-cache-id', $this->cache_id, TRUE);
 
     return $cache->data;
+  }
+
+  /**
+   * Helper function for retrieve the assets easily.
+   */
+  protected function get_assets() {
+    if ($assets_cache = cache_get('assets:' . $this->cache_id, 'cache_os_boxes')) {
+      $assets = unserialize($assets_cache->data);
+      return $assets;
+    }
   }
 
   /**
@@ -219,10 +232,10 @@ abstract class os_boxes_default extends boxes_box {
    *
    * @param $cache
    *  The information we want to cache.
-   * @param $box
+   * @param $assets
    *  The assets of the box. Optional.
    */
-  protected function set_cache($cache, $box = NULL) {
+  protected function set_cache($cache, $assets = NULL) {
     // Holds boolean whether rendering is done as dummy. Needs in order to avoid
     // caching of dummy rendering.
     // @todo: remove the dummy rendering fully.
@@ -244,10 +257,10 @@ abstract class os_boxes_default extends boxes_box {
     }
 
     cache_set($this->cache_id, $cache, 'cache_os_boxes', $expire);
-
-    if ($box) {
+dpm($assets, 'a');
+    if ($assets) {
       $cache_id = 'assets:' . $this->cache_id;
-      cache_set($cache_id, serialize($box), 'cache_os_boxes', $expire);
+      cache_set($cache_id, serialize($assets), 'cache_os_boxes', $expire);
     }
   }
 
