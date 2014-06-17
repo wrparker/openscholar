@@ -2289,6 +2289,9 @@ function _os_files_use_static_domain($path) {
     // keep adding things here as they come up
     return true;
   }
+  elseif (strpos($path, 'styles/') !== FALSE) {
+    return true;
+  }
   else {
     return false;
   }
