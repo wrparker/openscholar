@@ -64,7 +64,15 @@ class OsProfilesResource extends RestfulEntityBaseNode {
     );
 
     $public_fields['url'] = array(
-      'callback' => array($this, 'url'),
+      'property' => 'field_original_destination_url',
+    );
+
+    $public_fields['type'] = array(
+      'property' => 'type',
+    );
+
+    $public_fields['author'] = array(
+      'property' => 'author',
     );
 
     return $public_fields;

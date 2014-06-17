@@ -326,6 +326,7 @@ function os_profiles_field_display_node_alter(&$display, $context) {
  * Implements hook_field_access().
  */
 function os_profiles_field_access($op, $field, $entity_type, $entity, $account) {
+  return TRUE;
   if ($entity_type == 'node' && !empty($entity->type) && $entity->type == 'person') {
     $fields = array('field_uuid', 'field_original_destination_url', 'field_destination_url');
 
@@ -635,13 +636,13 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $url = $vsite->get_absolute_url();
 
     // Get the original node's UUID if it exist. Else, generate it.
-    $values['field_uuid'] = isset($wrapper->field_uuid) && $wrapper->field_uuid->value() ? $wrapper->field_uuid->value() : md5($form_state['autocomplete_nid']);
+    $values['uuid'] = isset($wrapper->field_uuid) && $wrapper->field_uuid->value() ? $wrapper->field_uuid->value() : md5($form_state['autocomplete_nid']);
 
     // Set the UUID for the original node as well.
-    _os_profiles_restws_request_alter($form_state['autocomplete_nid']);
+    _os_profiles_restful_request_alter($form_state['autocomplete_nid']);
 
     // Save the original address of the JSON.
-    $values['field_original_destination_url'] = $url . OS_PROFILE_JSON_PREFIX . $form_state['autocomplete_nid'];
+    $values['url'] = $url . OS_PROFILE_JSON_PREFIX . $form_state['autocomplete_nid'];
 
     // Set the file JSON url.
     $file = file_load($values['field_person_photo']['fid']);
@@ -676,7 +677,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $query = new EntityFieldQuery();
     $result = $query
       ->entityCondition('entity_type', 'node')
-      ->propertyCondition('title', $values['title'])
+      ->propertyCondition('title', $values['label'])
       ->propertyCondition('type', 'person')
       ->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $vsite->id)
       ->range(0, 1)
@@ -699,7 +700,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     // Write the current site as a listener in the node's origin site.
     $arguments = array(
       'action' => 'insert_person',
-      'UUID' => $values['field_uuid'],
+      'UUID' => $values['uuid'],
       'listener' => $base_url,
     );
     os_profiles_manage_synced_profiles($url, $arguments);
@@ -978,7 +979,7 @@ function os_profiles_restws_request_alter(&$request) {
  * @param $nid
  *  The node ID.
  */
-function _os_profiles_restws_request_alter($nid) {
+function _os_profiles_restful_request_alter($nid) {
   $wrapper = entity_metadata_wrapper('node', $nid);
 
   if (isset($wrapper->field_uuid) && !$wrapper->field_uuid->value()) {
