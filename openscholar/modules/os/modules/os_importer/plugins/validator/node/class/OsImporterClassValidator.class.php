@@ -16,7 +16,7 @@ class OsImporterClassValidator extends OsImporterEntityValidateBase {
       ),
     );
 
-    $fields['field_offered_year__start'] = array (
+    $fields['field_offered_year__start'] = array(
       'validators' => array(
         'validateOfferedYear',
       ),
