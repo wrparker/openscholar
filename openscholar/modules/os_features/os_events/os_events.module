@@ -1086,7 +1086,9 @@ function os_events_entity_insert($entity, $type) {
     'entity_id' => $node->nid,
   );
 
-  drupal_mail($module, $key, $wrapper->anon_mail->value(), $language, $params);
+  // Get the event's author to set the "from" email address.
+  $registration_settings = registration_entity_settings('node', $node->nid);
+  drupal_mail($module, $key, $wrapper->anon_mail->value(), $language, $params, $registration_settings['settings']['from_address']);
 }
 
 /**

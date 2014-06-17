@@ -120,6 +120,7 @@ class os_boxes_media extends os_boxes_default {
         if (isset($render['file']['#attached'])) {
           $assets = $render['file']['#attached'];
         }
+        $block['assets'] = $assets;
         $this->set_cache($block['content'], $assets);
       }
       else {

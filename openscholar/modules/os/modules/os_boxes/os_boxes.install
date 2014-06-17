@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Implements hook_schema().
+ */
 function os_boxes_schema() {
   $schema['cache_os_boxes'] = drupal_get_schema_unprocessed('system', 'cache');
   return $schema;

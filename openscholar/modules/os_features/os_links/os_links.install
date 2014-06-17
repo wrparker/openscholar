@@ -25,3 +25,16 @@ function os_links_update_7001() {
 
   features_revert($revert);
 }
+
+/**
+ * Reverts variable to enable customised full view mode.
+ */
+function os_links_update_7002() {
+  $revert = array(
+    'os_links' => array(
+      'variable',
+    )
+  );
+
+  features_revert($revert);
+}

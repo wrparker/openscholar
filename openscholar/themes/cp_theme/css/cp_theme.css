@@ -997,15 +997,16 @@ text-decoration:none;
 	width: 450px;
 }
 
+.view-cp-content .form-item-vocab {
+  float: left; /* LTR */
+  margin-right: 20px; /* LTR */
+}
 
+.view-cp-content #edit-node-titles {
+  clear: both;
+}
 
-
-
-
-
-
-
-
-
-
+.view-cp-content #edit-vocab {
+  padding: 5px;
+}
 
