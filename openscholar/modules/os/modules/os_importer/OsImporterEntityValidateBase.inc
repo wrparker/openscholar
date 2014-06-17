@@ -12,6 +12,13 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
   public function getFieldsInfo() {
     $fields = parent::getFieldsInfo();
 
+    // Add all fields.
+    foreach (field_info_instances($this->entityType, $this->bundle) as $field_name => $info) {
+      if ($info['required']) {
+        $fields[$field_name]['validators'][] = 'isNotEmpty';
+      }
+    }
+
     // Remove all validators for entityreference fields.
     foreach ($fields as $field_name => $info) {
       $field_info = field_info_field($field_name);
