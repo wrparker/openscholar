@@ -9,7 +9,16 @@ class os_sv_list extends os_boxes_default {
   public $embed_as = array(
     'iframe',
   );
-  
+
+  protected function set_cache_id($bundle = NULL, $page = NULL) {
+    // Discard 'all' bundle selection.
+    if ($bundle == 'node:all') {
+      $bundle = NULL;
+    }
+
+    return parent::set_cache_id($bundle, $page);
+  }
+
   public function __construct() {
     parent::__construct();
     $this->entity_type = $this->bundle = NULL;
@@ -228,7 +237,7 @@ class os_sv_list extends os_boxes_default {
     $block = parent::render();
     $page_num = pager_find_page(PagerDefault::$maxElement);
     
-    $this->set_cache_id($bundle, $page_num);
+    $this->set_cache_id('node:' . $bundle, $page_num);
     if (($block['content'] = $this->get_cache()) === FALSE) {
       $block['content'] = NULL;
       $assets = array();
