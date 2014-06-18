@@ -332,7 +332,9 @@ function cp_content_assign_taxonomy_action(&$nodes, $context) {
   $bundle_names = array();
   foreach ($bundles as $bundle) {
     $bundle_names[] = $bundle->bundle;
-   }
+  }
+
+  $selected_terms = is_array($terms) ? $terms : array($terms);
 
   $skipped_titles = array();
   $applied_titles = array();
@@ -345,8 +347,9 @@ function cp_content_assign_taxonomy_action(&$nodes, $context) {
     }
 
     // Assign the term(s) to the current node.
-    $selected_terms = is_array($terms) ? $terms : array($terms);
-    $wrapper->{OG_VOCAB_FIELD}->set($selected_terms);
+    $node_terms = $wrapper->{OG_VOCAB_FIELD}->value(array('identifier' => TRUE));
+    $node_terms = array_merge($node_terms ,$selected_terms);
+    $wrapper->{OG_VOCAB_FIELD}->set($node_terms);
     $wrapper->save();
     $applied_titles[] = $wrapper->label();
   }
@@ -388,6 +391,7 @@ function cp_content_assign_taxonomy_action(&$nodes, $context) {
  */
 function cp_content_remove_taxonomy_action_submit($form, $form_state) {
   $return = array();
+  $return['vocab'] = $form_state['values']['vocab'];
   $return['terms'] = $form_state['values']['terms'];
 
   return $return;
@@ -402,13 +406,28 @@ function cp_content_remove_taxonomy_action_submit($form, $form_state) {
  *  Contains information passed with the action's form submit handler.
  */
 function cp_content_remove_taxonomy_action(&$nodes, $context) {
+  $vocabulary = $context['vocab'];
   $terms = $context['terms'];
+
+  // Make a list of bundles associated with the selected vocabulary.
+  $vsite = vsite_get_vsite();
+  $bundles = os_taxonomy_og_vocabulary_bundles($vocabulary, $vsite->id);
+  $bundle_names = array();
+  foreach ($bundles as $bundle) {
+    $bundle_names[] = $bundle->bundle;
+  }
 
   $selected_terms = is_array($terms) ? $terms : array($terms);
 
+  $skipped_titles = array();
   $removed_titles = array();
   foreach ($nodes as $node) {
     $wrapper = entity_metadata_wrapper('node', $node);
+    // Check if the bundle of the node is associated with selected vocabulary.
+    if (!in_array($node->type, $bundle_names)) {
+      $skipped_titles[] = $wrapper->label();
+      continue;
+    }
 
     // Remove the term(s) from the current node.
     $node_terms = $wrapper->{OG_VOCAB_FIELD}->value(array('identifier' => TRUE));
@@ -425,13 +444,27 @@ function cp_content_remove_taxonomy_action(&$nodes, $context) {
   }
 
   // Notify the user on the nodes which terms were being removed of.
-  $params = array(
-    '%terms' => implode(", ", $names),
-    '!nodes' => theme('item_list', array('items' => $removed_titles)),
-  );
+  if (!empty($applied_titles)) {
+    $params = array(
+      '%terms' => implode(", ", $names),
+      '!nodes' => theme('item_list', array('items' => $removed_titles)),
+    );
 
-  $message = format_plural(count($selected_terms), 'Taxonomy term %terms was removed from the content: !nodes', '@count taxonomy terms %terms were removed from the content: !nodes', $params);
-  drupal_set_message($message);
+    $message = format_plural(count($selected_terms), 'Taxonomy term %terms was removed from the content: !nodes', '@count taxonomy terms %terms were removed from the content: !nodes', $params);
+    drupal_set_message($message);
+  }
+
+  // Notify the user on the skipped nodes (nodes whose bundle is not associated
+  // with the selected vocabulary).
+  if (!empty($skipped_titles)) {
+    $params = array(
+      '%terms' => implode(", ", $names),
+      '!nodes' => theme('item_list', array('items' => $skipped_titles)),
+    );
+
+    $message = format_plural(count($selected_terms), 'No term was removed from the content: !nodes', 'No terms were removed from the content: !nodes', $params);
+    drupal_set_message($message, 'warning');
+  }
 
   drupal_goto('cp/content');
 }
