@@ -707,3 +707,10 @@ function os_update_7032() {
 function os_update_7033() {
   module_disable(array('rdf'));
 }
+
+/**
+ * Disable the RDF module.
+ */
+function os_update_7034() {
+  module_disable(array('restful'));
+}
