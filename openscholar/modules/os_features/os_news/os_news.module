@@ -92,8 +92,8 @@ function os_news_process_node(&$vars) {
           if (isset($effect['data']['width'])) {
             $width = $effect['data']['width'] . "px";
           }
-    }
-    $photo_markup .= '<div class="photo with-caption" style="width:' . $width . '">' . render($vars['content']['field_photo']);
+    		}
+    		$photo_markup .= '<div class="photo with-caption" style="width:' . $width . '">' . render($vars['content']['field_photo']);
         $photo_markup .= '<div class="caption">' . $vars['content']['field_photo'][0]['#item']['os_file_description']['und'][0]['value'] . '</div>';
         $photo_markup .= '</div>';
       }
