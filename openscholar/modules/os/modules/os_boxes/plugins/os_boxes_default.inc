@@ -257,7 +257,6 @@ abstract class os_boxes_default extends boxes_box {
     }
 
     cache_set($this->cache_id, $cache, 'cache_os_boxes', $expire);
-dpm($assets, 'a');
     if ($assets) {
       $cache_id = 'assets:' . $this->cache_id;
       cache_set($cache_id, serialize($assets), 'cache_os_boxes', $expire);
