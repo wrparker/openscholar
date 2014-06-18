@@ -707,3 +707,26 @@ function os_update_7032() {
 function os_update_7033() {
   module_disable(array('rdf'));
 }
+
+/**
+ * Reverts feeds importers to add "Created date" and "Path" to CSV import.
+ */
+function os_update_7034() {
+  $apps = array(
+    'os_biocv',
+    'os_blog',
+    'os_classes',
+    'os_events',
+    'os_faq',
+    'os_image_gallery',
+    'os_links',
+    'os_news',
+    'os_pages',
+    'os_presentations',
+    'os_profiles',
+    'os_reader',
+    'os_software'
+  );
+  $revert = array_fill_keys($apps, array('feeds_importer'));
+  features_revert($revert);
+}
