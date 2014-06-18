@@ -592,8 +592,8 @@ function os_profiles_profiles_fields() {
  * Submit handler; Importing person profile from external source.
  */
 function os_profiles_sync_profile_submit($form, $form_state) {
-  if (variable_get('os_profiles_no_restws', FALSE) || !module_exists('restws')) {
-    // No RestWS.
+  if (!module_exists('restful')) {
+    // No RESTful module.
     return;
   }
 
@@ -608,40 +608,21 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $data = $origin->data;
 
     // Get the URL of the original node.
-    $url = isset($data['restful']) ? $data['url'] : str_replace('/node/' . $data['nid'] . '.json', '', $form_state['json_address']);
-
-    // Get the original node's UUID.
-    $values['field_uuid'] = $data[$keys['field_uuid']];
 
     // Save the original address of the JSON.
-    $values['field_original_destination_url'] = $form_state['json_address'];
+    $values['original_url'] = $form_state['json_address'];
 
     // Get the url of the file.
-    if ($data['restful']) {
-      $file_url = $data['photo']['url'];
-    }
-    else {
-      // The site using the old version.
-      if (!empty($values['field_person_photo'])) {
-        $file_info = os_profiles_get_origin_node_values($values['field_person_photo']['file']['uri'] . '.json', array('url'));
-        $file_url = $file_info->values['url'];
-      }
-    }
+    $file_url = $data['photo']['url'];
 
-    if (isset($data['restful'])) {
-      $photo_dimension = $data['photo'];
-      unset($photo_dimension['url']);
-    }
-    else {
-      $photo_dimension = $data['person_photo_dimension'];
-    }
+    $photo_dimension = $data['photo'];
   }
   else {
     // Import a person node using the auto-complete field.
     $wrapper = entity_metadata_wrapper('node', $form_state['autocomplete_nid']);
     foreach (array_keys($keys) as $key) {
       if (isset($wrapper->{$key}) && $value = $wrapper->{$key}->value()) {
-        $values[$key] = $value;
+        $values[$keys[$key]] = $value;
       }
     }
 
@@ -650,13 +631,13 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $url = $vsite->get_absolute_url();
 
     // Get the original node's UUID if it exist. Else, generate it.
-    $values['field_uuid'] = isset($wrapper->field_uuid) && $wrapper->field_uuid->value() ? $wrapper->field_uuid->value() : md5($form_state['autocomplete_nid']);
+    $values['uuid'] = isset($wrapper->field_uuid) && $wrapper->field_uuid->value() ? $wrapper->field_uuid->value() : md5($form_state['autocomplete_nid']);
 
     // Set the UUID for the original node as well.
-    _os_profiles_restws_request_alter($form_state['autocomplete_nid']);
+    _os_profiles_restful_request_alter($form_state['autocomplete_nid']);
 
     // Save the original address of the JSON.
-    $values['field_original_destination_url'] = $url . OS_PROFILE_JSON_PREFIX . $form_state['autocomplete_nid'];
+    $values['original_url'] = $url . OS_PROFILE_JSON_PREFIX . $form_state['autocomplete_nid'];
 
     // Set the file JSON url.
     $file = file_load($values['field_person_photo']['fid']);
@@ -691,7 +672,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $query = new EntityFieldQuery();
     $result = $query
       ->entityCondition('entity_type', 'node')
-      ->propertyCondition('title', $values['title'])
+      ->propertyCondition('title', $values['label'])
       ->propertyCondition('type', 'person')
       ->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $vsite->id)
       ->range(0, 1)
@@ -703,9 +684,9 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     }
   }
 
-  $handler = restws_resource_controller('node');
-
-  $nid = call_user_func_array(array($handler, $method), $arguments);
+  $handler = restful_get_restful_handler('profiles');
+  $result = $handler->post('', $values);
+  $nid = $result['id'];
 
   if ($method == 'update') {
     $nid = $arguments[0];
@@ -714,7 +695,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     // Write the current site as a listener in the node's origin site.
     $arguments = array(
       'action' => 'insert_person',
-      'UUID' => $values['field_uuid'],
+      'UUID' => $values['uuid'],
       'listener' => $base_url,
     );
     os_profiles_manage_synced_profiles($url, $arguments);
@@ -787,19 +768,22 @@ function os_profiles_get_origin_node_values($address, $fields) {
   $values = array();
 
   foreach ($fields as $key => $field) {
-    $info = field_info_field($field);
     $field_name = isset($data['restful']) ? $field : $key;
     if (empty($data[$field_name])) {
-      // The field value in the original node is empty. Entity metadata wrapper
-      // need NULL to delete the field. Multiple cardinality field need array
-      // and because the field empty we need to pass array(NULL).
-      $value = $info['cardinality'] == 1 ? NULL : array(NULL);
+      continue;
     }
     else {
       $value = $data[$field_name];
     }
 
-    $values[$key] = $value;
+    $values[$field] = $value;
+  }
+
+  // Restful module will validate the body eventually using
+  // entity_property_verify_data_type() which for data of the type
+  // "text_formatted" it expects an array.
+  if (!empty($values['description'])) {
+    $values['description'] = array($values['description']);
   }
 
   return (object) array(
@@ -997,7 +981,7 @@ function os_profiles_restws_request_alter(&$request) {
  * @param $nid
  *  The node ID.
  */
-function _os_profiles_restws_request_alter($nid) {
+function _os_profiles_restful_request_alter($nid) {
   $wrapper = entity_metadata_wrapper('node', $nid);
 
   if (isset($wrapper->field_uuid) && !$wrapper->field_uuid->value()) {
@@ -1390,8 +1374,8 @@ function os_profiles_node_update($node) {
 function os_profiles_profile_changed($node) {
   $wrapper = entity_metadata_wrapper('node', $node);
   $wrapper_original = entity_metadata_wrapper('node', $node->original);
-  foreach (os_profiles_profiles_fields() as $field) {
-    if ($wrapper->$field->value() !== $wrapper_original->$field->value()) {
+  foreach (os_profiles_profiles_fields() as $key => $field) {
+    if ($wrapper->$key->value() !== $wrapper_original->$key->value()) {
       return TRUE;
     }
   }
