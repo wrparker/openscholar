@@ -99,16 +99,11 @@ function os_profiles_feeds_importer_default() {
             'unique' => FALSE,
           ),
           12 => array(
-            'source' => 'Files',
-            'target' => 'file',
-            'unique' => FALSE,
-          ),
-          13 => array(
             'source' => 'Created date',
             'target' => 'created',
             'unique' => FALSE,
           ),
-          14 => array(
+          13 => array(
             'source' => 'Path',
             'target' => 'path_alias',
             'pathauto_override' => 1,
