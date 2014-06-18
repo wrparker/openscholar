@@ -79,6 +79,8 @@ projects[entity][subdir] = "contrib"
 projects[entity][version] = 1.0
 projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
 projects[entity][patch][] = http://drupal.org/files/entity-file_entity_access-1831578-9.patch
+projects[entity][patch][] = http://drupal.org/files/issues/2264079-entity-wrapper-access-single-entity-reference-1.patch
+projects[entity][patch][] = https://drupal.org/files/issues/2086225-entity-access-check-node-create-3.patch
 
 projects[entitycache][subdir] = "contrib"
 projects[entitycache][version] = 1.1
