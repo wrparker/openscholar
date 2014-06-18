@@ -514,6 +514,7 @@ function os_module_implements_alter(&$implementations, $hook) {
     $implementations['os'] = FALSE;
   }
   elseif ($hook == 'js_alter') {
+    // Move the os implementation of js_alter last to support the move of all js to the footer.
     unset($implementations['os']);
     $implementations['os'] = FALSE;
   }
