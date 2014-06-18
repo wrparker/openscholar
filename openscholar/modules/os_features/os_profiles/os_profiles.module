@@ -608,7 +608,6 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $data = $origin->data;
 
     // Get the URL of the original node.
-    $url = str_replace('/node/' . $data['nid'] . '.json', '', $form_state['json_address']);
 
     // Save the original address of the JSON.
     $values['original_url'] = $form_state['json_address'];
