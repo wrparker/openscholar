@@ -22,6 +22,10 @@ function os_blog_feeds_importer_default() {
       'config' => array(
         'allowed_extensions' => 'ics csv',
         'direct' => FALSE,
+        'directory' => 'public://feeds',
+        'allowed_schemes' => array(
+          0 => 'public',
+        ),
       ),
     ),
     'parser' => array(
