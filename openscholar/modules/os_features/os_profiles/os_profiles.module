@@ -170,6 +170,15 @@ function os_profiles_menu() {
     'access callback' => TRUE,
   );
 
+  $items['os_profile/create_profile/%node'] = array(
+    'title' => 'Create a site from a personal node',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os_profiles_create_site_from_profile'),
+    // todo: Deal with permission later.
+    'access callback' => TRUE,
+    'theme callback' => 'cp_theme_name',
+  );
+
   return $items;
 }
 
@@ -179,6 +188,7 @@ function os_profiles_menu() {
 function os_profiles_admin_paths() {
   return array(
     'cp/people/sync-profiles' => TRUE,
+    'os_profile/create_profile/*' => TRUE,
   );
 }
 
@@ -1629,4 +1639,38 @@ function os_profiles_preprocess_image_formatter(&$variables) {
   }
 
   $variables['item'] = (array)file_load($variables['item']['fid']);
+}
+
+/**
+ * Implement hook_preprocess_node().
+ */
+function os_profiles_preprocess_node(&$variables) {
+  if ($variables['view_mode'] != 'full' || $variables['node']->type != 'person') {
+    return;
+  }
+
+  $variables['content']['create_site'] = array(
+    '#markup' => l(t('Create a personal website from this profile'), 'os_profile/create_profile/' . $variables['node']->nid),
+    '#weight' => -9.5,
+  );
+}
+
+/**
+ * Create a site from a profile node.
+ *
+ * @see vsite_preprocess_toolbar().
+ */
+function os_profiles_create_site_from_profile($form, $form_state) {
+  $form['url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('URL'),
+    '#description' => t("Minimun 3 characters, which must be lowercase. Punctuations is not allowed except for hyphens and underscores. <Br /> Example: a choice of 'jdoe' would result the URL: @url"),
+  );
+
+  $form['create_as_subsite'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Create it as a subsite of @url'),
+  );
+
+  return $form;
 }
