@@ -141,7 +141,8 @@ function os_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'securepages_pages';
   $strongarm->value = 'user
-user/login';
+user/login
+pinserver/auth';
   $export['securepages_pages'] = $strongarm;
 
   $strongarm = new stdClass();
