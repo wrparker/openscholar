@@ -247,7 +247,7 @@ class os_sv_list extends os_boxes_default {
       $page = 0;
       $ids = $this->get_ids($page_num, $page);
       
-      $this->_set_plugins($this->entity_type, $bundle);
+      $this->_set_plugins($this->entity_type, $cid);
 
       // Add the pager.
       if ($this->options['pager'] && $ids) {
