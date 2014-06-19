@@ -66,7 +66,7 @@ function os_blog_feeds_importer_default() {
           4 => array(
             'source' => 'Path',
             'target' => 'path_alias',
-            'unique' => FALSE,
+            'pathauto_override' => 1,
           ),
         ),
         'update_existing' => '0',
