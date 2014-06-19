@@ -169,6 +169,7 @@ features[variable][] = expire_handler_node
 features[variable][] = expire_node_actions
 features[variable][] = expire_node_node_page
 features[variable][] = expire_status
+features[variable][] = image_toolkit
 features[variable][] = imageapi_optimize_service
 features[variable][] = imageapi_optimize_toolkit
 features[variable][] = pathauto_node_pattern
