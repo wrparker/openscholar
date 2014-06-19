@@ -709,9 +709,18 @@ function os_update_7033() {
 }
 
 /**
- * Reverts feeds importers to add "Created date" and "Path" to CSV import.
+ * Enables Advanced Aggregation modules and reverts variable exports related to it to ensure we have them.
  */
 function os_update_7034() {
+  module_enable(array('advagg_js_compress'));
+  features_revert(array('os' => array('variable')));
+  return t('Advanced Aggregation module enabled. Variables for OS module reverted.');
+}
+
+/**
+ * Reverts feeds importers to add "Created date" and "Path" to CSV import.
+ */
+function os_update_7035() {
   $apps = array(
     'os_biocv',
     'os_blog',

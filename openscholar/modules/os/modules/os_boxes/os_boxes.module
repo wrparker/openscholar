@@ -595,3 +595,10 @@ function os_boxes_invalidate_cache($entity, $type) {
   // Flush general assets.
   cache_clear_all('assets:' . $general_cid, 'cache_os_boxes', TRUE);
 }
+
+/**
+ * Implements hook_flush_caches().
+ */
+function os_boxes_flush_caches() {
+  return array('cache_os_boxes');
+}
