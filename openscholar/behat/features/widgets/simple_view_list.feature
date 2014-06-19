@@ -21,7 +21,7 @@ Feature:
       Then I should see "First blog"
        And response header "x-drupal-cache-os-boxes-plugin" should be "os_sv_list_box"
 
-  @api @last @foo
+  @api @wip
   Scenario: Verify the simple view widget pager and cache
       Given I am logging in as "john"
        When the widget "Simple view list" is set in the "Classes" page with the following <settings>:
@@ -33,8 +33,8 @@ Feature:
        Then I should see "1 of 6"
         And response header "x-drupal-cache-os-boxes-plugin" should be "os_sv_list_box"
        When the widget "Simple view list" is set in the "Classes" page with the following <settings>:
-         | Show pager               | check                    | checkbox    |
-         | Number of items                | 2                    | select list    |
+         | Show pager               | check                    | checkbox     |
+         | Number of items          | 2                        | select list  |
         And I visit "john/classes"
        Then I should see "1 of 18"
         And I visit "john/classes"
