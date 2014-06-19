@@ -1232,26 +1232,6 @@ img.media-element.file-default[style*="float:"][style*="right;"] {
 	padding-right:0;
 	}	
 	
-/**
- * "News" node-type styles.
- *
- * @todo These rules SHOULD be stored in the os_news module. 
- *
- * The original CSS file intermittently failed to load:
- * @see /profiles/openscholar/modules/os_features/os_news/os_news.css
- */
-
-
-.node-news .field-name-field-photo {
-  float: left;
-  margin: 0 1.5em .5em 0;
-}
-
-.page-node.node-type-news .field-name-body .field-name-field-photo {
-  float: right;
-  margin-left: 1em;
-}
-
 
 .block-boxes-os_sv_list_box .os_sv_list_box.sv-list-link.sv-list-view-links h1 a {
 	font-weight:normal;
