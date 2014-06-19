@@ -444,7 +444,7 @@ function cp_content_remove_taxonomy_action(&$nodes, $context) {
   }
 
   // Notify the user on the nodes which terms were being removed of.
-  if (!empty($applied_titles)) {
+  if (!empty($removed_titles)) {
     $params = array(
       '%terms' => implode(", ", $names),
       '!nodes' => theme('item_list', array('items' => $removed_titles)),
