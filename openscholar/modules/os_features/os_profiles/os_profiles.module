@@ -1695,5 +1695,37 @@ function os_profiles_create_site_from_profile($form, &$form_state, $node) {
     '#value' => t('Submit'),
   );
 
+  $from['#submit'][] = 'os_profiles_create_site_from_profile_submit';
+
   return $form;
+}
+
+/**
+ * Submit handler; Creates a VSite from a parent profile.
+ */
+function os_profiles_create_site_from_profile_submit($form, $form_state) {
+  global $user;
+
+  // The bio of the new VSite is taken from the parent profile.
+  $profile = $form_state['node'];
+
+  // Name of the new VSite.
+  $name = $purl = $form_state['values']['url'];
+
+  // Owner of the new VSite.
+  $uid = $user->uid;
+
+  // Set the parent VSite to be the current VSite if the user creates it as a
+  // subsite.
+  if (!empty($form_state['values']['create_as_subsite'])) {
+    $vsite = vsite_get_vsite();
+    $parent = $vsite->group->nid;
+  }
+  else {
+    $parent = NULL;
+  }
+  if ($vsite = vsite_create_vsite($name, $purl, $uid, 'personal', FALSE, $parent, 0)) {
+    // @todo: copy the bio of the prfoile into the new VSite.
+    drupal_goto($vsite->get_absolute_url());
+  }
 }
