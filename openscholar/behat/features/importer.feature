@@ -26,7 +26,6 @@ Feature: Testing the importer.
   Scenario: Verify that the vocabularies and terms from the CSV created
   successfully.
     Given I visit "john/blog/blog-csv"
-      And I should print page
      Then I should see "Johnny B good"
       And I should see "Californication"
       And I should see "Chuck Berry"
