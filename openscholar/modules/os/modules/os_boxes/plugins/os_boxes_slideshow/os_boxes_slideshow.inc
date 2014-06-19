@@ -287,6 +287,7 @@ class os_boxes_slideshow extends os_boxes_default {
           ),
         );
         $block['content'] = $output;
+        $block['assets'] = $assets;
         $this->set_cache($block['content'], $assets);
       }
     }
