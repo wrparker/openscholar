@@ -15,21 +15,21 @@ class OSPublicStreamWrapper extends DrupalPublicStreamWrapper {
    */
   function getExternalUrl() {
     $path = str_replace('\\', '/', $this->getTarget());
-    $domain = $GLOBALS['base_url'];
-    if ($this->useStatic($path)) {
-      $domain = variable_get('os_files_static_domain', $domain);
+    $base_url = $GLOBALS['base_url'];
+    if ($this->useStatic($path) && $static = variable_get('os_files_static_domain')) {
+      $base_url = $static;
       $link = array(
         '#type' => 'html_tag',
         '#tag' => 'link',
         '#attributes' => array(
           'rel' => 'dns-prefetch',
-          'href' => $domain
+          'href' => $static
         )
       );
       drupal_add_html_head($link, 'dns-prefetch');
     }
 
-    return $domain . '/' . self::getExternalDirectoryPath() . '/' . drupal_encode_path($path);
+    return $base_url . '/' . self::getExternalDirectoryPath() . '/' . drupal_encode_path($path);
   }
 
   /**
