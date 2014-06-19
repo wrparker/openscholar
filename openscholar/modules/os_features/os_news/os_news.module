@@ -84,8 +84,8 @@ function os_news_process_node(&$vars) {
   }
   else {
     if (isset($vars['content']['field_photo']) && isset($vars['content']['body'])) {
-      $photo_markup = "";
-      if (isset($vars['content']['field_photo'][0]['#item']['os_file_description']['und'][0]['value'])) {
+      $photo_markup = '';
+      if (isset($vars['content']['field_photo'][0]['#item']['os_file_description'][LANGUAGE_NONE][0]['value'])) {
         $image_style = image_style_load($vars['content']['field_photo'][0]['#image_style']);
         $width = "auto";
         foreach ($image_style['effects'] as $delta => $effect) {
@@ -94,7 +94,7 @@ function os_news_process_node(&$vars) {
           }
         }
         $photo_markup .= '<div class="photo with-caption" style="width:' . $width . '">' . render($vars['content']['field_photo']);
-        $photo_markup .= '<div class="caption">' . $vars['content']['field_photo'][0]['#item']['os_file_description']['und'][0]['value'] . '</div>';
+        $photo_markup .= '<div class="caption">' . $vars['content']['field_photo'][0]['#item']['os_file_description'][LANGUAGE_NONE][0]['value'] . '</div>';
         $photo_markup .= '</div>';
       }
       else {
