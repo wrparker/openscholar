@@ -163,7 +163,81 @@ function os_profiles_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-person-field_destination'
+  // Exported field_instance: 'node-person-field_child_site'
+  $field_instances['node-person-field_child_site'] = array(
+    'bundle' => 'person',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 30,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'links' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'no_image_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'sidebar_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'slide_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'title' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_child_site',
+    'label' => 'Child site',
+    'required' => FALSE,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'og',
+      'settings' => array(),
+      'type' => 'og_complex',
+      'weight' => 53,
+    ),
+  );
+
+  // Exported field_instance: 'node-person-field_destination_url'
   $field_instances['node-person-field_destination_url'] = array(
     'bundle' => 'person',
     'default_value' => NULL,
@@ -1138,6 +1212,7 @@ function os_profiles_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Address');
   t('Attach Files');
+  t('Child site');
   t('Destination URL');
   t('Email');
   t('First Name');
