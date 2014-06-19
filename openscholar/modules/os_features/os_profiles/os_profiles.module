@@ -1663,20 +1663,36 @@ function os_profiles_preprocess_node(&$variables) {
 function os_profiles_create_site_from_profile($form, &$form_state, $node) {
   global $base_url;
 
+  module_load_include('form.inc', 'vsite_register', 'vsite_register');
+
   $form_state['node'] = $node;
 
   $params = array(
     '@url' => $base_url . '/jdoe',
   );
-  $form['url'] = array(
+
+  $form['domain'] = array(
     '#type' => 'textfield',
     '#title' => t('URL'),
     '#required' => TRUE,
     '#description' => t("Minimun 3 characters, which must be lowercase. Punctuations is not allowed except for hyphens and underscores. <Br /> Example: a choice of 'jdoe' would result the URL: @url", $params),
+    '#ajax' => array(
+      'callback' => 'os_profiles_ajax_callback',
+      'wrapper' => 'url-address',
+    ),
   );
 
+  $form['results'] = array(
+    '#prefix' => '<div id="url-address">',
+    '#suffix' => '</div>',
+  );
+
+  if (!empty($form_state['values']) && $errors = _vsite_register_validate('domain', $form_state['values'])) {
+    $form['results']['#markup'] = theme('item_list', array('items' => $errors));
+  }
+
   // Adds the prefix to URL field.
-  $form['url']['#field_prefix'] = "$base_url/";
+  $form['domain']['#field_prefix'] = "$base_url/";
 
   // Show the "create subsite" checkbox only in a "department" site.
   $vsite = vsite_get_vsite();
@@ -1684,6 +1700,7 @@ function os_profiles_create_site_from_profile($form, &$form_state, $node) {
     $params = array(
       '@url' => $vsite->get_absolute_url(),
     );
+
     $form['create_as_subsite'] = array(
       '#type' => 'checkbox',
       '#title' => t('Create it as a subsite of @url', $params),
@@ -1699,6 +1716,24 @@ function os_profiles_create_site_from_profile($form, &$form_state, $node) {
 }
 
 /**
+ * Validate handler.
+ */
+function os_profiles_create_site_from_profile_validate($form, $form_state) {
+  module_load_include('form.inc', 'vsite_register', 'vsite_register');
+
+  if ($errors = _vsite_register_validate('domain', $form_state['values'])) {
+    form_set_error('domain', theme('item_list', array('items' => $errors)));
+  }
+}
+
+/**
+ * Ajax form callback.
+ */
+function os_profiles_ajax_callback($form, $form_state) {
+  return $form['results'];
+}
+
+/**
  * Submit handler; Creates a VSite from a parent profile.
  */
 function os_profiles_create_site_from_profile_submit($form, &$form_state) {
@@ -1708,7 +1743,7 @@ function os_profiles_create_site_from_profile_submit($form, &$form_state) {
   $profile = $form_state['node'];
 
   // Name of the new VSite.
-  $name = $purl = $form_state['values']['url'];
+  $name = $purl = $form_state['values']['domain'];
 
   // Owner of the new VSite.
   $uid = $user->uid;
