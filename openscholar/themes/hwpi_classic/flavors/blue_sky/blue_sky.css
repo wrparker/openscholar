@@ -76,16 +76,14 @@ background: #4E84C4 !important;
 border-top: 1px solid #efefef;
 }
 
-
-#menu-bar ul.nice-menu .menuparent a {
-    background: url('/profiles/openscholar/themes/hwpi_basetheme/images/menu_down_arrowOn.gif') right center no-repeat;
+#menu-bar ul.nice-menu .menuparent > a:before {
+background-position: 0 -566px;
 }
-
 
 #menu-bar ul.nice-menu .menuparent.over > a,
 #menu-bar ul.nice-menu .menuparent a:hover,
 #menu-bar ul.nice-menu .menuparent a.active {
-    background: url('/profiles/openscholar/themes/hwpi_basetheme/images/menu_down_arrowOn.gif') right center no-repeat #8996A0;
+    background-color:  #8996A0;
 }
 
 #menu-bar ul.nice-menu .menuparent ul li a:hover,
