@@ -23,6 +23,72 @@ function os_search_solr_boxes_plugins() {
 }
 
 /**
+ * Implements hook_menu().
+ */
+function os_search_solr_menu() {
+  $items = array();
+
+  $items['cp/build/features/os_solr_search'] = array(
+    'title' => 'Search Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os_search_solr_settings'),
+    'access callback' => 'spaces_access_admin',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+/**
+ * Form wrapper solr search settings.
+ *
+ * @see os_search_solr_settings()
+ */
+function os_search_solr_settings($form, $form_state) {
+  
+  $form['os_search_solr_include_subsites'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Subsites'),
+    '#description' => t('Should results from your subsites be included.'),
+    '#default_value' => variable_get('os_search_solr_include_subsites', FALSE),
+  );
+  
+  // Just a simple text box without select2.
+  $form['os_search_solr_search_sites'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Other Websites'),
+    '#description' => t('For now just enter a comma seperated list of site id\'s.'),
+    '#default_value' => variable_get('os_search_solr_search_sites', FALSE),
+  );
+  
+//   // Adding the select2 functionality for multiple selection.
+//   $form['os_search_solr_search_sites'] = array(
+//     '#type' => 'select',
+//     '#prefix' => '<div id="select-terms">',
+//     '#suffix' => '</div>',
+//     '#options' => array(),
+//     '#title' => t('Other Sites'),
+//     '#autocomplete_path' => 'user/autocomplete',
+//     '#required' => TRUE,
+//     '#multiple' => TRUE,
+//     '#after_build' => array('os_select2_widget_after_build'),
+//     '#cardinality' => -1,
+//     '#attached' => array(
+//       'css' => array(
+//         libraries_get_path('select2') . '/select2.css',
+//         drupal_get_path('module', 'os') . '/css/select2-widget.css',
+//       ),
+//       'js' => array(
+//         libraries_get_path('select2') . '/select2.min.js',
+//         drupal_get_path('module', 'os') . '/js/select2-widget.js',
+//       ),
+//    ),
+//   );
+  
+  return system_settings_form($form);
+}
+
+/**
  * Implements hook_block_info().
  */
 function os_search_solr_block_info() {
@@ -34,6 +100,21 @@ function os_search_solr_block_info() {
   );
 
   return $blocks;
+}
+
+/**
+ * Preprocessor for theme('page').
+ */
+function os_search_solr_preprocess_page(&$vars) {
+  $menu_item = menu_get_item();
+  
+  if ($menu_item && in_array($menu_item['path'], array('search/site/%', 'search/site')) && spaces_access_admin()) {
+    $links = &$vars['title_suffix']['controls']['section_links']['#links'];
+    $links['os_search_solr_settings'] = array(
+      'title' => t('Search Settings'),
+      'href' => 'cp/build/features/os_solr_search',
+    );
+  }
 }
 
 /**
@@ -116,8 +197,38 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
   $query->addFilter('bs_private', 1, TRUE);
   
   if (module_exists('vsite') && ($vsite = spaces_get_space())) {
-    // I only want to see items in this site
-    $query->addFilter("sm_og_group_ref", $vsite->group_type.":".$vsite->id);
+    
+    if (variable_get('os_search_solr_include_subsites') || variable_get('os_search_solr_search_sites','')) {
+      ctools_include('subsite','vsite');
+      // This site.
+      $sites = array( $vsite->group_type.":".$vsite->id );
+      
+      if (variable_get('os_search_solr_include_subsites')) {
+        //Get Subsites.
+        $subsites = vsite_get_subsites($vsite);
+        foreach ($subsites as $sid) {
+          $sites[] = '"'.$vsite->group_type.":".$sid.'"';
+        }
+      }
+      
+      if (variable_get('os_search_solr_search_sites','')) {
+        // Parse the list of 'other sites'
+        foreach (explode(',', variable_get('os_search_solr_search_sites','')) as $sid) {
+          $sid = trim($sid);
+          if(intval($sid)) {
+            $sites[] = '"'.$vsite->group_type.":".$sid.'"';
+          }
+        }
+      }
+      
+      $site_filter = '(' . implode(' OR ', $sites) . ')';
+    } else {
+      // Just filter to this site.
+      $site_filter = $vsite->group_type.":".$vsite->id;
+    }
+    
+    // Filter to the specified sites.
+    $query->addFilter("sm_og_group_ref", $site_filter);
     
     $group_wrapper = entity_metadata_wrapper('node', $vsite->group);
   
