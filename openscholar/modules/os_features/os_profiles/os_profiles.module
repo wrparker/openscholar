@@ -1756,7 +1756,7 @@ function os_profiles_create_site_from_profile_submit($form, &$form_state) {
     $parent = $vsite->group->nid;
   }
   
-  if ($vsite = vsite_create_vsite($name, $purl, $uid, 'personal', FALSE, $parent, 0)) {
+  if ($vsite = vsite_create_vsite($profile->title, $purl, $uid, 'personal', FALSE, $parent, 0)) {
     // @todo: copy the bio of the prfoile into the new VSite.
     $form_state['redirect'] = $vsite->get_absolute_url();
   }
