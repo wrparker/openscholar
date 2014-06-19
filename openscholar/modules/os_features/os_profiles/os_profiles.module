@@ -1715,13 +1715,12 @@ function os_profiles_create_site_from_profile_submit($form, &$form_state) {
 
   // Set the parent VSite to be the current VSite if the user creates it as a
   // subsite.
+  $parent = NULL;
   if (!empty($form_state['values']['create_as_subsite'])) {
     $vsite = vsite_get_vsite();
     $parent = $vsite->group->nid;
   }
-  else {
-    $parent = NULL;
-  }
+  
   if ($vsite = vsite_create_vsite($name, $purl, $uid, 'personal', FALSE, $parent, 0)) {
     // @todo: copy the bio of the prfoile into the new VSite.
     $form_state['redirect'] = $vsite->get_absolute_url();
