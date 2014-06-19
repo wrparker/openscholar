@@ -233,13 +233,8 @@ class os_sv_list extends os_boxes_default {
       return;
     }
 
-    $bundle = ($this->options['content_type'] != 'all') ? $this->options['content_type'] : NULL;
-    if ($bundle) {
-      $cid = 'node:' . $bundle;
-    }
-    else {
-      $cid = NULL;
-    }
+    $cid = ($this->options['content_type'] != 'all') ? 'node:' . $this->options['content_type'] : NULL;
+
     $block = parent::render();
     $page_num = pager_find_page(PagerDefault::$maxElement);
 
