@@ -27,6 +27,7 @@ Feature:
        When the widget "Simple view list" is set in the "Classes" page with the following <settings>:
          | Show pager               | check                    | checkbox    |
         And I visit "john/classes"
+        And I should print page
        Then I should see "1 of 6"
         And I visit "john/classes"
        Then I should see "1 of 6"
