@@ -107,6 +107,13 @@
     text-decoration: none;
     transition: none 0s ease 0s;
 }
+
+/* KILL THE DOWN ARROWS IN THE MAIN MENU WHEN IN RESPONSIVE MODE */
+#menu-bar ul.nice-menu .menuparent > a:before {
+background-image: none !important;
+
+}
+
 .nav li, .nav .menu li {
     display: block;
 }
@@ -256,7 +263,7 @@ ul.mobile-buttons {
 
 .link-count-mobi-util a {
   background-image: url("../images/hwpi_basesprite.png");
-  background-position: -52px -502px;
+  background-position: -52px -501px;
   background-origin: content-box;
   min-height: 20px;
 }
