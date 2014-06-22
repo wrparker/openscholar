@@ -188,7 +188,7 @@ function os_profiles_menu() {
 function os_profiles_admin_paths() {
   return array(
     'cp/people/sync-profiles' => TRUE,
-    'os_profile/create_profile/*' => TRUE,
+    'os-profile/create-profile/*' => TRUE,
   );
 }
 
@@ -1650,7 +1650,7 @@ function os_profiles_preprocess_node(&$variables) {
   }
 
   $variables['content']['create_site'] = array(
-    '#markup' => l(t('Create a personal website from this profile'), 'os_profile/create_profile/' . $variables['node']->nid),
+    '#markup' => l(t('Create a personal website from this profile'), 'os-profile/create-profile/' . $variables['node']->nid),
     '#weight' => -9.5,
   );
 }
