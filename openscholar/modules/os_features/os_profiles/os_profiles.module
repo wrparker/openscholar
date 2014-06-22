@@ -157,25 +157,24 @@ function os_profiles_menu() {
 
   $items['cp/people/insert_profile'] = array(
     'page callback' => 'os_profiles_insert_listeners',
-    'access callback' => TRUE,
+    'access callback' => array('create person content'),
   );
 
   $items['cp/people/update_profile'] = array(
     'page callback' => 'os_profiles_update_listeners',
-    'access callback' => TRUE,
+    'access callback' => array('create person content'),
   );
 
   $items['cp/people/unlink_profile'] = array(
     'page callback' => 'os_profiles_unlink_listeners',
-    'access callback' => TRUE,
+    'access callback' => array('create person content'),
   );
 
   $items['os-profile/create-profile/%node'] = array(
     'title' => 'Create a site from a personal node',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_profiles_create_site_from_profile', 2),
-    // todo: Deal with permission later.
-    'access callback' => TRUE,
+    'access callback' => array('create person content'),
     'theme callback' => 'cp_theme_name',
   );
 
@@ -1678,20 +1677,12 @@ function os_profiles_create_site_from_profile($form, &$form_state, $node) {
     '#title' => t('URL'),
     '#required' => TRUE,
     '#description' => t("Minimun 3 characters, which must be lowercase. Punctuations is not allowed except for hyphens and underscores. <Br /> Example: a choice of 'jdoe' would result the URL: @url", $params),
-    '#ajax' => array(
-      'callback' => 'os_profiles_ajax_callback',
-      'wrapper' => 'url-address',
-    ),
   );
 
   $form['results'] = array(
     '#prefix' => '<div id="url-address">',
     '#suffix' => '</div>',
   );
-
-  if (!empty($form_state['values']) && $errors = _vsite_register_validate('domain', $form_state['values'])) {
-    $form['results']['#markup'] = theme('item_list', array('items' => $errors));
-  }
 
   // Adds the prefix to URL field.
   $form['domain']['#field_prefix'] = $base_url . '/';
@@ -1720,19 +1711,12 @@ function os_profiles_create_site_from_profile($form, &$form_state, $node) {
 /**
  * Validate handler.
  */
-function os_profiles_create_site_from_profile_validate($form, $form_state) {
+function os_profiles_create_site_from_profile_validate($form, &$form_state) {
   module_load_include('form.inc', 'vsite_register', 'vsite_register');
 
   if ($errors = _vsite_register_validate('domain', $form_state['values'])) {
     form_set_error('domain', theme('item_list', array('items' => $errors)));
   }
-}
-
-/**
- * Ajax form callback.
- */
-function os_profiles_ajax_callback($form, $form_state) {
-  return $form['results'];
 }
 
 /**
