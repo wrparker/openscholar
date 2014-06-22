@@ -1694,7 +1694,7 @@ function os_profiles_create_site_from_profile($form, &$form_state, $node) {
   }
 
   // Adds the prefix to URL field.
-  $form['domain']['#field_prefix'] = "$base_url/";
+  $form['domain']['#field_prefix'] = $base_url . '/';
 
   // Show the "create subsite" checkbox only in a "department" site.
   $vsite = vsite_get_vsite();
@@ -1758,8 +1758,39 @@ function os_profiles_create_site_from_profile_submit($form, &$form_state) {
     $parent = $vsite->group->nid;
   }
   
-  if ($vsite = vsite_create_vsite($profile->title, $purl, $uid, 'personal', FALSE, $parent, 0)) {
-    // @todo: copy the bio of the prfoile into the new VSite.
-    $form_state['redirect'] = $vsite->get_absolute_url();
+  if ($new_vsite = vsite_create_vsite($profile->title, $purl, $uid, 'personal', FALSE, $parent, 0)) {
+    os_profiles_copy_bio_to_new_vsite($profile, $new_vsite);
+    $form_state['redirect'] = $new_vsite->get_absolute_url();
   }
+}
+
+/**
+ * Take an existing person node and create a new bio node from it in the new
+ * created VSite.
+ *
+ * @param $original_person
+ *  Original person node.
+ * @param $new_vsite
+ *  Newly created VSite.
+ */
+function os_profiles_copy_bio_to_new_vsite($original_person, $new_vsite) {
+  global $user;
+
+  // Owner of the new VSite.
+  $uid = $user->uid;
+
+  $vsite_wrapper = entity_metadata_wrapper('node', $new_vsite);
+  $person_wrapper = entity_metadata_wrapper('node', $original_person);
+
+  // Create the "Bio" node.
+  $bio = new stdClass();
+  $bio->type = 'bio';
+  $bio->title = $original_person->title;
+  $bio->language = LANGUAGE_NONE;
+  $bio->uid = $uid;
+
+  $bio_wrapper = entity_metadata_wrapper('node', $bio);
+  $bio_wrapper->body->set($person_wrapper->body->value());
+  $bio_wrapper->{OG_AUDIENCE_FIELD}->set(array($new_vsite->id));
+  $bio_wrapper->save();
 }
