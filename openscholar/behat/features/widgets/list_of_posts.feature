@@ -2,7 +2,7 @@ Feature:
   Testing that the List of posts widget shows book pages tagged
   with terms.
 
-  @api @last @foo
+  @api @last
   Scenario: Verify that the user sees terms in the filter by term widget.
     Given I am logging in as "john"
       And I create a new "page" entry with the name "parent page"
