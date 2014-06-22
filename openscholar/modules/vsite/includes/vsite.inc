@@ -112,11 +112,17 @@ function vsite_remove_entity($entity, $entity_type = 'node', $vsite = FALSE){
  *   Path for new site.
  * @param $uid
  *  The user ID to assocaite with the new VSite.
+ * @param string $bundle
+ *  The type(bundle) of the VSite to be created.
  * @param $preset
  *  Type of vsite to create.
+ * @param null $parent
+ *  The parent VSite of the new VSite.
+ * @param bool $visibility
+ *  Default visibility of the new VSite.
  *
  * @return
- *   the SPACE object if created or FALSE.
+ *   The SPACE object if created or FALSE.
  */
 function vsite_create_vsite($name, $domain, $uid, $bundle = 'personal', $preset = FALSE, $parent = NULL, $visibility = FALSE) {
   $node = new stdClass();
