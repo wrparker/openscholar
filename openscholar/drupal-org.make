@@ -427,9 +427,12 @@ projects[web_widgets][subdir] = "contrib"
 projects[web_widgets][version] = 1.0-alpha2
 
 projects[wysiwyg][subdir] = "contrib"
-projects[wysiwyg][version] = 2.2
+projects[wysiwyg][download][type] = git
+projects[wysiwyg][download][branch] = 7.x-2.x
+projects[wysiwyg][download][revision] = 21ce8aa
 projects[wysiwyg][patch][] = "http://drupal.org/files/wysiwyg-remove-breaks-1964806-2.patch"
 projects[wysiwyg][patch][] = "http://drupal.org/files/wysiwyg-table-format.patch"
+projects[wysiwyg][patch][] = "http://drupal.org/files/issues/wysiwyg-tinymce4.1968318.97.patch"
 
 projects[wysiwyg_filter][subdir] = "contrib"
 projects[wysiwyg_filter][version] = 1.6-rc2
@@ -451,7 +454,7 @@ libraries[jquery.cycle][download][url] = "https://raw.github.com/malsup/cycle/c2
 
 libraries[tinymce][type] = "libraries"
 libraries[tinymce][download][type] = "file"
-libraries[tinymce][download][url] = "http://github.com/downloads/tinymce/tinymce/tinymce_3.5.8.zip"
+libraries[tinymce][download][url] = "http://download.moxiecode.com/tinymce/tinymce_4.1.0.zip"
 
 libraries[spyc][type] = "libraries"
 libraries[spyc][download][type] = "file"
