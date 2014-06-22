@@ -14,7 +14,7 @@ Feature:
      When I visit "john/publications"
      Then I should get a "200" HTTP response
       And I visit "john/publications"
-     Then response header "x-drupal-cache" should be "HIT"
+     Then response header "X-Drupal-Cache" should be "HIT"
       And cache is "disabled" for anonymous users
 
   @api @first
@@ -49,11 +49,20 @@ Feature:
       And I visit "john/publications"
      Then I should not see "Export"
       And I go to "john/publications/export/bibtex"
-    Then I should get a "403" HTTP response
+     Then I should get a "403" HTTP response
 
   @api @first
   Scenario: Verify authors page is not available
     Given I go to "/publications/authors"
      Then I should get a "403" HTTP response
       And I go to "john/publications/authors"
-    Then I should get a "403" HTTP response
+     Then I should get a "403" HTTP response
+
+  @api @last
+  Scenario: Verify the "Cancel" button for confirm delete for a Publication
+            redirects to the edit form of that node.
+    Given I am logging in as "john"
+      And I edit the node "The Little Prince"
+     When I click "Delete this biblio"
+      And I click "Cancel"
+     Then I should see "Delete this biblio"

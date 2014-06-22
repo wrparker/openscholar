@@ -5,6 +5,9 @@ api = 2
 projects[admin_menu][subdir] = "contrib"
 projects[admin_menu][version] = 3.0-rc1
 
+projects[advagg][subdir] = "contrib"
+projects[advagg][version] = 2.6
+
 projects[apachesolr][subdir] = "contrib"
 projects[apachesolr][version] = 1.6
 
@@ -67,7 +70,7 @@ projects[disqus][patch][] = "http://drupal.org/files/comment_sources-disqus-2120
 
 projects[dragndrop_upload][subdir] = "contrib"
 projects[dragndrop_upload][version] = 1.0-alpha1
-projects[dragndrop_upload][patch][] = "http://drupalcode.org/project/dragndrop_upload.git/patch/164d2dd7526c297b544f5f367e48f5106f6bca5e"
+projects[dragndrop_upload][patch][] = "http://cgit.drupalcode.org/dragndrop_upload/patch/?id=164d2dd7526c297b544f5f367e48f5106f6bca5e"
 
 projects[dyntextfield][subdir] = "contrib"
 projects[dyntextfield][type] = module
@@ -166,6 +169,9 @@ projects[hierarchical_taxonomy][patch][] = "http://drupal.org/files/2034713-hs-c
 projects[html_title][subdir] = "contrib"
 projects[html_title][version] = 1.1
 
+projects[imageapi_optimize][subdir] = "contrib"
+projects[imageapi_optimize][version] = 1.0
+
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0
 projects[imagefield_crop][download][type] = git
@@ -233,7 +239,7 @@ projects[module_filter][subdir] = "contrib"
 projects[module_filter][version] = 1.7
 
 projects[memcache][subdir] = "contrib"
-projects[memcache][version] = 1.0
+projects[memcache][version] = 1.1-beta5
 
 projects[migrate][subdir] = "contrib"
 projects[migrate][version] = 2.5
@@ -256,12 +262,18 @@ projects[nice_menus][version] = 2.1
 projects[nodeformcols][subdir] = "contrib"
 projects[nodeformcols][version] = 1.0
 
+projects[entity_validator][subdir] = "contrib"
+projects[entity_validator][type] = module
+projects[entity_validator][download][type] = git
+projects[entity_validator][download][url] = "https://github.com/Gizra/entity_validator.git"
+projects[entity_validator][download][branch] = "7.x-1.x"
+
 projects[nodeorder][subdir] = "contrib"
 projects[nodeorder][version] = 1.1
 
 projects[oembed][subdir] = "contrib"
 projects[oembed][version] = 1.0-rc2
-projects[oembed][patch][] = "http://drupalcode.org/project/oembed.git/patch/a27adf7c1afe763ee5f386f30f0aea73a6097ff1"
+projects[oembed][patch][] = "http://cgit.drupalcode.org/oembed/patch/?id=a27adf7c1afe763ee5f386f30f0aea73a6097ff1"
 projects[oembed][patch][] = "http://drupal.org/files/issues/oembed.2134415.wysiwyg_dimensions.patch"
 
 projects[og][subdir] = "contrib"

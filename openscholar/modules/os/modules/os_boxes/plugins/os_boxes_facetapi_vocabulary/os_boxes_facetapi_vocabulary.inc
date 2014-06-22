@@ -76,28 +76,20 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
    *   Solr search page id in case empty search is needed, FALSE otherwise.
    */
   public function is_empty_search_needed() {
-    if (!$feature = os_get_active_feature()) {
-      // No active feature.
-      return;
-    }
-    if (!$app_info = os_app_info($feature->name)) {
-      // No app information available.
-      return;
-    }
-    if (!$browse_page = reset(array_keys($app_info['browse_pages']))) {
-      // No browse_pages.
+    if (!$bundle = $this->options['bundle']) {
       return;
     }
 
-    $page_id = 'browse_' . $browse_page;
-    $search_page = apachesolr_search_page_load($page_id);
+    $page_id = 'browse_' . $bundle;
+    if (!$search_page = apachesolr_search_page_load($page_id)) {
+      return;
+    }
     $env_id = $search_page['env_id'];
 
     if (apachesolr_has_searched($env_id)) {
       // Search was executed already.
       return;
     }
-    $page_id = 'browse_' . $browse_page;
     return $page_id;
   }
 
@@ -113,7 +105,9 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
 
     // Execute the query.
     try {
-      $search_page = apachesolr_search_page_load($page_id);
+      if (!$search_page = apachesolr_search_page_load($page_id)) {
+        throw new Exception("Failed to load search page information $search_page");
+      }
       $env_id = $search_page['env_id'];
 
       if (apachesolr_has_searched($env_id)) {
@@ -134,9 +128,9 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
       $context['search_type'] = 'apachesolr_search_show_facets';
       apachesolr_search_run_empty('apachesolr', $params, $search_page['search_path'], $solr, $context);
 
-      // Returning TRUE means there was an empty search, and we will cache the
+      // Returning page id means there was an empty search, and we will cache the
       // block.
-      return TRUE;
+      return $page_id;
     }
     catch (Exception $e) {
       watchdog('Apache Solr', nl2br(check_plain($e->getMessage())), NULL, WATCHDOG_ERROR);
@@ -160,12 +154,14 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     $string_og_vocab = facetapi_build_delta($searcher_name, 'block', 'sm_og_vocabulary');
     $delta_og_vocab = array_search($string_og_vocab, $map);
 
-    $cid = 'sm_og_vocabulary:' . $delta_og_vocab;
-    // Verify the cache is still valid, based on time since created.
-    if ($this->is_empty_search_needed() && ($cache = cache_get($cid)) && $cache->created > REQUEST_TIME - variable_get('facetapi_vocabulary_cache_timeout', 300)) {
-      $block = $cache->data;
+    if ($page_id = $this->is_empty_search_needed()) {
+      // Block delta is needed since $delta_og_vocab is not unique between sites
+      $cid = 'sm_og_vocabulary:' . $delta_og_vocab . ':' . $page_id;
+      $this->set_cache_id($cid);
+
     }
-    else {
+    // Verify the cache is still valid, based on time since created.
+    if (($block = $this->get_cache()) === FALSE) {
       // Verify the facet block has something to work on (means - it is in a solr
       // search page). If not - execute the empty solr search without showing
       // the results.
@@ -184,6 +180,11 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
         // os_boxes_widget_submit() renders blocks into a 'dummy' region, but
         // gives errors in case the content is empty, hence the space.
         $block['content'] = ' ';
+
+        // While block is empty, caching NULL will provide the needed caching.
+        if ($set_cache) {
+          $this->set_cache(NULL);
+        }
       }
       else {
         if (!empty($this->options['vocabularies'])) {
@@ -215,11 +216,34 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
 
         $block['content'] = render($block['content']);
         if ($set_cache) {
-          cache_set($cid, $block);
+          $this->set_cache($block);
         }
       }
     }
     return $block;
+  }
+
+  /**
+   * When submitting a box we need to invalidate here.
+   */
+  public function options_submit() {
+    if (module_exists('vsite') && !$vsite = vsite_get_vsite()) {
+      return;
+    }
+
+    // We try to delete the cache of a newly selected bundle, leaving the old cached
+    // info unused. If we will re-select the old bundle its cache will be cleared
+    // next time.
+    if ($this->options['bundle'] && is_string($this->options['bundle'])) {
+      $bundle = 'node:' . $this->options['bundle'];
+    }
+    else {
+      $bundle = NULL;
+    }
+    $cid = $this->set_cache_id($bundle);
+
+    cache_clear_all($cid, 'cache_os_boxes', TRUE);
+    cache_clear_all('assets:' . $cid, 'cache_os_boxes', TRUE);
   }
 }
 
