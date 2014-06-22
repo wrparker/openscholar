@@ -1642,7 +1642,7 @@ function os_profiles_preprocess_image_formatter(&$variables) {
 }
 
 /**
- * Implement hook_preprocess_node().
+ * Preprocess node.
  */
 function os_profiles_preprocess_node(&$variables) {
   if ($variables['view_mode'] != 'full' || $variables['node']->type != 'person') {
