@@ -1728,8 +1728,8 @@ function os_profiles_create_site_from_profile_submit($form, &$form_state) {
   // The bio of the new VSite is taken from the parent profile.
   $profile = $form_state['node'];
 
-  // Name of the new VSite.
-  $name = $purl = $form_state['values']['domain'];
+  // The purl of the new VSite.
+  $purl = $form_state['values']['domain'];
 
   // Owner of the new VSite.
   $uid = $user->uid;
@@ -1741,9 +1741,15 @@ function os_profiles_create_site_from_profile_submit($form, &$form_state) {
     $vsite = vsite_get_vsite();
     $parent = $vsite->group->nid;
   }
-  
+
   if ($new_vsite = vsite_create_vsite($profile->title, $purl, $uid, 'personal', FALSE, $parent, 0)) {
     os_profiles_copy_bio_to_new_vsite($profile, $new_vsite);
+
+    // Set the new VSite as the child site of the original profile.
+    $wrapper = entity_metadata_wrapper('node', $profile);
+    $wrapper->field_child_site->set($new_vsite->id);
+    $wrapper->save();
+
     $form_state['redirect'] = $new_vsite->get_absolute_url();
   }
 }
@@ -1763,7 +1769,6 @@ function os_profiles_copy_bio_to_new_vsite($original_person, $new_vsite) {
   // Owner of the new VSite.
   $uid = $user->uid;
 
-  $vsite_wrapper = entity_metadata_wrapper('node', $new_vsite);
   $person_wrapper = entity_metadata_wrapper('node', $original_person);
 
   // Create the "Bio" node.
