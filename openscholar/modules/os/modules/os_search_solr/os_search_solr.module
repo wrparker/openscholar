@@ -3,39 +3,6 @@
 include_once ('os_search_solr.features.inc');
 
 /**
- * Implements hook_cp_settings().
- */
-function os_search_solr_cp_settings() {
-  $setting = array();
-  $setting['os_search_solr_include_subsites'] = array(
-    'group' => array(
-      '#title' => t('Solr search settings'),
-      '#id' => 'solr-search',
-    ),
-    'form' => array(
-      '#type' => 'checkbox',
-      '#title' => t('Subsites'),
-      '#description' => t('Should results from your subsites be included.'),
-      '#default_value' => variable_get('os_search_solr_include_subsites', FALSE),
-    ),
-  );
-  $setting['os_search_solr_search_sites'] = array(
-    'group' => array(
-      '#title' => t('Solr search settings'),
-      '#id' => 'solr-search',
-    ),
-    'form' => array(
-      '#type' => 'textfield',
-      '#title' => t('Other Websites'),
-      '#description' => t('For now just enter a comma seperated list of site id\'s.'),
-      '#default_value' => variable_get('os_search_solr_search_sites', FALSE),
-    ),
-  );
-
-  return $setting;
-}
-
-/**
  * Implements hook_boxes_plugins().
  */
 function os_search_solr_boxes_plugins() {
@@ -581,6 +548,31 @@ function os_search_solr_cp_settings() {
       '#value' => t('Re-Index Search'),
       '#suffix' => "<div class=\"description\">".t('(Re)Index the sites searchable content.')."</div>",
       '#submit' => array('os_search_solr_reindex_site'),
+    ),
+  );
+
+  $settings['os_search_solr_include_subsites'] = array(
+    'group' => array(
+      '#title' => t('Solr search settings'),
+      '#id' => 'solr-search',
+    ),
+    'form' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Subsites'),
+      '#description' => t('Should results from your subsites be included.'),
+      '#default_value' => variable_get('os_search_solr_include_subsites', FALSE),
+    ),
+  );
+  $settings['os_search_solr_search_sites'] = array(
+    'group' => array(
+      '#title' => t('Solr search settings'),
+      '#id' => 'solr-search',
+    ),
+    'form' => array(
+      '#type' => 'textfield',
+      '#title' => t('Other Websites'),
+      '#description' => t('For now just enter a comma seperated list of site id\'s.'),
+      '#default_value' => variable_get('os_search_solr_search_sites', FALSE),
     ),
   );
 
