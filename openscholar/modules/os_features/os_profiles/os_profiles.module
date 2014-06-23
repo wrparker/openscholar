@@ -1785,8 +1785,5 @@ function os_profiles_copy_bio_to_new_vsite($original_person, $new_vsite) {
  * Removes the child site field from the node form.
  */
 function os_profiles_form_node_form_alter(&$form, $form_state) {
-  if ($form['#node']->type != 'person') {
-    return;
-  }
   $form['field_child_site']['#access'] = FALSE;
 }
