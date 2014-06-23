@@ -526,7 +526,7 @@ function os_search_solr_mark_entity_by_bundles($vsite_id, $bundles = array(), $l
 /**
  * Implements hook_menu().
  */
-function os_search_solr_menu(){
+function os_search_solr_menu() {
   $items = array();
 
   // Autocomplete callback for vsites.
@@ -542,24 +542,32 @@ function os_search_solr_menu(){
   return $items;
 }
 
+/**
+ * Menu callback; Return JSON output for the the autocomplete field.
+ */
 function os_search_solr_vsites_autocomplete($string = '') {
   if (strlen($string) < 3) {
     return;
   }
+
   $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
+  $result = $query
+    ->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', array('department', 'personal', 'project'), 'IN')
     ->propertyCondition('title', '%' . $string . '%', 'LIKE')
-    ->propertyCondition('status', 1)
-    ->propertyOrderBy('title', 'ASC');
-  $result = $query->execute();
+    ->propertyCondition('status', NODE_PUBLISHED)
+    ->propertyOrderBy('title', 'ASC')
+    ->execute();
+
+  if (empty($result['node'])) {
+    return;
+  }
 
   $options = array();
-  if (isset($result['node'])) {
-    foreach (node_load_multiple(array_keys($result['node'])) as $nid => $node) {
-      $options[] = $node->title . '(' . $nid . ')';
-    }
+  foreach (node_load_multiple(array_keys($result['node'])) as $nid => $node) {
+    $options[] = $node->title . '(' . $nid . ')';
   }
+
   drupal_json_output($options);
 }
 
