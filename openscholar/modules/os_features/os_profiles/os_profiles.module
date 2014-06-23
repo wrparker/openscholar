@@ -171,7 +171,7 @@ function os_profiles_menu() {
   );
 
   $items['os-profile/create-profile/%node'] = array(
-    'title' => 'Create a site from a personal node',
+    'title' => 'Create a personal website from this profile',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_profiles_create_site_from_profile', 2),
     'access arguments' => array('create personal content'),
