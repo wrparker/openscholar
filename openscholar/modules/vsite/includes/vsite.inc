@@ -122,7 +122,7 @@ function vsite_remove_entity($entity, $entity_type = 'node', $vsite = FALSE){
  *  Default visibility of the new VSite.
  *
  * @return
- *   The SPACE object if created or FALSE.
+ *  The SPACE object if created or FALSE.
  */
 function vsite_create_vsite($name, $domain, $uid, $bundle = 'personal', $preset = FALSE, $parent = NULL, $visibility = FALSE) {
   $node = new stdClass();

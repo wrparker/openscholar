@@ -1666,9 +1666,9 @@ function os_profiles_create_site_from_profile($form, &$form_state, $node) {
 
   $form_state['node'] = $node;
 
+  // Building URL by code and not via url() since url() will change it based
+  // on the current space.
   $params = array(
-    // Building URL by code and not via url() since url() will change it based
-    // on the current space.
     '@url' => $base_url . '/jdoe',
   );
 

@@ -983,12 +983,11 @@ function os_migrate_demo_get_vsite_owner_uid($group) {
 /**
  * Get the nid of the child site of a profile.
  *
+ *  Prints 0 if user the profile has no child site.
+ *  Otherwise, print the node id of the profile's child site.
+ *
  * @param $profile_title
  *  The profile title for which to get the child site's id.
- *
- * @print
- *  0 - if user the profile has no child site.
- *  Otherwise, print the node id of the profile's child site..
  */
 function os_migrate_demo_get_child_site_nid($profile_title) {
   $nid = os_migrate_demo_get_entity_id('node', $profile_title, TRUE, 'person');
