@@ -157,17 +157,17 @@ function os_profiles_menu() {
 
   $items['cp/people/insert_profile'] = array(
     'page callback' => 'os_profiles_insert_listeners',
-    'access callback' => array('create person content'),
+    'access callback' => TRUE,
   );
 
   $items['cp/people/update_profile'] = array(
     'page callback' => 'os_profiles_update_listeners',
-    'access callback' => array('create person content'),
+    'access callback' => TRUE,
   );
 
   $items['cp/people/unlink_profile'] = array(
     'page callback' => 'os_profiles_unlink_listeners',
-    'access callback' => array('create person content'),
+    'access callback' => TRUE,
   );
 
   $items['os-profile/create-profile/%node'] = array(
