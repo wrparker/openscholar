@@ -524,6 +524,46 @@ function os_search_solr_mark_entity_by_bundles($vsite_id, $bundles = array(), $l
 }
 
 /**
+ * Implements hook_menu().
+ */
+function os_search_solr_menu(){
+  $items = array();
+
+  // Autocomplete callback for vsites.
+  $items['vsite/autocomplete/vsite'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => 'VSite Autocomplete VSite',
+    'page callback' => 'os_search_solr_vsites_autocomplete',
+    'access callback' => 'user_access',
+    // @todo access.
+    'access arguments' => array('access content'),
+  );
+
+  return $items;
+}
+
+function os_search_solr_vsites_autocomplete($string = '') {
+  if (strlen($string) < 3) {
+    return;
+  }
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', array('department', 'personal', 'project'), 'IN')
+    ->propertyCondition('title', '%' . $string . '%', 'LIKE')
+    ->propertyCondition('status', 1)
+    ->propertyOrderBy('title', 'ASC');
+  $result = $query->execute();
+
+  $options = array();
+  if (isset($result['node'])) {
+    foreach (node_load_multiple(array_keys($result['node'])) as $nid => $node) {
+      $options[$nid] = $node->title;
+    }
+  }
+  drupal_json_output($options);
+}
+
+/**
  * Implements hook_cp_settings().
  */
 function os_search_solr_cp_settings() {
@@ -570,12 +610,33 @@ function os_search_solr_cp_settings() {
     ),
     'form' => array(
       '#type' => 'textfield',
-      '#title' => t('Other Websites'),
-      '#description' => t('For now just enter a comma seperated list of site id\'s.'),
+      '#multiple' => TRUE,
+      '#title' => t('Other websites'),
       '#default_value' => variable_get('os_search_solr_search_sites', FALSE),
+      '#cardinality' => '-1',
+      '#autocomplete_path' => 'vsite/autocomplete/vsite',
     ),
   );
-
+/*
+ *   $form['bundles'] = array(
+    '#options' => array('Posts' => $all_bundles['node'], 'Files' => $all_bundles['file']),
+    '#default_value' => array_keys($default_bundles),
+    '#description' => t('Select the content types to categorize using this vocabulary.'),
+    '#required' => TRUE,
+    '#after_build' => array('os_select2_widget_after_build'),
+    '#cardinality' => '-1',
+    '#attached' => array(
+      'css' => array(
+        libraries_get_path('select2') . '/select2.css',
+        drupal_get_path('module', 'os') . '/css/select2-widget.css',
+      ),
+      'js' => array(
+        libraries_get_path('select2') . '/select2.min.js',
+        drupal_get_path('module', 'os') . '/js/select2-widget.js',
+      ),
+    ),
+  );
+ */
   return $settings;
 }
 
