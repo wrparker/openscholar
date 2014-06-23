@@ -3,6 +3,39 @@
 include_once ('os_search_solr.features.inc');
 
 /**
+ * Implements hook_cp_settings().
+ */
+function os_search_solr_cp_settings() {
+  $setting = array();
+  $setting['os_search_solr_include_subsites'] = array(
+    'group' => array(
+      '#title' => t('Solr search settings'),
+      '#id' => 'solr-search',
+    ),
+    'form' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Subsites'),
+      '#description' => t('Should results from your subsites be included.'),
+      '#default_value' => variable_get('os_search_solr_include_subsites', FALSE),
+    ),
+  );
+  $setting['os_search_solr_search_sites'] = array(
+    'group' => array(
+      '#title' => t('Solr search settings'),
+      '#id' => 'solr-search',
+    ),
+    'form' => array(
+      '#type' => 'textfield',
+      '#title' => t('Other Websites'),
+      '#description' => t('For now just enter a comma seperated list of site id\'s.'),
+      '#default_value' => variable_get('os_search_solr_search_sites', FALSE),
+    ),
+  );
+
+  return $setting;
+}
+
+/**
  * Implements hook_boxes_plugins().
  */
 function os_search_solr_boxes_plugins() {
@@ -23,48 +56,6 @@ function os_search_solr_boxes_plugins() {
 }
 
 /**
- * Implements hook_menu().
- */
-function os_search_solr_menu() {
-  $items = array();
-
-  $items['cp/build/features/os_solr_search'] = array(
-    'title' => 'Search Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('os_search_solr_settings'),
-    'access callback' => 'spaces_access_admin',
-    'type' => MENU_LOCAL_TASK,
-  );
-
-  return $items;
-}
-
-/**
- * Form wrapper solr search settings.
- *
- * @see os_search_solr_settings()
- */
-function os_search_solr_settings($form, $form_state) {
-  
-  $form['os_search_solr_include_subsites'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Subsites'),
-    '#description' => t('Should results from your subsites be included.'),
-    '#default_value' => variable_get('os_search_solr_include_subsites', FALSE),
-  );
-  
-  // Just a simple text box without select2.
-  $form['os_search_solr_search_sites'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Other Websites'),
-    '#description' => t('For now just enter a comma seperated list of site id\'s.'),
-    '#default_value' => variable_get('os_search_solr_search_sites', FALSE),
-  );
-  
-  return system_settings_form($form);
-}
-
-/**
  * Implements hook_block_info().
  */
 function os_search_solr_block_info() {
@@ -76,21 +67,6 @@ function os_search_solr_block_info() {
   );
 
   return $blocks;
-}
-
-/**
- * Preprocessor for theme('page').
- */
-function os_search_solr_preprocess_page(&$vars) {
-  $menu_item = menu_get_item();
-  
-  if ($menu_item && in_array($menu_item['path'], array('search/site/%', 'search/site')) && spaces_access_admin()) {
-    $links = &$vars['title_suffix']['controls']['section_links']['#links'];
-    $links['os_search_solr_settings'] = array(
-      'title' => t('Search Settings'),
-      'href' => 'cp/build/features/os_solr_search',
-    );
-  }
 }
 
 /**
