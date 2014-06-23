@@ -171,14 +171,14 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
   
   // Only get public content, this excludes content with privacy = 1.
   $query->addFilter('bs_private', 1, TRUE);
-  
+
   if (module_exists('vsite') && ($vsite = spaces_get_space())) {
-    
+    // This site.
+    $sites = array('"' . $vsite->group_type . ":" . $vsite->id . '"');
+
     if (variable_get('os_search_solr_include_subsites') || variable_get('os_search_solr_search_sites', '')) {
       ctools_include('subsite', 'vsite');
-      // This site.
-      $sites = array($vsite->group_type . ":" . $vsite->id);
-      
+
       if (variable_get('os_search_solr_include_subsites')) {
         // Get Subsites.
         $subsites = vsite_get_subsites($vsite);
@@ -196,20 +196,15 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
           }
         }
       }
-      
-      $site_filter = '(' . implode(' OR ', $sites) . ')';
     }
-    else {
-      // Just filter to this site.
-      $site_filter = $vsite->group_type . ":" . $vsite->id;
-    }
-    
+
     // Filter to the specified sites.
+    $site_filter = '(' . implode(' OR ', $sites) . ')';
     $query->addFilter("sm_og_group_ref", $site_filter);
     
     $group_wrapper = entity_metadata_wrapper('node', $vsite->group);
   
-    //The site is private but this user has access so let them see.
+    // The site is private but this user has access so let them see.
     if ($query->hasFilter('bs_private', 1, TRUE) && module_exists('vsite_access') && !empty($group_wrapper->{VSITE_ACCESS_FIELD}) && $group_wrapper->{VSITE_ACCESS_FIELD}->value()) {
       $query->removeFilter('bs_private');
     }
