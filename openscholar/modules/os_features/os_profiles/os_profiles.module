@@ -1778,3 +1778,15 @@ function os_profiles_copy_bio_to_new_vsite($original_person, $new_vsite) {
   $bio_wrapper->{OG_AUDIENCE_FIELD}->set(array($new_vsite->id));
   $bio_wrapper->save();
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter();
+ *
+ * Removes the child site field from the node form.
+ */
+function os_profiles_form_node_form_alter(&$form, $form_state) {
+  if ($form['#node']->type != 'person') {
+    return;
+  }
+  $form['field_child_site']['#access'] = FALSE;
+}
