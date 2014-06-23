@@ -557,7 +557,7 @@ function os_search_solr_vsites_autocomplete($string = '') {
   $options = array();
   if (isset($result['node'])) {
     foreach (node_load_multiple(array_keys($result['node'])) as $nid => $node) {
-      $options[$nid] = $node->title;
+      $options[] = $node->title . '(' . $nid . ')';
     }
   }
   drupal_json_output($options);
