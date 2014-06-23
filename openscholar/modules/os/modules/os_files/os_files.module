@@ -413,6 +413,13 @@ function os_files_edit_file_invalidate_cache($form, $form_state) {
   if (module_exists('entitycache')) {
     cache_clear_all($form['fid']['#value'], 'cache_entity_file');
   }
+
+  // When replacing a file, the file entity module upload the file and replace
+  // him with the file we edited but the the file we upload have a record of
+  // it's own. We need to delete that new record.
+  if (!empty($form_state['values']['replace_upload'])) {
+    file_delete($form_state['values']['replace_upload']);
+  }
 }
 
 /**
