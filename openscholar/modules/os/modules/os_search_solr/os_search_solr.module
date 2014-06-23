@@ -531,12 +531,10 @@ function os_search_solr_menu() {
 
   // Autocomplete callback for vsites.
   $items['vsite/autocomplete/vsite'] = array(
-    'type' => MENU_CALLBACK,
     'title' => 'VSite Autocomplete VSite',
     'page callback' => 'os_search_solr_vsites_autocomplete',
-    'access callback' => 'user_access',
-    // @todo access.
-    'access arguments' => array('access content'),
+    'access callback' => 'spaces_access_admin',
+    'type' => MENU_CALLBACK,
   );
 
   return $items;
