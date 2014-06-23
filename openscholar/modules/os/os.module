@@ -513,6 +513,11 @@ function os_module_implements_alter(&$implementations, $hook) {
     unset($implementations['os']);
     $implementations['os'] = FALSE;
   }
+  elseif ($hook == 'js_alter') {
+    // Move the os implementation of js_alter last to support the move of all js to the footer.
+    unset($implementations['os']);
+    $implementations['os'] = FALSE;
+  }
 }
 
 /**
@@ -1637,6 +1642,20 @@ function os_js_alter(&$javascript) {
     if (strpos($url, 'colorbox.js')) {
       $file = drupal_get_path('module', 'os') . '/theme/os_colorbox.js';
       $javascript[$file] = drupal_js_defaults($file);
+    }
+
+    $javascript[$url]['scope'] = 'footer';
+    if ($url === 'settings') {
+      $inline_settings = array(
+        'type' => 'inline',
+        'scope' => 'footer',
+        'data' => 'jQuery.extend(Drupal.settings, '. drupal_json_encode(drupal_array_merge_deep_array($js['data'])) . ");",
+        'group' => JS_LIBRARY,
+        'every_page' => TRUE,
+        'weight' => 0,
+      ) + drupal_js_defaults();
+      $javascript['inline_settings'] = $inline_settings;
+      unset($javascript['settings']);
     }
   }
 }
