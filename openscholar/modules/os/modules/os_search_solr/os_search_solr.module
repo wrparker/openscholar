@@ -537,7 +537,82 @@ function os_search_solr_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  // VSite delete modal.
+  $items['vsite/os-apache-solr-settings/%ctools_js'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => t('Set apache solr settings'),
+    'page arguments' => array(2),
+    'page callback' => 'os_search_solr_settings',
+    'access callback' => 'spaces_access_admin',
+    'description' => t('Set search settings for apache solr.'),
+  );
+
   return $items;
+}
+
+/**
+ * Menu callback; Modal window for set OS apache solr search.
+ */
+function os_search_solr_settings($ajax) {
+
+  if (!$ajax) {
+    return drupal_get_form('os_search_solr_settings_form');
+  }
+
+  ctools_include('modal');
+  ctools_include('ajax');
+
+  $form_state = array(
+    'title' => t('OS solr search'),
+    'ajax'  => TRUE,
+    'build_info' => array(
+      'args'  => array($ajax),
+    ),
+  );
+
+  $commands = ctools_modal_form_wrapper('os_search_solr_settings_form', $form_state);
+
+  if (!empty($form_state['ajax_commands'])) {
+    $commands = $form_state['ajax_commands'];
+  }
+
+  print ajax_render($commands);
+  drupal_exit();
+}
+
+/**
+ * Form callback for set the settings of OS solr search.
+ */
+function os_search_solr_settings_form($form, $form_state) {
+
+  $form['search_subsites'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Subsites'),
+    '#description' => t('Should results from your subsites be included.'),
+    '#default_value' => variable_get('os_search_solr_include_subsites', FALSE),
+  );
+
+  $form['search_sites'] = array(
+    '#type' => 'textfield',
+    '#multiple' => TRUE,
+    '#title' => t('Other websites'),
+    '#default_value' => variable_get('os_search_solr_search_sites', FALSE),
+    '#cardinality' => '-1',
+    '#autocomplete_path' => 'vsite/autocomplete/vsite',
+  );
+
+  return $form;
+}
+
+function os_search_solr_settings_form_submit($form, $form_state) {
+
+  // Just dismiss the modal in case of a cancellation.
+  if ($form_state['clicked_button']['#value'] == 'Cancel') {
+    $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
+    return $form;
+  }
+
+  return $form;
 }
 
 /**
@@ -584,6 +659,7 @@ function os_search_solr_cp_settings() {
   }
 
   $settings = array();
+
   $settings['os_search_solr'] = array(
     'group' => array(
       '#title' => t('Maintenance'),
@@ -597,30 +673,39 @@ function os_search_solr_cp_settings() {
     ),
   );
 
-  $settings['os_search_solr_include_subsites'] = array(
-    'group' => array(
-      '#title' => t('Solr search settings'),
-      '#id' => 'solr-search',
-    ),
-    'form' => array(
-      '#type' => 'checkbox',
-      '#title' => t('Subsites'),
-      '#description' => t('Should results from your subsites be included.'),
-      '#default_value' => variable_get('os_search_solr_include_subsites', FALSE),
+  // Include the CTools tools that we need.
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_modal_add_js();
+
+  // Ctools modal settings.
+  $modal_settings = array(
+    'settings-link' => array(
+      'modalOptions' => array('opacity' => .6),
+      'animation' => 'fadeIn',
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 700,
+        'height' => 220,
+        'addWidth' => 0,
+        'addHeight' => 50,
+        'contentRight' => 0,
+        'contentBottom' => 10,
+      ),
     ),
   );
-  $settings['os_search_solr_search_sites'] = array(
+  drupal_add_js($modal_settings, 'setting');
+
+  $delete_link = ctools_modal_text_button(t('Search settings'), 'vsite/os-apache-solr-settings/nojs', '', 'ctools-modal-settings-link');
+
+  $settings['os_search_solr_include_subsites'] = array(
     'group' => array(
-      '#title' => t('Solr search settings'),
+      '#title' => t('Search settings'),
       '#id' => 'solr-search',
     ),
     'form' => array(
-      '#type' => 'textfield',
-      '#multiple' => TRUE,
-      '#title' => t('Other websites'),
-      '#default_value' => variable_get('os_search_solr_search_sites', FALSE),
-      '#cardinality' => '-1',
-      '#autocomplete_path' => 'vsite/autocomplete/vsite',
+      '#type' => 'item',
+      '#markup' => $delete_link,
     ),
   );
 /*
