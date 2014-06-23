@@ -61,30 +61,6 @@ function os_search_solr_settings($form, $form_state) {
     '#default_value' => variable_get('os_search_solr_search_sites', FALSE),
   );
   
-//   // Adding the select2 functionality for multiple selection.
-//   $form['os_search_solr_search_sites'] = array(
-//     '#type' => 'select',
-//     '#prefix' => '<div id="select-terms">',
-//     '#suffix' => '</div>',
-//     '#options' => array(),
-//     '#title' => t('Other Sites'),
-//     '#autocomplete_path' => 'user/autocomplete',
-//     '#required' => TRUE,
-//     '#multiple' => TRUE,
-//     '#after_build' => array('os_select2_widget_after_build'),
-//     '#cardinality' => -1,
-//     '#attached' => array(
-//       'css' => array(
-//         libraries_get_path('select2') . '/select2.css',
-//         drupal_get_path('module', 'os') . '/css/select2-widget.css',
-//       ),
-//       'js' => array(
-//         libraries_get_path('select2') . '/select2.min.js',
-//         drupal_get_path('module', 'os') . '/js/select2-widget.js',
-//       ),
-//    ),
-//   );
-  
   return system_settings_form($form);
 }
 
@@ -198,33 +174,34 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
   
   if (module_exists('vsite') && ($vsite = spaces_get_space())) {
     
-    if (variable_get('os_search_solr_include_subsites') || variable_get('os_search_solr_search_sites','')) {
-      ctools_include('subsite','vsite');
+    if (variable_get('os_search_solr_include_subsites') || variable_get('os_search_solr_search_sites', '')) {
+      ctools_include('subsite', 'vsite');
       // This site.
-      $sites = array( $vsite->group_type.":".$vsite->id );
+      $sites = array($vsite->group_type . ":" . $vsite->id);
       
       if (variable_get('os_search_solr_include_subsites')) {
-        //Get Subsites.
+        // Get Subsites.
         $subsites = vsite_get_subsites($vsite);
         foreach ($subsites as $sid) {
-          $sites[] = '"'.$vsite->group_type.":".$sid.'"';
+          $sites[] = '"' . $vsite->group_type . ":" . $sid . '"';
         }
       }
       
-      if (variable_get('os_search_solr_search_sites','')) {
-        // Parse the list of 'other sites'
-        foreach (explode(',', variable_get('os_search_solr_search_sites','')) as $sid) {
+      if (variable_get('os_search_solr_search_sites', '')) {
+        // Parse the list of 'other sites'.
+        foreach (explode(',', variable_get('os_search_solr_search_sites', '')) as $sid) {
           $sid = trim($sid);
-          if(intval($sid)) {
-            $sites[] = '"'.$vsite->group_type.":".$sid.'"';
+          if (intval($sid)) {
+            $sites[] = '"' . $vsite->group_type . ":" . $sid . '"';
           }
         }
       }
       
       $site_filter = '(' . implode(' OR ', $sites) . ')';
-    } else {
+    }
+    else {
       // Just filter to this site.
-      $site_filter = $vsite->group_type.":".$vsite->id;
+      $site_filter = $vsite->group_type . ":" . $vsite->id;
     }
     
     // Filter to the specified sites.
@@ -238,12 +215,12 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
     }
     
     // There may be private features, this user is a member and should get access to private features in search.
-    if ($query->hasFilter('bs_private', 1, TRUE) && (user_access('administer group') || og_is_member('node',  $group_wrapper->getIdentifier()))) {
+    if ($query->hasFilter('bs_private', 1, TRUE) && (user_access('administer group') || og_is_member('node', $group_wrapper->getIdentifier()))) {
       $query->removeFilter('bs_private');
     }
   }
   elseif (variable_get('file_default_scheme', 'public') == 'private') {
-    //We are not in a vsite, and we are in  a private install.
+    // We are not in a vsite, and we are in a private install.
     drupal_access_denied();
     drupal_exit();
   }
@@ -252,7 +229,6 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
     // Limit searches to just this OpenScholar install in shared indexes.
     $query->addFilter('hash', apachesolr_site_hash());
   }
-  
 }
 
 /**
