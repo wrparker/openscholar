@@ -639,7 +639,6 @@ class FeatureContext extends DrupalContext {
   private function invoke_code($function, $arguments = NULL, $debug = FALSE) {
     $code = !empty($arguments) ? "$function(" . implode(',', $arguments) . ");" : "$function();";
 
-    print_r($code);
     $output = $this->getDriver()->drush("php-eval \"{$code}\"");
 
     if ($debug) {
