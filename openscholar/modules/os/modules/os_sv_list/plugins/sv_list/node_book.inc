@@ -41,7 +41,7 @@ class sv_list_node_book  extends sv_list_plugin {
       '#states' => array(
         // Show this checkbox when the content type is "book page".
         'visible' => array(
-          ':input[name="content_type"]' => array('value' => t('book')),
+          ':input[name="os_sv_list_content_type"]' => array('value' => 'book'),
         ),
       ),
     );
