@@ -596,7 +596,7 @@ function os_search_solr_settings_form($form, $form_state) {
   $values = array();
   foreach ($search_sites as $vsite) {
     $wrapper = entity_metadata_wrapper('node', $vsite);
-    $values[] = '"' . $wrapper->title->value() . '" (' . $wrapper->getIdentifier() . ')';
+    $values[] = '"' . $wrapper->label() . '" (' . $wrapper->getIdentifier() . ')';
   }
 
   $form['search_sites'] = array(
@@ -616,6 +616,7 @@ function os_search_solr_settings_form($form, $form_state) {
   $form['cancel'] = array(
     '#markup' => l(t('Cancel'), "#",  array('attributes' => array('class' => 'ctools-close-modal'))),
   );
+
   $form['#submit'][] = 'os_search_solr_settings_form_submit';
 
   return $form;
