@@ -601,6 +601,11 @@ function os_search_solr_settings_form($form, $form_state) {
     '#autocomplete_path' => 'vsite/autocomplete/vsite',
   );
 
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
   return $form;
 }
 
