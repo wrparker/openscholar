@@ -119,7 +119,7 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
     // This site.
     $sites = array('"' . $vsite->group_type . ":" . $vsite->id . '"');
 
-    if (variable_get('os_search_solr_include_subsites') || variable_get('os_search_solr_search_sites', '')) {
+    if (variable_get('os_search_solr_include_subsites') || variable_get('os_search_solr_search_sites')) {
       ctools_include('subsite', 'vsite');
 
       if (variable_get('os_search_solr_include_subsites')) {
@@ -130,10 +130,9 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
         }
       }
       
-      if (variable_get('os_search_solr_search_sites', '')) {
+      if (variable_get('os_search_solr_search_sites')) {
         // Parse the list of 'other sites'.
-        foreach (explode(',', variable_get('os_search_solr_search_sites', '')) as $sid) {
-          $sid = trim($sid);
+        foreach (variable_get('os_search_solr_search_sites', array()) as $sid) {
           if (intval($sid)) {
             $sites[] = '"' . $vsite->group_type . ":" . $sid . '"';
           }
@@ -592,11 +591,19 @@ function os_search_solr_settings_form($form, $form_state) {
     '#default_value' => variable_get('os_search_solr_include_subsites', FALSE),
   );
 
+  $search_sites_nids = variable_get('os_search_solr_search_sites', array());
+  $search_sites = node_load_multiple($search_sites_nids);
+  $values = array();
+  foreach ($search_sites as $vsite) {
+    $wrapper = entity_metadata_wrapper('node', $vsite);
+    $values[] = '"' . $wrapper->title->value() . '" (' . $wrapper->getIdentifier() . ')';
+  }
+
   $form['search_sites'] = array(
     '#type' => 'textfield',
     '#multiple' => TRUE,
     '#title' => t('Other websites'),
-    '#default_value' => variable_get('os_search_solr_search_sites', FALSE),
+    '#default_value' => implode(', ', $values),
     '#cardinality' => '-1',
     '#autocomplete_path' => 'vsite/autocomplete/vsite',
   );
@@ -609,6 +616,7 @@ function os_search_solr_settings_form($form, $form_state) {
   $form['cancel'] = array(
     '#markup' => l(t('Cancel'), "#",  array('attributes' => array('class' => 'ctools-close-modal'))),
   );
+  $form['#submit'][] = 'os_search_solr_settings_form_submit';
 
   return $form;
 }
@@ -620,7 +628,13 @@ function os_search_solr_settings_form_submit($form, &$form_state) {
     $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
     return;
   }
-
+  $nids = os_search_solr_explode_nids($form_state['values']['search_sites']);
+  if ($vsite = vsite_get_vsite()) {
+    $vsite->controllers->variable->set('os_search_solr_search_sites', $nids);
+  }
+  else {
+    variable_set('os_search_solr_search_sites', $nids);
+  }
 
   // Dismiss modal.
   $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
@@ -771,26 +785,7 @@ function os_search_solr_cp_settings() {
       '#markup' => $delete_link,
     ),
   );
-/*
- *   $form['bundles'] = array(
-    '#options' => array('Posts' => $all_bundles['node'], 'Files' => $all_bundles['file']),
-    '#default_value' => array_keys($default_bundles),
-    '#description' => t('Select the content types to categorize using this vocabulary.'),
-    '#required' => TRUE,
-    '#after_build' => array('os_select2_widget_after_build'),
-    '#cardinality' => '-1',
-    '#attached' => array(
-      'css' => array(
-        libraries_get_path('select2') . '/select2.css',
-        drupal_get_path('module', 'os') . '/css/select2-widget.css',
-      ),
-      'js' => array(
-        libraries_get_path('select2') . '/select2.min.js',
-        drupal_get_path('module', 'os') . '/js/select2-widget.js',
-      ),
-    ),
-  );
- */
+
   return $settings;
 }
 
