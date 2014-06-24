@@ -606,18 +606,25 @@ function os_search_solr_settings_form($form, $form_state) {
     '#value' => t('Submit'),
   );
 
+  $form['cancel'] = array(
+    '#markup' => l(t('Cancel'), "#",  array('attributes' => array('class' => 'ctools-close-modal'))),
+  );
+  
   return $form;
 }
 
-function os_search_solr_settings_form_submit($form, $form_state) {
+function os_search_solr_settings_form_submit($form, &$form_state) {
 
   // Just dismiss the modal in case of a cancellation.
   if ($form_state['clicked_button']['#value'] == 'Cancel') {
     $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
-    return $form;
+    return;
   }
 
-  return $form;
+
+  // Dismiss modal.
+  $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
+
 }
 
 /**
