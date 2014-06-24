@@ -1661,6 +1661,7 @@ function os_profiles_preprocess_node(&$variables) {
   if ($variables['view_mode'] != 'full' || $variables['node']->type != 'person') {
     return;
   }
+
   if (!os_profiles_can_create_site_from_profile($variables['node'])) {
     return;
   }
