@@ -1263,3 +1263,39 @@ function os_search_solr_more_like_this_bundles_element_validate($element, &$form
     form_error($element, t('You must select at least one node type when leaving the related posts checkbox un-checked.'));
   }
 }
+
+function os_search_solr_preprocess_page(&$variables) {
+
+  // todo: check if this a solr search result ot search results.
+
+  // Include the CTools tools that we need.
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_modal_add_js();
+
+  // Ctools modal settings.
+  $modal_settings = array(
+    'settings-link' => array(
+      'modalOptions' => array('opacity' => .6),
+      'animation' => 'fadeIn',
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 700,
+        'height' => 220,
+        'addWidth' => 0,
+        'addHeight' => 50,
+        'contentRight' => 0,
+        'contentBottom' => 10,
+      ),
+    ),
+  );
+
+  // todo: fix modal position.
+  drupal_add_js($modal_settings, 'setting');
+  drupal_add_library('system', 'drupal.ajax');
+  $variables['title_suffix']['controls']['section_links']['#links']['settings'] = array(
+    'title' => t('Search settings'),
+    'href' => 'vsite/os-apache-solr-settings/nojs',
+    'attributes' => array('class' => array('use-ajax', 'ctools-modal-settings-link'), 'title' => '')
+  );
+}
