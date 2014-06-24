@@ -1177,6 +1177,8 @@ function os_search_solr_more_like_this_bundles_element_validate($element, &$form
 
 function os_search_solr_preprocess_page(&$variables) {
 
+  // todo: check if this a solr search result ot search results.
+
   // Include the CTools tools that we need.
   ctools_include('ajax');
   ctools_include('modal');
@@ -1198,24 +1200,13 @@ function os_search_solr_preprocess_page(&$variables) {
       ),
     ),
   );
+
+  // todo: fix modal position.
   drupal_add_js($modal_settings, 'setting');
-
-  $delete_link = ctools_modal_text_button(t('Search settings'), 'vsite/os-apache-solr-settings/nojs', '', 'ctools-modal-settings-link');
-
-  $settings['os_search_solr_include_subsites'] = array(
-    'group' => array(
-      '#title' => t('Search settings'),
-      '#id' => 'solr-search',
-    ),
-    'form' => array(
-      '#type' => 'item',
-      '#markup' => $delete_link,
-    ),
-  );
-dpm($delete_link);
-  dpm($variables);
-  $delete_link = ctools_modal_text_button(t('Search settings'), 'vsite/os-apache-solr-settings/nojs', '', 'ctools-modal-settings-link');
-  $variables['title_suffix']['controls']['settings'] = array(
-    '#markup' => $delete_link,
+  drupal_add_library('system', 'drupal.ajax');
+  $variables['title_suffix']['controls']['section_links']['#links']['settings'] = array(
+    'title' => t('Search settings'),
+    'href' => 'vsite/os-apache-solr-settings/nojs',
+    'attributes' => array('class' => array('use-ajax', 'ctools-modal-settings-link'), 'title' => '')
   );
 }
