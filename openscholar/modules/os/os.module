@@ -1638,11 +1638,15 @@ function os_access_region($module, $delta) {
  * and loads a small script to fix an issue if its been found
  */
 function os_js_alter(&$javascript) {
-  // do nothing to the javascript on install/update pages
-  if (defined('MAINTENANCE_MODE')) return;
+  // Do nothing to the javascript on install/update pages.
+  if (defined('MAINTENANCE_MODE')) {
+    return;
+  }
 
-  // do nothing on the overlay's empty page
-  if (module_exists('overlay') && overlay_display_empty_page()) return;
+  // Do nothing on the overlay's empty page.
+  if (module_exists('overlay') && overlay_display_empty_page()) {
+    return;
+  }
 
   foreach ($javascript as $url => $js) {
     if (strpos($url, 'colorbox.js')) {
