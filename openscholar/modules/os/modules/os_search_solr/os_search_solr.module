@@ -609,7 +609,7 @@ function os_search_solr_settings_form($form, $form_state) {
   $form['cancel'] = array(
     '#markup' => l(t('Cancel'), "#",  array('attributes' => array('class' => 'ctools-close-modal'))),
   );
-  
+
   return $form;
 }
 
@@ -628,29 +628,80 @@ function os_search_solr_settings_form_submit($form, &$form_state) {
 }
 
 /**
+ * Return array of nids take from brackets in the string.
+ *
+ * @param $string
+ *  Input string.
+ *
+ * @return array
+ *  Array of nids.
+ */
+function os_search_solr_explode_nids($string) {
+  $nids = array();
+
+  // Match values in brackets.
+  preg_match_all('/\(([A-Za-z0-9 ]+?)\)/', $string, $matches);
+  $typed_nids = array_unique($matches[1]);
+
+  // Grab only integer values.
+  foreach ($typed_nids as $nid) {
+    if (is_numeric($nid) && intval($nid) > 0) {
+      $nids[] = $nid;
+    }
+  }
+  return $nids;
+}
+
+/**
  * Menu callback; Return JSON output for the the autocomplete field.
  */
 function os_search_solr_vsites_autocomplete($string = '') {
-  if (strlen($string) < 3) {
+  // The string is a list of up to 10 chars of a node title in quotation, and
+  // a node id in brackets. e.g. - "title one" (42), "long ti..." (44).
+  $nids = os_search_solr_explode_nids($string);
+
+  // Search is done just for the last section.
+  $csv = str_getcsv($string);
+  $last_string = trim(array_pop($csv));
+
+  if (strlen($last_string) < 3) {
+    // Don't search for short input.
+    drupal_json_output();
     return;
   }
 
+  // Prefix is needed in the key to keep former selection.
+  if ($csv) {
+    $prefix = implode(', ', $csv) . ", ";
+  }
+  else {
+    $prefix = '';
+  }
+
+  // Query for VSites.
   $query = new EntityFieldQuery();
-  $result = $query
+  $query
     ->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', array('department', 'personal', 'project'), 'IN')
-    ->propertyCondition('title', '%' . $string . '%', 'LIKE')
+    ->propertyCondition('title', '%' . $last_string . '%', 'LIKE')
     ->propertyCondition('status', NODE_PUBLISHED)
-    ->propertyOrderBy('title', 'ASC')
-    ->execute();
+    ->propertyOrderBy('title', 'ASC');
+
+  // Exclude already selected nodes.
+  if ($nids) {
+    $query->propertyCondition('nid', $nids, 'NOT IN');
+  }
+  $result = $query->execute();
 
   if (empty($result['node'])) {
+    drupal_json_output();
     return;
   }
 
   $options = array();
   foreach (node_load_multiple(array_keys($result['node'])) as $nid => $node) {
-    $options[] = $node->title . '(' . $nid . ')';
+    $value = $node->title . '(' . $nid . ')';
+    $options[$prefix . $value] = $value;
   }
 
   drupal_json_output($options);
