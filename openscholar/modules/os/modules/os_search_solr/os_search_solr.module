@@ -1175,9 +1175,16 @@ function os_search_solr_more_like_this_bundles_element_validate($element, &$form
   }
 }
 
+/**
+ * Implements hook_preprocess_page().
+ *
+ * Adds a link to search settings to the search page's contextual links.
+ */
 function os_search_solr_preprocess_page(&$variables) {
-
-  // todo: check if this a solr search result ot search results.
+  $item = menu_get_item();
+  if ($item['path'] != 'search/site/%') {
+    return;
+  }
 
   // Include the CTools tools that we need.
   ctools_include('ajax');
@@ -1201,7 +1208,6 @@ function os_search_solr_preprocess_page(&$variables) {
     ),
   );
 
-  // todo: fix modal position.
   drupal_add_js($modal_settings, 'setting');
   drupal_add_library('system', 'drupal.ajax');
   $variables['title_suffix']['controls']['section_links']['#links']['settings'] = array(
