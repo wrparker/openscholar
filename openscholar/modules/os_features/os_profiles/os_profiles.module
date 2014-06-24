@@ -533,11 +533,6 @@ function os_profiles_sync_profile_validate($form, &$form_state) {
 
   if (!empty($form_state['values']['url'])) {
     // If the URL doesn't include the word "people" don't make the request.
-    if (strpos($form_state['values']['url'],'people') == FALSE) {
-      form_set_error('url', t('Make sure the URL is correct and that it includes the term "/people/"'));
-      return;
-    }
-
     $headers = get_headers($form_state['values']['url']);
 
     //if (!in_array('X-Generator: Drupal 7 (http://drupal.org)', $headers)) {
@@ -551,7 +546,14 @@ function os_profiles_sync_profile_validate($form, &$form_state) {
     // the field "field_original_destination_url".
     foreach ($headers as $header) {
       if (strpos($header, 'node_json: ') === 0) {
+        // We found an address of a json output from which we will sync a
+        // profile.
         $form_state['json_address'] = str_replace('node_json: ', '', $header);
+        return;
+      }
+      elseif (strpos($header, 'site_json_sync: ') === 0) {
+        // We found an address to create a profile from site.
+        $form_state['site_json_sync'] = str_replace('site_json_sync: ', '', $header);
         return;
       }
     }
@@ -609,22 +611,49 @@ function os_profiles_sync_profile_submit($form, $form_state) {
 
   // Import a person node using URL field.
   if (!empty($form_state['values']['url'])) {
-    $origin = os_profiles_get_origin_node_values($form_state['json_address'], $keys);
-    $values = $origin->values;
-    $data = $origin->data;
+    if (!empty($form_state['site_json_sync'])) {
+      // Create a profile from a site.
+      $request = drupal_http_request($form_state['site_json_sync']);
+      $data = drupal_json_decode($request->data);
 
-    // Get the URL of the original node.
-    $url = str_replace('/node/' . $data['nid'] . '.json', '', $form_state['json_address']);
+      $handler = restws_resource_controller('node');
 
-    // Get the original node's UUID.
-    $values['field_uuid'] = $data['field_uuid'];
+      $arguments = array(
+        'field_first_name' => $data->title,
+        'body' => $data->about,
+      );
 
-    // Save the original address of the JSON.
-    $values['field_original_destination_url'] = $form_state['json_address'];
+      $nid = $handler->create($arguments);
 
-    // Set the file JSON url.
-    $file_json_url = !empty($values['field_person_photo']) ? $values['field_person_photo']['file']['uri'] . '.json' : '';
-    $photo_dimension = $data['person_photo_dimension'];
+      $node = node_load($nid);
+
+      $params = array(
+        '@title' => $node->title,
+        '@url' => url('node/' . $node->nid),
+      );
+
+      drupal_set_message(t('The person @title has created. You can <a href="@url">visit</a> their page.', $params));
+      return;
+    }
+    else {
+      // Sync a profile from a given address.
+      $origin = os_profiles_get_origin_node_values($form_state['json_address'], $keys);
+      $values = $origin->values;
+      $data = $origin->data;
+
+      // Get the URL of the original node.
+      $url = str_replace('/node/' . $data['nid'] . '.json', '', $form_state['json_address']);
+
+      // Get the original node's UUID.
+      $values['field_uuid'] = $data['field_uuid'];
+
+      // Save the original address of the JSON.
+      $values['field_original_destination_url'] = $form_state['json_address'];
+
+      // Set the file JSON url.
+      $file_json_url = !empty($values['field_person_photo']) ? $values['field_person_photo']['file']['uri'] . '.json' : '';
+      $photo_dimension = $data['person_photo_dimension'];
+    }
   }
   else {
     // Import a person node using the auto-complete field.
