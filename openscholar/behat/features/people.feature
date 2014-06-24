@@ -61,6 +61,15 @@ Feature:
      Then I should see "Professional Titles/Affiliations"
 
   @api @first
+  Scenario: Create a profile from external site.
+    Given I am logging in as "john"
+      And I visit "obama/cp/people/sync-profiles"
+      And I populate in "url" with "LOCALHOST/john"
+     When I press "Submit"
+      And I visit "obama/people/john"
+     Then I should see "Work in gizra inc."
+
+  @api @first
   Scenario: Test changing the owner of a VSite.
     Given I am logging in as "admin"
       And I give the user "john" the role "vsite admin" in the group "obama"
