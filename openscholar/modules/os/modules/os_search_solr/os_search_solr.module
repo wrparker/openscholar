@@ -216,17 +216,12 @@ function os_search_solr_block_view_alter(&$data,$block) {
   $string_og = facetapi_build_delta($searcher_name, 'block', 'sm_og_group_ref');
   $delta_og = array_search($string_og, $map);
 
-  if($block->module == 'facetapi' && $block->delta == $delta_og) {
+  if ($block->module == 'facetapi' && $block->delta == $delta_og) {
     // Alter the title.
     $data['title'] = 'Filter By Site';
 
-    // Hide the Filter By Site facet inside of vsites.
-    if(module_exists('vsite') && vsite_get_vsite()) {
-      $data['content'] = NULL;
-    }
-
     // Hide the Filter by Site block if there is only one filter.
-    if(isset($data['content']['sm_og_group_ref']) && isset($data['content']['sm_og_group_ref']['#items'])) {
+    if (isset($data['content']['sm_og_group_ref']) && isset($data['content']['sm_og_group_ref']['#items'])) {
       $site_array = $data['content']['sm_og_group_ref']['#items'];
       if(is_array($site_array) && count($site_array) <= 1) {
         $data['content'] = NULL;
