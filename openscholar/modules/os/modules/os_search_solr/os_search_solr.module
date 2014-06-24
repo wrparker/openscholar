@@ -678,41 +678,6 @@ function os_search_solr_cp_settings() {
     ),
   );
 
-  // Include the CTools tools that we need.
-  ctools_include('ajax');
-  ctools_include('modal');
-  ctools_modal_add_js();
-
-  // Ctools modal settings.
-  $modal_settings = array(
-    'settings-link' => array(
-      'modalOptions' => array('opacity' => .6),
-      'animation' => 'fadeIn',
-      'modalSize' => array(
-        'type' => 'fixed',
-        'width' => 700,
-        'height' => 220,
-        'addWidth' => 0,
-        'addHeight' => 50,
-        'contentRight' => 0,
-        'contentBottom' => 10,
-      ),
-    ),
-  );
-  drupal_add_js($modal_settings, 'setting');
-
-  $delete_link = ctools_modal_text_button(t('Search settings'), 'vsite/os-apache-solr-settings/nojs', '', 'ctools-modal-settings-link');
-
-  $settings['os_search_solr_include_subsites'] = array(
-    'group' => array(
-      '#title' => t('Search settings'),
-      '#id' => 'solr-search',
-    ),
-    'form' => array(
-      '#type' => 'item',
-      '#markup' => $delete_link,
-    ),
-  );
 /*
  *   $form['bundles'] = array(
     '#options' => array('Posts' => $all_bundles['node'], 'Files' => $all_bundles['file']),
@@ -1211,10 +1176,46 @@ function os_search_solr_more_like_this_bundles_element_validate($element, &$form
 }
 
 function os_search_solr_preprocess_page(&$variables) {
-  $item = menu_get_item('vsite/os-apache-solr-settings/%ctools_js');
-  $variables['title_suffix']['controls']['section_links']['#links']['settings'] = array(
-    'title' => t('Settings'),
-    'href' => $item['href'],
-    'query' => drupal_get_destination(),
+
+  // Include the CTools tools that we need.
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_modal_add_js();
+
+  // Ctools modal settings.
+  $modal_settings = array(
+    'settings-link' => array(
+      'modalOptions' => array('opacity' => .6),
+      'animation' => 'fadeIn',
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 700,
+        'height' => 220,
+        'addWidth' => 0,
+        'addHeight' => 50,
+        'contentRight' => 0,
+        'contentBottom' => 10,
+      ),
+    ),
+  );
+  drupal_add_js($modal_settings, 'setting');
+
+  $delete_link = ctools_modal_text_button(t('Search settings'), 'vsite/os-apache-solr-settings/nojs', '', 'ctools-modal-settings-link');
+
+  $settings['os_search_solr_include_subsites'] = array(
+    'group' => array(
+      '#title' => t('Search settings'),
+      '#id' => 'solr-search',
+    ),
+    'form' => array(
+      '#type' => 'item',
+      '#markup' => $delete_link,
+    ),
+  );
+dpm($delete_link);
+  dpm($variables);
+  $delete_link = ctools_modal_text_button(t('Search settings'), 'vsite/os-apache-solr-settings/nojs', '', 'ctools-modal-settings-link');
+  $variables['title_suffix']['controls']['settings'] = array(
+    '#markup' => $delete_link,
   );
 }
