@@ -181,7 +181,7 @@ function os_profiles_menu() {
   $items['site_sync_info'] = array(
     'title' => 'Create a profile from site.',
     'page callback' => 'os_profiles_provide_site_information',
-    'access callback' => 'spaces_get_space',
+    'access callback' => 'os_profile_can_sync_site',
   );
 
   return $items;
@@ -1811,14 +1811,37 @@ function os_profiles_preprocess_page(&$variables) {
 }
 
 /**
+ * Access callback; Checking if the current menu item can provide site
+ * information in order to create a profile in the site.
+ */
+function os_profile_can_sync_site() {
+  return module_exists('vsite') && vsite_get_vsite();
+}
+
+/**
  * Menu callback; This function will provide information for create a profile
  * from site.
  */
 function os_profiles_provide_site_information() {
+  $vsite = vsite_get_vsite();
+
   $info = array(
-    'title' => 'foo',
-    'about' => 'bar',
+    'title' => $vsite->og->title,
   );
+
+  // Get the bio node in this site.
+  $query = new EntityFieldQuery();
+  $results = $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('type', 'bio')
+    ->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $vsite->id)
+    ->execute();
+
+  if (!empty($results['node'])) {
+    // Adding the bio to the output.
+    $wrapper = entity_metadata_wrapper('node', reset(array_keys($results['node'])));
+    $info['bio'] = $wrapper->body->value->value();
+  }
 
   drupal_json_output($info);
 }
