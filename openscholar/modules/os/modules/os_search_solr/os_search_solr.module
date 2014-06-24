@@ -604,7 +604,7 @@ function os_search_solr_settings_form($form, $form_state) {
     '#multiple' => TRUE,
     '#title' => t('Other websites'),
     '#default_value' => implode(', ', $values),
-    '#cardinality' => '-1',
+    '#cardinality' => UNLIMITED_CARDINALITY,
     '#autocomplete_path' => 'vsite/autocomplete/vsite',
   );
 
