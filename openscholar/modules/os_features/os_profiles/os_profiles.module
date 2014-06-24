@@ -178,6 +178,12 @@ function os_profiles_menu() {
     'theme callback' => 'cp_theme_name',
   );
 
+  $items['site_sync_info'] = array(
+    'title' => 'Create a profile from site.',
+    'page callback' => 'os_profiles_provide_site_information',
+    'access callback' => 'spaces_get_space',
+  );
+
   return $items;
 }
 
@@ -1791,4 +1797,28 @@ function os_profiles_copy_bio_to_new_vsite($original_person, $new_vsite) {
  */
 function os_profiles_form_node_form_alter(&$form, $form_state) {
   $form['field_child_site']['#access'] = FALSE;
+}
+
+/**
+ * Preprocess page.
+ */
+function os_profiles_preprocess_page(&$variables) {
+  if (!drupal_is_front_page()) {
+    return;
+  }
+
+  drupal_add_http_header('site_json_sync', url('site_sync_info', array('absolute' => TRUE)));
+}
+
+/**
+ * Menu callback; This function will provide information for create a profile
+ * from site.
+ */
+function os_profiles_provide_site_information() {
+  $info = array(
+    'title' => 'foo',
+    'about' => 'bar',
+  );
+
+  drupal_json_output($info);
 }
