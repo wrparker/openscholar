@@ -1209,3 +1209,12 @@ function os_search_solr_more_like_this_bundles_element_validate($element, &$form
     form_error($element, t('You must select at least one node type when leaving the related posts checkbox un-checked.'));
   }
 }
+
+function os_search_solr_preprocess_page(&$variables) {
+  $item = menu_get_item('vsite/os-apache-solr-settings/%ctools_js');
+  $variables['title_suffix']['controls']['section_links']['#links']['settings'] = array(
+    'title' => t('Settings'),
+    'href' => $item['href'],
+    'query' => drupal_get_destination(),
+  );
+}
