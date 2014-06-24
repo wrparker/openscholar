@@ -619,8 +619,9 @@ function os_profiles_sync_profile_submit($form, $form_state) {
       $handler = restws_resource_controller('node');
 
       $arguments = array(
-        'field_first_name' => $data->title,
-        'body' => $data->about,
+        'field_first_name' => $data['title'],
+        'type' => 'person',
+        'body' => $data['bio'],
       );
 
       $nid = $handler->create($arguments);
@@ -1869,7 +1870,7 @@ function os_profiles_provide_site_information() {
   if (!empty($results['node'])) {
     // Adding the bio to the output.
     $wrapper = entity_metadata_wrapper('node', reset(array_keys($results['node'])));
-    $info['bio'] = $wrapper->body->value->value();
+    $info['bio'] = $wrapper->body->value();
   }
 
   drupal_json_output($info);
