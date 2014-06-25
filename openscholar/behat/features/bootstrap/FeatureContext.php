@@ -1050,7 +1050,7 @@ class FeatureContext extends DrupalContext {
   public function iSearchForInSite($item, $site) {
     return array(
       new Step\When('I visit "' . $site . '"'),
-      new Step\When('I fill in "search_block_form" with "'. $item . '"'),
+      new Step\When('I fill in "search_block_form" with "' . $item . '"'),
       new Step\When('I press "Search"'),
     );
   }
