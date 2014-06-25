@@ -186,9 +186,9 @@ function os_search_solr_get_searcher_name() {
  *
  * Alter the titles of the Solr blocks.
  */
-function os_search_solr_block_view_alter(&$data,$block) {
+function os_search_solr_block_view_alter(&$data, $block) {
   // Gets delta map
-  if (!$map = facetapi_get_delta_map()) {
+  if ((!$map = facetapi_get_delta_map()) || $block->module != 'facetapi') {
     return;
   }
 
@@ -198,7 +198,7 @@ function os_search_solr_block_view_alter(&$data,$block) {
   $string_bundle = facetapi_build_delta($searcher_name, 'block', 'bundle');
   $delta_bundle = array_search($string_bundle, $map);
 
-  if ($block->module == 'facetapi' && $block->delta == $delta_bundle) {
+  if ($block->delta == $delta_bundle) {
     // Alter the title.
     $data['title'] = 'Filter By Post Type';
 
@@ -215,9 +215,9 @@ function os_search_solr_block_view_alter(&$data,$block) {
   $string_og = facetapi_build_delta($searcher_name, 'block', 'sm_og_group_ref');
   $delta_og = array_search($string_og, $map);
 
-  if ($block->module == 'facetapi' && $block->delta == $delta_og) {
+  if ($block->delta == $delta_og) {
     // Alter the title.
-    $data['title'] = 'Filter By Site';
+    $data['title'] = t('Filter by other sites');
 
     // Hide the Filter by Site block if there is only one filter.
     if (isset($data['content']['sm_og_group_ref']) && isset($data['content']['sm_og_group_ref']['#items'])) {
@@ -226,13 +226,20 @@ function os_search_solr_block_view_alter(&$data,$block) {
         $data['content'] = NULL;
       }
     }
+
+    // Hide the bundle titles.
+    if (isset($data['content']['sm_og_group_ref'])) {
+      foreach ($data['content']['sm_og_group_ref'] as &$bundle) {
+        unset($bundle['#title']);
+      }
+    }
   }
 
   // Filter by Post Date.
   $string_date = facetapi_build_delta($searcher_name, 'block', 'created');
   $delta_date = array_search($string_date, $map);
 
-  if ($block->module == 'facetapi' && $block->delta == $delta_date) {
+  if ($block->delta == $delta_date) {
     // Alter the title.
     $data['title'] = t('Filter By Post Date');
   }
@@ -240,7 +247,7 @@ function os_search_solr_block_view_alter(&$data,$block) {
   // OG-vocab field.
   $string = facetapi_build_delta($searcher_name, 'block', 'sm_og_vocabulary');
   $delta = array_search($string, $map);
-  if ($block->module == 'facetapi' && $block->delta == $delta) {
+  if ($block->delta == $delta) {
     $data['title'] = t('Filter By Taxonomy');
   }
 }
