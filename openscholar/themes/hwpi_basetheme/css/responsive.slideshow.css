@@ -88,13 +88,11 @@ margin-right:8px !important;
 }
 
 a.rslides_nav.next {
-background-position: -32px -5px !important;
-padding: 4px 18px 0 !important;
+background-position: -48px -23px !important;
 }
 
 a.rslides_nav.prev {
-background-position: -1px -5px !important;
-padding: 4px 18px 0 !important;
+background-position: -18px -23px !important;
 }
 	
 }
