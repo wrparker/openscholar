@@ -1238,3 +1238,18 @@ function os_search_solr_preprocess_page(&$variables) {
     'attributes' => array('class' => array('use-ajax', 'ctools-modal-settings-link'), 'title' => '')
   );
 }
+
+/**
+ * Implements hook_facetapi_widgets().
+ */
+function os_search_solr_facetapi_widgets() {
+  return array(
+    'os_search_solr_other_sites_links' => array(
+      'handler' => array(
+        'label' => t('Links'),
+        'class' => 'OsSearchSolrOtherSitesLinks',
+        'query types' => array('term', 'date'),
+      ),
+    ),
+  );
+}
