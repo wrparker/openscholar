@@ -135,6 +135,10 @@ abstract class os_boxes_default extends boxes_box {
       $this->cache_id .= ':' . $page;
     }
 
+    // Add the user id to the CID of the widget.
+    global $user;
+    $this->cache_id .= ':' . $user->uid;
+
     return $this->cache_id;
   }
 
