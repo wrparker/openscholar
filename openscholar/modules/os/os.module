@@ -1644,6 +1644,7 @@ function os_js_alter(&$javascript) {
       $javascript[$file] = drupal_js_defaults($file);
     }
 
+    continue;
     $javascript[$url]['scope'] = 'footer';
     if ($url === 'settings') {
       $inline_settings = array(
