@@ -666,12 +666,16 @@ function os_search_solr_explode_nids($string) {
 function os_search_solr_vsites() {
   // Query for VSites.
   $query = new EntityFieldQuery();
-  $result = $query
+  $query
     ->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', array('department', 'personal', 'project'), 'IN')
     ->propertyCondition('status', NODE_PUBLISHED)
-    ->propertyOrderBy('title', 'ASC')
-    ->execute();
+    ->propertyOrderBy('title', 'ASC');
+
+  if ($vsite = vsite_get_vsite()) {
+    $query->propertyCondition('nid', array($vsite->id), 'NOT IN');
+  }
+  $result = $query->execute();
 
   $options = array();
   foreach (node_load_multiple(array_keys($result['node'])) as $nid => $node) {
