@@ -1234,7 +1234,7 @@ function os_search_solr_preprocess_page(&$variables) {
   $variables['title_suffix']['controls']['section_links']['#links']['settings'] = array(
     'title' => t('Search settings'),
     'href' => 'vsite/os-apache-solr-settings/nojs',
-    'attributes' => array('class' => array('use-ajax', 'ctools-modal-settings-link'), 'title' => '')
+    'attributes' => array('class' => array('use-ajax', 'ctools-modal-settings-link'), 'title' => ''),
   );
 }
 
