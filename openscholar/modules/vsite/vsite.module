@@ -2413,7 +2413,7 @@ function vsite_contact_mail_owner_submit($form, &$form_state) {
 function vsite_vsite_delete_request_submit($form, &$form_state) {
   global $user, $language;
 
-  // Just dismiss the modal in case of a cancellation.
+  // Dismiss the modal in case of a cancellation.
   if ($form_state['clicked_button']['#value'] == 'Cancel') {
     $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
     return;

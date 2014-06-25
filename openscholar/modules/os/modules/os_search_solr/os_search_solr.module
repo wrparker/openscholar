@@ -627,7 +627,7 @@ function os_search_solr_settings_form($form, $form_state) {
  */
 function os_search_solr_settings_form_submit($form, &$form_state) {
 
-  // Just dismiss the modal in case of a cancellation.
+  // Dismiss the modal in case of a cancellation.
   if ($form_state['clicked_button']['#value'] == 'Cancel') {
     $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
     return;
