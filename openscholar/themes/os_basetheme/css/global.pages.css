@@ -1238,6 +1238,7 @@ img.media-element.file-default[style*="float:"][style*="right;"] {
 	font-size:initial;
 	}
 
+.node-news .field-name-field-photo.view-mode-sidebar_teaser,
 .node-news.node-teaser .field-name-field-photo {
   float: left;
   margin: 0 1.5em .5em 0;
