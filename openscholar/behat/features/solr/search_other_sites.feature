@@ -7,7 +7,7 @@ Feature:
     Given I am logging in as "john"
       And I add to the search results the sites "obama"
      When I search for "john" in the site "john"
-     Then I click on "Obama (1)" under facet "Filter By Other Sites"
+     Then I click on "Obama (1)" under facet "Filter by other sites"
           # Result form "john"
       And I should not see "Who was JFK?"
           # Result form "obama"
@@ -18,6 +18,6 @@ Feature:
     Given I am logging in as "alexander"
       And I add to the search results the site's subsites
      When I search for "blog" in the site "edison"
-     Then I click on "Tesla (1)" under facet "Filter By Other Sites"
+     Then I click on "Tesla (1)" under facet "Filter by other sites"
           # Result form "tesla"
       And I should see "Tesla's blog"
