@@ -523,14 +523,6 @@ function os_search_solr_mark_entity_by_bundles($vsite_id, $bundles = array(), $l
 function os_search_solr_menu() {
   $items = array();
 
-  // Autocomplete callback for vsites.
-  $items['vsite/autocomplete/vsite'] = array(
-    'title' => 'VSite Autocomplete VSite',
-    'page callback' => 'os_search_solr_vsites_autocomplete',
-    'access callback' => 'spaces_access_admin',
-    'type' => MENU_CALLBACK,
-  );
-
   // VSite delete modal.
   $items['vsite/os-apache-solr-settings/%ctools_js'] = array(
     'type' => MENU_CALLBACK,
@@ -586,21 +578,26 @@ function os_search_solr_settings_form($form, $form_state) {
     '#default_value' => variable_get('os_search_solr_include_subsites', FALSE),
   );
 
-  $search_sites_nids = variable_get('os_search_solr_search_sites', array());
-  $search_sites = node_load_multiple($search_sites_nids);
-  $values = array();
-  foreach ($search_sites as $vsite) {
-    $wrapper = entity_metadata_wrapper('node', $vsite);
-    $values[] = '"' . $wrapper->label() . '" (' . $wrapper->getIdentifier() . ')';
-  }
-
   $form['search_sites'] = array(
-    '#type' => 'textfield',
+    '#type' => 'select',
     '#multiple' => TRUE,
     '#title' => t('Other websites'),
-    '#default_value' => implode(', ', $values),
+    '#options' => os_search_solr_vsites(),
+    '#default_value' => variable_get('os_search_solr_search_sites', array()),
+    '#description' => t('Select additional sites to show search results from.'),
+    '#required' => TRUE,
+    '#after_build' => array('os_select2_widget_after_build'),
     '#cardinality' => UNLIMITED_CARDINALITY,
-    '#autocomplete_path' => 'vsite/autocomplete/vsite',
+    '#attached' => array(
+      'css' => array(
+        libraries_get_path('select2') . '/select2.css',
+        drupal_get_path('module', 'os') . '/css/select2-widget.css',
+      ),
+      'js' => array(
+        libraries_get_path('select2') . '/select2.min.js',
+        drupal_get_path('module', 'os') . '/js/select2-widget.js',
+      ),
+    ),
   );
 
   $form['submit'] = array(
@@ -628,9 +625,8 @@ function os_search_solr_settings_form_submit($form, &$form_state) {
     $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
     return;
   }
-  $nids = os_search_solr_explode_nids($form_state['values']['search_sites']);
   if ($vsite = vsite_get_vsite()) {
-    $vsite->controllers->variable->set('os_search_solr_search_sites', $nids);
+    $vsite->controllers->variable->set('os_search_solr_search_sites', $form_state['values']['search_sites']);
     $vsite->controllers->variable->set('os_search_solr_include_subsites', $form_state['values']['search_subsites']);
   }
   else {
@@ -640,7 +636,6 @@ function os_search_solr_settings_form_submit($form, &$form_state) {
 
   // Dismiss modal.
   $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
-
 }
 
 /**
@@ -668,59 +663,23 @@ function os_search_solr_explode_nids($string) {
   return $nids;
 }
 
-/**
- * Menu callback; Return JSON output for the the autocomplete field.
- */
-function os_search_solr_vsites_autocomplete($string = '') {
-  // The string is a list of up to 10 chars of a node title in quotation, and
-  // a node id in brackets. e.g. - "title one" (42), "long ti..." (44).
-  $nids = os_search_solr_explode_nids($string);
-
-  // Search is done just for the last section.
-  $csv = str_getcsv($string);
-  $last_string = trim(array_pop($csv));
-
-  if (strlen($last_string) < 3) {
-    // Don't search for short input.
-    drupal_json_output();
-    return;
-  }
-
-  // Prefix is needed in the key to keep former selection.
-  if ($csv) {
-    $prefix = implode(', ', $csv) . ", ";
-  }
-  else {
-    $prefix = '';
-  }
-
+function os_search_solr_vsites() {
   // Query for VSites.
   $query = new EntityFieldQuery();
-  $query
+  $result = $query
     ->entityCondition('entity_type', 'node')
     ->entityCondition('bundle', array('department', 'personal', 'project'), 'IN')
-    ->propertyCondition('title', '%' . $last_string . '%', 'LIKE')
     ->propertyCondition('status', NODE_PUBLISHED)
-    ->propertyOrderBy('title', 'ASC');
-
-  // Exclude already selected nodes.
-  if ($nids) {
-    $query->propertyCondition('nid', $nids, 'NOT IN');
-  }
-  $result = $query->execute();
-
-  if (empty($result['node'])) {
-    drupal_json_output();
-    return;
-  }
+    ->propertyOrderBy('title', 'ASC')
+    ->execute();
 
   $options = array();
   foreach (node_load_multiple(array_keys($result['node'])) as $nid => $node) {
     $value = $node->title . '(' . $nid . ')';
-    $options[$prefix . $value] = $value;
+    $options[$nid] = $value;
   }
 
-  drupal_json_output($options);
+  return $options;
 }
 
 /**
