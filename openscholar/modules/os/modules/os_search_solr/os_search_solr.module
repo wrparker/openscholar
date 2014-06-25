@@ -636,6 +636,8 @@ function os_search_solr_settings_form_submit($form, &$form_state) {
     variable_set('os_search_solr_search_sites', $nids);
   }
 
+  variable_set('os_search_solr_include_subsites', $form_state['values']['search_subsites']);
+
   // Dismiss modal.
   $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
 
