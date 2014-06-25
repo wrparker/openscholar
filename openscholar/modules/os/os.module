@@ -1654,18 +1654,20 @@ function os_js_alter(&$javascript) {
       $javascript[$file] = drupal_js_defaults($file);
     }
 
-    $javascript[$url]['scope'] = 'footer';
-    if ($url === 'settings') {
-      $inline_settings = array(
-        'type' => 'inline',
-        'scope' => 'footer',
-        'data' => 'jQuery.extend(Drupal.settings, '. drupal_json_encode(drupal_array_merge_deep_array($js['data'])) . ");",
-        'group' => JS_LIBRARY,
-        'every_page' => TRUE,
-        'weight' => 0,
-      ) + drupal_js_defaults();
-      $javascript['inline_settings'] = $inline_settings;
-      unset($javascript['settings']);
+    if (variable_get('os_footer_js', TRUE)) {
+      $javascript[$url]['scope'] = 'footer';
+      if ($url === 'settings') {
+        $inline_settings = array(
+          'type' => 'inline',
+          'scope' => 'footer',
+          'data' => 'jQuery.extend(Drupal.settings, '. drupal_json_encode(drupal_array_merge_deep_array($js['data'])) . ");",
+          'group' => JS_LIBRARY,
+          'every_page' => TRUE,
+          'weight' => 0,
+        ) + drupal_js_defaults();
+        $javascript['inline_settings'] = $inline_settings;
+        unset($javascript['settings']);
+      }
     }
   }
 }
