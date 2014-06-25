@@ -678,7 +678,7 @@ function os_search_solr_vsites() {
     ->propertyOrderBy('title', 'ASC');
 
   if ($vsite = vsite_get_vsite()) {
-    $query->propertyCondition('nid', array($vsite->id), 'NOT IN');
+    $query->propertyCondition('nid', $vsite->id, '<>');
   }
   $result = $query->execute();
 
