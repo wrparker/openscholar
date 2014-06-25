@@ -631,12 +631,12 @@ function os_search_solr_settings_form_submit($form, &$form_state) {
   $nids = os_search_solr_explode_nids($form_state['values']['search_sites']);
   if ($vsite = vsite_get_vsite()) {
     $vsite->controllers->variable->set('os_search_solr_search_sites', $nids);
+    $vsite->controllers->variable->set('os_search_solr_include_subsites', $form_state['values']['search_subsites']);
   }
   else {
     variable_set('os_search_solr_search_sites', $nids);
+    variable_set('os_search_solr_include_subsites', $form_state['values']['search_subsites']);
   }
-
-  variable_set('os_search_solr_include_subsites', $form_state['values']['search_subsites']);
 
   // Dismiss modal.
   $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
