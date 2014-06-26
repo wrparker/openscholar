@@ -335,6 +335,9 @@ function cp_toolbar_fill_drawer() {
     }
   }
 
+  // Sort alphabetically by title.
+  usort($links, '_cp_toolbar_sort_by_title');
+
   $drawer['content-drawer']['import'] = array(
     '#theme' => 'links',
     '#links' => $links,
@@ -442,6 +445,14 @@ function cp_toolbar_fill_drawer() {
   $drawer['toolbar_drawer_classes'] = implode(' ', $toolbar_drawer_classes);
 
   return $drawer;
+}
+
+/**
+ * Helper function; Compares two link titles.
+ */
+function _cp_toolbar_sort_by_title($link_a, $link_b)
+{
+  return strnatcmp($link_a['title'], $link_b['title']);
 }
 
 function theme_cp_toolbar_drawer_section($vars) {
