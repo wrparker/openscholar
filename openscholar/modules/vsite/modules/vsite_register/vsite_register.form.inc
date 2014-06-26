@@ -381,7 +381,7 @@ function vsite_register_form_submit(&$form, &$state) {
   // Check for a present queued og_tasks batch.
   $batch =& batch_get();
   if ($vsite && $batch) {
-    //Run all the batch commands right now.
+    // Run all the batch commands right now.
     $batch['progressive'] = FALSE;
 		batch_process();
   }

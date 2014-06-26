@@ -1019,7 +1019,6 @@ text-decoration:none;
 	width: 450px;
 }
 
-<<<<<<< HEAD
 .view-cp-content .form-item-vocab {
   float: left; /* LTR */
   margin-right: 20px; /* LTR */
@@ -1032,9 +1031,6 @@ text-decoration:none;
 .view-cp-content #edit-vocab {
   padding: 5px;
 }
-=======
-
->>>>>>> cb43036... #6101: Use spritesheet for fieldset arrows.
 
 /** Message icon overrides */
 div.status,
@@ -1078,6 +1074,10 @@ div.error:before {
 #toolbar a.toggle {
   background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
   background-position: 0px -859px;
+}
+
+.form-item-create-as-subsite {
+  margin-bottom: 35px;
 }
 
 #toolbar a.toggle-active {

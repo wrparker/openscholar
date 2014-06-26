@@ -1953,4 +1953,18 @@ class FeatureContext extends DrupalContext {
     );
   }
 
+  /**
+   * @given /^I verify that the profile "([^"]*)" has a child site named "([^"]*)"$/
+   */
+  public function iVerifyTheProfileHasChildSite($profile_title, $child_site_title) {
+    $child_site_nid = $this->invoke_code('os_migrate_demo_get_entity_id', array("'node'", "'$child_site_title'", "FALSE", "'personal'"));
+    $child_site_from_profile = $this->invoke_code('os_migrate_demo_get_child_site_nid', array("'$profile_title'"));
+
+    if (!$child_site_from_profile) {
+      throw new Exception(sprintf('The profile %s has no child site.', $profile_title));
+    }
+    elseif ($child_site_from_profile != $child_site_nid) {
+      throw new Exception(sprintf('The child site of the profile "%s" is not the site "%s".', $profile_title, $child_site_title));
+    }
+  }
 }
