@@ -67,15 +67,25 @@ function os_classes_feeds_importer_default() {
             'target' => 'field_offered_year:start',
             'unique' => FALSE,
           ),
-          6 => array(
+          5 => array(
             'source' => 'Semester',
             'target' => 'field_semester',
             'unique' => FALSE,
           ),
-          7 => array(
+          6 => array(
             'source' => 'Files',
             'target' => 'file',
             'unique' => FALSE,
+          ),
+          7 => array(
+            'source' => 'Created date',
+            'target' => 'created',
+            'unique' => FALSE,
+          ),
+          8 => array(
+            'source' => 'Path',
+            'target' => 'path_alias',
+            'pathauto_override' => 1,
           ),
         ),
         'update_existing' => '0',

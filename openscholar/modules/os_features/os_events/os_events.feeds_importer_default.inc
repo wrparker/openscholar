@@ -60,20 +60,30 @@ function os_events_feeds_importer_default() {
             'target' => 'field_date:end',
             'unique' => FALSE,
           ),
-          5 => array(
+          4 => array(
             'source' => 'Location',
             'target' => 'field_event_location',
             'unique' => FALSE,
           ),
-          6 => array(
+          5 => array(
             'source' => 'Registration',
             'target' => 'registration',
             'unique' => FALSE,
           ),
-          7 => array(
+          6 => array(
             'source' => 'Files',
             'target' => 'file',
             'unique' => FALSE,
+          ),
+          7 => array(
+            'source' => 'Created date',
+            'target' => 'created',
+            'unique' => FALSE,
+          ),
+          8 => array(
+            'source' => 'Path',
+            'target' => 'path_alias',
+            'pathauto_override' => 1,
           ),
         ),
         'update_existing' => '0',
