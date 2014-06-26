@@ -1045,6 +1045,38 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @When /^I search for "([^"]*)" in the site "([^"]*)"$/
+   */
+  public function iSearchForInSite($item, $site) {
+    return array(
+      new Step\When('I visit "' . $site . '"'),
+      new Step\When('I fill in "search_block_form" with "' . $item . '"'),
+      new Step\When('I press "Search"'),
+    );
+  }
+
+  /**
+   * @When /^I add to the search results the sites "([^"]*)"$/
+   */
+  public function iAddToSearchResultsSites($sites) {
+    $sites = explode(',', $sites);
+    $site_ids = array();
+    foreach ($sites as $site) {
+      $site_ids[] = $this->invoke_code('os_migrate_demo_get_node_id', array("'{$site}'"));
+    }
+    $site_ids = implode(',', $site_ids);
+    $this->invoke_code('os_migrate_demo_variable_set', array('os_search_solr_search_sites', 'array(' . $site_ids . ')'));
+  }
+
+  /**
+   * @When /^I add to the search results the site's subsites$/
+   */
+  public function iAddToSearchResultsSubsites() {
+    $function = 'os_migrate_demo_variable_set';
+    $this->invoke_code($function, array('os_search_solr_include_subsites', "TRUE"));
+  }
+
+  /**
    * @Then /^I verify the "([^"]*)" term link redirect to the original page$/
    */
   public function iVerifyTheTermLinkRedirectToTheOriginalPage($term) {

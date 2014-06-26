@@ -130,7 +130,7 @@ function os_search_solr_facetapi_default_facet_settings() {
   $facet->enabled = TRUE;
   $facet->settings = array(
     'weight' => 0,
-    'widget' => 'facetapi_links',
+    'widget' => 'os_search_solr_other_sites_links',
     'filters' => array(),
     'active_sorts' => array(
       'active' => 'active',
