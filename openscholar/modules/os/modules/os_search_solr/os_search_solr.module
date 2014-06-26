@@ -615,7 +615,6 @@ function os_search_solr_settings_form($form, $form_state) {
   $form['cancel'] = array(
     '#markup' => l(t('Cancel'), "#",  array('attributes' => array('class' => 'ctools-close-modal'))),
   );
-
   return $form;
 }
 
