@@ -1674,7 +1674,7 @@ function os_access_region($module, $delta) {
  * Implements hook_js_alter().
  *
  * Checks to see if the colorbox js has been loaded,
- * and loads a small script to fix an issue if its been found
+ * and loads a small script to fix an issue if its been found.
  */
 function os_js_alter(&$javascript) {
   // Do nothing to the javascript on install/update pages.
