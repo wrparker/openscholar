@@ -99,9 +99,14 @@ function os_profiles_feeds_importer_default() {
             'unique' => FALSE,
           ),
           12 => array(
-            'source' => 'Files',
-            'target' => 'file',
+            'source' => 'Created date',
+            'target' => 'created',
             'unique' => FALSE,
+          ),
+          13 => array(
+            'source' => 'Path',
+            'target' => 'path_alias',
+            'pathauto_override' => 1,
           ),
         ),
         'update_existing' => '0',
