@@ -117,10 +117,22 @@ function os_importer_os_add_new_links_alter(&$links) {
     return;
   }
 
+  if (count($current_app['importers']) > 1) {
+    $multiple_importers = TRUE;
+  }
+  else {
+    $multiple_importers = FALSE;
+  }
   foreach ($current_app['importers'] as $type => $importers) {
     if (os_importer_import_access($type) || os_importer_import_access($type, FALSE)) {
+      if ($multiple_importers) {
+        $title = t('Import @type', array('@type' => node_type_get_name($type)));
+      }
+      else {
+        $title = t('Import');
+      }
       $links['cp/os-importer-' . $type] = array(
-        'title' => t('Import'),
+        'title' => $title,
         'href' => 'cp/os-importer/' . $type,
       );
     }
