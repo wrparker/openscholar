@@ -2174,11 +2174,10 @@ function vsite_delete_request_form($form, &$form_state) {
   );
 
   $form['cancel'] = array(
-    '#markup' => l(t('Cancel'), "#",  array('attributes' => array('class' => 'ctools-close-modal'))),
+    '#markup' => l(t('Cancel'), 'user'),
   );
 
   $form['#submit'][] = 'vsite_delete_request_submit';
-  $form['#redirect'] = 'user';
 
   return $form;
 }
@@ -2406,6 +2405,8 @@ function vsite_delete_request_submit($form, &$form_state) {
 
   // Add new message.
   drupal_set_message(t('The delete request has been sent.'));
+
+  $form_state['redirect'] = 'user';
 }
 
 /**
