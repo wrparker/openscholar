@@ -592,7 +592,6 @@ function os_search_solr_settings_form($form, $form_state) {
     '#options' => os_search_solr_vsites(),
     '#default_value' => variable_get('os_search_solr_search_sites', array()),
     '#description' => t('Select additional sites to show search results from.'),
-    '#required' => TRUE,
     '#after_build' => array('os_select2_widget_after_build'),
     '#cardinality' => UNLIMITED_CARDINALITY,
     '#attached' => array(
@@ -1202,7 +1201,11 @@ function os_search_solr_more_like_this_bundles_element_validate($element, &$form
  */
 function os_search_solr_preprocess_page(&$variables) {
   $item = menu_get_item();
-  if ($item['path'] != 'search/site/%') {
+  $paths = array(
+    'search/site',
+    'search/site/%',
+  );
+  if (!in_array($item['path'], $paths)) {
     return;
   }
 
