@@ -1601,6 +1601,17 @@ function vsite_menu_alter(&$items){
 }
 
 /**
+ * Implements hook_admin_paths().
+ */
+function vsite_admin_paths() {
+  $paths = array(
+    'vsite/delete/*' => TRUE,
+  );
+
+  return $paths;
+}
+
+/**
  * Returns an array of all sites a user owns.
  */
 function vsite_load_user_sites($user_id) {
@@ -1636,6 +1647,7 @@ function vsite_load_user_sites($user_id) {
           'animation' => 'fadeIn',
         ),
       ));
+      $delete_link = '<a href="' . $site->get_absolute_url('vsite/delete/' . $node->nid) . '">delete site 2</a>';
     }
     $items[] = array(
       'data' => $delete_link,
@@ -2129,11 +2141,11 @@ function vsite_menu(){
   );
 
   // VSite delete modal.
-  $items['vsite/delete/%node/%ctools_js'] = array(
+  $items['vsite/delete/%node'] = array(
     'type' => MENU_CALLBACK,
     'title' => t('Delete website request'),
-    'page callback' => 'vsite_delete_request',
-    'page arguments' => array(2, 3),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('vsite_delete_request_form', 2, 3),
     'access callback' => 'vsite_delete_request_access',
     'access arguments' => array(2),
     'description' => t('Delete VSite'),
@@ -2143,48 +2155,9 @@ function vsite_menu(){
 }
 
 /**
- * Page callback; Sending VSite delete request.
- *
- * @param $node
- *   VSite node to delete.
- * @param $ajax
- *   Either AJAX or not.
- *
- * @return array|mixed
- *   Nothing in case of AJAX (print and exit), form otherwise.
- */
-function vsite_delete_request($node, $ajax) {
-
-  if (!$ajax) {
-    return drupal_get_form('vsite_vsite_delete_request_form');
-  }
-
-  ctools_include('modal');
-  ctools_include('ajax');
-  drupal_add_css(drupal_get_path('module', 'vsite') . '/css/vsite.css');
-
-  $form_state = array(
-    'title' => t('Delete website request'),
-    'ajax'  => TRUE,
-    'build_info' => array(
-      'args'  => array($node, $ajax),
-    ),
-  );
-
-  $commands = ctools_modal_form_wrapper('vsite_vsite_delete_request_form', $form_state);
-
-  if (!empty($form_state['ajax_commands'])) {
-    $commands = $form_state['ajax_commands'];
-  }
-
-  print ajax_render($commands);
-  drupal_exit;
-}
-
-/**
  * Delete request form.
  */
-function vsite_vsite_delete_request_form($form, &$form_state) {
+function vsite_delete_request_form($form, &$form_state) {
   $form = array();
 
   $form['message'] = array(
@@ -2204,7 +2177,9 @@ function vsite_vsite_delete_request_form($form, &$form_state) {
     '#markup' => l(t('Cancel'), "#",  array('attributes' => array('class' => 'ctools-close-modal'))),
   );
 
-  $form['#submit'][] = 'vsite_vsite_delete_request_submit';
+  $form['#submit'][] = 'vsite_delete_request_submit';
+  $form['#redirect'] = 'user';
+
   return $form;
 }
 
@@ -2410,12 +2385,11 @@ function vsite_contact_mail_owner_submit($form, &$form_state) {
 /**
  * Processes the site delete request form.
  */
-function vsite_vsite_delete_request_submit($form, &$form_state) {
+function vsite_delete_request_submit($form, &$form_state) {
   global $user, $language;
 
   // Just dismiss the modal in case of a cancellation.
   if ($form_state['clicked_button']['#value'] == 'Cancel') {
-    $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
     return;
   }
 
@@ -2430,18 +2404,8 @@ function vsite_vsite_delete_request_submit($form, &$form_state) {
   // Send the e-mail in the requested user language.
   drupal_mail('vsite', 'vsite_delete', $to, $language, $values, $user->mail);
 
-  // Dismiss modal.
-  $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
-
-  // Show message using AJAX.
   // Add new message.
   drupal_set_message(t('The delete request has been sent.'));
-
-  // Add status messages.
-  $form_state['ajax_commands'][] = ajax_command_before('#columns', theme('status_messages'));
-
-  // Clean messages.
-  drupal_get_messages();
 }
 
 /**
