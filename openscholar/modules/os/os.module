@@ -53,6 +53,14 @@ function os_menu() {
     'access arguments' => array('administer content'),
   );
 
+  $items['admin/config/openscholar/frontend'] = array(
+    'title' => 'OpenScholar Front End Settings',
+    'description' => 'Edit settings that affect general front end performance',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os_settings_frontend_form'),
+    'access arguments' => array('administer content'),
+  );
+
   $items['page_not_found'] = array(
     'type' => MENU_CALLBACK,
     'file' => 'os.pages.inc',
@@ -1058,6 +1066,37 @@ function os_settings_form($form_state) {
   );
 
   $form['#submit'][] = 'os_settings_form_submit';
+
+  return system_settings_form($form);
+}
+
+/**
+ * Change settings that affect the front-end performance of the site
+ */
+function os_settings_frontend_form($form_state) {
+  $form = array();
+
+  $form['os_files_static_domain'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Static Asset Domain'),
+    '#default_value' => variable_get('os_files_static_domain', ''),
+    '#description' => t('Static assets will be served from the base domain listed above. Ex. //static.example.com.<br>
+    This address must point to this install of OpenScholar. Leave blank to not use a separate domain for static assets.'),
+  );
+
+  $form['os_footer_js'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Move Javascript to bottom of page'),
+    '#default_value' => variable_get('os_footer_js', TRUE),
+    '#description' => t('Move all Javascript to the bottom of the page. Improves load times.')
+  );
+
+  $form['advagg_enabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable Minification'),
+    '#default_value' => variable_get('advagg_enabled', ADVAGG_ENABLED),
+    '#description' => t('Minifies javascript files to reduce filesize.')
+  );
 
   return system_settings_form($form);
 }
