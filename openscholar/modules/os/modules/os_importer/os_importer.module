@@ -651,7 +651,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       $field = str_replace(':', '__', $field);
 
       // Do not validate file fields.
-      if ($field == 'file') {
+      if ($field == 'file' || $field == 'path_alias') {
         continue;
       }
 
@@ -669,6 +669,9 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       }
       elseif (empty($value) && in_array($info['type'], array('integer', 'decimal'))) {
         $value = 0;
+      }
+      elseif ($field == 'created' && is_string($value)) {
+        $value = strtotime($value);
       }
 
       $wrapper->{$field}->set($value);
@@ -884,6 +887,9 @@ function os_importer_entity_property_info_alter(&$info) {
     foreach ($fields as $field => $label) {
       $info['node']['bundles'][$bundle]['properties'][$field] = $base + array(
         'label' => $label,
+      );
+      $info['node']['bundles'][$bundle]['properties']['created'] = $base + array(
+        'label' => t('Created'),
       );
     }
   }
