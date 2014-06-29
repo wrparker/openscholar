@@ -556,7 +556,7 @@ function os_search_solr_settings($ajax) {
   ctools_include('ajax');
 
   $form_state = array(
-    'title' => t('OS solr search'),
+    'title' => t('Search'),
     'ajax'  => TRUE,
     'build_info' => array(
       'args'  => array($ajax),
@@ -612,7 +612,7 @@ function os_search_solr_settings_form($form, $form_state) {
   );
 
   $form['cancel'] = array(
-    '#markup' => l(t('Cancel'), "#",  array('attributes' => array('class' => 'ctools-close-modal'))),
+    '#markup' => l(t('Cancel'), "#",  array('attributes' => array('class' => array('ctools-close-modal', 'os-close-search-settings')))),
   );
   return $form;
 }
@@ -681,7 +681,7 @@ function os_search_solr_vsites() {
 
   $options = array();
   foreach (node_load_multiple(array_keys($result['node'])) as $nid => $node) {
-    $value = $node->title . '(' . $nid . ')';
+    $value = $node->title;
     $options[$nid] = $value;
   }
 
@@ -1222,7 +1222,7 @@ function os_search_solr_preprocess_page(&$variables) {
       'modalSize' => array(
         'type' => 'fixed',
         'width' => 700,
-        'height' => 220,
+        'height' => 300,
         'addWidth' => 0,
         'addHeight' => 50,
         'contentRight' => 0,
