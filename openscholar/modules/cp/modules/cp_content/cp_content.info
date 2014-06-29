@@ -12,5 +12,4 @@ features[features_api][] = api:2
 features[views_view][] = cp_comments
 features[views_view][] = cp_content
 features[views_view][] = cp_files
-files[] = views/cp_content.views.inc
 files[] = views/handlers/cp_content_handler_field_referencing_nodes.inc
