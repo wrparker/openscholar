@@ -33,7 +33,6 @@ class sv_list_node_book  extends sv_list_plugin {
    * Alter the box's options form.
    */
   public function options_form($options, &$form) {
-    dpm($form);
     // Add a checkbox to include child pages in the results.
     $form['content']['include_child_pages'] = array(
       '#title' => t('Include child book pages'),
