@@ -25,7 +25,8 @@ function os_migrate_demo_boxes_plugins() {
       'path' => drupal_get_path('module', 'os_migrate_demo') . '/plugins/' . '/os_boxes_cache_test',
       'parent' => 'os_boxes_default',
     ),
-    'weight' => -4
+    'weight' => -4,
+    'factory' => FALSE,
   );
   return $info;
 }
