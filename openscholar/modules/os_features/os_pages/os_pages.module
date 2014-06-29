@@ -582,7 +582,9 @@ function _os_pages_show_portion($form, $form_state) {
   }
 
   foreach (element_children($form) as $c) {
-    if (in_array($form[$c]['#type'], array('hidden', 'value', 'token'))) continue;
+    if (!empty($form[$c]['#type']) && in_array($form[$c]['#type'], array('hidden', 'value', 'token'))) {
+      continue;
+    }
 
     if ($display_toggle XOR in_array($c, $toggle)) {
 
