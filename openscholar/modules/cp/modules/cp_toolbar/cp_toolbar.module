@@ -448,10 +448,9 @@ function cp_toolbar_fill_drawer() {
 }
 
 /**
- * Helper function; Compares two link titles.
+ * usort callback function for ordering the links in alphabetical order.
  */
-function _cp_toolbar_sort_by_title($link_a, $link_b)
-{
+function _cp_toolbar_sort_by_title($link_a, $link_b) {
   return strnatcmp($link_a['title'], $link_b['title']);
 }
 
