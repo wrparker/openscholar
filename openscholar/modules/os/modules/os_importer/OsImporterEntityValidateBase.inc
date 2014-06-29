@@ -28,6 +28,23 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
       }
     }
 
+    // Remove the required field which not being imported via the importer or
+    // taken care by the os_importer_entity_property_info_alter().
+    $field_names = array(
+      'field_news_date',
+      'registration',
+      'field_url',
+      'field_links_link',
+      'media_gallery_format',
+      'media_gallery_image_info_where',
+      'media_gallery_block_columns',
+      'media_gallery_block_rows',
+    );
+
+    foreach ($field_names as $field) {
+      unset($fields[$field]);
+    }
+
     return $fields;
   }
 
@@ -55,7 +72,8 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
    * the field is array with keys.
    */
   public function validatorUrlNotEmpty($field_name, $value) {
-    if (empty($value['url'])) {
+    $value = reset($value);
+    if (empty($value)) {
       $params = array(
         '@field_name' => $field_name,
       );

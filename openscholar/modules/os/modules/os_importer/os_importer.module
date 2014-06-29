@@ -627,7 +627,10 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       continue;
     }
 
-    $handler = entity_validator_get_validator_handler('node', $form_state['type']);
+    if (!$handler = entity_validator_get_validator_handler('node', $form_state['type'])) {
+      continue;
+    }
+
     $node = array(
       'type' => $form_state['type'],
     );
@@ -888,6 +891,7 @@ function os_importer_entity_property_info_alter(&$info) {
       $info['node']['bundles'][$bundle]['properties'][$field] = $base + array(
         'label' => $label,
       );
+
       $info['node']['bundles'][$bundle]['properties']['created'] = $base + array(
         'label' => t('Created'),
       );
