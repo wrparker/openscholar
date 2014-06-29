@@ -1625,30 +1625,8 @@ function vsite_load_user_sites($user_id) {
     $node = node_load($site->group->nid);
     $items = array();
     $items[] = l($node->title, $site->get_absolute_url());
-    if (node_access('delete', $node)) {
-      $delete_link = l(t('Delete site'), $site->get_absolute_url('node/' . $node->nid . '/delete'));
-    }
-    else {
-      $delete_link = vsite_delete_vsite_modal(array(
-        'text' => t('Delete site'),
-        'href' => $site->get_absolute_url('vsite/delete/' . $node->nid),
-        'class' => 'delete-link',
-        'modal_settings' => array(
-          'modalSize' => array(
-            'type' => 'fixed',
-            'width' => 700,
-            'height' => 220,
-            'addWidth' => 0,
-            'addHeight' => 0,
-            'contentRight' => 0,
-            'contentBottom' => 0,
-          ),
-          'modalOptions' => array('opacity' => .6),
-          'animation' => 'fadeIn',
-        ),
-      ));
-      $delete_link = '<a href="' . $site->get_absolute_url('vsite/delete/' . $node->nid) . '">delete site 2</a>';
-    }
+    $delete_url = (node_access('delete', $node)) ? 'node/' . $node->nid . '/delete' : 'vsite/delete/' . $node->nid;
+    $delete_link = l(t('Delete site'), $site->get_absolute_url($delete_url));
     $items[] = array(
       'data' => $delete_link,
       'class' => 'delete-link',
