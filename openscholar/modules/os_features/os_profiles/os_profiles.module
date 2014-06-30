@@ -1431,8 +1431,9 @@ function os_profiles_node_delete($node) {
   }
   else {
     $arguments['origin_deleted'] = TRUE;
-    $arguments['origin_url'] = url('node/' . $node->nid . '.json', array('absolute' => TRUE));
+    $arguments['origin_url'] = url(OS_PROFILE_JSON_PREFIX . $node->nid, array('absolute' => TRUE));
     foreach ($destinations as $destination) {
+      $destination .= '/';
       os_profiles_manage_synced_profiles($destination, $arguments);
     }
   }
