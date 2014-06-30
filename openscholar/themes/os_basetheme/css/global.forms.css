@@ -424,6 +424,22 @@ html.js #user-login-form li.openid-link,
   border-radius: 0;
   }
 
+.sitewide-front #search-block-form input.form-submit,
+.sitewide-front #search-block-form #edit-submit,
+.sitewide-front #search-form #edit-submit{
+  border: medium none;
+  font-size: 10px;
+  height: 43px;
+  width: 83px;
+  margin: 0 -100% 0 70% !important;
+  padding: 0 !important;
+  text-indent: 0 !important;
+  background: url('../images/scholarbase-sprite.png') no-repeat 0 -64px;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+
 #search-form fieldset.search-advanced {
   clear: left;
   }
