@@ -34,14 +34,14 @@ class sv_list_node_book  extends sv_list_plugin {
    */
   public function options_form($options, &$form) {
     // Add a checkbox to include child pages in the results.
-    $form['details']['include_child_pages'] = array(
+    $form['content']['include_child_pages'] = array(
       '#title' => t('Include child book pages'),
       '#type' => 'checkbox',
       '#default_value' => $options['include_child_pages'],
       '#states' => array(
         // Show this checkbox when the content type is "book page".
         'visible' => array(
-          ':input[name="os_sv_list_content_type"]' => array('value' => 'book'),
+          ':input[name="content_type"]' => array('value' => 'book'),
         ),
       ),
     );
