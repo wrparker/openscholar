@@ -612,7 +612,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $data = $origin->data;
 
     // Get the URL of the original node.
-    $url = str_replace(OS_PROFILE_JSON_PREFIX . $data['id'], '', $form_state['json_address']);
+    $url = str_replace('/' . OS_PROFILE_JSON_PREFIX . $data['id'], '', $form_state['json_address']);
 
     // Save the original address of the JSON.
     $values['original_url'] = $form_state['json_address'];
@@ -634,6 +634,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     // Get the URL of the original node.
     $vsite = vsite_get_vsite($wrapper->og_group_ref->get(0)->value()->nid);
     $url = $vsite->get_absolute_url();
+    $url = substr_replace($url, '', -1);
 
     // Get the original node's UUID if it exist. Else, generate it.
     $values['uuid'] = isset($wrapper->field_uuid) && $wrapper->field_uuid->value() ? $wrapper->field_uuid->value() : md5($form_state['autocomplete_nid']);
@@ -642,7 +643,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     _os_profiles_restful_request_alter($form_state['autocomplete_nid']);
 
     // Save the original address of the JSON.
-    $values['original_url'] = $url . OS_PROFILE_JSON_PREFIX . $form_state['autocomplete_nid'];
+    $values['original_url'] = $url . '/' . OS_PROFILE_JSON_PREFIX . $form_state['autocomplete_nid'];
 
     // Get the url of the file.
     $file = file_load($values['photo']['fid']);
@@ -956,13 +957,13 @@ function os_profiles_unlink_listeners() {
 function os_profiles_manage_synced_profiles($url, $values) {
   switch ($values['action']) {
     case 'insert_person':
-      $path = $url . 'cp/people/insert_profile';
+      $path = $url . '/cp/people/insert_profile';
       break;
     case 'update':
-      $path = $url . 'cp/people/update_profile';
+      $path = $url . '/cp/people/update_profile';
       break;
     case 'unlink':
-      $path = $url . 'cp/people/unlink_profile';
+      $path = $url . '/cp/people/unlink_profile';
       break;
     default:
       $path = NULL;
@@ -1420,7 +1421,7 @@ function os_profiles_node_delete($node) {
     // $destination address is in the form of:
     // http://www.example.com/vsite/api/v1/profiles/1 and we need just the
     // http://www.example.com/vsite part of that address.
-    $destination = preg_replace("/api\/v1\/profiles\/\d{1,}/", "", $destination);
+    $destination = preg_replace("/\/api\/v1\/profiles\/\d{1,}/", "", $destination);
     os_profiles_manage_synced_profiles($destination, $arguments);
   }
 
@@ -1435,7 +1436,6 @@ function os_profiles_node_delete($node) {
     $arguments['origin_deleted'] = TRUE;
     $arguments['origin_url'] = url(OS_PROFILE_JSON_PREFIX . $node->nid, array('absolute' => TRUE));
     foreach ($destinations as $destination) {
-      $destination .= '/';
       os_profiles_manage_synced_profiles($destination, $arguments);
     }
   }
