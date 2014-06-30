@@ -326,25 +326,35 @@ function os_profiles_field_display_node_alter(&$display, $context) {
  * Implements hook_field_access().
  */
 function os_profiles_field_access($op, $field, $entity_type, $entity, $account) {
-  if ($entity_type == 'node' && !empty($entity->type) && $entity->type == 'person') {
-    $fields = array(
-      'field_original_destination_url' => 'field_original_destination_url',
-      'field_destination_url' => 'field_destination_url',
-      'field_child_site' => 'field_child_site',
-    );
-
-    // When the node is listening to other node, hide the field we syncing.
-    $wrapper = entity_metadata_wrapper('node', $entity);
-    if ($wrapper->field_original_destination_url->value()) {
-      $fields = array_merge($fields, os_profiles_profiles_fields());
-    }
-
-    if (!empty($fields[$field['field_name']]) && in_array($fields[$field['field_name']], $fields) && $op == 'edit') {
-      return FALSE;
-    }
+  if ($op == 'edit') {
+    return;
   }
 
-  if (!empty($entity) && $field['field_name'] == 'field_url' && $entity_type == 'node' && $entity->type == 'person' && $op == 'edit') {
+  if ($entity_type != 'node' && !empty($entity->type) && $entity->type != 'person') {
+    return;
+  }
+
+  $fields = array(
+    'field_original_destination_url' => 'field_original_destination_url',
+    'field_destination_url' => 'field_destination_url',
+    'field_child_site' => 'field_child_site',
+    'original_url' => 'original_url',
+  );
+
+  // When the node is listening to other node, hide the field we syncing.
+  $wrapper = entity_metadata_wrapper('node', $entity);
+  if ($wrapper->field_original_destination_url->value()) {
+    $fields = array_merge($fields, os_profiles_profiles_fields());
+  }
+
+  $menu = menu_get_item();
+  $paths = array('node/%', 'node/%/edit');
+
+  if (in_array($menu['path'], $paths) && !empty($fields[$field['field_name']]) && in_array($fields[$field['field_name']], $fields)) {
+    return FALSE;
+  }
+
+  if (!empty($entity) && $field['field_name'] == 'field_url') {
     return user_access('bypass redirection', $account);
   }
 
