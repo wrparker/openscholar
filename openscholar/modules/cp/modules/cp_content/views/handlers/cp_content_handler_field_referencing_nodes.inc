@@ -10,7 +10,7 @@ class cp_content_handler_field_referencing_nodes extends views_handler_field {
   /**
    * Iterate over all values once, and get all the referencing nodes.
    */
-  function pre_render($values) {
+  function pre_render(&$values) {
     $fids = array();
     foreach ($values as $value) {
       $fids[] = $value->fid;
