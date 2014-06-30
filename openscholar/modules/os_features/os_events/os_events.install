@@ -108,4 +108,3 @@ function os_events_update_7006() {
 function os_events_update_7007() {
   variable_del('calendar_add_colorbox');
 }
-
