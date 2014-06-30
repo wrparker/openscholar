@@ -112,8 +112,8 @@ function cp_content_views_default_views_alter(&$views) {
 
   //Change the default CP Content view to display private files
   if (isset($views['cp_files']->display->display_options['filters']['schema_type']['schema_type'])) {
-    //Remove the schema filter all it currently does is exclude private.
-    unset($views['cp_files']->display->display_options['filters']['schema_type']);
+    // Add private files to the list.
+    $views['cp_files']->display->display_options['filters']['schema_type']['value']['private'] = 'private';
   }
 }
 
