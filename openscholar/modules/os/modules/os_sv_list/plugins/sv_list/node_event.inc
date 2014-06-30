@@ -29,7 +29,7 @@ class sv_list_node_event extends sv_list_plugin  {
    * upcoming events that haven't taken place yet.
    */
   public function sort_event($options, EntityFieldQuery $efq) {
-    $efq->fieldOrderBy('field_date', 'value', 'DESC');
+    $efq->fieldOrderBy('field_date', 'value', 'ASC');
     $efq->fieldCondition('field_date', 'value2', date('Y-m-d H:i:s'), '>=');
   }
 
@@ -47,7 +47,7 @@ class sv_list_node_event extends sv_list_plugin  {
     // Split repeated event into many nodes - one for each instance of event
     // key them by timestamp for easy sorting.
     $exploded = array();
-    $now = strtotime(date('Y-m-d H:i:s'));
+    $now = REQUEST_TIME;
     foreach ($entities as $entity) {
       foreach ($entity->field_date[LANGUAGE_NONE] as $delta => $date) {
         $time_index = strtotime($date['value']);
