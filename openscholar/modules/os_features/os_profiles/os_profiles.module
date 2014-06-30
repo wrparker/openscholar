@@ -610,7 +610,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $data = $origin->data;
 
     // Get the URL of the original node.
-    $url = str_replace('/node/' . $data['id'] . '.json', '', $form_state['json_address']);
+    $url = str_replace(OS_PROFILE_JSON_PREFIX . $data['id'], '', $form_state['json_address']);
 
     // Save the original address of the JSON.
     $values['original_url'] = $form_state['json_address'];
@@ -944,13 +944,13 @@ function os_profiles_unlink_listeners() {
 function os_profiles_manage_synced_profiles($url, $values) {
   switch ($values['action']) {
     case 'insert_person':
-      $path = $url . '/cp/people/insert_profile';
+      $path = $url . 'cp/people/insert_profile';
       break;
     case 'update':
-      $path = $url . '/cp/people/update_profile';
+      $path = $url . 'cp/people/update_profile';
       break;
     case 'unlink':
-      $path = $url . '/cp/people/unlink_profile';
+      $path = $url . 'cp/people/unlink_profile';
       break;
     default:
       $path = NULL;
