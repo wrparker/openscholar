@@ -853,12 +853,22 @@ function os_profiles_update_listeners($uuid = NULL) {
  */
 function os_profiles_unlink_listeners() {
   $query = new EntityFieldQuery();
-  $results = $query
+  $query
     ->entityCondition('entity_type', 'node')
     ->propertyCondition('type', 'person')
-    ->fieldCondition('field_uuid', 'value', $_GET['UUID'])
-    ->fieldCondition('field_original_destination_url', 'value', $_GET['origin_url'])
-    ->execute();
+    ->fieldCondition('field_uuid', 'value', $_GET['UUID']);
+
+  // If an origin node is deleted get the node with that value given in
+  // $_GET['origin_url']. Otherwise, search for the node with the destination
+  // that needs to be removed that is given in $_GET['remove_destination'].
+  if ($_GET['origin_deleted']) {
+    $query->fieldCondition('field_original_destination_url', 'value', $_GET['origin_url']);
+  }
+  else {
+    $query->fieldCondition('field_destination_url', 'value', $_GET['remove_destination']);
+  }
+
+  $results = $query->execute();
 
   if (!$results['node']) {
     return;
@@ -1408,7 +1418,7 @@ function os_profiles_node_delete($node) {
     // $destination address is in the form of:
     // http://www.example.com/vsite/api/v1/profiles/1 and we need just the
     // http://www.example.com/vsite part of that address.
-    $destination = preg_replace("/\/api\/v1\/profiles\/\d{1,}/", "", $destination);
+    $destination = preg_replace("/api\/v1\/profiles\/\d{1,}/", "", $destination);
     os_profiles_manage_synced_profiles($destination, $arguments);
   }
 
