@@ -850,12 +850,22 @@ function os_profiles_update_listeners($uuid = NULL) {
  */
 function os_profiles_unlink_listeners() {
   $query = new EntityFieldQuery();
-  $results = $query
+  $query
     ->entityCondition('entity_type', 'node')
     ->propertyCondition('type', 'person')
-    ->fieldCondition('field_uuid', 'value', $_GET['UUID'])
-    ->fieldCondition('field_original_destination_url', 'value', $_GET['origin_url'])
-    ->execute();
+    ->fieldCondition('field_uuid', 'value', $_GET['UUID']);
+
+  // If an origin node is deleted get the node with the value given in
+  // $_GET['origin_url']. Otherwise, search for the node with the destination
+  // that needs to be removed that is given in $_GET['remove_destination'].
+  if ($_GET['origin_deleted']) {
+    $query->fieldCondition('field_original_destination_url', 'value', $_GET['origin_url']);
+  }
+  else {
+    $query->fieldCondition('field_destination_url', 'value', $_GET['remove_destination']);
+  }
+
+  $results = $query->execute();
 
   if (!$results['node']) {
     return;
