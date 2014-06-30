@@ -23,16 +23,9 @@ body {
 }
 
 #columns a.node-readmore:after {
-  position: absolute;
-  content: '';
-  background-image: url("../../hwpi_basetheme/images/hwpi_basesprite.png");
-  background-position: 0 -575px;
-  height: 9px;
-  width: 6px;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  right: 0px;
+ background: url("../../hwpi_basetheme/images/hwpi_basesprite.png") no-repeat 3px -572px;
+padding-right: 11px;
+content: '';
 }
 
 
