@@ -73,9 +73,30 @@ class OsProfilesResource extends RestfulEntityBaseNode {
 
     $public_fields['author'] = array(
       'property' => 'author',
+      'sub_property' => 'uid',
     );
 
     return $public_fields;
+  }
+
+  /**
+   * Overrides RestfulEntityBase::viewEntity().
+   */
+  public function viewEntity($entity_id, $request, stdClass $account) {
+    $values = parent::viewEntity($entity_id, $request, $account);
+
+    $wrapper = entity_metadata_wrapper('node', $entity_id);
+
+    if (isset($wrapper->field_uuid) && !$wrapper->field_uuid->value()) {
+      // No UUID in the UUID field. Set it.
+      $wrapper->field_uuid->set(md5($entity_id));
+      $wrapper->save();
+    }
+
+    // Add the UUID field to the returned values.
+    $values['uuid'] = $wrapper->field_uuid->value();
+
+    return $values;
   }
 
   /**

@@ -326,6 +326,8 @@ function os_profiles_field_display_node_alter(&$display, $context) {
  * Implements hook_field_access().
  */
 function os_profiles_field_access($op, $field, $entity_type, $entity, $account) {
+  // @todo: control access of these fields when altering the node form instead.
+  return TRUE;
   if ($entity_type == 'node' && !empty($entity->type) && $entity->type == 'person') {
     $fields = array('field_uuid', 'field_original_destination_url', 'field_destination_url');
 
@@ -608,12 +610,13 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $data = $origin->data;
 
     // Get the URL of the original node.
+    $url = str_replace('/node/' . $data['id'] . '.json', '', $form_state['json_address']);
 
     // Save the original address of the JSON.
     $values['original_url'] = $form_state['json_address'];
 
     // Get the url of the file.
-    $file_url = $data['photo']['url'];
+    $file_url = $data['photo']['url'] ? $data['photo']['url'] : '';
 
     $photo_dimension = $data['photo'];
   }
@@ -639,23 +642,23 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     // Save the original address of the JSON.
     $values['original_url'] = $url . OS_PROFILE_JSON_PREFIX . $form_state['autocomplete_nid'];
 
-    // Set the file JSON url.
-    $file = file_load($values['field_person_photo']['fid']);
-    $file_url = file_create_url($file->uri);
+    // Get the url of the file.
+    $file = file_load($values['photo']['fid']);
+    $file_url = $file ? file_create_url($file->uri) : '';
 
     $photo_dimension = $wrapper->person_photo_dimension->value();
   }
 
   // Retrieve the file from the original node.
   $file = NULL;
-  if (!empty($file_json_url)) {
+  if (!empty($file_url)) {
     $copy_file = os_copy_file($file_url, TRUE);
 
     if ($copy_file['type'] == 'file') {
       $file = $copy_file['file'];
     }
 
-    unset($values['field_person_photo']);
+    unset($values['photo']);
   }
 
   // Set up default values.
@@ -959,20 +962,6 @@ function os_profiles_manage_synced_profiles($url, $values) {
   if ($path) {
     drupal_http_request(url($path, array('query' => $values)));
   }
-}
-
-/**
- * Implements hook_restws_request_alter().
- *
- * Setting the person node UUID when accessing the node via JSON and the UUID
- * field is not populate.
- */
-function os_profiles_restws_request_alter(&$request) {
-  if ($request['resource']->resource() != 'node') {
-    return;
-  }
-
-  _os_profiles_restws_request_alter($request['id']);
 }
 
 /**
