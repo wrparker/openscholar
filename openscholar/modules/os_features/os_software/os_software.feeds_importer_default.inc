@@ -71,6 +71,7 @@ function os_software_feeds_importer_default() {
             'source' => 'Path',
             'target' => 'path_alias',
             'pathauto_override' => 1,
+            'unique' => FALSE,
           ),
         ),
         'update_existing' => '0',
