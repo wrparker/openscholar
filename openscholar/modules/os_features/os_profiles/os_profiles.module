@@ -1405,10 +1405,10 @@ function os_profiles_node_delete($node) {
     // The destination to be removed.
     $arguments['remove_destination'] = $base_url;
 
-    // $destination is the JSON address that is,
-    // http://www.example.com/vsite/node/1.json and we need just the
+    // $destination address is in the form of:
+    // http://www.example.com/vsite/api/v1/profiles/1 and we need just the
     // http://www.example.com/vsite part of that address.
-    $destination = preg_replace("/\/node\/\d{1,}\.json/", "", $destination);
+    $destination = preg_replace("/\/api\/v1\/profiles\/\d{1,}/", "", $destination);
     os_profiles_manage_synced_profiles($destination, $arguments);
   }
 
