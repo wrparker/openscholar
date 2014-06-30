@@ -12,3 +12,4 @@ features[ctools][] = facetapi:facetapi_defaults:1
 features[features_api][] = api:2
 
 files[] = plugins/facetapi/os_adapter.inc
+files[] = plugins/facetapi/os_search_solr_other_sites_links.inc

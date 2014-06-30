@@ -6,3 +6,10 @@
 function cp_content_update_7000() {
   features_revert(array('cp_content' => array('views')));
 }
+
+/**
+ * Reverts cp_content view to hide temporary files from the list of files view.
+ */
+function cp_content_update_7001() {
+  features_revert(array('cp_content' => array('views')));
+}

@@ -51,3 +51,11 @@ function os_profiles_update_7004() {
   features_revert(array('os_profiles' => array('field_base', 'field_instance', 'feeds_tamper')));
 }
 
+
+/**
+ * Adding child site reference.
+ */
+function os_profiles_update_7005() {
+  features_revert(array('os_profiles' => array('field_base', 'field_instance')));
+}
+

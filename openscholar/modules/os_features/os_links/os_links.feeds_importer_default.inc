@@ -62,6 +62,17 @@ function os_links_feeds_importer_default() {
             'target' => 'file',
             'unique' => FALSE,
           ),
+          4 => array(
+            'source' => 'Created date',
+            'target' => 'created',
+            'unique' => FALSE,
+          ),
+          5 => array(
+            'source' => 'Path',
+            'target' => 'path_alias',
+            'pathauto_override' => 1,
+            'unique' => FALSE,
+          ),
         ),
         'update_existing' => '0',
         'input_format' => 'filtered_html',

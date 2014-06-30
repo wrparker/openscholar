@@ -348,6 +348,18 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I create a sub page named "([^"]*)" under the page "([^"]*)"$/
+   */
+  public function iCreateSubPageUnderPage($child_title, $parent_title) {
+    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'$parent_title'"));
+    return array(
+      new Step\When('I visit "john/node/add/page?parent_node=' . $nid . '&destination=node/' . $nid . '"'),
+      new Step\When('I fill in "Title" with "' . $child_title . '"'),
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
    * @When /^I create a new "([^"]*)" entry with the name "([^"]*)" in the group "([^"]*)"$/
    */
   public function iCreateANewEntryWithTheNameInGroup($type, $name, $group) {
@@ -469,6 +481,13 @@ class FeatureContext extends DrupalContext {
    */
   public function iAssignTheNodeToTheTerm($node, $term) {
     $this->invoke_code('os_migrate_demo_assign_node_to_term', array("'$node'","'$term'"));
+  }
+
+  /**
+   * @When /^I assign the page "([^"]*)" to the term "([^"]*)"$/
+   */
+  public function iAssignThePageToTheTerm($node, $term) {
+    $this->invoke_code('os_migrate_demo_assign_node_to_term', array("'$node'", "'$term'", 'page'));
   }
 
   /**
@@ -1042,6 +1061,38 @@ class FeatureContext extends DrupalContext {
       new Step\When('I fill in "search_block_form" with "'. $item . '"'),
       new Step\When('I press "Search"'),
     );
+  }
+
+  /**
+   * @When /^I search for "([^"]*)" in the site "([^"]*)"$/
+   */
+  public function iSearchForInSite($item, $site) {
+    return array(
+      new Step\When('I visit "' . $site . '"'),
+      new Step\When('I fill in "search_block_form" with "' . $item . '"'),
+      new Step\When('I press "Search"'),
+    );
+  }
+
+  /**
+   * @When /^I add to the search results the sites "([^"]*)"$/
+   */
+  public function iAddToSearchResultsSites($sites) {
+    $sites = explode(',', $sites);
+    $site_ids = array();
+    foreach ($sites as $site) {
+      $site_ids[] = $this->invoke_code('os_migrate_demo_get_node_id', array("'{$site}'"));
+    }
+    $site_ids = implode(',', $site_ids);
+    $this->invoke_code('os_migrate_demo_variable_set', array('os_search_solr_search_sites', 'array(' . $site_ids . ')'));
+  }
+
+  /**
+   * @When /^I add to the search results the site's subsites$/
+   */
+  public function iAddToSearchResultsSubsites() {
+    $function = 'os_migrate_demo_variable_set';
+    $this->invoke_code($function, array('os_search_solr_include_subsites', "TRUE"));
   }
 
   /**
@@ -1921,4 +1972,18 @@ class FeatureContext extends DrupalContext {
     );
   }
 
+  /**
+   * @given /^I verify that the profile "([^"]*)" has a child site named "([^"]*)"$/
+   */
+  public function iVerifyTheProfileHasChildSite($profile_title, $child_site_title) {
+    $child_site_nid = $this->invoke_code('os_migrate_demo_get_entity_id', array("'node'", "'$child_site_title'", "FALSE", "'personal'"));
+    $child_site_from_profile = $this->invoke_code('os_migrate_demo_get_child_site_nid', array("'$profile_title'"));
+
+    if (!$child_site_from_profile) {
+      throw new Exception(sprintf('The profile %s has no child site.', $profile_title));
+    }
+    elseif ($child_site_from_profile != $child_site_nid) {
+      throw new Exception(sprintf('The child site of the profile "%s" is not the site "%s".', $profile_title, $child_site_title));
+    }
+  }
 }

@@ -43,7 +43,7 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
     $value = reset($value);
 
     $values = array('true', 'false', 'on', 'off');
-    if (!in_array($value, $values)) {
+    if (!in_array(strtolower($value), $values)) {
       $params = array(
         '@value' => $value,
         '@values' => implode(", ", $values),
