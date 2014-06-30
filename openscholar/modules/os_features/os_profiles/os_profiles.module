@@ -116,7 +116,7 @@ function os_profiles_init() {
 
     // The field person is an array. Remove him for the update method but keep
     // it for later.
-    $person_photo = $data->values['field_person_photo'];
+    $person_photo = !empty($data->values['field_person_photo']) ? $data->values['field_person_photo'] : '';
     unset($data->values['field_person_photo']);
     try {
       $handler->update($node->nid, $data->values);
@@ -326,14 +326,23 @@ function os_profiles_field_display_node_alter(&$display, $context) {
  * Implements hook_field_access().
  */
 function os_profiles_field_access($op, $field, $entity_type, $entity, $account) {
-  if ($op == 'edit') {
+  if ($entity_type == 'node' && !empty($entity->type) && $entity->type == 'person' && $op == 'edit') {
     return;
   }
 
-  if ($entity_type != 'node' && !empty($entity->type) && $entity->type != 'person') {
-    return;
+  if (!empty($entity) && $field['field_name'] == 'field_url') {
+    return user_access('bypass redirection', $account);
   }
 
+  return TRUE;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Hide fields for a listener node.
+ */
+function os_profiles_form_person_node_form_alter(&$form, $form_state) {
   $fields = array(
     'field_original_destination_url' => 'field_original_destination_url',
     'field_destination_url' => 'field_destination_url',
@@ -342,23 +351,16 @@ function os_profiles_field_access($op, $field, $entity_type, $entity, $account) 
   );
 
   // When the node is listening to other node, hide the field we syncing.
-  $wrapper = entity_metadata_wrapper('node', $entity);
+  $wrapper = entity_metadata_wrapper('node', $form['#entity']);
   if ($wrapper->field_original_destination_url->value()) {
     $fields = array_merge($fields, os_profiles_profiles_fields());
   }
 
-  $menu = menu_get_item();
-  $paths = array('node/%', 'node/%/edit');
-
-  if (in_array($menu['path'], $paths) && !empty($fields[$field['field_name']]) && in_array($fields[$field['field_name']], $fields)) {
-    return FALSE;
+  foreach ($form as $element => &$info) {
+    if (!empty($fields[$element]) && in_array($fields[$element], $fields)) {
+      $info['#access'] = FALSE;
+    }
   }
-
-  if (!empty($entity) && $field['field_name'] == 'field_url') {
-    return user_access('bypass redirection', $account);
-  }
-
-  return TRUE;
 }
 
 /**
