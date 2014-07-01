@@ -105,7 +105,7 @@ function os_profiles_init() {
   $nids = array_keys($result['node']);
   $nodes = node_load_multiple($nids);
   $fields = os_profiles_profiles_fields();
-  $handler = restws_resource_controller('node');
+  $handler = restful_get_restful_handler('profiles');
 
   foreach ($nodes as $node) {
     if (empty($node->field_original_destination_url)) {
@@ -116,17 +116,17 @@ function os_profiles_init() {
 
     // The field person is an array. Remove him for the update method but keep
     // it for later.
-    $person_photo = !empty($data->values['field_person_photo']) ? $data->values['field_person_photo'] : '';
-    unset($data->values['field_person_photo']);
+    $person_photo = !empty($data->values['photo']) ? $data->values['photo'] : '';
+    unset($data->values['photo']);
     try {
-      $handler->update($node->nid, $data->values);
+      $handler->patch($node->nid, $data->values);
     }
     catch (RestWSException $e) {
       // TODO: watchdog message
       return;
     }
 
-    // We need to replace the field ID in the field with the new file ID we got.
+    // We need to replace the file ID in the field with the new file ID we got.
     $file = NULL;
     if ($person_photo) {
       $file_info = os_profiles_get_origin_node_values($person_photo['file']['uri'] . '.json', array('url'));
