@@ -530,12 +530,12 @@ function os_search_solr_mark_entity_by_bundles($vsite_id, $bundles = array(), $l
 function os_search_solr_menu() {
   $items = array();
 
-  // VSite delete modal.
-  $items['vsite/os-apache-solr-settings/%ctools_js'] = array(
+  // VSite search settings.
+  $items['vsite/os-apache-solr-settings'] = array(
     'type' => MENU_CALLBACK,
     'title' => t('Set apache solr settings'),
-    'page arguments' => array(2),
-    'page callback' => 'os_search_solr_settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os_search_solr_settings_form'),
     'access callback' => 'spaces_access_admin',
     'description' => t('Set search settings for apache solr.'),
   );
@@ -544,33 +544,13 @@ function os_search_solr_menu() {
 }
 
 /**
- * Menu callback; Modal window for set OS apache solr search.
+ * Implements hook_admin_paths().
  */
-function os_search_solr_settings($ajax) {
-
-  if (!$ajax) {
-    return drupal_get_form('os_search_solr_settings_form');
-  }
-
-  ctools_include('modal');
-  ctools_include('ajax');
-
-  $form_state = array(
-    'title' => t('Search'),
-    'ajax'  => TRUE,
-    'build_info' => array(
-      'args'  => array($ajax),
-    ),
+function os_search_solr_admin_paths() {
+  $paths = array(
+    'vsite/os-apache-solr-settings' => TRUE,
   );
-
-  $commands = ctools_modal_form_wrapper('os_search_solr_settings_form', $form_state);
-
-  if (!empty($form_state['ajax_commands'])) {
-    $commands = $form_state['ajax_commands'];
-  }
-
-  print ajax_render($commands);
-  drupal_exit();
+  return $paths;
 }
 
 /**
@@ -593,7 +573,7 @@ function os_search_solr_settings_form($form, $form_state) {
     '#default_value' => variable_get('os_search_solr_search_sites', array()),
     '#description' => t('Select additional sites to show search results from.'),
     '#after_build' => array('os_select2_widget_after_build'),
-    '#cardinality' => UNLIMITED_CARDINALITY,
+    '#cardinality' => FIELD_CARDINALITY_UNLIMITED,
     '#attached' => array(
       'css' => array(
         libraries_get_path('select2') . '/select2.css',
@@ -612,7 +592,7 @@ function os_search_solr_settings_form($form, $form_state) {
   );
 
   $form['cancel'] = array(
-    '#markup' => l(t('Cancel'), "#",  array('attributes' => array('class' => array('ctools-close-modal', 'os-close-search-settings')))),
+    '#markup' => l(t('Cancel'), $_GET['destination'],  array('attributes' => array('class' => 'os-close-search-settings'))),
   );
   return $form;
 }
@@ -621,50 +601,19 @@ function os_search_solr_settings_form($form, $form_state) {
  * Submit handler; For os_search_solr_settings_form.
  */
 function os_search_solr_settings_form_submit($form, &$form_state) {
-
-  // Dismiss the modal in case of a cancellation.
-  if ($form_state['clicked_button']['#value'] == 'Cancel') {
-    $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
-    return;
-  }
   if ($vsite = vsite_get_vsite()) {
     $vsite->controllers->variable->set('os_search_solr_search_sites', $form_state['values']['search_sites']);
     $vsite->controllers->variable->set('os_search_solr_include_subsites', $form_state['values']['search_subsites']);
   }
   else {
-    variable_set('os_search_solr_search_sites', $nids);
+    variable_set('os_search_solr_search_sites', $form_state['values']['search_sites']);
     variable_set('os_search_solr_include_subsites', $form_state['values']['search_subsites']);
   }
-
-  // Dismiss modal.
-  $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
 }
 
 /**
- * Return array of nids take from brackets in the string.
- *
- * @param $string
- *  Input string.
- *
- * @return array
- *  Array of nids.
+ * Return list of VSites for the "other websites" form element.
  */
-function os_search_solr_explode_nids($string) {
-  $nids = array();
-
-  // Match values in brackets.
-  preg_match_all('/\(([A-Za-z0-9 ]+?)\)/', $string, $matches);
-  $typed_nids = array_unique($matches[1]);
-
-  // Grab only integer values.
-  foreach ($typed_nids as $nid) {
-    if (is_numeric($nid) && intval($nid) > 0) {
-      $nids[] = $nid;
-    }
-  }
-  return $nids;
-}
-
 function os_search_solr_vsites() {
   // Query for VSites.
   $query = new EntityFieldQuery();
@@ -1209,34 +1158,10 @@ function os_search_solr_preprocess_page(&$variables) {
     return;
   }
 
-  // Include the CTools tools that we need.
-  ctools_include('ajax');
-  ctools_include('modal');
-  ctools_modal_add_js();
-
-  // Ctools modal settings.
-  $modal_settings = array(
-    'settings-link' => array(
-      'modalOptions' => array('opacity' => .6),
-      'animation' => 'fadeIn',
-      'modalSize' => array(
-        'type' => 'fixed',
-        'width' => 700,
-        'height' => 300,
-        'addWidth' => 0,
-        'addHeight' => 50,
-        'contentRight' => 0,
-        'contentBottom' => 10,
-      ),
-    ),
-  );
-
-  drupal_add_js($modal_settings, 'setting');
-  drupal_add_library('system', 'drupal.ajax');
   $variables['title_suffix']['controls']['section_links']['#links']['settings'] = array(
     'title' => t('Search settings'),
-    'href' => 'vsite/os-apache-solr-settings/nojs',
-    'attributes' => array('class' => array('use-ajax', 'ctools-modal-settings-link'), 'title' => ''),
+    'href' => 'vsite/os-apache-solr-settings',
+    'query' => drupal_get_destination(),
   );
 }
 

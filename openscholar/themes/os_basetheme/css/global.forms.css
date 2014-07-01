@@ -576,17 +576,3 @@ div.ctools-modal-content #os-mailchimp-form .form-item label {
     float: none;
  
 }
-
-div.ctools-modal-content .form-item-search-sites {
-  position: absolute;
-}
-
-#os-search-solr-settings-form input.form-submit {
-  position: relative;
-  top: 180px;
-}
-
-#os-search-solr-settings-form .os-close-search-settings {
-  position: relative;
-  top: 180px;
-}
