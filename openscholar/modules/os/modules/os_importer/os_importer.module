@@ -761,6 +761,12 @@ function os_importer_feeds_presave(FeedsSource $source, $entity, $item) {
     }
   }
 
+  // If the item we import didn't have a year value, clear the default value
+  // given by the date module from the entity.
+  if ($entity->type == "class" && empty($item['year'])) {
+    $entity->field_offered_year = array();
+  }
+
   _os_importer_import_vocab($source, $entity, $item, $id);
   _os_importer_import_behalf_of_user($source, $entity, $item, $id);
 }

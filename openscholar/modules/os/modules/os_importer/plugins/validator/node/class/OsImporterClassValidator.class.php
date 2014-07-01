@@ -47,6 +47,11 @@ class OsImporterClassValidator extends OsImporterEntityValidateBase {
    * Preprocess the offered year and preprocess the form on the way.
    */
   function validateOfferedYear($field_name, $value) {
+    // Allow empty value for the year.
+    if (empty($value)) {
+      return;
+    }
+
     $value = reset($value);
     if (!is_numeric($value) || (is_numeric($value) && $value > 9999)) {
       $params = array(
