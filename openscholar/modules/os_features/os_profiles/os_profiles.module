@@ -645,7 +645,6 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     // Get the URL of the original node.
     $vsite = vsite_get_vsite($wrapper->og_group_ref->get(0)->value()->nid);
     $url = $vsite->get_absolute_url();
-    $url = substr_replace($url, '', -1);
 
     // Get the original node's UUID if it exist. Else, generate it.
     $values['uuid'] = isset($wrapper->field_uuid) && $wrapper->field_uuid->value() ? $wrapper->field_uuid->value() : md5($form_state['autocomplete_nid']);

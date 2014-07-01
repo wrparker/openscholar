@@ -69,6 +69,7 @@ dependencies[] = views_litepager
 
 ; web services
 dependencies[] = restws
+dependencies[] = restful
 
 ; boxes
 dependencies[] = views_slideshow_cycle
@@ -139,7 +140,6 @@ dependencies[] = metatag
 dependencies[] = metatag_opengraph
 dependencies[] = metatag_twitter_cards
 dependencies[] = nodeformcols
-dependencies[] = restful
 dependencies[] = term_reference_tree
 dependencies[] = views_infinite_scroll
 
