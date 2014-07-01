@@ -16,7 +16,7 @@
 <?php print $styles; ?>
 <?php print $scripts; ?>
 <?php print $polyfills; ?>
-  <!--[if lte IE 8]-->
+  <!--[if lte IE 8]>
 <script type="text/javascript">
   var os_c = document.createElement;os_c('header');os_c('nav');os_c('section');os_c('article');os_c('aside');os_c('footer');os_c('hgroup');os_c('figure');
 </script>
