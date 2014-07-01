@@ -656,7 +656,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $values['original_url'] = $url . '/' . OS_PROFILE_JSON_PREFIX . $form_state['autocomplete_nid'];
 
     // Get the url of the file.
-    $file = file_load($values['photo']['fid']);
+    $file = !empty($values['photo']['fid']) ? file_load($values['photo']['fid']) : FALSE;
     $file_url = $file ? file_create_url($file->uri) : '';
 
     $photo_dimension = $wrapper->person_photo_dimension->value();
