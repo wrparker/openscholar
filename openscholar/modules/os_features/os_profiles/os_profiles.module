@@ -346,6 +346,7 @@ function os_profiles_form_person_node_form_alter(&$form, $form_state) {
     'field_destination_url' => 'field_destination_url',
     'field_child_site' => 'field_child_site',
     'original_url' => 'original_url',
+    'field_uuid' => 'field_uuid',
   );
 
   // When the node is listening to other node, hide the field we syncing.
