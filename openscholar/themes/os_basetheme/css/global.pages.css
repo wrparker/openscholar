@@ -898,7 +898,7 @@ width: calc(100% - 4em) !important;
 
 
 .page-roadmap .ui-icon-closethick {
-  background: url('../images/scholarbase-sprite.png.png') no-repeat 0 -772px;
+  background: url('../images/scholarbase-sprite.png') no-repeat 0 -770px;
   width: 30px;
   height: 30px;
   position: relative;
