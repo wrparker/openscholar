@@ -5,5 +5,5 @@
  * Contains OsActivitiesResource.
  */
 
-class OsActivitiesResource extends RestfulEntityBaseNode {
+class OsActivitiesResource extends RestfulEntityBaseMultipleBundles {
 }
