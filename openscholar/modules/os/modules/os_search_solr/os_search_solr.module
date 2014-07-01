@@ -531,7 +531,7 @@ function os_search_solr_menu() {
   $items = array();
 
   // VSite search settings.
-  $items['vsite/os-apache-solr-settings'] = array(
+  $items['cp/build/vsite/os-apache-solr-settings'] = array(
     'type' => MENU_CALLBACK,
     'title' => t('Set apache solr settings'),
     'page callback' => 'drupal_get_form',
@@ -548,7 +548,7 @@ function os_search_solr_menu() {
  */
 function os_search_solr_admin_paths() {
   $paths = array(
-    'vsite/os-apache-solr-settings' => TRUE,
+    'cp/build/vsite/os-apache-solr-settings' => TRUE,
   );
   return $paths;
 }
@@ -1160,7 +1160,7 @@ function os_search_solr_preprocess_page(&$variables) {
 
   $variables['title_suffix']['controls']['section_links']['#links']['settings'] = array(
     'title' => t('Search settings'),
-    'href' => 'vsite/os-apache-solr-settings',
+    'href' => 'cp/build/vsite/os-apache-solr-settings',
     'query' => drupal_get_destination(),
   );
 }
