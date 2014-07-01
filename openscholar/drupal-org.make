@@ -76,7 +76,7 @@ projects[dyntextfield][download][tag] = 1.0
 projects[dyntextfield][download][url] = "git://github.com/amitaibu/dyntextfield.git"
 
 projects[entity][subdir] = "contrib"
-projects[entity][version] = 1.x-dev
+projects[entity][version] = 1.5
 projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
 projects[entity][patch][] = http://drupal.org/files/issues/2264079-entity-wrapper-access-single-entity-reference-2.patch
 projects[entity][patch][] = http://drupal.org/files/issues/2086225-entity-access-check-node-create-3.patch
