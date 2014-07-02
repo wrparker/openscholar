@@ -178,12 +178,17 @@ a.rslides_nav.prev {
     width: 48%;
     z-index: 2;
     margin: 5% 0 0 5%;
-    -ms-filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#991E1E1E',endColorstr='#991E1E1E');
+  
 }
 
 .lt-ie9  #layout_3_1_overlay .slide-copy {
-    position: relative;
-}
+     position: absolute;
+ }
+ 
+ .lt-ie9  #layout_3_1_overlay .slide-copy {
+     background: url('../images/transparent-black.png');
+   
+  }
 
  #layout_3_1_overlay .rslides li {
     -moz-box-sizing: border-box;
@@ -288,13 +293,15 @@ line-height:24px;
     width: 100%;
     padding:0;
     min-height:160px;
-    -ms-filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#991E1E1E',endColorstr='#991E1E1E');
-}	
+   }
 
 .two-sidebars #layout_16_9_overlay .slide-copy {
     min-height: 130px;
 }
 
+.lt-ie9  #layout_16_9_overlay .slide-copy {
+      background: url('../images/transparent-black.png');
+ }
 	
 #layout_16_9_overlay .rslides_tabs {
     background: none repeat scroll 0 0 transparent;
