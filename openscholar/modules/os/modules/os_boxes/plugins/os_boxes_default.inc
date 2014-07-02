@@ -150,6 +150,10 @@ abstract class os_boxes_default extends boxes_box {
    *   NULL is a valid return value for an empty box.
    */
   protected function get_cache() {
+    if (!variable_get('os_boxes_cache_enabled', TRUE)) {
+      return FALSE;
+    }
+
     if (empty($this->cache_id)) {
       // No valid cache id.
       return FALSE;
@@ -188,6 +192,10 @@ abstract class os_boxes_default extends boxes_box {
    * Helper function for retrieve the assets easily.
    */
   protected function get_assets() {
+    if (!variable_get('os_boxes_cache_enabled', TRUE)) {
+      return FALSE;
+    }
+
     if ($assets_cache = cache_get('assets:' . $this->cache_id, 'cache_os_boxes')) {
       $assets = unserialize($assets_cache->data);
       return $assets;
@@ -245,6 +253,10 @@ abstract class os_boxes_default extends boxes_box {
    *  The assets of the box. Optional.
    */
   protected function set_cache($cache, $assets = NULL) {
+    if (!variable_get('os_boxes_cache_enabled', TRUE)) {
+      return FALSE;
+    }
+
     // Holds boolean whether rendering is done as dummy. Needs in order to avoid
     // caching of dummy rendering.
     // @todo: remove the dummy rendering fully.
@@ -265,11 +277,11 @@ abstract class os_boxes_default extends boxes_box {
       $expire = CACHE_PERMANENT;
     }
 
-//    cache_set($this->cache_id, $cache, 'cache_os_boxes', $expire);
-//    if ($assets) {
-//      $cache_id = 'assets:' . $this->cache_id;
-//      cache_set($cache_id, serialize($assets), 'cache_os_boxes', $expire);
-//    }
+    cache_set($this->cache_id, $cache, 'cache_os_boxes', $expire);
+    if ($assets) {
+      $cache_id = 'assets:' . $this->cache_id;
+      cache_set($cache_id, serialize($assets), 'cache_os_boxes', $expire);
+    }
   }
 
   /**
