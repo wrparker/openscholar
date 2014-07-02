@@ -112,7 +112,7 @@ function os_profiles_init() {
       continue;
     }
 
-    $data = os_profiles_get_origin_node_values($node->field_original_destination_url[LANGUAGE_NONE][0]['value'], $fields);
+    $data = os_profiles_get_origin_node_values($node->field_original_destination_url[LANGUAGE_NONE][0]['value'], $fields, 'update');
 
     // The field person is an array. Remove him for the update method but keep
     // it for later.
@@ -774,11 +774,13 @@ function os_profiles_insert_image($node, $file, $dimensions, $save = TRUE) {
  *  The JSON address of the node.
  * @param $fields
  *  The fields which holds the values we need.
+ * @param $op
+ *  The operation we perform. Defaults to "create".
  *
  * @return stdClass
  *  Return an object with the values and the full JSON of the original node.
  */
-function os_profiles_get_origin_node_values($address, $fields) {
+function os_profiles_get_origin_node_values($address, $fields, $op = 'create') {
   // When accessing the json format of the node multiple times we get cached
   // data. This won't allow us to pull the updated data of the node. In order
   // to get un-cached node we need to add the time stamp to the query string.
@@ -788,7 +790,10 @@ function os_profiles_get_origin_node_values($address, $fields) {
 
   foreach ($fields as $key => $field) {
     $field_name = isset($data['restful']) ? $field : $key;
-    if (empty($data[$field_name])) {
+    if (empty($data[$field_name]) && $op == 'update') {
+      $value = '';
+    }
+    elseif (empty($data[$field_name])) {
       continue;
     }
     else {
