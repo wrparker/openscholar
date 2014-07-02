@@ -643,7 +643,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     }
 
     // Send in the request only the value of the body.
-    $values['description'] = $values['description']['value'];
+    $values['description'] = !empty($values['description']['value']) ? $values['description']['value'] : '';
 
     // Get the URL of the original node.
     $vsite = vsite_get_vsite($wrapper->og_group_ref->get(0)->value()->nid);
