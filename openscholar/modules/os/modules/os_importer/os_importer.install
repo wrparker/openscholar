@@ -4,5 +4,5 @@
  * Enable the entity validate module.
  */
 function os_importer_update_7000() {
-  module_enable(array('entity_validate'));
+  module_enable(array('entity_validator'));
 }
