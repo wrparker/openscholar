@@ -88,5 +88,6 @@ Feature: User functionality testing.
      When I fill in "edit-name--2" with "Louis"
       And I fill in "edit-mail" with "louis@example.com"
       And I press "Create and add member"
+      And I should print page
      Then I should see "Louis has been added to the website: John"
       And I should verify that the user "Louis" has a role of "vsite member" in the group "john"
