@@ -32,10 +32,10 @@ function os_importer_year_to_date_form($importer, $element_key, $settings) {
 function os_importer_year_to_date_convert($result, $item_key, $element_key, &$field, $settings, $source) {
   if (is_array($field)) {
     foreach ($field as $key => $value) {
-      $field[$key] = '1/1/' . $field[$key];
+      $field[$key] = $field[$key] ? '1/1/' . $field[$key] : '';
     }
   }
   else {
-    $field = '1/1/' . $field;
+    $field = $field ? '1/1/' . $field : '';
   }
 }
