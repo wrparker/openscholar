@@ -39,7 +39,9 @@ class os_boxes_html extends os_boxes_default {
 
   public function options_submit($form, $form_state) {
     parent::options_submit($form, $form_state);
-    
+
+    // Only run this block if we're in a vsite.
+    // Don't just return early because we need the $vsite variable later
     if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
       // Construct a fake node so we can pass it into os_wysiwyg's helper function.
       $old_files = $form_state['values']['files'];
