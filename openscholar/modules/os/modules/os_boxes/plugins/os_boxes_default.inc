@@ -193,7 +193,7 @@ abstract class os_boxes_default extends boxes_box {
    */
   protected function get_assets() {
     if (!variable_get('os_boxes_cache_enabled', TRUE)) {
-      return FALSE;
+      return array();
     }
 
     if ($assets_cache = cache_get('assets:' . $this->cache_id, 'cache_os_boxes')) {
