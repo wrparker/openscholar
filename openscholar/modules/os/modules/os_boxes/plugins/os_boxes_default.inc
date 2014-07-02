@@ -265,11 +265,11 @@ abstract class os_boxes_default extends boxes_box {
       $expire = CACHE_PERMANENT;
     }
 
-    cache_set($this->cache_id, $cache, 'cache_os_boxes', $expire);
-    if ($assets) {
-      $cache_id = 'assets:' . $this->cache_id;
-      cache_set($cache_id, serialize($assets), 'cache_os_boxes', $expire);
-    }
+//    cache_set($this->cache_id, $cache, 'cache_os_boxes', $expire);
+//    if ($assets) {
+//      $cache_id = 'assets:' . $this->cache_id;
+//      cache_set($cache_id, serialize($assets), 'cache_os_boxes', $expire);
+//    }
   }
 
   /**
