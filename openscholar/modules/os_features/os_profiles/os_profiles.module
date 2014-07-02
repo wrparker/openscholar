@@ -789,9 +789,13 @@ function os_profiles_get_origin_node_values($address, $fields, $op = 'create') {
   $values = array();
 
   foreach ($fields as $key => $field) {
+    $info = field_info_field($key);
     $field_name = isset($data['restful']) ? $field : $key;
     if (empty($data[$field_name]) && $op == 'update') {
-      $value = '';
+      // The field value in the original node is empty. Entity metadata wrapper
+      // need am empty value to delete the field. Multiple cardinality field
+      // need array..
+      $value = $info['cardinality'] == 1 ? '' : array();
     }
     elseif (empty($data[$field_name])) {
       continue;
