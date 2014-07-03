@@ -260,7 +260,7 @@ abstract class os_boxes_default extends boxes_box {
    */
   protected function set_cache($cache, $assets = NULL) {
     if (!variable_get('os_boxes_cache_enabled', TRUE)) {
-      //return FALSE;
+      return FALSE;
     }
 
     // Holds boolean whether rendering is done as dummy. Needs in order to avoid
@@ -298,7 +298,6 @@ abstract class os_boxes_default extends boxes_box {
     $old_settings = $this->existing_assets['js']['settings'];
     $new_settings = $latest_assets['js']['settings'];
     $new_assets['settings'] = array_diff($new_settings, $old_settings);
-    dpm($new_assets);
 
     cache_set($this->cache_id, $cache, 'cache_os_boxes', $expire);
     $cache_id = 'assets:' . $this->cache_id;
