@@ -105,8 +105,14 @@ abstract class os_boxes_default extends boxes_box {
       $block['embed_link'] = true;
     }
 
+    $this->existing_assets = array(
+      'js' => drupal_add_js(),
+      'css' => drupal_add_css(),
+    );
+
     // Get the assets from the cache.
     $block['assets'] = $this->get_assets();
+
     return $block;
   }
 
@@ -254,7 +260,7 @@ abstract class os_boxes_default extends boxes_box {
    */
   protected function set_cache($cache, $assets = NULL) {
     if (!variable_get('os_boxes_cache_enabled', TRUE)) {
-      return FALSE;
+      //return FALSE;
     }
 
     // Holds boolean whether rendering is done as dummy. Needs in order to avoid
@@ -277,11 +283,26 @@ abstract class os_boxes_default extends boxes_box {
       $expire = CACHE_PERMANENT;
     }
 
+    // the block should have rendered everything out into an html string, and attached any js or css it needed.
+    // grab them all, compare with what we saved earlier.
+    $latest_assets = array(
+      'js' => drupal_add_js(),
+      'css' => drupal_add_css()
+    );
+
+    $new_assets = array(
+      'js' => array_diff_key($latest_assets['js'], $this->existing_assets['js']),
+      'css' => array_diff_key($latest_assets['css'], $this->existing_assets['css'])
+    );
+
+    $old_settings = $this->existing_assets['js']['settings'];
+    $new_settings = $latest_assets['js']['settings'];
+    $new_assets['settings'] = array_diff($new_settings, $old_settings);
+    dpm($new_assets);
+
     cache_set($this->cache_id, $cache, 'cache_os_boxes', $expire);
-    if ($assets) {
-      $cache_id = 'assets:' . $this->cache_id;
-      cache_set($cache_id, serialize($assets), 'cache_os_boxes', $expire);
-    }
+    $cache_id = 'assets:' . $this->cache_id;
+    cache_set($cache_id, serialize($new_assets), 'cache_os_boxes', $expire);
   }
 
   /**
