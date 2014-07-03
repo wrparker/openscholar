@@ -29,6 +29,13 @@ function cp_user_default_permissions() {
     ),
     'module' => 'redirect',
   );
+  $permissions['clear vsite cache'] = array(
+    'name' => 'clear vsite cache',
+    'roles' => array(
+      'support team' => 'support team',
+    ),
+    'module' => 'cp',
+  );
 
   return $permissions;
 }
