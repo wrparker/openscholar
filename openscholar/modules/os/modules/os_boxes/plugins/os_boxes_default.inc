@@ -291,13 +291,13 @@ abstract class os_boxes_default extends boxes_box {
     );
 
     $new_assets = array(
-      'js' => array_diff_key($latest_assets['js'], $this->existing_assets['js']),
-      'css' => array_diff_key($latest_assets['css'], $this->existing_assets['css'])
+      'js' => array_keys(array_diff_key($latest_assets['js'], $this->existing_assets['js'])),
+      'css' => array_keys(array_diff_key($latest_assets['css'], $this->existing_assets['css']))
     );
 
     $old_settings = $this->existing_assets['js']['settings'];
     $new_settings = $latest_assets['js']['settings'];
-    $new_assets['settings'] = array_diff($new_settings, $old_settings);
+    $new_assets['settings'] = array_values(array_diff_assoc($new_settings['data'], $old_settings['data']));
 
     cache_set($this->cache_id, $cache, 'cache_os_boxes', $expire);
     $cache_id = 'assets:' . $this->cache_id;
