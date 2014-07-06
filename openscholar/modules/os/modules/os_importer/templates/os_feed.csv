@@ -1,2 +1,2 @@
-Title,URL
-News feed,http://www.example.com/rss.xml
+Title,URL,Created date,Path
+News feed,http://www.example.com/rss.xml,2014-01-01,news-feed

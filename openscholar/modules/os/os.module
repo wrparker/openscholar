@@ -53,6 +53,14 @@ function os_menu() {
     'access arguments' => array('administer content'),
   );
 
+  $items['admin/config/openscholar/frontend'] = array(
+    'title' => 'OpenScholar Front End Settings',
+    'description' => 'Edit settings that affect general front end performance',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os_settings_frontend_form'),
+    'access arguments' => array('administer content'),
+  );
+
   $items['page_not_found'] = array(
     'type' => MENU_CALLBACK,
     'file' => 'os.pages.inc',
@@ -510,6 +518,11 @@ function os_module_implements_alter(&$implementations, $hook) {
   elseif ($hook == 'form_alter' || $hook == 'menu_alter') {
     // Make the os implementation of menu_alter last so os_pinserver_auth won't
     // override the "/user" page callback.
+    unset($implementations['os']);
+    $implementations['os'] = FALSE;
+  }
+  elseif ($hook == 'js_alter') {
+    // Move the os implementation of js_alter last to support the move of all js to the footer.
     unset($implementations['os']);
     $implementations['os'] = FALSE;
   }
@@ -1053,6 +1066,37 @@ function os_settings_form($form_state) {
   );
 
   $form['#submit'][] = 'os_settings_form_submit';
+
+  return system_settings_form($form);
+}
+
+/**
+ * Change settings that affect the front-end performance of the site
+ */
+function os_settings_frontend_form($form_state) {
+  $form = array();
+
+  $form['os_files_static_domain'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Static Asset Domain'),
+    '#default_value' => variable_get('os_files_static_domain', ''),
+    '#description' => t('Static assets will be served from the base domain listed above. Ex. //static.example.com.<br>
+    This address must point to this install of OpenScholar. Leave blank to not use a separate domain for static assets.'),
+  );
+
+  $form['os_footer_js'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Move Javascript to bottom of page'),
+    '#default_value' => variable_get('os_footer_js', TRUE),
+    '#description' => t('Move all Javascript to the bottom of the page. Improves load times.')
+  );
+
+  $form['advagg_enabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable Minification'),
+    '#default_value' => variable_get('advagg_enabled', ADVAGG_ENABLED),
+    '#description' => t('Minifies javascript files to reduce filesize.')
+  );
 
   return system_settings_form($form);
 }
@@ -1618,13 +1662,44 @@ function os_access_region($module, $delta) {
  * Implements hook_js_alter().
  *
  * Checks to see if the colorbox js has been loaded,
- * and loads a small script to fix an issue if its been found
+ * and loads a small script to fix an issue if its been found.
  */
 function os_js_alter(&$javascript) {
+  // Do nothing to the javascript on install/update pages.
+  if (defined('MAINTENANCE_MODE')) {
+    return;
+  }
+
+  // Do nothing on the overlay's empty page.
+  if (module_exists('overlay') && overlay_display_empty_page()) {
+    return;
+  }
+
   foreach ($javascript as $url => $js) {
     if (strpos($url, 'colorbox.js')) {
       $file = drupal_get_path('module', 'os') . '/theme/os_colorbox.js';
       $javascript[$file] = drupal_js_defaults($file);
+    }
+
+    if (variable_get('os_footer_js', TRUE)) {
+      // If this script is set to already be in the footer, increase it's weight.
+      // It expects to be loaded later than other scripts.
+      if ($javascript[$url]['scope'] == 'footer') {
+        $javascript[$url]['weight'] += 10000;
+      }
+      $javascript[$url]['scope'] = 'footer';
+      if ($url === 'settings') {
+        $inline_settings = array(
+          'type' => 'inline',
+          'scope' => 'footer',
+          'data' => 'jQuery.extend(Drupal.settings, '. drupal_json_encode(drupal_array_merge_deep_array($js['data'])) . ");",
+          'group' => JS_LIBRARY,
+          'every_page' => TRUE,
+          'weight' => 0,
+        ) + drupal_js_defaults();
+        $javascript['inline_settings'] = $inline_settings;
+        unset($javascript['settings']);
+      }
     }
   }
 }

@@ -37,7 +37,48 @@ function os_profiles_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_destination'
+  // Exported field_base: 'field_child_site'
+  $field_bases['field_child_site'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_child_site',
+    'foreign keys' => array(
+      'node' => array(
+        'columns' => array(
+          'target_id' => 'nid',
+        ),
+        'table' => 'node',
+      ),
+    ),
+    'indexes' => array(
+      'target_id' => array(
+        0 => 'target_id',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'entityreference',
+    'settings' => array(
+      'handler' => 'base',
+      'handler_settings' => array(
+        'behaviors' => array(
+          'views-select-list' => array(
+            'status' => 0,
+          ),
+        ),
+        'sort' => array(
+          'type' => 'none',
+        ),
+        'target_bundles' => array(),
+      ),
+      'target_type' => 'node',
+    ),
+    'translatable' => 0,
+    'type' => 'entityreference',
+  );
+
+  // Exported field_base: 'field_destination_url'
   $field_bases['field_destination_url'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -180,7 +221,7 @@ function os_profiles_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_origin_destination'
+  // Exported field_base: 'field_original_destination_url'
   $field_bases['field_original_destination_url'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -244,6 +285,35 @@ function os_profiles_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_phone',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
+  );
+
+  // Exported field_base: 'field_prefix'
+  $field_bases['field_prefix'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_prefix',
     'foreign keys' => array(
       'format' => array(
         'columns' => array(

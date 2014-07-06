@@ -114,25 +114,50 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
   
   // Only get public content, this excludes content with privacy = 1.
   $query->addFilter('bs_private', 1, TRUE);
-  
+
   if (module_exists('vsite') && ($vsite = spaces_get_space())) {
-    // I only want to see items in this site
-    $query->addFilter("sm_og_group_ref", $vsite->group_type.":".$vsite->id);
+    // This site.
+    $sites = array('"' . $vsite->group_type . ":" . $vsite->id . '"');
+
+    if (variable_get('os_search_solr_include_subsites') || variable_get('os_search_solr_search_sites')) {
+      ctools_include('subsite', 'vsite');
+
+      if (variable_get('os_search_solr_include_subsites')) {
+        // Get Subsites.
+        $subsites = vsite_get_subsites($vsite);
+        foreach ($subsites as $sid) {
+          $sites[] = '"' . $vsite->group_type . ":" . $sid . '"';
+        }
+      }
+      
+      if (variable_get('os_search_solr_search_sites')) {
+        // Parse the list of 'other sites'.
+        foreach (variable_get('os_search_solr_search_sites', array()) as $sid) {
+          if (intval($sid)) {
+            $sites[] = '"' . $vsite->group_type . ":" . $sid . '"';
+          }
+        }
+      }
+    }
+
+    // Filter to the specified sites.
+    $site_filter = '(' . implode(' OR ', $sites) . ')';
+    $query->addFilter("sm_og_group_ref", $site_filter);
     
     $group_wrapper = entity_metadata_wrapper('node', $vsite->group);
   
-    //The site is private but this user has access so let them see.
+    // The site is private but this user has access so let them see.
     if ($query->hasFilter('bs_private', 1, TRUE) && module_exists('vsite_access') && !empty($group_wrapper->{VSITE_ACCESS_FIELD}) && $group_wrapper->{VSITE_ACCESS_FIELD}->value()) {
       $query->removeFilter('bs_private');
     }
     
     // There may be private features, this user is a member and should get access to private features in search.
-    if ($query->hasFilter('bs_private', 1, TRUE) && (user_access('administer group') || og_is_member('node',  $group_wrapper->getIdentifier()))) {
+    if ($query->hasFilter('bs_private', 1, TRUE) && (user_access('administer group') || og_is_member('node', $group_wrapper->getIdentifier()))) {
       $query->removeFilter('bs_private');
     }
   }
   elseif (variable_get('file_default_scheme', 'public') == 'private') {
-    //We are not in a vsite, and we are in  a private install.
+    // We are not in a vsite, and we are in a private install.
     drupal_access_denied();
     drupal_exit();
   }
@@ -141,7 +166,6 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
     // Limit searches to just this OpenScholar install in shared indexes.
     $query->addFilter('hash', apachesolr_site_hash());
   }
-  
 }
 
 /**
@@ -162,9 +186,9 @@ function os_search_solr_get_searcher_name() {
  *
  * Alter the titles of the Solr blocks.
  */
-function os_search_solr_block_view_alter(&$data,$block) {
+function os_search_solr_block_view_alter(&$data, $block) {
   // Gets delta map
-  if (!$map = facetapi_get_delta_map()) {
+  if ((!$map = facetapi_get_delta_map()) || $block->module != 'facetapi') {
     return;
   }
 
@@ -174,7 +198,7 @@ function os_search_solr_block_view_alter(&$data,$block) {
   $string_bundle = facetapi_build_delta($searcher_name, 'block', 'bundle');
   $delta_bundle = array_search($string_bundle, $map);
 
-  if ($block->module == 'facetapi' && $block->delta == $delta_bundle) {
+  if ($block->delta == $delta_bundle) {
     // Alter the title.
     $data['title'] = 'Filter By Post Type';
 
@@ -191,20 +215,22 @@ function os_search_solr_block_view_alter(&$data,$block) {
   $string_og = facetapi_build_delta($searcher_name, 'block', 'sm_og_group_ref');
   $delta_og = array_search($string_og, $map);
 
-  if($block->module == 'facetapi' && $block->delta == $delta_og) {
+  if ($block->delta == $delta_og) {
     // Alter the title.
-    $data['title'] = 'Filter By Site';
-
-    // Hide the Filter By Site facet inside of vsites.
-    if(module_exists('vsite') && vsite_get_vsite()) {
-      $data['content'] = NULL;
-    }
+    $data['title'] = t('Filter by other sites');
 
     // Hide the Filter by Site block if there is only one filter.
-    if(isset($data['content']['sm_og_group_ref']) && isset($data['content']['sm_og_group_ref']['#items'])) {
+    if (isset($data['content']['sm_og_group_ref']) && isset($data['content']['sm_og_group_ref']['#items'])) {
       $site_array = $data['content']['sm_og_group_ref']['#items'];
       if(is_array($site_array) && count($site_array) <= 1) {
         $data['content'] = NULL;
+      }
+    }
+
+    // Hide the bundle titles.
+    if (isset($data['content']['sm_og_group_ref'])) {
+      foreach ($data['content']['sm_og_group_ref'] as &$bundle) {
+        unset($bundle['#title']);
       }
     }
   }
@@ -213,7 +239,7 @@ function os_search_solr_block_view_alter(&$data,$block) {
   $string_date = facetapi_build_delta($searcher_name, 'block', 'created');
   $delta_date = array_search($string_date, $map);
 
-  if ($block->module == 'facetapi' && $block->delta == $delta_date) {
+  if ($block->delta == $delta_date) {
     // Alter the title.
     $data['title'] = t('Filter By Post Date');
   }
@@ -221,7 +247,7 @@ function os_search_solr_block_view_alter(&$data,$block) {
   // OG-vocab field.
   $string = facetapi_build_delta($searcher_name, 'block', 'sm_og_vocabulary');
   $delta = array_search($string, $map);
-  if ($block->module == 'facetapi' && $block->delta == $delta) {
+  if ($block->delta == $delta) {
     $data['title'] = t('Filter By Taxonomy');
   }
 }
@@ -499,6 +525,170 @@ function os_search_solr_mark_entity_by_bundles($vsite_id, $bundles = array(), $l
 }
 
 /**
+ * Implements hook_menu().
+ */
+function os_search_solr_menu() {
+  $items = array();
+
+  // VSite delete modal.
+  $items['vsite/os-apache-solr-settings/%ctools_js'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => t('Set apache solr settings'),
+    'page arguments' => array(2),
+    'page callback' => 'os_search_solr_settings',
+    'access callback' => 'spaces_access_admin',
+    'description' => t('Set search settings for apache solr.'),
+  );
+
+  return $items;
+}
+
+/**
+ * Menu callback; Modal window for set OS apache solr search.
+ */
+function os_search_solr_settings($ajax) {
+
+  if (!$ajax) {
+    return drupal_get_form('os_search_solr_settings_form');
+  }
+
+  ctools_include('modal');
+  ctools_include('ajax');
+
+  $form_state = array(
+    'title' => t('OS solr search'),
+    'ajax'  => TRUE,
+    'build_info' => array(
+      'args'  => array($ajax),
+    ),
+  );
+
+  $commands = ctools_modal_form_wrapper('os_search_solr_settings_form', $form_state);
+
+  if (!empty($form_state['ajax_commands'])) {
+    $commands = $form_state['ajax_commands'];
+  }
+
+  print ajax_render($commands);
+  drupal_exit();
+}
+
+/**
+ * Form callback for set the settings of OS solr search.
+ */
+function os_search_solr_settings_form($form, $form_state) {
+
+  $form['search_subsites'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Subsites'),
+    '#description' => t('Should results from your subsites be included.'),
+    '#default_value' => variable_get('os_search_solr_include_subsites', FALSE),
+  );
+
+  $form['search_sites'] = array(
+    '#type' => 'select',
+    '#multiple' => TRUE,
+    '#title' => t('Other websites'),
+    '#options' => os_search_solr_vsites(),
+    '#default_value' => variable_get('os_search_solr_search_sites', array()),
+    '#description' => t('Select additional sites to show search results from.'),
+    '#after_build' => array('os_select2_widget_after_build'),
+    '#cardinality' => UNLIMITED_CARDINALITY,
+    '#attached' => array(
+      'css' => array(
+        libraries_get_path('select2') . '/select2.css',
+        drupal_get_path('module', 'os') . '/css/select2-widget.css',
+      ),
+      'js' => array(
+        libraries_get_path('select2') . '/select2.min.js',
+        drupal_get_path('module', 'os') . '/js/select2-widget.js',
+      ),
+    ),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  $form['cancel'] = array(
+    '#markup' => l(t('Cancel'), "#",  array('attributes' => array('class' => 'ctools-close-modal'))),
+  );
+  return $form;
+}
+
+/**
+ * Submit handler; For os_search_solr_settings_form.
+ */
+function os_search_solr_settings_form_submit($form, &$form_state) {
+
+  // Dismiss the modal in case of a cancellation.
+  if ($form_state['clicked_button']['#value'] == 'Cancel') {
+    $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
+    return;
+  }
+  if ($vsite = vsite_get_vsite()) {
+    $vsite->controllers->variable->set('os_search_solr_search_sites', $form_state['values']['search_sites']);
+    $vsite->controllers->variable->set('os_search_solr_include_subsites', $form_state['values']['search_subsites']);
+  }
+  else {
+    variable_set('os_search_solr_search_sites', $nids);
+    variable_set('os_search_solr_include_subsites', $form_state['values']['search_subsites']);
+  }
+
+  // Dismiss modal.
+  $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
+}
+
+/**
+ * Return array of nids take from brackets in the string.
+ *
+ * @param $string
+ *  Input string.
+ *
+ * @return array
+ *  Array of nids.
+ */
+function os_search_solr_explode_nids($string) {
+  $nids = array();
+
+  // Match values in brackets.
+  preg_match_all('/\(([A-Za-z0-9 ]+?)\)/', $string, $matches);
+  $typed_nids = array_unique($matches[1]);
+
+  // Grab only integer values.
+  foreach ($typed_nids as $nid) {
+    if (is_numeric($nid) && intval($nid) > 0) {
+      $nids[] = $nid;
+    }
+  }
+  return $nids;
+}
+
+function os_search_solr_vsites() {
+  // Query for VSites.
+  $query = new EntityFieldQuery();
+  $query
+    ->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', array('department', 'personal', 'project'), 'IN')
+    ->propertyCondition('status', NODE_PUBLISHED)
+    ->propertyOrderBy('title', 'ASC');
+
+  if ($vsite = vsite_get_vsite()) {
+    $query->propertyCondition('nid', $vsite->id, '<>');
+  }
+  $result = $query->execute();
+
+  $options = array();
+  foreach (node_load_multiple(array_keys($result['node'])) as $nid => $node) {
+    $value = $node->title . '(' . $nid . ')';
+    $options[$nid] = $value;
+  }
+
+  return $options;
+}
+
+/**
  * Implements hook_cp_settings().
  */
 function os_search_solr_cp_settings() {
@@ -513,6 +703,7 @@ function os_search_solr_cp_settings() {
   }
 
   $settings = array();
+
   $settings['os_search_solr'] = array(
     'group' => array(
       '#title' => t('Maintenance'),
@@ -1001,4 +1192,65 @@ function os_search_solr_more_like_this_bundles_element_validate($element, &$form
   if (!$form_state['values']['results_from_type'] && empty($element['#value'])) {
     form_error($element, t('You must select at least one node type when leaving the related posts checkbox un-checked.'));
   }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ *
+ * Adds a link to search settings to the search page's contextual links.
+ */
+function os_search_solr_preprocess_page(&$variables) {
+  $item = menu_get_item();
+  $paths = array(
+    'search/site',
+    'search/site/%',
+  );
+  if (!in_array($item['path'], $paths)) {
+    return;
+  }
+
+  // Include the CTools tools that we need.
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_modal_add_js();
+
+  // Ctools modal settings.
+  $modal_settings = array(
+    'settings-link' => array(
+      'modalOptions' => array('opacity' => .6),
+      'animation' => 'fadeIn',
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 700,
+        'height' => 220,
+        'addWidth' => 0,
+        'addHeight' => 50,
+        'contentRight' => 0,
+        'contentBottom' => 10,
+      ),
+    ),
+  );
+
+  drupal_add_js($modal_settings, 'setting');
+  drupal_add_library('system', 'drupal.ajax');
+  $variables['title_suffix']['controls']['section_links']['#links']['settings'] = array(
+    'title' => t('Search settings'),
+    'href' => 'vsite/os-apache-solr-settings/nojs',
+    'attributes' => array('class' => array('use-ajax', 'ctools-modal-settings-link'), 'title' => ''),
+  );
+}
+
+/**
+ * Implements hook_facetapi_widgets().
+ */
+function os_search_solr_facetapi_widgets() {
+  return array(
+    'os_search_solr_other_sites_links' => array(
+      'handler' => array(
+        'label' => t('Links'),
+        'class' => 'OsSearchSolrOtherSitesLinks',
+        'query types' => array('term', 'date'),
+      ),
+    ),
+  );
 }

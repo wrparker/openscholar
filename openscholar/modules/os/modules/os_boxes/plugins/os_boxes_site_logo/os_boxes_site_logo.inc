@@ -137,9 +137,14 @@ class os_boxes_site_logo extends os_boxes_default {
         }
       }
 
+      $width = 180;
+      $height = 140;
+
       try {
         if (!empty($fid) && $file = file_load($fid)) {
           $path = $file->uri;
+          $width = $file->image_dimensions['width'];
+          $height = $file->image_dimensions['height'];
         }
         else {
           $path = drupal_get_path('module', 'os_boxes').'/plugins/os_boxes_site_logo/default_logo.jpg';
@@ -149,7 +154,7 @@ class os_boxes_site_logo extends os_boxes_default {
         $path = drupal_get_path('module', 'os_boxes').'/plugins/os_boxes_site_logo/default_logo.jpg';
       }
 
-      $output = theme('image', array('path' => $path, 'alt' => $site_title));
+      $output = theme('image', array('path' => $path, 'alt' => $site_title, 'width' => $width, 'height' => $height));
       $block['content'] = l($output, '<front>', array('html' => true));
 
       return $block;

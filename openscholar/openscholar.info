@@ -142,6 +142,7 @@ dependencies[] = nodeformcols
 dependencies[] = restful
 dependencies[] = term_reference_tree
 dependencies[] = views_infinite_scroll
+dependencies[] = entity_validator
 
 files[] = openscholar.profile
 

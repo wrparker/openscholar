@@ -377,18 +377,29 @@ function os_books_preprocess_menu_link(&$vars) {
 function _os_books_find_menu_link_in_tree($tree, $link) {
   $children = reset($tree);
   $children = $children['below'];
+
+  if (!$children) {
+    return FALSE;
+  }
+
   for ($i=1;$i<10;$i++) {
     $plid = $link['p'.$i];
-    if (!$plid) break;
+
+    if (!$plid) {
+      break;
+    }
+
     foreach ($children as $c) {
       if ($c['link']['mlid'] == $plid) {
+
         if ($c['link']['mlid'] == $link['mlid']) {
           return $c;
         }
+
         $children = $c['below'];
         break;
       }
     }
   }
-  return false;
+  return FALSE;
 }

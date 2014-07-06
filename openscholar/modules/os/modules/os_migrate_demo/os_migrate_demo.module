@@ -11,6 +11,27 @@ function os_migrate_demo_define_harvard_courses() {
 }
 
 /**
+ * Implements hook_boxes_plugins.
+ */
+function os_migrate_demo_boxes_plugins() {
+  $info = array();
+  $info['os_boxes_cache_test'] = array(
+    'title' => 'Just for test',
+    'description' => 'Just for test',
+    'tags' => array('Content'),
+    'handler' => array(
+      'class' => 'os_boxes_cache_test',
+      'file' => 'os_boxes_cache_test.inc',
+      'path' => drupal_get_path('module', 'os_migrate_demo') . '/plugins/' . '/os_boxes_cache_test',
+      'parent' => 'os_boxes_default',
+    ),
+    'weight' => -4,
+    'factory' => FALSE,
+  );
+  return $info;
+}
+
+/**
  * Implements hook_menu().
  */
 function os_migrate_demo_menu() {
@@ -224,12 +245,15 @@ function os_migrate_demo_set_box_in_region($nid, $box, $page, $region = 'sidebar
   $boxes_mapping = array(
     'Filter by term' => 'os_taxonomy_fbt',
     'Simple view list' => 'os_sv_list_box',
+    'Files view list' => 'os_sv_list_file',
     'Search' => 'os_search_db-site-search',
     'Active book TOC' => 'os_boxes_booktoc',
     'Bio' => 'os_boxes_bio',
     'RSS feed' => 'os_boxes_rss',
     'Image gallery' => 'os_boxes_slideshow',
     'Faceted taxonomy' => 'os_boxes_facetapi_vocabulary',
+    'List of posts' => 'os_sv_list_box',
+    'Cache time test' => 'os_boxes_cache_test',
   );
 
   $contexts = array(
@@ -445,23 +469,85 @@ function os_migrate_demo_get_term_vsite_purl($tid) {
   print($vsite->purl);
 }
 
+function os_migrate_demo_get_file_vsite_purl($fid) {
+  // Get vid.
+  $file = file_load($fid);
+  $vid = $file->vid;
+
+  // Get og_vocab relation.
+  $relation = og_vocab_relation_get($vid);
+
+  if (empty($relation)) {
+    // Vocabulary is not related to a group.
+    print('');
+    return;
+  }
+
+  // Get vsite.
+  $vsite = node_load($relation->gid);
+
+  print($vsite->purl);
+}
+
+/**
+ * Get the entity ID.
+ *
+ * @param $entity_type
+ *   'node', 'user', etc.
+ * @param $title
+ *   Title of the entity.
+ * @param bool $return
+ *   Either to return the value or print it.
+ * @param $bundle
+ *   Optional; The bundle of the entity.
+ *
+ * @return mixed
+ *   The entity ID (in case of $return).
+ */
+function os_migrate_demo_get_entity_id($entity_type, $title, $return = FALSE, $bundle = NULL) {
+  $query = new entityFieldQuery();
+  $query->entityCondition('entity_type', $entity_type);
+  if ($entity_type == 'node') {
+    $query->propertyCondition('title', $title);
+  }
+  else if ($entity_type == 'file') {
+    $query->propertyCondition('filename', $title);
+  }
+
+  if ($bundle) {
+    $query->entityCondition('bundle', $bundle);
+  }
+
+  $result = $query->execute();
+
+  // Currently only support file and node.
+  if ($entity_type == 'node') {
+    $identifier = 'nid';
+
+  }
+  else if ($entity_type == 'file') {
+    $identifier = 'fid';
+  }
+
+  $entity_id = reset($result[$entity_type])->$identifier;
+
+  if ($return) {
+    return $entity_id;
+  }
+  else {
+    print($entity_id);
+  }
+}
+
 /**
  * Get the node ID.
  */
 function os_migrate_demo_get_node_id($title, $return = FALSE) {
-  $query = new entityFieldQuery();
-  $result = $query
-    ->entityCondition('entity_type', 'node')
-    ->propertyCondition('title', $title)
-    ->execute();
-
-  $nid = reset($result['node'])->nid;
-
   if ($return) {
-    return $nid;
+    return os_migrate_demo_get_entity_id('node', $title, $return);
   }
   else {
-    print($nid);
+    os_migrate_demo_get_entity_id('node', $title, $return);
   }
 }
 
@@ -582,10 +668,10 @@ function os_migrate_demo_get_node_alias($nid) {
 }
 
 /**
- * Get the node vsite purl.
+ * Get the entity vsite purl.
  */
-function os_migrate_demo_get_node_vsite_purl($nid) {
-  $wrapper = entity_metadata_wrapper('node', $nid);
+function os_migrate_demo_get_entity_vsite_purl($entity_type, $entity_id) {
+  $wrapper = entity_metadata_wrapper($entity_type, $entity_id);
 
   if (empty($wrapper->{OG_AUDIENCE_FIELD})) {
     // Not group content.
@@ -595,6 +681,13 @@ function os_migrate_demo_get_node_vsite_purl($nid) {
   $vsite = $wrapper->{OG_AUDIENCE_FIELD}->get(0)->value();
 
   print($vsite->purl);
+}
+
+/**
+ * Get the node vsite purl.
+ */
+function os_migrate_demo_get_node_vsite_purl($nid) {
+  print os_migrate_demo_get_entity_vsite_purl('node', $nid);
 }
 
 /**
@@ -907,4 +1000,24 @@ function os_migrate_demo_get_vsite_owner_uid($group) {
   $nid = os_migrate_demo_get_node_id($group, TRUE);
   $node = node_load($nid);
   print $node->uid;
+}
+
+/**
+ * Get the nid of the child site of a profile.
+ *
+ *  Prints 0 if user the profile has no child site.
+ *  Otherwise, print the node id of the profile's child site.
+ *
+ * @param $profile_title
+ *  The profile title for which to get the child site's id.
+ */
+function os_migrate_demo_get_child_site_nid($profile_title) {
+  $nid = os_migrate_demo_get_entity_id('node', $profile_title, TRUE, 'person');
+  $wrapper = entity_metadata_wrapper('node', $nid);
+
+  if (!$child_site_from_profile = $wrapper->field_child_site->value(array('identifier' => TRUE))) {
+    print(0);
+  }
+
+  print($child_site_from_profile);
 }

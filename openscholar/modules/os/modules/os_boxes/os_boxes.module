@@ -543,41 +543,44 @@ function _os_image_remove_handler($form, $form_state) {
 }
 
 /**
- * Implements hook_node_insert().
+ * Implements hook_entity_insert().
  */
-function os_boxes_node_insert($node) {
-  os_boxes_invalidate_cache($node);
+function os_boxes_entity_insert($entity, $type) {
+  os_boxes_invalidate_cache($entity, $type);
 }
 
 /**
- * Implements hook_node_delete().
+ * Implements hook_entity_delete().
  */
-function os_boxes_node_delete($node) {
-  os_boxes_invalidate_cache($node);
+function os_boxes_entity_delete($entity, $type) {
+  os_boxes_invalidate_cache($entity, $type);
 }
 
 /**
- * Implements hook_node_update().
+ * Implements hook_entity_update().
  */
-function os_boxes_node_update($node) {
-  os_boxes_invalidate_cache($node);
+function os_boxes_entity_update($entity, $type) {
+  os_boxes_invalidate_cache($entity, $type);
 }
 
 /**
  * Invalidating the boxes cache of the VSite.
  *
- * @param $node
- *  The node object which got affected by CRUD operation or widget settings
- *  change.
+ * @param $entity
+ *   The entity object which got affected by CRUD operation or widget settings
+ *   change.
+ * @param $type
+ *   The entity type.
  */
-function os_boxes_invalidate_cache($node) {
-  $wrapper = entity_metadata_wrapper('node', $node);
+function os_boxes_invalidate_cache($entity, $type) {
+
+  $wrapper = entity_metadata_wrapper($type, $entity);
   if (!$wrapper->__isset(OG_AUDIENCE_FIELD)) {
     return;
   }
 
   $gid = $wrapper->{OG_AUDIENCE_FIELD}->get(0)->getIdentifier();
-  $cid = 'os_boxes_cache:' . $gid . ':' . $node->type;
+  $cid = 'os_boxes_cache:' . $gid . ':' . $type . ':' . $entity->type;
   $general_cid = 'os_boxes_cache:' . $gid;
 
   // Flush raw data.
@@ -591,4 +594,11 @@ function os_boxes_invalidate_cache($node) {
 
   // Flush general assets.
   cache_clear_all('assets:' . $general_cid, 'cache_os_boxes', TRUE);
+}
+
+/**
+ * Implements hook_flush_caches().
+ */
+function os_boxes_flush_caches() {
+  return array('cache_os_boxes');
 }

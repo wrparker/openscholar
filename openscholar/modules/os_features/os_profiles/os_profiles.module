@@ -180,6 +180,15 @@ function os_profiles_menu() {
     'access callback' => TRUE,
   );
 
+  $items['os-profile/create-profile/%node'] = array(
+    'title' => 'Create a personal website from this profile',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os_profiles_create_site_from_profile', 2),
+    'access callback' => 'os_profiles_can_create_site_from_profile',
+    'access arguments' => array(2),
+    'theme callback' => 'cp_theme_name',
+  );
+
   return $items;
 }
 
@@ -189,6 +198,7 @@ function os_profiles_menu() {
 function os_profiles_admin_paths() {
   return array(
     'cp/people/sync-profiles' => TRUE,
+    'os-profile/create-profile/*' => TRUE,
   );
 }
 
@@ -207,6 +217,11 @@ function os_profiles_os_entity_view_modes() {
 function os_profiles_process_node(&$vars) {
   if ($vars['type'] !== 'person') {
     return;
+  }
+
+  // Adding the prefix value to the title of the person.
+  if (!empty($vars['field_prefix'])) {
+    $vars['title'] = $vars['field_prefix'][LANGUAGE_NONE][0]['value'] . ' ' . $vars['title'];
   }
 
   // Adding a header for determining the node ID.
@@ -876,7 +891,7 @@ function os_profiles_unlink_listeners() {
     ->propertyCondition('type', 'person')
     ->fieldCondition('field_uuid', 'value', $_GET['UUID']);
 
-  // If an origin node is deleted get the node with that value given in
+  // If an origin node is deleted get the node with the value given in
   // $_GET['origin_url']. Otherwise, search for the node with the destination
   // that needs to be removed that is given in $_GET['remove_destination'].
   if ($_GET['origin_deleted']) {
@@ -1656,4 +1671,174 @@ function os_profiles_preprocess_image_formatter(&$variables) {
   }
 
   $variables['item'] = (array)file_load($variables['item']['fid']);
+}
+
+/**
+ * Access callback for creating site from profile.
+ */
+function os_profiles_can_create_site_from_profile($node) {
+  $wrapper = entity_metadata_wrapper('node', $node);
+
+  if ($wrapper->field_child_site->value()) {
+    return FALSE;
+  }
+
+  return user_access('create personal content');
+}
+
+/**
+ * Preprocess node.
+ */
+function os_profiles_preprocess_node(&$variables) {
+  if ($variables['view_mode'] != 'full' || $variables['node']->type != 'person') {
+    return;
+  }
+
+  if (!os_profiles_can_create_site_from_profile($variables['node'])) {
+    return;
+  }
+
+  $variables['content']['create_site'] = array(
+    '#markup' => l(t('Create a personal website from this profile'), 'os-profile/create-profile/' . $variables['node']->nid),
+    '#weight' => -9.5,
+  );
+}
+
+/**
+ * Create a site from a profile node.
+ *
+ * @see vsite_preprocess_toolbar().
+ */
+function os_profiles_create_site_from_profile($form, &$form_state, $node) {
+  global $base_url;
+
+  module_load_include('form.inc', 'vsite_register', 'vsite_register');
+
+  $form_state['node'] = $node;
+
+  // Building URL by code and not via url() since url() will change it based
+  // on the current space.
+  $params = array(
+    '@url' => $base_url . '/jdoe',
+  );
+
+  $form['domain'] = array(
+    '#type' => 'textfield',
+    '#title' => t('URL'),
+    '#required' => TRUE,
+    '#description' => t("Minimun 3 characters, which must be lowercase. Punctuations is not allowed except for hyphens and underscores. <Br /> Example: a choice of 'jdoe' would result the URL: @url", $params),
+  );
+
+  $form['results'] = array(
+    '#prefix' => '<div id="url-address">',
+    '#suffix' => '</div>',
+  );
+
+  // Adds the prefix to URL field.
+  $form['domain']['#field_prefix'] = $base_url . '/';
+
+  // Show the "create subsite" checkbox only in a "department" site.
+  $vsite = vsite_get_vsite();
+  if ($vsite->group->type == 'department') {
+    $params = array(
+      '@url' => $vsite->get_absolute_url(),
+    );
+
+    $form['create_as_subsite'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Create it as a subsite of @url', $params),
+    );
+  }
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  return $form;
+}
+
+/**
+ * Validate handler.
+ */
+function os_profiles_create_site_from_profile_validate($form, &$form_state) {
+  module_load_include('form.inc', 'vsite_register', 'vsite_register');
+
+  if ($errors = _vsite_register_validate('domain', $form_state['values'])) {
+    form_set_error('domain', theme('item_list', array('items' => $errors)));
+  }
+}
+
+/**
+ * Submit handler; Creates a VSite from a parent profile.
+ */
+function os_profiles_create_site_from_profile_submit($form, &$form_state) {
+  global $user;
+
+  // The bio of the new VSite is taken from the parent profile.
+  $profile = $form_state['node'];
+
+  // The purl of the new VSite.
+  $purl = $form_state['values']['domain'];
+
+  // Owner of the new VSite.
+  $uid = $user->uid;
+
+  // Set the parent VSite to be the current VSite if the user creates it as a
+  // subsite.
+  $parent = NULL;
+  if (!empty($form_state['values']['create_as_subsite'])) {
+    $vsite = vsite_get_vsite();
+    $parent = $vsite->group->nid;
+  }
+
+  if ($new_vsite = vsite_create_vsite($profile->title, $purl, $uid, 'personal', FALSE, $parent, 0)) {
+    os_profiles_copy_bio_to_new_vsite($profile, $new_vsite);
+
+    // Set the new VSite as the child site of the original profile.
+    $wrapper = entity_metadata_wrapper('node', $profile);
+    $wrapper->field_child_site->set($new_vsite->id);
+    $wrapper->save();
+
+    $form_state['redirect'] = $new_vsite->get_absolute_url();
+  }
+}
+
+/**
+ * Take an existing person node and create a new bio node from it in the new
+ * created VSite.
+ *
+ * @param $original_person
+ *  Original person node.
+ * @param $new_vsite
+ *  Newly created VSite.
+ */
+function os_profiles_copy_bio_to_new_vsite($original_person, $new_vsite) {
+  global $user;
+
+  // Owner of the new VSite.
+  $uid = $user->uid;
+
+  $person_wrapper = entity_metadata_wrapper('node', $original_person);
+
+  // Create the "Bio" node.
+  $bio = new stdClass();
+  $bio->type = 'bio';
+  $bio->title = $original_person->title;
+  $bio->language = LANGUAGE_NONE;
+  $bio->uid = $uid;
+
+  $bio_wrapper = entity_metadata_wrapper('node', $bio);
+  $bio_wrapper->body->set($person_wrapper->body->value());
+  $bio_wrapper->{OG_AUDIENCE_FIELD}->set(array($new_vsite->id));
+  $bio_wrapper->save();
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Removes the child site field from the node form.
+ */
+function os_profiles_form_node_form_alter(&$form, $form_state) {
+  $form['field_child_site']['#access'] = FALSE;
 }

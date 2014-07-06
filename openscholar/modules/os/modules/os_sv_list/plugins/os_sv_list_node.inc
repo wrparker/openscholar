@@ -8,16 +8,6 @@ class os_sv_list_box extends os_sv_list {
   }
   
   /**
-   * Implementation of boxes_content::options_defaults().
-   */
-  /*
-  public function options_defaults() {
-    $options = parent::options_defaults();
-    return $options;
-  }
-  */
-  
-  /**
    * Implements boxes_content::options_form().
    */
   public function options_form(&$form_state) {
