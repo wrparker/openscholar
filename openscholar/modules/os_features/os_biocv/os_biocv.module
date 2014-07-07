@@ -41,6 +41,15 @@ function os_biocv_os_app_info() {
 }
 
 /**
+ * Implements hook_ctools_plugin_directory().
+ */
+function os_biocv_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'restful') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
  * Implements hook_menu().
  */
 function os_biocv_menu() {
@@ -411,4 +420,3 @@ function _os_biocv_access_admin() {
   }
   return user_access('administer site configuration');
 }
-

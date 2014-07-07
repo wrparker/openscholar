@@ -645,16 +645,15 @@ function os_profiles_sync_profile_submit($form, $form_state) {
       $request = drupal_http_request($form_state['site_json_sync']);
       $data = drupal_json_decode($request->data);
 
-<<<<<<< HEAD
-      $handler = restws_resource_controller('node');
-
-      $arguments = array(
-        'field_first_name' => $data['title'],
+      $values = array(
+        'first_name' => 'bar',
         'type' => 'person',
-        'body' => $data['bio'],
+        'description' => $data['bio'],
       );
 
-      $nid = $handler->create($arguments);
+      $handler = restful_get_restful_handler('profiles');
+      $result = $handler->post('', $values);
+      $nid = $result['id'];
 
       $node = node_load($nid);
 
@@ -673,30 +672,16 @@ function os_profiles_sync_profile_submit($form, $form_state) {
       $data = $origin->data;
 
       // Get the URL of the original node.
-      $url = str_replace('/node/' . $data['nid'] . '.json', '', $form_state['json_address']);
-
-      // Get the original node's UUID.
-      $values['field_uuid'] = $data['field_uuid'];
+      $url = str_replace('/' . OS_PROFILE_JSON_PREFIX . $data['id'], '', $form_state['json_address']);
 
       // Save the original address of the JSON.
-      $values['field_original_destination_url'] = $form_state['json_address'];
+      $values['original_url'] = $form_state['json_address'];
 
-      // Set the file JSON url.
-      $file_json_url = !empty($values['field_person_photo']) ? $values['field_person_photo']['file']['uri'] . '.json' : '';
-      $photo_dimension = $data['person_photo_dimension'];
+      // Get the url of the file.
+      $file_url = $data['photo']['url'] ? $data['photo']['url'] : '';
+
+      $photo_dimension = $data['photo'];
     }
-=======
-    // Get the URL of the original node.
-    $url = str_replace('/' . OS_PROFILE_JSON_PREFIX . $data['id'], '', $form_state['json_address']);
-
-    // Save the original address of the JSON.
-    $values['original_url'] = $form_state['json_address'];
-
-    // Get the url of the file.
-    $file_url = $data['photo']['url'] ? $data['photo']['url'] : '';
-
-    $photo_dimension = $data['photo'];
->>>>>>> 6042
   }
   else {
     // Import a person node using the auto-complete field.
@@ -1894,7 +1879,26 @@ function os_profiles_preprocess_page(&$variables) {
     return;
   }
 
-  drupal_add_http_header('site_json_sync', url('site_sync_info', array('absolute' => TRUE)));
+  $vsite = vsite_get_vsite();
+
+  // Get the bio node in this site.
+  $query = new EntityFieldQuery();
+  $results = $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('type', 'bio')
+    ->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $vsite->id)
+    ->execute();
+
+  if (!empty($results['node'])) {
+    $nid = reset(array_keys($results['node']));
+  }
+
+  $options = array(
+    'absolute' => TRUE,
+    'query' => array('nid' => $nid),
+  );
+
+  drupal_add_http_header('site_json_sync', url('site_sync_info', $options));
 }
 
 /**
@@ -1910,25 +1914,11 @@ function os_profile_can_sync_site() {
  * from site.
  */
 function os_profiles_provide_site_information() {
-  $vsite = vsite_get_vsite();
+  $handler = restful_get_restful_handler('bios');
 
-  $info = array(
-    'title' => $vsite->og->title,
-  );
+  // Define the fields.
+  $request['fields'] = 'description';
+  $result = $handler->get($_GET['nid'], $request);
 
-  // Get the bio node in this site.
-  $query = new EntityFieldQuery();
-  $results = $query
-    ->entityCondition('entity_type', 'node')
-    ->propertyCondition('type', 'bio')
-    ->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $vsite->id)
-    ->execute();
-
-  if (!empty($results['node'])) {
-    // Adding the bio to the output.
-    $wrapper = entity_metadata_wrapper('node', reset(array_keys($results['node'])));
-    $info['bio'] = $wrapper->body->value();
-  }
-
-  drupal_json_output($info);
+  return $result;
 }
