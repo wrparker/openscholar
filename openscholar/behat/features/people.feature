@@ -12,8 +12,9 @@ Feature:
   Scenario: Testing the autocomplete field or profile syncing.
     Given I am logging in as "john"
       And I visit "john/cp/people/sync-profiles"
-      And I fill in "autocomplete" with "Hillary Diane Rodham Clinton (58)"
+      And I fill in "autocomplete" with "Hillary Diane Rodham Clinton (59)"
       And I press "Submit"
+      And I should print page
       And I should see "The person Hillary Diane Rodham Clinton has created. You can visit their page."
      When I click "visit"
      Then I should see "Hillary Diane Rodham Clinton"
@@ -27,7 +28,7 @@ Feature:
     Given I am logging in as "john"
       And I update the node "Hillary Diane Rodham Clinton" field "Address" to "White house"
       And I visit "john/cp/people/sync-profiles"
-      And I fill in "autocomplete" with "Hillary Diane Rodham Clinton (58)"
+      And I fill in "autocomplete" with "Hillary Diane Rodham Clinton (59)"
       And I press "Submit"
       And I should see "The person Hillary Diane Rodham Clinton has updated. You can visit their page."
      When I click "visit"
@@ -41,7 +42,7 @@ Feature:
   Scenario: Empty the value of a field from the original node and check the
             listener node updated.
     Given I am logging in as "john"
-      And I visit "obama/node/58/edit"
+      And I visit "obama/node/59/edit"
      When I fill in "Address" with ""
       And I press "Save"
       And I sleep for "10"

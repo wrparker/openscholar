@@ -30,9 +30,9 @@ class os_boxes_site_info extends os_boxes_default {
       $descrip = field_get_items('node', $group, 'field_site_description');
       $this->options = array_merge($this->options, array(
         'site_title' => $group->title,
-        'descrip' => isset($descrip[0])?$descrip[0]['value']:'',
+        'descrip' => isset($descrip[0]) ? $descrip[0]['value'] : '',
         'address1' => $addr[0],
-        'address2' => $addr[1],
+        'address2' => isset($addr[1]) ? $addr[1] : '',
       ));
     }
     $form['site_title'] = array(
@@ -126,7 +126,7 @@ class os_boxes_site_info extends os_boxes_default {
 function os_boxes_site_info_submit($form, &$form_state) {
   $box = $form_state['box'];
   if (module_exists('vsite') && $space = spaces_get_space()) {
-    // populate the vsite with this information
+    // Populate the VSite with this information.
     $node = $space->group;
     $node->title = $form_state['values']['site_title'];
 
@@ -138,8 +138,8 @@ function os_boxes_site_info_submit($form, &$form_state) {
       'value' => $form_state['values']['address1'].'<br>'.$form_state['values']['address2'],
       'format' => NULL,
     );
-    if ($node->field_site_logo[LANGUAGE_NONE][0] == null) {
-      $node->field_site_logo = null;
+    if (empty($node->field_site_logo[LANGUAGE_NONE][0])){
+      $node->field_site_logo = NULL;
     }
 
     try {

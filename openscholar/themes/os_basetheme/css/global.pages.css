@@ -1238,6 +1238,12 @@ img.media-element.file-default[style*="float:"][style*="right;"] {
 	font-size:initial;
 	}
 
+.node-news .field-name-field-photo.view-mode-sidebar_teaser,
+.node-news.node-teaser .field-name-field-photo {
+  float: left;
+  margin: 0 1.5em .5em 0;
+ }
+
 /**
 LIST OF POSTS - PERSON TEASER IN SIDEBAR
  */
@@ -1264,6 +1270,11 @@ LIST OF POSTS - PERSON TEASER IN SIDEBAR
 .sidebar .block-boxes-os_sv_list_box .node.node-person.article.modified-in-os_profiles_process_node .pic-bio {
  	float:none;
 }
+
+.sidebar .block-boxes-os_sv_list_box .node.node-person.article.modified-in-os_profiles_process_node .pic-bio.people-sidebar-teaser {
+ 	float:left;
+}
+
 
 
 

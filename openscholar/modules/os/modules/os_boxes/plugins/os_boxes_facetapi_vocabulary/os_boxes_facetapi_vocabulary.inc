@@ -36,12 +36,17 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
       $selected_vocab = 'all';
     }
 
+    $bundles = os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP));
+    // Use first bundle of the list in case none was selected before.
+    if (!$bundle) {
+      $bundle = reset(array_keys($bundles));
+    }
+
     $form['bundle'] = array(
       '#type' => 'select',
       '#description' => t('Which bundle would you like to use.'),
       '#title' => t('Content type'),
-      '#options' => os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP)),
-      '#default_value' => $bundle,
+      '#options' => $bundles,
       '#required' => TRUE,
       '#default_value' => $bundle,
       '#ajax' => array(

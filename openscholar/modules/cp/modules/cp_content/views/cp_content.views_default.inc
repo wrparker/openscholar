@@ -801,9 +801,10 @@ function cp_content_views_default_views() {
   $handler->display->display_options['filters']['schema_type']['id'] = 'schema_type';
   $handler->display->display_options['filters']['schema_type']['table'] = 'file_managed';
   $handler->display->display_options['filters']['schema_type']['field'] = 'schema_type';
-  $handler->display->display_options['filters']['schema_type']['operator'] = 'not in';
   $handler->display->display_options['filters']['schema_type']['value'] = array(
-    'private' => 'private',
+    'embed' => 'embed',
+    'public' => 'public',
+    'oembed' => 'oembed',
   );
   $handler->display->display_options['filters']['schema_type']['group'] = 1;
   /* Filter criterion: File: File name or title */

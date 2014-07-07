@@ -7,6 +7,13 @@
 class os_search_solr_more_like_this extends os_boxes_default {
 
   /**
+   * Create a new box.
+   */
+  protected function __construct() {
+    parent::__construct();
+  }
+
+  /**
    * Implements of boxes_content::options_defaults().
    */
   public function options_defaults() {

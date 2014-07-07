@@ -135,6 +135,10 @@ abstract class os_boxes_default extends boxes_box {
       $this->cache_id .= ':' . $page;
     }
 
+    // Add the user id to the CID of the widget.
+    global $user;
+    $this->cache_id .= ':' . $user->uid;
+
     return $this->cache_id;
   }
 
@@ -166,7 +170,12 @@ abstract class os_boxes_default extends boxes_box {
 
     // For Admin users, add indicator that the returned block came from cache.
     if ($cache->data && user_access('administer openscholar')) {
-      $cache->data .= "<!--From Cache CID[{$this->cache_id}]-->";
+      if (is_string($cache->data)) {
+        $cache->data .= "<!--From Cache CID[{$this->cache_id}]-->";
+      }
+      else if (is_array($cache->data) && is_string($cache->data['content'])) {
+        $cache->data['content'] .= "<!--From Cache CID[{$this->cache_id}]-->";
+      }
     }
 
     drupal_add_http_header('x-drupal-cache-os-boxes-plugin', $this->plugin_key, TRUE);

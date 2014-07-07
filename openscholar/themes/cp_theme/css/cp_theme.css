@@ -889,11 +889,11 @@ form.node-form .form-region-right .fieldset-wrapper {
 
 a.tabledrag-handle .handle {
   background-image: url('../images/cp-sprite.png');
-  background-position-y: -15px;
+  background-position: 8px -15px;
 }
 
 a.tabledrag-handle-hover .handle {
-  background-position-y: -35px;
+  background-position: 8px -35px;
 }
 
 .delete-subtheme a {

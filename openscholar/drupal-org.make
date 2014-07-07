@@ -79,9 +79,10 @@ projects[dyntextfield][download][tag] = 1.0
 projects[dyntextfield][download][url] = "git://github.com/amitaibu/dyntextfield.git"
 
 projects[entity][subdir] = "contrib"
-projects[entity][version] = 1.0
+projects[entity][version] = 1.5
 projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
-projects[entity][patch][] = http://drupal.org/files/entity-file_entity_access-1831578-9.patch
+projects[entity][patch][] = http://drupal.org/files/issues/2264079-entity-wrapper-access-single-entity-reference-2.patch
+projects[entity][patch][] = http://drupal.org/files/issues/2086225-entity-access-check-node-create-3.patch
 
 projects[entitycache][subdir] = "contrib"
 projects[entitycache][version] = 1.1
@@ -333,6 +334,9 @@ projects[purl][patch][] = "http://drupal.org/files/issues/purl-integrate_redirec
 projects[registration][subdir] = "contrib"
 projects[registration][version] = 1.1
 projects[registration][patch][] = "https://drupal.org/files/issues/2183509-registration-broadcast-context-1.patch"
+
+projects[restful][subdir] = "contrib"
+projects[restful][version] = 1.x-dev
 
 projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
