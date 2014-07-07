@@ -60,7 +60,6 @@ class OsProfilesResource extends RestfulEntityBaseNode {
     );
 
     $public_fields['restful'] = array(
-      'property' => 'restful',
       'callback' => array($this, 'restful'),
     );
 

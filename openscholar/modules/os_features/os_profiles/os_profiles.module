@@ -112,19 +112,17 @@ function os_profiles_init() {
       continue;
     }
 
-    $data = os_profiles_get_origin_node_values($node->field_original_destination_url[LANGUAGE_NONE][0]['value'], $fields, 'update');
+    $data = os_profiles_get_origin_node_values($node->field_original_destination_url[LANGUAGE_NONE][0]['value'], $fields);
+
+    // Since using "put" will set NULL for missing fields we must send the original
+    // url too. Otherwise it will be cleared.
+    $data->values['original_url'] = $node->field_original_destination_url[LANGUAGE_NONE][0]['value'];
 
     // The field person is an array. Remove him for the update method but keep
     // it for later.
     $person_photo = !empty($data->values['photo']) ? $data->values['photo'] : '';
     unset($data->values['photo']);
-    try {
-      $handler->patch($node->nid, $data->values);
-    }
-    catch (RestWSException $e) {
-      // TODO: watchdog message
-      return;
-    }
+    $handler->put($node->nid, $data->values);
 
     // We need to replace the file ID in the field with the new file ID we got.
     $file = NULL;
@@ -605,6 +603,8 @@ function os_profiles_profiles_fields() {
   return array(
     'title' => 'label',
     'body' => 'description',
+    'author' => 'author',
+    'type' => 'type',
     'field_first_name' => 'first_name',
     'field_last_name' => 'last_name',
     'field_middle_name_or_initial' => 'middle_name',
@@ -615,6 +615,7 @@ function os_profiles_profiles_fields() {
     'field_website' => 'website',
     'field_person_photo' => 'photo',
     'field_uuid' => 'uuid',
+    'field_original_destination_url' => 'original_url',
   );
 }
 
@@ -795,7 +796,7 @@ function os_profiles_insert_image($node, $file, $dimensions, $save = TRUE) {
  * @return stdClass
  *  Return an object with the values and the full JSON of the original node.
  */
-function os_profiles_get_origin_node_values($address, $fields, $op = 'create') {
+function os_profiles_get_origin_node_values($address, $fields) {
   // When accessing the json format of the node multiple times we get cached
   // data. This won't allow us to pull the updated data of the node. In order
   // to get un-cached node we need to add the time stamp to the query string.
@@ -804,15 +805,8 @@ function os_profiles_get_origin_node_values($address, $fields, $op = 'create') {
   $values = array();
 
   foreach ($fields as $key => $field) {
-    $info = field_info_field($key);
     $field_name = isset($data['restful']) ? $field : $key;
-    if (empty($data[$field_name]) && $op == 'update') {
-      // The field value in the original node is empty. Entity metadata wrapper
-      // need am empty value to delete the field. Multiple cardinality field
-      // need array..
-      $value = $info['cardinality'] == 1 ? '' : array();
-    }
-    elseif (empty($data[$field_name])) {
+    if (empty($data[$field_name])) {
       continue;
     }
     else {
