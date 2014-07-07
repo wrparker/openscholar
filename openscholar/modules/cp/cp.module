@@ -289,6 +289,9 @@ function cp_permission() {
     'access control panel' => array(
       'title' => t('Access Control Panel'),
     ),
+    'clear vsite cache' => array(
+      'title' => t('Clear Vsite Varnish Cache'),
+    ),
   );
 }
 
@@ -503,11 +506,13 @@ function cp_cp_settings() {
         '#value' => t('Clear site cache'),
         '#suffix' => "<div class=\"description\">".t('Clear the cache to so anonymous users see the most recent updates. This removes the normal ~15 minute delay for new/updated posts to show up in lists but can slow the site down for your visitors.')."</div>",
         '#submit' => array('cp_clear_site_cache'),
-        '#access' => user_access('administer varnish'),
+        '#access' => user_access('clear vsite cache'),
       ),
     );
+
+    // Grant permission to those without it.
     if ($vsite = vsite_get_vsite()) {
-    	$settings['cp_clear_cache']['form']['#access'] = og_user_access('node', $vsite->group->nid, 'clear site cache', NULL, FALSE, TRUE);
+    	$settings['cp_clear_cache']['form']['#access'] = ($settings['cp_clear_cache']['form']['#access'] || og_user_access('node', $vsite->group->nid, 'clear site cache', NULL, FALSE, TRUE));
     }
   }
 
