@@ -14,7 +14,6 @@ Feature:
       And I visit "john/cp/people/sync-profiles"
       And I fill in "autocomplete" with "Hillary Diane Rodham Clinton (59)"
       And I press "Submit"
-      And I should print page
       And I should see "The person Hillary Diane Rodham Clinton has created. You can visit their page."
      When I click "visit"
      Then I should see "Hillary Diane Rodham Clinton"
@@ -47,6 +46,7 @@ Feature:
       And I press "Save"
       And I sleep for "10"
       And I visit "john/people/hillary-diane-rodham-clinton"
+      And I should print page
      Then I should not see "White house"
 
   @api @first
