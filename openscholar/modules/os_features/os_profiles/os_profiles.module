@@ -187,12 +187,6 @@ function os_profiles_menu() {
     'theme callback' => 'cp_theme_name',
   );
 
-  $items['site_sync_info'] = array(
-    'title' => 'Create a profile from site.',
-    'page callback' => 'os_profiles_provide_site_information',
-    'access callback' => 'os_profile_can_sync_site',
-  );
-
   return $items;
 }
 
@@ -646,9 +640,9 @@ function os_profiles_sync_profile_submit($form, $form_state) {
       $data = drupal_json_decode($request->data);
 
       $values = array(
-        'first_name' => 'bar',
+        'first_name' => $data['site_name'],
         'type' => 'person',
-        'description' => $data['bio'],
+        'description' => $data['description'],
       );
 
       $handler = restful_get_restful_handler('profiles');
@@ -1895,10 +1889,9 @@ function os_profiles_preprocess_page(&$variables) {
 
   $options = array(
     'absolute' => TRUE,
-    'query' => array('nid' => $nid),
   );
 
-  drupal_add_http_header('site_json_sync', url('site_sync_info', $options));
+  drupal_add_http_header('site_json_sync', url('api/v1/bios/' . $nid, $options));
 }
 
 /**
@@ -1907,18 +1900,4 @@ function os_profiles_preprocess_page(&$variables) {
  */
 function os_profile_can_sync_site() {
   return module_exists('vsite') && vsite_get_vsite();
-}
-
-/**
- * Menu callback; This function will provide information for create a profile
- * from site.
- */
-function os_profiles_provide_site_information() {
-  $handler = restful_get_restful_handler('bios');
-
-  // Define the fields.
-  $request['fields'] = 'description';
-  $result = $handler->get($_GET['nid'], $request);
-
-  return $result;
 }
