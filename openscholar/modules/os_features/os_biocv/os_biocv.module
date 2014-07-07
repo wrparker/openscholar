@@ -22,15 +22,6 @@ function os_biocv_os_app_info() {
   	  'bio',
   		'cv',
     ),
-
-    'importers' => array(
-      'bio' => array(
-        'csv' => 'os_cv',
-      ),
-      'cv' => array(
-        'csv' => 'os_bio',
-      ),
-    ),
     'browse_pages' => array(
       'bio' => FALSE,
       'cv' => FALSE,
