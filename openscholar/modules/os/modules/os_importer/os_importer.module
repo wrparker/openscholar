@@ -641,6 +641,9 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     $row_values = explode(",", $row);
 
     foreach ($row_values as $delta => $value) {
+      // Keeping the original value for a clear error message.
+      $orig_value = $value;
+
       // Fail in case mapping does not exist.
       if (!isset($mappings[$delta])) {
         $params = array(
@@ -678,7 +681,12 @@ function os_importer_verify_uploaded_file($form, $form_state) {
         $value = strtotime($value);
       }
 
-      $wrapper->{$field}->set($value);
+      try {
+        $wrapper->{$field}->set($value);
+      }
+      catch (EntityMetadataWrapperException $e) {
+        form_set_error('', t('Settings the value of field "!field" with value "!value" failed.', array('!field' => $field, '!value' => $orig_value)));
+      }
     }
 
     if ($handler->validate($node, TRUE) === FALSE) {
