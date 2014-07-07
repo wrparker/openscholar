@@ -1,12 +1,3 @@
-document.createElement('header');
-document.createElement('nav');
-document.createElement('section');
-document.createElement('article');
-document.createElement('aside');
-document.createElement('footer');
-document.createElement('hgroup');
-document.createElement('figure');
-
 
 // Fixes tab behavior after using the skip link in IE or Chrome
 Drupal.behaviors.osBase_skipLinkFocus = {

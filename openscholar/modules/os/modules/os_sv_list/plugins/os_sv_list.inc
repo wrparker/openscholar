@@ -233,7 +233,8 @@ class os_sv_list extends os_boxes_default {
       return;
     }
 
-    $cid = ($this->options['content_type'] != 'all') ? 'node:' . $this->options['content_type'] : NULL;
+    $bundle = ($this->options['content_type'] != 'all') ? $this->options['content_type'] : NULL;
+    $cid = $bundle ? 'node:' . $bundle : NULL;
 
     $block = parent::render();
     $page_num = pager_find_page(PagerDefault::$maxElement);
@@ -247,7 +248,7 @@ class os_sv_list extends os_boxes_default {
       $page = 0;
       $ids = $this->get_ids($page_num, $page);
       
-      $this->_set_plugins($this->entity_type, $cid);
+      $this->_set_plugins($this->entity_type, $bundle);
 
       // Add the pager.
       if ($this->options['pager'] && $ids) {

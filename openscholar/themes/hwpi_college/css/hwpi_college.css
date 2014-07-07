@@ -916,8 +916,8 @@ a.rslides_nav {
  	padding:0 !important;
 }
 
-.no-sidebars .region-content-top .block-boxes-os_slideshow_box + .block {
-padding:0 20px;
+.no-sidebars .region-content-top .block-boxes-os_slideshow_box ~ .block {
+margin:0 20px;
 }
 
 
