@@ -47,6 +47,7 @@ Feature:
       And I sleep for "10"
       And I visit "john/people/hillary-diane-rodham-clinton"
       And I should print page
+      And I should sleep for "10"
      Then I should not see "White house"
 
   @api @first
@@ -59,6 +60,7 @@ Feature:
           # Delete the original node.
      When I delete the node of type "person" named "Hillary Diane Rodham Clinton" in the group "obama"
       And I edit the node "Hillary Diane Rodham Clinton" in the group "john"
+      And I should sleep for "10"
      Then I should see "Professional Titles/Affiliations"
 
   @api @first
