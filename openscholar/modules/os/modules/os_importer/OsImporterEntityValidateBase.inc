@@ -45,6 +45,9 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
       unset($fields[$field]);
     }
 
+    // Add path validator.
+    $fields['path_alias']['validators'][] = 'validatorPath';
+
     return $fields;
   }
 
@@ -95,6 +98,48 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
         '@min_height' => $min_height,
       );
       $this->setError($field_name, 'The size of the image need to be at least @min_widthX@min_height. The given image is @widthX@height', $params);
+    }
+  }
+
+  /**
+   * Validating the path alias.
+   */
+  public function validatorPath($field_name, $value) {
+    if (empty($value)) {
+      return;
+    }
+
+    $vsite = vsite_get_vsite();
+    $purl = $vsite->group->purl;
+    $alias_without_purl = $value[0];
+    $alias_with_purl = $purl . '/' . $value[0];
+
+    // Ensure that the alias does not exist yet.
+    $query = db_select('url_alias')
+      ->fields('url_alias')
+      ->condition('alias', $alias_with_purl)
+      ->condition('language', LANGUAGE_NONE)
+      ->range(0, 1);
+
+    if ($query->execute()->fetchField()) {
+      // Alias already in use.
+      $params = array(
+        '@path' => $alias_without_purl,
+      );
+      $this->setError($field_name, t('The path "@path" is already in use. Please supply a different path.', $params));
+    }
+
+    // Check if the given alias is not taken by something more global.
+    // @see _vsite_form_alias_validate().
+    $items = array(
+      'alias_with_purl' => menu_get_item($alias_with_purl),
+      'alias_without_purl' => menu_get_item($alias_without_purl),
+    );
+    if ($items['alias_with_purl']['href'] == $alias_with_purl || $items['alias_without_purl']['href'] == $alias_without_purl) {
+      $params = array(
+        '@path' => $alias_without_purl,
+      );
+      $this->setError($field_name, t('The path "@path" is already in use. Please supply a different path.', $params));
     }
   }
 }
