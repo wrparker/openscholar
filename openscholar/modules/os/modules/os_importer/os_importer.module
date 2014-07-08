@@ -597,12 +597,14 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   // Replace the \r with \n.
   $file_content = file_get_contents($file->uri);
   $file_content = str_replace("\r", "\n", $file_content);
-  $rows = explode("\n", $file_content);
+  $file_rows = explode("\n", $file_content);
 
   feeds_include_library('ParserCSV.inc', 'ParserCSV');
   $parser = new ParserCSV();
   $parser->setDelimiter(',');
   $iterator = new ParserCSVIterator($file->uri);
+
+  $rows = $parser->parse($iterator);
 
   // Parse file's headers.
   $header = _os_importer_parse_header($parser, $iterator);
@@ -623,7 +625,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     }
 
     // Check if row is empty.
-    if (!implode("", explode(",", $row))) {
+    if (!implode("", $row)) {
       unset($rows[$key]);
       continue;
     }
@@ -638,9 +640,15 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     $node = entity_create('node', $node);
     $wrapper = entity_metadata_wrapper('node', $node);
     // Build the form values - break down the row.
-    $row_values = explode(",", $row);
 
-    foreach ($row_values as $delta => $value) {
+    foreach ($row as $delta => $value) {
+      // Check only the fields found in the mappings array. Columns after the
+      // last mapping column are used to create taxonomy terms.
+      // @see os_importer_feeds_presave().
+      if ($delta >= count($mappings)) {
+        break;
+      }
+
       // Fail in case mapping does not exist.
       if (!isset($mappings[$delta])) {
         $params = array(
@@ -655,7 +663,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       $field = str_replace(':', '__', $field);
 
       // Do not validate file fields.
-      if ($field == 'file' || $field == 'path_alias') {
+      if ($field == 'file') {
         continue;
       }
 
@@ -690,7 +698,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     }
   }
 
-  $new_file = file_save_data(implode("\n", $rows), $file->uri, FILE_EXISTS_REPLACE);
+  $new_file = file_save_data(implode("\n", $file_rows), $file->uri, FILE_EXISTS_REPLACE);
   $form_state['values']['file'] = $new_file->fid;
 }
 
@@ -891,6 +899,11 @@ function os_importer_entity_property_info_alter(&$info) {
       'field_url__url' => t('URL'),
       'field_photo' => t('News photo'),
     ),
+    'page' => array(),
+    'faq' => array(),
+    'blog' => array(),
+    'media_gallery' => array(),
+    'software_project' => array(),
   );
 
   foreach ($data as $bundle => $fields) {
@@ -903,5 +916,13 @@ function os_importer_entity_property_info_alter(&$info) {
         'label' => t('Created'),
       );
     }
+
+    $info['node']['bundles'][$bundle]['properties']['created'] = $base + array(
+      'label' => t('Created'),
+    );
+
+    $info['node']['bundles'][$bundle]['properties']['path_alias'] = $base + array(
+        'label' => t('Path'),
+    );
   }
 }
