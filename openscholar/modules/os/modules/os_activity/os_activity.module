@@ -6,6 +6,20 @@
  */
 include_once 'os_activity.features.inc';
 
+/**
+ * Implements hook_menu().
+ */
+function os_activity_menu() {
+  $items = array();
+
+  $items['activity.json'] = array(
+    'title' => 'Activity',
+    'page callback' => 'drupal_goto',
+    'page arguments' => array('api/v1/activities'),
+    'access callback' => TRUE,
+  );
+  return $items;
+}
 
 /**
  * Implements hook_ctools_plugin_directory().
