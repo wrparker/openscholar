@@ -122,10 +122,11 @@ function _hwpi_get_ancestry() {
     while (isset($group->field_group_parent) && $group->field_group_parent) {
       $items = field_get_items('node', $group, 'field_group_parent');
       $vsite = vsite_get_vsite($items[0]['target_id']);
-      if(is_object($vsite) && isset($vsite->group)) {
-        $group = $vsite->group;
-        $sites[$vsite->get_absolute_url()] = $group->title;
+      if(!is_object($vsite) || !isset($vsite->group)) {
+        break;
       }
+      $group = $vsite->group;
+      $sites[$vsite->get_absolute_url()] = $group->title;
     }
 
     // Then, looks for site organization terms and adds them to hierarchy.
