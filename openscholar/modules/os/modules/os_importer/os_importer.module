@@ -625,7 +625,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     }
 
     // Check if row is empty.
-    if (!implode("", explode(",", $row))) {
+    if (!implode("", $row)) {
       unset($rows[$key]);
       continue;
     }
