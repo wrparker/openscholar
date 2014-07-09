@@ -704,10 +704,10 @@ function _cp_form_alter_remove_redirect_element(&$form) {
 }
 
 /**
- * Activates the cp context on any entity edit form
+ * Activates the cp context on any entity edit form except comment forms.
  */
 function cp_form_alter(&$form, $form_state) {
-  if (isset($form['#entity_type']) && isset($form['#bundle'])) {
+  if (isset($form['#entity_type']) && $form['#entity_type'] != 'comment' && isset($form['#bundle'])) {
     if ($plugin = context_get_plugin('condition', 'node')) {
       // we want some of the node condition, but it only works for actual node types
       // fake it for every entity form.
