@@ -689,9 +689,6 @@ function cp_form_node_form_alter(&$form, &$form_state, $form_id) {
 function cp_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {
   // Hides the default redirect form section from displaying.
   _cp_form_alter_remove_redirect_element($form);
-
-  // Enable cp context.
-  cp_activate_cp_context();
 }
 
 /**
@@ -707,31 +704,15 @@ function _cp_form_alter_remove_redirect_element(&$form) {
 }
 
 /**
- * Implements hook_form_alter() to activate the cp context on any node
- * edit form.
+ * Activates the cp context on any entity edit form
  */
 function cp_form_alter(&$form, $form_state) {
-  if (isset($form['#node_edit_form'])) {
-    cp_activate_cp_context();
-  }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter() to enable cp context
- * when editing file.
- */
-function cp_form_file_entity_edit_alter(&$form, $form_state) {
-  cp_activate_cp_context();
-}
-
-/**
- * Activates the cp context.
- */
-function cp_activate_cp_context() {
-  if ($plugin = context_get_plugin('condition', 'node')) {
-    // we want some of the node condition, but it only works for actual node types
-    // fake it for every entity form.
-    $plugin->execute((object)array('type' => 'page'), 'form');
+  if (isset($form['#entity_type']) && isset($form['#bundle'])) {
+    if ($plugin = context_get_plugin('condition', 'node')) {
+      // we want some of the node condition, but it only works for actual node types
+      // fake it for every entity form.
+      $plugin->execute((object)array('type' => 'page'), 'form');
+    }
   }
 }
 
