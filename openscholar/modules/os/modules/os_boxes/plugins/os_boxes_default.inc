@@ -132,13 +132,14 @@ abstract class os_boxes_default extends boxes_box {
       $this->cache_id .= ':' . $bundle;
     }
     $this->cache_id .= ':' . $this->delta;
-    if ($page) {
-      $this->cache_id .= ':' . $page;
-    }
 
     // Add the user id to the CID of the widget.
     global $user;
     $this->cache_id .= ':' . $user->uid;
+
+    if ($page) {
+      $this->cache_id .= ':' . $page;
+    }
 
     return $this->cache_id;
   }
