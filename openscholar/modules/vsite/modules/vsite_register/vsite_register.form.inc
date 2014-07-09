@@ -352,7 +352,8 @@ function vsite_register_form_submit(&$form, &$state) {
   $preset = $values['preset'];
   $parent = $_POST['parent'] ? $_POST['parent'] : FALSE;
   $visibility = isset($values['vsite_private']) ? $values['vsite_private'] : FALSE;
-  $vsite = vsite_create_vsite($name, $purl, $author, $bundle, $preset, $parent, $visibility);
+  $state['additional_settings'] = empty($state['additional_settings']) ? array() : $state['additional_settings'];
+  $vsite = vsite_create_vsite($name, $purl, $author, $bundle, $preset, $parent, $visibility, $state['additional_settings']);
   if ($vsite) {
     $message = vsite_register_message($form, $values['domain']);
     $commands[] = ajax_command_replace('#submit-suffix', $message);
