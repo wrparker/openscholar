@@ -402,7 +402,8 @@ function os_events_views_default_views() {
   $handler->display->display_options['filters']['date_filter']['table'] = 'node';
   $handler->display->display_options['filters']['date_filter']['field'] = 'date_filter';
   $handler->display->display_options['filters']['date_filter']['operator'] = '>=';
-  $handler->display->display_options['filters']['date_filter']['default_date'] = 'now';
+  $handler->display->display_options['filters']['date_filter']['granularity'] = 'minute';
+  $handler->display->display_options['filters']['date_filter']['default_date'] = 'now - 30 min';
   $handler->display->display_options['filters']['date_filter']['add_delta'] = 'yes';
   $handler->display->display_options['filters']['date_filter']['date_fields'] = array(
     'field_data_field_date.field_date_value' => 'field_data_field_date.field_date_value',
@@ -462,7 +463,8 @@ function os_events_views_default_views() {
   $handler->display->display_options['filters']['date_filter']['table'] = 'node';
   $handler->display->display_options['filters']['date_filter']['field'] = 'date_filter';
   $handler->display->display_options['filters']['date_filter']['operator'] = '>=';
-  $handler->display->display_options['filters']['date_filter']['default_date'] = 'now';
+  $handler->display->display_options['filters']['date_filter']['granularity'] = 'minute';
+  $handler->display->display_options['filters']['date_filter']['default_date'] = 'now - 30 min';
   $handler->display->display_options['filters']['date_filter']['date_fields'] = array(
     'field_data_field_date.field_date_value' => 'field_data_field_date.field_date_value',
   );

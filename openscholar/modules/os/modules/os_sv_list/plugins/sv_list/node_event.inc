@@ -55,10 +55,17 @@ class sv_list_node_event extends sv_list_plugin  {
           $time_index += 1; //don't clobber events that start at same time.
         }
 
-        if (strtotime($date['value2']) >= $now) {
+        // The request time is calculated in the UTC timezone.
+        // In order to compare it against the event time values we need
+        // get the timestamp of the event's start and end times to UTC as well.
+        $utc_time = new DateTime($date['value'], new DateTimeZone('UTC'));
+        $local_start_time = $utc_time->getTimestamp();
+        $utc_time = new DateTime($date['value2'], new DateTimeZone('UTC'));
+        $local_end_time = $utc_time->getTimestamp();
+        if ($local_end_time >= $now) {
           // Remove the events which their starting date is less then half hour
           // ago.
-          if ($this->VerifyStartDate($now, $date['value'])) {
+          if ($this->VerifyStartDate($now, $local_start_time)) {
             continue;
           }
 
@@ -78,16 +85,7 @@ class sv_list_node_event extends sv_list_plugin  {
    * Verify the start date accouter no longer then 30 minutes ago.
    */
   protected function VerifyStartDate($now, $start_date) {
-    $time_zone = date_default_timezone();
-
-    // Ge the string of the date and define it as UTC time.
-    $date = new DateTime($start_date, new DateTimeZone('UTC'));
-
-    // Affect the time object according to the current time zone.
-    $date->setTimezone(new DateTimeZone($time_zone));
-
-    // Check if the event start date was no longer then 30 minutes ago.
-    return ($now - (30 * 60)) >= $date->getTimestamp();
+    return ($now - (30 * 60)) >= $start_date;
   }
 
   /**
