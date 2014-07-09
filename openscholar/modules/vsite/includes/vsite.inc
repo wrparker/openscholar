@@ -114,17 +114,19 @@ function vsite_remove_entity($entity, $entity_type = 'node', $vsite = FALSE){
  *  The user ID to assocaite with the new VSite.
  * @param string $bundle
  *  The type(bundle) of the VSite to be created.
- * @param $preset
+ * @param bool $preset
  *  Type of vsite to create.
  * @param null $parent
  *  The parent VSite of the new VSite.
  * @param bool $visibility
  *  Default visibility of the new VSite.
+ * @param array $additional_settings
+ *  Array of additional settings for the node object.
  *
- * @return
+ * @return bool
  *  The SPACE object if created or FALSE.
  */
-function vsite_create_vsite($name, $domain, $uid, $bundle = 'personal', $preset = FALSE, $parent = NULL, $visibility = FALSE) {
+function vsite_create_vsite($name, $domain, $uid, $bundle = 'personal', $preset = FALSE, $parent = NULL, $visibility = FALSE, $additional_settings = array()) {
   $node = new stdClass();
   $node->type = $bundle;
   node_object_prepare($node);
@@ -163,6 +165,10 @@ function vsite_create_vsite($name, $domain, $uid, $bundle = 'personal', $preset 
       );
     }
   }
+
+  // Allow other modules to alter the node object before saving it to the DB.
+  $node = (object) array_merge((array) $node, $additional_settings);
+
   node_save($node);
 
   if ($vsite = spaces_load('og', $node->nid)) {
