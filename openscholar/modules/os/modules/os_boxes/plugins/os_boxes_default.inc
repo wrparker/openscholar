@@ -107,6 +107,7 @@ abstract class os_boxes_default extends boxes_box {
 
     // Get the assets from the cache.
     $block['assets'] = $this->get_assets();
+
     return $block;
   }
 
@@ -131,19 +132,22 @@ abstract class os_boxes_default extends boxes_box {
       $this->cache_id .= ':' . $bundle;
     }
     $this->cache_id .= ':' . $this->delta;
-    if ($page) {
-      $this->cache_id .= ':' . $page;
-    }
 
     // Add the user id to the CID of the widget.
     global $user;
     $this->cache_id .= ':' . $user->uid;
+
+    if ($page) {
+      $this->cache_id .= ':' . $page;
+    }
 
     return $this->cache_id;
   }
 
   /**
    * Retrieve the cache.
+   *
+   * If we get a cache hit, put the original assets that we stored earlier back into place
    *
    * @return
    *   The cached data, or FALSE if no cache exists or is expired.
@@ -158,6 +162,19 @@ abstract class os_boxes_default extends boxes_box {
       // No valid cache id.
       return FALSE;
     }
+
+    // wipe out the static arrays so we can get an accurate record of what assets this box adds
+    $js = &drupal_static('drupal_add_js');
+    $css = &drupal_static('drupal_add_css');
+
+    $this->existing_assets = array(
+      'js' => $js,
+      'css' => $css,
+    );
+
+    $js = array();
+    $css = array();
+
     if (!$cache = cache_get($this->cache_id, 'cache_os_boxes')) {
       // No cache exists.
       return FALSE;
@@ -167,6 +184,11 @@ abstract class os_boxes_default extends boxes_box {
       // Cache object was expired.
       return FALSE;
     }
+
+    // Cache Hit
+    // This box isn't going to add any assets, so we should restore what was already in the static arrays
+    $js = $this->existing_assets['js'];
+    $css = $this->existing_assets['css'];
 
     if ($assets = $this->get_assets()) {
       $this->add_assets($assets);
@@ -222,7 +244,7 @@ abstract class os_boxes_default extends boxes_box {
               drupal_add_js($js);
             }
             else {
-              drupal_add_js(end($js), reset($js));
+              drupal_add_js($js['data'], $js);
             }
           }
           break;
@@ -235,6 +257,9 @@ abstract class os_boxes_default extends boxes_box {
           foreach ($asset as $css) {
             if (!is_array($css)) {
               drupal_add_css($css);
+            }
+            else {
+              drupal_add_css($css['data'], $css);
             }
           }
           break;
@@ -277,11 +302,53 @@ abstract class os_boxes_default extends boxes_box {
       $expire = CACHE_PERMANENT;
     }
 
-    cache_set($this->cache_id, $cache, 'cache_os_boxes', $expire);
-    if ($assets) {
-      $cache_id = 'assets:' . $this->cache_id;
-      cache_set($cache_id, serialize($assets), 'cache_os_boxes', $expire);
+    // the block should have rendered everything out into an html string, and attached any js or css it needed.
+    // earlier, we blanked out the static arrays that hold these assets for all of Drupal
+    // what's in those arrays now should only contain when this block added,
+    $jquery = drupal_get_library('system', 'jquery');
+    $once = drupal_get_library('system', 'jquery.once');
+    $new_assets = array(
+      'js' => array(),
+      'css' => array(),
+      'settings' => array(),
+    );
+
+    $static_js = &drupal_static('drupal_add_js');
+    // if this is empty, the block didn't add any js, and we don't need to do anything
+    if (!empty($static_js)) {
+      $common_js = array(
+        'settings' => array(),
+        'misc/drupal.js' => array(),
+      );
+      $common_js += $jquery['js'];
+      $common_js += $once['js'];
+      $new_assets['js'] = array_diff_key($static_js, $common_js);
+      $new_assets['settings'] = $static_js['settings']['data'];
     }
+
+    $static_css = &drupal_static('drupal_add_css');
+    if (!empty($static_css)) {
+      $common_css = array();
+      $common_css += $jquery['css'];
+      $common_css += $once['css'];
+      $new_assets['css'] = array_diff_key($static_css, $common_css);
+    }
+
+    // now we need to merge the new assets with what we stored earlier)
+    $static_js = array_merge($this->existing_assets['js'], $new_assets['js']);
+    $static_css = array_merge($this->existing_assets['css'],$new_assets['css']);
+    // any box which within another box won't have any settings come in through existing_assets
+    if (isset($this->existing_assets['js']['settings'])) {
+      $static_js['settings']['data'] = array_merge($this->existing_assets['js']['settings']['data'], $new_assets['settings']);
+    }
+    else {
+      $static_js['settings']['data'] = $new_assets['settings'];
+    }
+
+    // cache everything we just found
+    cache_set($this->cache_id, $cache, 'cache_os_boxes', $expire);
+    $cache_id = 'assets:' . $this->cache_id;
+    cache_set($cache_id, serialize($new_assets), 'cache_os_boxes', $expire);
   }
 
   /**
