@@ -101,3 +101,19 @@ function os_links_vsite_og_node_type_info() {
   );
 }
 
+/**
+ * Implements hook_preprocess_node().
+ */
+function os_links_preprocess_node(&$variables) {
+  if ($variables['type'] != 'link') {
+    return;
+  }
+
+  if (empty($variables['sv_list']) || $variables['view_mode'] != 'full') {
+    return;
+  }
+
+  $variables['page'] = TRUE;
+  $variables['title_prefix'] = '<h1 class="node-title">' . $variables['title'] . '</h1>';
+}
+
