@@ -101,3 +101,7 @@ function os_links_vsite_og_node_type_info() {
   );
 }
 
+function os_links_node_view_alter(&$build) {
+  dpm($build);
+}
+
