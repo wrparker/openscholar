@@ -13,17 +13,4 @@ $plugin = array(
 );
 
 class sv_list_node_link  extends sv_list_plugin {
-
-  /**
-   * Overrides sv_list_plugin::render().
-   */
-  public function render($options, &$entities) {
-    if ($options['display'] != 'full') {
-      return;
-    }
-
-    foreach ($entities as $entity) {
-      $entity->sv_list = TRUE;
-    }
-  }
 }
