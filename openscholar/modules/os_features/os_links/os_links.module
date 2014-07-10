@@ -109,9 +109,10 @@ function os_links_preprocess_node(&$variables) {
     return;
   }
 
-  if (empty($variables['sv_list'])) {
+  if (empty($variables['sv_list']) || $variables['view_mode'] != 'full') {
     return;
   }
+
   $variables['page'] = TRUE;
   $variables['title_prefix'] = '<h1 class="node-title">' . $variables['title'] . '</h1>';
 }
