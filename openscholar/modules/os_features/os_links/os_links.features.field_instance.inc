@@ -24,6 +24,13 @@ function os_links_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 0,
       ),
+      'full' => array(
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
       'links' => array(
         'label' => 'above',
         'settings' => array(),
@@ -82,6 +89,13 @@ function os_links_field_default_field_instances() {
     'description' => 'The web address of the link. Starts with: http://',
     'display' => array(
       'default' => array(
+        'label' => 'hidden',
+        'module' => 'link',
+        'settings' => array(),
+        'type' => 'link_default',
+        'weight' => 1,
+      ),
+      'full' => array(
         'label' => 'hidden',
         'module' => 'link',
         'settings' => array(),
@@ -158,6 +172,13 @@ function os_links_field_default_field_instances() {
         'settings' => array(),
         'type' => 'file_default',
         'weight' => 4,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'module' => 'file',
+        'settings' => array(),
+        'type' => 'file_default',
+        'weight' => 2,
       ),
       'links' => array(
         'label' => 'above',
