@@ -108,6 +108,7 @@ function os_links_preprocess_node(&$variables) {
   if ($variables['type'] != 'link') {
     return;
   }
+
   if (empty($variables['sv_list'])) {
     return;
   }
