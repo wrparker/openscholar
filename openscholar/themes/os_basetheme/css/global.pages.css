@@ -1293,4 +1293,7 @@ LIST OF POSTS - PERSON TEASER IN SIDEBAR
 	 margin-left: 0;
 }
 
-
+a.disable-link-lop {
+  pointer-events: none;
+  color: #1e1e1e !important;
+}
