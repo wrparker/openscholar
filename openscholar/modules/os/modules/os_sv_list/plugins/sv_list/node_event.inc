@@ -30,6 +30,7 @@ class sv_list_node_event extends sv_list_plugin  {
    */
   public function sort_event($options, EntityFieldQuery $efq) {
     $efq->fieldOrderBy('field_date', 'value', 'ASC');
+    $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime('-30 minutes')), '>=');
     $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '>=');
   }
 
@@ -48,6 +49,7 @@ class sv_list_node_event extends sv_list_plugin  {
     // key them by timestamp for easy sorting.
     $exploded = array();
     $now = REQUEST_TIME;
+    dpm($entities);
     foreach ($entities as $entity) {
       foreach ($entity->field_date[LANGUAGE_NONE] as $delta => $date) {
         $time_index = strtotime($date['value']);
@@ -66,7 +68,7 @@ class sv_list_node_event extends sv_list_plugin  {
           // Remove the events which their starting date is less then half hour
           // ago.
           if ($this->VerifyStartDate($now, $local_start_time)) {
-            continue;
+            //continue;
           }
 
           $new = clone $entity;
