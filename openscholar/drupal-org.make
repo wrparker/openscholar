@@ -250,6 +250,7 @@ projects[migrate_extras][version] = 2.4
 
 projects[mollom][subdir] = "contrib"
 projects[mollom][version] = 2.9
+projects[mollom][patch][] = "https://www.drupal.org/files/issues/mollom.hook_flag.9.patch"
 
 projects[multiform][subdir] = "contrib"
 projects[multiform][version] = 1.0
