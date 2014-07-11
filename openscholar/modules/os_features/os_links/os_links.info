@@ -47,6 +47,7 @@ features[variable][] = comment_link
 features[variable][] = comment_preview_link
 features[variable][] = comment_subject_field_link
 features[variable][] = diff_show_preview_changes_node_link
+features[variable][] = field_bundle_settings_node__link
 features[variable][] = menu_options_link
 features[variable][] = menu_parent_link
 features[variable][] = node_options_link
