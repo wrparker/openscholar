@@ -67,7 +67,7 @@ class sv_list_node_event extends sv_list_plugin  {
           // Remove the events which their starting date is less then half hour
           // ago.
           if ($this->VerifyStartDate($now, $local_start_time)) {
-            //continue;
+            continue;
           }
 
           $new = clone $entity;
