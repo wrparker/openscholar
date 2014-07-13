@@ -493,6 +493,21 @@ function cp_cp_settings() {
       ),
       'after_build' => array('_cp_settings_form_redirects_build'),
     );
+    $settings['number_redirects'] = array(
+      'group' => array(
+        '#title' => t('URL Redirects'),
+        '#id' => 'redirects',
+      ),
+      'form' => array(
+        '#type' => 'textfield',
+        '#title' => 'Number of maximum redirects',
+        '#size' => 15,
+        '#weight' => 2,
+        // @todo: create new permission "set maximum redirects".
+        '#access' => user_access('clear vsite cache'),
+      ),
+      'submit' => array('_cp_max_redirects_submit'),
+    );
   }
 
   if (module_exists('vsite') && module_exists('expire')) {
@@ -844,6 +859,13 @@ function _cp_settings_redirect_build_element($redirects) {
   }
 
   return $build;
+}
+
+/**
+ * Submit callback; Sets the number of max redirects.
+ */
+function _cp_max_redirects_submit($form, $form_state) {
+  dpm($form_state);
 }
 
 /**
