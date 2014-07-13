@@ -496,7 +496,7 @@ function cp_cp_settings() {
       ),
       'after_build' => array('_cp_settings_form_redirects_build'),
     );
-    $settings['number_redirects'] = array(
+    $settings['cp_redirect_max'] = array(
       'group' => array(
         '#title' => t('URL Redirects'),
         '#id' => 'redirects',
@@ -506,10 +506,10 @@ function cp_cp_settings() {
         '#title' => 'Number of maximum redirects',
         '#size' => 15,
         '#weight' => 2,
+        '#default_value' => variable_get('cp_redirect_max', CP_REDIRECT_MAX_DEFAULT),
         '#element_validate' => array('element_validate_integer_positive'),
         '#access' => user_access('set maximum redirects'),
       ),
-      'submit' => array('_cp_max_redirects_submit'),
     );
   }
 
@@ -862,14 +862,6 @@ function _cp_settings_redirect_build_element($redirects) {
   }
 
   return $build;
-}
-
-/**
- * Submit callback; Sets the number of max redirects.
- */
-function _cp_max_redirects_submit($form, $form_state) {
-  $max_redirects = $form_state['values']['number_redirects'];
-  variable_set('cp_redirect_max', $max_redirects);
 }
 
 /**
