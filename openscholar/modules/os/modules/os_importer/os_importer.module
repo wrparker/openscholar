@@ -586,9 +586,14 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   // Get the mappings of the current importer.
   $mappings_diff = array();
   $mappings = array();
+  $target_to_source = array();
   foreach ($config['processor']['config']['mappings'] as $mapping) {
     $mappings_diff[] = strtolower($mapping['source']);
     $mappings[] = $mapping['target'];
+
+    // Keep the source for each target field. This will be used for the validation
+    // error if there will be any later on.
+    $target_to_source[$mapping['target']] = $mapping['source'];
   }
 
   // Load the uploaded file and parse his headers.
@@ -690,11 +695,26 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     }
 
     if ($handler->validate($node, TRUE) === FALSE) {
-      $errors = $handler->getErrors();
-      $params = array(
-        '!errors' => $errors,
+      $errors = $handler->getErrors(FALSE);
+
+      $return = array();
+
+      // Replace the messages' placeholders with the CSV column name for better
+      // validation error messages.
+      foreach ($errors as $field => $field_errors) {
+        foreach ($field_errors as $error) {
+          if (!isset($error['params']['@field'])) {
+            continue;
+          }
+          $error['params']['@field'] = $target_to_source[$field];
+          $return[] = format_string($error['message'], $error['params']);
+        }
+      }
+
+      $return = array(
+        '!errors' => implode("\n\r", $return),
       );
-      form_set_error('', t('Field validation errors: !errors', $params));
+      form_set_error('', t('Field validation errors: !errors', $return));
     }
   }
 
