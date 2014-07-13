@@ -292,6 +292,9 @@ function cp_permission() {
     'clear vsite cache' => array(
       'title' => t('Clear Vsite Varnish Cache'),
     ),
+    'set maximum redirects' => array(
+      'title' => t('Set the maximum of allowed redirects'),
+    ),
   );
 }
 
@@ -503,8 +506,8 @@ function cp_cp_settings() {
         '#title' => 'Number of maximum redirects',
         '#size' => 15,
         '#weight' => 2,
-        // @todo: create new permission "set maximum redirects".
-        '#access' => user_access('clear vsite cache'),
+        '#element_validate' => array('element_validate_integer_positive'),
+        '#access' => user_access('set maximum redirects'),
       ),
       'submit' => array('_cp_max_redirects_submit'),
     );
@@ -865,7 +868,8 @@ function _cp_settings_redirect_build_element($redirects) {
  * Submit callback; Sets the number of max redirects.
  */
 function _cp_max_redirects_submit($form, $form_state) {
-  dpm($form_state);
+  $max_redirects = $form_state['values']['number_redirects'];
+  variable_set('cp_redirect_max', $max_redirects);
 }
 
 /**
