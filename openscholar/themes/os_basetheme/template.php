@@ -164,10 +164,8 @@ function os_basetheme_preprocess_node(&$vars) {
   // Event nodes, inject variables for date month and day shield
   if ($vars['node']->type == 'event' && !$vars['page']) {
     $vars['event_start'] = array();
-    $delta = 0;
-    if (isset($vars['node']->date_id)) {
-      list(,,, $delta,) = explode('.', $vars['node']->date_id . '.');
-    }
+
+    $delta = $vars['id'];
     if (isset($vars['field_date'][$delta]['value']) && !empty($vars['field_date'][$delta]['value'])) {
       // Define the time zone in the DB as a UTC.
       $date = new DateTime($vars['field_date'][$delta]['value'], new DateTimeZone('utc'));
