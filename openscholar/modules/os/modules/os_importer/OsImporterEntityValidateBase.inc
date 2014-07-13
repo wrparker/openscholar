@@ -67,7 +67,7 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
       '@date' => $value,
       '@format' => date('M j Y'),
     );
-    $this->setError($field_name, 'The date, @date, is not valid. The date should be in a format similar to @format', $params);
+    $this->setError($field_name, 'The value in the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
   }
 
   /**
@@ -77,10 +77,7 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
   public function validatorUrlNotEmpty($field_name, $value) {
     $value = reset($value);
     if (empty($value)) {
-      $params = array(
-        '@field_name' => $field_name,
-      );
-      $this->setError($field_name, t('The url on @field_name is empty. Please supply a URL.', $params));
+      $this->setError($field_name, t('The field URL cannot be empty.'));
     }
   }
 

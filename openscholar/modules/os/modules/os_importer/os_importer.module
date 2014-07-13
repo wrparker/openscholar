@@ -694,7 +694,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       $params = array(
         '!errors' => $errors,
       );
-      form_set_error('', t('The validation of the field encounter errors: !errors', $params));
+      form_set_error('', t('Field validation errors: !errors', $params));
     }
   }
 
