@@ -2310,7 +2310,7 @@ function os_files_file_url_alter(&$uri) {
   // They'll be handled in the public stream wrapper.
   // Also, make sure the variable is set.
   $domain = variable_get('os_files_static_domain');
-  if (!file_uri_scheme($uri) && $domain && strpos($uri, $domain) === FALSE &&_os_files_use_static_domain($uri)) {
+  if (!file_uri_scheme($uri) && $domain && strpos($uri, $domain) === FALSE && _os_files_use_static_domain($uri)) {
     $uri = $domain . '/' . $uri;
     $link = array(
       '#type' => 'html_tag',
