@@ -1687,6 +1687,11 @@ function os_js_alter(&$javascript) {
     return;
   }
 
+  // Do nothing when rendering a web widget
+  if (module_exists('web_widgets') && web_widgets_inside_widget()) {
+    return;
+  }
+
   foreach ($javascript as $url => $js) {
     if (strpos($url, 'colorbox.js')) {
       $file = drupal_get_path('module', 'os') . '/theme/os_colorbox.js';
