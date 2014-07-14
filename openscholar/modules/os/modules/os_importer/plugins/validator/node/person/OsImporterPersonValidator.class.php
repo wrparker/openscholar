@@ -9,18 +9,6 @@ class OsImporterPersonValidator extends OsImporterEntityValidateBase {
   public function setFieldsInfo() {
     $fields = parent::setFieldsInfo();
 
-    $fields['field_first_name'] = array(
-      'validators' => array(
-        'isNotEmpty',
-      ),
-    );
-
-    $fields['field_last_name'] = array(
-      'validators' => array(
-        'isNotEmpty',
-      ),
-    );
-
     $fields['person_photo'] = array(
       'validators' => array(
         'validatorPersonPhoto',
