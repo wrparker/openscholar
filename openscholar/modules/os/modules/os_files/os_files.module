@@ -2286,6 +2286,13 @@ function os_files_get_bundles() {
  * @param $path - The path to test
  */
 function _os_files_use_static_domain($path) {
+  global $is_https;
+
+  // If static domains on https is disabled and this page is secure, don't use the static domain.
+  if (!variable_get('os_files_static_domain_on_https', TRUE) && $is_https) {
+    return FALSE;
+  }
+
   if (strpos($path, 'js/js_') !== FALSE) {
     // aggregated js file.
     return TRUE;
