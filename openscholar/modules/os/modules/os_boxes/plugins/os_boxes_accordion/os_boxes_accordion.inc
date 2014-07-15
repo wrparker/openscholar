@@ -30,8 +30,7 @@ class os_boxes_accordion extends os_boxes_widget_collection {
     $output = parent::render();
 
     // disable caching for this block for now
-    $this->cache_id = NULL;
-    if (($output['content'] = $this->get_cache()) === FALSE) {
+    // if (($output['content'] = $this->get_cache()) === FALSE) {
       $content = array(
         '#prefix' => '<div class="accordion">',
         '#suffix' => '</div>',
@@ -79,8 +78,8 @@ class os_boxes_accordion extends os_boxes_widget_collection {
       }
 
       $output['content'] = drupal_render($content);
-      $this->set_cache($output['content'], $content['#attached']);
-    }
+    //   $this->set_cache($output['content'], $content['#attached']);
+    // }
 
     return $output;
   }
