@@ -210,6 +210,24 @@ function os_events_date_formatter_pre_view_alter(&$entity, $vars) {
     return;
   }
 
+  $entity->view = views_get_current_view();
+  $view = $entity->view;
+
+  // If we are in the "upcoming" view page, show only the current repeat.
+  if ($view && $view->display_handler->plugin_name == 'page') {
+    $result = $view->result[$view->row_index];
+    $field = 'field_data_field_date_field_date_value';
+    foreach ($entity->field_date[LANGUAGE_NONE] as $d => $r) {
+      if ($r['value'] == $result->$field) {
+        $delta = $d;
+        break;
+      }
+    }
+
+    $entity->date_id = 'node.' . $entity->nid . '.field_date.' . $delta;
+    return;
+  }
+
   if (!isset($entity->date_id)) {
        // The current view rendering this entity. We try and set it if it is not already set.
     if ((isset($entity->view) || $entity->view = views_get_current_view())
