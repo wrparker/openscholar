@@ -613,7 +613,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   // message if needed.
   if ($missing = array_diff($mappings_diff, $header)) {
     $params = array('!missing' => theme('item_list', array('items' => $missing)));
-    form_set_error('file', t('The next columns are missing in the CSV file: !missing', $params));
+    form_set_error('file', t('The next columns are missing in the CSV file: !missing Please download a template file and check the columns of the file you uploaded. ', $params));
     return;
   }
 
