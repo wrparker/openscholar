@@ -47,6 +47,8 @@ class os_boxes_tabs extends os_boxes_widget_collection {
    */
   public function render() {
     $block = parent::render();
+    // disable caching for this block for now
+    $this->cache_id = NULL;
     if (($block['content'] = $this->get_cache()) === FALSE) {
       $plugin = context_get_plugin('reaction', 'block');
       $blocks = $plugin->get_blocks();
