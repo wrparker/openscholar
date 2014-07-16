@@ -81,6 +81,6 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
       '@date' => $value,
       '@format' => date('M j Y'),
     );
-    $this->setError($field_name, 'The value in the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
+    $this->setError($field_name, 'The value of the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
   }
 }
