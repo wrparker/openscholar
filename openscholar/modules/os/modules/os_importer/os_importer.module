@@ -617,16 +617,9 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   // Check what columns are missing from the uploaded CSV file and display
   // message if needed.
   if ($missing = array_diff($mappings_diff, $header)) {
-    $params = array(
-      '!missing' => theme('item_list', array('items' => $missing)),
-      '@single-column' => reset($missing),
-    );
-
-    $message = format_plural(count($missing),
-      'The column @single-column missing in the CSV file. The structure of the your CSV file probably needs to be updated. Please download the template again.',
-      'The following columns are not presents in the CSV file: !missing The structure of the your CSV file probably needs to be updated. Please download the template again.'
-    );
-    form_set_error('file', t($message, $params));
+    $params = array('!missing' => theme('item_list', array('items' => $missing)));
+    form_set_error('file', t('The following columns are not present in the CSV file: !missing The structure of the your CSV file probably needs to be updated. Please download the template again. ', $params));
+    
     return;
   }
 
