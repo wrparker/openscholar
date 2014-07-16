@@ -687,6 +687,9 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       elseif (empty($value) && in_array($info['type'], array('integer', 'decimal'))) {
         $value = 0;
       }
+      elseif ($value && $info['type'] == 'integer') {
+        $value = intval($value);
+      }
       elseif ($field == 'created' && is_string($value)) {
         $value = strtotime($value);
       }
