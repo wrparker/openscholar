@@ -914,8 +914,7 @@ function os_importer_entity_property_info_alter(&$info) {
       'field_presentation_date__start' => t('Presentation date start'),
     ),
     'news' => array(
-      'field_news_date__start' => t('Date start'),
-      'field_news_date__end' => t('Date end'),
+      'field_news_date__start' => t('Date'),
       'field_url__url' => t('URL'),
       'field_photo' => t('News photo'),
     ),
