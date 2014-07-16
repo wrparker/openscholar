@@ -179,6 +179,10 @@ function os_basetheme_preprocess_node(&$vars) {
       $vars['event_start']['month'] = check_plain($date->format('M'));
       $vars['event_start']['day'] = check_plain($date->format('d'));
       $vars['classes_array'][] = 'event-start';
+
+      // Unset the date id to avoid displaying the first repeat in all the
+      // event's results on the page.
+      $vars['node']->date_id = NULL;
     }
   }
 
