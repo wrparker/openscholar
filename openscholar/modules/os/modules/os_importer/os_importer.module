@@ -590,10 +590,6 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   foreach ($config['processor']['config']['mappings'] as $mapping) {
     $mappings_diff[] = strtolower($mapping['source']);
     $mappings[] = $mapping['target'];
-
-    // Keep the source for each target field. This will be used for the validation
-    // error if there will be any later on.
-    $target_to_source[$mapping['target']] = $mapping['source'];
   }
 
   // Load the uploaded file and parse his headers.
@@ -704,20 +700,29 @@ function os_importer_verify_uploaded_file($form, $form_state) {
 
       // Replace the messages' placeholders with the CSV column name for better
       // validation error messages.
+      module_load_include('inc', 'entity', 'entity.property');
+      $node_info = entity_get_property_info('node');
       foreach ($errors as $field => $field_errors) {
         foreach ($field_errors as $error) {
           if (!isset($error['params']['@field'])) {
             continue;
           }
-          $error['params']['@field'] = $target_to_source[$field];
-          $return[] = format_string($error['message'], $error['params']);
+
+          // We take the label of the field (either the original label, or if
+          // it's a property we added, then the one defined in
+          // os_importer_entity_property_info_alter().
+          $bundle_info = $node_info['bundles'][$node->type];
+          $field_label = $bundle_info['properties'][$field]['label'];
+          $error['params']['@field'] = $field_label;
+
+          $return[] = format_string($error['message'], $error['params']) . '</br>';
         }
       }
 
       $return = array(
         '!errors' => implode("\n\r", $return),
       );
-      form_set_error('', t('Field validation errors: !errors', $return));
+      form_set_error('', t('Field validation errors:</br>!errors', $return));
     }
   }
 
