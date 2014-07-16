@@ -792,6 +792,11 @@ function os_importer_feeds_presave(FeedsSource $source, $entity, $item) {
     }
   }
 
+  // Allow importing a presentation with date is empty.
+  if ($entity->type == "presentation" && empty($item['date'])) {
+    $entity->field_presentation_date = array();
+  }
+
   // If the item we import didn't have a year value, clear the default value
   // given by the date module from the entity.
   if ($entity->type == "class" && empty($item['year'])) {
