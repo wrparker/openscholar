@@ -1766,7 +1766,7 @@ class FeatureContext extends DrupalContext {
   public function iShouldSeeThePublicationComesBeforeLopWidget($first, $second) {
     $page = $this->getSession()->getPage()->getContent();
 
-    $pattern = '/<div id="boxes-box-box-list-of-posts" class="boxes-box">[\s\S]*' . $first . '[\s\S]*' . $second . '[\s\S]*<\/div>/';
+    $pattern = "/<div id='boxes-box-box-list-of-posts' class='boxes-box'>[\s\S]*" . $first . "[\s\S]*" . $second . "[\s\S]*<\/div>/";
     if (!preg_match($pattern, $page)) {
       throw new Exception("The publication '$first' does not come before the publication '$second'.");
     }
