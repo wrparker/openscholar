@@ -6,6 +6,8 @@
  */
 class OsImporterEventValidator extends OsImporterEntityValidateBase {
 
+  private $dates = array();
+
   public function setFieldsInfo() {
     $fields = parent::setFieldsInfo();
 
@@ -25,7 +27,6 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
 
     $fields['registration'] = array(
       'validators' => array(
-        'isNotEmpty',
         'validateSignUp',
       ),
     );
@@ -49,7 +50,37 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
         '@values' => implode(", ", $values),
       );
 
-      $this->setError($field_name, 'The field value(@value) should be of of the next values: @values', $params);
+      $this->setError($field_name, 'The field value (@value) should be one of the following values: @values', $params);
     }
+  }
+
+  /**
+   * Verify the start is occurring before the end date.
+   */
+  public function validateOsDate($field_name, $value) {
+    // Store the dates to compare start and end dates.
+    $this->dates[$field_name] = reset($value);
+
+    $value = reset($value);
+
+    // Check if start date is greater then the end date.
+    if (isset($this->dates['field_date__start']) && $field_name == 'field_date__end') {
+      if (strtotime($this->dates['field_date__start']) > strtotime($this->dates['field_date__end'])) {
+        $this->setError($field_name, 'The start date should not be greater than the end date.');
+      }
+    }
+
+    // Validate the date format for the start and end date.
+    $date = DateTime::createFromFormat('M j Y', $value);
+
+    if ($date && $date->format('M j Y') == $value) {
+      return;
+    }
+
+    $params = array(
+      '@date' => $value,
+      '@format' => date('M j Y'),
+    );
+    $this->setError($field_name, 'The value of the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
   }
 }

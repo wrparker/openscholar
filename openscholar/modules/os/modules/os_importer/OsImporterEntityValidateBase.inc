@@ -12,13 +12,6 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
   public function getFieldsInfo() {
     $fields = parent::getFieldsInfo();
 
-    // Add all fields.
-    foreach (field_info_instances($this->entityType, $this->bundle) as $field_name => $info) {
-      if ($info['required']) {
-        $fields[$field_name]['validators'][] = 'isNotEmpty';
-      }
-    }
-
     // Remove all validators for entityreference fields.
     foreach ($fields as $field_name => $info) {
       $field_info = field_info_field($field_name);
@@ -32,7 +25,6 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
     // taken care by the os_importer_entity_property_info_alter().
     $field_names = array(
       'field_news_date',
-      'registration',
       'field_url',
       'field_links_link',
       'media_gallery_format',
@@ -55,6 +47,11 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
    * Verify the start is occurring before the end date.
    */
   public function validateOsDate($field_name, $value) {
+    // Empty values are checked for in 'isNotEmpty'.
+    if (empty($value)) {
+      return;
+    }
+
     $value = reset($value);
     // Validate the date format for the start and end date.
     $date = DateTime::createFromFormat('M j Y', $value);
@@ -67,7 +64,7 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
       '@date' => $value,
       '@format' => date('M j Y'),
     );
-    $this->setError($field_name, 'The value in the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
+    $this->setError($field_name, 'The value of the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
   }
 
   /**
