@@ -15,7 +15,6 @@ Feature:
       When I assign the node "First blog" with the type "blog" to the term "Stephen William Hawking"
        And I assign the node "First blog" with the type "blog" to the term "Air"
        And I visit "john/classes"
-       And I should print page
       Then I should see "First blog"
        And response header "x-drupal-cache-os-boxes-plugin" should not be "os_sv_list_box"
        And I visit "john/classes"
