@@ -11,6 +11,7 @@ Feature:
           | Display style        | Title                | select list |
           | Sorted By            | Year of Publication  | select list |
      When I visit "john/publications"
+      And I should print page
      Then I should see the publication "John F. Kennedy: A Biography" comes before "Goblet of Fire" in the LOP widget
 
   @api @last
