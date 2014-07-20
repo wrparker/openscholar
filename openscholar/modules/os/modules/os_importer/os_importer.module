@@ -796,10 +796,10 @@ function os_importer_feeds_presave(FeedsSource $source, $entity, $item) {
       $entity->field_date[LANGUAGE_NONE][0]['value2'] = $entity->field_date[LANGUAGE_NONE][0]['value'];
     }
 
-    // Allow events with both empty start and end dates.
+    // Allow events with both empty start and end dates in CSV import.
     // We clear them here since date module autopopulates empty values with
     // today's date.
-    if (empty($item['start date']) && empty($item['start date'])) {
+    if ($source->id == 'os_events_csv' && empty($item['start date']) && empty($item['start date'])) {
       $entity->field_date = array();
     }
   }
