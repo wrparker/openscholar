@@ -13,14 +13,12 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
 
     $fields['field_date__start'] = array(
       'validators' => array(
-        'isNotEmpty',
         'validateOsDate',
       ),
     );
 
     $fields['field_date__end'] = array(
       'validators' => array(
-        'isNotEmpty',
         'validateOsDate',
       ),
     );
@@ -58,6 +56,10 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
    * Verify the start is occurring before the end date.
    */
   public function validateOsDate($field_name, $value) {
+    if (empty($value)) {
+      return;
+    }
+
     // Store the dates to compare start and end dates.
     $this->dates[$field_name] = reset($value);
 
