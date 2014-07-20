@@ -11,7 +11,7 @@ Feature:
           | Display style        | Title                | select list |
           | Sorted By            | Year of Publication  | select list |
       And I should print page
-     When I visit "john/publications"
+     When I visit "john/blog"
      Then I should see the publication "John F. Kennedy: A Biography" comes before "Goblet of Fire" in the LOP widget
 
   @api @last
@@ -23,7 +23,7 @@ Feature:
           | Content Type         | Biblio               | select list |
           | Display style        | Title                | select list |
           | Sorted By            | Year of Publication  | select list |
-     When I visit "john/publications"
+     When I visit "john/blog"
      Then I should see the publication "John F. Kennedy: A Biography" comes before "Chamber of Secrets" in the LOP widget
       And I should see the publication "Chamber of Secrets" comes before "Goblet of Fire" in the LOP widget
 
@@ -41,6 +41,6 @@ Feature:
           | Content Type         | Biblio               | select list |
           | Display style        | Title                | select list |
           | Sorted By            | Year of Publication  | select list |
-     When I visit "john/publications"
+     When I visit "john/blog"
      Then I should see the publication "John F. Kennedy: A Biography" comes before "Chamber of Secrets" in the LOP widget
       And I should see the publication "Chamber of Secrets" comes before "Goblet of Fire" in the LOP widget
