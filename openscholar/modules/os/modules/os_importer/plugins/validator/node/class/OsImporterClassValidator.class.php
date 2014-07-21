@@ -11,7 +11,6 @@ class OsImporterClassValidator extends OsImporterEntityValidateBase {
 
     $fields['field_semester'] = array(
       'validators' => array(
-        'isNotEmpty',
         'validationSemester',
       ),
     );

@@ -354,7 +354,8 @@ function os_importer_event_registration($source, $entity, $target, $value, $mapp
     return;
   }
 
-  $register_on = in_array($value, array('ON', 'On', 'on', 'TRUE','true')) ? 'event_signup_simple' : '';
+  $value = strtolower($value);
+  $register_on = in_array($value, array('on', 'true')) ? 'event_signup_simple' : '';
   $entity->field_event_registration[$entity->language][0]['registration_type'] = $register_on;
 }
 
@@ -793,6 +794,13 @@ function os_importer_feeds_presave(FeedsSource $source, $entity, $item) {
   if ($entity->type == "event") {
     if (empty($entity->field_date[LANGUAGE_NONE][0]['value2'])) {
       $entity->field_date[LANGUAGE_NONE][0]['value2'] = $entity->field_date[LANGUAGE_NONE][0]['value'];
+    }
+
+    // Allow events with both empty start and end dates in CSV import.
+    // We clear them here since date module autopopulates empty values with
+    // today's date.
+    if ($source->id == 'os_events_csv' && empty($item['start date']) && empty($item['start date'])) {
+      $entity->field_date = array();
     }
   }
 
