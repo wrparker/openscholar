@@ -6,8 +6,8 @@ Feature:
   Scenario: Verify that the List of posts widget shows publications in the order
             of Year.
     Given I am logging in as "john"
-      And the widget "LOP" is set in the "Publications" page with the following <settings>:
-          | Content Type               | Biblio               | select list |
+      And the widget "List of publications" is set in the "Publications" page with the following <settings>:
+          | Content Type               | Publication               | select list |
           | Display style              | Title                | select list |
           | Sorted By                  | Year of Publication  | select list |
      When I visit "john/publications"
@@ -18,7 +18,7 @@ Feature:
             of Year and then by sticky.
     Given I am logging in as "john"
       And I make the node "Chamber of Secrets" sticky
-      And the widget "LOP" is set in the "Publications" page with the following <settings>:
+      And the widget "List of publications" is set in the "Publications" page with the following <settings>:
           | Content Type               | Biblio               | select list |
           | Display style              | Title                | select list |
           | Sorted By                  | Year of Publication  | select list |
@@ -36,7 +36,7 @@ Feature:
       And I edit the node "Chamber of Secrets"
       And I fill in "date[date]" with "01/01/1999"
       And I press "edit-submit"
-      And the widget "LOP" is set in the "Publications" page with the following <settings>:
+      And the widget "List of publications" is set in the "Publications" page with the following <settings>:
           | Content Type               | Biblio               | select list |
           | Display style              | Title                | select list |
           | Sorted By                  | Year of Publication  | select list |
