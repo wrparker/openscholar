@@ -99,10 +99,34 @@ function os_files_theme() {
   $items = array(
     'os_files_image_list' => array(
       'render element' => 'elements',
-    )
+    ),
+    'os_file_icon' => array(
+      'variables' => array('file' => NULL, 'icon_directory' => NULL),
+    ),
   );
 
   return $items;
+}
+
+/**
+ * Returns HTML for an image with an appropriate icon for the given file.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - file: A file object for which to make an icon.
+ *   - icon_directory: (optional) A path to a directory of icons to be used for
+ *     files. Defaults to the value of the "file_icon_directory" variable.
+ *
+ * @ingroup themeable
+ */
+function theme_os_file_icon($variables) {
+  $file = $variables['file'];
+  $icon_directory = $variables['icon_directory'];
+
+  $mime = check_plain($file->filemime);
+  if ($icon_url = file_icon_url($file, $icon_directory)) {
+    return '<img class="file-icon" alt="" title="' . $mime . '" src="' . $icon_url . '" />';
+  }
 }
 
 function os_files_theme_registry_alter(&$reg) {
@@ -1417,7 +1441,7 @@ function os_files_file_view($file, $view_mode, $langcode) {
   $file->content['og_vocabulary'] = array(); //don't print this until it's useful.  terms only work with sv lists right now.
 
   $icon = array(
-    '#theme' => 'file_icon',
+    '#theme' => 'os_file_icon',
     '#file' => $file,
     '#icon_directory' => drupal_get_path('module', 'os_files') . '/icons',
   );
@@ -2286,6 +2310,13 @@ function os_files_get_bundles() {
  * @param $path - The path to test
  */
 function _os_files_use_static_domain($path) {
+  global $is_https;
+
+  // If static domains on https is disabled and this page is secure, don't use the static domain.
+  if (!variable_get('os_files_static_domain_on_https', TRUE) && $is_https) {
+    return FALSE;
+  }
+
   if (strpos($path, 'js/js_') !== FALSE) {
     // aggregated js file.
     return TRUE;
@@ -2309,7 +2340,8 @@ function os_files_file_url_alter(&$uri) {
   // Skip files using a schema.
   // They'll be handled in the public stream wrapper.
   // Also, make sure the variable is set.
-  if (!file_uri_scheme($uri) && _os_files_use_static_domain($uri) && $domain = variable_get('os_files_static_domain')) {
+  $domain = variable_get('os_files_static_domain');
+  if (!file_uri_scheme($uri) && $domain && strpos($uri, $domain) === FALSE && _os_files_use_static_domain($uri)) {
     $uri = $domain . '/' . $uri;
     $link = array(
       '#type' => 'html_tag',

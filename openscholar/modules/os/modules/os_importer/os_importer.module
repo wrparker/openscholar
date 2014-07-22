@@ -354,7 +354,8 @@ function os_importer_event_registration($source, $entity, $target, $value, $mapp
     return;
   }
 
-  $register_on = in_array($value, array('ON', 'On', 'on', 'TRUE','true')) ? 'event_signup_simple' : '';
+  $value = strtolower($value);
+  $register_on = in_array($value, array('on', 'true')) ? 'event_signup_simple' : '';
   $entity->field_event_registration[$entity->language][0]['registration_type'] = $register_on;
 }
 
@@ -586,6 +587,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   // Get the mappings of the current importer.
   $mappings_diff = array();
   $mappings = array();
+  $target_to_source = array();
   foreach ($config['processor']['config']['mappings'] as $mapping) {
     $mappings_diff[] = strtolower($mapping['source']);
     $mappings[] = $mapping['target'];
@@ -613,7 +615,8 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   // message if needed.
   if ($missing = array_diff($mappings_diff, $header)) {
     $params = array('!missing' => theme('item_list', array('items' => $missing)));
-    form_set_error('file', t('The next columns are missing in the CSV file: !missing', $params));
+    form_set_error('file', t('The following columns are not present in the CSV file: !missing The structure of the your CSV file probably needs to be updated. Please download the template again. ', $params));
+    
     return;
   }
 
@@ -682,6 +685,9 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       elseif (empty($value) && in_array($info['type'], array('integer', 'decimal'))) {
         $value = 0;
       }
+      elseif ($value && $info['type'] == 'integer') {
+        $value = intval($value);
+      }
       elseif ($field == 'created' && is_string($value)) {
         $value = strtotime($value);
       }
@@ -695,11 +701,33 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     }
 
     if ($handler->validate($node, TRUE) === FALSE) {
-      $errors = $handler->getErrors();
-      $params = array(
-        '!errors' => $errors,
+      $errors = $handler->getErrors(FALSE);
+
+      $return = array();
+
+      // Replace the messages' placeholders with the CSV column name for better
+      // validation error messages.
+      foreach ($errors as $field => $field_errors) {
+        foreach ($field_errors as $error) {
+          if (!isset($error['params']['@field'])) {
+            continue;
+          }
+
+          // We take the label of the field (either the original label, or if
+          // it's a property we added, then the one defined in
+          // os_importer_entity_property_info_alter().
+          $field_info = $wrapper->{$field}->info();
+          $field_label = $field_info['label'];
+          $error['params']['@field'] = $field_label;
+
+          $return[] = format_string($error['message'], $error['params']) . '</br>';
+        }
+      }
+
+      $return = array(
+        '!errors' => implode("\n\r", $return),
       );
-      form_set_error('', t('The validation of the field encounter errors: !errors', $params));
+      form_set_error('', t('Field validation errors:</br>!errors', $return));
     }
   }
 
@@ -772,6 +800,18 @@ function os_importer_feeds_presave(FeedsSource $source, $entity, $item) {
     if (empty($entity->field_date[LANGUAGE_NONE][0]['value2'])) {
       $entity->field_date[LANGUAGE_NONE][0]['value2'] = $entity->field_date[LANGUAGE_NONE][0]['value'];
     }
+
+    // Allow events with both empty start and end dates in CSV import.
+    // We clear them here since date module autopopulates empty values with
+    // today's date.
+    if ($source->id == 'os_events_csv' && empty($item['start date']) && empty($item['start date'])) {
+      $entity->field_date = array();
+    }
+  }
+
+  // Allow importing a presentation with date is empty.
+  if ($entity->type == "presentation" && empty($item['date'])) {
+    $entity->field_presentation_date = array();
   }
 
   // If the item we import didn't have a year value, clear the default value
@@ -899,8 +939,7 @@ function os_importer_entity_property_info_alter(&$info) {
       'field_presentation_date__start' => t('Presentation date start'),
     ),
     'news' => array(
-      'field_news_date__start' => t('Date start'),
-      'field_news_date__end' => t('Date end'),
+      'field_news_date__start' => t('Date'),
       'field_url__url' => t('URL'),
       'field_photo' => t('News photo'),
     ),

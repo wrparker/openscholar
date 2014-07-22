@@ -28,7 +28,7 @@ function os_sv_list_menu() {
  * Ajax callback.
  */
 function os_sv_list_pager_callback($box) {
- 
+
   $output = $box->render();
   $commands[] = ajax_command_replace('box-' . $box->delta . '-page', $output['content']);
   return $output['content'];
@@ -36,7 +36,7 @@ function os_sv_list_pager_callback($box) {
 
 /**
  * Implements hook_ctools_plugin_type
- * 
+ *
  * Defines sv_list plugins that extend the basic sv list.
  */
 function os_sv_list_ctools_plugin_type() {
@@ -45,7 +45,7 @@ function os_sv_list_ctools_plugin_type() {
 
 /**
  * Implements hook_ctools_plugin_directory
- * 
+ *
  * Provides the sv_list plugins this module provides
  */
 function os_sv_list_ctools_plugin_directory($module, $plugin) {
@@ -57,17 +57,17 @@ function os_sv_list_ctools_plugin_directory($module, $plugin) {
 
 /**
  * @function os_sv_list_plugins
- * 
+ *
  * Get sv_list plugins.  Optionally filter by entity type or bundle.
  */
 function os_sv_list_plugins($entity_type = NULL, $bundle = NULL) {
   $plugins = ctools_get_plugins('os_sv_list', 'sv_list');
-  
+
   foreach (array('entity_type', 'bundle') as $filter) {
-    $var = ${$filter}; 
+    $var = ${$filter};
     if ($var) {
       $plugins = array_filter($plugins, function($plugin) use ($var, $filter) {
-        return (in_array($var, $plugin[$filter]) || empty($plugin[$filter]));    
+        return (in_array($var, $plugin[$filter]) || empty($plugin[$filter]));
       });
     }
 
@@ -92,7 +92,7 @@ function os_sv_list_boxes_plugins() {
     ),
     'factory' => FALSE,
   );
-  
+
   $plugins['os_sv_list_box'] = array(
     'title' => 'List of Posts',
     'tags' => array('Content'),
@@ -104,7 +104,7 @@ function os_sv_list_boxes_plugins() {
     ),
     'factory' => TRUE,
   );
-  
+
   $plugins['os_sv_list_file'] = array(
     'title' => 'List of Files',
     'tags' => array('Content'),
@@ -122,8 +122,8 @@ function os_sv_list_boxes_plugins() {
 
 /**
  * Implements hook_query_TAG_alter
- * 
- * EFQs tagged with random will be randomly sorted.  
+ *
+ * EFQs tagged with random will be randomly sorted.
  * http://rupertj.tumblr.com/post/21641418129/randomly-sorting-an-entityfieldquery
  */
 function os_sv_list_query_random_alter($query) {
@@ -135,7 +135,16 @@ function os_sv_list_query_random_alter($query) {
  */
 function os_sv_list_query_sv_list_biblio_alter(&$query) {
   $query->join('biblio', 'b', 'b.nid = ogm.etid');
-  $query->orderBy('b.biblio_year', 'DESC'); 
+  $query->orderBy('b.biblio_year', 'DESC');
+
+  // Order first by the biblio year, and lastly by sticky.
+  $fields =& $query->getOrderBy();
+  if (!empty($fields['node.sticky'])) {
+    $order = $fields['node.sticky'];
+    unset($fields['node.sticky']);
+    $fields['node.sticky'] = $order;
+  }
+  //Lastly order by created.
   $query->orderBy('node.created', 'DESC');
 }
 
@@ -205,7 +214,7 @@ function os_sv_list_terms_element_validate($element, &$form_state) {
 
 /**
  * @function os_sv_list_vocabs_content_type
- * 
+ *
  * AJAX callback for reload the vocabulary for the selected content type.
  */
 function os_sv_list_vocabs_content_type($form, $form_state) {

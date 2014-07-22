@@ -11,7 +11,6 @@ class OsImporterClassValidator extends OsImporterEntityValidateBase {
 
     $fields['field_semester'] = array(
       'validators' => array(
-        'isNotEmpty',
         'validationSemester',
       ),
     );
@@ -29,6 +28,11 @@ class OsImporterClassValidator extends OsImporterEntityValidateBase {
    * Validate the semester field.
    */
   function validationSemester($field_name_name, $value) {
+    // Allow empty value for the semester.
+    if (empty($value)) {
+      return;
+    }
+
     $info = field_info_field($field_name_name);
 
     // Validate the semester.
@@ -39,7 +43,7 @@ class OsImporterClassValidator extends OsImporterEntityValidateBase {
         '@value' => $value,
       );
 
-      $this->setError($field_name_name, 'The given value(@value) is not validate value for the semester field and should be one of @allowed-values', $params);
+      $this->setError($field_name_name, 'The given value (@value) is not a valid value for semester, and it should be one of the followings (@allowed-values)', $params);
     }
   }
 
