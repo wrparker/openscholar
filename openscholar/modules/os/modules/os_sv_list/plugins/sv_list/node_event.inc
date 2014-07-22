@@ -29,8 +29,14 @@ class sv_list_node_event extends sv_list_plugin  {
    * upcoming events that haven't taken place yet.
    */
   public function sort_event($options, EntityFieldQuery $efq) {
+    $efq->addTag('sv_list_events');
     $efq->fieldOrderBy('field_date', 'value', 'ASC');
-    $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '>=');
+    $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime('-30 minutes')), '>=', 'sv_list_events');
+    $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '>=', 'sv_list_events');
+
+    // Disable the pager.
+    // We expand events into nid-date below. We need every nid that matches so we can slice correctly.
+    unset($efq->pager);
   }
 
   /**
@@ -78,7 +84,11 @@ class sv_list_node_event extends sv_list_plugin  {
     }
 
     ksort($exploded);    //now sort by timestamp
-    $entities = array_slice(array_values($exploded), 0, $options['number_of_items']);  //and re-apply the item limit
+
+    // filter by page num
+    $page_num = pager_find_page(PagerDefault::$maxElement);
+    $limit = $options['number_of_items'];
+    $entities = array_slice(array_values($exploded), $page_num * $limit, $limit);  //and re-apply the item limit
   }
 
   /**

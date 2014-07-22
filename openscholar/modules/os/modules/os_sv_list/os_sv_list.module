@@ -135,8 +135,15 @@ function os_sv_list_query_random_alter($query) {
  */
 function os_sv_list_query_sv_list_biblio_alter(&$query) {
   $query->join('biblio', 'b', 'b.nid = ogm.etid');
-  $query->orderBy('b.biblio_year', 'DESC'); 
+  $query->orderBy('b.biblio_year', 'DESC');
   $query->orderBy('node.created', 'DESC');
+}
+
+/**
+ * Implements hook_query_tag_alter
+ */
+function os_sv_list_query_sv_list_events_alter(SelectQueryInterface &$query) {
+  $query->addField('field_data_field_date1', 'delta');
 }
 
 /**
