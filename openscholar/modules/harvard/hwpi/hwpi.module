@@ -31,7 +31,9 @@ function hwpi_init() {
  * Implements hook_preprocess_HOOK() for page.
  */
 function hwpi_preprocess_page(&$vars) {
-  if (_is_hwpi_theme()) {
+  $item = menu_get_item();
+
+  if (_is_hwpi_theme() && !path_is_admin($item['path'])) {
     $vars['page']['branding_header']['hwpi'] = _hwpi_branding_header();
     $vars['page']['branding_footer']['hwpi'] = _hwpi_branding_footer();
   }
