@@ -143,7 +143,20 @@ function os_sv_list_query_sv_list_biblio_alter(&$query) {
  * Implements hook_query_tag_alter
  */
 function os_sv_list_query_sv_list_events_alter(SelectQueryInterface &$query) {
-  $query->addField('field_data_field_date1', 'delta');
+  // get the alias for the field_date table
+  // then add the delta to the fields so we get a row for each unique nid-delta combination
+  // This tells EFQ how many results it actually has
+  $tables = $query->getTables();
+  foreach ($tables as $tb) {
+    if ($tb['table'] == 'field_data_field_date') {
+      $query->fields('field_data_field_date1', array('delta'));
+      break;
+    }
+  }
+
+  // Disable the range limiters.
+  // We expand events into nid-date below. We need every nid that matches so we can slice correctly.
+  $query->range();
 }
 
 /**

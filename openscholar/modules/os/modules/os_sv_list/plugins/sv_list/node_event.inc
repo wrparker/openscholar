@@ -33,10 +33,6 @@ class sv_list_node_event extends sv_list_plugin  {
     $efq->fieldOrderBy('field_date', 'value', 'ASC');
     $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime('-30 minutes')), '>=', 'sv_list_events');
     $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '>=', 'sv_list_events');
-
-    // Disable the pager.
-    // We expand events into nid-date below. We need every nid that matches so we can slice correctly.
-    unset($efq->pager);
   }
 
   /**
@@ -86,7 +82,9 @@ class sv_list_node_event extends sv_list_plugin  {
     ksort($exploded);    //now sort by timestamp
 
     // filter by page num
-    $page_num = pager_find_page(PagerDefault::$maxElement);
+    // When making normal requests, the page is always 0. We don't store the page the user is on between requests.
+    // When getting the page with AJAX, this box is the only pager active. Therefore, we want the 0 pager element.
+    $page_num = pager_find_page();
     $limit = $options['number_of_items'];
     $entities = array_slice(array_values($exploded), $page_num * $limit, $limit);  //and re-apply the item limit
   }
