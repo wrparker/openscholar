@@ -818,7 +818,7 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 /* The overlay should never be open with os_basetheme. This is here in case we miss
  * a path that needs the cp_theme activated */
 #overlay-close, #overlay-close:hover {
-  background: url('../images/scholarbase-sprite.png.png') no-repeat 0 -772px;
+  background: url('../images/scholarbase-sprite.png') no-repeat 0 -770px;
 	width:30px;
 	height:30px;
 	position: relative;
