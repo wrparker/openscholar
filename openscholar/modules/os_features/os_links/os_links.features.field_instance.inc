@@ -97,8 +97,9 @@ function os_links_field_default_field_instances() {
       ),
       'full' => array(
         'label' => 'hidden',
+        'module' => 'link',
         'settings' => array(),
-        'type' => 'hidden',
+        'type' => 'link_default',
         'weight' => 1,
       ),
       'links' => array(
@@ -177,7 +178,7 @@ function os_links_field_default_field_instances() {
         'module' => 'file',
         'settings' => array(),
         'type' => 'file_default',
-        'weight' => 4,
+        'weight' => 2,
       ),
       'links' => array(
         'label' => 'above',

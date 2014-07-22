@@ -15,6 +15,11 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
     // Add all fields.
     foreach (field_info_instances($this->entityType, $this->bundle) as $field_name => $info) {
       if ($info['required']) {
+        // Check if the 'isNotEmpty' validator is already assigned to the field
+        // in the base class. Don't re-add it to avoid duplicated messages.
+        if (isset($fields[$field_name]) && in_array('isNotEmpty', $fields[$field_name]['validators'])) {
+          continue;
+        }
         $fields[$field_name]['validators'][] = 'isNotEmpty';
       }
     }
@@ -32,7 +37,6 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
     // taken care by the os_importer_entity_property_info_alter().
     $field_names = array(
       'field_news_date',
-      'registration',
       'field_url',
       'field_links_link',
       'media_gallery_format',
@@ -55,6 +59,11 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
    * Verify the start is occurring before the end date.
    */
   public function validateOsDate($field_name, $value) {
+    // Empty values are checked for in 'isNotEmpty'.
+    if (empty($value)) {
+      return;
+    }
+
     $value = reset($value);
     // Validate the date format for the start and end date.
     $date = DateTime::createFromFormat('M j Y', $value);
@@ -67,7 +76,7 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
       '@date' => $value,
       '@format' => date('M j Y'),
     );
-    $this->setError($field_name, 'The date, @date, is not valid. The date should be in a format similar to @format', $params);
+    $this->setError($field_name, 'The value of the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
   }
 
   /**
@@ -77,10 +86,7 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
   public function validatorUrlNotEmpty($field_name, $value) {
     $value = reset($value);
     if (empty($value)) {
-      $params = array(
-        '@field_name' => $field_name,
-      );
-      $this->setError($field_name, t('The url on @field_name is empty. Please supply a URL.', $params));
+      $this->setError($field_name, t('The field URL cannot be empty.'));
     }
   }
 

@@ -341,7 +341,7 @@ class os_sv_list extends os_boxes_default {
     return $block;
   }
   
-  public function get_ids($page_num, $page) {    
+  public function get_ids($page) {
     //query for all content of our type
     $query = $this->query();
     $this->_plugins_invoke('query_alter', $query);

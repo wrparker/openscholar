@@ -29,6 +29,11 @@ class OsImporterNewsValidator extends OsImporterEntityValidateBase {
    * Validating the image is in 220X220.
    */
   public function validatorNewsPhoto($field_name, $value) {
+    // Allow empty photo.
+    if (empty($value)) {
+      return;
+    }
+
     $this->validatorPhoto($field_name, $value, 250, 250);
   }
 

@@ -1084,6 +1084,13 @@ function os_settings_frontend_form($form_state) {
     This address must point to this install of OpenScholar. Leave blank to not use a separate domain for static assets.'),
   );
 
+  $form['os_files_static_domain_on_https'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use Static Asset Domain on https pages'),
+    '#default_value' => variable_get('os_files_static_domain_on_https', TRUE),
+    '#description' => t('If you don\'t maintain multiple certificates and don\'t have a wildcard certificate you should leave this off to prevent security warnings.')
+  );
+
   $form['os_footer_js'] = array(
     '#type' => 'checkbox',
     '#title' => t('Move Javascript to bottom of page'),
@@ -1684,6 +1691,11 @@ function os_js_alter(&$javascript) {
 
   // Do nothing on the overlay's empty page.
   if (module_exists('overlay') && overlay_display_empty_page()) {
+    return;
+  }
+
+  // Do nothing when rendering a web widget
+  if (module_exists('web_widgets') && web_widgets_inside_widget()) {
     return;
   }
 

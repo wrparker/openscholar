@@ -9,18 +9,6 @@ class OsImporterPersonValidator extends OsImporterEntityValidateBase {
   public function setFieldsInfo() {
     $fields = parent::setFieldsInfo();
 
-    $fields['field_first_name'] = array(
-      'validators' => array(
-        'isNotEmpty',
-      ),
-    );
-
-    $fields['field_last_name'] = array(
-      'validators' => array(
-        'isNotEmpty',
-      ),
-    );
-
     $fields['person_photo'] = array(
       'validators' => array(
         'validatorPersonPhoto',
@@ -34,6 +22,11 @@ class OsImporterPersonValidator extends OsImporterEntityValidateBase {
    * Validating the image is in 220X220.
    */
   public function validatorPersonPhoto($field_name, $value) {
+    // Allow empty photo.
+    if (empty($value)) {
+      return;
+    }
+
     $this->validatorPhoto($field_name, reset($value), 220, 220);
   }
 

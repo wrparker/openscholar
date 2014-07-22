@@ -21,7 +21,6 @@ Feature:
   Scenario: Verify the anonymous user is being redirected to the feed item
             source page.
     Given I visit "john/news"
-      And I should print page
      When I click "JFK was murdered"
      Then I should see "Assassination of John F. Kennedy"
 

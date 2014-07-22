@@ -210,7 +210,7 @@ function _os_publications_plain_citation($node) {
       $short_url = 'http://' . $short_url;
     }
 
-    $citation .= ' Copy at ' . l($short_url, $short_url);
+    $citation .= ' Copy at&nbsp;' . l($short_url, $short_url);
   }
 
   drupal_add_js('function selectText(ele) {

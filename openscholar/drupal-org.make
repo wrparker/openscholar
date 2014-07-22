@@ -249,7 +249,7 @@ projects[migrate_extras][subdir] = "contrib"
 projects[migrate_extras][version] = 2.4
 
 projects[mollom][subdir] = "contrib"
-projects[mollom][version] = 2.9
+projects[mollom][version] = 2.10
 
 projects[multiform][subdir] = "contrib"
 projects[multiform][version] = 1.0
