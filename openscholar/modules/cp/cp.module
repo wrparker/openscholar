@@ -317,7 +317,8 @@ function cp_use_cp_theme() {
   $ops = array('edit', 'usage', 'delete', 'devel');
   if (in_array(arg(0), array('cp', 'os', 'media', 'vsite'))) {
     return TRUE;
-  } elseif (in_array(arg(0), array('file', 'node'))) {
+  }
+  elseif (in_array(arg(0), array('file', 'node'))) {
     return (arg(1) == 'add' || in_array(arg(2), $ops));
   }
   elseif (arg(0) == 'taxonomy') {
