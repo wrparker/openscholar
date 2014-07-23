@@ -265,7 +265,8 @@ margin-top:-2px;
 
 
 
-.boxes-box-content, .boxes-box-content p {
+.sidebar .boxes-box-content, 
+.sidebar .boxes-box-content p {
     font-family: arial,sans-serif !important;
     font-size: 0.95em;
     line-height: 22px;
