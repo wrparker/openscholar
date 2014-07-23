@@ -1809,6 +1809,9 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
       $form[$element]['#access'] = FALSE;
     }
   }
+
+  // Set the default value for "show description" to TRUE.
+  $form['show_description']['und']['#default_value'] = TRUE;
 }
 
 /**
