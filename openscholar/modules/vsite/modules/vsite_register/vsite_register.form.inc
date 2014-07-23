@@ -43,9 +43,9 @@ function vsite_register_form($form, &$state) {
 
   // Gets the available vsite bundles as options for the form.
   $bundles = array();
-  $group_types = og_get_all_group_bundle();
+  $group_types = og_get_all_group_bundle('node');
   $default_subsite_bundles = array('personal', 'project');
-  foreach ($group_types['node'] as $bundle => $label) {
+  foreach ($group_types as $bundle => $label) {
     // Verifies this user has access to create this node type.
     $user_access = user_access("create $bundle content");
     // Verifies this node type either has a parent, or doesn't need a parent.
@@ -582,7 +582,7 @@ function _vsite_register_validate($element, &$values) {
         else {
           $msg[] = t('The password field is required.');
         }
-        
+
         if (module_exists('password_policy')) {
           //borrowed from `password_policy_user_profile_form_validate()`
           $account = user_load(0);

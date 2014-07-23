@@ -1947,9 +1947,9 @@ function os_library_alter(&$libraries) {
  * Helper function for permission to view unpublish group content.
  */
 function os_grant_unpublished_viewing_permission() {
-  $group_content = og_get_all_group_content_bundle();
+  $group_content = og_get_all_group_content_bundle('node');
 
-  foreach (array_keys($group_content['node']) as $bundle) {
+  foreach (array_keys($group_content) as $bundle) {
     $group_types = array('department', 'personal', 'project');
 
     foreach ($group_types as $group_type) {

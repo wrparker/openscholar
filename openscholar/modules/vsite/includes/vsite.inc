@@ -193,12 +193,12 @@ function vsite_get_vsite_by_owner($uid = NULL) {
     return array();
   }
 
-  $group_bundles = og_get_all_group_bundle();
-  if (empty($group_bundles['node'])){
+  $group_bundles = og_get_all_group_bundle('node');
+  if (empty($group_bundles)){
     //can't determine group content types
     return array();
   }
-  $bundles = array_keys($group_bundles['node']);
+  $bundles = array_keys($group_bundles);
 
   $query = new EntityFieldQuery();
   $result = $query->entityCondition('entity_type', 'node')
