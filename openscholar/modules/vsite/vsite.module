@@ -2127,6 +2127,7 @@ function vsite_menu(){
     'access callback' => 'vsite_delete_request_access',
     'access arguments' => array(2),
     'description' => t('Delete VSite'),
+    'theme callback' => 'cp_custom_theme',
   );
 
   return $items;
