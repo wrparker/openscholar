@@ -279,7 +279,7 @@ projects[oembed][patch][] = "http://drupal.org/files/issues/oembed.2134415.wysiw
 projects[og][subdir] = "contrib"
 projects[og][version] = 2.6
 projects[og][patch][] = "https://drupal.org/files/issues/2231217-og-save-no-entity-load-1.patch"
-projects[og][patch][] = "https://drupal.org/files/issues/add_entity_type_parameter-2308279-1.patch"
+projects[og][patch][] = "https://drupal.org/files/issues/add_entity_type_parameter-2308279-3.patch"
 
 projects[og_moderation][subdir] = "contrib"
 projects[og_moderation][version] = 2.0
