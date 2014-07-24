@@ -1877,7 +1877,29 @@ function os_taxonomy_field_attach_create_bundle($entity_type, $bundle) {
  *   The bundle to attach the fields to.
  */
 function os_taxonomy_attach_fields_to_vocabulary($entity_type, $bundle) {
-  og_create_field('show_description', $entity_type, $bundle);
+  $field_name = 'show_description';
+  $og_field = og_fields_info($field_name);
+  $field = field_info_field($field_name);
+
+  // Allow overriding the field name.
+  $og_field['field']['field_name'] = $field_name;
+  if (empty($field)) {
+    $field = field_create_field($og_field['field']);
+  }
+
+  $instance = field_info_instance($entity_type, $field_name, $bundle);
+  if (empty($instance)) {
+    $instance = $og_field['instance'];
+    $instance += array(
+      'field_name' => $field_name,
+      'bundle' => $bundle,
+      'entity_type' => $entity_type,
+    );
+
+    field_create_instance($instance);
+  }
+
+  //og_create_field('show_description', $entity_type, $bundle);
 }
 
 /**
