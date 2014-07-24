@@ -26,7 +26,7 @@ Drupal.behaviors.tabs = {
         new_row,
         count = $('#edit-count'),
         select = $('#edit-new').get(0),
-        title = select.options[select.selectedIndex].innerHTML;
+        title = select.options[select.selectedIndex].innerHTML.replace(/ \([^\)]*\)/, '');
 
       count.val(parseInt(count.val())+1);
       id = 'widget-'+(new_id++);
