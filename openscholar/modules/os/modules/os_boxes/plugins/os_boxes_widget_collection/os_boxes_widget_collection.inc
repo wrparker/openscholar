@@ -54,7 +54,7 @@ abstract class os_boxes_widget_collection extends os_boxes_default {
         }
       }
     }
-    sort($options);
+    asort($options);
 
     $form['add'] = array(
       '#type' => 'fieldset',
