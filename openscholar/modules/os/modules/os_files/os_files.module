@@ -328,7 +328,7 @@ function os_files_form_file_entity_add_upload_alter(&$form, &$form_state) {
     if (!empty($mimetypes)) {
       // include mimetypes and extensions just in case a browser doesn't support one of them.
       $form['upload']['#attributes'] = array(
-        'accept' => implode(',', $mimetypes).','.implode(',.',$extensions).(count($extras)?',.'.implode(',.', $extras):''),
+        'accept' => implode(',', $mimetypes).',.'.implode(',.',$extensions).(count($extras)?',.'.implode(',.', $extras):''),
       );
       $form['upload']['#pre_render'][] = 'os_files_upload_attributes';
     }
