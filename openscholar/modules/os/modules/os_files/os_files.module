@@ -326,8 +326,9 @@ function os_files_form_file_entity_add_upload_alter(&$form, &$form_state) {
       }
     }
     if (!empty($mimetypes)) {
+      // include mimetypes and extensions just in case a browser doesn't support one of them.
       $form['upload']['#attributes'] = array(
-        'accept' => implode(',', $mimetypes).(count($extras)?',.'.implode(',.', $extras):''),
+        'accept' => implode(',', $mimetypes).',.'.implode(',.',$extensions).(count($extras)?',.'.implode(',.', $extras):''),
       );
       $form['upload']['#pre_render'][] = 'os_files_upload_attributes';
     }
@@ -1949,6 +1950,9 @@ function os_files_file_default_types_alter(&$types){
     // *.cls, *.sty
     'text/x-tex',
     'application/x-latex',
+    // *.rtf
+    'text/rtf',
+    'application/rtf',
   );
 
   $types['document']->mimetypes = (empty($types['document']->mimetypes)) ? $document : array_merge($types['document']->mimetypes, $document);
@@ -2076,6 +2080,7 @@ function _os_files_extensions_from_type($type) {
       'odp',
       'xml',
       'tex',
+      'rtf',
       'wtml',
       'wtt',
       'wwtfig',
@@ -2125,7 +2130,8 @@ function os_files_file_mimetype_mapping_alter(&$mimes) {
   $types = array(
     'application/x-wtt' => 'wtt',
     'application/x-wtml' => 'wtml',
-    'application/x-wwtfig' => 'wwtfig'
+    'application/x-wwtfig' => 'wwtfig',
+    'text/rtf' => 'rtf'
   );
 
   foreach ($types as $mime => $ext) {
