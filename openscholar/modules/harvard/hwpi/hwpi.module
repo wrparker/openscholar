@@ -176,9 +176,11 @@ function _hwpi_branding_footer() {
       ),
     ),
     'copyright' => array(
-      '#markup' => t('<span class="harvard-copyright">Copyright &copy; @year The President and Fellows of Harvard College</span> !privacy | !access', array(
+      '#markup' => t('<span class="harvard-copyright">Copyright &copy; @year The President and Fellows of Harvard College</span> !privacy | !access | !terms | !copyinfring', array(
           '!privacy' => variable_get('privacy_policy','')?'| '.l('Privacy', variable_get('privacy_policy')): '',
           '!access' => l('Accessibility', 'http://accessibility.harvard.edu/'),
+          '!terms' => l('Terms of Use', 'http://hwp.harvard.edu/terms-use'),
+          '!copyinfring' => l('Reporting Copyright Infringement', 'http://www.harvard.edu/reporting-copyright-infringements'),
           '@year' => date('Y'),
         )),
     ),
