@@ -395,9 +395,6 @@ function os_files_form_file_entity_edit_alter(&$form, &$form_state){
   $form['replace_upload']['#weight'] = 10;
   $form['actions']['submit']['#submit'][] = 'os_files_edit_file_invalidate_cache';
 
-  $form['field_file_image_alt_text']['#access'] = FALSE;
-  $form['field_file_image_title_text']['#access'] = FALSE;
-
   $form['user']['#access'] = FALSE;
 
   $previewable = array('image', 'video');
