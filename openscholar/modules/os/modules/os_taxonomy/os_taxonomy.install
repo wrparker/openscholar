@@ -47,3 +47,14 @@ function os_taxonomy_update_7003(&$sandbox) {
   // Affect the progress bar.
   $sandbox['#finished'] = $sandbox['sandbox']['progress'] / $sandbox['sandbox']['max'];
 }
+
+/**
+ * Fix Taxonomy term aliases that were created with the wrong path.
+ */
+function os_taxonomy_update_7004(&$sandbox) {
+  // Remove the feature paths from the begining of the term path's
+  db_update('url_alias')
+    ->expression('source', 'SUBSTRING(source, LOCATE(\'taxonomy/term\', source) )')
+    ->condition('source', "%/taxonomy/term/%", 'LIKE')
+    ->execute();
+}
