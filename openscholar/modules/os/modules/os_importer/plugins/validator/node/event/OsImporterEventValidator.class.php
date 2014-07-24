@@ -72,6 +72,11 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
       }
     }
 
+    // Check if only end date was supplied.
+    if (empty($this->dates['field_date__start']) && $field_name == 'field_date__end') {
+      $this->setError($field_name, 'The start date value should not be empty.');
+    }
+
     // Validate the date format for the start and end date.
     $date = DateTime::createFromFormat('M j Y', $value);
 
