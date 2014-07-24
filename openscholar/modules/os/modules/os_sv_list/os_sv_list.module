@@ -165,6 +165,7 @@ function os_sv_list_query_sv_list_events_alter(SelectQueryInterface &$query) {
 
   // Disable the range limiters.
   // We expand events into nid-date below. We need every nid that matches so we can slice correctly.
+  // This prevents nodes that only exist on previous pages from throwing off the count.
   $query->range();
 }
 
