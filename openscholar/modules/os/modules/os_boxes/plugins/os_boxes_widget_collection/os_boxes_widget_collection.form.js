@@ -29,6 +29,7 @@ Drupal.behaviors.tabs = {
         desc = '',
         title = '',
         matches = (/ \(([^\)]*)\)/).exec(select.options[select.selectedIndex].innerHTML);
+      
       if (matches != null) {
         title = matches[1];
         desc = matches.input.replace(matches[0], '');
