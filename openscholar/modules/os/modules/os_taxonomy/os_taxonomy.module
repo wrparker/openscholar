@@ -1005,9 +1005,11 @@ function theme_os_taxonomy_tagged_nodes($variables) {
 
   // Show description only if set and if this is first page.
   $show_descriptioon = FALSE;
-  $wrapper = entity_metadata_wrapper('taxonomy_term', $variables['taxonomy_term']);
-  if (!$page && $wrapper && $wrapper->show_description->value()) {
-    $show_descriptioon = TRUE;
+  if($variables['taxonomy_term']) {
+    $wrapper = entity_metadata_wrapper('taxonomy_term', $variables['taxonomy_term']);
+    if (!$page && $wrapper && isset($wrapper->show_description) && $wrapper->show_description->value()) {
+      $show_descriptioon = TRUE;
+    }
   }
 
   $options = $variables['options'] + array(
@@ -1808,6 +1810,11 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
     if (isset($form[$element])) {
       $form[$element]['#access'] = FALSE;
     }
+  }
+
+  // Set the default value for "show description" to TRUE for new terms.
+  if (!$form['#term']['tid']) {
+    $form['show_description']['und']['#default_value'] = TRUE;
   }
 }
 

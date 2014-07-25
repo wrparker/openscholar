@@ -276,7 +276,9 @@ margin: -20px 0 10px;
 margin: 15px 0 10px;
 }
 
-
+.front #content-column .ui-tabs-panel .block-content ~ div.contextual-links-wrapper.contextual-links-processed {
+right: -24px;
+}
 
 /*
 .section-biocv #content .context-links ul {

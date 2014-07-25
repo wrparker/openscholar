@@ -13,12 +13,12 @@ function vsite_vocab_install(){
     'weight' => $weight
   ))->condition('type', 'module')->condition('name', 'vsite_vocab')->execute();
 
-  $bundles = og_get_all_group_content_bundle();
-  if (isset($bundles['node']) && is_array($bundles['node'])) {
+  $bundles = og_get_all_group_content_bundle('node');
+  if (isset($bundles) && is_array($bundles)) {
     $og_field = og_fields_info(OG_VOCAB_FIELD);
     $og_field['instance']['display']['default']['label'] = 'hidden';
     $og_field['instance']['display']['default']['settings']['concatenate'] = TRUE;
-    foreach ($bundles['node'] as $bundle => $name) {
+    foreach ($bundles as $bundle => $name) {
       // Group content.
       og_create_field(OG_VOCAB_FIELD, 'node', $bundle, $og_field);
     }
@@ -41,15 +41,15 @@ function vsite_vocab_update_7001() {
  * Add og_vocab instance to file bundles
  */
 function _vsite_vocab_files_add_vocab_field() {
-  $bundles = og_get_all_group_content_bundle();
-  if (empty($bundles['file'])) {
+  $bundles = og_get_all_group_content_bundle('file');
+  if (empty($bundles)) {
     return;
   }
 
   $og_field = og_fields_info(OG_VOCAB_FIELD);
   $og_field['instance']['display']['default']['label'] = 'hidden';
   $og_field['instance']['display']['default']['settings']['concatenate'] = TRUE;
-  foreach ($bundles['file'] as $bundle => $name) {
+  foreach ($bundles as $bundle => $name) {
     og_create_field(OG_VOCAB_FIELD, 'file', $bundle, $og_field);
   }
 }
