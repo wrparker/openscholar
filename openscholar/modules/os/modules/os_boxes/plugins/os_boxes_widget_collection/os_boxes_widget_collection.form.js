@@ -26,7 +26,17 @@ Drupal.behaviors.tabs = {
         new_row,
         count = $('#edit-count'),
         select = $('#edit-new').get(0),
-        title = select.options[select.selectedIndex].innerHTML;
+        desc = '',
+        title = '',
+        matches = (/ \(([^\)]*)\)/).exec(select.options[select.selectedIndex].innerHTML);
+      
+      if (matches != null) {
+        title = matches[1];
+        desc = matches.input.replace(matches[0], '');
+      }
+      else {
+        desc = title = select.options[select.selectedIndex].innerHTML;
+      }
 
       count.val(parseInt(count.val())+1);
       id = 'widget-'+(new_id++);
@@ -45,7 +55,7 @@ Drupal.behaviors.tabs = {
 
       // set all the form elements in the new row
       $('input[name="widgets['+id+'][bid]"]', new_row).val(bid);
-      $('span', new_row).text(title);
+      $('span', new_row).text(desc);
       $('input[name="widgets['+id+'][title]"]', new_row).val(title);
       $('input[name="widgets['+id+'][weight]"]', new_row).addClass('field-weight').val(weight+1);
       $('.tabledrag-handle', new_row).remove();

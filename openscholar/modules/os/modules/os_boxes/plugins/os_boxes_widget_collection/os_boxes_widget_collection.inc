@@ -43,14 +43,13 @@ abstract class os_boxes_widget_collection extends os_boxes_default {
       if (isset($info['info']) && $info['delta'] != $this->delta) {
         // not everything we get back from hook_os_widget has an info field.
         // also, don't list yourself because infinite loops are bad
+        $options[$wgt] = trim($info['info']);
         if (!empty($info['title'])) {
-          $options[$wgt] = $info['title'];
-        }
-        else {
-          $options[$wgt] = $info['info'];
+          $options[$wgt] .= ' ('.trim($info['title']).')';
         }
       }
     }
+    asort($options);
 
     $form['add'] = array(
       '#type' => 'fieldset',
