@@ -315,7 +315,7 @@ function cp_custom_theme() {
  */
 function cp_use_cp_theme() {
   $ops = array('edit', 'usage', 'delete', 'devel');
-  if (in_array(arg(0), array('cp', 'os', 'media', 'vsite'))) {
+  if (in_array(arg(0), array('cp', 'os', 'media'))) {
     return TRUE;
   }
   elseif (in_array(arg(0), array('file', 'node'))) {
