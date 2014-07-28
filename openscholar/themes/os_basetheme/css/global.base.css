@@ -1110,3 +1110,7 @@ div.error:before {
   bottom: 0;
   left: 10px;
 }
+
+article.node-media-gallery.node-teaser .node-content {
+  height: 275px;
+}
