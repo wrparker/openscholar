@@ -1346,6 +1346,7 @@ function os_taxonomy_list_attached_entities($tid, $bundles = array(), $range = N
           break;
         case 'person':
           $query->leftJoin('field_data_field_last_name', 'p', 'p.revision_id = n.vid AND p.bundle = \'person\' AND p.entity_type = \'node\' AND p.language = \'und\' AND p.delta = 0');
+          $query->orderBy('n.sticky', 'DESC');
           $query->orderBy('p.field_last_name_value', 'ASC');
           break;
       }
