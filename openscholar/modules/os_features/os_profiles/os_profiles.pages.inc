@@ -3,7 +3,10 @@
 /**
  * App specific settings for Profiles
  */
-function os_profiles_settings() {
+function os_profiles_settings($form, &$form_state) {
+  // make sure this file is loaded on form submit
+  $form_state['build_info']['files'][] = drupal_get_path('module', 'os_profiles').'/os_profiles.pages.inc';
+
   $vsite = vsite_get_vsite();
 
   // Form element for disabling the use of a default image.
@@ -68,16 +71,18 @@ function os_profiles_settings() {
     ),
   );
 
-  // Get properties of the image if there's a custom default image.
-  if (module_exists('vsite') && $vsite = vsite_get_vsite() && $fid = variable_get('os_profiles_default_image_file', NULL)) {
-    $dimensions = variable_get('os_profiles_default_image_properties', array());
 
-    $instance = field_info_instance('node', 'field_person_photo', 'person');
-    if ($instance['widget']['settings']['resolution']) {
-      $ratio = explode('x', $instance['widget']['settings']['resolution']);
-      $ratio = $ratio[0]/$ratio[1];
-    }
+  $instance = field_info_instance('node', 'field_person_photo', 'person');
+  if ($instance['widget']['settings']['resolution']) {
+    list($width, $height) = explode('x', $instance['widget']['settings']['resolution']);
   }
+  $dimensions = variable_get('os_profiles_default_image_properties', array(
+    'x' => 0,
+    'y' => 0,
+    'height' => $height,
+    'width' => $width,
+  ));
+  $dimensions['ratio'] = $dimensions['width']/$dimensions['height'];
 
   // Show the default image used before a custom default image has been uploaded.
   $path = drupal_get_path('theme', 'hwpi_basetheme') . '/images/person-default-image.png';
@@ -100,13 +105,7 @@ function os_profiles_settings() {
       'file_validate_extensions' => array($allowed_file_types),
     ),
     '#process' => array('_os_profiles_default_image_process'),
-    '#dimensions' => array(
-      'x' => isset($dimensions['x']) ? $dimensions['x'] : 0,
-      'y' => isset($dimensions['y']) ? $dimensions['y'] : 0,
-      'height' => isset($dimensions['height']) ? $dimensions['height'] : 140,
-      'width' => isset($dimensions['width']) ? $dimensions['width'] : 180,
-      'ratio' => isset($ratio) ? $ratio : 0,
-    ),
+    '#dimensions' => $dimensions,
     '#attached' => array(
       'css' => array(
         '.form-managed-file img { max-width: none; }' => array(
@@ -128,19 +127,161 @@ function os_profiles_settings() {
 }
 
 /**
+ * Process function; For uploading a default profile image.
+ */
+function _os_profiles_default_image_process($element, $form_state, $form) {
+  $element = file_managed_file_process($element, $form_state, $form);
+  $element = os_files_imagefield_crop_process($element, $form_state, $form);
+  $element['remove_button']['#submit'][] = '_os_image_remove_handler';
+
+  // When pressing "remove" call the original form's submit handler in order to
+  // set the default image file id to 0.
+  $element['remove_button']['#submit'][] = 'os_profiles_display_settings_submit';
+
+  module_load_include('inc', 'comment_sources', 'comment_sources.admin');
+  $fid = isset($element['#value']['fid']) ? $element['#value']['fid'] : 0;
+
+  // always include this, whether there's a file or not
+  $settings = array(
+    $element['#id'] => array(
+      'box' => array(
+        'ratio' => $element['#dimensions']['ratio'],
+        'box_width' => 400,
+        'box_height' => 400,
+      ),
+      'minimum' => array(
+        'width' => NULL,
+        'height' => NULL,
+      ),
+    ),
+  );
+  $element['#attached']['js'][] = array(
+    'data' => array('imagefield_crop' => $settings),
+    'type' => 'setting',
+    'scope' => 'header',
+  );
+  $element['#attached']['js'][] = drupal_get_path('module', 'imagefield_crop').'/Jcrop/js/jquery.Jcrop.js';
+  $element['#attached']['js'][] = drupal_get_path('module', 'imagefield_crop').'/imagefield_crop.js';
+  $element['#attached']['css'][] = drupal_get_path('module', 'imagefield_crop').'/Jcrop/css/jquery.Jcrop.css';
+
+  // A custom default image has been uploaded.
+  if ($fid && $element['#file']) {
+    // Remove the preview of the default image.
+    unset($element['#field_prefix']);
+    unset($element['#field_suffix']);
+
+    unset($element['filename']);
+    // file_to_crop() take the cropped image and gets the original back
+    $file_to_crop = _imagefield_crop_file_to_crop($element['#file']->fid);
+    $element['preview'] = array(
+      '#type' => 'markup',
+      '#file' => $file_to_crop, // This is used by the #process function
+      '#prefix' => '<div class="imagefield-crop-preview">',
+      '#suffix' => '</div>',
+      '#process' => array('_os_profiles_default_image_preview_process'),
+      '#theme' => 'imagefield_crop_preview',
+      '#markup' => theme('image', array(
+          'path' => $element['#file']->uri,
+          'getsize' => FALSE,
+          'attributes' => array('class' => 'preview-existing'))
+      ),
+    );
+    $element['cropbox'] = array(
+      '#markup' => theme('image', array(
+          'path' => $file_to_crop->uri,
+          'attributes' => array(
+            'class' => 'cropbox',
+            'id' => $element['#id'] . '-cropbox',
+          )
+        )
+      ),
+    );
+
+    $element['x'] = array(
+      '#type' => 'hidden',
+      '#default_value' => $element['#dimensions']['x'],
+      '#attributes' => array(
+        'class' => array(
+          'edit-image-crop-x'
+        )
+      )
+    );
+
+    $element['y'] = array(
+      '#type' => 'hidden',
+      '#default_value' => $element['#dimensions']['y'],
+      '#attributes' => array(
+        'class' => array(
+          'edit-image-crop-y'
+        )
+      )
+    );
+
+    $element['height'] = array(
+      '#type' => 'hidden',
+      '#default_value' => $element['#dimensions']['height'],
+      '#attributes' => array(
+        'class' => array(
+          'edit-image-crop-height'
+        )
+      )
+    );
+
+    $element['width'] = array(
+      '#type' => 'hidden',
+      '#default_value' => $element['#dimensions']['width'],
+      '#attributes' => array(
+        'class' => array(
+          'edit-image-crop-width'
+        )
+      )
+    );
+  }
+
+  return $element;
+}
+
+/**
+ * Preview process function; For previewing an uploaded default profile image.
+ */
+function _os_profiles_default_image_preview_process($element, $form_state, $form) {
+  $element = @imagefield_crop_widget_preview_process($element, $form_state, $form);
+
+  $scale = null;
+  if (module_exists('vsite') && $vsite = spaces_get_space()) {
+    $instance = field_info_instance('node', 'field_person_photo', 'person');
+    if ($instance['widget']['settings']['resolution']) {
+      $scale = explode('x', $instance['widget']['settings']['resolution']);
+      $scale = array(
+        'width' => $scale[0],
+        'height' => $scale[1],
+      );
+    }
+  }
+
+  $element['#attached']['js'][0]['data']['imagefield_crop']['edit-file']['preview']['width'] = isset($scale) ? $scale['width'] : 0;
+  $element['#attached']['js'][0]['data']['imagefield_crop']['edit-file']['preview']['height'] = isset($scale) ? $scale['height'] : 0;
+
+  $element['#imagefield_crop']['#width'] = isset($scale) ? $scale['width'] : 0;
+  $element['#imagefield_crop']['#height'] = isset($scale) ? $scale['height'] : 0;
+
+  return $element;
+}
+
+/**
  * App settings form submit
  * Occurs before all the settings are saved to the space
  */
 function os_profiles_settings_submit($form, $form_state) {
-  $file_data = $form_state['input']['file'];
+  $file_data = $form_state['input']['os_profiles_default_image_file'];
 
   $vsite = vsite_get_vsite();
 
   // When removing an uploaded picture set the default image file id to 0.
-  if ($form_state['triggering_element']['#value'] == 'remove') {
-    $vsite->controllers->variable->set('os_profiles_default_image_file', 0);
-    return;
-  }
+  //if ($form_state['triggering_element']['#value'] == 'remove') {
+  //  $vsite->controllers->variable->set('os_profiles_default_image_file', 0);
+  //  return;
+  //}
 
   if ($file_data['fid']) {
     // An image was uploaded.
