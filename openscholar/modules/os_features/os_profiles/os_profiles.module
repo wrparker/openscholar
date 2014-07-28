@@ -179,6 +179,16 @@ function os_profiles_menu() {
     'theme callback' => 'cp_theme_name',
   );
 
+  $items['features/os_profiles'] = array(
+    'title' => 'Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os_profiles_settings'),
+    'access callback' => module_exists('vsite') ? 'spaces_access_admin' : 'user_access',
+    'access arguments' => module_exists('vsite') ? array() : array('administer site configuration'),
+    'type' => MENU_CALLBACK,
+    'file' => 'os_profiles.pages.inc',
+  );
+
   return $items;
 }
 
@@ -1007,7 +1017,7 @@ function _os_profiles_restws_request_alter($nid) {
  * Adds additional display settings for the os_profiles app.
  */
 function os_profiles_form_cp_app_settings_form_alter(&$form, &$form_state) {
-  if ($form['#feature'] != 'os_profiles') {
+  if (1 || $form['#feature'] != 'os_profiles') {
     return;
   }
 
