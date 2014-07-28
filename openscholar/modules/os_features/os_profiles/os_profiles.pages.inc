@@ -277,12 +277,7 @@ function os_profiles_settings_submit($form, $form_state) {
 
   $vsite = vsite_get_vsite();
 
-  // When removing an uploaded picture set the default image file id to 0.
-  //if ($form_state['triggering_element']['#value'] == 'remove') {
-  //  $vsite->controllers->variable->set('os_profiles_default_image_file', 0);
-  //  return;
-  //}
-
+  // save file usage and dimension information
   if ($file_data['fid']) {
     // An image was uploaded.
     $file = file_load($file_data['fid']);
@@ -319,8 +314,8 @@ function os_profiles_settings_submit($form, $form_state) {
     file_save($file);
 
     if (module_exists('vsite') && $space = spaces_get_space() && $file->fid) {
+      // The fid is saved by spaces, so we don't need to worry about it.
       // Save the state of the crop tool image.
-      $vsite->controllers->variable->set('os_profiles_default_image_file', $file_data['fid']);
       $dimensions = array(
         'x' => $file_data['x'],
         'y' => $file_data['y'],
@@ -332,11 +327,14 @@ function os_profiles_settings_submit($form, $form_state) {
   }
   else {
     // No file is uploaded.
-    $vsite->controllers->variable->set('os_profiles_default_image_file', 0);
+    // Delete dimension information.
+    $vsite->controllers->variable->del('os_profiles_default_image_properties', 0);
   }
 
   // Clear the os_profiles view cache so the setting will take effect.
   if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
     cache_clear_all('og:node:' . $vsite->id . ':', 'cache_views_data', TRUE);
   }
+
+  overlay_request_page_refresh();
 }
