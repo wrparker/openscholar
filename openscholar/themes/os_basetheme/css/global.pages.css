@@ -1233,6 +1233,9 @@ img.media-element.file-default[style*="float:"][style*="right;"] {
 	padding-right:0;
 	}	
 	
+article.node-media-gallery.node-teaser .node-content {
+   height: 275px;
+ }	
 
 .block-boxes-os_sv_list_box .os_sv_list_box.sv-list-link.sv-list-view-links h1 a {
 	font-weight:normal;
