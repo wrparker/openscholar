@@ -1013,8 +1013,10 @@ function os_profiles_form_cp_app_settings_form_alter(&$form, &$form_state) {
 
   $vsite = vsite_get_vsite();
 
-  // Form element for disabling the use of a default image.
-  $form['os_profiles_disable_default_image'] = array(
+  // Form element for disabling the use of a default image. We use a "dummy"
+  // variable to be able to get the value that is set in the vsite level and not
+  // the site-wide level value.
+  $form['dummy__os_profiles_disable_default_image'] = array(
     '#type' => 'checkbox',
     '#title' => t('Disable default image for people profiles'),
     '#default_value' => variable_get('os_profiles_disable_default_image', FALSE),
@@ -1335,6 +1337,9 @@ function os_profiles_display_settings_submit($form, $form_state) {
 
   // Set the display style for the profiles in the "/people" path.
   $vsite->controllers->variable->set('os_profiles_display_type', $form_state['values']['dummy__os_profiles_display_type']);
+
+  // Set variable for disabling profile images in the "/people" path.
+  $vsite->controllers->variable->set('os_profiles_disable_default_image', $form_state['values']['dummy__os_profiles_disable_default_image']);
 
   // Clear the os_profiles view cache so the setting will take effect.
   if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
