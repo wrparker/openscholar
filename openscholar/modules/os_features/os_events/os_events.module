@@ -1120,6 +1120,19 @@ function os_events_mail_alter(&$message) {
     return;
   }
 
+  // Get event default email address.
+  $wrapper = entity_metadata_wrapper($message['params']['context']['entity_type'], $message['params']['context']['entity_id']);
+  $event_author_email = $wrapper->author->mail->value();
+
+  // Default value of the "From" field should be the author of the event's e-mail
+  // in case it hasn't been changed yet (if it hasn't been changed yet, the email
+  // will be set by default to be as defined in the field instance).
+  $info = field_info_instance('node', 'field_event_registration', 'event');
+  $default_email = $info['settings']['default_registration_settings']['settings']['from_address'];
+  if ($message['headers']['From'] == $default_email) {
+    $message['headers']['From'] = $message['from'] = $event_author_email;
+  }
+
   // Set the sender and return-path headers.
   $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
 }
