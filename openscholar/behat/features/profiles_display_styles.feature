@@ -6,7 +6,7 @@ Feature:
             with display type "title".
     Given I am logging in as "john"
      When I go to the "os_profiles" app settings in the vsite "john"
-      And I choose the radio button named "dummy__os_profiles_display_type" with value "title" for the vsite "john"
+      And I choose the radio button named "os_profiles_display_type" with value "title" for the vsite "john"
       And I press "Save configuration"
       And I invalidate cache
       And I visit "john/people"
@@ -17,7 +17,7 @@ Feature:
             for example: "john/people/science/air".
     Given I am logging in as "john"
      When I go to the "os_profiles" app settings in the vsite "john"
-      And I choose the radio button named "dummy__os_profiles_display_type" with value "sidebar_teaser" for the vsite "john"
+      And I choose the radio button named "os_profiles_display_type" with value "sidebar_teaser" for the vsite "john"
       And I press "Save configuration"
       And I invalidate cache
       And I visit "john/people/science/wind"
@@ -29,7 +29,7 @@ Feature:
             other vsites.
     Given I am logging in as "john"
      When I go to the "os_profiles" app settings in the vsite "john"
-      And I choose the radio button named "dummy__os_profiles_display_type" with value "sidebar_teaser" for the vsite "john"
+      And I choose the radio button named "os_profiles_display_type" with value "sidebar_teaser" for the vsite "john"
       And I press "Save configuration"
       And I invalidate cache
       And I visit "obama/people"
@@ -40,7 +40,7 @@ Feature:
             With display type "teaser".
     Given I am logging in as "john"
      When I go to the "os_profiles" app settings in the vsite "john"
-      And I choose the radio button named "dummy__os_profiles_display_type" with value "teaser" for the vsite "john"
+      And I choose the radio button named "os_profiles_display_type" with value "teaser" for the vsite "john"
       And I press "Save configuration"
       And I invalidate cache
       And I visit "john/people"
