@@ -35,6 +35,7 @@ FileETag MTime Size
   php_value mbstring.http_input             pass
   php_value mbstring.http_output            pass
   php_flag mbstring.encoding_translation    off
+  php_value max_input_vars                  10000
 </IfModule>
 
 # Requires mod_expires to be enabled.
