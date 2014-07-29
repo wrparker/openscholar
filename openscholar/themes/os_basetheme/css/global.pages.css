@@ -68,7 +68,7 @@ body {
 	 padding-top: 15px;
 }
 
-.region-footer .region-inner, /* By default this sets up 20px gutters i.e. margin: 0 10px. */ 
+
 .region-page-top .region-inner /* Remove ugly space between branding region and toolbar */{
 	 padding-top: 0;
 }
