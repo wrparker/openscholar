@@ -521,10 +521,10 @@ ul.class_material_field_class a.class_material_field_class_anchor {
 }
 
 /* BLOG COMMENT ICON */
-.links li a.os-add-comment {
-    background: url("../images/scholarbase-sprite.png") 0 -539px no-repeat;
+.links li a.os-add-comment:before {
+    background: url("../images/scholarbase-sprite.png") 0 -538px no-repeat;
     padding-left: 15px;
-
+	content:'';
 }
 
 
