@@ -1812,7 +1812,7 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
   }
 
   // Set the default value for "show description" to TRUE for new terms.
-  if (!$form['#term']['tid']) {
+  if (is_array($form['#term']) && !$form['#term']['tid']) {
     $form['show_description']['und']['#default_value'] = TRUE;
   }
 }
