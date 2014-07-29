@@ -1875,6 +1875,8 @@ function os_taxonomy_field_attach_create_bundle($entity_type, $bundle) {
  * @param $bundle
  *   The bundle to attach the fields to.
  * @throws FieldException
+ *
+ * @see field_create_instance().
  */
 function os_taxonomy_attach_fields_to_vocabulary($entity_type, $bundle) {
   $info = os_taxonomy_og_fields_info();
@@ -1892,6 +1894,7 @@ function os_taxonomy_attach_fields_to_vocabulary($entity_type, $bundle) {
     'entity_type' => $entity_type,
   );
 
+  // Implement the field_create_instance() function.
   $field = field_read_field($instance['field_name']);
   if (empty($field)) {
     throw new FieldException(t("Attempt to create an instance of a field @field_name that doesn't exist or is currently inactive.", array('@field_name' => $instance['field_name'])));
@@ -1916,6 +1919,8 @@ function os_taxonomy_attach_fields_to_vocabulary($entity_type, $bundle) {
     throw new FieldException($message);
   }
 
+  // Writing the field the to DB and clear the cache field. This part meant for
+  // performance.
   _field_write_instance($instance);
   field_cache_clear();
 }
