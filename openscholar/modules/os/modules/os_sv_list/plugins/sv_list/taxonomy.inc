@@ -62,6 +62,11 @@ class sv_list_taxonomy extends sv_list_plugin {
       $element = 'vocab_' . $vid;
       $vocab_default_value = (isset($options['vocabs'][$element])) ? $options['vocabs'][$element] : array();
 
+      // Backwards compatibility, some widgets dont have $options['vocabs'] populated.
+      if(!$options['vocabs']) {
+        $vocab_default_value = array_intersect(array_keys($terms), $options['terms']);
+      }
+
       // Create select field with the terms as options.
       $vocab_form[$element] = array(
         '#type' => 'select',
