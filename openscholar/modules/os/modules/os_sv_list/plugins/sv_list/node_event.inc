@@ -61,48 +61,6 @@ class sv_list_node_event extends sv_list_plugin  {
     }
 
     $entities = $output;
-/*
-    // Split repeated event into many nodes - one for each instance of event
-    // key them by timestamp for easy sorting.
-    $exploded = array();
-    $now = REQUEST_TIME;
-    foreach ($entities as $entity) {
-      foreach ($entity->field_date[LANGUAGE_NONE] as $delta => $date) {
-        $time_index = strtotime($date['value']);
-        while (array_key_exists($time_index, $exploded)) {
-          $time_index += 1; //don't clobber events that start at same time.
-        }
-
-        // The request time is calculated in the UTC timezone.
-        // In order to compare it against the event time values we need
-        // get the timestamp of the event's start and end times to UTC as well.
-        $utc_time = new DateTime($date['value'], new DateTimeZone('UTC'));
-        $local_start_time = $utc_time->getTimestamp();
-        $utc_time = new DateTime($date['value2'], new DateTimeZone('UTC'));
-        $local_end_time = $utc_time->getTimestamp();
-        if ($local_end_time >= $now) {
-          // Remove the events which their starting date is less then half hour
-          // ago.
-          if ($this->VerifyStartDate($now, $local_start_time)) {
-            continue;
-          }
-
-          $new = clone $entity;
-          $new->field_date[LANGUAGE_NONE][0] = $date;
-          $new->date_id = implode('.', array('date', $new->nid, 'field_date', $delta));
-          $exploded[$time_index] = $new;
-        }
-      }
-    }
-
-    ksort($exploded);    //now sort by timestamp
-
-    // filter by page num
-    // When making normal requests, the page is always 0. We don't store the page the user is on between requests.
-    // When getting the page with AJAX, this box is the only pager active. Therefore, we want the 0 pager element.
-    $page_num = pager_find_page();
-    $limit = $options['number_of_items'];
-    $entities = array_slice(array_values($exploded), $page_num * $limit, $limit);  //and re-apply the item limit*/
   }
 
   /**
