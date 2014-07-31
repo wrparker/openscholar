@@ -244,11 +244,11 @@ class os_sv_list extends os_boxes_default {
       $block['content'] = NULL;
       $assets = array();
       $this->options += $this->options_defaults();
+
+      $this->_set_plugins($this->entity_type, $bundle);
       
       $page = 0;
       $ids = $this->get_ids($page_num, $page);
-      
-      $this->_set_plugins($this->entity_type, $bundle);
 
       // Add the pager.
       if ($this->options['pager'] && $ids) {
@@ -413,7 +413,7 @@ class os_sv_list extends os_boxes_default {
    */
   private function _plugins_invoke($method, &$args = NULL) {
     $options = ($this->options) ? $this->options + $this->options_defaults() : $this->options_defaults();
-    foreach ($this->plugins as $name => $plugin) {
+    foreach ($this->plugins as $name => &$plugin) {
       if (method_exists($plugin['instance'], $method)) {
         $ret[$plugin['name']] = $plugin['instance']->$method($options, $args); //to pass by ref we can't use func_get_args
       }

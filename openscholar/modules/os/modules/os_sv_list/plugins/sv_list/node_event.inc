@@ -33,6 +33,8 @@ class sv_list_node_event extends sv_list_plugin  {
     $efq->fieldOrderBy('field_date', 'value', 'ASC');
     $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime('-30 minutes')), '>=', 'sv_list_events');
     $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '>=', 'sv_list_events');
+
+    $this->query = $efq;
   }
 
   /**
@@ -46,6 +48,22 @@ class sv_list_node_event extends sv_list_plugin  {
       return;
     }
 
+    // The EntityFieldQuery has the raw DB data on it's ordered_results property
+    // We earlier modified this query to give a separate row for each nid-delta
+    // So we need to add a value to the entities array for each row in the raw DB
+    // every entity we need should already be in the entities array
+    $output = array();
+    $raw = $this->query->ordered_results;
+    dpm($raw);
+    foreach ($raw as $row) {
+      $entity = clone $entities[$row->entity_id];
+      $entity->date_id = implode('.', array('date', $entity->nid, 'field_date', $row->delta));
+      $output[] = $entity;
+    }
+    dpm($output);
+
+    $entities = $output;
+/*
     // Split repeated event into many nodes - one for each instance of event
     // key them by timestamp for easy sorting.
     $exploded = array();
@@ -86,7 +104,7 @@ class sv_list_node_event extends sv_list_plugin  {
     // When getting the page with AJAX, this box is the only pager active. Therefore, we want the 0 pager element.
     $page_num = pager_find_page();
     $limit = $options['number_of_items'];
-    $entities = array_slice(array_values($exploded), $page_num * $limit, $limit);  //and re-apply the item limit
+    $entities = array_slice(array_values($exploded), $page_num * $limit, $limit);  //and re-apply the item limit*/
   }
 
   /**
