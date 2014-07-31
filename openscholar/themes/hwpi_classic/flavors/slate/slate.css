@@ -119,12 +119,12 @@ border-top: 1px solid #999;
 #search-block-form input.form-submit, 
 #search-block-form #edit-submit, 
 #search-form #edit-submit {
-background: url(/profiles/openscholar/themes/hwpi_basetheme/images/hwpi_basesprite.png) no-repeat scroll 2px -440px #FFDB6D;
+ background: url(/profiles/openscholar/themes/hwpi_basetheme/images/hwpi_basesprite.png) no-repeat 2px -439px #8996A0;
 }
 
 
 a.rslides_nav {
-background-color: #FFDB6D !important;
+background-color: #444 !important;
 }
 
 #footer {
@@ -133,8 +133,8 @@ background-color: #FFDB6D !important;
 }
 
 .section-nav .menu-depth-1 > a {
-background: none repeat scroll 0 0 #FFDB6D !important;
-color: #1b4977 !important;
+background: #BAC5C6 !important;
+color: #fff !important;
 }
 
 .node-event .field-name-field-date, 
