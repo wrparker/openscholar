@@ -308,29 +308,17 @@ ul.pager li a:active {
 
 
 /* Note: .pager-current is for the current page. */
-ul.pager li.pager-item  {
-}
-
-ul.pager li.first {
-}
-
-ul.pager li.last {
-}
 
 ul.pager li.pager-current {
 	font-weight:bold;
 }
 
-ul.pager li.pager-first {
-}
-
-ul.pager li.pager-previous {
-}
-
-ul.pager li.pager-next {
-}
-
-ul.pager li.pager-last {
+.view-id-publication_types ul.pager li.pager-next a,
+.view-id-publication_types ul.pager li.pager-previous a,
+.view-id-publication_years ul.pager li.pager-next a,
+.view-id-publication_years ul.pager li.pager-previous a {
+font-size: 1.5em;
+text-decoration: none !important;
 }
 
 /* Skip Navigation */

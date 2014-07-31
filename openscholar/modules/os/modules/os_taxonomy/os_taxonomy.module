@@ -1005,9 +1005,10 @@ function theme_os_taxonomy_tagged_nodes($variables) {
 
   // Show description only if set and if this is first page.
   $show_descriptioon = FALSE;
-  $wrapper = entity_metadata_wrapper('taxonomy_term', $variables['taxonomy_term']);
-  if (!$page && $wrapper && $wrapper->show_description->value()) {
-    $show_descriptioon = TRUE;
+  if ($variables['taxonomy_term']) {
+    if (!$page && $variables['taxonomy_term']->show_description[LANGUAGE_NONE][0]['value']) {
+      $show_descriptioon = TRUE;
+    }
   }
 
   $options = $variables['options'] + array(
@@ -1344,6 +1345,7 @@ function os_taxonomy_list_attached_entities($tid, $bundles = array(), $range = N
           break;
         case 'person':
           $query->leftJoin('field_data_field_last_name', 'p', 'p.revision_id = n.vid AND p.bundle = \'person\' AND p.entity_type = \'node\' AND p.language = \'und\' AND p.delta = 0');
+          $query->orderBy('n.sticky', 'DESC');
           $query->orderBy('p.field_last_name_value', 'ASC');
           break;
       }
@@ -1809,6 +1811,11 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
       $form[$element]['#access'] = FALSE;
     }
   }
+
+  // Set the default value for "show description" to TRUE for new terms.
+  if (is_array($form['#term']) && !$form['#term']['tid']) {
+    $form['show_description']['und']['#default_value'] = TRUE;
+  }
 }
 
 /**
@@ -1868,9 +1875,55 @@ function os_taxonomy_field_attach_create_bundle($entity_type, $bundle) {
  *   The entity type of the bundle we want to attach the field to
  * @param $bundle
  *   The bundle to attach the fields to.
+ * @throws FieldException
+ *
+ * @see field_create_instance().
  */
 function os_taxonomy_attach_fields_to_vocabulary($entity_type, $bundle) {
-  og_create_field('show_description', $entity_type, $bundle);
+  $info = os_taxonomy_og_fields_info();
+  $field = $info['show_description']['field'];
+
+  if (!field_info_field($field['field_name'])) {
+    field_create_field($field);
+  }
+
+  $instance = $info['show_description']['instance'];
+
+  $instance += array(
+    'field_name' => $field['field_name'],
+    'bundle' => $bundle,
+    'entity_type' => $entity_type,
+  );
+
+  // Implement the field_create_instance() function.
+  $field = field_read_field($instance['field_name']);
+  if (empty($field)) {
+    throw new FieldException(t("Attempt to create an instance of a field @field_name that doesn't exist or is currently inactive.", array('@field_name' => $instance['field_name'])));
+  }
+  // Check that the required properties exists.
+  if (empty($instance['entity_type'])) {
+    throw new FieldException(t('Attempt to create an instance of field @field_name without an entity type.', array('@field_name' => $instance['field_name'])));
+  }
+  if (empty($instance['bundle'])) {
+    throw new FieldException(t('Attempt to create an instance of field @field_name without a bundle.', array('@field_name' => $instance['field_name'])));
+  }
+  // Check that the field can be attached to this entity type.
+  if (!empty($field['entity_types']) && !in_array($instance['entity_type'], $field['entity_types'])) {
+    throw new FieldException(t('Attempt to create an instance of field @field_name on forbidden entity type @entity_type.', array('@field_name' => $instance['field_name'], '@entity_type' => $instance['entity_type'])));
+  }
+
+  $instance['field_id'] = $field['id'];
+
+  $prior_instance = field_read_instance($instance['entity_type'], $instance['field_name'], $instance['bundle']);
+  if (!empty($prior_instance)) {
+    $message = t('Attempt to create an instance of field @field_name on bundle @bundle that already has an instance of that field.', array('@field_name' => $instance['field_name'], '@bundle' => $instance['bundle']));
+    throw new FieldException($message);
+  }
+
+  // Writing the field the to DB and clear the cache field. This part meant for
+  // performance.
+  _field_write_instance($instance);
+  field_cache_clear();
 }
 
 /**

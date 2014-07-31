@@ -304,6 +304,11 @@ function os_events_process_node(&$variables) {
   }
 
   if ($variables['page']) {
+    // Change the date markup if this is a recurring event.
+    if ($variables['content']['field_date']['#items'][0]['rrule']) {
+      $variables['content']['field_date'][0]['#markup'] = _os_events_style_recurring_event($variables['content']['field_date'][0]['#markup']);
+    }
+
     $options = array('absolute' => TRUE, 'attributes' => array('class' => array('subscribe')));
     $subscribe = l(t('subscribe'), 'calendar/export.ics/' . $variables['node']->nid, $options);
     $subscribe = str_replace('http://', 'webcal://', $subscribe);
@@ -336,6 +341,32 @@ function os_events_process_node(&$variables) {
     $rule = theme_date_repeat_display(array('item' => array('rrule' => $variables['content']['field_date']['#items'][0]['rrule'])));
     $variables['content']['field_date'][0]['#markup'] = str_replace($rule, '', $variables['content']['field_date'][0]['#markup'] );
   }
+}
+
+/**
+ * Helper function; Changes the order or the repeat rule and dates for repeated
+ * events.
+ *
+ * @param $markup
+ *  The default markup that needs reordering.
+ *
+ * @return string
+ *  The altered date markup..
+ */
+function _os_events_style_recurring_event($markup) {
+  // Get the repaet rule section.
+  $pattern = '/<div class="date-repeat-rule">[\s\S]*<\/div>/';
+  preg_match($pattern, $markup, $matches);
+  $repeat_rule = $matches[0];
+
+  // Remove it from the markup.
+  $markup = str_replace($repeat_rule, '', $markup);
+
+  // Clear the period in the repeat rule.
+  $repeat_rule = str_replace('.', '', $repeat_rule);
+
+  // Rebuild the markup.
+  return $markup . $repeat_rule;
 }
 
 /**
@@ -1118,6 +1149,19 @@ function os_events_mail($key, &$message, $params) {
 function os_events_mail_alter(&$message) {
   if (!in_array($message['id'], array('registration_broadcast', 'os_events_registration_confirmation'))) {
     return;
+  }
+
+  // Get event default email address.
+  $wrapper = entity_metadata_wrapper($message['params']['context']['entity_type'], $message['params']['context']['entity_id']);
+  $event_author_email = $wrapper->author->mail->value();
+
+  // Default value of the "From" field should be the author of the event's e-mail
+  // in case it hasn't been changed yet (if it hasn't been changed yet, the email
+  // will be set by default to be as defined in the field instance).
+  $info = field_info_instance('node', 'field_event_registration', 'event');
+  $default_email = $info['settings']['default_registration_settings']['settings']['from_address'];
+  if ($message['headers']['From'] == $default_email) {
+    $message['headers']['From'] = $message['from'] = $event_author_email;
   }
 
   // Set the sender and return-path headers.

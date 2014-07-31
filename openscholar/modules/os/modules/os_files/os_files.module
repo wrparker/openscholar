@@ -164,6 +164,26 @@ function os_files_field_extra_fields_alter(&$info) {
   }
 }
 
+/**
+ * Implements hook_default_oembed_provider_alter().
+ *
+ * Disables the stock providers that have oEmbed equivalents.
+ */
+function os_files_ctools_plugin_post_alter(&$plugin) {
+  if (strpos($plugin['module'], 'oembed') !== FALSE) {
+    $weights = array(
+      'node' => 0,
+      'file' => 1,
+      'box' => 2,
+      'embedly' => 3,
+      'default' => 4
+    );
+    if (isset($weights[$plugin['name']])) {
+      $plugin['weight'] = $weights[$plugin['name']];
+    }
+  }
+}
+
 /*
  * Implements hook_file_presave().
  */
@@ -326,8 +346,9 @@ function os_files_form_file_entity_add_upload_alter(&$form, &$form_state) {
       }
     }
     if (!empty($mimetypes)) {
+      // include mimetypes and extensions just in case a browser doesn't support one of them.
       $form['upload']['#attributes'] = array(
-        'accept' => implode(',', $mimetypes).(count($extras)?',.'.implode(',.', $extras):''),
+        'accept' => implode(',', $mimetypes).',.'.implode(',.',$extensions).(count($extras)?',.'.implode(',.', $extras):''),
       );
       $form['upload']['#pre_render'][] = 'os_files_upload_attributes';
     }
@@ -393,9 +414,6 @@ function os_files_form_file_entity_edit_alter(&$form, &$form_state){
 
   $form['replace_upload']['#weight'] = 10;
   $form['actions']['submit']['#submit'][] = 'os_files_edit_file_invalidate_cache';
-
-  $form['field_file_image_alt_text']['#access'] = FALSE;
-  $form['field_file_image_title_text']['#access'] = FALSE;
 
   $form['user']['#access'] = FALSE;
 
@@ -1949,6 +1967,9 @@ function os_files_file_default_types_alter(&$types){
     // *.cls, *.sty
     'text/x-tex',
     'application/x-latex',
+    // *.rtf
+    'text/rtf',
+    'application/rtf',
   );
 
   $types['document']->mimetypes = (empty($types['document']->mimetypes)) ? $document : array_merge($types['document']->mimetypes, $document);
@@ -2076,6 +2097,7 @@ function _os_files_extensions_from_type($type) {
       'odp',
       'xml',
       'tex',
+      'rtf',
       'wtml',
       'wtt',
       'wwtfig',
@@ -2125,7 +2147,8 @@ function os_files_file_mimetype_mapping_alter(&$mimes) {
   $types = array(
     'application/x-wtt' => 'wtt',
     'application/x-wtml' => 'wtml',
-    'application/x-wwtfig' => 'wwtfig'
+    'application/x-wwtfig' => 'wwtfig',
+    'text/rtf' => 'rtf'
   );
 
   foreach ($types as $mime => $ext) {

@@ -68,7 +68,7 @@ body {
 	 padding-top: 15px;
 }
 
-.region-footer .region-inner, /* By default this sets up 20px gutters i.e. margin: 0 10px. */ 
+
 .region-page-top .region-inner /* Remove ugly space between branding region and toolbar */{
 	 padding-top: 0;
 }
@@ -521,10 +521,10 @@ ul.class_material_field_class a.class_material_field_class_anchor {
 }
 
 /* BLOG COMMENT ICON */
-.links li a.os-add-comment {
-    background: url("../images/scholarbase-sprite.png") 0 -539px no-repeat;
+.links li a.os-add-comment:before {
+    background: url("../images/scholarbase-sprite.png") 0 -538px no-repeat;
     padding-left: 15px;
-
+	content:'';
 }
 
 
@@ -818,7 +818,7 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 /* The overlay should never be open with os_basetheme. This is here in case we miss
  * a path that needs the cp_theme activated */
 #overlay-close, #overlay-close:hover {
-  background: url('../images/scholarbase-sprite.png.png') no-repeat 0 -772px;
+  background: url('../images/scholarbase-sprite.png') no-repeat 0 -770px;
 	width:30px;
 	height:30px;
 	position: relative;
@@ -1233,6 +1233,9 @@ img.media-element.file-default[style*="float:"][style*="right;"] {
 	padding-right:0;
 	}	
 	
+article.node-media-gallery.node-teaser .node-content {
+   height: 275px;
+ }	
 
 .block-boxes-os_sv_list_box .os_sv_list_box.sv-list-link.sv-list-view-links h1 a {
 	font-weight:normal;
