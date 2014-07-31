@@ -313,6 +313,8 @@ ul.pager li.pager-current {
 	font-weight:bold;
 }
 
+.view-publication-contributors ul.pager li.pager-next a,
+.view-publication-contributors ul.pager li.pager-previous a,
 .view-id-publication_types ul.pager li.pager-next a,
 .view-id-publication_types ul.pager li.pager-previous a,
 .view-id-publication_years ul.pager li.pager-next a,
