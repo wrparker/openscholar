@@ -164,6 +164,26 @@ function os_files_field_extra_fields_alter(&$info) {
   }
 }
 
+/**
+ * Implements hook_default_oembed_provider_alter().
+ *
+ * Disables the stock providers that have oEmbed equivalents.
+ */
+function os_files_ctools_plugin_post_alter(&$plugin) {
+  if (strpos($plugin['module'], 'oembed') !== FALSE) {
+    $weights = array(
+      'node' => 0,
+      'file' => 1,
+      'box' => 2,
+      'embedly' => 3,
+      'default' => 4
+    );
+    if (isset($weights[$plugin['name']])) {
+      $plugin['weight'] = $weights[$plugin['name']];
+    }
+  }
+}
+
 /*
  * Implements hook_file_presave().
  */
