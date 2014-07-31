@@ -151,7 +151,7 @@ function os_sv_list_query_sv_list_biblio_alter(&$query) {
 /**
  * Implements hook_query_tag_alter
  */
-function os_sv_list_query_sv_list_events_alter(SelectQueryInterface &$query) {
+function os_sv_list_query_sv_list_events_alter(SelectQueryInterface $query) {
   // fix this awful query
 
   // then add the delta to the fields so we get a row for each unique nid-delta combination
