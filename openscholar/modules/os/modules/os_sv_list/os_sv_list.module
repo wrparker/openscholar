@@ -152,16 +152,25 @@ function os_sv_list_query_sv_list_biblio_alter(&$query) {
  * Implements hook_query_tag_alter
  */
 function os_sv_list_query_sv_list_events_alter(SelectQueryInterface &$query) {
-  // get the alias for the field_date table
+  // fix this awful query
+
   // then add the delta to the fields so we get a row for each unique nid-delta combination
   // This tells EFQ how many results it actually has
-  $tables = $query->getTables();
-  foreach ($tables as $tb) {
-    if ($tb['table'] == 'field_data_field_date') {
-      $query->fields('field_data_field_date1', array('delta'));
-      break;
-    }
-  }
+  // The table alias is derived from the delta group given in the conditions. We have to use the same
+  // alias, and not a different alias of the same table to get the correct results.
+
+  // add the delta to the fields
+  $query->fields('field_data_field_date_delta_sv_list_events', array('delta'));
+
+  // sort on the right table
+  $order = &$query->getOrderBy();
+  $order = array(
+    'field_data_field_date_delta_sv_list_events.field_date_value' => 'ASC'
+  );
+
+  // this table isn't needed anymore
+  $tables = &$query->getTables();
+  unset($tables['field_data_field_date_value1']);
 }
 
 /**

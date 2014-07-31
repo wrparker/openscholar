@@ -54,13 +54,11 @@ class sv_list_node_event extends sv_list_plugin  {
     // every entity we need should already be in the entities array
     $output = array();
     $raw = $this->query->ordered_results;
-    dpm($raw);
     foreach ($raw as $row) {
       $entity = clone $entities[$row->entity_id];
       $entity->date_id = implode('.', array('date', $entity->nid, 'field_date', $row->delta));
       $output[] = $entity;
     }
-    dpm($output);
 
     $entities = $output;
 /*
