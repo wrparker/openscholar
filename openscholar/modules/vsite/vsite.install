@@ -642,3 +642,37 @@ function vsite_update_7023() {
 function vsite_update_7024() {
   features_revert(array('vsite' => array('user_permission')));
 }
+
+/**
+ * Fix permissions slideshow for overridden roles
+ */
+function vsite_update_7025() {
+
+  // The default slideshow permissions for each role.
+  $vsite_admin_perms = array('create slideshow_slide content','delete any slideshow_slide content','delete own slideshow_slide content','update any slideshow_slide content','update own slideshow_slide content');
+  $vsite_user_perms = array('create slideshow_slide content','delete own slideshow_slide content','update own slideshow_slide content');
+  $content_editor_perms = array('create slideshow_slide content','delete own slideshow_slide content','update any slideshow_slide content','update own slideshow_slide content');
+
+  // Get all overridden vsite roles that are missing the slideshow permissions.
+  $results = db_query("SELECT COUNT(orp.permission) num_perm, ogr.*
+    FROM og_role ogr
+    LEFT JOIN og_role_permission orp ON orp.rid = ogr.rid AND orp.permission IN(:perms)
+    WHERE ogr.name IN('vsite user','vsite admin','content editor') AND ogr.gid > 1
+    GROUP BY ogr.rid
+    HAVING num_perm < :min_perm", array(':min_perm' => 3, ":perms" => $vsite_admin_perms));
+
+  // For each of the roles add the permissions that are missing.
+  foreach ($results as $result) {
+    switch ($result->name) {
+    	case 'vsite admin':
+    	  og_role_grant_permissions($result->rid, $vsite_admin_perms);
+    	break;
+    	case 'vsite user':
+    		og_role_grant_permissions($result->rid, $vsite_user_perms);
+    	break;
+    	case 'content editor':
+    	  og_role_grant_permissions($result->rid, $content_editor_perms);
+    	break;
+    }
+  }
+}
