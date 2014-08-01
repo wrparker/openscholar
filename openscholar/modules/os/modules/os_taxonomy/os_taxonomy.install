@@ -40,7 +40,9 @@ function os_taxonomy_update_7003(&$sandbox) {
   while (($sandbox['sandbox']['progress'] <= $start_banch + $batch) && ($sandbox['sandbox']['progress'] <= $sandbox['sandbox']['max'] - 1)) {
     $machine_name = $sandbox['sandbox']['info'][$sandbox['sandbox']['progress']];
     $sandbox['message'] = t('Adding required field to vocabulary @machine_name', array('@machine_name' => $machine_name));
-    og_create_field('show_description', 'taxonomy_term', $machine_name);
+    if ($machine_name) {
+      og_create_field('show_description', 'taxonomy_term', $machine_name);
+    }
     $sandbox['sandbox']['progress']++;
   }
 
