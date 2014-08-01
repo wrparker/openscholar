@@ -1,9 +1,11 @@
-#page {
+#page,
+#search-block-form .container-inline .form-item .form-text {
 background: #FDFAEF;
 }
 
 a,
-a:visited {
+a:visited,
+.biblio-title a {
 /*color: #1b4977;*/
 color: #C2230E;
 
@@ -100,7 +102,7 @@ background-position: 0 -566px;
 
 #menu-bar ul.nice-menu .menuparent ul li a:hover,
 #menu-bar ul.nice-menu .menuparent ul li a.active {
-     color:#1b4977;
+     color:#FFF;
 }
 
 #menu-bar ul.nice-menu a.active,
@@ -125,7 +127,8 @@ border-top: 1px solid #999;
 #search-block-form input.form-submit, 
 #search-block-form #edit-submit, 
 #search-form #edit-submit {
- background: url(/profiles/openscholar/themes/hwpi_basetheme/images/hwpi_basesprite.png) no-repeat 2px -439px #8996A0;
+  background: url(/profiles/openscholar/themes/hwpi_basetheme/images/hwpi_basesprite.png) no-repeat 2px -441px #8996A0;
+  height:34px;
 }
 
 
