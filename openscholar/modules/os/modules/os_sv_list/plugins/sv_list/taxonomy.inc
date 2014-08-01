@@ -60,10 +60,10 @@ class sv_list_taxonomy extends sv_list_plugin {
       }
 
       $element = 'vocab_' . $vid;
-      $vocab_default_value = (isset($options['vocabs'][$element])) ? $options['vocabs'][$element] : array();
+      $vocab_default_value = (is_array($options['vocabs']) && isset($options['vocabs'][$element])) ? $options['vocabs'][$element] : array();
 
       // Backwards compatibility, some widgets dont have $options['vocabs'] populated.
-      if(!$options['vocabs']) {
+      if(!is_array($options['vocabs']) || !$options['vocabs']) {
         $vocab_default_value = array_intersect(array_keys($terms), $options['terms']);
       }
 
