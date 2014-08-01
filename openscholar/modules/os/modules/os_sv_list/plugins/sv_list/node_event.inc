@@ -51,7 +51,7 @@ class sv_list_node_event extends sv_list_plugin  {
     // The EntityFieldQuery has the raw DB data on it's ordered_results property
     // We earlier modified this query to give a separate row for each nid-delta
     // So we need to add a value to the entities array for each row in the raw DB
-    // every entity we need should already be in the entities array
+    // Every entity we need should already be in the entities array
     $output = array();
     $raw = $this->query->ordered_results;
     foreach ($raw as $row) {
@@ -61,13 +61,6 @@ class sv_list_node_event extends sv_list_plugin  {
     }
 
     $entities = $output;
-  }
-
-  /**
-   * Verify the start date accouter no longer then 30 minutes ago.
-   */
-  protected function VerifyStartDate($now, $start_date) {
-    return ($now - (30 * 60)) >= $start_date;
   }
 
   /**
