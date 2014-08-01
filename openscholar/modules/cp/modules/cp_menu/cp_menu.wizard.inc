@@ -327,8 +327,8 @@ function cp_menu_url_validate(&$form, &$state) {
         form_set_error('url', t('Could not connect to url: %url', array('%url' => $url)));
       }
       else {
-        if (strpos($data, 'HTTP/1.1 404') !== FALSE) {
-          form_set_error('url', t('URL Returned Error: %error', array('%error' => $header[0])));
+        if (strpos($data, 'HTTP/1.1 404') === 0) {
+          form_set_error('url', t('URL Returned Error: 404 File Not Found'));
         }
       }
       return;
