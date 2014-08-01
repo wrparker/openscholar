@@ -1653,6 +1653,8 @@ function os_profiles_preprocess_image_formatter(&$variables) {
 
 /**
  * Access callback for creating site from profile.
+ *
+ * Users will have access if the node is in a vsite that can have subsites, and they are a admin, and have permission to create personal sites.
  */
 function os_profiles_can_create_site_from_profile($node) {
   $wrapper = entity_metadata_wrapper('node', $node);
@@ -1661,7 +1663,10 @@ function os_profiles_can_create_site_from_profile($node) {
     return FALSE;
   }
 
-  return user_access('create personal content');
+  $vsite = spaces_get_space();
+  $subsite_parents = variable_get('subsite_parents',array('department', 'project'));
+
+  return ($vsite && in_array($vsite->group->type,$subsite_parents) && spaces_access_admin() && user_access('create personal content'));
 }
 
 /**
