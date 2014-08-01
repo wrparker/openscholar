@@ -354,19 +354,34 @@ function os_events_process_node(&$variables) {
  *  The altered date markup..
  */
 function _os_events_style_recurring_event($markup) {
-  // Get the repaet rule section.
+
+  // Get the repeat rule section.
   $pattern = '/<div class="date-repeat-rule">[\s\S]*<\/div>/';
-  preg_match($pattern, $markup, $matches);
-  $repeat_rule = $matches[0];
+  if (preg_match($pattern, $markup, $matches)) {
+    $repeat_rule = $matches[0];
 
-  // Remove it from the markup.
-  $markup = str_replace($repeat_rule, '', $markup);
+    // Remove it from the markup.
+    $markup = str_replace($repeat_rule, '', $markup);
 
-  // Clear the period in the repeat rule.
-  $repeat_rule = str_replace('.', '', $repeat_rule);
+    // Clear the period in the repeat rule.
+    $repeat_rule = str_replace('.', '', $repeat_rule);
 
-  // Rebuild the markup.
-  return $markup . $repeat_rule;
+    // Rebuild the markup.
+    return $markup . $repeat_rule;
+  }
+  // Or, get the date section
+  // relies on the regex being greedy
+  $pattern = '/<span class="date-display-single">[\s\S]*<\/span>/';
+  if (preg_match($pattern, $markup, $matches)) {
+    $date = $matches[0];
+
+    $markup = str_replace($date, '', $markup);
+
+    return $date . $markup;
+  }
+
+
+  return $markup;
 }
 
 /**
