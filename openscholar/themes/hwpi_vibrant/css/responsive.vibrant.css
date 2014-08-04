@@ -164,7 +164,8 @@ background: none !important;
 }
 
 @media (max-width: 768px) {
-div.sidebar {
+.one-sidebar.sidebar-second .region-sidebar-second,
+.one-sidebar.sidebar-first .region-sidebar-first {
 width: 92%!important;
 	}
 }
