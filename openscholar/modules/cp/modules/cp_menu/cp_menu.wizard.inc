@@ -318,17 +318,17 @@ function cp_menu_url_validate(&$form, &$state) {
 
     //external url
     if (!in_array($domain, $domains)) {
-      $header = @get_headers($url);
+      $ch = curl_init($url);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+      curl_setopt($ch, CURLOPT_HEADER, TRUE);
+      $data = curl_exec($ch);
 
-      if (!$header) {
+      if ($data === FALSE) {
         form_set_error('url', t('Could not connect to url: %url', array('%url' => $url)));
       }
       else {
-        $http = explode(' ', $header[0]);
-        $http_code = $http[1];
-
-        if ($http_code == 404) {
-          form_set_error('url', t('URL Returned Error: %error', array('%error' => $header[0])));
+        if (strpos($data, 'HTTP/1.1 404') === 0) {
+          form_set_error('url', t('URL Returned Error: 404 File Not Found'));
         }
       }
       return;
