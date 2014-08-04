@@ -126,8 +126,8 @@ ul.menu {
 }
 /* column layouts */
 
-#content-column, div.sidebar {
-width: 90% !important;
+#content-column {
+width: 92% !important;
 }
 
 .page-node #content-column .content-inner {
@@ -137,6 +137,11 @@ width: 90% !important;
 .two-sidebars .region-sidebar-second {
     padding-top: 65px;
    
+}
+
+.region-sidebar-first {
+margin-left: -92% !important;
+width: 22% !important;
 }
 
 .two-sidebars .region-sidebar-second {
@@ -159,7 +164,7 @@ background: none !important;
 }
 
 @media (max-width: 768px) {
-.one-sidebar.sidebar-second .region-sidebar-second {
-width: 90%!important;
+div.sidebar {
+width: 92%!important;
 	}
 }
