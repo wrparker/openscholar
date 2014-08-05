@@ -24,13 +24,19 @@ class OSExpireFile extends ExpireFile {
     if (empty($file->fid)) {
       return;
     }
-   	
+
     //Expire the standard File URI's
     parent::expire($file, $action, $skip_action_check);
-    
+
     $styles = image_styles();
     $expire_urls = array();
-    
+
+    $file_url = file_create_url($file->uri);
+    $parsed_url = parse_url($file_url);
+
+    // Remove the non-purl prefixed version of the file.
+    $expire_urls[$parsed_url['path']] = $file_url;
+
     foreach ($styles as $style) {
       $image_path = image_style_path($style['name'], $file->uri);
       if (file_exists($image_path)) {
