@@ -1,3 +1,7 @@
+html, body {
+color: #4c4c4c;
+}
+
 #page {
 background: #F6F5EE;
 }
@@ -5,7 +9,6 @@ background: #F6F5EE;
 a,
 a:visited,
 .biblio-title a {
-/*color: #1b4977;*/
 color: #C2230E;
 
 }
@@ -59,29 +62,31 @@ font-family: helvetica, arial !important;
 #boxes-box-site_info, 
 #boxes-box-site_info a,
 #menu-bar ul.nice-menu a {
-color: #FFF;
+color: #4c4c4c;
 }
 
 .section-nav .expanded.menu-depth-2 > a:hover,
 .section-nav .expanded.menu-depth-2 > a,
-#menu-bar,
-#header {
-background: #8996A0 !important;
+#menu-bar {
+background: #F6F5EE !important;
 }
 
+#header {
+	background: #F0F0EE;
+}
 
 #menu-bar {
-border-top: 1px solid #efefef;
+border-bottom: 1px solid #E4E0E0;
 }
 
 #menu-bar ul.nice-menu .menuparent > a:before {
-background-position: 0 -566px;
+background-position: -36px -566px;
 }
 
 #menu-bar ul.nice-menu .menuparent.over > a,
 #menu-bar ul.nice-menu .menuparent a:hover,
 #menu-bar ul.nice-menu .menuparent a.active {
-    background-color:  #F3F3F1;
+    background-color:  #8996A0;
 }
 
 /* Targets all menuparents, top level or descendents of top */
@@ -90,15 +95,16 @@ background-position: 0 -566px;
 #menu-bar ul.nice-menu .menuparent a.active,
 #menu-bar ul.nice-menu a:hover,
 #menu-bar ul.nice-menu ul li.menuparent a {
-  color:#1b4977;
+  color:#FFF;
 }
 
 #menu-bar ul.nice-menu .menuparent.over > a:before,
 #menu-bar ul.nice-menu .menuparent a:hover:before,
 #menu-bar ul.nice-menu .menuparent a.active:before {
-  background-position: -12px -566px; /* White Arrow */
+  background-position: 0 -566px; /* White Arrow */
 }
 
+#menu-bar ul.nice-menu .menuparent ul li a,
 #menu-bar ul.nice-menu .menuparent ul li a:hover,
 #menu-bar ul.nice-menu .menuparent ul li a.active {
      color:#FFF;
@@ -106,7 +112,7 @@ background-position: 0 -566px;
 
 #menu-bar ul.nice-menu a.active,
 #menu-bar ul.nice-menu a:hover {
-    background: #F3F3F1;
+    background: #8996A0;
 }
 
 #menu-bar ul.nice-menu ul {
@@ -119,7 +125,7 @@ background-position: 0 -566px;
 #content-column .block.block-boxes-os_boxes_columns .block, 
 .node-person .block-inner, 
 .comment-wrapper {
-border-top: 1px solid #999;
+border-top: 1px solid #E4E0E0;
 }
 
 
@@ -130,14 +136,33 @@ border-top: 1px solid #999;
   height:34px;
 }
 
+.more-link:after {
+background-image: none;
+
+}
 
 a.rslides_nav {
-background-color: #444 !important;
+background-color: #8996A0 !important;
 }
 
 #footer {
-	background: #e9e9e9;
+	background: #777;
 	border-top: 1px solid #999;
+}
+
+#footer .footer-login,
+#footer,
+#footer a {
+	color:#FFF;
+	text-shadow: none;
+}
+
+#footer .footer-login:after {
+background-image: none;
+}
+
+#powered-by a {
+background-position: -14px -545px;
 }
 
 .section-nav .menu-depth-1 > a {
