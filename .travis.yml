@@ -81,6 +81,7 @@ script:
   - sleep 3 # give xvfb some time to start
 
   # Run selenium.
+  - wget http://chromedriver.googlecode.com/files/chromedriver_linux32_23.0.1240.0.zip && unzip chromedriver_linux32_23.0.1240.0.zip && sudo mv chromedriver /usr/bin
   - wget http://selenium-release.storage.googleapis.com/2.40/selenium-server-standalone-2.40.0.jar
   - java -jar selenium-server-standalone-2.40.0.jar -p 4444 &
   - sleep 5

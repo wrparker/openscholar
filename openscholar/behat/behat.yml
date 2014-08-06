@@ -26,7 +26,8 @@ default:
     features: 'features'
   extensions:
     Behat\MinkExtension\Extension:
-      show_cmd: 'open -a Firefox.app %s'
+      browser: chrome
+      javascript_session: webdriver
       goutte: ~
       selenium2: ~
     Drupal\DrupalExtension\Extension:
