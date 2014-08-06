@@ -156,8 +156,8 @@ class os_slideshow_box extends os_boxes_default {
     if ($random || ($block['content'] = $this->get_cache()) === FALSE) {
       $block['title'] = $block['subject'] = check_plain($this->title);
 
-      // Show Add Slide link to admins.
-      if (($vsite = vsite_get_vsite()) && og_user_access('node', $vsite->id, 'create slideshow_slide content')) {
+      // Show Add Slide link to admins, if they have 'create slideshow_slide content' permission
+      if (($vsite = vsite_get_vsite()) && og_user_access('node', $vsite->id, 'create slideshow_slide content', NULL, FALSE, TRUE)) {
         $block['content'] = l('Add Slide', 'node/add/slideshow-slide', array(
           'attributes' => array('class' => array('add_new')),
           'query' => array('widget' => $this->delta, 'destination' => current_path()),
