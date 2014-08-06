@@ -367,7 +367,7 @@ function _os_events_style_recurring_event($markup) {
     $repeat_rule = str_replace('.', '', $repeat_rule);
 
     // Rebuild the markup.
-    return $markup . $repeat_rule;
+    $markup = $markup . $repeat_rule;
   }
   // Or, get the date section
   // relies on the regex being greedy
@@ -377,10 +377,10 @@ function _os_events_style_recurring_event($markup) {
 
     $markup = str_replace($date, '', $markup);
 
-    return $date . $markup;
+    $markup = $date . $markup;
   }
 
-
+  $markup = str_replace(' .', '.', $markup);
   return $markup;
 }
 
