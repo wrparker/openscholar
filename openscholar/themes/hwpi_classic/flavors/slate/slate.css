@@ -6,6 +6,7 @@ color: #4c4c4c;
 background: #F6F5EE;
 }
 
+.ui-tabs .ui-widget-content a,
 a,
 a:visited,
 .biblio-title a {
@@ -42,7 +43,9 @@ body,
 #tinymce h4,
 #boxes-box-site_info, 
 #boxes-box-site_info a ,
-#menu-bar ul.nice-menu a {
+#menu-bar ul.nice-menu a,
+.breadcrumb, 
+.breadcrumb a {
 font-family: helvetica, Georgia, Baskerville, Palatino, 'Palatino Linotype', 'Book Antiqua', 'Times New Roman', serif;
 }
 
@@ -68,7 +71,11 @@ color: #4c4c4c;
 .section-nav .expanded.menu-depth-2 > a:hover,
 .section-nav .expanded.menu-depth-2 > a,
 #menu-bar {
-background: #F6F5EE !important;
+background: #FFF !important;
+}
+
+.section-nav .expanded.menu-depth-2 > a {
+color: #333;
 }
 
 #header {
