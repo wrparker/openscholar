@@ -1005,10 +1005,17 @@ list-style: none !important;
 
 
 .field-name-og-vocabulary a.toggle:before {
+background: url('../images/scholarbase-sprite.png') 3px -194px no-repeat;
+padding: 1px 0 3px 14px;
+content:'';
+}
+
+.field-name-og-vocabulary a.toggle.expanded:before {
 background: url('../images/scholarbase-sprite.png') -12px -194px no-repeat;
 padding: 1px 0 3px 14px;
 content:'';
 }
+
 
 .field-name-og-vocabulary .os-slider a {text-decoration:underline !important;}
 
