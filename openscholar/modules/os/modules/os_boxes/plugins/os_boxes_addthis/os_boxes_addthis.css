@@ -1,9 +1,9 @@
 .addthis_32x32_style .dummy .at300bs, .addthis_32x32_style .at300bs, .addthis_32x32_style .at15t {
-    background: url("images/addthisLarge_sprite.png") no-repeat scroll left center;
+    background: url("images/addthisLarge_sprite.png") no-repeat scroll left center !important;
 }
 
 .at16nc {
-    background: url("images/addthisSmall_sprite.png") no-repeat scroll 0 0 transparent;
+    background: url("images/addthisSmall_sprite.png") no-repeat scroll 0 0 transparent !important;
 }
 
 .at16nc.at16t_twitter {
