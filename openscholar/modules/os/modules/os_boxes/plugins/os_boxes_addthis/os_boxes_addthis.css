@@ -3,7 +3,7 @@
 }
 
 .at16nc {
-    background: url("images/addthisSmall_sprite.png") no-repeat scroll 0 0 transparent !important;
+    background: url("images/addthisSmall_sprite.png") no-repeat scroll 0 0 transparent;
 }
 
 .at16nc.at16t_twitter {
