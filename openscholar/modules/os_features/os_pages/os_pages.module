@@ -373,12 +373,21 @@ function os_pages_node_view_alter(&$build, $type) {
  * Allows users to see unpublished page if they have permission to do so
  */
 function os_pages_translated_menu_link_alter(&$link, $map) {
+
   if ($link['router_path'] == 'node/%') {
     if (!$link['access']) {
-      $tmp_map = clone $map;
+      // The $map saves the pieces of the path as strings, while elements in
+      // $path_map may be replaced with loaded objects.
+      // @see _menu_translate
+      $tmp_map = $map;
+
+      // _menu_translate has it's own method to keep from calling _menu_load_objects twice
+      // Since we know this is "node/%" and we will be calling node_load we fake it here
+      $loaded = ($link['load_functions'] && count($map) > 1 && is_object($map[1]));
+
       // we can assume this is an unpublished or deleted node
       // we should run proper access checks on it to determine if the user can access the node or not
-      if (_menu_load_objects($link, $tmp_map)) {
+      if ($loaded || _menu_load_objects($link, $tmp_map)) {
         // we know for sure the node is unpublished now. You can't load a deleted node
         _menu_check_access($link, $tmp_map);
         if ($link['access']) {
@@ -386,6 +395,7 @@ function os_pages_translated_menu_link_alter(&$link, $map) {
           $link['localized_options']['attributes']['class'][] = 'unpublished';
         }
       }
+
     }
     else {
       // children check
