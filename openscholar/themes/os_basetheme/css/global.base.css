@@ -569,14 +569,18 @@ ul ul ul ul {
 	margin-bottom:15px;
 	}
 
-.page-user .profile .item-list li {list-style:none !important;}
+.page-user .profile .item-list li {
+	list-style:none !important;
+	}
 
 
 .tweets-pulled-listing ul {
 	margin-left:0;
 }
 
-.sidebar .block-boxes-os_taxonomy_fbt ul ul {margin: 0 10px;}
+.block-boxes-os_taxonomy_fbt ul ul {
+	margin: 0 10px;
+	}
 
 /* ADDS SOME SPACE BELOW EACH VOCAB SECTION IN FACET'D BELOW */
 .sidebar .block-boxes-os_boxes_facetapi_vocabulary .item-list {
