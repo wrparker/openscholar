@@ -158,7 +158,7 @@ ul.nice-menu ul {
 	display: block;
 	text-decoration: none !important;
 	padding: 8px 15px;
-	border-bottom: 2px solid #fff;
+	border-bottom: 2px solid #fff !important;
 	font-size:15px;
 }
 
