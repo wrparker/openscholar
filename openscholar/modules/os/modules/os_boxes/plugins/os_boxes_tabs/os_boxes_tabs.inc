@@ -55,6 +55,9 @@ class os_boxes_tabs extends os_boxes_widget_collection {
         'links' => array(
           '#theme' => 'links',
           '#links' => array(),
+          '#attributes' => array(
+            'class' => array('tab-links'),
+          )
         ),
         '#attached' => array(
           'library' => array(
