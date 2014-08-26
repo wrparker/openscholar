@@ -112,7 +112,7 @@ function os_wysiwyg_link_filter($text) {
           $comps += array('query' => '', 'fragment' => '');
           $page = str_replace(array('?'.$comps['query'], '#'.$comps['fragment']), '', $m[3]);
           // query string is in var=val&var=val format. parse it into an array for drupal
-          parse_str($comps['query'], $query);
+          parse_str(htmlspecialchars_decode($comps['query']), $query);
           $options = array(
             'query' => $query,
             'fragment' => $comps['fragment']
