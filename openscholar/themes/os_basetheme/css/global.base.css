@@ -958,12 +958,15 @@ header[role=banner],
 }
 
 /* iframe padding when its floated left or right*/
+.lt-ie9 div[style*="FLOAT: LEFT;"] iframe,
+div[style*="float: left;"] iframe,
 .lt-ie9 span[style*="FLOAT: LEFT;"] iframe,
 span[style*="float: left;"] iframe {
 	padding-right:15px;
 	}
 	
-	
+.lt-ie9	div[style*="FLOAT:"][style*="RIGHT;"] iframe,
+div[style*="float:"][style*="right;"] iframe,	
 .lt-ie9	span[style*="FLOAT:"][style*="RIGHT;"] iframe,
 span[style*="float:"][style*="right;"] iframe {
 	padding-left:15px;
