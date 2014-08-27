@@ -15,6 +15,12 @@ html {
 #page-wrapper {
   background: url('../images/wrapper-inner.png') repeat-x 0 100% transparent;
   }
+  
+  #content-column, 
+  .content-column, 
+  div.sidebar {
+	background: #Fff;
+}
 
 /*TYPOGRAPHY*/
 
@@ -54,7 +60,9 @@ p {
 
 /* WRAPPER ELEMENTS */
 
-#header-container, #menu-bar .menu-wrapper, #columns .hg-container {
+#header-container, 
+#menu-bar .menu-wrapper, 
+#columns .hg-container {
   width:1000px;
   margin: 0 auto;
   }
@@ -83,11 +91,12 @@ p {
 	padding: 0 10px;
 }
 
-#boxes-box-site_info {
-    padding-left:7px;
-    border-left:2px dotted #CCC;
-}  
-  
+.region-header-third a {
+color: #2769AC !important;
+font-weight: bold;
+font-size: .90em;
+}
+
 /* MENU DEFAULT FONT */
 .menu-wrapper ul.menu li a,
 .menu-wrapper ul.menu li a:visited {
@@ -106,7 +115,7 @@ p {
 #header-container h1 a, 
 #header-container h1 a:visited {
   font-weight: normal;
-  font-size:40px;
+  font-size:36px;
   font-family:'Roboto Condensed', arial;
   }
   

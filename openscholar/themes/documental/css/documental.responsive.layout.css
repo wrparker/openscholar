@@ -14,11 +14,11 @@
 .one-sidebar .region-sidebar-second {width: 286px; margin-left: -286px}
 
 #header-container .gpanel .region {float: left; clear: none;}
-.header-left.header-main.header-right .region-header-second .region-inner {margin-left: 200px; margin-right: 200px;}
-.header-left.header-main .region-header-second .region-inner {margin-left: 200px; margin-right: 0;}
-.header-main.header-right .region-header-second .region-inner {margin-right: 200px; margin-left: 0;}
-.region-header-first {width:200px; margin-left:-100%;}
-.region-header-third {width:200px; margin-left:-200px;text-align: right;}
+.header-left.header-main.header-right .region-header-second .region-inner {margin-left: 250px; margin-right: 250px;}
+.header-left.header-main .region-header-second .region-inner {margin-left: 250px; margin-right: 0;}
+.header-main.header-right .region-header-second .region-inner {margin-right: 250px; margin-left: 0;}
+.region-header-first {width:250px; margin-left:-100%;}
+.region-header-third {width:250px; margin-left:-250px;text-align: right;}
 .region-header-second {width:100%;}
 
 /* FRONTPAGE CONTENT REGIONS - 3 COL CONFIG UNDER CONTENT TOP */
