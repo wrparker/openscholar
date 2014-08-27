@@ -177,3 +177,25 @@ function vsite_access_update_7004() {
     variable_set('vsite_access_robotstxt_directives', $directives);
   }
 }
+
+/**
+ * Removes old entries from the robots.txt variable.
+ */
+function vsite_access_update_7005() {
+  global $base_url;
+  $base_domain = parse_url(variable_get('purl_base_domain', $base_url), PHP_URL_HOST);
+  $directives = variable_get('vsite_access_robotstxt_directives', array());
+  $message = "";
+
+  if(isset($directives[$base_domain])){
+    foreach($directives[$base_domain] as $gid => $rule) {
+      if(!node_load($gid)){
+        $message .= "Remove Deleted Group [$gid] with rule [$rule]\n<br />";
+        unset($directives[$base_domain][$gid]);
+      }
+    }
+    variable_set('vsite_access_robotstxt_directives', $directives);
+  }
+
+  return $message;
+}
