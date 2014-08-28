@@ -188,7 +188,16 @@ function vsite_access_update_7005() {
   $message = "";
 
   if(isset($directives[$base_domain])){
+    //Keep track of number of nodes in static cache for memory
+    $loaded_nodes = 0;
     foreach($directives[$base_domain] as $gid => $rule) {
+
+      $loaded_nodes++;
+      if ($loaded_nodes%100 == 0) {
+        // Reset the cache to keep memory manageable
+        entity_get_controller('node')->resetCache();
+      }
+
       if(!node_load($gid)){
         $message .= "Remove Deleted Group [$gid] with rule [$rule]\n<br />";
         unset($directives[$base_domain][$gid]);
