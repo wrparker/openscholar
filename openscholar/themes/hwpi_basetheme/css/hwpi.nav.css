@@ -119,6 +119,12 @@ ul.nice-menu ul {
 
 /* Primary or Secondary Nav  Sidebar */
 
+.sidebar .os-custom-menu .block-inner,
+.sidebar #block-os-primary-menu .block-inner, 
+.sidebar #block-os-secondary-menu .block-inner {
+	margin-top: 0;
+}
+
 .sidebar .os-custom-menu,
 .sidebar #block-os-primary-menu, 
 .sidebar #block-os-secondary-menu {
