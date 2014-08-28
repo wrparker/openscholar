@@ -432,9 +432,7 @@ q:after {
   content: "";
 }
 
-blockquote p {
-  margin: 0;
-}
+
 
 blockquote {
 border-left: 2px solid #807E6D;
