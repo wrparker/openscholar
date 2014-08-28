@@ -217,7 +217,7 @@ function _os_pinserver_auth_vsite_private_file_settings(&$form, $form_state) {
       '#type' => 'checkbox',
       '#title' => t('Extend access to Harvard Community'),
       '#default_value' => variable_get('os_files_private_pinserver', 0),
-      '#description' => t('By default, private files are only accessible to your site members. By extending access to Harvard Community, anyone with a valid Harvard XID can log in using the Harvard Pinserver to access your private files.'),
+      '#description' => t('By default, private files are only accessible to your site members. By extending access to Harvard Community, anyone with a valid Harvard ID can log in using the Harvard Pinserver to access your private files.'),
       '#weight' => 1,
     );
   }
