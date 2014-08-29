@@ -15,6 +15,9 @@ Drupal.behaviors.os_upload_form = {
       
       function changeHandler (e) {
         if (!('result' in e) || e.result) {
+
+          // validation
+
           $('#file-entity-add-upload .form-actions #edit-next', ctx).click();
         }
       }
