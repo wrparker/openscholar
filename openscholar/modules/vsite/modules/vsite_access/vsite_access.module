@@ -99,7 +99,7 @@ function vsite_access_robotstxt() {
 function vsite_access_node_access($node, $op, $account) {
   $type = is_string($node) ? $node : (is_array($node) ? $node['type'] : $node->type);
   $vsite = vsite_get_vsite();
-  
+
   // Handle access to Group Content
   if (og_is_group_content_type('node', $type) && $op == 'view') {
      // When trying to view group content, check the privacy of the site.
@@ -405,6 +405,8 @@ function vsite_access_field_attach_update($entity_type, $entity) {
  * Implements hook_node_delete().
  */
 function vsite_access_node_delete($node) {
+  global $base_url;
+
   // Only continues to modify robotstxt settings for group type nodes.
   if (!og_is_group_type('node', $node->type)) {
     return;
@@ -415,7 +417,7 @@ function vsite_access_node_delete($node) {
   $modified = FALSE;
 
   // Deletes any reference to this site in the base domain array.
-  $base_domain = variable_get('purl_base_domain', '');
+  $base_domain = parse_url(variable_get('purl_base_domain', $base_url), PHP_URL_HOST);
   if ($base_domain) {
     if (isset($directives[$base_domain][$node->nid])) {
       unset($directives[$base_domain][$node->nid]);
