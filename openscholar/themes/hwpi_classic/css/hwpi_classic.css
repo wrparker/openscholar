@@ -210,6 +210,10 @@ margin-left:6em;
     border-top: 1px solid #CCCCCC;
 }
 
+.block-boxes-os_boxes_manual_list ul {
+  padding-left: 15px;
+}
+
 #content-column .item-list ul.pager li {
     font-family: arial;
 }
