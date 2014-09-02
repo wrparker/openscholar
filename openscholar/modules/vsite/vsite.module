@@ -3007,6 +3007,11 @@ function vsite_get_entity_alias($entity_type, $entity, $alias = NULL) {
     $alias = $entity->path['alias'];
   }
 
+  if ($entity_type == 'node' && $entity->type == 'harvard_course') {
+    // Harvard courses shouldn't get the vsite prefix.
+    return $alias;
+  }
+
   if (empty($alias)) {
     // No alias.
     return NULL;
@@ -3040,7 +3045,11 @@ function vsite_get_entity_alias($entity_type, $entity, $alias = NULL) {
   }
 
   // Get purl.
-  $purl = vsite_get_purl($vsite);
+  if (!$purl = vsite_get_purl($vsite)) {
+    // Purl was not found. Return the base alias in order to prevent / prefix in
+    // the alias.
+    return $alias;
+  }
 
   // Prevent purl duplication in alias - remove all purls prefixes.
   while (strpos($alias, "$purl/") === 0) {

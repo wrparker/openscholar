@@ -3,7 +3,7 @@
 /**
  * Renames all "vsite_domain_proccessing" variables in spaces_overrides.
  */
-function vsite_domain_update_7001($sandbox) {
+function vsite_domain_update_7001() {
   // Renames misspelled variable
   // "vsite_domain_proccessing" -> "vsite_domain_shared"
   $query = db_update('spaces_overrides')
