@@ -309,6 +309,21 @@ function os_files_form_file_entity_add_upload_alter(&$form, &$form_state) {
   if (isset($form['upload'])) {
     $form['upload']['#upload_location'] = file_entity_upload_destination_uri(array('file_directory' => os_files_get_save_path()));
   }
+
+  // send max_filesize to javascript so we can check against it with javascript
+  // if the browser supports such things
+  if (isset($args[0]['max_filesize'])) {
+    $form['#attached']['js'][] = array(
+      'data' => array(
+        'osFiles' => array(
+          'rawMaxFilesize' => $args[0]['max_filesize'],
+          'maxFilesize' => parse_size($args[0]['max_filesize']),
+        )
+      ),
+      'type' => 'setting',
+    );
+  }
+
   /*
    * Set a validator to check that uploaded files are the right type
    * Only display extensions for file types that are allowed
