@@ -131,7 +131,6 @@ function harvard_courses_courses_filter() {
     $query->condition('n.type', 'harvard_course');
     $query->condition('ogm.entity_type', 'node');
 
-  $semester = array();
   foreach ($query->execute() as $result) {
     $text = check_plain($result->field_term_value);
     $query_params = array(
