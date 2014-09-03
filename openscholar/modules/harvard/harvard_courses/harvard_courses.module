@@ -438,7 +438,7 @@ function harvard_courses_node_update($node) {
  * Implements hook_entity_update().
  */
 function harvard_courses_entity_update($entity, $type) {
-  if ($type != 'field_collection_item' || (isset($entity->field_name) && $entity->field_name != 'field_department_school')) {
+  if ($type != 'node' && in_array($entity->type, array('personal', 'project', 'department'))) {
     return;
   }
 
@@ -446,41 +446,57 @@ function harvard_courses_entity_update($entity, $type) {
   $original = entity_metadata_wrapper($type, $entity->original);
   $wrapper = entity_metadata_wrapper($type, $entity);
 
-  $fields = array(
-    'field_department_id',
-    'field_school_name',
-  );
+  if ($original->field_department_school->value() == $wrapper->field_department_school->value()) {
+    // The departments are the same.
+    return;
+  }
 
-  foreach ($fields as $field) {
-    if ($wrapper->{$field}->value() != $original->{$field}->value()) {
-      // Un-groping removed courses.
-      if ($field == 'field_school_name') {
-        $courses = harvard_courses_related_nodes('field_faculty', array($original->{$field}->label()));
-      }
-      else {
-        $courses = harvard_courses_related_nodes($field, array($original->{$field}->value()));
-      }
-      if (!empty($courses)) {
-        foreach ($courses as $course_id) {
-          og_ungroup('node', $entity->hostEntity(), 'node', $course_id);
-        }
-      }
+  foreach ($wrapper->field_department_school as $department) {
 
+    if (!$department->value()) {
+      continue;
+    }
+
+    if ($department->value()->entityType() != 'field_collection_item') {
+      continue;
+    }
+
+    $fields = array(
+      'field_department_id',
+      'field_school_name',
+    );
+
+    foreach ($fields as $field) {
       // Groping added courses.
       if ($field == 'field_school_name') {
-        $courses = harvard_courses_related_nodes('field_faculty', array($wrapper->{$field}->label()));
+        $courses = harvard_courses_related_nodes('field_faculty', array($department->{$field}->label()));
       }
       else {
-        $courses = harvard_courses_related_nodes($field, array($wrapper->{$field}->value()));
+        $courses = harvard_courses_related_nodes($field, array($department->{$field}->value()));
       }
+
       if (!empty($courses)) {
         foreach ($courses as $course) {
-          og_group('node', $entity->hostEntity(), array('entity_type' => 'node', 'entity' => $course));
+          og_group('node', $wrapper->value(), array('entity_type' => 'node', 'entity' => $course));
         }
       }
+
       $entity->skip_og_membership = TRUE;
     }
   }
+
+//  // Un-groping removed courses.
+//  if ($field == 'field_school_name') {
+//    $courses = harvard_courses_related_nodes('field_faculty', array($original->{$field}->label()));
+//  }
+//  else {
+//    $courses = harvard_courses_related_nodes($field, array($original->{$field}->value()));
+//  }
+//  if (!empty($courses)) {
+//    foreach ($courses as $course_id) {
+//      og_ungroup('node', $entity->hostEntity(), 'node', $course_id);
+//    }
+//  }
 }
 
 /**
