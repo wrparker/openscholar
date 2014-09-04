@@ -944,13 +944,16 @@ class FeatureContext extends DrupalContext {
    * @Given /^I remove harvard courses$/
    */
   public function iRemoveHarvardCourses() {
-    $metasteps = array();
-    $metasteps[] = new Step\When('I visit "john/cp/build/features/harvard_courses"');
-    $metasteps[] = new Step\When('I press "Remove"');
-    $metasteps[] = new Step\When('I sleep for "2"');
-    $metasteps[] = new Step\When('I press "Save configuration"');
+    $this->invoke_code('os_migrate_demo_remove_courses');
+    $this->iSleepFor(2);
+  }
 
-    return $metasteps;
+  /**
+   * @Given /^I add the courses$/
+   */
+  public function iAddTheCourses() {
+    $this->invoke_code('os_migrate_demo_add_courses');
+    $this->iSleepFor(2);
   }
 
   /**
