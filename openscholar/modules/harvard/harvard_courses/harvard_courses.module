@@ -434,7 +434,10 @@ function harvard_courses_node_update($node) {
     }
   }
 
-  harvard_courses_handle_courses($operations);
+  // Save the courses for later.
+  if ($operations) {
+    variable_set('harvard_courses_operations', $operations);
+  }
 }
 
 /**
@@ -486,7 +489,10 @@ function harvard_courses_entity_update($entity, $type) {
     }
   }
 
-  harvard_courses_handle_courses($operations);
+  // Save the courses for later.
+  if ($operations) {
+    variable_set('harvard_courses_operations', $operations);
+  }
 }
 
 /**
@@ -516,7 +522,9 @@ function harvard_courses_entity_insert($entity, $type) {
     foreach ($courses as $course) {
       $operations[] = array('og_group', array('node', $entity->hostEntity(), array('entity_type' => 'node', 'entity' => $course)));
     }
-    harvard_courses_handle_courses($operations);
+
+    // Save courses operations for later.
+    variable_set('harvard_courses_operations', $operations);
   }
 }
 
@@ -553,7 +561,9 @@ function harvard_courses_entity_delete($entity, $type) {
     foreach ($courses as $course_id) {
       $operations[] = array('og_ungroup', array('node', $site, 'node', $course_id));
     }
-    harvard_courses_handle_courses($operations);
+
+    // Save the operations for later.
+    variable_set('harvard_courses_operations', $operations);
   }
 }
 
@@ -790,6 +800,12 @@ function harvard_courses_feature_submit($form, $form_state) {
   }
 
   $wrapper->save();
+
+  // Handle operations we set after changing the harvard courses app settings.
+  if ($operations = variable_get('harvard_courses_operations', array())) {
+    harvard_courses_handle_courses($operations);
+    variable_del('harvard_courses_operations');
+  }
 }
 
 /**
