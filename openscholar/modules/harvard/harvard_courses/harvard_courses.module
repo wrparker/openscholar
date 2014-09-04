@@ -451,24 +451,12 @@ function harvard_courses_entity_update($entity, $type) {
     return;
   }
 
-  $operations = array();
   // Grouping the courses.
-  $operations += _harvard_courses_handle_courses($wrapper->field_department_school->value(), TRUE);
+  _harvard_courses_handle_courses($wrapper, TRUE);
 
   // Un grouping the courses.
-  $operations += _harvard_courses_handle_courses($wrapper->field_department_school->value(), FALSE);
+  _harvard_courses_handle_courses($original, FALSE);
   $entity->skip_og_membership = TRUE;
-
-  // Setting the batch.
-  $batch = array(
-    'operations' => $operations,
-    'title' => t('Processing courses'),
-    'init_message' => t('The courses processing has started.'),
-    'progress_message' => t('Processed @current out of @total.'),
-    'error_message' => t('Courses processing has encountered an error.'),
-  );
-  batch_set($batch);
-  batch_process('courses');
 }
 
 /**
@@ -480,18 +468,16 @@ function harvard_courses_entity_update($entity, $type) {
  * @param $group
  *   Determine if we need to group or un-group the course. TRUE for group, FALSE
  *   for un-grouping.
- *
- * @return Array
- *   Array of operations to the batch.
  */
-function _harvard_courses_handle_courses($field_collections, $group) {
-  $operations = array();
-  foreach ($field_collections as $field_collection) {
-    if ($field_collection->entityType() != 'field_collection_item') {
+function _harvard_courses_handle_courses(EntityMetadataWrapper $wrapper, $group) {
+  foreach ($wrapper->field_department_school as $department) {
+    if (!$department->value()) {
       continue;
     }
 
-    $department = entity_metadata_wrapper('field_collection_item', $field_collection);
+    if ($department->value()->entityType() != 'field_collection_item') {
+      continue;
+    }
 
     $fields = array(
       'field_department_id',
@@ -504,43 +490,30 @@ function _harvard_courses_handle_courses($field_collections, $group) {
         $courses = harvard_courses_related_nodes('field_faculty', array($department->{$field}->label()));
       }
       else {
-        // Building the parameters for the API function that will return us the
-        // courses according to the field collection data.
-        $fields = array(
-          'field_faculty',
-          'field_department_id',
-        );
-        $search_values = array(
-          'field_faculty' => $department->field_school_name->label(),
-          'field_department_id' => $department->field_department_id->value(),
-        );
-
-        // Un-grouping removed courses from the group.
-        $courses = harvard_courses_related_nodes($fields, $search_values);
+        $courses = harvard_courses_related_nodes($field, array($department->{$field}->value()));
       }
 
       if (!empty($courses)) {
         foreach ($courses as $course) {
+
           if ($group) {
-            $operations[] = array('og_group', array('node', $field_collection->hostEntity(), array('entity_type' => 'node', 'entity' => $course)));
+            og_group('node', $wrapper->value(), array('entity_type' => 'node', 'entity' => $course));
           }
           else {
-            $operations[] = array('og_ungroup', array('node', $field_collection->hostEntity(), 'node', $course));
+            og_ungroup('node', $wrapper->value(), 'node', $course);
           }
         }
       }
     }
   }
-
-  return $operations;
 }
 
 /**
  * Implements hook_entity_insert().
  */
 function harvard_courses_entity_insert($entity, $type) {
-    return;
   if ($type != 'field_collection_item' || (isset($entity->field_name) && $entity->field_name != 'field_department_school')) {
+    return;
   }
   $wrapper = entity_metadata_wrapper($type, $entity);
 
@@ -560,6 +533,41 @@ function harvard_courses_entity_insert($entity, $type) {
   if (!empty($courses)) {
     foreach ($courses as $course) {
       og_group('node', $entity->hostEntity(), array('entity_type' => 'node', 'entity' => $course));
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function harvard_courses_entity_delete($entity, $type) {
+  if ($type != 'field_collection_item' || (isset($entity->field_name) && $entity->field_name != 'field_department_school')) {
+    return;
+  }
+  $wrapper = entity_metadata_wrapper($type, $entity);
+  $site = $entity->hostEntity();
+
+  // There are no sites relate to the to the courses from the field collection.
+  if (empty($site)) {
+    return;
+  }
+
+  // Building the parameters for the API function that will return us the
+  // courses according to the field collection data.
+  $fields = array(
+    'field_faculty',
+    'field_department_id',
+  );
+  $search_values = array(
+    'field_faculty' => $wrapper->field_school_name->label(),
+    'field_department_id' => $wrapper->field_department_id->value(),
+  );
+
+  // Un-grouping removed courses from the group.
+  $courses = harvard_courses_related_nodes($fields, $search_values);
+  if (!empty($courses)) {
+    foreach ($courses as $course_id) {
+      og_ungroup('node', $site, 'node', $course_id);
     }
   }
 }
