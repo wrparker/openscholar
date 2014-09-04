@@ -451,26 +451,8 @@ function harvard_courses_entity_update($entity, $type) {
     return;
   }
 
-  // Grouping the courses.
-  _harvard_courses_handle_courses($wrapper, TRUE);
-
-  // Un grouping the courses.
-  _harvard_courses_handle_courses($original, FALSE);
-  $entity->skip_og_membership = TRUE;
-}
-
-/**
- * Handle the grouping and un-grouping of the course.
- *
- * @param EntityMetadataWrapper $wrapper
- *   The entity metadata wrapper object. Could be the original wrapper or the
- *   new wrapper.
- * @param $group
- *   Determine if we need to group or un-group the course. TRUE for group, FALSE
- *   for un-grouping.
- */
-function _harvard_courses_handle_courses(EntityMetadataWrapper $wrapper, $group) {
   foreach ($wrapper->field_department_school as $department) {
+
     if (!$department->value()) {
       continue;
     }
@@ -495,17 +477,26 @@ function _harvard_courses_handle_courses(EntityMetadataWrapper $wrapper, $group)
 
       if (!empty($courses)) {
         foreach ($courses as $course) {
-
-          if ($group) {
-            og_group('node', $wrapper->value(), array('entity_type' => 'node', 'entity' => $course));
-          }
-          else {
-            og_ungroup('node', $wrapper->value(), 'node', $course);
-          }
+          og_group('node', $wrapper->value(), array('entity_type' => 'node', 'entity' => $course));
         }
       }
+
+      $entity->skip_og_membership = TRUE;
     }
   }
+
+//  // Un-groping removed courses.
+//  if ($field == 'field_school_name') {
+//    $courses = harvard_courses_related_nodes('field_faculty', array($original->{$field}->label()));
+//  }
+//  else {
+//    $courses = harvard_courses_related_nodes($field, array($original->{$field}->value()));
+//  }
+//  if (!empty($courses)) {
+//    foreach ($courses as $course_id) {
+//      og_ungroup('node', $entity->hostEntity(), 'node', $course_id);
+//    }
+//  }
 }
 
 /**
