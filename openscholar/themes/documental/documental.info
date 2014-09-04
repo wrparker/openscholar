@@ -4,18 +4,18 @@
   name        = Documental
   description = An ideal theme for documenting projects
   core        = 7.x
-  base theme  = os_basetheme
+  base theme  = hwpi_classic
   release     = 7.x-3.x
   engine      = phptemplate
   screenshot  = screenshot.png
 
 ;----------// OpenScholar
 
-os[theme_type]   = "vsite"
-os[theme_access] = "public"
+os[theme_type]   = 'vsite'
+os[theme_access] = 'public'
+ os[cp_layout_css] = cp-layout-map.css
 
 ;----------// Stylesheets
-  stylesheets[screen][] = css/documental.responsive.layout.css
   stylesheets[screen][] = css/documental.css
 
 
