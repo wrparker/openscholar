@@ -2,7 +2,12 @@
 
 body {
 	font-family: helvetica, arial;
-	background:#FBFAFA;
+	background:#FAFAFA;
+}
+
+a,
+a:visited {
+color:#2769AC;
 }
 
 #menu-bar ul.nice-menu a,
@@ -22,13 +27,14 @@ body {
 #content-column h4,
 #tinymce h2,
 #tinymce h3,
-#tinymce h4 {
+#tinymce h4,
+.date-nav h3 {
 	font-family: 'Roboto', sans-serif;
 }
 
 
 #boxes-box-site_info a {
-	color: #215990;
+	color: #2769AC;
 	font-size: 1.11em;
 }
 
@@ -44,11 +50,14 @@ margin-bottom: 15px;
     background: #FFF;
 }
 
+#menu-bar ul.nice-menu .menuparent.over > a, 
+#menu-bar ul.nice-menu .menuparent a:hover, 
+#menu-bar ul.nice-menu .menuparent a.active,
 #menu-bar ul.nice-menu a.active, 
 #menu-bar ul.nice-menu a:hover,
 #menu-bar ul.nice-menu ul,
 #menu-bar {
-    background: #2C383C;
+    background: #3b484d;
 }
 
 #footer {
@@ -65,6 +74,11 @@ margin-bottom: 15px;
    color:#FFF;
 }
 
+
+#menu-bar ul.nice-menu .menuparent > a:before {
+background-position: 0px -566px;
+}
+
 .sidebar .block, 
 .front #content-column .block, 
 .node-person .block-inner, 
@@ -77,7 +91,7 @@ margin-bottom: 15px;
 }
 
 #columns h2.block-title {
-    background:#EFEFEF;
+    background:#dedede;
     font-size: 14px;
     text-transform: none;
     padding: 3px 7px;
@@ -87,7 +101,7 @@ margin-bottom: 15px;
 
 
 a.rslides_nav {
-    background-color: #D16103;
+    background-color: #555;
 }
 
 
