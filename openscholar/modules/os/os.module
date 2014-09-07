@@ -1913,7 +1913,7 @@ function os_app_info_declared_node_bundle($bundle = '') {
     }
   }
 
-  return empty($bundles) ? $bundles : isset($bundles[$bundle]);
+  return in_array($bundle, $bundles);
 }
 
 /**
