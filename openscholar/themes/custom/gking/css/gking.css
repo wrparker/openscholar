@@ -1181,6 +1181,10 @@ float: none;
    z-index: 5;
  }
 
+#powered-by {
+	position:absolute;
+}
+
 #footer .wrap #vsite-widgets-search-form {
   width: 302px;
   background-image: none;
