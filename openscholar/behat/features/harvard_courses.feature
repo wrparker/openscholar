@@ -19,9 +19,6 @@ Feature:
       And I should not see "(Re)fabricating Tectonic Prototypes"
 
     # Re add the courses and verify they were added.
-      And I visit "john/cp/build/features/harvard_courses"
-      And I fill in "Department ID" with "Architecture"
-      And I select "Harvard Graduate School of Design" from "School name"
-      And I press "Save configuration"
+      And I add the courses
       And I visit "john/courses"
      Then I should see "(Re)fabricating Tectonic Prototypes"
