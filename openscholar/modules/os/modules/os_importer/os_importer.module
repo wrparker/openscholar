@@ -795,7 +795,7 @@ function os_importer_feeds_presave(FeedsSource $source, $entity, $item) {
     return;
   }
 
-  if ($entity->type == 'feed_item') {
+  if (!os_app_info_declared_node_bundle($entity->type)) {
     // This is not a valid bundle name. Return early.
     return;
   }

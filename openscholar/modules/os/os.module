@@ -1891,6 +1891,32 @@ function os_app_info($app_name = NULL) {
 }
 
 /**
+ * Return list of node types declared in the os_app_info().
+ *
+ * @param String $bundle
+ *   Check for a specific bundle.
+ *
+ * @return Boolean|NULL
+ *   List of declared bundles or return TRUE/FALSE if a bundle name was supplied
+ *   and declared.
+ */
+function os_app_info_declared_node_bundle($bundle) {
+  $bundles = &drupal_static(__FUNCTION__, array());
+
+  if (empty($info)) {
+    $apps = os_app_info();
+    $bundles = array();
+    foreach ($apps as $app) {
+      if (!empty($app['nodetypes'])) {
+        $bundles = array_merge($app['nodetypes'], $bundles);
+      }
+    }
+  }
+
+  return in_array($bundle, $bundles);
+}
+
+/**
  * Implements hook_form_BASE_FORM_ID_alter() for user_login form.
  */
 function os_form_user_login_alter(&$form, $form_state) {
