@@ -364,6 +364,7 @@ function harvard_courses_node_presave($node) {
     }
   }
 
+  // Set the timestamp of the course.
   $wrapper = entity_metadata_wrapper('node', $node);
   if ($wrapper->is_new()) {
     $timestamp = harvard_courses_get_timestamp_by_semester($wrapper);
