@@ -335,7 +335,7 @@ function cp_user_edit_membership_form($form_state, $user_load) {
   $form['edit_membership']['group_manager'] = array(
     '#type' => 'checkbox',
     // Theme the checkbox label to look like the radio options.
-    '#title' => _cp_user_role_option(t('Set as site manager'), t('Make <em>@name</em> the site owner.', array('@name' => $name))),
+    '#title' => _cp_user_role_option(t('Set as site owner'), t('Make <em>@name</em> the site owner.', array('@name' => $name))),
     '#default_value' => $space->group->uid == $group_user->uid,
     '#access' => in_array('support team', $user->roles) || $space->group->uid == $user->uid,
   );
