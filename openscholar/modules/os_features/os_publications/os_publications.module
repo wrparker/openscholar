@@ -648,6 +648,9 @@ function os_publications_alter_year_field(&$form, &$form_state) {
   // defined in the "biblio_years_text" variable. Both _biblio_numeric_year()
   // and _biblio_text_year() are used to convert between code and numeric.
   $year_value = $form['biblio_year']['#default_value'];
+
+  //Get from the node since it may or may not be on the form.
+  $date_value = is_object($form['#node'])? $form['#node']->biblio_date : '';
   $year_coded_value = '';
 
   // If not a number then it was coded, so we want to show the value in the
@@ -687,6 +690,32 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#default_value' => $year_coded_value,
   );
 
+  $in_press_year = array_search('In Press', $years);
+  $form['biblio_year_coded_extrayear'] = array(
+    '#type' => 'textfield',
+    '#description' => 'e.g. 2015',
+    '#title' => 'Expected In Press Year',
+    '#size' => 10,
+    '#default_value' => $date_value,
+    '#states' => array(
+      // Only show this field when 'biblio_years_text' is used.
+      'visible' => array(
+        ':input[name="biblio_year_coded"]' => array('value' => "{$in_press_year}"),
+      ),
+    ),
+    '#weight' => $form['biblio_year_group']['#weight'] + 1,
+  );
+
+  //Hide biblio_date field if we are using it for "In Press Extra"
+  if($form['biblio_date']) {
+    $form['biblio_date']['#states'] = array(
+      // Only show this field when 'biblio_years_text' is not used.
+      'invisible' => array(
+        ':input[name="biblio_year_coded"]' => array('value' => "{$in_press_year}"),
+      ),
+    );
+  }
+
   // Add validation message for validating the field via JS.
   $form['biblio_year_group']['#suffix'] = '<div id="biblio-year-group-validate">' . t('Input must be in the form YYYY. Only numerical digits are allowed.') . '</div>';
 
@@ -711,6 +740,9 @@ function os_publications_validate_year_field($form, &$form_state) {
   // Set the coded value as the year if exist.
   if ($form_state['values']['biblio_year_coded'] && !$form_state['values']['biblio_year']) {
     $form_state['values']['biblio_year'] = $form_state['values']['biblio_year_coded'];
+    if ($form_state['values']['biblio_year_coded_extrayear']) {
+      $form_state['values']['biblio_date'] = $form_state['values']['biblio_year_coded_extrayear'];
+    }
   }
 }
 
@@ -796,6 +828,18 @@ function os_publications_biblio_form_patent_validate(&$form, &$form_state) {
   }
   $patent_key = $form_state['values']['biblio_section'];
   $form_state['values']['biblio_edition'] = $form['biblio_section']['#options'][$patent_key];
+}
+
+function os_publications_entity_prepare_view($entities, $type, $langcode) {
+  // Load a specific node into the user object for later theming.
+  if ($type == 'node') {
+    foreach ($entities as $nid => $entity) {
+      if($entity->type == 'biblio' && $entity->biblio_year == 'In Press' && !empty($entity->biblio_date)) {
+        $entity->biblio_year .= ", {$entity->biblio_date}";
+        $entity->biblio_date = '';
+      }
+    }
+  }
 }
 
 /**
