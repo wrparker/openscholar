@@ -6,3 +6,10 @@
 function os_classes_update_7000() {
   features_revert(array('os_classes' => array('field_instance')));
 }
+
+/**
+ * Adding the weight field for the.
+ */
+function os_classes_update_7001() {
+  features_revert(array('os_classes' => array('field_base', 'field_instance')));
+}

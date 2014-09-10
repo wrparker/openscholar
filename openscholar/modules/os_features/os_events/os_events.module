@@ -1193,22 +1193,3 @@ function os_events_form_event_node_form_alter(&$form, &$form_state) {
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
 }
 
-/**
- * Return the weight of the semester.
- *
- * @param $semester
- *   Optional. Specific semester name.
- * @return array
- *   Return all the semester and weight. If a semester name was given the
- *   the function will return the weight for that semester.
- */
-function os_events_semester_weights($semester = '') {
-  $weights = array(
-    'fall' => 1,
-    'winter' => 2,
-    'spring' => 3,
-    'summer' => 4,
-  );
-
-  return !empty($weight) ? $weights[$semester] : $weights;
-}

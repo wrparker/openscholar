@@ -169,3 +169,22 @@ function os_classes_process_node(&$vars) {
   }
 }
 
+/**
+ * Return the weight of the semester.
+ *
+ * @param $semester
+ *   Optional. Specific semester name.
+ * @return array
+ *   Return all the semester and weight. If a semester name was given the
+ *   the function will return the weight for that semester.
+ */
+function os_classes_semester_weights($semester = '') {
+  $weights = array(
+    'fall' => 1,
+    'winter' => 2,
+    'spring' => 3,
+    'summer' => 4,
+  );
+
+  return !empty($semester) ? $weights[$semester] : $weights;
+}
