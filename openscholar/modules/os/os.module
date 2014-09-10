@@ -2411,7 +2411,7 @@ function os_set_update_batch(&$sandbox, $info) {
 
   $id = empty($sandbox['id']) ? 0 : $sandbox['id'];
 
-  $result = $sandbox['max'] = $info['query']($id)
+  $result = $info['query']($id)
     ->range(0, $info['batch'])
     ->execute();
 

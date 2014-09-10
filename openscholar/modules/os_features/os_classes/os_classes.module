@@ -252,6 +252,20 @@ function os_classes_count_classes_base_query($id = NULL) {
 function os_classes_update_update_class_weight($node) {
   $wrapper = entity_metadata_wrapper('node', $node);
   $weight = os_classes_semester_weights(strtolower($wrapper->field_semester->value()));
-  $wrapper->field_weight->set($weight);
-  $wrapper->save();
+
+  if (is_array($weight)) {
+    $weight = 0;
+  }
+  try {
+    $wrapper->field_weight->set($weight);
+    $wrapper->save();
+  } catch (Exception $e) {
+    $params = array(
+      '@error' => $e->getMessage(),
+      '@nid' => $node->nid,
+      '@title' => $node->title,
+      '@value' => $weight,
+    );
+    drupal_set_message(t('There was error updating the node(@nid) @title with the value @value. More info: @error', $params), 'error');
+  }
 }
