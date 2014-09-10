@@ -202,8 +202,8 @@ function os_publications_query_biblio_alter(QueryAlterableInterface $query) {
     // the Biblio title.
     $order['biblio_year'] = isset($biblio_year_sort) ? $biblio_year_sort : 'DESC';
     $order['n.sticky'] = 'DESC';
-    $order['n.created'] = 'DESC';
     $order['biblio_date'] = 'DESC';
+    $order['n.created'] = 'DESC';
     $order['biblio_sort_title'] = (isset($biblio_sort_title)) ? $biblio_sort_title : 'ASC';
   }
   elseif (variable_get('biblio_sort', 'year') == 'type') {
@@ -217,6 +217,7 @@ function os_publications_query_biblio_alter(QueryAlterableInterface $query) {
       if ($key == 'biblio_type_name') {
         $new_order['n.sticky'] = 'DESC';
         $new_order['biblio_year'] = 'DESC';
+        $new_order['biblio_date'] = 'DESC';
         $new_order['n.created'] = 'DESC';
       }
     }
