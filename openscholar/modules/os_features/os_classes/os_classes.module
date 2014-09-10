@@ -224,3 +224,34 @@ function os_classes_field_access($op, $field, $entity_type, $entity, $account) {
     return FALSE;
   }
 }
+
+/**
+ * OS update batch query callback.
+ *
+ * @see os_set_update_batch().
+ */
+function os_classes_count_classes_base_query($id = NULL) {
+  $query = new EntityFieldQuery();
+
+  $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('type', 'class');
+
+  if ($id) {
+    $query->propertyCondition('nid', $id, '>=');
+  }
+
+  return $query;
+}
+
+/**
+ * OS update batch iterator callback.
+ *
+ * @see os_set_update_batch().
+ */
+function os_classes_update_update_class_weight($node) {
+  $wrapper = entity_metadata_wrapper('node', $node);
+  $weight = os_classes_semester_weights(strtolower($wrapper->field_semester->value()));
+  $wrapper->field_weight->set($weight);
+  $wrapper->save();
+}
