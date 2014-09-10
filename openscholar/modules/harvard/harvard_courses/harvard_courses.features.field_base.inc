@@ -612,13 +612,13 @@ function harvard_courses_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'timestamp'
-  $field_bases['timestamp'] = array(
+  // Exported field_base: 'field_timestamp'
+  $field_bases['field_timestamp'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'timestamp',
+    'field_name' => 'field_timestamp',
     'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,

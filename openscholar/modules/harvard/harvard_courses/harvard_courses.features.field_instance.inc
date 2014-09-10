@@ -1713,8 +1713,8 @@ function harvard_courses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-harvard_course-timestamp'
-  $field_instances['node-harvard_course-timestamp'] = array(
+  // Exported field_instance: 'node-harvard_course-field_timestamp'
+  $field_instances['node-harvard_course-field_timestamp'] = array(
     'bundle' => 'harvard_course',
     'deleted' => 0,
     'description' => '',
@@ -1771,8 +1771,8 @@ function harvard_courses_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'timestamp',
-    'label' => 'timestamp',
+    'field_name' => 'field_timestamp',
+    'label' => 'Timestamp',
     'required' => FALSE,
     'settings' => array(
       'default_value' => 'now',
@@ -2113,7 +2113,7 @@ function harvard_courses_field_default_field_instances() {
   t('Term');
   t('notes');
   t('number');
-  t('timestamp');
+  t('Timestamp');
 
   return $field_instances;
 }

@@ -363,6 +363,33 @@ function harvard_courses_node_presave($node) {
       $node->{$field}[$node->language][0]['value'] = $new;
     }
   }
+
+  $wrapper = entity_metadata_wrapper('node', $node);
+  if ($wrapper->is_new()) {
+    $timestamp = harvard_courses_get_timestamp_by_semester($wrapper);
+    $wrapper->field_timestamp->set($timestamp);
+  }
+  else {
+    $original = entity_metadata_wrapper('node', $node->wrapper);
+    if ($wrapper->field_calendar_period->value() != $original->field_calendar_period->value()) {
+      $timestamp = harvard_courses_get_timestamp_by_semester($wrapper);
+      $wrapper->field_timestamp->set($timestamp);
+    }
+  }
+}
+
+/**
+ * Return the timestamp from the course node.
+ *
+ * @param EntityMetadataWrapper $wrapper
+ *   The node object wrapped with entity metadata wrapper.
+ *
+ * @return int
+ *   The timestamp of the course semester.
+ */
+function harvard_courses_get_timestamp_by_semester(EntityMetadataWrapper $wrapper) {
+  list($month,,,$year) = explode(' ', $wrapper->field_calendar_period->value());
+  return strtotime($month . ' ' . $year);
 }
 
 /**
@@ -396,7 +423,6 @@ function harvard_courses_node_update($node) {
   // Loading into a wrapper the original node and the current node.
   $wrapper = entity_metadata_wrapper('node', $node);
   $original_node = entity_metadata_wrapper('node', $node->original);
-
   // Make a list of the fields we need to check in the vsite and in the course
   // node.
   $fields = array(
