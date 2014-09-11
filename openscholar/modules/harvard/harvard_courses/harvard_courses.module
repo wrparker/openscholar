@@ -378,7 +378,7 @@ function _harvard_courses_set_timestamp($node) {
   $wrapper = entity_metadata_wrapper('node', $node);
 
   try {
-    if ($node->is_new) {
+    if (!$node->is_new) {
       $timestamp = harvard_courses_get_timestamp_by_semester($wrapper);
       $wrapper->field_timestamp->set($timestamp);
     }
