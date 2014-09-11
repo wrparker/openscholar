@@ -889,3 +889,36 @@ function harvard_courses_vsite_og_node_type_info() {
     'harvard_course' => 'group content',
   );
 }
+
+/**
+ * Return an EntityFieldQuery for the os batch update set; Return a query for
+ * load/count the harvard courses.
+ *
+ * @see os_set_update_batch().
+ */
+function harvard_courses_update_time_stamp_query($id = NULL) {
+  $query = new EntityFieldQuery();
+
+  $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('type', 'harvard_course');
+
+  if ($id) {
+    $query->propertyCondition('nid', $id, '>=');
+  }
+
+  return $query;
+}
+
+/**
+ * Iterator callback for the os update batch; Update the timestamp field for a
+ * harvard course.
+ *
+ * @see os_ser_update_btach.
+ */
+function harvard_courses_update_iterator($node) {
+  $wrapper = entity_metadata_wrapper('node', $node);
+  $timestamp = harvard_courses_get_timestamp_by_semester($wrapper);
+  $wrapper->field_timestamp->set($timestamp);
+  $wrapper->save();
+}

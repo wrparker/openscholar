@@ -103,3 +103,15 @@ function harvard_courses_update_7000() {
 function harvard_courses_update_7001() {
   features_revert(array('harvard_courses' => array('field_base', 'field_instance')));
 }
+
+/**
+ * Set the time stamp field for the harvard courses.
+ */
+function harvard_courses_update_7003(&$sandbox) {
+  os_set_update_batch($sandbox, array(
+    'query' => 'harvard_courses_update_time_stamp_query',
+    'iterator' => 'harvard_courses_update_iterator',
+    'batch' => 250,
+    'entity' => 'node',
+  ));
+}
