@@ -20,7 +20,7 @@ class os_reader_filter_feed_is_imported extends views_handler_filter {
     );
   }
 
-  function query($group_by) {
+  function query() {
     if (empty($this->view->exposed_raw_input['feed_is_imported'])) {
       // 'All' is selected, no need to filter.
       return;

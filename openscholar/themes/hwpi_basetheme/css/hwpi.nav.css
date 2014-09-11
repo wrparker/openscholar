@@ -119,48 +119,64 @@ ul.nice-menu ul {
 
 /* Primary or Secondary Nav  Sidebar */
 
-.sidebar .os-custom-menu .block-inner,
-.sidebar #block-os-primary-menu .block-inner, 
-.sidebar #block-os-secondary-menu .block-inner {
+#columns .os-custom-menu .block-inner,
+#columns #block-os-primary-menu .block-inner, 
+#columns #block-os-secondary-menu .block-inner {
 	margin-top: 0;
 }
 
-.sidebar .os-custom-menu,
-.sidebar #block-os-primary-menu, 
-.sidebar #block-os-secondary-menu {
+#columns .os-custom-menu,
+#columns #block-os-primary-menu, 
+#columns #block-os-secondary-menu {
 	border: 1px solid #fff;
 	border-bottom: none;
 }
 
-.sidebar .os-custom-menu ul,
-.sidebar #block-os-primary-menu ul, 
-.sidebar #block-os-secondary-menu ul {
+#columns .accordion ul.nice-menu,
+#columns .os-custom-menu ul,
+#columns #block-os-primary-menu ul, 
+#columns #block-os-secondary-menu ul {
 	list-style: none !important;
 }
 
-.sidebar .os-custom-menu li,
-.sidebar #block-os-primary-menu li, 
-.sidebar #block-os-secondary-menu li {
+#columns .accordion ul.nice-menu li,
+#columns .os-custom-menu li,
+#columns #block-os-primary-menu li, 
+#columns #block-os-secondary-menu li {
   padding: 0;
 }
 
-.sidebar .os-custom-menu ul.menu,
-.sidebar #block-os-primary-menu ul.menu, 
-.sidebar #block-os-secondary-menu ul.menu {
+#columns .accordion ul.nice-menu,
+#columns .os-custom-menu ul.nice-menu,
+#columns #block-os-primary-menu ul.nice-menu, 
+#columns #block-os-secondary-menu ul.nice-menu,
+#columns .os-custom-menu ul.menu,
+#columns #block-os-primary-menu ul.menu, 
+#columns #block-os-secondary-menu ul.menu {
   margin-bottom: 0;
+  width: 100%;
 }
 
-.sidebar .os-custom-menu ul.menu li,
-.sidebar #block-os-primary-menu ul.menu li, 
-.sidebar #block-os-secondary-menu ul.menu li {
+#columns .accordion ul.nice-menu li,
+#columns .os-custom-menu ul.nice-menu li,
+#columns #block-os-primary-menu ul.nice-menu li, 
+#columns #block-os-secondary-menu ul.nice-menu li,
+#columns .os-custom-menu ul.menu li,
+#columns #block-os-primary-menu ul.menu li, 
+#columns #block-os-secondary-menu ul.menu li {
 	list-style: none;
-	background-color: #F3F3F1;
+	background-color: #F3F3F1 !important;
 	text-align: left;
+	float:none;
 }
 
-.sidebar .os-custom-menu ul.menu li a,
-.sidebar #block-os-primary-menu ul.menu li a, 
-.sidebar #block-os-secondary-menu ul.menu li a {
+#columns .accordion ul.nice-menu li a,
+#columns .os-custom-menu ul.nice-menu li a,
+#columns #block-os-primary-menu ul.nice-menu li a, 
+#columns #block-os-secondary-menu ul.nice-menu li a,
+#columns .os-custom-menu ul.menu li a,
+#columns #block-os-primary-menu ul.menu li a, 
+#columns #block-os-secondary-menu ul.menu li a {
 	display: block;
 	text-decoration: none !important;
 	padding: 8px 15px;
@@ -168,37 +184,52 @@ ul.nice-menu ul {
 	font-size:15px;
 }
 
-.sidebar .os-custom-menu ul.menu li li a,
-.sidebar #block-os-primary-menu ul.menu li li a, 
-.sidebar #block-os-secondary-menu ul.menu li li a {
+#columns .accordion ul.nice-menu li li a,
+#columns .os-custom-menu ul.nice-menu li li a,
+#columns #block-os-primary-menu ul.nice-menu li li a, 
+#columns #block-os-secondary-menu ul.nice-menu li li a,
+#columns .os-custom-menu ul.menu li li a,
+#columns #block-os-primary-menu ul.menu li li a, 
+#columns #block-os-secondary-menu ul.menu li li a {
 	padding: 8px 25px;
 }
 
-.sidebar .os-custom-menu ul.menu li ul.menu,
-.sidebar #block-os-primary-menu ul.menu li ul.menu, 
-.sidebar #block-os-secondary-menu ul.menu li ul.menu {
+#columns .accordion ul.nice-menu li ul.menu,
+#columns .os-custom-menu ul.menu li ul.menu,
+#columns #block-os-primary-menu ul.menu li ul.menu, 
+#columns #block-os-secondary-menu ul.menu li ul.menu,
+#columns .os-custom-menu ul.nice-menu li ul.menu,
+#columns #block-os-primary-menu ul.nice-menu li ul.menu, 
+#columns #block-os-secondary-menu ul.nice-menu li ul.menu {
     margin: 0 0 0 0;
 }
 
-
-.sidebar .os-custom-menu ul.menu li.last a,
-.sidebar #block-os-primary-menu ul.menu li.last a, 
-.sidebar #block-os-secondary-menu ul.menu li.last a {
+#columns .accordion ul.nice-menu li.last a,
+#columns .os-custom-menu ul.nice-menu li.last a,
+#columns #block-os-primary-menu ul.nice-menu li.last a, 
+#columns #block-os-secondary-menu ul.nice-menu li.last a,
+#columns .os-custom-menu ul.menu li.last a,
+#columns #block-os-primary-menu ul.menu li.last a, 
+#columns #block-os-secondary-menu ul.menu li.last a {
 	border-bottom: none;
 	
 }
 
-.sidebar .os-custom-menu ul.menu li li.last a,
-.sidebar #block-os-primary-menu ul.menu li li.last a, 
-.sidebar #block-os-secondary-menu ul.menu li li.last a {
+#columns .accordion ul.nice-menu li li.last a,
+#columns .os-custom-menu ul.nice-menu li li.last a,
+#columns #block-os-primary-menu ul.nice-menu li li.last a, 
+#columns #block-os-secondary-menu ul.nice-menu li li.last a,
+#columns .os-custom-menu ul.menu li li.last a,
+#columns #block-os-primary-menu ul.menu li li.last a, 
+#columns #block-os-secondary-menu ul.menu li li.last a {
 	border-bottom: 2px solid #fff;
 	
 }
 
-
-.sidebar .os-custom-menu a:hover,
-.sidebar #block-os-primary-menu a:hover, 
-.sidebar #block-os-secondary-menu a:hover {
+#columns .accordion ul.nice-menu a:hover,
+#columns .os-custom-menu a:hover,
+#columns #block-os-primary-menu a:hover, 
+#columns #block-os-secondary-menu a:hover {
 	background-color: #E6E6E3 !important;
 }
 

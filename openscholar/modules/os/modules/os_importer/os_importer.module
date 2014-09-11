@@ -795,6 +795,11 @@ function os_importer_feeds_presave(FeedsSource $source, $entity, $item) {
     return;
   }
 
+  if (!os_app_info_declared_node_bundle($entity->type)) {
+    // This is not a valid bundle name. Return early.
+    return;
+  }
+
   // When importing an event and the end date is empty we use the start date.
   if ($entity->type == "event") {
     if (empty($entity->field_date[LANGUAGE_NONE][0]['value2'])) {
