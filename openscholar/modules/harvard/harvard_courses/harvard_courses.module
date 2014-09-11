@@ -365,8 +365,30 @@ function harvard_courses_node_presave($node) {
   }
 
   // Set the timestamp of the course.
+  _harvard_courses_set_timestamp($node);
+}
+
+/**
+ * Set the time stamp field for the harvard easily.
+ *
+ * @param $node
+ *   The node object.
+ */
+function _harvard_courses_set_timestamp($node) {
   $wrapper = entity_metadata_wrapper('node', $node);
-  if ($wrapper->is_new()) {
+
+  if (!$wrapper->__isset('field_timestamp')) {
+    $params = array(
+      '@nid' => $node->nid,
+      '@title' => $node->title,
+    );
+    $message = t('Error occurred when trying to update the course(@nid) @title', $params);
+    drupal_set_message($message, 'error');
+    watchdog('harvard_course', $message);
+    return;
+  }
+
+  if ($node->is_new) {
     $timestamp = harvard_courses_get_timestamp_by_semester($wrapper);
     $wrapper->field_timestamp->set($timestamp);
   }
@@ -917,8 +939,6 @@ function harvard_courses_update_time_stamp_query($id = NULL) {
  * @see os_ser_update_btach.
  */
 function harvard_courses_update_iterator($node) {
-  $wrapper = entity_metadata_wrapper('node', $node);
-  $timestamp = harvard_courses_get_timestamp_by_semester($wrapper);
-  $wrapper->field_timestamp->set($timestamp);
-  $wrapper->save();
+  _harvard_courses_set_timestamp($node);
+  node_save($node);
 }
