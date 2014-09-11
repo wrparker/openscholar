@@ -45,17 +45,6 @@ function os_wysiwyg_media_token_to_markup_alter(&$element, $tag_info, $settings)
 }
 
 /**
- * Implements hook_node_view_alter().
- *
- * Makes sure that any iframes are that are cut up by text_summary still function
- */
-function os_wysiwyg_node_view_alter(&$node, $view_mode) {
-  if ($view_mode == 'teaser') {
-    dpm($node);
-  }
-}
-
-/**
  * Implements hook_wysiwyg_editor_settings_alter().
  */
 function os_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
