@@ -32,6 +32,9 @@ function os_importer_utf_8_convert($result, $item_key, $element_key, &$field, $s
     }
   }
   else {
+    if (empty($source->config['FeedsFileFetcher']['encode'])) {
+      return;
+    }
     $field = iconv($source->config['FeedsFileFetcher']['encode'], "UTF-8", $field);
   }
 }
