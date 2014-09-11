@@ -112,7 +112,7 @@ function harvard_courses_update_7002(&$sandbox) {
   os_set_update_batch($sandbox, array(
     'query' => 'harvard_courses_update_time_stamp_query',
     'iterator' => 'harvard_courses_update_iterator',
-    'batch' => 100,
+    'batch' => 250,
     'entity' => 'node',
   ));
 }
