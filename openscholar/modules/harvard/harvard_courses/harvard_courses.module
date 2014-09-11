@@ -377,27 +377,27 @@ function harvard_courses_node_presave($node) {
 function _harvard_courses_set_timestamp($node) {
   $wrapper = entity_metadata_wrapper('node', $node);
 
-  if (!$wrapper->__isset('field_timestamp')) {
-    $params = array(
-      '@nid' => $node->nid,
-      '@title' => $node->title,
-    );
-    $message = t('Error occurred when trying to update the course(@nid) @title', $params);
-    drupal_set_message($message, 'error');
-    watchdog('harvard_course', $message);
-    return;
-  }
-
-  if ($node->is_new) {
-    $timestamp = harvard_courses_get_timestamp_by_semester($wrapper);
-    $wrapper->field_timestamp->set($timestamp);
-  }
-  else {
-    $original = entity_metadata_wrapper('node', $node->wrapper);
-    if ($wrapper->field_calendar_period->value() != $original->field_calendar_period->value()) {
+  try {
+    if ($node->is_new) {
       $timestamp = harvard_courses_get_timestamp_by_semester($wrapper);
       $wrapper->field_timestamp->set($timestamp);
     }
+    else {
+      $original = entity_metadata_wrapper('node', $node->original);
+      if ($wrapper->field_calendar_period->value() != $original->field_calendar_period->value()) {
+        $timestamp = harvard_courses_get_timestamp_by_semester($wrapper);
+        $wrapper->field_timestamp->set($timestamp);
+      }
+    }
+  } catch (Exception $e) {
+    $params = array(
+      '@nid' => $node->nid,
+      '@title' => $node->title,
+      '@error' => $e->getMessage()
+    );
+    $message = t('Error occurred when trying to update the course(@nid) @title: @error', $params);
+    drupal_set_message($message, 'error');
+    watchdog('harvard_course', $message);
   }
 }
 
