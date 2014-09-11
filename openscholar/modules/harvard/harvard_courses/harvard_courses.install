@@ -108,11 +108,11 @@ function harvard_courses_update_7001() {
 /**
  * Set the time stamp field for the harvard courses.
  */
-function harvard_courses_update_7003(&$sandbox) {
+function harvard_courses_update_7002(&$sandbox) {
   os_set_update_batch($sandbox, array(
     'query' => 'harvard_courses_update_time_stamp_query',
     'iterator' => 'harvard_courses_update_iterator',
-    'batch' => 250,
+    'batch' => 100,
     'entity' => 'node',
   ));
 }
