@@ -96,7 +96,7 @@
           var editor = $(this),
             parent = editor.parents('.form-item'),
             dim = parent.find('[data-minrows]'),
-            height = (parseInt(dim.attr('data-minrows')) * 20),
+            height = (parseInt(dim.attr('data-minrows')) * 25),
             iframe = $('iframe', editor);
 
 
@@ -123,6 +123,19 @@
       setTimeout(function () { bindHandlers(ctx); }, 500);
       if (typeof ctx.body != 'undefined') {
         $(ctx.body).delegate('.mceListBoxMenu[role="listbox"]', 'click', listboxClickHandler);
+      }
+      // reset the data for anyone who's been here before
+      // we've never had to perform an 'update hook' task on javascript data before
+      // so I'm making up a convention as I go. 
+      if (typeof localStorage.osWysiwygExpandableTextareaUpdate316 == 'undefined') {
+        localStorage.osWysiwygExpandableTextareaUpdate316 = 'true';
+        var data = JSON.parse(localStorage.osWysiwygExpandableTextarea);
+        for (var i in data) {
+          if (typeof data[i] == 'object' && data[i].height == 250) {
+            delete data[i];
+          }
+        }
+        localStorage.osWysiwygExpandableTextarea = JSON.stringify(data);
       }
     }
   };
