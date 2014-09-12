@@ -2230,9 +2230,17 @@ function os_files_escape_media_tags($tag) {
  * Process callback for media_filter
  * Unescapes media's JSON strings and then calls media_filter on the original text
  */
-function os_files_filter_media_process($text) {
-  $text = preg_replace_callback(MEDIA_TOKEN_REGEX, 'os_files_escape_media_tags', $text);
-  return media_filter($text);
+function os_files_filter_media_process($text, $filter = NULL, $format = NULL, $langcode = NULL, $cache = NULL, $cache_id = NULL) {
+  static $loading;
+
+  // Increment loading to keep track of nesting levels to prevent an infinate loop.
+  if($loading < 3) {
+    $loading++;
+    $text = media_filter($text);
+    $loading--;
+  }
+
+  return $text;
 }
 
 function os_files_field_attach_create_bundle($entity_type, $type) {
