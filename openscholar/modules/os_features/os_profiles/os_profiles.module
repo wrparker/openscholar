@@ -118,7 +118,7 @@ function os_profiles_init() {
     $file = NULL;
     if ($person_photo) {
       $file_info = os_profiles_get_origin_node_values($person_photo['file']['uri'] . '.json', array('url'));
-      $copy_file = os_copy_file($file_info->values['url'], TRUE);
+      $copy_file = os_copy_file($file_info->values['url'], FALSE);
 
       if ($copy_file['type'] == 'file') {
         $file = $copy_file['file'];
@@ -663,10 +663,13 @@ function os_profiles_sync_profile_submit($form, $form_state) {
   $file = NULL;
   if (!empty($file_json_url)) {
     $file_info = os_profiles_get_origin_node_values($file_json_url, array('url'));
-    $copy_file = os_copy_file($file_info->values['url'], TRUE);
+    $copy_file = os_copy_file($file_info->values['url'], FALSE);
 
     if ($copy_file['type'] == 'file') {
       $file = $copy_file['file'];
+    }
+    else {
+      form_set_error('', $copy_file['message']);
     }
 
     unset($values['field_person_photo']);
