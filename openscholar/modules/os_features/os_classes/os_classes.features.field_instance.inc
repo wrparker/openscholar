@@ -142,7 +142,7 @@ function os_classes_field_default_field_instances() {
       'module' => 'os_wysiwyg',
       'settings' => array(
         'max_rows' => 10,
-        'rows' => 3,
+        'rows' => 5,
         'summary_rows' => 5,
       ),
       'type' => 'os_wysiwyg_expanding_textarea',
