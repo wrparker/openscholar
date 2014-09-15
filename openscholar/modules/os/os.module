@@ -2353,6 +2353,8 @@ function os_copy_file($url, $exception = FALSE) {
  * @see os_copy_file().
  */
 function os_file_copy_set_error($message, $exception) {
+  watchdog('os', $message);
+
   if ($exception) {
     throw new Exception($message);
   }
