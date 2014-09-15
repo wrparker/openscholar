@@ -1183,3 +1183,15 @@ function os_publications_update_7024() {
   ->condition('ftdid', 22)
   ->execute();
 }
+
+/**
+ * Update stored CSE style definition to match updated file.
+ */
+function os_publications_update_7025() {
+  if (os_publications_revert_citeproc_style('cse')) {
+    return t('CSE style reverted.');
+  }
+  else {
+    throw new DrupalUpdateException(t('Unable to revert CSE style. Ensure biblio CiteProc module is enabled.'));
+  }
+}

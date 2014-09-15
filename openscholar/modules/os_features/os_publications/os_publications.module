@@ -1256,3 +1256,24 @@ function os_publications_import_type($name, $field_settings) {
       ->execute();
   }
 }
+
+/**
+ * Reverts a given citation style to the defaults set in it's file
+ */
+function os_publications_revert_citeproc_style($name, $path = '') {
+  if (!$path) {
+    $path = drupal_get_path('module', 'biblio_citeproc').'/style/';
+  }
+  $path = $path . $name . '.csl';
+
+  if (!file_exists($path)) {
+    return false;
+  }
+
+  $csl = file_get_contents($path);
+  $name = basename($path);
+  // Use citeproc's function to update the db.
+  biblio_citeproc_install_style($name, $csl);
+
+  return true;
+}
