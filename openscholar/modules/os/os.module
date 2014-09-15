@@ -2386,3 +2386,50 @@ function os_drupal_goto_alter(&$path, &$options, &$http_response_code) {
   );
   redirect_redirect($redirect);
 }
+
+/**
+ * Updating nodes in batches easily.
+ *
+ * @param $sandbox
+ *   The update hook sandbox variable. Use for storing Information.
+ * @param Array $info
+ *   Information about the batch operations:
+ *    - count: Function name that will return a base EntityFieldQuery. The
+ *      object will be used for two things: count all the nodes we need update
+ *      and the second will use for iterator over batches.
+ *    - iterator: Callback function that will iterate over each node after
+ *      loading it from the DB.
+ *    - batch: The number of nodes we need to iterate at once.
+ *    - entity: The entity type.
+ */
+function os_set_update_batch(&$sandbox, $info) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    // Get the total amounts of nodes.
+    $sandbox['max'] = $info['query']()
+      ->count()
+      ->execute();
+  }
+
+  $id = empty($sandbox['id']) ? 0 : $sandbox['id'];
+
+  $result = $info['query']($id)
+    ->range(0, $info['batch'])
+    ->execute();
+
+  $ids_array = $result[$info['entity']];
+
+  if (empty($ids_array)) {
+    return;
+  }
+
+  $entities = entity_load($info['entity'], array_keys($ids_array));
+
+  foreach ($entities as $entity) {
+    call_user_func($info['iterator'], $entity);
+    $sandbox['progress']++;
+    $sandbox['id'] = entity_id($info['entity'], $entity);
+  }
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+}
