@@ -230,18 +230,6 @@ a img {
 	
 	}
 
-.sv-list-video.sv-list-view-teaser.sv-list-layout-grid .file,
-.sv-list-image.sv-list-view-teaser.sv-list-layout-grid .file {
-	background:#f1f1f1;
-	}
-
-.sv-list-video.sv-list-view-teaser.sv-list-layout-grid .field-name-os-file-description,
-.sv-list-video.sv-list-view-teaser.sv-list-layout-grid .file-info,
-.sv-list-image.sv-list-view-teaser.sv-list-layout-grid .field-name-os-file-description,
-.sv-list-image.sv-list-view-teaser.sv-list-layout-grid .file-info {
-	padding:0 8px;
-	}
-
 
 .block-boxes-os_sv_list_file .file img {margin-right:15px;display:block;}
 .block-boxes-os_sv_list_file .file img.file-icon {margin-right:8px;}
@@ -273,6 +261,7 @@ bottom: 20px;
 #content-column .sv-list-image.sv-list-view-teaser .file-image img,
 #content-column .sv-list-video.sv-list-view-teaser .oembed {
 	float: left;
+	position:relative;
 }
 
 #content-column .sv-list-video.sv-list-view-teaser img,
@@ -340,14 +329,6 @@ margin-bottom: 8px !important;
 	position:relative;
 }
 
-.sv-list-video.sv-list-view-teaser.sv-list-layout-grid .field-name-os-file-description,
-.sv-list-image.sv-list-view-teaser.sv-list-layout-grid .field-name-os-file-description {
-	display:none;
-	position:absolute;
-	z-index:2000;
-	background: #F1F1F1;
-	padding-bottom:8px;
-}
 
 p {
      margin: 0px 0px 1.5em;

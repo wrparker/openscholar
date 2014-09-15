@@ -559,14 +559,13 @@ ul.class_material_field_class a.class_material_field_class_anchor {
 
 .video-indicator {
 	background-image: url("../images/scholarbase-sprite.png");
-  background-position: -44px -85px;
- 	bottom: 10px;
-  display: block;
-  left: 10px;
-  height: 48px;
-  width: 48px;
-	position: relative;
-  margin-top: -48px;
+  background-position: -42px -85px;
+top: 38%;
+display: block;
+left: 40%;
+height: 42px;
+width: 48px;
+position: absolute;
 }
 
 .media-gallery-item:hover .video-indicator {
