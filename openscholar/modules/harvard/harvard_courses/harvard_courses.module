@@ -402,7 +402,17 @@ function _harvard_courses_set_timestamp($node) {
  *   The timestamp of the course semester.
  */
 function harvard_courses_get_timestamp_by_semester(EntityMetadataWrapper $wrapper) {
-  list($month,,,$year) = explode(' ', $wrapper->field_calendar_period->value());
+  $data = explode(' ', str_replace(array('(', ')'), ' ', $wrapper->field_calendar_period->value()));
+  $month = $data[0];
+
+  foreach ($data as $info) {
+    // Check this is an integer and the year is grater then 1900.
+    if (intval($info) && $info > 1900) {
+      $year = $info;
+      break;
+    }
+  }
+
   return strtotime($month . ' ' . $year);
 }
 
