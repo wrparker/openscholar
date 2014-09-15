@@ -2161,7 +2161,7 @@ function harvard_courses_field_default_fields() {
   );
 
   // Exported field_base: 'node-harvard_course-field_timestamp'
-  $field_bases['node-harvard_course-field_timestamp'] = array(
+  $fields['node-harvard_course-field_timestamp'] = array(
     'field_config' => array(
       'active' => 1,
       'cardinality' => 1,
