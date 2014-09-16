@@ -2218,9 +2218,11 @@ function os_files_escape_media_tags($tag) {
 function os_files_filter_media_process($text, $filter = NULL, $format = NULL, $langcode = NULL, $cache = NULL, $cache_id = NULL) {
   static $loading;
 
+
   // Increment loading to keep track of nesting levels to prevent an infinate loop.
-  if($loading < 3) {
+  if ($loading < 3) {
     $loading++;
+    $text = preg_replace_callback(MEDIA_TOKEN_REGEX, 'os_files_escape_media_tags', $text);
     $text = media_filter($text);
     $loading--;
   }
