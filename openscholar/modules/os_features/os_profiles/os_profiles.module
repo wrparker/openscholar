@@ -672,7 +672,6 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     unset($values['field_person_photo']);
   }
 
-
   // Set up default values.
   $values += array(
     'type' => 'person',
