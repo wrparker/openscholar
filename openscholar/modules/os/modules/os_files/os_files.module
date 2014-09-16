@@ -312,17 +312,28 @@ function os_files_form_file_entity_add_upload_alter(&$form, &$form_state) {
 
   // send max_filesize to javascript so we can check against it with javascript
   // if the browser supports such things
-  if (isset($args[0]['max_filesize'])) {
-    $form['#attached']['js'][] = array(
-      'data' => array(
-        'osFiles' => array(
-          'rawMaxFilesize' => $args[0]['max_filesize'],
-          'maxFilesize' => parse_size($args[0]['max_filesize']),
-        )
-      ),
-      'type' => 'setting',
-    );
+
+  $maxFilesize = parse_size(ini_get('post_max_size'));
+
+  // If upload_max_size is less, then reduce. Except if upload_max_size is
+  // zero, which indicates no limit.
+  $upload_max = parse_size(ini_get('upload_max_filesize'));
+  if ($upload_max > 0 && $upload_max < $maxFilesize) {
+    $maxFilesize = $upload_max;
   }
+
+  if (isset($args[0]['max_filesize'])) {
+    $maxFilesize = $args[0]['max_filesize'];
+  }
+  $form['#attached']['js'][] = array(
+    'data' => array(
+      'osFiles' => array(
+        'rawMaxFilesize' => $maxFilesize,
+        'maxFilesize' => parse_size($maxFilesize),
+      )
+    ),
+    'type' => 'setting',
+  );
 
   /*
    * Set a validator to check that uploaded files are the right type
