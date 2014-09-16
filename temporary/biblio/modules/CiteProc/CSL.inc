@@ -1259,7 +1259,7 @@ class csl_group extends csl_format{
     $text_parts = array();
 
     $terms = $variables = $have_variables = 0;
-    foreach ($this->elements as $element) {
+    foreach ($this->elements as $k => $element) {
       if (($element instanceof csl_text) &&
           ($element->source == 'term' ||
            $element->source == 'value' )) {
@@ -1271,6 +1271,10 @@ class csl_group extends csl_format{
           !empty($data->{$element->variable})
          ) {
         $variables++;
+      }
+
+      if ($this->delimiter && $element->source != 'macro' && $k != count($this->elements) -1) {
+        $element->suffix = $this->delimiter;
       }
 
       $text = $element->render($data, $mode);
@@ -1288,6 +1292,16 @@ class csl_group extends csl_format{
 
     $delimiter = $this->delimiter;
     $text = implode($delimiter, $text_parts); // insert the delimiter if supplied.
+    $no_space = trim($delimiter);
+    $quotes = array(
+      '"'.$no_space,
+      '”'.$no_space
+    );
+    $replace = array(
+      $no_space.'"',
+      $no_space.'”',
+    );
+    $text = str_replace($quotes, $replace, $text);
 
 
     return $this->format($text);
