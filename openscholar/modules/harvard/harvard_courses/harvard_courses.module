@@ -127,9 +127,11 @@ function harvard_courses_courses_filter() {
     ->distinct();
     $query->join('node', 'n', 'ogm.etid = n.nid');
     $query->join('field_data_field_term', 'f', 'f.entity_id = n.nid AND f.entity_type =\'node\'');
+    $query->join('field_data_field_timestamp', 't', 't.entity_id = n.nid AND f.entity_type =\'node\'');
     $query->condition('ogm.gid', $vsite->id);
     $query->condition('n.type', 'harvard_course');
     $query->condition('ogm.entity_type', 'node');
+    $query->orderBy('t.field_timestamp_value', 'DESC');
 
   $semester = array();
   foreach ($query->execute() as $result) {
@@ -363,6 +365,57 @@ function harvard_courses_node_presave($node) {
       $node->{$field}[$node->language][0]['value'] = $new;
     }
   }
+
+  // Set the timestamp of the course.
+  _harvard_courses_set_timestamp($node);
+}
+
+/**
+ * Set the time stamp field for the harvard easily.
+ *
+ * @param $node
+ *   The node object.
+ */
+function _harvard_courses_set_timestamp($node) {
+  $wrapper = entity_metadata_wrapper('node', $node);
+
+  try {
+    $timestamp = harvard_courses_get_timestamp_by_semester($wrapper);
+    $wrapper->field_timestamp->set($timestamp);
+  } catch (Exception $e) {
+    $params = array(
+      '@nid' => $node->nid,
+      '@title' => $node->title,
+      '@error' => $e->getMessage()
+    );
+    $message = t('Error occurred when trying to update the course(@nid) @title: @error', $params);
+    drupal_set_message($message, 'error');
+    watchdog('harvard_course', $message);
+  }
+}
+
+/**
+ * Return the timestamp from the course node.
+ *
+ * @param EntityMetadataWrapper $wrapper
+ *   The node object wrapped with entity metadata wrapper.
+ *
+ * @return int
+ *   The timestamp of the course semester.
+ */
+function harvard_courses_get_timestamp_by_semester(EntityMetadataWrapper $wrapper) {
+  $data = explode(' ', str_replace(array('(', ')'), ' ', $wrapper->field_calendar_period->value()));
+  $month = $data[0];
+
+  foreach ($data as $info) {
+    // Check this is an integer and the year is grater then 1900.
+    if (intval($info) && $info > 1900) {
+      $year = $info;
+      break;
+    }
+  }
+
+  return strtotime($month . ' ' . $year);
 }
 
 /**
@@ -396,7 +449,6 @@ function harvard_courses_node_update($node) {
   // Loading into a wrapper the original node and the current node.
   $wrapper = entity_metadata_wrapper('node', $node);
   $original_node = entity_metadata_wrapper('node', $node->original);
-
   // Make a list of the fields we need to check in the vsite and in the course
   // node.
   $fields = array(
@@ -861,4 +913,35 @@ function harvard_courses_vsite_og_node_type_info() {
   return array(
     'harvard_course' => 'group content',
   );
+}
+
+/**
+ * Return an EntityFieldQuery for the os batch update set; Return a query for
+ * load/count the harvard courses.
+ *
+ * @see os_set_update_batch().
+ */
+function harvard_courses_update_time_stamp_query($id = NULL) {
+  $query = new EntityFieldQuery();
+
+  $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('type', 'harvard_course');
+
+  if ($id) {
+    $query->propertyCondition('nid', $id, '>=');
+  }
+
+  return $query;
+}
+
+/**
+ * Iterator callback for the os update batch; Update the timestamp field for a
+ * harvard course.
+ *
+ * @see os_ser_update_btach.
+ */
+function harvard_courses_update_iterator($node) {
+  _harvard_courses_set_timestamp($node);
+  node_save($node);
 }

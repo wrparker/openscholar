@@ -96,3 +96,23 @@ function harvard_courses_install() {
 function harvard_courses_update_7000() {
   db_query("UPDATE {node} SET comment = 1 WHERE type = 'harvard_course'");
 }
+
+/**
+ * Disable comments for existing harvard courses nodes.
+ */
+function harvard_courses_update_7001() {
+  features_revert(array('harvard_courses' => array('field_base', 'field_instance', 'views_view')));
+  drupal_flush_all_caches();
+}
+
+/**
+ * Set the time stamp field for the harvard courses.
+ */
+function harvard_courses_update_7002(&$sandbox) {
+  os_set_update_batch($sandbox, array(
+    'query' => 'harvard_courses_update_time_stamp_query',
+    'iterator' => 'harvard_courses_update_iterator',
+    'batch' => 250,
+    'entity' => 'node',
+  ));
+}
