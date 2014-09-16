@@ -570,7 +570,9 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
   // Remove labels from biblio url section and add a placeholder.
   unset($form['url']['biblio_url_title']['#description']);
   unset($form['url']['#prefix']);
-  $form['url']['biblio_url_title']['#default_value'] = t('Publisher\'s Version');
+  if (empty($form['url']['biblio_url_title']['#default_value'])) {
+    $form['url']['biblio_url_title']['#default_value'] = t('Publisher\'s Version');
+  }
 
   // Add in a new validation for patents
   $form['#validate'][] = 'os_publications_biblio_form_patent_validate';
