@@ -169,6 +169,66 @@ function os_classes_process_node(&$vars) {
   }
 }
 
+/**
+ * Return the weight of the semester.
+ *
+ * @param $semester
+ *   Optional. Specific semester name.
+ * @return array
+ *   Return all the semester and weight. If a semester name was given the
+ *   the function will return the weight for that semester.
+ */
+function os_classes_semester_weights($semester = '') {
+  $weights = array(
+    'spring' => 1,
+    'summer' => 2,
+    'fall' => 3,
+    'winter' => 4,
+  );
+
+  return !empty($semester) ? $weights[$semester] : $weights;
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function os_classes_node_presave($node) {
+  if ($node->type != 'class') {
+    return;
+  }
+
+  $wrapper = entity_metadata_wrapper('node', $node);
+
+  if (!$semester = strtolower($wrapper->field_semester->value())) {
+    return;
+  }
+
+  $weight = os_classes_semester_weights($semester);
+
+  if ($wrapper->is_new->value()) {
+    $wrapper->field_weight->set($weight);
+  }
+  else {
+    // The node is being updated. Check for change in the semester field and
+    // update the weight field as well.
+    $original = entity_metadata_wrapper('node', $node->original);
+
+    if ($original->field_semester->value() == $wrapper->field_semester->value()) {
+      return;
+    }
+
+    $wrapper->field_weight->set($weight);
+  }
+}
+
+/**
+ * Implements hook_field_access().
+ */
+function os_classes_field_access($op, $field, $entity_type, $entity, $account) {
+  if ($field['field_name'] == 'field_weight') {
+    return FALSE;
+  }
+}
 
 /**
  * OS update batch query callback.
