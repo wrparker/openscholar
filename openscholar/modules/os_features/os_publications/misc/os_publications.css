@@ -142,3 +142,7 @@ h1.biblio-type-prefix {
 #edit-citation-distribute .fieldset-wrapper {
   padding-top: 25px;
 }
+
+.form-select.error {
+  border: 1px solid red;
+}
