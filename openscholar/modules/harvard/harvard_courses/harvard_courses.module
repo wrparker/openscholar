@@ -926,7 +926,8 @@ function harvard_courses_update_time_stamp_query($id = NULL) {
 
   $query
     ->entityCondition('entity_type', 'node')
-    ->propertyCondition('type', 'harvard_course');
+    ->propertyCondition('type', 'harvard_course')
+    ->addTag('no_harvard_courses_timestamp');
 
   if ($id) {
     $query->propertyCondition('nid', $id, '>=');
@@ -944,4 +945,14 @@ function harvard_courses_update_time_stamp_query($id = NULL) {
 function harvard_courses_update_iterator($node) {
   _harvard_courses_set_timestamp($node);
   node_save($node);
+}
+
+/**
+* Implements hook_query_TAG_alter()
+*
+* Limits resultset to those courses that do not have a timestamp yet.
+*/
+function harvard_courses_query_no_harvard_courses_timestamp_alter(QueryAlterableInterface $query) {
+  $query->leftJoin('field_data_field_timestamp', 'field_data_field_timestamp', '(node.nid = field_data_field_timestamp.entity_id AND field_data_field_timestamp.entity_type = \'node\')');
+  $query->isNull('field_data_field_timestamp.field_timestamp_value');
 }

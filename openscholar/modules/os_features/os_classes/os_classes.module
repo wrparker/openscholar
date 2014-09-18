@@ -240,7 +240,8 @@ function os_classes_count_classes_base_query($id = NULL) {
 
   $query
     ->entityCondition('entity_type', 'node')
-    ->propertyCondition('type', 'class');
+    ->propertyCondition('type', 'class')
+    ->addTag('no_field_weight');
 
   if ($id) {
     $query->propertyCondition('nid', $id, '>=');
@@ -273,4 +274,14 @@ function os_classes_update_update_class_weight($node) {
     );
     drupal_set_message(t('There was error updating the node(@nid) @title with the value @value. More info: @error', $params), 'error');
   }
+}
+
+/**
+* Implements hook_query_TAG_alter()
+*
+* Limits resultset to those courses that do not have a timestamp yet.
+*/
+function os_classes_query_no_field_weight_alter(QueryAlterableInterface $query) {
+  $query->leftJoin('field_data_field_weight', 'field_data_field_weight', '(node.nid = field_data_field_weight.entity_id AND field_data_field_weight.entity_type = \'node\')');
+  $query->isNull('field_data_field_weight.field_weight_value');
 }
