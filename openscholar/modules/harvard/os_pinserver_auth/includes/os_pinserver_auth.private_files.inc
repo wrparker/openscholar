@@ -153,6 +153,15 @@ function _os_pinserver_auth_file_download($uri) {
       $wrapper = file_stream_wrapper_get_instance_by_uri($uri);
       return pinserver_redirect(array('redirect' => $wrapper->getExternalUrl(), 'tk_forward' => '1'));
     }
+    // If we are on os_fast and private by pin is not used, go to the standard private file path
+    else if (!$private_files_by_pin && $os_fast && isset($file->fid) && function_exists('drupal_goto')) {
+      // In this case we use the path that has a full bootstrap, since this file can only be accessed by site members.
+      if (class_exists('DrupalPrivateStreamWrapper')) {
+        $instance = new DrupalPrivateStreamWrapper();
+        $instance->setUri($uri);
+        header('Location: ' . $instance->getExternalUrl(), TRUE, 302);
+      }
+    }
   }
 }
 
