@@ -101,7 +101,7 @@ function harvard_courses_update_7000() {
  * Disable comments for existing harvard courses nodes.
  */
 function harvard_courses_update_7001() {
-  features_revert(array('harvard_courses' => array('field_base', 'field_instance', 'views_view')));
+  features_revert(array('harvard_courses' => array('field', 'field_base', 'field_instance', 'views_view')));
   drupal_flush_all_caches();
 }
 
