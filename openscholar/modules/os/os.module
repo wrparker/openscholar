@@ -300,7 +300,7 @@ function os_block_view_alter(&$block, &$data) {
 
   if (!empty($data->delta) && array_key_exists($data->delta, os_get_menus()) && count($block['content'])) {
   	// Remove nice menus from the sidebar and footer regions.
-  	$theme = (in_array($data->region, array('footer', 'footer_first', 'footer_third', 'sidebar_first', 'sidebar_second'))) ? '' : 'os_nice_menus';
+  	$theme = (in_array($data->region, array('footer', 'footer_first', 'footer_third', 'content_first', 'content_second', 'content_bottom', 'content_top', 'sidebar_first', 'sidebar_second'))) ? '' : 'os_nice_menus';
     $block['content'] += array(
       '#theme' => $theme,
       '#menu_name' => $data->delta,
