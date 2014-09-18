@@ -3411,6 +3411,15 @@ function vsite_cp_settings_form_submit($form, &$form_state) {
     }
   }
 
+  // Make the icon file permanent so it doesn't get deleted automatically
+  if ($file = file_load($form_state['values']['site_favicon_fid'])) {
+    if (!$file->status) {
+      $file->status = FILE_STATUS_PERMANENT;
+      file_usage_add($file, 'vsite', 'node', $vsite->group->nid);
+      file_save($file);
+    }
+  }
+
   // Only saves wrapper and clears metatag cache when the values have changed.
   if ($modified) {
     $wrapper->save();
