@@ -515,10 +515,6 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['title']['spaces'] = array(
-    'type' => 'spaces_og',
-    'frontpage' => 0,
-  );
   /* Field: Content: Type */
   $handler->display->display_options['fields']['type']['id'] = 'type';
   $handler->display->display_options['fields']['type']['table'] = 'node';
@@ -574,6 +570,26 @@ function cp_content_views_default_views() {
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'bio' => 'bio',
+    'blog' => 'blog',
+    'book' => 'book',
+    'cv' => 'cv',
+    'class' => 'class',
+    'class_material' => 'class_material',
+    'event' => 'event',
+    'faq' => 'faq',
+    'feed' => 'feed',
+    'link' => 'link',
+    'media_gallery' => 'media_gallery',
+    'news' => 'news',
+    'page' => 'page',
+    'person' => 'person',
+    'presentation' => 'presentation',
+    'biblio' => 'biblio',
+    'software_project' => 'software_project',
+    'software_release' => 'software_release',
+  );
   $handler->display->display_options['filters']['type']['group'] = 1;
   $handler->display->display_options['filters']['type']['exposed'] = TRUE;
   $handler->display->display_options['filters']['type']['expose']['operator_id'] = 'type_op';
@@ -581,6 +597,18 @@ function cp_content_views_default_views() {
   $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
   $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
   $handler->display->display_options['filters']['type']['expose']['multiple'] = TRUE;
+  $handler->display->display_options['filters']['type']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    5 => 0,
+    6 => 0,
+    7 => 0,
+    4 => 0,
+    8 => 0,
+    9 => 0,
+  );
+  $handler->display->display_options['filters']['type']['expose']['reduce'] = TRUE;
   /* Filter criterion: Spaces: Content in current space */
   $handler->display->display_options['filters']['current']['id'] = 'current';
   $handler->display->display_options['filters']['current']['table'] = 'spaces';
@@ -780,7 +808,7 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'medium';
-  /* Field: File: Referencing content */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['referencing_nodes']['id'] = 'referencing_nodes';
   $handler->display->display_options['fields']['referencing_nodes']['table'] = 'file_managed';
   $handler->display->display_options['fields']['referencing_nodes']['field'] = 'referencing_nodes';
