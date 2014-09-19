@@ -269,7 +269,7 @@ projects[entity_validator][download][url] = "https://github.com/Gizra/entity_val
 projects[entity_validator][download][branch] = "7.x-1.x"
 
 projects[nodeorder][subdir] = "contrib"
-projects[nodeorder][version] = 1.1
+projects[nodeorder][version] = 1.2
 
 projects[oembed][subdir] = "contrib"
 projects[oembed][version] = 1.0-rc2
