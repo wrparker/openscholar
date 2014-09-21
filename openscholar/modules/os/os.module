@@ -2431,5 +2431,13 @@ function os_set_update_batch(&$sandbox, $info) {
     $sandbox['id'] = entity_id($info['entity'], $entity);
   }
 
-  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+  if ($sandbox['progress'] > $sandbox['max']) {
+    // The total results amount is smaller then the amount we processed in a
+    // single batch. After a single batch we can set the finished to true.
+    $sandbox['#finished'] = 1;
+  }
+  else {
+    // Save the last node, increase the node and check if the import finished.
+    $sandbox['#finished'] = ($sandbox['progress'] / $sandbox['max']);
+  }
 }
