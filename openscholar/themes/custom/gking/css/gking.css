@@ -182,6 +182,10 @@ h1#page-title,
 	padding-left: 2em;
 }
 
+.block-boxes-os_taxonomy_fbt ul ul {
+	margin: 0;
+	}
+
 .block h2.block-title {
   font-size: 1.3em;
   }
