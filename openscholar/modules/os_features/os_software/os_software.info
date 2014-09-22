@@ -32,6 +32,7 @@ features[ctools][] = views:views_default:3.0
 features[features_api][] = api:2
 features[feeds_importer][] = os_software
 features[feeds_tamper][] = os_software-body-utf8_convert
+features[feeds_tamper][] = os_software-created_date-adjust_date_to_timezone
 features[feeds_tamper][] = os_software-title-utf8_convert
 features[field_base][] = field_software_method
 features[field_base][] = field_software_package

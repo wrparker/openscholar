@@ -37,6 +37,7 @@ features[features_api][] = api:2
 features[feeds_importer][] = os_events_csv
 features[feeds_importer][] = os_ical
 features[feeds_tamper][] = os_events_csv-body-utf8_convert
+features[feeds_tamper][] = os_events_csv-created_date-adjust_date_to_timezone
 features[feeds_tamper][] = os_events_csv-end_date-strtotime
 features[feeds_tamper][] = os_events_csv-location-utf8_convert
 features[feeds_tamper][] = os_events_csv-registration-utf8_convert
