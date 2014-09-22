@@ -380,7 +380,7 @@ function _os_events_style_recurring_event($markup) {
     $markup = $date . $markup;
   }
 
-  $markup = str_replace(' .', '.', $markup);
+  $markup = preg_replace('/\s+\./', '.', $markup);
   return $markup;
 }
 

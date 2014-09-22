@@ -902,7 +902,7 @@ function _os_publications_biblio_entry_alter($markup, $node) {
   if (!empty($node->biblio_url)) {
     $biblio_url = $node->biblio_url;
     $biblio_check_url = l($biblio_url,$biblio_url);
-    $biblio_url_title = !empty($node->biblio_url_title) ? $node->biblio_url_title : 'Website';
+    $biblio_url_title = !empty($node->biblio_url_title) ? $node->biblio_url_title : t("Publisher's Version");
     $new_biblio_url = l($biblio_url_title,$biblio_url);
     if ($insert === FALSE) {
       $html .= ' ' . $new_biblio_url;
