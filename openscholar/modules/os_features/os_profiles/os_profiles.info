@@ -35,6 +35,7 @@ features[feeds_tamper][] = os_people-middle_name-utf8_convert
 features[feeds_tamper][] = os_people-short_bio-utf8_convert
 features[feeds_tamper][] = os_people-titles-explode
 features[feeds_tamper][] = os_people-titles-utf8_convert
+features[feeds_tamper][] = os_people-created_date-adjust_date_to_timezone
 features[field_base][] = field_address
 features[field_base][] = field_child_site
 features[field_base][] = field_destination_url
