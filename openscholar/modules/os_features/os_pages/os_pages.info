@@ -18,6 +18,7 @@ dependencies[] = os_wysiwyg
 dependencies[] = strongarm
 dependencies[] = text
 features[box][] = os_pages_section_nav
+features[box][] = vocabulary_filter
 features[context][] = os_browse_pages
 features[ctools][] = boxes:box:1
 features[ctools][] = context:context:3
