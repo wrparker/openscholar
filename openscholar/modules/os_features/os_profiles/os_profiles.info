@@ -28,6 +28,7 @@ features[ctools][] = views:views_default:3.0
 features[features_api][] = api:2
 features[feeds_importer][] = os_people
 features[feeds_tamper][] = os_people-address-utf8_convert
+features[feeds_tamper][] = os_people-created_date-adjust_date_to_timezone
 features[feeds_tamper][] = os_people-first_name-utf8_convert
 features[feeds_tamper][] = os_people-last_name-utf8_convert
 features[feeds_tamper][] = os_people-middle_name-utf8_convert
