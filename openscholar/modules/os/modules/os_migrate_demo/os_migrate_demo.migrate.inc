@@ -420,6 +420,7 @@ class OsMigrateClassesNode extends OsMigrate {
     array('body', 'Body'),
     array('link', 'Link'),
     array('semester', 'Semester'),
+    array('year', 'Year'),
     array(OG_AUDIENCE_FIELD, 'Site'),
     array(OG_VOCAB_FIELD, 'Terms'),
     array('path', 'Path'),
@@ -438,6 +439,7 @@ class OsMigrateClassesNode extends OsMigrate {
 
     $this->addFieldMapping('body', 'body');
     $this->addFieldMapping('field_semester', 'semester');
+    $this->addFieldMapping('field_offered_year', 'year');
 
     $this->addFieldMapping(OG_AUDIENCE_FIELD, OG_AUDIENCE_FIELD)
       ->sourceMigration(array('OsMigrateProjectNode', 'OsMigratePersonalNode'));
