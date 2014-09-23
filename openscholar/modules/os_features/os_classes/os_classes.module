@@ -180,13 +180,14 @@ function os_classes_process_node(&$vars) {
  */
 function os_classes_semester_weights($semester = '') {
   $weights = array(
-    'spring' => 1,
-    'summer' => 2,
-    'fall' => 3,
-    'winter' => 4,
+    'fall' => 1,
+    'winter' => 2,
+    'spring' => 3,
+    'summer' => 4,
+    '' => 5,
   );
 
-  return !empty($semester) ? $weights[$semester] : $weights;
+  return $weights[$semester];
 }
 
 /**
@@ -199,11 +200,9 @@ function os_classes_node_presave($node) {
 
   $wrapper = entity_metadata_wrapper('node', $node);
 
-  if (!$semester = strtolower($wrapper->field_semester->value())) {
-    return;
-  }
-
+  $semester = strtolower($wrapper->field_semester->value());
   $weight = os_classes_semester_weights($semester);
+  dpm($semester);
 
   if ($wrapper->is_new->value()) {
     $wrapper->field_weight->set($weight);

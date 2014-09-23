@@ -25,3 +25,22 @@ function os_classes_update_7002(&$sandbox) {
     'entity' => 'node',
   ));
 }
+
+/**
+ * Updating os classes views.
+ */
+function os_classes_update_7003() {
+  features_revert(array('os_classes' => array('views_view')));
+}
+
+/**
+ * Updating the node courses weight field.
+ */
+function os_classes_update_7004(&$sandbox) {
+  os_set_update_batch($sandbox, array(
+    'query' => 'os_classes_count_classes_base_query',
+    'iterator' => 'os_classes_update_update_class_weight',
+    'batch' => 100,
+    'entity' => 'node',
+  ));
+}
