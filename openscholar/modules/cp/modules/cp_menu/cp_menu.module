@@ -12,27 +12,26 @@ function cp_menu_menu() {
   $items = array();
 
   // Menu Wizard
-  $items['cp/menu/%ctools_js'] = array(
+  $items['cp/build/menu/link'] = array(
     'title' => 'Menu',
     'page callback' => 'cp_menu_page',
-    'page arguments' => array(2),
     'access callback' => 'spaces_access_admin',
     'type' => MENU_CALLBACK,
     'file' => 'cp_menu.wizard.inc',
   );
 
  //$items['cp/build/%/edit'] =
-  $items['cp/build/%/edit/%ctools_js'] = array(
+  $items['cp/build/menu/link/%/edit'] = array(
     'title' => 'Edit Link',
     'page callback' => 'cp_menu_edit_link',
-    'page arguments' => array(2, 4),
+    'page arguments' => array(4),
     'access callback' => 'spaces_access_admin',
     'type' => MENU_CALLBACK,
   );
-  $items['cp/build/%/delete/%ctools_js'] = array(
+  $items['cp/build/menu/link/%/delete'] = array(
     'title' => 'Delete Link',
     'page callback' => 'cp_menu_delete_link',
-    'page arguments' => array(2, 4),
+    'page arguments' => array(4),
     'access callback' => 'spaces_access_admin',
     'type' => MENU_CALLBACK,
   );
@@ -92,7 +91,7 @@ function cp_menu_menu() {
  */
 function cp_menu_admin_paths() {
   $paths = array(
-    'cp/menu/*' => TRUE,
+    'cp/build/menu/link/*' => TRUE,
   );
   return $paths;
 }

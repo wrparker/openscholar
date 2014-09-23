@@ -57,10 +57,10 @@ function cp_menu_build_form($form, $form_state, $menu = ''){
           '#markup' => $url?l($url_display, $url):"",
         ),
         'delete_link' => array(
-          '#markup' => ctools_modal_text_button('delete', 'cp/build/' . $l['mlid'] . '/delete/nojs/', '')
+          '#markup' => l('delete', 'cp/build/menu/link/' . $l['mlid'] . '/delete')
         ),
         'edit_link' => array(
-          '#markup' => ctools_modal_text_button('edit', 'cp/build/' . $l['mlid'] . '/edit/nojs/', '')
+          '#markup' => l('edit', 'cp/build/menu/link/' . $l['mlid'] . '/edit')
         ),
         'menu' => array(
           '#type' => 'select',
@@ -191,7 +191,7 @@ function theme_cp_menu_table($variables){
         ),
         array(
           //'data' => ctools_modal_text_button('Add New Link', 'cp/menu/nojs/new/'.$d, 'Add New Link'),
-          'data' => l(t('+ Add new link'),'cp/menu/nojs/new/'.$d,array('attributes' => array('title' => 'Add a new menu item.', 'class' => array('add-new-link')))),
+          'data' => l(t('+ Add new link'),'cp/build/menu/link/new/'.$d,array('attributes' => array('title' => 'Add a new menu item.', 'class' => array('add-new-link')))),
         ),
         array(
           'data' => '',
