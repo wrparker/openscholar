@@ -4,7 +4,7 @@ Feature:
   @api @first
   Scenario Outline: Test adding a link.
     Given I am logging in as "john"
-     When I visit "john/cp/menu/nojs/new/primary-menu"
+     When I visit "john/cp/build/menu/link/new/primary-menu"
       And I select "url" from "type"
       And I press "Continue"
       And I fill in "title" with <title>
