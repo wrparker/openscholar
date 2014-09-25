@@ -27,6 +27,8 @@
 	font-weight:normal;
 }
 
+
+
 .region-header-third ul.nice-menu a {
     color: #8A101E;
     font: 14px helvetica,arial,sans-serif;
@@ -426,4 +428,9 @@ color: #215990;
 
 #footer .footer-login {
 color: #FFF;
+}
+
+#footer .footer-login:after {
+background-image: none;
+
 }
