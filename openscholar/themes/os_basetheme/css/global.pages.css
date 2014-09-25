@@ -560,9 +560,9 @@ ul.class_material_field_class a.class_material_field_class_anchor {
 .video-indicator {
 	background-image: url("../images/scholarbase-sprite.png");
   background-position: -42px -85px;
-top: 38%;
+top: 30%;
 display: block;
-left: 40%;
+left:38%;
 height: 42px;
 width: 48px;
 position: absolute;
