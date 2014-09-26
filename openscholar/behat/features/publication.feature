@@ -66,3 +66,14 @@ Feature:
      When I click "Delete this biblio"
       And I click "Cancel"
      Then I should see "Delete this biblio"
+
+  @api @last
+  Scenario: Test that Conference Papers using the Chicago-Author-Date style
+            print 'In' correctly
+    Given I am logging in as "john"
+     When I go to the "os_publications" app settings in the vsite "john"
+      And I choose the radio button named "biblio_citeproc_style" with value "chicago-author-date.csl" for vsite "john"
+      And I press "Save Configuration"
+      And I visit "john/publications"
+     Then I should not see "In:"
+     Then I should see "in, "
