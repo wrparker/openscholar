@@ -2031,6 +2031,7 @@ class FeatureContext extends DrupalContext {
   public function iWhitelistTheDomain($domain) {
     $domains = $this->invoke_code('variable_get', array("'media_embed_whitelist'", "array()"));
     $domains[] = $domain;
+    $domains = array_values($domains);
     $domains = $this->set_variable('media_embed_whitelist', $domains);
   }
 }
