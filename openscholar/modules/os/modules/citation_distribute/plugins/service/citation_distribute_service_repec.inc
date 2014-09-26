@@ -115,10 +115,24 @@ class citation_distribute_service_repec extends citation_distribute_service {
 	  		switch ($biblio) {
   				//manipulate a string value before including it:
 					case '{biblio_date}':
-						$date = ($node->biblio_date) ? $node->biblio_date :  $node->biblio_year;
-						//strtotime interprets '1957' as an hour not a year.  prepend 4 digit dates with a month and day.  bib_date is sometimes YYYY too, so we're doing this everywhere.
-						$date = preg_replace( '/^(\d\d\d\d)$/', '01-01-$1', $date);
-						$out[$repec] = date('Y-m', strtotime($date)); //yyyy-mm
+					  if ($node->biblio_date) {
+					    $date = $node->biblio_date;
+					  } elseif ($node->biblio_year < 2200 && $node->biblio_year > 1900) {
+					    $date = $node->biblio_year;
+					  }
+
+					  if ($date) {
+						  //strtotime interprets '1957' as an hour not a year.  prepend 4 digit dates with a month and day.  bib_date is sometimes YYYY too, so we're doing this everywhere.
+						  $date = preg_replace( '/^(\d\d\d\d)$/', '01-01-$1', $date);
+						  $time = strtotime($date);
+					  }
+
+					  if (!isset($time) || !$time) {
+					    // Created is used in the case when it is a working paper, or non year.
+					    $time = $biblio->created;
+					  }
+
+						$out[$repec] = date('Y-m', $time); //yyyy-mm
 					break;
 	  		}
 	  	}
