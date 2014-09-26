@@ -33,7 +33,7 @@ function os_slideshow_field_default_field_bases() {
     'locked' => 0,
     'module' => 'text',
     'settings' => array(
-      'max_length' => 128,
+      'max_length' => 250,
     ),
     'translatable' => 0,
     'type' => 'text',
@@ -62,7 +62,7 @@ function os_slideshow_field_default_field_bases() {
     'locked' => 0,
     'module' => 'text',
     'settings' => array(
-      'max_length' => 128,
+      'max_length' => 250,
     ),
     'translatable' => 0,
     'type' => 'text',
