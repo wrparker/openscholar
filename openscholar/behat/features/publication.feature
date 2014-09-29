@@ -73,7 +73,7 @@ Feature:
     Given I am logging in as "john"
      When I go to the "os_publications" app settings in the vsite "john"
       And I choose the radio button named "biblio_citeproc_style" with value "chicago-author-date.csl" for the vsite "john"
-      And I press "Save Configuration"
+      And I press "Save configuration"
       And I visit "john/publications"
      Then I should not see "In:"
      Then I should see "in, "
