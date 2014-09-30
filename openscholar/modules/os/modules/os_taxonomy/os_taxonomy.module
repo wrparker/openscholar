@@ -1006,7 +1006,7 @@ function theme_os_taxonomy_tagged_nodes($variables) {
   // Show description only if set and if this is first page.
   $show_descriptioon = FALSE;
   if ($variables['taxonomy_term']) {
-    if (!$page && $variables['taxonomy_term']->show_description[LANGUAGE_NONE][0]['value']) {
+    if (!$page && array_key_exists(LANGUAGE_NONE, $variables['taxonomy_term']->show_description) && $variables['taxonomy_term']->show_description[LANGUAGE_NONE][0]['value']) {
       $show_descriptioon = TRUE;
     }
   }
