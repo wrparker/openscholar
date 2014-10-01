@@ -75,5 +75,5 @@ Feature:
       And I select the radio button named "biblio_citeproc_style" with value "chicago-author-date.csl"
       And I press "Save configuration"
       And I visit "john/publications/confpapers-tests"
-     Then I should not see "ConfPapers Test. In:"
-     Then I should see "ConfPapers Test, in"
+     Then I should not see "ConfPapers tests. In:"
+     Then I should see "ConfPapers tests, in"
