@@ -6,7 +6,7 @@ Feature:
     Given I am logging in as "john"
       And I visit "john/media/browser"
       And for "edit-embed-code" I enter "<iframe width='560' height='315' src='//www.youtube.com/embed/wl8RXCRr070' frameborder='0' allowfullscreen></iframe>"
-      And I click "Submit"
+      And I press "Submit"
      Then I should see "is from an untrusted domain."
 
   @api @last
@@ -15,5 +15,5 @@ Feature:
       And I whitelist the domain "youtube.com"
       And I visit "john/media/browser"
       And for "edit-embed-code" I enter "<iframe width='560' height='315' src='//www.youtube.com/embed/wl8RXCRr070' frameborder='0' allowfullscreen></iframe>"
-      And I click "Submit"
+      And I press "Submit"
      Then I should not see "is from an untrusted domain."
