@@ -72,7 +72,7 @@ Feature:
             print 'In' correctly
     Given I am logging in as "john"
      When I go to the "os_publications" app settings in the vsite "john"
-      And I choose the radio button named "biblio_citeproc_style" with value "chicago-author-date.csl"
+      And I select the radio button named "biblio_citeproc_style" with value "chicago-author-date.csl"
       And I press "Save configuration"
       And I visit "john/publications/confpapers-tests"
      Then I should not see "ConfPapers Test. In:"
