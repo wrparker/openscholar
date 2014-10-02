@@ -262,6 +262,9 @@ function cp_menu_url_validate(&$form, &$state) {
     return;
   }
 
+  // Remove preceding slashes from url
+  $state['values']['url'] = ltrim($state['values']['url'], '/');
+
   // Remove the query string and fragments.
   list($url, ) = explode('?', $state['values']['url'],2);
 
