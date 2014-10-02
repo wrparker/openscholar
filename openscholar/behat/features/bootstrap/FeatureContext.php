@@ -1287,7 +1287,7 @@ class FeatureContext extends DrupalContext {
       new Step\When('I press "Save permissions"'),
     );
   }
-  
+
   /**
    * @Then /^I should verify that the user "([^"]*)" has a role of "([^"]*)" in the group "([^"]*)"$/
    */
@@ -2029,9 +2029,6 @@ class FeatureContext extends DrupalContext {
    * @given /^I whitelist the domain "([^"]*)"$/
    */
   public function iWhitelistTheDomain($domain) {
-    $domains = $this->invoke_code('variable_get', array("'media_embed_whitelist'", "array()"));
-    $domains[] = $domain;
-    $domains = array_values($domains);
-    $domains = $this->set_variable('media_embed_whitelist', $domains);
+    $domains = $this->invoke_code('os_migrate_demo_add_to_whitelist', array("'{$domain}'"));
   }
 }

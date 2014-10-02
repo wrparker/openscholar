@@ -615,7 +615,7 @@ function os_migrate_demo_get_user_by_name($name, $return = FALSE) {
 
 /**
  * Get a role id.
- * 
+ *
  * @param $name
  * @param $gid
  */
@@ -967,6 +967,13 @@ function os_migrate_demo_vsite_set_variable($vsite, $name, $value) {
 
 function os_migrate_demo_set_read_only($value) {
   variable_set('os_readonly_mode', $value);
+}
+
+function os_migrate_demo_add_to_whitelist($domain) {
+  $domains = variable_get('media_embed_whitelist', array());
+  $domains[] = $domain;
+
+  variable_set('media_embed_whitelist', array_values($domains));
 }
 
 /**
