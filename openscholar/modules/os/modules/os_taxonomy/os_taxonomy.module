@@ -501,7 +501,7 @@ function theme_os_taxonomy_vocabulary_item_list($variables) {
     $options['offset'] = intval($options['offset']);
     $options['range'] = intval($options['range']);
 
-    $data = array_slice($data, $options['offset'], $options['offset'] + $options['range'], TRUE);
+    $data = array_slice($data, $options['offset'], $options['range'], TRUE);
   }
 
   if (!$data) {
