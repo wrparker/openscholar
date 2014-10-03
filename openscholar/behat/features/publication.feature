@@ -77,3 +77,18 @@ Feature:
       And I visit "john/publications/confpapers-tests"
      Then I should not see "ConfPapers tests. In:"
      Then I should see "ConfPapers tests, in"
+     
+ 
+  @api @first
+  Scenario: Verify publications are ordered by year then publication date in main view.
+    Given I am logging in as "john"
+     When I visit "john/publications"
+      And I should see the publication "John F. Kennedy: A Biography" comes before "Goblet of Fire"
+      And I should see the publication "Goblet of Fire" comes before "Prisoner of Azkaban"
+      
+    @api @first
+  Scenario: Verify publications are ordered by year then publication date in the LOP.
+    Given I am logging in as "john"
+     When I visit "john/publications"
+      And I should see the publication "John F. Kennedy: A Biography" comes before "Goblet of Fire" in the LOP widget
+      And I should see the publication "Goblet of Fire" comes before "Prisoner of Azkaban" in the LOP widget
