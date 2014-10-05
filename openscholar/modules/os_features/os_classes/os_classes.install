@@ -11,32 +11,13 @@ function os_classes_update_7000() {
  * Adding the fields.
  */
 function os_classes_update_7001() {
-  features_revert(array('os_classes' => array('field_base', 'field_instance')));
+  features_revert(array('os_classes' => array('field_base', 'field_instance', 'views_view')));
 }
 
 /**
  * Updating the node courses weight field.
  */
 function os_classes_update_7002(&$sandbox) {
-  os_set_update_batch($sandbox, array(
-    'query' => 'os_classes_count_classes_base_query',
-    'iterator' => 'os_classes_update_update_class_weight',
-    'batch' => 250,
-    'entity' => 'node',
-  ));
-}
-
-/**
- * Updating os classes views.
- */
-function os_classes_update_7003() {
-  features_revert(array('os_classes' => array('views_view')));
-}
-
-/**
- * Updating the node courses weight field.
- */
-function os_classes_update_7004(&$sandbox) {
   os_set_update_batch($sandbox, array(
     'query' => 'os_classes_count_classes_base_query',
     'iterator' => 'os_classes_update_update_class_weight',
