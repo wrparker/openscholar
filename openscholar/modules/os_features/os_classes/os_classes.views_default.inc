@@ -50,15 +50,15 @@ function os_classes_views_default_views() {
   $handler->display->display_options['sorts']['sticky']['table'] = 'node';
   $handler->display->display_options['sorts']['sticky']['field'] = 'sticky';
   $handler->display->display_options['sorts']['sticky']['order'] = 'DESC';
+  /* Sort criterion: Content: weight (field_weight) */
+  $handler->display->display_options['sorts']['field_weight_value']['id'] = 'field_weight_value';
+  $handler->display->display_options['sorts']['field_weight_value']['table'] = 'field_data_field_weight';
+  $handler->display->display_options['sorts']['field_weight_value']['field'] = 'field_weight_value';
   /* Sort criterion: Content: Offered (field_offered_year) */
   $handler->display->display_options['sorts']['field_offered_year_value']['id'] = 'field_offered_year_value';
   $handler->display->display_options['sorts']['field_offered_year_value']['table'] = 'field_data_field_offered_year';
   $handler->display->display_options['sorts']['field_offered_year_value']['field'] = 'field_offered_year_value';
   $handler->display->display_options['sorts']['field_offered_year_value']['order'] = 'DESC';
-  /* Sort criterion: Content: Semester (field_semester) */
-  $handler->display->display_options['sorts']['field_semester_value']['id'] = 'field_semester_value';
-  $handler->display->display_options['sorts']['field_semester_value']['table'] = 'field_data_field_semester';
-  $handler->display->display_options['sorts']['field_semester_value']['field'] = 'field_semester_value';
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
