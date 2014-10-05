@@ -229,6 +229,11 @@ function vsite_register_form($form, &$state) {
     );
   }
 
+  $form['agree_terms'] = array(
+    '#type' => 'item',
+    '#markup' => t('By clicking the button below, you are agreeing to our <a href="@url">Terms of Use</a>.', array('@url'  => 'http://hwp.harvard.edu/terms-use'))
+  );
+
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Create your site'),
