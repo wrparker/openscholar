@@ -252,63 +252,66 @@ class citation_distribute_service_repec extends citation_distribute_service {
 		}
 	}
 
-	/**
-	 *  validate
-	 *
-	 *	repec only takes working papers from us, so don't send any
-	 *	repec requires authors
-	 *
-	 *  validate has two modes.  it can check nodeapi's a3 form argument.  or it can check a nid.
-	 *
-	 *  @return boolean
-	 *  	success bool.  only relevant for nid mode
-	 **/
-	public function validate($a3) {
-	  $return = TRUE;
+  /**
+   *  Validate.
+   *
+   *	repec only takes working papers from us, so don't send any
+   *	repec requires authors
+   *
+   * validate has two modes. it can check nodeapi's a3 form argument. or it
+   * can check a nid.
+   *
+   * @return boolean
+   *   success bool.  only relevant for nid mode
+   **/
+  public function validate($a3) {
+    $return = TRUE;
 
-	  //get the vars we're checking by any means
-	  if (is_array($a3)) {
-	    $tid = $a3['values']['biblio_type'];
-	    $contributors = $a3['values']['biblio_contributors'];
-	  } elseif (is_int($a3)) {
-	    //not really $a3 anymore, just a nid
-	    if ($node = node_load($a3)) {
-	      $tid = $node-> biblio_type;
-	      $contributors = $node->biblio_contributors;
-	    } else {
-	      return FALSE;
-	    }
-	  }
+    // Get the vars we're checking by any means.
+    if (is_array($a3)) {
+      $tid = $a3['values']['biblio_type'];
+      $contributors = $a3['values']['biblio_contributors'];
+    }
+    elseif (is_int($a3)) {
+      // Not really $a3 anymore, just a nid.
+      if ($node = node_load($a3)) {
+        $tid = $node-> biblio_type;
+        $contributors = $node->biblio_contributors;
+      }
+      else {
+        return FALSE;
+      }
+    }
 
-	  /* ensure we're submitting a working paper */
-		//$type = db_result(db_query('SELECT name FROM {biblio_types} WHERE tid = %d ', $tid));
-		$type = db_select('biblio_types', 'bt')->condition('tid', $tid)->fields('bt', array('name'))->execute()->fetchColumn();
-		if ($this->_map_biblio_type($type) != 'wpaper') {
-		  $wpaper = array('Conference Paper', 'Conference Proceedings','Thesis','Report','Hearing','Case','Bill','Statute', 'Patent','Personal','Map','Chart','Unpublished','Database','Government Report','Classical','Legal Ruling','Miscellaneous','Miscellaneous Section','Working Paper',);
+    // Ensure we're submitting a working paper.
+    // $type = db_result(db_query('SELECT name FROM {biblio_types} WHERE tid = %d ', $tid));
+    $type = db_select('biblio_types', 'bt')->condition('tid', $tid)->fields('bt', array('name'))->execute()->fetchColumn();
+    if ($this->_map_biblio_type($type) != 'wpaper') {
+      $wpaper = array('Conference Paper', 'Conference Proceedings','Thesis','Report','Hearing','Case','Bill','Statute', 'Patent','Personal','Map','Chart','Unpublished','Database','Government Report','Classical','Legal Ruling','Miscellaneous','Miscellaneous Section','Working Paper',);
       form_set_error('biblio_type', t("The @type Publication type is not supported by @title. We've unselected it for you in the red highlighted area below on the right. Supported types are: @types", array('@title' => $this->title, '@types' => implode(', ', $wpaper), '@type' => $type)));
       drupal_add_js('jQuery("#edit-citation-distribute").removeClass("collapsed")', array('type' => 'inline'));
       drupal_add_js('jQuery("#edit-repec").attr("checked", false);', array('type' => 'inline'));
       drupal_add_js('jQuery("div.form-item-repec").addClass("form-select error");', array('type' => 'inline'));
-			$return = false;
-		}
+      $return = false;
+    }
 
-		/* repec needs at least one author */
-		$has_author = false;
-		foreach ($contributors as $author) {
-			if ( isset($author['name']) && strlen($author['name'])>0 ) {
-				$has_author = true;
-				break;
-			}
-		}
-		if (!$has_author) {
-			form_set_error('biblio_contributors', 'At least one author is required for ' . $this->title . ' distribution');
-			$return = false;
-		}
+    // Repec needs at least one author.
+    $has_author = false;
+    foreach ($contributors as $author) {
+      if ( isset($author['name']) && strlen($author['name'])>0 ) {
+        $has_author = true;
+        break;
+      }
+    }
+    if (!$has_author) {
+      form_set_error('biblio_contributors', 'At least one author is required for ' . $this->title . ' distribution');
+      $return = false;
+    }
 
-		return $return;
-	}
+    return $return;
+  }
 
-	/* remove() when a node is unflagged, delete its rdf file */
+	// remove() when a node is unflagged, delete its rdf file.
 	public function remove($nid) {
 		$file = $this->_citation_distribute_service_repec_path() . $this->_nid_to_type($nid) . '/' . $this->_file_name($nid);
 		return unlink($file);
