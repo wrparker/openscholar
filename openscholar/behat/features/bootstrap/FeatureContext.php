@@ -288,6 +288,18 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I verify the class "([^"]*)" is before "([^"]*)"$/
+   */
+  public function iVerifyTheClassIsBefore($first, $second) {
+    $page = $this->getSession()->getPage()->getContent();
+
+    $pattern = '/<div id="content">[\s\S]*' . $first . '[\s\S]*' . $second . '[\s\S]*<\/div>/';
+    if (!preg_match($pattern, $page)) {
+      throw new Exception("The publication '$first' does not come before the publication '$second'.");
+    }
+  }
+
+  /**
    * Find any element that contain the text and has the css class or id
    * selector.
    */

@@ -11,3 +11,8 @@ Feature:
       And I click "John F. Kennedy"
      When I should see the link "Wikipedia page on JFK"
      Then I should see the link "Who was JFK?"
+
+  @api @first @now
+  Scenario: Test the order of the classes order
+    Given I visit "john"
+      And I verify the class "JFK 202" is before "JFK 101"

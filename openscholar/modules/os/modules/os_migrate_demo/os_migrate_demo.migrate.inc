@@ -420,7 +420,7 @@ class OsMigrateClassesNode extends OsMigrate {
     array('body', 'Body'),
     array('link', 'Link'),
     array('semester', 'Semester'),
-    array('year', 'Year'),
+    array('field_offered_year', 'Year'),
     array(OG_AUDIENCE_FIELD, 'Site'),
     array(OG_VOCAB_FIELD, 'Terms'),
     array('path', 'Path'),
@@ -439,7 +439,7 @@ class OsMigrateClassesNode extends OsMigrate {
 
     $this->addFieldMapping('body', 'body');
     $this->addFieldMapping('field_semester', 'semester');
-    $this->addFieldMapping('field_offered_year', 'year');
+    $this->addFieldMapping('field_offered_year', 'field_offered_year');
 
     $this->addFieldMapping(OG_AUDIENCE_FIELD, OG_AUDIENCE_FIELD)
       ->sourceMigration(array('OsMigrateProjectNode', 'OsMigratePersonalNode'));
@@ -462,6 +462,13 @@ class OsMigrateClassesNode extends OsMigrate {
 
     $entity->field_class_link[LANGUAGE_NONE][0]['url'] = $link[0];
     $entity->field_class_link[LANGUAGE_NONE][0]['title'] = $link[1];
+
+    $entity->field_offered_year[LANGUAGE_NONE][0] = array(
+      'value' => $row->field_offered_year . '-01-01 00:00:00',
+      'timezone' => date_default_timezone(),
+      'timezone_db' => date_default_timezone(),
+      'date_type' => 'datetime',
+    );
 
     if (!empty($row->path)) {
       // Disable path-auto.
