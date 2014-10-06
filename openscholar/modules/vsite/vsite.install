@@ -676,3 +676,41 @@ function vsite_update_7025() {
     }
   }
 }
+
+/**
+ * Fix url aliases for vsite taxonomy terms that should include vsite
+ */
+function vsite_update_7026() {
+  // get all taxonomy term aliases
+  $aliases = db_select('url_alias', 'ua')
+              ->fields('ua')
+              ->condition('source', 'taxonomy/term/%', 'LIKE')
+              ->execute();
+
+  $counter = 0;
+  foreach ($aliases as $a) {
+    $alias_parts = explode("/", $a->alias);
+    $path_parts = explode("/", $a->source);
+    $query = "SELECT value FROM og_vocab_relation LEFT JOIN taxonomy_term_data ON taxonomy_term_data.vid = og_vocab_relation.vid LEFT JOIN purl ON og_vocab_relation.gid = purl.id AND purl.provider = 'spaces_og' WHERE og_vocab_relation.group_type = 'node' AND tid = " . $path_parts[2];
+    //Get the vsites related to a term.
+    $vsites = db_query($query);
+    // If this term is in multiple sites or none, then don't do anything.
+    if(!count($vsites) || count($vsites) > 1) continue;
+
+    foreach ($vsites as $v) {
+      // if alias is associated with a particular vsite but the alias does not start with that vsite, fix
+      if(isset($v->value) && $alias_parts[0] != $v->value) {
+        $num_updated = db_update('url_alias')
+                        ->fields(array('alias' => $v->value . "/" . $a->alias))
+                        ->condition('pid', $a->pid)
+                        ->execute();
+        $counter++;
+      }
+    }
+  }
+
+  return $counter . " " . t('aliases fixed.');
+}
+
+
+
