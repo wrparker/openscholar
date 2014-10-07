@@ -13,10 +13,18 @@ Feature:
      Then I should see the link "Who was JFK?"
 
   @api @first
-  Scenario: Test the order of the classes order
-    Given I visit "john"
-     When I visit "john/classes"
+  Scenario: Test the order of the classes.
+    Given I visit "john/classes"
      Then I verify the class "JFK 202" is before "JFK 101"
       And I verify the class "JFK 101" is before "JFK 303"
       And I verify the class "JFK 303" is before "JFK 404"
       And I verify the class "JFK 404" is before "JFK 505"
+
+  @api @first @now
+  Scenario: Check the date order is changing.
+    Given I am logging in as "john"
+     When I edit the entity "node" with title "JFK 202"
+      And I select the radio button "N/A" with the id "edit-field-semester-und-none"
+      And I press "Save"
+      And I visit "john/classes"
+     Then I verify the class "JFK 101" is before "JFK 202"
