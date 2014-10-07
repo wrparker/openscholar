@@ -129,7 +129,7 @@ class citation_distribute_service_repec extends citation_distribute_service {
 
             if (!isset($time) || !$time) {
               // Created is used in the case when it is a working paper, or non year.
-              $time = $biblio->created;
+              $time = $node->created;
             }
 
             $out[$repec] = date('Y-m', $time); //yyyy-mm
