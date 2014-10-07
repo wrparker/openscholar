@@ -15,4 +15,8 @@ Feature:
   @api @first @now
   Scenario: Test the order of the classes order
     Given I visit "john"
-      And I verify the class "JFK 202" is before "JFK 101"
+     When I visit "john/classes"
+     Then I verify the class "JFK 202" is before "JFK 101"
+      And I verify the class "JFK 101" is before "JFK 303"
+      And I verify the class "JFK 303" is before "JFK 404"
+      And I verify the class "JFK 404" is before "JFK 505"
