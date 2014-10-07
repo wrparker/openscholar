@@ -12,7 +12,7 @@ Feature:
      When I should see the link "Wikipedia page on JFK"
      Then I should see the link "Who was JFK?"
 
-  @api @first @now
+  @api @first
   Scenario: Test the order of the classes order
     Given I visit "john"
      When I visit "john/classes"
