@@ -14,7 +14,7 @@
  * @param unknown_type $js
  * @param unknown_type $step
  */
-function cp_menu_page($js = NULL, $step = NULL, $menu = NULL) {
+function cp_menu_page($step = NULL, $menu = NULL) {
   // can we collect the original menu?
   // should that be part of the menu link so the result can be added back in?
 
@@ -25,7 +25,6 @@ function cp_menu_page($js = NULL, $step = NULL, $menu = NULL) {
     cp_menu_cache_clear($object_id);
   }
   $object = cp_menu_cache_get($object_id);
-  $object['js'] = ($js != 'nojs');
 
   // Checks whether step is a menu?  if so, stash it and clear it.
   ctools_include('menu', 'os');
@@ -36,7 +35,6 @@ function cp_menu_page($js = NULL, $step = NULL, $menu = NULL) {
 
   // Initializes a form_state
   $form_state = array(
-    'ajax' => $js,
     'object_id' => $object_id,
     'object' => & $object,
   );
@@ -44,7 +42,7 @@ function cp_menu_page($js = NULL, $step = NULL, $menu = NULL) {
   // Prepares multistep form info
   $form_info = array(
     'id' => 'cp_menu_form',
-    'path' => 'cp/menu/' . ($js ? 'ajax' : 'nojs') . '/%step',
+    'path' => 'cp/build/menu/link/%step',
     'show trail' => FALSE,
     'show back' => TRUE,
     'show cancel' => TRUE,
@@ -98,22 +96,9 @@ function cp_menu_page($js = NULL, $step = NULL, $menu = NULL) {
   ctools_include('wizard');
   $form = ctools_wizard_multistep_form($form_info, $step, $form_state);
   $output = drupal_render($form);
-  if ($js) {
-    if ($errors = form_get_errors()) {
-      $error_msg = theme('html_tag', array('element' => array(
-        '#tag' => 'div',
-        '#attributes' => array('class'=> array('messages error')),
-        '#value' => implode('<br>', $errors),
-      )));
-      $output = $error_msg . '<br>' . $output;
-    }
-    ctools_include('ajax');
-    ctools_include('modal');
-    ctools_modal_render(t('Add menu item'), $output);
-  }
-  else {
-    return $output;
-  }
+  overlay_set_regions_to_render();
+
+  return $output;
 }
 
 /**
@@ -276,6 +261,9 @@ function cp_menu_url_validate(&$form, &$state) {
   if ($state['values']['url'] == '<front>') {
     return;
   }
+
+  // Remove preceding slashes from url
+  $state['values']['url'] = ltrim($state['values']['url'], '/');
 
   // Remove the query string and fragments.
   list($url, ) = explode('?', $state['values']['url'],2);
@@ -557,7 +545,7 @@ function cp_menu_wizard_finish(&$form_state) {
   // Provides node add form
   if (($values['type'] == 'page' && $values['new_or_select'] == 'new') || ($values['type'] == 'url' && isset($values['new_node_url']))) {
     cp_menu_cache_set($form_state['object_id'], $values);
-    if ($form_state['ajax'] || $values['js']) {
+    if (!empty($form_state['ajax']) || !empty($values['js'])) {
       ctools_include('modal');
       ctools_include('ajax');
       $commands = array();
@@ -641,7 +629,7 @@ function cp_menu_wizard_finish(&$form_state) {
   cp_menu_cache_clear($form_state['object_id']);
 
   //ctools_ajax_command_reload();
-  if ($form_state['ajax'] || $values['js']) {
+  if (!empty($form_state['ajax']) || !empty($values['js'])) {
     ctools_include('modal');
     ctools_include('ajax');
 
