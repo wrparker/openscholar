@@ -320,7 +320,7 @@ function cp_content_assign_taxonomy_action_submit($form, $form_state) {
  * @param $context
  *  Contains information passed with the action's form submit handler.
  */
-function cp_content_assign_taxonomy_action(&$nodes, $context) {
+function cp_content_assign_taxonomy_action(&$node, $context) {
   $vocabulary = $context['vocab'];
   $terms = $context['terms'];
 
@@ -336,20 +336,18 @@ function cp_content_assign_taxonomy_action(&$nodes, $context) {
 
   $skipped_titles = array();
   $applied_titles = array();
-  foreach ($nodes as $node) {
-    $wrapper = entity_metadata_wrapper('node', $node);
-    // Check if the bundle of the node is associated with selected vocabulary.
-    if (!in_array($node->type, $bundle_names)) {
-      $skipped_titles[] = $wrapper->label();
-      continue;
-    }
-
+  $wrapper = entity_metadata_wrapper('node', $node);
+  // Check if the bundle of the node is associated with selected vocabulary.
+  if (!in_array($node->type, $bundle_names)) {
     // Assign the term(s) to the current node.
     $node_terms = $wrapper->{OG_VOCAB_FIELD}->value(array('identifier' => TRUE));
     $node_terms = array_merge($node_terms ,$selected_terms);
     $wrapper->{OG_VOCAB_FIELD}->set($node_terms);
     $wrapper->save();
     $applied_titles[] = $wrapper->label();
+  }
+  else {
+    $skipped_titles[] = $wrapper->label();
   }
 
   $terms = taxonomy_term_load_multiple($selected_terms);
@@ -380,8 +378,6 @@ function cp_content_assign_taxonomy_action(&$nodes, $context) {
     $message = format_plural(count($selected_terms), 'Taxonomy term %terms could not be applied on the content: !nodes', '@count taxonomy terms %terms could not be applied on the content: !nodes', $params);
     drupal_set_message($message, 'warning');
   }
-
-  drupal_goto('cp/content');
 }
 
 /**
