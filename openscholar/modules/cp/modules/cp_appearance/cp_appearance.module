@@ -558,7 +558,7 @@ function theme_cp_appearance_add_subtheme_list($variables) {
   $types = $variables['types'];
 
   if ($types) {
-    $output = '<h4>Download the <a target="_blank" href="https://github.com/openscholar/starterkit">Subtheme Starter Kit</a> to begin developing your custom theme.</h4>';
+    $output = '<h4>Download the <a target="_blank" href="https://github.com/openscholar/starterkit">Subtheme Starter Kit</a> to begin developing your custom theme.</h4> Use of the custom theme feature is at your own risk. The OpenScholar team is not responsible for maintaining, fixing or updating custom themes uploaded to the system. We\'ll make every attempt possible to publish changes made to the markup used throughout OpenScholar from one code release to the next.';
     $output .= '<ul class="admin-list">';
     foreach ($types as $type => $info) {
       $output .= '<li class="clearfix">';

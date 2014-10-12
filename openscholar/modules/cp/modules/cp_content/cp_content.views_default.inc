@@ -580,6 +580,7 @@ function cp_content_views_default_views() {
     'event' => 'event',
     'faq' => 'faq',
     'feed' => 'feed',
+    'harvard_course' => 'harvard_course',
     'link' => 'link',
     'media_gallery' => 'media_gallery',
     'news' => 'news',
