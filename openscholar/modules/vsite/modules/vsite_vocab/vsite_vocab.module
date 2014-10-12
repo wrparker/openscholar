@@ -537,3 +537,53 @@ function vsite_vocab_field_formatter_view($entity_type, $entity, $field, $instan
 
   return $element;
 }
+
+/**
+ * Return an EntityFieldQuery for the os batch update set; Return a query for
+ * load/count the taxonomy vocabulary.
+ *
+ * @see os_set_update_batch().
+ */
+function _vsite_vocab_update_query($id = NULL) {
+  $query = new EntityFieldQuery();
+
+  $query
+    ->entityCondition('entity_type', 'taxonomy_vocabulary')
+    ->propertyCondition('type', 'harvard_course');
+
+  if ($id) {
+    $query->propertyCondition('vid', $id, '>=');
+  }
+
+  return $query;
+}
+
+/**
+ * Iterator callback for the os update batch; Fixing the vocabulary name by
+ * removing non-allowed values like dots and spaces.
+ *
+ * @see os_set_update_btach.
+ */
+function _vsite_vocab_name_fix_iterator($vocabulary) {
+  $name = $vocabulary->machine_name;
+
+  if (!preg_match('@[^a-z0-9_]+@', $name)) {
+    // The vocabulary name is OK. Return.
+    return;
+  }
+
+  // Fix the name.
+  $name = str_replace(array(' ', '.'), '', strtolower($name));
+
+  if (taxonomy_vocabulary_machine_name_load($name)) {
+    // Create unique name.
+    $i = 1;
+    while (taxonomy_vocabulary_machine_name_load($name)) {
+      $name = substr($name, 0, 32 - strlen($i)) . $i;
+      ++$i;
+    }
+  }
+
+  $vocabulary->machine_name = $name;
+  taxonomy_vocabulary_save($vocabulary);
+}
