@@ -570,6 +570,11 @@ function _vsite_vocab_name_fix_iterator($vocabulary) {
     return;
   }
 
+  // Delete the old path.
+  path_delete(array(
+    'source' => 'vocab/' . $name,
+  ));
+
   // Fix the name.
   $name = str_replace(array(' ', '.'), '', strtolower($name));
 
