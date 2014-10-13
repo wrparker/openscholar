@@ -57,7 +57,7 @@ function _vsite_vocab_files_add_vocab_field() {
 /**
  * Remove non-allowed characters from the vocabulary machine name.
  */
-function viste_vocab_update_7002(&$sandbox) {
+function vsite_vocab_update_7002(&$sandbox) {
   os_set_update_batch($sandbox, array(
     'query' => '_vsite_vocab_update_query',
     'iterator' => '_vsite_vocab_name_fix_iterator',

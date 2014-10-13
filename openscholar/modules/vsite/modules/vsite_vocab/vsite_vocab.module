@@ -547,9 +547,7 @@ function vsite_vocab_field_formatter_view($entity_type, $entity, $field, $instan
 function _vsite_vocab_update_query($id = NULL) {
   $query = new EntityFieldQuery();
 
-  $query
-    ->entityCondition('entity_type', 'taxonomy_vocabulary')
-    ->propertyCondition('type', 'harvard_course');
+  $query->entityCondition('entity_type', 'taxonomy_vocabulary');
 
   if ($id) {
     $query->propertyCondition('vid', $id, '>=');
