@@ -101,9 +101,10 @@ function os_help_get_variables_from_id($type, $id) {
 
   if (isset($links[$id]) && !empty($links[$id]['url']) && !empty($links[$id]['title'])) {
     $variables = array(
-      'path' => $links[$id]['url'] . '#main-content',
+      'path' => $links[$id]['url'],
       'text' => '<span>' . t('Help') . '</span>',
       'options' => array(
+        'fragment' => 'main-content',
         'attributes' => array(
           'class' => array(
             'os-help-link',
