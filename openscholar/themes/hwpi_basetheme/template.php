@@ -348,22 +348,8 @@ function hwpi_basetheme_node_view_alter(&$build) {
         }
       }
 
-      $terms = taxonomy_term_load_multiple($terms);
-      $ordered_terms = array();
+      $terms = vsite_vocab_sort_weight_alpha(taxonomy_term_load_multiple($tids));
 
-      foreach ($terms as $term) {
-        $vocabulary = taxonomy_vocabulary_load($term->vid);
-        $uri = entity_uri('taxonomy_term', $term);
-        $ordered_terms[] = array(
-          'tid' => $term->tid,
-          'term' => $term->name,
-          't_weight' => $term->weight,
-          'v_weight' => $vocabulary->weight,
-          'vid' => $vocabulary->vid,
-          'uri' => $uri['path']
-        );
-      }
-      og_vocab_sort_weight_alpha($ordered_terms);
       foreach ($ordered_terms as $info) {
         $v = taxonomy_vocabulary_load($info['vid']);
         if (!isset($build[$v->machine_name])) {
@@ -622,25 +608,3 @@ function hwpi_basetheme_process_pager_link($variables) {
   module_load_include('inc', 'os', 'includes/pager');
   _os_pager_add_html_head_link($variables);
 }
-
-/**
- * Helper function to sort og_vocab terms associated with a node by (in order):
- *  - vocabulary wieght
- *  - vocabulary id
- *  - term weight
- *  - term name
- */
-function og_vocab_sort_weight_alpha(&$terms) {
-  foreach ($terms as $term) {
-    $v_weight[$term['tid']] = $term['v_weight'];
-    $vid[$term['tid']] = $term['vid'];
-    $t_weight[$term['tid']] = $term['t_weight'];
-    $t_name[$term['tid']] = $term['term'];
-  }
-  array_multisort($v_weight, SORT_ASC, SORT_NUMERIC, 
-                  $vid, SORT_ASC, SORT_NUMERIC, 
-                  $t_weight, SORT_ASC, SORT_NUMERIC, 
-                  $t_name, SORT_ASC, SORT_STRING,
-                  $terms);
-}
-
