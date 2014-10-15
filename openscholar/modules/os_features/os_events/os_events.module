@@ -279,9 +279,9 @@ function os_events_process_node(&$variables) {
     $delta = intval($delta);
     $date = field_get_items('node', $variables['node'], $field);
     $date = $date[$delta]['value'];
-    $variables['link_title_text'] = t('On @date', array('@date' => gmdate('D M j', strtotime($date))));
+    $variables['link_title_text'] = t('On @date', array('@date' => date('D M j', strtotime($date.' UTC'))));
     if (isset($variables['content']['links']['node']['#links']['node-readmore'])) {
-      $variables['content']['links']['node']['#links']['node-readmore']['attributes']['title'] .= ' on '.gmdate('D M j', strtotime($date));
+      $variables['content']['links']['node']['#links']['node-readmore']['attributes']['title'] .= ' on '.date('D M j', strtotime($date.' UTC'));
     }
   }
 
