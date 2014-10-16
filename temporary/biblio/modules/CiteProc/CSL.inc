@@ -1042,7 +1042,7 @@ class csl_number extends csl_format {
 
   // Some people will enter the ordinal suffix of their edition which then doubles the suffix, strip out the non-numerials.
   function strip_letters($num) {
-  	return $num = preg_match('/\d/', $num) > 0 ? preg_replace("/[^0-9]/","",$num) : $num;
+    return $num = preg_match('/\d/', $num) > 0 ? preg_replace("/[^0-9]/","",$num) : $num;
   }
 
   function ordinal($num) {
@@ -1137,10 +1137,8 @@ class csl_text extends csl_format {
         $macro = $this->var;
         $text = $this->citeproc->render_macro($macro, $data, $mode); //trigger the macro process
         // If the user left the "author" field blank, don't print 'Anon.' or anything.
-        if($macro == 'author' || $macro == 'anon') {
-          if($text == 'Anon.') {
-          	$text = '';
-          }
+        if($macro == 'author' || $macro == 'anon' || $text == 'Anon.') {
+          $text = '';
         }
         // We don't want to display any urls in the citation.
         if($macro == 'access') {
