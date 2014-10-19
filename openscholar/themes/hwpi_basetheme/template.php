@@ -348,22 +348,10 @@ function hwpi_basetheme_node_view_alter(&$build) {
         }
       }
 
-      $terms = taxonomy_term_load_multiple($terms);
-      $ordered_terms = array();
+      $terms = vsite_vocab_sort_weight_alpha(taxonomy_term_load_multiple($tids));
 
-      foreach ($terms as $term) {
-        $vocabulary = taxonomy_vocabulary_load($term->vid);
-        $ordered_terms[] = array(
-          'term' => $term,
-          'weight' => $vocabulary->weight,
-          'vid' => $vocabulary->vid,
-        );
-      }
-      uasort($ordered_terms, 'og_vocab_sort_weight');
       foreach ($ordered_terms as $info) {
-        $t = $info['term'];
-        $v = taxonomy_vocabulary_load($t->vid);
-
+        $v = taxonomy_vocabulary_load($info['vid']);
         if (!isset($build[$v->machine_name])) {
           $m = $v->machine_name;
           $build[$m] = array(
@@ -387,18 +375,15 @@ function hwpi_basetheme_node_view_alter(&$build) {
             ),
           );
         }
-
-        $term_uri = entity_uri('taxonomy_term', $t);
-        $build[$v->machine_name]['inner'][$t->tid] = array(
+        $build[$v->machine_name]['inner'][$info['tid']] = array(
           '#prefix' => '<div>',
           '#suffix' => '</div>',
           '#theme' => 'link',
-          '#path' => $term_uri['path'],
-          '#text' => $t->name,
+          '#path' => $info['uri'],
+          '#text' => $info['term'],
           '#options' => array('attributes' => array(), 'html' => false),
         );
       }
-
       unset($build['og_vocabulary']);
     }
   }

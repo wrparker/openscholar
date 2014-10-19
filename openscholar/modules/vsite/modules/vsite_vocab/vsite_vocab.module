@@ -95,7 +95,7 @@ function vsite_vocab_term_page_access($term) {
 
   // If the vocab belongs to a vsite, make sure we are in that vsite.
   if($relation->group_type == 'node' && (!$space || $space->id != $relation->gid)){
-		return FALSE;
+    return FALSE;
   }
 
   return node_access('view', $group);
@@ -277,7 +277,7 @@ function vsite_vocab_form_taxonomy_form_vocabulary_validate($element, &$form_sta
   // Manually create the machine name.
   $machine_name = $form_state['values']['name'];
   if(module_exists('transliteration')) {
-	  $machine_name = transliteration_get($machine_name);
+    $machine_name = transliteration_get($machine_name);
   }
   $machine_name = substr(preg_replace('@[^a-z0-9_]+@', '', strtolower($machine_name)), 0, 32);
   // Avoid empty machine name when transliteration not enabled or fails
@@ -482,48 +482,27 @@ function vsite_vocab_field_formatter_view($entity_type, $entity, $field, $instan
     $tids[] = $item['target_id'];
   }
 
-  $terms = taxonomy_term_load_multiple($tids);
-  $ordered_terms = array();
-
-  foreach ($terms as $term) {
-    $vocabulary = taxonomy_vocabulary_load($term->vid);
-    $ordered_terms[] = array(
-      'term' => $term,
-      'weight' => $vocabulary->weight,
-      'vid' => $vocabulary->vid,
-    );
-  }
-
-  uasort($ordered_terms, 'og_vocab_sort_weight');
-
-  // Re-build the terms array, as it is now ordered.
-  $terms = array();
-  foreach ($ordered_terms as $info) {
-    $terms[] = $info['term'];
-  }
-
+  $terms = vsite_vocab_sort_weight_alpha(taxonomy_term_load_multiple($tids));
   $settings = $display['settings'];
 
   if ($settings['concatenate']) {
     $values = array();
+    // Re-build the terms array, as it is now ordered.
     foreach ($terms as $term) {
-      $url = entity_uri('taxonomy_term', $term);
-      $values[] = l($term->name, $url['path']);
+      $values[] = l($term['term'], $term['uri']);
     }
-
     $element[0] = array('#markup' => implode(', ', $values));
     return $element;
   }
 
   // Iterate over each term and group by vocabulary.
   $data = array();
-  foreach ($terms as $term) {
-    if (empty($data['vocabulary'][$term->vid])) {
-      $vocab = taxonomy_vocabulary_load($term->vid);
-      $data['vocabulary'][$term->vid] = check_plain($vocab->name);
+  foreach ($ordered_terms as $term) {
+    if (empty($data['vocabulary'][$term['vid']])) {
+      $vocab = taxonomy_vocabulary_load($term['vid']);
+      $data['vocabulary'][$term['vid']] = check_plain($vocab->name);
     }
-    $url = entity_uri('taxonomy_term', $term);
-    $data['term'][$term->vid][] = l($term->name, $url['path']);
+    $data['term'][$term['vid']][] = l($term->name, $term['uri']);
   }
 
   if (!$data) {
@@ -534,6 +513,99 @@ function vsite_vocab_field_formatter_view($entity_type, $entity, $field, $instan
   foreach ($data['term'] as $vid => $values) {
     $element[0][$vid] = array('#theme' => 'item_list', '#items' => $values, '#title' => $data['vocabulary'][$vid]);
   }
-
   return $element;
 }
+
+/**
+ * Return an EntityFieldQuery for the os batch update set; Return a query for
+ * load/count the taxonomy vocabulary.
+ *
+ * @see os_set_update_batch().
+ */
+function _vsite_vocab_update_query($id = NULL) {
+  $query = new EntityFieldQuery();
+
+  $query->entityCondition('entity_type', 'taxonomy_vocabulary');
+
+  if ($id) {
+    $query->propertyCondition('vid', $id, '>=');
+  }
+
+  return $query;
+}
+
+/**
+ * Iterator callback for the os update batch; Fixing the vocabulary name by
+ * removing non-allowed values like dots and spaces.
+ *
+ * @see os_set_update_btach.
+ */
+function _vsite_vocab_name_fix_iterator($vocabulary) {
+  $name = $vocabulary->machine_name;
+
+  if (!preg_match('@[^a-z0-9_]+@', $name)) {
+    // The vocabulary name is OK. Return.
+    return;
+  }
+
+  // Delete the old path.
+  path_delete(array(
+    'source' => 'vocab/' . $name,
+  ));
+
+  // Fix the name.
+  $name = str_replace(array(' ', '.'), '', strtolower($name));
+
+  if (taxonomy_vocabulary_machine_name_load($name)) {
+    // Create unique name.
+    $i = 1;
+    while (taxonomy_vocabulary_machine_name_load($name)) {
+      $name = substr($name, 0, 32 - strlen($i)) . $i;
+      ++$i;
+    }
+  }
+
+  $vocabulary->machine_name = $name;
+  taxonomy_vocabulary_save($vocabulary);
+}
+
+
+/**
+ * Helper function to sort vsite_vocab terms associated with a node by (in order):
+ *  - vocabulary wieght
+ *  - vocabulary id
+ *  - term weight
+ *  - term name
+ */
+function vsite_vocab_sort_weight_alpha($terms) {
+  $ordered_terms = array();
+
+  foreach ($terms as $tid => $term) {
+    if (isset($term->vid)) {
+      $vocabulary = taxonomy_vocabulary_load($term->vid);
+      $uri = entity_uri('taxonomy_term', $term);
+      $ordered_terms[] = array(
+        'tid' => $term->tid,
+        'term' => $term->name,
+        't_weight' => $term->weight,
+        'v_weight' => $vocabulary->weight,
+        'vid' => $vocabulary->vid,
+        'uri' => $uri['path']
+      );
+    }
+  }
+
+  foreach ($ordered_terms as $term) {
+    $v_weight[$term['tid']] = $term['v_weight'];
+    $vid[$term['tid']] = $term['vid'];
+    $t_weight[$term['tid']] = $term['t_weight'];
+    $t_name[$term['tid']] = $term['term'];
+  }
+  array_multisort($v_weight, SORT_ASC, SORT_NUMERIC, 
+                  $vid, SORT_ASC, SORT_NUMERIC, 
+                  $t_weight, SORT_ASC, SORT_NUMERIC, 
+                  $t_name, SORT_ASC, SORT_STRING,
+                  $ordered_terms);
+  return $ordered_terms;
+}
+

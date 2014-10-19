@@ -345,3 +345,13 @@ function hwpi_vsite_register_notify_author_body_text_alter(&$body_text) {
     . "Sincerely,\n"
     . "Harvard Web Publishing\n";
 }
+
+/**
+ *  Implements hook_form_FORM_ID_alter().
+ */
+function hwpi_form_vsite_register_form_alter(&$form, &$form_state) {
+  $form['agree_terms'] = array(
+    '#type' => 'item',
+    '#markup' => t('By clicking the button below, you are agreeing to our <a href="@url" target="_blank">Terms of Use</a>.', array('@url'  => 'http://hwp.harvard.edu/terms-use'))
+  );
+}

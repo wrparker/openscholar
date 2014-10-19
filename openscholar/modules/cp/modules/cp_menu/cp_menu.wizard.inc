@@ -309,6 +309,7 @@ function cp_menu_url_validate(&$form, &$state) {
       $ch = curl_init($url);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
       curl_setopt($ch, CURLOPT_HEADER, TRUE);
+      curl_setopt($ch, CURLOPT_SSLVERSION, 3);
       $data = curl_exec($ch);
 
       if ($data === FALSE) {
