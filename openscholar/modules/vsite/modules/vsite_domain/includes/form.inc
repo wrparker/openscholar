@@ -101,6 +101,8 @@ function vsite_domain_cp_settings_domain_submit(&$form, &$form_state) {
     call_user_func_array($callback, array($modifier));
   }
 
+  _vsite_domain_clear_field_caches($vsite->id);
+
   // Clears the specified cache if necessary (i.e. "purl_modifiers_en" cid).
   if ($actions['cache']) {
     try {
@@ -396,6 +398,26 @@ function _vsite_domain_process_new_values($form, $form_state, $vsite = NULL) {
     'domain' => $domain,
     'shared' => $shared,
   );
+}
+
+/**
+ * Clears field caches when any value in the domain setting is changed
+ */
+function _vsite_domain_clear_field_caches($gid) {
+  $entities = db_select('og_membership', 'ogm')
+    ->fields('ogm', array('etid', 'entity_type'))
+    ->condition('gid', $gid)
+    ->execute();
+
+  $or = db_or();
+
+  foreach ($entities as $en) {
+    $or->condition('cid', 'field:'.$en->entity_type.':'.$en->etid);
+  }
+
+  db_delete('cache_field')
+    ->condition($or)
+    ->execute();
 }
 
 /**
