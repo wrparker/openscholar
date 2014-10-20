@@ -24,4 +24,6 @@ function drush_vsite_domain_site_clear() {
       _vsite_domain_clear_field_caches($a);
     }
   }
+
+  drush_print(dt('Field caches cleared.'));
 }
