@@ -117,6 +117,7 @@ function vsite_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'personal' => 'personal',
     'project' => 'project',
+    'department' => 'department',
   );
   /* Filter criterion: Content: Site visibility (group_access) */
   $handler->display->display_options['filters']['group_access_value']['id'] = 'group_access_value';
