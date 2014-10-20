@@ -784,3 +784,18 @@ function os_files_update_7017() {
 
   return t('RTF files can now be uploaded to OpenScholar sites.');
 }
+
+/**
+ * Add various Microsoft Office template files to the Document file type
+ * Added in OS 3.17
+ */
+function os_files_update_7018() {
+  ctools_include('export');
+  $types = ctools_export_crud_load_all('file_type');
+  foreach ($types as $t => $o) {
+    ctools_export_crud_delete('file_type', $t);
+  }
+
+  return t('Microsoft Office template files can now be uploaded to OpenScholar sites.');
+
+}

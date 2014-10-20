@@ -2010,10 +2010,16 @@ function os_files_file_default_types_alter(&$types){
     'application/x-msword',
     // *.docx files
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    // *.dotx files
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
     // *.xlsx files
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    // *.xltx files
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
     // *.pptx files
     'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    // *.potx files
+    'application/vnd.openxmlformats-officedocument.presentationml.template',
     // *.ppsx files
     'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
     // *.odt files
@@ -2209,7 +2215,13 @@ function os_files_file_mimetype_mapping_alter(&$mimes) {
     'application/x-wtt' => 'wtt',
     'application/x-wtml' => 'wtml',
     'application/x-wwtfig' => 'wwtfig',
-    'text/rtf' => 'rtf'
+    'text/rtf' => 'rtf',
+    'application/msword' => 'dot',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.template' => 'dotx',
+    'application/vnd.ms-excel' => 'xlt',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.template' => 'xltx',
+    'application/vnd.ms-powerpoint' => 'pot',
+    'application/vnd.openxmlformats-officedocument.presentationml.template' => 'potx',
   );
 
   foreach ($types as $mime => $ext) {
