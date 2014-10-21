@@ -1944,9 +1944,9 @@ function harvard_courses_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-presentation-og_group_ref'
-  $field_instances['node-presentation-og_group_ref'] = array(
-    'bundle' => 'presentation',
+  // Exported field_instance: 'node-harvard_course-og_group_ref'
+  $field_instances['node-harvard_course-og_group_ref'] = array(
+    'bundle' => 'harvard_course',
     'default_value' => NULL,
     'default_value_function' => 'entityreference_prepopulate_field_default_value',
     'deleted' => 0,
