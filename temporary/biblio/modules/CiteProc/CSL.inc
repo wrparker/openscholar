@@ -1135,9 +1135,12 @@ class csl_text extends csl_format {
         break;
       case 'macro':
         $macro = $this->var;
+        
+        dvm($data);
+        
         $text = $this->citeproc->render_macro($macro, $data, $mode); //trigger the macro process
         // If the user left the "author" field blank, don't print 'Anon.' or anything.
-        if($macro == 'author' || $macro == 'anon' || $text == 'Anon.') {
+        if($macro == 'author' && ($macro == 'anon' || $text == 'Anon.')) {
           $text = '';
         }
         // We don't want to display any urls in the citation.
