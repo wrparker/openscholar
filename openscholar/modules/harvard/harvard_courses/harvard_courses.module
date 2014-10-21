@@ -350,8 +350,8 @@ function harvard_courses_node_presave($node) {
   // Replaces raw values with HTML entities decoded.
   $node->title = _harvard_courses_filter_html_entities($node->title);
 
-  include_once(drupal_get_path('module', 'harvard_courses') . '/harvard_courses.features.field.inc');
-  $fields = harvard_courses_field_default_fields();
+  include_once(drupal_get_path('module', 'harvard_courses') . '/harvard_courses.features.field_base.inc');
+  $fields = harvard_courses_field_default_field_bases();
   $text = array('text', 'text_with_summary');
   foreach ($fields as $field => $info) {
     if (!in_array($info['field_config']['type'], $text) || $info['field_instance']['bundle'] != 'harvard_course') {
