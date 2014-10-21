@@ -907,15 +907,6 @@ function harvard_courses_field_access($op, $field, $entity_type, $entity, $accou
 }
 
 /**
- * Implements hook_vsite_og_node_type_info().
- */
-function harvard_courses_vsite_og_node_type_info() {
-  return array(
-    'harvard_course' => 'group content',
-  );
-}
-
-/**
  * Return an EntityFieldQuery for the os batch update set; Return a query for
  * load/count the harvard courses.
  *

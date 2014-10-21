@@ -116,3 +116,12 @@ function harvard_courses_update_7002(&$sandbox) {
     'entity' => 'node',
   ));
 }
+
+/**
+ * Remove the pre-populate settings for harvard courses group reference.
+ */
+function harvard_courses_update_7003() {
+  $instance = field_info_instance('node', OG_AUDIENCE_FIELD, 'harvard_course');
+  $instance['settings']['behaviors']['prepopulate']['status'] = FALSE;
+  field_update_instance($instance);
+}
