@@ -43,6 +43,12 @@ border-bottom: 1px solid #f4f4f4!important;
 border-top: none!important;
 }
 
+
+#menu-bar #block-os-primary-menu a:hover,
+#menu-bar #block-os-primary-menu a:focus{
+	background-color:#FFF!important;
+}
+
 .link-count-mobi-main a {
   background-position: 0 -521px;
 }
