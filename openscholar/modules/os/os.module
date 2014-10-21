@@ -2401,19 +2401,27 @@ function os_drupal_goto_alter(&$path, &$options, &$http_response_code) {
  *      loading it from the DB.
  *    - batch: The number of nodes we need to iterate at once.
  *    - entity: The entity type.
+ *    - path: Path for the file contain the classes or the functions.
  */
 function os_set_update_batch(&$sandbox, $info) {
+
+  if (!empty($info['path'])) {
+    require_once $info['path'];
+  }
+
   if (!isset($sandbox['progress'])) {
     $sandbox['progress'] = 0;
     // Get the total amounts of nodes.
-    $sandbox['max'] = $info['query']()
+    $query = call_user_func($info['query']);
+    $sandbox['max'] = $query
       ->count()
       ->execute();
   }
 
   $id = empty($sandbox['id']) ? 0 : $sandbox['id'];
 
-  $result = $info['query']($id)
+  $query_info = call_user_func($info['query'], $id);
+  $result = $query_info
     ->range(0, $info['batch'])
     ->execute();
 
