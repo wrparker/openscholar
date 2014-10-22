@@ -1010,21 +1010,25 @@ function os_form_node_form_alter(&$form, $form_state) {
     );
     $form['actions']['delete'] = $form['actions_top']['delete'] = $delete;
   }
+  
+  // Add validation to 'Authored on' field
+  $form['author']['date']['#element_validate'] = array('_os_datetime_32_bit');
 }
 
 /**
- * Implements hook_node_validate()
- *
- * prevents user from changing 'Authored on' value to timestamp outside of the limits of a 32-bit integer
- *
+ * prevents user from setting timestamp value outside of the limits of a 32-bit integer
  */
-function os_node_validate($node, $form, &$form_state)  {
-  $timestamp = strtotime($form_state['values']['date']);
-  if ($timestamp < -2147483648) {
-    form_set_error('invalid datetime', t("Please enter an 'Authored on' date after 1901-12-13 15:45:51."));
-  }
-  if ($timestamp > 2147483647) {
-    form_set_error('invalid datetime', t("Please enter an 'Authored on' date before 2038-01-18 22:14:08."));
+function _os_datetime_32_bit($element, &$form_state, $form)  {
+  // if field is blank, no need to try to validate it
+  if($element['#value']) {
+    $timestamp = strtotime($element['#value']);
+  
+    if ($timestamp < -2147483648) {
+      form_error($element, t("Please enter a date for '!name' after 1901-12-13 15:45:51.", array('!name' => t($element['#title']))));
+    }
+    if ($timestamp > 2147483647) {
+      form_error($element, t("Please enter a date for '!name' before 2038-01-18 22:14:08.", array('!name' => t($element['#title']))));
+    }
   }
 }
 
