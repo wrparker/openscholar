@@ -118,18 +118,31 @@ function harvard_courses_update_7002(&$sandbox) {
 }
 
 /**
- * Remove the pre-populate settings for harvard courses group reference.
+ * Remove the pre-populate settings for harvard courses group reference and
+ * remove all the courses membership.
  */
 function harvard_courses_update_7003() {
   $instance = field_info_instance('node', OG_AUDIENCE_FIELD, 'harvard_course');
   $instance['settings']['behaviors']['prepopulate']['status'] = FALSE;
   field_update_instance($instance);
+
+  $query = new EntityFieldQuery();
+
+  $result = $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('type', 'harvard_course')
+    ->execute();
+
+  db_delete('og_membership')
+    ->condition('etid', array_keys($result['node']))
+    ->condition('entity_type', 'node')
+    ->execute();
 }
 
 /**
  * Update harvard courses reference.
  */
-function harvard_courses_update_7014(&$sandbox) {
+function harvard_courses_update_7019(&$sandbox) {
   os_set_update_batch($sandbox, array(
     'path' => drupal_get_path('module', 'harvard_courses') . '/includes/updates.inc',
     'query' => array('HarvardCoursesUpdate7004', 'query'),

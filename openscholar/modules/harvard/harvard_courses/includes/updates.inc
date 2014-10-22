@@ -7,8 +7,7 @@ class HarvardCoursesUpdate7004 {
 
     $query
       ->entityCondition('entity_type', 'node')
-      ->propertyCondition('type', 'harvard_course')
-      ->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', 7096);
+      ->propertyCondition('type', 'harvard_course');
 
     if ($id) {
       $query->propertyCondition('nid', $id, '>=');
