@@ -2011,12 +2011,7 @@ function harvard_courses_field_default_field_instances() {
           'status' => TRUE,
         ),
         'prepopulate' => array(
-          'action' => 'hide',
-          'action_on_edit' => TRUE,
-          'fallback' => 'hide',
-          'og_context' => TRUE,
-          'skip_perm' => FALSE,
-          'status' => TRUE,
+          'status' => FALSE,
         ),
       ),
       'user_register_form' => FALSE,
