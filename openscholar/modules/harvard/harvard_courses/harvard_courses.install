@@ -142,7 +142,7 @@ function harvard_courses_update_7003() {
 /**
  * Update harvard courses reference.
  */
-function harvard_courses_update_7019(&$sandbox) {
+function harvard_courses_update_7014(&$sandbox) {
   os_set_update_batch($sandbox, array(
     'path' => drupal_get_path('module', 'harvard_courses') . '/includes/updates.inc',
     'query' => array('HarvardCoursesUpdate7004', 'query'),
