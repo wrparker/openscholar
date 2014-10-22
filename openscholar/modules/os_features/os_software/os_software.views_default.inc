@@ -270,7 +270,7 @@ function os_software_views_default_views() {
   /* Display: Recommended */
   $handler = $view->new_display('entity_view', 'Recommended', 'entity_view_2');
   $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['title'] = 'Recommended Releases';
+  $handler->display->display_options['title'] = 'Recommended Release';
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['link_url'] = 'software/!1/releases';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
