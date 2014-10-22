@@ -2405,6 +2405,11 @@ function os_drupal_goto_alter(&$path, &$options, &$http_response_code) {
  */
 function os_set_update_batch(&$sandbox, $info) {
 
+  $info += array(
+    'entity' => 'node',
+    'batch' => drupal_is_cli() ? 400: 150,
+  );
+
   if (!empty($info['path'])) {
     require_once $info['path'];
   }
