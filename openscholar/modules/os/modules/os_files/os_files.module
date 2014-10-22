@@ -1212,6 +1212,12 @@ function os_files_field_widget_form_alter(&$elements, &$form_state, $context){
  */
 function os_files_media_widget_process($element, $form_state, $form) {
   $element['select']['#title'] = t('Choose File');
+
+  // remove 'use-ajax' class
+  // prevents the form from being loaded twice
+  $edit_classes = &$element['edit']['#attributes']['class'];
+  $edit_classes = array_diff($edit_classes, array('use-ajax'));
+
   return $element;
 }
 
