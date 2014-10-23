@@ -820,10 +820,13 @@ class csl_names extends csl_format {
       }
     }
 
-    if (!$matches) { // we don't have any primary suspects, so lets check the substitutes...
+    // we don't have any primary suspects, so lets check the substitutes...
+    if (!$matches) { 
       if (isset($this->substitutes)) {
-        foreach ($this->substitutes->elements as $element) {
-          if (($element instanceof csl_names)) { //test to see if any of the other names variables has content
+        foreach ($this->substitutes->elements as $element) {          
+          // if it's not a "names" element, don't render it
+          if (($element instanceof csl_names)) {
+            //test to see if any of the other names variables has content
             $variables  = explode(' ', $element->variable);
             foreach ($variables as $var) {
               list($contributor, $category) = explode(':', $var);
@@ -832,9 +835,6 @@ class csl_names extends csl_format {
                 break;
               }
             }
-          }
-          else { // if it's not a "names" element, just render it
-            return $element->render($data, $mode);
           }
         }
       }
@@ -1137,8 +1137,10 @@ class csl_text extends csl_format {
         $macro = $this->var;
         $text = $this->citeproc->render_macro($macro, $data, $mode); //trigger the macro process
         // If the user left the "author" field blank, don't print 'Anon.' or anything.
-        if($macro == 'author' || $macro == 'anon' || $text == 'Anon.') {
-          $text = '';
+        if($macro == 'author' || $macro == 'anon') {
+          if($text == 'Anon.') {
+            $text = '';
+          }
         }
         // We don't want to display any urls in the citation.
         if($macro == 'access') {

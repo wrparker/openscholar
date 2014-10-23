@@ -1212,6 +1212,12 @@ function os_files_field_widget_form_alter(&$elements, &$form_state, $context){
  */
 function os_files_media_widget_process($element, $form_state, $form) {
   $element['select']['#title'] = t('Choose File');
+
+  // remove 'use-ajax' class
+  // prevents the form from being loaded twice
+  $edit_classes = &$element['edit']['#attributes']['class'];
+  $edit_classes = array_diff($edit_classes, array('use-ajax'));
+
   return $element;
 }
 
@@ -1424,6 +1430,41 @@ function os_files_preprocess_image_formatter(&$variables) {
   }
   elseif (empty($item['title'])) {
     $item['title'] = $item['filename'];
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ *
+ * Ensures that iframes which are broken by character limits remain intact.
+ */
+function os_files_preprocess_node(&$vars) {
+  $body = &$vars['content']['body'][0]['#markup'];
+  $original = $vars['content']['body']['#items'][0]['safe_value'];
+
+  if (strpos($original, '<!--break-->') !== FALSE) {
+    // break manually inserted by user
+    // impossible to break iframes this way, break out now.
+    return;
+  }
+
+  if (strpos($original, '<iframe') === FALSE) {
+    // no iframes, nothing to do here
+    return;
+  }
+
+  preg_match_all('`<span alt="([^"]+)" title="[^"]+">(<iframe [^>]+></iframe>)`', $body, $trim_match, PREG_SET_ORDER);
+  preg_match_all('`<span alt="([^"]+)" title="[^"]+">(<iframe [^>]+></iframe>)`', $original, $orig_match, PREG_SET_ORDER);
+
+  foreach ($trim_match as $m) {
+    foreach ($orig_match as $om) {
+      // these are the same resource
+      // with the iframe chopped off though
+      if ($om[1] == $m[1] && $om[2] != $m[2]) {
+        // replace the bad HTML with the correct HTML
+        $body = str_replace($m[0], $om[2], $body);
+      }
+    }
   }
 }
 
