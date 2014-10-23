@@ -1004,6 +1004,17 @@ function os_publications_process_format($element) {
 }
 
 /**
+ * Implements hook_wysiwyg_editor_settings_alter().
+ *
+ * Prevents the <p> tag from being included in publication titles
+ */
+function os_publications_wysiwyg_editor_settings_alter(&$settings, $context) {
+  if ($context['profile']->format == 'title_filter') {
+    $settings['forced_root_block'] = '';
+  }
+}
+
+/**
  * Implements hook_preprocess_node().
  */
 function os_publications_preprocess_node(&$variables) {
