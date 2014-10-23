@@ -56,9 +56,17 @@ function cp_user_get_member_rows($gid) {
       $role_edit_text = t('edit');
       $change_ownership = '';
       $human_name = TRUE;
-      $role = _cp_user_get_role($account->uid, $vsite->group->nid, $human_name);
       $options = array('attributes' => array('class' => array('cp-user-float-right')));
-      $role_edit_link = l($role_edit_text, "cp/users/edit_membership/{$account->uid}", $options);
+
+      $membership = og_get_membership('node', $gid, 'user', $account->uid);
+      if ($membership->type == 'support_expire') {  // is there a constant for this I should be using?
+        $role = t('Support User');
+        $role_edit_link = '';
+      }
+      else {
+        $role = _cp_user_get_role($account->uid, $vsite->group->nid, $human_name);
+        $role_edit_link = l($role_edit_text, "cp/users/edit_membership/{$account->uid}", $options);
+      }
       $status_edit_link = l($status_edit_text, "cp/users/delete_membership/{$account->uid}", $options);
     }
 
