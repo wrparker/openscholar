@@ -528,7 +528,8 @@ function harvard_courses_entity_update($entity, $type) {
 
       // Groping added courses.
       if ($field == 'field_school_name') {
-        $courses = harvard_courses_related_nodes('field_faculty', array($wrapper->{$field}->label()));
+        // Un-grouping removed courses from the group.
+        $courses = harvard_courses_courses_from_field_collection($wrapper);
       }
       else {
         $courses = harvard_courses_related_nodes($field, array($wrapper->{$field}->value()));
@@ -557,19 +558,9 @@ function harvard_courses_entity_insert($entity, $type) {
   }
   $wrapper = entity_metadata_wrapper($type, $entity);
 
-  // Building the parameters for the API function that will return us the
-  // courses according to the field collection data.
-  $fields = array(
-    'field_faculty',
-    'field_department_id',
-  );
-  $search_values = array(
-    'field_faculty' => $wrapper->field_school_name->label(),
-    'field_department_id' => $wrapper->field_department_id->value(),
-  );
-
   // Un-grouping removed courses from the group.
-  $courses = harvard_courses_related_nodes($fields, $search_values);
+  $courses = $courses = harvard_courses_courses_from_field_collection($wrapper);
+
   if (!empty($courses)) {
     $operations = array();
     foreach ($courses as $course) {
@@ -596,19 +587,8 @@ function harvard_courses_entity_delete($entity, $type) {
     return;
   }
 
-  // Building the parameters for the API function that will return us the
-  // courses according to the field collection data.
-  $fields = array(
-    'field_faculty',
-    'field_department_id',
-  );
-  $search_values = array(
-    'field_faculty' => $wrapper->field_school_name->label(),
-    'field_department_id' => $wrapper->field_department_id->value(),
-  );
-
   // Un-grouping removed courses from the group.
-  $courses = harvard_courses_related_nodes($fields, $search_values);
+  $courses = harvard_courses_courses_from_field_collection($wrapper);
   if (!empty($courses)) {
     $operations = array();
     foreach ($courses as $course_id) {
@@ -634,6 +614,29 @@ function harvard_courses_handle_courses($operations) {
   );
   batch_set($batch);
   batch_process('courses');
+}
+
+/**
+ * Find harvard courses according to field collection.
+ *
+ * @param EntityMetadataWrapper $wrapper
+ *   The wrapper object for the field collection.
+ *
+ * @return array
+ *   List of NIDs.
+ */
+function harvard_courses_courses_from_field_collection(EntityMetadataWrapper $wrapper) {
+  $fields = array(
+    'field_faculty',
+    'field_department_id',
+  );
+  $search_values = array(
+    'field_faculty' => $wrapper->field_school_name->label(),
+    'field_department_id' => $wrapper->field_department_id->value(),
+  );
+
+  // Un-grouping removed courses from the group.
+  return harvard_courses_related_nodes($fields, $search_values);
 }
 
 /**
