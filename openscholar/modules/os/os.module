@@ -299,8 +299,8 @@ function os_block_view_alter(&$block, &$data) {
   ctools_include('menu', 'os');
 
   if (!empty($data->delta) && array_key_exists($data->delta, os_get_menus()) && count($block['content'])) {
-  	// Remove nice menus from the sidebar and footer regions.
-  	$theme = (in_array($data->region, array('footer', 'footer_first', 'footer_third', 'content_first', 'content_second', 'content_bottom', 'content_top', 'sidebar_first', 'sidebar_second'))) ? '' : 'os_nice_menus';
+    // Remove nice menus from the sidebar and footer regions.
+    $theme = (in_array($data->region, array('footer', 'footer_first', 'footer_third', 'content_first', 'content_second', 'content_bottom', 'content_top', 'sidebar_first', 'sidebar_second'))) ? '' : 'os_nice_menus';
     $block['content'] += array(
       '#theme' => $theme,
       '#menu_name' => $data->delta,
@@ -471,7 +471,7 @@ function os_theme() {
         'link_text' => 'Admin Login',
         'attributes' => array(
           'class' => array(
-          	'footer-login'
+            'footer-login'
           ),
         ),
       ),
@@ -1009,6 +1009,29 @@ function os_form_node_form_alter(&$form, $form_state) {
       '#weight' => 99,
     );
     $form['actions']['delete'] = $form['actions_top']['delete'] = $delete;
+  }
+  
+  // Add validation to 'Authored on' field
+  $form['author']['date']['#element_validate'] = array('_os_datetime_32_bit');
+}
+
+/**
+ * prevents user from setting timestamp value outside of the limits of a 32-bit integer
+ */
+function _os_datetime_32_bit($element, &$form_state, $form)  {
+  // if field is blank, no need to try to validate it
+  if($element['#value']) {
+    $timestamp = strtotime($element['#value']);
+  
+    if ($timestamp === FALSE) {
+      form_error($element, t("Please enter a valid date for '!name'.", array('!name' => t($element['#title']))));
+    }
+    elseif ($timestamp < -2147483648) {
+      form_error($element, t("Please enter a valid date for '!name' after 1901-12-13 15:45:51.", array('!name' => t($element['#title']))));
+    }
+    elseif ($timestamp > 2147483647) {
+      form_error($element, t("Please enter a valid date for '!name' before 2038-01-18 22:14:08.", array('!name' => t($element['#title']))));
+    }
   }
 }
 
@@ -2193,13 +2216,13 @@ function os_select2_widget_after_build($element, &$form_state) {
  */
 function os_expire_cache($urls, $wildcards, $object_type, $object) {
 
-	foreach ($urls as $internal_path => $absolute_url) {
+  foreach ($urls as $internal_path => $absolute_url) {
 
-	  // Check if wildcard is enabled for this URL.
-	  $wildcard = !empty($wildcards[$internal_path]);
+    // Check if wildcard is enabled for this URL.
+    $wildcard = !empty($wildcards[$internal_path]);
 
-	  // Clear cached page data.
-	  cache_clear_all($absolute_url, 'cache_page', $wildcard);
+    // Clear cached page data.
+    cache_clear_all($absolute_url, 'cache_page', $wildcard);
   }
 }
 
@@ -2401,19 +2424,32 @@ function os_drupal_goto_alter(&$path, &$options, &$http_response_code) {
  *      loading it from the DB.
  *    - batch: The number of nodes we need to iterate at once.
  *    - entity: The entity type.
+ *    - path: Path for the file contain the classes or the functions.
  */
 function os_set_update_batch(&$sandbox, $info) {
+
+  $info += array(
+    'entity' => 'node',
+    'batch' => drupal_is_cli() ? 400: 150,
+  );
+
+  if (!empty($info['path'])) {
+    require_once $info['path'];
+  }
+
   if (!isset($sandbox['progress'])) {
     $sandbox['progress'] = 0;
     // Get the total amounts of nodes.
-    $sandbox['max'] = $info['query']()
+    $query = call_user_func($info['query']);
+    $sandbox['max'] = $query
       ->count()
       ->execute();
   }
 
   $id = empty($sandbox['id']) ? 0 : $sandbox['id'];
 
-  $result = $info['query']($id)
+  $query_info = call_user_func($info['query'], $id);
+  $result = $query_info
     ->range(0, $info['batch'])
     ->execute();
 
