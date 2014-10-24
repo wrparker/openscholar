@@ -207,6 +207,10 @@ function os_boxes_remove_widget($module, $delta, $target = FALSE) {
   $blocks[$bid]['region'] = $target;
   os_layout_set_multiple($contexts, $blocks);
 
+  /*
+   * No longer needed now that the markup and notice are stored in js
+   * Keep around just in case
+   * 
   // Creates the notice
   if (!$target) {
     $render = array(
@@ -232,6 +236,7 @@ function os_boxes_remove_widget($module, $delta, $target = FALSE) {
   overlay_commands_add(ajax_command_replace('#block-' . drupal_html_class($bid), $html));
   overlay_commands_add(overlay_command_dismiss());
   return '';
+  */
 }
 
 /**
