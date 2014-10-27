@@ -1021,8 +1021,13 @@ function os_form_node_form_alter(&$form, $form_state) {
 function _os_datetime_32_bit($element, &$form_state, $form)  {
   // if field is blank, no need to try to validate it
   if($element['#value']) {
-    $timestamp = strtotime($element['#value']);
-  
+    if (!is_array($element['#value'])) {
+      $timestamp = strtotime($element['#value']);
+    }
+    else {
+      $timestamp = strtotime($element['#value']['date']);
+    }
+
     if ($timestamp === FALSE) {
       form_error($element, t("Please enter a valid date for '!name'.", array('!name' => t($element['#title']))));
     }
