@@ -413,7 +413,7 @@ function _vsite_domain_clear_field_caches($gid) {
   // trick DB caches into using transactions for performance
   $transaction = db_transaction();
   foreach ($entities as $en) {
-    cache_clear_all('field:'.$en->entity_type.':'.$en->etid);
+    cache_clear_all('field:'.$en->entity_type.':'.$en->etid, 'cache_field');
   }
   // transactions commit when the variable is destroyed. Nothing more is required.
 }
