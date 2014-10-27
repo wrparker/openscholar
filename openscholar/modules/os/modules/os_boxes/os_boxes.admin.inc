@@ -206,37 +206,6 @@ function os_boxes_remove_widget($module, $delta, $target = FALSE) {
   $old_region = $blocks[$bid]['region'];
   $blocks[$bid]['region'] = $target;
   os_layout_set_multiple($contexts, $blocks);
-
-  /*
-   * No longer needed now that the markup and notice are stored in js
-   * Keep around just in case
-   * 
-  // Creates the notice
-  if (!$target) {
-    $render = array(
-      '#type' => 'container',
-      '#attributes' => array(
-        'id' => 'block-' . drupal_html_class($bid),
-      ),
-      'text' => array(
-        '#type' => 'markup',
-        '#markup' => t('This widget has been removed from this section. You can !undo', array(
-            '!undo' => l(t('undo this action'), 'os/widget/' . $module . '/' . $delta . '/remove/' . $old_region, array('query' => array('contexts' => $contexts))),
-          )),
-      ),
-    );
-  }
-  else {
-    module_load_include('module', 'block', 'block');
-    $t      = _block_render_blocks(array((object)$blocks[$bid]));
-    $t      = _block_get_renderable_array($t);
-    $render = array_shift($t);
-  }
-  $html = drupal_render($render);
-  overlay_commands_add(ajax_command_replace('#block-' . drupal_html_class($bid), $html));
-  overlay_commands_add(overlay_command_dismiss());
-  return '';
-  */
 }
 
 /**
