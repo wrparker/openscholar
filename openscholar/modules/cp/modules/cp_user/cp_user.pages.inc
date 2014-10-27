@@ -61,7 +61,11 @@ function cp_user_get_member_rows($gid) {
       $membership = og_get_membership('node', $gid, 'user', $account->uid);
       if ($membership->type == 'support_expire') {  // is there a constant for this I should be using?
         $role = t('Support User');
-        $role_edit_link = '';
+        $expire = strtotime('+'.variable_get('vsite_support_expire', '3 days'), $membership->created);
+        $remaining = $expire - REQUEST_TIME;
+        $role_edit_link = '<span class="cp-user-float-right">No longer member in '
+          .(($remaining > 86400)?date('j', $remaining).' days.':date('G', $remaining).' hours.')
+          .'</span>';
       }
       else {
         $role = _cp_user_get_role($account->uid, $vsite->group->nid, $human_name);
