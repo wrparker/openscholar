@@ -35,8 +35,8 @@ before_script:
   - bash scripts/build
 
   # Download and install Apache solr
-  - wget http://wiki.gizra-labs.com/images/e/ee/Apache-solr-3.6.2.zip
-  - unzip -o Apache-solr-3.6.2.zip
+  - wget https://archive.apache.org/dist/lucene/solr/3.6.2/apache-solr-3.6.2.zip
+  - unzip -o apache-solr-3.6.2.zip
   - cd apache-solr-3.6.2/example/solr/conf
   # Copy the solr config files from the apache solr module
   - yes | cp /home/travis/build/openscholar/openscholar/www/profiles/openscholar/modules/contrib/apachesolr/solr-conf/solr-3.x/* .

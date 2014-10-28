@@ -903,7 +903,7 @@ function cp_appearance_manage_git_submit($form, &$form_state) {
  * Search of the flavors uploaded to the vsite.
  */
 function cp_appearance_get_flavors() {
-  if (!$vsite = vsite_get_vsite()) {
+  if (module_exists('vsite') && !$vsite = vsite_get_vsite()) {
     return array();
   }
   $flavors = array();

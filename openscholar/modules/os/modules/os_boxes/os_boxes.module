@@ -479,6 +479,8 @@ function os_boxes_menu_contextual_links_alter(&$links, $router_item, $path) {
   if (isset($links['widget-remove'])) {
     $ctxs = array_keys(context_active_contexts());
     $links['widget-remove']['localized_options']['query']['contexts'] = $ctxs;
+
+    drupal_add_js(drupal_get_path('module', 'os_boxes').'/misc/os_boxes.remove.js');
   }
 }
 

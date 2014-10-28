@@ -611,7 +611,7 @@ position: absolute;
 }
 
 .feed_item {margin-bottom:8px;}
-.feed_item span {font-style:italic;margin-right:4px;}
+.feed_item span {margin-right:4px;}
 
 
 .more-link /* Aggregator, blog, and forum more link */ {
