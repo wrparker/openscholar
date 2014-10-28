@@ -71,8 +71,8 @@ function os_pages_field_default_field_instances() {
       'active' => 1,
       'module' => 'os_wysiwyg',
       'settings' => array(
-        'max_rows' => 10,
-        'rows' => 10,
+        'max_rows' => 13,
+        'rows' => 13,
         'summary_rows' => 5,
       ),
       'type' => 'os_wysiwyg_expanding_textarea',

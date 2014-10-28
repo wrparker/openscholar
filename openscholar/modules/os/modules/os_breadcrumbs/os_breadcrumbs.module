@@ -293,7 +293,7 @@ function _os_breadcrumbs_build_taxonomy_breadcrumb($path) {
 
   // Load the vid.
   $vid = $term_hierarchy[0]->vid;
-  
+
   $terms_ordered = array_reverse($term_hierarchy);
   foreach($terms_ordered as $key => $term) {
     $short_title = _os_breadcrumbs_shorten_title($term->name);
@@ -328,9 +328,9 @@ function _os_breadcrumbs_build_subsection_breadcrumb($menu_active_trail) {
     }
     if($key == (count($menu_active_trail)) - 1) {
       // Remove trailing page title for now.
-      $links[] = ''; // t($short_title);
+      $links[$menu['href']] = ''; // t($short_title);
     }else {
-      $links[] = l(strtoupper($short_title), $menu['href']);
+      $links[$menu['href']] = l(strtoupper($short_title), $menu['href']);
     }
   }
   return $links;
@@ -596,7 +596,7 @@ function _os_breadcrumbs_check_parents($path) {
   foreach($parent_ids as $key => $menu_id) {
     $parent_link = vsite_menu_menu_link_load($menu_id);
     if(isset($parent_link) && is_array($parent_link)) {
-      $links[] = l(strtoupper($parent_link['title']), $parent_link['link_path']);
+      $links[$parent_link['link_path']] = l(strtoupper($parent_link['title']), $parent_link['link_path']);
     }
   }
 

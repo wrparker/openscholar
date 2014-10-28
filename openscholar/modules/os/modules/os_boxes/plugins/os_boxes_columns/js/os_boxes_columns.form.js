@@ -113,6 +113,9 @@
   Drupal.behaviors.osBoxesColumns = {
     attach: function (ctx) {
       textContent = typeof document.body.textContent !== 'undefined';
+
+      setupDraggables();
+      
       changeLayout(layout = $('input[name="layout"]:checked').val());
 
       $('input[name="layout"]:radio').change(function(e) {
@@ -120,8 +123,6 @@
       });
 
       $('#edit-search').keyup(filterWidgets);
-
-      setupDraggables();
 
       $('#boxes-box-form').submit(saveForm);
     }

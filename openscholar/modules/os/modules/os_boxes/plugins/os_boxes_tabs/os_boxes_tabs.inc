@@ -52,9 +52,14 @@ class os_boxes_tabs extends os_boxes_widget_collection {
       $plugin = context_get_plugin('reaction', 'block');
       $blocks = $plugin->get_blocks();
       $render = array(
+        '#prefix' => '<div class="os-boxes-tabbed">',
+        '#suffix' => '</div>',
         'links' => array(
           '#theme' => 'links',
           '#links' => array(),
+          '#attributes' => array(
+            'class' => array('tab-links'),
+          )
         ),
         '#attached' => array(
           'library' => array(

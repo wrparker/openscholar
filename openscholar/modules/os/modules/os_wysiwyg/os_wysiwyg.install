@@ -30,3 +30,36 @@ function os_wysiwyg_update_7001() {
 function os_wysiwyg_update_7002() {
   module_disable(array('media_oembed', 'oembedcore'));
 }
+
+/**
+ * Remove 'Hide Toolbar' buttom from wysiwyg
+ */
+function os_wysiwyg_update_7003() {
+  features_revert(array('os_wysiwyg' => array('wysiwyg')));
+  return t('\'Hide Toolbar\' button removed.');
+}
+
+/**
+ * Increase size of Body field in relevant node types.
+ */
+function os_wysiwyg_update_7004() {
+  $modules = array(
+    'os_biocv',
+    'os_blog',
+    'os_booklets',
+    'os_classes',
+    'os_events',
+    'os_faq',
+    'os_links',
+    'os_news',
+    'os_pages',
+    'os_presentations',
+    'os_profiles',
+    'os_software'
+  );
+  $reset = array(
+    'field_instance'
+  );
+
+  features_revert(array_fill_keys($modules, $reset));
+}

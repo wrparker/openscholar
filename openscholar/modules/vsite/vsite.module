@@ -3007,6 +3007,11 @@ function vsite_get_entity_alias($entity_type, $entity, $alias = NULL) {
     $alias = $entity->path['alias'];
   }
 
+  if ($entity_type == 'node' && !os_app_info_declared_node_bundle($entity->type)) {
+    // Harvard courses shouldn't get the vsite prefix.
+    return $alias;
+  }
+
   if (empty($alias)) {
     // No alias.
     return NULL;
@@ -3040,7 +3045,11 @@ function vsite_get_entity_alias($entity_type, $entity, $alias = NULL) {
   }
 
   // Get purl.
-  $purl = vsite_get_purl($vsite);
+  if (!$purl = vsite_get_purl($vsite)) {
+    // Purl was not found. Return the base alias in order to prevent / prefix in
+    // the alias.
+    return $alias;
+  }
 
   // Prevent purl duplication in alias - remove all purls prefixes.
   while (strpos($alias, "$purl/") === 0) {
@@ -3362,6 +3371,9 @@ function vsite_form_cp_settings_form_alter(&$form, &$form_state, $form_id) {
  * @see vsite_form_cp_settings_form_alter()
  */
 function vsite_cp_settings_form_submit($form, &$form_state) {
+  // Get current favicon fid for later
+  $fid = variable_get('site_favicon_fid');
+
   // Get the vsite_privacy value.
   $values = array(
     'site_favicon_fid' => array('type' => 'variable'),
@@ -3401,6 +3413,22 @@ function vsite_cp_settings_form_submit($form, &$form_state) {
         break;
     }
   }
+
+  // Clear out old associations if favicon has changed
+  if ($fid != $form_state['values']['site_favicon_fid']) {
+    if ($old_file = file_load($fid)) {
+      file_usage_delete($old_file, 'vsite', 'node', $vsite->group->nid);
+    }
+    // Make the icon file permanent so it doesn't get deleted automatically
+    if ($file = file_load($form_state['values']['site_favicon_fid'])) {
+      if (!$file->status) {
+        $file->status = FILE_STATUS_PERMANENT;
+        file_usage_add($file, 'vsite', 'node', $vsite->group->nid);
+        file_save($file);
+      }
+    }
+  }
+
 
   // Only saves wrapper and clears metatag cache when the values have changed.
   if ($modified) {

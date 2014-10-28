@@ -20,11 +20,11 @@ function os_wysiwyg_link_insert() {
       'title' => 'Files',
       'page' => '_os_link_get_view',
       'params' => array(),
-    ),
+    ),/*
     'page' => array(
       'title' => 'Page',
       'form' => '_os_link_internal_form',
-    ),
+    ),*/
   );
 
   if (isset($_GET['active']) && isset($tabs[$_GET['active']])) {

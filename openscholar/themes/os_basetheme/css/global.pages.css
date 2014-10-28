@@ -559,14 +559,13 @@ ul.class_material_field_class a.class_material_field_class_anchor {
 
 .video-indicator {
 	background-image: url("../images/scholarbase-sprite.png");
-  background-position: -44px -85px;
- 	bottom: 10px;
-  display: block;
-  left: 10px;
-  height: 48px;
-  width: 48px;
-	position: relative;
-  margin-top: -48px;
+  background-position: -42px -85px;
+top: 30%;
+display: block;
+left:38%;
+height: 42px;
+width: 48px;
+position: absolute;
 }
 
 .media-gallery-item:hover .video-indicator {
@@ -612,7 +611,7 @@ ul.class_material_field_class a.class_material_field_class_anchor {
 }
 
 .feed_item {margin-bottom:8px;}
-.feed_item span {font-style:italic;margin-right:4px;}
+.feed_item span {margin-right:4px;}
 
 
 .more-link /* Aggregator, blog, and forum more link */ {
@@ -1005,10 +1004,17 @@ list-style: none !important;
 
 
 .field-name-og-vocabulary a.toggle:before {
+background: url('../images/scholarbase-sprite.png') 3px -194px no-repeat;
+padding: 1px 0 3px 14px;
+content:'';
+}
+
+.field-name-og-vocabulary a.toggle.expanded:before {
 background: url('../images/scholarbase-sprite.png') -12px -194px no-repeat;
 padding: 1px 0 3px 14px;
 content:'';
 }
+
 
 .field-name-og-vocabulary .os-slider a {text-decoration:underline !important;}
 

@@ -836,6 +836,7 @@ html.js .form-region-right fieldset.collapsible .fieldset-legend
   padding: 6px 15px 4px;
   text-transform: none;
   width: 89%;
+  background-color: #f1f1f1;
 }
 
 html.js fieldset.collapsible .fieldset-legend {

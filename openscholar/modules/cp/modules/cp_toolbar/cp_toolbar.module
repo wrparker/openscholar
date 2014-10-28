@@ -73,6 +73,7 @@ function cp_toolbar_view() {
         'title' => t('Log out'),
         'href' => 'user/logout',
         'description' => t('Log out of this site'),
+        'query' => drupal_get_destination()
       ),
     );
     if (arg(0) == 'user') {
@@ -85,6 +86,7 @@ function cp_toolbar_view() {
           'title' => t('Support @purl', array('@purl' => $vsite->group->purl)),
           'href' => 'group/node/' . $vsite->id . '/subscribe/vsite_support_expire',
           'description' => t('Subscribe to group for support'),
+          'query' => drupal_get_destination()
         );
       }
       else {
@@ -92,6 +94,7 @@ function cp_toolbar_view() {
           'title' => t('Unsubscribe @purl' , array('@purl' => $vsite->group->purl)),
           'href' => 'group/node/' . $vsite->id . '/unsubscribe',
           'description' => t('Un-Subscribe from group'),
+          'query' => drupal_get_destination()
         );
       }
     }

@@ -144,6 +144,8 @@ function os_sv_list_query_sv_list_biblio_alter(&$query) {
     unset($fields['node.sticky']);
     $fields['node.sticky'] = $order;
   }
+  //Order by biblio_date
+  $query->orderBy('b.biblio_date', 'DESC');
   //Lastly order by created.
   $query->orderBy('node.created', 'DESC');
 }

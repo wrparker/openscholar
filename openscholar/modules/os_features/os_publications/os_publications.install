@@ -1183,3 +1183,84 @@ function os_publications_update_7024() {
   ->condition('ftdid', 22)
   ->execute();
 }
+
+/**
+ * Update stored CSE style definition to match updated file.
+ */
+function os_publications_update_7025() {
+  $messages = array();
+  if (os_publications_revert_citeproc_style('cse')) {
+    $messages[] = t('CSE style reverted.');
+  }
+  else {
+    throw new DrupalUpdateException(t('Unable to revert CSE style. Ensure biblio CiteProc module is enabled.'));
+  }
+
+  if (os_publications_revert_citeproc_style('chicago-author-date')) {
+    $messages[] = t('Chicago Author Date style reverted.');
+  }
+
+  return implode('<br />', $messages);
+}
+
+/**
+ * Remove extraneous p tags from the titles Biblio uses to sort on
+ */
+function os_publications_update_7026(&$ctx) {
+
+  if (!isset($ctx['progress'])) {
+    $q = db_select('biblio', 'b');
+    $q->join('field_data_title_field', 'tf', 'b.nid = tf.entity_id AND b.vid = tf.revision_id');
+    $q = $q->fields('b', array('nid', 'biblio_sort_title'))
+      ->fields('tf', array('title_field_value'))
+      ->condition('tf.title_field_value', '<p%</p>', 'LIKE')
+      ->condition('b.biblio_sort_title', 'p%p', 'LIKE')
+      ->execute();
+
+
+    foreach ($q as $r) {
+      $ctx['dataset'][] = $r;
+    }
+
+    if (count($ctx['dataset']) == 0) {
+      $ctx['#finished'] = 1;
+      return t('No publication titles need fixing.');
+    }
+
+    $ctx['progress'] = 0;
+    $ctx['total'] = count($ctx['dataset']);
+    $ctx['num'] = 100;
+  }
+
+  // transactions speed things up, apparently
+  $transaction = db_transaction();
+  $dataset = array_slice($ctx['dataset'], $ctx['progress'], $ctx['num'], TRUE);
+  module_load_include('inc', 'biblio', 'includes/biblio.util');
+  try {
+    foreach ($dataset as $k => $d) {
+      $title = preg_replace(array('#^<p[>^]+>#', '#</p>$#'), '', $title);
+      $title = biblio_normalize_title($title);
+      db_update('biblio')
+        ->fields(array(
+          'biblio_sort_title' => $title
+        ))
+        ->condition('nid', $d->nid)
+        ->execute();
+      $ctx['progress']++;
+    }
+  }
+  catch (Exception $e) {
+    $transaction->rollback();
+    $ctx['progress'] = $ctx['progress'] - ($ctx['progress'] % $ctx['number']);
+    throw $e;
+  }
+
+  // Drupal transactions commit automatically when the function exits
+  // So nothing more needs to be done.
+
+  $ctx['#finished'] = $ctx['progress']/$ctx['total'];
+  if ($ctx['#finished'] >= 1) {
+    $ctx['#finished'] = 1;
+    return t('All Publication titles have had extraneous p\'s removed.');
+  }
+}

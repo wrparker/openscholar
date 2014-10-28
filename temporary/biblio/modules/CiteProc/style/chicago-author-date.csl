@@ -301,7 +301,7 @@
       </group>
    </macro>
    <macro name="container-prefix">
-      <text term="in" text-case="capitalize-first"/>
+      <text term="in" />
    </macro>
    <macro name="container-title">
       <choose>
@@ -440,7 +440,7 @@
             <text macro="title"/>
             <text macro="description"/>
             <text macro="secondary-contributors" prefix=". "/>
-            <text macro="container-title" prefix=". "/>
+            <text macro="container-title" prefix=", "/>
             <text macro="container-contributors"/>
             <text macro="locators-chapter"/>
             <text macro="edition" prefix=". "/>

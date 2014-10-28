@@ -115,3 +115,10 @@ function os_events_update_7007() {
 function os_events_update_7008() {
   features_revert(array('os_events' => array('views')));
 }
+
+/**
+ * Remove the NID argument from the view for export events to ICS file.
+ */
+function os_events_update_7009() {
+  features_revert(array('os_events' => array('views')));
+}

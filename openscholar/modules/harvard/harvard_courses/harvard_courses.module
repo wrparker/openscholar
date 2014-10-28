@@ -127,10 +127,13 @@ function harvard_courses_courses_filter() {
     ->distinct();
     $query->join('node', 'n', 'ogm.etid = n.nid');
     $query->join('field_data_field_term', 'f', 'f.entity_id = n.nid AND f.entity_type =\'node\'');
+    $query->join('field_data_field_timestamp', 't', 't.entity_id = n.nid AND f.entity_type =\'node\'');
     $query->condition('ogm.gid', $vsite->id);
     $query->condition('n.type', 'harvard_course');
     $query->condition('ogm.entity_type', 'node');
+    $query->orderBy('t.field_timestamp_value', 'DESC');
 
+  $semester = array();
   foreach ($query->execute() as $result) {
     $text = check_plain($result->field_term_value);
     $query_params = array(
@@ -347,8 +350,8 @@ function harvard_courses_node_presave($node) {
   // Replaces raw values with HTML entities decoded.
   $node->title = _harvard_courses_filter_html_entities($node->title);
 
-  include_once(drupal_get_path('module', 'harvard_courses') . '/harvard_courses.features.field.inc');
-  $fields = harvard_courses_field_default_fields();
+  include_once(drupal_get_path('module', 'harvard_courses') . '/harvard_courses.features.field_base.inc');
+  $fields = harvard_courses_field_default_field_bases();
   $text = array('text', 'text_with_summary');
   foreach ($fields as $field => $info) {
     if (!in_array($info['field_config']['type'], $text) || $info['field_instance']['bundle'] != 'harvard_course') {
@@ -362,6 +365,57 @@ function harvard_courses_node_presave($node) {
       $node->{$field}[$node->language][0]['value'] = $new;
     }
   }
+
+  // Set the timestamp of the course.
+  _harvard_courses_set_timestamp($node);
+}
+
+/**
+ * Set the time stamp field for the harvard easily.
+ *
+ * @param $node
+ *   The node object.
+ */
+function _harvard_courses_set_timestamp($node) {
+  $wrapper = entity_metadata_wrapper('node', $node);
+
+  try {
+    $timestamp = harvard_courses_get_timestamp_by_semester($wrapper);
+    $wrapper->field_timestamp->set($timestamp);
+  } catch (Exception $e) {
+    $params = array(
+      '@nid' => $node->nid,
+      '@title' => $node->title,
+      '@error' => $e->getMessage()
+    );
+    $message = t('Error occurred when trying to update the course(@nid) @title: @error', $params);
+    drupal_set_message($message, 'error');
+    watchdog('harvard_course', $message);
+  }
+}
+
+/**
+ * Return the timestamp from the course node.
+ *
+ * @param EntityMetadataWrapper $wrapper
+ *   The node object wrapped with entity metadata wrapper.
+ *
+ * @return int
+ *   The timestamp of the course semester.
+ */
+function harvard_courses_get_timestamp_by_semester(EntityMetadataWrapper $wrapper) {
+  $data = explode(' ', str_replace(array('(', ')'), ' ', $wrapper->field_calendar_period->value()));
+  $month = $data[0];
+
+  foreach ($data as $info) {
+    // Check this is an integer and the year is grater then 1900.
+    if (intval($info) && $info > 1900) {
+      $year = $info;
+      break;
+    }
+  }
+
+  return strtotime($month . ' ' . $year);
 }
 
 /**
@@ -395,8 +449,7 @@ function harvard_courses_node_update($node) {
   // Loading into a wrapper the original node and the current node.
   $wrapper = entity_metadata_wrapper('node', $node);
   $original_node = entity_metadata_wrapper('node', $node->original);
-
-  // Make a list of the fields we need to check in the viste and in the course
+  // Make a list of the fields we need to check in the vsite and in the course
   // node.
   $fields = array(
     'cat_num' => array(
@@ -405,6 +458,7 @@ function harvard_courses_node_update($node) {
     ),
   );
 
+  $operations = array();
   foreach ($fields as $field) {
     $removed_items = array_diff($original_node->{$field['field_name']}->value(), $wrapper->{$field['field_name']}->value());
     $added_items = array_diff($wrapper->{$field['field_name']}->value(), $original_node->{$field['field_name']}->value());
@@ -414,7 +468,7 @@ function harvard_courses_node_update($node) {
       $courses = harvard_courses_related_nodes($field['course'], $removed_items);
       if (!empty($courses)) {
         foreach ($courses as $course_id) {
-          og_ungroup('node', $node->nid, 'node', $course_id);
+          $operations[] = array('og_ungroup', array('node', $node->nid, 'node', $course_id));
         }
       }
     }
@@ -426,11 +480,16 @@ function harvard_courses_node_update($node) {
       $courses = harvard_courses_related_nodes($field['course'], $added_items);
       if (!empty($courses)) {
         foreach ($courses as $course) {
-          og_group('node', $node->nid, array('entity_type' => 'node', 'entity' => $course));
+          $operations[] = array('og_group', array('node', $node->nid, array('entity_type' => 'node', 'entity' => $course)));
         }
       }
       $node->skip_og_membership = TRUE;
     }
+  }
+
+  // Save the courses for later.
+  if ($operations) {
+    variable_set('harvard_courses_operations', $operations);
   }
 }
 
@@ -451,6 +510,7 @@ function harvard_courses_entity_update($entity, $type) {
     'field_school_name',
   );
 
+  $operations = array();
   foreach ($fields as $field) {
     if ($wrapper->{$field}->value() != $original->{$field}->value()) {
       // Un-groping removed courses.
@@ -462,24 +522,30 @@ function harvard_courses_entity_update($entity, $type) {
       }
       if (!empty($courses)) {
         foreach ($courses as $course_id) {
-          og_ungroup('node', $entity->hostEntity(), 'node', $course_id);
+          $operations[] = array('og_ungroup', array('node', $entity->hostEntity(), 'node', $course_id));
         }
       }
 
       // Groping added courses.
       if ($field == 'field_school_name') {
-        $courses = harvard_courses_related_nodes('field_faculty', array($wrapper->{$field}->label()));
+        // Un-grouping removed courses from the group.
+        $courses = harvard_courses_courses_from_field_collection($wrapper);
       }
       else {
         $courses = harvard_courses_related_nodes($field, array($wrapper->{$field}->value()));
       }
       if (!empty($courses)) {
         foreach ($courses as $course) {
-          og_group('node', $entity->hostEntity(), array('entity_type' => 'node', 'entity' => $course));
+          $operations[] = array('og_group', array('node', $entity->hostEntity(), array('entity_type' => 'node', 'entity' => $course)));
         }
       }
       $entity->skip_og_membership = TRUE;
     }
+  }
+
+  // Save the courses for later.
+  if ($operations) {
+    variable_set('harvard_courses_operations', $operations);
   }
 }
 
@@ -492,23 +558,17 @@ function harvard_courses_entity_insert($entity, $type) {
   }
   $wrapper = entity_metadata_wrapper($type, $entity);
 
-  // Building the parameters for the API function that will return us the
-  // courses according to the field collection data.
-  $fields = array(
-    'field_faculty',
-    'field_department_id',
-  );
-  $search_values = array(
-    'field_faculty' => $wrapper->field_school_name->label(),
-    'field_department_id' => $wrapper->field_department_id->value(),
-  );
-
   // Un-grouping removed courses from the group.
-  $courses = harvard_courses_related_nodes($fields, $search_values);
+  $courses = $courses = harvard_courses_courses_from_field_collection($wrapper);
+
   if (!empty($courses)) {
+    $operations = array();
     foreach ($courses as $course) {
-      og_group('node', $entity->hostEntity(), array('entity_type' => 'node', 'entity' => $course));
+      $operations[] = array('og_group', array('node', $entity->hostEntity(), array('entity_type' => 'node', 'entity' => $course)));
     }
+
+    // Save courses operations for later.
+    variable_set('harvard_courses_operations', $operations);
   }
 }
 
@@ -527,8 +587,45 @@ function harvard_courses_entity_delete($entity, $type) {
     return;
   }
 
-  // Building the parameters for the API function that will return us the
-  // courses according to the field collection data.
+  // Un-grouping removed courses from the group.
+  $courses = harvard_courses_courses_from_field_collection($wrapper);
+  if (!empty($courses)) {
+    $operations = array();
+    foreach ($courses as $course_id) {
+      $operations[] = array('og_ungroup', array('node', $site, 'node', $course_id));
+    }
+
+    // Save the operations for later.
+    variable_set('harvard_courses_operations', $operations);
+  }
+}
+
+/**
+ * Set batch operation for adding/removing courses.
+ */
+function harvard_courses_handle_courses($operations) {
+  // Setting the batch.
+  $batch = array(
+    'operations' => $operations,
+    'title' => t('Processing courses'),
+    'init_message' => t('The courses processing has started.'),
+    'progress_message' => t('Processed @current out of @total.'),
+    'error_message' => t('Courses processing has encountered an error.'),
+  );
+  batch_set($batch);
+  batch_process('courses');
+}
+
+/**
+ * Find harvard courses according to field collection.
+ *
+ * @param EntityMetadataWrapper $wrapper
+ *   The wrapper object for the field collection.
+ *
+ * @return array
+ *   List of NIDs.
+ */
+function harvard_courses_courses_from_field_collection(EntityMetadataWrapper $wrapper) {
   $fields = array(
     'field_faculty',
     'field_department_id',
@@ -539,12 +636,7 @@ function harvard_courses_entity_delete($entity, $type) {
   );
 
   // Un-grouping removed courses from the group.
-  $courses = harvard_courses_related_nodes($fields, $search_values);
-  if (!empty($courses)) {
-    foreach ($courses as $course_id) {
-      og_ungroup('node', $site, 'node', $course_id);
-    }
-  }
+  return harvard_courses_related_nodes($fields, $search_values);
 }
 
 /**
@@ -764,6 +856,12 @@ function harvard_courses_feature_submit($form, $form_state) {
   }
 
   $wrapper->save();
+
+  // Handle operations we set after changing the harvard courses app settings.
+  if ($operations = variable_get('harvard_courses_operations', array())) {
+    harvard_courses_handle_courses($operations);
+    variable_del('harvard_courses_operations');
+  }
 }
 
 /**
@@ -812,10 +910,43 @@ function harvard_courses_field_access($op, $field, $entity_type, $entity, $accou
 }
 
 /**
- * Implements hook_vsite_og_node_type_info().
+ * Return an EntityFieldQuery for the os batch update set; Return a query for
+ * load/count the harvard courses.
+ *
+ * @see os_set_update_batch().
  */
-function harvard_courses_vsite_og_node_type_info() {
-  return array(
-    'harvard_course' => 'group content',
-  );
+function harvard_courses_update_time_stamp_query($id = NULL) {
+  $query = new EntityFieldQuery();
+
+  $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('type', 'harvard_course')
+    ->addTag('no_harvard_courses_timestamp');
+
+  if ($id) {
+    $query->propertyCondition('nid', $id, '>=');
+  }
+
+  return $query;
+}
+
+/**
+ * Iterator callback for the os update batch; Update the timestamp field for a
+ * harvard course.
+ *
+ * @see os_ser_update_btach.
+ */
+function harvard_courses_update_iterator($node) {
+  _harvard_courses_set_timestamp($node);
+  node_save($node);
+}
+
+/**
+* Implements hook_query_TAG_alter()
+*
+* Limits resultset to those courses that do not have a timestamp yet.
+*/
+function harvard_courses_query_no_harvard_courses_timestamp_alter(QueryAlterableInterface $query) {
+  $query->leftJoin('field_data_field_timestamp', 'field_data_field_timestamp', '(node.nid = field_data_field_timestamp.entity_id AND field_data_field_timestamp.entity_type = \'node\')');
+  $query->isNull('field_data_field_timestamp.field_timestamp_value');
 }

@@ -1,4 +1,4 @@
-; Drupal.org MakeFile for OpenScholar
+;Drupal.org MakeFile for OpenScholar
 core = 7.x
 api = 2
 
@@ -275,6 +275,7 @@ projects[oembed][subdir] = "contrib"
 projects[oembed][version] = 1.0-rc2
 projects[oembed][patch][] = "http://cgit.drupalcode.org/oembed/patch/?id=a27adf7c1afe763ee5f386f30f0aea73a6097ff1"
 projects[oembed][patch][] = "http://drupal.org/files/issues/oembed.2134415.wysiwyg_dimensions.patch"
+projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/514d6c636dc69ea76ea307a874c7cd9c3e0fb045/patches/oembed.alt_tags_no_escape.patch"
 
 projects[og][subdir] = "contrib"
 projects[og][version] = 2.6
@@ -403,6 +404,7 @@ projects[views][download][branch] = 7.x-3.x
 projects[views][download][revision] = 7173513
 projects[views][patch][] = "https://drupal.org/files/issues/views-jquery_dialog-2125261-1.patch"
 projects[views][patch][] = "https://drupal.org/files/views-1885668-2.patch"
+projects[views][patch][] = "https://www.drupal.org/files/views-1511396-110-array_diff_recursive.patch"
 
 projects[views_bulk_operations][subdir] = "contrib"
 projects[views_bulk_operations][version] = 3.0

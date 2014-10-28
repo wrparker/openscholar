@@ -230,18 +230,6 @@ a img {
 	
 	}
 
-.sv-list-video.sv-list-view-teaser.sv-list-layout-grid .file,
-.sv-list-image.sv-list-view-teaser.sv-list-layout-grid .file {
-	background:#f1f1f1;
-	}
-
-.sv-list-video.sv-list-view-teaser.sv-list-layout-grid .field-name-os-file-description,
-.sv-list-video.sv-list-view-teaser.sv-list-layout-grid .file-info,
-.sv-list-image.sv-list-view-teaser.sv-list-layout-grid .field-name-os-file-description,
-.sv-list-image.sv-list-view-teaser.sv-list-layout-grid .file-info {
-	padding:0 8px;
-	}
-
 
 .block-boxes-os_sv_list_file .file img {margin-right:15px;display:block;}
 .block-boxes-os_sv_list_file .file img.file-icon {margin-right:8px;}
@@ -273,6 +261,7 @@ bottom: 20px;
 #content-column .sv-list-image.sv-list-view-teaser .file-image img,
 #content-column .sv-list-video.sv-list-view-teaser .oembed {
 	float: left;
+	position:relative;
 }
 
 #content-column .sv-list-video.sv-list-view-teaser img,
@@ -340,14 +329,6 @@ margin-bottom: 8px !important;
 	position:relative;
 }
 
-.sv-list-video.sv-list-view-teaser.sv-list-layout-grid .field-name-os-file-description,
-.sv-list-image.sv-list-view-teaser.sv-list-layout-grid .field-name-os-file-description {
-	display:none;
-	position:absolute;
-	z-index:2000;
-	background: #F1F1F1;
-	padding-bottom:8px;
-}
 
 p {
      margin: 0px 0px 1.5em;
@@ -432,9 +413,7 @@ q:after {
   content: "";
 }
 
-blockquote p {
-  margin: 0;
-}
+
 
 blockquote {
 border-left: 2px solid #807E6D;
@@ -569,14 +548,18 @@ ul ul ul ul {
 	margin-bottom:15px;
 	}
 
-.page-user .profile .item-list li {list-style:none !important;}
+.page-user .profile .item-list li {
+	list-style:none !important;
+	}
 
 
 .tweets-pulled-listing ul {
 	margin-left:0;
 }
 
-.sidebar .block-boxes-os_taxonomy_fbt ul ul {margin: 0 10px;}
+.block-boxes-os_taxonomy_fbt ul ul {
+	margin: 0 10px;
+	}
 
 /* ADDS SOME SPACE BELOW EACH VOCAB SECTION IN FACET'D BELOW */
 .sidebar .block-boxes-os_boxes_facetapi_vocabulary .item-list {
@@ -589,7 +572,7 @@ ul ul ul ul {
 
 
 .boxes-box ul.featured-links {
-
+    list-style: none !important;
     margin-left: 0;
 }
 
@@ -954,12 +937,15 @@ header[role=banner],
 }
 
 /* iframe padding when its floated left or right*/
+.lt-ie9 div[style*="FLOAT: LEFT;"] iframe,
+div[style*="float: left;"] iframe,
 .lt-ie9 span[style*="FLOAT: LEFT;"] iframe,
 span[style*="float: left;"] iframe {
 	padding-right:15px;
 	}
 	
-	
+.lt-ie9	div[style*="FLOAT:"][style*="RIGHT;"] iframe,
+div[style*="float:"][style*="right;"] iframe,	
 .lt-ie9	span[style*="FLOAT:"][style*="RIGHT;"] iframe,
 span[style*="float:"][style*="right;"] iframe {
 	padding-left:15px;

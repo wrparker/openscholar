@@ -8,8 +8,13 @@ body  {
 	font-family: 'Roboto',Baskerville,Palatino,'Palatino Linotype','Book Antiqua','Times New Roman',serif;
     font-size: 14px;
     background: #F6F6F6;
+ }
  
-}
+ 
+  #content-column p {
+	font-family: 'Roboto', arial;
+   
+ }
 
 
 .hg-container {

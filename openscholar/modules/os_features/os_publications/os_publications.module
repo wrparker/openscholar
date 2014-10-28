@@ -202,8 +202,8 @@ function os_publications_query_biblio_alter(QueryAlterableInterface $query) {
     // the Biblio title.
     $order['biblio_year'] = isset($biblio_year_sort) ? $biblio_year_sort : 'DESC';
     $order['n.sticky'] = 'DESC';
-    $order['n.created'] = 'DESC';
     $order['biblio_date'] = 'DESC';
+    $order['n.created'] = 'DESC';
     $order['biblio_sort_title'] = (isset($biblio_sort_title)) ? $biblio_sort_title : 'ASC';
   }
   elseif (variable_get('biblio_sort', 'year') == 'type') {
@@ -217,6 +217,7 @@ function os_publications_query_biblio_alter(QueryAlterableInterface $query) {
       if ($key == 'biblio_type_name') {
         $new_order['n.sticky'] = 'DESC';
         $new_order['biblio_year'] = 'DESC';
+        $new_order['biblio_date'] = 'DESC';
         $new_order['n.created'] = 'DESC';
       }
     }
@@ -327,6 +328,22 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
     $node = $form['#node'];
   }
   $tid = !empty($form_state['biblio_type']) ? $form_state['biblio_type'] : (isset($form_state['node']->biblio_type) ? $form_state['node']->biblio_type : 0);
+
+  // The current book type isn't displaying in the publications page. We need
+  // to notify the user.
+  if (!in_array($tid, variable_get('os_publications_filter_publication_types'))) {
+    $link = menu_get_item('cp/build/publication/settings');
+    $params = array(
+      '@url' => url('cp/build/publication/settings'),
+      '@type' => $form['biblio_type']['#options'][$tid],
+    );
+
+    $form['biblio_type']['#suffix'] = t('Note: The publication type <b>@type</b> is not currently shown in publication lists.', $params);
+
+    if ($link['access']) {
+      $form['biblio_type']['#suffix'] .= t('You can change what publication types are shown by going to <a href="@url">publication settings.</a>', $params);
+    }
+  }
 
   // Patent Country Code array.
   $patent_country_codes = array('AP' => 'ARIPO (African Reg Ind Prop Org)', 'AL' => 'Albania', 'DZ' => 'Algeria', 'AR' => 'Argentina',
@@ -570,7 +587,9 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
   // Remove labels from biblio url section and add a placeholder.
   unset($form['url']['biblio_url_title']['#description']);
   unset($form['url']['#prefix']);
-  $form['url']['biblio_url_title']['#default_value'] = t('Publisher\'s Version');
+  if (empty($form['url']['biblio_url_title']['#default_value'])) {
+    $form['url']['biblio_url_title']['#default_value'] = t('Publisher\'s Version');
+  }
 
   // Add in a new validation for patents
   $form['#validate'][] = 'os_publications_biblio_form_patent_validate';
@@ -648,6 +667,9 @@ function os_publications_alter_year_field(&$form, &$form_state) {
   // defined in the "biblio_years_text" variable. Both _biblio_numeric_year()
   // and _biblio_text_year() are used to convert between code and numeric.
   $year_value = $form['biblio_year']['#default_value'];
+
+  //Get from the node since it may or may not be on the form.
+  $date_value = is_object($form['#node'])? $form['#node']->biblio_date : '';
   $year_coded_value = '';
 
   // If not a number then it was coded, so we want to show the value in the
@@ -687,6 +709,32 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#default_value' => $year_coded_value,
   );
 
+  $in_press_year = array_search('In Press', $years);
+  $form['biblio_year_coded_extrayear'] = array(
+    '#type' => 'textfield',
+    '#description' => 'e.g. 2015',
+    '#title' => 'Expected In Press Year',
+    '#size' => 10,
+    '#default_value' => $date_value,
+    '#states' => array(
+      // Only show this field when 'biblio_years_text' is used.
+      'visible' => array(
+        ':input[name="biblio_year_coded"]' => array('value' => "{$in_press_year}"),
+      ),
+    ),
+    '#weight' => $form['biblio_year_group']['#weight'] + 1,
+  );
+
+  //Hide biblio_date field if we are using it for "In Press Extra"
+  if($form['biblio_date']) {
+    $form['biblio_date']['#states'] = array(
+      // Only show this field when 'biblio_years_text' is not used.
+      'invisible' => array(
+        ':input[name="biblio_year_coded"]' => array('value' => "{$in_press_year}"),
+      ),
+    );
+  }
+
   // Add validation message for validating the field via JS.
   $form['biblio_year_group']['#suffix'] = '<div id="biblio-year-group-validate">' . t('Input must be in the form YYYY. Only numerical digits are allowed.') . '</div>';
 
@@ -711,6 +759,9 @@ function os_publications_validate_year_field($form, &$form_state) {
   // Set the coded value as the year if exist.
   if ($form_state['values']['biblio_year_coded'] && !$form_state['values']['biblio_year']) {
     $form_state['values']['biblio_year'] = $form_state['values']['biblio_year_coded'];
+    if ($form_state['values']['biblio_year_coded_extrayear']) {
+      $form_state['values']['biblio_date'] = $form_state['values']['biblio_year_coded_extrayear'];
+    }
   }
 }
 
@@ -798,6 +849,18 @@ function os_publications_biblio_form_patent_validate(&$form, &$form_state) {
   $form_state['values']['biblio_edition'] = $form['biblio_section']['#options'][$patent_key];
 }
 
+function os_publications_entity_prepare_view($entities, $type, $langcode) {
+  // Load a specific node into the user object for later theming.
+  if ($type == 'node') {
+    foreach ($entities as $nid => $entity) {
+      if($entity->type == 'biblio' && $entity->biblio_year == 'In Press' && !empty($entity->biblio_date)) {
+        $entity->biblio_year .= ", {$entity->biblio_date}";
+        $entity->biblio_date = '';
+      }
+    }
+  }
+}
+
 /**
  * Is given a render array representing the biblio node ready for rendering in the list view
  *
@@ -855,7 +918,7 @@ function _os_publications_biblio_entry_alter($markup, $node) {
   if (!empty($node->biblio_url)) {
     $biblio_url = $node->biblio_url;
     $biblio_check_url = l($biblio_url,$biblio_url);
-    $biblio_url_title = !empty($node->biblio_url_title) ? $node->biblio_url_title : 'Website';
+    $biblio_url_title = !empty($node->biblio_url_title) ? $node->biblio_url_title : t("Publisher's Version");
     $new_biblio_url = l($biblio_url_title,$biblio_url);
     if ($insert === FALSE) {
       $html .= ' ' . $new_biblio_url;
@@ -938,6 +1001,17 @@ function os_publications_process_format($element) {
     unset($element['format']['format']['#options']['title_filter']);
   }
   return $element;
+}
+
+/**
+ * Implements hook_wysiwyg_editor_settings_alter().
+ *
+ * Prevents the <p> tag from being included in publication titles
+ */
+function os_publications_wysiwyg_editor_settings_alter(&$settings, $context) {
+  if ($context['profile']->format == 'title_filter') {
+    $settings['forced_root_block'] = '';
+  }
 }
 
 /**
@@ -1255,4 +1329,25 @@ function os_publications_import_type($name, $field_settings) {
       ->fields($ct_vals)
       ->execute();
   }
+}
+
+/**
+ * Reverts a given citation style to the defaults set in it's file
+ */
+function os_publications_revert_citeproc_style($name, $path = '') {
+  if (!$path) {
+    $path = drupal_get_path('module', 'biblio_citeproc').'/style/';
+  }
+  $path = $path . $name . '.csl';
+
+  if (!file_exists($path)) {
+    return false;
+  }
+
+  $csl = file_get_contents($path);
+  $name = basename($path);
+  // Use citeproc's function to update the db.
+  biblio_citeproc_install_style($name, $csl);
+
+  return true;
 }

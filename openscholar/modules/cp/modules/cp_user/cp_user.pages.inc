@@ -56,9 +56,21 @@ function cp_user_get_member_rows($gid) {
       $role_edit_text = t('edit');
       $change_ownership = '';
       $human_name = TRUE;
-      $role = _cp_user_get_role($account->uid, $vsite->group->nid, $human_name);
       $options = array('attributes' => array('class' => array('cp-user-float-right')));
-      $role_edit_link = l($role_edit_text, "cp/users/edit_membership/{$account->uid}", $options);
+
+      $membership = og_get_membership('node', $gid, 'user', $account->uid);
+      if ($membership->type == 'support_expire') {  // is there a constant for this I should be using?
+        $role = t('Support User');
+        $expire = strtotime('+'.variable_get('vsite_support_expire', '3 days'), $membership->created);
+        $remaining = $expire - REQUEST_TIME;
+        $role_edit_link = '<span class="cp-user-float-right">No longer member in '
+          .(($remaining > 86400)?date('j', $remaining).' days.':date('G', $remaining).' hours.')
+          .'</span>';
+      }
+      else {
+        $role = _cp_user_get_role($account->uid, $vsite->group->nid, $human_name);
+        $role_edit_link = l($role_edit_text, "cp/users/edit_membership/{$account->uid}", $options);
+      }
       $status_edit_link = l($status_edit_text, "cp/users/delete_membership/{$account->uid}", $options);
     }
 
@@ -335,7 +347,7 @@ function cp_user_edit_membership_form($form_state, $user_load) {
   $form['edit_membership']['group_manager'] = array(
     '#type' => 'checkbox',
     // Theme the checkbox label to look like the radio options.
-    '#title' => _cp_user_role_option(t('Set as site manager'), t('Make <em>@name</em> the site owner.', array('@name' => $name))),
+    '#title' => _cp_user_role_option(t('Set as site owner'), t('Make <em>@name</em> the site owner.', array('@name' => $name))),
     '#default_value' => $space->group->uid == $group_user->uid,
     '#access' => in_array('support team', $user->roles) || $space->group->uid == $user->uid,
   );

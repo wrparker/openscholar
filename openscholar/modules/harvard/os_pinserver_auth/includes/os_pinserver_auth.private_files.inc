@@ -153,6 +153,15 @@ function _os_pinserver_auth_file_download($uri) {
       $wrapper = file_stream_wrapper_get_instance_by_uri($uri);
       return pinserver_redirect(array('redirect' => $wrapper->getExternalUrl(), 'tk_forward' => '1'));
     }
+    // If we are on os_fast and private by pin is not used, go to the standard private file path
+    else if (!$private_files_by_pin && $os_fast && isset($file->fid) && function_exists('drupal_goto')) {
+      // In this case we use the path that has a full bootstrap, since this file can only be accessed by site members.
+      if (class_exists('DrupalPrivateStreamWrapper')) {
+        $instance = new DrupalPrivateStreamWrapper();
+        $instance->setUri($uri);
+        header('Location: ' . $instance->getExternalUrl(), TRUE, 302);
+      }
+    }
   }
 }
 
@@ -217,8 +226,9 @@ function _os_pinserver_auth_vsite_private_file_settings(&$form, $form_state) {
       '#type' => 'checkbox',
       '#title' => t('Extend access to Harvard Community'),
       '#default_value' => variable_get('os_files_private_pinserver', 0),
-      '#description' => t('By default, private files are only accessible to your site members. By extending access to Harvard Community, anyone with a valid Harvard XID can log in using the Harvard Pinserver to access your private files.'),
+      '#description' => t('By extending access to Harvard Community, anyone with a valid Harvard ID can log in using the Harvard Pinserver to access your private files. You must have a custom domain and pin application to change this setting.'),
       '#weight' => 1,
+      '#disabled' => !(user_access('administer pinserver') && variable_get('vsite_domain_name', false)),
     );
   }
 

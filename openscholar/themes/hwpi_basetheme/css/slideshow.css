@@ -22,7 +22,11 @@ font-family:georgia,serif;
 	font-family:arial,sans-serif;
 }
 
-
+/*PREVENT JUMPY EFFECT WHEN NO SIDEARS AND 3-1 SS STYLE IS USED
+  HOLDS SPACE OPEN UNTIL JS CAN LOAD PRECISE INLINE HEIGHT VALUE*/
+.no-sidebars .region-content-top #layout_3_1_overlay .slide {
+height:327px;
+}
  
 
 

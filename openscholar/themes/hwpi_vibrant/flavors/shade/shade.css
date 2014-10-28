@@ -1,9 +1,37 @@
-#boxes-box-site_info, #boxes-box-site_info a {
-    font-family: open sans,arial,sans-serif;
+#layout_16_9_overlay .slide-copy p, 
+#layout_16_9_overlay .slide-copy h2, 
+#layout_16_9_side .slide-copy p, 
+#layout_16_9_side .slide-copy h2, 
+.slide-copy p,
+#page-title, 
+.node-title, 
+.page-search .title a, 
+#content-column .block.block-boxes-os_boxes_manual_list .links.inline a, 
+.more-link, 
+.page-search #content-column p, 
+.links a, 
+#footer ul.menu a, 
+.boxes-box-content h2, 
+.view-os-events .views-field-colorbox, 
+.field-name-body h2, 
+.field-name-body h3, 
+.field-name-body h4
+#boxes-box-site_info, 
+#boxes-box-site_info a,
+#content-column p,
+#tinymce {
+    font-family: helvetica,arial,sans-serif;
 }
+
+#tinymce {
+	font-weight:normal;
+}
+
+
+
 .region-header-third ul.nice-menu a {
     color: #8A101E;
-    font: 15px open sans,arial,sans-serif;
+    font: 14px helvetica,arial,sans-serif;
 }
 #search-block-form .form-item label {
     font-size: 12px;
@@ -22,7 +50,7 @@
 }
 #menu-bar ul a, #menu-bar ul.nice-menu a, #menu-bar ul.nice-menu .menuparent a {
     color: #FFFFFF;
-    font-family: open sans,arial,sans-serif;
+    font-family: helvetica,arial,sans-serif;
     font-size: 18px;
 }
 .boxes-box-content .caption h2 a,
@@ -48,13 +76,10 @@
 }
 
 body {
-    font-family: open sans,arial,serif;
-    font-size: 16px;
-    line-height: 28px;
+    font-family: helvetica,arial,serif;
+    line-height: 25px;
 }
-#page-title, .node-title, .page-search .title a, #content-column .block.block-boxes-os_boxes_manual_list .links.inline a, .more-link, .page-search #content-column p, .links a, #footer ul.menu a, .boxes-box-content h2, .view-os-events .views-field-colorbox, .field-name-body h2, .field-name-body h3, .field-name-body h4 {
-    font-family: open sans,arial,sans-serif;
-}
+
 h1 a, h2 a, h3 a, h4 a {
     font-weight: normal;
     text-decoration: none;
@@ -70,7 +95,7 @@ h1, h2, h3, h4 {
     background: none repeat scroll 0 0 #8996A0;
 }
 #layout_16_9_side .slide-copy h2 {
-    font: bold 30px open sans,arial,sans-serif;
+    font: bold 30px helvetica,arial,sans-serif;
 }
 #layout_16_9_side .slide-copy p {
     text-shadow: 0 1px 0 rgba(37, 37, 37, 0.75);
@@ -100,9 +125,7 @@ body.front #columns{
     border-radius: 3px;
     box-shadow: 0 0;
 }
-#layout_16_9_overlay .slide-copy p, #layout_16_9_overlay .slide-copy h2, #layout_16_9_side .slide-copy p, #layout_16_9_side .slide-copy h2, .slide-copy p {
-    font-family: open sans,arial,sans-serif;
-}
+
 .front #content-panels .block-title {
     background-color: #e3eaef;
     color: #000000;
@@ -150,7 +173,7 @@ sidebar .block-title {
     background: none repeat scroll 0 0 transparent;
    }
    span[style]{
-   	font-family:open sans,arial, sans-serif!important;
+   	font-family:helvetica,arial, sans-serif!important;
    }
    
 .event-start-month {
@@ -169,11 +192,9 @@ border-radius: 15px;
 }
 span.date-display-single {
     color: #474747;
-    font-size:14px;
+
 }
-.front #content-panels .block, .sidebar .block {
-    margin-bottom: 40px;
-}
+
 #layout_16_9_side .hero-copy h2 {
     border: 0 none;
     color: #FFFFFF;
@@ -221,7 +242,7 @@ span.date-display-single {
 }
 h1.node-title {
     font-weight: normal;
-    font-size:20px;
+ 
 }
 #content-column .field-name-body h3 {
     font-size: 20px;
@@ -234,7 +255,7 @@ ul.links li.link-count-node-readmore {
 /*main navbar*/
 #menu-bar ul.nice-menu .menuparent ul li a {
     background: none repeat scroll 0 0 #1d1d1d !important;
-    font-family: open sans,Arial,Helvetica,sans-serif;
+    font-family: helvetica,Arial,Helvetica,sans-serif;
     font-weight: normal;
 }
 #menu-bar ul.nice-menu ul {
@@ -307,7 +328,7 @@ ul.nice-menu-down li ul li ul {
     padding: 7px 15px 7px 0;
 }
 .slide-copy p {
-    font: 16px/24px open sans,arial,sans-serif;
+    font: 16px/24px helvetica,arial,sans-serif;
 }
 /*sidebar*/
 .section-nav .menu-depth-1 > a {
@@ -339,8 +360,8 @@ ul.nice-menu-down li ul li ul {
 }
 
 .not-front .field-name-body {
-    font-family: open sans, arial, sans-serif;
-    font-size: 16px;
+    font-family: helvetica, arial, sans-serif;
+   
 }
 h2.field-label {
     border-bottom: 0 none !important;
@@ -407,4 +428,9 @@ color: #215990;
 
 #footer .footer-login {
 color: #FFF;
+}
+
+#footer .footer-login:after {
+background-image: none;
+
 }

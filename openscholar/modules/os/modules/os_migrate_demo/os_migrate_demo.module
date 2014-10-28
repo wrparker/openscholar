@@ -615,7 +615,7 @@ function os_migrate_demo_get_user_by_name($name, $return = FALSE) {
 
 /**
  * Get a role id.
- * 
+ *
  * @param $name
  * @param $gid
  */
@@ -969,6 +969,13 @@ function os_migrate_demo_set_read_only($value) {
   variable_set('os_readonly_mode', $value);
 }
 
+function os_migrate_demo_add_to_whitelist($domain) {
+  $domains = variable_get('media_embed_whitelist', array());
+  $domains[] = $domain;
+
+  variable_set('media_embed_whitelist', array_values($domains));
+}
+
 /**
  * Return the number of times the feed item exists.
  *
@@ -1021,4 +1028,49 @@ function os_migrate_demo_get_child_site_nid($profile_title) {
   }
 
   print($child_site_from_profile);
+}
+
+/**
+ * Remove the courses for s given values.
+ */
+function os_migrate_demo_remove_courses() {
+  _os_migrate_demo_remove_courses(FALSE);
+}
+
+/**
+ * Add the courses for s given values.
+ */
+function os_migrate_demo_add_courses() {
+  _os_migrate_demo_remove_courses();
+}
+
+/**
+ * Remove/add the courses for s given values.
+ *
+ * @param $group
+ *   Determine if we need to group or un group the courses.
+ */
+function _os_migrate_demo_remove_courses($group = TRUE) {
+  $fields = array(
+    'field_faculty',
+    'field_department_id',
+  );
+
+  $search_values = array(
+    'field_faculty' => "Harvard Graduate School of Design",
+    'field_department_id' => 'Architecture',
+  );
+
+  // Un-grouping removed courses from the group.
+  $courses = harvard_courses_related_nodes($fields, $search_values);
+  if (!empty($courses)) {
+    foreach ($courses as $course_id) {
+      if ($group) {
+        og_group('node', 2, array('entity_type' => 'node', 'entity' => $course_id));
+      }
+      else {
+        og_ungroup('node', 2, 'node', $course_id);
+      }
+    }
+  }
 }

@@ -41,12 +41,15 @@ class os_boxes_media extends os_boxes_default {
       '#type' => 'textfield',
       '#default_value' => $this->options['maxwidth'],
       '#field_suffix' => 'px',
-      '#description' => t('Enter the maximum width the media can be when displayed.')
+      '#description' => t('Enter the maximum width the media can be when displayed. Use to 0 to leave it at the default
+        size. WARNING: This may cause the video to break out of columns in your page layout. Some trial and error may
+        be needed to ensure the embed looks good in your site layout.')
     );
 
     $form['help'] = array(
       '#prefix' => '<p>',
-      '#markup' => t('If you\'d like additional text around your image, video or iframe, you should use the Custom Text/HTML box. It will allow you to embed media around text.'),
+      '#markup' => t('If you\'d like additional text around your image, video or iframe, you should use the Custom
+        Text/HTML box. It will allow you to embed media around text.'),
       '#suffix' => '</p>',
     );
 

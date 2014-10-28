@@ -675,6 +675,22 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * Sets a variable with drush
+   *
+   * @param $name
+   *    The variable name to set
+   * @value $value
+   *    The value to set the variable to
+   */
+  private function set_variable($name, $value) {
+    // always use json encoding just to make things simpler for us
+    // catches arrays, objects, strings equally
+    $value = json_encode($value);
+
+    $this->getDriver()->drush("vset --format=json $name $value");
+  }
+
+  /**
    * @Then /^I should see the following <json>:$/
    */
   public function iShouldSeeTheFollowingJson(TableNode $table) {
@@ -944,13 +960,16 @@ class FeatureContext extends DrupalContext {
    * @Given /^I remove harvard courses$/
    */
   public function iRemoveHarvardCourses() {
-    $metasteps = array();
-    $metasteps[] = new Step\When('I visit "john/cp/build/features/harvard_courses"');
-    $metasteps[] = new Step\When('I press "Remove"');
-    $metasteps[] = new Step\When('I sleep for "2"');
-    $metasteps[] = new Step\When('I press "Save configuration"');
+    $this->invoke_code('os_migrate_demo_remove_courses');
+    $this->iSleepFor(2);
+  }
 
-    return $metasteps;
+  /**
+   * @Given /^I add the courses$/
+   */
+  public function iAddTheCourses() {
+    $this->invoke_code('os_migrate_demo_add_courses');
+    $this->iSleepFor(2);
   }
 
   /**
@@ -1268,7 +1287,7 @@ class FeatureContext extends DrupalContext {
       new Step\When('I press "Save permissions"'),
     );
   }
-  
+
   /**
    * @Then /^I should verify that the user "([^"]*)" has a role of "([^"]*)" in the group "([^"]*)"$/
    */
@@ -2004,5 +2023,12 @@ class FeatureContext extends DrupalContext {
     elseif ($child_site_from_profile != $child_site_nid) {
       throw new Exception(sprintf('The child site of the profile "%s" is not the site "%s".', $profile_title, $child_site_title));
     }
+  }
+
+  /**
+   * @given /^I whitelist the domain "([^"]*)"$/
+   */
+  public function iWhitelistTheDomain($domain) {
+    $domains = $this->invoke_code('os_migrate_demo_add_to_whitelist', array("'{$domain}'"));
   }
 }

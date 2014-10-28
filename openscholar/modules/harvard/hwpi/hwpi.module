@@ -251,8 +251,20 @@ function hwpi_node_insert($node) {
     return;
   }
 
-  // Only continues to alter settings if the site's theme is HWPI.
   $vsite = vsite_get_vsite($node->nid);
+
+  if (module_exists('salesforce')) {
+    //PURL is needed but spaces_og_node_insert may not have fired yet
+    if (!isset($vsite->group->purl) && is_array($node->purl) && !empty($node->purl['value'])) {
+      $vsite->group->purl = $node->purl['value'];
+    }
+
+    module_load_include('inc', 'hwpi', 'includes/salesforce');
+    hwpi_salesforce_impl_project_create($vsite, $vsite->group->uid);
+    hwpi_salesforce_support_project_create($vsite, $vsite->group->uid);
+  }
+
+  // Only continues to alter settings if the site's theme is HWPI.
   $theme = $vsite->controllers->variable->get('theme_default');
   if (!_is_hwpi_theme($theme)) {
     return;
@@ -332,4 +344,14 @@ function hwpi_vsite_register_notify_author_body_text_alter(&$body_text) {
     . "    Learn more about options and pricing at http://hwp.harvard.edu\n\n"
     . "Sincerely,\n"
     . "Harvard Web Publishing\n";
+}
+
+/**
+ *  Implements hook_form_FORM_ID_alter().
+ */
+function hwpi_form_vsite_register_form_alter(&$form, &$form_state) {
+  $form['agree_terms'] = array(
+    '#type' => 'item',
+    '#markup' => t('By clicking the button below, you are agreeing to our <a href="@url" target="_blank">Terms of Use</a>.', array('@url'  => 'http://hwp.harvard.edu/terms-use'))
+  );
 }
