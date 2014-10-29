@@ -26,6 +26,7 @@ function os_breadcrumbs_build_breadcrumbs() {
   }else {
     // Load the app type.
     $bundle = $menu_object->type;
+
     switch($bundle) {
       case 'page':
       case 'book':
@@ -33,6 +34,7 @@ function os_breadcrumbs_build_breadcrumbs() {
         break;
       case 'class_material':
       case 'software_release':
+      case 'harvard_course':
       default:
         $links = _os_breadcrumbs_build_app_breadcrumb($menu_active_trail);
     }
@@ -231,6 +233,13 @@ function _os_breadcrumbs_build_app_breadcrumb($menu_active_trail) {
           break;
       }
     }
+  }
+
+  // Dealing harvard courses bread crumbs.
+  if ($node->type == 'harvard_course') {
+    $links = array();
+    $links[] = l(t('HOME'),'<front>');
+    $links[] = l(t('Harvard courses'),'courses');
   }
   return $links;
 }
