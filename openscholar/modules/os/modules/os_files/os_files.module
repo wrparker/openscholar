@@ -420,7 +420,7 @@ function os_files_upload_validate_file_type(stdclass $file, $types) {
 function os_files_upload_validate_image_dimensions(stdClass $file) {
   $errors = array();
 
-  if ($file->type != 'image') return $errors;
+  if (file_get_type($file) != 'image') return $errors;
 
   // estimate code from devshed
   // see: http://forums.devshed.com/php-development-5/gd-image-resizing-memory-requirements-605060.html
@@ -431,8 +431,7 @@ function os_files_upload_validate_image_dimensions(stdClass $file) {
   $image_channels = $image_info['channels'];
   $memory_needed = round(($image_width * $image_height * $image_bits * $image_channels / 8 + Pow(2, 16)) * 1.8);
 
-
-  $memory_to_process = $memory_needed * 2.5;    // gross overestimate, but to be safe
+  $memory_to_process = $memory_needed * 2;    // gross overestimate, but to be safe
 
   $memory_limit = parse_size(ini_get('memory_limit'));
   $memory_drupal = parse_size('100MB'); // estimate how much memory Drupal will use
@@ -444,8 +443,8 @@ function os_files_upload_validate_image_dimensions(stdClass $file) {
       '!resizer' => l('picresize.com', 'http://www.picresize.com/')
     ));
   }
-  
-  return errors;
+
+  return $errors;
 }
 
 function os_files_file_entity_add_upload_submit(&$form, &$form_state) {
