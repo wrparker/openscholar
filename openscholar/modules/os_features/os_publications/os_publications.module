@@ -16,8 +16,8 @@ function os_publications_os_app_info() {
 
   $apps['os_publications'] = array(
     'path' => 'publications',
-  	'nodetypes' => array(
-  	  'biblio',
+    'nodetypes' => array(
+      'biblio',
     ),
     'importers' => array(
       'biblio' => array(
@@ -887,7 +887,7 @@ function os_publications_biblio_entry_alter(&$entry, $node) {
   // Attach the book cover.
   $entry['entry']['#markup'] = $image . $entry['entry']['#markup'];
   $entry['contextual_links'] = array(
-  	'#type' => 'contextual_links',
+    '#type' => 'contextual_links',
     '#contextual_links' => array(
       'node' => array('node', array($node->nid))
     ),
@@ -1050,7 +1050,7 @@ function os_publications_node_view_alter(&$build, $type) {
     case 'full':
       // Remove the publication image as it's called in theme_os_publications_tabular instead.
       if (isset($build['field_biblio_image'])) {
-      	$build['field_biblio_image']['#access'] = FALSE;
+        $build['field_biblio_image']['#access'] = FALSE;
       }
 
       // Remove the second export links that appear at the bottom of full view
@@ -1070,8 +1070,8 @@ function os_publications_node_view_alter(&$build, $type) {
       }
 
       // Add the abstract slider.
-	    _os_publications_attach_abstract($build, $build['#node'], 'teaser');
-	    // Add in notes.
+      _os_publications_attach_abstract($build, $build['#node'], 'teaser');
+      // Add in notes.
       if(isset($spaces) && is_object($spaces) && $spaces->controllers->variable->get('os_publications_note_in_teaser', 'space') == TRUE) {
         _os_publications_attach_notes($build, $build['#node']);
       }
@@ -1208,7 +1208,7 @@ function os_publications_preprocess_page(&$variables) {
   }
 
   ctools_include('infinite_scroll', 'os');
-  _os_add_infinite_scroll('os_publications', '#content li.pager-next>a', '#content>.biblio-category-section', array('pager' => '#content ul.pager', 'hide_biblio_categories' => TRUE));
+  _os_add_infinite_scroll('os_publications');
 
   // Hide the numbers of results found for anonymous users.
   if (user_is_anonymous()) {
