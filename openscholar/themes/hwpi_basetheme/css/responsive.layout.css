@@ -77,6 +77,7 @@ display:none;
 
 .region-header-first {display:none !important;}
 
+.header-left.header-main .region-header-second .region-inner,
 .header-left.header-main.header-right .region-header-second .region-inner {
     margin-left: 0 !important;
 }
