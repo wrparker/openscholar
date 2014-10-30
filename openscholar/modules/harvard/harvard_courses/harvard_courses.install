@@ -149,3 +149,44 @@ function harvard_courses_update_7004(&$sandbox) {
     'iterator' => array('HarvardCoursesUpdate7004', 'iterator'),
   ));
 }
+
+/**
+ * Get the courses catalog number and their real unique identifier.
+ */
+function _harvard_courses_update_7005(&$sandbox) {
+  $rows = 300;
+  $base_url = 'http://services.isites.harvard.edu/course_catalog/api/v1/search';
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $xml = file_get_contents($base_url);
+
+    $courses = new SimpleXMLElement($xml);
+    $courses_number = (String)$courses->courses[0]->attributes()->{'numFound'};
+    $sandbox['batch_number'] = intval($courses_number / $rows) + 1;
+    $sandbox['results'] = array();
+  }
+
+  $start = empty($sandbox['start']) ? 0 : $sandbox['start'];
+
+  for ($i = 0; $i <= $sandbox['batch_number']; $i++) {
+    $xml = file_get_contents($base_url . urlencode('?rows=' . $rows . '&start=' . $start));
+    $courses = new SimpleXMLElement($xml);
+
+    foreach ($courses->courses[0]->course as $course) {
+      $sandbox['results'][(String)$course->course_number] = array(
+        'id' => (String)$course->attributes()->{'id'},
+      );
+    }
+  }
+
+  if ($sandbox['progress'] > $sandbox['max']) {
+    // The total results amount is smaller then the amount we processed in a
+    // single batch. After a single batch we can set the finished to true.
+    $sandbox['#finished'] = 1;
+    variable_set('harvard_courses_guids', $sandbox['results']);
+  }
+  else {
+    // Save the last node, increase the node and check if the import finished.
+    $sandbox['#finished'] = ($sandbox['progress'] / $sandbox['max']);
+  }
+}
