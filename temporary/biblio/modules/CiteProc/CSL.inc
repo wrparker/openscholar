@@ -76,7 +76,7 @@ class citeproc {
         $this->bibliography = new csl_bibliography($bibliography, $this);
       }
     }
-   }
+  }
   function render($data, $mode = NULL) {
     $text = '';
     switch ($mode) {
@@ -851,9 +851,7 @@ class csl_names extends csl_format {
           $text .= $element->render($authors, $mode);
           // String replace the weird spacing with " ,"
           $text = str_replace(" ,", ",", $text);
-          if (!$element->suffix) {
-            $text = rtrim($text);
-          }
+          $text = rtrim($text);
         }
       }
       if (!empty($text)) $variable_parts[] = $text;
@@ -1196,6 +1194,7 @@ class csl_label extends csl_format {
         $plural = 'multiple';
         break;
       case 'contextual':
+      default:
         if (count($data) == 1) {
           $plural = 'single';
         }
@@ -1305,7 +1304,7 @@ class csl_group extends csl_format{
     $text = str_replace($quotes, $replace, $text);
 
 
-   return $this->format($text);
+    return $this->format($text);
   }
 }
 
@@ -1454,21 +1453,9 @@ class csl_if extends csl_rendering_element {
       $variables  = explode(' ', $variables);
       $matches = 0;
       foreach ($variables as $var) {
-        // if variable is actually an element in an array in $data, set up that element
-        // to be the value that is tested
-        if (strstr($var, ":") !== FALSE) {
-          $variable_parts = explode(":", $var);
-          $value_array = $data->{$variable_parts[0]};
-          if (is_array($value_array)) {
-            $value_in_data = $value_array[$variable_parts[1]];
-          }
-        }
-        else {
-          $value_in_data = $data->$var;
-        }
-        if (isset($value_in_data) && !empty($value_in_data) && $match == 'any') return TRUE;
-        if ((!isset($value_in_data) || empty($value_in_data)) && $match == 'all') return FALSE;
-        if (isset($value_in_data) && !empty($value_in_data)) $matches++;
+        if (isset($data->$var) && !empty($data->$var) && $match == 'any') return TRUE;
+        if ((!isset($data->$var) || empty($data->$var)) && $match == 'all') return FALSE;
+        if (isset($data->$var) && !empty($data->$var)) $matches++;
       }
       if ($match == 'all' && $matches == count($variables)) return TRUE;
       if ($match == 'none' && $matches == 0) return TRUE;
@@ -1602,7 +1589,7 @@ class csl_locale  {
           if (!$term) {
             $term = @$this->style_locale->xpath("//locale/terms/term[@name='$arg1'$form]$plural");
           }
-       }
+        }
         if (!$term) {
           $term = $this->locale->xpath("//cs:term[@name='$arg1'$form]$plural");
         }
