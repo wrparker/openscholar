@@ -68,6 +68,37 @@ function harvard_courses_menu() {
 }
 
 /**
+ * Implements hook_menu_alter().
+ */
+function harvard_courses_menu_alter($items) {
+  $items['courses']['title callback'] = 'harvard_courses_title_callback';
+}
+
+/**
+ *  Implements hook_preprocess().
+ */
+function harvard_courses_preprocess(&$variables, $hook)
+{
+  if ($hook == 'views_view_unformatted') {
+    dpm($variables);
+
+  }
+
+  $variables['view']->query->pager->display->display_options['menu']['title'] = 'a';
+}
+
+/**
+ *  Implements hook_views_pre_render().
+ */
+function harvard_courses_title_callback(View $view) {
+  $menu = menu_get_item();
+  if ($menu['path'] == 'courses' && !empty($_GET['term'])) {
+    return check_plain($_GET['term']);
+  }
+  return t('Courses');
+}
+
+/**
  * Implements hook_os_widget().
  */
 function harvard_courses_os_widget() {
@@ -110,18 +141,6 @@ function  harvard_courses_block_view($delta) {
   }
 
   return $block;
-}
-
-/**
- *  Implements hook_views_pre_render().
- */
-function harvard_courses_views_pre_render(View $view) {
-  $menu = menu_get_item();
-
-  if ($menu['path'] == 'courses' && !empty($_GET['term'])) {
-    drupal_set_title(check_plain($_GET['term']));
-  }
-
 }
 
 /**

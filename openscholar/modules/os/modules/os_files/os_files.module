@@ -1440,6 +1440,11 @@ function os_files_preprocess_image_formatter(&$variables) {
  */
 function os_files_preprocess_node(&$vars) {
   $body = &$vars['content']['body'][0]['#markup'];
+
+  if (empty($vars['content']['body']['#items'])) {
+    return;
+  }
+
   $original = $vars['content']['body']['#items'][0]['safe_value'];
 
   if (strpos($original, '<!--break-->') !== FALSE) {
