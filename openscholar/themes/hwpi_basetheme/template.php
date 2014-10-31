@@ -348,9 +348,9 @@ function hwpi_basetheme_node_view_alter(&$build) {
         }
       }
 
-      $terms = vsite_vocab_sort_weight_alpha(taxonomy_term_load_multiple($tids));
+      $terms = vsite_vocab_sort_weight_alpha(taxonomy_term_load_multiple($terms));
 
-      foreach ($ordered_terms as $info) {
+      foreach ($terms as $info) {
         $v = taxonomy_vocabulary_load($info['vid']);
         if (!isset($build[$v->machine_name])) {
           $m = $v->machine_name;
