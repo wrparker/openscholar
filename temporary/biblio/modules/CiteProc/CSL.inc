@@ -820,10 +820,13 @@ class csl_names extends csl_format {
       }
     }
 
-    if (!$matches) { // we don't have any primary suspects, so lets check the substitutes...
+    // we don't have any primary suspects, so lets check the substitutes...
+    if (!$matches) { 
       if (isset($this->substitutes)) {
-        foreach ($this->substitutes->elements as $element) {
-          if (($element instanceof csl_names)) { //test to see if any of the other names variables has content
+        foreach ($this->substitutes->elements as $element) {          
+          // if it's not a "names" element, don't render it
+          if (($element instanceof csl_names)) {
+            //test to see if any of the other names variables has content
             $variables  = explode(' ', $element->variable);
             foreach ($variables as $var) {
               list($contributor, $category) = explode(':', $var);
@@ -832,9 +835,6 @@ class csl_names extends csl_format {
                 break;
               }
             }
-          }
-          else { // if it's not a "names" element, just render it
-            return $element->render($data, $mode);
           }
         }
       }
@@ -1042,7 +1042,7 @@ class csl_number extends csl_format {
 
   // Some people will enter the ordinal suffix of their edition which then doubles the suffix, strip out the non-numerials.
   function strip_letters($num) {
-  	return $num = preg_match('/\d/', $num) > 0 ? preg_replace("/[^0-9]/","",$num) : $num;
+    return $num = preg_match('/\d/', $num) > 0 ? preg_replace("/[^0-9]/","",$num) : $num;
   }
 
   function ordinal($num) {
@@ -1139,7 +1139,7 @@ class csl_text extends csl_format {
         // If the user left the "author" field blank, don't print 'Anon.' or anything.
         if($macro == 'author' || $macro == 'anon') {
           if($text == 'Anon.') {
-          	$text = '';
+            $text = '';
           }
         }
         // We don't want to display any urls in the citation.

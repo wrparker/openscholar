@@ -54,8 +54,9 @@ class sv_list_node_event extends sv_list_plugin  {
     // Every entity we need should already be in the entities array
     $output = array();
     $raw = $this->query->ordered_results;
-    foreach ($raw as $row) {
-      if (isset($entities[$row->entity_id])) {
+    // use this instead of a foreach because this query can have more results than expected
+    for ($i=0; $i<$options['number_of_items']; $i++) {
+      if ($row = $raw[$i]) {
         $entity = clone $entities[$row->entity_id];
         $entity->date_id = implode('.', array('date', $entity->nid, 'field_date', $row->delta));
         $output[] = $entity;
