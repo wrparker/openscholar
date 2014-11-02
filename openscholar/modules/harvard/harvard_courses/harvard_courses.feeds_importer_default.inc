@@ -27,7 +27,7 @@ function harvard_courses_feeds_importer_default() {
       'plugin_key' => 'FeedsXPathParserXML',
       'config' => array(
         'sources' => array(
-          'xpathparser:14' => 'course_number',
+          'xpathparser:14' => '@id',
           'xpathparser:0' => 'course_number',
           'xpathparser:1' => 'description',
           'xpathparser:2' => 'school_name',

@@ -151,6 +151,13 @@ function harvard_courses_update_7004(&$sandbox) {
 }
 
 /**
+ * Change the guid for harvard courses importer.
+ */
+function harvard_courses_update_7005() {
+  features_revert(array('harvard_courses' => array('field', 'feeds_importer')));
+}
+
+/**
  * Delete harvard courses.
  */
 function harvard_courses_update_7006(&$sandbox) {
@@ -171,6 +178,7 @@ function harvard_courses_update_7006(&$sandbox) {
   $result = $query
     ->entityCondition('entity_type', 'node')
     ->propertyCondition('type', 'harvard_course')
+    ->propertyCondition('nid', $id, '>=')
     ->range(0, 300)
     ->execute();
 
