@@ -151,39 +151,43 @@ function harvard_courses_update_7004(&$sandbox) {
 }
 
 /**
- * Get the courses catalog number and their real unique identifier.
+ * Delete harvard courses.
  */
-function _harvard_courses_update_7005(&$sandbox) {
-  $rows = 300;
-  $base_url = 'http://services.isites.harvard.edu/course_catalog/api/v1/search';
+function harvard_courses_update_7006(&$sandbox) {
   if (!isset($sandbox['progress'])) {
     $sandbox['progress'] = 0;
-    $xml = file_get_contents($base_url);
-
-    $courses = new SimpleXMLElement($xml);
-    $courses_number = (String)$courses->courses[0]->attributes()->{'numFound'};
-    $sandbox['batch_number'] = intval($courses_number / $rows) + 1;
-    $sandbox['results'] = array();
+    // Get the total amounts of nodes.
+    $query = new EntityFieldQuery();
+    $sandbox['max'] = $query
+      ->entityCondition('entity_type', 'node')
+      ->propertyCondition('type', 'harvard_course')
+      ->count()
+      ->execute();
   }
 
-  $start = empty($sandbox['start']) ? 0 : $sandbox['start'];
+  $id = empty($sandbox['id']) ? 0 : $sandbox['id'];
 
-  for ($i = 0; $i <= $sandbox['batch_number']; $i++) {
-    $xml = file_get_contents($base_url . urlencode('?rows=' . $rows . '&start=' . $start));
-    $courses = new SimpleXMLElement($xml);
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('type', 'harvard_course')
+    ->range(0, 300)
+    ->execute();
 
-    foreach ($courses->courses[0]->course as $course) {
-      $sandbox['results'][(String)$course->course_number] = array(
-        'id' => (String)$course->attributes()->{'id'},
-      );
-    }
+  $ids_array = $result['node'];
+
+  if (empty($ids_array)) {
+    return;
   }
+
+  node_delete_multiple(array_keys($ids_array));
+
+  $sandbox['id'] = end($ids_array);
 
   if ($sandbox['progress'] > $sandbox['max']) {
     // The total results amount is smaller then the amount we processed in a
     // single batch. After a single batch we can set the finished to true.
     $sandbox['#finished'] = 1;
-    variable_set('harvard_courses_guids', $sandbox['results']);
   }
   else {
     // Save the last node, increase the node and check if the import finished.
