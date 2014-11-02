@@ -1238,10 +1238,7 @@ img.media-element.file-default[style*="float:"][style*="right;"] {
 	padding-left:15px;
 	padding-right:0;
 	}	
-	
-article.node-media-gallery.node-teaser .node-content {
-   height: 275px;
- }	
+		
 
 .block-boxes-os_sv_list_box .os_sv_list_box.sv-list-link.sv-list-view-links h1 a {
 	font-weight:normal;
@@ -1253,6 +1250,24 @@ article.node-media-gallery.node-teaser .node-content {
   float: left;
   margin: 0 1.5em .5em 0;
  }
+ 
+/** IMAGE GALLERY STYLE OVERRDIES **/
+ .mg-gallery img.stack-image {
+display: none;
+}
+
+.media-collection-item-wrapper {
+padding: 0;
+}
+
+.gallery-thumb-inner .iframe {
+display: block;
+}
+
+.article.node-media-gallery.node-teaser .node-content {
+height: auto;
+}
+ 
 
 /**
 LIST OF POSTS - PERSON TEASER IN SIDEBAR
