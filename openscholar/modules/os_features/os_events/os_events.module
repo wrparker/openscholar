@@ -680,6 +680,23 @@ function os_events_views_query_alter($view, $query) {
   // Determine the value of the calendar view mode(day, year, month) argument
   // value.
   $_GET[$_GET['type']] = isset($_GET[$_GET['type']]) ? $_GET[$_GET['type']] : date($format[$_GET['type']], time());
+
+  if ($view->current_display == 'feed_1') {
+    // todo: remove after working.
+    // path for example: calendar/export.ics/upcoming/seminars-events/econometrics
+    // Alter the exported events according the current path.
+    $menu = menu_get_item();
+
+    if ($menu['map'][2] == 'upcoming') {
+      // todo: change the query like the upcoming events.
+
+
+      if (!empty($menu['map'][3]) && !empty($menu['map'][4])) {
+        // We need to filter by the current taxonomy term filtering.
+        os_taxonomy_views_query_alter($view, $query);
+      }
+    }
+  }
 }
 
 /**
