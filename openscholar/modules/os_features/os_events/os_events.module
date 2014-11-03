@@ -688,10 +688,9 @@ function os_events_views_query_alter($view, views_plugin_query_default $query) {
     $menu = menu_get_item();
 
     if ($menu['map'][2] == 'upcoming') {
-      // todo: change the query like the upcoming events.
-      $query->where[0]['conditions'][3]['field'] = "DATE_FORMAT(ADDTIME(field_data_field_date.field_date_value, SEC_TO_TIME(-18000)), '%Y-%m-%d\T%H:%i') >= :node_date_filter";
-      unset($query->where[0]['conditions'][4]);
-
+      $query->where[1]['conditions'][3]['field'] = "DATE_FORMAT(ADDTIME(field_data_field_date.field_date_value, SEC_TO_TIME(-18000)), '%Y-%m-%d\T%H:%i') >= :field_data_field_date_field_date_value";
+      $query->where[1]['conditions'][3]['value'][':field_data_field_date_field_date_value'] = date("Y-m-d\TH:i");
+      unset($query->where[1]['conditions'][4]);
 
       if (!empty($menu['map'][3]) && !empty($menu['map'][4])) {
         // We need to filter by the current taxonomy term filtering.
