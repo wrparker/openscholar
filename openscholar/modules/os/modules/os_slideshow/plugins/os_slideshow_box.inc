@@ -171,7 +171,10 @@ class os_slideshow_box extends os_boxes_default {
 
       $block['content'] .= theme('os_slideshow_slideshow', $vars);
       $block['assets'] = $assets;
-      $this->set_cache($block['content'], $assets);
+      // if the slideshow is set to random, then we don't check for cache anyway
+      if (!$random) {
+        $this->set_cache($block['content'], $assets);
+      }
     }
     return $block;
   }
