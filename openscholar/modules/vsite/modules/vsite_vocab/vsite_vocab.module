@@ -497,7 +497,7 @@ function vsite_vocab_field_formatter_view($entity_type, $entity, $field, $instan
 
   // Iterate over each term and group by vocabulary.
   $data = array();
-  foreach ($ordered_terms as $term) {
+  foreach ($terms as $term) {
     if (empty($data['vocabulary'][$term['vid']])) {
       $vocab = taxonomy_vocabulary_load($term['vid']);
       $data['vocabulary'][$term['vid']] = check_plain($vocab->name);
