@@ -140,8 +140,8 @@ function harvard_courses_courses_filter() {
     ->fields('f', array('field_term_value'))
     ->distinct();
     $query->join('node', 'n', 'ogm.etid = n.nid');
-    $query->join('field_data_field_term', 'f', 'f.entity_id = n.nid AND f.entity_type =\'node\'');
-    $query->join('field_data_field_timestamp', 't', 't.entity_id = n.nid AND f.entity_type =\'node\'');
+    $query->join('field_data_field_term', 'f', "f.entity_id = n.nid AND f.entity_type ='node'");
+    $query->join('field_data_field_timestamp', 't', "t.entity_id = n.nid AND f.entity_type ='node'");
     $query->condition('ogm.gid', $vsite->id);
     $query->condition('n.type', 'harvard_course');
     $query->condition('ogm.entity_type', 'node');

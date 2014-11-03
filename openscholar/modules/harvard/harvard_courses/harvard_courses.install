@@ -149,3 +149,56 @@ function harvard_courses_update_7004(&$sandbox) {
     'iterator' => array('HarvardCoursesUpdate7004', 'iterator'),
   ));
 }
+
+/**
+ * Change the guid for harvard courses importer.
+ */
+function harvard_courses_update_7005() {
+  features_revert(array('harvard_courses' => array('feeds_importer')));
+}
+
+/**
+ * Delete harvard courses.
+ */
+function harvard_courses_update_7006(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    // Get the total amounts of nodes.
+    $query = new EntityFieldQuery();
+    $sandbox['max'] = $query
+      ->entityCondition('entity_type', 'node')
+      ->propertyCondition('type', 'harvard_course')
+      ->count()
+      ->execute();
+  }
+
+  $id = empty($sandbox['id']) ? 0 : $sandbox['id'];
+
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('type', 'harvard_course')
+    ->propertyCondition('nid', $id, '>=')
+    ->range(0, 300)
+    ->execute();
+
+  $ids_array = $result['node'];
+
+  if (empty($ids_array)) {
+    return;
+  }
+
+  node_delete_multiple(array_keys($ids_array));
+
+  $sandbox['id'] = end($ids_array);
+
+  if ($sandbox['progress'] > $sandbox['max']) {
+    // The total results amount is smaller then the amount we processed in a
+    // single batch. After a single batch we can set the finished to true.
+    $sandbox['#finished'] = 1;
+  }
+  else {
+    // Save the last node, increase the node and check if the import finished.
+    $sandbox['#finished'] = ($sandbox['progress'] / $sandbox['max']);
+  }
+}
