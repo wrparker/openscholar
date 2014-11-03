@@ -68,6 +68,20 @@ function harvard_courses_menu() {
 }
 
 /**
+ *  Implements hook_views_pre_render().
+ */
+function harvard_courses_views_pre_render(View &$view) {
+  $menu = menu_get_item();
+  $title = t('Courses');
+  
+  if ($menu['path'] == 'courses' && !empty($_GET['term'])) {
+    $title = check_plain($_GET['term']);
+  }
+
+  $view->set_title($title);
+}
+
+/**
  * Implements hook_os_widget().
  */
 function harvard_courses_os_widget() {
@@ -133,13 +147,24 @@ function harvard_courses_courses_filter() {
     $query->condition('ogm.entity_type', 'node');
     $query->orderBy('t.field_timestamp_value', 'DESC');
 
+  $term = empty($_GET['term']) ? '' : $_GET['term'];
+
   $semester = array();
   foreach ($query->execute() as $result) {
     $text = check_plain($result->field_term_value);
     $query_params = array(
       'term' => $text,
     );
-    $semester[$text] = l($text, 'courses', array('query' => $query_params));
+
+    $options = array(
+      'query' => $query_params,
+    );
+
+    if ($term == $text) {
+      $options['attributes']['style'] = array('font-weight: bold');
+    }
+
+    $semester[$text] = l($text, 'courses', $options);
   }
 
   return theme('item_list', array('title' => t('Filter by semester'), 'items' => $semester));
