@@ -668,7 +668,7 @@ function os_events_preprocess_date_views_pager(&$variables) {
  * When filtering by terms there could be a case when the type or the month are
  * not defined in the $_GET variables.
  */
-function os_events_views_query_alter($view, $query) {
+function os_events_views_query_alter($view, views_plugin_query_default $query) {
   if ($view->name != 'os_events' ) {
     return;
   }
@@ -680,6 +680,22 @@ function os_events_views_query_alter($view, $query) {
   // Determine the value of the calendar view mode(day, year, month) argument
   // value.
   $_GET[$_GET['type']] = isset($_GET[$_GET['type']]) ? $_GET[$_GET['type']] : date($format[$_GET['type']], time());
+
+  if ($view->current_display == 'feed_1') {
+    // Alter the exported events according the current path.
+    $menu = menu_get_item();
+
+    if ($menu['map'][2] == 'upcoming') {
+      $query->where[1]['conditions'][3]['field'] = "DATE_FORMAT(ADDTIME(field_data_field_date.field_date_value, SEC_TO_TIME(-18000)), '%Y-%m-%d\T%H:%i') >= :field_data_field_date_field_date_value";
+      $query->where[1]['conditions'][3]['value'][':field_data_field_date_field_date_value'] = date("Y-m-d\TH:i");
+      unset($query->where[1]['conditions'][4]);
+
+      if (!empty($menu['map'][3]) && !empty($menu['map'][4])) {
+        // We need to filter by the current taxonomy term filtering.
+        os_taxonomy_views_query_alter($view, $query);
+      }
+    }
+  }
 }
 
 /**

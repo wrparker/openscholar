@@ -161,6 +161,16 @@ function os_taxonomy_in_taxonomy_term_context($view = NULL) {
   }
 
   $item = menu_get_item();
+
+  if (strpos(implode('/', $item['original_map']), 'calendar/export.ics/upcoming/') === 0) {
+    // When exporting upcoming events filtered by term we need to see that we
+    // have 'upcoming/' in the original map. If so, search the key of the
+    // upcoming element and remove it from the original map. We don't need it.
+    count($item['original map']);
+    $key = array_search('upcoming', $item['original_map']);
+    unset($item['original_map'][$key]);
+  }
+
   $path_elements = count(explode("/", $path));
 
   if (count($item['original_map']) <= $path_elements) {
