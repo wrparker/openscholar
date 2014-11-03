@@ -668,7 +668,7 @@ function os_events_preprocess_date_views_pager(&$variables) {
  * When filtering by terms there could be a case when the type or the month are
  * not defined in the $_GET variables.
  */
-function os_events_views_query_alter($view, $query) {
+function os_events_views_query_alter($view, views_plugin_query_default $query) {
   if ($view->name != 'os_events' ) {
     return;
   }
@@ -689,6 +689,8 @@ function os_events_views_query_alter($view, $query) {
 
     if ($menu['map'][2] == 'upcoming') {
       // todo: change the query like the upcoming events.
+      $query->where[0]['conditions'][3]['field'] = "DATE_FORMAT(ADDTIME(field_data_field_date.field_date_value, SEC_TO_TIME(-18000)), '%Y-%m-%d\T%H:%i') >= :node_date_filter";
+      unset($query->where[0]['conditions'][4]);
 
 
       if (!empty($menu['map'][3]) && !empty($menu['map'][4])) {
