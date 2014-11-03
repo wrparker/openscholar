@@ -148,8 +148,10 @@ function biblio_marc_biblio_import($file, $terms = array(), $batch = FALSE, $ses
 
 function biblio_marc_check_md5($md5) {
   static $marc_md5s = array();
+  $vsite = vsite_get_vsite();
+
   if (empty($marc_md5s)) {
-    $result = db_query("SELECT * FROM {biblio_marc} ");
+    $result = db_query("SELECT biblio_marc_md5, nid FROM {biblio_marc}, {og_membership} WHERE nid = etid and gid = " . $vsite->id);
     foreach ($result as $row) {
       $marc_md5s[$row->biblio_marc_md5] = $row->nid;
     }

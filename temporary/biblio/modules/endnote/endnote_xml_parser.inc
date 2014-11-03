@@ -437,8 +437,10 @@ class EndNoteXMLParser {
 
   function biblio_xml_check_md5($md5) {
     static $xml_md5s = array();
+    $vsite = vsite_get_vsite();
+
     if (empty($xml_md5s)) {
-      $result = db_query("SELECT * FROM {biblio_xml} ");
+      $result = db_query("SELECT biblio_xml_md5, nid FROM {biblio_xml}, {og_membership} WHERE nid = etid and gid = " . $vsite->id);
       foreach ($result as $row) {
         $xml_md5s[$row->biblio_xml_md5] = $row->nid;
       }

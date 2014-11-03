@@ -388,8 +388,10 @@ function biblio_tagged_tagged_map_reset($type = NULL) {
 
 function biblio_tagged_check_md5($md5) {
   static $tagged_md5s = array();
+  $vsite = vsite_get_vsite();
+
   if (empty($tagged_md5s)) {
-    $result = db_query("SELECT * FROM {biblio_tagged} ");
+    $result = db_query("SELECT biblio_tagged_md5, nid FROM {biblio_tagged}, {og_membership} WHERE nid = etid and gid = " . $vsite->id);
     foreach ($result as $row ) {
       $tagged_md5s[$row->biblio_tagged_md5] = $row->nid;
     }
