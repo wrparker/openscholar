@@ -150,7 +150,9 @@ class os_boxes_manual_list extends os_boxes_default {
       else {
         $block['content'] = theme('links', array('links' => $links, 'attributes' => array('class' => array('featured-links'))));
       }
-      $this->set_cache($block['content']);
+      if (!$random) {
+        $this->set_cache($block['content']);
+      }
     }
     return $block;
   }
