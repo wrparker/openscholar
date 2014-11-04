@@ -166,12 +166,12 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
 
     }
     // Verify the cache is still valid, based on time since created.
-    if (($block = $this->get_cache()) === FALSE) {
-      // Verify the facet block has something to work on (means - it is in a solr
-      // search page). If not - execute the empty solr search without showing
-      // the results.
-      // If empty search happened, we will cache the block.
-      $set_cache = $this->call_empty_search_if_needed();
+    // Verify the facet block has something to work on (means - it is in a solr
+    // search page). If not - execute the empty solr search without showing
+    // the results.
+    // If empty search happened, we will cache the block.
+    $use_cache = $this->call_empty_search_if_needed();
+    if (!$use_cache || (($block = $this->get_cache()) === FALSE)) {
 
       $block = module_invoke('facetapi', 'block_view', $delta_og_vocab);
       $block['delta'] = $delta;
@@ -187,7 +187,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
         $block['content'] = ' ';
 
         // While block is empty, caching NULL will provide the needed caching.
-        if ($set_cache) {
+        if ($use_cache) {
           $this->set_cache(NULL);
         }
       }
@@ -220,7 +220,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
         }
 
         $block['content'] = render($block['content']);
-        if ($set_cache) {
+        if ($use_cache) {
           $this->set_cache($block);
         }
       }
