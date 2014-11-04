@@ -2856,6 +2856,7 @@ function vsite_form_alias_validate($form, &$form_state) {
 function _vsite_form_alias_validate($entity_type, $entity, $path) {
   // Entities must have a path in order to generate their alias.
   $entity->path = $path;
+  $entity->add_prefix = FALSE;
 
   list($id) = entity_extract_ids($entity_type, $entity);
   if ($id) {
