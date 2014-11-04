@@ -889,6 +889,10 @@ function _cp_user_list_roles($format, $bundle, $gid = 0) {
   // Will not include the 'member' and 'non-member' OG roles.
   $og_roles = og_roles('node', $bundle, $gid, FALSE, FALSE);
 
+  // Reorder the roles to make sure that the role Basic Member is first and
+  // the role Administrator is the last role on the list.
+  $og_roles = _cp_user_list_roles_reorder($og_roles);
+
   switch ($format) {
     case 'names':
       // Create array of roles with their "machine" names as keys and their
@@ -928,6 +932,47 @@ function _cp_user_list_roles($format, $bundle, $gid = 0) {
   }
 
   return $roles;
+}
+
+/**
+ * Helper function; Reorder array of OG roles according to access level.
+ *
+ * @param $og_roles
+ *  Array of OG roles, as returned by og_roles().
+ *
+ * @return
+ *  Reordered array of OG roles. The role Basic Member will be first on the
+ *  list and the role Administrator will be last on the list. Other roles will
+ *  be between them without being reordered.
+ */
+function _cp_user_list_roles_reorder($og_roles) {
+  // The first array is for the Basic Member role, the last array is for the
+  // Administrator role, and the middle array is for all other roles.
+  $og_roles_first = array();
+  $og_roles_middle = array();
+  $og_roles_last = array();
+
+  foreach ($og_roles as $rid => $role_name) {
+    if ($role_name == OS_USER_ROLE_BASIC) {
+      // Basic Member role, insert it to the first array.
+      $og_roles_first[$rid] = $role_name;
+      continue;
+    }
+
+    if ($role_name == OS_USER_ROLE_ADMIN) {
+      // Administrator role, insert it to the last array.
+      $og_roles_last[$rid] = $role_name;
+      continue;
+    }
+
+    // Not Basic Member or Administrator role, insert it to the middle array.
+    $og_roles_middle[$rid] = $role_name;
+  }
+
+  // Merge the 3 arrays back together in the correct order.
+  $og_roles = $og_roles_first + $og_roles_middle + $og_roles_last;
+
+  return $og_roles;
 }
 
 /**
