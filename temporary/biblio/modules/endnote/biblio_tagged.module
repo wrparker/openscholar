@@ -391,9 +391,15 @@ function biblio_tagged_check_md5($md5) {
   $vsite = vsite_get_vsite();
 
   if (empty($tagged_md5s)) {
-    $result = db_query("SELECT biblio_tagged_md5, nid FROM {biblio_tagged}, {og_membership} WHERE nid = etid and gid = " . $vsite->id);
-    foreach ($result as $row ) {
-      $tagged_md5s[$row->biblio_tagged_md5] = $row->nid;
+    $query = db_select("biblio_tagged", "bb");
+    $query->join("og_membership", "ogm", "bb.nid = ogm.etid");
+    $query->fields('bb', array('biblio_tagged_md5', 'nid'));
+    $query->condition("ogm.entity_type","node","=");
+    $query->condition("ogm.gid",$vsite->id,"=");
+    $result = $query->execute();
+
+    while($record = $result->fetchAssoc()) {
+      $tagged_md5s[$record['biblio_tagged_md5']] = $record['nid'];
     }
   }
   if (isset($tagged_md5s[$md5])) {

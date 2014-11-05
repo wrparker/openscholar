@@ -451,9 +451,15 @@ function biblio_ris_check_md5($md5) {
   $vsite = vsite_get_vsite();
 
   if (empty($ris_md5s)) {
-    $result = db_query("SELECT biblio_ris_md5, nid FROM {biblio_ris}, {og_membership} WHERE nid = etid and gid = " . $vsite->id);
-    foreach ($result as $row) {
-      $ris_md5s[$row->biblio_ris_md5] = $row->nid;
+    $query = db_select("biblio_ris", "bb");
+    $query->join("og_membership", "ogm", "bb.nid = ogm.etid");
+    $query->fields('bb', array('biblio_ris_md5', 'nid'));
+    $query->condition("ogm.entity_type","node","=");
+    $query->condition("ogm.gid",$vsite->id,"=");
+    $result = $query->execute();
+
+    while($record = $result->fetchAssoc()) {
+      $ris_md5s[$record['biblio_ris_md5']] = $record['nid'];
     }
   }
   if (isset($ris_md5s[$md5])) {
