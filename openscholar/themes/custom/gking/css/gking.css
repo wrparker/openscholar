@@ -1627,7 +1627,7 @@ body.front .block-boxes-os_taxonomy_fbt ul li.term-applications {
     width: 290px;
     }
 
-/* DESCRIPTIONS */
+/* DESCRIPTIONS 
 body.front .block-boxes-os_taxonomy_fbt .description {
     position:absolute;
     display:none;
@@ -1645,44 +1645,99 @@ body.front .block-boxes-os_taxonomy_fbt .description {
     max-height: 130px;
 	overflow: auto;
     }
-    
- /* STYLE THE FONTPAGE TAXO WIDGET DESCRIPTION SCROLLBAR */   
-::-webkit-scrollbar {
-      width: 8px;
-} /* this targets the default scrollbar (compulsory) */
-
-::-webkit-scrollbar-track {
-      background-color: #db7002;
-} /* the new scrollbar will have a flat appearance with the set background color */
+    */
  
-::-webkit-scrollbar-thumb {
-      background-color: rgba(0, 0, 0, 0.2); 
-} /* this will style the thumb, ignoring the track */
- 
-::-webkit-scrollbar-button {
-      background-color: #db7002;
-} /* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
- 
-::-webkit-scrollbar-corner {
-      background-color: black;
-} /* if both the vertical and the horizontal bars appear, then perhaps the right bottom corner also needs to be styled */    
-    
 /* SCROLLBAR STYLES FOR USE WITH jscrollpane */
+ 	.jspContainer {
+	overflow: hidden;
+	position: relative;
+}
+
+.jspPane
+{
+	 position:absolute;
+	 
+   
+    
+}
+
+.jspVerticalBar
+{
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 8px;
+	height: 100%;
+	
+}
+
+
+.jspCap
+{
+	display: none;
+}
+
+
+
 .jspTrack
 {
-    background: #b46868; /* changed from #dde */
-    position: relative;
+	background: #ccc;
+	position: relative;
 }
- 
+
 .jspDrag
 {
-    background: rgba(0,0,0,0.2); /* changed from #bbd */
-    position: relative;
-    top: 0;
-    left: 0;
-    cursor: pointer;
-}    
-    
+	background: #db7002;
+	position: relative;
+	top: 0;
+	left: 0;
+	cursor: pointer;
+}
+
+.jspHorizontalBar .jspTrack,
+.jspHorizontalBar .jspDrag
+{
+	float: left;
+	height: 100%;
+}
+
+
+.jspArrow.jspDisabled
+{
+	cursor: default;
+	background: #80808d;
+}
+
+
+.jspVerticalBar .jspArrow:focus
+{
+	outline: none;
+}
+
+.jspCorner
+{
+	background: #eeeef4;
+	float: left;
+	height: 100%;
+}
+			
+			.scroll-pane
+			{
+				
+				  width:300px;
+    min-height: 219px;
+    padding: 5px 14px;
+    border-left: 2px solid #db7002;
+    left:260px;
+    top:50px;
+  
+    text-align: left;
+    line-height:1.35em;
+    font-size:13px;
+    margin-top: 5px;
+    max-height: 130px !important;
+	overflow: auto;
+			}
     
 body.front .block-boxes-os_taxonomy_fbt ul.termchild-applications .description {
     border-right: 2px solid #db7002;
