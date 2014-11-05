@@ -115,7 +115,7 @@ jQuery(document).ready(function() {
 		jQuery('#citation-wrapper').addClass('has-attached');
 	}
 	
-	jQuery('.front div.description').addClass('scroll-pane');
+	jQuery('.front div.description').addClass('wrapper');
 	
 });
 
