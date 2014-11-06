@@ -10,12 +10,12 @@
  */
 class OsImporterPresentationValidator extends OsImporterEntityValidateBase {
 
-  public function setFieldsInfo() {
-    $fields = parent::setFieldsInfo();
+  public function publicFieldsInfo() {
+    $fields = parent::publicFieldsInfo();
 
     $fields['field_presentation_date__start'] = array(
       'validators' => array(
-        'validateOsDate',
+        array($this, 'validateOsDate'),
       ),
     );
 

@@ -6,12 +6,12 @@
  */
 class OsImporterPersonValidator extends OsImporterEntityValidateBase {
 
-  public function setFieldsInfo() {
-    $fields = parent::setFieldsInfo();
+  public function publicFieldsInfo() {
+    $fields = parent::publicFieldsInfo();
 
     $fields['person_photo'] = array(
       'validators' => array(
-        'validatorPersonPhoto',
+        array($this, 'validatorPersonPhoto'),
       ),
     );
 

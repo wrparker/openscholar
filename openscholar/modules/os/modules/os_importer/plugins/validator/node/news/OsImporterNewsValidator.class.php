@@ -6,19 +6,19 @@
  */
 class OsImporterNewsValidator extends OsImporterEntityValidateBase {
 
-  public function setFieldsInfo() {
-    $fields = parent::setFieldsInfo();
+  public function publicFieldsInfo() {
+    $fields = parent::publicFieldsInfo();
 
     $fields['field_news_date__start'] = array(
       'validators' => array(
-        'isNotEmpty',
-        'validateOsDate',
+        array($this, 'isNotEmpty'),
+        array($this, 'validateOsDate'),
       ),
     );
 
     $fields['field_photo'] = array(
       'validators' => array(
-        'validatorNewsPhoto',
+        array($this, 'validatorNewsPhoto'),
       ),
     );
 
