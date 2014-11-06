@@ -15,13 +15,15 @@ class OsImporterPersonValidator extends OsImporterEntityValidateBase {
       ),
     );
 
+    $fields['title'] = array();
+
     return $fields;
   }
 
   /**
    * Validating the image is in 220X220.
    */
-  public function validatorPersonPhoto($field_name, $value) {
+  public function validatorPersonPhoto($field_name, $value, EntityMetadataWrapper $wrapper, EntityMetadataWrapper $property_wrapper) {
     // Allow empty photo.
     if (empty($value)) {
       return;
@@ -36,11 +38,11 @@ class OsImporterPersonValidator extends OsImporterEntityValidateBase {
    * The person node don't need title by default since the title is generated
    * from the first\last\middle name and we already verifying the titles.
    */
-  public function isNotEmpty($field_name, $value) {
+  public function isNotEmpty($field_name, $value, EntityMetadataWrapper $wrapper, EntityMetadataWrapper $property_wrapper) {
     if ($field_name == 'title') {
       return;
     }
 
-    parent::isNotEmpty($field_name, $value);
+    parent::isNotEmpty($field_name, $value,  $wrapper, $property_wrapper);
   }
 }
