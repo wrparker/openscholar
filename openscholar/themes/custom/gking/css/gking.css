@@ -1659,7 +1659,6 @@ body.front .block-boxes-os_taxonomy_fbt .description {
     filter: alpha(opacity=90); }
     
 .ps-container > .ps-scrollbar-y-rail {
-  display: none;
   position: absolute;
   /* please don't change 'position' */
   -webkit-border-radius: 4px;
@@ -1673,9 +1672,9 @@ body.front .block-boxes-os_taxonomy_fbt .description {
   -moz-transition: background-color 0.2s linear, opacity 0.2s linear;
   -o-transition: background-color 0.2s linear, opacity 0.2s linear;
   transition: background-color 0.2s linear, opacity 0.2s linear;
-  right: -3px;
+  right: 3px;
   /* there must be 'right' for ps-scrollbar-y-rail */
-  width: 6px; }
+  width: 7px; }
   
   .ps-container > .ps-scrollbar-y-rail > .ps-scrollbar-y {
     position: absolute;
@@ -1689,9 +1688,9 @@ body.front .block-boxes-os_taxonomy_fbt .description {
     -moz-transition: background-color 0.2s linear;
     -o-transition: background-color 0.2s linear;
     transition: background-color 0.2s linear;
-    right: -3px;
+    right: 3px;
     /* there must be 'right' for ps-scrollbar-y */
-    width: 6px; }
+    width: 7px; }
     
   .ps-container > .ps-scrollbar-y-rail.in-scrolling {
     background-color: #db7002;
@@ -1717,7 +1716,7 @@ body.front .block-boxes-os_taxonomy_fbt .description {
   filter: alpha(opacity=90); }
   
   .ps-container:hover > .ps-scrollbar-x-rail:hover > .ps-scrollbar-x {
-    background-color: #999; }
+    background-color: #db7002; }
     
 .ps-container:hover > .ps-scrollbar-y-rail:hover {
   background-color: #db7002;
@@ -1726,7 +1725,7 @@ body.front .block-boxes-os_taxonomy_fbt .description {
   filter: alpha(opacity=90); }
   
   .ps-container:hover > .ps-scrollbar-y-rail:hover > .ps-scrollbar-y {
-    background-color: #999; }
+    background-color: #db7002; }
 
  
 body.front .block-boxes-os_taxonomy_fbt ul.termchild-applications .description {
