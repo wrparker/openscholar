@@ -95,8 +95,8 @@ Feature: User functionality testing.
   @api @last
   Scenario: Test adding oneself as a support user
     Given users:
-      | Bob Smith | support@localhost.com | support user |
-      And I am logged in as "Bob Smith"
+          | SupportTester | support@localhost.com | support user |
+      And I am logged in as "SupportTester"
       And I visit "john"
       And I click "Support john"
      When I press "Join"
