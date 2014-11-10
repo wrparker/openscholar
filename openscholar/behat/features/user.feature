@@ -93,11 +93,13 @@ Feature: User functionality testing.
       And I should verify that the user "Louis" has a role of "vsite member" in the group "john"
 
   @api @last
-  Scenario: Test adding onself as a support user
-    Given I am logging in as "klark"
+  Scenario: Test adding oneself as a support user
+    Given users:
+      | Bob Smith | support@localhost.com | support user |
+      And I am logged in as "Bob Smith"
       And I visit "john"
       And I click "Support john"
      When I press "Join"
       And I visit "join/cp/users"
-     Then I should see the text "Support User" in the "klark" row
+     Then I should see the text "Support User" in the "Bob Smith" row
       And I should see the text "No longer member in 3 days." in the "klark" row
