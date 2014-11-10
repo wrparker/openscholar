@@ -91,3 +91,13 @@ Feature: User functionality testing.
       And I should print page
      Then I should see "Louis has been added to the website: John"
       And I should verify that the user "Louis" has a role of "vsite member" in the group "john"
+
+  @api @last
+  Scenario: Test adding onself as a support user
+    Given I am logging in as "klark"
+      And I visit "john"
+      And I click "Support john"
+     When I press "Join"
+      And I visit "join/cp/users"
+     Then I should see the text "Support User" in the "klark" row
+      And I should see the text "No longer member in 3 days." in the "klark" row
