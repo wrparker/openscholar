@@ -77,3 +77,13 @@ Feature:
       And I visit "john/publications/confpapers-tests"
      Then I should not see "ConfPapers tests. In:"
      Then I should see "ConfPapers tests, in"
+
+  @api
+  Scenario: verify the user can see message the the publication won't display
+            in the publication form.
+    Given I am logging in as "john"
+      And I visit "john/cp/build/features/os_publications"
+      And I uncheck the box "os_publications_filter_publication_types[102]"
+      And I press "edit-submit"
+      And I visit "john/node/add/biblio"
+     Then I should see "Note: The publication type Journal Article is not currently shown in publication lists."
