@@ -1648,42 +1648,6 @@ body.front .block-boxes-os_taxonomy_fbt .description {
     
  
 /* SCROLLBAR STYLES FOR USE WITH perfect scroll */
- 	.ps-container.ps-active-x > .ps-scrollbar-x-rail, .ps-container.ps-active-y > .ps-scrollbar-y-rail {
-  display: block; }
-  
-   
-  .ps-container > .ps-scrollbar-x-rail.in-scrolling {
-    background-color: #ccc;
-    }
-    
-.ps-container > .ps-scrollbar-y-rail {
-  position: absolute;
-  /* please don't change 'position' */
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  border-radius: 4px;
-
-  right: 0;
-  /* there must be 'right' for ps-scrollbar-y-rail */
-  width: 7px; }
-
-  .ps-container > .ps-scrollbar-y-rail > .ps-scrollbar-y {
-    position: absolute;
-    /* please don't change 'position' */
-    background-color: #db7002;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    -ms-border-radius: 4px;
-    border-radius: 4px;
-	right: 0;
-    /* there must be 'right' for ps-scrollbar-y */
-    width: 7px; }
-    
-  .ps-container > .ps-scrollbar-y-rail.in-scrolling {
-    background-color: #ccc;
- }
-
 
  
 body.front .block-boxes-os_taxonomy_fbt ul.termchild-applications .description {
