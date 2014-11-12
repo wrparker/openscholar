@@ -73,12 +73,11 @@ function harvard_courses_menu() {
 function harvard_courses_views_pre_render(View &$view) {
   $menu = menu_get_item();
   $title = t('Courses');
-  
+
   if ($menu['path'] == 'courses' && !empty($_GET['term'])) {
     $title = check_plain($_GET['term']);
+    $view->set_title($title);
   }
-
-  $view->set_title($title);
 }
 
 /**
