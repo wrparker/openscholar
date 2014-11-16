@@ -781,7 +781,8 @@ function os_taxonomy_select_list($form, $form_state, $terms_list, $path) {
   $menu = menu_get_item();
   $form_state['path'] = $path;
 
-  $wrapper = entity_metadata_wrapper('taxonomy_term', reset(array_keys($terms_list)));
+  $tids = array_keys($terms_list);
+  $wrapper = entity_metadata_wrapper('taxonomy_term', reset($tids));
   $form['#vocabulary'] = $wrapper->vocabulary->value();
 
   $form['#attached']['css'][] = drupal_get_path('module', 'os_taxonomy') . '/os_taxonomy.css';
@@ -793,20 +794,28 @@ function os_taxonomy_select_list($form, $form_state, $terms_list, $path) {
     $default_value = end($term_path);
   }
 
+  $new_terms_list = array();
+  foreach ($terms_list as $tid => $value) {
+    $term_path = 'taxonomy/term/' . $tid;
+    os_taxonomy_term_alias($term_path, array('path_prefix' => $path));
+    $new_terms_list[url($term_path, array('absolute' => TRUE))] = $value;
+  }
+
   // Giving a unique name for the form element will allow us coloring it when
   // there is a problem in the submission of the form.
   $form['terms_' . $form['#vocabulary']->vid] = array(
     '#type' => 'select',
-    '#options' => array('--none--' => t('Select an item')) + $terms_list,
+    '#options' => array(url($path, array('absolute' => TRUE)) => t('Select an item')) + $new_terms_list,
     '#default_value' => $default_value,
     '#attributes' => array(
       'class' => array('terms-list'),
     ),
   );
 
-  if (count($menu['map']) > 1 && $menu['map'][1] == 'taxonomy' && $menu['map'][2] == 'term') {
-    $form['terms']['#default_value'] = $menu['map'][3];
+  if (count($menu['map']) >= 3) {
+    $form['terms_' . $form['#vocabulary']->vid]['#default_value'] = url($_GET['q'], array('absolute' => TRUE));
   }
+
   $form['actions'] = array(
     '#type' => 'actions',
     'submit' => array(
@@ -819,27 +828,6 @@ function os_taxonomy_select_list($form, $form_state, $terms_list, $path) {
   );
 
   return $form;
-}
-
-/**
- * Submit handler - redirect the user to the taxonomy page.
- *
- *  @see os_taxonomy_forms().
- */
-function os_taxonomy_select_list_submit($form, &$form_state) {
-  $path = 'taxonomy/term/' . $form_state['values']['terms_' . $form['#vocabulary']->vid];
-  os_taxonomy_term_alias($path, array('path_prefix' => $form_state['path']));
-
-  $form_state['redirect'] = $path;
-}
-
-/**
- * Submit handler - verify that the user select a term.
- */
-function os_taxonomy_select_list_validate($form, &$form_state) {
-  if ($form_state['values']['terms_' . $form['#vocabulary']->vid] == '--none--') {
-    form_set_error('terms_' . $form['#vocabulary']->vid, t('Please select a term.'));
-  }
 }
 
 /**
