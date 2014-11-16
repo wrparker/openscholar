@@ -30,7 +30,7 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
       $field_info = field_info_field($field_name);
       $type = $field_info['type'];
       if ($type == 'entityreference') {
-        unset($fields[$field_name]['validators']);
+        unset($fields[$field_name]);
       }
     }
 

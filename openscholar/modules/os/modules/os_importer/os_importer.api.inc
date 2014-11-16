@@ -73,7 +73,8 @@ function _os_importer_import_vocab(FeedsSource $source, $entity, $item, $id) {
     // Create the terms and the vocabulary.
     if (preg_match('@[^a-z0-9_]+@', $vocab)) {
       $params['@name'] = $vocab;
-      $vocab = str_replace(array(' ', '.'), '', strtolower($vocab));
+      $vocab = str_replace(array(' ', '.', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')'), '', strtolower($vocab));
+      $vocab = str_replace(array('_', '-'), '_', $vocab);
       $params['@new-name'] = $vocab;
       drupal_set_message(t("The vocab name @name contained not allowed characters. The vocab name is @new-name. You can change vocabulary's name in the future.", $params), 'notice');
     }
