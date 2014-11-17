@@ -1632,7 +1632,7 @@ body.front .block-boxes-os_taxonomy_fbt .description {
     position:absolute;
     display:none;
     width:224px;
-    min-height: 219px;
+    height: 219px;
     padding: 5px 14px;
     border-left: 2px solid #db7002;
     left:260px;
@@ -1642,12 +1642,12 @@ body.front .block-boxes-os_taxonomy_fbt .description {
     line-height:1.35em;
     font-size:13px;
     margin-top: 5px;
-    max-height: 130px;
-	overflow: hidden;
+overflow:auto;
     }
     
  
 /* SCROLLBAR STYLES FOR USE WITH perfect scroll */
+
 
  
 body.front .block-boxes-os_taxonomy_fbt ul.termchild-applications .description {
