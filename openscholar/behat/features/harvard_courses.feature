@@ -22,3 +22,10 @@ Feature:
       And I add the courses
       And I visit "john/courses"
      Then I should see "(Re)fabricating Tectonic Prototypes"
+
+  @api @first
+    Scenario: Testing the hvarvard courses bread crumb.
+      Given I visit "john/courses"
+       When I click "(Re)fabricating Tectonic Prototypes"
+        And I click "Harvard courses"
+       Then I should see "(Re)fabricating Tectonic Prototypes"
