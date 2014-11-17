@@ -225,6 +225,19 @@ class os_taxonomy_fbt extends os_boxes_default {
 
     ctools_include('layout', 'os');
 
+    // Adding the current absolute current path for the os taxonomy JS file.
+    // This would help us select the current terms we search for. This part
+    // cannot be cached.
+    $settings['fbt'] = array(
+      'url' => url($_GET['q'], array('absolute' => TRUE))
+    );
+    $tid = str_replace('taxonomy/term/', '', os_taxonomy_in_taxonomy_term_context());
+    if ($term = taxonomy_term_load($tid)) {
+      $settings['fbt']['vid'] = $term->vid;
+    }
+
+    drupal_add_js($settings, array('type' => 'setting'));
+
     if ($this->options['behavior'] == '--all--') {
       $this->options['bundles'] = array();
     }
