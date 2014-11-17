@@ -1,10 +1,24 @@
 (function ($) {
 
+  /**
+   * Redirect the user to the term page when he select it from the list.
+   */
   Drupal.behaviors.submitOnChange = {
     attach: function () {
       $('.terms-list').change(function(e) {
-        $(this).closest('form').trigger('submit')
+        window.location = $(this).val();
       })
+    }
+  };
+
+  /**
+   * When filtering by term we need to select the term the user selected.
+   */
+  Drupal.behaviors.CheckSelectedTerm = {
+    attach: function() {
+      if (Drupal.settings.fbt['vid'] != 'undefined') {
+        $("select[name=terms_" + Drupal.settings.fbt['vid'] + "]").val(Drupal.settings.fbt['url']);
+      }
     }
   };
 
