@@ -9,7 +9,7 @@
     attach: function (ctx) {
     	
       // add a click handler to lists of posts
-      $('.os-sv-list', ctx).closest('.boxes-box-content').click(click_handler).each(function () {
+      $('.os-sv-list', ctx).closest('.boxes-box-content').once('os-sv-list-pager').click(click_handler).each(function () {
         // save the current page to our cache
         // get the delta of the box and the page, and store them that way
         var page_elem = $(this).find('[data-page]'),
