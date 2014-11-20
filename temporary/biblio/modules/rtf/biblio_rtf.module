@@ -15,6 +15,7 @@ function biblio_rtf_biblio_export_options() {
 }
 
 function biblio_rtf_node_view($node, $view_mode) {
+  return;
   if ($node->type == 'biblio') {
     switch ($view_mode) {
       case 'full':
