@@ -72,6 +72,10 @@ position:relative !important;
 }
 
 @media (max-width: 479px){
+	
+.region-content-top .block-boxes-os_slideshow_box .slide {
+height: auto !important;
+}
 
 .rslides_tabs li { 
 display:none !important;	
