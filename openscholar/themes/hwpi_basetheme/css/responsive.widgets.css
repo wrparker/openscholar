@@ -72,16 +72,18 @@ width: 100% !important;
 clear: left;
 }
 
-
-}
-
-@media (max-width: 479px){
-
 .ui-tabs ul.ui-tabs-nav li {
     display: block !important;
 }
 .ui-tabs ul.ui-tabs-nav li a {
     padding: 10px 20px !important;
 }
+
+
+}
+
+@media (max-width: 479px){
+
+/* TABS CSS WAS HERE */
 
 }
