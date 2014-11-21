@@ -365,15 +365,24 @@ function os_search_solr_apachesolr_privacy_callback($entity_id, $entity_type) {
  *
  * Remove the user and date from the search results.
  */
-function os_search_solr_apachesolr_process_results(&$arg) {
-  if(count($arg) == 0) {
+function os_search_solr_apachesolr_process_results(array &$results, DrupalSolrQueryInterface $query) {
+  if (empty($results)) {
     return;
   }
 
   // Remove the user and date from the results.
-  for($i = 0, $l = count($arg); $i < $l; $i++) {
-  	$arg[$i]['user'] = '';
-  	$arg[$i]['date'] = '';
+  foreach ($results as $delta => $result) {
+    $entity_id = $result[$result['entity_type']]->entity_id;
+
+    if (!entity_access('view', $result['entity_type'], entity_load_single($result['entity_type'], $entity_id))) {
+      // The user don't have access to see this entity. Remove the from the
+      // results.
+      unset($results[$delta]);
+      continue;
+    }
+
+    $results[$delta]['user'] = '';
+    $results[$delta]['date'] = '';
   }
 }
 
