@@ -349,7 +349,7 @@ function os_slideshow_preprocess_os_slideshow_slide(&$vars) {
   if ($files = field_get_items('node', $node, 'field_image')) {
     $file = reset($files);
   }
-  $img = ($node->field_image) ? $node->field_image[$lang][0]['uri'] : '';
+  $img = !empty($node->field_image[$lang]) ? $node->field_image[$lang][0]['uri'] : $node->field_image[LANGUAGE_NONE][0]['uri'];
   $img_vars = array('path' => $img, 'style_name' => $vars['style_name']);
   
   if ($items = field_get_items('node', $node, 'field_slideshow_alt_text')) {
