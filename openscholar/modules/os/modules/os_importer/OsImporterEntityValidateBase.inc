@@ -18,7 +18,7 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
       if ($info['required']) {
         // Check if the 'isNotEmpty' validator is already assigned to the field
         // in the base class. Don't re-add it to avoid duplicated messages.
-        if (isset($fields[$field_name]) && in_array('isNotEmpty', $fields[$field_name]['validators'])) {
+        if (!empty($fields[$field_name]['validators']) && in_array('isNotEmpty', $fields[$field_name]['validators'])) {
           continue;
         }
         $fields[$field_name]['validators'][] = array($this, 'isNotEmpty');
