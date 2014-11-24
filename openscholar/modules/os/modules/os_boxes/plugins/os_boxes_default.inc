@@ -26,6 +26,8 @@ abstract class os_boxes_default extends boxes_box {
    */
   protected $cache_id;
 
+  protected $existing_assets = array('js' => array(), 'css' => array());
+
   /**
    * Holds the unix time stamp until when the plugin suppose to be cached.
    *
