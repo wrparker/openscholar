@@ -1264,3 +1264,14 @@ function os_publications_update_7026(&$ctx) {
     return t('All Publication titles have had extraneous p\'s removed.');
   }
 }
+
+/**
+ * Disable biblio_rtf and biblio_ris.
+ */
+function os_publications_update_7027() {
+  module_disable(array('biblio_rtf', 'biblio_ris'));
+
+  db_delete('spaces_overrides')
+    ->condition('object_id', 'biblio_export_links')
+    ->execute();
+}
