@@ -291,7 +291,7 @@ function os_events_process_node(&$variables) {
   // Show the signup link if capacity isn't reached and no repeat rule is used.
   if ($registrations_type && os_events_event_registration_reach_capacity($variables['node']) && !$variables['field_date'][0]['rrule'] ) {
     // In full view mode show a link to a modal.
-    if ($variables['view_mode'] == 'full') {
+    if ($variables['view_mode'] == 'full' && os_events_register_show_register_link($variables['node'])) {
       $register = os_events_generate_modal_register_link($variables['node']->nid, array());
     }
     // In teaser view mode link to the event page.
@@ -1207,4 +1207,22 @@ function os_events_mail_alter(&$message) {
  */
 function os_events_form_event_node_form_alter(&$form, &$form_state) {
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
+}
+
+/**
+ * Determine if the user can register to the event.
+ *
+ * @param $node
+ *   The node object.
+ *
+ * @return bool
+ */
+function os_events_register_show_register_link($node) {
+  $wrapper = entity_metadata_wrapper('node', $node);
+
+  if ($wrapper->getBundle() != 'event') {
+    return;
+  }
+
+  return time() < $wrapper->field_date->get(0)->value->value();
 }
