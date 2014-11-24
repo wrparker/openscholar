@@ -26,6 +26,9 @@ abstract class os_boxes_default extends boxes_box {
    */
   protected $cache_id;
 
+  /**
+   * Holds the box assets.
+   */
   protected $existing_assets = array('js' => array(), 'css' => array());
 
   /**
