@@ -110,6 +110,13 @@ margin-bottom:10px;
 	display: none;
 }
 
+
+/* IF THE SEARCH BLOCK IS PLACED IN A WIDE REGION, THE PIECES STAY TOGETHER */
+.block-os-search-solr {
+	 max-width: 395px;
+}
+
+
 .page-search .form-item-retain-filters {
     display: inline !important;
     margin: 0;
