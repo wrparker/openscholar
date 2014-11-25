@@ -1792,6 +1792,10 @@ body.front .block-boxes-os_taxonomy_fbt .item-list ul.termchild-methods a {
   
 }
 
+body.front .block-boxes-os_taxonomy_fbt .item-list ul.termchild-applications .description a,
+body.front .block-boxes-os_taxonomy_fbt .item-list ul.termchild-methods .description a {
+padding-left: 0;
+}
 
 body.front ul.term-methods,
 body.front ul.term-applications
