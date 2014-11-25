@@ -72,3 +72,4 @@ features[variable][] = pathauto_node_news_pattern
 features[views_view][] = os_news
 spaces[types][] = og
 spaces[types][] = site
+files[] = views/os_news_rss_pubDate.inc

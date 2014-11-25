@@ -42,6 +42,26 @@ function os_news_os_app_info() {
 }
 
 /**
+ * Implemetns hook_views_data().
+ */
+/**
+ *  Implements hook_views_data().
+ */
+function os_news_views_data() {
+  $data = array();
+
+  $data['node']['os_news_rss_pubDate'] = array(
+    'title' => t('OS news RSS pubDate'),
+    'help' => t('Just a plain text field.'),
+    'field' => array(
+      'handler' => 'os_news_rss_pubDate',
+    ),
+  );
+
+  return $data;
+}
+
+/**
  * Implements hook_os_entity_view_modes()
  */
 function os_news_os_entity_view_modes() {
