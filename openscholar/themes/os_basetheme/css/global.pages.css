@@ -1217,14 +1217,14 @@ img.recent-images-list:hover {
 #box-os_image_gallery_latest-page .more-link {clear:both;}
 
 /* Colorbox Slideshow modal - Kill Grey Borders in player */
-.node-type-media-gallery #cboxWrapper #cboxTopLeft, 
-.node-type-media-gallery #cboxWrapper #cboxTopCenter, 
-.node-type-media-gallery #cboxWrapper #cboxTopRight, 
-.node-type-media-gallery #cboxWrapper #cboxMiddleLeft, 
-.node-type-media-gallery #cboxWrapper #cboxMiddleRight, 
-.node-type-media-gallery #cboxWrapper #cboxBottomLeft, 
-.node-type-media-gallery #cboxWrapper #cboxBottomCenter, 
-.node-type-media-gallery #cboxWrapper #cboxBottomRight 
+#cboxWrapper #cboxTopLeft, 
+#cboxWrapper #cboxTopCenter, 
+#cboxWrapper #cboxTopRight, 
+#cboxWrapper #cboxMiddleLeft, 
+#cboxWrapper #cboxMiddleRight, 
+#cboxWrapper #cboxBottomLeft, 
+#cboxWrapper #cboxBottomCenter, 
+#cboxWrapper #cboxBottomRight 
 {
  background: none;
 }
