@@ -116,6 +116,9 @@ margin-bottom:10px;
 	 max-width: 395px;
 }
 
+#columns .block-os-search-solr {
+	 max-width: 346px;
+}
 
 .page-search .form-item-retain-filters {
     display: inline !important;
