@@ -343,6 +343,11 @@ function os_slideshow_theme($existing, $type, $theme, $path) {
 function os_slideshow_preprocess_os_slideshow_slide(&$vars) {
   $node = &$vars['node'];
   $lang = $node->language;
+
+  if (empty($node->field_image)) {
+    return;
+  }
+
   $vars['headline'] = ($node->field_headline) ? $node->field_headline[$lang][0]['value'] : '';
   $vars['description'] = ($node->field_description) ? $node->field_description[$lang][0]['value'] : '';
 
