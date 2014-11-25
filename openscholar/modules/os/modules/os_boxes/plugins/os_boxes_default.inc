@@ -179,7 +179,6 @@ abstract class os_boxes_default extends boxes_box {
 
     $js = array();
     $css = array();
-
     if (!$cache = cache_get($this->cache_id, 'cache_os_boxes')) {
       // No cache exists.
       return FALSE;
