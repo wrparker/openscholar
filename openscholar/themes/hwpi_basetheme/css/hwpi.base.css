@@ -494,7 +494,8 @@ ol.search-results li.search-result:last-child {
 
 /* Gray color for both Date and Location fields */
 .node-event .field-name-field-date,
-.node-event .field-name-field-event-location {
+.node-event .field-name-field-event-location,
+.date-display-single {
   color: #6D6D6D;
 }
 
