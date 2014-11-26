@@ -44,6 +44,39 @@ function os_rss_theme() {
 }
 
 /**
+ *  Implements hook_views_data().
+ */
+function os_rss_views_data() {
+  $data = array();
+
+  $data['node']['os_rss_pubDate'] = array(
+    'title' => t('OS RSS pubDate'),
+    'help' => t('pubDate of the node.'),
+    'field' => array(
+      'handler' => 'os_rss_pubDate',
+    ),
+  );
+
+  $data['node']['os_rss_guid'] = array(
+    'title' => t('OS RSS guid'),
+    'help' => t('Guid for the node.'),
+    'field' => array(
+      'handler' => 'os_rss_guid',
+    ),
+  );
+
+  $data['node']['os_rss_link'] = array(
+    'title' => t('OS RSS link'),
+    'help' => t('Provide absolute url for the node.'),
+    'field' => array(
+      'handler' => 'os_rss_link',
+    ),
+  );
+
+  return $data;
+}
+
+/**
  * Return default bundles to be displayed for the user.
  */
 function os_rss_default_bundles() {

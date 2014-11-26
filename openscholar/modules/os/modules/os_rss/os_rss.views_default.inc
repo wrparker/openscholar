@@ -59,20 +59,6 @@ function os_rss_views_default_views() {
   $handler->display->display_options['fields']['name']['label'] = '';
   $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
-  /* Field: Content: URL (Web address) */
-  $handler->display->display_options['fields']['field_links_link']['id'] = 'field_links_link';
-  $handler->display->display_options['fields']['field_links_link']['table'] = 'field_data_field_links_link';
-  $handler->display->display_options['fields']['field_links_link']['field'] = 'field_links_link';
-  $handler->display->display_options['fields']['field_links_link']['label'] = '';
-  $handler->display->display_options['fields']['field_links_link']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_links_link']['click_sort_column'] = 'url';
-  $handler->display->display_options['fields']['field_links_link']['type'] = 'link_absolute';
-  /* Field: Content: OS news RSS pubDate */
-  $handler->display->display_options['fields']['os_news_rss_pubDate']['id'] = 'os_news_rss_pubDate';
-  $handler->display->display_options['fields']['os_news_rss_pubDate']['table'] = 'node';
-  $handler->display->display_options['fields']['os_news_rss_pubDate']['field'] = 'os_news_rss_pubDate';
-  $handler->display->display_options['fields']['os_news_rss_pubDate']['label'] = '';
-  $handler->display->display_options['fields']['os_news_rss_pubDate']['element_label_colon'] = FALSE;
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -95,6 +81,24 @@ function os_rss_views_default_views() {
     'multiple_to' => '',
     'show_repeat_rule' => 'show',
   );
+  /* Field: Content: OS RSS guid */
+  $handler->display->display_options['fields']['os_rss_guid']['id'] = 'os_rss_guid';
+  $handler->display->display_options['fields']['os_rss_guid']['table'] = 'node';
+  $handler->display->display_options['fields']['os_rss_guid']['field'] = 'os_rss_guid';
+  $handler->display->display_options['fields']['os_rss_guid']['label'] = '';
+  $handler->display->display_options['fields']['os_rss_guid']['element_label_colon'] = FALSE;
+  /* Field: Content: OS RSS pubDate */
+  $handler->display->display_options['fields']['os_rss_pubDate']['id'] = 'os_rss_pubDate';
+  $handler->display->display_options['fields']['os_rss_pubDate']['table'] = 'node';
+  $handler->display->display_options['fields']['os_rss_pubDate']['field'] = 'os_rss_pubDate';
+  $handler->display->display_options['fields']['os_rss_pubDate']['label'] = '';
+  $handler->display->display_options['fields']['os_rss_pubDate']['element_label_colon'] = FALSE;
+  /* Field: Content: OS RSS link */
+  $handler->display->display_options['fields']['os_rss_link']['id'] = 'os_rss_link';
+  $handler->display->display_options['fields']['os_rss_link']['table'] = 'node';
+  $handler->display->display_options['fields']['os_rss_link']['field'] = 'os_rss_link';
+  $handler->display->display_options['fields']['os_rss_link']['label'] = '';
+  $handler->display->display_options['fields']['os_rss_link']['element_label_colon'] = FALSE;
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
   $handler->display->display_options['sorts']['created']['table'] = 'node';
@@ -126,12 +130,12 @@ function os_rss_views_default_views() {
   $handler->display->display_options['style_plugin'] = 'rss';
   $handler->display->display_options['row_plugin'] = 'rss_fields';
   $handler->display->display_options['row_options']['title_field'] = 'title';
-  $handler->display->display_options['row_options']['link_field'] = 'field_links_link';
+  $handler->display->display_options['row_options']['link_field'] = 'os_rss_link';
   $handler->display->display_options['row_options']['description_field'] = 'body';
   $handler->display->display_options['row_options']['creator_field'] = 'name';
-  $handler->display->display_options['row_options']['date_field'] = 'os_news_rss_pubDate';
+  $handler->display->display_options['row_options']['date_field'] = 'os_rss_pubDate';
   $handler->display->display_options['row_options']['guid_field_options'] = array(
-    'guid_field' => 'nid',
+    'guid_field' => 'os_rss_guid',
     'guid_field_is_permalink' => 0,
   );
   $handler->display->display_options['path'] = 'rss.xml';
