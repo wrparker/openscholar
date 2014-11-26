@@ -248,6 +248,7 @@ function _os_rss_importer_feed_create($items, $key) {
  * Get the node IDs according the the filter criteria.
  */
 function os_rss_importer_feed_export() {
+  $info = array();
   if (!empty($_GET['type'])) {
     $info = array(
       'type' => 'type',
@@ -259,9 +260,6 @@ function os_rss_importer_feed_export() {
       'type' => 'terms',
       'data' => $_GET['term'],
     );
-  }
-  else {
-    return array();
   }
 
   $nids = os_rss_importer_feed_get_nids($info);
@@ -279,7 +277,7 @@ function os_rss_importer_feed_export() {
  * @return Array
  *  List of node IDs.
  */
-function os_rss_importer_feed_get_nids($info) {
+function os_rss_importer_feed_get_nids($info = array()) {
   $nids = array();
 
   $query = new EntityFieldQuery();
@@ -290,11 +288,13 @@ function os_rss_importer_feed_get_nids($info) {
     $query->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $vsite->id);
   }
 
-  if ($info['type'] == 'type') {
-    $query->propertyCondition('type', $info['data']);
-  }
-  else {
-    $query->fieldCondition(OG_VOCAB_FIELD, 'target_id', $info['data']);
+  if ($info) {
+    if ($info['type'] == 'type') {
+      $query->propertyCondition('type', $info['data']);
+    }
+    else {
+      $query->fieldCondition(OG_VOCAB_FIELD, 'target_id', $info['data']);
+    }
   }
 
   $results = $query->execute();
