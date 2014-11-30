@@ -187,12 +187,6 @@ abstract class spaces_controller {
    * Set override values for a given controller object in this space.
    */
   function set($id, $value) {
-
-    if($this->is_default($id, $value)){
-      $this->del($id);
-      return TRUE;
-    }
-
     $override = array(
       'type' => $this->space_type,
       'id' => $this->space_id,
