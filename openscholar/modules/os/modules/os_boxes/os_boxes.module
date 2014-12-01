@@ -575,7 +575,7 @@ function os_boxes_entity_update($entity, $type) {
  *   The entity type.
  */
 function os_boxes_invalidate_cache($entity, $type) {
-  if (!db_table_exists('os_boxes_cache')) {
+  if (!db_table_exists('cache_os_boxes')) {
     return;
   }
 
