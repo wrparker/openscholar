@@ -21,16 +21,14 @@ $transaction = db_transaction();
 foreach ($q as $r) {
   module_load_include('inc', 'biblio', 'includes/biblio.util');
   try {
-    foreach ($dataset as $k => $d) {
-      $title = strip_tags($d->title_field_value);  // all we want is the text
-      $title = biblio_normalize_title($title);
-      db_update('biblio')
-        ->fields(array(
-          'biblio_sort_title' => $title
-        ))
-        ->condition('nid', $d->nid)
-        ->execute();
-    }
+    $title = strip_tags($r->title_field_value);  // all we want is the text
+    $title = biblio_normalize_title($title);
+    db_update('biblio')
+      ->fields(array(
+        'biblio_sort_title' => $title
+      ))
+      ->condition('nid', $r->nid)
+      ->execute();
   }
   catch (Exception $e) {
     $transaction->rollback();
