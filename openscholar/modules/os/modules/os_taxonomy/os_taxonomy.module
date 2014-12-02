@@ -250,8 +250,8 @@ function os_taxonomy_term_page($taxonomy_term) {
 function _os_taxonomy_active_elements($active = array()) {
   $current = &drupal_static(__FUNCTION__, array());
 
-  //Set the active vocab/term?
-  if(count($active)) {
+  // Set the active vocab/term?
+  if (count($active)) {
     $current = array_merge($current, $active);
   }
 
@@ -629,8 +629,7 @@ function os_taxonomy_preprocess_page(&$page) {
   if (!empty($active['vid'])) {
 
     $ctxs = array_keys(context_active_contexts());
-
-    $section = array_diff($ctxs, array('os_taxonomy-term-'.$active['tid']));
+    $section = array_diff($ctxs, array('os_taxonomy-term-' . $active['vid']));
 
     $section_links['section-header'] = array(
       'title' => t('This Vocabulary'),
@@ -1124,18 +1123,21 @@ function theme_os_taxonomy_tagged_nodes($variables) {
 
     $entities = os_taxonomy_list_attached_entities($tid, $options['bundles'], $options['range'], $options['offset']);
 
-    //this array map is only necessary when entity types are mixed.  would it be more efficient to use the TYPE_load_multiple and TYPE_view_multipe options when the bundles are all within one entity?
-    $build += array_map(function ($a) use ($tid, $options) {
+    // This array map is only necessary when entity types are mixed. Would it be
+    // more efficient to use the TYPE_load_multiple and TYPE_view_multipe
+    // options when the bundles are all within one entity?
+    $term_id = is_array($tid) ? reset($tid) : $tid;
+    $build += array_map(function ($a) use ($term_id, $options) {
       if ($a['entity_type'] == "node") {
-        //Render a node.
+        // Render a node.
         $entity = node_load($a['entity_id']);
-        $entity->contextual_annotation_key = 'tid-' . $tid;
+        $entity->contextual_annotation_key = 'tid-' . $term_id;
         return node_view($entity, $options['view_mode']);
       }
 
-      //Render a non-node entity
+      // Render a non-node entity.
       $entity = entity_load_single($a['entity_type'], $a['entity_id']);
-      $entity->contextual_annotation_key = 'tid-' . $tid;
+      $entity->contextual_annotation_key = 'tid-' . $term_id;
       return entity_view($a['entity_type'], array($entity), $options['view_mode']);
     }, $entities);
 
