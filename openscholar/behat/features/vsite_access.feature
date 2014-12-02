@@ -40,3 +40,6 @@ Disallow: /
 Disallow: /einstein/
 Disallow: /lincoln/
       """
+    And I visit "lincoln/cp/settings"
+    And I select the radio button named "vsite_private" with value "0"
+    And I press "edit-submit"
