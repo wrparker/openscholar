@@ -166,6 +166,10 @@ div.contextual-links-wrapper a,
   list-style: decimal;
 }
 
+.field-name-body ol {
+margin: 0 0 1.5em 25px;
+}
+
 /* Header */
 #header {
   background: #e8e8e8;
