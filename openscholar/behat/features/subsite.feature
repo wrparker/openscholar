@@ -1,6 +1,6 @@
 Feature:
-  Testing the viewing of list of subsites, which should be allowed
-  only to admins.
+  Testing the viewing of list of subsites, which should be allowed only to
+  admins.
 
   @api @first
   Scenario: Test view subsites for user with permission
