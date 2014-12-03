@@ -140,20 +140,20 @@ class os_boxes_manual_list extends os_boxes_default {
       }
       ksort($links);
       if (empty($links)) {
-        $block['title'] = '';
-        $block['subject'] = '';
-        return $block;
+        $block['title'] = $block['subject'] = '';
       }
-      if ($this->options['style'] == 'teasers' || $this->options['style'] == 'full') {
+      elseif  ($this->options['style'] == 'teasers' || $this->options['style'] == 'full') {
         $block['content'] = theme('item_list', array('items' => $links, 'attributes' => array('class' => array('featured-links'))));
       }
       else {
         $block['content'] = theme('links', array('links' => $links, 'attributes' => array('class' => array('featured-links'))));
       }
+
       if (!$random) {
         $this->set_cache($block['content']);
       }
     }
+
     return $block;
   }
 }

@@ -82,7 +82,12 @@ class os_boxes_tabs extends os_boxes_widget_collection {
           if ($block_arr = _block_render_blocks(array($block_tab))) {
             if (!empty($block_arr["{$block_tab->module}_{$block_tab->delta}"]->assets)) {
               $sub_assets = $block_arr["{$block_tab->module}_{$block_tab->delta}"]->assets;
-              $render['#attached'] = array_merge_recursive($sub_assets, $render['#attached']);
+              foreach ($sub_assets as $type => $data) {
+                if (!isset($render['#attached'][$type])) {
+                  $render['#attached'][$type] = array();
+                }
+                $render['#attached'][$type] = array_merge($render['#attached'][$type], $data);
+              }
             }
 
             if (!empty($block_arr["{$block_tab->module}_{$block_tab->delta}"]->content)) {
@@ -113,6 +118,7 @@ class os_boxes_tabs extends os_boxes_widget_collection {
           }
         }
       }
+
 
       ksort($render['links']['#links']);
       $block['content'] = drupal_render($render);

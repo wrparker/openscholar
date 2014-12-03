@@ -47,3 +47,21 @@ Feature: Testing the importer.
   Scenario: Verify the year of a class is imported correctly.
     Given I visit "john/classes"
      Then I should see "1950"
+
+  @pai @first
+  Scenario: Checking the vocabs imported properly.
+    Given I am logging in as "john"
+      And I visit "john/cp/build/taxonomy"
+      And I should see "bad_vocab"
+      And I should see "good_vocab"
+     When I click "bad_vocab"
+     Then I should see "Bad& (2)"
+      And I should see "Good& (2)"
+
+  @api @first
+  Scenario: Verify we can delete vocab with a bad name.
+    Given I am logging in as "john"
+      And I visit "john/cp/build/taxonomy/bad_vocab/edit"
+      And I press "Delete"
+     When I press "Delete"
+     Then I should see "Deleted vocabulary bad_vocab."

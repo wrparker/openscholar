@@ -70,6 +70,7 @@ function _os_importer_import_vocab(FeedsSource $source, $entity, $item, $id) {
   $new_vocabs = array_diff(array_keys($item), $mappings);
   $tids = array();
   foreach ($new_vocabs as $vocab) {
+    $original_name = $vocab;
     // Create the terms and the vocabulary.
     if (preg_match('@[^a-z0-9_]+@', $vocab)) {
       $params['@name'] = $vocab;
@@ -78,7 +79,7 @@ function _os_importer_import_vocab(FeedsSource $source, $entity, $item, $id) {
       $params['@new-name'] = $vocab;
       drupal_set_message(t("The vocab name @name contained not allowed characters. The vocab name is @new-name. You can change vocabulary's name in the future.", $params), 'notice');
     }
-    $info = _os_importer_create_vocab($vocab, $item[$vocab], 'node', $id, 'node', $entity->type);
+    $info = _os_importer_create_vocab($vocab, $item[$original_name], 'node', $id, 'node', $entity->type);
 
     // Build the taxonomy terms for the new node.
     $tids = array_merge($info['tids'], $tids);
