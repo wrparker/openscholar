@@ -2031,4 +2031,17 @@ class FeatureContext extends DrupalContext {
   public function iWhitelistTheDomain($domain) {
     $domains = $this->invoke_code('os_migrate_demo_add_to_whitelist', array("'{$domain}'"));
   }
+
+  /**
+   * @Then /^I verify "([^"]*)" comes before "([^"]*)"$/
+   */
+ public function iVerifyComesBefore($first, $second) {
+  $page = $this->getSession()->getPage()->getContent();
+
+  $pattern = "/[\s\S]*" . $first . "[\s\S]*" . $second . "[\s\S]*/";
+  if (!preg_match($pattern, $page)) {
+    throw new Exception("'$first' does not come before '$second'.");
+  }
+ }
+
 }
