@@ -14,7 +14,7 @@ projects[integrated_support][download][url] = "http://github.com/openscholar/int
 ; Libraries.
 libraries[tapir][type] = "libraries"
 libraries[tapir][download][type] = "git"
-libraries[tapir][download][url] = "git@github.com:sagotsky/tapir.git"
+libraries[tapir][download][url] = "https://github.com/sagotsky/tapir.git"
 
 libraries[pear][type] = "libraries"
 libraries[pear][download][type] = "file"
