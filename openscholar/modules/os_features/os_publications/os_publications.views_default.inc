@@ -243,21 +243,21 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['sorts']['name']['id'] = 'name';
   $handler->display->display_options['sorts']['name']['table'] = 'biblio_types';
   $handler->display->display_options['sorts']['name']['field'] = 'name';
-  /* Contextual filter: Biblio: Author full name */
-  $handler->display->display_options['arguments']['name']['id'] = 'name';
-  $handler->display->display_options['arguments']['name']['table'] = 'biblio_contributor_data';
-  $handler->display->display_options['arguments']['name']['field'] = 'name';
-  $handler->display->display_options['arguments']['name']['default_action'] = 'summary';
-  $handler->display->display_options['arguments']['name']['exception']['title_enable'] = TRUE;
-  $handler->display->display_options['arguments']['name']['title_enable'] = TRUE;
-  $handler->display->display_options['arguments']['name']['title'] = 'Coauthored Publications with: %1';
-  $handler->display->display_options['arguments']['name']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['name']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['name']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['name']['summary_options']['base_path'] = 'publications/author';
-  $handler->display->display_options['arguments']['name']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['name']['specify_validation'] = TRUE;
-  $handler->display->display_options['arguments']['name']['limit'] = '0';
+  /* Contextual filter: Biblio: Author ID */
+  $handler->display->display_options['arguments']['cid']['id'] = 'name';
+  $handler->display->display_options['arguments']['cid']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['arguments']['cid']['field'] = 'name';
+  $handler->display->display_options['arguments']['cid']['default_action'] = 'summary';
+  $handler->display->display_options['arguments']['cid']['exception']['title_enable'] = TRUE;
+  $handler->display->display_options['arguments']['cid']['title_enable'] = TRUE;
+  $handler->display->display_options['arguments']['cid']['title'] = 'Coauthored Publications with: %2';
+  $handler->display->display_options['arguments']['cid']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['cid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['cid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['cid']['summary_options']['base_path'] = 'publications/author';
+  $handler->display->display_options['arguments']['cid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['cid']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['cid']['limit'] = '0';
   /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
@@ -318,6 +318,12 @@ if(module_exists(\'apachesolr_search\')){
     'firstname' => 'firstname',
     'title' => 'title',
   );
+  /* Field: Publication: Author ID */
+  $handler->display->display_options['fields']['cid']['id'] = 'cid';
+  $handler->display->display_options['fields']['cid']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['fields']['cid']['field'] = 'cid';
+  $handler->display->display_options['fields']['cid']['label'] = '';
+  $handler->display->display_options['fields']['cid']['exclude'] = TRUE;
   /* Field: Publication: Author full name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'biblio_contributor_data';
@@ -342,7 +348,7 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['fields']['firstname']['alter']['alter_text'] = 1;
   $handler->display->display_options['fields']['firstname']['alter']['text'] = '[lastname], [firstname]';
   $handler->display->display_options['fields']['firstname']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['firstname']['alter']['path'] = 'publications/author/[name]';
+  $handler->display->display_options['fields']['firstname']['alter']['path'] = 'publications/author/[name]/[cid]';
   $handler->display->display_options['fields']['firstname']['empty'] = 'Anon.';
   /* Field: COUNT(DISTINCT Content: Title) */
   $handler->display->display_options['fields']['title']['id'] = 'title';
