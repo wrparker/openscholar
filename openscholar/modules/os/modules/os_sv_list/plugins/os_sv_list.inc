@@ -342,33 +342,37 @@ class os_sv_list extends os_boxes_default {
   }
   
   public function get_ids($page) {
-    //query for all content of our type
+    // Query for all content of our type.
     $query = $this->query();
     $this->_plugins_invoke('query_alter', $query);
     
     if ($this->options['content_type'] != 'all') {
+      // Any special hook here?
       $query->propertyCondition('type', $this->options['content_type']);
-      //any special hook here?
     }
 
-    //pager
+    // Pager.
     if ($this->options['pager'] && is_int($page)) {
       $query->pager($this->options['number_of_items']);
       $this->pager_element = $query->pager['element'];
-    } elseif (is_int($page)) {
-      $query->range(0, 1 + $this->options['number_of_items']); //add one so more link knows there's more.
+    }
+    elseif (is_int($page)) {
+      // Add one so more link knows there's more.
+      $query->range(0, 1 + $this->options['number_of_items']);
     }
     
-    //sort - if $this doesn't have it, one of the plugins will.
+    // Sort - if $this doesn't have it, one of the plugins will.
     $sort = $this->options['sort_by'];
     if (method_exists($this, $sort)) {
       $this->$sort($query);
-    } else {
+    }
+    else {
       $this->_plugins_invoke($sort, $query);
     }
+
     $this->_plugins_invoke('sort_alter', $query);
 
-    //execute
+    // Execute.
     $result = $query->execute();
     return (isset($result[$this->entity_type])) ? array_keys($result[$this->entity_type]) : array();
   }

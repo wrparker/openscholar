@@ -14,7 +14,7 @@ function os_image_gallery_default_box() {
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
   $box->api_version = 1;
   $box->delta = 'os_image_gallery_latest';
-  $box->plugin_key = 'os_sv_list_box';
+  $box->plugin_key = 'os_sv_list_file';
   $box->title = 'Recent Images';
   $box->description = 'Recent Images';
   $box->options = array(

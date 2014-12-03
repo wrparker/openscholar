@@ -189,7 +189,7 @@ class os_boxes_columns extends os_boxes_default {
       $temp = explode('|', $widgets);
       $region = $this->get_gpanel_region($region, $layout);
       foreach ($temp as $weight => $id) {
-        list($module, $delta) = explode('-', $id);
+        list($module, $delta) = explode('-', $id, 2);
         $blocks[$region][$id] = (object)array(
           'module' => $module,
           'delta' => $delta,
