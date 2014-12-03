@@ -27,6 +27,11 @@ abstract class os_boxes_default extends boxes_box {
   protected $cache_id;
 
   /**
+   * Holds the box assets.
+   */
+  protected $existing_assets = array('js' => array(), 'css' => array());
+
+  /**
    * Holds the unix time stamp until when the plugin suppose to be cached.
    *
    * The value can be a string which the function strtotime accept i.e 5 minutes
@@ -174,7 +179,6 @@ abstract class os_boxes_default extends boxes_box {
 
     $js = array();
     $css = array();
-
     if (!$cache = cache_get($this->cache_id, 'cache_os_boxes')) {
       // No cache exists.
       return FALSE;

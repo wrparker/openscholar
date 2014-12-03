@@ -97,3 +97,8 @@ Feature:
       And I verify that "john" is the owner of vsite "obama"
           # Reassign michelle to be a basic user.
       And I give the user "michelle" the role "vsite user" in the group "obama"
+
+  @api @first
+  Scenario: Testing the order of the people.
+    Given I visit "john/people"
+    Then I verify "Charles Anderson" comes before "Kristen Anderson"
