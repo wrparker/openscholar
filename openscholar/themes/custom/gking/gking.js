@@ -114,8 +114,12 @@ jQuery(document).ready(function() {
 	if (jQuery('#biblio-node').find('div.biblio-upload-wrapper').length) {
 		jQuery('#citation-wrapper').addClass('has-attached');
 	}
+
+//REMOVE THE TITLE/TOOLTIPS FROM THE AOR BLOCK ON FRONT PAGE
+	jQuery(".front ul.termchild-applications a").removeAttr("title");
+	jQuery(".front ul.termchild-methods a").removeAttr("title");
 	
-	jQuery('.front div.description').addClass('wrapper');
+
 	
 });
 
