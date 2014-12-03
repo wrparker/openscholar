@@ -55,30 +55,28 @@ function harvard_activity_reports_query_user_by_id($hash_id)  {
 function harvard_activity_reports_query_user_by_site($site_url) {
   // Make sure the site URL is with http.
   $site_url = rtrim(str_replace('https://', 'http://', $site_url), '/');
-  $parse_url = parse_url($site_url);
 
-  if (empty($parse_url['host'])) {
-    return;
-  }
+  global $base_url;
 
-  $host = $parse_url['host'];
+  if (strpos($site_url, $base_url) === 0) {
+    // base_url should always be scholar.harvard.edu
+    // so if the site_url starts with it, then this site does not have a custom domain
 
-  // Check to see if it is empty, if not, they must be a  VSite.
-  if (!empty($parse_url['path'])){
-    // Grab the path for the url.
-    // Remove the slash from the begining and end of the path.
-    $path = substr($parse_url['path'], 1);
+    $path = str_replace($base_url, '', $site_url);
     $path = trim($path, '/');
+    $path = explode('/', $path);
+    $vsite = $path[0];
     $provider = "spaces_og";
   }
   else{
     // User is unique user, just use the host.
     $provider = "vsite_domain";
-    $path = $host;
+    $parts = parse_url($site_url);
+    $vsite = $parts['host'];
   }
 
   // Query the database.
-  return db_query('SELECT n.uid FROM {node} n, {purl} p WHERE p.value = :path AND p.provider = :provider AND n.nid = p.id', array(':path' => $path, ':provider' => $provider))->fetchField();
+  return db_query('SELECT n.uid FROM {node} n, {purl} p WHERE p.value = :path AND p.provider = :provider AND n.nid = p.id', array(':path' => $vsite, ':provider' => $provider))->fetchField();
 }
 
 /**
@@ -302,7 +300,7 @@ function harvard_activity_reports_create_xml($biblio_data, $hash_id, $status,$ni
           $pubSource->appendChild($pubSourceValue);
 
           // citation info
-          $currentPub->appendChild($domtree->createElement("citation",$value['biblio_author'] . ". " . $value['biblio_title'] . ". " . $value['biblio_secondary_title']));
+          $currentPub->appendChild($domtree->createElement("citation",$value['biblio_author'] . ". " . html_entity_decode($value['biblio_title'], END_XML1, 'UTF-8') . ". " . $value['biblio_secondary_title']));
           // biblio basic info
           // create the proper linkTo
           $currentPub->appendChild($domtree->createElement('linkToArticle',$value['biblio_url']));
