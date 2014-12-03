@@ -1317,11 +1317,10 @@ LIST OF POSTS - PERSON TEASER IN SIDEBAR
 	 margin-left: 0;
 }
 
-.at-panel.gpanel.panel-display .sv-list-image .file:after {
-  content: ".";
-  display: block;
-  height: 0;
-  clear: both;
-  visibility: hidden;
+#boxes-box-os_image_gallery_latest .sv-list-image .file {
+ display: block;
+border-bottom: none;
+clear: both;
+  
 }
 
