@@ -69,13 +69,26 @@ function harvard_activity_reports_query_user_by_site($site_url) {
     $provider = "spaces_og";
   }
   else{
-    // User is unique user, just use the host.
+    // site_url is a custom, non-shared domain, we think
     $provider = "vsite_domain";
     $parts = parse_url($site_url);
     $vsite = $parts['host'];
   }
 
   // Query the database.
+  if ($uid = db_query('SELECT n.uid FROM {node} n, {purl} p WHERE p.value = :path AND p.provider = :provider AND n.nid = p.id', array(':path' => $vsite, ':provider' => $provider))->fetchField()) {
+    return $uid;
+  }
+
+  // if we fall here, this is a shared domain
+  // since it's high unlikely someone used a shared domain with a / in it
+  // it's safe to assume the vsite is the first part of the path
+  $provider = "spaces_og";
+  $path = parse_url($site_url, PHP_URL_PATH);
+  $path = explode('/', trim($path, '/'));
+  $vsite = $path[0];
+  dpm($path);
+
   return db_query('SELECT n.uid FROM {node} n, {purl} p WHERE p.value = :path AND p.provider = :provider AND n.nid = p.id', array(':path' => $vsite, ':provider' => $provider))->fetchField();
 }
 
