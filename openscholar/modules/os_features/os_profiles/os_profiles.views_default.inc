@@ -63,6 +63,10 @@ function os_profiles_views_default_views() {
   $handler->display->display_options['sorts']['field_first_name_format']['id'] = 'field_first_name_format';
   $handler->display->display_options['sorts']['field_first_name_format']['table'] = 'field_data_field_first_name';
   $handler->display->display_options['sorts']['field_first_name_format']['field'] = 'field_first_name_format';
+  /* Sort criterion: Content: Title */
+  $handler->display->display_options['sorts']['title']['id'] = 'title';
+  $handler->display->display_options['sorts']['title']['table'] = 'node';
+  $handler->display->display_options['sorts']['title']['field'] = 'title';
   /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
