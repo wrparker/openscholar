@@ -87,7 +87,6 @@ function harvard_activity_reports_query_user_by_site($site_url) {
   $path = parse_url($site_url, PHP_URL_PATH);
   $path = explode('/', trim($path, '/'));
   $vsite = $path[0];
-  dpm($path);
 
   return db_query('SELECT n.uid FROM {node} n, {purl} p WHERE p.value = :path AND p.provider = :provider AND n.nid = p.id', array(':path' => $vsite, ':provider' => $provider))->fetchField();
 }
