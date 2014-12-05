@@ -388,8 +388,8 @@ text-align: center;
 font-weight: bold;
 }
 
-.ossap-stats-real-time-week,
-.ossap-stats-real-time-month {
+.ossap-stats-weekly-visitors,
+.ossap-stats-monthly-visitors {
 font-size: 1.25em;
 color: #FFF;
 display: block;
@@ -398,7 +398,7 @@ font-weight: bold;
 margin-top: 67px;
 }
 
-.ossap-stats-real-time-month {
+.ossap-stats-monthly-visitors {
 margin-top: 20px;
 }
 
