@@ -1,9 +1,9 @@
-@import url(http://fonts.googleapis.com/css?family=Lato);
+@import url(http://fonts.googleapis.com/css?family=Cabin);
 
 body,
 .not-front .field-name-body, 
 #content-column p {
-font-family: 'Lato';
+font-family: 'Cabin';
 }
 
 #columns {
@@ -135,11 +135,11 @@ color: #215990;
 }
 
 
-
-#layout_16_9_side .slide {
-background: #FFF;
-
+.block-boxes-os_slideshow_box .slide {
+background: #BCAA7B !important;
 }
 
-
+a.rslides_nav {
+background-color: #444;
+}
 
