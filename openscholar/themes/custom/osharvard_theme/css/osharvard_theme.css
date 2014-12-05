@@ -380,12 +380,26 @@ line-height: 24px;
 }
 
 .ossap-stats-real-time-visitors {
-font-size: 3em;
+font-size: 2.5em;
 color: #818181;
 display: block;
-margin: 115px auto;
+margin: 70px auto 0 auto;
 text-align: center;
 font-weight: bold;
+}
+
+.ossap-stats-real-time-week,
+.ossap-stats-real-time-month {
+font-size: 1.25em;
+color: #FFF;
+display: block;
+text-align: center;
+font-weight: bold;
+margin-top: 67px;
+}
+
+.ossap-stats-real-time-month {
+margin-top: 20px;
 }
 
 #osactivity,
