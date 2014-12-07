@@ -38,6 +38,17 @@ function gkplus_menu() {
 }
 
 /**
+ * Implements hook_theme().
+ */
+function gkplus_theme() {
+  return array(
+    'gkplus_order_nodes_dnd' => array(
+      'render element' => 'form',
+    )
+  );
+}
+
+/**
  * Page callback; provides nodeorder form for a given taxonomy term.
  *
  * @ingroup nodeorder
@@ -117,7 +128,8 @@ function gkplus_nodeorder_admin_display_form($form, &$form_state, $tid) {
   foreach ($nodes as $node) {
     $form[$node->nid]['#node'] = $node;
     $form[$node->nid]['title'] = array(
-      '#markup' => check_plain($node->title));
+      '#markup' => check_plain($node->title),
+    );
     $form[$node->nid]['weight'] = array(
       '#type' => 'weight',
       '#title' => t('Weight for @title', array('@title' => $node->title)),
@@ -127,13 +139,44 @@ function gkplus_nodeorder_admin_display_form($form, &$form_state, $tid) {
     );
   }
 
-  $form['#theme'] = 'nodeorder_admin_display_form';
+  $form['#theme'] = 'gkplus_order_nodes_dnd';
   $form['#submit'] = array('nodeorder_admin_display_form_submit');
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save order'),
   );
   return $form;
+}
+
+/**
+ * Order nodes by drag and drop.
+ */
+function theme_gkplus_order_nodes_dnd($variables) {
+
+  $form = $variables['form'];
+
+  $rows = array();
+  foreach (element_children($form) as $key) {
+    if (!is_int($key)) {
+      continue;
+    }
+    $form[$key]['weight']['#attributes']['class'] = array('weight');
+
+    $rows[] = array(
+      'data' => array(
+        drupal_render($form[$key]['title']),
+        drupal_render($form[$key]['weight']),
+      ),
+      'class' => array('draggable'),
+    );
+  }
+
+  $header = array(t('Title'), t('Weight'));
+  $output = drupal_render($form['note']);
+  $output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'slides-order')));
+  $output .= drupal_render_children($form);
+  drupal_add_tabledrag('slides-order', 'order', 'sibling', 'weight');
+  return $output;
 }
 
 /**
