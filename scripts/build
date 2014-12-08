@@ -104,3 +104,9 @@ CUR_DIR=$(pwd)
 (
   cp -R openscholar/modules/os_features/os_events/iCalcreator/ openscholar/libraries/
 )
+
+# Copy our custom .htaccess file.
+(
+  rm $DOCROOT/.htaccess
+  cp .htaccess $DOCROOT
+)
