@@ -3,12 +3,15 @@
 body,
 .not-front .field-name-body, 
 #content-column p {
-font-family: 'Cabin';
+font-family: 'Cabin', helvetica;
 }
 
+body.front #columns,
 #columns {
 background: #FFF;
 background-image: url('standard-body-gradient.png');
+background-repeat: repeat-x;
+background-position: 0 0;
 }
 
 
@@ -103,6 +106,7 @@ background: #C4961A;
 
 }
 
+#menu-bar ul.nice-menu .menuparent ul li a.active,
 #menu-bar ul.nice-menu .menuparent ul li a,
 #menu-bar ul.nice-menu .menuparent ul li a:hover,
 #menu-bar ul.nice-menu a.active,
@@ -136,7 +140,7 @@ color: #215990;
 
 
 .block-boxes-os_slideshow_box .slide {
-background: #BCAA7B !important;
+background: #C39936 !important;
 }
 
 a.rslides_nav {
