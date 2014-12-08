@@ -312,7 +312,7 @@ function harvard_activity_reports_create_xml($biblio_data, $hash_id, $status,$ni
           $pubSource->appendChild($pubSourceValue);
 
           // citation info
-          $currentPub->appendChild($domtree->createElement("citation",$value['biblio_author'] . ". " . html_entity_decode($value['biblio_title'], ENT_COMPAT, 'UTF-8') . ". " . $value['biblio_secondary_title']));
+          $currentPub->appendChild($domtree->createElement("citation",$value['biblio_author'] . ". " . utf8_encode(htmlspecialchars(html_entity_decode(strip_tags($value['biblio_title'])), 0, 'ISO-8859-1', FALSE)) . ". " . $value['biblio_secondary_title']));
           // biblio basic info
           // create the proper linkTo
           $currentPub->appendChild($domtree->createElement('linkToArticle',$value['biblio_url']));
