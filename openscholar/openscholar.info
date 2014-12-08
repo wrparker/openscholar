@@ -69,6 +69,7 @@ dependencies[] = views_litepager
 
 ; web services
 dependencies[] = restws
+dependencies[] = restful
 
 ; boxes
 dependencies[] = views_slideshow_cycle

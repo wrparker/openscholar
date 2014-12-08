@@ -342,6 +342,12 @@ projects[registration][patch][] = "https://drupal.org/files/issues/2183509-regis
 projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
 
+projects[restful][subdir] = "contrib"
+projects[restful][download][type] = git
+projects[restful][download][url] = "https://github.com/Gizra/restful.git"
+projects[restful][download][branch] = "7.x-1.x"
+projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
+
 projects[redirect][subdir] = "contrib"
 projects[redirect][version] = 1.0-rc1
 
