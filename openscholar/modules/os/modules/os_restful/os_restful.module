@@ -1,2 +1,26 @@
 <?php
 
+/**
+ *  Implements hook_entity_info().
+ */
+function os_restful_entity_info() {
+  return array(
+    'space' => array(
+      'label' => t('Space'),
+      'entity class' => 'Space',
+      'base table' => 'spaces_overrides',
+      'controller class' => 'EntityAPIController',
+      'entity keys' => array(
+        'id' => 'sid',
+        'bundle' => 'object_type',
+      ),
+      'bundles' => array(
+        'boxes',
+        'context',
+        'menus',
+        'variable',
+      ),
+      'metadata controller class' => 'EntityDefaultMetadataController',
+    ),
+  );
+}
