@@ -32,7 +32,7 @@ class citation_distribute_service_googlescholar extends citation_distribute_serv
     function _googlescholar_list_authors($contributors = array()) {
       $authors = array();
       foreach ( $contributors as $cont ) {
-        $authors[] = $cont['name'];
+        $authors[] = htmlspecialchars(strip_tags($cont['name']), ENT_COMPAT, 'ISO-8859-1', FALSE);
       }
       return $authors;
     }
@@ -68,14 +68,11 @@ class citation_distribute_service_googlescholar extends citation_distribute_serv
     );
 
     foreach ($metadata as $key => $value) {
-      if ($value == 'title') {
-        $node->$value = htmlspecialchars(strip_tags($node->$value), ENT_COMPAT, 'ISO-8859-1', FALSE);
-      }
-      $metadata[$key] = (isset($node->$value)) ? $node->$value : NULL;
+      $metadata[$key] = (isset($node->$value)) ? htmlspecialchars(strip_tags($node->$value), ENT_COMPAT, 'ISO-8859-1', FALSE) : NULL;
     }
 
     if (isset($node->biblio_keywords)) {
-      $metadata['citation_keywords'] = implode(';', $node->biblio_keywords);
+      $metadata['citation_keywords'] = htmlspecialchars(strip_tags(implode(';', $node->biblio_keywords)), ENT_COMPAT, 'ISO-8859-1', FALSE);
     }
 
     if (isset($node->biblio_year, $node->biblio_date)) {
