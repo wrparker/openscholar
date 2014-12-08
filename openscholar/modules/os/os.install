@@ -739,3 +739,10 @@ function os_update_7035() {
   $revert = array_fill_keys($apps, array('feeds_importer'));
   features_revert($revert);
 }
+
+/**
+ * Enabling OS Restful.
+ */
+function os_update_7036() {
+  module_enable(array('os_restful'));
+}
