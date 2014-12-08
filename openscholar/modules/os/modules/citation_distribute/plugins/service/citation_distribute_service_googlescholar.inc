@@ -68,6 +68,9 @@ class citation_distribute_service_googlescholar extends citation_distribute_serv
     );
 
     foreach ($metadata as $key => $value) {
+      if ($value == 'title') {
+        $node->$value = htmlspecialchars(strip_tags($node->$value), ENT_COMPAT, 'ISO-8859-1', FALSE);
+      }
       $metadata[$key] = (isset($node->$value)) ? $node->$value : NULL;
     }
 
