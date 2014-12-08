@@ -15,6 +15,11 @@ background-position: 0 0;
 }
 
 
+#columns {
+background-image: none;
+
+}
+
 .front #content-panels .block-title, 
 .sidebar .block-title {
 background: #fff;
