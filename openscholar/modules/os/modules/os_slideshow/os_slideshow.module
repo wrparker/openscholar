@@ -348,8 +348,10 @@ function os_slideshow_preprocess_os_slideshow_slide(&$vars) {
     return;
   }
 
-  $vars['headline'] = ($node->field_headline) ? $node->field_headline[$lang][0]['value'] : '';
-  $vars['description'] = ($node->field_description) ? $node->field_description[$lang][0]['value'] : '';
+  $wrapper = entity_metadata_wrapper('node', $node);
+
+  $vars['headline'] = $wrapper->field_headline->value();
+  $vars['description'] = $wrapper->field_description->value();
 
   if ($files = field_get_items('node', $node, 'field_image')) {
     $file = reset($files);
