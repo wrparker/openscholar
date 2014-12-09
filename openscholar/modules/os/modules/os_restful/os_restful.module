@@ -7,9 +7,10 @@ function os_restful_entity_info() {
   return array(
     'space' => array(
       'label' => t('Space'),
-      'entity class' => 'Space',
+      'entity class' => 'Entity',
       'base table' => 'spaces_overrides',
       'controller class' => 'EntityAPIController',
+      'hook_load' => NULL,
       'entity keys' => array(
         'id' => 'sid',
         'bundle' => 'object_type',
@@ -20,7 +21,41 @@ function os_restful_entity_info() {
         'menus',
         'variable',
       ),
-      'metadata controller class' => 'EntityDefaultMetadataController',
+//      'metadata controller class' => 'EntityDefaultMetadataController',
     ),
   );
+}
+
+/**
+ * Loading spaces from the DB.
+ *
+ * @param array $spaces
+ *   The spaces ID.
+ * @return Space[]
+ *   Array of spaces.
+ */
+function os_restful_space_load_multiple($spaces = array()) {
+  return entity_load('space', $spaces);
+}
+
+/**
+ * Loading a single space from the DB.
+ *
+ * @param $sid
+ *   The space ID.
+ * @return Space
+ *   Space object.
+ */
+function os_restful_space_load($sid) {
+  return entity_load_single('space', $sid);
+}
+
+/**
+ * Deleting list of spaces from the DB.
+ *
+ * @param array $sids
+ *   The space ID.
+ */
+function os_restful_space_delete_multiple($sids = array()) {
+  entity_delete_multiple('space', $sids);
 }
