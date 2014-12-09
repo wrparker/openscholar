@@ -7,21 +7,15 @@ function os_restful_entity_info() {
   return array(
     'space' => array(
       'label' => t('Space'),
-      'entity class' => 'Entity',
+      'entity class' => 'SpaceEntity',
       'base table' => 'spaces_overrides',
       'controller class' => 'EntityAPIController',
-      'hook_load' => NULL,
+      'load hook' => '',
       'entity keys' => array(
         'id' => 'sid',
         'bundle' => 'object_type',
       ),
-      'bundles' => array(
-        'boxes',
-        'context',
-        'menus',
-        'variable',
-      ),
-//      'metadata controller class' => 'EntityDefaultMetadataController',
+      'metadata controller class' => 'EntityDefaultMetadataController',
     ),
   );
 }
