@@ -17,10 +17,10 @@ define('GKPLUS_SID', 3633);
 function gkplus_menu() {
   $items = array();
 
-  $items['taxonomy/nodeorder/%'] = array(
+  $items['taxonomy/%ctools_js/nodeorder/%'] = array(
     'title' => 'Order Taxonomy Nodes',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('gkplus_order_nodes_dnd_form', 2),
+    'page callback' => 'gkplus_nodeorder_form',
+    'page arguments' => array(1, 3),
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -38,15 +38,6 @@ function gkplus_menu() {
 }
 
 /**
- *  Implements hook_admin_paths().
- */
-function gkplus_admin_paths() {
-  return array(
-    'taxonomy/nodeorder/*' => TRUE,
-  );
-}
-
-/**
  * Implements hook_theme().
  */
 function gkplus_theme() {
@@ -58,11 +49,48 @@ function gkplus_theme() {
 }
 
 /**
+ * Page callback; provides nodeorder form for a given taxonomy term.
+ *
+ * @ingroup nodeorder
+ */
+function gkplus_nodeorder_form($js = NULL, $tid = NULL) {
+  if (!_gkplus_check_sid()) {
+    return;
+  }
+
+  // Gracefully degrades if $js is not set.
+  if (!$js) {
+    return drupal_get_form('gkplus_order_nodes_dnd_form', $tid);
+  }
+
+  ctools_include('ajax');
+  ctools_include('modal');
+
+  $form_state = array(
+    'title' => t('Order Term Nodes'),
+    'ajax' => TRUE,
+    'build_info' => array(
+      'args' => array($tid),
+    ),
+  );
+
+  $output = ctools_modal_form_wrapper('gkplus_order_nodes_dnd_form', $form_state);
+
+  if ($form_state['submitted'] && form_get_errors() == FALSE) {
+    $output = array();
+    $output[] = ctools_modal_command_dismiss();
+    $output[] = ctools_ajax_command_reload();
+
+  }
+  print ajax_render($output);
+  exit;
+}
+
+/**
  * Custom drag and drop form.
  */
 function gkplus_order_nodes_dnd_form($form, $form_state, $tid) {
   $form['items']['#tree'] = TRUE;
-  require_once (drupal_get_path('module', 'nodeorder') . '/nodeorder.admin.inc');
 
   $term = taxonomy_term_load($tid);
   // Build form tree
@@ -106,8 +134,8 @@ function gkplus_order_nodes_dnd_form($form, $form_state, $tid) {
     );
   }
 
-  $form['#attached']['library'][] = array('mics', 'tabledrag.js');
-  $form['#submit'] = array('nodeorder_admin_display_form_submit');
+  require_once (drupal_get_path('module', 'nodeorder') . '/nodeorder.admin.inc');
+  $form['#submit'][] = 'nodeorder_admin_display_form_submit';
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save Changes'));
 
@@ -183,9 +211,9 @@ function gkplus_nodeorder_admin_display_form($form, &$form_state, $tid) {
   $nodes_attached = os_taxonomy_list_attached_entities($tid, $bundles);
   $nodes = array();
   foreach ($nodes_attached as $info) {
-  	if($info['entity_type'] == 'node') {
-  	  $nodes[] = node_load($info['entity_id']);
-  	}
+    if($info['entity_type'] == 'node') {
+      $nodes[] = node_load($info['entity_id']);
+    }
   }
   $node_count = count($nodes);
 
@@ -702,11 +730,12 @@ function gkplus_preprocess_taxonomy_term(&$vars) {
     return;
   }
 
+  drupal_add_tabledrag('categories-sort', 'order', 'sibling', 'weight');
   ctools_include('ajax');
   ctools_include('modal');
 
   $vars['title_prefix'] = "<span class='term-admin-links'>"
-    . l(t('Sort Section'), "taxonomy/nodeorder/$tid")
+    . ctools_modal_text_button(t('Sort Section'), "taxonomy/nojs/nodeorder/$tid", t('Sort Section'), "term-admin-link term-admin-sort-link")
     . "</span>";
 }
 
