@@ -103,6 +103,11 @@ class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \RestfulDat
     }
 
     $request = $this->getRequest();
+    $space = spaces_load('og', $request['filter']['sid']);
+    $controller = $space->controllers->{$request['filter']['object_type']};
+    $settings = $controller->get($request['delta']);
+    $new_settings = array_merge($request['settings'], (array) $settings);
+    $controller->set($request['delta'], $new_settings);
   }
 
   /**
@@ -112,7 +117,6 @@ class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \RestfulDat
     if (!$this->checkGroupAccess()) {
       $this->throwException('You are not authorised.');
     }
-    
     $request = $this->getRequest();
   }
 }
