@@ -11,4 +11,5 @@ $plugin = array(
   ),
   'authentication_types' => TRUE,
   'authentication_optional' => TRUE,
+  'hook_menu' => TRUE,
 );
