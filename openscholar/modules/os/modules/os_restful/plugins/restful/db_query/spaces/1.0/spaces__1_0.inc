@@ -1,15 +1,14 @@
 <?php
 
 $plugin = array(
-  'label' => t('Spaces'),
-  'description' => t('Export the spaces table.'),
-  'resource' => 'Spaces',
-  'class' => 'OsRestfulSpaces',
+  'label' => t('vsite Setting'),
+  'description' => t('Export the spaces overrides table.'),
+  'resource' => 'setting',
+  'class' => 'OsRestfulSpacesOverrides',
   'data_provider_options' => array(
     'table_name' => 'spaces_overrides',
-    'id_column' => 'sid',
+    'id_column' => array('object_type', 'object_id', 'id'),
   ),
-  'menu_item' => 'space',
   'authentication_types' => TRUE,
   'authentication_optional' => TRUE,
 );

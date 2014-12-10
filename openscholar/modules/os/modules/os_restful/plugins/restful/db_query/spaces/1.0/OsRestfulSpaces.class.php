@@ -5,7 +5,7 @@
  * Contains \RestfulQueryVariable
  */
 
-class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \RestfulDataProviderDbQueryInterface, \RestfulDataProviderInterface {
+class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \RestfulDataProviderDbQueryInterface, \RestfulDataProviderInterface {
 
   /**
    * Overrides \RestfulDataProviderEFQ::controllersInfo().
