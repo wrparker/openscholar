@@ -106,8 +106,8 @@ class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \RestfulDat
     $space = spaces_load('og', $request['filter']['sid']);
     $controller = $space->controllers->{$request['filter']['object_type']};
     $settings = $controller->get($request['delta']);
-    $new_settings = array_merge($request['settings'], (array) $settings);
-    $controller->set($request['delta'], $new_settings);
+    $new_settings = array_merge((array) $settings, $request['settings']);
+    $controller->set($request['delta'], (object) $new_settings);
   }
 
   /**
