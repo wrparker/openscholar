@@ -3,7 +3,7 @@
 $plugin = array(
   'label' => t('vsite Setting'),
   'description' => t('Export the spaces overrides table.'),
-  'resource' => 'setting',
+  'resource' => 'vsite_setting',
   'class' => 'OsRestfulSpacesOverrides',
   'data_provider_options' => array(
     'table_name' => 'spaces_overrides',
