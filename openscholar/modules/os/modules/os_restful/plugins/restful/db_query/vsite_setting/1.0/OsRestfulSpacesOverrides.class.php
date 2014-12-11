@@ -124,6 +124,8 @@ class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \R
       $this->throwException('You need to provide title');
     }
 
+    $space = spaces_load('og', $request['vsite']);
+
     // Set up the blocks layout.
     ctools_include('layout', 'os');
     $contexts = array(
@@ -136,12 +138,27 @@ class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \R
       // Creating a new widget.
       $options = array(
         'delta' => time(),
-        'title' => $request['options']['title'],
-        'description' => $request['options']['description'],
-      );
+      ) + $request['options'];
+
+      // Create the box the current vsite.
+      $box = boxes_box::factory($request['widget'], $options);
+      $space->controllers->boxes->set($box->delta, $box);
+
+      // Add the block to the region.
+      $blocks['boxes-' . $box->delta]['region'] = $request['region'];
     }
     else {
-
+      // todo: handle when we need to add widget to a specific region.
     }
+
+    if (!array_key_exists($blocks['boxes-' . $box->delta], array('module', 'delta'))) {
+      $blocks['boxes-' . $box->delta]['delta'] = $box->delta;
+      $blocks['boxes-' . $box->delta]['module'] = 'boxes';
+      $blocks['boxes-' . $box->delta]['weight'] = 0;
+    }
+
+    $space->controllers->context->set($request['context'] . ":reaction:block", array(
+      'blocks' => $blocks,
+    ));
   }
 }
