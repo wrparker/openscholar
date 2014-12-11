@@ -117,6 +117,31 @@ class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \R
     if (!$this->checkGroupAccess()) {
       $this->throwException('You are not authorised.');
     }
+
     $request = $this->getRequest();
+
+    if (empty($request['options']['description'])) {
+      $this->throwException('You need to provide title');
+    }
+
+    // Set up the blocks layout.
+    ctools_include('layout', 'os');
+    $contexts = array(
+      $request['context'],
+      'os_public',
+    );
+    $blocks = os_layout_get_multiple($contexts, FALSE, TRUE);
+
+    if (empty($blocks[$request['widget']])) {
+      // Creating a new widget.
+      $options = array(
+        'delta' => time(),
+        'title' => $request['options']['title'],
+        'description' => $request['options']['description'],
+      );
+    }
+    else {
+
+    }
   }
 }
