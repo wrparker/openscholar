@@ -118,10 +118,27 @@ class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \R
       $this->throwException('You are not authorised.');
     }
 
+    // Get the clean request.
     $request = $this->getRequest();
+    static::cleanRequest($request);
+    $object = (object) $request;
 
-    if (empty($request['options']['description'])) {
-      $this->throwException('You need to provide title');
+    $handler = entity_validator_get_schema_validator('spaces_overrides');
+    $result = $handler->validate($object, TRUE);
+
+    $errors_output = array();
+    if (!$result) {
+      $e = new \RestfulBadRequestException;
+      $fields_errors = $handler->getErrors(FALSE);
+      foreach ($fields_errors as $field => $errors) {
+
+        foreach ($errors as $error) {
+          $errors_output[$field][] = format_string($error['message'], $error['params']);
+        }
+
+        $e->addFieldError($field, implode(', ', $errors_output[$field]));
+      }
+      throw $e;
     }
 
     $space = spaces_load('og', $request['vsite']);
