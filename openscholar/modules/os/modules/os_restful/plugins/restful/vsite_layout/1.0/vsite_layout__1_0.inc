@@ -1,10 +1,10 @@
 <?php
 
 $plugin = array(
-  'label' => t('vsite Setting'),
-  'description' => t('Export the spaces overrides table.'),
-  'resource' => 'vsite_setting',
-  'class' => 'OsRestfulSpacesOverrides',
+  'label' => t('vsite layout'),
+  'description' => t('End point for vsite layout.'),
+  'resource' => 'layout',
+  'class' => 'OsRestfulLayout',
   'data_provider_options' => array(
     'table_name' => 'spaces_overrides',
     'id_column' => array('object_type', 'object_id', 'id'),

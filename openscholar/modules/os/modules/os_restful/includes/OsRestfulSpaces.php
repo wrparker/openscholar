@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Contains \RestfulQueryVariable
+ * Contains \OsRestfulSpaces
  */
-
-class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \RestfulDataProviderDbQueryInterface, \RestfulDataProviderInterface {
+abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \RestfulDataProviderDbQueryInterface, \RestfulDataProviderInterface {
 
   protected $object;
+  protected $space;
 
   /**
    * Overrides \RestfulDataProviderEFQ::controllersInfo().
@@ -57,33 +57,26 @@ class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \R
   }
 
   /**
-   * un-serialize the value object.
-   */
-  public function mapDbRowToPublicFields($row) {
-    $row->value = unserialize($row->value);
-    return parent::mapDbRowToPublicFields($row);
-  }
-
-  /**
    * Verify the user's request has access CRUD in the current group.
    */
   public function checkGroupAccess() {
-    $account = $this->getAccount();
-
     // Get the clean request.
     $request = $this->getRequest();
     static::cleanRequest($request);
     $this->object = (object)$request;
 
-    if (!$space = spaces_load('og', $this->object->vsite)) {
+    if (!$this->space = spaces_load('og', $this->object->vsite)) {
       // No vsite context.
       $this->throwException('The vsite ID is missing.');
     }
+  }
 
-    if (!spaces_access_admin($account, $space)) {
-      // The current user can't manage boxes.
-      $this->throwException("You can't manage boxes in this vsite.");
-    }
+  /**
+   * un-serialize the value object.
+   */
+  public function mapDbRowToPublicFields($row) {
+    $row->value = unserialize($row->value);
+    return parent::mapDbRowToPublicFields($row);
   }
 
   /**
@@ -140,68 +133,5 @@ class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \R
 
       throw $e;
     }
-  }
-
-  /**
-   * Updating a given space override.
-   */
-  public function updateSpace() {
-    // Check group access.
-    $this->checkGroupAccess();
-
-    // Validate the object from the request.
-    $this->validate();
-
-    $request = $this->getRequest();
-    $space = spaces_load('og', $this->object->vsite);
-    $controller = $space->controllers->{$this->object->filter['object_type']};
-    $settings = $controller->get($this->object->delta);
-    $new_settings = array_merge((array) $settings, $this->object->settings);
-    $controller->set($request['delta'], (object) $new_settings);
-  }
-
-  /**
-   * Creating a space override.
-   */
-  public function createSpace() {
-    // Check group access.
-    $this->checkGroupAccess();
-
-    // Validate the object from the request.
-    $this->validate();
-
-    $space = spaces_load('og', $this->object->vsite);
-
-    // Set up the blocks layout.
-    ctools_include('layout', 'os');
-    $contexts = array(
-      $this->object->context,
-      'os_public',
-    );
-    $blocks = os_layout_get_multiple($contexts, FALSE, TRUE);
-
-    if (empty($blocks[$this->object->widget])) {
-      // Creating a new widget.
-      $options = array(
-        'delta' => time(),
-      ) + $this->object->options;
-
-      // Create the box the current vsite.
-      $box = boxes_box::factory($this->object->widget, $options);
-      $space->controllers->boxes->set($box->delta, $box);
-
-      // Add the block to the region.
-      $blocks['boxes-' . $box->delta]['region'] = $this->object->region;
-    }
-
-    if (!array_key_exists($blocks['boxes-' . $box->delta], array('module', 'delta'))) {
-      $blocks['boxes-' . $box->delta]['delta'] = $box->delta;
-      $blocks['boxes-' . $box->delta]['module'] = 'boxes';
-      $blocks['boxes-' . $box->delta]['weight'] = 0;
-    }
-
-    $space->controllers->context->set($this->object->context . ":reaction:block", array(
-      'blocks' => $blocks,
-    ));
   }
 }

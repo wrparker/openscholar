@@ -3,3 +3,5 @@ description = Managing integration between OpenScholar and Resful
 core = 7.x
 
 dependencies[] = restful
+
+files[] = includes/OsRestfulSpaces.php
