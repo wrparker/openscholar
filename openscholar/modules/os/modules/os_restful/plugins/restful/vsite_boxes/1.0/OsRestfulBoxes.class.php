@@ -77,5 +77,14 @@ class OsRestfulBoxes extends OsRestfulSpaces {
    * Delete a specific box.
    */
   public function deleteSpace() {
+    // Check group access.
+    $this->checkGroupAccess();
+
+    $delta = $this->object->object_id;
+
+    ctools_include('layout', 'os');
+    os_layout_block_delete('boxes-' . $delta);
+
+    $this->space->controllers->boxes->del($delta);
   }
 }
