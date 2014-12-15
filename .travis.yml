@@ -9,9 +9,14 @@ mysql:
   encoding: utf8
 
 env:
-  - TEST_SUITE=first
-  - TEST_SUITE=last
-
+  - TEST_SUITE=features
+  - TEST_SUITE=harvard
+#  - TEST_SUITE=javscript
+  - TEST_SUITE=misc
+  - TEST_SUITE=solr
+  - TEST_SUITE=taxonomy
+  - TEST_SUITE=vsite
+  - TEST_SUITE=widgets
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
@@ -76,7 +81,6 @@ before_script:
 
 script:
   - ./bin/behat --tags=$TEST_SUITE
-
 
 after_script:
     - sudo cat /var/log/apache2/error.log
