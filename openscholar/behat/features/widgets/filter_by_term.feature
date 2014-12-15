@@ -1,7 +1,7 @@
 Feature:
   Testing the filter by term widget.
 
-  @api @last
+  @api @widgets
   Scenario: Verify that the user sees terms in the filter by term widget.
     Given I am logging in as "john"
       And the widget "Filter by term" is set in the "Publications" page with the following <settings>:
@@ -17,7 +17,7 @@ Feature:
         | Douglas Noël Adams       |
         | Antoine de Saint-Exupéry |
 
-  @api @last
+  @api @widgets
   Scenario: Verify that the number of tagged posts appended to the term name.
     Given I am logging in as "john"
       And I assign the node "John F. Kennedy" to the term "Antoine de Saint-Exupéry"
@@ -33,7 +33,7 @@ Feature:
      Then I should see "Antoine de Saint-Exupéry (1)"
       And I should see "Stephen William Hawking (1)"
 
-  @api @last
+  @api @widgets
   Scenario: Verify the widget can show/hide the child terms.
     Given I am logging in as "john"
       And I set the term "Stephen William Hawking" under the term "Antoine de Saint-Exupéry"
@@ -51,7 +51,7 @@ Feature:
      When I visit "john/publications"
      Then I should see "Stephen William Hawking"
 
-  @api @last
+  @api @widgets
   Scenario: Verify the widget can show/hide the child terms by the depth setting.
     Given I am logging in as "john"
       And I set the term "Stephen William Hawking" under the term "Antoine de Saint-Exupéry"
@@ -75,7 +75,7 @@ Feature:
       And I should see "Stephen William Hawking"
       And I should see "Douglas Noël Adams"
 
-  @api @last
+  @api @widgets
   Scenario: Verify the widget can show/hide the child terms by the depth setting.
     Given I am logging in as "john"
       And the widget "Filter by term" is set in the "Publications" page with the following <settings>:
@@ -93,13 +93,13 @@ Feature:
           Wrote The Hitchhiker's Guide to the Galaxy
           """
 
-  @api @last
+  @api @widgets
   Scenario: Verify the terms links direct us to the correct path.
     Given I assign the node "Me and michelle obama" with the type "blog" to the term "Barack Hussein Obama"
      When I visit the original page for the term "Barack Hussein Obama"
      Then I should not get a "200" HTTP response
 
-  @api @last
+  @api @widgets
   Scenario: Test that the "filter by term" is rendered with the right link.
     Given I am logging in as "john"
       And the widget "Filter by term" is set in the "Publications" page with the following <settings>:
@@ -109,7 +109,7 @@ Feature:
      When I click "Air (1)"
      Then I should see "The little prince"
 
-  @api @last
+  @api @widgets
   Scenario: Verify that an empty term is shown if it has non-empty children.
     Given I am logging in as "john"
       And the widget "Filter by term" is set in the "Calendar" page with the following <settings>:
@@ -124,7 +124,7 @@ Feature:
       And I should see "Antoine de Saint-Exupéry"
       And I should see "Stephen William Hawking"
 
-  @api @last
+  @api @widgets
   Scenario: Verify the nodes are filtered by the selected term.
     Given I am logging in as "john"
       And the widget "Filter by term" is set in the "News" page with the following <settings>:
@@ -136,7 +136,7 @@ Feature:
      Then I should see "This is a new site generated via the vsite options in open scholar."
       And I should not see "There are more tests available on the tests list"
 
-  @api @last
+  @api @widgets
   Scenario: Verify automatic port type determination is working properly
     Given I am logging in as "john"
       And the widget "Filter by term" is set in the "News" page with the following <settings>:
