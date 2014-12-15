@@ -7,6 +7,8 @@
 
 class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \RestfulDataProviderDbQueryInterface, \RestfulDataProviderInterface {
 
+  protected $object;
+
   /**
    * Overrides \RestfulDataProviderEFQ::controllersInfo().
    */
@@ -66,8 +68,22 @@ class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \R
    * Verify the user's request has access CRUD in the current group.
    */
   public function checkGroupAccess() {
-    // todo: Handle.
-    return TRUE;
+    $account = $this->getAccount();
+
+    // Get the clean request.
+    $request = $this->getRequest();
+    static::cleanRequest($request);
+    $this->object = (object)$request;
+
+    if (!$space = spaces_load('og', $this->object->vsite)) {
+      // No vsite context.
+      $this->throwException('The vsite ID is missing.');
+    }
+
+    if (!spaces_access_admin($account, $space)) {
+      // The current user can't manage boxes.
+      $this->throwException("You can't manage boxes in this vsite.");
+    }
   }
 
   /**
@@ -95,37 +111,19 @@ class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \R
   }
 
   /**
-   * Updating a given space override.
-   */
-  public function updateSpace() {
-    if (!$this->checkGroupAccess()) {
-      $this->throwException('You are not authorised.');
-    }
-
-    $request = $this->getRequest();
-    $space = spaces_load('og', $request['filter']['sid']);
-    $controller = $space->controllers->{$request['filter']['object_type']};
-    $settings = $controller->get($request['delta']);
-    $new_settings = array_merge((array) $settings, $request['settings']);
-    $controller->set($request['delta'], (object) $new_settings);
-  }
-
-  /**
    * Validate object.
+   *
+   * @param $type
+   *   The type validation handler.
    *
    * @throws RestfulBadRequestException
    *   Throws exception with the error per object.
    * @return stdClass
    *   The clean request object convert ot a std object.
    */
-  public function validate() {
-    // Get the clean request.
-    $request = $this->getRequest();
-    static::cleanRequest($request);
-    $object = (object) $request;
-
-    $handler = entity_validator_get_schema_validator('spaces_overrides');
-    $result = $handler->validate($object, TRUE);
+  public function validate($type = 'spaces_overrides') {
+    $handler = entity_validator_get_schema_validator($type);
+    $result = $handler->validate($this->object, TRUE);
 
     $errors_output = array();
     if (!$result) {
@@ -142,45 +140,58 @@ class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \R
 
       throw $e;
     }
+  }
 
-    return $object;
+  /**
+   * Updating a given space override.
+   */
+  public function updateSpace() {
+    // Check group access.
+    $this->checkGroupAccess();
+
+    // Validate the object from the request.
+    $this->validate();
+
+    $request = $this->getRequest();
+    $space = spaces_load('og', $this->object->vsite);
+    $controller = $space->controllers->{$this->object->filter['object_type']};
+    $settings = $controller->get($this->object->delta);
+    $new_settings = array_merge((array) $settings, $this->object->settings);
+    $controller->set($request['delta'], (object) $new_settings);
   }
 
   /**
    * Creating a space override.
    */
   public function createSpace() {
-    if (!$this->checkGroupAccess()) {
-      $this->throwException('You are not authorised.');
-    }
+    // Check group access.
+    $this->checkGroupAccess();
 
-    $object = $this->validate();
+    // Validate the object from the request.
+    $this->validate();
 
-    $space = spaces_load('og', $object->vsite);
+    $space = spaces_load('og', $this->object->vsite);
 
     // Set up the blocks layout.
     ctools_include('layout', 'os');
     $contexts = array(
-      $object->context,
+      $this->object->context,
       'os_public',
     );
     $blocks = os_layout_get_multiple($contexts, FALSE, TRUE);
 
-    if (empty($blocks[$object->widget])) {
+    if (empty($blocks[$this->object->widget])) {
       // Creating a new widget.
       $options = array(
         'delta' => time(),
-      ) + $object->options;
+      ) + $this->object->options;
 
       // Create the box the current vsite.
-      $box = boxes_box::factory($object->widget, $options);
+      $box = boxes_box::factory($this->object->widget, $options);
       $space->controllers->boxes->set($box->delta, $box);
 
       // Add the block to the region.
-      $blocks['boxes-' . $box->delta]['region'] = $object->region;
-    }
-    else {
-      // todo: handle when we need to add widget to a specific region.
+      $blocks['boxes-' . $box->delta]['region'] = $this->object->region;
     }
 
     if (!array_key_exists($blocks['boxes-' . $box->delta], array('module', 'delta'))) {
@@ -189,7 +200,7 @@ class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \R
       $blocks['boxes-' . $box->delta]['weight'] = 0;
     }
 
-    $space->controllers->context->set($object->context . ":reaction:block", array(
+    $space->controllers->context->set($this->object->context . ":reaction:block", array(
       'blocks' => $blocks,
     ));
   }
