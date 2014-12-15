@@ -111,13 +111,14 @@ class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \R
   }
 
   /**
-   * Creating a space override.
+   * Validate object.
+   *
+   * @throws RestfulBadRequestException
+   *   Throws exception with the error per object.
+   * @return stdClass
+   *   The clean request object convert ot a std object.
    */
-  public function createSpace() {
-    if (!$this->checkGroupAccess()) {
-      $this->throwException('You are not authorised.');
-    }
-
+  public function validate() {
     // Get the clean request.
     $request = $this->getRequest();
     static::cleanRequest($request);
@@ -138,31 +139,45 @@ class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \R
 
         $e->addFieldError($field, implode(', ', $errors_output[$field]));
       }
+
       throw $e;
     }
 
-    $space = spaces_load('og', $request['vsite']);
+    return $object;
+  }
+
+  /**
+   * Creating a space override.
+   */
+  public function createSpace() {
+    if (!$this->checkGroupAccess()) {
+      $this->throwException('You are not authorised.');
+    }
+
+    $object = $this->validate();
+
+    $space = spaces_load('og', $object->vsite);
 
     // Set up the blocks layout.
     ctools_include('layout', 'os');
     $contexts = array(
-      $request['context'],
+      $object->context,
       'os_public',
     );
     $blocks = os_layout_get_multiple($contexts, FALSE, TRUE);
 
-    if (empty($blocks[$request['widget']])) {
+    if (empty($blocks[$object->widget])) {
       // Creating a new widget.
       $options = array(
         'delta' => time(),
-      ) + $request['options'];
+      ) + $object->options;
 
       // Create the box the current vsite.
-      $box = boxes_box::factory($request['widget'], $options);
+      $box = boxes_box::factory($object->widget, $options);
       $space->controllers->boxes->set($box->delta, $box);
 
       // Add the block to the region.
-      $blocks['boxes-' . $box->delta]['region'] = $request['region'];
+      $blocks['boxes-' . $box->delta]['region'] = $object->region;
     }
     else {
       // todo: handle when we need to add widget to a specific region.
@@ -174,7 +189,7 @@ class OsRestfulSpacesOverrides extends \RestfulDataProviderDbQuery implements \R
       $blocks['boxes-' . $box->delta]['weight'] = 0;
     }
 
-    $space->controllers->context->set($request['context'] . ":reaction:block", array(
+    $space->controllers->context->set($object->context . ":reaction:block", array(
       'blocks' => $blocks,
     ));
   }
