@@ -175,7 +175,8 @@ abstract class os_boxes_default extends boxes_box {
 
     $js = array();
     $css = array();
-    if (!$cache = cache_get($this->cache_id, 'cache_os_boxes')) {
+    $uid = $GLOBALS['user']->uid;
+    if (!$cache = cache_get($this->cache_id . ':' . $uid, 'cache_os_boxes')) {
       // No cache exists.
       return FALSE;
     }
@@ -205,7 +206,7 @@ abstract class os_boxes_default extends boxes_box {
     }
 
     drupal_add_http_header('x-drupal-cache-os-boxes-plugin', $this->plugin_key, TRUE);
-    drupal_add_http_header('x-drupal-cache-os-boxes-cache-id', $this->cache_id, TRUE);
+    drupal_add_http_header('x-drupal-cache-os-boxes-cache-id', $this->cache_id . ':'. $uid, TRUE);
 
     return $cache->data;
   }
