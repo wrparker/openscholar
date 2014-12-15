@@ -2,7 +2,7 @@ Feature:
   Testing search function using apache solr for searching in other sites
   (selected sites and/or subsites).
 
-  @api @last
+  @api @solr
   Scenario: Check search results are from the selected list of sites.
     Given I am logging in as "john"
       And I add to the search results the sites "obama"
@@ -13,7 +13,7 @@ Feature:
           # Result form "obama"
       And I should see "Me and michelle obama"
 
-  @api @last
+  @api @solr
   Scenario: Check search results are from the selected list of subsites.
     Given I am logging in as "alexander"
       And I add to the search results the site's subsites
