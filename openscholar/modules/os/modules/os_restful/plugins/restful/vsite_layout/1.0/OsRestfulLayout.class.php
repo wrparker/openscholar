@@ -16,7 +16,7 @@ class OsRestfulLayout extends OsRestfulSpaces {
   }
 
   /**
-   * Verify the user's request has access CRUD in the current group.
+   * Verify the user have access to the manage layout.
    */
   public function checkGroupAccess() {
     parent::checkGroupAccess();
@@ -84,5 +84,9 @@ class OsRestfulLayout extends OsRestfulSpaces {
     $space->controllers->context->set($this->object->context . ":reaction:block", array(
       'blocks' => $blocks,
     ));
+  }
+
+  public function deleteSpace() {
+
   }
 }

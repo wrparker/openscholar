@@ -6,7 +6,16 @@
  */
 abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \RestfulDataProviderDbQueryInterface, \RestfulDataProviderInterface {
 
+  /**
+   * @var stdClass
+   * The object the controller need to handle.
+   */
   protected $object;
+
+  /**
+   * @var space
+   * The space object.
+   */
   protected $space;
 
   /**
@@ -18,9 +27,14 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
         \RestfulInterface::GET => 'getSpace',
         \RestfulInterface::POST => 'createSpace',
         \RestfulInterface::PUT => 'updateSpace',
+        \RestFulInterface::DELETE => 'deleteSpace',
       ),
     );
   }
+
+  abstract public function createSpace();
+  abstract public function updateSpace();
+  abstract public function deleteSpace();
 
   /**
    * {@inheritdoc}

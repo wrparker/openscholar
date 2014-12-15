@@ -16,7 +16,7 @@ class OsRestfulBoxes extends OsRestfulSpaces {
   }
 
   /**
-   * Verify the user's request has access CRUD in the current group.
+   * Verify the user have access to the manage boxes.
    */
   public function checkGroupAccess() {
     parent::checkGroupAccess();
@@ -69,5 +69,11 @@ class OsRestfulBoxes extends OsRestfulSpaces {
     // Create the box the current vsite.
     $box = boxes_box::factory($this->object->widget, $options);
     $space->controllers->boxes->set($box->delta, $box);
+  }
+
+  /**
+   * Delete a specific box.
+   */
+  public function deleteSpace() {
   }
 }
