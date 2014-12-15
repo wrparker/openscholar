@@ -138,10 +138,6 @@ abstract class os_boxes_default extends boxes_box {
     }
     $this->cache_id .= ':' . $this->delta;
 
-    // Add the user id to the CID of the widget.
-    global $user;
-    $this->cache_id .= ':' . $user->uid;
-
     if ($page) {
       $this->cache_id .= ':' . $page;
     }
@@ -298,6 +294,9 @@ abstract class os_boxes_default extends boxes_box {
       // No valid cache id.
       return;
     }
+
+    // add the current user id to the cache id
+    $this->cache_id += ':' . $GLOBALS['user']->uid;
 
     if (!empty($this->cache_time)) {
       $expire = is_string($this->cache_time) ? strtotime($this->cache_time) : $this->cache_time;
