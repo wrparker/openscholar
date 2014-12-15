@@ -19,6 +19,12 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
   protected $space;
 
   /**
+   * @var string
+   * The string handler.
+   */
+  protected $validateHandler = '';
+
+  /**
    * Overrides \RestfulDataProviderEFQ::controllersInfo().
    */
   public static function controllersInfo() {
@@ -120,16 +126,13 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
   /**
    * Validate object.
    *
-   * @param $type
-   *   The type validation handler.
-   *
    * @throws RestfulBadRequestException
    *   Throws exception with the error per object.
    * @return stdClass
    *   The clean request object convert ot a std object.
    */
-  public function validate($type = 'spaces_overrides') {
-    $handler = entity_validator_get_schema_validator($type);
+  public function validate() {
+    $handler = entity_validator_get_schema_validator($this->validateHandler);
     $result = $handler->validate($this->object, TRUE);
 
     $errors_output = array();

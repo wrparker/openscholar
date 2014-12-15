@@ -7,6 +7,8 @@
 
 class OsRestfulBoxes extends OsRestfulSpaces {
 
+  protected $validateHandler = 'boxes';
+
   /**
    * Overriding the query list filter method: Exposing only boxes.
    */
