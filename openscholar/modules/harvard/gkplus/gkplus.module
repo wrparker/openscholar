@@ -731,6 +731,7 @@ function gkplus_preprocess_taxonomy_term(&$vars) {
   }
 
   drupal_add_tabledrag('categories-sort', 'order', 'sibling', 'weight');
+  drupal_add_js(drupal_get_path('module', 'gkplus') . '/gkplus.js');
   ctools_include('ajax');
   ctools_include('modal');
 

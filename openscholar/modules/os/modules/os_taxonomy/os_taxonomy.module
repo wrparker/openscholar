@@ -1081,7 +1081,7 @@ function theme_os_taxonomy_tagged_nodes($variables) {
   }
 
   // Checks whether there are child terms to display below this one.
-  $children = taxonomy_get_tree($vocabulary->vid, ($taxonomy_term)?$taxonomy_term->tid:0, 1, TRUE);
+  $children = taxonomy_get_tree($vocabulary->vid, ($taxonomy_term) ? $taxonomy_term->tid : 0, 1, TRUE);
   $has_children_to_display = (!empty($children) && (is_null($options['max_depth']) || (is_numeric($options['max_depth']) && $options['max_depth'] > $options['cur_depth'])));
 
   if ($taxonomy_term) {
@@ -1127,6 +1127,7 @@ function theme_os_taxonomy_tagged_nodes($variables) {
     // more efficient to use the TYPE_load_multiple and TYPE_view_multipe
     // options when the bundles are all within one entity?
     $term_id = is_array($tid) ? reset($tid) : $tid;
+
     $build += array_map(function ($a) use ($term_id, $options) {
       if ($a['entity_type'] == "node") {
         // Render a node.
@@ -1144,7 +1145,7 @@ function theme_os_taxonomy_tagged_nodes($variables) {
   }
   else if ((int) $options['cur_depth'] === 0 && !$has_children_to_display) {
     $pager = '';
-    $type = ($taxonomy_term)?"term":"vocabulary";
+    $type = ($taxonomy_term) ? "term" : "vocabulary";
     $build['no_content'] = array(
       '#prefix' => '<p>',
       '#markup' => t('There is currently no content classified with this @type.',array('@type' => $type)),
@@ -1242,7 +1243,7 @@ function os_taxonomy_count_attached_nodes_query_object($tid, $node_bundles = arr
  */
 function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array()) {
   $query = db_select('field_data_og_vocabulary', 'ogv');
-  $query->condition('og_vocabulary_target_id', $tid, is_array($tid)?'IN':"=")
+  $query->condition('og_vocabulary_target_id', $tid, is_array($tid) ? 'IN' : "=")
     ->distinct()
     ->fields('ogv', array('entity_type', 'entity_id'));
 
@@ -1337,8 +1338,8 @@ function os_taxonomy_list_attached_entities($tid, $bundles = array(), $range = N
     $query->orderBy('t.weight', 'ASC');
   }
   else {
-    if (count($bundles) == 1){
-      switch(current($bundles)){
+    if (count($bundles) == 1) {
+      switch(current($bundles)) {
         case 'biblio':
           $query->leftJoin('biblio', 'b', 'b.vid = n.vid');
           $query->orderBy('b.biblio_year', 'DESC');
@@ -1363,7 +1364,8 @@ function os_taxonomy_list_attached_entities($tid, $bundles = array(), $range = N
         break;
 
       default:
-        //select a date depending on the type of entity, sort by that.  this is slow.
+        // Select a date depending on the type of entity, sort by that. this is
+        // slow.
         $query->addExpression('IF(ogv.entity_type = :node, n.created, fm.timestamp)', 'entity_date', array(':node' => 'node'));
         $query->orderBy('n.sticky', 'DESC');
         $query->orderBy('entity_date', 'DESC');
