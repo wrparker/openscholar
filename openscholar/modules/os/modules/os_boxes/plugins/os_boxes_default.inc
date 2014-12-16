@@ -219,7 +219,7 @@ abstract class os_boxes_default extends boxes_box {
       return array();
     }
 
-    if ($assets_cache = cache_get('assets:' . $this->cache_id, 'cache_os_boxes')) {
+    if ($assets_cache = cache_get('assets:' . $this->cache_id.':'.$GLOBALS['user']->uid, 'cache_os_boxes')) {
       $assets = unserialize($assets_cache->data);
       return $assets;
     }
