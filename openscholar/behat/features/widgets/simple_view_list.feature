@@ -4,6 +4,7 @@ Feature:
   @api @last
   Scenario: Verify the simple view widget works after tagging node to term.
      Given I am logging in as "john"
+       And I set the variable "os_boxes_cache_enabled" to "1"
       When the widget "Simple view list" is set in the "Classes" page with the following <settings>:
         | authors                  | Stephen William Hawking  | select list |
         | science                  | Air                      | select list |
