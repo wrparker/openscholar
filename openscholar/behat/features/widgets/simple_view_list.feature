@@ -24,6 +24,7 @@ Feature:
   @api @wip
   Scenario: Verify the simple view widget pager and cache
       Given I am logging in as "john"
+        And I set the variable "os_boxes_cache_enabled" to "1"
        When the widget "Simple view list" is set in the "Classes" page with the following <settings>:
          | Show pager               | check                    | checkbox    |
         And I visit "john/classes"

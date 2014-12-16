@@ -297,7 +297,7 @@ abstract class os_boxes_default extends boxes_box {
     }
 
     // add the current user id to the cache id
-    $this->cache_id += ':' . $GLOBALS['user']->uid;
+    $cid = $this->cache_id + ':' . $GLOBALS['user']->uid;
 
     if (!empty($this->cache_time)) {
       $expire = is_string($this->cache_time) ? strtotime($this->cache_time) : $this->cache_time;
