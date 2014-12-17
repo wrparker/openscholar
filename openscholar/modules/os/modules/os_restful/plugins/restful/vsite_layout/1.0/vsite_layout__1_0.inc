@@ -3,7 +3,7 @@
 $plugin = array(
   'label' => t('vsite layout'),
   'description' => t('End point for vsite layout.'),
-  'resource' => 'layout',
+  'resource' => 'layouts',
   'class' => 'OsRestfulLayout',
   'data_provider_options' => array(
     'table_name' => 'spaces_overrides',
