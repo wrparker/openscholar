@@ -5,3 +5,4 @@ core = 7.x
 dependencies[] = restful
 
 files[] = includes/OsRestfulSpaces.php
+files[] = includes/OsObjectValidate.php

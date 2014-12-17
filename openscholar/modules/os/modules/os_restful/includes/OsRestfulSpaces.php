@@ -25,6 +25,13 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
   protected $validateHandler = '';
 
   /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $plugin, \RestfulAuthenticationManager $auth_manager = NULL, \DrupalCacheInterface $cache_controller = NULL) {
+    parent::__construct($plugin, $auth_manager, $cache_controller);
+  }
+
+  /**
    * Overrides \RestfulDataProviderEFQ::controllersInfo().
    */
   public static function controllersInfo() {
@@ -137,7 +144,7 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
 
     $errors_output = array();
     if (!$result) {
-      $e = new \RestfulBadRequestException;
+      $e = new \RestfulBadRequestException("It's look that you sent a request with bad values.");
       $fields_errors = $handler->getErrors(FALSE);
       foreach ($fields_errors as $field => $errors) {
 

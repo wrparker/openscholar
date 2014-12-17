@@ -1,6 +1,6 @@
 <?php
 
-class SpacesOverridesValidate extends ObjectValidateBase {
+abstract class OsObjectValidate extends ObjectValidateBase {
 
   /**
    * Overrides ObjectValidateBase::publicFieldsInfo().
@@ -15,13 +15,6 @@ class SpacesOverridesValidate extends ObjectValidateBase {
       ),
     );
 
-    $fields['options'] = array(
-      'property' => 'options',
-      'validators' => array(
-        array($this, 'validateOptions'),
-      ),
-    );
-
     return $fields;
   }
 
@@ -31,15 +24,6 @@ class SpacesOverridesValidate extends ObjectValidateBase {
   public function validateVsite($property, $value, $object) {
     if (empty($object->vsite)) {
       $this->setError('vsite', 'You need to pass vsite ID.');
-    }
-  }
-
-  /**
-   * Validate the option attribute,
-   */
-  public function validateOptions($property, $value, $object) {
-    if (empty($value['description'])) {
-      $this->setError($property, 'The description is missing in the widgets settings.');
     }
   }
 }

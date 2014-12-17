@@ -40,6 +40,8 @@ class OsRestfulBoxes extends OsRestfulSpaces {
     // Check group access.
     $this->checkGroupAccess();
 
+    $this->object->new = FALSE;
+
     // Validate the object from the request.
     $this->validate();
 
@@ -71,6 +73,8 @@ class OsRestfulBoxes extends OsRestfulSpaces {
     // Create the box the current vsite.
     $box = boxes_box::factory($this->object->widget, $options);
     $space->controllers->boxes->set($box->delta, $box);
+
+    return (Array) $box;
   }
 
   /**
