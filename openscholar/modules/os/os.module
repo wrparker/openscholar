@@ -526,6 +526,16 @@ function os_module_implements_alter(&$implementations, $hook) {
     unset($implementations['os']);
     $implementations['os'] = FALSE;
   }
+  elseif ($hook == 'node_update') {
+    // Switch the orders of the implementations.
+    $os = $implementations['os'];
+    $taxonomy = $implementations['taxonomy'];
+
+    unset($implementations['os'], $implementations['taxonomy']);
+
+    $implementations['os'] = $os;
+    $implementations['taxonomy'] = $taxonomy;
+  }
 }
 
 /**
@@ -2482,3 +2492,30 @@ function os_set_update_batch(&$sandbox, $info) {
     $sandbox['#finished'] = ($sandbox['progress'] / $sandbox['max']);
   }
 }
+
+/**
+ * Implements hook_node_update().
+ */
+function os_node_update($node) {
+  // Store the original value of the variable.
+  variable_set('taxonomy_maintain_index_table_original', variable_get('taxonomy_maintain_index_table'));
+
+  // Set the variable as false in order to prevent the weight deletion for this
+  // node.
+  variable_set('taxonomy_maintain_index_table', FALSE);
+
+  // Register a shutdown function that will set the variable back to true.
+  drupal_register_shutdown_function('os_revert_taxonomy_maintain');
+}
+
+/**
+ * After updating the node and not deleting the weight for that node we need to
+ * set the variable back to true.
+ */
+function os_revert_taxonomy_maintain() {
+  variable_set('taxonomy_maintain_index_table', variable_get('taxonomy_maintain_index_table_original'));
+
+  // Delete the temporary variable.
+  variable_del('taxonomy_maintain_index_table_original');
+}
+
