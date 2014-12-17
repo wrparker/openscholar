@@ -351,7 +351,6 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['fields']['firstname']['alter']['text'] = '[lastname], [firstname]';
   $handler->display->display_options['fields']['firstname']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['firstname']['alter']['path'] = 'publications/author/[cid]/[name]';
-  $handler->display->display_options['fields']['firstname']['empty'] = 'Anon.';
   /* Field: COUNT(DISTINCT Content: Title) */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -363,7 +362,6 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['prefix'] = '(';
   $handler->display->display_options['fields']['title']['suffix'] = ')';
-
   /* Sort criterion: Publication: Author last name */
   $handler->display->display_options['sorts']['lastname']['id'] = 'lastname';
   $handler->display->display_options['sorts']['lastname']['table'] = 'biblio_contributor_data';
@@ -386,7 +384,18 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['filters']['current']['id'] = 'current';
   $handler->display->display_options['filters']['current']['table'] = 'spaces';
   $handler->display->display_options['filters']['current']['field'] = 'current';
-
+  /* Filter criterion: Content: First name not blank */
+  $handler->display->display_options['filters']['firstname']['id'] = 'firstname';
+  $handler->display->display_options['filters']['firstname']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['filters']['firstname']['field'] = 'firstname';
+  $handler->display->display_options['filters']['firstname']['operator'] = '!=';
+  $handler->display->display_options['filters']['firstname']['value'] = '';
+  /* Filter criterion: Content: Last name not blank */
+  $handler->display->display_options['filters']['lastname']['id'] = 'lastname';
+  $handler->display->display_options['filters']['lastname']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['filters']['lastname']['field'] = 'lastname';
+  $handler->display->display_options['filters']['lastname']['operator'] = '!=';
+  $handler->display->display_options['filters']['lastname']['value'] = '';
   /* Display: Co-Authors List */
   $handler = $view->new_display('block', 'Co-Authors List', 'block');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
