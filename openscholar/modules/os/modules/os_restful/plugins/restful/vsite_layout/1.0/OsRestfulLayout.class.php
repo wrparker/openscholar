@@ -8,14 +8,7 @@
 class OsRestfulLayout extends OsRestfulSpaces {
 
   protected $validateHandler = 'layout';
-
-  /**
-   * Overriding the query list filter method: Exposing only boxes.
-   */
-  protected function queryForListFilter(\SelectQuery $query) {
-    parent::queryForListFilter($query);
-    $query->condition('object_type', 'context');
-  }
+  protected $objectType = 'context';
 
   /**
    * Verify the user have access to the manage layout.

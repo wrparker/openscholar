@@ -8,14 +8,7 @@
 class OsRestfulBoxes extends OsRestfulSpaces {
 
   protected $validateHandler = 'boxes';
-
-  /**
-   * Overriding the query list filter method: Exposing only boxes.
-   */
-  protected function queryForListFilter(\SelectQuery $query) {
-    parent::queryForListFilter($query);
-    $query->condition('object_type', 'boxes');
-  }
+  protected $objectType = 'boxes';
 
   /**
    * Verify the user have access to the manage boxes.
@@ -45,12 +38,15 @@ class OsRestfulBoxes extends OsRestfulSpaces {
     // Validate the object from the request.
     $this->validate();
 
-    $request = $this->getRequest();
-    $space = spaces_load('og', $this->object->vsite);
-    $controller = $space->controllers->{$this->object->filter['object_type']};
+    $controller = $this->space->controllers->{$this->objectType};
     $settings = $controller->get($this->object->delta);
-    $new_settings = array_merge((array) $settings, $this->object->settings);
-    $controller->set($request['delta'], (object) $new_settings);
+    if (!count(get_object_vars($settings))) {
+      $this->throwException("The delta which you provided doesn't exists");
+    }
+    $new_settings = array_merge((array) $settings, $this->object->options);
+    $controller->set($this->object->delta, (object) $new_settings);
+
+    return $new_settings;
   }
 
   /**
@@ -74,7 +70,7 @@ class OsRestfulBoxes extends OsRestfulSpaces {
     $box = boxes_box::factory($this->object->widget, $options);
     $space->controllers->boxes->set($box->delta, $box);
 
-    return (Array) $box;
+    return (array) $box;
   }
 
   /**
@@ -84,7 +80,7 @@ class OsRestfulBoxes extends OsRestfulSpaces {
     // Check group access.
     $this->checkGroupAccess();
 
-    $delta = $this->object->object_id;
+    $delta = $this->object->delta;
 
     ctools_include('layout', 'os');
     os_layout_block_delete('boxes-' . $delta);

@@ -25,11 +25,10 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
   protected $validateHandler = '';
 
   /**
-   * {@inheritdoc}
+   * @var string
+   * Object type: context, boxes etc. etc.
    */
-  public function __construct(array $plugin, \RestfulAuthenticationManager $auth_manager = NULL, \DrupalCacheInterface $cache_controller = NULL) {
-    parent::__construct($plugin, $auth_manager, $cache_controller);
-  }
+  protected $objectType = '';
 
   /**
    * Overrides \RestfulDataProviderEFQ::controllersInfo().
@@ -74,13 +73,24 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
   }
 
   /**
+   * Overriding the query list filter method: Exposing only boxes.
+   */
+  protected function queryForListFilter(\SelectQuery $query) {
+    parent::queryForListFilter($query);
+
+    if ($this->objectType) {
+      $query->condition('object_type', $this->objectType);
+    }
+  }
+
+  /**
    * Throwing exception easily.
    * @param $message
    *   The exception message.
    * @throws RestfulBadRequestException
    */
   public function throwException($message) {
-    throw new RestfulBadRequestException($message);
+    throw new \RestfulBadRequestException($message);
   }
 
   /**

@@ -52,7 +52,7 @@ class BoxesValidate extends OsObjectValidate {
     }
 
     if (empty($object->delta)) {
-      $this->setError($property, 'You need pass a delta for existing box.');
+      $this->setError($property, 'You need to pass a delta of existing box.');
     }
   }
 }
