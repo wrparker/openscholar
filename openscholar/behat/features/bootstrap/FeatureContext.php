@@ -1928,7 +1928,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I verify that "([^"]*)" is the owner of vsite "([^"]*)"$/
    */
   public function iVerifyThatIsTheOwnerOfVsite($username, $group) {
-    $uid = $this->invoke_code('os_migrate_demo_get_user_by_name', array($username));
+    $uid = os_migrate_demo_get_user_by_name($username);
     $author_uid = $this->invoke_code('os_migrate_demo_get_vsite_owner_uid', array($group));
 
     if ($uid != $author_uid) {
@@ -1940,7 +1940,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I edit the membership of "([^"]*)" in vsite "([^"]*)"$/
    */
   public function iEditTheMembershipOfInVsite($username, $group) {
-    $uid = $this->invoke_code('os_migrate_demo_get_user_by_name', array($username));
+    $uid = os_migrate_demo_get_user_by_name($username);
     return array(
       new Step\When('I visit "' . $group . '/cp/users/edit_membership/' . $uid . '"'),
     );
