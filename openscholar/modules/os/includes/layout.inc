@@ -178,18 +178,23 @@ function os_layout_get_multiple($contexts, $load_meta = FALSE, $unused_blocks = 
  *
  * @param string $context_name
  * @param array $blocks
+ * @param space $vsite
  */
-function os_layout_set($context_name, $blocks) {
+function os_layout_set($context_name, $blocks, $vsite = NULL) {
   _os_layout_sanitize_blocks($blocks);
 
   $context = context_load($context_name);
   $clean_up = false;
 
+  if (!$vsite) {
+    $vsite = module_exists('vsite') ? vsite_get_vsite() : NULL;
+  }
+
   if ($context_name == 'os_public' && !variable_get('os_layout_has_cleaned_up', false)) {
     // we want to compare to the old version, which is what should be in the children contexts
     $old_blocks = os_layout_get($context_name);
     $q = null;
-    if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
+    if ($vsite) {
       $q = db_select('spaces_overrides', 'so')
            ->condition('id', $vsite->group->nid)
            ->condition('object_type', 'context');
@@ -217,8 +222,7 @@ function os_layout_set($context_name, $blocks) {
   if (module_exists('vsite_layout')) {
     // Writes the context to the overrides table.
     vsite_layout_context_set($context_name, $blocks);
-    if ($clean_up) {
-      $vsite = vsite_get_vsite();
+    if ($clean_up && $vsite) {
       $vsite->controllers->variable->set('os_layout_has_cleaned_up', true);
     }
   }

@@ -60,34 +60,16 @@ class OsRestfulLayout extends OsRestfulSpaces {
     // Validate the object from the request.
     $this->validate();
 
-    $space = spaces_load('og', $this->object->vsite);
-
     // Set up the blocks layout.
     ctools_include('layout', 'os');
     $contexts = array(
-      $this->object->context,
+      $this->object->object_id,
       'os_public',
     );
+
     $blocks = os_layout_get_multiple($contexts, FALSE, TRUE);
 
-    // todo: get the box.
-
-    // Create the box the current vsite.
-//    $box = boxes_box::factory($this->object->widget, $options);
-//    $space->controllers->boxes->set($box->delta, $box);
-
-    // Add the block to the region.
-//    $blocks['boxes-' . $box->delta]['region'] = $this->object->region;
-
-    if (!array_key_exists($blocks['boxes-' . $box->delta], array('module', 'delta'))) {
-      $blocks['boxes-' . $box->delta]['delta'] = $box->delta;
-      $blocks['boxes-' . $box->delta]['module'] = 'boxes';
-      $blocks['boxes-' . $box->delta]['weight'] = 0;
-    }
-
-    $space->controllers->context->set($this->object->context . ":reaction:block", array(
-      'blocks' => $blocks,
-    ));
+    os_layout_set($this->object->object_id, $blocks, $this->space);
   }
 
   public function deleteSpace() {
