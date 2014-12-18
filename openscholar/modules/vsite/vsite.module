@@ -3189,6 +3189,11 @@ function vsite_og_permission() {
       'description' => t('Edit existing widgets.'),
       'os_override' => TRUE,
     ),
+    'create files' => array(
+      'title' => t('Add files'),
+      'description' => t('Add files to system.'),
+      'os_override' => TRUE,
+    )
   );
 }
 
