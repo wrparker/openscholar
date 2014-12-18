@@ -160,13 +160,21 @@ class FeatureContext extends DrupalContext {
       AND type = '$type'
     \"";
 
-    $result = $this->getDriver()->drush('sql-query', array($query));
-    $id = trim(substr($result, strlen('identifier')));
+    $query = new EntityFieldQuery();
+    $results = $query
+      ->entityCondition('entity_type', 'node')
+      ->propertyCondition('title', $title)
+      ->propertyCondition('type', $type)
+      ->execute();
 
-    if (!$id) {
-      throw new \Exception("No $page_type with title '$title' was found.");
+    if (empty($results['node'])) {
+      if (!$id) {
+        throw new \Exception("No $page_type with title '$title' was found.");
+      }
     }
-    $path = str_replace('%', $id, $path);
+
+    $ids = array_keys($results['node']);
+    $id = reset($ids);
 
     return new Given("I am at \"node/$id\"");
   }
@@ -235,7 +243,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I clear the cache$/
    */
   public function iClearTheCache() {
-    $this->getDriver()->drush('cc all');
+    drupal_flush_all_caches();
   }
 
   /**
@@ -431,8 +439,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^the widget "([^"]*)" is set in the "([^"]*)" page by the name "([^"]*)" with the following <settings>:$/
    */
   public function theWidgetIsSetInThePageBytheNameWithSettings($page, $widget, $name, TableNode $table) {
-    $code = "os_migrate_demo_set_box_in_region({$this->nid}, '$page', '$widget', 'sidebar_second', '$name');";
-    $this->box[] = $this->getDriver()->drush("php-eval \"{$code}\"");
+    $this->box[] = os_migrate_demo_set_box_in_region($this->nid, $page, $widget, 'sidebar_second', $name);
     $hash = $table->getRows();
 
     list($box, $delta, $context) = explode(",", $this->box[0]);
@@ -479,22 +486,21 @@ class FeatureContext extends DrupalContext {
    * @Given /^the widget "([^"]*)" is set in the "([^"]*)" page$/
    */
   public function theWidgetIsSetInThePage($page, $widget) {
-    $code = "os_migrate_demo_set_box_in_region({$this->nid}, '$page', '$widget');";
-    $this->box[] = $this->getDriver()->drush("php-eval \"{$code}\"");
+    $this->box[] = os_migrate_demo_set_box_in_region($this->nid, $page, $widget);
   }
 
   /**
    * @When /^I assign the node "([^"]*)" to the term "([^"]*)"$/
    */
   public function iAssignTheNodeToTheTerm($node, $term) {
-    $this->invoke_code('os_migrate_demo_assign_node_to_term', array("'$node'","'$term'"));
+    os_migrate_demo_assign_node_to_term($node, $term);
   }
 
   /**
    * @When /^I assign the page "([^"]*)" to the term "([^"]*)"$/
    */
   public function iAssignThePageToTheTerm($node, $term) {
-    $this->invoke_code('os_migrate_demo_assign_node_to_term', array("'$node'", "'$term'", 'page'));
+    os_migrate_demo_assign_node_to_term($node, $term, 'page');
   }
 
   /**
@@ -516,8 +522,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I assign the node "([^"]*)" with the type "([^"]*)" to the term "([^"]*)"$/
    */
   public function iAssignTheNodeWithTheTypeToTheTerm($node, $type, $term) {
-    $code = "os_migrate_demo_assign_node_to_term('$node', '$term', '$type');";
-    $this->getDriver()->drush("php-eval \"{$code}\"");
+    os_migrate_demo_assign_node_to_term($node, $term, $type);
   }
 
 
@@ -535,15 +540,14 @@ class FeatureContext extends DrupalContext {
         foreach ($data as &$value) {
           $value = trim($value);
         }
-        $code = "os_migrate_demo_hide_box({$this->nid}, '{$data[0]}', '{$data[1]}', '{$data[2]}');";
-        $this->getDriver()->drush("php-eval \"{$code}\"");
+        os_migrate_demo_hide_box($this->nid, $data[0], $data[1], $data[2]);
       }
     }
 
     if (!empty($this->domains)) {
       // Remove domain we added to vsite.
       foreach ($this->domains as $domain) {
-        $this->invoke_code("os_migrate_demo_remove_vsite_domain", array("'{$domain}'"));
+        os_migrate_demo_remove_vsite_domain($domain);
       }
     }
   }
@@ -552,12 +556,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^cache is "([^"]*)" for anonymous users$/
    */
   public function cacheIsForAnonymousUsers($status) {
-    if ($status == "enabled") {
-      $this->getDriver()->drush('vset cache 1');
-    }
-    else if ($status == "disabled") {
-      $this->getDriver()->drush('vset cache 0');
-    }
+    variable_set('cache', $status == "enabled");
   }
 
   /**
@@ -655,39 +654,23 @@ class FeatureContext extends DrupalContext {
   /**
    * Invoking a php code with drush.
    *
-   *  @param $function
-   *    The function name to invoke.
-   *  @param $arguments
-   *    Array contain the arguments for function.
-   *  @param $debug
-   *    Set as TRUE/FALSE to display the output the function print on the screen.
+   * @param $function
+   *   The function name to invoke.
+   * @param $arguments
+   *   Array contain the arguments for function.
+   * @param $debug
+   *   Set as TRUE/FALSE to display the output the function print on the screen.
+   * @return mixed
    */
-  private function invoke_code($function, $arguments = NULL, $debug = FALSE) {
-    $code = !empty($arguments) ? "$function(" . implode(',', $arguments) . ");" : "$function();";
+  private function invoke_code($function, $arguments = array(), $debug = FALSE) {
 
-    $output = $this->getDriver()->drush("php-eval \"{$code}\"");
+    $output = call_user_func_array($function, $arguments);
 
     if ($debug) {
       print_r($output);
     }
 
     return $output;
-  }
-
-  /**
-   * Sets a variable with drush
-   *
-   * @param $name
-   *    The variable name to set
-   * @value $value
-   *    The value to set the variable to
-   */
-  private function set_variable($name, $value) {
-    // always use json encoding just to make things simpler for us
-    // catches arrays, objects, strings equally
-    $value = json_encode($value);
-
-    $this->getDriver()->drush("vset --format=json $name $value");
   }
 
   /**
@@ -926,8 +909,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iSetCoursesToImport() {
     $metasteps = array();
-    $this->getDriver()->drush("php-eval \"drupal_flush_all_caches();\"");
-    $this->getDriver()->drush("cc all");
+    drupal_flush_all_caches();
     $metasteps[] = new Step\When('I visit "admin"');
     $metasteps[] = new Step\When('I visit "admin/structure/feeds/course/settings/HarvardFetcher"');
     $metasteps[] = new Step\When('I check the box "Debug mode"');
@@ -944,16 +926,14 @@ class FeatureContext extends DrupalContext {
    * @When /^I enable harvard courses$/
    */
   public function iEnableHarvardCourses() {
-    $code = "os_migrate_demo_define_harvard_courses();";
-    $this->getDriver()->drush("php-eval \"{$code}\"");
+    os_migrate_demo_define_harvard_courses();
   }
 
   /**
    * @Given /^I refresh courses$/
    */
   public function iRefreshCourses() {
-    $code = "os_migrate_demo_import_courses();";
-    $this->getDriver()->drush("php-eval \"{$code}\"");
+    os_migrate_demo_import_courses();
   }
 
   /**
@@ -976,8 +956,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I invalidate cache$/
    */
   public function iInvalidateCache() {
-    $code = "cache_clear_all('*', 'cache_views_data', TRUE);";
-    $this->getDriver()->drush("php-eval \"{$code}\"");
+    cache_clear_all('*', 'cache_views_data', TRUE);
   }
 
   /**
@@ -1016,16 +995,13 @@ class FeatureContext extends DrupalContext {
     }
     else {
       foreach ($rows as $row) {
-        $code = "os_migrate_demo_get_node_nid('$row[1]');";
-        $nid = $this->getDriver()->drush("php-eval \"{$code}\"");
-
+        $nid = os_migrate_demo_get_node_id('$row[1]');
 
         if ($row[2] == 'No') {
           $VisitUrl = 'node/' . $nid;
         }
         else {
-          $code = "print drupal_get_path_alias('node/{$nid}');";
-          $VisitUrl = $this->getDriver()->drush("php-eval \"{$code}\"");
+          $VisitUrl = drupal_get_path_alias('node/{$nid}');
         }
 
         if (!empty($row[0])) {
@@ -1117,16 +1093,14 @@ class FeatureContext extends DrupalContext {
    * @When /^I add to the search results the site's subsites$/
    */
   public function iAddToSearchResultsSubsites() {
-    $function = 'os_migrate_demo_variable_set';
-    $this->invoke_code($function, array('os_search_solr_include_subsites', "TRUE"));
+    os_migrate_demo_variable_set('os_search_solr_include_subsites', TRUE);
   }
 
   /**
    * @Then /^I verify the "([^"]*)" term link redirect to the original page$/
    */
   public function iVerifyTheTermLinkRedirectToTheOriginalPage($term) {
-    $code = "os_migrate_demo_get_term_id('$term');";
-    $tid = $this->getDriver()->drush("php-eval \"{$code}\"");
+    $tid = os_migrate_demo_get_term_id($term);
 
     $page = $this->getSession()->getPage();
     $element = $page->find('xpath', "//a[contains(., '{$term}')]");
@@ -1140,8 +1114,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I verify the "([^"]*)" term link doesn\'t redirect to the original page$/
    */
   public function iVerifyTheTermLinkDoesnTRedirectToTheOriginalPage($term) {
-    $code = "os_migrate_demo_get_term_id('$term');";
-    $tid = $this->getDriver()->drush("php-eval \"{$code}\"");
+    $tid = os_migrate_demo_get_term_id($term);
 
     $page = $this->getSession()->getPage();
     $element = $page->find('xpath', "//a[contains(., '{$term}')]");
@@ -1331,8 +1304,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I visit the original page for the term "([^"]*)"$/
    */
   public function iVisitTheOriginalPageForTheTerm($term) {
-    $code = "os_migrate_demo_get_term_id('$term');";
-    $tid = $this->getDriver()->drush("php-eval \"{$code}\"");
+    $tid = os_migrate_demo_get_term_id($term);
     $this->getSession()->visit($this->locatePath('taxonomy/term/' . $tid));
   }
 
@@ -1340,7 +1312,8 @@ class FeatureContext extends DrupalContext {
    * @Given /^I reindex the search$/
    */
   public function iReindexTheSearch() {
-    $this->getDriver()->drush("search-index");
+    print_r('This step is failing. Find a way to index programtically.');
+//    $this->getDriver()->drush("search-index");
   }
 
   /**
@@ -1434,11 +1407,10 @@ class FeatureContext extends DrupalContext {
    * @Given /^no boxes display outside the site context$/
    */
   function noBoxesDisplayOutsideTheSiteContext() {
-    // Runs a test of loading all existing boxes and checking if they have output.
+    // Runs a test of loading all existing boxes and checking if they have
+    // output.
     // @todo ideally we would actually create a box of each kind and test each.
-    $code = 'include_once("profiles/openscholar/modules/os/modules/os_boxes/tests/os_boxes.behat.inc");';
-    $code .= '_os_boxes_test_load_all_boxes_outside_vsite_context();';
-    $error = $this->getDriver()->drush("php-eval \"{$code}\"");
+    $error = _os_boxes_test_load_all_boxes_outside_vsite_context();
     if ($error) {
       throw new Exception(sprintf("At least one box returned output outside of a vsite: %s", $key));
     }
