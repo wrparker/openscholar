@@ -33,32 +33,13 @@ class OsRestfulLayout extends OsRestfulSpaces {
     // Validate the object from the request.
     $this->validate();
 
-    $request = $this->getRequest();
-    $space = spaces_load('og', $this->object->vsite);
-    $controller = $space->controllers->{$this->object->filter['object_type']};
-    $settings = $controller->get($this->object->delta);
-    $new_settings = array_merge((array) $settings, $this->object->settings);
-    $controller->set($request['delta'], (object) $new_settings);
-
-
-
-    // Check group access.
-    $this->checkGroupAccess();
-
-    $this->object->new = FALSE;
-
-    // Validate the object from the request.
-    $this->validate();
-
     $controller = $this->space->controllers->{$this->objectType};
     $settings = $controller->get($this->object->delta);
-    if (!count(get_object_vars($settings))) {
-      $this->throwException("The delta which you provided doesn't exists");
-    }
-    $new_settings = array_merge((array) $settings, $this->object->options);
-    $controller->set($this->object->delta, (object) $new_settings);
 
-    return $new_settings;
+    $settings[$this->object->object_id]['blocks'] =  array_merge_recursive($settings[$this->object->object_id]['blocks'], (array) $this->object->blocks);
+    $controller->set($this->object->object_id, $settings);
+
+    return $settings;
   }
 
   /**

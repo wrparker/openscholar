@@ -11,15 +11,13 @@ class LayoutsValidate extends OsObjectValidate {
     $fields['blocks'] = array(
       'property' => 'blocks',
       'required' => TRUE,
-      'validators' => array(
-        array($this, 'checkExistedDelta')
-      ),
+    );
+
+    $fields['object_id'] = array(
+      'property' => 'object_id',
+      'required' => TRUE,
     );
 
     return $fields;
-  }
-
-  public function checkExistedDelta($property, $value, $object) {
-    $this->setError($property, 'Foo!');
   }
 }
