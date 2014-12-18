@@ -34,9 +34,17 @@ class OsRestfulLayout extends OsRestfulSpaces {
     $this->validate();
 
     $controller = $this->space->controllers->{$this->objectType};
-    $settings = $controller->get($this->object->delta);
+    $settings = $controller->get($this->object->object_id);
 
-    $settings[$this->object->object_id]['blocks'] =  array_merge_recursive($settings[$this->object->object_id]['blocks'], (array) $this->object->blocks);
+    // Merge blocks.
+    foreach ($settings['blocks'] as $delta => &$block) {
+      if (empty($this->object->blocks[$delta])) {
+        continue;
+      }
+
+      $block = array_merge($settings['blocks'][$delta], $this->object->blocks[$delta]);
+    }
+
     $controller->set($this->object->object_id, $settings);
 
     return $settings;
