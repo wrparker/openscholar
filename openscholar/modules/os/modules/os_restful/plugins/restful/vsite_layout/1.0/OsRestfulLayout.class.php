@@ -62,14 +62,13 @@ class OsRestfulLayout extends OsRestfulSpaces {
 
     // Set up the blocks layout.
     ctools_include('layout', 'os');
-    $contexts = array(
-      $this->object->object_id,
-      'os_public',
-    );
 
-    $blocks = os_layout_get_multiple($contexts, FALSE, TRUE);
+    $controller = $this->space->controllers->{$this->objectType};
+    $settings = $controller->get($this->object->object_id);
 
-    os_layout_set($this->object->object_id, $blocks, $this->space);
+    $settings['blocks'] = array_merge($settings['blocks'], $this->object->blocks);
+    $controller->set($this->object->object_id, $settings);
+    return $settings['blocks'];
   }
 
   public function deleteSpace() {
