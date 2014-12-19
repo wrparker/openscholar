@@ -3190,8 +3190,13 @@ function vsite_og_permission() {
       'os_override' => TRUE,
     ),
     'create files' => array(
-      'title' => t('Add files'),
+      'title' => t('Upload files'),
       'description' => t('Add files to system.'),
+      'os_override' => TRUE,
+    ),
+    'add media from remote sources' => array(
+      'title' => t('Add 3rd party media to system.'),
+      'desscription' => t('Add rich media like youtube videos to system.'),
       'os_override' => TRUE,
     )
   );
