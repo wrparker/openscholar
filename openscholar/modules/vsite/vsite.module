@@ -3196,8 +3196,18 @@ function vsite_og_permission() {
     ),
     'add media from remote sources' => array(
       'title' => t('Add 3rd party media to system.'),
-      'desscription' => t('Add rich media like youtube videos to system.'),
+      'description' => t('Add rich media like youtube videos to system.'),
       'os_override' => TRUE,
+    ),
+    'edit any files' => array(
+      'title' => t('Edit files'),
+      'description' => t('Edit files and rich media.'),
+      'os_override' => TRUE,
+    ),
+    'delete any files' => array(
+      'title' => t('Delete files'),
+      'description' => t('Delete files and rich media from system.'),
+      'os_override' => TRUE
     )
   );
 }
