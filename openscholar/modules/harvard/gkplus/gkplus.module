@@ -134,7 +134,7 @@ function gkplus_order_nodes_dnd_form($form, $form_state, $tid) {
     );
   }
 
-  require_once (drupal_get_path('module', 'nodeorder') . '/nodeorder.admin.inc');
+  require_once (drupal_get_path('module', 'nodeorder') . '/includes/nodeorder.admin.inc');
   $form['#submit'][] = 'nodeorder_admin_display_form_submit';
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save Changes'));
