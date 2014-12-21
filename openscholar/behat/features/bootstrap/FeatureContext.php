@@ -500,7 +500,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iUnassignTheNodeWithTheTypeFromTheTerm($node, $type, $term) {
     $node = str_replace("'", "\'", $node);
-    $this->invoke_code('os_migrate_demo_unassign_node_from_term', array("'$node'","'$term'","'$type'"), TRUE);
+    os_migrate_demo_unassign_node_from_term($node, $term, $type);
   }
 
   /**
@@ -633,28 +633,6 @@ class FeatureContext extends DrupalContext {
    */
   public function iSleepFor($sec) {
     sleep($sec);
-  }
-
-  /**
-   * Invoking a php code with drush.
-   *
-   * @param $function
-   *   The function name to invoke.
-   * @param $arguments
-   *   Array contain the arguments for function.
-   * @param $debug
-   *   Set as TRUE/FALSE to display the output the function print on the screen.
-   * @return mixed
-   */
-  private function invoke_code($function, $arguments = array(), $debug = FALSE) {
-
-    $output = call_user_func_array($function, $arguments);
-
-    if ($debug) {
-      print_r($output);
-    }
-
-    return $output;
   }
 
   /**
