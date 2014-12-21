@@ -1,0 +1,7 @@
+name = OS restful
+description = Managing integration between OpenScholar and Resful
+core = 7.x
+
+dependencies[] = restful
+
+files[] = includes/OsNodeRestfulBase.php
