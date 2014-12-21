@@ -1809,7 +1809,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I update the node "([^"]*)" field "([^"]*)" to "([^"]*)"$/
    */
   public function iUpdateTheNodeFieldTo($title, $field, $value) {
-    $nid = os_migrate_demo_get_node_id(str_replace("'", "\'", $title);
+    $nid = os_migrate_demo_get_node_id(str_replace("'", "\'", $title));
 
     $purl = os_migrate_demo_get_node_vsite_purl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
