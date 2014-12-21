@@ -739,3 +739,10 @@ function os_update_7035() {
   $revert = array_fill_keys($apps, array('feeds_importer'));
   features_revert($revert);
 }
+
+/**
+ * Disable nodeorder taxonomy page override.
+ */
+function os_update_7036() {
+  variable_set('nodeorder_override_taxonomy_page', FALSE);
+}
