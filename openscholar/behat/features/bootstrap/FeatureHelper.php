@@ -290,7 +290,7 @@ class FeatureHelp {
    *  @param $page
    *    The machine name page from the mapped pages.
    *
-   *  @see os_migrate_demo_set_box_in_region().
+   *  @see static::SetBoxInRegion().
    */
   static public function hideBox($nid, $plugin, $delta, $page) {
     // Hide the box.
@@ -564,7 +564,7 @@ class FeatureHelp {
    * Get the node vsite purl.
    */
   static public function GetNodeVsitePurl($nid) {
-    return os_migrate_demo_get_entity_vsite_purl('node', $nid);
+    return static::GetEntityVsitePurl('node', $nid);
   }
 
   /**
@@ -776,7 +776,7 @@ class FeatureHelp {
    *  The vsite name.
    */
   static public function remove_vsite_domain($vsite) {
-    $id = os_migrate_demo_get_node_id($vsite, TRUE);
+    $id = static::GetNodeId($vsite, TRUE);
 
     db_delete('spaces_overrides')
       ->condition('id', $id)
@@ -843,7 +843,7 @@ class FeatureHelp {
    *  The vsite name.
    */
   static public function CountNodeInstances($title, $vsite) {
-    $nid = os_migrate_demo_get_node_id($vsite, TRUE);
+    $nid = static::GetNodeId($vsite, TRUE);
     $query = new EntityFieldQuery();
 
     $results = $query
@@ -863,7 +863,7 @@ class FeatureHelp {
    *    The group for which to get the owner's uid.
    */
   static public function GetVsiteOwnerUid($group) {
-    $nid = os_migrate_demo_get_node_id($group, TRUE);
+    $nid = static::GetNodeId($group, TRUE);
     $node = node_load($nid);
     return $node->uid;
   }
@@ -878,7 +878,7 @@ class FeatureHelp {
    *  The profile title for which to get the child site's id.
    */
   static public function GetChildSiteNid($profile_title) {
-    $nid = os_migrate_demo_get_entity_id('node', $profile_title, TRUE, 'person');
+    $nid = static::GetEntityId('node', $profile_title, TRUE, 'person');
     $wrapper = entity_metadata_wrapper('node', $nid);
 
     if (!$child_site_from_profile = $wrapper->field_child_site->value(array('identifier' => TRUE))) {
@@ -892,14 +892,14 @@ class FeatureHelp {
    * Remove the courses for s given values.
    */
   static public function RemoveCourses() {
-    _os_migrate_demo_remove_courses(FALSE);
+    static::RemoveCourses(FALSE);
   }
 
   /**
    * Add the courses for s given values.
    */
   static public function AddCourses() {
-    _os_migrate_demo_remove_courses();
+    static::RemoveCourses();
   }
 
   /**
