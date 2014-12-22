@@ -90,8 +90,6 @@ function gkplus_nodeorder_form($js = NULL, $tid = NULL) {
  * Custom drag and drop form.
  */
 function gkplus_order_nodes_dnd_form($form, $form_state, $tid) {
-  $form['items']['#tree'] = TRUE;
-
   $term = taxonomy_term_load($tid);
   // Build form tree
   $form = array(
@@ -101,15 +99,8 @@ function gkplus_order_nodes_dnd_form($form, $form_state, $tid) {
   );
   drupal_set_title(t('Order nodes for <em>%term_name</em>', array('%term_name' => $term->name)), PASS_THROUGH);
 
-  $bundles = os_taxonomy_og_vocabulary_bundles($term->vid, GKPLUS_SID);
-  $bundles = array_map(function($o) {return $o->bundle;}, $bundles);
-  $nodes_attached = os_taxonomy_list_attached_entities($tid, $bundles);
-  $nodes = array();
-  foreach ($nodes_attached as $info) {
-    if($info['entity_type'] == 'node') {
-      $nodes[] = node_load($info['entity_id']);
-    }
-  }
+  $node_ids = taxonomy_select_nodes($tid, FALSE, FALSE, array('t.weight' => 'ASC'));
+  $nodes = node_load_multiple($node_ids);
   $node_count = count($nodes);
 
   // Weights range from -delta to +delta, so delta should be at least half
@@ -119,15 +110,13 @@ function gkplus_order_nodes_dnd_form($form, $form_state, $tid) {
 
   foreach ($nodes as $node) {
     $form[$node->nid]['#node'] = $node;
-    $form[$node->nid]['title'] = array(
-      '#markup' => check_plain($node->title),
-    );
+    $form[$node->nid]['title'] = array('#markup' => check_plain($node->title));
     $form[$node->nid]['weight'] = array(
       '#type' => 'weight',
       '#title' => t('Weight for @title', array('@title' => $node->title)),
       '#title_display' => 'invisible',
-      '#delta' => 10,
-      '#default_value' => $node->weight,
+      '#delta' => $weight_delta,
+      '#default_value' => $node->nodeorder[$tid]['weight'],
       '#attributes' => array(
         'class' => array('weight'),
       ),
@@ -135,9 +124,13 @@ function gkplus_order_nodes_dnd_form($form, $form_state, $tid) {
   }
 
   require_once (drupal_get_path('module', 'nodeorder') . '/includes/nodeorder.admin.inc');
-  $form['#submit'][] = 'nodeorder_admin_display_form_submit';
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save Changes'));
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save order'),
+    '#submit' => array(
+      'nodeorder_admin_display_form_submit',
+    ),
+  );
 
   return $form;
 }
@@ -258,6 +251,7 @@ function gkplus_nodeorder_admin_display_form($form, &$form_state, $tid) {
  * The position of parameter in 3-digit code is filename, contents, auth.
  */
 function gkplus_upload_filefield_page() {
+  global $user;
   print t("Processing upload...") . "\n";
   if (!isset($_POST['filename']) || !isset($_POST['contents']) || !isset($_POST['auth'])) {
     print t("Error: missing parameters.") . "\n";
