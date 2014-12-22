@@ -441,11 +441,11 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
   $wrapper->{OG_AUDIENCE_FIELD}->set(array($vsite->id));
   $wrapper->author->set($user->uid);
   $wrapper->body->set(array('value' => $feed->description, 'format' => 'filtered_html'));
+  $doc = new DOMDocument();
 
   if ($feed->importer_type == 'news') {
     // Get the first image src.
     $file = FALSE;
-    $doc = new DOMDocument();
 
     // todo: use os_copy_file();
     try {
@@ -464,7 +464,6 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
           // assigning it to the body of the node.
           $feed->description = preg_replace('/<img[^>]+\>/i', '', $feed->description);
         }
-        $wrapper->body->set(array('value' => $feed->description, 'format' => 'filtered_html'));
       }
     }
     catch (Exception $e) {
@@ -477,6 +476,21 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
       $wrapper->field_photo->set((array) $file);
     }
   }
+
+  // Remove style attribute from div tags anv p tags.
+  if (property_exists($feed, 'description')) {
+    $doc->loadHTML($feed->description);
+    $xpath = new DOMXPath($doc);
+    $items = $xpath->query("//*[(local-name()='div' or local-name()='span') and @style]");
+
+    foreach($items as $item) {
+      $item->removeAttribute("style");
+    }
+
+    $feed->description = $doc->saveHTML();
+  }
+
+  $wrapper->body->set(array('value' => $feed->description, 'format' => 'filtered_html'));
   $wrapper->save();
 
   // Reference the feed to the VSite.
