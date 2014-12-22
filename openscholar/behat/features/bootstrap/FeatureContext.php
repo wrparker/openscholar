@@ -4,7 +4,6 @@ use Drupal\DrupalExtension\Context\DrupalContext;
 use Behat\Behat\Context\Step\Given;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
-use Guzzle\Service\Client;
 use Behat\Behat\Context\Step;
 use Behat\Behat\Context\Step\When;
 
@@ -48,7 +47,7 @@ class FeatureContext extends DrupalContext {
    *
    * Every scenario gets its own context object.
    *
-   * @param array $parameters.
+   * @param array $parameters .
    *   Context parameters (set them up through behat.yml or behat.local.yml).
    */
   public function __construct(array $parameters) {
@@ -282,38 +281,6 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * Find any element that contain the text and has the css class or id
-   * selector.
-   */
-  private function findAnyElement($text, $container, $childElement = '*') {
-    $page = $this->getSession()->getPage();
-    $attributes = array(
-      'id',
-      'class',
-    );
-
-    // Find the element wrapped under an element with the class.
-    foreach ($attributes as $attribute) {
-      $this->xpath = "//*[contains(@$attribute, '{$container}')]/{$childElement}[contains(., '{$text}')]";
-      $element = $page->find('xpath', $this->xpath);
-      if ($element) {
-        return $element;
-      }
-    }
-
-    // Find the element with the class.
-    foreach ($attributes as $attribute) {
-      $this->xpath = "//*[contains(@$attribute, '{$container}') and contains(., '{$text}')]";
-      $element = $page->find('xpath', $this->xpath);
-      if ($element) {
-        return $element;
-      }
-    }
-
-    throw new Exception(sprintf("An element containing the text %s with the class %s wasn't found", $text, $container));
-  }
-
-  /**
    * @Given /^a node of type "([^"]*)" with the title "([^"]*)" exists in site "([^"]*)"$/
    */
   public function assertNodeTypeTitleVsite($type, $title, $site = 'john') {
@@ -352,7 +319,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I create a sub page named "([^"]*)" under the page "([^"]*)"$/
    */
   public function iCreateSubPageUnderPage($child_title, $parent_title) {
-    $nid = os_migrate_demo_get_node_id($parent_title);
+    $nid = FeatureHelp::getNodeId($parent_title);
     return array(
       new Step\When('I visit "john/node/add/page?parent_node=' . $nid . '&destination=node/' . $nid . '"'),
       new Step\When('I fill in "Title" with "' . $child_title . '"'),
@@ -393,8 +360,8 @@ class FeatureContext extends DrupalContext {
    * @Then /^I should verify the node "([^"]*)" not exists$/
    */
   public function iShouldVerifyTheNodeNotExists($title) {
-    $nid = os_migrate_demo_get_node_id($title);
-    os_migrate_demo_delete_node($title);
+    $nid = FeatureHelp::getNodeId($title);
+    FeatureHelp::deleteNode($title);
 
     $this->Visit('I visit "john/node/' . $nid . '"');
 
