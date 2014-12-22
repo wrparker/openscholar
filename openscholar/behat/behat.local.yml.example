@@ -26,9 +26,8 @@ default:
     Behat\MinkExtension\Extension:
       base_url:  BASE_URL
     Drupal\DrupalExtension\Extension:
-      api_driver: "drupal"
       drupal:
-        drupal_root: "/home/travis/drupal"
+        drupal_root: "PathToDrupal"
       api_driver: "drupal"
       drush:
         alias: DRUSH_ALIAS
