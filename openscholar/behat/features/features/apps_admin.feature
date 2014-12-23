@@ -1,11 +1,6 @@
 Feature:
   Testing the managing of OpenScholar
 
-
-  @api @now
-  Scenario: Foo
-    Given I foo
-
   @api @features
   Scenario: Check that all of the apps are turned on
     Given I am logging in as "john"

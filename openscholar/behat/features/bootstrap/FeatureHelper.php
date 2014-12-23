@@ -76,7 +76,6 @@ class FeatureHelp {
     // Currently only support file and node.
     if ($entity_type == 'node') {
       $identifier = 'nid';
-
     }
     else if ($entity_type == 'file') {
       $identifier = 'fid';
@@ -843,7 +842,7 @@ class FeatureHelp {
    *  The vsite name.
    */
   static public function CountNodeInstances($title, $vsite) {
-    $nid = static::GetNodeId($vsite, TRUE);
+    $nid = static::GetNodeId($vsite);
     $query = new EntityFieldQuery();
 
     $results = $query
@@ -863,9 +862,9 @@ class FeatureHelp {
    *    The group for which to get the owner's uid.
    */
   static public function GetVsiteOwnerUid($group) {
-    $nid = static::GetNodeId($group, TRUE);
-    $node = node_load($nid);
-    return $node->uid;
+    $nid = static::GetNodeId($group);
+    $space = spaces_load('og', $nid);
+    return $space->group->uid;
   }
 
   /**

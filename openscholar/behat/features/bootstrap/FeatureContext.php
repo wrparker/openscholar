@@ -1474,8 +1474,10 @@ class FeatureContext extends DrupalContext {
    * @Given /^I import feed items for "([^"]*)"$/
    */
   public function iImportFeedItemsFor($vsite) {
+    global $base_url;
     $nid = FeatureHelp::GetNodeId($vsite);
-    FeatureHelp::ImportFeedItems($this->locatePath('os-reader/' . $vsite), $nid);
+    $url = $base_url . '/' . drupal_get_path('module', 'os_migrate_demo') . '/includes/' . $vsite . '_dummy_rss.xml';
+    FeatureHelp::ImportFeedItems($url, $nid);
   }
 
   /**
@@ -1833,10 +1835,11 @@ class FeatureContext extends DrupalContext {
    * @Given /^I verify that "([^"]*)" is the owner of vsite "([^"]*)"$/
    */
   public function iVerifyThatIsTheOwnerOfVsite($username, $group) {
+    // Reset the static cache.
+    drupal_static_reset();
+
     $uid = FeatureHelp::GetUserByName($username);
     $author_uid = FeatureHelp::GetVsiteOwnerUid($group);
-
-    print_r(array($uid, $author_uid));
 
     if ($uid != $author_uid) {
       throw new Exception("User '$username' is not the owner of vsite '$group'.");
