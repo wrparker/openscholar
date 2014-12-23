@@ -8,26 +8,17 @@ class BoxesValidate extends OsObjectValidate {
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();
 
-    $fields['widget'] = array(
-      'property' => 'widget',
-      'validators' => array(
-        array($this, 'validateWidget'),
-      ),
-    );
+    FieldsInfo::setFieldInfo($fields['widget'], $this)
+      ->setProperty('widget')
+      ->addCallback('validateWidget');
 
-    $fields['options'] = array(
-      'property' => 'options',
-      'validators' => array(
-        array($this, 'validateOptions'),
-      ),
-    );
+    FieldsInfo::setFieldInfo($fields['options'], $this)
+      ->setProperty('options')
+      ->addCallback('validateOptions');
 
-    $fields['delta'] = array(
-      'property' => 'delta',
-      'validators' => array(
-        array($this, 'validateDelta'),
-      ),
-    );
+    FieldsInfo::setFieldInfo($fields['delta'], $this)
+      ->setProperty('delta')
+      ->addCallback('validateDelta');
 
     return $fields;
   }

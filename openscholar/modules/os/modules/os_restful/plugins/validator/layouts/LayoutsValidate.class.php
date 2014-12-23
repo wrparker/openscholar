@@ -8,16 +8,15 @@ class LayoutsValidate extends OsObjectValidate {
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();
 
-    $fields['blocks'] = array(
-      'property' => 'blocks',
-      'required' => TRUE,
-    );
+    FieldsInfo::setFieldInfo($fields['blocks'], $this)
+      ->setProperty('blocks')
+      ->setRequired();
 
-    $fields['object_id'] = array(
-      'property' => 'object_id',
-      'required' => TRUE,
-    );
+    FieldsInfo::setFieldInfo($fields['object_id'], $this)
+      ->setProperty('object_id')
+      ->setRequired();
 
     return $fields;
   }
+
 }
