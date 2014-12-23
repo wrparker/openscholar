@@ -948,19 +948,4 @@ class FeatureHelp {
       ->execute();
   }
 
-  /**
-   * Get the entity vsite purl.
-   */
-  static public function GetEntityVsitePurl($entity_type, $entity_id) {
-    $wrapper = entity_metadata_wrapper($entity_type, $entity_id);
-
-    if (empty($wrapper->{OG_AUDIENCE_FIELD})) {
-      // Not group content.
-      print('');
-      return;
-    }
-    $vsite = $wrapper->{OG_AUDIENCE_FIELD}->get(0)->value();
-
-    print($vsite->purl);
-  }
 }
