@@ -827,7 +827,7 @@ class FeatureHelp {
     variable_set('os_readonly_mode', $value);
   }
 
-  static public function add_to_whitelist($domain) {
+  static public function AddToWhiteList($domain) {
     $domains = variable_get('media_embed_whitelist', array());
     $domains[] = $domain;
 
@@ -931,5 +931,36 @@ class FeatureHelp {
         }
       }
     }
+  }
+
+  /**
+   * Remove the domain we added to a vsite.
+   *
+   * @param $vsite
+   *  The vsite name.
+   */
+  static public function RemoveVsiteDomain($vsite) {
+    $id = static::getNodeId($vsite);
+
+    db_delete('spaces_overrides')
+      ->condition('id', $id)
+      ->condition('object_id', 'vsite_domain_name')
+      ->execute();
+  }
+
+  /**
+   * Get the entity vsite purl.
+   */
+  static public function GetEntityVsitePurl($entity_type, $entity_id) {
+    $wrapper = entity_metadata_wrapper($entity_type, $entity_id);
+
+    if (empty($wrapper->{OG_AUDIENCE_FIELD})) {
+      // Not group content.
+      print('');
+      return;
+    }
+    $vsite = $wrapper->{OG_AUDIENCE_FIELD}->get(0)->value();
+
+    print($vsite->purl);
   }
 }
