@@ -25,6 +25,17 @@ class OsRestfulLayout extends OsRestfulSpaces {
 
   /**
    * Updating a given space override.
+   *
+   * type: PUT
+   * values: {
+   *  vsite: 2,
+   *  object_id: os_front:reaction:block,
+   *  blocks: [
+   *    os_search_db-site-search: [
+   *      region: "sidebar_first"
+   *    ]
+   *  ]
+   * }
    */
   public function updateSpace() {
     // Check group access.
@@ -52,6 +63,21 @@ class OsRestfulLayout extends OsRestfulSpaces {
 
   /**
    * Creating a space override.
+   *
+   * type: POST
+   * values: {
+   *  vsite: 2,
+   *  object_id: os_front:reaction:block,
+   *  boxes: [
+   *    boxes-1419335380: [
+   *      module: "boxes",
+   *      delta: "1419335380",
+   *      region: "sidebar_second",
+   *      weight: 2,
+   *      status: 0
+   *    ]
+   *  ]
+   * }
    */
   public function createSpace() {
     // Check group access.
@@ -71,7 +97,25 @@ class OsRestfulLayout extends OsRestfulSpaces {
     return $settings['blocks'];
   }
 
+  /**
+   * In order to delete a widget from the layout your REST call should be:
+   * type: DELETE
+   *
+   * values: {
+   *  vsite: 2,
+   *  object_id: os_front:reaction:block,
+   *  delta: boxes-1419335380
+   * }
+   */
   public function deleteSpace() {
+    // Check group access.
+    $this->checkGroupAccess();
+    ctools_include('layout', 'os');
 
+    $controller = $this->space->controllers->{$this->objectType};
+    $settings = $controller->get($this->object->object_id);
+    unset($settings['blocks'][$this->object->delta]);
+    $controller->set($this->object->object_id, $settings);
+    return $settings['blocks'];
   }
 }
