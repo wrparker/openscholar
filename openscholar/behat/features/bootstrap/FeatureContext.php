@@ -80,27 +80,16 @@ class FeatureContext extends DrupalContext {
       throw new Exception("Password not found for '$username'.");
     }
 
-    if ($this->getDriver() instanceof Drupal\Driver\DrushDriver) {
-      // We are using a cli, log in with meta step.
+    if ($this->loggedIn()) {
+      $this->logout();
+    }
 
-      return array(
-        new Step\When('I am not logged in'),
-        new Step\When('I visit "/user"'),
-        new Step\When('I fill in "Username" with "' . $username . '"'),
-        new Step\When('I fill in "Password" with "' . $password . '"'),
-        new Step\When('I press "edit-submit"'),
-      );
-    }
-    else {
-      // Log in.
-      // Go to the user page.
-      $element = $this->getSession()->getPage();
-      $this->getSession()->visit($this->locatePath('/user'));
-      $element->fillField('Username', $username);
-      $element->fillField('Password', $password);
-      $submit = $element->findButton('Log in');
-      $submit->click();
-    }
+    $element = $this->getSession()->getPage();
+    $this->getSession()->visit($this->locatePath('/user'));
+    $element->fillField('Username', $username);
+    $element->fillField('Password', $password);
+    $submit = $element->findButton('Log in');
+    $submit->click();
   }
 
   /**
@@ -1485,8 +1474,8 @@ class FeatureContext extends DrupalContext {
    * @Given /^I import feed items for "([^"]*)"$/
    */
   public function iImportFeedItemsFor($vsite) {
-    $nid = FeatureHelp::get_node_id($vsite);
-    FeatureHelp::import_feed_items($this->locatePath('os-reader/' . $vsite), $nid);
+    $nid = FeatureHelp::GetNodeId($vsite);
+    FeatureHelp::ImportFeedItems($this->locatePath('os-reader/' . $vsite), $nid);
   }
 
   /**
@@ -1846,6 +1835,8 @@ class FeatureContext extends DrupalContext {
   public function iVerifyThatIsTheOwnerOfVsite($username, $group) {
     $uid = FeatureHelp::GetUserByName($username);
     $author_uid = FeatureHelp::GetVsiteOwnerUid($group);
+
+    print_r(array($uid, $author_uid));
 
     if ($uid != $author_uid) {
       throw new Exception("User '$username' is not the owner of vsite '$group'.");
