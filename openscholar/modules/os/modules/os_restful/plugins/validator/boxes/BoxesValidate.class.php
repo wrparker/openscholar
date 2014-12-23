@@ -10,7 +10,9 @@ class BoxesValidate extends OsObjectValidate {
 
     $fields['widget'] = array(
       'property' => 'widget',
-      'required' => TRUE,
+      'validators' => array(
+        array($this, 'validateWidget'),
+      ),
     );
 
     $fields['options'] = array(
@@ -53,6 +55,23 @@ class BoxesValidate extends OsObjectValidate {
 
     if (empty($object->delta)) {
       $this->setError($property, 'You need to pass a delta of existing box.');
+    }
+  }
+
+  /**
+   * Verifying we got a widget when creating box.
+   */
+  public function validateWidget($property, $value, $object) {
+    if (!property_exists($object, 'new')) {
+      return;
+    }
+
+    if (!$object->new) {
+      return;
+    }
+
+    if (empty($object->widget)) {
+      $this->setError($property, 'You need to pass a widget.');
     }
   }
 }

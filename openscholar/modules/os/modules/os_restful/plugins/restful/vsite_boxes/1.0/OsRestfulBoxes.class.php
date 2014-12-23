@@ -28,6 +28,15 @@ class OsRestfulBoxes extends OsRestfulSpaces {
 
   /**
    * Updating a given space override.
+   *
+   * type: PUT
+   * values: {
+   *  vsite: 2,
+   *  widget: os_taxonomy_fbt,
+   *  options: [
+   *    description: "Filter by terms"
+   *  ]
+   * }
    */
   public function updateSpace() {
     // Check group access.
@@ -51,6 +60,15 @@ class OsRestfulBoxes extends OsRestfulSpaces {
 
   /**
    * Creating a space override.
+   *
+   * type: POST
+   * values: {
+   *  vsite: 2,
+   *  delta: 1419342352,
+   *  options: [
+   *    description: "Terms"
+   *  ]
+   * }
    */
   public function createSpace() {
     // Check group access.
@@ -75,6 +93,12 @@ class OsRestfulBoxes extends OsRestfulSpaces {
 
   /**
    * Delete a specific box.
+   *
+   * type: DELETE
+   * values: {
+   *  vsite: 2,
+   *  delta: 1419335380
+   * }
    */
   public function deleteSpace() {
     // Check group access.
