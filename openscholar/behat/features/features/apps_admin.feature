@@ -1,7 +1,7 @@
 Feature:
   Testing the managing of OpenScholar
 
-  @api @features
+  @api @features_first
   Scenario: Check that all of the apps are turned on
     Given I am logging in as "john"
       And I visit "john"
@@ -24,7 +24,7 @@ Feature:
       | Reader        | Public |
       | Software      | Public |
 
-  @api @features
+  @api @features_first
     Scenario: Check site owner can't manage permissions of disabled app.
       Given I am logging in as "john"
         And I set feature "edit-spaces-features-os-booklets" to "Disabled" on "john"
@@ -32,14 +32,14 @@ Feature:
        Then I should not see "Create book page content"
         And I should see "Create Bio content"
 
-  @api @features
+  @api @features_first
     Scenario: Check enabling app brings back its permissions.
       Given I am logging in as "john"
         And I set feature "edit-spaces-features-os-booklets" to "Public" on "john"
        When I visit "john/cp/users/permissions"
        Then I should see "Create book page content"
 
-  @api @features
+  @api @features_first
     Scenario: Check content editor can edit widgets by default
       Given I am logging in as "john"
        When I give the user "klark" the role "content editor" in the group "john"
@@ -48,7 +48,7 @@ Feature:
         And I go to "john/os/widget/boxes/os_addthis/edit"
        Then I should get a "200" HTTP response
 
-  @api @features
+  @api @features_first
     Scenario: Check content editor without edit widgets permission can't edit
       Given I am logging in as "john"
        When I give the user "klark" the role "content editor" in the group "john"
@@ -63,7 +63,7 @@ Feature:
         And I go to "john/os/widget/boxes/os_addthis/edit"
        Then I should get a "403" HTTP response
 
-  @api @features
+  @api @features_first
     Scenario: Check rolling abck permissions re-enable widget permissions
       Given I am logging in as "john"
        When I give the user "klark" the role "content editor" in the group "john"
