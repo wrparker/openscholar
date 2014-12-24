@@ -500,11 +500,9 @@ class FeatureHelp {
    *
    * @param $name
    *    The user's name.
-   * @param $return
-   *    If set to TRUE the uid is returned.
-   *    If set to FALSE the uid is printed. Defaults to FALSE.
    */
-  static public function GetUserByName($name, $return = FALSE) {
+  static public function GetUserByName($name) {
+    drupal_static_reset();
     return user_load_by_name($name)->uid;
   }
 
@@ -859,9 +857,10 @@ class FeatureHelp {
    * Get the uid of the owner of a group.
    *
    * @param $group
-   *    The group for which to get the owner's uid.
+   *   The group for which to get the owner's uid.
    */
   static public function GetVsiteOwnerUid($group) {
+    drupal_static_reset();
     $nid = static::GetNodeId($group);
     $space = spaces_load('og', $nid);
     return $space->group->uid;
