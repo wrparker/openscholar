@@ -67,7 +67,6 @@ Feature:
   @api @features_second
   Scenario: Verify the imported news date is the original feed item date.
     Given I am logging in as "admin"
-      And I import feed items for "john"
       And I visit "john/cp/os-importer/news/manage"
       And I import the feed item "Lee Harvey Oswald"
      When I visit "john/news"

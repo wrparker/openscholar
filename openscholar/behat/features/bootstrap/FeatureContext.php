@@ -1835,13 +1835,9 @@ class FeatureContext extends DrupalContext {
    * @Given /^I verify that "([^"]*)" is the owner of vsite "([^"]*)"$/
    */
   public function iVerifyThatIsTheOwnerOfVsite($username, $group) {
-    // Reset the static cache.
-    drupal_static_reset();
-
     $uid = FeatureHelp::GetUserByName($username);
-    $author_uid = FeatureHelp::GetVsiteOwnerUid($group);
 
-    if ($uid != $author_uid) {
+    if ($uid != node_load(FeatureHelp::getNodeId($group))->uid) {
       throw new Exception("User '$username' is not the owner of vsite '$group'.");
     }
   }
