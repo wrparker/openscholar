@@ -27,4 +27,11 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
     return array('title' => $value[0]->title, 'id' => $value[0]->nid);
   }
 
+  /**
+   * Process the time stamp to a text.
+   */
+  public function dateProcess($value) {
+    return format_date($value[0]);
+  }
+
 }

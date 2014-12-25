@@ -24,11 +24,4 @@ class EventNodeRestfulBase extends OsNodeRestfulBase {
     return $public_fields;
   }
 
-  /**
-   * Process the time stamp to a text.
-   */
-  public function dateProcess($value) {
-    return format_date($value[0]);
-  }
-
 }
