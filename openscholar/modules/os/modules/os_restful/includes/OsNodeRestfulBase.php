@@ -2,7 +2,6 @@
 
 class OsNodeRestfulBase extends RestfulEntityBaseNode {
 
-
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();
 
