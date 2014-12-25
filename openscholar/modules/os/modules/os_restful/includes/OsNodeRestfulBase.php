@@ -7,6 +7,9 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
 
     $public_fields['vsite'] = array(
       'property' => OG_AUDIENCE_FIELD,
+      'process_callbacks' => array(
+        array($this, 'vsiteFieldDisplay'),
+      ),
     );
 
     $public_fields['body'] = array(
@@ -15,6 +18,13 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
     );
 
     return $public_fields;
+  }
+
+  /**
+   * Display the id and the title of the
+   */
+  public function vsiteFieldDisplay($value) {
+    return array('title' => $value[0]->title, 'id' => $value[0]->nid);
   }
 
 }
