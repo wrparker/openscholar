@@ -21,6 +21,15 @@ class EventNodeRestfulBase extends OsNodeRestfulBase {
       ),
     );
 
+    $public_fields['registration'] = array(
+      'property' => 'registration',
+      'sub_property' => 'registration_type',
+    );
+
+    $public_fields['field_event_registration'] = array(
+      'property' => 'field_event_registration',
+    );
+
     return $public_fields;
   }
 
