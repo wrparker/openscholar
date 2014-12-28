@@ -1226,3 +1226,14 @@ function os_events_register_show_register_link($node) {
 
   return time() < $wrapper->field_date->get(0)->value->value();
 }
+/**
+ * Implements hook_entity_property_info_alter().
+ */
+function os_events_entity_property_info_alter(&$info) {
+  $info['node']['bundles']['event']['properties']['field_event_registration'] = array(
+    'type' => 'unknown',
+    'setter callback' => 'entity_metadata_field_verbatim_set',
+    'getter callback' => 'entity_metadata_field_verbatim_get',
+    'label' => t('Registration'),
+  );
+}
