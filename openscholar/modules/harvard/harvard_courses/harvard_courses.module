@@ -5,6 +5,7 @@
  */
 
 include_once 'harvard_courses.features.inc';
+include_once 'harvard_courses.features.field_base.inc';
 
 /**
  * Implements hook_os_app_info().
@@ -374,7 +375,6 @@ function harvard_courses_node_presave($node) {
   // Replaces raw values with HTML entities decoded.
   $node->title = _harvard_courses_filter_html_entities($node->title);
 
-  include_once(drupal_get_path('module', 'harvard_courses') . '/harvard_courses.features.field_base.inc');
   $fields = harvard_courses_field_default_field_bases();
   $text = array('text', 'text_with_summary');
   foreach ($fields as $field => $info) {

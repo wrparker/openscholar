@@ -824,7 +824,6 @@ class FeatureContext extends DrupalContext {
    */
   public function iSetCoursesToImport() {
     $metasteps = array();
-    drupal_flush_all_caches();
     $metasteps[] = new Step\When('I visit "admin"');
     $metasteps[] = new Step\When('I visit "admin/structure/feeds/course/settings/HarvardFetcher"');
     $metasteps[] = new Step\When('I check the box "Debug mode"');
@@ -841,8 +840,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I enable harvard courses$/
    */
   public function iEnableHarvardCourses() {
-    FeatureHelp::define_harvard_courses();
-    
+    $this->visit('os-import-demo/enable/harvard');
   }
 
   /**
