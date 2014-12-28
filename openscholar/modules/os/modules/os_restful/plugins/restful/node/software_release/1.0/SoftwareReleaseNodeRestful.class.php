@@ -1,6 +1,6 @@
 <?php
 
-class SoftwareReleaseNodeRestfulBase extends OsNodeRestfulBase {
+class SoftwareReleaseNodeRestful extends OsNodeRestfulBase {
 
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();

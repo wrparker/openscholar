@@ -7,7 +7,7 @@ $plugin = array(
   'entity_type' => 'node',
   'bundle' => 'software_release',
   'description' => t('Expose software release bundle via restufl'),
-  'class' => 'SoftwareReleaseNodeRestfulBase',
+  'class' => 'SoftwareReleaseNodeRestful',
   'authentication_types' => TRUE,
   'authentication_optional' => TRUE,
 );
