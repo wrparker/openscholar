@@ -64,6 +64,8 @@ before_script:
   - drush vset purl_base_domain http://127.0.0.1
   - drush en os_migrate_demo -y
   - drush mi --all --user=1
+  - drush en harvard_courses -y
+  - drush cc all
 
   # Index site using Apache solr
   - drush en os_search_solr -y

@@ -1,13 +1,12 @@
 Feature:
   Testing the harvard courses import mechanism.
 
-  @api @harvard
+  @api @harvard @now
   Scenario: Importing courses and test their grouping to the correct sites.
     Given I am logging in as "admin"
 
     # Define harvard courses
-     When I enable harvard courses
-      And I set feature "edit-spaces-features-harvard-courses" to "Public" on "john"
+     When I set feature "edit-spaces-features-harvard-courses" to "Public" on "john"
       And I set courses to import
       And I refresh courses
       And I visit "john/courses"
