@@ -81,6 +81,10 @@ class FeatureHelp {
       $identifier = 'fid';
     }
 
+    if (empty($result[$entity_type])) {
+      return NULL;
+    }
+
     return reset($result[$entity_type])->{$identifier};
   }
 
