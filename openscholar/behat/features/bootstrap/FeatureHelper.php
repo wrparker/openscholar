@@ -328,7 +328,13 @@ class FeatureHelp {
    *    The type of the node. Optional, default is class.
    */
   static public function assignNodeToTerm($title, $name, $type = 'class') {
-    $nid = reset(entity_load('node', NULL, array('title' => $title, 'type' => $type)))->nid;
+    $entities = entity_load('node', NULL, array('title' => $title, 'type' => $type));
+
+    if (!reset($entities)) {
+      return;
+    }
+
+    $nid = reset($entities)->nid;
 
     $names = explode(",", $name);
     $query = new entityFieldQuery();
@@ -626,7 +632,8 @@ class FeatureHelp {
    *  The name of the term.
    */
   static public function DeleteTerm($term_name) {
-    $term = reset(taxonomy_get_term_by_name($term_name));
+    $taxonomies = taxonomy_get_term_by_name($term_name);
+    $term = reset($taxonomies);
     taxonomy_term_delete($term->tid);
   }
 
