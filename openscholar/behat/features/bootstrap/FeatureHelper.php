@@ -240,6 +240,10 @@ class FeatureHelp {
 
     $blocks = os_layout_get_multiple($contexts, FALSE, TRUE);
 
+    $options = array(
+      'delta' => time(),
+    );
+
     // Changing the region differently for box and block.
     if (empty($blocks[self::$boxes_mapping[$box]])) {
       // Define the box.
@@ -259,7 +263,7 @@ class FeatureHelp {
       $blocks['boxes-' . $box->delta]['region'] = $region;
 
       // Initialize the module ad the delta.
-      if (!array_key_exists($blocks['boxes-' . $box->delta], array('module', 'delta'))) {
+      if (!array_key_exists($blocks['boxes-' . $box->delta]['region'], array('module', 'delta'))) {
         $blocks['boxes-' . $box->delta]['delta'] = $options['delta'];
         $blocks['boxes-' . $box->delta]['module'] = 'boxes';
       }
@@ -365,7 +369,13 @@ class FeatureHelp {
    *    The type of the node. Optional, default is class.
    */
   static public function unassignNodeFromTerm($title, $name, $type = 'class') {
-    $nid = reset(entity_load('node', NULL, array('title' => $title, 'type' => $type)))->nid;
+    $entities = entity_load('node', NULL, array('title' => $title, 'type' => $type));
+
+    if (!$entities) {
+      return;
+    }
+
+    $nid = reset($entities)->nid;
 
     $wrapper = entity_metadata_wrapper('node', $nid);
 
@@ -889,6 +899,10 @@ class FeatureHelp {
   static public function GetChildSiteNid($profile_title) {
     $nid = static::GetEntityId('node', $profile_title, TRUE, 'person');
     $wrapper = entity_metadata_wrapper('node', $nid);
+
+    if (!$wrapper->__isset('field_child_site')) {
+      return 0;
+    }
 
     if (!$child_site_from_profile = $wrapper->field_child_site->value(array('identifier' => TRUE))) {
       return 0;

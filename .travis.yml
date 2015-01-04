@@ -66,6 +66,7 @@ before_script:
   - drush mi --all --user=1
   - drush en harvard_courses -y
   - drush cc all
+  - drush search-index
 
   # Index site using Apache solr
   - drush en os_search_solr -y

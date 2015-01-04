@@ -1223,14 +1223,6 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Given /^I reindex the search$/
-   */
-  public function iReindexTheSearch() {
-    print_r('This step is failing. Find a way to index programtically.');
-//    $this->getDriver()->drush("search-index");
-  }
-
-  /**
    * @Given /^I wait for page actions to complete$/
    */
   public function waitForPageActionsToComplete() {
