@@ -5,7 +5,7 @@ class MediaGalleryNodeRestfulBase extends OsNodeRestfulBase {
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();
 
-    // Body field Isn't attached
+    // Body field Isn't attached.
     unset($public_fields['body']);
 
     $public_fields['columns'] = array(
@@ -16,7 +16,9 @@ class MediaGalleryNodeRestfulBase extends OsNodeRestfulBase {
       'property' => 'media_gallery_rows',
     );
 
-    // todo: Handle file IDs.
+    $public_fields['files'] = array(
+      'property' => 'media_gallery_file',
+    );
 
     return $public_fields;
   }

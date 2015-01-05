@@ -61,7 +61,6 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
     // Add path validator.
     $fields['path_alias']['validators'][] = array($this, 'validatorPath');
 
-    dpm($this->rest);
     if ($this->rest) {
       $fields[OG_AUDIENCE_FIELD] = array(
         'required' => TRUE,
