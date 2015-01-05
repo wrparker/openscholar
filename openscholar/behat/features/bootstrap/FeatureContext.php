@@ -1373,7 +1373,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I delete the node of type "([^"]*)" named "([^"]*)"$/
    */
   public function iDeleteTheNodeOfTypeNamedUsingContextualLink($type, $title) {
-    $nid = FeatureHelp::GetNodeId(str_replace("'", "\'", $title));
+    $nid = FeatureHelp::GetNodeId($title);
     return array(
       new Step\When('I visit "node/' . $nid . '/delete?destination=' . $type . '"'),
       new Step\When('I press "Delete"'),
@@ -1879,10 +1879,10 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @given /^I verify that the profile "([^"]*)" has a child site named "([^"]*)"$/
+   * @Given /^I verify that the profile "([^"]*)" has a child site named "([^"]*)"$/
    */
   public function iVerifyTheProfileHasChildSite($profile_title, $child_site_title) {
-    $child_site_nid = FeatureHelp::getEntityID('node', $child_site_title, FALSE, 'personal');
+    $child_site_nid = FeatureHelp::getEntityID('node', $child_site_title, 'personal');
     $child_site_from_profile = FeatureHelp::getChildSiteNid($profile_title);
 
     if (!$child_site_from_profile) {
