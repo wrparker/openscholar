@@ -2,6 +2,27 @@
 
 class OsNodeRestfulBase extends RestfulEntityBaseNode {
 
+  /**
+   * Overrides \RestfulDataProviderEFQ::controllersInfo().
+   */
+  public static function controllersInfo() {
+    return array(
+      '' => array(
+        \RestfulInterface::GET => 'getList',
+        \RestfulInterface::HEAD => 'getList',
+        \RestfulInterface::POST => 'createEntity',
+        \RestfulInterface::DELETE => 'deleteEntity',
+      ),
+      '^(\d+,)*\d+$' => array(
+        \RestfulInterface::GET => 'viewEntities',
+        \RestfulInterface::HEAD => 'viewEntities',
+        \RestfulInterface::PUT => 'putEntity',
+        \RestfulInterface::PATCH => 'patchEntity',
+        \RestfulInterface::DELETE => 'deleteEntity',
+      ),
+    );
+  }
+
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();
 
