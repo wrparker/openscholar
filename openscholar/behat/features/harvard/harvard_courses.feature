@@ -1,7 +1,7 @@
 Feature:
   Testing the harvard courses import mechanism.
 
-  @api @harvard @now
+  @api @harvard
   Scenario: Importing courses and test their grouping to the correct sites.
     Given I am logging in as "admin"
 

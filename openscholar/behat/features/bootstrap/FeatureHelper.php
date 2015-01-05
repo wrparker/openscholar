@@ -660,7 +660,7 @@ class FeatureHelp {
    *  The name of the vsite.
    */
   static public function AddSubtheme($subtheme, $vsite) {
-    $path = drupal_get_path('profile', 'openscholar') . '/behat/' . $subtheme;
+    $path = 'profiles/openscholar/behat/' . $subtheme;
 
     $query = new entityFieldQuery();
     $result = $query
@@ -897,7 +897,7 @@ class FeatureHelp {
    *  The profile title for which to get the child site's id.
    */
   static public function GetChildSiteNid($profile_title) {
-    $nid = static::GetEntityId('node', $profile_title, TRUE, 'person');
+    $nid = static::GetEntityId('node', $profile_title, 'person');
     $wrapper = entity_metadata_wrapper('node', $nid);
 
     if (!$wrapper->__isset('field_child_site')) {
