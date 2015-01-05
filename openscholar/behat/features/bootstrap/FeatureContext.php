@@ -455,7 +455,6 @@ class FeatureContext extends DrupalContext {
    * @Given /^I unassign the node "([^"]*)" with the type "([^"]*)" from the term "([^"]*)"$/
    */
   public function iUnassignTheNodeWithTheTypeFromTheTerm($node, $type, $term) {
-    $node = str_replace("'", "\'", $node);
     FeatureHelp::unassignNodeFromTerm($node, $term, $type);
   }
 
@@ -1300,7 +1299,7 @@ class FeatureContext extends DrupalContext {
    * Change the event registration status.
    */
   private function eventRegistrationChangeStatus($title) {
-    $nid = FeatureHelp::GetNodeId(str_replace("'", "\'", $title));
+    $nid = FeatureHelp::GetNodeId($title);
     return array(
       new Step\When('I visit "node/' . $nid . '/edit"'),
       new Step\When('I check the box "Signup"'),
@@ -1325,7 +1324,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I edit the node "([^"]*)"$/
    */
   public function iEditTheNode($title) {
-    $nid = FeatureHelp::GetNodeId(str_replace("'", "\'", $title));
+    $nid = FeatureHelp::GetNodeId($title);
 
     $purl = FeatureHelp::GetNodeVsitePurl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
@@ -1339,7 +1338,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I edit the node "([^"]*)" in the group "([^"]*)"$/
    */
   public function iEditTheNodeInGroup($title, $group) {
-    $nid = FeatureHelp::GetNodeIdInVsite(str_replace("'", "\'", $title), $group);
+    $nid = FeatureHelp::GetNodeIdInVsite($title, $group);
     $purl = FeatureHelp::GetNodeVsitePurl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
 
@@ -1352,7 +1351,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I edit the page meta data of "([^"]*)" in "([^"]*)"$/
    */
   public function iEditTheMetaTags($title, $group) {
-    $nid = FeatureHelp::GetNodeId(str_replace("'", "\'", $title));
+    $nid = FeatureHelp::GetNodeId($title);
 
     return array(
       new Step\When('I visit "' . $group . '/os/pages/' . $nid . '/meta"'),
@@ -1363,7 +1362,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I edit the node of type "([^"]*)" named "([^"]*)" using contextual link$/
    */
   public function iEditTheNodeOfTypeNamedUsingContextualLink($type, $title) {
-    $nid = FeatureHelp::GetNodeId(str_replace("'", "\'", $title));
+    $nid = FeatureHelp::GetNodeId($title);
     return array(
       new Step\When('I visit "node/' . $nid . '/edit?destination=' . $type . '"'),
     );
@@ -1384,7 +1383,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I delete the node of type "([^"]*)" named "([^"]*)" in the group "([^"]*)"$/
    */
   public function iDeleteTheNodeOfTypeNamedInGroup($type, $title, $group) {
-    $nid = FeatureHelp::GetNodeIdInVsite(str_replace("'", "\'", $title), $group);
+    $nid = FeatureHelp::GetNodeIdInVsite($title, $group);
     return array(
       new Step\When('I visit "' . $group . '/node/' . $nid . '/delete?destination=' . $type . '"'),
       new Step\When('I press "Delete"'),
@@ -1549,7 +1548,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I login as "([^"]*)" in "([^"]*)"$/
    */
   public function iLoginAsIn($username, $site) {
-    $nid = FeatureHelp::GetNodeId(str_replace("'", "\'", $site));
+    $nid = FeatureHelp::GetNodeId($site);
 
     try {
       $password = $this->users[$username];
@@ -1756,7 +1755,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I update the node "([^"]*)" field "([^"]*)" to "([^"]*)"$/
    */
   public function iUpdateTheNodeFieldTo($title, $field, $value) {
-    $nid = FeatureHelp::GetNodeId(str_replace("'", "\'", $title));
+    $nid = FeatureHelp::GetNodeId($title);
 
     $purl = FeatureHelp::GetNodeVsitePurl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
