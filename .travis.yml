@@ -40,6 +40,12 @@ before_script:
   - bash scripts/setup
   - bash scripts/build
 
+  # Configure MySQL.
+  - echo -e "[server]\nmax_allowed_packet=64M" | sudo tee -a /etc/mysql/conf.d/drupal.cnf
+  - echo -e "\nwait_timeout=300" | sudo tee -a /etc/mysql/conf.d/drupal.cnf
+  - echo -e "\nmax_connections=250" | sudo tee -a /etc/mysql/conf.d/drupal.cnf
+  - sudo service mysql restart
+
   # Download and install Apache solr
   - wget https://archive.apache.org/dist/lucene/solr/3.6.2/apache-solr-3.6.2.zip
   - unzip -o apache-solr-3.6.2.zip
