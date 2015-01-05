@@ -502,8 +502,8 @@ class FeatureHelp {
    *    1 - user has a role which is not the role given.
    *    2 - user has the role given
    */
-  static public function check_user_role_in_group($name, $role, $group) {
-    $gid = $gid = self::GetNodeId($group, TRUE);
+  static public function checkUserRoleInGroup($name, $role, $group) {
+    $gid = self::GetNodeId($group);
     $user = user_load_by_name($name);
 
     if (!og_is_member('node', $gid, 'user', $user)) {
