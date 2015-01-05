@@ -29,7 +29,7 @@ Feature:
       And I go to "john/node/add/blog"
      Then I should get a "403" HTTP response
 
-  @api @vsite @now
+  @api @vsite
   Scenario: Testing vsite member can delete his own content.
     Given I am logging in as "michelle"
      When I delete the node of type "blog" named "Michelle's Blog"

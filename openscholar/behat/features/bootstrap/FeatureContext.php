@@ -106,27 +106,18 @@ class FeatureContext extends DrupalContext {
       throw new Exception("Password not found for '$username'.");
     }
 
-    if ($this->getDriver() instanceof Drupal\Driver\DrushDriver) {
-      // We are using a cli, log in with meta step.
+    if ($this->loggedIn()) {
+      $this->logout();
+    }
 
-      return array(
-        new Step\When('I am not logged in'),
-        new Step\When('I visit "http://' . $domain . '/user"'),
-        new Step\When('I fill in "Username" with "' . $username . '"'),
-        new Step\When('I fill in "Password" with "' . $password . '"'),
-        new Step\When('I press "edit-submit"'),
-      );
-    }
-    else {
-      // Log in.
-      // Go to the user page.
-      $element = $this->getSession()->getPage();
-      $this->getSession()->visit($this->locatePath('/user'));
-      $element->fillField('Username', $username);
-      $element->fillField('Password', $password);
-      $submit = $element->findButton('Log in');
-      $submit->click();
-    }
+    // Log in.
+    // Go to the user page.
+    $element = $this->getSession()->getPage();
+    $this->getSession()->visit("http://{$domain}/user");
+    $element->fillField('Username', $username);
+    $element->fillField('Password', $password);
+    $submit = $element->findButton('Log in');
+    $submit->click();
   }
 
   /**
@@ -1177,7 +1168,7 @@ class FeatureContext extends DrupalContext {
    * @Then /^I should verify that the user "([^"]*)" has a role of "([^"]*)" in the group "([^"]*)"$/
    */
   public function iShouldVerifyThatTheUserHasRole($name, $role, $group) {
-    $user_has_role = FeatureHelp::check_user_role_in_group($name, $role, $group);
+    $user_has_role = FeatureHelp::checkUserRoleInGroup($name, $role, $group);
 
     if ($user_has_role == 0) {
       throw new Exception("The user {$name} is not a member in the group {$group}");
@@ -1672,15 +1663,11 @@ class FeatureContext extends DrupalContext {
    */
   public function iDefineDomainTo($vsite, $domain) {
     $this->domains[] = $vsite;
+    $nid = FeatureHelp::getNodeId($vsite);
+    $vsite = vsite_get_vsite($nid);
 
-    return array(
-      new Step\When('I visit "' . $vsite . '/cp/settings"'),
-      new Step\When('I fill in "Custom domain name" with "' . $domain . '"'),
-      new Step\When('I check the box "Share domain name"'),
-      new Step\When('I press "edit-submit"'),
-    );
+    $vsite->controllers->variable->set('vsite_domain_name', $domain);
   }
-
 
   /**
    * @Given /^I verify the url is "([^"]*)"$/
