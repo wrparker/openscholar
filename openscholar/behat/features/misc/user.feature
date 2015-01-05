@@ -22,7 +22,7 @@ Feature: User functionality testing.
       And I press "Add users"
      Then I should see "michelle has been added to the group John."
 
-  @api @misc
+  @api @misc @now
   Scenario: Enable custom roles and permissions in a VSite.
     Given I am logging in as "john"
       And I visit "john/cp/users/permissions"
@@ -31,11 +31,11 @@ Feature: User functionality testing.
       And I visit "john/cp/users/permissions"
      Then I should see the button "Save permissions"
 
-  @api @misc
+  @api @misc @now
   Scenario: Create a custom role in a vsite.
     Given I am logging in as "john"
      When I visit "john/cp/users/roles"
-      And I fill in "Name" with "New Custom Role"
+      And I fill in "edit-name" with "New Custom Role"
       And I press "Add role"
       And I visit "john/cp/users/roles"
      Then I should see "New Custom Role"
@@ -53,7 +53,7 @@ Feature: User functionality testing.
      When I go to "john/node/add/book"
      Then I should get a "403" HTTP response
 
-  @api @misc
+  @api @misc @now
   Scenario: Test node creation permissions of a custom role - check success.
     Given I am logging in as "klark"
      When I go to "john/node/add/blog"
@@ -68,7 +68,7 @@ Feature: User functionality testing.
       And I visit "john/cp/users/roles"
      Then I should not see the button "Save permissions"
 
-  @api @misc
+  @api @misc @now
   Scenario: Test adding a new member by creating a new user on the site.
     Given I am logging in as "john"
       And I visit "john/cp/users/add"
@@ -78,7 +78,7 @@ Feature: User functionality testing.
      Then I should see "Peter has been added to the website: John"
       And I should verify that the user "Peter" has a role of "vsite member" in the group "john"
 
-  @api @misc
+  @api @misc @now
   Scenario: Test adding a new member by creating a new user on the site when
             using a shared domain.
     Given I am logging in as "admin"
