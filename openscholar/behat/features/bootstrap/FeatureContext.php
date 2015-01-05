@@ -17,11 +17,6 @@ class FeatureContext extends DrupalContext {
   private $randomText;
 
   /**
-   * Variable to pass into the last xPath expression.
-   */
-  private $xpath = '';
-
-  /**
    * The box delta we need to hide.
    */
   private $box = '';
@@ -124,9 +119,6 @@ class FeatureContext extends DrupalContext {
    * @Given /^I am on a "([^"]*)" page titled "([^"]*)"(?:, in the tab "([^"]*)"|)$/
    */
   public function iAmOnAPageTitled($page_type, $title, $subpage = NULL) {
-    $path = "$page_type/%";
-    $path .= "/$subpage";
-
     $query = new EntityFieldQuery();
     $results = $query
       ->entityCondition('entity_type', 'node')
@@ -173,30 +165,30 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldGet(PyStringNode $string) {
     $page = $this->getSession()->getPage();
-    $comapre_string = $string->getRaw();
+    $compare_string = $string->getRaw();
     $page_string = $page->getContent();
 
-    if (strpos($comapre_string, '{{*}}')) {
+    if (strpos($compare_string, '{{*}}')) {
       // Attributes that may changed in different environments.
       foreach (array('sourceUrl', 'id', 'value', 'href', 'os_version') as $attribute) {
         $page_string = preg_replace('/ '. $attribute . '=".+?"/', '', $page_string);
-        $comapre_string = preg_replace('/ '. $attribute . '=".+?"/', '', $comapre_string);
+        $compare_string = preg_replace('/ '. $attribute . '=".+?"/', '', $compare_string);
 
         // Dealing with JSON.
         $page_string = preg_replace('/"'. $attribute . '":".+?"/', '', $page_string);
-        $comapre_string = preg_replace('/"'. $attribute . '":".+?"/', '', $comapre_string);
+        $compare_string = preg_replace('/"'. $attribute . '":".+?"/', '', $compare_string);
       }
 
-      if ($page_string != $comapre_string) {
+      if ($page_string != $compare_string) {
         $output = "The strings are not matching.\n";
         $output .= "Page: {$page_string}\n";
-        $output .= "Search: {$comapre_string}\n";
+        $output .= "Search: {$compare_string}\n";
         throw new Exception($output);
       }
     }
     else {
       // Normal compare.
-      foreach (explode("\n", $comapre_string) as $text) {
+      foreach (explode("\n", $compare_string) as $text) {
         if (strpos($page_string, $text) === FALSE) {
           throw new Exception(sprintf('The text "%s" was not found.', $text));
         }
@@ -235,7 +227,7 @@ class FeatureContext extends DrupalContext {
     foreach ($table_rows as $rows) {
       $image = $page->find('xpath', "//img[contains(@src, '{$rows[0]}')]");
       if (!$image) {
-        throw new Exception(sprintf('The image "%s" wasn\'t found in the page.', $rows[0]));
+        throw new Exception(sprintf('The image "%s" was not found in the page.', $rows[0]));
       }
     }
   }
@@ -364,13 +356,13 @@ class FeatureContext extends DrupalContext {
    * @Given /^the widget "([^"]*)" is set in the "([^"]*)" page with the following <settings>:$/
    */
   public function theWidgetIsSetInThePageWithSettings($page, $widget, TableNode $table) {
-    return $this->theWidgetIsSetInThePageBytheNameWithSettings($page, $widget, '', $table);
+    return $this->theWidgetIsSetInThePageByTheNameWithSettings($page, $widget, '', $table);
   }
 
   /**
    * @Given /^the widget "([^"]*)" is set in the "([^"]*)" page by the name "([^"]*)" with the following <settings>:$/
    */
-  public function theWidgetIsSetInThePageBytheNameWithSettings($page, $widget, $name, TableNode $table) {
+  public function theWidgetIsSetInThePageByTheNameWithSettings($page, $widget, $name, TableNode $table) {
     $this->box[] = FeatureHelp::setBoxInRegion($this->nid, $page, $widget, 'sidebar_second', $name);
     $hash = $table->getRows();
 
@@ -591,7 +583,6 @@ class FeatureContext extends DrupalContext {
 
     // Hasing table, and define variables for later.
     $hash = $table->getRows();
-    $errors = array();
 
     // Run over the tale and start matching between the values of the JSON and
     // the user input.

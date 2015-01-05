@@ -71,6 +71,7 @@ before_script:
   - drush en os_migrate_demo -y
   - drush mi --all --user=1
   - drush en harvard_courses -y
+  - drush dis -y dblog
   - drush cc all
   - drush search-index
 
