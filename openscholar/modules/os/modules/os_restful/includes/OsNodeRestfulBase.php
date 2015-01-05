@@ -42,7 +42,7 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
   }
 
   /**
-   * Display the id and the title of the
+   * Display the id and the title of the group.
    */
   public function vsiteFieldDisplay($value) {
     return array('title' => $value[0]->title, 'id' => $value[0]->nid);
