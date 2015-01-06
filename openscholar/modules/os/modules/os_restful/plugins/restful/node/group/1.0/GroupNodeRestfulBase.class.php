@@ -48,7 +48,8 @@ class GroupNodeRestfulBase extends OsNodeRestfulBase {
     $users = user_load_multiple(array_keys($results['user']));
 
     foreach ($users as $user) {
-      $list[$user->uid] = array(
+      $list[] = array(
+        'uid' => $user->uid,
         'name' => $user->name,
         'email' => $user->mail,
       );
