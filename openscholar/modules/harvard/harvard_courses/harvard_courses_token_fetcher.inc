@@ -33,7 +33,6 @@ class HarvardFetcher extends FeedsFetcher {
     }
 
     // Loop over the nodes and build the query parameter value.
-    $param_values = array();
     $schools = array();
     $departments = array();
     $import_value = array();
