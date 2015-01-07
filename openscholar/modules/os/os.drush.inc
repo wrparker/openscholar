@@ -159,16 +159,16 @@ function drush_os_domain_build() {
     $all_domains = array_reduce($multisites, create_function('$ret, $arr', 'return array_merge($ret, $arr);'), array());
 
     ob_start();
-    $ac_domain_list = drush_invoke_process(drush_sitealias_get_record('@self'), 'ac-domain-list', array(), array() ); 
-    $domains = ob_get_clean();
+    $response = drush_invoke_process(drush_sitealias_get_record('@self'), 'ac-domain-list', array(), array() );
+    $raw = ob_get_clean();
     
-    if ($ac_domain_list['error_status']) {
+    if ($response['error_status']) {
       drush_die('Could not connect to acquia cloud api');
     }
 
-    $domains = explode("\r\n", $domains);
+    $raw = explode("\r\n", $raw);
     $ac_domain_list = array();
-    foreach ($domains as $d) {
+    foreach ($raw as $d) {
       if (preg_match("|name[/w]+:|", $d)) {
         $ac_domain_list[] = trim(preg_replace("|name[/w]+:[/w]+|", "", $d));
       }
