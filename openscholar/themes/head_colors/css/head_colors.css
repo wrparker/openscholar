@@ -21,15 +21,15 @@ body {
     }
    
 a, a:visited {
-    color:#8A281B;
+    color:#A03A25;
     }
     
 .biblio-title a, .biblio-title-chicago a {
-    color:#8A281B !important;
+    color:#A03A25 !important;
     }    
 
 a:hover {
-    color:#8A281B;
+    color:#A03A25;
     text-decoration: underline;
     }
 
@@ -40,12 +40,12 @@ h1, h2, h3, .region-sidebar-second a {
     }
 
 
-
 h1 a, h2 a, h3 a, .region-sidebar-second a {
     font-style: normal;
     }
 
 /* LAYOUT ELEMENTS */
+#menu-bar ul.nice-menu ul,
 #menu-bar ul.nice-menu .menuparent.over > a,
 #menu-bar ul.nice-menu .menuparent a:hover,
 #menu-bar ul.nice-menu .menuparent a.active,
@@ -59,12 +59,9 @@ h1 a, h2 a, h3 a, .region-sidebar-second a {
 
 
 /* HEADER ELEMENTS */
-
 #header-container {
-
-    color: #FFF;
- 
-    }
+color: #FFF;
+ }
 
 
 #header-container h1,
@@ -95,22 +92,24 @@ h1 a, h2 a, h3 a, .region-sidebar-second a {
     }
 
 
-    
-  /** NICE MENUS **/
-#menu-bar ul.nice-menu ul {
-	border:none;
-	background:#777;
-	}
-	
+ /** NICE MENUS **/
+
+
+#menu-bar ul.nice-menu a {
+	font-size:1.25em;
+	text-transform:uppercase;
+}
 
 #menu-bar ul.nice-menu ul li {
 
 	background:#252A2B;
 }
 	
+#menu-bar ul.nice-menu .menuparent ul li a.active,	
+#menu-bar ul.nice-menu .menuparent ul li a:hover,
 #menu-bar ul.nice-menu ul li a {
 	color:#FFF;
-	background:#777;
+
 	}
 
 
@@ -121,6 +120,11 @@ ul.nice-menu-left li.menuparent:hover, ul.nice-menu-left li li.menuparent:hover 
     background: none;
 }
 
+#menu-bar ul.nice-menu .menuparent > a:before {
+	background-position: 0 -566px;
+}
+
+
 
 #search-block-form input.form-submit, 
 #search-block-form #edit-submit, 
@@ -128,4 +132,9 @@ ul.nice-menu-left li.menuparent:hover, ul.nice-menu-left li li.menuparent:hover 
 background-position: 2px -440px;
 background-color: #999;
 }
+
+#footer {
+	background: #f9f9f9;
+}
+
 
