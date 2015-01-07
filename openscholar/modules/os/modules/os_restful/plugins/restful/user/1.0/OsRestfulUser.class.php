@@ -23,6 +23,13 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
       'property' => 'status',
     );
 
+    $public_fields['role'] = array(
+      'property' => 'uid',
+      'process_callbacks' => array(
+        array($this, 'getRoles'),
+      ),
+    );
+
     return $public_fields;
   }
 
@@ -41,5 +48,9 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
   public function createEntity() {
     require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
     return parent::createEntity();
+  }
+
+  public function getRoles($value) {
+    return user_load($value)->roles;
   }
 }
