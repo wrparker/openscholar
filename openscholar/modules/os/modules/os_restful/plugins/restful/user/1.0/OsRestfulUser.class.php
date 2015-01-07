@@ -14,6 +14,32 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
       'property' => 'name',
     );
 
+    $public_fields['password'] = array(
+      'property' => 'pass',
+      'callback' => array($this, 'hideField')
+    );
+
+    $public_fields['status'] = array(
+      'property' => 'status',
+    );
+
     return $public_fields;
+  }
+
+  /**
+   * Hide the field value.
+   *
+   * @return null
+   */
+  protected function hideField() {
+    return NULL;
+  }
+
+  /**
+   * Overriding the create entity method in order to load the password.inc file.
+   */
+  public function createEntity() {
+    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+    return parent::createEntity();
   }
 }
