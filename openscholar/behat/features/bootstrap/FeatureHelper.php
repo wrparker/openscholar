@@ -503,6 +503,7 @@ class FeatureHelp {
    *    2 - user has the role given
    */
   static public function checkUserRoleInGroup($name, $role, $group) {
+    drupal_static_reset();
     $gid = self::GetNodeId($group);
     $user = user_load_by_name($name);
 
@@ -533,6 +534,7 @@ class FeatureHelp {
    * @param $gid
    */
   static public function GetRoleByName($name, $gid) {
+    drupal_static_reset();
     $roles = og_roles('node', NULL, $gid);
     return array_search($name, $roles);
   }
