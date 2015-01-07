@@ -165,10 +165,16 @@ function drush_os_domain_build() {
     if ($ac_domain_list['error_status']) {
       drush_die('Could not connect to acquia cloud api');
     }
-    drush_print('Printing Domains: ');
-    drush_print_r($domains);
+
+    $domains = explode("\r\n", $domains);
+    $ac_domain_list = array();
+    foreach ($domains as $d) {
+      if (preg_match("|name[/w]+:|", $d)) {
+        $ac_domain_list[] = trim(preg_replace("|name[/w]+:[/w]+|", "", $d));
+      }
+    }
   
-    $ac_domain_list = array_map(create_function('$a', 'return $a["name"];'), $ac_domain_list['object'][1]);
+    //$ac_domain_list = array_map(create_function('$a', 'return $a["name"];'), $ac_domain_list['object'][1]);
     $add = array_diff($all_domains, $ac_domain_list);
     array_pop($ac_domain_list); //last item is original domain and cannot be removed.
     $del = array_diff($ac_domain_list, $all_domains);
