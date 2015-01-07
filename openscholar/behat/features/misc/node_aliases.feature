@@ -50,7 +50,7 @@ Feature:
   title are working properly.
     Given I am logging in as "admin"
       And I define "john" domain to "lincoln.local"
-      And I define "lincoln" domain to "lincoln.local"
+      And I define "Abraham" domain to "lincoln.local"
       And I visit "http://lincoln.local/john/about"
       And I should see "Page about john"
       And I verify the url is "lincoln.local"

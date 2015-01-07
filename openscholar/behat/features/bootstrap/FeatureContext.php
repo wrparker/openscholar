@@ -1655,9 +1655,10 @@ class FeatureContext extends DrupalContext {
   public function iDefineDomainTo($vsite, $domain) {
     $this->domains[] = $vsite;
     $nid = FeatureHelp::getNodeId($vsite);
-    $vsite = vsite_get_vsite($nid);
-
-    $vsite->controllers->variable->set('vsite_domain_name', $domain);
+    if ($group = vsite_get_vsite($nid)) {
+      $group->controllers->variable->set('vsite_domain_name', $domain);
+      $group->controllers->variable->set('vsite_domain_shared', $domain);
+    }
   }
 
   /**
