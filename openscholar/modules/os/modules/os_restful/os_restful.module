@@ -11,3 +11,10 @@ function os_restful_ctools_plugin_directory($module, $plugin) {
     return 'plugins/' . $plugin;
   }
 }
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function os_restful_entity_info_alter(&$entity_info) {
+  $entity_info['user']['entity keys']['label'] = 'name';
+}
