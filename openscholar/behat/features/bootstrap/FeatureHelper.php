@@ -381,7 +381,7 @@ class FeatureHelp {
 
     $terms = $wrapper->{OG_VOCAB_FIELD}->value();
     foreach ($terms as $key => $term) {
-      if ($term->title == $name) {
+      if ($term->name == $name) {
         unset($terms[$key]);
       }
     }

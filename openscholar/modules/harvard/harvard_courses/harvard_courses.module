@@ -360,7 +360,6 @@ function harvard_courses_node_insert($node) {
 
   // Change description field format to full html.
   $wrapper->field_course_description->set(array('format' => 'full_html'));
-//  $node->field_course_description[LANGUAGE_NONE][0]['format'] = 'full_html';
 }
 
 /**
