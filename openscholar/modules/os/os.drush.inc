@@ -169,8 +169,8 @@ function drush_os_domain_build() {
     $raw = explode("\r\n", $raw);
     $ac_domain_list = array();
     foreach ($raw as $d) {
-      if (preg_match("|name[/w]+:|", $d)) {
-        $ac_domain_list[] = trim(preg_replace("|name[/w]+:[/w]+|", "", $d));
+      if (preg_match('|name[\s]+:|', $d)) {
+        $ac_domain_list[] = trim(preg_replace('|name[\s]+:[\s]+|', "", $d));
       }
     }
   
