@@ -1,6 +1,6 @@
 Feature: Testing the importer.
 
-  @api @misc
+  @api @misc_first
   Scenario Outline: Testing the csv importing for content types.
     Given I am logging in as "admin"
      When I visit <import-address>
@@ -22,7 +22,7 @@ Feature: Testing the importer.
     | "john/os-importer-demo/person"            | "john/people"                             | "Person from csv"       | "Testing import of people"    |
     | "john/os-importer-demo/media_gallery"     | "john/galleries"                          | "Gallery from csv"      | "Testing import of gallery"   |
 
-  @api @misc
+  @api @misc_first
   Scenario: Verify that the vocabularies and terms from the CSV created
   successfully.
     Given I visit "john/blog/blog-csv"
@@ -31,24 +31,24 @@ Feature: Testing the importer.
       And I should see "Chuck Berry"
       And I should see "Red hot chili peppers"
 
-  @api @misc
+  @api @misc_first
   Scenario: Verify the hebrew text was imported.
     Given I visit "john/blog"
      Then I should see "בדיקה של כותרת"
       And I should see "בדיקה של תוכן"
 
-  @api @misc
+  @api @misc_first
   Scenario: Verify the spanish text was imported.
     Given I visit "john/news"
      Then I should see "Text in spanish"
       And I should see "Speaker: Luis Mendonça de Carvalho"
 
-  @api @misc
+  @api @misc_first
   Scenario: Verify the year of a class is imported correctly.
     Given I visit "john/classes"
      Then I should see "1950"
 
-  @pai @misc
+  @pai @misc_first
   Scenario: Checking the vocabs imported properly.
     Given I am logging in as "john"
       And I visit "john/cp/build/taxonomy"
@@ -58,7 +58,7 @@ Feature: Testing the importer.
      Then I should see "Bad& (2)"
       And I should see "Good& (2)"
 
-  @api @misc
+  @api @misc_first
   Scenario: Verify we can delete vocab with a bad name.
     Given I am logging in as "john"
       And I visit "john/cp/build/taxonomy/bad_vocab/edit"

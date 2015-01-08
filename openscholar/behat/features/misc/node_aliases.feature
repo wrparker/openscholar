@@ -1,7 +1,7 @@
 Feature:
   Testing the aliases of a node.
 
-  @api @misc
+  @api @misc_second
   Scenario: Verify that the pathauto alias is properly created in nodes.
     Given I am logging in as "john"
       And I visit "john/node/add/blog"
@@ -9,7 +9,7 @@ Feature:
      When I press "edit-submit"
      Then I verify the alias of node "Unique Title" is "john/blog/unique-title"
 
-  @api @misc
+  @api @misc_second
   Scenario: Verify that the custom alias is properly created in nodes.
     Given I am logging in as "john"
       And I visit "john/node/add/blog"
@@ -19,7 +19,7 @@ Feature:
      When I press "edit-submit"
      Then I verify the alias of node "Another Unique Title" is "john/unique-custom-alias"
 
-  @api @misc
+  @api @misc_second
   Scenario: Verify that aliases are displayed without purl in node edit form.
     Given I am logging in as "john"
      When I edit the node "Unique Title"
@@ -35,7 +35,7 @@ Feature:
      When I press "edit-submit"
      Then I verify the alias of node "John Custom Alias" is "john/john"
 
-  @api @misc
+  @api @misc_second
   Scenario: Verify it is impossible to use a duplicate purl in node custom path.
     Given I am logging in as "john"
       And I visit "john/node/add/blog"
@@ -45,7 +45,7 @@ Feature:
      When I press "edit-submit"
      Then I verify the alias of node "John Second Custom Alias" is "john/jfk-duplicate-purl"
 
-  @api @misc
+  @api @misc_second
   Scenario: Testing shared domain with two different vsite and the same node
   title are working properly.
     Given I am logging in as "admin"
@@ -58,7 +58,7 @@ Feature:
      Then I should see "Page about lincoln"
       And I verify the url is "lincoln.local"
 
-  @api @misc
+  @api @misc_second
   Scenario: Verify it is impossible to use aliases if they exist without the
             purl.
     Given I am logging in as "john"
@@ -72,7 +72,7 @@ Feature:
       And I press "edit-submit"
      Then I should see "The alias is already in use."
 
-  @api @misc
+  @api @misc_second
   Scenario: Verify the user can enter an alias with node type at the start.
             i.e: when user create a new presentation he can can set the alias as
             presentation/new-presentation.
@@ -84,7 +84,7 @@ Feature:
      When I press "Save"
      Then I should see "Presentation Checking a presentation has been created."
 
-  @api @misc
+  @api @misc_second
   Scenario: Verify the user can't enter an alias with a menu item which already
             in use.
             i.e: Verify user can't create post with the alias 'user/login'.
@@ -96,7 +96,7 @@ Feature:
      When I press "Save"
      Then I should see "The alias is already in use."
 
-  @api @misc
+  @api @misc_second
   Scenario: Verify the when a user create a page with a title that is a system
             path (for example a page with a title of "publications") the alias
             produced is given a suffix, for example creating the page titled
