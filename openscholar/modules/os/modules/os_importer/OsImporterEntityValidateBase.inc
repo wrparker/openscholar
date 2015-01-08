@@ -165,7 +165,7 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
   }
 
   /**
-   * Display the id and the title of the
+   * Display the id and the title of the group.
    */
   public function vsiteFieldDisplay($value) {
     return array('title' => $value[0]->title, 'id' => $value[0]->nid);
