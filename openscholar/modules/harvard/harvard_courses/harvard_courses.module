@@ -278,7 +278,8 @@ function haravard_courses_sites_nid_by_import_type($import_type, $search_value =
         if ($field == 'field_faculty') {
           $field = 'field_school_name';
           $colum = 'target_id';
-          $value = reset(entity_load('taxonomy_term', NULL, array('name' => $value, 'vid' => $vocabulary->vid)))->tid;
+          $entities = entity_load('taxonomy_term', NULL, array('name' => $value, 'vid' => $vocabulary->vid));
+          $value = reset($entities)->tid;
         }
         $query->fieldCondition($field, $colum, $value);
       }

@@ -804,16 +804,25 @@ class FeatureContext extends DrupalContext {
    * @Given /^I set courses to import$/
    */
   public function iSetCoursesToImport() {
+    $query = new EntityFieldQuery();
+    $result = $query
+      ->entityCondition('entity_type', 'taxonomy_term')
+      ->propertyCondition('name', 'Harvard Graduate School of Design')
+      ->range(0, 1)
+      ->execute();
+
+    $entity = entity_create('field_collection_item', array('field_name' => 'field_department_school'));
+    $entity->setHostEntity('node', node_load(FeatureHelp::getNodeId('john')));
+    $wrapper = entity_metadata_wrapper('field_collection_item', $entity);
+    $wrapper->field_department_id->set('Architecture');
+    $wrapper->field_school_name->set(reset($result['taxonomy_term'])->tid);
+    $wrapper->save();
+
     $metasteps = array();
     $metasteps[] = new Step\When('I visit "admin"');
     $metasteps[] = new Step\When('I visit "admin/structure/feeds/course/settings/HarvardFetcher"');
     $metasteps[] = new Step\When('I check the box "Debug mode"');
     $metasteps[] = new Step\When('I press "Save"');
-    $metasteps[] = new Step\When('I visit "john/cp/build/features/harvard_courses"');
-    $metasteps[] = new Step\When('I fill in "Department ID" with "Architecture"');
-    $metasteps[] = new Step\When('I select "Harvard Graduate School of Design" from "School name"');
-    $metasteps[] = new Step\When('I press "Save configuration"');
-
     return $metasteps;
   }
 

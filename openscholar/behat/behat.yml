@@ -7,5 +7,14 @@ default:
       selenium2: ~
     Drupal\DrupalExtension\Extension:
       blackbox: ~
+
+phantomjs:
+  context:
+      class:  'FeatureContext'
+  extensions:
+    Behat\MinkExtension\Extension:
+      goutte: ~
+      selenium2: ~
+
 imports:
   - behat.local.yml

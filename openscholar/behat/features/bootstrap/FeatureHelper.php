@@ -917,14 +917,14 @@ class FeatureHelp {
    * Remove the courses for s given values.
    */
   static public function RemoveCourses() {
-    static::RemoveCourses(FALSE);
+    static::__RemoveCourses(FALSE);
   }
 
   /**
    * Add the courses for s given values.
    */
   static public function AddCourses() {
-    static::RemoveCourses();
+    static::__RemoveCourses();
   }
 
   /**
@@ -933,7 +933,7 @@ class FeatureHelp {
    * @param $group
    *   Determine if we need to group or un group the courses.
    */
-  function _OsMigrateDemoRemoveCourses($group = TRUE) {
+  static public function __RemoveCourses($group = TRUE) {
     $fields = array(
       'field_faculty',
       'field_department_id',
