@@ -11,9 +11,9 @@ mysql:
 env:
 #  - TEST_SUITE=features_first
 #  - TEST_SUITE=features_second
-  - TEST_SUITE=harvard
+#  - TEST_SUITE=harvard
 #  - TEST_SUITE=javscript
-#  - TEST_SUITE=misc
+  - TEST_SUITE=misc
 #  - TEST_SUITE=solr
 #  - TEST_SUITE=taxonomy
 #  - TEST_SUITE=vsite
@@ -56,7 +56,7 @@ before_script:
   - bash scripts/build
 
   # Configure MySQL.
-  - echo -e "[server]\nmax_allowed_packet=200M" | sudo tee -a /etc/mysql/conf.d/drupal.cnf
+  - echo -e "[server]\nmax_allowed_packet=256M" | sudo tee -a /etc/mysql/conf.d/drupal.cnf
   - echo -e "\nwait_timeout=300" | sudo tee -a /etc/mysql/conf.d/drupal.cnf
   - echo -e "\nmax_connections=250" | sudo tee -a /etc/mysql/conf.d/drupal.cnf
   - sudo service mysql restart
