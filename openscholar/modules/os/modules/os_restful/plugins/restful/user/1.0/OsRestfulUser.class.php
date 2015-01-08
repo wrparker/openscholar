@@ -24,9 +24,16 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
     );
 
     $public_fields['role'] = array(
-      'property' => 'uid',
+      'property' => 'roles',
       'process_callbacks' => array(
         array($this, 'getRoles'),
+      ),
+    );
+
+    $public_fields[OG_AUDIENCE_FIELD] = array(
+      'property' => OG_AUDIENCE_FIELD,
+      'process_callbacks' => array(
+        array($this, 'vsiteFieldDisplay'),
       ),
     );
 
@@ -50,7 +57,26 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
     return parent::createEntity();
   }
 
-  public function getRoles($value) {
-    return user_load($value)->roles;
+  /**
+   * Refactor the roles property with rid-name format.
+   */
+  public function getRoles($roles) {
+    $return = array();
+    foreach ($roles as $role) {
+      $info = user_role_load($role);
+      $return[$info->rid] = $info->name;
+    }
+    return $return;
+  }
+
+  /**
+   * Display the id and the title of the group.
+   */
+  public function vsiteFieldDisplay($values) {
+    $groups = array();
+    foreach ($values as $value) {
+      $groups[] = array('title' => $value->title, 'id' => $value->nid);
+    }
+    return $groups;
   }
 }
