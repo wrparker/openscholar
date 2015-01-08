@@ -6,7 +6,6 @@ Feature:
     Given I visit "john/about"
      Then I should see the meta tag "description" with value "Page about john"
 
-    
   @api @misc
   Scenario: Testing custom metatags.
     Given I am logging in as "john"
