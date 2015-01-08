@@ -1,14 +1,16 @@
 Feature:
   Testing the harvard courses import mechanism.
 
-  @api @harvard
+  @javascript @harvard
   Scenario: Importing courses and test their grouping to the correct sites.
     Given I am logging in as "admin"
 
     # Define harvard courses
      When I set feature "edit-spaces-features-harvard-courses" to "Public" on "john"
       And I set courses to import
-      And I refresh courses
+      And I visit "john/courses"
+      And I click "Refresh courses"
+      And I sleep for "5"
       And I visit "john/courses"
       And I should see "(Re)fabricating Tectonic Prototypes"
 
@@ -22,7 +24,7 @@ Feature:
       And I visit "john/courses"
      Then I should see "(Re)fabricating Tectonic Prototypes"
 
-  @api @harvard
+  @javascript @harvard
     Scenario: Testing the hvarvard courses bread crumb.
       Given I visit "john/courses"
        When I click "(Re)fabricating Tectonic Prototypes"
