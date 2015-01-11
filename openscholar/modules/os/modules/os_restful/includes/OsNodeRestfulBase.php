@@ -38,6 +38,15 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
       'sub_property' => 'value',
     );
 
+    if (field_info_instance($this->getEntityType(), 'field_upload', $this->getBundle())) {
+      $public_fields['files'] = array(
+        'property' => 'field_upload',
+        'process_callbacks' => array(
+          array($this, 'fileFieldDisplay'),
+        ),
+      );
+    }
+
     return $public_fields;
   }
 
@@ -53,6 +62,25 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
    */
   public function dateProcess($value) {
     return format_date($value[0]);
+  }
+
+  /**
+   * Process the file field.
+   */
+  public function fileFieldDisplay($files) {
+    $return = array();
+
+    foreach ($files as $file) {
+      $return[] = array(
+        'fid' => $file['fid'],
+        'filemime' => $file['filemime'],
+        'name' => $file['filename'],
+        'uri' => $file['uri'],
+        'url' => file_create_url($files['uri']),
+      );
+    }
+
+    return $return;
   }
 
 }
