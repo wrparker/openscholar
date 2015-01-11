@@ -978,8 +978,7 @@ body.page-iqss-gking-research-group h3 {
   display:inline;
   }
 
-.node-presentation.node-teaser div.field-type-file,
-.node-presentation.node-teaser .date-display-single {
+.node-presentation.node-teaser div.field-type-file {
   display:inline-block;
 }
 

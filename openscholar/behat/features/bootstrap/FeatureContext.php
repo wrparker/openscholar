@@ -1806,7 +1806,7 @@ class FeatureContext extends DrupalContext {
 
     return array(
       new Step\When('I visit "' . $vsite . '/cp/settings"'),
-      new Step\When('I fill in "Custom domain name" with "' . $domain .'"'),
+      new Step\When('I fill in "Custom domain name" with "' . $domain . '"'),
       new Step\When('I check the box "Share domain name"'),
       new Step\When('I press "edit-submit"'),
     );
