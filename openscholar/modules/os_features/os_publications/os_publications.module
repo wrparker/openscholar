@@ -1252,8 +1252,9 @@ function os_publications_field_attach_load($entity_type, $entities, $view_mode) 
       if ($e->type != 'biblio') continue;
 
       if (!empty($e->field_biblio_image) && isset($e->title)) {
-        $e->field_biblio_image[LANGUAGE_NONE][0]['alt'] = $e->title;
-        $e->field_biblio_image[LANGUAGE_NONE][0]['title'] = $e->title;
+        $stripped_title = html_entity_decode(strip_tags(htmlspecialchars_decode($e->title)), ENT_XHTML, "UTF-8");
+        $e->field_biblio_image[LANGUAGE_NONE][0]['alt'] = $stripped_title;
+        $e->field_biblio_image[LANGUAGE_NONE][0]['title'] = $stripped_title;
       }
     }
   }
