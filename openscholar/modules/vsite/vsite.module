@@ -3193,21 +3193,41 @@ function vsite_og_permission() {
       'title' => t('Upload files'),
       'description' => t('Add files to system.'),
       'os_override' => TRUE,
+      'default role' => array(
+        'vsite user',
+        'content editor',
+        'vsite admin',
+      )
     ),
     'add media from remote sources' => array(
       'title' => t('Add 3rd party media to system.'),
       'description' => t('Add rich media like youtube videos to system.'),
       'os_override' => TRUE,
+      'default role' => array(
+        'vsite user',
+        'content editor',
+        'vsite admin',
+      )
     ),
     'edit any files' => array(
       'title' => t('Edit files'),
       'description' => t('Edit files and rich media.'),
       'os_override' => TRUE,
+      'default role' => array(
+        'vsite user',
+        'content editor',
+        'vsite admin',
+      )
     ),
     'delete any files' => array(
       'title' => t('Delete files'),
       'description' => t('Delete files and rich media from system.'),
-      'os_override' => TRUE
+      'os_override' => TRUE,
+      'default role' => array(
+        'vsite user',
+        'content editor',
+        'vsite admin',
+      )
     )
   );
 }

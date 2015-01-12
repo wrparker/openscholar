@@ -712,5 +712,39 @@ function vsite_update_7026() {
   return $counter . " " . t('aliases fixed.');
 }
 
+/**
+ * Adds file-related permissions to default site roles.
+ */
+function vsite_update_7027() {
+  $permissions = array(
+    'create files',
+    'add media from remote sources',
+    'edit any files',
+    'delete any files',
+  );
+
+  $group_bundles = og_get_all_group_bundle('node');
+  $default_roles = array('vsite admin', 'content editor', 'vsite user');
+
+  // handle the defaults
+  foreach (array_keys($group_bundles) as $bundle) {
+    $og_roles = og_roles('node', $bundle);
+    foreach ($default_roles as $role) {
+      $rid = array_search($role, $og_roles);
+      og_role_grant_permissions($rid, $permissions);
+    }
+  }
+
+  // handle the overridden roles
+  $results = db_query("SELECT ogr.*
+    FROM og_role ogr
+    WHERE ogr.name IN('vsite user','vsite admin','content editor')
+      AND ogr.gid >= 1");
+
+  // For each of the roles add the permissions that are missing.
+  foreach ($results as $r) {
+    og_role_grant_permissions($r->rid, $permissions);
+  }
+}
 
 
