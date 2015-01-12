@@ -17,9 +17,13 @@ class OsRestfulVariables extends OsRestfulSpaces {
     parent::checkGroupAccess();
     $account = $this->getAccount();
 
-    if (!spaces_access_admin($account, $this->space)) {
+    if (user_access('administer group', $account)) {
+      return;
+    }
+
+    if ($this->group->author->getIdentifier() != $account->uid) {
       // The current user can't manage boxes.
-      $this->throwException("You can't manage layout in this vsite.");
+      $this->throwException('You are not authorised to manage the variables of the group.');
     }
   }
 
@@ -34,7 +38,7 @@ class OsRestfulVariables extends OsRestfulSpaces {
    * }
    */
   public function updateSpace() {
-    $this->createUpdateVariable();
+    return $this->createUpdateVariable();
   }
 
   /**
@@ -48,7 +52,7 @@ class OsRestfulVariables extends OsRestfulSpaces {
    * }
    */
   public function createSpace() {
-    $this->createUpdateVariable();
+    return $this->createUpdateVariable();
   }
 
   /**

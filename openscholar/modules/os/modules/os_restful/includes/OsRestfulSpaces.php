@@ -31,6 +31,13 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
   protected $objectType = '';
 
   /**
+   * @var EntityMetadataWrapper
+   *
+   * The group wrapper object.
+   */
+  protected $group;
+
+  /**
    * Overrides \RestfulDataProviderEFQ::controllersInfo().
    */
   public static function controllersInfo() {
@@ -110,6 +117,8 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
       // No vsite context.
       $this->throwException('The vsite ID is missing.');
     }
+
+    $this->group = entity_metadata_wrapper('node', $this->space->og);
   }
 
   /**
