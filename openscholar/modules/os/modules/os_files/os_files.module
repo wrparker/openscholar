@@ -1474,10 +1474,6 @@ function os_files_preprocess_image_formatter(&$variables) {
   elseif (empty($item['title'])) {
     $item['title'] = $item['filename'];
   }
-  
-  // remove HTML from 'alt' and 'title' attributes
-  $item['alt'] = strip_tags(html_entity_decode($item['alt']));
-	$item['title'] = strip_tags(html_entity_decode($item['title']));
 }
 
 /**
@@ -1815,8 +1811,8 @@ function os_files_field_formatter_view($entity_type, $entity, $field, $instance,
             'title' => theme('image_style', array(
               'path' => $i['uri'],
               'style_name' => 'thumbnail',
-              'title' => strip_tags(html_entity_decode($title)),
-              'alt' => strip_tags(html_entity_decode($alt)),
+              'title' => $title,
+              'alt' => $alt,
               'width' => $image_info['width'],
               'height' => $image_info['height']
             )),
