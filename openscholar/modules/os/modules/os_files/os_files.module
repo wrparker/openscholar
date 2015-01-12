@@ -1798,13 +1798,11 @@ function os_files_field_formatter_view($entity_type, $entity, $field, $instance,
       )
     )
   );
-dvm($display['type'], 'display[type] in os_files_field_formatter_view');
   switch ($display['type']) {
     case 'os_files_image_list' :
       $images = array();
       $videos = array();
       $other = array();
-dvm($items, 'items in os_files_field_formatter_view');
       foreach ( $items as $i ) {
         if ($i['type'] == 'image') {
           $title = field_get_items('file', ( object ) $i, 'field_file_image_title_text');
@@ -1812,7 +1810,6 @@ dvm($items, 'items in os_files_field_formatter_view');
           $alt = field_get_items('file', ( object ) $i, 'field_file_image_alt_text');
           $alt = isset($alt[0]) ? $alt[0]['value'] : $i['filename'];
           $image_info = image_get_info($i['uri']);
-dvm('in $items loop');
           $images[] = array(
             'href' => file_create_url($i['uri']),
             'title' => theme('image_style', array(
