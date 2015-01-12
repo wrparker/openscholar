@@ -52,7 +52,7 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
    * {@inheritdoc}
    */
   public function publicFieldsInfo() {
-    return $this->simpleFieldsInfo(array('sid', 'type', 'id', 'object_id', 'object_type', 'value'));
+    return $this->simpleFieldsInfo(array('type', 'id', 'object_id', 'object_type', 'value'));
   }
 
   /**
@@ -80,6 +80,10 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
 
     if ($this->objectType) {
       $query->condition('object_type', $this->objectType);
+    }
+
+    if (!empty($_GET['vsite'])) {
+      $query->condition('id', $_GET['vsite']);
     }
   }
 
@@ -149,7 +153,10 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
    *   The clean request object convert ot a std object.
    */
   public function validate() {
-    $handler = entity_validator_get_schema_validator($this->validateHandler);
+    if (!$handler = entity_validator_get_schema_validator($this->validateHandler)) {
+      return;
+    }
+
     $result = $handler->validate($this->object, TRUE);
 
     $errors_output = array();
