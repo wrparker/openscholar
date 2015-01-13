@@ -1,25 +1,27 @@
-
 ;----------// Theme Information
 
   name        = Redhead
   description = A public theme for use in OpenScholar.
   core        = 7.x
-  base theme  = os_basetheme
+  base theme  = hwpi_basetheme
   release     = 7.x-3.x
   engine      = phptemplate
   screenshot  = screenshot.png
-  flavor_name = "Crimson"
+   flavor_name = "Crimson"
   plugins[os][flavor] = flavors
+
 
 ;----------// OpenScholar
 
-os[theme_type]   = 'vsite'
-os[theme_access] = 'public'
+  os[theme_type]    = 'vsite'
+  os[theme_access]  = 'public'
+  os[cp_layout_css] = cp-layout-map.css
+
+
 
 ;----------// Stylesheets
-    
-    stylesheets[screen][] = css/redhead.responsive.layout.css
-    stylesheets[screen][] = css/redhead.css
+
+  stylesheets[screen][] = css/redhead.css
 
 
 
@@ -32,7 +34,7 @@ os[theme_access] = 'public'
   settings[bigscreen_max_width_unit] = 'px'
   settings[bigscreen_page_width]     = 100
   settings[bigscreen_sidebar_first]  = 180
-  settings[bigscreen_sidebar_second] = 200
+  settings[bigscreen_sidebar_second] = 260
   settings[bigscreen_set_max_width]  = 1
   settings[bigscreen_max_width]      = 1140
   settings[bigscreen_media_query]    = 'only screen and (min-width:1025px)'
@@ -76,23 +78,3 @@ os[theme_access] = 'public'
   settings[smartphone_portrait_sidebar_first]  = 100
   settings[smartphone_portrait_sidebar_second] = 100
   settings[smartphone_portrait_media_query]    = 'only screen and (max-width:320px)'
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
