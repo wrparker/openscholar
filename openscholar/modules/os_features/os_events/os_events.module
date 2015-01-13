@@ -876,7 +876,7 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
   );
 
   // Set the default time for a reminder to be a day before the event.
-  $event_date = reset($wrapper->field_date->value());
+  $event_date = $wrapper->field_date->get(0)->value();
   $reminder = empty($reminder_date) ? strtotime('-1 day', strtotime($event_date['value'])) : strtotime($reminder_date);
   $form['reminder']['reminder_settings']['reminder_date'] = array(
     '#type' => 'date_popup',
@@ -893,14 +893,13 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
 
   // Remove the template, reminder date is no longer inside a container.
   $form['reminder']['reminder_settings']['reminder_template'] = $form['reminder']['reminder_settings']['reminder_template'] + array(
-    '#access' => FALSE,
-    '#value' => variable_get('os_reminder_template', "
+    '#access' => TRUE,
+    '#default_value' => variable_get('os_reminder_template', "
 Hello [registration:author:name],
 
-You request to send a reminder for the event <a href='[node:url]'>[node:title]</a>.
-    "),
+You request to send a reminder for the event <a href='[node:url]'>[node:title]</a>."),
   );
-  $form['reminder']['reminder_settings']['token_tree']['#access'] = FALSE;
+  $form['reminder']['reminder_settings']['token_tree']['#access'] = TRUE;
   $form['reminder']['reminder_settings']['#type'] = 'container';
   $form['reminder']['#type'] = 'container';
   $form['settings']['#access'] = FALSE;
