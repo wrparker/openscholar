@@ -95,7 +95,3 @@ function os_news_update_7006() {
 
   features_revert($revert);
 }
-
-function os_news_update_7007() {
-  features_revert(array('os_news' => array('variable'))); //modified one strongarm setting
-}
