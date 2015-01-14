@@ -1358,7 +1358,13 @@ function os_publications_revert_citeproc_style($name, $path = '') {
 function os_publications_apachesolr_index_document_build_node(ApacheSolrDocument $doc, $entity, $env_id) {
   if ($entity->type == 'biblio') {
     foreach ($entity->biblio_contributors as $c) {
-      $doc->addField('contributors', $c['name']);
+      $doc->addField('sm_contributors', $c['name']);
     }
   }
+}
+
+function os_publications_apachesolr_query_alter($query) {
+  $params['qf']['sm_contributors'] = 'sm_contributors^1.0';
+  $query->addParams($params);
+  drush_print_r($query);
 }
