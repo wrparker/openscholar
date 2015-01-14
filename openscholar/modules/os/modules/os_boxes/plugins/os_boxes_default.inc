@@ -138,10 +138,6 @@ abstract class os_boxes_default extends boxes_box {
     }
     $this->cache_id .= ':' . $this->delta;
 
-    // Add the user id to the CID of the widget.
-    global $user;
-    $this->cache_id .= ':' . $user->uid;
-
     if ($page) {
       $this->cache_id .= ':' . $page;
     }
@@ -179,7 +175,8 @@ abstract class os_boxes_default extends boxes_box {
 
     $js = array();
     $css = array();
-    if (!$cache = cache_get($this->cache_id, 'cache_os_boxes')) {
+    $uid = $GLOBALS['user']->uid;
+    if (!$cache = cache_get($this->cache_id . ':' . $uid, 'cache_os_boxes')) {
       // No cache exists.
       return FALSE;
     }
@@ -209,7 +206,7 @@ abstract class os_boxes_default extends boxes_box {
     }
 
     drupal_add_http_header('x-drupal-cache-os-boxes-plugin', $this->plugin_key, TRUE);
-    drupal_add_http_header('x-drupal-cache-os-boxes-cache-id', $this->cache_id, TRUE);
+    drupal_add_http_header('x-drupal-cache-os-boxes-cache-id', $this->cache_id . ':'. $uid, TRUE);
 
     return $cache->data;
   }
@@ -222,7 +219,7 @@ abstract class os_boxes_default extends boxes_box {
       return array();
     }
 
-    if ($assets_cache = cache_get('assets:' . $this->cache_id, 'cache_os_boxes')) {
+    if ($assets_cache = cache_get('assets:' . $this->cache_id.':'.$GLOBALS['user']->uid, 'cache_os_boxes')) {
       $assets = unserialize($assets_cache->data);
       return $assets;
     }
@@ -299,6 +296,9 @@ abstract class os_boxes_default extends boxes_box {
       return;
     }
 
+    // add the current user id to the cache id
+    $cid = $this->cache_id . ':' . $GLOBALS['user']->uid;
+
     if (!empty($this->cache_time)) {
       $expire = is_string($this->cache_time) ? strtotime($this->cache_time) : $this->cache_time;
     }
@@ -350,8 +350,8 @@ abstract class os_boxes_default extends boxes_box {
     }
 
     // cache everything we just found
-    cache_set($this->cache_id, $cache, 'cache_os_boxes', $expire);
-    $cache_id = 'assets:' . $this->cache_id;
+    cache_set($cid, $cache, 'cache_os_boxes', $expire);
+    $cache_id = 'assets:' . $cid;
     cache_set($cache_id, serialize($new_assets), 'cache_os_boxes', $expire);
   }
 
