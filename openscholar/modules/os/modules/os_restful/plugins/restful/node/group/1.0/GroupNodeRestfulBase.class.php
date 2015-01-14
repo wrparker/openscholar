@@ -19,7 +19,7 @@ class GroupNodeRestfulBase extends OsNodeRestfulBase {
     );
 
     $public_fields['purl'] = array(
-      'property' => 'purl',
+      'property' => 'domain',
     );
 
     $public_fields['type'] = array(
@@ -38,7 +38,7 @@ class GroupNodeRestfulBase extends OsNodeRestfulBase {
   public function queryForListFilter(\EntityFieldQuery $query) {
     parent::queryForListFilter($query);
 
-    $query->propertyCondition('type', array('personal', 'project', 'department'), 'IN');
+    $query->propertyCondition('type', OS_RESTFUL_GROUP_BUNDLES, 'IN');
   }
 
   /**
@@ -90,7 +90,7 @@ class GroupNodeRestfulBase extends OsNodeRestfulBase {
       $space->controllers->variable->set('spaces_preset_og', $request['preset']);
     }
 
-    if ($purl = $wrapper->value()->purl) {
+    if ($purl = $wrapper->domain->value()) {
       $modifier = array(
         'provider' => 'spaces_og',
         'id' => $id,
@@ -100,15 +100,4 @@ class GroupNodeRestfulBase extends OsNodeRestfulBase {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function viewEntity($id) {
-    // For some reason the getter callback declared for the purl isn't working.
-    // Overwriting the method would much more easy in order to display the
-    // purl.
-    $entity = parent::viewEntity($id);
-    $entity['purl'] = node_load($id)->purl;
-    return $entity;
-  }
 }
