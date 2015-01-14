@@ -58,6 +58,9 @@ function os_restful_purl_set(&$data, $name, $value, $langcode, $type, $info) {
   $data->purl = $value;
 }
 
+/**
+ * Return the value of the purl for the node.
+ */
 function os_restful_purl_get($data, array $options, $name, $type, $info) {
   return $data->purl;
 }
