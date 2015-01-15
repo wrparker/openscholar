@@ -148,6 +148,7 @@ class PARSEENTRIES
     $this->parseFile = TRUE;
     $this->outsideEntry = TRUE;
     $this->translate_latex = TRUE;
+    $this->messages = array();
   }
   // Open bib file
   /**
