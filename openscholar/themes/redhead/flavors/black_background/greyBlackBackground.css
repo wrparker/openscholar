@@ -1,9 +1,21 @@
-  
+ 
 body {
 color: #FFF;
 background:#000;
 }  
    
+
+#search-block-form input.form-submit, 
+#search-block-form #edit-submit, 
+#search-form #edit-submit {
+	background-color: #000;
+}
+   
+   
+.ui-tabs .ui-tabs-panel ,
+.calendar-calendar td,
+.calendar-calendar td a,   
+li a.active,   
 .ui-tabs .ui-state-default a, 
 .ui-tabs .ui-state-default a:link,   
 ul.nice-menu a,   
@@ -35,12 +47,21 @@ a:hover {
 }
 
 
+.node-class .field-name-field-semester, 
+.node-class .field-name-field-offered-year, 
+.node-class .field-name-field-class-link, 
+.node-class-material .field-name-field-class,
+.jcarousel-container,
+.os-files-other-list tr, 
+.os-files-other-list td,
 #footer,
 #footer a  {
     color:#FFF;
     background: #000;
     }
     
+  ul.primary li a,  
+  ul.primary li.active a,  
  .ui-tabs ul.ui-tabs-nav li,   
 .accordion .ui-state-default, 
 .accordion .ui-widget-content .ui-state-default, 
@@ -90,7 +111,14 @@ border: 1px solid #000;
 background: #222;
 }
 
-.ui-tabs .ui-tabs-panel {
-color: #FFF;
+
+.calendar-calendar tr {
+background-color: #444;
 }
 
+
+
+
+.calendar-calendar tr td.today {
+	color:#000;
+}

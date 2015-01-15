@@ -773,7 +773,7 @@ function os_preprocess_page(&$vars) {
           'class' => array('add_new'),
         ),
         'html' => FALSE,
-        'query' => isset($link['query'])?$link['query']:array(),
+        'query' => isset($link['query']) ? $link['query'] : array(),
       ),
     );
   }
