@@ -899,7 +899,7 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
   $form['reminder']['reminder_settings']['reminder_template'] = $form['reminder']['reminder_settings']['reminder_template'] + array(
     '#access' => FALSE,
     '#value'  => variable_get('os_reminder_template', "
-Hello [registration:attendee_name],
+Hello[registration:attendee_name],
 
 You request to send a reminder for the event <a href='[node:url]'>[node:title]</a>."),
   );
@@ -943,7 +943,7 @@ function os_events_tokens($type, $tokens, array $data = array(), array $options 
 
   $wrapper = entity_metadata_wrapper('registration', $data['registration']);
 
-  $replacements['[registration:attendee_name]'] = ' ' . $wrapper->field_full_name->value() ? $wrapper->field_full_name->value() : '';
+  $replacements['[registration:attendee_name]'] = $wrapper->field_full_name->value() ? ' ' . $wrapper->field_full_name->value() : '';
 
   return $replacements;
 }
