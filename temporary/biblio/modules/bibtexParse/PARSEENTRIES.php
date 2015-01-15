@@ -148,7 +148,7 @@ class PARSEENTRIES
     $this->parseFile = TRUE;
     $this->outsideEntry = TRUE;
     $this->translate_latex = TRUE;
-    $this->messages = array();
+    $this->errors = array();
   }
   // Open bib file
   /**
@@ -352,7 +352,7 @@ class PARSEENTRIES
       $this->undefinedStrings[] = $string; // Undefined string that is not a year etc.
       return '';
     }
-    return removeNestedBraces($string);
+    return $this->removeNestedBraces($string);
   }
 
   // This function works like explode('#',$val) but has to take into account whether
@@ -552,26 +552,26 @@ class PARSEENTRIES
     }
     return $this->entries;
   }
-}
 
-// remove nested braces inside field value
-function removeNestedBraces($string) {
-  $bracestart = strrpos($string, "{");
-  $braceend = strpos($string, "}");
+  // remove nested braces inside field value
+  function removeNestedBraces($string) {
+    $bracestart = strrpos($string, "{");
+    $braceend = strpos($string, "}");
 
-  if ($bracestart !== FALSE && $braceend !== FALSE) {
-    if ($bracestart > $braceend) {
-      $braceend = $bracestart + strpos(substr($string, $bracestart), "}");
-    }
-    $bracestart++;
-    $braceend--;
+    if ($bracestart !== FALSE && $braceend !== FALSE) {
+      if ($bracestart > $braceend) {
+        $braceend = $bracestart + strpos(substr($string, $bracestart), "}");
+      }
+      $bracestart++;
+      $braceend--;
 
-    $string = substr($string, 0, $braceend + 1) . substr($string, $braceend + 2);
-    $string = substr($string, 0, $bracestart - 1) . substr($string, $bracestart);
+      $string = substr($string, 0, $braceend + 1) . substr($string, $braceend + 2);
+      $string = substr($string, 0, $bracestart - 1) . substr($string, $bracestart);
     
-    return removeNestedBraces($string);
-  }
-  else {
-    return $string;
+      return $this->removeNestedBraces($string);
+    }
+    else {
+      return $string;
+    }
   }
 }
