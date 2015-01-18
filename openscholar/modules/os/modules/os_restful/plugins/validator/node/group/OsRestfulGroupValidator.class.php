@@ -28,9 +28,29 @@ class OsRestfulGroupValidator extends EntityValidateBase {
       'id' => $wrapper->getIdentifier(),
     );
 
-    if (!purl_validate($modifier)) {
+    if (strlen($modifier['value']) < 3) {
+      $this->setError('domain', 'The purl is less then 3 characters.');
+    }
+
+    if ($this->countPurlInstances($purl)) {
       $this->setError('domain', 'It seems that there is already a vsite with this purl.');
     }
+    
+    if (!valid_url($modifier['value']) || !_vsite_register_valid_url($modifier['value'])) {
+      $this->setError('domain', 'The purl have bad characters.');
+    }
+  }
+
+  /**
+   * Count the instances of a given purl.
+   */
+  private function countPurlInstances($value) {
+    $query = db_select('purl', 'p');
+    return $query
+      ->fields('p')
+      ->condition('value', $value)
+      ->execute()
+      ->rowCount();
   }
 
 }
