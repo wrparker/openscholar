@@ -14,7 +14,10 @@ class OsRestfulBoxes extends OsRestfulSpaces {
    * Verify the user have access to the manage boxes.
    */
   public function checkGroupAccess() {
-    parent::checkGroupAccess();
+    if (parent::checkGroupAccess()) {
+      return;
+    }
+
     $account = $this->getAccount();
 
     $access = !og_user_access('node', $this->space->id, 'administer boxes', $account) ||
@@ -77,8 +80,6 @@ class OsRestfulBoxes extends OsRestfulSpaces {
     // Validate the object from the request.
     $this->validate();
 
-    $space = spaces_load('og', $this->object->vsite);
-
     // Creating a new widget.
     $options = array(
       'delta' => time(),
@@ -86,7 +87,7 @@ class OsRestfulBoxes extends OsRestfulSpaces {
 
     // Create the box the current vsite.
     $box = boxes_box::factory($this->object->widget, $options);
-    $space->controllers->boxes->set($box->delta, $box);
+    $this->space->controllers->boxes->set($box->delta, $box);
 
     return (array) $box;
   }
@@ -104,11 +105,11 @@ class OsRestfulBoxes extends OsRestfulSpaces {
     // Check group access.
     $this->checkGroupAccess();
 
+    ctools_include('layout', 'os');
+
     $delta = $this->object->delta;
 
-    ctools_include('layout', 'os');
-    os_layout_block_delete('boxes-' . $delta);
-
+    os_layout_block_delete($delta, FALSE, $this->space);
     $this->space->controllers->boxes->del($delta);
   }
 }

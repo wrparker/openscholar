@@ -13,7 +13,7 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
   protected $object;
 
   /**
-   * @var space
+   * @var vsite
    * The space object.
    */
   protected $space;
@@ -119,6 +119,10 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
     }
 
     $this->group = entity_metadata_wrapper('node', $this->space->og);
+
+    if (user_access('administer group', $this->getAccount())) {
+      return TRUE;
+    }
   }
 
   /**
