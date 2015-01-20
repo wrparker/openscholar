@@ -23,10 +23,16 @@ drush php-eval "apachesolr_environment_delete('acquia_search_server_1');"
 # Add a local Solr index.
 drush php-eval "apachesolr_environment_save(array('env_id' => 'default', 'name' => 'default', 'url' => 'http://localhost:8983/solr', 'service_class' => ''));"
 
-
 # Index Solr.
 # @todo: Allow switch to index Solr.
 # drush solr-mark-all; drush solr-index
+
+# Remove traces for emails.
+echo "Remove traces for emails."
+drush sql-query "UPDATE users SET mail='foo@bar.com'"
+drush sql-query "UPDATE field_data_field_email SET field_email_value='foo@bar.com'"
+drush sql-query "UPDATE field_revision_field_email SET field_email_value='foo@bar.com'"
+drush sql-query "UPDATE registration SET anon_mail='foo@bar.com'"
 
 # Set teh file system
 drush vset file_public_path "sites/default/files"
