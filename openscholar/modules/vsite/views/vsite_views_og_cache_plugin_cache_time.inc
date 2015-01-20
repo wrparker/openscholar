@@ -17,7 +17,7 @@ class vsite_views_og_cache_plugin_cache_time extends views_og_cache_plugin_cache
   function add_calendar_key_data(&$key_data) {
     // Add OS Calendar's specific $_GET keys.
     foreach (array('type', 'year', 'month', 'week', 'day') as $key) {
-      if (isset($_GET[$key])) {
+      if (isset($_GET[$key]) && is_array($_GET[$key])) {
         $key_data[$key] = $_GET[$key];
       }
     }
