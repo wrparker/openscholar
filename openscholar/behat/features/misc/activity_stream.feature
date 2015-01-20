@@ -6,7 +6,7 @@ Feature:
     Given I visit "/activity"
      Then I should see "John created Software Project: Windows 7"
 
-  @api @misc
+  @api @misc_first
   Scenario: Check that only public messages are displayed on /activity.json
     Given I am logging in as "john"
      When I create a new "blog" entry with the name "public unique title"

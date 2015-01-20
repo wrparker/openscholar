@@ -2,7 +2,7 @@ Feature: Testing the tagged items.
   Testing that two nodes tagged to one term and only one node tagged to another
   term.
 
-  @api @misc
+  @api @misc_first
   Scenario: verify that the tagged items filter work as expected.
       Given I am logging in as "admin"
         And I visit "john/classes"

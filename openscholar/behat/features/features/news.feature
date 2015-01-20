@@ -1,7 +1,7 @@
 Feature:
   Testing the news tab.
 
-  @api @features
+  @api @features_second
   Scenario: Test the News tab
     Given I visit "john"
      When I click "News"

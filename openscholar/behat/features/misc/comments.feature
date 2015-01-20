@@ -1,7 +1,7 @@
 Feature:
   Testing the comment publishing for a blog entry.
 
-  @api @misc
+  @api @misc_first
   Scenario: Check that a user can create a new blog post
     Given I am logging in as "john"
      When I visit "john/blog"
@@ -9,7 +9,7 @@ Feature:
       And I add a comment "Lorem ipsum john doe" using the comment form
      Then I should see "Lorem ipsum john doe"
 
-  @api @misc
+  @api @misc_first
   Scenario: Check that a comment is displayed in the "recent comments" block
     Given I am logging in as "john"
      When I visit "john/blog"
