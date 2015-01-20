@@ -143,8 +143,8 @@ function theme_os_publications_tabular(&$vars) {
     $theme_image = theme('image_style', array(
       'style_name' => 'book_cover',
       'path' => $book_image['uri'],
-      'title' => html_entity_decode(strip_tags(htmlspecialchars_decode($book_image['title'])), ENT_XHTML, "UTF-8"),
-      'alt' => html_entity_decode(strip_tags(htmlspecialchars_decode($book_image['alt'])), ENT_XHTML, "UTF-8"),
+      'title' => html_entity_decode(strip_tags(htmlspecialchars_decode($book_image['title'])), ENT_COMPAT, "UTF-8"),
+      'alt' => html_entity_decode(strip_tags(htmlspecialchars_decode($book_image['alt'])), ENT_COMPAT, "UTF-8"),
     ));
     $book_output = '<div class="publication-cover-container">' . $theme_image . '</div>';
     // Add the image to the output under the citation.
