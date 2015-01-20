@@ -29,15 +29,15 @@ class OsRestfulGroupValidator extends EntityValidateBase {
     );
 
     if (strlen($modifier['value']) < 3) {
-      $this->setError('domain', 'The purl is less then 3 characters.');
+      $this->setError('domain', 'The site address should be at least 3 characters.');
     }
 
     if ($this->countPurlInstances($purl)) {
-      $this->setError('domain', 'It seems that there is already a vsite with this purl.');
+      $this->setError('domain', 'A site with this address already exists.');
     }
     
     if (!valid_url($modifier['value']) || !_vsite_register_valid_url($modifier['value'])) {
-      $this->setError('domain', 'The purl have bad characters.');
+      $this->setError('domain', 'The site address has invalid characters.');
     }
   }
 
