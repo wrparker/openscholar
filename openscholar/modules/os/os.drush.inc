@@ -159,7 +159,7 @@ function drush_os_domain_build() {
     $all_domains = array_reduce($multisites, create_function('$ret, $arr', 'return array_merge($ret, $arr);'), array());
 
     ob_start();
-    $response = drush_invoke_process(drush_sitealias_get_record('@self'), 'ac-domain-list', array(), array() );
+    $response = drush_invoke('ac-domain-list');
     $raw = ob_get_clean();
     
     if ($response['error_status']) {
