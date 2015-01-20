@@ -1727,6 +1727,12 @@ function os_js_alter(&$javascript) {
     return;
   }
 
+  $menu = menu_get_item();
+  // Don't change the weight in admin paths.
+  if (path_is_admin($menu['path'])) {
+    return;
+  }
+
   foreach ($javascript as $url => $js) {
     if (strpos($url, 'colorbox.js')) {
       $file = drupal_get_path('module', 'os') . '/theme/os_colorbox.js';
