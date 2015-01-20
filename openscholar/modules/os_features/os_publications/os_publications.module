@@ -1351,3 +1351,19 @@ function os_publications_revert_citeproc_style($name, $path = '') {
 
   return true;
 }
+
+/**
+ * Adds full author names to index
+ */
+function os_publications_apachesolr_index_document_build_node(ApacheSolrDocument $doc, $entity, $env_id) {
+  if ($entity->type == 'biblio') {
+    foreach ($entity->biblio_contributors as $c) {
+      $doc->addField('tm_contributors', $c['name']);
+    }
+  }
+}
+
+function os_publications_apachesolr_query_alter($query) {
+  $params['qf']['tm_contributors'] = 'tm_contributors^30';
+  $query->addParams($params);
+}
