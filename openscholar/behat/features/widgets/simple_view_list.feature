@@ -1,7 +1,7 @@
 Feature:
   Testing the simple view widget.
 
-  @api @last
+  @api @widgets
   Scenario: Verify the simple view widget works after tagging node to term.
      Given I am logging in as "john"
        And I set the variable "os_boxes_cache_enabled" to "1"
