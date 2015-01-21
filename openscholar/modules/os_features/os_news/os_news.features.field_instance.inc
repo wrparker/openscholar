@@ -544,7 +544,6 @@ function os_news_field_default_field_instances() {
         ),
         'type' => 'og_vocab',
         'weight' => 6,
-        'label' => 'above',
       ),
       'links' => array(
         'label' => 'above',
