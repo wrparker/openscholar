@@ -68,6 +68,7 @@ class OsRestfulBoxes extends OsRestfulSpaces {
    * values: {
    *  vsite: 2,
    *  delta: 1419342352,
+   *  widget: os_taxonomy_fbt,
    *  options: [
    *    description: "Terms"
    *  ]
