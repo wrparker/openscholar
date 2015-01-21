@@ -63,7 +63,6 @@ class GroupNodeRestfulBase extends OsNodeRestfulBase {
       $list[] = array(
         'uid' => $user->uid,
         'name' => $user->name,
-        'email' => $user->mail,
       );
     }
 
