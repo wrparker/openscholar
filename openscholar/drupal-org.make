@@ -1,4 +1,4 @@
-;Drupal.org MakeFile for OpenScholar.
+;Drupal.org MakeFile for OpenScholar
 
 core = 7.x
 api = 2
@@ -25,7 +25,7 @@ projects[boxes][patch][] = "https://www.drupal.org/files/1859150-1-boxes-strict_
 projects[boxes][patch][] = "https://www.drupal.org/files/issues/default_object_empty_value-2042101-3.patch"
 
 projects[calendar][subdir] = "contrib"
-projects[calendar][version] = 3.4
+projects[calendar][version] = 3.5
 projects[calendar][patch][] = "http://raw.github.com/openscholar/openscholar/72d63ee3537c31505b7481975886ec13789feeb5/patches/calendar-fix-week-view-overflow.patch"
 
 projects[colorbox][subdir] = "contrib"

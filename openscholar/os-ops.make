@@ -1,4 +1,4 @@
-; OPS MakeFile for OpenScholar.
+; OPS MakeFile for OpenScholar
 core = 7.x
 api = 2
 
