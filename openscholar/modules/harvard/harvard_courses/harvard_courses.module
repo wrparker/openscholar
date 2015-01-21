@@ -5,6 +5,7 @@
  */
 
 include_once 'harvard_courses.features.inc';
+include_once 'harvard_courses.features.field_base.inc';
 
 /**
  * Implements hook_os_app_info().
@@ -277,7 +278,8 @@ function haravard_courses_sites_nid_by_import_type($import_type, $search_value =
         if ($field == 'field_faculty') {
           $field = 'field_school_name';
           $colum = 'target_id';
-          $value = reset(entity_load('taxonomy_term', NULL, array('name' => $value, 'vid' => $vocabulary->vid)))->tid;
+          $entities = entity_load('taxonomy_term', NULL, array('name' => $value, 'vid' => $vocabulary->vid));
+          $value = reset($entities)->tid;
         }
         $query->fieldCondition($field, $colum, $value);
       }
@@ -358,7 +360,7 @@ function harvard_courses_node_insert($node) {
   $node->skip_og_membership = TRUE;
 
   // Change description field format to full html.
-  $node->field_course_description[LANGUAGE_NONE][0]['format'] = 'full_html';
+  $wrapper->field_course_description->set(array('format' => 'full_html'));
 }
 
 /**
@@ -374,11 +376,10 @@ function harvard_courses_node_presave($node) {
   // Replaces raw values with HTML entities decoded.
   $node->title = _harvard_courses_filter_html_entities($node->title);
 
-  include_once(drupal_get_path('module', 'harvard_courses') . '/harvard_courses.features.field_base.inc');
   $fields = harvard_courses_field_default_field_bases();
   $text = array('text', 'text_with_summary');
   foreach ($fields as $field => $info) {
-    if (!in_array($info['field_config']['type'], $text) || $info['field_instance']['bundle'] != 'harvard_course') {
+    if (!in_array($info['type'], $text) || $node->type != 'harvard_course') {
       continue;
     }
 
@@ -408,7 +409,7 @@ function _harvard_courses_set_timestamp($node) {
     $wrapper->field_timestamp->set($timestamp);
   } catch (Exception $e) {
     $params = array(
-      '@nid' => $node->nid,
+      '@nid' => property_exists($node, 'nid') ? $node->nid : '',
       '@title' => $node->title,
       '@error' => $e->getMessage()
     );
@@ -430,6 +431,7 @@ function _harvard_courses_set_timestamp($node) {
 function harvard_courses_get_timestamp_by_semester(EntityMetadataWrapper $wrapper) {
   $data = explode(' ', str_replace(array('(', ')'), ' ', $wrapper->field_calendar_period->value()));
   $month = $data[0];
+  $year = date('Y');
 
   foreach ($data as $info) {
     // Check this is an integer and the year is grater then 1900.

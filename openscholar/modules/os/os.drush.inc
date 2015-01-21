@@ -159,14 +159,22 @@ function drush_os_domain_build() {
     $all_domains = array_reduce($multisites, create_function('$ret, $arr', 'return array_merge($ret, $arr);'), array());
 
     ob_start();
-    $ac_domain_list = drush_invoke_process(drush_sitealias_get_record('@self'), 'ac-domain-list', array(), array() ); 
-    ob_get_clean();
+    $response = drush_invoke_process(drush_sitealias_get_record('@self'), 'ac-domain-list', array(), array() );
+    $raw = ob_get_clean();
     
-    if ($ac_domain_list['error_status']) {
+    if ($response['error_status']) {
       drush_die('Could not connect to acquia cloud api');
     }
+
+    $raw = explode("\r\n", $raw);
+    $ac_domain_list = array();
+    foreach ($raw as $d) {
+      if (preg_match('|name[\s]+:|', $d)) {
+        $ac_domain_list[] = trim(preg_replace('|name[\s]+:[\s]+|', "", $d));
+      }
+    }
   
-    $ac_domain_list = array_map(create_function('$a', 'return $a["name"];'), $ac_domain_list['object'][1]);
+    //$ac_domain_list = array_map(create_function('$a', 'return $a["name"];'), $ac_domain_list['object'][1]);
     $add = array_diff($all_domains, $ac_domain_list);
     array_pop($ac_domain_list); //last item is original domain and cannot be removed.
     $del = array_diff($ac_domain_list, $all_domains);

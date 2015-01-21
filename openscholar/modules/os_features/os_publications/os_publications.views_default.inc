@@ -243,24 +243,23 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['sorts']['name']['id'] = 'name';
   $handler->display->display_options['sorts']['name']['table'] = 'biblio_types';
   $handler->display->display_options['sorts']['name']['field'] = 'name';
-  /* Contextual filter: Biblio: Author last name */
-  $handler->display->display_options['arguments']['lastname']['id'] = 'lastname';
-  $handler->display->display_options['arguments']['lastname']['table'] = 'biblio_contributor_data';
-  $handler->display->display_options['arguments']['lastname']['field'] = 'lastname';
-  $handler->display->display_options['arguments']['lastname']['default_action'] = 'summary';
-  $handler->display->display_options['arguments']['lastname']['exception']['title_enable'] = TRUE;
-  $handler->display->display_options['arguments']['lastname']['title_enable'] = TRUE;
-  $handler->display->display_options['arguments']['lastname']['title'] = 'Coauthored Publications with: %1';
-  $handler->display->display_options['arguments']['lastname']['default_argument_type'] = 'fixed';
-  $handler->display->display_options['arguments']['lastname']['summary']['number_of_records'] = '0';
-  $handler->display->display_options['arguments']['lastname']['summary']['format'] = 'default_summary';
-  $handler->display->display_options['arguments']['lastname']['summary_options']['base_path'] = 'publications/author';
-  $handler->display->display_options['arguments']['lastname']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['lastname']['specify_validation'] = TRUE;
-  $handler->display->display_options['arguments']['lastname']['limit'] = '0';
-  $handler->display->display_options['arguments']['lastname']['case'] = 'ucwords';
-  $handler->display->display_options['arguments']['lastname']['path_case'] = 'lower';
-  $handler->display->display_options['arguments']['lastname']['transform_dash'] = TRUE;
+  /* Contextual filter: Biblio: Author ID */
+  $handler->display->display_options['arguments']['cid']['id'] = 'cid';
+  $handler->display->display_options['arguments']['cid']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['arguments']['cid']['field'] = 'cid';
+  $handler->display->display_options['arguments']['cid']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['cid']['limit'] = '0';
+  /* Contextual filter: Biblio: Author Name */
+  $handler->display->display_options['arguments']['name']['id'] = 'name';
+  $handler->display->display_options['arguments']['name']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['arguments']['name']['field'] = 'name';
+  $handler->display->display_options['arguments']['name']['default_action'] = 'summary';
+  $handler->display->display_options['arguments']['name']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['name']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['name']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['name']['summary_options']['base_path'] = 'publications/author';
+  $handler->display->display_options['arguments']['name']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['name']['limit'] = '0';
   /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
@@ -284,22 +283,123 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['filters']['current']['operator'] = 'all';
   $handler->display->display_options['filters']['current']['group'] = '0';
   $handler->display->display_options['filters']['current']['expose']['operator'] = FALSE;
+  $export['publication_contributors'] = $view;
 
-  /* Display: Block */
-  $handler = $view->new_display('block', 'Block', 'block');
-  $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['title'] = 'Publications By Co-Author';
-  $handler->display->display_options['defaults']['use_ajax'] = FALSE;
-  $handler->display->display_options['use_ajax'] = TRUE;
-  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
-  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $view = new view();
+  $view->name = 'co_author_list';
+  $view->description = '';
+  $view->tag = 'widgets';
+  $view->base_table = 'node';
+  $view->human_name = 'Co-Author List';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Co-Author List';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['group_by'] = TRUE;
+  $handler->display->display_options['access']['type'] = 'spaces_feature';
+  $handler->display->display_options['access']['spaces_feature'] = 'os_publications';
+  $handler->display->display_options['access']['perm'] = 'access biblio content';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'mini';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['pager']['options']['id'] = '1';
+  $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['pager']['options']['tags']['previous'] = '«';
   $handler->display->display_options['pager']['options']['tags']['next'] = '»';
-  $export['publication_contributors'] = $view;
+  $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['use_ajax'] = TRUE;
+  $handler->display->display_options['row_options']['hide_empty'] = FALSE;
+  $handler->display->display_options['row_options']['inline'] = array(
+    'firstname' => 'firstname',
+    'title' => 'title',
+  );
+  /* Field: Publication: Author ID */
+  $handler->display->display_options['fields']['cid']['id'] = 'cid';
+  $handler->display->display_options['fields']['cid']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['fields']['cid']['field'] = 'cid';
+  $handler->display->display_options['fields']['cid']['label'] = '';
+  $handler->display->display_options['fields']['cid']['exclude'] = TRUE;
+  /* Field: Publication: Author full name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['alter']['trim_whitespace'] = 1;
+  $handler->display->display_options['fields']['name']['exclude'] = TRUE;
+  /* Field: Publication: Author last name */
+  $handler->display->display_options['fields']['lastname']['id'] = 'lastname';
+  $handler->display->display_options['fields']['lastname']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['fields']['lastname']['field'] = 'lastname';
+  $handler->display->display_options['fields']['lastname']['label'] = '';
+  $handler->display->display_options['fields']['lastname']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['lastname']['alter']['trim_whitespace'] = 1;
+  /* Field: Publication: Author first name */
+  $handler->display->display_options['fields']['firstname']['id'] = 'firstname';
+  $handler->display->display_options['fields']['firstname']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['fields']['firstname']['field'] = 'firstname';
+  $handler->display->display_options['fields']['firstname']['label'] = '';
+  $handler->display->display_options['fields']['firstname']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['firstname']['alter']['trim_whitespace'] = 1;
+  $handler->display->display_options['fields']['firstname']['alter']['alter_text'] = 1;
+  $handler->display->display_options['fields']['firstname']['alter']['text'] = '[lastname], [firstname]';
+  $handler->display->display_options['fields']['firstname']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['firstname']['alter']['path'] = 'publications/author/[cid]/[name]';
+  /* Field: COUNT(DISTINCT Content: Title) */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['group_type'] = 'count';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['title']['prefix'] = '(';
+  $handler->display->display_options['fields']['title']['suffix'] = ')';
+  /* Sort criterion: Publication: Author last name */
+  $handler->display->display_options['sorts']['lastname']['id'] = 'lastname';
+  $handler->display->display_options['sorts']['lastname']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['sorts']['lastname']['field'] = 'lastname';
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'biblio' => 'biblio',
+  );
+  /* Filter criterion: Spaces: Content in current space */
+  $handler->display->display_options['filters']['current']['id'] = 'current';
+  $handler->display->display_options['filters']['current']['table'] = 'spaces';
+  $handler->display->display_options['filters']['current']['field'] = 'current';
+  /* Filter criterion: Content: First name not blank */
+  $handler->display->display_options['filters']['firstname']['id'] = 'firstname';
+  $handler->display->display_options['filters']['firstname']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['filters']['firstname']['field'] = 'firstname';
+  $handler->display->display_options['filters']['firstname']['operator'] = '!=';
+  $handler->display->display_options['filters']['firstname']['value'] = '';
+  /* Filter criterion: Content: Last name not blank */
+  $handler->display->display_options['filters']['lastname']['id'] = 'lastname';
+  $handler->display->display_options['filters']['lastname']['table'] = 'biblio_contributor_data';
+  $handler->display->display_options['filters']['lastname']['field'] = 'lastname';
+  $handler->display->display_options['filters']['lastname']['operator'] = '!=';
+  $handler->display->display_options['filters']['lastname']['value'] = '';
+  /* Display: Co-Authors List */
+  $handler = $view->new_display('block', 'Co-Authors List', 'block');
+  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $export['co_author_list'] = $view;
 
   $view = new view();
   $view->name = 'publication_types';

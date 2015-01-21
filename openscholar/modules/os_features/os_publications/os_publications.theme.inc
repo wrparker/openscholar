@@ -59,12 +59,12 @@ function theme_os_publications_tabular(&$vars) {
 
     switch ($f['name']) {
       case 'biblio_url':
-      	if(empty($node->biblio_url)) {
-      	  $data = '<p></p>';
-      	}else {
+        if(empty($node->biblio_url)) {
+          $data = '<p></p>';
+        }else {
           // no need to check plain. l does it for us
           $data = '<p>' . l(!empty($node->biblio_url_title) ? $node->biblio_url_title : 'Website', $value) . '</p>';
-      	}
+        }
         $display_title = FALSE;
         break;
 
@@ -136,14 +136,15 @@ function theme_os_publications_tabular(&$vars) {
   // Add pub-cover-content-wrapper.
   $output .= '<div id="pub-cover-content-wrapper">';
 
-  // Move publication image up under the citation.
+  // Move publication image up under the citation and remove HTML from title
   $book_images = field_get_items('node',$node,'field_biblio_image', $node->language);
   if (!empty($book_images)) {
     $book_image = reset($book_images);
     $theme_image = theme('image_style', array(
       'style_name' => 'book_cover',
       'path' => $book_image['uri'],
-      'title' => $book_image['title'],
+      'title' => html_entity_decode(strip_tags(htmlspecialchars_decode($book_image['title'])), ENT_COMPAT, "UTF-8"),
+      'alt' => html_entity_decode(strip_tags(htmlspecialchars_decode($book_image['alt'])), ENT_COMPAT, "UTF-8"),
     ));
     $book_output = '<div class="publication-cover-container">' . $theme_image . '</div>';
     // Add the image to the output under the citation.
@@ -214,17 +215,17 @@ function _os_publications_plain_citation($node) {
   }
 
   drupal_add_js('function selectText(ele) {
-	try {
-  	var div = document.createRange();
+  try {
+    var div = document.createRange();
     div.setStartBefore(ele);
     div.setEndAfter(ele) ;
-  	window.getSelection().addRange(div);
+    window.getSelection().addRange(div);
   }
   catch (e) {
-  	// we\'re in internet explorer
-  	div = document.selection.createRange();
-  	div.moveToElementText(ele);
-  	div.select();
+    // we\'re in internet explorer
+    div = document.selection.createRange();
+    div.moveToElementText(ele);
+    div.select();
   }
 }', 'inline');
 
@@ -352,7 +353,7 @@ function theme_os_publications_sort_tabs($vars) {
 
   // Make sure there was at least one sorting option selected.
   if($sort_boolean == FALSE) {
-  	return;
+    return;
   }
 
   // this arrow points down for some reason, despite being named 'asc'

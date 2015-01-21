@@ -1236,7 +1236,7 @@ function os_publications_preprocess_page(&$variables) {
       drupal_set_title($new_page_title);
       break;
     case "author":
-      $new_page_title = $current_page_title . t(" by Co-Author: ") . ucwords($menu['map'][2]);
+      $new_page_title = $current_page_title . t(" by Co-Author: ") . ucwords($menu['map'][3]);
       // Set the new page title.
       drupal_set_title($new_page_title);
       break;
@@ -1252,8 +1252,21 @@ function os_publications_field_attach_load($entity_type, $entities, $view_mode) 
       if ($e->type != 'biblio') continue;
 
       if (!empty($e->field_biblio_image) && isset($e->title)) {
-        $e->field_biblio_image[LANGUAGE_NONE][0]['alt'] = $e->title;
-        $e->field_biblio_image[LANGUAGE_NONE][0]['title'] = $e->title;
+        $stripped_title = html_entity_decode(strip_tags(htmlspecialchars_decode($e->title)), ENT_COMPAT, "UTF-8");
+        $entered_alt = $e->field_biblio_image[LANGUAGE_NONE][0]['field_file_image_alt_text'][LANGUAGE_NONE][0]['value'];
+        $entered_title = $e->field_biblio_image[LANGUAGE_NONE][0]['field_file_image_title_text'][LANGUAGE_NONE][0]['value'];
+        if (empty($entered_alt)) {
+          $e->field_biblio_image[LANGUAGE_NONE][0]['alt'] = $stripped_title;
+        }
+        else {
+          $e->field_biblio_image[LANGUAGE_NONE][0]['alt'] = html_entity_decode(strip_tags(htmlspecialchars_decode($entered_alt)), ENT_COMPAT, "UTF-8");
+        }
+        if (empty($entered_title)) {
+          $e->field_biblio_image[LANGUAGE_NONE][0]['title'] = $stripped_title;
+        }
+        else {
+          $e->field_biblio_image[LANGUAGE_NONE][0]['title'] = html_entity_decode(strip_tags(htmlspecialchars_decode($entered_title)), ENT_COMPAT, "UTF-8");
+        }
       }
     }
   }
@@ -1350,4 +1363,20 @@ function os_publications_revert_citeproc_style($name, $path = '') {
   biblio_citeproc_install_style($name, $csl);
 
   return true;
+}
+
+/**
+ * Adds full author names to index
+ */
+function os_publications_apachesolr_index_document_build_node(ApacheSolrDocument $doc, $entity, $env_id) {
+  if ($entity->type == 'biblio') {
+    foreach ($entity->biblio_contributors as $c) {
+      $doc->addField('tm_contributors', $c['name']);
+    }
+  }
+}
+
+function os_publications_apachesolr_query_alter($query) {
+  $params['qf']['tm_contributors'] = 'tm_contributors^30';
+  $query->addParams($params);
 }

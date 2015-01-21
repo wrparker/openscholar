@@ -16,7 +16,7 @@
    */
   Drupal.behaviors.CheckSelectedTerm = {
     attach: function() {
-      if (Drupal.settings.fbt['vid'] != 'undefined') {
+      if (typeof Drupal.settings.fbt != 'undefined' && typeof Drupal.settings.fbt['vid'] != 'undefined') {
         $("select[name=terms_" + Drupal.settings.fbt['vid'] + "]").val(Drupal.settings.fbt['url']);
       }
     }
