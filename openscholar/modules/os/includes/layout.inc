@@ -76,7 +76,7 @@ function os_layout_get_contexts($privacy = array(1, 2)) {
  * @return
  *  List of blocks.
  */
-function os_layout_get($context_name, $load_meta = FALSE, $unused_blocks = FALSE) {
+function os_layout_get($context_name, $load_meta = FALSE, $unused_blocks = FALSE, $space = NULL) {
    // context load alters the context (for vsites) so no need to do anything
    // extra.
   $context = context_load($context_name);
