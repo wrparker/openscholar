@@ -97,8 +97,15 @@ function os_news_update_7006() {
 }
 
 /**
- * Reverts strongarm settings
+ * Reverts settings and exports field instance
  */
 function os_news_update_7007() {
-  features_revert(array('os_news' => array('variable'))); //strongarm settings
+  $revert = array(
+    'os_news' => array(
+      'variable',
+      'field_instance',
+    )
+  );
+
+  features_revert($revert);
 }
