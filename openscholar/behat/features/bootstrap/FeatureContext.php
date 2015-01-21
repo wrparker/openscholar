@@ -6,6 +6,7 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Behat\Context\Step;
 use Behat\Behat\Context\Step\When;
+use GuzzleHttp\Post\PostBody;
 
 require 'vendor/autoload.php';
 
@@ -1899,5 +1900,55 @@ class FeatureContext extends DrupalContext {
     if (!preg_match($pattern, $page)) {
       throw new Exception("'$first' does not come before '$second'.");
     }
+  }
+
+  /**
+   * Alias to locatePath().
+   * @param $path
+   * @return string
+   */
+  private function getPath($path) {
+    return $this->locatePath($path);
+  }
+
+  /**
+   * Alias for Guzzle client.
+   *
+   * @return \GuzzleHttp\Client
+   */
+  private function getClient() {
+    return new GuzzleHttp\Client();
+  }
+
+  /**
+   * @Given /^I test the exposed resources:$/
+   */
+  public function iTestTheExposedResources(PyStringNode $resources) {
+    foreach ($resources->getLines() as $line) {
+      $this->getClient()->get($line);
+    }
+  }
+
+  private function restLogin($user) {
+    $base = base64_encode($user . ':' . $this->users[$user]);
+    $login_data = $this->getClient()->get($this->getpath('api/login'), [
+      'headers' => [
+        'Authorization' => 'Basic ' . $base,
+      ],
+    ]);
+
+    $data = $login_data->json();
+    return $data['data']['X-CSRF-Token'];
+  }
+
+  /**
+   * @Given /^I create a "([^"]*)" with the settings:$/
+   */
+  public function iCreateAWithTheSettings($arg1, TableNode $table) {
+    $token = $this->restLogin('admin');
+    $this->getClient()->post($this->locatePath('api/v1.0/boxes'), [
+      'headers' => ['X-CSRF-TOKEN' => $token, 'rest_call' => 0],
+      'body' => ['vsite' => 2],
+    ]);
   }
 }
