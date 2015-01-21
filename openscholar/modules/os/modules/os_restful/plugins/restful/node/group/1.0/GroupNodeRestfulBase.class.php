@@ -38,7 +38,7 @@ class GroupNodeRestfulBase extends OsNodeRestfulBase {
   public function queryForListFilter(\EntityFieldQuery $query) {
     parent::queryForListFilter($query);
 
-    $query->propertyCondition('type', OS_RESTFUL_GROUP_BUNDLES, 'IN');
+    $query->propertyCondition('type', array('personal', 'project', 'department'), 'IN');
   }
 
   /**
