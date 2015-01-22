@@ -33,7 +33,6 @@ class HarvardFetcher extends FeedsFetcher {
     }
 
     // Loop over the nodes and build the query parameter value.
-    $param_values = array();
     $schools = array();
     $departments = array();
     $import_value = array();
@@ -101,6 +100,9 @@ class HarvardFetcher extends FeedsFetcher {
       for ($i = 0; $i <= $batches; $i++) {
         $start = $i * $rows;
         $result = drupal_http_request($this->buildUrl($import_value, $rows, $start));
+        if (!property_exists($result, 'data')) {
+          continue;
+        }
         preg_match_all('|<courses*.numFound="(.*)">(.*)<\/courses>|U', $result->data, $matches, PREG_PATTERN_ORDER);
         if (!isset($matches[2][0])) {
           continue;
@@ -135,6 +137,10 @@ class HarvardFetcher extends FeedsFetcher {
 
   public function configDefaults() {
     return array('debug_mode' => '');
+  }
+
+  public function sourceDefaults() {
+
   }
 
   /**

@@ -1219,10 +1219,10 @@ function os_search_solr_created_facet(array $values, array $options) {
 function os_search_solr_facet_time($timestamp, $gap) {
   switch ($gap) {
     case FACETAPI_DATE_MONTH:
-      return format_date($timestamp, 'custom', 'F Y');
+      return format_date($timestamp, 'custom', 'F Y', 'UTC');
 
     case FACETAPI_DATE_DAY:
-      return format_date($timestamp, 'custom', 'F j, Y');
+      return format_date($timestamp, 'custom', 'F j, Y', 'UTC');
 
     case FACETAPI_DATE_HOUR:
       return format_date($timestamp, 'custom', 'g A');
@@ -1234,6 +1234,6 @@ function os_search_solr_facet_time($timestamp, $gap) {
       return format_date($timestamp, 'custom', 'g:i:s A');
 
     default:
-      return format_date($timestamp, 'custom', 'Y');
+      return format_date($timestamp, 'custom', 'Y', 'UTC');
   }
 }
