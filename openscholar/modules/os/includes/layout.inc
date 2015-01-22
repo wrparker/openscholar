@@ -81,6 +81,26 @@ function os_layout_get($context_name, $load_meta = FALSE, $unused_blocks = FALSE
    // extra.
   $context = context_load($context_name);
 
+  if (!$space) {
+    $space = vsite_get_vsite();
+  }
+
+  if ($space) {
+    // Some values we need to set to prevent later overwrites are protected.
+    $space->controllers->context->get(null, 'original');
+    foreach (array_keys(context_reactions()) as $plugin) {
+      // overwrite with true original values
+      if (isset($context->reactions[$plugin])) {
+        $space->controllers->context->values['original']["{$context->name}:reaction:{$plugin}"] = $context->reactions[$plugin];
+      }
+      // Now get from space.
+      $override = $space->controllers->context->get("{$context->name}:reaction:{$plugin}");
+      if (!is_null($override)) {
+        $context->reactions[$plugin] = $override;
+      }
+    }
+  }
+
   if (!is_object($context)) {
     return FALSE;
   }
