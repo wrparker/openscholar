@@ -6,7 +6,6 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Behat\Context\Step;
 use Behat\Behat\Context\Step\When;
-use GuzzleHttp\Post\PostBody;
 
 require 'vendor/autoload.php';
 
@@ -1949,6 +1948,7 @@ class FeatureContext extends DrupalContext {
     $this->getClient()->post($this->locatePath('api/v1.0/boxes'), [
       'headers' => ['X-CSRF-TOKEN' => $token, 'rest_call' => 0],
       'body' => ['vsite' => 2],
+      'cookies' => TRUE,
     ]);
   }
 }
