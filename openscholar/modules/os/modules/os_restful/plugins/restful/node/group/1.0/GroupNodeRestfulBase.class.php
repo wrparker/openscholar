@@ -57,12 +57,12 @@ class GroupNodeRestfulBase extends OsNodeRestfulBase {
       return $list;
     }
 
-    $users = user_load_multiple(array_keys($results['user']));
+    $accounts = user_load_multiple(array_keys($results['user']));
 
-    foreach ($users as $user) {
+    foreach ($accounts as $account) {
       $list[] = array(
-        'uid' => $user->uid,
-        'name' => $user->name,
+        'uid' => $account->uid,
+        'name' => $account->name,
       );
     }
 
@@ -97,6 +97,24 @@ class GroupNodeRestfulBase extends OsNodeRestfulBase {
       );
       purl_save($modifier);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access() {
+    if (!parent::access()) {
+      return;
+    }
+
+    $account = $this->getAccount();
+    $item = explode("/", $_GET['q']);
+
+    $gid = end($item) ? NULL : $item['page_arguments'][2];
+    $access_callback = $gid ? 'og_user_access' : 'user_access';
+    $access_arguments = $gid ? array('node', $gid, 'administer users', $account) : array('administer users', $account);
+
+    return call_user_func_array($access_callback, $access_arguments);
   }
 
 }
