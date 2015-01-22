@@ -83,8 +83,7 @@
           $(this)
             .addClass('active')
             .find('div.description')
-            .fadeIn('fast')
-            .css('opacity', '');
+            .fadeIn('fast');
         }, $.noop);
         
         // Initializes first hover event.
@@ -92,7 +91,9 @@
         $(first_term)
           .filter(":first")
           .each(function (index) {
-            $(this).trigger('mouseover');
+            $(this).trigger('mouseover')
+              .find('div.description')
+              .css('opacity', '');
         });
         
         // Marks all items as processed, so this only runs once per pageload.
