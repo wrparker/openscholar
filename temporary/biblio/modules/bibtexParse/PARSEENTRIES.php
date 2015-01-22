@@ -148,7 +148,7 @@ class PARSEENTRIES
     $this->parseFile = TRUE;
     $this->outsideEntry = TRUE;
     $this->translate_latex = TRUE;
-    $this->errors = array();
+    $this->error = "";
   }
   // Open bib file
   /**
@@ -160,17 +160,22 @@ class PARSEENTRIES
     if (!is_file($file))
     die;
     ini_set('auto_detect_line_endings', true);
-    $this->fid = fopen ($file,'r');
+
+    if($this->validate(file_get_contents($file))) {
+      $this->fid = fopen ($file,'r');
+    }
     $this->parseFile = TRUE;
   }
   // Load a bibtex string to parse it
   function loadBibtexString($bibtex_string)
   {
-    if (is_string($bibtex_string)) {
-      //$bibtex_string = $this->searchReplaceText($this->transtab_latex_unicode, $bibtex_string, FALSE);
-      $this->bibtexString = explode("\n",$bibtex_string);
-    } else {
-      $this->bibtexString = $bibtex_string;
+    if ($this->validate($bibtex_string)) {
+      if (is_string($bibtex_string)) {
+        //$bibtex_string = $this->searchReplaceText($this->transtab_latex_unicode, $bibtex_string, FALSE);
+        $this->bibtexString = explode("\n",$bibtex_string);
+      } else {
+        $this->bibtexString = $bibtex_string;
+      }
     }
     $this->parseFile = FALSE;
     $this->currentLine = 0;
@@ -448,6 +453,7 @@ class PARSEENTRIES
       {
         // throw all characters before the '@'
         $line=strstr($line,'@');
+
         if (!strchr($line, "{") && !strchr($line, "("))
         $possibleEntryStart = $line;
         elseif (preg_match("/@.*([{(])/U", preg_quote($line), $matches))
@@ -553,6 +559,17 @@ class PARSEENTRIES
     return $this->entries;
   }
 
+  // check to make sure entries are well-formed (no stray braces)
+  function validate($entries) {
+    if ((preg_match_all("/\{/", $entries, $matches)) != (preg_match_all("/\}/", $entries, $matches))) {
+     $this->error = "Error: invalid BibTex, contains unmatched braces.";
+      return FALSE;
+    }
+    else {
+      return TRUE;
+    }
+  }
+
   // remove nested braces inside field value
   function removeNestedBraces($string) {
     $bracestart = strrpos($string, "{");
@@ -567,11 +584,13 @@ class PARSEENTRIES
 
       $string = substr($string, 0, $braceend + 1) . substr($string, $braceend + 2);
       $string = substr($string, 0, $bracestart - 1) . substr($string, $bracestart);
-    
+
       return $this->removeNestedBraces($string);
     }
     else {
       return $string;
     }
+
   }
+
 }
