@@ -1909,15 +1909,6 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * Alias to locatePath().
-   * @param $path
-   * @return string
-   */
-  private function getPath($path) {
-    return $this->locatePath($path);
-  }
-
-  /**
    * Alias for Guzzle client.
    *
    * @return \GuzzleHttp\Client
@@ -1941,7 +1932,7 @@ class FeatureContext extends DrupalContext {
     }
 
     $base = base64_encode($user . ':' . $this->users[$user]);
-    $login_data = $this->getClient()->get($this->getpath('api/login-token'), [
+    $login_data = $this->getClient()->get($this->locatePath('api/login-token'), [
       'headers' => [
         'Authorization' => 'Basic ' . $base,
       ],
