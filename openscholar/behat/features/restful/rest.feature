@@ -11,7 +11,7 @@ Feature:
     api/v1.0/variables
     """
 
-  @api @rest @now
+  @api @rest
   Scenario: Creating a box.
     Given I create a "box" with the settings:
       | Title       | vsite   | widget            | delta       | options[description]  |

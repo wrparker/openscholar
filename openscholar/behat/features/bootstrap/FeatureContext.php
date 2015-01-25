@@ -38,6 +38,13 @@ class FeatureContext extends DrupalContext {
   private $nid;
 
   /**
+   * @var String
+   *
+   * Holds the access token for the user.
+   */
+  private $accessToken = array();
+
+  /**
    * Initializes context.
    *
    * Every scenario gets its own context object.
@@ -1920,6 +1927,54 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * Login via rest to get the user's access token.
+   *
+   * @param $user
+   *   The user name.
+   *
+   * @return string
+   *   The user access token.
+   */
+  private function restLogin($user) {
+    if (isset($this->accessToken[$user])) {
+      return $this->accessToken[$user];
+    }
+
+    $base = base64_encode($user . ':' . $this->users[$user]);
+    $login_data = $this->getClient()->get($this->getpath('api/login-token'), [
+      'headers' => [
+        'Authorization' => 'Basic ' . $base,
+      ],
+    ]);
+
+    $data = $login_data->json();
+    $this->accessToken[$user] = $data;
+    return $data['access_token'];
+  }
+
+  /**
+   * Handling bad 404 restful request.
+   *
+   * @param \GuzzleHttp\Exception\ClientException $e
+   *   The client exception handler.
+   *
+   * @throws Exception
+   */
+  private function handleExceptions(\GuzzleHttp\Exception\ClientException $e) {
+    $json = $e->getResponse()->json();
+
+    $implode = array();
+    foreach ($json['errors'] as $errors) {
+      foreach ($errors as $error) {
+        $implode[] = $error;
+      }
+    }
+
+    $errors = implode(', ', $implode);
+    throw new Exception('Your request has failed: ' . $errors);
+  }
+
+  /**
    * @Given /^I test the exposed resources:$/
    */
   public function iTestTheExposedResources(PyStringNode $resources) {
@@ -1928,27 +1983,25 @@ class FeatureContext extends DrupalContext {
     }
   }
 
-  private function restLogin($user) {
-    $base = base64_encode($user . ':' . $this->users[$user]);
-    $login_data = $this->getClient()->get($this->getpath('api/login'), [
-      'headers' => [
-        'Authorization' => 'Basic ' . $base,
-      ],
-    ]);
-
-    $data = $login_data->json();
-    return $data['data']['X-CSRF-Token'];
-  }
-
   /**
    * @Given /^I create a "([^"]*)" with the settings:$/
    */
   public function iCreateAWithTheSettings($arg1, TableNode $table) {
     $token = $this->restLogin('admin');
-    $this->getClient()->post($this->locatePath('api/v1.0/boxes'), [
-      'headers' => ['X-CSRF-TOKEN' => $token, 'rest_call' => 0],
-      'body' => ['vsite' => 2],
-      'cookies' => TRUE,
-    ]);
+    try {
+      $this->getClient()->post($this->locatePath('api/v1.0/boxes'), [
+        'headers' => ['access_token' => $token],
+        'body' => [
+          'vsite' => 2,
+          'delta' => time(),
+          'widget' => 'os_taxonomy_fbt',
+          'options' => [
+            'description' => 'foo',
+          ],
+        ],
+      ]);
+    } catch (\GuzzleHttp\Exception\ClientException $e) {
+      $this->handleExceptions($e);
+    }
   }
 }
