@@ -12,8 +12,8 @@ class LayoutsValidate extends OsObjectValidate {
       ->setProperty('blocks')
       ->setRequired();
 
-    FieldsInfo::setFieldInfo($fields['object_id'], $this)
-      ->setProperty('object_id')
+    FieldsInfo::setFieldInfo($fields['context'], $this)
+      ->setProperty('context')
       ->setRequired();
 
     return $fields;

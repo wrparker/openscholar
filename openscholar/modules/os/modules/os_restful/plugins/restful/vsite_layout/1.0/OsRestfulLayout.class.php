@@ -29,7 +29,7 @@ class OsRestfulLayout extends OsRestfulSpaces {
    * type: PUT
    * values: {
    *  vsite: 2,
-   *  object_id: os_front:reaction:block,
+   *  context: os_front,
    *  blocks: [
    *    os_search_db-site-search: [
    *      region: "sidebar_first"
@@ -44,21 +44,26 @@ class OsRestfulLayout extends OsRestfulSpaces {
     // Validate the object from the request.
     $this->validate();
 
+    ctools_include('layout', 'os');
+
     $controller = $this->space->controllers->{$this->objectType};
     $settings = $controller->get($this->object->object_id);
 
+    $blocks = os_layout_get($this->object->context, FALSE, FALSE, $this->space);
+
     // Merge blocks.
-    foreach ($settings['blocks'] as $delta => &$block) {
+    foreach ($blocks as $delta => &$block) {
       if (empty($this->object->blocks[$delta])) {
         continue;
       }
 
-      $block = array_merge($settings['blocks'][$delta], $this->object->blocks[$delta]);
+      $block = array_merge($blocks[$delta], $this->object->blocks[$delta]);
     }
 
     $controller->set($this->object->object_id, $settings);
+    os_layout_set($this->object->context, $blocks, $this->space);
 
-    return $settings;
+    return $blocks;
   }
 
   /**
@@ -67,7 +72,7 @@ class OsRestfulLayout extends OsRestfulSpaces {
    * type: POST
    * values: {
    *  vsite: 2,
-   *  object_id: os_front:reaction:block,
+   *  context: os_front,
    *  boxes: [
    *    boxes-1419335380: [
    *      module: "boxes",
@@ -99,8 +104,8 @@ class OsRestfulLayout extends OsRestfulSpaces {
 
   /**
    * In order to delete a widget from the layout your REST call should be:
-   * type: DELETE
    *
+   * type: DELETE
    * values: {
    *  vsite: 2,
    *  object_id: os_front:reaction:block,
