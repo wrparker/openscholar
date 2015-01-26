@@ -19,7 +19,11 @@
           }
         });
 
-        if (!$.browser.msie) {
+        if ($(this).hasClass('toggle') && $(this).hasClass('expanded')) {
+          return;
+        }
+
+        if ($.browser.msie == undefined) {
           slider.slideToggle("fast");
         }
         else {
