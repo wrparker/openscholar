@@ -81,10 +81,6 @@ function os_layout_get($context_name, $load_meta = FALSE, $unused_blocks = FALSE
    // extra.
   $context = context_load($context_name);
 
-  if (!$space) {
-    $space = vsite_get_vsite();
-  }
-
   if ($space) {
     // Some values we need to set to prevent later overwrites are protected.
     $space->controllers->context->get(null, 'original');
