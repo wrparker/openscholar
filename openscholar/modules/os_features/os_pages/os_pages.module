@@ -830,7 +830,6 @@ function os_pages_preprocess_page(&$page) {
   }
 
   $item = menu_get_item('cp/build/layout/' . implode('/', $ctxs));
-  debug($item);
   if ($item['access']) {
     $section_links['section-layout'] = array(
       'title' => t('Layout'),
