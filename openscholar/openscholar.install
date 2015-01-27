@@ -92,5 +92,9 @@ function openscholar_install() {
     user_role_grant_permissions($rid, array('access resource node'));
     user_role_grant_permissions($rid, array('access resource file'));
   }
+
+  // Set up jQuery update version variables.
+  variable_set('jquery_update_jquery_version', '1.8');
+  variable_set('jquery_update_jquery_admin_version', '1.5');
 }
 

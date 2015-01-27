@@ -739,3 +739,11 @@ function os_update_7035() {
   $revert = array_fill_keys($apps, array('feeds_importer'));
   features_revert($revert);
 }
+
+/**
+ * Set jQuery update version variables.
+ */
+function os_update_7036() {
+  variable_set('jquery_update_jquery_version', '1.8');
+  variable_set('jquery_update_jquery_admin_version', '1.5');
+}
