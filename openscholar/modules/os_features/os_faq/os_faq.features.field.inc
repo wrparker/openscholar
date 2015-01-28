@@ -61,7 +61,7 @@ function os_faq_field_default_fields() {
           'settings' => array(
             'trim_length' => 100,
           ),
-          'type' => 'text_summary_or_trimmed',
+          'type' => 'os_trimmed_text',
           'weight' => '0',
         ),
       ),

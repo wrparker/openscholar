@@ -2424,7 +2424,7 @@ function os_files_add_fields($type) {
           'settings' => array(
             'trim_length' => 160,
           ),
-          'type' => 'text_summary_or_trimmed',
+          'type' => 'os_trimmed_text',
           'weight' => 0,
         ),
         'preview' => array(

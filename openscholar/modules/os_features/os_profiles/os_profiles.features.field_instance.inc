@@ -43,7 +43,7 @@ function os_profiles_field_default_field_instances() {
         'settings' => array(
           'trim_length' => 160,
         ),
-        'type' => 'text_summary_or_trimmed',
+        'type' => 'os_trimmed_text',
         'weight' => 5,
       ),
       'sidebar_teaser' => array(
@@ -58,7 +58,7 @@ function os_profiles_field_default_field_instances() {
         'settings' => array(
           'trim_length' => 160,
         ),
-        'type' => 'text_summary_or_trimmed',
+        'type' => 'os_trimmed_text',
         'weight' => 6,
       ),
       'title' => array(
