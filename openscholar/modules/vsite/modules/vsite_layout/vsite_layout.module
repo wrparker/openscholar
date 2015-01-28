@@ -9,8 +9,11 @@
  *
  * @see os_layout_set()
  */
-function vsite_layout_context_set($context_name, $blocks) {
-  $vsite = spaces_get_space();
+function vsite_layout_context_set($context_name, $blocks, $vsite = FALSE) {
+
+  if (!$vsite) {
+    $vsite = spaces_get_space();
+  }
 
   if ($vsite && isset($vsite->controllers->context)) {
     $vsite->controllers->context->set($context_name . ":reaction:block", array(
