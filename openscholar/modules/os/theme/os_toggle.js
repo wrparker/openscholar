@@ -6,35 +6,33 @@
 (function ($) {
   Drupal.behaviors.os_toggle = {
     attach: function (ctx) {
-      $('.toggle', ctx).click(function(event) {
-        event.preventDefault();
+      $('.toggle', ctx).once(function() {
+        $(this, ctx).click(function(event) {
+          event.preventDefault();
 
-        $(this).toggleClass("expanded");
-        var slider = null;
+          $(this).toggleClass("expanded");
+          var slider = null;
 
-        $(this).add($(this).parents()).each(function () {
-          var potentials = $(this).siblings('.os-slider');
-          if (potentials.length) {
-            slider = $(potentials[0]);
-          }
-        });
+          $(this).add($(this).parents()).each(function () {
+            var potentials = $(this).siblings('.os-slider');
+            if (potentials.length) {
+              slider = $(potentials[0]);
+            }
+          });
 
-        if ($(this).hasClass('toggle') && $(this).hasClass('expanded')) {
-          return;
-        }
-
-        if ($.browser.msie == undefined) {
-          slider.slideToggle("fast");
-        }
-        else {
-          // IE8 Does not work with the slider.
-          if ($(this).hasClass('expanded')) {
-          slider.show();
+          if ($.browser.msie == undefined) {
+            slider.slideToggle("fast");
           }
           else {
-            slider.hide();
+            // IE8 Does not work with the slider.
+            if ($(this).hasClass('expanded')) {
+              slider.show();
+            }
+            else {
+              slider.hide();
+            }
           }
-        }
+        });
       });
     }
   };
