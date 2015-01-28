@@ -1,6 +1,8 @@
-/* D6 retro css for older themes */
-#columns {padding:0 10px;}
 
+#branding_header,
+#branding_footer {
+	display:none;
+}
 
 body  {
   color:#37352B;
@@ -96,20 +98,6 @@ h2.block-title {
   color: #106599;
 }
   
-  .region-sidebar-first #block-os-primary-menu ul.menu {margin-left:1px;border-top:none;}
-  .region-sidebar-first #block-os-secondary-menu ul.menu {margin-left:0;}
-  .region-sidebar-first #block-os-primary-menu ul.menu li,
-  .region-sidebar-second #block-os-primary-menu ul.menu li, 
-  .region-sidebar-first #block-os-secondary-menu ul.menu li,
-  .region-sidebar-second #block-os-secondary-menu ul.menu li {background:#FFF;padding-bottom:10px;}
-  
-  .region-sidebar-first #block-os-primary-menu ul.menu li a,
-  .region-sidebar-second #block-os-primary-menu ul.menu li a,
-  .region-sidebar-first #block-os-secondary-menu ul.menu li a {color:#757575;font-weight:bold;padding-left:1px;text-transform:uppercase;line-height:12px;}
-  
-  .region-sidebar-second #block-os-primary-menu ul.menu, 
-  .region-sidebar-second #block-os-primary-menu ul.menu li a, 
-   .region-sidebar-second #block-os-secondary-menu ul.menu li a {color:#757575;font-weight:bold;font-size:12px;text-transform:uppercase;}
 
 p.copy {
   margin-top: 0;
@@ -122,6 +110,10 @@ p.copy {
 
 
 .field-content a {color:#106599;}
+
+#boxes-box-site_info {
+padding-top: 0;
+}
 
 .region-header-first .block-boxes-os_boxes_site_info .boxes-box, 
 .region-header-third .block-boxes-os_boxes_site_info .boxes-box, 
@@ -214,9 +206,10 @@ margin: 8px -15px 0 3px;
   line-height: 17px;
   }
 
-#header-container h1 a,
-#header-container h1 a:visited {
+
+#boxes-box-site_info a {
     color:#991122;
+    font-family: helvetica, serif;
     }
 
 #header-container h1 a:hover {
@@ -225,6 +218,16 @@ margin: 8px -15px 0 3px;
     }
 
 /* MAIN NAVBAR */
+#menu-bar ul.nice-menu .menuparent ul li a,
+#menu-bar ul.nice-menu a {
+font-family: helvetica, serif;
+font-size: 14px;
+color: #303030;
+padding: 5px 17px;
+}
+
+
+
 #menu-bar {
   background: #FFF;
   padding:0 10px 0 0;
@@ -251,16 +254,18 @@ font-size: 12px;
 margin-right:1px;
 }
 
-#menu-bar ul li a:hover {
+
+#menu-bar ul.nice-menu a:hover {
 background:#106599;
 color: #FFF;
 }
 
-
-#menu-bar ul li a.active {
+#menu-bar ul.nice-menu a.active,
+ #menu-bar ul.nice-menu .menuparent a.active {
 background:#D4D4D5;
 color: #333;
 }
+
 
 
   /** NICE MENUS **/
@@ -282,10 +287,14 @@ ul.nice-menu ul {
 	margin-bottom:0;
 }
 
+#menu-bar ul.nice-menu li {
+margin-right: 0;
+}
+
 #menu-bar ul.nice-menu ul li {
 	margin-top:0;
 	background:#CCC;
-	
+
 }
 
 #menu-bar ul.nice-menu ul,	
