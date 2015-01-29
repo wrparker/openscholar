@@ -11,8 +11,8 @@ Feature:
     api/v1.0/variables
     """
 
-  @api @rest
+  @api @rest @now
   Scenario: Creating a box.
     Given I create a "box" with the settings:
-      | Title       | vsite   | widget            | delta       | options[description]  |
-      | Dummy box   | 2       | os_taxonomy_fbt   | 1419342352  | Terms                 |
+      | Site    | Widget            | Description  |
+      | john    | os_taxonomy_fbt   | Terms        |

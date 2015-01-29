@@ -1955,10 +1955,15 @@ class FeatureContext extends DrupalContext {
     $json = $e->getResponse()->json();
 
     $implode = array();
-    foreach ($json['errors'] as $errors) {
-      foreach ($errors as $error) {
-        $implode[] = $error;
+    if (!empty($json['errors'])) {
+      foreach ($json['errors'] as $errors) {
+        foreach ($errors as $error) {
+          $implode[] = $error;
+        }
       }
+    }
+    else {
+      $implode[] = $json['title'];
     }
 
     $errors = implode(', ', $implode);
@@ -1978,16 +1983,21 @@ class FeatureContext extends DrupalContext {
    * @Given /^I create a "([^"]*)" with the settings:$/
    */
   public function iCreateAWithTheSettings($arg1, TableNode $table) {
+    $rows = $table->getRows();
+    $values = array_combine($rows[0], $rows[1]);
+
+    $nid = FeatureHelp::getNodeId($values['Site']);
+
     $token = $this->restLogin('admin');
     try {
       $this->getClient()->post($this->locatePath('api/v1.0/boxes'), [
         'headers' => ['access_token' => $token],
         'body' => [
-          'vsite' => 2,
+          'vsite' => $nid,
           'delta' => time(),
-          'widget' => 'os_taxonomy_fbt',
+          'widget' => $values['Widget'],
           'options' => [
-            'description' => 'foo',
+            'description' => $values['Description'],
           ],
         ],
       ]);
