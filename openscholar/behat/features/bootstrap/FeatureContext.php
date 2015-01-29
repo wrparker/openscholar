@@ -4,7 +4,6 @@ use Drupal\DrupalExtension\Context\DrupalContext;
 use Behat\Behat\Context\Step\Given;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
-use Guzzle\Service\Client;
 use Behat\Behat\Context\Step;
 use Behat\Behat\Context\Step\When;
 
@@ -16,11 +15,6 @@ class FeatureContext extends DrupalContext {
    * Variable for storing the random string we used in the text.
    */
   private $randomText;
-
-  /**
-   * Variable to pass into the last xPath expression.
-   */
-  private $xpath = '';
 
   /**
    * The box delta we need to hide.
@@ -48,7 +42,7 @@ class FeatureContext extends DrupalContext {
    *
    * Every scenario gets its own context object.
    *
-   * @param array $parameters.
+   * @param array $parameters .
    *   Context parameters (set them up through behat.yml or behat.local.yml).
    */
   public function __construct(array $parameters) {
@@ -81,27 +75,16 @@ class FeatureContext extends DrupalContext {
       throw new Exception("Password not found for '$username'.");
     }
 
-    if ($this->getDriver() instanceof Drupal\Driver\DrushDriver) {
-      // We are using a cli, log in with meta step.
+    if ($this->loggedIn()) {
+      $this->logout();
+    }
 
-      return array(
-        new Step\When('I am not logged in'),
-        new Step\When('I visit "/user"'),
-        new Step\When('I fill in "Username" with "' . $username . '"'),
-        new Step\When('I fill in "Password" with "' . $password . '"'),
-        new Step\When('I press "edit-submit"'),
-      );
-    }
-    else {
-      // Log in.
-      // Go to the user page.
-      $element = $this->getSession()->getPage();
-      $this->getSession()->visit($this->locatePath('/user'));
-      $element->fillField('Username', $username);
-      $element->fillField('Password', $password);
-      $submit = $element->findButton('Log in');
-      $submit->click();
-    }
+    $element = $this->getSession()->getPage();
+    $this->getSession()->visit($this->locatePath('/user'));
+    $element->fillField('Username', $username);
+    $element->fillField('Password', $password);
+    $submit = $element->findButton('Log in');
+    $submit->click();
   }
 
   /**
@@ -118,55 +101,37 @@ class FeatureContext extends DrupalContext {
       throw new Exception("Password not found for '$username'.");
     }
 
-    if ($this->getDriver() instanceof Drupal\Driver\DrushDriver) {
-      // We are using a cli, log in with meta step.
+    if ($this->loggedIn()) {
+      $this->logout();
+    }
 
-      return array(
-        new Step\When('I am not logged in'),
-        new Step\When('I visit "http://' . $domain . '/user"'),
-        new Step\When('I fill in "Username" with "' . $username . '"'),
-        new Step\When('I fill in "Password" with "' . $password . '"'),
-        new Step\When('I press "edit-submit"'),
-      );
-    }
-    else {
-      // Log in.
-      // Go to the user page.
-      $element = $this->getSession()->getPage();
-      $this->getSession()->visit($this->locatePath('/user'));
-      $element->fillField('Username', $username);
-      $element->fillField('Password', $password);
-      $submit = $element->findButton('Log in');
-      $submit->click();
-    }
+    // Log in.
+    // Go to the user page.
+    $element = $this->getSession()->getPage();
+    $this->getSession()->visit("http://{$domain}/user");
+    $element->fillField('Username', $username);
+    $element->fillField('Password', $password);
+    $submit = $element->findButton('Log in');
+    $submit->click();
   }
 
   /**
    * @Given /^I am on a "([^"]*)" page titled "([^"]*)"(?:, in the tab "([^"]*)"|)$/
    */
   public function iAmOnAPageTitled($page_type, $title, $subpage = NULL) {
-    $table = 'node';
-    $id = 'nid';
-    $path = "$page_type/%";
-    $type = str_replace('-', '_', $page_type);
+    $query = new EntityFieldQuery();
+    $results = $query
+      ->entityCondition('entity_type', 'node')
+      ->propertyCondition('title', $title)
+      ->propertyCondition('type', str_replace('-', '_', $page_type))
+      ->execute();
 
-    $path .= "/$subpage";
-
-    //TODO: The title and type should be properly escaped.
-    $query = "\"
-      SELECT $id AS identifier
-      FROM $table
-      WHERE title = '$title'
-      AND type = '$type'
-    \"";
-
-    $result = $this->getDriver()->drush('sql-query', array($query));
-    $id = trim(substr($result, strlen('identifier')));
-
-    if (!$id) {
+    if (empty($results['node'])) {
       throw new \Exception("No $page_type with title '$title' was found.");
     }
-    $path = str_replace('%', $id, $path);
+
+    $ids = array_keys($results['node']);
+    $id = reset($ids);
 
     return new Given("I am at \"node/$id\"");
   }
@@ -200,30 +165,30 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldGet(PyStringNode $string) {
     $page = $this->getSession()->getPage();
-    $comapre_string = $string->getRaw();
+    $compare_string = $string->getRaw();
     $page_string = $page->getContent();
 
-    if (strpos($comapre_string, '{{*}}')) {
+    if (strpos($compare_string, '{{*}}')) {
       // Attributes that may changed in different environments.
       foreach (array('sourceUrl', 'id', 'value', 'href', 'os_version') as $attribute) {
         $page_string = preg_replace('/ '. $attribute . '=".+?"/', '', $page_string);
-        $comapre_string = preg_replace('/ '. $attribute . '=".+?"/', '', $comapre_string);
+        $compare_string = preg_replace('/ '. $attribute . '=".+?"/', '', $compare_string);
 
         // Dealing with JSON.
         $page_string = preg_replace('/"'. $attribute . '":".+?"/', '', $page_string);
-        $comapre_string = preg_replace('/"'. $attribute . '":".+?"/', '', $comapre_string);
+        $compare_string = preg_replace('/"'. $attribute . '":".+?"/', '', $compare_string);
       }
 
-      if ($page_string != $comapre_string) {
+      if ($page_string != $compare_string) {
         $output = "The strings are not matching.\n";
         $output .= "Page: {$page_string}\n";
-        $output .= "Search: {$comapre_string}\n";
+        $output .= "Search: {$compare_string}\n";
         throw new Exception($output);
       }
     }
     else {
       // Normal compare.
-      foreach (explode("\n", $comapre_string) as $text) {
+      foreach (explode("\n", $compare_string) as $text) {
         if (strpos($page_string, $text) === FALSE) {
           throw new Exception(sprintf('The text "%s" was not found.', $text));
         }
@@ -235,7 +200,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I clear the cache$/
    */
   public function iClearTheCache() {
-    $this->getDriver()->drush('cc all');
+    drupal_flush_all_caches();
   }
 
   /**
@@ -262,7 +227,7 @@ class FeatureContext extends DrupalContext {
     foreach ($table_rows as $rows) {
       $image = $page->find('xpath', "//img[contains(@src, '{$rows[0]}')]");
       if (!$image) {
-        throw new Exception(sprintf('The image "%s" wasn\'t found in the page.', $rows[0]));
+        throw new Exception(sprintf('The image "%s" was not found in the page.', $rows[0]));
       }
     }
   }
@@ -285,38 +250,6 @@ class FeatureContext extends DrupalContext {
     if (!$element) {
       throw new Exception(sprintf("The element with %s wasn't found in %s", $element, $container));
     }
-  }
-
-  /**
-   * Find any element that contain the text and has the css class or id
-   * selector.
-   */
-  private function findAnyElement($text, $container, $childElement = '*') {
-    $page = $this->getSession()->getPage();
-    $attributes = array(
-      'id',
-      'class',
-    );
-
-    // Find the element wrapped under an element with the class.
-    foreach ($attributes as $attribute) {
-      $this->xpath = "//*[contains(@$attribute, '{$container}')]/{$childElement}[contains(., '{$text}')]";
-      $element = $page->find('xpath', $this->xpath);
-      if ($element) {
-        return $element;
-      }
-    }
-
-    // Find the element with the class.
-    foreach ($attributes as $attribute) {
-      $this->xpath = "//*[contains(@$attribute, '{$container}') and contains(., '{$text}')]";
-      $element = $page->find('xpath', $this->xpath);
-      if ($element) {
-        return $element;
-      }
-    }
-
-    throw new Exception(sprintf("An element containing the text %s with the class %s wasn't found", $text, $container));
   }
 
   /**
@@ -358,7 +291,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I create a sub page named "([^"]*)" under the page "([^"]*)"$/
    */
   public function iCreateSubPageUnderPage($child_title, $parent_title) {
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'$parent_title'"));
+    $nid = FeatureHelp::getNodeId($parent_title);
     return array(
       new Step\When('I visit "john/node/add/page?parent_node=' . $nid . '&destination=node/' . $nid . '"'),
       new Step\When('I fill in "Title" with "' . $child_title . '"'),
@@ -399,9 +332,8 @@ class FeatureContext extends DrupalContext {
    * @Then /^I should verify the node "([^"]*)" not exists$/
    */
   public function iShouldVerifyTheNodeNotExists($title) {
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'$title'"));
-
-    $this->invoke_code('os_migrate_demo_delete_node', array("'$title'"));
+    $nid = FeatureHelp::getNodeId($title);
+    FeatureHelp::deleteNode($title);
 
     $this->Visit('I visit "john/node/' . $nid . '"');
 
@@ -424,15 +356,14 @@ class FeatureContext extends DrupalContext {
    * @Given /^the widget "([^"]*)" is set in the "([^"]*)" page with the following <settings>:$/
    */
   public function theWidgetIsSetInThePageWithSettings($page, $widget, TableNode $table) {
-    return $this->theWidgetIsSetInThePageBytheNameWithSettings($page, $widget, '', $table);
+    return $this->theWidgetIsSetInThePageByTheNameWithSettings($page, $widget, '', $table);
   }
 
   /**
    * @Given /^the widget "([^"]*)" is set in the "([^"]*)" page by the name "([^"]*)" with the following <settings>:$/
    */
-  public function theWidgetIsSetInThePageBytheNameWithSettings($page, $widget, $name, TableNode $table) {
-    $code = "os_migrate_demo_set_box_in_region({$this->nid}, '$page', '$widget', 'sidebar_second', '$name');";
-    $this->box[] = $this->getDriver()->drush("php-eval \"{$code}\"");
+  public function theWidgetIsSetInThePageByTheNameWithSettings($page, $widget, $name, TableNode $table) {
+    $this->box[] = FeatureHelp::setBoxInRegion($this->nid, $page, $widget, 'sidebar_second', $name);
     $hash = $table->getRows();
 
     list($box, $delta, $context) = explode(",", $this->box[0]);
@@ -479,47 +410,43 @@ class FeatureContext extends DrupalContext {
    * @Given /^the widget "([^"]*)" is set in the "([^"]*)" page$/
    */
   public function theWidgetIsSetInThePage($page, $widget) {
-    $code = "os_migrate_demo_set_box_in_region({$this->nid}, '$page', '$widget');";
-    $this->box[] = $this->getDriver()->drush("php-eval \"{$code}\"");
+    $this->box[] = FeatureHelp::setBoxInRegion($this->nid, $page, $widget);
   }
 
   /**
    * @When /^I assign the node "([^"]*)" to the term "([^"]*)"$/
    */
   public function iAssignTheNodeToTheTerm($node, $term) {
-    $this->invoke_code('os_migrate_demo_assign_node_to_term', array("'$node'","'$term'"));
+    FeatureHelp::assignNodeToTerm($node, $term);
   }
 
   /**
    * @When /^I assign the page "([^"]*)" to the term "([^"]*)"$/
    */
   public function iAssignThePageToTheTerm($node, $term) {
-    $this->invoke_code('os_migrate_demo_assign_node_to_term', array("'$node'", "'$term'", 'page'));
+    FeatureHelp::assignNodeToTerm($node, $term, 'page');
   }
 
   /**
    * @Given /^I unassign the node "([^"]*)" from the term "([^"]*)"$/
    */
   public function iUnassignTheNodeFromTheTerm($node, $term) {
-    $this->invoke_code('os_migrate_demo_unassign_node_from_term', array("'$node'","'$term'"));
+    FeatureHelp::unassignNodeFromTerm($node, $term);
   }
 
   /**
    * @Given /^I unassign the node "([^"]*)" with the type "([^"]*)" from the term "([^"]*)"$/
    */
   public function iUnassignTheNodeWithTheTypeFromTheTerm($node, $type, $term) {
-    $node = str_replace("'", "\'", $node);
-    $this->invoke_code('os_migrate_demo_unassign_node_from_term', array("'$node'","'$term'","'$type'"), TRUE);
+    FeatureHelp::unassignNodeFromTerm($node, $term, $type);
   }
 
   /**
    * @Given /^I assign the node "([^"]*)" with the type "([^"]*)" to the term "([^"]*)"$/
    */
   public function iAssignTheNodeWithTheTypeToTheTerm($node, $type, $term) {
-    $code = "os_migrate_demo_assign_node_to_term('$node', '$term', '$type');";
-    $this->getDriver()->drush("php-eval \"{$code}\"");
+    FeatureHelp::assignNodeToTerm($node, $term, $type);
   }
-
 
   /**
    * Hide the boxes we added during the scenario.
@@ -535,15 +462,14 @@ class FeatureContext extends DrupalContext {
         foreach ($data as &$value) {
           $value = trim($value);
         }
-        $code = "os_migrate_demo_hide_box({$this->nid}, '{$data[0]}', '{$data[1]}', '{$data[2]}');";
-        $this->getDriver()->drush("php-eval \"{$code}\"");
+        FeatureHelp::hideBox($this->nid, $data[0], $data[1], $data[2]);
       }
     }
 
     if (!empty($this->domains)) {
       // Remove domain we added to vsite.
       foreach ($this->domains as $domain) {
-        $this->invoke_code("os_migrate_demo_remove_vsite_domain", array("'{$domain}'"));
+        FeatureHelp::RemoveVsiteDomain($domain);
       }
     }
   }
@@ -552,12 +478,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^cache is "([^"]*)" for anonymous users$/
    */
   public function cacheIsForAnonymousUsers($status) {
-    if ($status == "enabled") {
-      $this->getDriver()->drush('vset cache 1');
-    }
-    else if ($status == "disabled") {
-      $this->getDriver()->drush('vset cache 0');
-    }
+    variable_set('cache', $status == "enabled");
   }
 
   /**
@@ -604,14 +525,14 @@ class FeatureContext extends DrupalContext {
    * @Given /^I create the term "([^"]*)" in vocabulary "([^"]*)"$/
    */
   public function iCreateTheTermInVocab($term_name, $vocab_name) {
-    $this->invoke_code('os_migrate_demo_create_term', array("'$term_name'","'$vocab_name'"));
+    FeatureHelp::CreateTerm($term_name ,$vocab_name);
   }
 
   /**
    * @Given /^I delete the term "([^"]*)"$/
    */
   public function iDeleteTheTermInVocab($term_name) {
-    $this->invoke_code('os_migrate_demo_delete_term', array("'$term_name'"));
+    FeatureHelp::DeleteTerm($term_name);
   }
 
   /**
@@ -653,44 +574,6 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * Invoking a php code with drush.
-   *
-   *  @param $function
-   *    The function name to invoke.
-   *  @param $arguments
-   *    Array contain the arguments for function.
-   *  @param $debug
-   *    Set as TRUE/FALSE to display the output the function print on the screen.
-   */
-  private function invoke_code($function, $arguments = NULL, $debug = FALSE) {
-    $code = !empty($arguments) ? "$function(" . implode(',', $arguments) . ");" : "$function();";
-
-    $output = $this->getDriver()->drush("php-eval \"{$code}\"");
-
-    if ($debug) {
-      print_r($output);
-    }
-
-    return $output;
-  }
-
-  /**
-   * Sets a variable with drush
-   *
-   * @param $name
-   *    The variable name to set
-   * @value $value
-   *    The value to set the variable to
-   */
-  private function set_variable($name, $value) {
-    // always use json encoding just to make things simpler for us
-    // catches arrays, objects, strings equally
-    $value = json_encode($value);
-
-    $this->getDriver()->drush("vset --format=json $name $value");
-  }
-
-  /**
    * @Then /^I should see the following <json>:$/
    */
   public function iShouldSeeTheFollowingJson(TableNode $table) {
@@ -698,10 +581,8 @@ class FeatureContext extends DrupalContext {
     $json_output = $this->getSession()->getPage()->getContent();
     $json = json_decode($json_output);
 
-
     // Hasing table, and define variables for later.
     $hash = $table->getRows();
-    $errors = array();
 
     // Run over the tale and start matching between the values of the JSON and
     // the user input.
@@ -870,23 +751,21 @@ class FeatureContext extends DrupalContext {
    * @Given /^I execute vsite cron$/
    */
   public function iExecuteVsiteCron() {
-    $this->invoke_code('vsite_cron');
+    vsite_cron();
   }
 
   /**
    * @Given /^I set the term "([^"]*)" under the term "([^"]*)"$/
    */
   public function iSetTheTermUnderTheTerm($child, $parent) {
-    $function = 'os_migrate_demo_set_term_under_term';
-    $this->invoke_code($function, array("'$child'", "'$parent'"));
+    FeatureHelp::setTermUnderTerm($child, $parent);
   }
 
   /**
    * @When /^I set the variable "([^"]*)" to "([^"]*)"$/
    */
   public function iSetTheVariableTo($variable, $value) {
-    $function = 'os_migrate_demo_variable_set';
-    $this->invoke_code($function, array($variable, "'$value'"));
+    FeatureHelp::variableSet($variable, $value);
   }
 
   /**
@@ -925,18 +804,25 @@ class FeatureContext extends DrupalContext {
    * @Given /^I set courses to import$/
    */
   public function iSetCoursesToImport() {
+    $query = new EntityFieldQuery();
+    $result = $query
+      ->entityCondition('entity_type', 'taxonomy_term')
+      ->propertyCondition('name', 'Harvard Graduate School of Design')
+      ->range(0, 1)
+      ->execute();
+
+    $entity = entity_create('field_collection_item', array('field_name' => 'field_department_school'));
+    $entity->setHostEntity('node', node_load(FeatureHelp::getNodeId('john')));
+    $wrapper = entity_metadata_wrapper('field_collection_item', $entity);
+    $wrapper->field_department_id->set('Architecture');
+    $wrapper->field_school_name->set(reset($result['taxonomy_term'])->tid);
+    $wrapper->save();
+
     $metasteps = array();
-    $this->getDriver()->drush("php-eval \"drupal_flush_all_caches();\"");
-    $this->getDriver()->drush("cc all");
     $metasteps[] = new Step\When('I visit "admin"');
     $metasteps[] = new Step\When('I visit "admin/structure/feeds/course/settings/HarvardFetcher"');
     $metasteps[] = new Step\When('I check the box "Debug mode"');
     $metasteps[] = new Step\When('I press "Save"');
-    $metasteps[] = new Step\When('I visit "john/cp/build/features/harvard_courses"');
-    $metasteps[] = new Step\When('I fill in "Department ID" with "Architecture"');
-    $metasteps[] = new Step\When('I select "Harvard Graduate School of Design" from "School name"');
-    $metasteps[] = new Step\When('I press "Save configuration"');
-
     return $metasteps;
   }
 
@@ -944,23 +830,21 @@ class FeatureContext extends DrupalContext {
    * @When /^I enable harvard courses$/
    */
   public function iEnableHarvardCourses() {
-    $code = "os_migrate_demo_define_harvard_courses();";
-    $this->getDriver()->drush("php-eval \"{$code}\"");
+    $this->visit('os-import-demo/enable/harvard');
   }
 
   /**
    * @Given /^I refresh courses$/
    */
   public function iRefreshCourses() {
-    $code = "os_migrate_demo_import_courses();";
-    $this->getDriver()->drush("php-eval \"{$code}\"");
+    FeatureHelp::ImportCourses();
   }
 
   /**
    * @Given /^I remove harvard courses$/
    */
   public function iRemoveHarvardCourses() {
-    $this->invoke_code('os_migrate_demo_remove_courses');
+    FeatureHelp::RemoveCourses();
     $this->iSleepFor(2);
   }
 
@@ -968,7 +852,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I add the courses$/
    */
   public function iAddTheCourses() {
-    $this->invoke_code('os_migrate_demo_add_courses');
+    FeatureHelp::AddCourses();
     $this->iSleepFor(2);
   }
 
@@ -976,8 +860,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I invalidate cache$/
    */
   public function iInvalidateCache() {
-    $code = "cache_clear_all('*', 'cache_views_data', TRUE);";
-    $this->getDriver()->drush("php-eval \"{$code}\"");
+    cache_clear_all('*', 'cache_views_data', TRUE);
   }
 
   /**
@@ -1016,16 +899,13 @@ class FeatureContext extends DrupalContext {
     }
     else {
       foreach ($rows as $row) {
-        $code = "os_migrate_demo_get_node_nid('$row[1]');";
-        $nid = $this->getDriver()->drush("php-eval \"{$code}\"");
-
+        $nid = FeatureHelp::GetNodeId($row[1]);
 
         if ($row[2] == 'No') {
           $VisitUrl = 'node/' . $nid;
         }
         else {
-          $code = "print drupal_get_path_alias('node/{$nid}');";
-          $VisitUrl = $this->getDriver()->drush("php-eval \"{$code}\"");
+          $VisitUrl = drupal_get_path_alias('node/{$nid}');
         }
 
         if (!empty($row[0])) {
@@ -1063,7 +943,7 @@ class FeatureContext extends DrupalContext {
     curl_setopt($ch, CURLOPT_HEADER, 1); // Return header.
     curl_setopt($ch, CURLOPT_NOBODY, 1); // Will not return the body.
 
-    $linkHeaders = curl_exec($ch);
+    curl_exec($ch);
     $curlInfo = curl_getinfo($ch);
     curl_close($ch);
 
@@ -1107,26 +987,23 @@ class FeatureContext extends DrupalContext {
     $sites = explode(',', $sites);
     $site_ids = array();
     foreach ($sites as $site) {
-      $site_ids[] = $this->invoke_code('os_migrate_demo_get_node_id', array("'{$site}'"));
+      $site_ids[] = FeatureHelp::GetNodeId($site);
     }
-    $site_ids = implode(',', $site_ids);
-    $this->invoke_code('os_migrate_demo_variable_set', array('os_search_solr_search_sites', 'array(' . $site_ids . ')'));
+    FeatureHelp::VariableSet('os_search_solr_search_sites', array(implode(',', $site_ids)));
   }
 
   /**
    * @When /^I add to the search results the site's subsites$/
    */
   public function iAddToSearchResultsSubsites() {
-    $function = 'os_migrate_demo_variable_set';
-    $this->invoke_code($function, array('os_search_solr_include_subsites', "TRUE"));
+    FeatureHelp::VariableSet('os_search_solr_include_subsites', TRUE);
   }
 
   /**
    * @Then /^I verify the "([^"]*)" term link redirect to the original page$/
    */
   public function iVerifyTheTermLinkRedirectToTheOriginalPage($term) {
-    $code = "os_migrate_demo_get_term_id('$term');";
-    $tid = $this->getDriver()->drush("php-eval \"{$code}\"");
+    $tid = FeatureHelp::GetTermId($term);
 
     $page = $this->getSession()->getPage();
     $element = $page->find('xpath', "//a[contains(., '{$term}')]");
@@ -1140,8 +1017,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I verify the "([^"]*)" term link doesn\'t redirect to the original page$/
    */
   public function iVerifyTheTermLinkDoesnTRedirectToTheOriginalPage($term) {
-    $code = "os_migrate_demo_get_term_id('$term');";
-    $tid = $this->getDriver()->drush("php-eval \"{$code}\"");
+    $tid = FeatureHelp::GetTermId($term);
 
     $page = $this->getSession()->getPage();
     $element = $page->find('xpath', "//a[contains(., '{$term}')]");
@@ -1248,7 +1124,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I give the user "([^"]*)" the role "([^"]*)" in the group "([^"]*)"$/
    */
   public function iGiveTheUserTheRoleInTheGroup($name, $role, $group) {
-    $uid = $this->invoke_code('os_migrate_demo_get_user_by_name', array("'{$name}'"));
+    $uid = FeatureHelp::GetUserByName($name);
 
     return array(
       new Step\When('I visit "' . $group . '/cp/users/add"'),
@@ -1264,8 +1140,8 @@ class FeatureContext extends DrupalContext {
    * @Given /^I give the role "([^"]*)" in the group "([^"]*)" the permission "([^"]*)"$/
    */
   public function iGiveTheRoleThePermissionInTheGroup($role, $group, $permission) {
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'{$group}'"));
-    $rid = $this->invoke_code('os_migrate_demo_get_role_by_name', array("'{$role}'", "'{$nid}'"));
+    $nid = FeatureHelp::GetNodeId($group);
+    $rid = FeatureHelp::GetRoleByName($role, $nid);
 
     return array(
       new Step\When('I visit "' . $group . '/group/node/' . $nid . '/admin/permission/' . $rid . '/edit"'),
@@ -1278,8 +1154,8 @@ class FeatureContext extends DrupalContext {
    * @Given /^I remove from the role "([^"]*)" in the group "([^"]*)" the permission "([^"]*)"$/
    */
   public function iRemoveTheRoleThePermissionInTheGroup($role, $group, $permission) {
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'{$group}'"));
-    $rid = $this->invoke_code('os_migrate_demo_get_role_by_name', array("'{$role}'", "'{$nid}'"));
+    $nid = FeatureHelp::GetNodeId($group);
+    $rid = FeatureHelp::GetRoleByName($role, $nid);
 
     return array(
       new Step\When('I visit "' . $group . '/group/node/' . $nid . '/admin/permission/' . $rid . '/edit"'),
@@ -1292,7 +1168,8 @@ class FeatureContext extends DrupalContext {
    * @Then /^I should verify that the user "([^"]*)" has a role of "([^"]*)" in the group "([^"]*)"$/
    */
   public function iShouldVerifyThatTheUserHasRole($name, $role, $group) {
-    $user_has_role = $this->invoke_code('os_migrate_demo_check_user_role_in_group', array("'{$name}'", "'{$role}'","'{$group}'"));
+    $user_has_role = FeatureHelp::checkUserRoleInGroup($name, $role, $group);
+
     if ($user_has_role == 0) {
       throw new Exception("The user {$name} is not a member in the group {$group}");
     }
@@ -1324,23 +1201,15 @@ class FeatureContext extends DrupalContext {
     }
     $radiobutton->selectOption($value, FALSE);
     $option = $radiobutton->getValue();
-    $this->invoke_code('os_migrate_demo_vsite_set_variable', array("'{$vsite}'", "'{$name}'", "'{$option}'"));
+    FeatureHelp::VsiteSetVariable($vsite, $name, $option);
   }
 
   /**
    * @When /^I visit the original page for the term "([^"]*)"$/
    */
   public function iVisitTheOriginalPageForTheTerm($term) {
-    $code = "os_migrate_demo_get_term_id('$term');";
-    $tid = $this->getDriver()->drush("php-eval \"{$code}\"");
+    $tid = FeatureHelp::GetTermId($term);
     $this->getSession()->visit($this->locatePath('taxonomy/term/' . $tid));
-  }
-
-  /**
-   * @Given /^I reindex the search$/
-   */
-  public function iReindexTheSearch() {
-    $this->getDriver()->drush("search-index");
   }
 
   /**
@@ -1421,8 +1290,7 @@ class FeatureContext extends DrupalContext {
    * Change the event registration status.
    */
   private function eventRegistrationChangeStatus($title) {
-    $title = str_replace("'", "\'", $title);
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'{$title}'"));
+    $nid = FeatureHelp::GetNodeId($title);
     return array(
       new Step\When('I visit "node/' . $nid . '/edit"'),
       new Step\When('I check the box "Signup"'),
@@ -1434,11 +1302,10 @@ class FeatureContext extends DrupalContext {
    * @Given /^no boxes display outside the site context$/
    */
   function noBoxesDisplayOutsideTheSiteContext() {
-    // Runs a test of loading all existing boxes and checking if they have output.
+    // Runs a test of loading all existing boxes and checking if they have
+    // output.
     // @todo ideally we would actually create a box of each kind and test each.
-    $code = 'include_once("profiles/openscholar/modules/os/modules/os_boxes/tests/os_boxes.behat.inc");';
-    $code .= '_os_boxes_test_load_all_boxes_outside_vsite_context();';
-    $error = $this->getDriver()->drush("php-eval \"{$code}\"");
+    $error = _os_boxes_test_load_all_boxes_outside_vsite_context();
     if ($error) {
       throw new Exception(sprintf("At least one box returned output outside of a vsite: %s", $key));
     }
@@ -1448,10 +1315,9 @@ class FeatureContext extends DrupalContext {
    * @When /^I edit the node "([^"]*)"$/
    */
   public function iEditTheNode($title) {
-    $title = str_replace("'", "\'", $title);
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'{$title}'"));
+    $nid = FeatureHelp::GetNodeId($title);
 
-    $purl = $this->invoke_code('os_migrate_demo_get_node_vsite_purl', array("'$nid'"));
+    $purl = FeatureHelp::GetNodeVsitePurl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
 
     return array(
@@ -1463,10 +1329,8 @@ class FeatureContext extends DrupalContext {
    * @When /^I edit the node "([^"]*)" in the group "([^"]*)"$/
    */
   public function iEditTheNodeInGroup($title, $group) {
-    $title = str_replace("'", "\'", $title);
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id_in_vsite', array("'{$title}'", "'{$group}'"));
-
-    $purl = $this->invoke_code('os_migrate_demo_get_node_vsite_purl', array("'$nid'"));
+    $nid = FeatureHelp::GetNodeIdInVsite($title, $group);
+    $purl = FeatureHelp::GetNodeVsitePurl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
 
     return array(
@@ -1478,8 +1342,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I edit the page meta data of "([^"]*)" in "([^"]*)"$/
    */
   public function iEditTheMetaTags($title, $group) {
-    $title = str_replace("'", "\'", $title);
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'{$title}'"));
+    $nid = FeatureHelp::GetNodeId($title);
 
     return array(
       new Step\When('I visit "' . $group . '/os/pages/' . $nid . '/meta"'),
@@ -1490,8 +1353,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I edit the node of type "([^"]*)" named "([^"]*)" using contextual link$/
    */
   public function iEditTheNodeOfTypeNamedUsingContextualLink($type, $title) {
-    $title = str_replace("'", "\'", $title);
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'{$title}'"));
+    $nid = FeatureHelp::GetNodeId($title);
     return array(
       new Step\When('I visit "node/' . $nid . '/edit?destination=' . $type . '"'),
     );
@@ -1501,8 +1363,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I delete the node of type "([^"]*)" named "([^"]*)"$/
    */
   public function iDeleteTheNodeOfTypeNamedUsingContextualLink($type, $title) {
-    $title = str_replace("'", "\'", $title);
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'{$title}'"));
+    $nid = FeatureHelp::GetNodeId($title);
     return array(
       new Step\When('I visit "node/' . $nid . '/delete?destination=' . $type . '"'),
       new Step\When('I press "Delete"'),
@@ -1513,8 +1374,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I delete the node of type "([^"]*)" named "([^"]*)" in the group "([^"]*)"$/
    */
   public function iDeleteTheNodeOfTypeNamedInGroup($type, $title, $group) {
-    $title = str_replace("'", "\'", $title);
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id_in_vsite', array("'{$title}'", "'{$group}'"));
+    $nid = FeatureHelp::GetNodeIdInVsite($title, $group);
     return array(
       new Step\When('I visit "' . $group . '/node/' . $nid . '/delete?destination=' . $type . '"'),
       new Step\When('I press "Delete"'),
@@ -1537,21 +1397,21 @@ class FeatureContext extends DrupalContext {
    * @Given /^I am adding the subtheme "([^"]*)" in "([^"]*)"$/
    */
   public function iAmAddingTheSubthemeIn($subtheme, $vsite) {
-    $this->invoke_code('os_migrate_demo_add_subtheme', array("'{$subtheme}'", "'{$vsite}'"));
+    FeatureHelp::AddSubtheme($subtheme, $vsite);
   }
 
   /**
    * @When /^I defined the "([^"]*)" as the theme of "([^"]*)"$/
    */
   public function iDefinedTheAsTheThemeOf($subtheme, $vsite) {
-    $this->invoke_code('os_migrate_demo_define_subtheme', array("'{$subtheme}'", "'{$vsite}'"));
+    FeatureHelp::DefineSubtheme($subtheme, $vsite, 1);
   }
 
   /**
    * @Given /^I define the subtheme "([^"]*)" of the theme "([^"]*)" as the theme of "([^"]*)"$/
    */
   public function iDefineTheSubthemeOfTheThemeAsTheThemeOf($subtheme, $theme, $vsite) {
-    $this->invoke_code('os_migrate_demo_define_subtheme', array("'{$theme}'", "'{$subtheme}'", "'{$vsite}'"));
+    FeatureHelp::DefineSubtheme($theme, $subtheme, $vsite);
   }
 
   /**
@@ -1594,16 +1454,18 @@ class FeatureContext extends DrupalContext {
    * @Given /^I import feed items for "([^"]*)"$/
    */
   public function iImportFeedItemsFor($vsite) {
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'$vsite'"));
-    $this->invoke_code('os_migrate_demo_import_feed_items', array("'" . $this->locatePath('os-reader/' . $vsite) . "'", $nid));
+    global $base_url;
+    $nid = FeatureHelp::GetNodeId($vsite);
+    $url = $base_url . '/' . drupal_get_path('module', 'os_migrate_demo') . '/includes/' . $vsite . '_dummy_rss.xml';
+    FeatureHelp::ImportFeedItems($url, $nid);
   }
 
   /**
    * @Given /^I import "([^"]*)" feed items for "([^"]*)"$/
    */
   public function iImportVsiteFeedItemsForVsite($vsite_origin, $vsite_target) {
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'$vsite_target'"));
-    $this->invoke_code('os_migrate_demo_import_feed_items', array("'" . $this->locatePath('os-reader/' . $vsite_origin) . "'", $nid));
+    $nid = FeatureHelp::GetNodeId($vsite_target);
+    FeatureHelp::ImportFeedItems($this->locatePath('os-reader/' . $vsite_origin), $nid);
   }
 
   /**
@@ -1670,16 +1532,15 @@ class FeatureContext extends DrupalContext {
    * @Given /^I display watchdog$/
    */
   public function iDisplayWatchdog() {
-    $this->invoke_code('os_migrate_demo_display_watchdogs', NULL, TRUE);
+    FeatureHelp::DisplayWatchdogs(NULL, TRUE);
   }
 
   /**
    * @When /^I login as "([^"]*)" in "([^"]*)"$/
    */
   public function iLoginAsIn($username, $site) {
-    $title = str_replace("'", "\'", $site);
+    $nid = FeatureHelp::GetNodeId($site);
 
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'{$title}'"));
     try {
       $password = $this->users[$username];
     } catch (Exception $e) {
@@ -1711,15 +1572,15 @@ class FeatureContext extends DrupalContext {
    * @Given /^I import the blog for "([^"]*)"$/
    */
   public function iImportTheBlogFor($vsite) {
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'$vsite'"));
-    $this->invoke_code('os_migrate_demo_import_feed_items', array("'" . $this->locatePath('os-reader/' . $vsite . '_blog') . "'", $nid, "blog"), TRUE);
+    $nid = FeatureHelp::GetNodeId($vsite);
+    FeatureHelp::ImportFeedItems($this->locatePath('os-reader/' . $vsite . '_blog'), $nid, 'blog');
   }
 
   /**
    * @Given /^I bind the content type "([^"]*)" with "([^"]*)"$/
    */
   public function iBindTheContentTypeWithIn($bundle, $vocabulary) {
-    $this->invoke_code("os_migrate_demo_bind_content_to_vocab", array("'{$bundle}'", "'{$vocabulary}'"), TRUE);
+    FeatureHelp::BindContentToVocab($bundle, $vocabulary);
   }
 
   /**
@@ -1740,9 +1601,8 @@ class FeatureContext extends DrupalContext {
    * @When /^I edit the term "([^"]*)"$/
    */
   public function iEditTheTerm($name) {
-    $tid = $this->invoke_code('os_migrate_demo_get_term_id', array("'$name'"));
-
-    $purl = $this->invoke_code('os_migrate_demo_get_term_vsite_purl', array("'$tid'"));
+    $tid = FeatureHelp::GetTermId($name);
+    $purl = FeatureHelp::GetTermVsitePurl($tid);
     $purl = !empty($purl) ? $purl . '/' : '';
 
     return array(
@@ -1754,8 +1614,8 @@ class FeatureContext extends DrupalContext {
    * @Then /^I verify the alias of node "([^"]*)" is "([^"]*)"$/
    */
   public function iVerifyTheAliasOfNodeIs($title, $alias) {
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'$title'"));
-    $actual_alias = $this->invoke_code('os_migrate_demo_get_node_alias', array("'$nid'"));
+    $nid = FeatureHelp::GetNodeId($title);
+    $actual_alias = FeatureHelp::GetNodeAlias($nid);
 
     if ($actual_alias != $alias) {
       throw new Exception("The alias of the node '$title' should be '$alias', but is '$actual_alias' instead.");
@@ -1766,8 +1626,8 @@ class FeatureContext extends DrupalContext {
    * @Then /^I verify the alias of term "([^"]*)" is "([^"]*)"$/
    */
   public function iVerifyTheAliasOfTermIs($name, $alias) {
-    $tid = $this->invoke_code('os_migrate_demo_get_term_id', array("'$name'"));
-    $actual_alias = $this->invoke_code('os_migrate_demo_get_term_alias', array("'$tid'"));
+    $tid = FeatureHelp::GetTermId($name);
+    $actual_alias = FeatureHelp::GetTermAlias($tid);
 
     if ($actual_alias != $alias) {
       throw new Exception("The alias of the term '$name' should be '$alias', but is '$actual_alias' instead.");
@@ -1803,15 +1663,12 @@ class FeatureContext extends DrupalContext {
    */
   public function iDefineDomainTo($vsite, $domain) {
     $this->domains[] = $vsite;
-
-    return array(
-      new Step\When('I visit "' . $vsite . '/cp/settings"'),
-      new Step\When('I fill in "Custom domain name" with "' . $domain .'"'),
-      new Step\When('I check the box "Share domain name"'),
-      new Step\When('I press "edit-submit"'),
-    );
+    $nid = FeatureHelp::getNodeId($vsite);
+    if ($group = vsite_get_vsite($nid)) {
+      $group->controllers->variable->set('vsite_domain_name', $domain);
+      $group->controllers->variable->set('vsite_domain_shared', $domain);
+    }
   }
-
 
   /**
    * @Given /^I verify the url is "([^"]*)"$/
@@ -1826,8 +1683,8 @@ class FeatureContext extends DrupalContext {
    * @Given /^I make the node "([^"]*)" sticky$/
    */
   public function iMakeTheNodeSticky($title) {
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'$title'"));
-    $this->invoke_code('os_migrate_demo_make_node_sticky', array("'$nid'"));
+    $nid = FeatureHelp::GetNodeId($title);
+    FeatureHelp::MakeNodeSticky($nid);
   }
 
   /**
@@ -1886,10 +1743,9 @@ class FeatureContext extends DrupalContext {
    * @Given /^I update the node "([^"]*)" field "([^"]*)" to "([^"]*)"$/
    */
   public function iUpdateTheNodeFieldTo($title, $field, $value) {
-    $title = str_replace("'", "\'", $title);
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'{$title}'"));
+    $nid = FeatureHelp::GetNodeId($title);
 
-    $purl = $this->invoke_code('os_migrate_demo_get_node_vsite_purl', array("'$nid'"));
+    $purl = FeatureHelp::GetNodeVsitePurl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
 
     return array(
@@ -1914,52 +1770,51 @@ class FeatureContext extends DrupalContext {
    * @Given /^I make registration to event without javascript available$/
    */
   public function iMakeRegistrationToEventWithoutJavascriptAvailable() {
-    $this->invoke_code('os_migrate_demo_event_registration_form');
+    FeatureHelp::EventRegistrationForm();
   }
 
   /**
    * @Given /^I make registration to event without javascript unavailable$/
    */
   public function iMakeRegistrationToEventWithoutJavascriptUnavailable() {
-    $this->invoke_code('os_migrate_demo_event_registration_link');
+    FeatureHelp::EventRegistrationLink();
   }
 
   /**
    * @When /^I enable read-only mode$/
    */
   public function iEnableReadOnlyMode() {
-    $this->invoke_code('os_migrate_demo_set_read_only', array(TRUE));
+    FeatureHelp::SetReadOnly(TRUE);
   }
 
   /**
    * @Then /^I disable read-only mode$/
    */
   public function iDisableReadOnlyMode() {
-    $this->invoke_code('os_migrate_demo_set_read_only', array(FALSE));
+    FeatureHelp::SetReadOnly(FALSE);
   }
 
   /**
    * @Then /^I enable pinserver$/
    */
   public function iEnablePinserver() {
-    $this->invoke_code('module_enable', array('array(\'pinserver\', \'pinserver_authenticate\', \'os_pinserver_auth\')'));
+    module_enable(array('pinserver', 'pinserver_authenticate', 'os_pinserver_auth'));
   }
 
   /**
    * @Then /^I disable pinserver$/
    */
   public function iDisablePinserver() {
-    $this->invoke_code('module_disable', array('array(\'pinserver\', \'pinserver_authenticate\', \'os_pinserver_auth\')'));
+    module_disable(array('pinserver', 'pinserver_authenticate', 'os_pinserver_auth'));
   }
 
   /**
    * @Given /^I verify that "([^"]*)" is the owner of vsite "([^"]*)"$/
    */
   public function iVerifyThatIsTheOwnerOfVsite($username, $group) {
-    $uid = $this->invoke_code('os_migrate_demo_get_user_by_name', array($username));
-    $author_uid = $this->invoke_code('os_migrate_demo_get_vsite_owner_uid', array($group));
+    $uid = FeatureHelp::GetUserByName($username);
 
-    if ($uid != $author_uid) {
+    if ($uid != node_load(FeatureHelp::getNodeId($group))->uid) {
       throw new Exception("User '$username' is not the owner of vsite '$group'.");
     }
   }
@@ -1968,17 +1823,17 @@ class FeatureContext extends DrupalContext {
    * @Given /^I edit the membership of "([^"]*)" in vsite "([^"]*)"$/
    */
   public function iEditTheMembershipOfInVsite($username, $group) {
-    $uid = $this->invoke_code('os_migrate_demo_get_user_by_name', array($username));
+    $uid = FeatureHelp::GetUserByName($username);
     return array(
       new Step\When('I visit "' . $group . '/cp/users/edit_membership/' . $uid . '"'),
     );
   }
 
- /**
+  /**
    * @Given /^I re import feed item "([^"]*)"$/
    */
   public function iReImportFeedItem($node) {
-    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'$node'"));
+    $nid = FeatureHelp::GetNodeId($node);
 
     return array(
       new Step\When('I visit "node/' . $nid . '/import"'),
@@ -1990,7 +1845,7 @@ class FeatureContext extends DrupalContext {
    * @Then /^I verify the feed item "([^"]*)" exists only "([^"]*)" time for "([^"]*)"$/
    */
   public function iVerifyTheFeedItemeExistsOnlyTimeFor($node, $time, $vsite) {
-    $count = $this->invoke_code('os_migrate_demo_count_node_instances', array("'$node'", "'$vsite'"));
+    $count = FeatureHelp::CountNodeInstances($node, $vsite);
 
     if ($count != $time) {
       throw new Exception(sprintf('The feed items has been imported %s times.', $count));
@@ -2001,8 +1856,8 @@ class FeatureContext extends DrupalContext {
    * @Given /^I edit the entity "([^"]*)" with title "([^"]*)"$/
    */
   public function iEditTheEntityWithTitle($entity_type, $title) {
-    $id = $this->invoke_code('os_migrate_demo_get_entity_id', array("'$entity_type'", "'$title'"));
-    $purl = $this->invoke_code('os_migrate_demo_get_entity_vsite_purl', array("'file'", "'$id'"));
+    $id = FeatureHelp::getEntityID($entity_type, $title);
+    $purl = FeatureHelp::GetEntityVsitePurl('file', $id);
     $purl = !empty($purl) ? $purl . '/' : '';
 
     return array(
@@ -2011,11 +1866,11 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @given /^I verify that the profile "([^"]*)" has a child site named "([^"]*)"$/
+   * @Given /^I verify that the profile "([^"]*)" has a child site named "([^"]*)"$/
    */
   public function iVerifyTheProfileHasChildSite($profile_title, $child_site_title) {
-    $child_site_nid = $this->invoke_code('os_migrate_demo_get_entity_id', array("'node'", "'$child_site_title'", "FALSE", "'personal'"));
-    $child_site_from_profile = $this->invoke_code('os_migrate_demo_get_child_site_nid', array("'$profile_title'"));
+    $child_site_nid = FeatureHelp::getEntityID('node', $child_site_title, 'personal');
+    $child_site_from_profile = FeatureHelp::getChildSiteNid($profile_title);
 
     if (!$child_site_from_profile) {
       throw new Exception(sprintf('The profile %s has no child site.', $profile_title));
@@ -2029,19 +1884,20 @@ class FeatureContext extends DrupalContext {
    * @given /^I whitelist the domain "([^"]*)"$/
    */
   public function iWhitelistTheDomain($domain) {
-    $domains = $this->invoke_code('os_migrate_demo_add_to_whitelist', array("'{$domain}'"));
+    FeatureHelp::AddToWhiteList($domain);
   }
 
   /**
    * @Then /^I verify "([^"]*)" comes before "([^"]*)"$/
    */
- public function iVerifyComesBefore($first, $second) {
-  $page = $this->getSession()->getPage()->getContent();
+  public function iVerifyComesBefore($first, $second) {
+    $page = $this->getSession()
+      ->getPage()
+      ->getContent();
 
-  $pattern = "/[\s\S]*" . $first . "[\s\S]*" . $second . "[\s\S]*/";
-  if (!preg_match($pattern, $page)) {
-    throw new Exception("'$first' does not come before '$second'.");
+    $pattern = "/[\s\S]*" . $first . "[\s\S]*" . $second . "[\s\S]*/";
+    if (!preg_match($pattern, $page)) {
+      throw new Exception("'$first' does not come before '$second'.");
+    }
   }
- }
-
 }

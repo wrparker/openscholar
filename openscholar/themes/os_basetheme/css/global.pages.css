@@ -1317,9 +1317,9 @@ LIST OF POSTS - PERSON TEASER IN SIDEBAR
 	 margin-left: 0;
 }
 
-#boxes-box-os_image_gallery_latest .sv-list-image .file {
+.sv-list-image.sv-list-view-os_files_thumbnail.sv-list-layout-list .file {
  display: block;
-border-bottom: none;
+border-bottom: none !important;
 clear: both;
   
 }

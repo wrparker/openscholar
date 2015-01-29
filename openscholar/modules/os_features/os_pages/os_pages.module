@@ -812,39 +812,60 @@ function os_pages_preprocess_page(&$page) {
   $ctxs = array_keys(context_active_contexts());
 
   if (isset($node->book['bid'])) {
-    $section = array_diff($ctxs, array('os_pages-page-'.$node->nid));
+    $section = array_diff($ctxs, array('os_pages-page-' . $node->nid));
 
     $section_links['section-header'] = array(
       'title' => t('This Section'),
     );
     $section_links['section-layout'] = array(
       'title' => t('Layout'),
-      'href' => 'cp/build/layout/'.implode('/', $section),
+      'href' => 'cp/build/layout/' . implode('/', $section),
       'query' => drupal_get_destination(),
     );
     $section_links['page-header'] = array(
       'title' => t('This Page'),
     );
 
-    $page['classes_array'][] = 'os_pages-section-'.$node->book['bid'];
+    $page['classes_array'][] = 'os_pages-section-' . $node->book['bid'];
   }
 
-  $section_links['page-layout'] = array(
-    'title' => t('Layout'),
-    'href' => 'cp/build/layout/'.implode('/', $ctxs),
-    'query' => drupal_get_destination(),
-  );
-  $section_links['page-edit'] = array(
-    'title' => t('Edit'),
-    'href' => 'os/pages/'.$node->nid.'/meta',
-    'query' => drupal_get_destination(),
-  );
-  $section_links['page-delete'] = array(
-    'title' => t('Delete'),
-    'href' => 'node/'.$node->nid.'/delete'
-  );
+  $item = menu_get_item('cp/build/layout/' . implode('/', $ctxs));
+  if ($item['access']) {
+    $section_links['section-layout'] = array(
+      'title' => t('Layout'),
+      'href' => 'cp/build/layout/' . implode('/', $ctxs),
+      'query' => drupal_get_destination(),
+    );
+  }
+  else {
+    unset($section_links['section-layout'], $section_links['section-header']);
+  }
+
+  $item = menu_get_item('os/pages/' . $node->nid . '/meta');
+  if ($item['access']) {
+    $section_links['page-edit'] = array(
+      'title' => t('Edit'),
+      'href' => 'os/pages/' . $node->nid . '/meta',
+      'query' => drupal_get_destination(),
+    );
+  }
+  else {
+    unset($section_links['page-edit']);
+  }
+
+  $item = menu_get_item('node/' . $node->nid . '/delete');
+  if ($item['access']) {
+    $section_links['page-delete'] = array(
+      'title' => t('Delete'),
+      'href' => 'node/' . $node->nid . '/delete',
+    );
+  }
+  else {
+    unset($section_links['page-delete']);
+  }
 
   $links = $section_links;
+  $page['title_suffix']['controls']['section_links']['#access'] = count($links);
 }
 
 /**

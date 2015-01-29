@@ -53,10 +53,16 @@ class spaces_controller_variable extends spaces_controller {
    * Override of load_original_values().
    */
   protected function load_original_values($id = NULL) {
+    static $inited;
+
     global $conf;
     if (empty($this->values['original'])) {
-      $this->values['original'] = $conf;
-      $this->loaded_all['original'] = TRUE;
+      if ($inited) {
+        $this->values['original'] = variable_initialize();
+      } else {
+        $this->values['original'] = $conf;
+      }
+      $this->loaded_all['original'] = $inited = TRUE;
     }
   }
 }

@@ -454,7 +454,11 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
         $images = $doc->getElementsByTagName('img')->item(0);
 
         if ($images && method_exists($images, 'getAttribute') && $src = $images->getAttribute('src')) {
-          $file = system_retrieve_file($src, 'public://', TRUE);
+          // 16 pixels is a decent image size we can import.
+          list($width, $height) = getimagesize($src );
+          if ($width * $height >= 16) {
+            $file = system_retrieve_file($src, 'public://', TRUE);
+          }
           // Images are found so delete the tags from the description before
           // assigning it to the body of the node.
           $feed->description = preg_replace('/<img[^>]+\>/i', '', $feed->description);
