@@ -1900,4 +1900,19 @@ class FeatureContext extends DrupalContext {
       throw new Exception("'$first' does not come before '$second'.");
     }
   }
+
+  /**
+   * @Given /^I drill down to see the hour$/
+   */
+  public function iDrillDownToSeeTheHour() {
+    for ($i = 0; $i <= 3; $i++) {
+      $element = $this->getSession()->getPage()->find('xpath', "//*[contains(@class, 'facetapi-facet-created')]//a[@class='facetapi-inactive' and last()]");
+
+      if (!$element) {
+        throw new Exception('Link was not found.');
+      }
+
+      $element->click();
+    }
+  }
 }
