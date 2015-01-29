@@ -1234,6 +1234,6 @@ function os_search_solr_facet_time($timestamp, $gap) {
       return format_date($timestamp, 'custom', 'g:i:s A');
 
     default:
-      return format_date($timestamp, 'custom', 'Y');
+      return format_date($timestamp, 'custom', 'Y', 'UTC');
   }
 }

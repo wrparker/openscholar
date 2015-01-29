@@ -50,7 +50,8 @@ function os_sv_list_ctools_plugin_type() {
  */
 function os_sv_list_ctools_plugin_directory($module, $plugin) {
   if (($module == 'os_sv_list') && ($plugin == 'sv_list')) {
-    require_once drupal_get_path('module', 'os_sv_list').'/plugins/sv_list/plugin.inc'; //base class must be present first.
+    // Base class must be present first.
+    require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'os_sv_list') . '/plugins/sv_list/plugin.inc';
     return 'plugins/sv_list';
   }
 }

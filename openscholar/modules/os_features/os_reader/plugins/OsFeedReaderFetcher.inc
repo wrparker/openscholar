@@ -71,6 +71,8 @@ class OsFeedReaderFetcher extends FeedsProcessor {
     return array(
       'type' => array(),
       'mappings' => array(),
+      'update_existing' => FEEDS_UPDATE_EXISTING,
+      'skip_hash_check' => 1,
     );
   }
 
@@ -132,7 +134,8 @@ class OsFeedReaderFetcher extends FeedsProcessor {
       ->execute();
 
     if (!empty($results['os_feed_item'])) {
-      return reset(array_keys($results['os_feed_item']));
+      $items = array_keys($results['os_feed_item']);
+      return reset($items);
     }
 
     return 0;

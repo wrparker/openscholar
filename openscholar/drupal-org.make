@@ -25,7 +25,7 @@ projects[boxes][patch][] = "https://www.drupal.org/files/1859150-1-boxes-strict_
 projects[boxes][patch][] = "https://www.drupal.org/files/issues/default_object_empty_value-2042101-3.patch"
 
 projects[calendar][subdir] = "contrib"
-projects[calendar][version] = 3.4
+projects[calendar][version] = 3.5
 projects[calendar][patch][] = "http://raw.github.com/openscholar/openscholar/72d63ee3537c31505b7481975886ec13789feeb5/patches/calendar-fix-week-view-overflow.patch"
 
 projects[colorbox][subdir] = "contrib"
@@ -268,8 +268,7 @@ projects[nodeformcols][version] = 1.0
 projects[entity_validator][subdir] = "contrib"
 projects[entity_validator][download][type] = git
 projects[entity_validator][download][url] = "https://github.com/Gizra/entity_validator.git"
-projects[entity_validator][download][branch] = "7.x-1.x"
-projects[entity_validator][download][revision] = 802289168aa6a30c1f191284153d4899564287ac
+projects[entity_validator][download][branch] = "31"
 
 projects[nodeorder][subdir] = "contrib"
 projects[nodeorder][version] = 1.1

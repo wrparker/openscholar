@@ -773,7 +773,7 @@ function os_preprocess_page(&$vars) {
           'class' => array('add_new'),
         ),
         'html' => FALSE,
-        'query' => isset($link['query'])?$link['query']:array(),
+        'query' => isset($link['query']) ? $link['query'] : array(),
       ),
     );
   }
@@ -1724,6 +1724,12 @@ function os_js_alter(&$javascript) {
 
   // Do nothing when rendering a web widget
   if (module_exists('web_widgets') && web_widgets_inside_widget()) {
+    return;
+  }
+
+  $menu = menu_get_item();
+  // Don't change the weight in admin paths.
+  if (path_is_admin($menu['path'])) {
     return;
   }
 
