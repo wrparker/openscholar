@@ -110,29 +110,7 @@ class OsRestfulBoxes extends OsRestfulSpaces {
     ctools_include('layout', 'os');
 
     $delta = $this->object->delta;
-    $context = context_load($this->object->context);
-    $space = $this->space;
-
-    if (!$space) {
-      $space = vsite_get_vsite();
-    }
-
-    if ($space) {
-      // some values we need to set to prevent later overwrites are protected
-      $space->controllers->context->get(null, 'original');
-      foreach (array_keys(context_reactions()) as $plugin) {
-        // overwrite with true original values
-        if (isset($context->reactions[$plugin])) {
-          $space->controllers->context->values['original']["{$context->name}:reaction:{$plugin}"] = $context->reactions[$plugin];
-        }
-        // now get from space
-        $override = $space->controllers->context->get("{$context->name}:reaction:{$plugin}");
-        if (!is_null($override)) {
-          $context->reactions[$plugin] = $override;
-        }
-      }
-    }
-    $blocks = $context->reactions['block']['blocks'];
+    $blocks = os_layout_get($this->object->context, FALSE, FALSE, $this->space);
 
     $this->space->controllers->boxes->del($delta);
     unset($blocks['boxes-' . $delta]);
