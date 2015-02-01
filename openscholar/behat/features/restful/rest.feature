@@ -13,6 +13,6 @@ Feature:
 
   @api @rest @now
   Scenario: Creating a box.
-    Given I create a "box" as "john" with the settings:
+    Given I "create" a "box" as "john" with the settings:
       | Site    | Widget  | Description  |
       | john    | Terms   | Terms        |

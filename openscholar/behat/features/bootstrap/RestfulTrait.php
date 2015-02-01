@@ -10,25 +10,32 @@ trait RestfulTrait {
    *
    * Holds list of endpoints path.
    */
-  private $endpoints = array(
+  private $endpoints = [
     'box' => 'api/boxes',
-  );
+  ];
 
   /**
    * @var array
    *
    * List of widgets and the machine name they represent.
    */
-  private $widgets = array(
+  private $widgets = [
     'Terms' => 'os_taxonomy_fbt',
-  );
+  ];
 
   /**
    * @var String
    *
    * Holds the access token for the user.
    */
-  private $accessToken = array();
+  private $accessToken = [];
+
+  /**
+   * @var array
+   *
+   * Generic metadata from tests.
+   */
+  private $meta = [];
 
   /**
    * Alias for Guzzle client.
@@ -110,11 +117,24 @@ trait RestfulTrait {
    * @Given /^I create a "([^"]*)" as "([^"]*)" with the settings:$/
    */
   public function iCreateAAsWithTheSettings($type, $account, TableNode $table) {
+
+  }
+
+  /**
+   * @Given /^I "([^"]*)" a "([^"]*)" as "([^"]*)" with the settings:$/
+   */
+  public function iAAsWithTheSettings($operation, $type, $account, TableNode $table) {
     $values = $this->getValues($table);
     $token = $this->restLogin($account);
 
+    $operations = [
+      'create' => 'post',
+      'edit' => 'put',
+      'delete' => 'delete',
+    ];
+
     try {
-      $this->getClient()->post($this->locatePath($this->endpoints[$type]), [
+      $this->getClient()->{$operations[$operation]}($this->locatePath($this->endpoints[$type]), [
         'headers' => ['access_token' => $token],
         'body' => [
           'vsite' => FeatureHelp::getNodeId($values['Site']),
