@@ -45,5 +45,6 @@ Feature:
       And I fill in "search_block_form" with "\"Tesla's Blog\""
       And I press "Search"
       And I drill down to see the hour
+     Then I verify the facet is in UTC format
 
 

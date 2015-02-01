@@ -1915,4 +1915,22 @@ class FeatureContext extends DrupalContext {
       $element->click();
     }
   }
+
+  /**
+   * @Then /^I verify the facet is in UTC format$/
+   */
+  public function iVerifyTheFacetIsInUTCFormat() {
+    $element = $this->getSession()->getPage()->find('xpath', "//*[contains(@class, 'facetapi-facet-created')]");
+    $nid = FeatureHelp::getNodeId("Tesla's Blog");
+
+    if (!$node = node_load($nid)) {
+      throw new Exception("The node Tesla's Blog was not found");
+    }
+
+    $found = strpos($element->getText(), format_date($node->created, 'custom', 'g:i A'));
+
+    if ($found === FALSE) {
+      throw new Exception('the formatted creates timestamp was not found in the facet filter value.');
+    }
+  }
 }
