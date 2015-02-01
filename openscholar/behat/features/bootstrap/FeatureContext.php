@@ -8,8 +8,11 @@ use Behat\Behat\Context\Step;
 use Behat\Behat\Context\Step\When;
 
 require 'vendor/autoload.php';
+require_once 'RestfulTrait.php';
 
 class FeatureContext extends DrupalContext {
+
+  use RestfulTrait;
 
   /**
    * Variable for storing the random string we used in the text.
@@ -36,13 +39,6 @@ class FeatureContext extends DrupalContext {
    * Hold the NID of the vsite.
    */
   private $nid;
-
-  /**
-   * @var String
-   *
-   * Holds the access token for the user.
-   */
-  private $accessToken = array();
 
   /**
    * Initializes context.
@@ -1908,101 +1904,4 @@ class FeatureContext extends DrupalContext {
     }
   }
 
-  /**
-   * Alias for Guzzle client.
-   *
-   * @return \GuzzleHttp\Client
-   */
-  private function getClient() {
-    return new GuzzleHttp\Client();
-  }
-
-  /**
-   * Login via rest to get the user's access token.
-   *
-   * @param $user
-   *   The user name.
-   *
-   * @return string
-   *   The user access token.
-   */
-  private function restLogin($user) {
-    if (isset($this->accessToken[$user])) {
-      return $this->accessToken[$user];
-    }
-
-    $base = base64_encode($user . ':' . $this->users[$user]);
-    $login_data = $this->getClient()->get($this->locatePath('api/login-token'), [
-      'headers' => [
-        'Authorization' => 'Basic ' . $base,
-      ],
-    ]);
-
-    $data = $login_data->json();
-    $this->accessToken[$user] = $data;
-    return $data['access_token'];
-  }
-
-  /**
-   * Handling bad 404 restful request.
-   *
-   * @param \GuzzleHttp\Exception\ClientException $e
-   *   The client exception handler.
-   *
-   * @throws Exception
-   */
-  private function handleExceptions(\GuzzleHttp\Exception\ClientException $e) {
-    $json = $e->getResponse()->json();
-
-    $implode = array();
-    if (!empty($json['errors'])) {
-      foreach ($json['errors'] as $errors) {
-        foreach ($errors as $error) {
-          $implode[] = $error;
-        }
-      }
-    }
-    else {
-      $implode[] = $json['title'];
-    }
-
-    $errors = implode(', ', $implode);
-    throw new Exception('Your request has failed: ' . $errors);
-  }
-
-  /**
-   * @Given /^I test the exposed resources:$/
-   */
-  public function iTestTheExposedResources(PyStringNode $resources) {
-    foreach ($resources->getLines() as $line) {
-      $this->getClient()->get($line);
-    }
-  }
-
-  /**
-   * @Given /^I create a "([^"]*)" with the settings:$/
-   */
-  public function iCreateAWithTheSettings($arg1, TableNode $table) {
-    $rows = $table->getRows();
-    $values = array_combine($rows[0], $rows[1]);
-
-    $nid = FeatureHelp::getNodeId($values['Site']);
-
-    $token = $this->restLogin('admin');
-    try {
-      $this->getClient()->post($this->locatePath('api/v1.0/boxes'), [
-        'headers' => ['access_token' => $token],
-        'body' => [
-          'vsite' => $nid,
-          'delta' => time(),
-          'widget' => $values['Widget'],
-          'options' => [
-            'description' => $values['Description'],
-          ],
-        ],
-      ]);
-    } catch (\GuzzleHttp\Exception\ClientException $e) {
-      $this->handleExceptions($e);
-    }
-  }
 }
