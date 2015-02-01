@@ -58,7 +58,7 @@ class OsRestfulBoxes extends OsRestfulSpaces {
     $new_settings = array_merge((array) $settings, $this->object->options);
     $controller->set($this->object->delta, (object) $new_settings);
 
-    return $new_settings;
+    return array(array($new_settings));
   }
 
   /**

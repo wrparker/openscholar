@@ -16,3 +16,6 @@ Feature:
     Given I "create" a "box" as "john" with the settings:
       | Site    | Widget  | Description  |
       | john    | Terms   | Terms        |
+    When I "update" a "box" as "john" with the settings:
+      | Site    | Widget  | Description  | Delta |
+      | john    | Terms   | Terms - new  | PREV  |

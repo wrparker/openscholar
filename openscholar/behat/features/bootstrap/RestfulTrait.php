@@ -73,7 +73,7 @@ trait RestfulTrait {
   }
 
   /**
-   * Handling bad 404 restful request.
+   * Handling non 200 http request.
    *
    * @param \GuzzleHttp\Exception\ClientException $e
    *   The client exception handler.
@@ -99,6 +99,16 @@ trait RestfulTrait {
     throw new Exception('Your request has failed: ' . $errors);
   }
 
+  /**
+   * Take the table head and the table body into one single array.
+   *
+   * todo: handle more then one line.
+   *
+   * @param TableNode $table
+   *   The table object.
+   *
+   * @return array
+   */
   private function getValues(TableNode $table) {
     $rows = $table->getRows();
     return array_combine($rows[0], $rows[1]);
@@ -114,13 +124,6 @@ trait RestfulTrait {
   }
 
   /**
-   * @Given /^I create a "([^"]*)" as "([^"]*)" with the settings:$/
-   */
-  public function iCreateAAsWithTheSettings($type, $account, TableNode $table) {
-
-  }
-
-  /**
    * @Given /^I "([^"]*)" a "([^"]*)" as "([^"]*)" with the settings:$/
    */
   public function iAAsWithTheSettings($operation, $type, $account, TableNode $table) {
@@ -129,16 +132,26 @@ trait RestfulTrait {
 
     $operations = [
       'create' => 'post',
-      'edit' => 'put',
+      'update' => 'put',
       'delete' => 'delete',
     ];
 
+    // Get the delta by specific conditions.
+    if (!empty($values['Delta'])) {
+      $delta = $values['Delta'] == 'PREV' ? $this->meta['widget']['delta'] : $values['Delta'];
+    }
+    else {
+      $delta = time();
+    }
+
+    $request = '';
     try {
-      $this->getClient()->{$operations[$operation]}($this->locatePath($this->endpoints[$type]), [
+      $request = $this->getClient()->{$operations[$operation]}($this->locatePath($this->endpoints[$type]), [
         'headers' => ['access_token' => $token],
+//    'future' => TRUE,
         'body' => [
           'vsite' => FeatureHelp::getNodeId($values['Site']),
-          'delta' => time(),
+          'delta' => $delta,
           'widget' => $this->widgets[$values['Widget']],
           'options' => [
             'description' => $values['Description'],
@@ -148,5 +161,7 @@ trait RestfulTrait {
     } catch (\GuzzleHttp\Exception\ClientException $e) {
       $this->handleExceptions($e);
     }
+
+    $this->meta['widget'] = $request->json()['hal:boxes'][0][0];
   }
 }
