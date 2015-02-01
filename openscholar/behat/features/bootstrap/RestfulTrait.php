@@ -11,7 +11,7 @@ trait RestfulTrait {
    * Holds list of endpoints path.
    */
   private $endpoints = array(
-    'box' => 'api/v1.0/boxes',
+    'box' => 'api/boxes',
   );
 
   /**

@@ -90,7 +90,7 @@ class OsRestfulBoxes extends OsRestfulSpaces {
     $box = boxes_box::factory($this->object->widget, $options);
     $this->space->controllers->boxes->set($box->delta, $box);
 
-    return (array) $box;
+    return array(array($box));
   }
 
   /**
