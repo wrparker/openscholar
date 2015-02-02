@@ -3,6 +3,9 @@
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
 
+/**
+ * Class RestfulTrait
+ */
 trait RestfulTrait {
 
   /**
@@ -124,12 +127,12 @@ trait RestfulTrait {
   }
 
   /**
-   * @Given /^I "([^"]*)" a "([^"]*)" as "([^"]*)" with the settings:$/
+   * @Given /^I "([^"]*)" a box as "([^"]*)" with the settings:$/
    */
-  public function iAAsWithTheSettings($operation, $type, $account, TableNode $table) {
+  public function iAAsWithTheSettings($operation, $account, TableNode $table) {
     $values = $this->getValues($table);
     $token = $this->restLogin($account);
-    $path = $this->locatePath($this->endpoints[$type]);
+    $path = $this->locatePath($this->endpoints['box']);
 
     $operations = [
       'create' => 'post',
@@ -163,10 +166,20 @@ trait RestfulTrait {
     }
 
     $this->meta['widget'] = $request->json()['hal:boxes'][0][0];
-
     $results = $this->getClient()->get($path . '?delta=' . $delta)->json();
-    if ($results['hal:boxes'][0][0]['value']['description'] != $this->meta['widget']['description']) {
-      throw new Exception('The results for the box not matching the settings you passed.');
+
+    // Verify the request did what it suppose to do.
+    if ($operation == 'delete') {
+      if ($results['hal:boxes'][0][0]['value']['description'] == $this->meta['widget']['description']) {
+        throw new Exception('The box was not deleted.');
+      }
+    }
+    else {
+
+      if ($results['hal:boxes'][0][0]['value']['description'] != $this->meta['widget']['description']) {
+        throw new Exception('The results for the box not matching the settings you passed.');
+      }
     }
   }
+
 }

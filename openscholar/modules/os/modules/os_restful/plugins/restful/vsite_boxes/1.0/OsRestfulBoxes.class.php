@@ -110,11 +110,12 @@ class OsRestfulBoxes extends OsRestfulSpaces {
     ctools_include('layout', 'os');
 
     $delta = $this->object->delta;
-    $blocks = os_layout_get($this->object->context, FALSE, FALSE, $this->space);
-
     $this->space->controllers->boxes->del($delta);
-    unset($blocks['boxes-' . $delta]);
 
-    os_layout_set($this->object->context, $blocks, $this->space);
+    if (!empty($this->object->context)) {
+      $blocks = os_layout_get($this->object->context, FALSE, FALSE, $this->space);
+      unset($blocks['boxes-' . $delta]);
+      os_layout_set($this->object->context, $blocks, $this->space);
+    }
   }
 }
