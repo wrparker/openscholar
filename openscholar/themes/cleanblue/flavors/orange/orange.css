@@ -1,9 +1,10 @@
-#menu-bar {
-	background: #C75A26;
+#menu-bar,
+#menu-bar #block-os-primary-menu {
+	background: #C75A26 !important;
 	}
 
-#menu-bar #block-os-primary-menu {
-	background: #C75A26;
+	#menu-bar ul.nice-menu a {
+color: #FFF;
 	}
 
 #menu-bar ul li a {
@@ -16,12 +17,7 @@ background: #D4D4D5;
 color: #C75A26;
 }
 
- .teaser-extra a {color:#C75A26;}
  
-.more-link a {
-  color:#C75A26;
-}
-
 .sidebar .content h1 a {color:#C75A26;}
 
 #header-container h1 a,
