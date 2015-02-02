@@ -138,23 +138,17 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
    * space override.
    */
   public function getSpace() {
-    $list = parent::index();
+    $elements = parent::index();
 
     $request = $this->getRequest();
 
-    if (!empty($request['type']) && !empty($list[0]['value'][$request['type']])) {
-      // We need a sub value from the space.
-      $sub_value = $list[0]['value'][$request['type']];
-
-      if (!empty($request['delta']) && !empty($sub_value[$request['delta']])) {
-        // We need a specif delta from the sub value.
-        return $sub_value[$request['delta']];
+    foreach ($elements as $element) {
+      if ($element['object_id'] == $request['delta']) {
+        return array(array($element));
       }
-
-      return $sub_value;
     }
 
-    return $list;
+    return $elements;
   }
 
   /**

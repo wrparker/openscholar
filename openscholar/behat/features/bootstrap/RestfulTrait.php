@@ -57,7 +57,7 @@ trait RestfulTrait {
    */
   private function restLogin($user) {
     if (isset($this->accessToken[$user])) {
-      return $this->accessToken[$user];
+      return $this->accessToken[$user]['access_token'];
     }
 
     $base = base64_encode($user . ':' . $this->users[$user]);
@@ -129,6 +129,7 @@ trait RestfulTrait {
   public function iAAsWithTheSettings($operation, $type, $account, TableNode $table) {
     $values = $this->getValues($table);
     $token = $this->restLogin($account);
+    $path = $this->locatePath($this->endpoints[$type]);
 
     $operations = [
       'create' => 'post',
@@ -146,9 +147,8 @@ trait RestfulTrait {
 
     $request = '';
     try {
-      $request = $this->getClient()->{$operations[$operation]}($this->locatePath($this->endpoints[$type]), [
+      $request = $this->getClient()->{$operations[$operation]}($path, [
         'headers' => ['access_token' => $token],
-//    'future' => TRUE,
         'body' => [
           'vsite' => FeatureHelp::getNodeId($values['Site']),
           'delta' => $delta,
@@ -163,5 +163,10 @@ trait RestfulTrait {
     }
 
     $this->meta['widget'] = $request->json()['hal:boxes'][0][0];
+
+    $results = $this->getClient()->get($path . '?delta=' . $delta)->json();
+    if ($results['hal:boxes'][0][0]['value']['description'] != $this->meta['widget']['description']) {
+      throw new Exception('The results for the box not matching the settings you passed.');
+    }
   }
 }
