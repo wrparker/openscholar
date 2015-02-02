@@ -2004,6 +2004,13 @@ function os_library_alter(&$libraries) {
 }
 
 /**
+ * Implements hook_libraries_info_alter().
+ */
+function os_libraries_info_alter(&$libraries) {
+  $libraries['autopager']['files']['js'][] = drupal_get_path('module', 'os').'/js/os_infinite_scroll_general.js';
+}
+
+/**
  * Helper function for permission to view unpublish group content.
  */
 function os_grant_unpublished_viewing_permission() {
