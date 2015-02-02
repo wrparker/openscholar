@@ -10,9 +10,9 @@
     if (old_load) {
       old_load.call(this, current, next);
     }
-    // if (next is last) {
-    //  loadingAll = false;
-    // )
+    if (!next.page) {
+      loadingAll = false;
+    )
     if (loadingAll) {
       $.autopager.load();
     }
@@ -23,10 +23,13 @@
       old_load = $.autopager.option('load');
       $.autopager.option('load', load);
 
-      $('<div class="autopager-load-all"><a>Load All</a></div>').appendTo('#main-content-header').click(function (e) {
-        loadingAll = true;
-        $.autopager.load();
-      });
+      if (!$('.autopager-load-all').length) {
+        $('<div class="autopager-load-all"><a>Load All</a></div>').appendTo('#main-content-header').click(function (e) {
+          e.preventDefault();
+          loadingAll = true;
+          $.autopager.load();
+        });
+      }
     }
   }
 
