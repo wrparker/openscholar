@@ -1,7 +1,7 @@
 Feature:
   Testing that content types should show tagged taxonomy terms on their node view page.
 
-  @api @taxonomy
+  @api @taxonomy @bio
   Scenario: Testing tagged term links for content type bio
      Given I am logging in as "john"
       When I create the vocabulary "color" in the group "einstein" assigned to bundle "bio"
@@ -13,7 +13,7 @@ Feature:
        And I visit "einstein/einstein"
       Then I should see "Red"
 
-  @api @taxonomy
+  @api @taxonomy @bio
   Scenario: Testing that removed tagged term don't show as links for content type bio
     Given I am logging in as "john"
       And I unassign the node "Albert" with the type "bio" from the term "Red"
