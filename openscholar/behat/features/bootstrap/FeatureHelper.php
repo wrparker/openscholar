@@ -58,7 +58,7 @@ class FeatureHelp {
    *   The entity ID (in case of $return).
    */
   static public function getEntityID($entity_type, $title, $bundle = NULL) {
-    $query = new entityFieldQuery();
+    $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', $entity_type);
     if ($entity_type == 'node') {
       $query->propertyCondition('title', $title);

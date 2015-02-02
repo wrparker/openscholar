@@ -1900,4 +1900,60 @@ class FeatureContext extends DrupalContext {
       throw new Exception("'$first' does not come before '$second'.");
     }
   }
+
+  /**
+   * @Given /^I click "([^"]*)" under "([^"]*)"$/
+   */
+  public function iClickUnder($link, $class) {
+    $element = $this->getSession()->getPage()->find('xpath', "//*[@class='{$class}']/a[.='{$link}']");
+
+    if (!$element) {
+      throw new \Exception('The link was no fount.');
+    }
+
+    $element->click();
+  }
+
+  /**
+   * @Given /^I save the page address$/
+   */
+  public function iSaveThePageAddress() {
+    $element = $this->getSession()->getPage()->find('xpath', "//div[@class='form-region-main']//div[@class='description']");
+    $childrens = explode(" ", $element->getText());
+
+    if (!$childrens) {
+      throw new Exception('The text was not found in the edit page.');
+    }
+
+    $this->url = $childrens[1];
+  }
+
+  /**
+   * @Then /^I verify the page kept the same$/
+   */
+  public function iVerifyThePageKeptTheSame() {
+    $prev_url = $this->url;
+    $this->iSaveThePageAddress();
+
+    if ($this->url != $prev_url) {
+      throw new Exception('The text has been changed during the title changing.');
+    }
+  }
+
+  /**
+   * @Given /^I edit the page "([^"]*)"$/
+   */
+  public function iEditThePage($title) {
+    $element = $this->getSession()->getPage()->find('xpath', "//*[@class='page-edit']/a[.='Edit']");
+    $this->visit($element->getAttribute('href'));
+  }
+
+  /**
+   * @Given /^I verify the url did not changed$/
+   */
+  public function iVerifyTheUrlDidNotChanged() {
+    if ($this->getSession()->getCurrentUrl() != $this->url) {
+      throw new Exception('The url of the pages has changed.');
+    }
+  }
 }
