@@ -6,7 +6,7 @@ $plugin = array(
   'resource' => 'roles',
   'class' => 'OsRestfulRoles',
   'data_provider_options' => array(
-    'table_name' => 'role',
+    'table_name' => 'og_role',
     'id_column' => 'rid',
   ),
   'authentication_types' => TRUE,
