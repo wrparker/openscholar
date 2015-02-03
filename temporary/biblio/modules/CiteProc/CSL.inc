@@ -605,7 +605,11 @@ class csl_name extends csl_format {
           }
           else {
             switch ($this->{'name-as-sort-order'}) {
-              case 'first' && $rank == 0:
+              case 'first':
+                if ($rank != 0) {
+                  $text = $given . ' ' . $name['lastname'] ;
+                  break;
+                }
               case 'all':
                 $text = $name['lastname'] . $this->sort_separator . $given;
                 break;
