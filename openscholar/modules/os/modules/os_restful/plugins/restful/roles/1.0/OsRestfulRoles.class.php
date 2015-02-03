@@ -12,6 +12,28 @@ class OsRestfulRoles extends \OsRestfulDataProvider {
   /**
    * {@inheritdoc}
    */
+  public static function controllersInfo() {
+    return array(
+      '' => array(
+        \RestfulInterface::GET => 'index',
+        \RestfulInterface::HEAD => 'index',
+        \RestfulInterface::POST => 'create',
+        \RestfulInterface::DELETE => 'remove',
+      ),
+      // We don't know what the ID looks like, assume that everything is the ID.
+      '^.*$' => array(
+        \RestfulInterface::GET => 'view',
+        \RestfulInterface::HEAD => 'view',
+        \RestfulInterface::PUT => 'replace',
+        \RestfulInterface::PATCH => 'update',
+        \RestfulInterface::DELETE => 'remove',
+      ),
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function publicFieldsInfo() {
     return array(
       'rid' => array(
@@ -28,25 +50,6 @@ class OsRestfulRoles extends \OsRestfulDataProvider {
       ),
       'group_type' => array(
         'property' => 'group_type',
-      ),
-    );
-  }
-
-  public static function controllersInfo() {
-    return array(
-      '' => array(
-        \RestfulInterface::GET => 'index',
-        \RestfulInterface::HEAD => 'index',
-        \RestfulInterface::POST => 'create',
-        \RestfulInterface::DELETE => 'remove',
-      ),
-      // We don't know what the ID looks like, assume that everything is the ID.
-      '^.*$' => array(
-        \RestfulInterface::GET => 'view',
-        \RestfulInterface::HEAD => 'view',
-        \RestfulInterface::PUT => 'replace',
-        \RestfulInterface::PATCH => 'update',
-        \RestfulInterface::DELETE => 'remove',
       ),
     );
   }
@@ -94,10 +97,7 @@ class OsRestfulRoles extends \OsRestfulDataProvider {
    * Verify the uer have permission to invoke this method.
    */
   public function update($id, $full_replace = FALSE) {
-    if (!user_access('administer permissions', $this->getAccount())) {
-      throw new \RestfulForbiddenException('You are not allowed to manage roles.');
-    }
-
+    $this->validate();
     return parent::update($id, $full_replace);
   }
 
