@@ -2511,12 +2511,12 @@ function os_set_update_batch(&$sandbox, $info) {
  * Implements hook_node_update().
  */
 function os_node_update($node) {
+  // Store the origin value of the variable.
+  variable_set('taxonomy_maintain_index_table_origin', variable_get('taxonomy_maintain_index_table'));
+
   // Set the variable as false in order to prevent the weight deletion for this
   // node.
   variable_set('taxonomy_maintain_index_table', FALSE);
-
-  // Register a shutdown function that will set the variable back to true.
-  drupal_register_shutdown_function('os_revert_taxonomy_maintain');
 }
 
 /**
@@ -2532,6 +2532,11 @@ function os_entity_update($entity, $type) {
     return;
   }
 
-  variable_set('taxonomy_maintain_index_table', TRUE);
+  // Set the variable as false in order to prevent the weight deletion for this
+  // node.
+  variable_set('taxonomy_maintain_index_table', variable_get('taxonomy_maintain_index_table_origin'));
+
+  // Remove the temporary variable.
+  variable_del('taxonomy_maintain_index_table_origin');
 }
 
