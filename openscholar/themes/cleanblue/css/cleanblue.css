@@ -24,6 +24,10 @@ body {
 	background: #ECE7E7;
 }
 
+#header-container {
+min-height: 150px;
+}
+
 /* TYPOGRAPHY*/
 .sidebar .block-boxes-os_boxes_site_info h1 a:hover
 #header-container h1 a:hover, 
@@ -172,6 +176,16 @@ h2.block-title {
 #menu-bar ul.nice-menu a:hover {
 	background: #106599;
 	color: #FFF;
+}
+
+ 
+#menu-bar ul.nice-menu .menuparent a.active:before {
+background-position: -69px -566px;
+}
+
+#menu-bar ul.nice-menu .menuparent.over > a:before,
+#menu-bar ul.nice-menu .menuparent a:hover:before {
+background-position: 0 -566px;
 }
 
 #menu-bar ul.nice-menu a.active, 
