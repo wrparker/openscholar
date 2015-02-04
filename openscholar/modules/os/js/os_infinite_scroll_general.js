@@ -10,11 +10,12 @@
     if (old_load) {
       old_load.call(this, current, next);
     }
-    if (!next.page) {
+    if (!next.page || next.page == NaN) {
       loadingAll = false;
+      $('.autopager-load-all').remove();
     }
     if (loadingAll) {
-      $.autopager.load();
+      setTimeout($.autopager.load, 1);
     }
   }
 
@@ -26,13 +27,15 @@
 
   Drupal.behaviors.osInfiniteScrollGeneral = {
     attach: function (ctx) {
-      old_load = $.autopager.option('load');
-      $.autopager.option('load', load);
+      if (load != $.autopager.option('load')) {
+        old_load = $.autopager.option('load');
+        $.autopager.option('load', load);
+      }
 
       if (!$('.autopager-load-all').length) {
         $('<div class="autopager-load-all"><a>Load All</a></div>').appendTo('#main-content-header');
         $().appendTo('#main-content .view-content');
-        $('#main-content .autopager-load-all').once('load-all-handler').click(loadAllClickHandler);
+        $('#main-content .autopager-load-all', ctx).live('click', loadAllClickHandler);
       }
 
       $(window).scroll(function(e) {
