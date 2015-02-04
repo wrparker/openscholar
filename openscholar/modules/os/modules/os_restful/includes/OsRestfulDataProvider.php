@@ -17,14 +17,6 @@ abstract class OsRestfulDataProvider extends \RestfulDataProviderDbQuery impleme
   protected $object;
 
   /**
-   * {@inheritdoc}
-   */
-  public function __construct(array $plugin, \RestfulAuthenticationManager $auth_manager = NULL, \DrupalCacheInterface $cache_controller = NULL, $language = NULL) {
-    parent::__construct($plugin, $auth_manager, $cache_controller, $language);
-
-  }
-
-  /**
    * Get the request object.
    *
    * @return object|stdClass
