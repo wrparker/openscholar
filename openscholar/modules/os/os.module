@@ -527,14 +527,22 @@ function os_module_implements_alter(&$implementations, $hook) {
     $implementations['os'] = FALSE;
   }
   elseif ($hook == 'node_update') {
-    // Switch the orders of the implementations.
     $os = $implementations['os'];
     $taxonomy = $implementations['taxonomy'];
 
-    unset($implementations['os'], $implementations['taxonomy']);
+    unset($implementations['os'], $implementations['taxonomy'], $implementations['entityreference']);
 
     $implementations['os'] = $os;
     $implementations['taxonomy'] = $taxonomy;
+  }
+  elseif ($hook == 'entity_update') {
+    $os = $implementations['os'];
+    $entityreference = $implementations['entityreference'];
+
+    unset($implementations['os'], $implementations['entityreference']);
+
+    $implementations['os'] = $os;
+    $implementations['entityreference'] = $entityreference;
   }
 }
 
@@ -2503,9 +2511,6 @@ function os_set_update_batch(&$sandbox, $info) {
  * Implements hook_node_update().
  */
 function os_node_update($node) {
-  // Store the original value of the variable.
-  variable_set('taxonomy_maintain_index_table_original', variable_get('taxonomy_maintain_index_table'));
-
   // Set the variable as false in order to prevent the weight deletion for this
   // node.
   variable_set('taxonomy_maintain_index_table', FALSE);
@@ -2515,13 +2520,18 @@ function os_node_update($node) {
 }
 
 /**
- * After updating the node and not deleting the weight for that node we need to
- * set the variable back to true.
+ * Implements hook_entity_update().
+ *
+ * When saving a node the variable set to FALSE to prevent from taxonomy to
+ * delete the node indexing and mess up the order. In this part we define the
+ * variable back to TRUE so module could act as they should be. For example:
+ * entity reference could keep maintain the node index.
  */
-function os_revert_taxonomy_maintain() {
-  variable_set('taxonomy_maintain_index_table', variable_get('taxonomy_maintain_index_table_original'));
+function os_entity_update($entity, $type) {
+  if ($type != 'node') {
+    return;
+  }
 
-  // Delete the temporary variable.
-  variable_del('taxonomy_maintain_index_table_original');
+  variable_set('taxonomy_maintain_index_table', TRUE);
 }
 
