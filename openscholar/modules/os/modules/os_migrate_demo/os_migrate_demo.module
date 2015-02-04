@@ -114,7 +114,7 @@ function os_migrate_demo_migrate_api() {
     'OsMigrateScienceTaxonomyTerm',
     'OsMigratePersonalNode',
     'OsMigrateProjectNode',
-    'OsMigrateBioagrphyNode',
+    'OsMigrateBiographyNode',
     'OsMigratePublicationNode',
     'OsMigrateClassesNode',
     'OsMigrateClassesMaterialNode',
