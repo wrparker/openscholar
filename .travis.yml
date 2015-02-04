@@ -19,7 +19,7 @@ env:
 #  - TEST_SUITE=taxonomy
 #  - TEST_SUITE=vsite
 #  - TEST_SUITE=widgets
-  - TEST_SUITE=rest
+  - TEST_SUITE=restful
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"

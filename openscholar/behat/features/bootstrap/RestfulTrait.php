@@ -2,6 +2,7 @@
 
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
+use GuzzleHttp\Message\ResponseInterface;
 
 /**
  * Class RestfulTrait
@@ -15,6 +16,7 @@ trait RestfulTrait {
    */
   private $endpoints = [
     'box' => 'api/boxes',
+    'layout' => 'api/layouts',
   ];
 
   /**
@@ -39,6 +41,17 @@ trait RestfulTrait {
    * Generic metadata from tests.
    */
   private $meta = [];
+
+  /**
+   * @var array
+   *
+   * List of operations.
+   */
+  private $operations = [
+    'create' => 'post',
+    'update' => 'put',
+    'delete' => 'delete',
+  ];
 
   /**
    * Alias for Guzzle client.
@@ -134,12 +147,6 @@ trait RestfulTrait {
     $token = $this->restLogin($account);
     $path = $this->locatePath($this->endpoints['box']);
 
-    $operations = [
-      'create' => 'post',
-      'update' => 'put',
-      'delete' => 'delete',
-    ];
-
     // Get the delta by specific conditions.
     if (!empty($values['Delta'])) {
       $delta = $values['Delta'] == 'PREV' ? $this->meta['widget']['delta'] : $values['Delta'];
@@ -150,7 +157,8 @@ trait RestfulTrait {
 
     $request = '';
     try {
-      $request = $this->getClient()->{$operations[$operation]}($path, [
+      /** @var ResponseInterface $request */
+      $request = $this->getClient()->{$this->operations[$operation]}($path, [
         'headers' => ['access_token' => $token],
         'body' => [
           'vsite' => FeatureHelp::getNodeId($values['Site']),
@@ -180,6 +188,12 @@ trait RestfulTrait {
         throw new Exception('The results for the box not matching the settings you passed.');
       }
     }
+  }
+
+  /**
+   * @Given /^I "([^"]*)" a layout as "([^"]*)" with the settings:$/
+   */
+  public function iALayoutAsWithTheSettings($operation, $account, TableNode $table) {
   }
 
 }

@@ -1,7 +1,7 @@
 Feature:
-  Testing rest endpoint
+  Testing boxes, layouts and variable end points.
 
-  @api @rest
+  @api @restful
   Scenario: Testing the layout endpoint
     Given I test the exposed resources:
     """
@@ -11,8 +11,8 @@ Feature:
     api/v1.0/variables
     """
 
-  @api @rest @now
-  Scenario: Creating a box.
+  @api @restful
+  Scenario: CRUD-ind a box.
     Given I "create" a box as "john" with the settings:
       | Site    | Widget  | Description  |
       | john    | Terms   | Terms        |
@@ -22,3 +22,10 @@ Feature:
     Then I "delete" a box as "john" with the settings:
       | Site    | Widget  | Description  | Delta |
       | john    | Terms   | Terms - new  | PREV  |
+
+
+  @api @restful
+  Scenario: CRUD-ing a layout.
+    Given I "create" a layout as "john" with the settings:
+      | Site |
+      | john |
