@@ -530,7 +530,7 @@ function os_module_implements_alter(&$implementations, $hook) {
     $os = $implementations['os'];
     $taxonomy = $implementations['taxonomy'];
 
-    unset($implementations['os'], $implementations['taxonomy'], $implementations['entityreference']);
+    unset($implementations['os'], $implementations['taxonomy']);
 
     $implementations['os'] = $os;
     $implementations['taxonomy'] = $taxonomy;
