@@ -122,7 +122,7 @@ trait RestfulTrait {
    */
   public function iTestTheExposedResources(PyStringNode $resources) {
     foreach ($resources->getLines() as $line) {
-      $this->getClient()->get($line);
+      $this->getClient()->get($this->locatePath($line));
     }
   }
 
