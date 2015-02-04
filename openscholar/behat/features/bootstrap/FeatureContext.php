@@ -1902,6 +1902,39 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I drill down to see the hour$/
+   */
+  public function iDrillDownToSeeTheHour() {
+    for ($i = 0; $i <= 3; $i++) {
+      $element = $this->getSession()->getPage()->find('xpath', "//*[contains(@class, 'facetapi-facet-created')]//a[@class='facetapi-inactive' and last()]");
+
+      if (!$element) {
+        throw new Exception('Link was not found.');
+      }
+
+      $element->click();
+    }
+  }
+
+  /**
+   * @Then /^I verify the facet is in UTC format$/
+   */
+  public function iVerifyTheFacetIsInUTCFormat() {
+    $element = $this->getSession()->getPage()->find('xpath', "//*[contains(@class, 'facetapi-facet-created')]");
+    $nid = FeatureHelp::getNodeId("Tesla's Blog");
+
+    if (!$node = node_load($nid)) {
+      throw new Exception("The node Tesla's Blog was not found");
+    }
+
+    $found = strpos($element->getText(), format_date($node->created, 'custom', 'g:i A'));
+
+    if ($found === FALSE) {
+      throw new Exception('the formatted creates timestamp was not found in the facet filter value.');
+    }
+  }
+
+  /**
    * @Given /^I click "([^"]*)" under "([^"]*)"$/
    */
   public function iClickUnder($link, $class) {
