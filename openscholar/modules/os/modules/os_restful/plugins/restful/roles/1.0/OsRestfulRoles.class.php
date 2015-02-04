@@ -73,9 +73,13 @@ class OsRestfulRoles extends \OsRestfulDataProvider {
     $wrapper = entity_metadata_wrapper('node', $request['vsite']);
 
     if ($wrapper->og_roles_permissions->value()) {
+      // The group override OG's default roles and permission. we need to return
+      // only roles for this group.
       $query->condition('gid', $request['vsite']);
     }
     else {
+      // The group use the default roles and permission. We need to display only
+      // roles matching to the group bundle those who not relate to any group.
       $query->condition('group_bundle', $wrapper->getBundle());
       $query->condition('gid', 0);
     }
@@ -112,7 +116,11 @@ class OsRestfulRoles extends \OsRestfulDataProvider {
   }
 
   /**
-   * Overrides
+   * Overrides the default validate method.
+   *
+   * @param bool $validate_request
+   *   Determine if we need to validate the sent request values. In case of
+   *   delete we don't need to validate the sent request values.
    */
   public function validate($validate_request = TRUE) {
     $this->getObject();
