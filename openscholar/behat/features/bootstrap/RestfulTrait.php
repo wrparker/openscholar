@@ -165,18 +165,18 @@ trait RestfulTrait {
       $this->handleExceptions($e);
     }
 
-    $this->meta['widget'] = $request->json()['hal:boxes'][0][0];
+    $this->meta['widget'] = $request->json()['data'][0][0];
     $results = $this->getClient()->get($path . '?delta=' . $delta)->json();
 
     // Verify the request did what it suppose to do.
     if ($operation == 'delete') {
-      if ($results['hal:boxes'][0][0]['value']['description'] == $this->meta['widget']['description']) {
+      if ($results['data'][0]['value']['description'] == $this->meta['widget']['description']) {
         throw new Exception('The box was not deleted.');
       }
     }
     else {
 
-      if ($results['hal:boxes'][0][0]['value']['description'] != $this->meta['widget']['description']) {
+      if ($results['data'][0][0]['value']['description'] != $this->meta['widget']['description']) {
         throw new Exception('The results for the box not matching the settings you passed.');
       }
     }
