@@ -18,6 +18,12 @@
     }
   }
 
+  function loadAllClickHandler(e) {
+    e.preventDefault();
+    loadingAll = true;
+    $.autopager.load(e);
+  }
+
   Drupal.behaviors.osInfiniteScrollGeneral = {
     attach: function (ctx) {
       old_load = $.autopager.option('load');
@@ -25,13 +31,15 @@
 
       if (!$('.autopager-load-all').length) {
         $('<div class="autopager-load-all"><a>Load All</a></div>').appendTo('#main-content-header');
-        $('<div class="autopager-load-all"><a>Load All</a></div>').insertBefore('#main-content .item-list');
-        $('.autopager-load-all').click(function (e) {
-          e.preventDefault();
-          loadingAll = true;
-          $.autopager.load();
-        });
+        $().appendTo('#main-content .view-content');
+        $('#main-content .autopager-load-all').once('load-all-handler').click(loadAllClickHandler);
       }
+
+      $(window).scroll(function(e) {
+        if (!$('#autopager-load-more + .autopager-load-all').length) {
+          $('<div class="autopager-load-all"><a>Load All</a></div>').insertAfter('#autopager-load-more');
+        }
+      });
     }
   }
 
