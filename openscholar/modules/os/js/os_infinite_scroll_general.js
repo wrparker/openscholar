@@ -4,7 +4,8 @@
 (function ($) {
 
   var loadingAll = false,
-    old_load;
+    old_load,
+    behaviorRun = false;
 
   function load (current, next) {
     if (old_load) {
@@ -27,6 +28,8 @@
 
   Drupal.behaviors.osInfiniteScrollGeneral = {
     attach: function (ctx) {
+      if (behaviorRun) return;
+
       if (load != $.autopager.option('load')) {
         old_load = $.autopager.option('load');
         $.autopager.option('load', load);
