@@ -76,6 +76,11 @@ h2.block-title {
 	font-size: 1.2em;
 }
 
+.date-nav h3 {
+font-family: Helvetica;
+
+}
+
 .sidebar h2.block-title {
 	color: #219910;
 	font: 13px/normal Arial, Verdana, sans-serif;
