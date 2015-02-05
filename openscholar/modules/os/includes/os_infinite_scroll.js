@@ -14,23 +14,20 @@
           for (var mod in Drupal.settings.autopager) {
             
             // load and start should be able to call several small functions instead of requiring us to bloat a single function
-            function _load(current, next) {
-              console.log('Loading');
-              console.log(current);
-              console.log(next);
+            function _load() {
               for (var f in settings._load) {
                 if ((typeof(settings._load[f]) == 'function') && (settings._load[f] != _load)){
-                  settings._load[f](current, next);
+                  settings._load[f]();
                 }
               }
               return true;
             }
   
             
-            function _start(current, next) {
+            function _start() {
               for (var f in settings._start) {
                 if ((typeof(settings._start[f]) == 'function') && (settings._start[f] != _start)){
-                  settings._start[f](current, next);
+                  settings._start[f]();
                 }
               }
               return true;
