@@ -61,11 +61,21 @@
           }
        
           // Removes active class from previous item
-          $($sel + ' ul li ul li.active')
-            .removeClass('active');
-          // Hides the previous item's description
-          $($sel + ' ul li ul li div.description')
-            .fadeOut('fast');
+          var prev = $($sel + ' ul li ul li.active');
+          if (prev.length) {
+            prev
+              .removeClass('active')
+              // Hides the previous item's description
+              .find('div.description')
+              .fadeOut('fast');
+          }
+          else {
+            $($sel + ' ul li ul li div.description')
+              // hide everything but this one.
+              // runs only once per page load
+              .not($(this).find('div.description'))
+              .fadeOut('fast');
+          }
           // Hides the previous item's more link
           $($sel + ' .more')
             .hide();
@@ -74,14 +84,16 @@
             .addClass('active')
             .find('div.description')
             .fadeIn('fast');
-        }, {});
+        }, $.noop);
         
         // Initializes first hover event.
         var first_term = $sel + ' ul li:nth-child(2) ul li:not(.aor-processed)';
         $(first_term)
           .filter(":first")
           .each(function (index) {
-            $(this).trigger('mouseover');
+            $(this).trigger('mouseover')
+              .find('div.description')
+              .css('opacity', '');
         });
         
         // Marks all items as processed, so this only runs once per pageload.
