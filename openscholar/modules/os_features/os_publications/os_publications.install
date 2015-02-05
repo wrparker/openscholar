@@ -1278,3 +1278,25 @@ function os_publications_update_7027() {
     ->condition('object_id', 'biblio_export_links')
     ->execute();
 }
+
+/**
+ * Remove indentation information from the citation styles
+ */
+function os_publications_update_7028(){
+
+  if(module_exists('biblio_citeproc')){
+    //Remove Line indentation from citeproc styles
+    foreach (biblio_get_styles() as $name => $desc){
+      $csl = db_query('SELECT csl FROM {biblio_citeproc_styles} WHERE filename = :id', array(':id' => $name))->fetchObject();
+      if (isset($csl->csl)) {
+        $csl_file_contents = $csl->csl;
+        if(($csl_file_contents = str_replace('<bibliography hanging-indent="true"', '<bibliography hanging-indent="false"', $csl_file_contents)) && ($csl_file_contents != $csl->csl)){
+          biblio_citeproc_install_style($name, $csl_file_contents);
+        }
+      }
+    }
+  }
+
+  return t('Removed inline indents from biblio_citeproc citations.');
+}
+
