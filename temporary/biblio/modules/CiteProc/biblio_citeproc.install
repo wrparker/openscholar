@@ -295,10 +295,12 @@ function biblio_citeproc_update_7001() {
 /**
  *
  * Update Chicago Manual of Style (author-date format) schema
+ * and remove indentation information from the citation styles
  */
 function biblio_citeproc_update_7002() {
   $style_file = 'chicago-author-date.csl';
   $path = drupal_get_path('module', 'biblio_citeproc') . "/style/$style_file";
   $csl = file_get_contents($path);
+	$csl = str_replace('<bibliography hanging-indent="true"', '<bibliography hanging-indent="false"', $csl);
   biblio_citeproc_install_style($style_file, $csl);
 }
