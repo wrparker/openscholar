@@ -2004,6 +2004,20 @@ function os_library_alter(&$libraries) {
 }
 
 /**
+ * Implements hook_libraries_info_alter().
+ */
+function os_libraries_info_alter(&$libraries) {
+  $libraries['autopager']['callbacks']['post-load'][] = 'os_libraries_autopager_add_js';
+}
+
+/**
+ * Adds some custom js to every autopager library invocation
+ */
+function os_libraries_autopager_add_js() {
+  drupal_add_js(drupal_get_path('module', 'os').'/js/os_infinite_scroll_general.js', array('weight' => 20));
+}
+
+/**
  * Helper function for permission to view unpublish group content.
  */
 function os_grant_unpublished_viewing_permission() {
