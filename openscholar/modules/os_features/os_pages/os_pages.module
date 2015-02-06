@@ -830,16 +830,15 @@ function os_pages_preprocess_page(&$page) {
   }
 
   $item = menu_get_item('cp/build/layout/' . implode('/', $ctxs));
-  debug($item);
   if ($item['access']) {
-    $section_links['section-layout'] = array(
+    $section_links['page-layout'] = array(
       'title' => t('Layout'),
       'href' => 'cp/build/layout/' . implode('/', $ctxs),
       'query' => drupal_get_destination(),
     );
   }
   else {
-    unset($section_links['section-layout'], $section_links['section-header']);
+    unset($section_links['section-layout'], $section_links['section-header'], $section_links['page-header']);
   }
 
   $item = menu_get_item('os/pages/' . $node->nid . '/meta');
