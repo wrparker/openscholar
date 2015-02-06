@@ -347,16 +347,21 @@ a, a:visited {
 }
 
 /* INFINITE SCROLL BUTTON */
-#autopager-load-more, #autopager-load-prev {
+#autopager-load-more,
+#autopager-load-prev,
+.autopager-load-all {
      text-align: center;
 }
 
-#autopager-load-more:hover, #autopager-load-prev:hover {
+#autopager-load-more:hover,
+#autopager-load-prev:hover,
+#autopager-load-all:hover {
      background-color: #FFFFFF;
 }
 
 #autopager-load-prev a,
-#autopager-load-more a {
+#autopager-load-more a,
+.autopager-load-all a {
      background: #f1f1f1;
      border-radius: 4px 4px 4px 4px;
      border: 1px solid #CCCCCC;
@@ -366,13 +371,20 @@ a, a:visited {
      font-weight: bold;
      margin: 0px auto;
      padding: 3px;
-     width: 25%;
+     width: 123.5px;
 }
 
 #autopager-load-prev a:hover,
-#autopager-load-more a:hover {
+#autopager-load-more a:hover,
+.autopager-load-all a:hover {
     text-decoration:none !important;
     cursor: pointer;
+}
+
+#main-content-header .autopager-load-all {
+  position: absolute;
+  top: 18px;
+  right: 0;
 }
 
 em,
