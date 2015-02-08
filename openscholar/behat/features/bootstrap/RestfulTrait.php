@@ -54,6 +54,13 @@ trait RestfulTrait {
   ];
 
   /**
+   * @var array
+   *
+   * Results from a JSON request.
+   */
+  private $results = [];
+
+  /**
    * Alias for Guzzle client.
    *
    * @return \GuzzleHttp\Client
@@ -131,6 +138,47 @@ trait RestfulTrait {
   }
 
   /**
+   * Get the delta for the widget.
+   *
+   * @param $values
+   *   The settings from the step definition.
+   * @return int
+   *   The delta of the widget. for a new widget the timestamp will be returned.
+   */
+  private function getDelta($values) {
+    // Get the delta by specific conditions.
+    if (!empty($values['Delta'])) {
+      return $values['Delta'] == 'PREV' ? $this->meta['widget']['delta'] : $values['Delta'];
+    }
+    else {
+      return time();
+    }
+  }
+
+  /**
+   * Verify the rest operation passed.
+   *
+   * @param $operation
+   *   The type of the operation: PUT, DELETE or POST.
+   *
+   * @throws Exception
+   */
+  private function verifyOperationPassed($operation) {
+    // Verify the request did what it suppose to do.
+    if ($operation == 'delete') {
+      if ($this->results['data'][0]['value']['description'] == $this->meta['widget']['description']) {
+        throw new Exception('The box was not deleted.');
+      }
+    }
+    else {
+
+      if ($this->results['data'][0][0]['value']['description'] != $this->meta['widget']['description']) {
+        throw new Exception('The results for the box not matching the settings you passed.');
+      }
+    }
+  }
+
+  /**
    * @Given /^I test the exposed resources:$/
    */
   public function iTestTheExposedResources(PyStringNode $resources) {
@@ -146,14 +194,7 @@ trait RestfulTrait {
     $values = $this->getValues($table);
     $token = $this->restLogin($account);
     $path = $this->locatePath($this->endpoints['box']);
-
-    // Get the delta by specific conditions.
-    if (!empty($values['Delta'])) {
-      $delta = $values['Delta'] == 'PREV' ? $this->meta['widget']['delta'] : $values['Delta'];
-    }
-    else {
-      $delta = time();
-    }
+    $delta = $this->getDelta($values);
 
     $request = '';
     try {
@@ -174,20 +215,8 @@ trait RestfulTrait {
     }
 
     $this->meta['widget'] = $request->json()['data'][0][0];
-    $results = $this->getClient()->get($path . '?delta=' . $delta)->json();
-
-    // Verify the request did what it suppose to do.
-    if ($operation == 'delete') {
-      if ($results['data'][0]['value']['description'] == $this->meta['widget']['description']) {
-        throw new Exception('The box was not deleted.');
-      }
-    }
-    else {
-
-      if ($results['data'][0][0]['value']['description'] != $this->meta['widget']['description']) {
-        throw new Exception('The results for the box not matching the settings you passed.');
-      }
-    }
+    $this->results = $this->getClient()->get($path . '?delta=' . $delta)->json();
+    $this->verifyOperationPassed($operation);
   }
 
   /**
