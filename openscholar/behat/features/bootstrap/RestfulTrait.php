@@ -285,6 +285,23 @@ trait RestfulTrait {
           ],
         ]
       );
+
+      $blocks = [
+        'boxes-' . $delta => [
+          'module' => 'boxes',
+          'delta' => $delta,
+          'region' => 'sidebar_second',
+          'weight' => 2,
+          'status' => 0,
+        ],
+      ];
+    }
+    else {
+      $blocks = [
+        'boxes-' . $delta => [
+          'region' => 'sidebar_second',
+        ],
+      ];
     }
 
     // Create the layout override.
@@ -293,15 +310,7 @@ trait RestfulTrait {
       [
         'vsite' => FeatureHelp::getNodeId($values['Site']),
         'object_id' => $values['Context'],
-        'blocks' => [
-          'boxes-' . $delta => [
-            'module' => 'boxes',
-            'delta' => $delta,
-            'region' => 'sidebar_second',
-            'weight' => 2,
-            'status' => 0,
-          ],
-        ],
+        'blocks' => $blocks,
       ]
     );
 
