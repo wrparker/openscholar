@@ -29,3 +29,5 @@ Feature:
     Given I "create" a layout as "john" with the settings:
       | Site | Context  | Box |
       | john | os_front | Bio |
+    And I visit "john"
+    And I should see the text "Work in gizra inc." under "region-sidebar-second"

@@ -68,7 +68,7 @@ class OsRestfulLayout extends OsRestfulSpaces {
    * values: {
    *  vsite: 2,
    *  object_id: os_pages-page-581,
-   *  boxes: [
+   *  blocks: [
    *    boxes-1419335380: [
    *      module: "boxes",
    *      delta: "1419335380",

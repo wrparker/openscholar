@@ -200,10 +200,22 @@ trait RestfulTrait {
   }
 
   /**
-   * @return ResponseInterface|string
+   * Invoke a rest request.
+   *
+   * @param $method
+   *   The method: POST, GET etc. etc.
+   * @param $path
+   *   The path of the request.
+   * @param $headers
+   *   The headers of the request.
+   * @param $body
+   *   The body of the request AKA the payload.
+   *
+   * @return ResponseInterface
+   *   The request object.
    * @throws Exception
    */
-  private function invokdeRestCommand($method, $path, $headers, $body) {
+  private function invokeRestRequest($method, $path, $headers, $body) {
     $request = '';
 
     try {
@@ -235,9 +247,10 @@ trait RestfulTrait {
     list($values, $token, $path) = $this->setVariables('box', $account, $table);
     $delta = $this->getDelta($values);
 
-    $request = $this->invokdeRestCommand($this->operations[$operation], $path,
+    $request = $this->invokeRestRequest($this->operations[$operation], $path,
       ['access_token' => $token],
-      ['vsite' => FeatureHelp::getNodeId($values['Site']),
+      [
+        'vsite' => FeatureHelp::getNodeId($values['Site']),
         'delta' => $delta,
         'widget' => $this->widgets[$values['Widget']],
         'options' => [
@@ -261,9 +274,10 @@ trait RestfulTrait {
     $delta = $this->getDelta($values);
 
     if ($op == 'post') {
-      $request = $this->invokdeRestCommand($op, $box_path,
+      $this->invokeRestRequest($op, $box_path,
         ['access_token' => $token],
-        ['vsite' => FeatureHelp::getNodeId($values['Site']),
+        [
+          'vsite' => FeatureHelp::getNodeId($values['Site']),
           'delta' => $delta,
           'widget' => $this->widgets[$values['Box']],
           'options' => [
@@ -273,13 +287,25 @@ trait RestfulTrait {
       );
     }
 
-//    $request = $this->invokdeRestCommand($op, $path,
-//      ['access_token' => $token],
-//      ['vsite' => FeatureHelp::getNodeId($values['Site']),
-//        'object_id' => $values['Context'],
-//        'blocks' => $values['Blocks'],
-//      ]
-//    );
+    // Create the layout override.
+    $request = $this->invokeRestRequest($op, $path,
+      ['access_token' => $token],
+      [
+        'vsite' => FeatureHelp::getNodeId($values['Site']),
+        'object_id' => $values['Context'],
+        'blocks' => [
+          'boxes-' . $delta => [
+            'module' => 'boxes',
+            'delta' => $delta,
+            'region' => 'sidebar_second',
+            'weight' => 2,
+            'status' => 0,
+          ],
+        ],
+      ]
+    );
+
+    $this->meta['widget'] = $request->json()['data'][0][0];
   }
 
 }
