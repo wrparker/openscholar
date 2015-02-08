@@ -200,6 +200,26 @@ trait RestfulTrait {
   }
 
   /**
+   * @return ResponseInterface|string
+   * @throws Exception
+   */
+  private function invokdeRestCommand($method, $path, $headers, $body) {
+    $request = '';
+
+    try {
+      /** @var ResponseInterface $request */
+      $request = $this->getClient()->{$method}($path, [
+        'headers' => $headers,
+        'body' => $body,
+      ]);
+    } catch (\GuzzleHttp\Exception\ClientException $e) {
+      $this->handleExceptions($e);
+    }
+
+    return $request;
+  }
+
+  /**
    * @Given /^I test the exposed resources:$/
    */
   public function iTestTheExposedResources(PyStringNode $resources) {
@@ -215,23 +235,16 @@ trait RestfulTrait {
     list($values, $token, $path) = $this->setVariables('box', $account, $table);
     $delta = $this->getDelta($values);
 
-    $request = '';
-    try {
-      /** @var ResponseInterface $request */
-      $request = $this->getClient()->{$this->operations[$operation]}($path, [
-        'headers' => ['access_token' => $token],
-        'body' => [
-          'vsite' => FeatureHelp::getNodeId($values['Site']),
-          'delta' => $delta,
-          'widget' => $this->widgets[$values['Widget']],
-          'options' => [
-            'description' => $values['Description'],
-          ],
+    $request = $this->invokdeRestCommand($this->operations[$operation], $path,
+      ['access_token' => $token],
+      ['vsite' => FeatureHelp::getNodeId($values['Site']),
+        'delta' => $delta,
+        'widget' => $this->widgets[$values['Widget']],
+        'options' => [
+          'description' => $values['Description'],
         ],
-      ]);
-    } catch (\GuzzleHttp\Exception\ClientException $e) {
-      $this->handleExceptions($e);
-    }
+      ]
+    );
 
     $this->meta['widget'] = $request->json()['data'][0][0];
     $this->results = $this->getClient()->get($path . '?delta=' . $delta)->json();
@@ -243,42 +256,30 @@ trait RestfulTrait {
    */
   public function iALayoutAsWithTheSettings($operation, $account, TableNode $table) {
     list($values, $token, $path) = $this->setVariables('layout', $account, $table);
+    $box_path = $this->locatePath($this->endpoints['box']);
     $op = $this->operations[$operation];
     $delta = $this->getDelta($values);
 
     if ($op == 'post') {
-      try {
-        /** @var ResponseInterface $request */
-        $request = $this->getClient()->{$this->operations[$operation]}($this->locatePath($this->endpoints['box']), [
-          'headers' => ['access_token' => $token],
-          'body' => [
-            'vsite' => FeatureHelp::getNodeId($values['Site']),
-            'delta' => $delta,
-            'widget' => $this->widgets[$values['Box']],
-            'options' => [
-              'description' => 'Widget for testing a layout',
-            ],
+      $request = $this->invokdeRestCommand($op, $box_path,
+        ['access_token' => $token],
+        ['vsite' => FeatureHelp::getNodeId($values['Site']),
+          'delta' => $delta,
+          'widget' => $this->widgets[$values['Box']],
+          'options' => [
+            'description' => 'Widget for testing a layout',
           ],
-        ]);
-      } catch (\GuzzleHttp\Exception\ClientException $e) {
-        $this->handleExceptions($e);
-      }
+        ]
+      );
     }
 
-//    $request = '';
-//    try {
-//      /** @var ResponseInterface $request */
-//      $request = $this->getClient()->{$op}($path, [
-//        'headers' => ['access_token' => $token],
-//        'body' => [
-//          'vsite' => FeatureHelp::getNodeId($values['Site']),
-//          'object_id' => $values['Context'],
-//          'blocks' => $values['Blocks'],
-//        ],
-//      ]);
-//    } catch (\GuzzleHttp\Exception\ClientException $e) {
-//      $this->handleExceptions($e);
-//    }
+//    $request = $this->invokdeRestCommand($op, $path,
+//      ['access_token' => $token],
+//      ['vsite' => FeatureHelp::getNodeId($values['Site']),
+//        'object_id' => $values['Context'],
+//        'blocks' => $values['Blocks'],
+//      ]
+//    );
   }
 
 }
