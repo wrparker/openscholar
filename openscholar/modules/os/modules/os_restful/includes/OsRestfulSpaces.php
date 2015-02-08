@@ -58,7 +58,7 @@ abstract class OsRestfulSpaces extends \OsRestfulDataProvider {
    * @return array
    *   List of the schema fields.
    */
-  public function simpleFieldsInfo($fields = array()) {
+  protected function simpleFieldsInfo($fields = array()) {
     $return = array();
     foreach ($fields as $field) {
       $return[$field] = array('property' => $field);
@@ -101,6 +101,9 @@ abstract class OsRestfulSpaces extends \OsRestfulDataProvider {
       // No vsite context.
       $this->throwException('The vsite ID is missing.');
     }
+
+    // Set up the space.
+    spaces_set_space($this->space);
 
     $this->group = entity_metadata_wrapper('node', $this->space->og);
 

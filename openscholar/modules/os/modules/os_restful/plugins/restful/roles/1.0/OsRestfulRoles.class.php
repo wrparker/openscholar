@@ -129,6 +129,10 @@ class OsRestfulRoles extends \OsRestfulDataProvider {
     if (empty($this->object->gid)) {
       $this->object->gid = 0;
     }
+    else {
+      // Set up the space.
+      spaces_set_space(vsite_get_vsite($this->object->gid));
+    }
 
     $this->object->gid = (int) $this->object->gid;
 
