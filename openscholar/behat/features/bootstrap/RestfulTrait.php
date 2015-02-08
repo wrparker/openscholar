@@ -26,6 +26,7 @@ trait RestfulTrait {
    */
   private $widgets = [
     'Terms' => 'os_taxonomy_fbt',
+    'Bio' => 'os_boxes_bio',
   ];
 
   /**
@@ -179,6 +180,26 @@ trait RestfulTrait {
   }
 
   /**
+   * Return array with a needed variables to the rest operations.
+   *
+   * @param $type
+   *   The type of the operation.
+   * @param $account
+   *   The user name.
+   * @param TableNode $table
+   *   The table settings from the step definition.
+   *
+   * @return array
+   */
+  private function setVariables($type, $account, TableNode $table) {
+    return [
+      $this->getValues($table),
+      $this->restLogin($account),
+      $this->locatePath($this->endpoints[$type]),
+    ];
+  }
+
+  /**
    * @Given /^I test the exposed resources:$/
    */
   public function iTestTheExposedResources(PyStringNode $resources) {
@@ -191,9 +212,7 @@ trait RestfulTrait {
    * @Given /^I "([^"]*)" a box as "([^"]*)" with the settings:$/
    */
   public function iAAsWithTheSettings($operation, $account, TableNode $table) {
-    $values = $this->getValues($table);
-    $token = $this->restLogin($account);
-    $path = $this->locatePath($this->endpoints['box']);
+    list($values, $token, $path) = $this->setVariables('box', $account, $table);
     $delta = $this->getDelta($values);
 
     $request = '';
@@ -223,6 +242,43 @@ trait RestfulTrait {
    * @Given /^I "([^"]*)" a layout as "([^"]*)" with the settings:$/
    */
   public function iALayoutAsWithTheSettings($operation, $account, TableNode $table) {
+    list($values, $token, $path) = $this->setVariables('layout', $account, $table);
+    $op = $this->operations[$operation];
+    $delta = $this->getDelta($values);
+
+    if ($op == 'post') {
+      try {
+        /** @var ResponseInterface $request */
+        $request = $this->getClient()->{$this->operations[$operation]}($this->locatePath($this->endpoints['box']), [
+          'headers' => ['access_token' => $token],
+          'body' => [
+            'vsite' => FeatureHelp::getNodeId($values['Site']),
+            'delta' => $delta,
+            'widget' => $this->widgets[$values['Box']],
+            'options' => [
+              'description' => 'Widget for testing a layout',
+            ],
+          ],
+        ]);
+      } catch (\GuzzleHttp\Exception\ClientException $e) {
+        $this->handleExceptions($e);
+      }
+    }
+
+//    $request = '';
+//    try {
+//      /** @var ResponseInterface $request */
+//      $request = $this->getClient()->{$op}($path, [
+//        'headers' => ['access_token' => $token],
+//        'body' => [
+//          'vsite' => FeatureHelp::getNodeId($values['Site']),
+//          'object_id' => $values['Context'],
+//          'blocks' => $values['Blocks'],
+//        ],
+//      ]);
+//    } catch (\GuzzleHttp\Exception\ClientException $e) {
+//      $this->handleExceptions($e);
+//    }
   }
 
 }

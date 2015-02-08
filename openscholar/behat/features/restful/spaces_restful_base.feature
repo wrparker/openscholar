@@ -24,8 +24,8 @@ Feature:
       | john    | Terms   | Terms - new  | PREV  |
 
 
-  @api @restful
+  @api @restful @now
   Scenario: CRUD-ing a layout.
     Given I "create" a layout as "john" with the settings:
-      | Site |
-      | john |
+      | Site | Context  | Box |
+      | john | os_front | Bio |
