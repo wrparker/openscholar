@@ -110,3 +110,10 @@ CUR_DIR=$(pwd)
   rm $DOCROOT/.htaccess
   cp .htaccess $DOCROOT
 )
+
+# Get the angualr components
+(
+  cd $BUILD_ROOT/openscholar/client
+  npm install && bower install
+  cd -
+)

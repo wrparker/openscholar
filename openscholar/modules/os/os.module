@@ -641,6 +641,8 @@ function _os_process_node_links_comment_add_class(&$vars) {
  * Implements hook_preprocess_HOOK() for page.tpl.php.
  */
 function os_preprocess_page(&$vars) {
+  $angular_path = libraries_get_path('components');
+
   // Add the dismiss messages JS.
   drupal_add_js(drupal_get_path('module', 'os') . "/theme/os_dismiss.js", "file");
 
@@ -651,6 +653,8 @@ function os_preprocess_page(&$vars) {
     'group' => CSS_THEME,
   ));
 
+  // Add angular JS.
+  drupal_add_js($angular_path . '/angular/angular.js');
 
   // Hide useless tabs.
   if (is_array($vars['tabs']['#primary'])) {
