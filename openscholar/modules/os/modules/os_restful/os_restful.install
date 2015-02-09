@@ -2,8 +2,7 @@
 
 /**
  * @file
- *
- * Install file.
+ * os_restful.install
  */
 
 /**
@@ -13,4 +12,3 @@ function os_restful_install() {
   variable_set('restful_file_upload', TRUE);
   variable_set('restful_enable_users_resource', FALSE);
 }
-

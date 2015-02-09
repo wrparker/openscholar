@@ -638,9 +638,12 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       continue;
     }
 
+    /** @var OsImporterEntityValidateBase $handler */
     if (!$handler = entity_validator_get_validator_handler('node', $form_state['type'])) {
       continue;
     }
+
+    $handler->rest = FALSE;
 
     $node = array(
       'type' => $form_state['type'],
