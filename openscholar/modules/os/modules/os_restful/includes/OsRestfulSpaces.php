@@ -4,25 +4,13 @@
  * @file
  * Contains \OsRestfulSpaces
  */
-abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \RestfulDataProviderDbQueryInterface, \RestfulDataProviderInterface {
-
-  /**
-   * @var stdClass
-   * The object the controller need to handle.
-   */
-  protected $object;
+abstract class OsRestfulSpaces extends \OsRestfulDataProvider {
 
   /**
    * @var vsite
    * The space object.
    */
   protected $space;
-
-  /**
-   * @var string
-   * The string handler.
-   */
-  protected $validateHandler = '';
 
   /**
    * @var string
@@ -70,7 +58,7 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
    * @return array
    *   List of the schema fields.
    */
-  public function simpleFieldsInfo($fields = array()) {
+  protected function simpleFieldsInfo($fields = array()) {
     $return = array();
     foreach ($fields as $field) {
       $return[$field] = array('property' => $field);
@@ -108,15 +96,14 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
    * Verify the user's request has access CRUD in the current group.
    */
   public function checkGroupAccess() {
-    // Get the clean request.
-    $request = $this->getRequest();
-    static::cleanRequest($request);
-    $this->object = (object)$request;
-
+    $this->getObject();
     if (!$this->space = spaces_load('og', $this->object->vsite)) {
       // No vsite context.
       $this->throwException('The vsite ID is missing.');
     }
+
+    // Set up the space.
+    spaces_set_space($this->space);
 
     $this->group = entity_metadata_wrapper('node', $this->space->og);
 
@@ -157,35 +144,4 @@ abstract class OsRestfulSpaces extends \RestfulDataProviderDbQuery implements \R
     return $list;
   }
 
-  /**
-   * Validate object.
-   *
-   * @throws RestfulBadRequestException
-   *   Throws exception with the error per object.
-   * @return stdClass
-   *   The clean request object convert ot a std object.
-   */
-  public function validate() {
-    if (!$handler = entity_validator_get_schema_validator($this->validateHandler)) {
-      return;
-    }
-
-    $result = $handler->validate($this->object, TRUE);
-
-    $errors_output = array();
-    if (!$result) {
-      $e = new \RestfulBadRequestException("It's look that you sent a request with bad values.");
-      $fields_errors = $handler->getErrors(FALSE);
-      foreach ($fields_errors as $field => $errors) {
-
-        foreach ($errors as $error) {
-          $errors_output[$field][] = format_string($error['message'], $error['params']);
-        }
-
-        $e->addFieldError($field, implode(', ', $errors_output[$field]));
-      }
-
-      throw $e;
-    }
-  }
 }
