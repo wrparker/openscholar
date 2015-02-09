@@ -5,7 +5,7 @@
  * Contains \OsRestfulSpacesOverrides
  */
 
-class OsRestfulBoxes extends OsRestfulSpaces {
+class OsRestfulBoxes extends \OsRestfulSpaces {
 
   protected $validateHandler = 'boxes';
   protected $objectType = 'boxes';

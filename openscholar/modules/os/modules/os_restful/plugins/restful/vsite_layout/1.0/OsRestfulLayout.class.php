@@ -5,7 +5,7 @@
  * Contains \OsRestfulLayout
  */
 
-class OsRestfulLayout extends OsRestfulSpaces {
+class OsRestfulLayout extends \OsRestfulSpaces {
 
   protected $validateHandler = 'layouts';
   protected $objectType = 'context';
