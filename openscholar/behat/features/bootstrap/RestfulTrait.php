@@ -149,7 +149,7 @@ trait RestfulTrait {
   private function getDelta($values) {
     // Get the delta by specific conditions.
     if (!empty($values['Delta'])) {
-      return $values['Delta'] == 'PREV' ? $this->meta['widget']['delta'] : $values['Delta'];
+      return $values['Delta'] == 'PREV' ? $this->meta['widget']['Delta'] : $values['Delta'];
     }
     else {
       return time();
@@ -314,7 +314,7 @@ trait RestfulTrait {
       ]
     );
 
-    $this->meta['widget'] = $request->json()['data'][0][0];
+    $this->meta['widget'] = $request->json()['data'];
   }
 
 }
