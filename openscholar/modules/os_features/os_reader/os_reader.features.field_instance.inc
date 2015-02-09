@@ -42,7 +42,7 @@ function os_reader_field_default_field_instances() {
         'settings' => array(
           'trim_length' => 600,
         ),
-        'type' => 'os_trimmed_text',
+        'type' => 'text_summary_or_trimmed',
         'weight' => 0,
       ),
       'title' => array(
@@ -187,7 +187,7 @@ function os_reader_field_default_field_instances() {
         'settings' => array(
           'trim_length' => 600,
         ),
-        'type' => 'os_trimmed_text',
+        'type' => 'text_summary_or_trimmed',
         'weight' => 1,
       ),
       'title' => array(
