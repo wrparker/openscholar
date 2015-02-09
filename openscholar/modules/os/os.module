@@ -1583,8 +1583,11 @@ function os_node_view_alter(&$build) {
 
   // fixes broken tags when <!--break--> is used
   if (in_array($build['#view_mode'], array('teaser', 'no_image_teaser')) && isset($build['body']) && is_array($build['body'])) {
+    $field_info = field_info_instance('node', 'body', $node->type);
+    $trim_length = empty($field_info['display'][$build['#view_mode']]['settings']['trim_length']) ? 600 : $field_info['display'][$build['#view_mode']]['settings']['trim_length'];
     foreach (element_children($build['body']) as $c) {
-      $build['body'][$c]['#markup'] = _filter_htmlcorrector($build['body'][$c]['#markup']);
+      $body = views_trim_text(array('html' => TRUE, 'max_length' => $trim_length), $node->body[LANGUAGE_NONE][$c]['value']);
+      $build['body'][$c]['#markup'] = $body;
     }
   }
 }
