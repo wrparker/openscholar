@@ -21,6 +21,9 @@ env:
   - TEST_SUITE=widgets
 
 before_script:
+  # install bower
+  - npm install -g bower
+  
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - composer global require drush/drush:6.*@dev
 
