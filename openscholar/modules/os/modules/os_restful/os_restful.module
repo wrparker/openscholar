@@ -11,3 +11,56 @@ function os_restful_ctools_plugin_directory($module, $plugin) {
     return 'plugins/' . $plugin;
   }
 }
+
+/**
+ * Implements hook_entity_property_info_alter().
+ */
+function os_restful_entity_property_info_alter(&$info) {
+  $types = array('personal', 'project', 'department');
+
+  foreach ($types as $type) {
+    $info['node']['bundles'][$type]['properties']['preset'] = array(
+      'label' => t('Site preset'),
+      'setter callback' => 'os_restful_preset_set',
+      'getter callback' => 'os_restful_preset_get',
+    );
+
+    $info['node']['bundles'][$type]['properties']['domain'] = array(
+      'label' => t('Site purl'),
+      'setter callback' => 'os_restful_purl_set',
+      'getter callback' => 'os_restful_purl_get',
+    );
+  }
+}
+
+/**
+ * Set the preset og property.
+ */
+function os_restful_preset_set(&$data, $name, $value, $langcode, $type, $info) {
+  $data->spaces_preset_og = $value;
+}
+
+/**
+ * Get the og preset property.
+ */
+function os_restful_preset_get($data, array $options, $name, $type, $info) {
+  if (!$space = vsite_get_vsite($data->nid)) {
+    return NULL;
+  }
+
+  return $space->controllers->variable->get('spaces_preset_og');
+}
+
+/**
+ * Set the purl property on the object.
+ */
+function os_restful_purl_set(&$data, $name, $value, $langcode, $type, $info) {
+  $data->purl = $value;
+}
+
+/**
+ * Return the value of the purl for the node.
+ */
+function os_restful_purl_get($data, array $options, $name, $type, $info) {
+  return $data->purl;
+}
