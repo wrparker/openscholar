@@ -87,7 +87,9 @@ trait RestfulTrait {
       return $this->accessToken[$user]['access_token'];
     }
 
-    print_r([__LINE__, $this->users]);
+    $request = $this->getClient()->get($this->locatePath('api'));
+    print_r($request->json());
+
     $base = base64_encode($user . ':' . $this->users[$user]);
     $login_data = $this->getClient()->get($this->locatePath('api/login-token'), [
       'headers' => [
@@ -97,7 +99,6 @@ trait RestfulTrait {
 
     $data = $login_data->json();
     $this->accessToken[$user] = $data;
-    print_r([__LINE__, $this->accessToken]);
     return $data['access_token'];
   }
 
