@@ -149,7 +149,7 @@ trait RestfulTrait {
   private function getDelta($values) {
     // Get the delta by specific conditions.
     if (!empty($values['Delta'])) {
-      return $values['Delta'] == 'PREV' ? $this->meta['widget']['Delta'] : $values['Delta'];
+      return $values['Delta'] == 'PREV' ? $this->meta['delta'] : $values['Delta'];
     }
     else {
       return time();
@@ -172,7 +172,6 @@ trait RestfulTrait {
       }
     }
     else {
-
       if ($this->results['data'][0][0]['value']['description'] != $this->meta['widget']['description']) {
         throw new Exception('The results for the box not matching the settings you passed.');
       }
@@ -259,6 +258,7 @@ trait RestfulTrait {
       ]
     );
 
+    $this->meta['delta'] = $delta;
     $this->meta['widget'] = $request->json()['data'][0][0];
     $this->results = $this->getClient()->get($path . '?delta=' . $delta)->json();
     $this->verifyOperationPassed($operation);
@@ -305,7 +305,7 @@ trait RestfulTrait {
     }
 
     // Create the layout override.
-    $request = $this->invokeRestRequest($op, $path,
+    $this->invokeRestRequest($op, $path,
       ['access_token' => $token],
       [
         'vsite' => FeatureHelp::getNodeId($values['Site']),
@@ -314,7 +314,7 @@ trait RestfulTrait {
       ]
     );
 
-    $this->meta['widget'] = $request->json()['data'];
+    $this->meta['delta'] = $delta;
   }
 
 }
