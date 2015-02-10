@@ -58,7 +58,7 @@ class OsRestfulBoxes extends \OsRestfulSpaces {
     $new_settings = array_merge((array) $settings, $this->object->options);
     $controller->set($this->object->delta, (object) $new_settings);
 
-    return array(array($new_settings));
+    return (array) $new_settings;
   }
 
   /**
@@ -90,7 +90,7 @@ class OsRestfulBoxes extends \OsRestfulSpaces {
     $box = boxes_box::factory($this->object->widget, $options);
     $this->space->controllers->boxes->set($box->delta, $box);
 
-    return array(array($box));
+    return (array) $box;
   }
 
   /**

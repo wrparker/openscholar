@@ -131,11 +131,11 @@ abstract class OsRestfulSpaces extends \OsRestfulDataProvider {
 
     foreach ($elements as $element) {
       if ($element['object_id'] == $request['delta']) {
-        return array(array($element));
+        return (array) $element;
       }
     }
 
-    return $elements;
+    return (array) $elements;
   }
 
 }

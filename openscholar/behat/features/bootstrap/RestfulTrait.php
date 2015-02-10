@@ -172,7 +172,7 @@ trait RestfulTrait {
       }
     }
     else {
-      if ($this->results['data'][0][0]['value']['description'] != $this->meta['widget']['description']) {
+      if ($this->results['data']['value']['description'] != $this->meta['widget']['description']) {
         throw new Exception('The results for the box not matching the settings you passed.');
       }
     }
@@ -259,7 +259,7 @@ trait RestfulTrait {
     );
 
     $this->meta['delta'] = $delta;
-    $this->meta['widget'] = $request->json()['data'][0][0];
+    $this->meta['widget'] = $request->json()['data'];
     $this->results = $this->getClient()->get($path . '?delta=' . $delta)->json();
     $this->verifyOperationPassed($operation);
   }
