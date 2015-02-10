@@ -296,12 +296,24 @@ trait RestfulTrait {
         ],
       ];
     }
-    else {
+    elseif ($op == 'put') {
       $blocks = [
         'boxes-' . $delta => [
-          'region' => 'sidebar_second',
+          'region' => 'sidebar_first',
         ],
       ];
+    }
+    else {
+      // Create the layout override.
+      $this->invokeRestRequest($op, $path,
+        ['access_token' => $token],
+        [
+          'vsite' => FeatureHelp::getNodeId($values['Site']),
+          'object_id' => $values['Context'],
+          'delta' => 'boxes-' . $delta,
+        ]
+      );
+      return;
     }
 
     // Create the layout override.

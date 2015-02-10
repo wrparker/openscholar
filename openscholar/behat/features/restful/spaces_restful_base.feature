@@ -23,7 +23,7 @@ Feature:
       | Site    | Widget  | Description  | Delta |
       | john    | Terms   | Terms - new  | PREV  |
 
-  @api @restful @now
+  @api @restful
   Scenario: CRUD-ing a layout.
     Given I "create" a layout as "john" with the settings:
       | Site | Context  | Box |
@@ -33,3 +33,10 @@ Feature:
      When I "update" a layout as "john" with the settings:
       | Site | Context  | Box | Delta |
       | john | os_front | Bio | PREV  |
+    And I visit "john"
+    And I should see the text "gizra" under "region-sidebar-first"
+    When I "delete" a layout as "john" with the settings:
+      | Site | Context                  | Delta |
+      | john | os_front:reaction:block  | PREV  |
+    And I visit "john"
+    And I should see the text "Work in gizra inc." under "region-content-top"
