@@ -2,6 +2,7 @@
 
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
+use GuzzleHttp\Message\FutureResponse;
 use GuzzleHttp\Message\ResponseInterface;
 
 /**
@@ -105,7 +106,7 @@ trait RestfulTrait {
    *
    * @throws Exception
    */
-  private function handleExceptions(\GuzzleHttp\Exception\ClientException $e) {
+  private function handleExceptions(\GuzzleHttp\Exception\ClientException $e, $return = FALSE) {
     $json = $e->getResponse()->json();
 
     $implode = array();
@@ -121,6 +122,11 @@ trait RestfulTrait {
     }
 
     $errors = implode(', ', $implode);
+
+    if ($return) {
+      return $errors;
+    }
+
     throw new Exception('Your request has failed: ' . $errors);
   }
 
@@ -210,22 +216,21 @@ trait RestfulTrait {
    *   The headers of the request.
    * @param $body
    *   The body of the request AKA the payload.
+   * @param $return
+   *   Determine if we need to return the request errors.
    *
    * @return ResponseInterface
    *   The request object.
    * @throws Exception
    */
-  private function invokeRestRequest($method, $path, $headers, $body) {
-    $request = '';
-
+  private function invokeRestRequest($method, $path, $headers, $body, $return = FALSE) {
     try {
-      /** @var ResponseInterface $request */
       $request = $this->getClient()->{$method}($path, [
         'headers' => $headers,
         'body' => $body,
       ]);
     } catch (\GuzzleHttp\Exception\ClientException $e) {
-      $this->handleExceptions($e);
+      return $this->handleExceptions($e, $return);
     }
 
     return $request;
@@ -346,6 +351,32 @@ trait RestfulTrait {
         'value' => $value,
       ]
     );
+  }
+
+  /**
+   * @Given /^I try to "([^"]*)" a box as "([^"]*)" in "([^"]*)"$/
+   */
+  public function iTryToABoxAsIn($operation, $account, $site) {
+    $token = $this->restLogin($account);
+    $path = $this->locatePath($this->endpoints['box']);
+    $delta = $this->getDelta(array());
+
+    $request = $this->invokeRestRequest($this->operations[$operation], $path,
+      ['access_token' => $token],
+      [
+        'vsite' => FeatureHelp::getNodeId($site),
+        'delta' => $delta,
+        'widget' => $this->widgets['Terms'],
+        'options' => [
+          'description' => 'Dummy one',
+        ],
+      ],
+      TRUE
+    );
+
+    if ($request != "You can't manage boxes in this vsite.") {
+      throw new Exception('The user did not got the expected message.');
+    }
   }
 
 }
