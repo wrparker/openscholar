@@ -17,6 +17,7 @@ trait RestfulTrait {
   private $endpoints = [
     'box' => 'api/boxes',
     'layout' => 'api/layouts',
+    'variable' => 'api/variables',
   ];
 
   /**
@@ -327,6 +328,24 @@ trait RestfulTrait {
     );
 
     $this->meta['delta'] = $delta;
+  }
+
+  /**
+   * @Given /^I "([^"]*)" the variable "([^"]*)" as "([^"]*)" with the value "([^"]*)" in "([^"]*)"$/
+   */
+  public function iTheVariableAsWithTheValue($operation, $name, $account, $value, $site) {
+    $token = $this->restLogin($account);
+    $path = $this->locatePath($this->endpoints['variable']);
+    $op = $this->operations[$operation];
+
+    $this->invokeRestRequest($op, $path,
+      ['access_token' => $token],
+      [
+        'vsite' => FeatureHelp::getNodeId($site),
+        'object_id' => $name,
+        'value' => $value,
+      ]
+    );
   }
 
 }

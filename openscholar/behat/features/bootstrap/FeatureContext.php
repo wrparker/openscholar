@@ -1904,4 +1904,14 @@ class FeatureContext extends DrupalContext {
     }
   }
 
+  /**
+   * @Given /^I should see "([^"]*)" in "([^"]*)"$/
+   */
+  public function iShouldSeeIn($value, $path) {
+    return array(
+      new Step\When('I visit "' . $path . '"'),
+      new Step\When('I should see "' . $value . '"'),
+    );
+  }
+
 }
