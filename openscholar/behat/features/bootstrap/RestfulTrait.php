@@ -96,6 +96,7 @@ trait RestfulTrait {
         'Authorization' => 'Basic ' . $base,
       ],
     ]);
+    print_r($base);
 
     $data = $login_data->json();
     $this->accessToken[$user] = $data;
