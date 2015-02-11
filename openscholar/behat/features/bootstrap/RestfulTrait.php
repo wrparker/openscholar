@@ -83,23 +83,20 @@ trait RestfulTrait {
    */
   private function restLogin($user) {
     if (isset($this->accessToken[$user])) {
-      print_r([__LINE__, $this->accessToken]);
       return $this->accessToken[$user]['access_token'];
     }
+//
+//    $base = base64_encode($user . ':' . $this->users[$user]);
+//    $login_data = $this->getClient()->get($this->locatePath('api/login-token'), [
+//      'headers' => [
+//        'Authorization' => 'Basic ' . $base,
+//      ],
+//    ]);
+//
+//    $data = $login_data->json();
+    $handler = new RestfulAccessTokenAuthentication(['entity_type' => 'restful_token_auth','bundle' => 'access_token']);
+    $data = $handler->getOrCreateToken();
 
-    $request = $this->getClient()->get($this->locatePath('api'));
-    print_r($user . ':' . $this->users[$user]);
-
-    $base = base64_encode($user . ':' . $this->users[$user]);
-    print_r($base);
-    print_r(get_defined_vars());
-    $login_data = $this->getClient()->get($this->locatePath('api/login-token'), [
-      'headers' => [
-        'Authorization' => 'Basic ' . $base,
-      ],
-    ]);
-
-    $data = $login_data->json();
     $this->accessToken[$user] = $data;
     return $data['access_token'];
   }
