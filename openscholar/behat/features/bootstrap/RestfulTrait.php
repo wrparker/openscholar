@@ -95,6 +95,7 @@ trait RestfulTrait {
 //
 //    $data = $login_data->json();
     $handler = new RestfulAccessTokenAuthentication(['entity_type' => 'restful_token_auth','bundle' => 'access_token']);
+    $handler->setAccount(user_load_by_name($user));
     $data = $handler->getOrCreateToken();
 
     $this->accessToken[$user] = $data;
