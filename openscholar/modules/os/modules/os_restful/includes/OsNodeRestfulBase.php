@@ -85,4 +85,14 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
     return $return;
   }
 
+  protected function checkEntityAccess($op, $entity_type, $entity) {
+    $request = $this->getRequest();
+
+    if ($request['vsite']) {
+      spaces_set_space(spaces_load('og', $request['vsite']));
+    }
+
+    return parent::access();
+  }
+
 }

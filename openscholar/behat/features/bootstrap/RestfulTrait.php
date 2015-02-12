@@ -19,6 +19,7 @@ trait RestfulTrait {
     'box' => 'api/boxes',
     'layout' => 'api/layouts',
     'variable' => 'api/variables',
+    'biblio' => 'api/biblio',
   ];
 
   /**
@@ -141,11 +142,29 @@ trait RestfulTrait {
    *
    * @param TableNode $table
    *   The table object.
+   * @param $table_to_fields
+   *   Determine if the title of the fields from the table should be convert to
+   *   field machine name. i.e: Taxonomy ref => field_taxonomy_ref.
    *
    * @return array
    */
-  private function getValues(TableNode $table) {
+  private function getValues(TableNode $table, $table_to_fields = FALSE) {
     $rows = $table->getRows();
+
+    // Convert the titles to machine names.
+    if ($table_to_fields) {
+
+      foreach ($rows[0] as &$field) {
+        $field = strtolower($field);
+
+        if (strpos($field, ' ') !== FALSE) {
+          $field = str_replace(' ', '_', $field);
+          // This is a field with more then one word. Create a 'field_' prefix.
+          $field = 'field_' . $field;
+        }
+      }
+    }
+
     return array_combine($rows[0], $rows[1]);
   }
 
@@ -198,12 +217,15 @@ trait RestfulTrait {
    *   The user name.
    * @param TableNode $table
    *   The table settings from the step definition.
+   * @param $table_to_fields
+   *   Determine if the title of the fields from the table should be convert to
+   *   field machine name. i.e: Taxonomy ref => field_taxonomy_ref.
    *
    * @return array
    */
-  private function setVariables($type, $account, TableNode $table) {
+  private function getVariables($type, $account, TableNode $table, $table_to_fields = FALSE) {
     return [
-      $this->getValues($table),
+      $this->getValues($table, $table_to_fields),
       $this->restLogin($account),
       $this->locatePath($this->endpoints[$type]),
     ];
@@ -253,7 +275,7 @@ trait RestfulTrait {
    * @Given /^I "([^"]*)" a box as "([^"]*)" with the settings:$/
    */
   public function iAAsWithTheSettings($operation, $account, TableNode $table) {
-    list($values, $token, $path) = $this->setVariables('box', $account, $table);
+    list($values, $token, $path) = $this->getVariables('box', $account, $table);
     $delta = $this->getDelta($values);
 
     $request = $this->invokeRestRequest($this->operations[$operation], $path,
@@ -278,7 +300,7 @@ trait RestfulTrait {
    * @Given /^I "([^"]*)" a layout as "([^"]*)" with the settings:$/
    */
   public function iALayoutAsWithTheSettings($operation, $account, TableNode $table) {
-    list($values, $token, $path) = $this->setVariables('layout', $account, $table);
+    list($values, $token, $path) = $this->getVariables('layout', $account, $table);
     $box_path = $this->locatePath($this->endpoints['box']);
     $op = $this->operations[$operation];
     $delta = $this->getDelta($values);
@@ -381,6 +403,17 @@ trait RestfulTrait {
     if ($request != "You can't manage boxes in this vsite.") {
       throw new Exception('The user did not got the expected message.');
     }
+  }
+
+  /**
+   * @Given /^I create a new node of "([^"]*)" as "([^"]*)" with the settings:$/
+   */
+  public function iCreateANewNodeOfAsWithTheSettings($type, $account, TableNode $table) {
+    list($values, $token, $path) = $this->getVariables($type, $account, $table, TRUE);
+    $values['vsite'] = FeatureHelp::getNodeId($values['vsite']);
+    $result = $this->invokeRestRequest('post', $path,
+      ['access_token' => $token],
+      $values);
   }
 
 }
