@@ -554,7 +554,7 @@ function _vsite_vocab_name_fix_iterator($vocabulary) {
   ));
 
   // Fix the name.
-  $name = str_replace(array(' ', '.'), '', strtolower($name));
+  $name = str_replace(array(' ', '.', ','), '', strtolower($name));
 
   if (taxonomy_vocabulary_machine_name_load($name)) {
     // Create unique name.
