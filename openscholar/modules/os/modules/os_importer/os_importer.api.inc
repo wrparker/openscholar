@@ -132,7 +132,7 @@ function _os_importer_create_vocab($name, $terms, $group_type, $gid, $entity_typ
   else {
     // We didn't found any vocabulary - create a new one.
     $i = 0;
-    $machine_name = str_replace(array(' ', '-', ','), '_', strtolower($name));
+    $machine_name = str_replace(array(' ', '-', ','), array('_', '_', ''), strtolower($name));
     while (taxonomy_vocabulary_machine_name_load($machine_name)) {
       $machine_name = substr($machine_name, 0, 32 - strlen($i)) . $i;
       $i++;
