@@ -338,7 +338,7 @@ function cp_content_assign_taxonomy_action(&$node, $context) {
   $applied_titles = array();
   $wrapper = entity_metadata_wrapper('node', $node);
   // Check if the bundle of the node is associated with selected vocabulary.
-  if (!in_array($node->type, $bundle_names)) {
+  if (in_array($node->type, $bundle_names)) {
     // Assign the term(s) to the current node.
     $node_terms = $wrapper->{OG_VOCAB_FIELD}->value(array('identifier' => TRUE));
     $node_terms = array_merge($node_terms ,$selected_terms);
