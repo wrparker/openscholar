@@ -1250,11 +1250,24 @@ function os_events_form_event_node_form_alter(&$form, &$form_state) {
  * @return bool
  */
 function os_events_register_show_register_link($node) {
-  $wrapper = entity_metadata_wrapper('node', $node);
-
-  if ($wrapper->getBundle() != 'event') {
+  if ($node->type != 'event') {
     return;
   }
 
-  return time() < $wrapper->field_date->get(0)->value->value();
+  $result = db_select('registration_entity', 're')
+    ->fields('re')
+    ->condition('entity_id', $node->nid)
+    ->condition('entity_type', 'node')
+    ->execute()
+    ->fetchAssoc();
+
+  if (empty($result)) {
+    return;
+  }
+
+  if (!$result['status']) {
+    return;
+  }
+
+  return time() < strtotime($result['open']);
 }
