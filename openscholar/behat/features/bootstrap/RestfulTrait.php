@@ -20,6 +20,23 @@ trait RestfulTrait {
     'layout' => 'api/layouts',
     'variable' => 'api/variables',
     'biblio' => 'api/biblio',
+    'bio' => 'api/bio',
+    'blog' => 'api/blog',
+    'book' => 'api/book',
+    'class' => 'api/class',
+    'class_material' => 'api/class_material',
+    'cv' => 'api/cv',
+    'event' => 'api/event',
+    'faq' => 'api/faq',
+    'feed' => 'api/feed',
+    'media_gallery' => 'api/media_gallery',
+    'news' => 'api/news',
+    'page' => 'api/page',
+    'person' => 'api/person',
+    'presentation' => 'api/presentation',
+    'slideshow_slide' => 'api/slideshow_slide',
+    'software_project' => 'api/software_project',
+    'software_release' => 'api/software_release',
   ];
 
   /**
@@ -86,15 +103,7 @@ trait RestfulTrait {
     if (isset($this->accessToken[$user])) {
       return $this->accessToken[$user]['access_token'];
     }
-//
-//    $base = base64_encode($user . ':' . $this->users[$user]);
-//    $login_data = $this->getClient()->get($this->locatePath('api/login-token'), [
-//      'headers' => [
-//        'Authorization' => 'Basic ' . $base,
-//      ],
-//    ]);
-//
-//    $data = $login_data->json();
+
     $handler = new RestfulAccessTokenAuthentication(['entity_type' => 'restful_token_auth','bundle' => 'access_token']);
     $handler->setAccount(user_load_by_name($user));
     $data = $handler->getOrCreateToken();
@@ -411,9 +420,15 @@ trait RestfulTrait {
   public function iCreateANewNodeOfAsWithTheSettings($type, $account, TableNode $table) {
     list($values, $token, $path) = $this->getVariables($type, $account, $table, TRUE);
     $values['vsite'] = FeatureHelp::getNodeId($values['vsite']);
-    $result = $this->invokeRestRequest('post', $path,
+
+    if (!empty($values['parent'])) {
+      $values['parent'] = FeatureHelp::getNodeId($values['parent']);
+    }
+
+    $this->invokeRestRequest('post', $path,
       ['access_token' => $token],
-      $values);
+      $values
+    );
   }
 
 }

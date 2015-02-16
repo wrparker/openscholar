@@ -1914,4 +1914,12 @@ class FeatureContext extends DrupalContext {
     );
   }
 
+  /**
+   * @Given /^I delete the node "([^"]*)"$/
+   */
+  public function iDeleteTheNode($title) {
+    $nid = FeatureHelp::getNodeId($title);
+    node_delete($nid);
+  }
+
 }
