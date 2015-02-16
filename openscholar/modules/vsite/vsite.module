@@ -582,7 +582,7 @@ function vsite_node_access($node, $op, $account) {
         return NODE_ACCESS_DENY;
       }
       // Check the user's permission to create new content in the current VSite.
-      return !og_user_access('node', $vsite->group->nid, 'create ' . $node . ' content', $account) ? NODE_ACCESS_DENY : NODE_ACCESS_IGNORE;
+      return !og_user_access('node', $vsite->group->nid, 'create ' . $node . ' content', $account) ? NODE_ACCESS_DENY : NODE_ACCESS_ALLOW;
       break;
 
     // Handle 'delete' cases:
