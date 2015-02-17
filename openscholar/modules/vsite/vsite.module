@@ -3189,6 +3189,46 @@ function vsite_og_permission() {
       'description' => t('Edit existing widgets.'),
       'os_override' => TRUE,
     ),
+    'create files' => array(
+      'title' => t('Upload files'),
+      'description' => t('Add files to system.'),
+      'os_override' => TRUE,
+      'default role' => array(
+        'vsite user',
+        'content editor',
+        'vsite admin',
+      )
+    ),
+    'add media from remote sources' => array(
+      'title' => t('Add 3rd party media to system.'),
+      'description' => t('Add rich media like youtube videos to system.'),
+      'os_override' => TRUE,
+      'default role' => array(
+        'vsite user',
+        'content editor',
+        'vsite admin',
+      )
+    ),
+    'edit any files' => array(
+      'title' => t('Edit files'),
+      'description' => t('Edit files and rich media.'),
+      'os_override' => TRUE,
+      'default role' => array(
+        'vsite user',
+        'content editor',
+        'vsite admin',
+      )
+    ),
+    'delete any files' => array(
+      'title' => t('Delete files'),
+      'description' => t('Delete files and rich media from system.'),
+      'os_override' => TRUE,
+      'default role' => array(
+        'vsite user',
+        'content editor',
+        'vsite admin',
+      )
+    )
   );
 }
 
@@ -3243,6 +3283,25 @@ function vsite_og_permission_alter(&$perms) {
 
   // Edit boxes should be given to the "content editor".
   $perms['edit boxes']['default role'][] = 'content editor';
+}
+
+/**
+ * Automatically add file permissions when a content create or update permission is set.
+ */
+function vsite_og_role_change_permissions($role, $grant, $revoke) {
+  $content_types = og_get_all_group_content_bundle('node');
+  foreach ($content_types as $k => $v) {
+    $plist = array();
+    $plist[] = 'create '.$k.' content';
+    $plist[] = 'update own '.$k.' content';
+    $plist[] = 'update any '.$k.' content';
+    foreach ($plist as $p) {
+      if (isset($grant[$p])) {
+        og_role_grant_permissions($role->rid, array('create files', 'add media from remote sources', 'edit any files', 'delete any files'));
+        return;
+      }
+    }
+  }
 }
 
 /**
