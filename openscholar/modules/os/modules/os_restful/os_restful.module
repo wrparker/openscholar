@@ -41,6 +41,12 @@ function os_restful_entity_property_info_alter(&$info) {
     'setter callback' => 'entity_property_verbatim_set',
     'getter callback' => 'entity_property_verbatim_get',
   );
+
+  $info['node']['bundles']['page']['properties']['path'] = array(
+    'label' => t('Site purl'),
+    'setter callback' => 'entity_property_verbatim_set',
+    'getter callback' => 'entity_property_verbatim_get',
+  );
 }
 
 /**
