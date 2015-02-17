@@ -164,13 +164,7 @@ trait RestfulTrait {
     if ($table_to_fields) {
 
       foreach ($rows[0] as &$field) {
-        $field = strtolower($field);
-
-        if (strpos($field, ' ') !== FALSE) {
-          $field = str_replace(' ', '_', $field);
-          // This is a field with more then one word. Create a 'field_' prefix.
-          $field = 'field_' . $field;
-        }
+        $field = str_replace(' ', '_', strtolower($field));
       }
     }
 
@@ -423,6 +417,14 @@ trait RestfulTrait {
 
     if (!empty($values['parent'])) {
       $values['parent'] = FeatureHelp::getNodeId($values['parent']);
+    }
+
+    if (!empty($values['start_date'])) {
+      $values['start_date'] = strtotime($values['start_date']);
+    }
+
+    if (!empty($values['end_date'])) {
+      $values['end_date'] = strtotime($values['end_date']);
     }
 
     $this->invokeRestRequest('post', $path,

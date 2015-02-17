@@ -44,3 +44,9 @@ Feature:
      Then I create a new node of "cv" as "john" with the settings:
       | Label   | Body               | vsite  |
       | Rest CV | This is a test CV  | john   |
+
+  @restful @now
+  Scenario: Creating book via rest.
+     Given I create a new node of "event" as "john" with the settings:
+      | Label       | Body                  | vsite  | Start date |
+      | Rest event  | This is a test event  | john   | 1/1/2010   |

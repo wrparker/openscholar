@@ -53,6 +53,20 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function propertyValuesPreprocess($property_name, $value, $public_field_name) {
+    $field_info = field_info_field($property_name);
+
+    if ($field_info['type'] == 'datetime') {
+      // Handling the field date.
+      return array(array($this->publicFields[$public_field_name]['sub_property'] => '2015-02-14 15:00:00'));
+    }
+
+    return parent::propertyValuesPreprocess($property_name, $value, $public_field_name);
+  }
+
+  /**
    * Display the id and the title of the group.
    */
   public function vsiteFieldDisplay($value) {
