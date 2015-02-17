@@ -419,18 +419,17 @@ trait RestfulTrait {
       $values['parent'] = FeatureHelp::getNodeId($values['parent']);
     }
 
-    if (!empty($values['start_date'])) {
-      $values['start_date'] = strtotime($values['start_date']);
-    }
-
-    if (!empty($values['end_date'])) {
-      $values['end_date'] = strtotime($values['end_date']);
+    // Set timestamp.
+    $date_fields = ['start_date', 'end_date', 'date'];
+    foreach ($date_fields as $date_field) {
+      if (!empty($values[$date_field])) {
+        $values[$date_field] = strtotime($values[$date_field]);
+      }
     }
 
     if (!empty($values['files'])) {
       $values['files'] = FeatureHelp::getFilesIDs(explode(',', $values['files']));
     }
-
 
     $this->invokeRestRequest('post', $path,
       ['access_token' => $token],

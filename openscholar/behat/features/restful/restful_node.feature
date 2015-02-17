@@ -63,8 +63,14 @@ Feature:
       | Label     | Body                | vsite  | Field url      |
       | Rest feed | This is a test feed | john   | http://foo.bar |
 
-  @restful @now
+  @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "image_gallery" as "john" with the settings:
       | Label     | vsite  | columns  | rows  | files               |
       | Rest feed | john   | 3        | 4     | jfk_1.jpg,jfk_2.jpg |
+
+  @restful @now
+  Scenario: Creating faq via rest.
+     Given I create a new node of "news" as "john" with the settings:
+      | Label     | date      | body                | vsite  |
+      | Rest feed | 1/1/2012  | This is a rest nest | john   |
