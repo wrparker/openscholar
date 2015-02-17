@@ -29,7 +29,7 @@ trait RestfulTrait {
     'event' => 'api/event',
     'faq' => 'api/faq',
     'feed' => 'api/feed',
-    'media_gallery' => 'api/media_gallery',
+    'image_gallery' => 'api/media_gallery',
     'news' => 'api/news',
     'page' => 'api/page',
     'person' => 'api/person',
@@ -426,6 +426,11 @@ trait RestfulTrait {
     if (!empty($values['end_date'])) {
       $values['end_date'] = strtotime($values['end_date']);
     }
+
+    if (!empty($values['files'])) {
+      $values['files'] = FeatureHelp::getFilesIDs(explode(',', $values['files']));
+    }
+
 
     $this->invokeRestRequest('post', $path,
       ['access_token' => $token],

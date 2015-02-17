@@ -45,8 +45,26 @@ Feature:
       | Label   | Body               | vsite  |
       | Rest CV | This is a test CV  | john   |
 
-  @restful @now
+  @restful
   Scenario: Creating book via rest.
      Given I create a new node of "event" as "john" with the settings:
       | Label       | Body                  | vsite  | Start date |
       | Rest event  | This is a test event  | john   | 1/1/2010   |
+
+  @restful
+  Scenario: Creating faq via rest.
+     Given I create a new node of "faq" as "john" with the settings:
+      | Label     | Body                | vsite  |
+      | Rest FAQ  | This is a test FAQ  | john   |
+
+  @restful
+  Scenario: Creating faq via rest.
+     Given I create a new node of "feed" as "john" with the settings:
+      | Label     | Body                | vsite  | Field url      |
+      | Rest feed | This is a test feed | john   | http://foo.bar |
+
+  @restful @now
+  Scenario: Creating faq via rest.
+     Given I create a new node of "image_gallery" as "john" with the settings:
+      | Label     | vsite  | columns  | rows  | files               |
+      | Rest feed | john   | 3        | 4     | jfk_1.jpg,jfk_2.jpg |

@@ -3,9 +3,14 @@
 class FeedNodeRestfulBase extends OsNodeRestfulBase {
 
   public function publicFieldsInfo() {
-    $public_fields = parent::publicFieldsInfo();
+    $fields = parent::publicFieldsInfo();
 
-    return $public_fields;
+    $fields['field_url'] = array(
+      'property' => 'field_url',
+      'required' => TRUE,
+    );
+
+    return $fields;
   }
 
 }
