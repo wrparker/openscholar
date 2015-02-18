@@ -58,7 +58,7 @@ function _os_importer_import_behalf_of_user(FeedsSource $source, $entity, $item,
  */
 function _os_importer_import_vocab(FeedsSource $source, $entity, $item, $id) {
   $config = $source->importer->getConfig();
-  $pattern = '/[^a-zA-Z0-9]/';
+  $pattern = '/[^a-zA-Z0-9_]/';
 
   // Getting the mappings from the processor config.
   $mappings = array();
