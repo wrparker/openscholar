@@ -23,7 +23,7 @@ function os_drush_command() {
         'drush @prod os-dc' => dt('Enable production site to use example.com domain.  The owner of example.com will still have to add that domain to her or her vsite.'), 
       ),
       'aliases' => array('os-dc'),
-      'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+      'bootstrap' => DRUSH_BOOTSTRAP_NONE,
     ),
       
     'os-domain-build' => array(
@@ -35,7 +35,7 @@ function os_drush_command() {
         'drush @prod os-db --domains-file=/var/www/alt/path/mysite/domains.list --domains-file-root=/var/www/alt/path/' => dt('As os-db, but uses the file specified instead of the domains.list found in the sites directory.  File must be "domains.list" but path can be anywhere.  The domains-file-path instructs drush that other sites in a multisite setup may live in /var/www/alt/path and it should be searched for domains.list files.'),           
       ),
       'aliases' => array('os-db'),
-      'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+      'bootstrap' => DRUSH_BOOTSTRAP_NONE,
     ),   
 
     'os-domain-add' => array(
@@ -46,7 +46,7 @@ function os_drush_command() {
         'drush @prod os-da -www example.com' => dt('Sets up @prod site to serve example.com and www.example.com.'),
       ),
       'aliases' => array('os-da'),
-      'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+      'bootstrap' => DRUSH_BOOTSTRAP_NONE,
     ),
       
     'os-domain-remove' => array(
@@ -57,7 +57,7 @@ function os_drush_command() {
         'drush @prod os-dr -www example.com' => dt('Sets up @prod site to stop serving example.com and www.example.com.'),
       ),
       'aliases' => array('os-dr'),
-      'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+      'bootstrap' => DRUSH_BOOTSTRAP_NONE,
     ),
       
     'os-domain-help' => array(
@@ -65,6 +65,7 @@ function os_drush_command() {
       'options' => array(),
       'arguments' => array(),
       'aliases' => array('os-dh'),
+      'bootstrap' => DRUSH_BOOTSTRAP_NONE,
     ),
       
     'os-domain-list' => array(
@@ -75,6 +76,7 @@ function os_drush_command() {
         'drush @prod os-dl' => dt('Lists @prod\s domains.'),
       ),
       'aliases' => array('os-dl'),
+      'bootstrap' => DRUSH_BOOTSTRAP_NONE,
     ),
 
     'os-domain-sync' => array(
@@ -85,7 +87,7 @@ function os_drush_command() {
         'drush @prod os-ds' => dt('Recreats domains list file from acquia\'s settings.'),
       ),
       'aliases' => array('os-ds'),
-      'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+      'bootstrap' => DRUSH_BOOTSTRAP_NONE,
     ),
   );
 }
