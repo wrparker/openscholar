@@ -54,9 +54,43 @@ function os_taxonomy_update_7003(&$sandbox) {
  * Fix Taxonomy term aliases that were created with the wrong path.
  */
 function os_taxonomy_update_7004(&$sandbox) {
-  // Remove the feature paths from the begining of the term path's
+  // Remove the feature paths from the beginning of the term path's.
   db_update('url_alias')
     ->expression('source', 'SUBSTRING(source, LOCATE(\'taxonomy/term\', source) )')
     ->condition('source', "%/taxonomy/term/%", 'LIKE')
     ->execute();
+}
+
+/**
+ * Create record in the taxonomy index table for missing terms and nodes.
+ */
+function os_taxonomy_update_7005() {
+  $query = db_select('field_data_og_vocabulary', 'ogv');
+  $query->leftJoin('taxonomy_index', 'ti', 'ogv.entity_id = ti.nid');
+  $orphans_terms = $query
+    ->fields('ogv', array('entity_id', 'og_vocabulary_target_id'))
+    ->fields('ti', array('nid', 'tid'))
+    ->condition('ogv.entity_type', 'node')
+    ->isNull('ti.nid')
+    ->distinct()
+    ->execute()
+    ->fetchAllAssoc('entity_id');
+
+  if (!$orphans_terms) {
+    return;
+  }
+
+  foreach ($orphans_terms as $orphans_term) {
+    try {
+      db_insert('taxonomy_index')
+        ->fields(array(
+          'tid' => $orphans_term->og_vocabulary_target_id,
+          'nid' => $orphans_term->entity_id,
+          'sticky' => 0,
+        ))
+        ->execute();
+    } catch (Exception $e) {
+      drupal_set_message($e->getMessage(), 'error');
+    }
+  }
 }
