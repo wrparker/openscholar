@@ -331,7 +331,7 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
 
   // The current book type isn't displaying in the publications page. We need
   // to notify the user.
-  if (!in_array($tid, variable_get('os_publications_filter_publication_types'))) {
+  if (!in_array($tid, variable_get('os_publications_filter_publication_types', array()))) {
     $link = menu_get_item('cp/build/publication/settings');
     $params = array(
       '@url' => url('cp/build/publication/settings'),
@@ -669,7 +669,7 @@ function os_publications_alter_year_field(&$form, &$form_state) {
   $year_value = $form['biblio_year']['#default_value'];
 
   //Get from the node since it may or may not be on the form.
-  $date_value = is_object($form['#node'])? $form['#node']->biblio_date : '';
+  $date_value = is_object($form['#node']) && !empty($form['#node']->biblio_date) ? $form['#node']->biblio_date : '';
   $year_coded_value = '';
 
   // If not a number then it was coded, so we want to show the value in the
@@ -725,8 +725,8 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#weight' => $form['biblio_year_group']['#weight'] + 1,
   );
 
-  //Hide biblio_date field if we are using it for "In Press Extra"
-  if($form['biblio_date']) {
+  // Hide biblio_date field if we are using it for "In Press Extra".
+  if (!empty($form['biblio_date'])) {
     $form['biblio_date']['#states'] = array(
       // Only show this field when 'biblio_years_text' is not used.
       'invisible' => array(
