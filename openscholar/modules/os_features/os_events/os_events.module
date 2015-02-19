@@ -1269,5 +1269,9 @@ function os_events_register_show_register_link($node) {
     return;
   }
 
-  return time() < strtotime($result['open']);
+  if (!empty($result['close'])) {
+    return in_array(time(), range(strtotime($result['open']), strtotime($result['close'])));
+  }
+
+  return time() <= strtotime($result['open']);
 }
