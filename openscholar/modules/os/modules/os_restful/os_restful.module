@@ -44,9 +44,18 @@ function os_restful_entity_property_info_alter(&$info) {
 
   $info['node']['bundles']['page']['properties']['path'] = array(
     'label' => t('Site purl'),
-    'setter callback' => 'entity_property_verbatim_set',
-    'getter callback' => 'entity_property_verbatim_get',
+    'setter callback' => 'os_restful_page_path_set',
+    'getter callback' => 'os_restful_page_path_get',
+    'type' => 'unknown',
   );
+}
+
+function os_restful_page_path_set(&$data, $name, $value, $langcode, $type, $info) {
+  $data->$name = $value;
+}
+
+function os_restful_page_path_get($data, array $options, $name, $type, $info) {
+  return $data->path;
 }
 
 /**

@@ -59,7 +59,7 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
     }
 
     // Add path validator.
-    $fields['path_alias']['validators'][] = array($this, 'validatorPath');
+    $fields[$this->rest ? 'path' : 'path_alias']['validators'][] = array($this, 'validatorPath');
 
     if ($this->rest) {
       $fields[OG_AUDIENCE_FIELD] = array(
@@ -125,7 +125,7 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
   /**
    * Validating the path alias.
    */
-  public function validatorPath($field_name, $value) {
+  public function validatorPath($field_name, $value, $wrapper) {
     if (empty($value)) {
       return;
     }
@@ -162,6 +162,8 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
       );
       $this->setError($field_name, t('The path "@path" is already in use. Please supply a different path.', $params));
     }
+
+    $wrapper->path->set(array('alias' => $value));
   }
 
   /**
