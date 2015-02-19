@@ -78,7 +78,7 @@ function _os_importer_import_vocab(FeedsSource $source, $entity, $item, $id) {
       $vocab = preg_replace($pattern, '', strtolower($vocab));
       $params['@new-name'] = $vocab;
       $params['@taxonomy-page'] = url('cp/build/build/taxonomy');
-      $text = "The vocabulary name \"@name\" contains not allowed character(s), it has been changed to \"@new-name\".";
+      $text = "The vocabulary name \"@name\" contains disallowed character(s), it has been changed to \"@new-name\".";
       $text .= "All special characters and spaces are removed from the original name during importing.";
       $text .= "You can change the vocabulary name in <a href='@taxonomy-page'>cp/build/build/taxonomy</a> in the future.";
       drupal_set_message(t($text, $params), 'notice');
