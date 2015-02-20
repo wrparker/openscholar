@@ -329,9 +329,10 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
   }
   $tid = !empty($form_state['biblio_type']) ? $form_state['biblio_type'] : (isset($form_state['node']->biblio_type) ? $form_state['node']->biblio_type : 0);
 
-  // The current book type isn't displaying in the publications page. We need
+  // The current publication type isn't displaying in the publications page. We need
   // to notify the user.
-  if (!in_array($tid, variable_get('os_publications_filter_publication_types', array()))) {
+  $shown_types = variable_get('os_publications_filter_publication_types', array());
+  if (count($shown_types) && !in_array($tid, $shown_types)) {
     $link = menu_get_item('cp/build/publication/settings');
     $params = array(
       '@url' => url('cp/build/publication/settings'),
