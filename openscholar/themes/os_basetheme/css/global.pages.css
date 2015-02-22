@@ -1321,6 +1321,8 @@ LIST OF POSTS - PERSON TEASER IN SIDEBAR
  display: block;
 border-bottom: none !important;
 clear: both;
-  
 }
 
+.taxonomy-term-description {
+  min-height: 5px;
+}

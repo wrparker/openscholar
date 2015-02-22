@@ -80,6 +80,8 @@ function os_taxonomy_update_7005() {
     return;
   }
 
+  $terms = array();
+
   foreach ($orphans_terms as $orphans_term) {
     try {
       db_insert('taxonomy_index')
@@ -89,8 +91,61 @@ function os_taxonomy_update_7005() {
           'sticky' => 0,
         ))
         ->execute();
+
+      // Store the items for later.
+      $terms[] = $orphans_term->og_vocabulary_target_id;
     } catch (Exception $e) {
       drupal_set_message($e->getMessage(), 'error');
     }
+  }
+
+  // Saved the term IDs for soring in the next hook update.
+  variable_set('os_taxonomy_terms_need_sort', array_unique($terms));
+}
+
+/**
+ * Create a proper term weight sorting.
+ */
+function os_taxonomy_update_7006() {
+  // After running the os_taxonomy_update_7005() the weight in the
+  // taxonomy_index table is [-9, 0, 0, 0] and that causing to a non consistence
+  // sorting. The hook update will iterate over the terms from 7005 and create a
+  // proper term sorting.
+
+  // Anonymous function.
+  $proper = function($tid) {
+    $results = db_select('taxonomy_index', 'ti')
+      ->condition('tid', $tid)
+      ->fields('ti', array('weight', 'tid', 'nid'))
+      ->orderBy('weight', 'ASC')
+      ->execute()
+      ->fetchAllAssoc('nid');
+
+    $nids = array_keys($results);
+    $first_nid = reset($nids);
+    $weight = 0;
+
+    foreach ($results as $nid => $result) {
+      if ($nid === $first_nid) {
+        // Store the last first weight.
+        $weight = $result->weight;
+        continue;
+      }
+
+      $weight--;
+      db_update('taxonomy_index')
+        ->fields(array('weight' => $weight))
+        ->condition('nid', $nid)
+        ->condition('tid', $tid)
+        ->execute();
+    }
+  };
+
+
+  // Load all the terms from the previous update hook.
+  $tids = variable_get('os_taxonomy_terms_need_sort');
+
+  foreach ($tids as $tid) {
+    $proper($tid);
   }
 }
