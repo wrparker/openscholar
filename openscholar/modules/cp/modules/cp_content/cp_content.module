@@ -447,10 +447,10 @@ function cp_content_remove_taxonomy_action(&$node, $context) {
 
       $params = array(
         '%terms' => implode(", ", $names),
-        '%node' => $removed_title['title'],
+        '!node' => $removed_title['title'],
       );
 
-      $message = format_plural(count($removed_title['removed_terms']), 'Taxonomy term %terms was removed from the content: %node', '@count taxonomy terms %terms were removed from the content: %node', $params);
+      $message = format_plural(count($removed_title['removed_terms']), 'Taxonomy term %terms was removed from the content: !node', '@count taxonomy terms %terms were removed from the content: %node', $params);
       drupal_set_message($message);
     }
   }
