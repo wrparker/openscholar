@@ -66,11 +66,17 @@ Feature:
   @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "image_gallery" as "john" with the settings:
-      | Label     | vsite  | columns  | rows  | files               |
-      | Rest feed | john   | 3        | 4     | jfk_1.jpg,jfk_2.jpg |
+      | Label         | vsite  | columns  | rows  | files               |
+      | Rest gallery  | john   | 3        | 4     | jfk_1.jpg,jfk_2.jpg |
 
-  @restful @now
+  @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "news" as "john" with the settings:
       | Label     | date      | body                | vsite  |
-      | Rest feed | 1/1/2012  | This is a rest nest | john   |
+      | Rest news | 1/1/2012  | This is a rest nest | john   |
+
+  @restful
+  Scenario: Creating faq via rest.
+     Given I create a new node of "page" as "john" with the settings:
+      | Label     | body                | vsite  | path       |
+      | Rest page | This is a rest page | john   | rest-path  |
