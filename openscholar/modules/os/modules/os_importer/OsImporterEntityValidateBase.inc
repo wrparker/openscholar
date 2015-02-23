@@ -132,8 +132,9 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
 
     $vsite = vsite_get_vsite();
     $purl = $vsite->group->purl;
-    $alias_without_purl = $value[0];
-    $alias_with_purl = $purl . '/' . $value[0];
+    $alias = $this->rest ? $value : $value[0];
+    $alias_without_purl = $alias;
+    $alias_with_purl = $purl . '/' . $alias;
 
     // Ensure that the alias does not exist yet.
     $query = db_select('url_alias')
@@ -163,7 +164,9 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
       $this->setError($field_name, t('The path "@path" is already in use. Please supply a different path.', $params));
     }
 
-    $wrapper->path->set(array('alias' => $value));
+    if ($this->rest) {
+      $wrapper->path->set(array('alias' => $value, 'pathauto' => FALSE));
+    }
   }
 
   /**
