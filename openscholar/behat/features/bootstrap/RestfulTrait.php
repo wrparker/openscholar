@@ -427,6 +427,10 @@ trait RestfulTrait {
       }
     }
 
+    if (!empty($values['professional_title'])) {
+      $values['professional_title'] = array($values['professional_title']);
+    }
+
     if (!empty($values['files'])) {
       $values['files'] = FeatureHelp::getFilesIDs(explode(',', $values['files']));
     }

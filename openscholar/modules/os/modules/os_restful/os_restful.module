@@ -42,12 +42,16 @@ function os_restful_entity_property_info_alter(&$info) {
     'getter callback' => 'entity_property_verbatim_get',
   );
 
-  $info['node']['bundles']['page']['properties']['path'] = array(
-    'label' => t('Site purl'),
-    'setter callback' => 'os_restful_page_path_set',
-    'getter callback' => 'os_restful_page_path_get',
-    'type' => 'unknown',
-  );
+  $info = entity_get_info('node');
+  foreach (array_keys($info['bundles']) as $bundle) {
+    $info['node']['bundles'][$bundle]['properties']['path'] = array(
+      'label' => t('Site purl'),
+      'setter callback' => 'os_restful_page_path_set',
+      'getter callback' => 'os_restful_page_path_get',
+      'type' => 'unknown',
+    );
+  }
+
 }
 
 /**
