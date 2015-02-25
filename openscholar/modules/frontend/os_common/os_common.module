@@ -1,0 +1,24 @@
+<?php
+
+function os_common_library() {
+  $info = array();
+
+  $path = drupal_get_path('os_common');
+
+  $info['JSPager'] = array(
+    'title' => 'JS Pager',
+    'js' => array(
+      $path.'/JSPager/JSPager.module.js' => array(),
+      0 => array(
+        'type' => 'setting',
+        'data' => array(
+          'libraryPaths' => array(
+            'JSPager' => $path.'/JSPager',
+          )
+        )
+      )
+    )
+  );
+
+  return $info;
+}

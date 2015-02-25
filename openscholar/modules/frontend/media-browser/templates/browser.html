@@ -1,0 +1,23 @@
+<div class="container-fluid">
+    <div class="file-search" ng-show="files.length">
+        <label for="file-search-input">Search</label>
+        <input id="file-search-input" type="text" ng-model="$parent.search" class="form-text" size="30" maxlength="128">
+    </div>
+    <div class="results" ng-show="files.length">
+        <div class="media-item" data-fid="{{file.fid}}" ng-click="$parent.setSelection(file.fid)" ng-class="{selected : $parent.selection == file.fid}" ng-repeat="file in files | filter:queryFilename | start:currentPage()*pageSize | limitTo: pageSize">
+            <div class="media-item-thumbnail" ng-bind-html-unsafe="file.preview">
+            </div>
+            <div class="media-item-label" title="{{file.orig}}">
+                {{file.name}} <span ng-show="file.name != file.orig">({{file.orig}}</span>
+            </div>
+        </div>
+    </div>
+    <div mb-pager page-size="10" collection-length="(files | filter:queryFilename).length"></div>
+    <div class="loading" ng-show="files.length==0">
+        Loading...
+    </div>
+    <div id="file-edit-section" ng-show="selection">
+        {{selection}}
+        <div ng-include="selection_form"></div>
+    </div>
+</div>

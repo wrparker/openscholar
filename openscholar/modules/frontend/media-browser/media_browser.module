@@ -1,0 +1,124 @@
+<?php
+
+function media_browser_menu() {
+  $items['media/browser/rest'] = array(
+    'title' => 'Media Browser REST',
+    'page callback' => 'media_browser_media_browser',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK
+  );
+
+  return $items;
+}
+
+/**
+ * Deprecated
+ */
+function media_browser_restws_response_alter(&$response, $function) {
+  switch ($function ) {
+    case 'queryResource':
+      foreach ($response['list'] as $k => $f) {
+        $response['list'][$k] = _media_browser_modify_response_row($f);
+      }
+      break;
+    case 'viewResource':
+        $response = _media_browser_modify_response_row($response);
+      break;
+  }
+}
+
+/**
+ * Deprecated
+ */
+function _media_browser_modify_response_row($file) {
+  $blacklist = array(
+    'og_group_ref' => TRUE,
+    'og_membership' => TRUE,
+    'og_membership__1' => TRUE,
+    'og_membership__2' => TRUE,
+    'og_membership__3' => TRUE,
+    'og_group_ref__og_membership' => TRUE,
+    'og_group_ref__og_membership__1' => TRUE,
+    'og_group_ref__og_membership__2' => TRUE,
+    'og_group_ref__og_membership__3' => TRUE,
+  );
+
+  $filtered = array_diff_key($file, $blacklist);
+
+  $f = file_load($file['fid']);
+  $filtered['orig'] = $f->origname;
+  $filtered['preview'] = drupal_render(file_view_file($f, 'preview'));
+  switch ($filtered['type']) {
+    case 'image':
+      $filtered['form'] = 'file_edit_image';
+      break;
+    default:
+      $filtered['form'] = 'file_edit_default';
+  }
+  entity_get_controller('file')->resetCache();
+
+  return $filtered;
+}
+
+/**
+ * Media Browser callback
+ */
+function media_browser_media_browser() {
+  $root = $GLOBALS['base_url'].'/'.drupal_get_path('module', 'media_browser').'/templates/';
+  $browser = array(
+    '#prefix' => '<div ng-app="mediaBrowser"><div ng-include="\''.$root.'browser.html'.'\'" ng-controller="BrowserCtrl">',
+    '#suffix' => '</div></div>',
+    '#attached' => array(
+      'js' => array(
+        array(
+          'data' => 'https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js',
+          'type' => 'external',
+        ),
+        array(
+          'data' => array(
+            'osRestModulePath' => $GLOBALS['base_url'].'/'.drupal_get_path('module', 'media_browser'),
+            'restBasePath' => url('')
+          ),
+          'type' => 'setting',
+        ),
+        array (
+          'data' => drupal_get_path('module', 'media_browser').'/misc/MediaBrowserFilters.js',
+          'type' => 'file',
+          'scope' => 'footer',
+        ),
+        array (
+          'data' => drupal_get_path('module', 'media_browser').'/misc/MediaBrowserDirectives.js',
+          'type' => 'file',
+          'scope' => 'footer',
+        ),
+        array (
+          'data' => drupal_get_path('module', 'media_browser').'/misc/MediaBrowserServices.js',
+          'type' => 'file',
+          'scope' => 'footer',
+        ),
+        array (
+          'data' => drupal_get_path('module', 'media_browser').'/misc/MediaBrowserModule.js',
+          'type' => 'file',
+          'scope' => 'footer',
+        )
+      ),
+      'css' => array(
+        drupal_get_path('module', 'media_browser').'/misc/media_browser.mediaBrowser.css',
+      )
+    )
+  );
+
+  return $browser;
+}
+
+/**
+ * Move angular to the top of the list scripts list
+ * We need it to load before jQuery because the version in Drupal is too old.
+ */
+function media_browser_process_html(&$vars) {
+  $search = '<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>';
+  $style = str_replace($search, '', $vars['scripts'], $count);
+  if ($count) {
+    $vars['scripts'] = $search."\n".$style;
+  }
+}
