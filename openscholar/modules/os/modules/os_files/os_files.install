@@ -806,5 +806,5 @@ function os_files_update_7018() {
  */
 function os_files_update_7019() {
   ctools_include('export');
-  ctools_export_crud_delete('document');
+  ctools_export_crud_delete('file_type', 'document');
 }
