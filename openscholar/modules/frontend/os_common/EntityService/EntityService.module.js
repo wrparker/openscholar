@@ -6,74 +6,73 @@
   var rootPath = Drupal.settings.osRestModulePath,
     restPath = Drupal.settings.restBasePath;
 
-  angular.module('mediaBrowser.services', [])
+  angular.module('EntityService', [])
   /**
    * Service to maintain the list of files on a user's site
    */
     .factory('EntityService', ['$rootScope', '$http', function ($rootScope, $http) {
 
-      var entities = [],
-        type,
-        factory = function (entityType) {
-          type = entitytype;
-          getAll();
+      var factory = function (entityType, idProp) {
+        var type = entitytype;
+        var entities = {};
+        var eventName = 'EntityService.'+type;
 
         $http.get(restPath+'/'+entityType)
           .success(function success(data) {
-            files = data.list;
-            $rootScope.$broadcast('FileService.changed', files);
+            for (var i=0; i<data.list.length; i++) {
+              var id = data.list[i][idProp];
+              entities[id] = data.list[i];
+            }
+            $rootScope.$broadcast(eventName+'.getAll', entities);
           })
           .error(function errorFunc() {
             $http.get({url: restPath}).
               success(success).
               error(errorFunc);
           });
+
+        this.getAll = function () {
+          return entities;
+        }
+
+        this.get = function (id) {
+          if (entities[id]) {
+            return entities[id];
+          }
+          throw new Exception('Entity of type '+type+' with id '+id+' not found.');
+        }
+
+        this.add = function (entity) {
+          if (entities[entity[idProp]]) {
+            throw new Exception('Cannot add entity of type '+type+' that already exists.');
+          }
+          entities[entity[idProp]] = entity;
+          // rest API call to add entity to server
+
+          $rootScope.$broadcast(eventName+'.add', entity);
+        };
+
+        this.edit = function (entity) {
+          if (!entities[entity[idProp]]) {
+            this.add(entity);
+            return;
+          }
+          entities[entity[idProp]] = entity;
+          // rest API call to update entity on server
+
+          $rootScope.$broadcast(eventName+'.update');
+        };
+
+        this.delete = function (entity) {
+          var id = entity[idProp];
+          delete entities[id];
+
+          //rest API call to delete entity from server
+
+          $rootScope.$broadcast(eventName+'.delete');
+        }
       }
 
-      var entities = [];
-
-      return {
-        getAll: function () {
-          return entities;
-        },
-        get: function (fid) {
-          for (var i = 0; i < files.length; i++) {
-            if (files[i].fid == fid) {
-              return files[i];
-            }
-          }
-          throw new Exception('FID not found');
-        },
-        add: function (file) {
-          files.push(file);
-          $rootScope.$broadcast('FileService.changed', files);
-        },
-        edit: function (file) {
-          for (var i = 0; i < files.length; i++) {
-            if (files[i].fid == file.fid) {
-              files[i] = file;
-              $rootScope.$broadcast('FileService.changed', files);
-              operating = true;
-              $http.put
-              return true;
-            }
-          }
-          return false;
-        },
-        delete: function (fid) {
-          if (angular.isObject(fid)) {
-            fid = fid.fid;
-          }
-          for (var i = 0; i < files.length; i++) {
-            if (files[i].fid == fid) {
-              files.splice(i, 1);
-              $rootScope.$broadcast('FileService.changed', files);
-              return true;
-            }
-          }
-          return false;
-        },
-        operating: false
-      };
+      return factory;
     }]);
 })

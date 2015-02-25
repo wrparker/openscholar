@@ -9,11 +9,26 @@ function os_common_library() {
     'title' => 'JS Pager',
     'js' => array(
       $path.'/JSPager/JSPager.module.js' => array(),
-      0 => array(
+      array(
         'type' => 'setting',
         'data' => array(
-          'libraryPaths' => array(
+          'paths' => array(
             'JSPager' => $path.'/JSPager',
+          )
+        )
+      )
+    )
+  );
+
+  $info['EntityService'] = array(
+    'title' => 'EntityService',
+    'js' => array(
+      $path.'/EntityService/EntityService.module.js' => array(),
+      array(
+        'type' => 'setting',
+        'data' => array(
+          'paths' => array(
+            'api' => '???'
           )
         )
       )
