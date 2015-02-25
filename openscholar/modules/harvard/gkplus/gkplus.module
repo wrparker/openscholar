@@ -99,8 +99,13 @@ function gkplus_order_nodes_dnd_form($form, $form_state, $tid) {
   );
   drupal_set_title(t('Order nodes for <em>%term_name</em>', array('%term_name' => $term->name)), PASS_THROUGH);
 
-  $node_ids = taxonomy_select_nodes($tid, FALSE, FALSE, array('t.weight' => 'ASC'));
-  $nodes = node_load_multiple($node_ids);
+  $results = os_taxonomy_list_attached_entities($tid);
+
+  foreach ($results as $result) {
+    $nid[] = $result['entity_id'];
+  }
+  $nodes = node_load_multiple($nid);
+
   $node_count = count($nodes);
 
   // Weights range from -delta to +delta, so delta should be at least half

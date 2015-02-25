@@ -1378,6 +1378,7 @@ function os_taxonomy_list_attached_entities($tid, $bundles = array(), $range = N
   }
 
   $result = $query->execute();
+
   $entities = array();
   while ($record = $result->fetchAssoc()) {
     $entities[] = array('entity_type' => $record['entity_type'], 'entity_id' => $record['entity_id']);
