@@ -2093,6 +2093,8 @@ function os_files_file_default_types_alter(&$types){
     // *.rtf
     'text/rtf',
     'application/rtf',
+    // *.csv',
+    'text/csv',
   );
 
   $types['document']->mimetypes = (empty($types['document']->mimetypes)) ? $document : array_merge($types['document']->mimetypes, $document);
@@ -2230,6 +2232,7 @@ function _os_files_extensions_from_type($type) {
       'wtml',
       'wtt',
       'wwtfig',
+      'csv',
     );
 
     $types['executable'] = array(
@@ -2284,6 +2287,7 @@ function os_files_file_mimetype_mapping_alter(&$mimes) {
     'application/vnd.openxmlformats-officedocument.spreadsheetml.template' => 'xltx',
     'application/vnd.ms-powerpoint' => 'pot',
     'application/vnd.openxmlformats-officedocument.presentationml.template' => 'potx',
+    'text/csv' => 'csv',
   );
 
   foreach ($types as $mime => $ext) {
