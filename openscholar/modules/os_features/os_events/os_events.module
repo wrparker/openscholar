@@ -937,7 +937,7 @@ function os_events_validate_end_date_after_start($form, $form_state) {
   $end = strtotime($scheduling['close']);
 
   if ($start > $end) {
-    form_set_error('scheduling][close', t('The end date must be later then the start date.'));
+    form_set_error('scheduling][close', t('The End date must be greater than the Start date'));
   }
 }
 
