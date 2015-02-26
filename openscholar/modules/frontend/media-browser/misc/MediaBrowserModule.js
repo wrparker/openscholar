@@ -2,15 +2,17 @@
   var rootPath = Drupal.settings.osRestModulePath,
       restPath = Drupal.settings.restBasePath;
 
-  angular.module('mediaBrowser', ['mediaBrowser.services', 'mediaBrowser.filters', 'mediaBrowser.directives', 'JSPager'])
-  .controller('BrowserCtrl', ['FileService', '$scope', '$filter', '$http', '$templateCache', function (FileService, $scope, $filter, $http, $templateCache) {
-    $scope.files = FileService.getAll();
+  angular.module('mediaBrowser', ['mediaBrowser.services', 'mediaBrowser.filters', 'mediaBrowser.directives', 'JSPager', 'EntityService'])
+  .controller('BrowserCtrl', ['$scope', '$filter', '$http', '$templateCache', 'EntityService',
+      function ($scope, $filter, $http, $templateCache, EntityService) {
+    var service = new EntityService('file');
+    $scope.files = service.getAll();
     $scope.templatePath = rootPath;
     $scope.selection = 0;
     $scope.selection_form = '';
 
     // Watch for changes in file list
-    $scope.$on('FileService.changed', function (event, files) {
+    $scope.$on('EntityService.file.changed', function (event, files) {
       $scope.files = files;
       console.log(files);
     });
