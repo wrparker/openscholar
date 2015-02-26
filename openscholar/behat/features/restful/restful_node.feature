@@ -81,8 +81,14 @@ Feature:
       | Label     | body                | vsite  | path       |
       | Rest page | This is a rest page | john   | rest-path  |
 
-  @restful @now
+  @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "person" as "john" with the settings:
       | address      | email            | first_name  | middle_name | last_name | phone     | prefix  | professional_title  | vsite   |
       | Rest address | foo@example.com  | Diego       | dela        | vega      | 555-1212  | snr.    | Zoro!               | john    |
+
+  @restful @now
+  Scenario: Creating faq via rest.
+     Given I create a new node of "presentation" as "john" with the settings:
+      | Label             | vsite | date     | location        |
+      | Rest presentation | john  | 1/1/2012 | Home sweet home |

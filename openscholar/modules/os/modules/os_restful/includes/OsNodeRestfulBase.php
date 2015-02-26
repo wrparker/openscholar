@@ -60,13 +60,23 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
 
     switch ($field_info['type']) {
       case 'datetime':
-        return array(array($this->publicFields[$public_field_name]['sub_property'] => ''));
+        return $this->handleDatePopulation($public_field_name, $value);
 
       case 'link_field':
         return array('url' => $value);
 
       default:
         return parent::propertyValuesPreprocess($property_name, $value, $public_field_name);
+    }
+  }
+
+  private function handleDatePopulation($public_field_name, $value) {
+    if ($this->getBundle() == 'presentation') {
+      // todo: fix.
+      return 12121;
+    }
+    else {
+      return array(array($this->publicFields[$public_field_name]['sub_property'] => ''));
     }
   }
 
