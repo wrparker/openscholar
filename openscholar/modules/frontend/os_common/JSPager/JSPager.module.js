@@ -6,7 +6,7 @@
  */
 
 (function () {
-  var rootPath = Drupal.settings.libraryPaths.JSPager;
+  var rootPath = Drupal.settings.paths.JSPager;
 
   angular.module('JSPager', [])
     .directive('JSPager', function() {

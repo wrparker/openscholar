@@ -3,8 +3,7 @@
  */
 (function () {
 
-  var rootPath = Drupal.settings.osRestModulePath,
-    restPath = Drupal.settings.restBasePath;
+  var restPath = Drupal.settings.paths.api;
 
   angular.module('EntityService', [])
   /**

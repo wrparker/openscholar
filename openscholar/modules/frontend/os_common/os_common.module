@@ -4,6 +4,7 @@ function os_common_library() {
   $info = array();
 
   $path = drupal_get_path('os_common');
+  $rest = url('api', array('alias' => true));
 
   $info['JSPager'] = array(
     'title' => 'JS Pager',
@@ -28,7 +29,7 @@ function os_common_library() {
         'type' => 'setting',
         'data' => array(
           'paths' => array(
-            'api' => '???'
+            'api' => $rest
           )
         )
       )
