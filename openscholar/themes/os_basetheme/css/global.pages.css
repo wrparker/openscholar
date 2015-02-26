@@ -557,6 +557,10 @@ ul.class_material_field_class a.class_material_field_class_anchor {
     position: relative;
 }
 
+.os-files-video-single .oembed {
+position: relative;
+}
+
 .video-indicator {
 	background-image: url("../images/scholarbase-sprite.png");
   background-position: -42px -85px;

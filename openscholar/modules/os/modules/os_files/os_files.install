@@ -799,3 +799,12 @@ function os_files_update_7018() {
   return t('Microsoft Office template files can now be uploaded to OpenScholar sites.');
 
 }
+
+/**
+ * Add csv files to Document file type
+ * Added in 3.20
+ */
+function os_files_update_7019() {
+  ctools_include('export');
+  ctools_export_crud_delete('file_type', 'document');
+}
