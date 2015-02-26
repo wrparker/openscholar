@@ -214,6 +214,8 @@ function os_layout_set($context_name, $blocks) {
     $clean_up = true;
   }
 
+  drupal_alter(array('os_layout_set'), $blocks, $context_name);
+
   if (module_exists('vsite_layout')) {
     // Writes the context to the overrides table.
     vsite_layout_context_set($context_name, $blocks);
