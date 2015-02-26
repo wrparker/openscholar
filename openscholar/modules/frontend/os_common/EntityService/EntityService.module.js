@@ -3,7 +3,7 @@
  */
 (function () {
 
-  var restPath = Drupal.settings.paths.api;
+  var restPath = '';
 
   angular.module('EntityService', [])
   /**
@@ -12,23 +12,35 @@
     .factory('EntityService', ['$rootScope', '$http', function ($rootScope, $http) {
 
       var factory = function (entityType, idProp) {
-        var type = entitytype;
+        var type = entityType;
         var entities = {};
         var eventName = 'EntityService.'+type;
+        var errorAttempts = 0;
 
-        $http.get(restPath+'/'+entityType)
-          .success(function success(data) {
-            for (var i=0; i<data.list.length; i++) {
-              var id = data.list[i][idProp];
-              entities[id] = data.list[i];
-            }
-            $rootScope.$broadcast(eventName+'.getAll', entities);
-          })
-          .error(function errorFunc() {
+        if (!restPath) {
+          restPath = Drupal.settings.paths.api;
+        }
+
+        var success = function(data) {
+          for (var i=0; i<data.list.length; i++) {
+            var id = data.list[i][idProp];
+            entities[id] = data.list[i];
+          }
+          $rootScope.$broadcast(eventName+'.getAll', entities);
+        }
+
+        var errorFunc = function() {
+          errorAttempts++;
+          if (errorAttempts < 3) {
             $http.get({url: restPath}).
               success(success).
               error(errorFunc);
-          });
+          }
+        }
+
+        $http.get(restPath+'/'+entityType)
+          .success(success)
+          .error(errorFunc);
 
         this.getAll = function () {
           return entities;
@@ -74,4 +86,4 @@
 
       return factory;
     }]);
-})
+})();

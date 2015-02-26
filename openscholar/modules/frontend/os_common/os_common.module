@@ -3,18 +3,35 @@
 function os_common_library() {
   $info = array();
 
-  $path = drupal_get_path('os_common');
+  $path = drupal_get_path('module', 'os_common');
   $rest = url('api', array('alias' => true));
 
   $info['angularjs'] = array(
     'title' => 'AngularJS',
+    'version' => '1.3.14',
     'js' => array(
-      'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.js' => array('type' => 'external')
+      'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.js' => array(
+        'type' => 'external',
+        'group' => JS_LIBRARY,
+        'weight' => -15
+      )
+    )
+  );
+
+  $info['helpers'] = array(
+    'title' => 'OS Common Helpers',
+    'version' => '1.0',
+    'js' => array(
+      $path.'/helpers/helpers.js' => array(
+        'group' => JS_LIBRARY,
+        'weight' => -10,
+      ),
     )
   );
 
   $info['JSPager'] = array(
     'title' => 'JS Pager',
+    'version' => '1.0',
     'js' => array(
       $path.'/JSPager/JSPager.module.js' => array(),
       array(
@@ -28,11 +45,13 @@ function os_common_library() {
     ),
     'dependencies' => array(
       array('os_common', 'angularjs'),
+      array('os_common', 'helpers')
     )
   );
 
   $info['EntityService'] = array(
     'title' => 'EntityService',
+    'version' => '1.0',
     'js' => array(
       $path.'/EntityService/EntityService.module.js' => array(),
       array(
@@ -46,6 +65,7 @@ function os_common_library() {
     ),
     'dependencies' => array(
       array('os_common', 'angularjs'),
+      array('os_common', 'helpers')
     )
   );
 

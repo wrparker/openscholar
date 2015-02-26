@@ -6,9 +6,18 @@
  */
 
 (function () {
-  var rootPath = Drupal.settings.paths.JSPager;
+  var rootPath = osCommonHelpers.findLibraryPath('JSPager');
 
   angular.module('JSPager', [])
+    .config(function($sceDelegateProvider) {
+      var whitelist = $sceDelegateProvider.resourceUrlWhitelist(),
+          domain = osCommonHelpers.findDomain(rootPath);
+
+      domain = domain+'/**';
+      whitelist.push(domain);
+
+      $sceDelegateProvider.resourceUrlWhitelist(whitelist);
+    })
     .directive('jsPager', function() {
       return {
         templateUrl: rootPath+'/pager.html',
@@ -36,7 +45,8 @@
         match = $attr.jsPager.match(/^\s*(.+)\s+in\s+(.*?)\s*(\s+track\s+by\s+(.+)\s*)?$/),
         index = match[1],
         collection = match[2],
-        elements = [];
+        elements = [],
+        pageSize = attr.pageSize || 10;
 
       $scope.$watchCollection(collection, function(collection) {
         var i, block, childScope;
@@ -51,7 +61,7 @@
           elements = [];
         }
 
-        for (i = 0; i < collection.length; i++) {
+        for (i = 0; i < pageSize; i++) {
           // create a new scope for every element in the collection.
           childScope = $scope.$new();
           // pass the current element of the collection into that scope
