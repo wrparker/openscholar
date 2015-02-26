@@ -149,7 +149,7 @@ function os_presentations_field_default_field_instances() {
         'label_position' => 'above',
         'repeat_collapsed' => 0,
         'text_parts' => array(),
-        'year_range' => '-10:+1',
+        'year_range' => '-10:+5',
       ),
       'type' => 'date_popup',
       'weight' => 32,

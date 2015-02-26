@@ -147,7 +147,7 @@ function hook_os_app_info() {
     'path' => 'software',
   	'nodetypes' => array(
   	  'software_project',
-      'software_release',
+  	  'software_release',
     ),
     'views tabs' => array(
       'os_software_projects' => array('page'),

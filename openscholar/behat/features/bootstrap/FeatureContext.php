@@ -1900,4 +1900,93 @@ class FeatureContext extends DrupalContext {
       throw new Exception("'$first' does not come before '$second'.");
     }
   }
+
+  /**
+   * @Given /^I drill down to see the hour$/
+   */
+  public function iDrillDownToSeeTheHour() {
+    for ($i = 0; $i <= 3; $i++) {
+      $element = $this->getSession()->getPage()->find('xpath', "//*[contains(@class, 'facetapi-facet-created')]//a[@class='facetapi-inactive' and last()]");
+
+      if (!$element) {
+        throw new Exception('Link was not found.');
+      }
+
+      $element->click();
+    }
+  }
+
+  /**
+   * @Then /^I verify the facet is in UTC format$/
+   */
+  public function iVerifyTheFacetIsInUTCFormat() {
+    $element = $this->getSession()->getPage()->find('xpath', "//*[contains(@class, 'facetapi-facet-created')]");
+    $nid = FeatureHelp::getNodeId("Tesla's Blog");
+
+    if (!$node = node_load($nid)) {
+      throw new Exception("The node Tesla's Blog was not found");
+    }
+
+    $found = strpos($element->getText(), format_date($node->created, 'custom', 'g:i A'));
+
+    if ($found === FALSE) {
+      throw new Exception('the formatted creates timestamp was not found in the facet filter value.');
+    }
+  }
+
+  /**
+   * @Given /^I click "([^"]*)" under "([^"]*)"$/
+   */
+  public function iClickUnder($link, $class) {
+    $element = $this->getSession()->getPage()->find('xpath', "//*[@class='{$class}']/a[.='{$link}']");
+
+    if (!$element) {
+      throw new \Exception('The link was no fount.');
+    }
+
+    $element->click();
+  }
+
+  /**
+   * @Given /^I save the page address$/
+   */
+  public function iSaveThePageAddress() {
+    $element = $this->getSession()->getPage()->find('xpath', "//div[@class='form-region-main']//div[@class='description']");
+    $childrens = explode(" ", $element->getText());
+
+    if (!$childrens) {
+      throw new Exception('The text was not found in the edit page.');
+    }
+
+    $this->url = $childrens[1];
+  }
+
+  /**
+   * @Then /^I verify the page kept the same$/
+   */
+  public function iVerifyThePageKeptTheSame() {
+    $prev_url = $this->url;
+    $this->iSaveThePageAddress();
+
+    if ($this->url != $prev_url) {
+      throw new Exception('The text has been changed during the title changing.');
+    }
+  }
+
+  /**
+   * @Given /^I edit the page "([^"]*)"$/
+   */
+  public function iEditThePage($title) {
+    $element = $this->getSession()->getPage()->find('xpath', "//*[@class='page-edit']/a[.='Edit']");
+    $this->visit($element->getAttribute('href'));
+  }
+
+  /**
+   * @Given /^I verify the url did not changed$/
+   */
+  public function iVerifyTheUrlDidNotChanged() {
+    if ($this->getSession()->getCurrentUrl() != $this->url) {
+      throw new Exception('The url of the pages has changed.');
+    }
+  }
 }

@@ -528,6 +528,62 @@ function os_news_field_default_field_instances() {
     ),
   );
 
+  // Exported field: 'node-news-og_vocabulary'.
+  $field_instances['node-news-og_vocabulary'] = array(
+    'bundle' => 'news',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+      'full' => array(
+        'label' => 'hidden',
+        'module' => 'vsite_vocab',
+        'settings' => array(
+          'concatenate' => TRUE,
+        ),
+        'type' => 'og_vocab',
+        'weight' => 6,
+      ),
+      'links' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+      'no_image_teaser' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+      'rss' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+      'sidebar_teaser' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+      'slide_teaser' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+      'title' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'og_vocabulary',
+    'label' => 'OG vocabulary',
+    'widget' => array(
+      'module' => 'og_vocab',
+      'type' => 'og_vocab_complex',
+      'weight' => 36,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Attach Files');

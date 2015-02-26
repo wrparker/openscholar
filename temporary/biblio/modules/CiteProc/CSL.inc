@@ -1274,10 +1274,6 @@ class csl_group extends csl_format{
         $variables++;
       }
 
-      if ($this->delimiter && $element->source != 'macro' && $k != count($this->elements) -1) {
-        $element->suffix = $this->delimiter;
-      }
-
       $text = $element->render($data, $mode);
 
       if (!empty($text)) {
