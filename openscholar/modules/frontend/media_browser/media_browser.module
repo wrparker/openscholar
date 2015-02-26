@@ -71,13 +71,9 @@ function media_browser_media_browser() {
     '#attached' => array(
       'js' => array(
         array(
-          'data' => 'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.js',
-          'type' => 'external',
-        ),
-        array(
           'data' => array(
             'osRestModulePath' => $GLOBALS['base_url'].'/'.drupal_get_path('module', 'media_browser'),
-            'restBasePath' => url('')
+            'restBasePath' => url('api')
           ),
           'type' => 'setting',
         ),

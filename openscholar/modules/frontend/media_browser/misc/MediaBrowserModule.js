@@ -2,7 +2,7 @@
   var rootPath = Drupal.settings.osRestModulePath,
       restPath = Drupal.settings.restBasePath;
 
-  angular.module('mediaBrowser', ['mediaBrowser.services', 'mediaBrowser.filters', 'mediaBrowser.directives', 'JSPager', 'EntityService'])
+  angular.module('mediaBrowser', ['mediaBrowser.services', 'JSPager', 'EntityService'])
   .controller('BrowserCtrl', ['$scope', '$filter', '$http', '$templateCache', 'EntityService',
       function ($scope, $filter, $http, $templateCache, EntityService) {
     var service = new EntityService('file');
