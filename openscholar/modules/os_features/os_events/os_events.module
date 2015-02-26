@@ -857,7 +857,7 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
     '#type' => 'date_popup',
     '#title' => t('Open date'),
     '#description' => t('When to automatically open registrations'),
-    '#default_value' => empty($open_date) ? '' : date('Y-m-d H:i', strtotime($open_date)),
+    '#default_value' => empty($open_date) ? date('Y-m-d H:i') : date('Y-m-d H:i', strtotime($open_date)),
     '#date_format' => $format,
   );
 
@@ -867,7 +867,6 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
     '#description' => t('When to automatically close registrations.'),
     '#default_value' => empty($close_date) ? '' : date('Y-m-d H:i', strtotime($close_date)),
     '#date_format' => $format,
-    '#required' => TRUE,
   );
 
   // Add 'from' field.
