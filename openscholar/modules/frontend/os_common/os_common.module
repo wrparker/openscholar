@@ -6,6 +6,13 @@ function os_common_library() {
   $path = drupal_get_path('os_common');
   $rest = url('api', array('alias' => true));
 
+  $info['angularjs'] = array(
+    'title' => 'AngularJS',
+    'js' => array(
+      'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.js' => array('type' => 'external')
+    )
+  );
+
   $info['JSPager'] = array(
     'title' => 'JS Pager',
     'js' => array(
@@ -18,6 +25,9 @@ function os_common_library() {
           )
         )
       )
+    ),
+    'dependencies' => array(
+      array('os_common', 'angularjs'),
     )
   );
 
@@ -33,6 +43,9 @@ function os_common_library() {
           )
         )
       )
+    ),
+    'dependencies' => array(
+      array('os_common', 'angularjs'),
     )
   );
 
