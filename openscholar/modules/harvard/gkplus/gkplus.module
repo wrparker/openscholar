@@ -114,8 +114,11 @@ function gkplus_order_nodes_dnd_form($form, $form_state, $tid) {
   $weight_delta = round($node_count / 2);
 
   foreach ($nodes as $node) {
+    if ($node->title == 'BLANK_TITLE' || empty($node->title)) {
+      $node->title = t('Node without a title - nid @nid', array('@nid' => $node->nid));
+    }
     $form[$node->nid]['#node'] = $node;
-    $form[$node->nid]['title'] = array('#markup' => check_plain($node->title));
+    $form[$node->nid]['title'] = array('#markup' => filter_xss($node->title));
     $form[$node->nid]['weight'] = array(
       '#type' => 'weight',
       '#title' => t('Weight for @title', array('@title' => $node->title)),
