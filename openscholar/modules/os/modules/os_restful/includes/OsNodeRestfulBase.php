@@ -72,8 +72,7 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
 
   private function handleDatePopulation($public_field_name, $value) {
     if ($this->getBundle() == 'presentation') {
-      // todo: fix.
-      return 12121;
+      return strtotime($value);
     }
     else {
       return array(array($this->publicFields[$public_field_name]['sub_property'] => ''));

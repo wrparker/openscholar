@@ -423,7 +423,8 @@ trait RestfulTrait {
     $date_fields = ['start_date', 'end_date', 'date'];
     foreach ($date_fields as $date_field) {
       if (!empty($values[$date_field])) {
-        $values[$date_field] = strtotime($values[$date_field]);
+        // todo: Check if we need or just the property pre process will handle
+//        $values[$date_field] = strtotime($values[$date_field]);
       }
     }
 

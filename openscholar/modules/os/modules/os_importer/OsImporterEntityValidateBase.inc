@@ -73,7 +73,7 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
   /**
    * Verify the start is occurring before the end date.
    */
-  public function validateOsDate($field_name, $value) {
+  public function validateOsDate($field_name, $value, EntityMetadataWrapper $wrapper, EntityMetadataWrapper $property_wrapper) {
     // Empty values are checked for in 'isNotEmpty'.
     if (empty($value) || $this->rest) {
       return;
