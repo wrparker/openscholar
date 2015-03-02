@@ -415,8 +415,10 @@ trait RestfulTrait {
     list($values, $token, $path) = $this->getVariables($type, $account, $table, TRUE);
     $values['vsite'] = FeatureHelp::getNodeId($values['vsite']);
 
-    if (!empty($values['parent'])) {
-      $values['parent'] = FeatureHelp::getNodeId($values['parent']);
+    foreach (['parent', 'software_project'] as $key) {
+      if (!empty($values[$key])) {
+        $values[$key] = FeatureHelp::getNodeId($values[$key]);
+      }
     }
 
     // Set timestamp.
@@ -434,6 +436,11 @@ trait RestfulTrait {
 
     if (!empty($values['files'])) {
       $values['files'] = FeatureHelp::getFilesIDs(explode(',', $values['files']));
+    }
+
+    if (!empty($values['package'])) {
+      $file = system_retrieve_file($values['package'], 'public://', FILE_EXISTS_REPLACE);
+      $values['package'] = $file->fid;
     }
 
     $this->invokeRestRequest('post', $path,

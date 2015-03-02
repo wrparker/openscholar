@@ -100,8 +100,14 @@ Feature:
       | Label           | vsite |
       | Rest slide show | john  |
 
-  @restful @now
+  @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "software_project" as "john" with the settings:
       | Label                 | vsite | files               |
-      | Rest softeare project | john  | jfk_1.jpg,jfk_2.jpg |
+      | Rest software project | john  | jfk_1.jpg,jfk_2.jpg |
+
+  @restful
+  Scenario: Creating faq via rest.
+     Given I create a new node of "software_release" as "john" with the settings:
+      | Label                 | vsite | software_project      | body  | recommended | version | package  |
+      | Rest softeare release | john  | Rest software project | foo   | 1           | 2005    | http://www.colorado.edu/conflict/peace/download/peace.zip |

@@ -122,4 +122,8 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
     return parent::access();
   }
 
+  public function singleFileFieldDisplay($file) {
+    return $this->fileFieldDisplay(array($file));
+  }
+
 }

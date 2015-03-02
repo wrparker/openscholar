@@ -47,7 +47,4 @@ class SoftwareReleaseNodeRestful extends OsNodeRestfulBase {
     return $value ? t('Recommended') : t('Not Recommended');
   }
 
-  public function singleFileFieldDisplay($file) {
-    return $this->fileFieldDisplay(array($file));
-  }
 }
