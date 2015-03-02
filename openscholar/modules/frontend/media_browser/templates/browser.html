@@ -1,18 +1,18 @@
 <div class="container-fluid">
-    <div class="file-search" ng-show="files.length">
+    <div class="file-search" ng-show="numFiles">
         <label for="file-search-input">Search</label>
         <input id="file-search-input" type="text" ng-model="$parent.search" class="form-text" size="30" maxlength="128">
     </div>
-    <div js-pager="files | filter:queryFilename" page-size="10">
-        <div class="media-item" data-fid="{{file.fid}}" ng-click="$parent.setSelection(file.fid)" ng-class="{selected : $parent.selection == file.fid}" ng-repeat="file in files | filter:queryFilename | start:currentPage()*pageSize | limitTo: pageSize">
+    <div js-pager="file in files | filter:queryFilename track by file.id" page-size="10">
+        <div class="media-item" data-fid="{{file.id}}" ng-click="$parent.setSelection(file.id)" ng-class="{selected : $parent.selection == file.id}">
             <div class="media-item-thumbnail" ng-bind-html-unsafe="file.preview">
             </div>
             <div class="media-item-label" title="{{file.orig}}">
-                {{file.name}} <span ng-show="file.name != file.orig">({{file.orig}}</span>
+                {{file.name}} <!--<span ng-show="file.name != file.orig">({{file.orig}})</span>-->
             </div>
         </div>
     </div>
-    <div class="loading" ng-show="files.length==0">
+    <div class="loading" ng-show="numFiles==0">
         Loading...
     </div>
     <div id="file-edit-section" ng-show="selection">

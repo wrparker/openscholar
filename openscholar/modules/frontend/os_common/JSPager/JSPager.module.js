@@ -18,88 +18,143 @@
 
       $sceDelegateProvider.resourceUrlWhitelist(whitelist);
     })
-    .directive('jsPager', function() {
-      return {
-        templateUrl: rootPath+'/pager.html',
-        transclude: true,
-        compile: pagerCompile,
-        //link: pagerLink
-      };
-    })
-    .filter('currentPage', ['scope.pager', function (pager) {
-      function currentPage(input) {
+    .filter('PagerCurrentPage', function () {
+      console.log('filter run');
+      console.log(this);
+      function currentPage(input, pager) {
         if (input) {
-          start = pager.currentPage();
-          return input.slice(start);
+          var start = pager.currentPage() * pager.pageSize;
+          if (Array.isArray(input)) {
+            return input.slice(start);
+          }
+          else if (typeof input == "object") {
+            var i = 0,
+              output = {};
+            for (var key in input) {
+              if (i++ < start) continue;
+
+              output[key] = input[key]
+            }
+            return output;
+          }
         }
         return '';
       }
-      currentPage.$stateful = true;
+      return currentPage;
+    })
+    .directive('jsPager', ['$parse', function($parse) {
+      return {
+        templateUrl: rootPath+'/pager.html',
+        transclude: true,
+        compile: function pagerCompile(element, attr) {
+          var loop = attr.jsPager,
+          /* this regex matches the following patterns:
+           * var in collection | filter:item1 | filter:item2 track by var.property
+           * if you try to do 'var in collection track by var.property | filters' it won't work properly
+           */
+            match = attr.jsPager.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/),
+            index = match[1],
+            collection = match[2] += ' | PagerCurrentPage:pager',
+            trackExp = match[4],
+            elements = [],
+            pageSize = attr.pageSize || 10,
+            //allElements = {$id: hashKey},
+            trackExpGetter, trackByArray;
 
-    }]);
+          /*  come back to this later
+          if (trackExp) {
+            trackExpGetter = $parse(trackExp);
+          }
+          else {
+            trackByArray = function(key, value) {
+              return hashKey(value);
+            }
+          }*/
 
-  function pagerCompile(element, attr, linker) {
-    var allElements = [];
-    return function($scope, $element, $attr) {
-      var loop = $attr.jsPager,
-        match = $attr.jsPager.match(/^\s*(.+)\s+in\s+(.*?)\s*(\s+track\s+by\s+(.+)\s*)?$/),
-        index = match[1],
-        collection = match[2],
-        elements = [],
-        pageSize = attr.pageSize || 10;
+          return function($scope, $element, $attr, _c, linker) {
+            /* come back to this later. It's all performance optimization and I'm going cross-eyed.
+            if (trackByExpGetter) {
+              trackByIdExpFn = function(key, value, index) {
+                // assign key, value, and $index to the locals so that they can be used in hash functions
+                if (keyIdentifier) allElements[keyIdentifier] = key;
+                allElements[valueIdentifier] = value;
+                allElements.$index = index;
+                return trackByExpGetter($scope, allElements);
+              };
+            }*/
 
-      $scope.$watchCollection(collection, function(collection) {
-        var i, block, childScope;
+            var $transclude = jQuery('ng-transclude, .ng-transclude, [ng-transclude]', $element),
+              $target = $element;
 
-        // check if elements have already been rendered
-        if (elements.length > 0){
-          // if so remove them from DOM, and destroy their scope
-          for (i = 0; i < elements.length; i++) {
-            elements[i].el.remove();
-            elements[i].scope.$destroy();
-          };
-          elements = [];
+            if ($transclude.length) {
+              $target = $transclude.parent();
+              $transclude.remove();
+            }
+
+            console.log(collection);
+            var base_coll = $parse(collection.split(' | ')[0]);
+            console.log(base_coll);
+            $scope.$watchCollection(collection, function(collection) {
+              var i, block, childScope;
+
+              // check if elements have already been rendered
+              if (elements.length > 0){
+                // if so remove them from DOM, and destroy their scope
+                for (i = 0; i < elements.length; i++) {
+                  elements[i].el.remove();
+                  elements[i].scope.$destroy();
+                };
+                elements = [];
+              }
+
+              i = 0;
+              for (var key in collection) {
+                if (i++ >= pageSize) continue;
+                // create a new scope for every element in the collection.
+                childScope = $scope.$new();
+                // pass the current element of the collection into that scope
+                childScope[index] = collection[key];
+
+                linker(childScope, function(clone){
+                  // clone the transcluded element, passing in the new scope.
+                  $target.append(clone); // add to DOM
+                  block = {};
+                  block.el = clone;
+                  block.scope = childScope;
+                  elements.push(block);
+                });
+              };
+
+            });
+
+            pagerLink($scope, $element, $attr, _c);
+          }
         }
-
-        for (i = 0; i < pageSize; i++) {
-          // create a new scope for every element in the collection.
-          childScope = $scope.$new();
-          // pass the current element of the collection into that scope
-          childScope[indexString] = collection[i];
-
-          linker(childScope, function(clone){
-            // clone the transcluded element, passing in the new scope.
-            $element.append(clone); // add to DOM
-            block = {};
-            block.el = clone;
-            block.scope = childScope;
-            elements.push(block);
-          });
-        };
-      });
-    }
-  }
+      };
+    }]);
 
 
   function pagerLink(scope, iElement, iAttrs, controller) {
     var current = 1;
 
-    scope.pager.perPage = scope
-    scope.pager.currentPage = currentPage;
-    scope.pager.numPages = numPages;
-    scope.pager.canPage = canPage;
-    scope.pager.changePage = changePage;
+    scope.pager = {
+      currentPage: currentPage,
+      numPages: numPages,
+      canPage: canPage,
+      changePage: changePage,
+      pageSize: iAttrs.pageSize || 10
+    };
 
     function currentPage() {
       var pages = numPages();
-      if (pages && scope.current > pages) {
+      if (pages && current > pages) {
         current = pages;
       }
       return current;
     }
 
     function numPages() {
-      return Math.ceil(scope.collectionLength/scope.pageSize);
+      return Math.ceil(scope.collectionLength/scope.pager.pageSize);
     }
 
     function canPage(dir) {
@@ -112,7 +167,7 @@
     function changePage(dir) {
       if (canPage(dir)) {
         dir = parseInt(dir);
-        scope.currentPage += dir;
+        current += dir;
       }
     }
   }

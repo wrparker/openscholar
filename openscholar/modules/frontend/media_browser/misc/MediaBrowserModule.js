@@ -2,18 +2,32 @@
   var rootPath = Drupal.settings.osRestModulePath,
       restPath = Drupal.settings.restBasePath;
 
-  angular.module('mediaBrowser', ['mediaBrowser.services', 'JSPager', 'EntityService'])
-  .controller('BrowserCtrl', ['$scope', '$filter', '$http', '$templateCache', 'EntityService',
-      function ($scope, $filter, $http, $templateCache, EntityService) {
-    var service = new EntityService('file');
-    $scope.files = service.getAll();
+  angular.module('mediaBrowser', ['JSPager', 'EntityService'])
+  .controller('BrowserCtrl', ['$scope', '$filter', '$http', '$templateCache', 'EntityService', '$sce',
+      function ($scope, $filter, $http, $templateCache, EntityService, $sce) {
+    var service = new EntityService('files', 'id');
+    $scope.files = [];
+    $scope.numFiles = 0;
     $scope.templatePath = rootPath;
     $scope.selection = 0;
     $scope.selection_form = '';
 
+        $scope.getId = function () {
+          return $scope.$id;
+        }
+
     // Watch for changes in file list
-    $scope.$on('EntityService.file.changed', function (event, files) {
+    $scope.$on('EntityService.files.add', function (event, files) {
       $scope.files = files;
+      console.log(files);
+    });
+
+    $scope.$on('EntityService.files.getAll', function (event, files) {
+      $scope.files = files;
+      for (var i=0; i<$scope.files.length; i++) {
+        $scope.files.preview = $sce.trustAsHtml($scope.files.preview);
+      }
+      $scope.numFiles = service.getCount();
       console.log(files);
     });
 

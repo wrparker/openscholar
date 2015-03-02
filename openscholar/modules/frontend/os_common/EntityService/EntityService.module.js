@@ -14,6 +14,7 @@
       var factory = function (entityType, idProp) {
         var type = entityType;
         var entities = {};
+        var entityCount = 0;
         var eventName = 'EntityService.'+type;
         var errorAttempts = 0;
 
@@ -21,11 +22,12 @@
           restPath = Drupal.settings.paths.api;
         }
 
-        var success = function(data) {
-          for (var i=0; i<data.list.length; i++) {
-            var id = data.list[i][idProp];
-            entities[id] = data.list[i];
+        var success = function(resp) {
+          for (var i=0; i<resp.data.length; i++) {
+            var id = resp.data[i][idProp];
+            entities[id] = resp.data[i];
           }
+          entityCount = resp.count;
           $rootScope.$broadcast(eventName+'.getAll', entities);
         }
 
@@ -51,6 +53,10 @@
             return entities[id];
           }
           throw new Exception('Entity of type '+type+' with id '+id+' not found.');
+        }
+
+        this.getCount = function () {
+          return entityCount;
         }
 
         this.add = function (entity) {

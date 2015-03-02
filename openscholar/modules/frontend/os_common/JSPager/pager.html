@@ -1,5 +1,6 @@
-<div class="results" ng-show="files.length" ng-transclude>
+<div class="results" ng-show="collectionLength">
+    <ng-transclude></ng-transclude>
 </div>
-<button ng-disabled="!canPage(-1)" ng-click="changePage(-1)">&lt;&lt;</button>
-{{currentPage()}}/{{numPages()}}
-<button ng-disabled="!canPage(1)" ng-click="changePage(1)">&gt;&gt;</button>
+<button ng-disabled="!pager.canPage(-1)" ng-click="pager.changePage(-1)">&lt;&lt;</button>
+{{pager.currentPage()}}/{{pager.numPages()}}
+<button ng-disabled="!pager.canPage(1)" ng-click="pager.changePage(1)">&gt;&gt;</button>
