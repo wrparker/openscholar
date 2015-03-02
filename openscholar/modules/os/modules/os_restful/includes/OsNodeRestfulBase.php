@@ -105,7 +105,7 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
         'filemime' => $file['filemime'],
         'name' => $file['filename'],
         'uri' => $file['uri'],
-        'url' => file_create_url($files['uri']),
+        'url' => file_create_url($file['uri']),
       );
     }
 
