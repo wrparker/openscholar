@@ -2,7 +2,7 @@
   var rootPath = Drupal.settings.osRestModulePath,
       restPath = Drupal.settings.restBasePath;
 
-  angular.module('mediaBrowser', ['JSPager', 'EntityService'])
+  angular.module('mediaBrowser', ['JSPager', 'EntityService', 'mediaBrowser.filters'])
   .controller('BrowserCtrl', ['$scope', '$filter', '$http', '$templateCache', 'EntityService', '$sce',
       function ($scope, $filter, $http, $templateCache, EntityService, $sce) {
     var service = new EntityService('files', 'id');
@@ -19,7 +19,6 @@
     // Watch for changes in file list
     $scope.$on('EntityService.files.add', function (event, files) {
       $scope.files = files;
-      console.log(files);
     });
 
     $scope.$on('EntityService.files.getAll', function (event, files) {
@@ -28,11 +27,10 @@
         $scope.files.preview = $sce.trustAsHtml($scope.files.preview);
       }
       $scope.numFiles = service.getCount();
-      console.log(files);
     });
 
     // Filter list of files by a filename fragment
-    $scope.queryFilename = function (item) {
+    $scope.queryFilename = function (item, index) {
 
       if ($scope.search) {
         var search = $scope.search.toLowerCase();

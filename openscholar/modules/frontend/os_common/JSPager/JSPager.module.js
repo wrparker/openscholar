@@ -19,21 +19,20 @@
       $sceDelegateProvider.resourceUrlWhitelist(whitelist);
     })
     .filter('PagerCurrentPage', function () {
-      console.log('filter run');
-      console.log(this);
       function currentPage(input, pager) {
         if (input) {
-          var start = pager.currentPage() * pager.pageSize;
+          var start = (pager.currentPage() - 1) * pager.pageSize;
           if (Array.isArray(input)) {
-            return input.slice(start);
+            return input.slice(start, pager.pageSize);
           }
           else if (typeof input == "object") {
             var i = 0,
               output = {};
             for (var key in input) {
-              if (i++ < start) continue;
-
-              output[key] = input[key]
+              if (i >= start && i < start + pager.pageSize) {
+                output[key] = input[key]
+              }
+              i++
             }
             return output;
           }
@@ -54,7 +53,7 @@
            */
             match = attr.jsPager.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/),
             index = match[1],
-            collection = match[2] += ' | PagerCurrentPage:pager',
+            collection = match[2],
             trackExp = match[4],
             elements = [],
             pageSize = attr.pageSize || 10,
@@ -91,10 +90,20 @@
               $transclude.remove();
             }
 
-            console.log(collection);
-            var base_coll = $parse(collection.split(' | ')[0]);
-            console.log(base_coll);
+            pagerLink($scope, $element, $attr, _c);
             $scope.$watchCollection(collection, function(collection) {
+              $scope.collectionLength = 0;
+              if (Array.isArray(collection)) {
+                $scope.collectionLength = collection.length;
+              }
+              else {
+                for (var key in collection) {
+                  $scope.collectionLength++;
+                }
+              }
+            });
+
+            $scope.$watchCollection(collection + ' | PagerCurrentPage:pager', function(collection) {
               var i, block, childScope;
 
               // check if elements have already been rendered
@@ -109,7 +118,6 @@
 
               i = 0;
               for (var key in collection) {
-                if (i++ >= pageSize) continue;
                 // create a new scope for every element in the collection.
                 childScope = $scope.$new();
                 // pass the current element of the collection into that scope
@@ -126,8 +134,6 @@
               };
 
             });
-
-            pagerLink($scope, $element, $attr, _c);
           }
         }
       };
@@ -142,7 +148,7 @@
       numPages: numPages,
       canPage: canPage,
       changePage: changePage,
-      pageSize: iAttrs.pageSize || 10
+      pageSize: parseInt(iAttrs.pageSize) || 10
     };
 
     function currentPage() {

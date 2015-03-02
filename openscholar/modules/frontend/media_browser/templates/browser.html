@@ -3,7 +3,7 @@
         <label for="file-search-input">Search</label>
         <input id="file-search-input" type="text" ng-model="$parent.search" class="form-text" size="30" maxlength="128">
     </div>
-    <div js-pager="file in files | filter:queryFilename track by file.id" page-size="10">
+    <div js-pager="file in files | mbFilename:$parent.search track by file.id" page-size="10">
         <div class="media-item" data-fid="{{file.id}}" ng-click="$parent.setSelection(file.id)" ng-class="{selected : $parent.selection == file.id}">
             <div class="media-item-thumbnail" ng-bind-html-unsafe="file.preview">
             </div>
