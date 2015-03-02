@@ -303,11 +303,15 @@ function os_importer_map_files($source, $entity, $target, $value, $mapping) {
   if (!$value) {
     return;
   }
+
+  require_once drupal_get_path('module', 'file_entity') . '/file_entity.pages.inc';
+  $path = file_entity_upload_destination_uri(array('file_directory' => os_files_get_save_path()));
+
   $field_name = $source->importer->processor->config['file_field'];
   $files = array();
 
   $sources = explode('|', $value);
-  // todo: Use system_retrieve_file().
+
   foreach ($sources as $source) {
     if ($file = system_retrieve_file($source, 'public://', TRUE)) {
       $files[] = array(
@@ -315,6 +319,12 @@ function os_importer_map_files($source, $entity, $target, $value, $mapping) {
         'display' => 1,
         'description' => '',
       );
+
+      $file = file_load($file->fid);
+      $source = $file->uri;
+      $file->uri = file_unmanaged_copy($file->uri, $path);
+      file_save($file);
+      drupal_unlink($source);
     }
     else {
       // The file could not be accessible. Display the error.
@@ -327,6 +337,7 @@ function os_importer_map_files($source, $entity, $target, $value, $mapping) {
 
   $entity->{$field_name}[$entity->language] = $files;
 }
+
 
 /**
  * Importer callback for the set the registration field of the event to TRUE or
