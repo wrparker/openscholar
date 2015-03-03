@@ -1296,3 +1296,18 @@ function os_events_register_show_register_link($node) {
 
   return time() >= strtotime($result['open']);
 }
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function os_events_theme_registry_alter(&$theme_registry) {
+  $theme_registry['registration_link']['function'] = 'os_events_registration_link';
+}
+
+/**
+ * Changing the theme callback for the registration link theme.
+ */
+function os_events_registration_link($variables) {
+  list(,$nid,) = explode('/', $variables['path']);
+  return os_events_generate_modal_register_link($nid);
+}
