@@ -1,22 +1,36 @@
-<div class="container-fluid">
-    <div class="file-search" ng-show="numFiles">
-        <label for="file-search-input">Search</label>
-        <input id="file-search-input" type="text" ng-model="$parent.search" class="form-text" size="30" maxlength="128">
+<div class="container-fluid" ng-switch="$parent.pane">
+    <div class="media-browser-buttons">
+        <div class="media-browser-button" ng-class="{active:$parent.pane=='upload'}" ng-click="$parent.pane='upload'">Upload</div>
+        <div class="media-browser-button" ng-class="{active:$parent.pane=='web'}" ng-click="$parent.pane='web'">Web</div>
+        <div class="media-browser-button" ng-class="{active:$parent.pane=='library'}" ng-click="$parent.pane='library'">Library</div>
     </div>
-    <div js-pager="file in files | mbFilename:$parent.search track by file.id" page-size="10">
-        <div class="media-item" data-fid="{{file.id}}" ng-click="$parent.setSelection(file.id)" ng-class="{selected : $parent.selection == file.id}">
-            <div class="media-item-thumbnail" ng-bind-html-unsafe="file.preview">
+    <div class="media-browser-panes">
+        <div class="media-browser-pane" ng-switch-when="upload">
+            Upload
+        </div>
+        <div class="media-browser-pane" ng-switch-when="web">
+            Web
+        </div>
+        <div class="media-browser-pane" ng-switch-when="library">
+            <div class="file-search" ng-show="numFiles">
+                <label for="file-search-input">Search</label>
+                <input id="file-search-input" type="text" ng-model="$parent.search" class="form-text" size="30" maxlength="128">
             </div>
-            <div class="media-item-label" title="{{file.orig}}">
-                {{file.name}} <!--<span ng-show="file.name != file.orig">({{file.orig}})</span>-->
+            <div js-pager="file in files | mbFilename:$parent.search track by file.id" page-size="10">
+                <div class="media-item" data-fid="{{file.id}}" ng-click="$parent.setSelection(file.id)" ng-class="{selected : $parent.selection == file.id}">
+                    <div class="media-item-thumbnail" ng-bind-html-unsafe="file.preview">
+                    </div>
+                    <div class="media-item-label" title="{{file.orig}}">
+                        {{file.name}} <!--<span ng-show="file.name != file.orig">({{file.orig}})</span>-->
+                    </div>
+                </div>
+            </div>
+            <div class="loading" ng-show="numFiles==0">
+                Loading...
+            </div>
+            <div id="file-edit-section" ng-show="selection">
+                <div ng-include="selection_form"></div>
             </div>
         </div>
-    </div>
-    <div class="loading" ng-show="numFiles==0">
-        Loading...
-    </div>
-    <div id="file-edit-section" ng-show="selection">
-        {{selection}}
-        <div ng-include="selection_form"></div>
     </div>
 </div>
