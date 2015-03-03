@@ -124,3 +124,47 @@ function vsite_layout_cp_layout_form_submit($form, &$form_state) {
   }
 }
 
+
+/**
+ * Implements hook_os_layout_set_alter
+ *
+ * Used to trigger re-build of the block relationships when a layout changes.
+ *
+ * @param array $blocks
+ * @param string $context_name
+ */
+function vsite_layout_os_layout_set_alter(&$blocks, $context_name) {
+  $vsite = vsite_get_vsite();
+  if ($vsite) {
+    // Delete the old block relationships.
+    db_delete('vsite_layout_block')->condition('sid', $vsite->id)->condition('context', $context_name)->execute();
+
+    foreach ($blocks as $block) {
+      //skip blocks that are not in the context.
+      if(!$block['region']) continue;
+
+      $block['sid'] = $vsite->id;
+      $block['context'] = $context_name;
+      drupal_write_record('vsite_layout_block', $block);
+    }
+  }
+}
+
+/**
+ * Update the os_layout_block_map
+ */
+function vsite_layout_update_block_map($map, $vsite = FALSE) {
+  global $conf;
+
+  if (!$vsite) {
+    $vsite = vsite_get_vsite();
+  }
+
+  // Save the override.
+  if ($vsite) {
+    $vsite->controllers->variable->set('os_layout_block_map', $map);
+  }
+
+  // Also update the conf array incase this is updated multiple times in a page load.
+  $conf['os_layout_block_map'] = $map;
+}

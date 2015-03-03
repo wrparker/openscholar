@@ -22,6 +22,11 @@ abstract class os_boxes_default extends boxes_box {
   public $changed;
 
   /**
+   * Holds the array of contexts that this item is in.
+   */
+  public $os_contexts;
+
+  /**
    * Holds the cache id.
    */
   protected $cache_id;
