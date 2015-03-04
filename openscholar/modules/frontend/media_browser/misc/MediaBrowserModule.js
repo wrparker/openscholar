@@ -2,9 +2,9 @@
   var rootPath = Drupal.settings.osRestModulePath,
       restPath = Drupal.settings.restBasePath;
 
-  angular.module('mediaBrowser', ['JSPager', 'EntityService', 'mediaBrowser.filters'])
-  .controller('BrowserCtrl', ['$scope', '$filter', '$http', '$templateCache', 'EntityService', '$sce',
-      function ($scope, $filter, $http, $templateCache, EntityService, $sce) {
+  angular.module('mediaBrowser', ['JSPager', 'EntityService', 'ngSanitize', 'angularFileUpload', 'mediaBrowser.filters'])
+  .controller('BrowserCtrl', ['$scope', '$filter', '$http', '$templateCache', 'EntityService', '$sce', '$upload',
+      function ($scope, $filter, $http, $templateCache, EntityService, $sce, $upload) {
     var service = new EntityService('files', 'id');
     $scope.files = [];
     $scope.numFiles = 0;
@@ -24,6 +24,10 @@
       }
       $scope.numFiles = service.getCount();
     });
+
+    $scope.upload = function ($files, $event, $rejectedFiles) {
+
+    }
 
     // selected file
     $scope.setSelection = function (fid) {
