@@ -1,3 +1,28 @@
+/* tabs and panes */
+
+.media-browser-panes {
+  border: 1px solid lightgray;
+  margin: 3px;
+  margin-top: 0;
+  padding: 5px;
+}
+
+.media-browser-buttons {
+  margin: 0 3px -1px 3px;
+}
+
+.media-browser-button {
+  width: 150px;
+  height: 20px;
+  border: 1px solid lightgray;
+  display: inline-block;
+  text-align: center;
+  padding: 5px;
+}
+
+.media-browser-button.active {
+  border-bottom: 1px solid white;
+}
 
 /* Search form */
 div.file-search {
@@ -26,6 +51,10 @@ div.file-search {
   display: inline-block;
   margin: 0 14px 10px 0;
   vertical-align: top;
+}
+
+.media-item .contextual-links-wrapper {
+  display: none;
 }
 
 .media-item img {

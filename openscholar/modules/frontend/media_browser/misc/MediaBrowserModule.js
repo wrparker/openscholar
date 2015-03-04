@@ -11,6 +11,7 @@
     $scope.templatePath = rootPath;
     $scope.selection = 0;
     $scope.selection_form = '';
+    $scope.pane = 'library';
 
     // Watch for changes in file list
     $scope.$on('EntityService.files.add', function (event, files) {
