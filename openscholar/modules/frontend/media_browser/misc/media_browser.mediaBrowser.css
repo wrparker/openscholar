@@ -1,0 +1,77 @@
+
+/* Search form */
+div.file-search {
+  padding-bottom: .5em;
+  border-bottom: 1px solid lightgray;
+  margin-bottom: .75em;
+  margin-right: 5px;
+}
+
+#file-search-input {
+  margin: 9px 0;
+}
+
+/* Full listing */
+.results {
+  margin-right: 230px;
+  border-right: 1px solid lightgray;
+}
+
+/* Single file thumbnails */
+.media-item {
+  background: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  padding: 5px;
+  width: 100px;
+  display: inline-block;
+  margin: 0 14px 10px 0;
+  vertical-align: top;
+}
+
+.media-item img {
+  height: auto;
+  width: 100%;
+}
+
+.media-item .media-item-label {
+  text-align: center;
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.media-item.selected {
+  background-color: #F4ECC7;
+  border-color: #058AC5;
+}
+
+/* Pager */
+.pager {
+  margin: 1em 0;
+  border-top: 1px solid lightgray;
+  padding-top: 0.5em;
+  text-align: center;
+}
+
+.pager button {
+  padding: 0px 5px;
+}
+
+/* File Edit panel */
+#file-edit-section {
+  position: absolute;
+  width: 205px;
+  top: 100px;
+  bottom: 42px;
+  right: 18px;
+  overflow: auto;
+}
+
+#file-edit-section input {
+  margin-bottom: 1em;
+}
+
+#file-edit-section button {
+  padding: 3px 5px;
+}
