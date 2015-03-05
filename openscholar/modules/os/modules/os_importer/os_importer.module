@@ -314,7 +314,7 @@ function os_importer_map_files($source, $entity, $target, $value, $mapping) {
       $files[] = array(
         'fid' => $file->fid,
         'display' => 1,
-        'timestamp' => '',
+        'timestamp' => REQUEST_TIME - 200,
       );
     }
     else {
