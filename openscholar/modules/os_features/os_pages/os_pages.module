@@ -1164,11 +1164,31 @@ function os_pages_preprocess_menu_link(&$vars) {
 function os_pages_apachesolr_index_document_build_node(ApacheSolrDocument $doc, $entity, $env_id) {
   if ($entity->type == 'page') {
     $ctx = context_load('os_pages-page-'.$entity->nid);
+    $loaded_boxes = array();
+
+    // Indexing happens outside the space so make an allowance for that
+    if (module_exists('vsite') && ($groups = og_get_entity_groups('node',$entity))) {
+      if ($groups['node'] && count($groups['node'])) {
+        $vsite = spaces_load('og', current($groups['node']));
+        $override = $vsite->controllers->context->get("os_pages-page-{$entity->nid}:reaction:block");
+        if (!is_null($override)) {
+          $ctx->reactions['block'] = $override;
+        }
+      }
+    }
+
     if ($ctx && isset($ctx->reactions['block']['blocks'])) {
       // Loop through the blocks in this page
       foreach ($ctx->reactions['block']['blocks'] as $block) {
         if($block['module'] != 'boxes' && $block['region']) continue;
+
         $box = boxes_box_load($block['delta']);
+        // Load from the vsite if needed.
+        if ($vsite && ($vsite_box = $vsite->controllers->boxes->get($delta))) {
+          if (is_array($vsite_box))  $vsite_box = (object) $vsite_box;
+          $box = boxes_factory($vsite_box->plugin_key, $vsite_box);
+          $box->new = FALSE;
+        }
         $boxes = array($box);
 
         // Add Boxes within box collections.
@@ -1180,7 +1200,14 @@ function os_pages_apachesolr_index_document_build_node(ApacheSolrDocument $doc, 
 
               list($module,$delta) = explode('-', $bid);
               if ($module =='boxes') {
-                $boxes[] = boxes_box_load($delta);
+                $new_box = boxes_box_load($delta);
+                // Load from the vsite if needed.
+                if ($vsite && ($vsite_box = $vsite->controllers->boxes->get($delta))) {
+                  if (is_array($vsite_box))  $vsite_box = (object) $vsite_box;
+                  $new_box = boxes_factory($vsite_box->plugin_key, $vsite_box);
+                  $new_box->new = FALSE;
+                }
+                $boxes[] = $new_box;
               }
             }
           }
@@ -1240,7 +1267,7 @@ function os_pages_widget_submit($form, $form_state) {
  */
 function _os_pages_reindex_context($context_name) {
   if (strpos($context_name, 'os_pages-page-') !== FALSE && module_exists('apachesolr')) {
-    $nid = str_replace('os_pages-page-', '', $name);
+    $nid = str_replace('os_pages-page-', '', $context_name);
     $node = node_load($nid);
     if ($node) {
       apachesolr_entity_update($node, 'node');
