@@ -1167,16 +1167,33 @@ function os_pages_apachesolr_index_document_build_node(ApacheSolrDocument $doc, 
     if ($ctx && isset($ctx->reactions['block']['blocks'])) {
       // Loop through the blocks in this page
       foreach ($ctx->reactions['block']['blocks'] as $block) {
-        if($block['module'] != 'boxes') continue;
+        if($block['module'] != 'boxes' && $block['region']) continue;
         $box = boxes_box_load($block['delta']);
+        $boxes = array($box);
 
-        // Render the contents of this box into solr.
-      	if ($box instanceof os_boxes_html) {
-      	  $doc->addField('tm_html_widget', check_markup($box->options['text']['value'], $box->options['text']['format']));
-      	}
+        // Add Boxes within box collections.
+        if ($box instanceof os_boxes_widget_collection || $box instanceof os_boxes_columns) {
+          if(count($box->options['widgets'])) {
+            foreach ($box->options['widgets'] as $widget) {
+              // Collections and columns store the BID slightly differently
+              $bid = (is_array($widget))? $widget['bid'] : $widget;
+
+              list($module,$delta) = explode('-', $bid);
+              if ($module =='boxes') {
+                $boxes[] = boxes_box_load($delta);
+              }
+            }
+          }
+        }
+
+        foreach ($boxes as $box) {
+          // Render the contents of this box into solr.
+          if ($box instanceof os_boxes_html) {
+            $doc->addField('tm_html_widget', check_markup($box->options['text']['value'], $box->options['text']['format']));
+          }
+        }
+
       }
-
-
     }
   }
 }
@@ -1195,6 +1212,33 @@ function os_pages_apachesolr_query_alter($query) {
  * @param string $context_name
  */
 function os_pages_os_layout_set_alter(&$blocks, $context_name) {
+  _os_pages_reindex_context($context_name);
+}
+
+/**
+ * Implements hook_form_FORM_ID_form_alter() for boxes_box
+ */
+function os_pages_form_boxes_box_form_alter(&$form, &$form_state) {
+  $form['#submit'][] = 'os_pages_widget_submit';
+}
+
+/**
+ * When a box is saved, if it is a HTML box then check if contexts need to be re-indexed.
+ */
+function os_pages_widget_submit($form, $form_state) {
+  if ($form_state['values']['op'] !== t('Cancel') && module_exists('vsite') && vsite_get_vsite() && $form_state['box']->plugin_key == 'os_boxes_html') {
+    // Get the relationship between blocks and contexts.
+    $context_blocks = vsite_layout_get_block_contexts('boxes',$form_state['box']->delta);
+    foreach ($context_blocks as $info) {
+    	_os_pages_reindex_context($info->context);
+    }
+  }
+}
+
+/**
+ * Re-Index a page in solr when it's context is modified.
+ */
+function _os_pages_reindex_context($context_name) {
   if (strpos($context_name, 'os_pages-page-') !== FALSE && module_exists('apachesolr')) {
     $nid = str_replace('os_pages-page-', '', $name);
     $node = node_load($nid);

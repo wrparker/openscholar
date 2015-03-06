@@ -177,6 +177,7 @@ function vsite_layout_get_block_contexts($module, $delta, $vsite = FALSE) {
   $query->condition('sid', $vsite->id);
   $query->condition('module', $module);
   $query->condition('delta', $delta);
+  $query->fields('vlb', array('module','delta','context','region','weight'));
 
   return $query->execute()->fetchAll();
 }
@@ -211,7 +212,7 @@ function vsite_layout_rebuild_block_contexts($vsite = FALSE) {
     }
   }
 
-  variable_set('vsite_layout_rebuild_block_contexts', FALSE);
+  $vsite->controllers->variable->set('vsite_layout_rebuild_block_contexts', FALSE);
 }
 
 /**
