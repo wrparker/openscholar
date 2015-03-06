@@ -7,6 +7,10 @@
   padding: 5px;
 }
 
+.media-browser-pane {
+  position: relative;
+}
+
 .media-browser-buttons {
   margin: 0 3px -1px 3px;
 }
@@ -103,4 +107,38 @@ div.file-search {
 
 #file-edit-section button {
   padding: 3px 5px;
+}
+
+/** Uploading styles */
+
+#media-browser-file-select {
+  height: 20px;
+  width: 100px;
+  position: absolute;
+  top: calc(50% - 15px);
+  left: calc(50% - 50px);
+  border: 1px outset lightgray;
+  border-radius: 10px;
+  font-size: 1.1em;
+  text-align: center;
+}
+
+#media-browser-drop-box {
+  height: 200px;
+}
+
+#media-browser-drop-box span {
+  position: absolute;
+  top: calc(50% + 10px);
+  left: calc(50% - 100px);
+}
+
+.media-browser-dupe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  padding: 20px;
 }
