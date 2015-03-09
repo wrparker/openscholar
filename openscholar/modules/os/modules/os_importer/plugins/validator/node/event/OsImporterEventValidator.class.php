@@ -79,17 +79,23 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
       $this->setError($field_name, 'The start date value should not be empty.');
     }
 
-    // Validate the date format for the start and end date.
-    $date = DateTime::createFromFormat('M j Y', $value);
-
-    if ($date && $date->format('M j Y') == $value) {
-      return;
-    }
-
-    $params = array(
-      '@date' => $value,
-      '@format' => date('M j Y'),
+    $formats = array(
+      'M j Y g:ia',
+      'M j Y',
     );
-    $this->setError($field_name, 'The value of the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
+
+    // Validate the date format for the start and end date.
+    foreach ($formats as $format) {
+      if ($date = DateTime::createFromFormat($format, $value)) {
+        if ($date->format($format) != $value) {
+          $params = array(
+            '@date' => $value,
+            '@format' => date($format),
+          );
+          $this->setError($field_name, 'The value of the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
+          return;
+        }
+      }
+    }
   }
 }
