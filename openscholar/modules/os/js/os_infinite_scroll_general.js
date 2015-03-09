@@ -36,6 +36,11 @@
       if (behaviorRun) return;
       behaviorRun = true;
 
+      // do nothing if there's no pager link to the next page
+      if ($($.autopager.option('link')).length == 0) {
+        return;
+      }
+
       if (load != $.autopager.option('load')) {
         old_load = $.autopager.option('load');
         $.autopager.option('load', load);
@@ -43,7 +48,6 @@
 
       if (!$('.autopager-load-all').length) {
         $('<div class="autopager-load-all"><a>Load All</a></div>').appendTo('#main-content-header');
-        $().appendTo('#main-content .view-content');
         $('#main-content .autopager-load-all', ctx).live('click', loadAllClickHandler);
       }
 
