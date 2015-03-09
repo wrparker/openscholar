@@ -3495,6 +3495,14 @@ function vsite_page_build(&$page) {
   if (drupal_is_front_page() && $vsite = vsite_get_vsite()) {
     $page['content_top']['metatags'] = $page['content']['metatags'];
   }
+
+  if ($vsite = vsite_get_vsite()) {
+    drupal_add_js(array(
+      'spaces' => array(
+        'id' => $vsite->id,
+        'path' => $vsite->group->title
+      )), 'setting');
+  }
 }
 
 /**
