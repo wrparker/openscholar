@@ -1108,3 +1108,11 @@ div.error:before {
   bottom: 0;
   left: 10px;
 }
+
+.boxes-box-content .ui-accordion .block-title {
+  display: none;
+}
+
+.boxes-box-content .ui-accordion .contextual-links-region {
+  border: none;
+}
