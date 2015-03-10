@@ -1180,11 +1180,11 @@ function os_pages_apachesolr_index_document_build_node(ApacheSolrDocument $doc, 
     if ($ctx && isset($ctx->reactions['block']['blocks'])) {
       // Loop through the blocks in this page
       foreach ($ctx->reactions['block']['blocks'] as $block) {
-        if($block['module'] != 'boxes' && $block['region']) continue;
+        if($block['module'] != 'boxes' || !$block['region']) continue;
 
         $box = boxes_box_load($block['delta']);
         // Load from the vsite if needed.
-        if ($vsite && ($vsite_box = $vsite->controllers->boxes->get($delta))) {
+        if ($vsite && ($vsite_box = $vsite->controllers->boxes->get($block['delta']))) {
           if (is_array($vsite_box))  $vsite_box = (object) $vsite_box;
           $box = boxes_factory($vsite_box->plugin_key, $vsite_box);
           $box->new = FALSE;
@@ -1228,6 +1228,7 @@ function os_pages_apachesolr_index_document_build_node(ApacheSolrDocument $doc, 
 function os_pages_apachesolr_query_alter($query) {
   $params['qf']['tm_html_widget'] = 'tm_html_widget^30';
   $query->addParams($params);
+  $query->addParam('fl', 'tm_html_widget');
 }
 
 /**
