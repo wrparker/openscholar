@@ -60,6 +60,7 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
 
     switch ($field_info['type']) {
       case 'datetime':
+      case 'datestamp':
         return $this->handleDatePopulation($public_field_name, $value);
 
       case 'link_field':
@@ -71,7 +72,7 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
   }
 
   private function handleDatePopulation($public_field_name, $value) {
-    if ($this->getBundle() == 'presentation') {
+    if (in_array($this->getBundle(), array('presentation', 'news'))) {
       return strtotime($value);
     }
     else {
