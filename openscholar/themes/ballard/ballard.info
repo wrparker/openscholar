@@ -4,7 +4,7 @@
   name        = Ballard
   description = A public theme for use in OpenScholar.
   core        = 7.x
-  base theme  = os_basetheme
+  base theme  = hwpi_basetheme
   release     = 7.x-3.x
   engine      = phptemplate
   screenshot  = screenshot.png
@@ -18,9 +18,9 @@
 
 ;----------// Stylesheets
 
-  
+  stylesheets[screen][] = css/ballard.layout.css
   stylesheets[screen][] = css/ballard.css
-  stylesheets[screen][] = css/ballard.responsive.layout.css
+
  
 
 ;----------// Theme Settings
