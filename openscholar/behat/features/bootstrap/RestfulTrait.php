@@ -205,6 +205,7 @@ trait RestfulTrait {
       }
     }
     else {
+      print_r($this->results);
       if ($this->results['data']['value']['description'] != $this->meta['widget']['description']) {
         throw new Exception('The results for the box not matching the settings you passed.');
       }
@@ -430,7 +431,9 @@ trait RestfulTrait {
     }
 
     if (!empty($values['package'])) {
-      $file = system_retrieve_file($values['package'], 'public://', FILE_EXISTS_REPLACE);
+      if (!$file = system_retrieve_file($values['package'], 'public://')) {
+        throw new Exception('The file was not downloaded.');
+      }
       $values['package'] = $file->fid;
     }
 
