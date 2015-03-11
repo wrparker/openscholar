@@ -82,9 +82,10 @@ projects[dyntextfield][download][tag] = 1.0
 projects[dyntextfield][download][url] = "git://github.com/amitaibu/dyntextfield.git"
 
 projects[entity][subdir] = "contrib"
-projects[entity][version] = 1.0
+projects[entity][branch] = 7.x-1.x
 projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
-projects[entity][patch][] = http://drupal.org/files/entity-file_entity_access-1831578-9.patch
+projects[entity][patch][] = https://www.drupal.org/files/issues/2086225-entity-access-check-18.patch
+;projects[entity][patch][] = http://drupal.org/files/entity-file_entity_access-1831578-9.patch
 
 projects[entitycache][subdir] = "contrib"
 projects[entitycache][version] = 1.1
@@ -268,7 +269,8 @@ projects[nodeformcols][version] = 1.0
 projects[entity_validator][subdir] = "contrib"
 projects[entity_validator][download][type] = git
 projects[entity_validator][download][url] = "https://github.com/Gizra/entity_validator.git"
-projects[entity_validator][download][branch] = "31"
+projects[entity_validator][download][branch] = "7.x-1.x"
+projects[entity_validator][download][revision] = "dc2615490d2bd7ea42fb6f16992ea8f6b5936d4d"
 
 projects[nodeorder][subdir] = "contrib"
 projects[nodeorder][version] = 1.1
@@ -344,8 +346,8 @@ projects[respondjs][version] = 1.1
 projects[restful][subdir] = "contrib"
 projects[restful][download][type] = git
 projects[restful][download][url] = "https://github.com/RESTful-Drupal/restful.git"
-projects[restful][download][branch] = "7.x-1.x"
-projects[restful][download][revision] = da24f7ccd1f86d5464403f2f0db22595a1505067
+projects[restful][download][branch] = "token-get"
+;projects[restful][download][revision] = da24f7ccd1f86d5464403f2f0db22595a1505067
 
 projects[redirect][subdir] = "contrib"
 projects[redirect][version] = 1.0-rc1
@@ -370,7 +372,7 @@ projects[services][download][branch] = 7.x-3.x
 projects[services][download][revision] = 761e620
 
 projects[services_basic_auth][subdir] = "contrib"
-projects[services_basic_auth][version] = "1.1"
+projects[services_basic_auth][version] = "1.3"
 
 projects[spaces][subdir] = "contrib"
 ;projects[spaces][version] = 3.0-alpha1+9-dev
