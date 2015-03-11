@@ -70,7 +70,7 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
     // Check if start date is greater then the end date.
     if (isset($this->dates['field_date__start']) && $field_name == 'field_date__end') {
       if (strtotime($this->dates['field_date__start']) > strtotime($this->dates['field_date__end'])) {
-        $this->setError($field_name, 'The start date should not be greater than the end date.');
+        $this->setError($field_name, 'The start date/time should not be later than the end date/time.');
       }
     }
 
