@@ -49,6 +49,12 @@ body {
 	text-transform: none;
 }
 
+
+.node-type-page .breadcrumb, .breadcrumb, .breadcrumb a {
+	font-size: 13px;
+	
+}
+
 /* TYPOGRAPHY*/
 .biblio-title a, .biblio-title-chicago a, a, a:visited {
 	color: #293352;
