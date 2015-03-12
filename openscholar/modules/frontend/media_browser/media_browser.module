@@ -124,7 +124,8 @@ function media_browser_media_browser() {
       'library' => array(
         array('os_common', 'JSPager'),
         array('os_common', 'EntityService'),
-        array('media_browser', 'ng-file-upload')
+        array('media_browser', 'ng-file-upload'),
+        array('os_common', 'auth')
       )
     )
   );
