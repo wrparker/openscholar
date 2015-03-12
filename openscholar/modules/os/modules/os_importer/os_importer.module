@@ -333,52 +333,6 @@ function os_importer_map_files($source, $entity, $target, $value, $mapping) {
 }
 
 /**
- * Implements hook_entity_insert().
- */
-function os_importer_entity_insert($entity, $type) {
-  if ($type != 'node') {
-    return;
-  }
-
-  if (empty($entity->feeds_item)) {
-    // Was not created via feeds nor os importer.
-    return;
-  }
-
-  $wrapper = entity_metadata_wrapper('node', $entity);
-
-  if (!$wrapper->__isset('field_upload')) {
-    // Field upload does not exists.
-    return;
-  }
-
-
-  // Get the uri the file needs.
-  require_once drupal_get_path('module', 'file_entity') . '/file_entity.pages.inc';
-  $path = file_entity_upload_destination_uri(array('file_directory' => os_files_get_save_path()));
-
-  if (!file_exists($path)) {
-    drupal_mkdir($path, NULL, TRUE);
-  }
-
-  foreach ($wrapper->field_upload as $upload) {
-    $file_info = $upload->value();
-     if (strpos($path, $file_info['uri']) !== 0) {
-       // The file isn't in the correct uri - moving the file.
-       $file = file_load($file_info['fid']);
-       $source = $file->uri;
-
-       // Get the new uri.
-       $file->uri = file_unmanaged_copy($file->uri, $path);
-       file_save($file);
-
-       // No need for the original file - remove.
-       drupal_unlink($source);
-     }
-  }
-}
-
-/**
  * Importer callback for the set the registration field of the event to TRUE or
  * FALSE.
  *
