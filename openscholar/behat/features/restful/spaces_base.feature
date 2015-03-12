@@ -11,7 +11,7 @@ Feature:
     api/v1.0/variables
     """
 
-  @api @restful
+  @api
   Scenario: CRUD-ind a box.
     Given I "create" a box as "john" with the settings:
       | Site    | Widget  | Description  |

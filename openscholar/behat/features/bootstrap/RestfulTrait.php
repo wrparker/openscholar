@@ -205,7 +205,6 @@ trait RestfulTrait {
       }
     }
     else {
-      print_r($this->results);
       if ($this->results['data']['value']['description'] != $this->meta['widget']['description']) {
         throw new Exception('The results for the box not matching the settings you passed.');
       }
@@ -432,6 +431,11 @@ trait RestfulTrait {
 
     if (!empty($values['package'])) {
       $file = $this->getClient()->get($this->locatePath('os-package-file'))->json();
+
+      if (empty($file['file']['fid'])) {
+        print_r($file);
+        throw new Exception('An error occured with the file. You ca the value above.');
+      }
       $values['package'] = $file['file']['fid'];
     }
 
