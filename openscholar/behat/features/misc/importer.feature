@@ -65,3 +65,8 @@ Feature: Testing the importer.
       And I press "Delete"
      When I press "Delete"
      Then I should see "Deleted vocabulary bad_vocab."
+
+  @api @misc_first
+  Scenario: I verify the imported files has a path with the vsite purl.
+    Given I visit "john/classes/class-csv"
+    Then I verify the files address contains "john/files"

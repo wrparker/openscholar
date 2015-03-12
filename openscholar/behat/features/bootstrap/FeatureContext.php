@@ -1989,4 +1989,19 @@ class FeatureContext extends DrupalContext {
       throw new Exception('The url of the pages has changed.');
     }
   }
+
+  /**
+   * @Then /^I verify the files address contains "([^"]*)"$/
+   */
+  public function iVerifyTheFilesAddressContains($link) {
+    $page = $this->getSession()->getPage();
+    $element = $page->find('xpath', '//table[@class="os-files-other-list"]//td[@class="file"]//a[.="harvard-fy.pdf"]');
+    if (!$element) {
+      throw new Exception('The link was not found in the node. Check if the file was imported correctly.');
+    }
+
+    if (strpos($element->getAttribute('href'), $link) === FALSE) {
+      throw new Exception(sprintf("%s isn't part of %s", $link, $element->getAttribute('href')));
+    }
+  }
 }
