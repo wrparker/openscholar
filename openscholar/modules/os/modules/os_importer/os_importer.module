@@ -309,10 +309,13 @@ function os_importer_map_files($source, $entity, $target, $value, $mapping) {
   $sources = explode('|', $value);
 
   foreach ($sources as $source) {
-    if ($file = system_retrieve_file($source, 'public://', TRUE)) {
+    $destination = 'public://' . token_replace(os_files_get_save_path(), array());
+    if ($file = system_retrieve_file($source, $destination, TRUE)) {
       $files[] = array(
         'fid' => $file->fid,
         'display' => 1,
+        'description' => '',
+        'timestamp' => REQUEST_TIME - 200,
       );
     }
     else {
@@ -615,7 +618,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   if ($missing = array_diff($mappings_diff, $header)) {
     $params = array('!missing' => theme('item_list', array('items' => $missing)));
     form_set_error('file', t('The following columns are not present in the CSV file: !missing The structure of the your CSV file probably needs to be updated. Please download the template again. ', $params));
-    
+
     return;
   }
 
