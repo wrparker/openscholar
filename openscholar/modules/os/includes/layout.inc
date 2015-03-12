@@ -39,8 +39,11 @@
  *  2: private
  *
  *  TRUE returns all.
+ *
+ *  @param boolean $user_created
+ *  Should dynamically user created contexts be returned?
  */
-function os_layout_get_contexts($privacy = array(1, 2)) {
+function os_layout_get_contexts($privacy = array(1, 2), $user_created = FALSE) {
   if (!is_array($privacy)) {
     if (!$privacy) {
       // If false was passed then return no contexts.
@@ -50,7 +53,7 @@ function os_layout_get_contexts($privacy = array(1, 2)) {
 
   $os_contexts = array();
   foreach (module_implements('os_layout_contexts') as $module) {
-    $contexts = module_invoke($module, 'os_layout_contexts', $privacy);
+    $contexts = module_invoke($module, 'os_layout_contexts', $privacy, $user_created);
     foreach ($contexts as $id => $name) {
       $os_contexts[$id] = $name;
     }
@@ -213,6 +216,8 @@ function os_layout_set($context_name, $blocks) {
     }
     $clean_up = true;
   }
+
+  drupal_alter(array('os_layout_set'), $blocks, $context_name);
 
   if (module_exists('vsite_layout')) {
     // Writes the context to the overrides table.
