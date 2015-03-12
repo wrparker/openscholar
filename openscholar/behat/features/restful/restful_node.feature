@@ -110,4 +110,4 @@ Feature:
   Scenario: Creating faq via rest.
      Given I create a new node of "software_release" as "john" with the settings:
       | Label                 | vsite | software_project      | body  | recommended | version | package  |
-      | Rest softeare release | john  | Rest software project | foo   | 1           | 2005    | http://www.colorado.edu/conflict/peace/download/peace.zip |
+      | Rest softeare release | john  | Rest software project | foo   | 1           | 2005    | true     |

@@ -431,10 +431,8 @@ trait RestfulTrait {
     }
 
     if (!empty($values['package'])) {
-      if (!$file = system_retrieve_file($values['package'], 'public://')) {
-        throw new Exception('The file was not downloaded.');
-      }
-      $values['package'] = $file->fid;
+      $file = $this->getClient()->get($this->locatePath('os-package-file'))->json();
+      $values['package'] = $file['file']['fid'];
     }
 
     $this->invokeRestRequest('post', $path,
