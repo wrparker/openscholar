@@ -10,13 +10,17 @@
    * Service to maintain the list of files on a user's site
    */
     .factory('EntityService', ['$rootScope', '$http', function ($rootScope, $http) {
-
       var factory = function (entityType, idProp) {
         var type = entityType;
         var entities = {};
         var entityCount = 0;
         var eventName = 'EntityService.'+type;
         var errorAttempts = 0;
+        var vsite = null;
+
+        if (Drupal.settings.spaces) {
+          vsite = Drupal.settings.spaces.id;
+        }
 
         if (!restPath) {
           restPath = Drupal.settings.paths.api;
@@ -40,7 +44,11 @@
           }
         }
 
-        $http.get(restPath+'/'+entityType)
+        var url = restPath+'/'+entityType;
+        if (vsite) {
+          url += '?filter[vsite]='+vsite;
+        }
+        $http.get(url)
           .success(success)
           .error(errorFunc);
 
@@ -63,8 +71,11 @@
           if (entities[entity[idProp]]) {
             throw new Exception('Cannot add entity of type '+type+' that already exists.');
           }
-          entities[entity[idProp]] = entity;
           // rest API call to add entity to server
+          $http.post($restPath+'/'+entityType, entity)
+            .success(function (resp) {
+              console.log(resp);
+            })
 
           $rootScope.$broadcast(eventName+'.add', entity);
         };

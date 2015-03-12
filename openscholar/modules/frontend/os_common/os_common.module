@@ -23,6 +23,20 @@ function os_common_library() {
     )
   );
 
+  $info['auth'] = array(
+    'title' => 'Authentication',
+    'version' => '1.0',
+    'js' => array(
+      $path.'/auth/auth.js' => array(
+        'group' => JS_LIBRARY,
+        'weight' => -10
+      ),
+    ),
+    'dependencies' => array(
+      array('os_common', 'angularjs'),
+    )
+  );
+
   $info['helpers'] = array(
     'title' => 'OS Common Helpers',
     'version' => '1.0',
