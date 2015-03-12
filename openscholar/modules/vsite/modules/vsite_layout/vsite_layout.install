@@ -113,8 +113,7 @@ function vsite_layout_update_7001(&$sandbox) {
       'context' => array('sid','context'),
     ),
   );
-  $ret = array();
-  db_create_table($ret, 'vsite_layout_block', $schema['vsite_layout_block']);
 
-  return $ret;
+  db_create_table('vsite_layout_block', $schema['vsite_layout_block']);
+
 }
