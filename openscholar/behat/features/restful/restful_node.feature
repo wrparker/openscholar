@@ -7,7 +7,7 @@ Feature:
       | Label       | Body                  | vsite | type  |
       | Rest biblio | This is a test Biblio | john  | 101   |
 
-  @restful @now
+  @restful
   Scenario: Creating bio via rest.
     Given I delete the node "John doe biography"
      Then I create a new node of "bio" as "john" with the settings:
