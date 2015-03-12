@@ -732,6 +732,7 @@ class FeatureContext extends DrupalContext {
     $element = $page->find('xpath', "//input[@id='{$elementId}']");
 
     if (!$element) {
+      $this->iShouldPrintPage();
       throw new Exception(sprintf("Could not find the element with the id %s", $elementId));
     }
 
