@@ -199,13 +199,19 @@ trait RestfulTrait {
    */
   private function verifyOperationPassed($operation) {
     // Verify the request did what it suppose to do.
+    $results = $this->results['data'];
+
+    if (array_key_exists(0, $results)) {
+      $results = $results[0];
+    }
+
     if ($operation == 'delete') {
-      if ($this->results['data'][0]['value']['description'] == $this->meta['widget']['description']) {
+      if (!empty($results['value']) && $results['value']['description'] == $this->meta['widget']['description']) {
         throw new Exception('The box was not deleted.');
       }
     }
     else {
-      if ($this->results['data']['value']['description'] != $this->meta['widget']['description']) {
+      if ($results['value']['description'] != $this->meta['widget']['description']) {
         throw new Exception('The results for the box not matching the settings you passed.');
       }
     }
