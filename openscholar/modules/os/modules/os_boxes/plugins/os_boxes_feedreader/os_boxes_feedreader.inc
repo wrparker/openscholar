@@ -21,6 +21,9 @@ class os_boxes_feedreader extends os_boxes_default {
     $options['feed_display'] = 'title';
     $options['time_display'] = 'formal';
 
+    // force this so caching works
+    $options['content_type'] = 'feed';
+
     return $options;
   }
 
@@ -116,7 +119,7 @@ class os_boxes_feedreader extends os_boxes_default {
       return $block;
     }
 
-    $this->set_cache_id('feed');
+    $this->set_cache_id('node:feed');
     if (($block['content'] = $this->get_cache()) === FALSE) {
       field_attach_prepare_view('node', array(
         $node->nid => $node,

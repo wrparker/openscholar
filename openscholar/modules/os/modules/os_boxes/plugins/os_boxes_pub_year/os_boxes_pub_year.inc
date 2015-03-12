@@ -17,6 +17,10 @@ class os_boxes_pub_year extends os_boxes_default {
   public function options_defaults() {
     $options = parent::options_defaults();
     $options['display_num'] = 1;
+
+    // needed for caching to work
+    $options['content_type'] = 'biblio';
+
     return $options;
   }
 
@@ -39,7 +43,7 @@ class os_boxes_pub_year extends os_boxes_default {
    */
   public function render() {
     $block = parent::render();
-    $this->set_cache_id('biblio');
+    $this->set_cache_id('node:biblio');
     if (($block['content'] = $this->get_cache()) === FALSE) {
       $delta = 'publication_years-block';
       list($name, $display_id) = explode('-', $delta);
