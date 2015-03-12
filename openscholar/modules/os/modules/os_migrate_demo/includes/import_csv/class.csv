@@ -1,2 +1,2 @@
-Title,Body,Link title,Link url,Year,Semester,Files
-Class from csv,Testing import of class,link title,link url,1950,fall,http://college.harvard.edu/sites/default/files/harvard-fy.pdf
+Title,Body,Link title,Link url,Year,Semester,Files,Created date,Path
+Class from csv,Testing import of class,link title,link url,1950,Fall,http://college.harvard.edu/sites/default/files/harvard-fy.pdf,,
