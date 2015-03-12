@@ -2,7 +2,7 @@
   var rootPath = Drupal.settings.osRestModulePath,
       restPath = Drupal.settings.restBasePath;
 
-  angular.module('mediaBrowser', ['JSPager', 'EntityService', 'ngSanitize', 'angularFileUpload', 'mediaBrowser.filters'])
+  angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'angularFileUpload', 'mediaBrowser.filters'])
   .controller('BrowserCtrl', ['$scope', '$filter', '$http', '$templateCache', 'EntityService', '$sce', '$upload',
       function ($scope, $filter, $http, $templateCache, EntityService, $sce, $upload) {
     var service = new EntityService('files', 'id');
@@ -150,11 +150,19 @@
       }
 
       function uploadOne($file) {
+        var fields = {};
+        if (Drupal.settings.spaces) {
+          fields.vsite = Drupal.settings.spaces.id;
+        }
         $upload.upload({
-          url: '',
+          url: Drupal.settings.paths.api+'/files',
           file: $file,
+          data: $file,
+          fileFormDataName: 'files[upload]',
+          headers: {'Content-Type': $file.type},
           method: 'POST',
-          fileName: $file.newName || null,
+          fields: fields,
+          fileName: $file.newName || null
         }).progress(function (e) {
           progress = e;
         }).success(function (e) {
@@ -208,5 +216,10 @@
     $scope.deleteConfirmed = function() {
       service.delete($scope.selected_file);
     };
+
+
+    $scope.embedSubmit = function () {
+
+    }
   }]);
 })();
