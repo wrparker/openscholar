@@ -20,7 +20,7 @@
                         <div><button value="replace" ng-click="$parent.replace($index, $last)">Replace</button></div>
                         <div><button value="cancel" ng-click="$parent.cancelUpload($index, $last)">Cancel</button></div>
                     </div>
-                    <div class="media-browser-dupe-counter" ng-show="$parent.dupes.length > 1">{{index}}/{{$parent.dupes.length}}</div>
+                    <div class="media-browser-dupe-counter" ng-show="$parent.dupes.length > 1">{{$index+1}}/{{$parent.dupes.length}}</div>
                 </div>
             </div>
             <div id="media-browser-upload-progress" ng-show="$parent.uploadProgress().uploading">

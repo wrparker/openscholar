@@ -90,7 +90,7 @@
 
     // renames the file before uploading
     $scope.rename = function ($index, $last) {
-      console.log($index);
+      $scope.dupes[$index].processed = true;
 
       if ($last) {
         finalizeDupes();
@@ -101,6 +101,8 @@
     // (just performs a swap on the hard drive)
     $scope.replace = function ($index, $last) {
       console.log($index);
+      $scope.dupes[$index].processed = true;
+      delete $scope.dupes[$index].newName;
 
       if ($last) {
         finalizeDupes();
