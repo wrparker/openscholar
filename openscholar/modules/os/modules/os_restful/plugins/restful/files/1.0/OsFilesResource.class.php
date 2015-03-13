@@ -114,8 +114,10 @@ class OsFilesResource extends RestfulEntityBase {
         og_group('node', $this->request['vsite'], array('entity_type' => 'file', 'entity' => $entity));
       }
 
-      $entity->status = FILE_STATUS_PERMANENT;
-      $entity = file_save($entity);
+      if ($entity->status == FILE_STATUS_TEMPORARY) {
+        $entity->status = FILE_STATUS_PERMANENT;
+        $entity = file_save($entity);
+      }
 
       $wrapper = entity_metadata_wrapper($this->entityType, $entity);
 
