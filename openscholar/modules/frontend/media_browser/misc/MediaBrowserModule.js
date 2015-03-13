@@ -109,7 +109,6 @@
 
     // cancels the upload process for this file
     $scope.cancelUpload = function ($index, $last) {
-      console.log($index);
       $scope.dupes[$index].doNotUpload = true;
       $scope.dupes[$index].processed = true;
 
@@ -137,12 +136,11 @@
         currentlyUploading = 0;
 
       $scope.upload = function ($files) {
-        console.log($files);
         for (var i=0; i<$files.length; i++) {
           toBeUploaded.push($files[i]);
         }
 
-        if (!uploading) {
+        if (!uploading && toBeUploaded.length) {
           uploading = true;
           $file = toBeUploaded[currentlyUploading];
           uploadOne($file);
@@ -166,6 +164,10 @@
         }).progress(function (e) {
           progress = e;
         }).success(function (e) {
+          for (var i = 0; i< e.data.length; i++) {
+            $scope.files[e.data[i].id] = e.data[i];
+          }
+
           currentlyUploading++;
           if (currentlyUploading < toBeUploaded.length) {
             $file = toBeUploaded[currentlyUploading];
@@ -182,10 +184,11 @@
 
       $scope.uploadProgress = function () {
         return {
-          filename: evt.config.file.name,
-          progressBar: parseInt(100.0 * progress.loaded / progress.total),
+          uploading: uploading,
+          filename: uploading ? toBeUploaded[currentlyUploading].name : '',
+          progressBar: (uploading && progress) ? parseInt(100.0 * progress.loaded / progress.total) : 0,
           index: currentlyUploading+1,
-          numFiles: toBeUploaded.length,
+          numFiles: toBeUploaded.length
         }
       }
     })();

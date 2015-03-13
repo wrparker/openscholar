@@ -107,7 +107,6 @@ class OsFilesResource extends RestfulEntityBase {
 
       $wrapper = entity_metadata_wrapper($this->entityType, $entity);
 
-      $this->setPropertyValues($wrapper);
       return array($this->viewEntity($wrapper->getIdentifier()));
     }
     elseif ($_FILES['files']['errors']['upload']) {

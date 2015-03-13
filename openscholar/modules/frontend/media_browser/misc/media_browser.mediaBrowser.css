@@ -142,3 +142,24 @@ div.file-search {
   background-color: white;
   padding: 20px;
 }
+
+#media-browser-upload-progress {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100px;
+  width: 200px;
+  text-align: center;
+}
+
+.progress-bar-full {
+  height: 1em;
+  border: 1px inset lightgray;
+  border-radius: 15px;
+}
+
+.progress-bar-completed {
+  background-color: lightblue;
+  height: 100%;
+  border-radius: 15px;
+}

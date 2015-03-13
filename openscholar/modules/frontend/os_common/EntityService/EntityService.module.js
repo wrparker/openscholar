@@ -43,14 +43,15 @@
               error(errorFunc);
           }
         }
-
-        var url = restPath+'/'+entityType;
-        if (vsite) {
-          url += '?filter[vsite]='+vsite;
+        this.fetch = function () {
+          var url = restPath+'/'+entityType;
+          if (vsite) {
+            //url += '?filter[vsite]='+vsite;
+          }
+          $http.get(url)
+            .success(success)
+            .error(errorFunc);
         }
-        $http.get(url)
-          .success(success)
-          .error(errorFunc);
 
         this.getAll = function () {
           return entities;
@@ -99,6 +100,8 @@
 
           $rootScope.$broadcast(eventName+'.delete');
         }
+
+        this.fetch();
       }
 
       return factory;
