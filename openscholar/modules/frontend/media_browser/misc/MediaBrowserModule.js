@@ -48,8 +48,8 @@
 
         for (var j in $scope.files) {
           // find any file with a name that matches "basename{_dd}.ext" and add it to list
-          if ($scope.files[j].name.indexOf(basename) !== -1 && $scope.files[j].name.indexOf(extension) !== -1) {
-            similar.push($files[i]);
+          if ($scope.files[j].filename.indexOf(basename) !== -1 && $scope.files[j].filename.indexOf(extension) !== -1) {
+            similar.push($scope.files[j]);
           }
         }
 
@@ -63,11 +63,11 @@
             // to the end of the original file name
             var max = 0;
             for (j=0; j<similar.length; j++) {
-              var rem = similar[j].name.replace(basename, '').replace(extension, '').replace('_', ''),
+              var rem = similar[j].filename.replace(basename, '').replace(extension, '').replace('_', ''),
                 num = rem ? parseInt(rem) : 0;
 
-              if (rem > max) {
-                max = rem;
+              if (num > max) {
+                max = num;
               };
             }
             var num = max + 1;
