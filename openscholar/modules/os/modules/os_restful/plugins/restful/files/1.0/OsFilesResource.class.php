@@ -24,6 +24,9 @@ class OsFilesResource extends RestfulEntityBase {
       'name' => array(
         'property' => 'name',
       ),
+      'filename' => array(
+        'callback' => array($this, 'getFilename')
+      ),
       'timestamp' => array(
         'property' => 'timestamp',
       ),
@@ -55,6 +58,15 @@ class OsFilesResource extends RestfulEntityBase {
       return $property->value();
     }
     return null;
+  }
+
+  /**
+   * Callback function to get the name of the file on disk
+   * We need this to inform the user of what the new filename will be.
+   */
+  public function getFilename($wrapper) {
+    $uri = $wrapper->value()->uri;
+    return basename($uri);
   }
 
   /**
