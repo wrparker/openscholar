@@ -1157,7 +1157,7 @@ function os_publications_node_presave($node) {
   $text = str_replace(array('<br >', '<br />'), ' ', $text);
   // Keep only the tags that we allow in the title WYSIWYG and keep it no more
   // then 255 characters.
-  $node->title = substr(strip_tags($text, '<em><sup><sub>'), 0, 255);
+  $node->title = substr(strip_tags($text, variable_get('html_title_allowed_elements', array('em', 'sub', 'sup'))), 0, 255);
 }
 
 /**
