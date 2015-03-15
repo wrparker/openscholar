@@ -1154,10 +1154,12 @@ function os_publications_node_presave($node) {
   // Remove any inline style tag.
   $text = preg_replace('#(<[a-z ]*)(style=("|\')(.*?)("|\'))([a-z ]*>)#', '\\1\\6', $node->title);
   // Remove rows breaking from any type.
-  $text = str_replace(array('<br >', '<br />'), ' ', $text);
+  $text = str_replace(array('<br >', '<br />', '<br>'), ' ', $text);
   // Keep only the tags that we allow in the title WYSIWYG and keep it no more
   // then 255 characters.
-  $node->title = substr(strip_tags($text, variable_get('html_title_allowed_elements', array('em', 'sub', 'sup'))), 0, 255);
+  $tags = variable_get('html_title_allowed_elements', array('em', 'sub', 'sup'));
+
+  $node->title = substr(strip_tags($text, '<' . implode('><', $tags) . '>'), 0, 255);
 }
 
 /**
