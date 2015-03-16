@@ -166,7 +166,7 @@
           progress = e;
         }).success(function (e) {
           for (var i = 0; i< e.data.length; i++) {
-            $scope.files[e.data[i].id] = e.data[i];
+            $scope.files.push(e.data[i]);
           }
 
           currentlyUploading++;

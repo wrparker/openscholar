@@ -12,7 +12,7 @@
     .factory('EntityService', ['$rootScope', '$http', function ($rootScope, $http) {
       var factory = function (entityType, idProp) {
         var type = entityType;
-        var entities = {};
+        var entities = [];
         var entityCount = 0;
         var eventName = 'EntityService.'+type;
         var errorAttempts = 0;
@@ -28,8 +28,7 @@
 
         var success = function(resp) {
           for (var i=0; i<resp.data.length; i++) {
-            var id = resp.data[i][idProp];
-            entities[id] = resp.data[i];
+            entities.push(resp.data[i]);
           }
           entityCount = resp.count;
           $rootScope.$broadcast(eventName+'.getAll', entities);
@@ -43,6 +42,16 @@
               error(errorFunc);
           }
         }
+
+        function findByProp(prop, value) {
+          var l = entities.length;
+          for (var i =0; i < l; i++) {
+            if (entities[i][prop] && entities[i][prop] == value) {
+              return i;
+            }
+          }
+        }
+
         this.fetch = function () {
           var url = restPath+'/'+entityType;
           if (vsite) {
@@ -58,8 +67,9 @@
         }
 
         this.get = function (id) {
-          if (entities[id]) {
-            return entities[id];
+          var k = findByProp(idProp, id);
+          if (entities[k]) {
+            return entities[k];
           }
           throw new Exception('Entity of type '+type+' with id '+id+' not found.');
         }
@@ -69,7 +79,8 @@
         }
 
         this.add = function (entity) {
-          if (entities[entity[idProp]]) {
+          var k = findByProp(idProp, entity[idProp]);
+          if (entities[k]) {
             throw new Exception('Cannot add entity of type '+type+' that already exists.');
           }
           // rest API call to add entity to server
@@ -82,19 +93,20 @@
         };
 
         this.edit = function (entity) {
-          if (!entities[entity[idProp]]) {
+          if (!entity[idProp]) {
             this.add(entity);
             return;
           }
-          entities[entity[idProp]] = entity;
+          var k = fetchByProp(idProp, entity[idProp]);
+          entities[k] = entity;
           // rest API call to update entity on server
 
           $rootScope.$broadcast(eventName+'.update');
         };
 
         this.delete = function (entity) {
-          var id = entity[idProp];
-          delete entities[id];
+          var k = fetchByProp(idProp, entity[idProp]);
+          entities.slice(k, 1);
 
           //rest API call to delete entity from server
 

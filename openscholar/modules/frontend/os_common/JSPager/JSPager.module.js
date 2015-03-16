@@ -91,6 +91,7 @@
             }
 
             pagerLink($scope, $element, $attr, _c);
+            console.log(collection);
             $scope.$watchCollection(collection, function(collection) {
               $scope.collectionLength = 0;
               if (Array.isArray(collection)) {
