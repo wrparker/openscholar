@@ -299,7 +299,8 @@ trait RestfulTrait {
       ]
     );
 
-    $this->meta['delta'] = $delta;
+
+    $this->meta['delta'] = $request->json()['data']['delta'];
     $this->meta['widget'] = $request->json()['data'];
     $this->results = $this->getClient()->get($path . '?delta=' . $delta)->json();
     $this->verifyOperationPassed($operation);

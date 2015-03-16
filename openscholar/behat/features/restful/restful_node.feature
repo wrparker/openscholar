@@ -57,56 +57,56 @@ Feature:
       | Label     | Body                | vsite  |
       | Rest FAQ  | This is a test FAQ  | john   |
 
-  @restful
+  @api @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "feed" as "john" with the settings:
       | Label     | Body                | vsite  | Field url      |
       | Rest feed | This is a test feed | john   | http://foo.bar |
 
-  @restful
+  @api @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "image_gallery" as "john" with the settings:
       | Label         | vsite  | columns  | rows  | files               |
       | Rest gallery  | john   | 3        | 4     | jfk_1.jpg,jfk_2.jpg |
 
-  @restful
+  @api @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "news" as "john" with the settings:
       | Label     | date      | body                | vsite  |
       | Rest news | 1/1/2012  | This is a rest nest | john   |
 
-  @restful
+  @api @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "page" as "john" with the settings:
       | Label     | body                | vsite  | path       |
       | Rest page | This is a rest page | john   | rest-path  |
 
-  @restful
+  @api @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "person" as "john" with the settings:
       | address      | email            | first_name  | middle_name | last_name | phone     | prefix  | professional_title  | vsite   |
       | Rest address | foo@example.com  | Diego       | dela        | vega      | 555-1212  | snr.    | Zoro!               | john    |
 
-  @restful
+  @api @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "presentation" as "john" with the settings:
       | Label             | vsite | date     | location        |
       | Rest presentation | john  | 1/1/2012 | Home sweet home |
 
   #todo: handle files.
-  @restful
+  @api @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "slideshow_slide" as "john" with the settings:
       | Label           | vsite |
       | Rest slide show | john  |
 
-  @restful
+  @api @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "software_project" as "john" with the settings:
       | Label                 | vsite | files               |
       | Rest software project | john  | jfk_1.jpg,jfk_2.jpg |
 
-  @restful
+  @api @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "software_release" as "john" with the settings:
       | Label                 | vsite | software_project      | body  | recommended | version | package  |

@@ -53,7 +53,6 @@ class OsRestfulBoxes extends \OsRestfulSpaces {
     $controller = $this->space->controllers->{$this->objectType};
     $settings = $controller->get($this->object->delta);
     if (!count(get_object_vars($settings))) {
-      print_r($settings);
       $this->throwException("The delta which you provided doesn't exists");
     }
     $new_settings = array_merge((array) $settings, $this->object->options);
