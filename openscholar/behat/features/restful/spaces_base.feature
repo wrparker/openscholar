@@ -12,6 +12,24 @@ Feature:
     """
 
   @api @api @restful
+  Scenario: CRUD-ing a layout.
+    Given I "create" a layout as "john" with the settings:
+      | Site | Context  | Box |
+      | john | os_front | Bio |
+    And I visit "john"
+    And I should see the text "This is a test bio" under "region-sidebar-second"
+    When I "update" a layout as "john" with the settings:
+      | Site | Context  | Box | Delta |
+      | john | os_front | Bio | PREV  |
+    And I visit "john"
+    And I should see the text "This is a test bio" under "region-sidebar-first"
+    When I "delete" a layout as "john" with the settings:
+      | Site | Context                  | Delta |
+      | john | os_front:reaction:block  | PREV  |
+    And I visit "john"
+    And I should see the text "This is a test bio" under "region-content-top"
+    
+  @api @api @restful
   Scenario: CRUD-ind a box.
     Given I "create" a box as "john" with the settings:
       | Site    | Widget  | Description  |
@@ -22,24 +40,6 @@ Feature:
     Then I "delete" a box as "john" with the settings:
       | Site    | Widget  | Description  | Delta |
       | john    | Terms   | Terms - new  | PREV  |
-
-  @api @api @restful
-  Scenario: CRUD-ing a layout.
-    Given I "create" a layout as "john" with the settings:
-      | Site | Context  | Box |
-      | john | os_front | Bio |
-      And I visit "john"
-      And I should see the text "This is a test bio" under "region-sidebar-second"
-     When I "update" a layout as "john" with the settings:
-      | Site | Context  | Box | Delta |
-      | john | os_front | Bio | PREV  |
-    And I visit "john"
-    And I should see the text "This is a test bio" under "region-sidebar-first"
-    When I "delete" a layout as "john" with the settings:
-      | Site | Context                  | Delta |
-      | john | os_front:reaction:block  | PREV  |
-    And I visit "john"
-    And I should see the text "This is a test bio" under "region-content-top"
 
   @api @restful
   Scenario: Testing variables overridden.
