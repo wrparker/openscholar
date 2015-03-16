@@ -1,11 +1,11 @@
 Feature:
   Test layout.
 
-  @api @api @restful
+  @api @api @restful @now
   Scenario: CRUD-ing a layout.
     Given I "create" a layout as "john" with the settings:
-      | Site | Context  | Box |
-      | john | os_front | Bio |
+      | Site | Context  | Box | Delta       |
+      | john | os_front | Bio | bio_teaser  |
     And I visit "john"
     And I should see the text "Work in gizra inc" under "region-sidebar-second"
     When I "update" a layout as "john" with the settings:
