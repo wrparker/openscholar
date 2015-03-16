@@ -112,7 +112,7 @@ a.rslides_nav {
 
 .section-nav .expanded.menu-depth-2 > a,
 .section-nav .expanded.menu-depth-2 > a:hover {
-  background-color: #888;
+  background-color: #888 !important;
   color: #fff;
 }
 
