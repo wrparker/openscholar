@@ -973,4 +973,24 @@ class FeatureHelp {
       ->execute();
   }
 
+  /**
+   * Get file ID's by their name.
+   *
+   * @param array $files
+   *   List of file names.
+   */
+  static public function getFilesIDs($files) {
+    $query = new EntityFieldQuery();
+    $result = $query
+      ->entityCondition('entity_type', 'file')
+      ->propertyCondition('filename', $files, 'IN')
+      ->execute();
+
+    if (empty($result['file'])) {
+      return;
+    }
+
+    return array_keys($result['file']);
+  }
+
 }

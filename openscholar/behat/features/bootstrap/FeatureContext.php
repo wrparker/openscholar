@@ -8,8 +8,11 @@ use Behat\Behat\Context\Step;
 use Behat\Behat\Context\Step\When;
 
 require 'vendor/autoload.php';
+require_once 'RestfulTrait.php';
 
 class FeatureContext extends DrupalContext {
+
+  use RestfulTrait;
 
   /**
    * Variable for storing the random string we used in the text.
@@ -1900,6 +1903,25 @@ class FeatureContext extends DrupalContext {
       throw new Exception("'$first' does not come before '$second'.");
     }
   }
+
+  /**
+   * @Given /^I should see "([^"]*)" in "([^"]*)"$/
+   */
+  public function iShouldSeeIn($value, $path) {
+    return array(
+      new Step\When('I visit "' . $path . '"'),
+      new Step\When('I should see "' . $value . '"'),
+    );
+  }
+
+  /**
+   * @Given /^I delete the node "([^"]*)"$/
+   */
+  public function iDeleteTheNode($title) {
+    $nid = FeatureHelp::getNodeId($title);
+    node_delete($nid);
+  }
+
 
   /**
    * @Given /^I drill down to see the hour$/
