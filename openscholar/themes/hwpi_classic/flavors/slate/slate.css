@@ -167,6 +167,11 @@ background-color: #8996A0 !important;
 background-image: none;
 }
 
+
+#footer ul.menu a.menu-heading {
+	font-size:.99em;
+}
+
 #powered-by a {
 background-position: -14px -545px;
 }

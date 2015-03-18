@@ -159,10 +159,17 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     $string_og_vocab = facetapi_build_delta($searcher_name, 'block', 'sm_og_vocabulary');
     $delta_og_vocab = array_search($string_og_vocab, $map);
 
+    if ($this->options['bundle'] && is_string($this->options['bundle'])) {
+      $bundle = 'node:' . $this->options['bundle'];
+    }
+    else {
+      $bundle = NULL;
+    }
+    $cid = $this->set_cache_id($bundle);
+
     if ($page_id = $this->is_empty_search_needed()) {
       // Block delta is needed since $delta_og_vocab is not unique between sites
-      $cid = 'sm_og_vocabulary:' . $delta_og_vocab . ':' . $page_id;
-      $this->set_cache_id($cid);
+      $cid = $this->cid = $cid .= ':' . $page_id;
 
     }
     // Verify the cache is still valid, based on time since created.
