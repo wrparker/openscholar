@@ -2,9 +2,10 @@
 
 body {
 	font-family: helvetica, arial;
-	background:#FAFAFA;
+	background:#FDFDFD;
 }
 
+.region-header-third ul.nice-menu a,
 a,
 a:visited {
 color:#2769AC;
@@ -91,24 +92,39 @@ background-position: 0px -566px;
 }
 
 #columns h2.block-title {
-    background:#dedede;
-    font-size: 14px;
+    background:#F3F3F1;
+    font-size: 15px;
     text-transform: none;
     padding: 3px 7px;
     margin-bottom: 10px;
+    font-weight:normal;
  
 }
 
-.section-nav .menu-depth-1 > a,
+
+.section-nav .menu-depth-1 > a {
+  background: #8996A0 !important;
+}
+
 a.rslides_nav {
     background-color: #555;
 }
 
+.section-nav .expanded.menu-depth-2 > a,
+.section-nav .expanded.menu-depth-2 > a:hover {
+  background-color: #888 !important;
+  color: #fff;
+}
 
 #search-block-form input.form-submit, 
 #search-block-form #edit-submit, 
 #search-form #edit-submit {
     background-position: 2px -373px;
+}
+
+#columns .block-boxes-os_boxes_html a, 
+#columns .field-name-body a {
+  text-decoration: none;
 }
 
 #footer .footer-login,

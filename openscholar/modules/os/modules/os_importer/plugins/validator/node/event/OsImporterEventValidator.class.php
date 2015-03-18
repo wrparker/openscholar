@@ -29,6 +29,8 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
       ),
     );
 
+    unset($fields['field_event_registration']);
+
     return $fields;
   }
 

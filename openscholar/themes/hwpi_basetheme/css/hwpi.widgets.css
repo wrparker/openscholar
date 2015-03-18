@@ -259,6 +259,11 @@ table td.mini .mini-day-on a {
     list-style: none;
 }
 
+#content-column .block.block-boxes-os_boxes_manual_list .field-name-body ul {
+    list-style: disc;
+    margin-left: 1em;
+}
+
 
 
 /* Tabs Overrides */

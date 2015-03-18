@@ -75,8 +75,8 @@ Feature:
       And I select the radio button named "biblio_citeproc_style" with value "chicago-author-date.csl"
       And I press "Save configuration"
       And I visit "john/publications/confpapers-tests"
-     Then I should not see "ConfPapers tests. In:"
-     Then I should see "ConfPapers tests, in"
+     Then I should not see "ConfPapers tests, in"
+     Then I should see "Confpapers Tests.” In"
 
   @api
   Scenario: verify the user can see message the the publication won't display

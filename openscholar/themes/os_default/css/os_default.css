@@ -128,6 +128,11 @@ body.not-logged-in.page-user.no-sidebars #content-column {
 	color:#555;
 }
 
+.denied #content a {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 .page-site-register #columns h1 {
 	margin:0 0 20px 0 !important;
 }

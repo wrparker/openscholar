@@ -948,6 +948,10 @@ ul.links li.link-count-node-readmore a {
   font-size: 16px;
 }
 
+#footer ul.menu a.menu-heading {
+	font-size:1.35em;
+}
+
 #powered-by a {
   background-position-y: -546px;
 }

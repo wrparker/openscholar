@@ -58,7 +58,7 @@ class FeatureHelp {
    *   The entity ID (in case of $return).
    */
   static public function getEntityID($entity_type, $title, $bundle = NULL) {
-    $query = new entityFieldQuery();
+    $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', $entity_type);
     if ($entity_type == 'node') {
       $query->propertyCondition('title', $title);
@@ -971,6 +971,26 @@ class FeatureHelp {
       ->condition('id', $id)
       ->condition('object_id', 'vsite_domain_name')
       ->execute();
+  }
+
+  /**
+   * Get file ID's by their name.
+   *
+   * @param array $files
+   *   List of file names.
+   */
+  static public function getFilesIDs($files) {
+    $query = new EntityFieldQuery();
+    $result = $query
+      ->entityCondition('entity_type', 'file')
+      ->propertyCondition('filename', $files, 'IN')
+      ->execute();
+
+    if (empty($result['file'])) {
+      return;
+    }
+
+    return array_keys($result['file']);
   }
 
 }

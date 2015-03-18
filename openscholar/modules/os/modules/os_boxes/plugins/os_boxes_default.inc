@@ -22,6 +22,11 @@ abstract class os_boxes_default extends boxes_box {
   public $changed;
 
   /**
+   * Holds the array of contexts that this item is in.
+   */
+  protected $os_contexts;
+
+  /**
    * Holds the cache id.
    */
   protected $cache_id;
@@ -376,6 +381,19 @@ abstract class os_boxes_default extends boxes_box {
 
     cache_clear_all($cid, 'cache_os_boxes', TRUE);
     cache_clear_all('assets:' . $cid, 'cache_os_boxes', TRUE);
+  }
+
+  /**
+   * Get the contexts where this box is located.
+   */
+  public function get_contexts() {
+
+    if(!isset($this->os_contexts) && module_exists('vsite_layout') && $this->delta) {
+      // Get the relationship between blocks and contexts.
+      $this->os_contexts = vsite_layout_get_block_contexts('boxes', $this->delta);
+    }
+
+    return $this->os_contexts;
   }
 }
 

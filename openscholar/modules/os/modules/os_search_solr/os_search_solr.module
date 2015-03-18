@@ -845,8 +845,11 @@ function os_search_solr_apachesolr_search_default_searchers() {
     $page_id = 'browse_' . $bundle_name;
     $export[$page_id] = os_search_solr_setup_bundle_searcher($bundle_name, $bundle_info['title'], $bundle_info['url']);
 
-    // Set the default display mode for the searcher.
-    os_search_solr_save_view_mode($page_id, $bundle_info['display_mode']);
+    $solr_view_modes = variable_get('os_search_solr_display_mode', array());
+    if($solr_view_modes[$page_id] != $bundle_info['display_mode']) {
+      // Set the default display mode for the searcher.
+      os_search_solr_save_view_mode($page_id, $bundle_info['display_mode']);
+    }
   }
   return $export;
 }
@@ -1028,17 +1031,17 @@ function os_search_solr_preprocess_search_results(&$variables) {
   //Only alter 'search_results' and render node if it is a non-search view mode.
   if(!in_array($view_mode, array('search_result', 'search_index'))){
 
-	  // Reset Search Results, we are going to completely override
-	  $variables['search_results'] = '';
+    // Reset Search Results, we are going to completely override
+    $variables['search_results'] = '';
 
-	  foreach ($variables['results'] as $result) {
-	    if ($result['entity_type'] == 'node' && $node = node_load($result['node']->entity_id)) {
-	      $build = node_view($node, $view_mode);
-	      // Hide links.
-	      $build['links']['#access'] = FALSE;
-	      $variables['search_results'] .= render($build);
-	    }
-	  }
+    foreach ($variables['results'] as $result) {
+      if ($result['entity_type'] == 'node' && $node = node_load($result['node']->entity_id)) {
+        $build = node_view($node, $view_mode);
+        // Hide links.
+        $build['links']['#access'] = FALSE;
+        $variables['search_results'] .= render($build);
+      }
+    }
   }
 }
 
@@ -1219,10 +1222,10 @@ function os_search_solr_created_facet(array $values, array $options) {
 function os_search_solr_facet_time($timestamp, $gap) {
   switch ($gap) {
     case FACETAPI_DATE_MONTH:
-      return format_date($timestamp, 'custom', 'F Y');
+      return format_date($timestamp, 'custom', 'F Y', 'UTC');
 
     case FACETAPI_DATE_DAY:
-      return format_date($timestamp, 'custom', 'F j, Y');
+      return format_date($timestamp, 'custom', 'F j, Y', 'UTC');
 
     case FACETAPI_DATE_HOUR:
       return format_date($timestamp, 'custom', 'g A');
