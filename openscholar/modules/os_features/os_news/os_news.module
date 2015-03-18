@@ -149,3 +149,38 @@ function os_news_field_attach_load($entity_type, $entities, $view_mode) {
   }
 }
 
+/**
+ * Copy the image from the source node to any node.
+ *
+ * @param $node
+ *  The node object.
+ * @param $file
+ *  The file object.
+ * @param $dimensions
+ *  The image field crop settings.
+ * @param $save
+ *  Determine if we need to save the node. Default set to TRUE.
+ */
+function os_news_insert_image($node, $file, $dimensions, $save = TRUE) {
+  if (!$file) {
+    // The file is empty. Truncating the file field.
+    unset($node->field_photo[$node->language][0]);
+  }
+  else {
+    $node->field_photo[$node->language][0] = array(
+      'fid' => $file->fid,
+      'display' => 1,
+      'description' => '',
+      'cropbox_x' => $dimensions['cropbox_x'],
+      'cropbox_y' => $dimensions['cropbox_y'],
+      'cropbox_height' => $dimensions['cropbox_height'],
+      'cropbox_width' => $dimensions['cropbox_width'],
+      'timestamp' => $file->timestamp,
+    );
+  }
+
+  if ($save) {
+    node_save($node);
+  }
+}
+

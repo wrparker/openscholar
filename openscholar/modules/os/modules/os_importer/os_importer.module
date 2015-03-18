@@ -880,15 +880,20 @@ function os_importer_form_biblio_import_form_alter(&$form, $form_state) {
  * Implements hook_feeds_processor_targets_alter().
  */
 function os_importer_feeds_processor_targets_alter(&$targets, $entity_type, $bundle_name) {
-  if ($bundle_name != 'person') {
-    return;
+  if ($bundle_name == 'person') {
+    $targets['person_photo'] = array(
+      'name' => t('Personal photo'),
+      'description' => t('Importing a personal photo from external source.'),
+      'callback' => 'os_importer_import_person_photo',
+    );
   }
-
-  $targets['person_photo'] = array(
-    'name' => t('Personal photo'),
-    'description' => t('Importing a personal photo from external source.'),
-    'callback' => 'os_importer_import_person_photo',
-  );
+  elseif ($bundle_name == 'news') {
+    $targets['field_photo'] = array(
+      'name' => t('News photo'),
+      'description' => t('Importing a news photo from external source.'),
+      'callback' => 'os_importer_import_news_photo',
+    );
+  }
 }
 
 /**
@@ -914,7 +919,34 @@ function os_importer_import_person_photo($source, $entity, $target, $value, $map
     'cropbox_height' => 0,
     'cropbox_width' => 0,
   );
-  os_profiles_insert_image($entity, $file['file'], $dimensions, FALSE);
+}
+
+/**
+ * Feeds callback; Importing a news photo from external source.
+ *
+ * @param $source
+ *   Field mapper source settings.
+ * @param $entity
+ *   An entity object, for instance a node object.
+ * @param $target
+ *   A string identifying the target on the node.
+ * @param $value
+ *   The value to populate the target with.
+ * @param $mapping
+ *  Associative array of the mapping settings from the per mapping
+ *  configuration form.
+ */
+function os_importer_import_news_photo($source, $entity, $target, $value, $mapping) {
+  $dimensions = array(
+    'cropbox_x' => 0,
+    'cropbox_y' => 0,
+    'cropbox_height' => 0,
+    'cropbox_width' => 0,
+  );
+  $destination = 'public://' . token_replace(os_files_get_save_path(), array());
+  $file = system_retrieve_file($value, $destination, TRUE);
+  $file->timestamp = REQUEST_TIME - 200; 
+  os_news_insert_image($entity, $file, $dimensions, FALSE);
 }
 
 /**
