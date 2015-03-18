@@ -85,4 +85,17 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
     return $return;
   }
 
+  public function propertyValuesPreprocess($property_name, $value, $public_field_name) {
+    // Get the field info.
+    $field_info = field_info_field($property_name);
+
+    switch ($field_info['type']) {
+      case 'link_field':
+        return array('url' => $value);
+    }
+
+    // Return the value as is.
+    return parent::propertyValuesPreprocess($property_name, $value, $public_field_name);
+  }
+
 }
