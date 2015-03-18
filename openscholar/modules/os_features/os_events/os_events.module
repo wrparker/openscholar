@@ -105,7 +105,7 @@ function os_events_event_registration_reach_capacity($node) {
 
   // When the capacity set to 0 the registration number is unlimited. When not,
   // check if the registration number didn't pass the capacity number.
-  if ($settings['capacity'] == 0 xor $registrations_number <= $settings['capacity']) {
+  if ($settings['capacity'] == 0 xor $registrations_number < $settings['capacity']) {
     return user_access('create event_signup_simple registration');
   }
   else {
@@ -918,6 +918,7 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
   // "#access = FALSE".
   $form['#validate'][] = '_os_events_update_from_address';
   $form['#validate'][] = 'os_events_validate_end_date_after_start';
+  $form['#submit'][] = 'os_events_invalidate_cache';
 
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
 }
@@ -1065,6 +1066,13 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   unset($form['actions'], $form['field_full_name'], $form['field_department'], $form['anon_mail'], $form['user']);
 
   $form['#submit'][] = 'os_events_modal_submit';
+}
+
+/**
+ * When changing the settings of the a registration invalidate the cache.
+ */
+function os_events_invalidate_cache($form, $form_state) {
+  os_boxes_invalidate_cache($form_state['entity']['entity_id'], 'node');
 }
 
 /**
@@ -1311,14 +1319,13 @@ function os_events_registration_link($variables) {
   list(,$nid,) = explode('/', $variables['path']);
   $node = node_load($nid);
 
-  if (os_events_event_registration_reach_capacity($node)) {
+  if (!os_events_event_registration_reach_capacity($node)) {
     return;
   }
 
   if (!os_events_register_show_register_link($node)) {
     return;
   }
-
 
   return os_events_generate_modal_register_link($nid);
 }
