@@ -93,10 +93,11 @@ background-position: 0px -566px;
 
 #columns h2.block-title {
     background:#F3F3F1;
-    font-size: 14px;
+    font-size: 15px;
     text-transform: none;
     padding: 3px 7px;
     margin-bottom: 10px;
+    font-weight:normal;
  
 }
 
@@ -111,7 +112,7 @@ a.rslides_nav {
 
 .section-nav .expanded.menu-depth-2 > a,
 .section-nav .expanded.menu-depth-2 > a:hover {
-  background-color: #888;
+  background-color: #888 !important;
   color: #fff;
 }
 

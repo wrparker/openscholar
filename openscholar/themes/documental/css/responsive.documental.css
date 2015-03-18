@@ -9,7 +9,7 @@ ul.primary li a {
     padding: 4px;
 }
 .link-count-mobi-main a {
-    background-color:#777;
+    background-color:#3b484d;
 }
 .link-count-mobi-util a {
     background-color: #444;
@@ -47,14 +47,14 @@ ul.primary li a {
     padding: 0;
 }
 #menu-bar #block-os-primary-menu{
-    background: #777;
+    background: #3b484d;
 }
 #menu-bar ul.nice-menu a.active, #menu-bar ul.nice-menu a:hover {
-    background: #777;
+    background: #3b484d;
 }
 #menu-bar #block-os-primary-menu a:hover,
 #menu-bar #block-os-primary-menu a:focus{
-	background-color:#777 !important;
+	background-color:#3b484d !important;
 }
 
 .region-header-third ul.nice-menu a {
