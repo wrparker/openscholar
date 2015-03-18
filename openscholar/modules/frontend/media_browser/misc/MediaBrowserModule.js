@@ -16,11 +16,11 @@
     $scope.dupes = [];
 
     // Watch for changes in file list
-    $scope.$on('EntityService.files.add', function (event, files) {
-      $scope.files = files;
+    $scope.$on('EntityService.files.add', function (event, file) {
+      //$scope.files.push(file)
     });
 
-    $scope.$on('EntityService.files.getAll', function (event, files) {
+    $scope.$on('EntityService.files.fetch', function (event, files) {
       $scope.files = files;
       for (var i=0; i<$scope.files.length; i++) {
         $scope.files.preview = $sce.trustAsHtml($scope.files.preview);
@@ -222,8 +222,14 @@
     };
 
 
+    $scope.embed = 'URL or Markup';
     $scope.embedSubmit = function () {
+      // construct the entity
+      var data = {
+        embed: this.embed,
+      }
 
+      service.add(data);
     }
   }]);
 })();

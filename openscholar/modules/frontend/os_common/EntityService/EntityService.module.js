@@ -31,7 +31,7 @@
             entities.push(resp.data[i]);
           }
           entityCount = resp.count;
-          $rootScope.$broadcast(eventName+'.getAll', entities);
+          $rootScope.$broadcast(eventName+'.fetch', entities);
         }
 
         var errorFunc = function() {
@@ -84,12 +84,14 @@
             throw new Exception('Cannot add entity of type '+type+' that already exists.');
           }
           // rest API call to add entity to server
-          $http.post($restPath+'/'+entityType, entity)
+          $http.post(restPath+'/'+entityType, entity)
             .success(function (resp) {
               console.log(resp);
-            })
+              var entity = resp.data[0];
+              entities.push(entity);
 
-          $rootScope.$broadcast(eventName+'.add', entity);
+              $rootScope.$broadcast(eventName+'.add', entity);
+            })
         };
 
         this.edit = function (entity) {
