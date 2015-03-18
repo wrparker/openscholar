@@ -1,7 +1,7 @@
 Feature:
   Testing boxes.
 
-  @api @restful @now
+  @api @restful
   Scenario: CRUD-ind a box.
     Given I "create" a box as "john" with the settings:
       | Site    | Widget  | Description  |

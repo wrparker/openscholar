@@ -316,7 +316,7 @@ trait RestfulTrait {
     $delta = $this->getDelta($values);
 
     if ($op == 'post') {
-      $this->invokeRestRequest($op, $box_path,
+      $request = $this->invokeRestRequest($op, $box_path,
         ['access_token' => $token],
         [
           'vsite' => FeatureHelp::getNodeId($values['Site']),
@@ -327,6 +327,8 @@ trait RestfulTrait {
           ],
         ]
       );
+
+      $this->meta['delta'] = $delta = $request->json()['data']['delta'];
 
       $blocks = [
         'boxes-' . $delta => [
@@ -367,8 +369,6 @@ trait RestfulTrait {
         'blocks' => $blocks,
       ]
     );
-
-    $this->meta['delta'] = $delta;
   }
 
   /**
