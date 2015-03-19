@@ -302,7 +302,21 @@ class csl_format extends csl_rendering_element {
           break;
         case 'capitalize-all':
         case 'title':
-          $text = mb_convert_case($text, MB_CASE_TITLE);
+          // If this is not a link we want to avoid capitalizing certain words.
+          if (strpos($text, '<a') == FALSE) {
+            // Words to skip.
+            $except = array('of');
+            $parts = explode(' ', $text);
+            foreach ($parts as $key => $part) {
+              if (!in_array($part, $except)) {
+                $parts[$key] = drupal_ucfirst($part);
+              }
+            }
+            $text = implode(' ', $parts);
+          }
+          else {
+            $text = ucwords($text);
+          }
           break;
         case 'capitalize-first':
           $text = drupal_ucfirst($text);
