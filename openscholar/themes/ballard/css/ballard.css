@@ -141,6 +141,17 @@ h3.block-title {
 	background: #F7F7F7;
 }
 
+.sidebar .block-content {
+  padding: 5px 10px;
+}
+
+.sidebar #block-os-secondary-menu .block-content {
+  padding: 0;
+}
+
+
+
+
 /**** MAIN NAV BAR  ****/
 #menu-bar {
 	background-image: -webkit-gradient(
