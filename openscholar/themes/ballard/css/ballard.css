@@ -145,10 +145,11 @@ h3.block-title {
   padding: 5px 10px;
 }
 
-.sidebar #block-os-secondary-menu .block-content {
+.sidebar #block-os-primary-menu .block-content,
+.sidebar #block-os-secondary-menu .block-content,
+.sidebar .os-menu .block-content {
   padding: 0;
 }
-
 
 
 
