@@ -980,3 +980,33 @@ function os_importer_entity_property_info_alter(&$info) {
   }
 }
 
+/**
+ * round up the hour. If the hour is 15:53 the return value will be 15:55.
+ * If the hour is 15:56 the hour will be 16:00.
+ *
+ * @param $hour
+ *   The hour in a time format of HH:MM
+ *
+ * @return
+ *   The new hour.
+ */
+function os_importer_round_hour($hour) {
+  list($hours, $minutes) = explode(':', $hour);
+
+  $single = $minutes % 10;
+  if ($single < 5) {
+    $new_minutes = intval($minutes / 10) * 10;
+  }
+  else if ($single > 5) {
+    $new_minutes = (intval($minutes / 10) + 1) * 10;
+  }
+  else {
+    $new_minutes = $minutes;
+  }
+
+  if ($new_minutes == '0') {
+    $new_minutes = '00';
+  }
+
+  return $hours . ':' . $new_minutes;
+}

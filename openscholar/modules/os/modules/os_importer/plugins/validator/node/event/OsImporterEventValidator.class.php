@@ -57,7 +57,7 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
   /**
    * Verify the start is occurring before the end date.
    */
-  public function validateOsDate($field_name, $value) {
+  public function validateOsDate($field_name, $value, EntityMetadataWrapper $wrapper, EntityMetadataWrapper $property_wrapper) {
     if (empty($value)) {
       return;
     }
@@ -83,6 +83,16 @@ class OsImporterEventValidator extends OsImporterEntityValidateBase {
       'M j Y g:ia',
       'M j Y',
     );
-    $this->validateDateFormats($formats, $value, $field_name);
+
+    if (!$this->validateDateFormats($formats, $value, $field_name)) {
+      return;
+    }
+
+    // The validation process didn't failed. We need to change the hour.
+    $time = strtotime($value);
+    $new_hour = os_importer_round_hour(date('g:i', $time));
+    list($month, $day, $year, $hour) = explode(' ', $value);
+    $new_time = $month . ' ' . $day . ' ' . $year . ' ' . $new_hour . substr($hour, -2);
+    $property_wrapper->set($new_time);
   }
 }
