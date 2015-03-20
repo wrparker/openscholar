@@ -112,6 +112,25 @@ function hook_os_layout_contexts_alter(&$all_contexts) {
 }
 
 /**
+ * Alter the blocks in a layout pre-save.
+ *
+ * This is your last chance to alter layout information before save, only applicable
+ * for performing high level re-arranging.  Or for performing actions associated with
+ * layout changes like re-indexing.  Contexts hooks do not fire in all cases so this
+ * is needed.
+ *
+ * @param $blocks
+ *   An array of blocks to be saved
+ *
+ * @paramm $context_name
+ *   Name of the context / layout getting saved
+ *
+ */
+function hook_os_layout_set_alter(&$blocks, $context_name) {
+
+}
+
+/**
  * Implements hook_os_add_new_links_alter().
  *
  * Modify items in the 'Add New' dropdown that appears on every public facing
@@ -131,8 +150,8 @@ function hook_os_add_new_links_alter(&$links) {
 /**
  * Implements hook_os_app_info().
  *
- * Describes a feature.  
- * 
+ * Describes a feature.
+ *
  * Keys:
  *   path => Path to page listing feature content.
  *   views tabs => List of views that display this feature's content.  This is used by
@@ -147,7 +166,7 @@ function hook_os_app_info() {
     'path' => 'software',
   	'nodetypes' => array(
   	  'software_project',
-      'software_release',
+  	  'software_release',
     ),
     'views tabs' => array(
       'os_software_projects' => array('page'),

@@ -478,6 +478,7 @@ function os_files_form_file_entity_edit_alter(&$form, &$form_state){
   $form['filename']['#description'] = t('Name of file as seen by your site\'s visitors');
 
   $form['media_title']['#access'] = FALSE;
+  $form['media_title'][LANGUAGE_NONE][0]['value']['#value_callback'] = 'os_files_media_title_value';
 
   $form['media_description']['#access'] = FALSE;
 
@@ -495,9 +496,6 @@ function os_files_form_file_entity_edit_alter(&$form, &$form_state){
   // this means we'll be getting it through the media browser
   if (strpos($_GET['q'], 'ajax') !== FALSE) {
     $form['preview']['#access'] = FALSE;
-
-    $form['media_title']['#access'] = FALSE;
-    $form['media_title'][LANGUAGE_NONE][0]['value']['#value_callback'] = 'os_files_media_title_value';
 
     $form['media_description']['#access'] = FALSE;
 
@@ -2093,6 +2091,8 @@ function os_files_file_default_types_alter(&$types){
     // *.rtf
     'text/rtf',
     'application/rtf',
+    // *.csv',
+    'text/csv',
   );
 
   $types['document']->mimetypes = (empty($types['document']->mimetypes)) ? $document : array_merge($types['document']->mimetypes, $document);
@@ -2230,6 +2230,7 @@ function _os_files_extensions_from_type($type) {
       'wtml',
       'wtt',
       'wwtfig',
+      'csv',
     );
 
     $types['executable'] = array(
@@ -2284,6 +2285,7 @@ function os_files_file_mimetype_mapping_alter(&$mimes) {
     'application/vnd.openxmlformats-officedocument.spreadsheetml.template' => 'xltx',
     'application/vnd.ms-powerpoint' => 'pot',
     'application/vnd.openxmlformats-officedocument.presentationml.template' => 'potx',
+    'text/csv' => 'csv',
   );
 
   foreach ($types as $mime => $ext) {

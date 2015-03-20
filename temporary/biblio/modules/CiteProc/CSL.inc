@@ -605,7 +605,11 @@ class csl_name extends csl_format {
           }
           else {
             switch ($this->{'name-as-sort-order'}) {
-              case 'first' && $rank == 0:
+              case 'first':
+                if ($rank != 0) {
+                  $text = $given . ' ' . $name['lastname'] ;
+                  break;
+                }
               case 'all':
                 $text = $name['lastname'] . $this->sort_separator . $given;
                 break;
@@ -1274,10 +1278,6 @@ class csl_group extends csl_format{
         $variables++;
       }
 
-      if ($this->delimiter && $element->source != 'macro' && $k != count($this->elements) -1) {
-        $element->suffix = $this->delimiter;
-      }
-
       $text = $element->render($data, $mode);
 
       if (!empty($text)) {
@@ -1319,10 +1319,30 @@ class csl_layout extends csl_format {
   function render($data, $mode = NULL) {
     $text = '';
     $parts = array();
-   // $delimiter = $this->delimiter;
 
+    // as assembling parts, check if punctuation and quotes are interacting correctly between adjacent parts
+    $counter = 0;
+    $punctuation =  array("!", "?", ",", ".");
+    $quotes = array("'", '"','”','’');
     foreach ($this->elements as $element) {
-      $parts[] = $element->render($data, $mode);
+      $part = $element->render($data, $mode);
+      if($part) {
+        if ($counter > 0) {
+          $prevpart = $parts[$counter - 1];
+          // get last character of pervious part
+          $lastchar = mb_substr($prevpart, mb_strlen($prevpart) - 1);
+          // get second-to-last character of pervious part
+          $secondtolastchar = mb_substr($prevpart, mb_strlen($prevpart) - 1);
+          // get first character of current part
+          $firstchar = mb_substr($part, 0, 1);
+          if (in_array($lastchar, $quotes) && in_array($firstchar, $punctuation) && !in_array($secondtolastchar, $punctuation)) {
+            $part = mb_substr($part, 1);
+            $parts[$counter - 1] = mb_substr($prevpart, 0, mb_strlen($prevpart) - 1) . "$firstchar$lastchar";
+          }
+        }
+        $parts[$counter] = $part;
+        $counter++;
+      }
     }
 
     $text = implode($this->delimiter, $parts);

@@ -338,7 +338,7 @@ function cp_content_assign_taxonomy_action(&$node, $context) {
   $applied_titles = array();
   $wrapper = entity_metadata_wrapper('node', $node);
   // Check if the bundle of the node is associated with selected vocabulary.
-  if (!in_array($node->type, $bundle_names)) {
+  if (in_array($node->type, $bundle_names)) {
     // Assign the term(s) to the current node.
     $node_terms = $wrapper->{OG_VOCAB_FIELD}->value(array('identifier' => TRUE));
     $node_terms = array_merge($node_terms ,$selected_terms);
@@ -447,10 +447,10 @@ function cp_content_remove_taxonomy_action(&$node, $context) {
 
       $params = array(
         '%terms' => implode(", ", $names),
-        '%node' => $removed_title['title'],
+        '!node' => $removed_title['title'],
       );
 
-      $message = format_plural(count($removed_title['removed_terms']), 'Taxonomy term %terms was removed from the content: %node', '@count taxonomy terms %terms were removed from the content: %node', $params);
+      $message = format_plural(count($removed_title['removed_terms']), 'Taxonomy term %terms was removed from the content: !node', '@count taxonomy terms %terms were removed from the content: !node', $params);
       drupal_set_message($message);
     }
   }
