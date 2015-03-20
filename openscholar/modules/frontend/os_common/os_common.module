@@ -5,6 +5,7 @@ function os_common_library() {
 
   $path = drupal_get_path('module', 'os_common');
   $rest = url('api', array('alias' => true));
+  purl_disable(TRUE);
 
   $info['angularjs'] = array(
     'title' => 'AngularJS',
@@ -57,7 +58,7 @@ function os_common_library() {
         'type' => 'setting',
         'data' => array(
           'paths' => array(
-            'JSPager' => $path.'/JSPager',
+            'JSPager' => url($path.'/JSPager'),
           )
         )
       )
@@ -87,6 +88,8 @@ function os_common_library() {
       array('os_common', 'helpers')
     )
   );
+
+  purl_disable(FALSE);
 
   return $info;
 }

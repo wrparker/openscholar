@@ -6,7 +6,7 @@
  */
 
 (function () {
-  var rootPath = osCommonHelpers.findLibraryPath('JSPager');
+  var rootPath = '';
 
   angular.module('JSPager', [])
     .config(function($sceDelegateProvider) {
@@ -17,6 +17,10 @@
       whitelist.push(domain);
 
       $sceDelegateProvider.resourceUrlWhitelist(whitelist);
+
+      if (typeof Drupal != 'undefined' && typeof Drupal.settings != 'undefined') {
+        rootPath = Drupal.settings.paths.JSPager;
+      }
     })
     .filter('PagerCurrentPage', function () {
       function currentPage(input, pager) {
