@@ -19,7 +19,7 @@ function os_events_default_box() {
   $box->description = 'Upcoming Events';
   $box->options = array(
     'content_type' => 'event',
-    'display' => 'title',
+    'display' => 'link_and_date',
     'more' => 1,
     'more_text' => 'More',
     'more_link' => 'calendar',
