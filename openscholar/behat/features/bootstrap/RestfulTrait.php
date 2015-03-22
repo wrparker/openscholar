@@ -452,4 +452,10 @@ trait RestfulTrait {
     );
   }
 
+  /**
+   * @Given /^I "([^"]*)" a term as "([^"]*)" with the settings:$/
+   */
+  public function iATermAsWithTheSettings($operation, $account, TableNode $table) {
+  }
+
 }
