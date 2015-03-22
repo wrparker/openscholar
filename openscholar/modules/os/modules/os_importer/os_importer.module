@@ -66,6 +66,35 @@ function os_importer_os_app_info() {
  * Import feed item when the user add the feed importer for the first time.
  */
 function os_importer_node_insert($node) {
+
+  if ($node->type == 'event') {
+
+    $round = function($value) {
+      $time = strtotime($value);
+      $hour = date('g:i', $time);
+      $new_hour = os_importer_round_hour($hour);
+
+      list($day) = explode(' ', $value);
+      return $day . ' ' . $new_hour . ':00';
+    };
+
+    // Round the hour of the event
+    $wrapper = entity_metadata_wrapper('node', $node);
+    $original_time = $wrapper->field_date->get(0);
+    $time = $original_time->value();
+    $time['value'] = $round($time['value']);
+    $time['value2'] = $round($time['value2']);
+
+    if ($time['value'] != $original_time->value->value() || $time['value2'] != $original_time->value2->value()) {
+      $param = array(
+        '@title' => $node->title,
+      );
+      drupal_set_message(t('The date for the event @title was not in units of 5 minutes(5:45, 5:40) and was altered.', $param), 'warning');
+    }
+
+    $wrapper->field_date->set(array($time));
+  }
+
   // Source attached to node.
   if (isset($node->feeds) || !$importer_id = feeds_get_importer_id($node->type)) {
     return;
@@ -998,7 +1027,7 @@ function os_importer_round_hour($hour) {
     $new_minutes = intval($minutes / 10) * 10;
   }
   else if ($single > 5) {
-    $new_minutes = (intval($minutes / 10) + 1) * 10;
+    $new_minutes = ((intval($minutes / 10) + 1) * 10) - 5;
   }
   else {
     $new_minutes = $minutes;
