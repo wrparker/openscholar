@@ -44,6 +44,29 @@ function os_events_os_app_info() {
 }
 
 /**
+ * Implements hook_entity_info_alter().
+ *
+ * Adds a view mode that shows the event's title and date.
+ */
+function os_events_entity_info_alter(&$info) {
+  $info['node']['view modes']['link_and_date'] = array(
+    'label' => t('Link and date'),
+    'custom settings' => TRUE,
+  );
+}
+
+/**
+ * Preprocess node.
+ *
+ * Adds a template suggestion for events when display mode is 'link_and_date'.
+ */
+function os_events_preprocess_node(&$vars) {
+  if ($vars['node']->type == 'event' && $vars['view_mode'] == 'link_and_date') {
+    $vars['theme_hook_suggestions'][] = 'node__event__link_and_date';
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function os_events_theme() {
@@ -144,7 +167,7 @@ function os_events_admin_paths() {
  */
 function os_events_os_entity_view_modes() {
   return array('node' =>
-    array('event' => array('sidebar_teaser')
+    array('event' => array('link_and_date', 'sidebar_teaser')
   ));
 }
 
@@ -163,15 +186,6 @@ function os_events_os_widget() {
     'region' => 'sidebar_second',
     'weight' => '-10',
     'info' => t('Mini Calendar'),
-  );
-
-  //List of upcoming events
-  $items['views-os_events-block_2'] = array(
-    'module' => 'views',
-    'delta' => 'os_events-block_2',
-    'region' => 'sidebar_second',
-    'weight' => '-15',
-    'info' => t('Upcoming Events'),
   );
 
   return $items;

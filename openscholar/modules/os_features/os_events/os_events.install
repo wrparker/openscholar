@@ -131,7 +131,7 @@ function os_events_update_7010() {
 }
 
 /**
- * Migrates the "Upcoming events" view to be a box instead.
+ * Migrate the "Upcoming events" view to be a box instead.
  */
 function os_events_update_7011() {
   $overrides = db_select('spaces_overrides', 'so')

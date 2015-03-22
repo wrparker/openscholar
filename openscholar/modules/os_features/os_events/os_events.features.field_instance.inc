@@ -31,6 +31,12 @@ function os_events_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 0,
       ),
+      'link_and_date' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 6,
+      ),
       'links' => array(
         'label' => 'above',
         'settings' => array(),
@@ -114,6 +120,20 @@ function os_events_field_default_field_instances() {
         ),
         'type' => 'date_default',
         'weight' => 1,
+      ),
+      'link_and_date' => array(
+        'label' => 'hidden',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'medium',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+          'show_repeat_rule' => 'show',
+        ),
+        'type' => 'date_default',
+        'weight' => 0,
       ),
       'links' => array(
         'label' => 'above',
@@ -206,6 +226,12 @@ function os_events_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 6,
       ),
+      'link_and_date' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 5,
+      ),
       'links' => array(
         'label' => 'above',
         'settings' => array(),
@@ -266,6 +292,12 @@ function os_events_field_default_field_instances() {
         ),
         'type' => 'registration_link',
         'weight' => 10,
+      ),
+      'link_and_date' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 4,
       ),
       'links' => array(
         'label' => 'above',
@@ -346,6 +378,12 @@ function os_events_field_default_field_instances() {
         'settings' => array(),
         'type' => 'os_files_image_list',
         'weight' => 2,
+      ),
+      'link_and_date' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 3,
       ),
       'links' => array(
         'label' => 'above',
