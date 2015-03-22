@@ -492,8 +492,15 @@ function os_events_modal_submit($form, &$form_state) {
   // In case event is full update the register links via ajax.
   $event = node_load($form_state['registration']->entity_id);
   if (!os_events_event_registration_reach_capacity($event)) {
-    $commands[] = ajax_command_html('.register-link-teaser', '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>');
-    $commands[] = ajax_command_html('.os_events_export_links .first', '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>');
+    $selectors = array(
+      '#node-' . $event->nid . ' .field-name-field-event-registration',
+      '.os_events_export_links .first',
+      '.register-link-teaser',
+    );
+
+    foreach ($selectors as $selector) {
+      $commands[] = ajax_command_html($selector, '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>');
+    }
   }
 
   // Clean any message.
@@ -1320,7 +1327,7 @@ function os_events_registration_link($variables) {
   $node = node_load($nid);
 
   if (!os_events_event_registration_reach_capacity($node)) {
-    return;
+    return '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
   }
 
   if (!os_events_register_show_register_link($node)) {

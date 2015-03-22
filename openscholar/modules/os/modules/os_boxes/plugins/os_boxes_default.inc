@@ -147,6 +147,8 @@ abstract class os_boxes_default extends boxes_box {
       $this->cache_id .= ':' . $page;
     }
 
+    $this->cache_id .= $_GET['q'];
+
     return $this->cache_id;
   }
 
