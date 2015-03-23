@@ -5,9 +5,9 @@ Feature: Testing taxonomy CRUD.
     Given I "create" a term as "john" with the settings:
       | label | vocab             |
       | Water | science_personal1 |
-    Given I "update" a term as "john" with the settings:
-      | label       | id    |
-      | Water - new | PREV  |
+    Given I "patch" a term as "john" with the settings:
+      | label       |
+      | Water - new |
     Given I "delete" a term as "john" with the settings:
       | id    |
       | PREV  |

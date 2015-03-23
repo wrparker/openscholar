@@ -73,6 +73,7 @@ trait RestfulTrait {
   private $operations = [
     'create' => 'post',
     'update' => 'put',
+    'patch' => 'patch',
     'delete' => 'delete',
   ];
 
@@ -460,13 +461,21 @@ trait RestfulTrait {
     list($values, $token, $path) = $this->getVariables('taxonomy', $account, $table, TRUE);
     $method = $this->operations[$operation];
 
-    if ($method == 'post') {
-      $payload = $values;
+    if ($method != 'post') {
+      $path .= '/' . $this->meta['id'];
     }
 
-    print_r($token);
-
-    $this->invokeRestRequest($method, $path, ['access_token' => $token], $payload);
+    $request = $this->invokeRestRequest($method, $path, ['access_token' => $token], $values);
+    if ($method == 'delete') {
+      if (!empty($request->json()['data'])) {
+        throw new \Exception('The delete of the taxonomy term did not occurred.');
+      }
+    }
+    else {
+      $this->meta = $request->json()['data'][0];
+      if ($this->meta['label'] != $values['label']) {
+        throw new Exception('The label of the entity is %s and not %s', $this->meta['label'], $values['label']);
+      }
+    }
   }
-
 }

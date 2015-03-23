@@ -56,7 +56,7 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
    * {@inheritdoc}
    */
   public function entityValidate(\EntityMetadataWrapper $wrapper) {
-    if (!$this->getRelation()) {
+    if (!$this->getRelation($wrapper->value())) {
       // The vocabulary is not relate to any group.
       throw new \RestfulBadRequestException("The vocabulary isn't relate to any group.");
     }
@@ -65,23 +65,16 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
   }
 
   /**
-   * Check access to CRUD an entity.
-   *
-   * @param $op
-   *   The operation. Allowed values are "create", "update" and "delete".
-   * @param $entity_type
-   *   The entity type.
-   * @param $entity
-   *   The entity object.
-   *
-   * @return bool
-   *   TRUE or FALSE based on the access. If no access is known about the entity
-   *   return NULL.
+   * Overrides RestfulEntityBaseTaxonomyTerm::checkEntityAccess().
    */
   protected function checkEntityAccess($op, $entity_type, $entity) {
 
-    if (!$relation = $this->getRelation()) {
+    if (!$relation = $this->getRelation($entity)) {
       return FALSE;
+    }
+
+    if ($op == 'view') {
+      return TRUE;
     }
 
     // We need this in order to alter the global user object.
@@ -90,7 +83,7 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
     spaces_set_space(vsite_get_vsite($relation->gid));
 
     if (!vsite_og_user_access('administer taxonomy')) {
-      throw new \RestfulBadRequestException("The vocabulary isn't relate to any group.");
+      throw new \RestfulBadRequestException("You are not allowed to create terms.");
     }
   }
 
@@ -100,18 +93,16 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
    * @return mixed
    *   OG vocab relation.
    */
-  private function getRelation() {
-    return og_vocab_relation_get(taxonomy_vocabulary_machine_name_load($this->request['vocab'])->vid);
+  private function getRelation($entity) {
+    $vocab = empty($entity->vocabulary_machine_name) ? $this->request['vocab'] : $entity->vocabulary_machine_name;
+    $this->bundle = $vocab;
+    return og_vocab_relation_get(taxonomy_vocabulary_machine_name_load($vocab)->vid);
   }
 
   /**
    * {@inheritdoc}
    */
   protected function checkPropertyAccess($op, $public_field_name, EntityMetadataWrapper $property_wrapper, EntityMetadataWrapper $wrapper) {
-    if ($public_field_name == 'vocab') {
-      return vsite_og_user_access('administer taxonomy');
-    }
-
-    return parent::checkPropertyAccess($op, $public_field_name, $property_wrapper, $wrapper);
+    return vsite_og_user_access('administer taxonomy');
   }
 }
