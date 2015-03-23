@@ -35,7 +35,7 @@ class sv_list_node_event extends sv_list_plugin  {
         'after_event_start' => '30 minutes after an event starts',
         'end_of_day' => 'At the end of the day',
         'end_of_event' => 'When the event ends',
-        ),
+      ),
       '#states' => array(
         // Display this field only when the LOP displays events sorted by
         // event date.
@@ -70,7 +70,7 @@ class sv_list_node_event extends sv_list_plugin  {
       case 'end_of_day';
         // The expiry time is tomorrow.
         $str = 'tomorrow';
-        $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime($str)), '>=', 'sv_list_events');
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s', strtotime($str)), '<', 'sv_list_events');
         break;
       case 'end_of_event';
         // The expiry time is at the end of the event.

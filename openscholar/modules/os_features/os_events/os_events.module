@@ -144,7 +144,7 @@ function os_events_admin_paths() {
  */
 function os_events_os_entity_view_modes() {
   return array('node' =>
-    array('event' => array('link_and_date', 'sidebar_teaser')
+    array('event' => array('sidebar_teaser')
   ));
 }
 
