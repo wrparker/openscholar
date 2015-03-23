@@ -183,10 +183,27 @@ background-image: linear-gradient(to bottom, #575757 0%, #0A0A0A 100%);
   border-right: 1px solid #696969;
 }
 
-#menu-bar ul.nice-menu a.active, #menu-bar ul.nice-menu a:hover {
+#menu-bar ul.nice-menu .menuparent.over > a,
+#menu-bar ul.nice-menu .menuparent a:hover,
+#menu-bar ul.nice-menu .menuparent a.active,
+#menu-bar ul.nice-menu a.active, 
+#menu-bar ul.nice-menu a:hover,
+#menu-bar ul.nice-menu .menuparent ul li a,
+#menu-bar ul.nice-menu .menuparent ul li a.active {
   background: #333;
   color: #FFF;
 }
+
+#menu-bar ul.nice-menu .menuparent > a:before {
+background-position: 0px -566px;
+}
+
+
+#menu-bar ul.nice-menu ul {
+  background: #2f2f2f;
+  top: 3em !important;
+}
+
 
 #powered-by a {
 	background-position: -14px -548px;
