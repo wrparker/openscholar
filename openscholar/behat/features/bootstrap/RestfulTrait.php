@@ -38,6 +38,7 @@ trait RestfulTrait {
     'slideshow_slide' => 'api/slideshow_slide',
     'software_project' => 'api/software_project',
     'software_release' => 'api/software_release',
+    'taxonomy' => 'api/taxonomy',
   ];
 
   /**
@@ -456,6 +457,16 @@ trait RestfulTrait {
    * @Given /^I "([^"]*)" a term as "([^"]*)" with the settings:$/
    */
   public function iATermAsWithTheSettings($operation, $account, TableNode $table) {
+    list($values, $token, $path) = $this->getVariables('taxonomy', $account, $table, TRUE);
+    $method = $this->operations[$operation];
+
+    if ($method == 'post') {
+      $payload = $values;
+    }
+
+    print_r($token);
+
+    $this->invokeRestRequest($method, $path, ['access_token' => $token], $payload);
   }
 
 }
