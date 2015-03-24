@@ -152,7 +152,6 @@ function os_menu_alter(&$items) {
     'file' => 'twitter_pull.admin.inc',
     'file path' => drupal_get_path('module', 'twitter_pull'),
   );
-  dpm('a');
 }
 function os_in_readonly_mode($page) {
   // Callback data for each page.
