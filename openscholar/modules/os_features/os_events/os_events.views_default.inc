@@ -43,15 +43,27 @@ function os_events_views_default_views() {
   $handler->display->display_options['style_options']['theme_style'] = '1';
   $handler->display->display_options['style_options']['max_items'] = '0';
   $handler->display->display_options['row_plugin'] = 'calendar_entity';
+  /* Field: Content: Date (field_date:delta) */
+  $handler->display->display_options['fields']['delta']['id'] = 'delta';
+  $handler->display->display_options['fields']['delta']['table'] = 'field_data_field_date';
+  $handler->display->display_options['fields']['delta']['field'] = 'delta';
+  $handler->display->display_options['fields']['delta']['label'] = '';
+  $handler->display->display_options['fields']['delta']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['delta']['element_label_colon'] = FALSE;
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['make_link'] = TRUE;
+  $handler->display->display_options['fields']['title']['alter']['path'] = 'event/[title]?delta=[delta]';
+  $handler->display->display_options['fields']['title']['alter']['replace_spaces'] = TRUE;
+  $handler->display->display_options['fields']['title']['alter']['path_case'] = 'lower';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = FALSE;
+  $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
   /* Field: Content: Date */
   $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
   $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
