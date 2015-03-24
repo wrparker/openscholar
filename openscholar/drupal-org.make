@@ -345,7 +345,7 @@ projects[respondjs][version] = 1.1
 projects[restful][subdir] = "contrib"
 projects[restful][download][type] = git
 projects[restful][download][url] = "https://github.com/RoySegall/restful.git"
-projects[restful][download][branch] = "444
+projects[restful][download][branch] = 444
 ;projects[restful][download][branch] = "7.x-1.x"
 ;projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
 
