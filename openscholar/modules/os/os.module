@@ -141,6 +141,11 @@ function os_menu_alter(&$items) {
 
   // Apply CP theme for book revision page.
   $items['node/%node/revisions']['theme callback'] = 'cp_theme_name';
+
+  // Fix the menu item definition for twitter pull.
+  $items['admin/config/people/twitter'] = array(
+    'title' => 'Twitter pull',
+  ) + $items['admin/config/twitter_pull'];
 }
 function os_in_readonly_mode($page) {
   // Callback data for each page.
@@ -197,7 +202,6 @@ function os_in_readonly_mode($page) {
 
   drupal_access_denied();
 }
-
 
 /**
  * Implements hook_entity_info_alter().
