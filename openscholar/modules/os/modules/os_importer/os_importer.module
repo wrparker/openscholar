@@ -71,7 +71,7 @@ function os_importer_node_insert($node) {
 
     $round = function($value) {
       $time = strtotime($value);
-      $hour = date('g:i', $time);
+      $hour = date('H:i', $time);
       $new_hour = os_importer_round_hour($hour);
 
       list($day) = explode(' ', $value);
@@ -85,11 +85,11 @@ function os_importer_node_insert($node) {
     $time['value'] = $round($time['value']);
     $time['value2'] = $round($time['value2']);
 
-    if ($time['value'] != $original_time->value->value() || $time['value2'] != $original_time->value2->value()) {
+    if ($time['value'] != gmdate('Y-m-d H:i:s', $original_time->value->value()) || $time['value2'] != gmdate('Y-m-d H:i:s', $original_time->value2->value())) {
       $param = array(
         '@title' => $node->title,
       );
-      drupal_set_message(t('The date for the event @title was not in units of 5 minutes(5:45, 5:40) and was altered.', $param), 'warning');
+      drupal_set_message(t('The value of minutes for the event @title is not in a multiple of 5 minutes and hence is altered.', $param), 'warning');
     }
 
     $wrapper->field_date->set(array($time));
