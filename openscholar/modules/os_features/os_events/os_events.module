@@ -83,8 +83,8 @@ function os_events_menu() {
  * @param $node
  *  The event to check capacity for.
  * @return bool
- *  Returns FALSE if capacity isn't reached yet. Else, check if user can
- *  signup for events and return TRUE/FALSE accordingly.
+ *  Returns TRUE if user has registration access and capacity hasn't been reached
+ *  or if the event has unlimited capacity. Otherwise, return FALSE.
  */
 function os_events_event_registration_reach_capacity($node) {
   // Check how much registration exists for this event.
