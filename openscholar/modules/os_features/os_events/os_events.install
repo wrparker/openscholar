@@ -166,3 +166,10 @@ function os_events_update_7011() {
       ->execute();
   }
 }
+
+/**
+ * Revert views to add the delta to event links.
+ */
+function os_events_update_7012() {
+  features_revert(array('os_events' => array('views')));
+}
