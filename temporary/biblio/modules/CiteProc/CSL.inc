@@ -302,7 +302,9 @@ class csl_format extends csl_rendering_element {
           break;
         case 'capitalize-all':
         case 'title':
-          $text = mb_convert_case($text, MB_CASE_TITLE);
+          if ($this->var == 'title') {
+            $text = mb_convert_case($text, MB_CASE_TITLE);
+          }
           break;
         case 'capitalize-first':
           $text = drupal_ucfirst($text);
