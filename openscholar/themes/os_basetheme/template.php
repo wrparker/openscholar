@@ -193,7 +193,7 @@ function os_basetheme_preprocess_node(&$vars) {
   elseif ($vars['node']->type == 'event' && $vars['page'] && !empty($vars['content']['field_date']['#items'][0]['rrule'])) {
     // We are in a page of a repeated event so we need to display the date
     // according to the delta.
-    $delta = $_GET['delta'];
+    $delta = !empty($_GET['delta']) ? $_GET['delta'] : 0;
 
     // We move the wanted delta to be the first element in order to get the
     // desired markup.
