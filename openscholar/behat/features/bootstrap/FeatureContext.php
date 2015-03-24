@@ -277,6 +277,59 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @When /^I create a new event with title "([^"]*)"$/
+   */
+  public function iCreateANewEventWithTitle($title) {
+    $tomorrow = time() + (24 * 60 * 60);
+    return array(
+      new Step\When('I visit "john/node/add/event"'),
+      new Step\When('I fill in "Title" with "' . $title . '"'),
+      new Step\When('I fill in "edit-field-date-und-0-value2-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
+      new Step\When('I fill in "edit-field-date-und-0-value2-timeEntry-popup-1" with "' . date('h:ia') . '"'),
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
+   * @When /^I create a new repeating event with title "([^"]*)" that repeats "([^"]*)" times$/
+   */
+  public function iCreateANewRepeatingEventWithTitle($title, $times) {
+    $tomorrow = time() + (24 * 60 * 60);
+    return array(
+      new Step\When('I visit "john/node/add/event"'),
+      new Step\When('I fill in "Title" with "' . $title . '"'),
+      new Step\When('I fill in "edit-field-date-und-0-value-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
+      new Step\When('I fill in "edit-field-date-und-0-value2-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
+      new Step\When('I check the box "edit-field-date-und-0-all-day"'),
+      new Step\When('I check the box "edit-field-date-und-0-show-repeat-settings"'),
+      new Step\When('I fill in "edit-field-date-und-0-rrule-count-child" with "' . $times . '"'),
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
+   * @When /^I should see the event "([^"]*)" in the LOP$/
+   */
+  public function iShouldSeeTheEventInTheLop($title) {
+    $page = $this->getSession()->getPage()->getContent();
+
+    $pattern = "/<div id='boxes-box-os_events_upcoming' class='boxes-box'>[\s\S]*" . $title . "[\s\S]*<\/div>/";
+    if (!preg_match($pattern, $page)) {
+      throw new Exception("The event '$title' was not found in the List of posts widget.");
+    }
+  }
+
+  /**
+   * @When /^I should see the date of the "([^"]*)" repeat of the event$/
+   */
+  public function iShouldSeeTheDateOfTheRepeatOfDate($repeat) {
+    $two_weeks_from_tmr = time() + ($repeat * 7 + 1) * (24 * 60 * 60);
+    return array(
+      new Step\When('I should see "' . date('l, F j, Y', $two_weeks_from_tmr) .'"'),
+    );
+  }
+
+  /**
    * @When /^I create a new "([^"]*)" entry with the name "([^"]*)"$/
    */
   public function iCreateANewEntryWithTheName($type, $name) {
