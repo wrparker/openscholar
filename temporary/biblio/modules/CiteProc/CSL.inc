@@ -302,9 +302,17 @@ class csl_format extends csl_rendering_element {
           break;
         case 'capitalize-all':
         case 'title':
-          if ($this->var == 'title') {
-            $text = mb_convert_case($text, MB_CASE_TITLE);
-          }
+          // See: http://docs.citationstyles.org/en/stable/specification.html#title-case-conversion
+          $array = array('A' => 'a', 'An' => 'an', 'And' => 'and', 'As' => 'as',
+            'At' => 'at', 'But' => 'but', 'By' => 'by', 'Down' => 'down',
+            'For' => 'for', 'From' => 'from', 'In' => 'in', 'Into' => 'into',
+            'Nor' => 'nor', 'Of' => 'of', 'On' => 'on', 'Onto' => 'onto',
+            'Or' => 'or', 'Over' => 'over', 'So' => 'so', 'The' => 'the',
+            'Till' => 'till', 'To' => 'to', 'Up' => 'up', 'Via' => 'via',
+            'With' => 'with', 'Yet' => 'yet',);
+
+          $text = mb_convert_case($text, MB_CASE_TITLE);
+          $text = strtr($text, $array);
           break;
         case 'capitalize-first':
           $text = drupal_ucfirst($text);
