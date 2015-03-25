@@ -50,7 +50,7 @@ before_script:
   - export NODE_JS="node-v0.12.1-linux-x64"
   - wget http://nodejs.org/dist/v0.12.1/$NODE_JS.tar.gz
   - sudo mv $NODE_JS.tar.gz /usr/local/share/
-  - sudo tar xvjf /usr/local/share/$NODE_JS.tar.gz
+  - sudo tar xzf /usr/local/share/$NODE_JS.tar.gz
   - sudo ln -sf /usr/local/share/$NODE_JS/bin /usr/local/share/nodejs
   - sudo ln -sf /usr/local/share/$NODE_JS/bin /usr/local/bin/nodejs
   - sudo ln -sf /usr/local/share/$NODE_JS/bin /usr/bin/nodejs
