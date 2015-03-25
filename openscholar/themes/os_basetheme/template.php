@@ -323,3 +323,24 @@ function os_basetheme_status_messages($vars) {
   }
   return $output;
 }
+
+/**
+ * Implements theme_views_view_field.
+ *
+ * Here we add the delta to the query string for the node title's link and
+ * returning the new output.
+ */
+function os_basetheme_views_view_field($vars) {
+  $field = $vars['field'];
+  if ($field->field != 'title') {
+    return $vars['output'];
+  }
+  $row = $vars['row'];
+
+  $options = array(
+    'query' => array(
+      'delta' => $row->field_data_field_date_delta,
+    ),
+  );
+  return l($row->node_title, 'node/' . $row->nid, $options);
+}
