@@ -54,7 +54,7 @@ before_script:
   - sudo ln -sf /usr/local/share/$NODE_JS/bin /usr/local/share/nodejs
   - sudo ln -sf /usr/local/share/$NODE_JS/bin /usr/local/bin/nodejs
   - sudo ln -sf /usr/local/share/$NODE_JS/bin /usr/bin/nodejs
-  - sudo npm install -g bower
+  - sudo /usr/local/share/nodejs/npm install -g bower
 
   # Set up the lincoln virtual domain.
   - sudo service apache2 restart
