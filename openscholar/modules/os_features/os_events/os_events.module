@@ -333,7 +333,10 @@ function os_events_process_node(&$variables) {
 
   // Hide the repeat rule summary from sidebar_teaser.
   if ($variables['view_mode'] == 'sidebar_teaser' && $variables['content']['field_date']['#items']) {
-    $rule = theme_date_repeat_display(array('item' => array('rrule' => $variables['content']['field_date']['#items'][0]['rrule'])));
+    $rule = theme_date_repeat_display(array(
+      'item' => array('rrule' => $variables['content']['field_date']['#items'][0]['rrule']),
+      'field' => field_info_field('field_date'),
+    ));
     $variables['content']['field_date'][0]['#markup'] = str_replace($rule, '', $variables['content']['field_date'][0]['#markup'] );
   }
 }
