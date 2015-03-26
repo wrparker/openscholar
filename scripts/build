@@ -67,7 +67,7 @@ cd $ROOT
 
   # Install bower components
   find openscholar/modules/frontend -type f -name 'bower.json' | sed -r 's|[^/]+$||' | uniq | while read path; do
-     bower install ".$path"
+     bower install "./$path"
   done
 
   # Check if sites/default exists, which means it is an existing installation.
