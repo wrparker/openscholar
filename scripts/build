@@ -66,7 +66,7 @@ cd $ROOT
   $DRUSH make openscholar/drupal-org-core.make $BUILD_ROOT/www-build
 
   # Install bower components
-  find openscholar/modules/frontend -type f -name 'bower.json' | sed -r 's|/[^/]+$||' | uniq | while read path; do
+  find openscholar/modules/frontend -type f -name 'bower.json' | sed -r 's|[^/]+$||' | uniq | while read path; do
      bower install $path
   done
 
