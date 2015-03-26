@@ -240,7 +240,13 @@ class os_sv_list extends os_boxes_default {
     $page_num = pager_find_page(PagerDefault::$maxElement);
 
     $this->set_cache_id($cid, $page_num);
-    if (($block['content'] = $this->get_cache()) === FALSE) {
+
+    // Check if rebuild is needed for this display.
+    $defaults = $this->options_defaults();
+    $display = $this->options['display'];
+    $rebuild = $defaults['rebuild']['display'][$display];
+
+    if (($block['content'] = $this->get_cache()) === FALSE || $rebuild) {
       $block['content'] = NULL;
       $assets = array();
       $this->options += $this->options_defaults();
@@ -335,7 +341,9 @@ class os_sv_list extends os_boxes_default {
         $block['assets'] = $assets;
         $block['content'] = "<div id='box-${delta}-page' data-page='${page_num}' data-delta='${delta}' class='${class}'>${content}</div>${pager}{$more}";
       }
-      $this->set_cache($block['content'], $assets);
+      if (!$rebuild) {
+        $this->set_cache($block['content'], $assets);
+      }
     }
 
     return $block;
