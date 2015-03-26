@@ -193,7 +193,7 @@ function os_basetheme_preprocess_node(&$vars) {
   elseif ($vars['node']->type == 'event' && $vars['page'] && !empty($vars['content']['field_date']['#items'][0]['rrule'])) {
     // We are in a page of a repeated event so we need to display the date
     // according to the delta.
-    $delta = !empty($_GET['delta']) ? $_GET['delta'] : 0;
+    $delta = isset($_GET['delta']) ? $_GET['delta'] : 0;
 
     // We move the wanted delta to be the first element in order to get the
     // desired markup.
@@ -209,7 +209,7 @@ function os_basetheme_preprocess_node(&$vars) {
     $field = field_view_field('node', $vars['node'], 'field_date', array('full'));
 
     // Rebuild the markup for the date field.
-    $vars['content']['field_date'][0]['#markup'] = $rule . ' ' .$field[0]['#markup'];
+    $vars['content']['field_date'][0]['#markup'] = $rule . ' ' . $field[0]['#markup'];
   }
 
   // Event persons, change title markup to h1

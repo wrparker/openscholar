@@ -234,12 +234,18 @@ function os_events_date_formatter_pre_view_alter(&$entity, $vars) {
       $entity->date_id = 'node.'.$entity->nid.'.field_date.'.$delta;
     }
     else {
-      // this is a single node, and we need to filter it down to just the next occurence of an event
-      if (count($vars['items']) > 1) {
-        foreach ($vars['items'] as $d => $i) {
-          if (REQUEST_TIME < strtotime($i['value'])) {
-            $entity->date_id = 'node.'.$entity->nid.'.field_date.'.$d;
-            break;
+      if (isset($_GET['delta'])) {
+        // The repeat number is set in the query string.
+        $entity->date_id = 'node.' . $entity->nid . '.field_date.' . $_GET['delta'];
+      }
+      else {
+        // This is a single node, and we need to filter it down to just the next occurence of an event.
+        if (count($vars['items']) > 1) {
+          foreach ($vars['items'] as $d => $i) {
+            if (REQUEST_TIME < strtotime($i['value'])) {
+              $entity->date_id = 'node.' . $entity->nid . '.field_date.' . $d;
+              break;
+            }
           }
         }
       }
