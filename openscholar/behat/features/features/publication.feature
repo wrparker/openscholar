@@ -76,7 +76,7 @@ Feature:
       And I press "Save configuration"
       And I visit "john/publications/confpapers-tests"
      Then I should not see "ConfPapers tests, in"
-     Then I should see "Confpapers Tests”. In"
+     Then I should see "Confpapers Tests.” In"
 
   @api
   Scenario: verify the user can see message the the publication won't display

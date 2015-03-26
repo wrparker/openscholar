@@ -1221,7 +1221,8 @@ class csl_text extends csl_format {
       $url = biblio_get_title_url_info($data);
       $text = l($text, $url['link'], $url['options']);
     }
-    return $text;
+
+    return $this->format($text);
   }
 }
 
