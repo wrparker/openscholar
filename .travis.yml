@@ -46,15 +46,8 @@ before_script:
   - sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin/phantomjs
   - sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/bin/phantomjs
 
-  # Install node, npm, and bower
-  - export NODE_JS="node-v0.12.1-linux-x64"
-  - wget http://nodejs.org/dist/v0.12.1/$NODE_JS.tar.gz
-  - sudo mv $NODE_JS.tar.gz /usr/local/share/
-  - sudo tar xzf /usr/local/share/$NODE_JS.tar.gz
-  - sudo ln -sf /usr/local/share/$NODE_JS/bin /usr/local/share/nodejs
-  - sudo ln -sf /usr/local/share/$NODE_JS/bin /usr/local/bin/nodejs
-  - sudo ln -sf /usr/local/share/$NODE_JS/bin /usr/bin/nodejs
-  - sudo /usr/local/share/nodejs/npm install -g bower
+  # Install  bower
+  - npm install -g bower
 
   # Set up the lincoln virtual domain.
   - sudo service apache2 restart
