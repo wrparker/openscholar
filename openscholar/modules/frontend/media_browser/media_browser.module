@@ -11,6 +11,9 @@ function media_browser_menu() {
   return $items;
 }
 
+/**
+ * Implements hook_library().
+ */
 function media_browser_library() {
   $info = array();
 
@@ -29,6 +32,88 @@ function media_browser_library() {
   );
 
   return $info;
+}
+
+/**
+ * Implements hook_library_alter().
+ *
+ * Replaces the old media browser code with our own
+ */
+function media_browser_library_alter(&$libs) {
+  if (isset($libs['media_browser'])) {
+    purl_disable(true);
+    $path = drupal_get_path('module', 'media_browser');
+    $libs['media_browser']['js'] += array(
+      $path.'/misc/MediaBrowserFilters.js' => array(),
+      $path.'/misc/MediaBrowserModule.js' => array(),
+      array(
+        'data' => array(
+          'paths' => array(
+            'moduleRoot' => url(drupal_get_path('module', 'media_browser'))
+          ),
+        ),
+        'type' => 'setting',
+      )
+    );
+    purl_disable(false);
+
+    $libs['media_browser']['dependencies'] = array_merge($libs['media_browser']['dependencies'], array(
+      array('os_common', 'JSPager'),
+      array('os_common', 'EntityService'),
+      array('media_browser', 'ng-file-upload'),
+      array('os_common', 'auth'),
+      array('os_common', 'angular-modal-service')
+    ));
+    $libs['media_browser']['css'] = array(
+      $path.'/misc/media_browser.mediaBrowser.css',
+    );
+
+    // we don't need any of this stuff anymore
+    // or even this library. Can't delete it though.
+    $libs['media_browser_page']['js'] = array();
+    $libs['media_browser_page']['css'] = array();
+    $libs['media_browser_page']['dependencies'] = array();
+  }
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function media_browser_element_info_alter(&$elements) {
+  $elements['media']['#process'][] = 'media_browser_element_process';
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function media_browser_field_widget_media_generic_form_alter(&$elements, &$forms_state, $context) {
+  //dpm($elements);
+  //$elements['#process'][] = 'media_browser_element_process';
+}
+
+/**
+ * Replaces the original media element's launcher buttons with our directive
+ */
+function media_browser_element_process($elem, $form_state, $form) {
+  $elem['preview']['#prefix'] = '<div class="preview" mb-open-modal>';
+
+  $elem['select']['#attributes']['mb-open-modal'] = '';
+  $elem['select']['#attributes']['class']
+    = array_diff($elem['select']['#attributes']['class'], array(
+    'launcher'
+  ));
+
+  return $elem;
+}
+
+/**
+ * Implements hook_wysiwyg_include_directory().
+ */
+function media_browser_wysiwyg_include_directory($type) {
+  switch ($type) {
+    case 'plugins':
+      return 'wysiwyg_plugins';
+  }
 }
 
 /**

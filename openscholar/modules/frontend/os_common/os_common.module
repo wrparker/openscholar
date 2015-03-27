@@ -89,6 +89,30 @@ function os_common_library() {
     )
   );
 
+
+  $bower = drupal_get_path('profile', 'openscholar').'/bower_components';
+  $info['bootstrap'] = array(
+    'title' => 'Boostrap',
+    'version' => '1.0',
+    'js' => array(
+      $bower.'/bootstrap/dist/js/bootstrap.js' => array(),
+    ),
+    'css' => array(
+      $bower.'/bootstrap/dist/css/bootstrap.css' => array(),
+    )
+  );
+
+  $info['angular-modal-service'] = array(
+    'title' => 'Angular Modal Service',
+    'version' => '1.0',
+    'js' => array(
+      $bower.'/angular-modal-service/dst/angular-modal-service.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'ui.dialog'),
+    )
+  );
+
   purl_disable(FALSE);
 
   return $info;
@@ -123,4 +147,6 @@ function os_common_preprocess_html(&$vars) {
  */
 function os_common_form_node_form_alter(&$form, &$form_state) {
   os_common_angular_app($form['#id']);
+
+  $form['#attached']['js'][] = drupal_get_path('module', 'os_common').'/modules/page-node-form.js';
 }

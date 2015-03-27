@@ -1,10 +1,12 @@
 (function () {
-  var rootPath = Drupal.settings.osRestModulePath,
-      restPath = Drupal.settings.restBasePath;
+  var rootPath;
 
-  angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'angularFileUpload', 'mediaBrowser.filters'])
+  angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'angularFileUpload', 'angularModalService', 'mediaBrowser.filters'])
+    .config(function (){
+       rootPath = Drupal.settings.paths.moduleRoot;
+    })
   .controller('BrowserCtrl', ['$scope', '$filter', '$http', '$templateCache', 'EntityService', '$sce', '$upload',
-      function ($scope, $filter, $http, $templateCache, EntityService, $sce, $upload) {
+      function ($scope, $filter, $http, $templateCache, EntityService, $sce, $upload, close) {
     var service = new EntityService('files', 'id');
     $scope.files = [];
     $scope.numFiles = 0;
@@ -46,7 +48,7 @@
             basename = $files[i].name.replace(/\.[a-zA-Z0-9]*$/, ''),
             extension = $files[i].name.replace(basename, '');
 
-        for (var j in $scope.files) {
+        for (var j=0; j<$scope.files.length; j++) {
           // find any file with a name that matches "basename{_dd}.ext" and add it to list
           if ($scope.files[j].filename.indexOf(basename) !== -1 && $scope.files[j].filename.indexOf(extension) !== -1) {
             similar.push($scope.files[j]);
@@ -230,6 +232,61 @@
       }
 
       service.add(data);
+    }
+  }])
+  .directive('mbOpenModal', ['ModalService', function(ModalService) {
+
+    function link(scope, elem, attr,contr) {
+      elem.bind('click', clickHandler);
+    }
+
+    function clickHandler() {
+      // get stuff from the element we clicked on and Drupal.settings
+      open({});
+    }
+
+    function open(params) {
+      ModalService.showModal({
+        templateUrl: rootPath+'/templates/browser.html',
+        controller: 'BrowserCtrl',
+        inputs: {
+          params: params || {}
+        }
+      }).then(function (modal) {
+        modal.element.dialog();
+        modal.close.then(function (result) {
+          console.log(result);
+          // run the function passed to us
+          if (result) {
+            params.onSelect(result);
+          }
+        });
+      });
+    }
+
+    Drupal.media = Drupal.media || {};
+    Drupal.media.popups = Drupal.media.popups || {};
+    Drupal.media.popups.mediaBrowser = function (onSelect, globalOptions, pluginOptions, widgetOptions) {
+      var options = Drupal.media.popups.mediaBrowser.getDefaults();
+      options.global = $.extend({}, options.global, globalOptions);
+      options.plugins = pluginOptions;
+      options.widget = $.extend({}, options.widget, widgetOptions);
+
+
+      // Params to send along to the iframe.  WIP.
+      var params = {};
+      $.extend(params, options.global);
+      params.plugins = options.plugins;
+      params.onSelect = onSelect;
+
+      open(params);
+    }
+
+
+    return {
+      template: '<ng-transclude></ng-transclude>',
+      link: link,
+      transclude: true
     }
   }]);
 })();
