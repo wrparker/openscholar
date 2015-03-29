@@ -372,6 +372,9 @@ class os_sv_list extends os_boxes_default {
 
     $this->_plugins_invoke('sort_alter', $query);
 
+    // Always use the sticky as the first order criterion.
+    $this->order_by_sticky($query);
+
     // Execute.
     $result = $query->execute();
     return (isset($result[$this->entity_type])) ? array_keys($result[$this->entity_type]) : array();
@@ -601,5 +604,38 @@ class os_sv_list extends os_boxes_default {
         }
         break;
     }
-  }  
+  }
+
+  /**
+   * Add the sticky sort if not already in the query and make it first
+   * priority.
+   *
+   * @param $query
+   *  The query object.
+   */
+  private function order_by_sticky(&$query) {
+    $sticky = array(
+      'type' => 'property',
+      'specifier' => 'sticky',
+      'direction' => 'DESC',
+    );
+
+    $sorts = &$query->order;
+    if (empty($sorts)) {
+      // No sort was set yet. Set it to sticky.
+      $sorts[] = $sticky;
+      return;
+    }
+
+    // Look for the sticky sort. If it is already in the query,remove it.
+    foreach ($sorts as $k => $sort) {
+      if ($sort['specifier'] == 'sticky') {
+        array_splice($sorts, $k, 1);
+        break;
+      }
+    }
+
+    // Add the sort by sticky to be the first sort.
+    array_unshift($sorts, $sticky);
+  }
 }
