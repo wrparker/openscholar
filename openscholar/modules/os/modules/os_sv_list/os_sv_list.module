@@ -138,16 +138,22 @@ function os_sv_list_query_sv_list_biblio_alter(&$query) {
   $query->join('biblio', 'b', 'b.nid = ogm.etid');
   $query->orderBy('b.biblio_year', 'DESC');
 
-  // Order first by the biblio year, and lastly by sticky.
-  $fields =& $query->getOrderBy();
-  if (!empty($fields['node.sticky'])) {
-    $order = $fields['node.sticky'];
-    unset($fields['node.sticky']);
-    $fields['node.sticky'] = $order;
+  // If this query is used for the sv_list plugin, keep the sticky sort as is.
+  $sv_list = $query->getMetaData('sv_list');
+  if (!$sv_list) {
+    // The query is not used for the sv_list. Order first by the biblio year,
+    // and then by sticky.
+    $fields =& $query->getOrderBy();
+    if (!empty($fields['node.sticky'])) {
+      $order = $fields['node.sticky'];
+      unset($fields['node.sticky']);
+      $fields['node.sticky'] = $order;
+    }
   }
-  //Order by biblio_date
+
+  // Order by biblio_date.
   $query->orderBy('b.biblio_date', 'DESC');
-  //Lastly order by created.
+  // Lastly order by created.
   $query->orderBy('node.created', 'DESC');
 }
 

@@ -611,9 +611,12 @@ class os_sv_list extends os_boxes_default {
    * priority.
    *
    * @param $query
-   *  The query object.
+   *   The query object.
    */
   private function order_by_sticky(&$query) {
+    // Make note of the fact this query is executed for the list of posts widget.
+    $query->addMetaData('sv_list', TRUE);
+
     $sticky = array(
       'type' => 'property',
       'specifier' => 'sticky',
@@ -627,7 +630,7 @@ class os_sv_list extends os_boxes_default {
       return;
     }
 
-    // Look for the sticky sort. If it is already in the query,remove it.
+    // Look for the sticky sort. If it is already in the query, remove it.
     foreach ($sorts as $k => $sort) {
       if ($sort['specifier'] == 'sticky') {
         array_splice($sorts, $k, 1);
