@@ -241,12 +241,7 @@ class os_sv_list extends os_boxes_default {
 
     $this->set_cache_id($cid, $page_num);
 
-    // Check if rebuild is needed for this display.
-    $defaults = $this->options_defaults();
-    $display = $this->options['display'];
-    $rebuild = !empty($defaults['rebuild']['display'][$display]) ? $defaults['rebuild']['display'][$display] : FALSE;
-
-    if (($block['content'] = $this->get_cache()) === FALSE || $rebuild) {
+    if (($block['content'] = $this->get_cache()) === FALSE) {
       $block['content'] = NULL;
       $assets = array();
       $this->options += $this->options_defaults();
@@ -341,9 +336,7 @@ class os_sv_list extends os_boxes_default {
         $block['assets'] = $assets;
         $block['content'] = "<div id='box-${delta}-page' data-page='${page_num}' data-delta='${delta}' class='${class}'>${content}</div>${pager}{$more}";
       }
-      if (!$rebuild) {
-        $this->set_cache($block['content'], $assets);
-      }
+      $this->set_cache($block['content'], $assets);
     }
 
     return $block;
