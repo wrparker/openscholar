@@ -244,7 +244,7 @@ class os_sv_list extends os_boxes_default {
     // Check if rebuild is needed for this display.
     $defaults = $this->options_defaults();
     $display = $this->options['display'];
-    $rebuild = $defaults['rebuild']['display'][$display];
+    $rebuild = !empty($defaults['rebuild']['display'][$display]) ? $defaults['rebuild']['display'][$display] : FALSE;
 
     if (($block['content'] = $this->get_cache()) === FALSE || $rebuild) {
       $block['content'] = NULL;
