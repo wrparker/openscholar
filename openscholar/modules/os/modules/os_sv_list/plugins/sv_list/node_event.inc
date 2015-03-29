@@ -13,21 +13,6 @@ $plugin = array(
 );
 
 class sv_list_node_event extends sv_list_plugin  {
-
-  /**
-   * Sets values of options in new boxes.
-   */
-  public function options_defaults() {
-    return array(
-      // Specify in which cases the list should be rebuilt.
-      'rebuild' => array(
-        'display' => array(
-          'full' => TRUE,
-        ),
-      ),
-    );
-  }
-
   /**
    * @function register_sorts()
    *
