@@ -361,7 +361,7 @@ class csl_format extends csl_rendering_element {
    *   The reformatted text.
    */
   protected function handleCapitalizeCaseConversion($text) {
-    $array = array('A' => 'a', 'An' => 'an', 'And' => 'and', 'As' => 'as',
+    $stop_words = array('A' => 'a', 'An' => 'an', 'And' => 'and', 'As' => 'as',
       'At' => 'at', 'But' => 'but', 'By' => 'by', 'Down' => 'down',
       'For' => 'for', 'From' => 'from', 'In' => 'in', 'Into' => 'into',
       'Nor' => 'nor', 'Of' => 'of', 'On' => 'on', 'Onto' => 'onto',
@@ -383,11 +383,11 @@ class csl_format extends csl_rendering_element {
         continue;
       }
 
-      if (!isset($array[$word])) {
+      if (!isset($stop_words[$word])) {
         continue;
       }
 
-      $word = str_replace($word, $array[$word], $word);
+      $word = str_replace($word, $stop_words[$word], $word);
     }
 
     return implode(' ', $tear_down);
