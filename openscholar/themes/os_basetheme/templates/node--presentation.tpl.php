@@ -11,6 +11,7 @@ hide($content['comments']);
 hide($content['links']);
 
 if (!$page) {
+  $body_value = render($content['body']);
   if (isset($content['field_presentation_location']) && $content['field_presentation_location']['#items'][0]['value'] !== NULL) {
     $location_value = $content['field_presentation_location']['#items'][0]['value'];
   }
@@ -63,14 +64,14 @@ if (!$page) {
       </header>
     <?php endif; ?>
     <?php print render($title_suffix); ?>
-  
+
     <?php if(!empty($user_picture) || $display_submitted): ?>
       <footer<?php print $footer_attributes; ?>>
         <?php print $user_picture; ?>
         <p class="author-datetime"><?php print $submitted; ?></p>
       </footer>
     <?php endif; ?>
-  
+
     <div<?php print $content_attributes; ?>>
       <?php print render($content); ?>
     </div>
@@ -79,8 +80,11 @@ if (!$page) {
       <nav<?php print $links_attributes; ?>><?php print $links; ?></nav>
     <?php endif; ?>
 
-  <?php print render($content['comments']); ?>
-
+    <?php print render($content['comments']); ?>
+  <?php else: ?>
+    <div<?php print $content_attributes; ?>>
+      <?php print $body_value; ?>
+    </div>
   <?php endif; ?>
   </div> <!-- /div.node-inner -->
 </article>
