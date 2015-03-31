@@ -372,8 +372,10 @@ class os_sv_list extends os_boxes_default {
 
     $this->_plugins_invoke('sort_alter', $query);
 
-    // Always use the sticky as the first order criterion.
-    $this->order_by_sticky($query);
+    // Always use the sticky as the first order criterion when displaying nodes.
+    if ($query->entityConditions['entity_type']['value'] == 'node') {
+      $this->order_by_sticky($query);
+    }
 
     // Execute.
     $result = $query->execute();
