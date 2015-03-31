@@ -56,20 +56,4 @@ class os_sv_list_box extends os_sv_list {
   function sort_alpha(EntityFieldQuery &$efq) {
     $efq->propertyOrderBy('title', 'ASC');
   }
-
-  protected function set_cache_id($bundle = NULL, $page = NULL) {
-    // In case of an event page, we need to have a cached version of the box
-    // for each event.
-    // @TODO: we should cache by the date id and not nid. Otherwise there is a problem with repeating events.
-    if ($bundle == 'node:event') {
-      $object = menu_get_object();
-      dpm($object);
-      if ($object && $object->type == 'event'){
-        $this->cache_id = parent::set_cache_id($bundle, $page) . ':' . $object->nid;
-        return $this->cache_id;
-      }
-    }
-
-    return parent::set_cache_id($bundle, $page);
-  }
 }
