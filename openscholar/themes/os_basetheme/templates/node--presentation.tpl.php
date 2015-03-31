@@ -11,7 +11,10 @@ hide($content['comments']);
 hide($content['links']);
 
 if (!$page) {
-  $body_value = render($content['body']);
+  $body_value = '';
+  if (!empty($content['body']['#items'][0]['value'])) {
+    $body_value = ($content['body']['#items'][0]['value']);
+  }
   if (isset($content['field_presentation_location']) && $content['field_presentation_location']['#items'][0]['value'] !== NULL) {
     $location_value = $content['field_presentation_location']['#items'][0]['value'];
   }
@@ -81,7 +84,8 @@ if (!$page) {
     <?php endif; ?>
 
     <?php print render($content['comments']); ?>
-  <?php else: ?>
+  <?php endif; ?>
+  <?php if (!empty($sv_list)): ?>
     <div<?php print $content_attributes; ?>>
       <?php print $body_value; ?>
     </div>
