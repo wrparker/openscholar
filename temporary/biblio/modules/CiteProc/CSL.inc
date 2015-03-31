@@ -1409,7 +1409,7 @@ class csl_bibliography  extends csl_format {
   function render($data, $mode = NULL) {
     $text = $this->layout->render($data, 'bibliography');
     if ($this->{'hanging-indent'} == 'true') {
-      $text = '<div style="  text-indent: -25px; padding-left: 25px;">' . $text . '</div>';
+      $text = '<div class="bib-neg-indent">' . $text . '</div>';
     }
     $text = str_replace('?.', '?', str_replace('..', '.', $text));
     return $this->format($text);
