@@ -423,6 +423,8 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
         '#type' => 'hidden',
         '#value' => isset($node->biblio_edition) ? $node->biblio_edition : '',
       );
+      // Hide the unneeded second patent number.
+      unset($form['biblio_tabs'][9]['biblio_issn']);
       break;
   }
 
