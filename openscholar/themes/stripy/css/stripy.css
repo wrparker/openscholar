@@ -1,5 +1,3 @@
-/* D6 retro css for older themes */
-#columns {padding:0 10px;}
 
 body {
     background: #FFF;
@@ -20,10 +18,7 @@ body.navbar-off #page {
   padding-bottom: 180px;
   }
 
-.wrap {
-  width: 910px;
-  margin: 0 auto;
-  }
+
 
 .biblio-title a, .biblio-title-chicago a,
 a,
@@ -70,10 +65,7 @@ h1#page-title {font-size:1.3em;}
 
 
 
-body.sidebar-first #columns .hg-container,
-body.header-left-main #header-container .hg-container {
-  padding-right: 20px;
-  }
+
 
 .region-sidebar-second .region-inner {
     border-left: 1px solid #ccc;
@@ -87,10 +79,7 @@ body.two-sidebars .region-sidebar-first {
     border: none;
     }
 
-#footer {
-    text-align: center;
-    font-size: .9em;
-    }
+
 
 /* HEADER ELEMENTS */
 
@@ -129,16 +118,15 @@ margin-bottom:10px;
   }
 
 #menu-bar li {
-    margin-right: 1.5em;
+ 
     text-transform: uppercase;
-    font-size: 17px;
-    background:none;
+
     }
 
 #menu-bar li a, #menu-bar li a:visited {
     color: #f5f5d8;
     text-decoration:none;
-    padding:8px 10px;
+ 
     }
 
 #menu-bar li a:hover, #menu-bar li a.active {
@@ -148,21 +136,14 @@ margin-bottom:10px;
     
    /** NICE MENUS **/
 #menu-bar ul.nice-menu ul {
-	margin-top:-8px;
+
 	border:none;
 		background:#777;
 	}
 	
-#menu-bar ul.nice-menu ul ul {
-	margin-top:0;
-}
 
-#menu-bar ul.nice-menu ul ul li {
-	margin-bottom:0;
-}	
-	
 #menu-bar ul.nice-menu ul li {
-	margin-top:0;
+	
 	background:#777;
 }
 	
@@ -173,16 +154,11 @@ margin-bottom:10px;
 
 
 
-	
 .sidebar #block-os-primary-menu ul.menu a {
 	text-decoration:none !important;
 	}	
 	
-	
-ul.nice-menu-left a, ul.nice-menu-left ul a {
-    padding-left: 0;
-}	
-	
+
 	
 
 /* Nodes */
