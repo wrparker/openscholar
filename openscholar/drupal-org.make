@@ -398,7 +398,7 @@ projects[transliteration][version] = 3.1
 
 projects[twitter_pull][subdir] = "contrib"
 projects[twitter_pull][version] = 1.0-rc4
-projects[twitter_pull][patch][] = 'http://drupal.org/files/twitter_pull-twitter_api_php-1781024-40.patch'
+projects[twitter_pull][patch][] = 'https://www.drupal.org/files/twitter_pull_twitter_api_php-1781024-46.patch'
 
 projects[views][subdir] = "contrib"
 projects[views][version] = 3.8
