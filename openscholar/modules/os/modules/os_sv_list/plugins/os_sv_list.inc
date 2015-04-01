@@ -286,11 +286,19 @@ class os_sv_list extends os_boxes_default {
         $more = ($this->options['more']) ? l($this->options['more_text'], $this->options['more_link'], array('attributes' => array('class' => array('more-link')))) : '';
       }
 
+      // Full view modes events have different display in the page and outside
+      // the page. When rendering the box with events for the first time in the
+      // event page the cache will store one of the events as it would displayed
+      // in the page.
+      // In order to prevent it we need get a fresh copy of the entity so we
+      // could add the sv_list property and not change the node object viewed in
+      // the page and the node rendering will render the event as it was
+      // displayed in a full view mode.
+      $static_reset = $this->entity_type == 'node' && !empty($this->options['content_type']) && $this->options['content_type'] == 'event';
+
       // Give plugins a chance to alter the entities after loading but before
       // rendering. see events.
-      // When viewing nodes we wouldn't load them from the static cache due to
-      // problems when viewing the node in the node page.
-      $entities = entity_load($this->entity_type, $ids, array(), $this->entity_type == 'node');
+      $entities = entity_load($this->entity_type, $ids, array(), $static_reset);
       $entities = array_map(function ($e) { $e->sv_list = TRUE; return $e; }, $entities);
       $this->_plugins_invoke('entities_alter', $entities);
 
