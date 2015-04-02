@@ -309,5 +309,17 @@ function _os_boxes_boxes_plugins() {
     );
   }
 
+  $info['os_boxes_dataverse_search'] = array(
+    'title' => 'Dataverse Search Box',
+    'description' => 'Add a way for visitors on your website to be able to search Dataverse',
+    'tags' => array('Misc'),
+    'handler' => array(
+      'class' => 'os_boxes_dataverse_search',
+      'file' => 'os_boxes_dataverse_search.inc',
+      'path' => $path .'/os_boxes_dataverse_search',
+      'parent' => 'os_boxes_default',
+    ),
+  );
+
   return $info;
 }
