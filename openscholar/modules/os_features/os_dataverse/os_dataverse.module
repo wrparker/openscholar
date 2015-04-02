@@ -115,3 +115,25 @@ function _os_dataverse_alias_validate($element, &$form_state) {
   }
 }
 
+/**
+ * Implements hook_boxes_plugins().
+ */
+ function os_dataverse_boxes_plugins(){
+ $path = drupal_get_path('module', 'os_dataverse') . '/plugins';
+ $info = array();
+
+  $info['os_boxes_dataverse_search'] = array(
+    'title' => 'Dataverse Search Box',
+    'description' => 'Add a way for visitors on your website to be able to search Dataverse',
+    'tags' => array('Misc'),
+    'handler' => array(
+      'class' => 'os_boxes_dataverse_search',
+      'file' => 'os_boxes_dataverse_search.inc',
+      'path' => $path,
+      'parent' => 'os_boxes_default',
+    ),
+  );
+
+  return $info;
+}
+
