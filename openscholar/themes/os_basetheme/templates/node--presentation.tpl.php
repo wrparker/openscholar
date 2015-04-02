@@ -13,7 +13,7 @@ hide($content['links']);
 if (!$page) {
   $body_value = '';
   if (!empty($content['body']['#items'][0]['value'])) {
-    $body_value = ($content['body']['#items'][0]['value']);
+    $body_value = render($content['body']);
   }
   if (isset($content['field_presentation_location']) && $content['field_presentation_location']['#items'][0]['value'] !== NULL) {
     $location_value = $content['field_presentation_location']['#items'][0]['value'];
