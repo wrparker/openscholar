@@ -17,8 +17,8 @@ function cp_content_views_data() {
     'help' => t('Show the content referencing files.'),
     // This is a dummy field, so point it to a real field that we need - the
     // group ID
-    'real field' => 'fid',
     'field' => array(
+      'field' => 'fid',
       'handler' => 'cp_content_handler_field_referencing_nodes',
     ),
   );
