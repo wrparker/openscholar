@@ -1,25 +1,127 @@
-(function () {
-  var rootPath;
+(function ($) {
+  var rootPath,
+    open = angular.noop;
 
   angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'angularFileUpload', 'angularModalService', 'mediaBrowser.filters'])
     .config(function (){
        rootPath = Drupal.settings.paths.moduleRoot;
     })
-  .controller('BrowserCtrl', ['$scope', '$filter', '$http', '$templateCache', 'EntityService', '$sce', '$upload',
-      function ($scope, $filter, $http, $templateCache, EntityService, $sce, $upload, close) {
-    var service = new EntityService('files', 'id');
+    .run(['ModalService', function (ModalService) {
+      open = function (params) {
+        params = jQuery.extend(true, {}, defaultParams(), params);
+        ModalService.showModal({
+          templateUrl: rootPath+'/templates/browser.html',
+          controller: 'BrowserCtrl',
+          inputs: {
+            params: params
+          }
+        }).then(function (modal) {
+          modal.element.dialog(params.dialog);
+          modal.close.then(function (result) {
+            console.log(result);
+            // run the function passed to us
+            if (result) {
+              params.onSelect(result);
+            }
+          });
+        });
+      }
+
+      function defaultParams() {
+        var params = {
+          dialog: {
+            buttons: {},
+            dialogClass: 'media-wrapper',
+            modal: true,
+            draggable: false,
+            resizable: false,
+            minWidth: 600,
+            width: 800,
+            height: 650,
+            position: 'center',
+            title: undefined,
+            overlay: {
+              backgroundColor: '#000000',
+              opacity: 0.4
+            },
+            zIndex: 10000,
+            close: function (event, ui) {
+              $(event.target).remove();
+            }
+          },
+          browser: {
+            panes: {
+              web: true,
+              upload: true,
+              library: true
+            },
+            allowedTypes: {
+              image: true,
+              video: true,
+              audio: true,
+              executable: true,
+              document: true
+            }
+          },
+          onSelect: angular.noop
+        };
+
+        return params;
+      }
+
+      Drupal.media = Drupal.media || {};
+      Drupal.media.popups = Drupal.media.popups || {};
+      var oldPopup = Drupal.media.popups.mediaBrowser;
+      Drupal.media.popups.mediaBrowser = function (onSelect, globalOptions, pluginOptions, widgetOptions) {
+        var options = Drupal.media.popups.mediaBrowser.getDefaults();
+        options.global = $.extend({}, options.global, globalOptions);
+        options.plugins = pluginOptions;
+        options.widget = $.extend({}, options.widget, widgetOptions);
+
+
+        // Params to send along to the iframe.  WIP.
+        var params = {};
+        $.extend(params, options.global);
+        params.plugins = options.plugins;
+        params.onSelect = onSelect;
+
+        open(params);
+      }
+
+      for (var k in oldPopup) {
+        if (!Drupal.media.popups.mediaBrowser[k]) {
+          Drupal.media.popups.mediaBrowser[k] = oldPopup[k];
+        }
+      }
+    }])
+  .controller('BrowserCtrl', ['$scope', '$filter', '$http', '$templateCache', 'EntityService', '$sce', '$upload', 'params', 'close',
+      function ($scope, $filter, $http, $templateCache, EntityService, $sce, $upload, params, close) {
+
+    // Initialization
+    var service = new EntityService('files', 'id'),
+      toEditForm = false;
     $scope.files = [];
     $scope.numFiles = 0;
     $scope.templatePath = rootPath;
     $scope.selection = 0;
-    $scope.selection_form = '';
+    $scope.form = '';
     $scope.pane = 'upload';
     $scope.toBeUploaded = [];
     $scope.dupes = [];
+    $scope.showButtons = false;
+    $scope.params = params.browser;
+    $scope.editing = false;
+    $scope.deleting = false;
+
+    if (close) {
+      $scope.showButtons = true;
+    }
 
     // Watch for changes in file list
     $scope.$on('EntityService.files.add', function (event, file) {
       //$scope.files.push(file)
+      $scope.pane = 'library';
+      $scope.setSelection(file.id);
     });
 
     $scope.$on('EntityService.files.fetch', function (event, files) {
@@ -41,6 +143,9 @@
     // looks for any files with a similar basename and extension to this file
     // if it finds any, it adds it to a list of dupes, then scans every file to find what the new name should be
     $scope.checkForDupes = function($files, $event, $rejected) {
+      if ($files.length == 1) {
+        toEditForm = true;
+      }
       var toBeUploaded = [];
       $scope.dupes = [];
       for (var i=0; i<$files.length; i++) {
@@ -168,6 +273,7 @@
           progress = e;
         }).success(function (e) {
           for (var i = 0; i< e.data.length; i++) {
+            e.data[i].new = true;
             $scope.files.push(e.data[i]);
           }
 
@@ -181,6 +287,11 @@
             uploading = false;
             progress = null;
             currentlyUploading = 0;
+            $scope.pane = 'library';
+            if (toEditForm) {
+              $scope.setSelection(e.data[i].id);
+              $scope.editing = true;
+            }
           }
         });
       }
@@ -201,18 +312,48 @@
     $scope.setSelection = function (fid) {
       $scope.selection = fid;
       $scope.selected_file = angular.copy(service.get(fid));
-      switch ($scope.selected_file.type) {
-        case 'image':
-          $scope.selection_form = rootPath+'/templates/file_edit_image.html';
-          break;
-        default:
-          $scope.selection_form = rootPath+'/templates/file_edit_default.html';
+      if ($scope.editting) {
+        switch ($scope.selected_file.type) {
+          case 'image':
+            $scope.form = rootPath+'/templates/file_edit_image.html';
+            break;
+          default:
+            $scope.form = rootPath+'/templates/file_edit_default.html';
+        }
+      }
+      else if ($scope.deleting) {
+        $scope.form = rootPath+'/templates/delete.html';
       }
     };
 
     // preload file edit templates
     $http.get(rootPath+'/templates/file_edit_default.html', {cache:$templateCache});
     $http.get(rootPath+'/templates/file_edit_image.html', {cache:$templateCache});
+    $http.get(rootPath+'/templates/delete.html', {cache:$templateCache});
+
+    $scope.editMode = function (starting) {
+      $scope.editting = starting;
+      if (starting) {
+        $scope.deleteMode(false);
+        if ($scope.selected_file) {
+          switch ($scope.selected_file.type) {
+            case 'image':
+              $scope.form = rootPath+'/templates/file_edit_image.html';
+              break;
+            default:
+              $scope.form = rootPath+'/templates/file_edit_default.html';
+          }
+        }
+      }
+    }
+
+    $scope.deleteMode = function (starting) {
+      $scope.deleting = starting;
+      if (starting) {
+        $scope.editMode(false);
+        $scope.form = rootPath+'/templates/delete.html';
+      }
+    }
 
     // file edit form methods
     $scope.save = function() {
@@ -233,6 +374,18 @@
 
       service.add(data);
     }
+
+    $scope.insert = function () {
+      var results = [];
+      $scope.selected_file.fid = $scope.selected_file.id; // hack to prevent rewriting a lot of Media's code.
+      results.push($scope.selected_file);
+
+      close(results);
+    }
+
+    $scope.cancel = function () {
+      close([]);
+    }
   }])
   .directive('mbOpenModal', ['ModalService', function(ModalService) {
 
@@ -240,48 +393,12 @@
       elem.bind('click', clickHandler);
     }
 
-    function clickHandler() {
+    function clickHandler(event) {
+      event.preventDefault();
+      console.log(event);
       // get stuff from the element we clicked on and Drupal.settings
       open({});
     }
-
-    function open(params) {
-      ModalService.showModal({
-        templateUrl: rootPath+'/templates/browser.html',
-        controller: 'BrowserCtrl',
-        inputs: {
-          params: params || {}
-        }
-      }).then(function (modal) {
-        modal.element.dialog();
-        modal.close.then(function (result) {
-          console.log(result);
-          // run the function passed to us
-          if (result) {
-            params.onSelect(result);
-          }
-        });
-      });
-    }
-
-    Drupal.media = Drupal.media || {};
-    Drupal.media.popups = Drupal.media.popups || {};
-    Drupal.media.popups.mediaBrowser = function (onSelect, globalOptions, pluginOptions, widgetOptions) {
-      var options = Drupal.media.popups.mediaBrowser.getDefaults();
-      options.global = $.extend({}, options.global, globalOptions);
-      options.plugins = pluginOptions;
-      options.widget = $.extend({}, options.widget, widgetOptions);
-
-
-      // Params to send along to the iframe.  WIP.
-      var params = {};
-      $.extend(params, options.global);
-      params.plugins = options.plugins;
-      params.onSelect = onSelect;
-
-      open(params);
-    }
-
 
     return {
       template: '<ng-transclude></ng-transclude>',
@@ -289,4 +406,4 @@
       transclude: true
     }
   }]);
-})();
+})(jQuery);

@@ -2,5 +2,6 @@
 <input id="file_name" type="text" ng-model="$parent.selected_file.name" class="form-text">
 
 <div class="control">
-    <button ng-click="$parent.save()">Save</button> | <button ng-click="$parent.delete()">Delete</button>
+    <button ng-click="$parent.save()">Save</button> |
+    <button ng-click="$parent.editMode(false)">Cancel</button>
 </div>

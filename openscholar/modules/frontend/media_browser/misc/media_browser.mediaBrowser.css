@@ -40,38 +40,39 @@ div.file-search {
   margin: 9px 0;
 }
 
-/* Full listing */
+/* Full listing *
 .results {
   margin-right: 230px;
   border-right: 1px solid lightgray;
-}
+}*/
 
 /* Single file thumbnails */
 .media-item {
-  background: #FFFFFF;
-  border: 1px solid #CCCCCC;
   padding: 5px;
-  width: 100px;
-  display: inline-block;
-  margin: 0 14px 10px 0;
-  vertical-align: top;
+  width: auto;
 }
 
-.media-item .contextual-links-wrapper {
+.mb-preview,
+.mb-title,
+.mb-filename,
+.mb-created,
+.mb-file-actions {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/**
+ Contextual wrappers are out of place here
+ Element invisible causes scrollbars when it really shouldn't.
+ */
+.media-item .contextual-links-wrapper,
+.media-item .element-invisible {
   display: none;
 }
 
 .media-item img {
   height: auto;
-  width: 100%;
-}
-
-.media-item .media-item-label {
-  text-align: center;
-  font-size: 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  width: 50px;
 }
 
 .media-item.selected {
@@ -94,11 +95,20 @@ div.file-search {
 /* File Edit panel */
 #file-edit-section {
   position: absolute;
-  width: 205px;
+  width: 300px;
   top: 100px;
   bottom: 42px;
   right: 18px;
   overflow: auto;
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  padding: 10px;
+  display: none;
+}
+
+#file-edit-section.open {
+  display: block;
 }
 
 #file-edit-section input {
@@ -162,4 +172,11 @@ div.file-search {
   background-color: lightblue;
   height: 100%;
   border-radius: 15px;
+}
+
+/**
+ * Dialog stuff
+ */
+.ui-dialog-titlebar {
+  display: none;
 }

@@ -49,20 +49,34 @@
                 <label for="file-search-input">Search</label>
                 <input id="file-search-input" type="text" ng-model="$parent.search" class="form-text" size="30" maxlength="128">
             </div>
+            <div id="mb-library-header">
+                <span class="mb-preview">&nbsp;</span>
+                <span class="mb-title">Title</span>
+                <span class="mb-filename">Filename</span>
+                <span class="mb-created">Upload Date</span>
+                <span class="mb-file-actions">&nbsp;</span>
+            </div>
             <div js-pager="file in files | mbFilename:$parent.search | orderBy:'-timestamp' track by file.id" page-size="10">
                 <div class="media-item" data-fid="{{file.id}}" ng-click="$parent.setSelection(file.id)" ng-class="{selected : $parent.selection == file.id}">
-                    <div class="media-item-thumbnail" ng-bind-html="file.preview">
-                    </div>
-                    <div class="media-item-label" title="{{file.orig}}">
-                        {{file.name}} <!--<span ng-show="file.name != file.orig">({{file.orig}})</span>-->
-                    </div>
+                    <span class="mb-preview" ng-bind-html="file.preview"></span>
+                    <span class="mb-title">{{file.name}}</span>
+                    <span class="mb-filename">{{file.uri}}</span>
+                    <span class="mb-created">{{file.created | date:'shortDate'}}</span>
+                    <span class="mb-file-actions">
+                        <span class="mb-actions-edit" ng-click="$parent.editMode(true)">Edit</span> |
+                        <span class="mb-actions-delete" ng-click="$parent.deleteMode(true)">Delete</span>
+                    </span>
                 </div>
             </div>
             <div class="loading" ng-show="numFiles==0">
                 Loading...
             </div>
-            <div id="file-edit-section" ng-show="selection">
-                <div ng-include="selection_form"></div>
+            <div id="file-edit-section" ng-class="{open : $parent.editting || $parent.deleting}">
+                <div ng-include="$parent.form"></div>
+            </div>
+            <div class="actions" ng-show="$parent.showButtons">
+                <button ng-click="$parent.insert()" ng-disabled="!$parent.selected_file">Insert</button>
+                <button ng-click="$parent.cancel()">Cancel</button>
             </div>
         </div>
     </div>
