@@ -353,8 +353,8 @@ body.node-type-biblio .node-type-biblio .field-field-biblio-image {
   }
 
 .bib-neg-indent {
-	text-indent:0 !important;
-	}
+    text-indent:0 !important;
+  }
 
 #citation-wrapper,
 body.node-type-biblio .biblio-export {
