@@ -5,6 +5,7 @@ package = Features
 dependencies[] = context
 dependencies[] = ctools
 dependencies[] = os
+features[box][] = os_dataverse_list_box
 features[box][] = os_dataverse_search_box
 features[context][] = dataverse_dataverse
 features[ctools][] = context:context:3
