@@ -48,7 +48,7 @@ function media_browser_library_alter(&$libs) {
   }
 
   purl_disable(true);
-  $path = libraries_get_path('components');
+  $path = drupal_get_path('module', 'media_browser');
 
   $libs['media_browser']['js'] += array(
     $path . '/misc/MediaBrowserFilters.js' => array(),
