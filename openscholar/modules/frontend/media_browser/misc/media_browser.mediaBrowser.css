@@ -61,6 +61,22 @@ div.file-search {
   vertical-align: middle;
 }
 
+.mb-preview {
+  width: 60px;
+}
+
+.mb-title {
+  width: 300px;
+}
+
+.mb-filename {
+  width: 200px;
+}
+
+.mb-created {
+  width: 100px;
+}
+
 /**
  Contextual wrappers are out of place here
  Element invisible causes scrollbars when it really shouldn't.

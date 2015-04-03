@@ -60,8 +60,8 @@
                 <div class="media-item" data-fid="{{file.id}}" ng-click="$parent.setSelection(file.id)" ng-class="{selected : $parent.selection == file.id}">
                     <span class="mb-preview" ng-bind-html="file.preview"></span>
                     <span class="mb-title">{{file.name}}</span>
-                    <span class="mb-filename">{{file.uri}}</span>
-                    <span class="mb-created">{{file.created | date:'shortDate'}}</span>
+                    <span class="mb-filename">{{file.filename}}</span>
+                    <span class="mb-created">{{(file.timestamp + '000') | date:'short'}}</span>
                     <span class="mb-file-actions">
                         <span class="mb-actions-edit" ng-click="$parent.editMode(true)">Edit</span> |
                         <span class="mb-actions-delete" ng-click="$parent.deleteMode(true)">Delete</span>
