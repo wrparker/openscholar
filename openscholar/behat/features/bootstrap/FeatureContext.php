@@ -277,17 +277,19 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @When /^I create a new event with title "([^"]*)"$/
+   * @When /^I create a new "([^"]*)" with title "([^"]*)" in the site "([^"]*)"$/
    */
-  public function iCreateANewEventWithTitle($title) {
+  public function iCreateANewEventWithTitle($type, $title, $vsite) {
     $tomorrow = time() + (24 * 60 * 60);
-    return array(
-      new Step\When('I visit "john/node/add/event"'),
-      new Step\When('I fill in "Title" with "' . $title . '"'),
-      new Step\When('I fill in "edit-field-date-und-0-value2-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
-      new Step\When('I fill in "edit-field-date-und-0-value2-timeEntry-popup-1" with "' . date('h:ia') . '"'),
-      new Step\When('I press "edit-submit"'),
-    );
+    $entity = $this->createEntity($type, $title);
+    $entity->field_date['und'][0]['value'] = date('Y-m-d H:i:s');
+    $entity->field_date['und'][0]['value2'] = date('Y-m-d H:i:s', $tomorrow);
+    $wrapper = entity_metadata_wrapper('node', $entity);
+
+    // Set the group ref
+    $nid = FeatureHelp::getNodeId($vsite);
+    $wrapper->{OG_AUDIENCE_FIELD}->set(array($nid));
+    entity_save('node', $entity);
   }
 
   /**
@@ -2041,5 +2043,21 @@ class FeatureContext extends DrupalContext {
     if ($this->getSession()->getCurrentUrl() != $this->url) {
       throw new Exception('The url of the pages has changed.');
     }
+  }
+
+  /**
+   * Create an entity of a given type and title.
+   */
+  private function createEntity($type, $title) {
+    $values = array(
+      'type' => $type,
+      'uid' => 1,
+      'created' => time(),
+      'title' => $title,
+    );
+
+    // Create an event that ends tomorrow.
+    $entity = entity_create('node', $values);
+    return $entity;
   }
 }

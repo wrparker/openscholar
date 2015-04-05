@@ -10,7 +10,7 @@ Feature:
   @api @widgets
   Scenario: Verify that the List of posts widget shows a new upcoming event.
     Given I am logging in as "john"
-     When I create a new event with title "New event"
+     When I create a new "event" with title "New event" in the site "john"
       And I visit "john/calendar"
      Then I should see the event "New event" in the LOP
 
