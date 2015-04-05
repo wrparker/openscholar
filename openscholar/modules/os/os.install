@@ -739,3 +739,14 @@ function os_update_7035() {
   $revert = array_fill_keys($apps, array('feeds_importer'));
   features_revert($revert);
 }
+
+/**
+ * Revert blog and events views to add "sticky" sort criteria.
+ */
+function os_update_7036() {
+  $revert = array(
+    'os_events' => array('views'),
+    'os_blog' => array('views'),
+  );
+  features_revert($revert);
+}
