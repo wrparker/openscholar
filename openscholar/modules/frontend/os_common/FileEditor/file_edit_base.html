@@ -1,0 +1,25 @@
+<label for="fe-file-name">Name</label>
+<input id="fe-file-name" type="text" ng-model="file.name" class="form-text" />
+
+<div ng-include="fileEditAddt"></div>
+
+<label for="fe-file-description"></label>
+<textarea id="fe-file-description" ng-model="file.description"></textarea>
+
+<label for="fe-file-replace"></label>
+<button id="fe-file-display-warning" ng-click="displayWarning()" ng-show="!showWarning && !showSuccess">Replace File</button>
+<div class="fe-warning" ng-show="showWarning">
+    Are you sure? This will replace the existing file and cannot be undone?
+    <div class="control">
+        <button id="fe-file-replace" ng-file-select ng-multiple="false" ng-accept="validate($file)" ng-file-change="$parent.prepForReplace($files, $event)">Replace</button>
+        <button id="fe-file-replace-cancel" ng-click="showWarning = false">Cancel</button>
+    </div>
+</div>
+<div class="fe-success" ng-show="showSuccess">Successfully replaced file.</div>
+
+<!--<div taxonomy-widget vocab-id="file.something" terms="file.terms"></div> Do this when getting taxonomy terms is sorted out-->
+
+<div class="control">
+    <button ng-click="save()">Save</button> |
+    <button ng-click="cancel()">Cancel</button>
+</div>
