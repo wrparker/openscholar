@@ -9,6 +9,7 @@ mysql:
   encoding: utf8
 
 env:
+  - TEST_SUITE=restful
   - TEST_SUITE=features_first
   - TEST_SUITE=features_second
   - TEST_SUITE=harvard
