@@ -1989,4 +1989,23 @@ class FeatureContext extends DrupalContext {
       throw new Exception('The url of the pages has changed.');
     }
   }
+
+  /**
+   * @Given /^I should see "([^"]*)" in the "([^"]*)" column$/
+   */
+  public function iShouldSeeInTheColumn($value, $column) {
+    $index = 0;
+    switch ($column) {
+      case 'used in':
+        $index = 5;
+        break;
+    }
+    $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//tr[td[contains(., '{$value}')]]//td[{$index}]");
+    if (!$element) {
+      throw new Exception(sprintf("The value of %s was not found", $value));
+    }
+    if ($element->getText() != $value) {
+      throw new Exception(sprintf("The value for the %s column should be %s but it is %s", $column, $value, $element->getText()));
+    }
+  }
 }
