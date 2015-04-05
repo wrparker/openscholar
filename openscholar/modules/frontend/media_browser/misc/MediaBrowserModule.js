@@ -2,7 +2,7 @@
   var rootPath,
     open = angular.noop;
 
-  angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'angularFileUpload', 'angularModalService', 'mediaBrowser.filters'])
+  angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'angularFileUpload', 'angularModalService', 'FileEditor', 'mediaBrowser.filters'])
     .config(function (){
        rootPath = Drupal.settings.paths.moduleRoot;
     })

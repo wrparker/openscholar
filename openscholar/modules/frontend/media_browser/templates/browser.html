@@ -71,8 +71,16 @@
             <div class="loading" ng-show="numFiles==0">
                 Loading...
             </div>
-            <div id="file-edit-section" ng-class="{open : $parent.editting || $parent.deleting}">
-                <div ng-include="$parent.form"></div>
+            <div id="file-edit-section" ng-class="{open : $parent.editting}">
+                <div file-edit file="$parent.selected_file" onClose="$parent.closeFileEdit(success)"></div>
+            </div>
+            <div id="file-delete-section" ng-class="{open : $parent.deleting}">
+                <div class="mb-delete-warning">Are you sure you want to delete {{$parent.selected_file.name}}? This operation CANNOT be undone.</div>
+
+                <div class="actions">
+                    <button ng-click="$parent.deleteConfirmed()">Delete</button> |
+                    <button ng-click="$parent.deleteMode(false)">Cancel</button>
+                </div>
             </div>
             <div class="actions" ng-show="$parent.showButtons">
                 <button ng-click="$parent.insert()" ng-disabled="!$parent.selected_file">Insert</button>
