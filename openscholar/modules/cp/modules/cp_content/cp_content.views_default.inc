@@ -842,6 +842,7 @@ function cp_content_views_default_views() {
   $handler->display->display_options['filters']['current']['id'] = 'current';
   $handler->display->display_options['filters']['current']['table'] = 'spaces';
   $handler->display->display_options['filters']['current']['field'] = 'current';
+  $handler->display->display_options['filters']['current']['relationship'] = 'file_to_node';
   $handler->display->display_options['filters']['current']['group'] = 1;
   /* Filter criterion: File: Schema type */
   $handler->display->display_options['filters']['schema_type']['id'] = 'schema_type';
