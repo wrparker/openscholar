@@ -68,12 +68,14 @@ function _get_bibtex_type_map() {
       'proceedings'      => 104,
       'report'           => 109,
       'software'         => 113,
+      'statue'           => 118,
       'techreport'       => 129,
       'unpublished'      => 124,
       'webarticle'       => 107,
       'webprojectpage'   => 134,
       'webservice'       => 133,
       'website'          => 132,
+      'workingpaper'     => 1000,
     )
   );
   $map['format'] = 'bibtex';
@@ -118,12 +120,14 @@ function _get_bibtex_type_names() {
       'proceedings'      => 'The proceedings of a conference',
       'report'           => 'Report',
       'software'         => 'Software',
+      'statue'           => 'Statue',
       'techreport'       => 'A report published by a school or other institution, usually numbered within a series',
       'unpublished'      => 'A document having an author and title, but not formally published',
       'webarticle'       => 'Web article',
       'webprojectpage'   => 'Web project page',
       'webservice'       => 'Web service',
       'website'          => 'Website',
+      'workingpaper'     => 'Working paper',
     )
   );
   $map['format'] = 'bibtex';
