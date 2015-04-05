@@ -4,8 +4,8 @@ function os_common_library() {
   $info = array();
 
   $path = drupal_get_path('module', 'os_common');
-  $rest = url('api', array('alias' => true));
   purl_disable(TRUE);
+  $rest = url('api');
 
   $info['angularjs'] = array(
     'title' => 'AngularJS',
@@ -110,6 +110,35 @@ function os_common_library() {
     ),
     'dependencies' => array(
       array('system', 'ui.dialog'),
+    )
+  );
+
+  $info['TaxonomyWidget'] = array(
+    'title' => 'Angular Taxonomy Widget',
+    'version' => '1.0',
+    'js' => array(
+      $path.'/TaxonomyWidget/TaxonomyWidget.module.js' => array(),
+    ),
+    'dependencies' => array(
+      array('os_common', 'angularjs'),
+    )
+  );
+
+  $info['FileEditor'] = array(
+    'title' => 'Angular File Editor',
+    'version' => '1.0',
+    'js' => array(
+      $path.'/FileEditor/FileEditor.module.js' => array(),
+      array(
+        'data' => array(
+          'paths' => array(
+            'FileEditor' => url($path.'/FileEditor'),
+          )
+        )
+      )
+    ),
+    'dependencies' => array(
+      array('os_common', 'TaxonomyWidget')
     )
   );
 
