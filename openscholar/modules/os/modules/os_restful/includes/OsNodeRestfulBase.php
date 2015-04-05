@@ -52,6 +52,14 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
     return $public_fields;
   }
 
+  protected function checkEntityAccess($op, $entity_type, $entity) {
+    $request = $this->getRequest();
+    if ($request['vsite']) {
+      spaces_set_space(spaces_load('og', $request['vsite']));
+    }
+    return parent::access();
+  }
+
   /**
    * Display the id and the title of the group.
    */
@@ -86,16 +94,30 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
   }
 
   public function propertyValuesPreprocess($property_name, $value, $public_field_name) {
-    // Get the field info.
-    $field_info = field_info_field($property_name);
 
+    $field_info = field_info_field($property_name);
     switch ($field_info['type']) {
+      case 'datetime':
+      case 'datestamp':
+        return $this->handleDatePopulation($public_field_name, $value);
       case 'link_field':
         return array('url' => $value);
+      default:
+        return parent::propertyValuesPreprocess($property_name, $value, $public_field_name);
     }
+  }
 
-    // Return the value as is.
-    return parent::propertyValuesPreprocess($property_name, $value, $public_field_name);
+  private function handleDatePopulation($public_field_name, $value) {
+    if (in_array($this->getBundle(), array('presentation', 'news'))) {
+      return strtotime($value);
+    }
+    else {
+      return array(array($this->publicFields[$public_field_name]['sub_property'] => ''));
+    }
+  }
+
+  public function singleFileFieldDisplay($file) {
+    return $this->fileFieldDisplay(array($file));
   }
 
 }

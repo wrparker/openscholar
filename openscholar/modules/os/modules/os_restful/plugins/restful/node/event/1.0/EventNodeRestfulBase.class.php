@@ -33,4 +33,17 @@ class EventNodeRestfulBase extends OsNodeRestfulBase {
     return $public_fields;
   }
 
+  public function entityPreSave(\EntityMetadataWrapper $wrapper) {
+    parent::entityPreSave($wrapper);
+    $request = $this->getRequest();
+    $date = $wrapper->field_date->value();
+    $format = 'Y-m-d h:i:s';
+    if (!empty($request['start_date'])) {
+      $date[0]['value'] = date($format, $request['start_date']);
+    }
+    if (!empty($request['end_date'])) {
+      $date[0]['value2'] = date($format, $request['end_date']);
+    }
+    $wrapper->field_date->set($date);
+  }
 }

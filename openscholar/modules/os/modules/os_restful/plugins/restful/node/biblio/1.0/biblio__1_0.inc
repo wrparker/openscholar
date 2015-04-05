@@ -7,7 +7,7 @@ $plugin = array(
   'entity_type' => 'node',
   'bundle' => 'biblio',
   'description' => t('Expose biblio bundle via restufl'),
-  'class' => 'BlogNodeRestfulBase',
+  'class' => 'BiblioNodeRestfulBase',
   'authentication_types' => TRUE,
   'authentication_optional' => TRUE,
 );

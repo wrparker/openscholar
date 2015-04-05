@@ -31,6 +31,22 @@ function os_restful_entity_property_info_alter(&$info) {
       'getter callback' => 'os_restful_purl_get',
     );
   }
+
+  $info['node']['bundles']['biblio']['properties']['biblio_type'] = array(
+    'label' => t('Site purl'),
+    'setter callback' => 'entity_property_verbatim_set',
+    'getter callback' => 'entity_property_verbatim_get',
+  );
+
+  $entity_info = entity_get_info('node');
+  foreach (array_keys($entity_info['bundles']) as $bundle) {
+    $info['node']['bundles'][$bundle]['properties']['path'] = array(
+      'label' => t('Site purl'),
+      'setter callback' => 'os_restful_page_path_set',
+      'getter callback' => 'os_restful_page_path_get',
+      'type' => 'unknown',
+    );
+  }
 }
 
 /**

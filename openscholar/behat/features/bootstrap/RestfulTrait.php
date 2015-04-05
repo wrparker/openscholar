@@ -474,7 +474,7 @@ trait RestfulTrait {
     else {
       $this->meta = $request->json()['data'][0];
       if ($this->meta['label'] != $values['label']) {
-        throw new Exception('The label of the entity is %s and not %s', $this->meta['label'], $values['label']);
+        throw new Exception("The label of the entity is {$this->meta['label']} and not {$values['label']}");
       }
     }
   }
