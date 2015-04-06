@@ -5,6 +5,7 @@
   margin: 3px;
   margin-top: 0;
   padding: 5px;
+  height: 597px;
 }
 
 .media-browser-pane {
@@ -135,6 +136,23 @@ div.file-search {
   padding: 3px 5px;
 }
 
+#file-delete-section {
+  display: none;
+  padding: 10px;
+  position: absolute;
+  width: 300px;
+  top: 100px;
+  bottom: 100px;
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  padding: 10px;
+}
+
+#file-delete-section.option {
+  display: block;
+}
+
 /** Uploading styles */
 
 #media-browser-file-select {
@@ -150,7 +168,7 @@ div.file-search {
 }
 
 #media-browser-drop-box {
-  height: 200px;
+  height: 597px;
 }
 
 #media-browser-drop-box span {
