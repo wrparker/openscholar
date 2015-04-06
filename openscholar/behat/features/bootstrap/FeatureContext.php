@@ -2011,4 +2011,12 @@ class FeatureContext extends DrupalContext {
       throw new Exception('The url of the pages has changed.');
     }
   }
+
+  /**
+   * @Given /^I can't visit "([^"]*)"$/
+   */
+  public function iCanTVisit($url) {
+    $this->visit($url);
+    $this->assertSession()->statusCodeEquals(403);
+  }
 }

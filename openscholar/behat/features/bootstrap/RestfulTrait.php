@@ -17,20 +17,20 @@ trait RestfulTrait {
    * Holds list of endpoints path.
    */
   private $endpoints = [
-    'box' => 'api/boxes',
-    'layout' => 'api/layouts',
-    'variable' => 'api/variables',
     'biblio' => 'api/biblio',
     'bio' => 'api/bio',
     'blog' => 'api/blog',
     'book' => 'api/book',
+    'box' => 'api/boxes',
     'class' => 'api/class',
     'class_material' => 'api/class_material',
     'cv' => 'api/cv',
     'event' => 'api/event',
     'faq' => 'api/faq',
     'feed' => 'api/feed',
+    'group' => 'api/group',
     'image_gallery' => 'api/media_gallery',
+    'layout' => 'api/layouts',
     'news' => 'api/news',
     'page' => 'api/page',
     'person' => 'api/person',
@@ -39,6 +39,7 @@ trait RestfulTrait {
     'software_project' => 'api/software_project',
     'software_release' => 'api/software_release',
     'taxonomy' => 'api/taxonomy',
+    'variable' => 'api/variables',
   ];
 
   /**
