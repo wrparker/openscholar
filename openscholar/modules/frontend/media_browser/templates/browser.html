@@ -1,8 +1,8 @@
-<div class="container-fluid" ng-switch="$parent.pane">
+<div class="container-fluid" ng-switch="pane">
     <div class="media-browser-buttons">
-        <div class="media-browser-button" ng-class="{active:$parent.pane=='upload'}" ng-click="$parent.pane='upload'">Upload</div>
-        <div class="media-browser-button" ng-class="{active:$parent.pane=='web'}" ng-click="$parent.pane='web'">Web</div>
-        <div class="media-browser-button" ng-class="{active:$parent.pane=='library'}" ng-click="$parent.pane='library'">Library</div>
+        <div class="media-browser-button" ng-class="{active:pane=='upload'}" ng-click="pane='upload'">Upload</div>
+        <div class="media-browser-button" ng-class="{active:pane=='web'}" ng-click="pane='web'">Web</div>
+        <div class="media-browser-button" ng-class="{active:pane=='library'}" ng-click="pane='library'">Library</div>
     </div>
     <div class="media-browser-panes">
         <div class="media-browser-pane" ng-switch-when="upload">
@@ -56,7 +56,7 @@
                 <span class="mb-created">Upload Date</span>
                 <span class="mb-file-actions">&nbsp;</span>
             </div>
-            <div js-pager="file in files | mbFilename:$parent.search | orderBy:'-timestamp' track by file.id" page-size="10">
+            <div js-pager="file in files | mbFilename:$parent.search | orderBy:'-timestamp' track by file.id" page-size="5">
                 <div class="media-item" data-fid="{{file.id}}" ng-click="$parent.setSelection(file.id)" ng-class="{selected : $parent.selection == file.id}">
                     <span class="mb-preview" ng-bind-html="file.preview"></span>
                     <span class="mb-title">{{file.name}}</span>
