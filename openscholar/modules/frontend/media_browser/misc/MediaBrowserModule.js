@@ -21,6 +21,7 @@
             console.log(result);
             // run the function passed to us
             if (result) {
+              console.log(result);
               params.onSelect(result);
             }
           });
@@ -312,18 +313,6 @@
     $scope.setSelection = function (fid) {
       $scope.selection = fid;
       $scope.selected_file = angular.copy(service.get(fid));
-      if ($scope.editting) {
-        switch ($scope.selected_file.type) {
-          case 'image':
-            $scope.form = rootPath+'/templates/file_edit_image.html';
-            break;
-          default:
-            $scope.form = rootPath+'/templates/file_edit_default.html';
-        }
-      }
-      else if ($scope.deleting) {
-        $scope.form = rootPath+'/templates/delete.html';
-      }
     };
 
     // preload file edit templates
@@ -335,15 +324,6 @@
       $scope.editting = starting;
       if (starting) {
         $scope.deleteMode(false);
-        if ($scope.selected_file) {
-          switch ($scope.selected_file.type) {
-            case 'image':
-              $scope.form = rootPath+'/templates/file_edit_image.html';
-              break;
-            default:
-              $scope.form = rootPath+'/templates/file_edit_default.html';
-          }
-        }
       }
     }
 
@@ -351,7 +331,6 @@
       $scope.deleting = starting;
       if (starting) {
         $scope.editMode(false);
-        $scope.form = rootPath+'/templates/delete.html';
       }
     }
 
