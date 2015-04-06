@@ -72,7 +72,7 @@
                 Loading...
             </div>
             <div id="file-edit-section" ng-class="{open : $parent.editting}">
-                <div file-edit file="$parent.selected_file" onClose="$parent.closeFileEdit(success)"></div>
+                <div file-edit file="$parent.selected_file" on-close="$parent.editting = false"></div>
             </div>
             <div id="file-delete-section" ng-class="{open : $parent.deleting}">
                 <div class="mb-delete-warning">Are you sure you want to delete {{$parent.selected_file.name}}? This operation CANNOT be undone.</div>
