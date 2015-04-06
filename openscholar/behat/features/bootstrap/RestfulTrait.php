@@ -172,7 +172,13 @@ trait RestfulTrait {
       }
     }
 
-    return array_combine($rows[0], $rows[1]);
+    $return = [];
+
+    foreach (array_slice($table->getRows(), 1) as $tbody) {
+      $return[] = array_combine($rows[0], $tbody);
+    }
+
+    return $return;
   }
 
   /**
@@ -477,6 +483,35 @@ trait RestfulTrait {
       if ($this->meta['label'] != $values['label']) {
         throw new Exception("The label of the entity is {$this->meta['label']} and not {$values['label']}");
       }
+    }
+  }
+
+  /**
+   * @Given /^I "([^"]*)" a group as "([^"]*)":$/
+   */
+  public function iAGroup($operation, $account, TableNode $table) {
+    list($groups, $token, $path) = $this->getVariables('group', $account, $table);
+    $op = $this->operations[$operation];
+
+    if ($operation == 'create') {
+      foreach ($groups as $group) {
+        $this->invokeRestRequest($op, $path,
+          ['access_token' => $token],
+          $group
+        );
+      }
+    }
+  }
+
+  /**
+   * @Given /^I verify vsite content:$/
+   */
+  public function iVerifyVsiteContent(TableNode $table) {
+    $values = $this->getValues($table);
+
+    foreach ($values as $value) {
+      $this->visit($value['purl']);
+      $this->assertPageContainsText($value['text']);
     }
   }
 }
