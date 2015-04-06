@@ -1,6 +1,6 @@
 Feature: Testing taxonomy CRUD.
 
-  @api @restful
+  @api
   Scenario: Testing CRUD actions for Taxonomy.
     Given I "create" a term as "john" with the settings:
       | label | vocab             |

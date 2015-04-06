@@ -178,7 +178,7 @@ trait RestfulTrait {
       $return[] = array_combine($rows[0], $tbody);
     }
 
-    return $return;
+    return count($table->getRows()) == 2 ? $return[0] : $return;
   }
 
   /**
