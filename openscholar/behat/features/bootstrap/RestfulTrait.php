@@ -17,20 +17,20 @@ trait RestfulTrait {
    * Holds list of endpoints path.
    */
   private $endpoints = [
-    'box' => 'api/boxes',
-    'layout' => 'api/layouts',
-    'variable' => 'api/variables',
     'biblio' => 'api/biblio',
     'bio' => 'api/bio',
     'blog' => 'api/blog',
     'book' => 'api/book',
+    'box' => 'api/boxes',
     'class' => 'api/class',
     'class_material' => 'api/class_material',
     'cv' => 'api/cv',
     'event' => 'api/event',
     'faq' => 'api/faq',
     'feed' => 'api/feed',
+    'group' => 'api/group',
     'image_gallery' => 'api/media_gallery',
+    'layout' => 'api/layouts',
     'news' => 'api/news',
     'page' => 'api/page',
     'person' => 'api/person',
@@ -39,6 +39,7 @@ trait RestfulTrait {
     'software_project' => 'api/software_project',
     'software_release' => 'api/software_release',
     'taxonomy' => 'api/taxonomy',
+    'variable' => 'api/variables',
   ];
 
   /**
@@ -171,7 +172,13 @@ trait RestfulTrait {
       }
     }
 
-    return array_combine($rows[0], $rows[1]);
+    $return = [];
+
+    foreach (array_slice($table->getRows(), 1) as $tbody) {
+      $return[] = array_combine($rows[0], $tbody);
+    }
+
+    return count($table->getRows()) == 2 ? $return[0] : $return;
   }
 
   /**
@@ -474,8 +481,37 @@ trait RestfulTrait {
     else {
       $this->meta = $request->json()['data'][0];
       if ($this->meta['label'] != $values['label']) {
-        throw new Exception('The label of the entity is %s and not %s', $this->meta['label'], $values['label']);
+        throw new Exception("The label of the entity is {$this->meta['label']} and not {$values['label']}");
       }
+    }
+  }
+
+  /**
+   * @Given /^I "([^"]*)" a group as "([^"]*)":$/
+   */
+  public function iAGroup($operation, $account, TableNode $table) {
+    list($groups, $token, $path) = $this->getVariables('group', $account, $table);
+    $op = $this->operations[$operation];
+
+    if ($operation == 'create') {
+      foreach ($groups as $group) {
+        $this->invokeRestRequest($op, $path,
+          ['access_token' => $token],
+          $group
+        );
+      }
+    }
+  }
+
+  /**
+   * @Given /^I verify vsite content:$/
+   */
+  public function iVerifyVsiteContent(TableNode $table) {
+    $values = $this->getValues($table);
+
+    foreach ($values as $value) {
+      $this->visit($value['purl']);
+      $this->assertPageContainsText($value['text']);
     }
   }
 }

@@ -500,27 +500,56 @@ function os_image_gallery_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'media_gallery_file',
     'label' => 'Gallery media',
-    'required' => FALSE,
+    'required' => 0,
     'settings' => array(
       'description_field' => 0,
       'file_directory' => '',
-      'file_extensions' => 'txt',
+      'file_extensions' => 'txt jpg jpeg png',
+      'filefield_paths' => array(
+        'active_updating' => 0,
+        'file_name' => array(
+          'options' => array(
+            'pathauto' => 0,
+            'transliterate' => 0,
+          ),
+          'value' => '[file:ffp-name-only-original].[file:ffp-extension-original]',
+        ),
+        'file_path' => array(
+          'options' => array(
+            'pathauto' => 0,
+            'transliterate' => 0,
+          ),
+          'value' => '',
+        ),
+        'retroactive_update' => 0,
+      ),
       'max_filesize' => '6 MB',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
+      'active' => 1,
       'module' => 'media',
       'settings' => array(
         'allowed_schemes' => array(
+          'embed' => 0,
+          'oembed' => 0,
           'public' => 'public',
         ),
         'allowed_types' => array(
           'audio' => 'audio',
           'document' => 'document',
+          'executable' => 0,
+          'html' => 0,
           'image' => 'image',
+          'undefined' => 0,
           'video' => 'video',
         ),
-        'browser_plugins' => array(),
+        'browser_plugins' => array(
+          'media_default--media_browser_1' => 0,
+          'media_default--media_browser_my_files' => 0,
+          'media_internet' => 0,
+          'upload' => 0,
+        ),
         'progress_indicator' => 'throbber',
       ),
       'type' => 'media_generic',

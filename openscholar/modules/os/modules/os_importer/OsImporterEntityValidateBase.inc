@@ -75,7 +75,7 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
    */
   public function validateOsDate($field_name, $value) {
     // Empty values are checked for in 'isNotEmpty'.
-    if (empty($value)) {
+    if (empty($value) || $this->rest) {
       return;
     }
 
