@@ -1,5 +1,9 @@
 <?php
 
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Headers: Authorization, access-token');
+
 /**
  * Implements hook_ctools_plugin_directory().
  */
@@ -47,6 +51,28 @@ function os_restful_entity_property_info_alter(&$info) {
       'type' => 'unknown',
     );
   }
+}
+
+/**
+ * Set the node path.
+ */
+function os_restful_page_path_set(&$data, $name, $value, $langcode, $type, $info) {
+  $data->$name = $value;
+}
+
+/**
+ * Get the node path.
+ */
+function os_restful_page_path_get($data, array $options, $name, $type, $info) {
+  if (empty($data->nid)) {
+    return;
+  }
+
+  if ($path = path_load(array('source' => 'node/' . $data->nid))) {
+    return $path['alias'];
+  }
+
+  return '';
 }
 
 /**
