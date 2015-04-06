@@ -113,6 +113,18 @@ function os_common_library() {
     )
   );
 
+  $info['ng-file-upload'] = array(
+    'title' => t('Angular File Upload'),
+    'version' => '3.1.0',
+    'js' => array(
+      $bower . '/ng-file-upload/angular-file-upload.js' => array(),
+      $bower . '/ng-file-upload/angular-file-upload-shim.js' => array(),
+    ),
+    'dependencies' => array(
+      array('os_common', 'angularjs'),
+    )
+  );
+
   $info['TaxonomyWidget'] = array(
     'title' => 'Angular Taxonomy Widget',
     'version' => '1.0',
@@ -121,6 +133,7 @@ function os_common_library() {
     ),
     'dependencies' => array(
       array('os_common', 'angularjs'),
+      array('os_common', 'EntityService'),
     )
   );
 
@@ -134,10 +147,13 @@ function os_common_library() {
           'paths' => array(
             'FileEditor' => url($path.'/FileEditor'),
           )
-        )
+        ),
+        'type' => 'setting',
       )
     ),
     'dependencies' => array(
+      array('os_common', 'ng-file-upload'),
+      array('os_common', 'EntityService'),
       array('os_common', 'TaxonomyWidget')
     )
   );
