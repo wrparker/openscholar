@@ -31,3 +31,10 @@ function os_classes_update_7002(&$sandbox) {
     'entity' => 'node',
   ));
 }
+
+/**
+ * Update the classes view.
+ */
+function os_classes_update_7003() {
+  features_revert(array('os_classes' => array('views')));
+}
