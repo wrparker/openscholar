@@ -27,7 +27,7 @@
         if (input) {
           var start = (pager.currentPage() - 1) * pager.pageSize;
           if (Array.isArray(input)) {
-            return input.slice(start, pager.pageSize);
+            return input.slice(start, start + pager.pageSize);
           }
           else if (typeof input == "object") {
             var i = 0,
