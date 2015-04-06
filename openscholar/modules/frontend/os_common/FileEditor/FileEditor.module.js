@@ -1,10 +1,10 @@
 (function ($) {
   var libraryPath = '';
 
-  angular.module('FileEditor', ['EntityService', 'os-auth', 'TaxonomyWidget', 'ng-file-upload']).
+  angular.module('FileEditor', ['EntityService', 'os-auth', 'TaxonomyWidget', 'angularFileUpload']).
     config(function () {
       libraryPath = Drupal.settings.paths.FileEditor;
-    })
+    }).
     directive('fileEdit', ['EntityService', '$upload', '$timeout', function (EntityService, $upload, $timeout) {
       return {
         scope: {
@@ -15,10 +15,14 @@
         link: function (scope, elem, attr, c, trans) {
           var fileService = new EntityService('files', 'id');
 
-          scope.fileEditAddt = libraryPath+'/file_edit_'+scope.file.type+'.html';
+          scope.fileEditAddt = '';
+          if (scope.file) {
+            scope.fileEditAddt = libraryPath+'/file_edit_'+scope.file.type+'.html';
+          }
           scope.showWarning = false;
           scope.showSuccess = false;
           scope.validate = function ($files) {
+            if (!$files || !$files.length) return true;
             var newFile = $files[0];
 
             if (scope.file.type == newFile.type) {
