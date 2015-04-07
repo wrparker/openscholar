@@ -1,3 +1,9 @@
+/* REMOVE WHEN THE SITE INFO VERTICAL ALIGN MIDDLE ISSUE IS RESOLVED */
+ #boxes-box-site_info {
+  padding-top: 0;
+}
+
+
 #branding_header, #branding_footer, #search-block-form .form-item label {
 	display: none;
 }
@@ -29,6 +35,12 @@ h1#page-title, h1, h2, h3 {
 
 /* HEADER ELEMENTS */
 
+.region-header-third ul.nice-menu a {
+  font: normal 1.2em georgia,sans-serif;
+  text-transform: none;
+  
+}
+
 #header-container h1 {
 	font-size: 31px;
 	line-height: 1em;
@@ -42,10 +54,12 @@ h1#page-title, h1, h2, h3 {
 	text-decoration: none;
 }
 
-#header-container h2 {
-	font-size: 1.5em;
-	line-height: 1em;
+
+#boxes-box-site_info h2 {
+ font-size: 1.5em;
+  font-style: normal;
 }
+
 
 #header-container a, #header-container a:visited {
 	text-decoration: none;

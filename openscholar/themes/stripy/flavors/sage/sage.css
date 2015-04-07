@@ -1,12 +1,5 @@
 /* Sage*/
 
-body {
-  background:#97A089;
-  }
-
-body.navbar-off #page {
-  background-image:url('images/body-bg-alt-sage.png');
-  }
 
 #menu-bar {
   background: rgb(125, 134, 111);

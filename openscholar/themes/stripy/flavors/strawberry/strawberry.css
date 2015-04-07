@@ -1,12 +1,5 @@
 /* Strawberry*/
 
-body {
-  background:#9F3B3B;
-  }
-
-body.navbar-off #page {
-  background-image:url('images/body-bg-alt-strawberry.png');
-  }
 
 #menu-bar {
   background: rgb(131, 29, 28);
