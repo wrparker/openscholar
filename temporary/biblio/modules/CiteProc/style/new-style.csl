@@ -104,16 +104,10 @@
   </macro>
   <macro name="contributors">
     <group delimiter=". ">
-      <names variable="author">
-        <name and="text" name-as-sort-order="first" sort-separator=", " delimiter=", " delimiter-precedes-last="always"/>
-        <label form="short" prefix=", "/>
-        <substitute>
-          <names variable="editor"/>
-          <names variable="translator"/>
-          <text macro="substitute-title"/>
-          <text macro="title"/>
-        </substitute>
-      </names>
+        <names variable="author" delimiter=". ">
+          <label form="verb" text-case="capitalize-first" suffix=" "/>
+          <name and="text" delimiter=", "/>
+        </names>
       <text macro="recipient"/>
     </group>
   </macro>
@@ -219,7 +213,7 @@
   </macro>
   <macro name="edition">
     <choose>
-      <if type="bill book graphic legal_case legislation motion_picture report song" match="any">
+      <if type="article article-magazine article-newspaper article-journal artwork bill book broadcast graphic legal_case legislation manuscript map motion_picture patent personal_communication report song thesis webpage" match="any">
         <choose>
           <if is-numeric="edition">
             <group delimiter=" " prefix=". ">
@@ -249,7 +243,7 @@
   </macro>
   <macro name="locators">
     <choose>
-      <if type="article-journal">
+      <if type="article article-magazine article-newspaper article-journal artwork broadcast manuscript map patent personal_communication thesis webpage" match="any">
         <choose>
           <if variable="volume">
             <text variable="volume" prefix=" "/>
