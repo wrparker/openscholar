@@ -7,10 +7,9 @@ Feature:
       And I wait for page actions to complete
      When I visit "/"
       And I click "Create a site"
-      And I fill "edit-domain" with random text
+      And I fill in "edit-domain" with "mysite"
       And I press "edit-submit"
       And I wait for page actions to complete
-      And I should print page
      Then I should see "Success! The new site has been created."
-      And I visit the site "random"
+      And I visit the site "mysite"
       And I should see "Your site's front page is set to display your bio by default."
