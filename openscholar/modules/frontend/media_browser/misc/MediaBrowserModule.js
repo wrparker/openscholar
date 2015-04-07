@@ -315,11 +315,6 @@
       $scope.selected_file = angular.copy(service.get(fid));
     };
 
-    // preload file edit templates
-    $http.get(rootPath+'/templates/file_edit_default.html', {cache:$templateCache});
-    $http.get(rootPath+'/templates/file_edit_image.html', {cache:$templateCache});
-    $http.get(rootPath+'/templates/delete.html', {cache:$templateCache});
-
     $scope.editMode = function (starting) {
       $scope.editting = starting;
       if (starting) {
