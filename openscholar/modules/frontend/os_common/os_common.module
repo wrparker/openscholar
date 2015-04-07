@@ -90,7 +90,7 @@ function os_common_library() {
   );
 
 
-  $bower = drupal_get_path('profile', 'openscholar').'/bower_components';
+  $bower = libraries_get_path('components');
   $info['bootstrap'] = array(
     'title' => 'Boostrap',
     'version' => '1.0',
