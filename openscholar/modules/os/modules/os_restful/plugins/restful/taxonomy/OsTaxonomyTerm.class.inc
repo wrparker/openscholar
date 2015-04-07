@@ -124,6 +124,9 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
    * {@inheritdoc}
    */
   protected function checkPropertyAccess($op, $public_field_name, EntityMetadataWrapper $property_wrapper, EntityMetadataWrapper $wrapper) {
+    // We need this in order to alter the global user object.
+    $this->getAccount();
+
     if ($op != 'view') {
       $relation = $this->getRelation(taxonomy_term_load($this->path));
       spaces_set_space(vsite_get_vsite($relation->vid));
