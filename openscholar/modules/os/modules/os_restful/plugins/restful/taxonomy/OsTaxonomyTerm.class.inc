@@ -19,6 +19,18 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getBundle() {
+    if ($this->path) {
+      $wrapper = entity_metadata_wrapper('taxonomy_term', $this->path);
+      return $wrapper->vocabulary->machine_name->value();
+    }
+
+    return $this->bundle;
+  }
+
+  /**
    * Display the name of the vocab from the vocabulary object.
    *
    * @param $value
@@ -113,6 +125,8 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
    */
   protected function checkPropertyAccess($op, $public_field_name, EntityMetadataWrapper $property_wrapper, EntityMetadataWrapper $wrapper) {
     if ($op != 'view') {
+      $relation = $this->getRelation(taxonomy_term_load($this->path));
+      spaces_set_space(vsite_get_vsite($relation->vid));
       return vsite_og_user_access('administer taxonomy');
     }
 
