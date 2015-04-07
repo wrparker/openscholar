@@ -10,7 +10,7 @@ Feature:
       And I click "Classes"
       And I click "John F. Kennedy"
      When I should see the link "Wikipedia page on JFK"
-     Then I should see the link "Who was JFK?"
+     Then I should see "who was JFK?"
 
   @api @features_first
   Scenario: Test the order of the classes.
