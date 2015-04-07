@@ -37,12 +37,11 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
    * Display taxonomy terms from the current vsite.
    */
   protected function queryForListFilter(\EntityFieldQuery $query) {
-
     if (empty($_GET['vsite'])) {
       throw new \RestfulBadRequestException(t('You need to provide a vsite.'));
     }
 
-    if (!$vsite = vsite_get_vsite($_GET['vsite'])) {
+    if (!$vsite = vsite_get_vsite($this->request['vsite'])) {
       return;
     }
 
@@ -62,6 +61,16 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
     }
 
     parent::entityvalidate($wrapper);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function isValidEntity($op, $entity_id) {
+    // The entity is valid since it's already been filtered in
+    // self::queryForListFilter() and the access is checked in
+    // self::checkEntityAccess().
+    return true;
   }
 
   /**
@@ -103,6 +112,10 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
    * {@inheritdoc}
    */
   protected function checkPropertyAccess($op, $public_field_name, EntityMetadataWrapper $property_wrapper, EntityMetadataWrapper $wrapper) {
-    return vsite_og_user_access('administer taxonomy');
+    if ($op != 'view') {
+      return vsite_og_user_access('administer taxonomy');
+    }
+
+    return parent::checkPropertyAccess($op, $public_field_name, $property_wrapper, $wrapper);
   }
 }
