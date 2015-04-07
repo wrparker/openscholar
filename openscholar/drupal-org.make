@@ -346,7 +346,7 @@ projects[restful][subdir] = "contrib"
 projects[restful][download][type] = git
 projects[restful][download][url] = "https://github.com/RESTful-Drupal/restful.git"
 projects[restful][download][branch] = "7.x-1.x"
-projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
+projects[restful][download][revision] = 5bf80e40d5e1fac768b52d71060cee695d8d1f27
 projects[restful][download][path][] = "https://patch-diff.githubusercontent.com/raw/RESTful-Drupal/restful/pull/445.patch"
 
 projects[redirect][subdir] = "contrib"
