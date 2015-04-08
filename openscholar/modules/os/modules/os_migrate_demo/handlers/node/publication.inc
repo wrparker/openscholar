@@ -15,6 +15,7 @@ class OsMigratePublicationNode extends OsMigrate {
     array('biblio_place_published', 'Publish location'),
     array('biblio_type_name', 'Biblio type name'),
     array('biblio_type', 'Biblio type'),
+    array('biblio_secondary_title', 'Secondary title'),
     array(OG_AUDIENCE_FIELD, 'Site'),
     array(OG_VOCAB_FIELD, 'Terms'),
     array('uid', 'UID'),
@@ -35,6 +36,7 @@ class OsMigratePublicationNode extends OsMigrate {
     $this->addFieldMapping('biblio_year', 'biblio_year');
     $this->addFieldMapping('Publish location', 'biblio_place_published');
     $this->addFieldMapping('biblio_type_name', 'biblio_type_name');
+    $this->addFieldMapping('biblio_secondary_title', 'biblio_secondary_title');
     $this->addFieldMapping('biblio_type', 'biblio_type');
     $this->addFieldMapping(OG_AUDIENCE_FIELD, OG_AUDIENCE_FIELD)
       ->sourceMigration(array('OsMigratePersonalNode', 'OsMigrateProjectNode'));
