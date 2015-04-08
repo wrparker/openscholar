@@ -59,7 +59,7 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
   /**
    * Verify the start is occurring before the end date.
    */
-  public function validateOsDate($field_name, $value) {
+  public function validateOsDate($field_name, $value, EntityMetadataWrapper $wrapper, EntityMetadataWrapper $property_wrapper) {
     // Empty values are checked for in 'isNotEmpty'.
     if (empty($value)) {
       return;
@@ -67,17 +67,35 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
 
     $value = reset($value);
     // Validate the date format for the start and end date.
-    $date = DateTime::createFromFormat('M j Y', $value);
+    $this->validateDateFormats(array('M j Y'), $value, $field_name);
+  }
 
-    if ($date && $date->format('M j Y') == $value) {
-      return;
+  /**
+   * Verify the value is in a given format.
+   *
+   * @param $formats
+   *   Array of formats.
+   * @param $value
+   *   The value of the field.
+   * @param $field_name
+   *   The field name.
+   */
+  protected function validateDateFormats($formats, $value, $field_name) {
+    // Validate the date format for the start and end date.
+    foreach ($formats as $format) {
+      if ($date = DateTime::createFromFormat($format, $value)) {
+        if ($date->format($format) != $value) {
+          $params = array(
+            '@date' => $value,
+            '@format' => date($format, $date->getTimestamp()),
+          );
+          $this->setError($field_name, 'The value of the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
+          return;
+        }
+      }
     }
 
-    $params = array(
-      '@date' => $value,
-      '@format' => date('M j Y'),
-    );
-    $this->setError($field_name, 'The value of the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
+    return TRUE;
   }
 
   /**
