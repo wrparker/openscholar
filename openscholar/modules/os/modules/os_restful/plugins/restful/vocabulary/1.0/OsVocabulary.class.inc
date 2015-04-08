@@ -44,6 +44,9 @@ class OsVocabulary extends \RestfulEntityBase {
    * {@inheritdoc}
    */
   protected function checkPropertyAccess($op, $public_field_name, EntityMetadataWrapper $property_wrapper, EntityMetadataWrapper $wrapper) {
+    // Set the user account.
+    $this->getAccount();
+
     if ($this->getMethod() == \RestfulBase::GET) {
       // Always return TRUE for properties.
       return TRUE;
@@ -53,8 +56,10 @@ class OsVocabulary extends \RestfulEntityBase {
       return TRUE;
     }
 
-    if ($this->getMethod() == \RestfulBase::POST && !$vsite = vsite_get_vsite($this->request['vsite'])) {
-      throw new \RestfulForbiddenException('There is no vsite with the provided ID.');
+    if ($this->getMethod() == \RestfulBase::POST) {
+      if (!$vsite = vsite_get_vsite($this->request['vsite'])) {
+        throw new \RestfulForbiddenException('There is no vsite with the provided ID.');
+      }
     }
     else {
       $vsite = vsite_get_vsite(og_vocab_relation_get($this->path)->gid);

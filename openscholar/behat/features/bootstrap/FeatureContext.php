@@ -5,7 +5,6 @@ use Behat\Behat\Context\Step\Given;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Behat\Context\Step;
-use Behat\Behat\Context\Step\When;
 
 require 'vendor/autoload.php';
 require_once 'RestfulTrait.php';
