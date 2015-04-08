@@ -97,9 +97,12 @@ class OsFilesResource extends RestfulEntityBase {
 
   /**
    * Process the og vocab field.
-   * 
+   *
    * @param $terms
+   *   The OG vocab field values.
+   *
    * @return array
+   *   Array of the terms with ID, label and vocabulary ID.
    */
   public function processOgVocabField($terms) {
     $return = array();

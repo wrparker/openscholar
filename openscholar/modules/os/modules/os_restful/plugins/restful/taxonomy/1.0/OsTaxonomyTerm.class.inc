@@ -11,7 +11,18 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
     $fields['vocab'] = array(
       'property' => 'vocabulary',
       'process_callbacks' => array(
-        array($this, 'processVocab'),
+        function($vocabulary) {
+          return $vocabulary->machine_name;
+        }
+      ),
+    );
+
+    $fields['vid'] = array(
+      'property' => 'vocabulary',
+      'process_callbacks' => array(
+        function($vocabulary) {
+          return $vocabulary->vid;
+        }
       ),
     );
 
@@ -59,6 +70,32 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
 
     module_load_include('inc', 'vsite_vocab', 'includes/taxonomy');
     $vocabs = array_keys(vsite_vocab_get_vocabularies($vsite));
+
+    if (!empty($this->request['vocab'])) {
+      // The user asked for vocabularies. Check if they belong to the vsite.
+      $requested_vocabulary = $this->request['vocab'];
+      if (!is_array($requested_vocabulary)) {
+        if (!$in_array = in_array($requested_vocabulary, $vocabs)) {
+          $bad_vocab = $requested_vocabulary;
+        }
+      }
+      else {
+        $in_array = TRUE;
+
+        foreach ($requested_vocabulary as $requested) {
+          if (!$in_array = in_array($requested, $vocabs)) {
+            $bad_vocab = $requested;
+            break;
+          }
+        }
+      }
+
+      if (!$in_array) {
+        throw new \RestfulBadRequestException(format_string('The vocab @vocab you asked is not part of the vsite.', array('@vocab' => $bad_vocab)));
+      }
+
+      $vocabs = is_array($this->request['vocab']) ? $this->request['vocab'] : array($this->request['vocab']);
+    }
 
     $query->propertyCondition('vid', $vocabs, 'IN');
   }
