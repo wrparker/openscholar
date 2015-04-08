@@ -68,6 +68,15 @@ Feature:
      Then I should see "Delete this biblio"
 
   @api @features_second
+  Scenario: Verify that the publication citations do not contain the indent CSS class when format is MLA
+    Given I am logging in as "john"
+     When I go to the "os_publications" app settings in the vsite "john"
+      And I select the radio button named "biblio_citeproc_style" with value "mla.csl"
+      And I press "Save configuration"
+      And I visit "john/cp/build/features/os_publications"
+     Then I should not see a "div" element with the class "bib-neg-indent"
+
+  @api @features_second
   Scenario: Test that Conference Papers using the Chicago-Author-Date style
             print 'In' correctly and doesn't capitalize unneeded words.
     Given I am logging in as "john"
@@ -81,9 +90,14 @@ Feature:
       And I should see "Journal of Publications"
       And I should not find the text "Journal Of Publications"
 
+  @api @features_second
+  Scenario: Verify that the publication citations contain the indent CSS class when format is Chicago Author-Date style
+    Given I am logging in as "john"
+      And I visit "john/cp/build/features/os_publications"
+     Then I should see a "div" element with the class "bib-neg-indent"
 
-  @api
-  Scenario: verify the user can see message the the publication won't display
+  @api @features_second
+  Scenario: Verify the user can see message the the publication won't display
             in the publication form.
     Given I am logging in as "john"
       And I visit "john/cp/build/features/os_publications"
