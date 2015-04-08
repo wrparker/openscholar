@@ -18,6 +18,7 @@ class os_boxes_dataverse_search extends os_boxes_default {
     $options = parent::options_defaults();
     $options['user_alias'] = '';
     $options['search_box_text'] = 'Search my dataverse';
+    $options['visibility'] = 'feature';
     return $options;
   }
 
@@ -27,7 +28,7 @@ class os_boxes_dataverse_search extends os_boxes_default {
   public function options_form(&$form_state){
     $form = parent::options_form($form_state);
 
-    $base_url = variable_get("dataverse_base_url", "https://dvn-build.hmdc.harvard.edu") . "/dataverse/";
+    $base_url = variable_get("dataverse_base_url", "https://dataverse.harvard.edu") . "/dataverse/";
 
     $form['user_alias'] = array(
       '#type' => 'textfield',
@@ -54,7 +55,7 @@ class os_boxes_dataverse_search extends os_boxes_default {
       return;
     }
 
-    $base_url = variable_get("dataverse_base_url", "https://dvn-build.hmdc.harvard.edu") . "/resources/js/widgets.js?alias=" . $this->options['user_alias'] . "&amp;dvUrl=" . variable_get("dataverse_base_url", "https://dvn-build.hmdc.harvard.edu") . "&amp;widget=search&amp;text=" . str_replace("%20", "+", drupal_encode_path($this->options['search_box_text']));
+    $base_url = variable_get("dataverse_base_url", "https://dataverse.harvard.edu") . "/resources/js/widgets.js?alias=" . $this->options['user_alias'] . "&amp;dvUrl=" . variable_get("dataverse_base_url", "https://dataverse.harvard.edu") . "&amp;widget=search&amp;text=" . str_replace("%20", "+", drupal_encode_path($this->options['search_box_text']));
 
     $block = parent::render();
     $block['content'] = "<script src=\"$base_url\"></script>";

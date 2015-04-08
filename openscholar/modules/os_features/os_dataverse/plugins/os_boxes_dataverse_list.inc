@@ -18,6 +18,7 @@ class os_boxes_dataverse_list extends os_boxes_default {
     $options = parent::options_defaults();
     $options['user_alias'] = '';
     $options['embed_height'] = '500px';
+    $options['visibility'] = 'feature';
     return $options;
   }
 
@@ -27,7 +28,7 @@ class os_boxes_dataverse_list extends os_boxes_default {
   public function options_form(&$form_state){
     $form = parent::options_form($form_state);
 
-    $base_url = variable_get("dataverse_base_url", "https://dvn-build.hmdc.harvard.edu") . "/dataverse/";
+    $base_url = variable_get("dataverse_base_url", "https://dataverse.harvard.edu") . "/dataverse/";
 
     $form['user_alias'] = array(
       '#type' => 'textfield',
@@ -55,7 +56,7 @@ class os_boxes_dataverse_list extends os_boxes_default {
     }
 
     $embed_height = preg_replace('/\D/', '', $this->options['embed_height']);
-    $base_url = variable_get("dataverse_base_url", "https://dvn-build.hmdc.harvard.edu") . "/resources/js/widgets.js?alias=" . $this->options['user_alias'] . "&amp;dvUrl=" . variable_get("dataverse_base_url", "https://dvn-build.hmdc.harvard.edu") . "&amp;widget=iframe&amp;heightPx=" . $embed_height;
+    $base_url = variable_get("dataverse_base_url", "https://dataverse.harvard.edu") . "/resources/js/widgets.js?alias=" . $this->options['user_alias'] . "&amp;dvUrl=" . variable_get("dataverse_base_url", "https://dataverse.harvard.edu") . "&amp;widget=iframe&amp;heightPx=" . $embed_height;
 
     $block = parent::render();
     $block['content'] = "<script src=\"$base_url\"></script>";
