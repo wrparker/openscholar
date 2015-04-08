@@ -137,7 +137,7 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Given /^I should see a "([^"]*)" element with the class "([^"]*)":$/
+   * @Then /^I should see "([^"]*)" element with the class "([^"]*)"$/
    */
   public function iShouldSeeElementWithTheClass($tag, $class) {
 		$page = $this->getSession()->getPage();
@@ -149,7 +149,7 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Given /^I should not see a "([^"]*)" element with the class "([^"]*)":$/
+   * @Then /^I should not see "([^"]*)" element with the class "([^"]*)"$/
    */
   public function iShouldNotSeeElementWithTheClass($tag, $class) {
 		$page = $this->getSession()->getPage();
