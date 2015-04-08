@@ -2008,4 +2008,23 @@ class FeatureContext extends DrupalContext {
       throw new Exception(sprintf("The value for the %s column should be %s but it is %s", $column, $value, $element->getText()));
     }
   }
+
+  /** @Given /^I should not find the text "([^"]*)"$/
+   *
+   * This step is used to for looking for text in the page while respecting
+   * the case sensitivity of the searched text.
+   *
+   * @see @pageTextNotContains
+   */
+  public function iShouldNotFindTheText($text) {
+    $actual = $this->getSession()->getPage()->getText();
+    $actual = preg_replace('/\s+/u', ' ', $actual);
+    $regex  = '/'.preg_quote($text, '/').'/u';
+
+    if (preg_match($regex, $actual)) {
+      $message = sprintf('The text "%s" appears in the text of this page, but it should not.', $text);
+      throw new Exception($message);
+    }
+  }
+
 }

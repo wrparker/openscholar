@@ -172,6 +172,12 @@ border-top: none;
     padding: 0;
 }
 
+.sidebar #block-os-primary-menu .block-content,
+.sidebar #block-os-secondary-menu .block-content,
+.sidebar .os-custom-menu .block-content {
+	padding: 0;
+	}
+
 .sidebar .block.section-nav, #content-column .block.section-nav {
     border:  none;
 }
@@ -191,13 +197,12 @@ border-top: none;
     padding: 7px 0;
 }
 
+.sidebar .block-inner,
 #content-panels .block-inner {
      margin-top: 0px;
 }
 
-.sidebar .block-inner {
-margin-top: 0;
-}
+
 
 .front #content-panels .block.block-boxes-os_slideshow_box {
      background: none repeat scroll 0px 0px #FFFFFF;
