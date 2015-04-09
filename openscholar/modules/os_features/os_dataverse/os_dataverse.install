@@ -64,6 +64,28 @@ function os_dataverse_update_7002() {
         );
         path_save($path);
 
+        // fix primary menu to link to that page
+        $menu_data = db_select('spaces_overrides', 'spaces_overrides')
+          ->condition('object_id', 'primary-menu')
+          ->condition('id', $vsite_id)
+          ->fields('spaces_overrides', array('value'))
+          ->execute()
+          ->fetchField();
+
+        if ($menu_data) {
+          $menu = unserialize($menu_data);
+          $menu['2566']['link_path'] = "node/" . $node->nid;
+          $menu['2566']['module'] = "menu";
+          $menu['2566']['router_path'] = "node/%";
+          $menu_data = serialize($menu);
+
+          db_update('spaces_overrides')
+            ->fields(array('value' => $menu_data))
+            ->condition('object_id', 'primary-menu')
+            ->condition('id', $vsite_id)
+            ->execute();
+        }
+
         // create the dataverse box objects
         $search_delta = os_boxes_create_delta();
         $search_box = new stdClass();

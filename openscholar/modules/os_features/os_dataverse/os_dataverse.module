@@ -7,8 +7,6 @@
  * Code for the os_dataverse feature.
  */
 
-// include_once 'os_dataverse.features.inc';
-
 /**
  * Implements hook_boxes_plugins().
  */
