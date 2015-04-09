@@ -198,13 +198,13 @@ a img {
 }
 
 
-.block-boxes-os_sv_list_file .file {
-	margin-bottom: 22px;	
+.sv-list-document .file {
+	margin-bottom: 0;	
 }
 
 #content-column .block-boxes-os_sv_list_file .file {
 	border-bottom: 1px solid #CCCCCC;
-    padding-bottom: 20px;
+    padding: 10px 0;
 }
 
 #content-column .block-boxes-os_sv_list_file span.file {
@@ -276,10 +276,16 @@ bottom: 20px;
 }
 
 a.entity-link {
-	display: inline;
-	font-weight:bold;	
-	padding-right: 10px;
+	display: inline;	
+	padding-right: 8px;
+	font-weight:bold;
 }
+
+.sv-list-layout-list a.entity-link {
+	font-weight:normal;
+}
+
+
 
 div.content a.download-link {
 	/*background: url("../images/scholarbase-sprite.png") no-repeat scroll 2px -588px rgba(0, 0, 0, 0);
