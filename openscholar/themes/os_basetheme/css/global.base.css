@@ -139,6 +139,15 @@ h1.node-title {
 	font-size:1.15em;
 }
 
+.sidebar .sv-list-link .node,
+.sidebar .sv-list-link h1.node-title,
+.accordion .sv-list-link .node,
+.accordion .sv-list-link h1.node-title {
+  font-weight: normal;
+  font-size: 1em;
+  margin-bottom: 0;
+}
+
 .node-teaser .field-name-body h2,
 .node-teaser .field-name-body h3,
 .node-teaser .field-name-body h4 {
