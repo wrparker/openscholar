@@ -745,8 +745,8 @@ function os_update_7035() {
  */
 function os_update_7036() {
   $revert = array(
-    'os_events' => array('views'),
-    'os_blog' => array('views'),
+    'os_events' => array('views_view'),
+    'os_blog' => array('views_view'),
   );
   features_revert($revert);
 }
