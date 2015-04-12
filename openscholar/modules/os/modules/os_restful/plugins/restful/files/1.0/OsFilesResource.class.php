@@ -51,9 +51,7 @@ class OsFilesResource extends RestfulEntityBase {
 
     $info['terms'] = array(
       'property' => OG_VOCAB_FIELD,
-      'process_callbacks' => array(
-        array($this, 'processOgVocabField'),
-      ),
+      'callback' => array($this, 'processOgVocabFieldEmpty'),
     );
 
     return $info;
@@ -95,23 +93,35 @@ class OsFilesResource extends RestfulEntityBase {
     return drupal_render($output);
   }
 
-  /**
-   * Process the og vocab field.
-   *
-   * @param $terms
-   *   The OG vocab field values.
-   *
-   * @return array
-   *   Array of the terms with ID, label and vocabulary ID.
-   */
-  public function processOgVocabField($terms) {
+  protected function processOgVocabFieldEmpty(\EntityDrupalWrapper $wrapper) {
+    $terms = $wrapper->{OG_VOCAB_FIELD}->value();
     $return = array();
 
-    foreach ($terms as $terms) {
+    if (empty($terms)) {
+      if (!$vsite = $wrapper->{OG_AUDIENCE_FIELD}->get(0)->getIdentifier()) {
+        return;
+      }
+
+      module_load_include('inc', 'vsite_vocab', 'includes/taxonomy');
+      $vocabularies = vsite_vocab_get_vocabularies(vsite_get_vsite($vsite));
+
+      foreach ($vocabularies as $vocabulary) {
+        if (og_vocab_load_og_vocab($vocabulary->vid, 'file', $wrapper->getBundle())) {
+          $return[] = array(
+            'vid' => $vocabulary->vid,
+            'label' => $vocabulary->name,
+          );
+        }
+      }
+
+      return $return;
+    }
+
+    foreach ($terms as $term) {
       $return[] = array(
-        'id' => $terms->tid,
-        'label' => $terms->name,
-        'vid' => $terms->vid,
+        'id' => $term->tid,
+        'label' => $term->name,
+        'vid' => $term->vid,
       );
     }
 
