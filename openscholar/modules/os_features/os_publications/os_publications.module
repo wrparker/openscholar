@@ -1148,6 +1148,21 @@ function os_publications_node_delete($node) {
 }
 
 /**
+ * Implements hook_node_presave().
+ */
+function os_publications_node_presave($node) {
+  // Remove any inline style tag.
+  $text = preg_replace('#(<[a-z ]*)(style=("|\')(.*?)("|\'))([a-z ]*>)#', '\\1\\6', $node->title);
+  // Remove rows breaking from any type.
+  $text = str_replace(array('<br >', '<br />', '<br>'), ' ', $text);
+  // Keep only the tags that we allow in the title WYSIWYG and keep it no more
+  // then 255 characters.
+  $tags = variable_get('html_title_allowed_elements', array('em', 'sub', 'sup'));
+
+  $node->title = substr(strip_tags($text, '<' . implode('><', $tags) . '>'), 0, 255);
+}
+
+/**
  * Puts together a list of all the cids that a given node would affect
  * And then clears them from the cache table
  *
@@ -1210,7 +1225,7 @@ function os_publications_preprocess_page(&$variables) {
   }
 
   ctools_include('infinite_scroll', 'os');
-  _os_add_infinite_scroll('os_publications', '#content li.pager-next>a', '#content>.biblio-category-section', array('pager' => '#content ul.pager', 'hide_biblio_categories' => TRUE));
+  _os_add_infinite_scroll('os_publications', '#content li.pager-next a', '#content>.biblio-category-section', array('pager' => '#content ul.pager', 'hide_biblio_categories' => TRUE));
   // Hide the numbers of results found for anonymous users.
   if (user_is_anonymous()) {
     unset($variables['page']['content']['system_main']['biblio_page']['header']['export_links']);

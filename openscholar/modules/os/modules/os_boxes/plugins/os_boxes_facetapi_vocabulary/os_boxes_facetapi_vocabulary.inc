@@ -17,6 +17,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     $options = parent::options_defaults();
     $options['bundle'] = FALSE;
     $options['vocabularies'] = array();
+    $options['sort_by'] = 'alpha';
 
     return $options;
   }
@@ -29,11 +30,13 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
 
     $bundle = $this->options['bundle'];
     $selected_vocab = $this->options['vocabularies'];
+    $sort_by = $this->options['sort_by'];
 
     if (!empty($form_state['values']['bundle'])) {
       // We have the bundle from the AJAX.
       $bundle = $form_state['values']['bundle'];
       $selected_vocab = 'all';
+      $sort_by = $form_state['values']['sort_by'];
     }
 
     $bundles = os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP));
@@ -71,6 +74,18 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
       '#multiple' => TRUE,
       '#default_value' => $selected_vocab,
     );
+
+    $options = array(
+      'alpha' => t('Alphabetical'),
+      'weight' => t('Term weight')
+    );
+    $form['sort_by'] = array(
+      '#title' => t('Sort by:'),
+      '#type' => 'select',
+      '#options' => $options,
+      '#default_value' => $sort_by,
+    );
+
     return $form;
   }
 
@@ -222,8 +237,26 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
         }
 
         if (!empty($block['content']['sm_og_vocabulary'])) {
-          // Sort by vocab's title.
-          ksort($block['content']['sm_og_vocabulary']);
+          // Sort by the Vocabulary weight if that option is selected.
+          if ($this->options['sort_by'] == 'weight') {
+            $query = new EntityFieldQuery();
+            $results = $query->entityCondition('entity_type', 'taxonomy_vocabulary')
+              ->propertyCondition('machine_name', array_keys($block['content']['sm_og_vocabulary']), 'IN')
+              ->propertyOrderBy('weight')
+              ->execute();
+
+            $ordered_vocab = array();
+            foreach($results['taxonomy_vocabulary'] as $vid) {
+              $vocab = taxonomy_vocabulary_load($vid->vid);
+              // Take the existing content and reorder it based on the query.
+              $ordered_vocab[$vocab->machine_name] = $block['content']['sm_og_vocabulary'][$vocab->machine_name];
+            }
+            $block['content']['sm_og_vocabulary'] = $ordered_vocab;
+          }
+          else {
+            // Default is to sort by vocab's title.
+            ksort($block['content']['sm_og_vocabulary']);
+          }
         }
 
         $block['content'] = render($block['content']);

@@ -69,14 +69,18 @@ Feature:
 
   @api @features_second
   Scenario: Test that Conference Papers using the Chicago-Author-Date style
-            print 'In' correctly
+            print 'In' correctly and doesn't capitalize unneeded words.
     Given I am logging in as "john"
      When I go to the "os_publications" app settings in the vsite "john"
       And I select the radio button named "biblio_citeproc_style" with value "chicago-author-date.csl"
       And I press "Save configuration"
       And I visit "john/publications/confpapers-tests"
      Then I should not see "ConfPapers tests, in"
-     Then I should see "Confpapers Tests.” In"
+      And I should see "Confpapers Tests.” In"
+      And I visit "john/publications/journal-article-title"
+      And I should see "Journal of Publications"
+      And I should not find the text "Journal Of Publications"
+
 
   @api
   Scenario: verify the user can see message the the publication won't display
