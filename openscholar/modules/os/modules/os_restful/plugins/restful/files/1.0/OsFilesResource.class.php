@@ -93,6 +93,10 @@ class OsFilesResource extends RestfulEntityBase {
     return drupal_render($output);
   }
 
+  /**
+   * @param EntityDrupalWrapper $wrapper
+   * @return array|void
+   */
   protected function processOgVocabFieldEmpty(\EntityDrupalWrapper $wrapper) {
     $terms = $wrapper->{OG_VOCAB_FIELD}->value();
     $return = array();

@@ -141,7 +141,58 @@ class OsVocabulary extends \RestfulEntityBase {
     module_load_include('inc', 'vsite_vocab', 'includes/taxonomy');
     $vocabs = array_keys(vsite_vocab_get_vocabularies($vsite));
 
+    if (!empty($this->request['entity_type']) && !empty($this->request['bundle'])) {
+
+      if (!$og_vocabs = $this->getOgVocabsByEntityBundle($this->request['entity_type'], $this->request['bundle'])) {
+        return;
+      }
+
+      $filtered_vocabs = array();
+      foreach ($og_vocabs as $og_vocab) {
+        if (!in_array($og_vocab->vid, $vocabs)) {
+          //
+          continue;
+        }
+
+        $filtered_vocabs[] = $og_vocab->vid;
+      }
+
+      $vocabs = $filtered_vocabs;
+    }
+
     $query->propertyCondition('vid', $vocabs, 'IN');
+  }
+
+  /**
+   * Get the attached OG vocabs to specific entity type and bundle.
+   * 
+   * @param $entity_type
+   *   The entity type.
+   * @param $bundle
+   *   The bundle.
+   * @param null $field_name
+   *   The field name. Optional.
+   *
+   * @return array
+   *   Array of og vocabs attached to entity type and bundle.
+   */
+  private function getOgVocabsByEntityBundle($entity_type, $bundle, $field_name = NULL) {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'og_vocab')
+      ->propertyCondition('entity_type', $entity_type)
+      ->propertyCondition('bundle', $bundle);
+
+    if (!empty($field_name)) {
+      $query->propertyCondition('field_name', $field_name);
+    }
+
+    $results = $query->execute();
+
+    if (empty($results['og_vocab'])) {
+      return;
+    }
+
+    return entity_load('og_vocab', array_keys($results['og_vocab']));
   }
 
 }
