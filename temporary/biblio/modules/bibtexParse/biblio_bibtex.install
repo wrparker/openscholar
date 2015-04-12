@@ -75,7 +75,7 @@ function _get_bibtex_type_map() {
       'webprojectpage'   => 134,
       'webservice'       => 133,
       'website'          => 132,
-      'workingpaper'     => 1000,
+      'workingpaper'     => 136,
     )
   );
   $map['format'] = 'bibtex';
