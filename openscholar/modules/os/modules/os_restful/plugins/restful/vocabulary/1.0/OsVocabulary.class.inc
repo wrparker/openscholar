@@ -123,6 +123,13 @@ class OsVocabulary extends \RestfulEntityBase {
     if ($this->getMethod() == \RestfulInterface::POST) {
       og_vocab_relation_save($wrapper->vid->value(), 'node', $this->request['vsite']);
     }
+
+    // Creating OG vocab.
+    if (in_array($this->getMethod(), array(\RestfulBase::POST, \RestfulBase::PATCH, \RestfulBase::PUT))) {
+      if (!empty($this->request['entity_type']) && !empty($this->request['bundle'])) {
+        og_vocab_create_og_vocab($wrapper->vid->value(), $this->request['entity_type'], $this->request['bundle'])->save();
+      }
+    }
   }
 
   /**
@@ -165,7 +172,7 @@ class OsVocabulary extends \RestfulEntityBase {
 
   /**
    * Get the attached OG vocabs to specific entity type and bundle.
-   * 
+   *
    * @param $entity_type
    *   The entity type.
    * @param $bundle

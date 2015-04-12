@@ -58,6 +58,11 @@ function os_restful_entity_property_info_alter(&$info) {
     'getter callback' => 'os_restful_vocab_gid_get',
     'type' => 'unknown',
   );
+
+  $info['og_vocab']['properties']['vid']['setter callback'] = 'entity_property_verbatim_set';
+  $info['og_vocab']['properties']['entity_type']['setter callback'] = 'entity_property_verbatim_set';
+  $info['og_vocab']['properties']['bundle']['setter callback'] = 'entity_property_verbatim_set';
+  $info['og_vocab']['properties']['field_name']['setter callback'] = 'entity_property_verbatim_set';
 }
 
 /**
