@@ -6,6 +6,9 @@
   var restPath = '';
 
   angular.module('EntityService', [])
+    .config(function () {
+      restPath = Drupal.settings.paths.api;
+    })
   /**
    * Service to maintain the list of files on a user's site
    */
@@ -20,10 +23,6 @@
 
         if (Drupal.settings.spaces) {
           vsite = Drupal.settings.spaces.id;
-        }
-
-        if (!restPath) {
-          restPath = Drupal.settings.paths.api;
         }
 
         var success = function(resp) {
@@ -52,12 +51,16 @@
           }
         }
 
-        this.fetch = function () {
+        this.fetch = function (params) {
           var url = restPath+'/'+entityType;
-          if (vsite) {
-            //url += '?filter[vsite]='+vsite;
+          if (!params) {
+            params = {};
           }
-          $http.get(url)
+
+          if (vsite) {
+            params.vsite = vsite;
+          }
+          return $http.get(url, params)
             .success(success)
             .error(errorFunc);
         }
@@ -71,7 +74,6 @@
           if (entities[k]) {
             return entities[k];
           }
-          throw new Exception('Entity of type '+type+' with id '+id+' not found.');
         }
 
         this.getCount = function () {
@@ -99,18 +101,27 @@
             this.add(entity);
             return;
           }
-          var k = fetchByProp(idProp, entity[idProp]);
-          entities[k] = entity;
-          // rest API call to update entity on server
+          var k = findByProp(idProp, entity[idProp]);
 
-          $rootScope.$broadcast(eventName+'.update');
+          var url = [restPath, entityType, entity[idProp]],
+            data = angular.copy(entity);
+
+          delete data[idProp];
+          $http.put(url.join('/'), data)
+            .success(function (resp) {
+              console.log(resp);
+
+              $rootScope.$broadcast(eventName+'.update', entity);
+            })
+
         };
 
         this.delete = function (entity) {
           var k = fetchByProp(idProp, entity[idProp]);
-          entities.slice(k, 1);
+          entities.splice(k, 1);
 
           //rest API call to delete entity from server
+
 
           $rootScope.$broadcast(eventName+'.delete');
         }
