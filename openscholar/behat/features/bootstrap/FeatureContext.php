@@ -2009,4 +2009,17 @@ class FeatureContext extends DrupalContext {
     }
   }
 
+  /**
+   * @Then /^I hover over the element "([^"]*)" under "([^"]*)"$/
+   */
+  public function iHoverOverTheElementUnder($locator, $container) {
+    $page = $this->getSession()->getPage();
+    $element = $page->find('xpath', "//*[contains(@class, '{$container}')]//a[contains(@class, '{$locator}')]");
+
+    if (!$element) {
+      throw new Exception(sprintf("The element with class %s wasn't found in %s", $element, $container));
+    }
+    $element->mouseOver();
+  }
+
 }

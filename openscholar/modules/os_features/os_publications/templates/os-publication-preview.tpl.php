@@ -10,7 +10,7 @@ $image = theme('image', array('path' => drupal_get_path('module', 'os_publicatio
     <div class="biblio-dummy-body">
       Wand, Jonathan, Gary King and Olivia Lau. 2011.
       <a>Anchors: Software for Anchoring Vigenttes Data.</a>
-      <em>Jornal of Statistical Software</em>
+      <em>Journal of Statistical Software</em>
       <span>42, no. 3: 1-25.</span>
     </div>
     <div class="biblio-dummy-links">
