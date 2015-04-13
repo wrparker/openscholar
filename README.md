@@ -18,9 +18,14 @@ For developers, see the [glossary](https://github.com/openscholar/openscholar/wi
 ## Get Involved
 
 * [Issues (Github)](https://github.com/openscholar/openscholar/issues)
-* IRC: freenode#openscholar
 * [@OpenScholarApp](http://twitter.com/OpenScholarApp)
 
 ## Tutorials
 
 * [How to create an OS App](https://github.com/openscholar/openscholar/wiki/How-to-create-an-os-app)
+
+## Utilities
+
+* [Scripts](https://github.com/openscholar/openscholar/wiki/Scripts)
+
+

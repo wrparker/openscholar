@@ -1,5 +1,8 @@
 (function ($) {
 
+  /**
+   * Fit multiple events to single day in the calendar.
+   */
   Drupal.behaviors.osEventsSideBySideEvents = {
 
     attach: function () {
@@ -34,7 +37,9 @@
     }
   };
 
-  // Update the End Date field according to the Start Date field.
+  /**
+   * Update the End Date field according to the Start Date field.
+   */
   Drupal.behaviors.osEventsUpdateEndDate = {
     attach: function () {
 
@@ -44,5 +49,24 @@
 
     }
   };
+
+  /**
+   * Populate the end time of the scheduling close date.
+   */
+  Drupal.behaviors.osPopulateEndDate = {
+    attach: function () {
+      $("#edit-scheduling-open-datepicker-popup-0").change(function() {
+        if ($("#edit-scheduling-open-timeEntry-popup-1").val() == "") {
+          $("#edit-scheduling-open-timeEntry-popup-1").val('12:01 AM');
+        }
+      });
+
+      $("#edit-scheduling-close-datepicker-popup-0").change(function() {
+        if ($("#edit-scheduling-close-timeEntry-popup-1").val() == "") {
+          $("#edit-scheduling-close-timeEntry-popup-1").val('11:59 PM');
+        }
+      });
+    }
+  }
 
 })(jQuery);

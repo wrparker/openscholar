@@ -66,6 +66,35 @@ function os_importer_os_app_info() {
  * Import feed item when the user add the feed importer for the first time.
  */
 function os_importer_node_insert($node) {
+
+  if ($node->type == 'event') {
+
+    $round = function($value) {
+      $time = strtotime($value);
+      $hour = date('H:i', $time);
+      $new_hour = os_importer_round_hour($hour);
+
+      list($day) = explode(' ', $value);
+      return $day . ' ' . $new_hour . ':00';
+    };
+
+    // Round the hour of the event
+    $wrapper = entity_metadata_wrapper('node', $node);
+    $original_time = $wrapper->field_date->get(0);
+    $time = $original_time->value();
+    $time['value'] = $round($time['value']);
+    $time['value2'] = $round($time['value2']);
+
+    if ($time['value'] != gmdate('Y-m-d H:i:s', $original_time->value->value()) || $time['value2'] != gmdate('Y-m-d H:i:s', $original_time->value2->value())) {
+      $param = array(
+        '@title' => $node->title,
+      );
+      drupal_set_message(t('The value of minutes for the event @title is not in a multiple of 5 minutes and hence is altered.', $param), 'warning');
+    }
+
+    $wrapper->field_date->set(array($time));
+  }
+
   // Source attached to node.
   if (isset($node->feeds) || !$importer_id = feeds_get_importer_id($node->type)) {
     return;
@@ -307,13 +336,15 @@ function os_importer_map_files($source, $entity, $target, $value, $mapping) {
   $files = array();
 
   $sources = explode('|', $value);
-  // todo: Use system_retrieve_file().
+
   foreach ($sources as $source) {
-    if ($file = system_retrieve_file($source, 'public://', TRUE)) {
+    $destination = 'public://' . token_replace(os_files_get_save_path(), array());
+    if ($file = system_retrieve_file($source, $destination, TRUE)) {
       $files[] = array(
         'fid' => $file->fid,
         'display' => 1,
         'description' => '',
+        'timestamp' => REQUEST_TIME - 200,
       );
     }
     else {
@@ -600,6 +631,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   $file_content = file_get_contents($file->uri);
   $file_content = str_replace("\r", "\n", $file_content);
   $file_rows = explode("\n", $file_content);
+  file_put_contents($file->uri, $file_content);
 
   feeds_include_library('ParserCSV.inc', 'ParserCSV');
   $parser = new ParserCSV();
@@ -616,7 +648,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   if ($missing = array_diff($mappings_diff, $header)) {
     $params = array('!missing' => theme('item_list', array('items' => $missing)));
     form_set_error('file', t('The following columns are not present in the CSV file: !missing The structure of the your CSV file probably needs to be updated. Please download the template again. ', $params));
-    
+
     return;
   }
 
@@ -979,4 +1011,35 @@ function os_importer_entity_property_info_alter(&$info) {
       'label' => t('Path'),
     );
   }
+}
+
+/**
+ * round up the hour. If the hour is 15:53 the return value will be 15:55.
+ * If the hour is 15:56 the hour will be 16:00.
+ *
+ * @param $hour
+ *   The hour in a time format of HH:MM
+ *
+ * @return
+ *   The new hour.
+ */
+function os_importer_round_hour($hour) {
+  list($hours, $minutes) = explode(':', $hour);
+
+  $single = $minutes % 10;
+  if ($single < 5) {
+    $new_minutes = intval($minutes / 10) * 10;
+  }
+  else if ($single > 5) {
+    $new_minutes = ((intval($minutes / 10) + 1) * 10) - 5;
+  }
+  else {
+    $new_minutes = $minutes;
+  }
+
+  if ($new_minutes == '0') {
+    $new_minutes = '00';
+  }
+
+  return $hours . ':' . $new_minutes;
 }

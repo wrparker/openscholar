@@ -2374,7 +2374,7 @@ function vsite_delete_request_submit($form, &$form_state) {
   }
 
   // Send to admin
-  $to = variable_get('site_mail', ini_get('sendmail_from'));
+  $to = variable_get('vsite_site_delete_mail', variable_get('site_mail', ini_get('sendmail_from')));
 
   // Save both users and all form values for email composition.
   $values = $form_state['values'];

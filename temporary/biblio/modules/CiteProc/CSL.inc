@@ -303,6 +303,7 @@ class csl_format extends csl_rendering_element {
         case 'capitalize-all':
         case 'title':
           $text = mb_convert_case($text, MB_CASE_TITLE);
+          $text = $this->handleCapitalizeCaseConversion($text);
           break;
         case 'capitalize-first':
           $text = drupal_ucfirst($text);
@@ -344,6 +345,52 @@ class csl_format extends csl_rendering_element {
     }
 
     return $prefix . $text . $suffix;
+  }
+
+  /**
+   * Handling the case conversion for special words.
+   *
+   * In both cases, stop words are lowercased, unless they are the first or last
+   * word in the string, or follow a colon.
+   *
+   * @see http://docs.citationstyles.org/en/stable/specification.html#title-case-conversion
+   *
+   * @param $text
+   *   The text we need to handle.
+   * @return string
+   *   The reformatted text.
+   */
+  protected function handleCapitalizeCaseConversion($text) {
+    $stop_words = array('A' => 'a', 'An' => 'an', 'And' => 'and', 'As' => 'as',
+      'At' => 'at', 'But' => 'but', 'By' => 'by', 'Down' => 'down',
+      'For' => 'for', 'From' => 'from', 'In' => 'in', 'Into' => 'into',
+      'Nor' => 'nor', 'Of' => 'of', 'On' => 'on', 'Onto' => 'onto',
+      'Or' => 'or', 'Over' => 'over', 'So' => 'so', 'The' => 'the',
+      'Till' => 'till', 'To' => 'to', 'Up' => 'up', 'Via' => 'via',
+      'With' => 'with', 'Yet' => 'yet',
+    );
+
+    $tear_down = explode(' ' , $text);
+
+    foreach ($tear_down as $delta => &$word) {
+      if (in_array($delta, array(0, count($tear_down) - 1))) {
+        continue;
+      }
+
+      $prev = $tear_down[$delta - 1];
+
+      if (strpos($prev, ':') !== FALSE) {
+        continue;
+      }
+
+      if (!isset($stop_words[$word])) {
+        continue;
+      }
+
+      $word = str_replace($word, $stop_words[$word], $word);
+    }
+
+    return implode(' ', $tear_down);
   }
 
 }
@@ -605,7 +652,11 @@ class csl_name extends csl_format {
           }
           else {
             switch ($this->{'name-as-sort-order'}) {
-              case 'first' && $rank == 0:
+              case 'first':
+                if ($rank != 0) {
+                  $text = $given . ' ' . $name['lastname'] ;
+                  break;
+                }
               case 'all':
                 $text = $name['lastname'] . $this->sort_separator . $given;
                 break;
@@ -1315,10 +1366,30 @@ class csl_layout extends csl_format {
   function render($data, $mode = NULL) {
     $text = '';
     $parts = array();
-   // $delimiter = $this->delimiter;
 
+    // as assembling parts, check if punctuation and quotes are interacting correctly between adjacent parts
+    $counter = 0;
+    $punctuation =  array("!", "?", ",", ".");
+    $quotes = array("'", '"','”','’');
     foreach ($this->elements as $element) {
-      $parts[] = $element->render($data, $mode);
+      $part = $element->render($data, $mode);
+      if($part) {
+        if ($counter > 0) {
+          $prevpart = $parts[$counter - 1];
+          // get last character of pervious part
+          $lastchar = mb_substr($prevpart, mb_strlen($prevpart) - 1);
+          // get second-to-last character of pervious part
+          $secondtolastchar = mb_substr($prevpart, mb_strlen($prevpart) - 1);
+          // get first character of current part
+          $firstchar = mb_substr($part, 0, 1);
+          if (in_array($lastchar, $quotes) && in_array($firstchar, $punctuation) && !in_array($secondtolastchar, $punctuation)) {
+            $part = mb_substr($part, 1);
+            $parts[$counter - 1] = mb_substr($prevpart, 0, mb_strlen($prevpart) - 1) . "$firstchar$lastchar";
+          }
+        }
+        $parts[$counter] = $part;
+        $counter++;
+      }
     }
 
     $text = implode($this->delimiter, $parts);
