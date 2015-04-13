@@ -1,7 +1,7 @@
-diff --git a/media_gallery.addimage.js b/media_gallery.addimage.js
+diff --git a/media_gallery/media_gallery.addimage.js b/media_gallery/media_gallery.addimage.js
 index 4ea119a..066e63b 100644
---- a/media_gallery.addimage.js
-+++ b/media_gallery.addimage.js
+--- a/media_gallery/media_gallery.addimage.js
++++ b/media_gallery/media_gallery.addimage.js
 @@ -3,13 +3,18 @@
  Drupal.behaviors.media_gallery = {};
  Drupal.behaviors.media_gallery.attach = function (context, settings) {
@@ -31,10 +31,10 @@ index 4ea119a..066e63b 100644
  
    var media = [];
  
-diff --git a/media_gallery.dragdrop.js b/media_gallery.dragdrop.js
+diff --git a/media_gallery/media_gallery.dragdrop.js b/media_gallery/media_gallery.dragdrop.js
 index 8af15cd..59794c6 100644
---- a/media_gallery.dragdrop.js
-+++ b/media_gallery.dragdrop.js
+--- a/media_gallery/media_gallery.dragdrop.js
++++ b/media_gallery/media_gallery.dragdrop.js
 @@ -3,6 +3,14 @@ Drupal.behaviors.mediaGallerySort = {};
  
  Drupal.behaviors.mediaGallerySort.attach = function (context, settings) {
@@ -75,10 +75,10 @@ index 8af15cd..59794c6 100644
  }
  
  /**
-diff --git a/media_gallery.module b/media_gallery.module
+diff --git a/media_gallery/media_gallery.module b/media_gallery/media_gallery.module
 index 0ec5541..d68f939 100644
---- a/media_gallery.module
-+++ b/media_gallery.module
+--- a/media_gallery/media_gallery.module
++++ b/media_gallery/media_gallery.module
 @@ -27,7 +27,6 @@ function media_gallery_file_view_modes() {
      'media_gallery_lightbox' => t('Gallery lightbox'),
      'media_gallery_detail' => t('Gallery detail'),
