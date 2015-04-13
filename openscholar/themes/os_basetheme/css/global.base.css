@@ -139,6 +139,15 @@ h1.node-title {
 	font-size:1.15em;
 }
 
+.sidebar .sv-list-link .node,
+.sidebar .sv-list-link h1.node-title,
+.accordion .sv-list-link .node,
+.accordion .sv-list-link h1.node-title {
+  font-weight: normal;
+  font-size: 1em;
+  margin-bottom: 0;
+}
+
 .node-teaser .field-name-body h2,
 .node-teaser .field-name-body h3,
 .node-teaser .field-name-body h4 {
@@ -198,13 +207,13 @@ a img {
 }
 
 
-.block-boxes-os_sv_list_file .file {
-	margin-bottom: 22px;	
+.sv-list-document .file {
+	margin-bottom: 0;	
 }
 
 #content-column .block-boxes-os_sv_list_file .file {
 	border-bottom: 1px solid #CCCCCC;
-    padding-bottom: 20px;
+    padding: 10px 0;
 }
 
 #content-column .block-boxes-os_sv_list_file span.file {
@@ -276,10 +285,16 @@ bottom: 20px;
 }
 
 a.entity-link {
-	display: inline;
-	font-weight:bold;	
-	padding-right: 10px;
+	display: inline;	
+	padding-right: 8px;
+	font-weight:bold;
 }
+
+.sv-list-layout-list a.entity-link {
+	font-weight:normal;
+}
+
+
 
 div.content a.download-link {
 	/*background: url("../images/scholarbase-sprite.png") no-repeat scroll 2px -588px rgba(0, 0, 0, 0);
