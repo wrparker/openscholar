@@ -231,7 +231,6 @@ projects[media_gallery][patch][] = "http://drupal.org/files/media_gallery-double
 projects[media_gallery][patch][] = "http://drupal.org/files/media_gallery-remove_taxonomy_shenanigans-1686498-9.patch"
 projects[media_gallery][patch][] = "http://drupal.org/files/media_gallery-rename_field-1940036-3.patch"
 projects[media_gallery][patch][] = "http://drupal.org/files/media_gallery-lightbox_double_file-1977822-1.patch"
-projects[media_gallery][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/49ca8b1d71fa846a066f41891e457121393e36c4/patches/media_gallery-multiple_full_content.patch"
 
 projects[message][subdir] = "contrib"
 projects[message][version] = 1.8
