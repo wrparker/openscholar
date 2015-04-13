@@ -112,6 +112,8 @@ html.js input.throbbing {
     text-decoration: none !important;
 }
 
+.media-browser-pane #media-browser-file-select,
+.media-browser-pane .actions button,
 a#edit-cancel,
 a.form-cancel {
   cursor: pointer;
@@ -131,6 +133,24 @@ a.form-cancel {
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
   border-radius: 20px;
+}
+
+.media-browser-pane .media-item {
+  background: #FFFFFF;
+  border: none;
+}
+
+.media-browser-pane .media-item:nth-child(odd) {
+  background: #EFEFEF;
+}
+
+.media-browser-pane .media-item:nth-child(even) {
+  background: #FFF;
+}
+
+
+.media-browser-pane textarea#media-browser-web {
+	width:95%;
 }
 
 a.form-cancel:hover {
