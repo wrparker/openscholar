@@ -1,7 +1,7 @@
-diff --git a/media_gallery/media_gallery.addimage.js b/media_gallery/media_gallery.addimage.js
+diff --git a/media_gallery.addimage.js b/media_gallery.addimage.js
 index 4ea119a..066e63b 100644
---- a/media_gallery/media_gallery.addimage.js
-+++ b/media_gallery/media_gallery.addimage.js
+--- a/media_gallery.addimage.js
++++ b/media_gallery.addimage.js
 @@ -3,13 +3,18 @@
  Drupal.behaviors.media_gallery = {};
  Drupal.behaviors.media_gallery.attach = function (context, settings) {
@@ -31,10 +31,216 @@ index 4ea119a..066e63b 100644
  
    var media = [];
  
-diff --git a/media_gallery/media_gallery.module b/media_gallery/media_gallery.module
+diff --git a/media_gallery.install b/media_gallery.install
+index 4d468fc..e191d1b 100644
+--- a/media_gallery.install
++++ b/media_gallery.install
+@@ -64,25 +64,11 @@ function media_gallery_install() {
+     styles_style_flush();
+   }
+ 
+-  // Add the taxonomy vocabulary for media gallery collections.
+-  $vocabulary = media_gallery_create_taxonomy_vocab();
+-
+-  // Make sure the standard 'field_tags' field exists.
+-  _media_gallery_ensure_field_tags();
+-
+   // Create fields (but not instances yet) for media_gallery nodes and
+   // for the gallery collection vocabulary.
+   foreach (_media_gallery_controlled_fields() as $field) {
+     _media_gallery_ensure_field($field);
+   }
+-  // Attach fields to gallery_collection taxonomy terms.
+-  foreach (_media_gallery_controlled_instances('taxonomy_term') as $instance) {
+-    _media_gallery_ensure_instance($instance);
+-  }
+-
+-  // Now that the gallery_collection vocabulary exists and has fields attached,
+-  // create an "All galleries" term for galleries to belong to by default.
+-  media_gallery_create_taxonomy_term($vocabulary);
+ 
+   // Attach fields to the media gallery node type (including a term reference
+   // for the default collection).
+@@ -117,7 +103,6 @@ function media_gallery_requirements() {
+   $required_fields = _media_gallery_controlled_fields();
+   // In addition to the fields we control, we also need the standard field_tags
+   // that most sites will have gotten from their install profile.
+-  $required_fields['field_tags'] = array('type' => 'taxonomy_term_reference');
+ 
+   foreach ($required_fields as $field_name => $field_definition) {
+     $field = field_info_field($field_name);
+@@ -275,18 +260,6 @@ function _media_gallery_controlled_fields() {
+       'locked' => TRUE,
+       'type' => 'number_integer',
+     ),
+-    'media_gallery_collection' => array(
+-      'field_name' => 'media_gallery_collection',
+-      'type' => 'taxonomy_term_reference',
+-      'settings' => array(
+-        'allowed_values' => array(
+-          array(
+-            'vocabulary' => 'gallery_collections',
+-            'parent' => 0,
+-          ),
+-        ),
+-      ),
+-    ),
+     // Fields to create on media items.
+     'media_description' => array(
+       'field_name' => 'media_description',
+@@ -655,26 +628,6 @@ function _media_gallery_controlled_instances($group = NULL) {
+         ),
+       ),
+     ),
+-    // The 'collection' tag field on media gallery nodes.
+-    'media_gallery_collection' => array(
+-      'field_name' => 'media_gallery_collection',
+-      'label' => $t('Gallery collection'),
+-      'default_value' => array(
+-        array(
+-          'tid' => variable_get('media_gallery_default_collection_tid'),
+-        ),
+-      ),
+-      'display' => array(
+-        'default' => array(
+-          'type' => 'hidden',
+-          'label' => 'hidden',
+-        ),
+-        'teaser' => array(
+-          'type' => 'hidden',
+-          'label' => 'hidden',
+-        ),
+-      ),
+-    ),
+   );
+   foreach ($node_instances as &$instance) {
+     $instance['entity_type'] = 'node';
+@@ -705,23 +658,7 @@ function _media_gallery_controlled_instances($group = NULL) {
+     ),
+   );
+ 
+-  foreach ($instances as $key => $instance) {
+-    // Since we are re-using fields which are defined for the node, we need to
+-    // remove any additional view modes which don't belong to avoid E_NOTICE errors.
+-    $instance['display'] = array_intersect_key($instance['display'], array_flip(array('default', 'full')));
+-    $instance['entity_type'] = 'taxonomy_term';
+-    $instance['bundle'] = 'gallery_collections';
+-    $taxonomy_instances['taxo_term_' . $key] = $instance;
+-  }
+-
+-  switch ($group) {
+-    case 'node':
+-      return $node_instances;
+-    case 'taxonomy_term':
+-      return $taxonomy_instances;
+-    default:
+-      return $node_instances + $taxonomy_instances;
+-  }
++  return $node_instances;
+ }
+ 
+ /**
+@@ -780,16 +717,6 @@ function _media_required_instances() {
+         'media_gallery_detail' => array('type' => 'text_default', 'label' => 'above'),
+       ),
+     ),
+-    'field_tags' => array(
+-      'field_name' => 'field_tags',
+-      'label' => $t('Tags'),
+-      'widget' => array(
+-        'type' => 'taxonomy_autocomplete',
+-      ),
+-      'display' => array(
+-        'default' => array('type' => 'hidden'),
+-      ),
+-    ),
+     'field_license' => array(
+       'field_name' => 'field_license',
+       'label' => $t('License settings for this media'),
+@@ -1303,3 +1230,79 @@ function media_gallery_update_7010() {
+   }
+   field_bundle_settings('file', $bundle, $bundle_settings);
+ }
++
++/**
++ * Renames field media_gallery_media => media_gallery_file
++ */
++function media_gallery_update_7011() {
++  $old = 'media_gallery_media';
++  $new = 'media_gallery_file';
++
++  if (db_table_exists('field_data_'.$new)) {
++    if (db_select('field_data_'.$new, 'f')->fields('f')->execute()->rowCount()==0 && db_table_exists('field_data_'.$old)) {
++      db_drop_table('field_data_'.$new); 
++      db_drop_table('field_revision_'.$new); 
++    } else {
++      return t('Media gallery already using new field.  Not performing upgrade.');
++    }
++  }
++  
++  //see: http://zgadzaj.com/how-to-change-the-machine-name-of-a-content-field-in-drupal-7
++  $transaction = db_transaction();
++  $schema = array(
++    'media_gallery_media_fid' => array(
++        //int(10) 		UNSIGNED 	Yes 	NULL
++      'type' => 'int',
++      'unsignged' => TRUE,
++      'not null' => FALSE,
++      'default' => NULL,
++    ),    
++    'media_gallery_media_display' => array(
++        //tinyint(3) 		UNSIGNED 	No 	1
++      'type' => 'int',
++      'size' => 'tiny',
++      'unsignged' => TRUE,
++      'not null' => TRUE,
++      'default' => 1,
++    ),
++    'media_gallery_media_description' => array(
++      //text 	utf8_general_ci 		Yes 	NULL
++      'type' => 'text',
++      'not null' => FALSE,
++      'default' => NULL,
++    ),
++  );
++    
++  try {
++    db_update('field_config')
++      ->fields(array('field_name' => $new))
++      ->condition('field_name', $old)
++      ->execute();
++      
++    db_update('field_config_instance')
++      ->fields(array('field_name' => $new))
++      ->condition('field_name', $old)
++      ->execute();
++    
++    foreach (array('field_data_', 'field_revision_') as $table_pre) {
++      $old_table = $table_pre . $old;
++      $new_table = $table_pre . $new;
++    
++      db_rename_table($old_table, $new_table);
++  
++      //drop index.  media_gallery_media_fid
++      db_drop_index($new_table, 'media_gallery_media_fid');  
++      foreach (array('fid', 'display', 'description') as $field) {
++        $spec = $schema["${old}_${field}"];
++        $keys = ($field == 'fid') ? array('indexes' => array('media_gallery_file_fid' => array('media_gallery_file_fid'))) : array();
++        db_change_field($new_table, "${old}_${field}", "${new}_${field}", $spec, $keys);        
++      }
++      
++    }
++  } catch (Exception $e) {
++    $transaction->rollback();
++    throw new DrupalUpdateException('Could not update Media Gallery\'s media_gallery_media field.  Rolling back changes.');
++  }
++  
++  return t('Updated Media Gallery field.');
++}
+diff --git a/media_gallery.module b/media_gallery.module
 index 0ec5541..d68f939 100644
---- a/media_gallery/media_gallery.module
-+++ b/media_gallery/media_gallery.module
+--- a/media_gallery.module
++++ b/media_gallery.module
 @@ -27,7 +27,6 @@ function media_gallery_file_view_modes() {
      'media_gallery_lightbox' => t('Gallery lightbox'),
      'media_gallery_detail' => t('Gallery detail'),
@@ -63,3 +269,16 @@ index 0ec5541..d68f939 100644
      // When viewing the full node, add front-end resources for drag-and-drop
      // sorting.
      if ($view_mode == 'full') {
+diff --git a/media_gallery.theme.inc b/media_gallery.theme.inc
+index e70e3c3..68045c5 100644
+--- a/media_gallery.theme.inc
++++ b/media_gallery.theme.inc
+@@ -232,6 +232,8 @@ function theme_media_gallery_media_item_lightbox($variables) {
+   $output = 'Error';
+   // If the format is to have the description as well, we add it here
+   if (!empty($gallery_node->media_gallery_lightbox_extras[LANGUAGE_NONE][0]['value'])) {
++    unset($element['file']); //already rendered in media_gallery_detail.  
++
+     $output =
+     '<div class="mg-lightbox-wrapper clearfix">' .
+       '<div class="lightbox-title">' . drupal_render($element['media_title']) . '</div>' .
