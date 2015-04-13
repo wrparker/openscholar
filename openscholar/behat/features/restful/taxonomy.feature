@@ -26,12 +26,15 @@ Feature: Testing taxonomy CRUD.
 
   @api @restful
   Scenario: Testing creation of OG vocab.
-    Given I "create" OG vocabulary as "john" with the settings:
+    Given I "create" a vocabulary as "john" with the settings:
+      | label   | vsite | machine name  |
+      | Testing | john  | testing_vocab |
+      And I "create" OG vocabulary as "john" with the settings:
       | entity type   | bundle  | vocabulary    |
       | node          | bio     | testing_vocab |
       And I am logging in as "john"
       And I visit "john/cp/build/taxonomy"
-      And I should see "Testing vocab"
+      And I should see "Testing"
     When I "patch" OG vocabulary as "john" with the settings:
       | bundle  |
       | blog    |
