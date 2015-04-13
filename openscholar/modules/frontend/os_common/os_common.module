@@ -130,6 +130,14 @@ function os_common_library() {
     'version' => '1.0',
     'js' => array(
       $path.'/TaxonomyWidget/TaxonomyWidget.module.js' => array(),
+      array(
+        'data' => array(
+          'paths' => array(
+            'TaxonomyWidget' => url($path.'/TaxonomyWidget/'),
+          )
+        ),
+        'type' => 'setting',
+      )
     ),
     'dependencies' => array(
       array('os_common', 'angularjs'),
