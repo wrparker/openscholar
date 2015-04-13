@@ -1,7 +1,7 @@
-diff --git a/media_gallery.addimage.js b/media_gallery.addimage.js
+diff --git a/media_gallery/media_gallery.addimage.js b/media_gallery/media_gallery.addimage.js
 index 4ea119a..066e63b 100644
---- a/media_gallery.addimage.js
-+++ b/media_gallery.addimage.js
+--- a/media_gallery/media_gallery.addimage.js
++++ b/media_gallery/media_gallery.addimage.js
 @@ -3,13 +3,18 @@
  Drupal.behaviors.media_gallery = {};
  Drupal.behaviors.media_gallery.attach = function (context, settings) {
@@ -31,10 +31,10 @@ index 4ea119a..066e63b 100644
  
    var media = [];
  
-diff --git a/media_gallery.install b/media_gallery.install
+diff --git a/media_gallery/media_gallery.install b/media_gallery/media_gallery.install
 index 4d468fc..e191d1b 100644
---- a/media_gallery.install
-+++ b/media_gallery.install
+--- a/media_gallery/media_gallery.install
++++ b/media_gallery/media_gallery.install
 @@ -64,25 +64,11 @@ function media_gallery_install() {
      styles_style_flush();
    }
@@ -237,10 +237,10 @@ index 4d468fc..e191d1b 100644
 +  
 +  return t('Updated Media Gallery field.');
 +}
-diff --git a/media_gallery.module b/media_gallery.module
+diff --git a/media_gallery/media_gallery.module b/media_gallery/media_gallery.module
 index 0ec5541..d68f939 100644
---- a/media_gallery.module
-+++ b/media_gallery.module
+--- a/media_gallery/media_gallery.module
++++ b/media_gallery/media_gallery.module
 @@ -27,7 +27,6 @@ function media_gallery_file_view_modes() {
      'media_gallery_lightbox' => t('Gallery lightbox'),
      'media_gallery_detail' => t('Gallery detail'),
@@ -269,10 +269,10 @@ index 0ec5541..d68f939 100644
      // When viewing the full node, add front-end resources for drag-and-drop
      // sorting.
      if ($view_mode == 'full') {
-diff --git a/media_gallery.theme.inc b/media_gallery.theme.inc
+diff --git a/media_gallery/media_gallery.theme.inc b/media_gallery/media_gallery.theme.inc
 index e70e3c3..68045c5 100644
---- a/media_gallery.theme.inc
-+++ b/media_gallery.theme.inc
+--- a/media_gallery/media_gallery.theme.inc
++++ b/media_gallery/media_gallery.theme.inc
 @@ -232,6 +232,8 @@ function theme_media_gallery_media_item_lightbox($variables) {
    $output = 'Error';
    // If the format is to have the description as well, we add it here
