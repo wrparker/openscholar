@@ -1,5 +1,5 @@
---- a/media_gallery/media_gallery.addimage.js	2015-03-05 12:57:41.000000000 -0500
-+++ b/media_gallery/media_gallery.addimage.js	2015-03-27 14:13:03.000000000 -0400
+--- a/media_gallery.addimage.js	2015-03-05 12:57:41.000000000 -0500
++++ b/media_gallery.addimage.js	2015-03-27 14:13:03.000000000 -0400
 @@ -11,6 +11,10 @@
  Drupal.media_gallery.open_browser = function (event) {
    event.preventDefault();
@@ -20,8 +20,8 @@
  
    var media = [];
  
---- a/media_gallery/media_gallery.dragdrop.js	2015-03-05 12:57:41.000000000 -0500
-+++ b/media_gallery/media_gallery.dragdrop.js	2015-03-27 14:13:00.000000000 -0400
+--- a/media_gallery.dragdrop.js	2015-03-05 12:57:41.000000000 -0500
++++ b/media_gallery.dragdrop.js	2015-03-27 14:13:00.000000000 -0400
 @@ -3,6 +3,14 @@
  
  Drupal.behaviors.mediaGallerySort.attach = function (context, settings) {
@@ -62,8 +62,8 @@
  }
  
  /**
---- a/media_gallery/media_gallery.module	2015-03-05 12:57:41.000000000 -0500
-+++ b/media_gallery/media_gallery.module	2015-03-27 14:16:48.000000000 -0400
+--- a/media_gallery.module	2015-03-05 12:57:41.000000000 -0500
++++ b/media_gallery.module	2015-03-27 14:16:48.000000000 -0400
 @@ -313,11 +313,17 @@
      $instance = field_info_instance('node', 'media_gallery_file', $node->type);
      $token = drupal_get_token('media_gallery');
