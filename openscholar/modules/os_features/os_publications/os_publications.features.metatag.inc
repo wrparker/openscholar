@@ -14,6 +14,12 @@ function os_publications_metatag_export_default() {
   $config['node:biblio'] = array(
     'instance' => 'node:biblio',
     'config' => array(
+      'description' => array(
+        'value' => '[node:citation]',
+      ),
+      'og:description' => array(
+        'value' => '[node:citation]',
+      ),
       'og:image' => array(
         'value' => '[node:field_biblio_image]',
       ),
