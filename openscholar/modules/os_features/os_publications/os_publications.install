@@ -1300,3 +1300,13 @@ function os_publications_update_7028(){
   return t('Removed inline indents from biblio_citeproc citations.');
 }
 
+/**
+ * Add the new chicago author-date based style to Biblio.
+ */
+function os_publications_update_7029() {
+  $name = 'harvard-chicago-author-date.csl';
+
+  // Read the CSL file from the directory.
+  $csl_file_contents = file_get_contents(drupal_get_path('module', 'biblio_citeproc') . '/style/' . $name);
+  biblio_citeproc_install_style($name, $csl_file_contents);
+}
