@@ -303,6 +303,7 @@ class csl_format extends csl_rendering_element {
         case 'capitalize-all':
         case 'title':
           $text = mb_convert_case($text, MB_CASE_TITLE);
+          $text = $this->handleCapitalizeCaseConversion($text);
           break;
         case 'capitalize-first':
           $text = drupal_ucfirst($text);
@@ -344,6 +345,52 @@ class csl_format extends csl_rendering_element {
     }
 
     return $prefix . $text . $suffix;
+  }
+
+  /**
+   * Handling the case conversion for special words.
+   *
+   * In both cases, stop words are lowercased, unless they are the first or last
+   * word in the string, or follow a colon.
+   *
+   * @see http://docs.citationstyles.org/en/stable/specification.html#title-case-conversion
+   *
+   * @param $text
+   *   The text we need to handle.
+   * @return string
+   *   The reformatted text.
+   */
+  protected function handleCapitalizeCaseConversion($text) {
+    $stop_words = array('A' => 'a', 'An' => 'an', 'And' => 'and', 'As' => 'as',
+      'At' => 'at', 'But' => 'but', 'By' => 'by', 'Down' => 'down',
+      'For' => 'for', 'From' => 'from', 'In' => 'in', 'Into' => 'into',
+      'Nor' => 'nor', 'Of' => 'of', 'On' => 'on', 'Onto' => 'onto',
+      'Or' => 'or', 'Over' => 'over', 'So' => 'so', 'The' => 'the',
+      'Till' => 'till', 'To' => 'to', 'Up' => 'up', 'Via' => 'via',
+      'With' => 'with', 'Yet' => 'yet',
+    );
+
+    $tear_down = explode(' ' , $text);
+
+    foreach ($tear_down as $delta => &$word) {
+      if (in_array($delta, array(0, count($tear_down) - 1))) {
+        continue;
+      }
+
+      $prev = $tear_down[$delta - 1];
+
+      if (strpos($prev, ':') !== FALSE) {
+        continue;
+      }
+
+      if (!isset($stop_words[$word])) {
+        continue;
+      }
+
+      $word = str_replace($word, $stop_words[$word], $word);
+    }
+
+    return implode(' ', $tear_down);
   }
 
 }
