@@ -37,7 +37,26 @@ class OsOgVocab extends \RestfulEntityBase {
    * {@inheritdoc}
    */
   protected function checkEntityAccess($op, $entity_type, $entity) {
-    return TRUE;
+    if ($this->getMethod() == \RestfulBase::GET) {
+      return TRUE;
+    }
+
+    $vid = $this->getMethod() == \RestfulBase::POST ? $this->request['vid'] : $entity->vid;
+    if (!$relation = og_vocab_relation_get($vid)) {
+      throw new \RestfulBadRequestException('The vocabulary is not relate to any group.');
+    }
+
+    spaces_set_space(vsite_get_vsite($relation->gid));
+    $this->getAccount();
+
+    $permissions = array(
+      \RestfulBase::POST => 'administer taxonomy',
+      \RestfulBase::PATCH => 'edit terms',
+      \RestfulBase::PUT => 'edit terms',
+      \RestfulBase::DELETE => 'delete terms',
+    );
+
+    return vsite_og_user_access($permissions[$op]);
   }
 
   /**
