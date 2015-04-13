@@ -66,22 +66,6 @@ index 59794c6..8af15cd 100644
  }
  
  /**
-diff --git a/media_gallery.info b/media_gallery.info
-index 409b43c..d7bb729 100644
---- a/media_gallery.info
-+++ b/media_gallery.info
-@@ -17,9 +17,9 @@ files[] = media_gallery.theme.inc
- configure = admin/config/media/galleries
- 
- 
--; Information added by drush on 2015-03-10
-+; Information added by drush on 2015-04-10
- version = "7.x-2.x-dev"
- core = "7.x"
- project = "media_gallery"
--datestamp = "1426006378"
-+datestamp = "1428695571"
- 
 diff --git a/media_gallery.module b/media_gallery.module
 index d68f939..6e0848c 100644
 --- a/media_gallery.module
