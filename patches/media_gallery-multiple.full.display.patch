@@ -1,92 +1,143 @@
 diff --git a/media_gallery.addimage.js b/media_gallery.addimage.js
-index 066e63b..2341b6e 100644
+index 2341b6e..def76cc 100644
 --- a/media_gallery.addimage.js
 +++ b/media_gallery.addimage.js
-@@ -11,10 +11,6 @@ Drupal.media_gallery = {};
+@@ -11,6 +11,10 @@ Drupal.media_gallery = {};
  Drupal.media_gallery.open_browser = function (event) {
    event.preventDefault();
    event.stopPropagation();
--  
--  // get node id for the link that was clicked and save to settings (id attribute for parent article is node-[id])
--  Drupal.settings.mediaGalleryNodeNid = $(this).closest("article.contextual-links-region").attr('id').substring(5);
--
++
++  // get node id for the link that was clicked and save to settings (id attribute for parent article is node-[id])
++  Drupal.settings.mediaGalleryNodeNid = $(this).closest("article.contextual-links-region").attr('id').substring(5);
++
    var pluginOptions = { 'id': 'media_gallery', 'multiselect' : true , 'types': Drupal.settings.mediaGalleryAllowedMediaTypes};
    Drupal.media.popups.mediaBrowser(Drupal.media_gallery.add_media, pluginOptions);
  };
-@@ -30,7 +26,7 @@ Drupal.media_gallery.add_media = function (mediaFiles) {
+@@ -26,7 +30,7 @@ Drupal.media_gallery.add_media = function (mediaFiles) {
      //console.warn('Error: Media not added.');
    };
  
--  var src = Drupal.settings.mediaGalleryAddImagesBaseUrl + Drupal.settings.mediaGalleryNodeNid + '/' + Drupal.settings.mediaGalleryToken;
-+  var src = Drupal.settings.mediaGalleryAddImagesUrl;
+-  var src = Drupal.settings.mediaGalleryAddImagesUrl;
++  var src = Drupal.settings.mediaGalleryAddImagesBaseUrl + Drupal.settings.mediaGalleryNodeNid + '/' + Drupal.settings.mediaGalleryToken;
  
    var media = [];
  
-diff --git a/media_gallery.dragdrop.js b/media_gallery.dragdrop.js
-index 59794c6..8af15cd 100644
---- a/media_gallery.dragdrop.js
-+++ b/media_gallery.dragdrop.js
-@@ -3,14 +3,6 @@ Drupal.behaviors.mediaGallerySort = {};
- 
- Drupal.behaviors.mediaGallerySort.attach = function (context, settings) {
-   var $ = jQuery;
--  var nid = null;
--
--  // if this is a node view page, set the mediaGalleryNodeNid setting
--  if ($("body").attr("class").match("page\-node\-[^ ]+")) {
--    nid = $("body").attr("class").match("page\-node\-[^ ]+").toString().substring(10);
--    settings.mediaGalleryNodeNid = nid;
--  }
--
-   // Create a drag-and-drop editor for gallery collections.
-   var $collection = $('.media-gallery-collection', context).once('media-gallery-sortable');
-   $('.media-collection-item-wrapper', $collection).once('media-gallery-draggable', Drupal.mediaGallerySort.addDraggableIcon);
-@@ -23,7 +15,7 @@ Drupal.behaviors.mediaGallerySort.attach = function (context, settings) {
-     $collection.bind('sortstop', Drupal.mediaGallerySort.setHeight);
-   }
-   // Create a drag-and-drop editor for individual gallery grid pages.
--  var $gallery = $('article#node-' + nid + ' .media-gallery-view-full.media-gallery-media > .field-items').once('media-gallery-sortable');
-+  var $gallery = $('.media-gallery-view-full.media-gallery-media > .field-items').once('media-gallery-sortable');
-   $('.media-gallery-item-wrapper', $gallery).once('media-gallery-draggable', Drupal.mediaGallerySort.addDraggableIcon);
-   if ($gallery.length && settings.mediaGallerySortGalleryUrl) {
-     $gallery.sortable();
-@@ -55,13 +47,8 @@ Drupal.mediaGallerySort.setHeight = function (event) {
-  */
- Drupal.mediaGallerySort.addDraggableIcon = function () {
-   var $ = jQuery;
--
--  // only add drag and drop functionality if this is a view node page and only apply it to that media gallery
--  var nid = $(this).closest("article.contextual-links-region").attr('id').substring(5);
--  if (Drupal.settings.mediaGalleryNodeNid != null && Drupal.settings.mediaGalleryNodeNid == nid) {
--    $(this).addClass('draggable');
--    $(this).prepend($('<div class="draggable-wrapper"><a class="draggable-handle">Drag</a></div>'));
--  }
-+  $(this).addClass('draggable');
-+  $(this).prepend($('<div class="draggable-wrapper"><a class="draggable-handle">Drag</a></div>'));
- }
- 
- /**
 diff --git a/media_gallery.module b/media_gallery.module
-index d68f939..6e0848c 100644
+index eceb654..d68f939 100644
 --- a/media_gallery.module
 +++ b/media_gallery.module
-@@ -313,17 +313,11 @@ function media_gallery_view($node, $view_mode) {
+@@ -27,7 +27,6 @@ function media_gallery_file_view_modes() {
+     'media_gallery_lightbox' => t('Gallery lightbox'),
+     'media_gallery_detail' => t('Gallery detail'),
+     'media_gallery_block_thumbnail' => t('Gallery block thumbnail'),
+-    'media_gallery_collection_thumbnail' => t('Gallery collection thumbnail'),
+   );
+ }
+ 
+@@ -74,7 +73,7 @@ function media_gallery_menu() {
+   );
+   // An in-gallery-context version of media/%file/edit.
+   $items['media-gallery/detail/%media_gallery_mg_node/%media_gallery_mg_item/edit'] = array(
+-    'title' => 'Edit file info',
++    'title' => 'Edit',
+     'page callback' => 'media_gallery_media_page_edit',
+     'page arguments'  => array(2, 3),
+     'access callback' => 'media_gallery_edit_item_access',
+@@ -86,7 +85,7 @@ function media_gallery_menu() {
+     'file' => 'media_gallery.pages.inc',
+   );
+   $items['media-gallery/detail/%media_gallery_mg_node/%media_gallery_mg_item/remove'] = array(
+-    'title' => 'Remove from gallery',
++    'title' => 'Remove',
+     'page callback' => 'drupal_get_form',
+     'page arguments' => array('media_gallery_remove_item_form', 2, 3),
+     'access callback' => 'media_gallery_remove_item_access',
+@@ -295,10 +294,7 @@ function media_gallery_view($node, $view_mode) {
+         'localized_options' => array(
+           'query' => array('render' => 'media-popup'),
+           'attributes' => array(
+-            'class' => array(
+-              'media-gallery-add',
+-              'launcher',
+-            ),
++            'class' => 'media-gallery-add launcher',
+           ),
+         ),
+       ),
+@@ -307,11 +303,6 @@ function media_gallery_view($node, $view_mode) {
+       '#suffix' => '</ul>',
+     );
+ 
+-    // Prevent the overlay module to open an additional dialog.
+-    if (module_exists('overlay')) {
+-      $node->content['add_media_link']['#link']['localized_options']['attributes']['class'][] = 'overlay-exclude';
+-    }
+-
+     // Enable the "Add media" link to launch the media browser.
+     module_load_include('inc', 'media', 'includes/media.browser');
+     media_attach_browser_js($node->content['add_media_link']);
+@@ -322,11 +313,17 @@ function media_gallery_view($node, $view_mode) {
      $instance = field_info_instance('node', 'media_gallery_file', $node->type);
      $token = drupal_get_token('media_gallery');
      $gallery_js_settings = array(
--      'mediaGalleryToken' => $token,
--      'mediaGalleryNodeNid' => '',
--      'mediaGalleryAddImagesBaseUrl' => url('media-gallery/add-images/'),
-+      'mediaGalleryAddImagesUrl' => url('media-gallery/add-images/' . $node->nid . '/' . $token),
-+      'mediaGallerySortGalleryUrl' => url('media-gallery/sort/gallery/' . $node->nid . '/' . $token),
+-      'mediaGalleryAddImagesUrl' => url('media-gallery/add-images/' . $node->nid . '/' . $token),
+-      'mediaGallerySortGalleryUrl' => url('media-gallery/sort/gallery/' . $node->nid . '/' . $token),
++      'mediaGalleryToken' => $token,
++      'mediaGalleryNodeNid' => '',
++      'mediaGalleryAddImagesBaseUrl' => url('media-gallery/add-images/'),
        'mediaGalleryAllowedMediaTypes' => array_filter($instance['widget']['settings']['allowed_types']),
      );
  
--    // only set the js sort URL if in view node page and that node is the one being rendered
--    if (arg(1) && arg(1) == $node->nid) {
--      $gallery_js_settings['mediaGallerySortGalleryUrl'] = url('media-gallery/sort/gallery/' . $node->nid . '/' . $token);
--    }
--
++    // only set the js sort URL if in view node page and that node is the one being rendered
++    if (arg(1) && arg(1) == $node->nid) {
++      $gallery_js_settings['mediaGallerySortGalleryUrl'] = url('media-gallery/sort/gallery/' . $node->nid . '/' . $token);
++    }
++
      // When viewing the full node, add front-end resources for drag-and-drop
      // sorting.
      if ($view_mode == 'full') {
+@@ -1279,17 +1276,6 @@ function media_gallery_contextual_links_view_alter(&$element, $items) {
+       }
+     }
+   }
+-  // Remove 'Edit' button provided by File Entity.
+-  if (isset($element['#links']['media-gallery-edit']) && isset($element['#links']['file-edit'])) {
+-    unset($element['#links']['file-edit']);
+-  }
+-  // Move 'Delete' button to the bottom of the list and modify label.
+-  if (isset($element['#links']['media-gallery-edit']) && isset($element['#links']['file-delete'])) {
+-    $delete = $element['#links']['file-delete'];
+-    unset($element['#links']['file-delete']);
+-    $element['#links']['file-delete'] = $delete;
+-    $element['#links']['file-delete']['title'] = 'Delete file';
+-  }
+ }
+ 
+ /**
+@@ -1517,7 +1503,7 @@ function media_gallery_multiedit_access($node) {
+   if ($media_items === FALSE)
+     return;
+ 
+-  $media_items = media_gallery_filter_media_access($media_items, 'update');
++  $media_items = media_gallery_filter_media_access($media_items, 'edit');
+   if (count($media_items) > 0) {
+     return TRUE;
+   }
+@@ -1554,7 +1540,7 @@ function media_gallery_view_item_access($node, $file) {
+ function media_gallery_edit_item_access($node, $file) {
+   // Only grant access if the user can edit the provided media
+   // and the media is part of the gallery.
+-  return file_entity_access('update', $file)
++  return file_entity_access('edit', $file)
+     && in_array($file->fid, media_gallery_get_file_ids($node));
+ }
+ 
+@@ -1885,7 +1871,7 @@ function media_gallery_lightbox_delivery_callback($page_content) {
+  * @param $media_files
+  *   The files to perform the access check.
+  * @param $operation
+- *   A access operation (for example: 'view', 'update', 'delete', 'create').
++ *   A access operation (for example: 'view', 'edit',...).
+  *
+  * @return
+  *   An array of files.
