@@ -35,9 +35,9 @@ Feature: Testing taxonomy CRUD.
       And I am logging in as "john"
       And I visit "john/cp/build/taxonomy"
       And I should see "Testing"
-    When I "patch" OG vocabulary as "john" with the settings:
+     When I "patch" OG vocabulary as "john" with the settings:
       | bundle  |
       | blog    |
-    Then I "delete" OG vocabulary as "john" with the settings:
+     Then I "delete" OG vocabulary as "john" with the settings:
       | id    |
       | PREV  |

@@ -51,7 +51,9 @@ class OsFilesResource extends RestfulEntityBase {
 
     $info['terms'] = array(
       'property' => OG_VOCAB_FIELD,
-      'callback' => array($this, 'processOgVocabFieldEmpty'),
+      'process_callbacks' => array(
+        array($this, 'processOgVocabFieldEmpty'),
+      ),
     );
 
     return $info;
@@ -93,33 +95,8 @@ class OsFilesResource extends RestfulEntityBase {
     return drupal_render($output);
   }
 
-  /**
-   * @param EntityDrupalWrapper $wrapper
-   * @return array|void
-   */
-  protected function processOgVocabFieldEmpty(\EntityDrupalWrapper $wrapper) {
-    $terms = $wrapper->{OG_VOCAB_FIELD}->value();
+  public function processTermsField($terms) {
     $return = array();
-
-    if (empty($terms)) {
-      if (!$vsite = $wrapper->{OG_AUDIENCE_FIELD}->get(0)->getIdentifier()) {
-        return;
-      }
-
-      module_load_include('inc', 'vsite_vocab', 'includes/taxonomy');
-      $vocabularies = vsite_vocab_get_vocabularies(vsite_get_vsite($vsite));
-
-      foreach ($vocabularies as $vocabulary) {
-        if (og_vocab_load_og_vocab($vocabulary->vid, 'file', $wrapper->getBundle())) {
-          $return[] = array(
-            'vid' => $vocabulary->vid,
-            'label' => $vocabulary->name,
-          );
-        }
-      }
-
-      return $return;
-    }
 
     foreach ($terms as $term) {
       $return[] = array(
@@ -131,4 +108,5 @@ class OsFilesResource extends RestfulEntityBase {
 
     return $return;
   }
+
 }
