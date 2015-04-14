@@ -10,10 +10,18 @@ class OsFilesResource extends RestfulEntityBase {
 
     $info['size'] = array(
       'property' => 'size',
+      'data' => array(
+        'type' => 'int',
+        'read_only' => TRUE,
+      )
     );
 
     $info['mimetype'] = array(
       'property' => 'mime',
+      'data' => array(
+        'type' => 'string',
+        'read_only' => TRUE,
+      )
     );
 
     $info['url'] = array(
@@ -22,6 +30,10 @@ class OsFilesResource extends RestfulEntityBase {
 
     $info['type'] = array(
       'property' => 'type',
+      'data' => array(
+        'type' => 'string',
+        'read_only' => TRUE,
+      )
     );
 
     $info['name'] = array(
@@ -38,10 +50,14 @@ class OsFilesResource extends RestfulEntityBase {
     );
 
     $info['image_alt'] = array(
+      'property' => 'field_file_image_alt_text',
+      'sub_property' => 'value',
       'callback' => array($this, 'getImageAltText'),
     );
 
     $info['image_title'] = array(
+      'property' => 'field_file_image_title_text',
+      'sub_property' => 'value',
       'callback' => array($this, 'getImageTitleText'),
     );
 
@@ -52,9 +68,11 @@ class OsFilesResource extends RestfulEntityBase {
     $info['terms'] = array(
       'property' => OG_VOCAB_FIELD,
       'process_callbacks' => array(
-        array($this, 'processOgVocabFieldEmpty'),
+        array($this, 'processTermsField'),
       ),
     );
+
+    unset($info['label']['property']);
 
     return $info;
   }
@@ -119,7 +137,7 @@ class OsFilesResource extends RestfulEntityBase {
     // do spaces/private file stuff here
     if (isset($this->request['vsite'])) {
       $path = db_select('purl', 'p')->fields('p', array('value'))->condition('id', $this->request['vsite'])->execute()->fetchField();
-      $destination .= $path.'/files';
+      $destination .= $path . '/files';
     }
     if ($entity = file_save_upload('upload', array(), $destination, FILE_EXISTS_REPLACE)) {
 
@@ -135,19 +153,19 @@ class OsFilesResource extends RestfulEntityBase {
       $wrapper = entity_metadata_wrapper($this->entityType, $entity);
 
       return array($this->viewEntity($wrapper->getIdentifier()));
-    }
-    elseif (isset($_FILES['files']) && $_FILES['files']['errors']['upload']) {
+    } elseif (isset($_FILES['files']) && $_FILES['files']['errors']['upload']) {
       throw new RestfulUnprocessableEntityException('Error uploading new file to server.');
-    }
-    elseif (isset($this->request['embed']) && module_exists('media_internet')) {
+    } elseif (isset($this->request['embed']) && module_exists('media_internet')) {
 
       try {
         $provider = media_internet_get_provider($this->request['embed']);
         $provider->validate();
-      } catch (MediaInternetNoHandlerException $e) {
+      }
+      catch (MediaInternetNoHandlerException $e) {
         $errors[] = $e->getMessage();
         return;
-      } catch (MediaInternetValidationException $e) {
+      }
+      catch (MediaInternetValidationException $e) {
         $errors[] = $e->getMessage();
         return;
       }
@@ -157,7 +175,8 @@ class OsFilesResource extends RestfulEntityBase {
       if ($validators) {
         try {
           $file = $provider->getFileObject();
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
           form_set_error('embed_code', $e->getMessage());
           return;
         }
@@ -171,8 +190,7 @@ class OsFilesResource extends RestfulEntityBase {
           $message = t('%url could not be added.', array('%url' => $embed_code));
           if (count($errors) > 1) {
             $message .= theme('item_list', array('items' => $errors));
-          }
-          else {
+          } else {
             $message .= ' ' . array_pop($errors);
           }
         }
@@ -181,8 +199,7 @@ class OsFilesResource extends RestfulEntityBase {
       if (!empty($errors)) {
         // set error code
         // return errors
-      }
-      else {
+      } else {
         // Providers decide if they need to save locally or somewhere else.
         // This method returns a file object
         $entity = $provider->save();
@@ -201,6 +218,7 @@ class OsFilesResource extends RestfulEntityBase {
         return array($this->viewEntity($wrapper->getIdentifier()));
       }
     }
+  }
 
   public function processTermsField($terms) {
     $return = array();
@@ -214,6 +232,24 @@ class OsFilesResource extends RestfulEntityBase {
     }
 
     return $return;
+  }
+
+  /**
+   * Override. We need to handle files being replaced through this method.
+   */
+  public function putEntity($entity_id) {
+
+    $destination = 'public://';
+    // do spaces/private file stuff here
+    if (isset($this->request['vsite'])) {
+      $path = db_select('purl', 'p')->fields('p', array('value'))->condition('id', $this->request['vsite'])->execute()->fetchField();
+      $destination .= $path.'/files';
+    }
+    if (file_save_upload('upload', array(), $destination, FILE_EXISTS_REPLACE)) {
+
+    }
+
+    $this->updateEntity($entity_id, FALSE);
   }
 
 }

@@ -5,17 +5,17 @@
 
   angular.module('TaxonomyWidget', ['EntityService', 'os-auth'])
     .directive('taxonomyWidget', ['EntityService', function (EntityService) {
+      var path = Drupal.settings.paths.TaxonomyWidget;
       return {
         scope: {
           terms: '='
         },
-        template: '<div class="tw-widget"><div ng-include="widgetType"></div></div>',
+        templateUrl: path + '/TaxonomyWidget.html',
         link: function (scope, elem, attrs, c, trans) {
           var entityType = attrs.entitytype,
             entityBundle = attrs.bundle,
             vocabService = new EntityService('vocabulary', 'id'),
-            termService = new EntityService('terms', 'id'),
-            terms = termService.getAll({vocab: scope.vocabId});
+            termService = new EntityService('terms', 'id');
 
           vocabService.fetch({entity_type: entityType, bundle: entityBundle})
             .then(function (result) {

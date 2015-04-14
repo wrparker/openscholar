@@ -60,7 +60,7 @@
           if (vsite) {
             params.vsite = vsite;
           }
-          return $http.get(url, params)
+          return $http.get(url, {params: params})
             .success(success)
             .error(errorFunc);
         }
@@ -125,8 +125,6 @@
 
           $rootScope.$broadcast(eventName+'.delete');
         }
-
-        this.fetch();
       }
 
       return factory;
