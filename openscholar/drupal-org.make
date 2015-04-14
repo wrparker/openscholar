@@ -82,9 +82,9 @@ projects[dyntextfield][download][tag] = 1.0
 projects[dyntextfield][download][url] = "git://github.com/amitaibu/dyntextfield.git"
 
 projects[entity][subdir] = "contrib"
-projects[entity][version] = 1.0
+projects[entity][branch] = 7.x-1.x
 projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
-projects[entity][patch][] = http://drupal.org/files/entity-file_entity_access-1831578-9.patch
+projects[entity][patch][] = https://www.drupal.org/files/issues/2086225-entity-access-check-18.patch
 
 projects[entitycache][subdir] = "contrib"
 projects[entitycache][version] = 1.1
@@ -268,7 +268,8 @@ projects[nodeformcols][version] = 1.0
 projects[entity_validator][subdir] = "contrib"
 projects[entity_validator][download][type] = git
 projects[entity_validator][download][url] = "https://github.com/Gizra/entity_validator.git"
-projects[entity_validator][download][branch] = "31"
+projects[entity_validator][download][branch] = "7.x-1.x"
+projects[entity_validator][download][revision] = dc26154
 
 projects[nodeorder][subdir] = "contrib"
 projects[nodeorder][version] = 1.1
@@ -343,9 +344,10 @@ projects[respondjs][version] = 1.1
 
 projects[restful][subdir] = "contrib"
 projects[restful][download][type] = git
-projects[restful][download][url] = "https://github.com/Gizra/restful.git"
-projects[restful][download][branch] = "7.x-1.x"
-projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
+projects[restful][download][url] = "https://github.com/RoySegall/restful.git"
+projects[restful][download][branch] = 444
+;projects[restful][download][branch] = "7.x-1.x"
+;projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
 
 projects[redirect][subdir] = "contrib"
 projects[redirect][version] = 1.0-rc1

@@ -2,7 +2,6 @@
 
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
-use GuzzleHttp\Message\FutureResponse;
 use GuzzleHttp\Message\ResponseInterface;
 
 /**
@@ -17,27 +16,31 @@ trait RestfulTrait {
    * Holds list of endpoints path.
    */
   private $endpoints = [
-    'box' => 'api/boxes',
-    'layout' => 'api/layouts',
-    'variable' => 'api/variables',
     'biblio' => 'api/biblio',
     'bio' => 'api/bio',
     'blog' => 'api/blog',
     'book' => 'api/book',
+    'box' => 'api/boxes',
     'class' => 'api/class',
     'class_material' => 'api/class_material',
     'cv' => 'api/cv',
     'event' => 'api/event',
     'faq' => 'api/faq',
     'feed' => 'api/feed',
+    'group' => 'api/group',
     'image_gallery' => 'api/media_gallery',
+    'layout' => 'api/layouts',
     'news' => 'api/news',
+    'og_vocab' => 'api/og_vocab',
     'page' => 'api/page',
     'person' => 'api/person',
     'presentation' => 'api/presentation',
     'slideshow_slide' => 'api/slideshow_slide',
     'software_project' => 'api/software_project',
     'software_release' => 'api/software_release',
+    'taxonomy' => 'api/taxonomy',
+    'variable' => 'api/variables',
+    'vocabulary' => 'api/vocabulary',
   ];
 
   /**
@@ -72,6 +75,7 @@ trait RestfulTrait {
   private $operations = [
     'create' => 'post',
     'update' => 'put',
+    'patch' => 'patch',
     'delete' => 'delete',
   ];
 
@@ -169,7 +173,13 @@ trait RestfulTrait {
       }
     }
 
-    return array_combine($rows[0], $rows[1]);
+    $return = [];
+
+    foreach (array_slice($table->getRows(), 1) as $tbody) {
+      $return[] = array_combine($rows[0], $tbody);
+    }
+
+    return count($table->getRows()) == 2 ? $return[0] : $return;
   }
 
   /**
@@ -452,4 +462,117 @@ trait RestfulTrait {
     );
   }
 
+  /**
+   * @Given /^I "([^"]*)" a term as "([^"]*)" with the settings:$/
+   */
+  public function iATermAsWithTheSettings($operation, $account, TableNode $table) {
+    list($values, $token, $path) = $this->getVariables('taxonomy', $account, $table, TRUE);
+    $method = $this->operations[$operation];
+
+    if ($method != 'post') {
+      $path .= '/' . $this->meta['id'];
+    }
+
+    $request = $this->invokeRestRequest($method, $path, ['access_token' => $token], $values);
+    if ($method == 'delete') {
+      if (!empty($request->json()['data'])) {
+        throw new \Exception('The delete of the taxonomy term did not occurred.');
+      }
+    }
+    else {
+      $this->meta = $request->json()['data'][0];
+      if ($this->meta['label'] != $values['label']) {
+        throw new Exception("The label of the entity is {$this->meta['label']} and not {$values['label']}");
+      }
+    }
+  }
+
+  /**
+   * @Given /^I "([^"]*)" a group as "([^"]*)":$/
+   */
+  public function iAGroup($operation, $account, TableNode $table) {
+    list($groups, $token, $path) = $this->getVariables('group', $account, $table);
+    $op = $this->operations[$operation];
+
+    if ($operation == 'create') {
+      foreach ($groups as $group) {
+        $this->invokeRestRequest($op, $path,
+          ['access_token' => $token],
+          $group
+        );
+      }
+    }
+  }
+
+  /**
+   * @Given /^I verify vsite content:$/
+   */
+  public function iVerifyVsiteContent(TableNode $table) {
+    $values = $this->getValues($table);
+
+    foreach ($values as $value) {
+      $this->visit($value['purl']);
+      $this->assertPageContainsText($value['text']);
+    }
+  }
+
+  /**
+   * @Given /^I "([^"]*)" a vocabulary as "([^"]*)" with the settings:$/
+   */
+  public function iAVocabularyAsWithTheSettings($operation, $account, TableNode $table) {
+    list($values, $token, $path) = $this->getVariables('vocabulary', $account, $table, TRUE);
+
+    $method = $this->operations[$operation];
+
+    if ($method != 'post') {
+      $path .= '/' . $this->meta['id'];
+    }
+    else {
+      $values['vsite'] = FeatureHelp::getNodeId($values['vsite']);
+    }
+
+    $request = $this->invokeRestRequest($method, $path, ['access_token' => $token], $values);
+    if ($method == 'delete') {
+      if (!empty($request->json()['data'])) {
+        throw new \Exception('The delete of the vocabulary did not occurred.');
+      }
+    }
+    else {
+      $this->meta = $request->json()['data'][0];
+      if ($this->meta['label'] != $values['label']) {
+        throw new Exception("The label of the entity is {$this->meta['label']} and not {$values['label']}");
+      }
+    }
+  }
+
+  /**
+   * @Given /^I "([^"]*)" OG vocabulary as "([^"]*)" with the settings:$/
+   */
+  public function iOGVocabularyAsWithTheSettings($operation, $account, TableNode $table) {
+    list($values, $token, $path) = $this->getVariables('og_vocab', $account, $table, TRUE);
+    $method = $this->operations[$operation];
+
+    if (!empty($values['vocabulary'])) {
+      $values['vid'] = taxonomy_vocabulary_machine_name_load($values['vocabulary'])->vid;
+      unset($values['vocabulary']);
+    }
+
+    if ($method != 'post') {
+      $path .= '/' . $this->meta['id'];
+    }
+
+    $request = $this->invokeRestRequest($method, $path, ['access_token' => $token], $values);
+
+    if ($method == 'delete') {
+      if (!empty($request->json()['data'])) {
+        throw new \Exception('The delete of the vocabulary did not occurred.');
+      }
+    }
+    else {
+      $this->meta = $request->json()['data'][0];
+      if ($this->meta['bundle'] != $values['bundle']) {
+        throw new Exception("The bundle of the entity is {$this->meta['bundle']} and not {$values['bundle']}");
+      }
+    }
+  }
 }

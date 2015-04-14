@@ -35,7 +35,8 @@ class OsRestfulGroupValidator extends EntityValidateBase {
     if ($this->countPurlInstances($purl)) {
       $this->setError('domain', 'A site with this address already exists.');
     }
-    
+
+    module_load_include('form.inc', 'vsite_register');
     if (!valid_url($modifier['value']) || !_vsite_register_valid_url($modifier['value'])) {
       $this->setError('domain', 'The site address has invalid characters.');
     }
