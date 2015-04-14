@@ -6,8 +6,7 @@ Feature:
     Given I visit "john"
      When I click "Presentations"
      Then I should see "JFK's biography"
-          # Check that the body is not shown.
-      And I should not see "presentation about jfk"
+      And I should see "presentation about jfk"
 
   @api @features_second
   Scenario: Verify that the body of a presentation is displayed in the LOP.

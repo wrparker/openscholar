@@ -85,10 +85,8 @@ if (!$page) {
 
     <?php print render($content['comments']); ?>
   <?php endif; ?>
-  <?php if (!empty($sv_list)): ?>
-    <div<?php print $content_attributes; ?>>
-      <?php print $body_value; ?>
-    </div>
-  <?php endif; ?>
+  <div<?php print $content_attributes; ?>>
+    <?php print $body_value; ?>
+  </div>
   </div> <!-- /div.node-inner -->
 </article>
