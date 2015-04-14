@@ -2,7 +2,6 @@
 
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
-use GuzzleHttp\Message\FutureResponse;
 use GuzzleHttp\Message\ResponseInterface;
 
 /**
@@ -32,6 +31,7 @@ trait RestfulTrait {
     'image_gallery' => 'api/media_gallery',
     'layout' => 'api/layouts',
     'news' => 'api/news',
+    'og_vocab' => 'api/og_vocab',
     'page' => 'api/page',
     'person' => 'api/person',
     'presentation' => 'api/presentation',
@@ -40,6 +40,7 @@ trait RestfulTrait {
     'software_release' => 'api/software_release',
     'taxonomy' => 'api/taxonomy',
     'variable' => 'api/variables',
+    'vocabulary' => 'api/vocabulary',
   ];
 
   /**
@@ -512,6 +513,66 @@ trait RestfulTrait {
     foreach ($values as $value) {
       $this->visit($value['purl']);
       $this->assertPageContainsText($value['text']);
+    }
+  }
+
+  /**
+   * @Given /^I "([^"]*)" a vocabulary as "([^"]*)" with the settings:$/
+   */
+  public function iAVocabularyAsWithTheSettings($operation, $account, TableNode $table) {
+    list($values, $token, $path) = $this->getVariables('vocabulary', $account, $table, TRUE);
+
+    $method = $this->operations[$operation];
+
+    if ($method != 'post') {
+      $path .= '/' . $this->meta['id'];
+    }
+    else {
+      $values['vsite'] = FeatureHelp::getNodeId($values['vsite']);
+    }
+
+    $request = $this->invokeRestRequest($method, $path, ['access_token' => $token], $values);
+    if ($method == 'delete') {
+      if (!empty($request->json()['data'])) {
+        throw new \Exception('The delete of the vocabulary did not occurred.');
+      }
+    }
+    else {
+      $this->meta = $request->json()['data'][0];
+      if ($this->meta['label'] != $values['label']) {
+        throw new Exception("The label of the entity is {$this->meta['label']} and not {$values['label']}");
+      }
+    }
+  }
+
+  /**
+   * @Given /^I "([^"]*)" OG vocabulary as "([^"]*)" with the settings:$/
+   */
+  public function iOGVocabularyAsWithTheSettings($operation, $account, TableNode $table) {
+    list($values, $token, $path) = $this->getVariables('og_vocab', $account, $table, TRUE);
+    $method = $this->operations[$operation];
+
+    if (!empty($values['vocabulary'])) {
+      $values['vid'] = taxonomy_vocabulary_machine_name_load($values['vocabulary'])->vid;
+      unset($values['vocabulary']);
+    }
+
+    if ($method != 'post') {
+      $path .= '/' . $this->meta['id'];
+    }
+
+    $request = $this->invokeRestRequest($method, $path, ['access_token' => $token], $values);
+
+    if ($method == 'delete') {
+      if (!empty($request->json()['data'])) {
+        throw new \Exception('The delete of the vocabulary did not occurred.');
+      }
+    }
+    else {
+      $this->meta = $request->json()['data'][0];
+      if ($this->meta['bundle'] != $values['bundle']) {
+        throw new Exception("The bundle of the entity is {$this->meta['bundle']} and not {$values['bundle']}");
+      }
     }
   }
 }

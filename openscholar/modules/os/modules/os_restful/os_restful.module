@@ -51,6 +51,20 @@ function os_restful_entity_property_info_alter(&$info) {
       'type' => 'unknown',
     );
   }
+
+  $info['taxonomy_vocabulary']['properties']['vsite'] = array(
+    'label' => t('Site purl'),
+    'setter callback' => 'os_restful_vocab_gid_set',
+    'getter callback' => 'os_restful_vocab_gid_get',
+    'type' => 'unknown',
+  );
+
+  $info['og_vocab']['properties']['vid']['setter callback'] = 'entity_property_verbatim_set';
+  $info['og_vocab']['properties']['entity_type']['setter callback'] = 'entity_property_verbatim_set';
+  $info['og_vocab']['properties']['bundle']['setter callback'] = 'entity_property_verbatim_set';
+  $info['og_vocab']['properties']['field_name']['setter callback'] = 'entity_property_verbatim_set';
+  $info['og_vocab']['properties']['settings']['setter callback'] = 'entity_property_verbatim_set';
+  $info['og_vocab']['properties']['settings']['type'] = 'unknown';
 }
 
 /**
@@ -105,4 +119,20 @@ function os_restful_purl_set(&$data, $name, $value, $langcode, $type, $info) {
  */
 function os_restful_purl_get($data, array $options, $name, $type, $info) {
   return $data->purl;
+}
+
+/**
+ * Get the gid for a given vocabulary.
+ */
+function os_restful_vocab_gid_get($data, array $options, $name, $type, $info) {
+  $relation = og_vocab_relation_get(taxonomy_vocabulary_machine_name_load($data->machine_name)->vid);
+
+  return $relation->gid;
+}
+
+/**
+ * Set the vsite property for the vocab.
+ */
+function os_restful_vocab_gid_set(&$data, $name, $value, $langcode, $type, $info) {
+  $data->vsite = $value;
 }
