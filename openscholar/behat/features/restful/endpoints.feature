@@ -26,6 +26,7 @@ Feature:
     api/slideshow_slide
     api/software_project
     api/software_release
+    api/taxonomy?vsite=2
     api/variables
+    api/vocabulary?vsite=2
     """
-#    api/taxonomy
