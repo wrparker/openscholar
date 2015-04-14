@@ -125,13 +125,14 @@
       $scope.setSelection(file.id);
     });
 
-    $scope.$on('EntityService.files.fetch', function (event, files) {
-      $scope.files = files;
-      for (var i=0; i<$scope.files.length; i++) {
-        $scope.files.preview = $sce.trustAsHtml($scope.files.preview);
-      }
-      $scope.numFiles = service.getCount();
-    });
+
+    service.fetch({})
+      .then(function (result) {
+        console.log(result);
+
+        $scope.files = result.data.data;
+        $scope.numFiles = $scope.files.length;
+      });
 
     $scope.validate = function($file) {
       var file = $file;
