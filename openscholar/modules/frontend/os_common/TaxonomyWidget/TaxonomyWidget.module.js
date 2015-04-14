@@ -8,31 +8,39 @@
       var path = Drupal.settings.paths.TaxonomyWidget;
       return {
         scope: {
-          terms: '='
+          terms: '=',
+          bundle: '@',
         },
         templateUrl: path + '/TaxonomyWidget.html',
         link: function (scope, elem, attrs, c, trans) {
-          var entityType = attrs.entitytype,
-            entityBundle = attrs.bundle,
+          var entityType = attrs.entityType,
             vocabService = new EntityService('vocabulary', 'id'),
-            termService = new EntityService('terms', 'id');
+            termService = new EntityService('taxonomy', 'id');
+          console.log(scope);
 
-          vocabService.fetch({entity_type: entityType, bundle: entityBundle})
-            .then(function (result) {
-              console.log(result);
-              scope.vocabs = result;
-              for (var i=0; i<scope.vocabs.length; i++) {
-                termService.fetch({vocab: scope.vocabs[i].id})
-                  .then(function (result) {
-                    console.log(result);
-                    for (var j=0; j<scope.vocabs.length; j++) {
+          attrs.$observe('bundle', function (value) {
+            console.log(value);
 
-                    }
-                  });
-              }
-            });
+            if (!value) return;
+            vocabService.fetch({entity_type: entityType, bundle: value})
+              .then(function (result) {
+                console.log(result);
+                if (!(result.status == 200 && result.statusText == "OK")) {
+                  return;
+                }
 
+                scope.vocabs = result.data.data;
+                for (var i=0; i<scope.vocabs.length; i++) {
+                  termService.fetch({vocab: scope.vocabs[i].id})
+                    .then(function (result) {
+                      console.log(result);
+                      for (var j=0; j<scope.vocabs.length; j++) {
 
+                      }
+                    });
+                }
+              });
+          });
         }
       }
     }])
