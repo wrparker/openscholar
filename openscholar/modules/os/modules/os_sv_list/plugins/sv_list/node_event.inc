@@ -68,12 +68,9 @@ class sv_list_node_event extends sv_list_plugin  {
     // Change the query according to the selected expiry time of the events.
     switch ($options['event_expire']) {
       case 'end_of_day';
-        // The expiry time is at the end of the day. We define it as:
-        // show events that started today and end before midnight today (that is,
-        // ended before tomorrow).
-        $str = 'tomorrow';
-        $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime('today')), '>=', 'sv_list_events');
-        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s', strtotime($str)), '<', 'sv_list_events');
+        // The expiry time is at the end of the day.
+        $str = 'today';
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s', strtotime($str)), '>=', 'sv_list_events');
         break;
       case 'end_of_event';
         // The expiry time is at the end of the event.
