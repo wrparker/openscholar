@@ -16,6 +16,10 @@ class OsVocabulary extends \RestfulEntityBase {
       'property' => 'vsite',
     );
 
+    $fields['form'] = array(
+      'callback' => array($this, 'getFormType'),
+    );
+
     return $fields;
   }
 
@@ -200,6 +204,19 @@ class OsVocabulary extends \RestfulEntityBase {
     }
 
     return entity_load('og_vocab', array_keys($results['og_vocab']));
+  }
+
+  protected function getFormType($wrapper) {
+    $id = $wrapper->getIdentifier();
+    $q = db_select('og_vocab', 'ov')
+      ->fields('ov', array('settings'))
+      ->condition('vid', $id)
+      ->execute();
+
+    $r = $q->fetchAssoc();
+    $settings = unserialize($r['settings']);
+
+    return $settings['widget_type'];
   }
 
 }
