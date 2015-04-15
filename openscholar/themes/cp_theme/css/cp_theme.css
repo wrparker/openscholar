@@ -135,23 +135,6 @@ a.form-cancel {
   border-radius: 20px;
 }
 
-.media-browser-pane .media-item {
-  background: #FFFFFF;
-  border: none;
-}
-
-.media-browser-pane .media-item:nth-child(odd) {
-  background: #EFEFEF;
-}
-
-.media-browser-pane .media-item:nth-child(even) {
-  background: #FFF;
-}
-
-
-.media-browser-pane textarea#media-browser-web {
-	width:95%;
-}
 
 a.form-cancel:hover {
  text-decoration:none;

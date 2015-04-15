@@ -53,6 +53,24 @@ div.file-search {
   width: auto;
 }
 
+.media-browser-pane .media-item {
+  background: #FFFFFF;
+  border: none;
+}
+
+.media-browser-pane .media-item:nth-child(odd) {
+  background: #EFEFEF;
+}
+
+.media-browser-pane .media-item:nth-child(even) {
+  background: #FFF;
+}
+
+
+.media-browser-pane textarea#media-browser-web {
+	width:95%;
+}
+
 .mb-preview,
 .mb-title,
 .mb-filename,
