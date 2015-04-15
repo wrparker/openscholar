@@ -48,7 +48,6 @@ function os_help_get_variables_from_id($type, $id) {
         'os_blog' => array('url' => 'http://docs.openscholar.harvard.edu/blog', 'title' => 'Blog App'),
         'os_booklets' => array('url' => 'http://docs.openscholar.harvard.edu/booklet', 'title' => 'Booklets App'),
         'os_classes' => array('url' => 'http://docs.openscholar.harvard.edu/classes', 'title' => 'Classes App'),
-        'os_dataverse' => array('url' => 'http://docs.openscholar.harvard.edu/dataverse', 'title' => 'Dataverse App'),
         'os_events' => array('url' => 'http://docs.openscholar.harvard.edu/events-app', 'title' => 'Events App'),
         'os_faq' => array('url' => 'http://docs.openscholar.harvard.edu/faq-app', 'title' => 'FAQ App'),
         'os_files_private' => array('url' => 'http://docs.openscholar.harvard.edu/private-files', 'title' => 'Private Files App'),
