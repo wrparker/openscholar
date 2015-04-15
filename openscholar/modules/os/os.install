@@ -746,3 +746,10 @@ function os_update_7035() {
 function os_update_7036() {
   module_enable(array('os_restful'));
 }
+
+/**
+ * Enabling the new media browser.
+ */
+function os_update_7037() {
+  module_enable(array('media_browser'));
+}
