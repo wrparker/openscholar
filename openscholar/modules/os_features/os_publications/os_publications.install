@@ -1310,3 +1310,10 @@ function os_publications_update_7029() {
   $csl_file_contents = file_get_contents(drupal_get_path('module', 'biblio_citeproc') . '/style/' . $name);
   biblio_citeproc_install_style($name, $csl_file_contents);
 }
+
+/**
+ * Define the publication citation as the og:description value.
+ */
+function os_publications_install_7030() {
+  features_revert(array('os_publications' => array('metatag')));
+}

@@ -112,7 +112,6 @@ dependencies[] = os_biocv
 dependencies[] = os_blog
 dependencies[] = os_booklets
 dependencies[] = os_classes
-dependencies[] = os_dataverse
 dependencies[] = os_events
 dependencies[] = os_faq
 dependencies[] = os_image_gallery
