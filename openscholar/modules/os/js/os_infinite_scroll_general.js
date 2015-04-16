@@ -17,6 +17,9 @@
     if (loadingAll) {
       setTimeout($.autopager.load, 1);
     }
+
+    // Remove the "Load all button" that's already next to a "Load more" button.
+    $('#autopager-load-more + .autopager-load-all').remove();
   }
 
   function loadAllClickHandler(e) {
@@ -48,7 +51,9 @@
       }
 
       $(window).scroll(function(e) {
-        if (!$('#autopager-load-more + .autopager-load-all').length) {
+        // Add a "Load more" button if we don't have one already and we are not
+        // in "loading all" state (the "Load all" has been clicked.
+        if (!$('#autopager-load-more + .autopager-load-all').length && !loadingAll) {
           $('<div class="autopager-load-all"><a>Load All</a></div>').insertAfter('#autopager-load-more');
         }
       });

@@ -741,8 +741,19 @@ function os_update_7035() {
 }
 
 /**
- * Enabling OS Restful.
+ * Revert blog and events views to add "sticky" sort criteria.
  */
 function os_update_7036() {
+  $revert = array(
+    'os_events' => array('views_view'),
+    'os_blog' => array('views_view'),
+  );
+  features_revert($revert);
+}
+
+/*
+ * Enabling OS Restful.
+ */
+function os_update_7037() {
   module_enable(array('os_restful'));
 }
