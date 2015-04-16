@@ -200,6 +200,7 @@ function os_common_preprocess_html(&$vars) {
  */
 function os_common_form_node_form_alter(&$form, &$form_state) {
 
+  //Determine if this form has an angular app.
   if($app = os_common_get_angular_module($form['#id'])) {
     // Set the active angular app as the app with the same name as this form id.
     os_common_angular_app($app->name);
