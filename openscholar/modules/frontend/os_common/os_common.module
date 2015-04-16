@@ -199,7 +199,39 @@ function os_common_preprocess_html(&$vars) {
  * Implements hook_node_form_alter().
  */
 function os_common_form_node_form_alter(&$form, &$form_state) {
-  os_common_angular_app($form['#id']);
 
-  $form['#attached']['js'][] = drupal_get_path('module', 'os_common').'/modules/page-node-form.js';
+  if($app = os_common_get_angular_module($form['#id'])) {
+    // Set the active angular app as the app with the same name as this form id.
+    os_common_angular_app($app->name);
+    $form['#attached']['js'][] = $app->uri;
+  }
+
+}
+
+/**
+ * Get angular js files.
+ *
+ * Returns Object
+ * $o->name = app-name;
+ * $o->filename = app-name.js
+ * $o->uri = full/path/tofile/app-name.js
+ */
+function os_common_get_angular_module($app_name){
+
+  if ($cache = cache_get('os_common_angular_modules')) {
+    $apps = $cache->data;
+  } else {
+    //Get os_common_modules
+    $apps = file_scan_directory(drupal_get_path('module', 'os_common').'/modules', "/.*\.js/", array('key' => 'name'));
+    //Allow other modules to add their own.
+    drupal_alter('os_angular_modules', $apps);
+
+    cache_set('os_common_angular_modules', $apps);
+  }
+
+  if (isset($apps[$app_name])) {
+    return $apps[$app_name];
+  }
+
+  return FALSE;
 }
