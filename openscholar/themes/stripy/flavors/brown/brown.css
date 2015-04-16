@@ -1,12 +1,5 @@
 /* Brown*/
 
-body {
-  background:#7A6834;
-  }
-
-body.navbar-off #page {
-  background-image:url('images/body-bg-alt-brown.png');
-  }
 
 #menu-bar {
   background: rgb(101, 85, 0);

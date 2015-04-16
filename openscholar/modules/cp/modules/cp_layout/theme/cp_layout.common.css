@@ -149,7 +149,7 @@
   position: absolute;
   top: 10px;
   left: 29px;
-  background-image: url("images/cp-layout-sprite.png");
+  background-image: url("images/cp-layout-sprite.png?201504");
 }
 
 
@@ -232,6 +232,11 @@
 .os_taxonomy_fbt .widget-icon {
   background-position-y: -862px;
 }
+
+.os_boxes_dataverse_search .widget-icon,
+.os_boxes_dataverse_list .widget-icon {
+    background-position-y: -1054px;
+  }
 
 #edit-layout-unused-widgets .cp-layout-widget.disabled,
 #edit-layout-unused-widgets .cp-layout-widget.hidden {
