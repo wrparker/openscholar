@@ -243,7 +243,7 @@
   </macro>
   <macro name="locators">
     <choose>
-      <if type="article article-magazine article-newspaper article-journal artwork broadcast manuscript map patent personal_communication thesis webpage" match="any">
+      <if type="article article-magazine article-newspaper article-journal artwork audiovisual bill broadcast manuscript map patent personal_communication thesis webpage" match="any">
         <choose>
           <if variable="volume">
             <text variable="volume" prefix=" "/>
@@ -281,7 +281,7 @@
         <text variable="container-title" prefix=" "/>
         <text variable="page" prefix=" "/>
       </else-if>
-      <else-if type="bill book graphic legal_case legislation motion_picture report song" match="any">
+      <else-if type="book graphic legal_case legislation motion_picture report song" match="any">
         <group prefix=". " delimiter=". ">
           <group>
             <text term="volume" form="short" text-case="capitalize-first" suffix=" "/>
