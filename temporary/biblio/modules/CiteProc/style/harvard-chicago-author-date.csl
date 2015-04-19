@@ -259,6 +259,7 @@
                 </else>
               </choose>
             </group>
+            <text variable="page" prefix=", " form="short"/>
           </if>
           <else-if variable="issue">
             <group delimiter=" " prefix=", ">
@@ -268,6 +269,7 @@
                 <date-part name="month"/>
               </date>
             </group>
+            <text variable="page" prefix=", " form="short"/>
           </else-if>
           <else>
             <date variable="issued" prefix=", ">
@@ -292,6 +294,7 @@
             <text term="volume" form="short" prefix=" " plural="true"/>
           </group>
         </group>
+        <text variable="page" prefix=", " form="short"/>
       </else-if>
       <else-if type="chapter paper-conference" match="any">
         <choose>
