@@ -194,13 +194,13 @@ function _os_publications_plain_citation($node) {
   // Add the patent number, patent source and patent issuing country, if no
   // present in the citation.
   if ($node->biblio_type == 119) {
-    if (strpos($citation, ' ' . $node->biblio_section) === FALSE){
+    if (!empty($node->biblio_section) && strpos($citation, ' ' . $node->biblio_section) === FALSE){
       $citation .= ' ' . $node->biblio_section;
     }
-    if (strpos($citation, ' ' . $node->biblio_volume) === FALSE){
-      $citation .= ' Patent: ' . $node->biblio_volume . '.';
+    if (!empty($node->biblio_volume) && strpos($citation, ' ' . $node->biblio_volume) === FALSE){
+      $citation .= ' Patent ' . $node->biblio_volume . '.';
     }
-    if (strpos($citation, $node->biblio_issue) === FALSE){
+    if (!empty($node->biblio_issue) && strpos($citation, $node->biblio_issue) === FALSE){
       $citation .= ' Patent source: ' . $node->biblio_issue . '.';
     }
   }
