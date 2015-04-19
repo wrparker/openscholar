@@ -151,7 +151,7 @@ function _get_csl_type_map() {
               'treaty'                  => '',
               'unpublished'             => 124,
               'webarticle'              => 107,
-              'webpage'                 => 107,
+              'webprojectpage'          => 134,
               'webservice'              => 133,
               'website'                 => 132,
         )
