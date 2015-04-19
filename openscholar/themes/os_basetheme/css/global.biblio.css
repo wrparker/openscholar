@@ -352,6 +352,10 @@ body.node-type-biblio .node-type-biblio .field-field-biblio-image {
   clear:none;
   }
 
+.bib-neg-indent {
+    text-indent:0 !important;
+  }
+
 #citation-wrapper,
 body.node-type-biblio .biblio-export {
   display:block;
