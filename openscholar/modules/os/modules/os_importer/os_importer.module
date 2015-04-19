@@ -818,8 +818,13 @@ function os_importer_feeds_after_import(FeedsSource $source) {
     return;
   }
 
-  $file = file_load($source->config['FeedsFileFetcher']['fid']);
-  file_delete($file);
+  // If in a VSite create a membership for this file.
+  if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
+    $gid = $vsite->id;
+    $fid = $source->config['FeedsFileFetcher']['fid'];
+    $membership = og_membership_create('node', $gid, 'file', $fid, OG_AUDIENCE_FIELD);
+    og_membership_save($membership);
+  }
 }
 
 /**
