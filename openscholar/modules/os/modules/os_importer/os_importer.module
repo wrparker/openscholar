@@ -768,8 +768,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     }
   }
 
-  $new_file = file_save_data(implode("\n", $file_rows), $file->uri, FILE_EXISTS_REPLACE);
-  $form_state['values']['file'] = $new_file->fid;
+  $form_state['values']['file'] = $file->fid;
 }
 
 /**
