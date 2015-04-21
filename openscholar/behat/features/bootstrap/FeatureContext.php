@@ -137,6 +137,30 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Then /^I should see "([^"]*)" element with the class "([^"]*)"$/
+   */
+  public function iShouldSeeElementWithTheClass($tag, $class) {
+    $page = $this->getSession()->getPage();
+
+    $element = $page->find('css', "$tag.$class");
+    if (!$element) {
+      throw new Exception(sprintf("%s element with the class %s was not found.", $tag, $class));
+    }
+  }
+
+  /**
+   * @Then /^I should not see "([^"]*)" element with the class "([^"]*)"$/
+   */
+  public function iShouldNotSeeElementWithTheClass($tag, $class) {
+    $page = $this->getSession()->getPage();
+
+    $element = $page->find('css', "$tag.$class");
+    if ($element) {
+      throw new Exception(sprintf("%s element with the class %s was found.", $tag, $class));
+    }
+  }
+
+  /**
    * @Given /^I should see the "([^"]*)" table with the following <contents>:$/
    */
   public function iShouldSeeTheTableWithTheFollowingContents($class, TableNode $table) {
@@ -2007,4 +2031,24 @@ class FeatureContext extends DrupalContext {
       throw new Exception('The url of the pages has changed.');
     }
   }
+
+  /**
+   * @Given /^I should not find the text "([^"]*)"$/
+   *
+   * This step is used to for looking for text in the page while respecting
+   * the case sensitivity of the searched text.
+   *
+   * @see @pageTextNotContains
+   */
+  public function iShouldNotFindTheText($text) {
+    $actual = $this->getSession()->getPage()->getText();
+    $actual = preg_replace('/\s+/u', ' ', $actual);
+    $regex  = '/'.preg_quote($text, '/').'/u';
+
+    if (preg_match($regex, $actual)) {
+      $message = sprintf('The text "%s" appears in the text of this page, but it should not.', $text);
+      throw new Exception($message);
+    }
+  }
+
 }

@@ -31,16 +31,16 @@ if (!$page) {
 
 ?>
 <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-  <?php if ($teaser): // begin teaser ?>
   <div class="node-inner">
-  <?php print render($title_prefix); ?>
-    <span class="title">
-    	<strong>
-    		<a href="<?php print $node_url; ?>" title="<?php print $title ?>">
-    		  <?php print $title; ?></a><?php if (isset($location_value) && !empty($location_value)): ?>, <?php endif; ?>
-    	</strong>
-    </span>
-  <?php print render($title_suffix); ?>
+  <?php if ($teaser): // begin teaser ?>
+    <?php print render($title_prefix); ?>
+      <span class="title">
+        <strong>
+          <a href="<?php print $node_url; ?>" title="<?php print $title ?>">
+            <?php print $title; ?></a><?php if (isset($location_value) && !empty($location_value)): ?>, <?php endif; ?>
+        </strong>
+      </span>
+    <?php print render($title_suffix); ?>
     <?php if (isset($location_value) && !empty($location_value)): ?>
       at
       <span class="location">
@@ -57,7 +57,7 @@ if (!$page) {
       <?php print $body_value; ?>
     </div>
   <?php endif; // end teaser ?>
-  
+
   <?php if (!$teaser): // begin default adaptivetheme full page node tpl ?>
     <?php print render($title_prefix); ?>
     <?php if ($title && !$page): //widgets can display content on its own page?>
@@ -81,7 +81,7 @@ if (!$page) {
     <div<?php print $content_attributes; ?>>
       <?php print render($content); ?>
     </div>
-  
+
     <?php if ($links = render($content['links'])): ?>
       <nav<?php print $links_attributes; ?>><?php print $links; ?></nav>
     <?php endif; ?>
