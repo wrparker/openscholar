@@ -9,9 +9,9 @@
       return {
         scope: {
           terms: '=',
-          bundle: '@',
+          bundle: '@'
         },
-        templateUrl: path + '/TaxonomyWidget.html',
+        templateUrl: path + 'TaxonomyWidget.html',
         link: function (scope, elem, attrs, c, trans) {
           var entityType = attrs.entityType,
             vocabService = new EntityService('vocabulary', 'id'),
