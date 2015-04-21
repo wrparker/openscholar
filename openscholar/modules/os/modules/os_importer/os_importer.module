@@ -808,31 +808,6 @@ function os_importer_import_submit($form, &$form_state) {
 }
 
 /**
- * Implements hook_feeds_after_import().
- *
- * After we import data we create an og membership for the file.
- */
-function os_importer_feeds_after_import(FeedsSource $source) {
-  if (!in_array('FeedsFileFetcher', array_keys($source->config))) {
-    return;
-  }
-
-  // If in a VSite create a membership for this file.
-  if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
-    $gid = $vsite->id;
-    $fid = $source->config['FeedsFileFetcher']['fid'];
-
-    // Don't create a membership if it exists already.
-    if (og_get_membership('node', $gid, 'file', $fid)) {
-      return;
-    }
-
-    $membership = og_membership_create('node', $gid, 'file', $fid, OG_AUDIENCE_FIELD);
-    og_membership_save($membership);
-  }
-}
-
-/**
  * Implements hook_feeds_presave().
  *
  * Supporting creation of vocabularies on the fly from the CSV file.
