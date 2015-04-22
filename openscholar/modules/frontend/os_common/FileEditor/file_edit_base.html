@@ -1,17 +1,25 @@
-<label for="fe-file-name">Name</label>
+<label for="fe-file-name">Label</label>
 <input id="fe-file-name" type="text" ng-model="file.name" class="form-text" />
+
+<div ng-show="file.schema == 'public' || file.schema == 'private'">
+    <label for="fe-filepath">File Name</label>
+    <input id="fe-filepath" type="text" ng-model="file.filename" class="form-text">
+</div>
 
 <div ng-include="fileEditAddt"></div>
 
-<label for="fe-file-description"></label>
+<label for="fe-file-description">Description</label>
 <textarea id="fe-file-description" ng-model="file.description"></textarea>
+
+<label for="fe-file-timestamp">Uploaded On</label>
+<input id="fe-file-timestamp" type="text" ng-model="file.timestamp" class="form-text">
 
 <label for="fe-file-replace"></label>
 <button id="fe-file-display-warning" ng-click="displayWarning()" ng-show="!showWarning && !showSuccess">Replace File</button>
 <div class="fe-warning" ng-show="showWarning">
     Are you sure? This will replace the existing file and cannot be undone?
     <div class="control">
-        <button id="fe-file-replace" ng-file-select ng-multiple="false" ng-accept="validate($file)" ng-file-change="$parent.prepForReplace($files, $event)">Replace</button>
+        <button id="fe-file-replace" ng-file-select ng-multiple="false" ng-accept="validate($file)" ng-file-change="prepForReplace($files, $event)">Replace</button>
         <button id="fe-file-replace-cancel" ng-click="showWarning = false">Cancel</button>
     </div>
 </div>
