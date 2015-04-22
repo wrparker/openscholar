@@ -139,6 +139,30 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Then /^I should see "([^"]*)" element with the class "([^"]*)"$/
+   */
+  public function iShouldSeeElementWithTheClass($tag, $class) {
+    $page = $this->getSession()->getPage();
+
+    $element = $page->find('css', "$tag.$class");
+    if (!$element) {
+      throw new Exception(sprintf("%s element with the class %s was not found.", $tag, $class));
+    }
+  }
+
+  /**
+   * @Then /^I should not see "([^"]*)" element with the class "([^"]*)"$/
+   */
+  public function iShouldNotSeeElementWithTheClass($tag, $class) {
+    $page = $this->getSession()->getPage();
+
+    $element = $page->find('css', "$tag.$class");
+    if ($element) {
+      throw new Exception(sprintf("%s element with the class %s was found.", $tag, $class));
+    }
+  }
+
+  /**
    * @Given /^I should see the "([^"]*)" table with the following <contents>:$/
    */
   public function iShouldSeeTheTableWithTheFollowingContents($class, TableNode $table) {
