@@ -3,7 +3,8 @@
  */
 (function () {
 
-  var restPath = '';
+  var restPath = '',
+    entities = {};
 
   angular.module('EntityService', [])
     .config(function () {
@@ -15,7 +16,8 @@
     .factory('EntityService', ['$rootScope', '$http', function ($rootScope, $http) {
       var factory = function (entityType, idProp) {
         var type = entityType;
-        var entities = [];
+        var ents;
+        entities[entityType] = ents = entities[entityType] || [];
         var entityCount = 0;
         var eventName = 'EntityService.'+type;
         var errorAttempts = 0;
@@ -27,10 +29,10 @@
 
         var success = function(resp) {
           for (var i=0; i<resp.data.length; i++) {
-            entities.push(resp.data[i]);
+            ents.push(resp.data[i]);
           }
           entityCount = resp.count;
-          $rootScope.$broadcast(eventName+'.fetch', entities);
+          $rootScope.$broadcast(eventName+'.fetch', ents);
         }
 
         var errorFunc = function() {
@@ -43,9 +45,9 @@
         }
 
         function findByProp(prop, value) {
-          var l = entities.length;
+          var l = ents.length;
           for (var i =0; i < l; i++) {
-            if (entities[i][prop] && entities[i][prop] == value) {
+            if (ents[i][prop] && ents[i][prop] == value) {
               return i;
             }
           }
@@ -71,8 +73,8 @@
 
         this.get = function (id) {
           var k = findByProp(idProp, id);
-          if (entities[k]) {
-            return entities[k];
+          if (ents[k]) {
+            return ents[k];
           }
         }
 
@@ -90,7 +92,7 @@
             .success(function (resp) {
               console.log(resp);
               var entity = resp.data[0];
-              entities.push(entity);
+              ents.push(entity);
 
               $rootScope.$broadcast(eventName+'.add', entity);
             })
@@ -101,13 +103,11 @@
             this.add(entity);
             return;
           }
-          var k = findByProp(idProp, entity[idProp]);
+          var k = findByProp(idProp, entity[idProp]),
+            url = [restPath, entityType, entity[idProp]],
+            data = getDiff(ents[k], entity);
 
-          var url = [restPath, entityType, entity[idProp]],
-            data = angular.copy(entity);
-
-          delete data[idProp];
-          $http.put(url.join('/'), data)
+          $http.patch(url.join('/'), data)
             .success(function (resp) {
               console.log(resp);
 
@@ -127,6 +127,107 @@
         }
       }
 
+      function getDiff(oEntity, nEntity) {
+        var diff = {};
+
+        for (var k in oEntity) {
+          if (!compareProps(oEntity[k], nEntity[k])) {
+            diff[k] = nEntity[k];
+          }
+        }
+
+        return diff;
+      }
+
       return factory;
     }]);
+
+  /*
+   * Buncha helper functions for getting comparisons
+   */
+
+  /**
+   * Compares two properties by value.
+   * If property is an array or object, recurses into them.
+   * @param prop1
+   * @param prop2
+   * @returns {boolean}
+   */
+  function compareProps(prop1, prop2) {
+    if (typeof prop1 != typeof prop2) {
+      return false;
+    }
+    else if (typeof prop1 == 'object') {
+      if (prop1 instanceof Array) {
+        return arrayEquals(prop1, prop2);
+      }
+      else if (prop1 == null && prop2 == null) {
+        return true;
+      }
+      else if (prop1 == null || prop2 == null) {
+        return false;
+      }
+      else {
+        return objectEquals(prop1, prop2);
+      }
+    }
+    else {
+      return prop1 == prop2;
+    }
+  }
+
+  /**
+   * Recursively compares 2 arrays by value
+   * @param arr1
+   * @param arr2
+   * @returns {boolean}
+   */
+  function arrayEquals(arr1, arr2) {
+    if (arr1.length != arr2.length) {
+      return false;
+    }
+    else {
+      var diff = false;
+      for (var i = 0; i < arr1.length; i++) {
+        diff = diff || compareProps(arr1[i], arr2[i]);
+      }
+
+      return diff;
+    }
+  }
+
+  /**
+   * Recursively compares 2 objects by value
+   * @param obj1
+   * @param obj2
+   * @returns {boolean}
+   */
+  function objectEquals(obj1, obj2) {
+    var keys1 = objectKeys(obj1),
+      keys2 = objectKeys(obj2),
+      diff = false;
+
+    if (arrayEquals(keys1, keys2)) {
+      for (var k in obj1) {
+        diff = diff || compareProps(obj1[k], obj2[k]);
+      }
+
+      return diff;
+    }
+    // objects have different keys
+    return false;
+  }
+
+  /**
+   * Returns an array of all keys on the object
+   * @param obj
+   * @returns {Array}
+   */
+  function objectKeys(obj) {
+    var keys = [];
+    for (var k in obj) {
+      keys.push(k);
+    }
+    return keys;
+  }
 })();
