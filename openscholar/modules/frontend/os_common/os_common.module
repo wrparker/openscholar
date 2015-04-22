@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Implements hook_library().
+ */
 function os_common_library() {
   $info = array();
 
@@ -28,14 +31,39 @@ function os_common_library() {
     'title' => 'Authentication',
     'version' => '1.0',
     'js' => array(
-      $path.'/auth/auth.js' => array(
+      $path . '/auth/auth.js' => array(
         'group' => JS_LIBRARY,
         'weight' => -10
       ),
     ),
     'dependencies' => array(
       array('os_common', 'angularjs'),
-    )
+    ),
+  );
+
+  $info['select2'] = array(
+    'title' => t('Select2'),
+    'version' => '3.4.3',
+    'js' => array(
+      libraries_get_path('select2') . '/select2.min.js' => array(),
+      drupal_get_path('module', 'os') . '/js/select2-widget.js' => array(),
+    ),
+    'css' => array(
+      libraries_get_path('select2') . '/select2.css',
+      drupal_get_path('module', 'os') . '/css/select2-widget.css',
+    ),
+  );
+
+  $info['angular_select2'] = array(
+    'title' => t('Angualr JS select 2'),
+    'version' => '0.0.5',
+    'js' => array(
+      libraries_get_path('angular_select2') . '/src/select2.js' => array(),
+    ),
+    'dependencies' => array(
+      array('os_common', 'select2'),
+      array('os_common', 'angularjs'),
+    ),
   );
 
   $info['helpers'] = array(

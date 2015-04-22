@@ -9,15 +9,15 @@
       return {
         scope: {
           file :  '=',
-          onClose : '&',
+          onClose : '&'
         },
-        templateUrl: libraryPath+'/file_edit_base.html',
+        templateUrl: libraryPath + '/file_edit_base.html',
         link: function (scope, elem, attr, c, trans) {
           var fileService = new EntityService('files', 'id');
 
           scope.fileEditAddt = '';
           if (scope.file) {
-            scope.fileEditAddt = libraryPath+'/file_edit_'+scope.file.type+'.html';
+            scope.fileEditAddt = libraryPath + '/file_edit_' + scope.file.type + '.html';
           }
           scope.showWarning = false;
           scope.showSuccess = false;
@@ -30,23 +30,23 @@
             }
 
             return false;
-          }
+          };
 
           scope.displayWarning = function() {
             scope.showWarning = true;
-          }
+          };
 
           scope.prepForUpload = function ($files, $event) {
             var file = $files[0];
 
             $upload.upload({
-              url: Drupal.settings.paths.api+'/files/'+file.id,
+              url: Drupal.settings.paths.api + '/files/' + file.id,
               file: file,
               data: file,
               fileFormDataName: 'files[upload]',
               headers: {'Content-Type': $file.type},
               method: 'PUT',
-              fields: fields,
+              fields: fields
             }).success(function () {
               scope.showWarning = false;
               scope.replaceSuccess = true;
@@ -54,12 +54,12 @@
                 scope.replaceSuccess = false;
               }, 5000);
             })
-          }
+          };
 
           scope.save = function () {
             fileService.edit(scope.file);
             scope.onClose({saved: true});
-          }
+          };
 
           scope.cancel = function () {
             scope.onClose({saved: false});

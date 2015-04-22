@@ -3,7 +3,7 @@
  */
 (function ($) {
 
-  angular.module('TaxonomyWidget', ['EntityService', 'os-auth'])
+  angular.module('TaxonomyWidget', ['EntityService', 'os-auth', 'ui.select2'])
     .directive('taxonomyWidget', ['EntityService', function (EntityService) {
       var path = Drupal.settings.paths.TaxonomyWidget;
       return {
@@ -20,7 +20,9 @@
           scope.allTerms = {};
 
           attrs.$observe('bundle', function (value) {
-            if (!value) return;
+            if (!value) {
+              return;
+            }
 
             vocabService.fetch({entity_type: entityType, bundle: value})
               .then(function (result) {
@@ -29,18 +31,16 @@
                 }
 
                 scope.vocabs = result.data.data;
-                for (var i=0; i<scope.vocabs.length; i++) {
+                for (var i = 0; i < scope.vocabs.length; i++) {
                   scope.allTerms[scope.vocabs[i].id] = [];
                   termService.fetch({vocab: scope.vocabs[i].id})
                     .then(function (result) {
-                      for (var j=0; j<result.data.data.length; j++) {
+                      for (var j = 0; j < result.data.data.length; j++) {
                         var t = result.data.data[j];
                         scope.allTerms[parseInt(t.vid)].push(t);
                       }
                     });
                 }
-
-                console.log(scope.allTerms);
               });
           });
         }

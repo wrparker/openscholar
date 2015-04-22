@@ -83,6 +83,7 @@ function media_browser_element_info_alter(&$elements) {
  * Implements hook_field_widget_form_alter().
  */
 function media_browser_field_widget_media_generic_form_alter(&$elements, &$forms_state, $context) {
+  drupal_add_library('os_common', 'angular_select2');
   //dpm($elements);
   //$elements['#process'][] = 'media_browser_element_process';
 }

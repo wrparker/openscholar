@@ -1,16 +1,19 @@
-<div class="tw-widget">
-    <div ng-repeat="v in vocabs" ng-switch="v.form">
-        <div ng-switch-when="options_select">
-            Options Select
-        </div>
-        <div ng-switch-when="entityreference_autocomplete">
-            EntityReference Autocomplete
-        </div>
-        <div ng-switch-when="options_buttons">
-            Options Buttons
-        </div>
-        <div ng-switch-when="term_reference_tree">
-            Term Reference Tree
-        </div>
+<div class="tw-widget" class="clearfix">
+  <div ng-repeat="v in vocabs" ng-switch="v.form" class="clearfix">
+    <div ng-switch-when="options_select">
+      <select ng-repeat="vocab in vocabs" ui-select2 ng-model="number" data-placeholder="Select terms from {{vocab.label}}" ng-required="true">
+        <option value=""></option>
+        <option ng-repeat="term in allTerms[vocab.id]" value="{{term.tid}}">{{term.label}}</option>
+      </select>
     </div>
+    <div ng-switch-when="entityreference_autocomplete">
+        EntityReference Autocomplete
+    </div>
+    <div ng-switch-when="options_buttons">
+        Options Buttons
+    </div>
+    <div ng-switch-when="term_reference_tree">
+        Term Reference Tree
+    </div>
+  </div>
 </div>

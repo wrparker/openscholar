@@ -17,7 +17,7 @@
         var type = entityType;
         var entities = [];
         var entityCount = 0;
-        var eventName = 'EntityService.'+type;
+        var eventName = 'EntityService.' + type;
         var errorAttempts = 0;
         var vsite = null;
 
@@ -30,8 +30,8 @@
             entities.push(resp.data[i]);
           }
           entityCount = resp.count;
-          $rootScope.$broadcast(eventName+'.fetch', entities);
-        }
+          $rootScope.$broadcast(eventName + '.fetch', entities);
+        };
 
         var errorFunc = function() {
           errorAttempts++;
@@ -40,7 +40,7 @@
               success(success).
               error(errorFunc);
           }
-        }
+        };
 
         function findByProp(prop, value) {
           var l = entities.length;
@@ -52,7 +52,7 @@
         }
 
         this.fetch = function (params) {
-          var url = restPath+'/'+entityType;
+          var url = restPath + '/' + entityType;
           if (!params) {
             params = {};
           }
@@ -63,36 +63,36 @@
           return $http.get(url, {params: params})
             .success(success)
             .error(errorFunc);
-        }
+        };
 
         this.getAll = function () {
           return entities;
-        }
+        };
 
         this.get = function (id) {
           var k = findByProp(idProp, id);
           if (entities[k]) {
             return entities[k];
           }
-        }
+        };
 
         this.getCount = function () {
           return entityCount;
-        }
+        };
 
         this.add = function (entity) {
           var k = findByProp(idProp, entity[idProp]);
           if (entities[k]) {
-            throw new Exception('Cannot add entity of type '+type+' that already exists.');
+            throw new Exception('Cannot add entity of type ' + type + ' that already exists.');
           }
           // rest API call to add entity to server
-          $http.post(restPath+'/'+entityType, entity)
+          $http.post(restPath + '/' + entityType, entity)
             .success(function (resp) {
               console.log(resp);
               var entity = resp.data[0];
               entities.push(entity);
 
-              $rootScope.$broadcast(eventName+'.add', entity);
+              $rootScope.$broadcast(eventName + '.add', entity);
             })
         };
 
@@ -111,7 +111,7 @@
             .success(function (resp) {
               console.log(resp);
 
-              $rootScope.$broadcast(eventName+'.update', entity);
+              $rootScope.$broadcast(eventName + '.update', entity);
             })
 
         };
@@ -123,9 +123,9 @@
           //rest API call to delete entity from server
 
 
-          $rootScope.$broadcast(eventName+'.delete');
+          $rootScope.$broadcast(eventName + '.delete');
         }
-      }
+      };
 
       return factory;
     }]);
