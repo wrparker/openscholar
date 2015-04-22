@@ -10,29 +10,44 @@ class OsFilesResource extends RestfulEntityBase {
 
     $info['size'] = array(
       'property' => 'size',
-      'data' => array(
-        'type' => 'int',
-        'read_only' => TRUE,
+      'discovery' => array(
+        'data' => array(
+          'type' => 'int',
+          'read_only' => TRUE,
+        )
       )
     );
 
     $info['mimetype'] = array(
       'property' => 'mime',
-      'data' => array(
-        'type' => 'string',
-        'read_only' => TRUE,
+      'discovery' => array(
+        'data' => array(
+          'type' => 'string',
+          'read_only' => TRUE,
+        )
       )
     );
 
     $info['url'] = array(
       'property' => 'url',
+      'saveCallback' => array($this, 'updateFileLocation')
+    );
+
+    $info['schema'] = array(
+      'callback' => array($this, 'getSchema'),
+    );
+
+    $info['filename'] = array(
+      'callback' => array($this, 'getFilename'),
     );
 
     $info['type'] = array(
       'property' => 'type',
-      'data' => array(
-        'type' => 'string',
-        'read_only' => TRUE,
+      'discovery' => array(
+        'data' => array(
+          'type' => 'string',
+          'read_only' => TRUE,
+        )
       )
     );
 
@@ -41,7 +56,13 @@ class OsFilesResource extends RestfulEntityBase {
     );
 
     $info['timestamp'] = array(
-      'property' => 'size',
+      'property' => 'timestamp',
+      'discovery' => array(
+        'data' => array(
+          'type' => 'int',
+          'read_only' => TRUE,
+        )
+      )
     );
 
     $info['description'] = array(
@@ -53,16 +74,24 @@ class OsFilesResource extends RestfulEntityBase {
       'property' => 'field_file_image_alt_text',
       'sub_property' => 'value',
       'callback' => array($this, 'getImageAltText'),
+      'saveCallback' => array($this, 'setImageAltText'),
     );
 
     $info['image_title'] = array(
       'property' => 'field_file_image_title_text',
       'sub_property' => 'value',
       'callback' => array($this, 'getImageTitleText'),
+      'saveCallback' => array($this, 'setImageTitleText'),
     );
 
     $info['preview'] = array(
       'callback' => array($this, 'getFilePreview'),
+      'discovery' => array(
+        'data' => array(
+          'type' => 'string',
+          'read_only' => TRUE,
+        )
+      )
     );
 
     $info['terms'] = array(
@@ -98,6 +127,15 @@ class OsFilesResource extends RestfulEntityBase {
   public function getFilename($wrapper) {
     $uri = $wrapper->value()->uri;
     return basename($uri);
+  }
+
+  /**
+   * Callback function to get the schema of the file.
+   * We use this to prevent user from changing the filename
+   */
+  public function getSchema($wrapper) {
+    $uri = $wrapper->value()->uri;
+    return parse_url($uri, PHP_URL_SCHEME);
   }
 
   /**
@@ -239,17 +277,132 @@ class OsFilesResource extends RestfulEntityBase {
    */
   public function putEntity($entity_id) {
 
+    // this request is only a file
+    // no other data is addeed
+    if ($this->request['file']) {
+      $oldFile = file_load($entity_id);
+      if ($file = file_move($this->request['file'], $oldFile->uri, FILE_EXISTS_REPLACE)) {
+
+        return array($this->viewEntity($entity_id));
+      }
+      else {
+        throw new RestfulBadRequestException('Error moving file.');
+      }
+    }
+
+    return parent::putEntity($entity_id);
+  }
+
+  protected function setPropertyValues(EntityMetadataWrapper $wrapper, $null_missing_fields = FALSE) {
+    $request = $this->getRequest();
+
+    static::cleanRequest($request);
+    $save = FALSE;
+    $original_request = $request;
+
+    foreach ($this->getPublicFields() as $public_field_name => $info) {
+      if (empty($info['property']) && empty($info['saveCallback'])) {
+        // We may have for example an entity with no label property, but with a
+        // label callback. In that case the $info['property'] won't exist, so
+        // we skip this field.
+        continue;
+      }
+
+      if (isset($info['saveCallback'])) {
+        $save = $save || call_user_func($info['saveCallback'], $wrapper);
+
+        if ($save) {
+          unset($original_request[$public_field_name]);
+        }
+      }
+      elseif ($info['property']) {
+        $property_name = $info['property'];
+
+        if (!isset($request[$public_field_name])) {
+          // No property to set in the request.
+          if ($null_missing_fields && $this->checkPropertyAccess('edit', $public_field_name, $wrapper->{$property_name}, $wrapper)) {
+            // We need to set the value to NULL.
+            $wrapper->{$property_name}->set(NULL);
+          }
+          continue;
+        }
+
+        if (!$this->checkPropertyAccess('edit', $public_field_name, $wrapper->{$property_name}, $wrapper)) {
+          throw new RestfulBadRequestException(format_string('Property @name cannot be set.', array('@name' => $public_field_name)));
+        }
+
+        $field_value = $this->propertyValuesPreprocess($property_name, $request[$public_field_name], $public_field_name);
+
+        $wrapper->{$property_name}->set($field_value);
+        unset($original_request[$public_field_name]);
+        $save = TRUE;
+      }
+    }
+
+
+    if (!$save) {
+      // No request was sent.
+      throw new RestfulBadRequestException('No values were sent with the request');
+    }
+
+    if ($original_request) {
+      // Request had illegal values.
+      $error_message = format_plural(count($original_request), 'Property @names is invalid.', 'Property @names are invalid.', array('@names' => implode(', ', array_keys($original_request))));
+      throw new RestfulBadRequestException($error_message);
+    }
+
+    // Allow changing the entity just before it's saved. For example, setting
+    // the author of the node entity.
+    $this->entityPreSave($wrapper);
+
+    $this->entityValidate($wrapper);
+
+    $wrapper->save();
+  }
+
+  protected function updateFileLocation($wrapper) {
+    $destination = $this->request[''];
+  }
+
+  public function patchEntity($entity_id) {
+
+    // do this after we run the other stuff, in case
     $destination = 'public://';
     // do spaces/private file stuff here
     if (isset($this->request['vsite'])) {
       $path = db_select('purl', 'p')->fields('p', array('value'))->condition('id', $this->request['vsite'])->execute()->fetchField();
       $destination .= $path.'/files';
     }
+    $input = fopen("php://input", "r");
+    $data = '';
+    while ($d = fread($input, 1024)) {
+      $data .= $d;
+    }
     if (file_save_upload('upload', array(), $destination, FILE_EXISTS_REPLACE)) {
 
-    }
+      // try this in case other values were sent. If it fails, then the only change is the file itself
+      try {
+       return parent::patchEntity($entity_id);
+      }
+      catch (RestfulBadRequestException $e) {
 
-    $this->updateEntity($entity_id, FALSE);
+        $wrapper = entity_metadata_wrapper($this->entityType, $entity_id);
+
+        // Set the HTTP headers.
+        $this->setHttpHeaders('Status', 201);
+
+        if (!empty($wrapper->url) && $url = $wrapper->url->value()); {
+          $this->setHttpHeaders('Location', $url);
+        }
+
+        return array($this->viewEntity($wrapper->getIdentifier()));
+      }
+    }
+    else {
+      // there was no file to upload. Assume some other field was set and try to patch it.
+      // If patchEntity throws an exception now, it means no data was sent at all.
+      return parent::patchEntity($entity_id);
+    }
   }
 
 }
