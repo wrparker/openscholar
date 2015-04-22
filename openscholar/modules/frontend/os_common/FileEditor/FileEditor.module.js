@@ -5,7 +5,7 @@
     config(function () {
       libraryPath = Drupal.settings.paths.FileEditor;
     }).
-    directive('fileEdit', ['EntityService', '$upload', '$timeout', function (EntityService, $upload, $timeout) {
+    directive('fileEdit', ['EntityService', '$http', '$timeout', function (EntityService, $http, $timeout) {
       return {
         scope: {
           file :  '=',
@@ -21,11 +21,10 @@
           }
           scope.showWarning = false;
           scope.showSuccess = false;
-          scope.validate = function ($files) {
-            if (!$files || !$files.length) return true;
-            var newFile = $files[0];
+          scope.validate = function ($file) {
+            if (!$file) return true;
 
-            if (scope.file.type == newFile.type) {
+            if (scope.file.mimetype == $file.type) {
               return true;
             }
 
@@ -36,24 +35,29 @@
             scope.showWarning = true;
           }
 
-          scope.prepForUpload = function ($files, $event) {
-            var file = $files[0];
+          scope.prepForReplace = function ($files, $event) {
+            if (!$files.length) return;
+            var file = $files[0],
+              fields = {};
 
-            $upload.upload({
-              url: Drupal.settings.paths.api+'/files/'+file.id,
-              file: file,
-              data: file,
-              fileFormDataName: 'files[upload]',
-              headers: {'Content-Type': $file.type},
-              method: 'PUT',
-              fields: fields,
-            }).success(function () {
-              scope.showWarning = false;
-              scope.replaceSuccess = true;
-              $timeout(function () {
-                scope.replaceSuccess = false;
-              }, 5000);
-            })
+            if (typeof Drupal.settings.spaces != 'undefined') {
+              fields.vsite = Drupal.settings.spaces.id
+            }
+
+            var config = {
+              headers: {
+                'Content-Type': file.type
+              }
+            };
+
+            $http.put(Drupal.settings.paths.api+'/files/'+scope.file.id, file, config)
+              .success(function () {
+                scope.showWarning = false;
+                scope.replaceSuccess = true;
+                $timeout(function () {
+                  scope.replaceSuccess = false;
+                }, 5000);
+              });
           }
 
           scope.save = function () {
