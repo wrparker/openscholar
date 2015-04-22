@@ -768,6 +768,8 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     }
   }
 
+  // Update the file contents with the validated contents.
+  file_put_contents($file->uri, implode("\n", $file_rows));
   $form_state['values']['file'] = $file->fid;
 }
 
