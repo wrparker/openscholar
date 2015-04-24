@@ -68,7 +68,7 @@
         }
 
         this.getAll = function () {
-          return entities;
+          return ents;
         }
 
         this.get = function (id) {
@@ -110,6 +110,9 @@
           $http.patch(url.join('/'), data)
             .success(function (resp) {
               console.log(resp);
+              var entity = resp.data[0];
+
+              ents.splice(k, 1, entity);
 
               $rootScope.$broadcast(eventName+'.update', entity);
             })
