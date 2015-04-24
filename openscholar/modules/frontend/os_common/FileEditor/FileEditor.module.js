@@ -5,7 +5,7 @@
     config(function () {
       libraryPath = Drupal.settings.paths.FileEditor;
     }).
-    directive('fileEdit', ['EntityService', '$http', '$timeout', function (EntityService, $http, $timeout) {
+    directive('fileEdit', ['EntityService', '$http', '$timeout', '$filter', function (EntityService, $http, $timeout, $filter) {
       return {
         scope: {
           file :  '=',
@@ -16,9 +16,22 @@
           var fileService = new EntityService('files', 'id');
 
           scope.fileEditAddt = '';
-          if (scope.file) {
-            scope.fileEditAddt = libraryPath+'/file_edit_'+scope.file.type+'.html';
-          }
+          scope.date = '';
+
+          scope.$watch('file', function (f) {
+            if (!f) return;
+            scope.fileEditAddt = libraryPath+'/file_edit_'+f.type+'.html';
+            scope.date = $filter('date')(f.timestamp+'000', 'short');
+          });
+
+          scope.$watch('date', function (value, old) {
+            if (value == old ) return;
+            var d = new Date(value);
+            if (d) {
+              scope.file.timestamp = parseInt(d.getTime() / 1000);
+            }
+          });
+
           scope.showWarning = false;
           scope.showSuccess = false;
           scope.validate = function ($file) {

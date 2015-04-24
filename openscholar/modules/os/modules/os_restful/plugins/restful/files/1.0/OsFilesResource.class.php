@@ -57,12 +57,6 @@ class OsFilesResource extends RestfulEntityBase {
 
     $info['timestamp'] = array(
       'property' => 'timestamp',
-      'discovery' => array(
-        'data' => array(
-          'type' => 'int',
-          'read_only' => TRUE,
-        )
-      )
     );
 
     $info['description'] = array(
