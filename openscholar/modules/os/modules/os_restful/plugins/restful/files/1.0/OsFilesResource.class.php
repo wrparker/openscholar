@@ -30,7 +30,6 @@ class OsFilesResource extends RestfulEntityBase {
 
     $info['url'] = array(
       'property' => 'url',
-      'saveCallback' => array($this, 'updateFileLocation')
     );
 
     $info['schema'] = array(
@@ -39,6 +38,7 @@ class OsFilesResource extends RestfulEntityBase {
 
     $info['filename'] = array(
       'callback' => array($this, 'getFilename'),
+      'saveCallback' => array($this, 'updateFileLocation')
     );
 
     $info['type'] = array(
@@ -281,6 +281,7 @@ class OsFilesResource extends RestfulEntityBase {
     // no other data is addeed
     if ($this->request['file']) {
       $oldFile = file_load($entity_id);
+      $this->request['file']->filename = $oldFile->filename;
       if ($file = file_move($this->request['file'], $oldFile->uri, FILE_EXISTS_REPLACE)) {
 
         return array($this->viewEntity($entity_id));
@@ -363,46 +364,4 @@ class OsFilesResource extends RestfulEntityBase {
   protected function updateFileLocation($wrapper) {
     $destination = $this->request[''];
   }
-
-  public function patchEntity($entity_id) {
-
-    // do this after we run the other stuff, in case
-    $destination = 'public://';
-    // do spaces/private file stuff here
-    if (isset($this->request['vsite'])) {
-      $path = db_select('purl', 'p')->fields('p', array('value'))->condition('id', $this->request['vsite'])->execute()->fetchField();
-      $destination .= $path.'/files';
-    }
-    $input = fopen("php://input", "r");
-    $data = '';
-    while ($d = fread($input, 1024)) {
-      $data .= $d;
-    }
-    if (file_save_upload('upload', array(), $destination, FILE_EXISTS_REPLACE)) {
-
-      // try this in case other values were sent. If it fails, then the only change is the file itself
-      try {
-       return parent::patchEntity($entity_id);
-      }
-      catch (RestfulBadRequestException $e) {
-
-        $wrapper = entity_metadata_wrapper($this->entityType, $entity_id);
-
-        // Set the HTTP headers.
-        $this->setHttpHeaders('Status', 201);
-
-        if (!empty($wrapper->url) && $url = $wrapper->url->value()); {
-          $this->setHttpHeaders('Location', $url);
-        }
-
-        return array($this->viewEntity($wrapper->getIdentifier()));
-      }
-    }
-    else {
-      // there was no file to upload. Assume some other field was set and try to patch it.
-      // If patchEntity throws an exception now, it means no data was sent at all.
-      return parent::patchEntity($entity_id);
-    }
-  }
-
 }
