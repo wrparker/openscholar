@@ -125,6 +125,10 @@
       $scope.setSelection(file.id);
     });
 
+    $scope.$on('EntityService.files.update', function (event, file) {
+      $scope.files = service.getAll();
+    })
+
 
     service.fetch({})
       .then(function (result) {
