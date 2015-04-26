@@ -36,10 +36,16 @@ function os_publications_overview() {
   // handle caching
   //cache_set($ckey, $output, 'cache_biblio_lists');
 
-  // change the page title to match the menu entry
-  ctools_include('menu', 'os');
-  $menu_item = os_menu_load_link_path($_GET['q']);
-  drupal_set_title($menu_item['title']);
+  // Change the page title to match the menu entry or to the filter value if used.
+  if (empty($output['biblio_page']['header']['export_links']['#filter'])) {
+    ctools_include('menu', 'os');
+    $menu_item = os_menu_load_link_path($_GET['q']);
+    drupal_set_title($menu_item['title']);
+  }
+  else {
+    $filter_value = reset($output['biblio_page']['header']['export_links']['#filter']['f']);
+    drupal_set_title(ucfirst($filter_value));
+  }
 
   return $output;
 }
