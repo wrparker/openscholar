@@ -32,14 +32,16 @@
             }
           }
 
+          console.log(scope.selectedTerms);
+
           /**
            * Add term to the selected terms array.
            *
            * @param item
            */
           scope.addSelectedTerms = function(item) {
+            // todo fix.
             scope.selectedTerms[item.vid][item.id] = item;
-            console.log(scope.selectedTerms);
           };
 
           /**
