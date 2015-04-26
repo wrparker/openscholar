@@ -65,6 +65,9 @@ function os_restful_entity_property_info_alter(&$info) {
   $info['og_vocab']['properties']['field_name']['setter callback'] = 'entity_property_verbatim_set';
   $info['og_vocab']['properties']['settings']['setter callback'] = 'entity_property_verbatim_set';
   $info['og_vocab']['properties']['settings']['type'] = 'unknown';
+
+  $info['file']['properties']['name']['setter callback'] = 'entity_property_verbatim_set';
+  $info['file']['properties']['timestamp']['setter callback'] = 'entity_property_verbatim_set';
 }
 
 /**
@@ -135,4 +138,35 @@ function os_restful_vocab_gid_get($data, array $options, $name, $type, $info) {
  */
 function os_restful_vocab_gid_set(&$data, $name, $value, $langcode, $type, $info) {
   $data->vsite = $value;
+}
+
+/**
+ * Stores properties for later
+ */
+function _os_restful_store_props($key, $value = null) {
+  $stored = &drupal_static(__FUNCTION__, array());
+
+  if (!is_null($value)) {
+    $stored[$key] = $value;
+  }
+
+  return $stored[$key];
+}
+
+function os_restful_restful_parse_request_alter(&$request) {
+  if ($request['timestamp']) {
+    _os_restful_store_props('timestamp', $request['timestamp']);
+  }
+}
+
+/**
+ * Implements hook_file_presave().
+ *
+ * file_save() automatically sets the timestamp to REQUEST_TIME.
+ * If we want to change it, it has to be done in a file_presave or entity_presave hook.
+ */
+function os_restful_file_presave($file) {
+  if ($timestamp = _os_restful_store_props('timestamp')) {
+    $file->timestamp = $timestamp;
+  }
 }
