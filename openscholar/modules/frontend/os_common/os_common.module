@@ -170,6 +170,7 @@ function os_common_library() {
     'dependencies' => array(
       array('os_common', 'angularjs'),
       array('os_common', 'EntityService'),
+      array('os_common', 'angular_select2'),
     )
   );
 
