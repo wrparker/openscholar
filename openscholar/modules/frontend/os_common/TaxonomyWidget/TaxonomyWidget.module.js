@@ -3,13 +3,13 @@
  */
 (function ($) {
 
-  angular.module('TaxonomyWidget', ['EntityService', 'os-auth', 'ui.select2'])
+  angular.module('TaxonomyWidget', ['EntityService', 'os-auth', 'ui.select', 'ngSanitize'])
     .directive('taxonomyWidget', ['EntityService', function (EntityService) {
       var path = Drupal.settings.paths.TaxonomyWidget;
       return {
         scope: {
           terms: '=', // two way binding. final result must match initial in architecture
-          bundle: '@', // read only
+          bundle: '@' // read only
         },
         templateUrl: path + 'TaxonomyWidget.html',
         link: function (scope, elem, attrs, c, trans) {
@@ -35,8 +35,7 @@
 
           // watch for changes to selectedTerms so we can update the terms property
           // that goes back up to the entity
-          scope.$watch('selectedTerms', function () {
-
+          scope.$watch('selectedTerms', function (data) {
           });
 
           // initialization
@@ -53,7 +52,6 @@
                 }
 
                 scope.vocabs = result.data.data;
-                console.log(scope.vocabs);
                 for (var i=0; i<scope.vocabs.length; i++) {
                   scope.allTerms[scope.vocabs[i].id] = [];
                   termService.fetch({vocab: scope.vocabs[i].id})

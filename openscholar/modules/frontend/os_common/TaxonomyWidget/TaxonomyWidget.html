@@ -1,10 +1,12 @@
 <div class="tw-widget" class="clearfix">
   <div ng-repeat="v in vocabs" ng-switch="v.form" class="clearfix">
     <div ng-switch-when="options_select">
-      <select ng-repeat="vocab in vocabs" ui-select2 ng-model="number" data-placeholder="Select terms from {{vocab.label}}" ng-required="true">
-        <option value=""></option>
-        <option ng-repeat="term in allTerms[vocab.id]" value="{{term.tid}}">{{term.label}}</option>
-      </select>
+      <ui-select multiple ng-repeat="vocab in vocabs" ng-model="selectedTerms" theme="select2" ng-disabled="disabled">
+        <ui-select-match placeholder="Select a term from {{vocab.label}}">{{$item.label}}</ui-select-match>
+        <ui-select-choices repeat="person in allTerms[3]">
+          <div ng-bind-html="person.label | highlight: $select.search"></div>
+        </ui-select-choices>
+      </ui-select>
     </div>
     <div ng-switch-when="entityreference_autocomplete">
         EntityReference Autocomplete
