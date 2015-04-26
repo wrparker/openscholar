@@ -1,27 +1,26 @@
 /**
  * Provides mechanisms for choosing a taxonomy term for a given entity
  */
-(function ($) {
+(function () {
 
   angular.module('TaxonomyWidget', ['EntityService', 'os-auth', 'ui.select', 'ngSanitize'])
     .directive('taxonomyWidget', ['EntityService', function (EntityService) {
       var path = Drupal.settings.paths.TaxonomyWidget;
       return {
         scope: {
-          terms: '=', // two way binding. final result must match initial in architecture
-          bundle: '@' // read only
+          terms: '=',
+          bundle: '@'
         },
         templateUrl: path + 'TaxonomyWidget.html',
-        link: function (scope, elem, attrs, c, trans) {
-          var entityType = attrs.entityType,
-            vocabService = new EntityService('vocabulary', 'id'),
-            termService = new EntityService('taxonomy', 'id');
-
+        link: function (scope, elem, attrs, c) {
+          var entityType = attrs.entityType;
+          var vocabService = new EntityService('vocabulary', 'id');
+          var termService = new EntityService('taxonomy', 'id');
           scope.allTerms = {};
           scope.selectedTerms = {};
 
-          // separate the list of all selected terms by vocab
-          // reduces complexity later
+          // Separate the list of all selected terms by vocab reduces complexity
+          // later.
           if (scope.terms) {
             for (var i = 0; i < scope.terms.length; i++) {
               var term = scope.terms[i];
@@ -33,13 +32,25 @@
             }
           }
 
-          // watch for changes to selectedTerms so we can update the terms property
-          // that goes back up to the entity
-          scope.$watch('selectedTerms', function (data) {
-          });
+          /**
+           * Add term to the selected terms array.
+           *
+           * @param item
+           */
+          scope.addSelectedTerms = function(item) {
+            scope.selectedTerms[item.vid][item.id] = item;
+            console.log(scope.selectedTerms);
+          };
 
-          // initialization
-          // occurs every time a selected file is changed
+          /**
+           * Remove a term from the selected terms.
+           *
+           * @param item
+           */
+          scope.removeSelectedTerms = function(item) {
+          };
+
+          // Occurs every time a selected file is changed.
           attrs.$observe('bundle', function (value) {
             if (!value) {
               return;
@@ -68,4 +79,4 @@
       }
     }])
 
-})(jQuery);
+})();

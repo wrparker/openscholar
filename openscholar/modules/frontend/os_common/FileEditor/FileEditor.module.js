@@ -71,7 +71,7 @@
                   scope.replaceSuccess = false;
                 }, 5000);
               });
-          }
+          };
 
           scope.save = function () {
             fileService.edit(scope.file);
