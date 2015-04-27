@@ -32,6 +32,9 @@
             }
           }
 
+          // Any change in the selected term scope will affect the file terms.
+          // This can be done thanks to a "Two way binding" implements using the
+          // = operator which defined in the isolated scope.
           scope.$watch('selectedTerms', function() {
             scope.terms = scope.selectedTerms;
           }, true);
