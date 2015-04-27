@@ -62,6 +62,7 @@ class OsFilesResource extends RestfulEntityBase {
     $info['description'] = array(
       'property' => 'os_file_description',
       'sub_property' => 'value',
+      'saveCallback' => array($this, 'setDescription')
     );
 
     $info['image_alt'] = array(
@@ -357,5 +358,18 @@ class OsFilesResource extends RestfulEntityBase {
 
   protected function updateFileLocation($wrapper) {
     $destination = $this->request[''];
+  }
+
+  protected function setDescription($wrapper) {
+    if ($this->request['description']) {
+      $data = array(
+        'value' => $this->request['description'],
+        'format' => 'filtered_html'
+      );
+      $wrapper->os_file_description->set($data);
+
+      return true;
+    }
+    return false;
   }
 }
