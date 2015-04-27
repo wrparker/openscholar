@@ -825,6 +825,13 @@ function os_publications_form_biblio_node_form_field_adjust($form) {
       unset($form[$field]);
     }
   }
+
+  // In case of a patent we add weight to the biblio section. This is done here
+  // because it didn't stick when done in the form alter.
+  if ($form['biblio_type']['#value'] == 119) {
+    $form['biblio_section']['#weight'] = 1.6;
+  }
+
   return $form;
 }
 
