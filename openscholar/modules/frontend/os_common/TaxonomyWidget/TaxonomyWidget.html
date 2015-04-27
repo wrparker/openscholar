@@ -2,11 +2,10 @@
   <div ng-repeat="v in vocabs" ng-switch="v.form" class="clearfix">
     <div ng-switch-when="options_select">
       <ui-select multiple
-                 on-select="addSelectedTerms($item, $model)" on-remove="removeSelectedTerms($item, $model)"
-                 ng-repeat="vocab in vocabs" ng-model="selectedTerms[vocab.id]"
+                 ng-repeat="vocab in vocabs track by vocab.id" ng-model="selectedTerms[vocab.id]"
                  theme="select2" ng-disabled="disabled">
         <ui-select-match placeholder="Select a term from {{vocab.label}}">{{$item.label}}</ui-select-match>
-        <ui-select-choices repeat="person in allTerms[vocab.id]">
+        <ui-select-choices repeat="person in allTerms[vocab.id] track by person.id">
           <div ng-bind-html="person.label | highlight: $select.search"></div>
         </ui-select-choices>
       </ui-select>

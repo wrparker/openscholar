@@ -32,25 +32,9 @@
             }
           }
 
-          console.log(scope.selectedTerms);
-
-          /**
-           * Add term to the selected terms array.
-           *
-           * @param item
-           */
-          scope.addSelectedTerms = function(item) {
-            // todo fix.
-            scope.selectedTerms[item.vid][item.id] = item;
-          };
-
-          /**
-           * Remove a term from the selected terms.
-           *
-           * @param item
-           */
-          scope.removeSelectedTerms = function(item) {
-          };
+          scope.$watch('selectedTerms', function() {
+            scope.terms = scope.selectedTerms;
+          }, true);
 
           // Occurs every time a selected file is changed.
           attrs.$observe('bundle', function (value) {
