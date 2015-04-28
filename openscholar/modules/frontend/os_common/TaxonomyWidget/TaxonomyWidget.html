@@ -15,7 +15,7 @@
       <div ng-repeat="term in autocomplete_terms">
         <input type="text"
                ng-model="selected"
-               typeahead="term.label + '(' + term.id + ')' for term in allTerms[vocab.id] | filter:$viewValue | limitTo:8"
+               typeahead="term.label for term in allTerms[vocab.id] | filter:$viewValue | limitTo:8"
                typeahead-on-select="onSelect($item, $model, $label)"
                class="form-text clearfix">
       </div>

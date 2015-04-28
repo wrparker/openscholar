@@ -66,21 +66,22 @@
           });
 
           scope.autocomplete_terms = ['empty'];
+
+          /**
+           * Add more autocomplete inputs.
+           */
           scope.addMore = function() {
             scope.autocomplete_terms.push(['empty']);
           };
 
+          /**
+           * Add another term to the selected terms object.
+           */
           scope.onSelect = function ($item, $model, $label) {
-
+            scope.selectedTerms[$item.vid][term.id] = $item;
           };
         }
       }
-    }])
-    .filter('termObjectFilter', function() {
-      return function(input) {
-        // todo fix. Will remove selected terms.
-        return false;
-      };
-    });
+    }]);
 
 })();
