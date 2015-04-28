@@ -154,6 +154,9 @@ background: none !important;
   margin-left: 12px;
   }
   
+ #menu-bar #block-os-primary-menu a.active.active ~ ul li a:hover {
+  background: none !important;
+  }  
   
 /*Secondary menu*/
 .at-panel.gpanel.panel-display.three-col.clearfix {
