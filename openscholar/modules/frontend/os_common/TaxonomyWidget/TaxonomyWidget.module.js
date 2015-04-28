@@ -3,7 +3,7 @@
  */
 (function () {
 
-  angular.module('TaxonomyWidget', ['EntityService', 'os-auth', 'ui.select', 'ngSanitize'])
+  angular.module('TaxonomyWidget', ['EntityService', 'os-auth', 'ui.select', 'ngSanitize', 'ui.bootstrap', 'ui.bootstrap.typeahead'])
     .directive('taxonomyWidget', ['EntityService', function (EntityService) {
       var path = Drupal.settings.paths.TaxonomyWidget;
       return {
@@ -12,7 +12,7 @@
           bundle: '@'
         },
         templateUrl: path + 'TaxonomyWidget.html',
-        link: function (scope, elem, attrs, c) {
+        link: function (scope, elem, attrs, c, $scope) {
           var entityType = attrs.entityType;
           var vocabService = new EntityService('vocabulary', 'id');
           var termService = new EntityService('taxonomy', 'id');
@@ -64,8 +64,23 @@
                 }
               });
           });
+
+          scope.autocomplete_terms = ['empty'];
+          scope.addMore = function() {
+            scope.autocomplete_terms.push(['empty']);
+          };
+
+          scope.onSelect = function ($item, $model, $label) {
+
+          };
         }
       }
     }])
+    .filter('termObjectFilter', function() {
+      return function(input) {
+        // todo fix. Will remove selected terms.
+        return false;
+      };
+    });
 
 })();

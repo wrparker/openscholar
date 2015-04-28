@@ -505,7 +505,3 @@ libraries[hopscotch][download][url] = "https://github.com/linkedin/hopscotch/arc
 libraries[angular_select2][type] = "libraries"
 libraries[angular_select2][download][type] = "get"
 libraries[angular_select2][download][url] = "https://github.com/angular-ui/ui-select/archive/v0.11.2.zip"
-
-libraries[angular_ui][type] = "libraries"
-libraries[angular_ui][download][type] = "get"
-libraries[angular_ui][download][url] = "https://github.com/angular-ui/bootstrap/archive/0.12.1.zip"
