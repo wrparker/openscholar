@@ -78,7 +78,14 @@
            * Add another term to the selected terms object.
            */
           scope.onSelect = function ($item, $model, $label) {
-            scope.selectedTerms[$item.vid][term.id] = $item;
+            scope.selectedTerms[$item.vid][$item.id] = $item;
+          };
+
+          /**
+           * Add and remove a term when checking/un-checking the checkbox.
+           */
+          scope.termsSelected = function(term) {
+            scope.selectedTerms[term.vid][term.id] = term;
           };
         }
       }

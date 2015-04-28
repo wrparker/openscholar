@@ -22,7 +22,11 @@
       <button ng-click="addMore()">Add more!</button>
     </div>
     <div ng-switch-when="options_buttons">
-        Options Buttons
+
+      <div ng-repeat="term in allTerms[vocab.id]">
+        <input type="checkbox" ng-click="termsSelected(term)" class="form-checkbox">
+        <label class="option">{{term.label}}</label>
+      </div>
     </div>
     <div ng-switch-when="term_reference_tree">
         Term Reference Tree
