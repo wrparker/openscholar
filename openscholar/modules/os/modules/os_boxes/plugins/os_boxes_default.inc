@@ -398,6 +398,35 @@ abstract class os_boxes_default extends boxes_box {
 
     return $this->os_contexts;
   }
+
+  /**
+   * Check access to the the box.
+   *
+   * @param $bundle
+   *  The bundle displayed in the widget.
+   *
+   * @return bool
+   *  Returns TRUE if the user can view the widget's content.
+   *  FALSE otherwise.
+   */
+  public function checkWidgetAccess($bundle) {
+    $public_bundles = array_keys(os_get_bundles(array(OS_PUBLIC_APP)));
+    $private_bundles = array_keys(os_get_bundles(array(OS_PRIVATE_APP)));
+
+    if (!empty($bundle) && in_array($bundle, $public_bundles)) {
+      // Widget displays a single public bundle.
+      return TRUE;
+    }
+
+    // Widget displays all bundles so check if the user is allowed the view the
+    // private bundles.
+    foreach ($private_bundles as $private_bundle) {
+      if (!node_access('view', $private_bundle)) {
+        return FALSE;
+      }
+    }
+    return TRUE;
+  }
 }
 
 function _os_boxes_default_advanced_handler($element, $form_state) {

@@ -59,5 +59,19 @@ class os_sv_list_file extends os_sv_list {
   function sort_filesize(&$efq) {
     $efq->propertyOrderBy('filesize', 'DESC');
   }
-  
+
+  /**
+   * Check access to the the box.
+   *
+   * @param $bundle
+   *  The bundle displayed in the widget.
+   *
+   * @return bool
+   *  Returns TRUE if the user can view the widget's content.
+   *  FALSE otherwise.
+   */
+  public function checkWidgetAccess($bundle) {
+
+    return true;
+  }
 }

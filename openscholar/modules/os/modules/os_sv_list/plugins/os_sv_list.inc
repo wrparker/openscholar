@@ -237,7 +237,7 @@ class os_sv_list extends os_boxes_default {
     $cid = $bundle ? 'node:' . $bundle : NULL;
 
     // Check user access to the content of the widget.
-    if (!$this->checkWidgetAccess($bundle, $vsite)) {
+    if (!$this->checkWidgetAccess($bundle)) {
       return;
     }
 
@@ -296,7 +296,7 @@ class os_sv_list extends os_boxes_default {
       $entities = entity_load($this->entity_type, $ids);
       $entities = array_map(function ($e) { $e->sv_list = TRUE; return $e; }, $entities);
       $this->_plugins_invoke('entities_alter', $entities);
-      
+
       // If we have entities render them out, otherwise cache (null) as the content.
       if (!empty($entities)) {
         
@@ -649,34 +649,4 @@ class os_sv_list extends os_boxes_default {
     array_unshift($sorts, $sticky);
   }
 
-  /**
-   * Check access to the LOP widget.
-   *
-   * @param $bundle
-   *  The bundle displayed in the widget.
-   * @param $vsite
-   *  The VSite the widget is displayed in.
-
-   * @return bool
-   *  Returns TRUE if the user can view the widget's content.
-   *  FALSE otherwise.
-   */
-  private function checkWidgetAccess($bundle, $vsite) {
-    $public_bundles = array_keys(os_get_bundles(array(OS_PUBLIC_APP)));
-    $private_bundles = array_keys(os_get_bundles(array(OS_PRIVATE_APP)));
-
-    if (!empty($bundle) && in_array($bundle, $public_bundles)) {
-      // Widget displays a single public bundle.
-      return TRUE;
-    }
-
-    // Widget displays all bundles so check if the user is allowed the view the
-    // private bundles.
-    foreach ($private_bundles as $private_bundle) {
-      if (!og_user_access('node', $vsite->id, "view $private_bundle content")) {
-        return FALSE;
-      }
-    }
-    return TRUE;
-  }
 }
