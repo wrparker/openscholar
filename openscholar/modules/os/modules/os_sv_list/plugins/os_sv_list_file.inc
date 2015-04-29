@@ -71,7 +71,7 @@ class os_sv_list_file extends os_sv_list {
    *  FALSE otherwise.
    */
   public function checkWidgetAccess($bundle) {
-
+    // @TODO
     return true;
   }
 }
