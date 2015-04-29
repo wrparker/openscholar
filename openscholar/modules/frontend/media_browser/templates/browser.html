@@ -10,8 +10,8 @@
             <div id="media-browser-drop-box" ng-file-drop ng-file-change="$parent.checkForDupes($files, $event)" class="media-browser-drop-box"
                  drag-over-class="media-browser-drag-over" ng-multiple="true" allow-dir="true"
                  hide-on-drop-not-available="true" ng-accept="$parent.validate($file)">
-                <span>or drag files here to upload them.</span>
-                <div class="help">Files must be less than <strong>{{maxFilesize}}</strong>.<br />
+                <span>or drag files here to upload them. <span class="help_icon" ng-mouseenter="showHelp = true" ng-mouseleave="showHelp = false">?</span></span>
+                <div class="help" ng-show="showHelp">Files must be less than <strong>{{maxFilesize}}</strong>.<br />
                     Allowed file types: <strong>{{extensions.join(' ')}}</strong></div>
             </div>
             <div id="media-browser-duplicate-check" ng-show="$parent.dupes.length > 0">

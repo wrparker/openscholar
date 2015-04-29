@@ -113,7 +113,7 @@
     $scope.params = params.browser;
     $scope.editing = false;
     $scope.deleting = false;
-    console.log(params);
+
     $scope.extensions = [];
     if (params.file_extensions) {
       $scope.extensions = params.file_extensions.split(' ');
@@ -128,6 +128,8 @@
     if (params.max_filesize) {
       $scope.maxFilesize = params.max_filesize;
     }
+
+    $scope.showHelp = false;
 
     if (close) {
       $scope.showButtons = true;
