@@ -27,6 +27,7 @@ projects[boxes][patch][] = "https://www.drupal.org/files/issues/default_object_e
 projects[calendar][subdir] = "contrib"
 projects[calendar][version] = 3.5
 projects[calendar][patch][] = "http://raw.github.com/openscholar/openscholar/72d63ee3537c31505b7481975886ec13789feeb5/patches/calendar-fix-week-view-overflow.patch"
+projects[calendar][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/ce29bb1dfb36309ddba74990232d59c81140b988/patches/calendar.scroll_to_first_event.patch"
 
 projects[colorbox][subdir] = "contrib"
 projects[colorbox][version] = 2.5
