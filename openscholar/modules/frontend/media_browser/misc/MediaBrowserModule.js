@@ -95,8 +95,8 @@
         }
       }
     }])
-  .controller('BrowserCtrl', ['$scope', '$filter', '$http', '$templateCache', 'EntityService', '$sce', '$upload', 'params', 'close',
-      function ($scope, $filter, $http, $templateCache, EntityService, $sce, $upload, params, close) {
+  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', '$sce', '$upload', 'params', 'close',
+      function ($scope, $filter, $http, EntityService, $sce, $upload, params, close) {
 
     // Initialization
     var service = new EntityService('files', 'id'),
@@ -113,6 +113,20 @@
     $scope.params = params.browser;
     $scope.editing = false;
     $scope.deleting = false;
+    console.log(params);
+    $scope.extensions = [];
+    if (params.file_extensions) {
+      $scope.extensions = params.file_extensions.split(' ');
+    }
+    if (!params.override_extensions) {
+      for (var t in params.types) {
+        $scope.extensions = $scope.extensions.concat(Drupal.settings.extensionMap[t]);
+      }
+    }
+
+    if (params.max_filesize) {
+      $scope.maxFilesize = params.max_filesize;
+    }
 
     if (close) {
       $scope.showButtons = true;
