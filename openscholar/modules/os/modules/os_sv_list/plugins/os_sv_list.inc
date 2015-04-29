@@ -229,12 +229,17 @@ class os_sv_list extends os_boxes_default {
   }
     
   public function render() {
-    if (module_exists('vsite') && !vsite_get_vsite()) {
+    if (module_exists('vsite') && !($vsite = vsite_get_vsite())) {
       return;
     }
 
     $bundle = ($this->options['content_type'] != 'all') ? $this->options['content_type'] : NULL;
     $cid = $bundle ? 'node:' . $bundle : NULL;
+
+    // Check user access to the content of the widget.
+    if (!$this->checkWidgetAccess($bundle, $vsite)) {
+      return;
+    }
 
     $block = parent::render();
     $page_num = pager_find_page(PagerDefault::$maxElement);
@@ -642,5 +647,36 @@ class os_sv_list extends os_boxes_default {
 
     // Add the sort by sticky to be the first sort.
     array_unshift($sorts, $sticky);
+  }
+
+  /**
+   * Check access to the LOP widget.
+   *
+   * @param $bundle
+   *  The bundle displayed in the widget.
+   * @param $vsite
+   *  The VSite the widget is displayed in.
+
+   * @return bool
+   *  Returns TRUE if the user can view the widget's content.
+   *  FALSE otherwise.
+   */
+  private function checkWidgetAccess($bundle, $vsite) {
+    $public_bundles = array_keys(os_get_bundles(array(OS_PUBLIC_APP)));
+    $private_bundles = array_keys(os_get_bundles(array(OS_PRIVATE_APP)));
+
+    if (!empty($bundle) && in_array($bundle, $public_bundles)) {
+      // Widget displays a single public bundle.
+      return TRUE;
+    }
+
+    // Widget displays all bundles so check if the user is allowed the view the
+    // private bundles.
+    foreach ($private_bundles as $private_bundle) {
+      if (!og_user_access('node', $vsite->id, "view $private_bundle content")) {
+        return FALSE;
+      }
+    }
+    return TRUE;
   }
 }

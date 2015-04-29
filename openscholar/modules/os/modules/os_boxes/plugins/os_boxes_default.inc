@@ -147,6 +147,9 @@ abstract class os_boxes_default extends boxes_box {
       $this->cache_id .= ':' . $page;
     }
 
+    global $user;
+    $this->cache_id .= ':' . $user->uid;
+
     return $this->cache_id;
   }
 

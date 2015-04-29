@@ -266,3 +266,29 @@ function os_sv_list_terms_element_validate($element, &$form_state) {
 function os_sv_list_vocabs_content_type($form, $form_state) {
   return $form['options']['vocabs'];
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_sv_list_form_spaces_features_form_alter(&$form, &$form_state) {
+  $form['#submit'][] = 'os_sv_list_form_spaces_features_form_submit';
+}
+
+/**
+ * Submit handler.
+ *
+ * Invalidate the os_boxes cache to make sure that apps that are now private
+ * won't display content in the LOP
+ */
+function os_sv_list_form_spaces_features_form_submit($form, &$form_state) {
+  $cid = 'os_boxes_cache:';
+  if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
+    $cid .= $vsite->id;
+  }
+
+  // Flush raw data.
+  cache_clear_all($cid, 'cache_os_boxes', TRUE);
+
+  // Flush assets.
+  cache_clear_all('assets:' . $cid, 'cache_os_boxes', TRUE);
+}
