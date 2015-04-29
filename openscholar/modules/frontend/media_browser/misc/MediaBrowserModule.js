@@ -123,6 +123,7 @@
         $scope.extensions = $scope.extensions.concat(Drupal.settings.extensionMap[t]);
       }
     }
+    $scope.extensions.sort();
 
     if (params.max_filesize) {
       $scope.maxFilesize = params.max_filesize;
