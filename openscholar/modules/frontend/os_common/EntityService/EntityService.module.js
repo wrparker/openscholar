@@ -4,7 +4,8 @@
 (function () {
 
   var restPath = '',
-    entities = {};
+    entities = {},
+    fetched = {};
 
   angular.module('EntityService', [])
     .config(function () {
@@ -13,7 +14,7 @@
   /**
    * Service to maintain the list of files on a user's site
    */
-    .factory('EntityService', ['$rootScope', '$http', function ($rootScope, $http) {
+    .factory('EntityService', ['$rootScope', '$http', '$q', function ($rootScope, $http, $q) {
       var factory = function (entityType, idProp) {
         var type = entityType;
         var ents;
@@ -28,9 +29,11 @@
         }
 
         var success = function(resp) {
+          ents.length = 0;
           for (var i=0; i<resp.data.length; i++) {
             ents.push(resp.data[i]);
           }
+          fetched[type] = true;
           entityCount = resp.count;
           $rootScope.$broadcast(eventName+'.fetch', ents);
         }
@@ -62,9 +65,11 @@
           if (vsite) {
             params.vsite = vsite;
           }
+
           return $http.get(url, {params: params})
             .success(success)
             .error(errorFunc);
+
         }
 
         this.getAll = function () {
