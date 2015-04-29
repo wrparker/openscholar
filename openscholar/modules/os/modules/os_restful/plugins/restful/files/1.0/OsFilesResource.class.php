@@ -372,4 +372,22 @@ class OsFilesResource extends RestfulEntityBase {
     }
     return false;
   }
+
+  protected function setImageAltText($wrapper) {
+    if ($this->request['image_alt']) {
+      $wrapper->field_file_image_alt_text->set($this->request['image_alt']);
+
+      return true;
+    }
+    return false;
+  }
+
+  protected function setImageTitleText($wrapper) {
+    if ($this->request['image_title']) {
+      $wrapper->field_file_image_title_text->set($this->request['image_title']);
+
+      return true;
+    }
+    return false;
+  }
 }
