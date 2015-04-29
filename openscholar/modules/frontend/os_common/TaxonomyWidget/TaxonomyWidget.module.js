@@ -28,7 +28,7 @@
                 scope.selectedTerms[term.vid] = {};
               }
 
-              scope.selectedTerms[term.vid][term.id] = term;
+              scope.selectedTerms[term.vid][term.id] = term.id;
             }
           }
 
@@ -65,27 +65,44 @@
               });
           });
 
-          scope.autocomplete_terms = ['empty'];
+          scope.autocomplete_terms = [{}];
 
           /**
            * Add more autocomplete inputs.
            */
           scope.addMore = function() {
-            scope.autocomplete_terms.push(['empty']);
+            scope.autocomplete_terms.push({});
           };
 
           /**
            * Add another term to the selected terms object.
            */
           scope.onSelect = function ($item, $model, $label) {
-            scope.selectedTerms[$item.vid][$item.id] = $item;
+            scope.selectedTerms[$item.vid][$item.id] = $item.id;
           };
 
           /**
            * Add and remove a term when checking/un-checking the checkbox.
            */
-          scope.termsSelected = function(term) {
-            scope.selectedTerms[term.vid][term.id] = term;
+          scope.termsSelected = function(term, object) {
+            if (!scope.selectedTerms[term.vid]) {
+              scope.selectedTerms[term.vid] = [];
+
+              if (!scope.selectedTerms[term.vid][term.id]) {
+                scope.selectedTerms[term.vid][term.id] = term.id;
+              }
+              else {
+                scope.selectedTerms[term.vid][term.id] = null;
+              }
+            }
+            else {
+              if (scope.selectedTerms[term.vid][term.id]) {
+                scope.selectedTerms[term.vid][term.id] = null;
+              }
+              else {
+                scope.selectedTerms[term.vid][term.id] = term.id;
+              }
+            }
           };
         }
       }
