@@ -227,9 +227,9 @@ class os_sv_list extends os_boxes_default {
 
     return $form;
   }
-    
+
   public function render() {
-    if (module_exists('vsite') && !($vsite = vsite_get_vsite())) {
+    if (module_exists('vsite') && !(vsite_get_vsite())) {
       return;
     }
 
