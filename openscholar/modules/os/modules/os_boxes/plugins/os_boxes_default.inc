@@ -410,17 +410,14 @@ abstract class os_boxes_default extends boxes_box {
     $public_bundles = array_keys(os_get_bundles(array(OS_PUBLIC_APP)));
     $private_bundles = array_keys(os_get_bundles(array(OS_PRIVATE_APP)));
 
-    if (!empty($bundle) && in_array($bundle, $public_bundles)) {
+    if (in_array($bundle, $public_bundles)) {
       // Widget displays a single public bundle.
       return TRUE;
     }
 
-    // Widget displays all bundles so check if the user is allowed the view the
-    // private bundles.
-    foreach ($private_bundles as $private_bundle) {
-      if (!node_access('view', $private_bundle)) {
-        return FALSE;
-      }
+    if (in_array($bundle, $private_bundles)) {
+      // Widget displays a single private bundle.
+      return node_access('view', $bundle);
     }
     return TRUE;
   }

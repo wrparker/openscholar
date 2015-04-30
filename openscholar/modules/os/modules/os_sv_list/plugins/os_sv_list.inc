@@ -229,19 +229,20 @@ class os_sv_list extends os_boxes_default {
   }
 
   public function render() {
-    if (module_exists('vsite') && !(vsite_get_vsite())) {
+    if (module_exists('vsite') && !vsite_get_vsite()) {
       return;
     }
+
+    $block = parent::render();
 
     $bundle = ($this->options['content_type'] != 'all') ? $this->options['content_type'] : NULL;
     $cid = $bundle ? 'node:' . $bundle : NULL;
 
     // Check user access to the content of the widget.
-    if (!$this->checkWidgetAccess($bundle)) {
-      return;
+    if (!empty($bundle) && !$this->checkWidgetAccess($bundle)) {
+      return $block;
     }
 
-    $block = parent::render();
     $page_num = pager_find_page(PagerDefault::$maxElement);
 
     $this->set_cache_id($cid, $page_num);
@@ -354,6 +355,19 @@ class os_sv_list extends os_boxes_default {
     if ($this->options['content_type'] != 'all') {
       // Any special hook here?
       $query->propertyCondition('type', $this->options['content_type']);
+    }
+    else {
+      // When "All" is selected show only public bundles and private bundles
+      // for the privileged users.
+      $bundles = array_keys(os_get_bundles(array(OS_PUBLIC_APP)));
+      $private_bundles = array_keys(os_get_bundles(array(OS_PRIVATE_APP)));
+
+      foreach ($private_bundles as $private_bundle) {
+        if (node_access('view', $private_bundle)) {
+          $bundles[] = $private_bundle;
+        }
+      }
+      $query->propertyCondition('type', $bundles, 'IN');
     }
 
     // Pager.
