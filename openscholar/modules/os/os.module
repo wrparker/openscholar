@@ -903,7 +903,7 @@ function os_form_alter(&$form, &$form_state, $form_id) {
       }
     }
     $form['actions']['cancel'] = array(
-      '#markup'   => l(t('Cancel'), $destination, array('attributes' => array('class' => 'form-cancel'))),
+      '#markup'   => '<a class="form-cancel" href="' . urldecode(url($destination)) . '">' . t('Cancel') . '</a>',
       '#weight' => 99,
     );
   }
