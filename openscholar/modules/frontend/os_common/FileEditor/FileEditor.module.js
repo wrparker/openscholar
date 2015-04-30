@@ -32,6 +32,19 @@
             }
           });
 
+          scope.$watch('file.filename', function (filename, old) {
+            scope.invalidName = false;
+            if (filename && filename != old) {
+              var files = fileService.getAll();
+              for (var i = 0; i < files.length; i++) {
+                if (filename == files[i].filename && scope.file.id != files[i].id) {
+                  scope.invalidName = true;
+                  return;
+                }
+              }
+            }
+          });
+
           scope.showWarning = false;
           scope.showSuccess = false;
           scope.validate = function ($file) {
@@ -71,6 +84,10 @@
                   scope.replaceSuccess = false;
                 }, 5000);
               });
+          }
+
+          scope.canSave = function () {
+            return scope.invalidName;
           }
 
           scope.save = function () {
