@@ -2524,3 +2524,40 @@ function os_files_file_url_alter(&$uri) {
     drupal_add_html_head($link, 'dns-prefetch');
   }
 }
+
+/**
+ * Implements hook_file_delete().
+ *
+ * We wan't to delete the file only when the user delete the file from the files
+ * control panel. Drupal will delete the file as it's attend to but before the
+ * file will be deleted(from the DB and the folders) we will create a copy of
+ * that file and fill in the void from the deleted file.
+ */
+function os_files_file_delete($file) {
+  if (!empty($file->user_delete)) {
+    // The user delete the file and not Drupal.
+    return;
+  }
+
+  // Create a copy of the file to the current schema.
+  list($schema) = explode('://', $file->uri);
+  $new_file = file_copy($file, $schema . '://');
+
+  // Get the file usage of the previous file.
+  $usages = file_usage_list($file);
+
+  foreach ($usages as $module => $module_usages) {
+    foreach ($module_usages as $usage) {
+      db_insert('file_usage')
+        ->fields(array(
+          'module' => $module,
+          'fid' => $new_file->fid,
+          'type' => $usage['type'],
+          'id' => $usage['id']
+        ))
+        ->execute();
+    }
+  }
+
+  // todo: update the fields. DB update is a good solution.
+}
