@@ -1338,12 +1338,10 @@ function os_publications_update_7030() {
 }
 
 /**
- * Add the new chicago author-date based style to Biblio.
+ * Reset the citeproc mappings to include all biblio types
+ * and add the new chicago author-date based style.
  */
 function os_publications_update_7031() {
-  $name = 'harvard-chicago-author-date.csl';
-
-  // Read the CSL file from the directory.
-  $csl_file_contents = file_get_contents(drupal_get_path('module', 'biblio_citeproc') . '/style/' . $name);
-  biblio_citeproc_install_style($name, $csl_file_contents);
+  _reset_csl_map(FALSE);
+  os_publications_revert_citeproc_style('harvard-chicago-author-date');
 }
