@@ -359,8 +359,8 @@ class os_sv_list extends os_boxes_default {
     else {
       // When "All" is selected show only public bundles and private bundles
       // for the privileged users.
-      $bundles = array_keys(os_get_bundles(array(OS_PUBLIC_APP)));
-      $private_bundles = array_keys(os_get_bundles(array(OS_PRIVATE_APP)));
+      $bundles = $this->getBundles(OS_PUBLIC_APP);
+      $private_bundles = $this->getBundles(OS_PRIVATE_APP);
 
       foreach ($private_bundles as $private_bundle) {
         if (node_access('view', $private_bundle)) {

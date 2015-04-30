@@ -407,19 +407,45 @@ abstract class os_boxes_default extends boxes_box {
    *  FALSE otherwise.
    */
   public function checkWidgetAccess($bundle) {
-    $public_bundles = array_keys(os_get_bundles(array(OS_PUBLIC_APP)));
-    $private_bundles = array_keys(os_get_bundles(array(OS_PRIVATE_APP)));
+    $bundles = $this->getBundles();
 
-    if (in_array($bundle, $public_bundles)) {
+    if (in_array($bundle, $bundles['public_bundles'])) {
       // Widget displays a single public bundle.
       return TRUE;
     }
 
-    if (in_array($bundle, $private_bundles)) {
+    if (in_array($bundle, $bundles['private_bundles'])) {
       // Widget displays a single private bundle.
       return node_access('view', $bundle);
     }
     return TRUE;
+  }
+
+  /**
+   * Get the associated bundles for an App type.
+   *
+   * @param $app_type
+   *  The App type to get the bundles for. Can be OS_PRIVATE_APP to get the
+   *  private bundles or OS_PUBLIC_APP to get the public bundles. If empty, get
+   *  all the bundles.
+   *
+   * @return array
+   *  An array keyed by the app type and valued with the matching bundles.
+   */
+  protected function getBundles($app_type = '') {
+    switch ($app_type) {
+      case OS_PRIVATE_APP:
+        $bundles = array_keys(os_get_bundles(array(OS_PRIVATE_APP)));
+        break;
+      case OS_PUBLIC_APP:
+        $bundles = array_keys(os_get_bundles(array(OS_PUBLIC_APP)));
+        break;
+      default:
+        $bundles['public_bundles'] = array_keys(os_get_bundles(array(OS_PUBLIC_APP)));
+        $bundles['private_bundles'] = array_keys(os_get_bundles(array(OS_PRIVATE_APP)));
+        break;
+    }
+    return $bundles;
   }
 }
 
