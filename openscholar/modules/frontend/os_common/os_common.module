@@ -82,6 +82,21 @@ function os_common_library() {
     ),
   );
 
+  $info['taxonomy_tree'] = array(
+    'title' => t('Angular taxonomy tree'),
+    'version' => '0.0.5',
+    'js' => array(
+      libraries_get_path('angular-ivh-treeview') . '/dist/ivh-treeview.min.js' => array(),
+    ),
+    'css' => array(
+      libraries_get_path('angular-ivh-treeview') . '/dist/ivh-treeview.min.css' => array(),
+    ),
+    'dependencies' => array(
+      array('os_common', 'select2'),
+      array('os_common', 'angularjs'),
+    ),
+  );
+
   $info['helpers'] = array(
     'title' => 'OS Common Helpers',
     'version' => '1.0',
@@ -188,6 +203,7 @@ function os_common_library() {
       array('os_common', 'EntityService'),
       array('os_common', 'angular_select2'),
       array('os_common', 'angular_ui'),
+      array('os_common', 'taxonomy_tree'),
     )
   );
 
@@ -208,7 +224,7 @@ function os_common_library() {
     'dependencies' => array(
       array('os_common', 'ng-file-upload'),
       array('os_common', 'EntityService'),
-      array('os_common', 'TaxonomyWidget')
+      array('os_common', 'TaxonomyWidget'),
     )
   );
 

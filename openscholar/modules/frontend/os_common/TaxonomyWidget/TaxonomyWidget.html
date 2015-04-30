@@ -28,7 +28,12 @@
       </div>
     </div>
     <div ng-switch-when="term_reference_tree">
-        Term Reference Tree
+
+      <input type="text" ng-model="termSearch" class="form-text clearfix"/>
+
+      <div
+        ivh-treeview="termsTree"
+        ivh-treeview-filter="termSearch"></div>
     </div>
   </div>
 </div>
