@@ -1,6 +1,6 @@
-name = Blue Yellow
-description = Slate blue/grey header and menu bar version of the Classic theme
+name = Monochrome
+description = A monochrome version of the Classic theme
 screenshot = screenshot.png
 
-css[] = blue_yellow.css
-css[] = responsive.blue_yellow.css
+css[] = monochrome.css
+css[] = responsive.monochrome.css
