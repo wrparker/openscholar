@@ -127,12 +127,18 @@
         this.delete = function (entity) {
 
           //rest API call to delete entity from server
-          $http.delete(restPath+'/'+entityType+'/'+entity[idProp]).success(function (resp) {
+          return $http.delete(restPath+'/'+entityType+'/'+entity[idProp]).success(function (resp) {
             var k = findByProp(idProp, entity[idProp]);
             ents.splice(k, 1);
 
             $rootScope.$broadcast(eventName+'.delete', entity[idProp]);
           });
+        }
+
+        // registers an entity with this service
+        // used for entities that are added outside of this service
+        this.register = function (entity) {
+          ents.push(entity);
         }
       }
 

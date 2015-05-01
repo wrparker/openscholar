@@ -144,6 +144,17 @@
 
     $scope.$on('EntityService.files.update', function (event, file) {
       $scope.files = service.getAll();
+    });
+
+    $scope.$on('EntityService.files.delete', function (event, id) {
+      var deleteMe;
+      for (var i=0; i<$scope.files.length; i++) {
+        if ($scope.files[i].id == id) {
+          deleteMe = i;
+        }
+      }
+
+      $scope.files.splice(deleteMe, 1);
     })
 
 
@@ -292,7 +303,7 @@
         $upload.upload({
           url: Drupal.settings.paths.api+'/files',
           file: $file,
-          data: $file,
+          data: $file,                                        // UPLOADED FILES ARE NOT GETTING THE VSITE
           fileFormDataName: 'files[upload]',
           headers: {'Content-Type': $file.type},
           method: 'POST',
@@ -304,6 +315,7 @@
           for (var i = 0; i< e.data.length; i++) {
             e.data[i].new = true;
             $scope.files.push(e.data[i]);
+            service.register(e.data[i]);
           }
 
           currentlyUploading++;
@@ -363,7 +375,10 @@
     };
 
     $scope.deleteConfirmed = function() {
-      service.delete($scope.selected_file);
+      service.delete($scope.selected_file)
+        .then(function (resp) {
+          $scope.deleting = false;
+        });
     };
 
 
