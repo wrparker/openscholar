@@ -174,16 +174,22 @@
       for (var i=0; i<$files.length; i++) {
         var similar = [],
             basename = $files[i].name.replace(/\.[a-zA-Z0-9]*$/, ''),
-            extension = $files[i].name.replace(basename, '');
+            extension = $files[i].name.replace(basename, ''),
+            dupeFound = false;
 
         for (var j=0; j<$scope.files.length; j++) {
-          // find any file with a name that matches "basename{_dd}.ext" and add it to list
+          // find any file with a name that matches "basename{_dd}.ext" and add it to list of similar files
           if ($scope.files[j].filename.indexOf(basename) !== -1 && $scope.files[j].filename.indexOf(extension) !== -1) {
             similar.push($scope.files[j]);
+            // also check if there is a file with the full filename and save this fact for later
+            // this allows file.jpg to be uploaded when file_01.jpg already exists
+            if ($scope.files[j].filename == $files[i].name) {
+              dupeFound = true;
+            }
           }
         }
 
-        if (similar.length) {
+        if (dupeFound) {
           // only one similar file found, drop _01 at the end
           if (similar.length == 1) {
             $files[i].newName = basename + '_01' + extension;
