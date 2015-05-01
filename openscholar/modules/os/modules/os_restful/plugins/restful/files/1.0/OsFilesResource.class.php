@@ -156,6 +156,20 @@ class OsFilesResource extends RestfulEntityBase {
   }
 
   /**
+   * Filter files by vsite
+   */
+  protected function queryForListFilter(EntityFieldQuery $query) {
+    if ($this->request['vsite']) {
+      if ($vsite = vsite_get_vsite($this->request['vsite'])) {
+        $query->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $this->request['vsite']);
+      }
+      else {
+        throw new RestfulBadRequestException(t('No vsite with the id @id', array('@id' => $this->request['vsite'])));
+      }
+    }
+  }
+
+  /**
    * Override. Handle the file upload process before creating an actual entity.
    * The file could be a straight replacement, and this is where we handle that.
    */
@@ -357,7 +371,17 @@ class OsFilesResource extends RestfulEntityBase {
   }
 
   protected function updateFileLocation($wrapper) {
-    $destination = $this->request[''];
+    if ($this->request['filename']) {
+      $file = file_load($wrapper->getIdentifier());
+      $label = $wrapper->name->value();
+      $destination = dirname($file->uri) . '/' . $this->request['filename'];
+      if ($file = file_move($file, $destination)) {
+        $wrapper->set($file);
+        $wrapper->name->set($label);
+        return true;
+      }
+    }
+    return false;
   }
 
   protected function setDescription($wrapper) {
