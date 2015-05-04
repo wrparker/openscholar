@@ -190,6 +190,7 @@ class OsFilesResource extends RestfulEntityBase {
 
       if (isset($this->request['vsite'])) {
         og_group('node', $this->request['vsite'], array('entity_type' => 'file', 'entity' => $entity));
+        $entity = file_load($entity->fid);
       }
 
       if ($entity->status != FILE_STATUS_PERMANENT) {
