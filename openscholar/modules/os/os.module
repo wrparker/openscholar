@@ -902,8 +902,10 @@ function os_form_alter(&$form, &$form_state, $form_id) {
         $destination = '';
       }
     }
+    // We don't need the query string in the destination.
+    $destination = strtok($destination, "?");
     $form['actions']['cancel'] = array(
-      '#markup'   => '<a class="form-cancel" href="' . urldecode(url($destination)) . '">' . t('Cancel') . '</a>',
+      '#markup'   => l(t('Cancel'), $destination, array('attributes' => array('class' => 'form-cancel'))),
       '#weight' => 99,
     );
   }
