@@ -26,6 +26,7 @@ Feature:
           | Display style            | Teaser | select list |
       And I logout
      When I visit "john/blog"
+      And I should print page
      Then I should see "John F. Kennedy: A Biography"
 
   @api @widgets
@@ -37,4 +38,6 @@ Feature:
       And I logout
      When I visit "john/blog"
      Then I should not see "John F. Kennedy: A Biography"
-
+          # Set the App back to "Public".
+      And I am logging in as "john"
+      And I set feature "edit-spaces-features-os-publications" to "Public" on "john"
