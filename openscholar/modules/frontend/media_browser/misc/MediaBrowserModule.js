@@ -170,7 +170,12 @@
       var file = $file;
       if (file && file instanceof File) {
         // TODO: Get validating properties from somewhere and check the file against them
-        return true;
+        console.log(file);
+        var size = params.max_filesize_raw > file.size,
+          ext = file.name.slice(file.name.lastIndexOf('.')+1),
+          extension = $scope.extensions.indexOf(ext) !== -1;
+
+        return size && extension;
       }
     }
 
