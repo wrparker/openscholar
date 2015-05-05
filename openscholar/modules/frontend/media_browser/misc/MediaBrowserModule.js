@@ -176,6 +176,7 @@
       var file = $file;
       if (file && file instanceof File) {
         // TODO: Get validating properties from somewhere and check the file against them
+
         console.log(file);
         var size = params.max_filesize_raw > file.size,   // file is smaller than max
           ext = file.name.slice(file.name.lastIndexOf('.')+1),
