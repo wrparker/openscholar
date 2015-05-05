@@ -362,8 +362,9 @@ class os_sv_list extends os_boxes_default {
       $bundles = $this->getBundles(OS_PUBLIC_APP);
       $private_bundles = $this->getBundles(OS_PRIVATE_APP);
 
+      $vsite = vsite_get_vsite();
       foreach ($private_bundles as $private_bundle) {
-        if (node_access('view', $private_bundle)) {
+        if (og_user_access('node', $vsite->id, "view $private_bundle content")) {
           $bundles[] = $private_bundle;
         }
       }
