@@ -20,6 +20,10 @@ class OsVocabulary extends \RestfulEntityBase {
       'callback' => array($this, 'getFormType'),
     );
 
+    $fields['tree'] = array(
+      'callback' => array($this, 'getVocabularyTree'),
+    );
+
     return $fields;
   }
 
@@ -217,6 +221,39 @@ class OsVocabulary extends \RestfulEntityBase {
     $settings = unserialize($r['settings']);
 
     return $settings['widget_type'];
+  }
+
+  /**
+   * Get the vocabulary in tree form.
+   */
+  protected function getVocabularyTree($wrapper) {
+    $id = $wrapper->getIdentifier();
+    $terms = hierarchical_taxonomy_get_tree($id);
+    $return = $this->getTree($terms, []);
+
+    return $return;
+  }
+
+  /**
+   * Build the tree structure as needed for the JS widget.
+   */
+  private function getTree($tree, $return) {
+    foreach ($tree as $leaf) {
+      if (empty($leaf->below)) {
+        $return[] = array(
+          'name' => $leaf->name,
+          'value' => $leaf->tid,
+        );
+      }
+      else {
+        $return[] = array(
+          'name' => $leaf->name,
+          'value' => $leaf->tid,
+          'children' => $this->getTree($leaf->below, []),
+        );
+      }
+    }
+    return $return;
   }
 
 }
