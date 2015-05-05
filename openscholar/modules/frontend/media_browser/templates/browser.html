@@ -25,7 +25,7 @@
                     <div class="media-browser-dupe-counter" ng-show="$parent.dupes.length > 1">{{$index+1}}/{{$parent.dupes.length}}</div>
                 </div>
             </div>
-            <div class="media-browser-logs">
+            <div id="media-browser-logs">
                 <div id="media-browser-upload-progress" ng-show="$parent.uploadProgress().uploading">
                     <div class="progress-filename">Uploading {{$parent.uploadProgress().filename}}</div>
                     <div class="progress-bar-wrapper">
@@ -36,7 +36,7 @@
                     <div id="media-browser-upload-counter">{{$parent.uploadProgress().index}} of {{$parent.uploadProgress().numFiles}}</div>
                 </div>
                 <div id="media-browser-rejected">
-                    <div ng-repeated="messages as m" class="message">
+                    <div ng-repeat="m in messages" class="message">
                         {{m.text}}
                     </div>
                 </div>
