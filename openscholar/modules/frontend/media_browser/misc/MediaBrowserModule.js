@@ -95,8 +95,8 @@
         }
       }
     }])
-  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', '$sce', '$upload', 'params', 'close',
-      function ($scope, $filter, $http, EntityService, $sce, $upload, params, close) {
+  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', '$sce', '$upload', '$timeout', 'params', 'close',
+      function ($scope, $filter, $http, EntityService, $sce, $upload, $timeout, params, close) {
 
     // Initialization
     var service = new EntityService('files', 'id'),
@@ -135,6 +135,10 @@
       $scope.showButtons = true;
     }
 
+    $scope.messages = {
+      next: 0
+    };
+
     // Watch for changes in file list
     $scope.$on('EntityService.files.add', function (event, file) {
       //$scope.files.push(file)
@@ -147,10 +151,12 @@
     });
 
     $scope.$on('EntityService.files.delete', function (event, id) {
+      // Don't want to worry about what happens when you modify an array you're looping over
       var deleteMe;
       for (var i=0; i<$scope.files.length; i++) {
         if ($scope.files[i].id == id) {
           deleteMe = i;
+          break;
         }
       }
 
@@ -171,12 +177,38 @@
       if (file && file instanceof File) {
         // TODO: Get validating properties from somewhere and check the file against them
         console.log(file);
-        var size = params.max_filesize_raw > file.size,
+        var size = params.max_filesize_raw > file.size,   // file is smaller than max
           ext = file.name.slice(file.name.lastIndexOf('.')+1),
-          extension = $scope.extensions.indexOf(ext) !== -1;
+          extension = $scope.extensions.indexOf(ext) !== -1,    // extension is found
+          id;
+
+        if (!size) {
+          id = $scope.messages.next++;
+          $scope.messages[id] = {
+            text: file.name + ' is larger than the maximum filesize of ' + params.max_filesize,
+          }
+          $timeout(angular.bind($scope, removeMessage, id), 5000);
+        }
+        if (!extension) {
+          id = $scope.messages.next++;
+          $scope.messages[id] = {
+            text: file.name + ' is not an accepted file type.',
+          }
+          $timeout(angular.bind($scope, removeMessage, id), 5000);
+        }
+        // if file is image and params specify max dimensions
+        if (file.type.indexOf('image/') !== -1 && params.min_dimensions) {
+          // since we can't force this function to wait, we have to use an onload
+          // and check this before uploading
+        }
+        console.log($scope.messages);
 
         return size && extension;
       }
+    }
+
+    function removeMessage(id) {
+      delete this.messages[id];
     }
 
     // looks for any files with a similar basename and extension to this file
