@@ -229,7 +229,7 @@ class OsVocabulary extends \RestfulEntityBase {
   protected function getVocabularyTree($wrapper) {
     $id = $wrapper->getIdentifier();
     $terms = hierarchical_taxonomy_get_tree($id);
-    $return = $this->getTree($terms, []);
+    $return = $this->getTree($terms, array());
 
     return $return;
   }
