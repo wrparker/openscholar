@@ -41,6 +41,7 @@ class FeatureHelp {
     'Faceted taxonomy' => 'os_boxes_facetapi_vocabulary',
     'List of posts' => 'os_sv_list_box',
     'List of publications' => 'os_sv_list_box',
+    'All Posts' => 'os_sv_list_box',
     'Cache time test' => 'os_boxes_cache_test',
   );
 
