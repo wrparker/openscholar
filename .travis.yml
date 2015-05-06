@@ -47,8 +47,11 @@ before_script:
   - sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin/phantomjs
   - sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/bin/phantomjs
 
-  # Install  bower
+  # Install bower
   - npm install -g bower
+
+  # Install angular testing utlities
+  - npm install -g protractor
 
   # Set up the lincoln virtual domain.
   - sudo service apache2 restart
@@ -127,6 +130,9 @@ script:
 
   # Run phantomJs.
   - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
+
+  # Run protractor
+  - protractor protractor.conf.js
 
   - ./bin/behat --tags=$TEST_SUITE
 
