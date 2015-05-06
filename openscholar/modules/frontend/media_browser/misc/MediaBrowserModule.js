@@ -368,8 +368,9 @@
             currentlyUploading = 0;
             $scope.pane = 'library';
             if (toEditForm) {
-              $scope.setSelection(e.data[i].id);
-              $scope.editing = true;
+              // there's only one file, we can assume it's this one
+              $scope.setSelection(e.data[0].id);
+              $scope.editting = true;
             }
           }
         });
