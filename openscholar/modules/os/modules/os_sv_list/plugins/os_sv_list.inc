@@ -289,12 +289,19 @@ class os_sv_list extends os_boxes_default {
       // Give plugins a chance to alter the entities after loading but before
       // rendering. see events.
       $entities = entity_load($this->entity_type, $ids);
-      $entities = array_map(function ($e) { $e->sv_list = TRUE; return $e; }, $entities);
+      $entities = array_map(function ($e) {
+        $new_entity = clone $e;
+        unset($new_entity->page);
+        $new_entity->sv_list = TRUE;
+
+        return $new_entity;
+      }, $entities);
+
       $this->_plugins_invoke('entities_alter', $entities);
-      
+
       // If we have entities render them out, otherwise cache (null) as the content.
       if (!empty($entities)) {
-        
+
         if ($this->options['display'] == 'title') {
           $render = $this->display_title($entities);
         }
