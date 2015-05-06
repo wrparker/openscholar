@@ -137,6 +137,30 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Then /^I should see "([^"]*)" element with the class "([^"]*)"$/
+   */
+  public function iShouldSeeElementWithTheClass($tag, $class) {
+    $page = $this->getSession()->getPage();
+
+    $element = $page->find('css', "$tag.$class");
+    if (!$element) {
+      throw new Exception(sprintf("%s element with the class %s was not found.", $tag, $class));
+    }
+  }
+
+  /**
+   * @Then /^I should not see "([^"]*)" element with the class "([^"]*)"$/
+   */
+  public function iShouldNotSeeElementWithTheClass($tag, $class) {
+    $page = $this->getSession()->getPage();
+
+    $element = $page->find('css', "$tag.$class");
+    if ($element) {
+      throw new Exception(sprintf("%s element with the class %s was found.", $tag, $class));
+    }
+  }
+
+  /**
    * @Given /^I should see the "([^"]*)" table with the following <contents>:$/
    */
   public function iShouldSeeTheTableWithTheFollowingContents($class, TableNode $table) {
@@ -2015,7 +2039,25 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Given /^I should not find the text "([^"]*)"$/
+   * @Given /^I should see "([^"]*)" in the "([^"]*)" column$/
+   */
+  public function iShouldSeeInTheColumn($value, $column) {
+    $index = 0;
+    switch ($column) {
+      case 'used in':
+        $index = 5;
+        break;
+    }
+    $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//tr[td[contains(., '{$value}')]]//td[{$index}]");
+    if (!$element) {
+      throw new Exception(sprintf("The value of %s was not found", $value));
+    }
+    if ($element->getText() != $value) {
+      throw new Exception(sprintf("The value for the %s column should be %s but it is %s", $column, $value, $element->getText()));
+    }
+  }
+
+  /** @Given /^I should not find the text "([^"]*)"$/
    *
    * This step is used to for looking for text in the page while respecting
    * the case sensitivity of the searched text.

@@ -768,8 +768,9 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     }
   }
 
-  $new_file = file_save_data(implode("\n", $file_rows), $file->uri, FILE_EXISTS_REPLACE);
-  $form_state['values']['file'] = $new_file->fid;
+  // Update the file contents with the validated contents.
+  file_put_contents($file->uri, implode("\n", $file_rows));
+  $form_state['values']['file'] = $file->fid;
 }
 
 /**
@@ -806,20 +807,6 @@ function os_importer_import_submit($form, &$form_state) {
     $wrapper->field_rss_url->set($values['url']);
     $wrapper->save();
   }
-}
-
-/**
- * Implements hook_feeds_after_import().
- *
- * After we import data from the file we can delete him.
- */
-function os_importer_feeds_after_import(FeedsSource $source) {
-  if (!in_array('FeedsFileFetcher', array_keys($source->config))) {
-    return;
-  }
-
-  $file = file_load($source->config['FeedsFileFetcher']['fid']);
-  file_delete($file);
 }
 
 /**

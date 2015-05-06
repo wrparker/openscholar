@@ -138,16 +138,22 @@ function os_sv_list_query_sv_list_biblio_alter(&$query) {
   $query->join('biblio', 'b', 'b.nid = ogm.etid');
   $query->orderBy('b.biblio_year', 'DESC');
 
-  // Order first by the biblio year, and lastly by sticky.
-  $fields =& $query->getOrderBy();
-  if (!empty($fields['node.sticky'])) {
-    $order = $fields['node.sticky'];
-    unset($fields['node.sticky']);
-    $fields['node.sticky'] = $order;
+  // If this query is used for the sv_list plugin, keep the sticky sort as is.
+  $sv_list = $query->getMetaData('sv_list');
+  if (!$sv_list) {
+    // The query is not used for the sv_list. Order first by the biblio year,
+    // and then by sticky.
+    $fields =& $query->getOrderBy();
+    if (!empty($fields['node.sticky'])) {
+      $order = $fields['node.sticky'];
+      unset($fields['node.sticky']);
+      $fields['node.sticky'] = $order;
+    }
   }
-  //Order by biblio_date
+
+  // Order by biblio_date.
   $query->orderBy('b.biblio_date', 'DESC');
-  //Lastly order by created.
+  // Lastly order by created.
   $query->orderBy('node.created', 'DESC');
 }
 
@@ -165,11 +171,23 @@ function os_sv_list_query_sv_list_events_alter(SelectQueryInterface $query) {
   // add the delta to the fields
   $query->fields('field_data_field_date_delta_sv_list_events', array('delta'));
 
-  // sort on the right table
-  $order = &$query->getOrderBy();
-  $order = array(
-    'field_data_field_date_delta_sv_list_events.field_date_value' => 'ASC'
-  );
+  // If this query is used for the sv_list plugin, keep the sticky sort as is.
+  $sv_list = $query->getMetaData('sv_list');
+  if ($sv_list) {
+    // Sort first by sticky and use the right table.
+    $order = &$query->getOrderBy();
+    $order = array(
+      'node.sticky' => 'DESC',
+      'field_data_field_date_delta_sv_list_events.field_date_value' => 'ASC'
+    );
+  }
+  else {
+    // Sort on the right table.
+    $order = &$query->getOrderBy();
+    $order = array(
+      'field_data_field_date_delta_sv_list_events.field_date_value' => 'ASC'
+    );
+  }
 
   // this table isn't needed anymore
   $tables = &$query->getTables();

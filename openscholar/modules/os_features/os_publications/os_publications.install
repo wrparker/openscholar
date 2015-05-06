@@ -1300,3 +1300,38 @@ function os_publications_update_7028(){
   return t('Removed inline indents from biblio_citeproc citations.');
 }
 
+/**
+ * Reset the bibtex mappings to include all biblio types.
+ */
+function os_publications_update_7029() {
+  db_delete('biblio_type_maps')
+    ->condition('format', 'bibtex')
+    ->execute();
+
+  // Get the id of a working paper.
+  $tid = db_select('biblio_types', 'bt')
+    ->fields('bt', array('tid'))
+    ->condition('name', 'Working paper')
+    ->execute()
+    ->fetchField();
+
+  // Get the original type map and set the id for a working paper.
+  $typemap = _get_bibtex_type_map();
+  $types = unserialize($typemap['type_map']);
+  $types['workingpaper'] = $tid;
+  $typemap['type_map'] = serialize($types);
+
+  // Get the names and the field map.
+  $typenames = _get_bibtex_type_names();
+  $fieldmap = _get_bibtex_field_map();
+  $maps = array_merge($typemap, $typenames, $fieldmap);
+
+  biblio_save_map($maps);
+}
+
+/**
+ * Define the publication citation as the og:description value.
+ */
+function os_publications_install_7030() {
+  features_revert(array('os_publications' => array('metatag')));
+}

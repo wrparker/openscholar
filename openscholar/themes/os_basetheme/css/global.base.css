@@ -311,6 +311,16 @@ div.content a.download-link {
     margin-right: 0.5em;
 }
 
+
+.sidebar .os_sv_list_file.sv-list-layout-grid > div {
+  margin-right: 0.1em;
+}
+
+.two-sidebars #content-column .sidebar .os_sv_list_file.sv-list-layout-grid > div {
+  margin-right: 0.4em;
+}
+
+
 .os_sv_list_file.sv-list-layout-grid img {
 margin-bottom: 8px !important;
 }

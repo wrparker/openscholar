@@ -77,7 +77,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
 
     $options = array(
       'alpha' => t('Alphabetical'),
-      'weight' => t('Term weight')
+      'weight' => t('Vocabulary weight')
     );
     $form['sort_by'] = array(
       '#title' => t('Sort by:'),
