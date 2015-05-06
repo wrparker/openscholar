@@ -29,12 +29,12 @@ border-bottom: none;
 
 
 #menu-bar ul.nice-menu li {
-background-color: #FFFFFF !important;
-color:#000 !important;
+background-color: #4E84C4 !important;
+color:#FFF !important;
 }
 
 #menu-bar #block-os-primary-menu a {
-color: #000 !important;
+color: #fff !important;
 }
 
 #menu-bar #block-os-primary-menu li {
@@ -52,12 +52,12 @@ background-position: -52px -529px;
 }
 
 .link-count-mobi-util a {
-    background-color: #F7F7F7;
+    background-color: #FFDB6D;
 }
 
 
 .link-count-mobi-main a {
-    background-color:#C2230E;
+    background-color:#4E84C4;
 }
 
 .link-count-mobi-main a {
