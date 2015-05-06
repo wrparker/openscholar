@@ -32,8 +32,9 @@
       <input type="text" ng-model="termSearch" class="form-text clearfix"/>
 
       <div
-        ivh-treeview="termsTree"
-        ivh-treeview-filter="termSearch"></div>
+        ivh-treeview="termsTree[vocab.id]"
+        ivh-treeview-filter="termSearch"
+        ivh-treeview-change-handler="termTreeChangeCallback"></div>
     </div>
   </div>
 </div>

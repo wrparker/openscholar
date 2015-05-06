@@ -17,6 +17,7 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
       var termService = new EntityService('taxonomy', 'id');
       scope.allTerms = {};
       scope.selectedTerms = {};
+      scope.termsTree = [];
 
       // Separate the list of all selected terms by vocab reduces complexity
       // later.
@@ -51,8 +52,13 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
 
           scope.vocabs = result.data.data;
           for (var i=0; i<scope.vocabs.length; i++) {
-            scope.allTerms[scope.vocabs[i].id] = [];
-            termService.fetch({vocab: scope.vocabs[i].id}).then(function (result) {
+            var vocab = scope.vocabs[i];
+
+            scope.termsTree[vocab.id] = vocab.tree;
+            console.log(scope.termsTree[vocab.id]);
+            scope.allTerms[vocab.id] = [];
+
+            termService.fetch({vocab: vocab.id}).then(function (result) {
               for (var j = 0; j < result.data.data.length; j++) {
                 var t = result.data.data[j];
                 scope.allTerms[parseInt(t.vid)].push(t);
@@ -102,24 +108,16 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
         }
       };
 
-      scope.termsTree = [{
-        label: 'Glasses',
-        value: 'glasses',
-        children: [{
-          label: 'Top Hat',
-          value: 'top_hat'
-        },{
-          label: 'Curly Mustache',
-          value: 'mustachio'
-        }]
-      }];
+      scope.termTreeChangeCallback = function(node, tree) {
 
-      scope.awesomeCallback = function(node, tree) {
-        // Do something with node or tree
-      };
+        if (Object.keys(node).indexOf('children') != -1) {
+          // Iterating over the children's of the term.
+          angular.forEach(node.children, function(value, key) {
+            scope.termTreeChangeCallback(value);
+          });
+        }
 
-      scope.otherAwesomeCallback = function(node, isSelected, tree) {
-        // Do soemthing with node or tree based on isSelected
+        scope.termsSelected(termService.get(node.value));
       };
     }
   }

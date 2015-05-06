@@ -241,13 +241,13 @@ class OsVocabulary extends \RestfulEntityBase {
     foreach ($tree as $leaf) {
       if (empty($leaf->below)) {
         $return[] = array(
-          'name' => $leaf->name,
+          'label' => $leaf->name,
           'value' => $leaf->tid,
         );
       }
       else {
         $return[] = array(
-          'name' => $leaf->name,
+          'label' => $leaf->name,
           'value' => $leaf->tid,
           'children' => $this->getTree($leaf->below, []),
         );
