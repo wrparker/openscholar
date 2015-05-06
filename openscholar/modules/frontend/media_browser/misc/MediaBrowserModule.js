@@ -95,8 +95,8 @@
         }
       }
     }])
-  .controller('BrowserCtrl', ['$scope', '$filter', '$http', '$templateCache', 'EntityService', '$sce', '$upload', 'params', 'close',
-      function ($scope, $filter, $http, $templateCache, EntityService, $sce, $upload, params, close) {
+  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', '$sce', '$upload', '$timeout', 'params', 'close',
+      function ($scope, $filter, $http, EntityService, $sce, $upload, $timeout, params, close) {
 
     // Initialization
     var service = new EntityService('files', 'id'),
@@ -114,9 +114,30 @@
     $scope.editing = false;
     $scope.deleting = false;
 
+    $scope.extensions = [];
+    if (params.file_extensions) {
+      $scope.extensions = params.file_extensions.split(' ');
+    }
+    if (!params.override_extensions) {
+      for (var t in params.types) {
+        $scope.extensions = $scope.extensions.concat(Drupal.settings.extensionMap[t]);
+      }
+    }
+    $scope.extensions.sort();
+
+    if (params.max_filesize) {
+      $scope.maxFilesize = params.max_filesize;
+    }
+
+    $scope.showHelp = false;
+
     if (close) {
       $scope.showButtons = true;
     }
+
+    $scope.messages = {
+      next: 0
+    };
 
     // Watch for changes in file list
     $scope.$on('EntityService.files.add', function (event, file) {
@@ -127,6 +148,19 @@
 
     $scope.$on('EntityService.files.update', function (event, file) {
       $scope.files = service.getAll();
+    });
+
+    $scope.$on('EntityService.files.delete', function (event, id) {
+      // Don't want to worry about what happens when you modify an array you're looping over
+      var deleteMe;
+      for (var i=0; i<$scope.files.length; i++) {
+        if ($scope.files[i].id == id) {
+          deleteMe = i;
+          break;
+        }
+      }
+
+      $scope.files.splice(deleteMe, 1);
     })
 
 
@@ -142,8 +176,40 @@
       var file = $file;
       if (file && file instanceof File) {
         // TODO: Get validating properties from somewhere and check the file against them
-        return true;
+
+        console.log(file);
+        var size = params.max_filesize_raw > file.size,   // file is smaller than max
+          ext = file.name.slice(file.name.lastIndexOf('.')+1),
+          extension = $scope.extensions.indexOf(ext) !== -1,    // extension is found
+          id;
+
+        if (!size) {
+          id = $scope.messages.next++;
+          $scope.messages[id] = {
+            text: file.name + ' is larger than the maximum filesize of ' + params.max_filesize,
+          }
+          $timeout(angular.bind($scope, removeMessage, id), 5000);
+        }
+        if (!extension) {
+          id = $scope.messages.next++;
+          $scope.messages[id] = {
+            text: file.name + ' is not an accepted file type.',
+          }
+          $timeout(angular.bind($scope, removeMessage, id), 5000);
+        }
+        // if file is image and params specify max dimensions
+        if (file.type.indexOf('image/') !== -1 && params.min_dimensions) {
+          // since we can't force this function to wait, we have to use an onload
+          // and check this before uploading
+        }
+        console.log($scope.messages);
+
+        return size && extension;
       }
+    }
+
+    function removeMessage(id) {
+      delete this.messages[id];
     }
 
     // looks for any files with a similar basename and extension to this file
@@ -157,16 +223,22 @@
       for (var i=0; i<$files.length; i++) {
         var similar = [],
             basename = $files[i].name.replace(/\.[a-zA-Z0-9]*$/, ''),
-            extension = $files[i].name.replace(basename, '');
+            extension = $files[i].name.replace(basename, ''),
+            dupeFound = false;
 
         for (var j=0; j<$scope.files.length; j++) {
-          // find any file with a name that matches "basename{_dd}.ext" and add it to list
+          // find any file with a name that matches "basename{_dd}.ext" and add it to list of similar files
           if ($scope.files[j].filename.indexOf(basename) !== -1 && $scope.files[j].filename.indexOf(extension) !== -1) {
             similar.push($scope.files[j]);
+            // also check if there is a file with the full filename and save this fact for later
+            // this allows file.jpg to be uploaded when file_01.jpg already exists
+            if ($scope.files[j].filename == $files[i].name) {
+              dupeFound = true;
+            }
           }
         }
 
-        if (similar.length) {
+        if (dupeFound) {
           // only one similar file found, drop _01 at the end
           if (similar.length == 1) {
             $files[i].newName = basename + '_01' + extension;
@@ -269,7 +341,7 @@
         $upload.upload({
           url: Drupal.settings.paths.api+'/files',
           file: $file,
-          data: $file,
+          data: $file,                                        // UPLOADED FILES ARE NOT GETTING THE VSITE
           fileFormDataName: 'files[upload]',
           headers: {'Content-Type': $file.type},
           method: 'POST',
@@ -281,6 +353,7 @@
           for (var i = 0; i< e.data.length; i++) {
             e.data[i].new = true;
             $scope.files.push(e.data[i]);
+            service.register(e.data[i]);
           }
 
           currentlyUploading++;
@@ -340,7 +413,10 @@
     };
 
     $scope.deleteConfirmed = function() {
-      service.delete($scope.selected_file);
+      service.delete($scope.selected_file)
+        .then(function (resp) {
+          $scope.deleting = false;
+        });
     };
 
 

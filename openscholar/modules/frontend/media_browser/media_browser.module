@@ -38,6 +38,14 @@ function media_browser_library_alter(&$libs) {
   purl_disable(true);
   $path = drupal_get_path('module', 'media_browser');
 
+  include_once DRUPAL_ROOT . '/includes/file.mimetypes.inc';
+  $mapping = file_mimetype_mapping();
+  $types = file_type_get_enabled_types();
+  $map = array();
+  foreach ($types as $t => $info) {
+    $map[$t] = _os_files_extensions_from_type($t);
+  }
+
   $libs['media_browser']['js'] += array(
     $path . '/misc/MediaBrowserFilters.js' => array(),
     $path . '/misc/MediaBrowserModule.js' => array(),
@@ -46,6 +54,7 @@ function media_browser_library_alter(&$libs) {
         'paths' => array(
           'moduleRoot' => url(drupal_get_path('module', 'media_browser')),
         ),
+        'extensionMap' => $map,
       ),
       'type' => 'setting',
     )
@@ -83,8 +92,14 @@ function media_browser_element_info_alter(&$elements) {
  * Implements hook_field_widget_form_alter().
  */
 function media_browser_field_widget_media_generic_form_alter(&$elements, &$forms_state, $context) {
-  drupal_add_library('os_common', 'angular_select2');
-  //dpm($elements);
+  if ($size = $elements['#media_options']['global']['max_filesize']) {
+    $elements['#media_options']['global']['max_filesize_raw'] = parse_size($size);
+  }
+  else {
+    $size = ini_get('upload_max_filesize');
+    $elements['#media_options']['global']['max_filesize'] = $size;
+    $elements['#media_options']['global']['max_filesize_raw'] = parse_size($size);
+  }
   //$elements['#process'][] = 'media_browser_element_process';
 }
 

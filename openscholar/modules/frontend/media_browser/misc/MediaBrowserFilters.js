@@ -31,6 +31,39 @@ angular.module('mediaBrowser.filters', [])
       }
       return input;
     }
+  })
+  .filter('mbExtensions', function () {
+    function testFile(file, extensions) {
+      var filename = file.filename,
+        ext = filename.slice(filename.lastIndexOf('.')+1);
+
+      return (extensions.indexOf(ext) !== -1);
+    }
+    return function (input, extensions) {
+      if (!extensions.length) {
+        return input;
+      }
+
+      if (Array.isArray(input)) {
+        results = [];
+        for (var i=0;i<input.length;i++) {
+          if (testFile(input[i], extensions)) {
+            results.push(input[i]);
+          }
+        }
+        return results;
+      }
+      else if (typeof input == 'object') {
+        results = {};
+        for (var k in input) {
+          if (testFile(input[k], extensions)) {
+            results[k] = input[k];
+          }
+        }
+        return results;
+      }
+      return input;
+    }
   });
 
 })();

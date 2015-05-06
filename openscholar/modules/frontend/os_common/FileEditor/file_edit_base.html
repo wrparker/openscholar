@@ -4,6 +4,7 @@
 <div ng-show="file.schema == 'public' || file.schema == 'private'">
     <label for="fe-filepath">File Name</label>
     <input id="fe-filepath" type="text" ng-model="file.filename" class="form-text">
+    <div ng-show="invalidName" class="error">A file with this name already exists!</div>
 </div>
 
 <div ng-include="fileEditAddt"></div>
@@ -28,6 +29,6 @@
 <div taxonomy-widget entity-type="file" bundle="{{file.type}}" terms="file.terms"></div>
 
 <div class="control">
-    <button ng-click="save()">Save</button> |
+    <button ng-click="save()" ng-disabled="canSave()">Save</button> |
     <button ng-click="cancel()">Cancel</button>
 </div>

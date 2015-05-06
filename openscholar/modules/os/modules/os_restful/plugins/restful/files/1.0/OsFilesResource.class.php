@@ -62,6 +62,7 @@ class OsFilesResource extends RestfulEntityBase {
     $info['description'] = array(
       'property' => 'os_file_description',
       'sub_property' => 'value',
+      'saveCallback' => array($this, 'setDescription')
     );
 
     $info['image_alt'] = array(
@@ -155,6 +156,20 @@ class OsFilesResource extends RestfulEntityBase {
   }
 
   /**
+   * Filter files by vsite
+   */
+  protected function queryForListFilter(EntityFieldQuery $query) {
+    if ($this->request['vsite']) {
+      if ($vsite = vsite_get_vsite($this->request['vsite'])) {
+        $query->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $this->request['vsite']);
+      }
+      else {
+        throw new RestfulBadRequestException(t('No vsite with the id @id', array('@id' => $this->request['vsite'])));
+      }
+    }
+  }
+
+  /**
    * Override. Handle the file upload process before creating an actual entity.
    * The file could be a straight replacement, and this is where we handle that.
    */
@@ -175,6 +190,7 @@ class OsFilesResource extends RestfulEntityBase {
 
       if (isset($this->request['vsite'])) {
         og_group('node', $this->request['vsite'], array('entity_type' => 'file', 'entity' => $entity));
+        $entity = file_load($entity->fid);
       }
 
       if ($entity->status != FILE_STATUS_PERMANENT) {
@@ -356,6 +372,47 @@ class OsFilesResource extends RestfulEntityBase {
   }
 
   protected function updateFileLocation($wrapper) {
-    $destination = $this->request[''];
+    if ($this->request['filename']) {
+      $file = file_load($wrapper->getIdentifier());
+      $label = $wrapper->name->value();
+      $destination = dirname($file->uri) . '/' . $this->request['filename'];
+      if ($file = file_move($file, $destination)) {
+        $wrapper->set($file);
+        $wrapper->name->set($label);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  protected function setDescription($wrapper) {
+    if ($this->request['description']) {
+      $data = array(
+        'value' => $this->request['description'],
+        'format' => 'filtered_html'
+      );
+      $wrapper->os_file_description->set($data);
+
+      return true;
+    }
+    return false;
+  }
+
+  protected function setImageAltText($wrapper) {
+    if ($this->request['image_alt']) {
+      $wrapper->field_file_image_alt_text->set($this->request['image_alt']);
+
+      return true;
+    }
+    return false;
+  }
+
+  protected function setImageTitleText($wrapper) {
+    if ($this->request['image_title']) {
+      $wrapper->field_file_image_title_text->set($this->request['image_title']);
+
+      return true;
+    }
+    return false;
   }
 }

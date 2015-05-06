@@ -192,7 +192,7 @@ function os_common_library() {
       array(
         'data' => array(
           'paths' => array(
-            'TaxonomyWidget' => url($path.'/TaxonomyWidget/'),
+            'TaxonomyWidget' => url($path.'/TaxonomyWidget'),
           )
         ),
         'type' => 'setting',

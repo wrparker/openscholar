@@ -1,7 +1,7 @@
 /* tabs and panes */
 
 .media-browser-panes {
-  border: 1px solid lightgray;
+  border-top: 1px solid lightgray;
   margin: 3px;
   margin-top: 0;
   padding: 5px;
@@ -78,6 +78,10 @@ div.file-search {
 .mb-file-actions {
   display: inline-block;
   vertical-align: middle;
+}
+
+mb-library-header {
+	text-transform:uppercase;
 }
 
 .mb-preview {
@@ -178,21 +182,26 @@ div.file-search {
   width: 100px;
   position: absolute;
   top: calc(50% - 15px);
-  left: calc(50% - 50px);
+  left: calc(48% - 50px);
   border: 1px outset lightgray;
   border-radius: 10px;
   font-size: 1.1em;
   text-align: center;
+  margin-right:0 !important;
 }
 
 #media-browser-drop-box {
-  height: 597px;
+  height: 450px;
+  width: 100%;
+  margin-top: 8%;
+  border: 2px dashed #ccc;
 }
 
 #media-browser-drop-box span {
-  position: absolute;
-  top: calc(50% + 10px);
-  left: calc(50% - 100px);
+   position: absolute;
+  top: calc(52% + 10px);
+  left: calc(48% - 100px);
+  font-size: 1.2em;
 }
 
 .media-browser-dupe {
@@ -205,7 +214,7 @@ div.file-search {
   padding: 20px;
 }
 
-#media-browser-upload-progress {
+#media-browser-logs {
   position: absolute;
   right: 0;
   top: 0;

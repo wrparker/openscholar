@@ -4,7 +4,8 @@
 (function () {
 
   var restPath = '',
-    entities = {};
+    entities = {},
+    fetched = {};
 
   angular.module('EntityService', [])
     .config(function () {
@@ -13,7 +14,7 @@
   /**
    * Service to maintain the list of files on a user's site
    */
-    .factory('EntityService', ['$rootScope', '$http', function ($rootScope, $http) {
+    .factory('EntityService', ['$rootScope', '$http', '$q', function ($rootScope, $http, $q) {
       var factory = function (entityType, idProp) {
         var type = entityType;
         var ents;
@@ -28,9 +29,11 @@
         }
 
         var success = function(resp) {
+          ents.length = 0;
           for (var i=0; i<resp.data.length; i++) {
             ents.push(resp.data[i]);
           }
+          fetched[type] = true;
           entityCount = resp.count;
           $rootScope.$broadcast(eventName+'.fetch', ents);
         }
@@ -62,10 +65,11 @@
           if (vsite) {
             params.vsite = vsite;
           }
+
           return $http.get(url, {params: params})
             .success(success)
             .error(errorFunc);
-        };
+        }
 
         this.getAll = function () {
           return ents;
@@ -120,13 +124,20 @@
         };
 
         this.delete = function (entity) {
-          var k = fetchByProp(idProp, entity[idProp]);
-          entities.splice(k, 1);
 
           //rest API call to delete entity from server
+          return $http.delete(restPath+'/'+entityType+'/'+entity[idProp]).success(function (resp) {
+            var k = findByProp(idProp, entity[idProp]);
+            ents.splice(k, 1);
 
+            $rootScope.$broadcast(eventName+'.delete', entity[idProp]);
+          });
+        }
 
-          $rootScope.$broadcast(eventName + '.delete');
+        // registers an entity with this service
+        // used for entities that are added outside of this service
+        this.register = function (entity) {
+          ents.push(entity);
         }
       };
 
