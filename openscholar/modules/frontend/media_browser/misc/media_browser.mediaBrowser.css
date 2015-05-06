@@ -80,7 +80,7 @@ div.file-search {
   vertical-align: middle;
 }
 
-mb-library-header {
+#mb-library-header {
 	text-transform:uppercase;
 }
 
@@ -181,13 +181,20 @@ mb-library-header {
   height: 20px;
   width: 100px;
   position: absolute;
-  top: calc(50% - 15px);
-  left: calc(48% - 50px);
+  top: 50%;
+  left: 39%;
   border: 1px outset lightgray;
   border-radius: 10px;
   font-size: 1.1em;
   text-align: center;
   margin-right:0 !important;
+}
+
+#drag-text {
+	position: absolute;
+    top: 40%;
+    left: 40%;
+    font-size: 1.2em;
 }
 
 #media-browser-drop-box {
