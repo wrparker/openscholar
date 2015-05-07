@@ -56,12 +56,14 @@ class sv_list_node_event extends sv_list_plugin  {
     $results = $this->query->ordered_results;
 
     foreach ($results as $delta => $result) {
-      $entity = clone $entities[$result->entity_id];
-      $entity->date_id = implode('.', array('date', $entity->nid, 'field_date', $result->delta));
-      $output[] = $entity;
+      if (!empty($entities[$result->entity_id])) {
+        $entity = clone $entities[$result->entity_id];
+        $entity->date_id = implode('.', array('date', $entity->nid, 'field_date', $result->delta));
+        $output[] = $entity;
+      }
 
-      if ($delta >= $options['number_of_items']) {
-        continue;
+      if ($delta >= $options['number_of_items'] - 1) {
+        break;
       }
     }
 
