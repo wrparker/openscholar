@@ -10,7 +10,7 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
       terms: '=',
       bundle: '@'
     },
-    templateUrl: path + 'TaxonomyWidget.html',
+    templateUrl: path + '/TaxonomyWidget.html',
     link: function (scope, elem, attrs, c, $scope) {
       var entityType = attrs.entityType;
       var vocabService = new EntityService('vocabulary', 'id');
