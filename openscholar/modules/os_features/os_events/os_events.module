@@ -304,7 +304,7 @@ function os_events_process_node(&$variables) {
     $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
   }
 
-  if ($variables['page']) {
+  if ($variables['page'] && empty($variables['sv_list'])) {
     // Change the date markup if this is a recurring event.
     if ($variables['content']['field_date']['#items'][0]['rrule']) {
       $variables['content']['field_date'][0]['#markup'] = _os_events_style_recurring_event($variables['content']['field_date'][0]['#markup']);

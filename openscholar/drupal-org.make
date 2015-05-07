@@ -1,4 +1,4 @@
-;Drupal.org MakeFile for OpenScholar
+;Drupal.org Makefile for OpenScholar
 
 core = 7.x
 api = 2
@@ -231,6 +231,7 @@ projects[media_gallery][patch][] = "http://drupal.org/files/media_gallery-double
 projects[media_gallery][patch][] = "http://drupal.org/files/media_gallery-remove_taxonomy_shenanigans-1686498-9.patch"
 projects[media_gallery][patch][] = "http://drupal.org/files/media_gallery-rename_field-1940036-3.patch"
 projects[media_gallery][patch][] = "http://drupal.org/files/media_gallery-lightbox_double_file-1977822-1.patch"
+projects[media_gallery][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/b92cbafb00bdec32c18dd3a98d936b79c4d801a9/patches/media_gallery-multiple.full.display.patch"
 
 projects[message][subdir] = "contrib"
 projects[message][version] = 1.8
@@ -242,7 +243,7 @@ projects[module_filter][subdir] = "contrib"
 projects[module_filter][version] = 1.7
 
 projects[memcache][subdir] = "contrib"
-projects[memcache][version] = 1.1-beta5
+projects[memcache][version] = 1.5
 
 projects[migrate][subdir] = "contrib"
 projects[migrate][version] = 2.5

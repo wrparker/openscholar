@@ -289,12 +289,19 @@ class os_sv_list extends os_boxes_default {
       // Give plugins a chance to alter the entities after loading but before
       // rendering. see events.
       $entities = entity_load($this->entity_type, $ids);
-      $entities = array_map(function ($e) { $e->sv_list = TRUE; return $e; }, $entities);
+      $entities = array_map(function ($e) {
+        $new_entity = clone $e;
+        unset($new_entity->page);
+        $new_entity->sv_list = TRUE;
+
+        return $new_entity;
+      }, $entities);
+
       $this->_plugins_invoke('entities_alter', $entities);
-      
+
       // If we have entities render them out, otherwise cache (null) as the content.
       if (!empty($entities)) {
-        
+
         if ($this->options['display'] == 'title') {
           $render = $this->display_title($entities);
         }
@@ -371,6 +378,11 @@ class os_sv_list extends os_boxes_default {
     }
 
     $this->_plugins_invoke('sort_alter', $query);
+
+    // Always use the sticky as the first order criterion when displaying nodes.
+    if ($query->entityConditions['entity_type']['value'] == 'node') {
+      $this->order_by_sticky($query);
+    }
 
     // Execute.
     $result = $query->execute();
@@ -601,5 +613,41 @@ class os_sv_list extends os_boxes_default {
         }
         break;
     }
-  }  
+  }
+
+  /**
+   * Add the sticky sort if not already in the query and make it first
+   * priority.
+   *
+   * @param $query
+   *   The query object.
+   */
+  private function order_by_sticky(&$query) {
+    // Make note of the fact this query is executed for the list of posts widget.
+    $query->addMetaData('sv_list', TRUE);
+
+    $sticky = array(
+      'type' => 'property',
+      'specifier' => 'sticky',
+      'direction' => 'DESC',
+    );
+
+    $sorts = &$query->order;
+    if (empty($sorts)) {
+      // No sort was set yet. Set it to sticky.
+      $sorts[] = $sticky;
+      return;
+    }
+
+    // Look for the sticky sort. If it is already in the query, remove it.
+    foreach ($sorts as $k => $sort) {
+      if ($sort['specifier'] == 'sticky') {
+        array_splice($sorts, $k, 1);
+        break;
+      }
+    }
+
+    // Add the sort by sticky to be the first sort.
+    array_unshift($sorts, $sticky);
+  }
 }

@@ -162,7 +162,7 @@ function os_basetheme_menu_link(array $vars) {
  */
 function os_basetheme_preprocess_node(&$vars) {
   // Event nodes, inject variables for date month and day shield
-  if ($vars['node']->type == 'event' && !$vars['page']) {
+  if ($vars['node']->type == 'event' && (!empty($vars['sv_list']) || !$vars['page'])) {
     $vars['event_start'] = array();
     $delta = 0;
     if (isset($vars['node']->date_id)) {

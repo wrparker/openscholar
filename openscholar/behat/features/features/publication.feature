@@ -81,9 +81,15 @@ Feature:
       And I should see "Journal of Publications"
       And I should not find the text "Journal Of Publications"
 
+  @api @features_second
+  Scenario: Verify that the publication citations contain the indent CSS class
+            when format is Chicago Author-Date style.
+    Given I am logging in as "john"
+      And I visit "john/cp/build/features/os_publications"
+     Then I should see "div" element with the class "bib-neg-indent"
 
-  @api
-  Scenario: verify the user can see message the the publication won't display
+  @api @features_second
+  Scenario: Verify the user can see message the the publication won't display
             in the publication form.
     Given I am logging in as "john"
       And I visit "john/cp/build/features/os_publications"
