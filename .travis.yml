@@ -10,16 +10,16 @@ mysql:
 
 env:
   - TEST_SUITE=restful
-#  - TEST_SUITE=features_first
-#  - TEST_SUITE=features_second
-#  - TEST_SUITE=harvard
-##  - TEST_SUITE=javscript
-#  - TEST_SUITE=misc_first
-#  - TEST_SUITE=misc_second
-#  - TEST_SUITE=solr
-#  - TEST_SUITE=taxonomy
-#  - TEST_SUITE=vsite
-#  - TEST_SUITE=widgets
+  - TEST_SUITE=features_first
+  - TEST_SUITE=features_second
+  - TEST_SUITE=harvard
+#  - TEST_SUITE=javscript
+  - TEST_SUITE=misc_first
+  - TEST_SUITE=misc_second
+  - TEST_SUITE=solr
+  - TEST_SUITE=taxonomy
+  - TEST_SUITE=vsite
+  - TEST_SUITE=widgets
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
@@ -47,8 +47,11 @@ before_script:
   - sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin/phantomjs
   - sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/bin/phantomjs
 
-  # Install  bower
+  # Install bower
   - npm install -g bower
+
+  # Install angular testing utlities
+  - npm install -g protractor
 
   # Set up the lincoln virtual domain.
   - sudo service apache2 restart
@@ -127,6 +130,9 @@ script:
 
   # Run phantomJs.
   - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
+
+  # Run protractor
+  - protractor protractor.conf.js
 
   - ./bin/behat --tags=$TEST_SUITE
 

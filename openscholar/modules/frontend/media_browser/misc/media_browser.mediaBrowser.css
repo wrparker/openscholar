@@ -80,7 +80,7 @@ div.file-search {
   vertical-align: middle;
 }
 
-mb-library-header {
+#mb-library-header {
 	text-transform:uppercase;
 }
 
@@ -179,10 +179,10 @@ mb-library-header {
 
 #media-browser-file-select {
   height: 20px;
-  width: 100px;
+  width: 130px;
   position: absolute;
-  top: calc(50% - 15px);
-  left: calc(48% - 50px);
+  top: 50%;
+  left: 39%;
   border: 1px outset lightgray;
   border-radius: 10px;
   font-size: 1.1em;
@@ -190,18 +190,18 @@ mb-library-header {
   margin-right:0 !important;
 }
 
+#drag-text {
+	position: absolute;
+    top: 40%;
+    left: 40%;
+    font-size: 1.2em;
+}
+
 #media-browser-drop-box {
   height: 450px;
   width: 100%;
   margin-top: 8%;
   border: 2px dashed #ccc;
-}
-
-#media-browser-drop-box span {
-   position: absolute;
-  top: calc(52% + 10px);
-  left: calc(48% - 100px);
-  font-size: 1.2em;
 }
 
 .media-browser-dupe {
@@ -214,25 +214,36 @@ mb-library-header {
   padding: 20px;
 }
 
-#media-browser-logs {
+#media-browser-upload-progress {
+  width: 250px;
   position: absolute;
-  right: 0;
-  top: 0;
-  height: 100px;
-  width: 200px;
-  text-align: center;
+  top: 20%;
+  left: 34%;
 }
 
 .progress-bar-full {
   height: 1em;
-  border: 1px inset lightgray;
-  border-radius: 15px;
+  border: 1px solid lightgray;
+  
 }
 
 .progress-bar-completed {
-  background-color: lightblue;
+  background: #ff0000;
   height: 100%;
-  border-radius: 15px;
+
+}
+
+
+.media-browser-pane .help {
+position: absolute;
+  top: 63%;
+  left: 40%;
+}
+
+#media-browser-rejected {
+  position: absolute;
+  top: 60%;
+  left: 40%;
 }
 
 /**
