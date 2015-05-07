@@ -120,7 +120,7 @@
     }
     if (!params.override_extensions) {
       for (var t in params.types) {
-        $scope.extensions = $scope.extensions.concat(Drupal.settings.extensionMap[t]);
+        $scope.extensions = $scope.extensions.concat(Drupal.settings.extensionMap[params.types[t]]);
       }
     }
     $scope.extensions.sort();
