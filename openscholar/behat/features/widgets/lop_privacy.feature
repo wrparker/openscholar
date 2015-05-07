@@ -9,21 +9,16 @@ Feature: foo
           | Display style            | Teaser | select list |
       And I logout
      When I visit "john/news"
-    And I should print page
      Then I should see "John F. Kennedy: A Biography"
 
   @api @widgets
-  Scenario: Verify that anonymous user can not see private bundles in the LOP.
+  Scenario: Verify that private bundles don't show up in the LOP.
     Given I am logging in as "john"
       And I set feature "edit-spaces-features-os-publications" to "Private" on "john"
       And the widget "All Posts" is set in the "News" page with the following <settings>:
           | Content Type             | All    | select list |
           | Display style            | Teaser | select list |
       And I visit "john/news"
-      And I should see "John F. Kennedy: A Biography"
-      And I logout
-     When I visit "john/news"
-     Then I should not see "John F. Kennedy: A Biography"
+      And I should not see "John F. Kennedy: A Biography"
           # Set the App back to "Public".
-      And I am logging in as "john"
       And I set feature "edit-spaces-features-os-publications" to "Public" on "john"
