@@ -43,7 +43,20 @@ function os_publications_overview() {
     drupal_set_title($menu_item['title']);
   }
   else {
-    $filter_value = reset($output['biblio_page']['header']['export_links']['#filter']['f']);
+    // We try to match the filter to a taxonomy term path.
+    $path = str_replace('publications', vsite_get_purl(), $_GET['q']);
+    $source = drupal_lookup_path('source', $path);
+    if (strpos($source, 'taxonomy/term') === 0) {
+      // It is a term, so use the name of the term as the title.
+      $tid = str_replace('taxonomy/term/', '', $source);
+      $term = taxonomy_term_load($tid);
+      $filter_value = $term->name;
+    }
+    else {
+      // No term was matched to the path so just display the filter value.
+      $filter_value = reset($output['biblio_page']['header']['export_links']['#filter']['f']);
+      $filter_value = str_replace('-', ' ', $filter_value);
+    }
     drupal_set_title(ucfirst($filter_value));
   }
 
