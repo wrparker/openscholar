@@ -56,6 +56,8 @@ class sv_list_node_event extends sv_list_plugin  {
     $results = $this->query->ordered_results;
 
     foreach ($results as $delta => $result) {
+      // The number of entities we display might be smaller then the number of
+      // query results so we need to check if the result entity is displayed.
       if (!empty($entities[$result->entity_id])) {
         $entity = clone $entities[$result->entity_id];
         $entity->date_id = implode('.', array('date', $entity->nid, 'field_date', $result->delta));
