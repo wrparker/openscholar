@@ -357,17 +357,8 @@ class os_sv_list extends os_boxes_default {
       $query->propertyCondition('type', $this->options['content_type']);
     }
     else {
-      // When "All" is selected show only public bundles and private bundles
-      // for the privileged users.
+      // When "All" is selected show only public bundles.
       $bundles = $this->getBundles(OS_PUBLIC_APP);
-      $private_bundles = $this->getBundles(OS_PRIVATE_APP);
-
-      $vsite = vsite_get_vsite();
-      foreach ($private_bundles as $private_bundle) {
-        if (og_user_access('node', $vsite->id, "view $private_bundle content")) {
-          $bundles[] = $private_bundle;
-        }
-      }
       $query->propertyCondition('type', $bundles, 'IN');
     }
 
