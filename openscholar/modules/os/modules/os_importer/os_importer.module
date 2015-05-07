@@ -66,8 +66,7 @@ function os_importer_os_app_info() {
  * Import feed item when the user add the feed importer for the first time.
  */
 function os_importer_node_insert($node) {
-
-  if ($node->type == 'event') {
+  if ($node->type == 'event' && !empty($node->feed_item)) {
 
     $round = function($value) {
       $time = strtotime($value);

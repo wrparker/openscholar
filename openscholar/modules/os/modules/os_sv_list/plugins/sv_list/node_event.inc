@@ -13,6 +13,39 @@ $plugin = array(
 );
 
 class sv_list_node_event extends sv_list_plugin  {
+
+  /**
+   * Sets values of options in new boxes.
+   */
+  public function options_defaults() {
+    return array(
+      'event_expire' => 'after_event_start',
+    );
+  }
+
+  public function options_form($options, &$form) {
+    $defaults = $this->options_defaults();
+
+    // Add a select list when sorting events by event date.
+    $form['content']['event_expire'] = array(
+      '#type' => 'select',
+      '#title' => 'Events should expire when',
+      '#default_value' => !empty($options['event_expire']) ? $options['event_expire'] : $defaults['event_expire'],
+      '#options' => array(
+        'after_event_start' => '30 minutes after an event starts',
+        'end_of_day' => 'At the end of the day',
+        'end_of_event' => 'When the event ends',
+      ),
+      '#states' => array(
+        // Display this field only when the LOP displays events sorted by
+        // event date.
+        'visible' => array(
+          ':input[name="sort_by"]' => array('value' => "sort_event"),
+        ),
+      ),
+    );
+  }
+
   /**
    * @function register_sorts()
    *
@@ -23,16 +56,32 @@ class sv_list_node_event extends sv_list_plugin  {
   }
 
   /**
-   * @function sort_event
+   * @function sort_event()
    *
-   * Custom sort for events.  Uses event date, but only for
-   * upcoming events that haven't taken place yet.
+   * Custom sort for events. Filters down the displayed events according to the
+   * selected expiry time.
    */
   public function sort_event($options, EntityFieldQuery $efq) {
     $efq->addTag('sv_list_events');
     $efq->fieldOrderBy('field_date', 'value', 'ASC');
-    $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime('-30 minutes')), '>=', 'sv_list_events');
-    $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '>=', 'sv_list_events');
+
+    // Change the query according to the selected expiry time of the events.
+    switch ($options['event_expire']) {
+      case 'end_of_day';
+        // The expiry time is at the end of the day.
+        $str = 'today';
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s', strtotime($str)), '>=', 'sv_list_events');
+        break;
+      case 'end_of_event';
+        // The expiry time is at the end of the event.
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '>=', 'sv_list_events');
+        break;
+      default:
+        // The default expiry time is 30 minutes after an event starts.
+        $str = '-30 minutes';
+        $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime($str)), '>=', 'sv_list_events');
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '>=', 'sv_list_events');
+    }
 
     $this->query = $efq;
   }
@@ -53,19 +102,15 @@ class sv_list_node_event extends sv_list_plugin  {
     // So we need to add a value to the entities array for each row in the raw DB
     // Every entity we need should already be in the entities array
     $output = array();
-    $results = $this->query->ordered_results;
-
-    foreach ($results as $delta => $result) {
-      $entity = clone $entities[$result->entity_id];
-      $entity->date_id = implode('.', array('date', $entity->nid, 'field_date', $result->delta));
-      $output[] = $entity;
-
-      if ($delta >= $options['number_of_items']) {
-        continue;
+    $raw = $this->query->ordered_results;
+    // use this instead of a foreach because this query can have more results than expected
+    for ($i=0; $i<$options['number_of_items']; $i++) {
+      if ($row = $raw[$i]) {
+        $entity = clone $entities[$row->entity_id];
+        $entity->date_id = implode('.', array('date', $entity->nid, 'field_date', $row->delta));
+        $output[] = $entity;
       }
     }
-
-    // use this instead of a foreach because this query can have more results than expected
 
     $entities = $output;
   }
