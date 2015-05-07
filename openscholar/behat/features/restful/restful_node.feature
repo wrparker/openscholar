@@ -58,20 +58,20 @@ Feature:
       | Rest CV | This is a test CV  | john   |
 
   @api @restful
-  Scenario: Creating event via rest.
-     Given I create a new node of "event" as "john" with the settings:
-      | Label       | Body                  | vsite  | Start date |
-      | Rest event  | This is a test event  | john   | 1/1/2010   |
-      When I visit "john/john/event/rest-event"
-      Then I should see "Rest event"
-
-  @api @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "faq" as "john" with the settings:
       | Label     | Body                | vsite  |
       | Rest FAQ  | This is a test FAQ  | john   |
       When I visit "john/faq/rest-faq"
       Then I should see "Rest FAQ"
+
+  @api @restful
+  Scenario: Creating event via rest.
+    Given I create a new node of "event" as "john" with the settings:
+      | Label       | Body                  | vsite  | Start date |
+      | Rest event  | This is a test event  | john   | 1/1/2010   |
+    When I visit "john/john/event/rest-event"
+    Then I should see "Rest event"
 
   @api @restful
   Scenario: Creating feed via rest.
