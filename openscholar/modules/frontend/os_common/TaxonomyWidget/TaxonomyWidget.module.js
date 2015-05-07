@@ -11,7 +11,7 @@
           terms: '=', // two way binding. final result must match initial in architecture
           bundle: '@', // read only
         },
-        templateUrl: path + '/TaxonomyWidget.html',
+        templateUrl: path + '/taxonomyWidget.html',
         link: function (scope, elem, attrs, c, trans) {
           var entityType = attrs.entityType,
             vocabService = new EntityService('vocabulary', 'id'),
