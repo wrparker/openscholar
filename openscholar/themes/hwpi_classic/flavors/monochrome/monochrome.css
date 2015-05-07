@@ -76,6 +76,13 @@ a, a:visited {
 	background-position: 0 -566px; /* White Arrow */
 }
 
+#menu-bar ul.nice-menu a.active, 
+#menu-bar ul.nice-menu a:hover,
+#menu-bar ul.nice-menu .menuparent.over > a,
+#menu-bar ul.nice-menu .menuparent a:hover, 
+#menu-bar ul.nice-menu .menuparent a.active {
+  background-color: #8C8179;
+}
 
 .event-start .event-start {
   width: 55px;
@@ -92,7 +99,7 @@ a, a:visited {
 #search-block-form input.form-submit, 
 #search-block-form #edit-submit, 
 #search-form #edit-submit {
-  background: url(/profiles/openscholar/themes/hwpi_basetheme/images/hwpi_basesprite.png) no-repeat 2px -441px #A51C30;
+  background: url('/profiles/openscholar/themes/hwpi_basetheme/images/hwpi_basesprite.png') no-repeat 2px -441px #A51C30;
   height:34px;
 }
 
@@ -134,12 +141,26 @@ a, a:visited {
 
 }
 
+#columns .accordion ul.nice-menu li, 
+#columns .os-custom-menu ul.nice-menu li, 
+#columns #block-os-primary-menu ul.nice-menu li, 
+#columns #block-os-secondary-menu ul.nice-menu li, 
+#columns .os-custom-menu ul.menu li, 
+#columns #block-os-primary-menu ul.menu li, 
+#columns #block-os-secondary-menu ul.menu li {
+  background-color: #ededed !important;
+}
+
+a.biblio-abstract-link.toggle {
+  background-position: 0 -397px;
+}
+
 a.rslides_nav {
 background-color:#A51C30;
 }
 
 #powered-by a {
-  background: url(/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png) no-repeat scroll -14px -547px transparent;
+  background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat scroll -14px -547px transparent;
 }
 
 .more-link:after {

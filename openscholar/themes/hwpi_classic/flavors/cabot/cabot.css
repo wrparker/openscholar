@@ -70,6 +70,8 @@ body, #page-title,
 	height: 55px;
 	background: #BAC5C6;
 	border-radius: 140px;
+	-webkit-border-radius: 140px;
+	-moz-border-radius: 140px;
 }
 
 .event-start .event-start span {
@@ -83,6 +85,10 @@ body, #page-title,
 
 #search-block-form .container-inline .form-item .form-text {
 	background-color: #dedede;
+	border-radius: 30px;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+  	padding: 0 35px 0 8px !important;
 }
 
 #search-block-form input.form-submit, 
@@ -137,8 +143,17 @@ body, #page-title,
 
 a.rslides_nav {
 	border-radius: 140px;
+	-webkit-border-radius: 140px;
+	-moz-border-radius: 140px;
 	width: 6px;
 }
+
+.rslides_tabs li:first-child {
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+}
+
 
 a.rslides_nav.prev {
 	background-position: -19px -25px;

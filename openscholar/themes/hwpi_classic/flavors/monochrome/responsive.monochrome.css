@@ -29,12 +29,12 @@ border-bottom: none;
 
 
 #menu-bar ul.nice-menu li {
-background-color: #FFFFFF !important;
-color:#000 !important;
+background-color: #1E1E1E !important;
+color:#FFF !important;
 }
 
 #menu-bar #block-os-primary-menu a {
-color: #000 !important;
+color: #FFF !important;
 }
 
 #menu-bar #block-os-primary-menu li {
@@ -48,16 +48,16 @@ background-position: 0 -493px;
 
 
 .link-count-mobi-util a {
-background-position: -52px -529px;
+background-position: -52px -500px;
 }
 
 .link-count-mobi-util a {
-    background-color: #F7F7F7;
+    background-color: #8C8179;
 }
 
 
 .link-count-mobi-main a {
-    background-color:#C2230E;
+    background-color:#1E1E1E;
 }
 
 .link-count-mobi-main a {
