@@ -193,7 +193,7 @@ div.file-search {
 #drag-text {
 	position: absolute;
     top: 40%;
-    left: 40%;
+    left: 39%;
     font-size: 1.2em;
 }
 
@@ -215,10 +215,10 @@ div.file-search {
 }
 
 #media-browser-upload-progress {
-  width: 250px;
+  width: 200px;
   position: absolute;
   top: 20%;
-  left: 34%;
+  left: 37%;
 }
 
 .progress-bar-full {
@@ -228,7 +228,7 @@ div.file-search {
 }
 
 .progress-bar-completed {
-  background: #ff0000;
+    background: url('images/loader2.gif') 0 no-repeat;
   height: 100%;
 
 }
@@ -237,14 +237,31 @@ div.file-search {
 .media-browser-pane .help {
 position: absolute;
   top: 63%;
-  left: 40%;
+  left: 16%;
+  width: 500px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background: #efefef;
 }
 
-#media-browser-rejected {
+.media-browser-rejected {
   position: absolute;
-  top: 60%;
-  left: 40%;
+  top: 63%;
+  left: 16%;
+  width: 500px;
+  padding: 10px;
 }
+
+
+.help_icon {
+  background: url('../../../../themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 0 -150px;
+  width: 20px;
+  height: 20px;
+  text-indent: -10em;
+  display: inline-block;
+  overflow: hidden;
+}
+
 
 /**
  * Dialog stuff
