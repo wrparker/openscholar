@@ -21,12 +21,13 @@ function os_books_update_7001(&$sandbox) {
   // if the query hasn't been run yet, get all book menus
   if (!isset($sandbox['data'])) {
     $q = db_select('menu_links', 'ml');
-    $q->leftJoin('book', 'book', 'ml.mlid = book.mlid');
-    $q = $q->fields('ml', array('menu_name'))
+    $q = $q->fields('ml', array('menu_name'), 'ogm', array('nid'))
+           ->leftJoin('book', 'book', 'ml.mlid = book.mlid')
+           ->leftJoin('ogm', 'og_membership', 'book.nid = ogm.nid')
            ->condition('ml.menu_name', 'book-toc-%', 'like')
-           ->condition('ml.module', 'book')
-           ->condition('ml.has_children', '1')
-           ->groupBy('menu_name')
+           ->condition('ml.plid', '0', '=')
+           ->condition('ml.has_children', '1', '=')
+           ->groupBy('nid')
            ->execute();
     foreach ($q as $row) {
       $sandbox['data'][] = $row->menu_name;
@@ -35,31 +36,33 @@ function os_books_update_7001(&$sandbox) {
     $sandbox['count'] = count($sandbox['data']);
     $sandbox['changed'] = 0;
     $sandbox['output'] = "";
-    if (!$sandbox['count']) {
-      return t('All book pages are in the correct group');
-    }
   }
+	elseif (!$sandbox['count']) {
+		return t('All book pages are in the correct group');
+	}
 
   // go through each menu ($limit number of menus at a time) and check that each menu item
   // associated with it belongs to the same vsite as the parent menu
   $limit = 10;
   $set = array_slice($sandbox['data'], $sandbox['progress'], $limit);
   foreach ($set as $menu_name) {
-    $menu = node_load(substr("$menu_name", 9));
-    $menu_tree = menu_tree_all_data("$menu_name");
-    foreach ($menu_tree as $link) {
-      foreach ($link['below'] as $sublink) {
-        // get menu item object
-        $nid = substr($sublink['link']['link_path'], 5);
-        $node = node_load($nid);
-        if ($menu->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id'] != $node->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id']) {
-          $node->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE] = $menu->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE];
-          $sandbox['output'] .= "Re-assigned <strong>" . $node->title . "</strong> from the <strong>" . $menu->title . "</strong> book menu.<br>";
-          $sandbox['changed']++;
-          node_save($node);
-        }
-      }
-    }
+    $subq = db_select('menu_links', 'ml');
+    $subq = $subq->fields('ml', array('link_path'))
+           ->condition('ml.menu_name', $menu_name)
+           ->condition('ml.module', 'book')
+           ->condition('ml.plid', '0', '<>')
+           ->execute();
+		foreach ($subq as $sublink) {
+			// get menu item object
+			$nid = substr($subq->link_path, 5);
+			$node = node_load($nid);
+			if ($menu->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id'] != $node->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id']) {
+				$node->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE] = $menu->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE];
+				$sandbox['output'] .= "Re-assigned <strong>" . $node->title . "</strong> from the <strong>" . $menu->title . "</strong> book menu.<br>";
+				$sandbox['changed']++;
+				node_save($node);
+			}
+		}
     $sandbox['progress']++;
   }
 
