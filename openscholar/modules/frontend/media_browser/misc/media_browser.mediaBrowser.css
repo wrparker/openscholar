@@ -159,7 +159,7 @@ div.file-search {
 #file-edit-section {
   position: absolute;
   width: 300px;
-  top: 100px;
+  top: 80px;
   bottom: 42px;
   right: 18px;
   overflow: auto;
@@ -172,10 +172,12 @@ div.file-search {
 
 #file-edit-section.open {
   display: block;
+  width: 70%;
 }
 
 #file-edit-section input {
   margin-bottom: 1em;
+  width: 80%;
 }
 
 #file-edit-section button {
