@@ -53,10 +53,16 @@ div.file-search {
   width: auto;
 }
 
+.media-item .mb-preview .file-image .content {
+  width: 50px;
+  height: 50px;
+}
+
 .media-browser-pane .media-item {
   background: #FFFFFF;
   border: none;
 }
+
 
 .media-browser-pane .media-item:nth-child(odd) {
   background: #EFEFEF;
@@ -66,6 +72,9 @@ div.file-search {
   background: #FFF;
 }
 
+.media-browser-pane .media-item:hover {
+  background: #e1e1e1;
+}
 
 .media-browser-pane textarea#media-browser-web {
 	width:95%;
@@ -132,6 +141,21 @@ div.file-search {
 }
 
 /* File Edit panel */
+.mb-actions-edit,
+.mb-actions-delete {
+	color:#4E84C4;
+}
+
+.mb-actions-edit:hover,
+.mb-actions-delete:hover {
+	cursor:pointer;
+	text-decoration:underline;
+}
+
+#file-edit-section .control button {
+	margin-right: 0 !important;
+}
+
 #file-edit-section {
   position: absolute;
   width: 300px;
