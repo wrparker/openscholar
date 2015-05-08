@@ -147,6 +147,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
   $radio_options = array();
   $default_flavor = '';
 
+  $themes_sorted = array();
   $featured_themes = array_filter(variable_get('cp_appearance_featured_themes', array()));
 
   // Adds each theme option to the form, and flavor options if available.
@@ -155,6 +156,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
     $info = $theme->info;
     $info['theme_name'] = $theme->name;
     $radio_options[$info['theme_name']] = $info['theme_name'];
+    $themes_sorted[$info['theme_name']] = $theme;
 
     //Flavors is not shown for the featured themes
     if (!in_array($theme->name, $featured_themes)) {
@@ -204,7 +206,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
 
         $flavor_theme->info['screenshot'] = $flav['path'].'/screenshot.png';
         $featured_themes[$flavor_name] = $flavor_name;
-        $themes[$flavor_name] = $flavor_theme;
+        $themes_sorted[$flavor_name] = $flavor_theme;
       }
       if (!empty($flavors))
       {
@@ -213,7 +215,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
     }
   }
 
-  ksort($themes);
+  $themes = $themes_sorted;
 
   // Sorts featured themes to the front.
   $current_theme = os_theme_get();
