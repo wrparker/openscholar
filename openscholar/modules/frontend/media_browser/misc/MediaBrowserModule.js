@@ -73,6 +73,7 @@
       Drupal.media = Drupal.media || {};
       Drupal.media.popups = Drupal.media.popups || {};
       var oldPopup = Drupal.media.popups.mediaBrowser;
+      Drupal.media.popups.mediaBrowserOld = oldPopup;
       Drupal.media.popups.mediaBrowser = function (onSelect, globalOptions, pluginOptions, widgetOptions) {
         var options = Drupal.media.popups.mediaBrowser.getDefaults();
         options.global = $.extend({}, options.global, globalOptions);
