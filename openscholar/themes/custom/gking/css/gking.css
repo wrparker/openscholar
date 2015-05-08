@@ -1855,11 +1855,17 @@ li.term-evaluating-us-social-security-administration-forecasts
   padding-left: 60px !important;
 }
 
+.sidebar li.term-evaluating-us-social-security-administration-forecasts {
+  padding-left: 0 !important;
+}
+
 li.term-evaluating-us-social-security-administration-forecasts a
 {
   
   padding-left: 0 !important;
 }
+
+
 
 body.front .block-boxes-os_taxonomy_fbt li.term-unifying-statistical-analysis .description {
   top: -210px;
@@ -1924,4 +1930,9 @@ body.front .block-boxes-os_taxonomy_fbt li.term-mortality-studies .description {
 
 body.front .block-boxes-os_taxonomy_fbt li.term-teaching-and-administration .description {
   top: -225px;
+}
+
+
+.page-taxonomy-term .os-taxonomy-term .node-faq.node-teaser {
+  padding-left: 0;
 }
