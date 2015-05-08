@@ -112,13 +112,15 @@ div.file-search {
 /**
  Contextual wrappers are out of place here
  Element invisible causes scrollbars when it really shouldn't.
+ Label wrapper is unnecessary in this location
  */
-.media-item .contextual-links-wrapper,
-.media-item .element-invisible {
+.mb-preview .media-item .contextual-links-wrapper,
+.mb-preview .media-item .element-invisible,
+.mb-preview .media-item .label-wrapper {
   display: none;
 }
 
-.media-item img {
+.mb-preview .media-item img {
   height: auto;
   width: 50px;
 }
