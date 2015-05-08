@@ -63,3 +63,12 @@ function os_wysiwyg_update_7004() {
 
   features_revert(array_fill_keys($modules, $reset));
 }
+
+/**
+ * Removes document from the wysiwyg allowed type var
+ */
+function os_wysiwyg_update_7005() {
+  $types = media_variable_get('wysiwyg_allowed_types');
+  $types = array_unique(array_diff($types, array('document')));
+  media_variable_set('wysiwyg_allowed_types', $types);
+}
