@@ -356,6 +356,9 @@ function _biblio_bibtex_export($node) {
   $bibtex .= _biblio_bibtex_format_entry('address', $node->biblio_place_published);
   $bibtex .= _biblio_bibtex_format_entry('abstract', $node->biblio_abst_e);
 
+  //stripping out the html tags
+  $bibtex= strip_tags($bibtex);
+
   $kw_array = array();
   if (!empty($node->terms)) {
     foreach ($node->terms as $term) {
