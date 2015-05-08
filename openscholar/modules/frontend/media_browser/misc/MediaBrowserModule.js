@@ -18,10 +18,8 @@
         }).then(function (modal) {
           modal.element.dialog(params.dialog);
           modal.close.then(function (result) {
-            console.log(result);
             // run the function passed to us
             if (result) {
-              console.log(result);
               params.onSelect(result);
             }
           });
