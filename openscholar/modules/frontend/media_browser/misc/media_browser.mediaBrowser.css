@@ -173,6 +173,9 @@ div.file-search {
 #file-edit-section.open {
   display: block;
   width: 70%;
+  -webkit-box-shadow: -8px 9px 5px -4px rgba(0,0,0,0.41);
+-moz-box-shadow: -8px 9px 5px -4px rgba(0,0,0,0.41);
+box-shadow: -8px 9px 5px -4px rgba(0,0,0,0.41);
 }
 
 #file-edit-section input {
