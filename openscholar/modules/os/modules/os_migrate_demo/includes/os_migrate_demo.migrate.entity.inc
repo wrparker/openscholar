@@ -115,6 +115,13 @@ abstract class OsMigrate extends Migration {
         $og_vocab = og_vocab_create_og_vocab($vocabulary->vid, 'node', $bundle);
         $og_vocab->save();
       }
+
+      // Create OG-vocab for images.
+      $settings = array(
+        'widget_type' => !empty($this->ogVocabWidgetSettings) ? $this->ogVocabWidgetSettings : 'options_select',
+      );
+      $og_vocab = og_vocab_create_og_vocab($vocabulary->vid, 'file', 'image', OG_VOCAB_FIELD, $settings);
+      $og_vocab->save();
     }
 
     $row->vocabulary_machine_name = $name;

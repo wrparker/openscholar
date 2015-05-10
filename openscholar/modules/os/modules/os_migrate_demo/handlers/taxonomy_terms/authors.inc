@@ -13,4 +13,6 @@ class OsMigrateAuthorsTaxonomyTerm extends OsMigrate {
   public $bundle = 'authors';
 
   public $ogVocab = TRUE;
+
+  public $ogVocabWidgetSettings = "options_buttons";
 }
