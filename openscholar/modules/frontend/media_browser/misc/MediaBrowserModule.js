@@ -18,10 +18,8 @@
         }).then(function (modal) {
           modal.element.dialog(params.dialog);
           modal.close.then(function (result) {
-            console.log(result);
             // run the function passed to us
             if (result) {
-              console.log(result);
               params.onSelect(result);
             }
           });
@@ -73,6 +71,7 @@
       Drupal.media = Drupal.media || {};
       Drupal.media.popups = Drupal.media.popups || {};
       var oldPopup = Drupal.media.popups.mediaBrowser;
+      Drupal.media.popups.mediaBrowserOld = oldPopup;
       Drupal.media.popups.mediaBrowser = function (onSelect, globalOptions, pluginOptions, widgetOptions) {
         var options = Drupal.media.popups.mediaBrowser.getDefaults();
         options.global = $.extend({}, options.global, globalOptions);
@@ -120,7 +119,7 @@
     }
     if (!params.override_extensions) {
       for (var t in params.types) {
-        $scope.extensions = $scope.extensions.concat(Drupal.settings.extensionMap[t]);
+        $scope.extensions = $scope.extensions.concat(Drupal.settings.extensionMap[params.types[t]]);
       }
     }
     $scope.extensions.sort();

@@ -114,6 +114,7 @@ html.js input.throbbing {
 
 .media-browser-pane #media-browser-file-select,
 .media-browser-pane .actions button,
+#file-edit-section .control button,
 a#edit-cancel,
 a.form-cancel {
   cursor: pointer;

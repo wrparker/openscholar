@@ -151,7 +151,7 @@ class OsFilesResource extends RestfulEntityBase {
    * Callback function for the file preview.
    */
   public function getFilePreview($wrapper) {
-    $output = file_view($wrapper->value(), 'preview');
+    $output = media_get_thumbnail_preview($wrapper->value());
     return drupal_render($output);
   }
 
