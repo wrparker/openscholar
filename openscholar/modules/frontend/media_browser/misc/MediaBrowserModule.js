@@ -127,6 +127,9 @@
     if (params.max_filesize) {
       $scope.maxFilesize = params.max_filesize;
     }
+    else {
+      $scope.maxFilesize = Drupal.settings.maximumFileSize;
+    }
 
     $scope.showHelp = false;
 
@@ -176,8 +179,8 @@
       if (file && file instanceof File) {
         // TODO: Get validating properties from somewhere and check the file against them
 
-        console.log(file);
-        var size = params.max_filesize_raw > file.size,   // file is smaller than max
+        var maxFilesize = params.max_filesize_raw || Drupal.settings.maxFileSizeRaw;
+        var size = maxFilesize > file.size,   // file is smaller than max
           ext = file.name.slice(file.name.lastIndexOf('.')+1),
           extension = $scope.extensions.indexOf(ext) !== -1,    // extension is found
           id;
@@ -185,7 +188,7 @@
         if (!size) {
           id = $scope.messages.next++;
           $scope.messages[id] = {
-            text: file.name + ' is larger than the maximum filesize of ' + params.max_filesize,
+            text: file.name + ' is larger than the maximum filesize of ' + (params.max_filesize || Drupal.settings.maxFileSize),
           }
           $timeout(angular.bind($scope, removeMessage, id), 5000);
         }
@@ -201,7 +204,6 @@
           // since we can't force this function to wait, we have to use an onload
           // and check this before uploading
         }
-        console.log($scope.messages);
 
         return size && extension;
       }
