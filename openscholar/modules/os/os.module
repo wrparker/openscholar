@@ -902,8 +902,10 @@ function os_form_alter(&$form, &$form_state, $form_id) {
         $destination = '';
       }
     }
+    // We don't need the query string in the destination.
+    list($path) = explode('?', $destination);
     $form['actions']['cancel'] = array(
-      '#markup'   => l(t('Cancel'), $destination, array('attributes' => array('class' => 'form-cancel'))),
+      '#markup' => l(t('Cancel'), $path, array('attributes' => array('class' => 'form-cancel'))),
       '#weight' => 99,
     );
   }
