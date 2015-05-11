@@ -227,6 +227,51 @@ function os_files_entity_presave($entity, $type) {
   }
 
   // Find an dummy entry for the file and delete it.
+  $wrapper = entity_metadata_wrapper($type, $entity);
+
+  if (!$wrapper->__isset('field_upload')) {
+    return;
+  }
+
+  $original_wrapper = entity_metadata_wrapper($type, $entity->original);
+
+  $get_fids = function(\EntityMetadataWrapper $field) {
+    $fids = array();
+
+    foreach ($field as $items) {
+      $file = $items->value();
+      $fids[] = $file['fid'];
+    }
+
+    return $fids;
+  };
+
+  $new_fids = $get_fids($wrapper->field_upload);
+  $old_fids = $get_fids($original_wrapper->field_upload);
+
+  // Delete the old dummy entries.
+  if ($added = array_diff($new_fids, $old_fids)) {
+    db_delete('file_usage')
+      ->condition('fid', $added, 'IN')
+      ->condition('id', 0)
+      ->execute();
+  }
+
+  // Create a dummy entry for files which removed from the file field.
+  if ($removed = array_diff($old_fids, $new_fids)) {
+    $dummy_entry = array();
+    foreach ($removed as $fid) {
+      $dummy_entry[] = array(
+        'fid' => $fid,
+        'module' => 'os_files',
+        'id' => 0,
+        'count' => 1,
+      );
+      db_insert('file_usage')
+        ->fields($dummy_entry)
+        ->execute();
+    }
+  }
 }
 
 /**
