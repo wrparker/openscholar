@@ -13,6 +13,4 @@ class OsMigrateBiologyTaxonomyTerm extends OsMigrate {
   public $bundle = 'biology';
 
   public $ogVocab = TRUE;
-
-  public $ogVocabWidgetSettings = "options_select";
 }

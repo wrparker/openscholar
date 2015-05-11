@@ -13,6 +13,4 @@ class OsMigrateMathTaxonomyTerm extends OsMigrate {
   public $bundle = 'math';
 
   public $ogVocab = TRUE;
-
-  public $ogVocabWidgetSettings = "term_reference_tree";
 }

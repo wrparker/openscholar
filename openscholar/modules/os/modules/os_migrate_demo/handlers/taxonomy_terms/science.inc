@@ -13,6 +13,4 @@ class OsMigrateScienceTaxonomyTerm extends OsMigrate {
   public $bundle = 'science';
 
   public $ogVocab = TRUE;
-
-  public $ogVocabWidgetSettings = "entityreference_autocomplete";
 }
