@@ -423,6 +423,8 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
         '#type' => 'hidden',
         '#value' => isset($node->biblio_edition) ? $node->biblio_edition : '',
       );
+      // Hide the unneeded second patent number.
+      unset($form['biblio_tabs'][9]['biblio_issn']);
       break;
   }
 
@@ -823,6 +825,13 @@ function os_publications_form_biblio_node_form_field_adjust($form) {
       unset($form[$field]);
     }
   }
+
+  // In case of a patent we add weight to the biblio section. This is done here
+  // because it didn't stick when done in the form alter.
+  if ($form['biblio_type']['#value'] == 119) {
+    $form['biblio_section']['#weight'] = 1.6;
+  }
+
   return $form;
 }
 
