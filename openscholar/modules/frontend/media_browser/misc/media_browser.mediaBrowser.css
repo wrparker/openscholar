@@ -58,26 +58,29 @@ div.file-search {
   height: 50px;
 }
 
-.media-browser-pane .media-row {
+.media-browser-pane .media-item {
   background: #FFFFFF;
   border: none;
+  width: auto;
 }
 
-.media-browser-pane .media-row:nth-child(odd) {
+.media-browser-pane .media-item:nth-child(odd) {
   background: #EFEFEF;
+  border: 1px solid #EFEFEF;
 }
 
-.media-browser-pane .media-row:nth-child(even) {
+.media-browser-pane .media-item:nth-child(even) {
   background: #FFF;
+   border: 1px solid #FFF;
 }
 
-.media-browser-pane .media-row:hover {
+.media-browser-pane .media-item:hover {
   background: #e1e1e1;
 }
 
-.media-browser-pane .media-row.selected {
-  background-color: #F4ECC7;
-  border-color: #058AC5;
+.media-browser-pane .media-item.selected {
+  background-color: #D1D6E2;
+  border: 1px solid #999;
 }
 
 .media-browser-pane textarea#media-browser-web {
