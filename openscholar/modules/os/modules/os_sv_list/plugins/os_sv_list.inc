@@ -227,16 +227,22 @@ class os_sv_list extends os_boxes_default {
 
     return $form;
   }
-    
+
   public function render() {
     if (module_exists('vsite') && !vsite_get_vsite()) {
       return;
     }
 
+    $block = parent::render();
+
     $bundle = ($this->options['content_type'] != 'all') ? $this->options['content_type'] : NULL;
     $cid = $bundle ? 'node:' . $bundle : NULL;
 
-    $block = parent::render();
+    // Check user access to the content of the widget.
+    if (!empty($bundle) && !$this->checkWidgetAccess($bundle)) {
+      return $block;
+    }
+
     $page_num = pager_find_page(PagerDefault::$maxElement);
 
     $this->set_cache_id($cid, $page_num);
@@ -356,6 +362,11 @@ class os_sv_list extends os_boxes_default {
     if ($this->options['content_type'] != 'all') {
       // Any special hook here?
       $query->propertyCondition('type', $this->options['content_type']);
+    }
+    else {
+      // When "All" is selected show only public bundles.
+      $bundles = $this->getBundles(OS_PUBLIC_APP);
+      $query->propertyCondition('type', $bundles, 'IN');
     }
 
     // Pager.
@@ -650,4 +661,5 @@ class os_sv_list extends os_boxes_default {
     // Add the sort by sticky to be the first sort.
     array_unshift($sorts, $sticky);
   }
+
 }
