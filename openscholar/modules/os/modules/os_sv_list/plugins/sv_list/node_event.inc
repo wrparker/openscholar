@@ -102,13 +102,20 @@ class sv_list_node_event extends sv_list_plugin  {
     // So we need to add a value to the entities array for each row in the raw DB
     // Every entity we need should already be in the entities array
     $output = array();
-    $raw = $this->query->ordered_results;
-    // use this instead of a foreach because this query can have more results than expected
-    for ($i=0; $i<$options['number_of_items']; $i++) {
-      if ($row = $raw[$i]) {
-        $entity = clone $entities[$row->entity_id];
-        $entity->date_id = implode('.', array('date', $entity->nid, 'field_date', $row->delta));
+
+    $results = $this->query->ordered_results;
+
+    foreach ($results as $delta => $result) {
+      // The number of entities we display might be smaller then the number of
+      // query results so we need to check if the result entity is displayed.
+      if (!empty($entities[$result->entity_id])) {
+        $entity = clone $entities[$result->entity_id];
+        $entity->date_id = implode('.', array('date', $entity->nid, 'field_date', $result->delta));
         $output[] = $entity;
+      }
+
+      if ($delta >= $options['number_of_items'] - 1) {
+        break;
       }
     }
 
