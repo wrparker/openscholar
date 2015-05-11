@@ -1,8 +1,8 @@
 <div class="container-fluid" ng-switch="pane">
     <div class="media-browser-buttons">
-        <div class="media-browser-button" ng-class="{active:pane=='upload'}" ng-click="pane='upload'">Upload</div>
-        <div class="media-browser-button" ng-class="{active:pane=='web'}" ng-click="pane='web'">Web</div>
-        <div class="media-browser-button" ng-class="{active:pane=='library'}" ng-click="pane='library'">Library</div>
+        <div class="media-browser-button" ng-class="{active:pane=='upload'}" ng-show="activePanes.upload" ng-click="pane='upload'">Upload</div>
+        <div class="media-browser-button" ng-class="{active:pane=='web'}" ng-show="activePanes.web" ng-click="pane='web'">Web</div>
+        <div class="media-browser-button" ng-class="{active:pane=='library'}" ng-show="activePanes.library" ng-click="pane='library'">Library</div>
     </div>
     <div class="media-browser-panes">
         <div class="media-browser-pane" ng-switch-when="upload">

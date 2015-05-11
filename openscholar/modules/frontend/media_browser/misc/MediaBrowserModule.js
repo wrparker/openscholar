@@ -2,6 +2,48 @@
   var rootPath,
     open = angular.noop;
 
+  function defaultParams() {
+    var params = {
+      dialog: {
+        buttons: {},
+        dialogClass: 'media-wrapper',
+        modal: true,
+        draggable: false,
+        resizable: false,
+        minWidth: 600,
+        width: 800,
+        height: 650,
+        position: 'center',
+        title: undefined,
+        overlay: {
+          backgroundColor: '#000000',
+          opacity: 0.4
+        },
+        zIndex: 10000,
+        close: function (event, ui) {
+          $(event.target).remove();
+        }
+      },
+      browser: {
+        panes: {
+          web: true,
+          upload: true,
+          library: true
+        },
+        allowedTypes: {
+          image: true,
+          video: true,
+          audio: true,
+          executable: true,
+          document: true
+        }
+      },
+      onSelect: angular.noop
+    };
+
+    return params;
+  }
+
   angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'angularFileUpload', 'angularModalService', 'FileEditor', 'mediaBrowser.filters'])
     .config(function (){
        rootPath = Drupal.settings.paths.moduleRoot;
@@ -29,48 +71,6 @@
             }
           });
         });
-      }
-
-      function defaultParams() {
-        var params = {
-          dialog: {
-            buttons: {},
-            dialogClass: 'media-wrapper',
-            modal: true,
-            draggable: false,
-            resizable: false,
-            minWidth: 600,
-            width: 800,
-            height: 650,
-            position: 'center',
-            title: undefined,
-            overlay: {
-              backgroundColor: '#000000',
-              opacity: 0.4
-            },
-            zIndex: 10000,
-            close: function (event, ui) {
-              $(event.target).remove();
-            }
-          },
-          browser: {
-            panes: {
-              web: true,
-              upload: true,
-              library: true
-            },
-            allowedTypes: {
-              image: true,
-              video: true,
-              audio: true,
-              executable: true,
-              document: true
-            }
-          },
-          onSelect: angular.noop
-        };
-
-        return params;
       }
 
       Drupal.media = Drupal.media || {};
@@ -117,6 +117,7 @@
     $scope.params = params.browser;
     $scope.editing = false;
     $scope.deleting = false;
+    $scope.activePanes = params.browser.panes;
 
     $scope.extensions = [];
     if (params.file_extensions) {
@@ -459,7 +460,19 @@
       event.preventDefault();
       console.log(event);
       // get stuff from the element we clicked on and Drupal.settings
-      open({});
+      var elem = event.currentTarget,
+        params = defaultParams(),
+        panes = elem.attributes['panes'].value;
+
+      for (var i in params.browser.panes) {
+        params.browser.panes[i] = (panes.indexOf(i) !== -1);
+      }
+
+      params.onSelect = function () {
+        window.reload();
+      }
+
+      open(params);
     }
 
     return {
