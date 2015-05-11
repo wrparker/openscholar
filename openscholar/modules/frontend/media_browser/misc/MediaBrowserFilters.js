@@ -37,7 +37,7 @@ angular.module('mediaBrowser.filters', [])
       var filename = file.filename,
         ext = filename.slice(filename.lastIndexOf('.')+1);
 
-      return (extensions.indexOf(ext) !== -1);
+      return !(file.schema == 'public' || file.schema == 'private') || (extensions.indexOf(ext) !== -1);
     }
     return function (input, extensions) {
       if (!extensions.length) {
