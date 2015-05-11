@@ -7,6 +7,10 @@ default:
       selenium2: ~
     Drupal\DrupalExtension\Extension:
       blackbox: ~
+  formatter:
+    name: 'timed'
+    parameters:
+      time: true
 
 phantomjs:
   context:

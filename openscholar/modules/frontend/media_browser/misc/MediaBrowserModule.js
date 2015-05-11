@@ -19,7 +19,12 @@
           modal.element.dialog(params.dialog);
           modal.close.then(function (result) {
             // run the function passed to us
-            if (result) {
+            if (Array.isArray(result)) {
+              if (result.length) {
+                params.onSelect(result);
+              }
+            }
+            else if (result) {
               params.onSelect(result);
             }
           });
