@@ -184,7 +184,7 @@
       if (file && file instanceof File) {
         // TODO: Get validating properties from somewhere and check the file against them
 
-        var maxFilesize = params.max_filesize_raw || Drupal.settings.maxFileSizeRaw;
+        var maxFilesize = params.max_filesize_raw || Drupal.settings.maximumFileSizeRaw;
         var size = maxFilesize > file.size,   // file is smaller than max
           ext = file.name.slice(file.name.lastIndexOf('.')+1),
           extension = $scope.extensions.indexOf(ext) !== -1,    // extension is found
@@ -193,7 +193,7 @@
         if (!size) {
           id = $scope.messages.next++;
           $scope.messages[id] = {
-            text: file.name + ' is larger than the maximum filesize of ' + (params.max_filesize || Drupal.settings.maxFileSize),
+            text: file.name + ' is larger than the maximum filesize of ' + (params.max_filesize || Drupal.settings.maximumFileSize),
           }
           $timeout(angular.bind($scope, removeMessage, id), 5000);
         }
