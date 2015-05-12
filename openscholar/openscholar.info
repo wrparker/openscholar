@@ -78,11 +78,13 @@ dependencies[] = views_slideshow_cycle
 
 ; OS
 dependencies[] = citation_distribute
+dependencies[] = media_browser
 dependencies[] = os
 dependencies[] = os_books
 dependencies[] = os_boxes
 dependencies[] = os_breadcrumbs
 dependencies[] = os_comments
+dependencies[] = os_common
 dependencies[] = os_files
 dependencies[] = os_files_private
 dependencies[] = os_front

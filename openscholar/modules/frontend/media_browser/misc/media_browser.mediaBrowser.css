@@ -48,24 +48,37 @@ div.file-search {
 }*/
 
 /* Single file thumbnails */
-.media-item {
+.mb-preview .media-item {
   padding: 5px;
   width: auto;
 }
 
-.media-browser-pane .media-item {
+.media-row .mb-preview .file-image .content {
+  width: 50px;
+  height: 50px;
+}
+
+.media-browser-pane .media-row {
   background: #FFFFFF;
   border: none;
 }
 
-.media-browser-pane .media-item:nth-child(odd) {
+.media-browser-pane .media-row:nth-child(odd) {
   background: #EFEFEF;
 }
 
-.media-browser-pane .media-item:nth-child(even) {
+.media-browser-pane .media-row:nth-child(even) {
   background: #FFF;
 }
 
+.media-browser-pane .media-row:hover {
+  background: #e1e1e1;
+}
+
+.media-browser-pane .media-row.selected {
+  background-color: #F4ECC7;
+  border-color: #058AC5;
+}
 
 .media-browser-pane textarea#media-browser-web {
 	width:95%;
@@ -103,20 +116,17 @@ div.file-search {
 /**
  Contextual wrappers are out of place here
  Element invisible causes scrollbars when it really shouldn't.
+ Label wrapper is unnecessary in this location
  */
-.media-item .contextual-links-wrapper,
-.media-item .element-invisible {
+.mb-preview .media-item .contextual-links-wrapper,
+.mb-preview .media-item .element-invisible,
+.mb-preview .media-item .label-wrapper {
   display: none;
 }
 
-.media-item img {
+.mb-preview .media-item img {
   height: auto;
   width: 50px;
-}
-
-.media-item.selected {
-  background-color: #F4ECC7;
-  border-color: #058AC5;
 }
 
 /* Pager */
@@ -132,10 +142,25 @@ div.file-search {
 }
 
 /* File Edit panel */
+.mb-actions-edit,
+.mb-actions-delete {
+	color:#4E84C4;
+}
+
+.mb-actions-edit:hover,
+.mb-actions-delete:hover {
+	cursor:pointer;
+	text-decoration:underline;
+}
+
+#file-edit-section .control button {
+	margin-right: 0 !important;
+}
+
 #file-edit-section {
   position: absolute;
   width: 300px;
-  top: 100px;
+  top: 80px;
   bottom: 42px;
   right: 18px;
   overflow: auto;
@@ -148,10 +173,15 @@ div.file-search {
 
 #file-edit-section.open {
   display: block;
+  width: 70%;
+  -webkit-box-shadow: -8px 9px 5px -4px rgba(0,0,0,0.41);
+-moz-box-shadow: -8px 9px 5px -4px rgba(0,0,0,0.41);
+box-shadow: -8px 9px 5px -4px rgba(0,0,0,0.41);
 }
 
 #file-edit-section input {
   margin-bottom: 1em;
+  width: 80%;
 }
 
 #file-edit-section button {
@@ -193,7 +223,7 @@ div.file-search {
 #drag-text {
 	position: absolute;
     top: 40%;
-    left: 40%;
+    left: 39%;
     font-size: 1.2em;
 }
 
@@ -215,10 +245,10 @@ div.file-search {
 }
 
 #media-browser-upload-progress {
-  width: 250px;
+  width: 200px;
   position: absolute;
   top: 20%;
-  left: 34%;
+  left: 37%;
 }
 
 .progress-bar-full {
@@ -228,7 +258,7 @@ div.file-search {
 }
 
 .progress-bar-completed {
-  background: #ff0000;
+    background: url('images/loader2.gif') 0 no-repeat;
   height: 100%;
 
 }
@@ -237,14 +267,31 @@ div.file-search {
 .media-browser-pane .help {
 position: absolute;
   top: 63%;
-  left: 40%;
+  left: 16%;
+  width: 500px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background: #efefef;
 }
 
 #media-browser-rejected {
   position: absolute;
-  top: 60%;
-  left: 40%;
+  top: 63%;
+  left: 16%;
+  width: 500px;
+  padding: 10px;
 }
+
+
+.help_icon {
+  background: url('../../../../themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 0 -150px;
+  width: 20px;
+  height: 20px;
+  text-indent: -10em;
+  display: inline-block;
+  overflow: hidden;
+}
+
 
 /**
  * Dialog stuff
