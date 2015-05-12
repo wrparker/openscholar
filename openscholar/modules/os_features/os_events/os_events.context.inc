@@ -51,9 +51,9 @@ function os_events_context_default_contexts() {
           'region' => 'sidebar_second',
           'weight' => '-10',
         ),
-        'views-os_events-block_2' => array(
-          'module' => 'views',
-          'delta' => 'os_events-block_2',
+        'boxes-os_events_upcoming' => array(
+          'module' => 'boxes',
+          'delta' => 'os_events_upcoming',
           'region' => 'sidebar_second',
           'weight' => '-10',
         ),

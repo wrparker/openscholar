@@ -29,7 +29,7 @@ class os_slideshow_box extends os_boxes_default {
 
     foreach ($layouts as $name => $layout) {
       if ($this->new || $ratio == current(array_keys($layout['ratio']))) {
-        $file = drupal_get_path('module', 'os_slideshow') . '/images/' . $name . '.png';
+        $file = drupal_get_path('module', 'os_slideshow') . '/images/' . str_replace(':','_',$name) . '.png';
         $ratio_options[$name] = (file_exists($file)) ? theme('image', array('path'=>$file)) . $layout['name'] : $layout['name'];
       }
     }

@@ -301,6 +301,61 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @When /^I create a new "([^"]*)" with title "([^"]*)" in the site "([^"]*)"$/
+   */
+  public function iCreateANewEventWithTitle($type, $title, $vsite) {
+    $tomorrow = time() + (24 * 60 * 60);
+    $entity = $this->createEntity($type, $title);
+    $entity->field_date['und'][0]['value'] = date('Y-m-d H:i:s');
+    $entity->field_date['und'][0]['value2'] = date('Y-m-d H:i:s', $tomorrow);
+    $wrapper = entity_metadata_wrapper('node', $entity);
+
+    // Set the group ref
+    $nid = FeatureHelp::getNodeId($vsite);
+    $wrapper->{OG_AUDIENCE_FIELD}->set(array($nid));
+    entity_save('node', $entity);
+  }
+
+  /**
+   * @When /^I create a new repeating event with title "([^"]*)" that repeats "([^"]*)" times$/
+   */
+  public function iCreateANewRepeatingEventWithTitle($title, $times) {
+    $tomorrow = time() + (24 * 60 * 60);
+    return array(
+      new Step\When('I visit "john/node/add/event"'),
+      new Step\When('I fill in "Title" with "' . $title . '"'),
+      new Step\When('I fill in "edit-field-date-und-0-value-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
+      new Step\When('I fill in "edit-field-date-und-0-value2-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
+      new Step\When('I check the box "edit-field-date-und-0-all-day"'),
+      new Step\When('I check the box "edit-field-date-und-0-show-repeat-settings"'),
+      new Step\When('I fill in "edit-field-date-und-0-rrule-count-child" with "' . $times . '"'),
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
+   * @When /^I should see the event "([^"]*)" in the LOP$/
+   */
+  public function iShouldSeeTheEventInTheLop($title) {
+    $page = $this->getSession()->getPage()->getContent();
+
+    $pattern = "/<div id='boxes-box-os_events_upcoming' class='boxes-box'>[\s\S]*" . $title . "[\s\S]*<\/div>/";
+    if (!preg_match($pattern, $page)) {
+      throw new Exception("The event '$title' was not found in the List of posts widget.");
+    }
+  }
+
+  /**
+   * @When /^I should see the date of the "([^"]*)" repeat of the event$/
+   */
+  public function iShouldSeeTheDateOfTheRepeatOfDate($repeat) {
+    $two_weeks_from_tmr = time() + ($repeat * 7 + 1) * (24 * 60 * 60);
+    return array(
+      new Step\When('I should see "' . date('l, F j, Y', $two_weeks_from_tmr) .'"'),
+    );
+  }
+
+  /**
    * @When /^I create a new "([^"]*)" entry with the name "([^"]*)"$/
    */
   public function iCreateANewEntryWithTheName($type, $name) {
@@ -2027,6 +2082,22 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * Create an entity of a given type and title.
+   */
+  private function createEntity($type, $title) {
+    $values = array(
+      'type' => $type,
+      'uid' => 1,
+      'created' => time(),
+      'title' => $title,
+    );
+
+    // Create an event that ends tomorrow.
+    $entity = entity_create('node', $values);
+    return $entity;
+  }
+
+  /**
    * @Given /^I should see "([^"]*)" in the "([^"]*)" column$/
    */
   public function iShouldSeeInTheColumn($value, $column) {
@@ -2061,6 +2132,13 @@ class FeatureContext extends DrupalContext {
       $message = sprintf('The text "%s" appears in the text of this page, but it should not.', $text);
       throw new Exception($message);
     }
+  }
+
+  /**
+   * @Given /^I logout$/
+   */
+  public function iLogout() {
+    $this->visit('user/logout');
   }
 
 }

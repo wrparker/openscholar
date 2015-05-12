@@ -280,6 +280,12 @@ class os_taxonomy_fbt extends os_boxes_default {
         $this->options['bundles'] = array($bundles);
       }
     }
+
+    // Check user access to the content of the widget.
+    if (!empty($this->options['bundles']) && !$this->checkWidgetAccess(reset($this->options['bundles']))) {
+      return $block;
+    }
+
     $id = 'vocabulary:' . $this->options['vocabulary'];
     $this->set_cache_id($id);
     if (($block['content'] = $this->get_cache()) === FALSE) {
