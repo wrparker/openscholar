@@ -469,14 +469,11 @@ trait RestfulTrait {
     list($values, $token, $path) = $this->getVariables('taxonomy', $account, $table, TRUE);
     $method = $this->operations[$operation];
 
-    $headers = array(
-      'access_token' => $token,
-    );
     if ($method != 'post') {
       $path .= '/' . $this->meta['id'];
     }
 
-    $request = $this->invokeRestRequest($method, $path, $headers, $values);
+    $request = $this->invokeRestRequest($method, $path, ['access_token' => $token], $values);
     if ($method == 'delete') {
       if (!empty($request->json()['data'])) {
         throw new \Exception('The delete of the taxonomy term did not occurred.');
