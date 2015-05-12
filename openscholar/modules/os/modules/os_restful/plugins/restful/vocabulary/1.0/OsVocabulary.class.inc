@@ -159,6 +159,7 @@ class OsVocabulary extends \RestfulEntityBase {
     if (!empty($this->request['entity_type']) && !empty($this->request['bundle'])) {
 
       if (!$og_vocabs = $this->getOgVocabsByEntityBundle($this->request['entity_type'], $this->request['bundle'])) {
+        $query->propertyCondition('vid', 0);
         return;
       }
 
