@@ -271,15 +271,15 @@ trait RestfulTrait {
    */
   private function invokeRestRequest($method, $path, $headers, $body, $return = FALSE) {
     try {
-      $request = $this->getClient()->{$method}($path, [
+      $response = $this->getClient()->{$method}($path, [
         'headers' => $headers,
-        'body' => $body,
+        'json' => $body,
       ]);
     } catch (\GuzzleHttp\Exception\ClientException $e) {
       return $this->handleExceptions($e, $return);
     }
 
-    return $request;
+    return $response;
   }
 
   /**
@@ -469,11 +469,14 @@ trait RestfulTrait {
     list($values, $token, $path) = $this->getVariables('taxonomy', $account, $table, TRUE);
     $method = $this->operations[$operation];
 
+    $headers = array(
+      'access_token' => $token,
+    );
     if ($method != 'post') {
       $path .= '/' . $this->meta['id'];
     }
 
-    $request = $this->invokeRestRequest($method, $path, ['access_token' => $token], $values);
+    $request = $this->invokeRestRequest($method, $path, $headers, $values);
     if ($method == 'delete') {
       if (!empty($request->json()['data'])) {
         throw new \Exception('The delete of the taxonomy term did not occurred.');
