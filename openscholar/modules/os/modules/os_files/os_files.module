@@ -184,7 +184,7 @@ function os_files_ctools_plugin_post_alter(&$plugin) {
   }
 }
 
-/**
+/*
  * Implements hook_file_presave().
  */
 function os_files_file_presave($file) {
@@ -209,24 +209,8 @@ function os_files_file_insert($file) {
   // Create a dummy file_usage entry. It will be removed only when the file is
   // deleted.
   db_insert('file_usage')
-    ->fields(array(
-      'fid' => $file->fid,
-      'module' => 'os_files',
-      'id' => 0,
-      'count' => 1,
-    ))
+    ->fields(array('fid' => $file->fid, 'module' => 'os_files', 'id' => 0, 'count' => 1))
     ->execute();
-}
-
-/**
- * Implements hook_entity_presave().
- */
-function os_files_entity_presave($entity, $type) {
-  if ($type == 'file') {
-    return;
-  }
-
-  // Find an dummy entry for the file and delete it.
 }
 
 /**
