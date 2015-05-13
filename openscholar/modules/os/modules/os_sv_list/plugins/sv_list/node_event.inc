@@ -155,4 +155,8 @@ class sv_list_node_event extends sv_list_plugin  {
       $cache_time = "5 minutes";
     }
   }
+
+  public function get_number_of_results() {
+    return count($this->query->ordered_results);
+  }
 }

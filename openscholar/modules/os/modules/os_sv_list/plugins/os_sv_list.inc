@@ -279,11 +279,18 @@ class os_sv_list extends os_boxes_default {
       drupal_add_library('system', 'drupal.ajax');
       drupal_add_js(drupal_get_path('module', 'os_sv_list') . '/os_sv_list_display.js');
 
-      // Truncate items and prepare the more link.
+      // Prepare the more link.
       $more = '';
+      $plugin_name = $this->entity_type . '_' . $bundle;
+      $actual_ids = $this->_plugins_invoke('get_number_of_results');
+      $actual_ids = !empty($actual_ids[$plugin_name]) ? $actual_ids[$plugin_name] : $ids;
+      if ($actual_ids > $this->options['number_of_items']) {
+        $more = ($this->options['more']) ? l($this->options['more_text'], $this->options['more_link'], array('attributes' => array('class' => array('more-link')))) : '';
+      }
+
+      // Truncate items.
       if (count($ids) > $this->options['number_of_items'] || ($this->options['pager'] && $ids && $pager_current < $pager_max)) {
         $ids = array_slice($ids, 0, $this->options['number_of_items']);
-        $more = ($this->options['more']) ? l($this->options['more_text'], $this->options['more_link'], array('attributes' => array('class' => array('more-link')))) : '';
       }
 
       // Give plugins a chance to alter the entities after loading but before
