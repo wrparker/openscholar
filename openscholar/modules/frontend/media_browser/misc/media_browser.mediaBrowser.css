@@ -216,6 +216,14 @@ box-shadow: -8px 9px 5px -4px rgba(0,0,0,0.41);
   display: block;
 }
 
+#file-edit-section .fe-warning ~ .control {
+display:none;
+}
+
+#file-edit-section .fe-warning.ng-hide ~ .control {
+display:block;
+}
+
 /** Uploading styles */
 
 #media-browser-file-select {
