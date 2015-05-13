@@ -83,6 +83,11 @@ div.file-search {
   border: 1px solid #999;
 }
 
+.media-browser-pane .media-item.new.selected {
+  background-color: #BDF2D3;
+}
+
+
 .media-browser-pane textarea#media-browser-web {
 	width:95%;
 }
@@ -106,10 +111,12 @@ div.file-search {
 
 .mb-title {
   width: 300px;
+    word-wrap: break-word;
 }
 
 .mb-filename {
   width: 200px;
+    word-wrap: break-word;
 }
 
 .mb-created {
