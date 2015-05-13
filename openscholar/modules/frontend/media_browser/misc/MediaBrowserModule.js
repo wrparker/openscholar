@@ -118,14 +118,17 @@
     $scope.editing = false;
     $scope.deleting = false;
     $scope.activePanes = params.browser.panes;
+    $scope.activePanes.edit = true;
+    $scope.activePanes.delete = true;
 
     $scope.extensions = [];
     if (params.file_extensions) {
       $scope.extensions = params.file_extensions.split(' ');
     }
     if (!params.override_extensions) {
-      for (var t in params.types) {
-        $scope.extensions = $scope.extensions.concat(Drupal.settings.extensionMap[params.types[t]]);
+      var types = params.browser.allowedTypes;
+      for (var t in types) {
+        $scope.extensions = $scope.extensions.concat(Drupal.settings.extensionMap[types[t]]);
       }
     }
     $scope.extensions.sort();
@@ -171,7 +174,6 @@
       $scope.files.splice(deleteMe, 1);
     })
 
-
     service.fetch({})
       .then(function (result) {
         console.log(result);
@@ -179,6 +181,15 @@
         $scope.files = result.data.data;
         $scope.numFiles = $scope.files.length;
       });
+
+    $scope.changePanes = function (pane) {
+      if ($scope.activePanes[pane]) {
+        $scope.pane = pane;
+      }
+      else {
+        close(true);
+      }
+    }
 
     $scope.validate = function($file) {
       var file = $file;
@@ -373,11 +384,13 @@
             uploading = false;
             progress = null;
             currentlyUploading = 0;
-            $scope.pane = 'library';
             if (toEditForm) {
               // there's only one file, we can assume it's this one
               $scope.setSelection(e.data[0].id);
-              $scope.editting = true;
+              $scope.changePanes('edit');
+            }
+            else {
+              $scope.changePanes('library');
             }
           }
         });
@@ -401,20 +414,6 @@
       $scope.selected_file = angular.copy(service.get(fid));
     };
 
-    $scope.editMode = function (starting) {
-      $scope.editting = starting;
-      if (starting) {
-        $scope.deleteMode(false);
-      }
-    }
-
-    $scope.deleteMode = function (starting) {
-      $scope.deleting = starting;
-      if (starting) {
-        $scope.editMode(false);
-      }
-    }
-
     // file edit form methods
     $scope.save = function() {
       service.edit($scope.selected_file);
@@ -423,7 +422,7 @@
     $scope.deleteConfirmed = function() {
       service.delete($scope.selected_file)
         .then(function (resp) {
-          $scope.deleting = false;
+          $scope.changePanes('library');
         });
     };
 
@@ -458,18 +457,23 @@
 
     function clickHandler(event) {
       event.preventDefault();
-      console.log(event);
       // get stuff from the element we clicked on and Drupal.settings
       var elem = event.currentTarget,
         params = defaultParams(),
-        panes = elem.attributes['panes'].value;
+        panes = elem.attributes['panes'].value,
+        types = elem.attributes['types'].value.split(',');
 
       for (var i in params.browser.panes) {
         params.browser.panes[i] = (panes.indexOf(i) !== -1);
       }
 
+      params.browser.allowedTypes = {}
+      for (i=0; i<types.length;i++) {
+        params.browser.allowedTypes[types[i]] = types[i];
+      }
+
       params.onSelect = function () {
-        window.reload();
+        window.location.reload();
       }
 
       open(params);

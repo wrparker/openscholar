@@ -1,8 +1,8 @@
 <div class="container-fluid" ng-switch="pane">
     <div class="media-browser-buttons">
-        <div class="media-browser-button" ng-class="{active:pane=='upload'}" ng-show="activePanes.upload" ng-click="pane='upload'">Upload</div>
-        <div class="media-browser-button" ng-class="{active:pane=='web'}" ng-show="activePanes.web" ng-click="pane='web'">Web</div>
-        <div class="media-browser-button" ng-class="{active:pane=='library'}" ng-show="activePanes.library" ng-click="pane='library'">Library</div>
+        <div class="media-browser-button" ng-class="{active:pane=='upload'}" ng-show="activePanes.upload" ng-click="changePane('upload')">Upload</div>
+        <div class="media-browser-button" ng-class="{active:pane=='web'}" ng-show="activePanes.web" ng-click="changePane('web')">Web</div>
+        <div class="media-browser-button" ng-class="{active:pane=='library'}" ng-show="activePanes.library" ng-click="changePane('library')">Library</div>
     </div>
     <div class="media-browser-panes">
         <div class="media-browser-pane" ng-switch-when="upload">
@@ -73,28 +73,28 @@
                     <span class="mb-filename">{{file.filename}}</span>
                     <span class="mb-created">{{(file.timestamp + '000') | date:'short'}}</span>
                     <span class="mb-file-actions">
-                        <span class="mb-actions-edit" ng-click="$parent.editMode(true)">Edit</span> |
-                        <span class="mb-actions-delete" ng-click="$parent.deleteMode(true)">Delete</span>
+                        <span class="mb-actions-edit" ng-click="changePanes('edit')">Edit</span> |
+                        <span class="mb-actions-delete" ng-click="changePanes('delete')">Delete</span>
                     </span>
                 </div>
             </div>
             <div class="loading" ng-show="numFiles==0">
                 Loading...
             </div>
-            <div id="file-edit-section" ng-class="{open : $parent.editting}">
-                <div file-edit file="$parent.selected_file" on-close="$parent.editting = false"></div>
-            </div>
-            <div id="file-delete-section" ng-class="{open : $parent.deleting}">
-                <div class="mb-delete-warning">Are you sure you want to delete {{$parent.selected_file.name}}? This operation CANNOT be undone.</div>
-
-                <div class="actions">
-                    <button ng-click="$parent.deleteConfirmed()">Delete</button> |
-                    <button ng-click="$parent.deleteMode(false)">Cancel</button>
-                </div>
-            </div>
             <div class="actions" ng-show="$parent.showButtons">
                 <button ng-click="$parent.insert()" ng-disabled="!$parent.selected_file">Insert</button>
                 <button ng-click="$parent.cancel()">Cancel</button>
+            </div>
+        </div>
+        <div class="media-browser-pane" ng-switch-when="edit">
+            <div file-edit file="$parent.selected_file" on-close="changePanes('library')"></div>
+        </div>
+        <div class="media-browser-pane" ng-switch-when="delete">
+            <div class="mb-delete-warning">Are you sure you want to delete {{$parent.selected_file.name}}? This operation CANNOT be undone.</div>
+
+            <div class="actions">
+                <button ng-click="$parent.deleteConfirmed()">Delete</button> |
+                <button ng-click="$parent.changePanes('library')">Cancel</button>
             </div>
         </div>
     </div>
