@@ -185,6 +185,7 @@
     $scope.changePanes = function (pane) {
       if ($scope.activePanes[pane]) {
         $scope.pane = pane;
+        return true;
       }
       else {
         close(true);
