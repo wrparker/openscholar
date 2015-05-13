@@ -53,9 +53,6 @@ if (!$page) {
     <?php if (isset($file_value) && !empty($file_value)): ?>
       <?php print $file_value; ?>
     <?php endif; ?>
-    <div<?php print $content_attributes; ?>>
-      <?php print $body_value; ?>
-    </div>
   <?php endif; // end teaser ?>
 
   <?php if (!$teaser): // begin default adaptivetheme full page node tpl ?>
@@ -88,5 +85,8 @@ if (!$page) {
 
     <?php print render($content['comments']); ?>
   <?php endif; ?>
+  <div<?php print $content_attributes; ?>>
+    <?php print $body_value; ?>
+  </div>
   </div> <!-- /div.node-inner -->
 </article>
