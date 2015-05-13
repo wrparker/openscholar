@@ -73,7 +73,7 @@
                     <span class="mb-filename">{{file.filename}}</span>
                     <span class="mb-created">{{(file.timestamp + '000') | date:'short'}}</span>
                     <span class="mb-file-actions">
-                        <span class="mb-actions-edit" ng-click="changePanes('edit')">Edit</span> |
+                        <span class="mb-actions-edit" ng-click="changePanes('edit')">Edit</span>
                         <span class="mb-actions-delete" ng-click="changePanes('delete')">Delete</span>
                     </span>
                 </div>
@@ -93,7 +93,7 @@
             <div class="mb-delete-warning">Are you sure you want to delete {{$parent.selected_file.name}}? This operation CANNOT be undone.</div>
 
             <div class="actions">
-                <button ng-click="$parent.deleteConfirmed()">Delete</button> |
+                <button ng-click="$parent.deleteConfirmed()">Delete</button>
                 <button ng-click="$parent.changePanes('library')">Cancel</button>
             </div>
         </div>

@@ -84,12 +84,13 @@ div.file-search {
 }
 
 .media-browser-pane .media-item.new.selected {
-  background-color: #E3F8EC;
+  background-color: #DFE8BC;
 }
 
 
 .media-browser-pane textarea#media-browser-web {
 	width:95%;
+	min-height: 300px;
 }
 
 .mb-preview,
@@ -110,12 +111,12 @@ div.file-search {
 }
 
 .mb-title {
-  width: 300px;
+  width: 250px;
     word-wrap: break-word;
 }
 
 .mb-filename {
-  width: 200px;
+  width: 250px;
     word-wrap: break-word;
 }
 
@@ -255,10 +256,10 @@ box-shadow: -8px 9px 5px -4px rgba(0,0,0,0.41);
 }
 
 #media-browser-upload-progress {
-  width: 200px;
+  width: 180px;
   position: absolute;
   top: 20%;
-  left: 37%;
+  left: 38%;
 }
 
 .progress-bar-full {
@@ -268,7 +269,7 @@ box-shadow: -8px 9px 5px -4px rgba(0,0,0,0.41);
 }
 
 .progress-bar-completed {
-    background: url('images/loader2.gif') 0 no-repeat;
+    background: url('images/loader3.gif') 0 no-repeat;
   height: 100%;
 
 }
