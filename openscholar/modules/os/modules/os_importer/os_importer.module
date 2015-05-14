@@ -640,7 +640,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   $rows = $parser->parse($iterator);
 
   // Parse file's headers.
-  $header = _os_importer_parse_header($parser, $iterator);
+  $header = _os_importer_parse_header($parser, $iterator, $mappings);
 
   // Check what columns are missing from the uploaded CSV file and display
   // message if needed.
@@ -847,6 +847,19 @@ function os_importer_feeds_presave(FeedsSource $source, $entity, $item) {
   if ($entity->type == "class" && empty($item['year'])) {
     $entity->field_offered_year = array();
   }
+
+  // Get the header values in order to create the vocabularies with the correct
+  // letter casing.
+  $config = $source->importer->getConfig();
+  $mappings = array();
+  foreach ($config['processor']['config']['mappings'] as $mapping) {
+    $mappings[] = $mapping['target'];
+  }
+  $parser = new ParserCSV();
+  $parser->setDelimiter(',');
+  $iterator = new ParserCSVIterator($source->config['FeedsFileFetcher']['source']);
+  $header = _os_importer_parse_header($parser, $iterator, $mappings);
+  $item = array_combine($header, array_values($item));
 
   _os_importer_import_vocab($source, $entity, $item, $id);
   _os_importer_import_behalf_of_user($source, $entity, $item, $id);
