@@ -1,3 +1,3 @@
 (function() {
-  angular.module('cp-files', ['mediaBrowser']);
+  angular.module('cp-files', ['mediaBrowser', 'FileEditorModal']);
 })();
