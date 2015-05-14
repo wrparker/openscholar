@@ -850,16 +850,18 @@ function os_importer_feeds_presave(FeedsSource $source, $entity, $item) {
 
   // Get the header values in order to create the vocabularies with the correct
   // letter casing.
-  $config = $source->importer->getConfig();
-  $mappings = array();
-  foreach ($config['processor']['config']['mappings'] as $mapping) {
-    $mappings[] = $mapping['target'];
+  if ($source->id != 'os_ical') {
+    $config = $source->importer->getConfig();
+    $mappings = array();
+    foreach ($config['processor']['config']['mappings'] as $mapping) {
+      $mappings[] = $mapping['target'];
+    }
+    $parser = new ParserCSV();
+    $parser->setDelimiter(',');
+    $iterator = new ParserCSVIterator($source->config['FeedsFileFetcher']['source']);
+    $header = _os_importer_parse_header($parser, $iterator, $mappings);
+    $item = array_combine($header, array_values($item));
   }
-  $parser = new ParserCSV();
-  $parser->setDelimiter(',');
-  $iterator = new ParserCSVIterator($source->config['FeedsFileFetcher']['source']);
-  $header = _os_importer_parse_header($parser, $iterator, $mappings);
-  $item = array_combine($header, array_values($item));
 
   _os_importer_import_vocab($source, $entity, $item, $id);
   _os_importer_import_behalf_of_user($source, $entity, $item, $id);
