@@ -6,9 +6,10 @@ var taxonomy = angular.module('TaxonomyWidget', ['EntityService', 'os-auth', 'ui
 taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) {
   var path = Drupal.settings.paths.TaxonomyWidget;
   return {
+    restrict: 'E',
     scope: {
-      terms: '=',
-      bundle: '@'
+      terms: "=",
+      bundle: "@"
     },
     templateUrl: path + '/TaxonomyWidget.html',
     link: function (scope, elem, attrs, c, $scope) {
@@ -16,27 +17,14 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
       var vocabService = new EntityService('vocabulary', 'id');
       var termService = new EntityService('taxonomy', 'id');
       scope.allTerms = {};
-      scope.selectedTerms = {};
       scope.termsTree = [];
-
-      // Separate the list of all selected terms by vocab reduces complexity
-      // later.
-      if (scope.terms) {
-        for (var i = 0; i < scope.terms.length; i++) {
-          var term = scope.terms[i];
-          if (scope.selectedTerms[term.vid] == undefined) {
-            scope.selectedTerms[term.vid] = {};
-          }
-
-          scope.selectedTerms[term.vid][term.id] = term.id;
-        }
-      }
+      console.log(scope);
 
       // Any change in the selected term scope will affect the file terms.
       // This can be done thanks to a "Two way binding" implements using the
       // = operator which defined in the isolated scope.
-      scope.$watch('selectedTerms', function() {
-        scope.terms = scope.selectedTerms;
+      scope.$watch('terms', function() {
+        scope.selectedTerms = scope.terms;
       }, true);
 
       // Occurs every time a selected file is changed.
@@ -82,6 +70,7 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
        */
       scope.onSelect = function ($item, $model, $label) {
         scope.selectedTerms[$item.vid][$item.id] = $item.id;
+        scope.terms = scope.selectedTerms;
       };
 
       /**

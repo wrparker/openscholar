@@ -22,6 +22,22 @@
             if (!f) return;
             scope.fileEditAddt = libraryPath+'/file_edit_'+f.type+'.html';
             scope.date = $filter('date')(f.timestamp+'000', 'short');
+            scope.file.terms = (function(terms){
+              if (terms == undefined) {
+                return;
+              }
+
+              var processedTerms = {};
+              for (var i = 0; i < terms.length; i++) {
+                var term = terms[i];
+                if (processedTerms[term.vid] == undefined) {
+                  processedTerms[term.vid] = [];
+                }
+
+                processedTerms[term.vid].push(term);
+              }
+              return processedTerms;
+            })(scope.file.terms);
           });
 
           scope.$watch('date', function (value, old) {
@@ -91,6 +107,7 @@
           }
 
           scope.save = function () {
+            console.log(scope.file);
             fileService.edit(scope.file);
             scope.onClose({saved: true});
           };
