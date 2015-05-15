@@ -156,6 +156,15 @@ class OsFilesResource extends RestfulEntityBase {
   }
 
   /**
+   * Check for group access
+   */
+  public function checkGroupAccess($op) {
+    $account = $this->getAccount();
+
+    return true;
+  }
+
+  /**
    * Filter files by vsite
    */
   protected function queryForListFilter(EntityFieldQuery $query) {
@@ -179,7 +188,7 @@ class OsFilesResource extends RestfulEntityBase {
    * The file could be a straight replacement, and this is where we handle that.
    */
   public function createEntity() {
-    if ($this->checkEntityAccess('create', 'file', NULL) === FALSE) {
+    if ($this->checkEntityAccess('create', 'file', NULL) === FALSE && $this->checkGroupAccess('create') === FALSE) {
       // User does not have access to create entity.
       $params = array('@resource' => $this->getPluginKey('label'));
       throw new RestfulForbiddenException(format_string('You do not have access to create a new @resource resource.', $params));
