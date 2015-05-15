@@ -4,7 +4,7 @@
  * @apiName GetFiles
  * @apiGroup File
  *
- * @apiParam {Number} [vsite=2664]  Optional VSite to retrieve files from
+ * @apiParam {Number} vsite  Optional VSite to retrieve files from
  *
  * @apiSuccess {Object[]} files List of files in the site.
  *
@@ -33,6 +33,103 @@
  *        "terms":null
  *      },...
  *     }
+ */
+
+/**
+ * @api {post} /api/files Save File
+ * @apiName SaveFile
+ * @apiGroup File
+ *
+ * @apiParam {Number} vsite  VSite to save the file to
+ * @apiParam {Object} data  File metadat
+ * @apiParam {Object} files[upload]  File Data
+ *
+ * @apiParamExample {multipart/form-data} Request-Example:
+ *     ------WebKitFormBoundaryXgmJRlIas3M22RWQ
+ *         Content-Disposition: form-data; name="vsite"
+ *         2664
+ *     ------WebKitFormBoundaryXgmJRlIas3M22RWQ
+ *         Content-Disposition: form-data; name="data"
+ *         {"lastModified":1424292767000,"lastModifiedDate":"2015-02-18T20:52:47.000Z","name":"jassleep.jpg","type":"image/jpeg","size":1967014}
+ *     ------WebKitFormBoundaryXgmJRlIas3M22RWQ
+ *         Content-Disposition: form-data; name="files[upload]"; filename="jassleep.jpg"
+ *         Content-Type: image/jpeg
+ *     ------WebKitFormBoundaryXgmJRlIas3M22RWQ--
+ *
+ * @apiSuccess {Object} file The saved file
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data":[
+ *          {
+ *             "id":"330546",
+ *             "label":"jassleep.jpg",
+ *             "self":"http:\/\/staging.scholar.harvard.edu\/api\/v1.0\/files\/330546",
+ *             "size":"1967014",
+ *             "mimetype":"image\/jpeg",
+ *             "url":"http:\/\/staging.scholar.harvard.edu\/files\/rbrandon\/files\/jassleep.jpg",
+ *             "schema":"public",
+ *             "filename":"jassleep.jpg",
+ *             "type":"image",
+ *             "name":"jassleep.jpg",
+ *             "timestamp":"1431716541",
+ *             "description":null,
+ *             "image_alt":null,
+ *             "image_title":null,
+ *             "preview":"<div...preview markup",
+ *             "terms":null
+ *          }
+ *       ],
+ *       "self":{
+ *          "title":"Self",
+ *          "href":"http:\/\/staging.scholar.harvard.edu\/api\/v1.0\/files"
+ *     }
+ *}
+ *
+ */
+
+/**
+ * @api {patch} /api/files/:fid Update a File
+ * @apiName UpdateFile
+ * @apiGroup File
+ *
+ * @apiParam {Number} fid  A files unique ID
+ * @apiParam {Object} file  File Object parameters to save
+ *
+ * @apiParamExample {json} Request-Example:
+ *     {"name":"Jasper Sleeping","description":"My Images Description","image_alt":"Alternate TXT","image_title":"Mouseover"}
+ *
+ * @apiSuccess {Object} file The saved file
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data":[
+ *          {
+ *             "id":"330546",
+ *             "label":"jassleep.jpg",
+ *             "self":"http:\/\/staging.scholar.harvard.edu\/api\/v1.0\/files\/330546",
+ *             "size":"1967014",
+ *             "mimetype":"image\/jpeg",
+ *             "url":"http:\/\/staging.scholar.harvard.edu\/files\/rbrandon\/files\/jassleep.jpg",
+ *             "schema":"public",
+ *             "filename":"jassleep.jpg",
+ *             "type":"image",
+ *             "name":"jassleep.jpg",
+ *             "timestamp":"1431716541",
+ *             "description":null,
+ *             "image_alt":null,
+ *             "image_title":null,
+ *             "preview":"<div...preview markup",
+ *             "terms":null
+ *          }
+ *       ],
+ *       "self":{
+ *          "title":"Self",
+ *          "href":"http:\/\/staging.scholar.harvard.edu\/api\/v1.0\/files"
+ *     }
+ *}
  *
  */
 class OsFilesResource extends RestfulEntityBase {
