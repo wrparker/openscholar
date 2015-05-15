@@ -1,5 +1,40 @@
 <?php
-
+/**
+ * @api {get} /api/files Request Site Files
+ * @apiName GetFiles
+ * @apiGroup File
+ *
+ * @apiParam {Number} [vsite=2664]  Optional VSite to retrieve files from
+ *
+ * @apiSuccess {Object[]} files List of files in the site.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       {
+ *        "id":75061,
+ *        "label":"Image One",
+ *        "self":"http://staging.scholar.harvard.edu/api/v1.0/files/75061",
+ *        "size":"37466",
+ *         "mimetype":"image/jpeg",
+ *        "url":"http://staging.scholar.harvard.edu/files/rbrandon/files/cafu1.jpg",
+ *        "schema":"public",
+ *        "filename":"cafu1.jpg",
+ *        "type":"image",
+ *        "name":"Image One",
+ *        "timestamp":"1360044636",
+ *        "description":null,
+ *        "image_alt":'alt text',
+ *        "image_title":null,
+ *        "preview":"
+ *        img1
+ *        img1 (cafu1.jpg)
+ *        ",
+ *        "terms":null
+ *      },...
+ *     }
+ *
+ */
 class OsFilesResource extends RestfulEntityBase {
 
   /**
