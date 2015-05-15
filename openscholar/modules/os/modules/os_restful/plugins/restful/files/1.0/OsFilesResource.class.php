@@ -308,11 +308,25 @@ class OsFilesResource extends RestfulEntityBase {
       $vsite = $file->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id'];
     }
 
-    if ($space = spaces_load('og', $vsite)) {
-      return spaces_access_admin_perms()
+    $permission = '';
+    switch ($op) {
+      case 'create':
+        $permission = 'create files';
+        break;
+      case 'update':
+      case 'edit':
+        $permission = 'edit any files';
+        break;
+      case 'delete':
+        $permission = 'delete any files';
+        break;
     }
 
-    return true;
+    if ($permission && $vsite) {
+      return og_user_access('node', $vsite, $permission, $account);
+    }
+
+    return false;
   }
 
   /**
