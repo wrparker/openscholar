@@ -53,44 +53,49 @@ div.file-search {
   width: auto;
 }
 
-.media-row .mb-preview .file-image .content {
+.media-row .media-thumbnail {
   width: 50px;
   height: 50px;
 }
 
-.media-browser-pane .media-item {
+.media-browser-pane .media-row {
   background: #FFFFFF;
   border: none;
   width: auto;
+  padding: 5px 0 5px 5px;
 }
 
-.media-browser-pane .media-item:nth-child(odd) {
+.media-browser-pane .media-row:nth-child(odd) {
   background: #EFEFEF;
   border: 1px solid #EFEFEF;
 }
 
-.media-browser-pane .media-item:nth-child(even) {
+.media-browser-pane .media-row:nth-child(even) {
   background: #FFF;
    border: 1px solid #FFF;
 }
 
-.media-browser-pane .media-item:hover {
+.media-browser-pane .media-row:hover {
   background: #e1e1e1;
 }
 
-.media-browser-pane .media-item.selected {
+.media-browser-pane .media-row.selected {
   background-color: #D1D6E2;
   border: 1px solid #999;
 }
 
-.media-browser-pane .media-item.new.selected {
+.media-browser-pane .media-row.new.selected {
   background-color: #DFE8BC;
 }
 
-
+.media-browser-pane textarea#fe-file-description,
 .media-browser-pane textarea#media-browser-web {
 	width:95%;
 	min-height: 300px;
+}
+
+.media-browser-pane textarea#fe-file-description {
+	min-height: 100px;
 }
 
 .mb-preview,
@@ -100,6 +105,10 @@ div.file-search {
 .mb-file-actions {
   display: inline-block;
   vertical-align: middle;
+}
+
+.media-browser-pane .results {
+  margin-bottom: 12px;
 }
 
 #mb-library-header {
@@ -164,25 +173,12 @@ div.file-search {
 	text-decoration:underline;
 }
 
-#file-edit-section .control button {
+div[file-edit] .control button {
 	margin-right: 0 !important;
 }
 
-#file-edit-section {
-  position: absolute;
-  width: 300px;
-  top: 80px;
-  bottom: 42px;
-  right: 18px;
-  overflow: auto;
-  background-color: white;
-  border: 1px solid lightgray;
-  border-radius: 3px;
-  padding: 10px;
-  display: none;
-}
 
-#file-edit-section.open {
+div[file-edit].open {
   display: block;
   width: 70%;
   -webkit-box-shadow: -8px 9px 5px -4px rgba(0,0,0,0.41);
@@ -190,12 +186,12 @@ div.file-search {
 box-shadow: -8px 9px 5px -4px rgba(0,0,0,0.41);
 }
 
-#file-edit-section input {
+div[file-edit] input {
   margin-bottom: 1em;
-  width: 80%;
+  width: 95%;
 }
 
-#file-edit-section button {
+div[file-edit] button {
   padding: 3px 5px;
 }
 
@@ -226,11 +222,11 @@ width: 110px;
   display: block;
 }
 
-#file-edit-section .fe-warning ~ .control {
+div[file-edit] .fe-warning ~ .control {
 display:none;
 }
 
-#file-edit-section .fe-warning.ng-hide ~ .control {
+div[file-edit] .fe-warning.ng-hide ~ .control {
 display:block;
 }
 
