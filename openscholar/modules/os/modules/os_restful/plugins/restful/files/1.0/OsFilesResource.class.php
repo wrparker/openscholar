@@ -158,8 +158,27 @@ class OsFilesResource extends RestfulEntityBase {
   /**
    * Check for group access
    */
-  public function checkGroupAccess($op) {
+  public function checkGroupAccess($op, $file = null) {
     $account = $this->getAccount();
+
+    $vsite = null;
+    if ($this->request['vsite']) {
+      $vsite = $this->request['vsite'];
+    }
+    elseif ($file == null) {
+      return FALSE;
+    }
+    elseif (is_a($file, EntityDrupalWrapper)) {
+      $value = $file->{OG_AUDIENCE_FIELD}->value();
+      $vsite = $value['target_id'];
+    }
+    elseif (is_object($file)) {
+      $vsite = $file->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id'];
+    }
+
+    if ($space = spaces_load('og', $vsite)) {
+      return spaces_access_admin_perms()
+    }
 
     return true;
   }
