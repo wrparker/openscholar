@@ -29,16 +29,17 @@
           web: true,
           upload: true,
           library: true
-        },
-        allowedTypes: {
-          image: true,
-          video: true,
-          audio: true,
-          executable: true,
-          document: true
         }
       },
-      onSelect: angular.noop
+      onSelect: angular.noop,
+      types: {
+        image: 'image',
+        video: 'video',
+        audio: 'audio',
+        executable: 'executable',
+        document: 'document',
+        html: 'html'
+      }
     };
 
     return params;
@@ -126,9 +127,19 @@
       $scope.extensions = params.file_extensions.split(' ');
     }
     if (!params.override_extensions) {
-      var types = params.browser.allowedTypes;
+      var types = params.types;
+      console.log(types);
       for (var t in types) {
-        $scope.extensions = $scope.extensions.concat(Drupal.settings.extensionMap[types[t]]);
+        var ext = Drupal.settings.extensionMap[types[t]],
+          i = 0, l = ext ? ext.length : false;
+
+        if (!ext) continue;
+
+        for (var i=0; i<l; i++) {
+          if ($scope.extensions.indexOf(ext[i]) === -1) {
+            $scope.extensions.push(ext[i]);
+          }
+        }
       }
     }
     $scope.extensions.sort();
