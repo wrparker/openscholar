@@ -2122,4 +2122,11 @@ class FeatureContext extends DrupalContext {
     }
   }
 
+  /**
+   * @Given /^I logout$/
+   */
+  public function iLogout() {
+    $this->visit('user/logout');
+  }
+
 }

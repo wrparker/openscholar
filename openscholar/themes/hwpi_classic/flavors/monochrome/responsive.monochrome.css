@@ -6,13 +6,18 @@ background-color: #FFF;
 }
 
 .region-header-third ul.nice-menu a {
-color: #215990 !important;
+color: #FFF !important;
 }
 
 
 .region-header-third .os-custom-menu li, .region-header-third #block-os-secondary-menu li {
 border-top: 1px solid #f4f4f4 !important;
 
+}
+
+.region-header-third #block-os-secondary-menu.opened, 
+.region-header-third .os-custom-menu.opened {
+background-color: #8C8179;
 }
 
 
@@ -65,7 +70,7 @@ background-position: 0 -493px;
 }
 
 .link-count-mobi-search a {
-    background-color: #8996A0;
+    background-color: #A51C30;
 }
 
 .mobi-util a {
