@@ -3,7 +3,7 @@
 class BiblioNodeRestfulBase extends OsNodeRestfulBase {
 
   /**
-   * @api {get} /biblio/:id Get
+   * @api {get} api/biblio/:id Get
    * @apiVersion 0.1.0
    * @apiName Get
    * @apiGroup Publication
@@ -30,7 +30,7 @@ class BiblioNodeRestfulBase extends OsNodeRestfulBase {
   }
 
   /**
-   * @api {post} /biblio Post
+   * @api {post} api/biblio Post
    * @apiVersion 0.1.0
    * @apiName Post
    * @apiGroup Publication
@@ -53,7 +53,7 @@ class BiblioNodeRestfulBase extends OsNodeRestfulBase {
   }
 
   /**
-   * @api {delete} /biblio/:id Delete
+   * @api {delete} api/biblio/:id Delete
    * @apiVersion 0.1.0
    * @apiName Delete
    * @apiGroup Publication
@@ -76,7 +76,7 @@ class BiblioNodeRestfulBase extends OsNodeRestfulBase {
   }
 
   /**
-   * @api {patch} /biblio/:id Patch
+   * @api {patch} api/biblio/:id Patch
    * @apiVersion 0.1.0
    * @apiName Patch
    * @apiGroup Publication
