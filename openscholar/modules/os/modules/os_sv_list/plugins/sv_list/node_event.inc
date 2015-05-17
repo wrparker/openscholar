@@ -156,6 +156,17 @@ class sv_list_node_event extends sv_list_plugin  {
     }
   }
 
+  /**
+   * Get the number of query results for the plugin.
+   *
+   * In case of events we need this number of results to determine if the "more"
+   * link should be displayed. This is because repeated events are counted only
+   * once when counting node IDs, and this can cause the link to not be showed
+   * when it actually should.
+   *
+   * @return int
+   *   Number of query results.
+   */
   public function get_number_of_results() {
     return count($this->query->ordered_results);
   }
