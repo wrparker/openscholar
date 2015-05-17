@@ -32,6 +32,17 @@ function os_importer_feeds_plugins() {
       'path' => drupal_get_path('module', 'os_importer') . '/plugins',
     ),
   );
+  $info['OsFeedsCSVParser'] = array(
+    'name' => t('OS importer CSV parser'),
+    'description' => t('Parses a given file as a CSV file.'),
+    'help' => t('Parse data in Comma Separated Value format.'),
+    'handler' => array(
+      'parent' => 'FeedsCSVParser',
+      'class' => 'OsFeedsCSVParser',
+      'file' => 'OsFeedsCSVParser.inc',
+      'path' => drupal_get_path('module', 'os_importer') . '/plugins',
+    ),
+  );
   return $info;
 }
 
@@ -617,7 +628,6 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   // Get the mappings of the current importer.
   $mappings_diff = array();
   $mappings = array();
-  $target_to_source = array();
   foreach ($config['processor']['config']['mappings'] as $mapping) {
     $mappings_diff[] = strtolower($mapping['source']);
     $mappings[] = $mapping['target'];
@@ -846,21 +856,6 @@ function os_importer_feeds_presave(FeedsSource $source, $entity, $item) {
   // given by the date module from the entity.
   if ($entity->type == "class" && empty($item['year'])) {
     $entity->field_offered_year = array();
-  }
-
-  // Get the header values in order to create the vocabularies with the correct
-  // letter casing.
-  if ($source->id != 'os_ical') {
-    $config = $source->importer->getConfig();
-    $mappings = array();
-    foreach ($config['processor']['config']['mappings'] as $mapping) {
-      $mappings[] = $mapping['target'];
-    }
-    $parser = new ParserCSV();
-    $parser->setDelimiter(',');
-    $iterator = new ParserCSVIterator($source->config['FeedsFileFetcher']['source']);
-    $header = _os_importer_parse_header($parser, $iterator, $mappings);
-    $item = array_combine($header, array_values($item));
   }
 
   _os_importer_import_vocab($source, $entity, $item, $id);

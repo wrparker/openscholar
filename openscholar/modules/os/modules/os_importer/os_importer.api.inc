@@ -17,7 +17,7 @@ function _os_importer_parse_header(ParserCSV $parser, ParserCSVIterator $iterato
   }
   $header = array_shift($rows);
   foreach ($header as $i => $title) {
-    $header[$i] = $i < count($mappings) ? trim(drupal_strtolower($title)) : trim($title);
+    $header[$i] = trim(drupal_strtolower($title));
   }
   return $header;
 }
