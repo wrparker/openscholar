@@ -517,7 +517,7 @@ function _cp_appearance_theme_screenshot_item($theme, &$form) {
       'item-theme-picker',
       $status_class,
     ),
-    'id' => 'theme-' . str_replace('_', '-', $theme->name),
+    'id' => 'theme-' . str_replace('_', '-flavor-', $theme->name),
     'data' => theme('cp-appearance-theme-item', array(
       'info' => $info,
       'sub_theme' => $subtheme_select_list,
