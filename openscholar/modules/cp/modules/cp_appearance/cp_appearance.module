@@ -155,11 +155,13 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
     // Adds this theme to the radio options.
     $info = $theme->info;
     $info['theme_name'] = $theme->name;
-    $radio_options[$info['theme_name']] = $info['theme_name'];
-    $themes_sorted[$info['theme_name']] = $theme;
 
     //Flavors is not shown for the featured themes
-    if (!in_array($theme->name, $featured_themes)) {
+    if (!in_array($theme->name, $featured_themes) || !count(os_theme_get_flavors($info['theme_name']))) {
+      //Add this theme to the list of theme options.
+      $radio_options[$info['theme_name']] = $info['theme_name'];
+      $themes_sorted[$info['theme_name']] = $theme;
+
       // Only continues if this theme has flavors.
       $theme_flavors = os_theme_get_flavors($info['theme_name']);
       $flavor_options = _cp_appearance_get_flavor_options($theme_flavors, $info, $default_flavor);
@@ -182,6 +184,13 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
       }
     else
     {
+
+      //Add this theme to the list of theme options.
+      $radio_options[$info['theme_name'].'||default'] = $info['theme_name'];
+      $themes_sorted[$info['theme_name'].'||default'] = $theme;
+      $featured_themes[$info['theme_name'].'||default'] = $info['theme_name'].'||default';
+      $theme->info['theme_flavor_name'] = $info['name'].' - '.$info['flavor_name'];
+
       $flavors = os_theme_get_flavors($info['theme_name']);
        foreach ($flavors as $flavor_name => $flav) {
         $flavor_theme = (object)array(
@@ -198,19 +207,17 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
           'prefix' => 'phptemplate',
           'stylesheets' => $theme->stylesheets,
           'engine' => 'phptemplate',
-          'base_theme' => 'hwpi_basetheme'
+          'base_theme' => 'hwpi_basetheme',
+          'is_flavor' => true,  // Indicate that this is a flavor not a full theme.
         );
         $flavor_theme->info['flavor_name'] = $flavor_theme->info['name'];
         $flavor_theme->info['name'] = $info['name'];
         $flavor_theme->info['theme_flavor_name'] = $flavor_theme->info['name'].' - '.$flavor_theme->info['flavor_name'];
 
         $flavor_theme->info['screenshot'] = $flav['path'].'/screenshot.png';
-        $featured_themes[$flavor_name] = $flavor_name;
-        $themes_sorted[$flavor_name] = $flavor_theme;
-      }
-      if (!empty($flavors))
-      {
-        $theme->info['theme_flavor_name'] = $info['name'].' - '.$info['flavor_name'];
+        $featured_themes[$info['theme_name'].'||'.$flavor_name] = $info['theme_name'].'||'.$flavor_name;
+        $themes_sorted[$info['theme_name'].'||'.$flavor_name] = $flavor_theme;
+        $radio_options[$info['theme_name'].'||'.$flavor_name] = $flavor_theme->info['theme_flavor_name'];
       }
     }
   }
@@ -219,6 +226,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
 
   // Sorts featured themes to the front.
   $current_theme = os_theme_get();
+  $current_flavor = variable_get('os_appearance_'.$current_theme.'_flavor','defualt');
   if (count($featured_themes)) {
     $first_themes = array();
     $other_themes = $themes;
@@ -232,8 +240,8 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
 
   // Moves default theme to the front of the array.
   if (!empty($first_themes)) {
-    if (isset($first_themes[$current_theme])) {
-      $current_theme = _cp_appearance_move_option_to_front($first_themes, $current_theme);
+    if (isset($first_themes[$current_theme.'||'.$current_flavor])) {
+      $current_theme = _cp_appearance_move_option_to_front($first_themes, $current_theme.'||'.$current_flavor);
     }
     elseif (isset($other_themes[$current_theme])) {
       $current_theme = _cp_appearance_move_option_to_front($other_themes, $current_theme);
@@ -298,6 +306,12 @@ function cp_appearance_theme_picker_form_validate($form, &$form_state){
   }
 
   $theme_default = $form_state['values']['theme_default'];
+  list($theme_default,$flavor) = explode("||", $theme_default, 2);
+  if ($flavor) {
+    $form_state['values']["os_appearance_" . $theme_default . "_flavor"] = $flavor;
+    $form_state['values']['theme_default'] = $theme_default;
+  }
+
   foreach ( $form_state['values'] as $key => $value ) {
     //No need to save all the default flavor variables
     if ($key != "os_appearance_" . $theme_default . "_flavor" && substr($key, 0, 14) == "os_appearance_" && substr($key, - 7) == "_flavor") {
