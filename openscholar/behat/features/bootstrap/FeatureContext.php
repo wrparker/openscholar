@@ -2062,4 +2062,23 @@ class FeatureContext extends DrupalContext {
     }
   }
 
+  // Media Browser functions
+  /**
+   * @When /I wait "([^"]*)" for the media browser to open/
+   */
+  public function iWaitForTheMediaBrowserToOpen($time) {
+    $timestamp = strtotime($time);
+    $this->iSleepFor($timestamp);
+    if (!$elem = $this->find('.ui-dialog.media-wrapper') || !$this->find('.ui-dialog.media-wrapper .media-browser-panes')) {
+      throw new Exception('The media browser failed to open.');
+    }
+  }
+
+  /**
+   * @Then /I should see the media browser/
+   */
+  public function iShouldSeeTheMediaBrowser() {
+
+  }
+
 }
