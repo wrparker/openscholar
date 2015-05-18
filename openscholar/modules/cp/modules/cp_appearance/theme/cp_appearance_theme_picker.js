@@ -16,8 +16,7 @@
           $(this).addClass('checked');
         }
 
-        var $theme_name =  $(this).attr('id').substr($(this).attr('id').lastIndexOf("-flavor-"));
-        $("#edit-theme-default-" + $(this).attr('id').replace($theme_name, "").substr(6)).attr("checked", "checked").change();
+        $("#edit-theme-default-" + $(this).attr('id').substr(6)).attr("checked", "checked").change();
       });
 
       /**
