@@ -315,9 +315,6 @@ function cp_appearance_theme_picker_form_validate($form, &$form_state){
     $form_state['values']["os_appearance_" . $theme_default . "_flavor"] = $flavor;
     $form_state['values']['theme_default'] = $theme_default;
   }
-    dpm($theme_default);
-    dpm($form_state['values']['theme_default']);
-
 
   foreach ( $form_state['values'] as $key => $value ) {
     //No need to save all the default flavor variables
