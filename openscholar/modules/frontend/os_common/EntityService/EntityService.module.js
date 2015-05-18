@@ -94,7 +94,6 @@
           // rest API call to add entity to server
           $http.post(restPath + '/' + entityType, entity)
             .success(function (resp) {
-              console.log(resp);
               var entity = resp.data[0];
               ents.push(entity);
 
@@ -113,7 +112,6 @@
 
           $http.patch(url.join('/'), data)
             .success(function (resp) {
-              console.log(resp);
               var entity = resp.data[0];
 
               ents.splice(k, 1, entity);

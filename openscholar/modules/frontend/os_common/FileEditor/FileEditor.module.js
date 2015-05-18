@@ -107,7 +107,6 @@
           }
 
           scope.save = function () {
-            console.log(scope.file);
             fileService.edit(scope.file);
             scope.onClose({saved: true});
           };
