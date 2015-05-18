@@ -311,7 +311,7 @@ function cp_appearance_theme_picker_form_validate($form, &$form_state){
     list($theme_default, $flavor) = $theme_items;
   }
 
-  if ($flavor) {
+  if (isset($flavor)) {
     $form_state['values']["os_appearance_" . $theme_default . "_flavor"] = $flavor;
     $form_state['values']['theme_default'] = $theme_default;
   }
