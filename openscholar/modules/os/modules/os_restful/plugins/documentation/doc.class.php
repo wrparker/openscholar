@@ -2,10 +2,10 @@
 
 abstract class documentation {
   /**
-   * @api {get} api/session/token Basic
+   * @api {get} api/session/token X CSRF token
    * @apiVersion 0.1.0
    * @apiName Basic
-   * @apiGroup Authentication
+   * @apiGroup Basic
    *
    * @apiDescription
    * When running a REST request inside a Drupal installation RESTful will
@@ -25,7 +25,7 @@ abstract class documentation {
    * @api {get} api/login-token Access Token
    * @apiVersion 0.1.0
    * @apiName Access token
-   * @apiGroup Authentication
+   * @apiGroup Basic
    *
    * @apiDescription
    * Access token uses us for request which done outside the Drupal installation.
@@ -82,22 +82,9 @@ abstract class documentation {
    * @apiGroup Basic
    *
    * @apiDescription
-   * Access token uses us for request which done outside the Drupal installation.
-   * A good example will be a mobile application try to access content which not
-   * accessible to anonymous users. Since the request is done outside the Drupal
-   * installation we need a way to verify which user involve in the request.
+   * One of RESTful good features is the API discovery.
    *
-   * In the example you can see how a request to get the access token is done
-   * using Angular JS. Once the request succeeded you will get back a JSON with
-   * three important parameters:
-   * * `access_token` will keep the access token that you can use in order to make a
-   * successful rest request.
-   * * `expires_in` define for how many times the access token is valid. Usually for
-   * one day.
-   * * `refresh_token` will used you to get a new access token once the previous has
-   * expired.
-   *
-   * @apiSampleRequest api
+   * @apiSampleRequest api/
    */
   abstract public function endpoints();
 }
