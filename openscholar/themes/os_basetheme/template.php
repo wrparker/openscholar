@@ -221,6 +221,12 @@ function os_basetheme_preprocess_node(&$vars) {
         $vars['title_prefix']['#suffix'] = '<div class="toggle">' . $vars['title_prefix']['#suffix'] . '</div>';
       }
     }
+
+  }
+
+  // Show the body last in a presentation.
+  if ($vars['type'] == 'presentation' && $vars['view_mode'] == 'full') {
+    $vars['content']['body']['#weight'] = 999;
   }
 }
 
