@@ -15,10 +15,7 @@
           // Adds the class to this one.
           $(this).addClass('checked');
         }
-
-       // $("#edit-theme-default-" + $(this).attr('id').substr(6)).attr("checked", "checked").change();
-          var $theme_name =  $(this).attr('id').substr($(this).attr('id').lastIndexOf("-flavor-"));
-          $("#edit-theme-default-" + $(this).attr('id').replace($theme_name, "").substr(6)).attr("checked", "checked").change();
+        $("#edit-theme-default-" + $(this).attr('id').substr(6)).attr("checked", "checked").change();
       });
 
       /**

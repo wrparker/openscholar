@@ -144,7 +144,7 @@ ul.theme-picker li.checked h3,
   }
 
 form#cp-appearance-theme-picker-form div.form-radios {
-  display:none;
+  display:inline;
 }
 
 #cp-appearance-theme-picker-form  {
