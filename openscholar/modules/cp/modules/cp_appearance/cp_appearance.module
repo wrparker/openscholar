@@ -186,16 +186,17 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
     {
 
       //Add this theme to the list of theme options.
-      $radio_options[$info['theme_name'].'||default'] = $info['theme_name'];
-      $themes_sorted[$info['theme_name'].'||default'] = $theme;
-      $featured_themes[$info['theme_name'].'||default'] = $info['theme_name'].'||default';
+      $radio_options[$info['theme_name'].'-os_featured_flavor-default'] = $info['theme_name'];
+      $theme->name = $info['theme_name'].'-os_featured_flavor-default';
+      $themes_sorted[$info['theme_name'].'-os_featured_flavor-default'] = $theme;
+      $featured_themes[$info['theme_name'].'-os_featured_flavor-default'] = $info['theme_name'].'-os_featured_flavor-default';
       $theme->info['theme_flavor_name'] = $info['name'].' - '.$info['flavor_name'];
 
       $flavors = os_theme_get_flavors($info['theme_name']);
        foreach ($flavors as $flavor_name => $flav) {
         $flavor_theme = (object)array(
           'filename' => $flav['path'].'/'.$flav['file'],
-          'name' => $flavor_name,
+          'name' => $info['theme_name'].'-os_featured_flavor-'.$flavor_name,
           'type' => 'theme',
           'owner' => 'themes/engines/phptemplate/phptemplate.engine',
           'status' => '1',
@@ -215,9 +216,9 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
         $flavor_theme->info['theme_flavor_name'] = $flavor_theme->info['name'].' - '.$flavor_theme->info['flavor_name'];
 
         $flavor_theme->info['screenshot'] = $flav['path'].'/screenshot.png';
-        $featured_themes[$info['theme_name'].'||'.$flavor_name] = $info['theme_name'].'||'.$flavor_name;
-        $themes_sorted[$info['theme_name'].'||'.$flavor_name] = $flavor_theme;
-        $radio_options[$info['theme_name'].'||'.$flavor_name] = $flavor_theme->info['theme_flavor_name'];
+        $featured_themes[$info['theme_name'].'-os_featured_flavor-'.$flavor_name] = $info['theme_name'].'-os_featured_flavor-'.$flavor_name;
+        $themes_sorted[$info['theme_name'].'-os_featured_flavor-'.$flavor_name] = $flavor_theme;
+        $radio_options[$info['theme_name'].'-os_featured_flavor-'.$flavor_name] = $flavor_theme->info['theme_flavor_name'];
       }
     }
   }
@@ -240,8 +241,8 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
 
   // Moves default theme to the front of the array.
   if (!empty($first_themes)) {
-    if (isset($first_themes[$current_theme.'||'.$current_flavor])) {
-      $current_theme = _cp_appearance_move_option_to_front($first_themes, $current_theme.'||'.$current_flavor);
+    if (isset($first_themes[$current_theme.'-os_featured_flavor-'.$current_flavor])) {
+      $current_theme = _cp_appearance_move_option_to_front($first_themes, $current_theme.'-os_featured_flavor-'.$current_flavor);
     }
     elseif (isset($other_themes[$current_theme])) {
       $current_theme = _cp_appearance_move_option_to_front($other_themes, $current_theme);
@@ -306,7 +307,7 @@ function cp_appearance_theme_picker_form_validate($form, &$form_state){
   }
 
   $theme_default = $form_state['values']['theme_default'];
-  $theme_items = explode("||", $theme_default, 2);
+  $theme_items = explode("-os_featured_flavor-", $theme_default, 2);
   if(count($theme_items) > 1) {
     list($theme_default, $flavor) = $theme_items;
   }
