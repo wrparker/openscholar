@@ -20,6 +20,7 @@ env:
   - TEST_SUITE=taxonomy
   - TEST_SUITE=vsite
   - TEST_SUITE=widgets
+  - TEST_SUITE=media_browser ; PROFILE=phantomjs
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
@@ -131,10 +132,7 @@ script:
   # Run phantomJs.
   - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
 
-  # Run protractor
-  - protractor ~/protractor.conf.js
-
-  - ./bin/behat --tags=$TEST_SUITE
+  - if $PROFILE ; then ./bin/behat -p $PROFILE --tags=$TEST_SUITE else ./bin/behat --tags=%TEST_SUITE
 
 after_script:
   - sudo cat /var/log/apache2/error.log
