@@ -15,6 +15,7 @@
           // Adds the class to this one.
           $(this).addClass('checked');
         }
+
         $("#edit-theme-default-" + $(this).attr('id').substr(6)).attr("checked", "checked").change();
       });
 

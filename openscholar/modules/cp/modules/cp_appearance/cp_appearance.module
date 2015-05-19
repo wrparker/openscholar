@@ -184,12 +184,12 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
       }
     else
     {
+
       //Add this theme to the list of theme options.
+      $radio_options[$info['theme_name'].'||default'] = $info['theme_name'];
       $themes_sorted[$info['theme_name'].'||default'] = $theme;
       $featured_themes[$info['theme_name'].'||default'] = $info['theme_name'].'||default';
       $theme->info['theme_flavor_name'] = $info['name'].' - '.$info['flavor_name'];
-
-      $radio_options[$info['theme_name']] = $info['theme_name'];
 
       $flavors = os_theme_get_flavors($info['theme_name']);
        foreach ($flavors as $flavor_name => $flav) {
@@ -217,7 +217,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
         $flavor_theme->info['screenshot'] = $flav['path'].'/screenshot.png';
         $featured_themes[$info['theme_name'].'||'.$flavor_name] = $info['theme_name'].'||'.$flavor_name;
         $themes_sorted[$info['theme_name'].'||'.$flavor_name] = $flavor_theme;
-        $radio_options[$info['theme_name'].'||-'.$flavor_theme->info['flavor_name']] = $info['theme_name'].'-'.$flavor_theme->info['flavor_name'];
+        $radio_options[$info['theme_name'].'||'.$flavor_name] = $flavor_theme->info['theme_flavor_name'];
       }
     }
   }
@@ -304,15 +304,16 @@ function cp_appearance_theme_picker_form_validate($form, &$form_state){
   if ($op == t('Reset to defaults')) {
     return;
   }
+
   $theme_default = $form_state['values']['theme_default'];
-  $theme_items = explode("||-", $theme_default, 2);
+  $theme_items = explode("||", $theme_default, 2);
   if(count($theme_items) > 1) {
     list($theme_default, $flavor) = $theme_items;
   }
 
   if (isset($flavor)) {
-    $form_state['values']["os_appearance_" . $theme_default . "_flavor"] = 'default';
-    $form_state['values']['theme_default'] = $theme_default.'||-'.$flavor;
+    $form_state['values']["os_appearance_" . $theme_default . "_flavor"] = $flavor;
+    $form_state['values']['theme_default'] = $theme_default;
   }
 
   foreach ( $form_state['values'] as $key => $value ) {
@@ -438,7 +439,6 @@ function theme_cp_appearance_theme_picker_form($variables) {
         )),
       );
     }
-
 
     $variables = array(
       'items' => $items,
