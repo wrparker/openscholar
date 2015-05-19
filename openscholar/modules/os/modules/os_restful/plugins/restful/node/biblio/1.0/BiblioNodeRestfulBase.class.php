@@ -15,8 +15,14 @@ class BiblioNodeRestfulBase extends OsNodeRestfulBase {
    * @apiSuccess {Number}   id        The publication ID.
    * @apiSuccess {String}   label     Registration Date.
    * @apiSuccess {Object}   vsite     The vsite object.
+   * @apiSuccess {String}   vsite.title     Group name.
+   * @apiSuccess {Integer}  vsite.id        Group ID.
    * @apiSuccess {string}   body      The body of the publication.
-   * @apiSuccess {Object[]} files     The attached files.
+   * @apiSuccess {Integer}  files.fid       file ID.
+   * @apiSuccess {Integer}  files.filemime  Mime type.
+   * @apiSuccess {Integer}  files.name      File name.
+   * @apiSuccess {Integer}  files.uri       Uniform Resource Identifier.
+   * @apiSuccess {Integer}  files.url       The address url.
    * @apiSuccess {Integer}  type      The publication type ID.
    */
   public function publicFieldsInfo() {
@@ -41,7 +47,6 @@ class BiblioNodeRestfulBase extends OsNodeRestfulBase {
    *
    * @apiSampleRequest off
    *
-   * @apiSuccess {Number}   id        The publication ID.
    * @apiSuccess {String}   label     Registration Date.
    * @apiSuccess {Integer}  vsite     The vsite ID.
    * @apiSuccess {string}   body      The body of the publication.
@@ -63,13 +68,6 @@ class BiblioNodeRestfulBase extends OsNodeRestfulBase {
    * @apiParam {Number} id The publication ID
    *
    * @apiSampleRequest off
-   *
-   * @apiSuccess {Number}   id        The publication ID.
-   * @apiSuccess {String}   label     Registration Date.
-   * @apiSuccess {Integer}  vsite     The vsite ID.
-   * @apiSuccess {string}   body      The body of the publication.
-   * @apiSuccess {Integer[]} files    List of file IDs.
-   * @apiSuccess {Integer}  type      The publication type ID.
    */
   public function deleteEntity($entity_id) {
     parent::deleteEntity($entity_id);
@@ -87,7 +85,6 @@ class BiblioNodeRestfulBase extends OsNodeRestfulBase {
    *
    * @apiSampleRequest off
    *
-   * @apiSuccess {Number}   id        The publication ID.
    * @apiSuccess {String}   label     Registration Date.
    * @apiSuccess {Integer}  vsite     The vsite ID.
    * @apiSuccess {string}   body      The body of the publication.
