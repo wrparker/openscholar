@@ -52,7 +52,6 @@ before_script:
   - npm install -g bower
 
   # Install angular testing utlities
-  - npm install -g protractor
 
   # Set up the lincoln virtual domain.
   - sudo service apache2 restart
