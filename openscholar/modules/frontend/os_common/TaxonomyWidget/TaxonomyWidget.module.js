@@ -25,6 +25,9 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
       // = operator which defined in the isolated scope.
       scope.$watch('terms', function() {
         scope.selectedTerms = scope.terms;
+
+        // Find the terms which appear in allTerms and not in selectedTerms and
+        // push them to selectAllTerms.
       }, true);
 
       // Occurs every time a selected file is changed.
