@@ -1,5 +1,137 @@
 <?php
+/**
+ * @api {get} /api/files Request Site Files
+ * @apiName GetFiles
+ * @apiGroup File
+ *
+ * @apiParam {Number} vsite  Optional VSite to retrieve files from
+ *
+ * @apiSuccess {Object[]} files List of files in the site.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       {
+ *        "id":75061,
+ *        "label":"Image One",
+ *        "self":"http://staging.scholar.harvard.edu/api/v1.0/files/75061",
+ *        "size":"37466",
+ *         "mimetype":"image/jpeg",
+ *        "url":"http://staging.scholar.harvard.edu/files/rbrandon/files/cafu1.jpg",
+ *        "schema":"public",
+ *        "filename":"cafu1.jpg",
+ *        "type":"image",
+ *        "name":"Image One",
+ *        "timestamp":"1360044636",
+ *        "description":null,
+ *        "image_alt":'alt text',
+ *        "image_title":null,
+ *        "preview":"
+ *        img1
+ *        img1 (cafu1.jpg)
+ *        ",
+ *        "terms":null
+ *      },...
+ *     }
+ */
 
+/**
+ * @api {post} /api/files Save File
+ * @apiName SaveFile
+ * @apiGroup File
+ *
+ * @apiParam {Number} vsite  VSite to save the file to
+ * @apiParam {Object} data  File metadat
+ * @apiParam {Object} files[upload]  File Data
+ *
+ * @apiParamExample {multipart/form-data} Request-Example:
+ *     ------WebKitFormBoundaryXgmJRlIas3M22RWQ
+ *         Content-Disposition: form-data; name="vsite"
+ *         2664
+ *     ------WebKitFormBoundaryXgmJRlIas3M22RWQ
+ *         Content-Disposition: form-data; name="data"
+ *         {"lastModified":1424292767000,"lastModifiedDate":"2015-02-18T20:52:47.000Z","name":"jassleep.jpg","type":"image/jpeg","size":1967014}
+ *     ------WebKitFormBoundaryXgmJRlIas3M22RWQ
+ *         Content-Disposition: form-data; name="files[upload]"; filename="jassleep.jpg"
+ *         Content-Type: image/jpeg
+ *     ------WebKitFormBoundaryXgmJRlIas3M22RWQ--
+ *
+ * @apiSuccess {Object} file The saved file
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data":[
+ *          {
+ *             "id":"330546",
+ *             "label":"jassleep.jpg",
+ *             "self":"http:\/\/staging.scholar.harvard.edu\/api\/v1.0\/files\/330546",
+ *             "size":"1967014",
+ *             "mimetype":"image\/jpeg",
+ *             "url":"http:\/\/staging.scholar.harvard.edu\/files\/rbrandon\/files\/jassleep.jpg",
+ *             "schema":"public",
+ *             "filename":"jassleep.jpg",
+ *             "type":"image",
+ *             "name":"jassleep.jpg",
+ *             "timestamp":"1431716541",
+ *             "description":null,
+ *             "image_alt":null,
+ *             "image_title":null,
+ *             "preview":"<div...preview markup",
+ *             "terms":null
+ *          }
+ *       ],
+ *       "self":{
+ *          "title":"Self",
+ *          "href":"http:\/\/staging.scholar.harvard.edu\/api\/v1.0\/files"
+ *     }
+ *}
+ *
+ */
+
+/**
+ * @api {patch} /api/files/:fid Update a File
+ * @apiName UpdateFile
+ * @apiGroup File
+ *
+ * @apiParam {Number} fid  A files unique ID
+ * @apiParam {Object} file  File Object parameters to save
+ *
+ * @apiParamExample {json} Request-Example:
+ *     {"name":"Jasper Sleeping","description":"My Images Description","image_alt":"Alternate TXT","image_title":"Mouseover"}
+ *
+ * @apiSuccess {Object} file The saved file
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data":[
+ *          {
+ *             "id":"330546",
+ *             "label":"jassleep.jpg",
+ *             "self":"http:\/\/staging.scholar.harvard.edu\/api\/v1.0\/files\/330546",
+ *             "size":"1967014",
+ *             "mimetype":"image\/jpeg",
+ *             "url":"http:\/\/staging.scholar.harvard.edu\/files\/rbrandon\/files\/jassleep.jpg",
+ *             "schema":"public",
+ *             "filename":"jassleep.jpg",
+ *             "type":"image",
+ *             "name":"jassleep.jpg",
+ *             "timestamp":"1431716541",
+ *             "description":null,
+ *             "image_alt":null,
+ *             "image_title":null,
+ *             "preview":"<div...preview markup",
+ *             "terms":null
+ *          }
+ *       ],
+ *       "self":{
+ *          "title":"Self",
+ *          "href":"http:\/\/staging.scholar.harvard.edu\/api\/v1.0\/files"
+ *     }
+ *}
+ *
+ */
 class OsFilesResource extends RestfulEntityBase {
 
   /**
@@ -157,6 +289,48 @@ class OsFilesResource extends RestfulEntityBase {
   }
 
   /**
+   * Check for group access
+   */
+  public function checkGroupAccess($op, $file = null) {
+    $account = $this->getAccount();
+
+    $vsite = null;
+    if ($this->request['vsite']) {
+      $vsite = $this->request['vsite'];
+    }
+    elseif ($file == null) {
+      return FALSE;
+    }
+    elseif (is_a($file, EntityDrupalWrapper)) {
+      $value = $file->{OG_AUDIENCE_FIELD}->value();
+      $vsite = $value['target_id'];
+    }
+    elseif (is_object($file)) {
+      $vsite = $file->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id'];
+    }
+
+    $permission = '';
+    switch ($op) {
+      case 'create':
+        $permission = 'create files';
+        break;
+      case 'update':
+      case 'edit':
+        $permission = 'edit any files';
+        break;
+      case 'delete':
+        $permission = 'delete any files';
+        break;
+    }
+
+    if ($permission && $vsite) {
+      return og_user_access('node', $vsite, $permission, $account);
+    }
+
+    return false;
+  }
+
+  /**
    * Filter files by vsite
    */
   protected function queryForListFilter(EntityFieldQuery $query) {
@@ -168,6 +342,11 @@ class OsFilesResource extends RestfulEntityBase {
         throw new RestfulBadRequestException(t('No vsite with the id @id', array('@id' => $this->request['vsite'])));
       }
     }
+    // make getting private files explicit
+    // private files currently require PIN authentication before they can even be access checked
+    if (!isset($this->request['private'])) {
+      $query->propertyCondition('uri', 'private://%', 'NOT LIKE');
+    }
   }
 
   /**
@@ -175,7 +354,7 @@ class OsFilesResource extends RestfulEntityBase {
    * The file could be a straight replacement, and this is where we handle that.
    */
   public function createEntity() {
-    if ($this->checkEntityAccess('create', 'file', NULL) === FALSE) {
+    if ($this->checkEntityAccess('create', 'file', NULL) === FALSE && $this->checkGroupAccess('create') === FALSE) {
       // User does not have access to create entity.
       $params = array('@resource' => $this->getPluginKey('label'));
       throw new RestfulForbiddenException(format_string('You do not have access to create a new @resource resource.', $params));

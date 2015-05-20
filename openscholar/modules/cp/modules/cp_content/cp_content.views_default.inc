@@ -755,7 +755,7 @@ function cp_content_views_default_views() {
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['empty'] = TRUE;
-  $handler->display->display_options['header']['area']['content'] = '<div class="cp-controls-wrapper"><ul><li><a href="../../file/add" class="add_new">Add file</a></li></ul></div>';
+  $handler->display->display_options['header']['area']['content'] = '<div class="cp-controls-wrapper"><div class="add_new" mb-open-modal panes="upload,web" types="image,video,audio,document,executable,html">Add file</div></div>';
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   /* Relationship: File Usage: Content */
   $handler->display->display_options['relationships']['file_to_node']['id'] = 'file_to_node';
