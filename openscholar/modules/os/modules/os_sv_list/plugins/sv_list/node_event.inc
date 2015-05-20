@@ -20,28 +20,33 @@ class sv_list_node_event extends sv_list_plugin  {
   public function options_defaults() {
     return array(
       'event_expire' => 'after_event_start',
+      'show' => 'upcoming_events',
     );
   }
 
   public function options_form($options, &$form) {
     $defaults = $this->options_defaults();
 
+    $form['content']['show'] = array(
+      '#type' => 'select',
+      '#title' => 'Show',
+      '#default_value' => !empty($options['show']) ? $options['show'] : $defaults['show'],
+      '#options' => array(
+        'upcoming_events' => 'Upcoming Events',
+        'past_events' => 'Past Events',
+        'all_events' => 'All Events',
+      ),
+    );
+
     // Add a select list when sorting events by event date.
     $form['content']['event_expire'] = array(
       '#type' => 'select',
-      '#title' => 'Events should expire when',
+      '#title' => 'Events should expire',
       '#default_value' => !empty($options['event_expire']) ? $options['event_expire'] : $defaults['event_expire'],
       '#options' => array(
         'after_event_start' => '30 minutes after an event starts',
         'end_of_day' => 'At the end of the day',
         'end_of_event' => 'When the event ends',
-      ),
-      '#states' => array(
-        // Display this field only when the LOP displays events sorted by
-        // event date.
-        'visible' => array(
-          ':input[name="sort_by"]' => array('value' => "sort_event"),
-        ),
       ),
     );
   }
@@ -52,7 +57,10 @@ class sv_list_node_event extends sv_list_plugin  {
    * Adds a custom sort for this entity/bundle
    */
   public function register_sorts() {
-    return array('sort_event' => t('Event Date'));
+    return array(
+      'sort_event_asc' => t('Event Date Ascending (Past to Future)'),
+      'sort_event_desc' => t('Event Date Descending (Future to Past)'),
+    );
   }
 
   /**

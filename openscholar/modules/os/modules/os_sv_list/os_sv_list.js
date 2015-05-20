@@ -93,6 +93,45 @@
             $('#os_sv_list_content_type').change();
           });
 
+          // Handle the "event" content type.
+          if (content_type == 'event') {
+            $('.form-item-show').show();
+            var sort_by = $('#edit-sort-by');
+            var show = $('#edit-show');
+
+            // Show the "expire-event" field when user selects ascending order
+            // for upcoming events or descending order for past events.
+            sort_by.change(function() {
+              var sort_type = $(this).val();
+              var show_type = show.val();
+              showField(sort_type, show_type);
+            });
+            show.change(function() {
+              var sort_type = sort_by.val();
+              var show_type = $(this).val();
+              showField(sort_type, show_type);
+            });
+
+            function showField(sort_type, show_type) {
+              var expire_event = $('.form-item-event-expire');
+              expire_event.hide();
+              if (sort_type == 'sort_event_asc' && show_type == 'upcoming_events') {
+                expire_event.show();
+                expire_event.find('label').text(Drupal.t('Events should expire'));
+              }
+              else if (sort_type == 'sort_event_desc' && show_type == 'past_events') {
+                expire_event.show();
+                expire_event.find('label').text(Drupal.t('Events should appear'));
+              }
+              else {
+                expire_event.hide();
+              }
+            }
+          }
+          else {
+            $('.form-item-event-expire').hide();
+            $('.form-item-show').hide();
+          }
         });
   
         // perform the change callback once now.
@@ -102,7 +141,7 @@
         var content_type = $('#os_sv_list_content_type').val();
         var show_all_checked = $('#biblio_show_all_check').is(':checked') ? true : false;
   
-        });
+      });
 
       // Select2.
       //console.log($('#vocabs', context).find('.form-select:not(.select2-processed)'))
