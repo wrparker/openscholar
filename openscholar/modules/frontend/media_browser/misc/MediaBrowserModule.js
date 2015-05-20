@@ -2,6 +2,49 @@
   var rootPath,
     open = angular.noop;
 
+  function defaultParams() {
+    var params = {
+      dialog: {
+        buttons: {},
+        dialogClass: 'media-wrapper',
+        modal: true,
+        draggable: false,
+        resizable: false,
+        minWidth: 600,
+        width: 800,
+        height: 650,
+        position: 'center',
+        title: undefined,
+        overlay: {
+          backgroundColor: '#000000',
+          opacity: 0.4
+        },
+        zIndex: 10000,
+        close: function (event, ui) {
+          $(event.target).remove();
+        }
+      },
+      browser: {
+        panes: {
+          web: true,
+          upload: true,
+          library: true
+        }
+      },
+      onSelect: angular.noop,
+      types: {
+        image: 'image',
+        video: 'video',
+        audio: 'audio',
+        executable: 'executable',
+        document: 'document',
+        html: 'html'
+      }
+    };
+
+    return params;
+  }
+
   angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'angularFileUpload', 'angularModalService', 'FileEditor', 'mediaBrowser.filters'])
     .config(function (){
        rootPath = Drupal.settings.paths.moduleRoot;
@@ -19,53 +62,16 @@
           modal.element.dialog(params.dialog);
           modal.close.then(function (result) {
             // run the function passed to us
-            if (result) {
+            if (Array.isArray(result)) {
+              if (result.length) {
+                params.onSelect(result);
+              }
+            }
+            else if (result) {
               params.onSelect(result);
             }
           });
         });
-      }
-
-      function defaultParams() {
-        var params = {
-          dialog: {
-            buttons: {},
-            dialogClass: 'media-wrapper',
-            modal: true,
-            draggable: false,
-            resizable: false,
-            minWidth: 600,
-            width: 800,
-            height: 650,
-            position: 'center',
-            title: undefined,
-            overlay: {
-              backgroundColor: '#000000',
-              opacity: 0.4
-            },
-            zIndex: 10000,
-            close: function (event, ui) {
-              $(event.target).remove();
-            }
-          },
-          browser: {
-            panes: {
-              web: true,
-              upload: true,
-              library: true
-            },
-            allowedTypes: {
-              image: true,
-              video: true,
-              audio: true,
-              executable: true,
-              document: true
-            }
-          },
-          onSelect: angular.noop
-        };
-
-        return params;
       }
 
       Drupal.media = Drupal.media || {};
@@ -112,20 +118,37 @@
     $scope.params = params.browser;
     $scope.editing = false;
     $scope.deleting = false;
+    $scope.activePanes = params.browser.panes;
+    $scope.activePanes.edit = true;
+    $scope.activePanes.delete = true;
 
     $scope.extensions = [];
     if (params.file_extensions) {
       $scope.extensions = params.file_extensions.split(' ');
     }
     if (!params.override_extensions) {
-      for (var t in params.types) {
-        $scope.extensions = $scope.extensions.concat(Drupal.settings.extensionMap[params.types[t]]);
+      var types = params.types;
+      console.log(types);
+      for (var t in types) {
+        var ext = Drupal.settings.extensionMap[types[t]],
+          i = 0, l = ext ? ext.length : false;
+
+        if (!ext) continue;
+
+        for (var i=0; i<l; i++) {
+          if ($scope.extensions.indexOf(ext[i]) === -1) {
+            $scope.extensions.push(ext[i]);
+          }
+        }
       }
     }
     $scope.extensions.sort();
 
     if (params.max_filesize) {
       $scope.maxFilesize = params.max_filesize;
+    }
+    else {
+      $scope.maxFilesize = Drupal.settings.maximumFileSize;
     }
 
     $scope.showHelp = false;
@@ -162,7 +185,6 @@
       $scope.files.splice(deleteMe, 1);
     })
 
-
     service.fetch({})
       .then(function (result) {
         console.log(result);
@@ -171,13 +193,23 @@
         $scope.numFiles = $scope.files.length;
       });
 
+    $scope.changePanes = function (pane) {
+      if ($scope.activePanes[pane]) {
+        $scope.pane = pane;
+        return true;
+      }
+      else {
+        close(true);
+      }
+    }
+
     $scope.validate = function($file) {
       var file = $file;
       if (file && file instanceof File) {
         // TODO: Get validating properties from somewhere and check the file against them
 
-        console.log(file);
-        var size = params.max_filesize_raw > file.size,   // file is smaller than max
+        var maxFilesize = params.max_filesize_raw || Drupal.settings.maximumFileSizeRaw;
+        var size = maxFilesize > file.size,   // file is smaller than max
           ext = file.name.slice(file.name.lastIndexOf('.')+1),
           extension = $scope.extensions.indexOf(ext) !== -1,    // extension is found
           id;
@@ -185,7 +217,7 @@
         if (!size) {
           id = $scope.messages.next++;
           $scope.messages[id] = {
-            text: file.name + ' is larger than the maximum filesize of ' + params.max_filesize,
+            text: file.name + ' is larger than the maximum filesize of ' + (params.max_filesize || Drupal.settings.maximumFileSize),
           }
           $timeout(angular.bind($scope, removeMessage, id), 5000);
         }
@@ -201,7 +233,6 @@
           // since we can't force this function to wait, we have to use an onload
           // and check this before uploading
         }
-        console.log($scope.messages);
 
         return size && extension;
       }
@@ -365,11 +396,13 @@
             uploading = false;
             progress = null;
             currentlyUploading = 0;
-            $scope.pane = 'library';
             if (toEditForm) {
               // there's only one file, we can assume it's this one
               $scope.setSelection(e.data[0].id);
-              $scope.editting = true;
+              $scope.changePanes('edit');
+            }
+            else {
+              $scope.changePanes('library');
             }
           }
         });
@@ -393,20 +426,6 @@
       $scope.selected_file = angular.copy(service.get(fid));
     };
 
-    $scope.editMode = function (starting) {
-      $scope.editting = starting;
-      if (starting) {
-        $scope.deleteMode(false);
-      }
-    }
-
-    $scope.deleteMode = function (starting) {
-      $scope.deleting = starting;
-      if (starting) {
-        $scope.editMode(false);
-      }
-    }
-
     // file edit form methods
     $scope.save = function() {
       service.edit($scope.selected_file);
@@ -415,7 +434,7 @@
     $scope.deleteConfirmed = function() {
       service.delete($scope.selected_file)
         .then(function (resp) {
-          $scope.deleting = false;
+          $scope.changePanes('library');
         });
     };
 
@@ -450,9 +469,26 @@
 
     function clickHandler(event) {
       event.preventDefault();
-      console.log(event);
       // get stuff from the element we clicked on and Drupal.settings
-      open({});
+      var elem = event.currentTarget,
+        params = defaultParams(),
+        panes = elem.attributes['panes'].value,
+        types = elem.attributes['types'].value.split(',');
+
+      for (var i in params.browser.panes) {
+        params.browser.panes[i] = (panes.indexOf(i) !== -1);
+      }
+
+      params.browser.allowedTypes = {}
+      for (i=0; i<types.length;i++) {
+        params.browser.allowedTypes[types[i]] = types[i];
+      }
+
+      params.onSelect = function () {
+        window.location.reload();
+      }
+
+      open(params);
     }
 
     return {

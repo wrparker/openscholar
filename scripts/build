@@ -120,9 +120,9 @@ CUR_DIR=$(pwd)
 )
 
 # Get the angualr components
-(
-  cd $BUILD_ROOT/openscholar/client
-  npm install
-  bower install
-  cd -
-)
+#(
+#  cd $BUILD_ROOT/openscholar/client
+#  npm install
+#  bower install
+#  cd -
+#)

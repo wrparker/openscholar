@@ -35,7 +35,7 @@ function media_browser_library_alter(&$libs) {
     return;
   }
 
-  purl_disable(true);
+  $disable = array('alias' => TRUE);
   $path = drupal_get_path('module', 'media_browser');
 
   include_once DRUPAL_ROOT . '/includes/file.mimetypes.inc';
@@ -52,14 +52,15 @@ function media_browser_library_alter(&$libs) {
     array(
       'data' => array(
         'paths' => array(
-          'moduleRoot' => url(drupal_get_path('module', 'media_browser')),
+          'moduleRoot' => url(drupal_get_path('module', 'media_browser'), $disable),
         ),
         'extensionMap' => $map,
+        'maximumFileSize' => ini_get('upload_max_filesize'),
+        'maximumFileSizeRaw' => parse_size(ini_get('upload_max_filesize')),
       ),
       'type' => 'setting',
     )
   );
-  purl_disable(false);
 
   $libs['media_browser']['dependencies'] = array_merge($libs['media_browser']['dependencies'], array(
     array('os_common', 'JSPager'),
