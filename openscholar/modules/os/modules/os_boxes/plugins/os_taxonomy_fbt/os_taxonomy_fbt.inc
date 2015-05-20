@@ -106,10 +106,10 @@ class os_taxonomy_fbt extends os_boxes_default {
     $form['bundles'] = array(
       '#type' => 'select',
       '#title' => t('Select Post type'),
-      '#options' => os_get_bundles(array(1,2)),
+      '#options' => $this->getTaxonomyBundles(),
       '#description' => t('The post types that will be included in the count'),
       '#multiple' => FALSE,
-      '#size' => count(os_get_bundles(array(1,2))) / 2,
+      '#size' => count($this->getTaxonomyBundles()) / 2,
       '#dependency' => array(
         'edit-behavior' => array('select'),
       ),
@@ -170,6 +170,32 @@ class os_taxonomy_fbt extends os_boxes_default {
     );
 
     return $form;
+  }
+
+  /**
+   * Return the available bundles with the future and past events bundles.
+   * 
+   * @return array
+   */
+  protected function getTaxonomyBundles() {
+    $info = &drupal_static(__METHOD__);
+
+    if ($info) {
+      return $info;
+    }
+
+    $bundles = os_get_bundles(array(1,2));
+    $delta = array_search('event', array_keys($bundles));
+    $first = array_slice($bundles, 0, $delta);
+    $second = array_slice($bundles, $delta + 1);
+    $events_type = array(
+      'past_events' => t('Past event'),
+      'event_future' => t('Future event'),
+    );
+
+    $info = $first + $events_type + $second;
+
+    return $info;
   }
 
   /**
