@@ -131,7 +131,7 @@ script:
   # Run phantomJs.
   - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
 
-  - ./bin/behat --tags=%TEST_SUITE
+  - ./bin/behat --tags=$TEST_SUITE
 
 after_script:
   - sudo cat /var/log/apache2/error.log
