@@ -67,6 +67,13 @@ class os_boxes_site_info extends os_boxes_default {
       '#description' => t('Ex. Cambridge, MA 02138'),
     );
 
+    $form['contact_anonymous'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Enable contact form.'),
+      '#default_value' => variable_get('vsite_users_contact_form_anonymous', FALSE),
+      '#description' => t('Will print an (email) link to your contact form.'),
+    );
+
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save'),
@@ -101,13 +108,13 @@ class os_boxes_site_info extends os_boxes_default {
       ));
     }
 
-    $output = '';
     $tags = array('br', 'a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd');
 
     $output = '<h1>'.l($this->options['site_title'], '<front>').'</h1>
     '.(!empty($this->options['descrip'])?'<h2>'.filter_xss($this->options['descrip'], $tags).'</h2>':'').'
     <p>'.((!empty($this->options['address1']) || !empty($this->options['address2']))?
-        filter_xss($this->options['address1']).'<br>'.filter_xss($this->options['address2']):'').'</p>';
+        filter_xss($this->options['address1']).'<br>'.filter_xss($this->options['address2']):'').'
+    '. ($anon_contact ? l('(email)', 'contact_owner') : '' . '</p>');
 
     $block['content'] = $output;
     return $block;
