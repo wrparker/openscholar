@@ -189,8 +189,8 @@ class os_taxonomy_fbt extends os_boxes_default {
     $first = array_slice($bundles, 0, $delta);
     $second = array_slice($bundles, $delta + 1);
     $events_type = array(
-      'past_events' => t('Past event'),
-      'event_future' => t('Future event'),
+      'past_event' => t('Past event'),
+      'future_event' => t('Future event'),
     );
 
     $info = $first + $events_type + $second;
