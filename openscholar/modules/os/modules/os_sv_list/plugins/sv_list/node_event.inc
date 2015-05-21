@@ -64,14 +64,42 @@ class sv_list_node_event extends sv_list_plugin  {
   }
 
   /**
-   * @function sort_event()
+   * @function query_alter
+   */
+  public function query_alter($options, $efq) {
+    if ($options['content_type'] != 'event') {
+      return;
+    }
+
+    $events_to_show = $options['show'];
+    switch ($events_to_show) {
+      case 'all_events':
+        break;
+      case 'past_events':
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '<');
+        break;
+      default:
+        // The default option is for upcoming events.
+        $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s'), '>=');
+        break;
+    }
+  }
+
+  /**
+   * @function sort_event_asc()
    *
    * Custom sort for events. Filters down the displayed events according to the
    * selected expiry time.
    */
-  public function sort_event($options, EntityFieldQuery $efq) {
+  public function sort_event_asc($options, EntityFieldQuery $efq) {
     $efq->addTag('sv_list_events');
+    $efq->addMetaData('sort_event', 'ASC');
     $efq->fieldOrderBy('field_date', 'value', 'ASC');
+
+    if ($options['show'] != 'upcoming_events') {
+      $this->query = $efq;
+      return;
+    }
 
     // Change the query according to the selected expiry time of the events.
     switch ($options['event_expire']) {
@@ -89,6 +117,43 @@ class sv_list_node_event extends sv_list_plugin  {
         $str = '-30 minutes';
         $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime($str)), '>=', 'sv_list_events');
         $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '>=', 'sv_list_events');
+    }
+
+    $this->query = $efq;
+  }
+
+  /**
+   * @function sort_event_desc()
+   *
+   * Custom sort for events. Filters down the displayed events according to the
+   * selected expiry time.
+   */
+  public function sort_event_desc($options, EntityFieldQuery $efq) {
+    $efq->addTag('sv_list_events');
+    $efq->addMetaData('sort_event', 'DESC');
+    $efq->fieldOrderBy('field_date', 'value', 'DESC');
+
+    if ($options['show'] != 'past_events') {
+      $this->query = $efq;
+      return;
+    }
+
+    // Change the query according to the selected expiry time of the events.
+    switch ($options['event_expire']) {
+      case 'end_of_day';
+        // The expiry time is at the end of the day.
+        $str = 'today';
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s', strtotime($str)), '<', 'sv_list_events');
+        break;
+      case 'end_of_event';
+        // The expiry time is at the end of the event.
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '<', 'sv_list_events');
+        break;
+      default:
+        // The default expiry time is 30 minutes after an event starts.
+        $str = '-30 minutes';
+        $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime($str)), '<', 'sv_list_events');
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '<', 'sv_list_events');
     }
 
     $this->query = $efq;

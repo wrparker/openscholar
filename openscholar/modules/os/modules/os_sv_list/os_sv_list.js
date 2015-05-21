@@ -99,6 +99,9 @@
             var sort_by = $('#edit-sort-by');
             var show = $('#edit-show');
 
+            // Show the "expire-event" field if needed based on current form values.
+            showField(sort_by.val(), show.val());
+
             // Show the "expire-event" field when user selects ascending order
             // for upcoming events or descending order for past events.
             sort_by.change(function() {
