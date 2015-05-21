@@ -32,9 +32,9 @@ class sv_list_node_event extends sv_list_plugin  {
       '#title' => 'Show',
       '#default_value' => !empty($options['show']) ? $options['show'] : $defaults['show'],
       '#options' => array(
-        'upcoming_events' => 'Upcoming Events',
-        'past_events' => 'Past Events',
-        'all_events' => 'All Events',
+        'upcoming_events' => t('Upcoming Events'),
+        'past_events' => t('Past Events'),
+        'all_events' => t('All Events'),
       ),
     );
 
@@ -44,9 +44,9 @@ class sv_list_node_event extends sv_list_plugin  {
       '#title' => 'Events should expire',
       '#default_value' => !empty($options['event_expire']) ? $options['event_expire'] : $defaults['event_expire'],
       '#options' => array(
-        'after_event_start' => '30 minutes after an event starts',
-        'end_of_day' => 'At the end of the day',
-        'end_of_event' => 'When the event ends',
+        'after_event_start' => t('30 minutes after an event starts'),
+        'end_of_day' => t('At the end of the day'),
+        'end_of_event' => t('When the event ends'),
       ),
     );
   }
