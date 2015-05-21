@@ -2,6 +2,16 @@
 
 class EventNodeRestfulBase extends OsNodeRestfulBase {
 
+  /**
+   * @api {get} api/event/:id Get
+   * @apiVersion 0.1.0
+   * @apiName Get
+   * @apiGroup Event
+   *
+   * @apiDescription Consume event content.
+   *
+   * @apiParam {Number} id The event ID
+   */
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();
 
@@ -33,6 +43,9 @@ class EventNodeRestfulBase extends OsNodeRestfulBase {
     return $public_fields;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function entityPreSave(\EntityMetadataWrapper $wrapper) {
     parent::entityPreSave($wrapper);
     $request = $this->getRequest();
@@ -45,5 +58,53 @@ class EventNodeRestfulBase extends OsNodeRestfulBase {
     $date[0]['value2'] = empty($request['end_date']) ? $date[0]['value'] : date($format, strtotime($request['end_date']));
 
     $wrapper->field_date->set($date);
+  }
+
+  /**
+   * @api {post} api/event Post
+   * @apiVersion 0.1.0
+   * @apiName Post
+   * @apiGroup Event
+   *
+   * @apiDescription Create a event entry.
+   *
+   * @apiParam {Number} id The event ID
+   *
+   * @apiSampleRequest off
+   */
+  public function createEntity() {
+    return parent::createEntity();
+  }
+
+  /**
+   * @api {delete} api/event/:id Delete
+   * @apiVersion 0.1.0
+   * @apiName Delete
+   * @apiGroup Event
+   *
+   * @apiDescription Create a event entry.
+   *
+   * @apiParam {Number} id The event ID
+   *
+   * @apiSampleRequest off
+   */
+  public function deleteEntity($entity_id) {
+    parent::deleteEntity($entity_id);
+  }
+
+  /**
+   * @api {patch} api/event/:id Patch
+   * @apiVersion 0.1.0
+   * @apiName Patch
+   * @apiGroup Event
+   *
+   * @apiDescription Create a event entry.
+   *
+   * @apiParam {Number} id The event ID
+   *
+   * @apiSampleRequest off
+   */
+  public function patchEntity($entity_id) {
+    parent::patchEntity($entity_id);
   }
 }
