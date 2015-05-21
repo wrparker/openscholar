@@ -181,14 +181,14 @@ function os_sv_list_query_sv_list_events_alter(SelectQueryInterface $query) {
     $order = &$query->getOrderBy();
     $order = array(
       'node.sticky' => 'DESC',
-      'field_data_field_date_delta_sv_list_events.field_date_value' => $sort_type
+      'field_data_field_date_delta_sv_list_events.field_date_value' => $sort_type,
     );
   }
   else {
     // Sort on the right table.
     $order = &$query->getOrderBy();
     $order = array(
-      'field_data_field_date_delta_sv_list_events.field_date_value' => $sort_type
+      'field_data_field_date_delta_sv_list_events.field_date_value' => $sort_type,
     );
   }
 
