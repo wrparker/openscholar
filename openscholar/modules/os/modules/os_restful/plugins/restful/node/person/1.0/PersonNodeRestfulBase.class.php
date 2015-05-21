@@ -2,6 +2,16 @@
 
 class PersonNodeRestfulBase extends OsNodeRestfulBase {
 
+  /**
+   * @api {get} api/person/:id Get
+   * @apiVersion 0.1.0
+   * @apiName Get
+   * @apiGroup Person
+   *
+   * @apiDescription Consume person content.
+   *
+   * @apiParam {Number} id The person ID
+   */
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();
 
@@ -38,6 +48,54 @@ class PersonNodeRestfulBase extends OsNodeRestfulBase {
     );
 
     return $public_fields;
+  }
+
+  /**
+   * @api {post} api/person Post
+   * @apiVersion 0.1.0
+   * @apiName Post
+   * @apiGroup Person
+   *
+   * @apiDescription Create a person entry.
+   *
+   * @apiParam {Number} id The person ID
+   *
+   * @apiSampleRequest off
+   */
+  public function createEntity() {
+    return parent::createEntity();
+  }
+
+  /**
+   * @api {delete} api/person/:id Delete
+   * @apiVersion 0.1.0
+   * @apiName Delete
+   * @apiGroup Person
+   *
+   * @apiDescription Create a person entry.
+   *
+   * @apiParam {Number} id The person ID
+   *
+   * @apiSampleRequest off
+   */
+  public function deleteEntity($entity_id) {
+    parent::deleteEntity($entity_id);
+  }
+
+  /**
+   * @api {patch} api/person/:id Patch
+   * @apiVersion 0.1.0
+   * @apiName Patch
+   * @apiGroup Person
+   *
+   * @apiDescription Create a person entry.
+   *
+   * @apiParam {Number} id The person ID
+   *
+   * @apiSampleRequest off
+   */
+  public function patchEntity($entity_id) {
+    parent::patchEntity($entity_id);
   }
 
 }
