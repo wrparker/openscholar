@@ -82,14 +82,6 @@ function os_common_library() {
     ),
   );
 
-  $info['lodash'] = array(
-    'title' => t('Lodash'),
-    'version' => '0.0.5',
-    'js' => array(
-      drupal_get_path('module', 'os_common') . '/js/lodash.js' => array(),
-    ),
-  );
-
   $info['taxonomy_tree'] = array(
     'title' => t('Angular taxonomy tree'),
     'version' => '0.0.5',
@@ -212,7 +204,6 @@ function os_common_library() {
       array('os_common', 'angular_select2'),
       array('os_common', 'angular_ui'),
       array('os_common', 'taxonomy_tree'),
-      array('os_common', 'lodash'),
     )
   );
 

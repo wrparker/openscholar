@@ -6,7 +6,7 @@
         <ui-select multiple ng-model="selectedTerms[vocab.id]"
                    theme="select2" ng-disabled="disabled">
           <ui-select-match placeholder="Select a term from {{vocab.label}}">{{$item.label}}</ui-select-match>
-            <ui-select-choices repeat="term in selectAllTerms[vocab.id] track by term.id">
+            <ui-select-choices repeat="term in allTerms[vocab.id] track by term.id">
               <div ng-bind-html="term.label | highlight: $select.search"></div>
             </ui-select-choices>
         </ui-select>

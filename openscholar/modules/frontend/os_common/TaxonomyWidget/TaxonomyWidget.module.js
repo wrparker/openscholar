@@ -17,7 +17,6 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
       var vocabService = new EntityService('vocabulary', 'id');
       var termService = new EntityService('taxonomy', 'id');
       scope.allTerms = {};
-      scope.selectAllTerms = {};
       scope.termsTree = [];
 
       // Any change in the selected term scope will affect the file terms.
@@ -25,9 +24,6 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
       // = operator which defined in the isolated scope.
       scope.$watch('terms', function() {
         scope.selectedTerms = scope.terms;
-
-        // Find the terms which appear in allTerms and not in selectedTerms and
-        // push them to selectAllTerms.
       }, true);
 
       // Occurs every time a selected file is changed.
@@ -47,20 +43,11 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
 
             scope.termsTree[vocab.id] = vocab.tree;
             scope.allTerms[vocab.id] = [];
-            scope.selectAllTerms[vocab.id] = [];
 
             termService.fetch({vocab: vocab.id}).then(function (result) {
               for (var j = 0; j < result.data.data.length; j++) {
                 var t = result.data.data[j];
                 scope.allTerms[parseInt(t.vid)].push(t);
-                var position = scope.selectedTerms[t.vid].map(function(term) {
-                  return parseInt(term.id);
-                }).indexOf(t.id);
-
-                if (position == -1) {
-                  debugger;
-                  scope.selectAllTerms[parseInt(t.vid)].push(t);
-                }
               }
             });
           }
