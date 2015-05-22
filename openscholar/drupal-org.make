@@ -493,10 +493,19 @@ libraries[autopager][type] = "libraries"
 libraries[autopager][download][type] = "file"
 libraries[autopager][download][url] = "https://github.com/sagotsky/jquery-autopager/archive/v1.2.zip"
 
-libraries[html5shiv[type] = "libraries"
+libraries[html5shiv][type] = "libraries"
 libraries[html5shiv][download][type] = "file"
 libraries[html5shiv][download][url] = "http://raw.github.com/aFarkas/html5shiv/master/dist/html5shiv.js"
 
 libraries[hopscotch][type] = "libraries"
 libraries[hopscotch][download][type] = "file"
 libraries[hopscotch][download][url] = "https://github.com/linkedin/hopscotch/archive/b41ab659507175264ab6347d0032f03e42b961d1.zip"
+
+; Angular js libraries.
+libraries[angular_select2][type] = "libraries"
+libraries[angular_select2][download][type] = "get"
+libraries[angular_select2][download][url] = "https://github.com/angular-ui/ui-select/archive/v0.11.2.zip"
+
+libraries[angular-ivh-treeview][type] = "libraries"
+libraries[angular-ivh-treeview][download][type] = "get"
+libraries[angular-ivh-treeview][download][url] = "https://github.com/iVantage/angular-ivh-treeview/archive/v0.9.0.zip"

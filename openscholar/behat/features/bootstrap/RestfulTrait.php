@@ -271,15 +271,15 @@ trait RestfulTrait {
    */
   private function invokeRestRequest($method, $path, $headers, $body, $return = FALSE) {
     try {
-      $request = $this->getClient()->{$method}($path, [
+      $response = $this->getClient()->{$method}($path, [
         'headers' => $headers,
-        'body' => $body,
+        'json' => $body,
       ]);
     } catch (\GuzzleHttp\Exception\ClientException $e) {
       return $this->handleExceptions($e, $return);
     }
 
-    return $request;
+    return $response;
   }
 
   /**

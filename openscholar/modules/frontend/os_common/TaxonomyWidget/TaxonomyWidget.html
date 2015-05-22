@@ -1,0 +1,42 @@
+<div class="tw-widget" class="clearfix">
+  <div ng-repeat="vocab in vocabs" ng-switch="vocab.form" class="clearfix">
+    <h4>{{vocab.label}}</h4>
+
+    <div ng-switch-when="options_select">
+        <ui-select multiple ng-model="selectedTerms[vocab.id]"
+                   theme="select2" ng-disabled="disabled">
+          <ui-select-match placeholder="Select a term from {{vocab.label}}">{{$item.label}}</ui-select-match>
+            <ui-select-choices repeat="term in allTerms[vocab.id] track by term.id">
+              <div ng-bind-html="term.label | highlight: $select.search"></div>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+    <div ng-switch-when="entityreference_autocomplete">
+      <div ng-repeat="term in autocomplete_terms">
+        <input type="text"
+               ng-model="selected"
+               typeahead="term.label for term in allTerms[vocab.id] | filter:$viewValue | limitTo:8"
+               typeahead-on-select="onSelect($item, $model, $label)"
+               class="form-text clearfix">
+      </div>
+      <button ng-click="addMore()">Add more</button>
+    </div>
+    <div ng-switch-when="options_buttons">
+      <div ng-repeat="term in allTerms[vocab.id]">
+        <input type="checkbox" ng-click="termsSelected(term, this)" class="form-checkbox">
+        <label class="option">{{term.label}}</label>
+      </div>
+    </div>
+    <div ng-switch-when="term_reference_tree">
+
+      <input type="text" ng-model="termSearch" class="form-text clearfix"/>
+
+      <div
+        ivh-treeview="termsTree[vocab.id]"
+        ivh-treeview-filter="termSearch"
+        ivh-treeview-change-handler="termTreeChangeCallback"></div>
+    </div>
+  </div>
+</div>
+
+

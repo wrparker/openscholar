@@ -132,6 +132,7 @@ Feature:
 
   @api @restful
   Scenario: Creating software release via rest.
+    # @TODO bring back package to "true"
      Given I create a new node of "software_release" as "john" with the settings:
-      | Label                 | vsite | software_project      | body  | recommended | version | package  |
-      | Rest software release | john  | Rest software project | foo   | 1           | 2005    | true     |
+      | Label                 | vsite | software_project      | body  | recommended | version |
+      | Rest software release | john  | Rest software project | foo   | 1           | 2005    |
