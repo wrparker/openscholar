@@ -250,7 +250,7 @@ class OsVocabulary extends \RestfulEntityBase {
         $return[] = array(
           'label' => $leaf->name,
           'value' => $leaf->tid,
-          'children' => $this->getTree($leaf->below, []),
+          'children' => $this->getTree($leaf->below, array()),
         );
       }
     }
