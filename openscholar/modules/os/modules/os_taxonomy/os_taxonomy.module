@@ -489,6 +489,14 @@ function theme_os_taxonomy_vocabulary_item_list($variables) {
         $link_options['attributes']['class'][] = 'active';
       }
 
+      // Handle events.
+      if (current($options['bundles']) == 'past_event') {
+        $term_path['path'] = 'calendar/past_events?tid=' . $tid . '&vocab=' . $term->vid;
+      }
+      elseif (current($options['bundles']) == 'future_event') {
+        $term_path['path'] = 'calendar/upcoming?tid=' . $tid . '&vocab=' . $term->vid;
+      }
+
       // Data contain data for term children.
       $data[$tid] = array(
         'data' => theme('os_taxonomy_term_item', array(
@@ -1284,7 +1292,7 @@ function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array
   elseif (!empty($bundles) && is_array($bundles) && reset($bundles) != '--all--') {
     $query->condition('ogv.bundle', $bundles, 'IN');
   }
-dpq($query);
+
   return $query;
 }
 
