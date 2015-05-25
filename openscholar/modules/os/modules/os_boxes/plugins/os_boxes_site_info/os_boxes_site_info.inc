@@ -70,7 +70,7 @@ class os_boxes_site_info extends os_boxes_default {
     $form['contact'] = array(
       '#type' => 'checkbox',
       '#title' => t('Enable contact form.'),
-      '#default_value' => variable_get('show_email', FALSE),
+      '#default_value' => variable_get('show_email', variable_get('vsite_users_contact_form_anonymous', TRUE)),
       '#description' => t('Will print an (email) link to your contact form.'),
     );
 
@@ -94,7 +94,7 @@ class os_boxes_site_info extends os_boxes_default {
     }
     $block = parent::render();
 
-    $contact = variable_get('show_email', FALSE);
+    $contact = variable_get('show_email', variable_get('vsite_users_contact_form_anonymous', TRUE));
     if (module_exists('vsite') && $vsite = spaces_get_space()) {
       $group = $vsite->group;
       $addr = field_get_items('node', $group, 'field_site_address');
