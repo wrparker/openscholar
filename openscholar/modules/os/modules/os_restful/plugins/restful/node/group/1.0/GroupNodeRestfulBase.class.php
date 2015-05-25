@@ -2,6 +2,24 @@
 
 class GroupNodeRestfulBase extends OsNodeRestfulBase {
 
+  /**
+   * @api {get} api/group Get
+   * @apiVersion 0.1.0
+   * @apiName Group
+   * @apiGroup Group
+   *
+   * @apiDescription
+   * OpenScholar uses Organic Groups in order to have content attached to vsite.
+   * Actually, each vsite is a group. This give us the options to override
+   * site wide settings(roles and permission).
+   *
+   * There are 3 types of groups: personal, project and department when personal
+   * can have sub-sites.
+   *
+   * @apiSampleRequest api/group
+   *
+   * @apiParam {Number} id The group ID
+   */
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();
 
@@ -115,6 +133,54 @@ class GroupNodeRestfulBase extends OsNodeRestfulBase {
     $access_arguments = $gid ? array('node', $gid, 'administer users', $account) : array('administer users', $account);
 
     return call_user_func_array($access_callback, $access_arguments);
+  }
+
+  /**
+   * @api {post} api/group Post
+   * @apiVersion 0.1.0
+   * @apiName Post
+   * @apiGroup Group
+   *
+   * @apiDescription Create a group entry.
+   *
+   * @apiParam {Number} id The group ID
+   *
+   * @apiSampleRequest off
+   */
+  public function createEntity() {
+    return parent::createEntity();
+  }
+
+  /**
+   * @api {delete} api/group/:id Delete
+   * @apiVersion 0.1.0
+   * @apiName Delete
+   * @apiGroup Group
+   *
+   * @apiDescription Delete a group entry.
+   *
+   * @apiParam {Number} id The group ID
+   *
+   * @apiSampleRequest off
+   */
+  public function deleteEntity($entity_id) {
+    parent::deleteEntity($entity_id);
+  }
+
+  /**
+   * @api {patch} api/group/:id Patch
+   * @apiVersion 0.1.0
+   * @apiName Patch
+   * @apiGroup Group
+   *
+   * @apiDescription Update a group entry.
+   *
+   * @apiParam {Number} id The group ID
+   *
+   * @apiSampleRequest off
+   */
+  public function patchEntity($entity_id) {
+    parent::patchEntity($entity_id);
   }
 
 }
