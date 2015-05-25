@@ -90,15 +90,38 @@ function os_taxonomy_taxonomy_term_uri($term) {
  * Implements hook_views_query_alter().
  */
 function os_taxonomy_views_query_alter(&$view, &$query) {
-  if (!$path = os_taxonomy_in_taxonomy_term_context($view)) {
-    return;
+  if (!empty($_GET['tid']) && !empty($_GET['vocab'])) {
+
+    if (!$relation = og_vocab_relation_get($_GET['vocab'])) {
+      throw new Exception(t('There is not vocab with the given ID @id', array('@id' => $_GET['vocab'])));
+    }
+
+    if (!$vsite = vsite_get_vsite()) {
+      return;
+    }
+
+    if ($vsite->id != $relation->id) {
+      return;
+    }
+
+    // The tid exists in the query string.
+    if (!$term = taxonomy_term_load($_GET['tid'])) {
+      return;
+    }
+
+    $tid = $term->tid;
+  }
+  else {
+    if (!$path = os_taxonomy_in_taxonomy_term_context($view)) {
+      return;
+    }
+
+    $tid = str_replace('taxonomy/term/', '', $path);
   }
 
   $group_key = key($query->where);
   $alias = $query->add_table('field_data_og_vocabulary');
   $query->set_distinct();
-
-  $tid = str_replace('taxonomy/term/', '', $path);
   $query->add_where($group_key, "$alias.og_vocabulary_target_id", $tid, '=');
 
   if ($view_title = $view->get_title()) {
@@ -489,12 +512,17 @@ function theme_os_taxonomy_vocabulary_item_list($variables) {
         $link_options['attributes']['class'][] = 'active';
       }
 
+      $link_options['query'] = array(
+        'tid' => $tid,
+        'vocab' => $term->vid,
+      );
+
       // Handle events.
       if (current($options['bundles']) == 'past_event') {
-        $term_path['path'] = 'calendar/past_events?tid=' . $tid . '&vocab=' . $term->vid;
+        $term_path['path'] = 'calendar/past_events';
       }
       elseif (current($options['bundles']) == 'future_event') {
-        $term_path['path'] = 'calendar/upcoming?tid=' . $tid . '&vocab=' . $term->vid;
+        $term_path['path'] = 'calendar/upcoming';
       }
 
       // Data contain data for term children.
