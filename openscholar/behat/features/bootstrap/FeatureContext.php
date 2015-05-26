@@ -277,6 +277,24 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I should see that the "([^"]*)" in the "([^"]*)" are collapsed$/
+   */
+  public function iShouldSeeTheItemsInTheAre($type, $location) {
+    switch ($location) {
+      case 'LOP':
+        $id = 'block-boxes-os-' . $type . '-sv-list';
+        break;
+    }
+
+    $page = $this->getSession()->getPage();
+    $element = $page->find('xpath', "//*[contains(@id, '{$id}')]//*[contains(@class, 'expanded')]");
+
+    if ($element) {
+      throw new Exception(sprintf("Some elements with %s are not collapsed", $location));
+    }
+  }
+
+  /**
    * @Given /^a node of type "([^"]*)" with the title "([^"]*)" exists in site "([^"]*)"$/
    */
   public function assertNodeTypeTitleVsite($type, $title, $site = 'john') {

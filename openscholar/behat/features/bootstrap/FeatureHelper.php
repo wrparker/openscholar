@@ -17,6 +17,7 @@ class FeatureHelp {
     'People' => 'profiles_profiles',
     'Data' => 'dataverse_dataverse',
     'Galleries' => 'gallery_gallery',
+    'FAQ' => 'faq_faq',
     'Software' => 'software_software',
     'Documents' => 'booklets_booklets',
     'Publications' => 'publications_publications',

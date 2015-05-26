@@ -73,8 +73,7 @@ projects[disqus][version] = 1.9
 projects[disqus][patch][] = "http://drupal.org/files/comment_sources-disqus-2120703-1.patch"
 
 projects[dragndrop_upload][subdir] = "contrib"
-projects[dragndrop_upload][version] = 1.0-alpha1
-projects[dragndrop_upload][patch][] = "http://cgit.drupalcode.org/dragndrop_upload/patch/?id=164d2dd7526c297b544f5f367e48f5106f6bca5e"
+projects[dragndrop_upload][version] = 1.0-alpha2
 
 projects[dyntextfield][subdir] = "contrib"
 projects[dyntextfield][type] = module
@@ -480,7 +479,7 @@ libraries[select2][download][url] = "https://github.com/ivaynberg/select2/archiv
 
 libraries[twitter-api-php][type] = "libraries"
 libraries[twitter-api-php][download][type] = "file"
-libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/master.zip"
+libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/1.0.3.zip"
 
 libraries[autopager][type] = "libraries"
 libraries[autopager][download][type] = "file"
