@@ -100,7 +100,7 @@ function os_taxonomy_views_query_alter(&$view, &$query) {
       return;
     }
 
-    if ($vsite->id != $relation->id) {
+    if ($vsite->id != $relation->gid) {
       return;
     }
 
