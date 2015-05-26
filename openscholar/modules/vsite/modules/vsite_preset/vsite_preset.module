@@ -105,10 +105,10 @@ function vsite_preset_get_preset_bundles($preset = 'os_scholar') {
       continue;
     }
 
-    $_node_types = _node_types_build();
+    $node_types = _node_types_build();
     foreach ($info['nodetypes'] as $nodetype) {
-      if (isset($_node_types->names[$nodetype])) {
-        $bundles[$nodetype] = $_node_types->names[$nodetype];
+      if (isset($node_types->names[$nodetype])) {
+        $bundles[$nodetype] = $node_types->names[$nodetype];
       }
       else {
         $bundles[$nodetype] = $module;
