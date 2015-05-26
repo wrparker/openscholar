@@ -3,6 +3,46 @@
 class OsFilesResource extends RestfulFilesUpload {
 
   /**
+   * @api {get} api/files/:id Get
+   * @apiVersion 0.1.0
+   * @apiName Get
+   * @apiGroup Files
+   *
+   * @apiDescription Consume files.
+   *
+   * @apiParam {Number} id The file ID
+   *
+   * @apiSuccess {Number}   id        The file ID.
+   * @apiSuccess {String}   label     File mame.
+   * @apiSuccess {Integer}  size      Size in bytes.
+   * @apiSuccess {String}   mimetype  File mimetype.
+   * @apiSuccess {String}   url       The direct URL.
+   * @apiSuccess {String}   type      file type: image, document, audio etc. etc.
+   * @apiSuccess {String}   name      File mame.
+   * @apiSuccess {Integer}  timestamp The timestamp when the file copied to the server.
+   * @apiSuccess {String}   preview   The html representation of the file.
+   * @apiSuccess {Object} Terms       Terms attached to the file.
+   */
+  public static function controllersInfo() {
+    return array(
+      '' => array(
+        // GET returns a list of entities.
+        \RestfulInterface::GET => 'getList',
+        \RestfulInterface::HEAD => 'getList',
+        // POST
+        \RestfulInterface::POST => 'createEntity',
+      ),
+      '^.*$' => array(
+        \RestfulInterface::GET => 'viewEntities',
+        \RestfulInterface::HEAD => 'viewEntities',
+        \RestfulInterface::PUT => 'putEntity',
+        \RestfulInterface::PATCH => 'patchEntity',
+        \RestfulInterface::DELETE => 'deleteEntity',
+      ),
+    );
+  }
+
+  /**
    * Overrides RestfulEntityBase::publicFieldsInfo().
    */
   public function publicFieldsInfo() {
@@ -51,9 +91,6 @@ class OsFilesResource extends RestfulFilesUpload {
 
     $info['terms'] = array(
       'property' => OG_VOCAB_FIELD,
-//      'process_callbacks' => array(
-//        array($this, 'processOgVocabFieldEmpty'),
-//      ),
     );
 
     return $info;
@@ -113,7 +150,7 @@ class OsFilesResource extends RestfulFilesUpload {
    * @api {post} api/files Post
    * @apiVersion 0.1.0
    * @apiName Post
-   * @apiGroup files
+   * @apiGroup Files
    *
    * @apiDescription Upload a file.
    *
@@ -125,6 +162,8 @@ class OsFilesResource extends RestfulFilesUpload {
    * Once the request passed, you will get back a result representing the file
    * object in OpenScholar's database. In order to attach files to content
    * you'll need to pass the file ID from the file you uploaded.
+   *
+   * @apiSuccess {String} file The file object. Look on the post documentation.
    *
    * @apiSampleRequest off
    *
@@ -162,5 +201,39 @@ class OsFilesResource extends RestfulFilesUpload {
    */
   public function createEntity() {
     return parent::createEntity();
+  }
+
+  /**
+   * @api {delete} api/files/:id Delete
+   * @apiVersion 0.1.0
+   * @apiName Delete
+   * @apiGroup Files
+   *
+   * @apiDescription Delete a file entry.
+   *
+   * @apiParam {Number} id The file ID
+   *
+   * @apiSampleRequest off
+   */
+  public function deleteEntity($entity_id) {
+    parent::deleteEntity($entity_id);
+  }
+
+  /**
+   * @api {patch} api/bio/:id Patch
+   * @apiVersion 0.1.0
+   * @apiName Patch
+   * @apiGroup Files
+   *
+   * @apiDescription Create a Biography entry.
+   *
+   * @apiParam {Number} id The publication ID
+   *
+   * @apiSampleRequest off
+   *
+   * @apiSuccess {String} file The file object. Look on the post documentation.
+   */
+  public function patchEntity($entity_id) {
+    parent::patchEntity($entity_id);
   }
 }
