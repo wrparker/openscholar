@@ -80,3 +80,44 @@ function _vsite_preset_new_section_task($title, $info = array()) {
 
   return $task;
 }
+
+/**
+ * Get bundles for a VSite preset.
+ *
+ * @param $preset
+ *   Name of the preset.
+ *
+ * @return Array
+ *   And array of bundle names.
+ */
+function vsite_preset_get_preset_bundles($preset = 'os_scholar') {
+  $bundles = array();
+  $app_info = os_app_info();
+  $preset = spaces_preset_load($preset, 'og');
+  $spaces_features = $preset->value['variable']['spaces_features'];
+
+  foreach ($app_info as $app_name => $info) {
+    if (!isset($info['nodetypes'])) {
+      continue;
+    }
+    $module = $info['module'];
+    if (empty($spaces_features[$module])) {
+      continue;
+    }
+
+    $_node_types = _node_types_build();
+    foreach ($info['nodetypes'] as $nodetype) {
+      if (isset($_node_types->names[$nodetype])) {
+        $bundles[$nodetype] = $_node_types->names[$nodetype];
+      }
+      else {
+        $bundles[$nodetype] = $module;
+      }
+    }
+  }
+
+  // Sort the bundles in alphabetical order.
+  asort($bundles);
+
+  return $bundles;
+}

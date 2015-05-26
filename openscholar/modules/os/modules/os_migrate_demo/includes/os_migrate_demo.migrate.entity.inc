@@ -111,7 +111,7 @@ abstract class OsMigrate extends Migration {
       // Create an OG-vocab entity for all group-content bundles
       // @todo: Move to "OG-Vocab" migrate.
       // We can't save OG vocab for all bundles, as it fails in Travis.
-      foreach (array_keys(os_get_bundles()) as $bundle) {
+      foreach (array_keys(vsite_preset_get_preset_bundles()) as $bundle) {
         $og_vocab = og_vocab_create_og_vocab($vocabulary->vid, 'node', $bundle);
         $og_vocab->save();
       }
