@@ -154,6 +154,7 @@ Feature:
   @api @widgets
   Scenario: Verify past tagged events link to the past events view.
     Given I am logging in as "john"
+      And I bind the content type "event" with "science"
       And I assign the node "John F. Kennedy birthday" with the type "event" to the term "air"
       And the widget "Filter by term" is set in the "News" page with the following <settings>:
         | Post types           | Select post type   | select list |
@@ -169,6 +170,7 @@ Feature:
   @api @widgets
   Scenario: Verify past tagged events link to the upcoming events view.
     Given I am logging in as "john"
+      And I bind the content type "event" with "authors"
       And the widget "Filter by term" is set in the "News" page with the following <settings>:
         | Post types           | Select post type   | select list |
         | Vocabularies         | authors            | select list |
