@@ -1,9 +1,10 @@
 <label for="fe-file-name">Label</label>
 <input id="fe-file-name" type="text" ng-model="file.name" class="form-text" />
+<div class="description">Name of file as seen by your site's visitors.</div>
 
 <div ng-show="file.schema == 'public' || file.schema == 'private'">
     <label for="fe-filepath">File Name</label>
-    <input id="fe-filepath" type="text" ng-model="file.filename" class="form-text">
+    {{fullPath}}<input id="fe-filepath" type="text" ng-model="file.filename" class="form-text">
     <div ng-show="invalidName" class="error">A file with this name already exists!</div>
 </div>
 
