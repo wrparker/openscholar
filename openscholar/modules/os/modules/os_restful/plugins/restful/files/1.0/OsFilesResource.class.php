@@ -366,6 +366,9 @@ class OsFilesResource extends RestfulEntityBase {
       $path = db_select('purl', 'p')->fields('p', array('value'))->condition('id', $this->request['vsite'])->execute()->fetchField();
       $destination .= $path . '/files';
     }
+
+    $writable = file_prepare_directory($destination, FILE_MODIFY_PERMISSIONS | FILE_CREATE_DIRECTORY);
+
     if ($entity = file_save_upload('upload', array(), $destination, FILE_EXISTS_REPLACE)) {
 
       if (isset($this->request['vsite'])) {
@@ -444,6 +447,14 @@ class OsFilesResource extends RestfulEntityBase {
         $wrapper = entity_metadata_wrapper($this->entityType, $entity);
 
         return array($this->viewEntity($wrapper->getIdentifier()));
+      }
+    }
+    else {
+      if (!$writable) {
+        throw new RestfulServerConfigurationException('Unable to create directory for target file.');
+      }
+      else {
+        // we failed for some other reason. What?
       }
     }
   }
