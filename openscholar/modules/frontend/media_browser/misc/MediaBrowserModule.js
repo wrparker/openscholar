@@ -121,6 +121,7 @@
     $scope.activePanes = params.browser.panes;
     $scope.activePanes.edit = true;
     $scope.activePanes.delete = true;
+    $scope.loading = true;
 
     $scope.availTypes = [
       {label: 'Image', value: 'image'},
@@ -200,7 +201,9 @@
 
         $scope.files = result.data.data;
         $scope.numFiles = $scope.files.length;
+        $scope.loading = false;
       });
+
 
     $scope.changePanes = function (pane) {
       if ($scope.activePanes[pane]) {
