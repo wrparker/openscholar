@@ -64,6 +64,37 @@ angular.module('mediaBrowser.filters', [])
       }
       return input;
     }
+  })
+  .filter('mbType', function () {
+    function testFile(file, types) {
+      return types.indexOf(file.type) != -1;
+    }
+
+    return function (input, types) {
+      if (types == undefined || types.length == 0) {
+        return input;
+      }
+
+      if (Array.isArray(input)) {
+        results = [];
+        for (var i=0; i<input.length; i++) {
+          if (testFile(input[i], types)) {
+            results.push(input[i]);
+          }
+        }
+        return results;
+      }
+      else if (typeof input == 'object') {
+        results = {};
+        for (var k in input) {
+          if (testFile(input[k], types)) {
+            results[k] = input[k];
+          }
+        }
+        return results;
+      }
+      return input;
+    }
   });
 
 })();

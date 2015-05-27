@@ -122,6 +122,15 @@
     $scope.activePanes.edit = true;
     $scope.activePanes.delete = true;
 
+    $scope.availTypes = [
+      {label: 'Image', value: 'image'},
+      {label: 'Document', value: 'document'},
+      {label: 'Video', value: 'video'},
+      {label: 'HTML', value: 'html'},
+      {label: 'Executable', value: 'executable'},
+      {label: 'Audio', value: 'audio'}
+    ];
+
     $scope.extensions = [];
     if (params.file_extensions) {
       $scope.extensions = params.file_extensions.split(' ');
