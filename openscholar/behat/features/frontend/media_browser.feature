@@ -8,4 +8,5 @@ Feature:
       And I visit "john/node/add/page"
      When I click "Choose File"
       And I wait for page actions to complete
+      And I should print page
      Then I should see "Select files to Add"
