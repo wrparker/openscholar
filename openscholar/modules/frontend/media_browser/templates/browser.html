@@ -41,6 +41,9 @@
                     </div>
                 </div>
             </div>
+            <div class="actions">
+                <button value="cancel" ng-click="cancel()">Cancel</button>
+            </div>
         </div>
         <div class="media-browser-pane" ng-switch-when="web">
             <legend for="media-browser-web">URL or HTML:</legend>
@@ -50,7 +53,7 @@
                 {{$parent.whitelist}}</div>
             <div class="actions">
                 <button value="submit" ng-click="$parent.embedSubmit()">Submit</button>
-                <button value="cancel" ng-click="$parent.close()">Cancel</button>
+                <button value="cancel" ng-click="$parent.cancel()">Cancel</button>
             </div>
         </div>
         <div class="media-browser-pane" ng-switch-when="library">
