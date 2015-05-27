@@ -227,18 +227,10 @@
           id;
 
         if (!size) {
-          id = $scope.messages.next++;
-          $scope.messages[id] = {
-            text: file.name + ' is larger than the maximum filesize of ' + (params.max_filesize || Drupal.settings.maximumFileSize),
-          }
-          $timeout(angular.bind($scope, removeMessage, id), 5000);
+          addMessage(file.name + ' is larger than the maximum filesize of ' + (params.max_filesize || Drupal.settings.maximumFileSize));
         }
         if (!extension) {
-          id = $scope.messages.next++;
-          $scope.messages[id] = {
-            text: file.name + ' is not an accepted file type.',
-          }
-          $timeout(angular.bind($scope, removeMessage, id), 5000);
+          addMessage(file.name + ' is not an accepted file type.');
         }
         // if file is image and params specify max dimensions
         if (file.type.indexOf('image/') !== -1 && params.min_dimensions) {
@@ -248,6 +240,14 @@
 
         return size && extension;
       }
+    }
+
+    function addMessage(message) {
+      var id = $scope.messages.next++;
+      $scope.messages[id] = {
+        text: message
+      };
+      $timeout(angular.bind($scope, removeMessage, id), 5000);
     }
 
     function removeMessage(id) {
@@ -375,6 +375,28 @@
         }
       }
 
+      function uploadNext() {
+        currentlyUploading++;
+        if (currentlyUploading < toBeUploaded.length) {
+          $file = toBeUploaded[currentlyUploading];
+          uploadOne($file);
+        }
+        else {
+          toBeUploaded = [];
+          uploading = false;
+          progress = null;
+          currentlyUploading = 0;
+          if (toEditForm) {
+            // there's only one file, we can assume it's this one
+            $scope.setSelection(e.data[0].id);
+            $scope.changePanes('edit');
+          }
+          else {
+            $scope.changePanes('library');
+          }
+        }
+      }
+
       function uploadOne($file) {
         var fields = {};
         if (Drupal.settings.spaces) {
@@ -397,26 +419,10 @@
             $scope.files.push(e.data[i]);
             service.register(e.data[i]);
           }
-
-          currentlyUploading++;
-          if (currentlyUploading < toBeUploaded.length) {
-            $file = toBeUploaded[currentlyUploading];
-            uploadOne($file);
-          }
-          else {
-            toBeUploaded = [];
-            uploading = false;
-            progress = null;
-            currentlyUploading = 0;
-            if (toEditForm) {
-              // there's only one file, we can assume it's this one
-              $scope.setSelection(e.data[0].id);
-              $scope.changePanes('edit');
-            }
-            else {
-              $scope.changePanes('library');
-            }
-          }
+          uploadNext();
+        }).error(function (e) {
+          addMessage('Unable to upload file. Contact site administrator.');
+          uploadNext();
         });
       }
 
