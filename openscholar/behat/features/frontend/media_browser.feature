@@ -1,7 +1,7 @@
 Feature:
   Testing the Media Browser
 
-  @media_browser
+  @media_browser @javascript
   Scenario: Invoke the browser from the standard media field
     Given I am logged in as "john"
       And I start creating a post of type "page" in site "john"
@@ -10,10 +10,13 @@ Feature:
 
   @media_browser
   Scenario: Invoke the browser from the wysiwyg
-    Given I am logged in as "john"
-      And I start creating a post of type "page" in "john"
-     When I click on "Add media"
-     Then I wait "1 second" for media browser to open
+    Given I am logging in as "john"
+      And I wait for page actions to complete
+      And I visit "john/node/add/page"
+     When I click "Choose File"
+      And I wait for page actions to complete
+      And I should print page
+     Then I should see "Select files to Add"
 
   @media_browser
   Scenario: Navigate through tabs

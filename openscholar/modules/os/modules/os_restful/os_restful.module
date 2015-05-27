@@ -154,7 +154,7 @@ function _os_restful_store_props($key, $value = null) {
 }
 
 function os_restful_restful_parse_request_alter(&$request) {
-  if ($request['timestamp']) {
+  if (!empty($request['timestamp'])) {
     _os_restful_store_props('timestamp', $request['timestamp']);
   }
 }

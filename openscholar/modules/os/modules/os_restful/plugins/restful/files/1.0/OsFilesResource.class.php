@@ -226,6 +226,7 @@ class OsFilesResource extends RestfulEntityBase {
       'process_callbacks' => array(
         array($this, 'processTermsField'),
       ),
+      'saveCallback' => array($this, 'setTerms'),
     );
 
     unset($info['label']['property']);
@@ -499,7 +500,7 @@ class OsFilesResource extends RestfulEntityBase {
       }
 
       if (isset($info['saveCallback'])) {
-        $save = $save || call_user_func($info['saveCallback'], $wrapper);
+        $save = call_user_func($info['saveCallback'], $wrapper);
 
         if ($save) {
           unset($original_request[$public_field_name]);
@@ -589,6 +590,22 @@ class OsFilesResource extends RestfulEntityBase {
   protected function setImageTitleText($wrapper) {
     if ($this->request['image_title']) {
       $wrapper->field_file_image_title_text->set($this->request['image_title']);
+
+      return true;
+    }
+    return false;
+  }
+
+  protected function setTerms($wrapper) {
+    if ($values = $this->request['terms']) {
+      $terms = array();
+      foreach ($values as $value) {
+        foreach ($value as $term) {
+          $terms[] = $term['id'];
+        }
+      }
+
+      $wrapper->{OG_VOCAB_FIELD}->set($terms);
 
       return true;
     }

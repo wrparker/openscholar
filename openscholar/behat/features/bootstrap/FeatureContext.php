@@ -2090,4 +2090,16 @@ class FeatureContext extends DrupalContext {
 
   }
 
+  /**
+   * @Then /^Show me a screenshot$/
+   */
+  public function showScreenshot() {
+    $image_data = $this->getSession()->getDriver()->getScreenshot();
+    $file_and_path = '/tmp/behat_screenshot.jpg';
+    file_put_contents($file_and_path, $image_data);
+    if (PHP_OS === "Linux" && PHP_SAPI === "cli") {
+      exec('display ' . $file_and_path);
+    }
+  }
+
 }

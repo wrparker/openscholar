@@ -20,7 +20,7 @@
         var ents;
         entities[entityType] = ents = entities[entityType] || [];
         var entityCount = 0;
-        var eventName = 'EntityService.'+type;
+        var eventName = 'EntityService.' + type;
         var errorAttempts = 0;
         var vsite = null;
 
@@ -45,7 +45,7 @@
               success(success).
               error(errorFunc);
           }
-        }
+        };
 
         function findByProp(prop, value) {
           var l = ents.length;
@@ -57,7 +57,7 @@
         }
 
         this.fetch = function (params) {
-          var url = restPath+'/'+entityType;
+          var url = restPath + '/' + entityType;
           if (!params) {
             params = {};
           }
@@ -69,7 +69,6 @@
           return $http.get(url, {params: params})
             .success(success)
             .error(errorFunc);
-
         }
 
         this.getAll = function () {
@@ -81,25 +80,24 @@
           if (ents[k]) {
             return ents[k];
           }
-        }
+        };
 
         this.getCount = function () {
           return entityCount;
-        }
+        };
 
         this.add = function (entity) {
           var k = findByProp(idProp, entity[idProp]);
           if (entities[k]) {
-            throw new Exception('Cannot add entity of type '+type+' that already exists.');
+            throw new Exception('Cannot add entity of type ' + type + ' that already exists.');
           }
           // rest API call to add entity to server
-          $http.post(restPath+'/'+entityType, entity)
+          $http.post(restPath + '/' + entityType, entity)
             .success(function (resp) {
-              console.log(resp);
               var entity = resp.data[0];
               ents.push(entity);
 
-              $rootScope.$broadcast(eventName+'.add', entity);
+              $rootScope.$broadcast(eventName + '.add', entity);
             })
         };
 
@@ -114,12 +112,11 @@
 
           $http.patch(url.join('/'), data)
             .success(function (resp) {
-              console.log(resp);
               var entity = resp.data[0];
 
               ents.splice(k, 1, entity);
 
-              $rootScope.$broadcast(eventName+'.update', entity);
+              $rootScope.$broadcast(eventName + '.update', entity);
             })
 
         };
@@ -140,7 +137,7 @@
         this.register = function (entity) {
           ents.push(entity);
         }
-      }
+      };
 
       function getDiff(oEntity, nEntity) {
         var diff = {};
