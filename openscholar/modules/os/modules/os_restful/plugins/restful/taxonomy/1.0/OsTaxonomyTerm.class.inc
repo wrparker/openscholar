@@ -3,7 +3,14 @@
 class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
 
   /**
-   * {@inheritdoc}
+   * @api {get} api/taxonomy?vsite=:id Get
+   * @apiVersion 0.1.0
+   * @apiName Get
+   * @apiGroup AAA
+   *
+   * @apiDescription Consume taxonomy term content.
+   *
+   * @apiParam {Number} id The id of the VSite
    */
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();
@@ -27,6 +34,10 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
     );
 
     return $fields;
+  }
+
+  public function createEntity() {
+    return parent::createEntity();
   }
 
   /**
