@@ -39,7 +39,7 @@
               return processedTerms;
             })(scope.file.terms);
 
-            scope.fullPath = f.url.slice(0, f.url.lastIndexOf('/'));
+            scope.fullPath = f.url.slice(0, f.url.lastIndexOf('/')+1);
           });
 
           scope.$watch('date', function (value, old) {
