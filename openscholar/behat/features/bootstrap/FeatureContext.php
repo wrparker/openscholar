@@ -290,6 +290,15 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I start creating a post of type "([^"]*)" in site "([^"]*)"$/
+   */
+  public function iStartCreatingPostOfType($type, $site) {
+    return array(
+      new Step\When('I visit "'. $site . '/node/add/' . $type . '"')
+    );
+  }
+
+  /**
    * @Given /^I create a new publication$/
    */
   public function iCreateANewPublication() {
@@ -2069,7 +2078,7 @@ class FeatureContext extends DrupalContext {
   public function iWaitForTheMediaBrowserToOpen($time) {
     $timestamp = strtotime($time);
     $this->iSleepFor($timestamp);
-    if (!$elem = $this->find('.ui-dialog.media-wrapper') || !$this->find('.ui-dialog.media-wrapper .media-browser-panes')) {
+    if (!$elem = $this->getSession()->getPage()->find('css', '.ui-dialog.media-wrapper') || !$this-getSession()->getPage()->find('css', '.ui-dialog.media-wrapper .media-browser-panes')) {
       throw new Exception('The media browser failed to open.');
     }
   }
