@@ -133,14 +133,6 @@ class sv_list_node_event extends sv_list_plugin  {
     $efq->addMetaData('sort_event', 'DESC');
     $efq->fieldOrderBy('field_date', 'value', 'DESC');
 
-    if ($options['show'] != 'past_events') {
-      $this->query = $efq;
-      return;
-    }
-
-    // @TODO - for now get events from the past 30 days.
-    $str = '-30 days';
-    $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime($str)), '>=', 'sv_list_events');
     $this->query = $efq;
   }
 
