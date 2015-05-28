@@ -39,6 +39,20 @@ div.file-filters {
   margin-right: 5px;
 }
 
+.file-filters .file-search {
+  display: inline-block;
+  margin-right: 30px;
+}
+
+.file-filters .file-type {
+  display: inline-block;
+  margin-right: 30px;
+}
+
+.file-filters .file-clear {
+  display: inline-block;
+}
+
 #file-search-input {
   margin: 9px 0;
 }
