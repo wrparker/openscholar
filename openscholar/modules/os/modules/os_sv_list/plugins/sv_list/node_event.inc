@@ -71,6 +71,12 @@ class sv_list_node_event extends sv_list_plugin  {
       return;
     }
 
+    // We do this to deal with sites that have the old "sort_event" selected.
+    // This is now named "sort_event_asc".
+    if ($options['sort'] == 'sort_event') {
+      $options['sort'] = 'sort_event_asc';
+    }
+
     $events_to_show = $options['show'];
     switch ($events_to_show) {
       case 'all_events':
