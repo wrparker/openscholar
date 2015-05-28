@@ -164,6 +164,15 @@
       $scope.maxFilesize = Drupal.settings.maximumFileSize;
     }
 
+    $scope.isFiltered = function () {
+      return $scope.filteredTypes.length || $scope.search != "";
+    }
+
+    $scope.clearFilters = function () {
+      $scope.filteredTypes = [];
+      $scope.search = '';
+    }
+
     $scope.showHelp = false;
 
     if (close) {
