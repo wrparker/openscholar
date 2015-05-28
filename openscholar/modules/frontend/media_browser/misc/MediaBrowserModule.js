@@ -53,7 +53,7 @@
       open = function (params) {
         params = jQuery.extend(true, {}, defaultParams(), params);
         ModalService.showModal({
-          templateUrl: rootPath+'/templates/browser.html',
+          templateUrl: rootPath+'/templates/browser.html?vers='+Drupal.settings.version.mediaBrowser,
           controller: 'BrowserCtrl',
           inputs: {
             params: params
@@ -74,29 +74,32 @@
         });
       }
 
-      Drupal.media = Drupal.media || {};
-      Drupal.media.popups = Drupal.media.popups || {};
-      var oldPopup = Drupal.media.popups.mediaBrowser;
-      Drupal.media.popups.mediaBrowserOld = oldPopup;
-      Drupal.media.popups.mediaBrowser = function (onSelect, globalOptions, pluginOptions, widgetOptions) {
-        var options = Drupal.media.popups.mediaBrowser.getDefaults();
-        options.global = $.extend({}, options.global, globalOptions);
-        options.plugins = pluginOptions;
-        options.widget = $.extend({}, options.widget, widgetOptions);
+      // if the File object is not supported by this browser, fallback to the original media browser
+      if (typeof window.File != 'undefined') {
+        Drupal.media = Drupal.media || {};
+        Drupal.media.popups = Drupal.media.popups || {};
+        var oldPopup = Drupal.media.popups.mediaBrowser;
+        Drupal.media.popups.mediaBrowserOld = oldPopup;
+        Drupal.media.popups.mediaBrowser = function (onSelect, globalOptions, pluginOptions, widgetOptions) {
+          var options = Drupal.media.popups.mediaBrowser.getDefaults();
+          options.global = $.extend({}, options.global, globalOptions);
+          options.plugins = pluginOptions;
+          options.widget = $.extend({}, options.widget, widgetOptions);
 
 
-        // Params to send along to the iframe.  WIP.
-        var params = {};
-        $.extend(params, options.global);
-        params.plugins = options.plugins;
-        params.onSelect = onSelect;
+          // Params to send along to the iframe.  WIP.
+          var params = {};
+          $.extend(params, options.global);
+          params.plugins = options.plugins;
+          params.onSelect = onSelect;
 
-        open(params);
-      }
+          open(params);
+        }
 
-      for (var k in oldPopup) {
-        if (!Drupal.media.popups.mediaBrowser[k]) {
-          Drupal.media.popups.mediaBrowser[k] = oldPopup[k];
+        for (var k in oldPopup) {
+          if (!Drupal.media.popups.mediaBrowser[k]) {
+            Drupal.media.popups.mediaBrowser[k] = oldPopup[k];
+          }
         }
       }
     }])

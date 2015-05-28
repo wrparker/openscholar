@@ -118,6 +118,9 @@ function os_common_library() {
         'data' => array(
           'paths' => array(
             'JSPager' => url($path.'/JSPager', $disable),
+          ),
+          'version' => array(
+            'JSPager' => '0.9',
           )
         )
       )
@@ -193,6 +196,9 @@ function os_common_library() {
         'data' => array(
           'paths' => array(
             'TaxonomyWidget' => url($path.'/TaxonomyWidget', $disable),
+          ),
+          'version' => array(
+            'TaxonomyWidget' => '0.9',
           )
         ),
         'type' => 'setting',
@@ -216,6 +222,9 @@ function os_common_library() {
         'data' => array(
           'paths' => array(
             'FileEditor' => url($path.'/FileEditor', $disable),
+          ),
+          'version' => array(
+            'FileEditor' => '0.9',
           )
         ),
         'type' => 'setting',
