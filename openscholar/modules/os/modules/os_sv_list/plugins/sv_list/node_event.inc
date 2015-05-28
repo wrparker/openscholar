@@ -41,7 +41,7 @@ class sv_list_node_event extends sv_list_plugin  {
     // Add a select list when sorting events by event date.
     $form['content']['event_expire_appear'] = array(
       '#type' => 'select',
-      '#title' => 'Events should expire',
+      '#title' => t('Events should expire'),
       '#default_value' => !empty($options['event_expire_appear']) ? $options['event_expire_appear'] : $defaults['event_expire_appear'],
       '#options' => array(
         'after_event_start' => t('30 minutes after an event starts'),
