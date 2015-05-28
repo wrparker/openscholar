@@ -99,10 +99,11 @@
             var sort_by = $('#edit-sort-by');
             var show = $('#edit-show');
 
-            // Show the "expire-event" field if needed based on current form values.
+            // Show the "expire-event-appear" field if needed based on current
+            // form values.
             showField(sort_by.val(), show.val());
 
-            // Show the "expire-event" field when user selects ascending order
+            // Show the "expire-event-appear" field when user selects ascending order
             // for upcoming events or descending order for past events.
             sort_by.change(function() {
               var sort_type = $(this).val();
@@ -116,23 +117,23 @@
             });
 
             function showField(sort_type, show_type) {
-              var expire_event = $('.form-item-event-expire');
-              expire_event.hide();
+              var expire_event_appear = $('.form-item-event-expire-appear');
+              expire_event_appear.hide();
               if (sort_type == 'sort_event_asc' && show_type == 'upcoming_events') {
-                expire_event.show();
-                expire_event.find('label').text(Drupal.t('Events should expire'));
+                expire_event_appear.show();
+                expire_event_appear.find('label').text(Drupal.t('Events should expire'));
               }
               else if (sort_type == 'sort_event_desc' && show_type == 'past_events') {
-                expire_event.show();
-                expire_event.find('label').text(Drupal.t('Events should appear'));
+                expire_event_appear.show();
+                expire_event_appear.find('label').text(Drupal.t('Events should appear'));
               }
               else {
-                expire_event.hide();
+                expire_event_appear.hide();
               }
             }
           }
           else {
-            $('.form-item-event-expire').hide();
+            $('.form-item-event-expire-appear').hide();
             $('.form-item-show').hide();
           }
         });

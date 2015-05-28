@@ -19,7 +19,7 @@ class sv_list_node_event extends sv_list_plugin  {
    */
   public function options_defaults() {
     return array(
-      'event_expire' => 'after_event_start',
+      'event_expire_appear' => 'after_event_start',
       'show' => 'upcoming_events',
     );
   }
@@ -39,10 +39,10 @@ class sv_list_node_event extends sv_list_plugin  {
     );
 
     // Add a select list when sorting events by event date.
-    $form['content']['event_expire'] = array(
+    $form['content']['event_expire_appear'] = array(
       '#type' => 'select',
       '#title' => 'Events should expire',
-      '#default_value' => !empty($options['event_expire']) ? $options['event_expire'] : $defaults['event_expire'],
+      '#default_value' => !empty($options['event_expire_appear']) ? $options['event_expire_appear'] : $defaults['event_expire_appear'],
       '#options' => array(
         'after_event_start' => t('30 minutes after an event starts'),
         'end_of_day' => t('At the end of the day'),
@@ -76,11 +76,20 @@ class sv_list_node_event extends sv_list_plugin  {
       case 'all_events':
         break;
       case 'past_events':
-        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '<');
+        // Show past events. For all sorts except for
+        // 'Event Date Descending (Future to Past)' we get events that already
+        // ended.
+        if ($options['sort'] != 'sort_event_desc') {
+          $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '<');
+        }
         break;
       default:
-        // The default option is for upcoming events.
-        $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s'), '>=');
+        // The default option is for upcoming events. For all sorts except
+        // for 'Event Date Ascending (Past to Future)' we get events that
+        // haven't started yet.
+        if ($options['sort'] != 'sort_event_asc') {
+          $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s'), '>=');
+        }
         break;
     }
   }
@@ -102,7 +111,7 @@ class sv_list_node_event extends sv_list_plugin  {
     }
 
     // Change the query according to the selected expiry time of the events.
-    switch ($options['event_expire']) {
+    switch ($options['event_expire_appear']) {
       case 'end_of_day';
         // The expiry time is at the end of the day.
         $str = 'today';
@@ -126,12 +135,35 @@ class sv_list_node_event extends sv_list_plugin  {
    * @function sort_event_desc()
    *
    * Custom sort for events. Filters down the displayed events according to the
-   * selected expiry time.
+   * selected appear time.
    */
   public function sort_event_desc($options, EntityFieldQuery $efq) {
     $efq->addTag('sv_list_events');
     $efq->addMetaData('sort_event', 'DESC');
     $efq->fieldOrderBy('field_date', 'value', 'DESC');
+
+    if ($options['show'] != 'past_events') {
+      $this->query = $efq;
+      return;
+    }
+
+    // Change the query according to the selected appear time of the events.
+    switch ($options['event_expire_appear']) {
+      case 'end_of_day';
+        // The appear time is at the end of the day.
+        $str = 'today';
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s', strtotime($str)), '>=', 'sv_list_events');
+        break;
+      case 'end_of_event';
+        // The appear time is at the end of the event.
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '>=', 'sv_list_events');
+        break;
+      default:
+        // The default appear time is 30 minutes after an event starts.
+        $str = '-30 minutes';
+        $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime($str)), '>=', 'sv_list_events');
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '>=', 'sv_list_events');
+    }
 
     $this->query = $efq;
   }
