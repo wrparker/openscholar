@@ -1,9 +1,11 @@
 <label for="fe-file-name">Label</label>
 <input id="fe-file-name" type="text" ng-model="file.name" class="form-text" />
+<div class="description">Name of file as seen by your site's visitors.</div>
 
 <div ng-show="file.schema == 'public' || file.schema == 'private'">
     <label for="fe-filepath">File Name</label>
-    <input id="fe-filepath" type="text" ng-model="file.filename" class="form-text">
+    <span class="full-url">{{fullPath}}</span>
+    <span class="fe-filepath-wrapper"><input id="fe-filepath" type="text" ng-model="file.filename" class="form-text"></span>
     <div ng-show="invalidName" class="error">A file with this name already exists!</div>
 </div>
 
@@ -30,5 +32,5 @@
 
 <div class="control">
     <button ng-click="save()" ng-disabled="canSave()">Save</button> |
-    <button ng-click="cancel()">Close</button>
+    <button ng-click="cancel()">Cancel</button>
 </div>

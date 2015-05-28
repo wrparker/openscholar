@@ -290,6 +290,15 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I start creating a post of type "([^"]*)" in site "([^"]*)"$/
+   */
+  public function iStartCreatingPostOfType($type, $site) {
+    return array(
+      new Step\When('I visit "'. $site . '/node/add/' . $type . '"')
+    );
+  }
+
+  /**
    * @Given /^I create a new publication$/
    */
   public function iCreateANewPublication() {
@@ -2064,14 +2073,70 @@ class FeatureContext extends DrupalContext {
 
   // Media Browser functions
   /**
-   * @When /I wait "([^"]*)" for the media browser to open/
+   * @When /^I wait "([^"]*)" for the media browser to open$/
    */
   public function iWaitForTheMediaBrowserToOpen($time) {
-    $timestamp = strtotime($time);
-    $this->iSleepFor($timestamp);
-    if (!$elem = $this->find('.ui-dialog.media-wrapper') || !$this->find('.ui-dialog.media-wrapper .media-browser-panes')) {
+    $this->getSession()->wait($time * 1000);
+    if (!$elem = $this->getSession()->getPage()->find('css', '.ui-dialog.media-wrapper') || !$this-getSession()->getPage()->find('css', '.ui-dialog.media-wrapper .media-browser-panes')) {
       throw new Exception('The media browser failed to open.');
     }
+  }
+
+  /**
+   * @Then /^I should wait for the text "([^"]*)" to "([^"]*)"$/
+   */
+  public function iShouldWaitForTheTextTo($text, $appear) {
+    $this->waitForXpathNode(".//*[contains(normalize-space(string(text())), \"$text\")]", $appear == 'appear');
+  }
+
+  /**
+   * Wait for an element by its XPath to appear or disappear.
+   *
+   * @param string $xpath
+   *   The XPath string.
+   * @param bool $appear
+   *   Determine if element should appear. Defaults to TRUE.
+   *
+   * @throws Exception
+   */
+  private function waitForXpathNode($xpath, $appear = TRUE) {
+    $this->waitFor(function($context) use ($xpath, $appear) {
+      try {
+        $nodes = $context->getSession()->getDriver()->find($xpath);
+        if (count($nodes) > 0) {
+          $visible = $nodes[0]->isVisible();
+          return $appear ? $visible : !$visible;
+        }
+        return !$appear;
+      }
+      catch (WebDriver\Exception $e) {
+        if ($e->getCode() == WebDriver\Exception::NO_SUCH_ELEMENT) {
+          return !$appear;
+        }
+        throw $e;
+      }
+    });
+  }
+
+  /**
+   * Helper function; Execute a function until it return TRUE or timeouts.
+   *
+   * @param $fn
+   *   A callable to invoke.
+   * @param int $timeout
+   *   The timeout period. Defaults to 10 seconds.
+   *
+   * @throws Exception
+   */
+  private function waitFor($fn, $timeout = 5000) {
+    $start = microtime(true);
+    $end = $start + $timeout / 1000.0;
+    while (microtime(true) < $end) {
+      if ($fn($this)) {
+        return;
+      }
+    }
+    throw new \Exception('waitFor timed out.');
   }
 
   /**
@@ -2079,6 +2144,26 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldSeeTheMediaBrowser() {
 
+  }
+
+  /**
+   * @Then /^Show me a screenshot$/
+   */
+  public function showScreenshot() {
+    $image_data = $this->getSession()->getDriver()->getScreenshot();
+    $file_and_path = '/tmp/behat_screenshot.jpg';
+    file_put_contents($file_and_path, $image_data);
+    if (PHP_OS === "Linux" && PHP_SAPI === "cli") {
+      exec('display ' . $file_and_path);
+    }
+  }
+
+  /**
+   * @When /^I click on "([^"]*)" button in the media browser$/
+   */
+  public function iClickOn($text) {
+    $element = $this->getSession()->getPage()->find('xpath', "//*[contains(@class, 'media-browser-button') and text() = '{$text}']");
+    $element->click();
   }
 
 }

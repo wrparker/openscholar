@@ -11,7 +11,7 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
       terms: "=",
       bundle: "@"
     },
-    templateUrl: path + '/TaxonomyWidget.html',
+    templateUrl: path + '/TaxonomyWidget.html?vers='+Drupal.settings.version.TaxonomyWidget,
     link: function (scope, elem, attrs) {
       var entityType = attrs.entityType;
       var vocabService = new EntityService('vocabulary', 'id');

@@ -41,6 +41,9 @@
                     </div>
                 </div>
             </div>
+            <div class="actions">
+                <button value="cancel" ng-click="cancel()">Cancel</button>
+            </div>
         </div>
         <div class="media-browser-pane" ng-switch-when="web">
             <legend for="media-browser-web">URL or HTML:</legend>
@@ -50,14 +53,20 @@
                 {{$parent.whitelist}}</div>
             <div class="actions">
                 <button value="submit" ng-click="$parent.embedSubmit()">Submit</button>
-                <button value="cancel" ng-click="$parent.close()">Cancel</button>
+                <button value="cancel" ng-click="$parent.cancel()">Cancel</button>
             </div>
         </div>
         <div class="media-browser-pane" ng-switch-when="library">
-            <div class="file-search" ng-show="numFiles">
-                <label for="file-search-input">Search</label>
-                <input id="file-search-input" type="text" ng-model="$parent.search" class="form-text" size="30" maxlength="128">
-                Type in a filename and press enter.
+            <div class="file-filters">
+                <div class="file-search" ng-show="numFiles">
+                    <label for="file-search-input">Filename</label>
+                    <input id="file-search-input" type="text" ng-model="$parent.search" class="form-text" size="30" maxlength="128">
+                    Type in a filename or label to filter list of files.
+                </div>
+                <div class="file-type" ng-show="numFiles">
+                    <label for="file-type-input">File Type</label>
+                    <select id="file-type-input" type="select" ng-model="filteredTypes" ng-options="type.value as type.label for type in availTypes" multiple="multiple"></select>
+                </div>
             </div>
             <div id="mb-library-header">
                 <span class="mb-preview">&nbsp;</span>
@@ -66,7 +75,7 @@
                 <span class="mb-created">Upload Date</span>
                 <span class="mb-file-actions">&nbsp;</span>
             </div>
-            <div js-pager="file in files | mbFilename:$parent.search | mbExtensions:extensions | orderBy:'-timestamp' track by file.id" page-size="5">
+            <div js-pager="file in files | mbFilename:$parent.search | mbType:filteredTypes | mbExtensions:extensions | orderBy:'-timestamp' track by file.id" page-size="5">
                 <div class="media-row" data-fid="{{file.id}}" ng-click="setSelection(file.id)" ng-class="{selected : selection == file.id, new : file.new}">
                     <span class="mb-preview" ng-bind-html="file.preview"></span>
                     <span class="mb-title">{{file.name}}</span>
@@ -78,8 +87,11 @@
                     </span>
                 </div>
             </div>
-            <div class="loading" ng-show="numFiles==0">
+            <div class="loading" ng-show="loading">
                 Loading...
+            </div>
+            <div class="no-files" ng-show="!loading && files.length == 0">
+                No files to show.
             </div>
             <div class="actions" ng-show="$parent.showButtons">
                 <button ng-click="$parent.insert()" ng-disabled="!$parent.selected_file">Insert</button>

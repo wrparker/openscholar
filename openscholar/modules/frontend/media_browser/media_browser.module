@@ -54,6 +54,9 @@ function media_browser_library_alter(&$libs) {
         'paths' => array(
           'moduleRoot' => url(drupal_get_path('module', 'media_browser'), $disable),
         ),
+        'version' => array(
+          'mediaBrowser' => '0.9'
+        ),
         'extensionMap' => $map,
         'maximumFileSize' => ini_get('upload_max_filesize'),
         'maximumFileSizeRaw' => parse_size(ini_get('upload_max_filesize')),

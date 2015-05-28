@@ -53,7 +53,7 @@
       open = function (params) {
         params = jQuery.extend(true, {}, defaultParams(), params);
         ModalService.showModal({
-          templateUrl: rootPath+'/templates/browser.html',
+          templateUrl: rootPath+'/templates/browser.html?vers='+Drupal.settings.version.mediaBrowser,
           controller: 'BrowserCtrl',
           inputs: {
             params: params
@@ -74,29 +74,32 @@
         });
       }
 
-      Drupal.media = Drupal.media || {};
-      Drupal.media.popups = Drupal.media.popups || {};
-      var oldPopup = Drupal.media.popups.mediaBrowser;
-      Drupal.media.popups.mediaBrowserOld = oldPopup;
-      Drupal.media.popups.mediaBrowser = function (onSelect, globalOptions, pluginOptions, widgetOptions) {
-        var options = Drupal.media.popups.mediaBrowser.getDefaults();
-        options.global = $.extend({}, options.global, globalOptions);
-        options.plugins = pluginOptions;
-        options.widget = $.extend({}, options.widget, widgetOptions);
+      // if the File object is not supported by this browser, fallback to the original media browser
+      if (typeof window.File != 'undefined') {
+        Drupal.media = Drupal.media || {};
+        Drupal.media.popups = Drupal.media.popups || {};
+        var oldPopup = Drupal.media.popups.mediaBrowser;
+        Drupal.media.popups.mediaBrowserOld = oldPopup;
+        Drupal.media.popups.mediaBrowser = function (onSelect, globalOptions, pluginOptions, widgetOptions) {
+          var options = Drupal.media.popups.mediaBrowser.getDefaults();
+          options.global = $.extend({}, options.global, globalOptions);
+          options.plugins = pluginOptions;
+          options.widget = $.extend({}, options.widget, widgetOptions);
 
 
-        // Params to send along to the iframe.  WIP.
-        var params = {};
-        $.extend(params, options.global);
-        params.plugins = options.plugins;
-        params.onSelect = onSelect;
+          // Params to send along to the iframe.  WIP.
+          var params = {};
+          $.extend(params, options.global);
+          params.plugins = options.plugins;
+          params.onSelect = onSelect;
 
-        open(params);
-      }
+          open(params);
+        }
 
-      for (var k in oldPopup) {
-        if (!Drupal.media.popups.mediaBrowser[k]) {
-          Drupal.media.popups.mediaBrowser[k] = oldPopup[k];
+        for (var k in oldPopup) {
+          if (!Drupal.media.popups.mediaBrowser[k]) {
+            Drupal.media.popups.mediaBrowser[k] = oldPopup[k];
+          }
         }
       }
     }])
@@ -121,6 +124,16 @@
     $scope.activePanes = params.browser.panes;
     $scope.activePanes.edit = true;
     $scope.activePanes.delete = true;
+    $scope.loading = true;
+
+    $scope.availTypes = [
+      {label: 'Image', value: 'image'},
+      {label: 'Document', value: 'document'},
+      {label: 'Video', value: 'video'},
+      {label: 'HTML', value: 'html'},
+      {label: 'Executable', value: 'executable'},
+      {label: 'Audio', value: 'audio'}
+    ];
 
     $scope.extensions = [];
     if (params.file_extensions) {
@@ -192,7 +205,9 @@
 
         $scope.files = result.data.data;
         $scope.numFiles = $scope.files.length;
+        $scope.loading = false;
       });
+
 
     $scope.changePanes = function (pane) {
       if ($scope.activePanes[pane]) {
@@ -216,18 +231,10 @@
           id;
 
         if (!size) {
-          id = $scope.messages.next++;
-          $scope.messages[id] = {
-            text: file.name + ' is larger than the maximum filesize of ' + (params.max_filesize || Drupal.settings.maximumFileSize),
-          }
-          $timeout(angular.bind($scope, removeMessage, id), 5000);
+          addMessage(file.name + ' is larger than the maximum filesize of ' + (params.max_filesize || Drupal.settings.maximumFileSize));
         }
         if (!extension) {
-          id = $scope.messages.next++;
-          $scope.messages[id] = {
-            text: file.name + ' is not an accepted file type.',
-          }
-          $timeout(angular.bind($scope, removeMessage, id), 5000);
+          addMessage(file.name + ' is not an accepted file type.');
         }
         // if file is image and params specify max dimensions
         if (file.type.indexOf('image/') !== -1 && params.min_dimensions) {
@@ -237,6 +244,14 @@
 
         return size && extension;
       }
+    }
+
+    function addMessage(message) {
+      var id = $scope.messages.next++;
+      $scope.messages[id] = {
+        text: message
+      };
+      $timeout(angular.bind($scope, removeMessage, id), 5000);
     }
 
     function removeMessage(id) {
@@ -364,6 +379,28 @@
         }
       }
 
+      function uploadNext() {
+        currentlyUploading++;
+        if (currentlyUploading < toBeUploaded.length) {
+          $file = toBeUploaded[currentlyUploading];
+          uploadOne($file);
+        }
+        else {
+          toBeUploaded = [];
+          uploading = false;
+          progress = null;
+          currentlyUploading = 0;
+          if (toEditForm) {
+            // there's only one file, we can assume it's this one
+            $scope.setSelection(e.data[0].id);
+            $scope.changePanes('edit');
+          }
+          else {
+            $scope.changePanes('library');
+          }
+        }
+      }
+
       function uploadOne($file) {
         var fields = {};
         if (Drupal.settings.spaces) {
@@ -386,26 +423,10 @@
             $scope.files.push(e.data[i]);
             service.register(e.data[i]);
           }
-
-          currentlyUploading++;
-          if (currentlyUploading < toBeUploaded.length) {
-            $file = toBeUploaded[currentlyUploading];
-            uploadOne($file);
-          }
-          else {
-            toBeUploaded = [];
-            uploading = false;
-            progress = null;
-            currentlyUploading = 0;
-            if (toEditForm) {
-              // there's only one file, we can assume it's this one
-              $scope.setSelection(e.data[0].id);
-              $scope.changePanes('edit');
-            }
-            else {
-              $scope.changePanes('library');
-            }
-          }
+          uploadNext();
+        }).error(function (e) {
+          addMessage('Unable to upload file. Contact site administrator.');
+          uploadNext();
         });
       }
 

@@ -1,7 +1,7 @@
 (function () {
   var service,
     dialogParams = {
-      minWidth: 500,
+      minWidth: 800,
       modal: true
     };
 
