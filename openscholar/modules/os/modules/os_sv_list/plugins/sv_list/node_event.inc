@@ -151,18 +151,17 @@ class sv_list_node_event extends sv_list_plugin  {
     switch ($options['event_expire_appear']) {
       case 'end_of_day';
         // The appear time is at the end of the day.
-        $str = 'today';
-        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s', strtotime($str)), '>=', 'sv_list_events');
+        $str = 'yesterday';
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s', strtotime($str)), '<', 'sv_list_events');
         break;
       case 'end_of_event';
         // The appear time is at the end of the event.
-        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '>=', 'sv_list_events');
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '<', 'sv_list_events');
         break;
       default:
-        // The default appear time is 30 minutes after an event starts.
+        // The default appear time is 30 minutes after an event ends.
         $str = '-30 minutes';
-        $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime($str)), '>=', 'sv_list_events');
-        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '>=', 'sv_list_events');
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s', strtotime($str)), '<', 'sv_list_events');
     }
 
     $this->query = $efq;
