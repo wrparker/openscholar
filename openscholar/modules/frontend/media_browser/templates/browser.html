@@ -7,7 +7,8 @@
     <div class="media-browser-panes">
         <div class="media-browser-pane" ng-switch-when="upload">
         	<span id="drag-text">Drag and drop files here. <span class="help_icon" ng-mouseenter="showHelp = true" ng-mouseleave="showHelp = false">?</span></span>
-            <div id="media-browser-file-select" ng-file-select ng-file-change="$parent.checkForDupes($files, $event)" ng-accept="$parent.validate($file)" accept="{{'.'+extensions.join(',.')}}">Select files to Add</div>
+            <div id="media-browser-file-select" ng-file-select ng-file-change="$parent.checkForDupes($files, $event)"
+                 ng-accept="$parent.validate($file)" accept="{{'.'+extensions.join(',.')}}" ng-multiple="true">Select files to Add</div>
             <div class="help" ng-show="showHelp">Files must be less than <strong>{{maxFilesize}}</strong>.<br />
                     Allowed file types: <strong>{{extensions.join(' ')}}</strong></div>
             <div id="media-browser-drop-box" ng-file-drop ng-file-change="$parent.checkForDupes($files, $event)" class="media-browser-drop-box"
