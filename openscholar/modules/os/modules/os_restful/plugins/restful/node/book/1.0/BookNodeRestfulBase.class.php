@@ -6,7 +6,7 @@ class BookNodeRestfulBase extends OsNodeRestfulBase {
    * @api {get} api/book/:id Get
    * @apiVersion 0.1.0
    * @apiName Get
-   * @apiGroup book
+   * @apiGroup Book
    *
    * @apiDescription Consume book content.
    *
@@ -22,7 +22,7 @@ class BookNodeRestfulBase extends OsNodeRestfulBase {
    * @api {post} api/book Post
    * @apiVersion 0.1.0
    * @apiName Post
-   * @apiGroup book
+   * @apiGroup Book
    *
    * @apiDescription Create a book entry.
    *
@@ -38,9 +38,9 @@ class BookNodeRestfulBase extends OsNodeRestfulBase {
    * @api {delete} api/book/:id Delete
    * @apiVersion 0.1.0
    * @apiName Delete
-   * @apiGroup book
+   * @apiGroup Book
    *
-   * @apiDescription Create a book entry.
+   * @apiDescription Delete a book entry.
    *
    * @apiParam {Number} id The book ID
    *
@@ -54,9 +54,9 @@ class BookNodeRestfulBase extends OsNodeRestfulBase {
    * @api {patch} api/book/:id Patch
    * @apiVersion 0.1.0
    * @apiName Patch
-   * @apiGroup book
+   * @apiGroup Book
    *
-   * @apiDescription Create a book entry.
+   * @apiDescription Patch a book entry.
    *
    * @apiParam {Number} id The book ID
    *

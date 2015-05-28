@@ -6,11 +6,11 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
    * @api {get} api/taxonomy?vsite=:id Get
    * @apiVersion 0.1.0
    * @apiName Get
-   * @apiGroup AAA
+   * @apiGroup Term
    *
    * @apiDescription Consume taxonomy term content.
    *
-   * @apiParam {Number} id The id of the VSite
+   * @apiParam {Number} id The ID of the VSite
    */
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();
@@ -36,8 +36,49 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
     return $fields;
   }
 
+  /**
+   * @api {get} api/taxonomy Post
+   * @apiVersion 0.1.0
+   * @apiName Post
+   * @apiGroup Term
+   *
+   * @apiDescription Create taxonomy term content.
+   *
+   * @apiParam {String} label The name of the term
+   * @apiParam {String} vocabulary The name of the vocabulary for the term
+   */
   public function createEntity() {
     return parent::createEntity();
+  }
+
+  /**
+   * @api {delete} api/taxonomy/:id Delete
+   * @apiVersion 0.1.0
+   * @apiName Delete
+   * @apiGroup Term
+   *
+   * @apiDescription Delete a taxonomy term.
+   *
+   * @apiParam {Number} id The term ID
+   *
+   * @apiSampleRequest off
+   */
+  public function deleteEntity($entity_id) {
+    parent::deleteEntity($entity_id);
+  }
+
+  /**
+   * @api {get} api/taxonomy Patch
+   * @apiVersion 0.1.0
+   * @apiName Patch
+   * @apiGroup Term
+   *
+   * @apiDescription Patch a taxonomy term.
+   *
+   * @apiParam {String} label The name of the term
+   */
+  public function patchEntity($entity_id) {
+    parent::patchEntity($entity_id);
   }
 
   /**
