@@ -143,6 +143,7 @@
       }
     }
     $scope.extensions.sort();
+    $scope.whitelist = Drupal.settings.embedWhitelist;
 
     if (params.max_filesize) {
       $scope.maxFilesize = params.max_filesize;
