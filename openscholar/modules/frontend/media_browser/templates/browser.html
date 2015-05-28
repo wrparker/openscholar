@@ -50,8 +50,8 @@
             <textarea id="media-browser-web" cols="60" rows="5" ng-model="$parent.embed"></textarea>
             <div class="description">Enter a URL from one of <a href="http://embed.ly/embed/features/providers" target="_blank">
                 these providers</a> or paste a snippet of HTML. The HTML may contain references to any of the following sites:
-                <span ng-init="limit = -10" ng-repeat="domain in whitelist" ng-mouseenter="limit = -100" ng-mouseleave="limit = -10" tooltip="{{domain}}" >
-                  <span ng-hide="(limit *-1) >= domain.length">...</span>{{domain | limitTo:limit}}
+                <span ng-init="limit = -21" ng-repeat="domain in whitelist" ng-mouseenter="limit = -120" ng-mouseleave="limit = -21" tooltip="{{domain}}" >
+                  <span ng-hide="(limit *-1) >= domain.length">...</span>{{domain | limitTo:limit}}{{$last ? '' : ', '}}
                 </span>
             </div>
             <div class="actions">
