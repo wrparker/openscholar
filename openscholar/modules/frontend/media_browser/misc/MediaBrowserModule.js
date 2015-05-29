@@ -165,8 +165,9 @@
       $scope.maxFilesize = Drupal.settings.maximumFileSize;
     }
 
+    $scope.filteredTypes = [];
     $scope.isFiltered = function () {
-      return $scope.filteredTypes.length || $scope.search != "";
+      return $scope.filteredTypes.length || $scope.search;
     }
 
     $scope.clearFilters = function () {
@@ -186,9 +187,7 @@
 
     // Watch for changes in file list
     $scope.$on('EntityService.files.add', function (event, file) {
-      //$scope.files.push(file)
-      $scope.pane = 'library';
-      $scope.setSelection(file.id);
+      $scope.files.push(file)
     });
 
     $scope.$on('EntityService.files.update', function (event, file) {
@@ -388,7 +387,7 @@
         }
       }
 
-      function uploadNext() {
+      function uploadNext(firstId) {
         currentlyUploading++;
         if (currentlyUploading < toBeUploaded.length) {
           $file = toBeUploaded[currentlyUploading];
@@ -399,9 +398,9 @@
           uploading = false;
           progress = null;
           currentlyUploading = 0;
-          if (toEditForm) {
+          if (toEditForm && firstId) {
             // there's only one file, we can assume it's this one
-            $scope.setSelection(e.data[0].id);
+            $scope.setSelection(firstId);
             $scope.changePanes('edit');
           }
           else {
@@ -432,7 +431,7 @@
             $scope.files.push(e.data[i]);
             service.register(e.data[i]);
           }
-          uploadNext();
+          uploadNext(e.data[0].id);
         }).error(function (e) {
           addMessage('Unable to upload file. Contact site administrator.');
           uploadNext();
@@ -477,7 +476,13 @@
         embed: this.embed,
       }
 
-      service.add(data);
+      service.add(data).success(function (e) {
+        if (e.data.length) {
+          $scope.embed = '';
+          $scope.setSelection(e.data[0].id);
+          $scope.changePanes('edit')
+        }
+      });
     }
 
     $scope.insert = function () {

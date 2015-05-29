@@ -92,7 +92,7 @@
             throw new Exception('Cannot add entity of type ' + type + ' that already exists.');
           }
           // rest API call to add entity to server
-          $http.post(restPath + '/' + entityType, entity)
+          return $http.post(restPath + '/' + entityType, entity)
             .success(function (resp) {
               var entity = resp.data[0];
               ents.push(entity);
