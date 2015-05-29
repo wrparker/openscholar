@@ -112,6 +112,7 @@ html.js input.throbbing {
     text-decoration: none !important;
 }
 
+.media-browser-pane .file-clear button,
 .media-browser-pane #media-browser-file-select,
 .media-browser-pane .actions button,
 div[file-edit] .control button,
