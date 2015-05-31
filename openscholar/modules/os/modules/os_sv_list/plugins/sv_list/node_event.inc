@@ -71,12 +71,6 @@ class sv_list_node_event extends sv_list_plugin  {
       return;
     }
 
-    // We do this to deal with sites that have the old "sort_event" selected.
-    // This is now named "sort_event_asc".
-    if ($options['sort'] == 'sort_event') {
-      $options['sort'] = 'sort_event_asc';
-    }
-
     $events_to_show = $options['show'];
     switch ($events_to_show) {
       case 'all_events':
@@ -85,7 +79,7 @@ class sv_list_node_event extends sv_list_plugin  {
         // Show past events. For all sorts except for
         // 'Event Date Descending (Future to Past)' we get events that already
         // ended.
-        if ($options['sort'] != 'sort_event_desc') {
+        if ($options['sort_by'] != 'sort_event_desc') {
           $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '<');
         }
         break;
@@ -93,7 +87,7 @@ class sv_list_node_event extends sv_list_plugin  {
         // The default option is for upcoming events. For all sorts except
         // for 'Event Date Ascending (Past to Future)' we get events that
         // haven't started yet.
-        if ($options['sort'] != 'sort_event_asc') {
+        if ($options['sort_by'] != 'sort_event_asc') {
           $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s'), '>=');
         }
         break;
@@ -187,11 +181,12 @@ class sv_list_node_event extends sv_list_plugin  {
 
     // The EntityFieldQuery has the raw DB data on it's ordered_results property
     // We earlier modified this query to give a separate row for each nid-delta
-    // So we need to add a value to the entities array for each row in the raw DB
-    // Every entity we need should already be in the entities array
+    // So we need to add a value to the entities array for each row in the raw
+    // DB Every entity we need should already be in the entities array.
     $output = array();
     $raw = $this->query->ordered_results;
-    // use this instead of a foreach because this query can have more results than expected
+    // use this instead of a foreach because this query can have more results
+    // than expected.
     for ($i=0; $i<$options['number_of_items']; $i++) {
       if ($row = $raw[$i]) {
         $entity = clone $entities[$row->entity_id];
