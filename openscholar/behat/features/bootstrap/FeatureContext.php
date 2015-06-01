@@ -2088,6 +2088,18 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I fill in the field "([^"]*)" with the node "([^"]*)"$/
+   *
+   * This step is used to fill in an autocomplete field.
+   */
+  public function iFillInTheFieldWithTheNode($id, $title) {
+    $nid = FeatureHelp::getNodeId($title);
+    $element = $this->getSession()->getPage();
+    $value = $title . ' (' . $nid . ')';
+    $element->fillField($id, $value);
+  }
+
+  /**
    * Create an entity of a given type and title.
    */
   private function createEntity($type, $title) {
@@ -2145,6 +2157,16 @@ class FeatureContext extends DrupalContext {
    */
   public function iLogout() {
     $this->visit('user/logout');
+  }
+
+  /**
+   * @Then /^I should see a table with the text "([^"]*)" in its header$/
+   */
+  public function iShouldSeeATableWithTheTextInItsHeader($text) {
+    $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//thead//tr//th[contains(., '{$text}')]");
+    if (!$element) {
+      throw new Exception(sprintf("The header of the table doesn't contain the text %s", $text));
+    }
   }
 
 }
