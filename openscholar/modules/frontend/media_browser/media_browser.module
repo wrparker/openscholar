@@ -58,8 +58,8 @@ function media_browser_library_alter(&$libs) {
           'mediaBrowser' => '0.9.2'
         ),
         'extensionMap' => $map,
-        'maximumFileSize' => ini_get('upload_max_filesize'),
-        'maximumFileSizeRaw' => parse_size(ini_get('upload_max_filesize')),
+        'maximumFileSize' => file_upload_max_size(),
+        'maximumFileSizeRaw' => parse_size(file_upload_max_size()),
       ),
       'type' => 'setting',
     )

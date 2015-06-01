@@ -369,7 +369,7 @@ class OsFilesResource extends RestfulEntityBase {
 
     $writable = file_prepare_directory($destination, FILE_MODIFY_PERMISSIONS | FILE_CREATE_DIRECTORY);
 
-    if ($entity = file_save_upload('upload', array(), $destination, FILE_EXISTS_REPLACE)) {
+    if ($entity = file_save_upload('upload', $this->getValidators(), $destination, FILE_EXISTS_REPLACE)) {
 
       if (isset($this->request['vsite'])) {
         og_group('node', $this->request['vsite'], array('entity_type' => 'file', 'entity' => $entity));
@@ -455,8 +455,28 @@ class OsFilesResource extends RestfulEntityBase {
       }
       else {
         // we failed for some other reason. What?
+        throw new RestfulBadRequestException('Unable to process request.');
       }
     }
+  }
+
+  protected function getValidators() {
+    $extensions = array();
+    $types = file_type_get_enabled_types();
+    foreach ($types as $t => $type) {
+      $extensions = array_merge($extensions, _os_files_extensions_from_type($t));
+    }
+
+    $validators = array(
+      'file_validate_extensions' => array(
+        implode(' ', $extensions)
+      ),
+      'file_validate_size' => array(
+        parse_size(file_upload_max_size())
+      )
+    );
+
+    return $validators;
   }
 
   public function processTermsField($terms) {
