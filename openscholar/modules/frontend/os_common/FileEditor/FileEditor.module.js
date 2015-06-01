@@ -40,7 +40,7 @@
             })(scope.file.terms);
 
             scope.fullPath = f.url.slice(0, f.url.lastIndexOf('/')+1);
-            scope.extension = f.url.slice(f.url.lastIndexOf('.'));
+            scope.extension = '.' + getExtension(f.url);
           });
 
           scope.$watch('date', function (value, old) {
@@ -69,7 +69,7 @@
           scope.validate = function ($file) {
             if (!$file) return true;
 
-            if (scope.file.mimetype == $file.type) {
+            if (getExtension(scope.file.url) == getExtension($file.name)) {
               return true;
             }
 
@@ -119,6 +119,10 @@
           }
         }
       }
-    }])
+    }]);
+
+  function getExtension(url) {
+    return url.slice(url.lastIndexOf('.')+1);
+  }
 
 })(jQuery);
