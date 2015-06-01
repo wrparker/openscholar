@@ -1,11 +1,18 @@
 /* tabs and panes */
 
+.display_inline {
+  display: inline-block;
+}
+
+.display_inline.two_blocks {
+  width: 48%;
+}
+
 .media-browser-panes {
   border-top: 1px solid lightgray;
   margin: 3px;
   margin-top: 0;
-  padding: 5px;
-  height: 597px;
+  padding: 20px 5px 0;
 }
 
 .media-browser-pane {
@@ -199,22 +206,30 @@ div[file-edit] .control button {
 }
 
 
-div[file-edit].open {
-  display: block;
-  width: 70%;
-  -webkit-box-shadow: -8px 9px 5px -4px rgba(0,0,0,0.41);
--moz-box-shadow: -8px 9px 5px -4px rgba(0,0,0,0.41);
-box-shadow: -8px 9px 5px -4px rgba(0,0,0,0.41);
-}
 
 div[file-edit] input {
-  margin-bottom: 1em;
+  margin-bottom: .1em;
   width: 95%;
 }
 
 div[file-edit] button {
   padding: 3px 5px;
 }
+
+div[file-edit] div.description {
+  margin-bottom: 1.75em;
+}
+
+div[file-edit] div.display_inline {
+  margin-top: .5em;
+}
+
+
+div[ng-include="fileEditAddt"] {
+  background: #efefef;
+  width: 97%;
+  margin: 20px 0;
+ }
 
 #file-delete-section {
   display: none;
@@ -236,10 +251,10 @@ div[file-edit] button {
   border: none;
   padding-left: 23px;
   font-size: .95em;
-  margin-bottom: 10px;
+  margin: 10px 0;
   color: #034A9D;
   text-decoration: underline;
-  border: 1px solid #4E84C4;
+  border: 1px solid #95ABC5;
 }
 
 #file-delete-section.open {
@@ -279,7 +294,7 @@ display:block;
 #media-browser-drop-box {
   height: 450px;
   width: 100%;
-  margin-top: 8%;
+  margin: 6% 0 2%;
   border: 2px dashed #ccc;
 }
 
