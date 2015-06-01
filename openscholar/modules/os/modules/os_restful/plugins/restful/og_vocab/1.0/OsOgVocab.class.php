@@ -101,7 +101,7 @@ class OsOgVocab extends \RestfulEntityBase {
   }
 
   /**
-   * @api {get} api/og_vocab Patch
+   * @api {get} api/og_vocab/:id Patch
    * @apiVersion 0.1.0
    * @apiName Patch
    * @apiGroup Og Vocabulary
@@ -110,7 +110,7 @@ class OsOgVocab extends \RestfulEntityBase {
    *
    * @apiParam {String} type The entity type
    * @apiParam {String} bundle The entity bundle
-   * @apiParam {Number} id The entity ID
+   * @apiParam {Number} id The og vocabulary ID
    *
    * @apiSampleRequest off
    */
