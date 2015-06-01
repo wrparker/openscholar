@@ -40,6 +40,7 @@
             })(scope.file.terms);
 
             scope.fullPath = f.url.slice(0, f.url.lastIndexOf('/')+1);
+            scope.extension = f.url.slice(f.url.lastIndexOf('.'));
           });
 
           scope.$watch('date', function (value, old) {
