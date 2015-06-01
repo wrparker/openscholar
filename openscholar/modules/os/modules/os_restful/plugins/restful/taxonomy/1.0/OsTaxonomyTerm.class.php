@@ -68,7 +68,7 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
   }
 
   /**
-   * @api {get} api/taxonomy Patch
+   * @api {get} api/taxonomy/:id Patch
    * @apiVersion 0.1.0
    * @apiName Patch
    * @apiGroup Term
@@ -76,6 +76,9 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
    * @apiDescription Patch a taxonomy term.
    *
    * @apiParam {String} label The name of the term
+   * @apiParam {Number} id The term ID
+   *
+   * @apiSampleRequest off
    */
   public function patchEntity($entity_id) {
     parent::patchEntity($entity_id);

@@ -3,7 +3,14 @@
 class OsVocabulary extends \RestfulEntityBase {
 
   /**
-   * {@inheritdoc}
+   * @api {get} api/vocabulary?vsite=:id Get
+   * @apiVersion 0.1.0
+   * @apiName Get
+   * @apiGroup Vocabulary
+   *
+   * @apiDescription Consume vocabulary content.
+   *
+   * @apiParam {Number} id The ID of the VSite
    */
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();
@@ -17,6 +24,54 @@ class OsVocabulary extends \RestfulEntityBase {
     );
 
     return $fields;
+  }
+
+  /**
+   * @api {get} api/vocabulary Post
+   * @apiVersion 0.1.0
+   * @apiName Post
+   * @apiGroup Vocabulary
+   *
+   * @apiDescription Create vocabulary content.
+   *
+   * @apiParam {String} label The name of the vocabulary
+   * @apiParam {Number} id The ID of the VSite
+   */
+  public function createEntity() {
+    return parent::createEntity();
+  }
+
+  /**
+   * @api {delete} api/vocabulary/:id Delete
+   * @apiVersion 0.1.0
+   * @apiName Delete
+   * @apiGroup Vocabulary
+   *
+   * @apiDescription Delete a vocabulary.
+   *
+   * @apiParam {Number} id The vocabulary ID
+   *
+   * @apiSampleRequest off
+   */
+  public function deleteEntity($entity_id) {
+    parent::deleteEntity($entity_id);
+  }
+
+  /**
+   * @api {get} api/vocabulary/:id Patch
+   * @apiVersion 0.1.0
+   * @apiName Patch
+   * @apiGroup Vocabulary
+   *
+   * @apiDescription Patch a vocabulary.
+   *
+   * @apiParam {String} label The name of the vocabulary
+   * @apiParam {Number} id The vocabulary ID
+   *
+   * @apiSampleRequest off
+   */
+  public function patchEntity($entity_id) {
+    parent::patchEntity($entity_id);
   }
 
   /**
