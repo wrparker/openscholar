@@ -2134,7 +2134,8 @@ class FeatureContext extends DrupalContext {
     }
   }
 
-  /** @Given /^I should not find the text "([^"]*)"$/
+  /**
+   * @Given /^I should not find the text "([^"]*)"$/
    *
    * This step is used to for looking for text in the page while respecting
    * the case sensitivity of the searched text.
@@ -2148,6 +2149,23 @@ class FeatureContext extends DrupalContext {
 
     if (preg_match($regex, $actual)) {
       $message = sprintf('The text "%s" appears in the text of this page, but it should not.', $text);
+      throw new Exception($message);
+    }
+  }
+
+  /**
+   * @Given /^I should find the text "([^"]*)"$/
+   *
+   * This step is used to for looking for text in the page while respecting
+   * the case sensitivity of the searched text.
+   */
+  public function iShouldFindTheText($text) {
+    $actual = $this->getSession()->getPage()->getText();
+    $actual = preg_replace('/\s+/u', ' ', $actual);
+    $regex  = '/'.preg_quote($text, '/').'/u';
+
+    if (!preg_match($regex, $actual)) {
+      $message = sprintf('The text "%s" did not appear in the text of this page, but it should have.', $text);
       throw new Exception($message);
     }
   }
