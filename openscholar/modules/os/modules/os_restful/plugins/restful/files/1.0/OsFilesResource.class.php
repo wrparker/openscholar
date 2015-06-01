@@ -531,7 +531,7 @@ class OsFilesResource extends RestfulEntityBase {
       }
 
       if (isset($info['saveCallback'])) {
-        $save = call_user_func($info['saveCallback'], $wrapper);
+        $save = $save || call_user_func($info['saveCallback'], $wrapper);
 
         if ($save) {
           unset($original_request[$public_field_name]);
