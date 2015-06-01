@@ -95,6 +95,7 @@ function os_taxonomy_views_query_alter(&$view, &$query) {
       // There is a path, but it does not match an active term.  In this case it is either
       // an old alias, old term, or mistyped path, we will throw a 404.
       drupal_not_found();
+      exit;
     }
 
     // No extra path filter was found.
