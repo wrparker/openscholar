@@ -3,7 +3,14 @@
 class OsOgVocab extends \RestfulEntityBase {
 
   /**
-   * {@inheritdoc}
+   * @api {get} api/og_vocab/:id Get
+   * @apiVersion 0.1.0
+   * @apiName Get
+   * @apiGroup Og Vocabulary
+   *
+   * @apiDescription Consume og vocabulary content.
+   *
+   * @apiParam {Number} id The ID of the entity
    */
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();
@@ -57,6 +64,58 @@ class OsOgVocab extends \RestfulEntityBase {
     );
 
     return vsite_og_user_access($permissions[$op]);
+  }
+
+  /**
+   * @api {get} api/og_vocab Post
+   * @apiVersion 0.1.0
+   * @apiName Post
+   * @apiGroup Og Vocabulary
+   *
+   * @apiDescription Create an og vocabulary.
+   *
+   * @apiParam {String} type The entity type
+   * @apiParam {String} bundle The entity bundle
+   * @apiParam {Number} id The entity ID
+   *
+   * @apiSampleRequest off
+   */
+  public function createEntity() {
+    return parent::createEntity();
+  }
+
+  /**
+   * @api {delete} api/og_vocab/:id Delete
+   * @apiVersion 0.1.0
+   * @apiName Delete
+   * @apiGroup Og Vocabulary
+   *
+   * @apiDescription Delete an og vocabulary.
+   *
+   * @apiParam {Number} id The og vocabulary ID
+   *
+   * @apiSampleRequest off
+   */
+  public function deleteEntity($entity_id) {
+    parent::deleteEntity($entity_id);
+  }
+
+  /**
+   * @api {get} api/og_vocab Patch
+   * @apiVersion 0.1.0
+   * @apiName Patch
+   * @apiGroup Og Vocabulary
+   *
+   * @apiDescription Patch an og vocabulary.
+   *
+   * @apiParam {String} type The entity type
+   * @apiParam {String} bundle The entity bundle
+   * @apiParam {Number} id The entity ID
+   *
+   * @apiSampleRequest off
+   */
+  public function patchEntity($entity_id) {
+    parent::patchEntity($entity_id);
   }
 
   /**
