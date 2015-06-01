@@ -12,8 +12,7 @@
   border-top: 1px solid lightgray;
   margin: 3px;
   margin-top: 0;
-  padding: 5px;
-  height: 597px;
+  padding: 20px 5px 0;
 }
 
 .media-browser-pane {
@@ -207,6 +206,7 @@ div[file-edit] .control button {
 }
 
 
+
 div[file-edit] input {
   margin-bottom: .1em;
   width: 95%;
@@ -224,6 +224,12 @@ div[file-edit] div.display_inline {
   margin-top: .5em;
 }
 
+
+div[ng-include="fileEditAddt"] {
+  background: #efefef;
+  width: 97%;
+  margin: 20px 0;
+ }
 
 #file-delete-section {
   display: none;
@@ -248,7 +254,7 @@ div[file-edit] div.display_inline {
   margin: 10px 0;
   color: #034A9D;
   text-decoration: underline;
-  border: 1px solid #4E84C4;
+  border: 1px solid #95ABC5;
 }
 
 #file-delete-section.open {
@@ -288,7 +294,7 @@ display:block;
 #media-browser-drop-box {
   height: 450px;
   width: 100%;
-  margin: 8% 0 2%;
+  margin: 6% 0 2%;
   border: 2px dashed #ccc;
 }
 
