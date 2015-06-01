@@ -2088,6 +2088,18 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I fill in the field "([^"]*)" with the node "([^"]*)"$/
+   *
+   * This step is used to fill in an autocomplete field.
+   */
+  public function iFillInTheFieldWithTheNode($id, $title) {
+    $nid = FeatureHelp::getNodeId($title);
+    $element = $this->getSession()->getPage();
+    $value = $title . ' (' . $nid . ')';
+    $element->fillField($id, $value);
+  }
+
+  /**
    * Create an entity of a given type and title.
    */
   private function createEntity($type, $title) {
@@ -2122,7 +2134,8 @@ class FeatureContext extends DrupalContext {
     }
   }
 
-  /** @Given /^I should not find the text "([^"]*)"$/
+  /**
+   * @Given /^I should not find the text "([^"]*)"$/
    *
    * This step is used to for looking for text in the page while respecting
    * the case sensitivity of the searched text.
@@ -2141,10 +2154,37 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I should find the text "([^"]*)"$/
+   *
+   * This step is used to for looking for text in the page while respecting
+   * the case sensitivity of the searched text.
+   */
+  public function iShouldFindTheText($text) {
+    $actual = $this->getSession()->getPage()->getText();
+    $actual = preg_replace('/\s+/u', ' ', $actual);
+    $regex  = '/'.preg_quote($text, '/').'/u';
+
+    if (!preg_match($regex, $actual)) {
+      $message = sprintf('The text "%s" did not appear in the text of this page, but it should have.', $text);
+      throw new Exception($message);
+    }
+  }
+
+  /**
    * @Given /^I logout$/
    */
   public function iLogout() {
     $this->visit('user/logout');
+  }
+
+  /**
+   * @Then /^I should see a table with the text "([^"]*)" in its header$/
+   */
+  public function iShouldSeeATableWithTheTextInItsHeader($text) {
+    $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//thead//tr//th[contains(., '{$text}')]");
+    if (!$element) {
+      throw new Exception(sprintf("The header of the table doesn't contain the text %s", $text));
+    }
   }
 
 }
