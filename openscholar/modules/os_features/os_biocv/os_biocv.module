@@ -18,9 +18,9 @@ function os_biocv_os_app_info() {
 
   $apps['os_biocv'] = array(
     'path' => 'biocv',
-  	'nodetypes' => array(
-  	  'bio',
-  		'cv',
+    'nodetypes' => array(
+      'bio',
+      'cv',
     ),
     'browse_pages' => array(
       'bio' => FALSE,
@@ -403,3 +403,193 @@ function _os_biocv_access_admin() {
   return user_access('administer site configuration');
 }
 
+/**
+ *
+ */
+function os_biocv_migrate() {
+  $output = "";
+
+  // get bio data and add to data array
+  $query = db_select('node', 'n')
+    ->condition('n.type', 'bio', '=')
+    ->condition('n.status', '1', '=');
+  $query->leftJoin('field_data_body', 'body', 'n.nid = body.entity_id AND body.deleted <> 1 AND n.vid = body.revision_id');
+  $query->innerJoin('og_membership', 'ogm', 'body.entity_id = ogm.etid AND ogm.entity_type = body.entity_type');
+  $query->leftJoin('spaces_overrides', 'so', "so.id = ogm.gid AND so.object_type='variable' AND so.object_id = 'os_biocv_use_pdf_as_cv'");
+  $query = $query->fields('ogm', array('gid'))
+                 ->fields('n', array('nid','title','uid'))
+                 ->fields('body', array('body_value'))
+                 ->fields('so', array('value'));
+  $query->addExpression('MIN(n.created)');
+  $query->groupBy('ogm.gid');
+  $results = $query->execute();
+
+  $vsites = array();
+  while ($row = $results->fetchObject()) {
+    $values = array();
+    $values['uid'] = $row->uid;
+    $values['bio_nid'] = $row->nid;
+    _os_biocv_set_not_empty($values, 'bio_title', $row->title);
+    _os_biocv_set_not_empty($values, 'bio_body', $row->body_value);
+
+    switch($row->value) {
+      case 'b:1;':
+        $setting = FALSE;
+        break;
+      case 'i:1;':
+        $setting = FALSE;
+        break;
+      case 's:1:"1";':
+        $setting = FALSE;
+        break;
+      case 'i:0;':
+        $setting = TRUE;
+        break;
+      case 's:1:"0";':
+        $setting = TRUE;
+        break;
+      case 's:4:"b:0;";':
+        $setting = TRUE;
+        break;
+      default:
+        $setting = TRUE;
+    }
+    $values['tabs'] = $setting;
+
+    $vsites[$row->gid] = $values;
+
+  }
+
+  // get cv data and add to data array
+  $query = db_select('og_membership', 'ogm')
+    ->condition('ogm.entity_type', 'node', '=');
+  $query->innerJoin('node', 'n', "ogm.etid = n.nid AND n.type = 'cv' AND n.status = 1");
+  $query->leftJoin('field_data_body', 'body', 'n.nid = body.entity_id AND body.deleted <> 1 AND n.vid = body.revision_id');
+  $query->leftJoin('field_data_field_biocv_pdf_upload', 'pdf', 'n.nid = pdf.entity_id');
+  $query->leftJoin('file_managed', 'file', 'file.fid = pdf.field_biocv_pdf_upload_fid and file.status = 1');
+  $query = $query->fields('ogm', array('gid'))
+                 ->fields('n', array('nid','title', 'uid'))
+                 ->fields('body', array('body_value'))
+                 ->fields('file', array('uri'));
+  $query->addExpression('MIN(n.created)');
+  $query->groupBy('ogm.gid');
+  $results = $query->execute();
+
+  while ($row = $results->fetchObject()) {
+    if (!isset($vsites[$row->gid])) {
+      $values = array();
+    }
+    else {
+      $values = $vsites[$row->gid];
+    }
+    $values['cv_nid'] = $row->nid;
+    _os_biocv_set_not_empty($values, 'cv_title', $row->title);
+    _os_biocv_set_not_empty($values, 'cv_body', $row->body_value);
+    $values['cv_path'] = str_replace("public:/", "", $row->uri);
+    if (!isset($values['uid'])) {
+      $values['uid'] = $row->uid;
+    }
+
+    $vsites[$row->gid] = $values;
+  }
+
+  $gid = '86696';
+  $vsite_values = $vsites[$gid];
+  $vsite_obj = vsite_get_vsite($gid);
+  if (!$vsite_values['uid']) {
+    $vsite_values['uid'] = 1;
+  }
+
+  try {
+    // create body for bio page
+    $bio_body = $vsite_values['bio_body'];
+    if (isset($vsite_values['cv_body']) || isset($vsite_values['cv_path'])) {
+      $cvlink = "";
+      if ($vsite_values['tabs']) {
+        $cvlink = '<p><a href="/' . $vsite_obj->group->title . '/biocv/cv">Curriculum Vitae</a></p>';
+      }
+      elseif ($vsite_values['cv_path']) {
+        $cvlink = '<p><a href="' . $vsite_values['cv_path'] . '">Curriculum Vitae</a></p>';
+      }
+    }
+    $bio_body = $cvlink . $bio_body;
+    $bio_options = array(
+      'body' => array(
+        'value' => $bio_body,
+        'format' => 'filtered_html',
+      ),
+    );
+    $bio_node = os_create_node($vsite_values['bio_title'], 'page', $vsite_values['uid'], NULL, $bio_options);
+    if (!$bio_node) {
+      throw new Exception("Unable to create bio page for vsite " . $gid . ".");
+    }
+
+    // Add the new page to the vsite, delete the old bio node and then give the new page the right url alias
+     vsite_add_node($bio_node, $gid);
+    node_delete($vsite_values['bio_nid']);
+    $path = array(
+      "source" => "node/" . $bio_node->nid,
+      "alias" => $vsite_obj->group->title . "/biocv"
+    );
+    path_save($path);
+
+    // create cv page (if necessary)
+    if ($vsite_values['tabs'] && (isset($vsite_values['cv_body']) || isset($vsite_values['cv_path']))) {
+      $cv_body = "";
+      if(isset($vsite_values['cv_body'])) {
+        $cv_body = $vsite_values['cv_body'];
+      }
+      if(isset($vsite_values['cv_path'])) {
+        $cv_node = node_load($vsite_values['cv_nid']);
+        $cv_field_data = $cv_node->field_biocv_pdf_upload;
+        $cv_display = array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'file_default',
+        );
+        $cv_body .= render(field_view_field('node', $cv_node, 'field_biocv_pdf_upload', $cv_display, LANGUAGE_NONE));
+      }
+      $cv_options = array(
+        'body' => array(
+          'value' => $cv_body,
+          'format' => 'filtered_html',
+        ),
+      );
+      $cv_node = os_create_node($vsite_values['cv_title'], 'page', $vsite_values['uid'], NULL, $cv_options);
+      if (!$cv_node) {
+        throw new Exception("Unable to create cv page for vsite " . $gid . ".");
+      }
+      // Add the new page to the vsite, delete the old CV node and then give the new page the right url alias
+      vsite_add_node($cv_node, $gid);
+      node_delete($vsite_values['cv_nid']);
+      $path = array(
+        "source" => "node/" . $cv_node->nid,
+        "alias" => $vsite_obj->group->title . "/biocv/cv"
+      );
+      path_save($path);
+    }
+    elseif (isset($vsite_values['cv_nid'])) {
+//
+// TODO: figure out how to transfer association of cv file from CV node to CV page or bio page, depending
+//
+//      node_delete($vsite_values['cv_nid']);
+    }
+  }
+  catch (Exception $e) {
+    $output .= $e->getMessage() . "\n";
+  }
+  print $output;
+}
+
+/**
+ * helper function to make the distinction between a field
+ * with only whitespace, HTML tags and/or HTML entities in it
+ * and actual content and only set an indexed array value
+ * if there is actual content
+ */
+function _os_biocv_set_not_empty(&$array, $key, $value) {
+  $pattern = '/\s/';
+  if (preg_replace($pattern, "", html_entity_decode(strip_tags($value))) != "") {
+    $array[$key] = $value;
+  }
+}
