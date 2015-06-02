@@ -550,7 +550,6 @@
       <text macro="container-contributors"/>
       <text macro="edition"/>
       <text macro="locators-chapter"/>
-      <text macro="collection-title-journal" prefix=", " suffix=", "/>
       <text macro="locators"/>
       <text macro="issue"/>
       <text macro="locators-article"/>
