@@ -344,11 +344,9 @@
       <else-if type="article-journal">
         <choose>
           <if variable="volume issue" match="any">
-            <group delimiter=" ">
-              <text variable="issue" prefix=", "/>
-              <text variable="volume" prefix=", "/>
-              <text variable="page" prefix=": "/>
-            </group>
+            <text variable="issue" prefix=", "/>
+            <text variable="volume" prefix=", "/>
+            <text variable="page" prefix=": "/>
           </if>
           <else>
             <text variable="page" prefix=", "/>
