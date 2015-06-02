@@ -329,6 +329,16 @@ class os_taxonomy_fbt extends os_boxes_default {
         'options' => $this->options,
       ));
 
+      // When showing events set expire time of 5 minutes.
+      $event_bundles = array(
+        'event',
+        'upcoming_event',
+        'past_event',
+      );
+      if (in_array(reset($this->options['bundles']), $event_bundles)) {
+        $this->cache_time = "5 minutes";
+      }
+
       $block['content'] = $content;
       $this->set_cache($block['content']);
     }
