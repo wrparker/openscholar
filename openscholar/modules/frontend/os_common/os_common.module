@@ -179,8 +179,19 @@ function os_common_library() {
     'title' => t('Angular File Upload'),
     'version' => '3.1.0',
     'js' => array(
-      $bower . '/ng-file-upload/angular-file-upload.js' => array(),
-      $bower . '/ng-file-upload/angular-file-upload-shim.js' => array(),
+      libraries_get_path('ng-file-upload') . '/angular-file-upload.js' => array(),
+      libraries_get_path('ng-file-upload') . '/angular-file-upload-shim.js' => array(),
+    ),
+    'dependencies' => array(
+      array('os_common', 'angularjs'),
+    )
+  );
+
+  $info['angular-modal-service'] = array(
+    'title' => t('Angular File Upload'),
+    'version' => '3.1.0',
+    'js' => array(
+      libraries_get_path('angular-modal-service') . '/dst/angular-modal-service.min.js' => array(),
     ),
     'dependencies' => array(
       array('os_common', 'angularjs'),
@@ -235,6 +246,7 @@ function os_common_library() {
     ),
     'dependencies' => array(
       array('os_common', 'ng-file-upload'),
+      array('os_common', 'angular-modal-service'),
       array('os_common', 'EntityService'),
       array('os_common', 'TaxonomyWidget'),
     )
