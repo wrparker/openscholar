@@ -521,7 +521,7 @@ function theme_os_taxonomy_vocabulary_item_list($variables) {
       if (current($options['bundles']) == 'past_event') {
         $term_path['path'] = 'calendar/past_events';
       }
-      elseif (current($options['bundles']) == 'upcoming_event' || current($options['bundles']) == 'event') {
+      elseif (in_array(current($options['bundles']), array('upcoming_event', 'event'))) {
         $term_path['path'] = 'calendar/upcoming';
       }
 
@@ -1307,7 +1307,7 @@ function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array
     $query->leftJoin('field_data_field_date', 'fd', '(ogv.entity_id = fd.entity_id)');
     $event_type = reset($bundles);
 
-    if ($event_type == 'upcoming_event' || $event_type == 'event') {
+    if (in_array($event_type, array('upcoming_event', 'event'))) {
       // When user selected "upcoming event" or the "Determine for me" option,
       // get upcoming events.
       $str = '-30 minutes';
