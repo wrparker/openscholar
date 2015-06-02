@@ -521,7 +521,7 @@ function theme_os_taxonomy_vocabulary_item_list($variables) {
       if (current($options['bundles']) == 'past_event') {
         $term_path['path'] = 'calendar/past_events';
       }
-      elseif (current($options['bundles']) == 'future_event') {
+      elseif (current($options['bundles']) == 'upcoming_event' || current($options['bundles']) == 'event') {
         $term_path['path'] = 'calendar/upcoming';
       }
 
@@ -1307,9 +1307,11 @@ function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array
     $query->leftJoin('field_data_field_date', 'fd', '(ogv.entity_id = fd.entity_id)');
     $event_type = reset($bundles);
 
-    if ($event_type == 'future_event') {
-      // Get upcoming events.
-      $query->condition('fd.field_date_value', gmdate('Y-m-d H:i:s'), '>=');
+    if ($event_type == 'upcoming_event' || $event_type == 'event') {
+      // When user selected "upcoming event" or the "Determine for me" option,
+      // get upcoming events.
+      $str = '-30 minutes';
+      $query->condition('fd.field_date_value', gmdate('Y-m-d H:i:s', strtotime($str)), '>=');
     }
     else {
       // Get past events.
