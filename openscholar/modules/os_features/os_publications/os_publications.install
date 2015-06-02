@@ -1335,3 +1335,26 @@ function os_publications_update_7029() {
 function os_publications_install_7030() {
   features_revert(array('os_publications' => array('metatag')));
 }
+
+/**
+ * Adding biblio field 'biblio_date' to Newspaper and magazine.
+ */
+function os_publication_install_7031() {
+  $fields = db_select('biblio_fields', 'bf')
+    ->condition('name', 'biblio_date')
+    ->fields('bf')
+    ->execute()
+    ->fetchAllAssoc('fid');
+  $fid = reset($fields)->fid;
+
+  // Get the biblio types we need to iterate over and attach the fields.
+  $types = db_select('biblio_types', 'bt')
+    ->condition('name', array('Newspaper Article', 'Magazine Article'), 'IN')
+    ->fields('bt', array('tid', 'name'))
+    ->execute()
+    ->fetchAllKeyed();
+
+  foreach (array_keys($types) as $type_id) {
+    // Attaching the biblio field to the biblio type.
+  }
+}
