@@ -10,7 +10,7 @@ class OsOgVocab extends \RestfulEntityBase {
    *
    * @apiDescription Consume og vocabulary content.
    *
-   * @apiParam {Number} id The ID of the entity
+   * @apiParam {Integer} id The ID of the entity
    */
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();
@@ -76,7 +76,7 @@ class OsOgVocab extends \RestfulEntityBase {
    *
    * @apiParam {String} type The entity type
    * @apiParam {String} bundle The entity bundle
-   * @apiParam {Number} id The entity ID
+   * @apiParam {Integer} id The entity ID
    *
    * @apiSampleRequest off
    */
@@ -92,7 +92,7 @@ class OsOgVocab extends \RestfulEntityBase {
    *
    * @apiDescription Delete an og vocabulary.
    *
-   * @apiParam {Number} id The og vocabulary ID
+   * @apiParam {Integer} id The og vocabulary ID
    *
    * @apiSampleRequest off
    */
@@ -110,7 +110,7 @@ class OsOgVocab extends \RestfulEntityBase {
    *
    * @apiParam {String} type The entity type
    * @apiParam {String} bundle The entity bundle
-   * @apiParam {Number} id The og vocabulary ID
+   * @apiParam {Integer} id The og vocabulary ID
    *
    * @apiSampleRequest off
    */
