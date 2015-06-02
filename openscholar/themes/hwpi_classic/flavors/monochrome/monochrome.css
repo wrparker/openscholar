@@ -34,9 +34,12 @@ h2.block-title,
 	font-family: 'Source Sans Pro', sans-serif, Georgia, serif !important;
 }
 
+.block-boxes-os_taxonomy_fbt.navigation a,
+.breadcrumb a,
 a, a:visited {
   color: #A51C30;
 }
+
 
 .section-nav .menu-depth-1 > a,
 #header {
@@ -121,15 +124,16 @@ a, a:visited {
 
 
 .section-nav ul.menu li a {
-	border-bottom: 1px solid #BF7D86;
+	border-bottom: none;
 }
 
 #boxes-box-os_pages_section_nav {
 	border: 1px solid #BF7D86;
 }
 
+.section-nav .expanded.menu-depth-2 > a:hover,
 .section-nav .expanded.menu-depth-2 > a {
-  background-color: #BAC5C6;
+  background-color: #BAC5C6 !important;
   color: #222;
 }
 
