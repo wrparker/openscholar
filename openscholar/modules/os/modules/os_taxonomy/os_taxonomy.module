@@ -1315,7 +1315,7 @@ function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array
     }
     else {
       // Get past events.
-      $query->condition('fd.field_date_value2', gmdate('Y-m-d H:i:s'), '<');
+      $query->condition('fd.field_date_value', gmdate('Y-m-d H:i:s'), '<');
     }
     $query->condition('ogv.bundle', array('event'), 'IN');
   }
