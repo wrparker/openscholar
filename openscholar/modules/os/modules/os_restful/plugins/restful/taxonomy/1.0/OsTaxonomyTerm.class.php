@@ -37,7 +37,7 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
   }
 
   /**
-   * @api {get} api/taxonomy Post
+   * @api {post} api/taxonomy Post
    * @apiVersion 0.1.0
    * @apiName Post
    * @apiGroup Term
@@ -68,7 +68,7 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
   }
 
   /**
-   * @api {get} api/taxonomy/:id Patch
+   * @api {patch} api/taxonomy/:id Patch
    * @apiVersion 0.1.0
    * @apiName Patch
    * @apiGroup Term

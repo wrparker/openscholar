@@ -27,7 +27,7 @@ class OsVocabulary extends \RestfulEntityBase {
   }
 
   /**
-   * @api {get} api/vocabulary Post
+   * @api {post} api/vocabulary Post
    * @apiVersion 0.1.0
    * @apiName Post
    * @apiGroup Vocabulary
@@ -58,7 +58,7 @@ class OsVocabulary extends \RestfulEntityBase {
   }
 
   /**
-   * @api {get} api/vocabulary/:id Patch
+   * @api {patch} api/vocabulary/:id Patch
    * @apiVersion 0.1.0
    * @apiName Patch
    * @apiGroup Vocabulary
