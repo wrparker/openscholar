@@ -65,11 +65,6 @@ cd $ROOT
   # Build core.
   $DRUSH make openscholar/drupal-org-core.make $BUILD_ROOT/www-build
 
-  # Install bower components
-  find openscholar/modules/frontend -type f -name 'bower.json' | sed -r 's|[^/]+$||' | uniq | while read path; do
-     bower install "./$path"
-  done
-
   # Check if sites/default exists, which means it is an existing installation.
   if [ -d $BUILD_ROOT/$DOCROOT/sites/default ]; then
     cp -rp $BUILD_ROOT/$DOCROOT/sites/default sites-backup
@@ -119,10 +114,9 @@ CUR_DIR=$(pwd)
   cp .htaccess $DOCROOT
 )
 
-# Get the angualr components
-#(
-#  cd $BUILD_ROOT/openscholar/client
-#  npm install
-#  bower install
-#  cd -
-#)
+# Get the angualr components.
+(
+  cd $BUILD_ROOT/openscholar
+  bower install
+  cd -
+)

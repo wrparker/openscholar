@@ -45,7 +45,7 @@
     return params;
   }
 
-  angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'angularFileUpload', 'angularModalService', 'FileEditor', 'mediaBrowser.filters'])
+  angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'angularFileUpload', 'ngFileUpload', 'angularModalService', 'FileEditor', 'mediaBrowser.filters'])
     .config(function (){
        rootPath = Drupal.settings.paths.moduleRoot;
     })
@@ -103,8 +103,8 @@
         }
       }
     }])
-  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', '$sce', '$upload', '$timeout', 'params', 'close',
-      function ($scope, $filter, $http, EntityService, $sce, $upload, $timeout, params, close) {
+  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', '$sce', 'Upload', '$timeout', 'params', 'close',
+      function ($scope, $filter, $http, EntityService, $sce, upload, $timeout, params, close) {
 
     // Initialization
     var service = new EntityService('files', 'id'),

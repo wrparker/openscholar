@@ -179,7 +179,8 @@ function os_common_library() {
     'title' => t('Angular File Upload'),
     'version' => '3.1.0',
     'js' => array(
-      libraries_get_path('angular-file-upload') . '/angular-file-upload.js' => array(),
+      libraries_get_path('angular-file-upload') . '/angular-file-upload.min.js' => array(),
+      libraries_get_path('ng-file-upload') . '/ng-file-upload.js' => array(),
       libraries_get_path('ng-file-upload') . '/ng-file-upload-shim.min.js' => array(),
     ),
     'dependencies' => array(
