@@ -10,7 +10,7 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
    *
    * @apiDescription Consume taxonomy term content.
    *
-   * @apiParam {Number} id The ID of the VSite
+   * @apiParam {Integer} id The ID of the VSite
    */
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();
@@ -37,7 +37,7 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
   }
 
   /**
-   * @api {get} api/taxonomy Post
+   * @api {post} api/taxonomy Post
    * @apiVersion 0.1.0
    * @apiName Post
    * @apiGroup Term
@@ -59,7 +59,7 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
    *
    * @apiDescription Delete a taxonomy term.
    *
-   * @apiParam {Number} id The term ID
+   * @apiParam {Integer} id The term ID
    *
    * @apiSampleRequest off
    */
@@ -68,7 +68,7 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
   }
 
   /**
-   * @api {get} api/taxonomy/:id Patch
+   * @api {patch} api/taxonomy/:id Patch
    * @apiVersion 0.1.0
    * @apiName Patch
    * @apiGroup Term
@@ -76,7 +76,7 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
    * @apiDescription Patch a taxonomy term.
    *
    * @apiParam {String} label The name of the term
-   * @apiParam {Number} id The term ID
+   * @apiParam {Integer} id The term ID
    *
    * @apiSampleRequest off
    */

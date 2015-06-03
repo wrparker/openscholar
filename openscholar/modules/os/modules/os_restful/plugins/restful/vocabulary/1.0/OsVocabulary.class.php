@@ -10,7 +10,7 @@ class OsVocabulary extends \RestfulEntityBase {
    *
    * @apiDescription Consume vocabulary content.
    *
-   * @apiParam {Number} id The ID of the VSite
+   * @apiParam {Integer} id The ID of the VSite
    */
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();
@@ -27,7 +27,7 @@ class OsVocabulary extends \RestfulEntityBase {
   }
 
   /**
-   * @api {get} api/vocabulary Post
+   * @api {post} api/vocabulary Post
    * @apiVersion 0.1.0
    * @apiName Post
    * @apiGroup Vocabulary
@@ -35,7 +35,7 @@ class OsVocabulary extends \RestfulEntityBase {
    * @apiDescription Create vocabulary content.
    *
    * @apiParam {String} label The name of the vocabulary
-   * @apiParam {Number} id The ID of the VSite
+   * @apiParam {Integer} id The ID of the VSite
    */
   public function createEntity() {
     return parent::createEntity();
@@ -49,7 +49,7 @@ class OsVocabulary extends \RestfulEntityBase {
    *
    * @apiDescription Delete a vocabulary.
    *
-   * @apiParam {Number} id The vocabulary ID
+   * @apiParam {Integer} id The vocabulary ID
    *
    * @apiSampleRequest off
    */
@@ -58,7 +58,7 @@ class OsVocabulary extends \RestfulEntityBase {
   }
 
   /**
-   * @api {get} api/vocabulary/:id Patch
+   * @api {patch} api/vocabulary/:id Patch
    * @apiVersion 0.1.0
    * @apiName Patch
    * @apiGroup Vocabulary
@@ -66,7 +66,7 @@ class OsVocabulary extends \RestfulEntityBase {
    * @apiDescription Patch a vocabulary.
    *
    * @apiParam {String} label The name of the vocabulary
-   * @apiParam {Number} id The vocabulary ID
+   * @apiParam {Integer} id The vocabulary ID
    *
    * @apiSampleRequest off
    */

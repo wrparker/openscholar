@@ -7,6 +7,16 @@
 
 class OsRestfulUser extends \RestfulEntityBaseUser {
 
+  /**
+   * @api {get} api/users/:id Get
+   * @apiVersion 0.1.0
+   * @apiName Get
+   * @apiGroup User
+   *
+   * @apiDescription Consume the user entity.
+   *
+   * @apiParam {Integer} id The ID of the user
+   */
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();
 
@@ -51,10 +61,45 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
 
   /**
    * Overriding the create entity method in order to load the password.inc file.
+   *
+   * @api {post} api/users Post
+   * @apiVersion 0.1.0
+   * @apiName Post
+   * @apiGroup User
+   *
+   * @apiDescription Create a user entity.
+   *
+   * @apiParam {String} name The name of the user
+   * @apiParam {String} mail The email of the user
+   * @apiParam {String} password The password for the user
+   * @apiParam {Integer} role The role ID of the user
+   * @apiParam {Integer} vsite The VSite of the user
+   *
+   * @apiSampleRequest off
    */
   public function createEntity() {
     require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
     return parent::createEntity();
+  }
+
+  /**
+   * @api {patch} api/users/:id Patch
+   * @apiVersion 0.1.0
+   * @apiName Patch
+   * @apiGroup User
+   *
+   * @apiDescription Patch a user entity.
+   *
+   * @apiParam {String} name The name of the user
+   * @apiParam {String} mail The email of the user
+   * @apiParam {String} password The password for the user
+   * @apiParam {Integer} role The role ID of the user
+   * @apiParam {Integer} vsite The VSite of the user
+   *
+   * @apiSampleRequest off
+   */
+  public function patchEntity($entity_id) {
+    parent::patchEntity($entity_id);
   }
 
   /**
