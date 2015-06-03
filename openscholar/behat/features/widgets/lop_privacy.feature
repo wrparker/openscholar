@@ -1,4 +1,4 @@
-Feature: foo
+Feature:
   Verify that privacy of bundles is respected in the LOP widget.
 
   @api @widgets

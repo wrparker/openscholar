@@ -2088,6 +2088,18 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I fill in the field "([^"]*)" with the node "([^"]*)"$/
+   *
+   * This step is used to fill in an autocomplete field.
+   */
+  public function iFillInTheFieldWithTheNode($id, $title) {
+    $nid = FeatureHelp::getNodeId($title);
+    $element = $this->getSession()->getPage();
+    $value = $title . ' (' . $nid . ')';
+    $element->fillField($id, $value);
+  }
+
+  /**
    * Create an entity of a given type and title.
    */
   private function createEntity($type, $title) {
@@ -2122,7 +2134,43 @@ class FeatureContext extends DrupalContext {
     }
   }
 
-  /** @Given /^I should not find the text "([^"]*)"$/
+  /**
+   * @Given /^I should see "([^"]*)" in the "([^"]*)" column for the row "([^"]*)"$/
+   */
+  public function iShouldSeeInTheColumnInTheRow($value, $column, $row) {
+    $index = 0;
+    switch ($column) {
+      case 'used in':
+        $index = 5;
+        break;
+    }
+    $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//tr[contains(., '{$row}')][td[contains(., '{$value}')]]//td[{$index}]");
+    if (!$element) {
+      throw new Exception(sprintf("The value of %s was not found", $value));
+    }
+    if ($element->getText() != $value) {
+      throw new Exception(sprintf("The value for the %s column should be %s but it is %s", $column, $value, $element->getText()));
+    }
+  }
+
+  /**
+   * @Given /^I should not see "([^"]*)" in the "([^"]*)" column for the row "([^"]*)"$/
+   */
+  public function iShouldNotSeeInTheColumnInTheRow($value, $column, $row) {
+    $index = 0;
+    switch ($column) {
+      case 'used in':
+        $index = 5;
+        break;
+    }
+    $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//tr[contains(., '{$row}')]//td[{$index}]");
+    if ($element->getText() == $value) {
+      throw new Exception(sprintf("The value for the %s column should not be %s", $column, $value));
+    }
+  }
+
+  /**
+   * @Given /^I should not find the text "([^"]*)"$/
    *
    * This step is used to for looking for text in the page while respecting
    * the case sensitivity of the searched text.
@@ -2141,10 +2189,94 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I should find the text "([^"]*)"$/
+   *
+   * This step is used to for looking for text in the page while respecting
+   * the case sensitivity of the searched text.
+   */
+  public function iShouldFindTheText($text) {
+    $actual = $this->getSession()->getPage()->getText();
+    $actual = preg_replace('/\s+/u', ' ', $actual);
+    $regex  = '/'.preg_quote($text, '/').'/u';
+
+    if (!preg_match($regex, $actual)) {
+      $message = sprintf('The text "%s" did not appear in the text of this page, but it should have.', $text);
+      throw new Exception($message);
+    }
+  }
+
+  /**
    * @Given /^I logout$/
    */
   public function iLogout() {
     $this->visit('user/logout');
+  }
+
+  /**
+   * @When /^I remove the file "([^"]*)" from the node "([^"]*)" of type "([^"]*)"$/
+   */
+  public function iRemoveTheFileFromTheNode($filename, $title, $type) {
+    $nid = FeatureHelp::getNodeId($title);
+
+    $wrapper = entity_metadata_wrapper('node', $nid);
+
+    switch ($type) {
+      case "media gallery":
+        $field_name = 'media_gallery_file';
+        break;
+    }
+
+    // Remove the file from the field.
+    $new_files = array();
+    $files = $wrapper->{$field_name}->value();
+    foreach ($files as $file) {
+      if ($file['filename'] == $filename) {
+        continue;
+      }
+      $new_files[] = $file;
+    }
+
+    // Set the field again and save.
+    $wrapper->{$field_name}->set($new_files);
+    $wrapper->save();
+
+  }
+
+  /**
+   * @Given /^I am deleting the file "([^"]*)"$/
+   */
+  public function iAmDeletingTheFile($filename) {
+    $fid = FeatureHelp::getEntityID('file', $filename);
+    $file = file_load($fid);
+    file_delete($file);
+  }
+
+  /**
+   * @Given /^I should verify the file "([^"]*)" exists$/
+   */
+  public function iShouldVerifyTheFileExists($filename) {
+    $fid = FeatureHelp::getEntityID('file', $filename);
+
+    $result = db_select('file_usage', 'fu')
+      ->fields('fu')
+      ->condition('fu.module', 'os_files')
+      ->condition('fu.fid', $fid)
+      ->execute()
+      ->fetchAssoc();
+
+    if (empty($result)) {
+      throw new Exception(sprintf("No file usage was found for the file %s", $filename));
+    }
+  }
+
+  /**
+   * @Then /^I should see a table with the text "([^"]*)" in its header$/
+   */
+  public function iShouldSeeATableWithTheTextInItsHeader($text) {
+    $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//thead//tr//th[contains(., '{$text}')]");
+    if (!$element) {
+      throw new Exception(sprintf("The header of the table doesn't contain the text %s", $text));
+    }
   }
 
 }
