@@ -174,7 +174,7 @@ Feature:
       And the widget "Filter by term" is set in the "News" page with the following <settings>:
         | Post types           | Select post type   | select list |
         | Vocabularies         | authors            | select list |
-        | Select Post type     | Future event       | select list |
+        | Select Post type     | Upcoming event     | select list |
      When I visit "john/news"
       And I should see "Antoine de Saint-Exupéry (1)"
       And I click "Antoine de Saint-Exupéry (1)"
