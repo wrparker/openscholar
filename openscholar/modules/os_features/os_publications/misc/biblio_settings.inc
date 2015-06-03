@@ -2205,7 +2205,7 @@ $biblio_field_type_data = array(
   array('ftdid' => 181, 'title' => 'Folio Number', 'hint' => ''),
   array('ftdid' => 182, 'title' => 'Scale', 'hint' => ''),
   array('ftdid' => 183, 'title' => 'Newspaper', 'hint' => ''),
-  array('ftdid' => 184, 'title' => 'Issue Date', 'hint' => ''),
+  array('ftdid' => 184, 'title' => 'Date Published', 'hint' => '(mm/yyyy)'),
   array('ftdid' => 185, 'title' => 'Date Accessed', 'hint' => ''),
   array('ftdid' => 186, 'title' => 'Published Source', 'hint' => ''),
   array('ftdid' => 187, 'title' => 'International Title', 'hint' => ''),
