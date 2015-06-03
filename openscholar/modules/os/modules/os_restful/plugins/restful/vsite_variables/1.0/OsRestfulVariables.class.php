@@ -28,28 +28,40 @@ class OsRestfulVariables extends OsRestfulSpaces {
   }
 
   /**
-   * Updating a given space override.
+   * @api {path} api/variables Patch
+   * @apiVersion 0.1.0
+   * @apiName Patch
+   * @apiGroup Variables
    *
-   * type: PUT
-   * values: {
-   *  vsite: 2,
-   *  object_id: vsite_head_link_rel_author,
-   *  value: 1
-   * }
+   * @apiDescription Update a variable in a vsite.
+   *
+   * @apiParam {Number} id The publication ID
+   *
+   * @apiSampleRequest off
+   *
+   * @apiSuccess {Integer}  vsite       Registration Date.
+   * @apiSuccess {String}   object_id   The variable name.
+   * @apiSuccess {Mixed}    value       The body of the publication.
    */
   public function updateSpace() {
     return $this->createUpdateVariable();
   }
 
   /**
-   * Creating a space override.
+   * @api {post} api/variables Post
+   * @apiVersion 0.1.0
+   * @apiName Post
+   * @apiGroup Variables
    *
-   * type: POST
-   * values: {
-   *  vsite: 2,
-   *  object_id: vsite_head_link_rel_author,
-   *  value: 1
-   * }
+   * @apiDescription Create a variable in a vsite.
+   *
+   * @apiParam {Number} id The publication ID
+   *
+   * @apiSampleRequest off
+   *
+   * @apiSuccess {Integer}  vsite       Registration Date.
+   * @apiSuccess {String}   object_id   The variable name.
+   * @apiSuccess {Mixed}    value       The body of the publication.
    */
   public function createSpace() {
     return $this->createUpdateVariable();
@@ -72,13 +84,19 @@ class OsRestfulVariables extends OsRestfulSpaces {
   }
 
   /**
-   * In order to delete a widget from the layout your REST call should be:
-   * type: DELETE
+   * @api {delete} api/variables Delete
+   * @apiVersion 0.1.0
+   * @apiName Delete
+   * @apiGroup Variables
    *
-   * values: {
-   *  vsite: 2,
-   *  object_id: vsite_head_link_rel_author,
-   * }
+   * @apiDescription Delete a variable in a vsite.
+   *
+   * @apiParam {Number} id The publication ID
+   *
+   * @apiSampleRequest off
+   *
+   * @apiSuccess {Integer}  vsite       Registration Date.
+   * @apiSuccess {String}   object_id   The variable name.
    */
   public function deleteSpace() {
     // Check group access.
@@ -86,5 +104,23 @@ class OsRestfulVariables extends OsRestfulSpaces {
 
     $controller = $this->space->controllers->{$this->objectType};
     $controller->del($this->object->object_id);
+  }
+
+  /**
+   * @api {get} api/variables/:id Get
+   * @apiVersion 0.1.0
+   * @apiName Get
+   * @apiGroup Variables
+   *
+   * @apiDescription Get a variable from a vsite.
+   *
+   * @apiSuccess {String}   type         The space override type.
+   * @apiSuccess {Integer}  id           The space override ID.
+   * @apiSuccess {Mixed}    object_id    The space override object ID.
+   * @apiSuccess {Mixed}    object_type  The space override object type.
+   * @apiSuccess {Mixed}    value        The space override value.
+   */
+  public function getSpace() {
+    return parent::getSpace();
   }
 }
