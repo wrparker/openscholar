@@ -32,7 +32,18 @@ class OsRestfulRoles extends \OsRestfulDataProvider {
   }
 
   /**
-   * {@inheritdoc}
+   * @api {get} api/roles?vsite=:id Get
+   * @apiVersion 0.1.0
+   * @apiName Get
+   * @apiGroup Roles
+   *
+   * @apiDescription Consume user roles inside the group.
+   *
+   * @apiParam {Integer} rid            Role's ID.
+   * @apiParam {String}  name           Role's name.
+   * @apiParam {Integer} gid            Group ID. Not in use.
+   * @apiParam {String}  group_bundle   Group type.
+   * @apiParam {String}  group_type     Group Entity.
    */
   public function publicFieldsInfo() {
     return array(
