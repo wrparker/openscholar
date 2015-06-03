@@ -505,15 +505,3 @@ libraries[hopscotch][download][url] = "https://github.com/linkedin/hopscotch/arc
 libraries[angular_select2][type] = "libraries"
 libraries[angular_select2][download][type] = "get"
 libraries[angular_select2][download][url] = "https://github.com/angular-ui/ui-select/archive/v0.11.2.zip"
-
-libraries[angular-ivh-treeview][type] = "libraries"
-libraries[angular-ivh-treeview][download][type] = "get"
-libraries[angular-ivh-treeview][download][url] = "https://github.com/iVantage/angular-ivh-treeview/archive/v0.9.0.zip"
-
-;libraries[ng-file-upload][type] = "libraries"
-;libraries[ng-file-upload][download][type] = "get"
-;libraries[ng-file-upload][download][url] = "https://github.com/nervgh/angular-file-upload/archive/v1.1.5.zip"
-
-;libraries[angular-modal-service][type] = "libraries"
-;libraries[angular-modal-service][download][type] = "get"
-;libraries[angular-modal-service][download][url] = "https://github.com/dwmkerr/angular-modal-service/archive/v0.6.6.zip"

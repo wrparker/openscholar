@@ -5,7 +5,7 @@
       modal: true
     };
 
-  angular.module('FileEditorModal', ['EntityService', 'FileEditor', 'angularModalService'])
+  angular.module('FileEditorModal', ['EntityService', 'FileEditor', 'angularModalService', 'angularFileUpload'])
     .run(['EntityService', function (EntityService) {
       service = new EntityService('files', 'id');
       service.fetch();
