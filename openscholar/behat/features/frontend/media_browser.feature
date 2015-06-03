@@ -31,6 +31,16 @@ Feature: foo
      When I click on "Library" button in the media browser
       And I should see "Type in a filename or label to filter list of files"
 
+  @media_browser @javascript
+  Scenario: Verify files show up in the "Previously uploaded files" tab
+    Given I am logging in as "john"
+      And I wait for page actions to complete
+      And I edit the node "John doe biography" in the group "john"
+      And I click "Choose File"
+      And I wait "1 second" for the media browser to open
+     When I click on "Previously uploaded files" button in the media browser
+     Then I should see "kitty.jpg"
+
   @media_browser @javascript @wip
   Scenario: Upload a new file with no duplicates by pressing the button
     Given I am logging in as "john"
