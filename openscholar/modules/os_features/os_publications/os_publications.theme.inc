@@ -41,6 +41,7 @@ function theme_os_publications_tabular(&$vars) {
     'biblio_secondary_title',
     'biblio_coins',
     'biblio_lang',
+    'biblio_date',
   );
   $rows = array();
 
@@ -202,6 +203,13 @@ function _os_publications_plain_citation($node) {
     }
     if (!empty($node->biblio_issue) && strpos($citation, $node->biblio_issue) === FALSE){
       $citation .= ' Patent source: ' . $node->biblio_issue . '.';
+    }
+  }
+
+  // Add the presented date for a conference paper.
+  if ($node->biblio_type == 103) {
+    if (!empty($node->biblio_date) && strpos($citation, $node->biblio_date) === FALSE){
+      $citation .= ' Date Presented: ' . $node->biblio_date . '.';
     }
   }
 
