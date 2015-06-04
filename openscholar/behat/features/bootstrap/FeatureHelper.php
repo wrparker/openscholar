@@ -17,6 +17,7 @@ class FeatureHelp {
     'People' => 'profiles_profiles',
     'Data' => 'dataverse_dataverse',
     'Galleries' => 'gallery_gallery',
+    'FAQ' => 'faq_faq',
     'Software' => 'software_software',
     'Documents' => 'booklets_booklets',
     'Publications' => 'publications_publications',
@@ -41,6 +42,8 @@ class FeatureHelp {
     'Faceted taxonomy' => 'os_boxes_facetapi_vocabulary',
     'List of posts' => 'os_sv_list_box',
     'List of publications' => 'os_sv_list_box',
+    'Upcoming events' => 'os_sv_list_box',
+    'All Posts' => 'os_sv_list_box',
     'Cache time test' => 'os_boxes_cache_test',
   );
 

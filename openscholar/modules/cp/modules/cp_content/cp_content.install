@@ -28,3 +28,11 @@ function cp_content_update_7003() {
   features_revert(array('cp_content' => array('views')));
   return t('CP Content Views reverted to defaults.');
 }
+
+/**
+ * Reverts cp_content views to bring back the "Used in" column.
+ */
+function cp_content_update_7004() {
+  features_revert(array('cp_content' => array('views_view')));
+  return t('CP Content Views reverted to defaults.');
+}

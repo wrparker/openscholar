@@ -1,4 +1,4 @@
-;Drupal.org MakeFile for OpenScholar
+;Drupal.org Makefile for OpenScholar
 
 core = 7.x
 api = 2
@@ -27,6 +27,7 @@ projects[boxes][patch][] = "https://www.drupal.org/files/issues/default_object_e
 projects[calendar][subdir] = "contrib"
 projects[calendar][version] = 3.5
 projects[calendar][patch][] = "http://raw.github.com/openscholar/openscholar/72d63ee3537c31505b7481975886ec13789feeb5/patches/calendar-fix-week-view-overflow.patch"
+projects[calendar][patch][] = "http://raw.github.com/openscholar/openscholar/b334cd4b6831a5a1869647b7cbaaec1e8058d9bc/patches/calendar.scroll_to_first_event.patch"
 
 projects[colorbox][subdir] = "contrib"
 projects[colorbox][version] = 2.5
@@ -72,8 +73,7 @@ projects[disqus][version] = 1.9
 projects[disqus][patch][] = "http://drupal.org/files/comment_sources-disqus-2120703-1.patch"
 
 projects[dragndrop_upload][subdir] = "contrib"
-projects[dragndrop_upload][version] = 1.0-alpha1
-projects[dragndrop_upload][patch][] = "http://cgit.drupalcode.org/dragndrop_upload/patch/?id=164d2dd7526c297b544f5f367e48f5106f6bca5e"
+projects[dragndrop_upload][version] = 1.0-alpha2
 
 projects[dyntextfield][subdir] = "contrib"
 projects[dyntextfield][type] = module
@@ -128,6 +128,7 @@ projects[feeds_tamper‏][subdir] = "contrib"
 projects[feeds_tamper‏][type] = "module"
 projects[feeds_tamper‏][download][type] = "git"
 projects[feeds_tamper‏][download][url]="http://git.drupal.org/project/feeds_tamper.git"
+projects[feeds_tamper‏][patch][] = "https://www.drupal.org/files/issues/use_instancof_instead_of_get_class-2490120-1.patch"
 
 projects[feeds_xpathparser][subdir] = "contrib"
 projects[feeds_xpathparser][download][type] = git
@@ -243,7 +244,7 @@ projects[module_filter][subdir] = "contrib"
 projects[module_filter][version] = 1.7
 
 projects[memcache][subdir] = "contrib"
-projects[memcache][version] = 1.1-beta5
+projects[memcache][version] = 1.5
 
 projects[migrate][subdir] = "contrib"
 projects[migrate][version] = 2.5
@@ -479,7 +480,7 @@ libraries[select2][download][url] = "https://github.com/ivaynberg/select2/archiv
 
 libraries[twitter-api-php][type] = "libraries"
 libraries[twitter-api-php][download][type] = "file"
-libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/master.zip"
+libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/1.0.3.zip"
 
 libraries[autopager][type] = "libraries"
 libraries[autopager][download][type] = "file"

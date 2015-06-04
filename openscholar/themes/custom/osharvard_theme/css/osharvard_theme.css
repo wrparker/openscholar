@@ -191,7 +191,7 @@ body.no-sidebars .content-top-slideshow-enabled #content-panels .region-content-
 
 
 .bythenumbs {
-	width:800px;
+	width: 980px;
 	margin:0 auto;
 }
 
@@ -406,8 +406,17 @@ margin-top: 20px;
 ul#firstset,
 ul#secondset {
 	background:#F6F6F6;
-	width:598px;
-	}
+	width: 780px;
+	
+}
+
+
+
+ul#firstset {
+    width: 780px;
+	
+	
+}
 
 ul#secondset {
 	background:#FFF;
@@ -415,7 +424,7 @@ ul#secondset {
 
 ul#secondset,
 ul#firstset {
-	margin:0 0 .2em 8px;
+	margin: 0 0 .2em 8px;
 }
 
 ul#secondset li,
@@ -428,7 +437,8 @@ ul#firstset li {
     list-style-type: none;
     margin: 8px 8px 8px 0;
     padding: 3px 0 0 65px;
-    width: 120px;
+    
+	width: 180px;
 }
 
 li#websites {
@@ -459,14 +469,17 @@ li#diskspace {
 ul#secondset li {
 	margin: 8px 8px 0 0;
     padding: 0;
-    width: 143px;
+    
+	width: 189px;
     position:relative;
- 	height: 90px;
- 	float:left;
+ 	
+	height: 90px;
+ 	
+	float:left;
 }
 
 li#pageviews {
-	background:url('/profiles/openscholar/themes/custom/osharvard_theme/images/statsbgs/total-views.png') no-repeat #F6F6F6;
+	background: url('/profiles/openscholar/themes/custom/osharvard_theme/images/statsbgs/total-views.png') 25px 0px #F6F6F6 no-repeat;
 	}
 
 li#pageviews div {
@@ -519,7 +532,8 @@ position: relative;
  padding: 2px 12px 5px;
 margin-top: 9px;
 margin-bottom: 7px;
-width: 772px;
+
+ width: 955px;
 }
 
 #most-viewedpages h4,
@@ -552,7 +566,7 @@ padding-left:35px;
 
 .top-visited ul {
 	height:225px;
-	width: 380px;
+	/* width: 380px; */
 	overflow:auto;
 }
 
@@ -561,7 +575,8 @@ padding-left:35px;
 	background:#F6f6f6;
  padding: 2px 12px 5px;
 margin-top: 3px;
-width: 368px;
+
+	width: 460px;
 display:inline-block;
 vertical-align: top;
 font-size:12px;
@@ -600,7 +615,8 @@ padding-left:35px;
 #tabs2 {
   padding-right: 2px;
    margin-top: 10px;
-   margin-left: 70px !important;
+   
+  margin-left: 115px !important;
 height: 30px;
 }
 
@@ -649,12 +665,6 @@ clear:both;
   padding-top: 10px;
 
 }
-
-
-
-
-
-
 
 
 .region-content-first .block-boxes .os-embed-link {

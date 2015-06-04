@@ -47,4 +47,20 @@ class OsMigrateGalleryNode extends OsMigrate {
     $this->addFieldMapping('uid', 'uid')
       ->sourceMigration('OsMigrateUsers');
   }
+
+  /**
+   * Create OG memberships for the used files in the galleries.
+   */
+  public function complete($entity, $row) {
+    $wrapper = entity_metadata_wrapper('node', $entity);
+    $gid = $wrapper->{OG_AUDIENCE_FIELD}->value(array('identifier' => TRUE));
+    foreach ($wrapper->media_gallery_file->value() as $file) {
+      $membership = og_membership_create('node', reset($gid), 'file', $file['fid'], OG_AUDIENCE_FIELD);
+      og_membership_save($membership);
+
+      // Create a dummy file_usage entry. It will be removed only when the file is
+      // deleted.
+      file_usage_add(file_load($file['fid']), 'os_files', 'node', $gid);
+    }
+  }
 }

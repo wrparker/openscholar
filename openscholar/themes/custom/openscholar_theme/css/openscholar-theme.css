@@ -596,4 +596,8 @@ span.github-label {
 
 .alerts > p:first-child {background: url("../images/warning.png") no-repeat scroll 0 0 transparent;
     padding: 3px 0 3px 28px;}
+    
+.page-roadmap #modal ul {
+line-height: 2.1em;
+}
 

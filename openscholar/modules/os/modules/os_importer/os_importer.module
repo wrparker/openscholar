@@ -32,6 +32,17 @@ function os_importer_feeds_plugins() {
       'path' => drupal_get_path('module', 'os_importer') . '/plugins',
     ),
   );
+  $info['OsFeedsCSVParser'] = array(
+    'name' => t('OS importer CSV parser'),
+    'description' => t('Parses a given file as a CSV file.'),
+    'help' => t('Parse data in Comma Separated Value format.'),
+    'handler' => array(
+      'parent' => 'FeedsCSVParser',
+      'class' => 'OsFeedsCSVParser',
+      'file' => 'OsFeedsCSVParser.inc',
+      'path' => drupal_get_path('module', 'os_importer') . '/plugins',
+    ),
+  );
   return $info;
 }
 
@@ -66,8 +77,7 @@ function os_importer_os_app_info() {
  * Import feed item when the user add the feed importer for the first time.
  */
 function os_importer_node_insert($node) {
-
-  if ($node->type == 'event') {
+  if ($node->type == 'event' && !empty($node->feed_item)) {
 
     $round = function($value) {
       $time = strtotime($value);
@@ -618,7 +628,6 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   // Get the mappings of the current importer.
   $mappings_diff = array();
   $mappings = array();
-  $target_to_source = array();
   foreach ($config['processor']['config']['mappings'] as $mapping) {
     $mappings_diff[] = strtolower($mapping['source']);
     $mappings[] = $mapping['target'];
@@ -641,7 +650,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   $rows = $parser->parse($iterator);
 
   // Parse file's headers.
-  $header = _os_importer_parse_header($parser, $iterator);
+  $header = _os_importer_parse_header($parser, $iterator, $mappings);
 
   // Check what columns are missing from the uploaded CSV file and display
   // message if needed.
@@ -768,8 +777,9 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     }
   }
 
-  $new_file = file_save_data(implode("\n", $file_rows), $file->uri, FILE_EXISTS_REPLACE);
-  $form_state['values']['file'] = $new_file->fid;
+  // Update the file contents with the validated contents.
+  file_put_contents($file->uri, implode("\n", $file_rows));
+  $form_state['values']['file'] = $file->fid;
 }
 
 /**
@@ -806,20 +816,6 @@ function os_importer_import_submit($form, &$form_state) {
     $wrapper->field_rss_url->set($values['url']);
     $wrapper->save();
   }
-}
-
-/**
- * Implements hook_feeds_after_import().
- *
- * After we import data from the file we can delete him.
- */
-function os_importer_feeds_after_import(FeedsSource $source) {
-  if (!in_array('FeedsFileFetcher', array_keys($source->config))) {
-    return;
-  }
-
-  $file = file_load($source->config['FeedsFileFetcher']['fid']);
-  file_delete($file);
 }
 
 /**

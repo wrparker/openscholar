@@ -227,16 +227,22 @@ class os_sv_list extends os_boxes_default {
 
     return $form;
   }
-    
+
   public function render() {
     if (module_exists('vsite') && !vsite_get_vsite()) {
       return;
     }
 
+    $block = parent::render();
+
     $bundle = ($this->options['content_type'] != 'all') ? $this->options['content_type'] : NULL;
     $cid = $bundle ? 'node:' . $bundle : NULL;
 
-    $block = parent::render();
+    // Check user access to the content of the widget.
+    if (!empty($bundle) && !$this->checkWidgetAccess($bundle)) {
+      return $block;
+    }
+
     $page_num = pager_find_page(PagerDefault::$maxElement);
 
     $this->set_cache_id($cid, $page_num);
@@ -279,22 +285,36 @@ class os_sv_list extends os_boxes_default {
       drupal_add_library('system', 'drupal.ajax');
       drupal_add_js(drupal_get_path('module', 'os_sv_list') . '/os_sv_list_display.js');
 
-      // Truncate items and prepare the more link.
+      // Prepare the more link.
       $more = '';
+      $plugin_name = $this->entity_type . '_' . $bundle;
+      $actual_ids = $this->_plugins_invoke('get_number_of_results');
+      $actual_ids = !empty($actual_ids[$plugin_name]) ? $actual_ids[$plugin_name] : $ids;
+      if ($actual_ids > $this->options['number_of_items']) {
+        $more = ($this->options['more']) ? l($this->options['more_text'], $this->options['more_link'], array('attributes' => array('class' => array('more-link')))) : '';
+      }
+
+      // Truncate items.
       if (count($ids) > $this->options['number_of_items'] || ($this->options['pager'] && $ids && $pager_current < $pager_max)) {
         $ids = array_slice($ids, 0, $this->options['number_of_items']);
-        $more = ($this->options['more']) ? l($this->options['more_text'], $this->options['more_link'], array('attributes' => array('class' => array('more-link')))) : '';
       }
 
       // Give plugins a chance to alter the entities after loading but before
       // rendering. see events.
       $entities = entity_load($this->entity_type, $ids);
-      $entities = array_map(function ($e) { $e->sv_list = TRUE; return $e; }, $entities);
+      $entities = array_map(function ($e) {
+        $new_entity = clone $e;
+        unset($new_entity->page);
+        $new_entity->sv_list = TRUE;
+
+        return $new_entity;
+      }, $entities);
+
       $this->_plugins_invoke('entities_alter', $entities);
-      
+
       // If we have entities render them out, otherwise cache (null) as the content.
       if (!empty($entities)) {
-        
+
         if ($this->options['display'] == 'title') {
           $render = $this->display_title($entities);
         }
@@ -349,6 +369,11 @@ class os_sv_list extends os_boxes_default {
     if ($this->options['content_type'] != 'all') {
       // Any special hook here?
       $query->propertyCondition('type', $this->options['content_type']);
+    }
+    else {
+      // When "All" is selected show only public bundles.
+      $bundles = $this->getBundles(OS_PUBLIC_APP);
+      $query->propertyCondition('type', $bundles, 'IN');
     }
 
     // Pager.
@@ -643,4 +668,5 @@ class os_sv_list extends os_boxes_default {
     // Add the sort by sticky to be the first sort.
     array_unshift($sorts, $sticky);
   }
+
 }
