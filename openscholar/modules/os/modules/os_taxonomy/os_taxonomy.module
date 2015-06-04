@@ -1313,13 +1313,12 @@ function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array
       // When user selected "upcoming event" or the "Determine for me" option,
       // get upcoming events.
       $str = date('Y-m-d\TH:i', strtotime('-30 minutes'));
-      $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(28800)), '%Y-%m-%d\T%H:%i') >= :str", array(":str" => $str));
-
+      $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(-18000)), '%Y-%m-%d\T%H:%i') >= :str", array(":str" => $str));
     }
     else {
       // Get past events.
       $str = date('Y-m-d');
-      $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(28800)), '%Y-%m-%d') < :str", array(":str" => $str));
+      $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(-18000)), '%Y-%m-%d') < :str", array(":str" => $str));
     }
     $query->condition('ogv.bundle', array('event'), 'IN');
   }
