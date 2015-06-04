@@ -24,10 +24,22 @@ class OsRestfulLayout extends \OsRestfulSpaces {
   }
 
   /**
-   * Updating a given space override.
+   * @api {patch} api/layout Patch
+   * @apiVersion 0.1.0
+   * @apiName Patch
+   * @apiGroup Layout
    *
-   * type: PUT
-   * values: {
+   * @apiDescription Update a layout in a vsite.
+   *
+   * @apiParam {Number} object_id The identifier of the layout object.
+   *
+   * @apiSampleRequest off
+   *
+   * @apiSuccess {Integer}  vsite       vsite ID.
+   * @apiSuccess {String}   object_id   Identifier of the layout object.
+   * @apiSuccess {Array}  blocks      Array of blocks.
+   *
+   * @apiExample {js} Example usage:
    *  vsite: 2,
    *  object_id: os_pages-page-581,
    *  blocks: [
@@ -35,7 +47,6 @@ class OsRestfulLayout extends \OsRestfulSpaces {
    *      region: "sidebar_first"
    *    ]
    *  ]
-   * }
    */
   public function updateSpace() {
     // Check group access.
@@ -62,10 +73,27 @@ class OsRestfulLayout extends \OsRestfulSpaces {
   }
 
   /**
-   * Creating a space override.
+   * @api {post} api/layout Post
+   * @apiVersion 0.1.0
+   * @apiName Post
+   * @apiGroup Layout
    *
-   * type: POST
-   * values: {
+   * @apiDescription Create a layout in a vsite.
+   *
+   *
+   * @apiSampleRequest off
+   *
+   * @apiSuccess {Integer}  vsite         vsite ID.
+   * @apiSuccess {String}   object_id     Identifier of the layout object.
+   * @apiSuccess {Array}    blocks        Array of blocks.
+   * @apiSuccess {String}   blocks.module The name of the module which provide the block.
+   * @apiSuccess {String}   blocks.delta  The delta of the box.
+   * @apiSuccess {String}   blocks.region The region In the body.
+   * @apiSuccess {String}   blocks.weight The weight of the module. Will affect
+   * the order of the blocks in the same region.
+   * @apiSuccess {Boolean}  blocks.status Determine if the block will be display or not.
+   *
+   * @apiExample {js} Example usage:
    *  vsite: 2,
    *  object_id: os_pages-page-581,
    *  boxes: [
@@ -77,7 +105,6 @@ class OsRestfulLayout extends \OsRestfulSpaces {
    *      status: 0
    *    ]
    *  ]
-   * }
    */
   public function createSpace() {
     // Check group access.

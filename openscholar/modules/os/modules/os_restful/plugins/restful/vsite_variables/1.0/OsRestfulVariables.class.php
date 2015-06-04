@@ -28,7 +28,7 @@ class OsRestfulVariables extends OsRestfulSpaces {
   }
 
   /**
-   * @api {path} api/variables Patch
+   * @api {patch} api/variables Patch
    * @apiVersion 0.1.0
    * @apiName Patch
    * @apiGroup Variables
