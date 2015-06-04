@@ -254,7 +254,7 @@ function _os_publications_filter_by_term(QueryAlterableInterface $query) {
   }
 
   if (strpos($path, 'taxonomy/term/') !== 0) {
-    return;
+    return FALSE;
   }
 
   $tid = str_replace('taxonomy/term/', '', $path);
