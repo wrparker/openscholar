@@ -32,6 +32,17 @@ function os_importer_feeds_plugins() {
       'path' => drupal_get_path('module', 'os_importer') . '/plugins',
     ),
   );
+  $info['OsFeedsCSVParser'] = array(
+    'name' => t('OS importer CSV parser'),
+    'description' => t('Parses a given file as a CSV file.'),
+    'help' => t('Parse data in Comma Separated Value format.'),
+    'handler' => array(
+      'parent' => 'FeedsCSVParser',
+      'class' => 'OsFeedsCSVParser',
+      'file' => 'OsFeedsCSVParser.inc',
+      'path' => drupal_get_path('module', 'os_importer') . '/plugins',
+    ),
+  );
   return $info;
 }
 
@@ -617,7 +628,6 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   // Get the mappings of the current importer.
   $mappings_diff = array();
   $mappings = array();
-  $target_to_source = array();
   foreach ($config['processor']['config']['mappings'] as $mapping) {
     $mappings_diff[] = strtolower($mapping['source']);
     $mappings[] = $mapping['target'];
@@ -640,7 +650,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
   $rows = $parser->parse($iterator);
 
   // Parse file's headers.
-  $header = _os_importer_parse_header($parser, $iterator);
+  $header = _os_importer_parse_header($parser, $iterator, $mappings);
 
   // Check what columns are missing from the uploaded CSV file and display
   // message if needed.

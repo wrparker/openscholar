@@ -204,6 +204,10 @@ function os_files_file_insert($file) {
       'entity_type' => 'file',
       'entity' => $file
     ));
+
+    // Create a dummy file_usage entry. It will be removed only when the file is
+    // deleted.
+    file_usage_add($file, 'os_files', 'node', $context['gid']);
   }
 }
 
