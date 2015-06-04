@@ -24,7 +24,7 @@ class OsRestfulLayout extends \OsRestfulSpaces {
   }
 
   /**
-   * @api {patch} api/layout Patch
+   * @api {patch} api/layouts Patch
    * @apiVersion 0.1.0
    * @apiName Patch
    * @apiGroup Layout
@@ -73,13 +73,12 @@ class OsRestfulLayout extends \OsRestfulSpaces {
   }
 
   /**
-   * @api {post} api/layout Post
+   * @api {post} api/layouts Post
    * @apiVersion 0.1.0
    * @apiName Post
    * @apiGroup Layout
    *
    * @apiDescription Create a layout in a vsite.
-   *
    *
    * @apiSampleRequest off
    *
@@ -131,13 +130,24 @@ class OsRestfulLayout extends \OsRestfulSpaces {
   }
 
   /**
-   * In order to delete the layout override pass the next arguments:
+   * @api {delete} api/layouts Delete
+   * @apiVersion 0.1.0
+   * @apiName Delete
+   * @apiGroup Layout
    *
-   * type: DELETE
-   * values: {
-   *  vsite: 2,
-   *  object_id: os_pages-page-582:reaction:block,
-   *  delta: boxes-1419335380
+   * @apiDescription Delete a box from a layout.
+   *
+   * @apiSampleRequest off
+   *
+   * @apiSuccess {Integer}  vsite       vsite ID.
+   * @apiSuccess {String}   object_id   Identifier of the layout object.
+   * @apiSuccess {Integer}  delta       The delta of the block.
+   *
+   * @apiExample {js} Example usage:
+   *  {
+   *    vsite: 2,
+   *    object_id: os_pages-page-582:reaction:block,
+   *    delta: boxes-1419335380
    * }
    */
   public function deleteSpace() {
@@ -148,5 +158,18 @@ class OsRestfulLayout extends \OsRestfulSpaces {
       ->condition('object_id', $this->object->object_id)
       ->condition('id', $this->object->vsite)
       ->execute();
+  }
+
+  /**
+   * @api {get} api/layouts/:id Get
+   * @apiVersion 0.1.0
+   * @apiName Get
+   * @apiGroup Layout
+   *
+   * @apiDescription Get a variable from a vsite.
+   *
+   */
+  public function getSpace() {
+    return parent::getSpace();
   }
 }
