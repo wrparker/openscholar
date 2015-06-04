@@ -113,6 +113,17 @@ function os_taxonomy_views_query_alter(&$view, &$query) {
   }
   else {
     if (!$path = os_taxonomy_in_taxonomy_term_context($view)) {
+
+      //If this view takes arguments we can't be sure that this is a 404, we will let the view decide.
+      $view_takes_arguments = (isset($view->display_handler->handlers) && isset($view->display_handler->handlers['argument']) && count($view->display_handler->handlers['argument']));
+      if ($path === FALSE && !$view_takes_arguments) {
+        // There is a path, but it does not match an active term.  In this case it is either
+        // an old alias, old term, or mistyped path, we will throw a 404.
+        drupal_not_found();
+        exit;
+      }
+
+      // No extra path filter was found.
       return;
     }
 
@@ -144,6 +155,8 @@ function os_taxonomy_views_query_alter(&$view, &$query) {
  *
  * @return mixed
  *  The path of the term, i.e: taxonomy/term/1.
+ *  NULL if there is no no taxonomy path
+ *  FALSE if there is a path but it is not a taxonomy path.
  */
 function os_taxonomy_in_taxonomy_term_context($view = NULL) {
   $path = &drupal_static(__FUNCTION__, FALSE);
@@ -217,7 +230,7 @@ function os_taxonomy_in_taxonomy_term_context($view = NULL) {
   }
 
   if (strpos($path, 'taxonomy/term/') !== 0) {
-    return;
+    return FALSE;
   }
 
   return $path;
