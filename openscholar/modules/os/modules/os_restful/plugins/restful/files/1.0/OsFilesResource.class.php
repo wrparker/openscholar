@@ -527,6 +527,9 @@ class OsFilesResource extends RestfulFilesUpload {
       $oldFile = file_load($entity_id);
       $this->request['file']->filename = $oldFile->filename;
       if ($file = file_move($this->request['file'], $oldFile->uri, FILE_EXISTS_REPLACE)) {
+        if ($oldFile->{OG_AUDIENCE_FIELD}) {
+          og_group('node', $oldFile->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id'], array('entity_type' => 'file', 'entity' => $file));
+        }
 
         return array($this->viewEntity($entity_id));
       }
