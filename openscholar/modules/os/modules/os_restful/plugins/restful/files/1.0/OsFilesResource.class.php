@@ -132,7 +132,21 @@
  *}
  *
  */
-class OsFilesResource extends RestfulEntityBase {
+class OsFilesResource extends RestfulFilesUpload {
+
+  /**
+   * Overrides \RestfulBase::controllersInfo().
+   */
+  public static function controllersInfo() {
+    return array(
+      '' => array(
+        \RestfulInterface::GET => 'getList',
+        \RestfulInterface::POST => 'createEntity',
+        \RestfulInterface::PUT => 'putEntity',
+        \RestfulInterface::PATCH => 'updateEntity',
+      ),
+    );
+  }
 
   /**
    * Overrides RestfulEntityBase::publicFieldsInfo().
