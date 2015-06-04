@@ -145,6 +145,12 @@ class OsFilesResource extends RestfulFilesUpload {
         \RestfulInterface::PUT => 'putEntity',
         \RestfulInterface::PATCH => 'updateEntity',
       ),
+      '^.*$' => array(
+        \RestfulInterface::GET => 'getList',
+        \RestfulInterface::POST => 'createEntity',
+        \RestfulInterface::PUT => 'putEntity',
+        \RestfulInterface::PATCH => 'updateEntity',
+      ),
     );
   }
 
@@ -398,9 +404,11 @@ class OsFilesResource extends RestfulFilesUpload {
       $wrapper = entity_metadata_wrapper($this->entityType, $entity);
 
       return array($this->viewEntity($wrapper->getIdentifier()));
-    } elseif (isset($_FILES['files']) && $_FILES['files']['errors']['upload']) {
+    }
+    elseif (isset($_FILES['files']) && $_FILES['files']['errors']['upload']) {
       throw new RestfulUnprocessableEntityException('Error uploading new file to server.');
-    } elseif (isset($this->request['embed']) && module_exists('media_internet')) {
+    }
+    elseif (isset($this->request['embed']) && module_exists('media_internet')) {
 
       try {
         $provider = media_internet_get_provider($this->request['embed']);
@@ -444,7 +452,8 @@ class OsFilesResource extends RestfulFilesUpload {
       if (!empty($errors)) {
         // set error code
         // return errors
-      } else {
+      }
+      else {
         // Providers decide if they need to save locally or somewhere else.
         // This method returns a file object
         $entity = $provider->save();
