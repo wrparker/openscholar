@@ -1307,15 +1307,19 @@ function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array
     $query->leftJoin('field_data_field_date', 'fd', '(ogv.entity_id = fd.entity_id)');
     $event_type = reset($bundles);
 
+    // Here we use the same where condition as the "upcoming events" and "past
+    // events" in order to get the correct number of results.
     if (in_array($event_type, array('upcoming_event', 'event'))) {
       // When user selected "upcoming event" or the "Determine for me" option,
       // get upcoming events.
-      $str = '-30 minutes';
-      $query->condition('fd.field_date_value', gmdate('Y-m-d H:i:s', strtotime($str)), '>=');
+      $str = date('Y-m-d\TH:i', strtotime('-30 minutes'));
+      $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(28800)), '%Y-%m-%d\T%H:%i') >= :str", array(":str" => $str));
+
     }
     else {
       // Get past events.
-      $query->condition('fd.field_date_value', gmdate('Y-m-d H:i:s'), '<');
+      $str = date('Y-m-d');
+      $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(28800)), '%Y-%m-%d') < :str", array(":str" => $str));
     }
     $query->condition('ogv.bundle', array('event'), 'IN');
   }
