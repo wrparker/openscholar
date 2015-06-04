@@ -24,6 +24,9 @@ projects[boxes][patch][] = "http://raw.github.com/openscholar/openscholar/b38919
 projects[boxes][patch][] = "https://www.drupal.org/files/1859150-1-boxes-strict_warning.patch"
 projects[boxes][patch][] = "https://www.drupal.org/files/issues/default_object_empty_value-2042101-3.patch"
 
+projects[cache_consistent][subdir] = "contrib"
+projects[cache_consistent][version] = 1.2
+
 projects[calendar][subdir] = "contrib"
 projects[calendar][version] = 3.5
 projects[calendar][patch][] = "http://raw.github.com/openscholar/openscholar/72d63ee3537c31505b7481975886ec13789feeb5/patches/calendar-fix-week-view-overflow.patch"
