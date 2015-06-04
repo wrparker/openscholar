@@ -1,6 +1,6 @@
 {
   "name": "openscholar",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "resolutions": {
     "angular": "1.2.28"
   },
