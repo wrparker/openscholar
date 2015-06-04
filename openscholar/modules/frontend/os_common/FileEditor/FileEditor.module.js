@@ -1,7 +1,7 @@
 (function ($) {
   var libraryPath = '';
 
-  angular.module('FileEditor', ['EntityService', 'os-auth', 'TaxonomyWidget', 'angularFileUpload']).
+  angular.module('FileEditor', ['EntityService', 'os-auth', 'TaxonomyWidget']).
     config(function () {
       libraryPath = Drupal.settings.paths.FileEditor;
     }).
