@@ -90,26 +90,49 @@ function os_taxonomy_taxonomy_term_uri($term) {
  * Implements hook_views_query_alter().
  */
 function os_taxonomy_views_query_alter(&$view, &$query) {
-  if (!$path = os_taxonomy_in_taxonomy_term_context($view)) {
+  if (!empty($_GET['tid']) && !empty($_GET['vocab'])) {
 
-    //If this view takes arguments we can't be sure that this is a 404, we will let the view decide.
-    $view_takes_arguments = (isset($view->display_handler->handlers) && isset($view->display_handler->handlers['argument']) && count($view->display_handler->handlers['argument']));
-    if ($path === FALSE && !$view_takes_arguments) {
-      // There is a path, but it does not match an active term.  In this case it is either
-      // an old alias, old term, or mistyped path, we will throw a 404.
-      drupal_not_found();
-      exit;
+    if (!$relation = og_vocab_relation_get($_GET['vocab'])) {
+      throw new Exception(t('There is not vocab with the given ID @id', array('@id' => $_GET['vocab'])));
     }
 
-    // No extra path filter was found.
-    return;
+    if (!$vsite = vsite_get_vsite()) {
+      return;
+    }
+
+    if ($vsite->id != $relation->gid) {
+      return;
+    }
+
+    // The tid exists in the query string.
+    if (!$term = taxonomy_term_load($_GET['tid'])) {
+      return;
+    }
+
+    $tid = $term->tid;
+  }
+  else {
+    if (!$path = os_taxonomy_in_taxonomy_term_context($view)) {
+
+      //If this view takes arguments we can't be sure that this is a 404, we will let the view decide.
+      $view_takes_arguments = (isset($view->display_handler->handlers) && isset($view->display_handler->handlers['argument']) && count($view->display_handler->handlers['argument']));
+      if ($path === FALSE && !$view_takes_arguments) {
+        // There is a path, but it does not match an active term.  In this case it is either
+        // an old alias, old term, or mistyped path, we will throw a 404.
+        drupal_not_found();
+        exit;
+      }
+
+      // No extra path filter was found.
+      return;
+    }
+
+    $tid = str_replace('taxonomy/term/', '', $path);
   }
 
   $group_key = key($query->where);
   $alias = $query->add_table('field_data_og_vocabulary');
   $query->set_distinct();
-
-  $tid = str_replace('taxonomy/term/', '', $path);
   $query->add_where($group_key, "$alias.og_vocabulary_target_id", $tid, '=');
 
   if ($view_title = $view->get_title()) {
@@ -500,6 +523,19 @@ function theme_os_taxonomy_vocabulary_item_list($variables) {
       }
       if (!empty($options['tid_active_class']) && $options['tid_active_class'] == $tid) {
         $link_options['attributes']['class'][] = 'active';
+      }
+
+      $link_options['query'] = array(
+        'tid' => $tid,
+        'vocab' => $term->vid,
+      );
+
+      // Handle events.
+      if (current($options['bundles']) == 'past_event') {
+        $term_path['path'] = 'calendar/past_events';
+      }
+      elseif (in_array(current($options['bundles']), array('upcoming_event', 'event'))) {
+        $term_path['path'] = 'calendar/upcoming';
       }
 
       // Data contain data for term children.
@@ -1279,7 +1315,30 @@ function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array
     $query->condition($node_published);
   }
 
-  if (!empty($bundles) && is_array($bundles) && reset($bundles) != '--all--') {
+  // In case the bundle is of the type "event", filter by the type of the event.
+  if (!empty($bundles) && is_array($bundles) && strpos(reset($bundles), 'event') !== FALSE) {
+    $query->leftJoin('field_data_field_date', 'fd', '(ogv.entity_id = fd.entity_id)');
+    $event_type = reset($bundles);
+
+    // Get the number of seconds form the server timezone to GMT timezone.
+    $seconds = date("Z");
+
+    // Here we use the same where condition as the "upcoming events" and "past
+    // events" in order to get the correct number of results.
+    if (in_array($event_type, array('upcoming_event', 'event'))) {
+      // When user selected "upcoming event" or the "Determine for me" option,
+      // get upcoming events.
+      $str = date('Y-m-d\TH:i', strtotime('-30 minutes'));
+      $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(" . $seconds . ")), '%Y-%m-%d\T%H:%i') >= :str", array(":str" => $str));
+    }
+    else {
+      // Get past events.
+      $str = date('Y-m-d');
+      $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(" . $seconds . ")), '%Y-%m-%d') < :str", array(":str" => $str));
+    }
+    $query->condition('ogv.bundle', array('event'), 'IN');
+  }
+  elseif (!empty($bundles) && is_array($bundles) && reset($bundles) != '--all--') {
     $query->condition('ogv.bundle', $bundles, 'IN');
   }
 
