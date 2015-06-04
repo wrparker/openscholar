@@ -128,7 +128,6 @@ projects[feeds_tamper‏][subdir] = "contrib"
 projects[feeds_tamper‏][type] = "module"
 projects[feeds_tamper‏][download][type] = "git"
 projects[feeds_tamper‏][download][url]="http://git.drupal.org/project/feeds_tamper.git"
-projects[feeds_tamper‏][patch][] = "https://www.drupal.org/files/issues/use_instancof_instead_of_get_class-2490120-1.patch"
 
 projects[feeds_xpathparser][subdir] = "contrib"
 projects[feeds_xpathparser][download][type] = git
