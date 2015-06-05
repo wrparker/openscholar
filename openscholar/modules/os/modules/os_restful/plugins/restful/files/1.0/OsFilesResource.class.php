@@ -289,6 +289,13 @@ class OsFilesResource extends RestfulEntityBase {
   }
 
   /**
+   * Override checkEntityAccess()
+   */
+  public function checkEntityAccess($op, $entity_type, $entity) {
+    return parent::checkEntityAccess($op, $entity_type, $entity) || $this->checkGroupAccess($op, $entity);
+  }
+
+  /**
    * Check for group access
    */
   public function checkGroupAccess($op, $file = null) {
