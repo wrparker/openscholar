@@ -91,6 +91,7 @@ div.file-filters {
   border: none;
   width: auto;
   padding: 5px 0 5px 5px;
+  height: 60px;
 }
 
 .media-browser-pane .media-row:nth-child(odd) {
