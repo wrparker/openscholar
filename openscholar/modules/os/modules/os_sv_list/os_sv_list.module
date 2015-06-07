@@ -163,13 +163,14 @@ function os_sv_list_query_sv_list_biblio_alter(&$query) {
 function os_sv_list_query_sv_list_events_alter(SelectQueryInterface $query) {
   // fix this awful query
 
-  // then add the delta to the fields so we get a row for each unique nid-delta combination
-  // This tells EFQ how many results it actually has
-  // The table alias is derived from the delta group given in the conditions. We have to use the same
-  // alias, and not a different alias of the same table to get the correct results.
+  // Add the delta to the fields so we get a row for each unique nid-delta
+  // combination. This tells EFQ how many results it actually has. The table
+  // alias is derived from the delta group given in the conditions. We have to
+  // use the same alias, and not a different alias of the same table to get the
+  // correct results.
 
   // add the delta to the fields
-  $query->fields('field_data_field_date_delta_sv_list_events', array('delta'));
+  $query->fields('field_data_field_date1', array('delta'));
 
   // Get the type of sort to use.
   $sort_type = $query->getMetaData('sort_event');
@@ -181,14 +182,14 @@ function os_sv_list_query_sv_list_events_alter(SelectQueryInterface $query) {
     $order = &$query->getOrderBy();
     $order = array(
       'node.sticky' => 'DESC',
-      'field_data_field_date_delta_sv_list_events.field_date_value' => $sort_type,
+      'field_data_field_date1.field_date_value' => $sort_type,
     );
   }
   else {
     // Sort on the right table.
     $order = &$query->getOrderBy();
     $order = array(
-      'field_data_field_date_delta_sv_list_events.field_date_value' => $sort_type,
+      'field_data_field_date_delta1.field_date_value' => $sort_type,
     );
   }
 
