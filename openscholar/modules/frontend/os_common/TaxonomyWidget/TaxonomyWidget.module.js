@@ -23,6 +23,9 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
       // This can be done thanks to a "Two way binding" implements using the
       // = operator which defined in the isolated scope.
       scope.$watch('terms', function() {
+        if (scope.terms === null) {
+          scope.terms = [];
+        }
         scope.selectedTerms = scope.terms;
       }, true);
 
@@ -104,7 +107,7 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
           });
         }
 
-        scope.termsSelected(termService.get(node.value));
+        scope.selectedTerms(termService.get(node.value)); // TODO: This is not right, but I have to figure out what it's supposed to do first.
       };
     }
   }
