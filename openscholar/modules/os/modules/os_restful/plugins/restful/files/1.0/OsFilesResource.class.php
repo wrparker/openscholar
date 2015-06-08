@@ -132,8 +132,26 @@
  *}
  *
  */
-class OsFilesResource extends RestfulEntityBase {
+class OsFilesResource extends RestfulFilesUpload {
 
+  public static function controllersInfo() {
+    return array(
+      '' => array(
+        // GET returns a list of entities.
+        \RestfulInterface::GET => 'getList',
+        \RestfulInterface::HEAD => 'getList',
+        // POST
+        \RestfulInterface::POST => 'createEntity',
+      ),
+      '^.*$' => array(
+        \RestfulInterface::GET => 'viewEntities',
+        \RestfulInterface::HEAD => 'viewEntities',
+        \RestfulInterface::PUT => 'putEntity',
+        \RestfulInterface::PATCH => 'patchEntity',
+        \RestfulInterface::DELETE => 'deleteEntity',
+      ),
+    );
+  }
   /**
    * Overrides RestfulEntityBase::publicFieldsInfo().
    */
@@ -308,7 +326,7 @@ class OsFilesResource extends RestfulEntityBase {
     elseif ($file == null) {
       return FALSE;
     }
-    elseif (is_a($file, EntityDrupalWrapper)) {
+    elseif ($file instanceof EntityDrupalWrapper) {
       $value = $file->{OG_AUDIENCE_FIELD}->value();
       $vsite = $value['target_id'];
     }
