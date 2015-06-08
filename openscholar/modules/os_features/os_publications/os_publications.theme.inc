@@ -41,13 +41,18 @@ function theme_os_publications_tabular(&$vars) {
     'biblio_secondary_title',
     'biblio_coins',
     'biblio_lang',
-    'biblio_date',
-    'biblio_url',
-    'biblio_section',
-    'biblio_number',
-    'biblio_number_of_volumes',
-    'biblio_type_of_work',
   );
+
+  if (variable_get('biblio_citeproc_style') == 'harvard1.csl') {
+    $hidden = array_merge($hidden, array(
+      'biblio_url',
+      'biblio_section',
+      'biblio_number',
+      'biblio_number_of_volumes',
+      'biblio_type_of_work',
+      'biblio_date',
+    ));
+  }
 
   $rows = array();
 
@@ -212,58 +217,61 @@ function _os_publications_plain_citation($node) {
     }
   }
 
-  $fields = array(
-    103 => array(
-      'biblio_date' => 'Date Presented',
-    ),
-    108 => array(
-      'biblio_type_of_work' => 'Thesis Type',
-    ),
-    110 => array(
-      'biblio_type_of_work' => 'Medium',
-    ),
-    117 => array(
-      'biblio_section' => 'Code Section',
-    ),
-    116 => array(
-      'biblio_number' => 'Number'
-    ),
-    118 => array(
-      'biblio_section' => 'Sections',
-      'biblio_number_of_volumes' => 'Statute Number',
-    ),
-    120 => array(
-      'biblio_number_of_volumes' => 'Communication Number',
-      'biblio_type_of_work' => 'Type',
-    ),
-    124 => array(
-      'biblio_type_of_work' => 'Type of Work',
-    ),
-    127 => array(
-      'biblio_number_of_volumes' => 'Number of volumes',
-    ),
-    128 => array(
-      'biblio_section' => 'Section Number',
-      'biblio_number_of_volumes' => 'Session Number',
-    ),
-  );
+  if (variable_get('biblio_citeproc_style') == 'harvard1.csl') {
+    $fields = array(
+      103 => array(
+        'biblio_date' => 'Date Presented',
+      ),
+      108 => array(
+        'biblio_type_of_work' => 'Thesis Type',
+      ),
+      110 => array(
+        'biblio_type_of_work' => 'Medium',
+      ),
+      117 => array(
+        'biblio_section' => 'Code Section',
+      ),
+      116 => array(
+        'biblio_number' => 'Number'
+      ),
+      118 => array(
+        'biblio_section' => 'Sections',
+        'biblio_number_of_volumes' => 'Statute Number',
+      ),
+      120 => array(
+        'biblio_number_of_volumes' => 'Communication Number',
+        'biblio_type_of_work' => 'Type',
+      ),
+      124 => array(
+        'biblio_type_of_work' => 'Type of Work',
+      ),
+      127 => array(
+        'biblio_number_of_volumes' => 'Number of volumes',
+      ),
+      128 => array(
+        'biblio_section' => 'Section Number',
+        'biblio_number_of_volumes' => 'Session Number',
+      ),
+    );
 
-  if (!empty($fields[$node->biblio_type])) {
-    foreach ($fields[$node->biblio_type] as $field => $label) {
-      if (!empty($node->{$field}) && strpos($citation, $node->{$field}) === FALSE) {
-        $citation .= ' ' . t($label . ': @data.', array('@data' => $node->{$field}));
+    if (!empty($fields[$node->biblio_type])) {
+      foreach ($fields[$node->biblio_type] as $field => $label) {
+        if (!empty($node->{$field}) && strpos($citation, $node->{$field}) === FALSE) {
+          $citation .= ' ' . t($label . ': @data.', array('@data' => $node->{$field}));
+        }
       }
+    }
+
+    // Add the publisher into the citation.
+    if (!empty($node->biblio_url) && strpos($citation, $node->biblio_url) === FALSE) {
+      $args = array(
+        '@url' => $node->biblio_url,
+        '@data' => $node->biblio_url_title,
+      );
+      $citation .= ' ' . t("Publisher's version: <a href='@url'>@data</a>.", $args);
     }
   }
 
-  // Add the publisher into the citation.
-  if (!empty($node->biblio_url) && strpos($citation, $node->biblio_url) === FALSE) {
-    $args = array(
-      '@url' => $node->biblio_url,
-      '@data' => $node->biblio_url_title,
-    );
-    $citation .= ' ' . t("Publisher's version: <a href='@url'>@data</a>.", $args);
-  }
 
   $allowed_html_elements = variable_get('html_title_allowed_elements', array('em', 'sub', 'sup', 'a'));
   $citation = filter_xss($citation, $allowed_html_elements);
