@@ -504,15 +504,8 @@ function theme_os_taxonomy_vocabulary_item_list($variables) {
 
       // Handle events.
       if (strpos(current($options['bundles']), 'event') !== FALSE) {
-        // Get the term alias.
-        $result = db_select('url_alias')
-          ->fields('url_alias', array('alias'))
-          ->condition('source', 'taxonomy/term/' . $tid)
-          ->execute()
-          ->fetchAssoc();
-
-        // Remove the PURL from the alias.
-        $term_alias = $result['alias'];
+        // Get the term alias and remove the PURL from the alias.
+        $term_alias = drupal_lookup_path('alias', 'taxonomy/term/' . $term->tid);
         $parts = explode('/', $term_alias);
         array_shift($parts);
         $term_alias = implode('/', $parts);
