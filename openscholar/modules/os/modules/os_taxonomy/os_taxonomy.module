@@ -91,12 +91,12 @@ function os_taxonomy_taxonomy_term_uri($term) {
  */
 function os_taxonomy_views_query_alter(&$view, &$query) {
   if (!$path = os_taxonomy_in_taxonomy_term_context($view)) {
-
-    //If this view takes arguments we can't be sure that this is a 404, we will let the view decide.
+    // If this view takes arguments we can't be sure that this is a 404, we will
+    // let the view decide.
     $view_takes_arguments = (isset($view->display_handler->handlers) && isset($view->display_handler->handlers['argument']) && count($view->display_handler->handlers['argument']));
     if ($path === FALSE && !$view_takes_arguments) {
-      // There is a path, but it does not match an active term.  In this case it is either
-      // an old alias, old term, or mistyped path, we will throw a 404.
+      // There is a path, but it does not match an active term. In this case it
+      // is either an old alias, old term, or mistyped path, we will throw a 404.
       drupal_not_found();
       exit;
     }
@@ -511,7 +511,7 @@ function theme_os_taxonomy_vocabulary_item_list($variables) {
           ->execute()
           ->fetchAssoc();
 
-        // Remove the purl from the alias.
+        // Remove the PURL from the alias.
         $term_alias = $result['alias'];
         $parts = explode('/', $term_alias);
         array_shift($parts);
