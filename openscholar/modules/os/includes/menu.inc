@@ -20,6 +20,23 @@ function os_get_menus() {
 }
 
 /**
+ * Count how many menu items exists in the site.
+ *
+ * @return int
+ *   Menu items number.
+ */
+function os_count_menu_items() {
+  $menus = array_keys(os_get_menus());
+  $items = 0;
+
+  foreach ($menus as $menu) {
+    $items += count(_cp_menu_flatten_tree(os_menu_tree_data($menu)));
+  }
+
+  return $items;
+}
+
+/**
  * Creates (inserts) a new menu to be used in the OS Menu system.
  *
  * Note: this function does NOT implement hook_menu_insert().

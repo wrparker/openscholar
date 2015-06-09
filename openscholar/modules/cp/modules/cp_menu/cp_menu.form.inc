@@ -141,17 +141,6 @@ function cp_menu_build_form($form, $form_state, $menu = ''){
   return $form;
 }
 
-function _cp_menu_flatten_tree($tree){
-  $copy = array();
-  foreach ( $tree as $l ) {
-    $copy = array_merge($copy, array(
-      $l
-    ), _cp_menu_flatten_tree($l['below']));
-  }
-
-  return $copy;
-}
-
 /**
  * Renders the form array as a table and sets up the tabledrag.
  *
@@ -161,6 +150,11 @@ function theme_cp_menu_table($variables){
   ctools_modal_add_js();
   $table_data = $variables['table'];
   $menus = os_get_menus();
+
+  ctools_include('menu', 'os');
+  if ($menus_limit = (os_count_menu_items() >= 105)) {
+    drupal_set_message(t('It look like you reached the maximum number of menu items you can defined.'), 'warning');
+  }
 
   $headers = array(
       t('Title'),
@@ -179,6 +173,10 @@ function theme_cp_menu_table($variables){
 
   $rows = array();
   foreach ( element_children($table_data) as $d ) {
+    $add_menu_link = '';
+    if (!$menus_limit) {
+      $add_menu_link = l(t('+ Add new link'),'cp/build/menu/link/new/'.$d,array('attributes' => array('title' => 'Add a new menu item.', 'class' => array('add-new-link'))));
+    }
     $extra_classes = array();
     if ($table_data[$d]['#hidden']) {
       $extra_classes[] = 'hidden';
@@ -191,7 +189,7 @@ function theme_cp_menu_table($variables){
         ),
         array(
           //'data' => ctools_modal_text_button('Add New Link', 'cp/menu/nojs/new/'.$d, 'Add New Link'),
-          'data' => l(t('+ Add new link'),'cp/build/menu/link/new/'.$d,array('attributes' => array('title' => 'Add a new menu item.', 'class' => array('add-new-link')))),
+          'data' => $add_menu_link,
         ),
         array(
           'data' => '',
