@@ -105,3 +105,10 @@ Feature:
       And I visit "john/publications/science/air"
      Then I should see "Air"
       And I should see the link "The Little Prince"
+
+  @api @features_second
+  Scenario: Verify that when filtering publications with a taxonomy term, the
+            title of the publication list is the term name.
+    Given I am logging in as "john"
+      And I visit "john/publications/type/book"
+     Then I should see "Publications by Type: Book"
