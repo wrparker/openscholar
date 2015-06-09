@@ -43,7 +43,7 @@ function theme_os_publications_tabular(&$vars) {
     'biblio_lang',
   );
 
-  if (variable_get('biblio_citeproc_style') == 'harvard1.csl') {
+  if (variable_get('biblio_citeproc_style') == 'harvard-chicago-author-date.csl') {
     $hidden = array_merge($hidden, array(
       'biblio_url',
       'biblio_section',
@@ -217,7 +217,7 @@ function _os_publications_plain_citation($node) {
     }
   }
 
-  if (variable_get('biblio_citeproc_style') == 'harvard1.csl') {
+  if (variable_get('biblio_citeproc_style') == 'harvard-chicago-author-date.csl') {
     $fields = array(
       103 => array(
         'biblio_date' => 'Date Presented',
