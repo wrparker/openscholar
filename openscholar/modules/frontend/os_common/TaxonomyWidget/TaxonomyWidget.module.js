@@ -16,17 +16,40 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
       var entityType = attrs.entityType;
       var vocabService = new EntityService('vocabulary', 'id');
       var termService = new EntityService('taxonomy', 'id');
+      var termChange = false;
+      var selectChange = false;
       scope.allTerms = {};
       scope.termsTree = [];
+      scope.selectedTerms = {};
 
       // Any change in the selected term scope will affect the file terms.
       // This can be done thanks to a "Two way binding" implements using the
       // = operator which defined in the isolated scope.
-      scope.$watch('terms', function() {
-        if (scope.terms === null) {
-          scope.terms = [];
+      scope.$watch('terms', function(newTerms, oldTerms) {
+        if (!selectChange) {
+          termChange = true;
+          scope.selectedTerms = {};
+          if (newTerms instanceof Array) {
+            for (var i = 0; i < newTerms.length; i++) {
+              scope.selectedTerms[newTerms[i].vid] = scope.selectedTerms[newTerms[i].vid] || [];
+              scope.selectedTerms[newTerms[i].vid].push(newTerms[i]);
+            }
+          }
         }
-        scope.selectedTerms = scope.terms;
+        selectChange = false;
+      }, true);
+
+      scope.$watch('selectedTerms', function(newTerms, oldTerms) {
+        if (!termChange) {
+          selectChange = true;
+          scope.terms = [];
+          for (var k in newTerms) {
+            for (var i = 0; i < newTerms[k].length; i++) {
+              scope.terms.push(newTerms[k][i]);
+            }
+          }
+        }
+        termChange = false;
       }, true);
 
       // Occurs every time a selected file is changed.
@@ -46,6 +69,8 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
 
             scope.termsTree[vocab.id] = vocab.tree;
             scope.allTerms[vocab.id] = [];
+
+            scope.selectedTerms[vocab.id] = scope.selectedTerms[vocab.id] || [];
 
             termService.fetch({vocab: vocab.id}).then(function (result) {
               for (var j = 0; j < result.data.data.length; j++) {
