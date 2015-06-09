@@ -246,7 +246,7 @@
 .content-left.content-right #content-panels .region-content-second,
 .content-right.content-bottom #content-panels .region-content-second,
 .content-right.content-bottom #content-panels .region-content-bottom {
-    width: 50%;
+   width: 50%;
   }
 
   .front .content-left.content-right.content-bottom #content-panels .region-content-first,
