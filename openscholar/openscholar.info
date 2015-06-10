@@ -34,6 +34,7 @@ dependencies[] = context
 dependencies[] = features
 dependencies[] = boxes
 dependencies[] = views
+dependencies[] = views_data_export
 dependencies[] = strongarm
 dependencies[] = date
 dependencies[] = date_ical

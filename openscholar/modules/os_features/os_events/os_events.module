@@ -1044,11 +1044,6 @@ function os_events_form_registration_registrations_broadcast_form_alter(&$form, 
  * Implements hook_form_FORM_ID_alter().
  */
 function os_events_form_registration_form_alter(&$form, &$form_state) {
-  // Remove the entity from the form - we don't need it and it disable the
-  // header.
-  // @TODO: figure out why the $form['#entity'] disable the header.
-  unset($form['#entity']);
-
   $form['who_is_registering'] = array(
     '#type' => 'value',
     '#value' => 'registration_registrant_type_anon',
