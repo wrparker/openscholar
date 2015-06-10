@@ -1027,6 +1027,21 @@ function os_events_field_widget_registration_select_form_alter(&$element, &$form
 function os_events_menu_alter(&$items) {
   $items['node/%entity_object/register']['access callback'] = FALSE;
   $items['admin/structure/registration/registration_states']['access callback'] = FALSE;
+
+  $items['node/%/registrations/export_events'] = array(
+    'title' => 'Export',
+    'page callback' => 'os_events_redirect_to_export',
+    'page arguments' => array(1),
+    'access callback' => true,
+    'type' => MENU_LOCAL_TASK,
+  );
+}
+
+/**
+ * Page callback; Redirect to the export page.
+ */
+function os_events_redirect_to_export($nid) {
+  drupal_goto('node/' . $nid . '/registrations/export');
 }
 
 /**

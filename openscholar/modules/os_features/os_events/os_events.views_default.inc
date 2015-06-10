@@ -32,17 +32,42 @@ function os_events_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Field: Registration: Registration ID */
-  $handler->display->display_options['fields']['registration_id']['id'] = 'registration_id';
-  $handler->display->display_options['fields']['registration_id']['table'] = 'registration';
-  $handler->display->display_options['fields']['registration_id']['field'] = 'registration_id';
+  /* Field: Registration: Anonymous e-mail */
+  $handler->display->display_options['fields']['anon_mail']['id'] = 'anon_mail';
+  $handler->display->display_options['fields']['anon_mail']['table'] = 'registration';
+  $handler->display->display_options['fields']['anon_mail']['field'] = 'anon_mail';
+  $handler->display->display_options['fields']['anon_mail']['label'] = 'Email';
+  /* Field: Registration: Date created */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'registration';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = 'Registration Created Time';
+  $handler->display->display_options['fields']['created']['date_format'] = 'short';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'os_time';
+  /* Field: Registration: Department */
+  $handler->display->display_options['fields']['field_department']['id'] = 'field_department';
+  $handler->display->display_options['fields']['field_department']['table'] = 'field_data_field_department';
+  $handler->display->display_options['fields']['field_department']['field'] = 'field_department';
+  /* Field: Registration: Full name */
+  $handler->display->display_options['fields']['field_full_name']['id'] = 'field_full_name';
+  $handler->display->display_options['fields']['field_full_name']['table'] = 'field_data_field_full_name';
+  $handler->display->display_options['fields']['field_full_name']['field'] = 'field_full_name';
+  /* Contextual filter: Registration: Host entity ID */
+  $handler->display->display_options['arguments']['entity_id']['id'] = 'entity_id';
+  $handler->display->display_options['arguments']['entity_id']['table'] = 'registration';
+  $handler->display->display_options['arguments']['entity_id']['field'] = 'entity_id';
+  $handler->display->display_options['arguments']['entity_id']['default_action'] = 'not found';
+  $handler->display->display_options['arguments']['entity_id']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['entity_id']['default_argument_options']['code'] = 'return os_events_get_registraton_id_export();';
+  $handler->display->display_options['arguments']['entity_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['entity_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['entity_id']['summary_options']['items_per_page'] = '25';
 
   /* Display: Data export */
   $handler = $view->new_display('views_data_export', 'Data export', 'views_data_export_1');
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['style_plugin'] = 'views_data_export_csv';
   $handler->display->display_options['path'] = 'node/%/registrations/export';
-  $handler->display->display_options['use_batch'] = 'batch';
   $handler->display->display_options['segment_size'] = '25';
   $export['event_attendees'] = $view;
 
