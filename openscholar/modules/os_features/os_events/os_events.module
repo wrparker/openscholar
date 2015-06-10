@@ -1108,11 +1108,11 @@ function os_events_preprocess_table(&$variables) {
   ));
 
   // Remove the "count" and the "states" from the table head.
-  unset($variables['header'][4], $variables['header'][6]);
+  unset($variables['header'][0], $variables['header'][4], $variables['header'][6]);
 
   // Remove the "count" and the "states" from each table row.
   foreach (array_keys($variables['rows']) as $delta) {
-    unset($variables['rows'][$delta][4], $variables['rows'][$delta][6]);
+    unset($variables['rows'][$delta][0], $variables['rows'][$delta][4], $variables['rows'][$delta][6]);
   }
 }
 
