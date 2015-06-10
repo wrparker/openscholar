@@ -579,23 +579,3 @@ function cp_menu_edit_link_form_submit($form, $form_state) {
     os_menu_link_save($link);
   }
 }
-
-/**
- * Return the menu tree in a flat structure.
- *
- * @param $tree
- *   The name of the menu.
- *
- * @return array
- *   Array of the menu items in the current vsite.
- */
-function _cp_menu_flatten_tree($tree) {
-  $copy = array();
-  foreach ( $tree as $l ) {
-    $copy = array_merge($copy, array(
-      $l
-    ), _cp_menu_flatten_tree($l['below']));
-  }
-
-  return $copy;
-}
