@@ -45,7 +45,7 @@ function os_common_library() {
     'title' => t('Select2'),
     'version' => '3.4.3',
     'js' => array(
-      libraries_get_path('select2') . '/select2.min.js' => array(),
+      libraries_get_path('select2') . '/select2.js' => array(),
       drupal_get_path('module', 'os') . '/js/select2-widget.js' => array(),
     ),
     'css' => array(
@@ -58,7 +58,7 @@ function os_common_library() {
     'title' => t('Angualr JS select 2'),
     'version' => '0.0.5',
     'js' => array(
-      libraries_get_path('angular_select2') . '/dist/select.min.js' => array(),
+      libraries_get_path('angular_select2') . '/dist/select.js' => array(),
     ),
     'css' => array(
       libraries_get_path('angular_select2') . '/dist/select.min.css' => array(),
@@ -86,7 +86,7 @@ function os_common_library() {
     'title' => t('Angular taxonomy tree'),
     'version' => '0.0.5',
     'js' => array(
-      libraries_get_path('angular-ivh-treeview') . '/dist/ivh-treeview.min.js' => array(),
+      libraries_get_path('angular-ivh-treeview') . '/dist/ivh-treeview.js' => array(),
     ),
     'css' => array(
       libraries_get_path('angular-ivh-treeview') . '/dist/ivh-treeview.min.css' => array(),
@@ -179,8 +179,8 @@ function os_common_library() {
     'title' => t('Angular File Upload'),
     'version' => '3.1.0',
     'js' => array(
-      libraries_get_path('ng-file-upload') . '/angular-file-upload.min.js' => array(),
-      libraries_get_path('ng-file-upload') . '/angular-file-upload-shim.min.js' => array(),
+      libraries_get_path('ng-file-upload') . '/angular-file-upload.js' => array(),
+      libraries_get_path('ng-file-upload') . '/angular-file-upload-shim.js' => array(),
     ),
     'dependencies' => array(
       array('os_common', 'angularjs'),
