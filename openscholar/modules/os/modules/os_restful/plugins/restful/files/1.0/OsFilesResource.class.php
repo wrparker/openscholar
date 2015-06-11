@@ -445,13 +445,14 @@ class OsFilesResource extends RestfulEntityBase {
         // This method returns a file object
         $entity = $provider->save();
 
-        if ($this->request['vsite']) {
-          og_group('node', $this->request['vsite'], array('entity_type' => 'file', 'entity' => $entity));
-        }
-
         if ($entity->status != FILE_STATUS_PERMANENT) {
           $entity->status = FILE_STATUS_PERMANENT;
           $entity = file_save($entity);
+        }
+
+        if ($this->request['vsite']) {
+          og_group('node', $this->request['vsite'], array('entity_type' => 'file', 'entity' => $entity));
+          $entity = file_load($entity->fid);
         }
 
         $wrapper = entity_metadata_wrapper($this->entityType, $entity);
@@ -494,7 +495,7 @@ class OsFilesResource extends RestfulEntityBase {
 
     foreach ($terms as $term) {
       $return[] = array(
-        'id' => $term->tid,
+        'id' => (int)$term->tid,
         'label' => $term->name,
         'vid' => $term->vid,
       );
