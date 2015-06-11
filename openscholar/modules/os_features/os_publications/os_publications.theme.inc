@@ -257,18 +257,14 @@ function _os_publications_plain_citation($node) {
     if (!empty($fields[$node->biblio_type])) {
       foreach ($fields[$node->biblio_type] as $field) {
         if (!empty($node->{$field}) && strpos($citation, $node->{$field}) === FALSE) {
-          $citation .= ' ' . t(', @data', array('@data' => $node->{$field}));
+          $citation .= ' ,' . $node->{$field};
         }
       }
     }
 
     // Add the publisher into the citation.
     if (!empty($node->biblio_url) && strpos($citation, $node->biblio_url) === FALSE) {
-      $args = array(
-        '@url' => $node->biblio_url,
-        '@data' => $node->biblio_url_title,
-      );
-      $citation .= ' ' . t("<a href='@url'>@data</a>.", $args);
+      $citation .= " <a href='{$node->biblio_url}'>{$node->biblio_url_title}</a>";
     }
   }
 
