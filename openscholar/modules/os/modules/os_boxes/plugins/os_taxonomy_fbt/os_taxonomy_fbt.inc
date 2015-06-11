@@ -249,6 +249,14 @@ class os_taxonomy_fbt extends os_boxes_default {
       }
     }
 
+    // If no feature is active and we use the "Determine for me" option it
+    // means contexts are not loaded yet (right after submission of the form).
+    // Only in the next call to render() we wil have an active feature.
+    $feature = os_get_active_feature();
+    if (empty($feature) && !empty($this->options['behavior']) && $this->options['behavior'] == 'contextual') {
+      return $block;
+    }
+
     ctools_include('layout', 'os');
 
     // Adding the current absolute current path for the os taxonomy JS file.
