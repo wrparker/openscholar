@@ -90,7 +90,9 @@
             $http.get(url, {params: params})
               .success(success)
               .error(errorFunc);
-            fetchDefer.notify("Loading 0% complete.");
+            setTimeout(function () {
+              fetchDefer.notify("Loading 0% complete.");
+            }, 0);
           }
           return fetchDefer.promise;
         }

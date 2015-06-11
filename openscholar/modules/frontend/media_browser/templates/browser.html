@@ -5,6 +5,11 @@
         <div class="media-browser-button" ng-class="{active:pane=='library'}" ng-show="activePanes.library" ng-click="changePanes('library')">Previously uploaded files</div>
     </div>
     <div class="media-browser-panes">
+        <div class="loading" ng-show="loading">
+            Please wait while we get information on your files.<br />
+            <img src="{{templatePath}}/misc/images/large-spin_loader.gif"><br />
+            {{loadingMessage}}
+        </div>
         <div class="media-browser-pane" ng-switch-when="upload">
         	<span id="drag-text">Drag and drop files here. <span class="help_icon" ng-mouseenter="showHelp = true" ng-mouseleave="showHelp = false">?</span></span>
             <a href="#" id="media-browser-file-select" ng-file-select ng-file-change="$parent.checkForDupes($files, $event)"
@@ -93,9 +98,6 @@
                         <span class="mb-actions-delete" ng-click="setSelection(file.id); changePanes('delete')">Delete</span>
                     </span>
                 </div>
-            </div>
-            <div class="loading" ng-show="loading">
-                Loading...
             </div>
             <div class="no-files" ng-show="!loading && files.length == 0">
                 No files to show.
