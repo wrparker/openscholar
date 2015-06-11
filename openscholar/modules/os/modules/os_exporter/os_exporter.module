@@ -21,7 +21,7 @@ function os_exporter_ctools_plugin_type() {
  * Include CTools plugins and get all exporter plugins.
  *
  * @return array
- *   All plugins relate to entity exporter.
+ *   All plugins relate to exporter.
  */
 function os_exporter_get_exporter_plugins() {
   ctools_include('plugins');
@@ -29,13 +29,13 @@ function os_exporter_get_exporter_plugins() {
 }
 
 /**
- * Include CTools plugins and get the specified entity exporter plugin.
+ * Include CTools plugins and get the specified exporter plugin.
  *
  * @param string $plugin_name
  *   If provided this function only returns the selected plugin.
  *
  * @return array
- *   The selected plugin for entity exporter.
+ *   The selected plugin for exporter.
  */
 function os_exporter_get_exporter_plugin($plugin_name) {
   ctools_include('plugins');
@@ -72,4 +72,3 @@ function os_exporter_ctools_plugin_directory($module, $plugin) {
     return 'plugins/' . $plugin;
   }
 }
-

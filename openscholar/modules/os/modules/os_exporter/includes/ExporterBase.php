@@ -73,7 +73,6 @@ abstract class ExportBase {
 
     $this->content = array($header);
     $this->content[] = $content;
-//    $this->setContent($header + $this->getContent());
     return $this;
   }
 }
