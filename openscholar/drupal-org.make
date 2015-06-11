@@ -409,9 +409,6 @@ projects[views][patch][] = "https://drupal.org/files/issues/views-jquery_dialog-
 projects[views_bulk_operations][subdir] = "contrib"
 projects[views_bulk_operations][version] = 3.0
 
-projects[views_data_export][subdir] = "contrib"
-projects[views_data_export][version] = 3.0-beta8
-
 projects[views_og_cache][subdir] = "contrib"
 projects[views_og_cache][version] = 1.1
 projects[views_og_cache][patch][] = "https://drupal.org/files/issues/2226219-easy-key-data-override-2.patch"

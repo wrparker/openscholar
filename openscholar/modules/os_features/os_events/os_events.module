@@ -74,7 +74,47 @@ function os_events_menu() {
     'access arguments' => array('create event_signup_simple registration'),
   );
 
+  $items['node/%node/registrations/export'] = array(
+    'title' => 'Export attendees to csv',
+    'access callback' => TRUE,
+    'page arguments' => array(1),
+    'page callback' => 'os_events_export_to_csv',
+  );
+
   return $items;
+}
+
+function os_events_export_to_csv($node) {
+  $exporter = os_exporter_get_exporter_handler('csv');
+  $exporter->setFileHeader(array(t('Email'), t('Created Time'), t('Department'), t('Full name')));
+
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'registration')
+    ->propertyCondition('entity_id', $node->nid)
+    ->propertyCondition('entity_type', 'node')
+    ->execute();
+
+  if (empty($result['registration'])) {
+    return;
+  }
+
+  $attendees = entity_load('registration', array_keys($result['registration']));
+
+  foreach ($attendees as $attendee) {
+    $wrapper = entity_metadata_wrapper('registration', $attendee);
+
+    $exporter->addContent(array(
+      $attendee->anon_mail,
+      '"' . format_date($attendee->created) . '"',
+      $wrapper->field_department->value(),
+      $wrapper->field_full_name->value(),
+    ));
+  }
+
+  $exporter->exportToFile($node->title . 'attendees.csv');
+
+  return $node->title;
 }
 
 /**
@@ -1027,20 +1067,6 @@ function os_events_field_widget_registration_select_form_alter(&$element, &$form
 function os_events_menu_alter(&$items) {
   $items['node/%entity_object/register']['access callback'] = FALSE;
   $items['admin/structure/registration/registration_states']['access callback'] = FALSE;
-
-  $items['node/%/registrations/export_events'] = array(
-    'title' => 'Export',
-    'page callback' => 'os_events_redirect_to_export',
-    'page arguments' => array(1),
-    'access callback' => true,
-  );
-}
-
-/**
- * Page callback; Redirect to the export page.
- */
-function os_events_redirect_to_export($nid) {
-  drupal_goto('node/' . $nid . '/registrations/export');
 }
 
 /**
@@ -1139,7 +1165,7 @@ function os_events_preprocess_page(&$variables) {
   $registration_links = array(
     'export' => array(
       'title' => t('Export'),
-      'href' => 'node/' . $event_id . '/registrations/export_events',
+      'href' => 'node/' . $event_id . '/registrations/export',
     ),
     'simple_view' => array(
       'title' => t('Simple view'),

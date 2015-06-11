@@ -65,13 +65,6 @@ function os_events_views_default_views() {
   $handler->display->display_options['arguments']['entity_id']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['entity_id']['summary_options']['items_per_page'] = '25';
 
-  /* Display: Data export */
-  $handler = $view->new_display('views_data_export', 'Data export', 'views_data_export_1');
-  $handler->display->display_options['pager']['type'] = 'some';
-  $handler->display->display_options['style_plugin'] = 'views_data_export_csv';
-  $handler->display->display_options['path'] = 'node/%/registrations/export';
-  $handler->display->display_options['segment_size'] = '25';
-
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page_1');
   $handler->display->display_options['path'] = 'node/%/registrations/simple_view';
