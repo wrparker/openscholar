@@ -1033,7 +1033,6 @@ function os_events_menu_alter(&$items) {
     'page callback' => 'os_events_redirect_to_export',
     'page arguments' => array(1),
     'access callback' => true,
-    'type' => MENU_LOCAL_TASK,
   );
 }
 
@@ -1114,6 +1113,46 @@ function os_events_preprocess_table(&$variables) {
   foreach (array_keys($variables['rows']) as $delta) {
     unset($variables['rows'][$delta][0], $variables['rows'][$delta][4], $variables['rows'][$delta][6]);
   }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ *
+ * Add a dropdown menu for the registration page.
+ */
+function os_events_preprocess_page(&$variables) {
+  $menu = menu_get_item();
+  if (strpos($menu['path'], 'node/%/registrations') !== 0) {
+    return;
+  }
+
+  // Remove the "Simple view" tab from the navigation tabs.
+  foreach ($variables['tabs']['#secondary'] as $index => $tab) {
+    if ($tab['#link']['title'] == 'Simple view') {
+      unset($variables['tabs']['#secondary'][$index]);
+      break;
+    }
+  }
+
+  // Create dropdown links for simple view and export of registrants.
+  $event_id = $menu['original_map'][1];
+  $registration_links = array(
+    'export' => array(
+      'title' => t('Export'),
+      'href' => 'node/' . $event_id . '/registrations/export_events',
+    ),
+    'simple_view' => array(
+      'title' => t('Simple view'),
+      'href' => 'node/' . $event_id . '/registrations/simple_view',
+    ),
+  );
+  $variables['tabs']['#secondary']['registration_links'] = array(
+    '#theme' => 'ctools_dropdown',
+    '#links' => $registration_links,
+    '#title' => 'Links',
+    '#class' => 'section_links registration_links',
+    '#access' => spaces_access_admin(),
+  );
 }
 
 /**
