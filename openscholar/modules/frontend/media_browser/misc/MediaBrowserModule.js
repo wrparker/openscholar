@@ -214,6 +214,11 @@
         $scope.files = result;
         $scope.numFiles = $scope.files.length;
         $scope.loading = false;
+      }, function (error) {
+        // there was an error getting results. We should tell the user and advise them.
+      }, function (message) {
+        // notification received
+        console.log(message);
       });
 
 

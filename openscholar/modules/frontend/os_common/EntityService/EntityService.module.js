@@ -44,6 +44,9 @@
           }
 
           if (resp.next) {
+            var max = Math.ceil(resp.count/resp.data.length),
+              curr = resp.next.href.match(/page=([\d])/)[1];
+            fetchDefer.notify(("Loading $p% complete.").replace('$p', ((curr-1)/max)*100));
             $http.get(resp.next.href).success(recursiveFetch);
           }
           else {
@@ -58,6 +61,9 @@
             $http.get({url: restPath}).
               success(success).
               error(errorFunc);
+          }
+          else {
+            fetchDefer.reject('Error getting files. Aborting after 3 attempts.');
           }
         };
 
@@ -84,6 +90,7 @@
             $http.get(url, {params: params})
               .success(success)
               .error(errorFunc);
+            fetchDefer.notify("Loading 0% complete.");
           }
           return fetchDefer.promise;
         }
