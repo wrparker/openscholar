@@ -36,7 +36,7 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
                 return;
               }
 
-              scope.vocabs = result.data.data;
+              scope.vocabs = result;
               for (var i = 0; i < scope.vocabs.length; i++) {
                 var vocab = scope.vocabs[i];
 
@@ -46,8 +46,8 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
                 scope.selectedTerms[vocab.id] = scope.selectedTerms[vocab.id] || [];
 
                 termService.fetch({vocab: vocab.id}).then(function (result) {
-                  for (var j = 0; j < result.data.data.length; j++) {
-                    var t = result.data.data[j],
+                  for (var j = 0; j < result.length; j++) {
+                    var t = result[j],
                       term = {
                         id: t.id,
                         label: t.label,
