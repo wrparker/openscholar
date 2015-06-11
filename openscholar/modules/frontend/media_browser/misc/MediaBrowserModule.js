@@ -211,7 +211,7 @@
       .then(function (result) {
         console.log(result);
 
-        $scope.files = result.data.data;
+        $scope.files = result;
         $scope.numFiles = $scope.files.length;
         $scope.loading = false;
       });
