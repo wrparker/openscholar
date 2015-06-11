@@ -105,3 +105,17 @@ Feature:
       And I visit "john/publications/science/air"
      Then I should see "Air"
       And I should see the link "The Little Prince"
+
+  @api @features_second
+  Scenario: Verify that when filtering publications by publication type, the
+            title of the publication list is the publication type.
+    Given I am logging in as "john"
+      And I visit "john/publications/type/book"
+     Then I should see "Publications by Type: Book"
+
+  @api @features_second
+  Scenario: Verify that when filtering publications by year, the
+            title of the publication list is given year.
+    Given I am logging in as "john"
+      And I visit "john/publications/year/1943"
+     Then I should see "Publications by Year: 1943"
