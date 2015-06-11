@@ -406,6 +406,7 @@ projects[views][subdir] = "contrib"
 projects[views][version] = 3.8
 projects[views][patch][] = "https://drupal.org/files/issues/views-jquery_dialog-2125261-1.patch"
 
+
 projects[views_bulk_operations][subdir] = "contrib"
 projects[views_bulk_operations][version] = 3.0
 

@@ -352,22 +352,6 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @When /^I create a new registration event with title "([^"]*)"$/
-   */
-  public function iCreateANewRegistrationEventWithTitle($title) {
-    $tomorrow = time() + (24 * 60 * 60);
-    return array(
-      new Step\When('I visit "john/node/add/event"'),
-      new Step\When('I fill in "Title" with "' . $title . '"'),
-      new Step\When('I fill in "edit-field-date-und-0-value-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
-      new Step\When('I fill in "edit-field-date-und-0-value2-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
-      new Step\When('I check the box "edit-field-date-und-0-all-day"'),
-      new Step\When('I check the box "field_event_registration[und][0][registration_type]"'),
-      new Step\When('I press "edit-submit"'),
-    );
-  }
-
-  /**
    * @When /^I should see the event "([^"]*)" in the LOP$/
    */
   public function iShouldSeeTheEventInTheLop($title) {
@@ -2293,29 +2277,6 @@ class FeatureContext extends DrupalContext {
     if (!$element) {
       throw new Exception(sprintf("The header of the table doesn't contain the text %s", $text));
     }
-  }
-
-  /**
-   * @Given /^I sign up "([^"]*)" with email "([^"]*)" to the event "([^"]*)"$/
-   */
-  public function iSignUpWithEmailToTheEvent($name, $email, $event) {
-    $event_id = FeatureHelp::getNodeId($event);
-    return array(
-      new Step\When('I visit "john/os_events/nojs/registration/' . $event_id . '"'),
-      new Step\When('I fill in "edit-anon-mail" with "' . $email . '"'),
-      new Step\When('I fill in "edit-field-full-name-und-0-value" with "' . $name . '"'),
-      new Step\When('I press "edit-submit"'),
-    );
-  }
-
-  /**
-   * @Given /^I manage registrations for the event "([^"]*)"$/
-   */
-  public function iManageRegistrationsForTheEvent($event) {
-    $event_id = FeatureHelp::getNodeId($event);
-    return array(
-      new Step\When('I visit "john/node/' . $event_id . '/registrations"'),
-    );
   }
 
 }

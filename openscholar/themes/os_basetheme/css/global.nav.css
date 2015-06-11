@@ -555,12 +555,8 @@ html.js #citation-wrapper div.ctools-dropdown a.ctools-dropdown-text-link {
 	float:right;
 	display:inline;
 	margin-left:25px;
-}
-
-.ctools-dropdown.registration_links a {
-  color: #215990 !important;
-}
-
+	}	
+	
 .contextual-controls-wrapper div.ctools-dropdown.section_links a.ctools-dropdown-text-link {
  float:right;
   background: url('../images/scholarbase-sprite.png') no-repeat 0px -331px !important;

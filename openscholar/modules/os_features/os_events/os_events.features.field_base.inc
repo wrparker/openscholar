@@ -154,6 +154,5 @@ function os_events_field_default_field_bases() {
     'translatable' => 0,
     'type' => 'text',
   );
-
   return $field_bases;
 }
