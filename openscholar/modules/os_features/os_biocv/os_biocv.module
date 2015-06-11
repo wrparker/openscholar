@@ -503,6 +503,7 @@ function os_biocv_migrate() {
 
   // limit to first 200
   $vsites = array_slice($vsites, 0, 200);
+
   foreach ($vsites as $gid => $vsite_values) {
     $vsite_obj = vsite_get_vsite($gid);
     if (!$vsite_values['uid']) {
@@ -594,7 +595,7 @@ function os_biocv_migrate() {
         path_save($path);
       }
       elseif (isset($vsite_values['cv_nid'])) {
-        node_delete($vsite_values['cv_nid']);
+         node_delete($vsite_values['cv_nid']);
       }
 
       // find out if this vsite has a customized instance of the bio widget
@@ -604,25 +605,34 @@ function os_biocv_migrate() {
       $or->condition("so.value",'%os_boxes_bio%', 'like');
       $query->condition($or);
       $query->condition("id", $gid, "=");
-      $query = $query->fields('so', array('object_type', 'object_id', 'value'));
+      $query = $query->fields('so', array('object_type', 'object_id', 'value'))
+                     ->orderBy('so.object_type', 'ASC');
       $results = $query->execute();
 
       // set flag to track whether or not new bio widget has been created
       $bio_widget_created_flag = 0;
-
       // the user has changed the default display for the bio widget
       if ($results->rowCount()) {
+        $existing_bio_widget = NULL;
         while ($row = $results->fetchObject()) {
-          $row_values = unserialize($row->value);
-          foreach ($row_values as $value => $instances) {
-            if(is_array($instances)) {
+          // if user has a bio_teaser entry, save settings for when/if the new bio widget is created
+          if($row->object_id == "bio_teaser") {
+            $existing_bio_widget = unserialize($row->value);
+          }
+          else {
+            $row_values = unserialize($row->value);
+            foreach ($row_values as $value => $instances) {
+              if(is_array($instances)) {
               foreach ($instances as $type => $data) {
                 if (is_array($data) && ($data['plugin'] == "os_boxes_bio" || $data['delta'] == "bio_teaser")) {
                   $transaction = db_transaction();
                   try {
                     // replace implemented bio widget with new featured posts widget
                     if($data['region']) {
-                      $vsite_values['bio_options'] = $data['options'];
+                      if($existing_bio_widget) {
+                        $vsite_values['bio_options'] = $existing_bio_widget->options;
+                      }
+
                       $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $bio_node->nid, $bio_widget_created_flag);
 
                       $box_position = array(
@@ -656,9 +666,10 @@ function os_biocv_migrate() {
                     $transaction->rollback();
                     $output .= "DB transaction error trying to replace bio widget with featured posts widget: " . $e->getMessage() . "\n";
                     throw $e;
-                  }
+                   }
                 }
               }
+            }
             }
           }
         }
@@ -668,19 +679,6 @@ function os_biocv_migrate() {
       // but we still need to add in the featured posts bio widget
       else {
         $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $bio_node->nid, $bio_widget_created_flag);
-
-        $box_position = array(
-          "region" => 'content_top',
-          "weight" => '-10',
-          "module" => "boxes",
-          "delta" => $featured_delta,
-          "status" => 0,
-          "title" => NULL,
-        );
-
-        db_insert('spaces_overrides')
-          ->fields(array('type' => 'og', 'id' => $gid, 'object_type' => 'context', 'object_id' => 'os_front:reaction:block', 'value' => serialize(array('blocks' => array("boxes-" . $featured_delta => $box_position)))))
-          ->execute();
       }
 
 print "finished vsite id: $gid \n";
@@ -713,21 +711,44 @@ function _os_biocv_create_bio_featured_posts_widget($vsite_id, $vsite_values, $b
   $featured_box->embed_as = array("iframe", "oembed");
   $featured_box->plugin_key = "os_boxes_manual_list";
 
-  if(isset($vsite_values['bio_options']) && isset($vsite_values['bio_options']['teaser'])) {
-    $featured_box->options['style'] = $vsite_values['bio_options']['teaser'];
+  if(isset($vsite_values['bio_options']) && isset($vsite_values['bio_options']['teaser']) && ($vsite_values['bio_options']['teaser'] != "full")) {
+    $featured_box->options['style'] = "teasers";
   }
   else {
     $featured_box->options['style'] = "full";
   }
+
 
   try {
     if (!$bio_widget_created) {
       db_insert('spaces_overrides')
         ->fields(array('type' => 'og', 'id' => $vsite_id, 'object_type' => 'boxes', 'object_id' => $featured_delta, 'value' => serialize($featured_box)))
         ->execute();
-      if ($featured_delta) {
-        $bio_widget_created = 1;
+      $bio_widget_created = 1;
+
+      // if an os_front context doesn't exist for this vsite, create one
+      $query = db_select('spaces_overrides', 'so')->fields('so');
+      $query->condition('so.object_type','context', '=');
+      $query->condition('so.object_id','os_front:reaction:block', '=');
+      $query->condition('so.id', $vsite_id, '=');
+      $results = $query->execute();
+
+      if (!$results->rowCount()) {
+        $box_position = array(
+          "region" => 'content_top',
+          "weight" => '-10',
+          "module" => "boxes",
+          "delta" => $featured_delta,
+          "status" => 0,
+          "title" => NULL,
+        );
+
+        db_insert('spaces_overrides')
+          ->fields(array('type' => 'og', 'id' => $vsite_id, 'object_type' => 'context', 'object_id' => 'os_front:reaction:block', 'value' => serialize(array('blocks' => array("boxes-" . $featured_delta => $box_position)))))
+          ->execute();
       }
+    }
+    else {
     }
     return $featured_delta;
   }
