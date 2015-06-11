@@ -752,7 +752,7 @@ function os_update_7036() {
 }
 
 /**
- * Install Views data export.
+ * Install OS exporter.
  */
 function os_update_7037() {
   module_enable(array('os_exporter'));
