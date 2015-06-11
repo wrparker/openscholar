@@ -220,44 +220,44 @@ function _os_publications_plain_citation($node) {
   if (variable_get('biblio_citeproc_style') == 'harvard-chicago-author-date.csl') {
     $fields = array(
       103 => array(
-        'biblio_date' => 'Date Presented',
+        'biblio_date',
       ),
       108 => array(
-        'biblio_type_of_work' => 'Thesis Type',
+        'biblio_type_of_work',
       ),
       110 => array(
-        'biblio_type_of_work' => 'Medium',
+        'biblio_type_of_work',
       ),
       117 => array(
-        'biblio_section' => 'Code Section',
+        'biblio_section',
       ),
       116 => array(
-        'biblio_number' => 'Number'
+        'biblio_number',
       ),
       118 => array(
-        'biblio_section' => 'Sections',
-        'biblio_number_of_volumes' => 'Statute Number',
+        'biblio_section',
+        'biblio_number_of_volumes',
       ),
       120 => array(
-        'biblio_number_of_volumes' => 'Communication Number',
-        'biblio_type_of_work' => 'Type',
+        'biblio_number_of_volumes',
+        'biblio_type_of_work',
       ),
       124 => array(
-        'biblio_type_of_work' => 'Type of Work',
+        'biblio_type_of_work',
       ),
       127 => array(
-        'biblio_number_of_volumes' => 'Number of volumes',
+        'biblio_number_of_volumes',
       ),
       128 => array(
-        'biblio_section' => 'Section Number',
-        'biblio_number_of_volumes' => 'Session Number',
+        'biblio_section',
+        'biblio_number_of_volumes',
       ),
     );
 
     if (!empty($fields[$node->biblio_type])) {
-      foreach ($fields[$node->biblio_type] as $field => $label) {
+      foreach ($fields[$node->biblio_type] as $field) {
         if (!empty($node->{$field}) && strpos($citation, $node->{$field}) === FALSE) {
-          $citation .= ' ' . t($label . ': @data.', array('@data' => $node->{$field}));
+          $citation .= ' ' . t(', @data', array('@data' => $node->{$field}));
         }
       }
     }
@@ -268,7 +268,7 @@ function _os_publications_plain_citation($node) {
         '@url' => $node->biblio_url,
         '@data' => $node->biblio_url_title,
       );
-      $citation .= ' ' . t("Publisher's version: <a href='@url'>@data</a>.", $args);
+      $citation .= ' ' . t("<a href='@url'>@data</a>.", $args);
     }
   }
 
