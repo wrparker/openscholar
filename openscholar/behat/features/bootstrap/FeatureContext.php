@@ -2318,4 +2318,25 @@ class FeatureContext extends DrupalContext {
     );
   }
 
+  /**
+   * @When /^I export the registrants list for the event "([^"]*)" in the site "([^"]*)"$/
+   */
+  public function iExportTheRegistrantsListForTheEventInTheSite($event, $site) {
+    $client = new \Guzzle\Http\Client();
+    $url = $this->getSession()->getCurrentUrl() . '/export';
+    $request = $client->get($url);
+
+    // Add the response so we can check it and next steps.
+    $this->response = $request->send();
+  }
+
+  /**
+   * @Then /^I verify the file "([^"]*)" was downloaded$/
+   */
+  public function iVerifyTheFileWasDownloaded($file_name) {
+    if ($this->response->getStatusCode() != 200) {
+      throw new Exception(sprintf("The file %s was not download correctly.", $file_name));
+    }
+  }
+
 }
