@@ -1,14 +1,44 @@
 <?php
 
-abstract class ExportBase {
+abstract class ExportBase implements Export {
 
+  /**
+   * @var array
+   *
+   * Holds the file content.
+   */
   protected $content = array();
 
   /**
-   * Concatenating content to the content variable.
+   * @var \EntityFieldQuery.
    *
-   * @param $content
-   *   The value to add.
+   * The object of the entity field query.
+   */
+  protected $query;
+
+  /**
+   * @var array
+   *
+   * The information of the fields to export.
+   */
+  protected $fields = array();
+
+  /**
+   * @var string
+   *
+   * The entity type.
+   */
+  protected $entityType;
+
+  /**
+   * @var string
+   *
+   * The bundle of the entity.
+   */
+  protected $bundle;
+
+  /**
+   * {@inheritdoc}
    */
   public function addContent($content) {
     $this->content[] = $content;
@@ -16,10 +46,7 @@ abstract class ExportBase {
   }
 
   /**
-   * Returning the content variable.
-   *
-   * @return array
-   *   Get the content variable.
+   * {@inheritdoc}
    */
   public function getContent() {
     return $this->content;
@@ -27,13 +54,7 @@ abstract class ExportBase {
 
 
   /**
-   * Set the content variable to a specific value.
-   *
-   * @param $content
-   *   The content to set.
-   *
-   * @return $this
-   *   The current object.
+   * {@inheritdoc}
    */
   public function setContent($content) {
     $this->content = $content;
@@ -41,10 +62,9 @@ abstract class ExportBase {
   }
 
   /**
-   * @return string
-   *   Generate the file.
+   * {@inheritdoc}
    */
-  protected function generateFileContent() {
+  public function generateFileContent() {
     $file_content = '';
 
     foreach ($this->content as $content) {
@@ -55,18 +75,7 @@ abstract class ExportBase {
   }
 
   /**
-   * Export the content to a file.
-   *
-   * @param $name
-   *   The name of the file.
-   */
-  abstract function exportToFile($name);
-
-  /**
-   * Put array in the beginning of the content variable.
-   *
-   * @return $this
-   *   The current object.
+   * {@inheritdoc}
    */
   public function setFileHeader($header) {
     $content = $this->content;

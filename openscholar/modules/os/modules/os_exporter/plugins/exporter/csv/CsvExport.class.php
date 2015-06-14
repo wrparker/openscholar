@@ -5,11 +5,9 @@
  */
 
 class CsvExport extends ExportBase {
+
   /**
-   * Export the content to a file.
-   *
-   * @param $name
-   *   The name of the file.
+   * {@inheritdoc}
    */
   public function exportToFile($name) {
     $content = $this->generateFileContent();
