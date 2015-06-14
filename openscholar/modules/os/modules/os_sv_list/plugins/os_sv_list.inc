@@ -372,10 +372,8 @@ class os_sv_list extends os_boxes_default {
     }
     else {
       // When "All" is selected show only public bundles.
-      if ($this->entity_type != 'file') {
-        $bundles = $this->getBundles(OS_PUBLIC_APP);
-        $query->propertyCondition('type', $bundles, 'IN');
-      }
+      $bundles = $this->getBundles(OS_PUBLIC_APP, $this->entity_type);
+      $query->propertyCondition('type', $bundles, 'IN');
     }
 
     // Pager.
