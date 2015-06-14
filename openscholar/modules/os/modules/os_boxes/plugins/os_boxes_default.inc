@@ -147,9 +147,6 @@ abstract class os_boxes_default extends boxes_box {
       $this->cache_id .= ':' . $page;
     }
 
-    $uid = $GLOBALS['user']->uid;
-    $this->cache_id .= ':' . $uid;
-
     return $this->cache_id;
   }
 
@@ -183,8 +180,8 @@ abstract class os_boxes_default extends boxes_box {
 
     $js = array();
     $css = array();
-
-    if (!$cache = cache_get($this->cache_id, 'cache_os_boxes')) {
+    $uid = $GLOBALS['user']->uid;
+    if (!$cache = cache_get($this->cache_id . ':' . $uid, 'cache_os_boxes')) {
       // No cache exists.
       return FALSE;
     }
@@ -214,7 +211,7 @@ abstract class os_boxes_default extends boxes_box {
     }
 
     drupal_add_http_header('x-drupal-cache-os-boxes-plugin', $this->plugin_key, TRUE);
-    drupal_add_http_header('x-drupal-cache-os-boxes-cache-id', $this->cache_id , TRUE);
+    drupal_add_http_header('x-drupal-cache-os-boxes-cache-id', $this->cache_id . ':'. $uid, TRUE);
 
     return $cache->data;
   }
@@ -291,12 +288,21 @@ abstract class os_boxes_default extends boxes_box {
       return FALSE;
     }
 
+    // Holds boolean whether rendering is done as dummy. Needs in order to avoid
+    // caching of dummy rendering.
+    // @todo: remove the dummy rendering fully.
+    global $dummy_rendering;
+    if ($dummy_rendering) {
+      return;
+    }
+
     if (empty($this->cache_id)) {
       // No valid cache id.
       return;
     }
 
-    $cid = $this->cache_id;
+    // add the current user id to the cache id
+    $cid = $this->cache_id . ':' . $GLOBALS['user']->uid;
 
     if (!empty($this->cache_time)) {
       $expire = is_string($this->cache_time) ? strtotime($this->cache_time) : $this->cache_time;
