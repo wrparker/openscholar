@@ -168,7 +168,6 @@ class sv_list_node_event extends sv_list_plugin  {
         // The default appear time is 30 minutes after an event starts.
         $str = '-30 minutes';
         $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime($str)), '<', 'sv_list_events');
-        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '<', 'sv_list_events');
     }
 
     $this->query = $efq;
