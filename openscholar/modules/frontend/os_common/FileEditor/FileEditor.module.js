@@ -14,6 +14,7 @@
         templateUrl: libraryPath + '/file_edit_base.html?vers='+Drupal.settings.version.FileEditor,
         link: function (scope, elem, attr, c, trans) {
           var fileService = new EntityService('files', 'id');
+          fileService.fetch({});
 
           scope.fileEditAddt = '';
           scope.date = '';
@@ -107,7 +108,7 @@
     }]);
 
   function getExtension(url) {
-    return url.slice(url.lastIndexOf('.')+1);
+    return url.slice(url.lastIndexOf('.')+1).toLowerCase();
   }
 
 })(jQuery);

@@ -125,6 +125,7 @@
     $scope.activePanes.edit = true;
     $scope.activePanes.delete = true;
     $scope.loading = true;
+    $scope.loadingMessage = '';
 
     $scope.availTypes = [
       {label: 'Image', value: 'image'},
@@ -211,9 +212,14 @@
       .then(function (result) {
         console.log(result);
 
-        $scope.files = result.data.data;
+        $scope.files = result;
         $scope.numFiles = $scope.files.length;
         $scope.loading = false;
+      }, function (error) {
+        // there was an error getting results. We should tell the user and advise them.
+      }, function (message) {
+        // notification received
+        $scope.loadingMessage = message;
       });
 
 

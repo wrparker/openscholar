@@ -18,12 +18,14 @@
 
       function clickHandler(event) {
         event.preventDefault();
+        event.stopPropagation();
+        var fid = this.attributes.fid.value;
 
         ModalService.showModal({
           template: '<div file-edit file="file" on-close="closeModal(saved)"></div>',
           controller: 'FileEditorModalController',
           inputs: {
-            fid: this.attributes.fid.value
+            fid: fid
           }
         }).then(function (modal) {
           modal.element.dialog(dialogParams);
@@ -33,7 +35,10 @@
             }
           })
         });
+
+        return false;
       }
+
       return {
         link: link
       }

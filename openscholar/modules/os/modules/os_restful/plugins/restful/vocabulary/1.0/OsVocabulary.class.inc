@@ -176,7 +176,12 @@ class OsVocabulary extends \RestfulEntityBase {
       $vocabs = $filtered_vocabs;
     }
 
-    $query->propertyCondition('vid', $vocabs, 'IN');
+    if (count($vocabs)) {
+      $query->propertyCondition('vid', $vocabs, 'IN');
+    }
+    else {
+      $query->propertyCondition('vid', 0);
+    }
   }
 
   /**

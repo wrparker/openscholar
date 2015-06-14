@@ -1,12 +1,12 @@
 <div class="tw-widget" class="clearfix">
   <div ng-repeat="vocab in vocabs" ng-switch="vocab.form" class="clearfix">
     <h4>{{vocab.label}}</h4>
-      
+
     <div ng-switch-when="options_select">
         <ui-select multiple ng-model="$parent.selectedTerms[vocab.id]"
                    theme="select2" ng-disabled="disabled">
           <ui-select-match placeholder="Select a term from {{vocab.label}}">{{$item.label}}</ui-select-match>
-            <ui-select-choices repeat="term in allTerms[vocab.id] track by term.id">
+            <ui-select-choices repeat="term in $parent.allTerms[vocab.id] track by term.id">
               <div ng-bind-html="term.label | highlight: $select.search"></div>
             </ui-select-choices>
         </ui-select>

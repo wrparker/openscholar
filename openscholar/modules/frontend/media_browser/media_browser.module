@@ -104,22 +104,19 @@ function media_browser_field_widget_media_generic_form_alter(&$elements, &$forms
     $elements['#media_options']['global']['max_filesize'] = $size;
     $elements['#media_options']['global']['max_filesize_raw'] = parse_size($size);
   }
-  //$elements['#process'][] = 'media_browser_element_process';
 }
 
 /**
  * Replaces the original media element's launcher buttons with our directive
  */
 function media_browser_element_process($elem, $form_state, $form) {
-  return $elem;
+  $elem['#attached']['library'][] = array('os_common', 'FileEditorModal');
 
-  $elem['preview']['#prefix'] = '<div class="preview" mb-open-modal>';
-
-  $elem['select']['#attributes']['mb-open-modal'] = '';
-  $elem['select']['#attributes']['class']
-    = array_diff($elem['select']['#attributes']['class'], array(
-    'launcher'
-  ));
+  if (isset($elem['edit'])) {
+    $elem['edit']['#attributes']['class'] = array_diff($elem['edit']['#attributes']['class'], array('ctools-use-modal', 'use-ajax'));
+    $elem['edit']['#attributes']['file-editor-modal'] = 'file-editor-modal';
+    $elem['edit']['#attributes']['fid'] = $elem['fid']['#value'];
+  }
 
   return $elem;
 }

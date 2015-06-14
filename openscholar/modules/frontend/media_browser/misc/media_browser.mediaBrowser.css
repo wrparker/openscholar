@@ -15,6 +15,22 @@
   padding: 20px 5px 0;
 }
 
+.media-browser-panes .loading {
+  position: absolute;
+  top: 35px;
+  bottom: 89px;
+  left: 8px;
+  right: 3px;
+  background-color: white;
+  z-index: 25;
+  opacity: 0.75;
+  padding: 50px;
+  padding-top: 150px;
+  text-align: center;
+  font-size: large;
+  font-weight: bolder;
+}
+
 .media-browser-pane {
   position: relative;
 }

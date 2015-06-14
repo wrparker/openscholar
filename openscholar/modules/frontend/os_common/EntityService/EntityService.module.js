@@ -23,6 +23,7 @@
         var eventName = 'EntityService.' + type;
         var errorAttempts = 0;
         var vsite = null;
+        var fetchDefer;
 
         if (Drupal.settings.spaces) {
           vsite = Drupal.settings.spaces.id;
@@ -30,12 +31,28 @@
 
         var success = function(resp) {
           ents.length = 0;
+
+          recursiveFetch(resp);
+
+          fetched[type] = true;
+          entityCount = resp.count;
+        }
+
+        function recursiveFetch(resp) {
           for (var i=0; i<resp.data.length; i++) {
             ents.push(resp.data[i]);
           }
-          fetched[type] = true;
-          entityCount = resp.count;
-          $rootScope.$broadcast(eventName+'.fetch', ents);
+
+          if (resp.next) {
+            var max = Math.ceil(resp.count/resp.data.length),
+              curr = resp.next.href.match(/page=([\d])/)[1];
+            fetchDefer.notify(("Loading $p% complete.").replace('$p', ((curr-1)/max)*100));
+            $http.get(resp.next.href).success(recursiveFetch);
+          }
+          else {
+            fetchDefer.resolve(ents);
+            $rootScope.$broadcast(eventName+'.fetch', ents);
+          }
         }
 
         var errorFunc = function() {
@@ -44,6 +61,9 @@
             $http.get({url: restPath}).
               success(success).
               error(errorFunc);
+          }
+          else {
+            fetchDefer.reject('Error getting files. Aborting after 3 attempts.');
           }
         };
 
@@ -57,18 +77,24 @@
         }
 
         this.fetch = function (params) {
-          var url = restPath + '/' + entityType;
-          if (!params) {
-            params = {};
-          }
+          if (!fetchDefer) {
+            var url = restPath + '/' + entityType;
+            if (!params) {
+              params = {};
+            }
 
-          if (vsite) {
-            params.vsite = vsite;
+            if (vsite) {
+              params.vsite = vsite;
+            }
+            fetchDefer = $q.defer();
+            $http.get(url, {params: params})
+              .success(success)
+              .error(errorFunc);
+            setTimeout(function () {
+              fetchDefer.notify("Loading 0% complete.");
+            }, 0);
           }
-
-          return $http.get(url, {params: params})
-            .success(success)
-            .error(errorFunc);
+          return fetchDefer.promise;
         }
 
         this.getAll = function () {
@@ -91,6 +117,11 @@
           if (entities[k]) {
             throw new Exception('Cannot add entity of type ' + type + ' that already exists.');
           }
+
+          if (vsite) {
+            entity.vsite = vsite;
+          }
+
           // rest API call to add entity to server
           return $http.post(restPath + '/' + entityType, entity)
             .success(function (resp) {

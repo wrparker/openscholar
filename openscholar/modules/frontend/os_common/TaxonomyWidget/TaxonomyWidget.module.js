@@ -21,6 +21,7 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
       scope.allTerms = {};
       scope.termsTree = [];
       scope.selectedTerms = {};
+      scope.disabled = true;
 
       // Any change in the selected term scope will affect the file terms.
       // This can be done thanks to a "Two way binding" implements using the
@@ -28,12 +29,44 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
       scope.$watch('terms', function(newTerms, oldTerms) {
         if (!selectChange) {
           termChange = true;
-          scope.selectedTerms = {};
+          var bundle = attrs.bundle;
           if (newTerms instanceof Array) {
-            for (var i = 0; i < newTerms.length; i++) {
-              scope.selectedTerms[newTerms[i].vid] = scope.selectedTerms[newTerms[i].vid] || [];
-              scope.selectedTerms[newTerms[i].vid].push(newTerms[i]);
-            }
+            vocabService.fetch({entity_type: entityType, bundle: bundle}).then(function (result) {
+              if (!(result.status == 200 && result.statusText == "OK")) {
+                return;
+              }
+
+              scope.vocabs = result;
+              for (var i = 0; i < scope.vocabs.length; i++) {
+                var vocab = scope.vocabs[i];
+
+                scope.termsTree[vocab.id] = vocab.tree;
+                scope.allTerms[vocab.id] = [];
+
+                scope.selectedTerms[vocab.id] = scope.selectedTerms[vocab.id] || [];
+
+                termService.fetch({vocab: vocab.id}).then(function (result) {
+                  for (var j = 0; j < result.length; j++) {
+                    var t = result[j],
+                      term = {
+                        id: t.id,
+                        label: t.label,
+                        vid: t.vid
+                      };
+                    scope.allTerms[t.vid].push(term);
+
+                    for (var i = 0; i < newTerms.length; i++) {
+                      if (newTerms[i].id == t.id) {
+                        scope.selectedTerms[t.vid].push(term);
+                        break;
+                      }
+                    }
+                  }
+                  scope.disabled = false;
+                });
+              }
+            });
+            console.log(scope.selectedTerms);
           }
         }
         selectChange = false;
@@ -41,6 +74,7 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
 
       scope.$watch('selectedTerms', function(newTerms, oldTerms) {
         if (!termChange) {
+          console.log(newTerms);
           selectChange = true;
           scope.terms = [];
           for (var k in newTerms) {
@@ -48,6 +82,7 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
               scope.terms.push(newTerms[k][i]);
             }
           }
+          console.log(scope.terms);
         }
         termChange = false;
       }, true);
@@ -57,29 +92,6 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
         if (!value) {
           return;
         }
-
-        vocabService.fetch({entity_type: entityType, bundle: value}).then(function (result) {
-          if (!(result.status == 200 && result.statusText == "OK")) {
-            return;
-          }
-
-          scope.vocabs = result.data.data;
-          for (var i=0; i<scope.vocabs.length; i++) {
-            var vocab = scope.vocabs[i];
-
-            scope.termsTree[vocab.id] = vocab.tree;
-            scope.allTerms[vocab.id] = [];
-
-            scope.selectedTerms[vocab.id] = scope.selectedTerms[vocab.id] || [];
-
-            termService.fetch({vocab: vocab.id}).then(function (result) {
-              for (var j = 0; j < result.data.data.length; j++) {
-                var t = result.data.data[j];
-                scope.allTerms[parseInt(t.vid)].push(t);
-              }
-            });
-          }
-        });
       });
 
       scope.autocomplete_terms = [{}];
