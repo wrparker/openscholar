@@ -52,6 +52,7 @@
 
           scope.showWarning = false;
           scope.showSuccess = false;
+          scope.replaceReject = false;
           scope.validate = function ($file) {
             if (!$file) return true;
 
@@ -66,29 +67,37 @@
             scope.showWarning = true;
           };
 
-          scope.prepForReplace = function ($files, $event) {
-            if (!$files.length) return;
-            var file = $files[0],
-              fields = {};
+          scope.prepForReplace = function ($files, $event, $rejectedFiles) {
+            if ($event.type != 'change') return;
+            if ($files.length) {
+              var file = $files[0],
+                fields = {};
 
-            if (typeof Drupal.settings.spaces != 'undefined') {
-              fields.vsite = Drupal.settings.spaces.id
-            }
-
-            var config = {
-              headers: {
-                'Content-Type': file.type
+              if (typeof Drupal.settings.spaces != 'undefined') {
+                fields.vsite = Drupal.settings.spaces.id
               }
-            };
 
-            $http.put(Drupal.settings.paths.api+'/files/'+scope.file.id, file, config)
-              .success(function () {
-                scope.showWarning = false;
-                scope.replaceSuccess = true;
-                $timeout(function () {
-                  scope.replaceSuccess = false;
-                }, 5000);
-              });
+              var config = {
+                headers: {
+                  'Content-Type': file.type
+                }
+              };
+
+              $http.put(Drupal.settings.paths.api + '/files/' + scope.file.id, file, config)
+                .success(function () {
+                  scope.showWarning = false;
+                  scope.replaceSuccess = true;
+                  $timeout(function () {
+                    scope.replaceSuccess = false;
+                  }, 5000);
+                });
+            }
+            else {
+              scope.replaceReject = true;
+              $timeout(function () {
+                scope.replaceReject = false;
+              }, 5000);
+            }
           };
 
           scope.canSave = function () {
