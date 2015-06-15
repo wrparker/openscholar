@@ -32,9 +32,6 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
           var bundle = attrs.bundle;
           if (newTerms instanceof Array) {
             vocabService.fetch({entity_type: entityType, bundle: bundle}).then(function (result) {
-              if (!(result.status == 200 && result.statusText == "OK")) {
-                return;
-              }
 
               scope.vocabs = result;
               for (var i = 0; i < scope.vocabs.length; i++) {
