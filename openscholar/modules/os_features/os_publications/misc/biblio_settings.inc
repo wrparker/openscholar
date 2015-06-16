@@ -2087,7 +2087,7 @@ $biblio_field_type_data = array(
   array('ftdid' => 17, 'title' => 'Volume', 'hint' => 'Volume number'),
   array('ftdid' => 18, 'title' => 'Number', 'hint' => ''),
   array('ftdid' => 19, 'title' => 'Pages', 'hint' => 'e.g. 23-25'),
-  array('ftdid' => 20, 'title' => 'Date Published', 'hint' => '(mm/yyyy)'),
+  array('ftdid' => 20, 'title' => 'Date Published', 'hint' => 'e.g. 12 Jan 2015'),
   array('ftdid' => 21, 'title' => 'Publication Language', 'hint' => ''),
   array('ftdid' => 22, 'title' => 'Abstract', 'hint' => ''),
   array('ftdid' => 23, 'title' => 'French Abstract', 'hint' => ''),
