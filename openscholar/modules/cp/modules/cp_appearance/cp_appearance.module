@@ -190,7 +190,6 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
       $theme->name = $info['theme_name'].'-os_featured_flavor-default';
       $themes_sorted[$info['theme_name'].'-os_featured_flavor-default'] = $theme;
       $featured_themes[$info['theme_name'].'-os_featured_flavor-default'] = $info['theme_name'].'-os_featured_flavor-default';
-      $theme->info['theme_flavor_name'] = $info['name'].' - '.$info['flavor_name'];
 
       $flavors = os_theme_get_flavors($info['theme_name']);
        foreach ($flavors as $flavor_name => $flav) {
@@ -213,12 +212,11 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
         );
         $flavor_theme->info['flavor_name'] = $flavor_theme->info['name'];
         $flavor_theme->info['name'] = $info['name'];
-        $flavor_theme->info['theme_flavor_name'] = $flavor_theme->info['name'].' - '.$flavor_theme->info['flavor_name'];
 
         $flavor_theme->info['screenshot'] = $flav['path'].'/screenshot.png';
         $featured_themes[$info['theme_name'].'-os_featured_flavor-'.$flavor_name] = $info['theme_name'].'-os_featured_flavor-'.$flavor_name;
         $themes_sorted[$info['theme_name'].'-os_featured_flavor-'.$flavor_name] = $flavor_theme;
-        $radio_options[$info['theme_name'].'-os_featured_flavor-'.$flavor_name] = $flavor_theme->info['theme_flavor_name'];
+        $radio_options[$info['theme_name'].'-os_featured_flavor-'.$flavor_name] = $flavor_theme->info['flavor_name'];
       }
     }
   }

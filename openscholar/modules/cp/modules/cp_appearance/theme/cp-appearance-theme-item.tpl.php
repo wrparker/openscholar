@@ -24,13 +24,13 @@ if (file_exists($info['screenshot'])) {
 ?>
 <?php echo $screenshot; ?>
 <div class="theme-info">
-  <h3><?php if (empty($info['theme_flavor_name']))
+  <h3><?php if (empty($info['flavor_name']))
     {
       echo $info['name'];
     }
     else
     {
-      echo $info['theme_flavor_name'];
+      echo $info['flavor_name'];
     }
   ?></h3>
   <?php if ($sub_theme): ?>
