@@ -1336,3 +1336,30 @@ function os_events_registration_link($variables) {
 
   return os_events_generate_modal_register_link($nid);
 }
+
+/**
+ * Implements hook_preprocess_calendar_item().
+ */
+function os_events_preprocess_calendar_item(&$vars) {
+  $item = $vars['item'];
+  if ($item->granularity == 'day' || $item->granularity == 'week') {
+    $item->item_height = os_events_get_event_duration($item);
+  }
+}
+
+/**
+ * Get the duration of an event in hours.
+ * 
+ * @param $item
+ *   The event item.
+ * @return string
+ *   The event duration in hours.
+ */
+function os_events_get_event_duration($item) {
+  $event_start = strtotime($item->calendar_start);
+  $event_end = strtotime($item->calendar_end);
+  $hours = floor(($event_end - $event_start) / 3600);
+
+  // @TODO: how do we want to handle events that are spanning a few days?
+  return 80 * $hours . 'px';
+}
