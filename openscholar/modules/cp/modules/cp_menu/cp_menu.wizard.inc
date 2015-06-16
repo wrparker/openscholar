@@ -127,6 +127,25 @@ function cp_menu_type($form, &$form_state) {
 }
 
 /**
+ * Verifying the user didn't reached the maximum menu items the DB can hold.
+ */
+function cp_menu_title_validate($form, $form_state) {
+  $vsite = vsite_get_vsite();
+  $item = $form_state['values'];
+
+  $removing_keys = array('previous', 'return', 'cancel', 'form_build_id', 'form_token', 'form_id', 'op');
+  foreach ($removing_keys as $key) {
+    unset($item[$key]);
+  }
+  $item = $item + array('link_path' => '');
+  list($menu) = _vsite_menu_prepare_menu_item($item, $vsite);
+
+  if (strlen(serialize($menu)) > 65500) {
+    form_set_error('', t('You have reached the maximum number of items for this menu.'));
+  }
+}
+
+/**
  * Multistep form page; presents title and advanced options for a URL link.
  */
 function cp_menu_title($form, &$form_state) {
