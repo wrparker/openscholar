@@ -45,7 +45,6 @@ function theme_os_publications_tabular(&$vars) {
 
   if (variable_get('biblio_citeproc_style') == 'harvard-chicago-author-date.csl') {
     $hidden = array_merge($hidden, array(
-      'biblio_url',
       'biblio_section',
       'biblio_number',
       'biblio_number_of_volumes',
@@ -220,51 +219,46 @@ function _os_publications_plain_citation($node) {
   if (variable_get('biblio_citeproc_style') == 'harvard-chicago-author-date.csl') {
     $fields = array(
       103 => array(
-        'biblio_date',
+        'biblio_date' => 'Date Presented',
       ),
       108 => array(
-        'biblio_type_of_work',
+        'biblio_type_of_work' => 'Thesis Type',
       ),
       110 => array(
-        'biblio_type_of_work',
+        'biblio_type_of_work' => 'Medium',
       ),
       117 => array(
-        'biblio_section',
+        'biblio_section' => 'Code Section',
       ),
       116 => array(
-        'biblio_number',
+        'biblio_number' => 'Number'
       ),
       118 => array(
-        'biblio_section',
-        'biblio_number_of_volumes',
+        'biblio_section' => 'Sections',
+        'biblio_number_of_volumes' => 'Statute Number',
       ),
       120 => array(
-        'biblio_number_of_volumes',
-        'biblio_type_of_work',
+        'biblio_number_of_volumes' => 'Communication Number',
+        'biblio_type_of_work' => 'Type',
       ),
       124 => array(
-        'biblio_type_of_work',
+        'biblio_type_of_work' => 'Type of Work',
       ),
       127 => array(
-        'biblio_number_of_volumes',
+        'biblio_number_of_volumes' => 'Number of volumes',
       ),
       128 => array(
-        'biblio_section',
-        'biblio_number_of_volumes',
+        'biblio_section' => 'Section Number',
+        'biblio_number_of_volumes' => 'Session Number',
       ),
     );
 
     if (!empty($fields[$node->biblio_type])) {
-      foreach ($fields[$node->biblio_type] as $field) {
+      foreach ($fields[$node->biblio_type] as $field => $label) {
         if (!empty($node->{$field}) && strpos($citation, $node->{$field}) === FALSE) {
-          $citation .= ' ,' . $node->{$field};
+          $citation .= ' ' . t($label . ': @data.', array('@data' => $node->{$field}));
         }
       }
-    }
-
-    // Add the publisher into the citation.
-    if (!empty($node->biblio_url) && strpos($citation, $node->biblio_url) === FALSE) {
-      $citation .= " <a href='{$node->biblio_url}'>{$node->biblio_url_title}</a>";
     }
   }
 
