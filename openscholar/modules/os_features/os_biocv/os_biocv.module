@@ -11,27 +11,6 @@
 include_once 'os_biocv.features.inc';
 
 /**
- * Implements hook_os_app_info().
- */
-function os_biocv_os_app_info() {
-  $apps = array();
-
-  $apps['os_biocv'] = array(
-    'path' => 'biocv',
-    'nodetypes' => array(
-      'bio',
-      'cv',
-    ),
-    'browse_pages' => array(
-      'bio' => FALSE,
-      'cv' => FALSE,
-    ),
-  );
-
-  return $apps;
-}
-
-/**
  * Implements hook_menu().
  */
 function os_biocv_menu() {
@@ -404,12 +383,20 @@ function _os_biocv_access_admin() {
 }
 
 /**
+ * @file
+ * Code for the OS Bio/CV feature.
+ *
+ * @see ./profiles/openscholar/modules/os/modules/os_boxes/plugins/os_boxes_bio/os_boxes_bio.inc
+ */
+
+/**
  *
  */
 function os_biocv_migrate() {
   features_revert(array(
-    "os" => array("context"),
+    "os" => array("context", "spaces_presets"),
     "os_biocv" => array("context"),
+    "vsite" => array("spaces_presets"),
   ));
 
   $output = "";
@@ -502,8 +489,8 @@ function os_biocv_migrate() {
   $count = 0;
 
   // limit to first 200
-  $vsites = array_slice($vsites, 0, 200);
-
+//  $vsites = array_slice($vsites, 0, 200);
+  $vsites = array("6723" => $vsites['6723']);
   foreach ($vsites as $gid => $vsite_values) {
     $vsite_obj = vsite_get_vsite($gid);
     if (!$vsite_values['uid']) {

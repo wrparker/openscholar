@@ -547,16 +547,25 @@ function vsite_preset_spaces_presets() {
   $spaces_presets->space_type = 'og';
   $spaces_presets->value = array(
     'bundles' => array('personal'),
+      'og_tasks' => array(
+        0 => 'vsite_preset_section_bio',
+      ),
     'variable' => array(
       'spaces_features' => array(
         'os' => '1',
         'os_pages' => '1',
-        'os_biocv' => '1',
         'os_publications' => '1',
         'os_classes' => '1',
+        'os_biocv' => '0',
+      ),
+      'vsite_preset_menu_order' => array(
+        'primary-menu' => array(
+          'Bio' => -3,
+          'Classes' => -2,
+          'Publications' => -1,
+        ),
       ),
       'spaces_features_available' => array(
-        'os_biocv',
         'os_blog',
         'os_booklets',
         'os_classes',
@@ -583,7 +592,7 @@ function vsite_preset_spaces_presets() {
       'primary-menu' => array(
         900 => array(
           'link_path' => 'biocv',
-          'link_title' => 'Bio & CV',
+          'link_title' => 'Bio',
           'options' => array(),
           'mlid' => 900,
           'p1' => 900,
