@@ -451,8 +451,23 @@ abstract class os_boxes_default extends boxes_box {
       }
     }
     elseif ($entity_type == 'file') {
-      $file_bundles = os_files_get_bundles();
-      $bundles = array_keys($file_bundles);
+      switch ($app_type) {
+        case OS_PRIVATE_APP:
+          $bundles = array();
+          break;
+        case OS_PUBLIC_APP:
+          $file_bundles = os_files_get_bundles();
+          $bundles = array_keys($file_bundles);
+          break;
+        default:
+          $file_bundles = os_files_get_bundles();
+          $bundles['public_bundles'] = array_keys($file_bundles);
+          $bundles['private_bundles'] = array();
+          break;
+      }
+    }
+    else {
+      $bundles = array();
     }
 
     return $bundles;
