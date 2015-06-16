@@ -143,6 +143,9 @@ function vsite_menu_menu_link_save(&$item, $gid = FALSE) {
   return $item['mlid'];
 }
 
+/**
+ * Helper function for preparing the new menu object.
+ */
 function _vsite_menu_prepare_menu_item(&$item, $vsite) {
   $default_menu = key(os_get_menus());
 
