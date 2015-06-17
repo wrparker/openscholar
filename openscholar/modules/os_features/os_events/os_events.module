@@ -1360,6 +1360,5 @@ function os_events_get_event_duration($item) {
   $event_end = strtotime($item->calendar_end);
   $hours = floor(($event_end - $event_start) / 3600);
 
-  // @TODO: how do we want to handle events that are spanning a few days?
   return 80 * $hours . 'px';
 }
