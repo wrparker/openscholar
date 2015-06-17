@@ -85,12 +85,6 @@ div.file-filters {
   margin: 9px 0;
 }
 
-/* Full listing *
-.results {
-  margin-right: 230px;
-  border-right: 1px solid lightgray;
-}*/
-
 /* Single file thumbnails */
 .mb-preview .media-item {
   padding: 5px;
@@ -194,6 +188,11 @@ div.file-filters {
   width: 50px;
 }
 
+/* TOP MARGIN ABOVE BUTTON SETS */
+.media-browser-pane .actions {
+  margin-top: 10px;
+}
+
 /* Pager */
 .pager {
   margin: 1em 0;
@@ -204,6 +203,15 @@ div.file-filters {
 
 .pager button {
   padding: 0px 5px;
+}
+
+ button[ng-disabled="!pager.canPage(1)"],
+ button[ng-disabled="!pager.canPage(-1)"] { 
+  border: none;
+  background-color: #fff;
+  color: #4E84C4;
+  font-weight: bold;
+  font-size: 1.1em;
 }
 
 /* File Edit panel */
@@ -246,6 +254,7 @@ div[ng-include="fileEditAddt"] {
   background: #efefef;
   width: 97%;
   margin: 20px 0;
+  padding-left: 10px;
  }
 
 #file-delete-section {
@@ -311,7 +320,7 @@ display:block;
 #media-browser-drop-box {
   height: 450px;
   width: 100%;
-  margin: 6% 0 2%;
+  margin: 3% 0 2%;
   border: 2px dashed #ccc;
 }
 
