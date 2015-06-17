@@ -340,6 +340,11 @@ function os_basetheme_status_messages($vars) {
  * returning the new output.
  */
 function os_basetheme_views_view_field($vars) {
+  $view = $vars['view'];
+  if ($view->name != 'os_events') {
+    return $vars['output'];
+  }
+
   $field = $vars['field'];
   if ($field->field != 'title') {
     return $vars['output'];
