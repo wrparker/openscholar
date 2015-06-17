@@ -45,6 +45,7 @@ function theme_os_publications_tabular(&$vars) {
 
   if (variable_get('biblio_citeproc_style') == 'harvard-chicago-author-date.csl') {
     $hidden = array_merge($hidden, array(
+      'biblio_url',
       'biblio_section',
       'biblio_number',
       'biblio_number_of_volumes',
@@ -259,6 +260,11 @@ function _os_publications_plain_citation($node) {
           $citation .= ' ' . t($label . ': @data.', array('@data' => $node->{$field}));
         }
       }
+    }
+
+    // Add the publisher into the citation.
+    if (!empty($node->biblio_url) && strpos($citation, $node->biblio_url) === FALSE) {
+      $citation .= " <a href='{$node->biblio_url}'>{$node->biblio_url_title}</a>";
     }
   }
 
