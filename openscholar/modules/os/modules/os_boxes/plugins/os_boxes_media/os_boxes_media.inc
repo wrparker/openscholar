@@ -12,6 +12,9 @@ class os_boxes_media extends os_boxes_default {
   public function options_form(&$form_state) {
     $form = parent::options_form($form_state);
 
+    os_common_angular_app('os-boxes');
+    $form['#attached']['js'][] = drupal_get_path('module', 'os_boxes') . '/misc/os_boxes.app.js';
+
     $form['fid'] = array(
       '#title' => t('File or HTML'),
       '#type' => 'media',

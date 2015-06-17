@@ -1,3 +1,3 @@
 (function () {
-  angular.module('os-boxes', ['mediaBrowser']);
+  angular.module('os-boxes', ['mediaBrowser', 'FileEditorModal']);
 })();

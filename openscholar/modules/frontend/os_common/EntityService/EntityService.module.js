@@ -31,10 +31,11 @@
 
         var success = function(resp) {
           ents.length = 0;
+          console.log(resp);
 
           recursiveFetch(resp);
 
-          fetched[type] = true;
+          fetched[type] = true; //(new Date()).GetTime()
           entityCount = resp.count;
         }
 
