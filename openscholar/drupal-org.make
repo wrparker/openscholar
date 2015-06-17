@@ -505,3 +505,4 @@ libraries[hopscotch][download][url] = "https://github.com/linkedin/hopscotch/arc
 libraries[angular_select2][type] = "libraries"
 libraries[angular_select2][download][type] = "get"
 libraries[angular_select2][download][url] = "https://github.com/angular-ui/ui-select/archive/v0.11.2.zip"
+libraries[angular_select2][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/ad2fd2d198e91ac9a77eacbae996579e55510a3a/patches/angular_select-7024-async.patch"
