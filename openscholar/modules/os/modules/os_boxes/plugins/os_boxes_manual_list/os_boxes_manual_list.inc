@@ -12,6 +12,7 @@ class os_boxes_manual_list extends os_boxes_default {
       'nodes' => array(),
       'style' => 'titles',
       'random' => false,
+			'hide_title' => 0,
     );
   }
 
@@ -91,6 +92,13 @@ class os_boxes_manual_list extends os_boxes_default {
       '#description' => t('Check this box to show one random post out of the list, instead of all of them.'),
     );
 
+    $form['hide_title'] = array(
+      '#type' => 'checkbox',
+      '#title' => 'Hide Titles',
+      '#default_value' => isset($this->options['hide_title']) ? $this->options['hide_title'] : $defaults['hide_title'],
+      '#description' => t('Hide titles of posts.'),
+    );
+
     $form['count'] = array(
       '#type' => 'hidden',
       '#default_value' => count($this->options['nodes'])-1,
@@ -119,6 +127,10 @@ class os_boxes_manual_list extends os_boxes_default {
 
       foreach ($nodes as $n) {
         if ($node = node_load($n['nid'])) {
+					// nullify title unless user has selected to show only titles
+					if($this->options['style'] != 'titles' && $this->options['hide_title']) {
+						$node->title = NULL;
+					}
           if ($this->options['style'] == 'teasers') {
             // Theme the nodes as a teaser.
 
