@@ -14,6 +14,13 @@
 
       function link(scope, elem, attr) {
         elem.bind('click', clickHandler);
+
+        elem.parent().find('.fid').change(function (e) {
+          // Media removes all click events on the edit button, so we have to add the handler again if we want
+          // this to continue working.
+          elem.bind('click', clickHandler);
+          elem.attr('fid', e.target.value);
+        })
       }
 
       function clickHandler(event) {

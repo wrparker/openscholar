@@ -21,8 +21,10 @@ class os_boxes_html extends os_boxes_default {
   public function options_form(&$form_state) {
     $form = parent::options_form($form_state);
 
-    os_common_angular_app('os-boxes');
-    $form['#attached']['js'][] = drupal_get_path('module', 'os_boxes') . '/misc/os_boxes.app.js';
+    if (module_exists('os_common')) {
+      os_common_angular_app('os-boxes');
+      $form['#attached']['js'][] = drupal_get_path('module', 'os_boxes') . '/misc/os_boxes.app.js';
+    }
 
     $form['text'] = array(
       '#type' => 'text_format',
