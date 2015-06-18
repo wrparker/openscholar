@@ -1275,3 +1275,20 @@ function _os_pages_reindex_context($context_name) {
     }
   }
 }
+
+/**
+ * Implements hook_node_insert().
+ */
+function os_pages_node_insert($node) {
+  if ($node->type != 'page') {
+    return;
+  }
+
+  if (empty($node->metatags['description']['value'])) {
+    return;
+  }
+  
+  $wrapper = entity_metadata_wrapper('node', $node);
+
+  $node->metatags['description']['value'] = $wrapper->field_meta_description->value();
+}
