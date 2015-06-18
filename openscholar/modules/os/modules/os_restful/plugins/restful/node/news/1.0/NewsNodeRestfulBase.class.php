@@ -32,7 +32,7 @@ class NewsNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Post
    * @apiGroup News
    *
-   * @apiDescription Create a News entry.
+   * @apiDescription Create a news entry.
    *
    * @apiParam {Number} id The news ID
    *
@@ -48,7 +48,7 @@ class NewsNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup News
    *
-   * @apiDescription Create a News entry.
+   * @apiDescription Delete a news entry.
    *
    * @apiParam {Number} id The news ID
    *
@@ -64,7 +64,7 @@ class NewsNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup News
    *
-   * @apiDescription Create a News entry.
+   * @apiDescription Update a news entry.
    *
    * @apiParam {Number} id The news ID
    *

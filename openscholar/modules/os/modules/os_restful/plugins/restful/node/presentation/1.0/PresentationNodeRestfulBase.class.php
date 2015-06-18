@@ -35,7 +35,7 @@ class PresentationNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Post
    * @apiGroup Presentation
    *
-   * @apiDescription Create a Presentation entry.
+   * @apiDescription Update a Presentation entry.
    *
    * @apiParam {Number} id The presentation ID
    *
@@ -51,7 +51,7 @@ class PresentationNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup Presentation
    *
-   * @apiDescription Create a Presentation entry.
+   * @apiDescription Delete a Presentation entry.
    *
    * @apiParam {Number} id The presentation ID
    *
@@ -67,7 +67,7 @@ class PresentationNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Presentation
    *
-   * @apiDescription Create a Presentation entry.
+   * @apiDescription Update a Presentation entry.
    *
    * @apiParam {Number} id The presentation ID
    *

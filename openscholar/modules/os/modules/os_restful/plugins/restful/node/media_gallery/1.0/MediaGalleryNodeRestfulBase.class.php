@@ -8,7 +8,7 @@ class MediaGalleryNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Get
    * @apiGroup Media gallery
    *
-   * @apiDescription Consume media_gallery content.
+   * @apiDescription Consume media gallery content.
    *
    * @apiParam {Number} id The media gallery ID
    */
@@ -39,7 +39,7 @@ class MediaGalleryNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Post
    * @apiGroup Media gallery
    *
-   * @apiDescription Create a Media gallery entry.
+   * @apiDescription Create a media gallery entry.
    *
    * @apiParam {Number} id The media gallery ID
    *
@@ -55,7 +55,7 @@ class MediaGalleryNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup Media gallery
    *
-   * @apiDescription Create a Media gallery entry.
+   * @apiDescription Delete a media gallery entry.
    *
    * @apiParam {Number} id The media gallery ID
    *
@@ -71,7 +71,7 @@ class MediaGalleryNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Media gallery
    *
-   * @apiDescription Create a Media gallery entry.
+   * @apiDescription Update a media gallery entry.
    *
    * @apiParam {Number} id The media gallery ID
    *

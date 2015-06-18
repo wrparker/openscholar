@@ -30,7 +30,7 @@ class LinkNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Post
    * @apiGroup Link
    *
-   * @apiDescription Create a Link entry.
+   * @apiDescription Update a link entry.
    *
    * @apiParam {Number} id The link ID
    *
@@ -46,7 +46,7 @@ class LinkNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup Link
    *
-   * @apiDescription Create a Link entry.
+   * @apiDescription Delete a link entry.
    *
    * @apiParam {Number} id The link ID
    *
@@ -62,7 +62,7 @@ class LinkNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Link
    *
-   * @apiDescription Create a Link entry.
+   * @apiDescription Update a Link entry.
    *
    * @apiParam {Number} id The link ID
    *

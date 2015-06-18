@@ -45,7 +45,7 @@ class FeedNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup Feed
    *
-   * @apiDescription Create a feed entry.
+   * @apiDescription Delete a feed entry.
    *
    * @apiParam {Number} id The feed ID
    *
@@ -61,7 +61,7 @@ class FeedNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Feed
    *
-   * @apiDescription Create a feed entry.
+   * @apiDescription Update a feed entry.
    *
    * @apiParam {Number} id The feed ID
    *

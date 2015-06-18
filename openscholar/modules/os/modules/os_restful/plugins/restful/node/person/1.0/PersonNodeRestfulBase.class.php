@@ -72,7 +72,7 @@ class PersonNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup Person
    *
-   * @apiDescription Create a person entry.
+   * @apiDescription Delete a person entry.
    *
    * @apiParam {Number} id The person ID
    *
@@ -88,7 +88,7 @@ class PersonNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Person
    *
-   * @apiDescription Create a person entry.
+   * @apiDescription Update a person entry.
    *
    * @apiParam {Number} id The person ID
    *

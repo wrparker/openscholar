@@ -82,7 +82,7 @@ class EventNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup Event
    *
-   * @apiDescription Create a event entry.
+   * @apiDescription Delete a event entry.
    *
    * @apiParam {Number} id The event ID
    *
@@ -98,7 +98,7 @@ class EventNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Event
    *
-   * @apiDescription Create a event entry.
+   * @apiDescription Update a event entry.
    *
    * @apiParam {Number} id The event ID
    *

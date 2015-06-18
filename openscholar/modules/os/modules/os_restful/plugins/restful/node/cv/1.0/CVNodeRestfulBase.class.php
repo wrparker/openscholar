@@ -40,7 +40,7 @@ class CVNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup CV
    *
-   * @apiDescription Create a cv entry.
+   * @apiDescription Delete a cv entry.
    *
    * @apiParam {Number} id The cv ID
    *
@@ -56,7 +56,7 @@ class CVNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup CV
    *
-   * @apiDescription Create a cv entry.
+   * @apiDescription Update a cv entry.
    *
    * @apiParam {Number} id The cv ID
    *

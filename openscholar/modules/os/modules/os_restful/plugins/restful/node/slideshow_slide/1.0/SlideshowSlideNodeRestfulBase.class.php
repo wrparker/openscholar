@@ -40,7 +40,7 @@ class SlideshowSlideNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup Slideshow
    *
-   * @apiDescription Create a Slideshow entry.
+   * @apiDescription Delete a Slideshow entry.
    *
    * @apiParam {Number} id The slideshow ID
    *
@@ -56,7 +56,7 @@ class SlideshowSlideNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Slideshow
    *
-   * @apiDescription Create a Slideshow entry.
+   * @apiDescription Update a Slideshow entry.
    *
    * @apiParam {Number} id The slideshow ID
    *

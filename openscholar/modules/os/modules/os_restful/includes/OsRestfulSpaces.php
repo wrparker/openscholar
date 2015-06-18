@@ -88,7 +88,7 @@ abstract class OsRestfulSpaces extends \OsRestfulDataProvider {
    *   The exception message.
    * @throws RestfulBadRequestException
    */
-  protected function throwException($message) {
+  public function throwException($message) {
     throw new \RestfulBadRequestException($message);
   }
 

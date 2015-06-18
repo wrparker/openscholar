@@ -63,7 +63,7 @@ class BiblioNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup Publication
    *
-   * @apiDescription Create a Publication entry.
+   * @apiDescription Delete a Publication entry.
    *
    * @apiParam {Number} id The publication ID
    *
@@ -79,7 +79,7 @@ class BiblioNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Publication
    *
-   * @apiDescription Create a Publication entry.
+   * @apiDescription Update a Publication entry.
    *
    * @apiParam {Number} id The publication ID
    *

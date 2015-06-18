@@ -63,7 +63,7 @@ class SoftwareReleaseNodeRestful extends OsNodeRestfulBase {
    * @apiName Post
    * @apiGroup Software release
    *
-   * @apiDescription Create a Software release entry.
+   * @apiDescription Create a software release entry.
    *
    * @apiParam {Number} id The software release ID
    *
@@ -79,7 +79,7 @@ class SoftwareReleaseNodeRestful extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup Software release
    *
-   * @apiDescription Create a Software release entry.
+   * @apiDescription Delete a software release entry.
    *
    * @apiParam {Number} id The software release ID
    *
@@ -95,7 +95,7 @@ class SoftwareReleaseNodeRestful extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Software release
    *
-   * @apiDescription Create a Software release entry.
+   * @apiDescription Update a software release entry.
    *
    * @apiParam {Number} id The software release ID
    *

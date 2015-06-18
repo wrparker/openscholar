@@ -8,9 +8,9 @@ class BioNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Get
    * @apiGroup Biography
    *
-   * @apiDescription Consume publications content.
+   * @apiDescription Consume biography content.
    *
-   * @apiParam {Number} id The publication ID
+   * @apiParam {Number} id The biography ID
    *
    * @apiSuccess {Number}   id              The publication ID.
    * @apiSuccess {String}   label           Registration Date.
@@ -37,9 +37,9 @@ class BioNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Post
    * @apiGroup Biography
    *
-   * @apiDescription Create a Biography entry.
+   * @apiDescription Create a biography entry.
    *
-   * @apiParam {Number} id The publication ID
+   * @apiParam {Number} id The biography ID
    *
    * @apiSampleRequest off
    *
@@ -59,9 +59,9 @@ class BioNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup Biography
    *
-   * @apiDescription Create a Biography entry.
+   * @apiDescription Delete a biography entry.
    *
-   * @apiParam {Number} id The publication ID
+   * @apiParam {Number} id The biography ID
    *
    * @apiSampleRequest off
    */
@@ -75,9 +75,9 @@ class BioNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Biography
    *
-   * @apiDescription Create a Biography entry.
+   * @apiDescription Update a biography entry.
    *
-   * @apiParam {Number} id The publication ID
+   * @apiParam {Number} id The biography ID
    *
    * @apiSampleRequest off
    *

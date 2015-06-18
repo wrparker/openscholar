@@ -57,7 +57,7 @@ class FAQNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup FAQ
    *
-   * @apiDescription Create a faq entry.
+   * @apiDescription Delete a faq entry.
    *
    * @apiParam {Number} id The faq ID
    *
@@ -73,7 +73,7 @@ class FAQNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup FAQ
    *
-   * @apiDescription Create a faq entry.
+   * @apiDescription Update a faq entry.
    *
    * @apiParam {Number} id The faq ID
    *

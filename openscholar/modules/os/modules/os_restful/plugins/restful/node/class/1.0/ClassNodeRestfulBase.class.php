@@ -40,7 +40,7 @@ class ClassNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup Class
    *
-   * @apiDescription Create a class entry.
+   * @apiDescription Delete a class entry.
    *
    * @apiParam {Number} id The class ID
    *
@@ -56,7 +56,7 @@ class ClassNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Class
    *
-   * @apiDescription Create a class entry.
+   * @apiDescription Update a class entry.
    *
    * @apiParam {Number} id The class ID
    *

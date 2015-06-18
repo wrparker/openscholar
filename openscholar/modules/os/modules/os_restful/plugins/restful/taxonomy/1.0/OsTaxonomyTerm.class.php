@@ -44,8 +44,8 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
    *
    * @apiDescription Create taxonomy term content.
    *
-   * @apiParam {String} label The name of the term
-   * @apiParam {String} vocabulary The name of the vocabulary for the term
+   * @apiSuccess {String} label The name of the term
+   * @apiSuccess {String} vocabulary The name of the vocabulary for the term
    */
   public function createEntity() {
     return parent::createEntity();
@@ -73,7 +73,7 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
    * @apiName Patch
    * @apiGroup Term
    *
-   * @apiDescription Patch a taxonomy term.
+   * @apiDescription Update a taxonomy term.
    *
    * @apiParam {String} label The name of the term
    * @apiParam {Integer} id The term ID

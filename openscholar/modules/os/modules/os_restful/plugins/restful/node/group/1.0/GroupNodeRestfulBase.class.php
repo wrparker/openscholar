@@ -9,7 +9,7 @@ class GroupNodeRestfulBase extends OsNodeRestfulBase {
    * @apiGroup Group
    *
    * @apiDescription
-   * OpenScholar uses Organic Groups in order to have content attached to vsite.
+   * OpenScholar uses [Organic Groups](http://drupal.org/project/og) in order to have content attached to vsite.
    * Actually, each vsite is a group. This give us the options to override
    * site wide settings(roles and permission).
    *

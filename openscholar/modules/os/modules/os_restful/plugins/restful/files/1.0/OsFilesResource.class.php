@@ -1,6 +1,6 @@
 <?php
 
-class OsFilesResource extends RestfulFilesUpload {
+class OsFilesResource extends RestfulEntityBase {
 
   /**
    * @api {get} api/files/:id Get
@@ -21,25 +21,10 @@ class OsFilesResource extends RestfulFilesUpload {
    * @apiSuccess {String}   name      File mame.
    * @apiSuccess {Integer}  timestamp The timestamp when the file copied to the server.
    * @apiSuccess {String}   preview   The html representation of the file.
-   * @apiSuccess {Object} Terms       Terms attached to the file.
+   * @apiSuccess {Object}   Terms     Terms attached to the file.
    */
   public static function controllersInfo() {
-    return array(
-      '' => array(
-        // GET returns a list of entities.
-        \RestfulInterface::GET => 'getList',
-        \RestfulInterface::HEAD => 'getList',
-        // POST
-        \RestfulInterface::POST => 'createEntity',
-      ),
-      '^.*$' => array(
-        \RestfulInterface::GET => 'viewEntities',
-        \RestfulInterface::HEAD => 'viewEntities',
-        \RestfulInterface::PUT => 'putEntity',
-        \RestfulInterface::PATCH => 'patchEntity',
-        \RestfulInterface::DELETE => 'deleteEntity',
-      ),
-    );
+    return parent::controllersInfo();
   }
 
   /**
@@ -225,7 +210,7 @@ class OsFilesResource extends RestfulFilesUpload {
    * @apiName Patch
    * @apiGroup Files
    *
-   * @apiDescription Create a Biography entry.
+   * @apiDescription Update a file entry.
    *
    * @apiParam {Number} id The publication ID
    *

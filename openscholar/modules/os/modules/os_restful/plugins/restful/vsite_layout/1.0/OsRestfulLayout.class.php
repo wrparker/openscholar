@@ -29,7 +29,7 @@ class OsRestfulLayout extends \OsRestfulSpaces {
    * @apiName Patch
    * @apiGroup Layout
    *
-   * @apiDescription Update a layout in a vsite.
+   * @apiDescription Update a layout structure in a vsite.
    *
    * @apiParam {Number} object_id The identifier of the layout object.
    *
@@ -166,7 +166,7 @@ class OsRestfulLayout extends \OsRestfulSpaces {
    * @apiName Get
    * @apiGroup Layout
    *
-   * @apiDescription Get a variable from a vsite.
+   * @apiDescription Get a layout structure from a vsite.
    *
    */
   public function getSpace() {

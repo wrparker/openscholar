@@ -44,7 +44,7 @@ class PageNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup Page
    *
-   * @apiDescription Create a Page entry.
+   * @apiDescription Delete a Page entry.
    *
    * @apiParam {Number} id The page ID
    *
@@ -60,7 +60,7 @@ class PageNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Page
    *
-   * @apiDescription Create a Page entry.
+   * @apiDescription Update a Page entry.
    *
    * @apiParam {Number} id The page ID
    *

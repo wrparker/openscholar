@@ -24,7 +24,7 @@ class BlogNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Post
    * @apiGroup Blog
    *
-   * @apiDescription Create a Blog entry.
+   * @apiDescription Create a blog entry.
    *
    * @apiParam {Number} id The blog ID
    *
@@ -40,7 +40,7 @@ class BlogNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup Blog
    *
-   * @apiDescription Create a Blog entry.
+   * @apiDescription Delete a blog entry.
    *
    * @apiParam {Number} id The blog ID
    *
@@ -56,7 +56,7 @@ class BlogNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Blog
    *
-   * @apiDescription Create a Blog entry.
+   * @apiDescription Update a blog entry.
    *
    * @apiParam {Number} id The blog ID
    *

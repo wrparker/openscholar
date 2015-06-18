@@ -88,7 +88,7 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
    * @apiName Patch
    * @apiGroup User
    *
-   * @apiDescription Patch a user entity.
+   * @apiDescription Update a user entity.
    *
    * @apiParam {String} name The name of the user
    * @apiParam {String} mail The email of the user

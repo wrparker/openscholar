@@ -8,9 +8,10 @@ abstract class documentation {
    * @apiGroup Basic
    *
    * @apiDescription
-   * When running a REST request inside a Drupal installation RESTful will
-   * validate you need to pass an X-CSRF-TOKEN as a header for each request.
-   * This will make sure that the user of the cookie was not hijacked.
+   * Unlike the access token situation, when running a REST request inside a
+   * Drupal installation RESTful will validate the available cookies. You'll
+   * need to pass X-CSRF-TOKEN header for each request. This will make sure that
+   * the user's cookie was not hijacked.
    *
    * @apiSampleRequest off
    *
@@ -33,15 +34,15 @@ abstract class documentation {
    * accessible to anonymous users. Since the request is done outside the Drupal
    * installation we need a way to verify which user involve in the request.
    *
-   * In the example you can see how a request to get the access token is done
-   * using Angular JS. Once the request succeeded you will get back a JSON with
-   * three important parameters:
-   * * `access_token` will keep the access token that you can use in order to make a
-   * successful rest request.
-   * * `expires_in` define for how many times the access token is valid. Usually for
-   * one day.
-   * * `refresh_token` will used you to get a new access token once the previous has
-   * expired.
+   * The example below will show you how you can generate access token for a
+   * user. Once the request succeeded you will get back a JSON with three
+   * important parameters:
+   * * `access_token` -  This is the token which represent the user in any rest
+   *    request.
+   * * `expires_in` - Amount of seconds in which the access token is valid.
+   * * `refresh_token` - Once the the amount of seconds reached to maximum the
+   *    refresh token isn't not valid any more. You'll need to ask for a new one
+   *    using the refresh token.
    *
    * @apiSampleRequest off
    *
@@ -82,7 +83,9 @@ abstract class documentation {
    * @apiGroup Basic
    *
    * @apiDescription
-   * One of RESTful good features is the API discovery.
+   * One of RESTful good features is the API discovery. This end point will
+   * provide for you all the available end points and their description. Very
+   * handy during development.
    *
    * @apiSampleRequest api/
    */

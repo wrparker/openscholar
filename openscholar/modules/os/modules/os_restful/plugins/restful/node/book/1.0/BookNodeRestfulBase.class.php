@@ -56,7 +56,7 @@ class BookNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Book
    *
-   * @apiDescription Patch a book entry.
+   * @apiDescription Update a book entry.
    *
    * @apiParam {Number} id The book ID
    *

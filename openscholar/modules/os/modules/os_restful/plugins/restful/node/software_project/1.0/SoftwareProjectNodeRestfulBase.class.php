@@ -24,7 +24,7 @@ class SoftwareProjectNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Post
    * @apiGroup Software project
    *
-   * @apiDescription Create a Software project entry.
+   * @apiDescription Create a software project entry.
    *
    * @apiParam {Number} id The software project ID
    *
@@ -40,7 +40,7 @@ class SoftwareProjectNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup Software project
    *
-   * @apiDescription Create a Software project entry.
+   * @apiDescription Delete a software project entry.
    *
    * @apiParam {Number} id The software project ID
    *
@@ -56,7 +56,7 @@ class SoftwareProjectNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Software project
    *
-   * @apiDescription Create a Software project entry.
+   * @apiDescription Update a software project entry.
    *
    * @apiParam {Number} id The software project ID
    *

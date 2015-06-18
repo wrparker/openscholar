@@ -6,7 +6,7 @@ class ClassMaterialNodeRestfulBase extends OsNodeRestfulBase {
    * @api {get} api/class_material/:id Get
    * @apiVersion 0.1.0
    * @apiName Get
-   * @apiGroup Class-material
+   * @apiGroup Class material
    *
    * @apiDescription Consume class material content.
    *
@@ -43,7 +43,7 @@ class ClassMaterialNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Delete
    * @apiGroup Class material
    *
-   * @apiDescription Create a class entry.
+   * @apiDescription Delete a class entry.
    *
    * @apiParam {Number} id The class material ID
    *
@@ -59,7 +59,7 @@ class ClassMaterialNodeRestfulBase extends OsNodeRestfulBase {
    * @apiName Patch
    * @apiGroup Class material
    *
-   * @apiDescription Create a class material entry.
+   * @apiDescription Update a class material entry.
    *
    * @apiParam {Number} id The class ID
    *
