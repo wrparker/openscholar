@@ -217,7 +217,7 @@ function os_events_views_pre_render(&$view) {
     return;
   }
 
-  $view->attachment_before = '<div class="cal-export">' . t('Export') . '</div>' . $view->attachment_before;
+  $view->attachment_before = '<a class="cal-export">' . t('Export') . '</a>' . $view->attachment_before;
 }
 
 function os_events_date_formatter_pre_view_alter(&$entity, $vars) {

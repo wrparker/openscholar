@@ -657,8 +657,32 @@ ul ul ul ul {
   position: relative;
 }
 
+.cal-export {
+  color: #215990;
+  padding: 5px 8px;
+  border: 1px solid #e4e4e4;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  width:60px;
+  background-color:#f3f3f1;
+  padding-right: 20px;
+}
+
+a.cal-export:before {
+ background: url('../images/scholarbase-sprite.png') no-repeat -60px -202px;
+
+}
+
+.cal-export:hover {
+ cursor: pointer;
+
+}
+
+
 .attachment.attachment-before ul li {
   border-bottom: none;
+  display: block;
 }
 
 /* Don't display the ical link in the floating box. */
@@ -668,14 +692,23 @@ ul ul ul ul {
 
 .view-os-events.view-id-os_events .attachment-before {
   position: absolute;
-  top: -10px;
+  top: -38px;
   right: 0px;
+ 
 }
 
 .node-event.article .node-content .links,
 .view-os-events.view-id-os_events .attachment-before .links {
  display:inline-block;
  margin-left:8px;
+}
+
+.view-os-events.view-id-os_events .attachment-before .links {
+ margin-left:0;
+ display:none;
+ background-color: #fff;
+  border: 1px solid #e4e4e4;
+  padding: 5px;
 }
 
 .ical {
