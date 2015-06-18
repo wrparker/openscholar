@@ -1012,9 +1012,6 @@ function os_events_field_widget_registration_select_form_alter(&$element, &$form
   $element['registration_type']['#title'] = t('Signup');
   $element['registration_type']['#description'] = t('If checked, users will be able to signup for this event.');
 
-  // Disable signup for repeated events.
-  $element['registration_type']['#states']['enabled'][':input[name="field_date[und][0][show_repeat_settings]"]'] = array('checked' => FALSE);
-
   // Add JS to change button description,
   $element['registration_type']['#attached']['js'] = array(
     drupal_get_path('module', 'os_events') . '/js/os_events_signup_description.js'
