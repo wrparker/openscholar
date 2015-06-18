@@ -658,21 +658,14 @@ ul ul ul ul {
 }
 
 .cal-export {
-  color: #215990;
-  padding: 5px 8px;
+  padding: 5px 25px 5px 5px;
   border: 1px solid #e4e4e4;
   border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  width:60px;
-  background-color:#f3f3f1;
-  padding-right: 20px;
+  background: url('../images/scholarbase-sprite.png?abh') no-repeat 57px -902px #f3f3f1;
 }
 
-a.cal-export:before {
- background: url('../images/scholarbase-sprite.png') no-repeat -60px -202px;
-
-}
 
 .cal-export:hover {
  cursor: pointer;
@@ -694,7 +687,8 @@ a.cal-export:before {
   position: absolute;
   top: -38px;
   right: 0px;
- 
+ text-align: right;
+ width: 102px;
 }
 
 .node-event.article .node-content .links,
@@ -709,6 +703,9 @@ a.cal-export:before {
  background-color: #fff;
   border: 1px solid #e4e4e4;
   padding: 5px;
+  z-index: 1;
+  position: relative;
+  text-align: left;
 }
 
 .ical {
@@ -725,7 +722,7 @@ a.cal-export:before {
 
 .webcal:before,
 .ical:before {
-  background: url('../images/scholarbase-sprite.png') no-repeat -48px -727px;
+  background: url('../images/scholarbase-sprite.png?0615b') no-repeat -48px -727px;
   width: 21px;
   height: 21px;
   position: absolute;
@@ -740,9 +737,9 @@ a.cal-export:before {
 }
 
 .rss:before {
-  background: url('../images/scholarbase-sprite.png') no-repeat 0px -727px;
+  background: url('../images/scholarbase-sprite.png?0615b') no-repeat 0px -727px;
   width: 21px;
-  height: 21px;
+  height: 22px;
   position: absolute;
   left: 0;
   content: '';
@@ -755,7 +752,7 @@ a.cal-export:before {
 }
 
 .subscribe:before {
-  background: url('../images/scholarbase-sprite.png') no-repeat -24px -727px;
+  background: url('../images/scholarbase-sprite.png?0615b') no-repeat -24px -727px;
   width: 21px;
   height: 21px;
   position: absolute;
