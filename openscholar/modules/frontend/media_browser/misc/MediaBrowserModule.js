@@ -503,34 +503,39 @@
       close([]);
     }
   }])
-  .directive('mbOpenModal', ['ModalService', function(ModalService) {
+  .directive('mbOpenModal', ['$parse', 'ModalService', function($parse, ModalService) {
 
-    function link(scope, elem, attr,contr) {
-      elem.bind('click', clickHandler);
-    }
+    function link(scope, elem, attr, contr) {
+      elem.bind('click', function (event) {
+        event.preventDefault();
+        // get stuff from the element we clicked on and Drupal.settings
+        var elem = event.currentTarget,
+          params = defaultParams(),
+          panes = elem.attributes['panes'].value,
+          types = elem.attributes['types'].value.split(',');
 
-    function clickHandler(event) {
-      event.preventDefault();
-      // get stuff from the element we clicked on and Drupal.settings
-      var elem = event.currentTarget,
-        params = defaultParams(),
-        panes = elem.attributes['panes'].value,
-        types = elem.attributes['types'].value.split(',');
+        for (var i in params.browser.panes) {
+          params.browser.panes[i] = (panes.indexOf(i) !== -1);
+        }
 
-      for (var i in params.browser.panes) {
-        params.browser.panes[i] = (panes.indexOf(i) !== -1);
-      }
+        params.browser.allowedTypes = {}
+        for (i=0; i<types.length;i++) {
+          params.browser.allowedTypes[types[i]] = types[i];
+        }
 
-      params.browser.allowedTypes = {}
-      for (i=0; i<types.length;i++) {
-        params.browser.allowedTypes[types[i]] = types[i];
-      }
+        params.onSelect = function (inserted) {
+          if (elem.attributes['on-select']) {
+            $parse(elem.attributes['on-select'])(scope, {
+              $inserted: inserted
+            });
+          }
+          else {
+            window.location.reload();
+          }
+        }
 
-      params.onSelect = function () {
-        window.location.reload();
-      }
-
-      open(params);
+        open(params);
+      });
     }
 
     return {
