@@ -203,6 +203,11 @@ a.biblio-abstract-link.toggle.expanded {
   padding:8px;
   border:1px solid #CCC;
   }
+  
+ /* ADD A LEFT MARGIN TO THE ABSTRACT SLIDER WHEN A BIBLIO THUMBNAIL IS USED */ 
+.field-name-field-biblio-image ~ .biblio-abstract-display {
+  margin-left: 68px;
+}
 
 .biblio-export-links {
   float: right;

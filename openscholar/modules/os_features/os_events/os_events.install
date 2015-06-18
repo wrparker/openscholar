@@ -173,3 +173,7 @@ function os_events_update_7011() {
 function os_events_update_7012() {
   features_revert(array('os_events' => array('views')));
 }
+
+function os_events_update_7013() {
+  features_revert(array('os_events' => array('variable')));
+}
