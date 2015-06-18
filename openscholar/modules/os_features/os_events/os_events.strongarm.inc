@@ -65,6 +65,13 @@ function os_events_strongarm() {
   $strongarm->name = 'date_views_monthformat_without_year';
   $strongarm->value = 'F Y';
   $export['date_views_monthformat_without_year'] = $strongarm;
+  
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'date_views_month_format_without_year';
+  $strongarm->value = 'F Y';
+  $export['date_views_month_format_without_year'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
