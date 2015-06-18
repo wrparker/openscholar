@@ -431,9 +431,14 @@ function os_events_generate_modal_register_link($nid, $modal_settings = array())
  * @param $node
  *  The node object.
  */
-function os_events_events_register($js, $node, $date_id = 0) {
+function os_events_events_register($js, $node, $date_id = FALSE) {
   ctools_include('modal');
   ctools_include('ajax');
+  $repeating = $node->field_date['und'][0]['rrule'];
+  // Repeating delta not present.
+  if($repeating && $date_id === FALSE && !$js) {
+    return;
+  }
 
   $registration_type = registration_get_entity_registration_type('node', $node);
   $registration = entity_get_controller('registration')->create(array(
@@ -450,8 +455,15 @@ function os_events_events_register($js, $node, $date_id = 0) {
     return $registration_form;
   }
 
-  if (!os_events_event_registration_reach_capacity($node)) {
-    drupal_set_message(t('The event has reached his maximum capacity of registrations. Sorry.'), 'error');
+  if (!os_events_event_registration_reach_capacity($node) || ($repeating && $date_id === FALSE)) {
+
+    if($repeating && $date_id == FALSE) {
+      drupal_set_message(t('Unable to register for this repeating event, bad link detected.'), 'error');
+    }
+
+    if (!os_events_event_registration_reach_capacity($node)) {
+      drupal_set_message(t('The event has reached his maximum capacity of registrations. Sorry.'), 'error');
+    }
     $commands = array();
 
     // dismiss the window
