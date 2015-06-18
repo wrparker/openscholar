@@ -87,6 +87,7 @@ features[variable][] = comment_form_location_event
 features[variable][] = comment_preview_event
 features[variable][] = comment_subject_field_event
 features[variable][] = date_views_monthformat_without_year
+features[variable][] = date_views_month_format_without_year
 features[variable][] = diff_show_preview_changes_node_event
 features[variable][] = menu_options_event
 features[variable][] = menu_parent_event
