@@ -223,7 +223,7 @@ function os_events_date_formatter_pre_view_alter(&$entity, $vars) {
         $delta = $result->field_data_field_date_delta;
       }
       else {
-        // Use the date in teh result field to get the delta on the repeated field_date field.
+        // Use the date in the result field to get the delta on the repeated field_date field.
         foreach ($entity->field_date[LANGUAGE_NONE] as $d => $r) {
           if ($r['value'] == $result->$field) {
             $delta = $d;
@@ -290,7 +290,7 @@ function os_events_process_node(&$variables) {
   $register = '';
 
   // Show the signup link if capacity isn't reached and no repeat rule is used.
-  if ($registrations_type && os_events_event_registration_reach_capacity($variables['node']) && !$variables['field_date'][0]['rrule'] ) {
+  if ($registrations_type && os_events_event_registration_reach_capacity($variables['node'])) {
     // In full view mode show a link to a modal.
     if ($variables['view_mode'] == 'full' && os_events_register_show_register_link($variables['node'])) {
       $register = os_events_generate_modal_register_link($variables['node']->nid, array());
@@ -431,7 +431,7 @@ function os_events_generate_modal_register_link($nid, $modal_settings = array())
  * @param $node
  *  The node object.
  */
-function os_events_events_register($js, $node) {
+function os_events_events_register($js, $node, $date_id = 0) {
   ctools_include('modal');
   ctools_include('ajax');
 
@@ -440,6 +440,7 @@ function os_events_events_register($js, $node) {
     'entity_type' => 'node',
     'entity_id' => $node->nid,
     'type' => $registration_type,
+    'repeat_date' => $date_id,
   ));
 
   $registration->ajax = $js;
@@ -1041,10 +1042,30 @@ function os_events_form_registration_registrations_broadcast_form_alter(&$form, 
  * Implements hook_form_FORM_ID_alter().
  */
 function os_events_form_registration_form_alter(&$form, &$form_state) {
-  // Remove the entity from the form - we don't need it and it disable the
-  // header.
-  // @TODO: figure out why the $form['#entity'] disable the header.
-  unset($form['#entity']);
+
+  // Default to no repeating event date.
+  $form['field_repeating_event_date'] = array(
+    '#type' => 'value',
+    '#value' => '',
+  );
+
+  $registration = $form_state['registration'];
+  if(isset($registration->repeat_date) && $registration->entity_type == 'node') {
+    $node = node_load($registration->entity_id);
+
+    $delta = intval($registration->repeat_date);
+    $date = field_get_items('node', $node, 'field_date');
+    if (isset($date[$delta])) {
+      // Set the date for the registration.
+      $form['field_repeating_event_date']['#value'] = $date[$delta]['value'];
+
+      $form['field_repeating_event_date'] = array(
+        '#type' => 'item',
+        '#markup' => '<span class="date-display-single">'. t('On @date', array('@date' => date('l, F j, Y', strtotime($date[$delta]['value'].' UTC'))))."</span>",
+        '#weight' => -10,
+      );
+    }
+  }
 
   $form['who_is_registering'] = array(
     '#type' => 'value',
@@ -1285,6 +1306,11 @@ function os_events_form_event_node_form_alter(&$form, &$form_state) {
 function os_events_register_show_register_link($node) {
   if ($node->type != 'event') {
     return;
+  }
+
+  // For repeating events get the correct delta
+  if (isset($node->date_id)) {
+    list(,,, $delta,) = explode('.', $node->date_id . '.');
   }
 
   $result = db_select('registration_entity', 're')
