@@ -218,7 +218,7 @@ function os_pages_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'media',
+      'module' => 'media_browser',
       'settings' => array(
         'allowed_schemes' => array(
           'embed' => 'embed',
@@ -240,9 +240,11 @@ function os_pages_field_default_field_instances() {
           'media_internet' => 'media_internet',
           'upload' => 'upload',
         ),
+        'droppable_area_text' => 'Drag your files here.',
         'progress_indicator' => 'throbber',
+        'upload_button_text' => 'Upload',
       ),
-      'type' => 'media_generic',
+      'type' => 'media_browser_widget',
       'weight' => 32,
     ),
   );
