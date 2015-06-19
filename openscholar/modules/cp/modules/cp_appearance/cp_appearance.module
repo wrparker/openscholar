@@ -329,11 +329,11 @@ function cp_appearance_theme_picker_form_validate($form, &$form_state){
  * Processes all the flavors a theme has.
  *
  * @param array $theme_flavors
- *  	List of flavors used by this theme
+ *    List of flavors used by this theme
  * @param array $info
- *  	Theme info
+ *    Theme info
  * @param &string $default_flavor
- * 		Flavor to default to
+ *     Flavor to default to
  *
  * @return array
  */
@@ -431,9 +431,10 @@ function theme_cp_appearance_theme_picker_form($variables) {
         "<div class='" . $class . "'>" . l(t('Update'), 'cp/appearance/update-subtheme/' . $flavor) . "</div>",
       );
 
+      $theme_category = substr($info['module'], 5);
       $items[] = array(
         'class' => array('item-theme-picker', $selected_subtheme),
-        'id' => 'theme-' . str_replace('_', '-', $flavor),
+        'id' => 'theme-' . str_replace('_', '-', $info['module']) . "-os-featured-flavor-$flavor",
         'data' => theme('cp-appearance-subtheme-item', array(
           'info' => $theme_info ,
           'actions' => implode("", $actions),
@@ -531,6 +532,7 @@ function _cp_appearance_theme_screenshot_item($theme, &$form) {
   if ($theme->name == $form['theme_default']['#default_value']) {
     $status_class = 'current';
   }
+
   $item = array(
     'class' => array(
       'item-theme-picker',
