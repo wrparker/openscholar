@@ -10,7 +10,8 @@
         scope.panes = ['upload', 'web', 'library'];
         scope.sendToBrowser = function($files) {
           var params = {
-            files: $files
+            files: $files,
+            onSelect: scope.addFile
           };
           mbModal.open(params);
         }
