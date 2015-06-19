@@ -9,6 +9,30 @@ function os_events_install() {
 
   //Don't store the 'last_viewed' date, This is annoying
   variable_set('calendar_track_date', 0);
+
+  db_add_field('registration_entity', 'repeating_event_date', array(
+      'type' => 'varchar',
+      'length' => 128,
+      'not null' => FALSE,
+      'description' => 'A optional date when a repeating event occurs.',
+    ));
+}
+
+function os_events_uninstall() {
+  db_drop_field('registration_entity', 'repeating_event_date');
+}
+
+// Implements hook_schema_alter().
+function os_events_schema_alter(&$schema) {
+  if (isset($schema['registration_entity'])) {
+    $schema['registration_entity']['fields']['repeating_event_date'] = array(
+      'type' => 'varchar',
+      'length' => 128,
+      'not null' => FALSE,
+      'description' => 'A optional date when a repeating event occurs.',
+    );
+    $schema['registration_entity']['primary key'][] = 'repeating_event_date';
+  }
 }
 
 /**
