@@ -142,7 +142,7 @@
       $scope.files.splice(deleteMe, 1);
     })
 
-    service.fetch({})
+    var fetching = service.fetch({})
       .then(function (result) {
         console.log(result);
 
@@ -440,16 +440,18 @@
     // when a set of files are passed to the Media Browser, they were handled by some other service and then passed
     // to the Media Browser to handle
     if (params.files) {
-      var accepted = [], rejected = [];
-      for (var i=0; i<params.files.length; i++) {
-        if ($scope.validate(params.files[i])) {
-          accepted.push(params.files[i]);
+      fetching.then(function () {
+        var accepted = [], rejected = [];
+        for (var i=0; i<params.files.length; i++) {
+          if ($scope.validate(params.files[i])) {
+            accepted.push(params.files[i]);
+          }
+          else {
+            rejected.push(params.files[i]);
+          }
         }
-        else {
-          rejected.push(params.files[i]);
-        }
-      }
-      $scope.checkForDupes(accepted, {}, rejected);
+        $scope.checkForDupes(accepted, {}, rejected);
+      });
     }
   }])
   .directive('mbOpenModal', ['$parse', 'mbModal', function($parse, mbModal) {

@@ -12,7 +12,7 @@
           var params = {
             files: $files
           };
-          mbModal(params);
+          mbModal.open(params);
         }
 
         scope.addFile = function ($files) {
