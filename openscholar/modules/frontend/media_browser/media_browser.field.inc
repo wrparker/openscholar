@@ -98,7 +98,5 @@ function media_browser_field_widget_form(&$form, &$form_state, $field, $instance
     ))
   );
 
-  dpm($element);
-
   return $element;
 }
