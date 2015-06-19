@@ -66,6 +66,11 @@ function media_browser_field_widget_form(&$form, &$form_state, $field, $instance
   $field_settings = $instance['settings'];
   $widget_settings = $instance['widget']['settings'];
 
+  $files = array();
+  foreach ($items as $file) {
+    $files[] = $file['fid'];
+  }
+
   $element += array(
     '#field' => $field,
     '#instance' => $instance,
@@ -81,8 +86,7 @@ function media_browser_field_widget_form(&$form, &$form_state, $field, $instance
           'data' => array(
             'mediaBrowserField' => array(
               drupal_html_class('edit-'.$element['#field_name']) => array(
-                'selectedFiles' => array(
-                )
+                'selectedFiles' => $files
               ),
             )
           )
