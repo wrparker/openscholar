@@ -473,8 +473,8 @@
         }
 
         params.onSelect = function (inserted) {
-          if (elem.attributes['on-select']) {
-            $parse(elem.attributes['on-select'])(scope, {
+          if (elem.attributes['on-select'].value) {
+            $parse(elem.attributes['on-select'].value)(scope, {
               $inserted: inserted
             });
           }

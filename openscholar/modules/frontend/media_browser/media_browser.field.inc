@@ -89,7 +89,7 @@ function media_browser_field_widget_form(&$form, &$form_state, $field, $instance
         )
       ),
     ),
-    '#markup' => format_string('<div media-browser-field max-filesize="@filesize" types="@types" extensions="@extensions" upload-text="@upload-text" droppable-text="@droppable-text"></div>', array(
+    '#markup' => format_string('<div media-browser-field max-filesize="@filesize" types="@types" extensions="@extensions" upload-text="@upload-text" droppable-text="@droppable-text" files="[]"></div>', array(
       '@filesize' => isset($field_settings['max_filesize']) ? $field_settings['max_filesize'] : 0,
       '@types' => implode(',', array_filter($widget_settings['allowed_types'])),
       '@extensions' => isset($field_settings['file_extensions']) ? $field_settings['file_extensions'] : media_variable_get('file_extensions'),
