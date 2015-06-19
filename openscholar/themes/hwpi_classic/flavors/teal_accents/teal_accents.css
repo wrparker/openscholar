@@ -93,7 +93,7 @@ h2.block-title,
 
 .section-nav .expanded.menu-depth-2 > a:hover,
 .section-nav .expanded.menu-depth-2 > a {
-  background-color: #ccc;
+  background-color: #ccc !important;
 }
 
 
@@ -127,5 +127,27 @@ a.rslides_nav {
 #search-form #edit-submit {
   background: url('/profiles/openscholar/themes/hwpi_basetheme/images/hwpi_basesprite.png') no-repeat 2px -441px #1ebfb3;
   height:34px;
+}
+
+#columns .accordion ul.nice-menu li, 
+#columns .os-custom-menu ul.nice-menu li, 
+#columns #block-os-primary-menu ul.nice-menu li, 
+#columns #block-os-secondary-menu ul.nice-menu li, 
+#columns .os-custom-menu ul.menu li, 
+#columns #block-os-primary-menu ul.menu li,
+#columns #block-os-secondary-menu ul.menu li {
+ 	background-color: #FFF !important;
+  }
+  
+#columns .accordion ul.nice-menu li a, 
+#columns .os-custom-menu ul.nice-menu li a, 
+#columns #block-os-primary-menu ul.nice-menu li a,
+#columns #block-os-secondary-menu ul.nice-menu li a, 
+#columns .os-custom-menu ul.menu li a, 
+#columns #block-os-primary-menu ul.menu li a,
+#columns #block-os-secondary-menu ul.menu li a {
+  	border-bottom: 1px solid #ebe3df !important;
+  	font-family: 'Montserrat', helvetica !important;
+ 
 }
 
