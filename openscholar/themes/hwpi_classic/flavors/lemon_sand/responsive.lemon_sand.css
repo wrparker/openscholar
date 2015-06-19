@@ -6,7 +6,7 @@ background-color: #FFF;
 }
 
 .region-header-third ul.nice-menu a {
-color: #FFF !important;
+color: #222 !important;
 }
 
 
@@ -17,7 +17,7 @@ border-top: 1px solid #f4f4f4 !important;
 
 .region-header-third #block-os-secondary-menu.opened, 
 .region-header-third .os-custom-menu.opened {
-background-color: #8C8179;
+background-color: #FFF;
 }
 
 
@@ -34,12 +34,12 @@ border-bottom: none;
 
 
 #menu-bar ul.nice-menu li {
-background-color: #1E1E1E !important;
+background-color: #ffdb6d !important;
 color:#FFF !important;
 }
 
 #menu-bar #block-os-primary-menu a {
-color: #FFF !important;
+color: #222 !important;
 }
 
 #menu-bar #block-os-primary-menu li {
@@ -53,16 +53,16 @@ background-position: 0 -493px;
 
 
 .link-count-mobi-util a {
-background-position: -52px -500px;
+background-position: -52px -530px;
 }
 
 .link-count-mobi-util a {
-    background-color: #8C8179;
+    background-color: #FFF;
 }
 
 
 .link-count-mobi-main a {
-    background-color:#1E1E1E;
+    background-color:#ffdb6d;
 }
 
 .link-count-mobi-main a {
@@ -70,7 +70,7 @@ background-position: 0 -493px;
 }
 
 .link-count-mobi-search a {
-    background-color: #A51C30;
+    background-color: #ffdb6d;
 }
 
 .mobi-util a {
