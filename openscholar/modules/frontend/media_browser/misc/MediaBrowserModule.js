@@ -2,77 +2,11 @@
   var rootPath,
     open = angular.noop;
 
-  function defaultParams() {
-    var params = {
-      dialog: {
-        buttons: {},
-        dialogClass: 'media-wrapper',
-        modal: true,
-        draggable: false,
-        resizable: false,
-        minWidth: 600,
-        width: 800,
-        height: 650,
-        position: 'center',
-        title: undefined,
-        overlay: {
-          backgroundColor: '#000000',
-          opacity: 0.4
-        },
-        zIndex: 10000,
-        close: function (event, ui) {
-          $(event.target).remove();
-        }
-      },
-      browser: {
-        panes: {
-          web: true,
-          upload: true,
-          library: true
-        }
-      },
-      onSelect: angular.noop,
-      types: {
-        image: 'image',
-        video: 'video',
-        audio: 'audio',
-        executable: 'executable',
-        document: 'document',
-        html: 'html'
-      }
-    };
-
-    return params;
-  }
-
   angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'angularFileUpload', 'angularModalService', 'FileEditor', 'mediaBrowser.filters'])
     .config(function (){
        rootPath = Drupal.settings.paths.moduleRoot;
     })
-    .run(['ModalService', function (ModalService) {
-      open = function (params) {
-        params = jQuery.extend(true, {}, defaultParams(), params);
-        ModalService.showModal({
-          templateUrl: rootPath+'/templates/browser.html?vers='+Drupal.settings.version.mediaBrowser,
-          controller: 'BrowserCtrl',
-          inputs: {
-            params: params
-          }
-        }).then(function (modal) {
-          modal.element.dialog(params.dialog);
-          modal.close.then(function (result) {
-            // run the function passed to us
-            if (Array.isArray(result)) {
-              if (result.length) {
-                params.onSelect(result);
-              }
-            }
-            else if (result) {
-              params.onSelect(result);
-            }
-          });
-        });
-      }
+    .run(['mbModal', function (mbModal) {
 
       // if the File object is not supported by this browser, fallback to the original media browser
       if (typeof window.File != 'undefined') {
@@ -93,7 +27,7 @@
           params.plugins = options.plugins;
           params.onSelect = onSelect;
 
-          open(params);
+          mbModal.open(params);
         }
 
         for (var k in oldPopup) {
@@ -502,15 +436,30 @@
     $scope.cancel = function () {
       close([]);
     }
+
+    // when a set of files are passed to the Media Browser, they were handled by some other service and then passed
+    // to the Media Browser to handle
+    if (params.files) {
+      var accepted = [], rejected = [];
+      for (var i=0; i<params.files.length; i++) {
+        if ($scope.validate(params.files[i])) {
+          accepted.push(params.files[i]);
+        }
+        else {
+          rejected.push(params.files[i]);
+        }
+      }
+      $scope.checkForDupes(accepted, {}, rejected);
+    }
   }])
-  .directive('mbOpenModal', ['$parse', 'ModalService', function($parse, ModalService) {
+  .directive('mbOpenModal', ['$parse', 'mbModal', function($parse, mbModal) {
 
     function link(scope, elem, attr, contr) {
       elem.bind('click', function (event) {
         event.preventDefault();
         // get stuff from the element we clicked on and Drupal.settings
         var elem = event.currentTarget,
-          params = defaultParams(),
+          params = mbModal.defaultParams(),
           panes = elem.attributes['panes'].value,
           types = elem.attributes['types'].value.split(',');
 
@@ -534,7 +483,7 @@
           }
         }
 
-        open(params);
+        mbModal.open(params);
       });
     }
 
@@ -543,5 +492,73 @@
       link: link,
       transclude: true
     }
+  }])
+  .service('mbModal', ['ModalService', function (ModalService) {
+      this.defaultParams = function () {
+        var params = {
+          dialog: {
+            buttons: {},
+            dialogClass: 'media-wrapper',
+            modal: true,
+            draggable: false,
+            resizable: false,
+            minWidth: 600,
+            width: 800,
+            height: 650,
+            position: 'center',
+            title: undefined,
+            overlay: {
+              backgroundColor: '#000000',
+              opacity: 0.4
+            },
+            zIndex: 10000,
+            close: function (event, ui) {
+              $(event.target).remove();
+            }
+          },
+          browser: {
+            panes: {
+              web: true,
+              upload: true,
+              library: true
+            }
+          },
+          onSelect: angular.noop,
+          types: {
+            image: 'image',
+            video: 'video',
+            audio: 'audio',
+            executable: 'executable',
+            document: 'document',
+            html: 'html'
+          }
+        };
+
+        return params;
+      }
+
+      this.open = function (params) {
+        params = jQuery.extend(true, {}, this.defaultParams(), params);
+        ModalService.showModal({
+          templateUrl: rootPath+'/templates/browser.html?vers='+Drupal.settings.version.mediaBrowser,
+          controller: 'BrowserCtrl',
+          inputs: {
+            params: params
+          }
+        }).then(function (modal) {
+          modal.element.dialog(params.dialog);
+          modal.close.then(function (result) {
+            // run the function passed to us
+            if (Array.isArray(result)) {
+              if (result.length) {
+                params.onSelect(result);
+              }
+            }
+            else if (result) {
+              params.onSelect(result);
+            }
+          });
+        });
+      }
   }]);
 })(jQuery);
