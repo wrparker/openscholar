@@ -407,7 +407,12 @@ ol.search-results li.search-result:last-child {
   position: relative;
   width: 120px;
 }
-  
+
+.calendar-calendar .day-view div.single-day .i_0 .view-item .calendar,
+.calendar-calendar .week-view div.single-day .i_5 .view-item .calendar {
+  margin-left: 0;
+}
+ 
 .calendar-calendar .week-view div.single-day .view-item {
   width: 100%;
 }
