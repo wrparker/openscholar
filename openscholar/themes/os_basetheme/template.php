@@ -353,3 +353,63 @@ function os_basetheme_views_view_field($vars) {
   );
   return l($row->node_title, 'node/' . $row->nid, $options);
 }
+
+/**
+ * Returns HTML for a date element formatted as a range.
+ *
+ * Changes the "to" in a date range to a "-" for the month/week/day views
+ *
+ * @see theme_date_display_range().
+ */
+function os_basetheme_date_display_range($variables) {
+  $date1 = $variables['date1'];
+  $date2 = $variables['date2'];
+  $timezone = $variables['timezone'];
+  $attributes_start = $variables['attributes_start'];
+  $attributes_end = $variables['attributes_end'];
+
+  $view = views_get_current_view();
+  $display = array(
+    'page_1',
+    'page_2',
+    'page_3',
+  );
+  $from_to = ' to ';
+  if ($view && in_array($view->current_display, $display))  {
+    $from_to = ' - ';
+    $date1 = str_replace(array('am', 'pm'), array('a', 'p'), $date1);
+    $date2 = str_replace(array('am', 'pm'), array('a', 'p'), $date2);
+  }
+
+  // Wrap the result with the attributes.
+  return t('!start-date ' . $from_to .' !end-date', array(
+    '!start-date' => '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . $date1 . '</span>',
+    '!end-date' => '<span class="date-display-end"' . drupal_attributes($attributes_end) . '>' . $date2 . $timezone . '</span>',
+  ));
+}
+
+/**
+ * Returns HTML for a date element formatted as a single date.
+ *
+ * Changes am/pm to be a/p and adds a span around the date.
+ */
+function os_basetheme_date_display_single($variables) {
+  $date = $variables['date'];
+  $timezone = $variables['timezone'];
+  $attributes = $variables['attributes'];
+
+  $view = views_get_current_view();
+  $display = array(
+    'page_1',
+    'page_2',
+    'page_3',
+  );
+  if ($view && in_array($view->current_display, $display))  {
+    $date = str_replace(array('am', 'pm'), array('a', 'p'), $date);
+    $formatted_date = $variables['dates']['value']['formatted_date'];
+    $date = str_replace($formatted_date, '<span class="event-date">' . $formatted_date . '</span>', $date);
+  }
+
+  // Wrap the result with the attributes.
+  return '<span class="date-display-single"' . drupal_attributes($attributes) . '>' . $date . $timezone . '</span>';
+}
