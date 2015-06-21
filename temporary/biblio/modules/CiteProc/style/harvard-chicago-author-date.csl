@@ -243,7 +243,7 @@
   </macro>
   <macro name="locators">
     <choose>
-      <if type="article article-magazine artwork audiovisual bill broadcast case chart classical database film government-report hearing journal legislation manuscript map miscellaneous miscellaneous-section patent personal\_communication proceedings-conference presentation software thesis unpublished webarticle webprojectpage webservice website" match="any">
+      <if type="article article-magazine artwork audiovisual bill broadcast case chart classical database film government-report hearing journal legislation manuscript map miscellaneous miscellaneous-section patent personal\_communication proceedings-conference presentation report software thesis unpublished webarticle webprojectpage webservice website" match="any">
         <choose>
           <if variable="volume">
             <text variable="volume" prefix=" "/>
@@ -423,6 +423,11 @@
       </else-if>
     </choose>
   </macro>
+  <macro name="additional-date">
+    <if type="hearing report unpublished" match="any">
+      <text variable="container" prefix=", "/>
+    </if>
+  </macro>
   <macro name="day-month">
     <date variable="issued">
       <date-part name="month"/>
@@ -554,6 +559,7 @@
       <text macro="issue"/>
       <text macro="locators-article"/>
       <text macro="access" prefix=". "/>
+      <text macro="additional-date"/>
     </layout>
   </bibliography>
 </style>
