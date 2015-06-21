@@ -47,7 +47,7 @@ $index = 0;
       <?php print 'style="height:' . $item->item_height . '";'; ?>
     <?php endif;?>>
       <?php print theme('calendar_stripe_stripe', array('item' => $item)); ?>
-      <div class="<?php print $item->date_id ?> contents">
+      <div class="<?php print $item->date_id ?> contents" data-item-id="<?php print $item->id; ?>">
         <?php foreach ($rendered_fields as $field): ?>
           <?php if ($index++ == 0 && (isset($item->continuation) && $item->continuation)) : ?>
             <div class="continuation">&laquo;</div>
@@ -62,4 +62,7 @@ $index = 0;
       <?php endif;?>
     </div>
   </div>
+</div>
+<div id="event-popover-<?php print $item->id; ?>" style="display: none;">
+  testing popup
 </div>
