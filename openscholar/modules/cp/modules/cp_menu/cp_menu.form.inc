@@ -25,7 +25,15 @@ function cp_menu_build_form($form, $form_state, $menu = ''){
     '#tree' => true
   );
 
+
   foreach ($menus as $m => $title) {
+
+    if (cp_menu_menu_reached_size($m)) {
+      $args = array(
+        '@menu' => $title,
+      );
+      drupal_set_message(t('You have reached the maximum number of items for the menu @menu', $args), 'warning');
+    }
     $form['menus'][$m] = array(
       '#weight' => (($is_active && $menu == $m) ? 1 : $weight ++),
       '#hidden' => ($is_active && $menu != $m),
@@ -153,6 +161,20 @@ function _cp_menu_flatten_tree($tree){
 }
 
 /**
+ * Check if the menu exceeded the number of menu he can holds.
+ *
+ * @param $name
+ *   The machine name of the menu.
+ *
+ * @param bool
+ *   True or false when the menu exceeded his sieze.
+ */
+function cp_menu_menu_reached_size($name) {
+  $space = spaces_get_space();
+  return strlen(serialize($space->controllers->menus->get($name))) > 65000;
+}
+
+/**
  * Renders the form array as a table and sets up the tabledrag.
  *
  * @param unknown_type $variables
@@ -179,6 +201,10 @@ function theme_cp_menu_table($variables){
 
   $rows = array();
   foreach ( element_children($table_data) as $d ) {
+    $link = l(t('+ Add new link'),'cp/build/menu/link/new/'.$d,array('attributes' => array('title' => 'Add a new menu item.', 'class' => array('add-new-link'))));
+    if (cp_menu_menu_reached_size($d)) {
+      $link = '';
+    }
     $extra_classes = array();
     if ($table_data[$d]['#hidden']) {
       $extra_classes[] = 'hidden';
@@ -191,7 +217,7 @@ function theme_cp_menu_table($variables){
         ),
         array(
           //'data' => ctools_modal_text_button('Add New Link', 'cp/menu/nojs/new/'.$d, 'Add New Link'),
-          'data' => l(t('+ Add new link'),'cp/build/menu/link/new/'.$d,array('attributes' => array('title' => 'Add a new menu item.', 'class' => array('add-new-link')))),
+          'data' => $link,
         ),
         array(
           'data' => '',
