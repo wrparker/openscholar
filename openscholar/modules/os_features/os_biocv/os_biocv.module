@@ -8,6 +8,16 @@
  * @see ./profiles/openscholar/modules/os/modules/os_boxes/plugins/os_boxes_bio/os_boxes_bio.inc
  */
 
+
+/**
+* Implements hook_os_app_info().
+*/
+function os_biocv_os_app_info() {
+  $apps = array();
+  $apps['os_biocv'] = array();
+  return $apps;
+}
+
 /**
  * Page callback; renders a Bio node with optional CV link.
  */

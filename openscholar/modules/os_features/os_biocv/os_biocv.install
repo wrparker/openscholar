@@ -5,7 +5,7 @@
  * adds "Hide Titles" checkbox to Featured Posts widget;
  * converts bio widget instances into Featured Posts widget with "Hide Titles" checked
  **/
-function os_biocv_update_7001($sandbox = array()) {
+function os_biocv_update_7001(&$sandbox) {
   if (!isset($sandbox['total'])) {
     // this is the first run, so revert the necesary features
     features_revert(array(
@@ -107,21 +107,24 @@ function os_biocv_update_7001($sandbox = array()) {
     try {
       // prepare body content for bio page
       $bio_body = $vsite_values['bio_body'];
+
       // if user has cv content, add link to either cv page or cv file
       if (isset($vsite_values['cv_body']) || isset($vsite_values['cv_fid'])) {
         $cv_link = "";
         if ($vsite_values['tabs'] && isset($vsite_values['cv_body'])) {
           $cv_link = '<p><a href="/' . $vsite_obj->group->purl . '/biocv/cv">Curriculum Vitae</a></p>';
         }
-        elseif ($vsite_values['cv_fid']) {
+        elseif (isset($vsite_values['cv_fid'])) {
           // add link to CV file and attach file to vsite so that when CV node is deleted, the file won't be
           $cv_file_obj = file_load($vsite_values['cv_fid']);
-          if (!$cv_file_obj) {
-            throw new Exception("Unable to load cv file object for vsite " . $gid . ".");
+          if ($cv_file_obj === FALSE) {
+            throw new Exception("Unable to load cv file object for vsite [" . $gid . "].");
           }
-          $public_file_path = variable_get('file_public_path', conf_path() . '/files');
-          $cv_link = '<p><a href="/' . str_replace("public:/", $public_file_path, $cv_file_obj->uri) . '">Curriculum Vitae</a></p>';
-          file_usage_add($cv_file_obj, "os_files", "node", $gid);
+          else {
+            $public_file_path = variable_get('file_public_path', conf_path() . '/files');
+            $cv_link = '<p><a href="/' . str_replace("public:/", $public_file_path, $cv_file_obj->uri) . '">Curriculum Vitae</a></p>';
+            file_usage_add($cv_file_obj, "os_files", "node", $gid);
+          }
         }
       }
 
@@ -141,7 +144,6 @@ function os_biocv_update_7001($sandbox = array()) {
 
       // Add the new page to the vsite
       vsite_add_node($bio_node, $gid);
-
 
       // get all bio nodes associated with vsite and then delete them
       $query = db_select('node', 'n')
@@ -166,19 +168,19 @@ function os_biocv_update_7001($sandbox = array()) {
       $all_cv_nids = $query->execute()->fetchAllKeyed($key_index = 0, $value_index = 0);
 
       // create cv page (if necessary)
-      if ($vsite_values['tabs'] && isset($vsite_values['cv_body'])) {
+      if ($vsite_values['tabs'] && isset($vsite_values['cv_nid'])) {
         $cv_body = "";
         if(isset($vsite_values['cv_body'])) {
           $cv_body = $vsite_values['cv_body'];
         }
         if(isset($vsite_values['cv_fid'])) {
-          $cv_node = node_load($vsite_values['cv_nid']);
+          $old_cv_node = node_load($vsite_values['cv_nid']);
           $cv_display = array(
             'label' => 'above',
             'settings' => array(),
             'type' => 'file_default',
           );
-          $cv_body .= render(field_view_field('node', $cv_node, 'field_biocv_pdf_upload', $cv_display, LANGUAGE_NONE));
+          $cv_body .= render(field_view_field('node', $old_cv_node, 'field_biocv_pdf_upload', $cv_display, LANGUAGE_NONE));
         }
         $cv_body_options = array(
           'body' => array(
@@ -190,12 +192,6 @@ function os_biocv_update_7001($sandbox = array()) {
         $cv_node = os_create_node($vsite_values['cv_title'], 'page', $vsite_values['uid'], NULL, $cv_body_options);
         if (!$cv_node) {
           throw new Exception("Unable to create cv page for vsite " . $gid . ".");
-        }
-
-        // if CV file hasn't been attached to the vsite yet, do so now
-        if (isset($vsite_values['cv_fid']) && !isset($cv_file_obj)) {
-            $cv_file_obj = file_load($vsite_values['cv_fid']);
-            file_usage_add($cv_file_obj, "os_files", "node", $gid);
         }
 
         // Add the new page to the vsite, delete all old CV nodes and
