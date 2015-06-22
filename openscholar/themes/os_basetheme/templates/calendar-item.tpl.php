@@ -64,7 +64,7 @@ $index = 0;
   </div>
 </div>
 <div id="event-popover-<?php print $item->id; ?>" style="display: none;">
-  <?php foreach ($rendered_fields as $field): ?>
-    <?php print $field; ?>
-  <?php endforeach; ?>
+  <div class="event-title"><?php print $item->popover_fields['event_title']; ?></div>
+  <div class="event-date"><?php print $item->popover_fields['event_date']; ?></div>
+  <div class="event-location"><span><?php print t('Where '); ?></span><?php print $item->popover_fields['event_location']; ?></div>
 </div>

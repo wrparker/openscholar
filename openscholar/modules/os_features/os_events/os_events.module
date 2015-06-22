@@ -1348,6 +1348,14 @@ function os_events_preprocess_calendar_item(&$vars) {
   if ($item->granularity == 'day' || $item->granularity == 'week') {
     $item->item_height = os_events_get_event_duration($item);
   }
+
+  // Prepare popover fields.
+  if (in_array($item->granularity, array('day', 'week', 'month'))) {
+    $item->popover_fields['event_title'] = $item->rendered_fields['title'];
+    // @TODO: Is this format OK?
+    $item->popover_fields['event_date'] = $item->rendered_fields['field_date'];
+    $item->popover_fields['event_location'] = $item->rendered_fields['field_event_location'];
+  }
 }
 
 /**
