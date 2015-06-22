@@ -8,7 +8,6 @@
         scope.field_name = elem.parent().attr('id').match(/edit-([\w-]*)/)[1].replace('-', '_');
         scope.showHelp = false;
         scope.panes = ['upload', 'web', 'library'];
-        console.log(scope);
 
         if (scope.selectedFiles.length == 0) {
           try {
@@ -26,6 +25,14 @@
             // assume the entity has no files attached to it yet
           }
         }
+
+        scope.$on('EntityService.files.update', function (file) {
+          for (var i = 0; i<scope.selectedFiles.length; i++) {
+            if (file.id == scope.selectedFiles[i].id) {
+              scope.selectedFiles[i] = angular.copy(file);
+            }
+          }
+        });
 
         scope.sendToBrowser = function($files) {
           var params = {
@@ -48,18 +55,30 @@
         scope.replaceFile = function ($inserted, $index) {
           scope.selectedFiles.splice($index, 1, $inserted);
         }
+
+        elem.parent().find(' > *').not(elem).remove();
       }
 
-      return {
-        link: link,
-        templateUrl: Drupal.settings.paths.moduleRoot + '/templates/field.html',
-        scope: {
-          selectedFiles: '=files',
-          maxFilesize: '@maxFilesize',
-          types: '@',
-          extensions: '@',
-          upload_text: '@uploadText',
-          droppable_text: '@droppableText'
+      if (mbModal.requirementsMet()) {
+        return {
+          link: link,
+          templateUrl: Drupal.settings.paths.moduleRoot + '/templates/field.html',
+          scope: {
+            selectedFiles: '=files',
+            maxFilesize: '@maxFilesize',
+            types: '@',
+            extensions: '@',
+            upload_text: '@uploadText',
+            droppable_text: '@droppableText'
+          }
+        }
+      }
+      else {
+        // remove this element. It won't work right anyway
+        return {
+          link: function (elem, attr) {
+            elem.remove();
+          }
         }
       }
     }])

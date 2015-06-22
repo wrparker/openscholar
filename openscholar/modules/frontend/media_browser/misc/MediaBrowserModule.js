@@ -539,6 +539,10 @@
         return params;
       }
 
+      this.requirementsMet = function() {
+        return (window.File && window.FormData);
+      }
+
       this.open = function (params) {
         params = jQuery.extend(true, {}, this.defaultParams(), params);
         ModalService.showModal({

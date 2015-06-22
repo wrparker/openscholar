@@ -104,3 +104,37 @@ function media_browser_field_widget_form(&$form, &$form_state, $field, $instance
 
   return $element;
 }
+
+function media_browser_field_widget_media_draggable_file_form_alter(&$elements, &$form_state, $context) {
+  $field_settings = $elements['#instance']['settings'];
+  $widget_settings = $elements['#instance']['widget']['settings'];
+
+  $files = array();
+  foreach ($context['items'] as $file) {
+    $files[] = $file['fid'];
+  }
+
+  $elements['#attached']['library'][] = array('os_common', 'FileEditorModal');
+  $elements['#attached']['library'][] = array('media', 'media_browser');
+  $elements['#attached']['js'][] = drupal_get_path('module', 'media_browser').'/misc/MediaBrowserField.js';
+  $elements['#attached']['js'][] = array(
+    'type' => 'setting',
+    'data' => array(
+      'mediaBrowserField' => array(
+        drupal_html_class('edit-'.$elements['#field_name']) => array(
+          'selectedFiles' => $files
+        ),
+      )
+    )
+  );
+
+  $elements['angularbrowser'] = array(
+    '#markup' =>format_string('<div media-browser-field max-filesize="@filesize" types="@types" extensions="@extensions" upload-text="@upload-text" droppable-text="@droppable-text" files="[]"></div>', array(
+      '@filesize' => isset($field_settings['max_filesize']) ? $field_settings['max_filesize'] : 0,
+      '@types' => implode(',', array_filter($widget_settings['allowed_types'])),
+      '@extensions' => isset($field_settings['file_extensions']) ? $field_settings['file_extensions'] : media_variable_get('file_extensions'),
+      '@upload-text' => $widget_settings['upload_button_text'],
+      '@droppable-text' => $widget_settings['droppable_area_text']
+    ))
+  );
+}

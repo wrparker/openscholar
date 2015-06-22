@@ -23,7 +23,8 @@ function os_common_library() {
         'type' => 'external',
         'group' => JS_LIBRARY,
         'weight' => -14
-      )
+      ),
+      libraries_get_path('es5-shim') . '/es5-shim.js',
     )
   );
 
