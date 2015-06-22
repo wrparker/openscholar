@@ -5,7 +5,7 @@
       modal: true
     };
 
-  angular.module('FileEditorModal', ['EntityService', 'FileEditor', 'angularModalService', 'angularFileUpload'])
+  angular.module('FileEditorModal', ['EntityService', 'FileEditor', 'angularModalService', 'angularFileUpload', 'locationFix'])
     .run(['EntityService', function (EntityService) {
       service = new EntityService('files', 'id');
       service.fetch();
@@ -37,9 +37,7 @@
         }).then(function (modal) {
           modal.element.dialog(dialogParams);
           modal.close.then(function(result) {
-            if (result) {
-              window.location.reload();
-            }
+            scope.onClose({result: result});
           })
         });
 
@@ -47,7 +45,10 @@
       }
 
       return {
-        link: link
+        link: link,
+        scope: {
+          onClose: '&',
+        }
       }
     }])
     .controller('FileEditorModalController', ['$scope', 'EntityService', 'fid', 'close', function ($scope, EntityService, fid, close) {
