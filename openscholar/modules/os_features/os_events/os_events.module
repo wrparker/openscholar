@@ -1345,7 +1345,7 @@ function os_events_registration_link($variables) {
  */
 function os_events_preprocess_calendar_item(&$vars) {
   $item = $vars['item'];
-  if ($item->granularity == 'day' || $item->granularity == 'week') {
+  if (in_array($item->granularity, array('day', 'week'))) {
     $item->item_height = os_events_get_event_duration($item);
   }
 
