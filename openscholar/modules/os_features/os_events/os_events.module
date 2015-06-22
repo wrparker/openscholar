@@ -1349,15 +1349,20 @@ function os_events_preprocess_calendar_item(&$vars) {
 
 /**
  * Get the duration of an event in hours.
- * 
+ *
  * @param $item
  *   The event item.
- * @return string
- *   The event duration in hours.
+ * @return mixed
+ *   The event duration in hours or NULL if end time equals start time.
  */
 function os_events_get_event_duration($item) {
   $event_start = strtotime($item->calendar_start);
   $event_end = strtotime($item->calendar_end);
+
+  if ($event_start == $event_end) {
+    return NULL;
+  }
+
   $hours = floor(($event_end - $event_start) / 3600);
 
   return 80 * $hours . 'px';

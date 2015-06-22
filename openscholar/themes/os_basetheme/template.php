@@ -357,7 +357,7 @@ function os_basetheme_views_view_field($vars) {
 /**
  * Returns HTML for a date element formatted as a range.
  *
- * Changes the "to" in a date range to a "-" for the month/week/day views
+ * Changes the "to" in a date range to a "-" for the month/week/day views.
  *
  * @see theme_date_display_range().
  */
@@ -368,14 +368,13 @@ function os_basetheme_date_display_range($variables) {
   $attributes_start = $variables['attributes_start'];
   $attributes_end = $variables['attributes_end'];
 
-  $view = views_get_current_view();
-  $display = array(
-    'page_1',
-    'page_2',
-    'page_3',
+  $displays = array(
+    'month',
+    'week',
+    'day',
   );
   $from_to = ' to ';
-  if ($view && in_array($view->current_display, $display))  {
+  if (os_events_in_view_context($displays))  {
     $from_to = ' - ';
     $date1 = str_replace(array('am', 'pm'), array('a', 'p'), $date1);
     $date2 = str_replace(array('am', 'pm'), array('a', 'p'), $date2);
@@ -398,13 +397,12 @@ function os_basetheme_date_display_single($variables) {
   $timezone = $variables['timezone'];
   $attributes = $variables['attributes'];
 
-  $view = views_get_current_view();
-  $display = array(
-    'page_1',
-    'page_2',
-    'page_3',
+  $displays = array(
+    'month',
+    'week',
+    'day',
   );
-  if ($view && in_array($view->current_display, $display))  {
+  if (os_events_in_view_context($displays))  {
     $date = str_replace(array('am', 'pm'), array('a', 'p'), $date);
     $formatted_date = $variables['dates']['value']['formatted_date'];
     $date = str_replace($formatted_date, '<span class="event-date">' . $formatted_date . '</span>', $date);
@@ -412,4 +410,34 @@ function os_basetheme_date_display_single($variables) {
 
   // Wrap the result with the attributes.
   return '<span class="date-display-single"' . drupal_attributes($attributes) . '>' . $date . $timezone . '</span>';
+}
+
+/**
+ * Check if we are in the os_events view context.
+ *
+ * @param array $display_titles
+ *   The display titles to check for. If not provided we check only for
+ *   the view context with no particular display.
+ * @return bool
+ *   Returns TRUE if we are in the os_events view context with the optional
+ *   supplied display titles. FALSE otherwise.
+ */
+function os_events_in_view_context($display_titles = array()) {
+  $view = views_get_current_view();
+  if (!$view || $view->name != 'os_events') {
+    return FALSE;
+  }
+
+  if (empty($display_titles)) {
+    return $view->name == 'os_events';
+  }
+
+  $display_names = array();
+  foreach ($view->display as $name => $display) {
+    if (in_array(strtolower($display->display_title), $display_titles)) {
+      $display_names[] = $name;
+    }
+  }
+
+  return in_array($view->current_display, $display_names);
 }
