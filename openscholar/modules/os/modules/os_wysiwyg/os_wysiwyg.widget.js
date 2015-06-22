@@ -140,6 +140,8 @@
     }
   };
 
+  // We override some default code of the wysiwyg module.
+  // See @OS custom logic in prepareContent().
   Drupal.wysiwyg.editor.instance.tinymce = {
     addPlugin: function(plugin, settings, pluginSettings) {
       if (typeof Drupal.wysiwyg.plugins[plugin] != 'object') {
@@ -220,10 +222,12 @@
     },
 
     prepareContent: function(content) {
-      // We do this to fix missing html tags.
+      // @OS custom logic. We need to do this since there is a use case for when
+      // a user enters broken HTML when disabling the rich text feature.
       var d = document.createElement('div');
       d.innerHTML = content;
       content = d.innerHTML;
+      // End of OS custom logic.
 
       // Certain content elements need to have additional DOM properties applied
       // to prevent this editor from highlighting an internal button in addition
