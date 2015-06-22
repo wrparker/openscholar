@@ -43,9 +43,9 @@ $index = 0;
 <div class="<?php print !empty($item->class) ? $item->class : 'item'; ?>">
   <div class="view-item view-item-<?php print $view->name ?>">
     <div class="calendar <?php print $item->granularity; ?>view"
-    <?php if (!empty($item->item_height)) : ?>
-      <?php print 'style="height:' . $item->item_height . '";'; ?>
-    <?php endif;?>>
+      <?php if (!empty($item->item_height)) : ?>
+        <?php print 'style="height:' . $item->item_height . '";'; ?>
+      <?php endif;?>>
       <?php print theme('calendar_stripe_stripe', array('item' => $item)); ?>
       <div class="<?php print $item->date_id ?> contents" data-item-id="<?php print $item->id; ?>">
         <?php foreach ($rendered_fields as $field): ?>
@@ -64,5 +64,7 @@ $index = 0;
   </div>
 </div>
 <div id="event-popover-<?php print $item->id; ?>" style="display: none;">
-  testing popup
+  <?php foreach ($rendered_fields as $field): ?>
+    <?php print $field; ?>
+  <?php endforeach; ?>
 </div>

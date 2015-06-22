@@ -20,7 +20,10 @@
         }
         else {
           popOver.dialog({
-            position: {my: 'bottom-10', at: 'center', of: e}
+            position: {my: 'bottom-10', at: 'center', of: e},
+            draggable: false,
+            closeOnEscape: true
+
           });
         }
       });
