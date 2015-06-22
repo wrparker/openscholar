@@ -9,15 +9,10 @@
  * A generic task which creates a simple page node and primary menu link.
  */
 function _vsite_preset_section_task($entity, $task, &$context) {
-
-trigger_error("task: '" . $task->arguments['title'] . "'\n", E_USER_ERROR);
-
   // Only continues if a non-empty $title argument was passed on the task object.
   if (!isset($task->arguments['title']) || empty($task->arguments['title'])) {
     return;
   }
-
-trigger_error("creating page node for '" . $task->arguments['title'] . "'\n", E_USER_ERROR);
 
   // Creates a new page node using the passed title.
   $node = os_create_node($task->arguments['title'], 'page', $entity->uid);

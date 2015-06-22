@@ -12,7 +12,7 @@ class os_boxes_manual_list extends os_boxes_default {
       'nodes' => array(),
       'style' => 'titles',
       'random' => false,
-			'hide_title' => 0,
+      'hide_title' => 0,
     );
   }
 
@@ -127,10 +127,10 @@ class os_boxes_manual_list extends os_boxes_default {
 
       foreach ($nodes as $n) {
         if ($node = node_load($n['nid'])) {
-					// nullify title unless user has selected to show only titles
-					if($this->options['style'] != 'titles' && $this->options['hide_title']) {
-						$node->title = NULL;
-					}
+          // nullify title unless user has selected to show only titles
+          if($this->options['style'] != 'titles' && $this->options['hide_title']) {
+            $node->title = NULL;
+          }
           if ($this->options['style'] == 'teasers') {
             // Theme the nodes as a teaser.
 
