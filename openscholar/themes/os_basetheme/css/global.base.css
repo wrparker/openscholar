@@ -778,6 +778,12 @@ color: #6D6D6D;
 	float:left;margin-top:10px;
 }
 
+/* PUSH THE DATE OFF SCREEN IN MONTH/WEEK/DAY VIEWS (SAVE SPACE) - REMAINS ACCESSIBLE  */
+.event-date {
+  position: absolute;
+  clip: rect(0px 0px 0px 0px);
+}
+
 /* BOOK NAVS */
 .book-menu {
   width: 33%;
