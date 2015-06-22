@@ -1336,3 +1336,18 @@ function os_events_registration_link($variables) {
 
   return os_events_generate_modal_register_link($nid);
 }
+
+/**
+ * Implements hook_node_view().
+ */
+function os_events_node_view($node, $view_mode, $langcode) {
+  if ($view_mode != 'full') {
+    return;
+  }
+
+  if ($node->type != 'event') {
+    return;
+  }
+
+  drupal_add_js(drupal_get_path('module', 'os_events') . '/js/date_formatting.js');
+}
