@@ -852,6 +852,31 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
  	right: 50px;
  }	
  
+ div[aria-describedby^="event-popover-"], 
+ div[aria-describedby*=" event-popover-"] {
+ 	border:1px solid #CCC;
+ 	}
+ 	
+ 	
+ 	
+ /*	
+ div[id^="event-popover-"], 
+ div[id*=" event-popover-"] {
+ 	margin-top:0;
+ 	padding-top:0;
+ 	} 
+ 	*/
+
+ 
+  div[aria-describedby^="event-popover-"] .ui-dialog-titlebar, 
+ div[aria-describedby*=" event-popover-"] .ui-dialog-titlebar,
+  div[aria-describedby^="event-popover-"] .ui-dialog-content, 
+ div[aria-describedby*=" event-popover-"] .ui-dialog-content {
+ 	padding: 0 1em;
+ }
+
+		
+ 
  /** MODAL OVERRIDES for OS ORG ROADMAP PAGE **/
 
 .page-roadmap .ui-dialog {
