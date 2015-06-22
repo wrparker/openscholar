@@ -101,14 +101,6 @@ function cp_menu_page($step = NULL, $menu = NULL) {
   return $output;
 }
 
-function cp_menu_title_validate($form, $form_state) {
-  $space = spaces_get_space();
-  $tree = $space->controllers->menus->get($form_state['object']['menu']);
-
-  // todo: fix.
-  form_set_error('', 'You are exceeding the menu items limit by creating this menu item.');
-}
-
 /**
  * Multistep form page; presents radio options page and url.
  */
