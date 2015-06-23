@@ -2,7 +2,9 @@
   var service,
     dialogParams = {
       minWidth: 800,
-      modal: true
+      minHeight: 650,
+      modal: true,
+      position: 'center',
     };
 
   angular.module('FileEditorModal', ['EntityService', 'FileEditor', 'angularModalService', 'angularFileUpload', 'locationFix'])
