@@ -907,6 +907,19 @@ function os_form_alter(&$form, &$form_state, $form_id) {
       '#weight' => 99,
     );
   }
+
+  // Add a submit handler to close the overlay.
+  if (path_is_admin($_GET['q'])) {
+    array_unshift($form['#submit'], 'os_close_overlay');
+  }
+}
+
+/**
+ * Submit handler; Forces the overlay to close.
+ */
+function os_close_overlay(&$form, &$form_state) {
+  overlay_close_dialog();
+  $form_state['redirect'] = FALSE;
 }
 
 /**
@@ -1010,7 +1023,7 @@ function os_form_node_form_alter(&$form, $form_state) {
     );
     $form['actions']['delete'] = $form['actions_top']['delete'] = $delete;
   }
-  
+
   // Add validation to 'Authored on' field
   $form['author']['date']['#element_validate'] = array('_os_datetime_32_bit');
 }
