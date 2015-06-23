@@ -855,17 +855,36 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
  div[aria-describedby^="event-popover-"], 
  div[aria-describedby*=" event-popover-"] {
  	border:1px solid #CCC;
+ 	-webkit-box-shadow: 5px 5px 5px 0px rgba(50, 50, 50, 0.4);
+-moz-box-shadow:    5px 5px 5px 0px rgba(50, 50, 50, 0.4);
+box-shadow:         5px 5px 5px 0px rgba(50, 50, 50, 0.4);
+
  	}
  	
  	
+   div[aria-describedby^="event-popover-"] .ui-dialog-content, 
+ div[aria-describedby*=" event-popover-"] .ui-dialog-content {
+  background: url('../images/event-popover_arrow.png') no-repeat center bottom;
+bottom: -12px;
+ 	}
  	
- /*	
- div[id^="event-popover-"], 
- div[id*=" event-popover-"] {
- 	margin-top:0;
- 	padding-top:0;
- 	} 
- 	*/
+ 
+	
+ 	 div[aria-describedby^="event-popover-"] .ui-icon-closethick, 
+ div[aria-describedby*=" event-popover-"] .ui-icon-closethickt {
+  background: url('../images/scholarbase-sprite.png') no-repeat 0 -474px;
+
+ }
+ 	
+div[aria-describedby^="event-popover-"] .ui-widget-header .ui-state-default:hover,
+div[aria-describedby^="event-popover-"] .ui-widget-header .ui-state-default:hover, 	
+div[aria-describedby^="event-popover-"] .ui-widget-header .ui-state-default,
+div[aria-describedby^="event-popover-"] .ui-widget-header .ui-state-default {
+  border: none;
+  background: none;
+
+}
+
 
  
   div[aria-describedby^="event-popover-"] .ui-dialog-titlebar, 
