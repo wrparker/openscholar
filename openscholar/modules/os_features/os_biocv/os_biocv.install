@@ -8,12 +8,6 @@
  * converts bio widget instances into Featured Posts widget with "Hide Titles" checked
  **/
 function os_biocv_uninstall() {
-  features_revert(array(
-    "os" => array("context", "spaces_presets"),
-    "os_biocv" => array("context"),
-    "vsite" => array("spaces_presets"),
-  ));
-
   $output = "";
 
   // get bio and cv data and add to data array
