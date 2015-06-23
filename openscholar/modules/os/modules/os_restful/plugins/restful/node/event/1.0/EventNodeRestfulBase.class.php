@@ -10,6 +10,23 @@ class EventNodeRestfulBase extends OsNodeRestfulBase {
    *
    * @apiDescription Consume event content.
    *
+   * @apiSuccess {Number}   id              The publication ID.
+   * @apiSuccess {String}   label           Registration Date.
+   * @apiSuccess {Object[]} vsite           The vsite object.
+   * @apiSuccess {String}   vsite.title     Group name.
+   * @apiSuccess {Integer}  vsite.id        Group ID.
+   * @apiSuccess {string}   body            The body of the publication.
+   * @apiSuccess {Object[]} files           The attached files.
+   * @apiSuccess {Integer}  files.fid       file ID.
+   * @apiSuccess {Integer}  files.filemime  Mime type.
+   * @apiSuccess {Integer}  files.name      File name.
+   * @apiSuccess {Integer}  files.uri       Uniform Resource Identifier.
+   * @apiSuccess {Integer}  files.url       The address url.
+   * @apiSuccess {Integer}  start_date      Event start date.
+   * @apiSuccess {Integer}  end_date        Event end date.
+   * @apiSuccess {Integer}  field_event_registration The event type. Use
+   * event_signup_simple. Populate with [registration_type: event_signup_simple]
+   *
    * @apiParam {Number} id The event ID
    */
   public function publicFieldsInfo() {
@@ -29,11 +46,6 @@ class EventNodeRestfulBase extends OsNodeRestfulBase {
       'process_callbacks' => array(
         array($this, 'dateProcess'),
       ),
-    );
-
-    $public_fields['registration'] = array(
-      'property' => 'registration',
-      'sub_property' => 'registration_type',
     );
 
     $public_fields['field_event_registration'] = array(

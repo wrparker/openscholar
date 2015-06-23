@@ -28,6 +28,19 @@ class BlogNodeRestfulBase extends OsNodeRestfulBase {
    *
    * @apiParam {Number} id The blog ID
    *
+   * @apiSuccess {Number}   id              The publication ID.
+   * @apiSuccess {String}   label           Registration Date.
+   * @apiSuccess {Object[]} vsite           The vsite object.
+   * @apiSuccess {String}   vsite.title     Group name.
+   * @apiSuccess {Integer}  vsite.id        Group ID.
+   * @apiSuccess {string}   body            The body of the publication.
+   * @apiSuccess {Object[]} files           The attached files.
+   * @apiSuccess {Integer}  files.fid       file ID.
+   * @apiSuccess {Integer}  files.filemime  Mime type.
+   * @apiSuccess {Integer}  files.name      File name.
+   * @apiSuccess {Integer}  files.uri       Uniform Resource Identifier.
+   * @apiSuccess {Integer}  files.url       The address url.
+   *
    * @apiSampleRequest off
    */
   public function createEntity() {

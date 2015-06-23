@@ -19,6 +19,15 @@ class GroupNodeRestfulBase extends OsNodeRestfulBase {
    * @apiSampleRequest api/group
    *
    * @apiParam {Number} id The group ID
+   *
+   * @apiSuccess {Number}   id          The publication ID.
+   * @apiSuccess {String}   label       Registration Date.
+   * @apiSuccess {Object[]} users       The group users.
+   * @apiSuccess {Integer}  users.id    The user ID.
+   * @apiSuccess {Integer}  users.name  The user name.
+   * @apiSuccess {String}   preset      The group preset.
+   * @apiSuccess {String}   purl        The group persistent URL.
+   * @apiSuccess {String}   type        The group type(i.e node type).
    */
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();
