@@ -97,6 +97,11 @@ class os_boxes_manual_list extends os_boxes_default {
       '#title' => 'Hide Titles',
       '#default_value' => isset($this->options['hide_title']) ? $this->options['hide_title'] : $defaults['hide_title'],
       '#description' => t('Hide titles of posts.'),
+      '#states' => array(
+        'disabled' => array(
+          '#edit-style' => array('value' => 'titles'),
+        ),
+      ),
     );
 
     $form['count'] = array(

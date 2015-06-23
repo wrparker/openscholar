@@ -72,19 +72,5 @@ Drupal.behaviors.os_manual_list = {
     }
 
     setup_remove($form);
-
-    // make sure user can't select "list of titles" and then check "Hide Titles"
-    if ($('#edit-style', ctx).val() == 'titles') {
-      $('#edit-hide-title', ctx).attr('disabled', 'disabled').removeAttr('checked', 'checked');
-    }
-
-    $('#edit-style', ctx).change(function() {
-      if ($(this).val() == 'titles') {
-        $('#edit-hide-title', ctx).attr('disabled', 'disabled').removeAttr('checked', 'checked');
-      }
-      else {
-        $('#edit-hide-title', ctx).removeAttr('disabled');
-      }
-    });
   }
 };

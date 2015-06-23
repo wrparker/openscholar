@@ -1,98 +1,95 @@
 <?php
 
 /**
+ * Implements hook_uninstall()
+ *
  * converts all used bio & cv content nodes to pages;
  * adds "Hide Titles" checkbox to Featured Posts widget;
  * converts bio widget instances into Featured Posts widget with "Hide Titles" checked
  **/
-function os_biocv_update_7001(&$sandbox) {
-  if (!isset($sandbox['total'])) {
-    // this is the first run, so revert the necesary features
-    features_revert(array(
-      "os" => array("context", "spaces_presets"),
-      "os_biocv" => array("context"),
-      "vsite" => array("spaces_presets"),
-    ));
-    $sandbox['progress'] = 0;
-    $sandbox['output'] = "";
+function os_biocv_uninstall() {
+  features_revert(array(
+    "os" => array("context", "spaces_presets"),
+    "os_biocv" => array("context"),
+    "vsite" => array("spaces_presets"),
+  ));
 
-    // get bio and cv data and add to data array
-    $query = db_select('og_membership', 'ogm')
-      ->condition('ogm.entity_type', 'node', '=');
-    $query->innerJoin('node', 'n', "ogm.etid = n.nid AND (n.type = 'cv' OR n.type = 'bio') AND n.status = 1");
-    $query->leftJoin('field_data_body', 'body', 'n.nid = body.entity_id AND body.deleted <> 1 AND n.vid = body.revision_id');
-    $query->leftJoin('field_data_field_biocv_pdf_upload', 'pdf', 'n.nid = pdf.entity_id');
-    $query->leftJoin('spaces_overrides', 'so', "so.id = ogm.gid AND so.object_type='variable' AND so.object_id = 'os_biocv_use_pdf_as_cv'");
-    $query = $query->fields('ogm', array('gid'))
-                   ->fields('n', array('nid','title', 'uid', 'type'))
-                   ->fields('body', array('body_value'))
-                   ->fields('pdf', array('field_biocv_pdf_upload_fid'))
-                   ->fields('so', array('value'));
-    $query->addExpression('MIN(n.created)');
-    $query->groupBy('ogm.gid');
-    $query->groupBy('n.type');
-    $results = $query->execute();
+  $output = "";
 
-    $sandbox['vsites'] = array();
-    while ($row = $results->fetchObject()) {
-      if($row->gid) {
-        if (!isset($sandbox['vsites'][$row->gid . ".0"])) {
-          $values = array();
+  // get bio and cv data and add to data array
+  $query = db_select('og_membership', 'ogm')
+    ->condition('ogm.entity_type', 'node', '=');
+  $query->innerJoin('node', 'n', "ogm.etid = n.nid AND (n.type = 'cv' OR n.type = 'bio') AND n.status = 1");
+  $query->leftJoin('field_data_body', 'body', 'n.nid = body.entity_id AND body.deleted <> 1 AND n.vid = body.revision_id');
+  $query->leftJoin('field_data_field_biocv_pdf_upload', 'pdf', 'n.nid = pdf.entity_id');
+  $query->leftJoin('spaces_overrides', 'so', "so.id = ogm.gid AND so.object_type='variable' AND so.object_id = 'os_biocv_use_pdf_as_cv'");
+  $query = $query->fields('ogm', array('gid'))
+                 ->fields('n', array('nid','title', 'uid', 'type'))
+                 ->fields('body', array('body_value'))
+                 ->fields('pdf', array('field_biocv_pdf_upload_fid'))
+                 ->fields('so', array('value'));
+  $query->addExpression('MIN(n.created)');
+  $query->groupBy('ogm.gid');
+  $query->groupBy('n.type');
+  $results = $query->execute();
+
+  $vsites = array();
+  while ($row = $results->fetchObject()) {
+    if($row->gid) {
+      if (!isset($vsites[$row->gid . ".0"])) {
+        $values = array();
+      }
+      else {
+        $values = $vsites[$row->gid . ".0"];
+      }
+      if($row->type == "bio") {
+        $values['uid'] = $row->uid;
+        $values['bio_nid'] = $row->nid;
+        _os_biocv_set_not_empty($values, 'bio_title', $row->title);
+        _os_biocv_set_not_empty($values, 'bio_body', $row->body_value);
+
+        // figure out if vsite was set up to display Bio & CV as tabs
+        switch($row->value) {
+          case 'b:1;':
+            $setting = FALSE;
+            break;
+          case 'i:1;':
+            $setting = FALSE;
+            break;
+          case 's:1:"1";':
+            $setting = FALSE;
+            break;
+          case 'i:0;':
+            $setting = TRUE;
+            break;
+          case 's:1:"0";':
+            $setting = TRUE;
+            break;
+          case 's:4:"b:0;";':
+            $setting = TRUE;
+            break;
+          default:
+            $setting = TRUE;
         }
-        else {
-          $values = $sandbox['vsites'][$row->gid . ".0"];
-        }
-        if($row->type == "bio") {
+        $values['tabs'] = $setting;
+        $vsites[$row->gid . ".0"] = $values;
+      }
+      else {
+        $values['cv_nid'] = $row->nid;
+        _os_biocv_set_not_empty($values, 'cv_title', $row->title);
+        _os_biocv_set_not_empty($values, 'cv_body', $row->body_value);
+        _os_biocv_set_not_empty($values, 'cv_fid', $row->field_biocv_pdf_upload_fid);
+
+        if (!isset($values['uid'])) {
           $values['uid'] = $row->uid;
-          $values['bio_nid'] = $row->nid;
-          _os_biocv_set_not_empty($values, 'bio_title', $row->title);
-          _os_biocv_set_not_empty($values, 'bio_body', $row->body_value);
-
-          // figure out if vsite was set up to display Bio & CV as tabs
-          switch($row->value) {
-            case 'b:1;':
-              $setting = FALSE;
-              break;
-            case 'i:1;':
-              $setting = FALSE;
-              break;
-            case 's:1:"1";':
-              $setting = FALSE;
-              break;
-            case 'i:0;':
-              $setting = TRUE;
-              break;
-            case 's:1:"0";':
-              $setting = TRUE;
-              break;
-            case 's:4:"b:0;";':
-              $setting = TRUE;
-              break;
-            default:
-              $setting = TRUE;
-          }
-          $values['tabs'] = $setting;
-          $sandbox['vsites'][$row->gid . ".0"] = $values;
         }
-        else {
-          $values['cv_nid'] = $row->nid;
-          _os_biocv_set_not_empty($values, 'cv_title', $row->title);
-          _os_biocv_set_not_empty($values, 'cv_body', $row->body_value);
-          _os_biocv_set_not_empty($values, 'cv_fid', $row->field_biocv_pdf_upload_fid);
-
-          if (!isset($values['uid'])) {
-            $values['uid'] = $row->uid;
-          }
-
-          $sandbox['vsites'][$row->gid . ".0"] = $values;
-        }
+        $vsites[$row->gid . ".0"] = $values;
       }
     }
-    $sandbox['total'] = count($sandbox['vsites']);
   }
 
-  $batch_size = 100;
-  $vsites = array_splice($sandbox['vsites'], 0, $batch_size);
+//   $batch_size = 100;
+//   $vsites = array_splice($vsites, 0, $batch_size);
 
   // with the array of vsites that have bio and/or cv data,
   // loop through them to convert content to pages and
@@ -145,14 +142,17 @@ function os_biocv_update_7001(&$sandbox) {
       // Add the new page to the vsite
       vsite_add_node($bio_node, $gid);
 
-      // get all bio nodes associated with vsite and then delete them
+      // get all bio nodes associated with vsite and then delete them and their url aliases
       $query = db_select('node', 'n')
         ->condition('n.type', 'bio', '=')
         ->fields('n', array('nid'));
       $query->innerJoin('og_membership', 'ogm', "n.nid = ogm.etid AND gid = $gid AND entity_type = 'node'");
       $all_bio_nids = $query->execute()->fetchAllKeyed($key_index = 0, $value_index = 0);
       node_delete_multiple(array_keys($all_bio_nids));
-
+      foreach ($nid as $all_bio_nids) {
+        path_delete($nid);
+      }
+      
       // give the new page the right url alias
       $path = array(
         "source" => "node/" . $bio_node->nid,
@@ -194,10 +194,13 @@ function os_biocv_update_7001(&$sandbox) {
           throw new Exception("Unable to create cv page for vsite " . $gid . ".");
         }
 
-        // Add the new page to the vsite, delete all old CV nodes and
-        // then give the new page the right url alias
+        // Add the new page to the vsite, delete all old CV nodes and url aliases
+        // and then give the new page the right url alias
         vsite_add_node($cv_node, $gid);
         node_delete_multiple(array_keys($all_cv_nids));
+        foreach ($nid as $all_cv_nids) {
+          path_delete($nid);
+        }
         $path = array(
           "source" => "node/" . $cv_node->nid,
           "alias" => $vsite_obj->group->purl . "/biocv/cv"
@@ -206,6 +209,9 @@ function os_biocv_update_7001(&$sandbox) {
       }
       elseif (isset($vsite_values['cv_nid'])) {
         node_delete_multiple(array_keys($all_cv_nids));
+        foreach ($nid as $all_cv_nids) {
+          path_delete($nid);
+        }
       }
 
       // find out if this vsite has a customized instance of the bio widget
@@ -274,7 +280,7 @@ function os_biocv_update_7001(&$sandbox) {
                   }
                   catch (Exception $e) {
                     $transaction->rollback();
-                    $sandbox['output'] .= "DB transaction error trying to replace bio widget with featured posts widget: " . $e->getMessage() . "<br />\n";
+                    $output .= "DB transaction error trying to replace bio widget with featured posts widget: " . $e->getMessage() . "\n";
                     throw $e;
                    }
                 }
@@ -291,20 +297,10 @@ function os_biocv_update_7001(&$sandbox) {
       }
     }
     catch (Exception $e) {
-      $sandbox['output'] .= $e->getMessage() . "<br />\n";
+      $output .= $e->getMessage() . "\n";
     }
   }
-
-  // increase the progress and check if finished
-  $sandbox['progress'] += $batch_size;
-
-  if ($sandbox['progress'] > $sandbox['total']) {
-    $sandbox['#finished'] = 1;
-    return $sandbox['output'];
-  }
-  else {
-    $sandbox['#finished'] = ($sandbox['progress'] / $sandbox['total']);
-  }
+  return $output;
 }
 
 /**
