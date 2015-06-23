@@ -67,6 +67,6 @@ $index = 0;
   <div class="event-title"><?php print $item->popover_fields['event_title']; ?></div>
   <div class="event-date"><?php print $item->popover_fields['event_date']; ?></div>
   <?php if (!empty($item->popover_fields['event_location'])) : ?>
-    <div class="event-location"><span><?php print t('Where '); ?></span><?php print $item->popover_fields['event_location']; ?></div>
+    <div class="event-location"><span><?php print t('Location: '); ?></span><?php print $item->popover_fields['event_location']; ?></div>
   <?php endif;?>
 </div>
