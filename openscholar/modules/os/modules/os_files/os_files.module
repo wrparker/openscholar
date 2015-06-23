@@ -2235,6 +2235,7 @@ function _os_files_extensions_from_type($type) {
       'wtt',
       'wwtfig',
       'csv',
+      'sas',
     );
 
     $types['executable'] = array(
