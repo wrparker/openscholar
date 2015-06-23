@@ -171,17 +171,17 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
 
       // Adds the flavor select option to the form.
       $flavor_key = 'os_appearance_' . $info['theme_name'] . '_flavor';
-        $form[$flavor_key] = array(
-          '#type' => 'select',
-          '#title' => t('Flavor'),
-          '#options' => $flavor_options,
-          '#default_value' => variable_get($flavor_key, $default_flavor),
-          '#ajax' => array(
-            'callback' => 'cp_appearance_swap_screenshot',
-            'wrapper' => 'screenshot_' . $theme->name
-          )
-        );
-      }
+      $form[$flavor_key] = array(
+        '#type' => 'select',
+        '#title' => t('Flavor'),
+        '#options' => $flavor_options,
+        '#default_value' => variable_get($flavor_key, $default_flavor),
+        '#ajax' => array(
+          'callback' => 'cp_appearance_swap_screenshot',
+          'wrapper' => 'screenshot_' . $theme->name
+        )
+      );
+    }
     else
     {
 
@@ -221,6 +221,36 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
         $radio_options[$info['theme_name'].'-os_featured_flavor-'.$flavor_name] = $flavor_theme->info['theme_flavor_name'];
       }
     }
+  }
+
+  // include flavors that have been added manually by user
+  foreach(cp_appearance_get_flavors() as $flavor_name => $flav) {
+    $theme = os_get_themes($flav['module']);
+    $flavor_theme = (object)array(
+      'filename' => $details['path'],
+      'name' => $flav['module'] .'-os_featured_flavor-'.$flavor_name,
+      'type' => 'theme',
+      'owner' => 'themes/engines/phptemplate/phptemplate.engine',
+      'status' => '1',
+      'weight' => '0',
+      'bootsrap' => '0',
+      'schema_version' => '-1',
+      'info' => drupal_parse_info_file($flav['path'].'/'.$flav['file']),
+      'base_themes' => $theme->base_themes,
+      'prefix' => 'phptemplate',
+      'stylesheets' => $theme->stylesheets,
+      'engine' => 'phptemplate',
+      'base_theme' => 'hwpi_basetheme',
+      'is_flavor' => true,  // Indicate that this is a flavor not a full theme.
+    );
+    $flavor_theme->info['flavor_name'] = $flavor_name;
+    $flavor_theme->info['name'] = $flavor_name;
+    $flavor_theme->info['theme_flavor_name'] = $flav['module'] .' - '.$flavor_theme->info['flavor_name'];
+
+    $flavor_theme->info['screenshot'] = $flav['path'].'/screenshot.png';
+    $featured_themes[$flav['module'].'-os_featured_flavor-'.$flavor_name] = $flav['module'].'-os_featured_flavor-'.$flavor_name;
+    $themes_sorted[$flav['module'].'-os_featured_flavor-'.$flavor_name] = $flavor_theme;
+    $radio_options[$flav['module'].'-os_featured_flavor-'.$flavor_name] = $flavor_theme->info['theme_flavor_name'];
   }
 
   $themes = $themes_sorted;
@@ -431,7 +461,6 @@ function theme_cp_appearance_theme_picker_form($variables) {
         "<div class='" . $class . "'>" . l(t('Update'), 'cp/appearance/update-subtheme/' . $flavor) . "</div>",
       );
 
-      $theme_category = substr($info['module'], 5);
       $items[] = array(
         'class' => array('item-theme-picker', $selected_subtheme),
         'id' => 'theme-' . str_replace('_', '-', $info['module']) . "-os-featured-flavor-$flavor",
@@ -441,7 +470,6 @@ function theme_cp_appearance_theme_picker_form($variables) {
         )),
       );
     }
-
     $variables = array(
       'items' => $items,
       'attributes' => array('class' => 'theme-picker'),
