@@ -243,7 +243,7 @@
   </macro>
   <macro name="locators">
     <choose>
-      <if type="article article-magazine artwork audiovisual bill broadcast case chart classical database film government-report hearing journal legislation manuscript map miscellaneous miscellaneous-section patent personal\_communication proceedings-conference presentation report software thesis unpublished webarticle webprojectpage webservice website" match="any">
+      <if type="article article-magazine artwork audiovisual bill broadcast case chart classical database film government-report hearing journal legislation manuscript map miscellaneous miscellaneous-section patent personal\_communication proceedings-conference presentation software thesis unpublished webarticle webprojectpage webservice website" match="any">
         <choose>
           <if variable="volume">
             <text variable="volume" prefix=" "/>
