@@ -13,12 +13,19 @@
     .directive('fileEditorModal', ['ModalService', function(ModalService) {
 
       function link(scope, elem, attr) {
-        elem.bind('click', clickHandler);
+        var data = {
+          attr: attr,
+          scope: scope
+        }
+        elem.bind('click', data, clickHandler);
+        if (!scope.onClose && scope.viewsClose) {
+          scope.onClose = scope.viewsClose;
+        }
 
         elem.parent().find('.fid').change(function (e) {
           // Media removes all click events on the edit button, so we have to add the handler again if we want
           // this to continue working.
-          elem.bind('click', clickHandler);
+          elem.bind('click', data, clickHandler);
           elem.attr('fid', e.target.value);
         })
       }
@@ -26,7 +33,7 @@
       function clickHandler(event) {
         event.preventDefault();
         event.stopPropagation();
-        var fid = this.attributes.fid.value;
+        var fid = event.data.attr.fid;
 
         ModalService.showModal({
           template: '<div file-edit file="file" on-close="closeModal(saved)"></div>',
@@ -37,7 +44,7 @@
         }).then(function (modal) {
           modal.element.dialog(dialogParams);
           modal.close.then(function(result) {
-            scope.onClose({result: result});
+            event.data.scope.onClose({result: result});
           })
         });
 
@@ -48,6 +55,7 @@
         link: link,
         scope: {
           onClose: '&',
+          viewsClose: '&'
         }
       }
     }])
