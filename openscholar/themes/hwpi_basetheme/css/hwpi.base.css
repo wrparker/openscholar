@@ -330,6 +330,7 @@ ol.search-results li.search-result:last-child {
   line-height: 1.4em;
   border-radius: 0;
   border: 1px solid #e5e5e3;
+  height: 25px;
 }
 
 .calendar-calendar .week-view .full th {
