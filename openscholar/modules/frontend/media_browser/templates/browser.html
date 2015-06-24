@@ -60,6 +60,10 @@
                   <span ng-hide="(limit *-1) >= domain.length">...</span>{{domain | limitTo:limit}}{{$last ? '' : ', '}}
                 </span>
             </div>
+            <div class="embed-failure" ng-show="embedFailure" ng-click="$parent.embedFailure = false">
+                <span class="error-icon"></span>
+                URL or HTML was not valid! Please check the URLs and try again.
+            </div>
             <div class="actions">
                 <button value="submit" ng-click="$parent.embedSubmit()">Submit</button>
                 <button value="cancel" ng-click="$parent.cancel()">Cancel</button>

@@ -54,6 +54,30 @@
   background-color: #FFFFFF;
 }
 
+/* Embed pane error window */
+.media-browser-pane .embed-failure {
+  position: absolute;
+  top: 30%;
+  left: calc(50% - (451px / 2));
+  background-color: red;
+  color: white;
+  padding: 10px;
+  padding-left: 40px;
+  border: 2px solid darkred;
+  cursor: pointer;
+}
+
+.media-browser-pane .embed-failure .error-icon {
+  background-image: url('../../../../themes/os_basetheme/images/scholarbase-sprite.png');
+  background-position: -72px -231px;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  position: absolute;
+  top: calc(50% - 12px);
+  left: 7px;
+}
+
 /* Search form */
 div.file-filters {
   padding-bottom: .5em;

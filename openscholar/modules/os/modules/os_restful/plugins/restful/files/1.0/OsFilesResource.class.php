@@ -397,48 +397,22 @@ class OsFilesResource extends RestfulEntityBase {
     }
     elseif (isset($this->request['embed']) && module_exists('media_internet')) {
 
-      try {
-        $provider = media_internet_get_provider($this->request['embed']);
-        $provider->validate();
-      }
-      catch (MediaInternetNoHandlerException $e) {
-        $errors[] = $e->getMessage();
-        return;
-      }
-      catch (MediaInternetValidationException $e) {
-        $errors[] = $e->getMessage();
-        return;
-      }
+      $provider = media_internet_get_provider($this->request['embed']);
+      $provider->validate();
 
       $validators = array();  // TODO: How do we populate this?
       $file = $provider->getFileObject();
       if ($validators) {
-        try {
-          $file = $provider->getFileObject();
-        }
-        catch (Exception $e) {
-          form_set_error('embed_code', $e->getMessage());
-          return;
-        }
+        $file = $provider->getFileObject();
 
         // Check for errors. @see media_add_upload_validate calls file_save_upload().
         // this code is ripped from file_save_upload because we just want the validation part.
         // Call the validation functions specified by this function's caller.
         $errors = array_merge($errors, file_validate($file, $validators));
-
-        if (!empty($errors)) {
-          $message = t('%url could not be added.', array('%url' => $embed_code));
-          if (count($errors) > 1) {
-            $message .= theme('item_list', array('items' => $errors));
-          } else {
-            $message .= ' ' . array_pop($errors);
-          }
-        }
       }
 
       if (!empty($errors)) {
-        // set error code
-        // return errors
+        throw new MediaInternetValidationException(implode("\n", $errors));
       }
       else {
         // Providers decide if they need to save locally or somewhere else.
