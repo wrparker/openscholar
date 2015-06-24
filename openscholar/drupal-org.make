@@ -59,8 +59,7 @@ projects[ctools][patch][] = "http://drupal.org/files/ctools-plugin_extension-162
 projects[ctools][patch][] = "https://drupal.org/files/issues/2147905-allow-alter-with-more-context-1.patch"
 
 projects[date][subdir] = "contrib"
-projects[date][version] = 2.6
-projects[date][patch][] = "http://drupal.org/files/date-migrate_v24-1715700-1.patch"
+projects[date][version] = 2.8
 
 projects[date_ical][subdir] = "contrib"
 projects[date_ical][version] = 2.7
