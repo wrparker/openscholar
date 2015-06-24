@@ -296,7 +296,12 @@ display:block;
 }
 
 /** Uploading styles */
+	
+#edit-field_upload-und-drop {
+	 position: relative;
+}	
 
+#edit-field_upload-und-drop span.ng-binding.ng-scope,
 #media-browser-file-select {
   height: 20px;
   width: 130px;
@@ -310,6 +315,12 @@ display:block;
   margin-right:0 !important;
 }
 
+#edit-field_upload-und-drop span.ng-binding.ng-scope {
+   width: 80px;
+  top: 25%;
+
+}
+
 #drag-text {
 	position: absolute;
     top: 40%;
@@ -317,11 +328,23 @@ display:block;
     font-size: 1.2em;
 }
 
+#edit-field_upload-und-drop #drag-text {
+  top: 43%;
+  left: 39%;
+  font-size: 1em;
+}
+
 #media-browser-drop-box {
   height: 450px;
   width: 100%;
   margin: 3% 0 2%;
   border: 2px dashed #ccc;
+}
+
+.node-form #media-browser-drop-box {
+  height: 150px;
+  background-color: #FFF;
+ 
 }
 
 .media-browser-dupe {
@@ -353,7 +376,7 @@ display:block;
 
 }
 
-
+.node-form .help,
 .media-browser-pane .help {
 position: absolute;
   top: 63%;
@@ -363,6 +386,11 @@ position: absolute;
   padding: 10px;
   background: #efefef;
 }
+
+.node-form .help {
+  top: 58%;
+  left: 3%;
+ }
 
 #media-browser-rejected {
   position: absolute;
