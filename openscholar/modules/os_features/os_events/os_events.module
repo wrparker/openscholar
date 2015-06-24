@@ -852,6 +852,11 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
   // Hide the tokens list for sending messages to registrants.
   unset($form['token_tree']);
 
+  $repeating_event_date = FALSE;
+  if (isset($form_state['build_info']['args'][0]['repeating_event_date'])) {
+    $repeating_event_date = $form_state['build_info']['args'][0]['repeating_event_date'];
+  }
+
   // Default value of the From field should be the author of the event's e-mail
   // in case it hasn't been changed yet (if it hasn't been changed yet, the email
   // will be set by default to be as defined in the field instance).
@@ -901,7 +906,7 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
 
   // Set the default time for a reminder to be a day before the event.
   $event_date = $wrapper->field_date->get(0)->value();
-  $reminder = empty($reminder_date) ? strtotime('-1 day', strtotime($event_date['value'])) : strtotime($reminder_date);
+  $reminder = empty($reminder_date) ? strtotime('-1 day', strtotime($repeating_event_date?$repeating_event_date:$event_date['value'])) : strtotime($reminder_date);
   $form['reminder']['reminder_settings']['reminder_date'] = array(
     '#type' => 'date_popup',
     '#title' => t('Reminder Date'),
@@ -926,6 +931,20 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
   $form['reminder']['reminder_settings']['token_tree']['#access'] = FALSE;
   $form['reminder']['reminder_settings']['#type'] = 'container';
   $form['reminder']['#type'] = 'container';
+
+
+  // Default to no repeating event date.
+  $form['field_repeating_event_date'] = array(
+    '#type' => 'value',
+    '#value' => $repeating_event_date,
+  );
+
+  $form['field_repeating_event_date_text'] = array(
+    '#type' => 'item',
+    '#markup' => '<span class="date-display-single">'. t('Changing settings for @date', array('@date' => date('l, F j, Y', strtotime($repeating_event_date.' UTC'))))."</span>",
+    '#weight' => -10,
+  );
+
   $form['settings']['#access'] = FALSE;
 
   $form['reminder']['#weight'] = 9;
@@ -938,6 +957,8 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
   // "#access = FALSE".
   $form['#validate'][] = '_os_events_update_from_address';
   $form['#validate'][] = 'os_events_validate_end_date_after_start';
+  $default_submit = array_search('registration_entity_settings_form_submit',$form['#submit']);
+  $form['#submit'][$default_submit] = 'os_events_registration_entity_settings_form_submit';
   $form['#submit'][] = 'os_events_invalidate_cache';
 
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
@@ -1037,6 +1058,9 @@ function os_events_field_widget_registration_select_form_alter(&$element, &$form
 function os_events_menu_alter(&$items) {
   $items['node/%entity_object/register']['access callback'] = FALSE;
   $items['admin/structure/registration/registration_states']['access callback'] = FALSE;
+
+  //Use custom settings callback
+  $items['node/%entity_object/registrations/settings']['page callback'] = 'os_events_entity_settings_page';
 }
 
 /**
@@ -1071,7 +1095,7 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
       // Set the date for the registration.
       $form['field_repeating_event_date']['#value'] = $date[$delta]['value'];
 
-      $form['field_repeating_event_date'] = array(
+      $form['field_repeating_event_date_text'] = array(
         '#type' => 'item',
         '#markup' => '<span class="date-display-single">'. t('On @date', array('@date' => date('l, F j, Y', strtotime($date[$delta]['value'].' UTC'))))."</span>",
         '#weight' => -10,
@@ -1370,4 +1394,112 @@ function os_events_registration_link($variables) {
   }
 
   return os_events_generate_modal_register_link($nid);
+}
+
+/**
+ * Alter the local tasks to include the delta.
+ */
+function os_events_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  $alter_urls = array('node/%','node/%/registrations','node/%/registrations/settings','node/%/registrations/broadcast','node/%/registrations/list');
+  // Add action link to 'node/add' on 'admin/content' page.
+  if (in_array($root_path,$alter_urls) && $router_item['map'][1]->type == 'event' && (isset($router_item['map'][1]->date_id) || $_GET['delta'])) {
+    //Get the Delta
+    if (isset($router_item['map'][1]->date_id)) {
+      list(,,$field,$delta) = explode('.', $router_item['map'][1]->date_id);
+    } else {
+      $delta = $_GET['delta'];
+    }
+
+    //Loop through the primary tabs.
+    foreach ($data['tabs'] as $index => $tabs) {
+      foreach ($tabs['output'] as $n => $tab) {
+        if (in_array($tab['#link']['path'],$alter_urls)) {
+          $data['tabs'][$index]['output'][$n]['#link']['localized_options']['query'] = array('delta' => $delta);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Page callback for repeating events registration settings.
+ *
+ * @param $entity_type
+ * @param $entity
+ *
+ * @return array
+ *   Registration entity settings form.
+ */
+function os_events_entity_settings_page($entity_type, $entity) {
+
+  list($entity_id) = entity_extract_ids($entity_type, $entity);
+  $repeating = $entity->field_date['und'][0]['rrule'];
+
+  if ($repeating && isset($_GET['delta'])) {
+    $delta = intval($_GET['delta']);
+    $date = field_get_items('node', $entity, 'field_date');
+    $date = $date[$delta]['value'];
+  } else if($repeating) {
+    form_set_error('repeating_event',"You are changing the default for all occurances of this repeating event.");
+    $date = '';
+  }
+
+  $settings = os_events_registration_repeating_entity_settings($entity_type, $entity_id, $date);
+
+  if (!$repeating) {
+    unset($settings['repeating_event_date']);
+  }
+  return drupal_get_form('registration_entity_settings_form', $settings, $entity_type, $entity_id);
+}
+
+/**
+ * Get registration settings for a repeating event.
+ *
+ * @param string $entity_type
+ *   The host entity type.
+ * @param int $entity_id
+ *   The host entity ID.
+ *
+ * @return array|bool
+ *   A row from {registration_entity}, or FALSE if no settings exist.
+ */
+function os_events_registration_repeating_entity_settings($entity_type, $entity_id, $date_string, $reset = FALSE) {
+  $result = &drupal_static(__FUNCTION__ . $entity_type . $entity_id . $date_string);
+
+  if (!$result || $reset) {
+    $result = db_select('registration_entity', 're')
+      ->fields('re')
+      ->condition('entity_id', $entity_id, '=')
+      ->condition('entity_type', $entity_type, '=')
+      ->condition('repeating_event_date', array($date_string,''), 'IN')
+      ->orderBy('repeating_event_date', 'DESC') //Get custom settings first
+      ->range(0,1)
+      ->execute()
+      ->fetchAssoc();
+
+    if ($result) {
+      $result['settings'] = unserialize($result['settings']);
+      $result['repeating_event_date'] = $date_string;
+    }
+  }
+
+  return $result;
+}
+
+/**
+ * Submit handler for registration_entity_settings_form().
+ *
+ * @param array $form
+ * @param array $form_state
+ */
+function os_events_registration_entity_settings_form_submit($form, &$form_state) {
+  $entity = $form_state['entity'];
+
+  $fields = registration_convert_form_settings($form_state['values']);
+
+  registration_update_entity_settings($entity['entity_type'], $entity['entity_id'], $fields);
+
+  $uri = entity_uri($entity['entity_type'], entity_load_single($entity['entity_type'], $entity['entity_id']));
+
+  $form_state['redirect'] = $uri['path'];
 }
