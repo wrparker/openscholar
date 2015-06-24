@@ -2318,4 +2318,27 @@ class FeatureContext extends DrupalContext {
     );
   }
 
+  /**
+   * @When /^I export the registrants list for the event "([^"]*)" in the site "([^"]*)"$/
+   */
+  public function iExportTheRegistrantsListForTheEventInTheSite($event, $site) {
+    $url = $this->getSession()->getCurrentUrl() . '/export';
+    $file = file_get_contents($url);
+
+    if (!$file) {
+      throw new Exception(sprintf("Could not export the list of registrants."));
+    }
+    $this->exportedRegistrants = $file;
+  }
+
+  /**
+   * @Then /^I verify the file contains the user "([^"]*)" with email of "([^"]*)"$/
+   */
+  public function iVerifyTheFileContainsTheUserWithEmailOf($name, $email) {
+    var_dump("/" . $email . ",(...,)," . $name . "/");
+    if (!preg_match("/" . $email . "(.*)" . $name . "/", $this->exportedRegistrants)) {
+      throw new Exception(sprintf("List of registrants doesn't is exported wrong."));
+    }
+  }
+
 }

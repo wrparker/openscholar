@@ -177,9 +177,17 @@ function os_events_update_7012() {
   features_revert(array('os_events' => array('views')));
 }
 
+function os_events_update_7013() {
+  features_revert(array('os_events' => array('variable')));
+}
+
+function os_events_update_7014() {
+  features_revert(array('os_events' => array('variable')));
+}
+
 /**
  * Define the registration entity as a group content.
  */
-function os_events_update_7013() {
+function os_events_update_7015() {
   og_create_field(OG_AUDIENCE_FIELD, 'registration', 'event_signup_simple');
 }
