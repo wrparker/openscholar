@@ -422,6 +422,12 @@
           $scope.setSelection(e.data[0].id);
           $scope.changePanes('edit')
         }
+      })
+      .error(function (e) {
+        $scope.embedFailure = true;
+          $timeout(function () {
+            $scope.embedFailure = false;
+          }, 5000);
       });
     }
 
