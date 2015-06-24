@@ -2323,12 +2323,17 @@ class FeatureContext extends DrupalContext {
    */
   public function iExportTheRegistrantsListForTheEventInTheSite($event, $site) {
     $url = $this->getSession()->getCurrentUrl() . '/export';
-    $file = file_get_contents($url);
 
-    if (!$file) {
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+
+    if (!$data = curl_exec($curl)) {
       throw new Exception(sprintf("Could not export the list of registrants."));
     }
-    $this->exportedRegistrants = $file;
+    curl_close($curl);
+    $this->exportedRegistrants = $data;
   }
 
   /**
