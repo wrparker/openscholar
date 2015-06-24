@@ -875,6 +875,7 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
   $open_date = $form['scheduling']['open']['#default_value'];
   $close_date = $form['scheduling']['close']['#default_value'];
   $reminder_date = $form['reminder']['reminder_settings']['reminder_date']['#default_value'];
+  $reminder_on = $form['reminder']['reminder_settings']['reminder_status']['#default_value'];
 
   $format = 'M d Y h:i A';
   // Replace textual date fields in favor of date popup.
@@ -911,7 +912,7 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
     '#type' => 'date_popup',
     '#title' => t('Reminder Date'),
     '#description' => t('When to send reminders.'),
-    '#default_value' => date('Y-m-d H:i', $reminder),
+    '#default_value' => $reminder_on ? date('Y-m-d H:i', $reminder) : '',
     '#date_format' => $format,
     '#states' => array(
       'visible' => array(
@@ -923,10 +924,10 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
   // Remove the template, reminder date is no longer inside a container.
   $form['reminder']['reminder_settings']['reminder_template'] = $form['reminder']['reminder_settings']['reminder_template'] + array(
     '#access' => FALSE,
-    '#value'  => variable_get('os_reminder_template', "
+    '#value'  => $reminder_on ? variable_get('os_reminder_template', "
 Hello[registration:attendee_name],
 
-You request to send a reminder for the event <a href='[node:url]'>[node:title]</a>."),
+You request to send a reminder for the event <a href='[node:url]'>[node:title]</a>.") : '',
   );
   $form['reminder']['reminder_settings']['token_tree']['#access'] = FALSE;
   $form['reminder']['reminder_settings']['#type'] = 'container';
