@@ -101,4 +101,4 @@ Feature:
   @api @features_second
   Scenario: Testing the order of the people.
     Given I visit "john/people"
-    Then I verify "Charles Anderson" comes before "Kristen Anderson"
+     Then I verify "Charles Anderson" comes before "Kristen Anderson"

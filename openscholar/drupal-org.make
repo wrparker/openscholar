@@ -24,6 +24,9 @@ projects[boxes][patch][] = "http://raw.github.com/openscholar/openscholar/b38919
 projects[boxes][patch][] = "https://www.drupal.org/files/1859150-1-boxes-strict_warning.patch"
 projects[boxes][patch][] = "https://www.drupal.org/files/issues/default_object_empty_value-2042101-3.patch"
 
+projects[cache_consistent][subdir] = "contrib"
+projects[cache_consistent][version] = 1.2
+
 projects[calendar][subdir] = "contrib"
 projects[calendar][version] = 3.5
 projects[calendar][patch][] = "http://raw.github.com/openscholar/openscholar/72d63ee3537c31505b7481975886ec13789feeb5/patches/calendar-fix-week-view-overflow.patch"
@@ -56,8 +59,7 @@ projects[ctools][patch][] = "http://drupal.org/files/ctools-plugin_extension-162
 projects[ctools][patch][] = "https://drupal.org/files/issues/2147905-allow-alter-with-more-context-1.patch"
 
 projects[date][subdir] = "contrib"
-projects[date][version] = 2.6
-projects[date][patch][] = "http://drupal.org/files/date-migrate_v24-1715700-1.patch"
+projects[date][version] = 2.8
 
 projects[date_ical][subdir] = "contrib"
 projects[date_ical][version] = 2.7
@@ -124,11 +126,8 @@ projects[features][version] = 2.0
 projects[feeds][subdir] = "contrib"
 projects[feeds][version] = 2.0-alpha7
 
-projects[feeds_tamper‏][subdir] = "contrib"
-projects[feeds_tamper‏][type] = "module"
-projects[feeds_tamper‏][download][type] = "git"
-projects[feeds_tamper‏][download][url]="http://git.drupal.org/project/feeds_tamper.git"
-projects[feeds_tamper‏][patch][] = "https://www.drupal.org/files/issues/use_instancof_instead_of_get_class-2490120-1.patch"
+projects[feeds_tamper][subdir] = "contrib"
+projects[feeds_tamper][version] = 1.1
 
 projects[feeds_xpathparser][subdir] = "contrib"
 projects[feeds_xpathparser][download][type] = git
