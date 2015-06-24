@@ -1,3 +1,15 @@
 (function() {
-  angular.module('cp-files', ['mediaBrowser', 'FileEditorModal']);
+  angular.module('cp-files', ['mediaBrowser', 'FileEditorModal'])
+    .run([function() {
+      var elem = angular.element(document.querySelectorAll('.view-id-cp_files'));
+      elem.attr('ng-controller', 'CpFilesController');
+    }])
+    .controller('CpFilesController', ['$scope', function ($scope) {
+      console.log('success');
+      $scope.reload = function (result) {
+        if (result) {
+          window.location.reload();
+        }
+      }
+    }]);
 })();

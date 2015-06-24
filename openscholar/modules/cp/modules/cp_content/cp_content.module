@@ -500,5 +500,6 @@ function cp_content_preprocess_views_view(&$vars) {
     drupal_add_library('media', 'media_browser');
     drupal_add_library('os_common', 'FileEditorModal');
     drupal_add_js(drupal_get_path('module', 'cp_content').'/apps/cp_files.js');
+    // $vars['attributes_array']['ng-controller'] = 'CpFilesController'; Reminder to myself that this doesn't work cause Views doesn't print attributes
   }
 }

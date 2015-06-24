@@ -238,7 +238,7 @@ function os_common_library() {
 
   $info['FileEditor'] = array(
     'title' => 'Angular File Editor',
-    'version' => '1.0',
+    'version' => '1.0.1',
     'js' => array(
       $path.'/FileEditor/FileEditor.module.js' => array(),
       array(

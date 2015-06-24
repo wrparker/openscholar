@@ -20,8 +20,9 @@
           scope: scope
         }
         elem.bind('click', data, clickHandler);
-        if (!scope.onClose && scope.viewsClose) {
-          scope.onClose = scope.viewsClose;
+        scope.runViews = false;
+        if (!attr.onClose && attr.viewsClose) {
+          scope.runViews = true;
         }
 
         elem.parent().find('.fid').change(function (e) {
@@ -46,7 +47,13 @@
         }).then(function (modal) {
           modal.element.dialog(dialogParams);
           modal.close.then(function(result) {
-            event.data.scope.onClose({result: result});
+            var scope = event.data.scope;
+            if (scope.runViews) {
+              scope.viewsClose({result: result});
+            }
+            else {
+              scope.onClose({result: result});
+            }
           })
         });
 
