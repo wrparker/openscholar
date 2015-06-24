@@ -333,6 +333,17 @@ ol.search-results li.search-result:last-child {
   height: 25px;
 }
 
+.calendar.monthview .field-content {
+  position: absolute;
+  width: 3000px;
+  left: 5px;
+    top: 6px;
+}
+
+.calendar.monthview .views-field-field-date {
+	display:none;
+}
+
 .calendar-calendar .week-view .full th {
   border-bottom: none;
 }
