@@ -317,7 +317,7 @@ display:block;
 
 #edit-field_upload-und-drop span.ng-binding.ng-scope {
    width: 80px;
-  top: 40%;
+  top: 25%;
 
 }
 
@@ -329,8 +329,9 @@ display:block;
 }
 
 #edit-field_upload-und-drop #drag-text {
-  top: 60%;
-  left: 35%;
+  top: 43%;
+  left: 39%;
+  font-size: 1em;
 }
 
 #media-browser-drop-box {
@@ -375,7 +376,7 @@ display:block;
 
 }
 
-
+.node-form .help,
 .media-browser-pane .help {
 position: absolute;
   top: 63%;
@@ -385,6 +386,11 @@ position: absolute;
   padding: 10px;
   background: #efefef;
 }
+
+.node-form .help {
+  top: 58%;
+  left: 3%;
+ }
 
 #media-browser-rejected {
   position: absolute;
