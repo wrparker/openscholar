@@ -76,7 +76,6 @@
     }
     if (!params.override_extensions) {
       var types = params.types;
-      console.log(types);
       for (var t in types) {
         var ext = Drupal.settings.extensionMap[types[t]],
           i = 0, l = ext ? ext.length : false;
@@ -357,7 +356,7 @@
         $upload.upload({
           url: Drupal.settings.paths.api+'/files',
           file: $file,
-          data: $file,                                        // UPLOADED FILES ARE NOT GETTING THE VSITE
+          data: $file,
           fileFormDataName: 'files[upload]',
           headers: {'Content-Type': $file.type},
           method: 'POST',
@@ -368,7 +367,6 @@
         }).success(function (e) {
           for (var i = 0; i< e.data.length; i++) {
             e.data[i].new = true;
-            $scope.files.push(e.data[i]);
             service.register(e.data[i]);
           }
           uploadNext(e.data[0].id);
