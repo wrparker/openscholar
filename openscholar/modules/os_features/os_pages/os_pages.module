@@ -1277,14 +1277,14 @@ function _os_pages_reindex_context($context_name) {
 }
 
 /**
- * Implements hook_node_insert().
+ * Implements hook_node_presave().
  */
-function os_pages_node_insert($node) {
+function os_pages_node_presave($node) {
   if ($node->type != 'page') {
     return;
   }
 
-  if (empty($node->metatags['description']['value'])) {
+  if (!empty($node->metatags['description']['value'])) {
     return;
   }
   
