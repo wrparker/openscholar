@@ -39,24 +39,15 @@ class OsMigrateEventsNode extends OsMigrate {
       ->sourceMigration('OsMigrateUsers');
   }
 
-  public function prepare($entity, $row) {
+  public function prepareRow($row) {
+    parent::prepareRow($row);
+
     $date = explode(';', $row->field_date);
-
-    if ($strtotime = strtotime($date[0])) {
-      $date[0] = date('Y-m-d H:i', $strtotime);
-    }
-
-    $entity->field_date[LANGUAGE_NONE][0] = array(
-      'value' => $date[0],
-      'date_type' => 'datetime',
-    );
+    $row->field_date = array($date[0]);
 
     // Adding the end date of the event.
     if (isset($date[1])) {
-      if ($strtotime = strtotime($date[1])) {
-        $date[1] = date('Y-m-d H:i', $strtotime);
-      }
-      $entity->field_date[LANGUAGE_NONE][0]['value2'] = $date[1];
+      $row->field_date['arguments'] = array('to' => $date[1]);
     }
   }
 }
