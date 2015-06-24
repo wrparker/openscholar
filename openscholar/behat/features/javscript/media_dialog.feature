@@ -1,7 +1,7 @@
 Feature:
   Testing the media dialog page
 
-  @api @javascript @foo
+  @api @javascript
   Scenario: Verify the "Upload" button is displayed when opening the media
             dialog page.
     Given I am logging in as "john"
