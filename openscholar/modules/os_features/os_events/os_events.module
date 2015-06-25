@@ -76,7 +76,7 @@ function os_events_menu() {
 
   $items['node/%node/registrations/export'] = array(
     'title' => 'Export attendees to csv',
-    'access arguments' => user_access('administer registration'),
+    'access arguments' => array('administer registration'),
     'page arguments' => array(1),
     'page callback' => 'os_events_export_to_csv',
   );
