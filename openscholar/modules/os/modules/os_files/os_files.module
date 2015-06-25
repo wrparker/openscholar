@@ -135,21 +135,6 @@ function theme_os_file_icon($variables) {
 function os_files_theme_registry_alter(&$reg) {
   unset($reg['oembed']['template']);
   $reg['oembed']['function'] = 'theme_os_files_oembed';
-
-  array_unshift($reg['media_dialog_page'], 'os_files_preprocess_media_dialog_page');
-}
-
-/**
- * Preprocess function for media dialog page.
- *
- * Here we change the ID for the upload field for a file upload form. This is
- * needed since in Drupal 7.37 there's a `-upload` appended to the ID which
- * breaks our media dialog.
- *
- * @see file_managed_file_process().
- */
-function os_files_preprocess_media_dialog_page(&$variables) {
-  $variables['page']['content']['system_main']['tabset']['plugins']['upload']['form']['upload']['#id'] = "edit-upload";
 }
 
 function theme_os_files_oembed($vars){
@@ -1425,6 +1410,9 @@ function os_files_media_browser_plugins_alter(&$output){
   unset($output['media_default--media_browser_my_files']);
   $output['upload']['#title'] = t('My Computer');
   $output['media_default--media_browser_1']['#title'] = t('My Library');
+
+  // Set the ID in order to avoid duplicated ID elements.
+  $output['upload']['form']['upload']['#id'] = 'edit-upload';
 
   // add an area to the views form to put the file edit form
   $html = &$output['media_default--media_browser_1']['#markup'];
