@@ -48,6 +48,22 @@ function media_browser_library_alter(&$libs) {
     $map[$t] = _os_files_extensions_from_type($t);
   }
 
+  // Start with post_max_size.
+  $max_size_raw = parse_size(ini_get('post_max_size'));
+  $upload_max_raw = parse_size(ini_get('upload_max_filesize'));
+  if ($upload_max_raw > 0) {
+    if ($upload_max_raw < $max_size_raw) {
+      $max_size = ini_get('post_max_size');
+    }
+    else {
+      $max_size = ini_get('upload_max_filesize');
+      $max_size_raw = $upload_max_raw;
+    }
+  }
+  else {
+    $max_size = ini_get('post_max_size');
+  }
+
   $libs['media_browser']['js'] += array(
     $path . '/misc/MediaBrowserFilters.js' => array(),
     $path . '/misc/MediaBrowserModule.js' => array(),
@@ -60,8 +76,8 @@ function media_browser_library_alter(&$libs) {
           'mediaBrowser' => '0.9.3'
         ),
         'extensionMap' => $map,
-        'maximumFileSize' => file_upload_max_size(),
-        'maximumFileSizeRaw' => parse_size(file_upload_max_size()),
+        'maximumFileSize' => $max_size,
+        'maximumFileSizeRaw' => $max_size_raw,
       ),
       'type' => 'setting',
     )
