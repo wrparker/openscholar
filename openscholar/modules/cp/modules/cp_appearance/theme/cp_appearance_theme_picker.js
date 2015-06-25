@@ -10,11 +10,12 @@
        */
       $('li.item-theme-picker').click(function(){
         // Removes the active class from every li first.
-        $("ul.theme-picker").children(".item-theme-picker").removeClass('checked');
+        $(this).siblings(".item-theme-picker").removeClass('checked');
         if(!$(this).hasClass('current')){
           // Adds the class to this one.
           $(this).addClass('checked');
         }
+
         $("#edit-theme-default-" + $(this).attr('id').substr(6)).attr("checked", "checked").change();
       });
 
