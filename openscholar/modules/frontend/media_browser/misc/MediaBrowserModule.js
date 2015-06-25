@@ -130,7 +130,7 @@
 
     $scope.$on('EntityService.files.delete', function (event, id) {
       // Don't want to worry about what happens when you modify an array you're looping over
-      var deleteMe;
+      var deleteMe = false;
       for (var i=0; i<$scope.files.length; i++) {
         if ($scope.files[i].id == id) {
           deleteMe = i;
@@ -138,7 +138,9 @@
         }
       }
 
-      $scope.files.splice(deleteMe, 1);
+      if (deleteMe !== false) {
+        $scope.files.splice(deleteMe, 1);
+      }
     })
 
     var fetching = service.fetch({})
