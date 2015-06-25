@@ -2166,4 +2166,12 @@ class FeatureContext extends DrupalContext {
     $element->click();
   }
 
+  /**
+   * @When /^I click on the tab "([^"]*)"$/
+   */
+  public function iClickOnTheTab($arg1) {
+    $element = $this->getSession()->getPage()->find('xpath', "//*[.='{$arg1}']");
+    $element->click();
+  }
+
 }
