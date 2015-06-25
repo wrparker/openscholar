@@ -940,11 +940,31 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
     '#value' => $repeating_event_date,
   );
 
-  $form['field_repeating_event_date_text'] = array(
-    '#type' => 'item',
-    '#markup' => '<span class="date-display-single">'. t('Changing settings for @date', array('@date' => date('l, F j, Y', strtotime($repeating_event_date.' UTC'))))."</span>",
-    '#weight' => -10,
-  );
+  if ($repeating_event_date) {
+    $form['field_repeating_event_date_text'] = array(
+      '#type' => 'item',
+      '#markup' => '<span class="date-display-single">'. t('Changing settings for @date', array('@date' => date('l, F j, Y', strtotime($repeating_event_date.' UTC'))))."</span>",
+      '#weight' => -10,
+    );
+  } elseif ($repeating_event_date === '') {
+    // Changing for all instances.
+    $form['field_repeating_event_date_text'] = array(
+      '#type' => 'item',
+      '#markup' => '<span class="date-display-single">'. t('You are changing the default settings for all occurances of this event.')."</span>",
+      '#weight' => -10,
+    );
+
+    ctools_include('jump-menu');
+    foreach ($wrapper->field_date as $delta => $field_date) {
+      $date = $field_date->value();
+      $options[url($_GET['q'],array('query' => array('delta' => $delta)))] = date('l, F j, Y', strtotime($date['value'].' UTC'));
+    }
+    $settings = array(
+      'choose' => t('-- Go to a specific date instead --'),
+    );
+    $form =  $form + ctools_jump_menu($form, $form_state, $options, $settings);
+    $form['jump']['#weight'] = $form['go']['#weight'] = -9;
+  }
 
   $form['settings']['#access'] = FALSE;
 
@@ -1385,6 +1405,8 @@ function os_events_theme_registry_alter(&$theme_registry) {
 function os_events_registration_link($variables) {
   list(,$nid,) = explode('/', $variables['path']);
   $node = node_load($nid);
+  $delta = $_GET['delta'];
+  $repeating = $node->field_date['und'][0]['rrule'];
 
   if (!os_events_event_registration_reach_capacity($node)) {
     return '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
@@ -1441,7 +1463,6 @@ function os_events_entity_settings_page($entity_type, $entity) {
     $date = field_get_items('node', $entity, 'field_date');
     $date = $date[$delta]['value'];
   } else if($repeating) {
-    form_set_error('repeating_event',"You are changing the default for all occurances of this repeating event.");
     $date = '';
   }
 
@@ -1498,19 +1519,22 @@ function os_events_registration_entity_settings_form_submit($form, &$form_state)
 
   $fields = registration_convert_form_settings($form_state['values']);
 
-  registration_update_entity_settings($entity['entity_type'], $entity['entity_id'], $fields);
+  if (empty($form_state['values']['field_repeating_event_date'])) {
+    $form_state['values']['field_repeating_event_date'] = '';
+  }
+
+  db_merge('registration_entity')
+    ->key(array(
+    'entity_id' => $entity['entity_id'],
+    'entity_type' => $entity['entity_type'],
+    'repeating_event_date' => $form_state['values']['field_repeating_event_date'],
+  ))
+    ->fields($fields)
+    ->execute();
+
+  drupal_set_message(t('Registration settings have been saved.'));
 
   $uri = entity_uri($entity['entity_type'], entity_load_single($entity['entity_type'], $entity['entity_id']));
 
   $form_state['redirect'] = $uri['path'];
 }
-
-
-//      ctools_include('jump-menu');
-//      $form = ctools_jump_menu(array(), $form_state, array($url => t('Jump!'), "http://google.com" => "Google"), array());
-//      $form_state = array(
-//        'title' => os_events_register_form_title('node', $node->nid),
-//        'ajax' => $js,
-//        'use_ctools' => TRUE,
-//      );
-//      $output = ctools_modal_form_render($form_state, $form);
