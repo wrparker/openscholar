@@ -5,12 +5,18 @@
       minHeight: 650,
       modal: true,
       position: 'center',
-    };
+    },
+    loading,
+    fetchPromise;
+
 
   angular.module('FileEditorModal', ['EntityService', 'FileEditor', 'angularModalService', 'angularFileUpload', 'locationFix'])
     .run(['EntityService', function (EntityService) {
       service = new EntityService('files', 'id');
-      service.fetch();
+      loading = true;
+      fetchPromise = service.fetch().then(function() {
+        loading = false;
+      });
     }])
     .directive('fileEditorModal', ['ModalService', function(ModalService) {
 
@@ -39,7 +45,9 @@
         var fid = event.data.attr.fid;
 
         ModalService.showModal({
-          template: '<div file-edit file="file" on-close="closeModal(saved)"></div>',
+          template: '<div><div class="file-entity-loading" ng-show="loading"><div class="file-entity-loading-message">Loading files...<br />' +
+            '<img src="{{asset_path}}/large-spin_loader.gif"><br />Please wait...</div></div>' +
+            '<div file-edit file="file" on-close="closeModal(saved)"></div></div>',
           controller: 'FileEditorModalController',
           inputs: {
             fid: fid
@@ -69,7 +77,17 @@
       }
     }])
     .controller('FileEditorModalController', ['$scope', 'EntityService', 'fid', 'close', function ($scope, EntityService, fid, close) {
-      $scope.file = angular.copy(service.get(fid));
+      $scope.loading = loading;
+      $scope.asset_path = Drupal.settings.paths.FileEditor;
+      if (loading) {
+        fetchPromise.then(function () {
+          $scope.file = angular.copy(service.get(fid));
+          $scope.loading = loading;
+        });
+      }
+      else {
+        $scope.file = angular.copy(service.get(fid));
+      }
 
       $scope.closeModal = function (saved) {
         close(saved);

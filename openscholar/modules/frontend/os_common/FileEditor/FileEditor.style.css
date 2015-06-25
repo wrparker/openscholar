@@ -8,3 +8,25 @@ div[file-edit] .fe-filepath-wrapper {
   overflow: hidden;
   padding-right: 18px;
 }
+
+.file-entity-loading {
+  background-color: white;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  position: absolute;
+}
+
+.file-entity-loading-message {
+  position: absolute;
+  top: calc(50% - 259px/2);
+  left: calc(50% - 175px/2);
+  text-align: center;
+  font-size: large;
+  font-weight: bolder;
+}
+
+.file-entity-loading-message img {
+  padding: 10px 0;
+}
