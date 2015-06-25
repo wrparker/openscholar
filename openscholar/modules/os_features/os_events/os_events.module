@@ -1504,3 +1504,13 @@ function os_events_registration_entity_settings_form_submit($form, &$form_state)
 
   $form_state['redirect'] = $uri['path'];
 }
+
+
+//      ctools_include('jump-menu');
+//      $form = ctools_jump_menu(array(), $form_state, array($url => t('Jump!'), "http://google.com" => "Google"), array());
+//      $form_state = array(
+//        'title' => os_events_register_form_title('node', $node->nid),
+//        'ajax' => $js,
+//        'use_ctools' => TRUE,
+//      );
+//      $output = ctools_modal_form_render($form_state, $form);
