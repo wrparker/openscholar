@@ -119,7 +119,7 @@ function os_events_export_to_csv($node) {
     ));
   }
 
-  $exporter->exportToFile($node->title . 'attendees.csv');
+  $exporter->exportToFile($node->title . ' attendees.csv');
 
   return $node->title;
 }
