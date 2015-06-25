@@ -8,7 +8,7 @@
       dialogs.dialog();
       dialogs.dialog('close');
 
-      $('.view-item-os_events .views-field-title a').on('click', function(e) {
+      $('.view-item-os_events .contents a').on('click', function(e) {
         e.preventDefault();
         var itemId = $(this).closest('div[data-item-id]').data('item-id');
         var popOver = $('#event-popover-' + itemId);

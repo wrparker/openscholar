@@ -894,8 +894,10 @@ div[aria-describedby^="event-popover-"] .ui-widget-header .ui-state-default {
  	padding: 0 1em;
  }
 
-		
- 
+div[id^=event-popover] .event-title a {
+  outline: none;
+}
+
  /** MODAL OVERRIDES for OS ORG ROADMAP PAGE **/
 
 .page-roadmap .ui-dialog {
