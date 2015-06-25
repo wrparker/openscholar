@@ -1363,7 +1363,7 @@ function os_events_get_event_duration($item) {
     return NULL;
   }
 
-  $hours = floor(($event_end - $event_start) / 3600);
+  $hours = round(($event_end - $event_start) / 3600, 1);
 
   return 80 * $hours . 'px';
 }
