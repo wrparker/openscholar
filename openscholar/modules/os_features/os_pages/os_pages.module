@@ -1284,11 +1284,16 @@ function os_pages_node_presave($node) {
     return;
   }
 
+  $wrapper = entity_metadata_wrapper('node', $node);
+
+  $metatag_value = $wrapper->field_meta_description->value();
+  if (empty($metatag_value)) {
+    return;
+  }
+
   if (!empty($node->metatags['description']['value'])) {
     return;
   }
-  
-  $wrapper = entity_metadata_wrapper('node', $node);
 
   $node->metatags['description']['value'] = $wrapper->field_meta_description->value();
 }
