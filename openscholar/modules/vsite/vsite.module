@@ -2182,13 +2182,19 @@ function vsite_site_contact() {
   $space = spaces_get_space();
   if (!empty($space)) {
     // Get the vsite_users_contact_form_anonymous varible
-    $contact_anon = $space->controllers->variable->get('vsite_users_contact_form_anonymous', 'space');
+    $allow_contact = $space->controllers->variable->get('show_email', 'space');
+    //Use depricated variable.
+    if ($allow_contact === null) {
+      $allow_contact = $space->controllers->variable->get('vsite_users_contact_form_anonymous', 'space');
+    }
+
   }
   else {
-    $contact_anon = variable_get('vsite_users_contact_form_anonymous', '1');
+    $allow_contact = variable_get('show_email', variable_get('vsite_users_contact_form_anonymous', TRUE));
   }
-  if (empty($contact_anon) && ! user_is_logged_in()) {
-    $output = t('You need to be logged in in order to send mail to this user.');
+
+  if (empty($allow_contact)) {
+    $output = t('You are not allowed to contact this user.');
   }
   elseif (! flood_is_allowed('contact', variable_get('contact_hourly_threshold', 3))) {
     $output = t('You cannot contact more than %number users per hour. Please try again later.', array(
