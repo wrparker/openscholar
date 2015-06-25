@@ -70,7 +70,7 @@ function os_events_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'date_views_monthformat_with_year';
-  $strongarm->value = '“l,';
+  $strongarm->value = 'F Y';
   $export['date_views_monthformat_with_year'] = $strongarm;
 
   $strongarm = new stdClass();
