@@ -810,7 +810,7 @@ function os_files_update_7019() {
 }
 
 /**
- * Update files extensions.
+ * Update files extensions and add the SAS to Document file types.
  */
 function os_files_update_7020() {
   $feature = array('field_instance');
@@ -828,4 +828,7 @@ function os_files_update_7020() {
     'os_software' => $feature,
   );
   features_revert($revert);
+
+  ctools_include('export');
+  ctools_export_crud_delete('file_type', 'document');
 }

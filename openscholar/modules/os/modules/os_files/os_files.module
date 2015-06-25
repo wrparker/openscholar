@@ -2097,6 +2097,8 @@ function os_files_file_default_types_alter(&$types){
     'application/rtf',
     // *.csv',
     'text/csv',
+    // *.sas
+    'application/sas',
   );
 
   $types['document']->mimetypes = (empty($types['document']->mimetypes)) ? $document : array_merge($types['document']->mimetypes, $document);
