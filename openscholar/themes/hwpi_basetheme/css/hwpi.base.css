@@ -341,7 +341,8 @@ ol.search-results li.search-result:last-child {
 }
 
 .calendar.monthview .views-field-field-date {
-	display:none;
+	position: absolute;
+	clip: rect(0px 0px 0px 0px);
 }
 
 .calendar-calendar .week-view .full th {
