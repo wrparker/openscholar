@@ -244,7 +244,7 @@ function _vsite_menu_prepare_menu_item(&$item, $vsite) {
       $existing_menu[$existing_item['plid']]['has_children'] = count($remaining_children)?1:0;
     }
 
-    return array($existing_menu, $default_menu);;
+    return array($existing_menu, $menu);
   }
 }
 
