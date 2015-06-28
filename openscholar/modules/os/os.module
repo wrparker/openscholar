@@ -919,7 +919,6 @@ function os_form_alter(&$form, &$form_state, $form_id) {
  */
 function os_close_overlay(&$form, &$form_state) {
   overlay_close_dialog();
-  $form_state['redirect'] = FALSE;
 }
 
 /**
