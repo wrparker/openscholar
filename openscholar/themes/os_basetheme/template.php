@@ -214,7 +214,7 @@ function os_basetheme_preprocess_node(&$vars) {
     // Don't display the repeats in full view mode.
     foreach ($vars['content']['field_date'] as $index => $repeat ) {
       if ($index && is_integer($index)) {
-        unset($vars['content']['field_date'][$index]);
+        hide($vars['content']['field_date'][$index]);
       }
     }
   }
