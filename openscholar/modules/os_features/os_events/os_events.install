@@ -186,8 +186,10 @@ function os_events_update_7014() {
 }
 
 /**
- * Define the registration entity as a group content.
+ * Define the registration entity as a group content and revert the views
+ * component to display event attendees..
  */
 function os_events_update_7015() {
   og_create_field(OG_AUDIENCE_FIELD, 'registration', 'event_signup_simple');
+  features_revert(array('os_events' => array('views')));
 }
