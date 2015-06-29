@@ -8,7 +8,7 @@
       console.log('success');
       $scope.reload = function (result) {
         if (result) {
-          window.location.reload();
+          //window.location.reload();
         }
       }
     }]);
