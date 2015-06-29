@@ -30,7 +30,7 @@ class SoftwareReleaseNodeRestful extends OsNodeRestfulBase {
     $public_fields = parent::publicFieldsInfo();
 
     $public_fields['software_release'] = array(
-      'property' => 'field_software_release',
+      'property' => 'field_software_project',
       'process_callbacks' => array(
         array($this, 'softwareProjectPreprocess'),
       ),

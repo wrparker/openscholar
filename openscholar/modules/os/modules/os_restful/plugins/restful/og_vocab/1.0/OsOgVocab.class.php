@@ -11,6 +11,16 @@ class OsOgVocab extends \RestfulEntityBase {
    * @apiDescription Consume og vocabulary content.
    *
    * @apiParam {Integer} id The ID of the entity
+   *
+   * @apiSuccess {Number}   id                    The OG vocab ID.
+   * @apiSuccess {Number}   vid                   The real vocabulary ID.
+   * @apiSuccess {String}   entity_type           The entity type the og vocab relate to.
+   * @apiSuccess {String}   bundle                The bundle which the vocab relate to.
+   * @apiSuccess {String}   field_name            The field name which contains the reference to the terms.
+   * @apiSuccess {Object}   settings              Settings for the OG vocabulary.
+   * @apiSuccess {Bool}     settings.required     Determine if the field is required.
+   * @apiSuccess {String}   settings.widget_type  The widget of the vocabulary when editing entities.
+   * @apiSuccess {Integer}  settings.cardinality  Number of terms the user can reference. -1 for unlimited.
    */
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();

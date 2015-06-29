@@ -11,6 +11,21 @@ class PageNodeRestfulBase extends OsNodeRestfulBase {
    * @apiDescription Consume page content.
    *
    * @apiParam {Number} id The page ID
+   *
+   * @apiSuccess {Number}   id                  The publication ID.
+   * @apiSuccess {String}   label               Registration Date.
+   * @apiSuccess {Object}   vsite               The vsite object.
+   * @apiSuccess {String}   vsite.title         Group name.
+   * @apiSuccess {Integer}  vsite.id            Group ID.
+   * @apiSuccess {string}   body                The body of the publication.
+   * @apiSuccess {string}   address             Person address.
+   * @apiSuccess {string}   email               Email address.
+   * @apiSuccess {string}   first_name          First name.
+   * @apiSuccess {string}   middle_name         Middle name.
+   * @apiSuccess {string}   last_name           Last name.
+   * @apiSuccess {string}   phone               Phone number.
+   * @apiSuccess {string}   prefix              Full name prefix.
+   * @apiSuccess {String[]} professional_title  List of professional titles.
    */
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();

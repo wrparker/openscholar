@@ -15,6 +15,8 @@ class SlideshowSlideNodeRestfulBase extends OsNodeRestfulBase {
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();
 
+    unset($public_fields['body']);
+
     return $public_fields;
   }
 
