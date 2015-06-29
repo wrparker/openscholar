@@ -918,6 +918,10 @@ function os_form_alter(&$form, &$form_state, $form_id) {
  * Submit handler; Forces the overlay to close.
  */
 function os_close_overlay(&$form, &$form_state) {
+  // Don't force overlay to close on views' exposed forms.
+  if (isset($form['#token']) && $form['#token'] == 'views_exposed_form') {
+    return;
+  }
   overlay_close_dialog();
 }
 
