@@ -141,7 +141,7 @@
             url = [restPath, entityType, entity[idProp]],
             data = getDiff(ents[k], entity);
 
-          $http.patch(url.join('/'), data)
+          return $http.patch(url.join('/'), data)
             .success(function (resp) {
               var entity = resp.data[0];
 
@@ -197,10 +197,7 @@
    * @returns {boolean}
    */
   function compareProps(prop1, prop2) {
-    if (typeof prop1 != typeof prop2) {
-      return false;
-    }
-    else if (typeof prop1 == 'object') {
+    if (typeof prop1 == 'object') {
       if (prop1 instanceof Array) {
         return arrayEquals(prop1, prop2);
       }
@@ -214,8 +211,11 @@
         return objectEquals(prop1, prop2);
       }
     }
-    else {
+    else if (typeof(prop1) == typeof(prop2)) {
       return prop1 == prop2;
+    }
+    else {
+      return prop1.toString() == prop2.toString();
     }
   }
 
