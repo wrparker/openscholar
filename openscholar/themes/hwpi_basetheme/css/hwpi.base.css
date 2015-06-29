@@ -456,6 +456,12 @@ ol.search-results li.search-result:last-child {
   padding-top: 0;
 }
 
+.calendar-calendar .week-view div.single-day .half-hour, 
+.calendar-calendar .day-view div.single-day .half-hour {
+  height: 50%;
+
+}
+
 /* Views Node Lists */
 
 .page-taxonomy.page-taxonomy-term .node-teaser.article,
