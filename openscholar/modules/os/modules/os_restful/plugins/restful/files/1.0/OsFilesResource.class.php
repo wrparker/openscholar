@@ -296,6 +296,19 @@ class OsFilesResource extends RestfulEntityBase {
   }
 
   /**
+   * Override checkPropertyAccess()
+   *
+  public function checkPropertyAccess($op, $public_field_name, EntityMetadataWrapper $property_wrapper, EntityMetadataWrapper $wrapper) {
+    return $access = parent::checkPropertyAccess($op, $public_field_name, $property_wrapper, $wrapper);
+    if (1 || $access) {
+      return $access;
+    }
+
+    $file = $wrapper->value();
+    return $this->checkGroupAccess($op, $file);
+  }*/
+
+  /**
    * Check for group access
    */
   public function checkGroupAccess($op, $file = null) {
@@ -519,7 +532,7 @@ class OsFilesResource extends RestfulEntityBase {
       }
 
       if (isset($info['saveCallback'])) {
-        $save = $save || call_user_func($info['saveCallback'], $wrapper);
+        $save = call_user_func($info['saveCallback'], $wrapper) || $save;
 
         if ($save) {
           unset($original_request[$public_field_name]);
