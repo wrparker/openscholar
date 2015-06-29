@@ -333,6 +333,8 @@ ol.search-results li.search-result:last-child {
   height: 25px;
 }
 
+.calendar.dayview .views-field-title .field-content,
+.calendar.weekview .views-field-title .field-content,
 .calendar.monthview .field-content {
   position: absolute;
   width: 3000px;
@@ -340,6 +342,18 @@ ol.search-results li.search-result:last-child {
     top: 6px;
 }
 
+.calendar.dayview .date-display-single,
+.calendar.weekview .date-display-single {
+	  display: block;
+  margin-top: 20px;
+}
+
+.calendar.dayview .date-display-single span,
+.calendar.weekview .date-display-single  span{
+	  font-size: 9px;
+}
+
+.calendar.dayview .event-date,
 .calendar.monthview .views-field-field-date {
 	position: absolute;
 	clip: rect(0px 0px 0px 0px);
