@@ -761,14 +761,29 @@ function os_update_7037() {
 /**
  * Uninstall the os_biocv module
  */
-function os_update_7038() {
-  features_revert(array(
-    "os" => array("context", "spaces_presets"),
-    "vsite" => array("spaces_presets"),
-  ));
+function os_update_7038(&$sandbox) {
+  if (!isset($sandbox['dataset'])) {
+    $sandbox['notices'] = "";
+    $sandbox['completed'] = 0;
+    $dataset = _get_vsite_biocv_data();
+    $sandbox['dataset'] = $dataset;
+    $sandbox['total'] = count($dataset);
+    $sandbox['#finished'] = 0.0;
+  }
 
-  if( module_exists('os_biocv')) {
+  $vsites = array_splice($sandbox['dataset'], 0, 100);
+
+  $sandbox['notices'] .= _replace_biocvs_with_pages($vsites);
+  $sandbox['completed'] = $sandbox['completed'] + count($vsites);
+  $sandbox['#finished'] = (float)$sandbox['completed'] / (float)$sandbox['total'];
+
+  if($sancbox['#finished'] >= 1) {
+    $sandbox['#finished'] = 1;
+
+    // done going through bio & cv content -- ok to disable and uninstall
     module_disable(array('os_biocv'));
     drupal_uninstall_modules(array('os_biocv'));
+
+    return "Completed " . $sandbox['completed'] . " migrations." . $sandbox['notices'];
   }
 }
