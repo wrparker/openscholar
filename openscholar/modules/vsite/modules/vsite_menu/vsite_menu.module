@@ -131,7 +131,7 @@ function vsite_menu_menu_link_save(&$item, $gid = FALSE) {
     return FALSE;
   }
 
-  if (list($existing_menu, $menu) = _vsite_menu_prepare_menu_item($item, $vsite)) {
+  if (list($menu, $existing_menu) = _vsite_menu_prepare_menu_item($item, $vsite)) {
     $vsite->controllers->menus->set($menu, $existing_menu);
 
     /**
@@ -244,7 +244,7 @@ function _vsite_menu_prepare_menu_item(&$item, $vsite) {
       $existing_menu[$existing_item['plid']]['has_children'] = count($remaining_children)?1:0;
     }
 
-    return array($existing_menu, $menu);
+    return array($menu, $existing_menu);
   }
 }
 
