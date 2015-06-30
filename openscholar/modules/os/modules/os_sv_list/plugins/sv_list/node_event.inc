@@ -66,7 +66,7 @@ class sv_list_node_event extends sv_list_plugin  {
   /**
    * @function query_alter().
    */
-  public function query_alter($options, $efq) {
+  public function query_alter(&$options, $efq) {
     if ($options['content_type'] != 'event') {
       return;
     }

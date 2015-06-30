@@ -446,10 +446,10 @@ class os_sv_list extends os_boxes_default {
    * keyed array.
    */
   private function _plugins_invoke($method, &$args = NULL) {
-    $options = ($this->options) ? $this->options + $this->options_defaults() : $this->options_defaults();
+    $this->options = ($this->options) ? $this->options + $this->options_defaults() : $this->options_defaults();
     foreach ($this->plugins as $name => &$plugin) {
       if (method_exists($plugin['instance'], $method)) {
-        $ret[$plugin['name']] = $plugin['instance']->$method($options, $args); //to pass by ref we can't use func_get_args
+        $ret[$plugin['name']] = $plugin['instance']->$method($this->options, $args); //to pass by ref we can't use func_get_args
       }
     }
     

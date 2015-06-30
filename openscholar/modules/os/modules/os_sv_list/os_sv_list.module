@@ -170,7 +170,7 @@ function os_sv_list_query_sv_list_events_alter(SelectQueryInterface $query) {
   // correct results.
 
   // add the delta to the fields
-  $query->fields('field_data_field_date1', array('delta'));
+  $query->fields('field_data_field_date_delta_sv_list_events', array('delta'));
 
   // Get the type of sort to use.
   $sort_type = $query->getMetaData('sort_event');
@@ -182,14 +182,14 @@ function os_sv_list_query_sv_list_events_alter(SelectQueryInterface $query) {
     $order = &$query->getOrderBy();
     $order = array(
       'node.sticky' => 'DESC',
-      'field_data_field_date1.field_date_value' => $sort_type,
+      'field_data_field_date_delta_sv_list_events.field_date_value' => $sort_type,
     );
   }
   else {
     // Sort on the right table.
     $order = &$query->getOrderBy();
     $order = array(
-      'field_data_field_date_delta1.field_date_value' => $sort_type,
+      'field_data_field_date_delta_sv_list_events.field_date_value' => $sort_type,
     );
   }
 
