@@ -512,12 +512,6 @@ function _replace_biocvs_with_pages($vsite_data) {
         else {
           $public_file_path = variable_get('file_public_path', conf_path() . '/files');
           $cv_link = '<p><a href="/' . str_replace("public:/", $public_file_path, $cv_file_obj->uri) . '">Curriculum Vitae</a></p>';
-          if (isset($vsite_values['bio_nid'])) {
-            file_usage_delete($cv_file_obj, "os_files", "node", $vsite_values['bio_nid']);
-          }
-          if (isset($vsite_values['cv_nid'])) {
-            file_usage_delete($cv_file_obj, "os_files", "node", $vsite_values['cv_nid']);
-          }
           file_usage_add($cv_file_obj, "os_files", "node", $gid);
         }
       }
@@ -531,7 +525,6 @@ function _replace_biocvs_with_pages($vsite_data) {
         'format' => 'full_html',
       ),
     );
-
     $vsite_values['bio_title'] = isset($vsite_values['bio_title']) ? $vsite_values['bio_title'] : "Bio";
 
     $bio_node = os_create_node($vsite_values['bio_title'], 'page', $vsite_values['uid'], NULL, $bio_body_options);
@@ -685,7 +678,6 @@ function _replace_biocvs_with_pages($vsite_data) {
                       if($existing_bio_widget) {
                         $vsite_values['bio_options'] = $existing_bio_widget->options;
                       }
-
                       $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $bio_node->nid, $bio_widget_created_flag);
 
                       $box_position = array(
