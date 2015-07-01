@@ -126,6 +126,7 @@ function cp_menu_type($form, &$form_state) {
   return $form;
 }
 
+
 /**
  * Verifying the user didn't reached the maximum menu items the DB can hold.
  */
