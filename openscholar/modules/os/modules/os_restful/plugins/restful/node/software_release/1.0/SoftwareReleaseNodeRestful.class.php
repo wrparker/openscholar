@@ -25,6 +25,9 @@ class SoftwareReleaseNodeRestful extends OsNodeRestfulBase {
    * @apiDescription Consume software release content.
    *
    * @apiParam {Number} id The software release ID
+   *
+   * @apiSuccess {Number} id    The software release ID.
+   * @apiSuccess {String} label The publication ID.
    */
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();
