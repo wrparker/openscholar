@@ -145,7 +145,7 @@ function cp_menu_title_validate($form, $form_state) {
   $item['menu_name'] = $form_state['object']['menu'];
   list(, $existing_menu) = _vsite_menu_prepare_menu_item($item, $vsite);
 
-  if (strlen(serialize($existing_menu)) > 24000) {
+  if (strlen(serialize($existing_menu)) > 65000) {
     form_set_error('', t('You have reached the maximum number of items for this menu.'));
   }
 }
