@@ -162,7 +162,7 @@ function os_basetheme_menu_link(array $vars) {
  */
 function os_basetheme_preprocess_node(&$vars) {
   // Event nodes, inject variables for date month and day shield
-  if ($vars['node']->type == 'event' && !$vars['page']) {
+  if ($vars['node']->type == 'event' && (!empty($vars['sv_list']) || !$vars['page'])) {
     $vars['event_start'] = array();
     $delta = 0;
     if (isset($vars['node']->date_id)) {
@@ -180,9 +180,42 @@ function os_basetheme_preprocess_node(&$vars) {
       $vars['event_start']['day'] = check_plain($date->format('d'));
       $vars['classes_array'][] = 'event-start';
 
+      // For events with a repeat rule we add the delta to the query string.
+      if ($vars['content']['field_date']['#items'][0]['rrule']) {
+        $vars['node_url'] .= '?delta=' . $delta;
+      }
+
       // Unset the date id to avoid displaying the first repeat in all the
       // event's results on the page.
       $vars['node']->date_id = NULL;
+    }
+  }
+  elseif ($vars['node']->type == 'event' && $vars['page'] && !empty($vars['content']['field_date']['#items'][0]['rrule'])) {
+    // We are in a page of a repeated event so we need to display the date
+    // according to the delta.
+    $delta = isset($_GET['delta']) ? $_GET['delta'] : 0;
+
+    // We move the wanted delta to be the first element in order to get the
+    // desired markup.
+    $vars['node']->field_date['und'][0] = $vars['node']->field_date['und'][$delta];
+
+    // Get the repeat rule.
+    $rule = theme_date_repeat_display(array(
+      'item' => array('rrule' => $vars['content']['field_date']['#items'][0]['rrule']),
+      'field' => field_info_field('field_date'),
+    ));
+
+    // Get the date field. The delta we want to display will be returned.
+    $field = field_view_field('node', $vars['node'], 'field_date', array('full'));
+
+    // Rebuild the markup for the date field.
+    $vars['content']['field_date'][0]['#markup'] = $rule . ' ' . $field[0]['#markup'];
+
+    // Don't display the repeats in full view mode.
+    foreach ($vars['content']['field_date'] as $index => $repeat ) {
+      if ($index && is_integer($index)) {
+        hide($vars['content']['field_date'][$index]);
+      }
     }
   }
 
@@ -195,6 +228,12 @@ function os_basetheme_preprocess_node(&$vars) {
         $vars['title_prefix']['#suffix'] = '<div class="toggle">' . $vars['title_prefix']['#suffix'] . '</div>';
       }
     }
+
+  }
+
+  // Show the body last in a presentation.
+  if ($vars['type'] == 'presentation' && $vars['view_mode'] == 'full') {
+    $vars['content']['body']['#weight'] = 999;
   }
 }
 
@@ -299,4 +338,30 @@ function os_basetheme_status_messages($vars) {
     $output .= "</div></div>";
   }
   return $output;
+}
+
+/**
+ * Implements theme_views_view_field.
+ *
+ * Here we add the delta to the query string for the node title's link and
+ * returning the new output.
+ */
+function os_basetheme_views_view_field($vars) {
+  $view = $vars['view'];
+  if ($view->name != 'os_events') {
+    return $vars['output'];
+  }
+
+  $field = $vars['field'];
+  if ($field->field != 'title') {
+    return $vars['output'];
+  }
+  $row = $vars['row'];
+
+  $options = array(
+    'query' => array(
+      'delta' => $row->field_data_field_date_delta,
+    ),
+  );
+  return l($row->node_title, 'node/' . $row->nid, $options);
 }

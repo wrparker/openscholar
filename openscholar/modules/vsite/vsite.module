@@ -2380,6 +2380,7 @@ function vsite_delete_request_submit($form, &$form_state) {
   $values = $form_state['values'];
   $values['user'] = $user;
   $values['node'] = $form_state['build_info']['args'][0];
+  $values['subject'] = variable_get('vsite_site_delete_subject', 'Site Deletion Request');
 
   // Send the e-mail in the requested user language.
   drupal_mail('vsite', 'vsite_delete', $to, $language, $values, $user->mail);

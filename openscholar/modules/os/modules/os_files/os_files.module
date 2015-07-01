@@ -204,6 +204,10 @@ function os_files_file_insert($file) {
       'entity_type' => 'file',
       'entity' => $file
     ));
+
+    // Create a dummy file_usage entry. It will be removed only when the file is
+    // deleted.
+    file_usage_add($file, 'os_files', 'node', $context['gid']);
   }
 }
 
@@ -1624,7 +1628,7 @@ function os_files_file_view($file, $view_mode, $langcode) {
         $img['#theme'] = 'image_style';
         $img['#style_name'] = 'os_files_large';
         $img['#attributes']['class'] = array();
-        $img['#path'] = $img['#file']->uri;
+        $img['#path'] = $file->uri;
         $content = array_merge(array('file' => $img), $content);//include embedded image
         $content['file-info']['file']['#style_name'] = 'os_files_large'; //600x600
         break;
@@ -2096,6 +2100,8 @@ function os_files_file_default_types_alter(&$types){
     'application/rtf',
     // *.csv',
     'text/csv',
+    // *.sas
+    'application/sas',
   );
 
   $types['document']->mimetypes = (empty($types['document']->mimetypes)) ? $document : array_merge($types['document']->mimetypes, $document);
@@ -2234,6 +2240,7 @@ function _os_files_extensions_from_type($type) {
       'wtt',
       'wwtfig',
       'csv',
+      'sas',
     );
 
     $types['executable'] = array(

@@ -1,4 +1,4 @@
-/* Typography */
+/* Typography  */
 body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
@@ -771,6 +771,7 @@ LIST OF POSTS - PERSON TEASER IN SIDEBAR
 
 .node-presentation .field-name-body {
   margin-bottom: 15px;
+  margin-top: 15px;
 }
 
 /* NODE CLASSES */

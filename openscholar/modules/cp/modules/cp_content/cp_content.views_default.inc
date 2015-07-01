@@ -809,11 +809,6 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'medium';
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['referencing_nodes']['id'] = 'referencing_nodes';
-  $handler->display->display_options['fields']['referencing_nodes']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['referencing_nodes']['field'] = 'referencing_nodes';
-  $handler->display->display_options['fields']['referencing_nodes']['label'] = 'Used in';
   /* Field: File: Edit link */
   $handler->display->display_options['fields']['edit']['id'] = 'edit';
   $handler->display->display_options['fields']['edit']['table'] = 'file_managed';
@@ -827,6 +822,12 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['delete']['field'] = 'delete';
   $handler->display->display_options['fields']['delete']['label'] = 'Delete';
   $handler->display->display_options['fields']['delete']['exclude'] = TRUE;
+  /* Field: File: Referencing content */
+  $handler->display->display_options['fields']['referencing_nodes']['id'] = 'referencing_nodes';
+  $handler->display->display_options['fields']['referencing_nodes']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['referencing_nodes']['field'] = 'referencing_nodes';
+  $handler->display->display_options['fields']['referencing_nodes']['label'] = 'Used in';
+  $handler->display->display_options['fields']['referencing_nodes']['element_label_colon'] = FALSE;
   /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
   $handler->display->display_options['fields']['nothing_1']['table'] = 'views';

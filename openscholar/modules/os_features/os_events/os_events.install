@@ -129,3 +129,55 @@ function os_events_update_7009() {
 function os_events_update_7010() {
   features_revert(array('os_events' => array('feeds_importer')));
 }
+
+/**
+ * Migrate the "Upcoming events" view to be a box instead.
+ */
+function os_events_update_7011() {
+  $overrides = db_select('spaces_overrides', 'so')
+    ->fields('so', array('object_id', 'value', 'id'))
+    ->condition('object_type', 'context')
+    ->condition('object_id', '%reaction:block', 'LIKE')
+    ->condition('value', '%views-os_events-block_2%', 'LIKE')
+    ->execute()
+    ->fetchAllAssoc('id');
+
+  foreach ($overrides as $override) {
+    $blocks = unserialize($override->value);
+
+    // In case the view is used, create a new block that will replace it.
+    if (isset($blocks['blocks']['views-os_events-block_2'])) {
+      $old_block = $blocks['blocks']['views-os_events-block_2'];
+      $blocks['blocks']['boxes-os_events_upcoming'] = array(
+        'module' => 'boxes',
+        'delta' => 'os_events_upcoming',
+        'region' => $old_block['region'],
+        'weight' => $old_block['weight'],
+      );
+      unset($blocks['blocks']['views-os_events-block_2']);
+      $override->value = serialize($blocks);
+    }
+
+    db_update('spaces_overrides')
+      ->fields(array('value' => $override->value))
+      ->condition('id', $override->id)
+      ->condition('object_type', 'context')
+      ->condition('object_id', $override->object_id)
+      ->execute();
+  }
+}
+
+/**
+ * Revert views to add the delta to event links.
+ */
+function os_events_update_7012() {
+  features_revert(array('os_events' => array('views')));
+}
+
+function os_events_update_7013() {
+  features_revert(array('os_events' => array('variable')));
+}
+
+function os_events_update_7014() {
+  features_revert(array('os_events' => array('variable')));
+}

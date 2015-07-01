@@ -279,6 +279,24 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I should see that the "([^"]*)" in the "([^"]*)" are collapsed$/
+   */
+  public function iShouldSeeTheItemsInTheAre($type, $location) {
+    switch ($location) {
+      case 'LOP':
+        $id = 'block-boxes-os-' . $type . '-sv-list';
+        break;
+    }
+
+    $page = $this->getSession()->getPage();
+    $element = $page->find('xpath', "//*[contains(@id, '{$id}')]//*[contains(@class, 'expanded')]");
+
+    if ($element) {
+      throw new Exception(sprintf("Some elements with %s are not collapsed", $location));
+    }
+  }
+
+  /**
    * @Given /^a node of type "([^"]*)" with the title "([^"]*)" exists in site "([^"]*)"$/
    */
   public function assertNodeTypeTitleVsite($type, $title, $site = 'john') {
@@ -308,6 +326,61 @@ class FeatureContext extends DrupalContext {
       new Step\When('I press "edit-biblio-next"'),
       new Step\When('I fill in "Title" with "'. time() . '"'),
       new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
+   * @When /^I create a new "([^"]*)" with title "([^"]*)" in the site "([^"]*)"$/
+   */
+  public function iCreateANewEventWithTitle($type, $title, $vsite) {
+    $tomorrow = time() + (24 * 60 * 60);
+    $entity = $this->createEntity($type, $title);
+    $entity->field_date['und'][0]['value'] = date('Y-m-d H:i:s');
+    $entity->field_date['und'][0]['value2'] = date('Y-m-d H:i:s', $tomorrow);
+    $wrapper = entity_metadata_wrapper('node', $entity);
+
+    // Set the group ref
+    $nid = FeatureHelp::getNodeId($vsite);
+    $wrapper->{OG_AUDIENCE_FIELD}->set(array($nid));
+    entity_save('node', $entity);
+  }
+
+  /**
+   * @When /^I create a new repeating event with title "([^"]*)" that repeats "([^"]*)" times$/
+   */
+  public function iCreateANewRepeatingEventWithTitle($title, $times) {
+    $tomorrow = time() + (24 * 60 * 60);
+    return array(
+      new Step\When('I visit "john/node/add/event"'),
+      new Step\When('I fill in "Title" with "' . $title . '"'),
+      new Step\When('I fill in "edit-field-date-und-0-value-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
+      new Step\When('I fill in "edit-field-date-und-0-value2-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
+      new Step\When('I check the box "edit-field-date-und-0-all-day"'),
+      new Step\When('I check the box "edit-field-date-und-0-show-repeat-settings"'),
+      new Step\When('I fill in "edit-field-date-und-0-rrule-count-child" with "' . $times . '"'),
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
+   * @When /^I should see the event "([^"]*)" in the LOP$/
+   */
+  public function iShouldSeeTheEventInTheLop($title) {
+    $page = $this->getSession()->getPage()->getContent();
+
+    $pattern = "/<div id='boxes-box-os_events_upcoming' class='boxes-box'>[\s\S]*" . $title . "[\s\S]*<\/div>/";
+    if (!preg_match($pattern, $page)) {
+      throw new Exception("The event '$title' was not found in the List of posts widget.");
+    }
+  }
+
+  /**
+   * @When /^I should see the date of the "([^"]*)" repeat of the event$/
+   */
+  public function iShouldSeeTheDateOfTheRepeatOfDate($repeat) {
+    $two_weeks_from_tmr = time() + ($repeat * 7 + 1) * (24 * 60 * 60);
+    return array(
+      new Step\When('I should see "' . date('l, F j, Y', $two_weeks_from_tmr) .'"'),
     );
   }
 
@@ -2052,6 +2125,88 @@ class FeatureContext extends DrupalContext {
     $this->assertSession()->statusCodeEquals(403);
   }
 
+  /*
+   * @Given /^I fill in the field "([^"]*)" with the node "([^"]*)"$/
+   *
+   * This step is used to fill in an autocomplete field.
+   */
+  public function iFillInTheFieldWithTheNode($id, $title) {
+    $nid = FeatureHelp::getNodeId($title);
+    $element = $this->getSession()->getPage();
+    $value = $title . ' (' . $nid . ')';
+    $element->fillField($id, $value);
+  }
+
+  /**
+   * Create an entity of a given type and title.
+   */
+  private function createEntity($type, $title) {
+    $values = array(
+      'type' => $type,
+      'uid' => 1,
+      'created' => time(),
+      'title' => $title,
+    );
+
+    // Create an event that ends tomorrow.
+    $entity = entity_create('node', $values);
+    return $entity;
+  }
+
+  /**
+   * @Given /^I should see "([^"]*)" in the "([^"]*)" column$/
+   */
+  public function iShouldSeeInTheColumn($value, $column) {
+    $index = 0;
+    switch ($column) {
+      case 'used in':
+        $index = 5;
+        break;
+    }
+    $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//tr[td[contains(., '{$value}')]]//td[{$index}]");
+    if (!$element) {
+      throw new Exception(sprintf("The value of %s was not found", $value));
+    }
+    if ($element->getText() != $value) {
+      throw new Exception(sprintf("The value for the %s column should be %s but it is %s", $column, $value, $element->getText()));
+    }
+  }
+
+  /**
+   * @Given /^I should see "([^"]*)" in the "([^"]*)" column for the row "([^"]*)"$/
+   */
+  public function iShouldSeeInTheColumnInTheRow($value, $column, $row) {
+    $index = 0;
+    switch ($column) {
+      case 'used in':
+        $index = 5;
+        break;
+    }
+    $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//tr[contains(., '{$row}')][td[contains(., '{$value}')]]//td[{$index}]");
+    if (!$element) {
+      throw new Exception(sprintf("The value of %s was not found", $value));
+    }
+    if ($element->getText() != $value) {
+      throw new Exception(sprintf("The value for the %s column should be %s but it is %s", $column, $value, $element->getText()));
+    }
+  }
+
+  /**
+   * @Given /^I should not see "([^"]*)" in the "([^"]*)" column for the row "([^"]*)"$/
+   */
+  public function iShouldNotSeeInTheColumnInTheRow($value, $column, $row) {
+    $index = 0;
+    switch ($column) {
+      case 'used in':
+        $index = 5;
+        break;
+    }
+    $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//tr[contains(., '{$row}')]//td[{$index}]");
+    if ($element->getText() == $value) {
+      throw new Exception(sprintf("The value for the %s column should not be %s", $column, $value));
+    }
+  }
+
   /**
    * @Given /^I should not find the text "([^"]*)"$/
    *
@@ -2077,8 +2232,25 @@ class FeatureContext extends DrupalContext {
    */
   public function iWaitForTheMediaBrowserToOpen($time) {
     $this->getSession()->wait($time * 1000);
-    if (!$elem = $this->getSession()->getPage()->find('css', '.ui-dialog.media-wrapper') || !$this-getSession()->getPage()->find('css', '.ui-dialog.media-wrapper .media-browser-panes')) {
+    if (!$elem = $this->getSession()->getPage()->find('css', '.ui-dialog.media-wrapper') || !$this->getSession()->getPage()->find('css', '.ui-dialog.media-wrapper .media-browser-panes')) {
       throw new Exception('The media browser failed to open.');
+    }
+  }
+
+  /**
+   * @Given /^I should find the text "([^"]*)"$/
+   *
+   * This step is used to for looking for text in the page while respecting
+   * the case sensitivity of the searched text.
+   */
+  public function iShouldFindTheText($text) {
+    $actual = $this->getSession()->getPage()->getText();
+    $actual = preg_replace('/\s+/u', ' ', $actual);
+    $regex  = '/'.preg_quote($text, '/').'/u';
+
+    if (!preg_match($regex, $actual)) {
+      $message = sprintf('The text "%s" did not appear in the text of this page, but it should have.', $text);
+      throw new Exception($message);
     }
   }
 
@@ -2139,11 +2311,40 @@ class FeatureContext extends DrupalContext {
     throw new \Exception('waitFor timed out.');
   }
 
-  /**
-   * @Then /I should see the media browser/
+  /*
+   * @Given /^I logout$/
    */
-  public function iShouldSeeTheMediaBrowser() {
+  public function iLogout() {
+    $this->visit('user/logout');
+  }
 
+  /**
+   * @When /^I remove the file "([^"]*)" from the node "([^"]*)" of type "([^"]*)"$/
+   */
+  public function iRemoveTheFileFromTheNode($filename, $title, $type) {
+    $nid = FeatureHelp::getNodeId($title);
+
+    $wrapper = entity_metadata_wrapper('node', $nid);
+
+    switch ($type) {
+      case "media gallery":
+        $field_name = 'media_gallery_file';
+        break;
+    }
+
+    // Remove the file from the field.
+    $new_files = array();
+    $files = $wrapper->{$field_name}->value();
+    foreach ($files as $file) {
+      if ($file['filename'] == $filename) {
+        continue;
+      }
+      $new_files[] = $file;
+    }
+
+    // Set the field again and save.
+    $wrapper->{$field_name}->set($new_files);
+    $wrapper->save();
   }
 
   /**
@@ -2172,6 +2373,44 @@ class FeatureContext extends DrupalContext {
   public function iClickOnTheTab($arg1) {
     $element = $this->getSession()->getPage()->find('xpath', "//*[.='{$arg1}']");
     $element->click();
+
+  }
+
+  /*
+   * @Given /^I am deleting the file "([^"]*)"$/
+   */
+  public function iAmDeletingTheFile($filename) {
+    $fid = FeatureHelp::getEntityID('file', $filename);
+    $file = file_load($fid);
+    file_delete($file);
+  }
+
+  /**
+   * @Given /^I should verify the file "([^"]*)" exists$/
+   */
+  public function iShouldVerifyTheFileExists($filename) {
+    $fid = FeatureHelp::getEntityID('file', $filename);
+
+    $result = db_select('file_usage', 'fu')
+      ->fields('fu')
+      ->condition('fu.module', 'os_files')
+      ->condition('fu.fid', $fid)
+      ->execute()
+      ->fetchAssoc();
+
+    if (empty($result)) {
+      throw new Exception(sprintf("No file usage was found for the file %s", $filename));
+    }
+  }
+
+  /**
+   * @Then /^I should see a table with the text "([^"]*)" in its header$/
+   */
+  public function iShouldSeeATableWithTheTextInItsHeader($text) {
+    $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//thead//tr//th[contains(., '{$text}')]");
+    if (!$element) {
+      throw new Exception(sprintf("The header of the table doesn't contain the text %s", $text));
+    }
   }
 
 }

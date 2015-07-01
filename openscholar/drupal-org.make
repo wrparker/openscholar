@@ -1,4 +1,4 @@
-;Drupal.org MakeFile for OpenScholar
+;Drupal.org Makefile for OpenScholar
 
 core = 7.x
 api = 2
@@ -24,9 +24,13 @@ projects[boxes][patch][] = "http://raw.github.com/openscholar/openscholar/b38919
 projects[boxes][patch][] = "https://www.drupal.org/files/1859150-1-boxes-strict_warning.patch"
 projects[boxes][patch][] = "https://www.drupal.org/files/issues/default_object_empty_value-2042101-3.patch"
 
+projects[cache_consistent][subdir] = "contrib"
+projects[cache_consistent][version] = 1.2
+
 projects[calendar][subdir] = "contrib"
 projects[calendar][version] = 3.5
 projects[calendar][patch][] = "http://raw.github.com/openscholar/openscholar/72d63ee3537c31505b7481975886ec13789feeb5/patches/calendar-fix-week-view-overflow.patch"
+projects[calendar][patch][] = "http://raw.github.com/openscholar/openscholar/b334cd4b6831a5a1869647b7cbaaec1e8058d9bc/patches/calendar.scroll_to_first_event.patch"
 
 projects[colorbox][subdir] = "contrib"
 projects[colorbox][version] = 2.5
@@ -34,6 +38,7 @@ projects[colorbox][version] = 2.5
 projects[comment_sources][subdir] = "contrib"
 projects[comment_sources][version] = 2.0
 projects[comment_sources][patch][] = "https://drupal.org/files/issues/22086870-comment-source-wrong-query-field-1.patch"
+projects[comment_sources][patch][] = "https://drupal.org/files/issues/change-submit-handler-index-2513794-2.patch"
 
 projects[context][subdir] = "contrib"
 projects[context][version] = 3.0-beta4
@@ -55,8 +60,7 @@ projects[ctools][patch][] = "http://drupal.org/files/ctools-plugin_extension-162
 projects[ctools][patch][] = "https://drupal.org/files/issues/2147905-allow-alter-with-more-context-1.patch"
 
 projects[date][subdir] = "contrib"
-projects[date][version] = 2.6
-projects[date][patch][] = "http://drupal.org/files/date-migrate_v24-1715700-1.patch"
+projects[date][version] = 2.8
 
 projects[date_ical][subdir] = "contrib"
 projects[date_ical][version] = 2.7
@@ -72,8 +76,7 @@ projects[disqus][version] = 1.9
 projects[disqus][patch][] = "http://drupal.org/files/comment_sources-disqus-2120703-1.patch"
 
 projects[dragndrop_upload][subdir] = "contrib"
-projects[dragndrop_upload][version] = 1.0-alpha1
-projects[dragndrop_upload][patch][] = "http://cgit.drupalcode.org/dragndrop_upload/patch/?id=164d2dd7526c297b544f5f367e48f5106f6bca5e"
+projects[dragndrop_upload][version] = 1.0-alpha2
 
 projects[dyntextfield][subdir] = "contrib"
 projects[dyntextfield][type] = module
@@ -124,10 +127,8 @@ projects[features][version] = 2.0
 projects[feeds][subdir] = "contrib"
 projects[feeds][version] = 2.0-alpha7
 
-projects[feeds_tamper‏][subdir] = "contrib"
-projects[feeds_tamper‏][type] = "module"
-projects[feeds_tamper‏][download][type] = "git"
-projects[feeds_tamper‏][download][url]="http://git.drupal.org/project/feeds_tamper.git"
+projects[feeds_tamper][subdir] = "contrib"
+projects[feeds_tamper][version] = 1.1
 
 projects[feeds_xpathparser][subdir] = "contrib"
 projects[feeds_xpathparser][download][type] = git
@@ -243,7 +244,7 @@ projects[module_filter][subdir] = "contrib"
 projects[module_filter][version] = 1.7
 
 projects[memcache][subdir] = "contrib"
-projects[memcache][version] = 1.1-beta5
+projects[memcache][version] = 1.5
 
 projects[migrate][subdir] = "contrib"
 projects[migrate][version] = 2.5
@@ -487,7 +488,7 @@ libraries[select2][download][url] = "https://github.com/ivaynberg/select2/archiv
 
 libraries[twitter-api-php][type] = "libraries"
 libraries[twitter-api-php][download][type] = "file"
-libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/master.zip"
+libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/1.0.3.zip"
 
 libraries[autopager][type] = "libraries"
 libraries[autopager][download][type] = "file"

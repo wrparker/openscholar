@@ -163,13 +163,17 @@ function os_sv_list_query_sv_list_biblio_alter(&$query) {
 function os_sv_list_query_sv_list_events_alter(SelectQueryInterface $query) {
   // fix this awful query
 
-  // then add the delta to the fields so we get a row for each unique nid-delta combination
-  // This tells EFQ how many results it actually has
-  // The table alias is derived from the delta group given in the conditions. We have to use the same
-  // alias, and not a different alias of the same table to get the correct results.
+  // Add the delta to the fields so we get a row for each unique nid-delta
+  // combination. This tells EFQ how many results it actually has. The table
+  // alias is derived from the delta group given in the conditions. We have to
+  // use the same alias, and not a different alias of the same table to get the
+  // correct results.
 
   // add the delta to the fields
-  $query->fields('field_data_field_date_delta_sv_list_events', array('delta'));
+  $query->fields('field_data_field_date1', array('delta'));
+
+  // Get the type of sort to use.
+  $sort_type = $query->getMetaData('sort_event');
 
   // If this query is used for the sv_list plugin, keep the sticky sort as is.
   $sv_list = $query->getMetaData('sv_list');
@@ -178,14 +182,14 @@ function os_sv_list_query_sv_list_events_alter(SelectQueryInterface $query) {
     $order = &$query->getOrderBy();
     $order = array(
       'node.sticky' => 'DESC',
-      'field_data_field_date_delta_sv_list_events.field_date_value' => 'ASC'
+      'field_data_field_date1.field_date_value' => $sort_type,
     );
   }
   else {
     // Sort on the right table.
     $order = &$query->getOrderBy();
     $order = array(
-      'field_data_field_date_delta_sv_list_events.field_date_value' => 'ASC'
+      'field_data_field_date_delta1.field_date_value' => $sort_type,
     );
   }
 
@@ -265,4 +269,30 @@ function os_sv_list_terms_element_validate($element, &$form_state) {
  */
 function os_sv_list_vocabs_content_type($form, $form_state) {
   return $form['options']['vocabs'];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_sv_list_form_spaces_features_form_alter(&$form, &$form_state) {
+  $form['#submit'][] = 'os_sv_list_form_spaces_features_form_submit';
+}
+
+/**
+ * Submit handler.
+ *
+ * Invalidate the os_boxes cache to make sure that apps that are now private
+ * won't display content in the LOP
+ */
+function os_sv_list_form_spaces_features_form_submit($form, &$form_state) {
+  $cid = 'os_boxes_cache:';
+  if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
+    $cid .= $vsite->id;
+  }
+
+  // Flush raw data.
+  cache_clear_all($cid, 'cache_os_boxes', TRUE);
+
+  // Flush assets.
+  cache_clear_all('assets:' . $cid, 'cache_os_boxes', TRUE);
 }

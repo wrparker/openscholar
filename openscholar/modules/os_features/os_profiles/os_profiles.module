@@ -545,6 +545,12 @@ function os_profiles_sync_profile_validate($form, &$form_state) {
       return;
     }
 
+    $request = drupal_http_request($form_state['values']['url']);
+      if ($request->code == 403) {
+        form_set_error('url', t('The profile cannot be synced: it seems that the profile you are trying to sync belong to a private site or is set to private on a public site.'));
+      return;
+    }
+      
     $headers = get_headers($form_state['values']['url']);
 
     //if (!in_array('X-Generator: Drupal 7 (http://drupal.org)', $headers)) {
