@@ -11,6 +11,12 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
    * @apiDescription Consume taxonomy term content.
    *
    * @apiParam {Integer} id The ID of the VSite
+   *
+   * @apiSuccess {Number} id    The term ID.
+   * @apiSuccess {String} label The term label.
+   * @apiSuccess {String} self  The direct url of the current end point.
+   * @apiSuccess {String} vocab The vocabulary end machine name.
+   * @apiSuccess {Number} vid   The vocabulary ID.
    */
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();

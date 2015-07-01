@@ -26,8 +26,22 @@ class SoftwareReleaseNodeRestful extends OsNodeRestfulBase {
    *
    * @apiParam {Number} id The software release ID
    *
-   * @apiSuccess {Number} id    The software release ID.
-   * @apiSuccess {String} label The publication ID.
+   * @apiSuccess {Number}   id                      The software release ID.
+   * @apiSuccess {String}   label                   The publication ID.
+   * @apiSuccess {object}   vsite                   The vsite object
+   * @apiSuccess {String}   vsite.title             Group name.
+   * @apiSuccess {Integer}  vsite.id                Group ID.
+   * @apiSuccess {Object}   software_release        The software project reference.
+   * @apiSuccess {Object}   software_release.id     Software project ID
+   * @apiSuccess {Object}   software_release.label  Software project label
+   * @apiSuccess {Bool}     recommended             If this release recommended or not
+   * @apiSuccess {String}   version                 The version of the release
+   * @apiSuccess {Object}   package                 The file object
+   * @apiSuccess {Object}   package.fid             File ID
+   * @apiSuccess {Object}   package.filemime        File filemime.
+   * @apiSuccess {Object}   package.name            File name.
+   * @apiSuccess {Object}   package.uri             URI of the file.
+   * @apiSuccess {Object}   package.url             File URL.
    */
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();
@@ -56,6 +70,8 @@ class SoftwareReleaseNodeRestful extends OsNodeRestfulBase {
         array($this, 'singleFileFieldDisplay'),
       ),
     );
+
+    unset($body);
 
     return $public_fields;
   }

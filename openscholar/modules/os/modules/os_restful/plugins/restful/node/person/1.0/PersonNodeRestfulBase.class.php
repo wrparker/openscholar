@@ -12,17 +12,20 @@ class PersonNodeRestfulBase extends OsNodeRestfulBase {
    *
    * @apiParam {Number} id The person ID
    *
-   * @apiSuccess {Number}   id        The publication ID.
-   * @apiSuccess {String}   label     Registration Date.
-   * @apiSuccess {Object}   vsite     The vsite object.
-   * @apiSuccess {String}   vsite.title     Group name.
-   * @apiSuccess {Integer}  vsite.id        Group ID.
-   * @apiSuccess {string}   body      The body of the publication.
-   * @apiSuccess {Integer}  files.fid       file ID.
-   * @apiSuccess {Integer}  files.filemime  Mime type.
-   * @apiSuccess {Integer}  files.name      File name.
-   * @apiSuccess {Integer}  files.uri       Uniform Resource Identifier.
-   * @apiSuccess {Integer}  files.url       The address url.
+   * @apiSuccess {Number}   id                  The publication ID.
+   * @apiSuccess {String}   label               Registration Date.
+   * @apiSuccess {Object}   vsite               The vsite object.
+   * @apiSuccess {String}   vsite.title         Group name.
+   * @apiSuccess {Integer}  vsite.id            Group ID.
+   * @apiSuccess {string}   body                The body of the publication.
+   * @apiSuccess {string}   address             Person address.
+   * @apiSuccess {string}   email               Email address.
+   * @apiSuccess {string}   first_name          First name.
+   * @apiSuccess {string}   middle_name         Middle name.
+   * @apiSuccess {string}   last_name           Last name.
+   * @apiSuccess {string}   phone               Phone number.
+   * @apiSuccess {string}   prefix              Full name prefix.
+   * @apiSuccess {String[]} professional_title  List of professional titles.
    */
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();

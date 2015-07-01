@@ -11,6 +11,12 @@ class OsVocabulary extends \RestfulEntityBase {
    * @apiDescription Consume vocabulary content.
    *
    * @apiParam {Integer} id The ID of the VSite
+   *
+   * @apiSuccess {Number} id            User ID.
+   * @apiSuccess {String} label         Vocabulary label.
+   * @apiSuccess {String} self          Direct url of the current end point.
+   * @apiSuccess {String} machine_name  Vocabulary machine name.
+   * @apiSuccess {Number} vsite         The vsite ID.
    */
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();

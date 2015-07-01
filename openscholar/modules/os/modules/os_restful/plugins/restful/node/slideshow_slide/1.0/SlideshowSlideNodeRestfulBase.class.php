@@ -11,6 +11,13 @@ class SlideshowSlideNodeRestfulBase extends OsNodeRestfulBase {
    * @apiDescription Consume slideshow content.
    *
    * @apiParam {Number} id The slideshow ID
+   *
+   * @apiSuccess {Number}   id            The slideshow ID.
+   * @apiSuccess {String}   label         Label of the slideshow.
+   * @apiSuccess {String}   self          The direct URl of the current end point.
+   * @apiSuccess {object}   vsite         The vsite object
+   * @apiSuccess {String}   vsite.title   Group name.
+   * @apiSuccess {Integer}  vsite.id      Group ID.
    */
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();
