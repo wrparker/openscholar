@@ -183,7 +183,7 @@ class sv_list_node_event extends sv_list_plugin  {
    * Ensures that all sort options have a set sorting type
    */
   public function sort_alter($options, EntityFieldQuery $efq) {
-    if (in_array($options['sort_by'], array('sort_event_desc', 'sort_event_asc'))) {
+    if ($options['content_type'] != 'events' || in_array($options['sort_by'], array('sort_event_desc', 'sort_event_asc'))) {
       return;
     }
 
@@ -287,6 +287,8 @@ class sv_list_node_event extends sv_list_plugin  {
    *   Number of query results.
    */
   public function get_number_of_results() {
-    return count($this->query->ordered_results);
+    if (isset($this->query)) {
+      return count($this->query->ordered_results);
+    }
   }
 }
