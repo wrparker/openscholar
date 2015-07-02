@@ -896,6 +896,7 @@ div[aria-describedby^="event-popover-"] .ui-widget-header .ui-state-default {
 
 div[id^=event-popover] .event-title a {
   outline: none;
+  color: #215990;
 }
 
  /** MODAL OVERRIDES for OS ORG ROADMAP PAGE **/
