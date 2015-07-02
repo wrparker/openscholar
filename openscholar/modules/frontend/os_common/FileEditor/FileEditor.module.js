@@ -88,19 +88,6 @@
                   scope.showWarning = false;
                   scope.replaceSuccess = true;
 
-                  // force the preview image to be updated
-                  var iframe = document.createElement('iframe'),
-                    src = jQuery(result.data[0].preview).find('img').attr('src');
-
-                  iframe.style.display = 'none';
-                  function reload() {
-                    this.contentWindow.location.reload(true);
-                    this.removeEventListener('load', reload, false);
-                    this.parentElement.removeChild(this);
-                  }
-                  iframe.addEventListener('load', reload, false);
-                  document.body.appendChild(iframe);
-
                   $timeout(function () {
                     scope.replaceSuccess = false;
                   }, 5000);
