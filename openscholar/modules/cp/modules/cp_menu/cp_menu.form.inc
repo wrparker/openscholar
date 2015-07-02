@@ -27,13 +27,6 @@ function cp_menu_build_form($form, $form_state, $menu = ''){
 
 
   foreach ($menus as $m => $title) {
-
-    if (cp_menu_menu_reached_size($m)) {
-      $args = array(
-        '@menu' => $title,
-      );
-      drupal_set_message(t('You have reached the maximum number of items for the menu @menu', $args), 'warning');
-    }
     $form['menus'][$m] = array(
       '#weight' => (($is_active && $menu == $m) ? 1 : $weight ++),
       '#hidden' => ($is_active && $menu != $m),
@@ -202,9 +195,6 @@ function theme_cp_menu_table($variables){
   $rows = array();
   foreach ( element_children($table_data) as $d ) {
     $link = l(t('+ Add new link'),'cp/build/menu/link/new/'.$d,array('attributes' => array('title' => 'Add a new menu item.', 'class' => array('add-new-link'))));
-    if (cp_menu_menu_reached_size($d)) {
-      $link = '';
-    }
     $extra_classes = array();
     if ($table_data[$d]['#hidden']) {
       $extra_classes[] = 'hidden';
