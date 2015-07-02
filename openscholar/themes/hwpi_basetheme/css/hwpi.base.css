@@ -284,6 +284,12 @@ ol.search-results li.search-result:last-child {
   border-color: #e5e5e3;
 }
 
+.calendar-calendar .week-view div.single-day .half-hour,
+.calendar-calendar .day-view div.single-day .half-hour {
+ {
+   border-color: #FFF;
+ }
+
 .calendar-calendar td.empty {
   color: #303030;
 }
