@@ -135,7 +135,7 @@
     }]);
 
   function getExtension(url) {
-    return url.slice(url.lastIndexOf('.')+1).toLowerCase();
+    return url.slice(url.lastIndexOf('.')+1, (url.lastIndexOf('?') != -1)?url.lastIndexOf('?'):url.length).toLowerCase();
   }
 
 })(jQuery);
