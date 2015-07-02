@@ -280,9 +280,7 @@ ol.search-results li.search-result:last-child {
 }
 
 .calendar-calendar td,
-.calendar-calendar td.empty,
-.calendar-calendar .week-view div.single-day .half-hour,
-.calendar-calendar .day-view div.single-day .half-hour {
+.calendar-calendar td.empty {
   border-color: #e5e5e3;
 }
 
@@ -456,11 +454,6 @@ ol.search-results li.search-result:last-child {
   padding-top: 0;
 }
 
-.calendar-calendar .week-view div.single-day .half-hour, 
-.calendar-calendar .day-view div.single-day .half-hour {
-  height: 50%;
-
-}
 
 /* Views Node Lists */
 
