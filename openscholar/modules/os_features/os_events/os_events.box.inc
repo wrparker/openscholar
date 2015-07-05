@@ -25,7 +25,7 @@ function os_events_default_box() {
     'more_link' => 'calendar',
     'pager' => 0,
     'number_of_items' => '6',
-    'sort_by' => 'sort_event',
+    'sort_by' => 'sort_event_asc',
   );
   $export['os_events_upcoming'] = $box;
 
