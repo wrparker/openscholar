@@ -54,10 +54,37 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
 
   protected function checkEntityAccess($op, $entity_type, $entity) {
     $request = $this->getRequest();
+
     if ($request['vsite']) {
       spaces_set_space(spaces_load('og', $request['vsite']));
     }
-    return parent::access();
+
+    if (empty($entity->nid)) {
+      // This is still a new node. Skip.
+      return;
+    }
+
+    if ($is_group = in_array($entity->type, array('personal', 'project', 'department'))) {
+      $group = $entity;
+    }
+    else {
+      $wrapper = entity_metadata_wrapper('node', $entity);
+      $group = $wrapper->{OG_AUDIENCE_FIELD}->get(0)->value();
+    }
+
+    if (empty($request['vsite'])) {
+      spaces_set_space(spaces_load('og', $group->nid));
+    }
+
+    $access = vsite_access_node_access($group, 'view', $this->getAccount()) == NODE_ACCESS_DENY ? FALSE : TRUE;
+
+    if ($is_group) {
+      // In addition to the node access check, we need to see if the user can
+      // manage groups.
+      return $access && og_user_access('node', $entity->nid, 'administer users', $this->getAccount());
+    }
+
+    return $access;
   }
 
   /**
