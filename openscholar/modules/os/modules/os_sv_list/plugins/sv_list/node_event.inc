@@ -66,7 +66,7 @@ class sv_list_node_event extends sv_list_plugin  {
   /**
    * @function query_alter().
    */
-  public function query_alter(&$options, EntityFieldQuery $efq) {
+  public function query_alter($options, $efq) {
     if ($options['content_type'] != 'event') {
       return;
     }
@@ -182,7 +182,7 @@ class sv_list_node_event extends sv_list_plugin  {
    *
    * Ensures that all sort options have a set sorting type
    */
-  public function sort_alter($options, EntityFieldQuery $efq) {
+  public function sort_alter($options, $efq) {
     if ($options['content_type'] != 'events' || in_array($options['sort_by'], array('sort_event_desc', 'sort_event_asc'))) {
       return;
     }
