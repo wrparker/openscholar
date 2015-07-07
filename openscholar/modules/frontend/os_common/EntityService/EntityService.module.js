@@ -132,24 +132,37 @@
             })
         };
 
-        this.edit = function (entity) {
+        this.edit = function (entity, ignore) {
           if (!entity[idProp]) {
             this.add(entity);
             return;
           }
+          ignore = ignore || [];
+          ignore.push(idProp);
+
           var k = findByProp(idProp, entity[idProp]),
             url = [restPath, entityType, entity[idProp]],
-            data = getDiff(ents[k], entity);
+            data = getDiff(ents[k], entity, ignore);
 
-          return $http.patch(url.join('/'), data)
-            .success(function (resp) {
-              var entity = resp.data[0];
+          if (data.length) {
+            delete data.length;
 
-              ents.splice(k, 1, entity);
+            return $http.patch(url.join('/'), data)
+              .success(function (resp) {
+                var entity = resp.data[0];
 
-              $rootScope.$broadcast(eventName + '.update', entity);
-            })
+                ents.splice(k, 1, entity);
 
+                $rootScope.$broadcast(eventName + '.update', entity);
+              });
+          }
+          else {
+            var defer = $q.defer();
+            setTimeout(function () {
+              defer.resolve(false);
+            }, 1);
+            return defer.promise;
+          }
         };
 
         this.delete = function (entity) {
@@ -170,14 +183,17 @@
         }
       };
 
-      function getDiff(oEntity, nEntity) {
-        var diff = {};
+      function getDiff(oEntity, nEntity, ignore) {
+        var diff = {},
+          numProps = 0;
 
         for (var k in oEntity) {
-          if (!compareProps(oEntity[k], nEntity[k])) {
+          if (ignore.indexOf(k) == -1 && !compareProps(oEntity[k], nEntity[k])) {
             diff[k] = nEntity[k];
+            numProps++;
           }
         }
+        diff.length = numProps;
 
         return diff;
       }
@@ -198,12 +214,21 @@
    */
   function compareProps(prop1, prop2) {
     if (typeof prop1 == 'object') {
-      if (prop1 instanceof Array) {
+      if (prop1 instanceof Array && prop2 instanceof Array) {
         return arrayEquals(prop1, prop2);
       }
       else if (prop1 == null && prop2 == null) {
         return true;
       }
+      // rest apis return 'null' instead of an empty array
+      // some widgets convert that into an empty array, and thus we need to check here
+      else if (prop1 == null && prop2 instanceof Array && prop2.length == 0) {
+        return true;
+      }
+      else if (prop2 == null && prop1 instanceof Array && prop1.length == 0) {
+        return true;
+      }
+      // if neither property is an array, return false as usual
       else if (prop1 == null || prop2 == null) {
         return false;
       }

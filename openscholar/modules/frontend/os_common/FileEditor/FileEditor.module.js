@@ -106,8 +106,13 @@
           }
 
           scope.save = function () {
-            fileService.edit(scope.file).then(function() {
-              scope.onClose({saved: true});
+            fileService.edit(scope.file, ['preview']).then(function(result) {
+                if (result) {
+                  scope.onClose({saved: true});
+                }
+                else {
+                  scope.onClose({saved: false});
+                }
             },
             function() {
               console.log('error happened');

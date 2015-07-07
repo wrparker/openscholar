@@ -396,11 +396,6 @@
       $scope.selected_file = angular.copy(service.get(fid));
     };
 
-    // file edit form methods
-    $scope.save = function() {
-      service.edit($scope.selected_file);
-    };
-
     $scope.deleteConfirmed = function() {
       service.delete($scope.selected_file)
         .then(function (resp) {
