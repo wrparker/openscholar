@@ -77,14 +77,19 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
     }
 
     $access = vsite_access_node_access($group, 'view', $this->getAccount()) == NODE_ACCESS_DENY ? FALSE : TRUE;
+    $manager = og_user_access('node', $entity->nid, 'administer users', $this->getAccount());
 
     if ($is_group) {
       // In addition to the node access check, we need to see if the user can
       // manage groups.
-      return $access && og_user_access('node', $entity->nid, 'administer users', $this->getAccount());
+      return $manager && $access;
     }
-
-    return $access;
+    else {
+      $app = os_get_app_by_bundle($entity->type);
+      $space = spaces_get_space();
+      $application_settings = $space->controllers->variable->get('spaces_features');
+      return $application_settings[$app] == 1 ? $access : $access && $manager;
+    }
   }
 
   /**
