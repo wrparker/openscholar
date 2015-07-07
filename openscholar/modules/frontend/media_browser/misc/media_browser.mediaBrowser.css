@@ -58,13 +58,14 @@
 .media-browser-pane .embed-failure {
   position: absolute;
   top: 30%;
-  left: calc(50% - (451px / 2));
+  left: calc(50% - (500px / 2));
   background-color: red;
   color: white;
   padding: 10px;
   padding-left: 40px;
   border: 2px solid darkred;
   cursor: pointer;
+  width: 446px;
 }
 
 .media-browser-pane .embed-failure .error-icon {
