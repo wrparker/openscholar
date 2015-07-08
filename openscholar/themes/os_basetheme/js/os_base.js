@@ -16,4 +16,13 @@ Drupal.behaviors.osBase_skipLinkFocus = {
 };
 
 
-
+jQuery(document).ready(function() {
+jQuery(".cal-export").click(function(){
+    jQuery(".attachment.attachment-before ul").slideToggle();
+    jQuery(".os_events_export_links .last").slideToggle();
+    
+    
+    
+    
+});
+});
