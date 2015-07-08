@@ -575,4 +575,39 @@ trait RestfulTrait {
       }
     }
   }
+
+  /**
+   * @Given /^I consume "([^"]*)" as "([^"]*)"$/
+   */
+  public function iConsumeAs($enpdoint, $account) {
+    $token = $this->restLogin($account);
+    $this->results = $this->invokeRestRequest('get', $this->locatePath($enpdoint), ['access_token' => $token], [], TRUE);
+  }
+
+  /**
+   * @Given /^I verify the request "([^"]*)"$/
+   */
+  public function iVerifyTheRequest($status) {
+    if ($status == 'passed') {
+      if (!($this->results instanceof ResponseInterface) || $this->results->getStatusCode() != 200) {
+        throw new Exception('The last REST request did not passed');
+      }
+    }
+    else {
+      if (!is_string($this->results)) {
+        throw new Exception('The last REST request did not failed');
+      }
+    }
+  }
+
+  /**
+   * @Given /^I define "([^"]*)" as a "([^"]*)"$/
+   */
+  public function iDefineAsA($group, $access_level) {
+    $nid = FeatureHelp::getNodeId($group);
+    $level = $access_level == 'private' ? VSITE_ACCESS_PRIVATE : VSITE_ACCESS_PUBLIC;
+    $wrapper = entity_metadata_wrapper('node', $nid);
+    $wrapper->{VSITE_ACCESS_FIELD}->set($level);
+    $wrapper->save();
+  }
 }

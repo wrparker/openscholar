@@ -96,9 +96,10 @@ class OsRestfulVariables extends OsRestfulSpaces {
    */
   private function blackList() {
     return array(
-      'spaces_features', 'robotstxt', 'os_mailchimp_vsite_api_key', 'os_ga_google_analytics_id',
-      'vsite_private', 'cp_admin_menu', 'vsite_domain_shared', 'vsite_head_link_rel_author',
-      'vsite_head_link_rel_publisher',
+      'spaces_features', 'robotstxt', 'os_mailchimp_vsite_api_key',
+      'os_ga_google_analytics_id', 'vsite_private', 'cp_admin_menu',
+      'vsite_domain_shared', 'vsite_head_link_rel_author',
+      'vsite_head_link_rel_publisher', 'spaces_preset_og', 'os_menus',
     );
   }
 
