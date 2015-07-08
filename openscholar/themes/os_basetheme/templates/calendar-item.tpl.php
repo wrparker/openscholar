@@ -69,6 +69,6 @@ $index = 0;
   <?php if (!empty($item->popover_fields['event_location'])) : ?>
     <div class="event-location"><span><?php print t('Location: '); ?></span><?php print $item->popover_fields['event_location']; ?></div>
   <?php endif;?>
-
   <div class="popover-pointer"></div>
 </div>
+
