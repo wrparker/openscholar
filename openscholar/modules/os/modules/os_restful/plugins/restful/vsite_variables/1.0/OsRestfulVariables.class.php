@@ -108,6 +108,6 @@ class OsRestfulVariables extends OsRestfulSpaces {
   protected function queryForListFilter(\SelectQuery $query) {
     parent::queryForListFilter($query);
 
-    $query->condition('object_id', $this->blackList(), 'IN');
+    $query->condition('object_id', $this->blackList(), 'NOT IN');
   }
 }
