@@ -15,7 +15,7 @@ class OsRestfulBoxes extends \OsRestfulSpaces {
    */
   public function checkGroupAccess() {
     if (parent::checkGroupAccess()) {
-      return;
+      return TRUE;
     }
 
     $account = $this->getAccount();

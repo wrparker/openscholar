@@ -18,7 +18,7 @@ class OsRestfulVariables extends OsRestfulSpaces {
     $account = $this->getAccount();
 
     if (user_access('administer group', $account)) {
-      return;
+      return TRUE;
     }
 
     if ($this->group->author->getIdentifier() != $account->uid) {
