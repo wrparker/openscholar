@@ -1170,6 +1170,10 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
       // Use custom registration settings.
       $form['#registration_settings'] = os_events_registration_repeating_entity_settings($registration->entity_id, $registration->entity_type, $date[$delta]['value']);
 
+      //Set the default in the form
+      $form['field_repeating_event_date']['und'][0]['value']['#default_value'] = $date[$delta]['value'];
+      $form['field_repeating_event_date']['#access'] = FALSE;
+
       $form['field_repeating_event_date_text'] = array(
         '#type' => 'item',
         '#markup' => '<span class="date-display-single">'. t('On @date', array('@date' => date('l, F j, Y', strtotime($date[$delta]['value'].' UTC'))))."</span>",
@@ -1182,6 +1186,9 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
     '#type' => 'value',
     '#value' => 'registration_registrant_type_anon',
   );
+
+  //Don't show the state dropdown
+  $form['state']['#access'] = FALSE;
 
   $form['actions']['cancel']['#access'] = FALSE;
   $form['actions']['submit']['#value'] = t('Signup');
@@ -1221,18 +1228,74 @@ function os_events_preprocess_table(&$variables) {
     return;
   }
 
+  $event = $menu['page_arguments'][1];
+  $repeating = $event->field_date['und'][0]['rrule'];
+  if ($repeating && isset($_GET['delta'])) {
+    $delta = intval($_GET['delta']);
+    $date = field_get_items('node', $event, 'field_date');
+    $date = $date[$delta]['value'];
+  }
+
+
   // Change the title of the registrations table.
-  $variables['caption'] = t('List of registrations for %title.', array(
+  $variables['caption'] = t('List of registrations for %multiple %title.', array(
+    '%multiple' => ($repeating)? (isset($date)?date('l, F j, Y', strtotime($date.' UTC'))." of":"all occurances of"):"",
     '%title' => entity_label('node', $menu['map'][1]),
   ));
 
-  // Remove the "count" and the "states" from the table head.
-  unset($variables['header'][0], $variables['header'][4], $variables['header'][6]);
+  if ($repeating && !isset($date)) {
+    ctools_include('jump-menu');
+    $date = field_get_items('node', $event, 'field_date');
 
-  // Remove the "count" and the "states" from each table row.
-  foreach (array_keys($variables['rows']) as $delta) {
-    unset($variables['rows'][$delta][0], $variables['rows'][$delta][4], $variables['rows'][$delta][6]);
+    $form_state = array();
+    foreach ($date as $delta => $field_date) {
+      $options[url($_GET['q'],array('query' => array('delta' => $delta)))] = date('l, F j, Y', strtotime($field_date['value'].' UTC'));
+    }
+    $settings = array(
+      'choose' => t('-- Go to a specific date instead --'),
+    );
+    $form = ctools_jump_menu($form, $form_state, $options, $settings);
+    $variables['caption'] .= drupal_render($form);
   }
+
+  // Remove the "id", "user", "count" and the "states" from the table head.
+  unset($variables['header'][0], $variables['header'][2], $variables['header'][4], $variables['header'][6]);
+
+  // Remove the "id", "user", "count" and the "states" from each table row.
+  foreach (array_keys($variables['rows']) as $delta) {
+    unset($variables['rows'][$delta][0], $variables['rows'][$delta][2], $variables['rows'][$delta][4], $variables['rows'][$delta][6]);
+  }
+}
+
+/**
+ * Implements hook_entity_query_alter().
+ */
+function os_events_entity_query_alter( $query) {
+
+  $menu = menu_get_item();
+  if ($menu['path'] != 'node/%/registrations' || !is_object($menu['page_arguments'][1])) {
+    return;
+  }
+
+  $event = $menu['page_arguments'][1];
+  $repeating = $event->field_date['und'][0]['rrule'];
+
+  //Is this the registration list EFQ
+  if(!$repeating || empty($query->entityConditions) || $query->entityConditions['entity_type']['value'] != 'registration') {
+    return;
+  }
+
+  if(isset($_GET['delta'])) {
+    $delta = intval($_GET['delta']);
+    $date = field_get_items('node', $event, 'field_date');
+    $date = $date[$delta]['value'];
+    $query->fieldCondition('field_repeating_event_date', 'value', $date);
+  } else {
+    // @todo we don't have a delta
+  }
+
+
+
 }
 
 /**
