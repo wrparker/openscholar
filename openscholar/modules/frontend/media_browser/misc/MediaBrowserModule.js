@@ -9,7 +9,7 @@
     .run(['mbModal', function (mbModal) {
 
       // if the File object is not supported by this browser, fallback to the original media browser
-      if (typeof window.File != 'undefined') {
+      if (mbModal.requirementsMet()) {
         Drupal.media = Drupal.media || {};
         Drupal.media.popups = Drupal.media.popups || {};
         var oldPopup = Drupal.media.popups.mediaBrowser;
@@ -545,24 +545,31 @@
       }
 
       this.open = function (params) {
-        params = jQuery.extend(true, {}, this.defaultParams(), params);
+        var defaults = this.defaultParams(),
+          nparams = {
+            dialog: angular.extend([], defaults.dialog, params.dialog),
+            browser: angular.extend({}, defaults.browser, params.browser),
+            onSelect: params.onSelect || defaults.onSelect,
+            types: params.types || defaults.types
+        };
+
         ModalService.showModal({
           templateUrl: rootPath+'/templates/browser.html?vers='+Drupal.settings.version.mediaBrowser,
           controller: 'BrowserCtrl',
           inputs: {
-            params: params
+            params: nparams
           }
         }).then(function (modal) {
-          modal.element.dialog(params.dialog);
+          modal.element.dialog(nparams.dialog);
           modal.close.then(function (result) {
             // run the function passed to us
             if (Array.isArray(result)) {
               if (result.length) {
-                params.onSelect(result);
+                nparams.onSelect(result);
               }
             }
             else if (result) {
-              params.onSelect(result);
+              nparams.onSelect(result);
             }
           });
         });
