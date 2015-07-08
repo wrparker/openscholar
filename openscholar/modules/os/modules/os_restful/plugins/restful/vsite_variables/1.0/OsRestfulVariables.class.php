@@ -87,4 +87,27 @@ class OsRestfulVariables extends OsRestfulSpaces {
     $controller = $this->space->controllers->{$this->objectType};
     $controller->del($this->object->object_id);
   }
+
+  /**
+   * Keep a list of the object we don't want to show.
+   *
+   * @return array
+   *   Array of variables names.
+   */
+  private function blackList() {
+    return array(
+      'spaces_features', 'robotstxt', 'os_mailchimp_vsite_api_key', 'os_ga_google_analytics_id',
+      'vsite_private', 'cp_admin_menu', 'vsite_domain_shared', 'vsite_head_link_rel_author',
+      'vsite_head_link_rel_publisher',
+    );
+  }
+
+  /**
+   * Filtering the variables we don't want to show.
+   */
+  protected function queryForListFilter(\SelectQuery $query) {
+    parent::queryForListFilter($query);
+
+    $query->condition('object_id', $this->blackList(), 'IN');
+  }
 }
