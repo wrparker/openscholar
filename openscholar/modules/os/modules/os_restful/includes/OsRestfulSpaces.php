@@ -43,6 +43,9 @@ abstract class OsRestfulSpaces extends \OsRestfulDataProvider {
   abstract public function updateSpace();
   abstract public function deleteSpace();
 
+  /**
+   * {@inheritdoc}
+   */
   public function access() {
     return $this->checkGroupAccess();
   }
