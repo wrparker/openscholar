@@ -772,7 +772,7 @@ function os_update_7038(&$sandbox) {
       $sandbox['#finished'] = 0.0;
     }
 
-    $vsites = array_splice($sandbox['dataset'], 0, 10);
+    $vsites = array_splice($sandbox['dataset'], 0, 100);
 
     $sandbox['notices'] .= _replace_biocvs_with_pages($vsites);
     $sandbox['completed'] += count($vsites);
