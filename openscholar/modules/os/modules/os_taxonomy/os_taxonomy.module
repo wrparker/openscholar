@@ -503,7 +503,7 @@ function theme_os_taxonomy_vocabulary_item_list($variables) {
       }
 
       // Handle events.
-      if (strpos(current($options['bundles']), 'event') !== FALSE) {
+      if (is_array($options['bundles']) && strpos(current($options['bundles']), 'event') !== FALSE) {
         // Get the term alias and remove the PURL from the alias.
         $term_alias = drupal_lookup_path('alias', 'taxonomy/term/' . $term->tid);
         $parts = explode('/', $term_alias);
@@ -606,7 +606,7 @@ function os_taxonomy_is_tagged_tree($term, $node_bundles, $depth = NULL, &$retur
  *    Referenced array of the options variable from the theme functions.
  */
 function os_taxonomy_get_prefix_path(&$options) {
-  if (!count($options['bundles'])) {
+  if (!count($options['bundles']) || !is_array($options['bundles'])) {
     return;
   }
   $map = features_get_component_map('node');
@@ -1607,6 +1607,10 @@ function os_taxonomy_terms_determine_sort($terms) {
  * avoid collating files and nodes on a term page unless absolutely necessary.
  */
 function _os_taxonomy_bundle_entities($bundles = array()) {
+  if (!is_array($bundles)) {
+    return;
+  }
+
   $ret = array();
   $bundle_functions = array('node' => 'os_get_bundles', 'file' => 'os_files_get_bundles');
 
