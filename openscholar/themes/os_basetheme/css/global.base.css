@@ -220,6 +220,14 @@ a img {
 .sv-list-image.sv-list-view-teaser.sv-list-layout-grid .content {
     display: block;
 }
+#content-column .block-boxes-os_boxes_columns .sv-list-video.sv-list-view-teaser .file.file-video,
+#content-column .block-boxes-os_boxes_columns .sv-list-image.sv-list-view-teaser .file.file-image {
+    margin-bottom: 10px;
+}
+#content-column .block-boxes-os_boxes_columns .sv-list-video.sv-list-view-teaser .file-info,
+#content-column .block-boxes-os_boxes_columns .sv-list-image.sv-list-view-teaser .file-info {
+    clear: both;
+}
 .block-boxes-os_sv_list_file .file img {
     margin-right: 15px;
     display: block;

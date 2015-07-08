@@ -67,12 +67,11 @@ class os_boxes_site_info extends os_boxes_default {
       '#description' => t('Ex. Cambridge, MA 02138'),
     );
 
-    $form['contact_anonymous'] = array(
+    $form['contact'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Enable contact form for Logged Out users.'),
-      '#default_value' => variable_get('vsite_users_contact_form_anonymous', true),
-      '#description' => t('Will print an (email) link to your contact form when a visitor is not logged in.
-        Logged in users will always see the link.'),
+      '#title' => t('Enable contact form.'),
+      '#default_value' => variable_get('show_email', variable_get('vsite_users_contact_form_anonymous', TRUE)),
+      '#description' => t('Will print an (email) link to your contact form.'),
     );
 
     $form['submit'] = array(
@@ -95,7 +94,7 @@ class os_boxes_site_info extends os_boxes_default {
     }
     $block = parent::render();
 
-    $anon_contact = variable_get('vsite_users_contact_form_anonymous', true);
+    $contact = variable_get('show_email', variable_get('vsite_users_contact_form_anonymous', TRUE));
     if (module_exists('vsite') && $vsite = spaces_get_space()) {
       $group = $vsite->group;
       $addr = field_get_items('node', $group, 'field_site_address');
@@ -109,14 +108,13 @@ class os_boxes_site_info extends os_boxes_default {
       ));
     }
 
-    $output = '';
     $tags = array('br', 'a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd');
 
     $output = '<h1>'.l($this->options['site_title'], '<front>').'</h1>
     '.(!empty($this->options['descrip'])?'<h2>'.filter_xss($this->options['descrip'], $tags).'</h2>':'').'
     <p>'.((!empty($this->options['address1']) || !empty($this->options['address2']))?
         filter_xss($this->options['address1']).'<br>'.filter_xss($this->options['address2']):'').'
-    '.((user_is_logged_in() || $anon_contact)?l('(email)', 'contact_owner'):'').'</p>';
+    '. ($contact ? l('(email)', 'contact_owner') : '' . '</p>');
 
     $block['content'] = $output;
     return $block;
@@ -144,7 +142,7 @@ function os_boxes_site_info_submit($form, &$form_state) {
 
     try {
       node_save($node);
-      $space->controllers->variable->set('vsite_users_contact_form_anonymous', $form_state['values']['contact_anonymous']);
+      $space->controllers->variable->set('show_email', $form_state['values']['contact']);
     }
     catch (Exception $e) {
       drupal_set_message(t('Error saving site information. Contact your site administrator.'), 'error');
@@ -153,6 +151,6 @@ function os_boxes_site_info_submit($form, &$form_state) {
   }
   else {
     boxes_box_form_submit($form, $form_state);
-    variable_set('vsite_users_contact_form_anonymous', $form_state['values']['contact_anonymous']);
+    variable_set('show_email', $form_state['values']['contact']);
   }
 }

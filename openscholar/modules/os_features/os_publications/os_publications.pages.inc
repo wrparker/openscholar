@@ -36,28 +36,21 @@ function os_publications_overview() {
   // handle caching
   //cache_set($ckey, $output, 'cache_biblio_lists');
 
-  // Change the page title to match the menu entry or to the filter value if used.
-  if (empty($output['biblio_page']['header']['export_links']['#filter'])) {
+  // We try to match the filter to a taxonomy term path.
+  $path = str_replace('publications', vsite_get_purl(), $_GET['q']);
+  $source = drupal_lookup_path('source', $path);
+  if (strpos($source, 'taxonomy/term') === 0) {
+    // It is a term, so use the name of the term as the title.
+    $tid = str_replace('taxonomy/term/', '', $source);
+    $term = taxonomy_term_load($tid);
+    $filter_value = $term->name;
+    drupal_set_title(ucfirst($filter_value));
+  }
+  else {
+    // Change the page title to match the menu entry.
     ctools_include('menu', 'os');
     $menu_item = os_menu_load_link_path($_GET['q']);
     drupal_set_title($menu_item['title']);
-  }
-  else {
-    // We try to match the filter to a taxonomy term path.
-    $path = str_replace('publications', vsite_get_purl(), $_GET['q']);
-    $source = drupal_lookup_path('source', $path);
-    if (strpos($source, 'taxonomy/term') === 0) {
-      // It is a term, so use the name of the term as the title.
-      $tid = str_replace('taxonomy/term/', '', $source);
-      $term = taxonomy_term_load($tid);
-      $filter_value = $term->name;
-    }
-    else {
-      // No term was matched to the path so just display the filter value.
-      $filter_value = reset($output['biblio_page']['header']['export_links']['#filter']['f']);
-      $filter_value = str_replace('-', ' ', $filter_value);
-    }
-    drupal_set_title(ucfirst($filter_value));
   }
 
   return $output;

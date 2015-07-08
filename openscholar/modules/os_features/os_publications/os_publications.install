@@ -1332,6 +1332,22 @@ function os_publications_update_7029() {
 /**
  * Define the publication citation as the og:description value.
  */
-function os_publications_install_7030() {
+function os_publications_update_7030() {
   features_revert(array('os_publications' => array('metatag')));
+}
+
+/**
+ * Adding biblio field 'biblio_date' to Newspaper and magazine.
+ */
+function os_publications_update_7031() {
+  _os_publications_update_field_data();
+}
+
+/**
+ * Reset the citeproc mappings to include all biblio types
+ * and add the new chicago author-date based style.
+ */
+function os_publications_update_7032() {
+  _reset_csl_map(FALSE);
+  os_publications_revert_citeproc_style('harvard-chicago-author-date');
 }

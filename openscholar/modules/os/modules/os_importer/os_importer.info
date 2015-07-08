@@ -33,4 +33,5 @@ features[variable][] = node_preview_blog_import
 features[variable][] = node_submitted_blog_import
 files[] = plugins/OsImporterFetcher.inc
 files[] = plugins/OsImporterNodeProcessor.inc
+files[] = plugins/OsFeedsCSVParser.inc
 files[] = OsImporterEntityValidateBase.inc
