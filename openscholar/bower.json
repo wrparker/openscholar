@@ -2,7 +2,7 @@
   "name": "openscholar",
   "version": "0.0.1",
   "resolutions": {
-    "angular": "1.3.16"
+    "angular": "~1.3.x"
   },
   "dependencies": {
     "angular-modal-service": "0.6.6",
