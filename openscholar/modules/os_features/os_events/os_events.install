@@ -10,6 +10,9 @@ function os_events_install() {
   //Don't store the 'last_viewed' date, This is annoying
   variable_set('calendar_track_date', 0);
 
+  // Define the registration entity as a group content.
+  og_create_field(OG_AUDIENCE_FIELD, 'registration', 'event_signup_simple');
+
   db_add_field('registration_entity', 'repeating_event_date', array(
       'type' => 'varchar',
       'length' => 128,
@@ -227,4 +230,13 @@ function os_events_update_7014() {
 
 function os_events_update_7015() {
   features_revert(array('os_events' => array('variable')));
+}
+
+/**
+ * Define the registration entity as a group content and revert the views
+ * component to display event attendees..
+ */
+function os_events_update_7016() {
+  og_create_field(OG_AUDIENCE_FIELD, 'registration', 'event_signup_simple');
+  features_revert(array('os_events' => array('views')));
 }

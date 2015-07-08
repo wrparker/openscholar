@@ -103,6 +103,7 @@ features[variable][] = node_submitted_event
 features[variable][] = nodeformscols_field_placements_event_default
 features[variable][] = os_taxonomy_app_path_os_events
 features[variable][] = pathauto_node_event_pattern
+features[views_view][] = event_attendees
 features[views_view][] = os_events
 mtime = 1435265610
 spaces[types][] = og
