@@ -299,7 +299,7 @@ function _os_biocv_bio_page_contents() {
   $node = os_biocv_get_bio_node();
   if ($node) {
     if (empty($node->body) && _os_biocv_access_admin()) {
-      // Spoofs a node body in order to    contextual links, etc.
+      // Spoofs a node body in order to print contextual links, etc.
       // Note: this makes no changes to the bio node because we don't save it.
       $markup = '<p>' . t('Oops! Nothing to show here yet.') . ' ' . l(t('Add some text to your bio'), "node/{$node->nid}/edit") . '</p>';
       $node->body['und'] = array(
@@ -489,6 +489,7 @@ function _replace_biocvs_with_pages($vsite_data) {
   foreach ($vsite_data as $gid => $vsite_values) {
     $gid = (int)$gid;
     $vsite_obj = vsite_get_vsite($gid);
+
     if (!$vsite_values['uid']) {
       $vsite_values['uid'] = 1;
     }
@@ -505,6 +506,7 @@ function _replace_biocvs_with_pages($vsite_data) {
       elseif (isset($vsite_values['cv_fid'])) {
         // add link to CV file and attach file to vsite so that when CV node is deleted, the file won't be
         $cv_file_obj = file_load($vsite_values['cv_fid']);
+
         if ($cv_file_obj === FALSE) {
           $output .= "Unable to load cv file object for vsite [" . $gid . "].";
           continue;
@@ -512,17 +514,12 @@ function _replace_biocvs_with_pages($vsite_data) {
         else {
           $public_file_path = variable_get('file_public_path', conf_path() . '/files');
           $cv_link = '<p><a href="' . $cv_file_obj->uri . '">Curriculum Vitae</a></p>';
-          file_usage_add($cv_file_obj, "os_files", "node", $gid);
         }
       }
     }
 
     // create bio page node
     $bio_body = $cv_link . $bio_body;
-    $bio_body_options = array(
-      'value' => $bio_body,
-      'format' => 'full_html',
-    );
     $vsite_values['bio_title'] = isset($vsite_values['bio_title']) ? $vsite_values['bio_title'] : "Bio";
     $bio_node = os_create_node($vsite_values['bio_title'], 'page', $vsite_values['uid']);
 
@@ -530,9 +527,11 @@ function _replace_biocvs_with_pages($vsite_data) {
       $output .= "Unable to create bio page for vsite " . $gid . ".";
       continue;
     }
-    else {
-      $bio_node->body = $bio_body_options;
-      node_save($bio_node);
+    $bio_node_wrapper = entity_metadata_wrapper('node', $bio_node);
+    $bio_node_wrapper->body->set(array('value' => $bio_body, 'format' => 'filtered_html'));
+    node_save($bio_node);
+
+    if ($cv_file_obj && (!$vsite_values['tabs'] || !isset($vsite_values['cv_body']))) {
       file_usage_add($cv_file_obj, "os_files", "node", $bio_node->nid);
     }
 
@@ -589,12 +588,12 @@ function _replace_biocvs_with_pages($vsite_data) {
     $all_cv_nids = $query->execute()->fetchAllKeyed($key_index = 0, $value_index = 0);
 
     // create cv page (if necessary)
-    if ($vsite_values['tabs'] && isset($vsite_values['cv_nid'])) {
+    if ($vsite_values['tabs'] && isset($vsite_values['cv_nid']) && isset($vsite_values['cv_body'])) {
       $cv_body = "";
       if(isset($vsite_values['cv_body'])) {
         $cv_body = $vsite_values['cv_body'];
       }
-      if(isset($vsite_values['cv_fid'])) {
+      if(isset($vsite_values['cv_fid']) && $cv_file_obj) {
         $old_cv_node = node_load($vsite_values['cv_nid']);
         $cv_display = array(
           'label' => 'above',
@@ -603,19 +602,17 @@ function _replace_biocvs_with_pages($vsite_data) {
         );
         $cv_body .= render(field_view_field('node', $old_cv_node, 'field_biocv_pdf_upload', $cv_display, LANGUAGE_NONE));
       }
-      $cv_body_options = array(
-        'value' => $cv_body,
-        'format' => 'full_html',
-      );
 
       $cv_node = os_create_node($vsite_values['cv_title'], 'page', $vsite_values['uid']);
       if (!$cv_node) {
          $output .= "Unable to create cv page for vsite " . $gid . ".";
          continue;
       }
-      else {
-        $cv_node->body = $cv_body_options;
-        node_save($cv_node);
+      $cv_node_wrapper = entity_metadata_wrapper('node', $cv_node);
+      $cv_node_wrapper->body->set(array('value' => $cv_body, 'format' => 'filtered_html'));
+      node_save($cv_node);
+
+      if ($cv_file_obj) {
         file_usage_add($cv_file_obj, "os_files", "node", $cv_node->nid);
       }
 

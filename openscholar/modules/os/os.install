@@ -772,18 +772,19 @@ function os_update_7038(&$sandbox) {
       $sandbox['#finished'] = 0.0;
     }
 
-    $vsites = array_splice($sandbox['dataset'], 0, 150);
+    $vsites = array_splice($sandbox['dataset'], 0, 10);
 
     $sandbox['notices'] .= _replace_biocvs_with_pages($vsites);
-    $sandbox['completed'] = $sandbox['completed'] + count($vsites);
+    $sandbox['completed'] += count($vsites);
     $sandbox['#finished'] = (float)$sandbox['completed'] / (float)$sandbox['total'];
 
     if($sancbox['#finished'] >= 1) {
-      $sandbox['#finished'] = 1;
-      module_disable(array('os_biocv'));
-      drupal_uninstall_modules(array('os_biocv'));
+      module_disable(array('os_biocv'), FALSE);
+      drupal_uninstall_modules(array('os_biocv'), FALSE);
 
+      $sandbox['#finished'] = 1;
       return "Completed " . $sandbox['completed'] . " migrations." . $sandbox['notices'];
     }
+    return $sandbox['completed'] . " out of " . $sandbox['total'] . " completed.";
   }
 }
