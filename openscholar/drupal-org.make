@@ -38,6 +38,7 @@ projects[colorbox][version] = 2.5
 projects[comment_sources][subdir] = "contrib"
 projects[comment_sources][version] = 2.0
 projects[comment_sources][patch][] = "https://drupal.org/files/issues/22086870-comment-source-wrong-query-field-1.patch"
+projects[comment_sources][patch][] = "https://drupal.org/files/issues/change-submit-handler-index-2513794-2.patch"
 
 projects[context][subdir] = "contrib"
 projects[context][version] = 3.0-beta4
@@ -404,7 +405,6 @@ projects[twitter_pull][patch][] = 'http://drupal.org/files/twitter_pull-twitter_
 projects[views][subdir] = "contrib"
 projects[views][version] = 3.8
 projects[views][patch][] = "https://drupal.org/files/issues/views-jquery_dialog-2125261-1.patch"
-
 
 projects[views_bulk_operations][subdir] = "contrib"
 projects[views_bulk_operations][version] = 3.0

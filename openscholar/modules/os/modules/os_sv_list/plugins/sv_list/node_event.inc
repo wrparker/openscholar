@@ -19,29 +19,34 @@ class sv_list_node_event extends sv_list_plugin  {
    */
   public function options_defaults() {
     return array(
-      'event_expire' => 'after_event_start',
+      'event_expire_appear' => 'after_event_start',
+      'show' => 'upcoming_events',
     );
   }
 
   public function options_form($options, &$form) {
     $defaults = $this->options_defaults();
 
-    // Add a select list when sorting events by event date.
-    $form['content']['event_expire'] = array(
+    $form['content']['show'] = array(
       '#type' => 'select',
-      '#title' => 'Events should expire when',
-      '#default_value' => !empty($options['event_expire']) ? $options['event_expire'] : $defaults['event_expire'],
+      '#title' => 'Show',
+      '#default_value' => !empty($options['show']) ? $options['show'] : $defaults['show'],
       '#options' => array(
-        'after_event_start' => '30 minutes after an event starts',
-        'end_of_day' => 'At the end of the day',
-        'end_of_event' => 'When the event ends',
+        'upcoming_events' => t('Upcoming Events'),
+        'past_events' => t('Past Events'),
+        'all_events' => t('All Events'),
       ),
-      '#states' => array(
-        // Display this field only when the LOP displays events sorted by
-        // event date.
-        'visible' => array(
-          ':input[name="sort_by"]' => array('value' => "sort_event"),
-        ),
+    );
+
+    // Add a select list when sorting events by event date.
+    $form['content']['event_expire_appear'] = array(
+      '#type' => 'select',
+      '#title' => t('Events should expire'),
+      '#default_value' => !empty($options['event_expire_appear']) ? $options['event_expire_appear'] : $defaults['event_expire_appear'],
+      '#options' => array(
+        'after_event_start' => t('30 minutes after an event starts'),
+        'end_of_day' => t('At the end of the day'),
+        'end_of_event' => t('When the event ends'),
       ),
     );
   }
@@ -52,21 +57,67 @@ class sv_list_node_event extends sv_list_plugin  {
    * Adds a custom sort for this entity/bundle
    */
   public function register_sorts() {
-    return array('sort_event' => t('Event Date'));
+    return array(
+      'sort_event_asc' => t('Event Date Ascending (Past to Future)'),
+      'sort_event_desc' => t('Event Date Descending (Future to Past)'),
+    );
   }
 
   /**
-   * @function sort_event()
+   * @function query_alter().
+   */
+  public function query_alter($options, $efq) {
+    if ($options['content_type'] != 'event') {
+      return;
+    }
+
+    // We do this to deal with sites that have the old "sort_event" selected.
+    // This is now named "sort_event_asc".
+    if ($options['sort_by'] == 'sort_event') {
+      $options['sort_by'] = 'sort_event_asc';
+    }
+
+    $events_to_show = $options['show'];
+    switch ($events_to_show) {
+      case 'all_events':
+        break;
+      case 'past_events':
+        // Show past events. For all sorts except for
+        // 'Event Date Descending (Future to Past)' we get events that already
+        // ended.
+        if ($options['sort_by'] != 'sort_event_desc') {
+          $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '<');
+        }
+        break;
+      default:
+        // The default option is for upcoming events. For all sorts except
+        // for 'Event Date Ascending (Past to Future)' we get events that
+        // haven't started yet.
+        if ($options['sort_by'] != 'sort_event_asc') {
+          $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s'), '>=');
+        }
+        break;
+    }
+  }
+
+  /**
+   * @function sort_event_asc().
    *
    * Custom sort for events. Filters down the displayed events according to the
    * selected expiry time.
    */
-  public function sort_event($options, EntityFieldQuery $efq) {
+  public function sort_event_asc($options, EntityFieldQuery $efq) {
     $efq->addTag('sv_list_events');
+    $efq->addMetaData('sort_event', 'ASC');
     $efq->fieldOrderBy('field_date', 'value', 'ASC');
 
+    if ($options['show'] != 'upcoming_events') {
+      $this->query = $efq;
+      return;
+    }
+
     // Change the query according to the selected expiry time of the events.
-    switch ($options['event_expire']) {
+    switch ($options['event_expire_appear']) {
       case 'end_of_day';
         // The expiry time is at the end of the day.
         $str = 'today';
@@ -87,6 +138,42 @@ class sv_list_node_event extends sv_list_plugin  {
   }
 
   /**
+   * @function sort_event_desc()
+   *
+   * Custom sort for events. Filters down the displayed events according to the
+   * selected appear time.
+   */
+  public function sort_event_desc($options, EntityFieldQuery $efq) {
+    $efq->addTag('sv_list_events');
+    $efq->addMetaData('sort_event', 'DESC');
+    $efq->fieldOrderBy('field_date', 'value', 'DESC');
+
+    if ($options['show'] != 'past_events') {
+      $this->query = $efq;
+      return;
+    }
+
+    // Change the query according to the selected appear time of the events.
+    switch ($options['event_expire_appear']) {
+      case 'end_of_day';
+        // The appear time is at the end of the day.
+        $str = 'today';
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s', strtotime($str)), '<', 'sv_list_events');
+        break;
+      case 'end_of_event';
+        // The appear time is at the end of the event.
+        $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '<', 'sv_list_events');
+        break;
+      default:
+        // The default appear time is 30 minutes after an event starts.
+        $str = '-30 minutes';
+        $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime($str)), '<', 'sv_list_events');
+    }
+
+    $this->query = $efq;
+  }
+
+  /**
    * @function entities_alter
    *
    * Events have been loaded, but repeated events are grouped under a single node.
@@ -99,22 +186,20 @@ class sv_list_node_event extends sv_list_plugin  {
 
     // The EntityFieldQuery has the raw DB data on it's ordered_results property
     // We earlier modified this query to give a separate row for each nid-delta
-    // So we need to add a value to the entities array for each row in the raw DB
-    // Every entity we need should already be in the entities array
+    // So we need to add a value to the entities array for each row in the raw
+    // DB Every entity we need should already be in the entities array.
     $output = array();
-
-    $results = $this->query->ordered_results;
-
-    foreach ($results as $delta => $result) {
-      // The number of entities we display might be smaller then the number of
-      // query results so we need to check if the result entity is displayed.
-      if (!empty($entities[$result->entity_id])) {
-        $entity = clone $entities[$result->entity_id];
-        $entity->date_id = implode('.', array('date', $entity->nid, 'field_date', $result->delta));
+    $raw = $this->query->ordered_results;
+    // use this instead of a foreach because this query can have more results
+    // than expected.
+    for ($i=0; $i<$options['number_of_items']; $i++) {
+      if ($row = $raw[$i]) {
+        $entity = clone $entities[$row->entity_id];
+        $entity->date_id = implode('.', array('date', $entity->nid, 'field_date', $row->delta));
         $output[] = $entity;
       }
 
-      if ($delta >= $options['number_of_items'] - 1) {
+      if ($i >= $options['number_of_items'] - 1) {
         break;
       }
     }

@@ -564,12 +564,13 @@ position: relative;
 .video-indicator {
 	background-image: url("../images/scholarbase-sprite.png");
   background-position: -42px -85px;
-top: 30%;
+top: 50%;
 display: block;
-left:38%;
+left:50%;
 height: 42px;
 width: 48px;
 position: absolute;
+transform: translate(-50%, -50%);
 }
 
 .media-gallery-item:hover .video-indicator {
