@@ -1695,6 +1695,19 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Then /^I cannot look for "([^"]*)"$/
+   *
+   * Defining a new step because when using the step "I should see" for the iCal
+   * page the test is failing.
+   */
+  public function iCannotLookFor($string) {
+    $element = $this->getSession()->getPage();
+    if (strpos($element->getContent(), $string) !== FALSE) {
+      throw new Exception("the string '$string' was found.");
+    }
+  }
+
+  /**
    * @When /^I edit the term "([^"]*)"$/
    */
   public function iEditTheTerm($name) {
