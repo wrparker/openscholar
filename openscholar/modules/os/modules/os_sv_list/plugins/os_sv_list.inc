@@ -372,7 +372,7 @@ class os_sv_list extends os_boxes_default {
     }
     else {
       // When "All" is selected show only public bundles.
-      $bundles = $this->getBundles(OS_PUBLIC_APP);
+      $bundles = $this->getBundles(OS_PUBLIC_APP, $this->entity_type);
       $query->propertyCondition('type', $bundles, 'IN');
     }
 

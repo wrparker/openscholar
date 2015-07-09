@@ -210,6 +210,13 @@ function os_basetheme_preprocess_node(&$vars) {
 
     // Rebuild the markup for the date field.
     $vars['content']['field_date'][0]['#markup'] = $rule . ' ' . $field[0]['#markup'];
+
+    // Don't display the repeats in full view mode.
+    foreach ($vars['content']['field_date'] as $index => $repeat ) {
+      if ($index && is_integer($index)) {
+        hide($vars['content']['field_date'][$index]);
+      }
+    }
   }
 
   // Event persons, change title markup to h1
@@ -340,6 +347,11 @@ function os_basetheme_status_messages($vars) {
  * returning the new output.
  */
 function os_basetheme_views_view_field($vars) {
+  $view = $vars['view'];
+  if ($view->name != 'os_events') {
+    return $vars['output'];
+  }
+
   $field = $vars['field'];
   if ($field->field != 'title') {
     return $vars['output'];

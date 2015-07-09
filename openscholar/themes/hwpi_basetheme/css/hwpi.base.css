@@ -237,11 +237,16 @@ ol.search-results li.search-result:last-child {
     background-color: #f3f3f2;
 }
 .calendar-calendar td,
-.calendar-calendar td.empty,
+.calendar-calendar td.empty {
+  border-color: #e5e5e3;
+}
+
 .calendar-calendar .week-view div.single-day .half-hour,
 .calendar-calendar .day-view div.single-day .half-hour {
-    border-color: #e5e5e3;
-}
+
+   border-color: #FFF;
+ }
+
 .calendar-calendar td.empty {
     color: #303030;
 }
@@ -375,8 +380,13 @@ ol.search-results li.search-result:last-child {
 .calendar-calendar .week-view div.single-day .i_5 .view-item .calendar {
     margin-left: 0;
 }
-.calendar-calendar .week-view div.single-day .view-item {
-    width: 100%;
+ 
+ .calendar-calendar .day-view div.single-day .i_0.md_3 .view-item .calendar,
+ .calendar-calendar .day-view div.single-day .i_3 .view-item .calendar,
+ .calendar-calendar .day-view div.single-day .i_5 .view-item .calendar,
+ .calendar-calendar .day-view div.single-day .i_8 .view-item .calendar,
+ .calendar-calendar .week-view div.single-day .view-item {
+  width: 100% !important;
 }
 .calendar-calendar .week-view .full div.calendar-agenda-hour,
 .calendar-calendar .day-view .full div.calendar-agenda-hour,
@@ -384,6 +394,13 @@ ol.search-results li.search-result:last-child {
 .calendar-calendar .day-view .full div.calendar-agenda-items {
     height: 80px;
 }
+
+.calendar-calendar .week-view div.single-day .i_8 .view-item .calendar,
+.calendar-calendar .week-view div.single-day .i_5 .view-item .calendar,
+.calendar-calendar .week-view div.single-day .i_3 .view-item .calendar {
+  width: 50%;
+}
+
 .calendar-calendar div.date-nav h3 {
     color: #1e1e1e;
 }
@@ -401,6 +418,7 @@ ol.search-results li.search-result:last-child {
 .block .view-os-events.view-id-os_events .view-header {
     padding-top: 0;
 }
+
 /* Views Node Lists */
 
 .page-taxonomy.page-taxonomy-term .node-teaser.article,
