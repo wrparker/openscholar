@@ -36,6 +36,9 @@ abstract class OsRestfulSpaces extends \OsRestfulDataProvider {
         \RestfulInterface::PUT => 'updateSpace',
         \RestFulInterface::DELETE => 'deleteSpace',
       ),
+      '^.*$' => array(
+        \RestfulInterface::GET => 'getSpace',
+      ),
     );
   }
 

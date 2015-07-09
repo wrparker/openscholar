@@ -110,5 +110,21 @@ class OsRestfulVariables extends OsRestfulSpaces {
     parent::queryForListFilter($query);
 
     $query->condition('object_id', $this->blackList(), 'NOT IN');
+
+    if (!empty($this->path)) {
+      $query->condition('object_id', $this->path);
+    }
   }
+
+  /**
+   * Don't show all the variables but only the one who passed in the address.
+   */
+  public function getSpace() {
+    if (empty($this->path)) {
+      $this->throwException('You must provide the id of the variable.');
+    }
+
+    return parent::getSpace();
+  }
+
 }
