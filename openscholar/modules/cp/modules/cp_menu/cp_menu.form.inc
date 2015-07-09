@@ -25,7 +25,6 @@ function cp_menu_build_form($form, $form_state, $menu = ''){
     '#tree' => true
   );
 
-
   foreach ($menus as $m => $title) {
     $form['menus'][$m] = array(
       '#weight' => (($is_active && $menu == $m) ? 1 : $weight ++),
@@ -154,17 +153,18 @@ function _cp_menu_flatten_tree($tree){
 }
 
 /**
- * Check if the menu exceeded the number of menu he can holds.
- *
- * @param $name
- *   The machine name of the menu.
- *
- * @param bool
- *   True or false when the menu exceeded his sieze.
+ * Validate handler; Verify the menu are not exceeded after drag and drop items.
  */
-function cp_menu_menu_reached_size($name) {
+function cp_menu_build_form_validate($form, $form_state) {
   $space = spaces_get_space();
-  return strlen(serialize($space->controllers->menus->get($name))) > 65000;
+
+  foreach ($form_state['values']['menus'] as $menu) {
+    if (strlen(serialize($space->controllers->menus->get($menu['menu-name']))) > 65000) {
+      $loaded_menu = menu_load($menu['menu-name']);
+      $args['@name'] = $loaded_menu['title'];
+      form_set_error('', t('The menu @name has exceeded the maximum size.', $args));
+    }
+  }
 }
 
 /**
