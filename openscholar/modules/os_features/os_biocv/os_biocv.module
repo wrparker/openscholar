@@ -499,6 +499,7 @@ function _replace_biocvs_with_pages($vsite_data) {
 
     // if user has cv content, add link to either cv page or cv file
     $cv_link = "";
+    $cv_file_obj = FALSE;
     if (isset($vsite_values['cv_body']) || isset($vsite_values['cv_fid'])) {
       if ($vsite_values['tabs'] && isset($vsite_values['cv_body'])) {
         $cv_link = '<p><a href="/' . $vsite_obj->group->purl . '/biocv/cv">Curriculum Vitae</a></p>';
@@ -527,9 +528,6 @@ function _replace_biocvs_with_pages($vsite_data) {
       $output .= "Unable to create bio page for vsite " . $gid . ".";
       continue;
     }
-    $bio_node_wrapper = entity_metadata_wrapper('node', $bio_node);
-    $bio_node_wrapper->body->set(array('value' => $bio_body, 'format' => 'filtered_html'));
-    node_save($bio_node);
 
     if ($cv_file_obj && (!$vsite_values['tabs'] || !isset($vsite_values['cv_body']))) {
       file_usage_add($cv_file_obj, "os_files", "node", $bio_node->nid);
@@ -537,6 +535,10 @@ function _replace_biocvs_with_pages($vsite_data) {
 
     // Add the new page to the vsite
     vsite_add_node($bio_node, $gid);
+
+    $bio_node_wrapper = entity_metadata_wrapper('node', $bio_node);
+    $bio_node_wrapper->body->set(array('value' => $bio_body, 'format' => 'filtered_html'));
+    node_save($bio_node);
 
     // Get primary menu info for bio cv link
     $bio_menu = array();
@@ -608,13 +610,14 @@ function _replace_biocvs_with_pages($vsite_data) {
          $output .= "Unable to create cv page for vsite " . $gid . ".";
          continue;
       }
-      $cv_node_wrapper = entity_metadata_wrapper('node', $cv_node);
-      $cv_node_wrapper->body->set(array('value' => $cv_body, 'format' => 'filtered_html'));
-      node_save($cv_node);
 
       if ($cv_file_obj) {
         file_usage_add($cv_file_obj, "os_files", "node", $cv_node->nid);
       }
+
+      $cv_node_wrapper = entity_metadata_wrapper('node', $cv_node);
+      $cv_node_wrapper->body->set(array('value' => $cv_body, 'format' => 'filtered_html'));
+      node_save($cv_node);
 
       // Add the new page to the vsite, delete all old CV nodes and url aliases
       // and then give the new page the right url alias
@@ -731,6 +734,8 @@ function _replace_biocvs_with_pages($vsite_data) {
 function _os_biocv_set_not_empty(&$array, $key, $value) {
   $pattern = '/\s/';
   if (preg_replace($pattern, "", html_entity_decode(strip_tags($value))) != "") {
+    // remove file metadata to avoid problems when creating new nodes with existing content
+    $value = preg_replace('/\<[^>]*data-file_info=".*?"[^>]*>[^<]*\<\/[^>]*>/', '\1', $value);
     $array[$key] = $value;
   }
 }

@@ -778,13 +778,12 @@ function os_update_7038(&$sandbox) {
     $sandbox['completed'] += count($vsites);
     $sandbox['#finished'] = (float)$sandbox['completed'] / (float)$sandbox['total'];
 
-    if($sancbox['#finished'] >= 1) {
+    if($sandbox['#finished'] >= 1) {
       module_disable(array('os_biocv'), FALSE);
       drupal_uninstall_modules(array('os_biocv'), FALSE);
 
       $sandbox['#finished'] = 1;
       return "Completed " . $sandbox['completed'] . " migrations." . $sandbox['notices'];
     }
-    return $sandbox['completed'] . " out of " . $sandbox['total'] . " completed.";
   }
 }
