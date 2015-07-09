@@ -43,11 +43,11 @@ $index = 0;
 <div class="<?php print !empty($item->class) ? $item->class : 'item'; ?>">
   <div class="view-item view-item-<?php print $view->name ?>">
     <div class="calendar <?php print $item->granularity; ?>view"
-    <?php if (!empty($item->item_height)) : ?>
-      <?php print 'style="height:' . $item->item_height . '";'; ?>
-    <?php endif;?>>
+      <?php if (!empty($item->item_height)) : ?>
+        <?php print 'style="height:' . $item->item_height . '";'; ?>
+      <?php endif;?>>
       <?php print theme('calendar_stripe_stripe', array('item' => $item)); ?>
-      <div class="<?php print $item->date_id ?> contents">
+      <div class="<?php print $item->date_id ?> contents" data-item-id="<?php print $item->id; ?>">
         <?php foreach ($rendered_fields as $field): ?>
           <?php if ($index++ == 0 && (isset($item->continuation) && $item->continuation)) : ?>
             <div class="continuation">&laquo;</div>
@@ -63,3 +63,12 @@ $index = 0;
     </div>
   </div>
 </div>
+<div id="event-popover-<?php print $item->id; ?>" style="display: none;">
+  <div class="event-title"><?php print $item->popover_fields['event_title']; ?></div>
+  <div class="event-date"><?php print $item->popover_fields['event_date']; ?></div>
+  <?php if (!empty($item->popover_fields['event_location'])) : ?>
+    <div class="event-location"><span><?php print t('Location: '); ?></span><?php print $item->popover_fields['event_location']; ?></div>
+  <?php endif;?>
+  <div class="popover-pointer"></div>
+</div>
+

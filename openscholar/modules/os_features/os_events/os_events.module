@@ -653,6 +653,10 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
     return;
   }
 
+  // Add JS for event popup.
+  drupal_add_js(drupal_get_path('module', 'os_events') . '/js/os_events_popup.js');
+  drupal_add_library('system', 'ui.dialog');
+
   $handler = &$view->display_handler;
 
   // Adding the JS for side by side events display for the week view mode.
@@ -1453,8 +1457,16 @@ function os_events_registration_link($variables) {
  */
 function os_events_preprocess_calendar_item(&$vars) {
   $item = $vars['item'];
-  if ($item->granularity == 'day' || $item->granularity == 'week') {
+  if (in_array($item->granularity, array('day', 'week'))) {
     $item->item_height = os_events_get_event_duration($item);
+  }
+
+  // Prepare popover fields.
+  if (in_array($item->granularity, array('day', 'week', 'month'))) {
+    $item->popover_fields['event_title'] = $item->rendered_fields['title'];
+    // @TODO: Is this format OK?
+    $item->popover_fields['event_date'] = $item->rendered_fields['field_date'];
+    $item->popover_fields['event_location'] = $item->rendered_fields['field_event_location'];
   }
 }
 
