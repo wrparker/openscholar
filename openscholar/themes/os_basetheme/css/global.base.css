@@ -587,24 +587,68 @@ ul ul ul ul {
 .node-event {
     position: relative;
 }
+.cal-export {
+    padding: 5px 25px 5px 5px;
+    border: 1px solid #e4e4e4;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background: url('../images/scholarbase-sprite.png?abh') no-repeat 57px -902px #f3f3f1;
+}
+.cal-export:hover {
+    cursor: pointer;
+}
 .attachment.attachment-before ul li {
     border-bottom: none;
+    display: block;
 }
 /* Don't display the ical link in the floating box. */
 
 #cboxWrapper .node-event .links {
     display: none;
 }
+
 .view-os-events.view-id-os_events .attachment-before {
     position: absolute;
-    top: -10px;
+    top: -38px;
     right: 0px;
+    text-align: right;
+    width: 102px;
 }
+
 .node-event.article .node-content .links,
 .view-os-events.view-id-os_events .attachment-before .links {
     display: inline-block;
     margin-left: 8px;
 }
+.os_events_export_links .last,
+.view-os-events.view-id-os_events .attachment-before .links {
+    margin-left: 0;
+    display: none;
+    background-color: #fff;
+    border: 1px solid #e4e4e4;
+    padding: 5px;
+    z-index: 1;
+    position: relative;
+    text-align: left;
+}
+
+.os_events_export_links {
+float: right;
+  text-align: right;
+}
+
+.os_events_export_links .first {
+float: left;
+  position: absolute;
+  left: 0;
+}
+
+
+.os_events_export_links .last a {
+	display:block;
+}
+
 .ical {
     padding: 3px 0 3px 25px !important;
     border-bottom: none !important;
@@ -617,7 +661,7 @@ ul ul ul ul {
 }
 .webcal:before,
 .ical:before {
-    background: url('../images/scholarbase-sprite.png') no-repeat -48px -727px;
+    background: url('../images/scholarbase-sprite.png?0615b') no-repeat -48px -727px;
     width: 21px;
     height: 21px;
     position: absolute;
@@ -630,9 +674,9 @@ ul ul ul ul {
     position: relative;
 }
 .rss:before {
-    background: url('../images/scholarbase-sprite.png') no-repeat 0px -727px;
+    background: url('../images/scholarbase-sprite.png?0615b') no-repeat 0px -727px;
     width: 21px;
-    height: 21px;
+    height: 22px;
     position: absolute;
     left: 0;
     content: '';
@@ -643,7 +687,7 @@ ul ul ul ul {
     position: relative;
 }
 .subscribe:before {
-    background: url('../images/scholarbase-sprite.png') no-repeat -24px -727px;
+    background: url('../images/scholarbase-sprite.png?0615b') no-repeat -24px -727px;
     width: 21px;
     height: 21px;
     position: absolute;
@@ -661,14 +705,7 @@ div.register-link-teaser .register {
     font-weight: normal;
     border-bottom: none !important;
 }
-.os_events_export_links .first {
-    margin-top: 7px;
-    float: left;
-}
-.os_events_export_links .last {
-    margin-top: 7px;
-    float: right;
-}
+
 .page-node.node-type-event .rss,
 .page-node.node-type-event .subscribe {
     display: inline-block;
