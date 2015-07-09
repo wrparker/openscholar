@@ -605,6 +605,7 @@ function _replace_biocvs_with_pages($vsite_data) {
         $cv_body .= render(field_view_field('node', $old_cv_node, 'field_biocv_pdf_upload', $cv_display, LANGUAGE_NONE));
       }
 
+      $vsite_values['cv_title'] = isset($vsite_values['cv_title']) ? $vsite_values['cv_title'] : "CV";
       $cv_node = os_create_node($vsite_values['cv_title'], 'page', $vsite_values['uid']);
       if (!$cv_node) {
          $output .= "Unable to create cv page for vsite " . $gid . ".";
