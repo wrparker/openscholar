@@ -642,6 +642,7 @@ float: right;
 float: left;
   position: absolute;
   left: 0;
+  margin-top: -20px;
 }
 
 
