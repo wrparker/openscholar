@@ -607,7 +607,7 @@ ul ul ul ul {
 #cboxWrapper .node-event .links {
     display: none;
 }
-.os_events_export_links,
+
 .view-os-events.view-id-os_events .attachment-before {
     position: absolute;
     top: -38px;
@@ -615,9 +615,7 @@ ul ul ul ul {
     text-align: right;
     width: 102px;
 }
-.node-type-event .os_events_export_links {
-    top: 0;
-}
+
 .node-event.article .node-content .links,
 .view-os-events.view-id-os_events .attachment-before .links {
     display: inline-block;
@@ -634,6 +632,23 @@ ul ul ul ul {
     position: relative;
     text-align: left;
 }
+
+.os_events_export_links {
+float: right;
+  text-align: right;
+}
+
+.os_events_export_links .first {
+float: left;
+  position: absolute;
+  left: 0;
+}
+
+
+.os_events_export_links .last a {
+	display:block;
+}
+
 .ical {
     padding: 3px 0 3px 25px !important;
     border-bottom: none !important;
@@ -690,13 +705,7 @@ div.register-link-teaser .register {
     font-weight: normal;
     border-bottom: none !important;
 }
-.os_events_export_links .first {
-  margin-top: 7px;
-  float: left;
-  position: absolute;
-  width: 180px;
-  right: 0px;
-}
+
 .page-node.node-type-event .rss,
 .page-node.node-type-event .subscribe {
     display: inline-block;
