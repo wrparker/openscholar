@@ -783,7 +783,7 @@ function os_update_7038(&$sandbox) {
       drupal_uninstall_modules(array('os_biocv'), FALSE);
 
       $sandbox['#finished'] = 1;
-      return "Completed " . $sandbox['completed'] . " migrations." . $sandbox['notices'];
+      return "Completed " . $sandbox['completed'] . " out of " . $sandbox['total'] . " migrations.<br/>" . $sandbox['notices'];
     }
   }
 }

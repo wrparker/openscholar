@@ -509,7 +509,7 @@ function _replace_biocvs_with_pages($vsite_data) {
         $cv_file_obj = file_load($vsite_values['cv_fid']);
 
         if ($cv_file_obj === FALSE) {
-          $output .= "Unable to load cv file object for vsite [" . $gid . "].";
+          $output .= "Unable to load cv file object for vsite [" . $gid . "]. ";
           continue;
         }
         else {
@@ -525,7 +525,7 @@ function _replace_biocvs_with_pages($vsite_data) {
     $bio_node = os_create_node($vsite_values['bio_title'], 'page', $vsite_values['uid']);
 
     if (!$bio_node) {
-      $output .= "Unable to create bio page for vsite " . $gid . ".";
+      $output .= "Unable to create bio page for vsite " . $gid . ". ";
       continue;
     }
 
@@ -608,7 +608,7 @@ function _replace_biocvs_with_pages($vsite_data) {
       $vsite_values['cv_title'] = isset($vsite_values['cv_title']) ? $vsite_values['cv_title'] : "CV";
       $cv_node = os_create_node($vsite_values['cv_title'], 'page', $vsite_values['uid']);
       if (!$cv_node) {
-         $output .= "Unable to create cv page for vsite " . $gid . ".";
+         $output .= "Unable to create cv page for vsite " . $gid . ". ";
          continue;
       }
 
