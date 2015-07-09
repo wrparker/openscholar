@@ -76,7 +76,8 @@ function os_events_menu() {
 
   $items['node/%node/registrations/export'] = array(
     'title' => 'Export attendees to csv',
-    'access arguments' => array('administer registration'),
+    'access callback' => 'registration_administer_registrations_access',
+    'access arguments' => array(0, 1),
     'page arguments' => array(1),
     'page callback' => 'os_events_export_to_csv',
   );
@@ -1196,6 +1197,7 @@ function os_events_preprocess_page(&$variables) {
 
   // Create dropdown links for simple view and export of registrants.
   $event_id = $menu['original_map'][1];
+  $event = node_load($event_id);
   $registration_links = array(
     'export' => array(
       'title' => t('CSV'),
@@ -1211,7 +1213,7 @@ function os_events_preprocess_page(&$variables) {
     '#links' => $registration_links,
     '#title' => t('Export'),
     '#class' => 'section_links registration_links',
-    '#access' => spaces_access_admin(),
+    '#access' => registration_administer_registrations_access('node', $event),
   );
 }
 
