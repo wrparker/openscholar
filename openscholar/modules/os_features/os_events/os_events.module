@@ -1185,22 +1185,11 @@ function os_events_modules_enabled($modules) {
  * Implements hook_date_ical_feed_event_render_alter().
  */
 function os_events_date_ical_feed_event_render_alter(&$event, $view, &$context) {
-  // Prevent placing a backslash before a colon, because it makes iCal crash.
-  $event['description'] = str_replace('\:', ':', $event['description']);
-
-  // Tear down the description in order to clean up the description.
-  $description = explode("\r\n", $event['description']);
-
-  // The first 3 element and last 7 holds redundant information such as:
-  // subscribe link, the data of the event etc. etc.
-  $sliced_array = array_slice($description, 3, count($description) - 7);
-
-  $description = array();
-  foreach ($sliced_array as $row) {
-    $description[] = $row;
+  $wrapper = entity_metadata_wrapper('node', $context['entity']);
+  $event['description'] = '';
+  if ($value = $wrapper->body->value()) {
+    $event['description'] = strip_tags($value['value']);
   }
-
-  $event['description'] = implode("\n", $description);
 }
 
 /**
