@@ -153,6 +153,21 @@ function _cp_menu_flatten_tree($tree){
 }
 
 /**
+ * Validate handler; Verify the menu are not exceeded after drag and drop items.
+ */
+function cp_menu_build_form_validate($form, $form_state) {
+  $space = spaces_get_space();
+
+  foreach ($form_state['values']['menus'] as $menu) {
+    if (strlen(serialize($space->controllers->menus->get($menu['menu-name']))) > 65000) {
+      $loaded_menu = menu_load($menu['menu-name']);
+      $args['@name'] = $loaded_menu['title'];
+      form_set_error('', t('The menu @name has exceeded the maximum size.', $args));
+    }
+  }
+}
+
+/**
  * Renders the form array as a table and sets up the tabledrag.
  *
  * @param unknown_type $variables
@@ -179,6 +194,7 @@ function theme_cp_menu_table($variables){
 
   $rows = array();
   foreach ( element_children($table_data) as $d ) {
+    $link = l(t('+ Add new link'),'cp/build/menu/link/new/'.$d,array('attributes' => array('title' => 'Add a new menu item.', 'class' => array('add-new-link'))));
     $extra_classes = array();
     if ($table_data[$d]['#hidden']) {
       $extra_classes[] = 'hidden';
@@ -191,7 +207,7 @@ function theme_cp_menu_table($variables){
         ),
         array(
           //'data' => ctools_modal_text_button('Add New Link', 'cp/menu/nojs/new/'.$d, 'Add New Link'),
-          'data' => l(t('+ Add new link'),'cp/build/menu/link/new/'.$d,array('attributes' => array('title' => 'Add a new menu item.', 'class' => array('add-new-link')))),
+          'data' => $link,
         ),
         array(
           'data' => '',
