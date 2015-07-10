@@ -371,6 +371,39 @@ ul.primary li a {
   padding: .1em 10px .2em;
 }
 
+
+/* Calendar tabs styling  */
+ul.tabs.primary {
+  border-bottom:none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.tabs.primary li:first-child a {
+border-radius: 4px 0px 0px 4px;
+-moz-border-radius: 4px 0px 0px 4px;
+-webkit-border-radius: 4px 0px 0px 4px;
+}
+
+
+ul.tabs.primary li:last-child a {
+border-radius: 0px 4px 4px 0px;
+-moz-border-radius: 0px 4px 4px 0px;
+-webkit-border-radius: 0px 4px 4px 0px;
+}
+
+
+ul.tabs.primary li a {
+margin-right: -5px;
+  padding: 5px 8px;
+  border-bottom: 1px solid #e4e4e4;
+}
+
+ul.tabs.primary li.active a {
+	border: 1px solid #e4e4e4;
+}
+
+
 .local-tasks ul.primary li a:hover {
   background-color: #f7f7f7;
   border-color: #ddd;
@@ -555,8 +588,12 @@ html.js #citation-wrapper div.ctools-dropdown a.ctools-dropdown-text-link {
 	float:right;
 	display:inline;
 	margin-left:25px;
-	}	
-	
+}
+
+.ctools-dropdown.registration_links a {
+  color: #215990 !important;
+}
+
 .contextual-controls-wrapper div.ctools-dropdown.section_links a.ctools-dropdown-text-link {
  float:right;
   background: url('../images/scholarbase-sprite.png') no-repeat 0px -331px !important;
