@@ -178,6 +178,10 @@ function os_sv_list_query_sv_list_events_alter(SelectQueryInterface $query) {
     }
   }
 
+  if(!$date_table) {
+    watchdog('os_sv_list_events',"Can not sort because field_data_field_date has not been joined.");
+  }
+
   $query->fields($date_table, array('delta'));
 
   // Get the type of sort to use.

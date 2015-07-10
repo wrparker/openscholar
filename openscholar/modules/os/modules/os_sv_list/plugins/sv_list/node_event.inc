@@ -183,27 +183,11 @@ class sv_list_node_event extends sv_list_plugin  {
    * Ensures that all sort options have a set sorting type
    */
   public function sort_alter($options, $efq) {
-    if ($options['content_type'] != 'events' || in_array($options['sort_by'], array('sort_event_desc', 'sort_event_asc'))) {
+    if ($options['content_type'] != 'event' || in_array($options['sort_by'], array('sort_event_desc', 'sort_event_asc'))) {
       return;
     }
 
-    $events_to_show = $options['show'];
-    switch ($events_to_show) {
-      case 'all_events':
-        $efq->fieldOrderBy('field_date', 'value', 'ASC');
-      case 'past_events':
-        // Show past events. For all sorts except for
-        // 'Event Date Descending (Future to Past)' we get events that already
-        // ended.
-        $efq->fieldOrderBy('field_date', 'value', 'DESC');
-        break;
-      default:
-        // The default option is for upcoming events. For all sorts except
-        // for 'Event Date Ascending (Past to Future)' we get events that
-        // haven't started yet.
-        $efq->fieldOrderBy('field_date', 'value', 'ASC');
-        break;
-    }
+    $this->sort_event_asc($options, $efq);
   }
 
   /**
