@@ -653,6 +653,10 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
     return;
   }
 
+  // Add JS for event popup.
+  drupal_add_js(drupal_get_path('module', 'os_events') . '/js/os_events_popup.js');
+  drupal_add_library('system', 'ui.dialog');
+
   $handler = &$view->display_handler;
 
   // Adding the JS for side by side events display for the week view mode.
@@ -1446,4 +1450,43 @@ function os_events_registration_link($variables) {
   }
 
   return os_events_generate_modal_register_link($nid);
+}
+
+/**
+ * Implements hook_preprocess_calendar_item().
+ */
+function os_events_preprocess_calendar_item(&$vars) {
+  $item = $vars['item'];
+  if (in_array($item->granularity, array('day', 'week'))) {
+    $item->item_height = os_events_get_event_duration($item);
+  }
+
+  // Prepare popover fields.
+  if (in_array($item->granularity, array('day', 'week', 'month'))) {
+    $item->popover_fields['event_title'] = $item->rendered_fields['title'];
+    // @TODO: Is this format OK?
+    $item->popover_fields['event_date'] = $item->rendered_fields['field_date'];
+    $item->popover_fields['event_location'] = $item->rendered_fields['field_event_location'];
+  }
+}
+
+/**
+ * Get the duration of an event in hours.
+ *
+ * @param $item
+ *   The event item.
+ * @return mixed
+ *   The event duration in hours or NULL if end time equals start time.
+ */
+function os_events_get_event_duration($item) {
+  $event_start = strtotime($item->calendar_start);
+  $event_end = strtotime($item->calendar_end);
+
+  if ($event_start == $event_end) {
+    return NULL;
+  }
+
+  $hours = round(($event_end - $event_start) / 3600, 1);
+
+  return 80 * $hours . 'px';
 }
