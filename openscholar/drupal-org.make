@@ -283,8 +283,7 @@ projects[oembed][patch][] = "http://drupal.org/files/issues/oembed.2134415.wysiw
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/514d6c636dc69ea76ea307a874c7cd9c3e0fb045/patches/oembed.alt_tags_no_escape.patch"
 
 projects[og][subdir] = "contrib"
-projects[og][version] = 2.6
-projects[og][patch][] = "https://drupal.org/files/issues/2231217-og-save-no-entity-load-1.patch"
+projects[og][version] = 2.7
 projects[og][patch][] = "https://drupal.org/files/issues/add_entity_type_parameter-2308279-3.patch"
 
 projects[og_moderation][subdir] = "contrib"
