@@ -106,7 +106,7 @@
           }
 
           scope.save = function () {
-            fileService.edit(scope.file, ['preview']).then(function(result) {
+            fileService.edit(scope.file, ['preview', 'url']).then(function(result) {
                 if (result) {
                   scope.onClose({saved: true});
                 }
