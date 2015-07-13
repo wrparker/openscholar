@@ -81,9 +81,8 @@ projects[dyntextfield][download][tag] = 1.0
 projects[dyntextfield][download][url] = "git://github.com/amitaibu/dyntextfield.git"
 
 projects[entity][subdir] = "contrib"
-projects[entity][version] = 1.0
+projects[entity][version] = 1.6
 projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
-projects[entity][patch][] = http://drupal.org/files/entity-file_entity_access-1831578-9.patch
 
 projects[entitycache][subdir] = "contrib"
 projects[entitycache][version] = 1.1
@@ -211,13 +210,7 @@ projects[linkchecker][subdir] = "contrib"
 projects[linkchecker][version] = 1.0-beta1
 
 projects[media][subdir] = "contrib"
-projects[media][version] = 2.x-dev
-projects[media][download][type] = git
-projects[media][download][branch] = 7.x-2.x
-projects[media][download][revision] = "b433b278d7e0ab7420f5a874886843fb9fe7ebe2"
-; projects[media][patch][] = "http://drupal.org/files/issues/1121808-media-resuse-files-by-uri.patch"
-; projects[media][patch][] = "http://drupal.org/files/media-7.x-2.x-fix-class-array.patch"
-projects[media][patch][] = "http://drupal.org/files/media_fatal_wysiwyg_remove_1937864_11.patch"
+projects[media][version] = 2.0-alpha4
 
 projects[media_gallery][subdir] = "contrib"
 projects[media_gallery][version] = 2.x-dev
