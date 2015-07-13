@@ -315,7 +315,7 @@ class OsFilesResource extends RestfulEntityBase {
     $account = $this->getAccount();
 
     $vsite = null;
-    if ($this->request['vsite']) {
+    if (!empty($this->request['vsite'])) {
       $vsite = $this->request['vsite'];
     }
     elseif ($file == null) {
@@ -522,6 +522,11 @@ class OsFilesResource extends RestfulEntityBase {
     static::cleanRequest($request);
     $save = FALSE;
     $original_request = $request;
+
+    if ($space = $wrapper->{OG_AUDIENCE_FIELD}->value()) {
+      $vsite = vsite_get_vsite($space[0]->nid);
+      $vsite->activate_user_roles();
+    }
 
     foreach ($this->getPublicFields() as $public_field_name => $info) {
       if (empty($info['property']) && empty($info['saveCallback'])) {
