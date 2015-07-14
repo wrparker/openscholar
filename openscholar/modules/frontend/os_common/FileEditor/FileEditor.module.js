@@ -14,7 +14,7 @@
         templateUrl: libraryPath + '/file_edit_base.html?vers='+Drupal.settings.version.FileEditor,
         link: function (scope, elem, attr, c, trans) {
           var fileService = new EntityService('files', 'id');
-          fileService.fetch({});
+          //fileService.fetch({});
 
           scope.fileEditAddt = '';
           scope.date = '';

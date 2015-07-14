@@ -634,12 +634,11 @@ class OsFilesResource extends RestfulEntityBase {
   }
 
   protected function setTerms($wrapper) {
-    if ($values = $this->request['terms']) {
+    if (isset($this->request['terms'])) {
+      $values = $this->request['terms'];
       $terms = array();
-      foreach ($values as $value) {
-        foreach ($value as $term) {
-          $terms[] = $term['id'];
-        }
+      foreach ($values as $term) {
+        $terms[] = $term['id'];
       }
 
       $wrapper->{OG_VOCAB_FIELD}->set($terms);
