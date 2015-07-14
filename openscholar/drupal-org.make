@@ -41,7 +41,7 @@ projects[comment_sources][patch][] = "https://drupal.org/files/issues/22086870-c
 projects[comment_sources][patch][] = "https://drupal.org/files/issues/change-submit-handler-index-2513794-2.patch"
 
 projects[context][subdir] = "contrib"
-projects[context][version] = 3.0-beta4
+projects[context][version] = 3.6
 projects[context][patch][] = "http://drupal.org/files/os-custom-beta4.patch"
 projects[context][patch][] = "http://drupal.org/files/1855004.context.float_block_weights.patch"
 
