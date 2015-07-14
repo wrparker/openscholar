@@ -19,10 +19,9 @@ projects[apachesolr_og][subdir] = "contrib"
 projects[apachesolr_og][revision] = 5fda19fc208bd62713be99a839aed0528d9d3db7
 
 projects[boxes][subdir] = "contrib"
-projects[boxes][version] = 1.0-beta7
-projects[boxes][patch][] = "http://raw.github.com/openscholar/openscholar/b38919350643c8b26a3f639e935c1c6e802c6dd7/patches/boxes.load_from_spaces_and_fix_fatals.patch"
-projects[boxes][patch][] = "https://www.drupal.org/files/1859150-1-boxes-strict_warning.patch"
-projects[boxes][patch][] = "https://www.drupal.org/files/issues/default_object_empty_value-2042101-3.patch"
+projects[boxes][version] = 1.2
+projects[boxes][patch][] = "https://gist.githubusercontent.com/RoySegall/e39a1e8ab87bc58dc458/raw/7cb488a7d03afabca9f02b7cd431e7dc32caaacc/gistfile1.darcspatch"
+projects[boxes][patch][] = "https://www.drupal.org/files/issues/default_object_empty_value-2042101-4.patch"
 
 projects[cache_consistent][subdir] = "contrib"
 projects[cache_consistent][version] = 1.2
