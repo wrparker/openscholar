@@ -513,8 +513,7 @@ function _replace_biocvs_with_pages($vsite_data) {
           continue;
         }
         else {
-          $public_file_path = variable_get('file_public_path', conf_path() . '/files');
-          $cv_link = '<p><a href="' . $cv_file_obj->uri . '">Curriculum Vitae</a></p>';
+          $cv_link = '<p><a href="' . file_create_url($cv_file_obj->uri) . '">Curriculum Vitae</a></p>';
         }
       }
     }
@@ -549,17 +548,6 @@ function _replace_biocvs_with_pages($vsite_data) {
       }
     }
 
-    // get all bio nodes associated with vsite and then delete them and their url aliases
-    $query = db_select('node', 'n')
-      ->condition('n.type', 'bio', '=')
-      ->fields('n', array('nid'));
-    $query->innerJoin('og_membership', 'ogm', "n.nid = ogm.etid AND gid = $gid AND entity_type = 'node'");
-    $all_bio_nids = $query->execute()->fetchAllKeyed($key_index = 0, $value_index = 0);
-    node_delete_multiple(array_keys($all_bio_nids));
-    foreach ($all_bio_nids as $nid) {
-      path_delete($nid);
-    }
-
     // give the new page the right url alias
     $path = array(
       "source" => "node/" . $bio_node->nid,
@@ -582,20 +570,16 @@ function _replace_biocvs_with_pages($vsite_data) {
       $mlid = vsite_menu_create_menu_link($bio_menu['link_title'], 'node/' . $bio_node->nid, $gid, $bio_menu['plid'], $new_bio_menu);
     }
 
-    // get all cv nodes associated with vsite
-    $query = db_select('node', 'n')
-      ->condition('n.type', 'cv', '=')
-      ->fields('n', array('nid'));
-    $query->innerJoin('og_membership', 'ogm', "n.nid = ogm.etid AND gid = $gid AND entity_type = 'node'");
-    $all_cv_nids = $query->execute()->fetchAllKeyed($key_index = 0, $value_index = 0);
-
     // create cv page (if necessary)
     if ($vsite_values['tabs'] && isset($vsite_values['cv_nid']) && isset($vsite_values['cv_body'])) {
       $cv_body = "";
       if(isset($vsite_values['cv_body'])) {
         $cv_body = $vsite_values['cv_body'];
       }
-      if(isset($vsite_values['cv_fid']) && $cv_file_obj) {
+      if(isset($vsite_values['cv_fid'])) {
+        if (!$cv_file_obj) {
+          $cv_file_obj = file_load($vsite_values['cv_fid']);
+        }
         $old_cv_node = node_load($vsite_values['cv_nid']);
         $cv_display = array(
           'label' => 'above',
@@ -620,14 +604,6 @@ function _replace_biocvs_with_pages($vsite_data) {
       $cv_node_wrapper->body->set(array('value' => $cv_body, 'format' => 'filtered_html'));
       node_save($cv_node);
 
-      // Add the new page to the vsite, delete all old CV nodes and url aliases
-      // and then give the new page the right url alias
-      vsite_add_node($cv_node, $gid);
-      node_delete_multiple(array_keys($all_cv_nids));
-      foreach ($all_cv_nids as $nid) {
-        path_delete($nid);
-      }
-
       // give the new page the right url alias
       $path = array(
         "source" => "node/" . $cv_node->nid,
@@ -635,11 +611,19 @@ function _replace_biocvs_with_pages($vsite_data) {
       );
       path_save($path);
     }
-    elseif (isset($vsite_values['cv_nid'])) {
-      node_delete_multiple(array_keys($all_cv_nids));
-      foreach ($all_cv_nids as $nid) {
-        path_delete($nid);
-      }
+
+    // get all bio and cv nodes associated with vsite and then delete them and their url aliases
+    $query = db_select('node', 'n');
+    $or = db_or();
+    $or->condition("n.type",'bio', '=');
+    $or->condition("n.type",'cv', '=');
+    $query->condition($or);
+    $query->innerJoin('og_membership', 'ogm', "n.nid = ogm.etid AND gid = $gid AND entity_type = 'node'");
+    $query = $query->fields('n', array('nid'));
+    $all_bio_nids = $query->execute()->fetchAllKeyed($key_index = 0, $value_index = 0);
+    node_delete_multiple(array_keys($all_bio_nids));
+    foreach ($all_bio_nids as $nid) {
+      path_delete($nid);
     }
 
     // find out if this vsite has a customized instance of the bio widget
