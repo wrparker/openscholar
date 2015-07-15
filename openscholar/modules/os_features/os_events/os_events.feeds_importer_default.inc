@@ -35,7 +35,6 @@ function os_events_feeds_importer_default() {
       'plugin_key' => 'OsImporterNodeProcessor',
       'config' => array(
         'file_field' => 'field_upload',
-        'content_type' => 'event',
         'expire' => '-1',
         'author' => 0,
         'authorize' => 1,
@@ -90,14 +89,16 @@ function os_events_feeds_importer_default() {
         'update_existing' => '0',
         'input_format' => 'filtered_html',
         'skip_hash_check' => 0,
+        'update_non_existent' => 'skip',
+        'bundle' => 'event',
       ),
     ),
-    'content_type' => '',
+    'content_type' => 'event',
     'update' => 0,
-    'import_period' => 1800,
+    'import_period' => '1800',
     'expire_period' => 3600,
-    'import_on_create' => TRUE,
-    'process_in_background' => FALSE,
+    'import_on_create' => 1,
+    'process_in_background' => 0,
   );
   $export['os_events_csv'] = $feeds_importer;
 
@@ -161,7 +162,8 @@ function os_events_feeds_importer_default() {
         'input_format' => 'filtered_html',
         'skip_hash_check' => 0,
         'file_field' => 'field_upload',
-        'content_type' => 'event',
+        'update_non_existent' => 'skip',
+        'bundle' => 'event',
       ),
     ),
     'content_type' => '',

@@ -73,15 +73,16 @@ function os_blog_feeds_importer_default() {
         'update_existing' => '0',
         'input_format' => 'filtered_html',
         'skip_hash_check' => 0,
-        'content_type' => 'blog',
+        'update_non_existent' => 'skip',
+        'bundle' => 'blog',
       ),
     ),
-    'content_type' => '',
+    'content_type' => 'blog',
     'update' => 0,
-    'import_period' => 1800,
+    'import_period' => '1800',
     'expire_period' => 3600,
-    'import_on_create' => TRUE,
-    'process_in_background' => FALSE,
+    'import_on_create' => 1,
+    'process_in_background' => 0,
   );
   $export['os_blog_csv'] = $feeds_importer;
 

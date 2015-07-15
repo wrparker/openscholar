@@ -124,7 +124,7 @@ function os_importer_node_insert($node) {
 
   // Schedule source and importer.
   $source->schedule();
-  feeds_importer($importer_id)->schedule();
+  feeds_source($importer_id)->schedule();
 }
 
 /**
@@ -301,16 +301,16 @@ function os_importer_importer_title($type) {
  *  Return TRUE/FALSE.
  */
 function os_importer_import_access($bundle, $feed = TRUE) {
-  if ($feed) {
-    $source = feeds_source($bundle);
-    $config = $source->importer->getConfig();
+  $info = os_importer_importable_content();
 
-    if (!$config['processor']['config']['content_type']) {
+  if ($feed) {
+    $source = feeds_source($info[$bundle]['csv']);
+    $config = $source->importer->getConfig();
+    if (!$config['processor']['config']['bundle']) {
       return FALSE;
     }
   }
 
-  $info = os_importer_importable_content();
   $access = !empty($info[$bundle]);
 
   // When we have 'vsite' we must have specific create permission per bundle.
