@@ -120,7 +120,7 @@ projects[features][subdir] = "contrib"
 projects[features][version] = 2.0
 
 projects[feeds][subdir] = "contrib"
-projects[feeds][version] = 2.0-alpha7
+projects[feeds][version] = 2.0-beta1
 
 projects[feeds_tamper][subdir] = "contrib"
 projects[feeds_tamper][version] = 1.1
