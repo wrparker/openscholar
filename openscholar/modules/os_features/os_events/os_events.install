@@ -181,3 +181,10 @@ function os_events_update_7013() {
 function os_events_update_7014() {
   features_revert(array('os_events' => array('variable')));
 }
+
+/**
+ * Create a single event export.
+ */
+function os_events_update_7015() {
+  features_revert(array('os_events' => array('views')));
+}
