@@ -302,6 +302,7 @@ projects[olark][patch][] = "http://drupal.org/files/olark-js-to-d7-update-178532
 
 projects[password_policy][subdir] = "contrib"
 projects[password_policy][version] = 2.0-alpha5
+projects[password_policy][patch][] = "https://www.drupal.org/files/issues/password_policy-7.x-2.x-fix_element_alter_error-2489918-4.patch"
 
 projects[pathauto][subdir] = "contrib"
 projects[pathauto][version] = 1.2
