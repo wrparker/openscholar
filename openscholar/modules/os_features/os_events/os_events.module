@@ -1187,8 +1187,9 @@ function os_events_modules_enabled($modules) {
 function os_events_date_ical_feed_event_render_alter(&$event, $view, &$context) {
   $wrapper = entity_metadata_wrapper('node', $context['entity']);
   $event['description'] = '';
+  $event['summary'] = $wrapper->label();
   if ($value = $wrapper->body->value()) {
-    $event['description'] = strip_tags($value['value']);
+    $event['description'] = drupal_html_to_text($value['value']);;
   }
 
   $event['location'] = $wrapper->field_event_location->value();
