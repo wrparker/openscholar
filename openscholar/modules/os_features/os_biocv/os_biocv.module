@@ -571,7 +571,7 @@ function _replace_biocvs_with_pages($vsite_data) {
     }
 
     // create cv page (if necessary)
-    if ($vsite_values['tabs'] && isset($vsite_values['cv_nid']) && isset($vsite_values['cv_body'])) {
+    if (isset($vsite_values['tabs']) && $vsite_values['tabs'] && isset($vsite_values['cv_nid']) && isset($vsite_values['cv_body'])) {
       $cv_body = "";
       if(isset($vsite_values['cv_body'])) {
         $cv_body = $vsite_values['cv_body'];
@@ -652,7 +652,7 @@ function _replace_biocvs_with_pages($vsite_data) {
           foreach ($row_values as $value => $instances) {
             if(is_array($instances)) {
               foreach ($instances as $type => $data) {
-                if (is_array($data) && ((isset($data['plugin']) && $data['plugin'] == "os_boxes_bio") || $data['delta'] == "bio_teaser")) {
+                if (is_array($data) && ((isset($data['plugin']) && $data['plugin'] == "os_boxes_bio") || (isset($data['delta']) && $data['delta'] == "bio_teaser"))) {
                   $transaction = db_transaction();
                   try {
                     // replace implemented bio widget with new featured posts widget
@@ -740,7 +740,7 @@ function _os_biocv_create_bio_featured_posts_widget($vsite_id, $vsite_values, $b
     "nodes" => array(array("nid" => $bio_nid, "title" => $vsite_values['bio_title'])),
     "random" => 0,
     "additional_classes" => NULL,
-    "hide_title" => 1
+    "hide_title" => ((isset($vsite_values['bio_options']) && $vsite_values['bio_options']['show_title']) ? NULL : 1),
   );
   $featured_box->embed_as = array("iframe", "oembed");
   $featured_box->plugin_key = "os_boxes_manual_list";
