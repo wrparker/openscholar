@@ -110,7 +110,9 @@ function os_profiles_init() {
       $handler->update($node->nid, $data->values);
     }
     catch (RestWSException $e) {
-      // TODO: watchdog message
+      $message = t('Problem when trying to sync profile: @error', array('@error' => $e->getMessage()));
+      drupal_set_message($message, 'error');
+      watchdog('os_profile', $message);
       return;
     }
 
