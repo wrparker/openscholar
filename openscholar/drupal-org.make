@@ -274,6 +274,7 @@ projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/opens
 projects[og][subdir] = "contrib"
 projects[og][version] = 2.7
 projects[og][patch][] = "https://drupal.org/files/issues/add_entity_type_parameter-2308279-3.patch"
+projects[og][patch][] = "https://www.drupal.org/files/issues/group_reference_token-2264759-17.patch"
 
 projects[og_moderation][subdir] = "contrib"
 projects[og_moderation][version] = 2.0
