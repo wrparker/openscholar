@@ -501,7 +501,7 @@ function _replace_biocvs_with_pages($vsite_data) {
     $cv_link = "";
     $cv_file_obj = FALSE;
     if (isset($vsite_values['cv_body']) || isset($vsite_values['cv_fid'])) {
-      if ($vsite_values['tabs'] && isset($vsite_values['cv_body'])) {
+      if (isset($vsite_values['tabs']) && $vsite_values['tabs'] && isset($vsite_values['cv_body'])) {
         $cv_link = '<p><a href="/' . $vsite_obj->group->purl . '/biocv/cv">Curriculum Vitae</a></p>';
       }
       elseif (isset($vsite_values['cv_fid'])) {
@@ -528,7 +528,7 @@ function _replace_biocvs_with_pages($vsite_data) {
       continue;
     }
 
-    if ($cv_file_obj && (!$vsite_values['tabs'] || !isset($vsite_values['cv_body']))) {
+    if ($cv_file_obj && (!isset($vsite_values['tabs']) || !$vsite_values['tabs'] || !isset($vsite_values['cv_body']))) {
       file_usage_add($cv_file_obj, "os_files", "node", $bio_node->nid);
     }
 
@@ -644,13 +644,19 @@ function _replace_biocvs_with_pages($vsite_data) {
       $existing_bio_widget = NULL;
       while ($row = $results->fetchObject()) {
         // if user has a bio_teaser entry, save settings for when/if the new bio widget is created
-        if($row->object_id == "bio_teaser") {
+        if($row->object_id == "bio_teaser" && $results->rowCount() > 1) {
           $existing_bio_widget = unserialize($row->value);
+        }
+        // if user has only a bio_teaser entry, then there will be layout data in the db, so set up default
+        elseif($row->object_id == "bio_teaser") {
+          $existing_bio_widget = unserialize($row->value);
+          $vsite_values['bio_options'] = $existing_bio_widget->options;
+          $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $bio_node->nid, $bio_widget_created_flag);
         }
         else {
           $row_values = unserialize($row->value);
           foreach ($row_values as $value => $instances) {
-            if(is_array($instances)) {
+            if (is_array($instances)) {
               foreach ($instances as $type => $data) {
                 if (is_array($data) && ((isset($data['plugin']) && $data['plugin'] == "os_boxes_bio") || (isset($data['delta']) && $data['delta'] == "bio_teaser"))) {
                   $transaction = db_transaction();
