@@ -1300,8 +1300,14 @@ function os_events_modules_enabled($modules) {
  * Implements hook_date_ical_feed_event_render_alter().
  */
 function os_events_date_ical_feed_event_render_alter(&$event, $view, &$context) {
-  // Prevent placing a backslash before a colon, because it makes iCal crash.
-  $event['description'] = str_replace('\:', ':', $event['description']);
+  $wrapper = entity_metadata_wrapper('node', $context['entity']);
+  $event['description'] = '';
+  $event['summary'] = $wrapper->label();
+  if ($value = $wrapper->body->value()) {
+    $event['description'] = drupal_html_to_text($value['value']);;
+  }
+
+  $event['location'] = $wrapper->field_event_location->value();
 }
 
 /**
