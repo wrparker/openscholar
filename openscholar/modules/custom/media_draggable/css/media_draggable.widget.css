@@ -28,18 +28,18 @@
 
 .field-widget-media-draggable-file .file-list-single span {
   display: inline-block;
-  width: 70%;
+  width: 65%;
 }
 
 .field-widget-media-draggable-file .file-list-single ul {
   display: inline-block;
-  width: 30%;
+  width: 34%;
   margin: 0;
 }
 
 .field-widget-media-draggable-file .file-list-single ul li {
   display: inline-block;
-  width: 45%;
+  width: 32%;
 }
 
 .droppable-message,
