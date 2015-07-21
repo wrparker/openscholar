@@ -33,7 +33,6 @@ function os_books_update_7001(&$sandbox) {
     $q_and->condition('ml.has_children', '1', '=');
     $q->condition($q_and);
     $q = $q->execute();
-
     foreach ($q as $row) {
       $sandbox['data'][] = $row;
     }
@@ -41,9 +40,11 @@ function os_books_update_7001(&$sandbox) {
     $sandbox['count'] = count($sandbox['data']);
     $sandbox['changed'] = 0;
     $sandbox['output'] = "";
-  }
-  elseif (!$sandbox['count']) {
-    return t('All book pages are in the correct group');
+
+    // if there are no book menus to check, no need to continue
+    if (!$sandbox['count']) {
+        return t('All book pages are in the correct group');
+    }
   }
 
   // go through each menu ($limit number of menus at a time) and check that each menu item

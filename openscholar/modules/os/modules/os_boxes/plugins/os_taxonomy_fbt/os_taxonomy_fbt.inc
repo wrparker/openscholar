@@ -335,7 +335,7 @@ class os_taxonomy_fbt extends os_boxes_default {
         'upcoming_event',
         'past_event',
       );
-      if (in_array(reset($this->options['bundles']), $event_bundles)) {
+      if (is_array($this->options['bundles']) && in_array(reset($this->options['bundles']), $event_bundles)) {
         $this->cache_time = "5 minutes";
       }
 

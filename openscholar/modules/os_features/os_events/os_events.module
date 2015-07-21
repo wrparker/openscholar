@@ -74,7 +74,55 @@ function os_events_menu() {
     'access arguments' => array('create event_signup_simple registration'),
   );
 
+  $items['node/%node/registrations/export'] = array(
+    'title' => 'Export attendees to csv',
+    'access callback' => 'registration_administer_registrations_access',
+    'access arguments' => array(0, 1),
+    'page arguments' => array(1),
+    'page callback' => 'os_events_export_to_csv',
+  );
+
   return $items;
+}
+
+/**
+ * Page callback; Exports event's registrants.
+ */
+function os_events_export_to_csv($node) {
+  if (!module_exists('os_exporter')) {
+    return;
+  }
+
+  $exporter = os_exporter_get_exporter_handler('csv');
+  $exporter->setFileHeader(array(t('Email'), t('Created Time'), t('Department'), t('Full name')));
+
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'registration')
+    ->propertyCondition('entity_id', $node->nid)
+    ->propertyCondition('entity_type', 'node')
+    ->execute();
+
+  if (empty($result['registration'])) {
+    return;
+  }
+
+  $attendees = entity_load('registration', array_keys($result['registration']));
+
+  foreach ($attendees as $attendee) {
+    $wrapper = entity_metadata_wrapper('registration', $attendee);
+
+    $exporter->addContent(array(
+      $attendee->anon_mail,
+      '"' . format_date($attendee->created) . '"',
+      $wrapper->field_department->value(),
+      $wrapper->field_full_name->value(),
+    ));
+  }
+
+  $exporter->exportToFile($node->title . ' attendees.csv');
+
+  return $node->title;
 }
 
 /**
@@ -198,6 +246,26 @@ function os_events_default_registration_type() {
     "rdf_mapping" : []
   }');
   return $items;
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function os_events_views_pre_render(&$view) {
+  if ($view->name != 'os_events') {
+    return;
+  }
+
+  // Not a page display.
+  if (strpos($view->current_display, 'page') !== 0) {
+    return;
+  }
+
+  if (empty($view->attachment_before)) {
+    return;
+  }
+
+  $view->attachment_before = '<a class="cal-export">' . t('Export') . '</a>' . $view->attachment_before;
 }
 
 function os_events_date_formatter_pre_view_alter(&$entity, $vars) {
@@ -445,6 +513,9 @@ function os_events_events_register($js, $node) {
   $registration->ajax = $js;
   $registration_form = drupal_get_form('registration_form', $registration);
 
+  // Hide the OG audience field.
+  $registration_form[OG_AUDIENCE_FIELD]['#access'] = FALSE;
+
   if (!$js) {
     return $registration_form;
   }
@@ -581,6 +652,10 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
   if (empty($_GET['type']) || !in_array($_GET['type'], array('day', 'week', 'month', 'year'))) {
     return;
   }
+
+  // Add JS for event popup.
+  drupal_add_js(drupal_get_path('module', 'os_events') . '/js/os_events_popup.js');
+  drupal_add_library('system', 'ui.dialog');
 
   $handler = &$view->display_handler;
 
@@ -1044,11 +1119,6 @@ function os_events_form_registration_registrations_broadcast_form_alter(&$form, 
  * Implements hook_form_FORM_ID_alter().
  */
 function os_events_form_registration_form_alter(&$form, &$form_state) {
-  // Remove the entity from the form - we don't need it and it disable the
-  // header.
-  // @TODO: figure out why the $form['#entity'] disable the header.
-  unset($form['#entity']);
-
   $form['who_is_registering'] = array(
     '#type' => 'value',
     '#value' => 'registration_registrant_type_anon',
@@ -1098,12 +1168,57 @@ function os_events_preprocess_table(&$variables) {
   ));
 
   // Remove the "count" and the "states" from the table head.
-  unset($variables['header'][4], $variables['header'][6]);
+  unset($variables['header'][0], $variables['header'][4], $variables['header'][6]);
 
   // Remove the "count" and the "states" from each table row.
   foreach (array_keys($variables['rows']) as $delta) {
-    unset($variables['rows'][$delta][4], $variables['rows'][$delta][6]);
+    unset($variables['rows'][$delta][0], $variables['rows'][$delta][4], $variables['rows'][$delta][6]);
   }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ *
+ * Add a dropdown menu for the registration page.
+ */
+function os_events_preprocess_page(&$variables) {
+  $menu = menu_get_item();
+  if (strpos($menu['path'], 'node/%/registrations') !== 0) {
+    return;
+  }
+
+  if (empty($variables['tabs']['#secondary'])) {
+    return;
+  }
+
+  // Remove the "Simple view" tab from the navigation tabs.
+  foreach ($variables['tabs']['#secondary'] as $index => $tab) {
+    if ($tab['#link']['title'] == 'Simple view') {
+      unset($variables['tabs']['#secondary'][$index]);
+      break;
+    }
+  }
+
+  // Create dropdown links for simple view and export of registrants.
+  $event_id = $menu['original_map'][1];
+  $event = node_load($event_id);
+  $registration_links = array(
+    'export' => array(
+      'title' => t('CSV'),
+      'href' => 'node/' . $event_id . '/registrations/export',
+    ),
+    'simple_view' => array(
+      'title' => t('Simple view'),
+      'href' => 'node/' . $event_id . '/registrations/simple_view',
+    ),
+  );
+  $variables['tabs']['#secondary']['registration_links'] = array(
+    '#theme' => 'ctools_dropdown',
+    '#links' => $registration_links,
+    '#title' => t('Export'),
+    '#class' => 'section_links registration_links',
+    '#access' => registration_administer_registrations_access('node', $event),
+  );
 }
 
 /**
@@ -1341,4 +1456,43 @@ function os_events_registration_link($variables) {
   }
 
   return os_events_generate_modal_register_link($nid);
+}
+
+/**
+ * Implements hook_preprocess_calendar_item().
+ */
+function os_events_preprocess_calendar_item(&$vars) {
+  $item = $vars['item'];
+  if (in_array($item->granularity, array('day', 'week'))) {
+    $item->item_height = os_events_get_event_duration($item);
+  }
+
+  // Prepare popover fields.
+  if (in_array($item->granularity, array('day', 'week', 'month'))) {
+    $item->popover_fields['event_title'] = $item->rendered_fields['title'];
+    // @TODO: Is this format OK?
+    $item->popover_fields['event_date'] = $item->rendered_fields['field_date'];
+    $item->popover_fields['event_location'] = $item->rendered_fields['field_event_location'];
+  }
+}
+
+/**
+ * Get the duration of an event in hours.
+ *
+ * @param $item
+ *   The event item.
+ * @return mixed
+ *   The event duration in hours or NULL if end time equals start time.
+ */
+function os_events_get_event_duration($item) {
+  $event_start = strtotime($item->calendar_start);
+  $event_end = strtotime($item->calendar_end);
+
+  if ($event_start == $event_end) {
+    return NULL;
+  }
+
+  $hours = round(($event_end - $event_start) / 3600, 1);
+
+  return 80 * $hours . 'px';
 }

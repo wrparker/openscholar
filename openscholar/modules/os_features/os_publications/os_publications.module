@@ -1246,6 +1246,10 @@ function os_publications_preprocess_page(&$variables) {
   }
   // Get the current page title.
   $current_page_title = drupal_get_title();
+  if($current_page_title != $menu['title']) {
+    //If they already have a custom title for this page do not override it again.
+    return;
+  }
   // Get the 'type' filter.
   $type_filter = $menu['map'][1];
   // Switch on the filter, we want type/year/author only.

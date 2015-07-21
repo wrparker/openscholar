@@ -11,6 +11,72 @@ function os_events_views_default_views() {
   $export = array();
 
   $view = new view();
+  $view->name = 'event_attendees';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'registration';
+  $view->human_name = 'Event attendees';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Simple view';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'spaces_feature';
+  $handler->display->display_options['access']['spaces_feature'] = 'os_events';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Field: Registration: Anonymous e-mail */
+  $handler->display->display_options['fields']['anon_mail']['id'] = 'anon_mail';
+  $handler->display->display_options['fields']['anon_mail']['table'] = 'registration';
+  $handler->display->display_options['fields']['anon_mail']['field'] = 'anon_mail';
+  $handler->display->display_options['fields']['anon_mail']['label'] = '';
+  $handler->display->display_options['fields']['anon_mail']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['anon_mail']['element_label_colon'] = FALSE;
+  /* Field: Registration: Full name */
+  $handler->display->display_options['fields']['field_full_name']['id'] = 'field_full_name';
+  $handler->display->display_options['fields']['field_full_name']['table'] = 'field_data_field_full_name';
+  $handler->display->display_options['fields']['field_full_name']['field'] = 'field_full_name';
+  $handler->display->display_options['fields']['field_full_name']['label'] = '';
+  $handler->display->display_options['fields']['field_full_name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_full_name']['element_label_colon'] = FALSE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['label'] = '';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[ ] [field_full_name] - [anon_mail]';
+  $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
+  /* Contextual filter: Registration: Host entity ID */
+  $handler->display->display_options['arguments']['entity_id']['id'] = 'entity_id';
+  $handler->display->display_options['arguments']['entity_id']['table'] = 'registration';
+  $handler->display->display_options['arguments']['entity_id']['field'] = 'entity_id';
+  $handler->display->display_options['arguments']['entity_id']['default_action'] = 'not found';
+  $handler->display->display_options['arguments']['entity_id']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['entity_id']['default_argument_options']['code'] = 'return os_events_get_registraton_id_export();';
+  $handler->display->display_options['arguments']['entity_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['entity_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['entity_id']['summary_options']['items_per_page'] = '25';
+
+  /* Display: Page */
+  $handler = $view->new_display('page', 'Page', 'page_1');
+  $handler->display->display_options['path'] = 'node/%/registrations/simple_view';
+  $handler->display->display_options['menu']['type'] = 'tab';
+  $handler->display->display_options['menu']['title'] = 'Simple view';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
+  $handler->display->display_options['tab_options']['type'] = 'tab';
+  $handler->display->display_options['tab_options']['weight'] = '0';
+  $export['event_attendees'] = $view;
+
+  $view = new view();
   $view->name = 'os_events';
   $view->description = '';
   $view->tag = 'Calendar';
@@ -78,6 +144,12 @@ function os_events_views_default_views() {
   );
   $handler->display->display_options['fields']['field_date']['group_rows'] = FALSE;
   $handler->display->display_options['fields']['field_date']['delta_offset'] = '0';
+  /* Field: Content: Location */
+  $handler->display->display_options['fields']['field_event_location']['id'] = 'field_event_location';
+  $handler->display->display_options['fields']['field_event_location']['table'] = 'field_data_field_event_location';
+  $handler->display->display_options['fields']['field_event_location']['field'] = 'field_event_location';
+  $handler->display->display_options['fields']['field_event_location']['label'] = 'Where';
+  $handler->display->display_options['fields']['field_event_location']['exclude'] = TRUE;
   /* Sort criterion: Content: Sticky */
   $handler->display->display_options['sorts']['sticky']['id'] = 'sticky';
   $handler->display->display_options['sorts']['sticky']['table'] = 'node';
