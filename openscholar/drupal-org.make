@@ -273,6 +273,7 @@ projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/opens
 projects[og][subdir] = "contrib"
 projects[og][version] = 2.7
 projects[og][patch][] = "https://drupal.org/files/issues/add_entity_type_parameter-2308279-3.patch"
+projects[og][patch][] = "https://www.drupal.org/files/issues/group_reference_token-2264759-17.patch"
 
 projects[og_moderation][subdir] = "contrib"
 projects[og_moderation][version] = 2.0
@@ -301,6 +302,7 @@ projects[olark][patch][] = "http://drupal.org/files/olark-js-to-d7-update-178532
 
 projects[password_policy][subdir] = "contrib"
 projects[password_policy][version] = 2.0-alpha5
+projects[password_policy][patch][] = "https://www.drupal.org/files/issues/password_policy-7.x-2.x-fix_element_alter_error-2489918-4.patch"
 
 projects[pathauto][subdir] = "contrib"
 projects[pathauto][version] = 1.2
@@ -336,7 +338,8 @@ projects[robotstxt][version] = "1.1"
 projects[robotstxt][patch][] = "http://drupal.org/files/issues/send_cache_headers-1923838-5.patch"
 
 projects[restws][subdir] = "contrib"
-projects[restws][version] = "2.4"
+projects[restws][version] = "2.0-alpha3"
+projects[restws][patch][] = "http://drupal.org/files/1806142-restws-property-exception.patch"
 
 projects[shorten][subdir] = "contrib"
 projects[shorten][version] = 1.2
