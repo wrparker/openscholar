@@ -513,7 +513,7 @@ function _replace_biocvs_with_pages($vsite_data) {
           continue;
         }
         else {
-          $cv_link = '<p><a href="' . file_create_url($cv_file_obj->uri) . '">Curriculum Vitae</a></p>';
+          $cv_link = '<p><a href="' . file_create_url($cv_file_obj->uri) . '" class="os-cvlink">Curriculum Vitae</a></p>';
         }
       }
     }
