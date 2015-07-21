@@ -679,21 +679,21 @@ function _replace_biocvs_with_pages($vsite_data) {
 
                       $instances["boxes-" . $featured_delta] = $box_position;
                     }
-                  // remove entry in serialized array for bio widget and update database entry
-                  unset($instances[$type]);
-                  db_update('spaces_overrides')
-                    ->fields(array('type' => 'og', 'id' => $gid, 'object_type' => $row->object_type, 'object_id' => $row->object_id, 'value' => serialize(array($value => $instances))))
-                    ->condition('id', $gid, "=")
-                    ->condition('object_id', $row->object_id, "=")
-                    ->condition('object_type', $row->object_type, "=")
-                    ->execute();
+                    // remove entry in serialized array for bio widget and update database entry
+                    unset($instances[$type]);
+                    db_update('spaces_overrides')
+                      ->fields(array('type' => 'og', 'id' => $gid, 'object_type' => $row->object_type, 'object_id' => $row->object_id, 'value' => serialize(array($value => $instances))))
+                      ->condition('id', $gid, "=")
+                      ->condition('object_id', $row->object_id, "=")
+                      ->condition('object_type', $row->object_type, "=")
+                      ->execute();
 
-                  // delete instance of bio widget
-                  db_delete('spaces_overrides')
-                    ->condition('id', $gid, "=")
-                    ->condition('object_id', "bio_teaser", "=")
-                    ->condition('object_type', "boxes", "=")
-                    ->execute();
+                    // delete instance of bio widget
+                    db_delete('spaces_overrides')
+                      ->condition('id', $gid, "=")
+                      ->condition('object_id', "bio_teaser", "=")
+                      ->condition('object_type', "boxes", "=")
+                      ->execute();
                   }
                   catch (Exception $e) {
                     $transaction->rollback();
@@ -745,9 +745,10 @@ function _os_biocv_create_bio_featured_posts_widget($vsite_id, $vsite_values, $b
     "make_embeddable" => 0,
     "nodes" => array(array("nid" => $bio_nid, "title" => $vsite_values['bio_title'])),
     "random" => 0,
-    "additional_classes" => NULL,
+    "additional_classes" => "converted-bio",
     "hide_title" => ((isset($vsite_values['bio_options']) && $vsite_values['bio_options']['show_title']) ? NULL : 1),
   );
+
   $featured_box->embed_as = array("iframe", "oembed");
   $featured_box->plugin_key = "os_boxes_manual_list";
 
