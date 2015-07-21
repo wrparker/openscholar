@@ -8,6 +8,16 @@ mysql:
   username: root
   encoding: utf8
 
+addons:
+  apt:
+    sources:
+      - apt-get update
+      - apt-get install apache2
+      - apt-get update
+      - apt-get install build-essential chrpath libssl-dev libxft-dev
+      - apt-get install libfreetype6 libfreetype6-dev
+      - apt-get install libfontconfig1 libfontconfig1-dev
+
 env:
   - TEST_SUITE=features_first
   - TEST_SUITE=features_second
@@ -25,33 +35,27 @@ before_script:
   - composer global require drush/drush:6.*@dev
 
   # Install apache
-  - sudo apt-get update
-  - sudo apt-get install apache2
-  - sudo a2enmod actions
-  - sudo a2enmod rewrite
-  - echo "export PATH=/home/vagrant/.phpenv/bin:$PATH" | sudo tee -a /etc/apache2/envvars > /dev/null
-  - echo "$(curl -fsSL https://gist.github.com/roderik/16d751c979fdeb5a14e3/raw/74f4fec92c064c4f683fef28a6098caf0f038de7/gistfile1.txt)" | sudo tee /etc/apache2/conf.d/phpconfig > /dev/null
-  - echo "$(curl -fsSL https://gist.github.com/roderik/2eb301570ed4a1f4c33d/raw/8066fda124b6c86f69ad32a010b8c22bbaf868e8/gistfile1.txt)" | sed -e "s,PATH,`pwd`/www,g" | sudo tee /etc/apache2/sites-available/default > /dev/null
+  - a2enmod actions
+  - a2enmod rewrite
+  - echo "export PATH=/home/vagrant/.phpenv/bin:$PATH" | tee -a /etc/apache2/envvars > /dev/null
+  - echo "$(curl -fsSL https://gist.github.com/roderik/16d751c979fdeb5a14e3/raw/74f4fec92c064c4f683fef28a6098caf0f038de7/gistfile1.txt)" | tee /etc/apache2/conf.d/phpconfig > /dev/null
+  - echo "$(curl -fsSL https://gist.github.com/roderik/2eb301570ed4a1f4c33d/raw/8066fda124b6c86f69ad32a010b8c22bbaf868e8/gistfile1.txt)" | sed -e "s,PATH,`pwd`/www,g" | tee /etc/apache2/sites-available/default > /dev/null
 
  # Install phantom JS.
-  - sudo apt-get update
-  - sudo apt-get install build-essential chrpath libssl-dev libxft-dev
-  - sudo apt-get install libfreetype6 libfreetype6-dev
-  - sudo apt-get install libfontconfig1 libfontconfig1-dev
   - export PHANTOM_JS="phantomjs-1.9.7-linux-x86_64"
   - wget https://bitbucket.org/ariya/phantomjs/downloads/$PHANTOM_JS.tar.bz2
-  - sudo mv $PHANTOM_JS.tar.bz2 /usr/local/share/
-  - sudo tar xvjf /usr/local/share/$PHANTOM_JS.tar.bz2
-  - sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/share/phantomjs
-  - sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin/phantomjs
-  - sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/bin/phantomjs
+  - mv $PHANTOM_JS.tar.bz2 /usr/local/share/
+  - tar xvjf /usr/local/share/$PHANTOM_JS.tar.bz2
+  - ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/share/phantomjs
+  - ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin/phantomjs
+  - ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/bin/phantomjs
 
   # Set up the lincoln virtual domain.
-  - sudo service apache2 restart
-  - sudo sh -c "echo 127.0.1.1	lincoln.local >> /etc/hosts"
-  - sudo sh -c "cat openscholar/behat/lincoln-vhost.txt > /etc/apache2/sites-available/lincoln"
-  - sudo a2ensite lincoln
-  - sudo service apache2 reload
+  - service apache2 restart
+  - sh -c "echo 127.0.1.1	lincoln.local >> /etc/hosts"
+  - sh -c "cat openscholar/behat/lincoln-vhost.txt > /etc/apache2/sites-available/lincoln"
+  - a2ensite lincoln
+  - service apache2 reload
   - "mysql -e 'create database drupal;'"
   - phpenv rehash
   - bash scripts/setup
@@ -59,8 +63,8 @@ before_script:
 
   # Configure MySQL.
   - mysql -e "SHOW VARIABLES LIKE 'max_allowed_packet';"
-  - echo -e "[server]\nmax_allowed_packet=64M" | sudo tee -a /etc/mysql/conf.d/drupal.cnf
-  - sudo service mysql reload
+  - echo -e "[server]\nmax_allowed_packet=64M" | tee -a /etc/mysql/conf.d/drupal.cnf
+  - service mysql reload
   - mysql -e "SET GLOBAL wait_timeout=300;"
   - mysql -e "SHOW VARIABLES LIKE 'max_allowed_packet';"
 
@@ -84,8 +88,8 @@ before_script:
   - mkdir -p /tmp
   - mkdir -p /tmp/devel-mails
   - mkdir -p sites/default/files
-  - sudo chmod 777 /tmp -R
-  - sudo chmod 777 sites/default -R
+  - chmod 777 /tmp -R
+  - chmod 777 sites/default -R
   - time drush si openscholar --account-pass=admin --db-url=mysql://root:@127.0.0.1/drupal openscholar_flavor_form.os_profile_flavor=development openscholar_install_type.os_profile_type=vsite --yes
   - drush vset purl_base_domain http://127.0.0.1
 
@@ -110,7 +114,7 @@ before_script:
   - cp behat.local.yml.travis behat.local.yml
   - curl -s https://getcomposer.org/installer | php
   - php composer.phar install --prefer-source
-  - sudo cat /var/log/apache2/error.log
+  - cat /var/log/apache2/error.log
 
 script:
 
@@ -127,4 +131,4 @@ script:
   - ./bin/behat --tags=$TEST_SUITE
 
 after_script:
-  - sudo cat /var/log/apache2/error.log
+  - cat /var/log/apache2/error.log
