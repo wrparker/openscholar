@@ -15,7 +15,7 @@ Drupal.behaviors.os_slideshow = {
       for (var delta in Drupal.settings.os_slideshow) {      
         var $slider = $('div#' + delta).find('.rslides');
         if (c > 0) {
-          Drupal.settings.os_slideshow[delta].namespace = delta;
+          //Drupal.settings.os_slideshow[delta].namespace = delta;
         }
         c++;
         $slider.responsiveSlides(Drupal.settings.os_slideshow[delta]);

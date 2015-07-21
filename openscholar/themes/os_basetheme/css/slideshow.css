@@ -7,7 +7,11 @@
 
 .slide {
     padding: 0 !important;
-    position: relative;
+    /*position: relative;*/
+}
+
+.block-boxes-os_slideshow_box {
+    min-height: 200px;
 }
 
 .slide object, .slide embed {
