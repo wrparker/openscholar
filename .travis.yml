@@ -43,15 +43,15 @@ before_install:
   - npm install -g phantomjs
 
   # Set up the lincoln virtual domain.
-  - service apache2 restart
-  - sh -c "echo 127.0.1.1	lincoln.local >> /etc/hosts"
-  - sh -c "cat openscholar/behat/lincoln-vhost.txt > /etc/apache2/sites-available/lincoln"
-  - a2ensite lincoln
-  - service apache2 reload
-  - "mysql -e 'create database drupal;'"
-  - phpenv rehash
-  - bash scripts/setup
-  - bash scripts/build
+#  - service apache2 restart
+#  - sh -c "echo 127.0.1.1	lincoln.local >> /etc/hosts"
+#  - sh -c "cat openscholar/behat/lincoln-vhost.txt > /etc/apache2/sites-available/lincoln"
+#  - a2ensite lincoln
+#  - service apache2 reload
+#  - "mysql -e 'create database drupal;'"
+#  - phpenv rehash
+#  - bash scripts/setup
+#  - bash scripts/build
 
   # Download and install Apache solr
   - wget https://archive.apache.org/dist/lucene/solr/3.6.2/apache-solr-3.6.2.zip
