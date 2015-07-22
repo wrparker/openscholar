@@ -35,13 +35,6 @@ install:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - composer global require drush/drush:6.*@dev
 
-  # Install apache
-  - a2enmod actions
-  - a2enmod rewrite
-  - echo "export PATH=/home/vagrant/.phpenv/bin:$PATH" | tee -a /etc/apache2/envvars > /dev/null
-  - echo "$(curl -fsSL https://gist.github.com/roderik/16d751c979fdeb5a14e3/raw/74f4fec92c064c4f683fef28a6098caf0f038de7/gistfile1.txt)" | tee /etc/apache2/conf.d/phpconfig > /dev/null
-  - echo "$(curl -fsSL https://gist.github.com/roderik/2eb301570ed4a1f4c33d/raw/8066fda124b6c86f69ad32a010b8c22bbaf868e8/gistfile1.txt)" | sed -e "s,PATH,`pwd`/www,g" | tee /etc/apache2/sites-available/default > /dev/null
-
  # Install phantom JS.
   - export PHANTOM_JS="phantomjs-1.9.7-linux-x86_64"
   - wget https://bitbucket.org/ariya/phantomjs/downloads/$PHANTOM_JS.tar.bz2
@@ -61,13 +54,6 @@ install:
   - phpenv rehash
   - bash scripts/setup
   - bash scripts/build
-
-  # Configure MySQL.
-  - mysql -e "SHOW VARIABLES LIKE 'max_allowed_packet';"
-  - echo -e "[server]\nmax_allowed_packet=64M" | tee -a /etc/mysql/conf.d/drupal.cnf
-  - service mysql reload
-  - mysql -e "SET GLOBAL wait_timeout=300;"
-  - mysql -e "SHOW VARIABLES LIKE 'max_allowed_packet';"
 
   # Download and install Apache solr
   - wget https://archive.apache.org/dist/lucene/solr/3.6.2/apache-solr-3.6.2.zip
