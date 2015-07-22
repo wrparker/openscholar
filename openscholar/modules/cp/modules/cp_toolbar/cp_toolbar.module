@@ -77,7 +77,6 @@ function cp_toolbar_view() {
         'title' => t('Log out'),
         'href' => 'user/logout',
         'description' => t('Log out of this site'),
-        'query' => drupal_get_destination()
       ),
     );
     if (arg(0) == 'user') {
