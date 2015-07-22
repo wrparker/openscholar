@@ -83,15 +83,16 @@ h3 {
   color:#222;
   }
 
-h3.cv-direct-download {
+.os-cvlink{
   background: #717171;
   padding: 3px 15px;
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
   border-radius: 20px;
   margin: 0 0 15px 0;
-  color: #fff;
+  color: #FFF;
   width: 110px;
+ font-weight: bold;
   }
 
 h3.cv-direct-download a,
