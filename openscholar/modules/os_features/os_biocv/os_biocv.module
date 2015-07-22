@@ -536,17 +536,17 @@ function _replace_biocvs_with_pages($vsite_data) {
     if (isset($vsite_values['bio_nid'])) {
       $old_bio_node = node_load($vsite_values['bio_nid']);
       $fileObj = NULL;
-			if(count($old_bio_node->field_upload)) {
-				foreach ($old_bio_node->field_upload[LANGUAGE_NONE] as $bio_file) {
-					$fileObj = NULL;
-					if (!isset($vsite_values['cv_fid']) || $bio_file['fid'] != $vsite_values['cv_fid']) {
-						$fileObj = file_load($bio_file['fid']);
-						if ($fileObj) {
-							file_usage_add($fileObj, "os_files", "node", $bio_node->nid);
-						}
-					}
-				}
-			}
+      if(count($old_bio_node->field_upload)) {
+        foreach ($old_bio_node->field_upload[LANGUAGE_NONE] as $bio_file) {
+          $fileObj = NULL;
+          if (!isset($vsite_values['cv_fid']) || $bio_file['fid'] != $vsite_values['cv_fid']) {
+            $fileObj = file_load($bio_file['fid']);
+            if ($fileObj) {
+              file_usage_add($fileObj, "os_files", "node", $bio_node->nid);
+            }
+          }
+        }
+      }
     }
 
     // Add the new page to the vsite
@@ -625,17 +625,17 @@ function _replace_biocvs_with_pages($vsite_data) {
           $old_cv_node = node_load($vsite_values['cv_nid']);
         }
         $fileObj = NULL;
-				if(count($old_cv_node->field_upload)) {
-					foreach ($old_cv_node->field_upload[LANGUAGE_NONE] as $cv_file) {
-						$fileObj = NULL;
-						if (!isset($vsite_values['cv_fid']) || $cv_file['fid'] != $vsite_values['cv_fid']) {
-							$fileObj = file_load($cv_file['fid']);
-							if ($fileObj) {
-								file_usage_add($fileObj, "os_files", "node", $cv_node->nid);
-							}
-						}
-					}
-				}
+        if(count($old_cv_node->field_upload)) {
+          foreach ($old_cv_node->field_upload[LANGUAGE_NONE] as $cv_file) {
+            $fileObj = NULL;
+            if (!isset($vsite_values['cv_fid']) || $cv_file['fid'] != $vsite_values['cv_fid']) {
+              $fileObj = file_load($cv_file['fid']);
+              if ($fileObj) {
+                file_usage_add($fileObj, "os_files", "node", $cv_node->nid);
+              }
+            }
+          }
+        }
       }
 
       $cv_node_wrapper = entity_metadata_wrapper('node', $cv_node);
@@ -750,6 +750,9 @@ function _replace_biocvs_with_pages($vsite_data) {
     else {
       $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $bio_node->nid, $bio_widget_created_flag);
     }
+
+    // TODO: find out if this vsite has a List of Posts or Featured Posts widget that references either the old bio or cv node
+
   }
   return $output;
 }
@@ -833,3 +836,13 @@ function _os_biocv_create_bio_featured_posts_widget($vsite_id, $vsite_values, $b
     return FALSE;
   }
 }
+
+/**
+ * helper function return the serial data snippet to search for
+ */
+function _os_biocv_serial_snippet($key, $value) {
+  if ($key && $value) {
+    return "s:" . strlen($key) . "\"$key\";s:" . strlen($value) . "\"$value\";";
+  }
+}
+
