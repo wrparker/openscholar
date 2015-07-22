@@ -2238,6 +2238,20 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @When /^ I upload the file "{[^"]*)" from the operating system browser$/
+   */
+  public function iChooseFileFromBrowser($filename) {
+    $driver = $this->getSession()->getDriver();
+  }
+
+  /**
+   * @When /^I drop the file "([^"]*) onto the element "([^"]*)"$/
+   */
+  public function iDropFileOnto($file, $element) {
+
+  }
+
+  /**
    * @Given /^I should find the text "([^"]*)"$/
    *
    * This step is used to for looking for text in the page while respecting
