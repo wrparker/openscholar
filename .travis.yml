@@ -19,6 +19,10 @@ addons:
       - apt-get install libfreetype6 libfreetype6-dev
       - apt-get install libfontconfig1 libfontconfig1-dev
 
+    packages:
+      - php5-cgi
+      - php5-mysql
+
 env:
   - TEST_SUITE=features_first
 #  - TEST_SUITE=features_second
@@ -31,18 +35,12 @@ env:
 #  - TEST_SUITE=vsite
 #  - TEST_SUITE=widgets
 
-install:
+before_install:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - composer global require drush/drush:6.*@dev
 
  # Install phantom JS.
-  - export PHANTOM_JS="phantomjs-1.9.7-linux-x86_64"
-  - wget https://bitbucket.org/ariya/phantomjs/downloads/$PHANTOM_JS.tar.bz2
-  - mv $PHANTOM_JS.tar.bz2 /usr/local/share/
-  - tar xvjf /usr/local/share/$PHANTOM_JS.tar.bz2
-  - ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/share/phantomjs
-  - ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin/phantomjs
-  - ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/bin/phantomjs
+  - npm install -g phantomjs
 
   # Set up the lincoln virtual domain.
   - service apache2 restart
