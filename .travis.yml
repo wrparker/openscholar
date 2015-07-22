@@ -50,8 +50,8 @@ before_install:
 #  - service apache2 reload
 #  - "mysql -e 'create database drupal;'"
 #  - phpenv rehash
-#  - bash scripts/setup
-#  - bash scripts/build
+  - bash scripts/setup
+  - bash scripts/build
 
   # Download and install Apache solr
   - git clone https://github.com/RoySegall/solr-script.git
