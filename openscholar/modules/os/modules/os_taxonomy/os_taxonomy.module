@@ -1297,7 +1297,7 @@ function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array
   }
 
   // In case the bundle is of the type "event", filter by the type of the event.
-  if (!empty($bundles) && is_array($bundles) && strpos(reset($bundles), 'event') !== FALSE) {
+  if (!empty($bundles) && is_array($bundles) && strpos(reset($bundles), 'event') !== FALSE && count($bundles) == 1) {
     $query->leftJoin('field_data_field_date', 'fd', '(ogv.entity_id = fd.entity_id)');
     $event_type = reset($bundles);
 
