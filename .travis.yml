@@ -104,7 +104,7 @@ before_install:
   - cp behat.local.yml.travis behat.local.yml
   - curl -s https://getcomposer.org/installer | php
   - php composer.phar install --prefer-source
-  - cat /var/log/apache2/error.log
+#  - cat /var/log/apache2/error.log
 
   # Run selenium.
   - sh -e /etc/init.d/xvfb start
