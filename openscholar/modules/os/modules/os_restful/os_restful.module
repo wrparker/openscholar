@@ -162,6 +162,10 @@ function os_restful_restful_parse_request_alter(&$request) {
     $vsite = vsite_get_vsite($request['vsite']);
     $vsite->activate_user_roles();
   }
+
+  if (!empty($request['file'])) {
+    $request['file']->type = file_get_type($request['file']);
+  }
 }
 
 /**
