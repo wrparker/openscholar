@@ -5,7 +5,8 @@
 
   var restPath = '',
     entities = {},
-    fetched = {};
+    fetched = {},
+    defers = {};
 
   angular.module('EntityService', [])
     .config(function () {
@@ -29,41 +30,43 @@
           vsite = Drupal.settings.spaces.id;
         }
 
-        var success = function(resp) {
+        var success = function(resp, status, headers, config) {
           ents.length = 0;
 
-          recursiveFetch(resp);
+          recursiveFetch(resp, status, headers, config);
 
           fetched[type] = true;
           entityCount = resp.count;
         }
 
-        function recursiveFetch(resp) {
+        function recursiveFetch(resp, status, headers, config) {
           for (var i=0; i<resp.data.length; i++) {
             ents.push(resp.data[i]);
           }
+          var key = config.deferKey;
 
           if (resp.next) {
             var max = Math.ceil(resp.count/resp.data.length),
               curr = resp.next.href.match(/page=([\d])/)[1];
-            fetchDefer.notify(("Loading $p% complete.").replace('$p', ((curr-1)/max)*100));
-            $http.get(resp.next.href).success(recursiveFetch);
+            defers[key].notify(("Loading $p% complete.").replace('$p', ((curr-1)/max)*100));
+            $http.get(resp.next.href, {deferKey: key}).success(recursiveFetch);
           }
           else {
-            fetchDefer.resolve(ents);
-            $rootScope.$broadcast(eventName+'.fetch', ents);
+            defers[key].resolve(ents);
+            delete defers[key];
+            $rootScope.$broadcast(eventName+'.fetch', ents, key);
           }
         }
 
-        var errorFunc = function() {
+        var errorFunc = function(resp, status, headers, config) {
           errorAttempts++;
           if (errorAttempts < 3) {
-            $http.get({url: restPath}).
+            $http.get(restPath + '/' + entityType, config).
               success(success).
               error(errorFunc);
           }
           else {
-            fetchDefer.reject('Error getting files. Aborting after 3 attempts.');
+            defers[config.deferKey].reject('Error getting files. Aborting after 3 attempts.');
           }
         };
 
@@ -77,24 +80,27 @@
         }
 
         this.fetch = function (params) {
-          if (!fetchDefer) {
-            var url = restPath + '/' + entityType;
-            if (!params) {
-              params = {};
-            }
+          if (!params) {
+            params = {};
+          }
 
-            if (vsite) {
-              params.vsite = vsite;
-            }
-            fetchDefer = $q.defer();
-            $http.get(url, {params: params})
+          if (vsite) {
+            params.vsite = vsite;
+          }
+
+          var key = entityType + ':' + JSON.stringify(params);
+
+          if (!defers[key]) {
+            var url = restPath + '/' + entityType;
+            defers[key] = $q.defer();
+            $http.get(url, {params: params, deferKey: key})
               .success(success)
               .error(errorFunc);
             setTimeout(function () {
-              fetchDefer.notify("Loading 0% complete.");
+              defers[key].notify("Loading 0% complete.");
             }, 0);
           }
-          return fetchDefer.promise;
+          return defers[key].promise;
         }
 
         this.getAll = function () {
