@@ -504,7 +504,7 @@ function _replace_biocvs_with_pages($vsite_data) {
     $cv_file_obj = FALSE;
     if (isset($vsite_values['cv_body']) || isset($vsite_values['cv_fid'])) {
       if (isset($vsite_values['tabs']) && $vsite_values['tabs'] && isset($vsite_values['cv_body'])) {
-        $cv_link = '<p><a href="/' . $vsite_obj->group->purl . '/biocv/cv" class="os-cvlink">Curriculum Vitae</a></p>';
+        $cv_link = '<p class="os-cvlinkwrap"><a href="/' . $vsite_obj->group->purl . '/biocv/cv" class="os-cvlink">Curriculum Vitae</a></p>';
       }
       elseif (isset($vsite_values['cv_fid'])) {
         // add link to CV file and attach file to vsite so that when CV node is deleted, the file won't be
@@ -515,7 +515,7 @@ function _replace_biocvs_with_pages($vsite_data) {
           continue;
         }
         else {
-          $cv_link = '<p><a href="' . file_create_url($cv_file_obj->uri) . '" class="os-cvlink">Curriculum Vitae</a></p>';
+          $cv_link = '<p class="os-cvlinkwrap"><a href="' . file_create_url($cv_file_obj->uri) . '" class="os-cvlink">Curriculum Vitae</a></p>';
         }
       }
     }
@@ -538,7 +538,7 @@ function _replace_biocvs_with_pages($vsite_data) {
     if (isset($vsite_values['bio_nid'])) {
       $old_bio_node = node_load($vsite_values['bio_nid']);
       $fileObj = NULL;
-      if(count($old_bio_node->field_upload)) {
+      if(is_array($old_bio_node->field_upload) && count($old_bio_node->field_upload)) {
         foreach ($old_bio_node->field_upload[LANGUAGE_NONE] as $bio_file) {
           $fileObj = NULL;
           if (!isset($vsite_values['cv_fid']) || $bio_file['fid'] != $vsite_values['cv_fid']) {
@@ -561,7 +561,7 @@ function _replace_biocvs_with_pages($vsite_data) {
     // Get primary menu info for bio cv link
     $bio_menu = array();
     foreach (_vsite_menu_get_menu_links('primary-menu',  $vsite_obj) as $mlid => $menu_item) {
-      if ($menu_item['link_path'] == "biocv") {
+      if (isset($menu_item['link_path']) && $menu_item['link_path'] == "biocv") {
         $bio_menu = $menu_item;
         break;
       }
@@ -590,6 +590,7 @@ function _replace_biocvs_with_pages($vsite_data) {
     }
 
     // create cv page (if necessary)
+    $cv_node = NULL;
     if (isset($vsite_values['tabs']) && $vsite_values['tabs'] && isset($vsite_values['cv_nid']) && isset($vsite_values['cv_body'])) {
       $cv_body = "";
       if(isset($vsite_values['cv_body'])) {
@@ -627,7 +628,7 @@ function _replace_biocvs_with_pages($vsite_data) {
           $old_cv_node = node_load($vsite_values['cv_nid']);
         }
         $fileObj = NULL;
-        if(count($old_cv_node->field_upload)) {
+        if(isset($old_cv_node->field_upload) && is_array($old_cv_node->field_upload) && count($old_cv_node->field_upload)) {
           foreach ($old_cv_node->field_upload[LANGUAGE_NONE] as $cv_file) {
             $fileObj = NULL;
             if (!isset($vsite_values['cv_fid']) || $cv_file['fid'] != $vsite_values['cv_fid']) {
@@ -819,13 +820,13 @@ function _replace_biocvs_with_pages($vsite_data) {
           // otherwise, it's a list of posts widget, so we need to convert it to a featured posts widget
           else {
             // create new featured posts widget based on LOP options
-            $vsite_values['options']['additional_classes'] = $box_data->options['additional_classes'];
-            $vsite_values['options']['make_embeddable'] = $box_data->options['make_embeddable'];
-            $vsite_values['options']['style'] = $box_data->options['display'];
-            if ($box_data->options['content_type'] == "bio") {
+            $vsite_values['options']['additional_classes'] = isset($box_data->options['additional_classes']) ? $box_data->options['additional_classes'] : "";
+            $vsite_values['options']['make_embeddable'] = isset($box_data->options['make_embeddable']) ? $box_data->options['make_embeddable'] : "";
+            $vsite_values['options']['style'] = isset($box_data->options['display']) ? $box_data->options['display'] : "";
+            if ($box_data->options['content_type'] == "bio" && $bio_node) {
               $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $bio_node->nid, "converted-bio", 1);
             }
-            elseif ($box_data->options['content_type'] == "cv") {
+            elseif ($box_data->options['content_type'] == "cv" && $cv_node) {
               $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $cv_node->nid, "converted-bio", 1);
             }
 
@@ -904,7 +905,7 @@ function _os_biocv_create_bio_featured_posts_widget($vsite_id, $vsite_values, $b
     "nodes" => array(array("nid" => $bio_nid, "title" => $vsite_values['bio_title'])),
     "random" => 0,
     "additional_classes" => $class,
-    "hide_title" => ((isset($vsite_values['options']) && $vsite_values['options']['show_title']) ? NULL : 1),
+    "hide_title" => ((isset($vsite_values['options']['show_title']) && $vsite_values['options']['show_title']) ? NULL : 1),
   );
 
   $featured_box->embed_as = array("iframe", "oembed");
