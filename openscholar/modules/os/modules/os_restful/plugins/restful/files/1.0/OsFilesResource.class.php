@@ -516,7 +516,7 @@ class OsFilesResource extends RestfulEntityBase {
     return parent::putEntity($entity_id);
   }
 
-  protected function _setPropertyValues(EntityMetadataWrapper $wrapper, $null_missing_fields = FALSE) {
+  protected function setPropertyValues(EntityMetadataWrapper $wrapper, $null_missing_fields = FALSE) {
     $request = $this->getRequest();
 
     static::cleanRequest($request);
