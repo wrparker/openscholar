@@ -141,7 +141,7 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
           });
         }
 
-        scope.selectedTerms(termService.get(node.value)); // TODO: This is not right, but I have to figure out what it's supposed to do first.
+        scope.termsSelected(termService.get(node.value));
       };
     }
   }

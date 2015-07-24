@@ -172,4 +172,5 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
 
     return parent::checkPropertyAccess($op, $public_field_name, $property_wrapper, $wrapper);
   }
+
 }

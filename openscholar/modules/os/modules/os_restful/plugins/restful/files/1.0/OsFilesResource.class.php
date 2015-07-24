@@ -516,7 +516,7 @@ class OsFilesResource extends RestfulEntityBase {
     return parent::putEntity($entity_id);
   }
 
-  protected function setPropertyValues(EntityMetadataWrapper $wrapper, $null_missing_fields = FALSE) {
+  protected function _setPropertyValues(EntityMetadataWrapper $wrapper, $null_missing_fields = FALSE) {
     $request = $this->getRequest();
 
     static::cleanRequest($request);
@@ -586,6 +586,23 @@ class OsFilesResource extends RestfulEntityBase {
     $this->entityValidate($wrapper);
 
     $wrapper->save();
+  }
+
+
+  public function propertyValuesPreprocess($property_name, $value, $public_field_name) {
+    $request = $this->getRequest();
+    self::cleanRequest($request);
+
+    if ($public_field_name == 'terms') {
+      $new_value = array();
+      foreach ($request['terms'] as $term) {
+        $new_value[] = is_array($term) ? $term['tid'] : $term;
+      }
+
+      return $new_value;
+    }
+
+    return parent::propertyValuesPreprocess($property_name, $value, $public_field_name);
   }
 
   protected function updateFileLocation($wrapper) {
