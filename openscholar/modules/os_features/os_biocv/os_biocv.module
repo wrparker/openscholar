@@ -668,8 +668,8 @@ function _replace_biocvs_with_pages($vsite_data) {
     // find out if this vsite has a customized instance of the bio widget
     $query = db_select('spaces_overrides', 'so');
     $query->condition("so.type", 'og');
-    $query->condition("so.object_type", array('boxes','context'), 'in');
     $query->condition("id", $gid, "=");
+    $query->condition("so.object_type", array('boxes','context'), 'in');
     $or = db_or();
     $or->condition("so.value",'%bio_teaser%', 'like');
     $or->condition("so.value",'%os_boxes_bio%', 'like');
@@ -779,9 +779,10 @@ function _replace_biocvs_with_pages($vsite_data) {
     }
 
     if ($conditions) {
-      $query->condition($or);
+      $query->condition("type", 'og');
       $query->condition("id", $gid, "=");
       $query->condition("object_type", "boxes", "=");
+      $query->condition($or);
       $query = $query->fields('so', array('object_type', 'object_id', 'value'));
       $results = $query->execute();
 
@@ -831,6 +832,7 @@ function _replace_biocvs_with_pages($vsite_data) {
             // check for where LOP widget was being used and replace with new Featured Posts widget
             if($featured_delta) {
               $query = db_select('spaces_overrides', 'so')->fields('so', array('object_type', 'object_id', 'value'));
+              $query->condition("type", 'og');
               $query->condition("id", $gid, "=");
               $query->condition("object_type", "context", "=");
               $query->condition("value", "%" . $box->object_id . "%", "like");
@@ -926,9 +928,10 @@ function _os_biocv_create_bio_featured_posts_widget($vsite_id, $vsite_values, $b
     if (!$context) {
       // if a context doesn't exist for this widget, create one
       $query = db_select('spaces_overrides', 'so')->fields('so');
+      $query->condition("so.type", 'og');
+      $query->condition('so.id', $vsite_id, '=');
       $query->condition('so.object_type','context', '=');
       $query->condition('so.object_id', "os_front:reaction:block", '=');
-      $query->condition('so.id', $vsite_id, '=');
       $results = $query->execute();
 
       if (!$results->rowCount()) {
