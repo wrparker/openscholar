@@ -76,7 +76,9 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
           scope.terms = [];
           for (var k in newTerms) {
             for (var i = 0; i < newTerms[k].length; i++) {
-              scope.terms.push(newTerms[k][i]);
+              if (newTerms[k][i]) {
+                scope.terms.push(newTerms[k][i]);
+              }
             }
           }
           console.log(scope.terms);
@@ -104,8 +106,7 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
        * Add another term to the selected terms object.
        */
       scope.onSelect = function ($item, $model, $label) {
-        scope.selectedTerms[$item.vid][$item.id] = $item.id;
-        scope.terms = scope.selectedTerms;
+        scope.selectedTerms[$item.vid][$item.id] = $item;
       };
 
       /**
@@ -114,23 +115,31 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
       scope.termsSelected = function(term, object) {
         if (!scope.selectedTerms[term.vid]) {
           scope.selectedTerms[term.vid] = [];
+        }
 
-          if (!scope.selectedTerms[term.vid][term.id]) {
-            scope.selectedTerms[term.vid][term.id] = term.id;
-          }
-          else {
-            scope.selectedTerms[term.vid][term.id] = null;
+        var found = false;
+        for (var i = 0; i < scope.selectedTerms[term.vid].length; i++) {
+          if (scope.selectedTerms[term.vid][i].id == term.id) {
+            scope.selectedTerms[term.vid].splice(i, 1);
+            found = true;
+            break;
           }
         }
-        else {
-          if (scope.selectedTerms[term.vid][term.id]) {
-            scope.selectedTerms[term.vid][term.id] = null;
-          }
-          else {
-            scope.selectedTerms[term.vid][term.id] = term.id;
-          }
+
+        if (!found) {
+          scope.selectedTerms[term.vid].push(term);
         }
       };
+
+      scope.termSet = function(term) {
+        for (var i = 0; i < scope.selectedTerms[term.vid].length; i++) {
+          if (scope.selectedTerms[term.vid][i].id == term.id) {
+            return true;
+          }
+        }
+
+        return false;
+      }
 
       scope.termTreeChangeCallback = function(node, tree) {
 

@@ -23,7 +23,7 @@
     </div>
     <div ng-switch-when="options_buttons">
       <div ng-repeat="term in allTerms[vocab.id]">
-        <input type="checkbox" ng-click="termsSelected(term, this)" class="form-checkbox">
+        <input type="checkbox" ng-click="termsSelected(term, this)" class="form-checkbox" ng-checked="termSet(term)">
         <label class="option">{{term.label}}</label>
       </div>
     </div>
