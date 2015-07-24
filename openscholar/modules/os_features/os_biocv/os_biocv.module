@@ -502,7 +502,7 @@ function _replace_biocvs_with_pages($vsite_data) {
     $cv_file_obj = FALSE;
     if (isset($vsite_values['cv_body']) || isset($vsite_values['cv_fid'])) {
       if (isset($vsite_values['tabs']) && $vsite_values['tabs'] && isset($vsite_values['cv_body'])) {
-        $cv_link = '<p><a href="/' . $vsite_obj->group->purl . '/biocv/cv" class="os-cvlink">Curriculum Vitae</a></p>';
+        $cv_link = '<p class="os-cvlinkwrap">Download CV: <a href="/' . $vsite_obj->group->purl . '/biocv/cv" class="os-cvlink">PDF</a></p>';
       }
       elseif (isset($vsite_values['cv_fid'])) {
         // add link to CV file and attach file to vsite so that when CV node is deleted, the file won't be
@@ -513,7 +513,7 @@ function _replace_biocvs_with_pages($vsite_data) {
           continue;
         }
         else {
-          $cv_link = '<p><a href="' . file_create_url($cv_file_obj->uri) . '" class="os-cvlink">Curriculum Vitae</a></p>';
+          $cv_link = '<p class="os-cvlinkwrap">Download CV: <a href="' . file_create_url($cv_file_obj->uri) . '" class="os-cvlink">PDF</a></p>';
         }
       }
     }
