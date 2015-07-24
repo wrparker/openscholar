@@ -670,6 +670,7 @@ function _replace_biocvs_with_pages($vsite_data) {
     $or->condition("so.value",'%bio_teaser%', 'like');
     $or->condition("so.value",'%os_boxes_bio%', 'like');
     $query->condition($or);
+    $query->condition("so.object_type", array('boxes','context'), 'in');
     $query->condition("id", $gid, "=");
     $query = $query->fields('so', array('object_type', 'object_id', 'value'))
                    ->orderBy('so.object_type', 'ASC');
@@ -688,8 +689,11 @@ function _replace_biocvs_with_pages($vsite_data) {
         // if user has only a bio_teaser entry, then there will be layout data in the db, so set up default
         elseif($row->object_id == "bio_teaser") {
           $existing_bio_widget = unserialize($row->value);
-          $vsite_values['bio_options'] = $existing_bio_widget->options;
-          $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $bio_node->nid, $bio_widget_created_flag);
+          $vsite_values['options'] = $existing_bio_widget->options;
+          if (!$bio_widget_created_flag) {
+            $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $bio_node->nid, "converted-bio");
+            $bio_widget_created_flag = 1;
+          }
         }
         else {
           $row_values = unserialize($row->value);
@@ -702,9 +706,12 @@ function _replace_biocvs_with_pages($vsite_data) {
                     // replace implemented bio widget with new featured posts widget
                     if($data['region']) {
                       if($existing_bio_widget) {
-                        $vsite_values['bio_options'] = $existing_bio_widget->options;
+                        $vsite_values['options'] = $existing_bio_widget->options;
                       }
-                      $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $bio_node->nid, $bio_widget_created_flag);
+                      if (!$bio_widget_created_flag) {
+                         $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $bio_node->nid, "converted-bio");
+                        $bio_widget_created_flag = 1;
+                      }
 
                       $box_position = array(
                         "region" => $data['region'],
@@ -748,11 +755,115 @@ function _replace_biocvs_with_pages($vsite_data) {
     // the user hasn't changed the default display,
     // but we still need to add in the featured posts bio widget
     else {
-      $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $bio_node->nid, $bio_widget_created_flag);
+      if (!$bio_widget_created_flag) {
+        $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $bio_node->nid, "converted-bio");
+        $bio_widget_created_flag = 1;
+      }
     }
 
-    // TODO: find out if this vsite has a List of Posts or Featured Posts widget that references either the old bio or cv node
+    // find out if this vsite has List of Posts or Featured Posts widgetd that reference the old bio or cv node
+    $conditions = 0;
 
+    $query = db_select('spaces_overrides', 'so');
+    $or = db_or();
+    if (isset($vsite_values['bio_nid']) && isset($vsite_values['bio_body'])) {
+      $conditions = 1;
+      $or->condition("so.value",'%"content_type";s:3:"bio"%', 'like');
+      $or->condition("so.value", _os_biocv_serial_snippet("nid", $vsite_values['bio_nid']), 'like');
+    }
+    if (isset($vsite_values['cv_nid']) && isset($vsite_values['cv_body'])) {
+      $conditions = 1;
+      $or->condition("so.value",'%"content_type";s:2:"cv"%', 'like');
+      $or->condition("so.value", _os_biocv_serial_snippet("nid", $vsite_values['cv_nid']), 'like');
+    }
+
+    if ($conditions) {
+      $query->condition($or);
+      $query->condition("id", $gid, "=");
+      $query->condition("object_type", "boxes", "=");
+      $query = $query->fields('so', array('object_type', 'object_id', 'value'));
+      $results = $query->execute();
+
+      if ($results->rowCount()) {
+        while ($box = $results->fetchObject()) {
+          $box_data = unserialize($box->value);
+          // box is a featured posts widget, so the node id(s) need to be replaced
+          if ($box_data->plugin_key == "os_boxes_manual_list") {
+            foreach ($box_data->options['nodes'] as $index => $featured_node) {
+              if ($featured_node['nid'] == $vsite_values['bio_nid']) {
+                if (isset($bio_node)) {
+                  $box_data->options['nodes'][$index]['nid'] = $bio_node->nid;
+                }
+                else {
+                  unset($box_data->options['nodes'][$index]);
+                }
+              }
+              elseif ($featured_node['nid'] == $vsite_values['cv_nid']) {
+                if (isset($cv_node)) {
+                  $box_data->options['nodes'][$index]['nid'] = $cv_node->nid;
+                }
+                else {
+                  unset($box_data->options['nodes'][$index]);
+                }
+              }
+            }
+            $update_query = db_update('spaces_overrides')
+              ->fields(array('type' => 'og', 'id' => $gid, 'object_type' => $box->object_type, 'object_id' => $box->object_id, 'value' => serialize($box_data)))
+              ->condition('id', $gid, "=")
+              ->condition('object_id', $box->object_id, "=")
+              ->condition('object_type', $box->object_type, "=")
+              ->execute();
+          }
+          // otherwise, it's a list of posts widget, so we need to convert it to a featured posts widget
+          else {
+            // create new featured posts widget based on LOP options
+            $vsite_values['options'] = $box_data->options;
+            if ($box_data->options['content_type'] == "bio") {
+              $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $bio_node->nid, "converted-bio", 1);
+            }
+            elseif ($box_data->options['content_type'] == "cv") {
+              $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $cv_node->nid, "converted-bio", 1);
+            }
+
+            // check for where LOP widget was being used and replace with new Featured Posts widget
+            if($featured_delta) {
+              $query = db_select('spaces_overrides', 'so')->fields('so', array('object_type', 'object_id', 'value'));
+              $query->condition("id", $gid, "=");
+              $query->condition("object_type", "context", "=");
+              $query->condition("value", "%" . $box->object_id . "%", "like");
+              $contexts = $query->execute();
+
+              while ($context = $contexts->fetchObject()) {
+                $context_data = unserialize($context->value);
+                foreach ($context_data['blocks'] as $block_id => $block_data) {
+                  if($block_id == "boxes-" . $box->object_id) {
+                    if (isset($context_data['blocks']['boxes-' . $box->object_id]['plugin'])) {
+                      unset($context_data['blocks']['boxes-' . $box->object_id]['plugin']);
+                    }
+                    $context_data['blocks']["boxes-" . $featured_delta] = $context_data['blocks']['boxes-' . $box->object_id];
+                    unset($context_data['blocks']['boxes-' . $box->object_id]);
+                    break;
+                  }
+                }
+                // update context data in db
+                $update_query = db_update('spaces_overrides')
+                  ->fields(array('type' => 'og', 'id' => $gid, 'object_type' => $context->object_type, 'object_id' => $context->object_id, 'value' => serialize($context_data)))
+                  ->condition('id', $gid, "=")
+                  ->condition('object_id', $context->object_id, "=")
+                  ->condition('object_type', $context->object_type, "=")
+                  ->execute();
+              }
+            }
+            // delete instance of old widget
+            $delete_query = db_delete('spaces_overrides')
+              ->condition('id', $gid, "=")
+              ->condition('object_id', $box->object_id, "=")
+              ->condition('object_type', "boxes", "=")
+              ->execute();
+          }
+        }
+      }
+    }
   }
   return $output;
 }
@@ -775,7 +886,7 @@ function _os_biocv_set_not_empty(&$array, $key, $value) {
 /**
  * helper function to create the featured posts object the replaces the bio widget
  */
-function _os_biocv_create_bio_featured_posts_widget($vsite_id, $vsite_values, $bio_nid, &$bio_widget_created) {
+function _os_biocv_create_bio_featured_posts_widget($vsite_id, $vsite_values, $bio_nid, $class = "", $context = NULL) {
   $featured_delta = "og-" . $vsite_id . "-" . substr(md5(time()), -8);
   $featured_box = new stdClass();
   $featured_box->changed = NULL;
@@ -786,38 +897,40 @@ function _os_biocv_create_bio_featured_posts_widget($vsite_id, $vsite_values, $b
     "make_embeddable" => 0,
     "nodes" => array(array("nid" => $bio_nid, "title" => $vsite_values['bio_title'])),
     "random" => 0,
-    "additional_classes" => "converted-bio",
-    "hide_title" => ((isset($vsite_values['bio_options']) && $vsite_values['bio_options']['show_title']) ? NULL : 1),
+    "additional_classes" => $class,
+    "hide_title" => ((isset($vsite_values['options']) && $vsite_values['options']['show_title']) ? NULL : 1),
   );
 
   $featured_box->embed_as = array("iframe", "oembed");
   $featured_box->plugin_key = "os_boxes_manual_list";
 
-  if(isset($vsite_values['bio_options']) && isset($vsite_values['bio_options']['teaser']) && ($vsite_values['bio_options']['teaser'] != "full")) {
+  if(isset($vsite_values['options']) && isset($vsite_values['options']['teaser']) && ($vsite_values['options']['teaser'] != "full")) {
     $featured_box->options['style'] = "teasers";
+  }
+  elseif (isset($vsite_values['options']['style'])) {
+    $featured_box->options['style'] = $vsite_values['options']['style'];
   }
   else {
     $featured_box->options['style'] = "full";
   }
 
   try {
-    if (!$bio_widget_created) {
-      db_insert('spaces_overrides')
-        ->fields(array('type' => 'og', 'id' => $vsite_id, 'object_type' => 'boxes', 'object_id' => $featured_delta, 'value' => serialize($featured_box)))
-        ->execute();
-      $bio_widget_created = 1;
+    db_insert('spaces_overrides')
+      ->fields(array('type' => 'og', 'id' => $vsite_id, 'object_type' => 'boxes', 'object_id' => $featured_delta, 'value' => serialize($featured_box)))
+      ->execute();
 
-      // if an os_front context doesn't exist for this vsite, create one
+    if (!$context) {
+      // if a context doesn't exist for this widget, create one
       $query = db_select('spaces_overrides', 'so')->fields('so');
       $query->condition('so.object_type','context', '=');
-      $query->condition('so.object_id','os_front:reaction:block', '=');
+      $query->condition('so.object_id', "os_front:reaction:block", '=');
       $query->condition('so.id', $vsite_id, '=');
       $results = $query->execute();
 
       if (!$results->rowCount()) {
         $box_position = array(
-          "region" => 'content_top',
-          "weight" => '-10',
+          "region" => "content_top",
+          "weight" => "-10",
           "module" => "boxes",
           "delta" => $featured_delta,
           "status" => 0,
@@ -825,14 +938,14 @@ function _os_biocv_create_bio_featured_posts_widget($vsite_id, $vsite_values, $b
         );
 
         db_insert('spaces_overrides')
-          ->fields(array('type' => 'og', 'id' => $vsite_id, 'object_type' => 'context', 'object_id' => 'os_front:reaction:block', 'value' => serialize(array('blocks' => array("boxes-" . $featured_delta => $box_position)))))
+          ->fields(array('type' => 'og', 'id' => $vsite_id, 'object_type' => 'context', 'object_id' => "os_front:reaction:block", 'value' => serialize(array('blocks' => array("boxes-" . $featured_delta => $box_position)))))
           ->execute();
       }
     }
     return $featured_delta;
   }
   catch (Exception $e) {
-    throw new Exception("DB error trying to create featured posts bio widget: " . $e->getMessage());
+    throw new Exception("DB error trying to create featured posts widget for vsite $vsite_id: " . $e->getMessage());
     return FALSE;
   }
 }
@@ -842,7 +955,6 @@ function _os_biocv_create_bio_featured_posts_widget($vsite_id, $vsite_values, $b
  */
 function _os_biocv_serial_snippet($key, $value) {
   if ($key && $value) {
-    return "s:" . strlen($key) . "\"$key\";s:" . strlen($value) . "\"$value\";";
+    return "%s:" . strlen($key) . ":\"$key\";s:" . strlen($value) . ":\"$value\";%";
   }
 }
-
