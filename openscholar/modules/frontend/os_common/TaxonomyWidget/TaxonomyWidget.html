@@ -12,14 +12,14 @@
         </ui-select>
     </div>
     <div ng-switch-when="entityreference_autocomplete">
-      <div ng-repeat="term in autocomplete_terms">
-        <input type="text"
-               ng-model="selected"
-               typeahead="term.label for term in allTerms[vocab.id] | filter:$viewValue | limitTo:8"
-               typeahead-on-select="onSelect($item, $model, $label)"
-               class="form-text clearfix">
-      </div>
-      <button ng-click="addMore()">Add more</button>
+        <div ng-repeat="term in selectedTerms[vocab.id]">
+            <input type="text"
+                   ng-model="selectedTerms[vocab.id][$index]"
+                   typeahead="term.label for term in allTerms[vocab.id] | filter:$viewValue | limitTo:8"
+                   typeahead-on-select="onSelect($item, $model, $label)"
+                   class="form-text clearfix">
+        </div>
+        <button ng-click="addMore(vocab.id)">Add more</button>
     </div>
     <div ng-switch-when="options_buttons">
       <div ng-repeat="term in allTerms[vocab.id]">

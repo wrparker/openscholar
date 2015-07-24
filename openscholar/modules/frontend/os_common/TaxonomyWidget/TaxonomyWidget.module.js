@@ -59,6 +59,15 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
                       }
                     }
                   }
+
+                  for (var i = 0; i < scope.vocabs.length; i++) {
+                    if (scope.vocabs[i].id == t.vid) {
+                      if (scope.vocabs[i].form == 'entityreference_autocomplete'){
+                        scope.selectedTerms[t.vid].push({label: '', id: 0, vid: t.vid});
+                      }
+                    }
+                  }
+
                   scope.disabled = false;
                 });
               }
@@ -76,7 +85,7 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
           scope.terms = [];
           for (var k in newTerms) {
             for (var i = 0; i < newTerms[k].length; i++) {
-              if (newTerms[k][i]) {
+              if (newTerms[k][i] && newTerms[k][i].id) {
                 scope.terms.push(newTerms[k][i]);
               }
             }
@@ -93,13 +102,11 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
         }
       });
 
-      scope.autocomplete_terms = [{}];
-
       /**
        * Add more autocomplete inputs.
        */
-      scope.addMore = function() {
-        scope.autocomplete_terms.push({});
+      scope.addMore = function(vocab_id) {
+        scope.selectedTerms[vocab_id].push({});
       };
 
       /**
@@ -107,6 +114,7 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
        */
       scope.onSelect = function ($item, $model, $label) {
         scope.selectedTerms[$item.vid][$item.id] = $item;
+        scope.addMore($item.vid);
       };
 
       /**
