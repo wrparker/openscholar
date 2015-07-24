@@ -350,6 +350,9 @@ p {
 #columns p:last-child {
     margin: 0 0px .4em;
 }
+p.os-cvlinkwrap {
+	margin-bottom:0;
+}
 a,
 a:visited {
     text-decoration: none;
