@@ -485,6 +485,8 @@ function _get_vsite_biocv_data() {
  * converts bio widget instances into Featured Posts widget with "Hide Titles" checked
  */
 function _replace_biocvs_with_pages($vsite_data) {
+  global $conf;
+  $conf['expire_status'] = 0;
   $output = "";
   foreach ($vsite_data as $gid => $vsite_values) {
     $gid = (int)$gid;
@@ -502,7 +504,7 @@ function _replace_biocvs_with_pages($vsite_data) {
     $cv_file_obj = FALSE;
     if (isset($vsite_values['cv_body']) || isset($vsite_values['cv_fid'])) {
       if (isset($vsite_values['tabs']) && $vsite_values['tabs'] && isset($vsite_values['cv_body'])) {
-        $cv_link = '<p class="os-cvlinkwrap">Download CV: <a href="/' . $vsite_obj->group->purl . '/biocv/cv" class="os-cvlink">PDF</a></p>';
+        $cv_link = '<p><a href="/' . $vsite_obj->group->purl . '/biocv/cv" class="os-cvlink">Curriculum Vitae</a></p>';
       }
       elseif (isset($vsite_values['cv_fid'])) {
         // add link to CV file and attach file to vsite so that when CV node is deleted, the file won't be
@@ -513,7 +515,7 @@ function _replace_biocvs_with_pages($vsite_data) {
           continue;
         }
         else {
-          $cv_link = '<p class="os-cvlinkwrap">Download CV: <a href="' . file_create_url($cv_file_obj->uri) . '" class="os-cvlink">PDF</a></p>';
+          $cv_link = '<p><a href="' . file_create_url($cv_file_obj->uri) . '" class="os-cvlink">Curriculum Vitae</a></p>';
         }
       }
     }
@@ -550,7 +552,7 @@ function _replace_biocvs_with_pages($vsite_data) {
     }
 
     // Add the new page to the vsite
-    vsite_add_node($bio_node, $gid);
+    vsite_add_node($bio_node, $gid, FALSE);
 
     $bio_node_wrapper = entity_metadata_wrapper('node', $bio_node);
     $bio_node_wrapper->body->set(array('value' => $bio_body, 'format' => 'filtered_html'));
@@ -637,6 +639,8 @@ function _replace_biocvs_with_pages($vsite_data) {
           }
         }
       }
+      // Add the new page to the vsite
+      vsite_add_node($cv_node, $gid, FALSE);
 
       $cv_node_wrapper = entity_metadata_wrapper('node', $cv_node);
       $cv_node_wrapper->body->set(array('value' => $cv_body, 'format' => 'filtered_html'));
@@ -650,7 +654,7 @@ function _replace_biocvs_with_pages($vsite_data) {
       path_save($path);
     }
 
-    // get all bio and cv nodes associated with vsite and then delete them and their url aliases
+    // get all bio and cv nodes associated with vsite and then delete them
     $query = db_select('node', 'n');
     $or = db_or();
     $or->condition("n.type",'bio', '=');
@@ -660,9 +664,6 @@ function _replace_biocvs_with_pages($vsite_data) {
     $query = $query->fields('n', array('nid'));
     $all_bio_nids = $query->execute()->fetchAllKeyed($key_index = 0, $value_index = 0);
     node_delete_multiple(array_keys($all_bio_nids));
-    foreach ($all_bio_nids as $nid) {
-      path_delete($nid);
-    }
 
     // find out if this vsite has a customized instance of the bio widget
     $query = db_select('spaces_overrides', 'so');
@@ -760,7 +761,6 @@ function _replace_biocvs_with_pages($vsite_data) {
         $bio_widget_created_flag = 1;
       }
     }
-
     // find out if this vsite has List of Posts or Featured Posts widgetd that reference the old bio or cv node
     $conditions = 0;
 
@@ -817,7 +817,9 @@ function _replace_biocvs_with_pages($vsite_data) {
           // otherwise, it's a list of posts widget, so we need to convert it to a featured posts widget
           else {
             // create new featured posts widget based on LOP options
-            $vsite_values['options'] = $box_data->options;
+            $vsite_values['options']['additional_classes'] = $box_data->options['additional_classes'];
+            $vsite_values['options']['make_embeddable'] = $box_data->options['make_embeddable'];
+            $vsite_values['options']['style'] = $box_data->options['display'];
             if ($box_data->options['content_type'] == "bio") {
               $featured_delta = _os_biocv_create_bio_featured_posts_widget($gid, $vsite_values, $bio_node->nid, "converted-bio", 1);
             }
@@ -841,6 +843,7 @@ function _replace_biocvs_with_pages($vsite_data) {
                       unset($context_data['blocks']['boxes-' . $box->object_id]['plugin']);
                     }
                     $context_data['blocks']["boxes-" . $featured_delta] = $context_data['blocks']['boxes-' . $box->object_id];
+                    $context_data['blocks']["boxes-" . $featured_delta]['delta'] = $featured_delta;
                     unset($context_data['blocks']['boxes-' . $box->object_id]);
                     break;
                   }
