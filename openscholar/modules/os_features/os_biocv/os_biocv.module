@@ -667,14 +667,15 @@ function _replace_biocvs_with_pages($vsite_data) {
 
     // find out if this vsite has a customized instance of the bio widget
     $query = db_select('spaces_overrides', 'so');
+    $query->condition("so.type", 'og');
+    $query->condition("so.object_type", array('boxes','context'), 'in');
+    $query->condition("id", $gid, "=");
     $or = db_or();
     $or->condition("so.value",'%bio_teaser%', 'like');
     $or->condition("so.value",'%os_boxes_bio%', 'like');
     $query->condition($or);
-    $query->condition("so.object_type", array('boxes','context'), 'in');
-    $query->condition("id", $gid, "=");
     $query = $query->fields('so', array('object_type', 'object_id', 'value'))
-                   ->orderBy('so.object_type', 'ASC');
+                  ->orderBy('so.object_type', 'ASC');
     $results = $query->execute();
 
     // set flag to track whether or not new bio widget has been created
