@@ -1449,8 +1449,9 @@ function os_events_show_register_by_node($node) {
 
   $value = $wrapper->field_date->get(0)->value();
 
+  $date = new DateTime($value['value'], new DateTimeZone('UTC'));
   // We only need to verify the event didn't started yet.
-  return time() <= strtotime($value['value']);
+  return time() <= $date->getTimestamp();
 }
 
 /**
