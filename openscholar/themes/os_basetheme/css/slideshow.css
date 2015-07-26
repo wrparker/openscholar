@@ -10,10 +10,6 @@
     /*position: relative;*/
 }
 
-.block-boxes-os_slideshow_box {
-    min-height: 200px;
-}
-
 .slide object, .slide embed {
     float: left;
     width: 100%;
