@@ -30,5 +30,4 @@ Drupal.behaviors.os_slideshow = {
   }
 }
 
-
 }(jQuery));
