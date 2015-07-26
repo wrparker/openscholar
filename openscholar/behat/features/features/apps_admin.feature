@@ -2,9 +2,10 @@ Feature:
   Testing the managing of OpenScholar
 
 
-  @api @features_first
+  @api @features_first @now
   Scenario: Check that all of the apps are turned on
     Given I am logging in as "john"
+      And I visit "john" and I print page
       And I visit "john"
      When I click "Build"
       #And I should see "Apps"

@@ -2345,4 +2345,12 @@ class FeatureContext extends DrupalContext {
     }
   }
 
+  /**
+   * @Given /^I visit "([^"]*)" and I print page$/
+   */
+  public function iVisitAndIPrintPage($arg1) {
+    $this->visit($arg1);
+    $this->iShouldPrintPage();
+  }
+
 }

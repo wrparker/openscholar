@@ -120,7 +120,7 @@ before_install:
   - drush runserver 127.0.0.1:8080 &
 
 script:
-  - ./bin/behat --tags=$TEST_SUITE
+  - ./bin/behat --tags=now
 
 after_script:
   - cat /var/log/apache2/error.log
