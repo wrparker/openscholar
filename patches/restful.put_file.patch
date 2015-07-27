@@ -1,0 +1,389 @@
+diff --git a/modules/restful_example/plugins/restful/taxonomy_term/tags/1.0/RestfulEntityTaxonomyTermTags.class.php b/modules/restful_example/plugins/restful/taxonomy_term/tags/1.0/RestfulEntityTaxonomyTermTags.class.php
+index 15021c5..051d216 100644
+--- a/modules/restful_example/plugins/restful/taxonomy_term/tags/1.0/RestfulEntityTaxonomyTermTags.class.php
++++ b/modules/restful_example/plugins/restful/taxonomy_term/tags/1.0/RestfulEntityTaxonomyTermTags.class.php
+@@ -6,4 +6,16 @@
+  */
+ 
+ class RestfulEntityTaxonomyTermTags extends \RestfulEntityBaseTaxonomyTerm {
++
++  /**
++   * Overrides \RestfulEntityBaseTaxonomyTerm::checkEntityAccess().
++   *
++   * Allow access to create "Tags" resource for privileged users, as
++   * we can't use entity_access() since entity_metadata_taxonomy_access()
++   * denies it for a non-admin user.
++   */
++  protected function checkEntityAccess($op, $entity_type, $entity) {
++    $account = $this->getAccount();
++    return user_access('create article content', $account);
++  }
+ }
+diff --git a/plugins/restful/RestfulEntityBaseTaxonomyTerm.php b/plugins/restful/RestfulEntityBaseTaxonomyTerm.php
+index 4d44dbb..3a0bb3e 100644
+--- a/plugins/restful/RestfulEntityBaseTaxonomyTerm.php
++++ b/plugins/restful/RestfulEntityBaseTaxonomyTerm.php
+@@ -18,13 +18,11 @@ class RestfulEntityBaseTaxonomyTerm extends RestfulEntityBase {
+    */
+   protected function setPropertyValues(EntityMetadataWrapper $wrapper, $null_missing_fields = FALSE) {
+     $term = $wrapper->value();
+-    if (empty($term->tid) && (!taxonomy_vocabulary_machine_name_load($this->getBundle()))) {
+-      // This is a new term object but we don't have a vocabulary with the name
+-      // from the plugin definition.
++    if (!empty($term->tid)) {
+       return;
+     }
+ 
+-    $vocabulary = taxonomy_vocabulary_machine_name_load($this->getBundle());
++    $vocabulary = taxonomy_vocabulary_machine_name_load($term->vocabulary_machine_name);
+     $term->vid = $vocabulary->vid;
+ 
+     parent::setPropertyValues($wrapper, $null_missing_fields);
+@@ -45,28 +43,4 @@ class RestfulEntityBaseTaxonomyTerm extends RestfulEntityBase {
+     }
+     return parent::checkPropertyAccess($op, $public_field_name, $property, $wrapper);
+   }
+-
+-  /**
+-   * Overrides \RestfulEntityBaseTaxonomyTerm::checkEntityAccess().
+-   *
+-   * Taxonomy access for different operations has defined in the menu in various
+-   * ways. This method will implement the same access logic of the menu items.
+-   */
+-  protected function checkEntityAccess($op, $entity_type, $entity) {
+-    if ($this->getMethod() == \RestfulBase::GET) {
+-      $permission = 'access content';
+-    }
+-    else {
+-      if ($this->getMethod() == \RestfulBase::POST) {
+-        $permission = 'administer taxonomy';
+-      }
+-      else {
+-        $vocabulary = taxonomy_vocabulary_machine_name_load($this->getBundle());
+-        $operation = $this->getMethod() == \RestfulBase::DELETE ? 'delete' : 'edit';
+-        $permission = $operation . ' terms in ' . $vocabulary->vid;
+-      }
+-    }
+-
+-    return user_access($permission, $this->getAccount());
+-  }
+ }
+diff --git a/restful.info b/restful.info
+index b391aba..c15d501 100644
+--- a/restful.info
++++ b/restful.info
+@@ -62,8 +62,8 @@ files[] = tests/RestfulAuthenticationTestCase.test
+ files[] = tests/RestfulAutoCompleteTestCase.test
+ files[] = tests/RestfulCreateEntityTestCase.test
+ files[] = tests/RestfulCreateNodeTestCase.test
+-files[] = tests/RestfulCRUDTaxonomyTermTestCase.test
+ files[] = tests/RestfulCreatePrivateNodeTestCase.test
++files[] = tests/RestfulCreateTaxonomyTermTestCase.test
+ files[] = tests/RestfulCsrfTokenTestCase.test
+ files[] = tests/RestfulCurlBaseTestCase.test
+ files[] = tests/RestfulDataProviderCToolsPluginsTestCase.test
+diff --git a/restful.module b/restful.module
+index 54100b1..4074d89 100644
+--- a/restful.module
++++ b/restful.module
+@@ -573,17 +573,77 @@ function restful_parse_request() {
+   }
+   elseif ($method == \RestfulInterface::POST) {
+     $request = $_POST;
+-  }
+-
+-  if (!$request && $query_string = _restful_get_query_string_from_php_input()) {
+-    // When trying to POST using curl on simpleTest it doesn't reach
+-    // $_POST, so we try to re-grab it here.
+-    // Also, sometimes the client might send the input still encoded.
+-    if ($decoded_json = drupal_json_decode($query_string)) {
+-      $request = $decoded_json;
++    if ($_FILES) {
++      $request['file_upload'] = true;
+     }
+-    else {
+-      parse_str($query_string, $request);
++  }
++  elseif ($method == \RestfulInterface::HEAD) {
++    $request = array('method' => $method);
++  }
++  elseif ($method == \RestfulInterface::DELETE) {
++    $request = array('method' => $method);
++  }
++
++  // if we get this far, then we need to do special processing on php://input to get the data
++  if (!$request) {
++    $temp = explode(';', isset($_SERVER['CONTENT_TYPE']) ? $_SERVER['CONTENT_TYPE'] : 'unknown');
++    $contentType = $temp[0];
++    // CHARSET=<Something> will be in $temp[1], if it's ever needed
++    switch ($contentType) {
++      case 'application/json':
++        $request = drupal_json_decode(_restful_get_query_string_from_php_input());
++        break;
++      case 'application/x-www-form-encoded':
++        parse_str(_restful_get_query_string_from_php_input(), $request);
++        break;
++      case 'multipart/form-data':
++        // php://input is an empty string when the content-type is multipart/form-data
++        // There's nothing we can do to get this data
++        throw new RestfulBadRequestException('Cannot use multipart/form-data with HTTP Method ' . $method . '.');
++        break;
++      case 'unknown':
++        // if content type is undefined, we try a couple things and if they don't work, oh well
++        $request = drupal_json_decode(_restful_get_query_string_from_php_input());
++        if (!$request) {
++          parse_str(_restful_get_query_string_from_php_input(), $request);
++        }
++        break;
++      default:
++        // this is some kind of file, a direct upload
++        // copy it into the temporary directory then pass the URI to the handler for it to deal with
++        // handlers are expected to copy this file somewhere else
++        $uri = drupal_tempnam('temporary://', 'restFile_');
++        $input = fopen('php://input', 'rb');
++        $dest = fopen($uri, 'wb');
++
++        $size = $_SERVER['CONTENT_LENGTH'];
++        $pos = 0;
++        $chunk = 1024;
++        while ($pos < $size) {
++          if ($writ = stream_copy_to_stream($input, $dest, $chunk)) {
++            $pos += $writ;
++          } else {
++            fclose($input);
++            fclose($dest);
++            throw new RestfulUnprocessableEntityException('Unable to copy file.');
++          }
++        }
++
++        // construct a file object based on the file we just received.
++        $uri = file_stream_wrapper_uri_normalize($uri);
++        $file = new stdClass();
++        $file->uid = $GLOBALS['user']->uid;
++        $file->filename = basename($uri);
++        $file->uri = $uri;
++        $file->filemime = $contentType;
++        // This is gagged because some uris will not support it.
++        $file->filesize = @filesize($uri);
++        $file->timestamp = REQUEST_TIME;
++
++        $request['file'] = $file;
++        fclose($input);
++        fclose($dest);
++        break;
+     }
+   }
+ 
+diff --git a/tests/RestfulCRUDTaxonomyTermTestCase.test b/tests/RestfulCRUDTaxonomyTermTestCase.test
+deleted file mode 100644
+index 3921103..0000000
+--- a/tests/RestfulCRUDTaxonomyTermTestCase.test
++++ /dev/null
+@@ -1,128 +0,0 @@
+-<?php
+-
+-/**
+- * @file
+- * Contains RestfulCRUDTaxonomyTermTestCase
+- */
+-
+-class RestfulCRUDTaxonomyTermTestCase extends DrupalWebTestCase {
+-
+-  public static function getInfo() {
+-    return array(
+-      'name' => 'Taxonomy term integration',
+-      'description' => 'Test the CRUD actions of a taxonomy term entity type.',
+-      'group' => 'RESTful',
+-    );
+-  }
+-
+-  function setUp() {
+-    parent::setUp('restful_test');
+-  }
+-
+-  /**
+-   * Test the CRUD actions.
+-   */
+-  function testCRUD() {
+-    $vid = taxonomy_vocabulary_machine_name_load('tags')->vid;
+-
+-    // Test creation of a taxonomy term.
+-    $user1 = $this->drupalCreateuser(array(
+-      'administer taxonomy',
+-      'edit terms in ' . $vid,
+-      'delete terms in ' . $vid,
+-      'create article content'
+-    ));
+-    $user2 = $this->drupalCreateUser(array('access content', 'create article content'));
+-
+-    $handler = restful_get_restful_handler('test_tags');
+-    $handler->setAccount($user1);
+-
+-    $text1 = $this->randomName();
+-    $request = array('label' => $text1);
+-    $result = $handler->post('', $request);
+-
+-    $id = $result[0]['id'];
+-    $this->assertTrue($id, 'Term was created by a user with the proper permission.');
+-
+-    // Test the update of a taxonomy term.
+-    $text2 = $this->randomName();
+-    $request = array('label' => $text2);
+-    $result = $handler->patch($id, $request);
+-    $this->assertTrue($result[0]['label'] == $text2, 'The taxonomy term has been updates successfully');
+-
+-    // Test the deletion of a taxonomy term.
+-    $handler->delete($id);
+-    $this->assertFalse(taxonomy_term_load($id), 'The taxonomy term has been deleted successfully');
+-
+-    // Verify user2 can't create terms.
+-    $handler->setAccount($user2);
+-    try {
+-      $text1 = $this->randomName();
+-      $request = array('label' => $text1);
+-      $handler->post('', $request);
+-    }
+-    catch (RestfulForbiddenException $e) {
+-      $this->pass('user2 cannot create taxonomy term via restful.');
+-    }
+-
+-    // Creating a term and check that the normal user can consume the resource.
+-    $text3 = $this->randomName();
+-    $taxonomy = entity_create('taxonomy_term', array(
+-      'name' => $text3,
+-      'vid' => taxonomy_vocabulary_machine_name_load('tags')->vid,
+-    ));
+-    entity_save('taxonomy_term', $taxonomy);
+-    $terms = $handler->get();
+-
+-    $this->assertEqual($terms[0]['label'], $text3, 'user2 can access to the terms via rest.');
+-
+-    // Check user can't patch a term.
+-    try {
+-      $handler->patch($taxonomy->tid, array('name' => $this->randomName()));
+-    }
+-    catch (RestfulForbiddenException $e) {
+-      $this->pass('user2 cannot patch taxonomy term.');
+-    }
+-
+-    // Check user can't delete a term.
+-    try {
+-      $handler->delete($taxonomy->tid);
+-    }
+-    catch (RestfulForbiddenException $e) {
+-      $this->pass('user2 cannot delete taxonomy term.');
+-    }
+-
+-    drupal_static_reset();
+-
+-    // Testing sub-requests.
+-    $handler = restful_get_restful_handler('articles', 1, 5);
+-    $handler->setAccount($user2);
+-    $tags = array(
+-      'label' => 'foo',
+-    );
+-    $data = array(
+-      'label' => 'bar',
+-      'tags' => array($tags),
+-    );
+-    try {
+-      $handler->post('', $data);
+-      $this->fail('User 2 managed to create a new tag resource');
+-    } catch (RestfulForbiddenException $e) {
+-      $this->pass('User 2 cannot create a new tag resource');
+-    }
+-
+-    // Verify user 1 can create new tag resource via sub request.
+-    drupal_static_reset();
+-    $handler = restful_get_restful_handler('articles', 1, 5);
+-    $handler->setAccount($user1);
+-    $tags = array(
+-      'label' => 'foo',
+-    );
+-    $data = array(
+-      'label' => 'bar',
+-      'tags' => array($tags),
+-    );
+-    $handler->post('', $data);
+-    $this->pass('User 1 managed to create a new tag resource');
+-  }
+-}
+diff --git a/tests/RestfulCreateTaxonomyTermTestCase.test b/tests/RestfulCreateTaxonomyTermTestCase.test
+new file mode 100644
+index 0000000..83a9392
+--- /dev/null
++++ b/tests/RestfulCreateTaxonomyTermTestCase.test
+@@ -0,0 +1,39 @@
++<?php
++
++/**
++ * @file
++ * Contains RestfulCreateTaxonomyTermTestCase
++ */
++
++class RestfulCreateTaxonomyTermTestCase extends DrupalWebTestCase {
++
++  public static function getInfo() {
++    return array(
++      'name' => 'Taxonomy term integration',
++      'description' => 'Test the creation of a taxonomy term entity type.',
++      'group' => 'RESTful',
++    );
++  }
++
++  function setUp() {
++    parent::setUp('restful_test');
++  }
++
++  /**
++   * Test the creation of a taxonomy term entity type.
++   */
++  function testCreate() {
++    $user1 = $this->drupalCreateUser(array('create article content'));
++    $this->drupalLogin($user1);
++
++    $handler = restful_get_restful_handler('test_tags');
++    $handler->setAccount($user1);
++
++    $text1 = $this->randomName();
++    $request = array('label' => $text1);
++    $result = $handler->post('', $request);
++
++    $id = $result[0]['id'];
++    $this->assertTrue($id, 'Term was created by a non-admin user.');
++  }
++}
+diff --git a/tests/RestfulCurlBaseTestCase.test b/tests/RestfulCurlBaseTestCase.test
+index a64132d..3cc3794 100644
+--- a/tests/RestfulCurlBaseTestCase.test
++++ b/tests/RestfulCurlBaseTestCase.test
+@@ -27,7 +27,7 @@ class RestfulCurlBaseTestCase extends DrupalWebTestCase {
+    *   Array keyed with the "code", "headers", and "body" of the response.
+    */
+   protected function httpRequest($url, $method = \RestfulInterface::GET, $body = NULL, $headers = array(), $use_token = TRUE) {
+-    $format = 'json';
++    $format = 'x-www-form-encoded';
+ 
+     switch ($method) {
+       case \RestfulInterface::GET:
+diff --git a/tests/modules/restful_test/plugins/restful/taxonomy_term/test_tags/1.0/RestfulEntityTaxonomyTermTestTags.class.php b/tests/modules/restful_test/plugins/restful/taxonomy_term/test_tags/1.0/RestfulEntityTaxonomyTermTestTags.class.php
+index 4a7b36c..c3ace7e 100644
+--- a/tests/modules/restful_test/plugins/restful/taxonomy_term/test_tags/1.0/RestfulEntityTaxonomyTermTestTags.class.php
++++ b/tests/modules/restful_test/plugins/restful/taxonomy_term/test_tags/1.0/RestfulEntityTaxonomyTermTestTags.class.php
+@@ -6,4 +6,16 @@
+  */
+ 
+ class RestfulEntityTaxonomyTermTestTags extends \RestfulEntityBaseTaxonomyTerm {
++
++  /**
++   * Overrides \RestfulEntityBaseTaxonomyTerm::checkEntityAccess().
++   *
++   * Allow access to create "Tags" resource for privileged users, as
++   * we can't use entity_access() since entity_metadata_taxonomy_access()
++   * denies it for a non-admin user.
++   */
++  protected function checkEntityAccess($op, $entity_type, $entity) {
++    $account = $this->getAccount();
++    return user_access('create article content', $account);
++  }
+ }
