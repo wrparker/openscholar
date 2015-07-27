@@ -6,7 +6,8 @@
   var restPath = '',
     entities = {},
     fetched = {},
-    defers = {};
+    defers = {},
+    cache = {};
 
   angular.module('EntityService', [])
     .config(function () {
@@ -19,7 +20,7 @@
       var factory = function (entityType, idProp) {
         var type = entityType;
         var ents;
-        entities[entityType] = ents = entities[entityType] || [];
+        entities[entityType] = ents = entities[entityType] || {};
         var entityCount = 0;
         var eventName = 'EntityService.' + type;
         var errorAttempts = 0;
@@ -31,30 +32,31 @@
         }
 
         var success = function(resp, status, headers, config) {
-          ents.length = 0;
-
+          var key = config.pKey;
+          cache[key] = {
+            data: [],
+            fetched: Date.now()
+          };
           recursiveFetch(resp, status, headers, config);
-
-          fetched[type] = true;
-          entityCount = resp.count;
         }
 
         function recursiveFetch(resp, status, headers, config) {
+          var key = config.pKey;
           for (var i=0; i<resp.data.length; i++) {
-            ents.push(resp.data[i]);
+            cache[key].data.push(resp.data[i]);
+            ents[resp.data[i][idProp]] = resp.data[i];
           }
-          var key = config.deferKey;
 
           if (resp.next) {
             var max = Math.ceil(resp.count/resp.data.length),
               curr = resp.next.href.match(/page=([\d])/)[1];
             defers[key].notify(("Loading $p% complete.").replace('$p', ((curr-1)/max)*100));
-            $http.get(resp.next.href, {deferKey: key}).success(recursiveFetch);
+            $http.get(resp.next.href, {pKey: key}).success(recursiveFetch);
           }
           else {
-            defers[key].resolve(ents);
+            defers[key].resolve(angular.copy(cache[key].data));
             delete defers[key];
-            $rootScope.$broadcast(eventName+'.fetch', ents, key);
+            $rootScope.$broadcast(eventName+'.fetch', angular.copy(cache[key].data), key);
           }
         }
 
@@ -66,13 +68,12 @@
               error(errorFunc);
           }
           else {
-            defers[config.deferKey].reject('Error getting files. Aborting after 3 attempts.');
+            defers[config.pKey].reject('Error getting files. Aborting after 3 attempts.');
           }
         };
 
         function findByProp(prop, value) {
-          var l = ents.length;
-          for (var i =0; i < l; i++) {
+          for (var i in ents) {
             if (ents[i][prop] && ents[i][prop] == value) {
               return i;
             }
@@ -93,7 +94,7 @@
           if (!defers[key]) {
             var url = restPath + '/' + entityType;
             defers[key] = $q.defer();
-            $http.get(url, {params: params, deferKey: key})
+            $http.get(url, {params: params, pKey: key})
               .success(success)
               .error(errorFunc);
             setTimeout(function () {
@@ -156,10 +157,13 @@
             return $http.patch(url.join('/'), data)
               .success(function (resp) {
                 var entity = resp.data[0];
-
-                ents.splice(k, 1, entity);
+                ents[k] = entity;
 
                 $rootScope.$broadcast(eventName + '.update', entity);
+                var keys = getCacheKeysForEntity(type, idProp, entity);
+                for (var k in keys) {
+                  cache[k].data[keys[k]] = entity;
+                }
               });
           }
           else {
@@ -176,9 +180,13 @@
           //rest API call to delete entity from server
           return $http.delete(restPath+'/'+entityType+'/'+entity[idProp]).success(function (resp) {
             var k = findByProp(idProp, entity[idProp]);
-            ents.splice(k, 1);
+            delete ents[k];
 
             $rootScope.$broadcast(eventName+'.delete', entity[idProp]);
+            var keys = getCacheKeysForEntity(type, idProp, entity);
+            for (var k in keys) {
+              cache[k].data.splice(keys[k], 1);
+            }
           });
         }
 
@@ -206,6 +214,31 @@
 
       return factory;
     }]);
+
+  /**
+   * Collect the keys an entity exists in for every cache available
+   * TODO: Generate comparator functions on cache creation to test whether entities fit in cache or not
+   *
+   * @param type - entity type we're searching for
+   * @param entity - The entity we're looking for in the caches
+   */
+  function getCacheKeysForEntity(type, idProp, entity) {
+    var keys = {};
+    for (var k in cache) {
+      // Wrong type.
+      if (k.indexOf(type) == -1) {
+        continue;
+      }
+
+      // TODO: Replace this for loop with comparator function invocation. Should be much faster once those work.
+      for (var i = 0; i < cache[k].data.length; i++) {
+        if (cache[k].data[i][idProp] == entity[idProp]) {
+          keys[k] = i;
+        }
+      }
+    }
+    return keys;
+  }
 
   /*
    * Buncha helper functions for getting comparisons
