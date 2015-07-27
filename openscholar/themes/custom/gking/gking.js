@@ -20,7 +20,7 @@
         $('<a class="more" href="#">More</a>')
           .appendTo('.front .region-header-second .block-boxes-os_boxes_html .boxes-box-content');
         // Adds the "close x" link on the default-hidden bio/cv overlay.
-        container.find('.node-cv')
+        container.find('.block-boxes-os_boxes_manual_list .node-page')
           .prepend('<a class="more" href="#">CLOSE X</a>');
         
         // Gets the latest updated PDF URL from the CV node...

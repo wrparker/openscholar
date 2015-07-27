@@ -31,7 +31,7 @@
   bottom: -560px;
 }  
    
-.front #header .node-bio {
+.front #header .block-boxes-os_boxes_manual_list .node-page {
   position: relative;
 }
 
@@ -60,7 +60,7 @@
  *
  * @todo: re-evaluate and/or remove?
  */
-.front.not-logged-in .region-header-second .node-bio .node-content {
+.block-boxes-os_boxes_manual_list .field-name-body .field-item.even {
     position: static;
     margin-left: 40px;
     padding-right: 26px;
