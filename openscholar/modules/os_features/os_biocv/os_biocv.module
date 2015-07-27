@@ -515,7 +515,7 @@ function _replace_biocvs_with_pages($vsite_data) {
           continue;
         }
         else {
-          $cv_link = '<p class="os-cvlinkwrap"><a href="' . file_create_url($cv_file_obj->uri) . '" class="os-cvlink">Curriculum Vitae</a></p>';
+          $cv_link = '<p class="os-cvlinkwrap"><a href="' . file_create_url($cv_file_obj->uri) . '" class="os-cvlink" data-fid="' . $vsite_values['cv_fid'] . '">Curriculum Vitae</a></p>';
         }
       }
     }
@@ -911,10 +911,10 @@ function _os_biocv_create_bio_featured_posts_widget($vsite_id, $vsite_values, $b
   $featured_box->embed_as = array("iframe", "oembed");
   $featured_box->plugin_key = "os_boxes_manual_list";
 
-  if(isset($vsite_values['options']) && isset($vsite_values['options']['teaser']) && ($vsite_values['options']['teaser'] != "full")) {
+  if (isset($vsite_values['options']) && isset($vsite_values['options']['teaser']) && ($vsite_values['options']['teaser'] != "full")) {
     $featured_box->options['style'] = "teasers";
   }
-  elseif (isset($vsite_values['options']['style'])) {
+  elseif (isset($vsite_values['options']) && isset($vsite_values['options']['style'])) {
     $featured_box->options['style'] = $vsite_values['options']['style'];
   }
   else {
