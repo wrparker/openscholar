@@ -9,6 +9,35 @@ div[file-edit] .fe-filepath-wrapper {
   padding-right: 18px;
 }
 
+div[file-edit] .control button {
+  margin-right: 0 !important;
+}
+
+div[file-edit] input[type="text"] {
+  margin-bottom: .1em;
+  width: 95%;
+}
+
+div[file-edit] button {
+  padding: 3px 5px;
+}
+
+div[file-edit] div.description {
+  margin-bottom: 1.75em;
+}
+
+div[file-edit] div.display_inline {
+  margin-top: .5em;
+}
+
+
+div[ng-include="fileEditAddt"] {
+  background: #efefef;
+  width: 97%;
+  margin: 20px 0;
+  padding-left: 10px;
+}
+
 .file-entity-loading {
   background-color: white;
   top: 0;
