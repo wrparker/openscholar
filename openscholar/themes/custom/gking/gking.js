@@ -20,15 +20,15 @@
         $('<a class="more" href="#">More</a>')
           .appendTo('.front .region-header-second .block-boxes-os_boxes_html .boxes-box-content');
         // Adds the "close x" link on the default-hidden bio/cv overlay.
-        container.find('.node-page')
+        container.find('.node-cv')
           .prepend('<a class="more" href="#">CLOSE X</a>');
         
         // Gets the latest updated PDF URL from the CV node...
-        var cv_link = container.find('.block-boxes-os_boxes_manual_list .node-page a.os-cvlink').attr('href');
+        var cv_link = container.find('.node-cv .field-name-field-biocv-pdf-upload a').attr('href');
         // Formats it to look like the link at the top of the /biocv page...
         cv_link = '<div class="node-content"><h3 class="cv-direct-download">Full CV: <a href="' + cv_link + '">PDF</a></h3><div class="clear"></div></div>';       
         // ...And insert this html markup as the CV node content.
-        container.find('.node-page .node-content')
+        container.find('.node-cv .node-content')
           .replaceWith(cv_link);
       }
         // Prevent the click from being bound everytime the pager is paged.
@@ -134,7 +134,6 @@ jQuery(document).ready(function() {
 
 	
 });
-
 
 
 
