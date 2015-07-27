@@ -39,7 +39,7 @@
   margin-bottom: 1em;
 }
 
-.bio-open a.more {
+.front .block-boxes-os_boxes_manual_list .node-page a.more {
 	color: #5C7677;
 	float: right;
 	padding: 11px 38px 10px 0;
@@ -60,12 +60,3 @@
  *
  * @todo: re-evaluate and/or remove?
  */
-.block-boxes-os_boxes_manual_list .field-name-body .field-item.even {
-    position: static;
-    margin-left: 40px;
-    padding-right: 26px;
-    overflow: scroll;
-    height: 523px;
-    margin-right: 11px;
-    margin-top: 70px;
-}

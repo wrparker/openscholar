@@ -104,6 +104,12 @@ p.os-cvlinkwrap {
   margin-bottom: 3em;
 }
 
+.front p.os-cvlinkwrap {
+  position: fixed;
+}
+
+
+
 .front .block-boxes-os_boxes_manual_list h1.node-title {
 position: absolute; 
     clip: rect(0px 0px 0px 0px);
