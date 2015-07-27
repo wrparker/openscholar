@@ -163,6 +163,16 @@ function os_common_library() {
     )
   );
 
+  $info['TreeSelector'] = array(
+    'title' => 'TreeSelector',
+    'version' => '1.0',
+    'js' => array(
+      $path.'/TreeSelector/TreeSelector.module.js' => array(),
+    ),
+    'css' => array(
+      $path.'/TreeSelector/TreeSelector.css' => array()
+    )
+  );
 
   $bower = libraries_get_path('components');
   $info['bootstrap'] = array(
