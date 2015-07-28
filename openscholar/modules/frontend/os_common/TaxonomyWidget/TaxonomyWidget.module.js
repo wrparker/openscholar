@@ -1,7 +1,8 @@
+(function () {
 /**
  * Provides mechanisms for choosing a taxonomy term for a given entity.
  */
-var taxonomy = angular.module('TaxonomyWidget', ['EntityService', 'os-auth', 'ui.select', 'ngSanitize', 'ui.bootstrap', 'ui.bootstrap.typeahead', 'ivh.treeview']);
+var taxonomy = angular.module('TaxonomyWidget', ['EntityService', 'os-auth', 'ui.select', 'ngSanitize', 'ui.bootstrap', 'ui.bootstrap.typeahead', 'TreeSelector']);
 
 taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) {
   var path = Drupal.settings.paths.TaxonomyWidget;
@@ -43,7 +44,23 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
                 scope.selectedTerms[vocab.id] = scope.selectedTerms[vocab.id] || [];
 
                 termService.fetch({vocab: vocab.id}).then(function (result) {
+                  // If this vocab has no terms, bail out.
+                  if (result.length == 0) return;
+
+                  // Get the vocab so we can check it later
+                  // We can't use the vocab var in the parent closure, because it changes before this code is executed
+                  // and will always be set to the last vocab processed.
+                  var vocab;
+                  for (var i = 0; i < scope.vocabs.length; i++) {
+                    if (scope.vocabs[i].id == result[0].vid) {
+                      vocab = scope.vocabs[i];
+                      break;
+                    }
+                  }
+
+                  // Loop over the terms we just fetched.
                   for (var j = 0; j < result.length; j++) {
+                    // Create a new object so we can ensure it passes equality tests
                     var t = result[j],
                       term = {
                         id: t.id,
@@ -52,6 +69,7 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
                       };
                     scope.allTerms[t.vid].push(term);
 
+                    // Build scope.selectedTerms using the same object in allTerms
                     for (var i = 0; i < newTerms.length; i++) {
                       if (newTerms[i].id == t.id) {
                         scope.selectedTerms[t.vid].push(term);
@@ -60,19 +78,16 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
                     }
                   }
 
-                  for (var i = 0; i < scope.vocabs.length; i++) {
-                    if (scope.vocabs[i].id == t.vid) {
-                      if (scope.vocabs[i].form == 'entityreference_autocomplete'){
-                        scope.selectedTerms[t.vid].push({label: '', id: 0, vid: t.vid});
-                      }
-                    }
+                  if (vocab.form == 'entityreference_autocomplete'){
+                    scope.selectedTerms[t.vid].push({label: '', id: 0, vid: t.vid});
+                  }
+                  else if (vocab.form == 'term_reference_tree') {
                   }
 
                   scope.disabled = false;
                 });
               }
             });
-            console.log(scope.selectedTerms);
           }
         }
         selectChange = false;
@@ -151,15 +166,16 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
 
       scope.termTreeChangeCallback = function(node, tree) {
 
-        if (Object.keys(node).indexOf('children') != -1) {
+        /*if (Object.keys(node).indexOf('children') != -1) {
           // Iterating over the children's of the term.
           angular.forEach(node.children, function(value, key) {
             scope.termTreeChangeCallback(value);
           });
-        }
+        }*/
 
         scope.termsSelected(termService.get(node.value));
       };
     }
   }
 }]);
+})();
