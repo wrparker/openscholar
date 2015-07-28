@@ -242,7 +242,7 @@ function os_common_library() {
       array('os_common', 'EntityService'),
       array('os_common', 'angular_select2'),
       array('os_common', 'angular_ui'),
-      array('os_common', 'taxonomy_tree'),
+      array('os_common', 'TreeSelector'),
     )
   );
 
