@@ -117,7 +117,8 @@ before_install:
   - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
 
   # Fire up the server.
-  - drush runserver 127.0.0.1:8080 &
+  - drush runserver 80 &
+  - curl http://127.0.0.1
 
 script:
   - ./bin/behat --tags=now
