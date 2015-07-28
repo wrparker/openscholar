@@ -350,7 +350,7 @@ p {
 #columns p:last-child {
     margin: 0 0px .4em;
 }
-p.os-cvlinkwrap {
+span.os-cvlinkwrap {
 	margin-bottom:0;
 }
 a,
