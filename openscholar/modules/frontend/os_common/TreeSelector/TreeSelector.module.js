@@ -10,7 +10,7 @@
 
   var m = angular.module('TreeSelector', []);
 
-  m.directive('TreeSelector', [function () {
+  m.directive('treeSelectorWidget', [function () {
 
     function treeLinker(scope, elem, attr, contr, transFn) {
 
@@ -19,11 +19,56 @@
       }
 
       scope.$watch('tree', function (newTree) {
-        scope.flatTree = [];
+        var result = [];
         for (var i = 0; i < scope.tree.length; i++) {
-          scope.flatTree.concat(flattenTree(scope.tree[i]));
+          result = result.concat(flattenTree(scope.tree[i]));
+        }
+        scope.flatTree = result;
+      });
+
+      var selected = [];
+      scope.$watchCollection('selected', function (newItems) {
+        selected = [];
+
+        for (var i = 0; i < newItems.length; i++) {
+          var id = 0;
+          if (typeof newItems[i] == 'object') {
+            id = newItems[i].value || newItems[i].id || 0;
+          }
+          else if (typeof newItems[i] == 'Number') {
+            id = newItems[i];
+          }
+          selected.push(id);
+        }
+
+        if (selected.length) {
+          openAncestors();
         }
       });
+
+      attr.$observe('filter', function (value) {
+        scope.filterString = value;
+      })
+
+      /**
+       * Loop backwards through the flat tree, looking for children that have been selected
+       * then setting the ancestors of any selected children to be expanded
+       */
+      function openAncestors() {
+        var parent = 0;
+        for (var i = scope.flatTree.length - 1; i >= 0; i--) {
+          if (scope.flatTree[i].depth && scope.isChecked(scope.flatTree[i].value)) {
+            parent = scope.flatTree[i].parent;
+          }
+
+          if (scope.flatTree[i].value == parent) {
+            scope.flatTree[i].collapsed = false;
+            if (scope.flatTree[i].depth) {
+              parent = scope.flatTree[i].parent;
+            }
+          }
+        }
+      }
 
       scope.parentCollapsed = function (parent) {
         var node = findNode(parent);
@@ -44,6 +89,23 @@
         }
       }
 
+      scope.isChecked = function (id) {
+        var i = 0,
+          l = selected.length;
+
+        for(;i<l;i++) {
+          if (selected[i] == id) {
+            return true;
+          }
+        }
+
+        return false;
+      }
+
+      scope.toggleNode = function (node) {
+        scope.onChange({$node: node})
+      }
+
     }
 
     /**
@@ -53,11 +115,10 @@
     function flattenTree(node) {
       var output = [],
         depth = (node.depth !== undefined) ? node.depth : 0;
-        node.collapsed = true;
+      node.collapsed = true;
 
       if (node.depth === undefined) {
         node.depth = depth;
-        node.collapsed = false;
       }
       output.push(node);
       if (Array.isArray(node.children)) {
@@ -66,7 +127,7 @@
         for (var i = 0; i < node.children.length; i++) {
           node.children[i].parent = node.value
           node.children[i].depth = depth + 1;
-          output.concat(flattenTree(node.children[i]));
+          output = output.concat(flattenTree(node.children[i]));
         }
       }
       else {
@@ -85,12 +146,12 @@
         onChange: '&' // event handler to invoke when a node is changed
       },
       link: treeLinker,
-      template: '<ul><li ng-repeat="node as flatTree" ng-class="{collapsed: parentCollapsed(node.parent)}">' +
+      template: '<ul><li ng-repeat="node in flatTree | filter:{label:filterString}" ng-show="node.depth == 0 || !parentCollapsed(node.parent)">' +
         '<span class="spacer" ng-repeat="i in range(node.depth)"></span>' +
-        '<span class="expander" ng-click="node.collapsed = false" ng-class="{collapsed: node.collapsed}">&nbsp;</span>' +
-        '<input type="checkbox" value="node.value" ng-change="onChange(node.value)" ng-checked="isChecked(node.value)"> {{node.label}}' +
+        '<span class="expander" ng-class="{collapsed: node.collapsed, empty: !node.hasChildren}" ng-click="node.collapsed = !node.collapsed">&nbsp;</span>' +
+        '<input type="checkbox" value="node.value" ng-click="toggleNode(node)" ng-checked="isChecked(node.value)"> {{node.label}}' +
       '</li></ul>'
     };
 
   }]);
-});
+})();
