@@ -208,3 +208,9 @@ function os_events_update_7017() {
   features_revert(array('os_events' => array('views')));
 }
 
+/**
+ * When exporting events, export the last 30 and not the 30 days backwards.
+ */
+function os_events_update_7018() {
+  features_revert(array('os_events' => array('views')));
+}
