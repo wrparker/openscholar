@@ -20,7 +20,7 @@
         $('<a class="more" href="#">More</a>')
           .appendTo('.front .region-header-second .block-boxes-os_boxes_html .boxes-box-content');
         // Adds the "close x" link on the default-hidden bio/cv overlay.
-        container.find('.front .region-header-second .block-boxes-os_boxes_manual_list .node-page')
+        container.find('.node-page')
           .prepend('<a class="more" href="#">CLOSE X</a>');
         
      
@@ -45,13 +45,13 @@
       
       // Stand back! Complex jQuery effects ahead!
       if (areas.length) {
-    	  
-    	// Updates the displayed taxonomy term item on hover event
+
+      // Updates the displayed taxonomy term item on hover event
         $($sel + ' ul li ul li:not(.aor-processed)').hover(function (event) {
 
           // Exits without any effect if this item is already active.
           if ($(this).hasClass('active')) {
-        	return;
+          return;
           }
        
           // Removes active class from previous item
@@ -97,11 +97,11 @@
       
       // Moves messages (i.e. error messages) underneath main menu.
       if ($('.front #messages').length) {
-    	  $('.front #messages').prependTo('#header-container');
+        $('.front #messages').prependTo('#header-container');
       }
       // Handles non-front pages a little differently from front page.
       else if ($('#messages').length) {
-    	  $('#messages').prependTo('#columns');
+        $('#messages').prependTo('#columns');
       }
       /**
        * Scrolls to the top of the page when you click the sort links
@@ -117,16 +117,14 @@
 })(jQuery);
 
 jQuery(document).ready(function() {
-	if (jQuery('#biblio-node').find('div.biblio-upload-wrapper').length) {
-		jQuery('#citation-wrapper').addClass('has-attached');
-	}
+  if (jQuery('#biblio-node').find('div.biblio-upload-wrapper').length) {
+    jQuery('#citation-wrapper').addClass('has-attached');
+  }
 
 //REMOVE THE TITLE/TOOLTIPS FROM THE AOR BLOCK ON FRONT PAGE
-	jQuery(".front ul.termchild-applications a").removeAttr("title");
-	jQuery(".front ul.termchild-methods a").removeAttr("title");
-	
+  jQuery(".front ul.termchild-applications a").removeAttr("title");
+  jQuery(".front ul.termchild-methods a").removeAttr("title");
 
-	
 });
 
 
