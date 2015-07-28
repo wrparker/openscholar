@@ -20,7 +20,7 @@
         $('<a class="more" href="#">More</a>')
           .appendTo('.front .region-header-second .block-boxes-os_boxes_html .boxes-box-content');
         // Adds the "close x" link on the default-hidden bio/cv overlay.
-        container.find('.front .block-boxes-os_boxes_manual_list .node-page')
+        container.find('.front .region-header-second .block-boxes-os_boxes_manual_list .node-page')
           .prepend('<a class="more" href="#">CLOSE X</a>');
         
      
@@ -28,7 +28,13 @@
         // Prevent the click from being bound everytime the pager is paged.
         $(".front .region-header-second a.more").unbind("click");
         // Both the "More" and "Close X" links trigger this animate event.
-      
+      $(".front .region-header-second a.more").click(function (event) {
+          if (container.hasClass("bio-open")) {
+            container.removeClass("bio-open").stop().animate({height: '0'}, "1500");
+          } else {
+            container.addClass("bio-open").stop().animate({height: '70%'}, "1500");
+          }
+        });
       }
       
       /**
