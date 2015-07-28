@@ -95,7 +95,6 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
 
       scope.$watch('selectedTerms', function(newTerms, oldTerms) {
         if (!termChange) {
-          console.log(newTerms);
           selectChange = true;
           scope.terms = [];
           for (var k in newTerms) {
@@ -105,7 +104,6 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
               }
             }
           }
-          console.log(scope.terms);
         }
         termChange = false;
       }, true);
