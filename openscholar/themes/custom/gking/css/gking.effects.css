@@ -28,7 +28,8 @@
 }
 
 .front.logged-in .region-header-second .block-boxes-os_boxes_manual_list .node-content {
-  bottom: -560px;
+  bottom: -700px;
+    padding-top: 5px;
 }  
    
 .front #header .block-boxes-os_boxes_manual_list .node-page {
