@@ -156,7 +156,8 @@
 
             return $http.patch(url.join('/'), data)
               .success(function (resp) {
-                var entity = resp.data[0];
+                var entity = resp.data[0],
+                  k = findByProp(idProp, entity[idProp]);
                 ents[k] = entity;
 
                 $rootScope.$broadcast(eventName + '.update', entity);
