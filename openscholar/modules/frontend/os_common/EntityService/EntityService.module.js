@@ -14,9 +14,32 @@
       restPath = Drupal.settings.paths.api;
     })
   /**
+   * Provider to manage configuration options for EntityService
+   */
+    .provider('EntityConfig', [function () {
+      var config = {};
+
+      function initType(type) {
+        config[type] = config[type] || {
+          fields: {}
+        };
+      }
+
+      return {
+        $get: [function () {
+          return angular.copy(config);
+        }],
+        addField: function (type, field, value) {
+          initType(type);
+
+          config[type].fields[field] = value;
+        }
+      }
+    }])
+  /**
    * Service to maintain the list of files on a user's site
    */
-    .factory('EntityService', ['$rootScope', '$http', '$q', function ($rootScope, $http, $q) {
+    .factory('EntityService', ['$rootScope', '$http', '$q', 'EntityConfig', function ($rootScope, $http, $q, config) {
       var factory = function (entityType, idProp) {
         var type = entityType;
         var ents;
@@ -89,6 +112,12 @@
             params.vsite = vsite;
           }
 
+          if (config[entityType]) {
+            for (var k in config[entityType].fields) {
+              params[k] = config[entityType].fields[k];
+            }
+          }
+
           var key = entityType + ':' + JSON.stringify(params);
 
           if (!defers[key]) {
@@ -127,6 +156,10 @@
 
           if (vsite) {
             entity.vsite = vsite;
+          }
+
+          for (var k in config[entityType].fields) {
+            params[k] = config[entityType].fields[k];
           }
 
           // rest API call to add entity to server
