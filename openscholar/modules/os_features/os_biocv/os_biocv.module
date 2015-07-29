@@ -655,6 +655,48 @@ function _replace_biocvs_with_pages($vsite_data) {
       path_save($path);
     }
 
+    // if either a new bio page or a new cv page has been created, make sure os_pages app is enabled
+    if ($bio_node || $cv_node) {
+      // get all bio and cv nodes associated with vsite and then delete them
+      $query = db_select('spaces_overrides', 'so');
+      $query->condition("so.type", 'og');
+      $query->condition("id", $gid, "=");
+      $query->condition("so.object_id", array('spaces_features'), '=');
+      $query = $query->fields('so', array('object_type', 'object_id', 'value'));
+      $results = $query->execute();
+
+      // if there are existing app settings, make sure os_pages is enabled
+      if ($results->rowCount()) {
+        while ($settings = $results->fetchObject()) {
+          $apps = unserialize($settings->value);
+          $update = NULL;
+          if (isset($apps['os_biocv'])) {
+            unset($apps['os_biocv']);
+            $update = 1;
+          }
+          if(!isset($apps['os_pages']) || $apps['os_pages'] == 0) {
+            $apps['os_pages'] = 1;
+            $update = 1;
+          }
+          if ($update) {
+            db_update('spaces_overrides')
+              ->fields(array('type' => 'og', 'id' => $gid, 'object_type' => 'variable', 'object_id' => 'spaces_features', 'value' => serialize($apps)))
+              ->condition('id', $gid, "=")
+              ->condition('object_id', 'spaces_features', "=")
+              ->condition('object_type', $settings->object_type, "=")
+              ->execute();
+          }
+        }
+      }
+      // otherwise, there are no app settings, add in one for os_pages
+      else {
+        $apps = array('os_pages' => 1);
+        db_insert('spaces_overrides')
+          ->fields(array('type' => 'og', 'id' => $gid, 'object_type' => 'variable', 'object_id' => 'spaces_features', 'value' => serialize($apps)))
+          ->execute();
+      }
+    }
+
     // get all bio and cv nodes associated with vsite and then delete them
     $query = db_select('node', 'n');
     $or = db_or();
@@ -966,3 +1008,4 @@ function _os_biocv_serial_snippet($key, $value) {
     return "%s:" . strlen($key) . ":\"$key\";s:" . strlen($value) . ":\"$value\";%";
   }
 }
+
