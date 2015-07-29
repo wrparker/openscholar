@@ -227,7 +227,8 @@
         // registers an entity with this service
         // used for entities that are added outside of this service
         this.register = function (entity) {
-          ents.push(entity);
+          ents[entity[idProp]] = entity;
+          // TODO: Run through generated comparators and add to caches
         }
       };
 
