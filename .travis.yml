@@ -118,7 +118,7 @@ before_install:
 
   # Fire up the server.
   - drush runserver 80 &
-  - curl http://127.0.0.1
+  - wget http://127.0.0.1/john
 
 
 script:
