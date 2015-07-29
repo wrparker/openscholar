@@ -386,6 +386,10 @@ class OsFilesResource extends RestfulEntityBase {
 
     $destination = 'public://';
     // do spaces/private file stuff here
+    if (isset($this->request['private'])) {
+      $destination = 'private://';
+    }
+
     if (isset($this->request['vsite'])) {
       $path = db_select('purl', 'p')->fields('p', array('value'))->condition('id', $this->request['vsite'])->execute()->fetchField();
       $destination .= $path . '/files';
