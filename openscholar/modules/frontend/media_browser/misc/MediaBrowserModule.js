@@ -37,8 +37,8 @@
         }
       }
     }])
-  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', '$sce', '$upload', '$timeout', 'params', 'close',
-      function ($scope, $filter, $http, EntityService, $sce, $upload, $timeout, params, close) {
+  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', 'EntityConfig', '$sce', '$upload', '$timeout', 'params', 'close',
+      function ($scope, $filter, $http, EntityService, config, $sce, $upload, $timeout, params, close) {
 
     // Initialization
     var service = new EntityService('files', 'id'),
@@ -354,6 +354,11 @@
         var fields = {};
         if (Drupal.settings.spaces) {
           fields.vsite = Drupal.settings.spaces.id;
+        }
+        if (config.files) {
+          for (var k in config.files.fields) {
+            fields[k] = config.files.fields[k];
+          }
         }
         $upload.upload({
           url: Drupal.settings.paths.api+'/files',
