@@ -45,12 +45,16 @@ if (!class_exists('purl_vsite_path')) {
           }
 
           global $base_url;
-          if ($space_found || in_array($settings->value, self::$disabled) ||
-            (strlen($vsite_domain) && str_replace('http://', '', $_SERVER['HTTP_HOST']) != $vsite_domain) ||
-            (!strlen($vsite_domain) && str_replace('http://', '', $_SERVER['HTTP_HOST']) != parse_url(variable_get('purl_base_domain', $base_url),PHP_URL_HOST))
-          ) {
+
+          // todo: wtf?
+          $statement_1 = $space_found || in_array($settings->value, self::$disabled);
+          $statement_2 = strlen($vsite_domain) && str_replace('http://', '', $_SERVER['HTTP_HOST']) != $vsite_domain;
+          $statement_3 = !strlen($vsite_domain) && str_replace('http://', '', $_SERVER['HTTP_HOST']) != parse_url(variable_get('purl_base_domain', $base_url),PHP_URL_HOST);
+          $statement_4 = strpos($base_url, ':') !== FALSE;
+          if (($statement_1 || $statement_2 || $statement_3) XOR $statement_4) {
             unset($parsed[$site]);
-          }else{
+          }
+          else{
             //We have a valid OG Space
             $space_found = TRUE;
           }
