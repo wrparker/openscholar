@@ -11,17 +11,10 @@ mysql:
 
 addons:
   apt:
-    sources:
-      - apt-get update
-#      - apt-get install apache2
-#      - apt-get update
-#      - apt-get install build-essential chrpath libssl-dev libxft-dev
-#      - apt-get install libfreetype6 libfreetype6-dev
-#      - apt-get install libfontconfig1 libfontconfig1-dev
-
     packages:
       - php5-cgi
       - php5-mysql
+      - php5-curl
 
 env:
   - TEST_SUITE=features_first
@@ -120,7 +113,7 @@ before_install:
   - drush runserver &
 
 script:
-  - ./bin/behat --tags=now
+  - ./bin/behat --tags=$TEST_SUITE
 
 after_script:
   - cat /var/log/apache2/error.log
