@@ -118,8 +118,6 @@ before_install:
 
   # Fire up the server.
   - drush runserver 80 &
-  - wget http://127.0.0.1/john
-
 
 script:
   - ./bin/behat --tags=now
