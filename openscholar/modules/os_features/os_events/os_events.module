@@ -1191,6 +1191,18 @@ function os_events_preprocess_page(&$variables) {
     return;
   }
 
+  $event_id = $menu['original_map'][1];
+  $query = new EntityFieldQuery();
+  $result = $query
+      ->entityCondition('entity_type', 'registration')
+      ->propertyCondition('entity_id', $event_id->nid)
+      ->propertyCondition('entity_type', 'node')
+      ->execute();
+
+  if (empty($result['registration'])) {
+    return;
+  }
+
   // Remove the "Simple view" tab from the navigation tabs.
   foreach ($variables['tabs']['#secondary'] as $index => $tab) {
     if ($tab['#link']['title'] == 'Simple view') {
@@ -1200,7 +1212,6 @@ function os_events_preprocess_page(&$variables) {
   }
 
   // Create dropdown links for simple view and export of registrants.
-  $event_id = $menu['original_map'][1];
   $event = node_load($event_id);
   $registration_links = array(
     'export' => array(
