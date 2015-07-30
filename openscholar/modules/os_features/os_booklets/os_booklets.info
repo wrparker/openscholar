@@ -16,7 +16,6 @@ dependencies[] = media
 dependencies[] = menu
 dependencies[] = og_ui
 dependencies[] = os
-dependencies[] = os_biocv
 dependencies[] = os_files
 dependencies[] = os_sv_list
 dependencies[] = spaces

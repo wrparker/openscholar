@@ -13,7 +13,6 @@ dependencies[] = file
 dependencies[] = filefield_paths
 dependencies[] = media
 dependencies[] = og_vocab
-dependencies[] = os_biocv
 dependencies[] = spaces
 dependencies[] = strongarm
 dependencies[] = views

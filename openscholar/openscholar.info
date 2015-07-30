@@ -109,7 +109,6 @@ dependencies[] = cp_content
 dependencies[] = cp_toolbar
 
 ; Features
-dependencies[] = os_biocv
 dependencies[] = os_blog
 dependencies[] = os_booklets
 dependencies[] = os_classes
