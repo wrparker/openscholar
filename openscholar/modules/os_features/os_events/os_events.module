@@ -1191,6 +1191,10 @@ function os_events_preprocess_page(&$variables) {
     return;
   }
 
+  if (!is_object($menu['original_map'][1])) {
+    return;
+  }
+
   $event_id = $menu['original_map'][1];
   $query = new EntityFieldQuery();
   $result = $query
