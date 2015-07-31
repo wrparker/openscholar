@@ -430,8 +430,9 @@ function os_classes_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'media',
+      'module' => 'media_draggable',
       'settings' => array(
+        'allow_replace' => 0,
         'allowed_schemes' => array(
           'embed' => 'embed',
           'oembed' => 'oembed',
@@ -440,6 +441,7 @@ function os_classes_field_default_field_instances() {
         'allowed_types' => array(
           'audio' => 'audio',
           'default' => 'default',
+          'document' => 'document',
           'executable' => 'executable',
           'html' => 'html',
           'image' => 'image',
@@ -451,9 +453,14 @@ function os_classes_field_default_field_instances() {
           'media_internet' => 'media_internet',
           'upload' => 'upload',
         ),
+        'droppable_area_text' => 'Drop files here to upload',
+        'multiupload' => 0,
         'progress_indicator' => 'throbber',
+        'standard_upload' => 1,
+        'upload_button_text' => 'Upload',
+        'upload_event' => 'auto',
       ),
-      'type' => 'media_generic',
+      'type' => 'media_draggable_file',
       'weight' => 7,
     ),
   );
@@ -662,11 +669,12 @@ function os_classes_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'media',
+      'module' => 'media_draggable',
       'settings' => array(
+        'allow_replace' => 0,
         'allowed_schemes' => array(
-          'embed' => 0,
-          'oembed' => 0,
+          'embed' => 'embed',
+          'oembed' => 'oembed',
           'public' => 'public',
         ),
         'allowed_types' => array(
@@ -679,15 +687,19 @@ function os_classes_field_default_field_instances() {
           'video' => 'video',
         ),
         'browser_plugins' => array(
-          'library' => 0,
           'media_default--media_browser_1' => 'media_default--media_browser_1',
-          'media_embed' => 0,
+          'media_default--media_browser_my_files' => 0,
           'media_internet' => 'media_internet',
           'upload' => 'upload',
         ),
+        'droppable_area_text' => 'Drop files here to upload',
+        'multiupload' => 0,
         'progress_indicator' => 'throbber',
+        'standard_upload' => 1,
+        'upload_button_text' => 'Upload',
+        'upload_event' => 'auto',
       ),
-      'type' => 'media_generic',
+      'type' => 'media_draggable_file',
       'weight' => 4,
     ),
   );
