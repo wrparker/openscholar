@@ -751,7 +751,7 @@ function os_update_7036() {
   features_revert($revert);
 }
 
-/*
+/**
  * Enabling OS Restful, and the new Media Browser.
  */
 function os_update_7037() {

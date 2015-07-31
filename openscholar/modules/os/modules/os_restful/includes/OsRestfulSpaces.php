@@ -36,12 +36,22 @@ abstract class OsRestfulSpaces extends \OsRestfulDataProvider {
         \RestfulInterface::PUT => 'updateSpace',
         \RestFulInterface::DELETE => 'deleteSpace',
       ),
+      '^.*$' => array(
+        \RestfulInterface::GET => 'getSpace',
+      ),
     );
   }
 
   abstract public function createSpace();
   abstract public function updateSpace();
   abstract public function deleteSpace();
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access() {
+    return $this->checkGroupAccess();
+  }
 
   /**
    * {@inheritdoc}
