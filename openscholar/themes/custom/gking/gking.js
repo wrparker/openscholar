@@ -20,21 +20,15 @@
         $('<a class="more" href="#">More</a>')
           .appendTo('.front .region-header-second .block-boxes-os_boxes_html .boxes-box-content');
         // Adds the "close x" link on the default-hidden bio/cv overlay.
-        container.find('.node-cv')
+        container.find('.node-page')
           .prepend('<a class="more" href="#">CLOSE X</a>');
         
-        // Gets the latest updated PDF URL from the CV node...
-        var cv_link = container.find('.node-cv .field-name-field-biocv-pdf-upload a').attr('href');
-        // Formats it to look like the link at the top of the /biocv page...
-        cv_link = '<div class="node-content"><h3 class="cv-direct-download">Full CV: <a href="' + cv_link + '">PDF</a></h3><div class="clear"></div></div>';       
-        // ...And insert this html markup as the CV node content.
-        container.find('.node-cv .node-content')
-          .replaceWith(cv_link);
+     
       }
         // Prevent the click from being bound everytime the pager is paged.
         $(".front .region-header-second a.more").unbind("click");
         // Both the "More" and "Close X" links trigger this animate event.
-        $(".front .region-header-second a.more").click(function (event) {
+      $(".front .region-header-second a.more").click(function (event) {
           if (container.hasClass("bio-open")) {
             container.removeClass("bio-open").stop().animate({height: '0'}, "1500");
           } else {
@@ -51,13 +45,13 @@
       
       // Stand back! Complex jQuery effects ahead!
       if (areas.length) {
-    	  
-    	// Updates the displayed taxonomy term item on hover event
+
+      // Updates the displayed taxonomy term item on hover event
         $($sel + ' ul li ul li:not(.aor-processed)').hover(function (event) {
 
           // Exits without any effect if this item is already active.
           if ($(this).hasClass('active')) {
-        	return;
+          return;
           }
        
           // Removes active class from previous item
@@ -103,11 +97,11 @@
       
       // Moves messages (i.e. error messages) underneath main menu.
       if ($('.front #messages').length) {
-    	  $('.front #messages').prependTo('#header-container');
+        $('.front #messages').prependTo('#header-container');
       }
       // Handles non-front pages a little differently from front page.
       else if ($('#messages').length) {
-    	  $('#messages').prependTo('#columns');
+        $('#messages').prependTo('#columns');
       }
       /**
        * Scrolls to the top of the page when you click the sort links
@@ -123,18 +117,15 @@
 })(jQuery);
 
 jQuery(document).ready(function() {
-	if (jQuery('#biblio-node').find('div.biblio-upload-wrapper').length) {
-		jQuery('#citation-wrapper').addClass('has-attached');
-	}
+  if (jQuery('#biblio-node').find('div.biblio-upload-wrapper').length) {
+    jQuery('#citation-wrapper').addClass('has-attached');
+  }
 
 //REMOVE THE TITLE/TOOLTIPS FROM THE AOR BLOCK ON FRONT PAGE
-	jQuery(".front ul.termchild-applications a").removeAttr("title");
-	jQuery(".front ul.termchild-methods a").removeAttr("title");
-	
+  jQuery(".front ul.termchild-applications a").removeAttr("title");
+  jQuery(".front ul.termchild-methods a").removeAttr("title");
 
-	
 });
-
 
 
 

@@ -77,6 +77,8 @@ class sv_list_node_event extends sv_list_plugin  {
       $options['sort_by'] = 'sort_event_asc';
     }
 
+    $efq->addTag('sv_list_events');
+
     $events_to_show = $options['show'];
     switch ($events_to_show) {
       case 'all_events':
@@ -86,7 +88,7 @@ class sv_list_node_event extends sv_list_plugin  {
         // 'Event Date Descending (Future to Past)' we get events that already
         // ended.
         if ($options['sort_by'] != 'sort_event_desc') {
-          $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '<');
+          $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '<', 'sv_list_events');
         }
         break;
       default:
@@ -94,10 +96,12 @@ class sv_list_node_event extends sv_list_plugin  {
         // for 'Event Date Ascending (Past to Future)' we get events that
         // haven't started yet.
         if ($options['sort_by'] != 'sort_event_asc') {
-          $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s'), '>=');
+          $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s'), '>=', 'sv_list_events');
         }
         break;
     }
+
+    $this->query = $efq;
   }
 
   /**
@@ -174,13 +178,26 @@ class sv_list_node_event extends sv_list_plugin  {
   }
 
   /**
+   * @function sort_alter
+   *
+   * Ensures that all sort options have a set sorting type
+   */
+  public function sort_alter($options, $efq) {
+    if ($options['content_type'] != 'event' || in_array($options['sort_by'], array('sort_event_desc', 'sort_event_asc'))) {
+      return;
+    }
+
+    $this->sort_event_asc($options, $efq);
+  }
+
+  /**
    * @function entities_alter
    *
    * Events have been loaded, but repeated events are grouped under a single node.
    * Split them into several nodes, then re-sort and slice them.
    */
   public function entities_alter($options, &$entities) {
-    if ($options['content_type'] != 'event' || $options['sort_by'] != 'sort_event') {
+    if ($options['content_type'] != 'event') {
       return;
     }
 
@@ -190,6 +207,7 @@ class sv_list_node_event extends sv_list_plugin  {
     // DB Every entity we need should already be in the entities array.
     $output = array();
     $raw = $this->query->ordered_results;
+
     // use this instead of a foreach because this query can have more results
     // than expected.
     for ($i=0; $i<$options['number_of_items']; $i++) {
@@ -215,7 +233,7 @@ class sv_list_node_event extends sv_list_plugin  {
    * just call node_view on each of them.
    */
   public function render($options, &$entities) {
-    if ($options['content_type'] != 'event' || $options['sort_by'] != 'sort_event') {
+    if ($options['content_type'] != 'event') {
       return;
     }
 
@@ -236,7 +254,7 @@ class sv_list_node_event extends sv_list_plugin  {
    *   Cache time string.
    */
   public function set_cache_time($options, &$cache_time) {
-    if ($options['content_type'] == 'event' && $options['sort_by'] == 'sort_event') {
+    if ($options['content_type'] == 'event') {
       $cache_time = "5 minutes";
     }
   }
@@ -253,6 +271,8 @@ class sv_list_node_event extends sv_list_plugin  {
    *   Number of query results.
    */
   public function get_number_of_results() {
-    return count($this->query->ordered_results);
+    if (isset($this->query)) {
+      return count($this->query->ordered_results);
+    }
   }
 }

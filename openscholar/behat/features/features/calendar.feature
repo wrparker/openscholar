@@ -49,10 +49,14 @@ Feature: Testing OpenScholar calendar page.
      Given I go to "calendar"
       Then I should get a "403" HTTP response
 
-
   @api @features_first
   Scenario: Test the week tab and
     Given I visit "john/calendar"
       And I click "Week"
       And I click "Navigate to next week"
      Then I should verify the next week calendar is displayed correctly
+
+  @api @features_first @now
+  Scenario: Test the week tab and
+    Given I visit "john/calendar/export.ics"
+     Then I cannot look for "-------- DATE: "

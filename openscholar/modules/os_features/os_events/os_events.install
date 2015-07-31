@@ -233,10 +233,25 @@ function os_events_update_7015() {
 }
 
 /**
+ * Reset date format variables
+ */
+function os_events_update_7015() {
+  features_revert(array('os_events' => array('variable')));
+}
+
+/**
+ * Create a single event export.
+ */
+function os_events_update_7016() {
+  features_revert(array('os_events' => array('views')));
+}
+
+/**
  * Define the registration entity as a group content and revert the views
  * component to display event attendees..
  */
-function os_events_update_7016() {
+function os_events_update_7017() {
   og_create_field(OG_AUDIENCE_FIELD, 'registration', 'event_signup_simple');
   features_revert(array('os_events' => array('views')));
 }
+

@@ -647,13 +647,13 @@ function os_reader_cron() {
 
   // Get all the orphans feed items which older then 1 month.
   $query = db_select('os_feed_item', 'ofi');
-  $query->leftJoin('og_membership', 'ogm', 'ogm.etid = ofi.id');
+  $query->leftJoin('field_data_field_nodes_reference', 'nr', 'nr.entity_id = ofi.importer_nid');
   $results = $query
     ->fields('ofi', array('id'))
     ->condition('ofi.id', 0, '>')
     ->condition('ofi.created', strtotime("1 month ago"), '<')
     ->condition('ofi.id', $id, '>=')
-    ->isNull('ogm.etid')
+    ->isNull('nr.entity_id')
     ->range(0, 500)
     ->orderBy('ofi.created', 'DESC')
     ->execute()
