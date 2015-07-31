@@ -1613,7 +1613,7 @@ function os_events_registration_link($variables) {
 function os_events_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   $alter_urls = array('node/%','node/%/registrations','node/%/registrations/settings','node/%/registrations/broadcast','node/%/registrations/list');
   // Add action link to 'node/add' on 'admin/content' page.
-  if (in_array($root_path,$alter_urls) && $router_item['map'][1]->type == 'event' && (isset($router_item['map'][1]->date_id) || $_GET['delta'])) {
+  if (in_array($root_path,$alter_urls) && $router_item['map'][1]->type == 'event' && (isset($router_item['map'][1]->date_id) || isset($_GET['delta']))) {
     //Get the Delta
     if (isset($router_item['map'][1]->date_id)) {
       list(,,$field,$delta) = explode('.', $router_item['map'][1]->date_id);

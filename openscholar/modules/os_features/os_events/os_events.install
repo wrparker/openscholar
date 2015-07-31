@@ -206,29 +206,7 @@ function os_events_update_7013() {
   features_revert(array('os_events' => array('variable')));
 }
 
-/**
- * Add a date field to the registration entity table.
- */
 function os_events_update_7014() {
-
-  $spec = array(
-      'type' => 'varchar',
-      'length' => 128,
-      'default' => '',
-      'not null' => TRUE,
-      'description' => 'A optional date when a repeating event occurs.',
-    );
-
-  if (!db_field_exists('registration_entity', 'repeating_event_date')) {
-    db_drop_primary_key('registration_entity');
-
-    db_add_field('registration_entity', 'repeating_event_date', $spec);
-
-    db_add_primary_key('registration_entity', array('entity_id', 'entity_type', 'repeating_event_date'));
-  }
-}
-
-function os_events_update_7015() {
   features_revert(array('os_events' => array('variable')));
 }
 
@@ -252,6 +230,28 @@ function os_events_update_7016() {
  */
 function os_events_update_7017() {
   og_create_field(OG_AUDIENCE_FIELD, 'registration', 'event_signup_simple');
-  features_revert(array('os_events' => array('views')));
+  features_revert(array('os_events' => array('field')));
 }
 
+/**
+ * Add a date field to the registration entity table.
+ */
+function os_events_update_7018() {
+
+  $spec = array(
+      'type' => 'varchar',
+      'length' => 128,
+      'default' => '',
+      'not null' => TRUE,
+      'description' => 'A optional date when a repeating event occurs.',
+    );
+
+  if (!db_field_exists('registration_entity', 'repeating_event_date')) {
+    db_drop_primary_key('registration_entity');
+
+    db_add_field('registration_entity', 'repeating_event_date', $spec);
+
+    db_add_primary_key('registration_entity', array('entity_id', 'entity_type', 'repeating_event_date'));
+  }
+  features_revert(array('os_events' => array('field')));
+}
