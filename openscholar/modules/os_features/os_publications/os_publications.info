@@ -21,7 +21,6 @@ dependencies[] = media
 dependencies[] = media_draggable
 dependencies[] = menu
 dependencies[] = os
-dependencies[] = os_biocv
 dependencies[] = os_files
 dependencies[] = strongarm
 dependencies[] = views

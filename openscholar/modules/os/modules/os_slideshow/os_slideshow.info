@@ -10,7 +10,6 @@ dependencies[] = imagefield_crop
 dependencies[] = libraries
 dependencies[] = link
 dependencies[] = media
-dependencies[] = os_biocv
 dependencies[] = strongarm
 stylesheets[all][] = os_slideshow.css
 stylesheets[all][] = os_slideshow_aspect_ratio_form.css
