@@ -1967,6 +1967,25 @@ function os_app_info_declared_node_bundle($bundle = '') {
 }
 
 /**
+ * Get the application name by the node bundle.
+ *
+ * @param $bundle
+ *   The name of the bundle.
+ *
+ * @return string
+ *   The name of the application.
+ */
+function os_get_app_by_bundle($bundle) {
+  $apps = os_app_info();
+
+  foreach ($apps as $app => $info) {
+    if (!empty($info['nodetypes']) && in_array($bundle, $info['nodetypes'])) {
+      return $app;
+    }
+  }
+}
+
+/**
  * Implements hook_form_BASE_FORM_ID_alter() for user_login form.
  */
 function os_form_user_login_alter(&$form, $form_state) {
