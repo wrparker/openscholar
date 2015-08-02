@@ -15,28 +15,28 @@ Feature: Testing OpenScholar calendar page.
   Scenario: Test the Calendar tab with day events filtered by terms.
     Given I visit "john/calendar?type=day&day=2013-05-29"
       And I should see the text "John F. Kennedy birthday" under "view-display-id-page_1"
-     When I visit "john/calendar/authors/douglas-noël-adams?type=day&day=2013-05-29"
+     When I visit "john/calendar/authors/douglas-noel-adams?type=day&day=2013-05-29"
      Then I should not see the text "John F. Kennedy birthday" under "view-display-id-page_1"
 
   @api @features_first
   Scenario: Test the Calendar tab with week events filtered by terms.
     Given I visit "john/calendar/authors/stephen-william-hawking?week=2013-W22&type=week"
       And I should see the text "John F. Kennedy birthday" under "view-display-id-page_1"
-     When I visit "john/calendar/authors/douglas-noël-adams?week=2013-W22&type=week"
+     When I visit "john/calendar/authors/douglas-noel-adams?week=2013-W22&type=week"
      Then I should not see the text "John F. Kennedy birthday" under "view-display-id-page_1"
 
   @api @features_first
   Scenario: Test the Calendar tab with month events filtered by terms.
     Given I visit "john/calendar/authors/stephen-william-hawking?type=month&month=2013-05"
       And I should see the link "John F. Kennedy birthday" under "view-display-id-page_1"
-     When I visit "john/calendar/authors/douglas-noël-adams?type=month&month=2013-05"
+     When I visit "john/calendar/authors/douglas-noel-adams?type=month&month=2013-05"
      Then I should not see the text "John F. Kennedy birthday" under "view-display-id-page_1"
 
   @api @features_first
   Scenario: Test the Calendar tab with year events filtered by terms.
     Given I visit "john/calendar/authors/stephen-william-hawking?type=year&year=2013"
       And I should see the link "29" under "has-events"
-     When I visit "john/calendar/authors/douglas-noël-adams?type=year&year=2013"
+     When I visit "john/calendar/authors/douglas-noel-adams?type=year&year=2013"
      Then I should not see the link "29" under "view-display-id-page_1"
 
   @api @features_first

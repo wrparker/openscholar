@@ -14,7 +14,7 @@ Feature:
      Then I should see "Filter by term"
       And I should see the following <links>
         | Antoine de Saint-Exupéry |
-        | Douglas Noël Adams       |
+        | Douglas noel Adams       |
         | Antoine de Saint-Exupéry |
 
   @api @widgets
@@ -23,7 +23,7 @@ Feature:
       And I assign the node "John F. Kennedy" to the term "Antoine de Saint-Exupéry"
       And I assign the node "John F. Kennedy" to the term "Stephen William Hawking"
       And I set the term "Stephen William Hawking" under the term "Antoine de Saint-Exupéry"
-      And I set the term "Douglas Noël Adams" under the term "Stephen William Hawking"
+      And I set the term "Douglas noel Adams" under the term "Stephen William Hawking"
       And the widget "Filter by term" is set in the "Classes" page with the following <settings>:
         | Vocabularies                     | authors | select list |
         | Show empty terms                 | check   | checkbox    |
@@ -55,7 +55,7 @@ Feature:
   Scenario: Verify the widget can show/hide the child terms by the depth setting.
     Given I am logging in as "john"
       And I set the term "Stephen William Hawking" under the term "Antoine de Saint-Exupéry"
-      And I set the term "Douglas Noël Adams" under the term "Stephen William Hawking"
+      And I set the term "Douglas noel Adams" under the term "Stephen William Hawking"
       And the widget "Filter by term" is set in the "Publications" page with the following <settings>:
         | Vocabularies         | authors   | select list |
         | Show empty terms     | check     | checkbox    |
@@ -64,7 +64,7 @@ Feature:
       And I visit "john/publications"
       And I should see "Antoine de Saint-Exupéry"
       And I should see "Stephen William Hawking"
-      And I should not see "Douglas Noël Adams"
+      And I should not see "Douglas noel Adams"
       And the widget "Filter by term" is set in the "Publications" page with the following <settings>:
         | Vocabularies         | authors   | select list |
         | Show empty terms     | check     | checkbox    |
@@ -73,7 +73,7 @@ Feature:
      When I visit "john/publications"
      Then I should see "Antoine de Saint-Exupéry"
       And I should see "Stephen William Hawking"
-      And I should see "Douglas Noël Adams"
+      And I should see "Douglas noel Adams"
 
   @api @widgets
   Scenario: Verify the widget can show/hide the child terms by the depth setting.
@@ -89,7 +89,7 @@ Feature:
           Wrote The little prince
           Stephen William Hawking
           Wrote A Brief History of Time
-          Douglas Noël Adams
+          Douglas noel Adams
           Wrote The Hitchhiker's Guide to the Galaxy
           """
 
@@ -116,11 +116,11 @@ Feature:
         | Widget Description   | Taxonomy  | textfield   |
         | Vocabularies         | authors   | select list |
         | Show empty terms     | uncheck   | checkbox    |
-      And I set the term "Douglas Noël Adams" under the term "Antoine de Saint-Exupéry"
-      And I set the term "Stephen William Hawking" under the term "Douglas Noël Adams"
-      And I unassign the node "Halley's Comet" with the type "event" from the term "Douglas Noël Adams"
+      And I set the term "Douglas noel Adams" under the term "Antoine de Saint-Exupéry"
+      And I set the term "Stephen William Hawking" under the term "Douglas noel Adams"
+      And I unassign the node "Halley's Comet" with the type "event" from the term "Douglas noel Adams"
      When I visit "john/calendar"
-     Then I should see "Douglas Noël Adams"
+     Then I should see "Douglas noel Adams"
       And I should see "Antoine de Saint-Exupéry"
       And I should see "Stephen William Hawking"
 
