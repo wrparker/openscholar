@@ -18,7 +18,7 @@ addons:
 
 env:
   - TEST_SUITE=features_first
-#  - TEST_SUITE=features_second
+  - TEST_SUITE=features_second
 #  - TEST_SUITE=harvard
 ##  - TEST_SUITE=javscript
 #  - TEST_SUITE=misc_first
