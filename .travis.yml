@@ -17,7 +17,8 @@ addons:
       - php5-curl
 cache:
   directories:
-  - openscholar
+  - openscholar/modules/contrib
+  - openscholar/behat/vendor
 
 env:
   - TEST_SUITE=features_first
