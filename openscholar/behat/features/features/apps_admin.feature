@@ -9,7 +9,6 @@ Feature:
      When I click "Build"
       #And I should see "Apps"
      Then I should see the "spaces" table with the following <contents>:
-      | Bio/CV        | Public |
       | Blog          | Public |
       | Booklets      | Public |
       | Classes       | Public |
@@ -31,7 +30,6 @@ Feature:
         And I set feature "edit-spaces-features-os-booklets" to "Disabled" on "john"
        When I visit "john/cp/users/permissions"
        Then I should not see "Create book page content"
-        And I should see "Create Bio content"
 
   @api @features_first
     Scenario: Check enabling app brings back its permissions.
