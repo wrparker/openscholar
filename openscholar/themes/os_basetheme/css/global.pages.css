@@ -853,6 +853,56 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
  	right: 50px;
  }	
  
+ div[aria-describedby^="event-popover-"], 
+ div[aria-describedby*=" event-popover-"] {
+ 	border:1px solid #CCC;
+ 	-webkit-box-shadow: 5px 5px 5px 0px rgba(50, 50, 50, 0.4);
+-moz-box-shadow:    5px 5px 5px 0px rgba(50, 50, 50, 0.4);
+box-shadow:         5px 5px 5px 0px rgba(50, 50, 50, 0.4);
+
+ 	}
+ 	
+
+.popover-pointer {
+  background: url('../images/event-popover_arrow.png') no-repeat center center;
+  bottom: -12px;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 140px;
+} 
+
+	
+ 	 div[aria-describedby^="event-popover-"] .ui-icon-closethick, 
+ div[aria-describedby*=" event-popover-"] .ui-icon-closethickt {
+  background: url('../images/scholarbase-sprite.png') no-repeat 0 -474px;
+
+ }
+ 	
+div[aria-describedby^="event-popover-"] .ui-widget-header .ui-state-default:hover,
+div[aria-describedby^="event-popover-"] .ui-widget-header .ui-state-default:hover, 	
+div[aria-describedby^="event-popover-"] .ui-widget-header .ui-state-default,
+div[aria-describedby^="event-popover-"] .ui-widget-header .ui-state-default {
+  border: none;
+  background: none;
+
+}
+
+
+ 
+  div[aria-describedby^="event-popover-"] .ui-dialog-titlebar, 
+ div[aria-describedby*=" event-popover-"] .ui-dialog-titlebar,
+  div[aria-describedby^="event-popover-"] .ui-dialog-content, 
+ div[aria-describedby*=" event-popover-"] .ui-dialog-content {
+ 	padding: 0 1em;
+ 	overflow: initial;
+ }
+
+div[id^=event-popover] .event-title a {
+  outline: none;
+  color: #215990;
+}
+
  /** MODAL OVERRIDES for OS ORG ROADMAP PAGE **/
 
 .page-roadmap .ui-dialog {

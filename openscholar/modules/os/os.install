@@ -752,9 +752,46 @@ function os_update_7036() {
 }
 
 /**
- * Enabling OS Restful, and the new Media Browser.
+ * Install OS exporter.
  */
 function os_update_7037() {
-  module_enable(array('os_restful'));
-  module_enable(array('media_browser'));
+  module_enable(array('os_exporter'));
+}
+
+/**
+ * Uninstall the os_biocv module
+ */
+function os_update_7038(&$sandbox) {
+  if (module_exists('os_biocv')) {
+    if (!isset($sandbox['dataset'])) {
+      $sandbox['notices'] = "";
+      $sandbox['completed'] = 0;
+      $dataset = _get_vsite_biocv_data();
+      $sandbox['dataset'] = $dataset;
+      $sandbox['total'] = count($dataset);
+      $sandbox['#finished'] = 0.0;
+    }
+
+    $vsites = array_splice($sandbox['dataset'], 0, 100);
+
+    $sandbox['notices'] .= _replace_biocvs_with_pages($vsites);
+    $sandbox['completed'] += count($vsites);
+    $sandbox['#finished'] = (float)$sandbox['completed'] / (float)$sandbox['total'];
+
+    if($sandbox['#finished'] >= 1) {
+      module_disable(array('os_biocv'), FALSE);
+      drupal_uninstall_modules(array('os_biocv'), FALSE);
+
+      $sandbox['#finished'] = 1;
+      return "Completed " . $sandbox['completed'] . " out of " . $sandbox['total'] . " migrations.<br/>" . $sandbox['notices'];
+    }
+  }
+}
+
+
+/*
+ * Enabling OS Restful, and the new Media Browser.
+ */
+function os_update_7039() {
+  module_enable(array('os_restful', 'media_browser'));
 }

@@ -94,7 +94,8 @@ function os_taxonomy_views_query_alter(&$view, &$query) {
     // If this view takes arguments we can't be sure that this is a 404, we will
     // let the view decide.
     $view_takes_arguments = (isset($view->display_handler->handlers) && isset($view->display_handler->handlers['argument']) && count($view->display_handler->handlers['argument']));
-    if ($path === FALSE && !$view_takes_arguments) {
+    $view_is_page_view = (isset($view->display_handler->plugin_name) && $view->display_handler->plugin_name == 'page');
+    if ($path === FALSE && !$view_takes_arguments && $view_is_page_view) {
       // There is a path, but it does not match an active term. In this case it
       // is either an old alias, old term, or mistyped path, we will throw a 404.
       drupal_not_found();
@@ -503,7 +504,7 @@ function theme_os_taxonomy_vocabulary_item_list($variables) {
       }
 
       // Handle events.
-      if (strpos(current($options['bundles']), 'event') !== FALSE) {
+      if (is_array($options['bundles']) && strpos(current($options['bundles']), 'event') !== FALSE) {
         // Get the term alias and remove the PURL from the alias.
         $term_alias = drupal_lookup_path('alias', 'taxonomy/term/' . $term->tid);
         $parts = explode('/', $term_alias);
@@ -606,7 +607,7 @@ function os_taxonomy_is_tagged_tree($term, $node_bundles, $depth = NULL, &$retur
  *    Referenced array of the options variable from the theme functions.
  */
 function os_taxonomy_get_prefix_path(&$options) {
-  if (!count($options['bundles'])) {
+  if (!count($options['bundles']) || !is_array($options['bundles'])) {
     return;
   }
   $map = features_get_component_map('node');
@@ -1296,7 +1297,7 @@ function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array
   }
 
   // In case the bundle is of the type "event", filter by the type of the event.
-  if (!empty($bundles) && is_array($bundles) && strpos(reset($bundles), 'event') !== FALSE) {
+  if (!empty($bundles) && is_array($bundles) && strpos(reset($bundles), 'event') !== FALSE && count($bundles) == 1) {
     $query->leftJoin('field_data_field_date', 'fd', '(ogv.entity_id = fd.entity_id)');
     $event_type = reset($bundles);
 
@@ -1607,6 +1608,10 @@ function os_taxonomy_terms_determine_sort($terms) {
  * avoid collating files and nodes on a term page unless absolutely necessary.
  */
 function _os_taxonomy_bundle_entities($bundles = array()) {
+  if (!is_array($bundles)) {
+    return;
+  }
+
   $ret = array();
   $bundle_functions = array('node' => 'os_get_bundles', 'file' => 'os_files_get_bundles');
 

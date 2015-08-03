@@ -68,6 +68,11 @@ ul.primary li a {
 .front #content-column .block.block-boxes-os_boxes_manual_list {
     margin-bottom: 20px;
 }
+
+.front #content-column .block.block-boxes-os_boxes_manual_list.converted-bio {
+    margin-bottom: 0;
+}
+
 .two-sidebars #content-panels, 
 .one-sidebar.sidebar-second #content-panels {
     border-right: none;
