@@ -15,6 +15,9 @@ addons:
       - php5-cgi
       - php5-mysql
       - php5-curl
+cache:
+  directories:
+  - openscholar
 
 env:
   - TEST_SUITE=features_first
