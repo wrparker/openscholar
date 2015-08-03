@@ -230,6 +230,7 @@ div.file-filters {
   padding: 0px 5px;
 }
 
+ .tw-widget button[ng-click="addMore(vocab.id)"],
  button[ng-disabled="!pager.canPage(1)"],
  button[ng-disabled="!pager.canPage(-1)"] { 
   border: none;
@@ -237,6 +238,12 @@ div.file-filters {
   color: #4E84C4;
   font-weight: bold;
   font-size: 1.1em;
+}
+
+ .tw-widget button[ng-click="addMore(vocab.id)"] { 
+  background-color: #458C00;
+  color: #FFF;
+  font-weight: bold;
 }
 
 /* File Edit panel */
@@ -287,6 +294,14 @@ display:none;
 
 div[file-edit] .fe-warning.ng-hide ~ .control {
 display:block;
+}
+
+.tw-widget h4 {
+font-size:.97em;
+}
+
+.tw-widget {
+    margin-bottom: 15px;
 }
 
 /** Uploading styles */
