@@ -776,7 +776,12 @@ function os_update_7038(&$sandbox) {
 
     $sandbox['notices'] .= _replace_biocvs_with_pages($vsites);
     $sandbox['completed'] += count($vsites);
-    $sandbox['#finished'] = (float)$sandbox['completed'] / (float)$sandbox['total'];
+    if ($sandbox['total']) {
+      $sandbox['#finished'] = (float)$sandbox['completed'] / (float)$sandbox['total'];
+    }
+    else {
+       $sandbox['#finished'] = 1;
+    }
 
     if($sandbox['#finished'] >= 1) {
       module_disable(array('os_biocv'), FALSE);
