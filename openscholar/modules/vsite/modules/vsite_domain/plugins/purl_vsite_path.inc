@@ -46,9 +46,12 @@ if (!class_exists('purl_vsite_path')) {
 
           global $base_url;
 
+          $clean_url = str_replace('http://', '', variable_get('purl_base_domain', $base_url));
+          $temp = explode('/', $clean_url);
+
           $disabled_url = $space_found || in_array($settings->value, self::$disabled);
           $custom_domain = strlen($vsite_domain) && str_replace('http://', '', $_SERVER['HTTP_HOST']) != $vsite_domain;
-          $host_url_match = !strlen($vsite_domain) && str_replace('http://', '', $_SERVER['HTTP_HOST']) != str_replace('http://', '', variable_get('purl_base_domain', $base_url));
+          $host_url_match = !strlen($vsite_domain) && str_replace('http://', '', $_SERVER['HTTP_HOST']) != $temp[0];
           if ($disabled_url || $custom_domain || $host_url_match) {
             unset($parsed[$site]);
           }
