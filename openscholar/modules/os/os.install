@@ -792,3 +792,12 @@ function os_update_7038(&$sandbox) {
     }
   }
 }
+
+
+/**
+ * Remove bio and cv options from content list after the os_biocv module has been uninstalled
+ */
+function os_update_7039() {
+  features_revert(array('cp_content' => array('views_view')));
+}
+
