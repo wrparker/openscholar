@@ -53,7 +53,7 @@
         }
 
         scope.replaceFile = function ($inserted, $index) {
-          scope.selectedFiles.splice($index, 1, $inserted);
+          scope.selectedFiles.splice($index, 1, $inserted[0]);
         }
 
         elem.parent().find(' > *').not(elem).remove();
