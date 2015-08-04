@@ -96,12 +96,6 @@ function media_browser_library_alter(&$libs) {
   $libs['media_browser']['css'] = array(
     $path.'/misc/media_browser.mediaBrowser.css',
   );
-
-  // We don't need any of this stuff anymore  or even this library. Can't delete
-  // it though.
-//  $libs['media_browser_page']['js'] = array();
-//  $libs['media_browser_page']['css'] = array();
-//  $libs['media_browser_page']['dependencies'] = array();
 }
 
 /**
