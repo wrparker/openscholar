@@ -88,7 +88,7 @@ function media_browser_field_widget_form(&$form, &$form_state, $field, $instance
               drupal_html_class('edit-'.$element['#field_name']) => array(
                 'selectedFiles' => $files
               ),
-            )
+            ),
           )
         )
       ),
@@ -126,7 +126,7 @@ function media_browser_field_widget_media_draggable_file_form_alter(&$elements, 
         drupal_html_class('edit-'.$elements['#field_name']) => array(
           'selectedFiles' => $files
         ),
-      )
+      ),
     )
   );
 

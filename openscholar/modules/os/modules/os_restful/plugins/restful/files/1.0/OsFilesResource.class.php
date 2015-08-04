@@ -160,6 +160,10 @@ class OsFilesResource extends RestfulEntityBase {
       )
     );
 
+    $info['icon'] = array(
+      'callback' => array($this, 'getIconUrl')
+    );
+
     $info['url'] = array(
       'property' => 'url',
     );
@@ -286,6 +290,14 @@ class OsFilesResource extends RestfulEntityBase {
   public function getFilePreview($wrapper) {
     $output = media_get_thumbnail_preview($wrapper->value());
     return drupal_render($output);
+  }
+
+  /**
+   * Callback for icon url
+   */
+  public function getIconUrl($wrapper) {
+    $file = $wrapper->value();
+    return file_icon_url($file);
   }
 
   /**

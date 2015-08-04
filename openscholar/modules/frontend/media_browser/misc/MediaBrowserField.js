@@ -56,8 +56,6 @@
           scope.selectedFiles.splice($index, 1, $inserted[0]);
         }
 
-        elem.parent().find(' > *').not(elem).remove();
-
 
         scope.allowedTypes = scope.types.split(',');
         scope.extensionsFull = [];
@@ -67,6 +65,8 @@
             scope.extensionsFull = scope.extensionsFull.concat(Drupal.settings.extensionMap[type]);
           }
         }
+
+        elem.parent().find(' > *').not(elem).remove();
       }
 
       if (mbModal.requirementsMet()) {

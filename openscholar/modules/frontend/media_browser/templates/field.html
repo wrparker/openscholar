@@ -14,7 +14,7 @@
 <div class="file-list-single form-wrapper" ng-repeat="file in selectedFiles" ng-class="{even: $even, odd: $odd}">
     <input type="hidden" name="{{field_name}}[und][{{$index}}][fid]" value="{{file.id}}">
     <span>
-        <img class="file-icon" alt="Icon for {{file.mime}}" title="{{file.mime}}" src="{{file.mime | filter:iconUrl}}">
+        <img class="file-icon" alt="Icon for {{file.mime}}" title="{{file.mime}}" src="{{file.icon}}">
         {{file.label}} ({{file.filename}})
     </span>
     <ul>
