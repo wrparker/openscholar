@@ -1,5 +1,5 @@
 (function ($) {
 
-  angular.module('faq-node-form', ['mediaBrowser']);
+  angular.module('faq-node-form', ['mediaBrowser', 'MediaBrowserField']);
 
 })(jQuery);
