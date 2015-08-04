@@ -142,120 +142,40 @@
 
   // We override some default code of the wysiwyg module.
   // See @OS custom logic in prepareContent().
-  Drupal.wysiwyg.editor.instance.tinymce = {
-    addPlugin: function(plugin, settings, pluginSettings) {
-      if (typeof Drupal.wysiwyg.plugins[plugin] != 'object') {
-        return;
-      }
-      tinymce.create('tinymce.plugins.' + plugin, {
-        /**
-         * Initialize the plugin, executed after the plugin has been created.
-         *
-         * @param ed
-         *   The tinymce.Editor instance the plugin is initialized in.
-         * @param url
-         *   The absolute URL of the plugin location.
-         */
-        init: function(ed, url) {
-          // Register an editor command for this plugin, invoked by the plugin's button.
-          ed.addCommand(plugin, function() {
-            if (typeof Drupal.wysiwyg.plugins[plugin].invoke == 'function') {
-              var data = { format: 'html', node: ed.selection.getNode(), content: ed.selection.getContent() };
-              // TinyMCE creates a completely new instance for fullscreen mode.
-              var instanceId = ed.id == 'mce_fullscreen' ? ed.getParam('fullscreen_editor_id') : ed.id;
-              Drupal.wysiwyg.plugins[plugin].invoke(data, pluginSettings, instanceId);
+  Drupal.wysiwyg.editor.instance.tinymce.prepareContent = function(content) {
+    // @OS custom logic. We need to do this since there is a use case for when
+    // a user enters broken HTML when disabling the rich text feature.
+    var d = document.createElement('div');
+    d.innerHTML = content;
+    content = d.innerHTML;
+    // End of OS custom logic.
+
+    // Certain content elements need to have additional DOM properties applied
+    // to prevent this editor from highlighting an internal button in addition
+    // to the button of a Drupal plugin.
+    var specialProperties = {
+      img: { 'class': 'mceItem' }
+    };
+    var $content = $('<div>' + content + '</div>'); // No .outerHTML() in jQuery :(
+    // Find all placeholder/replacement content of Drupal plugins.
+    $content.find('.drupal-content').each(function() {
+      // Recursively process DOM elements below this element to apply special
+      // properties.
+      var $drupalContent = $(this);
+      $.each(specialProperties, function(element, properties) {
+        $drupalContent.find(element).andSelf().each(function() {
+          for (var property in properties) {
+            if (property == 'class') {
+              $(this).addClass(properties[property]);
             }
-          });
-
-          // Register the plugin button.
-          ed.addButton(plugin, {
-            title : settings.iconTitle,
-            cmd : plugin,
-            image : settings.icon
-          });
-
-          // Load custom CSS for editor contents on startup.
-          ed.onInit.add(function() {
-            if (settings.css) {
-              ed.dom.loadCSS(settings.css);
+            else {
+              $(this).attr(property, properties[property]);
             }
-          });
-
-          // Attach: Replace plain text with HTML representations.
-          ed.onBeforeSetContent.add(function(ed, data) {
-            var editorId = (ed.id == 'mce_fullscreen' ? ed.getParam('fullscreen_editor_id') : ed.id);
-            if (typeof Drupal.wysiwyg.plugins[plugin].attach == 'function') {
-              data.content = Drupal.wysiwyg.plugins[plugin].attach(data.content, pluginSettings, editorId);
-              data.content = Drupal.wysiwyg.editor.instance.tinymce.prepareContent(data.content);
-            }
-          });
-
-          // Detach: Replace HTML representations with plain text.
-          ed.onGetContent.add(function(ed, data) {
-            var editorId = (ed.id == 'mce_fullscreen' ? ed.getParam('fullscreen_editor_id') : ed.id);
-            if (typeof Drupal.wysiwyg.plugins[plugin].detach == 'function') {
-              data.content = Drupal.wysiwyg.plugins[plugin].detach(data.content, pluginSettings, editorId);
-            }
-          });
-
-          // isNode: Return whether the plugin button should be enabled for the
-          // current selection.
-          ed.onNodeChange.add(function(ed, command, node) {
-            if (typeof Drupal.wysiwyg.plugins[plugin].isNode == 'function') {
-              command.setActive(plugin, Drupal.wysiwyg.plugins[plugin].isNode(node));
-            }
-          });
-        },
-
-        /**
-         * Return information about the plugin as a name/value array.
-         */
-        getInfo: function() {
-          return {
-            longname: settings.title
-          };
-        }
-      });
-
-      // Register plugin.
-      tinymce.PluginManager.add(plugin, tinymce.plugins[plugin]);
-    },
-
-    prepareContent: function(content) {
-      // @OS custom logic. We need to do this since there is a use case for when
-      // a user enters broken HTML when disabling the rich text feature.
-      var d = document.createElement('div');
-      d.innerHTML = content;
-      content = d.innerHTML;
-      // End of OS custom logic.
-
-      // Certain content elements need to have additional DOM properties applied
-      // to prevent this editor from highlighting an internal button in addition
-      // to the button of a Drupal plugin.
-      var specialProperties = {
-        img: { 'class': 'mceItem' }
-      };
-      var $content = $('<div>' + content + '</div>'); // No .outerHTML() in jQuery :(
-      // Find all placeholder/replacement content of Drupal plugins.
-      $content.find('.drupal-content').each(function() {
-        // Recursively process DOM elements below this element to apply special
-        // properties.
-        var $drupalContent = $(this);
-        $.each(specialProperties, function(element, properties) {
-          $drupalContent.find(element).andSelf().each(function() {
-            for (var property in properties) {
-              if (property == 'class') {
-                $(this).addClass(properties[property]);
-              }
-              else {
-                $(this).attr(property, properties[property]);
-              }
-            }
-          });
+          }
         });
       });
-      return $content.html();
-    }
+    });
+    return $content.html();
   };
 
 })(jQuery);
