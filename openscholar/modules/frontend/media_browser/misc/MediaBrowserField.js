@@ -49,7 +49,7 @@
         }
 
         scope.removeFile = function ($index) {
-          scope.selectedFiles.splice($index);
+          scope.selectedFiles.splice($index, 1);
         }
 
         scope.replaceFile = function ($inserted, $index) {
