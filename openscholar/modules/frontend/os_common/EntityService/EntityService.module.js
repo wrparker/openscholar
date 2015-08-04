@@ -158,15 +158,19 @@
             entity.vsite = vsite;
           }
 
-          for (var k in config[entityType].fields) {
-            params[k] = config[entityType].fields[k];
+          if (config[entityType]) {
+            for (var k in config[entityType].fields) {
+              params[k] = config[entityType].fields[k];
+            }
           }
 
           // rest API call to add entity to server
           return $http.post(restPath + '/' + entityType, entity)
             .success(function (resp) {
               var entity = resp.data[0];
-              ents.push(entity);
+              ents[entity[idProp]] = entity;
+
+              // TODO: Use generated comparator function to add to caches
 
               $rootScope.$broadcast(eventName + '.add', entity);
             })

@@ -125,7 +125,12 @@
     });
 
     $scope.$on('EntityService.files.update', function (event, file) {
-      $scope.files = service.getAll();
+      for (var i=0; i < $scope.files.length; i++) {
+        if ($scope.files[i].id == file.id) {
+          $scope.files[i] = file;
+          break;
+        }
+      }
     });
 
     $scope.$on('EntityService.files.delete', function (event, id) {
