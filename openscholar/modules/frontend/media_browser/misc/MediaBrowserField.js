@@ -57,6 +57,16 @@
         }
 
         elem.parent().find(' > *').not(elem).remove();
+
+
+        scope.allowedTypes = scope.types.split(',');
+        scope.extensionsFull = [];
+        for (var i = 0; i < scope.allowedTypes.length; i++) {
+          var type = scope.allowedTypes[i];
+          if (Drupal.settings.extensionMap[type] && Drupal.settings.extensionMap[type].length) {
+            scope.extensionsFull = scope.extensionsFull.concat(Drupal.settings.extensionMap[type]);
+          }
+        }
       }
 
       if (mbModal.requirementsMet()) {

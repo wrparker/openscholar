@@ -49,20 +49,8 @@ function media_browser_library_alter(&$libs) {
   }
 
   // Start with post_max_size.
-  $max_size_raw = parse_size(ini_get('post_max_size'));
-  $upload_max_raw = parse_size(ini_get('upload_max_filesize'));
-  if ($upload_max_raw > 0) {
-    if ($upload_max_raw < $max_size_raw) {
-      $max_size = ini_get('post_max_size');
-    }
-    else {
-      $max_size = ini_get('upload_max_filesize');
-      $max_size_raw = $upload_max_raw;
-    }
-  }
-  else {
-    $max_size = ini_get('post_max_size');
-  }
+  $max_size = media_browser_get_max_size();
+  $max_size_raw = parse_size($max_size);
 
   $libs['media_browser']['js'] += array(
     $path . '/misc/MediaBrowserFilters.js' => array(),
@@ -98,6 +86,22 @@ function media_browser_library_alter(&$libs) {
   );
 }
 
+function media_browser_get_max_size() {
+  $post_max = ini_get('post_max_size');
+  $post_raw = parse_size($post_max);
+  $upload_max = ini_get('upload_max_filesize');
+  $upload_max_raw = parse_size($upload_max);
+  if ($upload_max_raw > 0) {
+    if ($upload_max_raw < $max_size_raw) {
+      return $post_max;
+    }
+    else {
+      return $upload_max;
+    }
+  }
+  return $post_max;
+}
+
 /**
  * Implements hook_element_info_alter().
  */
@@ -113,7 +117,7 @@ function media_browser_field_widget_media_generic_form_alter(&$elements, &$forms
     $elements['#media_options']['global']['max_filesize_raw'] = parse_size($size);
   }
   else {
-    $size = ini_get('upload_max_filesize');
+    $size = media_browser_get_max_size();
     $elements['#media_options']['global']['max_filesize'] = $size;
     $elements['#media_options']['global']['max_filesize_raw'] = parse_size($size);
   }

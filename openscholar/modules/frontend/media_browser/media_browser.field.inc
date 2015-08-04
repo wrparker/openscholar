@@ -111,7 +111,9 @@ function media_browser_field_widget_media_draggable_file_form_alter(&$elements, 
 
   $files = array();
   foreach ($context['items'] as $file) {
-    $files[] = $file['fid'];
+    if (!empty($file)) {
+      $files[] = $file['fid'];
+    }
   }
 
   $elements['#attached']['library'][] = array('os_common', 'FileEditorModal');
@@ -130,9 +132,9 @@ function media_browser_field_widget_media_draggable_file_form_alter(&$elements, 
 
   $elements['angularbrowser'] = array(
     '#markup' => format_string('<div media-browser-field max-filesize="@filesize" types="@types" extensions="@extensions" upload-text="@upload-text" droppable-text="@droppable-text" files="[]"></div>', array(
-      '@filesize' => isset($field_settings['max_filesize']) ? $field_settings['max_filesize'] : 0,
+      '@filesize' => !empty($field_settings['max_filesize']) ? $field_settings['max_filesize'] : media_browser_get_max_size(),
       '@types' => implode(',', array_filter($widget_settings['allowed_types'])),
-      '@extensions' => isset($field_settings['file_extensions']) ? $field_settings['file_extensions'] : media_variable_get('file_extensions'),
+      '@extensions' => !empty($field_settings['file_extensions']) ? $field_settings['file_extensions'] : media_variable_get('file_extensions'),
       '@upload-text' => $widget_settings['upload_button_text'],
       '@droppable-text' => $widget_settings['droppable_area_text']
     ))
