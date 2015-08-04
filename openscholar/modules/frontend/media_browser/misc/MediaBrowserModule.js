@@ -563,6 +563,10 @@
             types: params.types || defaults.types
         };
 
+        if (params.files) {
+          nparams.files = params.files;
+        }
+
         ModalService.showModal({
           templateUrl: rootPath+'/templates/browser.html?vers='+Drupal.settings.version.mediaBrowser,
           controller: 'BrowserCtrl',
