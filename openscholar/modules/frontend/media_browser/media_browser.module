@@ -92,7 +92,7 @@ function media_browser_get_max_size() {
   $upload_max = ini_get('upload_max_filesize');
   $upload_max_raw = parse_size($upload_max);
   if ($upload_max_raw > 0) {
-    if ($upload_max_raw < $max_size_raw) {
+    if ($upload_max_raw < $post_raw) {
       return $post_max;
     }
     else {
