@@ -802,7 +802,7 @@ function os_update_7039() {
   );
   $modules = array(
     'os_blog' => $revert,
-    'os_booklet' => $revert,
+    'os_booklets' => $revert,
     'os_classes'  => $revert,
     'os_events' => $revert,
     'os_faq' => $revert,
