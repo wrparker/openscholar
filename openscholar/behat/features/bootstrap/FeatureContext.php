@@ -352,6 +352,22 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @When /^I create a new registration event with title "([^"]*)"$/
+   */
+  public function iCreateANewRegistrationEventWithTitle($title) {
+    $tomorrow = time() + (24 * 60 * 60);
+    return array(
+      new Step\When('I visit "john/node/add/event"'),
+      new Step\When('I fill in "Title" with "' . $title . '"'),
+      new Step\When('I fill in "edit-field-date-und-0-value-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
+      new Step\When('I fill in "edit-field-date-und-0-value2-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
+      new Step\When('I check the box "edit-field-date-und-0-all-day"'),
+      new Step\When('I check the box "field_event_registration[und][0][registration_type]"'),
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
    * @When /^I should see the event "([^"]*)" in the LOP$/
    */
   public function iShouldSeeTheEventInTheLop($title) {
@@ -1695,6 +1711,19 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Then /^I cannot look for "([^"]*)"$/
+   *
+   * Defining a new step because when using the step "I should see" for the iCal
+   * page the test is failing.
+   */
+  public function iCannotLookFor($string) {
+    $element = $this->getSession()->getPage();
+    if (strpos($element->getContent(), $string) !== FALSE) {
+      throw new Exception("the string '$string' was found.");
+    }
+  }
+
+  /**
    * @When /^I edit the term "([^"]*)"$/
    */
   public function iEditTheTerm($name) {
@@ -2276,6 +2305,56 @@ class FeatureContext extends DrupalContext {
     $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//thead//tr//th[contains(., '{$text}')]");
     if (!$element) {
       throw new Exception(sprintf("The header of the table doesn't contain the text %s", $text));
+    }
+  }
+
+  /**
+   * @Given /^I sign up "([^"]*)" with email "([^"]*)" to the event "([^"]*)"$/
+   */
+  public function iSignUpWithEmailToTheEvent($name, $email, $event) {
+    $event_id = FeatureHelp::getNodeId($event);
+    return array(
+      new Step\When('I visit "john/os_events/nojs/registration/' . $event_id . '"'),
+      new Step\When('I fill in "edit-anon-mail" with "' . $email . '"'),
+      new Step\When('I fill in "edit-field-full-name-und-0-value" with "' . $name . '"'),
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
+   * @Given /^I manage registrations for the event "([^"]*)"$/
+   */
+  public function iManageRegistrationsForTheEvent($event) {
+    $event_id = FeatureHelp::getNodeId($event);
+    return array(
+      new Step\When('I visit "john/node/' . $event_id . '/registrations"'),
+    );
+  }
+
+  /**
+   * @When /^I export the registrants list for the event "([^"]*)" in the site "([^"]*)"$/
+   */
+  public function iExportTheRegistrantsListForTheEventInTheSite($event, $site) {
+    $url = $this->getSession()->getCurrentUrl() . '/export?testing=true';
+
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+
+    if (!$data = curl_exec($curl)) {
+      throw new Exception(sprintf("Could not export the list of registrants."));
+    }
+    curl_close($curl);
+    $this->exportedRegistrants = $data;
+  }
+
+  /**
+   * @Then /^I verify the file contains the user "([^"]*)" with email of "([^"]*)"$/
+   */
+  public function iVerifyTheFileContainsTheUserWithEmailOf($name, $email) {
+    if (!preg_match("/" . $email . "(.*)" . $name . "/", $this->exportedRegistrants)) {
+      throw new Exception(sprintf("List of registrants is exported wrong."));
     }
   }
 

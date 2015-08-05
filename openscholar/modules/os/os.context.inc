@@ -77,12 +77,6 @@ function os_context_default_contexts() {
           'region' => 'sidebar_second',
           'weight' => '-10',
         ),
-        'boxes-bio_teaser' => array(
-          'module' => 'boxes',
-          'delta' => 'bio_teaser',
-          'region' => 'content_top',
-          'weight' => '-10',
-        ),
       ),
     ),
   );
