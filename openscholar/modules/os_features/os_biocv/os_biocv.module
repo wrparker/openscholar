@@ -688,6 +688,13 @@ function _replace_biocvs_with_pages($vsite_data) {
           }
         }
       }
+      // otherwise, there are no app settings, add in one for os_pages
+      else {
+        $apps = array('os_pages' => 1);
+        db_insert('spaces_overrides')
+          ->fields(array('type' => 'og', 'id' => $gid, 'object_type' => 'variable', 'object_id' => 'spaces_features', 'value' => serialize($apps)))
+          ->execute();
+      }
     }
 
     // get all bio and cv nodes associated with vsite and then delete them

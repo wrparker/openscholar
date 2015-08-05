@@ -1685,10 +1685,10 @@ function os_profiles_copy_bio_to_new_vsite($original_person, $new_vsite) {
 
   $person_wrapper = entity_metadata_wrapper('node', $original_person);
 
-  // Create the "Bio" page.
+  // Create the "Bio" node.
   $bio = new stdClass();
-  $bio->type = 'page';
-  $bio->title = "Bio";
+  $bio->type = 'bio';
+  $bio->title = $original_person->title;
   $bio->language = LANGUAGE_NONE;
   $bio->uid = $uid;
 
@@ -1696,9 +1696,6 @@ function os_profiles_copy_bio_to_new_vsite($original_person, $new_vsite) {
   $bio_wrapper->body->set($person_wrapper->body->value());
   $bio_wrapper->{OG_AUDIENCE_FIELD}->set(array($new_vsite->id));
   $bio_wrapper->save();
-
-  // create menu item for "Bio" page
-  $mlid = vsite_menu_create_menu_link("Bio", 'node/' . $bio_wrapper->getIdentifier(), $new_vsite->id);
 }
 
 /**
