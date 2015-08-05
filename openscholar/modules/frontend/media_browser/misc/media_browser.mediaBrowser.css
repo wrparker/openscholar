@@ -306,11 +306,11 @@ font-size:.97em;
 
 /** Uploading styles */
 	
-#edit-field_upload-und-drop {
+.field-widget-media-draggable-file {
 	 position: relative;
-}	
+}
 
-#edit-field_upload-und-drop span.ng-binding.ng-scope,
+.field-widget-media-draggable-file span.ng-binding.ng-scope,
 #media-browser-file-select {
   height: 20px;
   width: 130px;
@@ -324,7 +324,7 @@ font-size:.97em;
   margin-right:0 !important;
 }
 
-#edit-field_upload-und-drop span.ng-binding.ng-scope {
+.field-widget-media-draggable-file span.ng-binding.ng-scope {
    width: 80px;
   top: 25%;
   left: 50%;
@@ -338,7 +338,7 @@ font-size:.97em;
     font-size: 1.2em;
 }
 
-#edit-field_upload-und-drop #drag-text {
+.field-widget-media-draggable-file #drag-text {
   top: 43%;
     left: 50%;
   font-size: 1em;
