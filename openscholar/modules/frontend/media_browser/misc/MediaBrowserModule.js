@@ -380,6 +380,7 @@
           for (var i = 0; i< e.data.length; i++) {
             e.data[i].new = true;
             service.register(e.data[i]);
+            $scope.files.push(e.data[i]);
           }
           uploadNext(e.data[0].id);
         }).error(function (e) {
