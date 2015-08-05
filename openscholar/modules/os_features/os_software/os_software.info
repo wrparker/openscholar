@@ -16,7 +16,6 @@ dependencies[] = list
 dependencies[] = media
 dependencies[] = options
 dependencies[] = os
-dependencies[] = os_biocv
 dependencies[] = os_files
 dependencies[] = strongarm
 dependencies[] = views

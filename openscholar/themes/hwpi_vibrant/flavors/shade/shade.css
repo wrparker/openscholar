@@ -126,6 +126,7 @@ body.front #columns{
     box-shadow: 0 0;
 }
 
+.front #content-panels .block.block-boxes-os_boxes_manual_list.converted-bio .block-title,
 .front #content-panels .block-title {
     background-color: #e3eaef;
     color: #000000;
@@ -222,6 +223,15 @@ span.date-display-single {
     margin-bottom: 0;
     padding: 0 0 18px;
 }
+
+.front #content-panels .block.block-boxes-os_boxes_manual_list.converted-bio {
+    background-color: #F6F8F8;
+    border: none;
+    padding: 0;
+}
+
+
+
 /*calendar*/
 .calendar-calendar tr {
     background-color: transparent;

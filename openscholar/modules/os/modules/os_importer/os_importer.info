@@ -9,7 +9,6 @@ dependencies[] = feeds_tamper_ui
 dependencies[] = feeds_ui
 dependencies[] = file
 dependencies[] = filefield_paths
-dependencies[] = os_biocv
 dependencies[] = strongarm
 features[ctools][] = feeds:feeds_importer_default:1
 features[ctools][] = strongarm:strongarm:1

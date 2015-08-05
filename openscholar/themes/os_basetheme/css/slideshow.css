@@ -7,7 +7,7 @@
 
 .slide {
     padding: 0 !important;
-    position: relative;
+    /*position: relative;*/
 }
 
 .slide object, .slide embed {

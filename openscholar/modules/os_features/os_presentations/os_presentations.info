@@ -12,7 +12,6 @@ dependencies[] = filefield_paths
 dependencies[] = media
 dependencies[] = options
 dependencies[] = os
-dependencies[] = os_biocv
 dependencies[] = os_files
 dependencies[] = spaces
 dependencies[] = strongarm

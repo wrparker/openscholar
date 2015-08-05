@@ -16,7 +16,6 @@ dependencies[] = filefield_paths
 dependencies[] = link
 dependencies[] = media
 dependencies[] = og_vocab
-dependencies[] = os_biocv
 dependencies[] = os_files
 dependencies[] = spaces
 dependencies[] = strongarm

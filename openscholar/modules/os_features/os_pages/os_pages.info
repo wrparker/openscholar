@@ -12,7 +12,6 @@ dependencies[] = file
 dependencies[] = filefield_paths
 dependencies[] = media
 dependencies[] = node
-dependencies[] = os_biocv
 dependencies[] = os_files
 dependencies[] = os_wysiwyg
 dependencies[] = strongarm

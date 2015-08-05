@@ -13,7 +13,6 @@ dependencies[] = file
 dependencies[] = media
 dependencies[] = media_gallery
 dependencies[] = os
-dependencies[] = os_biocv
 dependencies[] = strongarm
 dependencies[] = views_litepager
 dependencies[] = views_slideshow

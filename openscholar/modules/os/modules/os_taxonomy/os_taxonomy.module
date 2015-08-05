@@ -94,7 +94,8 @@ function os_taxonomy_views_query_alter(&$view, &$query) {
     // If this view takes arguments we can't be sure that this is a 404, we will
     // let the view decide.
     $view_takes_arguments = (isset($view->display_handler->handlers) && isset($view->display_handler->handlers['argument']) && count($view->display_handler->handlers['argument']));
-    if ($path === FALSE && !$view_takes_arguments) {
+    $view_is_page_view = (isset($view->display_handler->plugin_name) && $view->display_handler->plugin_name == 'page');
+    if ($path === FALSE && !$view_takes_arguments && $view_is_page_view) {
       // There is a path, but it does not match an active term. In this case it
       // is either an old alias, old term, or mistyped path, we will throw a 404.
       drupal_not_found();
@@ -1296,7 +1297,7 @@ function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array
   }
 
   // In case the bundle is of the type "event", filter by the type of the event.
-  if (!empty($bundles) && is_array($bundles) && strpos(reset($bundles), 'event') !== FALSE) {
+  if (!empty($bundles) && is_array($bundles) && strpos(reset($bundles), 'event') !== FALSE && count($bundles) == 1) {
     $query->leftJoin('field_data_field_date', 'fd', '(ogv.entity_id = fd.entity_id)');
     $event_type = reset($bundles);
 

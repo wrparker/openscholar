@@ -265,6 +265,19 @@ table td.mini .mini-day-on a {
 }
 
 
+/* Feat Post as a converted BIO node */
+#content-column .block.block-boxes-os_boxes_manual_list.converted-bio {
+  background: inherit !important;
+  border:none;
+  padding:0;
+}
+
+
+#content-column .block.block-boxes-os_boxes_manual_list h2.block-title.converted-bio {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
 
 /* Tabs Overrides */
 .block-boxes-os_boxes_tabs .ui-widget {
