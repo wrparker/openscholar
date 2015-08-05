@@ -1,5 +1,5 @@
 (function ($) {
 
-  angular.module('software_release-node-form', ['mediaBrowser', 'MediaBrowserField']);
+  angular.module('software-release-node-form', ['mediaBrowser', 'MediaBrowserField']);
 
 })(jQuery);
