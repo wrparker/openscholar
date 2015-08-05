@@ -776,7 +776,12 @@ function os_update_7038(&$sandbox) {
 
     $sandbox['notices'] .= _replace_biocvs_with_pages($vsites);
     $sandbox['completed'] += count($vsites);
-    $sandbox['#finished'] = (float)$sandbox['completed'] / (float)$sandbox['total'];
+    if ($sandbox['total']) {
+      $sandbox['#finished'] = (float)$sandbox['completed'] / (float)$sandbox['total'];
+    }
+    else {
+       $sandbox['#finished'] = 1;
+    }
 
     if($sandbox['#finished'] >= 1) {
       module_disable(array('os_biocv'), FALSE);
@@ -788,13 +793,20 @@ function os_update_7038(&$sandbox) {
   }
 }
 
+/**
+ * Remove bio and cv options from content list after the os_biocv module has been uninstalled
+ */
+function os_update_7039() {
+  features_revert(array('cp_content' => array('views_view')));
+}
+
 
 /*
  * Enabling OS Restful, and the new Media Browser.
  *
  * Revert modules that use the new feature.
  */
-function os_update_7039() {
+function os_update_7040() {
   module_enable(array('os_restful', 'media_browser'));
 
   $revert = array(

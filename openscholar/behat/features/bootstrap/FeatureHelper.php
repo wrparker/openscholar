@@ -9,7 +9,6 @@ class FeatureHelp {
   static $page_mapping = array(
     'News' => 'news_news',
     'Blog' => 'blog_blog',
-    'Bio' => 'biocv_biocv',
     'Link' => 'links_links',
     'Reader' => 'reader_reader',
     'Calendar' => 'events_events',
@@ -36,7 +35,6 @@ class FeatureHelp {
     'Files view list' => 'os_sv_list_file',
     'Search' => 'os_search_db-site-search',
     'Active book TOC' => 'os_boxes_booktoc',
-    'Bio' => 'os_boxes_bio',
     'RSS feed' => 'os_boxes_rss',
     'Image gallery' => 'os_boxes_slideshow',
     'Faceted taxonomy' => 'os_boxes_facetapi_vocabulary',
