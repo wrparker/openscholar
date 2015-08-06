@@ -2166,18 +2166,6 @@ class FeatureContext extends DrupalContext {
     $this->assertSession()->statusCodeEquals(403);
   }
 
-  /*
-   * @Given /^I fill in the field "([^"]*)" with the node "([^"]*)"$/
-   *
-   * This step is used to fill in an autocomplete field.
-   */
-  public function iFillInTheFieldWithTheNode($id, $title) {
-    $nid = FeatureHelp::getNodeId($title);
-    $element = $this->getSession()->getPage();
-    $value = $title . ' (' . $nid . ')';
-    $element->fillField($id, $value);
-  }
-
   /**
    * Create an entity of a given type and title.
    */
@@ -2206,7 +2194,7 @@ class FeatureContext extends DrupalContext {
     }
     $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//tr[td[contains(., '{$value}')]]//td[{$index}]");
     if (!$element) {
-      throw new Exception(sprintf("The value of %s was not found", $value));
+      throw new Exception(sprintf("The value of %s was not found", $column));
     }
     if ($element->getText() != $value) {
       throw new Exception(sprintf("The value for the %s column should be %s but it is %s", $column, $value, $element->getText()));
