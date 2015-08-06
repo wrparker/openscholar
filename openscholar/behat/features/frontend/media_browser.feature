@@ -19,9 +19,9 @@ Feature: foo
       And I wait "1 second" for the media browser to open
       And I should see "Drag and drop files here."
      When I click on the tab "Previously uploaded files"
-      And I should see "No files to show."
+      And I should see "Filename"
      When I click on the tab "Embed from the web"
-      And I should see "Enter a URL"
+      And I should see "URL or HTML:"
 
   @javascript
   Scenario: Verify files show up in the "Previously uploaded files" tab
@@ -31,4 +31,4 @@ Feature: foo
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
      When I click on "Previously uploaded files" button in the media browser
-     Then I should see "kitty.jpg"
+     Then I should see "slideshow1.jpg"
