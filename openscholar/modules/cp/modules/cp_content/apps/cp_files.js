@@ -5,10 +5,9 @@
       elem.attr('ng-controller', 'CpFilesController');
     }])
     .controller('CpFilesController', ['$scope', function ($scope) {
-      console.log('success');
       $scope.reload = function (result) {
         if (result) {
-          //window.location.reload();
+          window.location.reload();
         }
       }
     }]);
