@@ -1435,11 +1435,15 @@ function os_events_register_show_register_link($node) {
     ->fetchAssoc();
 
   if (empty($result)) {
-    return;
+    return FALSE;
   }
 
   if (!$result['status']) {
-    return;
+    return FALSE;
+  }
+
+  if (!$result['close'] || (!$result['close'] && !$result['close'])) {
+    return os_events_show_register_by_node($node);
   }
 
   if (!empty($result['close'])) {
@@ -1447,6 +1451,29 @@ function os_events_register_show_register_link($node) {
   }
 
   return time() >= strtotime($result['open']);
+}
+
+/**
+ * In case the event registration don't have open or close range, the fallback
+ * will be to check the registration availability by the date field.
+ *
+ * @param $node
+ *   The event node.
+ *
+ * @return bool
+ */
+function os_events_show_register_by_node($node) {
+  $wrapper = entity_metadata_wrapper('node', $node);
+
+  if ($wrapper->getBundle() != 'event') {
+    return;
+  }
+
+  $value = $wrapper->field_date->get(0)->value();
+
+  $date = new DateTime($value['value'], new DateTimeZone('UTC'));
+  // We only need to verify the event didn't started yet.
+  return time() <= $date->getTimestamp();
 }
 
 /**
