@@ -2192,13 +2192,16 @@ class FeatureContext extends DrupalContext {
         $index = 5;
         break;
     }
-    $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//tr[td[contains(., '{$value}')]]//td[{$index}]");
-    if (!$element) {
-      throw new Exception(sprintf("The value of %s was not found", $column));
+    $elements = $this->getSession()->getPage()->findAll('xpath', "//div[@id='content']//table/tbody/tr/td[count(//table/thead/tr/th[.=\"{$column}\"]/preceding-sibling::th)+1]");
+    if (count($elements) == 0) {
+      throw new Exception(sprintf("No column %s found on page.", $column));
     }
-    if ($element->getText() != $value) {
-      throw new Exception(sprintf("The value for the %s column should be %s but it is %s", $column, $value, $element->getText()));
+    foreach ($elem as $elements) {
+      if ($elem.getText() == $value) {
+        return;
+      }
     }
+    throw new Exception(sprintf("The value for the %s column should be %s but it is %s", $column, $value, $element->getText()));
   }
 
   /**
