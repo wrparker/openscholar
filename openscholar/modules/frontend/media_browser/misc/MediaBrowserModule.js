@@ -10,6 +10,7 @@
 
       // if the File object is not supported by this browser, fallback to the original media browser
       if (mbModal.requirementsMet()) {
+        Drupal = Drupal || {};
         Drupal.media = Drupal.media || {};
         Drupal.media.popups = Drupal.media.popups || {};
         var oldPopup = Drupal.media.popups.mediaBrowser;

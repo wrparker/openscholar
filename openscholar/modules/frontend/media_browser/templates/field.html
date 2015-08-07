@@ -1,7 +1,7 @@
 <div id="edit-{{field_name}}-und-drop" class="form-managed-file">
     <span id="drag-text">{{droppable_text}}<span class="help_icon" ng-mouseenter="showHelp = true" ng-mouseleave="showHelp = false">?</span></span>
 
-    <a href="#" mb-open-modal panes="{{panes.join(',')}}" types="{{types.join(',')}}" on-select="addFile($inserted)">{{upload_text}}</a>
+    <a href="#" mb-open-modal panes="{{panes.join(',')}}" types="{{types}}" on-select="addFile($inserted)">{{upload_text}}</a>
 
     <div class="help" ng-show="showHelp">Files must be less than <strong>{{maxFilesize}}</strong>.<br />
         Allowed file types: <strong>{{extensionsFull.join(' ')}}</strong></div>
@@ -19,7 +19,7 @@
     </span>
     <ul>
         <li class="replace first">
-            <a href="" mb-open-modal panes="{{panes.join(',')}}" types="{{types.join('.')}}" on-select="replaceFile($inserted, $index)">Replace</a>
+            <a href="" mb-open-modal panes="{{panes.join(',')}}" types="{{types}}" on-select="replaceFile($inserted, $index)">Replace</a>
         </li>
         <li class="edit">
             <a href="" file-editor-modal fid="{{file.id}}">Edit</a>
