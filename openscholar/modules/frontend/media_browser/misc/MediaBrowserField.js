@@ -73,7 +73,9 @@
       if (mbModal.requirementsMet()) {
         return {
           link: link,
-          templateUrl: Drupal.settings.paths.moduleRoot + '/templates/field.html?vers='. Drupal.settings.version.mediaBrowser,
+          templateUrl: function () {
+            return Drupal.settings.paths.moduleRoot + '/templates/field.html?vers=' + Drupal.settings.version.mediaBrowser
+          },
           scope: {
             selectedFiles: '=files',
             maxFilesize: '@maxFilesize',
