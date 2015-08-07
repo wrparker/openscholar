@@ -306,8 +306,12 @@ font-size:.97em;
 
 /** Uploading styles */
 	
-.field-widget-media-draggable-file {
-	 position: relative;
+[media-browser-field] {
+  position: relative;
+}
+
+[media-browser-field] .form-managed-file {
+  position: relative;
 }
 
 .field-widget-media-draggable-file span.ng-binding.ng-scope,
