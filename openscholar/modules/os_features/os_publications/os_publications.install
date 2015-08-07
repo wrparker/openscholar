@@ -1351,3 +1351,36 @@ function os_publications_update_7032() {
   _reset_csl_map(FALSE);
   os_publications_revert_citeproc_style('harvard-chicago-author-date');
 }
+
+/**
+ * Bring back the Year of publication title for working paper.
+ */
+function os_publications_update_7033() {
+  $field_exists = db_select('biblio_field_type', 'bft')
+    ->fields('bft', array())
+    ->condition('tid', 136)
+    ->condition('fid', 15)
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+
+  if ($field_exists) {
+    return;
+  }
+
+  $fields = array(
+    'tid' => 136,
+    'fid' => 15,
+    'ftdid' => 15,
+    'cust_tdid' => 15,
+    'common' => 1,
+    'vtab' => 2,
+    'autocomplete' => 0,
+    'required' => 1,
+    'weight' => '-45',
+    'visible' => '1'
+  );
+  db_insert('biblio_field_type')
+    ->fields($fields)
+    ->execute();
+}
