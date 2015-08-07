@@ -491,9 +491,9 @@
           params.browser.panes[i] = (panes.indexOf(i) !== -1);
         }
 
-        params.browser.allowedTypes = {}
+        params.types = {}
         for (i=0; i<types.length;i++) {
-          params.browser.allowedTypes[types[i]] = types[i];
+          params.types[types[i]] = types[i];
         }
 
         params.onSelect = function (inserted) {
