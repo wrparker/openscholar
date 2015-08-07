@@ -2426,7 +2426,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I click on the "([^"]*)" control$/
    */
   public function iClickOnControl($text) {
-    $element = $this->getSession()->getPage()->find('xpath', "//*[texxt() = '{$text}'");
+    $element = $this->getSession()->getPage()->find('xpath', "//*[text() = '{$text}'");
     $element->click();
   }
 
