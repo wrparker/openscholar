@@ -65,6 +65,7 @@
             scope.extensionsFull = scope.extensionsFull.concat(Drupal.settings.extensionMap[type]);
           }
         }
+        scope.extensionsFull.sort();
 
         elem.parent().find(' > *').not(elem).remove();
       }
