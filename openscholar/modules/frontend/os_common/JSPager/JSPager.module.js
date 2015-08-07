@@ -46,9 +46,30 @@
       return currentPage;
     })
     .directive('jsPager', ['$parse', function($parse) {
+      var currentPages = [],
+        idMap = {};
       return {
         templateUrl: rootPath+'/pager.html',
         transclude: true,
+        controller: [function () {
+
+          this.getJSPagerId = function (string) {
+            if (idMap[string] == undefined) {
+              currentPages.push(1);
+              idMap[string] = currentPages.length - 1;
+            }
+
+            return idMap[string];
+          }
+
+          this.page = function (id, page) {
+            if (typeof page != 'undefined') {
+              currentPages[id] = page;
+            }
+
+            return currentPages[id];
+          }
+        }],
         compile: function pagerCompile(element, attr) {
           var loop = attr.jsPager,
           /* this regex matches the following patterns:
@@ -145,7 +166,8 @@
 
 
   function pagerLink(scope, iElement, iAttrs, controller) {
-    var current = 1;
+    var JSPagerId = controller.getJSPagerId(iAttrs.jsPager),
+      current = controller.page(JSPagerId);
 
     scope.pager = {
       currentPage: currentPage,
@@ -178,6 +200,7 @@
       if (canPage(dir)) {
         dir = parseInt(dir);
         current += dir;
+        controller.page(JSPagerId, current);
       }
     }
   }
