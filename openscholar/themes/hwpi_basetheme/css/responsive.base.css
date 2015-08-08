@@ -75,6 +75,11 @@ iframe {
   .node-event .field-name-field-event-location  { margin-left: 0 ! important; }
 }
 
+#content .node-event .event-content .node-content section,
+#content .node-event .event-content .node-content {
+margin-left: 0 !important;
+}
+
 /*--------------------------------------------------------*/
 @media (max-width: 479px){
 	
