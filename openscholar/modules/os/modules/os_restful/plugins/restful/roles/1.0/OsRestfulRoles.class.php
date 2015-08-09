@@ -97,19 +97,42 @@ class OsRestfulRoles extends \OsRestfulDataProvider {
   }
 
   /**
-   * Overrides RestfulDataProviderDbQuery::create().
+   * @api {post} api/roles?vsite=:id Post
+   * @apiVersion 0.1.0
+   * @apiName Post
+   * @apiGroup Roles
    *
-   * Verify the uer have permission to invoke this method.
+   * @apiDescription Create a layout in a vsite.
+   *
+   * @apiSampleRequest off
+   *
+   * @apiSuccess {Integer} rid            Role's ID.
+   * @apiSuccess {String}  name           Role's name.
+   * @apiSuccess {Integer} gid            Group ID. Not in use.
+   * @apiSuccess {String}  group_bundle   Group type.
+   * @apiSuccess {String}  group_type     Group Entity.
    */
   public function create() {
+    // Verify the uer have permission to invoke this method.
     $this->validate();
     return parent::create();
   }
 
   /**
-   * Overrides RestfulDataProviderDbQuery::update().
+   * @api {patch} api/roles/:id Patch
+   * @apiVersion 0.1.0
+   * @apiName Patch
+   * @apiGroup Roles
    *
-   * Verify the uer have permission to invoke this method.
+   * @apiDescription Create a layout in a vsite.
+   *
+   * @apiSampleRequest off
+   *
+   * @apiSuccess {Integer} rid            Role's ID.
+   * @apiSuccess {String}  name           Role's name.
+   * @apiSuccess {Integer} gid            Group ID. Not in use.
+   * @apiSuccess {String}  group_bundle   Group type.
+   * @apiSuccess {String}  group_type     Group Entity.
    */
   public function update($id, $full_replace = FALSE) {
     $this->validate();
@@ -117,9 +140,14 @@ class OsRestfulRoles extends \OsRestfulDataProvider {
   }
 
   /**
-   * Overrides RestfulDataProviderDbQuery::delete().
+   * @api {post} api/roles/:id Delete
+   * @apiVersion 0.1.0
+   * @apiName Delete
+   * @apiGroup Roles
    *
-   * Verify the uer have permission to invoke this method.
+   * @apiDescription Create a layout in a vsite.
+   *
+   * @apiSampleRequest off
    */
   public function delete($path = '', array $request = array()) {
     $this->validate(FALSE);
