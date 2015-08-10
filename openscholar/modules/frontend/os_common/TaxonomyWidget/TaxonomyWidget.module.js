@@ -119,14 +119,13 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
        * Add more autocomplete inputs.
        */
       scope.addMore = function(vocab_id) {
-        scope.selectedTerms[vocab_id].push({});
       };
 
       /**
        * Add another term to the selected terms object.
        */
       scope.onSelect = function ($item, $model, $label) {
-        scope.selectedTerms[$item.vid][$item.id] = $item;
+        scope.selectedTerms[$item.vid].splice(0, 0, $item);
         scope.addMore($item.vid);
       };
 
@@ -173,6 +172,12 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
 
         scope.termsSelected(termService.get(node.value));
       };
+
+      scope.alreadySelected = function ($item) {
+        if ($item && scope.selectedTerms[$item.vid].indexOf($item) == -1) {
+          return $item;
+        }
+      }
     }
   }
 }]);
