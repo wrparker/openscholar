@@ -21,6 +21,7 @@ class OsRestfulMenu extends \OsRestfulDataProvider {
       'id' => 'mlid',
       'path' => 'link_path',
       'title' => 'link_title',
+      'menu' => 'menu_name',
     );
 
     foreach ($properties as $key => $property) {
