@@ -1199,8 +1199,24 @@ function os_events_preprocess_page(&$variables) {
     }
   }
 
-  // Create dropdown links for simple view and export of registrants.
+  //If there are no registrants, do not display the download link
+  if (empty($menu['original_map'][1])) {
+    return;
+  }
+
   $event_id = $menu['original_map'][1];
+  $query = new EntityFieldQuery();
+  $result = $query
+      ->entityCondition('entity_type', 'registration')
+      ->propertyCondition('entity_id', $event_id)
+      ->propertyCondition('entity_type', 'node')
+      ->execute();
+
+  if (empty($result['registration'])) {
+    return;
+  }
+
+  // Create dropdown links for simple view and export of registrants.
   $event = node_load($event_id);
   $registration_links = array(
     'export' => array(
