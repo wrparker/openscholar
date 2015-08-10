@@ -42,6 +42,8 @@ class OsVocabulary extends \RestfulEntityBase {
    *
    * @apiParam {String} label The name of the vocabulary
    * @apiParam {Integer} id The ID of the VSite
+   *
+   * @apiSampleRequest off
    */
   public function createEntity() {
     return parent::createEntity();

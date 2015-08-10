@@ -22,7 +22,7 @@ class GroupNodeRestfulBase extends OsNodeRestfulBase {
    *
    * @apiSuccess {Number}   id          The publication ID.
    * @apiSuccess {String}   label       Registration Date.
-   * @apiSuccess {Object[]} users       The group users.
+   * @apiSuccess {Object} users       The group users.
    * @apiSuccess {Integer}  users.id    The user ID.
    * @apiSuccess {Integer}  users.name  The user name.
    * @apiSuccess {String}   preset      The group preset.

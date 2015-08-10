@@ -14,11 +14,11 @@ class BioNodeRestfulBase extends OsNodeRestfulBase {
    *
    * @apiSuccess {Number}   id              The publication ID.
    * @apiSuccess {String}   label           Registration Date.
-   * @apiSuccess {Object[]} vsite           The vsite object.
+   * @apiSuccess {Object}   vsite           The vsite object.
    * @apiSuccess {String}   vsite.title     Group name.
    * @apiSuccess {Integer}  vsite.id        Group ID.
    * @apiSuccess {string}   body            The body of the publication.
-   * @apiSuccess {Object[]} files           The attached files.
+   * @apiSuccess {Object}   files           The attached files.
    * @apiSuccess {Integer}  files.fid       file ID.
    * @apiSuccess {Integer}  files.filemime  Mime type.
    * @apiSuccess {Integer}  files.name      File name.

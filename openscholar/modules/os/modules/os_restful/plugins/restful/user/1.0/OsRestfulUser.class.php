@@ -24,9 +24,9 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
    * @apiSuccess {String} password              User password. Not accessed via get only for update/create/delete
    * @apiSuccess {String} status                Status of the user - active or not.
    * @apiSuccess {String} role                  User site wide role.
-   * @apiSuccess {object[]} og_group_ref        Groups which the user belong.
-   * @apiSuccess {object[]} og_group_ref.title  Title of the group.
-   * @apiSuccess {object[]} og_group_ref.id     Group ID.
+   * @apiSuccess {Object} og_group_ref        Groups which the user belong.
+   * @apiSuccess {Object} og_group_ref.title  Title of the group.
+   * @apiSuccess {Object} og_group_ref.id     Group ID.
    */
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();

@@ -172,7 +172,7 @@ class OsRestfulLayout extends \OsRestfulSpaces {
    * @apiSuccess {String}   type        The override type. Default is OG.
    * @apiSuccess {String}   object_id   The override identifier.
    * @apiSuccess {String}   object_type The object type.
-   * @apiSuccess {Object[]} value       Teh override definitions.
+   * @apiSuccess {Object} value       Teh override definitions.
    */
   public function getSpace() {
     return parent::getSpace();
