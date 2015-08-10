@@ -1231,7 +1231,7 @@ function os_events_preprocess_page(&$variables) {
   $variables['tabs']['#secondary']['registration_links'] = array(
     '#theme' => 'ctools_dropdown',
     '#links' => $registration_links,
-    '#title' => t('Export'),
+    '#title' => t('Download Registrant List'),
     '#class' => 'section_links registration_links',
     '#access' => registration_administer_registrations_access('node', $event),
   );
