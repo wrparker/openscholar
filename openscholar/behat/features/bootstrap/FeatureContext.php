@@ -2187,15 +2187,16 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldSeeInTheColumn($value, $column) {
 
-    $column = $this->lower_case($column, TRUE);
+    $column_str = strtolower($column);
     $text = $this->lower_case('text()');
-    $query = "//div[@id='content']//table/tbody/tr/td[count(//table/thead/tr/th[contains({$column}, {$text})]/preceding-sibling::th)+1]";
+    $query = "//div[@id='content']//table/tbody/tr/td[count(//table/thead/tr/th[contains({$text}, '{$column_str}')]/preceding-sibling::th)+1]";
     $elements = $this->getSession()->getPage()->findAll('xpath', $query);
     if (count($elements) == 0) {
       throw new Exception(sprintf("No column %s found on page.", $column));
     }
-    foreach ($elem as $elements) {
-      if ($elem.getText() == $value) {
+
+    foreach ($elements as $elem) {
+      if ($elem->getText() == $value) {
         return;
       }
     }
