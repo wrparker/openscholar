@@ -1199,8 +1199,24 @@ function os_events_preprocess_page(&$variables) {
     }
   }
 
-  // Create dropdown links for simple view and export of registrants.
+  //If there are no registrants, do not display the download link
+  if (empty($menu['original_map'][1])) {
+    return;
+  }
+
   $event_id = $menu['original_map'][1];
+  $query = new EntityFieldQuery();
+  $result = $query
+      ->entityCondition('entity_type', 'registration')
+      ->propertyCondition('entity_id', $event_id)
+      ->propertyCondition('entity_type', 'node')
+      ->execute();
+
+  if (empty($result['registration'])) {
+    return;
+  }
+
+  // Create dropdown links for simple view and export of registrants.
   $event = node_load($event_id);
   $registration_links = array(
     'export' => array(
@@ -1215,7 +1231,7 @@ function os_events_preprocess_page(&$variables) {
   $variables['tabs']['#secondary']['registration_links'] = array(
     '#theme' => 'ctools_dropdown',
     '#links' => $registration_links,
-    '#title' => t('Export'),
+    '#title' => t('Download Registrant List'),
     '#class' => 'section_links registration_links',
     '#access' => registration_administer_registrations_access('node', $event),
   );
@@ -1419,11 +1435,15 @@ function os_events_register_show_register_link($node) {
     ->fetchAssoc();
 
   if (empty($result)) {
-    return;
+    return FALSE;
   }
 
   if (!$result['status']) {
-    return;
+    return FALSE;
+  }
+
+  if (!$result['close'] || (!$result['close'] && !$result['close'])) {
+    return os_events_show_register_by_node($node);
   }
 
   if (!empty($result['close'])) {
@@ -1431,6 +1451,29 @@ function os_events_register_show_register_link($node) {
   }
 
   return time() >= strtotime($result['open']);
+}
+
+/**
+ * In case the event registration don't have open or close range, the fallback
+ * will be to check the registration availability by the date field.
+ *
+ * @param $node
+ *   The event node.
+ *
+ * @return bool
+ */
+function os_events_show_register_by_node($node) {
+  $wrapper = entity_metadata_wrapper('node', $node);
+
+  if ($wrapper->getBundle() != 'event') {
+    return;
+  }
+
+  $value = $wrapper->field_date->get(0)->value();
+
+  $date = new DateTime($value['value'], new DateTimeZone('UTC'));
+  // We only need to verify the event didn't started yet.
+  return time() <= $date->getTimestamp();
 }
 
 /**
