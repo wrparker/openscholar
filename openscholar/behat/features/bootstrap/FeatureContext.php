@@ -2186,13 +2186,10 @@ class FeatureContext extends DrupalContext {
    * @Given /^I should see "([^"]*)" in the "([^"]*)" column$/
    */
   public function iShouldSeeInTheColumn($value, $column) {
-    $index = 0;
-    switch ($column) {
-      case 'used in':
-        $index = 5;
-        break;
-    }
-    $elements = $this->getSession()->getPage()->findAll('xpath', "//div[@id='content']//table/tbody/tr/td[count(//table/thead/tr/th[.=\"{$column}\"]/preceding-sibling::th)+1]");
+
+    $column = $this->lower_case($column, TRUE);
+    $text = $this->lower_case('text()');
+    $elements = $this->getSession()->getPage()->findAll('xpath', "//div[@id='content']//table/tbody/tr/td[count(//table/thead/tr/th[contains(\"{$column}\", \"{$text}\"]/preceding-sibling::th)+1]");
     if (count($elements) == 0) {
       throw new Exception(sprintf("No column %s found on page.", $column));
     }
@@ -2202,6 +2199,13 @@ class FeatureContext extends DrupalContext {
       }
     }
     throw new Exception(sprintf("The value for the %s column should be %s but it is %s", $column, $value, $element->getText()));
+  }
+
+  private function lower_case($string, $escape = FALSE) {
+    if ($escape) {
+      $string = "'".$string."'";
+    }
+    return "translate($string, \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\", \"abcdefghijklmnopqrstuvwxyz\")";
   }
 
   /**
