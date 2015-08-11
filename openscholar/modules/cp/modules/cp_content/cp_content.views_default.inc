@@ -571,10 +571,8 @@ function cp_content_views_default_views() {
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
-    'bio' => 'bio',
     'blog' => 'blog',
     'book' => 'book',
-    'cv' => 'cv',
     'class' => 'class',
     'class_material' => 'class_material',
     'event' => 'event',
