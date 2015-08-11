@@ -10,15 +10,6 @@ Feature:
      Then I should see "Rest biblio"
 
   @api @restful
-  Scenario: Creating bio via rest.
-    Given I delete the node "John doe biography"
-     Then I create a new node of "bio" as "john" with the settings:
-      | Label       | Body                | vsite |
-      | Rest bio    | This is a Rest bio  | john  |
-     When I visit "john"
-     Then I should see "Rest bio"
-
-  @api @restful
   Scenario: Creating blog via rest.
     Given I create a new node of "blog" as "john" with the settings:
       | Label     | Body                 | vsite |
