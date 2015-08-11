@@ -5,6 +5,7 @@ class os_sv_list extends os_boxes_default {
   private $plugins = array();
   protected $entity_type;
   protected $bundle;
+  protected $checkEntityAccess = false;
 
   public $embed_as = array(
     'iframe',
@@ -229,6 +230,7 @@ class os_sv_list extends os_boxes_default {
   }
 
   public function render() {
+    global $user;
     if (module_exists('vsite') && !vsite_get_vsite()) {
       return;
     }
@@ -302,13 +304,27 @@ class os_sv_list extends os_boxes_default {
       // Give plugins a chance to alter the entities after loading but before
       // rendering. see events.
       $entities = entity_load($this->entity_type, $ids);
-      $entities = array_map(function ($e) {
-        $new_entity = clone $e;
+      $account = user_load($user->uid);
+
+      $new_entities = array();
+
+      foreach ($entities as $key => $entity) {
+        if ($this->checkEntityAccess) {
+          // Check the entity access.
+          if (!entity_access('view', $this->entity_type, $entity, $account)) {
+            continue;
+          }
+        }
+
+        $new_entity = clone $entity;
         unset($new_entity->page);
         $new_entity->sv_list = TRUE;
+        $new_entities[] = $new_entity;
+      }
 
-        return $new_entity;
-      }, $entities);
+      $entities = $new_entities;
+      // Garbage collection.
+      unset($new_entities);
 
       $this->_plugins_invoke('entities_alter', $entities);
 
@@ -372,8 +388,13 @@ class os_sv_list extends os_boxes_default {
     }
     else {
       // When "All" is selected show only public bundles.
-      $bundles = $this->getBundles(OS_PUBLIC_APP, $this->entity_type);
-      $query->propertyCondition('type', $bundles, 'IN');
+      if ($bundles = $this->getBundles(OS_PUBLIC_APP, $this->entity_type)) {
+        $query->propertyCondition('type', $bundles, 'IN');
+      }
+      else {
+        // No bundles. We need to check the entity access when iterate over it.
+        $this->checkEntityAccess = TRUE;
+      }
     }
 
     // Pager.
