@@ -2189,7 +2189,8 @@ class FeatureContext extends DrupalContext {
 
     $column = $this->lower_case($column, TRUE);
     $text = $this->lower_case('text()');
-    $elements = $this->getSession()->getPage()->findAll('xpath', "//div[@id='content']//table/tbody/tr/td[count(//table/thead/tr/th[contains(\"{$column}\", \"{$text}\"]/preceding-sibling::th)+1]");
+    $query = "//div[@id='content']//table/tbody/tr/td[count(//table/thead/tr/th[contains({$column}, {$text})]/preceding-sibling::th)+1]";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $query);
     if (count($elements) == 0) {
       throw new Exception(sprintf("No column %s found on page.", $column));
     }
@@ -2205,7 +2206,7 @@ class FeatureContext extends DrupalContext {
     if ($escape) {
       $string = "'".$string."'";
     }
-    return "translate($string, \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\", \"abcdefghijklmnopqrstuvwxyz\")";
+    return "translate($string, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')";
   }
 
   /**
