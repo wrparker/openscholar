@@ -42,13 +42,6 @@ Feature:
      Then I should see "Rest class material"
 
   @api @restful
-  Scenario: Creating CV via rest.
-    Given I delete the node "John doe's curriculum"
-     Then I create a new node of "cv" as "john" with the settings:
-      | Label   | Body               | vsite  |
-      | Rest CV | This is a test CV  | john   |
-
-  @api @restful
   Scenario: Creating faq via rest.
      Given I create a new node of "faq" as "john" with the settings:
       | Label     | Body                | vsite  |
