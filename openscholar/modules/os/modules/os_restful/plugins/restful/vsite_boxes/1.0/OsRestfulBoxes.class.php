@@ -20,7 +20,7 @@ class OsRestfulBoxes extends \OsRestfulSpaces {
 
     $account = $this->getAccount();
 
-    $access = !og_user_access('node', $this->space->id, 'administer boxes', $account) ||
+    $access = !og_user_access('node', $this->space->id, 'administer boxes', $account) &&
               !og_user_access('node', $this->space->id, 'edit boxes', $account);
 
     if ($access) {
