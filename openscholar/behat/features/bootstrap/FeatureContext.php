@@ -2214,15 +2214,14 @@ class FeatureContext extends DrupalContext {
    * @Given /^I should see "([^"]*)" in the "([^"]*)" column for the row "([^"]*)"$/
    */
   public function iShouldSeeInTheColumnInTheRow($value, $column, $row) {
-    $index = 0;
-    switch ($column) {
-      case 'used in':
-        $index = 5;
-        break;
-    }
-    $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//tr[contains(., '{$row}')][td[contains(., '{$value}')]]//td[{$index}]");
+
+    $column_str = strtolower($column);
+    $text = $this->lower_case('text()');
+    $query = "//div[@id='content']//table/tbody/tr[contains(text(), '{$row}')]/td[count(//table/thead/tr/th[contains({$text}, '{$column_str}')]/preceding-sibling::th)+1]";
+
+    $element = $this->getSession()->getPage()->find('xpath', $query);
     if (!$element) {
-      throw new Exception(sprintf("The value of %s was not found", $value));
+      throw new Exception(sprintf("The column \"%s\" or row \"%s\" was not found", $column, $row));
     }
     if ($element->getText() != $value) {
       throw new Exception(sprintf("The value for the %s column should be %s but it is %s", $column, $value, $element->getText()));
