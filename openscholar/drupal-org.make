@@ -464,9 +464,10 @@ libraries[respondjs][download][type] = "file"
 libraries[respondjs][download][url] = "https://github.com/scottjehl/Respond/archive/1.3.0.zip"
 
 libraries[responsiveslides][type] = "libraries"
-libraries[responsiveslides][download][type] = "file"
-libraries[responsiveslides][download][url] = "https://github.com/viljamis/ResponsiveSlides.js/archive/v1.53.tar.gz"
-libraries[responsiveslides][patch][] = "https://raw.github.com/openscholar/openscholar/c5b00de5f1c79a679446467296ab16ebff6c19e0/patches/responsiveslides-hc_changes.patch"
+libraries[responsiveslides][download][type] = "git"
+libraries[responsiveslides][download][url] = "https://github.com/viljamis/ResponsiveSlides.js.git"
+libraries[responsiveslides][download][revision] = "120079561d7a4f8a6459f7a5d8aa657ad5d3db83"
+libraries[responsiveslides][patch][] = "https://gist.githubusercontent.com/RoySegall/412084926772e2e4181d/raw/8b98aa3d880ab40ac74a6343d74928a7a1667b7a/foo.patch"
 
 libraries[flexslider][type] = "libraries"
 libraries[flexslider][download][type] = "file"
