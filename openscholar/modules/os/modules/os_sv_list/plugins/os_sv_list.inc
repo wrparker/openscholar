@@ -316,10 +316,12 @@ class os_sv_list extends os_boxes_default {
           }
         }
 
+        list($id) = entity_extract_ids($this->entity_type, $entity);
+
         $new_entity = clone $entity;
         unset($new_entity->page);
         $new_entity->sv_list = TRUE;
-        $new_entities[] = $new_entity;
+        $new_entities[$id] = $new_entity;
       }
 
       $entities = $new_entities;
