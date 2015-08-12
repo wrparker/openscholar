@@ -2187,6 +2187,11 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldSeeInTheColumn($value, $column) {
 
+    // temporary
+    if (!$this->getSession()->getPage()->find("xpath", "//div[@id='content']//table")) {
+      throw new Exception(sprintf("No files found."));
+    }
+
     $column_str = strtolower($column);
     $text = $this->lower_case('text()');
     $query = "//div[@id='content']//table/tbody/tr/td[count(//table/thead/tr/th[contains({$text}, '{$column_str}')]/preceding-sibling::th)+1]";
@@ -2200,7 +2205,7 @@ class FeatureContext extends DrupalContext {
         return;
       }
     }
-    throw new Exception(sprintf("The value for the %s column should be %s but it is %s", $column, $value, $element->getText()));
+    throw new Exception(sprintf("No row has the value \"%s\" in the column \"%s\".", $value, $column));
   }
 
   private function lower_case($string, $escape = FALSE) {
