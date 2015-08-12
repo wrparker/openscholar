@@ -1204,6 +1204,19 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
         '#markup' => '<span class="date-display-single">'. t('On @date', array('@date' => date('l, F j, Y', strtotime($date[$delta]['value'].' UTC'))))."</span>",
         '#weight' => -10,
       );
+
+      ctools_include('jump-menu');
+      foreach ($date as $d => $d) {
+        //Skip the selected date.
+        if($d['value'] == $date[$delta]['value']) continue;
+
+        $options[url($_GET['q'],array('query' => array('delta' => $d)))] = date('l, F j, Y', strtotime($d['value'].' UTC'));
+      }
+      $settings = array(
+        'choose' => date('l, F j, Y', strtotime($date[$delta]['value'].' UTC')),
+      );
+      $form =  $form + ctools_jump_menu($form, $form_state, $options, $settings);
+      $form['jump']['#weight'] = $form['go']['#weight'] = -9;
     }
   }
 
