@@ -7,7 +7,7 @@ Feature:
             of Year.
     Given I am logging in as "john"
       And the widget "List of publications" is set in the "Publications" page with the following <settings>:
-          | Content Type               | Biblio               | select list |
+          | Content Type               | Publication          | select list |
           | Display style              | Title                | select list |
           | Sorted By                  | Year of Publication  | select list |
      When I visit "john/publications"
@@ -19,7 +19,7 @@ Feature:
     Given I am logging in as "john"
       And I make the node "Chamber of Secrets" sticky
       And the widget "List of publications" is set in the "Publications" page with the following <settings>:
-          | Content Type               | Biblio               | select list |
+          | Content Type               | Publication          | select list |
           | Display style              | Title                | select list |
           | Sorted By                  | Year of Publication  | select list |
      When I visit "john/publications"
@@ -37,7 +37,7 @@ Feature:
       And I fill in "date[date]" with "01/01/1999"
       And I press "edit-submit"
       And the widget "List of publications" is set in the "Publications" page with the following <settings>:
-          | Content Type               | Biblio               | select list |
+          | Content Type               | Publication          | select list |
           | Display style              | Title                | select list |
           | Sorted By                  | Year of Publication  | select list |
      When I visit "john/publications"
