@@ -558,36 +558,12 @@ function _replace_biocvs_with_pages($vsite_data) {
     $bio_node_wrapper->body->set(array('value' => $bio_body, 'format' => 'filtered_html'));
     node_save($bio_node);
 
-    // Get primary menu info for bio cv link
-    $bio_menu = array();
-    foreach (_vsite_menu_get_menu_links('primary-menu',  $vsite_obj) as $mlid => $menu_item) {
-      if (isset($menu_item['link_path']) && $menu_item['link_path'] == "biocv") {
-        $bio_menu = $menu_item;
-        break;
-      }
-    }
-
     // give the new page the right url alias
     $path = array(
       "source" => "node/" . $bio_node->nid,
       "alias" => $vsite_obj->group->purl . "/biocv"
     );
     path_save($path);
-
-    // create new menu item for bio page node
-    if (count($bio_menu)) {
-      $new_bio_menu = array(
-        "menu_name" => $bio_menu['menu_name'],
-        "router_path" => "node/%",
-        "options" => $bio_menu['options'],
-        "weight" => $bio_menu['weight'],
-        "module" => $bio_menu['module'],
-        "hidden" => $bio_menu['hidden'],
-        "external" => $bio_menu['external'],
-        "plid" => $bio_menu['plid'],
-      );
-      $mlid = vsite_menu_create_menu_link($bio_menu['link_title'], 'node/' . $bio_node->nid, $gid, $bio_menu['plid'], $new_bio_menu);
-    }
 
     // create cv page (if necessary)
     $cv_node = NULL;
@@ -655,7 +631,7 @@ function _replace_biocvs_with_pages($vsite_data) {
       path_save($path);
     }
 
-    // if either a new bio page or a new cv page has been created, make sure os_pages app is enabled
+    // if either a new bio page or a new cv page has been created, make sure os_pages app is enabled and menus are fixed
     if ($bio_node || $cv_node) {
       // get all bio and cv nodes associated with vsite and then delete them
       $query = db_select('spaces_overrides', 'so');
@@ -687,6 +663,73 @@ function _replace_biocvs_with_pages($vsite_data) {
               ->execute();
           }
         }
+      }
+
+      // Get primary menu info for bio & cv links
+      $primary_menu = array();
+      foreach (_vsite_menu_get_menu_links('primary-menu',  $vsite_obj) as $mlid => $menu_item) {
+        if (isset($menu_item['link_path']) && ($menu_item['link_path'] == "biocv" || $menu_item['link_path'] == "biocv/cv")) {
+          $primary_menu[$menu_item['link_path']] = $menu_item;
+        }
+      }
+      // Get secondary menu info for bio & cv links
+      $secondary_menu = array();
+      foreach (_vsite_menu_get_menu_links('secondary-menu',  $vsite_obj) as $mlid => $menu_item) {
+        if (isset($menu_item['link_path']) && ($menu_item['link_path'] == "biocv" || $menu_item['link_path'] == "biocv/cv")) {
+          $secondary_menu[$menu_item['link_path']] = $menu_item;
+        }
+      }
+
+      // create new primary menu item(s) for bio/cv page node(s)
+      if (count($primary_menu)) {
+        foreach ($primary_menu as $type => $menu) {
+          $new_menu = array(
+            "menu_name" => 'primary-menu',
+            "router_path" => "node/%",
+            "link_title" => $menu['link_title'],
+            "options" => $menu['options'],
+            "weight" => $menu['weight'],
+            "module" => 'system',
+            "hidden" => $menu['hidden'],
+            "external" => $menu['external'],
+            "plid" => $menu['plid'],
+          );
+          if ($type == "biocv") {
+            $new_menu['link_path'] = 'node/' . $bio_node->nid;
+            $mlid = vsite_menu_menu_link_save($new_menu, $gid);
+          }
+          elseif ($type == "biocv/cv") {
+            $new_menu['link_path'] = 'node/' . $cv_node->nid;
+            $mlid = vsite_menu_menu_link_save($new_menu, $gid);
+          }
+        }
+        vsite_menu_cache_clear('primary-menu', $gid);
+      }
+
+      // create new primary menu item(s) for bio/cv page node(s)
+      if (count($secondary_menu)) {
+        foreach ($secondary_menu as $type => $menu) {
+          $new_menu = array(
+            "menu_name" => 'secondary-menu',
+            "router_path" => "node/%",
+            "link_title" => $menu['link_title'],
+            "options" => $menu['options'],
+            "weight" => $menu['weight'],
+            "module" => 'system',
+            "hidden" => $menu['hidden'],
+            "external" => $menu['external'],
+            "plid" => $menu['plid'],
+          );
+          if ($type == "biocv") {
+            $new_menu['link_path'] = 'node/' . $bio_node->nid;
+            $mlid = vsite_menu_menu_link_save($new_menu, $gid);
+          }
+          elseif ($type == "biocv/cv") {
+            $new_menu['link_path'] = 'node/' . $cv_node->nid;
+            $mlid = vsite_menu_menu_link_save($new_menu, $gid);
+          }
+        }
+        vsite_menu_cache_clear('secondary-menu', $gid);
       }
     }
 
