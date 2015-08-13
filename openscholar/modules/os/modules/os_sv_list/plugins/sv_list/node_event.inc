@@ -212,6 +212,9 @@ class sv_list_node_event extends sv_list_plugin  {
     // than expected.
     for ($i=0; $i<$options['number_of_items']; $i++) {
       if ($row = $raw[$i]) {
+        if (empty($entities[$row->entity_id])) {
+          continue;
+        }
         $entity = clone $entities[$row->entity_id];
         $entity->date_id = implode('.', array('date', $entity->nid, 'field_date', $row->delta));
         $output[] = $entity;

@@ -2518,3 +2518,24 @@ function os_set_update_batch(&$sandbox, $info) {
     $sandbox['#finished'] = ($sandbox['progress'] / $sandbox['max']);
   }
 }
+
+/**
+ * Implements hook_node_access().
+ */
+function os_node_access($node, $op, $account) {
+  $map = features_get_component_map('node');
+
+  if (!is_object($node)) {
+    $node = (object) $node;
+  }
+
+  if (empty($node->type)) {
+    return;
+  }
+
+  $feature = !empty($map[$node->type]) ? reset($map[$node->type]) : NULL;
+  if ($feature) {
+    return spaces_access_feature('view', $feature) ? NODE_ACCESS_IGNORE : NODE_ACCESS_DENY;
+  }
+
+}
