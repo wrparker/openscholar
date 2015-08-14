@@ -1,0 +1,41 @@
+/* Layout CSS */
+
+.front #columns  {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.front #columns,
+.front .content-left.content-bottom #content-panels .region-content-first,
+.front .content-left.content-bottom #content-panels .region-content-bottom,
+.front .content-left.content-right #content-panels .region-content-first,
+.front .content-left.content-right #content-panels .region-content-second,
+.front .content-right.content-bottom #content-panels .region-content-second,
+.front .content-right.content-bottom #content-panels .region-content-bottom,
+.front .content-left.content-right.content-bottom #content-panels .region-content-first,
+.front .content-left.content-right.content-bottom #content-panels .region-content-second,
+.front .content-left.content-right.content-bottom #content-panels .region-content-bottom  {
+    width: 100%;
+}
+
+
+.front .content-left.content-right.content-bottom .region-content-first .region-inner, 
+.front .content-left.content-right.content-bottom .region-content-second .region-inner, 
+.front .content-left.content-right .region-content-first .region-inner, 
+.front .content-left.content-bottom .region-content-first .region-inner, 
+.front .content-right.content-bottom .region-content-second .region-inner {
+    padding-right: 0;
+}
+
+.front .content-left.content-right.content-bottom .region-content-bottom .region-inner, 
+.front .content-left.content-right.content-bottom .region-content-second .region-inner, 
+.front .content-left.content-right .region-content-second .region-inner, 
+.front .content-left.content-bottom .region-content-bottom .region-inner, 
+.front .content-right.content-bottom .region-content-bottom .region-inner {
+    padding-left: 0;
+}
+
+.front #columns {
+    margin-top: 0;
+    margin-bottom: 0;
+}
