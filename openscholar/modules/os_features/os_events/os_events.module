@@ -494,9 +494,44 @@ function os_events_generate_modal_register_link($nid, $delta = FALSE, $modal_set
   $path = 'os_events/nojs/registration/' . $nid;
   if ($delta !== FALSE) {
     $path = $path . '/' . $delta;
+
+    $wrapper = entity_metadata_wrapper('node', $nid);
+    ctools_include('jump-menu');
+    foreach ($wrapper->field_date as $d => $field_date) {
+      $date = $field_date->value();
+      if($d == $delta) continue;
+      $options[url($_GET['q'],array('query' => array('delta' => $d)))] = date('l, F j, Y', strtotime($date['value'].' UTC'));
+    }
+
+    $settings = array(
+      'choose' => '-Select a different occurance-',
+    );
+    $form_state = array();
+    $form = ctools_jump_menu(array(), $form_state, $options, $settings);
+    $form['#attached']['js'][] = drupal_get_path('module', 'os') . '/theme/os_toggle.js';
+
+
+    $date_switch  = l('(another date?)', $_GET['q'], array('attributes' => array('class' => array('os_event-moredates-link', 'toggle'))));
+    $slider['abstract_slider'] = array(
+      '#type' => 'container',
+      '#weight' => 3,
+      '#attributes' => array(
+        'class' => array(
+          'os_event-moredates-display',
+          'os-slider',
+        ),
+      ),
+      'abstract' => array(
+        '#markup' => drupal_render($form)
+      ),
+    );
+    $slider = drupal_render($slider);
+
   }
 
-  return ctools_ajax_text_button(t('Sign up for this event'), $path, '', 'ctools-use-modal ctools-modal-events-modal-style register use-ajax');
+  $sign_up = ctools_ajax_text_button(t('Sign up for this event'), $path, '', 'ctools-use-modal ctools-modal-events-modal-style register use-ajax');
+
+  return isset($date_switch)? $sign_up . $date_switch . $slider : $sign_up;
 }
 
 /**
@@ -1205,18 +1240,6 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
         '#weight' => -10,
       );
 
-      ctools_include('jump-menu');
-      foreach ($date as $d => $d) {
-        //Skip the selected date.
-        if($d['value'] == $date[$delta]['value']) continue;
-
-        $options[url($_GET['q'],array('query' => array('delta' => $d)))] = date('l, F j, Y', strtotime($d['value'].' UTC'));
-      }
-      $settings = array(
-        'choose' => date('l, F j, Y', strtotime($date[$delta]['value'].' UTC')),
-      );
-      $form =  $form + ctools_jump_menu($form, $form_state, $options, $settings);
-      $form['jump']['#weight'] = $form['go']['#weight'] = -9;
     }
   }
 
@@ -1365,12 +1388,24 @@ function os_events_preprocess_page(&$variables) {
   }
 
   $event_id = $menu['original_map'][1];
+  $node = node_load($event_id);
+  $delta = isset($_GET['delta']) ? $_GET['delta'] : FALSE;
+  $repeating = $node->field_date['und'][0]['rrule'];
+  $date = '';
+  if ($repeating && $delta) {
+    $date = $node->field_date['und'][$delta]['value'];
+  }
+
   $query = new EntityFieldQuery();
-  $result = $query
-      ->entityCondition('entity_type', 'registration')
+  $query->entityCondition('entity_type', 'registration')
       ->propertyCondition('entity_id', $event_id)
-      ->propertyCondition('entity_type', 'node')
-      ->execute();
+      ->propertyCondition('entity_type', 'node');
+
+  if ($date) {
+    $query->fieldCondition('field_repeating_event_date', 'value', $date);
+  } //Flter to just this occurance
+
+  $result = $query->execute();
 
   if (empty($result['registration'])) {
     return;
@@ -1381,11 +1416,11 @@ function os_events_preprocess_page(&$variables) {
   $registration_links = array(
     'export' => array(
       'title' => t('CSV'),
-      'href' => 'node/' . $event_id . '/registrations/export',
+      'href' => 'node/' . $event_id . '/registrations/export' . (($date)? '/' . $date : ''),
     ),
     'simple_view' => array(
       'title' => t('Simple view'),
-      'href' => 'node/' . $event_id . '/registrations/simple_view',
+      'href' => 'node/' . $event_id . '/registrations/simple_view' . (($date)? '/' . $date : ''),
     ),
   );
   $variables['tabs']['#secondary']['registration_links'] = array(
