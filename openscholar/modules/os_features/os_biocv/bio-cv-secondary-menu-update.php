@@ -16,6 +16,7 @@ $result = $query->execute()->fetchField();
 
 foreach ($results as $id) {
 {
+    //this line is all wrong
     $vsite_obj = vsite_get_vsite($id);
 }
 
