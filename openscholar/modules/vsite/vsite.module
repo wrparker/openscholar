@@ -2440,6 +2440,7 @@ function vsite_mail($key, &$message, $params){
       $node = $params['node'];
       $user = $params['user'];
 
+      $message['subject'] = $params['subject'];
       $message['body'][] = t('The user !user asked to delete the site "!site".', array('!user' => $user->name, '!site' => $node->title));
       $message['body'][] = t('The reason for the delete request was: "!reason".', array('!reason' => $reason));
       $message['body'][] = t('Please review the request and if approved delete the site via !url.',
