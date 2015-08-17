@@ -6,8 +6,15 @@
  * Time: 11:24 AM
  */
 
-$result = db_query("SELECT id from spaces_overrides WHERE object_id = 'secondary_menu' AND object_type = 'menu' AND value like '%biocv%';");
-foreach ($result as $id => $id) {
+$results = db_select('spaces_overrides')
+    ->fields('id')
+    ->condition('object_id', 'secondary_menu')
+    ->condition('object_type', 'menu')
+    ->condition('value', '%biocv%', 'LIKE')
+    ->execute();
+$result = $query->execute()->fetchField();
+
+foreach ($results as $id) {
 {
     $vsite_obj = vsite_get_vsite($id);
 }
