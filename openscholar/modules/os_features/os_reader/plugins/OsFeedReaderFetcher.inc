@@ -53,7 +53,7 @@ class OsFeedReaderFetcher extends FeedsProcessor {
       'importer_type' => $node_wrapper->getBundle() == 'blog_import' ? 'blog' : 'news',
     );
 
-    $feed_item = os_reader_feed_item_create($values);
+    $feed_item = empty($entity->id) ? os_reader_feed_item_create($values) : os_reader_feed_item_load($entity->id);
 
     $wrapper = entity_metadata_wrapper('os_feed_item', $feed_item);
     $wrapper->{OG_AUDIENCE_FIELD}->set($node_wrapper->{OG_AUDIENCE_FIELD}->value(array('identifier' => TRUE)));
