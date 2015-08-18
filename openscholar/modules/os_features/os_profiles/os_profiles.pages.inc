@@ -5,9 +5,7 @@
  */
 function os_profiles_settings($form, &$form_state) {
   // make sure this file is loaded on form submit
-  $form_state['build_info']['files'][] = drupal_get_path('module', 'os_profiles').'/os_profiles.pages.inc';
-
-  $vsite = vsite_get_vsite();
+  $form_state['build_info']['files'][] = drupal_get_path('module', 'os_profiles') . '/os_profiles.pages.inc';
 
   // Form element for disabling the use of a default image.
   $form['default_image'] = array(
