@@ -1388,7 +1388,6 @@ function os_publications_update_7033() {
  * Bring back the abstract field for working paper.
  */
 function os_publications_update_7034() {
-  // (136, 22, 22, 22, 1, 1, 0, 0, 155, 1)
   $field_exists = db_select('biblio_field_type', 'bft')
     ->fields('bft', array())
     ->condition('tid', 136)
