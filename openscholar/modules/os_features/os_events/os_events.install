@@ -230,7 +230,7 @@ function os_events_update_7016() {
  */
 function os_events_update_7017() {
   og_create_field(OG_AUDIENCE_FIELD, 'registration', 'event_signup_simple');
-  features_revert(array('os_events' => array('field')));
+  features_revert(array('os_events' => array('views')));
 }
 
 /*
@@ -267,5 +267,5 @@ function os_events_update_7019() {
  * Simple View for repeating events should only export the single date's event
  */
 function os_events_update_7020() {
-  features_revert(array('os_events' => array('views', 'field_instance')));
+  features_revert(array('os_events' => array('field','views', 'field_instance')));
 }
