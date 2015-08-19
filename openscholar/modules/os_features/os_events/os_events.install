@@ -233,10 +233,17 @@ function os_events_update_7017() {
   features_revert(array('os_events' => array('field')));
 }
 
+/*
+ * When exporting events, export the last 40 and not the 30 days backwards.
+ */
+function os_events_update_7018() {
+  features_revert(array('os_events' => array('views')));
+}
+
 /**
  * Add a date field to the registration entity table.
  */
-function os_events_update_7018() {
+function os_events_update_7019() {
 
   $spec = array(
       'type' => 'varchar',
@@ -254,13 +261,6 @@ function os_events_update_7018() {
     db_add_primary_key('registration_entity', array('entity_id', 'entity_type', 'repeating_event_date'));
   }
   features_revert(array('os_events' => array('field')));
-}
-
-/*
- * When exporting events, export the last 40 and not the 30 days backwards.
- */
-function os_events_update_7019() {
-  features_revert(array('os_events' => array('views')));
 }
 
 /*
