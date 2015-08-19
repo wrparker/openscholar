@@ -78,7 +78,7 @@ function os_events_menu() {
     'title' => 'Export attendees to csv',
     'access callback' => 'registration_administer_registrations_access',
     'access arguments' => array(0, 1),
-    'page arguments' => array(1,4),
+    'page arguments' => array(1),
     'page callback' => 'os_events_export_to_csv',
   );
 
