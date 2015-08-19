@@ -1339,6 +1339,11 @@ function os_events_preprocess_table(&$variables) {
  */
 function os_events_entity_query_alter( $query) {
 
+  // Skip this if we are not looking for registrations.
+  if(empty($query->entityConditions) || $query->entityConditions['entity_type']['value'] != 'registration') {
+    return;
+  }
+
   $menu = menu_get_item();
   if ($menu['path'] != 'node/%/registrations' || !is_object($menu['page_arguments'][1])) {
     return;
@@ -1348,7 +1353,7 @@ function os_events_entity_query_alter( $query) {
   $repeating = $event->field_date['und'][0]['rrule'];
 
   //Is this the registration list EFQ
-  if(!$repeating || empty($query->entityConditions) || $query->entityConditions['entity_type']['value'] != 'registration') {
+  if(!$repeating) {
     return;
   }
 
