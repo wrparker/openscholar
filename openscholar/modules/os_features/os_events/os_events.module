@@ -74,11 +74,11 @@ function os_events_menu() {
     'access arguments' => array('create event_signup_simple registration'),
   );
 
-  $items['node/%node/registrations/export'] = array(
+  $items['node/%node/registrations/export/%'] = $items['node/%node/registrations/export'] = array(
     'title' => 'Export attendees to csv',
     'access callback' => 'registration_administer_registrations_access',
     'access arguments' => array(0, 1),
-    'page arguments' => array(1),
+    'page arguments' => array(1,4),
     'page callback' => 'os_events_export_to_csv',
   );
 
@@ -88,7 +88,7 @@ function os_events_menu() {
 /**
  * Page callback; Exports event's registrants.
  */
-function os_events_export_to_csv($node) {
+function os_events_export_to_csv($node, $delta = FALSE) {
   if (!module_exists('os_exporter')) {
     return;
   }
@@ -100,8 +100,14 @@ function os_events_export_to_csv($node) {
   $result = $query
     ->entityCondition('entity_type', 'registration')
     ->propertyCondition('entity_id', $node->nid)
-    ->propertyCondition('entity_type', 'node')
-    ->execute();
+    ->propertyCondition('entity_type', 'node');
+
+  if ($delta !== FALSE && isset($node->field_date['und'][$delta])) {
+    $date = $node->field_date['und'][$delta]['value'];
+    $query->fieldCondition('field_repeating_event_date', 'value', $date);
+  }
+
+  $result = $query->execute();
 
   if (empty($result['registration'])) {
     return;
@@ -120,7 +126,7 @@ function os_events_export_to_csv($node) {
     ));
   }
 
-  $exporter->exportToFile($node->title . ' attendees.csv');
+  $exporter->exportToFile($node->title . '-' . (isset($date)?$date . '-':'') .'attendees.csv');
 
   return $node->title;
 }
@@ -1392,7 +1398,7 @@ function os_events_preprocess_page(&$variables) {
   $delta = isset($_GET['delta']) ? $_GET['delta'] : FALSE;
   $repeating = $node->field_date['und'][0]['rrule'];
   $date = '';
-  if ($repeating && $delta) {
+  if ($repeating && $delta !== FALSE) {
     $date = $node->field_date['und'][$delta]['value'];
   }
 
@@ -1416,7 +1422,7 @@ function os_events_preprocess_page(&$variables) {
   $registration_links = array(
     'export' => array(
       'title' => t('CSV'),
-      'href' => 'node/' . $event_id . '/registrations/export' . (($date)? '/' . $date : ''),
+      'href' => 'node/' . $event_id . '/registrations/export' . (($date)? '/' . $delta : ''),
     ),
     'simple_view' => array(
       'title' => t('Simple view'),
