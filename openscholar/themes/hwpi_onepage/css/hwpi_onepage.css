@@ -53,7 +53,7 @@ body {
 /* Header */
 
 #header {
-    background: #d8d8d8;
+    background: #d1cfc8;
     color: #333;
 }
 #boxes-box-site_info,
@@ -63,14 +63,14 @@ body {
 /* Menu bar */
 
 #menu-bar {
-    background: #c3c3c3;
+    background: #555;
     padding: 0;
 }
 #menu-bar ul.nice-menu li {
     margin-right: 0;
 }
 #menu-bar ul.nice-menu a {
-    color: #333;
+    color: #FFF;
     padding: 16px 15px;
     text-transform: uppercase;
 }
@@ -384,7 +384,7 @@ table td.mini {
 /* Footer */
 
 #footer {
-    background-color: #d8d8d8;
+    background-color: #d1cfc8;
     color:#333;
 }
 #footer ul.menu a {
