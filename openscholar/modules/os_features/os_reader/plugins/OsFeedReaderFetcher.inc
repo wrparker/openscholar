@@ -55,7 +55,6 @@ class OsFeedReaderFetcher extends FeedsProcessor {
 
     $feed_item = empty($entity->id) ? os_reader_feed_item_create($values) : os_reader_feed_item_load($entity->id);
 
-//    $feed_item = os_reader_feed_item_create($values);
     $wrapper = entity_metadata_wrapper('os_feed_item', $feed_item);
     $wrapper->{OG_AUDIENCE_FIELD}->set($node_wrapper->{OG_AUDIENCE_FIELD}->value(array('identifier' => TRUE)));
     $wrapper->save();
