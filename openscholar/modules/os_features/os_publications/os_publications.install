@@ -1384,3 +1384,36 @@ function os_publications_update_7033() {
     ->fields($fields)
     ->execute();
 }
+/**
+ * Bring back the abstract field for working paper.
+ */
+function os_publications_update_7034() {
+  // (136, 22, 22, 22, 1, 1, 0, 0, 155, 1)
+  $field_exists = db_select('biblio_field_type', 'bft')
+    ->fields('bft', array())
+    ->condition('tid', 136)
+    ->condition('fid', 22)
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+
+  if ($field_exists) {
+    return;
+  }
+
+  $fields = array(
+    'tid' => 136,
+    'fid' => 22,
+    'ftdid' => 22,
+    'cust_tdid' => 22,
+    'common' => 1,
+    'vtab' => 1,
+    'autocomplete' => 0,
+    'required' => 1,
+    'weight' => '155',
+    'visible' => '1'
+  );
+  db_insert('biblio_field_type')
+    ->fields($fields)
+    ->execute();
+}
