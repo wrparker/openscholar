@@ -267,5 +267,12 @@ function os_events_update_7019() {
  * Simple View for repeating events should only export the single date's event
  */
 function os_events_update_7020() {
-  features_revert(array('os_events' => array('field','views', 'field_instance')));
+  features_revert(array('os_events' => array('field','views')));
+}
+
+/*
+ * Add the repeating_signup field to registrations
+ */
+function os_events_update_7021() {
+  features_revert(array('os_events' => array('field_instance')));
 }
