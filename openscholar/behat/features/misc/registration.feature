@@ -54,5 +54,26 @@ Feature:
       And I should see "bill@example.com"
       And I am logging in as "admin"
       And I make registration to event without javascript unavailable
-
+      
+  @api @misc_second
+  Scenario: Verify that registration shows correctly for repeated events and the option
+            to switch to another date is present.
+    Given I am logging in as "john"
+     When I create a new repeating registration event in site "john" with title "Repeating Signup event" that repeats "4" times
+      And I visit "john/calendar"
+     Then I should see the event "Repeating Signup event" in the LOP
+      And I visit "john/event/repeating-signup-event?delta=2"
+      And I should see "Sign up for this event"
+      And I should see "another date"
+      
+  @api @misc_second
+  Scenario: Verify that registration shows correctly for non-repeated events and the option
+            to switch to another date is not present.
+    Given I am logging in as "john"
+     When I create a new registration event with title "Johns Event"
+      And I visit "john/calendar"
+     Then I should see the event "Johns event" in the LOP
+      And I visit "john/event/Johns-event?delta=2"
+      And I should see "Sign up for this event"
+      And I should not see "another date"
 

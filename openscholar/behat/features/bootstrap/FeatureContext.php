@@ -362,7 +362,25 @@ class FeatureContext extends DrupalContext {
       new Step\When('I fill in "edit-field-date-und-0-value-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
       new Step\When('I fill in "edit-field-date-und-0-value2-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
       new Step\When('I check the box "edit-field-date-und-0-all-day"'),
-      new Step\When('I check the box "field_event_registration[und][0][registration_type]"'),
+      new Step\When('I check the box "edit-field-event-registration-und-0-registration-type"'),
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
+   * @When /^I create a new repeating registration event in site "([^"]*)" with title "([^"]*)" that repeats "([^"]*)" times$/
+   */
+  public function iCreateANewRepeatingRegistrationEventWithTitle($site, $title, $times) {
+    $tomorrow = time() + (24 * 60 * 60);
+    return array(
+      new Step\When('I visit "'.$site.'/node/add/event"'),
+      new Step\When('I fill in "Title" with "' . $title . '"'),
+      new Step\When('I fill in "edit-field-date-und-0-value-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
+      new Step\When('I fill in "edit-field-date-und-0-value2-datepicker-popup-0" with "' . date('M j Y', $tomorrow) . '"'),
+      new Step\When('I check the box "edit-field-date-und-0-all-day"'),
+      new Step\When('I check the box "edit-field-date-und-0-show-repeat-settings"'),
+      new Step\When('I fill in "edit-field-date-und-0-rrule-count-child" with "' . $times . '"'),
+      new Step\When('I check the box "edit-field-event-registration-und-0-registration-type"'),
       new Step\When('I press "edit-submit"'),
     );
   }
