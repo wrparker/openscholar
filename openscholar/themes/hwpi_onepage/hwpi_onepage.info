@@ -23,9 +23,6 @@
   stylesheets[screen][] = css/hwpi_onepage.layout.css
   stylesheets[screen][] = css/hwpi_onepage.css
   
-  
-scripts[] = hwpi_onepage.js
-
 
 ;----------// Theme Settings
 

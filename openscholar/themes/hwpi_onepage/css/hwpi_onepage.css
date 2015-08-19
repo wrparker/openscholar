@@ -53,7 +53,7 @@ body {
 /* Header */
 
 #header {
-    background: #d1cfc8;
+    background: #D7D7D7;
     color: #333;
 }
 #boxes-box-site_info,
@@ -212,10 +212,9 @@ h2.block-title {
 }
 .node-type-person #content-column .node-person h2.block-title,
 .sidebar .block h2.block-title {
-    font-size: 14px;
+    font-size: .9em;
     line-height: 16px;
     padding: 7px 0;
-    font-weight: bold;
 }
 .block-content {
     margin-top: 20px;
@@ -316,7 +315,26 @@ table td.mini {
     color: #1E1E1E;
 }
 .event-start .event-start {
-    background: url("../images/event-shield.png") no-repeat scroll 0 0 transparent;
+	width: 55px;
+	height: 55px;
+	background: #FFF;
+	border:1px solid #ebebeb;
+	border-top:3px solid #215990;
+	-webkit-border-bottom-right-radius: 4px;
+-webkit-border-bottom-left-radius: 4px;
+-moz-border-radius-bottomright: 4px;
+-moz-border-radius-bottomleft: 4px;
+border-bottom-right-radius: 4px;
+border-bottom-left-radius: 4px;
+}
+
+.event-start .event-start span {
+	font-weight: normal;
+}
+
+.event-start-month {
+	color: #000;
+	padding: 12px 0 0;
 }
 /* Tabs (widget) */
 
@@ -338,17 +356,17 @@ table td.mini {
 
 #boxes-box-os_pages_section_nav,
 .section-nav ul.menu li a {
-    border-color: #959595;
-    font-weight: bold;
+    border-color: #d1cfc8;
+   
 }
 .section-nav .menu-depth-1 > a {
-    background-color: #1e1e1e !important;
+    background-color: #4a4a4a !important;
 }
 .section-nav .expanded.menu-depth-2 > a {
     background-color: #545454;
 }
 .section-nav .expanded.menu-depth-2 > a:hover {
-    background-color: #A23338 !important;
+    background-color: #999 !important;
 }
 .section-nav .expanded.menu-depth-2 .menu-depth-3 > a,
 .section-nav .expanded.menu-depth-2 .menu-depth-4 > a,
@@ -358,7 +376,7 @@ table td.mini {
 .section-nav .leaf.menu-depth-4 > a,
 .section-nav .leaf.menu-depth-5 > a,
 .section-nav .leaf.menu-depth-6 > a {
-    background-color: #f3f3f1 !important;
+    background-color: #F3F3F1 !important;
 }
 .section-nav .expanded.menu-depth-2 .menu-depth-3 > a:hover,
 .section-nav .expanded.menu-depth-2 .menu-depth-4 > a:hover,
@@ -384,7 +402,7 @@ table td.mini {
 /* Footer */
 
 #footer {
-    background-color: #d1cfc8;
+    background-color: #D7D7D7;
     color:#333;
 }
 #footer ul.menu a {
@@ -413,15 +431,7 @@ table td.mini {
 a.rslides_nav {
     background-color: #000;
 }
-/*
- .slide-copy h2 {
- margin-bottom: 0;
- }
 
- #layout_16_9_below .slide-copy h2 {
- margin-bottom: 16px;
- }
- */
 
 .slide-copy h2 a {
     font-weight: bold;
