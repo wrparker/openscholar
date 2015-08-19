@@ -1873,6 +1873,10 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
   if (is_array($form['#term']) && !$form['#term']['tid']) {
     $form['show_description']['und']['#default_value'] = TRUE;
   }
+
+  if (!empty($form['#attributes']['class']) && in_array('confirmation', $form['#attributes']['class'])) {
+    $form['description']['#markup'] = t('Deleting a term will <span>delete all its children</span> if there are any. This action cannot be undone.');
+  }
 }
 
 /**
