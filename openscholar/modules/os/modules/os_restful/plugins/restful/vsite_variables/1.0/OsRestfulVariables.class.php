@@ -136,11 +136,13 @@ class OsRestfulVariables extends OsRestfulSpaces {
     $whitelist = $this->whiteList();
 
     $db_or = db_or();
-    foreach ($whitelist as $variable) {
+    foreach ($whitelist['wildecard_fields'] as $variable) {
       $db_or->condition('object_id', $variable, 'LIKE');
     }
 
-    $query->condition('object_id', $db_or);
+    $db_or->condition('object_id', $whitelist['in_fields'], 'IN');
+
+    $query->condition($db_or);
 
     if (!empty($this->path)) {
       $query->condition('object_id', $this->path);
