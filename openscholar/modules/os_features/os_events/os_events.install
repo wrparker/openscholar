@@ -262,3 +262,10 @@ function os_events_update_7018() {
 function os_events_update_7019() {
   features_revert(array('os_events' => array('views')));
 }
+
+/*
+ * Simple View for repeating events should only export the single date's event
+ */
+function os_events_update_7020() {
+  features_revert(array('os_events' => array('views')));
+}
