@@ -80,7 +80,7 @@ Feature:
      When I visit "obama/cp/os-importer/news/manage"
      Then I should see "JFK was murdered"
 
-  @api @features_second
+  @js @features_second
   Scenario: Verify a feed item can be imported only once to the site.
     Given I am logging in as "admin"
      When I re import feed item "John news importer"
