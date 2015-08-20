@@ -1411,3 +1411,62 @@ function os_publications_apachesolr_query_alter($query) {
   $params['qf']['tm_contributors'] = 'tm_contributors^30';
   $query->addParams($params);
 }
+
+/**
+ * Bring back the field.
+ *
+ * @param $field_name
+ *   The machine name of the field.
+ * @param $publication_name
+ *   The publication type.
+ * @param array $settings
+ *   Settings for the field.
+ *
+ * @throws Exception
+ */
+function os_publications_restore_field($field_name, $publication_name, array $settings = array()) {
+  $field_id = db_select('biblio_fields', 'bf')
+    ->fields('bf', array('fid'))
+    ->condition('name', $field_name)
+    ->execute()
+    ->fetchAllKeyed();
+
+  if (!$fid = key($field_id)) {
+    $args['@name'] = $field_name;
+    throw new \Exception(t('The field @name was not found', $args));
+  }
+
+  $working_type_id = db_select('biblio_types', 'bt')
+    ->fields('bt', array('tid'))
+    ->condition('name', $publication_name)
+    ->execute()
+    ->fetchAllKeyed();
+
+  if (!$tid = key($working_type_id)) {
+    $args['@name'] = $field_name;
+    throw new \Exception(t('The biblio type @name was not found', $args));
+  }
+
+  $field_exists = db_select('biblio_field_type', 'bft')
+    ->fields('bft', array())
+    ->condition('tid', $tid)
+    ->condition('fid', $fid)
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+
+  if ($field_exists) {
+    return;
+  }
+
+  $fields = array(
+    'tid' => $tid,
+    'fid' => $fid,
+    'ftdid' => $fid,
+    'cust_tdid' => $fid,
+  ) + $settings;
+
+  db_insert('biblio_field_type')
+    ->fields($fields)
+    ->execute();
+}
