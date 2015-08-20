@@ -357,7 +357,7 @@ font-size:.97em;
 }
 
 .node-form #media-browser-drop-box {
-  height: 150px;
+  height: 180px;
   background-color: #FFF;
  
 }
@@ -403,9 +403,11 @@ position: absolute;
 }
 
 .node-form .help {
- top: 75%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+ top: 70%;
+    left: 50%;
+    width: 95%;
+    transform: translate(-50%, -50%);
+    height: 70px;
  }
 
 #media-browser-rejected {
