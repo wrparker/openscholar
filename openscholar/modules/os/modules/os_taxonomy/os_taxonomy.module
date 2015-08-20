@@ -1873,6 +1873,10 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
   if (is_array($form['#term']) && !$form['#term']['tid']) {
     $form['show_description']['und']['#default_value'] = TRUE;
   }
+
+  if (!empty($form['#attributes']['class']) && in_array('confirmation', $form['#attributes']['class'])) {
+    $form['description']['#markup'] = t('Deleting a term  <span class="emphasize">will delete all of its child terms</span> if there are any. Reassigning child terms to a different parent term should be considered. This action cannot be undone.');
+  }
 }
 
 /**
