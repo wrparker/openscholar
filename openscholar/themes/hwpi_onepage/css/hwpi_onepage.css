@@ -121,6 +121,18 @@ body {
 ul.nice-menu-down li ul li ul {
     left: 12em;
 }
+
+#columns .accordion ul.nice-menu li a, 
+#columns .sidebar .os-custom-menu ul.nice-menu li a, 
+#columns .sidebar #block-os-primary-menu ul.nice-menu li a, 
+#columns .sidebar #block-os-secondary-menu ul.nice-menu li a, 
+#columns .sidebar .os-custom-menu ul.menu li a, 
+#columns .sidebar #block-os-primary-menu ul.menu li a, 
+#columns .sidebar #block-os-secondary-menu ul.menu li a {
+  
+    font-size: inherit;
+}
+
 /* HOMEPAGE SPECIFIC STYLES */
 
 .front #content-panels .region-content-first,
@@ -320,12 +332,12 @@ table td.mini {
 	background: #FFF;
 	border:1px solid #ebebeb;
 	border-top:3px solid #215990;
-	-webkit-border-bottom-right-radius: 4px;
--webkit-border-bottom-left-radius: 4px;
--moz-border-radius-bottomright: 4px;
--moz-border-radius-bottomleft: 4px;
-border-bottom-right-radius: 4px;
-border-bottom-left-radius: 4px;
+	-webkit-border-bottom-right-radius: 5px;
+-webkit-border-bottom-left-radius: 5px;
+-moz-border-radius-bottomright: 5px;
+-moz-border-radius-bottomleft: 5px;
+border-bottom-right-radius: 5px;
+border-bottom-left-radius: 5px;
 }
 
 .event-start .event-start span {
@@ -356,17 +368,21 @@ border-bottom-left-radius: 4px;
 
 #boxes-box-os_pages_section_nav,
 .section-nav ul.menu li a {
-    border-color: #d1cfc8;
-   
+      border-color: #D7D7D7;
+    border-right: none;
+    border-left: none;
 }
 .section-nav .menu-depth-1 > a {
-    background-color: #4a4a4a !important;
+        background-color: #D7D7D7 !important;
+    color: #333 !important;
+    border-bottom: 1px solid #999 !important;
 }
 .section-nav .expanded.menu-depth-2 > a {
-    background-color: #545454;
+    background-color: #FFF;
+    color: inherit;
 }
 .section-nav .expanded.menu-depth-2 > a:hover {
-    background-color: #999 !important;
+    background-color: #e3e3e1 !important;
 }
 .section-nav .expanded.menu-depth-2 .menu-depth-3 > a,
 .section-nav .expanded.menu-depth-2 .menu-depth-4 > a,
@@ -376,7 +392,7 @@ border-bottom-left-radius: 4px;
 .section-nav .leaf.menu-depth-4 > a,
 .section-nav .leaf.menu-depth-5 > a,
 .section-nav .leaf.menu-depth-6 > a {
-    background-color: #F3F3F1 !important;
+    background-color: #FFF !important;
 }
 .section-nav .expanded.menu-depth-2 .menu-depth-3 > a:hover,
 .section-nav .expanded.menu-depth-2 .menu-depth-4 > a:hover,
