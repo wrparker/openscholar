@@ -8,23 +8,21 @@
 
 $results = db_select('spaces_overrides')
     ->fields('id')
-    ->condition('object_id', 'secondary_menu')
-    ->condition('object_type', 'menu')
+    ->condition('object_id', 'secondary-menu')
+    ->condition('object_type', 'menus')
     ->condition('value', '%biocv%', 'LIKE')
     ->execute();
 $result = $query->execute()->fetchField();
 
 foreach ($results as $id) {
-{
-    //this line is all wrong
-    $vsite_obj = vsite_get_vsite($id);
-}
+  $vsite_obj = vsite_get_vsite($id);
 
-// Get secondary menu info for bio & cv links
-$secondary_menu = array();
-foreach (_vsite_menu_get_menu_links('secondary-menu',  $vsite_obj) as $mlid => $menu_item) {
-  if (isset($menu_item['link_path']) && ($menu_item['link_path'] == "biocv" || $menu_item['link_path'] == "biocv/cv")) {
-    $secondary_menu[$menu_item['link_path']] = $menu_item;
+  // Get secondary menu info for bio & cv links
+  $secondary_menu = array();
+  foreach (_vsite_menu_get_menu_links('secondary-menu',  $vsite_obj) as $mlid => $menu_item) {
+    if (isset($menu_item['link_path']) && ($menu_item['link_path'] == "biocv" || $menu_item['link_path'] == "biocv/cv")) {
+      $secondary_menu[$menu_item['link_path']] = $menu_item;
+    }
   }
 }
 
@@ -53,3 +51,4 @@ if (count($secondary_menu)) {
   }
   vsite_menu_cache_clear('secondary-menu', $gid);
 }
+?>
