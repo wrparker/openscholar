@@ -37,7 +37,8 @@
         scope.sendToBrowser = function($files) {
           var params = {
             files: $files,
-            onSelect: scope.addFile
+            onSelect: scope.addFile,
+            types: scope.types
           };
           mbModal.open(params);
         }
