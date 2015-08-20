@@ -374,7 +374,11 @@ function os_events_process_node(&$variables) {
     }
     // In teaser view mode link to the event page.
     elseif ($variables['view_mode'] == 'teaser') {
-      $register = '<div class="register-link-teaser">' . l(t('Registration is required'), 'node/' . $variables['node']->nid) . '</div>';
+      $options = array();
+      if ($delta !== FALSE) {
+        $options = array('query' => array('delta' => $delta));
+      }
+      $register = '<div class="register-link-teaser">' . l(t('Registration is required'), 'node/' . $variables['node']->nid, $options) . '</div>';
     }
   }
   elseif ($registrations_type) {
@@ -502,37 +506,38 @@ function os_events_generate_modal_register_link($nid, $delta = FALSE, $modal_set
     $path = $path . '/' . $delta;
 
     $wrapper = entity_metadata_wrapper('node', $nid);
-    ctools_include('jump-menu');
     foreach ($wrapper->field_date as $d => $field_date) {
       $date = $field_date->value();
       if($d == $delta) continue;
       $options[url($_GET['q'],array('query' => array('delta' => $d)))] = date('l, F j, Y', strtotime($date['value'].' UTC'));
     }
 
-    $settings = array(
-      'choose' => '-Select a different occurance-',
-    );
-    $form_state = array();
-    $form = ctools_jump_menu(array(), $form_state, $options, $settings);
-    $form['#attached']['js'][] = drupal_get_path('module', 'os') . '/theme/os_toggle.js';
+    //Only allow switching if there is more than one option.
+    if ($options) {
+      $settings = array(
+        'choose' => '-Select a different occurance-',
+      );
+      $form_state = array();
+      ctools_include('jump-menu');
+      $form = ctools_jump_menu(array(), $form_state, $options, $settings);
+      $form['#attached']['js'][] = drupal_get_path('module', 'os') . '/theme/os_toggle.js';
 
-
-    $date_switch  = l('(another date?)', $_GET['q'], array('attributes' => array('class' => array('os_event-moredates-link', 'toggle'))));
-    $slider['abstract_slider'] = array(
-      '#type' => 'container',
-      '#weight' => 3,
-      '#attributes' => array(
-        'class' => array(
-          'os_event-moredates-display',
-          'os-slider',
+      $date_switch  = l('(another date?)', $_GET['q'], array('attributes' => array('class' => array('os_event-moredates-link', 'toggle'))));
+      $slider['abstract_slider'] = array(
+        '#type' => 'container',
+        '#weight' => 3,
+        '#attributes' => array(
+          'class' => array(
+            'os_event-moredates-display',
+            'os-slider',
+          ),
         ),
-      ),
-      'abstract' => array(
-        '#markup' => drupal_render($form)
-      ),
-    );
-    $slider = drupal_render($slider);
-
+        'abstract' => array(
+          '#markup' => drupal_render($form)
+        ),
+      );
+      $slider = drupal_render($slider);
+    }
   }
 
   $sign_up = ctools_ajax_text_button(t('Sign up for this event'), $path, '', 'ctools-use-modal ctools-modal-events-modal-style register use-ajax');
@@ -1078,7 +1083,6 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
       '#weight' => -10,
     );
 
-    ctools_include('jump-menu');
     foreach ($wrapper->field_date as $delta => $field_date) {
       $date = $field_date->value();
       $options[url($_GET['q'],array('query' => array('delta' => $delta)))] = date('l, F j, Y', strtotime($date['value'].' UTC'));
@@ -1086,8 +1090,11 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
     $settings = array(
       'choose' => t('-- Go to a specific date instead --'),
     );
-    $form =  $form + ctools_jump_menu($form, $form_state, $options, $settings);
-    $form['jump']['#weight'] = $form['go']['#weight'] = -9;
+    if (isset($options)) {
+      ctools_include('jump-menu');
+      $form =  $form + ctools_jump_menu($form, $form_state, $options, $settings);
+      $form['jump']['#weight'] = $form['go']['#weight'] = -9;
+    }
   }
 
   $form['settings']['#access'] = FALSE;
@@ -1311,7 +1318,7 @@ function os_events_preprocess_table(&$variables) {
   ));
 
   if ($repeating && !isset($date)) {
-    ctools_include('jump-menu');
+
     $date = field_get_items('node', $event, 'field_date');
 
     $form_state = array();
@@ -1321,8 +1328,11 @@ function os_events_preprocess_table(&$variables) {
     $settings = array(
       'choose' => t('-- Go to a specific date instead --'),
     );
-    $form = ctools_jump_menu($form, $form_state, $options, $settings);
-    $variables['caption'] .= drupal_render($form);
+    if(isset($options)) {
+      ctools_include('jump-menu');
+      $form = ctools_jump_menu($form, $form_state, $options, $settings);
+      $variables['caption'] .= drupal_render($form);
+    }
   }
 
   // Remove the "id", "user", "count" and the "states" from the table head.
