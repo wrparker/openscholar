@@ -7,7 +7,7 @@
  */
 
 $results = db_select('spaces_overrides')
-    ->fields('id')
+    ->fields('id', array('id'))
     ->condition('object_id', 'secondary-menu')
     ->condition('object_type', 'menus')
     ->condition('value', '%biocv%', 'LIKE')
@@ -44,7 +44,7 @@ foreach ($results as $id) {
 
       if ($type == "biocv") {
         $bio_node = db_select('url_alias')
-            ->fields('source')
+            ->fields('source', array('source'))
             ->condition('alias', $vsite_name.'/biocv%', 'LIKE')
             ->execute();
         $bio_node = substr($bio_node, 6, strlen($bio_node));
@@ -54,10 +54,10 @@ foreach ($results as $id) {
       }
       elseif ($type == "biocv/cv") {
         $cv_node = db_select('url_alias')
-           ->fields('source')
+          ->fields('source', array('source'))
            ->condition('alias', $vsite_name.'/biocv/cv%', 'LIKE')
            ->execute();
-        $cv_node = substr($bio_node, 6, strlen($cv_node));
+        $cv_node = substr($cv_node, 6, strlen($cv_node));
 
         $new_menu['link_path'] = 'node/' . $cv_node->nid;
         $mlid = vsite_menu_menu_link_save($new_menu, $id);
