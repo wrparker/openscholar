@@ -363,29 +363,30 @@ function os_events_process_node(&$variables) {
     }
   }
 
-  $registrations_type = !empty($variables['node']->field_event_registration[LANGUAGE_NONE][0]['registration_type']);
-  $register = '';
-
-  // Show the signup link if capacity isn't reached.
-  if ($registrations_type && os_events_event_registration_reach_capacity($variables['node'], $date)) {
-    // In full view mode show a link to a modal.
-    if ($variables['view_mode'] == 'full' && os_events_register_show_register_link($variables['node'], $date)) {
-      $register = os_events_generate_modal_register_link($variables['node']->nid, $delta, array());
-    }
-    // In teaser view mode link to the event page.
-    elseif ($variables['view_mode'] == 'teaser') {
-      $options = array();
-      if ($delta !== FALSE) {
-        $options = array('query' => array('delta' => $delta));
-      }
-      $register = '<div class="register-link-teaser">' . l(t('Registration is required'), 'node/' . $variables['node']->nid, $options) . '</div>';
-    }
-  }
-  elseif ($registrations_type) {
-    $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
-  }
-
   if ($variables['page'] && empty($variables['sv_list'])) {
+
+    $registrations_type = !empty($variables['node']->field_event_registration[LANGUAGE_NONE][0]['registration_type']);
+    $register = '';
+
+    // Show the signup link if capacity isn't reached.
+    if ($registrations_type && os_events_event_registration_reach_capacity($variables['node'], $date)) {
+      // In full view mode show a link to a modal.
+      if ($variables['view_mode'] == 'full' && os_events_register_show_register_link($variables['node'], $date)) {
+        $register = os_events_generate_modal_register_link($variables['node']->nid, $delta, array());
+      }
+      // In teaser view mode link to the event page.
+      elseif ($variables['view_mode'] == 'teaser') {
+        $options = array();
+        if ($delta !== FALSE) {
+          $options = array('query' => array('delta' => $delta));
+        }
+        $register = '<div class="register-link-teaser">' . l(t('Registration is required'), 'node/' . $variables['node']->nid, $options) . '</div>';
+      }
+    }
+    elseif ($registrations_type) {
+      $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
+    }
+
     // Change the date markup if this is a recurring event.
     if ($variables['content']['field_date']['#items'][0]['rrule']) {
       $variables['content']['field_date'][0]['#markup'] = _os_events_style_recurring_event($variables['content']['field_date'][0]['#markup']);
