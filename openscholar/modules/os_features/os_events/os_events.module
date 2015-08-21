@@ -510,6 +510,7 @@ function os_events_generate_modal_register_link($nid, $delta = FALSE, $modal_set
     // Display all date options if this node is not in a sv_list
     if (!$sv_list) {
       $wrapper = entity_metadata_wrapper('node', $nid);
+      $fd = (array) $wrapper->field_date;
       foreach ($wrapper->field_date as $d => $field_date) {
         $date = $field_date->value();
         if($d == $delta) continue;
