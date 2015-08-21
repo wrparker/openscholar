@@ -6,15 +6,16 @@
  * Time: 11:24 AM
  */
 
-$results = db_select('spaces_overrides')
-    ->fields('id', array('id'))
+$result = db_select('spaces_overrides', 'spaces_overrides')
+    ->distinct()
+    ->fields('spaces_overrides', array('id'))
     ->condition('object_id', 'secondary-menu')
     ->condition('object_type', 'menus')
     ->condition('value', '%biocv%', 'LIKE')
     ->execute();
-$result = $query->execute()->fetchField();
 
-foreach ($results as $id) {
+$count = $result->rowCount();
+while($id = $result->FetchField()) {
   $vsite_obj = vsite_get_vsite($id);
 
   // Get secondary menu info for bio & cv links
