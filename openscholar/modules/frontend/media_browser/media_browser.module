@@ -49,8 +49,15 @@ function media_browser_library_alter(&$libs) {
   }
 
   // Start with post_max_size.
-  $max_size = media_browser_get_max_size();
+  $max_size_php = media_browser_get_max_size();
+  $max_size_inline = variable_get('os_files_max_inline_filesize', '128 MB');
   $max_size_raw = parse_size($max_size);
+  $max_inline_raw = parse_size($max_size_inline);
+
+  if ($max_inline_raw > $max_size_raw) {
+    $max_size = $max_size_inline;
+    $max_size_raw = $max_inline_raw;
+  }
 
   $libs['media_browser']['js'] += array(
     $path . '/misc/MediaBrowserFilters.js' => array(),
