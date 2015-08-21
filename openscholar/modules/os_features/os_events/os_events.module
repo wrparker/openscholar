@@ -510,13 +510,20 @@ function os_events_generate_modal_register_link($nid, $delta = FALSE, $modal_set
 
     // Display all date options if this node is not in a sv_list
     if (!$sv_list) {
-      $wrapper = entity_metadata_wrapper('node', $nid);
-      $fd = (array) $wrapper->field_date;
-      foreach ($wrapper->field_date as $d => $field_date) {
-        $date = $field_date->value();
-        if($d == $delta) continue;
-        $options[url($_GET['q'],array('query' => array('delta' => $d)))] = date('l, F j, Y', strtotime($date['value'].' UTC'));
+      static $options_cache;
+
+      if(!isset($options_cache[$nid])) {
+        $wrapper = entity_metadata_wrapper('node', $nid);
+        $options_cache[$nid] = array();
+
+        foreach ($wrapper->field_date as $d => $field_date) {
+          $date = $field_date->value();
+          if($d == $delta) continue;
+          $options_cache[$nid][url($_GET['q'],array('query' => array('delta' => $d)))] = date('l, F j, Y', strtotime($date['value'].' UTC'));
+        }
       }
+
+      $options = $options_cache[$nid];
     }
 
     //Only allow switching if there is more than one option.
@@ -1313,8 +1320,8 @@ function os_events_preprocess_table(&$variables) {
   $repeating = $event->field_date['und'][0]['rrule'];
   if ($repeating && isset($_GET['delta'])) {
     $delta = intval($_GET['delta']);
-    $date = field_get_items('node', $event, 'field_date');
-    $date = $date[$delta]['value'];
+    $d = field_get_items('node', $event, 'field_date');
+    $date = $d[$delta]['value'];
   }
 
 
