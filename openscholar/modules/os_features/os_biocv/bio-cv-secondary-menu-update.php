@@ -44,21 +44,21 @@ while($id = $result->FetchField()) {
       $vsite_name = vsite_get_purl($vsite_obj);
 
       if ($type == "biocv") {
-        $bio_node = db_select('url_alias')
-            ->fields('source', array('source'))
+        $bio_node = db_select('url_alias', 'url_alias')
+            ->fields('url_alias', array('source'))
             ->condition('alias', $vsite_name.'/biocv%', 'LIKE')
             ->execute();
-        $bio_node = substr($bio_node, 6, strlen($bio_node));
+        $bio_node = substr((string)$bio_node, 6, strlen((string)$bio_node));
 
         $new_menu['link_path'] = 'node/' . $bio_node->nid;
         $mlid = vsite_menu_menu_link_save($new_menu, $id);
       }
       elseif ($type == "biocv/cv") {
-        $cv_node = db_select('url_alias')
-          ->fields('source', array('source'))
+        $cv_node = db_select('url_alias', 'url_alias')
+           ->fields('url_alias', array('source'))
            ->condition('alias', $vsite_name.'/biocv/cv%', 'LIKE')
            ->execute();
-        $cv_node = substr($cv_node, 6, strlen($cv_node));
+        $cv_node = substr((string)$cv_node, 6, strlen((string)$cv_node));
 
         $new_menu['link_path'] = 'node/' . $cv_node->nid;
         $mlid = vsite_menu_menu_link_save($new_menu, $id);
