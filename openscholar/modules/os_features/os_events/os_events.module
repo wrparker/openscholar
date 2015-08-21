@@ -366,7 +366,7 @@ function os_events_process_node(&$variables) {
   $registrations_type = !empty($variables['node']->field_event_registration[LANGUAGE_NONE][0]['registration_type']);
   $register = '';
 
-  // Show the signup link if capacity isn't reached and no repeat rule is used.
+  // Show the signup link if capacity isn't reached.
   if ($registrations_type && os_events_event_registration_reach_capacity($variables['node'], $date)) {
     // In full view mode show a link to a modal.
     if ($variables['view_mode'] == 'full' && os_events_register_show_register_link($variables['node'], $date)) {
@@ -476,11 +476,13 @@ function _os_events_style_recurring_event($markup) {
  *  The event NID.
  * @param $modal_settings
  *  Ctools modal settings.
+ * @parm $sv_list
+ *  TRUE if this is included in a sv_list
  *
  * @return string
  *  Link for the revealing the modal.
  */
-function os_events_generate_modal_register_link($nid, $delta = FALSE, $modal_settings = array()) {
+function os_events_generate_modal_register_link($nid, $delta = FALSE, $modal_settings = array(), $sv_list = FALSE) {
   $modal_settings += array(
     'modalSize' => array(
       'type' => 'fixed',
@@ -505,11 +507,14 @@ function os_events_generate_modal_register_link($nid, $delta = FALSE, $modal_set
   if ($delta !== FALSE) {
     $path = $path . '/' . $delta;
 
-    $wrapper = entity_metadata_wrapper('node', $nid);
-    foreach ($wrapper->field_date as $d => $field_date) {
-      $date = $field_date->value();
-      if($d == $delta) continue;
-      $options[url($_GET['q'],array('query' => array('delta' => $d)))] = date('l, F j, Y', strtotime($date['value'].' UTC'));
+    // Display all date options if this node is not in a sv_list
+    if (!$sv_list) {
+      $wrapper = entity_metadata_wrapper('node', $nid);
+      foreach ($wrapper->field_date as $d => $field_date) {
+        $date = $field_date->value();
+        if($d == $delta) continue;
+        $options[url($_GET['q'],array('query' => array('delta' => $d)))] = date('l, F j, Y', strtotime($date['value'].' UTC'));
+      }
     }
 
     //Only allow switching if there is more than one option.
@@ -1702,15 +1707,26 @@ function os_events_theme_registry_alter(&$theme_registry) {
  * Changing the theme callback for the registration link theme.
  */
 function os_events_registration_link($variables) {
-  list(,$nid,) = explode('/', $variables['path']);
-  $node = node_load($nid);
-  $delta = isset($_GET['delta']) ? $_GET['delta'] : FALSE;
+
+  if (!empty($variables['entity'])) {
+    $node = $variables['entity'];
+    if (isset($node->date_id)) {
+      list(,,$field,$delta) = explode('.', $node->date_id);
+    }
+  } else {
+    list(,$nid,) = explode('/', $variables['path']);
+    $node = node_load($nid);
+  }
+
+  if (!isset($delta)) {
+    $delta = isset($_GET['delta']) ? $_GET['delta'] : FALSE;
+  }
+
   $repeating = $node->field_date['und'][0]['rrule'];
   $date = '';
   if ($repeating && $delta) {
     $date = $node->field_date['und'][$delta]['value'];
   }
-
 
   if (!os_events_event_registration_reach_capacity($node, $date)) {
     return '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
@@ -1720,7 +1736,7 @@ function os_events_registration_link($variables) {
     return;
   }
 
-  return os_events_generate_modal_register_link($nid, $delta);
+  return os_events_generate_modal_register_link($node->nid, $delta, array(), !empty($node->sv_list));
 }
 
 /**
