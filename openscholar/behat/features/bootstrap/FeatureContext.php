@@ -1965,13 +1965,8 @@ class FeatureContext extends DrupalContext {
     try {
       $source->import();
     } catch (\Exception $e) {
-      
-    }
 
-//    return array(
-//      new Step\When('I visit "node/' . $nid . '/import"'),
-//      new Step\When('I press "Import"'),
-//    );
+    }
   }
 
   /**
