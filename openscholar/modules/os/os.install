@@ -801,13 +801,13 @@ function os_update_7039() {
 }
 
 
-/*
+/**
  * Enabling OS Restful, and the new Media Browser.
  *
  * Revert modules that use the new feature.
  */
 function os_update_7040() {
-  module_enable(array('os_restful', 'media_browser'));
+  module_enable(array('os_app_base', 'os_restful', 'media_browser'));
 
   $revert = array(
     'field_instance'
