@@ -1384,3 +1384,14 @@ function os_publications_update_7033() {
     ->fields($fields)
     ->execute();
 }
+
+/**
+ * Fix the duplication of secondary title.
+ */
+function os_publications_update_7034() {
+  $csls = array('chicago-author-date');
+  foreach ($csls as $csl) {
+    os_publications_revert_citeproc_style($csl);
+  }
+
+}
