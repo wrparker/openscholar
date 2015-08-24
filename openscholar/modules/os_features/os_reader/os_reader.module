@@ -655,7 +655,7 @@ function os_reader_cron() {
     ->condition('ofi.id', $id, '>=')
     ->isNull('nr.entity_id')
     ->range(0, 500)
-    ->orderBy('ofi.created', 'DESC')
+    ->orderBy('ofi.id', 'ASC')
     ->execute()
     ->fetchAllAssoc('id');
 
