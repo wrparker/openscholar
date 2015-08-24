@@ -59,7 +59,7 @@ function media_browser_library_alter(&$libs) {
     $max_size_raw = $max_inline_raw;
   }
 
-  $max_size = preg_replace('/^([\d]+)([^\d\s])/', '$1 $2B', $max_size);
+  $max_size = preg_replace('/^([\d]+)([^\d\s]).*/', '$1 $2B', $max_size);
 
   $libs['media_browser']['js'] += array(
     $path . '/misc/MediaBrowserFilters.js' => array(),
