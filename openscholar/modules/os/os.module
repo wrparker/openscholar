@@ -908,8 +908,9 @@ function os_form_alter(&$form, &$form_state, $form_id) {
     );
   }
 
-  // Add a submit handler to close the overlay.
-  if (path_is_admin($_GET['q'])) {
+  // Add a submit handler to close the overlay when the submit button is
+  // pressed.
+  if (path_is_admin($_GET['q']) && isset($form_state['submitted']) && $form_state['submitted']) {
     array_unshift($form['#submit'], 'os_close_overlay');
   }
 }
