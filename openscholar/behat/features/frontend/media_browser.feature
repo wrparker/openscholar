@@ -5,7 +5,7 @@ Feature: foo
   Scenario: Invoke the browser from the standard media field
     Given I am logging in as "john"
       And I wait for page actions to complete
-      And I edit the entity "node" with title "John doe biography"
+      And I edit the entity "node" with title "About"
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
      Then I should see "Select files to Add"
@@ -14,7 +14,7 @@ Feature: foo
   Scenario: Navigate through tabs
     Given I am logging in as "john"
       And I wait for page actions to complete
-      And I edit the entity "node" with title "John doe biography"
+      And I edit the entity "node" with title "About"
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
       And I should see "Drag and drop files here."
@@ -27,7 +27,7 @@ Feature: foo
   Scenario: Verify files show up in the "Previously uploaded files" tab
     Given I am logging in as "john"
       And I wait for page actions to complete
-      And I edit the node "John doe biography" in the group "john"
+      And I edit the node "About" in the group "john"
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
      When I click on "Previously uploaded files" button in the media browser
