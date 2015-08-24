@@ -112,11 +112,7 @@ html.js input.throbbing {
     text-decoration: none !important;
 }
 
-#edit-field_upload-und-drop span.ng-binding.ng-scope,
-.media-browser-pane .file-clear button,
-.media-browser-pane #media-browser-file-select,
-.media-browser-pane .actions button,
-div[file-edit] .control button,
+
 a#edit-cancel,
 a.form-cancel {
   cursor: pointer;
