@@ -19,6 +19,7 @@ dependencies[] = filefield_paths
 dependencies[] = image
 dependencies[] = media
 dependencies[] = media_draggable
+dependencies[] = os_app_base
 dependencies[] = menu
 dependencies[] = os
 dependencies[] = os_files
