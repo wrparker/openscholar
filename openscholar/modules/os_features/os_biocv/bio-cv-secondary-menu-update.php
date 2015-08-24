@@ -5,6 +5,11 @@
  * Date: 8/17/15
  * Time: 11:24 AM
  */
+//define('DRUPAL_ROOT', "/Applications/MAMP/openscholar/www");
+
+//require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+//drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+
 
 $result = db_select('spaces_overrides', 'spaces_overrides')
     ->distinct()
@@ -47,20 +52,34 @@ while($id = $result->FetchField()) {
         $bio_node = db_select('url_alias', 'url_alias')
             ->fields('url_alias', array('source'))
             ->condition('alias', $vsite_name.'/biocv%', 'LIKE')
-            ->execute();
-        $bio_node = substr((string)$bio_node, 6, strlen((string)$bio_node));
+            ->orderby('alias', 'ASC')
+            ->execute()
+            ->fetchCol();
 
-        $new_menu['link_path'] = 'node/' . $bio_node->nid;
+        $bio_node = substr((string)$bio_node[0], 6);
+        if (!intval($bio_node)) {
+          echo "Unable to find BioCV node for site $id \n";
+          continue;
+        }
+
+        $new_menu['link_path'] = 'node/' . $bio_node;
         $mlid = vsite_menu_menu_link_save($new_menu, $id);
       }
       elseif ($type == "biocv/cv") {
         $cv_node = db_select('url_alias', 'url_alias')
            ->fields('url_alias', array('source'))
            ->condition('alias', $vsite_name.'/biocv/cv%', 'LIKE')
-           ->execute();
-        $cv_node = substr((string)$cv_node, 6, strlen((string)$cv_node));
+            ->orderby('alias', 'ASC')
+            ->execute()
+            ->fetchCol();
 
-        $new_menu['link_path'] = 'node/' . $cv_node->nid;
+        $cv_node = substr((string)$cv_node, 6);
+        if (!intval($cv_node)) {
+          echo "Unable to find CV node for site $id \n";
+          continue;
+        }
+
+        $new_menu['link_path'] = 'node/' . $cv_node;
         $mlid = vsite_menu_menu_link_save($new_menu, $id);
       }
     }
