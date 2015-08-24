@@ -61,8 +61,7 @@ Feature:
     Given I am logging in as "john"
      When I create a new repeating registration event in site "john" with title "Repeating Signup event" that repeats "4" times
       And I visit "john/calendar"
-     Then I should see the event "Repeating Signup event" in the LOP
-      And I visit "john/event/repeating-signup-event?delta=2"
+     Then I visit "john/event/repeating-signup-event?delta=2"
       And I should see "Sign up for this event"
       And I should see "another date"
       
@@ -72,8 +71,8 @@ Feature:
     Given I am logging in as "john"
      When I create a new registration event with title "Johns Event"
       And I visit "john/calendar"
-     Then I should see the event "Johns event" in the LOP
-      And I visit "john/event/Johns-event?delta=2"
+     Then I visit "john/event/Johns-event?delta=2"
       And I should see "Sign up for this event"
       And I should not see "another date"
+      
 
