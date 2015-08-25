@@ -1387,4 +1387,13 @@ function os_publications_update_7034() {
     'weight' => '157',
     'visible' => '1'
   ));
+
+  os_publications_restore_field('biblio_url', 'Working paper', array(
+    'common' => 1,
+    'vtab' => 5,
+    'autocomplete' => 0,
+    'required' => 0,
+    'weight' => '158',
+    'visible' => '1'
+  ));
 }
