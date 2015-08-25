@@ -2221,8 +2221,9 @@ class FeatureContext extends DrupalContext {
   public function iShouldSeeInTheColumnInTheRow($value, $column, $row) {
 
     $column_str = strtolower($column);
+    $row_str = strtolower($row);
     $text = $this->lower_case('text()');
-    $query = "//div[@id='content']//table/tbody/tr[contains(text(), '{$row}')]/td[count(//table/thead/tr/th[contains({$text}, '{$column_str}')]/preceding-sibling::th)+1]";
+    $query = "//div[@id='content']//{$text}[contains(.,'{$row_str}')]/ancestor::*[self::tr]/td[count(//table/thead/tr/th[contains({$text}, '${column_str}')]/preceding-sibling::th)+1]";
 
     $element = $this->getSession()->getPage()->find('xpath', $query);
     if (!$element) {
