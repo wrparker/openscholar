@@ -13,12 +13,14 @@ function os_events_install() {
   // Define the registration entity as a group content.
   og_create_field(OG_AUDIENCE_FIELD, 'registration', 'event_signup_simple');
 
+  db_drop_primary_key('registration_entity');
   db_add_field('registration_entity', 'repeating_event_date', array(
       'type' => 'varchar',
       'length' => 128,
       'not null' => FALSE,
       'description' => 'A optional date when a repeating event occurs.',
     ));
+  db_add_primary_key('registration_entity', array('entity_id', 'entity_type', 'repeating_event_date'));
 }
 
 function os_events_uninstall() {
