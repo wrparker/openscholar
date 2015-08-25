@@ -242,7 +242,15 @@ class sv_list_node_event extends sv_list_plugin  {
 
     $render = array();
     foreach ($entities as $node) {
-      $render[] = node_view($node, $options['display']);
+
+      //Set as non-page node
+      $new_entity = clone $node;
+      unset($new_entity->page);
+      $new_entity->sv_list = TRUE;
+
+      $render[] = node_view($new_entity, $options['display']);
+      //Garbage Collection
+      unset($new_entity);
     }
 
     return $render;
