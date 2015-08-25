@@ -1389,14 +1389,7 @@ function os_publications_update_7033() {
  * Fix the duplication of secondary title.
  */
 function os_publications_update_7034() {
-  $csls = array(
-    'apa',
-    'chicago-author-date',
-    'chicago-note-bibliography',
-    'chicago-fullnote-bibliography',
-    'mhra',
-  );
-  foreach ($csls as $csl) {
-    os_publications_revert_citeproc_style($csl);
-  }
+  $map = biblio_get_map('field_map', 'csl');
+  $map['collection-title'] = '';
+  biblio_set_map('field_map', 'csl', $map);
 }
