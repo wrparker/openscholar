@@ -610,4 +610,19 @@ trait RestfulTrait {
     $wrapper->{VSITE_ACCESS_FIELD}->set($level);
     $wrapper->save();
   }
+
+  /**
+   * @Given /^I try to post a "([^"]*)" as "([^"]*)" to "([^"]*)"$/
+   */
+  public function iTryToPostAAsTo($type, $account, $group) {
+    $gid = FeatureHelp::getNodeId($group);
+    $values = [
+      'label' => 'Test',
+      'body' => 'Test blog',
+      'vsite' => $gid,
+    ];
+    $request = $this->invokeRestRequest('post', $this->locatePath($type), ['access_token' => $this->restLogin($account)], $values, 1);
+
+    print_r($request);
+  }
 }
