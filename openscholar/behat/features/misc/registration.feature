@@ -73,7 +73,7 @@ Feature:
     Given I am logging in as "john"
      When I create a new registration event with title "Johns Event"
       And I visit "john/calendar"
-     Then I visit "john/event/Johns-event?delta=2"
+     Then I visit "john/event/Johns-event"
       And I should see "Johns Event"
       And I should see "Sign up for this event"
       And I should not see "another date"
