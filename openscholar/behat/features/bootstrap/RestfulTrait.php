@@ -618,11 +618,23 @@ trait RestfulTrait {
     $gid = FeatureHelp::getNodeId($group);
     $values = [
       'label' => 'Test',
-      'body' => 'Test blog',
+      'body' => 'Test ' . $type,
       'vsite' => $gid,
     ];
-    $request = $this->invokeRestRequest('post', $this->locatePath($type), ['access_token' => $this->restLogin($account)], $values, 1);
+    try {
+      $this->invokeRestRequest('post', $this->locatePath($this->endpoints[$type]), ['access_token' => $this->restLogin($account)], $values);
+      $this->meta['passed'] = TRUE;
+    } catch (\Exception $e) {
+      $this->meta['passed'] = FALSE;
+    }
+  }
 
-    print_r($request);
+  /**
+   * @Given /^I verify it "([^"]*)"$/
+   */
+  public function iVerifyIt($status) {
+    if (($status == 'passed' && !$this->meta['passed']) || $status == 'failed' && $this->meta['passed']) {
+      throw new Exception('The last request has failed');
+    }
   }
 }
