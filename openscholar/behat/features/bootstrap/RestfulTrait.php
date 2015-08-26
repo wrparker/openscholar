@@ -299,7 +299,7 @@ trait RestfulTrait {
     $delta = $this->getDelta($values);
 
     $request = $this->invokeRestRequest($this->operations[$operation], $path,
-      ['access_token' => $token],
+      ['X-CSRF-Token' => $token],
       [
         'vsite' => FeatureHelp::getNodeId($values['Site']),
         'delta' => $delta,
