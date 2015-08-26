@@ -1625,9 +1625,18 @@ function vsite_load_user_sites($user_id) {
   $vsites_owner = vsite_get_vsite_by_owner($user_id);
   // Create each site as a link.
   foreach ($vsites_owner as $site ) {
+    $space = spaces_get_space(nid);
     $node = node_load($site->group->nid);
     $items = array();
     $items[] = l($node->title, $site->get_absolute_url());
+    if (vsite_subsite_access('create', $space)) {
+      $subsite_url = 'site/register?parent='. $node->nid;
+      $subsite_link = l(t('Add subsite'), $site->get_absolute_url($subsite_url));
+      $items[] = array(
+        'data' => $subsite_link,
+        'class' => array('$subsite_link'),
+      );
+    };
     $delete_url = (node_access('delete', $node)) ? 'node/' . $node->nid . '/delete' : 'os/vsite/delete/' . $node->nid;
     $delete_link = l(t('Delete site'), $site->get_absolute_url($delete_url));
     $items[] = array(
