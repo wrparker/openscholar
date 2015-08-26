@@ -601,7 +601,7 @@ trait RestfulTrait {
   }
 
   /**
-   * @Given /^I define "([^"]*)" as a "([^"]*)"$/
+   * @Given /^I define "([^"]*)" as a "([^"]*)" group$/
    */
   public function iDefineAsA($group, $access_level) {
     $nid = FeatureHelp::getNodeId($group);
