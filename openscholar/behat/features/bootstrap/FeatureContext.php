@@ -1979,10 +1979,12 @@ class FeatureContext extends DrupalContext {
   public function iReImportFeedItem($node) {
     $nid = FeatureHelp::GetNodeId($node);
 
-    return array(
-      new Step\When('I visit "node/' . $nid . '/import"'),
-      new Step\When('I press "Import"'),
-    );
+    $source = feeds_source('os_reader', $nid);
+    try {
+      $source->import();
+    } catch (\Exception $e) {
+
+    }
   }
 
   /**
