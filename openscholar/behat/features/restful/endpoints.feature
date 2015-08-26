@@ -10,14 +10,12 @@ Feature:
     api/bio
     api/blog
     api/book
-    api/boxes
     api/class
     api/class_material
     api/cv
     api/event
     api/faq
     api/feed
-    api/layouts
     api/media_gallery
     api/news
     api/page
@@ -27,6 +25,5 @@ Feature:
     api/software_project
     api/software_release
     api/taxonomy?vsite=2
-    api/variables
     api/vocabulary?vsite=2
     """
