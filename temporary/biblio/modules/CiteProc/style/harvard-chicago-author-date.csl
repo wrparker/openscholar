@@ -434,36 +434,6 @@
       <date-part name="day" prefix=" "/>
     </date>
   </macro>
-  <macro name="collection-title">
-    <choose>
-      <if match="none" type="article-journal">
-        <choose>
-          <if match="none" is-numeric="collection-number">
-            <group delimiter=", ">
-              <text variable="collection-title" text-case="title"/>
-              <text variable="collection-number"/>
-            </group>
-          </if>
-          <else>
-            <group delimiter=" ">
-              <text variable="collection-title" text-case="title"/>
-              <text variable="collection-number"/>
-            </group>
-          </else>
-        </choose>
-      </if>
-    </choose>
-  </macro>
-  <macro name="collection-title-journal">
-    <choose>
-      <if type="article-journal">
-        <group delimiter=" ">
-          <text variable="collection-title"/>
-          <text variable="collection-number"/>
-        </group>
-      </if>
-    </choose>
-  </macro>
   <macro name="event">
     <group>
       <text term="presented at" suffix=" "/>
