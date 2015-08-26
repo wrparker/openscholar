@@ -5,10 +5,10 @@
  * Date: 8/17/15
  * Time: 11:24 AM
  */
-//define('DRUPAL_ROOT', "/Applications/MAMP/openscholar/www");
+define('DRUPAL_ROOT', "/Applications/MAMP/openscholar/www");
 
-//require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
-//drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
 
 $result = db_select('spaces_overrides', 'spaces_overrides')
@@ -44,6 +44,7 @@ while($id = $result->FetchField()) {
         "hidden" => $menu['hidden'],
         "external" => $menu['external'],
         "plid" => $menu['plid'],
+        "mlid" => $menu['mlid'], // Replace the current item.
       );
 
       $vsite_name = vsite_get_purl($vsite_obj);
@@ -56,7 +57,7 @@ while($id = $result->FetchField()) {
             ->execute()
             ->fetchCol();
 
-        $bio_node = substr((string)$bio_node[0], 6);
+        $bio_node = substr((string)$bio_node[0], 5);
         if (!intval($bio_node)) {
           echo "Unable to find BioCV node for site $id \n";
           continue;
@@ -73,7 +74,7 @@ while($id = $result->FetchField()) {
             ->execute()
             ->fetchCol();
 
-        $cv_node = substr((string)$cv_node, 6);
+        $cv_node = substr((string)$cv_node, 5);
         if (!intval($cv_node)) {
           echo "Unable to find CV node for site $id \n";
           continue;
