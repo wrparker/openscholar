@@ -693,6 +693,7 @@ function _replace_biocvs_with_pages($vsite_data) {
             "hidden" => $menu['hidden'],
             "external" => $menu['external'],
             "plid" => $menu['plid'],
+            "mlid" => $menu['mlid'],
           );
           if ($type == "biocv") {
             $new_menu['link_path'] = 'node/' . $bio_node->nid;
@@ -719,6 +720,7 @@ function _replace_biocvs_with_pages($vsite_data) {
             "hidden" => $menu['hidden'],
             "external" => $menu['external'],
             "plid" => $menu['plid'],
+            "mlid" => $menu['mlid'],
           );
           if ($type == "biocv") {
             $new_menu['link_path'] = 'node/' . $bio_node->nid;
