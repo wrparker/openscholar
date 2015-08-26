@@ -74,6 +74,37 @@ function os_events_views_default_views() {
   $handler->display->display_options['menu']['context_only_inline'] = 0;
   $handler->display->display_options['tab_options']['type'] = 'tab';
   $handler->display->display_options['tab_options']['weight'] = '0';
+
+  /* Display: Page */
+  $handler = $view->new_display('page', 'Page', 'page_2');
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Registration: Host entity ID */
+  $handler->display->display_options['arguments']['entity_id']['id'] = 'entity_id';
+  $handler->display->display_options['arguments']['entity_id']['table'] = 'registration';
+  $handler->display->display_options['arguments']['entity_id']['field'] = 'entity_id';
+  $handler->display->display_options['arguments']['entity_id']['default_action'] = 'not found';
+  $handler->display->display_options['arguments']['entity_id']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['entity_id']['default_argument_options']['code'] = 'return os_events_get_registraton_id_export();';
+  $handler->display->display_options['arguments']['entity_id']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['entity_id']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['entity_id']['summary_options']['items_per_page'] = '25';
+  /* Contextual filter: Registration: repeating_event_date (field_repeating_event_date) */
+  $handler->display->display_options['arguments']['field_repeating_event_date_value']['id'] = 'field_repeating_event_date_value';
+  $handler->display->display_options['arguments']['field_repeating_event_date_value']['table'] = 'field_data_field_repeating_event_date';
+  $handler->display->display_options['arguments']['field_repeating_event_date_value']['field'] = 'field_repeating_event_date_value';
+  $handler->display->display_options['arguments']['field_repeating_event_date_value']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['field_repeating_event_date_value']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_repeating_event_date_value']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_repeating_event_date_value']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_repeating_event_date_value']['limit'] = '0';
+  $handler->display->display_options['path'] = 'node/%/registrations/simple_view/%';
+  $handler->display->display_options['menu']['type'] = 'tab';
+  $handler->display->display_options['menu']['title'] = 'Simple view';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
+  $handler->display->display_options['tab_options']['type'] = 'tab';
+  $handler->display->display_options['tab_options']['weight'] = '0';
   $export['event_attendees'] = $view;
 
   $view = new view();

@@ -209,6 +209,12 @@ a.biblio-abstract-link.toggle.expanded {
   margin-left: 68px;
 }
 
+a.os_event-moredates-link{
+	font-size: 0.7em;
+	margin-left: 3px;
+	display:inline;
+}
+
 .biblio-export-links {
   float: right;
   text-align: left;

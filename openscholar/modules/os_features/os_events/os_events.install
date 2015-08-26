@@ -12,6 +12,33 @@ function os_events_install() {
 
   // Define the registration entity as a group content.
   og_create_field(OG_AUDIENCE_FIELD, 'registration', 'event_signup_simple');
+
+  db_drop_primary_key('registration_entity');
+  db_add_field('registration_entity', 'repeating_event_date', array(
+      'type' => 'varchar',
+      'length' => 128,
+      'not null' => FALSE,
+      'description' => 'A optional date when a repeating event occurs.',
+    ));
+  db_add_primary_key('registration_entity', array('entity_id', 'entity_type', 'repeating_event_date'));
+}
+
+function os_events_uninstall() {
+  db_drop_field('registration_entity', 'repeating_event_date');
+}
+
+// Implements hook_schema_alter().
+function os_events_schema_alter(&$schema) {
+  if (isset($schema['registration_entity'])) {
+    $schema['registration_entity']['fields']['repeating_event_date'] = array(
+      'type' => 'varchar',
+      'length' => 128,
+      'default' => '',
+      'not null' => TRUE,
+      'description' => 'A optional date when a repeating event occurs.',
+    );
+    $schema['registration_entity']['primary key'][] = 'repeating_event_date';
+  }
 }
 
 /**
@@ -208,9 +235,46 @@ function os_events_update_7017() {
   features_revert(array('os_events' => array('views')));
 }
 
-/**
+/*
  * When exporting events, export the last 40 and not the 30 days backwards.
  */
 function os_events_update_7018() {
   features_revert(array('os_events' => array('views')));
+}
+
+/**
+ * Add a date field to the registration entity table.
+ */
+function os_events_update_7019() {
+
+  $spec = array(
+      'type' => 'varchar',
+      'length' => 128,
+      'default' => '',
+      'not null' => TRUE,
+      'description' => 'A optional date when a repeating event occurs.',
+    );
+
+  if (!db_field_exists('registration_entity', 'repeating_event_date')) {
+    db_drop_primary_key('registration_entity');
+
+    db_add_field('registration_entity', 'repeating_event_date', $spec);
+
+    db_add_primary_key('registration_entity', array('entity_id', 'entity_type', 'repeating_event_date'));
+  }
+  features_revert(array('os_events' => array('field')));
+}
+
+/*
+ * Simple View for repeating events should only export the single date's event
+ */
+function os_events_update_7020() {
+  features_revert(array('os_events' => array('field','views')));
+}
+
+/*
+ * Add the repeating_signup field to registrations
+ */
+function os_events_update_7021() {
+  features_revert(array('os_events' => array('field_instance')));
 }

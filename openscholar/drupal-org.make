@@ -338,8 +338,8 @@ projects[purl][patch][] = "http://drupal.org/files/729862-9-purl-inbound-alter-m
 projects[purl][patch][] = "http://drupal.org/files/issues/purl-integrate_redirect_keep_options-1735266-4.patch"
 
 projects[registration][subdir] = "contrib"
-projects[registration][version] = 1.1
-projects[registration][patch][] = "https://drupal.org/files/issues/2183509-registration-broadcast-context-1.patch"
+projects[registration][version] = 1.4
+projects[registration][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/a92620d51664a4924aee531ace680cf7c06afd87/patches/registration_link_pass_entity.patch"
 
 projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
