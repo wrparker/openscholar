@@ -421,7 +421,7 @@ trait RestfulTrait {
       TRUE
     );
 
-    if ($request != "You can't manage boxes in this vsite.") {
+    if ($request != "Access denied.") {
       throw new Exception('The user did not got the expected message.');
     }
   }

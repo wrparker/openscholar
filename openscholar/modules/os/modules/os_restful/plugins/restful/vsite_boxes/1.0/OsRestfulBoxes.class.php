@@ -27,6 +27,8 @@ class OsRestfulBoxes extends \OsRestfulSpaces {
       // The current user can't manage boxes.
       $this->throwException("You can't manage boxes in this vsite.");
     }
+
+    return TRUE;
   }
 
   /**
