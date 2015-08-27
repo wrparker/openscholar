@@ -2526,5 +2526,4 @@ class FeatureContext extends DrupalContext {
       throw new Exception(sprintf("List of registrants is exported wrong."));
     }
   }
-
 }

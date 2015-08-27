@@ -637,4 +637,26 @@ trait RestfulTrait {
       throw new Exception('The last request has failed');
     }
   }
+
+  private function jsonContent() {
+    return $this->results->json()['data'];
+  }
+
+  /**
+   * @Given /^I should get empty json$/
+   */
+  public function iShouldGetEmptyJson() {
+    if (!empty($this->jsonContent())) {
+      throw new \Exception('The json is not empty.');
+    }
+  }
+
+  /**
+   * @Given /^I should not get empty json$/
+   */
+  public function iShouldNotGetEmptyJson() {
+    if (empty($this->jsonContent())) {
+      throw new \Exception('The json is empty.');
+    }
+  }
 }
