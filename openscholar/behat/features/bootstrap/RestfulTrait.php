@@ -297,11 +297,12 @@ trait RestfulTrait {
   public function iAAsWithTheSettings($operation, $account, TableNode $table) {
     list($values, $token, $path) = $this->getVariables('box', $account, $table);
     $delta = $this->getDelta($values);
+    $viste = FeatureHelp::getNodeId($values['Site']);
 
     $request = $this->invokeRestRequest($this->operations[$operation], $path,
       ['access_token' => $token],
       [
-        'vsite' => FeatureHelp::getNodeId($values['Site']),
+        'vsite' => $viste,
         'delta' => $delta,
         'widget' => $this->widgets[$values['Widget']],
         'options' => [
@@ -310,10 +311,10 @@ trait RestfulTrait {
       ]
     );
 
-
     $this->meta['delta'] = $request->json()['data']['delta'];
     $this->meta['widget'] = $request->json()['data'];
-    $this->results = $this->getClient()->get($path . '?delta=' . $delta)->json();
+    $headers = ['headers' => ['access_token' => $token]];
+    $this->results = $this->getClient()->get($path . '?delta=' . $delta . '&vsite=' . $viste, $headers)->json();
     $this->verifyOperationPassed($operation);
   }
 
