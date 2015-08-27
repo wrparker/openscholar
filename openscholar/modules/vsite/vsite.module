@@ -1635,7 +1635,7 @@ function vsite_load_user_sites($user_id) {
       $subsite_link = l(t('Add subsite'), 'site/register', array('query' => array('parent' => $node->nid)));
       $items[] = array(
         'data' => $subsite_link,
-        'class' => array('delete-link'),
+        'class' => array('add-subsite'),
       );
     }
     //Display "Delete site" link
