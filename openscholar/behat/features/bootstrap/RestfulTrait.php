@@ -657,7 +657,8 @@ trait RestfulTrait {
    * @Given /^I should not get empty json$/
    */
   public function iShouldNotGetEmptyJson() {
-    if (empty($this->jsonContent())) {
+    $json = $this->jsonContent();
+    if (empty($json)) {
       throw new \Exception('The json is empty.');
     }
   }
