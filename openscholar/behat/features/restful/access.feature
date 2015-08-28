@@ -3,7 +3,7 @@ Feature:
 
   @api @restful
   Scenario: Testing group content type cosuming
-    Given I define "obama" as a "private"
+    Given I define "obama" as a "private" group
      When I consume "api/blog/12" as "demo"
      Then I verify the request "failed"
 
