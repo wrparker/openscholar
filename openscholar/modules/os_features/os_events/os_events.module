@@ -590,17 +590,22 @@ function os_events_events_register($js, $node, $date_id = FALSE) {
   // Hide the OG audience field.
   $registration_form[OG_AUDIENCE_FIELD]['#access'] = FALSE;
 
+  $date = '';
+  if ($date_id !== FALSE) {
+    $date = $registration_form['field_repeating_event_date']['und'][0]['value']['#default_value'];
+  }
+
   if (!$js) {
     return $registration_form;
   }
 
-  if (!os_events_event_registration_reach_capacity($node) || ($repeating && $date_id === FALSE)) {
+  if (!os_events_event_registration_reach_capacity($node, $date) || ($repeating && $date_id === FALSE)) {
 
     if($repeating && $date_id == FALSE) {
       drupal_set_message(t('Unable to register for this repeating event, bad link detected.'), 'error');
     }
 
-    if (!os_events_event_registration_reach_capacity($node)) {
+    if (!os_events_event_registration_reach_capacity($node, $date)) {
       drupal_set_message(t('The event has reached his maximum capacity of registrations. Sorry.'), 'error');
     }
     $commands = array();
