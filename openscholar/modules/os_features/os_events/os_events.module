@@ -627,8 +627,8 @@ function os_events_events_register($js, $node, $date_id = FALSE) {
 /**
  * Extra Validation for registration submission
  *
- * @param unknown_type $form
- * @param unknown_type $form_state
+ * @param array $form
+ * @param array $form_state
  */
 function os_events_modal_validate($form, &$form_state) {
 
