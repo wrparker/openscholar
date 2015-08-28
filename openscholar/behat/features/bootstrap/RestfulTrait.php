@@ -314,7 +314,8 @@ trait RestfulTrait {
     $this->meta['delta'] = $request->json()['data']['delta'];
     $this->meta['widget'] = $request->json()['data'];
     $headers = ['headers' => ['access_token' => $token]];
-    $this->results = $this->getClient()->get($path . '?delta=' . $delta . '&vsite=' . $viste, $headers)->json();
+    $get = $this->getClient()->get($path . '/' . $delta . '?vsite=' . $viste, $headers);
+    $this->results = $get->json();
     $this->verifyOperationPassed($operation);
   }
 
