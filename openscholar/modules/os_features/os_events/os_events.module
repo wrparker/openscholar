@@ -625,6 +625,49 @@ function os_events_events_register($js, $node, $date_id = FALSE) {
 }
 
 /**
+ * Extra Validation for registration submission
+ *
+ * @param unknown_type $form
+ * @param unknown_type $form_state
+ */
+function os_events_modal_validate($form, &$form_state) {
+
+  if (!empty($form_state['values']['anon_mail'])) {
+
+    $date = '';
+    if (!empty($form_state['values']['field_repeating_event_date']['und'][0]['value'])) {
+      $date = $form_state['values']['field_repeating_event_date']['und'][0]['value'];
+    }
+
+    $email_query = new EntityFieldQuery();
+    $email_query->entityCondition('entity_type', 'registration')->propertyCondition('anon_mail', $form_state['values']['anon_mail']);
+
+    if ($date) {
+      $email_query->fieldCondition('field_repeating_event_date', 'value', $date);
+    } //Flter to just this occurance
+
+    if(count($email_query->execute())) {
+      form_set_error('anon_mail', t('You have already registered and may not register again.'));
+      return;
+    }
+
+    if ($user = user_load_by_mail($form_state['values']['anon_mail'])) {
+      $user_query = new EntityFieldQuery();
+      $user_query->entityCondition('entity_type', 'registration')->propertyCondition('user_uid', $user->uid);
+
+      if ($date) {
+        $user_query->fieldCondition('field_repeating_event_date', 'value', $date);
+      }
+
+      if(count($email_query->execute())) {
+        form_set_error('anon_mail', t('You have already registered and may not register again.'));
+        return;
+      }
+    }
+  }
+}
+
+/**
  * Submit handler; Dismissing the ctools modal window and display a message
  * when the registration is completed.
  */
@@ -1255,7 +1298,10 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
       // Set the date for the registration.
       $form_state['registration']->field_repeating_event_date['und'][0]['value'] = $date[$delta]['value'];
       // Use custom registration settings.
-      $form['#registration_settings'] = os_events_registration_repeating_entity_settings($registration->entity_id, $registration->entity_type, $date[$delta]['value']);
+      $settings_overrides = os_events_registration_repeating_entity_settings($registration->entity_id, $registration->entity_type, $date[$delta]['value']);
+      if ($settings_overrides) {
+        $form['#registration_settings'] = $settings_overrides;
+      }
 
       //Set the default in the form
       $form['field_repeating_event_date']['und'][0]['value']['#default_value'] = $date[$delta]['value'];
@@ -1296,6 +1342,7 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   $form_state['rebuild'] = TRUE;
   unset($form['actions'], $form['field_full_name'], $form['field_department'], $form['anon_mail'], $form['user']);
 
+  $form['#validate'][] = 'os_events_modal_validate';
   $form['#submit'][] = 'os_events_modal_submit';
 }
 
