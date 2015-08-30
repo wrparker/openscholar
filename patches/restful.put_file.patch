@@ -83,34 +83,27 @@ index b391aba..c15d501 100644
  files[] = tests/RestfulCurlBaseTestCase.test
  files[] = tests/RestfulDataProviderCToolsPluginsTestCase.test
 diff --git a/restful.module b/restful.module
-index 54100b1..4074d89 100644
+index 54100b1..56d7534 100644
 --- a/restful.module
 +++ b/restful.module
-@@ -573,17 +573,77 @@ function restful_parse_request() {
+@@ -573,17 +573,71 @@ function restful_parse_request() {
    }
    elseif ($method == \RestfulInterface::POST) {
      $request = $_POST;
--  }
--
++    if ($_FILES) {
++      $request['file_upload'] = true;
++    }
+   }
+ 
 -  if (!$request && $query_string = _restful_get_query_string_from_php_input()) {
 -    // When trying to POST using curl on simpleTest it doesn't reach
 -    // $_POST, so we try to re-grab it here.
 -    // Also, sometimes the client might send the input still encoded.
 -    if ($decoded_json = drupal_json_decode($query_string)) {
 -      $request = $decoded_json;
-+    if ($_FILES) {
-+      $request['file_upload'] = true;
-     }
+-    }
 -    else {
 -      parse_str($query_string, $request);
-+  }
-+  elseif ($method == \RestfulInterface::HEAD) {
-+    $request = array('method' => $method);
-+  }
-+  elseif ($method == \RestfulInterface::DELETE) {
-+    $request = array('method' => $method);
-+  }
-+
 +  // if we get this far, then we need to do special processing on php://input to get the data
 +  if (!$request) {
 +    $temp = explode(';', isset($_SERVER['CONTENT_TYPE']) ? $_SERVER['CONTENT_TYPE'] : 'unknown');
