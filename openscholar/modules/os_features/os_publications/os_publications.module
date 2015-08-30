@@ -930,7 +930,6 @@ function _os_publications_biblio_entry_alter($markup, $node) {
   // the node.
   if (!empty($node->biblio_url)) {
     $biblio_url = $node->biblio_url;
-    $biblio_check_url = l($biblio_url,$biblio_url);
     $biblio_url_title = !empty($node->biblio_url_title) ? $node->biblio_url_title : t("Publisher's Version");
     $new_biblio_url = l($biblio_url_title,$biblio_url);
     if ($insert === FALSE) {
@@ -939,6 +938,12 @@ function _os_publications_biblio_entry_alter($markup, $node) {
     else {
       $html = substr_replace($html, ' ' . $new_biblio_url, $insert, 0);
     }
+  }
+
+  $wrapper = entity_metadata_wrapper('node', $node);
+
+  if ($url = $wrapper->field_biblio_redirect->value()) {
+    $html = preg_replace("/href=\"([^\"]*)\"/", 'href="' . $url['url'] . '"', $html);
   }
 
   return $html;
