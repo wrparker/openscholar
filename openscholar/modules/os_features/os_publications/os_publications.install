@@ -1399,8 +1399,17 @@ function os_publications_update_7034() {
 }
 
 /**
- * Add redirect field.
+ * Fix the duplication of secondary title.
  */
 function os_publications_update_7035() {
+  $map = biblio_get_map('field_map', 'csl');
+  $map['collection-title'] = '';
+  biblio_set_map('field_map', 'csl', $map);
+}
+
+/**
+ * Add redirect field.
+ */
+function os_publications_update_7036() {
   features_revert(array('os_publications' => array('field_base', 'field_instance')));
 }
