@@ -139,6 +139,20 @@ function cp_menu() {
     'description' => t('Control various settings of your site, such as making your site private or configuring your site to integrate with 3rd party services.'),
   );
 
+  $items["cp/apps"] = array(
+    'title' => 'Apps',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array(
+      'cp_app_settings_form',
+    ),
+    'file' => 'cp.form.inc',
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => 'spaces_access_admin',
+    'weight' => 30,
+    'description' => t('Manage and customize your site\'s apps.')
+  );
+
+
   if (module_exists('contact')) {
     $items['cp/support'] = array(
       'title' => 'Support',
