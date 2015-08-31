@@ -1870,7 +1870,12 @@ function os_events_registration_entity_settings_form_submit($form, &$form_state)
 
   $uri = entity_uri($entity['entity_type'], entity_load_single($entity['entity_type'], $entity['entity_id']));
 
-  $form_state['redirect'] = $uri['path'];
+  $query = array();
+  if (!empty($form_state['values']['field_repeating_event_date'])) {
+    $query['delta'] = $_GET['delta'];
+  }
+
+  $form_state['redirect'] = array($uri['path'],array('query' => $query));
 }
 
 /**
