@@ -449,6 +449,12 @@ tr.error /* High priority messages. See also the .error declaration below. */ {
   word-wrap: break-word;
 }
 
+a.os_event-moredates-link,
+a.os_event-default-settings-link{
+  font-size: 0.7em;
+  margin-left: 3px;
+  display:inline;
+}
 
 .lt-ie8 .node-unpublished > *,
 .lt-ie8 .comment-unpublished > * {
