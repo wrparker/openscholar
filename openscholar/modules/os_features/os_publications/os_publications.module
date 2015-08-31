@@ -940,12 +940,6 @@ function _os_publications_biblio_entry_alter($markup, $node) {
     }
   }
 
-  $wrapper = entity_metadata_wrapper('node', $node);
-
-  if ($url = $wrapper->field_biblio_redirect->value()) {
-    $html = preg_replace("/href=\"([^\"]*)\"/", 'href="' . $url['url'] . '"', $html);
-  }
-
   return $html;
 }
 
