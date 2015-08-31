@@ -1314,6 +1314,9 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
       );
 
     }
+  } elseif (isset($form['field_repeating_event_date'])) {
+    $form['field_repeating_event_date']['#access'] = FALSE;
+    $form['og_group_ref']['#access'] = FALSE;
   }
 
   $form['who_is_registering'] = array(
