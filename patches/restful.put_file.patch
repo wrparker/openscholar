@@ -4,7 +4,7 @@ index 15021c5..051d216 100644
 +++ b/modules/restful_example/plugins/restful/taxonomy_term/tags/1.0/RestfulEntityTaxonomyTermTags.class.php
 @@ -6,4 +6,16 @@
   */
- 
+
  class RestfulEntityTaxonomyTermTags extends \RestfulEntityBaseTaxonomyTerm {
 +
 +  /**
@@ -20,54 +20,18 @@ index 15021c5..051d216 100644
 +  }
  }
 diff --git a/plugins/restful/RestfulEntityBaseTaxonomyTerm.php b/plugins/restful/RestfulEntityBaseTaxonomyTerm.php
-index 4d44dbb..3a0bb3e 100644
+index 4d44dbb..cf9f163 100644
 --- a/plugins/restful/RestfulEntityBaseTaxonomyTerm.php
 +++ b/plugins/restful/RestfulEntityBaseTaxonomyTerm.php
-@@ -18,13 +18,11 @@ class RestfulEntityBaseTaxonomyTerm extends RestfulEntityBase {
-    */
-   protected function setPropertyValues(EntityMetadataWrapper $wrapper, $null_missing_fields = FALSE) {
-     $term = $wrapper->value();
--    if (empty($term->tid) && (!taxonomy_vocabulary_machine_name_load($this->getBundle()))) {
--      // This is a new term object but we don't have a vocabulary with the name
--      // from the plugin definition.
-+    if (!empty($term->tid)) {
+@@ -24,7 +24,7 @@ class RestfulEntityBaseTaxonomyTerm extends RestfulEntityBase {
        return;
      }
- 
+
 -    $vocabulary = taxonomy_vocabulary_machine_name_load($this->getBundle());
 +    $vocabulary = taxonomy_vocabulary_machine_name_load($term->vocabulary_machine_name);
      $term->vid = $vocabulary->vid;
- 
+
      parent::setPropertyValues($wrapper, $null_missing_fields);
-@@ -45,28 +43,4 @@ class RestfulEntityBaseTaxonomyTerm extends RestfulEntityBase {
-     }
-     return parent::checkPropertyAccess($op, $public_field_name, $property, $wrapper);
-   }
--
--  /**
--   * Overrides \RestfulEntityBaseTaxonomyTerm::checkEntityAccess().
--   *
--   * Taxonomy access for different operations has defined in the menu in various
--   * ways. This method will implement the same access logic of the menu items.
--   */
--  protected function checkEntityAccess($op, $entity_type, $entity) {
--    if ($this->getMethod() == \RestfulBase::GET) {
--      $permission = 'access content';
--    }
--    else {
--      if ($this->getMethod() == \RestfulBase::POST) {
--        $permission = 'administer taxonomy';
--      }
--      else {
--        $vocabulary = taxonomy_vocabulary_machine_name_load($this->getBundle());
--        $operation = $this->getMethod() == \RestfulBase::DELETE ? 'delete' : 'edit';
--        $permission = $operation . ' terms in ' . $vocabulary->vid;
--      }
--    }
--
--    return user_access($permission, $this->getAccount());
--  }
- }
 diff --git a/restful.info b/restful.info
 index b391aba..c15d501 100644
 --- a/restful.info
@@ -83,10 +47,10 @@ index b391aba..c15d501 100644
  files[] = tests/RestfulCurlBaseTestCase.test
  files[] = tests/RestfulDataProviderCToolsPluginsTestCase.test
 diff --git a/restful.module b/restful.module
-index 54100b1..56d7534 100644
+index 54100b1..d660818 100644
 --- a/restful.module
 +++ b/restful.module
-@@ -573,17 +573,71 @@ function restful_parse_request() {
+@@ -573,17 +573,84 @@ function restful_parse_request() {
    }
    elseif ($method == \RestfulInterface::POST) {
      $request = $_POST;
@@ -94,7 +58,7 @@ index 54100b1..56d7534 100644
 +      $request['file_upload'] = true;
 +    }
    }
- 
+
 -  if (!$request && $query_string = _restful_get_query_string_from_php_input()) {
 -    // When trying to POST using curl on simpleTest it doesn't reach
 -    // $_POST, so we try to re-grab it here.
@@ -120,6 +84,19 @@ index 54100b1..56d7534 100644
 +        // php://input is an empty string when the content-type is multipart/form-data
 +        // There's nothing we can do to get this data
 +        throw new RestfulBadRequestException('Cannot use multipart/form-data with HTTP Method ' . $method . '.');
++        break;
++      case 'application/x-www-form-urlencoded':
++        if (!$request && $query_string = _restful_get_query_string_from_php_input()) {
++          // When trying to POST using curl on simpleTest it doesn't reach
++          // $_POST, so we try to re-grab it here.
++          // Also, sometimes the client might send the input still encoded.
++          if ($decoded_json = drupal_json_decode($query_string)) {
++            $request = $decoded_json;
++          }
++          else {
++            parse_str($query_string, $request);
++          }
++        }
 +        break;
 +      case 'unknown':
 +        // if content type is undefined, we try a couple things and if they don't work, oh well
@@ -166,7 +143,7 @@ index 54100b1..56d7534 100644
 +        break;
      }
    }
- 
+
 diff --git a/tests/RestfulCRUDTaxonomyTermTestCase.test b/tests/RestfulCRUDTaxonomyTermTestCase.test
 deleted file mode 100644
 index 3921103..0000000
@@ -356,7 +333,7 @@ index a64132d..3cc3794 100644
    protected function httpRequest($url, $method = \RestfulInterface::GET, $body = NULL, $headers = array(), $use_token = TRUE) {
 -    $format = 'json';
 +    $format = 'x-www-form-encoded';
- 
+
      switch ($method) {
        case \RestfulInterface::GET:
 diff --git a/tests/modules/restful_test/plugins/restful/taxonomy_term/test_tags/1.0/RestfulEntityTaxonomyTermTestTags.class.php b/tests/modules/restful_test/plugins/restful/taxonomy_term/test_tags/1.0/RestfulEntityTaxonomyTermTestTags.class.php
@@ -365,7 +342,7 @@ index 4a7b36c..c3ace7e 100644
 +++ b/tests/modules/restful_test/plugins/restful/taxonomy_term/test_tags/1.0/RestfulEntityTaxonomyTermTestTags.class.php
 @@ -6,4 +6,16 @@
   */
- 
+
  class RestfulEntityTaxonomyTermTestTags extends \RestfulEntityBaseTaxonomyTerm {
 +
 +  /**
