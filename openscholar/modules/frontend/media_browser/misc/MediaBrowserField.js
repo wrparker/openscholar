@@ -9,6 +9,18 @@
         scope.showHelp = false;
         scope.panes = ['upload', 'web', 'library'];
 
+        var types = {};
+        scope.allowedTypes = scope.types.split(',');
+        scope.extensionsFull = [];
+        for (var i = 0; i < scope.allowedTypes.length; i++) {
+          var type = scope.allowedTypes[i];
+          types[type] = type;
+          if (Drupal.settings.extensionMap[type] && Drupal.settings.extensionMap[type].length) {
+            scope.extensionsFull = scope.extensionsFull.concat(Drupal.settings.extensionMap[type]);
+          }
+        }
+        scope.extensionsFull.sort();
+
         if (scope.selectedFiles.length == 0) {
           try {
             var fids = Drupal.settings.mediaBrowserField[elem.parent().attr('id')].selectedFiles,
@@ -38,7 +50,7 @@
           var params = {
             files: $files,
             onSelect: scope.addFile,
-            types: scope.types
+            types: types
           };
           mbModal.open(params);
         }
@@ -58,15 +70,6 @@
         }
 
 
-        scope.allowedTypes = scope.types.split(',');
-        scope.extensionsFull = [];
-        for (var i = 0; i < scope.allowedTypes.length; i++) {
-          var type = scope.allowedTypes[i];
-          if (Drupal.settings.extensionMap[type] && Drupal.settings.extensionMap[type].length) {
-            scope.extensionsFull = scope.extensionsFull.concat(Drupal.settings.extensionMap[type]);
-          }
-        }
-        scope.extensionsFull.sort();
 
         elem.parent().find(' > *').not(elem).remove();
       }
