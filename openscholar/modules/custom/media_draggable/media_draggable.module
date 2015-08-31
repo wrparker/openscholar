@@ -201,6 +201,15 @@ function media_draggable_field_widget_process($element, &$form_state, &$form) {
       $element[$k] = $temp;
     }
   }
+  elseif (!empty($form_state['input'])) {
+    // Field is empty after saving form
+    // Remove all existing files.
+    foreach (element_children($element) as $c) {
+      if (is_numeric($c)) {
+        unset($element[$c]);
+      }
+    }
+  }
 
   return $element;
 }
