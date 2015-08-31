@@ -2221,13 +2221,16 @@ class FeatureContext extends DrupalContext {
   public function iShouldSeeInTheColumnInTheRow($value, $column, $row) {
 
     $column_str = strtolower($column);
+    $row_str = strtolower($row);
     $text = $this->lower_case('text()');
-    $query = "//div[@id='content']//table/tbody/tr[contains(text(), '{$row}')]/td[count(//table/thead/tr/th[contains({$text}, '{$column_str}')]/preceding-sibling::th)+1]";
+    $dot = $this->lower_case('.');
+    $query = "//table//text()[contains({$dot},'{$row_str}')]/ancestor::*[self::tr]/td[count(//table/thead/tr/th[contains({$text}, '{$column_str}')]/preceding-sibling::th)+1]";
 
     $element = $this->getSession()->getPage()->find('xpath', $query);
     if (!$element) {
       throw new Exception(sprintf("The column \"%s\" or row \"%s\" was not found", $column, $row));
     }
+
     if ($element->getText() != $value) {
       throw new Exception(sprintf("The value for the %s column should be %s but it is %s", $column, $value, $element->getText()));
     }
@@ -2440,7 +2443,7 @@ class FeatureContext extends DrupalContext {
     $element->click();
   }
 
-  /*
+  /**
    * @Given /^I am deleting the file "([^"]*)"$/
    */
   public function iAmDeletingTheFile($filename) {

@@ -571,7 +571,9 @@
             dialog: angular.extend([], defaults.dialog, params.dialog),
             browser: angular.extend({}, defaults.browser, params.browser),
             onSelect: params.onSelect || defaults.onSelect,
-            types: params.types || defaults.types
+            types: params.types || defaults.types,
+            max_filesize: params.max_filesize || null,
+            max_filesize_raw: params.max_filesize_raw || null
         };
 
         if (params.files) {
