@@ -50,7 +50,7 @@ trait RestfulTrait {
    */
   private $widgets = [
     'Terms' => 'os_taxonomy_fbt',
-    'Bio' => 'os_boxes_bio',
+    'Pub' => 'os_boxes_pub_year',
   ];
 
   /**
