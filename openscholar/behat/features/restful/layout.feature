@@ -1,7 +1,7 @@
 Feature:
   Test layout.
 
-  @api @restful @now2
+  @api @restful
   Scenario: CRUD-ing a layout.
     Given I "create" a layout as "john" with the settings:
       | Site | Context  | Box |
