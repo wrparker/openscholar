@@ -793,11 +793,72 @@ function os_update_7038(&$sandbox) {
   }
 }
 
-
 /**
  * Remove bio and cv options from content list after the os_biocv module has been uninstalled
  */
 function os_update_7039() {
   features_revert(array('cp_content' => array('views_view')));
+}
+
+/**
+ * Remove instances of facebook widgets that are no longer supported by OS
+ */
+function os_update_7040() {
+  $status = "";
+
+  $deltas = array(
+    'fb_social_likebox',
+    'fb_social_activityf',
+    'fb_social_recommend',
+    'fb_social_facepile',
+    'fb_social_livestream',
+    'fb_social_send'
+  );
+
+  // loop through different box types
+  foreach ($deltas as $delta) {
+    $query = db_select('spaces_overrides', 'so')->fields('so', array('id','object_id'));
+    $query->condition("so.type", 'og');
+    $query->condition('so.object_type','boxes', '=');
+    $query->condition('so.value', '%' . $delta . '%', 'like');
+    $results = $query->execute();
+
+    $count = "0";
+    // loop through instances of box type
+    while ($box = $results->fetchObject()) {
+      $query = db_select('spaces_overrides', 'so')->fields('so', array('object_id', 'value'));
+      $query->condition("so.type", 'og');
+      $query->condition("so.id", $box->id);
+      $query->condition('so.object_type','context', '=');
+      $query->condition('so.value', '%' . $box->object_id . '%', 'like');
+      $contexts = $query->execute();
+
+      // loop through places where instance is placed on the site
+      while ($context = $contexts->fetchObject()) {
+        $boxes = unserialize($context->value);
+
+        // unset index for widget and update spaces_overrides row
+        if (isset($boxes['blocks']["boxes-" . $box->object_id])) {
+          unset($boxes['blocks']["boxes-" . $box->object_id]);
+          $update_query = db_update('spaces_overrides')
+            ->fields(array('type' => 'og', 'id' => $box->id, 'object_type' => 'context', 'object_id' => $context->object_id, 'value' => serialize($boxes)))
+            ->condition('id', $box->id, "=")
+            ->condition('object_id', $context->object_id, "=")
+            ->condition('object_type', 'context', "=")
+            ->execute();
+        }
+      }
+
+      // remove boxes spaces_overrides row for widget
+      $delete_query = db_delete('spaces_overrides')
+        ->condition('id', $box->id, "=")
+        ->condition('object_id', $box->object_id, "=")
+        ->condition('object_type', "boxes", "=")
+        ->execute();
+      $count++;
+    }
+    $status .= "$count instances of the $delta widget removed. <br />";
+  }
+  return $status;
 }
 
