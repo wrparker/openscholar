@@ -120,14 +120,21 @@ function os_profiles_init() {
     $file = NULL;
     if ($person_photo) {
       $file_info = os_profiles_get_origin_node_values($person_photo['file']['uri'] . '.json', array('url'));
-      $copy_file = os_copy_file($file_info->values['url'], FALSE);
+      // If the file was updated within 2 min of the node then update it as well.
+      if (($data->values['changed'] - 120) < $file_info->values['timestamp']) {
+        $copy_file = os_copy_file($file_info->values['url'], FALSE);
 
-      if ($copy_file['type'] == 'file') {
-        $file = $copy_file['file'];
+        if ($copy_file['type'] == 'file') {
+          $file = $copy_file['file'];
+        }
       }
     }
 
-    os_profiles_insert_image($node, $file, $data->data['person_photo_dimension']);
+    if ($file || !isset($file_info)) {
+      os_profiles_insert_image($node, $file, $data->data['person_photo_dimension']);
+    } else {
+      node_save($node);
+    }
   }
 
   // Delete the UUID that needs to be updated and the time in which the UUID
