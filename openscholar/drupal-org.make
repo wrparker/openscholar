@@ -348,7 +348,7 @@ projects[restful][subdir] = "contrib"
 projects[restful][download][type] = git
 projects[restful][download][url] = "https://github.com/RoySegall/restful.git"
 projects[restful][download][branch] = 444
-projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/220c0427bf15f126ef4d96490adab66ffbdc0e10/patches/restful.put_file.patch"
+projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/839d0cc214f2422e924e35d33133d1268b8cc1cd/patches/restful.put_file.patch"
 ;projects[restful][download][branch] = "7.x-1.x"
 ;projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
 
