@@ -300,7 +300,7 @@ trait RestfulTrait {
     $viste = FeatureHelp::getNodeId($values['Site']);
 
     $request = $this->invokeRestRequest($this->operations[$operation], $path,
-      ['X-CSRF-Token' => $token],
+      ['access_token' => $token],
       [
         'vsite' => $viste,
         'delta' => $delta,
