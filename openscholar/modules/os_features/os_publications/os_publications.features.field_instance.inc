@@ -286,7 +286,7 @@ function os_publications_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_biblio_redirect',
-    'label' => 'Biblio redirect',
+    'label' => 'Link citation directly to: ',
     'required' => 0,
     'settings' => array(
       'attributes' => array(
