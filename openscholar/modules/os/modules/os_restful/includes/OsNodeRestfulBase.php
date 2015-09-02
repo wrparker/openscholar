@@ -76,7 +76,7 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
       spaces_set_space(spaces_load('og', $group->nid));
     }
 
-    $manager = og_user_access('node', $entity->nid, 'administer users', $this->getAccount());
+    $manager = og_user_access('node', $group->nid, 'administer users', $this->getAccount());
 
     if ($is_group) {
       // In addition to the node access check, we need to see if the user can

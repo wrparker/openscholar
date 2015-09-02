@@ -25,6 +25,8 @@ class OsRestfulVariables extends OsRestfulSpaces {
       // The current user can't manage boxes.
       $this->throwException('You are not authorised to manage the variables of the group.');
     }
+
+    return true;
   }
 
   /**

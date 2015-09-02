@@ -3,11 +3,10 @@ Feature:
 
   @api @restful
   Scenario: Verify the endpoint permission.
-    Given I can't visit "api/group"
-     When I am logging in as "demo"
-      And I can't visit "api/group"
-     Then I am logging in as "admin"
-      And I visit "api/group"
+    Given I consume "api/group" as "demo"
+      And I should get empty json
+     When I consume "api/group" as "admin"
+      And I should not get empty json
 
   @api @restful
   Scenario: Create a new group via restful.
