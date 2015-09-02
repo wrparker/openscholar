@@ -143,13 +143,16 @@ function os_events_export_to_csv($node, $delta = FALSE) {
 function os_events_event_registration_reach_capacity($node, $date = '') {
   // Check how much registration exists for this event.
   $query = new EntityFieldQuery();
-  $registrations_number = $query
-    ->entityCondition('entity_type', 'registration')
+  $query->entityCondition('entity_type', 'registration')
     ->propertyCondition('entity_id', $node->nid)
-    ->propertyCondition('entity_type', 'node')
-    ->fieldCondition('field_repeating_event_date', 'value', $date)
-    ->count()
-    ->execute();
+    ->propertyCondition('entity_type', 'node');
+
+  // Get all registrations unless we specify a date to check.
+  if ($date) {
+    $query->fieldCondition('field_repeating_event_date', 'value', $date);
+  }
+
+  $registrations_number = $query->count()->execute();
 
   // Get the settings of the registration for this event.
   $settings = os_events_registration_repeating_entity_settings('node', $node->nid, $date);
