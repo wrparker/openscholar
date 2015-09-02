@@ -1094,7 +1094,7 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
       '#markup' => '<span class="date-display-single">'. t('Changing settings for @date', array('@date' => date('l, F j, Y', strtotime($repeating_event_date.' UTC'))))."</span>",
       '#weight' => -10,
     );
-  } elseif ($repeating_event_date === '') {
+  } elseif ($repeating_event_date === '' && count($wrapper->field_date) > 1) {
     // Changing for all instances.
     $form['field_repeating_event_date_text'] = array(
       '#type' => 'item',
