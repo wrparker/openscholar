@@ -90,22 +90,19 @@ function cp_app_settings_form($form, &$form_state) {
       $position = array_search('system_settings_form_submit', $form['#submit'], TRUE);
       if ($position !== FALSE) {
         $form['#submit'][$position] = 'cp_app_system_settings_form_submit';
-
         if (isset($form['actions']) && count(element_children($form['actions'])) == 1 &&
           spaces_access_admin_perms(array('administer spaces'))
         ) {
-            $form['actions']['reset'] = array(
-              '#type' => 'submit',
-              '#value' => t('Reset to defaults'),
-            );
-            $form['actions']['submit']['#value'] = t('Save for @name', array(
-              '@name' => $space->title(),
-            ));
+        $form['actions']['reset'] = array(
+          '#type' => 'submit',
+          '#value' => t('Reset to defaults'),
+          );
+          $form['actions']['submit']['#value'] = t('Save for @name', array(
+            '@name' => $space->title(),
+          ));
         }
-        dpm($form);
-      }
-    }
-
+     }
+   }
     // Add the #space value to all forms generated in a space to enable non-
     // purl space-types to handle AHAH callbacks. @see spaces_ahah_check()
     $form['#space'] = array(
@@ -118,37 +115,33 @@ function cp_app_settings_form($form, &$form_state) {
 }
 
 function cp_app_system_settings_form_submit($form, &$form_state) {
+
   if ($space = spaces_get_space()) {
     $op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
 
     // Exclude unnecessary elements.
     form_state_values_clean($form_state);
+    //foreach ($form['spaces_features'] as $feature => #default_value) {
+  //}
+    dpm($form['spaces_features']);
+    dpm($form_state['values']);
 
     foreach ($form_state['values'] as $key => $value) {
       if ($op == t('Reset to defaults')) {
-        // variable_del($key);
         $space->controllers->variable->del($key);
-      }
-      elseif ($preset && $op == t('Save to @title', array('@title' => $preset->title))) {
-        $space->controllers->variable->del($key);
-        $preset->value['variable'][$key] = $value;
       }
       else {
-        if (is_array($value) && isset($form_state['values']['array_filter'])) {
+        /*if (is_array($value) && isset($form_state['values']['array_filter'])) {
           $value = array_keys(array_filter($value));
-        }
-        // variable_set($key, $value);
-        // @TODO: Implement selective saving -- e.g. only save if
-        // differs from parent value (preset first, then check original).
+        }*/
         $space->controllers->variable->set($key, $value);
+        dpm($key);
+        dpm($value);
+
       }
     }
     if ($op == t('Reset to defaults')) {
       drupal_set_message(t('The configuration options have been reset to their default values for %space.', array('%space' => $space->title())));
-    }
-    elseif ($preset && $op == t('Save to @title', array('@title' => $preset->title))) {
-      drupal_set_message(t('The configuration options have been saved for %title.', array('%title' => $preset->title)));
-      cp_app_preset_save($preset);
     }
     else {
       drupal_set_message(t('The configuration options have been saved for %space.', array('%space' => $space->title())));
