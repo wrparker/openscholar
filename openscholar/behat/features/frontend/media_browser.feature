@@ -34,7 +34,7 @@ Feature: foo
      Then I should see "slideshow1.jpg"
 
   @media_browser @javascript
-  Scenario: Test the file upload work flow for a single, valid file
+  Scenario: Test the file upload work flow for a single, valid, non-duplicate file
     Given I am logging in as "john"
       And I wait for page actions to complete
       And I edit the node "About" in the group "john"
@@ -45,3 +45,15 @@ Feature: foo
      When I click on the "Save" control
      Then I should see the media browser "Previously uploaded files" tab is active
       And I should see "kitten-2.jpg" in the "div.media-row.new" element
+
+  @media_browser @javascript
+  Scenario: Test the file upload work flow for multiple, valid, non-duplicate files
+    Given I am logging in as "john"
+      And I wait for page actions to complete
+      And I edit the node "About" in the group "john"
+     When I click on the "Upload" control
+      And I wait "1 second" for the media browser to open
+      And I drop the files "rubber-duck.jpg, conservatory_of_flowers3.jpg" onto the "Drag and drop files here." area
+     Then I should see the media browser "Previously uploaded files" tab is active
+      And I should see "rubber-duck.jpg" in a "div.media-row.new" element
+      And I should see "conservatory_of_flowers3.jpg" in a "div.media-row.new" element

@@ -2343,10 +2343,68 @@ class FeatureContext extends DrupalContext {
         e.dataTransfer = {
           files : $inputId.get(0).files
         };
-        console.log(e);
         var result = document.evaluate(\"$target\", document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
         var elem = result.iterateNext();
-        console.log(elem);
+        elem.dispatchEvent(e);");
+    }
+    else {
+      throw new Exception('Mink files_path parameter not configured.');
+    }
+  }
+
+  /**
+   * @When /^I drop the files "([^"]*)" onto the "([^"]*)" area$/
+   */
+  public function iDropFilesOnto($files, $area) {
+    // Make sure the element we want exists on the page.
+    $xpath = "//*[@ng-file-drop and count(./preceding-sibling::span[contains(text(), '$area')])]";
+    if (!($elem = $this->getSession()->getPage()->find('xpath', $xpath))) {
+      throw new Exception("No droppable region with text \"$area\" found.");
+    }
+    $target = $elem->getXpath();
+
+    if ($filepath = $this->getMinkParameter('files_path')) {
+      $files = explode(', ', $files);
+      $paths;
+      foreach ($files as $file) {
+        $path = rtrim(realpath($filepath), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file;
+        if (!file_exists($path)) {
+          throw new Exception("Target file $path not found");
+        }
+        $paths[] = $path;
+      }
+
+      $driver = $this->getSession()->getDriver();
+      $inputs = [];
+      foreach ($paths as $k => $path) {
+        $inputId = 'elem_' . substr(md5(time()), 0, 7) . '_' . $k;
+        $driver->executeScript("$inputId = window.jQuery('<input id=\"$inputId\" type=\"file\">').appendTo('body');");
+        if (!($elem->getSession()->getPage()->find('xpath', "//input[@id='$inputId']"))) {
+          throw new Exception('Dummy input not found');
+        }
+        $driver->attachFile("//input[@id='$inputId']", $path);
+        $inputs[] = $inputId;
+      }
+
+      // Files are on the separate fields now. We need to grab them, make them into something similar to a FilesList
+      // object, and turn that into an event
+      $inputStr = json_encode($inputs);
+
+      $driver->executeScript("
+        var inputs = $inputStr;
+        e = document.createEvent(\"HTMLEvents\");
+        e.initEvent('drop', true, true);
+        e.dataTransfer = {
+          files : []
+        };
+        for (var i = 0; i < inputs.length; i++) {
+          e.dataTransfer.files.push(jQuery('#'+inputs[i]).get(0).files[0]);
+        }
+        e.dataTransfer.files.item = function (i) {
+          return this[i];
+        }
+        var result = document.evaluate(\"$target\", document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+        var elem = result.iterateNext();
         elem.dispatchEvent(e);");
     }
     else {
@@ -2374,6 +2432,22 @@ class FeatureContext extends DrupalContext {
     if ($elem->getText() != $tab) {
       throw new Exception('Wrong tab is active');
     }
+  }
+
+  /**
+   * @Then /^I should see "([^"]*)" in an? "([^"]*)" element$/
+   *
+   * Check text in multiple matching elements for a match
+   * Default implementation (in the "" element) does not work when multiple elements match selector
+   */
+  public function iShouldSeeInAElement($text, $selector) {
+    $elems = $this->getSession()->getPage()->findAll('css', $selector);
+    foreach ($elems as $e) {
+      if (stripos($e->getText(), $text) !== FALSE) {
+        return;
+      }
+    }
+    throw new Exception("The text \"$text\" was not found in any element matching \"$selector\"");
   }
 
   /**
