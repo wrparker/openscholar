@@ -115,30 +115,26 @@ function cp_app_settings_form($form, &$form_state) {
 }
 
 function cp_app_system_settings_form_submit($form, &$form_state) {
-
   if ($space = spaces_get_space()) {
     $op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
-
     // Exclude unnecessary elements.
     form_state_values_clean($form_state);
-    //foreach ($form['spaces_features'] as $feature => #default_value) {
-  //}
-    dpm($form['spaces_features']);
-    dpm($form_state['values']);
+    $spaces_features = variable_get('spaces_features', array());
+    $features = spaces_features($space ? $space->type : 'site');
 
-    foreach ($form_state['values'] as $key => $value) {
-      if ($op == t('Reset to defaults')) {
-        $space->controllers->variable->del($key);
+    if ($op == t('Reset to defaults')) {
+      $space->controllers->variable->del('spaces_features');
+    }
+    else
+    {
+      foreach ($form_state['values'] as $key => $value)
+      {
+        if (isset($features[$key]))
+        {
+          $spaces_features[$value] = $value;
+        }
       }
-      else {
-        /*if (is_array($value) && isset($form_state['values']['array_filter'])) {
-          $value = array_keys(array_filter($value));
-        }*/
-        $space->controllers->variable->set($key, $value);
-        dpm($key);
-        dpm($value);
-
-      }
+      $space->controllers->variable->set('spaces_features', $spaces_features);
     }
     if ($op == t('Reset to defaults')) {
       drupal_set_message(t('The configuration options have been reset to their default values for %space.', array('%space' => $space->title())));
