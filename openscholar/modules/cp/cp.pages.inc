@@ -48,7 +48,7 @@ function cp_app_settings($js, $app_name) {
  *
  * @see cp_app_settings()
  */
-function cp_app_settings_form($form, $form_state, $app_name) {
+function cp_app_settings_form($form, &$form_state, $app_name) {
   $item = menu_get_item('features/' . $app_name);
   $form['#attributes'] = array(
     'class' => array(
