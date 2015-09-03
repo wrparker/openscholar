@@ -1135,9 +1135,11 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
   );
 
   if ($repeating_event_date) {
+    $defaults  = l('(change defaults)', $_GET['q'], array('attributes' => array('class' => array('os_event-default-settings-link'))));
+
     $form['field_repeating_event_date_text'] = array(
       '#type' => 'item',
-      '#markup' => '<span class="date-display-single">'. t('Changing settings for @date', array('@date' => date('l, F j, Y', strtotime($repeating_event_date.' UTC'))))."</span>",
+      '#markup' => '<span class="date-display-single">'. t('Changing settings for @date', array('@date' => date('l, F j, Y', strtotime($repeating_event_date.' UTC'))))."</span>".$defaults,
       '#weight' => -10,
     );
   } elseif ($repeating_event_date === '' && count($wrapper->field_date) > 1) {
