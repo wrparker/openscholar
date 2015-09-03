@@ -363,10 +363,10 @@ function os_events_process_node(&$variables) {
     }
   }
 
+  $register = '';
   if ($variables['page'] && empty($variables['sv_list'])) {
 
     $registrations_type = !empty($variables['node']->field_event_registration[LANGUAGE_NONE][0]['registration_type']);
-    $register = '';
 
     // Show the signup link if capacity isn't reached.
     if ($registrations_type && os_events_event_registration_reach_capacity($variables['node'], $date)) {
@@ -839,6 +839,13 @@ function os_events_views_query_alter($view, views_plugin_query_default $query) {
   if ($view->name != 'os_events' ) {
     return;
   }
+
+  if ($view->current_display == 'feed_3' && is_int($view->args[0])) {
+    $group_key = key($query->where);
+    $query->add_where($group_key, "node.nid", $view->args[0], '=');
+    return;
+  }
+
   $format = array('year' => 'Y', 'month' => 'Y-m', 'week' => 'Y-\W', 'day' => 'Y-m-d');
 
   // Determine the type of the displayed month by the argument from the address.
