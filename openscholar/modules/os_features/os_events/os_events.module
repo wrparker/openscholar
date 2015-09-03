@@ -143,13 +143,16 @@ function os_events_export_to_csv($node, $delta = FALSE) {
 function os_events_event_registration_reach_capacity($node, $date = '') {
   // Check how much registration exists for this event.
   $query = new EntityFieldQuery();
-  $registrations_number = $query
-    ->entityCondition('entity_type', 'registration')
+  $query->entityCondition('entity_type', 'registration')
     ->propertyCondition('entity_id', $node->nid)
-    ->propertyCondition('entity_type', 'node')
-    ->fieldCondition('field_repeating_event_date', 'value', $date)
-    ->count()
-    ->execute();
+    ->propertyCondition('entity_type', 'node');
+
+  // Get all registrations unless we specify a date to check.
+  if ($date) {
+    $query->fieldCondition('field_repeating_event_date', 'value', $date);
+  }
+
+  $registrations_number = $query->count()->execute();
 
   // Get the settings of the registration for this event.
   $settings = os_events_registration_repeating_entity_settings('node', $node->nid, $date);
@@ -590,17 +593,22 @@ function os_events_events_register($js, $node, $date_id = FALSE) {
   // Hide the OG audience field.
   $registration_form[OG_AUDIENCE_FIELD]['#access'] = FALSE;
 
+  $date = '';
+  if ($date_id !== FALSE) {
+    $date = $registration_form['field_repeating_event_date']['und'][0]['value']['#default_value'];
+  }
+
   if (!$js) {
     return $registration_form;
   }
 
-  if (!os_events_event_registration_reach_capacity($node) || ($repeating && $date_id === FALSE)) {
+  if (!os_events_event_registration_reach_capacity($node, $date) || ($repeating && $date_id === FALSE)) {
 
     if($repeating && $date_id == FALSE) {
       drupal_set_message(t('Unable to register for this repeating event, bad link detected.'), 'error');
     }
 
-    if (!os_events_event_registration_reach_capacity($node)) {
+    if (!os_events_event_registration_reach_capacity($node, $date)) {
       drupal_set_message(t('The event has reached his maximum capacity of registrations. Sorry.'), 'error');
     }
     $commands = array();
@@ -1132,7 +1140,7 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
       '#markup' => '<span class="date-display-single">'. t('Changing settings for @date', array('@date' => date('l, F j, Y', strtotime($repeating_event_date.' UTC'))))."</span>",
       '#weight' => -10,
     );
-  } elseif ($repeating_event_date === '') {
+  } elseif ($repeating_event_date === '' && count($wrapper->field_date) > 1) {
     // Changing for all instances.
     $form['field_repeating_event_date_text'] = array(
       '#type' => 'item',
@@ -1915,7 +1923,12 @@ function os_events_registration_entity_settings_form_submit($form, &$form_state)
 
   $uri = entity_uri($entity['entity_type'], entity_load_single($entity['entity_type'], $entity['entity_id']));
 
-  $form_state['redirect'] = $uri['path'];
+  $query = array();
+  if (!empty($form_state['values']['field_repeating_event_date'])) {
+    $query['delta'] = $_GET['delta'];
+  }
+
+  $form_state['redirect'] = array($uri['path'],array('query' => $query));
 }
 
 /**
