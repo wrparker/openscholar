@@ -23,7 +23,7 @@ Feature: foo
      When I click on the tab "Embed from the web"
       And I should see "URL or HTML:"
 
-  @javascript
+  @media_browser @javascript
   Scenario: Verify files show up in the "Previously uploaded files" tab
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -32,3 +32,16 @@ Feature: foo
       And I wait "1 second" for the media browser to open
      When I click on "Previously uploaded files" button in the media browser
      Then I should see "slideshow1.jpg"
+
+  @media_browser @javascript
+  Scenario: Test the file upload work flow for a single, valid file
+    Given I am logging in as "john"
+      And I wait for page actions to complete
+      And I edit the node "About" in the group "john"
+     When I click on the "Upload" control
+      And I wait "1 second" for the media browser to open
+      And I drop the file "kitten-2.jpg" onto the "Drag and drop files here." area
+      And I should wait for "File Edit" directive to "appear"
+     When I click on the "Save" control
+     Then I should see the media browser "Previously uploaded files" tab is active
+      And I should see "kitten-2.jpg" in the "div.media-row.new" element

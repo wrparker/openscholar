@@ -2283,17 +2283,77 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @When /^ I upload the file "{[^"]*)" from the operating system browser$/
+   * @When /^ I upload the file "{[^"]*)" to the "{[^"]*)" control$/
+   *
+   * Skip for now. May need to update ng-file-upload for it to work ever
    */
-  public function iChooseFileFromBrowser($filename) {
+  public function iUploadFileToControl($filename, $control) {
     $driver = $this->getSession()->getDriver();
   }
 
   /**
-   * @When /^I drop the file "([^"]*) onto the element "([^"]*)"$/
+   * @When /^I drop the file "([^"]*)" onto the "([^"]*)" area$/
    */
-  public function iDropFileOnto($file, $element) {
+  public function iDropFileOnto($file, $area) {
+    // Make sure the element we want exists on the page.
+    $xpath = "//*[@ng-file-drop and count(./preceding-sibling::span[contains(text(), '$area')])]";
+    if (!($elem = $this->getSession()->getPage()->find('xpath', $xpath))) {
+      throw new Exception("No droppable region with text \"$area\" found.");
+    }
+    $target = $elem->getXpath();
 
+    if ($filepath = $this->getMinkParameter('files_path')) {
+      $path = rtrim(realpath($filepath), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
+      if (!file_exists($path)) {
+        throw new Exception("Target file $path not found");
+      }
+
+      $driver = $this->getSession()->getDriver();
+      $inputId = 'elem_' . substr(md5(time()), 0, 7);
+      $driver->executeScript("$inputId = window.jQuery('<input id=\"$inputId\" type=\"file\">').appendTo('body');");
+      if (!($elem->getSession()->getPage()->find('xpath', "//input[@id='$inputId']"))) {
+        throw new Exception('Dummy input not found');
+      }
+      $driver->attachFile("//input[@id='$inputId']", $path);
+
+      // File is on the field now. We need to grab it and make a drop event out of it
+      $driver->executeScript("
+        e = document.createEvent(\"HTMLEvents\");
+        e.initEvent('drop', true, true);
+        e.dataTransfer = {
+          files : $inputId.get(0).files
+        };
+        console.log(e);
+        var result = document.evaluate(\"$target\", document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+        var elem = result.iterateNext();
+        console.log(elem);
+        elem.dispatchEvent(e);");
+    }
+    else {
+      throw new Exception('Mink files_path parameter not configured.');
+    }
+  }
+
+  /**
+   * @Then /^I should wait for "([^"]*)" directive to "([^"]*)"$/
+   */
+  function iWaitForDirective($directive, $appear) {
+    $directive = strtolower(preg_replace('/([ ]+)/', '-', $directive));
+    $xpath = ".//*[@$directive]";
+    $this->waitForXpathNode($xpath, $appear == 'appear');
+  }
+
+  /**
+   * @Then /^I should see the media browser "([^"]*)" tab is active$/
+   */
+  function iShouldSeeTabActive($tab) {
+    if (!($elem = $this->getSession()->getPage()->find('css', '.media-browser-button.active'))) {
+      throw new Exception('No Media Browser tab is active.');
+    }
+
+    if ($elem->getText() != $tab) {
+      throw new Exception('Wrong tab is active');
+    }
   }
 
   /**
@@ -2317,7 +2377,12 @@ class FeatureContext extends DrupalContext {
    * @Then /^I should wait for the text "([^"]*)" to "([^"]*)"$/
    */
   public function iShouldWaitForTheTextTo($text, $appear) {
-    $this->waitForXpathNode(".//*[contains(normalize-space(string(text())), \"$text\")]", $appear == 'appear');
+    try {
+      $this->waitForXpathNode(".//*[contains(normalize-space(string(text())), \"$text\")]", $appear == 'appear');
+    }
+    catch (Exception $e) {
+      throw new Exception("Text \"$text\" not found on page after 5 secnds.");
+    }
   }
 
   /**
