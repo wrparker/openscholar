@@ -127,6 +127,7 @@ function cp_app_system_settings_form_submit($form, &$form_state) {
     }
     else
     {
+      dpm($spaces_features);
       foreach ($form_state['values'] as $key => $value)
       {
         if (isset($features[$key]))
