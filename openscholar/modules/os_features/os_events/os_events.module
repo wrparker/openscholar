@@ -143,13 +143,16 @@ function os_events_export_to_csv($node, $delta = FALSE) {
 function os_events_event_registration_reach_capacity($node, $date = '') {
   // Check how much registration exists for this event.
   $query = new EntityFieldQuery();
-  $registrations_number = $query
-    ->entityCondition('entity_type', 'registration')
+  $query->entityCondition('entity_type', 'registration')
     ->propertyCondition('entity_id', $node->nid)
-    ->propertyCondition('entity_type', 'node')
-    ->fieldCondition('field_repeating_event_date', 'value', $date)
-    ->count()
-    ->execute();
+    ->propertyCondition('entity_type', 'node');
+
+  // Get all registrations unless we specify a date to check.
+  if ($date) {
+    $query->fieldCondition('field_repeating_event_date', 'value', $date);
+  }
+
+  $registrations_number = $query->count()->execute();
 
   // Get the settings of the registration for this event.
   $settings = os_events_registration_repeating_entity_settings('node', $node->nid, $date);
@@ -590,17 +593,22 @@ function os_events_events_register($js, $node, $date_id = FALSE) {
   // Hide the OG audience field.
   $registration_form[OG_AUDIENCE_FIELD]['#access'] = FALSE;
 
+  $date = '';
+  if ($date_id !== FALSE) {
+    $date = $registration_form['field_repeating_event_date']['und'][0]['value']['#default_value'];
+  }
+
   if (!$js) {
     return $registration_form;
   }
 
-  if (!os_events_event_registration_reach_capacity($node) || ($repeating && $date_id === FALSE)) {
+  if (!os_events_event_registration_reach_capacity($node, $date) || ($repeating && $date_id === FALSE)) {
 
     if($repeating && $date_id == FALSE) {
       drupal_set_message(t('Unable to register for this repeating event, bad link detected.'), 'error');
     }
 
-    if (!os_events_event_registration_reach_capacity($node)) {
+    if (!os_events_event_registration_reach_capacity($node, $date)) {
       drupal_set_message(t('The event has reached his maximum capacity of registrations. Sorry.'), 'error');
     }
     $commands = array();
@@ -622,6 +630,49 @@ function os_events_events_register($js, $node, $date_id = FALSE) {
   $output = ctools_modal_form_render($form_state, $registration_form);
   print ajax_render($output);
   drupal_exit();
+}
+
+/**
+ * Extra Validation for registration submission
+ *
+ * @param array $form
+ * @param array $form_state
+ */
+function os_events_modal_validate($form, &$form_state) {
+
+  if (!empty($form_state['values']['anon_mail'])) {
+
+    $date = '';
+    if (!empty($form_state['values']['field_repeating_event_date']['und'][0]['value'])) {
+      $date = $form_state['values']['field_repeating_event_date']['und'][0]['value'];
+    }
+
+    $email_query = new EntityFieldQuery();
+    $email_query->entityCondition('entity_type', 'registration')->propertyCondition('anon_mail', $form_state['values']['anon_mail']);
+
+    if ($date) {
+      $email_query->fieldCondition('field_repeating_event_date', 'value', $date);
+    } //Flter to just this occurance
+
+    if(count($email_query->execute())) {
+      form_set_error('anon_mail', t('You have already registered and may not register again.'));
+      return;
+    }
+
+    if ($user = user_load_by_mail($form_state['values']['anon_mail'])) {
+      $user_query = new EntityFieldQuery();
+      $user_query->entityCondition('entity_type', 'registration')->propertyCondition('user_uid', $user->uid);
+
+      if ($date) {
+        $user_query->fieldCondition('field_repeating_event_date', 'value', $date);
+      }
+
+      if(count($email_query->execute())) {
+        form_set_error('anon_mail', t('You have already registered and may not register again.'));
+        return;
+      }
+    }
+  }
 }
 
 /**
@@ -1084,12 +1135,14 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
   );
 
   if ($repeating_event_date) {
+    $defaults  = l('(change defaults)', $_GET['q'], array('attributes' => array('class' => array('os_event-default-settings-link'))));
+
     $form['field_repeating_event_date_text'] = array(
       '#type' => 'item',
-      '#markup' => '<span class="date-display-single">'. t('Changing settings for @date', array('@date' => date('l, F j, Y', strtotime($repeating_event_date.' UTC'))))."</span>",
+      '#markup' => '<span class="date-display-single">'. t('Changing settings for @date', array('@date' => date('l, F j, Y', strtotime($repeating_event_date.' UTC'))))."</span>".$defaults,
       '#weight' => -10,
     );
-  } elseif ($repeating_event_date === '') {
+  } elseif ($repeating_event_date === '' && count($wrapper->field_date) > 1) {
     // Changing for all instances.
     $form['field_repeating_event_date_text'] = array(
       '#type' => 'item',
@@ -1255,7 +1308,10 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
       // Set the date for the registration.
       $form_state['registration']->field_repeating_event_date['und'][0]['value'] = $date[$delta]['value'];
       // Use custom registration settings.
-      $form['#registration_settings'] = os_events_registration_repeating_entity_settings($registration->entity_id, $registration->entity_type, $date[$delta]['value']);
+      $settings_overrides = os_events_registration_repeating_entity_settings($registration->entity_id, $registration->entity_type, $date[$delta]['value']);
+      if ($settings_overrides) {
+        $form['#registration_settings'] = $settings_overrides;
+      }
 
       //Set the default in the form
       $form['field_repeating_event_date']['und'][0]['value']['#default_value'] = $date[$delta]['value'];
@@ -1268,6 +1324,9 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
       );
 
     }
+  } elseif (isset($form['field_repeating_event_date'])) {
+    $form['field_repeating_event_date']['#access'] = FALSE;
+    $form['og_group_ref']['#access'] = FALSE;
   }
 
   $form['who_is_registering'] = array(
@@ -1296,6 +1355,7 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   $form_state['rebuild'] = TRUE;
   unset($form['actions'], $form['field_full_name'], $form['field_department'], $form['anon_mail'], $form['user']);
 
+  $form['#validate'][] = 'os_events_modal_validate';
   $form['#submit'][] = 'os_events_modal_submit';
 }
 
@@ -1865,7 +1925,12 @@ function os_events_registration_entity_settings_form_submit($form, &$form_state)
 
   $uri = entity_uri($entity['entity_type'], entity_load_single($entity['entity_type'], $entity['entity_id']));
 
-  $form_state['redirect'] = $uri['path'];
+  $query = array();
+  if (!empty($form_state['values']['field_repeating_event_date'])) {
+    $query['delta'] = $_GET['delta'];
+  }
+
+  $form_state['redirect'] = array($uri['path'],array('query' => $query));
 }
 
 /**
