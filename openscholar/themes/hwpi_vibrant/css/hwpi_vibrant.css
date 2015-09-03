@@ -107,14 +107,14 @@ div.contextual-links-wrapper a,.contextual-controls-wrapper div.ctools-dropdown.
     -o-transition: none;
     transition: none;
 }
-.block-content li {
-    list-style: none;
+
+.block-boxes-os_boxes_html .block-content ul,
+.block-content .field-name-body ul {
+    list-style-type: disc;
 }
-.block-boxes-os_boxes_html .block-content li,.block-content .field-name-body li {
-    list-style: disc;
-}
-.block-boxes-os_boxes_html .block-content ol li,.block-content .field-name-body ol li {
-    list-style: decimal;
+.block-boxes-os_boxes_html .block-content ol,
+.block-content .field-name-body ol {
+    list-style-type: decimal;
 }
 .field-name-body ol {
     margin: 0 0 1.5em 25px;

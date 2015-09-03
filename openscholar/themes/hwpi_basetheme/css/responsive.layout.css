@@ -206,6 +206,21 @@ table[style] {
 .one-sidebar.sidebar-second .region-content-second .region-inner {
     padding-right: 15px;
 }
+
+/* MAKES THE EVENT SIGNUP FORM MODAL RESPONSIVE*/
+#modalContent[style] {
+   position: absolute !important;
+    left: 0 !important;
+    top:40px !important;
+}
+
+#modal-content[style],
+div.ctools-modal-content[style] {
+    width: 100% !important;
+    height: auto !important;
+}
+
+
 }
 
 /*--------------------------------------------------------*/

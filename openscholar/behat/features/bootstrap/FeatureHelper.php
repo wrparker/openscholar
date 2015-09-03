@@ -259,8 +259,11 @@ class FeatureHelp {
       );
 
       // Create the box.
-      $box = boxes_box::factory(self::$boxes_mapping[$box], $options);
+      if (!$box = boxes_box::factory(self::$boxes_mapping[$box], $options)) {
+        throw new Exception(sprintf('The box %s failed to saved'), $box);
+      }
       $box->save();
+
       $blocks['boxes-' . $box->delta]['region'] = $region;
 
       // Initialize the module ad the delta.
