@@ -72,8 +72,8 @@
 
           if (resp.next) {
             var max = Math.ceil(resp.count/resp.data.length),
-              curr = resp.next.href.match(/page=([\d])/)[1];
-            defers[key].notify(("Loading $p% complete.").replace('$p', ((curr-1)/max)*100));
+              curr = resp.next.href.match(/page=([\d]+)/)[1];
+            defers[key].notify(("Loading $p% complete.").replace('$p', Math.round(((curr-1)/max)*100)));
             $http.get(resp.next.href, {pKey: key}).success(recursiveFetch);
           }
           else {
