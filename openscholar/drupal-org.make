@@ -114,13 +114,6 @@ projects[facetapi][subdir] = "contrib"
 projects[facetapi][version] = 1.1
 projects[facetapi][patch][] = "http://drupal.org/files/2006704-facetapi-er-regroup-2.patch"
 
-projects[fb_social][subdir] = "contrib"
-;projects[fb_social][version] = 2.0-beta4+1-dev
-projects[fb_social][download][type] = git
-projects[fb_social][download][branch] = 7.x-2.x
-projects[fb_social][download][revision] = cd73e9b
-projects[fb_social][patch][] = "http://drupal.org/files/comment_sources-fb_social-2120709-1.patch"
-
 projects[features][subdir] = "contrib"
 projects[features][version] = 2.0
 

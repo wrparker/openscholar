@@ -2519,17 +2519,3 @@ function os_set_update_batch(&$sandbox, $info) {
     $sandbox['#finished'] = ($sandbox['progress'] / $sandbox['max']);
   }
 }
-
-/**
- * Implelements hook_boxes_plugins_alter
- *
- * Removes deprecated/unused facebook widgets
- */
-function os_boxes_plugins_alter(&$plugins) {
-  $plugins['fb_social_likebox'] = false;
-  $plugins['fb_social_activityf'] = false;
-  $plugins['fb_social_recommend'] = false;
-  $plugins['fb_social_facepile'] = false;
-  $plugins['fb_social_livestream'] = false;
-  $plugins['fb_social_send'] = false;
-}

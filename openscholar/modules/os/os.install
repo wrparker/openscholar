@@ -801,64 +801,61 @@ function os_update_7039() {
 }
 
 /**
- * Remove instances of facebook widgets that are no longer supported by OS
+ * Uninstall fb_social module and remove instances of facebook widgets
  */
 function os_update_7040() {
-  $status = "";
+  if (module_exists('fb_social')) {
+    $status = "";
 
-  $deltas = array(
-    'fb_social_likebox',
-    'fb_social_activityf',
-    'fb_social_recommend',
-    'fb_social_facepile',
-    'fb_social_livestream',
-    'fb_social_send'
-  );
-
-  // loop through different box types
-  foreach ($deltas as $delta) {
-    $query = db_select('spaces_overrides', 'so')->fields('so', array('id','object_id'));
+    $query = db_select('spaces_overrides', 'so')->fields('so', array('id','object_id','value'));
     $query->condition("so.type", 'og');
     $query->condition('so.object_type','boxes', '=');
-    $query->condition('so.value', '%' . $delta . '%', 'like');
+    $query->condition('so.value', '%"fb_plugin_name"%', 'like');
     $results = $query->execute();
 
     $count = "0";
-    // loop through instances of box type
+    // loop through instances of fb widget boxes
     while ($box = $results->fetchObject()) {
-      $query = db_select('spaces_overrides', 'so')->fields('so', array('object_id', 'value'));
-      $query->condition("so.type", 'og');
-      $query->condition("so.id", $box->id);
-      $query->condition('so.object_type','context', '=');
-      $query->condition('so.value', '%' . $box->object_id . '%', 'like');
-      $contexts = $query->execute();
+      $box_data = unserialize($box->value);
 
-      // loop through places where instance is placed on the site
-      while ($context = $contexts->fetchObject()) {
-        $boxes = unserialize($context->value);
+      // make sure the box is really associated with an fb_social plugin
+      if(isset($box_data->fb_plugin_name)) {
+        $query = db_select('spaces_overrides', 'so')->fields('so', array('object_id', 'value'));
+        $query->condition("so.type", 'og');
+        $query->condition("so.id", $box->id);
+        $query->condition('so.object_type','context', '=');
+        $query->condition('so.value', '%' . $box->object_id . '%', 'like');
+        $contexts = $query->execute();
 
-        // unset index for widget and update spaces_overrides row
-        if (isset($boxes['blocks']["boxes-" . $box->object_id])) {
-          unset($boxes['blocks']["boxes-" . $box->object_id]);
-          $update_query = db_update('spaces_overrides')
-            ->fields(array('type' => 'og', 'id' => $box->id, 'object_type' => 'context', 'object_id' => $context->object_id, 'value' => serialize($boxes)))
-            ->condition('id', $box->id, "=")
-            ->condition('object_id', $context->object_id, "=")
-            ->condition('object_type', 'context', "=")
-            ->execute();
+        // loop through places where instance is placed on the site
+        while ($context = $contexts->fetchObject()) {
+          $boxes = unserialize($context->value);
+
+          // unset index for widget and update spaces_overrides row
+          if (isset($boxes['blocks']["boxes-" . $box->object_id])) {
+            unset($boxes['blocks']["boxes-" . $box->object_id]);
+            $update_query = db_update('spaces_overrides')
+              ->fields(array('type' => 'og', 'id' => $box->id, 'object_type' => 'context', 'object_id' => $context->object_id, 'value' => serialize($boxes)))
+              ->condition('id', $box->id, "=")
+              ->condition('object_id', $context->object_id, "=")
+              ->condition('object_type', 'context', "=")
+              ->execute();
+          }
         }
-      }
 
-      // remove boxes spaces_overrides row for widget
-      $delete_query = db_delete('spaces_overrides')
-        ->condition('id', $box->id, "=")
-        ->condition('object_id', $box->object_id, "=")
-        ->condition('object_type', "boxes", "=")
-        ->execute();
-      $count++;
+        // remove boxes spaces_overrides row for widget
+        $delete_query = db_delete('spaces_overrides')
+          ->condition('id', $box->id, "=")
+          ->condition('object_id', $box->object_id, "=")
+          ->condition('object_type', "boxes", "=")
+          ->execute();
+        $count++;
+      }
     }
-    $status .= "$count instances of the $delta widget removed. <br />";
+    module_disable(array('fb_social'), FALSE);
+    drupal_uninstall_modules(array('fb_social'), FALSE);
+    $status = "$count instances of FB widgets have been removed. ";
+    return $status;
   }
-  return $status;
 }
 
