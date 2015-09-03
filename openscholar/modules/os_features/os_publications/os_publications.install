@@ -1406,3 +1406,10 @@ function os_publications_update_7035() {
   $map['collection-title'] = '';
   biblio_set_map('field_map', 'csl', $map);
 }
+
+/**
+ * Add redirect field.
+ */
+function os_publications_update_7036() {
+  features_revert(array('os_publications' => array('field_base', 'field_instance')));
+}
