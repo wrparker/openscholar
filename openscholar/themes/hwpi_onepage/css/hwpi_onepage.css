@@ -151,6 +151,10 @@ ul.nice-menu-down li ul li ul {
 .front #content-panels .region.region-content-bottom {
     border-bottom: none;
 }
+
+.block-boxes-os_sv_list_box h2.block-title {
+    text-align: center;
+}
 /* Titles & Type */
 
 .page-search .title a,
