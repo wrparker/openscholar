@@ -1,8 +1,8 @@
 <?php
 
 $plugin = array(
-  'label' => t('vsite layout'),
-  'description' => t('End point for vsite layout.'),
+  'label' => t('vsite variables'),
+  'description' => t('End point for vsite variables.'),
   'resource' => 'variables',
   'class' => 'OsRestfulVariables',
   'data_provider_options' => array(

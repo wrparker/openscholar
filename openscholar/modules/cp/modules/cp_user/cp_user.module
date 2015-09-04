@@ -825,15 +825,6 @@ function cp_user_user_register_submit($form, &$form_state) {
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter() for cp_settings_form.
- */
-function cp_user_form_cp_settings_form_alter(&$form, &$form_state) {
-  if (isset($form['admin-menu'])) {
-    $form['admin-menu']['#access'] = FALSE;
-  }
-}
-
-/**
  * Returns an associative array of OG roles.
  *
  * @param $format
