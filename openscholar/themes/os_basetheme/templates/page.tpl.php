@@ -1,3 +1,4 @@
+<div id="admin_panel" class="admin_panel">
 <!--REGION TO HOUSE RESPONSIVE MENU. OTHER CONTENT CAN'T BE PLACED HERE-->
 <div class="responive-menu-container clearfix">
   <?php print render($page['responsive_menu']); ?>
@@ -55,7 +56,10 @@
 			<div class="hg-container">
 				<div id="content-column" role="main">
 					<div class="content-inner">
-					  <?php if ($breadcrumb): print $breadcrumb; endif; ?>
+					  <?php
+					if ($breadcrumb) : print $breadcrumb;
+					endif;
+ ?>
 
 						<?php if ($is_front || $use_content_regions): ?>
 							<?php print render($title_prefix); ?>
@@ -162,9 +166,11 @@
 		<!--footer region end-->
   <?php endif; ?>
   <div id="powerby-login">
-  	<?php if (isset($login_link)) {
-    print render($login_link);
-  } ?>
+  	<?php
+	if (isset($login_link)) {
+		print render($login_link);
+	}
+ ?>
   	<div id="powered-by"><a href="http://theopenscholar.org">OpenScholar</a></div>
     </div>
   </footer>
@@ -181,3 +187,180 @@
 		</div>
   </div>
 <?php endif; ?>
+</div><!-- /admin_panel -->
+<div class="morph-button morph-button-sidebar morph-button-fixed">
+			<button type="button">
+				<img src="img/os-cp_button.png">
+				<!--<span class="icon icon-cog">Settings Menu</span>-->
+			</button>
+			<div class="morph-content">
+				<div>
+					<div class="content-style-sidebar">
+						<a href="#" style="position:absolute;left:10px;top:7px;"><img src="img/home_button.png" width="25" height="25"></a>
+						<div class="close_panel">
+							<span style="color:#a39d9d;">O</span><span style="color:#df1f26;">S</span>
+						</div><span class="icon icon-close">&#171; Close</span>
+						<div id='cssmenu'>
+							<ul>
+								<li>
+									&nbsp;
+								</li>
+
+								<li class='has-sub'>
+									<a href='#'>Site Content</a>
+									<ul class='sub-menu'>
+										<li class="heading has-sub submenu">
+											<a href='#' class="submenu_heading">Browse</a>
+											<ul>
+												<li>
+													<a href='#'>Content</a>
+												</li>
+												<li>
+													<a href='#'>Files</a>
+												</li>
+												<li>
+													<a href='#'>Widgets</a>
+												</li>
+												<li>
+													<a href='#'>Tagging</a>
+												</li>
+											</ul>
+										</li>
+
+										<li class="heading has-sub submenu">
+											<a href='#' class="submenu_heading">Add</a>
+											<ul>
+												<li>
+													<a href='#'>Basic Page</a>
+												</li>
+												<li>
+													<a href='#'>Files</a>
+												</li>
+												<li>
+													<a href='#'>ContentType 2</a>
+												</li>
+												<li>
+													<a href='#'>ContentType 3</a>
+												</li>
+												<li>
+													<a href='#'>ContentType N</a>
+												</li>
+											</ul>
+										</li>
+										<li class="heading has-sub submenu">
+											<a href='#' class="submenu_heading">Import</a>
+											<ul>
+												<li>
+													<a href='#'>Page</a>
+												</li>
+												<li>
+													<a href='#'>ContentType 2</a>
+												</li>
+												<li>
+													<a href='#'>ContentType 3</a>
+												</li>
+												<li>
+													<a href='#'>ContentType N</a>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href='#'>Menus</a>
+								</li>
+								<li>
+								<li class='has-sub'>
+									<a href='#'>Appearance</a>
+									<ul class='sub-menu'>
+										<li>
+											<a href='#'>Themes</a>
+										</li>
+										<li>
+											<a href='#'>Layout</a>
+										</li>
+										<li>
+											<a href='#'>Theme Settings</a>
+										</li>
+									</ul>
+								</li>
+								<li class='has-sub'>
+									<a href='#'>Settings</a>
+									<ul class='sub-menu'>
+										<li>
+											<a href='#'>Apps</a>
+										</li>
+										<li>
+											<a href='#'>Publications</a>
+										</li>
+										<li>
+											<a href='#'>Blog</a>
+										</li>
+										<li>
+											<a href='#'>Profiles</a>
+										</li>
+										
+										<li>
+											<a href='#'>Private Files</a>
+										</li>
+										<li>
+											<a href='#'>FAQs</a>
+										</li>
+										<li>
+											<a href='#'>Booklets</a>
+										</li>
+										<li>
+											<a href='#'>Advanced</a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href='#'>Users &amp; Roles</a>
+								</li>
+								<li class='has-sub'>
+									<a href='#'>Help</a>
+									<ul class='sub-menu'>
+										<li>
+											<a href='#'>Support</a>
+										</li>
+										<li>
+											<a href='#'>Documentation</a>
+										</li>
+
+									</ul>
+								<li class='has-sub'>
+									<a href='#'>Admin</a>
+									<ul class='sub-menu'>
+										<li>
+											<a href='#'>Content</a>
+										</li>
+										<li>
+											<a href='#'>Structure</a>
+										</li>
+										<li>
+											<a href='#'>Appearance</a>
+										</li>
+										<li>
+											<a href='#'>People</a>
+										</li>
+										<li>
+											<a href='#'>Modules</a>
+										</li>
+										<li>
+											<a href='#'>Configuration</a>
+										</li>
+										<li>
+											<a href='#'>Reports</a>
+										</li>
+										<li>
+											<a href='#'>Help</a>
+										</li>
+									</ul>
+								</li>
+							</ul>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!-- morph-button -->
