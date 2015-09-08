@@ -1,0 +1,3 @@
+name = "Admin Panel"
+core = 7.x
+description = "Admin Panel for logged in users"
