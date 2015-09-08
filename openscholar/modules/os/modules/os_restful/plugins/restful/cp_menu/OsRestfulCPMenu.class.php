@@ -101,6 +101,9 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     $function = "get_$name_string";
     if (method_exists($this, $function)) {
       $output = $this->$function();
+      $user = $this->getAccount();
+
+      drupal_alter('os_restful_cp_menu_'.$name_string, $output, $user);
     }
 
     return $output;
@@ -145,6 +148,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
 
     $user = $this->getAccount();
     $vsite = $this->request['vsite'];
+    $vsite_object = vsite_get_vsite($vsite);
 
     $bundles = os_app_info_declared_node_bundle();
     $type_info = node_type_get_types();
@@ -163,7 +167,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       }
 
       $type_url_str = str_replace('_', '-', $bundle);
-      $add_links[] = array(
+      $add_links["{$bundle}"] = array(
         'label' => $type_info[$bundle]->name,
         'type' => 'link',
         'href' => "node/add/{$type_url_str}",
@@ -171,7 +175,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       );
 
       if (os_importer_importable_content($bundle)) {
-          $import_links[] = array(
+          $import_links["{$bundle}"] = array(
           'label' => os_importer_importer_title($bundle),
           'type' => 'link',
           'href' => 'cp/os-importer/' . $bundle,
@@ -180,47 +184,61 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       }
     }
 
+    $feature_settings = array();
+    if (spaces_access_admin($user, $vsite_object)) {
+      foreach (array_keys(array_filter($spaces_features)) as $feature) {
+        $item = menu_get_item("cp/build/features/{$feature}");
+        if ($item && $item['href'] == "cp/build/features/{$feature}") {
+          $feature_settings["feature_{$feature}"] = array(
+            'label' => $item['title'],
+            'type' => 'link',
+            'href' => "/".$item['href'],
+          );
+        }
+      }
+    }
+
     $structure = array(
-      array(
+      'content' => array(
         'label' => 'Site Content',
         'type' => 'heading',
         'default_state' => 'collapsed',
         'children' => array(
-          array(
+          'browse' => array(
             'label' => 'Browse',
             'type' => 'heading',
             'default_state' => 'collapsed',
             'children' => array(
-              array(
+              'content' => array(
                 'label' => 'Content',
                 'type' => 'link',
                 'href' => '/cp/content'
               ),
-              array(
+              'files' => array(
                 'label' => 'Files',
                 'type' => 'link',
                 'href' => '/cp/content/files'
               ),
 //              @tbd v2
-//              array(
+//              'widgets' => array(
 //                'label' => 'Widgets',
 //                'type' => 'link',
 //                'href' => '/cp/content'
 //              ),
-              array(
+              'tagging' => array(
                 'label' => 'Tagging',
                 'type' => 'link',
                 'href' => '/cp/build/taxonomy'
               ),
             ),
           ),
-          array(
+          'add' => array(
             'label' => 'Add',
             'type' => 'heading',
             'default_state' => 'collapsed',
             'children' => $add_links,
           ),
-          array(
+          'import' => array(
             'label' => 'Import',
             'type' => 'heading',
             'default_state' => 'collapsed',
@@ -228,54 +246,95 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
           ),
         ),
       ),
-      array(
+      'menus' => array(
         'label' => 'Menus',
         'type' => 'link',
         'href' => '/cp/build/menu'
       ),
-      array(
+      'appearance' => array(
         'label' => 'Appearance',
         'type' => 'heading',
         'default_state' => 'collapsed',
         'children' => array(
-            array(
+            'themes' => array(
               'label' => 'Themes',
               'type' => 'link',
               'href' => '/cp/appearance'
             ),
-            array(
+            'layout' => array(
               'label' => 'Layout',
               'type' => 'link',
               'href' => '/cp/build/layout'
             ),
-            array(
+            'theme_settings' => array(
               'label' => 'Theme Settings',
               'type' => 'link',
               'href' => '/dev/null'
             ),
           ),
       ),
-      array(
+      'settings' => array(
         'label' => 'Settings',
         'type' => 'heading',
         'default_state' => 'collapsed',
-        'children' => array(),
+        'children' => array(
+          'app' => array(
+            'label' => 'Apps',
+            'type' => 'link',
+            'href' => '/cp/apps'
+          )
+        ) + $feature_settings,
       ),
-      array(
+      'users_roles' => array(
         'label' => 'Users & Roles',
         'type' => 'link',
         'href' => '/cp/users'
       ),
-      array(
+      'help' => array(
         'label' => 'Help',
         'type' => 'heading',
         'default_state' => 'collapsed',
-        'children' => array(),
+        'children' => array(
+          'support' => array(
+            'label' => 'Support',
+            'type' => 'link',
+            'href' => '/cp/support'
+          ),
+          'documentation' => array(
+            'label' => 'Documentation',
+            'type' => 'link',
+            'href' => '/cp/welcome'
+          ),
+        ),
       ),
-      $admin
     );
 
-return $structure;
+    //Should we show this user the admin links?
+    if (user_access('access administration pages',$user)) {
+      $admin_menu = menu_tree_all_data('management', NULL, 2);
+      $admin_menu = current($admin_menu);
+      $admin_links = array();
+
+      foreach ($admin_menu['below'] as $mi) {
+        $link = $mi['link'];
+        if ($link['hidden'] != 0) continue;
+        $key = str_replace(" ", "_", strtolower($link['title']));
+        $admin_links[$key] = array(
+          'label' => $link['title'],
+          'type' => 'link',
+          'href' => "/{$link['href']}",
+        );
+      }
+
+      $structure['admin'] = array(
+        'label' => 'Admin',
+        'type' => 'heading',
+        'default_state' => 'collapsed',
+        'children' => $admin_links,
+      );
+    }
+
+    return $structure;
 
     if ($user->uid) {
       $links = array(
