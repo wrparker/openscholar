@@ -2337,7 +2337,8 @@ class FeatureContext extends DrupalContext {
       $path = preg_replace('|[\/\\\\]|', DIRECTORY_SEPARATOR, $path);
       $driver->attachFile("//input[@id='$inputId']", $path);
 
-      // File is on the field now. We need to grab it and make a drop event out of it
+      // File is on the field now. We need to grab it and make a drop event out of it.
+      // We can't do this with jQuery because the handlers are not bound using it. ng-file-upload use browser methods.
       $driver->executeScript("
         e = document.createEvent(\"HTMLEvents\");
         e.initEvent('drop', true, true);
@@ -2375,6 +2376,8 @@ class FeatureContext extends DrupalContext {
         $paths[] = $path;
       }
 
+      // Selenium has no support for <input type="file" multiple>. So instead, we use multiple input elements,
+      // then dummy up a JS FilesList object to pass to the element.
       $driver = $this->getSession()->getDriver();
       $inputs = [];
       foreach ($paths as $k => $path) {
@@ -2438,7 +2441,7 @@ class FeatureContext extends DrupalContext {
   /**
    * @Then /^I confirm the file "([^"]*)" in the site "([^"]*)" is the same file as "([^"]*)"$/
    */
-  public function iConfirmTheFileInElementIsSameAs($filename, $site, $original) {
+  public function iConfirmTheFileInSiteIsSameAs($filename, $site, $original) {
     $file = $this->getFile($filename, $site);
 
     // change directories to so all the file wrapper functions work properly
@@ -2466,7 +2469,7 @@ class FeatureContext extends DrupalContext {
   /**
    * @Then /^I confirm the file "([^"]*)" in the site "([^"]*)" is not the same file as "([^"]*)"$/
    */
-  public function iConfirmTheFileInElementIsNotSameAs($filename, $site, $original) {
+  public function iConfirmTheFileInSiteIsNotSameAs($filename, $site, $original) {
     $file = $this->getFile($filename, $site);
 
     // change directories to so all the file wrapper functions work properly
@@ -2519,6 +2522,20 @@ class FeatureContext extends DrupalContext {
       }
     }
     throw new Exception("The text \"$text\" was not found in any element matching \"$selector\"");
+  }
+
+  /**
+   * @When /^I mouse over the "([^"]*)" element$/
+   */
+  public function iMouseOverElement($selector) {
+    $elem = $this->getSession()->getPage()->find('css', $selector);
+
+    if ($elem) {
+      $elem->mouseOver();
+    }
+    else {
+      throw new Exception("No element matching \"$selector\" is found.");
+    }
   }
 
   /**

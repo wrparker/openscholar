@@ -74,3 +74,18 @@ Feature: foo
      Then I should see the media browser "Previously uploaded files" tab is active
       And I should see "rubber-duck.jpg" in a "div.media-row.new" element
       And I should see "conservatory_of_flowers3.jpg" in a "div.media-row.new" element
+
+  @media_browser @javascript
+  Scenario: Test the file upload work flow for a single, invalid file.
+    Given I am logging in as "john"
+      And I wait for page actions to complete
+      And I edit the node "I opened a new personal" in the group "john"
+     When I click on the "Choose File" control
+      And I wait "1 second" for the media browser to open
+      And I mouse over the ".media-browser-pane .help_icon" element
+     Then I should see "jpeg jpg png"
+      And I should not see "pdf"
+      And I drop the file "abc.pdf" onto the "Drag and drop files here." area
+      And I should see "abc.pdf is not an accepted file type."
+      And I should wait for the text "abc.pdf is not an accepted file type." to "disappear"
+      And I should not see "abc.pdf is not an acepted file type."
