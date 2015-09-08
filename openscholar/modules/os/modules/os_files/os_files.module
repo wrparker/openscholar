@@ -1853,7 +1853,12 @@ function os_files_field_formatter_view($entity_type, $entity, $field, $instance,
           $href = file_create_url($i['uri']);
           $text = $i['description'] ? $i['description'] : $i['filename'];
           //Round Filesize to nearest KB
-          $filesize = $i['filesize'] - ($i['filesize'] % DRUPAL_KILOBYTE);
+          if ($i['filesize'] >= DRUPAL_KILOBYTE) {
+            $filesize = $i['filesize'] - ($i['filesize'] % DRUPAL_KILOBYTE);
+          }
+          else {
+            $filesize = $i['filesize'];
+          }
 
           $other[] = array(
             array(
