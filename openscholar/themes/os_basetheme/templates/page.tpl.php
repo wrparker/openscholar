@@ -189,14 +189,11 @@
 <?php endif; ?>
 </div><!-- /admin_panel -->
 <div class="morph-button morph-button-sidebar morph-button-fixed">
-			<button type="button">
-				<img src="img/os-cp_button.png">
-				<!--<span class="icon icon-cog">Settings Menu</span>-->
-			</button>
+			<button type="button"></button>
 			<div class="morph-content">
 				<div>
 					<div class="content-style-sidebar">
-						<a href="#" style="position:absolute;left:10px;top:7px;"><img src="img/home_button.png" width="25" height="25"></a>
+						<a href="/path/to/vsite-homepage" class="admin-menu-homeicon"></a>
 						<div class="close_panel">
 							<span style="color:#a39d9d;">O</span><span style="color:#df1f26;">S</span>
 						</div><span class="icon icon-close">&#171; Close</span>
@@ -357,6 +354,11 @@
 										</li>
 									</ul>
 								</li>
+								<!--REMOVE THIS LI WHEN BETA TESTING IS COMPLETE-->
+								<li style="margin-top:70px;">
+									<a href='https://harvard.az1.qualtrics.com/SE/?SID=SV_5pErjqW6E44JV0p' target="_blank" style="background: #222;">Feedback Form</a>
+									</li>
+								
 							</ul>
 
 						</div>
