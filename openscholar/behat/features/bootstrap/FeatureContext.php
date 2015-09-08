@@ -2334,6 +2334,7 @@ class FeatureContext extends DrupalContext {
       if (!($elem->getSession()->getPage()->find('xpath', "//input[@id='$inputId']"))) {
         throw new Exception('Dummy input not found');
       }
+      $path = preg_replace('|[\/\\\\]|', DIRECTORY_SEPARATOR, $path);
       $driver->attachFile("//input[@id='$inputId']", $path);
 
       // File is on the field now. We need to grab it and make a drop event out of it
@@ -2365,7 +2366,7 @@ class FeatureContext extends DrupalContext {
 
     if ($filepath = $this->getMinkParameter('files_path')) {
       $files = explode(', ', $files);
-      $paths;
+      $paths = array();
       foreach ($files as $file) {
         $path = rtrim(realpath($filepath), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file;
         if (!file_exists($path)) {
@@ -2415,7 +2416,7 @@ class FeatureContext extends DrupalContext {
   /**
    * @Then /^I should wait for "([^"]*)" directive to "([^"]*)"$/
    */
-  function iWaitForDirective($directive, $appear) {
+  public function iWaitForDirective($directive, $appear) {
     $directive = strtolower(preg_replace('/([ ]+)/', '-', $directive));
     $xpath = ".//*[@$directive]";
     $this->waitForXpathNode($xpath, $appear == 'appear');
@@ -2424,7 +2425,7 @@ class FeatureContext extends DrupalContext {
   /**
    * @Then /^I should see the media browser "([^"]*)" tab is active$/
    */
-  function iShouldSeeTabActive($tab) {
+  public function iShouldSeeTabActive($tab) {
     if (!($elem = $this->getSession()->getPage()->find('css', '.media-browser-button.active'))) {
       throw new Exception('No Media Browser tab is active.');
     }
@@ -2432,6 +2433,76 @@ class FeatureContext extends DrupalContext {
     if ($elem->getText() != $tab) {
       throw new Exception('Wrong tab is active');
     }
+  }
+
+  /**
+   * @Then /^I confirm the file "([^"]*)" in the site "([^"]*)" is the same file as "([^"]*)"$/
+   */
+  public function iConfirmTheFileInElementIsSameAs($filename, $site, $original) {
+    $file = $this->getFile($filename, $site);
+
+    // change directories to so all the file wrapper functions work properly
+    $current = getcwd();
+    chdir(DRUPAL_ROOT);
+
+    // catch any exceptions so we can change the directory back should an exception happen
+    try {
+      if ($filepath = $this->getMinkParameter('files_path')) {
+        $originalPath = $filepath . '/' . $original;
+        if (filesize(drupal_realpath($file->uri)) != filesize($originalPath) || sha1_file($file->uri) != sha1_file($originalPath)) {
+          throw new Exception("File \"$filename\" in site \"$site\" is not the same file as \"$original\"");
+        }
+      } else {
+        throw new Exception('Mink files_path parameter not configured.');
+      }
+    } catch (Exception $e) {
+      // catch everything so we can change the directory back to the original state
+      // then throw them again
+      chdir($current);
+      throw $e;
+    }
+  }
+
+  /**
+   * @Then /^I confirm the file "([^"]*)" in the site "([^"]*)" is not the same file as "([^"]*)"$/
+   */
+  public function iConfirmTheFileInElementIsNotSameAs($filename, $site, $original) {
+    $file = $this->getFile($filename, $site);
+
+    // change directories to so all the file wrapper functions work properly
+    $current = getcwd();
+    chdir(DRUPAL_ROOT);
+
+    // catch any exceptions so we can change the directory back should an exception happen
+    try {
+      if ($filepath = $this->getMinkParameter('files_path')) {
+        $originalPath = $filepath.'/'.$original;
+        if (filesize(drupal_realpath($file->uri)) == filesize($originalPath) && sha1_file($file->uri) == sha1_file($originalPath)) {
+          throw new Exception("File \"$filename\" in site \"site\" is the same file as \"original\"");
+        }
+      }
+      else {
+        throw new Exception('Mink files_path parameter not configured.');
+      }
+    } catch (Exception $e) {
+      // catch everything so we can change the directory back to the original state
+      // then throw them again
+      chdir($current);
+      throw $e;
+    }
+  }
+
+  protected function getFile($filename, $site) {
+    $uri = "$site/files/$filename";
+    $q = db_select('file_managed', 'fm')
+      ->fields('fm', array('fid'))
+      ->condition('uri', '%'.$uri, 'LIKE')
+      ->execute();
+
+    foreach ($q as $r) {
+      return file_load($r->fid);
+    }
+    throw new Exception("file \"$filename\" not found in site \"$site\"");
   }
 
   /**
