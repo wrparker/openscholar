@@ -1,12 +1,15 @@
 <?php
 
 function admin_panel_preprocess_page(&$vars) {
-  if (user_is_logged_in()) {
-    $path = drupal_get_path('module', 'admin_panel');
-    drupal_add_js($path.'/misc/classie.js');
-    drupal_add_js($path.'/misc/modernizr.custom.js');
-    drupal_add_js($path.'/misc/uiMorphingButton_fixed.js');
-    drupal_add_css($path.'/misc/component.css');
-    drupal_add_css($path.'/misc/content.css');
-  }
+	if (user_is_logged_in()) {
+		$path = drupal_get_path('module', 'admin_panel');
+		drupal_add_js($path . '/misc/modernizr.custom.js');
+		drupal_add_js($path . '/misc/classie.js');
+		drupal_add_js($path . '/misc/uiMorphingButton_fixed.js');
+		drupal_add_js($path . '/misc/admin_panel.js');
+		drupal_add_js($path . '/misc/admin_panel-menu.js');
+		drupal_add_css($path . '/misc/component.css');
+		drupal_add_css($path . '/misc/content.css');
+		drupal_add_css($path . '/misc/admin_panel-menu.css');
+	}
 }

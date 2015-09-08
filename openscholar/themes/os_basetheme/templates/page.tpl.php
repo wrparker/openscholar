@@ -357,6 +357,11 @@
 										</li>
 									</ul>
 								</li>
+								<!--REMOVE THIS LI WHEN BETA TESTING IS COMPLETE-->
+								<li style="margin-top:70px;">
+									<a href='https://harvard.az1.qualtrics.com/SE/?SID=SV_5pErjqW6E44JV0p' target="_blank" style="background: #404140;">Feedback Form</a>
+									</li>
+								
 							</ul>
 
 						</div>
