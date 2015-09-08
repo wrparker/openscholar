@@ -148,9 +148,17 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
 
     $bundles = os_app_info_declared_node_bundle();
     $type_info = node_type_get_types();
-//Also Check Spaces features
+    $variable_controller = $this->getVariableController($vsite);
+    $spaces_features = $variable_controller->get('spaces_features');
+
     foreach ($bundles as $bundle) {
       if (!og_user_access('node', $vsite, 'create ' . $bundle . ' content')) {
+        continue;
+      }
+
+      //Check that the feature is enabled.
+      $feature = os_get_app_by_bundle($bundle);
+      if (empty($spaces_features[$feature])) {
         continue;
       }
 
@@ -161,6 +169,15 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'href' => "node/add/{$type_url_str}",
         'alt' => $type_info[$bundle]->description,
       );
+
+      if (os_importer_importable_content($bundle)) {
+          $import_links[] = array(
+          'label' => os_importer_importer_title($bundle),
+          'type' => 'link',
+          'href' => 'cp/os-importer/' . $bundle,
+          'alt' => t("One time bulk import of @type content.",array('@type' => $type_info[$bundle]->name)),
+        );
+      }
     }
 
     $structure = array(
@@ -207,24 +224,36 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
             'label' => 'Import',
             'type' => 'heading',
             'default_state' => 'collapsed',
-            'children' => array(
-              array(
-              )
-            ),
+            'children' => $import_links,
           ),
         ),
       ),
       array(
         'label' => 'Menus',
-        'type' => 'heading',
-        'default_state' => 'collapsed',
-        'children' => array(),
+        'type' => 'link',
+        'href' => '/cp/build/menu'
       ),
       array(
         'label' => 'Appearance',
         'type' => 'heading',
         'default_state' => 'collapsed',
-        'children' => array(),
+        'children' => array(
+            array(
+              'label' => 'Themes',
+              'type' => 'link',
+              'href' => '/cp/appearance'
+            ),
+            array(
+              'label' => 'Layout',
+              'type' => 'link',
+              'href' => '/cp/build/layout'
+            ),
+            array(
+              'label' => 'Theme Settings',
+              'type' => 'link',
+              'href' => '/dev/null'
+            ),
+          ),
       ),
       array(
         'label' => 'Settings',
@@ -232,6 +261,18 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'default_state' => 'collapsed',
         'children' => array(),
       ),
+      array(
+        'label' => 'Users & Roles',
+        'type' => 'link',
+        'href' => '/cp/users'
+      ),
+      array(
+        'label' => 'Help',
+        'type' => 'heading',
+        'default_state' => 'collapsed',
+        'children' => array(),
+      ),
+      $admin
     );
 
 return $structure;
@@ -423,5 +464,18 @@ return $structure;
     );
 
     return $build;
+  }
+
+  protected function getVariableController($vsite) {
+
+    $controller = FALSE;
+    ctools_include('plugins');
+
+    $plugin = ctools_get_plugins('spaces', 'plugins', 'spaces_controller_variable');
+    if ($plugin && $class = ctools_plugin_get_class($plugin, 'handler')) {
+      $controller = new $class('variable', 'og', $vsite);
+    }
+
+    return $controller;
   }
 }
