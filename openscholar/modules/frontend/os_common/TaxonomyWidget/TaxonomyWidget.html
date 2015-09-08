@@ -14,7 +14,7 @@
     <div ng-switch-when="entityreference_autocomplete">
         <div ng-repeat="selectedTerm in selectedTerms[vocab.id]">
             <input type="text"
-                   ng-model="selectedTerm"
+                   ng-model="selectedTerms[vocab.id][$index]"
                    typeahead="term.label for term in allTerms[vocab.id] | filter:$viewValue | filter:alreadySelected | limitTo:8"
                    typeahead-on-select="onSelect($item, $model, $label)"
                    class="form-text clearfix">
