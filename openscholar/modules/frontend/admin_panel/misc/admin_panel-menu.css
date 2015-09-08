@@ -7,21 +7,11 @@
 
 			.morph-button > button {
 
-				background-color: #111;
+				background: url('images/os-cp_button.png') no-repeat;
+				background-color:#111;
 			}
 
-			*, *:after, *:before {
-				-webkit-box-sizing: border-box;
-				-moz-box-sizing: border-box;
-				box-sizing: border-box;
-			}
-			.clearfix:before, .clearfix:after {
-				content: '';
-				display: table;
-			}
-			.clearfix:after {
-				clear: both;
-			}
+			
 
 			html, body {
 				overflow-x: hidden;
@@ -47,6 +37,16 @@
 				-webkit-transform: translateX(175px);
 				transform: translateX(175px);
 			}
+			
+			.admin-menu-homeicon {
+    position: absolute;
+    left: 10px;
+    top: 5px;
+    width: 30px;
+    height: 25px;
+    background: url('images/home_button.png') no-repeat;
+}
+
 
 			/* MENU SPECIFIC */
 			#cssmenu, #cssmenu ul, #cssmenu ul li, #cssmenu ul li a {
@@ -177,30 +177,6 @@
 				background: #dddddd;
 			}
 
-			/* Modals */
-			.modal {
-				position: absolute;
-				left: 225px;
-				top: 42px;
-				border: 3px solid #8E8E8B;
-				background: #FFF;
-				display: none;
-			}
-			.modal.show {
-				display: block;
-			}
-
-			.modal-heading {
-				position: absolute;
-				top: 0;
-				left: 0;
-				right: 0;
-				width: 100%;
-				height: 35px;
-				background: #313338;
-				color: #FFF;
-				padding: 9px;
-			}
 
 			.topRight_Menu {
 				position: fixed;
