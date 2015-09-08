@@ -85,7 +85,10 @@ Feature: foo
       And I mouse over the ".media-browser-pane .help_icon" element
      Then I should see "jpeg jpg png"
       And I should not see "pdf"
+      And I should see "Files must be less than 15 MB."
       And I drop the file "abc.pdf" onto the "Drag and drop files here." area
       And I should see "abc.pdf is not an accepted file type."
       And I should wait for the text "abc.pdf is not an accepted file type." to "disappear"
-      And I should not see "abc.pdf is not an acepted file type."
+      And I should not see "abc.pdf is not an accepted file type."
+      And I drop the file "Expeditionary_Fighting_Vehicle_test.jpg" onto the "Drag and drop files here." area
+      And I should see "Expeditionary_Fighting_Vehicle_test.jpg is larger than the maximum filesize of 15 MB"
