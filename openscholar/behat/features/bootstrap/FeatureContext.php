@@ -2525,6 +2525,21 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Then /^I should not see "([^"]*)" in an? "([^"]*)" element$/
+   *
+   * Check text in multiple matching elements for a match
+   * Default implementation (in the "" element) does not work when multiple elements match selector
+   */
+  public function iShouldNotSeeInAElement($text, $selector) {
+    $elems = $this->getSession()->getPage()->findAll('css', $selector);
+    foreach ($elems as $e) {
+      if (stripos($e->getText(), $text) !== FALSE) {
+        throw new Exception("The text \"$text\" was found in an element matching \"$selector\"");
+      }
+    }
+  }
+
+  /**
    * @When /^I mouse over the "([^"]*)" element$/
    */
   public function iMouseOverElement($selector) {

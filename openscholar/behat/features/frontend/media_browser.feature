@@ -79,6 +79,23 @@ Feature: Media Browser
       And I should see "kitten-2_01.jpg" in the "div.media-row.new" element
 
   @media_browser @javascript
+  Scenario: Test the work flow for a single, valid, duplicate file, which we cancel
+    Given I am logging in as "john"
+     And I wait for page actions to complete
+     And I edit the node "About" in the group "john"
+    When I click on the "Upload" control
+     And I wait "1 second" for the media browser to open
+     And I drop the file "kitten-2.jpg" onto the "Drag and drop files here." area
+    Then I should see the text "A file with the name 'kitten-2.jpg' already exists."
+     And I press the "Cancel" button
+     And I should see the media browser "Upload from your computer" tab is active
+    When I click on the tab "Previously uploaded files"
+    Then I should see "kitten-2.jpg" in a "div.media-row" element
+     And I should see "kitten-2_01.jpg" in a "div.media-row" element
+     And I should not see "kitten-2_02.jpg" in a "div.media-row" element
+     And I confirm the file "kitten-2.jpg" in the site "john" is not the same file as "kitten-2.jpg"
+
+  @media_browser @javascript
   Scenario: Test the file upload work flow for multiple, valid, non-duplicate files
     Given I am logging in as "john"
       And I wait for page actions to complete
