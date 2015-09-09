@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Quattrocento+Sans);
+@import url(https://fonts.googleapis.com/css?family=Lato);
 
 body,
 #page-title,
@@ -27,7 +27,7 @@ h2.block-title,
 #menu-bar ul.nice-menu a,
 #boxes-box-site_info,
 #boxes-box-site_info a {
-    font-family: 'Quattrocento Sans', Georgia, serif !important;
+    font-family: 'Lato', Georgia, serif !important;
 }
 /* Main wrappers */
 
@@ -42,10 +42,11 @@ body {
 #columns a.node-readmore {
     border-bottom: none;
     font-weight: bold;
-    float: none;
     padding-right: 11px;
     position: relative;
     z-index: 9;
+    text-decoration: none;
+    font-size: .78em;
 }
 #columns a.node-readmore:after {
     background: url("../../hwpi_basetheme/images/hwpi_basesprite.png") no-repeat 3px -572px;
@@ -59,7 +60,7 @@ body {
     color: #333;
      
 }
-#boxes-box-site_info,
+
 #boxes-box-site_info a {
     color: #333;
 }
@@ -152,7 +153,7 @@ ul.nice-menu-down li ul li ul {
     border-bottom: none;
 }
 
-.block-boxes-os_sv_list_box h2.block-title {
+.front .block-boxes-os_sv_list_box h2.block-title {
     text-align: center;
 }
 /* Titles & Type */
@@ -314,7 +315,7 @@ h2.block-title {
     color: inherit;
 }
 .section-nav .expanded.menu-depth-2 > a:hover {
-    background-color: #e3e3e1 !important;
+    background-color: #ededed !important;
 }
 .section-nav .expanded.menu-depth-2 .menu-depth-3 > a,
 .section-nav .expanded.menu-depth-2 .menu-depth-4 > a,
