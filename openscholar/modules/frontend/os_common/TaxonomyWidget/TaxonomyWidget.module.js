@@ -78,12 +78,6 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
                     }
                   }
 
-                  if (vocab.form == 'entityreference_autocomplete'){
-                    scope.selectedTerms[t.vid].push({label: '', id: 0, vid: t.vid});
-                  }
-                  else if (vocab.form == 'term_reference_tree') {
-                  }
-
                   scope.disabled = false;
                 });
               }
@@ -93,6 +87,9 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
         selectChange = false;
       }, true);
 
+      /**
+       * Converts our multi-tiered selectedTerms array into a flat array like what was passed to us earlier.
+       */
       scope.$watch('selectedTerms', function(newTerms, oldTerms) {
         if (!termChange) {
           selectChange = true;
@@ -108,26 +105,22 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
         termChange = false;
       }, true);
 
-      // Occurs every time a selected file is changed.
-      attrs.$observe('bundle', function (value) {
-        if (!value) {
-          return;
-        }
-      });
-
-      /**
-       * Add more autocomplete inputs.
-       */
-      scope.addMore = function(vocab_id) {
-      };
-
       /**
        * Add another term to the selected terms object.
        */
       scope.onSelect = function ($item, $model, $label) {
         scope.selectedTerms[$item.vid].splice(0, 0, $item);
-        scope.addMore($item.vid);
+        this.autocompleteTerm = null;
       };
+
+      /**
+       * Remove term from the selected terms object
+       * @param vid
+       * @param $index
+       */
+      scope.removeTerm = function (vid, $index) {
+        scope.selectedTerms[vid].splice($index, 1);
+      }
 
       /**
        * Add and remove a term when checking/un-checking the checkbox.
