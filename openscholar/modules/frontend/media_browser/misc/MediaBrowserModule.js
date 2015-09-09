@@ -345,13 +345,15 @@
           uploading = false;
           progress = null;
           currentlyUploading = 0;
-          if (toEditForm && firstId) {
-            // there's only one file, we can assume it's this one
-            $scope.setSelection(firstId);
-            $scope.changePanes('edit');
-          }
-          else {
-            $scope.changePanes('library');
+          if ($scope.dupes.length == 0) {
+            if (toEditForm && firstId) {
+              // there's only one file, we can assume it's this one
+              $scope.setSelection(firstId);
+              $scope.changePanes('edit');
+            }
+            else {
+              $scope.changePanes('library');
+            }
           }
         }
       }
