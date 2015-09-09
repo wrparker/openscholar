@@ -2596,7 +2596,7 @@ class FeatureContext extends DrupalContext {
       $this->waitForXpathNode(".//*[contains(normalize-space(string(text())), \"$text\")]", $appear == 'appear');
     }
     catch (Exception $e) {
-      throw new Exception("Text \"$text\" not found on page after 5 seconds.");
+      throw new Exception("Text \"$text\" did not \"$appear\" after 5 seconds.");
     }
   }
 

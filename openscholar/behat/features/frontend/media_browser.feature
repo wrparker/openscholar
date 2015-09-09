@@ -139,3 +139,17 @@ Feature: Media Browser
       And I should not see "abc.pdf is not an accepted file type."
       And I drop the file "Expeditionary_Fighting_Vehicle_test.jpg" onto the "Drag and drop files here." area
       And I should see "Expeditionary_Fighting_Vehicle_test.jpg is larger than the maximum filesize of 15 MB"
+
+  @media_browser @javascript
+  Scenario: Test the file upload work flow for multiple valid files, some of which are duplicates and some of which are not.
+    Given I am logging in as "john"
+      And I wait for page actions to complete
+      And I edit the node "About" in the group "john"
+     When I click on the "Upload" control
+      And I wait "1 second" for the media browser to open
+      And I drop the files "abc.pdf, kitten-2.jpg" onto the "Drag and drop files here." area
+     Then I should see "A file with the name 'kitten-2.jpg' already exists."
+      And I press the "Cancel" button
+      And I should see the media browser "Upload from your computer" tab is active
+      And I click on the tab "Previously uploaded files"
+      And I should see "abc.pdf" in a "div.media-row.new" element
