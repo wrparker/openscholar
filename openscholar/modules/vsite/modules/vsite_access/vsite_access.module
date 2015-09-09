@@ -495,36 +495,3 @@ function vsite_access_preprocess_page(&$vars) {
     $vars['is_front'] = false;
   }
 }
-
-/**
- * Implements hook_form_FORM_ID_alter().
- */
-function vsite_access_form_node_form_alter(&$form, $form_state) {
-  // Provide the redirect field for content managers.
-  if (user_access('administer redirects')) {
-    return;
-  }
-
-  if (!$vsite = vsite_get_vsite() || empty($form_state['node'])) {
-    return;
-  }
-
-  $node = $form_state['node'];
-
-  if (!in_array($node->type, array('news', 'biblio'))) {
-    return;
-  }
-
-  global $user;
-  $account = clone $user;
-
-  $field_access = in_array('content editor', og_get_user_roles('node', $vsite->id, $account->uid));
-
-  if (isset($form['field_url'])) {
-    $form['field_url']['#access'] = $field_access;
-  }
-
-  if (isset($form['field_biblio_redirect'])) {
-    $form['field_biblio_redirect']['#access'] = $field_access;
-  }
-}
