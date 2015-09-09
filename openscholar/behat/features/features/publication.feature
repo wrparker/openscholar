@@ -89,6 +89,19 @@ Feature:
      Then I should see "div" element with the class "bib-neg-indent"
 
   @api @features_second
+  Scenario: Verify that the publication citations display author F. Middle Last correctly
+            when format is Chicago Author-Date style.
+    Given I am logging in as "john"
+      And I visit "john/node/add/biblio"
+      And I select "Book" from "Publication Type"
+      And I press "edit-biblio-next"
+      And I fill in "Title" with "The Great Gatsby"
+      And I fill in "edit-biblio-year" with "1925"
+      And I fill in "edit-biblio-contributors-0-name" with "F. Scott Fitzgerald"
+      And I press "edit-submit"
+    Then I should see "Fitzgerald, F. Scott"
+
+  @api @features_second
   Scenario: Verify the user can see message the the publication won't display
             in the publication form.
     Given I am logging in as "john"
