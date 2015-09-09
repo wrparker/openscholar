@@ -2340,14 +2340,20 @@ class FeatureContext extends DrupalContext {
       // File is on the field now. We need to grab it and make a drop event out of it.
       // We can't do this with jQuery because the handlers are not bound using it. ng-file-upload use browser methods.
       $driver->executeScript("
-        e = document.createEvent(\"HTMLEvents\");
-        e.initEvent('drop', true, true);
-        e.dataTransfer = {
+        var drag = document.createEvent(\"HTMLEvents\");
+        drag.initEvent('dragover', true, true);
+        drag.dataTransfer = {
+          files: $inputId.get(0).files
+        };
+        var drop = document.createEvent(\"HTMLEvents\");
+        drop.initEvent('drop', true, true);
+        drop.dataTransfer = {
           files : $inputId.get(0).files
         };
         var result = document.evaluate(\"$target\", document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
         var elem = result.iterateNext();
-        elem.dispatchEvent(e);");
+        elem.dispatchEvent(drag);
+        elem.dispatchEvent(drop);");
     }
     else {
       throw new Exception('Mink files_path parameter not configured.');
@@ -2396,20 +2402,24 @@ class FeatureContext extends DrupalContext {
 
       $driver->executeScript("
         var inputs = $inputStr;
-        e = document.createEvent(\"HTMLEvents\");
-        e.initEvent('drop', true, true);
-        e.dataTransfer = {
+        drop = document.createEvent(\"HTMLEvents\");
+        drop.initEvent('drop', true, true);
+        drop.dataTransfer = {
           files : []
         };
         for (var i = 0; i < inputs.length; i++) {
-          e.dataTransfer.files.push(jQuery('#'+inputs[i]).get(0).files[0]);
+          drop.dataTransfer.files.push(jQuery('#'+inputs[i]).get(0).files[0]);
         }
-        e.dataTransfer.files.item = function (i) {
+        drop.dataTransfer.files.item = function (i) {
           return this[i];
         }
+        var drag = document.createEvent(\"HTMLEvents\");
+        drag.initEvent('dragover', true, true);
+        drag.dataTransfer = drop.dataTransfer;
         var result = document.evaluate(\"$target\", document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
         var elem = result.iterateNext();
-        elem.dispatchEvent(e);");
+        elem.dispatchEvent(drag);
+        elem.dispatchEvent(drop);");
     }
     else {
       throw new Exception('Mink files_path parameter not configured.');
@@ -2551,6 +2561,14 @@ class FeatureContext extends DrupalContext {
     else {
       throw new Exception("No element matching \"$selector\" is found.");
     }
+  }
+
+  /**
+   * @When /^I wait "([^"]*)"$/
+   */
+  public function iWait($time) {
+    $seconds = strtotime($time, 0);
+    $this->getSession()->getDriver()->wait($seconds * 1000, false);
   }
 
   /**
@@ -2703,6 +2721,22 @@ class FeatureContext extends DrupalContext {
   public function iClickOnControl($text) {
     $element = $this->getSession()->getPage()->find('xpath', "//*[text() = '{$text}']");
     $element->click();
+  }
+
+  /**
+   * @When /^I click on the "([^"]*)" control in the "([^"]*)" element$/
+   */
+  public function iClickOnControlInElement($text, $css) {
+    $page = $this->getSession()->getPage();
+    $parents = $page->findAll('css', $css);
+
+    foreach ($parents as $p) {
+      if ($p->isVisible()) {
+        if ($elem = $p->find('xpath', "//*[text() = '{$text}']")) {
+          $elem->click();
+        }
+      }
+    }
   }
 
   /**

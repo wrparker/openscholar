@@ -108,6 +108,21 @@ Feature: Media Browser
       And I should see "conservatory_of_flowers3.jpg" in a "div.media-row.new" element
 
   @media_browser @javascript
+  Scenario: Test the file upload work flow for multiple, valid, duplicate files, which we cancel
+    Given I am logging in as "john"
+      And I wait for page actions to complete
+      And I edit the node "About" in the group "john"
+     When I click on the "Upload" control
+      And I wait "1 second" for the media browser to open
+      And I drop the files "rubber-duck.jpg, conservatory_of_flowers3.jpg" onto the "Drag and drop files here." area
+     Then I should see "A file with the name 'rubber-duck.jpg' already exists."
+      And I should see "1/2"
+     When I press the "Cancel" button
+     Then I should see "A file with the name 'conservatory_of_flowers3.jpg' already exists."
+      And I click on the "Cancel" control in the ".media-browser-dupe" element
+     Then I should see the media browser "Upload from your computer" tab is active
+
+  @media_browser @javascript
   Scenario: Test the file upload work flow for a single, invalid file.
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -120,7 +135,7 @@ Feature: Media Browser
       And I should see "Files must be less than 15 MB."
       And I drop the file "abc.pdf" onto the "Drag and drop files here." area
       And I should see "abc.pdf is not an accepted file type."
-      And I should wait for the text "abc.pdf is not an accepted file type." to "disappear"
+      And I wait "6 seconds"
       And I should not see "abc.pdf is not an accepted file type."
       And I drop the file "Expeditionary_Fighting_Vehicle_test.jpg" onto the "Drag and drop files here." area
       And I should see "Expeditionary_Fighting_Vehicle_test.jpg is larger than the maximum filesize of 15 MB"
