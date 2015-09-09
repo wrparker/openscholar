@@ -1,5 +1,4 @@
 @import url(https://fonts.googleapis.com/css?family=Lato);
-
 body,
 #page-title,
 .node-title,
@@ -35,7 +34,7 @@ html,
 body {
     background: #fff;
     color: #333;
-    font-size: 1.025em;
+    font-size: .98em;
 }
 /* Elements */
 
@@ -58,9 +57,11 @@ body {
 #header {
     background: #F4F4F4;
     color: #333;
-     
 }
-
+#boxes-box-site_info h2 {
+    font-size: 1.3em;
+    font-style: normal;
+}
 #boxes-box-site_info a {
     color: #333;
 }
@@ -105,7 +106,6 @@ body {
 #menu-bar ul.nice-menu .menuparent ul li a,
 #menu-bar ul.nice-menu .menuparent ul li a.active {
     color: #FFF;
-    font-family: arial;
     font-size: 13px;
     font-weight: bold;
     padding-right: 8px;
@@ -145,16 +145,18 @@ ul.nice-menu-down li ul li ul {
 
 .front #content-panels .region-content-first,
 .front #content-panels .region-content-bottom {
-    background-color: #F4f4f4;
+    background-color: #F5f5f5;
     border-top: 1px solid #DDD;
     border-bottom: 1px solid #DDD;
 }
 .front #content-panels .region.region-content-bottom {
     border-bottom: none;
 }
-
 .front .block-boxes-os_sv_list_box h2.block-title {
     text-align: center;
+}
+.front #content-panels {
+    margin-bottom: 0;
 }
 /* Titles & Type */
 
@@ -173,21 +175,19 @@ ul.nice-menu-down li ul li ul {
     line-height: 28px;
 }
 h1#page-title {
-    font-size: 30px;
+    font-size: 25px;
     line-height: 1;
     /* Font size is larger than the default line-height, so will overlap if the title wraps */
     
-    margin: 0 0 20px;
+    margin: 0 0 2%;
+}
+.node-type-page h1#page-title {
+    margin: 1% 0 2%;
 }
 h2.block-title {
     padding: 7px 0;
-    text-transform: none;
     font-size: .95em;
-    letter-spacing: 0.1em;
     font-weight: bold;
-}
-.page-search h1#page-title {
-    margin-top: 10px;
 }
 #content-column .block.block-boxes-os_boxes_manual_list .links.inline a,
 .more-link {
@@ -196,23 +196,21 @@ h2.block-title {
 }
 /* Search */
 
-#search-block-form .container-inline .form-item .form-text {
-    height: 32px;
-}
 #search-block-form input.form-submit,
 #search-block-form #edit-submit,
 #search-form #edit-submit {
     background: url('/profiles/openscholar/themes/hwpi_basetheme/images/hwpi_basesprite.png') no-repeat 2px -441px #c7c7c7;
     height: 34px;
 }
-#search-block-form .form-item label {
-    color: #333;
-}
 /* Border control */
 
 .not-front.two-sidebars #content-column .content-inner {
     border-right: 1px solid #e7e7e7;
 }
+.content-left.content-right .region-content-first .region-inner,
+.content-left.content-bottom .region-content-first .region-inner,
+.content-right.content-bottom .region-content-second .region-inner,
+.content-left.content-right.content-bottom .region-content-second .region-inner,
 .two-sidebars #content-panels,
 .one-sidebar.sidebar-second #content-panels {
     border-right: none;
@@ -228,13 +226,6 @@ h2.block-title {
 }
 /* Blocks */
 
-.sidebar .block {
-    margin-bottom: 20px;
-}
-
-.block.no-title .block-content {
-    margin-top: 0;
-}
 #content-panels .block {
     margin-bottom: 15px;
 }
@@ -255,9 +246,6 @@ h2.block-title {
 }
 /* Calander */
 
-.date-nav h3 {
-    font-family: arial;
-}
 .date-nav h3 a {
     color: #1E1E1E;
 }
@@ -288,11 +276,14 @@ h2.block-title {
     font-size: 14px;
 }
 .ui-tabs ul.ui-tabs-nav li.ui-tabs-active {
-    background: #a41b2f !important;
+    border-top: 3px solid #215990;
 }
 .ui-tabs ul.ui-tabs-nav li.ui-tabs-active a {
     border-bottom-width: 1px;
-    color: #fff;
+    color: #1e1e1e;
+}
+.ui-tabs ul.ui-tabs-nav li {
+    background: #EAEAE6;
 }
 .block-boxes-os_boxes_tabs .links li a {
     background-image: none !important;
@@ -360,14 +351,11 @@ h2.block-title {
     color: #FFF;
 }
 #footer ul.menu li a {
-    font-family: arial;
     text-transform: uppercase;
-    font-size: 13px;
+    font-size: 12px;
 }
-#footer ul.menu li ul li a {
-    font-family: arial;
-    text-transform: none;
-    font-size: 14px;
+#footer ul.menu li a.menu-heading {
+    font-size: .9em;
 }
 .page-news .view .node-teaser {
     padding: 10px 0 30px;
@@ -390,4 +378,7 @@ a.rslides_nav {
 
 .node-type-person .node-person .field-name-field-professional-title {
     margin-top: 0;
+}
+#powered-by a {
+    background-position: -14px -548px;
 }
