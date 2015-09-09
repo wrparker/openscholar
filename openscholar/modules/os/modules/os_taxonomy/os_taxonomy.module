@@ -176,11 +176,11 @@ function os_taxonomy_in_taxonomy_term_context($view = NULL) {
 
   $item = menu_get_item();
 
-  if (strpos(implode('/', $item['original_map']), 'calendar/export.ics/upcoming/') === 0) {
+  if ($export = strpos(implode('/', $item['original_map']), 'calendar/export.ics/upcoming/') === 0) {
     // When exporting upcoming events filtered by term we need to see that we
     // have 'upcoming/' in the original map. If so, search the key of the
     // upcoming element and remove it from the original map. We don't need it.
-    count($item['original map']);
+    count($item['original_map']);
     $key = array_search('upcoming', $item['original_map']);
     unset($item['original_map'][$key]);
   }
@@ -192,8 +192,12 @@ function os_taxonomy_in_taxonomy_term_context($view = NULL) {
     return;
   }
 
-  // Get the term alias, if exists.
-  $path_parts = array_slice($item['original_map'], $path_elements);
+  // Change the offset according to context of the event filtering. When
+  // exporting the events we need another offset for the slicing.
+  $offset = $export ? $path_elements - 1 : $path_elements;
+
+  // Compile the term alias from the last two items in the array.
+  $path_parts = array_slice($item['original_map'], $offset, 2);
 
   if (!$path = drupal_get_normal_path(implode('/', $path_parts))) {
     return;
