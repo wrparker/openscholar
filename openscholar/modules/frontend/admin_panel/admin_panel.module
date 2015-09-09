@@ -13,3 +13,42 @@ function admin_panel_preprocess_page(&$vars) {
 		drupal_add_css($path . '/misc/admin_panel-menu.css');
 	}
 }
+
+/**
+ * Implements hook_library_alter().
+ *
+ * Adds code for the admin panel
+ */
+function admin_panel_library_alter(&$libs) {
+
+  $disable = array('alias' => TRUE);
+  $path = drupal_get_path('module', 'admin_panel');
+
+  // Includes resources needed to create the admin panel.
+  $libs['admin_panel'] = array(
+    'title' => 'Admin Panel libraries',
+  );
+
+  $libs['admin_panel']['js'] = array(
+    $path . '/misc/AdminPanelModule.js' => array(),
+    array(
+      'data' => array(
+        'paths' => array(
+          'moduleRoot' => url($path, $disable),
+        ),
+        'version' => array(
+          'adminPanel' => '0.0.1'
+        ),
+      ),
+      'type' => 'setting',
+    )
+  );
+
+  $libs['admin_panel']['dependencies'] = array(
+    array('os_common', 'auth'),
+  );
+
+  $libs['admin_panel']['css'] = array(
+    $path.'/misc/media_browser.mediaBrowser.css',
+  );
+}
