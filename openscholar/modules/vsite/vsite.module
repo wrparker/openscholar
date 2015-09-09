@@ -3230,7 +3230,16 @@ function vsite_og_permission() {
         'content editor',
         'vsite admin',
       )
-    )
+    ),
+    'administer redirects' => array(
+      'title' => t('Administer URL redirections'),
+      'description' => t('Grant access to the redirect field.'),
+      'os_override' => TRUE,
+      'default role' => array(
+        'content editor',
+        'vsite admin',
+      )
+    ),
   );
 }
 
