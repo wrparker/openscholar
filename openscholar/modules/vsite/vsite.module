@@ -3231,8 +3231,8 @@ function vsite_og_permission() {
         'vsite admin',
       )
     ),
-    'administer redirects' => array(
-      'title' => t('Administer URL redirections'),
+    'bypass redirection' => array(
+      'title' => t('Bypass redirection'),
       'description' => t('Grant access to the redirect field.'),
       'os_override' => TRUE,
       'default role' => array(
