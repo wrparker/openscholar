@@ -3618,3 +3618,36 @@ function _vsite_metatag_get_cid_parts($vsite) {
 
   return $cid_parts;
 }
+
+/**
+ * Query callback; Get all the vsites.
+ */
+function vsite_get_vsites($id = NULL) {
+  $query = new EntityFieldQuery();
+
+  $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('type', array_keys(vsite_vsite_og_node_type_info()), 'IN');
+
+  if ($id) {
+    $query->propertyCondition('nid', $id, '>=');
+  }
+
+  return $query;
+}
+
+/**
+ * Iterator callback; Grant bypass redirection permisison to content managers.
+ */
+function vsite_grant_by_pass_permission($node) {
+  $granted_roles = array('content editor', 'vsite admin');
+  $roles = og_roles('node', $node->type, $node->nid);
+
+  foreach ($roles as $rid => $role) {
+    if (!in_array($role, $granted_roles)) {
+      continue;
+    }
+
+    og_role_grant_permissions($rid, array('bypass redirection'));
+  }
+}
