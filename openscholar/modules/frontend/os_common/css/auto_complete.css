@@ -1,0 +1,29 @@
+div[ng-repeat="vocab in vocabs"] {
+    width: 60%;
+}
+div[ng-repeat="vocab in vocabs"] ul.dropdown-menu {
+    list-style: none;
+    margin: 0;
+    background-color: #efefef;
+    width: 98%;
+}
+div[ng-repeat="vocab in vocabs"] ul.dropdown-menu li {
+    padding: 4px 8px;
+}
+div[ng-repeat="vocab in vocabs"] ul.dropdown-menu li:hover {
+    background-color: #e1e1e1;
+    cursor: pointer;
+}
+div[ng-repeat="vocab in vocabs"] .tw-term-remove {
+    color: #FF0000;
+    font-weight: bold;
+    text-transform: lowercase;
+    font-size: 1.1em;
+    background-color: #efefef;
+    padding: 0 4px;
+    border: 1px solid #ccc;
+    font-family: verdana;
+}
+div[ng-repeat="vocab in vocabs"] div[ng-repeat="selectedTerm in selectedTerms[vocab.id]"] {
+    padding: 3px 0px;
+}
