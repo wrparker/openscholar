@@ -88,18 +88,49 @@ Feature:
       And I visit "john/cp/build/features/os_publications"
      Then I should see "div" element with the class "bib-neg-indent"
 
-  @api @features_second
+  @js @features_second
   Scenario: Verify that the publication citations display author F. Middle Last correctly
             when format is Chicago Author-Date style.
     Given I am logging in as "john"
-      And I visit "john/node/add/biblio"
-      And I select "Book" from "Publication Type"
-      And I press "edit-biblio-next"
-      And I fill in "Title" with "The Great Gatsby"
-      And I fill in "edit-biblio-year" with "1925"
-      And I fill in "edit-biblio-contributors-0-name" with "F. Scott Fitzgerald"
+      And I edit the node "Philosophers Stone"
+      And I fill in "edit-biblio-contributors-0-auth-type" with "1"
+      And I fill in "edit-biblio-contributors-0-name" with "Rowling, J. Kathleen"
+      And I fill in "edit-biblio-contributors-0-rank" with "0"
       And I press "edit-submit"
-    Then I should see "Fitzgerald, F. Scott"
+    Then I should see "Rowling, J. Kathleen"
+
+  @js @features_second
+  Scenario: Verify that the publication citations display author F. Middle Last correctly
+            when format is Chicago Author-Date style.
+    Given I am logging in as "john"
+      And I edit the node "Philosophers Stone"
+      And I fill in "edit-biblio-contributors-0-auth-type" with "1"
+      And I fill in "edit-biblio-contributors-0-name" with "J. Kathleen Rowling"
+      And I fill in "edit-biblio-contributors-0-rank" with "0"
+      And I press "edit-submit"
+    Then I should see "Rowling, J. Kathleen"
+
+  @js @features_second
+  Scenario: Verify that the publication citations display author F. M. Last correctly
+            when format is Chicago Author-Date style.
+    Given I am logging in as "john"
+      And I edit the node "Philosophers Stone"
+      And I fill in "edit-biblio-contributors-0-auth-type" with "1"
+      And I fill in "edit-biblio-contributors-0-name" with "Rowling, J. K."
+      And I fill in "edit-biblio-contributors-0-rank" with "0"
+      And I press "edit-submit"
+    Then I should see "Rowling, J. K."
+
+  @js @features_second
+  Scenario: Verify that the publication citations display author F. M. Last correctly
+            when format is Chicago Author-Date style.
+    Given I am logging in as "john"
+      And I edit the node "Philosophers Stone"
+      And I fill in "edit-biblio-contributors-0-auth-type" with "1"
+      And I fill in "edit-biblio-contributors-0-name" with "J. K. Rowling"
+      And I fill in "edit-biblio-contributors-0-rank" with "0"
+      And I press "edit-submit"
+    Then I should see "Rowling, J. K."
 
   @api @features_second
   Scenario: Verify the user can see message the the publication won't display
