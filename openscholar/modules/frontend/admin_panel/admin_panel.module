@@ -2,15 +2,8 @@
 
 function admin_panel_preprocess_page(&$vars) {
 	if (user_is_logged_in()) {
-		$path = drupal_get_path('module', 'admin_panel');
-		drupal_add_js($path . '/misc/modernizr.custom.js');
-		drupal_add_js($path . '/misc/classie.js');
-		drupal_add_js($path . '/misc/uiMorphingButton_fixed.js');
-		drupal_add_js($path . '/misc/admin_panel.js');
-		drupal_add_js($path . '/misc/admin_panel-menu.js');
-		drupal_add_css($path . '/misc/component.css');
-		drupal_add_css($path . '/misc/content.css');
-		drupal_add_css($path . '/misc/admin_panel-menu.css');
+    drupal_add_library('admin_panel','admin_panel');
+    os_common_angular_app('AdminPanel');
 	}
 }
 
@@ -19,7 +12,7 @@ function admin_panel_preprocess_page(&$vars) {
  *
  * Adds code for the admin panel
  */
-function admin_panel_library_alter(&$libs) {
+function admin_panel_library() {
 
   $disable = array('alias' => TRUE);
   $path = drupal_get_path('module', 'admin_panel');
@@ -31,6 +24,11 @@ function admin_panel_library_alter(&$libs) {
 
   $libs['admin_panel']['js'] = array(
     $path . '/misc/AdminPanelModule.js' => array(),
+    $path . '/misc/classie.js' => array(),
+    $path . '/misc/modernizr.custom.js' => array(),
+    $path . '/misc/uiMorphingButton_fixed.js' => array(),
+    $path . '/misc/admin_panel.js' => array(),
+    $path . '/misc/admin_panel-menu.js' => array(),
     array(
       'data' => array(
         'paths' => array(
@@ -49,6 +47,10 @@ function admin_panel_library_alter(&$libs) {
   );
 
   $libs['admin_panel']['css'] = array(
-    $path.'/misc/media_browser.mediaBrowser.css',
+    $path.'/misc/component.css',
+    $path.'/misc/content.css',
+    $path.'/misc/admin_panel-menu.css',
   );
+
+  return $libs;
 }
