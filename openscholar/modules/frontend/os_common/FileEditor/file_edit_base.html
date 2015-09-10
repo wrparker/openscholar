@@ -17,7 +17,7 @@
 <label for="fe-file-timestamp">Uploaded On</label>
 <input id="fe-file-timestamp" type="text" ng-model="date" class="form-text">
 
-<div ng-show="file.schema == 'public' || file.schema == 'private'">
+<div class="fe-replace-wrapper" ng-show="file.schema == 'public' || file.schema == 'private'">
     <label for="fe-file-replace"></label>
     <button id="fe-file-display-warning" ng-click="displayWarning()" ng-show="!showWarning && !showSuccess">Replace File</button>
     <div class="fe-warning" ng-show="showWarning">
