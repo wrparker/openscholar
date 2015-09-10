@@ -757,7 +757,7 @@ function vsite_update_7028() {
 /**
  * Apply by pass redirection og permission to vsite content managers.
  */
-function _vsite_update_7029(&$sandbox) {
+function vsite_update_7029(&$sandbox) {
   os_set_update_batch($sandbox, array(
     'query' => 'vsite_get_vsites',
     'iterator' => 'vsite_grant_by_pass_permission',
