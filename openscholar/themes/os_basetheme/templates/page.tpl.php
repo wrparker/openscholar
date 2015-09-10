@@ -203,10 +203,10 @@
 							<ul>
 								<li>&nbsp;</li>
                 <li ng-repeat="(key, parent) in admin_panel" ng-class="{'has-sub': parent.children}">
-                  <a ng-attr-href="{{parent.href || '#'}}">{{ parent.label }}</a>
+                  <a ng-attr-href="{{parent.href || '#'}}" toggle-open ng-class="{'toggleable': parent.children}">{{ parent.label }}</a>
                   <ul class='sub-menu' ng-if="parent.children" ng-repeat="(key, child) in parent.children">
                     <li class='submenu' ng-class="{'has-sub': child.children, 'heading': child.type == 'heading'}">
-                      <a href='#' class="submenu_heading">{{ child.label }}</a>
+                      <a href='#' class="submenu_heading" toggle-open ng-class="{'toggleable': child.children}">{{ child.label }}</a>
                       <ul ng-if="child.children">
                         <li ng-repeat="(key, grandchild) in child.children">
                           <a ng-attr-href="{{ grandchild.href || '#' }}">{{ grandchild.label }}</a>
