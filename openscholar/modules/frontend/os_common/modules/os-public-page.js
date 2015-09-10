@@ -10,16 +10,15 @@
       $this.attr({
         'file-editor-modal': '',
         'fid': fid,
-        'on-close': 'reload(result)'
+        'on-close': 'reload($result)'
       });
-
-      $rs.reload = function (result) {
-        if (result) {
-          window.location.reload();
-        }
-      }
-
     });
+
+    $rs.reload = function (result) {
+      if (result) {
+        window.location.reload();
+      }
+    }
   }]);
 
 })(jQuery);

@@ -374,7 +374,7 @@ function os_common_get_angular_module($app_name){
  * Implements hook_menu_contextual_links_alter().
  */
 function os_common_menu_contextual_links_alter(&$links, $router_item, $root_path) {
-  if (isset($links['file-edit'])) {
+  if (isset($links['file-edit']) && !os_common_angular_app()) {
     os_common_angular_app('os-public-page');
     drupal_add_js(drupal_get_path('module', 'os_common').'/modules/os-public-page.js');
     drupal_add_library('os_common', 'FileEditorModal');
