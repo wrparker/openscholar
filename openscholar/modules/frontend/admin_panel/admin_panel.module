@@ -28,7 +28,6 @@ function admin_panel_library() {
     $path . '/misc/modernizr.custom.js' => array(),
     $path . '/misc/uiMorphingButton_fixed.js' => array(),
     $path . '/misc/admin_panel.js' => array(),
-    $path . '/misc/admin_panel-menu.js' => array(),
     array(
       'data' => array(
         'paths' => array(
