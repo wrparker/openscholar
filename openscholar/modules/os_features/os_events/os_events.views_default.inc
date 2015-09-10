@@ -88,7 +88,7 @@ function os_events_views_default_views() {
   $handler->display->display_options['arguments']['entity_id']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['entity_id']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['entity_id']['summary_options']['items_per_page'] = '25';
-  /* Contextual filter: Registration: repeating_event_date (field_repeating_event_date) */
+  /* Contextual filter: : field_repeating_event_date (field_repeating_event_date) */
   $handler->display->display_options['arguments']['field_repeating_event_date_value']['id'] = 'field_repeating_event_date_value';
   $handler->display->display_options['arguments']['field_repeating_event_date_value']['table'] = 'field_data_field_repeating_event_date';
   $handler->display->display_options['arguments']['field_repeating_event_date_value']['field'] = 'field_repeating_event_date_value';
@@ -853,6 +853,16 @@ function os_events_views_default_views() {
   $handler->display->display_options['row_options']['date_field'] = 'field_data_field_date.field_date_value';
   $handler->display->display_options['row_options']['location_field'] = 'none';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Content: Nid */
+  $handler->display->display_options['arguments']['nid']['id'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['table'] = 'node';
+  $handler->display->display_options['arguments']['nid']['field'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'raw';
+  $handler->display->display_options['arguments']['nid']['default_argument_options']['index'] = '2';
+  $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
