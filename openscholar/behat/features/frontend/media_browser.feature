@@ -153,3 +153,49 @@ Feature: Media Browser
       And I should see the media browser "Upload from your computer" tab is active
       And I click on the tab "Previously uploaded files"
       And I should see "abc.pdf" in a "div.media-row.new" element
+
+  @media_browser @javascript
+  Scenario: Test adding a youtube video to a site
+    Given I am logging in as "john"
+      And I wait for page actions to complete
+      And I edit the node "About" in the group "john"
+     When I click on the "Upload" control
+      And I wait "1 second" for the media browser to open
+      And I click on the tab "Embed from the web"
+      And I fill in "URL or HTML" with "https://youtu.be/jNQXAC9IVRw"
+      And I press the "Submit" button
+      And I should wait for "File Edit" directive to "appear"
+     Then the "Label" field should contain "Me at the zoo"
+      And I click on the "Save" control in the "div[file-edit]" element
+      And I should see the media browser "Previously uploaded files" tab is active
+      And I should see "Me at the zoo" in a "div.media-row.selected" element
+
+  @media_browser @javascript
+  Scenario: Test adding an unknown URL to a site
+    Given I am logging in as "john"
+      And I wait for page actions to complete
+      And I edit the node "About" in the group "john"
+     When I click on the "Upload" control
+      And I wait "1 second" for the media browser to open
+      And I click on the tab "Embed from the web"
+      And I fill in "URL or HTML" with "http://this.is.a.fake.site.com/id/52ac3d"
+      And I press the "Submit" button
+      And I wait "3 seconds"
+     Then I should see "URL(s) not from accepted domain!"
+
+  @media_browser @javascript
+  Scenario: Test adding embed codes from trusted and untrusted sources
+    Given I am logging in as "john"
+      And I wait for page actions to complete
+      And I edit the node "About" in the group "john"
+     When I click on the "Upload" control
+      And I wait "1 second" for the media browser to open
+      And I click on the tab "Embed from the web"
+      And I fill in "URL or HTML" with "<iframe src=\"http://untrusted.domain\"></iframe>"
+      And I press the "Submit" button
+      And I wait "3 seconds"
+     Then I should see "URL(s) not from accepted domain!"
+     When I whitelist the domain "trusted.domain"
+      And I fill in "URL or HTML" with "<iframe src=\"http://trusted.domain\"></iframe>"
+      And I press the "Submit" button
+      And I should wait for "File Edit" directive to "appear"
