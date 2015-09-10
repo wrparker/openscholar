@@ -3199,7 +3199,7 @@ function vsite_og_permission() {
         'vsite user',
         'content editor',
         'vsite admin',
-      )
+      ),
     ),
     'add media from remote sources' => array(
       'title' => t('Add 3rd party media to system.'),
@@ -3209,7 +3209,7 @@ function vsite_og_permission() {
         'vsite user',
         'content editor',
         'vsite admin',
-      )
+      ),
     ),
     'edit any files' => array(
       'title' => t('Edit files'),
@@ -3219,7 +3219,7 @@ function vsite_og_permission() {
         'vsite user',
         'content editor',
         'vsite admin',
-      )
+      ),
     ),
     'delete any files' => array(
       'title' => t('Delete files'),
@@ -3229,7 +3229,7 @@ function vsite_og_permission() {
         'vsite user',
         'content editor',
         'vsite admin',
-      )
+      ),
     ),
     'bypass redirection' => array(
       'title' => t('Bypass redirection'),
@@ -3238,7 +3238,7 @@ function vsite_og_permission() {
       'default role' => array(
         'content editor',
         'vsite admin',
-      )
+      ),
     ),
   );
 }
