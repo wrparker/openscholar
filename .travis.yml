@@ -9,19 +9,21 @@ mysql:
   encoding: utf8
 
 env:
-  - TEST_SUITE=restful
-  - TEST_SUITE=features_first
-  - TEST_SUITE=features_second
-  - TEST_SUITE=harvard
-  - TEST_SUITE=javscript
-  - TEST_SUITE=misc_first
-  - TEST_SUITE=misc_second
-  - TEST_SUITE=solr
-  - TEST_SUITE=taxonomy
-  - TEST_SUITE=vsite
-  - TEST_SUITE=widgets
-  - TEST_SUITE=media_browser
-  - secure: "kbYKhyQY0mHBRcMz82PQDkWSrAjGeQVyk/VC5TJkcGd06QW6ovK3Xyy1FvoyID8ktG56EAe2IOnSE3kt51h8mqGlR6SVfluBJobgWjgcY3+6kSWPNsVrZNUL+hwHytM+OhbacUXP/PedXP55DMMPP0GVQlPgdzaUjzzlScj3w3A="
+  global:
+    - secure: "kbYKhyQY0mHBRcMz82PQDkWSrAjGeQVyk/VC5TJkcGd06QW6ovK3Xyy1FvoyID8ktG56EAe2IOnSE3kt51h8mqGlR6SVfluBJobgWjgcY3+6kSWPNsVrZNUL+hwHytM+OhbacUXP/PedXP55DMMPP0GVQlPgdzaUjzzlScj3w3A="
+  matrix:
+    - TEST_SUITE=restful
+    - TEST_SUITE=features_first
+    - TEST_SUITE=features_second
+    - TEST_SUITE=harvard
+    - TEST_SUITE=javscript
+    - TEST_SUITE=misc_first
+    - TEST_SUITE=misc_second
+    - TEST_SUITE=solr
+    - TEST_SUITE=taxonomy
+    - TEST_SUITE=vsite
+    - TEST_SUITE=widgets
+    - TEST_SUITE=media_browser
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
