@@ -1953,7 +1953,7 @@ function os_app_info($app_name = NULL) {
 function os_app_info_declared_node_bundle($bundle = '') {
   $bundles = &drupal_static(__FUNCTION__, array());
 
-  if (empty($info)) {
+  if (empty($bundles)) {
     $apps = os_app_info();
     $bundles = array();
     foreach ($apps as $app) {
@@ -1963,7 +1963,7 @@ function os_app_info_declared_node_bundle($bundle = '') {
     }
   }
 
-  return in_array($bundle, $bundles);
+  return empty($bundle)? $bundles : in_array($bundle, $bundles);
 }
 
 /**
