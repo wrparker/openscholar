@@ -43,6 +43,7 @@ function admin_panel_library() {
 
   $libs['admin_panel']['dependencies'] = array(
     array('os_common', 'auth'),
+    array('os_common', 'helpers'),
   );
 
   $libs['admin_panel']['css'] = array(

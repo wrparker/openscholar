@@ -117,6 +117,14 @@ function os_common_library() {
         'group' => JS_LIBRARY,
         'weight' => -10,
       ),
+      array(
+        'type' => 'setting',
+        'data' => array(
+          'paths' => array(
+            'api' => $rest
+          )
+        )
+      )
     )
   );
 
@@ -148,14 +156,6 @@ function os_common_library() {
     'version' => '1.0',
     'js' => array(
       $path.'/EntityService/EntityService.module.js' => array(),
-      array(
-        'type' => 'setting',
-        'data' => array(
-          'paths' => array(
-            'api' => $rest
-          )
-        )
-      )
     ),
     'dependencies' => array(
       array('os_common', 'angularjs'),

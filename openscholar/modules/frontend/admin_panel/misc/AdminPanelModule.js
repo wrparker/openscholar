@@ -5,12 +5,22 @@
     angular.module('AdminPanel', [])
     .config(function (){
        rootPath = Drupal.settings.paths.moduleRoot;
+       restPath = Drupal.settings.paths.api;
+       vsite = Drupal.settings.spaces.id;
     }).controller("MenuCtrl", function($scope, $http) {
-      $scope.someContent = "RWB Rules";
-      $http.get('/api/cp_menu/admin_panel?vsite=2516').
+    
+      menu = 'admin_panel';
+      params = {};
+      if (vsite) {
+        params.vsite = vsite;
+      }
+      
+      var url = restPath + '/cp_menu/' + menu;
+      $http.get(url, {params: params}).
         success(function(data, status, headers, config) {
           $scope.admin_panel = data.data;
         });
+     
     }).directive('toggleOpen', function() {
       return {
         link: function(scope, element, attrs) {

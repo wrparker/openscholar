@@ -104,6 +104,8 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       $user = $this->getAccount();
 
       drupal_alter('os_restful_cp_menu_'.$name_string, $output, $user);
+      //Set the menu order, so angular does not re-order
+      $output = $this->maintainOrder($output);
     }
 
     return $output;
@@ -160,9 +162,10 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         continue;
       }
 
-      //Check that the feature is enabled.
+      //Check that the feature is enabled, and not hidden from menus.
       $feature = os_get_app_by_bundle($bundle);
-      if (empty($spaces_features[$feature])) {
+      $info = os_app_info($feature);
+      if (empty($spaces_features[$feature]) || (!empty($info['hide from toolbar']) && is_array($info['hide from toolbar']) && in_array($bundle, $info['hide from toolbar']))) {
         continue;
       }
 
@@ -197,6 +200,10 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         }
       }
     }
+
+    //Order alphabetically
+    ksort($add_links);
+    ksort($import_links);
 
     $structure = array(
       'content' => array(
@@ -348,5 +355,29 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     }
 
     return $controller;
+  }
+
+  /**
+   * Change the array keys so that angular does not re-order them. It automatically re-orders
+   *   keys so that they are alphabetical.
+   * @param $menu
+   */
+  protected function maintainOrder($menu) {
+    $final = array();
+    $i = 0;
+    foreach ($menu as $key => $value) {
+      if (is_array($value)) {
+        $value = $this->maintainOrder($value);
+      }
+
+      if(is_array($value) && !empty($value['type'])) {
+    	  $final["{$i}_{$key}"] = $value;
+    	  $i++;
+      } else {
+        $final["{$key}"] = $value;
+      }
+    }
+
+    return $final;
   }
 }
