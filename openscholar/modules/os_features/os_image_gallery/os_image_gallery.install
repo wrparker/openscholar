@@ -69,3 +69,10 @@ function _os_image_gallery_hide_media_description_label() {
   
   return $instances;
 }
+
+/**
+ * Update the image file.
+ */
+function os_image_gallery_update_7004() {
+  features_revert(array('os_image_gallery' => array('field_instance')));
+}

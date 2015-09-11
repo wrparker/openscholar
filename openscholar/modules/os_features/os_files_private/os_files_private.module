@@ -279,3 +279,16 @@ function os_files_private_stream_wrappers_alter(&$wrappers){
     $wrappers['private']['class'] = 'OSFilesPrivateStreamWrapper';
   }
 }
+
+/**
+ * Implements hook_preprocess_view_view().
+ */
+function os_files_private_preprocess_views_view(&$vars) {
+  if ($vars['view']->name == 'os_files_private') {
+    os_common_angular_app('os-files-private');
+    drupal_add_library('media', 'media_browser');
+    drupal_add_library('os_common', 'FileEditorModal');
+    drupal_add_js(drupal_get_path('module', 'os_files_private').'/apps/os_files_private.js');
+    // $vars['attributes_array']['ng-controller'] = 'CpFilesController'; Reminder to myself that this doesn't work cause Views doesn't print attributes
+  }
+}

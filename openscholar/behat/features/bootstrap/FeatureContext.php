@@ -5,11 +5,13 @@ use Behat\Behat\Context\Step\Given;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Behat\Context\Step;
-use Behat\Behat\Context\Step\When;
 
 require 'vendor/autoload.php';
+require_once 'RestfulTrait.php';
 
 class FeatureContext extends DrupalContext {
+
+  use RestfulTrait;
 
   /**
    * Variable for storing the random string we used in the text.
@@ -302,6 +304,15 @@ class FeatureContext extends DrupalContext {
       new Step\When('I visit "' . $site . '/node/add/' . $type . '"'),
       new Step\When('I fill in "Title" with "'. $title . '"'),
       new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
+   * @Given /^I start creating a post of type "([^"]*)" in site "([^"]*)"$/
+   */
+  public function iStartCreatingPostOfType($type, $site) {
+    return array(
+      new Step\When('I visit "'. $site . '/node/add/' . $type . '"')
     );
   }
 
@@ -2048,6 +2059,25 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I should see "([^"]*)" in "([^"]*)"$/
+   */
+  public function iShouldSeeIn($value, $path) {
+    return array(
+      new Step\When('I visit "' . $path . '"'),
+      new Step\When('I should see "' . $value . '"'),
+    );
+  }
+
+  /**
+   * @Given /^I delete the node "([^"]*)"$/
+   */
+  public function iDeleteTheNode($title) {
+    $nid = FeatureHelp::getNodeId($title);
+    node_delete($nid);
+  }
+
+
+  /**
    * @Given /^I drill down to see the hour$/
    */
   public function iDrillDownToSeeTheHour() {
@@ -2149,6 +2179,14 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I can't visit "([^"]*)"$/
+   */
+  public function iCanTVisit($url) {
+    $this->visit($url);
+    $this->assertSession()->statusCodeEquals(403);
+  }
+
+  /**
    * Create an entity of a given type and title.
    */
   private function createEntity($type, $title) {
@@ -2168,35 +2206,51 @@ class FeatureContext extends DrupalContext {
    * @Given /^I should see "([^"]*)" in the "([^"]*)" column$/
    */
   public function iShouldSeeInTheColumn($value, $column) {
-    $index = 0;
-    switch ($column) {
-      case 'used in':
-        $index = 5;
-        break;
+
+    // temporary
+    if (!$this->getSession()->getPage()->find("xpath", "//div[@id='content']//table")) {
+      throw new Exception(sprintf("No files found."));
     }
-    $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//tr[td[contains(., '{$value}')]]//td[{$index}]");
-    if (!$element) {
-      throw new Exception(sprintf("The value of %s was not found", $value));
+
+    $column_str = strtolower($column);
+    $text = $this->lower_case('text()');
+    $query = "//div[@id='content']//table/tbody/tr/td[count(//table/thead/tr/th[contains({$text}, '{$column_str}')]/preceding-sibling::th)+1]";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $query);
+    if (count($elements) == 0) {
+      throw new Exception(sprintf("No column %s found on page.", $column));
     }
-    if ($element->getText() != $value) {
-      throw new Exception(sprintf("The value for the %s column should be %s but it is %s", $column, $value, $element->getText()));
+
+    foreach ($elements as $elem) {
+      if ($elem->getText() == $value) {
+        return;
+      }
     }
+    throw new Exception(sprintf("No row has the value \"%s\" in the column \"%s\".", $value, $column));
+  }
+
+  private function lower_case($string, $escape = FALSE) {
+    if ($escape) {
+      $string = "'".$string."'";
+    }
+    return "translate($string, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')";
   }
 
   /**
    * @Given /^I should see "([^"]*)" in the "([^"]*)" column for the row "([^"]*)"$/
    */
   public function iShouldSeeInTheColumnInTheRow($value, $column, $row) {
-    $index = 0;
-    switch ($column) {
-      case 'used in':
-        $index = 5;
-        break;
-    }
-    $element = $this->getSession()->getPage()->find('xpath', "//div[@id='content']//table//tr[contains(., '{$row}')][td[contains(., '{$value}')]]//td[{$index}]");
+
+    $column_str = strtolower($column);
+    $row_str = strtolower($row);
+    $text = $this->lower_case('text()');
+    $dot = $this->lower_case('.');
+    $query = "//table//text()[contains({$dot},'{$row_str}')]/ancestor::*[self::tr]/td[count(//table/thead/tr/th[contains({$text}, '{$column_str}')]/preceding-sibling::th)+1]";
+
+    $element = $this->getSession()->getPage()->find('xpath', $query);
     if (!$element) {
-      throw new Exception(sprintf("The value of %s was not found", $value));
+      throw new Exception(sprintf("The column \"%s\" or row \"%s\" was not found", $column, $row));
     }
+
     if ($element->getText() != $value) {
       throw new Exception(sprintf("The value for the %s column should be %s but it is %s", $column, $value, $element->getText()));
     }
@@ -2237,6 +2291,286 @@ class FeatureContext extends DrupalContext {
     }
   }
 
+  // Media Browser functions
+  /**
+   * @When /^I wait "([^"]*)" for the media browser to open$/
+   */
+  public function iWaitForTheMediaBrowserToOpen($time) {
+    $this->getSession()->wait($time * 1000);
+    if (!$elem = $this->getSession()->getPage()->find('css', '.ui-dialog.media-wrapper') || !$this->getSession()->getPage()->find('css', '.ui-dialog.media-wrapper .media-browser-panes')) {
+      throw new Exception('The media browser failed to open.');
+    }
+  }
+
+  /**
+   * @When /^ I upload the file "{[^"]*)" to the "{[^"]*)" control$/
+   *
+   * Skip for now. May need to update ng-file-upload for it to work ever
+   */
+  public function iUploadFileToControl($filename, $control) {
+    $driver = $this->getSession()->getDriver();
+  }
+
+  /**
+   * @When /^I drop the file "([^"]*)" onto the "([^"]*)" area$/
+   */
+  public function iDropFileOnto($file, $area) {
+    // Make sure the element we want exists on the page.
+    $xpath = "//*[@ng-file-drop and count(./preceding-sibling::span[contains(text(), '$area')])]";
+    if (!($elem = $this->getSession()->getPage()->find('xpath', $xpath))) {
+      throw new Exception("No droppable region with text \"$area\" found.");
+    }
+    $target = $elem->getXpath();
+
+    if ($filepath = $this->getMinkParameter('files_path')) {
+      $path = rtrim(realpath($filepath), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
+      if (!file_exists($path)) {
+        throw new Exception("Target file $path not found");
+      }
+
+      $driver = $this->getSession()->getDriver();
+      $inputId = 'elem_' . substr(md5(time()), 0, 7);
+      $driver->executeScript("$inputId = window.jQuery('<input id=\"$inputId\" type=\"file\">').appendTo('body');");
+      if (!($elem->getSession()->getPage()->find('xpath', "//input[@id='$inputId']"))) {
+        throw new Exception('Dummy input not found');
+      }
+      $path = preg_replace('|[\/\\\\]|', DIRECTORY_SEPARATOR, $path);
+      $driver->attachFile("//input[@id='$inputId']", $path);
+
+      // File is on the field now. We need to grab it and make a drop event out of it.
+      // We can't do this with jQuery because the handlers are not bound using it. ng-file-upload use browser methods.
+      $driver->executeScript("
+        var drag = document.createEvent(\"HTMLEvents\");
+        drag.initEvent('dragover', true, true);
+        drag.dataTransfer = {
+          files: $inputId.get(0).files
+        };
+        var drop = document.createEvent(\"HTMLEvents\");
+        drop.initEvent('drop', true, true);
+        drop.dataTransfer = {
+          files : $inputId.get(0).files
+        };
+        var result = document.evaluate(\"$target\", document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+        var elem = result.iterateNext();
+        elem.dispatchEvent(drag);
+        elem.dispatchEvent(drop);");
+    }
+    else {
+      throw new Exception('Mink files_path parameter not configured.');
+    }
+  }
+
+  /**
+   * @When /^I drop the files "([^"]*)" onto the "([^"]*)" area$/
+   */
+  public function iDropFilesOnto($files, $area) {
+    // Make sure the element we want exists on the page.
+    $xpath = "//*[@ng-file-drop and count(./preceding-sibling::span[contains(text(), '$area')])]";
+    if (!($elem = $this->getSession()->getPage()->find('xpath', $xpath))) {
+      throw new Exception("No droppable region with text \"$area\" found.");
+    }
+    $target = $elem->getXpath();
+
+    if ($filepath = $this->getMinkParameter('files_path')) {
+      $files = explode(', ', $files);
+      $paths = array();
+      foreach ($files as $file) {
+        $path = rtrim(realpath($filepath), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file;
+        if (!file_exists($path)) {
+          throw new Exception("Target file $path not found");
+        }
+        $paths[] = $path;
+      }
+
+      // Selenium has no support for <input type="file" multiple>. So instead, we use multiple input elements,
+      // then dummy up a JS FilesList object to pass to the element.
+      $driver = $this->getSession()->getDriver();
+      $inputs = [];
+      foreach ($paths as $k => $path) {
+        $inputId = 'elem_' . substr(md5(time()), 0, 7) . '_' . $k;
+        $driver->executeScript("$inputId = window.jQuery('<input id=\"$inputId\" type=\"file\">').appendTo('body');");
+        if (!($elem->getSession()->getPage()->find('xpath', "//input[@id='$inputId']"))) {
+          throw new Exception('Dummy input not found');
+        }
+        $driver->attachFile("//input[@id='$inputId']", $path);
+        $inputs[] = $inputId;
+      }
+
+      // Files are on the separate fields now. We need to grab them, make them into something similar to a FilesList
+      // object, and turn that into an event
+      $inputStr = json_encode($inputs);
+
+      $driver->executeScript("
+        var inputs = $inputStr;
+        drop = document.createEvent(\"HTMLEvents\");
+        drop.initEvent('drop', true, true);
+        drop.dataTransfer = {
+          files : []
+        };
+        for (var i = 0; i < inputs.length; i++) {
+          drop.dataTransfer.files.push(jQuery('#'+inputs[i]).get(0).files[0]);
+        }
+        drop.dataTransfer.files.item = function (i) {
+          return this[i];
+        }
+        var drag = document.createEvent(\"HTMLEvents\");
+        drag.initEvent('dragover', true, true);
+        drag.dataTransfer = drop.dataTransfer;
+        var result = document.evaluate(\"$target\", document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+        var elem = result.iterateNext();
+        elem.dispatchEvent(drag);
+        elem.dispatchEvent(drop);");
+    }
+    else {
+      throw new Exception('Mink files_path parameter not configured.');
+    }
+  }
+
+  /**
+   * @Then /^I should wait for "([^"]*)" directive to "([^"]*)"$/
+   */
+  public function iWaitForDirective($directive, $appear) {
+    $directive = strtolower(preg_replace('/([ ]+)/', '-', $directive));
+    $xpath = ".//*[@$directive]";
+    $this->waitForXpathNode($xpath, $appear == 'appear');
+  }
+
+  /**
+   * @Then /^I should see the media browser "([^"]*)" tab is active$/
+   */
+  public function iShouldSeeTabActive($tab) {
+    if (!($elem = $this->getSession()->getPage()->find('css', '.media-browser-button.active'))) {
+      throw new Exception('No Media Browser tab is active.');
+    }
+
+    if ($elem->getText() != $tab) {
+      throw new Exception('Wrong tab is active');
+    }
+  }
+
+  /**
+   * @Then /^I confirm the file "([^"]*)" in the site "([^"]*)" is the same file as "([^"]*)"$/
+   */
+  public function iConfirmTheFileInSiteIsSameAs($filename, $site, $original) {
+    $file = $this->getFile($filename, $site);
+
+    // change directories to so all the file wrapper functions work properly
+    $current = getcwd();
+    chdir(DRUPAL_ROOT);
+
+    // catch any exceptions so we can change the directory back should an exception happen
+    try {
+      if ($filepath = $this->getMinkParameter('files_path')) {
+        $originalPath = $filepath . '/' . $original;
+        if (filesize(drupal_realpath($file->uri)) != filesize($originalPath) || sha1_file($file->uri) != sha1_file($originalPath)) {
+          throw new Exception("File \"$filename\" in site \"$site\" is not the same file as \"$original\"");
+        }
+      } else {
+        throw new Exception('Mink files_path parameter not configured.');
+      }
+    } catch (Exception $e) {
+      // catch everything so we can change the directory back to the original state
+      // then throw them again
+      chdir($current);
+      throw $e;
+    }
+  }
+
+  /**
+   * @Then /^I confirm the file "([^"]*)" in the site "([^"]*)" is not the same file as "([^"]*)"$/
+   */
+  public function iConfirmTheFileInSiteIsNotSameAs($filename, $site, $original) {
+    $file = $this->getFile($filename, $site);
+
+    // change directories to so all the file wrapper functions work properly
+    $current = getcwd();
+    chdir(DRUPAL_ROOT);
+
+    // catch any exceptions so we can change the directory back should an exception happen
+    try {
+      if ($filepath = $this->getMinkParameter('files_path')) {
+        $originalPath = $filepath.'/'.$original;
+        if (filesize(drupal_realpath($file->uri)) == filesize($originalPath) && sha1_file($file->uri) == sha1_file($originalPath)) {
+          throw new Exception("File \"$filename\" in site \"site\" is the same file as \"original\"");
+        }
+      }
+      else {
+        throw new Exception('Mink files_path parameter not configured.');
+      }
+    } catch (Exception $e) {
+      // catch everything so we can change the directory back to the original state
+      // then throw them again
+      chdir($current);
+      throw $e;
+    }
+  }
+
+  protected function getFile($filename, $site) {
+    $uri = "$site/files/$filename";
+    $q = db_select('file_managed', 'fm')
+      ->fields('fm', array('fid'))
+      ->condition('uri', '%'.$uri, 'LIKE')
+      ->execute();
+
+    foreach ($q as $r) {
+      return file_load($r->fid);
+    }
+    throw new Exception("file \"$filename\" not found in site \"$site\"");
+  }
+
+  /**
+   * @Then /^I should see "([^"]*)" in an? "([^"]*)" element$/
+   *
+   * Check text in multiple matching elements for a match
+   * Default implementation (in the "" element) does not work when multiple elements match selector
+   */
+  public function iShouldSeeInAElement($text, $selector) {
+    $elems = $this->getSession()->getPage()->findAll('css', $selector);
+    foreach ($elems as $e) {
+      if (stripos($e->getText(), $text) !== FALSE) {
+        return;
+      }
+    }
+    throw new Exception("The text \"$text\" was not found in any element matching \"$selector\"");
+  }
+
+  /**
+   * @Then /^I should not see "([^"]*)" in an? "([^"]*)" element$/
+   *
+   * Check text in multiple matching elements for a match
+   * Default implementation (in the "" element) does not work when multiple elements match selector
+   */
+  public function iShouldNotSeeInAElement($text, $selector) {
+    $elems = $this->getSession()->getPage()->findAll('css', $selector);
+    foreach ($elems as $e) {
+      if (stripos($e->getText(), $text) !== FALSE) {
+        throw new Exception("The text \"$text\" was found in an element matching \"$selector\"");
+      }
+    }
+  }
+
+  /**
+   * @When /^I mouse over the "([^"]*)" element$/
+   */
+  public function iMouseOverElement($selector) {
+    $elem = $this->getSession()->getPage()->find('css', $selector);
+
+    if ($elem) {
+      $elem->mouseOver();
+    }
+    else {
+      throw new Exception("No element matching \"$selector\" is found.");
+    }
+  }
+
+  /**
+   * @When /^I wait "([^"]*)"$/
+   */
+  public function iWait($time) {
+    $seconds = strtotime($time, 0);
+    $this->getSession()->getDriver()->wait($seconds * 1000, false);
+  }
+
   /**
    * @Given /^I should find the text "([^"]*)"$/
    *
@@ -2255,6 +2589,68 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Then /^I should wait for the text "([^"]*)" to "([^"]*)"$/
+   */
+  public function iShouldWaitForTheTextTo($text, $appear) {
+    try {
+      $this->waitForXpathNode(".//*[contains(normalize-space(string(text())), \"$text\")]", $appear == 'appear');
+    }
+    catch (Exception $e) {
+      throw new Exception("Text \"$text\" did not \"$appear\" after 5 seconds.");
+    }
+  }
+
+  /**
+   * Wait for an element by its XPath to appear or disappear.
+   *
+   * @param string $xpath
+   *   The XPath string.
+   * @param bool $appear
+   *   Determine if element should appear. Defaults to TRUE.
+   *
+   * @throws Exception
+   */
+  private function waitForXpathNode($xpath, $appear = TRUE) {
+    $this->waitFor(function($context) use ($xpath, $appear) {
+      try {
+        $nodes = $context->getSession()->getDriver()->find($xpath);
+        if (count($nodes) > 0) {
+          $visible = $nodes[0]->isVisible();
+          return $appear ? $visible : !$visible;
+        }
+        return !$appear;
+      }
+      catch (WebDriver\Exception $e) {
+        if ($e->getCode() == WebDriver\Exception::NO_SUCH_ELEMENT) {
+          return !$appear;
+        }
+        throw $e;
+      }
+    });
+  }
+
+  /**
+   * Helper function; Execute a function until it return TRUE or timeouts.
+   *
+   * @param $fn
+   *   A callable to invoke.
+   * @param int $timeout
+   *   The timeout period. Defaults to 10 seconds.
+   *
+   * @throws Exception
+   */
+  private function waitFor($fn, $timeout = 5000) {
+    $start = microtime(true);
+    $end = $start + $timeout / 1000.0;
+    while (microtime(true) < $end) {
+      if ($fn($this)) {
+        return;
+      }
+    }
+    throw new \Exception('waitFor timed out.');
+  }
+
+  /*
    * @Given /^I logout$/
    */
   public function iLogout() {
@@ -2288,7 +2684,59 @@ class FeatureContext extends DrupalContext {
     // Set the field again and save.
     $wrapper->{$field_name}->set($new_files);
     $wrapper->save();
+  }
 
+  /**
+   * @Then /^Show me a screenshot$/
+   */
+  public function showScreenshot() {
+    $image_data = $this->getSession()->getDriver()->getScreenshot();
+    $file_and_path = '/tmp/behat_screenshot.jpg';
+    file_put_contents($file_and_path, $image_data);
+    if (PHP_OS === "Linux" && PHP_SAPI === "cli") {
+      exec('display ' . $file_and_path);
+    }
+  }
+
+  /**
+   * @When /^I click on "([^"]*)" button in the media browser$/
+   */
+  public function iClickOn($text) {
+    $element = $this->getSession()->getPage()->find('xpath', "//*[contains(@class, 'media-browser-button') and text() = '{$text}']");
+    $element->click();
+  }
+
+  /**
+   * @When /^I click on the tab "([^"]*)"$/
+   */
+  public function iClickOnTheTab($arg1) {
+    $element = $this->getSession()->getPage()->find('xpath', "//*[.='{$arg1}']");
+    $element->click();
+
+  }
+
+  /**
+   * @When /^I click on the "([^"]*)" control$/
+   */
+  public function iClickOnControl($text) {
+    $element = $this->getSession()->getPage()->find('xpath', "//*[text() = '{$text}']");
+    $element->click();
+  }
+
+  /**
+   * @When /^I click on the "([^"]*)" control in the "([^"]*)" element$/
+   */
+  public function iClickOnControlInElement($text, $css) {
+    $page = $this->getSession()->getPage();
+    $parents = $page->findAll('css', $css);
+
+    foreach ($parents as $p) {
+      if ($p->isVisible()) {
+        if ($elem = $p->find('xpath', "//*[text() = '{$text}']")) {
+          $elem->click();
+        }
+      }
+    }
   }
 
   /**
@@ -2377,5 +2825,4 @@ class FeatureContext extends DrupalContext {
       throw new Exception(sprintf("List of registrants is exported wrong."));
     }
   }
-
 }

@@ -34,7 +34,7 @@ Drupal.wysiwyg.plugins.os_link = {
       delete settings['global'].active;
       delete settings['global'].url;
     }
-    Drupal.media.popups.mediaBrowser(function (insert) {
+    Drupal.media.popups.mediaBrowserOld(function (insert) {
       self.insertLink();
     }, settings['global'], {}, {
       src: Drupal.settings.osWysiwygLink.browserUrl, // because media is dumb about its query args

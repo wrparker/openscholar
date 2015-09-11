@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * os_restful.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function os_restful_install() {
+  variable_set('restful_enable_users_resource', FALSE);
+}
