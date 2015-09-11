@@ -211,6 +211,13 @@ margin-left:6em;
     border-top: 1px solid #CCCCCC;
 }
 
+.front #content-column .block.block-boxes-os_boxes_manual_list.converted-bio {
+    border-top: none;
+}
+
+
+
+
 #content-column .item-list ul.pager li {
     font-family: arial;
 }

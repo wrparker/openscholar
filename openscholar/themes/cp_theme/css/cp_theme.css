@@ -112,6 +112,7 @@ html.js input.throbbing {
     text-decoration: none !important;
 }
 
+
 a#edit-cancel,
 a.form-cancel {
   cursor: pointer;
@@ -132,6 +133,7 @@ a.form-cancel {
   -webkit-border-radius: 20px;
   border-radius: 20px;
 }
+
 
 a.form-cancel:hover {
  text-decoration:none;
@@ -301,6 +303,15 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 .page-node-edit.node-type-biblio #overlay {
 max-width: 930px;
 min-width: 850px;
+}
+
+
+form.confirmation {
+	margin-top:20px;
+}
+
+form.confirmation span.emphasize {
+	font-weight:bold;
 }
 
  /* OVERRIDES WITH TABS IN MODAL - EXPERIMENTAL */

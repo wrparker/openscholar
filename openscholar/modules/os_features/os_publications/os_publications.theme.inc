@@ -42,6 +42,18 @@ function theme_os_publications_tabular(&$vars) {
     'biblio_coins',
     'biblio_lang',
   );
+
+  if (variable_get('biblio_citeproc_style') == 'harvard-chicago-author-date.csl') {
+    $hidden = array_merge($hidden, array(
+      'biblio_url',
+      'biblio_section',
+      'biblio_number',
+      'biblio_number_of_volumes',
+      'biblio_type_of_work',
+      'biblio_date',
+    ));
+  }
+
   $rows = array();
 
   foreach ($fields as $f) {
@@ -191,7 +203,73 @@ function _os_publications_plain_citation($node) {
 
   $citation = theme('biblio_style', array('node' => $node, 'base' => $base, 'style_name' => $style));
 
-  $allowed_html_elements = variable_get('html_title_allowed_elements', array('em', 'sub', 'sup'));
+  // Add the patent number, patent source and patent issuing country, if no
+  // present in the citation.
+  if ($node->biblio_type == 119) {
+    if (!empty($node->biblio_section) && strpos($citation, ' ' . $node->biblio_section) === FALSE){
+      $citation .= ' ' . $node->biblio_section;
+    }
+    if (!empty($node->biblio_volume) && strpos($citation, ' ' . $node->biblio_volume) === FALSE){
+      $citation .= ' Patent ' . $node->biblio_volume . '.';
+    }
+    if (!empty($node->biblio_issue) && strpos($citation, $node->biblio_issue) === FALSE){
+      $citation .= ' Patent source: ' . $node->biblio_issue . '.';
+    }
+  }
+
+  if (variable_get('biblio_citeproc_style') == 'harvard-chicago-author-date.csl') {
+    $fields = array(
+      103 => array(
+        'biblio_date' => 'Date Presented',
+      ),
+      108 => array(
+        'biblio_type_of_work' => 'Thesis Type',
+      ),
+      110 => array(
+        'biblio_type_of_work' => 'Medium',
+      ),
+      117 => array(
+        'biblio_section' => 'Code Section',
+      ),
+      116 => array(
+        'biblio_number' => 'Number'
+      ),
+      118 => array(
+        'biblio_section' => 'Sections',
+        'biblio_number_of_volumes' => 'Statute Number',
+      ),
+      120 => array(
+        'biblio_number_of_volumes' => 'Communication Number',
+        'biblio_type_of_work' => 'Type',
+      ),
+      124 => array(
+        'biblio_type_of_work' => 'Type of Work',
+      ),
+      127 => array(
+        'biblio_number_of_volumes' => 'Number of volumes',
+      ),
+      128 => array(
+        'biblio_section' => 'Section Number',
+        'biblio_number_of_volumes' => 'Session Number',
+      ),
+    );
+
+    if (!empty($fields[$node->biblio_type])) {
+      foreach ($fields[$node->biblio_type] as $field => $label) {
+        if (!empty($node->{$field}) && strpos($citation, $node->{$field}) === FALSE) {
+          $citation .= ' ' . t($label . ': @data.', array('@data' => $node->{$field}));
+        }
+      }
+    }
+
+    // Add the publisher into the citation.
+    if (!empty($node->biblio_url) && strpos($citation, $node->biblio_url) === FALSE) {
+      $citation .= " <a href='{$node->biblio_url}'>{$node->biblio_url_title}</a>";
+    }
+  }
+
+
+  $allowed_html_elements = variable_get('html_title_allowed_elements', array('em', 'sub', 'sup', 'a'));
   $citation = filter_xss($citation, $allowed_html_elements);
 
   // add url to citation
@@ -254,7 +332,7 @@ function theme_os_publications_export_links($variables) {
     $export_links = module_invoke_all('biblio_export_link', $nid, $filter);
     $links        = array_merge($lookup_links, $export_links);
   }
-  $title = 'Export';
+  $title = isset($node->nid) ? t('Download Citation') : t('Download Citations');
 
   return theme('ctools_dropdown', array('links' => $links, 'title' => $title, 'attributes' => array('class' => array('biblio-export-buttons'))));
 }

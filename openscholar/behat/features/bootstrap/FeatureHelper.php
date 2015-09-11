@@ -9,7 +9,6 @@ class FeatureHelp {
   static $page_mapping = array(
     'News' => 'news_news',
     'Blog' => 'blog_blog',
-    'Bio' => 'biocv_biocv',
     'Link' => 'links_links',
     'Reader' => 'reader_reader',
     'Calendar' => 'events_events',
@@ -17,6 +16,7 @@ class FeatureHelp {
     'People' => 'profiles_profiles',
     'Data' => 'dataverse_dataverse',
     'Galleries' => 'gallery_gallery',
+    'FAQ' => 'faq_faq',
     'Software' => 'software_software',
     'Documents' => 'booklets_booklets',
     'Publications' => 'publications_publications',
@@ -35,12 +35,13 @@ class FeatureHelp {
     'Files view list' => 'os_sv_list_file',
     'Search' => 'os_search_db-site-search',
     'Active book TOC' => 'os_boxes_booktoc',
-    'Bio' => 'os_boxes_bio',
     'RSS feed' => 'os_boxes_rss',
     'Image gallery' => 'os_boxes_slideshow',
     'Faceted taxonomy' => 'os_boxes_facetapi_vocabulary',
     'List of posts' => 'os_sv_list_box',
     'List of publications' => 'os_sv_list_box',
+    'Upcoming events' => 'os_sv_list_box',
+    'All Posts' => 'os_sv_list_box',
     'Cache time test' => 'os_boxes_cache_test',
   );
 
@@ -258,8 +259,11 @@ class FeatureHelp {
       );
 
       // Create the box.
-      $box = boxes_box::factory(self::$boxes_mapping[$box], $options);
+      if (!$box = boxes_box::factory(self::$boxes_mapping[$box], $options)) {
+        throw new Exception(sprintf('The box %s failed to saved'), $box);
+      }
       $box->save();
+
       $blocks['boxes-' . $box->delta]['region'] = $region;
 
       // Initialize the module ad the delta.

@@ -19,6 +19,8 @@ composer.phar
 openscholar/composer.lock
 behat/vendor
 
+openscholar/client/node_modules
+
 #make
 openscholar/1/
 openscholar/libraries/

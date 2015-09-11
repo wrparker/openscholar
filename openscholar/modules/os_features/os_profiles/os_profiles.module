@@ -110,7 +110,9 @@ function os_profiles_init() {
       $handler->update($node->nid, $data->values);
     }
     catch (RestWSException $e) {
-      // TODO: watchdog message
+      variable_del('os_profiles_nodes_uuid');
+      variable_del('os_profiles_nodes_uuid_time');
+      lock_release('os_profile_sync');
       return;
     }
 
@@ -118,14 +120,21 @@ function os_profiles_init() {
     $file = NULL;
     if ($person_photo) {
       $file_info = os_profiles_get_origin_node_values($person_photo['file']['uri'] . '.json', array('url'));
-      $copy_file = os_copy_file($file_info->values['url'], FALSE);
+      // If the file was updated within 2 min of the node then update it as well.
+      if (($data->values['changed'] - 120) < $file_info->values['timestamp']) {
+        $copy_file = os_copy_file($file_info->values['url'], FALSE);
 
-      if ($copy_file['type'] == 'file') {
-        $file = $copy_file['file'];
+        if ($copy_file['type'] == 'file') {
+          $file = $copy_file['file'];
+        }
       }
     }
 
-    os_profiles_insert_image($node, $file, $data->data['person_photo_dimension']);
+    if ($file || !isset($file_info)) {
+      os_profiles_insert_image($node, $file, $data->data['person_photo_dimension']);
+    } else {
+      node_save($node);
+    }
   }
 
   // Delete the UUID that needs to be updated and the time in which the UUID
@@ -542,6 +551,12 @@ function os_profiles_sync_profile_validate($form, &$form_state) {
     // If the URL doesn't include the word "people" don't make the request.
     if (strpos($form_state['values']['url'],'people') == FALSE) {
       form_set_error('url', t('Make sure the URL is correct and that it includes the term "/people/"'));
+      return;
+    }
+
+    $request = drupal_http_request($form_state['values']['url']);
+      if ($request->code == 403) {
+        form_set_error('url', t('The profile cannot be synced: it seems that the profile you are trying to sync belong to a private site or is set to private on a public site.'));
       return;
     }
 
@@ -1014,132 +1029,6 @@ function _os_profiles_restws_request_alter($nid) {
     $wrapper->field_uuid->set(md5($nid));
     $wrapper->save();
   }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- *
- * Adds additional display settings for the os_profiles app.
- */
-function os_profiles_form_cp_app_settings_form_alter(&$form, &$form_state) {
-  if (1 || $form['#feature'] != 'os_profiles') {
-    return;
-  }
-
-  $vsite = vsite_get_vsite();
-
-  // Form element for disabling the use of a default image.
-  $form['os_profiles_disable_default_image'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Disable default image for people profiles'),
-    '#default_value' => variable_get('os_profiles_disable_default_image', FALSE),
-    '#description' => t('If checked no image will be used when viewing the "/people" page.'),
-    '#weight' => -99,
-  );
-
-  $entity_info = entity_get_info('node');
-  foreach ($entity_info['view modes'] as $name => $info) {
-    if (!$info['custom settings'] || $name == 'links') {
-      // Display only display modes the user turned on. The "links" view mode is
-      // disabled in the case of a "person" content type.
-      continue;
-    }
-
-    $profile_styles[$name] = $info['label'];
-  }
-
-  $profile_styles_hover = array();
-  $counter = 0;
-
-  // Create markup for style examples when hovering over each style.
-  foreach ($profile_styles as $style => $name) {
-    $counter ++;
-    // Prepare the popup and the style name.
-    $profile_example_link = '<a href="#" class="profile-pop" data-popbox="pop'.$counter.'">' . check_plain($name) . '</a>';
-    $profile_example_title = '<h2>' . $name . '</h2>';
-    // Prepare the profile style example for the popup.
-    $profile_example = _os_profiles_build_display_style_example($style);
-    $profile_example_text = '<p>' . $profile_example . '</p>';
-    $profile_example_output = $profile_example_link . '<div id="pop'.$counter.'" class="stylebox">' . $profile_example_title . $profile_example_text . '</div>';
-    $profile_styles_hover[$style] = $profile_example_output;
-  }
-
-  // Form element to choose display type. We use a "dummy" variable to be able
-  // to get the value that is set in the vsite level and not the site-wide
-  // level value.
-  $form['dummy__os_profiles_display_type'] = array(
-    '#type' => 'radios',
-    '#title' => t('Display types'),
-    '#default_value' => variable_get('os_profiles_display_type', 'teaser'),
-    '#options' => $profile_styles_hover,
-    '#description' => t('Choose the display type of a person in the "/people" page.'),
-    '#weight' => -999,
-    '#attached' => array(
-      'css' => array(
-        drupal_get_path('module', 'os_profiles') . '/misc/os_profiles_settings.css',
-      ),
-      'js' => array(
-        drupal_get_path('module', 'os_profiles') . '/misc/os_profiles_settings_hover.js',
-      )
-    ),
-  );
-
-  // Get properties of the image if there's a custom default image.
-  if (module_exists('vsite') && $vsite = vsite_get_vsite() && $fid = variable_get('os_profiles_default_image_file', NULL)) {
-    $dimensions = variable_get('os_profiles_default_image_properties', array());
-
-    $instance = field_info_instance('node', 'field_person_photo', 'person');
-    if ($instance['widget']['settings']['resolution']) {
-      $ratio = explode('x', $instance['widget']['settings']['resolution']);
-      $ratio = $ratio[0]/$ratio[1];
-    }
-  }
-
-  // Show the default image used before a custom default image has been uploaded.
-  $path = drupal_get_path('theme', 'hwpi_basetheme') . '/images/person-default-image.png';
-  $image = '<div class="field-name-field-person-photo">' . theme('image',  array('path' => $path)) . '</div>';
-
-  // Form element for uploading a default image.
-  $allowed_file_types = 'gif png jpg jpeg';
-  global $language;
-
-  $form['file'] = array(
-    '#type' => 'managed_file',
-    '#field_parents' => array(),
-    '#field_name' => array(),
-    '#language' => $language->language,
-    '#title' => t('Default image'),
-    '#field_prefix' => '<div class="">',
-    '#field_suffix' => '</div>' . $image,
-    '#default_value' => variable_get('os_profiles_default_image_file', NULL),
-    '#description' => t('The default image will be used if a profile photo is not available. Instead, you can upload your own default image.<br/>Position the cropping tool over it if necessary. Allowed file types: <strong> @allowed_file_types </strong>', array('@allowed_file_types' => $allowed_file_types)),
-    '#upload_validators' => array(
-      'file_validate_extensions' => array($allowed_file_types),
-    ),
-    '#process' => array('_os_profiles_default_image_process'),
-    '#dimensions' => array(
-      'x' => isset($dimensions['x']) ? $dimensions['x'] : 0,
-      'y' => isset($dimensions['y']) ? $dimensions['y'] : 0,
-      'height' => isset($dimensions['height']) ? $dimensions['height'] : 140,
-      'width' => isset($dimensions['width']) ? $dimensions['width'] : 180,
-      'ratio' => isset($ratio) ? $ratio : 0,
-    ),
-    '#attached' => array(
-      'css' => array(
-        '.form-managed-file img { max-width: none; }' => array(
-          'type' => 'inline'
-        )
-      ),
-    ),
-    '#weight' => -100,
-  );
-
-  // Set upload location.
-  if (module_exists('vsite') && $space = spaces_get_space()) {
-    $form['file']['#upload_location'] = 'public://' . $space->group->purl . '/files';
-  }
-
-  $form['#submit'][] = 'os_profiles_display_settings_submit';
 }
 
 /**
@@ -1679,10 +1568,10 @@ function os_profiles_copy_bio_to_new_vsite($original_person, $new_vsite) {
 
   $person_wrapper = entity_metadata_wrapper('node', $original_person);
 
-  // Create the "Bio" node.
+  // Create the "Bio" page.
   $bio = new stdClass();
-  $bio->type = 'bio';
-  $bio->title = $original_person->title;
+  $bio->type = 'page';
+  $bio->title = "Bio";
   $bio->language = LANGUAGE_NONE;
   $bio->uid = $uid;
 
@@ -1690,6 +1579,9 @@ function os_profiles_copy_bio_to_new_vsite($original_person, $new_vsite) {
   $bio_wrapper->body->set($person_wrapper->body->value());
   $bio_wrapper->{OG_AUDIENCE_FIELD}->set(array($new_vsite->id));
   $bio_wrapper->save();
+
+  // create menu item for "Bio" page
+  $mlid = vsite_menu_create_menu_link("Bio", 'node/' . $bio_wrapper->getIdentifier(), $new_vsite->id);
 }
 
 /**

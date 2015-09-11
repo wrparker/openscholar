@@ -751,9 +751,82 @@ function os_update_7036() {
   features_revert($revert);
 }
 
-/*
- * Enabling OS Restful.
+/**
+ * Install OS exporter.
  */
 function os_update_7037() {
-  module_enable(array('os_restful'));
+  module_enable(array('os_exporter'));
+}
+
+/**
+ * Uninstall the os_biocv module
+ */
+function os_update_7038(&$sandbox) {
+  if (module_exists('os_biocv')) {
+    if (!isset($sandbox['dataset'])) {
+      $sandbox['notices'] = "";
+      $sandbox['completed'] = 0;
+      $dataset = _get_vsite_biocv_data();
+      $sandbox['dataset'] = $dataset;
+      $sandbox['total'] = count($dataset);
+      $sandbox['#finished'] = 0.0;
+    }
+
+    $vsites = array_splice($sandbox['dataset'], 0, 100);
+
+    $sandbox['notices'] .= _replace_biocvs_with_pages($vsites);
+    $sandbox['completed'] += count($vsites);
+    if ($sandbox['total']) {
+      $sandbox['#finished'] = (float)$sandbox['completed'] / (float)$sandbox['total'];
+    }
+    else {
+       $sandbox['#finished'] = 1;
+    }
+
+    if($sandbox['#finished'] >= 1) {
+      module_disable(array('os_biocv'), FALSE);
+      drupal_uninstall_modules(array('os_biocv'), FALSE);
+
+      $sandbox['#finished'] = 1;
+      return "Completed " . $sandbox['completed'] . " out of " . $sandbox['total'] . " migrations.<br/>" . $sandbox['notices'];
+    }
+  }
+}
+
+/**
+ * Remove bio and cv options from content list after the os_biocv module has been uninstalled
+ */
+function os_update_7039() {
+  features_revert(array('cp_content' => array('views_view')));
+}
+
+
+/**
+ * Enabling OS Restful, and the new Media Browser.
+ *
+ * Revert modules that use the new feature.
+ */
+function os_update_7040() {
+  module_enable(array('os_app_base', 'os_restful', 'media_browser'));
+
+  $revert = array(
+    'field_instance'
+  );
+  $modules = array(
+    'os_blog' => $revert,
+    'os_booklets' => $revert,
+    'os_classes'  => $revert,
+    'os_events' => $revert,
+    'os_faq' => $revert,
+    'os_links' => $revert,
+    'os_news' => $revert,
+    'os_pages' => $revert,
+    'os_presentations' => $revert,
+    'os_profiles' => $revert,
+    'os_publications' => $revert,
+    'os_software' => $revert,
+  );
+  features_revert($modules);
+
+  return t('Upgraded the Media Browser across the whole site.');
 }

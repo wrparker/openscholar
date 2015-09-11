@@ -1,4 +1,4 @@
-;Drupal.org MakeFile for OpenScholar
+;Drupal.org Makefile for OpenScholar
 
 core = 7.x
 api = 2
@@ -24,9 +24,13 @@ projects[boxes][patch][] = "http://raw.github.com/openscholar/openscholar/b38919
 projects[boxes][patch][] = "https://www.drupal.org/files/1859150-1-boxes-strict_warning.patch"
 projects[boxes][patch][] = "https://www.drupal.org/files/issues/default_object_empty_value-2042101-3.patch"
 
+projects[cache_consistent][subdir] = "contrib"
+projects[cache_consistent][version] = 1.2
+
 projects[calendar][subdir] = "contrib"
 projects[calendar][version] = 3.5
 projects[calendar][patch][] = "http://raw.github.com/openscholar/openscholar/72d63ee3537c31505b7481975886ec13789feeb5/patches/calendar-fix-week-view-overflow.patch"
+projects[calendar][patch][] = "http://raw.github.com/openscholar/openscholar/b334cd4b6831a5a1869647b7cbaaec1e8058d9bc/patches/calendar.scroll_to_first_event.patch"
 
 projects[colorbox][subdir] = "contrib"
 projects[colorbox][version] = 2.5
@@ -34,6 +38,7 @@ projects[colorbox][version] = 2.5
 projects[comment_sources][subdir] = "contrib"
 projects[comment_sources][version] = 2.0
 projects[comment_sources][patch][] = "https://drupal.org/files/issues/22086870-comment-source-wrong-query-field-1.patch"
+projects[comment_sources][patch][] = "https://drupal.org/files/issues/change-submit-handler-index-2513794-2.patch"
 
 projects[context][subdir] = "contrib"
 projects[context][version] = 3.0-beta4
@@ -55,8 +60,7 @@ projects[ctools][patch][] = "http://drupal.org/files/ctools-plugin_extension-162
 projects[ctools][patch][] = "https://drupal.org/files/issues/2147905-allow-alter-with-more-context-1.patch"
 
 projects[date][subdir] = "contrib"
-projects[date][version] = 2.6
-projects[date][patch][] = "http://drupal.org/files/date-migrate_v24-1715700-1.patch"
+projects[date][version] = 2.8
 
 projects[date_ical][subdir] = "contrib"
 projects[date_ical][version] = 2.7
@@ -72,8 +76,7 @@ projects[disqus][version] = 1.9
 projects[disqus][patch][] = "http://drupal.org/files/comment_sources-disqus-2120703-1.patch"
 
 projects[dragndrop_upload][subdir] = "contrib"
-projects[dragndrop_upload][version] = 1.0-alpha1
-projects[dragndrop_upload][patch][] = "http://cgit.drupalcode.org/dragndrop_upload/patch/?id=164d2dd7526c297b544f5f367e48f5106f6bca5e"
+projects[dragndrop_upload][version] = 1.0-alpha2
 
 projects[dyntextfield][subdir] = "contrib"
 projects[dyntextfield][type] = module
@@ -124,10 +127,8 @@ projects[features][version] = 2.0
 projects[feeds][subdir] = "contrib"
 projects[feeds][version] = 2.0-alpha7
 
-projects[feeds_tamper‏][subdir] = "contrib"
-projects[feeds_tamper‏][type] = "module"
-projects[feeds_tamper‏][download][type] = "git"
-projects[feeds_tamper‏][download][url]="http://git.drupal.org/project/feeds_tamper.git"
+projects[feeds_tamper][subdir] = "contrib"
+projects[feeds_tamper][version] = 1.1
 
 projects[feeds_xpathparser][subdir] = "contrib"
 projects[feeds_xpathparser][download][type] = git
@@ -243,7 +244,7 @@ projects[module_filter][subdir] = "contrib"
 projects[module_filter][version] = 1.7
 
 projects[memcache][subdir] = "contrib"
-projects[memcache][version] = 1.1-beta5
+projects[memcache][version] = 1.5
 
 projects[migrate][subdir] = "contrib"
 projects[migrate][version] = 2.5
@@ -253,7 +254,7 @@ projects[migrate_extras][subdir] = "contrib"
 projects[migrate_extras][version] = 2.4
 
 projects[mollom][subdir] = "contrib"
-projects[mollom][version] = 2.10
+projects[mollom][version] = 2.14
 
 projects[multiform][subdir] = "contrib"
 projects[multiform][version] = 1.0
@@ -337,8 +338,8 @@ projects[purl][patch][] = "http://drupal.org/files/729862-9-purl-inbound-alter-m
 projects[purl][patch][] = "http://drupal.org/files/issues/purl-integrate_redirect_keep_options-1735266-4.patch"
 
 projects[registration][subdir] = "contrib"
-projects[registration][version] = 1.1
-projects[registration][patch][] = "https://drupal.org/files/issues/2183509-registration-broadcast-context-1.patch"
+projects[registration][version] = 1.4
+projects[registration][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/a92620d51664a4924aee531ace680cf7c06afd87/patches/registration_link_pass_entity.patch"
 
 projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
@@ -347,6 +348,7 @@ projects[restful][subdir] = "contrib"
 projects[restful][download][type] = git
 projects[restful][download][url] = "https://github.com/RoySegall/restful.git"
 projects[restful][download][branch] = 444
+projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/839d0cc214f2422e924e35d33133d1268b8cc1cd/patches/restful.put_file.patch"
 ;projects[restful][download][branch] = "7.x-1.x"
 ;projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
 
@@ -412,7 +414,6 @@ projects[views][subdir] = "contrib"
 projects[views][version] = 3.8
 projects[views][patch][] = "https://drupal.org/files/issues/views-jquery_dialog-2125261-1.patch"
 
-
 projects[views_bulk_operations][subdir] = "contrib"
 projects[views_bulk_operations][version] = 3.0
 
@@ -472,9 +473,10 @@ libraries[respondjs][download][type] = "file"
 libraries[respondjs][download][url] = "https://github.com/scottjehl/Respond/archive/1.3.0.zip"
 
 libraries[responsiveslides][type] = "libraries"
-libraries[responsiveslides][download][type] = "file"
-libraries[responsiveslides][download][url] = "https://github.com/viljamis/ResponsiveSlides.js/archive/v1.53.tar.gz"
-libraries[responsiveslides][patch][] = "https://raw.github.com/openscholar/openscholar/c5b00de5f1c79a679446467296ab16ebff6c19e0/patches/responsiveslides-hc_changes.patch"
+libraries[responsiveslides][download][type] = "git"
+libraries[responsiveslides][download][url] = "https://github.com/viljamis/ResponsiveSlides.js.git"
+libraries[responsiveslides][download][revision] = "120079561d7a4f8a6459f7a5d8aa657ad5d3db83"
+libraries[responsiveslides][patch][] = "https://gist.githubusercontent.com/RoySegall/412084926772e2e4181d/raw/8b98aa3d880ab40ac74a6343d74928a7a1667b7a/foo.patch"
 
 libraries[flexslider][type] = "libraries"
 libraries[flexslider][download][type] = "file"
@@ -486,16 +488,22 @@ libraries[select2][download][url] = "https://github.com/ivaynberg/select2/archiv
 
 libraries[twitter-api-php][type] = "libraries"
 libraries[twitter-api-php][download][type] = "file"
-libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/master.zip"
+libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/1.0.3.zip"
 
 libraries[autopager][type] = "libraries"
 libraries[autopager][download][type] = "file"
 libraries[autopager][download][url] = "https://github.com/sagotsky/jquery-autopager/archive/v1.2.zip"
 
-libraries[html5shiv[type] = "libraries"
+libraries[html5shiv][type] = "libraries"
 libraries[html5shiv][download][type] = "file"
 libraries[html5shiv][download][url] = "http://raw.github.com/aFarkas/html5shiv/master/dist/html5shiv.js"
 
 libraries[hopscotch][type] = "libraries"
 libraries[hopscotch][download][type] = "file"
 libraries[hopscotch][download][url] = "https://github.com/linkedin/hopscotch/archive/b41ab659507175264ab6347d0032f03e42b961d1.zip"
+
+; Angular js libraries.
+libraries[angular_select2][type] = "libraries"
+libraries[angular_select2][download][type] = "get"
+libraries[angular_select2][download][url] = "https://github.com/angular-ui/ui-select/archive/v0.12.0.zip"
+libraries[angular_select2][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/ad2fd2d198e91ac9a77eacbae996579e55510a3a/patches/angular_select-7024-async.patch"

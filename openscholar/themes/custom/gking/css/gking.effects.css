@@ -22,16 +22,17 @@
   overflow:auto;
   bottom: 0;
   left:40px;
-  top:52px;
+  top:40px;
   right:10px;
   padding-right:25px;
 }
 
-.front.logged-in .region-header-second .block-boxes-os_boxes_manual_list .node-content {
-  bottom: -560px;
+.front .region-header-second .block-boxes-os_boxes_manual_list .node-content {
+  bottom: -700px;
+    padding-top: 5px;
 }  
    
-.front #header .node-bio {
+.front #header .block-boxes-os_boxes_manual_list .node-page {
   position: relative;
 }
 
@@ -39,7 +40,7 @@
   margin-bottom: 1em;
 }
 
-.bio-open a.more {
+.front .block-boxes-os_boxes_manual_list .node-page a.more {
 	color: #5C7677;
 	float: right;
 	padding: 11px 38px 10px 0;
@@ -60,12 +61,3 @@
  *
  * @todo: re-evaluate and/or remove?
  */
-.front.not-logged-in .region-header-second .node-bio .node-content {
-    position: static;
-    margin-left: 40px;
-    padding-right: 26px;
-    overflow: scroll;
-    height: 523px;
-    margin-right: 11px;
-    margin-top: 70px;
-}

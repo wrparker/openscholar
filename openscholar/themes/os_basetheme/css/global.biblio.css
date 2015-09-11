@@ -203,6 +203,17 @@ a.biblio-abstract-link.toggle.expanded {
   padding:8px;
   border:1px solid #CCC;
   }
+  
+ /* ADD A LEFT MARGIN TO THE ABSTRACT SLIDER WHEN A BIBLIO THUMBNAIL IS USED */ 
+.field-name-field-biblio-image ~ .biblio-abstract-display {
+  margin-left: 68px;
+}
+
+a.os_event-moredates-link{
+	font-size: 0.7em;
+	margin-left: 3px;
+	display:inline;
+}
 
 .biblio-export-links {
   float: right;
@@ -317,7 +328,7 @@ body.node-type-biblio .node-type-biblio .field-field-biblio-image {
 .os-files-other-list tr td.size {
 	font-size:10px;
 	font-weight: bold;
-	width: 40px;
+	width: 55px;
 	text-align:right;
 } 
 

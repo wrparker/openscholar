@@ -59,5 +59,15 @@ class os_sv_list_file extends os_sv_list {
   function sort_filesize(&$efq) {
     $efq->propertyOrderBy('filesize', 'DESC');
   }
-  
+
+  /**
+   * Check access to the the box.
+   *
+   * We return here TRUE because in the case of file, a public file attached to a
+   * private bundle would still be considered public.
+   */
+  public function checkWidgetAccess($bundle) {
+    return TRUE;
+  }
+
 }

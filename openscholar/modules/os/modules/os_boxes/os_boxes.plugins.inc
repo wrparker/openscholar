@@ -34,18 +34,6 @@ function _os_boxes_boxes_plugins() {
     ),
   );
 
-  $info['os_boxes_bio'] = array(
-    'title' => 'Bio',
-    'description' => 'Your personal bio',
-    'tags' => array('Social'),
-    'handler' => array(
-      'class' => 'os_boxes_bio',
-      'file' => 'os_boxes_bio.inc',
-      'path' => $path . '/os_boxes_bio',
-      'parent' => 'os_boxes_default',
-    ),
-  );
-
   $info['os_boxes_manual_list'] = array(
     'title' => 'Featured Posts',
     'description' => 'Create your own list of posts',

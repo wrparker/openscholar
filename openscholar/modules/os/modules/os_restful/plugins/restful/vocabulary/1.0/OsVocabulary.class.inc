@@ -16,6 +16,14 @@ class OsVocabulary extends \RestfulEntityBase {
       'property' => 'vsite',
     );
 
+    $fields['form'] = array(
+      'callback' => array($this, 'getFormType'),
+    );
+
+    $fields['tree'] = array(
+      'callback' => array($this, 'getVocabularyTree'),
+    );
+
     return $fields;
   }
 
@@ -151,6 +159,7 @@ class OsVocabulary extends \RestfulEntityBase {
     if (!empty($this->request['entity_type']) && !empty($this->request['bundle'])) {
 
       if (!$og_vocabs = $this->getOgVocabsByEntityBundle($this->request['entity_type'], $this->request['bundle'])) {
+        $query->propertyCondition('vid', 0);
         return;
       }
 
@@ -167,7 +176,12 @@ class OsVocabulary extends \RestfulEntityBase {
       $vocabs = $filtered_vocabs;
     }
 
-    $query->propertyCondition('vid', $vocabs, 'IN');
+    if (count($vocabs)) {
+      $query->propertyCondition('vid', $vocabs, 'IN');
+    }
+    else {
+      $query->propertyCondition('vid', 0);
+    }
   }
 
   /**
@@ -200,6 +214,52 @@ class OsVocabulary extends \RestfulEntityBase {
     }
 
     return entity_load('og_vocab', array_keys($results['og_vocab']));
+  }
+
+  protected function getFormType($wrapper) {
+    $id = $wrapper->getIdentifier();
+    $q = db_select('og_vocab', 'ov')
+      ->fields('ov', array('settings'))
+      ->condition('vid', $id)
+      ->execute();
+
+    $r = $q->fetchAssoc();
+    $settings = unserialize($r['settings']);
+
+    return $settings['widget_type'];
+  }
+
+  /**
+   * Get the vocabulary in tree form.
+   */
+  protected function getVocabularyTree($wrapper) {
+    $id = $wrapper->getIdentifier();
+    $terms = hierarchical_taxonomy_get_tree($id);
+    $return = $this->getTree($terms, array());
+
+    return $return;
+  }
+
+  /**
+   * Build the tree structure as needed for the JS widget.
+   */
+  private function getTree($tree, $return) {
+    foreach ($tree as $leaf) {
+      if (empty($leaf->below)) {
+        $return[] = array(
+          'label' => $leaf->name,
+          'value' => $leaf->tid,
+        );
+      }
+      else {
+        $return[] = array(
+          'label' => $leaf->name,
+          'value' => $leaf->tid,
+          'children' => $this->getTree($leaf->below, array()),
+        );
+      }
+    }
+    return $return;
   }
 
 }

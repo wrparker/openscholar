@@ -15,18 +15,20 @@ class OsRestfulBoxes extends \OsRestfulSpaces {
    */
   public function checkGroupAccess() {
     if (parent::checkGroupAccess()) {
-      return;
+      return TRUE;
     }
 
     $account = $this->getAccount();
 
-    $access = !og_user_access('node', $this->space->id, 'administer boxes', $account) ||
+    $access = !og_user_access('node', $this->space->id, 'administer boxes', $account) &&
               !og_user_access('node', $this->space->id, 'edit boxes', $account);
 
     if ($access) {
       // The current user can't manage boxes.
       $this->throwException("You can't manage boxes in this vsite.");
     }
+
+    return TRUE;
   }
 
   /**

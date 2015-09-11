@@ -379,7 +379,7 @@ function os_events_field_default_field_instances() {
     'settings' => array(
       'description_field' => 0,
       'file_directory' => '',
-      'file_extensions' => 'jpg jpeg gif png txt doc docx gz xls xlsx pdf ppt pptx pps odt ods odp tex tgz xml zip',
+      'file_extensions' => 'jpg jpeg gif png txt doc docx gz xls xlsx pdf ppt pptx pps odt ods odp tex tgz xml zip sas',
       'filefield_paths' => array(
         'active_updating' => 0,
         'file_name' => array(
@@ -403,8 +403,9 @@ function os_events_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'media',
+      'module' => 'media_draggable',
       'settings' => array(
+        'allow_replace' => 0,
         'allowed_schemes' => array(
           'embed' => 'embed',
           'oembed' => 'oembed',
@@ -425,9 +426,14 @@ function os_events_field_default_field_instances() {
           'media_internet' => 'media_internet',
           'upload' => 'upload',
         ),
+        'droppable_area_text' => 'Drop files here to upload',
+        'multiupload' => 0,
         'progress_indicator' => 'throbber',
+        'standard_upload' => 1,
+        'upload_button_text' => 'Upload',
+        'upload_event' => 'auto',
       ),
-      'type' => 'media_generic',
+      'type' => 'media_draggable_file',
       'weight' => 5,
     ),
   );
@@ -497,6 +503,40 @@ function os_events_field_default_field_instances() {
       ),
       'type' => 'text_textfield',
       'weight' => 1,
+    ),
+  );
+
+  // Exported field_instance: 'registration-event_signup_simple-field_repeating_event_date'
+  $field_instances['registration-event_signup_simple-field_repeating_event_date'] = array(
+    'bundle' => 'event_signup_simple',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 2,
+      ),
+    ),
+    'entity_type' => 'registration',
+    'field_name' => 'field_repeating_event_date',
+    'label' => 'repeating_event_date',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 100,
     ),
   );
 

@@ -177,7 +177,7 @@ function os_software_field_default_field_instances() {
     'settings' => array(
       'description_field' => 0,
       'file_directory' => '',
-      'file_extensions' => 'jpg jpeg gif png txt doc docx gz xls xlsx pdf ppt pptx pps odt ods odp tex tgz xml zip',
+      'file_extensions' => 'jpg jpeg gif png txt doc docx gz xls xlsx pdf ppt pptx pps odt ods odp tex tgz xml zip sas',
       'filefield_paths' => array(
         'active_updating' => 0,
         'file_name' => array(
@@ -201,8 +201,9 @@ function os_software_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'media',
+      'module' => 'media_draggable',
       'settings' => array(
+        'allow_replace' => 0,
         'allowed_schemes' => array(
           'embed' => 'embed',
           'oembed' => 'oembed',
@@ -223,9 +224,14 @@ function os_software_field_default_field_instances() {
           'media_internet' => 'media_internet',
           'upload' => 'upload',
         ),
+        'droppable_area_text' => 'Drop files here to upload',
+        'multiupload' => 0,
         'progress_indicator' => 'throbber',
+        'standard_upload' => 1,
+        'upload_button_text' => 'Upload',
+        'upload_event' => 'auto',
       ),
-      'type' => 'media_generic',
+      'type' => 'media_draggable_file',
       'weight' => 32,
     ),
   );
@@ -363,30 +369,37 @@ function os_software_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'file',
+      'module' => 'media_draggable',
       'settings' => array(
+        'allow_replace' => 0,
         'allowed_schemes' => array(
           'embed' => 0,
           'oembed' => 0,
-          'private' => 0,
           'public' => 'public',
         ),
         'allowed_types' => array(
           'audio' => 0,
           'default' => 0,
+          'document' => 0,
+          'executable' => 'executable',
           'html' => 0,
-          'image' => 'image',
+          'image' => 0,
           'video' => 0,
         ),
         'browser_plugins' => array(
           'media_default--media_browser_1' => 'media_default--media_browser_1',
           'media_default--media_browser_my_files' => 0,
-          'media_internet' => 'media_internet',
+          'media_internet' => 0,
           'upload' => 'upload',
         ),
+        'droppable_area_text' => 'Drop files here to upload',
+        'multiupload' => 0,
         'progress_indicator' => 'throbber',
+        'standard_upload' => 1,
+        'upload_button_text' => 'Upload',
+        'upload_event' => 'auto',
       ),
-      'type' => 'file_generic',
+      'type' => 'media_draggable_file',
       'weight' => 2,
     ),
   );

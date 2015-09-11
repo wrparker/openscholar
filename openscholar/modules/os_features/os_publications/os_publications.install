@@ -1332,6 +1332,84 @@ function os_publications_update_7029() {
 /**
  * Define the publication citation as the og:description value.
  */
-function os_publications_install_7030() {
+function os_publications_update_7030() {
   features_revert(array('os_publications' => array('metatag')));
+}
+
+/**
+ * Adding biblio field 'biblio_date' to Newspaper and magazine.
+ */
+function os_publications_update_7031() {
+  _os_publications_update_field_data();
+}
+
+/**
+ * Reset the citeproc mappings to include all biblio types
+ * and add the new chicago author-date based style.
+ */
+function os_publications_update_7032() {
+  _reset_csl_map(FALSE);
+  os_publications_revert_citeproc_style('harvard-chicago-author-date');
+}
+
+/**
+ * Bring back the Year of publication title for working paper.
+ */
+function os_publications_update_7033() {
+  os_publications_restore_field('biblio_year', 'Working paper', array(
+    'common' => 1,
+    'vtab' => 2,
+    'autocomplete' => 0,
+    'required' => 1,
+    'weight' => '-45',
+    'visible' => '1'
+  ));
+}
+
+/**
+ * Bring back the abstract and note fields for working paper.
+ */
+function os_publications_update_7034() {
+  os_publications_restore_field('biblio_abst_e', 'Working paper', array(
+    'common' => 1,
+    'vtab' => 2,
+    'autocomplete' => 0,
+    'required' => 1,
+    'weight' => '-45',
+    'visible' => '1'
+  ));
+
+  os_publications_restore_field('biblio_notes', 'Working paper', array(
+    'common' => 0,
+    'vtab' => 7,
+    'autocomplete' => 0,
+    'required' => 0,
+    'weight' => '157',
+    'visible' => '1'
+  ));
+
+  os_publications_restore_field('biblio_url', 'Working paper', array(
+    'common' => 1,
+    'vtab' => 5,
+    'autocomplete' => 0,
+    'required' => 0,
+    'weight' => '158',
+    'visible' => '1'
+  ));
+}
+
+/**
+ * Fix the duplication of secondary title.
+ */
+function os_publications_update_7035() {
+  $map = biblio_get_map('field_map', 'csl');
+  $map['collection-title'] = '';
+  biblio_set_map('field_map', 'csl', $map);
+}
+
+/**
+ * Add redirect field.
+ */
+function os_publications_update_7036() {
+  features_revert(array('os_publications' => array('field_base', 'field_instance')));
 }

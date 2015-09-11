@@ -106,10 +106,10 @@ class os_taxonomy_fbt extends os_boxes_default {
     $form['bundles'] = array(
       '#type' => 'select',
       '#title' => t('Select Post type'),
-      '#options' => os_get_bundles(array(1,2)),
+      '#options' => $this->getTaxonomyBundles(),
       '#description' => t('The post types that will be included in the count'),
       '#multiple' => FALSE,
-      '#size' => count(os_get_bundles(array(1,2))) / 2,
+      '#size' => count($this->getTaxonomyBundles()) / 2,
       '#dependency' => array(
         'edit-behavior' => array('select'),
       ),
@@ -170,6 +170,32 @@ class os_taxonomy_fbt extends os_boxes_default {
     );
 
     return $form;
+  }
+
+  /**
+   * Return the available bundles with the future and past events bundles.
+   * 
+   * @return array
+   */
+  protected function getTaxonomyBundles() {
+    $info = &drupal_static(__METHOD__);
+
+    if ($info) {
+      return $info;
+    }
+
+    $bundles = os_get_bundles(array(1,2));
+    $delta = array_search('event', array_keys($bundles));
+    $first = array_slice($bundles, 0, $delta);
+    $second = array_slice($bundles, $delta + 1);
+    $events_type = array(
+      'past_event' => t('Past event'),
+      'upcoming_event' => t('Upcoming event'),
+    );
+
+    $info = $first + $events_type + $second;
+
+    return $info;
   }
 
   /**
@@ -280,6 +306,12 @@ class os_taxonomy_fbt extends os_boxes_default {
         $this->options['bundles'] = array($bundles);
       }
     }
+
+    // Check user access to the content of the widget.
+    if (!empty($this->options['bundles']) && !$this->checkWidgetAccess(reset($this->options['bundles']))) {
+      return $block;
+    }
+
     $id = 'vocabulary:' . $this->options['vocabulary'];
     $this->set_cache_id($id);
     if (($block['content'] = $this->get_cache()) === FALSE) {
@@ -296,6 +328,16 @@ class os_taxonomy_fbt extends os_boxes_default {
         'vid' => $this->options['vocabulary'],
         'options' => $this->options,
       ));
+
+      // When showing events set expire time of 5 minutes.
+      $event_bundles = array(
+        'event',
+        'upcoming_event',
+        'past_event',
+      );
+      if (is_array($this->options['bundles']) && in_array(reset($this->options['bundles']), $event_bundles)) {
+        $this->cache_time = "5 minutes";
+      }
 
       $block['content'] = $content;
       $this->set_cache($block['content']);

@@ -219,7 +219,7 @@ function _os_link_get_view($params) {
         ),
         '#attached' => array(
           'library' => array(
-            array('media', 'media_browser'),
+            array('media', 'media_browser_page'),
           ),
           'js' => array(
             drupal_get_path('module', 'media') . '/js/plugins/media.views.js',

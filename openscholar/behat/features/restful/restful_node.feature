@@ -10,15 +10,6 @@ Feature:
      Then I should see "Rest biblio"
 
   @api @restful
-  Scenario: Creating bio via rest.
-    Given I delete the node "John doe biography"
-     Then I create a new node of "bio" as "john" with the settings:
-      | Label       | Body                | vsite |
-      | Rest bio    | This is a Rest bio  | john  |
-     When I visit "john"
-     Then I should see "Rest bio"
-
-  @api @restful
   Scenario: Creating blog via rest.
     Given I create a new node of "blog" as "john" with the settings:
       | Label     | Body                 | vsite |
@@ -49,13 +40,6 @@ Feature:
       | Rest class material | This is a test class material  | john  | Rest class |
      When I visit "john/classes/rest-class/materials/rest-class-material"
      Then I should see "Rest class material"
-
-  @api @restful
-  Scenario: Creating CV via rest.
-    Given I delete the node "John doe's curriculum"
-     Then I create a new node of "cv" as "john" with the settings:
-      | Label   | Body               | vsite  |
-      | Rest CV | This is a test CV  | john   |
 
   @api @restful
   Scenario: Creating faq via rest.
@@ -132,6 +116,7 @@ Feature:
 
   @api @restful
   Scenario: Creating software release via rest.
+    # @TODO bring back package to "true"
      Given I create a new node of "software_release" as "john" with the settings:
-      | Label                 | vsite | software_project      | body  | recommended | version | package  |
-      | Rest software release | john  | Rest software project | foo   | 1           | 2005    | true     |
+      | Label                 | vsite | software_project      | body  | recommended | version |
+      | Rest software release | john  | Rest software project | foo   | 1           | 2005    |

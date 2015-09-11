@@ -61,6 +61,7 @@
  
 }
 
+
 #menu-bar #block-os-primary-menu ul:after {
     clear: both;
     content: ".";
@@ -138,6 +139,26 @@ background: none !important;
 #menu-bar ul.nice-menu ul ul {
 	display:none !important;
 }
+
+#menu-bar #block-os-primary-menu a.active.active ~ ul {
+  display: block !important;
+  visibility: visible !important;
+  background:none !important;
+  }
+
+#menu-bar #block-os-primary-menu a.active.active ~ ul li {
+  border: none !important;
+  }
+  
+  #menu-bar #block-os-primary-menu a.active.active ~ ul li a {
+  margin-left: 12px;
+  }
+  
+ #menu-bar #block-os-primary-menu a.active.active ~ ul li a:hover {
+  background: none !important;
+  }  
+  
+  
 /*Secondary menu*/
 .at-panel.gpanel.panel-display.three-col.clearfix {
     padding-right: 15px;

@@ -126,6 +126,30 @@ function cp_menu_type($form, &$form_state) {
   return $form;
 }
 
+
+/**
+ * Verifying the user didn't reached the maximum menu items the DB can hold.
+ */
+function cp_menu_title_validate($form, $form_state) {
+  $vsite = vsite_get_vsite();
+  $item = $form_state['values'];
+
+  $removing_keys = array('previous', 'return', 'cancel', 'form_build_id', 'form_token', 'form_id', 'op');
+  foreach ($removing_keys as $key) {
+    unset($item[$key]);
+  }
+  $item = $item + array('link_path' => '');
+
+  // Add the menu name to check the specifically the menu for which we add
+  // this link.
+  $item['menu_name'] = $form_state['object']['menu'];
+  list(, $existing_menu) = _vsite_menu_prepare_menu_item($item, $vsite);
+
+  if (strlen(serialize($existing_menu)) > 65000) {
+    form_set_error('', t('You have reached the maximum number of items for this menu.'));
+  }
+}
+
 /**
  * Multistep form page; presents title and advanced options for a URL link.
  */

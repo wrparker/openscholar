@@ -14,13 +14,18 @@ class OsRestfulLayout extends \OsRestfulSpaces {
    * Verify the user have access to the manage layout.
    */
   public function checkGroupAccess() {
-    parent::checkGroupAccess();
+    if (parent::checkGroupAccess()) {
+      return TRUE;
+    }
+
     $account = $this->getAccount();
 
     if (!spaces_access_admin($account, $this->space)) {
       // The current user can't manage boxes.
       $this->throwException("You can't manage layout in this vsite.");
     }
+
+    return true;
   }
 
   /**

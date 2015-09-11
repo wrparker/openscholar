@@ -36,12 +36,22 @@ abstract class OsRestfulSpaces extends \OsRestfulDataProvider {
         \RestfulInterface::PUT => 'updateSpace',
         \RestFulInterface::DELETE => 'deleteSpace',
       ),
+      '^.*$' => array(
+        \RestfulInterface::GET => 'getSpace',
+      ),
     );
   }
 
   abstract public function createSpace();
   abstract public function updateSpace();
   abstract public function deleteSpace();
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access() {
+    return $this->checkGroupAccess();
+  }
 
   /**
    * {@inheritdoc}
@@ -77,8 +87,12 @@ abstract class OsRestfulSpaces extends \OsRestfulDataProvider {
       $query->condition('object_type', $this->objectType);
     }
 
-    if (!empty($_GET['vsite'])) {
+    if (!empty($this->request['vsite'])) {
       $query->condition('id', $_GET['vsite']);
+    }
+
+    if (!empty($this->request['delta'])) {
+      $query->condition('object_id', $this->request['delta']);
     }
   }
 

@@ -907,6 +907,23 @@ function os_form_alter(&$form, &$form_state, $form_id) {
       '#weight' => 99,
     );
   }
+
+  // Add a submit handler to close the overlay when the submit button is
+  // pressed.
+  if (path_is_admin($_GET['q']) && isset($form_state['submitted']) && $form_state['submitted']) {
+    array_unshift($form['#submit'], 'os_close_overlay');
+  }
+}
+
+/**
+ * Submit handler; Forces the overlay to close.
+ */
+function os_close_overlay(&$form, &$form_state) {
+  // Don't force overlay to close on views' exposed forms.
+  if (isset($form['#token']) && $form['#token'] == 'views_exposed_form') {
+    return;
+  }
+  overlay_close_dialog();
 }
 
 /**
@@ -1010,7 +1027,7 @@ function os_form_node_form_alter(&$form, $form_state) {
     );
     $form['actions']['delete'] = $form['actions_top']['delete'] = $delete;
   }
-  
+
   // Add validation to 'Authored on' field
   $form['author']['date']['#element_validate'] = array('_os_datetime_32_bit');
 }
@@ -1948,6 +1965,25 @@ function os_app_info_declared_node_bundle($bundle = '') {
   }
 
   return in_array($bundle, $bundles);
+}
+
+/**
+ * Get the application name by the node bundle.
+ *
+ * @param $bundle
+ *   The name of the bundle.
+ *
+ * @return string
+ *   The name of the application.
+ */
+function os_get_app_by_bundle($bundle) {
+  $apps = os_app_info();
+
+  foreach ($apps as $app => $info) {
+    if (!empty($info['nodetypes']) && in_array($bundle, $info['nodetypes'])) {
+      return $app;
+    }
+  }
 }
 
 /**

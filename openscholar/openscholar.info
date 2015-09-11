@@ -78,13 +78,21 @@ dependencies[] = views_slideshow_cycle
 
 ; OS
 dependencies[] = citation_distribute
+dependencies[] = media_browser
 dependencies[] = os
 dependencies[] = os_books
 dependencies[] = os_boxes
 dependencies[] = os_breadcrumbs
 dependencies[] = os_comments
+dependencies[] = os_common
 dependencies[] = os_files
 dependencies[] = os_files_private
+dependencies[] = os_taxonomy
+dependencies[] = os_ga
+dependencies[] = os_wysiwyg_link
+dependencies[] = os_tour
+dependencies[] = os_importer
+dependencies[] = os_exporter
 dependencies[] = os_front
 dependencies[] = os_front
 dependencies[] = os_ga
@@ -110,7 +118,6 @@ dependencies[] = cp_toolbar
 dependencies[] = cp_user
 
 ; Features
-dependencies[] = os_biocv
 dependencies[] = os_blog
 dependencies[] = os_booklets
 dependencies[] = os_classes

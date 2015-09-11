@@ -10,7 +10,7 @@ class MediaInternetEmbedHandler extends MediaInternetBaseHandler {
   }
 
   public function getFileObject() {
-    $uri = 'embed://'. md5($this->embedCode);
+    $uri = 'embed://'. md5($this->embedCode . time());
     $file = file_uri_to_object($uri);
     $file->type = 'html';
 
