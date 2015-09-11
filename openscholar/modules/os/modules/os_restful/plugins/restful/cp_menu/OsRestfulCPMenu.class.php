@@ -106,6 +106,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       drupal_alter('os_restful_cp_menu_'.$name_string, $output, $user);
       //Set the menu order, so angular does not re-order
       $output = $this->maintainOrder($output);
+      $this->alterURLs($output);
     }
 
     return $output;
@@ -195,7 +196,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
           $feature_settings["feature_{$feature}"] = array(
             'label' => $item['title'],
             'type' => 'link',
-            'href' => "/".$item['href'],
+            'href' => $item['href'],
           );
         }
       }
@@ -219,12 +220,12 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
               'content' => array(
                 'label' => 'Content',
                 'type' => 'link',
-                'href' => '/cp/content'
+                'href' => 'cp/content'
               ),
               'files' => array(
                 'label' => 'Files',
                 'type' => 'link',
-                'href' => '/cp/content/files'
+                'href' => 'cp/content/files'
               ),
 //              @tbd v2
 //              'widgets' => array(
@@ -235,7 +236,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
               'tagging' => array(
                 'label' => 'Tagging',
                 'type' => 'link',
-                'href' => '/cp/build/taxonomy'
+                'href' => 'cp/build/taxonomy'
               ),
             ),
           ),
@@ -256,7 +257,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       'menus' => array(
         'label' => 'Menus',
         'type' => 'link',
-        'href' => '/cp/build/menu'
+        'href' => 'cp/build/menu'
       ),
       'appearance' => array(
         'label' => 'Appearance',
@@ -266,17 +267,17 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
             'themes' => array(
               'label' => 'Themes',
               'type' => 'link',
-              'href' => '/cp/appearance'
+              'href' => 'cp/appearance'
             ),
             'layout' => array(
               'label' => 'Layout',
               'type' => 'link',
-              'href' => '/cp/build/layout'
+              'href' => 'cp/build/layout'
             ),
             'theme_settings' => array(
               'label' => 'Theme Settings',
               'type' => 'link',
-              'href' => '/dev/null'
+              'href' => 'dev/null'
             ),
           ),
       ),
@@ -288,14 +289,14 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
           'app' => array(
             'label' => 'Apps',
             'type' => 'link',
-            'href' => '/cp/apps'
+            'href' => 'cp/apps'
           )
         ) + $feature_settings,
       ),
       'users_roles' => array(
         'label' => 'Users & Roles',
         'type' => 'link',
-        'href' => '/cp/users'
+        'href' => 'cp/users'
       ),
       'help' => array(
         'label' => 'Help',
@@ -305,12 +306,12 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
           'support' => array(
             'label' => 'Support',
             'type' => 'link',
-            'href' => '/cp/support'
+            'href' => 'cp/support'
           ),
           'documentation' => array(
             'label' => 'Documentation',
             'type' => 'link',
-            'href' => '/cp/welcome'
+            'href' => 'cp/welcome'
           ),
         ),
       ),
@@ -379,5 +380,25 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     }
 
     return $final;
+  }
+
+  /**
+   * Alter the URL's so that they are vsite specific.
+   * @param $menu
+   */
+  protected function alterURLs(&$menu) {
+
+    $vsite = $this->request['vsite'];
+    $vsite_object = vsite_get_vsite($vsite);
+
+    foreach ($menu as $key => $value) {
+      if (!empty($value['children'])) {
+        $this->alterURLs($menu[$key]['children']);
+      }
+
+      if (!empty($value['href']) && $value['href'] != '#') {
+        $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href']);
+      }
+    }
   }
 }
