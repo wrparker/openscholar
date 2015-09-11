@@ -1,4 +1,4 @@
-<div id="admin_panel" class="admin_panel">
+<div id="page_wrap" class="page_wrap">
 <!--REGION TO HOUSE RESPONSIVE MENU. OTHER CONTENT CAN'T BE PLACED HERE-->
 <div class="responive-menu-container clearfix">
   <?php print render($page['responsive_menu']); ?>
@@ -187,44 +187,6 @@
 		</div>
   </div>
 <?php endif; ?>
-</div><!-- /admin_panel -->
 
-<!-- new admin_panel -->
-<div class="morph-button morph-button-sidebar morph-button-fixed" ng-controller="MenuCtrl">
-			<button type="button"></button>
-			<div class="morph-content">
-				<div>
-					<div class="content-style-sidebar">
-						<a href="/path/to/vsite-homepage" class="admin-menu-homeicon"></a>
-						<div class="close_panel">
-							<span style="color:#a39d9d;">O</span><span style="color:#df1f26;">S</span>
-						</div><span class="icon icon-close">&#171; Close</span>
-						<div id='cssmenu'>
-							<ul>
-								<li>&nbsp;</li>
-                <li ng-repeat="(key, parent) in admin_panel" ng-class="{'has-sub': parent.children}">
-                  <a ng-attr-href="{{parent.href || '#'}}" toggle-open ng-class="{'toggleable': parent.children}">{{ parent.label }}</a>
-                  <ul class='sub-menu' ng-if="parent.children" ng-repeat="(key, child) in parent.children">
-                    <li class='submenu' ng-class="{'has-sub': child.children, 'heading': child.type == 'heading'}">
-                      <a href="{{child.href || '#'}}" toggle-open ng-class="{'toggleable': child.children, 'submenu_heading': child.children}">{{ child.label }}</a>
-                      <ul ng-if="child.children">
-                        <li ng-repeat="(key, grandchild) in child.children">
-                          <a ng-attr-href="{{ grandchild.href || '#' }}">{{ grandchild.label }}</a>
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
-                </li>
-								<!--REMOVE THIS LI WHEN BETA TESTING IS COMPLETE-->
-								<li style="margin-top:70px;">
-									<a href='https://harvard.az1.qualtrics.com/SE/?SID=SV_5pErjqW6E44JV0p' target="_blank" style="background: #222;">Feedback Form</a>
-									</li>
+</div><!-- /page_wrap -->
 
-							</ul>
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- new admin_panel -->
