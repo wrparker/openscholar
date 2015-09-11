@@ -21,8 +21,7 @@ env:
   - TEST_SUITE=vsite
   - TEST_SUITE=widgets
   - TEST_SUITE=media_browser
-  global:
-    - secure: "kbYKhyQY0mHBRcMz82PQDkWSrAjGeQVyk/VC5TJkcGd06QW6ovK3Xyy1FvoyID8ktG56EAe2IOnSE3kt51h8mqGlR6SVfluBJobgWjgcY3+6kSWPNsVrZNUL+hwHytM+OhbacUXP/PedXP55DMMPP0GVQlPgdzaUjzzlScj3w3A="
+  - secure: "kbYKhyQY0mHBRcMz82PQDkWSrAjGeQVyk/VC5TJkcGd06QW6ovK3Xyy1FvoyID8ktG56EAe2IOnSE3kt51h8mqGlR6SVfluBJobgWjgcY3+6kSWPNsVrZNUL+hwHytM+OhbacUXP/PedXP55DMMPP0GVQlPgdzaUjzzlScj3w3A="
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
