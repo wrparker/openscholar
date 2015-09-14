@@ -179,7 +179,10 @@
 
     function currentPage() {
       var pages = numPages();
-      if (pages && current > pages) {
+      if (pages === 0) {
+        return 0;
+      }
+      else if (Number.isInteger(pages) && current > pages) {
         current = pages;
       }
       return current;
