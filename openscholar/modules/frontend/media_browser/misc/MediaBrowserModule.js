@@ -270,6 +270,9 @@
           $scope.dupes.push($files[i]);
         }
         else {
+          if ($files[i].filename != $files[i].name) {
+            addMessage("This file was renamed from \"" + $files[i].name + "\" due to having invalid characters in its name.")
+          }
           // not a dupe, just upload it silently
           toBeUploaded.push($files[i]);
         }
