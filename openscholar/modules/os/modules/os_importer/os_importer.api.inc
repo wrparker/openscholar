@@ -73,7 +73,7 @@ function _os_importer_import_vocab(FeedsSource $source, $entity, $item, $id) {
   foreach ($new_vocabs as $vocab) {
     $original_name = $vocab;
     // Create the terms and the vocabulary.
-    if (preg_match('@[^a-zA-Z0-9_]+@', $vocab)) {
+    if (preg_match('@[^a-zA-Z0-9_ ]+@', $vocab)) {
       $params['@name'] = $vocab;
       $vocab = preg_replace($pattern, '', $vocab);
       $params['@new-name'] = $vocab;

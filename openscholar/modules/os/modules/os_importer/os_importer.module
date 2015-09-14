@@ -666,6 +666,11 @@ function os_importer_verify_uploaded_file($form, $form_state) {
     if (!$key) {
       // Check the header for bad vocabularies.
       foreach (array_diff(array_map('strtolower', $row), $mappings_diff) as $vocab) {
+        if (!trim($vocab)) {
+          form_set_error('', t('You cannot have a vocabulary without a name.'));
+          continue;
+        }
+
         if (preg_match('@[^a-z0-9_]+@', $vocab) && !str_replace(array(' ', '.', '&', '-'), '', strtolower($vocab))) {
           form_set_error('', t("The vocabularies you want to import doesn't contain any text."));
         }
@@ -679,9 +684,12 @@ function os_importer_verify_uploaded_file($form, $form_state) {
       continue;
     }
 
+    /** @var OsImporterEntityValidateBase $handler */
     if (!$handler = entity_validator_get_validator_handler('node', $form_state['type'])) {
       continue;
     }
+
+    $handler->rest = FALSE;
 
     $node = array(
       'type' => $form_state['type'],

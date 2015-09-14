@@ -10,6 +10,14 @@
  */
 class OsImporterEntityValidateBase extends EntityValidateBase {
 
+  /**
+   * @var bool
+   * Determine if the validation invoked during a rest call. This is useful when
+   * we have different validation for rest call and other validation when
+   * importing CSV.
+   */
+  public $rest = TRUE;
+
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();
 
@@ -53,6 +61,12 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
     // Add path validator.
     $fields['path_alias']['validators'][] = array($this, 'validatorPath');
 
+    if ($this->rest) {
+      $fields[OG_AUDIENCE_FIELD] = array(
+        'required' => TRUE,
+      );
+    }
+
     return $fields;
   }
 
@@ -61,7 +75,7 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
    */
   public function validateOsDate($field_name, $value, EntityMetadataWrapper $wrapper, EntityMetadataWrapper $property_wrapper) {
     // Empty values are checked for in 'isNotEmpty'.
-    if (empty($value)) {
+    if (empty($value) || $this->rest) {
       return;
     }
 
@@ -166,5 +180,12 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
       );
       $this->setError($field_name, t('The path "@path" is already in use. Please supply a different path.', $params));
     }
+  }
+
+  /**
+   * Display the id and the title of the group.
+   */
+  public function vsiteFieldDisplay($value) {
+    return array('title' => $value[0]->title, 'id' => $value[0]->nid);
   }
 }

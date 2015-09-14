@@ -859,3 +859,32 @@ function os_update_7040() {
   }
 }
 
+/**
+ * Enabling OS Restful, and the new Media Browser.
+ *
+ * Revert modules that use the new feature.
+ */
+function os_update_7041() {
+  module_enable(array('os_app_base', 'os_restful', 'media_browser'));
+
+  $revert = array(
+    'field_instance'
+  );
+  $modules = array(
+    'os_blog' => $revert,
+    'os_booklets' => $revert,
+    'os_classes'  => $revert,
+    'os_events' => $revert,
+    'os_faq' => $revert,
+    'os_links' => $revert,
+    'os_news' => $revert,
+    'os_pages' => $revert,
+    'os_presentations' => $revert,
+    'os_profiles' => $revert,
+    'os_publications' => $revert,
+    'os_software' => $revert,
+  );
+  features_revert($modules);
+
+  return t('Upgraded the Media Browser across the whole site.');
+}

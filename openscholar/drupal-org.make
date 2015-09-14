@@ -85,9 +85,9 @@ projects[dyntextfield][download][tag] = 1.0
 projects[dyntextfield][download][url] = "git://github.com/amitaibu/dyntextfield.git"
 
 projects[entity][subdir] = "contrib"
-projects[entity][version] = 1.0
+projects[entity][branch] = 7.x-1.x
 projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
-projects[entity][patch][] = http://drupal.org/files/entity-file_entity_access-1831578-9.patch
+projects[entity][patch][] = https://www.drupal.org/files/issues/2086225-entity-access-check-18.patch
 
 projects[entitycache][subdir] = "contrib"
 projects[entitycache][version] = 1.1
@@ -337,6 +337,14 @@ projects[registration][patch][] = "https://raw.githubusercontent.com/openscholar
 projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
 
+projects[restful][subdir] = "contrib"
+projects[restful][download][type] = git
+projects[restful][download][url] = "https://github.com/RoySegall/restful.git"
+projects[restful][download][branch] = 444
+projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/839d0cc214f2422e924e35d33133d1268b8cc1cd/patches/restful.put_file.patch"
+;projects[restful][download][branch] = "7.x-1.x"
+;projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
+
 projects[redirect][subdir] = "contrib"
 projects[redirect][version] = 1.0-rc1
 
@@ -479,10 +487,16 @@ libraries[autopager][type] = "libraries"
 libraries[autopager][download][type] = "file"
 libraries[autopager][download][url] = "https://github.com/sagotsky/jquery-autopager/archive/v1.2.zip"
 
-libraries[html5shiv[type] = "libraries"
+libraries[html5shiv][type] = "libraries"
 libraries[html5shiv][download][type] = "file"
 libraries[html5shiv][download][url] = "http://raw.github.com/aFarkas/html5shiv/master/dist/html5shiv.js"
 
 libraries[hopscotch][type] = "libraries"
 libraries[hopscotch][download][type] = "file"
 libraries[hopscotch][download][url] = "https://github.com/linkedin/hopscotch/archive/b41ab659507175264ab6347d0032f03e42b961d1.zip"
+
+; Angular js libraries.
+libraries[angular_select2][type] = "libraries"
+libraries[angular_select2][download][type] = "get"
+libraries[angular_select2][download][url] = "https://github.com/angular-ui/ui-select/archive/v0.12.0.zip"
+libraries[angular_select2][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/ad2fd2d198e91ac9a77eacbae996579e55510a3a/patches/angular_select-7024-async.patch"

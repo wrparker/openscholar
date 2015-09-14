@@ -9,7 +9,8 @@ class OsImporterFeedValidator extends OsImporterEntityValidateBase {
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();
 
-    $fields['field_url__url'] = array(
+    $url = $this->rest ? 'field_url' : 'field_url__url';
+    $fields[$url] = array(
       'validators' => array(
         array($this, 'validatorUrlNotEmpty'),
       ),
