@@ -206,9 +206,7 @@
           }
           else {
             var defer = $q.defer();
-            setTimeout(function () {
-              defer.resolve(false);
-            }, 1);
+            defer.resolve(true);
             return defer.promise;
           }
         };

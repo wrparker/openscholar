@@ -422,8 +422,13 @@
     $scope.deleteConfirmed = function() {
       service.delete($scope.selected_file)
         .then(function (resp) {
-          $scope.changePanes('library');
         });
+      for (var j = 0; j < $scope.files.length; j++) {
+        if ($scope.files[j].id == $scope.selected_file.id) {
+          $scope.files[j].status = 'deleting';
+        }
+      }
+      $scope.changePanes('library');
     };
 
 
@@ -438,6 +443,7 @@
         if (e.data.length) {
           $scope.embed = '';
           $scope.setSelection(e.data[0].id);
+
           $scope.changePanes('edit')
         }
       })
@@ -447,6 +453,19 @@
             $scope.embedFailure = false;
           }, 5000);
       });
+    }
+
+    $scope.closeFileEdit = function (result) {
+      if (!result && $scope.selected_file.new) {
+        service.delete($scope.selected_file);
+        for (var j = 0; j < $scope.files.length; j++) {
+          if ($scope.files[j].id == $scope.selected_file.id) {
+            $scope.files[j].status = 'deleting';
+          }
+        }
+        $scope.selected_file = null;
+      }
+      $scope.changePanes('library');
     }
 
     $scope.insert = function () {
