@@ -332,6 +332,7 @@ div[file-edit] .control button {
 .node-form .media-browser-drop-box {
     height: 180px;
     background-color: #FFF;
+    margin-top: 0;
 }
 .media-browser-dupe {
     position: absolute;
