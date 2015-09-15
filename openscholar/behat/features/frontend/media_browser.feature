@@ -86,6 +86,7 @@ Feature: Media Browser
     When I click on the "Upload" control
      And I wait "1 second" for the media browser to open
      And I drop the file "kitten-2.jpg" onto the "Drag and drop files here." area
+     And Show me a screenshot
     Then I should see the text "A file with the name 'kitten-2.jpg' already exists."
      And I press the "Cancel" button
      And I should see the media browser "Upload from your computer" tab is active
