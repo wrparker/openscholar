@@ -4,7 +4,7 @@
 
     angular.module('AdminPanel', [])
     .config(function (){
-       rootPath = Drupal.settings.paths.moduleRoot;
+       rootPath = Drupal.settings.paths.adminPanelModuleRoot;
        restPath = Drupal.settings.paths.api;
        vsite = Drupal.settings.spaces.id;
     }).controller("MenuCtrl", function($scope, $http) {
@@ -20,6 +20,10 @@
         success(function(data, status, headers, config) {
           $scope.admin_panel = data.data;
         });
+      
+      return {
+        templateUrl: rootPath+'/templates/admin_menu.html?vers='+Drupal.settings.version.adminPanel,
+      };
      
     }).directive('toggleOpen', function() {
       return {

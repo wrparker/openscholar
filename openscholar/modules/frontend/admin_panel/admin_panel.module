@@ -1,11 +1,16 @@
 <?php
 
-use Guzzle\Http\Message;
 function admin_panel_preprocess_page(&$vars) {
 	if (user_is_logged_in()) {
     drupal_add_library('admin_panel','admin_panel');
     os_common_angular_app('AdminPanel');
 	}
+}
+
+function admin_panel_init() {
+  if(variable_get('admin_panel_enabled', TRUE)) {
+    //admin_menu_suppress(TRUE);
+  }
 }
 
 function admin_panel_page_build(&$vars) {
@@ -14,7 +19,7 @@ function admin_panel_page_build(&$vars) {
 <!-- new admin_panel -->
   <div class="morph-button morph-button-sidebar morph-button-fixed">
     <button type="button"></button>
-      <div class="morph-content" ng-include="'{$root}admin_menu.html'" ng-controller="MenuCtrl"></div>
+      <div class="morph-content" ng-controller="MenuCtrl"></div>
   </div>
 <!-- new admin_panel -->
 AM;
@@ -32,6 +37,7 @@ AM;
  */
 function admin_panel_library() {
 
+  global $user;
   $disable = array('alias' => TRUE);
   $path = drupal_get_path('module', 'admin_panel');
 
@@ -39,6 +45,9 @@ function admin_panel_library() {
   $libs['admin_panel'] = array(
     'title' => 'Admin Panel libraries',
   );
+
+  // @todo save site configuration mtime
+  $modified = 444;
 
   $libs['admin_panel']['js'] = array(
     $path . '/misc/AdminPanelModule.js' => array(),
@@ -49,7 +58,11 @@ function admin_panel_library() {
     array(
       'data' => array(
         'paths' => array(
-          'moduleRoot' => url($path, $disable),
+          'adminPanelModuleRoot' => url($path, $disable),
+        ),
+        'admin_panel' => array(
+          'user' => $user->uid,
+          'mtime' => $modified,
         ),
         'version' => array(
           'adminPanel' => '0.0.1'
