@@ -4,13 +4,12 @@ function admin_panel_preprocess_page(&$vars) {
 	if (user_is_logged_in()) {
     drupal_add_library('admin_panel','admin_panel');
     os_common_angular_app('AdminPanel');
-	}
-}
 
-function admin_panel_init() {
-  if(variable_get('admin_panel_enabled', TRUE)) {
-    //admin_menu_suppress(TRUE);
-  }
+	  if (isset($vars['page']['page_top']['toolbar'])) {
+	    //Disable the toolbar if the new admin panel is active.
+      $vars['page']['page_top']['toolbar']['#access'] = $vars['page']['page_top']['toolbar']['#access'] && !variable_get('admin_panel_enabled', TRUE);
+    }
+	}
 }
 
 function admin_panel_page_build(&$vars) {
@@ -19,7 +18,7 @@ function admin_panel_page_build(&$vars) {
 <!-- new admin_panel -->
   <div class="morph-button morph-button-sidebar morph-button-fixed">
     <button type="button"></button>
-      <div class="morph-content" ng-controller="MenuCtrl"></div>
+      <div class="morph-content" left-menu></div>
   </div>
 <!-- new admin_panel -->
 AM;

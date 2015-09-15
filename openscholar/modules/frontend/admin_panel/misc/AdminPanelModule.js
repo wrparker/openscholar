@@ -20,10 +20,6 @@
         success(function(data, status, headers, config) {
           $scope.admin_panel = data.data;
         });
-      
-      return {
-        templateUrl: rootPath+'/templates/admin_menu.html?vers='+Drupal.settings.version.adminPanel,
-      };
      
     }).directive('toggleOpen', function() {
       return {
@@ -48,6 +44,11 @@
           })  
         },
       }
-    });;
+    }).directive('leftMenu', function() {
+      return {
+       templateUrl: rootPath+'/templates/admin_menu.html?vers='+Drupal.settings.version.adminPanel,
+       controller: 'MenuCtrl'
+     };
+   });
     
 })(jQuery);
