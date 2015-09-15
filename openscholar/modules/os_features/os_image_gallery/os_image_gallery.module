@@ -104,12 +104,6 @@ function os_image_gallery_node_view($node, $view_mode) {
   // node type.
   media_gallery_view($node, $view_mode);
 
-  //Update link title so users know they can upload more than just images
-  if (isset($node->content['add_media_link']['select']) && $node->content['add_media_link']['select']['#title'] == t('Add New Image')) {
-    $node->content['add_media_link']['select']['#title'] = t('Add New Media');
-  }
-
-
   // Attaches custom CSS to this node view page.
   $node->content['os_image_gallery'] = array(
     '#attached' => array(
@@ -119,6 +113,32 @@ function os_image_gallery_node_view($node, $view_mode) {
       ),
     ),
   );
+
+  if (isset($node->content['add_media_link'])) {
+    if (module_exists('os_common')) {
+      $field_info = field_info_instance('node', 'media_gallery_file', 'media_gallery');
+      $max = $field_info['settings']['max_filesize'];
+
+      os_common_angular_app('media-gallery-public');
+      $node->content['os_image_gallery']['#attached']['js'][] = drupal_get_path('module', 'os_image_gallery').'/apps/media-gallery-public.js';
+      $node->content['os_image_gallery']['#attached']['library'][] = array('os_common', 'FileEditorModal');
+      $node->content['os_image_gallery']['#attached']['library'][] = array('media', 'media_browser');
+      $node->content['os_image_gallery']['#attached']['js'][] = array(
+        'type' => 'setting',
+        'data' => array(
+          'mediaGalleryMaxFilesize' => $max,
+          'mediaGalleryMaxFilesizeRaw' => parse_size($max)
+        )
+      );
+    }
+
+    //Update link title so users know they can upload more than just images
+    if (isset($node->content['add_media_link']['select']) && $node->content['add_media_link']['select']['#title'] == t('Add New Image')) {
+      $node->content['add_media_link']['select']['#title'] = t('Add New Media');
+    }
+  }
+
+
 
   // Gets the fids of images on this page
   if (isset($node->media_gallery_file[$node->language]) && count($node->media_gallery_file[$node->language])) {

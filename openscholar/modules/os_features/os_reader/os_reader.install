@@ -112,7 +112,7 @@ function os_reader_update_7000() {
  */
 function os_reader_update_7001() {
   $schema = os_reader_schema();
-  if(!db_field_exists('os_feed_item', 'importer_type')){
+  if (!db_field_exists('os_feed_item', 'importer_type')) {
     db_add_field('os_feed_item', 'importer_type', $schema['os_feed_item']['fields']['importer_type']);
   }
 }
