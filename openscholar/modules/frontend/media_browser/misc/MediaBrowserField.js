@@ -57,7 +57,18 @@
 
         scope.addFile = function ($files) {
           for (var i = 0; i < $files.length; i++) {
-            scope.selectedFiles.push($files[i]);
+            var found = false;
+            for (var j = 0; j < scope.selectedFiles.length; j++) {
+              if ($files[i].id == scope.selectedFiles[j].id) {
+                scope.selectedFiles[j] = angular.copy($files[i]);
+                highlightDupe(scope.selectedFiles[j]);
+                found = true;
+                break;
+              }
+            }
+            if (!found) {
+              scope.selectedFiles.push($files[i]);
+            }
           }
         }
 
@@ -67,6 +78,10 @@
 
         scope.replaceFile = function ($inserted, $index) {
           scope.selectedFiles.splice($index, 1, $inserted[0]);
+        }
+
+        function highlightDupe(file) {
+
         }
 
 
