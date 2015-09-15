@@ -11,7 +11,7 @@
          hide-on-drop-not-available="true" ng-accept="validate($file)">
     </div>
 </div>
-<div class="file-list-single form-wrapper" ng-repeat="file in selectedFiles" ng-class="{even: $even, odd: $odd}">
+<div class="file-list-single form-wrapper" ng-repeat="file in selectedFiles" ng-class="{even: $even, odd: $odd, highlight: file.highlight}">
     <input type="hidden" name="{{field_name}}[und][{{$index}}][fid]" value="{{file.id}}">
     <span>
         <img class="file-icon" alt="Icon for {{file.mime}}" title="{{file.mime}}" src="{{file.icon}}">

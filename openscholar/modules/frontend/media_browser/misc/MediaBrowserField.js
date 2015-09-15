@@ -1,7 +1,7 @@
 (function () {
 
   angular.module('MediaBrowserField', ['mediaBrowser', 'FileEditorModal', 'EntityService'])
-    .directive('mediaBrowserField', ['mbModal', 'EntityService', function (mbModal, EntityService) {
+    .directive('mediaBrowserField', ['mbModal', 'EntityService', '$timeout', function (mbModal, EntityService, $timeout) {
 
       function link(scope, elem, attr) {
         // everything to define
@@ -53,15 +53,19 @@
             types: types
           };
           mbModal.open(params);
+          for (var i = 0; i < scope.selectedFiles; i++) {
+            highlightDupe(scope.selectedFiles[i], false);
+          }
         }
 
         scope.addFile = function ($files) {
           for (var i = 0; i < $files.length; i++) {
             var found = false;
             for (var j = 0; j < scope.selectedFiles.length; j++) {
+              highlightDupe(scope.selectedFiles[j], false);
               if ($files[i].id == scope.selectedFiles[j].id) {
                 scope.selectedFiles[j] = angular.copy($files[i]);
-                highlightDupe(scope.selectedFiles[j]);
+                highlightDupe(scope.selectedFiles[j], true);
                 found = true;
                 break;
               }
@@ -80,8 +84,8 @@
           scope.selectedFiles.splice($index, 1, $inserted[0]);
         }
 
-        function highlightDupe(file) {
-
+        function highlightDupe(file, toHighlight) {
+          file.highlight = toHighlight;
         }
 
 
