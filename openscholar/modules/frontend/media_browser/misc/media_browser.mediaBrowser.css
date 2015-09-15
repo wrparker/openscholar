@@ -137,7 +137,7 @@ div.file-filters {
     min-height: 300px;
 }
 .media-browser-pane textarea#fe-file-description {
-    min-height: 100px;
+    min-height: 20px;
 }
 .mb-preview,
 .mb-title,
