@@ -1,7 +1,7 @@
 (function () {
 
   angular.module('MediaBrowserField', ['mediaBrowser', 'FileEditorModal', 'EntityService'])
-    .directive('mediaBrowserField', ['mbModal', 'EntityService', '$timeout', function (mbModal, EntityService, $timeout) {
+    .directive('mediaBrowserField', ['mbModal', 'EntityService', function (mbModal, EntityService) {
 
       function link(scope, elem, attr) {
         // everything to define
