@@ -25,7 +25,7 @@
                     A file with the name '{{dupe.name}}' already exists.
                     <div class="actions">
                         <div><button value="rename" ng-click="$parent.rename($index, $last)">Rename</button> The new name will be {{dupe.newName}}</div>
-                        <div><button value="replace" ng-click="$parent.replace($index, $last)">Replace</button></div>
+                        <div><button value="replace" ng-click="$parent.replace($index, $last)">Replace</button> This CANNOT be undone!</div>
                         <div><button value="cancel" ng-click="$parent.cancelUpload($index, $last)">Cancel</button></div>
                     </div>
                     <div class="media-browser-dupe-counter" ng-show="$parent.dupes.length > 1">{{$index+1}}/{{$parent.dupes.length}}</div>
@@ -98,7 +98,7 @@
                     <span class="mb-filename">{{file.filename}}</span>
                     <span class="mb-created">{{(file.timestamp + '000') | date:'short'}}</span>
                     <span class="mb-file-actions">
-                        <span class="mb-actions-edit" ng-click="setSelection(file.id); selected_file.new = false; changePanes('edit')">Edit</span>
+                        <span class="mb-actions-edit" ng-click="setSelection(file.id); selected_file.new = false; selected_file.replaced = false; changePanes('edit')">Edit</span>
                         <span class="mb-actions-delete" ng-click="setSelection(file.id); changePanes('delete')">Delete</span>
                     </span>
                 </div>

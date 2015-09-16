@@ -381,16 +381,20 @@
           progress = e;
         }).success(function (e) {
           for (var i = 0; i< e.data.length; i++) {
-            e.data[i].new = true;
             service.register(e.data[i]);
             var found = false;
+            // check to see if this file exists
             for (var j = 0; j < $scope.files.length; j++) {
               if ($scope.files[j].id == e.data[i].id) {
+                // we just replaced an existing file.
+                e.data[i].replaced = true;
                 $scope.files[j] = e.data[i];
                 found = true;
               }
             }
             if (!found) {
+              // This is a brand-new file. Set the true flag and add it to the list.
+              e.data[i].new = true;
               $scope.files.push(e.data[i]);
             }
           }
