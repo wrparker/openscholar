@@ -2025,6 +2025,8 @@ function os_events_preprocess_calendar_item(&$vars) {
   // Prepare popover fields.
   if (in_array($item->granularity, array('day', 'week', 'month'))) {
     $item->popover_fields['event_title'] = $item->rendered_fields['title'];
+    $item->popover_fields['event_delta'] = $item->rendered_fields['delta'];
+
     // @TODO: Is this format OK?
     $item->popover_fields['event_date'] = $item->rendered_fields['field_date'];
     $item->popover_fields['event_location'] = $item->rendered_fields['field_event_location'];
