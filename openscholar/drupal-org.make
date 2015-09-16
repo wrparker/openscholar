@@ -339,7 +339,7 @@ projects[purl][patch][] = "http://drupal.org/files/issues/purl-integrate_redirec
 
 projects[registration][subdir] = "contrib"
 projects[registration][version] = 1.4
-projects[registration][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/a92620d51664a4924aee531ace680cf7c06afd87/patches/registration_link_pass_entity.patch"
+projects[registration][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/fff85ce1e059985dac494d6bde5e923e25a74feb/patches/registration_link_pass_entity.patch"
 
 projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
