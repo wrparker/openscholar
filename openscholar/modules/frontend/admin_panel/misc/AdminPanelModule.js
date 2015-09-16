@@ -7,6 +7,8 @@
        rootPath = Drupal.settings.paths.adminPanelModuleRoot;
        restPath = Drupal.settings.paths.api;
        vsite = Drupal.settings.spaces.id;
+       cid = Drupal.settings.admin_panel.cid;
+       uid = Drupal.settings.admin_panel.user;
     }).controller("MenuCtrl", function($scope, $http) {
     
       menu = 'admin_panel';
@@ -14,6 +16,9 @@
       if (vsite) {
         params.vsite = vsite;
       }
+      
+      params.cid = cid;
+      params.uid = uid;
       
       var url = restPath + '/cp_menu/' + menu;
       $http.get(url, {params: params}).

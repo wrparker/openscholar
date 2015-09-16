@@ -4,16 +4,10 @@ function admin_panel_preprocess_page(&$vars) {
 	if (user_is_logged_in()) {
     drupal_add_library('admin_panel','admin_panel');
     os_common_angular_app('AdminPanel');
-
-	  if (isset($vars['page']['page_top']['toolbar'])) {
-	    //Disable the toolbar if the new admin panel is active.
-      $vars['page']['page_top']['toolbar']['#access'] = $vars['page']['page_top']['toolbar']['#access'] && !variable_get('admin_panel_enabled', TRUE);
-    }
 	}
 }
 
 function admin_panel_page_build(&$vars) {
-  $root = $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'admin_panel') . '/templates/';
   $am = <<<AM
 <!-- new admin_panel -->
   <div class="morph-button morph-button-sidebar morph-button-fixed">
@@ -39,14 +33,17 @@ function admin_panel_library() {
   global $user;
   $disable = array('alias' => TRUE);
   $path = drupal_get_path('module', 'admin_panel');
+  $perm = drupal_static('user_access');
+  $spaces_features = variable_get('spaces_features', array());
 
   // Includes resources needed to create the admin panel.
   $libs['admin_panel'] = array(
     'title' => 'Admin Panel libraries',
   );
 
-  // @todo save site configuration mtime
-  $modified = 444;
+  $perms = isset($perm[$user->uid]) ? $perm[$user->uid] : array();
+  // Create a unique cid based on user permissions and enabled features.
+  $cid = drupal_hash_base64(implode("",array_merge(array_filter($spaces_features),$perms)));
 
   $libs['admin_panel']['js'] = array(
     $path . '/misc/AdminPanelModule.js' => array(),
@@ -61,7 +58,7 @@ function admin_panel_library() {
         ),
         'admin_panel' => array(
           'user' => $user->uid,
-          'mtime' => $modified,
+          'cid' => $cid,
         ),
         'version' => array(
           'adminPanel' => '0.0.1'
