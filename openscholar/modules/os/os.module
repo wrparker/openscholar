@@ -2555,5 +2555,9 @@ function os_field_access($op, $field, $entity_type, $entity, $account) {
     return;
   }
 
+  if (!in_array($entity->type, array('news', 'person', 'biblio'))) {
+    return;
+  }
+
   return user_access('bypass redirection', $account);
 }
