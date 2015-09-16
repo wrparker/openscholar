@@ -112,6 +112,7 @@ html.js input.throbbing {
     text-decoration: none !important;
 }
 
+
 a#edit-cancel,
 a.form-cancel {
   cursor: pointer;
@@ -132,6 +133,7 @@ a.form-cancel {
   -webkit-border-radius: 20px;
   border-radius: 20px;
 }
+
 
 a.form-cancel:hover {
  text-decoration:none;
