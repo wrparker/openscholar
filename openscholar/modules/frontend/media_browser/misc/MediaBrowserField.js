@@ -88,8 +88,6 @@
           file.highlight = toHighlight;
         }
 
-
-
         elem.parent().find(' > *').not(elem).remove();
       }
 
