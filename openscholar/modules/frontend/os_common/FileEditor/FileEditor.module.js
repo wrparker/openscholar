@@ -115,7 +115,7 @@
                 }
             },
             function(result) {
-              scope.errorMessages = result.data.title.replace(/[^:]*: /, '');
+              scope.errorMessages = result.data.title.replace(/[^\s:]*: /, '');
               scope.showErrorMessages = true;
             });
           };

@@ -605,7 +605,7 @@ class OsFilesResource extends RestfulEntityBase {
 
 
     if ($this->getErrors()) {
-      $e = new RestfulBadRequestException("This following properties contained errors and could not be saved.\n".
+      $e = new RestfulBadRequestException("The following errors occured when attempting to save this file.\n".
         implode("\n", $this->getErrors()));
       throw $e;
     }

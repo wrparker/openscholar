@@ -80,6 +80,10 @@ div[file-edit] h4,
   width: 450px;
 }
 
+[file-edit] span {
+  white-space: pre-line;
+}
+
 [file-edit] .error .error-close {
   position: absolute;
   bottom: 0;
