@@ -79,7 +79,7 @@
 		}
 		else {
 			// add class active (solves z-index problem when more than one button is in the page)
-			classie.addClass( this.el, 'active' );
+			jQuery(this.el).addClass('active');
 			this.options.onBeforeOpen();
 		}
 
@@ -102,7 +102,7 @@
 				// callback
 				if( self.expanded ) {
 					// remove class active (after closing)
-					classie.removeClass( self.el, 'active' );
+					jQuery(self.el).removeClass('active');
 					self.options.onAfterClose();
 				}
 				else {
@@ -122,7 +122,7 @@
 		// set the left and top values of the contentEl (same like the button)
 		var buttonPos = this.button.getBoundingClientRect();
 		// need to reset
-		classie.addClass( this.contentEl, 'no-transition' );
+		jQuery(this.contentEl).addClass('no-transition');
 		this.contentEl.style.left = 'auto';
 		this.contentEl.style.top = 'auto';
 		
@@ -132,13 +132,13 @@
 			self.contentEl.style.top = buttonPos.top + 'px';
 			
 			if( self.expanded ) {
-				classie.removeClass( self.contentEl, 'no-transition' );
-				classie.removeClass( self.el, 'open' );
+				jQuery(self.contentEl).removeClass('no-transition');
+				jQuery(self.el).removeClass('open');
 			}
 			else {
 				setTimeout( function() { 
-					classie.removeClass( self.contentEl, 'no-transition' );
-					classie.addClass( self.el, 'open' ); 
+					jQuery(self.contentEl).removeClass('no-transition');
+					jQuery(self.el).addClass('open');
 				}, 25 );
 			}
 		}, 25 );
