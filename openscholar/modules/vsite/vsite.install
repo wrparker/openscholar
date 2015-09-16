@@ -759,8 +759,6 @@ function vsite_update_7028() {
  */
 function vsite_update_7029(&$sandbox) {
   os_set_update_batch($sandbox, array(
-    'query' => array('update', 'Query'),
-    'iterator' => array('update', 'Iterator'),
     'batch' => 250,
     'entity' => 'node',
     'path' => drupal_get_path('module', 'vsite') . '/updates/update7029.php',

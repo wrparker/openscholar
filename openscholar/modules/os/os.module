@@ -2473,6 +2473,8 @@ function os_set_update_batch(&$sandbox, $info) {
   $info += array(
     'entity' => 'node',
     'batch' => drupal_is_cli() ? 400: 150,
+    'query' => array('update', 'Query'),
+    'iterator' => array('update', 'Iterator'),
   );
 
   if (!empty($info['path'])) {
