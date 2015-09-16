@@ -3620,23 +3620,6 @@ function _vsite_metatag_get_cid_parts($vsite) {
 }
 
 /**
- * Query callback; Get all the vsites.
- */
-function vsite_get_vsites($id = NULL) {
-  $query = new EntityFieldQuery();
-
-  $query
-    ->entityCondition('entity_type', 'node')
-    ->propertyCondition('type', array_keys(vsite_vsite_og_node_type_info()), 'IN');
-
-  if ($id) {
-    $query->propertyCondition('nid', $id, '>=');
-  }
-
-  return $query;
-}
-
-/**
  * Iterator callback; Grant bypass redirection permisison to content managers.
  */
 function vsite_grant_by_pass_permission($node) {
