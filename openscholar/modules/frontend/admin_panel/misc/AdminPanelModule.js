@@ -9,24 +9,21 @@
        vsite = Drupal.settings.spaces.id;
        cid = Drupal.settings.admin_panel.cid;
        uid = Drupal.settings.admin_panel.user;
-    }).controller("MenuCtrl", function($scope, $http) {
+    }).controller("MenuCtrl",['$scope', '$http', function ($scope, $http) {
     
       menu = 'admin_panel';
-      params = {};
+      params = { cid: cid, uid: uid};
       if (vsite) {
         params.vsite = vsite;
       }
       
-      params.cid = cid;
-      params.uid = uid;
-      
       var url = restPath + '/cp_menu/' + menu;
-      $http.get(url, {params: params}).
-        success(function(data, status, headers, config) {
-          $scope.admin_panel = data.data;
-        });
+      $http({method: 'get', url: url, params: params, cache: true}).
+        then(function(response) {
+          $scope.admin_panel = response.data.data;
+        }); 
      
-    }).directive('toggleOpen', function() {
+    }]).directive('toggleOpen', function() {
       return {
         link: function(scope, element, attrs) {
     	  element.bind('click', function() {
