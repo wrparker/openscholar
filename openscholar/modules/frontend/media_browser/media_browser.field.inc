@@ -71,6 +71,9 @@ function media_browser_field_widget_form(&$form, &$form_state, $field, $instance
     $files[] = $file['fid'];
   }
 
+  $max_size = !empty($field_settings['max_filesize']) ? $field_settings['max_filesize'] : media_browser_get_max_size();
+  $max_size = preg_replace('/^([\d]+)([^\d\s]).*/', '$1 $2B', $max_size);
+
   $element += array(
     '#field' => $field,
     '#instance' => $instance,
@@ -94,7 +97,7 @@ function media_browser_field_widget_form(&$form, &$form_state, $field, $instance
       ),
     ),
     '#markup' => format_string('<div media-browser-field max-filesize="@filesize" types="@types" extensions="@extensions" upload-text="@upload-text" droppable-text="@droppable-text" files="[]"></div>', array(
-      '@filesize' => isset($field_settings['max_filesize']) ? $field_settings['max_filesize'] : 0,
+      '@filesize' => $max_size,
       '@types' => implode(',', array_filter($widget_settings['allowed_types'])),
       '@extensions' => isset($field_settings['file_extensions']) ? $field_settings['file_extensions'] : media_variable_get('file_extensions'),
       '@upload-text' => $widget_settings['upload_button_text'],
@@ -130,9 +133,12 @@ function media_browser_field_widget_media_draggable_file_form_alter(&$elements, 
     )
   );
 
+  $max_size = !empty($field_settings['max_filesize']) ? $field_settings['max_filesize'] : media_browser_get_max_size();
+  $max_size = preg_replace('/^([\d]+)([^\d\s]).*/', '$1 $2B', $max_size);
+
   $elements['angularbrowser'] = array(
     '#markup' => format_string('<div media-browser-field max-filesize="@filesize" types="@types" extensions="@extensions" upload-text="@upload-text" droppable-text="@droppable-text" files="[]"></div>', array(
-      '@filesize' => !empty($field_settings['max_filesize']) ? $field_settings['max_filesize'] : media_browser_get_max_size(),
+      '@filesize' => $max_size,
       '@types' => implode(',', array_filter($widget_settings['allowed_types'])),
       '@extensions' => !empty($field_settings['file_extensions']) ? $field_settings['file_extensions'] : media_variable_get('file_extensions'),
       '@upload-text' => $widget_settings['upload_button_text'],

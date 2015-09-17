@@ -22,11 +22,9 @@
  */
 function rbuild_form_software_project_node_form_alter(&$form, &$form_state, $form_id) {
   // Only shows the rbuild fields if "Rbuild repository" method is selected
-  $form['#attached'] = array(
-    'js' => array(
-      'type' => 'file',
-      'data' => drupal_get_path('module', 'rbuild') . '/rbuild.js',
-    ),
+  $form['#attached']['js'][] = array(
+    'type' => 'file',
+    'data' => drupal_get_path('module', 'rbuild') . '/rbuild.js',
   );
 
   // Checks that the provided Repository URL and Short Name are valid

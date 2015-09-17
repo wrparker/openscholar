@@ -3,6 +3,7 @@
 
 [tree-selector-widget] ul {
   margin-left: 0.25em;
+  margin-bottom: 0px;
 }
 
 [tree-selector-widget] li {
@@ -11,15 +12,15 @@
 
 [tree-selector-widget] .expander {
   display: inline-block;
-  width: 10px;
+  width: 13px;
   background-image: url('../../../../themes/cp_theme/images/cp-sprite.png');
-  background-position-x: -38px;
+  background-position-x: 0px;
   background-position-y: -452px;
 }
 
 [tree-selector-widget] .expander.collapsed {
-  background-position-x: -38px;
-  background-position-y: -436px;
+  background-position-x: 0;
+  background-position-y: -434px;
 }
 
 [tree-selector-widget] .expander.empty {

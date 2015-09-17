@@ -87,8 +87,12 @@ abstract class OsRestfulSpaces extends \OsRestfulDataProvider {
       $query->condition('object_type', $this->objectType);
     }
 
-    if (!empty($_GET['vsite'])) {
+    if (!empty($this->request['vsite'])) {
       $query->condition('id', $_GET['vsite']);
+    }
+
+    if (!empty($this->request['delta'])) {
+      $query->condition('object_id', $this->request['delta']);
     }
   }
 

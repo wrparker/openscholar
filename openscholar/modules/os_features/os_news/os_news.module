@@ -122,18 +122,6 @@ function os_news_vsite_og_node_type_info() {
 }
 
 /**
- * Implements hook_field_access().
- *
- * Restrict access to the redirect field on the news node.
- */
-function os_news_field_access($op, $field, $entity_type, $entity, $account) {
-  if (!empty($entity) && $field['field_name'] == 'field_url' && $entity_type == 'node' && $entity->type == 'news' && $op == 'edit') {
-    return user_access('bypass redirection', $account);
-  }
-  return TRUE;
-}
-
-/**
  * Adds alt and title text where appropriate
  */
 function os_news_field_attach_load($entity_type, $entities, $view_mode) {

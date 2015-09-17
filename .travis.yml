@@ -9,18 +9,21 @@ mysql:
   encoding: utf8
 
 env:
-  - TEST_SUITE=restful
-  - TEST_SUITE=features_first
-  - TEST_SUITE=features_second
-  - TEST_SUITE=harvard
-#  - TEST_SUITE=javscript
-  - TEST_SUITE=misc_first
-  - TEST_SUITE=misc_second
-  - TEST_SUITE=solr
-  - TEST_SUITE=taxonomy
-  - TEST_SUITE=vsite
-  - TEST_SUITE=widgets
-  - TEST_SUITE=media_browser
+  global:
+    - secure: "kbYKhyQY0mHBRcMz82PQDkWSrAjGeQVyk/VC5TJkcGd06QW6ovK3Xyy1FvoyID8ktG56EAe2IOnSE3kt51h8mqGlR6SVfluBJobgWjgcY3+6kSWPNsVrZNUL+hwHytM+OhbacUXP/PedXP55DMMPP0GVQlPgdzaUjzzlScj3w3A="
+  matrix:
+    - TEST_SUITE=restful
+    - TEST_SUITE=features_first
+    - TEST_SUITE=features_second
+    - TEST_SUITE=harvard
+    - TEST_SUITE=javscript
+    - TEST_SUITE=misc_first
+    - TEST_SUITE=misc_second
+    - TEST_SUITE=solr
+    - TEST_SUITE=taxonomy
+    - TEST_SUITE=vsite
+    - TEST_SUITE=widgets
+    - TEST_SUITE=media_browser
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
@@ -119,13 +122,16 @@ before_script:
   - php composer.phar install --prefer-source
   - sudo cat /var/log/apache2/error.log
 
+  # Other
+  - drush vset oembedembedly_api_key $EMBEDLYAPIKEY
+
 script:
 
   # Run selenium.
   - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
   - wget http://selenium-release.storage.googleapis.com/2.40/selenium-server-standalone-2.40.0.jar
-  - java -jar selenium-server-standalone-2.40.0.jar -p 4444 &
+  - java -jar selenium-server-standalone-2.40.0.jar -p 4444 2>&1 &
   - sleep 5
 
   # Run phantomJs.

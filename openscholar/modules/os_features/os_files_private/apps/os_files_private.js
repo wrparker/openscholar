@@ -9,7 +9,7 @@
     .controller('OSFilesPrivateController', ['$scope', function ($scope) {
       $scope.reload = function (result) {
         if (result) {
-          //window.location.reload();
+          window.location.reload();
         }
       }
     }]);

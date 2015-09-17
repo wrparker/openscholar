@@ -112,11 +112,7 @@ html.js input.throbbing {
     text-decoration: none !important;
 }
 
-#edit-field_upload-und-drop span.ng-binding.ng-scope,
-.media-browser-pane .file-clear button,
-.media-browser-pane #media-browser-file-select,
-.media-browser-pane .actions button,
-div[file-edit] .control button,
+
 a#edit-cancel,
 a.form-cancel {
   cursor: pointer;
@@ -307,6 +303,15 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 .page-node-edit.node-type-biblio #overlay {
 max-width: 930px;
 min-width: 850px;
+}
+
+
+form.confirmation {
+	margin-top:20px;
+}
+
+form.confirmation span.emphasize {
+	font-weight:bold;
 }
 
  /* OVERRIDES WITH TABS IN MODAL - EXPERIMENTAL */

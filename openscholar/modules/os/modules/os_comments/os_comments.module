@@ -1,8 +1,6 @@
 <?php
 // $Id$
 
-include_once ('os_comments.features.inc');
-
 /**
  * @file
  * OS Comments module file.
@@ -57,12 +55,6 @@ function os_comments_form_cp_app_settings_form_alter(&$form, &$form_state, $form
         if (strpos($child, 'comment_sources_') === 0 && !in_array($child, $node_types)) {
           $form['left']["comment_settings"][$child]['#access'] = FALSE;
         }
-        else {
-          // Renames end user value to match sentence case.
-          if (isset($form['left']["comment_settings"][$child]["#options"]['fb_social:Facebook Comments'])) {
-            $form['left']["comment_settings"][$child]["#options"]['fb_social:Facebook Comments'] = t('Facebook comments');
-          }
-        }
       }
       break;
 
@@ -84,12 +76,6 @@ function os_comments_form_cp_app_settings_form_alter(&$form, &$form_state, $form
         // Hides non-applicable node types from this app's setting page.
         if (strpos($child, 'comment_sources_') === 0 && !in_array($child, $node_types)) {
           $form["comment_settings"][$child]['#access'] = FALSE;
-        }
-        else {
-          // Renames end user value to match sentence case.
-          if (isset($form["comment_settings"][$child]["#options"]['fb_social:Facebook Comments'])) {
-            $form["comment_settings"][$child]["#options"]['fb_social:Facebook Comments'] = t('Facebook comments');
-          }
         }
       }
 
@@ -154,30 +140,6 @@ function os_comments_comment_sources_alter(&$sources) {
 }
 
 /**
- * Implements hook_fb_social_default_presets_alter().
- *
- * @param array $presets
- */
-function os_comments_fb_social_default_presets_alter(&$presets) {
-
-  // Only alters multi-tenant presets
-  if (!module_exists('vsite')) {
-    return;
-  }
-
-  // Applies custom node types
-  foreach ($presets as $name => $preset) {
-    if (variable_get("fb_social_{$name}_nodetypes", FALSE) !== FALSE) {
-      $presets[$name]->settings['node_types']['types'] = variable_get("fb_social_{$name}_nodetypes", FALSE);
-    }
-  }
-}
-
-/**
- * Save functions for sources in multi-tenant
- */
-
-/**
  * Saves the Disqus node types comment settings
  */
 function os_comments_disqus_save_vsite($comment_node_types) {
@@ -187,19 +149,6 @@ function os_comments_disqus_save_vsite($comment_node_types) {
   }
 
   $vsite->controllers->variable->set('disqus_nodetypes', $comment_node_types);
-}
-
-/**
- * Saves the Facebook node type comments settings
- */
-function os_comments_fb_social_save_vsite($comment_node_types, $preset_name = '') {
-  $vsite = vsite_get_vsite();
-  if (!$vsite) {
-    return FALSE;
-  }
-
-  // Saves node types in a variable used to alter the fb_social preset
-  $vsite->controllers->variable->set("fb_social_{$preset_name}_nodetypes", $comment_node_types);
 }
 
 /**
@@ -345,9 +294,6 @@ function os_comments_preprocess_node(&$vars) {
       // being rewritten to "X Comments" by disqus's count.js.
       //$vars['content']['links']['comment']['#links']['comment-add']['fragment'] = 'disqus_thread';
       //$vars['content']['links']['comment']['#links']['comment-add']['title'] = t('Add new comment');
-    }
-    elseif ($vars['node']->os_comments == 'fb_social:Facebook Comments') {
-      unset($vars['content']['links']['comment']['#links']['comment-add']['fragment']);
     }
   }
   // Removes the "Add new comment" form title when users don't have access.

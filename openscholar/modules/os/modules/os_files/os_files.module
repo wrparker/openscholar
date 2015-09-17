@@ -22,8 +22,12 @@ function os_files_init() {
   $plugins = ctools_get_plugins('oembed', 'providers');
   if (!isset($plugins['embedly'])) {
     $info = ctools_plugin_get_plugin_type_info();
-    cache_clear_all('plugins:oembed:providers', $info['oembed']['providers']['cache table']);
-    ctools_get_plugins_reset();
+
+    // If the ctools plugin data is not present do not clear the cache.
+    if (isset($info['oembed']['providers']['cache table'])) {
+      cache_clear_all('plugins:oembed:providers', $info['oembed']['providers']['cache table']);
+      ctools_get_plugins_reset();
+    }
     watchdog('oembed', 'Embedly oEmbed plugins not found');
   }
 }
@@ -1853,7 +1857,12 @@ function os_files_field_formatter_view($entity_type, $entity, $field, $instance,
           $href = file_create_url($i['uri']);
           $text = $i['description'] ? $i['description'] : $i['filename'];
           //Round Filesize to nearest KB
-          $filesize = $i['filesize'] - ($i['filesize'] % DRUPAL_KILOBYTE);
+          if ($i['filesize'] >= DRUPAL_KILOBYTE) {
+            $filesize = $i['filesize'] - ($i['filesize'] % DRUPAL_KILOBYTE);
+          }
+          else {
+            $filesize = $i['filesize'];
+          }
 
           $other[] = array(
             array(

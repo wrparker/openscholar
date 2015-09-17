@@ -111,13 +111,6 @@ projects[facetapi][subdir] = "contrib"
 projects[facetapi][version] = 1.1
 projects[facetapi][patch][] = "http://drupal.org/files/2006704-facetapi-er-regroup-2.patch"
 
-projects[fb_social][subdir] = "contrib"
-;projects[fb_social][version] = 2.0-beta4+1-dev
-projects[fb_social][download][type] = git
-projects[fb_social][download][branch] = 7.x-2.x
-projects[fb_social][download][revision] = cd73e9b
-projects[fb_social][patch][] = "http://drupal.org/files/comment_sources-fb_social-2120709-1.patch"
-
 projects[features][subdir] = "contrib"
 projects[features][version] = 2.0
 
@@ -251,7 +244,7 @@ projects[migrate_extras][subdir] = "contrib"
 projects[migrate_extras][version] = 2.4
 
 projects[mollom][subdir] = "contrib"
-projects[mollom][version] = 2.10
+projects[mollom][version] = 2.14
 
 projects[multiform][subdir] = "contrib"
 projects[multiform][version] = 1.0
@@ -335,8 +328,9 @@ projects[purl][patch][] = "http://drupal.org/files/729862-9-purl-inbound-alter-m
 projects[purl][patch][] = "http://drupal.org/files/issues/purl-integrate_redirect_keep_options-1735266-4.patch"
 
 projects[registration][subdir] = "contrib"
-projects[registration][version] = 1.1
-projects[registration][patch][] = "https://drupal.org/files/issues/2183509-registration-broadcast-context-1.patch"
+projects[registration][version] = 1.5
+projects[registration][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/fff85ce1e059985dac494d6bde5e923e25a74feb/patches/registration_link_pass_entity.patch"
+projects[registration][patch][] = "https://www.drupal.org/files/issues/registration-add-context-to-headers-2564355-1.patch"
 
 projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
@@ -345,7 +339,7 @@ projects[restful][subdir] = "contrib"
 projects[restful][download][type] = git
 projects[restful][download][url] = "https://github.com/RoySegall/restful.git"
 projects[restful][download][branch] = 444
-projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/e27df6341e11cfa75f5486806e7143cd60787544/patches/restful.put_file.patch"
+projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/839d0cc214f2422e924e35d33133d1268b8cc1cd/patches/restful.put_file.patch"
 ;projects[restful][download][branch] = "7.x-1.x"
 ;projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
 

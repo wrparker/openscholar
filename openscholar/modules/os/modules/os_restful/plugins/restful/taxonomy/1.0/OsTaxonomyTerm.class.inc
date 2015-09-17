@@ -165,12 +165,19 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
     $this->getAccount();
 
     if ($op != 'view') {
-      $relation = $this->getRelation(taxonomy_term_load($this->path));
-      spaces_set_space(vsite_get_vsite($relation->vid));
-      return vsite_og_user_access('administer taxonomy');
+      if (module_exists('spaces')) {
+        $relation = $this->getRelation(taxonomy_term_load($this->path));
+        spaces_set_space(vsite_get_vsite($relation->vid));
+        return vsite_og_user_access('administer taxonomy');
+      }
+      return parent::checkPropertyAccess($op, $public_field_name, $property_wrapper, $wrapper);
+    }
+    else {
+      // By default, Drupal restricts access to even viewing vocabulary properties.
+      // There's really no case where viewing a vocabular property is a problem though
+      return true;
     }
 
-    return parent::checkPropertyAccess($op, $public_field_name, $property_wrapper, $wrapper);
   }
 
 }

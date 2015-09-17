@@ -640,7 +640,7 @@ class OsFilesResource extends RestfulEntityBase {
   }
 
   protected function setDescription($wrapper) {
-    if ($this->request['description']) {
+    if (isset($this->request['description'])) {
       $data = array(
         'value' => $this->request['description'],
         'format' => 'filtered_html'
@@ -653,7 +653,7 @@ class OsFilesResource extends RestfulEntityBase {
   }
 
   protected function setImageAltText($wrapper) {
-    if ($this->request['image_alt']) {
+    if (isset($this->request['image_alt'])) {
       $wrapper->field_file_image_alt_text->set($this->request['image_alt']);
 
       return true;
@@ -662,7 +662,7 @@ class OsFilesResource extends RestfulEntityBase {
   }
 
   protected function setImageTitleText($wrapper) {
-    if ($this->request['image_title']) {
+    if (isset($this->request['image_title'])) {
       $wrapper->field_file_image_title_text->set($this->request['image_title']);
 
       return true;

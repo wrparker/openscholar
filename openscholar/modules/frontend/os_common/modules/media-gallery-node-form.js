@@ -1,5 +1,5 @@
 (function ($) {
 
-  angular.module('media_gallery-node-form', ['mediaBrowser']);
+  angular.module('media-gallery-node-form', ['mediaBrowser']);
 
 })(jQuery);

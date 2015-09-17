@@ -425,7 +425,7 @@ function os_classes_field_default_field_instances() {
         ),
         'retroactive_update' => 0,
       ),
-      'max_filesize' => '',
+      'max_filesize' => '128 MB',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
@@ -664,7 +664,7 @@ function os_classes_field_default_field_instances() {
         ),
         'retroactive_update' => 0,
       ),
-      'max_filesize' => '',
+      'max_filesize' => '128 MB',
       'user_register_form' => FALSE,
     ),
     'widget' => array(

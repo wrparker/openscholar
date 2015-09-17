@@ -88,6 +88,9 @@ function os_common_library() {
       drupal_get_path('module', 'os_common') . '/js/ui-bootstrap-custom-0.12.1.min.js' => array(),
       drupal_get_path('module', 'os_common') . '/js/ui-bootstrap-custom-tpls-0.12.1.min.js' => array(),
     ),
+    'css' => array(
+      drupal_get_path('module', 'os_common') . '/css/auto_complete.css' => array(),
+    ),
     'dependencies' => array(
       array('os_common', 'select2'),
       array('os_common', 'angularjs'),
@@ -140,7 +143,7 @@ function os_common_library() {
             'JSPager' => url($path.'/JSPager', $disable),
           ),
           'version' => array(
-            'JSPager' => '0.9',
+            'JSPager' => '1.0',
           )
         )
       )
@@ -231,7 +234,7 @@ function os_common_library() {
             'TaxonomyWidget' => url($path.'/TaxonomyWidget', $disable),
           ),
           'version' => array(
-            'TaxonomyWidget' => '0.9.2',
+            'TaxonomyWidget' => '1.0.0',
           )
         ),
         'type' => 'setting',
@@ -257,7 +260,7 @@ function os_common_library() {
             'FileEditor' => url($path.'/FileEditor', $disable),
           ),
           'version' => array(
-            'FileEditor' => '0.9.2',
+            'FileEditor' => '1.0.0',
           )
         ),
         'type' => 'setting',
@@ -267,6 +270,7 @@ function os_common_library() {
       $path.'/FileEditor/FileEditor.style.css' => array(),
     ),
     'dependencies' => array(
+      array('os_common', 'auth'),
       array('os_common', 'ng-file-upload'),
       array('os_common', 'EntityService'),
       array('os_common', 'TaxonomyWidget'),
@@ -359,4 +363,20 @@ function os_common_get_angular_module($app_name){
   }
 
   return FALSE;
+}
+
+/**
+ * Implements hook_menu_contextual_links_alter().
+ *
+ * Adds the File Editor js to pages that have a file/n/edit contextual link.
+ */
+/**
+ * Implements hook_menu_contextual_links_alter().
+ */
+function os_common_menu_contextual_links_alter(&$links, $router_item, $root_path) {
+  if (isset($links['file-edit']) && !os_common_angular_app()) {
+    os_common_angular_app('os-public-page');
+    drupal_add_js(drupal_get_path('module', 'os_common').'/modules/os-public-page.js');
+    drupal_add_library('os_common', 'FileEditorModal');
+  }
 }

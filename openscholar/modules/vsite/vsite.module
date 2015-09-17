@@ -2451,6 +2451,7 @@ function vsite_mail($key, &$message, $params){
       $node = $params['node'];
       $user = $params['user'];
 
+      $message['subject'] = $params['subject'];
       $message['body'][] = t('The user !user asked to delete the site "!site".', array('!user' => $user->name, '!site' => $node->title));
       $message['body'][] = t('The reason for the delete request was: "!reason".', array('!reason' => $reason));
       $message['body'][] = t('Please review the request and if approved delete the site via !url.',
@@ -3209,7 +3210,7 @@ function vsite_og_permission() {
         'vsite user',
         'content editor',
         'vsite admin',
-      )
+      ),
     ),
     'add media from remote sources' => array(
       'title' => t('Add 3rd party media to system.'),
@@ -3219,7 +3220,7 @@ function vsite_og_permission() {
         'vsite user',
         'content editor',
         'vsite admin',
-      )
+      ),
     ),
     'edit any files' => array(
       'title' => t('Edit files'),
@@ -3229,7 +3230,7 @@ function vsite_og_permission() {
         'vsite user',
         'content editor',
         'vsite admin',
-      )
+      ),
     ),
     'delete any files' => array(
       'title' => t('Delete files'),
@@ -3239,8 +3240,17 @@ function vsite_og_permission() {
         'vsite user',
         'content editor',
         'vsite admin',
-      )
-    )
+      ),
+    ),
+    'bypass redirection' => array(
+      'title' => t('Bypass redirection'),
+      'description' => t('Grant access to the redirect field.'),
+      'os_override' => TRUE,
+      'default role' => array(
+        'content editor',
+        'vsite admin',
+      ),
+    ),
   );
 }
 
@@ -3626,4 +3636,20 @@ function _vsite_metatag_get_cid_parts($vsite) {
   );
 
   return $cid_parts;
+}
+
+/**
+ * Iterator callback; Grant bypass redirection permisison to content managers.
+ */
+function vsite_grant_by_pass_permission($node) {
+  $granted_roles = array('content editor', 'vsite admin');
+  $roles = og_roles('node', $node->type, $node->nid);
+
+  foreach ($roles as $rid => $role) {
+    if (!in_array($role, $granted_roles)) {
+      continue;
+    }
+
+    og_role_grant_permissions($rid, array('bypass redirection'));
+  }
 }

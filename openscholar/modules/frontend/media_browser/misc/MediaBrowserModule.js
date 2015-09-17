@@ -345,13 +345,15 @@
           uploading = false;
           progress = null;
           currentlyUploading = 0;
-          if (toEditForm && firstId) {
-            // there's only one file, we can assume it's this one
-            $scope.setSelection(firstId);
-            $scope.changePanes('edit');
-          }
-          else {
-            $scope.changePanes('library');
+          if ($scope.dupes.length == 0) {
+            if (toEditForm && firstId) {
+              // there's only one file, we can assume it's this one
+              $scope.setSelection(firstId);
+              $scope.changePanes('edit');
+            }
+            else {
+              $scope.changePanes('library');
+            }
           }
         }
       }
@@ -425,7 +427,7 @@
     };
 
 
-    $scope.embed = 'URL or Markup';
+    $scope.embed = '';
     $scope.embedSubmit = function () {
       // construct the entity
       var data = {
@@ -571,7 +573,9 @@
             dialog: angular.extend([], defaults.dialog, params.dialog),
             browser: angular.extend({}, defaults.browser, params.browser),
             onSelect: params.onSelect || defaults.onSelect,
-            types: params.types || defaults.types
+            types: params.types || defaults.types,
+            max_filesize: params.max_filesize || null,
+            max_filesize_raw: params.max_filesize_raw || null
         };
 
         if (params.files) {

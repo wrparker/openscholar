@@ -50,7 +50,7 @@ trait RestfulTrait {
    */
   private $widgets = [
     'Terms' => 'os_taxonomy_fbt',
-    'Bio' => 'os_boxes_bio',
+    'Pub' => 'os_boxes_pub_year',
   ];
 
   /**
@@ -297,11 +297,12 @@ trait RestfulTrait {
   public function iAAsWithTheSettings($operation, $account, TableNode $table) {
     list($values, $token, $path) = $this->getVariables('box', $account, $table);
     $delta = $this->getDelta($values);
+    $viste = FeatureHelp::getNodeId($values['Site']);
 
     $request = $this->invokeRestRequest($this->operations[$operation], $path,
       ['access_token' => $token],
       [
-        'vsite' => FeatureHelp::getNodeId($values['Site']),
+        'vsite' => $viste,
         'delta' => $delta,
         'widget' => $this->widgets[$values['Widget']],
         'options' => [
@@ -310,10 +311,11 @@ trait RestfulTrait {
       ]
     );
 
-
     $this->meta['delta'] = $request->json()['data']['delta'];
     $this->meta['widget'] = $request->json()['data'];
-    $this->results = $this->getClient()->get($path . '?delta=' . $delta)->json();
+    $headers = ['headers' => ['access_token' => $token]];
+    $get = $this->getClient()->get($path . '/' . $delta . '?vsite=' . $viste, $headers);
+    $this->results = $get->json();
     $this->verifyOperationPassed($operation);
   }
 
@@ -421,7 +423,7 @@ trait RestfulTrait {
       TRUE
     );
 
-    if ($request != "You can't manage boxes in this vsite.") {
+    if ($request != "Access denied.") {
       throw new Exception('The user did not got the expected message.');
     }
   }
@@ -601,7 +603,7 @@ trait RestfulTrait {
   }
 
   /**
-   * @Given /^I define "([^"]*)" as a "([^"]*)"$/
+   * @Given /^I define "([^"]*)" as a "([^"]*)" group$/
    */
   public function iDefineAsA($group, $access_level) {
     $nid = FeatureHelp::getNodeId($group);
@@ -609,5 +611,56 @@ trait RestfulTrait {
     $wrapper = entity_metadata_wrapper('node', $nid);
     $wrapper->{VSITE_ACCESS_FIELD}->set($level);
     $wrapper->save();
+  }
+
+  /**
+   * @Given /^I try to post a "([^"]*)" as "([^"]*)" to "([^"]*)"$/
+   */
+  public function iTryToPostAAsTo($type, $account, $group) {
+    $gid = FeatureHelp::getNodeId($group);
+    $values = [
+      'label' => 'Test',
+      'body' => 'Test ' . $type,
+      'vsite' => $gid,
+    ];
+    try {
+      $this->invokeRestRequest('post', $this->locatePath($this->endpoints[$type]), ['access_token' => $this->restLogin($account)], $values);
+      $this->meta['passed'] = TRUE;
+    } catch (\Exception $e) {
+      $this->meta['passed'] = FALSE;
+    }
+  }
+
+  /**
+   * @Given /^I verify it "([^"]*)"$/
+   */
+  public function iVerifyIt($status) {
+    if (($status == 'passed' && !$this->meta['passed']) || $status == 'failed' && $this->meta['passed']) {
+      throw new Exception('The last request has failed');
+    }
+  }
+
+  private function jsonContent() {
+    return $this->results->json()['data'];
+  }
+
+  /**
+   * @Given /^I should get empty json$/
+   */
+  public function iShouldGetEmptyJson() {
+    $json = $this->jsonContent();
+    if (!empty($json)) {
+      throw new \Exception('The json is not empty.');
+    }
+  }
+
+  /**
+   * @Given /^I should not get empty json$/
+   */
+  public function iShouldNotGetEmptyJson() {
+    $json = $this->jsonContent();
+    if (empty($json)) {
+      throw new \Exception('The json is empty.');
+    }
   }
 }
