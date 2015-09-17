@@ -54,7 +54,7 @@
 	  //For Qualtrics URL Remove after beta
       return {
         link: function(scope, element, attrs) {
-    	  element.attr('href', attrs.href + '?osurl=' + encodeURIComponent(location.href));
+    	  element.attr('href', attrs.href + '?osurl=' + encodeURIComponent(location.href) + '&uid=' + uid);
         },
       }
     });
