@@ -2492,6 +2492,8 @@ function os_set_update_batch(&$sandbox, $info) {
   $info += array(
     'entity' => 'node',
     'batch' => drupal_is_cli() ? 400: 150,
+    'query' => array('update', 'Query'),
+    'iterator' => array('update', 'Iterator'),
   );
 
   if (!empty($info['path'])) {
@@ -2537,4 +2539,25 @@ function os_set_update_batch(&$sandbox, $info) {
     // Save the last node, increase the node and check if the import finished.
     $sandbox['#finished'] = ($sandbox['progress'] / $sandbox['max']);
   }
+}
+
+/**
+ * Implements hook_field_access().
+ *
+ * Restrict access to the redirect field on the news node.
+ */
+function os_field_access($op, $field, $entity_type, $entity, $account) {
+  if (!in_array($field['field_name'], array('field_url', 'field_biblio_redirect')) || empty($entity) || $op != 'edit') {
+    return;
+  }
+
+  if ($entity_type != 'node') {
+    return;
+  }
+
+  if (!in_array($entity->type, array('news', 'person', 'biblio'))) {
+    return;
+  }
+
+  return user_access('bypass redirection', $account);
 }
