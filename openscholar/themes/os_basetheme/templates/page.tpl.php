@@ -1,3 +1,31 @@
+<div id="topRightMenu" class="topRight_Menu"><!--MY ACCOUNT TAB OPEN-->
+			<div>
+				Dan Cabral &nbsp;<span class="slate alert">5</span>
+				<div class="arrow-down"></div>
+			</div>
+		</div>
+		<div id="rightMenuSlide" class="topRight_Menu topRight_subMenu">
+			<ul>
+				<li>
+					<a href="">Manage my account</a>
+				</li>
+				<li>
+					<a href="">Notifications</a><span class="slate alert">2</span>
+				</li>
+				<li>
+					<a href="">Accessbility check</a><span class="slate alert">3</span>
+				</li>
+				<li>
+					<a href="">My sites</a>
+				</li>
+				<li>
+					<a href="">Support this site</a>
+				</li>
+				<li class="slate">
+					<a href="">Logout</a>
+				</li>
+			</ul>
+		</div><!--MY ACCOUNT TAB Close-->
 <div id="page_wrap" class="page_wrap">
 <!--REGION TO HOUSE RESPONSIVE MENU. OTHER CONTENT CAN'T BE PLACED HERE-->
 <div class="responive-menu-container clearfix">
