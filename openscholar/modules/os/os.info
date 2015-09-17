@@ -191,3 +191,4 @@ features[views_view][] = os_users
 features[views_view][] = vsite_autocomplete
 files[] = includes/expire.node.inc
 files[] = includes/expire.file.inc
+files[] = includes/osUpdateBatch.php
