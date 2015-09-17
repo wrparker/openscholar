@@ -69,7 +69,6 @@
           scope.selectedFiles.splice($index, 1, $inserted[0]);
         }
 
-
         var label = elem.parent().find(' label');
         elem.parent().find(' > *').not(elem).remove();
         elem.before(label);
