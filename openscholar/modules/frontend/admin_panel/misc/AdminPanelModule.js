@@ -1,6 +1,5 @@
 (function ($) {
-  var rootPath,
-    open = angular.noop;
+  var rootPath;
 
     angular.module('AdminPanel', [])
     .config(function (){
@@ -51,6 +50,13 @@
        templateUrl: rootPath+'/templates/admin_menu.html?vers='+Drupal.settings.version.adminPanel,
        controller: 'MenuCtrl'
      };
-   });
-    
+   }).directive('addLocation', function() {
+	  //For Qualtrics URL Remove after beta
+      return {
+        link: function(scope, element, attrs) {
+    	  element.attr('href', attrs.href + '?osurl=' + encodeURIComponent(location.href));
+        },
+      }
+    });
+  
 })(jQuery);

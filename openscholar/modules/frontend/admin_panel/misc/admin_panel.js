@@ -28,10 +28,3 @@ jQuery("#topRightMenu").click(function() {
 	}
 });
 
-//THIS IS FOR GETTING THE URL OF THE REFERRING SITE AND APPENDING IT TO THE QUALTRICS URL
-jQuery(document).ready(function($) {
-	//jquery
-	var pathname = location.href;
-	$('#os-site').attr('href', $('#os-site').attr('href') + '?osurl=' + encodeURIComponent(pathname));
-
-});

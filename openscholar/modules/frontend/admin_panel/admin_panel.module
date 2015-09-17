@@ -8,18 +8,15 @@ function admin_panel_preprocess_page(&$vars) {
 }
 
 function admin_panel_page_build(&$vars) {
-  $am = <<<AM
-<!-- new admin_panel -->
-  <div class="morph-button morph-button-sidebar morph-button-fixed">
-    <button type="button"></button>
-      <div class="morph-content" left-menu></div>
-  </div>
-<!-- new admin_panel -->
-AM;
 
   $vars['page_bottom']['admin_menu'] = array(
     '#weight' => 25,
-    '#markup' => $am,
+    '#markup' => '<div class="morph-button morph-button-sidebar morph-button-fixed"><button type="button"></button><div class="morph-content" left-menu></div></div>',
+  );
+
+  $vars['page_bottom']['user_menu'] = array(
+    '#weight' => 25,
+    '#markup' => '<div id="topRightMenu" class="topRight_Menu" right-menu></div>',
   );
 }
 
