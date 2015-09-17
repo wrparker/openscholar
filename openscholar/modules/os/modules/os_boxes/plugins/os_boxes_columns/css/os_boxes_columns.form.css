@@ -334,18 +334,6 @@ background-color: #DDD;
   background-image: url("../images/post.png");
 }
 
-.fb_social_activityf:before,
-.fb_social_recommend:before,
-.fb_social_comments:before,
-.fb_social_livestream:before,
-.fb_social_facepile:before,
-.fb_social_send:before,
-.fb_social_likebox:before,
-.fb_social_like:before {
-  background-image: url("../images/facebook.png");
-}
-
-
 .os_boxes_twitterfeed:before {
   background-image: url("../images/twitter.png");
 }

@@ -1421,37 +1421,42 @@ function os_events_preprocess_table(&$variables) {
 /**
  * Implements hook_entity_query_alter().
  */
-function os_events_entity_query_alter( $query) {
+function os_events_entity_query_alter($query) {
 
   // Skip this if we are not looking for registrations.
-  if(empty($query->entityConditions) || $query->entityConditions['entity_type']['value'] != 'registration') {
+  if (empty($query->entityConditions) || $query->entityConditions['entity_type']['value'] != 'registration') {
     return;
   }
 
   $menu = menu_get_item();
-  if ($menu['path'] != 'node/%/registrations' || !is_object($menu['page_arguments'][1])) {
+  $event = NULL;
+  if ($menu['path'] == 'node/%/registrations' && is_object($menu['page_arguments'][1])) {
+    $event = $menu['page_arguments'][1];
+  }
+
+  if ($menu['path'] == 'node/%/registrations/broadcast' && is_object($menu['page_arguments'][2])) {
+    $event = $menu['page_arguments'][2];
+  }
+
+  if (!$event) {
     return;
   }
 
-  $event = $menu['page_arguments'][1];
   $repeating = $event->field_date['und'][0]['rrule'];
 
-  //Is this the registration list EFQ
-  if(!$repeating) {
+  // Is this the registration list EFQ.
+  if (!$repeating) {
     return;
   }
 
-  if(isset($_GET['delta'])) {
-    $delta = intval($_GET['delta']);
-    $date = field_get_items('node', $event, 'field_date');
-    $date = $date[$delta]['value'];
-    $query->fieldCondition('field_repeating_event_date', 'value', $date);
-  } else {
-    // @todo we don't have a delta
+  if (!isset($_GET['delta'])) {
+    return;
   }
 
-
-
+  $delta = intval($_GET['delta']);
+  $date = field_get_items('node', $event, 'field_date');
+  $date = $date[$delta]['value'];
+  $query->fieldCondition('field_repeating_event_date', 'value', $date);
 }
 
 /**
@@ -2020,6 +2025,8 @@ function os_events_preprocess_calendar_item(&$vars) {
   // Prepare popover fields.
   if (in_array($item->granularity, array('day', 'week', 'month'))) {
     $item->popover_fields['event_title'] = $item->rendered_fields['title'];
+    $item->popover_fields['event_delta'] = $item->rendered_fields['delta'];
+
     // @TODO: Is this format OK?
     $item->popover_fields['event_date'] = $item->rendered_fields['field_date'];
     $item->popover_fields['event_location'] = $item->rendered_fields['field_event_location'];
