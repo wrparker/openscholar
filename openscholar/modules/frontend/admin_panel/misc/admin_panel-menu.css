@@ -170,7 +170,6 @@ body {
     top: 0;
     right: 0;
     padding: 10px;
-    margin-right: 15px;
     color: white;
     background: #999;
     z-index: 10;
@@ -187,9 +186,20 @@ body {
     padding: 0;
     border-top: 1px solid #FFF;
 }
-.topRight_subMenu li {
-    padding: 10px;
+
+.topRight_subMenu ul {
+    margin: 0;
+    list-style-type:none;
 }
+
+.topRight_subMenu li {
+   padding: 5px 10px;
+}
+
+.topRight_subMenu li a {
+    color: #FFF;
+}
+
 .slate {
     background: #6C7A89;
 }
