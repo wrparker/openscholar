@@ -30,3 +30,10 @@ function os_files_private_requirements($phase) {
     ),
   );
 }
+
+/**
+ * Revert view.
+ */
+function os_files_private_update_7001() {
+  features_revert(array('os_files_private' => array('views')));
+}

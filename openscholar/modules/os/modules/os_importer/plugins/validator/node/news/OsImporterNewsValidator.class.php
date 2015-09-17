@@ -9,7 +9,7 @@ class OsImporterNewsValidator extends OsImporterEntityValidateBase {
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();
 
-    $fields['field_news_date__start'] = array(
+    $fields[$this->rest ? 'field_news_date' : 'field_news_date__start'] = array(
       'validators' => array(
         array($this, 'isNotEmpty'),
         array($this, 'validateOsDate'),
