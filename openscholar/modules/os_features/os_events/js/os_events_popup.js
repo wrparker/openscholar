@@ -2,7 +2,7 @@
 
   Drupal.behaviors.triggerEventPopup = {
     attach: function (ctx) {
-      var dialogs = $('[id^=event-popover]');
+      var dialogs = $('div[id^=event-popover]');
 
       // Initialize and hide all dialogs.
       dialogs.dialog();
@@ -11,7 +11,8 @@
       $('.view-item-os_events .contents a').on('click', function(e) {
         e.preventDefault();
         var itemId = $(this).closest('div[data-item-id]').data('item-id');
-        var popOver = $('#event-popover-' + itemId);
+        var delta = $(this).attr("href").match(/delta=(\d)*/);
+        var popOver = $('#event-popover-' + itemId + "-" + delta[1]);
         var isOpen = popOver.dialog("isOpen");
 
         // Toggle dialog.

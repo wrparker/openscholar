@@ -69,8 +69,6 @@
           scope.selectedFiles.splice($index, 1, $inserted[0]);
         }
 
-
-
         elem.parent().find(' > *').not(elem).remove();
       }
 
