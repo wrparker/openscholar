@@ -61,12 +61,7 @@ function os_software_form_software_project_node_form_alter(&$form, &$form_state,
     return;
   }
 
-  $form['#attached'] = array(
-    'css' => array(
-      'type' => 'file',
-      'data' => drupal_get_path('module', 'os_software') . '/os_software.css',
-    ),
-  );
+  $form['#attached']['css'][] = drupal_get_path('module', 'os_software') . '/os_software.css';
   $form['actions']['submit']['#submit'][] = '_os_software_form_redirect';
 }
 

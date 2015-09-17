@@ -26,6 +26,12 @@ class os_boxes_site_logo extends os_boxes_default {
         return $form;
       }
 
+      if (module_exists('os_common')) {
+        os_common_angular_app('os-boxes');
+        $form['#attached']['library'][] = array('os_common', 'FileEditorModal');
+        $form['#attached']['js'][] = drupal_get_path('module', 'os_boxes') . '/misc/os_boxes.app.js';
+      }
+
       $fid = $this->options['fid'];
       $x = $this->options['x'];
       $y = $this->options['y'];
