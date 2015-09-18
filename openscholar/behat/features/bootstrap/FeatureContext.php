@@ -2316,7 +2316,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iDropFileOnto($file, $area) {
     // Make sure the element we want exists on the page.
-    $xpath = "//*[@ng-file-drop and count(./preceding-sibling::span[contains(text(), '$area')])]";
+    $xpath = "//*[@ng-file-drop and count(./descendant::span[contains(text(), '$area')])]";
     if (!($elem = $this->getSession()->getPage()->find('xpath', $xpath))) {
       throw new Exception("No droppable region with text \"$area\" found.");
     }
@@ -2365,7 +2365,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iDropFilesOnto($files, $area) {
     // Make sure the element we want exists on the page.
-    $xpath = "//*[@ng-file-drop and count(./preceding-sibling::span[contains(text(), '$area')])]";
+    $xpath = "//*[@ng-file-drop and count(./descendant::span[contains(text(), '$area')])]";
     if (!($elem = $this->getSession()->getPage()->find('xpath', $xpath))) {
       throw new Exception("No droppable region with text \"$area\" found.");
     }
