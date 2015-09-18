@@ -3,20 +3,20 @@
 
     angular.module('AdminPanel', [])
     .config(function (){
-       rootPath = Drupal.settings.paths.adminPanelModuleRoot;
-       restPath = Drupal.settings.paths.api;
+       paths = Drupal.settings.paths
        vsite = Drupal.settings.spaces.id;
        cid = Drupal.settings.admin_panel.cid;
        uid = Drupal.settings.admin_panel.user;
     }).controller("AdminMenuController",['$scope', '$http', function ($scope, $http) {
     
       menu = 'admin_panel';
+      $scope.paths = paths;
       params = { cid: cid, uid: uid};
       if (vsite) {
         params.vsite = vsite;
       }
       
-      var url = restPath + '/cp_menu/' + menu;
+      var url = paths.api + '/cp_menu/' + menu;
       $http({method: 'get', url: url, params: params, cache: true}).
         then(function(response) {
           $scope.admin_panel = response.data.data;
@@ -47,7 +47,7 @@
       }
     }).directive('leftMenu', function() {
       return {
-       templateUrl: rootPath+'/templates/admin_menu.html?vers='+Drupal.settings.version.adminPanel,
+       templateUrl: paths.adminPanelModuleRoot+'/templates/admin_menu.html?vers='+Drupal.settings.version.adminPanel,
        controller: 'AdminMenuController',
        link: function(scope, element, attrs) {
       	 new UIMorphingButton(element[0], {

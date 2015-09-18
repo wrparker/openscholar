@@ -84,15 +84,15 @@ function admin_panel_library() {
             'uid' => $user->uid,
             'name' => format_username($user),
             'support_user' => user_access('subscribe as support team'),
-            'is_member' => ($vsite)? og_is_member('node', $vsite->id) : false,
+            'is_member' => ($vsite) ? og_is_member('node', $vsite->id) : false,
           ),
         ),
         'version' => array(
           'userPanel' => '0.0.1'
         ),
         'paths' => array(
-          'support_subscribe' => $vsite->get_absolute_url('group/node/' . $vsite->id . '/subscribe/vsite_support_expire'),
-          'support_unsubscribe' => $vsite->get_absolute_url('group/node/' . $vsite->id . '/unsubscribe'),
+          'support_subscribe' => ($vsite) ? $vsite->get_absolute_url('group/node/' . $vsite->id . '/subscribe/vsite_support_expire') : '',
+          'support_unsubscribe' => ($vsite) ? $vsite->get_absolute_url('group/node/' . $vsite->id . '/unsubscribe') : '',
         ),
       ),
       'type' => 'setting',
@@ -103,4 +103,16 @@ function admin_panel_library() {
   );
 
   return $libs;
+}
+
+/**
+ * Implements hook_admin_paths().
+ */
+function admin_panel_admin_paths() {
+  $items = array(
+    'group/node/*/subscribe/vsite_support_expire' => TRUE,
+    'group/node/*/unsubscribe' => TRUE,
+  );
+
+  return $items;
 }

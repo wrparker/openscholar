@@ -9,6 +9,7 @@ function os_common_library() {
   $path = drupal_get_path('module', 'os_common');
   $disable = array('alias' => TRUE);
   $rest = url('api', $disable);
+  $vsite = vsite_get_vsite();
 
   $info['angularjs'] = array(
     'title' => 'AngularJS',
@@ -124,7 +125,8 @@ function os_common_library() {
         'type' => 'setting',
         'data' => array(
           'paths' => array(
-            'api' => $rest
+            'api' => $rest,
+            'vsite_home' => $vsite ? $vsite->get_absolute_url() : '',
           )
         )
       )
