@@ -56,15 +56,12 @@
 
         var success = function(resp, status, headers, config) {
           var key = config.pKey;
-          cache[key] = {
-            data: [],
-            fetched: Date.now()
-          };
           recursiveFetch(resp, status, headers, config);
         }
 
         function recursiveFetch(resp, status, headers, config) {
           var key = config.pKey;
+          // convert the key into a params array
           for (var i=0; i<resp.data.length; i++) {
             cache[key].data.push(resp.data[i]);
             ents[resp.data[i][idProp]] = resp.data[i];
@@ -78,7 +75,6 @@
           }
           else {
             defers[key].resolve(angular.copy(cache[key].data));
-            delete defers[key];
             $rootScope.$broadcast(eventName+'.fetch', angular.copy(cache[key].data), key);
           }
         }
@@ -128,7 +124,18 @@
               .error(errorFunc);
             setTimeout(function () {
               defers[key].notify("Loading 0% complete.");
-            }, 0);
+            }, 1);
+            cache[key] = {
+              lastUpdated: parseInt(Date.now/1000),
+              data: [],
+              entityType: entityType,
+              matches: function(entity, entityType) {
+                if (entityType != this.entityType) {
+                  return false;
+                }
+                return testEntity.call(this, entity, params);
+              }
+            }
           }
           return defers[key].promise;
         }
@@ -170,7 +177,15 @@
               var entity = resp.data[0];
               ents[entity[idProp]] = entity;
 
-              // TODO: Use generated comparator function to add to caches
+              for (var k in cache) {
+                if (cache[k].matches(entity)) {
+                  for (var i=0; i < cache[k].data.length; i++) {
+                    if (cache[k].data[i][idProp] == entity[idProp]) {
+                      cache[k].data[i] = entity;
+                    }
+                  }
+                }
+              }
 
               $rootScope.$broadcast(eventName + '.add', entity);
             })
@@ -206,9 +221,7 @@
           }
           else {
             var defer = $q.defer();
-            setTimeout(function () {
-              defer.resolve(false);
-            }, 1);
+            defer.resolve(false);
             return defer.promise;
           }
         };
@@ -232,7 +245,16 @@
         // used for entities that are added outside of this service
         this.register = function (entity) {
           ents[entity[idProp]] = entity;
-          // TODO: Run through generated comparators and add to caches
+
+          for (var k in cache) {
+            if (cache[k].matches(entity)) {
+              for (var i=0; i < cache[k].data.length; i++) {
+                if (cache[k].data[i][idProp] == entity[idProp]) {
+                  cache[k].data[i] = entity;
+                }
+              }
+            }
+          }
         }
       };
 
@@ -249,6 +271,29 @@
         diff.length = numProps;
 
         return diff;
+      }
+
+      /**
+       *
+       */
+      function testEntity(entity, params) {
+        for (var k in params) {
+          if (entity[k] == undefined) {
+            // this is not something that comes returned on the object
+            // try other things
+            switch (k) {
+              case 'vsite':
+                if (params[k] != vsite) {
+                  return false;
+                }
+                break;
+            }
+          }
+          else if (entity[k] != params[k]) {
+            return false;
+          }
+        }
+        return true;
       }
 
       return factory;
