@@ -1,0 +1,27 @@
+    <div id="topRightMenu" class="topRight_Menu" right-menu-toggle>
+      <div>
+        {{ user.name }}&nbsp;<span class="slate alert">5</span>
+        <div class="arrow-down"></div>
+      </div>
+    </div>
+    <div id="rightMenuSlide" class="topRight_Menu topRight_subMenu" style='display:none;'>
+      <ul>
+        <li>
+          <a ng-href="/user/{{ user.uid }}/edit">Manage my account</a>
+        </li>
+        <li>
+          <a href="">Notifications</a><span class="slate alert">2</span>
+        </li>
+        <li>
+          <a href="/user">My sites</a>
+        </li>
+        <li>
+          <a ng-href="{{ paths.support_subscribe }}" add-destination ng-if="user.support_user && !user.is_member">Support this site</a>
+          <a ng-href="{{ paths.support_unsubscribe }}" add-destination ng-if="user.support_user && user.is_member">Un-Subscribe from site</a>
+        </li>
+        <li class="slate">
+          <a href="/user/logout" add-destination>Logout</a>
+        </li>
+      </ul>
+    </div>
+  
