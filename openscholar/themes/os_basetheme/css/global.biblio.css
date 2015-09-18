@@ -209,12 +209,6 @@ a.biblio-abstract-link.toggle.expanded {
   margin-left: 68px;
 }
 
-a.os_event-moredates-link{
-	font-size: 0.7em;
-	margin-left: 3px;
-	display:inline;
-}
-
 .biblio-export-links {
   float: right;
   text-align: left;
@@ -328,7 +322,7 @@ body.node-type-biblio .node-type-biblio .field-field-biblio-image {
 .os-files-other-list tr td.size {
 	font-size:10px;
 	font-weight: bold;
-	width: 40px;
+	width: 55px;
 	text-align:right;
 } 
 

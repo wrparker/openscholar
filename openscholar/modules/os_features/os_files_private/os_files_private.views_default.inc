@@ -39,7 +39,7 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['empty'] = TRUE;
-  $handler->display->display_options['header']['area']['content'] = '<div class="cp-controls-wrapper"><ul><li><a href="../../file/add/private" class="add_new">Add private file</a></li></ul></div>';
+  $handler->display->display_options['header']['area']['content'] = '<div class="cp-controls-wrapper"><div class="add_new" mb-open-modal panes="upload" types="image,video,audio,document,executable" on-select="reload($inserted)">Add file</div></div>';
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   /* Relationship: File Usage: Content */
   $handler->display->display_options['relationships']['file_to_node']['id'] = 'file_to_node';
@@ -108,20 +108,25 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['fields']['title']['field'] = 'title';
   $handler->display->display_options['fields']['title']['relationship'] = 'file_to_node';
   $handler->display->display_options['fields']['title']['label'] = 'Used in';
-  $handler->display->display_options['fields']['title']['spaces'] = array(
-    'type' => 'spaces_og',
-    'frontpage' => 0,
-  );
   /* Field: File: Edit link */
   $handler->display->display_options['fields']['edit']['id'] = 'edit';
   $handler->display->display_options['fields']['edit']['table'] = 'file_managed';
   $handler->display->display_options['fields']['edit']['field'] = 'edit';
   $handler->display->display_options['fields']['edit']['label'] = 'Edit';
+  $handler->display->display_options['fields']['edit']['exclude'] = TRUE;
   /* Field: File: Delete link */
   $handler->display->display_options['fields']['delete']['id'] = 'delete';
   $handler->display->display_options['fields']['delete']['table'] = 'file_managed';
   $handler->display->display_options['fields']['delete']['field'] = 'delete';
   $handler->display->display_options['fields']['delete']['label'] = 'Delete';
+  $handler->display->display_options['fields']['delete']['exclude'] = TRUE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
+  $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_1']['label'] = 'Manage';
+  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<a file-editor-modal fid="[fid]" href="#" views-close="reload(result)">Edit</a> [delete]';
+  $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
   /* Sort criterion: File: Upload date */
   $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['sorts']['timestamp']['table'] = 'file_managed';

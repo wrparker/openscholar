@@ -110,7 +110,9 @@ function os_profiles_init() {
       $handler->update($node->nid, $data->values);
     }
     catch (RestWSException $e) {
-      // TODO: watchdog message
+      variable_del('os_profiles_nodes_uuid');
+      variable_del('os_profiles_nodes_uuid_time');
+      lock_release('os_profile_sync');
       return;
     }
 
@@ -118,14 +120,21 @@ function os_profiles_init() {
     $file = NULL;
     if ($person_photo) {
       $file_info = os_profiles_get_origin_node_values($person_photo['file']['uri'] . '.json', array('url'));
-      $copy_file = os_copy_file($file_info->values['url'], FALSE);
+      // If the file was updated within 2 min of the node then update it as well.
+      if (($data->values['changed'] - 120) < $file_info->values['timestamp']) {
+        $copy_file = os_copy_file($file_info->values['url'], FALSE);
 
-      if ($copy_file['type'] == 'file') {
-        $file = $copy_file['file'];
+        if ($copy_file['type'] == 'file') {
+          $file = $copy_file['file'];
+        }
       }
     }
 
-    os_profiles_insert_image($node, $file, $data->data['person_photo_dimension']);
+    if ($file || !isset($file_info)) {
+      os_profiles_insert_image($node, $file, $data->data['person_photo_dimension']);
+    } else {
+      node_save($node);
+    }
   }
 
   // Delete the UUID that needs to be updated and the time in which the UUID
@@ -353,10 +362,6 @@ function os_profiles_field_access($op, $field, $entity_type, $entity, $account) 
     }
   }
 
-  if (!empty($entity) && $field['field_name'] == 'field_url' && $entity_type == 'node' && $entity->type == 'person' && $op == 'edit') {
-    return user_access('bypass redirection', $account);
-  }
-
   return TRUE;
 }
 
@@ -550,7 +555,7 @@ function os_profiles_sync_profile_validate($form, &$form_state) {
         form_set_error('url', t('The profile cannot be synced: it seems that the profile you are trying to sync belong to a private site or is set to private on a public site.'));
       return;
     }
-      
+
     $headers = get_headers($form_state['values']['url']);
 
     //if (!in_array('X-Generator: Drupal 7 (http://drupal.org)', $headers)) {
@@ -1582,5 +1587,4 @@ function os_profiles_copy_bio_to_new_vsite($original_person, $new_vsite) {
  */
 function os_profiles_form_node_form_alter(&$form, $form_state) {
   $form['field_child_site']['#access'] = FALSE;
-
 }

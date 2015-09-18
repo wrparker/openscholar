@@ -356,3 +356,35 @@ function media_embed_field_attach_form($entity_type, $entity, &$form, &$form_sta
     // do nothing
   }
 }
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * Moves our implementation of library_alter to the end.
+ */
+function media_embed_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'library_alter') {
+    // Move the media_embed implementation of library_alter last.
+    unset($implementations['media_embed']);
+    $implementations['media_embed'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_library_alter().
+ *
+ * Adds params media browser code.
+ */
+function media_embed_library_alter(&$libs) {
+  if (!isset($libs['media_browser']) || !isset($libs['media_browser']['js'])) {
+    return;
+  }
+
+  $whitelist = media_embed_get_whitelist();
+
+  $libs['media_browser']['js'][] = array(
+    'data' => array('embedWhitelist' => $whitelist),
+    'type' => 'setting',
+  );
+
+}

@@ -85,9 +85,9 @@ projects[dyntextfield][download][tag] = 1.0
 projects[dyntextfield][download][url] = "git://github.com/amitaibu/dyntextfield.git"
 
 projects[entity][subdir] = "contrib"
-projects[entity][version] = 1.0
+projects[entity][branch] = 7.x-1.x
 projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
-projects[entity][patch][] = http://drupal.org/files/entity-file_entity_access-1831578-9.patch
+projects[entity][patch][] = https://www.drupal.org/files/issues/2086225-entity-access-check-18.patch
 
 projects[entitycache][subdir] = "contrib"
 projects[entitycache][version] = 1.1
@@ -113,13 +113,6 @@ projects[expire][version] = 2.0-beta2
 projects[facetapi][subdir] = "contrib"
 projects[facetapi][version] = 1.1
 projects[facetapi][patch][] = "http://drupal.org/files/2006704-facetapi-er-regroup-2.patch"
-
-projects[fb_social][subdir] = "contrib"
-;projects[fb_social][version] = 2.0-beta4+1-dev
-projects[fb_social][download][type] = git
-projects[fb_social][download][branch] = 7.x-2.x
-projects[fb_social][download][revision] = cd73e9b
-projects[fb_social][patch][] = "http://drupal.org/files/comment_sources-fb_social-2120709-1.patch"
 
 projects[features][subdir] = "contrib"
 projects[features][version] = 2.0
@@ -338,11 +331,20 @@ projects[purl][patch][] = "http://drupal.org/files/729862-9-purl-inbound-alter-m
 projects[purl][patch][] = "http://drupal.org/files/issues/purl-integrate_redirect_keep_options-1735266-4.patch"
 
 projects[registration][subdir] = "contrib"
-projects[registration][version] = 1.4
-projects[registration][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/a92620d51664a4924aee531ace680cf7c06afd87/patches/registration_link_pass_entity.patch"
+projects[registration][version] = 1.5
+projects[registration][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/fff85ce1e059985dac494d6bde5e923e25a74feb/patches/registration_link_pass_entity.patch"
+projects[registration][patch][] = "https://www.drupal.org/files/issues/registration-add-context-to-headers-2564355-1.patch"
 
 projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
+
+projects[restful][subdir] = "contrib"
+projects[restful][download][type] = git
+projects[restful][download][url] = "https://github.com/RoySegall/restful.git"
+projects[restful][download][branch] = 444
+projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/839d0cc214f2422e924e35d33133d1268b8cc1cd/patches/restful.put_file.patch"
+;projects[restful][download][branch] = "7.x-1.x"
+;projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
 
 projects[redirect][subdir] = "contrib"
 projects[redirect][version] = 1.0-rc1
@@ -486,10 +488,16 @@ libraries[autopager][type] = "libraries"
 libraries[autopager][download][type] = "file"
 libraries[autopager][download][url] = "https://github.com/sagotsky/jquery-autopager/archive/v1.2.zip"
 
-libraries[html5shiv[type] = "libraries"
+libraries[html5shiv][type] = "libraries"
 libraries[html5shiv][download][type] = "file"
 libraries[html5shiv][download][url] = "http://raw.github.com/aFarkas/html5shiv/master/dist/html5shiv.js"
 
 libraries[hopscotch][type] = "libraries"
 libraries[hopscotch][download][type] = "file"
 libraries[hopscotch][download][url] = "https://github.com/linkedin/hopscotch/archive/b41ab659507175264ab6347d0032f03e42b961d1.zip"
+
+; Angular js libraries.
+libraries[angular_select2][type] = "libraries"
+libraries[angular_select2][download][type] = "get"
+libraries[angular_select2][download][url] = "https://github.com/angular-ui/ui-select/archive/v0.12.0.zip"
+libraries[angular_select2][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/ad2fd2d198e91ac9a77eacbae996579e55510a3a/patches/angular_select-7024-async.patch"

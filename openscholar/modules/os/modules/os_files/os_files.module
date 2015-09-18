@@ -22,8 +22,12 @@ function os_files_init() {
   $plugins = ctools_get_plugins('oembed', 'providers');
   if (!isset($plugins['embedly'])) {
     $info = ctools_plugin_get_plugin_type_info();
-    cache_clear_all('plugins:oembed:providers', $info['oembed']['providers']['cache table']);
-    ctools_get_plugins_reset();
+
+    // If the ctools plugin data is not present do not clear the cache.
+    if (isset($info['oembed']['providers']['cache table'])) {
+      cache_clear_all('plugins:oembed:providers', $info['oembed']['providers']['cache table']);
+      ctools_get_plugins_reset();
+    }
     watchdog('oembed', 'Embedly oEmbed plugins not found');
   }
 }
@@ -1245,11 +1249,13 @@ function os_files_field_widget_form_alter(&$elements, &$form_state, $context){
       }
     }
   }
+}
 
-  if ($context['instance']['widget']['type'] == 'media_generic') {
-    $elements['#process'][] = 'media_element_process';
-    $elements['#process'][] = 'os_files_media_widget_process';
-  }
+/**
+ * Implements hook_element_info_alter().
+ */
+function os_files_element_info_alter(&$types) {
+  $types['media']['#process'][] = 'os_files_media_widget_process';
 }
 
 /**
@@ -1302,6 +1308,7 @@ function os_files_imagefield_crop_process($element, $form_state, $form) {
 
   module_load_include('inc', 'media', 'includes/media.browser');
   media_attach_browser_js($element['selected_file']);
+  $element['selected_file']['#attached']['library'][] = array('os_common', 'FileEditorModal');
 
   $element['#element_validate'] = array(
     'os_files_file_element_validate',
@@ -1850,7 +1857,12 @@ function os_files_field_formatter_view($entity_type, $entity, $field, $instance,
           $href = file_create_url($i['uri']);
           $text = $i['description'] ? $i['description'] : $i['filename'];
           //Round Filesize to nearest KB
-          $filesize = $i['filesize'] - ($i['filesize'] % DRUPAL_KILOBYTE);
+          if ($i['filesize'] >= DRUPAL_KILOBYTE) {
+            $filesize = $i['filesize'] - ($i['filesize'] % DRUPAL_KILOBYTE);
+          }
+          else {
+            $filesize = $i['filesize'];
+          }
 
           $other[] = array(
             array(

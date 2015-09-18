@@ -79,10 +79,26 @@ function os_layout_get_contexts($privacy = array(1, 2), $user_created = FALSE) {
  * @return
  *  List of blocks.
  */
-function os_layout_get($context_name, $load_meta = FALSE, $unused_blocks = FALSE) {
+function os_layout_get($context_name, $load_meta = FALSE, $unused_blocks = FALSE, $space = NULL) {
    // context load alters the context (for vsites) so no need to do anything
    // extra.
   $context = context_load($context_name);
+
+  if ($space) {
+    // Some values we need to set to prevent later overwrites are protected.
+    $space->controllers->context->get(null, 'original');
+    foreach (array_keys(context_reactions()) as $plugin) {
+      // overwrite with true original values
+      if (isset($context->reactions[$plugin])) {
+        $space->controllers->context->values['original']["{$context->name}:reaction:{$plugin}"] = $context->reactions[$plugin];
+      }
+      // Now get from space.
+      $override = $space->controllers->context->get("{$context->name}:reaction:{$plugin}");
+      if (!is_null($override)) {
+        $context->reactions[$plugin] = $override;
+      }
+    }
+  }
 
   if (!is_object($context)) {
     return FALSE;
@@ -118,10 +134,10 @@ function os_layout_get($context_name, $load_meta = FALSE, $unused_blocks = FALSE
 
   // Ensure blocks all have the required fields.
   $required = array(
-      'region' => FALSE,
-      'status' => 0,
-      'title' => '',
-      'weight' => 0,
+    'region' => FALSE,
+    'status' => 0,
+    'title' => '',
+    'weight' => 0,
   );
   foreach ($block_settings as $k => &$b) {
     if (os_layout_block_exists($b) && $k == $b['module'].'-'.$b['delta']) {
@@ -181,18 +197,22 @@ function os_layout_get_multiple($contexts, $load_meta = FALSE, $unused_blocks = 
  *
  * @param string $context_name
  * @param array $blocks
+ * @param space $vsite
  */
-function os_layout_set($context_name, $blocks) {
+function os_layout_set($context_name, $blocks, $vsite = NULL) {
   _os_layout_sanitize_blocks($blocks);
 
-  $context = context_load($context_name);
   $clean_up = false;
+
+  if (!$vsite) {
+    $vsite = module_exists('vsite') ? vsite_get_vsite() : NULL;
+  }
 
   if ($context_name == 'os_public' && !variable_get('os_layout_has_cleaned_up', false)) {
     // we want to compare to the old version, which is what should be in the children contexts
     $old_blocks = os_layout_get($context_name);
     $q = null;
-    if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
+    if ($vsite) {
       $q = db_select('spaces_overrides', 'so')
            ->condition('id', $vsite->group->nid)
            ->condition('object_type', 'context');
@@ -206,13 +226,17 @@ function os_layout_set($context_name, $blocks) {
     }
     foreach ($q as $r) {
       $ctx = $r->name;
-      if ($ctx == $context_name) continue;
+
+      if ($ctx == $context_name) {
+        continue;
+      }
+
       $child_blocks = os_layout_get($ctx);
 
       _os_layout_adjust_relative_weight($child_blocks, $old_blocks);
       $child_blocks = _os_layout_filter_blocks($child_blocks, $old_blocks);
 
-      os_layout_set($ctx, $child_blocks);
+      os_layout_set($ctx, $child_blocks, $vsite);
     }
     $clean_up = true;
   }
@@ -221,9 +245,8 @@ function os_layout_set($context_name, $blocks) {
 
   if (module_exists('vsite_layout')) {
     // Writes the context to the overrides table.
-    vsite_layout_context_set($context_name, $blocks);
-    if ($clean_up) {
-      $vsite = vsite_get_vsite();
+    vsite_layout_context_set($context_name, $blocks, $vsite);
+    if ($clean_up && $vsite) {
       $vsite->controllers->variable->set('os_layout_has_cleaned_up', true);
     }
   }
@@ -364,13 +387,14 @@ function os_layout_load_block($bid, $load_meta = TRUE, $block = array()) {
  * Remove a block from one or more contexts.
  *
  * @param $bid
- *  Block identifier [os-primary-menu].
- *
+ *   Block identifier [os-primary-menu].
  * @param $contexts
- *  An array of contexts or individual context to delete a block from, defaults
- *  to all contexts.
+ *   An array of contexts or individual context to delete a block from,
+ *   defaults to all contexts.
+ * @param vsite $vsite
+ *   The vsite object.
  */
-function os_layout_block_delete($bid, $contexts = FALSE) {
+function os_layout_block_delete($bid, $contexts = FALSE, vsite $vsite) {
   if (!$contexts) {
     $contexts = os_layout_get_contexts(TRUE);
   }
@@ -387,7 +411,7 @@ function os_layout_block_delete($bid, $contexts = FALSE) {
       $set = TRUE;
     }
     if ($set) {
-      os_layout_set($context, $blocks);
+      os_layout_set($context, $blocks, $vsite);
     }
   }
 
