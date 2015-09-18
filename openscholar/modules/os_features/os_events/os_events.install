@@ -283,5 +283,5 @@ function os_events_update_7021() {
  * Reverting OS events views.
  */
 function os_events_update_7022() {
-  features_revert(array('os_events' => array('views')));
+  features_revert(array('os_events' => array('field_instance', 'views')));
 }

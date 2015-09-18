@@ -396,7 +396,7 @@ function os_events_process_node(&$variables) {
     }
 
     $options = array('absolute' => TRUE, 'attributes' => array('class' => array('subscribe')));
-    $subscribe = l(t('subscribe'), 'calendar/export.ics/' . $variables['node']->nid, $options);
+    $subscribe = l(t('subscribe'), 'calendar/'  . $variables['node']->nid . '/export.ics', $options);
     $subscribe = str_replace('http://', 'webcal://', $subscribe);
 
     // Hiding the original registration link because we are using our own link
@@ -404,7 +404,7 @@ function os_events_process_node(&$variables) {
     // in the export area.
     hide($variables['content']['field_event_registration']);
 
-    $ical = l(t('iCal'), 'calendar/export.ics/' . $variables['node']->nid, array('attributes' => array('class' => array('ical'))));
+    $ical = l(t('iCal'), 'calendar/' . $variables['node']->nid . '/export.ics', array('attributes' => array('class' => array('ical'))));
 
     $params = array(
       'register' => $register,
