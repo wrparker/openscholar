@@ -90,6 +90,10 @@ function admin_panel_library() {
         'version' => array(
           'userPanel' => '0.0.1'
         ),
+        'paths' => array(
+          'support_subscribe' => $vsite->get_absolute_url('group/node/' . $vsite->id . '/subscribe/vsite_support_expire'),
+          'support_unsubscribe' => $vsite->get_absolute_url('group/node/' . $vsite->id . '/unsubscribe'),
+        ),
       ),
       'type' => 'setting',
     )
