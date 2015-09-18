@@ -332,6 +332,8 @@ function cp_menu_url_validate(&$form, &$state) {
     if (!in_array($domain, $domains)) {
       $ch = curl_init($url);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+      curl_setopt($ch, CURLOPT_HEADER, TRUE);
+      curl_setopt($ch, CURLOPT_SSLVERSION, 3);
       $data = curl_exec($ch);
       $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
@@ -340,7 +342,7 @@ function cp_menu_url_validate(&$form, &$state) {
       }
       return;
     } else {
-      //absolute path to internal url coud be same vsite or external vsite
+      //absolute path to internal url could be same vsite or external vsite
       if ($external_vsite) {
         $path = $url;
       } else {
