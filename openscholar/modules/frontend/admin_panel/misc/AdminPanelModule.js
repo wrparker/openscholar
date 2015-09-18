@@ -8,7 +8,7 @@
        vsite = Drupal.settings.spaces.id;
        cid = Drupal.settings.admin_panel.cid;
        uid = Drupal.settings.admin_panel.user;
-    }).controller("MenuCtrl",['$scope', '$http', function ($scope, $http) {
+    }).controller("AdminMenuController",['$scope', '$http', function ($scope, $http) {
     
       menu = 'admin_panel';
       params = { cid: cid, uid: uid};
@@ -48,7 +48,26 @@
     }).directive('leftMenu', function() {
       return {
        templateUrl: rootPath+'/templates/admin_menu.html?vers='+Drupal.settings.version.adminPanel,
-       controller: 'MenuCtrl'
+       controller: 'AdminMenuController',
+       link: function(scope, element, attrs) {
+      	 new UIMorphingButton(element[0], {
+      			closeEl : '.icon-close',
+      			onBeforeOpen : function() {
+      				// push main admin_panel
+      				jQuery('#page_wrap').addClass('pushed');
+      			},
+      			onAfterOpen : function() {
+      				// add scroll class to main el
+      				jQuery('.morph-button').addClass('scroll');
+      			},
+      			onBeforeClose : function() {
+      				jQuery('.morph-button').removeClass('scroll');
+      				// push back main admin_panel
+      				jQuery('#page_wrap').removeClass('pushed');
+      			}
+      		});
+      	 
+  	   }
      };
    }).directive('addLocation', function() {
 	  //For Qualtrics URL Remove after beta

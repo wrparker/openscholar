@@ -2,8 +2,8 @@
 
 function admin_panel_preprocess_page(&$vars) {
 	if (user_is_logged_in()) {
-    drupal_add_library('admin_panel','admin_panel');
-    os_common_angular_app('AdminPanel');
+    drupal_add_library('admin_panel','user_panel');
+    os_common_angular_app('UserPanel');
 	}
 }
 
@@ -11,12 +11,12 @@ function admin_panel_page_build(&$vars) {
 
   $vars['page_bottom']['admin_menu'] = array(
     '#weight' => 25,
-    '#markup' => '<div class="morph-button morph-button-sidebar morph-button-fixed"><button type="button"></button><div class="morph-content" left-menu></div></div>',
+    '#markup' => '<div class="morph-button morph-button-sidebar morph-button-fixed" left-menu></div>',
   );
 
   $vars['page_bottom']['user_menu'] = array(
     '#weight' => 25,
-    '#markup' => '<div id="topRightMenu" class="topRight_Menu" right-menu></div>',
+    '#markup' => '<div right-menu></div>',
   );
 }
 
@@ -32,6 +32,7 @@ function admin_panel_library() {
   $path = drupal_get_path('module', 'admin_panel');
   $perm = drupal_static('user_access');
   $spaces_features = variable_get('spaces_features', array());
+  $vsite = vsite_get_vsite();
 
   // Includes resources needed to create the admin panel.
   $libs['admin_panel'] = array(
@@ -46,7 +47,6 @@ function admin_panel_library() {
     $path . '/misc/AdminPanelModule.js' => array(),
     $path . '/misc/modernizr.custom.js' => array(),
     $path . '/misc/uiMorphingButton_fixed.js' => array(),
-    $path . '/misc/admin_panel.js' => array(),
     array(
       'data' => array(
         'paths' => array(
@@ -73,6 +73,29 @@ function admin_panel_library() {
     $path.'/misc/component.css',
     $path.'/misc/content.css',
     $path.'/misc/admin_panel-menu.css',
+  );
+
+  $libs['user_panel']['js'] = array(
+    $path . '/misc/UserPanelModule.js' => array(),
+    array(
+      'data' => array(
+        'user_panel' => array(
+          'user' => array(
+            'uid' => $user->uid,
+            'name' => format_username($user),
+            'support_user' => user_access('subscribe as support team'),
+            'is_member' => ($vsite)? og_is_member('node', $vsite->id) : false,
+          ),
+        ),
+        'version' => array(
+          'userPanel' => '0.0.1'
+        ),
+      ),
+      'type' => 'setting',
+    )
+  );
+  $libs['user_panel']['dependencies'] = array(
+    array('admin_panel', 'admin_panel'),
   );
 
   return $libs;
