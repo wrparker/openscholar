@@ -140,10 +140,6 @@
           return defers[key].promise;
         }
 
-        this.getAll = function () {
-          return ents;
-        }
-
         this.get = function (id) {
           var k = findByProp(idProp, id);
           if (ents[k]) {
@@ -177,15 +173,7 @@
               var entity = resp.data[0];
               ents[entity[idProp]] = entity;
 
-              for (var k in cache) {
-                if (cache[k].matches(entity)) {
-                  for (var i=0; i < cache[k].data.length; i++) {
-                    if (cache[k].data[i][idProp] == entity[idProp]) {
-                      cache[k].data[i] = entity;
-                    }
-                  }
-                }
-              }
+              addToCaches(entityType, idProp, entity);
 
               $rootScope.$broadcast(eventName + '.add', entity);
             })
@@ -246,15 +234,34 @@
         this.register = function (entity) {
           ents[entity[idProp]] = entity;
 
-          for (var k in cache) {
-            if (cache[k].matches(entity)) {
-              for (var i=0; i < cache[k].data.length; i++) {
-                if (cache[k].data[i][idProp] == entity[idProp]) {
-                  cache[k].data[i] = entity;
-                }
+          addToCaches(entityType, idProp, entity);
+        }
+
+        /**
+         * Test entity fetched with a set of params to see if it matches a cache
+         *
+         * Proper usage:
+         *  this function should use the cache object as it's 'this', by using the call() method.
+         *  Ex. testEntity.call(this, entity, params);
+         */
+        function testEntity(entity, params) {
+          for (var k in params) {
+            if (entity[k] == undefined) {
+              // this is not something that comes returned on the object
+              // try other things
+              switch (k) {
+                case 'vsite':
+                  if (params[k] != vsite) {
+                    return false;
+                  }
+                  break;
               }
             }
+            else if (entity[k] != params[k]) {
+              return false;
+            }
           }
+          return true;
         }
       };
 
@@ -271,29 +278,6 @@
         diff.length = numProps;
 
         return diff;
-      }
-
-      /**
-       *
-       */
-      function testEntity(entity, params) {
-        for (var k in params) {
-          if (entity[k] == undefined) {
-            // this is not something that comes returned on the object
-            // try other things
-            switch (k) {
-              case 'vsite':
-                if (params[k] != vsite) {
-                  return false;
-                }
-                break;
-            }
-          }
-          else if (entity[k] != params[k]) {
-            return false;
-          }
-        }
-        return true;
       }
 
       return factory;
@@ -322,6 +306,24 @@
       }
     }
     return keys;
+  }
+
+  /**
+   * Add an entity to all caches it matches
+   */
+  function addToCaches(type, idProp, entity) {
+    var keys = getCacheKeysForEntity(type, idProp, entity);
+
+    for (var k in cache) {
+      if (keys[k] != undefined) {
+        cache[k].data[keys[k]] = entity;
+        continue;
+      }
+
+      if (cache[k].matches(entity, type)) {
+        cache[k].data.push(entity);
+      }
+    }
   }
 
   /*
