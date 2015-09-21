@@ -324,7 +324,6 @@ function _save_contributors(&$contributors, $nid, $vid, $update = FALSE) {
  * @return unknown_type
  */
 function biblio_parse_author($author_array, $cat = 0) {
-
   if ($author_array['auth_category'] == 5) {
     $author_array['firstname'] = '';
     $author_array['initials'] = '';
@@ -407,7 +406,7 @@ function _grabFirstnameInitials($remainder) {
     if ((ord($first_char) >= 97) && (ord($first_char) <= 122)) {
     $prefix[] = $value;
     }
-    elseif (preg_match("/[a-zA-Z]{2,}/", trim($value))) {
+    elseif (preg_match("/[a-zA-Z.]{2,}/", trim($value))) {
       $firstname_array[] = trim($value);
     }
     else {
