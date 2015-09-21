@@ -140,9 +140,6 @@
 
           if (!defers[key]) {
             var url = restPath + '/' + entityType;
-            if (params[idProp] != undefined) {
-              url += '/' + params[idProp];
-            }
             defers[key] = $q.defer();
             $http.get(url, {params: params, pKey: key})
               .success(success)
