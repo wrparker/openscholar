@@ -103,6 +103,24 @@
           }
         }
 
+        this.fetchOne = function (id) {
+          var cKey = entityType + ':' + id;
+
+          if (!defers[cKey]) {
+            var url = restPath + '/' + entityType + '/' + id;
+            defers[cKey] = $q.defer();
+            $http.get(url, {pKey: cKey})
+              .then(function (response) {
+                ents[id] = response.data.data[0];
+                defers[cKey].resolve(angular.copy(response.data.data[0]));
+              },
+              function (response) {
+                defers[cKey].reject(response);
+              });
+          }
+          return defers[cKey].promise;
+        }
+
         this.fetch = function (params) {
           if (!params) {
             params = {};
@@ -122,6 +140,9 @@
 
           if (!defers[key]) {
             var url = restPath + '/' + entityType;
+            if (params[idProp] != undefined) {
+              url += '/' + params[idProp];
+            }
             defers[key] = $q.defer();
             $http.get(url, {params: params, pKey: key})
               .success(success)

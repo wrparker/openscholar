@@ -22,21 +22,22 @@
         scope.extensionsFull.sort();
 
         if (scope.selectedFiles.length == 0) {
-          try {
-            var fids = Drupal.settings.mediaBrowserField[elem.parent().attr('id')].selectedFiles,
-              service = new EntityService('files', 'id');
-
-            service.fetch().then(function () {
-              for (var i = 0; i<fids.length; i++) {
-                scope.selectedFiles.push(angular.copy(service.get(fids[i])));
+          var fids = Drupal.settings.mediaBrowserField[elem.parent().attr('id')].selectedFiles,
+            service = new EntityService('files', 'id'),
+            generateFunc = function (i) {
+              return function(file) {
+                scope.selectedFiles[i] = angular.copy(file);
               }
-            })
-          }
-          catch (e) {
-            // do nothing
-            // assume the entity has no files attached to it yet
+            };
+
+          for (var i = 0; i<fids.length; i++) {
+            var fid = fids[i];
+            service.fetchOne(fid).then(generateFunc(i));
           }
         }
+
+        // prefetch the files now so user can open Media Browser later
+        service.fetch();
 
         scope.$on('EntityService.files.update', function (file) {
           for (var i = 0; i<scope.selectedFiles.length; i++) {
