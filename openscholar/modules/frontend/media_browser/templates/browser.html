@@ -22,9 +22,9 @@
             </div>
             <div id="media-browser-duplicate-check" ng-show="$parent.dupes.length > 0">
                 <div class="media-browser-dupe" ng-repeat="dupe in $parent.dupes" ng-show="!dupe.processed" style="z-index: {{1000-$index}}">
-                    A file with the name "{{dupe.filename}}" already exists.
+                    A file with the name '{{dupe.filename}}' already exists.
                     <div ng-show="dupe.name != dupe.filename">
-                        This file was renamed from "{{dupe.name}}" due to having invalid characters in its name.
+                        This file was renamed from '{{dupe.name}}' due to having invalid characters in its name.
                     </div>
                     <div class="actions">
                         <div><button value="rename" ng-click="$parent.rename($index, $last)">Rename</button> The new name will be {{dupe.newName}}</div>
