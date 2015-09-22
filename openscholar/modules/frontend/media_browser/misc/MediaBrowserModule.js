@@ -381,16 +381,20 @@
           progress = e;
         }).success(function (e) {
           for (var i = 0; i< e.data.length; i++) {
-            e.data[i].new = true;
             service.register(e.data[i]);
             var found = false;
+            // check to see if this file exists
             for (var j = 0; j < $scope.files.length; j++) {
               if ($scope.files[j].id == e.data[i].id) {
+                // we just replaced an existing file.
+                e.data[i].replaced = true;
                 $scope.files[j] = e.data[i];
                 found = true;
               }
             }
             if (!found) {
+              // This is a brand-new file. Set the true flag and add it to the list.
+              e.data[i].new = true;
               $scope.files.push(e.data[i]);
             }
           }
@@ -422,8 +426,13 @@
     $scope.deleteConfirmed = function() {
       service.delete($scope.selected_file)
         .then(function (resp) {
-          $scope.changePanes('library');
         });
+      for (var j = 0; j < $scope.files.length; j++) {
+        if ($scope.files[j].id == $scope.selected_file.id) {
+          $scope.files[j].status = 'deleting';
+        }
+      }
+      $scope.changePanes('library');
     };
 
 
@@ -438,6 +447,7 @@
         if (e.data.length) {
           $scope.embed = '';
           $scope.setSelection(e.data[0].id);
+
           $scope.changePanes('edit')
         }
       })
@@ -447,6 +457,19 @@
             $scope.embedFailure = false;
           }, 5000);
       });
+    }
+
+    $scope.closeFileEdit = function (result) {
+      if (!result && $scope.selected_file.new) {
+        service.delete($scope.selected_file);
+        for (var j = 0; j < $scope.files.length; j++) {
+          if ($scope.files[j].id == $scope.selected_file.id) {
+            $scope.files[j].status = 'deleting';
+          }
+        }
+        $scope.selected_file = null;
+      }
+      $scope.changePanes('library');
     }
 
     $scope.insert = function () {
