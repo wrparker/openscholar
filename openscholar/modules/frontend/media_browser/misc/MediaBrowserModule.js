@@ -436,7 +436,7 @@
     };
 
 
-    $scope.embed = 'URL or Markup';
+    $scope.embed = '';
     $scope.embedSubmit = function () {
       // construct the entity
       var data = {

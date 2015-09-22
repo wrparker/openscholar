@@ -137,7 +137,7 @@ div.file-filters {
     min-height: 300px;
 }
 .media-browser-pane textarea#fe-file-description {
-    min-height: 100px;
+    min-height: 20px;
 }
 .mb-preview,
 .mb-title,
@@ -236,12 +236,12 @@ button[ng-disabled="!pager.canPage(-1)"] {
     padding: 10px;
 }
 #fe-file-display-warning {
-    background: url('images/replace_icon.png') no-repeat 3px 4px #215990;
+    background: url('images/replace_icon.png?abc') no-repeat 3px 4px #E6E6E6;
     border: none;
     padding: 10px 10px 10px 32px;
     font-size: .95em;
     margin: 10px 0;
-    color: #fff;
+    color: #215990;
     cursor: pointer;
 }
 #file-delete-section.open {
