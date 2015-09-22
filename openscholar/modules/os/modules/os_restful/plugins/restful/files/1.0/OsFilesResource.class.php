@@ -134,6 +134,8 @@
  */
 class OsFilesResource extends RestfulEntityBase {
 
+  protected $errors = array();
+
   /**
    * Overrides RestfulEntityBase::publicFieldsInfo().
    */
@@ -213,6 +215,13 @@ class OsFilesResource extends RestfulEntityBase {
       'sub_property' => 'value',
       'callback' => array($this, 'getImageTitleText'),
       'saveCallback' => array($this, 'setImageTitleText'),
+    );
+
+    $info['embed_code'] = array(
+      'property' => 'field_html_code',
+      'sub_property' => 'value',
+      'callback' => array($this, 'getHtmlCode'),
+      'saveCallback' => array($this, 'setHtmlCode'),
     );
 
     $info['preview'] = array(
@@ -298,6 +307,13 @@ class OsFilesResource extends RestfulEntityBase {
   public function getIconUrl($wrapper) {
     $file = $wrapper->value();
     return file_icon_url($file);
+  }
+
+  /**
+   * Callback for embed codes
+   */
+  public function getHtmlCode($wrapper) {
+    return $this->getBundleProperty($wrapper, 'field_html_code');
   }
 
   /**
@@ -588,6 +604,11 @@ class OsFilesResource extends RestfulEntityBase {
     }
 
 
+    if ($this->getErrors()) {
+      $e = new RestfulBadRequestException("The following errors occured when attempting to save this file.\n".
+        implode("\n", $this->getErrors()));
+      throw $e;
+    }
     if (!$save) {
       // No request was sent.
       throw new RestfulBadRequestException('No values were sent with the request');
@@ -623,6 +644,24 @@ class OsFilesResource extends RestfulEntityBase {
     }
 
     return parent::propertyValuesPreprocess($property_name, $value, $public_field_name);
+  }
+
+  /**
+   * Add an error to be returned to the client.
+   *
+   * @param $field - the field that errored
+   * @param $error - the string message describing the error
+   */
+  public function addError($field, $error) {
+    $this->errors[] = "$field: $error";
+  }
+
+  /**
+   * Get the list of errors displayed so far
+   * @return array
+   */
+  public function getErrors() {
+    return $this->errors;
   }
 
   protected function updateFileLocation($wrapper) {
@@ -666,6 +705,18 @@ class OsFilesResource extends RestfulEntityBase {
       $wrapper->field_file_image_title_text->set($this->request['image_title']);
 
       return true;
+    }
+    return false;
+  }
+
+  protected function setHtmlCode($wrapper) {
+    if (isset($this->request['embed_code'])) {
+      if (media_embed_check_src($this->request['embed_code'])) {
+        $wrapper->field_html_code->set($this->request['embed_code']);
+
+        return true;
+      }
+      $this->addError('embed_code', 'This embed code failed validation. Please check that all urls are from accepted domains');
     }
     return false;
   }

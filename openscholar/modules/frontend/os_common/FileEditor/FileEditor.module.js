@@ -114,8 +114,9 @@
                   scope.onClose({saved: false});
                 }
             },
-            function() {
-              console.log('error happened');
+            function(result) {
+              scope.errorMessages = result.data.title.replace(/[^\s:]*: /, '');
+              scope.showErrorMessages = true;
             });
           };
 

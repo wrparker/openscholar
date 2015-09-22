@@ -38,3 +38,8 @@
     <button ng-click="save()" ng-disabled="canSave()">Save</button> 
     <button ng-click="cancel()">Cancel</button>
 </div>
+
+<div class="error" ng-show="showErrorMessages">
+    <span ng-click="showErrorMessages = false;" class="error-close">Close</span>
+    <span>{{errorMessages}}</span>
+</div>
