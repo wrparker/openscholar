@@ -223,9 +223,13 @@
       $scope.dupes = [];
       for (var i=0; i<$files.length; i++) {
         var similar = [],
-            basename = $files[i].name.replace(/\.[a-zA-Z0-9]*$/, ''),
-            extension = $files[i].name.replace(basename, ''),
+            basename = $files[i].name.replace(/\.[a-zA-Z0-9]*$/, ''),   // remove extension from filename
+            extension = $files[i].name.replace(basename, ''),           // remove filename from filename to get extension
             dupeFound = false;
+
+        // rewrite the filename the same way PHP will
+        basename = basename.replace(/ /g, '_').replace(/[^a-zA-Z0-9-_.~]/g, '');
+        $files[i].filename = basename + extension;
 
         for (var j=0; j<$scope.files.length; j++) {
           // find any file with a name that matches "basename{_dd}.ext" and add it to list of similar files
@@ -233,7 +237,7 @@
             similar.push($scope.files[j]);
             // also check if there is a file with the full filename and save this fact for later
             // this allows file.jpg to be uploaded when file_01.jpg already exists
-            if ($scope.files[j].filename == $files[i].name) {
+            if ($scope.files[j].filename == $files[i].filename) {
               dupeFound = true;
             }
           }
@@ -266,6 +270,9 @@
           $scope.dupes.push($files[i]);
         }
         else {
+          if ($files[i].filename != $files[i].name) {
+            addMessage("This file was renamed from \"" + $files[i].name + "\" due to having invalid characters in its name.")
+          }
           // not a dupe, just upload it silently
           toBeUploaded.push($files[i]);
         }
@@ -408,7 +415,7 @@
       $scope.uploadProgress = function () {
         return {
           uploading: uploading,
-          filename: uploading ? toBeUploaded[currentlyUploading].name : '',
+          filename: uploading ? toBeUploaded[currentlyUploading].filename : '',
           progressBar: (uploading && progress) ? parseInt(100.0 * progress.loaded / progress.total) : 0,
           index: currentlyUploading+1,
           numFiles: toBeUploaded.length
