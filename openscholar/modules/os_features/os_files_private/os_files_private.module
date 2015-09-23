@@ -17,6 +17,7 @@ function os_files_private_os_app_info() {
 
   $apps['os_files_private'] = array(
     'path' => OS_FILES_PRIVATE_PATH,
+    'has_settings' => TRUE,
   );
 
   return $apps;

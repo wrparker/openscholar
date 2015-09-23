@@ -31,6 +31,7 @@ function os_booklets_os_app_info() {
         'menu_item' => 'documents',
       ),
     ),
+    'has_settings' => TRUE,
   );
 
   return $apps;

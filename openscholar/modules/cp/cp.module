@@ -117,7 +117,10 @@ function cp_menu() {
 
   // Provides a customize form for each OS App and a version that will load in a modal
   $apps = spaces_features('site');
+  $app_info = os_app_info();
   foreach ($apps as $name => $app) {
+    if(!$app_info[$name]['has_settings']) continue;
+
     $items['cp/build/features/' . $name] = array(
       'title callback' => '_cp_app_settings_page_title',
       'title arguments' => array(3),

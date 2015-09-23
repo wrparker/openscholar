@@ -35,6 +35,7 @@ function os_profiles_os_app_info() {
         'menu_item' => 'people',
       ),
     ),
+    'has_settings' => TRUE,
   );
 
   return $apps;

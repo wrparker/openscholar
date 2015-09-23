@@ -26,6 +26,7 @@ function harvard_courses_os_app_info() {
         'display_mode' => 'teaser',
       ),
     ),
+    'has_settings' => TRUE,
   );
 
   return $apps;
