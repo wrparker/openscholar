@@ -41,9 +41,9 @@
             if (d) {
               scope.file.timestamp = parseInt(d.getTime() / 1000);
               if (dateTimeout) {
-                clearTimeout(dateTimeout);
+                $timeout.cancel(dateTimeout);
               }
-              dateTimeout = setTimeout(function () {
+              dateTimeout = $timeout(function () {
                 scope.date = $filter('date')(scope.file.timestamp+'000', 'short');
               }, 3000);
             }
