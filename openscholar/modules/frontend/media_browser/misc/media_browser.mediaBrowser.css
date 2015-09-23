@@ -396,3 +396,13 @@ div[file-edit] .control button {
 .ui-dialog-titlebar {
     display: none;
 }
+
+
+/**
+ * Misc label styling associated with MB
+ */
+
+.field-name-field-upload .edit-field-upload-und-drop {
+    margin-top: 15px;
+}
+
