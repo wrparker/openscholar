@@ -519,7 +519,7 @@ function os_search_solr_mark_entity_by_bundles($vsite_id, $bundles = array(), $l
   $query = new EntityFieldQuery();
   $result = $query
     ->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', $bundles, 'IN')
+    ->entityCondition('bundle', array_keys($bundles), 'IN')
     ->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $vsite_id)
     ->propertyCondition('nid', $last_nid, '>')
     ->propertyOrderBy('nid')
