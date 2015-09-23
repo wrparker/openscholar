@@ -48,7 +48,7 @@ function os_tour_library() {
     'website' => 'http://linkedin.github.io/hopscotch',
     'version' => '0.1.2',
     'js' => array(
-      "$path/js/hopscotch-0.1.2.min.js" => $settings
+      "$path/js/hopscotch-0.1.2.js" => $settings
     ),
     'css' => array(
       "$path/css/hopscotch-0.1.2.min.css" => $settings,
@@ -59,7 +59,7 @@ function os_tour_library() {
   $libraries['os_tour'] = array(
     'title' => 'Os Tour',
     'js' => array(
-      "{$os_tour_path}/theme/os_tour.notifications.js",
+      "{$os_tour_path}/theme/os_tour.notifications.js" => array(),
       array(
         'data' => array(
           'os_notifications' => os_tour_get_tour_settings(),

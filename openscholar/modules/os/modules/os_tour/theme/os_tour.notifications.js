@@ -26,7 +26,7 @@
 		  * @param {object} entry
 		  * @returns {string} output
 		  */
-		  notifications_item: function (entry, num_remaining, count_element) {
+		  notifications_item: function (entry, num_remaining, count_element, target) {
 			    // Prepare the output to display inside the tour's content region.
 			    var output = "<div class='feed_item'>";
 
@@ -57,7 +57,7 @@
 			    var item = {
 			      title: entry.title,
 			      content:output,
-			      target: document.querySelector("#os-tour-notifications-menu-link"),
+			      target: target,
 			      placement: "bottom",
 			      yOffset: -3,
 			      xOffset: -10,

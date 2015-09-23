@@ -37,10 +37,12 @@
       //Go to feed and check for notifications.
   	  return {
   	    link: function(scope, element, attrs) {
-  		  count_element = angular.element('<span class="slate alert"></span>');
+  		  count_element = angular.element('<span class="slate alert" ng-alert=></span>');
   		  // @TODO: Add support for multiple feeds.
 	      var feed = new google.feeds.Feed(notify_settings.url);
 	      var items = [];
+	      var link = element.find('a')[0];
+	      
 	      feed.setNumEntries(notify_settings.max);
 	      feed.load(function (result) {
 	        if (result.error) {
@@ -50,8 +52,8 @@
 	        for (var i = 0; i < result.feed.entries.length; i++) {
 	          var num_remaining = (result.feed.entries.length - i);
 	          var entry = result.feed.entries[i];
-	          if (!osTour.notifications_is_new(entry)) {
-	            var item = osTour.notifications_item(entry, num_remaining, count_element);
+	          if (osTour.notifications_is_new(entry)) {
+	            var item = osTour.notifications_item(entry, num_remaining, count_element, link);
 	            items.push(item);
 	          }
 	        }
@@ -75,22 +77,11 @@
 	            }
 	          };
 
-	          element.bind('click', function(e) {
+	          element.find('a').bind('click', function(e) {
         	    e.preventDefault();
         	    hopscotch.startTour(tour);
-              }) 
-              
-	            // Adds our tour overlay behavior with desired effects.
-//	            $('#os-tour-notifications-menu-link').click(function() {
-//	              $('html, body').animate({scrollTop:0}, '500', 'swing', function() {
-//	                $('.hopscotch-bubble').addClass('animated');
-//	                // Removes animation for each step.
-//	                $('.hopscotch-bubble').removeClass('animated');
-//	                // Allows us to target just this tour in CSS rules.
-//	                $('.hopscotch-bubble').addClass('os-tour-notifications');
-//	              });
-//	            });
-	          }
+              })
+	        }
 	      });
     	},
   	  }
