@@ -402,7 +402,8 @@ div[file-edit] .control button {
  * Misc label styling associated with MB
  */
 
-.field-name-field-upload .edit-field-upload-und-drop {
+.field-name-field-upload label[for="edit-field-upload-und-drop"] {
+	
     margin-top: 15px;
 }
 
