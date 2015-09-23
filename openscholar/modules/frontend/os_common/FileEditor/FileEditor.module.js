@@ -29,16 +29,32 @@
             scope.extension = '.' + getExtension(f.url);
           });
 
+          var dateTimeout;
           scope.$watch('date', function (value, old) {
             if (value == old ) return;
+            scope.invalidDate = false;
             var d = new Date(value);
+            if (isNaN(d.getTime())) {
+              scope.invalidDate = true;
+              return;
+            }
             if (d) {
               scope.file.timestamp = parseInt(d.getTime() / 1000);
+              if (dateTimeout) {
+                clearTimeout(dateTimeout);
+              }
+              dateTimeout = setTimeout(function () {
+                scope.date = $filter('date')(scope.file.timestamp+'000', 'short');
+              }, 3000);
             }
           });
 
           scope.$watch('file.filename', function (filename, old) {
             scope.invalidName = false;
+            if (filename == "") {
+              scope.invalidName = true;
+              return;
+            }
             if (filename && filename != old) {
               var files = fileService.getAll();
               for (var i = 0; i < files.length; i++) {
