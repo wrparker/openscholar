@@ -129,7 +129,7 @@
           };
 
           scope.cancel = function () {
-            scope.onClose({saved: false});
+            scope.onClose({saved: FER.CANCELED});
           }
         }
       }
