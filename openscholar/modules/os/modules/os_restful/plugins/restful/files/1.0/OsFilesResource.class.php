@@ -132,7 +132,7 @@
  *}
  *
  */
-class OsFilesResource extends RestfulEntityBase {
+class OsFilesResource extends OsRestfulEntityCacheableBase {
 
   protected $errors = array();
 
