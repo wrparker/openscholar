@@ -25,6 +25,12 @@ function os_common_library() {
         'group' => JS_LIBRARY,
         'weight' => -14
       ),
+
+      '//ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-cookies.js' => array(
+        'type' => 'external',
+        'group' => JS_LIBRARY,
+        'weight' => -14
+      ),
       libraries_get_path('es5-shim') . '/es5-shim.js' => array(),
     )
   );
