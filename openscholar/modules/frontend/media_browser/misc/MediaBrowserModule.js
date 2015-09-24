@@ -467,7 +467,7 @@
     }
 
     $scope.closeFileEdit = function (result) {
-      if (!result && $scope.selected_file.new) {
+      if (result == 'canceled' && $scope.selected_file.new) {
         service.delete($scope.selected_file);
         for (var j = 0; j < $scope.files.length; j++) {
           if ($scope.files[j].id == $scope.selected_file.id) {
