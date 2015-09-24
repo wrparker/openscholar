@@ -253,12 +253,7 @@ button[ng-disabled="!pager.canPage(-1)"] {
 #file-delete-section.open {
     display: block;
 }
-div[file-edit] .fe-warning ~ .control {
-    display: none;
-}
-div[file-edit] .fe-warning.ng-hide ~ .control {
-    display: block;
-}
+
 .tw-widget h4 {
     font-size: .97em;
 }
