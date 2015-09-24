@@ -227,7 +227,7 @@
           }
           else {
             var defer = $q.defer();
-            defer.resolve(false);
+            defer.resolve({detail: "No data sent with request."});
             return defer.promise;
           }
         };
