@@ -123,10 +123,12 @@ function media_browser_element_info_alter(&$elements) {
  */
 function media_browser_field_widget_media_generic_form_alter(&$elements, &$forms_state, $context) {
   if ($size = $elements['#media_options']['global']['max_filesize']) {
+    $size = preg_replace('/^([\d]+)([^\d\s]).*/', '$1 $2B', $size);
     $elements['#media_options']['global']['max_filesize_raw'] = parse_size($size);
   }
   else {
     $size = media_browser_get_max_size();
+    $size = preg_replace('/^([\d]+)([^\d\s]).*/', '$1 $2B', $size);
     $elements['#media_options']['global']['max_filesize'] = $size;
     $elements['#media_options']['global']['max_filesize_raw'] = parse_size($size);
   }
