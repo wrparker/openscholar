@@ -267,6 +267,7 @@ div[file-edit] .fe-warning.ng-hide ~ .control {
 [media-browser-field] .form-managed-file {
     position: relative;
 }
+
 .field-widget-media-draggable-file span.ng-binding.ng-scope,
 #media-browser-file-select {
     height: 20px;
@@ -403,7 +404,27 @@ div[file-edit] .control button {
  */
 
 .field-name-field-upload label[for="edit-field-upload-und-drop"] {
-	
-    margin-top: 15px;
+
+  margin-top: 15px;
+}
+
+@keyframes highlight {
+  0% {
+    margin-left: 0px;
+    animation-timing-function: ease-out;
+  }
+  50% {
+    margin-left: 20px;
+    animation-timing-function: ease-in;
+  }
+  100% {
+    margin-left: 0px;
+  }
+}
+
+[media-browser-field] .file-list-single.highlight {
+  animation-name: highlight;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
 }
 
