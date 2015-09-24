@@ -175,9 +175,35 @@ function os_restful_restful_parse_request_alter(&$request) {
  *
  * file_save() automatically sets the timestamp to REQUEST_TIME.
  * If we want to change it, it has to be done in a file_presave or entity_presave hook.
+ *
+ * Also, make sure file->changed is always the current REQUEST_TIME
  */
 function os_restful_file_presave($file) {
   if ($timestamp = _os_restful_store_props('timestamp')) {
     $file->timestamp = $timestamp;
   }
+
+  $file->changed = REQUEST_TIME;
+}
+
+/**
+ * Implements hook_entity_delete().
+ *
+ * Logs all entities that are deleted so they can be returned in restful update results
+ */
+function os_restful_entity_delete($entity, $type) {
+  $wrapper = entity_metadata_wrapper($type, $entity);
+  $id = $wrapper->getIdentifier();
+
+  $extra = module_invoke_all('os_restful_entity_delete_data');
+  drupal_alter('os_restful_entity_delete_data', $extra);
+
+  db_insert('entities_deleted')
+    ->fields(array(
+      'entity_id' => $id,
+      'entity_type' => $type,
+      'deleted' => REQUEST_TIME,
+      'extra' => serialize($extra)
+    ))
+    ->execute();
 }
