@@ -91,6 +91,20 @@ class OsRestfulEntityCacheableBase extends RestfulEntityBase {
     }
     return $query;
   }
+
+  public function additionalHateoas() {
+    $addtl = array();
+
+    $timestamp = str_replace('updates/', '', $path);
+    if ($timestamp < strtotime('-30 days')) {
+      $addtl['allEntitiesAsOf'] = REQUEST_TIME;
+    }
+    else {
+     $addtl['updatesAsOf'] = REQUEST_TIME;
+    }
+
+    return $addtl;
+  }
 }
 
 ?>
