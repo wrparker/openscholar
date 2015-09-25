@@ -149,5 +149,4 @@ after_script:
   - sudo cat /var/log/apache2/error.log
 
 after_failure: # this will of course run only on failure
-  - "travis-artifacts upload --path /tmp/behat_ss_*"
-  - "travis-artifacts upload --path /var/log/apache2/error.log"
+  - "travis-artifacts upload --path /tmp/behat_ss*"

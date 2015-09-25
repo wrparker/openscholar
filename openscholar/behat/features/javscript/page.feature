@@ -13,16 +13,3 @@ Feature:
      Then I verify the page kept the same
       And I press "Save"
       And I verify the url did not changed
-
-  @javascript
-  Scenario: Deliberate Fail Verify the page path is not changed after editing.
-    Given I am logging in as "admin"
-      And I visit "john/node/add/page"
-      And I fill in "Title" with "Testing page"
-      And I press "Sve"
-      And I edit the page "Testing page"
-      And I save the page address
-     When I fill in "Tile" with "Other page"
-     Then I verify the page kept the same
-      And I press "Save"
-      And I verify the url did not changed
