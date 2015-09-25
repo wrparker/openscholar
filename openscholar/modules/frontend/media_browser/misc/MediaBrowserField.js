@@ -88,7 +88,9 @@
           file.highlight = toHighlight;
         }
 
+        var label = elem.parent().find(' label');
         elem.parent().find(' > *').not(elem).remove();
+        elem.before(label);
       }
 
       if (mbModal.requirementsMet()) {
