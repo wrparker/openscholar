@@ -42,9 +42,15 @@ Feature: Testing OpenScholar calendar page.
   @api @features_first
   Scenario: Testing the events export in iCal format.
     Given I visit "john/calendar/upcoming/all/export.ics"
-     Then I look for ".field_date.0@"
-      And I look for "SUMMARY:Registration event"
-      And I cannot look for "Testing event"
+     Then I should see  "SUMMARY:Registration event"
+      And I should not see "Testing event"
+
+  @api @features_first
+  Scenario: Testing the single event export in iCal format.
+    Given I visit "john/event/registration-event"
+     Then I click on link "iCal" under "main-content-header"
+      And I should see  "SUMMARY:Registration event"
+      And I should not see "Testing event"
 
   @api @features_first
   Scenario: Test that site-wise calendar is disabled
