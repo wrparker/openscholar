@@ -54,6 +54,25 @@ class OsRestfulEntityCacheableBase extends RestfulEntityBase {
       }
     }
 
+    $q = db_select('entities_deleted', 'ed')
+      ->fields('ed')
+      ->condition('entity_type', $entity_type)
+      ->condition('deleted', (int)$timestamp, '>')
+      ->execute();
+
+    $deleted = array();
+
+    foreach ($q as $r) {
+      $deleted[] = array(
+        'id' => $r->entity_id,
+        'status' => 'deleted',
+        'extra' => unserialize($r->extra)
+      );
+    }
+
+    drupal_alter('os_restful_deleted_entities', $deleted, $this);
+    $return = array_merge($return, $deleted);
+
     return $return;
   }
 

@@ -195,7 +195,7 @@ function os_restful_entity_delete($entity, $type) {
   $wrapper = entity_metadata_wrapper($type, $entity);
   $id = $wrapper->getIdentifier();
 
-  $extra = module_invoke_all('os_restful_entity_delete_data');
+  $extra = module_invoke_all('os_restful_entity_delete_data', $type, $entity);
   drupal_alter('os_restful_entity_delete_data', $extra);
 
   db_insert('entities_deleted')
