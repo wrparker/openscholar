@@ -690,7 +690,7 @@ function os_events_modal_submit($form, &$form_state) {
   // dismiss the window
   $commands[] = ctools_modal_command_dismiss();
   // Display messages.
-  $commands[] = ajax_command_before('#columns', theme('status_messages'));
+  $commands[] = ajax_command_before('#header', theme('status_messages'));
 
   // In case event is full update the register links via ajax.
   $event = node_load($form_state['registration']->entity_id);
