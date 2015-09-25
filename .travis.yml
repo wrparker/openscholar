@@ -33,7 +33,6 @@ before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - composer global require drush/drush:6.*@dev
   - "gem install travis-artifacts"
-  - "mkdir /tmp/screenshots"
 
   # Install apache
   - sudo apt-get update
@@ -99,6 +98,7 @@ before_script:
   - cd www
   - mkdir -p /tmp
   - mkdir -p /tmp/devel-mails
+  - mkdir -p /tmp/screenshots
   - mkdir -p sites/default/files
   - sudo chmod 777 /tmp -R
   - sudo chmod 777 sites/default -R
@@ -149,4 +149,4 @@ after_script:
   - sudo cat /var/log/apache2/error.log
 
 after_failure: # this will of course run only on failure
-  - "travis-artifacts upload --path /tmp/behat_ss*"
+  - "travis-artifacts upload --path /tmp/screenshots"
