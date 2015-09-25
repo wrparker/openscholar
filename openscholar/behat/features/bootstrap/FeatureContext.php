@@ -1726,12 +1726,12 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Then /^I look for "([^"]*)"$/
+   * @Then /^I should find the text "([^"]*)" in the file$/
    *
    * Defining a new step because when using the step "I should see" for the iCal
    * page the test is failing.
    */
-  public function iLookFor($string) {
+  public function iShouldFindTheTextInTheFile($string) {
     $element = $this->getSession()->getPage();
 
     if (strpos($element->getContent(), $string) === FALSE) {
@@ -1740,13 +1740,12 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Then /^I cannot look for "([^"]*)"$/
+   * @Then /^I should not find the text "([^"]*)" in the file$/
    *
-   * Defining a new step because when using the step "I should see" for the iCal
-   * page the test is failing.
    */
-  public function iCannotLookFor($string) {
+  public function iShouldNotFindTheTextInTheFile($string) {
     $element = $this->getSession()->getPage();
+
     if (strpos($element->getContent(), $string) !== FALSE) {
       throw new Exception("the string '$string' was found.");
     }

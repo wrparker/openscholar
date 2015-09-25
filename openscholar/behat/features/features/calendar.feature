@@ -40,17 +40,11 @@ Feature: Testing OpenScholar calendar page.
      Then I should not see the link "29" under "view-display-id-page_1"
 
   @api @features_first
-  Scenario: Testing the events export in iCal format.
+  Scenario: Testing the upcoming events export in iCal format.
     Given I visit "john/calendar/upcoming/all/export.ics"
-     Then I should see  "SUMMARY:Registration event"
-      And I should not see "Testing event"
-
-  @api @features_first
-  Scenario: Testing the single event export in iCal format.
-    Given I visit "john/event/registration-event"
-     Then I click on link "iCal" under "main-content-header"
-      And I should see  "SUMMARY:Registration event"
-      And I should not see "Testing event"
+     Then I should find the text "SUMMARY:Registration event" in the file
+      And I should find the text "SUMMARY:Halley's Comet" in the file
+      And I should not find the text "Testing event" in the file
 
   @api @features_first
   Scenario: Test that site-wise calendar is disabled
