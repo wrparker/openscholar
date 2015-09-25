@@ -275,7 +275,10 @@ function os_events_views_pre_render(&$view) {
     return;
   }
 
-  $view->attachment_before = '<a class="cal-export">' . t('Export') . '</a>' . $view->attachment_before;
+  // only display subscribe links if listing is the events landing page or a list of upcoming events
+  if ((isset($view->exposed_input['month']) && $view->exposed_input['month'] == date('Y-m')) || strpos($view->get_path(), "calendar/upcoming") !== FALSE) {
+    $view->attachment_before = '<a class="cal-export">' . t('Export') . '</a>' . $view->attachment_before;
+  }
 }
 
 function os_events_date_formatter_pre_view_alter(&$entity, $vars) {
@@ -396,7 +399,7 @@ function os_events_process_node(&$variables) {
     }
 
     $options = array('absolute' => TRUE, 'attributes' => array('class' => array('subscribe')));
-    $subscribe = l(t('subscribe'), 'calendar/'  . $variables['node']->nid . '/export.ics', $options);
+    $subscribe = l(t('subscribe'), 'calendar/single/'  . $variables['node']->nid . '/export.ics', $options);
     $subscribe = str_replace('http://', 'webcal://', $subscribe);
 
     // Hiding the original registration link because we are using our own link
@@ -404,7 +407,7 @@ function os_events_process_node(&$variables) {
     // in the export area.
     hide($variables['content']['field_event_registration']);
 
-    $ical = l(t('iCal'), 'calendar/' . $variables['node']->nid . '/export.ics', array('attributes' => array('class' => array('ical'))));
+    $ical = l(t('iCal'), 'calendar/single/' . $variables['node']->nid . '/export.ics', array('attributes' => array('class' => array('ical'))));
 
     $params = array(
       'register' => $register,
@@ -745,19 +748,21 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
 
   if (!in_array($display_id, array('block_2', 'block_1'))) {
     $buttons = array(
-      'subscribe' => 'calendar/export.ics',
-      'iCal' => 'calendar/export.ics',
-      'rss' => 'calendar/rss.xml'
+      'subscribe' => 'calendar/upcoming/all/export.ics',
+      'iCal' => 'calendar/upcoming/all/export.ics',
+      'rss' => 'calendar/upcoming/all/rss.xml'
     );
 
     foreach ($buttons as $label => $path) {
-
       // When the user is filtering events by taxonomy term we need to add the
       // path to the iCal/rss export path.
-      if (os_taxonomy_in_taxonomy_term_context($view)) {
+      $term_path = os_taxonomy_in_taxonomy_term_context($view);
+      if ($term_path) {
         // Get the current taxonomy term path from the $_GET['q'] and remove the
         // word calendar for prevent duplication of the word.
-        $path .= str_replace('calendar', '', $_GET['q']);
+        $path_parts = explode("/", $term_path);
+        $tid = array_pop($path_parts);
+        $path = str_replace("upcoming/all/", "term/$tid/", $path);
       }
 
       $links[$label] = array(
@@ -910,14 +915,16 @@ function os_events_views_query_alter($view, views_plugin_query_default $query) {
     // Alter the exported events according the current path.
     $menu = menu_get_item();
 
-    if ($menu['map'][2] == 'upcoming') {
-      $query->where[1]['conditions'][3]['field'] = "DATE_FORMAT(ADDTIME(field_data_field_date.field_date_value, SEC_TO_TIME(-18000)), '%Y-%m-%d\T%H:%i') >= :field_data_field_date_field_date_value";
-      $query->where[1]['conditions'][3]['value'][':field_data_field_date_field_date_value'] = date("Y-m-d\TH:i");
-      unset($query->where[1]['conditions'][4]);
-
-      if (!empty($menu['map'][3]) && !empty($menu['map'][4])) {
-        // We need to filter by the current taxonomy term filtering.
-        os_taxonomy_views_query_alter($view, $query);
+    // narrow down export to single event
+    if ($menu['map'][1] == "single" && is_numeric($menu['map'][2])) {
+      $query->add_where($query->options['group'], "node.nid", $menu['map'][2], "=");
+    }
+    else {
+      // We need to filter by the current taxonomy term filtering.
+      if ($menu['map'][1] == 'term' && is_numeric($menu['map'][2])) {
+        $alias = $query->add_table('field_data_og_vocabulary');
+        $query->set_distinct();
+        $query->add_where($query->options['group'], "$alias.og_vocabulary_target_id", $menu['map'][2], '=');
       }
     }
   }
