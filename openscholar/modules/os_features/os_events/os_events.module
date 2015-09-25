@@ -896,37 +896,32 @@ function os_events_views_query_alter($view, views_plugin_query_default $query) {
     return;
   }
 
-  if ($view->current_display == 'feed_3' && is_int($view->args[0])) {
-    $group_key = key($query->where);
-    $query->add_where($group_key, "node.nid", $view->args[0], '=');
-    return;
-  }
-
-  $format = array('year' => 'Y', 'month' => 'Y-m', 'week' => 'Y-\W', 'day' => 'Y-m-d');
-
-  // Determine the type of the displayed month by the argument from the address.
-  $_GET['type'] = isset($_GET['type']) ? $_GET['type'] : 'month';
-
-  // Determine the value of the calendar view mode(day, year, month) argument
-  // value.
-  $_GET[$_GET['type']] = isset($_GET[$_GET['type']]) ? $_GET[$_GET['type']] : date($format[$_GET['type']], time());
-
-  if ($view->current_display == 'feed_1') {
+  if ($view->current_display == 'feed_1' || $view->current_display == 'feed_2') {
     // Alter the exported events according the current path.
     $menu = menu_get_item();
 
     // narrow down export to single event
     if ($menu['map'][1] == "single" && is_numeric($menu['map'][2])) {
+      unset($query->where[1]['conditions'][4]);
       $query->add_where($query->options['group'], "node.nid", $menu['map'][2], "=");
     }
     else {
-      // We need to filter by the current taxonomy term filtering.
+      // filter by the current taxonomy term filtering.
       if ($menu['map'][1] == 'term' && is_numeric($menu['map'][2])) {
         $alias = $query->add_table('field_data_og_vocabulary');
         $query->set_distinct();
         $query->add_where($query->options['group'], "$alias.og_vocabulary_target_id", $menu['map'][2], '=');
       }
     }
+  }
+  else {
+    $format = array('year' => 'Y', 'month' => 'Y-m', 'week' => 'Y-\W', 'day' => 'Y-m-d');
+
+    // Determine the type of the displayed month by the argument from the address
+    $_GET['type'] = isset($_GET['type']) ? $_GET['type'] : 'month';
+
+    // Determine the value of the calendar view mode(day, year, month) argument value
+    $_GET[$_GET['type']] = isset($_GET[$_GET['type']]) ? $_GET[$_GET['type']] : date($format[$_GET['type']], time());
   }
 }
 
