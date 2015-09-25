@@ -41,8 +41,10 @@ Feature: Testing OpenScholar calendar page.
 
   @api @features_first
   Scenario: Testing the events export in iCal format.
-    Given I visit "john/calendar/export.ics"
+    Given I visit "john/calendar/upcoming/all/export.ics"
      Then I look for ".field_date.0@"
+      And I look for "SUMMARY:Registration event"
+      And I cannot look for "Testing event"
 
   @api @features_first
   Scenario: Test that site-wise calendar is disabled
@@ -55,8 +57,3 @@ Feature: Testing OpenScholar calendar page.
       And I click "Week"
       And I click "Navigate to next week"
      Then I should verify the next week calendar is displayed correctly
-
-  @api @features_first @now
-  Scenario: Test the week tab and
-    Given I visit "john/calendar/export.ics"
-     Then I cannot look for "-------- DATE: "

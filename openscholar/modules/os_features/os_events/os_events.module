@@ -896,6 +896,7 @@ function os_events_views_query_alter($view, views_plugin_query_default $query) {
     return;
   }
 
+	// is this a view a feed view?
   if ($view->current_display == 'feed_1' || $view->current_display == 'feed_2') {
     // Alter the exported events according the current path.
     $menu = menu_get_item();
