@@ -147,6 +147,7 @@
               lastUpdated: parseInt(Date.now/1000),
               data: [],
               entityType: entityType,
+              idProperty: idProp,
               matches: function(entity, entityType) {
                 if (entityType != this.entityType) {
                   return false;
@@ -299,6 +300,83 @@
       }
 
       return factory;
+    }])
+  .run(['$http, $q', function ($http, $q) {
+      var urlBase = restPath + '/:type/updates/:time';
+
+      var entityTypes = {},
+        updated = {};
+      for (var k in caches) {
+        var type = caches[k].entityType;
+        defers[k] = $q.defer();
+        entityTypes[type] = entityTypes[type] || [];
+        entityTypes[type].push(k);
+        updated[type] = Math.min(updated[type], parseInt(caches[k].lastUpdated));
+      }
+
+      for (var t in entityTypes) {
+        fetchUpdates(t, entityTypes[t], updates[t]);
+      }
+
+      function fetchUpdates(type, keys, timestamp, nextUrl) {
+        var url;
+        if (nextUrl == undefined) {
+          url = restPath.replace(':type:', type).replace(':time', timestamp)
+        }
+        else {
+          url = nextUrl;
+        }
+
+        $http.get(url).then(function (resp) {
+          for (var i = 0; i < keys.length; i++) {
+            if (page == 1) {
+              if (resp.allEntitiesAsOf) {
+                cache[keys[i]].data = [];
+                cache[keys[i]].lastUpdated = resp.allEntitiesAsOf;
+              }
+              else if (resp.updatesAsOf) {
+                cache[keys[i]].lastUpdated = resp.updateAsOf;
+              }
+            }
+          }
+
+          for (var i=0; i<resp.data.length; i++) {
+            // get all caches this entity exists in
+            var cacheKeys = getCacheKeysForEntity(type, cache[keys[0]].idProperty, resp.data[i])
+            // handle this entity for all caches it exists in
+            for (var k in cacheKeys) {
+              if (resp.data[i].status == 'deleted') {
+                cache[k].data.splice(cacheKeys[k], 1);
+              }
+              else {
+                cache[k].data.splice(cacheKeys[k], 1, resp.data[i]);
+              }
+            }
+            if (resp.data[i].status != 'deleted') {
+              // add new entities to the caches
+              for (var k in cache) {
+                if (cacheKeys[k] == undefined && cache[k].matches(resp.data[i])) {
+                  cache[k].data.push(resp.data[i]);
+                }
+              }
+            }
+          }
+
+          if (resp.next) {
+            var max = Math.ceil(resp.count/resp.data.length),
+              curr = resp.next.href.match(/page=([\d]+)/)[1];
+            for (var k in entityTypes[type]) {
+              defers[k].notify(("Loading $p% complete.").replace('$p', Math.round(((curr - 1) / max) * 100)));
+            }
+            fetchUpdates(type, keys, timestamp, resp.next);
+          }
+          else {
+            for (var k in entityTypes[type]) {
+              defers[k].resolve(angular.copy(cache[k].data));
+            }
+          }
+        })
+      }
     }]);
 
   /**
@@ -320,6 +398,7 @@
       for (var i = 0; i < cache[k].data.length; i++) {
         if (cache[k].data[i][idProp] == entity[idProp]) {
           keys[k] = i;
+          break;
         }
       }
     }
