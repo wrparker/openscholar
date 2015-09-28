@@ -301,21 +301,21 @@
 
       return factory;
     }])
-  .run(['$http, $q', function ($http, $q) {
+  .run(['$http', '$q', function ($http, $q) {
       var urlBase = restPath + '/:type/updates/:time';
 
       var entityTypes = {},
         updated = {};
-      for (var k in caches) {
-        var type = caches[k].entityType;
+      for (var k in cache) {
+        var type = cache[k].entityType;
         defers[k] = $q.defer();
         entityTypes[type] = entityTypes[type] || [];
         entityTypes[type].push(k);
-        updated[type] = Math.min(updated[type], parseInt(caches[k].lastUpdated));
+        updated[type] = Math.min(updated[type], parseInt(cache[k].lastUpdated));
       }
 
       for (var t in entityTypes) {
-        fetchUpdates(t, entityTypes[t], updates[t]);
+        fetchUpdates(t, entityTypes[t], updated[t]);
       }
 
       function fetchUpdates(type, keys, timestamp, nextUrl) {
@@ -372,7 +372,8 @@
           }
           else {
             for (var k in entityTypes[type]) {
-              defers[k].resolve(angular.copy(cache[k].data));
+              var key = entityTypes[type][k];
+              defers[key].resolve(angular.copy(cache[key].data));
             }
           }
         })
