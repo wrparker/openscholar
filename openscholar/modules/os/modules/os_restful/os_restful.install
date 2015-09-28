@@ -20,8 +20,6 @@ function os_restful_install() {
       'default' => 0,
     ));
   }
-
-  drupal_install_schema('os_restful');
 }
 
 function os_restful_schema() {
