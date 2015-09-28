@@ -346,6 +346,22 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @When /^I create an upcoming event with title "([^"]*)" in the site "([^"]*)"$/
+   */
+  public function iCreateAnUpcomingEventWithTitle($title, $vsite) {
+    $tomorrow = time() + (24 * 60 * 60);
+    $entity = $this->createEntity("event", $title);
+    $entity->field_date['und'][0]['value'] = date('Y-m-d H:i:s', $tomorrow);
+    $entity->field_date['und'][0]['value2'] = date('Y-m-d H:i:s', $tomorrow + 360);
+    $wrapper = entity_metadata_wrapper('node', $entity);
+
+    // Set the group ref
+    $nid = FeatureHelp::getNodeId($vsite);
+    $wrapper->{OG_AUDIENCE_FIELD}->set(array($nid));
+    entity_save('node', $entity);
+  }
+
+  /**
    * @When /^I create a new repeating event with title "([^"]*)" that repeats "([^"]*)" times$/
    */
   public function iCreateANewRepeatingEventWithTitle($title, $times) {
