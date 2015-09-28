@@ -53,7 +53,11 @@ body {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    font-style: normal;
 }
+
+
+
 #cssmenu {
     font-family: helvetica;
     color: #ffffff;
@@ -173,12 +177,22 @@ body {
     color: white;
     background: #999;
     z-index: 10;
-    width: 160px;
+    width: 155px;
     display: inline-block;
     font-family: helvetica;
     font-size: 14px;
     cursor: pointer;
 }
+
+#topRightMenu {
+    padding: 8px 0 8px 10px;
+    width: 145px;
+}
+
+.topRight_Menu a {
+    font-style: normal;
+}
+
 .topRight_subMenu {
     margin-top: 34px;
     font-size: 13px;
@@ -219,7 +233,7 @@ body {
     position: fixed;
     display: inline-block;
     margin-left: 5px;
-    margin-top: 3px;
+    margin-top: 6px;
 }
 a {
     cursor: pointer;
