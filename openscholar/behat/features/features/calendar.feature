@@ -71,9 +71,8 @@ Feature: Testing OpenScholar calendar page.
   @api @features_first
   Scenario: Testing the upcoming events export in iCal format.
     Given I visit "john/calendar/upcoming/all/export.ics"
-     Then I should find the text "SUMMARY:Registration event" in the file
       And I should find the text "SUMMARY:Halley's Comet" in the file
-      And I should not find the text "Testing event" in the file
+      And I should not find the text "John F. Kennedy birthday" in the file
 
   @api @features_first
   Scenario: Test that site-wise calendar is disabled
