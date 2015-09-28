@@ -9,7 +9,7 @@
     defers = {},
     cache = {};
 
-  angular.module('EntityService', [])
+  angular.module('EntityService', ['indexedDB'])
     .config(function () {
       restPath = Drupal.settings.paths.api;
     })
@@ -39,7 +39,7 @@
   /**
    * Service to maintain the list of files on a user's site
    */
-    .factory('EntityService', ['$rootScope', '$http', '$q', 'EntityConfig', function ($rootScope, $http, $q, config) {
+    .factory('EntityService', ['$rootScope', '$http', '$q', 'EntityConfig', '$indexedDB', function ($rootScope, $http, $q, config, $idb) {
       var factory = function (entityType, idProp) {
         var type = entityType;
         var ents;
@@ -74,6 +74,7 @@
             $http.get(resp.next.href, {pKey: key}).success(recursiveFetch);
           }
           else {
+            saveCache(key);
             defers[key].resolve(angular.copy(cache[key].data));
             $rootScope.$broadcast(eventName+'.fetch', angular.copy(cache[key].data), key);
           }
@@ -144,7 +145,8 @@
               defers[key].notify("Loading 0% complete.");
             }, 1);
             cache[key] = {
-              lastUpdated: parseInt(Date.now/1000),
+              key: key,
+              lastUpdated: parseInt(Date.now()/1000),
               data: [],
               entityType: entityType,
               idProperty: idProp,
@@ -223,6 +225,7 @@
                 var keys = getCacheKeysForEntity(type, idProp, entity);
                 for (var k in keys) {
                   cache[k].data[keys[k]] = entity;
+                  saveCache(k);
                 }
               });
           }
@@ -244,6 +247,7 @@
             var keys = getCacheKeysForEntity(type, idProp, entity);
             for (var k in keys) {
               cache[k].data.splice(keys[k], 1);
+              saveCache(k);
             }
           });
         }
@@ -299,24 +303,41 @@
         return diff;
       }
 
+      function saveCache(key) {
+        $idb.openStore('entities', function (store) {
+          cache[key].matches = cache[key].matches.toString();
+          store.insert(cache[key]);
+          cache[key].matches = eval('(' + cache[key].matches + ')');
+        });
+      }
+
       return factory;
     }])
-  .run(['$http', '$q', function ($http, $q) {
+  .run(['$http', '$q', '$indexedDB', function ($http, $q, $idb) {
       var urlBase = restPath + '/:type/updates/:time';
-
       var entityTypes = {},
         updated = {};
-      for (var k in cache) {
-        var type = cache[k].entityType;
-        defers[k] = $q.defer();
-        entityTypes[type] = entityTypes[type] || [];
-        entityTypes[type].push(k);
-        updated[type] = Math.min(updated[type], parseInt(cache[k].lastUpdated));
-      }
 
-      for (var t in entityTypes) {
-        fetchUpdates(t, entityTypes[t], updated[t]);
-      }
+      $idb.openStore('entities', function (store) {
+        store.getAll().then (function (caches) {
+
+          for (var i = 0; i < caches.length; i++) {
+            var key = caches[i].key;
+            cache[key] = caches[i];
+            cache[key].matches = eval('(' + cache[key].matches + ')');
+
+            var type = caches[i].entityType;
+            defers[key] = $q.defer();
+            entityTypes[type] = entityTypes[type] || [];
+            entityTypes[type].push(key);
+            updated[type] = Math.min(updated[type], parseInt(caches[i].lastUpdated));
+          }
+
+          for (var t in entityTypes) {
+            fetchUpdates(t, entityTypes[t], updated[t]);
+          }
+        })
+      })
 
       function fetchUpdates(type, keys, timestamp, nextUrl) {
         var url;
@@ -374,10 +395,23 @@
             for (var k in entityTypes[type]) {
               var key = entityTypes[type][k];
               defers[key].resolve(angular.copy(cache[key].data));
+              $idb.openStore('entities', function(store) {
+                cache[key].matches = cache[key].matches.toString();
+                store.insert(cache[key]);
+                cache[key].matches = eval('(' + cache[key].matches + ')');
+              });
             }
           }
         })
       }
+    }])
+    .config(['$indexedDBProvider', function ($idbp) {
+      $idbp
+        .connection('EntityService')
+        .upgradeDatabase(1, function (event, db, tx) {
+           var store = db.createObjectStore('entities', { keyPath: "key" });
+           store.createIndex('key_idx', 'key', {unique: true});
+        });
     }]);
 
   /**
@@ -420,6 +454,7 @@
 
       if (cache[k].matches(entity, type)) {
         cache[k].data.push(entity);
+        saveCache(k);
       }
     }
   }

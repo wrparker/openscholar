@@ -96,6 +96,9 @@ class OsRestfulEntityCacheableBase extends RestfulEntityBase {
     $addtl = array();
 
     $timestamp = str_replace('updates/', '', $path);
+    if ($timestamp == $path) {
+      $addtl['allEntitiesAsOf'] = REQUEST_TIME;
+    }
     if ($timestamp < strtotime('-30 days')) {
       $addtl['allEntitiesAsOf'] = REQUEST_TIME;
     }
