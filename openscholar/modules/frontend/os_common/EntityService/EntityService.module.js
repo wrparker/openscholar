@@ -7,7 +7,8 @@
     entities = {},
     fetched = {},
     defers = {},
-    cache = {};
+    cache = {},
+    lockPromise;
 
   angular.module('EntityService', ['indexedDB'])
     .config(function () {
@@ -64,7 +65,6 @@
           // convert the key into a params array
           for (var i=0; i<resp.data.length; i++) {
             cache[key].data.push(resp.data[i]);
-            ents[resp.data[i][idProp]] = resp.data[i];
           }
 
           if (resp.next) {
@@ -134,37 +134,46 @@
           }
 
           var key = entityType + ':' + JSON.stringify(params);
-
           if (!defers[key]) {
-            var url = restPath + '/' + entityType;
             defers[key] = $q.defer();
-            $http.get(url, {params: params, pKey: key})
-              .success(success)
-              .error(errorFunc);
-            setTimeout(function () {
-              defers[key].notify("Loading 0% complete.");
-            }, 1);
-            cache[key] = {
-              key: key,
-              lastUpdated: parseInt(Date.now()/1000),
-              data: [],
-              entityType: entityType,
-              idProperty: idProp,
-              matches: function(entity, entityType) {
-                if (entityType != this.entityType) {
-                  return false;
+          }
+
+          lockPromise.then(function (keys) {
+            if (!keys[key]) {
+              var url = restPath + '/' + entityType;
+              $http.get(url, {params: params, pKey: key})
+                .success(success)
+                .error(errorFunc);
+              setTimeout(function () {
+                defers[key].notify("Loading 0% complete.");
+              }, 1);
+              cache[key] = {
+                key: key,
+                lastUpdated: parseInt(Date.now()/1000),
+                data: [],
+                entityType: entityType,
+                idProperty: idProp,
+                matches: function(entity, entityType) {
+                  if (entityType != this.entityType) {
+                    return false;
+                  }
+                  return testEntity.call(this, entity, params);
                 }
-                return testEntity.call(this, entity, params);
               }
             }
-          }
+          });
+          defers[key].promise.then(function(data) {
+            for (var i = 0; i < data.length; i++) {
+              ents[data[i][idProp]] = data[i];
+            }
+          })
           return defers[key].promise;
         }
 
         this.get = function (id) {
-          var k = findByProp(idProp, id);
-          if (ents[k]) {
-            return ents[k];
+          var keys = getCacheKeysForId(entityType, idProp, id);
+          for (var k in keys) {
+            return cache[k].data[keys[k]];
           }
         };
 
@@ -316,22 +325,29 @@
   .run(['$http', '$q', '$indexedDB', function ($http, $q, $idb) {
       var urlBase = restPath + '/:type/updates/:time';
       var entityTypes = {},
-        updated = {};
+        updated = {},
+        lock = $q.defer();
+      lockPromise = lock.promise;
 
       $idb.openStore('entities', function (store) {
         store.getAll().then (function (caches) {
 
+          var keys = {};
           for (var i = 0; i < caches.length; i++) {
             var key = caches[i].key;
             cache[key] = caches[i];
             cache[key].matches = eval('(' + cache[key].matches + ')');
 
             var type = caches[i].entityType;
-            defers[key] = $q.defer();
+            keys[key] = true;
+            if (!defers[key]) {
+              defers[key] = $q.defer();
+            }
             entityTypes[type] = entityTypes[type] || [];
             entityTypes[type].push(key);
-            updated[type] = Math.min(updated[type], parseInt(caches[i].lastUpdated));
+            updated[type] = Math.min(parseInt(updated[type]) || Infinity, parseInt(caches[i].lastUpdated));
           }
+          lock.resolve(keys);
 
           for (var t in entityTypes) {
             fetchUpdates(t, entityTypes[t], updated[t]);
@@ -342,7 +358,7 @@
       function fetchUpdates(type, keys, timestamp, nextUrl) {
         var url;
         if (nextUrl == undefined) {
-          url = restPath.replace(':type:', type).replace(':time', timestamp)
+          url = urlBase.replace(':type', type).replace(':time', timestamp)
         }
         else {
           url = nextUrl;
@@ -350,41 +366,41 @@
 
         $http.get(url).then(function (resp) {
           for (var i = 0; i < keys.length; i++) {
-            if (page == 1) {
-              if (resp.allEntitiesAsOf) {
+            if (nextUrl == undefined) {
+              if (resp.data.allEntitiesAsOf) {
                 cache[keys[i]].data = [];
-                cache[keys[i]].lastUpdated = resp.allEntitiesAsOf;
+                cache[keys[i]].lastUpdated = resp.data.allEntitiesAsOf;
               }
-              else if (resp.updatesAsOf) {
-                cache[keys[i]].lastUpdated = resp.updateAsOf;
+              else if (resp.data.updatesAsOf) {
+                cache[keys[i]].lastUpdated = resp.data.updatesAsOf;
               }
             }
           }
 
-          for (var i=0; i<resp.data.length; i++) {
+          for (var i=0; i<resp.data.data.length; i++) {
             // get all caches this entity exists in
-            var cacheKeys = getCacheKeysForEntity(type, cache[keys[0]].idProperty, resp.data[i])
+            var cacheKeys = getCacheKeysForEntity(type, cache[keys[0]].idProperty, resp.data.data[i])
             // handle this entity for all caches it exists in
             for (var k in cacheKeys) {
-              if (resp.data[i].status == 'deleted') {
+              if (resp.data.data[i].status == 'deleted') {
                 cache[k].data.splice(cacheKeys[k], 1);
               }
               else {
-                cache[k].data.splice(cacheKeys[k], 1, resp.data[i]);
+                cache[k].data.splice(cacheKeys[k], 1, resp.data.data[i]);
               }
             }
-            if (resp.data[i].status != 'deleted') {
+            if (resp.data.data[i].status != 'deleted') {
               // add new entities to the caches
               for (var k in cache) {
-                if (cacheKeys[k] == undefined && cache[k].matches(resp.data[i])) {
-                  cache[k].data.push(resp.data[i]);
+                if (cacheKeys[k] == undefined && cache[k].matches(resp.data.data[i])) {
+                  cache[k].data.push(resp.data.data[i]);
                 }
               }
             }
           }
 
           if (resp.next) {
-            var max = Math.ceil(resp.count/resp.data.length),
+            var max = Math.ceil(resp.count/resp.data.data.length),
               curr = resp.next.href.match(/page=([\d]+)/)[1];
             for (var k in entityTypes[type]) {
               defers[k].notify(("Loading $p% complete.").replace('$p', Math.round(((curr - 1) / max) * 100)));
@@ -397,7 +413,7 @@
               defers[key].resolve(angular.copy(cache[key].data));
               $idb.openStore('entities', function(store) {
                 cache[key].matches = cache[key].matches.toString();
-                store.insert(cache[key]);
+                store.upsert(cache[key]);
                 cache[key].matches = eval('(' + cache[key].matches + ')');
               });
             }
@@ -432,6 +448,27 @@
       // TODO: Replace this for loop with comparator function invocation. Should be much faster once those work.
       for (var i = 0; i < cache[k].data.length; i++) {
         if (cache[k].data[i][idProp] == entity[idProp]) {
+          keys[k] = i;
+          break;
+        }
+      }
+    }
+    return keys;
+  }
+
+  /**
+   * Collect the keys an id exists in for every cache available
+   */
+  function getCacheKeysForId(type, idProp, id) {
+    var keys = {};
+    for (var k in cache) {
+      // Wrong type.
+      if (k.indexOf(type) == -1) {
+        continue;
+      }
+
+      for (var i = 0; i < cache[k].data.length; i++) {
+        if (cache[k].data[i][idProp] == id) {
           keys[k] = i;
           break;
         }

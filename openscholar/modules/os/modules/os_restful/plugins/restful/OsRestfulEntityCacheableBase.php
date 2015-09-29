@@ -94,6 +94,7 @@ class OsRestfulEntityCacheableBase extends RestfulEntityBase {
 
   public function additionalHateoas() {
     $addtl = array();
+    $path = $this->getPath();
 
     $timestamp = str_replace('updates/', '', $path);
     if ($timestamp == $path) {
