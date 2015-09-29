@@ -9,7 +9,7 @@
        uid = Drupal.settings.admin_panel.user;
     }).controller("AdminMenuController",['$scope', '$http', '$cookieStore', function ($scope, $http, $cookieStore) {
     
-      menu = 'admin_panel';
+      var menu = 'admin_panel';
       $scope.paths = paths;
       
       params = { cid: cid, uid: uid};
@@ -24,16 +24,16 @@
         }); 
       
       $scope.getListStyle = function(id) { 
-    	  menu_state = $cookieStore.get('osAdminMenuState');
-    	  if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
-    	    return {'display':'block'}; 
-    	  }
-    	  return {};
+    	var menu_state = $cookieStore.get('osAdminMenuState');
+    	if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
+    	  return {'display':'block'}; 
+    	}
+    	return {};
       };
      
     }]).directive('toggleOpen', ['$cookieStore', function($cookieStore) {
     
-      menu_state = $cookieStore.get('osAdminMenuState');
+      var menu_state = $cookieStore.get('osAdminMenuState');
       if (typeof(menu_state) == 'undefined') {
         menu_state = {'main': false};  
       }
@@ -82,7 +82,7 @@
       }
       
     }]).directive('leftMenu', ['$cookieStore', function($cookieStore) {
-      menu_state = $cookieStore.get('osAdminMenuState');
+      var menu_state = $cookieStore.get('osAdminMenuState');
       if (typeof(menu_state) == 'undefined') {
         menu_state = {'main': false};  
       }
