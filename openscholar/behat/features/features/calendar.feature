@@ -87,17 +87,17 @@ Feature: Testing OpenScholar calendar page.
   @api @features_first
   Scenario: Testing the Past Events list
     Given I visit "john/calendar/past_events"
-     Then I should see the link "Testing event" under "view-os-events"
+     Then I should see the link "John F. Kennedy birthday" under "view-os-events"
       And I should not see the link "Export" under "view-os-events"
       
   @api @features_first
   Scenario: Testing the Upcoming Events list
     Given I visit "john/calendar/upcoming"
      Then I should see the link "Someone" under "view-os-events"
-      And I should not see the link "Testing event" under "view-os-events"
+      And I should not see the link "John F. Kennedy birthday" under "view-os-events"
      When I click on link "iCal" under "content"
      Then I should find the text "SUMMARY:Halleys Comet" in the file
-      And I should not find the text "Testing event" in the file
+      And I should not find the text "John F. Kennedy birthday" in the file
       
   @api @features_first
   Scenario: Testing the Upcoming Events list limited by term
