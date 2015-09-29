@@ -2316,7 +2316,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iDropFileOnto($file, $area) {
     // Make sure the element we want exists on the page.
-    $xpath = "//*[@ng-file-drop and count(./preceding-sibling::span[contains(text(), '$area')])]";
+    $xpath = "//*[@ng-file-drop and count(./descendant::span[contains(text(), '$area')])]";
     if (!($elem = $this->getSession()->getPage()->find('xpath', $xpath))) {
       throw new Exception("No droppable region with text \"$area\" found.");
     }
@@ -2365,7 +2365,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iDropFilesOnto($files, $area) {
     // Make sure the element we want exists on the page.
-    $xpath = "//*[@ng-file-drop and count(./preceding-sibling::span[contains(text(), '$area')])]";
+    $xpath = "//*[@ng-file-drop and count(./descendant::span[contains(text(), '$area')])]";
     if (!($elem = $this->getSession()->getPage()->find('xpath', $xpath))) {
       throw new Exception("No droppable region with text \"$area\" found.");
     }
@@ -2825,4 +2825,22 @@ class FeatureContext extends DrupalContext {
       throw new Exception(sprintf("List of registrants is exported wrong."));
     }
   }
+
+  /**
+   * @AfterStep
+   */
+   public function takeScreenshotAfterFailedStep($event)
+   {
+     if ($event->getResult() == 4) {
+       if ($this->getSession()->getDriver() instanceof
+       \Behat\Mink\Driver\Selenium2Driver) {
+         $stepText = $event->getStep()->getText();
+         $fileTitle = preg_replace("#[^a-zA-Z0-9\._-]#", '', $stepText);
+         $fileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR . $fileTitle . '.png';
+         $screenshot = $this->getSession()->getDriver()->getScreenshot();
+         file_put_contents($fileName, $screenshot);
+         print "Screenshot for '{$stepText}' placed in {$fileName}\n";
+       }
+     }
+ }
 }

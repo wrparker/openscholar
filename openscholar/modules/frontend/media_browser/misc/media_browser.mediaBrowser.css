@@ -244,15 +244,16 @@ button[ng-disabled="!pager.canPage(-1)"] {
     color: #215990;
     cursor: pointer;
 }
+
+.fe-replace-wrapper .description {
+    display: inline-block;
+    margin-left: 10px;
+}
+
 #file-delete-section.open {
     display: block;
 }
-div[file-edit] .fe-warning ~ .control {
-    display: none;
-}
-div[file-edit] .fe-warning.ng-hide ~ .control {
-    display: block;
-}
+
 .tw-widget h4 {
     font-size: .97em;
 }

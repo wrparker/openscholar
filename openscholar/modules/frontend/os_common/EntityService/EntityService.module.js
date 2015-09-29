@@ -56,15 +56,12 @@
 
         var success = function(resp, status, headers, config) {
           var key = config.pKey;
-          cache[key] = {
-            data: [],
-            fetched: Date.now()
-          };
           recursiveFetch(resp, status, headers, config);
         }
 
         function recursiveFetch(resp, status, headers, config) {
           var key = config.pKey;
+          // convert the key into a params array
           for (var i=0; i<resp.data.length; i++) {
             cache[key].data.push(resp.data[i]);
             ents[resp.data[i][idProp]] = resp.data[i];
@@ -78,7 +75,6 @@
           }
           else {
             defers[key].resolve(angular.copy(cache[key].data));
-            delete defers[key];
             $rootScope.$broadcast(eventName+'.fetch', angular.copy(cache[key].data), key);
           }
         }
@@ -101,6 +97,24 @@
               return i;
             }
           }
+        }
+
+        this.fetchOne = function (id) {
+          var cKey = entityType + ':' + id;
+
+          if (!defers[cKey]) {
+            var url = restPath + '/' + entityType + '/' + id;
+            defers[cKey] = $q.defer();
+            $http.get(url, {pKey: cKey})
+              .then(function (response) {
+                ents[id] = response.data.data[0];
+                defers[cKey].resolve(angular.copy(response.data.data[0]));
+              },
+              function (response) {
+                defers[cKey].reject(response);
+              });
+          }
+          return defers[cKey].promise;
         }
 
         this.fetch = function (params) {
@@ -128,13 +142,20 @@
               .error(errorFunc);
             setTimeout(function () {
               defers[key].notify("Loading 0% complete.");
-            }, 0);
+            }, 1);
+            cache[key] = {
+              lastUpdated: parseInt(Date.now/1000),
+              data: [],
+              entityType: entityType,
+              matches: function(entity, entityType) {
+                if (entityType != this.entityType) {
+                  return false;
+                }
+                return testEntity.call(this, entity, params);
+              }
+            }
           }
           return defers[key].promise;
-        }
-
-        this.getAll = function () {
-          return ents;
         }
 
         this.get = function (id) {
@@ -170,7 +191,7 @@
               var entity = resp.data[0];
               ents[entity[idProp]] = entity;
 
-              // TODO: Use generated comparator function to add to caches
+              addToCaches(entityType, idProp, entity);
 
               $rootScope.$broadcast(eventName + '.add', entity);
             })
@@ -206,9 +227,7 @@
           }
           else {
             var defer = $q.defer();
-            setTimeout(function () {
-              defer.resolve(false);
-            }, 1);
+            defer.resolve({detail: "No data sent with request."});
             return defer.promise;
           }
         };
@@ -232,7 +251,35 @@
         // used for entities that are added outside of this service
         this.register = function (entity) {
           ents[entity[idProp]] = entity;
-          // TODO: Run through generated comparators and add to caches
+
+          addToCaches(entityType, idProp, entity);
+        }
+
+        /**
+         * Test entity fetched with a set of params to see if it matches a cache
+         *
+         * Proper usage:
+         *  this function should use the cache object as it's 'this', by using the call() method.
+         *  Ex. testEntity.call(this, entity, params);
+         */
+        function testEntity(entity, params) {
+          for (var k in params) {
+            if (entity[k] == undefined) {
+              // this is not something that comes returned on the object
+              // try other things
+              switch (k) {
+                case 'vsite':
+                  if (params[k] != vsite) {
+                    return false;
+                  }
+                  break;
+              }
+            }
+            else if (entity[k] != params[k]) {
+              return false;
+            }
+          }
+          return true;
         }
       };
 
@@ -277,6 +324,24 @@
       }
     }
     return keys;
+  }
+
+  /**
+   * Add an entity to all caches it matches
+   */
+  function addToCaches(type, idProp, entity) {
+    var keys = getCacheKeysForEntity(type, idProp, entity);
+
+    for (var k in cache) {
+      if (keys[k] != undefined) {
+        cache[k].data[keys[k]] = entity;
+        continue;
+      }
+
+      if (cache[k].matches(entity, type)) {
+        cache[k].data.push(entity);
+      }
+    }
   }
 
   /*

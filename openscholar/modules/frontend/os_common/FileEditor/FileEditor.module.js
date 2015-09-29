@@ -5,7 +5,12 @@
     config(function () {
       libraryPath = Drupal.settings.paths.FileEditor;
     }).
-    directive('fileEdit', ['EntityService', '$http', '$timeout', '$filter', function (EntityService, $http, $timeout, $filter) {
+    constant("FILEEDITOR_RESPONSES", {
+      SAVED: "saved",
+      NO_CHANGES: "no changes",
+      CANCELED: "canceled"
+    }).
+    directive('fileEdit', ['EntityService', '$http', '$timeout', '$filter', 'FILEEDITOR_RESPONSES', function (EntityService, $http, $timeout, $filter, FER) {
       return {
         scope: {
           file :  '=',
@@ -107,11 +112,14 @@
 
           scope.save = function () {
             fileService.edit(scope.file, ['preview', 'url']).then(function(result) {
-                if (result) {
-                  scope.onClose({saved: true});
+                if (result.data) {
+                  scope.onClose({saved: FER.SAVED});
+                }
+                else if (result.detail) {
+                  scope.onClose({saved: FER.NO_CHANGES})
                 }
                 else {
-                  scope.onClose({saved: false});
+                  scope.onClose({saved: FER.CANCELED})
                 }
             },
             function(result) {
@@ -121,7 +129,7 @@
           };
 
           scope.cancel = function () {
-            scope.onClose({saved: false});
+            scope.onClose({saved: FER.CANCELED});
           }
         }
       }

@@ -63,7 +63,7 @@ $index = 0;
     </div>
   </div>
 </div>
-<div id="event-popover-<?php print $item->id; ?>" style="display: none;">
+<div id="event-popover-<?php print $item->id . '-' . $item->popover_fields['event_delta']; ?>" style="display: none;">
   <div class="event-title"><?php print $item->popover_fields['event_title']; ?></div>
   <div class="event-date"><?php print $item->popover_fields['event_date']; ?></div>
   <?php if (!empty($item->popover_fields['event_location'])) : ?>
