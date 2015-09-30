@@ -3,12 +3,18 @@
 
     angular.module('UserPanel', ['AdminPanel'])
     .config(function (){
-       rootPath = Drupal.settings.paths.adminPanelModuleRoot;
-       restPath = Drupal.settings.paths.api;
-       vsite = Drupal.settings.spaces.id;
-       user_data = Drupal.settings.user_panel.user;
-       paths = Drupal.settings.paths;
-       notify_settings = Drupal.settings.os_notifications;
+       var rootPath = Drupal.settings.paths.adminPanelModuleRoot;
+       var restPath = Drupal.settings.paths.api;
+       
+       if(typeof(Drupal.settings.spaces) == 'undefined') {
+    	 var vsite = false;   
+       } else {	   
+         var vsite = Drupal.settings.spaces.id;
+       }
+       
+       var user_data = Drupal.settings.user_panel.user;
+       var paths = Drupal.settings.paths;
+       var notify_settings = Drupal.settings.os_notifications;
     }).controller("UserMenuController",['$scope', '$http', function ($scope, $http) {
     
       $scope.user = user_data;
