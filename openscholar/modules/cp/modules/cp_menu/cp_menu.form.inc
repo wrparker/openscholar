@@ -200,7 +200,7 @@ function theme_cp_menu_table($variables){
       $extra_classes[] = 'hidden';
     }
 		
-		$remove_link_text = in_array($d,$revert) ? 'Reset' : 'Remove';
+    $remove_link_text = in_array($d,$revert) ? 'Reset' : 'Remove';
 		
     $rows[] = array(
       'data' => array(
@@ -420,7 +420,7 @@ function cp_menu_remove_menu($ajax, $menu) {
       }      
     }
   }	 
-	echo ajax_render($output);
+  echo ajax_render($output);
   drupal_exit();
 }
 
@@ -432,7 +432,7 @@ function cp_menu_remove_confirm($form, &$form_state) {
     'secondary-menu',
   ); 
 
-	$remove_link_text = in_array($menu,$revert) ? 'reset' : 'remove';
+  $remove_link_text = in_array($menu,$revert) ? 'reset' : 'remove';
 	
   $form = confirm_form($form, t('Are you sure you want to ' . $remove_link_text . ' the menu: @menu?', array('@menu' => $menu)));
 
