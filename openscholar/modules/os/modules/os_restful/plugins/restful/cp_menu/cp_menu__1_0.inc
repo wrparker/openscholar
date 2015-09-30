@@ -10,5 +10,6 @@ $plugin = array(
   'hook_menu' => TRUE,
 //  'render_cache' => array(
 //    'render' => TRUE,
+//    'granularity' => DRUPAL_CACHE_PER_USER,
 //  ),
 );

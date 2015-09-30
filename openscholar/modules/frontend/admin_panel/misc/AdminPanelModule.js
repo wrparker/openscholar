@@ -3,6 +3,7 @@
   var vsite;
   var cid;
   var uid;
+  var morphButton;
 
     angular.module('AdminPanel', [ 'os-auth', 'ngCookies'])
     .config(function (){
@@ -25,6 +26,10 @@
       $http({method: 'get', url: url, params: params, cache: true}).
         then(function(response) {
           $scope.admin_panel = response.data.data;
+          var menu_state = $cookieStore.get('osAdminMenuState');
+          if (typeof(menu_state.main) !== 'undefined' && menu_state.main) {
+        	morphButton.toggle();  
+          }
         }); 
       
       $scope.getListStyle = function(id) { 
@@ -95,7 +100,7 @@
        templateUrl: paths.adminPanelModuleRoot+'/templates/admin_menu.html?vers='+Drupal.settings.version.adminPanel,
        controller: 'AdminMenuController',
        link: function(scope, element, attrs) {
-      	  button = new UIMorphingButton(element[0], {
+    	  morphButton = new UIMorphingButton(element[0], {
       			closeEl : '.icon-close',
       			onBeforeOpen : function() {
       				// push main admin_panel
@@ -119,9 +124,6 @@
           	      });
       			}
       		});
-      	 if (menu_state.main) {
-      	   button.toggle();
-      	 }
   	   }
      };
    }]).directive('addLocation', function() {
