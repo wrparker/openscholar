@@ -311,7 +311,6 @@ function cp_menu_add_menu($ajax) {
     if ($form_state['executed']) {
       $output[] = ctools_modal_command_dismiss();
       if (isset($form_state['values']['op']) && $form_state['values']['op'] == t('Save')) {
-        ctools_include('ajax');
         $output[] = array('command' => 'os_modal_parent_refresh');
       }
     }
