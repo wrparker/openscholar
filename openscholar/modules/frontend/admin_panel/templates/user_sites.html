@@ -1,9 +1,13 @@
 <a href="#" ng-click="showSites = ! showSites">My Sites</a>
-<div ng-repeat="(key, site) in site_data" ng-show="showSites">
-  <!-- Dan add some popout markup to the div and basic skeliton and I can make the links all correct? -->
-  <b>{{ site.title }}</b>
-  <span ng-show="site.owner">Owned</span>
-  <a ng-show="site.subsite_access" href="/site/register?parent={{ site.id }}">Add subsite</a>
-  <a ng-show="site.delete_access" href="/node/{{ site.id }}/delete">Delete</a>
-  <a ng-show="! site.delete_access" href="/os/vsite/delete/{{ site.id }}">Delete</a>
+<div ng-show="showSites" ng-repeat="own in [true, false]">
+  <h3 ng-show="own">My Sites</h3>
+  <h3 ng-show="!own">Other Sites</h3>
+  <div ng-repeat="(key, site) in site_data | filter:{owner: true}:strict" >
+    <!-- Dan add some popout markup to the div and basic skeliton and I can make the links all correct? -->
+    <b>{{ site.title }}</b>
+    <span ng-show="site.owner">Owned</span>
+    <a ng-show="site.subsite_access" href="/site/register?parent={{ site.id }}">Add subsite</a>
+    <a ng-show="site.delete_access" href="/node/{{ site.id }}/delete">Delete</a>
+    <a ng-show="! site.delete_access" href="/os/vsite/delete/{{ site.id }}">Delete</a>
+  </div>
 </div>
