@@ -1682,7 +1682,6 @@ function os_events_mail($key, &$message, $params) {
   $message['body'] = array();
   $message['body'][] = t("Hello @user-name", $params);
   $message['body'][] = t("You have successfully registered for @title (@url).", $params);
-  drupal_set_message($message['body'][1]);
 }
 
 /**
