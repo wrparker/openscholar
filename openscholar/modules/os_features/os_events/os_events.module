@@ -1633,12 +1633,12 @@ function os_events_entity_insert($entity, $type) {
   $wrapper = entity_metadata_Wrapper($type, $entity);
   $node = node_load($entity->entity_id);
 
-  // Obtaining the 5th argument (delta) of the Ajax URL.
-  $delta = arg(4);
+  // Obtaining menu router item of the Ajax URL.
+  $menu_item = menu_get_item();
 
-  // If delta argument is present in URL, then query option will be available in url parameter.
-  if(isset($delta) && !empty($delta)) {
-    $query = array('delta' => $delta);
+  // If delta argument is present in URL, then query option will be available in url parameter otherwise no delta parameter will be available in email link.
+  if ($menu_item['path'] == "os_events/%/registration/%" && isset($menu_item['original_map'][4]) && !empty($menu_item['original_map'][4])) {
+    $query = array('delta' => $menu_item['original_map'][4]);
   } else {
     $query = array();
   }
@@ -1682,6 +1682,7 @@ function os_events_mail($key, &$message, $params) {
   $message['body'] = array();
   $message['body'][] = t("Hello @user-name", $params);
   $message['body'][] = t("You have successfully registered for @title (@url).", $params);
+  drupal_set_message($message['body'][1]);
 }
 
 /**
