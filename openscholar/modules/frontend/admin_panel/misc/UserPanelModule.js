@@ -3,25 +3,39 @@
 
     angular.module('UserPanel', ['AdminPanel'])
     .config(function (){
-       var rootPath = Drupal.settings.paths.adminPanelModuleRoot;
-       var restPath = Drupal.settings.paths.api;
+       var rootPath;
+       var restPath;
+       var vsite;
+       var notify_settings;
+       var user_data;
+       var paths;
+       
+       rootPath = Drupal.settings.paths.adminPanelModuleRoot;
+       restPath = Drupal.settings.paths.api;
        
        if(typeof(Drupal.settings.spaces) == 'undefined') {
-    	 var vsite = false;   
+    	 vsite = false;   
        } else {	   
-         var vsite = Drupal.settings.spaces.id;
+         vsite = Drupal.settings.spaces.id;
        }
        
-       var user_data = Drupal.settings.user_panel.user;
-       var paths = Drupal.settings.paths;
-       var notify_settings = Drupal.settings.os_notifications;
+       user_data = Drupal.settings.user_panel.user;
+       paths = Drupal.settings.paths;
+       notify_settings = Drupal.settings.os_notifications;
     }).controller("UserMenuController",['$scope', '$http', function ($scope, $http) {
     
       $scope.user = user_data;
       $scope.vsite = { id: vsite };
       $scope.paths = paths;
      
-    }]).directive('rightMenu', function() {
+    }]).controller("UserSitesController",['$scope', '$http', function ($scope, $http) {
+        
+        var url = paths.api + '/user/' + user_data.uid;
+        $http({method: 'get', url: url}).
+          then(function(response) {
+            $scope.site_data = response.data.data.og_user_node;
+          });
+      }]).directive('rightMenu', function() {
       return {
        templateUrl: rootPath+'/templates/user_menu.html?vers='+Drupal.settings.version.userPanel,
        controller: 'UserMenuController',
@@ -34,6 +48,13 @@
 	      element.attr('href', url + ((url.indexOf('?') == -1) ? '?' : '&') + 'destination=' + encodeURIComponent(location.href));
   	    },
 	  }
+    }).directive('loadMySites', function() {
+    	 
+        return {
+            templateUrl: rootPath+'/templates/user_sites.html?vers='+Drupal.settings.version.userPanel,
+            controller: 'UserSitesController',
+          };
+       
     }).directive('notificationCheck', function() {
       //check for google and hopscotch
       if (typeof google == 'undefined' || typeof hopscotch == 'undefined') {

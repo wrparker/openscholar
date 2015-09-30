@@ -30,8 +30,8 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
       ),
     );
 
-    $public_fields[OG_AUDIENCE_FIELD] = array(
-      'property' => OG_AUDIENCE_FIELD,
+    $public_fields['og_user_node'] = array(
+      'property' => 'og_user_node',
       'process_callbacks' => array(
         array($this, 'vsiteFieldDisplay'),
       ),
@@ -73,9 +73,18 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
    * Display the id and the title of the group.
    */
   public function vsiteFieldDisplay($values) {
+    $account = $this->getAccount();
+    ctools_include('subsite', 'vsite');
+
     $groups = array();
     foreach ($values as $value) {
-      $groups[] = array('title' => $value->title, 'id' => $value->nid);
+      $groups[] = array(
+        'title' => $value->title,
+        'id' => $value->nid,
+        'owner' => ($value->uid == $account->uid),
+        'subsite_access' => vsite_subsite_access('create', $value),
+        'delete_access' => node_access('delete', $value),
+      );
     }
     return $groups;
   }
