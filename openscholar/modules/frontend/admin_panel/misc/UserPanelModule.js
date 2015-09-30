@@ -1,14 +1,13 @@
 (function () {
-  var rootPath;
+	var rootPath;
+    var restPath;
+    var vsite;
+    var notify_settings;
+    var user_data;
+    var paths;
 
     angular.module('UserPanel', ['AdminPanel'])
     .config(function (){
-       var rootPath;
-       var restPath;
-       var vsite;
-       var notify_settings;
-       var user_data;
-       var paths;
        
        rootPath = Drupal.settings.paths.adminPanelModuleRoot;
        restPath = Drupal.settings.paths.api;
@@ -30,10 +29,14 @@
      
     }]).controller("UserSitesController",['$scope', '$http', function ($scope, $http) {
         
-        var url = paths.api + '/user/' + user_data.uid;
+        var url = paths.api + '/users/' + user_data.uid;
         $http({method: 'get', url: url}).
           then(function(response) {
-            $scope.site_data = response.data.data.og_user_node;
+        	if(typeof(response.data.data[0].og_user_node) == 'undefined') {
+        	  $scope.site_data = {};
+        	} else {
+              $scope.site_data = response.data.data[0].og_user_node;
+        	}
           });
       }]).directive('rightMenu', function() {
       return {

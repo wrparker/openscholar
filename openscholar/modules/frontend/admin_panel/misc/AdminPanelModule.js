@@ -1,13 +1,12 @@
 (function ($) {
-  var rootPath;
+  var paths;
+  var vsite;
+  var cid;
+  var uid;
 
     angular.module('AdminPanel', [ 'os-auth', 'ngCookies'])
     .config(function (){
-       var paths;
-       var vsite;
-       var cid;
-       var uid;
-
+       
        paths = Drupal.settings.paths
        vsite = Drupal.settings.spaces.id;
        cid = Drupal.settings.admin_panel.cid;
