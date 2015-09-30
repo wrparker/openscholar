@@ -414,7 +414,7 @@ function cp_menu_remove_menu($ajax, $menu) {
   $output = ctools_modal_form_wrapper('cp_menu_remove_confirm', $form_state);
   if ($form_state['executed']) {
     if (isset($form_state['values']['op'])) {
-			$output[] = ctools_modal_command_dismiss();
+	$output[] = ctools_modal_command_dismiss();
       if ($form_state['values']['op'] == 'Confirm') {
         $output[] = array('command' => 'os_modal_parent_refresh');
       }      
