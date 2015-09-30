@@ -55,7 +55,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
    */
   public function access() {
     $account = $this->getAccount();
-    return user_access('adminsiter site configuration', $account);
+    return user_access('adminsiter site configuration', $account) || $this->checkGroupAccess();;
   }
 
   /**

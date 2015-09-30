@@ -30,12 +30,17 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
       ),
     );
 
-    $public_fields['og_user_node'] = array(
-      'property' => 'og_user_node',
-      'process_callbacks' => array(
-        array($this, 'vsiteFieldDisplay'),
-      ),
-    );
+    $ga_field = og_get_group_audience_fields('user','user','node');
+    unset($ga_field['vsite_support_expire']);
+
+    if(count($ga_field)) {
+      $public_fields['og_user_node'] = array(
+        'property' => key($ga_field),
+        'process_callbacks' => array(
+          array($this, 'vsiteFieldDisplay'),
+        ),
+      );
+    }
 
     return $public_fields;
   }
