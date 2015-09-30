@@ -12,7 +12,6 @@ body {
     height: 100%;
     position: relative;
 }
-
 .page-cp #branding,
 .page-cp #page,
 .page_wrap {
@@ -21,21 +20,32 @@ body {
     -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.7, 0, 0.3, 1) 0.1s;
     transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1) 0.1s;
 }
-
+.page-cp #branding {
+    position: relative;
+    margin-left: 20px;
+}
+.page-cp #branding.pushed {
+    margin-left: 0;
+}
 .no-js .page-cp #branding,
 .no-js .page-cp #page,
 .no-js .page_wrap {
     width: calc(100% - 300px);
     right: 0;
 }
-
-.page-cp #branding.pushed, 
+.page-cp #branding.pushed,
 .page-cp #page.pushed,
 .pushed.page_wrap {
     -webkit-transition-duration: 0.5s;
     transition-duration: 0.5s;
     -webkit-transform: translateX(175px);
     transform: translateX(175px);
+}
+.page-cp #page {
+    margin-left: 60px;
+}
+.page-cp #page.pushed {
+    margin-left: 40px;
 }
 .admin-menu-homeicon {
     position: absolute;
@@ -64,9 +74,6 @@ body {
     box-sizing: border-box;
     font-style: normal;
 }
-
-
-
 #cssmenu {
     font-family: helvetica;
     color: #ffffff;
@@ -192,16 +199,13 @@ body {
     font-size: 14px;
     cursor: pointer;
 }
-
 #topRightMenu {
     padding: 8px 0 8px 10px;
     width: 145px;
 }
-
 .topRight_Menu a {
     font-style: normal;
 }
-
 .topRight_subMenu {
     margin-top: 34px;
     font-size: 13px;
@@ -209,20 +213,16 @@ body {
     padding: 0;
     border-top: 1px solid #FFF;
 }
-
 .topRight_subMenu ul {
     margin: 0;
-    list-style-type:none;
+    list-style-type: none;
 }
-
 .topRight_subMenu li {
-   padding: 5px 10px;
+    padding: 5px 10px;
 }
-
 .topRight_subMenu li a {
     color: #FFF;
 }
-
 .slate {
     background: #6C7A89;
 }
