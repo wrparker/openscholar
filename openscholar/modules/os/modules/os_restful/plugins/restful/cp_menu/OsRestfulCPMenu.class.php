@@ -274,11 +274,11 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
               'type' => 'link',
               'href' => 'cp/build/layout'
             ),
-            'theme_settings' => array(
-              'label' => 'Theme Settings',
-              'type' => 'link',
-              'href' => 'dev/null'
-            ),
+//            'theme_settings' => array(
+//              'label' => 'Theme Settings',
+//              'type' => 'link',
+//              'href' => 'dev/null'
+//            ),
           ),
       ),
       'settings' => array(
