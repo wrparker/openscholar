@@ -426,7 +426,7 @@ function cp_menu_remove_menu($ajax, $menu) {
 function cp_menu_remove_confirm($form, &$form_state) {
   $menu = $form_state['menu'];
 	
-	$revert = array(
+  $revert = array(
     'primary-menu',
     'secondary-menu',
   ); 
