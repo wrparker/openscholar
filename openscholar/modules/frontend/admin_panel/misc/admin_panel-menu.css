@@ -12,16 +12,25 @@ body {
     height: 100%;
     position: relative;
 }
+
+.page-cp #branding,
+.page-cp #page,
 .page_wrap {
     width: 100%;
     position: absolute;
     -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.7, 0, 0.3, 1) 0.1s;
     transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1) 0.1s;
 }
+
+.no-js .page-cp #branding,
+.no-js .page-cp #page,
 .no-js .page_wrap {
     width: calc(100% - 300px);
     right: 0;
 }
+
+.page-cp #branding.pushed, 
+.page-cp #page.pushed,
 .pushed.page_wrap {
     -webkit-transition-duration: 0.5s;
     transition-duration: 0.5s;
