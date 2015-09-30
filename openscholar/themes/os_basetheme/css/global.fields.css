@@ -159,3 +159,22 @@
 	max-width: 275px;
 	vertical-align: top;
 }
+
+/* Events sign up confirmation registrant screen */
+.registration-event-signup-simple .field-label {
+	width:125px;
+	display: inline-block;
+}
+
+.registration-event-signup-simple .field-name-field-department .field-items,
+.registration-event-signup-simple .field-name-field-full-name .field-items {
+display:inline-block;
+}
+
+.registration-event-signup-simple .field-label-inline:nth-child(6),
+.registration-event-signup-simple .field-label-inline:nth-child(7),
+.registration-event-signup-simple .field-label-inline:nth-child(8),
+.registration-event-signup-simple .field-name-field-repeating-event-date {
+	display:none;
+}
+
