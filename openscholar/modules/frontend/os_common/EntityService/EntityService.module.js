@@ -8,6 +8,7 @@
     fetched = {},
     defers = {},
     cache = {},
+    weSaved = {},
     lockPromise;
 
   angular.module('EntityService', ['indexedDB'])
@@ -236,6 +237,15 @@
                   cache[k].data[keys[k]] = entity;
                   saveCache(k);
                 }
+              })
+              .then(angular.noOp, function (resp) {
+                switch (resp.code) {
+                  case 409:
+                    console.log('conflict');
+                    break;
+                  case 410:
+                    console.log('resource gone');
+                }
               });
           }
           else {
@@ -322,38 +332,63 @@
 
       return factory;
     }])
-  .run(['$http', '$q', '$indexedDB', function ($http, $q, $idb) {
-      var urlBase = restPath + '/:type/updates/:time';
+  .run(['EntityCacheUpdater', '$q', '$indexedDB', function (ECU, $q, $idb) {
       var entityTypes = {},
-        updated = {},
         lock = $q.defer();
       lockPromise = lock.promise;
 
       $idb.openStore('entities', function (store) {
         store.getAll().then (function (caches) {
-
           var keys = {};
           for (var i = 0; i < caches.length; i++) {
-            var key = caches[i].key;
+            var key = caches[i].key,
+              type = caches[i].entityType;;
+            keys[key] = key;
             cache[key] = caches[i];
             cache[key].matches = eval('(' + cache[key].matches + ')');
-
-            var type = caches[i].entityType;
-            keys[key] = true;
             if (!defers[key]) {
               defers[key] = $q.defer();
             }
-            entityTypes[type] = entityTypes[type] || [];
-            entityTypes[type].push(key);
-            updated[type] = Math.min(parseInt(updated[type]) || Infinity, parseInt(caches[i].lastUpdated));
+            entityTypes[type] = true;
           }
           lock.resolve(keys);
 
           for (var t in entityTypes) {
-            fetchUpdates(t, entityTypes[t], updated[t]);
+            ECU.update(t);
           }
         })
       })
+    }])
+    .config(['$indexedDBProvider', function ($idbp) {
+      $idbp
+        .connection('EntityService')
+        .upgradeDatabase(1, function (event, db, tx) {
+           var store = db.createObjectStore('entities', { keyPath: "key" });
+           store.createIndex('key_idx', 'key', {unique: true});
+        });
+    }])
+  .service('EntityCacheUpdater', ['$http', '$q', '$indexedDB', function ($http, $q, $idb) {
+      var urlBase = restPath + '/:type/updates/:time';
+
+      function update(updateType) {
+        var keys = {},
+          timestamps = {};
+        for (var key in cache) {
+          var type = cache[key].entityType;
+          if (updateType == undefined) {
+            keys[type] = keys[type] || [];
+            keys[type].push(key);
+          }
+          else if (updateType == type) {
+            keys[type] = keys[type] || [];
+            keys[type].push(key);
+          }
+          timestamps[type] = timestamps[type] || cache[key].lastUpdated;
+        }
+        for (var t in keys) {
+          fetchUpdates(t, keys[t], timestamps[t]);
+        }
+      }
 
       function fetchUpdates(type, keys, timestamp, nextUrl) {
         var url;
@@ -402,14 +437,15 @@
           if (resp.next) {
             var max = Math.ceil(resp.count/resp.data.data.length),
               curr = resp.next.href.match(/page=([\d]+)/)[1];
-            for (var k in entityTypes[type]) {
-              defers[k].notify(("Loading $p% complete.").replace('$p', Math.round(((curr - 1) / max) * 100)));
+            for (var i = 0; i < keys.length; i++) {
+              var k = keys[i];
+              defers[k].notify(("Loading updates: $p% complete.").replace('$p', Math.round(((curr - 1) / max) * 100)));
             }
             fetchUpdates(type, keys, timestamp, resp.next);
           }
           else {
-            for (var k in entityTypes[type]) {
-              var key = entityTypes[type][k];
+            for (var i = 0; i < keys.length; i++) {
+              var key = keys[i];
               defers[key].resolve(angular.copy(cache[key].data));
               $idb.openStore('entities', function(store) {
                 cache[key].matches = cache[key].matches.toString();
@@ -420,14 +456,8 @@
           }
         })
       }
-    }])
-    .config(['$indexedDBProvider', function ($idbp) {
-      $idbp
-        .connection('EntityService')
-        .upgradeDatabase(1, function (event, db, tx) {
-           var store = db.createObjectStore('entities', { keyPath: "key" });
-           store.createIndex('key_idx', 'key', {unique: true});
-        });
+
+      this.update = update;
     }]);
 
   /**

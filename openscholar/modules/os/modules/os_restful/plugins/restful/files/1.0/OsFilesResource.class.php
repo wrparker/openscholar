@@ -735,4 +735,17 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     }
     return false;
   }
+
+  protected function getLastModified($id) {
+    $q = db_select('file_managed', 'fm')
+      ->fields('fm', array('changed'))
+      ->condition('fid', $id)
+      ->execute();
+
+    foreach ($q as $r) {
+      return $r->changed;
+    }
+
+    return FALSE;
+  }
 }

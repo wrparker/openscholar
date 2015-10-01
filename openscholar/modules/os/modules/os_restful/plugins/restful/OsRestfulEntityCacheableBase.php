@@ -5,7 +5,7 @@
  * This class alows for clients to implement a permanent caching system, and only fetch updates for the entity in question
  */
 
-class OsRestfulEntityCacheableBase extends RestfulEntityBase {
+abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
 
   public static function controllersInfo() {
     return array(
@@ -92,19 +92,63 @@ class OsRestfulEntityCacheableBase extends RestfulEntityBase {
     return $query;
   }
 
+  /**
+   * @param $id - the entity of the id to retrieve the last modified timestamp for
+   * @return mixed - either a timestamp with the last time this entity was changed, or FALSE if the entity no longer exists
+   */
+  abstract protected function getLastModified($id);
+
+  // Override these functions to allow us to act before any actions are performed
+  public function update($id, $full_replace = false) {
+    if ($this->request['lastModified']) {
+      $modified = $this->getLastModified($id);
+      if ($modified === FALSE) {
+        throw new RestfulException(t("Entity @id has been deleted.", array('@id' => $id)), 410);
+      }
+      if ($this->request['lastModified'] < $modified) {
+        throw new RestfulException(t("Entity @id has been modified since updates were last retrieved.", array('@id' => $id)), 409);
+      }
+    }
+    return $parent::update($id, $full_replace);
+  }
+
+  public function remove($id) {
+    if ($this->request['lastModified']) {
+      $modified = $this->getLastModified($id);
+      if ($modified === FALSE) {
+        throw new RestfulException(t("Entity @id has been deleted.", array('@id' => $id)), 410);
+      }
+      if ($this->request['lastModified'] < $modified) {
+        throw new RestfulException(t("Entity @id has been modified since updates were last retrieved.", array('@id' => $id)), 409);
+      }
+    }
+    return $parent::remove($id);
+  }
+
+  protected function reject($timestamp = null) {
+    static $rejected = [];
+    $rejected['timestmap'] = $timestamp;
+    return $rejected;
+  }
+
   public function additionalHateoas() {
     $addtl = array();
     $path = $this->getPath();
 
-    $timestamp = str_replace('updates/', '', $path);
-    if ($timestamp == $path) {
-      $addtl['allEntitiesAsOf'] = REQUEST_TIME;
+    $rejects = $this->reject();
+    if ($rejects) {
+      $addtl['updatedOn'] = $rejects['timestamp'];
     }
-    if ($timestamp < strtotime('-30 days')) {
-      $addtl['allEntitiesAsOf'] = REQUEST_TIME;
-    }
-    else {
-     $addtl['updatesAsOf'] = REQUEST_TIME;
+    if ($this->method == \RestfulInterface::GET) {
+      $timestamp = str_replace('updates/', '', $path);
+      if ($timestamp == $path) {
+        $addtl['allEntitiesAsOf'] = REQUEST_TIME;
+      }
+      if ($timestamp < strtotime('-30 days')) {
+        $addtl['allEntitiesAsOf'] = REQUEST_TIME;
+      } else {
+        $addtl['updatesAsOf'] = REQUEST_TIME;
+      }
     }
 
     return $addtl;
