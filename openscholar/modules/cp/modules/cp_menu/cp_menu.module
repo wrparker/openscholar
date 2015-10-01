@@ -302,7 +302,7 @@ function cp_menu_form_node_form_alter(&$form, &$form_state, $form_id) {
       $form['path']['alias']['#default_value'] = $cache['new_node_url'];
       $form['path']['pathauto']['#default_value'] = FALSE;
     }
-    
+
     // Cache shouldn't be deleted on the first pass of adding a new biblio.
     if (isset($cache['new_node_type']) && $cache['new_node_type'] == 'biblio') {
       // Check for the form state input - biblio type, this will be present if we are past
@@ -365,7 +365,7 @@ function cp_menu_node_validate($node, $form, &$form_state) {
  * @param $js
  * @return array|mixed
  */
-function cp_menu_edit_link($link, $js) {
+function cp_menu_edit_link($link, $js = FALSE) {
   ctools_include('menu', 'os');
   $link = os_menu_link_load($link);
   if ($js) {
@@ -524,7 +524,7 @@ function cp_menu_edit_link_form($form, $form_state, $link) {
       '#type' => 'textfield',
       '#title' => t('Tooltip'),
       '#description' => t('Text displayed when mouse hovers over link'),
-      '#default_value' => $link['options']['attributes']['title'],
+      '#default_value' => isset($link['options']['attributes']['title']) ? $link['options']['attributes']['title'] : '',
     );
   }
 
@@ -560,7 +560,7 @@ function cp_menu_edit_link_form_validate($form, &$form_state) {
 /**
  * Submit callback for edit link form.
  */
-function cp_menu_edit_link_form_submit($form, $form_state) {
+function cp_menu_edit_link_form_submit($form, &$form_state) {
   ctools_include('menu', 'os');
   $link = $form['#link'];
 
@@ -578,4 +578,7 @@ function cp_menu_edit_link_form_submit($form, $form_state) {
 
     os_menu_link_save($link);
   }
+  overlay_close_dialog();
+  overlay_request_page_refresh();
+  $form_state['no_redirect'] = true;
 }
