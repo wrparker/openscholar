@@ -272,7 +272,7 @@ a {
 }
 .account_tab_popout:after {
     left: 100%;
-    top: 50%;
+    top: 100px;
     border: solid transparent;
     content: " ";
     height: 0;
