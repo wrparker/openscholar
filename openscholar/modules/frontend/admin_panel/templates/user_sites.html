@@ -5,9 +5,11 @@
   <h3 ng-show="!own">Other Sites</h3>
   <div ng-repeat="(key, site) in site_data | filter:{owner: true}:strict" >
     <a href="/node/{{ site.id }}">{{ site.title }}</a>
+    <div class="position-right">
     <a ng-show="site.subsite_access" href="/site/register?parent={{ site.id }}" class="button add">Add subsite</a>
     <a ng-show="site.delete_access" href="/node/{{ site.id }}/delete" class="button remove">Delete</a>
     <a ng-show="! site.delete_access" href="/os/vsite/delete/{{ site.id }}" class="button remove">Delete</a>
+    </div>
   </div>
 </div>
 </div>
