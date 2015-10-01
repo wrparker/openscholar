@@ -300,6 +300,10 @@ class csl_format extends csl_rendering_element {
         case 'lowercase':
           $text = drupal_strtolower($text);
           break;
+        case 'capitalize-all':
+          $text = mb_convert_case($text, MB_CASE_TITLE);
+          $text = $this->handleCapitalizeCaseConversion($text);
+          break;
         case 'capitalize-first':
           $text = drupal_ucfirst($text);
           break;
