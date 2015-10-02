@@ -223,6 +223,11 @@ body {
 .topRight_subMenu li a {
     color: #FFF;
 }
+
+.topRight_subMenu li a.text_link {
+    color: #215990;
+}
+
 .slate {
     background: #6C7A89;
 }
@@ -289,6 +294,10 @@ a {
 }
 /* these need to be moved to the os_common dir*/
 
+.text_link {
+	color: #215990;
+	}
+
 .button {
     border-radius: 3px 3px 3px 3px;
     -moz-border-radius: 3px 3px 3px 3px;
@@ -297,8 +306,21 @@ a {
     padding: 3px 4px;
 }
 .button.add {
-    background-color: #199791;
+    background-color: #458C00;
 }
 .button.remove {
     background-color: #FF3E00;
+}
+
+.position-right {
+	float:right;
+}
+
+.bottom_margin {
+	margin-bottom:8px;
+}
+
+
+.h3_header {
+	font-weight:normal;
 }
