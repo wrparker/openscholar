@@ -17,7 +17,7 @@ border-top: 1px solid #f4f4f4 !important;
 
 .region-header-third #block-os-secondary-menu.opened, 
 .region-header-third .os-custom-menu.opened {
-background-color: #8C8179;
+background-color: #A51C30;
 }
 
 
@@ -27,14 +27,14 @@ border-bottom: none;
 
 #menu-bar {
 padding: 0 15px !important;
-background: #F9F9F9;
+background: #A51C30;
 border-bottom: none;
 }
 
 
 
 #menu-bar ul.nice-menu li {
-background-color: #1E1E1E !important;
+background-color: #A51C30 !important;
 color:#FFF !important;
 }
 
@@ -57,12 +57,12 @@ background-position: -52px -500px;
 }
 
 .link-count-mobi-util a {
-    background-color: #8C8179;
+    background-color: #A51C30;
 }
 
 
 .link-count-mobi-main a {
-    background-color:#1E1E1E;
+    background-color:#A51C30;
 }
 
 .link-count-mobi-main a {
@@ -70,17 +70,17 @@ background-position: 0 -493px;
 }
 
 .link-count-mobi-search a {
-    background-color: #A51C30;
+    background-color: #436CBD;
 }
 
 .mobi-util a {
-    background: #F7F7F7;
+    background: #A51C30;
 
 }
 
 
 .mobile-buttons a {
-color: #000!important;
+color: #215990 !important;
 
 
 }
