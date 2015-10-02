@@ -136,7 +136,7 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
     $path = $this->getPath();
 
     $rejects = $this->reject();
-    if ($rejects) {
+    if (!count($rejects)) {
       $addtl['updatedOn'] = $rejects['timestamp'];
     }
     if ($this->method == \RestfulInterface::GET) {

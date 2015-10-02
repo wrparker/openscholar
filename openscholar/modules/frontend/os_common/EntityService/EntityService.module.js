@@ -41,7 +41,7 @@
   /**
    * Service to maintain the list of files on a user's site
    */
-    .factory('EntityService', ['$rootScope', '$http', '$q', 'EntityConfig', '$indexedDB', function ($rootScope, $http, $q, config, $idb) {
+    .factory('EntityService', ['$rootScope', '$http', '$q', 'EntityConfig', '$indexedDB', 'EntityCacheUpdater', function ($rootScope, $http, $q, config, $idb, ECU) {
       var factory = function (entityType, idProp) {
         var type = entityType;
         var ents;
@@ -225,7 +225,18 @@
           if (data.length) {
             delete data.length;
 
-            return $http.patch(url.join('/'), data)
+            var config = {
+              headers: {}
+            };
+
+            var keys = getCacheKeysForEntity(type, idProp, entity);
+            var updated = 0
+            for (var k in keys) {
+              updated = Math.max(updated, cache[k].lastUpdated);
+            }
+            config.headers['If-Unmodified-Since'] = (new Date(updated*1000)).toString();
+
+            return $http.patch(url.join('/'), data, config)
               .success(function (resp) {
                 var entity = resp.data[0],
                   k = findByProp(idProp, entity[idProp]);
@@ -242,9 +253,11 @@
                 switch (resp.code) {
                   case 409:
                     console.log('conflict');
+                    ECU.update(entityType);
                     break;
                   case 410:
                     console.log('resource gone');
+                    ECU.update(entityType);
                 }
               });
           }
@@ -257,8 +270,19 @@
 
         this.delete = function (entity) {
 
+          var config = {
+            headers: {}
+          };
+
+          var keys = getCacheKeysForEntity(type, idProp, entity);
+          var updated = 0
+          for (var k in keys) {
+            updated = Math.max(updated, cache[k].lastUpdate);
+          }
+          config.headers['If-Unmodified-Since'] = (new Date(updated*1000)).toString();
+
           //rest API call to delete entity from server
-          return $http.delete(restPath+'/'+entityType+'/'+entity[idProp]).success(function (resp) {
+          return $http.delete(restPath+'/'+entityType+'/'+entity[idProp], config).success(function (resp) {
             var k = findByProp(idProp, entity[idProp]);
             delete ents[k];
 
@@ -367,7 +391,7 @@
            store.createIndex('key_idx', 'key', {unique: true});
         });
     }])
-  .service('EntityCacheUpdater', ['$http', '$q', '$indexedDB', function ($http, $q, $idb) {
+  .service('EntityCacheUpdater', ['$http', '$q', '$indexedDB', '$rootScope', function ($http, $q, $idb, $rs) {
       var urlBase = restPath + '/:type/updates/:time';
 
       function update(updateType) {
@@ -447,6 +471,7 @@
             for (var i = 0; i < keys.length; i++) {
               var key = keys[i];
               defers[key].resolve(angular.copy(cache[key].data));
+              $rs.$broadcast('EntityCacheUpdater.cacheUpdated');
               $idb.openStore('entities', function(store) {
                 cache[key].matches = cache[key].matches.toString();
                 store.upsert(cache[key]);
