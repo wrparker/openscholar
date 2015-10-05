@@ -21,6 +21,17 @@
 ul.nice-menu ul {
     top: 2.75em !important;
 }
+#menu-bar ul.nice-menu li {
+    margin-right: 15px;
+}
+#menu-bar ul.nice-menu .menuparent ul li a.active,
+#menu-bar ul.nice-menu .menuparent ul li a {
+    color: #FFF;
+}
+#menu-bar ul.nice-menu .menuparent ul li a:hover {
+    color: #FFF;
+    text-decoration: underline !important;
+}
 #header {
     background: #F3F3F1;
 }
