@@ -162,15 +162,15 @@
 
 /* Events sign up confirmation registrant screen */
 .registration-event-signup-simple .field-label {
-	width:125px;
-	display: inline-block;
+  width:125px;
+  display: inline-block;
 }
 
 .registration-event-signup-simple .field-name-field-department .field-items,
 .registration-event-signup-simple .field-name-field-full-name .field-items {
-display:inline-block;
+  display:inline-block;
 }
 
 .registration-event-signup-simple div.field-label:after {
-    content: ": "
+  content: ": "
 }
