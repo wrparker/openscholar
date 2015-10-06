@@ -149,6 +149,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
 
   $themes_sorted = array();
   $featured_themes = array_filter(variable_get('cp_appearance_featured_themes', array()));
+  $single_themes = array_filter(['aberdeen' => 'aberdeen', 'airstream' => 'airstream']);
 
   // Adds each theme option to the form, and flavor options if available.
   foreach ($themes as $theme) {
@@ -270,7 +271,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
   }
 
   // Moves default theme to the front of the array.
-  if (!empty($first_themes)) {
+  if (!empty($first_themes) || !empty($single_themes)) {
     if (isset($first_themes[$current_theme.'-os_featured_flavor-'.$current_flavor])) {
       $current_theme = _cp_appearance_move_option_to_front($first_themes, $current_theme.'-os_featured_flavor-'.$current_flavor);
     }
@@ -279,7 +280,17 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
     }
     $featured_header =  array('HEADER_FEATURED' => 'HEADER_FEATURED');
     $other_header = array('HEADER_OTHER' => 'HEADER_OTHER');
-    $themes = array_merge($featured_header, $first_themes, $other_header, $other_themes);
+    $single_header = array('HEADER_SINGLE' => 'HEADER_SINGLE');
+
+    $themes = array();
+
+    if (!empty($first_themes)) {
+      $themes = array_merge($featured_header, $first_themes, $other_header, $other_themes);
+    }
+
+    if (!empty($single_themes)) {
+      $themes = array_merge($themes, $single_header, $single_header);
+    }
   }
   elseif (isset($themes[$current_theme])) {
     $current_theme = _cp_appearance_move_option_to_front($themes, $current_theme);
@@ -406,7 +417,7 @@ function theme_cp_appearance_theme_picker_form($variables) {
   // Builds each item containing a screenshot-option or section separators.
   $items = array();
   foreach ($form['theme_default']['#enabled_themes'] as $theme) {
-    if (in_array($theme, array('HEADER_FEATURED', 'HEADER_OTHER'))) {
+    if (in_array($theme, array('HEADER_FEATURED', 'HEADER_OTHER', 'HEADER_SINGLE'))) {
       $items[] = _cp_appearance_theme_header_item($theme);
     }
     else {
@@ -516,6 +527,10 @@ function _cp_appearance_theme_header_item($header_type) {
 
     case 'HEADER_OTHER':
       $title = '<h2>' . t('Other themes') . '</h2>';
+      break;
+
+    case 'HEADER_SINGLE':
+      $title = '<h2>' . t('Single page themes') . '</h2>';
       break;
   }
 
