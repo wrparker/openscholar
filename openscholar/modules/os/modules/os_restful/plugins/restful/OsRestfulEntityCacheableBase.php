@@ -99,30 +99,32 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
   abstract protected function getLastModified($id);
 
   // Override these functions to allow us to act before any actions are performed
-  public function update($id, $full_replace = false) {
-    if ($this->request['lastModified']) {
+  protected function updateEntity($id, $null_missing_fields = FALSE) {
+    $unmodified = \RestfulManager::getRequestHttpHeader('If-Unmodified-Since');
+    if ($unmodified) {
       $modified = $this->getLastModified($id);
       if ($modified === FALSE) {
         throw new RestfulException(t("Entity @id has been deleted.", array('@id' => $id)), 410);
       }
-      if ($this->request['lastModified'] < $modified) {
+      if (strtotime($unmodified) < $modified) {
         throw new RestfulException(t("Entity @id has been modified since updates were last retrieved.", array('@id' => $id)), 409);
       }
     }
-    return $parent::update($id, $full_replace);
+    return parent::updateEntity($id, $null_missing_fields);
   }
 
-  public function remove($id) {
-    if ($this->request['lastModified']) {
+  public function deleteEntity($entity_id) {
+    $unmodified = \RestfulManager::getRequestHttpHeader('If-Unmodified-Since');
+    if ($unmodified) {
       $modified = $this->getLastModified($id);
       if ($modified === FALSE) {
         throw new RestfulException(t("Entity @id has been deleted.", array('@id' => $id)), 410);
       }
-      if ($this->request['lastModified'] < $modified) {
+      if (strtotime($unmodified) < $modified) {
         throw new RestfulException(t("Entity @id has been modified since updates were last retrieved.", array('@id' => $id)), 409);
       }
     }
-    return $parent::remove($id);
+    return parent::deleteEntity($id);
   }
 
   protected function reject($timestamp = null) {

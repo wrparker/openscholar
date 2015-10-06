@@ -204,6 +204,7 @@
               var entity = resp.data[0];
               ents[entity[idProp]] = entity;
 
+              weSaved[entity[idProp]] = Date.now();
               addToCaches(entityType, idProp, entity);
 
               $rootScope.$broadcast(eventName + '.add', entity);
@@ -229,12 +230,17 @@
               headers: {}
             };
 
-            var keys = getCacheKeysForEntity(type, idProp, entity);
-            var updated = 0
-            for (var k in keys) {
-              updated = Math.max(updated, cache[k].lastUpdated);
+            var updated = 0;
+            if (weSaved[entity[idProp]] == undefined) {
+              var keys = getCacheKeysForEntity(type, idProp, entity);
+              for (var k in keys) {
+                updated = Math.max(updated, cache[k].lastUpdated);
+              }
             }
-            config.headers['If-Unmodified-Since'] = (new Date(updated*1000)).toString();
+            else {
+              updated = weSaved[entity[idProp]];
+            }
+            config.headers['If-Unmodified-Since'] = (new Date(updated*1000)).toString().replace(/ \([^)]*\)/, '');
 
             return $http.patch(url.join('/'), data, config)
               .success(function (resp) {
@@ -242,6 +248,7 @@
                   k = findByProp(idProp, entity[idProp]);
                 ents[k] = entity;
 
+                weSaved[entity[idProp]] = data.updatedOn;
                 $rootScope.$broadcast(eventName + '.update', entity);
                 var keys = getCacheKeysForEntity(type, idProp, entity);
                 for (var k in keys) {
@@ -279,7 +286,7 @@
           for (var k in keys) {
             updated = Math.max(updated, cache[k].lastUpdate);
           }
-          config.headers['If-Unmodified-Since'] = (new Date(updated*1000)).toString();
+          config.headers['If-Unmodified-Since'] = (new Date(updated*1000)).toString().replace(/ \([^)]*\)/, '');
 
           //rest API call to delete entity from server
           return $http.delete(restPath+'/'+entityType+'/'+entity[idProp], config).success(function (resp) {
