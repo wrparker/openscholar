@@ -446,11 +446,11 @@ function os_events_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 1,
+        'type' => 'text_plain',
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'registration',
@@ -480,11 +480,11 @@ function os_events_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 0,
+        'type' => 'text_plain',
+        'weight' => 1,
       ),
     ),
     'entity_type' => 'registration',
@@ -514,11 +514,10 @@ function os_events_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
-        'module' => 'text',
+        'label' => 'hidden',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 2,
+        'type' => 'hidden',
+        'weight' => 10,
       ),
     ),
     'entity_type' => 'registration',

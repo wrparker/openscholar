@@ -35,8 +35,8 @@
 .node-type-class .field-items {
      display: inline-block;
 	  	}
-	  	
-	  	
+
+
 .field-type-file .field-item {display:inline;}
 
 /*
@@ -171,10 +171,6 @@
 display:inline-block;
 }
 
-.registration-event-signup-simple .field-label-inline:nth-child(6),
-.registration-event-signup-simple .field-label-inline:nth-child(7),
-.registration-event-signup-simple .field-label-inline:nth-child(8),
-.registration-event-signup-simple .field-name-field-repeating-event-date {
-	display:none;
+.registration-event-signup-simple div.field-label:after {
+    content: ": "
 }
-
