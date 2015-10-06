@@ -152,7 +152,7 @@ ul.nice-menu-down li ul li ul {
 .front #content-panels .region.region-content-bottom {
     border-bottom: none;
 }
-.front .block-boxes-os_sv_list_box h2.block-title {
+.front .block h2.block-title {
     text-align: center;
 }
 .front #content-panels {
@@ -287,6 +287,9 @@ h2.block-title {
 }
 .block-boxes-os_boxes_tabs .links li a {
     background-image: none !important;
+}
+.ui-tabs .ui-tabs-panel {
+    background-color: #FFF;
 }
 /* Section nav */
 
