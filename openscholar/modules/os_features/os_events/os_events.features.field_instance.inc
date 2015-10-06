@@ -450,7 +450,7 @@ function os_events_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_plain',
-        'weight' => 5,
+        'weight' => 40,
       ),
     ),
     'entity_type' => 'registration',
