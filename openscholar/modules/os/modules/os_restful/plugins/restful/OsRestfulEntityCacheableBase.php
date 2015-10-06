@@ -104,7 +104,7 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
     if ($unmodified) {
       $modified = $this->getLastModified($id);
       if ($modified === FALSE) {
-        throw new RestfulException(t("Entity @id has been deleted.", array('@id' => $id)), 410);
+        throw new RestfulGoneException(t("Entity @id has been deleted.", array('@id' => $id)), 410);
       }
       if (strtotime($unmodified) < $modified) {
         throw new RestfulException(t("Entity @id has been modified since updates were last retrieved.", array('@id' => $id)), 409);
@@ -118,7 +118,7 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
     if ($unmodified) {
       $modified = $this->getLastModified($id);
       if ($modified === FALSE) {
-        throw new RestfulException(t("Entity @id has been deleted.", array('@id' => $id)), 410);
+        throw new RestfulGoneException(t("Entity @id has been deleted.", array('@id' => $id)), 410);
       }
       if (strtotime($unmodified) < $modified) {
         throw new RestfulException(t("Entity @id has been modified since updates were last retrieved.", array('@id' => $id)), 409);
