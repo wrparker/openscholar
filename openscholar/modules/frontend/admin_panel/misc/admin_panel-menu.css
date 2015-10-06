@@ -22,7 +22,7 @@ body {
 }
 .page-cp #branding {
     position: relative;
-    margin-left: 20px;
+    margin-left: 40px;
 }
 .page-cp #branding.pushed {
     margin-left: 0;
@@ -42,7 +42,7 @@ body {
     transform: translateX(175px);
 }
 .page-cp #page {
-    margin-left: 60px;
+    margin-left: 80px;
 }
 .page-cp #page.pushed {
     margin-left: 40px;
@@ -298,17 +298,17 @@ a {
 	color: #215990;
 	}
 
-.button {
+.btton {
     border-radius: 3px 3px 3px 3px;
     -moz-border-radius: 3px 3px 3px 3px;
     -webkit-border-radius: 3px 3px 3px 3px;
     color: #FFF;
     padding: 3px 4px;
 }
-.button.add {
+.btton.add {
     background-color: #458C00;
 }
-.button.remove {
+.btton.remove {
     background-color: #FF3E00;
 }
 

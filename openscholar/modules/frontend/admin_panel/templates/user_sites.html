@@ -6,9 +6,9 @@
   <div ng-repeat="(key, site) in site_data | filter:{owner: true}:strict" class="bottom_margin">
     <a href="/node/{{ site.id }}" class="text_link">{{ site.title }}</a>
     <div class="position-right">
-    <a ng-show="site.subsite_access" href="/site/register?parent={{ site.id }}" class="button add">Add subsite</a>
-    <a ng-show="site.delete_access" href="/node/{{ site.id }}/delete" class="button remove">Delete</a>
-    <a ng-show="! site.delete_access" href="/os/vsite/delete/{{ site.id }}" class="button remove">Delete</a>
+    <a ng-show="site.subsite_access" href="/site/register?parent={{ site.id }}" class="btton add">Add subsite</a>
+    <a ng-show="site.delete_access" href="/node/{{ site.id }}/delete" class="btton remove">Delete</a>
+    <a ng-show="! site.delete_access" href="/os/vsite/delete/{{ site.id }}" class="btton remove">Delete</a>
     </div>
   </div>
 </div>
