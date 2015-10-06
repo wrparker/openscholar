@@ -142,7 +142,9 @@
 
           scope.$on('EntityCacheUpdater.cacheUpdated', function () {
             if (scope.showErrorMessages) {
-              scope.showErrorMessage = false;
+              $timeout(function () {
+                scope.showErrorMessages = false;
+              }, 5000);
               scope.file = angular.copy(fileService.get(scope.file.id));
             }
           });

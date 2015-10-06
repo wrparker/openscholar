@@ -219,9 +219,13 @@
           ignore = ignore || [];
           ignore.push(idProp);
 
-          var k = findByProp(idProp, entity[idProp]),
-            url = [restPath, entityType, entity[idProp]],
-            data = getDiff(ents[k], entity, ignore);
+          var keys = getCacheKeysForEntity(type, idProp, entity),
+            data = {};
+          for (var k in keys) {
+            data = getDiff(cache[k].data[keys[k]], entity, ignore);
+            break;
+          }
+          var url = [restPath, entityType, entity[idProp]];
 
           if (data.length) {
             delete data.length;
@@ -232,7 +236,7 @@
 
             var updated = 0;
             if (weSaved[entity[idProp]] == undefined) {
-              var keys = getCacheKeysForEntity(type, idProp, entity);
+
               for (var k in keys) {
                 updated = Math.max(updated, cache[k].lastUpdated);
               }
@@ -357,7 +361,7 @@
       function saveCache(key) {
         $idb.openStore('entities', function (store) {
           cache[key].matches = cache[key].matches.toString();
-          store.insert(cache[key]);
+          store.upsert(cache[key]);
           cache[key].matches = eval('(' + cache[key].matches + ')');
         });
       }
