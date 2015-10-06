@@ -123,7 +123,7 @@
                 }
             },
             function(result) {
-              switch (result.code) {
+              switch (result.status) {
                 case 409:
                   scope.errorMessages = 'This file has been changed since it was last retrieved from the server. Please wait while we get an updated version.';
                   scope.showErrorMessages = true;

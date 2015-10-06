@@ -257,7 +257,7 @@
                 }
               })
               .then(angular.noOp, function (resp) {
-                switch (resp.code) {
+                switch (resp.status) {
                   case 409:
                     console.log('conflict');
                     ECU.update(entityType);
@@ -266,6 +266,7 @@
                     console.log('resource gone');
                     ECU.update(entityType);
                 }
+                return $q.reject(resp);
               });
           }
           else {
