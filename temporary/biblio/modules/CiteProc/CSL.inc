@@ -301,7 +301,6 @@ class csl_format extends csl_rendering_element {
           $text = drupal_strtolower($text);
           break;
         case 'capitalize-all':
-        case 'title':
           $text = mb_convert_case($text, MB_CASE_TITLE);
           $text = $this->handleCapitalizeCaseConversion($text);
           break;
