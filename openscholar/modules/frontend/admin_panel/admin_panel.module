@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Implements hook_preprocess_page().
+ *
+ * Adds the user_panel angular library.
+ */
 function admin_panel_preprocess_page(&$vars) {
 	if (user_is_logged_in()) {
     drupal_add_library('admin_panel','user_panel');
@@ -7,7 +12,17 @@ function admin_panel_preprocess_page(&$vars) {
 	}
 }
 
+/**
+ * Implements hook_page_build().
+ *
+ * Adds the admin_panel angular markup and wrapper.
+ */
 function admin_panel_page_build(&$vars) {
+
+  // No need for admin-panel markup
+  if (!user_is_logged_in()) {
+    return;
+  }
 
   $vars['page_bottom']['admin_menu'] = array(
     '#weight' => 25,
