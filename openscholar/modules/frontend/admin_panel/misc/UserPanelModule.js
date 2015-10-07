@@ -6,7 +6,7 @@
     var user_data;
     var paths;
 
-    angular.module('UserPanel', ['AdminPanel'])
+    angular.module('UserPanel', ['AdminPanel','JSPager'])
     .config(function (){
        
        rootPath = Drupal.settings.paths.adminPanelModuleRoot;
@@ -38,6 +38,11 @@
               $scope.site_data = response.data.data[0].og_user_node;
         	}
           });
+          $scope.pageSize = 7;
+          $scope.numberOfPages=function(data){
+            return Math.ceil(data.length/$scope.pageSize);                
+          }
+        
       }]).directive('rightMenu', function() {
       return {
        templateUrl: rootPath+'/templates/user_menu.html?vers='+Drupal.settings.version.userPanel,
