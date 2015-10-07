@@ -3,7 +3,7 @@
 function admin_panel_preprocess_page(&$vars) {
 	if (user_is_logged_in()) {
     drupal_add_library('admin_panel','user_panel');
-    os_common_angular_app('UserPanel');
+    os_common_angular_apps('UserPanel');
 	}
 }
 
