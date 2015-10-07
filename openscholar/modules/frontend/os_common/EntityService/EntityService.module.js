@@ -137,32 +137,32 @@
           var key = entityType + ':' + JSON.stringify(params);
           if (!defers[key]) {
             defers[key] = $q.defer();
-          }
 
-          lockPromise.then(function (keys) {
-            if (!keys[key]) {
-              var url = restPath + '/' + entityType;
-              $http.get(url, {params: params, pKey: key})
-                .success(success)
-                .error(errorFunc);
-              setTimeout(function () {
-                defers[key].notify("Loading 0% complete.");
-              }, 1);
-              cache[key] = {
-                key: key,
-                lastUpdated: parseInt(Date.now()/1000),
-                data: [],
-                entityType: entityType,
-                idProperty: idProp,
-                matches: function(entity, entityType) {
-                  if (entityType != this.entityType) {
-                    return false;
+            lockPromise.then(function (keys) {
+              if (!keys[key]) {
+                var url = restPath + '/' + entityType;
+                $http.get(url, {params: params, pKey: key})
+                  .success(success)
+                  .error(errorFunc);
+                setTimeout(function () {
+                  defers[key].notify("Loading 0% complete.");
+                }, 1);
+                cache[key] = {
+                  key: key,
+                  lastUpdated: parseInt(Date.now()/1000),
+                  data: [],
+                  entityType: entityType,
+                  idProperty: idProp,
+                  matches: function(entity, entityType) {
+                    if (entityType != this.entityType) {
+                      return false;
+                    }
+                    return testEntity.call(this, entity, params);
                   }
-                  return testEntity.call(this, entity, params);
                 }
               }
-            }
-          });
+            });
+          }
           defers[key].promise.then(function(data) {
             for (var i = 0; i < data.length; i++) {
               ents[data[i][idProp]] = data[i];
@@ -392,8 +392,10 @@
           for (var t in entityTypes) {
             ECU.update(t);
           }
-        })
-      })
+        }, function (error) {
+          console.log(error);
+        });
+      });
     }])
     .config(['$indexedDBProvider', function ($idbp) {
       $idbp
