@@ -27,7 +27,7 @@
         then(function(response) {
           $scope.admin_panel = response.data.data;
           var menu_state = $cookieStore.get('osAdminMenuState');
-          if (typeof(menu_state.main) !== 'undefined' && menu_state.main) {
+          if (typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main) {
         	morphButton.toggle();  
           }
         }); 
@@ -67,7 +67,7 @@
     		return;
     	  }
     	  
-    	  if (typeof(menu_state[attrs.id]) !== 'undefined' && menu_state[attrs.id]) {
+    	  if (typeof(menu_state) !== 'undefined' && typeof(menu_state[attrs.id]) !== 'undefined' && menu_state[attrs.id]) {
     		element.parent('li').addClass('open');
     	  }
     	  
