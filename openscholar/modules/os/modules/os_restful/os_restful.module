@@ -19,6 +19,16 @@ function os_restful_ctools_plugin_directory($module, $plugin) {
 }
 
 /**
+ * Implements hook_cron().
+ */
+function os_restful_cron() {
+  $time = strotime('-30 days');
+  db_delete('entities_deleted')
+    ->condition('deleted', $time, '<')
+    ->execute();
+}
+
+/**
  * Implements hook_entity_property_info_alter().
  */
 function os_restful_entity_property_info_alter(&$info) {
