@@ -143,8 +143,8 @@ ul.nice-menu-down li ul li ul {
 }
 /* HOMEPAGE SPECIFIC STYLES */
 
-.front #content-panels .region-content-first,
-.front #content-panels .region-content-bottom {
+.front #content-panels .region-content-top,
+.front #content-panels .region-content-second {
     background-color: #F5f5f5;
     border-top: 1px solid #DDD;
     border-bottom: 1px solid #DDD;

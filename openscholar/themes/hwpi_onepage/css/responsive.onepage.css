@@ -57,6 +57,28 @@
 
 /*--------------------------------------------------------*/
 @media (max-width: 768px) {
+/* LOPs in the frontpage - not in a columns widget */   
+
+.front .block-boxes-os_sv_list_box .node {
+    display: block;
+
+
+}
+.front .block-boxes-os_sv_list_box .node,
+.front .block-boxes-os_sv_list_box.lopz-6 .node:nth-child(3),
+.front .block-boxes-os_sv_list_box.lopz-4 .node:nth-child(even),
+.front .block-boxes-os_sv_list_box .node:last-of-type {
+
+  margin-right: 0;
+
+}
+.front .block-boxes-os_sv_list_box.lopz-6 .node,
+.front .block-boxes-os_sv_list_box.lopz-3 .node,
+.front .block-boxes-os_sv_list_box.lopz-4 .node,
+.front .block-boxes-os_sv_list_box.lopz-2 .node  {
+width:100% !important;
+}
+
 
 
 }
