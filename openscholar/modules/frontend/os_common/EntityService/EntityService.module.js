@@ -153,11 +153,12 @@
                   data: [],
                   entityType: entityType,
                   idProperty: idProp,
+                  params: params,
                   matches: function(entity, entityType) {
                     if (entityType != this.entityType) {
                       return false;
                     }
-                    return testEntity.call(this, entity, params);
+                    return testEntity.call(this, entity, this.params);
                   }
                 }
               }
@@ -313,35 +314,8 @@
           ents[entity[idProp]] = entity;
 
           addToCaches(entityType, idProp, entity);
-        }
-
-        /**
-         * Test entity fetched with a set of params to see if it matches a cache
-         *
-         * Proper usage:
-         *  this function should use the cache object as it's 'this', by using the call() method.
-         *  Ex. testEntity.call(this, entity, params);
-         */
-        function testEntity(entity, params) {
-          for (var k in params) {
-            if (entity[k] == undefined) {
-              // this is not something that comes returned on the object
-              // try other things
-              switch (k) {
-                case 'vsite':
-                  if (params[k] != vsite) {
-                    return false;
-                  }
-                  break;
-              }
-            }
-            else if (entity[k] != params[k]) {
-              return false;
-            }
-          }
-          return true;
-        }
-      };
+        };
+      }
 
       function getDiff(oEntity, nEntity, ignore) {
         var diff = {},
@@ -364,6 +338,25 @@
           store.upsert(cache[key]);
           cache[key].matches = eval('(' + cache[key].matches + ')');
         });
+      }
+
+      /**
+       * Add an entity to all caches it matches
+       */
+      function addToCaches(type, idProp, entity) {
+        var keys = getCacheKeysForEntity(type, idProp, entity);
+
+        for (var k in cache) {
+          if (keys[k] != undefined) {
+            cache[k].data[keys[k]] = entity;
+            continue;
+          }
+
+          if (cache[k].matches(entity, type)) {
+            cache[k].data.push(entity);
+            saveCache(k);
+          }
+        }
       }
 
       return factory;
@@ -500,6 +493,33 @@
     }]);
 
   /**
+   * Test entity fetched with a set of params to see if it matches a cache
+   *
+   * Proper usage:
+   *  this function should use the cache object as it's 'this', by using the call() method.
+   *  Ex. testEntity.call(this, entity, params);
+   */
+  function testEntity(entity, params) {
+    for (var k in params) {
+      if (entity[k] == undefined) {
+        // this is not something that comes returned on the object
+        // try other things
+        switch (k) {
+          case 'vsite':
+            if (params[k] != Drupal.settings.spaces.id) {
+              return false;
+            }
+            break;
+        }
+      }
+      else if (entity[k] != params[k]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
    * Collect the keys an entity exists in for every cache available
    * TODO: Generate comparator functions on cache creation to test whether entities fit in cache or not
    *
@@ -544,25 +564,6 @@
       }
     }
     return keys;
-  }
-
-  /**
-   * Add an entity to all caches it matches
-   */
-  function addToCaches(type, idProp, entity) {
-    var keys = getCacheKeysForEntity(type, idProp, entity);
-
-    for (var k in cache) {
-      if (keys[k] != undefined) {
-        cache[k].data[keys[k]] = entity;
-        continue;
-      }
-
-      if (cache[k].matches(entity, type)) {
-        cache[k].data.push(entity);
-        saveCache(k);
-      }
-    }
   }
 
   /*
