@@ -42,7 +42,9 @@ body {
     transform: translateX(175px);
 }
 .page-cp #page {
+	width:auto;
     margin-left: 80px;
+     margin-right: 0;
 }
 .page-cp #page.pushed {
     margin-left: 40px;
