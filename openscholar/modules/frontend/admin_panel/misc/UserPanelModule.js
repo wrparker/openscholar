@@ -6,7 +6,7 @@
     var user_data;
     var paths;
 
-    angular.module('UserPanel', ['AdminPanel','JSPager'])
+    angular.module('UserPanel', ['AdminPanel'])
     .config(function (){
        
        rootPath = Drupal.settings.paths.adminPanelModuleRoot;
