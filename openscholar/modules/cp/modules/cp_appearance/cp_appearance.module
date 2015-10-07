@@ -149,7 +149,9 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
 
   $themes_sorted = array();
   $featured_themes = array_filter(variable_get('cp_appearance_featured_themes', array()));
+  // From where we get the list of single page themes?
   $single_themes = array_filter(['aberdeen' => 'aberdeen', 'airstream' => 'airstream']);
+  $display_single_themes = array();
 
   // Adds each theme option to the form, and flavor options if available.
   foreach ($themes as $theme) {
@@ -222,6 +224,13 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
         $radio_options[$info['theme_name'].'-os_featured_flavor-'.$flavor_name] = $flavor_theme->info['theme_flavor_name'];
       }
     }
+
+    if ($single_themes) {
+      // todo: handle here with single page application array order.
+      if (in_array($info['theme_name'], $single_themes)) {
+        $display_single_themes[$info['theme_name']] = $theme;
+      }
+    }
   }
 
   // include flavors that have been added manually by user
@@ -270,8 +279,15 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
     }
   }
 
+
+  if (!empty($display_single_themes)) {
+    unset($single_themes['aberdeen']);
+    $header = array('HEADER_SINGLE' => 'HEADER_SINGLE');
+    $themes = array_merge($header, $display_single_themes);
+  }
+
   // Moves default theme to the front of the array.
-  if (!empty($first_themes) || !empty($single_themes)) {
+  if (!empty($first_themes)) {
     if (isset($first_themes[$current_theme.'-os_featured_flavor-'.$current_flavor])) {
       $current_theme = _cp_appearance_move_option_to_front($first_themes, $current_theme.'-os_featured_flavor-'.$current_flavor);
     }
@@ -280,17 +296,8 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
     }
     $featured_header =  array('HEADER_FEATURED' => 'HEADER_FEATURED');
     $other_header = array('HEADER_OTHER' => 'HEADER_OTHER');
-    $single_header = array('HEADER_SINGLE' => 'HEADER_SINGLE');
 
-    $themes = array();
-
-    if (!empty($first_themes)) {
-      $themes = array_merge($featured_header, $first_themes, $other_header, $other_themes);
-    }
-
-    if (!empty($single_themes)) {
-      $themes = array_merge($themes, $single_header, $single_header);
-    }
+    $themes = array_merge($featured_header, $first_themes, $other_header, $other_themes);
   }
   elseif (isset($themes[$current_theme])) {
     $current_theme = _cp_appearance_move_option_to_front($themes, $current_theme);
@@ -531,6 +538,7 @@ function _cp_appearance_theme_header_item($header_type) {
 
     case 'HEADER_SINGLE':
       $title = '<h2>' . t('Single page themes') . '</h2>';
+      $subtitle = t('Single page application themes. Awesome for mobile oriented site!');
       break;
   }
 
