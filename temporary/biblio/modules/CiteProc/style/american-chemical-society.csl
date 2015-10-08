@@ -167,6 +167,27 @@
             </group>
           </group>
         </else-if>
+        <else-if type="miscellaneous" match="any">
+          <group delimiter=", ">
+            <text macro="editor"/>
+            <text macro="series"/>
+            <group delimiter=", ">
+              <text macro="publisher"/>
+              <text macro="issued"/>
+            </group>
+            <group delimiter=", ">
+              <text variable="volume" />
+                <group prefix=" (" suffix=")">
+                  <choose>
+                    <if variable="issue">
+                      <text variable="issue"/>
+                    </if>
+                  </choose>
+                </group>
+                <text variable="page"  form="short"/>
+            </group>
+          </group>
+        </else-if>
         <else-if type="webpage">
           <group delimiter=" ">
             <text variable="title"/>
