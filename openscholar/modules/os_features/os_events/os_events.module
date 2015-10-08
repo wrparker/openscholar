@@ -1643,11 +1643,21 @@ function os_events_entity_insert($entity, $type) {
   $wrapper = entity_metadata_Wrapper($type, $entity);
   $node = node_load($entity->entity_id);
 
+  // Obtaining menu router item of the Ajax URL.
+  $menu_item = menu_get_item();
+
+  // If delta argument is present in URL, then query option will be available in url parameter otherwise no delta parameter will be available in email link.
+  if ($menu_item['path'] == "os_events/%/registration/%" && isset($menu_item['original_map'][4]) && !empty($menu_item['original_map'][4])) {
+     $query = array('delta' => $menu_item['original_map'][4]);
+  } else {
+    $query = array();
+  }
+
   $module = 'os_events';
   $key = 'registration_confirmation';
   $language = language_default();
   $params = array(
-    '@url' => url('node/' . $node->nid, array('absolute' => TRUE)),
+    '@url' => url('node/' . $node->nid, array('absolute' => TRUE, 'query' => $query)),
     '@title' => $node->title,
     '@user-name' => $wrapper->field_full_name->value(),
   );
