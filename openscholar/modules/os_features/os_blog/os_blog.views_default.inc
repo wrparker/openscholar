@@ -131,7 +131,7 @@ function os_blog_views_default_views() {
   /* Display: Archive Block */
   $handler = $view->new_display('block', 'Archive Block', 'block');
   $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['title'] = 'Blogs posts by month';
+  $handler->display->display_options['title'] = 'Blog posts by month';
   $handler->display->display_options['defaults']['use_ajax'] = FALSE;
   $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
