@@ -32,7 +32,8 @@ h2.block-title,
 
 html,
 body {
-    background: #fff;
+    background: #F5F5F5;
+    ;
     color: #333;
     font-size: .98em;
 }
@@ -55,7 +56,6 @@ body {
 /* Header */
 
 #header {
-    background: #F4F4F4;
     color: #333;
 }
 #boxes-box-site_info h2 {
@@ -143,11 +143,9 @@ ul.nice-menu-down li ul li ul {
 }
 /* HOMEPAGE SPECIFIC STYLES */
 
-.front #content-panels .region-content-top,
-.front #content-panels .region-content-second {
-    background-color: #F5f5f5;
-    border-top: 1px solid #DDD;
-    border-bottom: 1px solid #DDD;
+.front #content-panels .region-content-first,
+.front #content-panels .region-content-bottom {
+    background: #FFF;
 }
 .front #content-panels .region.region-content-bottom {
     border-bottom: none;
@@ -155,6 +153,7 @@ ul.nice-menu-down li ul li ul {
 .front .block h2.block-title {
     text-align: center;
 }
+.front #columns .region-content-top .region-inner,
 .front #content-panels {
     margin-bottom: 0;
 }
@@ -369,13 +368,36 @@ h2.block-title {
     margin-top: 0;
 }
 a.rslides_nav {
-    background-color: #000;
+    background-color: #787878;
 }
 .slide-copy h2 a {
     font-weight: bold;
 }
-#layout_3_1_overlay .slide-copy h2 a {
+.slide-copy h2 a {
     font-weight: normal;
+}
+.front #content-panels .region-content-top .block.block-boxes-os_slideshow_box {
+    margin-bottom: 0;
+}
+.rslides_tabs li {
+    background: #CCC !important;
+}
+.front #layout_3_1_overlay .slide {
+    position: relative;
+}
+.front #layout_3_1_overlay .slide-copy,
+.front #layout_3_1_overlay .rslides_tabs {
+    position: absolute;
+    top: 95%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    bottom: inherit;
+    right: inherit;
+}
+.front #layout_3_1_overlay .slide-copy {
+    width: 48%;
+    margin: 10% 0 0 0;
 }
 /** PEOPLE DETAIL PAGE **/
 

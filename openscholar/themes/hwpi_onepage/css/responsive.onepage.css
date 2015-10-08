@@ -72,6 +72,11 @@
   margin-right: 0;
 
 }
+
+
+.front .block.block-boxes-os_slideshow_box #layout_16_9_side,
+.front .block.block-boxes-os_slideshow_box #layout_16_9_overlay,
+.front .block.block-boxes-os_slideshow_box #layout_16_9_below,
 .front .block-boxes-os_sv_list_box.lopz-6 .node,
 .front .block-boxes-os_sv_list_box.lopz-3 .node,
 .front .block-boxes-os_sv_list_box.lopz-4 .node,
@@ -79,6 +84,14 @@
 width:100% !important;
 }
 
+.ui-tabs ul.ui-tabs-nav li:first-child {
+border-right:1px solid #CCC;
+}
+.front #layout_3_1_overlay .slide-copy, .front #layout_3_1_overlay .rslides_tabs {
 
+    -webkit-transform:none !important;
+    transform: none !important;
+   
+}
 
 }
