@@ -9,8 +9,20 @@ include_once 'os_events.features.inc';
 function os_events_os_app_info() {
   $apps = array();
 
+  // Obtaining menu router object
+  $menu_item = menu_get_item();
+
+  // When user is on node delete confirm page, setting path variable as destination parameter in URL. Form redirects to this path after submission.
+  if($menu_item['path'] == 'node/%/delete') {
+    $query = drupal_get_destination();
+    $path = $query['destination'];
+  } else {
+    // Default redirection will be to the page 'calendar'
+    $path = 'calendar';
+  }
+
   $apps['os_events'] = array(
-    'path' => 'calendar',
+    'path' => $path,
     'nodetypes' => array(
       'event',
     ),
