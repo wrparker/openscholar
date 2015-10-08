@@ -35,8 +35,8 @@
 .node-type-class .field-items {
      display: inline-block;
 	  	}
-	  	
-	  	
+
+
 .field-type-file .field-item {display:inline;}
 
 /*
@@ -158,4 +158,12 @@
 	display: inline-block;
 	max-width: 275px;
 	vertical-align: top;
+}
+
+/* Hide breadcrumb trail for Archive and All from display for blog archive page */
+body.page-blog-archive .breadcrumb a:nth-child(5),
+body.page-blog-archive .breadcrumb a:nth-child(7),
+body.page-blog-archive .breadcrumb span:nth-child(4),
+body.page-blog-archive .breadcrumb span:nth-child(6){
+  display: none;
 }
