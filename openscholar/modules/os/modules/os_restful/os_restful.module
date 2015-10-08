@@ -22,7 +22,7 @@ function os_restful_ctools_plugin_directory($module, $plugin) {
  * Implements hook_cron().
  */
 function os_restful_cron() {
-  $time = strotime('-30 days');
+  $time = strtotime('-30 days');
   db_delete('entities_deleted')
     ->condition('deleted', $time, '<')
     ->execute();
