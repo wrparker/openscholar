@@ -37,7 +37,7 @@ class OsImporterClassValidator extends OsImporterEntityValidateBase {
 
     // Validate the semester.
     $allowed_values = $info['settings']['allowed_values'] + array('N/A' => 'N/A');
-    if (!in_array($value, $allowed_values)) {
+    if (!in_array(strtolower($value), array_map('strtolower', $allowed_values))) {
       $params = array(
         '@allowed-values' => implode(', ', $allowed_values),
         '@value' => $value,
@@ -57,12 +57,22 @@ class OsImporterClassValidator extends OsImporterEntityValidateBase {
     }
 
     $value = reset($value);
+
     if (!is_numeric($value) || (is_numeric($value) && $value > 9999)) {
       $params = array(
         '@value' => $value,
       );
 
       $this->setError($field_name, 'The value for the year field is not valid value(@value). The value should be a year.', $params);
+    }
+
+    // Do not allow if entered Year is past year.
+    if (!is_numeric($value) || (is_numeric($value) && $value < date('Y'))) {
+      $params = array(
+        '@value' => $value,
+      );
+
+      $this->setError($field_name, 'The value for the year field is not valid value(@value). The value should be a present or future year.', $params);
     }
   }
 }

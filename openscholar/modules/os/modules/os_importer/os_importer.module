@@ -743,7 +743,13 @@ function os_importer_verify_uploaded_file($form, $form_state) {
         $value = intval($value);
       }
       elseif ($field == 'created' && is_string($value)) {
-        $value = strtotime($value);
+        // If date format is valid, i.e. YYYY-MM-DD, then will be converted into epoch timestamp.
+        // Otherwise displaying error message.
+        if(DateTime::createFromFormat("Y-m-d", $value)) {
+          $value = strtotime($value);
+        } else {
+          form_set_error('created', t('The value for the !field with value "!value" is not valid. Expected date format YYYY-MM-DD', array('!field' => $field, '!value' => $value)));
+        }
       }
 
       try {
