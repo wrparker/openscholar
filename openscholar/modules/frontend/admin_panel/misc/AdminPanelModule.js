@@ -6,17 +6,49 @@
   var morphButton;
   var menu_state;
 
-    angular.module('AdminPanel', [ 'os-auth', 'ngCookies'])
+    angular.module('AdminPanel', [ 'os-auth', 'ngCookies','ngStorage'])
     .config(function (){
        paths = Drupal.settings.paths
-       vsite = Drupal.settings.spaces.id;
+       vsite = Drupal.settings.spaces.id || 0;
        cid = Drupal.settings.admin_panel.cid;
        uid = Drupal.settings.admin_panel.user;
-    }).controller("AdminMenuController",['$scope', '$http', '$cookieStore', function ($scope, $http, $cookieStore) {
+    }).controller("AdminMenuController",['$scope', '$http', '$cookies','$localStorage', function ($scope, $http, $cookies, $localStorage) {
     
       var menu = 'admin_panel';
       $scope.paths = paths;
       
+      $scope.getListStyle = function(id) { 
+      	if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
+      	  return {'display':'block'}; 
+      	}
+      	return {};
+      };
+      
+      //Init storage
+      if (typeof($localStorage.admin_menu) == 'undefined') {
+        $localStorage.admin_menu = {};
+      }
+      if (typeof($localStorage.admin_menu[uid]) == 'undefined') {  
+        $localStorage.admin_menu[uid] = {};
+      }
+      
+      // Check for the menu data in local storage.
+      if (typeof($localStorage.admin_menu[uid]) !== 'undefined' && typeof($localStorage.admin_menu[uid][vsite]) !== 'undefined' && typeof($localStorage.admin_menu[uid][vsite][cid]) !== 'undefined') {
+        $scope.admin_panel = $localStorage.admin_menu[uid][vsite][cid];
+        
+        if (typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main) {
+          window.setTimeout(function () {
+        	// Turn off transitions and toggle open
+        	//morphButton.support.transitions = false;
+        	morphButton.toggle();
+        	//morphButton.support.transitions = Modernizr.csstransitions;
+          },1);
+        }
+        
+        return;
+      }
+      
+      //Go get the admin menu from the server.
       params = { cid: cid, uid: uid};
       if (vsite) {
         params.vsite = vsite;
@@ -25,20 +57,17 @@
       var url = paths.api + '/cp_menu/' + menu;
       $http({method: 'get', url: url, params: params, cache: true}).
         then(function(response) {
+          //Clear out old entries.
+          $localStorage.admin_menu[uid][vsite] = {};
+          $localStorage.admin_menu[uid][vsite][cid] = response.data.data;
           $scope.admin_panel = response.data.data;
           if (typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main) {
         	morphButton.toggle();  
           }
         }); 
       
-      $scope.getListStyle = function(id) { 
-    	if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
-    	  return {'display':'block'}; 
-    	}
-    	return {};
-      };
      
-    }]).directive('toggleOpen', ['$cookieStore', function($cookieStore) {
+    }]).directive('toggleOpen', ['$cookies', function($cookies) {
     
       if (typeof(menu_state) == 'undefined') {
         menu_state = {'main': false};  
@@ -81,15 +110,15 @@
 	          }
         	}
         	scope.$apply(function () {
-        	  $cookieStore.put('osAdminMenuState',menu_state);
+        	  $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
             });
           })  
         },
       }
       
-    }]).directive('leftMenu', ['$cookieStore', function($cookieStore) {
+    }]).directive('leftMenu', ['$cookies', function($cookies) {
       if (typeof(menu_state) == 'undefined') {
-        menu_state = $cookieStore.get('osAdminMenuState');
+        menu_state = $cookies.getObject('osAdminMenuState');
       }
       // If it is still undefined init it.
       if (typeof(menu_state) == 'undefined') {
@@ -111,7 +140,7 @@
       			  jQuery('.morph-button').addClass('scroll');
       			  menu_state['main'] = true;
       			  scope.$apply(function () {
-        	        $cookieStore.put('osAdminMenuState',menu_state);
+        	        $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
         	      });
       			},
       			onBeforeClose : function() {
@@ -120,7 +149,7 @@
       			  jQuery('#page_wrap, .page-cp #page, .page-cp #branding').removeClass('pushed');
       			  menu_state['main'] = false;
         		  scope.$apply(function () {
-          	        $cookieStore.put('osAdminMenuState',menu_state);
+          	        $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
           	      });
       			}
       		});

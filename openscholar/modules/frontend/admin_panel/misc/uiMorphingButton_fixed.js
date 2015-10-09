@@ -55,6 +55,8 @@
 		this.contentEl = this.el.querySelector( '.morph-content' );
 		// init events
 		this._initEvents();
+		
+		this.support = support;
 	}
 
 	UIMorphingButton.prototype._initEvents = function() {
@@ -87,9 +89,9 @@
 
 		var self = this,
 			onEndTransitionFn = function( ev ) {
-				if( ev.target !== this ) return false;
+				if( self.support.transitions && ev.target !== this ) return false;
 
-				if( support.transitions ) {
+				if( self.support.transitions ) {
 					// open: first opacity then width/height/left/top
 					// close: first width/height/left/top then opacity
 					if( self.expanded && ev.propertyName !== 'opacity' || !self.expanded && ev.propertyName !== 'width' && ev.propertyName !== 'height' && ev.propertyName !== 'left' && ev.propertyName !== 'top' ) {
@@ -112,7 +114,7 @@
 				self.expanded = !self.expanded;
 			};
 
-		if( support.transitions ) {
+		if( this.support.transitions ) {
 			this.contentEl.addEventListener( transEndEventName, onEndTransitionFn );
 		}
 		else {

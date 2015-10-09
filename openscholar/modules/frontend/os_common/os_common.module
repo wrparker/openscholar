@@ -25,8 +25,12 @@ function os_common_library() {
         'group' => JS_LIBRARY,
         'weight' => -14
       ),
-
       '//ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-cookies.js' => array(
+        'type' => 'external',
+        'group' => JS_LIBRARY,
+        'weight' => -14
+      ),
+      '//cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.9/ngStorage.min.js' => array(
         'type' => 'external',
         'group' => JS_LIBRARY,
         'weight' => -14
