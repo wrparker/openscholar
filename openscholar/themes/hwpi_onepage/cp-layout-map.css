@@ -11,9 +11,13 @@
 .os_front .cp-region-content-top {
     min-height: 10em;
 }
-.os_front .cp-region-sidebar-first,
-.os_front .cp-region-sidebar-second {
+.os_front .cp-region-sidebar-first[style],
+.os_front .cp-region-sidebar-second[style] {
     display: none;
+    height: 1px !important;
+    width: 1px !important;
+    min-height: 1px !important;
+    min-width: 1px !important;
 }
 .os_front .form-actions,
 .os_front .cp-region-footer-bottom,
