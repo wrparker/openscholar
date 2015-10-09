@@ -4,10 +4,10 @@
   var cid;
   var uid;
   var morphButton;
+  var menu_state;
 
     angular.module('AdminPanel', [ 'os-auth', 'ngCookies'])
     .config(function (){
-       
        paths = Drupal.settings.paths
        vsite = Drupal.settings.spaces.id;
        cid = Drupal.settings.admin_panel.cid;
@@ -26,14 +26,12 @@
       $http({method: 'get', url: url, params: params, cache: true}).
         then(function(response) {
           $scope.admin_panel = response.data.data;
-          var menu_state = $cookieStore.get('osAdminMenuState');
           if (typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main) {
         	morphButton.toggle();  
           }
         }); 
       
       $scope.getListStyle = function(id) { 
-    	var menu_state = $cookieStore.get('osAdminMenuState');
     	if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
     	  return {'display':'block'}; 
     	}
@@ -42,7 +40,6 @@
      
     }]).directive('toggleOpen', ['$cookieStore', function($cookieStore) {
     
-      var menu_state = $cookieStore.get('osAdminMenuState');
       if (typeof(menu_state) == 'undefined') {
         menu_state = {'main': false};  
       }
@@ -91,7 +88,10 @@
       }
       
     }]).directive('leftMenu', ['$cookieStore', function($cookieStore) {
-      var menu_state = $cookieStore.get('osAdminMenuState');
+      if (typeof(menu_state) == 'undefined') {
+        menu_state = $cookieStore.get('osAdminMenuState');
+      }
+      // If it is still undefined init it.
       if (typeof(menu_state) == 'undefined') {
         menu_state = {'main': false};  
       }

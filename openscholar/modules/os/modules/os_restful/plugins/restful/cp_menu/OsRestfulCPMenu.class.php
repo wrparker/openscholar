@@ -291,7 +291,14 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
             'type' => 'link',
             'href' => 'cp/apps'
           )
-        ) + $feature_settings,
+        ) + $feature_settings +
+        array(
+          'advanced' => array(
+            'label' => 'Advanced',
+            'type' => 'link',
+            'href' => 'cp/settings'
+          )
+        ),
       ),
       'users_roles' => array(
         'label' => 'Users & Roles',
