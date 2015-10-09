@@ -65,14 +65,5 @@ class OsImporterClassValidator extends OsImporterEntityValidateBase {
 
       $this->setError($field_name, 'The value for the year field is not valid value(@value). The value should be a year.', $params);
     }
-
-    // Do not allow if entered Year is past year.
-    if (!is_numeric($value) || (is_numeric($value) && $value < date('Y'))) {
-      $params = array(
-        '@value' => $value,
-      );
-
-      $this->setError($field_name, 'The value for the year field is not valid value(@value). The value should be a present or future year.', $params);
-    }
   }
 }
