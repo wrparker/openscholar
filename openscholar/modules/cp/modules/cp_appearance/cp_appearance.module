@@ -149,8 +149,9 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
 
   $themes_sorted = array();
   $featured_themes = array_filter(variable_get('cp_appearance_featured_themes', array()));
+
   // From where we get the list of single page themes?
-  $single_themes = array_filter(['aberdeen' => 'aberdeen', 'airstream' => 'airstream']);
+  $single_themes = array_filter(['aberdeen' => 'aberdeen', 'airstream' => 'airstream', 'collegiate' => 'collegiate', 'gking' => 'gking']);
   $display_single_themes = array();
 
   // Adds each theme option to the form, and flavor options if available.
@@ -224,13 +225,6 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
         $radio_options[$info['theme_name'].'-os_featured_flavor-'.$flavor_name] = $flavor_theme->info['theme_flavor_name'];
       }
     }
-
-    if ($single_themes) {
-      // todo: handle here with single page application array order.
-      if (in_array($info['theme_name'], $single_themes)) {
-        $display_single_themes[$info['theme_name']] = $theme;
-      }
-    }
   }
 
   // include flavors that have been added manually by user
@@ -279,13 +273,6 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
     }
   }
 
-
-  if (!empty($display_single_themes)) {
-    unset($single_themes['aberdeen']);
-    $header = array('HEADER_SINGLE' => 'HEADER_SINGLE');
-    $themes = array_merge($header, $display_single_themes);
-  }
-
   // Moves default theme to the front of the array.
   if (!empty($first_themes)) {
     if (isset($first_themes[$current_theme.'-os_featured_flavor-'.$current_flavor])) {
@@ -305,6 +292,28 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
   // Selects the first option in case the current theme wasn't found.
   else {
     $current_theme = key($themes);
+  }
+
+  // Get all the single page themes.
+  foreach ($themes_sorted as $theme) {
+    // todo: check if this a single page theme.
+    if (in_array($theme->name, $single_themes)) {
+      $display_single_themes[$theme->name] = $theme;
+    }
+  }
+
+  if (!empty($display_single_themes)) {
+
+    foreach (array_keys($single_themes) as $theme) {
+      // Remove the one page theme from the theme page in order to prevent
+      // duplications.
+      unset($themes_sorted[$theme]);
+    }
+
+    $header_single = array('HEADER_SINGLE' => 'HEADER_SINGLE');
+    $featured_header = array('HEADER_FEATURED' => 'HEADER_FEATURED');
+
+    $themes = array_merge($featured_header, $themes_sorted, $header_single, $display_single_themes);
   }
 
   // Adds the theme options to form
