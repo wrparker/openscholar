@@ -318,7 +318,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
     $header_single = array('HEADER_SINGLE' => 'HEADER_SINGLE');
     $featured_header = array('HEADER_FEATURED' => 'HEADER_FEATURED');
 
-    $themes = !empty($themes) ? array_merge($themes, $header_single, $display_single_themes) : array_merge($featured_header, $themes_sorted, $header_single, $display_single_themes);
+    $themes = !empty($themes) ? array_merge($header_single, $display_single_themes, $themes) : array_merge($header_single, $display_single_themes, $featured_header, $themes_sorted);
   }
 
   // Adds the theme options to form
@@ -536,6 +536,7 @@ function _cp_appearance_theme_header_item($header_type) {
   switch ($header_type) {
     case 'HEADER_FEATURED':
       $default = t('Featured themes');
+      $subtitle = t('Mobile-friendly themes ussing Harvard color palettes');
       $display_title = variable_get('cp_appearance_featured_display_title', $default);
       if (!empty($display_title)) {
         $title = '<h2>' . check_plain($display_title) . '</h2>';
@@ -551,8 +552,9 @@ function _cp_appearance_theme_header_item($header_type) {
       break;
 
     case 'HEADER_SINGLE':
-      $title = '<h2>' . t('Single page themes') . '</h2>';
-      $subtitle = t('Single page application themes. Awesome for mobile oriented site!');
+      $params['@url'] = 'http://google.com';
+      $title = '<h2>' . t('One page / horizontal homepage layout themes') . '</h2>';
+      $subtitle = t('Mobile-friendly themes with horizontal homepage regions. <a href="@url">How to use these themes</a>', $params);
       break;
   }
 
