@@ -22,7 +22,7 @@ Feature:
           # Result form "tesla"
       And I should see "Tesla's blog"
 
-  @api @solr @now
+  @api @solr
   Scenario: Verify that other site widget won't show if it's empty.
 
     Given I am logging in as "john"
