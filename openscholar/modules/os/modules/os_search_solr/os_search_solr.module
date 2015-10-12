@@ -228,7 +228,7 @@ function os_search_solr_block_view_alter(&$data, $block) {
       }
 
       // We found 1 vsite(or non at all) - clearing the block content.
-      if ($vsites <= 1) {
+      if ($vsites == 0) {
         $data['content'] = NULL;
       }
     }
