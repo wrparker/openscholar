@@ -185,6 +185,13 @@ function _os_breadcrumbs_build_app_breadcrumb($menu_active_trail) {
   $item = menu_get_item();
   if(isset($item) && ($item['path'] == 'blog/archive' || (strpos($item['path'], 'publications') === 0))) {
     $map = $item['original_map'];
+
+    // If user is on blog archive page, then removing breadcrumb trail for archive and all
+    if($item['path'] == 'blog/archive' && isset($map[2]) && isset($map[3])) {
+      unset($map[2]);
+      unset($map[3]);
+    }
+
     if(isset($map) && count($map) > 1) {
       // Rebuild the breadcrumbs.
       $links = array();
