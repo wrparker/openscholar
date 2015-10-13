@@ -290,7 +290,7 @@
           var keys = getCacheKeysForEntity(type, idProp, entity);
           var updated = 0
           for (var k in keys) {
-            updated = Math.max(updated, cache[k].lastUpdate);
+            updated = Math.max(updated, cache[k].lastUpdated);
           }
           config.headers['If-Unmodified-Since'] = (new Date(updated*1000)).toString().replace(/ \([^)]*\)/, '');
 
