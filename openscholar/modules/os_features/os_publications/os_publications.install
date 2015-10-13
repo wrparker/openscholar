@@ -1418,7 +1418,21 @@ function os_publications_update_7036() {
  * Un-hiding the miscellaneous fields upon publications.
  */
 function os_publications_update_7037() {
+  $citations = array(
+    'american-chemical-society-with-titles',
+    'american-chemical-society',
+    'apa',
+    'chicago-author-date',
+    'chicago-fullnote-bibliography',
+    'chicago-note-bibliography',
+    'mhra',
+    'mla',
+    'nature',
+  );
+
   _reset_csl_map(FALSE);
-  os_publications_revert_citeproc_style('apa');
+  foreach ($citations as $citateion) {
+    os_publications_revert_citeproc_style($citateion);
+  }
 }
 
