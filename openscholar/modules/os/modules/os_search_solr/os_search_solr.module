@@ -220,9 +220,15 @@ function os_search_solr_block_view_alter(&$data, $block) {
     $data['title'] = t('Filter by other sites');
 
     // Hide the Filter by Site block if there is only one filter.
-    if (isset($data['content']['sm_og_group_ref']) && isset($data['content']['sm_og_group_ref']['#items'])) {
-      $site_array = $data['content']['sm_og_group_ref']['#items'];
-      if(is_array($site_array) && count($site_array) <= 1) {
+    if (isset($data['content']['sm_og_group_ref'])) {
+      // Looping over the matching vsites and count the amount.
+      $vsites = 0;
+      foreach ($data['content']['sm_og_group_ref'] as $sites) {
+        $vsites += count($sites['#items']);
+      }
+
+      // We found 1 vsite(or non at all) - clearing the block content.
+      if ($vsites == 0) {
         $data['content'] = NULL;
       }
     }

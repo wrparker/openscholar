@@ -21,3 +21,11 @@ Feature:
      Then I click on "Tesla (1)" under facet "Filter by other sites"
           # Result form "tesla"
       And I should see "Tesla's blog"
+
+  @api @solr
+  Scenario: Verify that other site widget won't show if it's empty.
+
+    Given I am logging in as "john"
+      And I add to the search results the sites "obama"
+     When I search for "music" in the site "john"
+     Then I should not see "Filter by other sites"
