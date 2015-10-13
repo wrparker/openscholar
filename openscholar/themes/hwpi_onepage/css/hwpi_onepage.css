@@ -68,7 +68,6 @@ a.os-swipe-large {
     display: inline-block;
     text-align: center;
     border: 1px solid #85A2BE;
-    font-size: 16px;
     padding: 10px 20px;
     font-weight: normal;
     background: linear-gradient(to left, transparent 50%, #FFFFFF 50%) repeat scroll right bottom / 200% 100% rgba(0, 0, 0, 0);
