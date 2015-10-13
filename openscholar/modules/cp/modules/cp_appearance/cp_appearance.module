@@ -151,7 +151,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
   $featured_themes = array_filter(variable_get('cp_appearance_featured_themes', array('aberdeen' => 'aberdeen', 'airstream' => 'airstream')));
 
   // From where we get the list of single page themes?
-  $single_themes = array_filter('hwpi_onepage' => 'hwpi_onepage');
+  $single_themes = array('hwpi_onepage' => 'hwpi_onepage');
   $display_single_themes = array();
 
   // Adds each theme option to the form, and flavor options if available.
