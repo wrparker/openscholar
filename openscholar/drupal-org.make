@@ -335,6 +335,7 @@ projects[registration][subdir] = "contrib"
 projects[registration][version] = 1.5
 projects[registration][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/fff85ce1e059985dac494d6bde5e923e25a74feb/patches/registration_link_pass_entity.patch"
 projects[registration][patch][] = "https://www.drupal.org/files/issues/registration-add-context-to-headers-2564355-1.patch"
+projects[registration][patch][] = "https://www.drupal.org/files/issues/registration_fatal_error_class-2546836-6.patch"
 
 projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
