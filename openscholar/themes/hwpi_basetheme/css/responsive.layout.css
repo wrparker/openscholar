@@ -423,12 +423,6 @@ padding: 0.3em 0.1em;
 
 }
 
-.block-boxes-os_boxes_html table td,
-.block-boxes-os_boxes_html table th,
-.field-name-body table td,
-.field-name-body table th {
-  display: block;
-}
 
 .field-name-field-photo {
     float: none!important;

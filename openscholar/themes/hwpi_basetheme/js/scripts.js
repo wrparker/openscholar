@@ -37,4 +37,6 @@
       );
     }
   }
+// Call to stacktable plugin for responsive table implementation
+$('.field-name-body table, .block-boxes-os_boxes_html table').cardtable();
 })(jQuery);
