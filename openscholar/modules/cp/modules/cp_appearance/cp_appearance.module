@@ -509,7 +509,6 @@ function theme_cp_appearance_theme_picker_form($variables) {
     );
     $output .= theme('item_list', $variables);
 
-    $output .= t('<h1>Featured themes</h1>');
   }
 
   $output .= drupal_render($form);
