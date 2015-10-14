@@ -21,7 +21,7 @@ function cp_page_alter(&$page) {
 }
 
 function cp_toolbar_pre_render($toolbar) {
-  if(variable_get('admin_panel_enabled', TRUE)) {
+  if(variable_get('admin_panel_enabled', FALSE)) {
     $toolbar['#access'] = FALSE;
     return $toolbar;
   }
