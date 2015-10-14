@@ -151,8 +151,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
   $featured_themes = array_filter(variable_get('cp_appearance_featured_themes', array('aberdeen' => 'aberdeen', 'airstream' => 'airstream')));
 
   // From where we get the list of single page themes?
-  $single_themes = array('hwpi_onepage' => 'hwpi_onepage');
-  $display_single_themes = array();
+  $single_themes = array();
 
   // Adds each theme option to the form, and flavor options if available.
   foreach ($themes as $theme) {
@@ -295,14 +294,16 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
   }
 
   // Get all the single page themes.
-  foreach ($themes_sorted as $theme) {
-    // todo: check if this a single page theme.
-    if (in_array($theme->name, $single_themes)) {
-      $display_single_themes[$theme->name] = $theme;
+  foreach ($themes_sorted as $delta => $theme) {
+
+    if (empty($theme->info['single'])) {
+      continue;
     }
+
+    $single_themes[$theme->name] = $theme;
   }
 
-  if (!empty($display_single_themes)) {
+  if (!empty($single_themes)) {
 
     foreach (array_keys($single_themes) as $theme) {
       // Remove the one page theme from the theme page in order to prevent
@@ -318,7 +319,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
     $header_single = array('HEADER_SINGLE' => 'HEADER_SINGLE');
     $featured_header = array('HEADER_FEATURED' => 'HEADER_FEATURED');
 
-    $themes = !empty($themes) ? array_merge($header_single, $display_single_themes, $themes) : array_merge($header_single, $display_single_themes, $featured_header, $themes_sorted);
+    $themes = !empty($themes) ? array_merge($header_single, $single_themes, $themes) : array_merge($header_single, $display_single_themes, $featured_header, $themes_sorted);
   }
 
   // Adds the theme options to form
