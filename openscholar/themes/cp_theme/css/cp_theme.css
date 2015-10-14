@@ -404,6 +404,7 @@ table.spaces td.option, table.spaces td.storage {
   font-weight:normal;
 }
 
+#cp-appearance-theme-picker-form #theme-header-single p,
 #cp-appearance-theme-picker-form #theme-header-featured p {
   color:#777;
   font-size:15px;
