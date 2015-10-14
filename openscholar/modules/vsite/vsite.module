@@ -3246,6 +3246,33 @@ function vsite_og_permission() {
         'vsite admin',
       ),
     ),
+    'access content overview' => array(
+      'title' => t('Access the content overview page'),
+      'description' => t('Grant access to overview content page.'),
+      'os_override' => TRUE,
+      'default role' => array(
+        'content editor',
+        'vsite admin',
+      ),
+    ),
+    'administer files' => array(
+      'title' => t('Administer files'),
+      'description' => t('Grant access to overview files page.'),
+      'os_override' => TRUE,
+      'default role' => array(
+        'content editor',
+        'vsite admin',
+      ),
+    ),
+    'administer comments' => array(
+      'title' => t('Administer comments'),
+      'description' => t('Grant access to overview comments page.'),
+      'os_override' => TRUE,
+      'default role' => array(
+        'content editor',
+        'vsite admin',
+      ),
+    ),
   );
 }
 
