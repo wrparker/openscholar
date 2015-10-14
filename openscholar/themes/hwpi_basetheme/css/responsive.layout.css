@@ -423,6 +423,10 @@ padding: 0.3em 0.1em;
 
 }
 
+.block-boxes-os_boxes_html table:not(.os-datatable) td,
+.field-name-body table:not(.os-datatable) td {
+  display: block;
+}
 
 .field-name-field-photo {
     float: none!important;
