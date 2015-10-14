@@ -170,13 +170,14 @@ function os_boxes_widget_delete_submit($form, &$form_state) {
   if ($form_state['values']['op'] == t('Yes')) {
     // Removes box from contexts
     ctools_include('layout', 'os');
-    os_layout_block_delete('boxes-' . $form_state['values']['bid']);
 
     // Deletes box instance
     if (module_exists('spaces') && $space = spaces_get_space()) {
       $space->controllers->boxes->del($form_state['values']['bid']);
+      os_layout_block_delete('boxes-' . $form_state['values']['bid'], NULL, $space);
     }
     else {
+      os_layout_block_delete('boxes-' . $form_state['values']['bid']);
       if ($box = boxes_box_load($form_state['values']['bid'])) {
         $box->delete();
       }
