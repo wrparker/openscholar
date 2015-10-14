@@ -398,6 +398,7 @@ table.spaces td.option, table.spaces td.storage {
   overflow: hidden;
 }
 
+#theme-header-single h2,
 #cp-appearance-theme-picker-form #theme-header-featured h2,
 #cp-appearance-theme-picker-form #theme-header-other h2 {
   font-weight:normal;
