@@ -547,7 +547,6 @@
       </group>
       <text macro="description"/>
       <text macro="secondary-contributors" prefix=". "/>
-      <text macro="container-title" prefix=". "/>
       <text macro="container-contributors"/>
       <text macro="edition"/>
       <text macro="locators-chapter"/>

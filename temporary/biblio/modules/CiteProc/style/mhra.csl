@@ -369,7 +369,6 @@
          <group delimiter=", ">
             <text macro="author"/>
             <text macro="title-note"/>
-            <text macro="container-title-note"/>
             <text macro="editor-translator"/>
             <text macro="collection-title"/>
             <text macro="volume"/>
