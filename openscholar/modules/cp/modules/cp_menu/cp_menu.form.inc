@@ -200,10 +200,12 @@ function theme_cp_menu_table($variables){
       $extra_classes[] = 'hidden';
     }
 		
+    $remove_link_text = in_array($d,$revert) ? 'Reset' : 'Remove';
+		
     $rows[] = array(
       'data' => array(
         array(
-          'data' => $menus[$d] . drupal_render($table_data[$d]['menu-name']).' '.ctools_modal_text_button((in_array($d,$revert)?'Reset':'Remove'), 'cp/build/menu/nojs/remove/'.$d, 'Remove'),
+          'data' => $menus[$d] . drupal_render($table_data[$d]['menu-name']).' '.ctools_modal_text_button($remove_link_text, 'cp/build/menu/nojs/remove/'.$d, $remove_link_text),
           'colspan' => count($headers) - 2,
         ),
         array(
@@ -309,7 +311,7 @@ function cp_menu_add_menu($ajax) {
     if ($form_state['executed']) {
       $output[] = ctools_modal_command_dismiss();
       if (isset($form_state['values']['op']) && $form_state['values']['op'] == t('Save')) {
-        $output[] = ctools_ajax_command_reload();
+        $output[] = array('command' => 'os_modal_parent_refresh');
       }
     }
     echo ajax_render($output);
@@ -399,7 +401,7 @@ function cp_menu_edit_submit($form, &$form_state) {
 
 function cp_menu_remove_menu($ajax, $menu) {
   if (!$ajax) {
-    return drupal_get_form('cp_menu_remove_confim', $menu);
+    return drupal_get_form('cp_menu_remove_confirm', $menu);
   }
 
   ctools_include('modal');
@@ -411,23 +413,28 @@ function cp_menu_remove_menu($ajax, $menu) {
   $output = ctools_modal_form_wrapper('cp_menu_remove_confirm', $form_state);
   if ($form_state['executed']) {
     if (isset($form_state['values']['op'])) {
-	    if ($form_state['values']['op'] == t('Confirm')) {
-        ctools_include('ajax');
-        $output[] = ctools_ajax_command_reload();
-      }
-      else {
-        $output[] = ctools_modal_command_dismiss();
-      }
+	$output[] = ctools_modal_command_dismiss();
+      if ($form_state['values']['op'] == 'Confirm') {
+        $output[] = array('command' => 'os_modal_parent_refresh');
+      }      
     }
   }	 
   echo ajax_render($output);
-  exit();
+  drupal_exit();
 }
 
 function cp_menu_remove_confirm($form, &$form_state) {
   $menu = $form_state['menu'];
-  $form = confirm_form($form, t('Are you sure you want to remove the menu: @menu?', array('@menu' => $menu)));
 	
+  $revert = array(
+    'primary-menu',
+    'secondary-menu',
+  ); 
+
+  $remove_link_text = in_array($menu,$revert) ? 'reset' : 'remove';
+	
+  $form = confirm_form($form, t('Are you sure you want to ' . $remove_link_text . ' the menu: @menu?', array('@menu' => $menu)));
+
   $form['actions']['cancel'] = array(
     '#type' => 'submit',
     '#value' => t('Cancel'),
