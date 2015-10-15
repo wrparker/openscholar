@@ -34,6 +34,8 @@
 .front .content-left.content-right.content-bottom #content-panels .region-content-bottom,
 .front .block.block-boxes-os_slideshow_box #layout_3_1_overlay img,
 .front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html,
+.front .block-boxes-os_boxes_tabs .block-boxes-os_boxes_html,
+.front .block-boxes-os_boxes_accordion .block-boxes-os_boxes_html,
 .front .block-boxes-os_boxes_media img {
     width: 100%;
 }
@@ -42,10 +44,12 @@
     max-width: 1520px;
 }
 .front .block-boxes-os_boxes_html {
-    width: 95%;
-    font-size: 1.2em;
+    width: 85%;
+    font-size: 1.3em;
     line-height: 1.4em;
 }
+.front .block-boxes-os_boxes_accordion .block-boxes-os_boxes_html,
+.front .block-boxes-os_boxes_tabs .block-boxes-os_boxes_html,
 .front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html {
     margin-left: 0;
     margin-right: 0;
@@ -104,9 +108,7 @@
 .front .block-boxes-os_boxes_columns .block-boxes-os_sv_list_box .node:last-of-type {
     margin-right: 0;
 }
-.front .block-boxes-os_boxes_columns .block-boxes-os_sv_list_box.lopz-6 .node,
-.front .block-boxes-os_boxes_columns .block-boxes-os_sv_list_box.lopz-3 .node,
-.front .block-boxes-os_boxes_columns .block-boxes-os_sv_list_box.lopz-4 .node,
-.front .block-boxes-os_boxes_columns .block-boxes-os_sv_list_box.lopz-2 .node {
-    width: inherit;
+.front .block-boxes-os_boxes_columns .block-boxes-os_sv_list_box,
+.front .block-boxes-os_boxes_columns .block-boxes-os_sv_list_box .node {
+    width: 100%;
 }

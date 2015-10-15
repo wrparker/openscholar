@@ -186,6 +186,9 @@ ul.nice-menu-down li ul li ul {
 .front .block-boxes-os_boxes_media img {
     margin: -15px 0 -20px 0;
 }
+.front .node-teaser.node-person {
+    padding: 0 0 30px;
+}
 /* Titles & Type */
 
 .page-search .title a,
@@ -423,7 +426,10 @@ a.rslides_nav {
     transform: translate(-50%, -50%);
     bottom: inherit;
     right: inherit;
-    z-index: 2;
+}
+.block-boxes-os_slideshow_box .slide-copy,
+.block-boxes-os_slideshow_box .rslides_tabs {
+    z-index: 2 !important;
 }
 .front #layout_3_1_overlay .slide-copy {
     width: 48%;
