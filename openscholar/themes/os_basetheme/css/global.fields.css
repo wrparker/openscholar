@@ -170,11 +170,3 @@
 .registration-event-signup-simple .field-name-field-full-name .field-items {
   display:inline-block;
 }
-
-.registration-event-signup-simple .registration-author,
-.registration-event-signup-simple .registration-state,
-.registration-event-signup-simple .registration-slots,
-.registration-event-signup-simple .field-name-field-repeating-event-date {
-  display:none;
-}
-
