@@ -50,15 +50,23 @@
           });
 
           scope.$watch('file.filename', function (filename, old) {
+            if (typeof filename != 'string') {
+              return;
+            }
             scope.invalidName = false;
             if (filename == "") {
               scope.invalidName = true;
               return;
             }
-            if (filename && filename != old) {
+            if (!filename.match(/^([a-zA-Z0-9_\.-]*)\.([a-zA-Z0-9]*)$/)) {
+              scope.invalidName = true;
+              return;
+            }
+            var lower = filename.toLowerCase();
+            if (lower != old) {
               var files = fileService.getAll();
               for (var i = 0; i < files.length; i++) {
-                if (filename == files[i].filename && scope.file.id != files[i].id) {
+                if (lower == files[i].filename && scope.file.id != files[i].id) {
                   scope.invalidName = true;
                   return;
                 }

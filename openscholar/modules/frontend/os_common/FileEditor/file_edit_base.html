@@ -6,7 +6,7 @@
     <label for="fe-filepath">File Name</label>
     <span class="full-url">{{fullPath}}</span>
     <span class="fe-filepath-wrapper"><input id="fe-filepath" type="text" ng-model="file.filename" class="form-text" ng-class="{error: invalidName}"></span>
-    <div ng-show="invalidName && file.filename" class="error">A file with this name already exists!</div>
+    <div ng-show="invalidName && file.filename" class="error">This filename cannot contain illegal characters, or a file with this name already exists!</div>
 </div>
 
 <div ng-include="fileEditAddt"></div>
