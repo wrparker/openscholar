@@ -127,20 +127,10 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
     return parent::deleteEntity($entity_id);
   }
 
-  protected function reject($timestamp = null) {
-    static $rejected = [];
-    $rejected['timestmap'] = $timestamp;
-    return $rejected;
-  }
-
   public function additionalHateoas() {
     $addtl = array();
     $path = $this->getPath();
 
-    $rejects = $this->reject();
-    if (!count($rejects)) {
-      $addtl['updatedOn'] = $rejects['timestamp'];
-    }
     if ($this->method == \RestfulInterface::GET) {
       $timestamp = str_replace('updates/', '', $path);
       if ($timestamp == $path) {
