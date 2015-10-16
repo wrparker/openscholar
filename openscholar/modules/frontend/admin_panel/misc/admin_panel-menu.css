@@ -20,6 +20,14 @@ body {
     -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.7, 0, 0.3, 1) 0.1s;
     transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1) 0.1s;
 }
+
+.page-cp #branding.no-transition,
+.page-cp #page.no-transition,
+.page_wrap.no-transition {
+    -webkit-transition: none;
+    transition: none;
+}
+
 .page-cp #branding {
     position: relative;
     margin-left: 40px;

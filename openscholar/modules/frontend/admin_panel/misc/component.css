@@ -69,6 +69,12 @@
     -webkit-transition: opacity 0.3s 0.5s;
     transition: opacity 0.3s 0.5s;
 }
+
+.morph-button-fixed.open.no-transition .morph-content > div {
+    -webkit-transition: opacity 0s 0s;
+    transition: opacity 0s 0s;
+}
+
 .morph-button-fixed.active > button {
     z-index: 2000;
 }
@@ -87,6 +93,14 @@
     -webkit-transition: width 0.4s 0.1s, height 0.4s 0.1s, top 0.4s 0.1s, left 0.4s 0.1s;
     transition: width 0.4s 0.1s, height 0.4s 0.1s, top 0.4s 0.1s, left 0.4s 0.1s;
 }
+
+
+.morph-button-overlay.open.no-transition .morph-content,
+.morph-button-sidebar.open.no-transition .morph-content {
+    -webkit-transition: width 0s 0s, height 0s 0s, top 0s 0s, left 0s 0s;
+    transition: width 0s 0s, height 0s 0s, top 0s 0s, left 0s 0s;
+}
+
 /* Morph Button Style: Overlay */
 
 .morph-button.morph-button-overlay {
