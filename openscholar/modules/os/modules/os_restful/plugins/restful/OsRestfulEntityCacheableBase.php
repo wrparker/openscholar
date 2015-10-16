@@ -92,6 +92,10 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
     return $query;
   }
 
+  public function fetchingUpdates() {
+    return (strpos($this->path, 'updates/') !== FALSE);
+  }
+
   /**
    * @param $id - the entity of the id to retrieve the last modified timestamp for
    * @return mixed - either a timestamp with the last time this entity was changed, or FALSE if the entity no longer exists

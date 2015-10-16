@@ -1,6 +1,6 @@
 <?php
 
-class OsVocabulary extends \RestfulEntityBase {
+class OsVocabulary extends OsRestfulEntityCacheableBase {
 
   /**
    * {@inheritdoc}
@@ -262,4 +262,9 @@ class OsVocabulary extends \RestfulEntityBase {
     return $return;
   }
 
+  protected function getLastModified($id) {
+    // Vocabularies cannot really be editted. When they were first created isn't stored either.
+    // This function is only concerned with modifications, so as long as we assume it's really old, we're fine for now
+    return strotime('-31 days', REQUEST_TIME);
+  }
 }

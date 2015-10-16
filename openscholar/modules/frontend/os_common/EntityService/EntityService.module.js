@@ -430,6 +430,15 @@
           url = nextUrl;
         }
 
+        if (Drupal.settings.spaces.id) {
+          if (url.indexOf('?') == -1) {
+            url += '?vsite=' + Drupal.settings.spaces.id;
+          }
+          else {
+            url += '&vsite=' + Drupal.settings.spaces.id;
+          }
+        }
+
         $http.get(url).then(function (resp) {
           for (var i = 0; i < keys.length; i++) {
             if (nextUrl == undefined) {
