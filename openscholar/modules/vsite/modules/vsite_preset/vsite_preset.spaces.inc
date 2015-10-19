@@ -562,7 +562,6 @@ function vsite_preset_spaces_presets() {
         'primary-menu' => array(
           'Bio' => -3,
           'Classes' => -2,
-          'Publications' => -1,
         ),
       ),
       'spaces_features_available' => array(

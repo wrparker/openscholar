@@ -48,7 +48,7 @@ function os_publications_menu_alter(&$items) {
     'access callback' => 'spaces_access_feature',
     'access arguments' => array('view', 'os_publications'),
     'file' => drupal_get_path('module', 'os_publications') . '/os_publications.pages.inc',
-    'menu_name' => 'primary-menu',
+    'type' => MENU_CALLBACK,
   );
 
   $items['publications/export'] = array(
@@ -86,6 +86,9 @@ function os_publications_menu_alter(&$items) {
 
   // Change access callback to publications/keywords.
   $items['publications/keywords']['access callback'] = FALSE;
+
+  // Change access callback to publications/import.
+  $items['publications/import']['access callback'] = FALSE;
 }
 
 /**
