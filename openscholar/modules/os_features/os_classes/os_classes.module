@@ -13,11 +13,11 @@ include_once 'os_classes.features.inc';
  */
 function os_classes_views_pre_render(&$view) {
   // If the user is on /classes page.
-  if($view->name == 'os_classes' && $view->current_display == 'page') {
+  if ($view->name == 'os_classes' && $view->current_display == 'page') {
     // Iterating all views resultset of nodes
-    foreach($view->style_plugin->row_plugin->nodes as $nid => $node) {
+    foreach ($view->style_plugin->row_plugin->nodes as $nid => $node) {
       // If field_semester array element is empty, then semester value will be displayed as 'n/a'.
-      if(empty($view->style_plugin->row_plugin->nodes[$nid]->field_semester)) {
+      if (empty($view->style_plugin->row_plugin->nodes[$nid]->field_semester)) {
         $view->style_plugin->row_plugin->nodes[$nid]->field_semester[LANGUAGE_NONE][0]['value'] = 'n/a';
       } elseif (strtolower($view->style_plugin->row_plugin->nodes[$nid]->field_semester[LANGUAGE_NONE][0]['value']) == 'n/a') {
         // If semester field in class import CSV is written as N/A or N/a or n/A, displaying the value in lower case.
@@ -33,7 +33,7 @@ function os_classes_views_pre_render(&$view) {
 function os_classes_form_class_node_form_alter(&$form, &$form_state) {
   // If field semester default value is empty, then option N/A will be selected in edit mode
   // During new class creation, default value is empty, then also n/a will be selected.
-  if(empty($form['field_semester'][LANGUAGE_NONE]['#default_value'])) {
+  if (empty($form['field_semester'][LANGUAGE_NONE]['#default_value'])) {
     $form['field_semester'][LANGUAGE_NONE]['#default_value'] = '_none';
   }
 }
