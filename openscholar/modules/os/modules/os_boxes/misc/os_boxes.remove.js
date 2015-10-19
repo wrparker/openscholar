@@ -11,10 +11,10 @@ Drupal.behaviors.osBoxesRemove = {
       e.stopPropagation();
     })
   }
-}
+};
 
 var removed_widgets = {},
-  template = 'This widget has been removed from this section. You can <a href="/os/site01/os/widget/boxes/{delta}/remove/{region}{query}">undo this action</a>';
+  template = 'This widget has been removed from this section. You can <a href="os/widget/{delta}/{region}/remove/return{query}">undo this action</a>';
 
 function removeWidget(widget, query) {
   var id = widget.attr('id'),
