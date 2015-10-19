@@ -200,10 +200,11 @@ function os_basetheme_preprocess_node(&$vars) {
     $vars['node']->field_date['und'][0] = $vars['node']->field_date['und'][$delta];
 
     // Get the repeat rule.
-    $rule = theme_date_repeat_display(array(
+    $rule = theme('date_repeat_display', array(
       'item' => array('rrule' => $vars['content']['field_date']['#items'][0]['rrule']),
       'field' => field_info_field('field_date'),
     ));
+    //$rule = theme_date_repeat_display();
 
     // Get the date field. The delta we want to display will be returned.
     $field = field_view_field('node', $vars['node'], 'field_date', array('full'));
@@ -452,4 +453,24 @@ function os_events_in_view_context($display_titles = array()) {
   }
 
   return in_array($view->current_display, $display_names);
+}
+
+/**
+ * Implements override for theme_date_repeat_display of contrib module date_repeat
+ * @param array $vars
+ * theme parameters
+ * Here we are altering the display text of the event occurrences in repetitive events
+ * @return string
+ * returning the output as HTML.
+ */
+function os_basetheme_date_repeat_display($vars) {
+  $field = $vars['field'];
+  $item = $vars['item'];
+  $entity = !empty($vars['node']) ? $vars['node'] : NULL;
+  $output = '';
+  if (!empty($item['rrule'])) {
+    $output = os_date_repeat_rrule_description($item['rrule']);
+    $output = '<div class="date-repeat-rule">' . $output . '</div>';
+  }
+  return $output;
 }
