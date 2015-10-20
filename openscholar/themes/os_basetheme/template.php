@@ -204,7 +204,6 @@ function os_basetheme_preprocess_node(&$vars) {
       'item' => array('rrule' => $vars['content']['field_date']['#items'][0]['rrule']),
       'field' => field_info_field('field_date'),
     ));
-    //$rule = theme_date_repeat_display();
 
     // Get the date field. The delta we want to display will be returned.
     $field = field_view_field('node', $vars['node'], 'field_date', array('full'));
