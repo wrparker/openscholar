@@ -2094,7 +2094,7 @@ function os_date_repeat_rrule_description($rrule, $format = 'D M d Y') {
   }
 
   // define 5 days code as weekday array value
-  $weekdays = array('MO', 'TU', 'WE', 'TH', 'FR');
+  //$weekdays = array('MO', 'TU', 'WE', 'TH', 'FR');
 
   module_load_include('inc', 'date_api', 'date_api_ical');
   module_load_include('inc', 'date_repeat', 'date_repeat_calc');
@@ -2125,22 +2125,26 @@ function os_date_repeat_rrule_description($rrule, $format = 'D M d Y') {
   switch ($rrule['FREQ']) {
     case 'WEEKLY':
       $description['!interval'] = format_plural($rrule['INTERVAL'], 'every week', 'every @count weeks') . ' ';
+      $freq_type = 'weekly';
       break;
     case 'MONTHLY':
       $description['!interval'] = format_plural($rrule['INTERVAL'], 'every month', 'every @count months') . ' ';
+      $freq_type = 'monthly';
       break;
     case 'YEARLY':
       $description['!interval'] = format_plural($rrule['INTERVAL'], 'every year', 'every @count years') . ' ';
+      $freq_type = 'yearly';
       break;
     default:
-      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every day', 'every @count days') . ' ';
+      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every day', 'every @count days');
+      $freq_type = 'daily';
       break;
   }
 
   if (!empty($rrule['BYDAY'])) {
     $days = date_repeat_dow_day_options();
     $counts = date_repeat_dow_count_options();
-    $results = array();
+    $days_results = array();
     $day_count = 0;
     foreach ($rrule['BYDAY'] as $byday) {
       // Get the numeric part of the BYDAY option, i.e. +3 from +3MO.
@@ -2151,30 +2155,14 @@ function os_date_repeat_rrule_description($rrule, $format = 'D M d Y') {
       if (!empty($count)) {
         // See if there is a 'pretty' option for this count, i.e. +1 => First.
         $order = array_key_exists($count, $counts) ? strtolower($counts[$count]) : $count;
-        $results[] = trim(t(' on the !date_order !day_of_week', array('!date_order' => $order, '!day_of_week' => $days[$day])));
+        $days_results[] = trim(t(' on the !date_order !day_of_week', array('!date_order' => $order, '!day_of_week' => $days[$day])));
       }
       else {
-        // If current iteration is for last day of the display, appending 'and' before the day.
-        if($day_count == count($rrule['BYDAY'])) {
-          $last_day_output = trim(t('!day_of_week', array('!day_of_week' => t('and ') . $days[$day])));
-        } else {
-          $results[] = trim(t('!day_of_week', array('!day_of_week' => $days[$day])));
-        }
+        $days_results[] = trim(t('!day_of_week', array('!day_of_week' => $days[$day])));
       }
     }
-
-    $description['!byday'] = t('every ') . implode(', ', $results) . ' ' . $last_day_output;
-
-    $intersected_days = array_intersect($rrule['BYDAY'], $weekdays);
-    //print_r($intersected_days);
-    // Omitting 'every day' string
-    $description['!interval'] = '';
-    // It will be displayed as every weekday
-    if(count($rrule['BYDAY']) == count($weekdays)) {
-      $description['!byday'] = 'every weekday';
-    }
-
   }
+
   if (!empty($rrule['BYMONTH'])) {
     if (sizeof($rrule['BYMONTH']) < 12) {
       $results = array();
@@ -2183,23 +2171,49 @@ function os_date_repeat_rrule_description($rrule, $format = 'D M d Y') {
         $results[] = $months[$month];
       }
       if (!empty($rrule['BYMONTHDAY'])) {
-        $description['!bymonth'] = trim(t('!repeats_every_interval on the !month_days of !month_names', array('!repeats_every_interval ' => '', '!month_days' => implode(', ', $rrule['BYMONTHDAY']), '!month_names' => implode(', ', $results))));
+        $description['!bymonth'] = trim(t(' on the !month_days of !month_names', array('!month_days' => implode(', ', $rrule['BYMONTHDAY']), '!month_names' => implode(', ', $results))));
       }
       else {
-        $description['!bymonth'] = trim(t('!repeats_every_interval on !month_names', array('!repeats_every_interval ' => '', '!month_names' => implode(', ', $results))));
+        $description['!bymonth'] = trim(t(' of !month_names', array('!month_names' => implode(', ', $results))));
       }
     }
+  }
+
+  if ($freq_type == 'daily') {
+    // Omitting 'every day' string for daily events
+    if (isset($days_results)) {
+      $description['!interval'] = '';
+      $description['!byday'] = t('every ') . implode(', ', $days_results);
+    }
+    // It will be displayed as every weekday
+    if (isset($rrule['BYDAY']) && count($rrule['BYDAY']) == 5) {
+      $description['!byday'] = 'every weekday';
+    }
+  } elseif ($freq_type == 'weekly') {
+      if (isset($days_results) && count($days_results) > 1 && empty($rrule['COUNT'])) {
+        $prefix_day_weekly = ' on ';
+      } else {
+        $prefix_day_weekly = ' every ';
+      }
+    $description['!byday'] = t($prefix_day_weekly) . implode(', ', $days_results);
+  } elseif ($freq_type == 'monthly' && isset($days_results)) {
+        $description['!interval'] = '';
+        $description['!byday'] = implode(', ', $days_results) . ' ' . $description['!bymonth'];
+        $description['!bymonth'] = '';
+  } elseif ($freq_type == 'yearly' && isset($days_results)) {
+      $description['!byday'] = implode(', ', $days_results) . ' ' . $description['!bymonth'];
+      $description['!bymonth'] = '';
   }
   if ($rrule['INTERVAL'] < 1) {
     $rrule['INTERVAL'] = 1;
   }
   if (!empty($rrule['COUNT'])) {
-    $description['!count'] = trim(t('!repeats_every_interval !count times', array('!repeats_every_interval ' => '', '!count' => $rrule['COUNT'])));
+    $description['!count'] = trim(t(', !count times', array('!count' => $rrule['COUNT'])));
   }
   if (!empty($rrule['UNTIL'])) {
     $until = date_ical_date($rrule['UNTIL'], 'UTC');
     date_timezone_set($until, date_default_timezone_object());
-    $description['!until'] = trim(t('!repeats_every_interval until !until_date', array('!repeats_every_interval ' => '', '!until_date' => date_format_date($until, 'custom', $format))));
+    $description['!until'] = trim(t(' until !until_date', array('!until_date' => date_format_date($until, 'custom', $format))));
   }
   if ($exceptions) {
     $values = array();
@@ -2223,5 +2237,5 @@ function os_date_repeat_rrule_description($rrule, $format = 'D M d Y') {
     }
     $description['!additional'] = trim(t('Also includes !additional_dates.', array('!additional_dates' => implode(', ', $values))));
   }
-  return t('Repeats !interval !bymonth !byday !count !until !except. !additional', $description);
+  return t('Repeats !interval!bymonth!byday!count !until !except. !additional', $description);
 }
