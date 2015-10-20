@@ -393,16 +393,7 @@
     <text term="in" text-case="capitalize-first"/>
   </macro>
   <macro name="container-title">
-    <choose>
-      <if type="chapter paper-conference" match="any">
-        <text macro="container-prefix" suffix=" "/>
-      </if>
-    </choose>
-    <choose>
-      <if type="legal_case" match="none">
-        <text variable="container-title" text-case="title" font-style="italic"/>
-      </if>
-    </choose>
+    <text variable="sceondary-title" text-case="title" font-style="italic"/>
   </macro>
   <macro name="publisher">
     <group delimiter=": ">
@@ -547,6 +538,7 @@
       </group>
       <text macro="description"/>
       <text macro="secondary-contributors" prefix=". "/>
+      <text variable="sceondary-title"/>
       <text macro="container-contributors"/>
       <text macro="edition"/>
       <text macro="locators-chapter"/>
