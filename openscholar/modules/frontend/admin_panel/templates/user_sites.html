@@ -4,7 +4,9 @@
   <h3 ng-show="own" class="h3_header bottom_margin">My Sites</h3>
   <h3 ng-show="!own" class="h3_header bottom_margin">Other Sites</h3>
   <div ng-repeat="(key, site) in filtered = (site_data | filter:{owner: own}:strict) | limitTo: pageSize * (currentPage[key] + 1) | limitTo: pageSize * -1  " class="bottom_margin">
+    <div class="position-left">
     <a href="/node/{{ site.id }}" class="text_link">{{ site.title }}</a>
+    </div>
     <div class="position-right">
     <a ng-show="site.subsite_access" href="/site/register?parent={{ site.id }}" class="btton add">Add subsite</a>
     <a ng-show="site.delete_access" href="/node/{{ site.id }}/delete" class="btton remove">Delete</a>
