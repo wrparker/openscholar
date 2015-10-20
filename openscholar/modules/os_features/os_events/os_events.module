@@ -2093,16 +2093,11 @@ function os_date_repeat_rrule_description($rrule, $format = 'D M d Y') {
     return;
   }
 
-  // define 5 days code as weekday array value
-  //$weekdays = array('MO', 'TU', 'WE', 'TH', 'FR');
-
   module_load_include('inc', 'date_api', 'date_api_ical');
   module_load_include('inc', 'date_repeat', 'date_repeat_calc');
 
   $parts = date_repeat_split_rrule($rrule);
-  //echo '<pre>';
-  //print_r($parts);
-  //exit();
+
   $additions = $parts[2];
   $exceptions = $parts[1];
   $rrule = $parts[0];
