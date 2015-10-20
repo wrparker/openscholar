@@ -2403,10 +2403,20 @@ function vsite_delete_request_submit($form, &$form_state) {
  * @return contact_page
  */
 function vsite_site_contact_access(){
-  if (! ($space = spaces_get_space()) || ! ($user = user_load($space->group->uid))) {
-    return FALSE;
+  $space = spaces_get_space();
+  if (!empty($space)) {
+    // Get the vsite_users_contact_form_anonymous varible
+    $allow_contact = $space->controllers->variable->get('show_email', 'space');
+    //Use depricated variable.
+    if ($allow_contact === null) {
+      $allow_contact = $space->controllers->variable->get('vsite_users_contact_form_anonymous', 'space');
+    }
   }
-  return TRUE;
+  else {
+    $allow_contact = variable_get('show_email', variable_get('vsite_users_contact_form_anonymous', TRUE));
+  }
+
+  return $allow_contact;
 }
 
 /**
