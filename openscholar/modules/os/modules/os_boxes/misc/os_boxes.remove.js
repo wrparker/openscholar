@@ -14,17 +14,19 @@ Drupal.behaviors.osBoxesRemove = {
 };
 
 var removed_widgets = {},
-  template = 'This widget has been removed from this section. You can <a href="os/widget/{delta}/{region}/remove/return{query}">undo this action</a>';
+  template = 'This widget has been removed from this section. You can <a href="os/widget/{module}/{delta}/remove/{region}/{query}">undo this action</a>';
 
 function removeWidget(widget, query) {
   var id = widget.attr('id'),
       delta = id.replace('block-boxes-', '').replace(/--\d/, ''),
       region = findRegion(widget),
+      module = widget.attr('module'),
       html = template;
 
   html = html.replace('{delta}', delta);
   html = html.replace('{region}', region);
   html = html.replace('{query}', query);
+  html = html.replace('{module}', module);
 
   removed_widgets[id] = widget.children().detach();
   widget.html(html);

@@ -194,7 +194,7 @@ function os_boxes_widget_delete_submit($form, &$form_state) {
 /**
  * Handles removing a widget from a theme region, provides undo link.
  */
-function os_boxes_remove_widget($module, $delta, $return = NULL) {
+function os_boxes_remove_widget($module, $delta, $region = NULL) {
   $contexts = $_GET['contexts'];
 
   // Removes the box from the contexts.
@@ -203,10 +203,9 @@ function os_boxes_remove_widget($module, $delta, $return = NULL) {
 
   $bid = $module . '-' . $delta;
 
-  $old_region = $blocks[$bid]['region'];
-  if ($return) {
+  if ($region) {
     // The return has value which mean we need to undo the widget removal.
-    $blocks[$bid]['region'] = $delta;
+    $blocks[$bid]['region'] = $region;
   }
   os_layout_set_multiple($contexts, $blocks);
 }
