@@ -102,6 +102,7 @@ function media_draggable_field_widget_form(&$form, &$form_state, $field, $instan
   $info = element_info('dragndrop_upload');
 
   $element['drop'] = array(
+    '#title' => isset($instance['label']) ? $instance['label'] : '',
     '#type' => 'dragndrop_upload',
     '#upload_location' => file_field_widget_uri($element['#field'], $element['#instance']),
     '#upload_validators' => file_field_widget_upload_validators(
@@ -149,14 +150,16 @@ function media_draggable_field_widget_form(&$form, &$form_state, $field, $instan
   );
 
   foreach ($items as $delta => $item) {
-    $element[$delta] = $element['template'];
-    $element[$delta]['#file'] = file_load($item['fid']);
-    $element[$delta]['fid']['#default_value'] = $item['fid'];
+    if ($file = file_load($item['fid'])) {
+      $element[$delta] = $element['template'];
+      $element[$delta]['#file'] = $file;
+      $element[$delta]['fid']['#default_value'] = $item['fid'];
 
-    // prevent Drupal from automatically deleting files by adding a file_usage ref to itself
-    $usage = file_usage_list($element[$delta]['#file']);
-    if (!isset($usage['media_draggable']['file'][$item['fid']])) {
-      file_usage_add($element[$delta]['#file'], 'media_draggable', 'file', $item['fid']);
+      // prevent Drupal from automatically deleting files by adding a file_usage ref to itself
+      $usage = file_usage_list($file);
+      if (!isset($usage['media_draggable']['file'][$item['fid']])) {
+        file_usage_add($element[$delta]['#file'], 'media_draggable', 'file', $item['fid']);
+      }
     }
   }
 

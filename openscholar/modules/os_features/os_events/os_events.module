@@ -1116,7 +1116,7 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
     '#type' => 'date_popup',
     '#title' => t('Reminder Date'),
     '#description' => t('When to send reminders.'),
-    '#default_value' => $reminder_on ? date('Y-m-d H:i', $reminder) : '',
+    '#default_value' => $reminder && !empty($reminder_date) ? date('Y-m-d H:i', strtotime($reminder_date)) : date('Y-m-d H:i'),
     '#date_format' => $format,
     '#states' => array(
       'visible' => array(
@@ -1191,6 +1191,30 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
   $form['#submit'][] = 'os_events_invalidate_cache';
 
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
+
+  $form['#after_build'][] = 'os_events_registration_entity_after_build';
+}
+
+/**
+ * After build; Change the order the validation handlers.
+ */
+function os_events_registration_entity_after_build($form, $form_state) {
+  array_unshift($form['#validate'], 'os_events_validate_handle_reminder');
+  return $form;
+}
+
+/**
+ * Validate handler; Take care with bad values from the reminder part.
+ */
+function os_events_validate_handle_reminder($form, &$form_state) {
+  // Since we are hiding the reminder template from the form the and the user
+  // switch from not reminding to reminding the original validation handler
+  // messed up.
+  $reminder = &$form_state['values']['reminder'];
+  $reminder['reminder_settings']['reminder_template'] = $form_state['values']['reminder']['send_reminder'] ? variable_get('os_reminder_template', "
+Hello[registration:attendee_name],
+
+You request to send a reminder for the event <a href='[node:url]'>[node:title]</a>.") : '';
 }
 
 /**
@@ -1876,6 +1900,7 @@ function os_events_entity_settings_page($entity_type, $entity) {
   list($entity_id) = entity_extract_ids($entity_type, $entity);
   $repeating = $entity->field_date['und'][0]['rrule'];
 
+  $date = '';
   if ($repeating && isset($_GET['delta'])) {
     $delta = intval($_GET['delta']);
     $date = field_get_items('node', $entity, 'field_date');

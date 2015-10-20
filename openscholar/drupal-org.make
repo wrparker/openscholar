@@ -226,6 +226,7 @@ projects[media_gallery][patch][] = "http://drupal.org/files/media_gallery-remove
 projects[media_gallery][patch][] = "http://drupal.org/files/media_gallery-rename_field-1940036-3.patch"
 projects[media_gallery][patch][] = "http://drupal.org/files/media_gallery-lightbox_double_file-1977822-1.patch"
 projects[media_gallery][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/b92cbafb00bdec32c18dd3a98d936b79c4d801a9/patches/media_gallery-multiple.full.display.patch"
+projects[media_gallery][patch][] = "https://www.drupal.org/files/issues/2585509-media_gallery-lost_files.patch"
 
 projects[message][subdir] = "contrib"
 projects[message][version] = 1.8
@@ -334,6 +335,7 @@ projects[registration][subdir] = "contrib"
 projects[registration][version] = 1.5
 projects[registration][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/fff85ce1e059985dac494d6bde5e923e25a74feb/patches/registration_link_pass_entity.patch"
 projects[registration][patch][] = "https://www.drupal.org/files/issues/registration-add-context-to-headers-2564355-1.patch"
+projects[registration][patch][] = "https://www.drupal.org/files/issues/registration_fatal_error_class-2546836-6.patch"
 
 projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1

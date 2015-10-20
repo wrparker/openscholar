@@ -394,7 +394,7 @@ function os_layout_load_block($bid, $load_meta = TRUE, $block = array()) {
  * @param vsite $vsite
  *   The vsite object.
  */
-function os_layout_block_delete($bid, $contexts = FALSE, vsite $vsite) {
+function os_layout_block_delete($bid, $contexts = FALSE, vsite $vsite = NULL) {
   if (!$contexts) {
     $contexts = os_layout_get_contexts(TRUE);
   }
