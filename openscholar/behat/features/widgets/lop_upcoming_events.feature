@@ -23,7 +23,7 @@ Feature:
      Then I should see the event "Repeating event" in the LOP
       And I visit "john/event/repeating-event?delta=2"
       And I should see the date of the "2" repeat of the event
-      And I should see "Repeats every week 3 times"
+      And I should see "Repeats every week, 3 times"
 
   @api @widgets
   Scenario: Verify that the List of posts widget shows a "more" link when showing
