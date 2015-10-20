@@ -304,6 +304,41 @@ a {
 .account_tab_popout.user_sites {
     top: 50px;
 }
+
+.site-list {
+	height:35px;
+}
+
+ul.user-sites li {
+	padding:0;
+	display:inline-block;
+}
+
+
+
+ul.user-sites li.site-name{
+	max-width:60%;
+	white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 30ch;
+
+}
+
+ul.user-sites li.button-delete{
+	position:absolute;
+	right:15px;
+}
+
+ul.user-sites li.button-add {
+	position:absolute;
+	right:70px;
+}
+
+
+
+
+
 /* these need to be moved to the os_common dir*/
 
 .text_link {
@@ -324,13 +359,6 @@ a {
     background-color: #FF3E00;
 }
 
-.position-right {
-	float:right;
-}
-
-.position-left {
-	float:left;
-}
 
 .bottom_margin {
 	margin-bottom:8px;
@@ -340,4 +368,5 @@ a {
 .h3_header {
 	font-weight:normal;
 	border-bottom: 1px solid #ccc;
+	background-color: #efefef;
 }
