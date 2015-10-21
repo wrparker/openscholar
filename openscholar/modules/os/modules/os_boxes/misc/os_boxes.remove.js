@@ -18,7 +18,7 @@ var removed_widgets = {},
 
 function removeWidget(widget, query) {
   var id = widget.attr('id'),
-      delta = id.replace('block-boxes-', '').replace(/--\d/, ''),
+      delta = widget.attr('delta'),
       region = findRegion(widget),
       module = widget.attr('module'),
       html = template;
