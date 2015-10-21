@@ -287,6 +287,8 @@ a {
     box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
     padding: 15px;
 }
+
+.hopscotch-bubble:after,
 .account_tab_popout:after {
     left: 100%;
     top: 100px;
@@ -335,9 +337,20 @@ ul.user-sites li.button-add {
 	right:70px;
 }
 
+.hopscotch-bubble[style] {
+    top: 50px !important;
+    left: auto !important;
+    right:145px !important;
+        color: #1e1e1e;
+    border: 1px solid #CCC;
+    -webkit-box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
+    -moz-box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
+    box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
+   }
 
-
-
+.hopscotch-bubble-arrow-container {
+	display:none;
+}
 
 /* these need to be moved to the os_common dir*/
 
