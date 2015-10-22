@@ -340,7 +340,7 @@ ul.user-sites li.button-add {
 .hopscotch-bubble[style] {
     top: 50px !important;
     left: auto !important;
-    right:145px !important;
+    right:160px !important;
         color: #1e1e1e;
     border: 1px solid #CCC;
     -webkit-box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
@@ -350,6 +350,10 @@ ul.user-sites li.button-add {
 
 .hopscotch-bubble-arrow-container {
 	display:none;
+}
+
+.animated {
+	animation-duration: 0s !important;
 }
 
 /* these need to be moved to the os_common dir*/
@@ -378,8 +382,3 @@ ul.user-sites li.button-add {
 }
 
 
-.h3_header {
-	font-weight:normal;
-	border-bottom: 1px solid #ccc;
-	background-color: #efefef;
-}

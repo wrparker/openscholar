@@ -1,8 +1,8 @@
 <a href="#" ng-click="showSites = ! showSites">My Sites</a>
 <div class="account_tab_popout user_sites" ng-show="showSites">
 	<div ng-repeat="(key, own) in [true,false]" ng-init="currentPage[key] = 0">
-		<h3 ng-show="own" class="h3_header bottom_margin">My Sites</h3>
-		<h3 ng-show="!own" class="h3_header bottom_margin">Other Sites</h3>
+		<h3 ng-show="own" class="bottom_margin">My Sites</h3>
+		<h3 ng-show="!own" class="bottom_margin">Other Sites</h3>
 		<div ng-repeat="(key, site) in filtered = (site_data | filter:{owner: own}:strict) | limitTo: pageSize * (currentPage[key] + 1) | limitTo: pageSize * -1  " class="site-list">
 			<ul class="user-sites">
 				<li class="site-name"><a href="/node/{{ site.id }}" class="text_link">{{ site.title }}</a></li>
