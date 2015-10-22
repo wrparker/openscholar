@@ -261,18 +261,22 @@
             </date>
          </else>
       </choose>
-   </macro>
+   </macro>z
    <macro name="pages">
       <choose>
          <if type="article-journal">
-            <text variable="page" prefix=", "/>
+            <text variable="page" prefix=",sss "/>
          </if>
          <else>
             <choose>
                <if variable="volume">
+                  <text variable="volume" prefix=", " font-style="italic"/>
+                  <text variable="issue" prefix=", "/>
                   <text variable="page" prefix=", "/>
                </if>
                <else>
+                  <text variable="volume" prefix=", " font-style="italic"/>
+                  <text variable="issue" prefix=", "/>
                   <label variable="page" form="short" prefix=", " suffix=" "/>
                   <text variable="page"/>
                </else>
@@ -365,7 +369,6 @@
          <group delimiter=", ">
             <text macro="author"/>
             <text macro="title-note"/>
-            <text macro="container-title-note"/>
             <text macro="editor-translator"/>
             <text macro="collection-title"/>
             <text macro="volume"/>

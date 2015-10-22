@@ -72,6 +72,8 @@ h3, h4 {
   margin: 0;
   }
 
+
+.node-type-presentation .node-presentation h2.field-label,
 .biblio-download-links-label,
 h3 {
   color: #6e7a7a;
@@ -1404,6 +1406,53 @@ padding-top: 20px;
 
 .pubcontent-wrapper {
 vertical-align: top;
+}
+
+/* STYLES THE ATTACHED FILES TABLE IN PRESENTATION PAGE VIEW */
+.node-type-presentation .node-presentation .field-name-field-presentation-date {
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+width: 73%;
+    float: right;
+    vertical-align: top;
+}
+
+.node-type-presentation .node-presentation .field-name-field-presentation-location {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+width: 73%;
+    float: right;
+    vertical-align: top;
+}
+
+.node-type-presentation .node-presentation .field-name-body {
+float: right;
+    width: 75%;
+    margin-top: 20px;
+}
+
+
+.node-type-presentation .node-presentation .field-name-field-presentation-file .field-item {
+   background: #D95C00;
+    padding: 3px;
+    display: inline-block;
+    width: 21%;
+    margin-bottom: 10px;
+
+}
+
+.node-type-presentation .node-presentation .field-name-field-presentation-file .field-item a {
+    color: #FFF;
+text-decoration:underline;
+
+}
+
+.node-type-presentation .node-presentation .os-files-other-list {
+width: 22%;
 }
 
 /* TAXONOMY */

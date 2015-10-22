@@ -148,7 +148,10 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
   $default_flavor = '';
 
   $themes_sorted = array();
-  $featured_themes = array_filter(variable_get('cp_appearance_featured_themes', array()));
+  $featured_themes = array_filter(variable_get('cp_appearance_featured_themes', array('aberdeen' => 'aberdeen', 'airstream' => 'airstream')));
+
+  // From where we get the list of single page themes?
+  $single_themes = array();
 
   // Adds each theme option to the form, and flavor options if available.
   foreach ($themes as $theme) {
@@ -227,7 +230,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
   foreach(cp_appearance_get_flavors() as $flavor_name => $flav) {
     $theme = os_get_themes($flav['module']);
     $flavor_theme = (object)array(
-      'filename' => $details['path'],
+      'filename' => $flav['path'],
       'name' => $flav['module'] .'-os_featured_flavor-'.$flavor_name,
       'type' => 'theme',
       'owner' => 'themes/engines/phptemplate/phptemplate.engine',
@@ -235,7 +238,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
       'weight' => '0',
       'bootsrap' => '0',
       'schema_version' => '-1',
-      'info' => drupal_parse_info_file($flav['path'].'/'.$flav['file']),
+      'info' => drupal_parse_info_file($flav['path'] . '/' . $flav['file']),
       'base_themes' => $theme->base_themes,
       'prefix' => 'phptemplate',
       'stylesheets' => $theme->stylesheets,
@@ -245,7 +248,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
     );
     $flavor_theme->info['flavor_name'] = $flavor_name;
     $flavor_theme->info['name'] = $flavor_name;
-    $flavor_theme->info['theme_flavor_name'] = $flav['module'] .' - '.$flavor_theme->info['flavor_name'];
+    $flavor_theme->info['theme_flavor_name'] = $flav['module'] .' - ' . $flavor_theme->info['flavor_name'];
 
     $flavor_theme->info['screenshot'] = $flav['path'].'/screenshot.png';
     $featured_themes[$flav['module'].'-os_featured_flavor-'.$flavor_name] = $flav['module'].'-os_featured_flavor-'.$flavor_name;
@@ -279,6 +282,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
     }
     $featured_header =  array('HEADER_FEATURED' => 'HEADER_FEATURED');
     $other_header = array('HEADER_OTHER' => 'HEADER_OTHER');
+
     $themes = array_merge($featured_header, $first_themes, $other_header, $other_themes);
   }
   elseif (isset($themes[$current_theme])) {
@@ -287,6 +291,35 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
   // Selects the first option in case the current theme wasn't found.
   else {
     $current_theme = key($themes);
+  }
+
+  // Get all the single page themes.
+  foreach ($themes_sorted as $delta => $theme) {
+
+    if (empty($theme->info['single'])) {
+      continue;
+    }
+
+    $single_themes[$theme->name] = $theme;
+  }
+
+  if (!empty($single_themes)) {
+
+    foreach (array_keys($single_themes) as $theme) {
+      // Remove the one page theme from the theme page in order to prevent
+      // duplications.
+      if (!empty($themes)) {
+        unset($themes[$theme]);
+      }
+      else {
+        unset($themes_sorted[$theme]);
+      }
+    }
+
+    $header_single = array('HEADER_SINGLE' => 'HEADER_SINGLE');
+    $featured_header = array('HEADER_FEATURED' => 'HEADER_FEATURED');
+
+    $themes = !empty($themes) ? array_merge($header_single, $single_themes, $themes) : array_merge($header_single, $display_single_themes, $featured_header, $themes_sorted);
   }
 
   // Adds the theme options to form
@@ -406,7 +439,7 @@ function theme_cp_appearance_theme_picker_form($variables) {
   // Builds each item containing a screenshot-option or section separators.
   $items = array();
   foreach ($form['theme_default']['#enabled_themes'] as $theme) {
-    if (in_array($theme, array('HEADER_FEATURED', 'HEADER_OTHER'))) {
+    if (in_array($theme, array('HEADER_FEATURED', 'HEADER_OTHER', 'HEADER_SINGLE'))) {
       $items[] = _cp_appearance_theme_header_item($theme);
     }
     else {
@@ -476,7 +509,6 @@ function theme_cp_appearance_theme_picker_form($variables) {
     );
     $output .= theme('item_list', $variables);
 
-    $output .= t('<h1>Featured themes</h1>');
   }
 
   $output .= drupal_render($form);
@@ -504,6 +536,7 @@ function _cp_appearance_theme_header_item($header_type) {
   switch ($header_type) {
     case 'HEADER_FEATURED':
       $default = t('Featured themes');
+      $subtitle = t('Mobile-friendly themes ussing Harvard color palettes');
       $display_title = variable_get('cp_appearance_featured_display_title', $default);
       if (!empty($display_title)) {
         $title = '<h2>' . check_plain($display_title) . '</h2>';
@@ -516,6 +549,12 @@ function _cp_appearance_theme_header_item($header_type) {
 
     case 'HEADER_OTHER':
       $title = '<h2>' . t('Other themes') . '</h2>';
+      break;
+
+    case 'HEADER_SINGLE':
+      $params['@url'] = 'http://docs.openscholar.harvard.edu/one-page-themes';
+      $title = '<h2>' . t('One page / horizontal homepage layout themes') . '</h2>';
+      $subtitle = t('<p>Mobile-friendly themes with horizontal homepage regions. <a href="@url">How to use these themes.</a></p>', $params);
       break;
   }
 

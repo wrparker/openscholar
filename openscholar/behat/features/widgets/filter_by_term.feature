@@ -118,7 +118,7 @@ Feature:
         | Show empty terms     | uncheck   | checkbox    |
       And I set the term "Douglas Noël Adams" under the term "Antoine de Saint-Exupéry"
       And I set the term "Stephen William Hawking" under the term "Douglas Noël Adams"
-      And I unassign the node "Halley's Comet" with the type "event" from the term "Douglas Noël Adams"
+      And I unassign the node "Halleys Comet" with the type "event" from the term "Douglas Noël Adams"
      When I visit "john/calendar"
      Then I should see "Douglas Noël Adams"
       And I should see "Antoine de Saint-Exupéry"

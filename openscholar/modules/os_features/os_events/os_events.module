@@ -275,7 +275,10 @@ function os_events_views_pre_render(&$view) {
     return;
   }
 
-  $view->attachment_before = '<a class="cal-export">' . t('Export') . '</a>' . $view->attachment_before;
+  // only display subscribe links if listing is the events landing page or a list of upcoming events
+  if ((isset($view->exposed_input['month']) && $view->exposed_input['month'] == date('Y-m')) || strpos($view->get_path(), "calendar/upcoming") !== FALSE) {
+    $view->attachment_before = '<a class="cal-export">' . t('Export') . '</a>' . $view->attachment_before;
+  }
 }
 
 function os_events_date_formatter_pre_view_alter(&$entity, $vars) {
@@ -366,10 +369,10 @@ function os_events_process_node(&$variables) {
     }
   }
 
+  $register = '';
   if ($variables['page'] && empty($variables['sv_list'])) {
 
     $registrations_type = !empty($variables['node']->field_event_registration[LANGUAGE_NONE][0]['registration_type']);
-    $register = '';
 
     // Show the signup link if capacity isn't reached.
     if ($registrations_type && os_events_event_registration_reach_capacity($variables['node'], $date)) {
@@ -396,7 +399,7 @@ function os_events_process_node(&$variables) {
     }
 
     $options = array('absolute' => TRUE, 'attributes' => array('class' => array('subscribe')));
-    $subscribe = l(t('subscribe'), 'calendar/export.ics/' . $variables['node']->nid, $options);
+    $subscribe = l(t('subscribe'), 'calendar/single/'  . $variables['node']->nid . '/export.ics', $options);
     $subscribe = str_replace('http://', 'webcal://', $subscribe);
 
     // Hiding the original registration link because we are using our own link
@@ -404,7 +407,7 @@ function os_events_process_node(&$variables) {
     // in the export area.
     hide($variables['content']['field_event_registration']);
 
-    $ical = l(t('iCal'), 'calendar/export.ics/' . $variables['node']->nid, array('attributes' => array('class' => array('ical'))));
+    $ical = l(t('iCal'), 'calendar/single/' . $variables['node']->nid . '/export.ics', array('attributes' => array('class' => array('ical'))));
 
     $params = array(
       'register' => $register,
@@ -745,19 +748,21 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
 
   if (!in_array($display_id, array('block_2', 'block_1'))) {
     $buttons = array(
-      'subscribe' => 'calendar/export.ics',
-      'iCal' => 'calendar/export.ics',
-      'rss' => 'calendar/rss.xml'
+      'subscribe' => 'calendar/upcoming/all/export.ics',
+      'iCal' => 'calendar/upcoming/all/export.ics',
+      'rss' => 'calendar/upcoming/all/rss.xml'
     );
 
     foreach ($buttons as $label => $path) {
-
       // When the user is filtering events by taxonomy term we need to add the
       // path to the iCal/rss export path.
-      if (os_taxonomy_in_taxonomy_term_context($view)) {
+      $term_path = os_taxonomy_in_taxonomy_term_context($view);
+      if ($term_path) {
         // Get the current taxonomy term path from the $_GET['q'] and remove the
         // word calendar for prevent duplication of the word.
-        $path .= str_replace('calendar', '', $_GET['q']);
+        $path_parts = explode("/", $term_path);
+        $tid = array_pop($path_parts);
+        $path = str_replace("upcoming/all/", "term/$tid/", $path);
       }
 
       $links[$label] = array(
@@ -890,29 +895,34 @@ function os_events_views_query_alter($view, views_plugin_query_default $query) {
   if ($view->name != 'os_events' ) {
     return;
   }
-  $format = array('year' => 'Y', 'month' => 'Y-m', 'week' => 'Y-\W', 'day' => 'Y-m-d');
 
-  // Determine the type of the displayed month by the argument from the address.
-  $_GET['type'] = isset($_GET['type']) ? $_GET['type'] : 'month';
-
-  // Determine the value of the calendar view mode(day, year, month) argument
-  // value.
-  $_GET[$_GET['type']] = isset($_GET[$_GET['type']]) ? $_GET[$_GET['type']] : date($format[$_GET['type']], time());
-
-  if ($view->current_display == 'feed_1') {
+	// is this a view a feed view?
+  if ($view->current_display == 'feed_1' || $view->current_display == 'feed_2') {
     // Alter the exported events according the current path.
     $menu = menu_get_item();
 
-    if ($menu['map'][2] == 'upcoming') {
-      $query->where[1]['conditions'][3]['field'] = "DATE_FORMAT(ADDTIME(field_data_field_date.field_date_value, SEC_TO_TIME(-18000)), '%Y-%m-%d\T%H:%i') >= :field_data_field_date_field_date_value";
-      $query->where[1]['conditions'][3]['value'][':field_data_field_date_field_date_value'] = date("Y-m-d\TH:i");
+    // narrow down export to single event
+    if ($menu['map'][1] == "single" && is_numeric($menu['map'][2])) {
       unset($query->where[1]['conditions'][4]);
-
-      if (!empty($menu['map'][3]) && !empty($menu['map'][4])) {
-        // We need to filter by the current taxonomy term filtering.
-        os_taxonomy_views_query_alter($view, $query);
+      $query->add_where($query->options['group'], "node.nid", $menu['map'][2], "=");
+    }
+    else {
+      // filter by the current taxonomy term filtering.
+      if ($menu['map'][1] == 'term' && is_numeric($menu['map'][2])) {
+        $alias = $query->add_table('field_data_og_vocabulary');
+        $query->set_distinct();
+        $query->add_where($query->options['group'], "$alias.og_vocabulary_target_id", $menu['map'][2], '=');
       }
     }
+  }
+  else {
+    $format = array('year' => 'Y', 'month' => 'Y-m', 'week' => 'Y-\W', 'day' => 'Y-m-d');
+
+    // Determine the type of the displayed month by the argument from the address
+    $_GET['type'] = isset($_GET['type']) ? $_GET['type'] : 'month';
+
+    // Determine the value of the calendar view mode(day, year, month) argument value
+    $_GET[$_GET['type']] = isset($_GET[$_GET['type']]) ? $_GET[$_GET['type']] : date($format[$_GET['type']], time());
   }
 }
 
@@ -1106,7 +1116,7 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
     '#type' => 'date_popup',
     '#title' => t('Reminder Date'),
     '#description' => t('When to send reminders.'),
-    '#default_value' => $reminder_on ? date('Y-m-d H:i', $reminder) : '',
+    '#default_value' => $reminder && !empty($reminder_date) ? date('Y-m-d H:i', strtotime($reminder_date)) : date('Y-m-d H:i'),
     '#date_format' => $format,
     '#states' => array(
       'visible' => array(
@@ -1181,6 +1191,30 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
   $form['#submit'][] = 'os_events_invalidate_cache';
 
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
+
+  $form['#after_build'][] = 'os_events_registration_entity_after_build';
+}
+
+/**
+ * After build; Change the order the validation handlers.
+ */
+function os_events_registration_entity_after_build($form, $form_state) {
+  array_unshift($form['#validate'], 'os_events_validate_handle_reminder');
+  return $form;
+}
+
+/**
+ * Validate handler; Take care with bad values from the reminder part.
+ */
+function os_events_validate_handle_reminder($form, &$form_state) {
+  // Since we are hiding the reminder template from the form the and the user
+  // switch from not reminding to reminding the original validation handler
+  // messed up.
+  $reminder = &$form_state['values']['reminder'];
+  $reminder['reminder_settings']['reminder_template'] = $form_state['values']['reminder']['send_reminder'] ? variable_get('os_reminder_template', "
+Hello[registration:attendee_name],
+
+You request to send a reminder for the event <a href='[node:url]'>[node:title]</a>.") : '';
 }
 
 /**
@@ -1633,11 +1667,21 @@ function os_events_entity_insert($entity, $type) {
   $wrapper = entity_metadata_Wrapper($type, $entity);
   $node = node_load($entity->entity_id);
 
+  // Obtaining menu router item of the Ajax URL.
+  $menu_item = menu_get_item();
+
+  // If delta argument is present in URL, then query option will be available in url parameter otherwise no delta parameter will be available in email link.
+  if ($menu_item['path'] == "os_events/%/registration/%" && isset($menu_item['original_map'][4]) && !empty($menu_item['original_map'][4])) {
+     $query = array('delta' => $menu_item['original_map'][4]);
+  } else {
+    $query = array();
+  }
+
   $module = 'os_events';
   $key = 'registration_confirmation';
   $language = language_default();
   $params = array(
-    '@url' => url('node/' . $node->nid, array('absolute' => TRUE)),
+    '@url' => url('node/' . $node->nid, array('absolute' => TRUE, 'query' => $query)),
     '@title' => $node->title,
     '@user-name' => $wrapper->field_full_name->value(),
   );
@@ -1856,6 +1900,7 @@ function os_events_entity_settings_page($entity_type, $entity) {
   list($entity_id) = entity_extract_ids($entity_type, $entity);
   $repeating = $entity->field_date['und'][0]['rrule'];
 
+  $date = '';
   if ($repeating && isset($_GET['delta'])) {
     $delta = intval($_GET['delta']);
     $date = field_get_items('node', $entity, 'field_date');

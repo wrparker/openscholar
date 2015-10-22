@@ -56,6 +56,9 @@ Feature: Media Browser
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
+      And I click on the tab "Previously uploaded files"
+      And I should see "kitten-2.jpg" in a "div.media-row" element
+      And I click on the tab "Upload from your computer"
       And I drop the file "duplicate/kitten-2.jpg" onto the "Drag and drop files here." area
      Then I should see the text "A file with the name 'kitten-2.jpg' already exists."
       And I press the "Replace" button
@@ -74,6 +77,9 @@ Feature: Media Browser
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
+      And I click on the tab "Previously uploaded files"
+      And I should see "kitten-2.jpg" in a "div.media-row" element
+      And I click on the tab "Upload from your computer"
       And I drop the file "duplicate/kitten-2.jpg" onto the "Drag and drop files here." area
      Then I should see the text "A file with the name 'kitten-2.jpg' already exists."
       And I press the "Rename" button
@@ -90,6 +96,9 @@ Feature: Media Browser
     When I click on the "Upload" control
      And I wait "1 second" for the media browser to open
      And I should wait for the text "Please wait while we get information on your files." to "disappear"
+     And I click on the tab "Previously uploaded files"
+     And I should see "kitten-2.jpg" in a "div.media-row" element
+     And I click on the tab "Upload from your computer"
      And I drop the file "kitten-2.jpg" onto the "Drag and drop files here." area
     Then I should wait for the text "A file with the name 'kitten-2.jpg' already exists." to "appear"
      And I press the "Cancel" button

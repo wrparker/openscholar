@@ -11,11 +11,11 @@ Feature:
   Scenario: Test the Blog archive
     Given I visit "john"
       And I click "Blog"
-      And I should see "ARCHIVE"
+      And I should see "Blog posts by month"
      When I visit "john/blog/archive/all"
       And I should see "First blog"
       And I visit "john/blog/archive/all/201301"
-     Then I should see "Archive: January 2013"
+     Then I should see "January 2013"
       And I should not see "First blog"
 
   @api @wip

@@ -138,7 +138,9 @@
    <macro name="pages">
       <choose>
          <if variable="page">
-            <text variable="page"/>
+            <text variable="volume" prefix=", " font-style="italic"/>
+            <text variable="issue" prefix=", "/>
+            <text variable="page" prefix=", " />
          </if>
          <else>
             <text value="n. pag"/>

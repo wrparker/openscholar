@@ -176,15 +176,6 @@ function os_taxonomy_in_taxonomy_term_context($view = NULL) {
 
   $item = menu_get_item();
 
-  if (strpos(implode('/', $item['original_map']), 'calendar/export.ics/upcoming/') === 0) {
-    // When exporting upcoming events filtered by term we need to see that we
-    // have 'upcoming/' in the original map. If so, search the key of the
-    // upcoming element and remove it from the original map. We don't need it.
-    count($item['original map']);
-    $key = array_search('upcoming', $item['original_map']);
-    unset($item['original_map'][$key]);
-  }
-
   $path_elements = count(explode("/", $path));
 
   if (count($item['original_map']) <= $path_elements) {
@@ -295,17 +286,17 @@ function os_taxonomy_activate_context($taxonomy_term = NULL, $vocabulary = NULL)
 
   // Load context for taxonomy term.
   if ($taxonomy_term) {
-	  $context_name = 'os_taxonomy-term-'.$taxonomy_term;
-	  _os_taxonomy_active_elements(array('tid' => $taxonomy_term));
+    $context_name = 'os_taxonomy-term-'.$taxonomy_term;
+    _os_taxonomy_active_elements(array('tid' => $taxonomy_term));
 
-	  if (($feature = os_get_active_feature()) && isset($feature->info['features']['node'])){
-	    $variables['options']['bundles'] = $feature->info['features']['node'];
-	    $context_name .= '-'.$feature->name;
-	  }
+    if (($feature = os_get_active_feature()) && isset($feature->info['features']['node'])){
+      $variables['options']['bundles'] = $feature->info['features']['node'];
+      $context_name .= '-'.$feature->name;
+    }
 
-	  if ($ctx = context_load($context_name)) {
-	    context_set('context', $ctx->name, $ctx);
-	  }
+    if ($ctx = context_load($context_name)) {
+      context_set('context', $ctx->name, $ctx);
+    }
   }
 
   // Load context for vocab if we are not in a os feature context.
@@ -1128,11 +1119,11 @@ function theme_os_taxonomy_tagged_nodes($variables) {
       // Retrieve all of the terms.
       $all_terms = taxonomy_get_tree($vocabulary->vid,0);
       // Aggregate the TID's
-	    foreach ($all_terms as $child){
-	      $tid[] = $child->tid;
-	    }
-	    // Do not display a tree, we are aggregating.
-	    $options['max_depth'] = FALSE;
+      foreach ($all_terms as $child){
+        $tid[] = $child->tid;
+      }
+      // Do not display a tree, we are aggregating.
+      $options['max_depth'] = FALSE;
     }
   }
 
@@ -1750,15 +1741,15 @@ function os_taxonomy_taxonomy_vocabulary_update($vocabulary) {
 
   // Skip processing if the user has disabled pathauto for the term.
   if (!isset($vocabulary->path['pathauto']) || !empty($vocabulary->path['pathauto'])) {
-	  // Skip processing if the term has no pattern.
-	  if (pathauto_pattern_load_by_entity('taxonomy_vocabulary', $vocabulary->machine_name)) {
-	    module_load_include('inc', 'pathauto');
-	    $uri = entity_uri('taxonomy_vocabulary', $vocabulary);
+    // Skip processing if the term has no pattern.
+    if (pathauto_pattern_load_by_entity('taxonomy_vocabulary', $vocabulary->machine_name)) {
+      module_load_include('inc', 'pathauto');
+      $uri = entity_uri('taxonomy_vocabulary', $vocabulary);
 
-	    $langcode = !empty($langcode) ? $langcode : LANGUAGE_NONE;
-	    pathauto_create_alias('taxonomy_vocabulary', 'update', $uri['path'], array('vocabulary' => $vocabulary), $vocabulary->machine_name, $langcode);
-	    return;
-	  }
+      $langcode = !empty($langcode) ? $langcode : LANGUAGE_NONE;
+      pathauto_create_alias('taxonomy_vocabulary', 'update', $uri['path'], array('vocabulary' => $vocabulary), $vocabulary->machine_name, $langcode);
+      return;
+    }
   }
 
   if (isset($vocabulary->path)) {

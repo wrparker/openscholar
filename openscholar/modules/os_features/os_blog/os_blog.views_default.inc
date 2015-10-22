@@ -74,7 +74,7 @@ function os_blog_views_default_views() {
   $handler->display->display_options['arguments']['created_year_month']['field'] = 'created_year_month';
   $handler->display->display_options['arguments']['created_year_month']['exception']['title_enable'] = TRUE;
   $handler->display->display_options['arguments']['created_year_month']['title_enable'] = TRUE;
-  $handler->display->display_options['arguments']['created_year_month']['title'] = 'Archive: %2';
+  $handler->display->display_options['arguments']['created_year_month']['title'] = '%2';
   $handler->display->display_options['arguments']['created_year_month']['default_argument_type'] = 'fixed';
   $handler->display->display_options['arguments']['created_year_month']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['created_year_month']['summary']['format'] = 'default_summary';
@@ -131,11 +131,15 @@ function os_blog_views_default_views() {
   /* Display: Archive Block */
   $handler = $view->new_display('block', 'Archive Block', 'block');
   $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['title'] = 'Archive';
+  $handler->display->display_options['title'] = 'Blog posts by month';
+  $handler->display->display_options['defaults']['use_ajax'] = FALSE;
+  $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['defaults']['pager'] = FALSE;
-  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['type'] = 'mini';
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Global: Null */
   $handler->display->display_options['arguments']['null']['id'] = 'null';

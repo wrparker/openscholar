@@ -14,6 +14,7 @@ function hwpi_basetheme_preprocess_html(&$vars) {
     'matchMedia.js', // matchMedia polyfill for older browsers
     'eq.js',         // Equalheights script
     'eq-os.js',      // Call Equalheights for specific elements
+    'stacktable.js', // Call stacktable jQuery plugins for responsive behavior for table markups.
     'scripts.js',    // General stuff, currently removes ui-helper-clearfix class from ui tabs
   );
   foreach ($scripts as $script) {
