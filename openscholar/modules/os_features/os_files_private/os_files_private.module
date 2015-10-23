@@ -122,6 +122,45 @@ function os_files_private_form_file_entity_add_upload_submit($form, &$form_state
 }
 
 /**
+ * Control access to a file.
+ *
+ * @param $op
+ *   The operation to be performed. Possible values:
+ *   - "create"
+ *   - "delete"
+ *   - "update"
+ *   - "view"
+ * @param $file
+ *   The file on which the operation is to be performed, or, if it does
+ *   not yet exist, the type of file to be created.
+ * @param $account
+ *   A user object representing the user for whom the operation is to be
+ *   performed.
+ *
+ * @return
+ *   FILE_ENTITY_ACCESS_ALLOW if the operation is to be allowed;
+ *   FILE_ENTITY_ACCESS_DENY if the operation is to be denied;
+ *   FILE_ENTITY_ACCESS_IGNORE to not affect this operation at all;
+ */
+function os_files_private_file_entity_access($op, $file, $account) {
+    $type = is_string($file) ? $file : $file->type;
+
+    if (is_object($file)) {
+      $scheme = file_uri_scheme($file->uri);
+      $wrapper = file_entity_get_stream_wrapper($scheme);
+      $is_private = !empty($wrapper['private']);
+      
+      $vsite = vsite_get_vsite();
+      $sid = ($vsite) ? $vsite->group->nid : false;
+      $groups = og_get_entity_groups('file',$file);
+      if(!empty($groups['node']) && !in_array($sid, $groups['node'])) {
+        // If the file is accessed in another group deny access.
+        return FILE_ENTITY_ACCESS_DENY;
+      }
+    }
+}
+
+/**
  * Implements hook_file_download().
  *
  * Checks for access rules and serves file if all rules pass.
