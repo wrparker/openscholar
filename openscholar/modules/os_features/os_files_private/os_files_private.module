@@ -146,14 +146,10 @@ function os_files_private_file_entity_access($op, $file, $account) {
     $type = is_string($file) ? $file : $file->type;
 
     if (is_object($file)) {
-      $scheme = file_uri_scheme($file->uri);
-      $wrapper = file_entity_get_stream_wrapper($scheme);
-      $is_private = !empty($wrapper['private']);
-      
       $vsite = vsite_get_vsite();
       $sid = ($vsite) ? $vsite->group->nid : false;
       $groups = og_get_entity_groups('file',$file);
-      if(!empty($groups['node']) && !in_array($sid, $groups['node'])) {
+      if($vsite && !empty($groups['node']) && !in_array($sid, $groups['node'])) {
         // If the file is accessed in another group deny access.
         return FILE_ENTITY_ACCESS_DENY;
       }
