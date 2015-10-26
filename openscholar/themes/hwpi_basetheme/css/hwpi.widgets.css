@@ -85,6 +85,7 @@
     display: table-cell;
     vertical-align: middle;
 }
+#footer #search-block-form .form-item label,
 #content-panels #search-block-form .form-item label,
 .sidebar #search-block-form .form-item label {
     position: absolute;
