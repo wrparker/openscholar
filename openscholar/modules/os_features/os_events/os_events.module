@@ -2144,15 +2144,15 @@ function os_date_repeat_rrule_description($rrule, $format = 'D M d Y') {
   $interval = date_repeat_interval_options();
   switch ($rrule['FREQ']) {
     case 'WEEKLY':
-      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every week', 'every @count weeks') . ' ';
+      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every week', 'every @count weeks');
       $freq_type = 'weekly';
       break;
     case 'MONTHLY':
-      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every month', 'every @count months') . ' ';
+      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every month', 'every @count months');
       $freq_type = 'monthly';
       break;
     case 'YEARLY':
-      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every year', 'every @count years') . ' ';
+      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every year', 'every @count years');
       $freq_type = 'yearly';
       break;
     default:
@@ -2213,16 +2213,22 @@ function os_date_repeat_rrule_description($rrule, $format = 'D M d Y') {
       if (isset($days_results) && count($days_results) > 1 && empty($rrule['COUNT'])) {
         $prefix_day_weekly = ' on ';
       } else {
-        $prefix_day_weekly = ' every ';
+        $prefix_day_weekly = count($days_results) > 0 ? ' every ' : '';
       }
     $description['!byday'] = t($prefix_day_weekly) . implode(', ', $days_results);
-  } elseif ($freq_type == 'monthly' && isset($days_results)) {
+  } elseif ($freq_type == 'monthly') {
+      if(isset($days_results)) {
         $description['!interval'] = '';
-        $description['!byday'] = implode(', ', $days_results) . ' ' . $description['!bymonth'];
+        $description['!byday'] = implode(', ', $days_results) . (!empty($description['!bymonth']) ? ' ' . $description['!bymonth'] : '' );
         $description['!bymonth'] = '';
-  } elseif ($freq_type == 'yearly' && isset($days_results)) {
-      $description['!byday'] = implode(', ', $days_results) . ' ' . $description['!bymonth'];
-      $description['!bymonth'] = '';
+      }
+      $description['!interval'] .= (!empty($description['!bymonth']) ? ' ' : '' );
+  } elseif ($freq_type == 'yearly') {
+      if(isset($days_results)) {
+        $description['!byday'] = implode(', ', $days_results) . (!empty($description['!bymonth']) ? ' ' . $description['!bymonth'] : '' );
+        $description['!bymonth'] = '';
+      }
+      $description['!interval'] .= (!empty($description['!bymonth']) ? ' ' : '' );
   }
   if ($rrule['INTERVAL'] < 1) {
     $rrule['INTERVAL'] = 1;
