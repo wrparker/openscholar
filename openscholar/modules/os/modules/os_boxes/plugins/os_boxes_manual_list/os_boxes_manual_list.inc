@@ -17,31 +17,40 @@ class os_boxes_manual_list extends os_boxes_default {
   }
 
   public function options_form(&$form_state) {
-    $form = parent::options_form($form_state);
-
-    $form['#attached']['js'] = array(
-      drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_manual_list/os_boxes_manual_list.js'
-    );
-
     include_once (drupal_get_path('module', 'vsite') . '/includes/nodeautocomplete.inc');
-    $form['add'] = array(
+    $form_state['build_info']['files'][] = drupal_get_path('module', 'vsite') . '/includes/nodeautocomplete.inc';
+
+
+    $form = parent::options_form($form_state);
+    $form['search'] = array(
       '#type' => 'fieldset',
       '#title' => t('Add New Post'),
-      'node_to_add' => vsite_node_autocomplete_element() + array('#field_suffix' => '<input type="button" class="add_new" value="Add" />'),
+      'node_to_add' => vsite_node_autocomplete_element(),
+      'add' => array(
+        '#type' => 'button',
+        '#value' => t('Add post'),
+        '#href' => '',
+        '#ajax' => array(
+          'callback' => 'os_boxes_manual_add',
+          'wrapper' => 'nodes',
+        ),
+      ),
     );
 
-    // Build a normal form.
+    $form_state['storage']['nodes'] = isset($form_state['storage']['nodes']) ? $form_state['storage']['nodes'] : 0;
+
+
     $form['nodes'] = array(
       '#type' => 'markup',
       '#tree' => TRUE,
+      '#prefix' => '<div id="nodes">',
+      '#suffix' => '</div>',
       '#pre_render' => array('os_boxes_manual_list_table'),
     );
 
-    $nodes = &$form['nodes'];
-    usort($this->options['nodes'], 'element_sort');
+    $this->options['nodes'][] = (7);
+    $this->options['nodes'][] = (8);
 
-    // Blank element for copying purposes.
-    $this->options['nodes']['blank'] = array('nid' => 0, 'title' => '__blank__', 'weight' => 2000000);
     foreach ($this->options['nodes'] as $k => $v) {
       $deleted = '';
       if (!($node = node_load($v['nid']))) {
@@ -73,6 +82,26 @@ class os_boxes_manual_list extends os_boxes_default {
       $nodes[$k] = $n;
     }
 
+    $nodes = &$form['nodes'];
+    usort($this->options['nodes'], 'element_sort');
+
+    if ($form_state['storage']['nodes']) {
+      for ($i = 1; $i <= $form_state['storage']['nodes']; $i++) {
+        $form['nodes'][$i] = array(
+          '#type' => 'fieldset',
+          '#tree' => TRUE,
+        );
+
+        $form['nodes'][$i]['name'] = array(
+          '#title' => t('Name'),
+          '#type' => 'textfield',
+        );
+      }
+    }
+
+    $form_state['storage']['nodes']++;
+
+    // Blank element for copying purposes.
     $form['style'] = array(
       '#type' => 'select',
       '#title' => t('Display Style'),
@@ -229,4 +258,8 @@ function os_boxes_manual_list_add_new_fields($element, &$form_state, &$form) {
   }
 
   return $element;
+}
+
+function os_boxes_manual_add($form, $form_state) {
+  return $form['options']['nodes'];
 }
