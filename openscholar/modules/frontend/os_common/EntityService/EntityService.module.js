@@ -158,7 +158,7 @@
                     if (entityType != this.entityType) {
                       return false;
                     }
-                    return testEntity.call(this, entity, this.params);
+                    return testEntity.call(this, entity);
                   }
                 }
               }
@@ -467,7 +467,7 @@
             if (resp.data.data[i].status != 'deleted') {
               // add new entities to the caches
               for (var k in cache) {
-                if (cacheKeys[k] == undefined && cache[k].matches(resp.data.data[i])) {
+                if (cacheKeys[k] == undefined && cache[k].matches(resp.data.data[i], type)) {
                   cache[k].data.push(resp.data.data[i]);
                 }
               }
@@ -508,7 +508,11 @@
    *  this function should use the cache object as it's 'this', by using the call() method.
    *  Ex. testEntity.call(this, entity, params);
    */
-  function testEntity(entity, params) {
+  function testEntity(entity) {
+    // params is the search query we return
+    var params = this.params,
+      type = this.entityType;
+
     for (var k in params) {
       if (entity[k] == undefined) {
         // this is not something that comes returned on the object
@@ -519,6 +523,35 @@
               return false;
             }
             break;
+        }
+      }
+      else if ((k == 'entity_type' || k == 'bundle') && typeof entity.bundles == 'object') {
+        // this thing refers to other entities, like vocabs do. It can accept multiple types of entity type / file combinations
+
+        if (entity.bundles[params.entity_type]) {
+          var found = false;
+          for (var l in entity.bundles[params.entity_type]) {
+            if ( entity.bundles[params.entity_type][l] == params.bundle) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            return false;
+          }
+        }
+      }
+      // allow for a property on the entity to be a container that we only need to match one of to pass
+      else if (entity[k] instanceof Object && (typeof params[k] == 'string' || typeof params[k] == 'number')) {
+        var found = false;
+        for (var l in entity[k]) {
+          if (entity[k][l] == params[k]) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          return false;
         }
       }
       else if (entity[k] != params[k]) {

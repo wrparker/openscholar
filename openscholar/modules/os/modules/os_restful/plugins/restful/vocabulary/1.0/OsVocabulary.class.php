@@ -24,6 +24,10 @@ class OsVocabulary extends OsRestfulEntityCacheableBase {
       'callback' => array($this, 'getVocabularyTree'),
     );
 
+    $fields['bundles'] = array(
+      'callback' => array($this, 'getBundles')
+    );
+
     return $fields;
   }
 
@@ -260,6 +264,23 @@ class OsVocabulary extends OsRestfulEntityCacheableBase {
       }
     }
     return $return;
+  }
+
+  protected function getBundles($wrapper) {
+    if (module_exists('og_vocab')) {
+      // why
+      $q = db_select('og_vocab', 'ogv')
+        ->fields('ogv', array('entity_type', 'bundle'))
+        ->condition('vid', $wrapper->getIdentifier())
+        ->execute();
+
+      $output = array();
+      foreach ($q as $r) {
+        $output[$r->entity_type][] = $r->bundle;
+      }
+
+      return $output;
+    }
   }
 
   protected function getLastModified($id) {
