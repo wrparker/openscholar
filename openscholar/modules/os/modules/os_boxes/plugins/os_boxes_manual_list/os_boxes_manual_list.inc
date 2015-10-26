@@ -34,11 +34,11 @@ class os_boxes_manual_list extends os_boxes_default {
           'callback' => 'os_boxes_manual_add',
           'wrapper' => 'nodes',
         ),
+        '#add' => TRUE,
       ),
     );
 
     $form_state['storage']['nodes'] = isset($form_state['storage']['nodes']) ? $form_state['storage']['nodes'] : 0;
-
 
     $form['nodes'] = array(
       '#type' => 'markup',
@@ -48,55 +48,17 @@ class os_boxes_manual_list extends os_boxes_default {
       '#pre_render' => array('os_boxes_manual_list_table'),
     );
 
-    $this->options['nodes'][] = (7);
-    $this->options['nodes'][] = (8);
-
-    foreach ($this->options['nodes'] as $k => $v) {
-      $deleted = '';
-      if (!($node = node_load($v['nid']))) {
-        $deleted = ' &lt;Deleted! Please remove!&gt;';
-      }
-      $n = array(
-        '#weight' => $v['weight'],
-        'nid' => array(
-          '#type' => 'hidden',
-          '#default_value' => $v['nid'],
-        ),
-        'text' => array(
-          '#type' => 'markup',
-          '#markup' => '<span>' . $v['title'] . $deleted . '</span> <a href="#" class="remove" title="Remove Post">Remove</a>',
-        ),
-        'title' => array(
-          '#type' => 'hidden',
-          '#default_value' => $v['title'],
-        ),
-        'weight' => array(
-          '#type' => 'textfield',
-          '#default_value' => $v['weight'],
-          '#size' => 3,
-          '#attributes' => array(
-            'class' => (string)$k!='blank'?array('field-weight'):array(),
-          )
-        ),
-      );
-      $nodes[$k] = $n;
-    }
-
     $nodes = &$form['nodes'];
     usort($this->options['nodes'], 'element_sort');
 
-    if ($form_state['storage']['nodes']) {
-      for ($i = 1; $i <= $form_state['storage']['nodes']; $i++) {
-        $form['nodes'][$i] = array(
-          '#type' => 'fieldset',
-          '#tree' => TRUE,
-        );
+    foreach ($this->options['nodes'] as $delta => $node) {
+      $nodes[$delta] = $this->addNode($node, $delta);
+      $form_state['storage']['nodes']++;
+    }
 
-        $form['nodes'][$i]['name'] = array(
-          '#title' => t('Name'),
-          '#type' => 'textfield',
-        );
-      }
+    if (!empty($form_state['triggering_element']['#add'])) {
+      $nodes[$form_state['storage']['nodes']] = $this->addNode(['title' => 'a'], $form_state['storage']['nodes']);
+      $form_state['storage']['nodes']++;
     }
 
     $form_state['storage']['nodes']++;
@@ -201,6 +163,39 @@ class os_boxes_manual_list extends os_boxes_default {
     }
 
     return $block;
+  }
+
+  /**
+   * Adding a single node.
+   *
+   * @param $node
+   * @param $delta
+   * @return array
+   */
+  private function addNode($node, $delta) {
+    return array(
+      '#weight' => $node['weight'],
+      'nid' => array(
+        '#type' => 'hidden',
+        '#default_value' => $node['nid'],
+      ),
+      'text' => array(
+        '#type' => 'markup',
+        '#markup' => $node['title'],
+      ),
+      'title' => array(
+        '#type' => 'hidden',
+        '#default_value' => $node['title'],
+      ),
+      'weight' => array(
+        '#type' => 'textfield',
+        '#default_value' => $node['weight'],
+        '#size' => 3,
+        '#attributes' => array(
+          'class' => (string)$delta != 'blank' ? array('field-weight') : array(),
+        )
+      ),
+    );
   }
 }
 
