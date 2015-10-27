@@ -48,7 +48,7 @@ function os_publications_menu_alter(&$items) {
     'access callback' => 'spaces_access_feature',
     'access arguments' => array('view', 'os_publications'),
     'file' => drupal_get_path('module', 'os_publications') . '/os_publications.pages.inc',
-    'type' => MENU_CALLBACK,
+    'menu_name' => 'primary-menu',
   );
 
   $items['publications/export'] = array(
