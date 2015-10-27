@@ -655,7 +655,7 @@ function os_profiles_field_default_field_instances() {
   $field_instances['node-person-field_person_photo'] = array(
     'bundle' => 'person',
     'deleted' => 0,
-    'description' => 'Image should not be smaller than 220 x 220.',
+    '#description' => t('Image should not be smaller than 220 x 220. @link', array('@link' => l('text', 'http://www.boston.com/'))),
     'display' => array(
       'default' => array(
         'label' => 'hidden',
