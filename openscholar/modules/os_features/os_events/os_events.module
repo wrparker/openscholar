@@ -1755,6 +1755,34 @@ function os_events_mail_alter(&$message) {
  */
 function os_events_form_event_node_form_alter(&$form, &$form_state) {
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
+  $form['#validate'][] = 'os_events_validate_repeat_on_checkbox';
+}
+
+/**
+ * Validate handler; Verifying if at least one day/month checkbox is selected for 'Repeat on' section in Weekly/Monthly/Yearly repeating event form.
+ */
+function os_events_validate_repeat_on_checkbox($form, $form_state) {
+  // Obtaining repeat rules from form submission.
+  $repeating = $form_state['values']['field_date'][LANGUAGE_NONE][0]['rrule'];
+
+  // For non-repeating events, $repeating will be NULL.
+  if ($repeating) {
+    // Formatting repeat rules in structured array.
+    $parts = date_repeat_split_rrule($repeating);
+    $rrule = $parts[0];
+    // Validation for weekly, monthly and yearly repeating events.
+    if (!isset($rrule['BYDAY']) && $rrule['FREQ'] == 'WEEKLY') {
+      form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][FREQ', t('Repeat on field must have at least one day option checked.'));
+    } elseif (!isset($rrule['BYMONTH']) && in_array($rrule['FREQ'], array('MONTHLY', 'YEARLY'))) {
+        // Validation for two types of radio button choice for monthly and yearly repeating events.
+        // e.g On day <NUM> of <MONTH> / On the <FIRST> <SUNDAY> of <MONTH>.
+        if (!isset($rrule['BYMONTHDAY'])) {
+          form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][FREQ', t('Repeats On the field must have at least one month option checked.'));
+        } else {
+          form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][FREQ', t('Repeats On day field must have at least one month option checked.'));
+        }
+    }
+  }
 }
 
 /**
