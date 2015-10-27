@@ -20,14 +20,17 @@ body {
     -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.7, 0, 0.3, 1) 0.1s;
     transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1) 0.1s;
 }
-
+.page-cp.overlay #branding,
+.page-cp.overlay #page {
+    position: relative;
+    width: auto;
+}
 .page-cp #branding.no-transition,
 .page-cp #page.no-transition,
 .page_wrap.no-transition {
     -webkit-transition: none;
     transition: none;
 }
-
 .page-cp #branding {
     position: relative;
     margin-left: 40px;
@@ -50,14 +53,13 @@ body {
     transform: translateX(175px);
 }
 .page-cp #page {
-	width:90%;
+    width: 90%;
     margin-left: 80px;
-     margin-right: 0;
+    margin-right: 0;
 }
 .page-cp #page.pushed {
     margin-left: 40px;
-    width:80%;
-     
+    width: 80%;
 }
 .admin-menu-homeicon {
     position: absolute;
@@ -235,11 +237,9 @@ body {
 .topRight_subMenu li a {
     color: #FFF;
 }
-
 .topRight_subMenu li a.text_link {
     color: #215990;
 }
-
 .slate {
     background: #6C7A89;
 }
@@ -287,7 +287,6 @@ a {
     box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
     padding: 15px;
 }
-
 .hopscotch-bubble:after,
 .account_tab_popout:after {
     left: 100%;
@@ -306,62 +305,49 @@ a {
 .account_tab_popout.user_sites {
     top: 50px;
 }
-
 .site-list {
-	height:35px;
+    height: 35px;
 }
-
 ul.user-sites li {
-	padding:0;
-	display:inline-block;
+    padding: 0;
+    display: inline-block;
 }
-
-
-
-ul.user-sites li.site-name{
-	max-width:60%;
-	white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 30ch;
-
+ul.user-sites li.site-name {
+    max-width: 60%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 30ch;
 }
-
-ul.user-sites li.button-delete{
-	position:absolute;
-	right:15px;
+ul.user-sites li.button-delete {
+    position: absolute;
+    right: 15px;
 }
-
 ul.user-sites li.button-add {
-	position:absolute;
-	right:70px;
+    position: absolute;
+    right: 70px;
 }
-
 .hopscotch-bubble[style] {
     top: 50px !important;
     left: auto !important;
-    right:160px !important;
-        color: #1e1e1e;
+    right: 160px !important;
+    color: #1e1e1e;
     border: 1px solid #CCC;
     -webkit-box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
     -moz-box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
     box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
-   }
-
+}
 .hopscotch-bubble-arrow-container {
-	display:none;
+    display: none;
 }
-
 .animated {
-	animation-duration: 0s !important;
+    animation-duration: 0s !important;
 }
-
 /* these need to be moved to the os_common dir*/
 
 .text_link {
-	color: #215990;
-	}
-
+    color: #215990;
+}
 .btton {
     border-radius: 3px 3px 3px 3px;
     -moz-border-radius: 3px 3px 3px 3px;
@@ -375,10 +361,6 @@ ul.user-sites li.button-add {
 .btton.remove {
     background-color: #FF3E00;
 }
-
-
 .bottom_margin {
-	margin-bottom:8px;
+    margin-bottom: 8px;
 }
-
-
