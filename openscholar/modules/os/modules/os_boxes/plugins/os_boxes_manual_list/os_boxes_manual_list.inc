@@ -19,9 +19,9 @@ class os_boxes_manual_list extends os_boxes_default {
   public function options_form(&$form_state) {
     include_once (drupal_get_path('module', 'vsite') . '/includes/nodeautocomplete.inc');
     $form_state['build_info']['files'][] = drupal_get_path('module', 'vsite') . '/includes/nodeautocomplete.inc';
-
-
     $form = parent::options_form($form_state);
+
+    $form['#attached']['js'][] = drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_manual_list/os_boxes_manual_list.js';
     $form['search'] = array(
       '#type' => 'fieldset',
       '#title' => t('Add New Post'),
@@ -30,11 +30,11 @@ class os_boxes_manual_list extends os_boxes_default {
         '#type' => 'button',
         '#value' => t('Add post'),
         '#href' => '',
+        '#add' => TRUE,
         '#ajax' => array(
           'callback' => 'os_boxes_manual_add',
           'wrapper' => 'nodes',
         ),
-        '#add' => TRUE,
       ),
     );
 
@@ -48,20 +48,36 @@ class os_boxes_manual_list extends os_boxes_default {
       '#pre_render' => array('os_boxes_manual_list_table'),
     );
 
-    $nodes = &$form['nodes'];
-    usort($this->options['nodes'], 'element_sort');
-
-    foreach ($this->options['nodes'] as $delta => $node) {
-      $nodes[$delta] = $this->addNode($node, $delta);
-      $form_state['storage']['nodes']++;
-    }
-
     if (!empty($form_state['triggering_element']['#add'])) {
-      $nodes[$form_state['storage']['nodes']] = $this->addNode(['title' => 'a'], $form_state['storage']['nodes']);
-      $form_state['storage']['nodes']++;
+
+      if (empty($form_state['values']['node_to_add'])) {
+        form_set_error('', t('Please chose a node to add.'));
+      }
+      else {
+        $explode = explode('[', $form_state['values']['node_to_add']);
+        $node = node_load(intval(end($explode)));
+        $this->options['nodes'][] = array('title' => $node->title, 'nid' => $node->nid, 'weight' => 1 - count($this->options['nodes']));
+      }
     }
 
-    $form_state['storage']['nodes']++;
+    $form_state['storage']['removed'] = empty($form_state['storage']['removed']) ? array() : $form_state['storage']['removed'];
+
+    if (!empty($form_state['triggering_element']['#remove'])) {
+      $form_state['storage']['removed'][] = $form_state['triggering_element']['#remove'];
+    }
+
+    $nodes = &$form['nodes'];
+
+    $delta = 0;
+    foreach ($this->options['nodes'] as &$node) {
+      if (in_array($node['nid'], $form_state['storage']['removed'])) {
+        $form_state['storage']['removed'][] = $node['nod'];
+        unset($node);
+        continue;
+      }
+      $nodes[$delta] = $this->addNode($node, $delta);
+      $delta++;
+    }
 
     // Blank element for copying purposes.
     $form['style'] = array(
@@ -181,11 +197,20 @@ class os_boxes_manual_list extends os_boxes_default {
       ),
       'text' => array(
         '#type' => 'markup',
-        '#markup' => $node['title'],
+        '#markup' => $node['title'] . render($remove),
       ),
       'title' => array(
         '#type' => 'hidden',
         '#default_value' => $node['title'],
+      ),
+      'remove' => array(
+        '#type' => 'button',
+        '#value' => t('Remove'),
+        '#remove' => $node['nid'],
+        '#ajax' => array(
+          'callback' => 'os_boxes_manual_add',
+          'wrapper' => 'nodes',
+        ),
       ),
       'weight' => array(
         '#type' => 'textfield',
@@ -206,7 +231,7 @@ function os_boxes_manual_list_table($element) {
   foreach (element_children($element) as $c) {
     $rows[] = array(
       'data' => array(
-        drupal_render($element[$c]['nid']).drupal_render($element[$c]['text']).drupal_render($element[$c]['title']),
+        drupal_render($element[$c]['nid']) . drupal_render($element[$c]['text']) . drupal_render($element[$c]['title']) . drupal_render($element[$c]['remove']),
         drupal_render($element[$c]['weight']),
       ),
       'class' => (string)$c!='blank'?array('draggable'):array(),
