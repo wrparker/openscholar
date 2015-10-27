@@ -55,9 +55,10 @@ class os_boxes_manual_list extends os_boxes_default {
       }
       else {
         $explode = explode('[', $form_state['values']['node_to_add']);
-        $node = node_load(intval(end($explode)));
-        unset($form_state['storage']['removed'][$node->nid]);
-        $this->options['nodes'][] = array('title' => $node->title, 'nid' => $node->nid, 'weight' => 1 - count($this->options['nodes']));
+        $nid = intval(end($explode));
+        $node = node_load($nid);
+        unset($form_state['storage']['removed'][$nid]);
+        $this->options['nodes'][$nid] = array('title' => $node->title, 'nid' => $node->nid, 'weight' => 1 - count($this->options['nodes']));
       }
     }
 
