@@ -880,7 +880,14 @@ function os_form_alter(&$form, &$form_state, $form_id) {
   // /people
   if ($form_id == 'node_delete_confirm') {
     $paths = os_get_app_path();
-    if (isset($paths[$form['#node']->type])) {
+
+    // Obtaining destination parameter from URL
+    $query = drupal_get_destination();
+    $destination_menu_object = menu_get_item($query['destination']);
+
+    // If destination is the deleted node itself, then redirecting to default app path
+    // Also if no destination parameter is found in URL, then redirecting to default app path
+    if(($destination_menu_object['path'] == 'node/%' || empty($_GET['destination'])) && isset($paths[$form['#node']->type])) {
       $_GET['destination'] = $paths[$form['#node']->type];
     }
   }
@@ -2560,4 +2567,13 @@ function os_field_access($op, $field, $entity_type, $entity, $account) {
   }
 
   return user_access('bypass redirection', $account);
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function os_preprocess_block(&$vars) {
+  // Adding the name of the module and the delta.
+  $vars['attributes_array']['module'] = $vars['block']->module;
+  $vars['attributes_array']['delta'] = $vars['block']->delta;
 }

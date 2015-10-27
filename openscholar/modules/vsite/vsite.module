@@ -2182,13 +2182,19 @@ function vsite_site_contact() {
   $space = spaces_get_space();
   if (!empty($space)) {
     // Get the vsite_users_contact_form_anonymous varible
-    $contact_anon = $space->controllers->variable->get('vsite_users_contact_form_anonymous', 'space');
+    $allow_contact = $space->controllers->variable->get('show_email', 'space');
+    //Use depricated variable.
+    if ($allow_contact === null) {
+      $allow_contact = $space->controllers->variable->get('vsite_users_contact_form_anonymous', 'space');
+    }
+
   }
   else {
-    $contact_anon = variable_get('vsite_users_contact_form_anonymous', '1');
+    $allow_contact = variable_get('show_email', variable_get('vsite_users_contact_form_anonymous', TRUE));
   }
-  if (empty($contact_anon) && ! user_is_logged_in()) {
-    $output = t('You need to be logged in in order to send mail to this user.');
+
+  if (empty($allow_contact)) {
+    $output = t('You are not allowed to contact this user.');
   }
   elseif (! flood_is_allowed('contact', variable_get('contact_hourly_threshold', 3))) {
     $output = t('You cannot contact more than %number users per hour. Please try again later.', array(
@@ -2397,10 +2403,20 @@ function vsite_delete_request_submit($form, &$form_state) {
  * @return contact_page
  */
 function vsite_site_contact_access(){
-  if (! ($space = spaces_get_space()) || ! ($user = user_load($space->group->uid))) {
-    return FALSE;
+  $space = spaces_get_space();
+  if (!empty($space)) {
+    // Get the vsite_users_contact_form_anonymous varible
+    $allow_contact = $space->controllers->variable->get('show_email', 'space');
+    //Use depricated variable.
+    if ($allow_contact === null) {
+      $allow_contact = $space->controllers->variable->get('vsite_users_contact_form_anonymous', 'space');
+    }
   }
-  return TRUE;
+  else {
+    $allow_contact = variable_get('show_email', variable_get('vsite_users_contact_form_anonymous', TRUE));
+  }
+
+  return $allow_contact;
 }
 
 /**
@@ -3234,6 +3250,33 @@ function vsite_og_permission() {
     'bypass redirection' => array(
       'title' => t('Bypass redirection'),
       'description' => t('Grant access to the redirect field.'),
+      'os_override' => TRUE,
+      'default role' => array(
+        'content editor',
+        'vsite admin',
+      ),
+    ),
+    'access content overview' => array(
+      'title' => t('Access the content overview page'),
+      'description' => t('Grant access to overview content page.'),
+      'os_override' => TRUE,
+      'default role' => array(
+        'content editor',
+        'vsite admin',
+      ),
+    ),
+    'administer files' => array(
+      'title' => t('Administer files'),
+      'description' => t('Grant access to overview files page.'),
+      'os_override' => TRUE,
+      'default role' => array(
+        'content editor',
+        'vsite admin',
+      ),
+    ),
+    'administer comments' => array(
+      'title' => t('Administer comments'),
+      'description' => t('Grant access to overview comments page.'),
       'os_override' => TRUE,
       'default role' => array(
         'content editor',

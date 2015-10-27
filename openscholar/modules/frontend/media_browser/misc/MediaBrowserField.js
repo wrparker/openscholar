@@ -5,7 +5,7 @@
 
       function link(scope, elem, attr) {
         // everything to define
-        scope.field_name = elem.parent().attr('id').match(/edit-([\w-]*)/)[1].replace('-', '_');
+        scope.field_name = elem.parent().attr('id').match(/edit-([\w-]*)/)[1].replace(/-/g, '_');
         scope.showHelp = false;
         scope.panes = ['upload', 'web', 'library'];
 
@@ -89,7 +89,9 @@
           file.highlight = toHighlight;
         }
 
+        var label = elem.parent().find(' label');
         elem.parent().find(' > *').not(elem).remove();
+        elem.before(label);
       }
 
       if (mbModal.requirementsMet()) {

@@ -383,6 +383,9 @@ function os_slideshow_preprocess_os_slideshow_slide(&$vars) {
   $url = ($node->field_link) ? $node->field_link[$lang][0]['url'] : '';
   if ($url) {
     foreach (array('headline', 'description', 'image') as $elem) {
+      if (empty($vars[$elem])) {
+        continue;
+      }
       $vars[$elem] = l($vars[$elem], $url, array('html' => TRUE));
     }
   }

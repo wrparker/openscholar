@@ -334,6 +334,7 @@ div[file-edit] .control button {
 .node-form .media-browser-drop-box {
     height: 180px;
     background-color: #FFF;
+    margin-top: 0;
 }
 .media-browser-dupe {
     position: absolute;
@@ -398,6 +399,16 @@ div[file-edit] .control button {
     display: none;
 }
 
+
+/**
+ * Misc label styling associated with MB
+ */
+
+.field-name-field-upload label[for="edit-field-upload-und-drop"] {
+
+  margin-top: 15px;
+}
+
 @keyframes highlight {
   0% {
     margin-left: 0px;
@@ -417,3 +428,4 @@ div[file-edit] .control button {
   animation-duration: 2s;
   animation-iteration-count: infinite;
 }
+

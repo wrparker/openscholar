@@ -9,6 +9,16 @@
 include_once 'os_classes.features.inc';
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_classes_form_class_node_form_alter(&$form, &$form_state) {
+  // If field semester default value is empty, then option N/A will be selected in edit mode
+  if(empty($form['field_semester'][LANGUAGE_NONE]['#default_value']) && isset($form['#node']->nid)) {
+    $form['field_semester'][LANGUAGE_NONE]['#default_value'] = '_none';
+  }
+}
+
+/**
  * Implements hook_os_app_info().
  */
 function os_classes_os_app_info() {

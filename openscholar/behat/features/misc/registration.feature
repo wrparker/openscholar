@@ -4,14 +4,14 @@ Feature:
   @api @wip
   Scenario: Limit the registration capacity to 1 and verify it for a normal user.
     Given I am logging in as "john"
-      And I turn on event registration on "Halley's Comet"
+      And I turn on event registration on "Halleys Comet"
      When I visit "john/event/halleys-comet"
       And I set the event capacity to "1"
       And I fill in "Email" with "g@gmail.com"
       And I press "Signup"
      When I am logging in as "michelle"
       And I visit "john/event/halleys-comet"
-      And I should not see "Sign up for Halley's Comet"
+      And I should not see "Sign up for Halleys Comet"
      Then I delete "john" registration
 
   @api @wip
@@ -23,7 +23,7 @@ Feature:
       And I press "Signup"
      When I am logging in as "michelle"
       And I visit "john/event/halleys-comet"
-      And I should see "Sign up for Halley's Comet"
+      And I should see "Sign up for Halleys Comet"
      Then I delete "john" registration
 
   @api @misc_second
