@@ -49,8 +49,9 @@ body {
 .pushed.page_wrap {
     -webkit-transition-duration: 0.5s;
     transition-duration: 0.5s;
-    -webkit-transform: translateX(175px);
+   -webkit-transform: translateX(175px);
     transform: translateX(175px);
+
 }
 .page-cp #page {
     width: 90%;
@@ -214,7 +215,7 @@ body {
     cursor: pointer;
 }
 #topRightMenu {
-    padding: 8px 0 8px 10px;
+    padding: 7px 0 8px 10px;
     width: 145px;
 }
 .topRight_Menu a {
@@ -328,9 +329,9 @@ ul.user-sites li.button-add {
     right: 70px;
 }
 .hopscotch-bubble[style] {
-    top: 50px !important;
+    top: 55px !important;
     left: auto !important;
-    right: 160px !important;
+    right: 145px !important;
     color: #1e1e1e;
     border: 1px solid #CCC;
     -webkit-box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
