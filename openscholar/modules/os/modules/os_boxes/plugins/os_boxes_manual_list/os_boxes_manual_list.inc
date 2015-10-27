@@ -56,6 +56,7 @@ class os_boxes_manual_list extends os_boxes_default {
       else {
         $explode = explode('[', $form_state['values']['node_to_add']);
         $node = node_load(intval(end($explode)));
+        unset($form_state['storage']['removed'][$node->nid]);
         $this->options['nodes'][] = array('title' => $node->title, 'nid' => $node->nid, 'weight' => 1 - count($this->options['nodes']));
       }
     }
@@ -63,7 +64,7 @@ class os_boxes_manual_list extends os_boxes_default {
     $form_state['storage']['removed'] = empty($form_state['storage']['removed']) ? array() : $form_state['storage']['removed'];
 
     if (!empty($form_state['triggering_element']['#remove'])) {
-      $form_state['storage']['removed'][] = $form_state['triggering_element']['#remove'];
+      $form_state['storage']['removed'][$form_state['triggering_element']['#remove']] = $form_state['triggering_element']['#remove'];
     }
 
     $nodes = &$form['nodes'];
@@ -71,11 +72,10 @@ class os_boxes_manual_list extends os_boxes_default {
     $delta = 0;
     foreach ($this->options['nodes'] as &$node) {
       if (in_array($node['nid'], $form_state['storage']['removed'])) {
-        $form_state['storage']['removed'][] = $node['nod'];
         unset($node);
         continue;
       }
-      $nodes[$delta] = $this->addNode($node, $delta);
+      $nodes[$node['nid']] = $this->addNode($node, $delta);
       $delta++;
     }
 
@@ -241,7 +241,6 @@ function os_boxes_manual_list_table($element) {
   $element['#attributes'] = array('id' => 'manual-nodes-list');
   $element['#rows'] = $rows;
   $element['#sticky'] = false;
-  $element['#empty'] = true;
 
   $element['#theme'] = 'table';
   drupal_add_tabledrag('manual-nodes-list', 'order', 'sibling', 'field-weight');
@@ -269,7 +268,7 @@ function os_boxes_manual_list_add_new_fields($element, &$form_state, &$form) {
   unset($form_state['values']['nodes']['blank']);
 
   // Remove nids that aren't in the post.
-  if (is_array($form_state['values'])) {
+  if (!empty($form_state['values']['nodes'])) {
     foreach ($form_state['values']['nodes'] as $k => $v) {
       if (!isset($form_state['input']['nodes'][$k]) || !isset($form_state['input']['nodes'][$k]['nid'])) {
         unset($form_state['values']['nodes'][$k]);
