@@ -1603,7 +1603,8 @@ function os_files_file_view($file, $view_mode, $langcode) {
     ),
   );
 
-  if (!isset($file->oembed) || !$file->oembed) {
+  // HTML embeded files will not have any Download link.
+  if ((!isset($file->oembed) || !$file->oembed) && $file->filemime != 'html/embed') {
     $content['file-info']['download'] = array(
       '#theme' => 'link',
       '#path' => file_create_url($file->uri),
