@@ -16,10 +16,10 @@ function os_classes_field_attach_load($entity_type, $entities, $age, $options) {
   if ($entity_type == 'node') {
     foreach ($entities as $entity) {
       if ($entity->type == 'class') {
-        // If attached field 'field_semester' have no value, displaying n/a as default value.
-        // If field has the value for N/A, N/a or n/A by class import csv, then also output should be displayed as n/a.
+        // If attached field 'field_semester' have no value, displaying N/A as default value.
+        // If field has the value for N/A, N/a or n/A by class import csv, then also output should be displayed as N/A.
         if (empty($entity->field_semester) || (isset($entity->field_semester[LANGUAGE_NONE][0]['value']) && strtolower($entity->field_semester[LANGUAGE_NONE][0]['value']) == 'n/a')) {
-          $entity->field_semester[LANGUAGE_NONE][0]['value'] = 'n/a';
+          $entity->field_semester[LANGUAGE_NONE][0]['value'] = 'N/A';
         }
       }
     }
