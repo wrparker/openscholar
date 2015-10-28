@@ -65,7 +65,7 @@
             var lower = filename.toLowerCase();
             if (lower != old) {
               var files = fileService.getAll();
-              for (var i = 0; i < files.length; i++) {
+              for (var i in files) {
                 if (lower == files[i].filename && scope.file.id != files[i].id) {
                   scope.invalidName = true;
                   return;
