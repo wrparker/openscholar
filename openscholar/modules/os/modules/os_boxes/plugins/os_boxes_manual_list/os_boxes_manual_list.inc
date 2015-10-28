@@ -71,9 +71,9 @@ class os_boxes_manual_list extends os_boxes_default {
     $nodes = &$form['nodes'];
 
     $delta = 0;
+    uasort($this->options['nodes'], 'os_boxes_contact_node');
     foreach ($this->options['nodes'] as &$node) {
       if (in_array($node['nid'], $form_state['storage']['removed'])) {
-        unset($node);
         continue;
       }
       $nodes[$node['nid']] = $this->addNode($node, $delta);
@@ -228,12 +228,12 @@ class os_boxes_manual_list extends os_boxes_default {
 function os_boxes_manual_list_table($element) {
   // Render the form as a table.
   $rows = array();
-  uasort($element, 'element_sort');
   foreach (element_children($element) as $c) {
     $rows[] = array(
       'data' => array(
-        drupal_render($element[$c]['nid']) . drupal_render($element[$c]['text']) . drupal_render($element[$c]['title']) . drupal_render($element[$c]['remove']),
+        drupal_render($element[$c]['nid']) . drupal_render($element[$c]['text']) . drupal_render($element[$c]['title']),
         drupal_render($element[$c]['weight']),
+        drupal_render($element[$c]['remove']),
       ),
       'class' => (string)$c!='blank'?array('draggable'):array(),
     );
@@ -280,6 +280,16 @@ function os_boxes_manual_list_add_new_fields($element, &$form_state, &$form) {
   return $element;
 }
 
+/**
+ * Ajax form callback.
+ */
 function os_boxes_manual_add($form, $form_state) {
   return $form['options']['nodes'];
+}
+
+/**
+ * Sorting callback. Put the last element at the bottom of the list.
+ */
+function os_boxes_contact_node($a, $b) {
+  return ($a['weight'] < $b['weight']) ? 1 : -1;
 }
