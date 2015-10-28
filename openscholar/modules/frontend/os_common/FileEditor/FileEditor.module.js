@@ -58,7 +58,7 @@
               scope.invalidName = true;
               return;
             }
-            if (!filename.match(/^([a-zA-Z0-9_\.-]*)\.([a-zA-Z0-9]*)$/)) {
+            if (!filename.match(/^([a-zA-Z0-9_\.-]*)$/)) {
               scope.invalidName = true;
               return;
             }
