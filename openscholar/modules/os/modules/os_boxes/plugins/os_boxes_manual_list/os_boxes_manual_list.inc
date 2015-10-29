@@ -206,11 +206,11 @@ class os_boxes_manual_list extends os_boxes_default {
       ),
       'remove' => array(
         '#type' => 'button',
+        '#name' => 'remove_' . $node['nid'],
         '#value' => t('Remove'),
         '#remove' => $node['nid'],
-        '#node' => $node,
         '#ajax' => array(
-          'callback' => 'os_boxes_manual_remove',
+          'callback' => 'os_boxes_manual_add',
           'wrapper' => 'nodes',
         ),
       ),
@@ -285,13 +285,6 @@ function os_boxes_manual_list_add_new_fields($element, &$form_state, &$form) {
  * Ajax form callback.
  */
 function os_boxes_manual_add($form, $form_state) {
-  return $form['options']['nodes'];
-}
-
-/**
- * Ajax form callback.
- */
-function os_boxes_manual_remove($form, $form_state) {
   return $form['options']['nodes'];
 }
 
