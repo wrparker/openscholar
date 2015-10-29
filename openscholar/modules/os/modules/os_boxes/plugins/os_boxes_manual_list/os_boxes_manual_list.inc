@@ -17,6 +17,7 @@ class os_boxes_manual_list extends os_boxes_default {
   }
 
   public function options_form(&$form_state) {
+    // Will prevent fatal error and the FAPI from failing.
     include_once (drupal_get_path('module', 'vsite') . '/includes/nodeautocomplete.inc');
     $form_state['build_info']['files'][] = drupal_get_path('module', 'vsite') . '/includes/nodeautocomplete.inc';
     $form = parent::options_form($form_state);
@@ -37,6 +38,7 @@ class os_boxes_manual_list extends os_boxes_default {
       ),
     );
 
+    // Keep which nodes removed.
     $form_state['storage']['nodes'] = isset($form_state['storage']['nodes']) ? $form_state['storage']['nodes'] : 0;
 
     $form['nodes'] = array(
@@ -53,14 +55,17 @@ class os_boxes_manual_list extends os_boxes_default {
         form_set_error('', t('Please choose a node to add.'));
       }
       else {
+        // Get the node.
         $explode = explode('[', $form_state['values']['node_to_add']);
         $nid = intval(end($explode));
         $node = node_load($nid);
+        // The node is added again, remove from the list of removed nodes.
         unset($form_state['storage']['removed'][$nid]);
         $this->options['nodes'][$nid] = array('title' => $node->title, 'nid' => $node->nid, 'weight' => count($this->options['nodes']) + 1);
       }
     }
 
+    // Check which node was removed.
     $form_state['storage']['removed'] = empty($form_state['storage']['removed']) ? array() : $form_state['storage']['removed'];
 
     if (!empty($form_state['triggering_element']['#remove'])) {
@@ -72,6 +77,7 @@ class os_boxes_manual_list extends os_boxes_default {
     $delta = 0;
     foreach ($this->options['nodes'] as &$node) {
       if (in_array($node['nid'], $form_state['storage']['removed'])) {
+        // Don't add the node to the list.
         continue;
       }
       $nodes[$node['nid']] = $this->addNode($node, $delta);
@@ -184,8 +190,12 @@ class os_boxes_manual_list extends os_boxes_default {
    * Adding a single node.
    *
    * @param $node
+   *   The node array.
    * @param $delta
+   *   The delta of the node.
+   *
    * @return array
+   *   A new table row.
    */
   private function addNode($node, $delta) {
     return array(
@@ -218,7 +228,7 @@ class os_boxes_manual_list extends os_boxes_default {
         '#size' => 3,
         '#attributes' => array(
           'class' => (string)$delta != 'blank' ? array('field-weight') : array(),
-        )
+        ),
       ),
     );
   }
