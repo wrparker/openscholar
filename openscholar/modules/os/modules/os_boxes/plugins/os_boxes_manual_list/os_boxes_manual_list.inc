@@ -58,7 +58,7 @@ class os_boxes_manual_list extends os_boxes_default {
         $nid = intval(end($explode));
         $node = node_load($nid);
         unset($form_state['storage']['removed'][$nid]);
-        $this->options['nodes'][$nid] = array('title' => $node->title, 'nid' => $node->nid, 'weight' => 1 - count($this->options['nodes']));
+        $this->options['nodes'][$nid] = array('title' => $node->title, 'nid' => $node->nid, 'weight' => count($this->options['nodes']) + 1);
       }
     }
 
@@ -71,7 +71,6 @@ class os_boxes_manual_list extends os_boxes_default {
     $nodes = &$form['nodes'];
 
     $delta = 0;
-    uasort($this->options['nodes'], 'os_boxes_contact_node');
     foreach ($this->options['nodes'] as &$node) {
       if (in_array($node['nid'], $form_state['storage']['removed'])) {
         continue;
@@ -229,6 +228,7 @@ class os_boxes_manual_list extends os_boxes_default {
 function os_boxes_manual_list_table($element) {
   // Render the form as a table.
   $rows = array();
+  uasort($element, 'element_sort');
   foreach (element_children($element) as $c) {
     $rows[] = array(
       'data' => array(
@@ -286,11 +286,4 @@ function os_boxes_manual_list_add_new_fields($element, &$form_state, &$form) {
  */
 function os_boxes_manual_add($form, $form_state) {
   return $form['options']['nodes'];
-}
-
-/**
- * Sorting callback. Put the last element at the bottom of the list.
- */
-function os_boxes_contact_node($a, $b) {
-  return ($a['weight'] < $b['weight']) ? 1 : -1;
 }
