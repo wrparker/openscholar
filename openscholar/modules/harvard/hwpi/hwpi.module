@@ -355,3 +355,22 @@ function hwpi_form_vsite_register_form_alter(&$form, &$form_state) {
     '#markup' => t('By clicking the button below, you are agreeing to our <a href="@url" target="_blank">Terms of Use</a>.', array('@url'  => 'http://hwp.harvard.edu/terms-use'))
   );
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hwpi_form_user_login_alter(&$form, $form_state) {
+  $form['message'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array(
+        'user-login-message-text',
+      )
+    ),
+    'message-text' => array(
+      '#markup' => t('!roadmap-link for the latest new feature and bug fix information.', array(
+        '!roadmap-link' => l('Visit our roadmap', 'http://theopenscholar.org/roadmap')
+      ))
+    )
+  );
+}
