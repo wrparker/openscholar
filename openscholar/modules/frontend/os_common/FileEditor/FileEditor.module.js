@@ -34,20 +34,44 @@
             scope.extension = '.' + getExtension(f.url);
           });
 
+          var dateTimeout;
           scope.$watch('date', function (value, old) {
             if (value == old ) return;
+            scope.invalidDate = false;
             var d = new Date(value);
+            if (isNaN(d.getTime())) {
+              scope.invalidDate = true;
+              return;
+            }
             if (d) {
               scope.file.timestamp = parseInt(d.getTime() / 1000);
+              if (dateTimeout) {
+                $timeout.cancel(dateTimeout);
+              }
+              dateTimeout = $timeout(function () {
+                scope.date = $filter('date')(scope.file.timestamp+'000', 'short');
+              }, 3000);
             }
           });
 
           scope.$watch('file.filename', function (filename, old) {
+            if (typeof filename != 'string') {
+              return;
+            }
             scope.invalidName = false;
-            if (filename && filename != old) {
+            if (filename == "") {
+              scope.invalidName = true;
+              return;
+            }
+            if (!filename.match(/^([a-zA-Z0-9_\.-]*)$/)) {
+              scope.invalidName = true;
+              return;
+            }
+            var lower = filename.toLowerCase();
+            if (lower != old) {
               var files = fileService.getAll();
-              for (var i = 0; i < files.length; i++) {
-                if (filename == files[i].filename && scope.file.id != files[i].id) {
+              for (var i in files) {
+                if (lower == files[i].filename && scope.file.id != files[i].id) {
                   scope.invalidName = true;
                   return;
                 }
