@@ -1126,12 +1126,13 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
   );
 
   // Remove the template, reminder date is no longer inside a container.
+  $delta = empty($_GET['delta']) ? 0 : $_GET['delta'];
   $form['reminder']['reminder_settings']['reminder_template'] = $form['reminder']['reminder_settings']['reminder_template'] + array(
     '#access' => FALSE,
     '#value'  => $reminder_on ? variable_get('os_reminder_template', "
-Hello[registration:attendee_name],
+Hello,
 
-You request to send a reminder for the event <a href='[node:url]'>[node:title]</a>.") : '',
+This is only a friendly reminder that you registered the event <a href='[node:url]?delta={$delta}'>[node:title]</a>.") : '',
   );
   $form['reminder']['reminder_settings']['token_tree']['#access'] = FALSE;
   $form['reminder']['reminder_settings']['#type'] = 'container';
@@ -1210,11 +1211,12 @@ function os_events_validate_handle_reminder($form, &$form_state) {
   // Since we are hiding the reminder template from the form the and the user
   // switch from not reminding to reminding the original validation handler
   // messed up.
+  $delta = empty($_GET['delta']) ? 0 : $_GET['delta'];
   $reminder = &$form_state['values']['reminder'];
   $reminder['reminder_settings']['reminder_template'] = $form_state['values']['reminder']['send_reminder'] ? variable_get('os_reminder_template', "
-Hello[registration:attendee_name],
+Hello,
 
-You request to send a reminder for the event <a href='[node:url]'>[node:title]</a>.") : '';
+This is only a friendly reminder that you registered the event <a href='[node:url]?delta={$delta}'>[node:title]</a>.") : '';
 }
 
 /**
