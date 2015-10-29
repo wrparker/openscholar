@@ -30,6 +30,7 @@ Feature: Media Browser
       And I edit the node "About" in the group "john"
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
+      And I should wait for the text "Please wait while we get information on your files." to "disappear"
      When I click on "Previously uploaded files" button in the media browser
      Then I should see "slideshow1.jpg"
 
@@ -40,6 +41,7 @@ Feature: Media Browser
       And I edit the node "About" in the group "john"
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
+      And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I drop the file "kitten-2.jpg" onto the "Drag and drop files here." area
       And I should wait for "File Edit" directive to "appear"
      When I click on the "Save" control
@@ -53,6 +55,7 @@ Feature: Media Browser
       And I edit the node "About" in the group "john"
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
+      And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I click on the tab "Previously uploaded files"
       And I should see "kitten-2.jpg" in a "div.media-row" element
       And I click on the tab "Upload from your computer"
@@ -73,6 +76,7 @@ Feature: Media Browser
       And I edit the node "About" in the group "john"
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
+      And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I click on the tab "Previously uploaded files"
       And I should see "kitten-2.jpg" in a "div.media-row" element
       And I click on the tab "Upload from your computer"
@@ -91,6 +95,7 @@ Feature: Media Browser
      And I edit the node "About" in the group "john"
     When I click on the "Upload" control
      And I wait "1 second" for the media browser to open
+     And I should wait for the text "Please wait while we get information on your files." to "disappear"
      And I click on the tab "Previously uploaded files"
      And I should see "kitten-2.jpg" in a "div.media-row" element
      And I click on the tab "Upload from your computer"
@@ -111,6 +116,7 @@ Feature: Media Browser
       And I edit the node "About" in the group "john"
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
+      And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I drop the files "rubber-duck.jpg, conservatory_of_flowers3.jpg" onto the "Drag and drop files here." area
      Then I should see the media browser "Previously uploaded files" tab is active
       And I should see "rubber-duck.jpg" in a "div.media-row.new" element
@@ -123,6 +129,7 @@ Feature: Media Browser
       And I edit the node "About" in the group "john"
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
+      And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I drop the files "rubber-duck.jpg, conservatory_of_flowers3.jpg" onto the "Drag and drop files here." area
      Then I should see "A file with the name 'rubber-duck.jpg' already exists."
       And I should see "1/2"
@@ -138,6 +145,7 @@ Feature: Media Browser
       And I edit the node "I opened a new personal" in the group "john"
      When I click on the "Choose File" control
       And I wait "1 second" for the media browser to open
+      And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I mouse over the ".media-browser-pane .help_icon" element
      Then I should see "jpeg jpg png"
       And I should not see "pdf"
@@ -156,6 +164,7 @@ Feature: Media Browser
       And I edit the node "About" in the group "john"
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
+      And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I drop the files "abc.pdf, kitten-2.jpg" onto the "Drag and drop files here." area
      Then I should see "A file with the name 'kitten-2.jpg' already exists."
       And I press the "Cancel" button
@@ -170,6 +179,7 @@ Feature: Media Browser
       And I edit the node "About" in the group "john"
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
+      And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I click on the tab "Embed from the web"
       And I fill in "URL or HTML" with "https://youtu.be/jNQXAC9IVRw"
       And I press the "Submit" button
@@ -186,6 +196,7 @@ Feature: Media Browser
       And I edit the node "About" in the group "john"
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
+      And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I click on the tab "Embed from the web"
       And I fill in "URL or HTML" with "http://this.is.a.fake.site.com/id/52ac3d"
       And I press the "Submit" button
@@ -199,6 +210,7 @@ Feature: Media Browser
       And I edit the node "About" in the group "john"
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
+      And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I click on the tab "Embed from the web"
       And I fill in "URL or HTML" with "<iframe src=\"http://untrusted.domain\"></iframe>"
       And I press the "Submit" button

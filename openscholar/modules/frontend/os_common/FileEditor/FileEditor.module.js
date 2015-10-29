@@ -123,13 +123,42 @@
                 }
             },
             function(result) {
-              scope.errorMessages = result.data.title.replace(/[^\s:]*: /, '');
-              scope.showErrorMessages = true;
+              switch (result.status) {
+                case 409:
+                  scope.errorMessages = 'This file has been changed since it was last retrieved from the server. Please wait while we get an updated version.';
+                  scope.showErrorMessages = true;
+                  break;
+                case 410:
+                  scope.errorMessages = 'This file has been deleted. It will be removed from your listing shortly.';
+                  scope.showErrorMessages = true;
+                  scope.deletedRedirect = true;
+                  break;
+                default:
+                  scope.errorMessages = result.data.title.replace(/[^\s:]*: /, '');
+                  scope.showErrorMessages = true;
+              }
             });
-          };
+          }
+
+          scope.$on('EntityCacheUpdater.cacheUpdated', function () {
+            if (scope.showErrorMessages) {
+              $timeout(function () {
+                scope.showErrorMessages = false;
+              }, 5000);
+              scope.file = angular.copy(fileService.get(scope.file.id));
+            }
+          });
 
           scope.cancel = function () {
             scope.onClose({saved: FER.CANCELED});
+          }
+
+          scope.closeErrors = function () {
+            scope.showErrorMessages = false;
+            if (scope.deletedRedirect) {
+              scope.deletedRedirect = false;
+              scope.cancel();
+            }
           }
         }
       }
