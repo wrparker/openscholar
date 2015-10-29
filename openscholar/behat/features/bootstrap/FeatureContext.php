@@ -2858,4 +2858,15 @@ class FeatureContext extends DrupalContext {
        }
      }
  }
+
+  /**
+   * @Given /^I create an event in "([^"]*)"$/
+   */
+  public function iCreateAnEventAt($time) {
+    $entity = entity_create('node', ['type' => 'event', 'title' => 'foo']);
+    $wrapper = entity_metadata_wrapper('node', $entity);
+    $wrapper->field_date->set([array('value' => date('Y-m-d H:i:s', strtotime($time)))]);
+    $wrapper->{OG_AUDIENCE_FIELD}->set([2]);
+    $wrapper->save();
+  }
 }

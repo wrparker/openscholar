@@ -35,3 +35,8 @@ Feature: Testing the tagged items.
       And I bind the content type "class" with "science"
       And I visit "john/classes/john-f-kennedy"
      Then I should see "Air"
+
+  @api @taxonomy @now2
+  Scenario: Verify count of tagged events works as expected.
+    Given I am logging in as "john"
+      And I create an event in "+1 min"
