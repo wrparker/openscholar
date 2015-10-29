@@ -51,7 +51,7 @@ class os_boxes_manual_list extends os_boxes_default {
     if (!empty($form_state['triggering_element']['#add'])) {
 
       if (empty($form_state['values']['node_to_add'])) {
-        form_set_error('', t('Please chose a node to add.'));
+        form_set_error('', t('Please choose a node to add.'));
       }
       else {
         $explode = explode('[', $form_state['values']['node_to_add']);
@@ -198,7 +198,7 @@ class os_boxes_manual_list extends os_boxes_default {
       ),
       'text' => array(
         '#type' => 'markup',
-        '#markup' => $node['title'] . render($remove),
+        '#markup' => $node['title'],
       ),
       'title' => array(
         '#type' => 'hidden',
@@ -208,8 +208,9 @@ class os_boxes_manual_list extends os_boxes_default {
         '#type' => 'button',
         '#value' => t('Remove'),
         '#remove' => $node['nid'],
+        '#node' => $node,
         '#ajax' => array(
-          'callback' => 'os_boxes_manual_add',
+          'callback' => 'os_boxes_manual_remove',
           'wrapper' => 'nodes',
         ),
       ),
@@ -284,6 +285,13 @@ function os_boxes_manual_list_add_new_fields($element, &$form_state, &$form) {
  * Ajax form callback.
  */
 function os_boxes_manual_add($form, $form_state) {
+  return $form['options']['nodes'];
+}
+
+/**
+ * Ajax form callback.
+ */
+function os_boxes_manual_remove($form, $form_state) {
   return $form['options']['nodes'];
 }
 
