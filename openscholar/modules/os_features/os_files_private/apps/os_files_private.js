@@ -8,7 +8,7 @@
     }])
     .controller('OSFilesPrivateController', ['$scope', 'FILEEDITOR_RESPONSES', function ($scope, FER) {
       $scope.reload = function (result) {
-        if (result == FER.SAVED) {
+        if (result == FER.SAVED || result === true) {
           window.location.reload();
         }
       }
