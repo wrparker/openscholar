@@ -453,3 +453,58 @@ function os_events_in_view_context($display_titles = array()) {
 
   return in_array($view->current_display, $display_names);
 }
+
+/**
+ * Returns HTML for an image field.
+ *
+ * Output image fields as figure with figcaption for captioning.
+ */
+function os_basetheme_field__image($vars) {
+  $output = '';
+  // Static variable for obtaining image caption texts in theme_image function.
+  $image_caption_static = &drupal_static('image_caption_static');
+  
+  // Render the label, if it's not hidden.
+  if (!$vars['label_hidden']) {
+    $output .= '<h2 class="field-label"' . $vars['title_attributes'] . '>' . $vars['label'] . ':&nbsp;</h2>';
+  }
+  foreach ($vars['items'] as $delta => $item) {
+    // Opening figure tag
+    $output .= '<figure>';
+    $img_filename = $vars['element']['#object']->origname;
+    // Putting image description text in static variable.
+    $image_caption_static[$img_filename] = strip_tags($item['#markup']);
+  }
+  return $output;
+}
+
+/**
+ * Overriding theme_image for os_basetheme.
+ */
+function os_basetheme_image($variables) {  
+  $attributes = $variables['attributes'];
+  $attributes['src'] = file_create_url($variables['path']);
+
+  foreach (array('width', 'height', 'alt', 'title') as $key) {
+    if (isset($variables[$key])) {
+      $attributes[$key] = $variables[$key];
+    }
+  }
+
+  // For inline images, figcaption tags will be displayed.
+  if (isset($attributes['class']) && $attributes['class'][0] == 'media-element') {
+    $path = explode("?", $attributes['src']);
+    $img_filename = drupal_basename($path[0]);
+    $output = '<img' . drupal_attributes($attributes) . ' />';
+    // Static variable for obtaining image caption texts.
+    $image_caption_static = &drupal_static('image_caption_static');
+    if (!empty($image_caption_static[$img_filename])) {
+      $output .= '<figcaption>' . $image_caption_static[$img_filename] . '</figcaption>';
+    }
+    // Closing figure tag
+    $output .= '</figure>';
+    return $output;
+  } else {
+    return '<img' . drupal_attributes($attributes) . ' />';
+  }
+}
