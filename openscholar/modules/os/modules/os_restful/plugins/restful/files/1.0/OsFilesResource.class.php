@@ -444,6 +444,9 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     elseif (isset($_FILES['files']) && $_FILES['files']['errors']['upload']) {
       throw new RestfulUnprocessableEntityException('Error uploading new file to server.');
     }
+    elseif ($errors = form_get_errors()) {
+      throw new RestfulUnprocessableEntityException($errors['upload']);
+    }
     elseif (isset($this->request['embed']) && module_exists('media_internet')) {
 
       $provider = media_internet_get_provider($this->request['embed']);
@@ -507,7 +510,8 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
       ),
       'file_validate_size' => array(
         parse_size(file_upload_max_size())
-      )
+      ),
+      'os_files_upload_validate_image_dimensions' => array()
     );
 
     return $validators;
