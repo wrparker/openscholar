@@ -74,6 +74,7 @@
          <text macro="title" prefix=" " suffix=". "/>
          <text variable="container-title" font-style="italic" suffix=" " form="short"/>
          <text variable="volume" suffix=", " font-weight="bold"/>
+         <text variable="issue" suffix=", "/>
          <text variable="page"/>
          <text macro="issuance"/>
          <text macro="access"/>

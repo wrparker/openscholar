@@ -786,10 +786,6 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
     return;
   }
 
-  if (empty($_GET['type']) || !in_array($_GET['type'], array('day', 'week', 'month', 'year'))) {
-    return;
-  }
-
   // Add JS for event popup.
   drupal_add_js(drupal_get_path('module', 'os_events') . '/js/os_events_popup.js');
   drupal_add_library('system', 'ui.dialog');
@@ -814,6 +810,10 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
     }
 
     $view->args[0] = date($format['month'], $time);
+    return;
+  }
+
+  if (empty($_GET['type']) || !in_array($_GET['type'], array('day', 'week', 'month', 'year'))) {
     return;
   }
 

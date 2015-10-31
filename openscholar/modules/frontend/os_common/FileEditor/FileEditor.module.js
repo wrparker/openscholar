@@ -34,20 +34,44 @@
             scope.extension = '.' + getExtension(f.url);
           });
 
+          var dateTimeout;
           scope.$watch('date', function (value, old) {
             if (value == old ) return;
+            scope.invalidDate = false;
             var d = new Date(value);
+            if (isNaN(d.getTime())) {
+              scope.invalidDate = true;
+              return;
+            }
             if (d) {
               scope.file.timestamp = parseInt(d.getTime() / 1000);
+              if (dateTimeout) {
+                $timeout.cancel(dateTimeout);
+              }
+              dateTimeout = $timeout(function () {
+                scope.date = $filter('date')(scope.file.timestamp+'000', 'short');
+              }, 3000);
             }
           });
 
           scope.$watch('file.filename', function (filename, old) {
+            if (typeof filename != 'string') {
+              return;
+            }
             scope.invalidName = false;
-            if (filename && filename != old) {
+            if (filename == "") {
+              scope.invalidName = true;
+              return;
+            }
+            if (!filename.match(/^([a-zA-Z0-9_\.-]*)$/)) {
+              scope.invalidName = true;
+              return;
+            }
+            var lower = filename.toLowerCase();
+            if (lower != old) {
               var files = fileService.getAll();
-              for (var i = 0; i < files.length; i++) {
-                if (filename == files[i].filename && scope.file.id != files[i].id) {
+              for (var i in files) {
+                if (lower == files[i].filename && scope.file.id != files[i].id) {
                   scope.invalidName = true;
                   return;
                 }
@@ -123,13 +147,42 @@
                 }
             },
             function(result) {
-              scope.errorMessages = result.data.title.replace(/[^\s:]*: /, '');
-              scope.showErrorMessages = true;
+              switch (result.status) {
+                case 409:
+                  scope.errorMessages = 'This file has been changed since it was last retrieved from the server. Please wait while we get an updated version.';
+                  scope.showErrorMessages = true;
+                  break;
+                case 410:
+                  scope.errorMessages = 'This file has been deleted. It will be removed from your listing shortly.';
+                  scope.showErrorMessages = true;
+                  scope.deletedRedirect = true;
+                  break;
+                default:
+                  scope.errorMessages = result.data.title.replace(/[^\s:]*: /, '');
+                  scope.showErrorMessages = true;
+              }
             });
-          };
+          }
+
+          scope.$on('EntityCacheUpdater.cacheUpdated', function () {
+            if (scope.showErrorMessages) {
+              $timeout(function () {
+                scope.showErrorMessages = false;
+              }, 5000);
+              scope.file = angular.copy(fileService.get(scope.file.id));
+            }
+          });
 
           scope.cancel = function () {
             scope.onClose({saved: FER.CANCELED});
+          }
+
+          scope.closeErrors = function () {
+            scope.showErrorMessages = false;
+            if (scope.deletedRedirect) {
+              scope.deletedRedirect = false;
+              scope.cancel();
+            }
           }
         }
       }
