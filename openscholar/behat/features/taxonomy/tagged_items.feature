@@ -39,4 +39,4 @@ Feature: Testing the tagged items.
   @api @taxonomy @now2
   Scenario: Verify count of tagged events works as expected.
     Given I am logging in as "john"
-      And I create an event in "+1 min"
+      And I create a future event in "john"

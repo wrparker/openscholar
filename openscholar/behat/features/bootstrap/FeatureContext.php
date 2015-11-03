@@ -2860,13 +2860,27 @@ class FeatureContext extends DrupalContext {
  }
 
   /**
-   * @Given /^I create an event in "([^"]*)"$/
+   * @Given /^I create a future event in "([^"]*)"$/
    */
-  public function iCreateAnEventAt($time) {
-    $entity = entity_create('node', ['type' => 'event', 'title' => 'foo']);
-    $wrapper = entity_metadata_wrapper('node', $entity);
-    $wrapper->field_date->set([array('value' => date('Y-m-d H:i:s', strtotime($time)))]);
-    $wrapper->{OG_AUDIENCE_FIELD}->set([2]);
-    $wrapper->save();
+  public function iCreateAnEventAt($site) {
+    // Get the next 5 minutes jump.
+    $minute = date('i');
+    $hour = date('H');
+    $ampm = date('a');
+
+    if ($minute <= 30) {
+      $time = $hour . ':' . 35 . $ampm;
+    }
+    else {
+      $time = $hour + 1 . ':' . 15 . $ampm;
+    }
+
+    return [
+      new Step\When('I visit "' . $site . '/node/add/event"'),
+      new Step\When('I fill in "Title" with "testing event"'),
+      new Step\When('I fill in "field_date[und][0][value][time]" with "' . $time . '"'),
+      new Step\When('I fill in "field_date[und][0][value2][time]" with "' . $time . '"'),
+      new Step\When('I press "edit-submit"'),
+    ];
   }
 }
