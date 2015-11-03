@@ -46,7 +46,7 @@ function undoRemoveWidget(widget) {
 }
 
 function findRegion(widget) {
-  var region = widget.closest('.region'),
+  var region = widget.closest('.region, .nav'),
     classes = region.attr('class').split(' '),
     region_name = '';
 
