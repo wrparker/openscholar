@@ -171,7 +171,7 @@ ul.nice-menu-down li ul li ul {
 }
 /* HOMEPAGE SPECIFIC STYLES */
 
-.front #header,
+#header,
 .front #content-panels .region-content-first,
 .front #content-panels .region-content-bottom {
     background: #F5F5F5;
@@ -217,7 +217,7 @@ h1#page-title {
 }
 h2.block-title {
     padding: 7px 0;
-    font-size: .95em;
+    font-size: 1.3em;
     font-weight: bold;
 }
 #content-column .block.block-boxes-os_boxes_manual_list .links.inline a,
