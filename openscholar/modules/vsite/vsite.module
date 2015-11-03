@@ -3685,3 +3685,46 @@ function vsite_grant_by_pass_permission($node) {
     og_role_grant_permissions($rid, array('bypass redirection'));
   }
 }
+
+/**
+ * Filter out deleted entities that don't belong to the current space
+ */
+/**
+ * Implements hook_os_restful_deleted_entities_alter().
+ */
+function vsite_os_restful_deleted_entities_alter(&$deleted, OsRestfulEntityCacheableBase $handler) {
+  $request = $handler->getRequest();
+  if ($request['vsite']) {
+    foreach ($deleted as $k => $v) {
+      if ($v['extra']['group'] != $request['vsite']) {
+        unset($deleted[$k]);
+      }
+    }
+  }
+}
+
+/**
+ * Add vsite information to the data saved with a deleted entity
+ */
+/**
+ * Implements hook_os_restful_entity_delete_data().
+ */
+function vsite_os_restful_entity_delete_data($entity_type, $entity) {
+  $data = array();
+  switch ($entity_type) {
+    case 'node':
+    case 'file':
+      if (is_array($entity->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0])) {
+        $data['group'] = $entity->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id'];
+      }
+      break;
+    case 'taxonomy_term':
+      // TODO: Figure this out
+      break;
+    case 'taxonomy_vocabulary':
+      // TODO: Figure this out
+      break;
+    }
+
+  return $data;
+}
