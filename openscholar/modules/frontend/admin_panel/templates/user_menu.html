@@ -1,11 +1,14 @@
     <div id="topRightMenu" class="topRight_Menu" right-menu-toggle>
-      <div>
-        {{ user.name }}&nbsp;
+      <div id="my-account">
+        My<br>Account
         <div class="arrow-down"></div>
       </div>
     </div>
     <div id="rightMenuSlide" class="topRight_Menu topRight_subMenu" style='display:none;'>
       <ul>
+      	<li id="user-name">
+          {{ user.name }}
+        </li>
         <li>
           <a ng-href="/user/{{ user.uid }}/edit">Manage my account</a>
         </li>
