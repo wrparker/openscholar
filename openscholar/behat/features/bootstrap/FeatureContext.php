@@ -2860,27 +2860,17 @@ class FeatureContext extends DrupalContext {
  }
 
   /**
-   * @Given /^I create a future event in "([^"]*)"$/
+   * @When /^I change the date of "([^"]*)" in "([^"]*)"$/
    */
-  public function iCreateAnEventAt($site) {
-    // Get the next 5 minutes jump.
-    $minute = date('i');
-    $hour = date('H');
-    $ampm = date('a');
-
-    if ($minute <= 30) {
-      $time = $hour . ':' . 35 . $ampm;
-    }
-    else {
-      $time = $hour + 1 . ':' . 15 . $ampm;
-    }
-
-    return [
-      new Step\When('I visit "' . $site . '/node/add/event"'),
-      new Step\When('I fill in "Title" with "testing event"'),
-      new Step\When('I fill in "field_date[und][0][value][time]" with "' . $time . '"'),
-      new Step\When('I fill in "field_date[und][0][value2][time]" with "' . $time . '"'),
-      new Step\When('I press "edit-submit"'),
-    ];
+  public function iChangeTheDateOfIn($label, $site) {
+    $nid = FeatureHelp::getNodeIdInVsite($label, $site);
+    $wrapper = entity_metadata_wrapper('node', $nid);
+    $date = $wrapper->field_date->value();
+    // Set the event to last year.
+    $date[0]['value'] = str_replace(date('Y'), date('Y') - 1, $date[0]['value']);
+    $date[0]['value2'] = str_replace(date('Y'), date('Y') - 1, $date[0]['value2']);
+    $wrapper->field_date->set($date);
+    $wrapper->save();
   }
+
 }
