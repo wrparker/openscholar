@@ -882,7 +882,7 @@ class csl_names extends csl_format {
               list($contributor, $category) = explode(':', $var);
               if (!empty($contributor) && $this->_get_category($data->{$contributor}, $category)) {
                 $matches++;
-                break;
+                break 2;
               }
             }
           }
