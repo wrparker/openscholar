@@ -50,6 +50,12 @@ function findRegion(widget) {
     classes = region.attr('class').split(' '),
     region_name = '';
 
+  if (classes[0] == 'nav') {
+    // Menu bar is the only place which don't have the region as part of the
+    // class.
+    return 'menu_bar';
+  }
+
   $.each(classes, function(i, v) {
     if (typeof v == 'string' && v.indexOf('region-') > -1) {
       region_name = v.replace('region-', '').replace('-', '_');
@@ -57,7 +63,7 @@ function findRegion(widget) {
       // break out of the loop
       return false;
     }
-  })
+  });
 
   return region_name;
 }
