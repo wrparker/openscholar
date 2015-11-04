@@ -3727,8 +3727,4 @@ function vsite_os_restful_entity_delete_data($entity_type, $entity) {
     }
 
   return $data;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> SCHOLAR-3.x
