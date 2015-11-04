@@ -105,6 +105,11 @@
                 menu_state[attrs.id] = false;
                 closeLink(parent);
 	          } else {
+	        	if ( element.hasClass('close-siblings') ) {
+		      	  parent.siblings('.open').each(function() {
+		       	    closeLink(jQuery(this));
+		       	  });
+		       	}
 	            menu_state[attrs.id] = true;
 	            openLink(parent);
 	          }
