@@ -132,7 +132,7 @@
  *}
  *
  */
-class OsFilesResource extends RestfulEntityBase {
+class OsFilesResource extends OsRestfulEntityCacheableBase {
 
   protected $errors = array();
 
@@ -734,5 +734,18 @@ class OsFilesResource extends RestfulEntityBase {
       return true;
     }
     return false;
+  }
+
+  protected function getLastModified($id) {
+    $q = db_select('file_managed', 'fm')
+      ->fields('fm', array('changed'))
+      ->condition('fid', $id)
+      ->execute();
+
+    foreach ($q as $r) {
+      return $r->changed;
+    }
+
+    return FALSE;
   }
 }

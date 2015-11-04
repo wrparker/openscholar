@@ -81,6 +81,8 @@ function os_publications_install() {
   }
 
   variable_set('biblio_years_text', $new_bibyears);
+
+  _reset_csl_map(FALSE);
 }
 
 // Implements hook_schema_alter().
@@ -1413,3 +1415,26 @@ function os_publications_update_7035() {
 function os_publications_update_7036() {
   features_revert(array('os_publications' => array('field_base', 'field_instance')));
 }
+
+/**
+ * Un-hiding the miscellaneous fields upon publications.
+ */
+function os_publications_update_7037() {
+  $citations = array(
+    'american-chemical-society-with-titles',
+    'american-chemical-society',
+    'apa',
+    'chicago-author-date',
+    'chicago-fullnote-bibliography',
+    'chicago-note-bibliography',
+    'mhra',
+    'mla',
+    'nature',
+  );
+
+  _reset_csl_map(FALSE);
+  foreach ($citations as $citateion) {
+    os_publications_revert_citeproc_style($citateion);
+  }
+}
+

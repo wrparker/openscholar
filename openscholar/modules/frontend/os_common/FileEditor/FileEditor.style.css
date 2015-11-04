@@ -68,7 +68,7 @@ div[file-edit] h4,
 
 /* Error window */
 
-[file-edit] .error {
+[file-edit] div.error {
   position: absolute;
   top: 30%;
   left: calc(50% - (500px / 2));
@@ -84,9 +84,14 @@ div[file-edit] h4,
   white-space: pre-line;
 }
 
-[file-edit] .error .error-close {
+[file-edit] div.error .error-close {
   position: absolute;
   bottom: 0;
   right: 0;
   padding: 5px;
+}
+
+[file-edit] input.error {
+  border-color: red !important;
+  outline-color: red !important;
 }

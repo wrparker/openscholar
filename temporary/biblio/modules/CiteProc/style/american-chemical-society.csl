@@ -197,6 +197,7 @@
             <group delimiter=", ">
               <text macro="issued"/>
               <text variable="volume" font-style="italic"/>
+              <text variable="issue"/>
               <text variable="page"/>
             </group>
           </group>
