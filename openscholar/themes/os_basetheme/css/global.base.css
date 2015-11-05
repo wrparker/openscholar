@@ -821,17 +821,17 @@ dd {
  * - Google maps break also, see below for fixes.
  */
 
-img {
+body.html img {
     max-width: 100%;
     height: auto;
     -ms-interpolation-mode: bicubic;
 }
 /* /ht Ethan Marcotte - http://front.ie/l8rJaA */
 
-img,
-embed,
-object,
-video {
+body.html img,
+body.html embed,
+body.html object,
+body.html video {
     max-width: 100%;
 }
 /* Disable flexiblity for IE8 and below or these tags in tables*/
