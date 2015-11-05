@@ -460,7 +460,7 @@ function os_events_in_view_context($display_titles = array()) {
  * Output image fields as figure with figcaption for captioning.
  */
 function os_basetheme_field__image($vars) {
-  $output = '';
+  $output = ' ';
   // Static variable for obtaining image caption texts in theme_image function.
   $image_caption_static = &drupal_static('image_caption_static');
   
@@ -469,8 +469,6 @@ function os_basetheme_field__image($vars) {
     $output .= '<h2 class="field-label"' . $vars['title_attributes'] . '>' . $vars['label'] . ':&nbsp;</h2>';
   }
   foreach ($vars['items'] as $delta => $item) {
-    // Opening figure tag
-    $output .= '<figure>';
     $img_filename = $vars['element']['#object']->origname;
     // Putting image description text in static variable.
     $image_caption_static[$img_filename] = strip_tags($item['#markup']);
@@ -495,7 +493,8 @@ function os_basetheme_image($variables) {
   if (isset($attributes['class']) && $attributes['class'][0] == 'media-element') {
     $path = explode("?", $attributes['src']);
     $img_filename = drupal_basename($path[0]);
-    $output = '<img' . drupal_attributes($attributes) . ' />';
+    $output = '<figure>';
+    $output .= '<img' . drupal_attributes($attributes) . ' />';
     // Static variable for obtaining image caption texts.
     $image_caption_static = &drupal_static('image_caption_static');
     if (!empty($image_caption_static[$img_filename])) {
