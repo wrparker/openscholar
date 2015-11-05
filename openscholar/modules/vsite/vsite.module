@@ -1615,7 +1615,7 @@ function vsite_menu_alter(&$items) {
     'type' => MENU_LOCAL_TASK,
     'file' => 'spaces.admin.inc',
     'module' => 'spaces'
-  	);
+    );
 
   // Paths for group node edit admin operations.
   $restricted_group_node_paths = array(
