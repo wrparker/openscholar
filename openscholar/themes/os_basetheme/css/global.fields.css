@@ -170,3 +170,6 @@
 .registration-event-signup-simple .field-name-field-full-name .field-items {
   display:inline-block;
 }
+.registration-event-signup-simple .field-label-inline:nth-child(5) {
+	display:none;
+}
