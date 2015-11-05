@@ -1,4 +1,4 @@
-<a href="#" ng-click="showSites = ! showSites">My Sites</a>
+<div href="#" ng-click="showSites = ! showSites"></div>
 <div class="account_tab_popout user_sites" ng-show="showSites">
 	<div ng-repeat="(key, own) in [true,false]" ng-init="currentPage[key] = 0">
 		<h3 ng-show="own" class="bottom_margin">My Sites</h3>

@@ -49,8 +49,8 @@ body {
 .pushed.page_wrap {
     -webkit-transition-duration: 0.5s;
     transition-duration: 0.5s;
-   -webkit-transform: translateX(10px);
-    transform: translateX(10px);
+   -webkit-transform: translateX(15px);
+    transform: translateX(15px);
 
 }
 .page-cp #page {
@@ -202,9 +202,9 @@ body {
 }
 
 #my-account {
-	font-size: .9em;
-    line-height: 12px;
-    text-align: center;
+	
+	background: url('images/my_account-bg.png') no-repeat;
+ 
     width: 60px;
 }
 
