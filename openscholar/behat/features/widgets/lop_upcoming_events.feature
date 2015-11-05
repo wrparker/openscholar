@@ -18,7 +18,7 @@ Feature:
   Scenario: Verify that the List of posts widget shows a new repeating event
             and that repeats are displayed correctly.
     Given I am logging in as "john"
-     When I create a new repeating event with title "Repeating event" that repeats "3" times
+     When I create a new repeating event with title "Repeating event" that repeats "3" times and repeats "Weekly" with Repeat on "Fri"
       And I visit "john/calendar"
      Then I should see the event "Repeating event" in the LOP
       And I visit "john/event/repeating-event?delta=2"
@@ -30,7 +30,7 @@ Feature:
             events with number of repeats higher than the number of items to be
             displayed.
     Given I am logging in as "john"
-     When I create a new repeating event with title "Another Repeating event" that repeats "5" times
+     When I create a new repeating event with title "Another Repeating event" that repeats "5" times and repeats "Weekly" with Repeat on "Fri"
       And the widget "Upcoming events" is set in the "Software" page with the following <settings>:
           | Content Type               | Event  | select list |
           | Display style              | Title  | select list |
