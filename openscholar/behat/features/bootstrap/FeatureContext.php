@@ -2858,4 +2858,19 @@ class FeatureContext extends DrupalContext {
        }
      }
  }
+
+  /**
+   * @When /^I change the date of "([^"]*)" in "([^"]*)"$/
+   */
+  public function iChangeTheDateOfIn($label, $site) {
+    $nid = FeatureHelp::getNodeIdInVsite($label, $site);
+    $wrapper = entity_metadata_wrapper('node', $nid);
+    $date = $wrapper->field_date->value();
+    // Set the event to last year.
+    $date[0]['value'] = str_replace(date('Y'), date('Y') - 1, $date[0]['value']);
+    $date[0]['value2'] = str_replace(date('Y'), date('Y') - 1, $date[0]['value2']);
+    $wrapper->field_date->set($date);
+    $wrapper->save();
+  }
+
 }

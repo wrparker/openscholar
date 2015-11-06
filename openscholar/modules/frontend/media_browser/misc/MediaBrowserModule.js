@@ -192,9 +192,7 @@
           addMessage(file.name + ' is not an accepted file type.');
         }
         // if file is image and params specify max dimensions
-        if (file.type.indexOf('image/') !== -1 && params.min_dimensions) {
-          // since we can't force this function to wait, we have to use an onload
-          // and check this before uploading
+        if (file.type.indexOf('image/') !== -1) {
         }
 
         return size && extension;
@@ -358,6 +356,9 @@
               $scope.setSelection(firstId);
               $scope.changePanes('edit');
             }
+            else if (typeof $scope.messages[$scope.messages.next-1] != 'undefined') {
+              // do nothing. This usually means there was an error during upload.
+            }
             else {
               $scope.changePanes('library');
             }
@@ -407,7 +408,7 @@
           }
           uploadNext(e.data[0].id);
         }).error(function (e) {
-          addMessage('Unable to upload file. Contact site administrator.');
+          addMessage(e.title);
           uploadNext();
         });
       }

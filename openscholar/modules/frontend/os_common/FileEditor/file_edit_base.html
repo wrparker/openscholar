@@ -34,5 +34,5 @@
 
 <div class="error" ng-show="showErrorMessages">
     <span ng-click="closeErrors()" class="error-close">Close</span>
-    <span>{{errorMessages}}</span>
+    <span ng-bind-html="errorMessages"></span>
 </div>

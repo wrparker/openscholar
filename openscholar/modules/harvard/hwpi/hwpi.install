@@ -93,3 +93,12 @@ function hwpi_update_7005() {
   $value = drupal_map_assoc(array('hwpi_classic', 'hwpi_modern', 'hwpi_vibrant', 'hwpi_college'));
   variable_set($name, $value);
 }
+
+/**
+ * Enables new `Onepage` theme.
+ */
+function hwpi_update_7006() {
+    // Enables the new `hwpi_onepage` theme.
+    theme_enable(array('hwpi_onepage'));
+}
+
