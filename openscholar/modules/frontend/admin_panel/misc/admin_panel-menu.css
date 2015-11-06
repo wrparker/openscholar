@@ -49,9 +49,8 @@ body {
 .pushed.page_wrap {
     -webkit-transition-duration: 0.5s;
     transition-duration: 0.5s;
-   -webkit-transform: translateX(15px);
+    -webkit-transform: translateX(15px);
     transform: translateX(15px);
-
 }
 .page-cp #page {
     width: 90%;
@@ -200,14 +199,9 @@ body {
     top: 18px;
     background: #dddddd;
 }
-
-#my-account {
-	
-	background: url('images/my_account-bg.png') no-repeat;
- 
-    width: 60px;
+#rightMenuSlide {
+    top: 4px;
 }
-
 .topRight_Menu {
     position: fixed;
     top: 0;
@@ -222,8 +216,10 @@ body {
     cursor: pointer;
 }
 #topRightMenu {
-    padding: 7px 0 8px 10px;
-
+    background: url('images/my_account-bg.png') 4px 0 no-repeat;
+    width: 50px;
+    height: 18px;
+    background-color: #999;
 }
 .topRight_Menu a {
     font-style: normal;
@@ -233,7 +229,6 @@ body {
     font-size: 13px;
     display: none;
     padding: 0;
-    border-top: 1px solid #FFF;
 }
 .topRight_subMenu ul {
     margin: 0;
@@ -248,12 +243,12 @@ body {
 .topRight_subMenu li a.text_link {
     color: #215990;
 }
-
 #user-name {
-	background-color: #B2B2B2;
+    background-color: #B2B2B2;
 }
-
-
+#user-name:hover {
+    cursor: text;
+}
 .slate {
     background: #6C7A89;
 }
@@ -264,7 +259,7 @@ body {
     padding: 0 4px;
 }
 .arrow-down {
-        width: 0;
+    width: 0;
     height: 0;
     border-left: 7px solid transparent;
     border-right: 7px solid transparent;
