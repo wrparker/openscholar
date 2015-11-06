@@ -497,6 +497,10 @@ function os_theme() {
  */
 function os_theme_registry_alter(&$reg) {
   $reg['menu_tree']['preprocess functions'] = array_diff($reg['menu_tree']['preprocess functions'], array('template_preprocess_menu_tree'));
+
+  // Removing the original process function with our function.
+  $key = array_search('adaptivetheme_process_region', $reg['region']['process functions']);
+  $reg['region']['process functions'][$key] = 'os_process_region';
 }
 
 /**
@@ -2576,4 +2580,39 @@ function os_preprocess_block(&$vars) {
   // Adding the name of the module and the delta.
   $vars['attributes_array']['module'] = $vars['block']->module;
   $vars['attributes_array']['delta'] = $vars['block']->delta;
+}
+
+/**
+ * Replacing adaptivetheme_process_region function with our function in order to
+ * add the name of the region to the class attribute.
+ */
+function os_process_region(&$vars) {
+
+  if (empty($vars['classes'])) {
+    $vars['classes'] = '';
+  }
+
+  // Initialize and populate the outer wrapper variables.
+  $vars['outer_prefix'] = '<div class="' . $vars['classes'] . '">';
+  $vars['outer_suffix'] = '</div>';
+
+  // Initialize and populate the inner wrapper variables.
+  $vars['inner_prefix'] = '<div class="region-inner clearfix">';
+  $vars['inner_suffix'] = '</div>';
+
+  // Some regions need different or no markup .Use a region template with no
+  // wrappers for the main content.
+  if ($vars['region'] === 'content') {
+    $vars['outer_prefix'] = '';
+    $vars['outer_suffix'] = '';
+    $vars['inner_prefix'] = '';
+    $vars['inner_suffix'] = '';
+  }
+
+  // Menu bar needs an id, nav class and no inner wrapper.
+  if ($vars['region'] === 'menu_bar') {
+    $vars['outer_prefix'] = '<div id="menu-bar" class="nav region-menu-bar clearfix">';
+    $vars['inner_prefix'] = '';
+    $vars['inner_suffix'] = '';
+  }
 }
