@@ -8,6 +8,7 @@
   engine      = phptemplate
   screenshot  = screenshot.png
   flavor_name = "One Page"
+  plugins[os][flavor] = flavors
   single = true
 
 
