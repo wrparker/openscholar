@@ -64,3 +64,10 @@ function os_profiles_update_7005() {
 function os_profiles_update_7006() {
   features_revert(array('os_profiles' => array('views_view')));
 }
+
+/**
+ * Updating description to profile photo
+ */
+function os_profiles_update_7007() {
+ features_revert(array('os_profiles' => array('field_instance')));
+}
