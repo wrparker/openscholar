@@ -52,3 +52,19 @@ function os_pinserver_auth_update_7002() {
   variable_set('os_readonly_register_callback', 'os_pinserver_auth_vsite_register_form_page');
   variable_set('os_readonly_site_register_callback', 'os_pinserver_auth_vsite_register_form_page');
 }
+
+function os_pinserver_auth_delete_7003() {
+  $table = 'os_pinserver';
+  $table_exists = db_table_exists($table);
+  if ($table_exists) {
+     db_drop_table($table);
+  }
+}
+
+function os_pinserver_auth_delete_7004() {
+  $table = 'iqss_pinserver';
+  $table_exists = db_table_exists($table);
+  if ($table_exists) {
+     db_drop_table($table);
+  }
+}
