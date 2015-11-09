@@ -57,13 +57,20 @@ class os_boxes_manual_list extends os_boxes_default {
         form_set_error('', t('Please choose a node to add.'));
       }
       else {
+        // Collecting all the weight so we could get the maximum and place the
+        // new added node to the bottom.
+        $weights = [];
+        foreach ($this->options['nodes'] as $node) {
+          $weights[] = $node['weight'];
+        }
+
         // Get the node.
         $explode = explode('[', $form_state['values']['node_to_add']);
         $nid = intval(end($explode));
         $node = node_load($nid);
         // The node is added again, remove from the list of removed nodes.
         unset($form_state['storage']['removed'][$nid]);
-        $this->options['nodes'][$nid] = array('title' => $node->title, 'nid' => $node->nid, 'weight' => count($this->options['nodes']) + 1);
+        $this->options['nodes'][$nid] = array('title' => $node->title, 'nid' => $node->nid, 'weight' => max($weights) + 1);
       }
     }
 
