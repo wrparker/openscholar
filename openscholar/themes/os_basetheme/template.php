@@ -455,7 +455,6 @@ function os_events_in_view_context($display_titles = array()) {
 }
 
 /**
-<<<<<<< HEAD
  * Returns HTML for an image field.
  *
  * Output image fields as figure with figcaption for captioning.
