@@ -876,6 +876,10 @@ function vsite_permission(){
       'title' => t('Delete VSite'),
       'description' => t('Allow users to delete vsite.')
     ),
+    'administer group nodes' => array(
+      'title' => t('Administer Group Nodes'),
+      'description' => t('Allow users to administer group nodes.')
+    ),
   );
 }
 
@@ -1596,8 +1600,35 @@ function _vsite_purl_init(){
  *
  * Remove the "Groups" link from the users 'edit' form.
  */
-function vsite_menu_alter(&$items){
+function vsite_menu_alter(&$items) {
   $items['user/%user/edit/groups']['access callback'] = FALSE;
+
+  // Overriding features node edit admin pages access.
+  $items['node/%/features'] = array(
+    'title' => 'Features',
+    'description' => 'Configure features for this space',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array(
+        'spaces_features_form',
+        ),
+    'access arguments' => array('administer group nodes'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'spaces.admin.inc',
+    'module' => 'spaces'
+    );
+
+  // Paths for group node edit admin operations.
+  $restricted_group_node_paths = array(
+    'node/%node/edit',
+    'node/%/group'
+  );
+
+  // Iterating $restricted_group_node_paths for overriding access callback for group node edit pages.
+  foreach ($restricted_group_node_paths as $path) {
+    // Overriding access callback for group node edit.
+    $items[$path]['access arguments'][] = $items[$path]['access callback'];
+    $items[$path]['access callback'] = 'vsite_group_node_edit_access';
+  }
 
   // Site-Wide contact page is not used and is a valuable path so we make it avalible here.
   unset($items['contact']);
@@ -2133,6 +2164,26 @@ function vsite_menu(){
   );
 
   return $items;
+}
+
+/**
+ * Custom access callback for editing group nodes.
+ */
+function vsite_group_node_edit_access() {
+  $args = func_get_args();
+  $original_access_callback = array_pop($args);
+
+  $node = is_numeric($args[1]) ? node_load($args[1]) : $args[1];
+  // Obtaining open group type.
+  $group_type = isset($node->type) ? og_is_group_type('node', $node->type) : FALSE;
+
+  // Restricting non-superadmin users to edit group nodes.
+  // Else calling existing access callback.
+  if ($group_type) {
+    return user_access('administer group nodes');
+  } else {
+    return call_user_func_array($original_access_callback, $args);
+  }
 }
 
 /**

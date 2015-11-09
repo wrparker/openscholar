@@ -120,7 +120,11 @@
                   $timeout(function () {
                     scope.replaceSuccess = false;
                   }, 5000);
-                });
+                })
+              .error(function (error) {
+                  scope.errorMessages = error.title;
+                  scope.showErrorMessages = true;
+              });
             }
             else {
               scope.replaceReject = true;

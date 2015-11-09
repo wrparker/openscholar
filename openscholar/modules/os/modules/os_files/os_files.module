@@ -446,8 +446,7 @@ function os_files_upload_validate_image_dimensions(stdClass $file) {
   $available_memory = $memory_limit - $memory_drupal;
 
   if ($memory_to_process > $available_memory) {
-    $errors[] = t('The dimensions of this image are too large for us to handle. Use photo-editing software or an online
-      tool like !resizer to shrink the image.', array(
+    $errors[] = t('The dimensions of this image are too large for us to handle. Use photo-editing software or an online tool like !resizer to shrink the image.', array(
       '!resizer' => l('picresize.com', 'http://www.picresize.com/')
     ));
   }

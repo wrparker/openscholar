@@ -52,32 +52,32 @@ body {
     content: '';
 }
 a.os-swipe-small {
-    color: #215990;
+  color: #FFF !important;
     text-decoration: none !important;
     display: inline-block;
     text-align: center;
-    border: 1px solid #85A2BE;
-    padding: 5px 15px;
+    border: 1px solid #FFF;
+  padding: 5px 10px;
     font-weight: normal;
-    background: linear-gradient(to left, transparent 50%, #FFFFFF 50%) repeat scroll right bottom / 200% 100% rgba(0, 0, 0, 0);
-    transition: all 0.5s ease 0s;
+    background-color: #293352;
 }
 a.os-swipe-large {
-    color: #215990;
+    color: #FFF !important;
     text-decoration: none !important;
     display: inline-block;
     text-align: center;
-    border: 1px solid #85A2BE;
+    border: 1px solid #FFF;
     padding: 10px 20px;
     font-weight: normal;
-    background: linear-gradient(to left, transparent 50%, #FFFFFF 50%) repeat scroll right bottom / 200% 100% rgba(0, 0, 0, 0);
-    transition: all 0.5s ease 0s;
+    background-color: #293352;
 }
 a.os-swipe-large:hover,
 a.os-swipe-small:hover {
-    background-position: left bottom;
-    border: 1px solid #bbd0e5;
+    border: 1px solid #293352;
+    color: #222 !important;
+ background-color: #FFF;
 }
+
 /* Header */
 
 #boxes-box-site_info h2 {
@@ -171,7 +171,7 @@ ul.nice-menu-down li ul li ul {
 }
 /* HOMEPAGE SPECIFIC STYLES */
 
-.front #header,
+#header,
 .front #content-panels .region-content-first,
 .front #content-panels .region-content-bottom {
     background: #F5F5F5;
@@ -216,9 +216,12 @@ h1#page-title {
     margin: 1% 0 2%;
 }
 h2.block-title {
-    padding: 7px 0;
-    font-size: .95em;
+    padding: 20px 0 25px;
+    font-size: 1.3em;
     font-weight: bold;
+}
+.block-boxes-os_boxes_columns h2.block-title {
+    padding: 7px 0;
 }
 #content-column .block.block-boxes-os_boxes_manual_list .links.inline a,
 .more-link {
@@ -434,7 +437,7 @@ a.rslides_nav {
 .front #layout_3_1_overlay .slide-copy {
     width: 48%;
     margin: 10% 0 0 0;
-   text-align: center;
+    text-align: center;
 }
 /** PEOPLE DETAIL PAGE **/
 

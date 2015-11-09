@@ -288,11 +288,23 @@ function media_embed_file_formatter_media_embed_view($file, $display, $langcode)
         $target_width = $file->override['maxwidth'];
       }
 
+      $target_height = 0;
+      if (isset($file->override['attributes']['height'])) {
+        $target_height = $file->override['attributes']['height'];
+      }
+      elseif (isset($file->override['maxheight']) && $file->override['maxheight'] && $height > $file->override['maxheight']) {
+        $target_height = $file->override['maxheight'];
+      }
+
       if ($target_width) {
-        $diff = abs($width-$target_width);
-        $ratio = $diff/$width;
-        $heightdiff = $ratio*$height;
-        $height = round($height-$heightdiff);
+        if (!$target_height) {
+          $diff = abs($width - $target_width);
+          $ratio = ($width - $diff) / $width;
+          $height = $ratio * $height;
+        }
+        else {
+          $height = $target_height;
+        }
         $width = $target_width;
 
         $patterns[0] = '/height="([0-9]*)"/';
@@ -309,21 +321,25 @@ function media_embed_file_formatter_media_embed_view($file, $display, $langcode)
 
     // WYSIWYG will not handle iframes and the like properly.
     else {
-      $width = 100;
+      $width = $height = 100;
       if (isset($file->override['width'])) {
         $width = $file->override['width'];
+        if (isset($file->override['height'])) {
+          $height = $file->override['height'];
+        }
       }
       else {
         $html = $file->field_html_code[LANGUAGE_NONE][0]['value'];
         preg_match('/width="([0-9%]*)"/', $html, $fetchwidth);
         if ($fetchwidth) {
+          preg_match('/height="([0-9]*)"/', $html, $fetchheight);
+          if ($fetchheight) {
+            $height = $fetchheight[1];
+          }
           if (strpos($fetchwidth[1], '%') !== FALSE) {
             // the width is relative.
             // we're going to assume the aspect ratio is 1:1 and use the height
-            preg_match('/height="([0-9]*)"/', $html, $fetchheight);
-            if ($fetchheight) {
-              $width = $fetchheight[1];
-            }
+            $width = $height;
           }
           else {
             $width = $fetchwidth[1];
@@ -338,6 +354,7 @@ function media_embed_file_formatter_media_embed_view($file, $display, $langcode)
         ),
         '#path' => drupal_get_path('module', 'media').'/images/icons/default/file-unknown.png',
         '#width' => $width,
+        '#height' => $height,
       );
 
       return $output;
