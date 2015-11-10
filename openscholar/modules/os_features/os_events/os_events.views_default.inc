@@ -252,6 +252,7 @@ function os_events_views_default_views() {
   $handler->display->display_options['tab_options']['title'] = 'Calendar';
   $handler->display->display_options['tab_options']['description'] = 'Calendar of events';
   $handler->display->display_options['tab_options']['weight'] = '0';
+  $handler->display->display_options['tab_options']['name'] = 'primary-menu';
 
   /* Display: Week */
   $handler = $view->new_display('page', 'Week', 'page_2');
