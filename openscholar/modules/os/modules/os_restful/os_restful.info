@@ -9,4 +9,5 @@ files[] = plugins/restful/OsRestfulEntityCacheableBase.php
 files[] = includes/OsNodeRestfulBase.php
 files[] = includes/OsObjectValidate.php
 files[] = includes/OsRestfulDataProvider.php
+files[] = includes/OsRestfulReports.php
 files[] = includes/OsRestfulSpaces.php

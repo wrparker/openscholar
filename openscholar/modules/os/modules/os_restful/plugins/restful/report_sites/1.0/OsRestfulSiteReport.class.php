@@ -4,7 +4,7 @@
  * @file
  * Contains \OsRestfulSiteReport
  */
-abstract class OsRestfulSiteReport extends \OsRestfulReports {
+class OsRestfulSiteReport extends \OsRestfulReports {
 
   /**
    * {@inheritdoc}
