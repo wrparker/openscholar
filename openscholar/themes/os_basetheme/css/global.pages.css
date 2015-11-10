@@ -1092,7 +1092,7 @@ img.media-element.file-default[style*="float:"][style*="right;"] {
     padding-right: 0;
 }
 
-.block-boxes-os_boxes_html img ~ figcaption {
+img ~ figcaption {
 color: #555;
     font-style: italic;
     clear: both;
