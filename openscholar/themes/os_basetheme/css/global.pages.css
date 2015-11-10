@@ -1091,6 +1091,14 @@ img.media-element.file-default[style*="float:"][style*="right;"] {
     padding-left: 15px;
     padding-right: 0;
 }
+
+.block-boxes-os_boxes_html img ~ figcaption {
+color: #555;
+    font-style: italic;
+    clear: both;
+}
+
+
 .block-boxes-os_sv_list_box .os_sv_list_box.sv-list-link.sv-list-view-links h1 a {
     font-weight: normal;
     font-size: initial;
