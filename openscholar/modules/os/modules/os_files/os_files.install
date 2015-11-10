@@ -838,7 +838,9 @@ function os_files_update_7020() {
  */
 function os_files_update_7021() {
   ctools_include('export');
-  ctools_export_crud_delete('file_type', 'icon');
+  $file_type = ctools_export_crud_load('file_type', 'icon');
+  ctools_export_crud_save('file_type', $file_type);
+  field_attach_create_bundle('file', 'icon'); // do this manually for reasons
   ctools_export_crud_delete('file_type', 'image');
 
   $count = db_update('file_managed')
