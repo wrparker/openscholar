@@ -1,8 +1,10 @@
 /* Site Info */
+.block-boxes-os_boxes_site_info {
+    min-height: 120px; 	
+}
 
 #boxes-box-site_info {
-    min-height: 80px;
-    padding-top: 38px;
+vertical-align:middle;
 }
 #boxes-box-site_info,
 #boxes-box-site_info a {
@@ -24,9 +26,7 @@
     font-size: 24px;
     font-style: italic;
 }
-#boxes-box-site_info h1 + h2 {
-    margin-bottom: 10px;
-}
+
 /* Search */
 
 #search-block-form {
