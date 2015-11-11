@@ -1,4 +1,4 @@
-;Drupal.org Makefile for OpenScholar
+;Drupal.org MakeFile for OpenScholar
 
 core = 7.x
 api = 2
