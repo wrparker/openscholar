@@ -40,6 +40,11 @@ class FeatureContext extends DrupalContext {
   private $nid;
 
   /**
+   * @var integer
+   */
+  private $deltaWidget;
+
+  /**
    * Initializes context.
    *
    * Every scenario gets its own context object.
@@ -525,6 +530,7 @@ class FeatureContext extends DrupalContext {
     $hash = $table->getRows();
 
     list($box, $delta, $context) = explode(",", $this->box[0]);
+    $this->deltaWidget = $delta;
 
     $metasteps = array();
     // @TODO: Don't use the hard coded address - remove john from the address.
@@ -2871,6 +2877,13 @@ class FeatureContext extends DrupalContext {
     $date[0]['value2'] = str_replace(date('Y'), date('Y') - 1, $date[0]['value2']);
     $wrapper->field_date->set($date);
     $wrapper->save();
+  }
+
+  /**
+   * @Then /^I verify the manual list order is kept$/
+   */
+  public function iVerifyTheManualListOrderIsKept() {
+    $this->visit('john/os/widget/boxes/' . $this->deltaWidget . '/edit');
   }
 
 }

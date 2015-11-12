@@ -43,6 +43,7 @@ class FeatureHelp {
     'Upcoming events' => 'os_sv_list_box',
     'All Posts' => 'os_sv_list_box',
     'Cache time test' => 'os_boxes_cache_test',
+    'Featured posts' => 'os_boxes_manual_list',
   );
 
   /**

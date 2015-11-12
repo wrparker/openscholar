@@ -8,3 +8,9 @@ Feature: Testing OpenScholar layout.
       And I press "edit-submit"
      Then I verify the element "boxes-box-site_logo" under "columns"
       And no boxes display outside the site context
+
+  @javascript @now2
+  Scenario: Test the removal of items from the manual list.
+    Given I am logging in as "admin"
+     When the widget "Featured posts" is set in the "Blog" page
+     Then I verify the manual list order is kept
