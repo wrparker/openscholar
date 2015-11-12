@@ -469,11 +469,11 @@ function os_basetheme_field__image($vars) {
     $output .= '<h2 class="field-label"' . $vars['title_attributes'] . '>' . $vars['label'] . ':&nbsp;</h2>';
   }
   foreach ($vars['items'] as $delta => $item) {
-  	if(isset($vars['element']['#object']->origname)) {
+    if (isset($vars['element']['#object']->origname)) {
       $img_filename = $vars['element']['#object']->origname;
       // Putting image description text in static variable.
       $image_caption_static[$img_filename] = strip_tags($item['#markup']);
-  	}
+    }
   }
   return $output;
 }
