@@ -463,15 +463,17 @@ function os_basetheme_field__image($vars) {
   $output = ' ';
   // Static variable for obtaining image caption texts in theme_image function.
   $image_caption_static = &drupal_static('image_caption_static');
-  
+
   // Render the label, if it's not hidden.
   if (!$vars['label_hidden']) {
     $output .= '<h2 class="field-label"' . $vars['title_attributes'] . '>' . $vars['label'] . ':&nbsp;</h2>';
   }
   foreach ($vars['items'] as $delta => $item) {
-    $img_filename = $vars['element']['#object']->origname;
-    // Putting image description text in static variable.
-    $image_caption_static[$img_filename] = strip_tags($item['#markup']);
+  	if(isset($vars['element']['#object']->origname)) {
+      $img_filename = $vars['element']['#object']->origname;
+      // Putting image description text in static variable.
+      $image_caption_static[$img_filename] = strip_tags($item['#markup']);
+  	}
   }
   return $output;
 }
