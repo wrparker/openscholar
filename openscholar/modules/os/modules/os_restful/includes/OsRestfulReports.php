@@ -12,6 +12,7 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
    * The name of the report being requested.
    */
   protected $reportName = '';
+  protected $keywordString = '';
 
   /**
    * Overrides \RestfulDataProviderEFQ::controllersInfo().
@@ -60,12 +61,23 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
   public function getReport($name_string) {
     $output = array();
     $request = $this->getRequest();
-    
-    $function = "get_$name_string_report";
-    if (method_exists($this, $function) && isset($request['columns'])) {
-			$this->setPublicFields(array_merge($this->getPublicFields(), $request['columns']));
-    	$this->reportName = $name_string;
-    	$output = $this->$function();
+    $function = "get_{$name_string}_report";
+
+    // if additional public fields have been requested, add them
+    // then call function for the requested report
+    if (method_exists($this, $function)) {
+      if(isset($request['columns'])) {
+        $new_public_fields = array();
+        foreach ($request['columns'] as $column) {
+          $new_public_fields[$column] = array("property" => $column);
+        }
+        $this->setPublicFields(array_merge($this->getPublicFields(), $new_public_fields));
+      }
+      if (isset($request['keyword'])) {
+        $this->keywordString = $request['keyword'];
+      }
+      $this->reportName = $name_string;
+      $output = $this->{$function}();
     }
 
     return $output;
