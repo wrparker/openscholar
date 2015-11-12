@@ -90,7 +90,8 @@ function os_events_menu() {
  */
 function os_events_entity_view_alter(&$build, $type) {
   // Removing extra fields from event registration page in full view mode.
-  if($type == 'registration' && $build['#view_mode'] == 'full' && $build['#bundle'] == 'event_signup_simple') {
+  if ($type == 'registration' && $build['#view_mode'] == 'full' && $build['#bundle'] == 'event_signup_simple') {
+    $build['host_entity_link']['#label'] = t('Event');
     unset($build['slots']);
     unset($build['author']);
     unset($build['state']);
