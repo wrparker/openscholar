@@ -2873,4 +2873,63 @@ class FeatureContext extends DrupalContext {
     $wrapper->save();
   }
 
+  /**
+   * @Given /^I remove the menu from the menu section$/
+   */
+  public function iRemoveTheMenuFromTheMenuSection() {
+    $page = $this->getSession()->getPage();
+
+    $page->getSession()->getDriver()->mouseOver("//ul[@id='nice-menu-primary-menu']");
+    $this->takeScreenshotAfterFailedStep([]);
+    $page->getSession()->getDriver()->click('//nav[@id="block-os-primary-menu"]//a[@class="contextual-links-trigger"]');
+
+    if ($element = $page->find('xpath', '//nav[@id="block-os-primary-menu"]//div[contains(@class, "contextual-links-wrapper")]//li[@class="link-count-widget-remove first"]//a')) {
+      throw new Exception('The element was not found.');
+    }
+
+    $element->click();
+  }
+
+  /**
+   * @Given /^I wait the text "([^"]*)" to appear$/
+   */
+  public function iWaitTheTextToAppear($text) {
+    $page = $this->getSession()->getPage();
+    $times = 0;
+    while ($times < 30) {
+      if ($element = $page->find('xpath', '//*[contains(., "' . $text . '")]')) {
+        if ($element->isVisible()) {
+          return $element;
+        }
+      }
+      $times++;
+      sleep(1);
+    }
+    throw new \Exception(sprintf('The text %s was not found.', $text));
+  }
+
+  /**
+   * @Given /^I click on the undo widget$/
+   */
+  public function iClickOnTheUndoWidget() {
+    $page = $this->getSession()->getPage();
+    $page->find('xpath', '//nav[@id="block-os-primary-menu"]//a')->click();
+  }
+
+  /**
+   * @When /^I refresh the page$/
+   */
+  public function iRefreshThePage() {
+    $this->getSession()->reload();
+  }
+
+  /**
+   * @Then /^I verify the menu exists$/
+   */
+  public function iVerifyTheMenuExists() {
+    if (!$this->getSession()->getPage()->find('xpath', '//nav[@id="block-os-primary-menu"]//ul[@id="nice-menu-primary-menu"]')) {
+      throw new Exception('The menu does not exists');
+    }
+  }
+
 }
