@@ -2850,20 +2850,39 @@ class FeatureContext extends DrupalContext {
   /**
    * @AfterStep
    */
-   public function takeScreenshotAfterFailedStep($event)
-   {
-     if ($event->getResult() == 4) {
-       if ($this->getSession()->getDriver() instanceof
-       \Behat\Mink\Driver\Selenium2Driver) {
-         $stepText = $event->getStep()->getText();
-         $fileTitle = preg_replace("#[^a-zA-Z0-9\._-]#", '', $stepText);
-         $fileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR . $fileTitle . '.png';
-         $screenshot = $this->getSession()->getDriver()->getScreenshot();
-         file_put_contents($fileName, $screenshot);
-         print "Screenshot for '{$stepText}' placed in {$fileName}\n";
-       }
-     }
- }
+  public function takeScreenshotAfterFailedStep($event) {
+    if (!$event) {
+      return;
+    }
+
+    if ($event->getResult() != 4) {
+      return;
+    }
+
+    $stepText = $event->getStep()->getText();
+    $fileTitle = preg_replace("#[^a-zA-Z0-9\._-]#", '', $stepText);
+    $path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR . $fileTitle . '.png';
+
+    $this->capturePage($path, $stepText);
+  }
+
+  /**
+   * Capture the page.
+   *
+   * @param $path
+   *   The path of the file. Including the file name.
+   * @param $stepText
+   *   The name of the step.
+   */
+  protected function capturePage($path, $stepText) {
+    if (!$this->getSession()->getDriver() instanceof \Behat\Mink\Driver\Selenium2Driver) {
+      return;
+    }
+
+    $screenshot = $this->getSession()->getDriver()->getScreenshot();
+    file_put_contents($path, $screenshot);
+    print "Screenshot for '{$stepText}' placed in {$path}\n";
+  }
 
   /**
    * @When /^I change the date of "([^"]*)" in "([^"]*)"$/
@@ -2883,7 +2902,64 @@ class FeatureContext extends DrupalContext {
    * @Then /^I verify the manual list order is kept$/
    */
   public function iVerifyTheManualListOrderIsKept() {
-    $this->visit('john/os/widget/boxes/' . $this->deltaWidget . '/edit');
+    $this->visit('john/os/widget/boxes/box-featured-posts/edit');
+    $driver = $this->getSession()->getDriver();
+    $page = $this->getSession()->getPage();
+
+    // Add a posts.
+    $page->fillField('edit-node-to-add', 'Mac OSX [8]');
+    $page->pressButton('Add post');
+    sleep(2);
+    $page->fillField('edit-node-to-add', 'First blog [10]');
+    $page->pressButton('Add post');
+    sleep(2);
+
+    // Save the widget.
+    $page->pressButton('Save');
+
+    // Go back to the page and verify the posts listed.
+    $this->visit('john/os/widget/boxes/box-featured-posts/edit');
+
+    // Verify the text exists.
+    $texts = [
+      'Mac OSX',
+      'First blog',
+    ];
+
+    foreach ($texts as $text) {
+      if (!$page->find('xpath', "//td[contains(.,'{$text}')]")) {
+        throw new Exception(sprintf('The text %s does not exists.', $text));
+      }
+    }
+
+    // Remove the node and verify it was removed.
+    $page->pressButton('edit-nodes-8-remove');
+    sleep(2);
+    if ($page->find('xpath', "//td[contains(.,'Mac OSX')]")) {
+      throw new Exception(sprintf('The text Mac OSX does exists.'));
+    }
+
+    // Add the node again.
+    $page->fillField('edit-node-to-add', 'Mac OSX [8]');
+    $page->pressButton('Add post');
+    sleep(2);
+
+    $page->pressButton('Save');
+
+    // Go back to the page and verify the posts exists.
+    $this->visit('john/os/widget/boxes/box-featured-posts/edit');
+
+    // Verify the text exists.
+    $texts = [
+      'Mac OSX',
+      'First blog',
+    ];
+
+    foreach ($texts as $text) {
+      if (!$page->find('xpath', "//td[contains(.,'{$text}')]")) {
+        throw new Exception(sprintf('The text %s does not exists.', $text));
+      }
+    }
   }
 
 }
