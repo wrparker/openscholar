@@ -9,7 +9,7 @@ Feature: Testing OpenScholar layout.
      Then I verify the element "boxes-box-site_logo" under "columns"
       And no boxes display outside the site context
 
-  @javascript @now2
+  @javascript
   Scenario: Testing the remove link for menu in the menu section.
     Given I am logging in as "john"
      When I visit "/john"

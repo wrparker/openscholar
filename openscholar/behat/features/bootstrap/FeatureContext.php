@@ -2880,14 +2880,8 @@ class FeatureContext extends DrupalContext {
     $page = $this->getSession()->getPage();
 
     $page->getSession()->getDriver()->mouseOver("//ul[@id='nice-menu-primary-menu']");
-    $this->takeScreenshotAfterFailedStep([]);
-    $page->getSession()->getDriver()->click('//nav[@id="block-os-primary-menu"]//a[@class="contextual-links-trigger"]');
-
-    if ($element = $page->find('xpath', '//nav[@id="block-os-primary-menu"]//div[contains(@class, "contextual-links-wrapper")]//li[@class="link-count-widget-remove first"]//a')) {
-      throw new Exception('The element was not found.');
-    }
-
-    $element->click();
+    $page->getSession()->getDriver()->click("//nav[@id='block-os-primary-menu']//a[contains(@class, 'contextual-links-trigger')]");
+    $page->getSession()->getDriver()->click('//nav[@id="block-os-primary-menu"]//div[contains(@class, "contextual-links-wrapper")]//li[@class="link-count-widget-remove first"]//a');
   }
 
   /**
