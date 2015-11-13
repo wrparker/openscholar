@@ -97,7 +97,6 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
         $this->keywordString = $request['keyword'];
         $this->keywordFields = $request['kfields'];
       }
-			$this->userRoles = (isset($request['roles'])) ? $request['roles'] : "all";
       $this->reportName = $name_string;
       $output = $this->{$function}();
     }
@@ -124,6 +123,41 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
    */
   public function remove($id) {
     $this->notImplementedCrudOperation(__FUNCTION__);
+  }
+
+  /**
+   * Overriding the query list filter method
+   */
+  protected function queryForListFilter(\SelectQuery $query) {
+    parent::queryForListFilter($query);
+
+    // add in keyword search on requested fields
+    if ($this->keywordString) {
+      $keyword_or = db_or();
+      foreach ($this->keywordFields as $field) {
+        $keyword_or->condition($field, '%' . db_like($this->keywordString) . '%', "LIKE");
+       }
+      $query->condition($keyword_or);
+    }
+
+    // limit by role, if needed
+    // radio buttons: only site owners, site owners/admins, all users
+    if ($this->userRoles == "admins") {
+      $query->condition("ogr.name", '%' . db_like("vsite") . '%', "LIKE");
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * plus remove whitespace
+   */
+  public function mapDbRowToPublicFields($row) {
+    $new_row = parent::mapDbRowToPublicFields($row);
+    foreach($new_row as $id => $column) {
+      $new_row[$id] = trim($column);
+    }
+    return $new_row;
   }
 
   /**

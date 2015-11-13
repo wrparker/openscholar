@@ -7,8 +7,8 @@ $plugin = array(
   'resource' => 'report_sites',
   'class' => 'OsRestfulSiteReport',
   'data_provider_options' => array(
-    'table_name' => 'node',
-    'id_column' => array('nid'),
+    'table_name' => 'purl',
+    'id_column' => array('id'),
   ),
   'authentication_types' => TRUE,
   'authentication_optional' => FALSE,

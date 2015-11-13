@@ -24,6 +24,8 @@ class OsRestfulUserReport extends \OsRestfulReports {
   }
 
   public function get_role_report() {
+    $request = $this->getRequest();
+    $this->userRoles = (isset($request['roles'])) ? $request['roles'] : "all";
     $results = $this->getQueryForList()->execute();
     $return = array();
 
@@ -48,7 +50,7 @@ class OsRestfulUserReport extends \OsRestfulReports {
       $query->innerJoin("node", "n", "og.entity_type = 'user' AND og.etid = users.uid AND og.gid = n.nid");
     }
     else {
-          $query->innerJoin("node", "n", "og.entity_type = 'user' AND og.etid = users.uid AND og.gid = n.nid AND users.uid = n.uid");
+      $query->innerJoin("node", "n", "og.entity_type = 'user' AND og.etid = users.uid AND og.gid = n.nid AND users.uid = n.uid");
     }
     $query->innerJoin("og_users_roles", "ogur", "ogur.uid = users.uid AND ogur.gid = og.gid");
     $query->groupBy("users.uid, n.nid");
@@ -78,31 +80,10 @@ class OsRestfulUserReport extends \OsRestfulReports {
     return $query;
   }
 
-
-  /**
-   * Overriding the query list filter method
-   */
-  protected function queryForListFilter(\SelectQuery $query) {
-    parent::queryForListFilter($query);
-
-    // add in keyword search on requested fields
-    if ($this->keywordString) {
-      $keyword_or = db_or();
-      foreach ($this->keywordFields as $field) {
-        $keyword_or->condition($field, '%' . db_like($this->keywordString) . '%', "LIKE");
-       }
-      $query->condition($keyword_or);
-    }
-
-    // limit by role, if needed
-    // radio buttons: only site owners, site owners/admins, all users
-    if ($this->userRoles == "admins") {
-      $query->condition("ogr.name", '%' . db_like("vsite") . '%', "LIKE");
-    }
-  }
-
   /**
    * {@inheritdoc}
+   *
+   * adds logic to handle site roles and latest updated content, if needed
    */
   public function mapDbRowToPublicFields($row) {
     $new_row = parent::mapDbRowToPublicFields($row);
