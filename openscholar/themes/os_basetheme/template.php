@@ -500,7 +500,7 @@ function os_basetheme_image($variables) {
   if (isset($attributes['class']) && $attributes['class'][0] == 'media-element') {
     $path = explode("?", $attributes['src']);
     $img_filename = drupal_basename($path[0]);
-    $output = '<figure>';
+    $output .= '<figure style="' . $attributes['style'] . '">';
     $output .= '<img' . drupal_attributes($attributes) . ' />';
     // Static variable for obtaining image caption texts.
     $image_caption_static = &drupal_static('image_caption_static');
