@@ -97,6 +97,22 @@ function os_events_entity_view_alter(&$build, $type) {
     // Overriding Event entity link display.
     $build['host_entity_link']['#label'] = t('Event');
     $build['host_entity_link']['#items'][0]['#markup'] = isset($build['host_entity_link']['#items'][0]['#markup']) ? l($node->title, 'node/' . $build['#entity']->entity_id, array('query' => $param)) : NULL;
+    $build['host_entity_link']['#weight'] = -20;
+    $entity_link_tmp = $build['host_entity_link'];
+    unset($build['host_entity_link']);
+    $build['entity_link'] = $entity_link_tmp;
+
+    // Overriding Created date display.
+    $build['created']['#weight'] = -9;
+    $created_tmp = $build['created'];
+    unset($build['created']);
+    $build['created'] = $created_tmp;
+
+    // Overriding Updated date display.
+    $build['updated']['#weight'] = -10;
+    $updated_tmp = $build['updated'];
+    unset($build['updated']);
+    $build['updated'] = $updated_tmp;
 
     // Reset additional fields display.
     unset($build['spaces']);
