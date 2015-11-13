@@ -91,8 +91,16 @@ function os_events_menu() {
 function os_events_entity_view_alter(&$build, $type) {
   // Removing extra fields from event registration page in full view mode.
   if ($type == 'registration' && $build['#view_mode'] == 'full' && $build['#bundle'] == 'event_signup_simple') {
-    $build['host_entity_link']['#label'] = t('Event');
-    unset($build['slots']);
+    $param = drupal_get_query_parameters();
+    $node = node_load($build['#entity']->entity_id);
+
+    // Overriding Event entity link display.
+	$build['host_entity_link']['#label'] = t('Event');
+    $build['host_entity_link']['#items'][0]['#markup'] = isset($build['host_entity_link']['#items'][0]['#markup']) ? l($node->title, 'node/' . $build['#entity']->entity_id, array('query' => $param)) : NULL;
+//print_r(menu_get_item('registration/1'));
+
+    // Reset additional fields display.
+    unset($build['spaces']);
     unset($build['author']);
     unset($build['state']);
   }
@@ -945,6 +953,16 @@ function os_events_views_query_alter($view, views_plugin_query_default $query) {
  * Change the url of the prev and next links.
  */
 function os_events_url_outbound_alter(&$path, &$options, $original_path) {
+
+  // Overriding View/Edit/Delete links in Event sign up registration listing.
+  if (preg_match('|^registration/([0-9]*)(/.*)?|', $path, $matches)) {
+    if (isset($matches[2]) && in_array($matches[2], array('/edit', '/delete'))) {
+      $options['query'] = array_merge(drupal_get_query_parameters(), drupal_get_destination());
+    } else {
+      $options['query'] = drupal_get_query_parameters();
+    }
+  }
+
   $view_modes = array(
     'calendar/week',
     'calendar/day',
