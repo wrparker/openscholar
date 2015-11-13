@@ -95,7 +95,7 @@ function os_events_entity_view_alter(&$build, $type) {
     $node = node_load($build['#entity']->entity_id);
 
     // Overriding Event entity link display.
-	$build['host_entity_link']['#label'] = t('Event');
+    $build['host_entity_link']['#label'] = t('Event');
     $build['host_entity_link']['#items'][0]['#markup'] = isset($build['host_entity_link']['#items'][0]['#markup']) ? l($node->title, 'node/' . $build['#entity']->entity_id, array('query' => $param)) : NULL;
 
     // Reset additional fields display.
