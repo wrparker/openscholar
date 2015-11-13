@@ -12,7 +12,27 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
    * The name of the report being requested.
    */
   protected $reportName = '';
+
+  /**
+   * @var string
+   *
+   * The string to search for within user fields.
+   */
   protected $keywordString = '';
+
+  /**
+   * @var string
+   *
+   * The type of users to show.
+   */
+  protected $userRoles = '';
+
+  /**
+   * @var array
+   *
+   * The fields within which to do a keyword search.
+   */
+  protected $keywordFields = array();
 
   /**
    * Overrides \RestfulDataProviderEFQ::controllersInfo().
@@ -73,9 +93,11 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
         }
         $this->setPublicFields(array_merge($this->getPublicFields(), $new_public_fields));
       }
-      if (isset($request['keyword'])) {
+      if (isset($request['keyword']) && isset($request['kfields'])) {
         $this->keywordString = $request['keyword'];
+        $this->keywordFields = $request['kfields'];
       }
+			$this->userRoles = (isset($request['roles'])) ? $request['roles'] : "all";
       $this->reportName = $name_string;
       $output = $this->{$function}();
     }
