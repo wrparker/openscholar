@@ -126,6 +126,9 @@
     });
 
     $scope.$on('EntityService.files.update', function (event, file) {
+      if ($scope.selected_file.id == file.id) {
+        $scope.selected_file = angular.copy(file);
+      }
       for (var i=0; i < $scope.files.length; i++) {
         if ($scope.files[i].id == file.id) {
           $scope.files[i] = file;
