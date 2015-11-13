@@ -514,18 +514,7 @@
       type = this.entityType;
 
     for (var k in params) {
-      if (entity[k] == undefined) {
-        // this is not something that comes returned on the object
-        // try other things
-        switch (k) {
-          case 'vsite':
-            if (params[k] != Drupal.settings.spaces.id) {
-              return false;
-            }
-            break;
-        }
-      }
-      else if ((k == 'entity_type' || k == 'bundle') && typeof entity.bundles == 'object') {
+      if ((k == 'entity_type' || k == 'bundle') && typeof entity.bundles == 'object') {
         // this thing refers to other entities, like vocabs do. It can accept multiple types of entity type / file combinations
 
         if (entity.bundles[params.entity_type]) {
@@ -540,6 +529,10 @@
             return false;
           }
         }
+        else {
+          // this does not accept the entity type we are looking for
+          return false;
+        }
       }
       // allow for a property on the entity to be a container that we only need to match one of to pass
       else if (entity[k] instanceof Object && (typeof params[k] == 'string' || typeof params[k] == 'number')) {
@@ -552,6 +545,17 @@
         }
         if (!found) {
           return false;
+        }
+      }
+      else if (entity[k] == undefined) {
+        // this is not something that comes returned on the object
+        // try other things
+        switch (k) {
+          case 'vsite':
+            if (params[k] != Drupal.settings.spaces.id) {
+              return false;
+            }
+            break;
         }
       }
       else if (entity[k] != params[k]) {
