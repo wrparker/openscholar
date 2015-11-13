@@ -49,6 +49,8 @@
         	morphButton.isAnimating = false;
         	morphButton.expanded = true;
           },1000);
+        } else {
+          jQuery('.morph-button').removeClass('no-transition');
         }
         
         return;
