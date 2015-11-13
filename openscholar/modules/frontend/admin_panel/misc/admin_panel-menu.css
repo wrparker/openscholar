@@ -12,6 +12,7 @@ body {
     height: 100%;
     position: relative;
 }
+
 .page-cp #branding,
 .page-cp #page,
 .page_wrap {
@@ -20,6 +21,7 @@ body {
     -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.7, 0, 0.3, 1) 0.1s;
     transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1) 0.1s;
 }
+
 .page-cp.overlay #branding,
 .page-cp.overlay #page {
     position: relative;
@@ -44,6 +46,7 @@ body {
     width: calc(100% - 300px);
     right: 0;
 }
+
 .page-cp #branding.pushed,
 .page-cp #page.pushed,
 .pushed.page_wrap {
@@ -52,6 +55,7 @@ body {
     -webkit-transform: translateX(15px);
     transform: translateX(15px);
 }
+
 .page-cp #page {
     width: 90%;
     margin-left: 80px;
@@ -102,6 +106,7 @@ body {
 .align-right {
     float: right;
 }
+
 #cssmenu > ul > li > a {
     padding: 10px 10px;
     cursor: pointer;
@@ -174,6 +179,7 @@ body {
     -o-transition: color .2s ease;
     transition: color .2s ease;
 }
+
 #cssmenu .heading {
     padding: 10px 15px;
     background: #444;

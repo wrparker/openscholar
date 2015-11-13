@@ -26,7 +26,7 @@ function admin_panel_page_build(&$vars) {
 
   $vars['page_bottom']['admin_menu'] = array(
     '#weight' => 25,
-    '#markup' => '<div class="morph-button morph-button-sidebar morph-button-fixed" left-menu></div>',
+    '#markup' => '<div class="morph-button no-transition morph-button-sidebar morph-button-fixed" left-menu></div>',
   );
 
   $vars['page_bottom']['user_menu'] = array(

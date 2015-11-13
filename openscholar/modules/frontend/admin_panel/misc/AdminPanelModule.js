@@ -37,12 +37,18 @@
         $scope.admin_panel = $localStorage.admin_menu[uid][vsite][cid];
         
         if (typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main) {
+          // Turn off transitions and toggle open, there are a bunch of damn set-timeouts in morphbutton so we need to delay things here.
           window.setTimeout(function () {
-        	// Turn off transitions and toggle open
-        	//morphButton.support.transitions = false;
-        	morphButton.toggle();
-        	//morphButton.support.transitions = Modernizr.csstransitions;
-          },1);
+            morphButton.openTransition = false;
+            morphButton.toggle();
+            morphButton.openTransition = true;
+          },1);  
+          
+          window.setTimeout(function () {
+        	jQuery('.morph-button').removeClass('no-transition');
+        	morphButton.isAnimating = false;
+        	morphButton.expanded = true;
+          },1000);
         }
         
         return;
@@ -138,7 +144,7 @@
       			closeEl : '.icon-close',
       			onBeforeOpen : function() {
       				// push main admin_panel
-      				jQuery('#page_wrap, .page-cp #page, .page-cp #branding').addClass('pushed');
+      				//jQuery('#page_wrap, .page-cp #page, .page-cp #branding').addClass('pushed');
       			},
       			onAfterOpen : function() {
       			  // add scroll class to main el
@@ -150,14 +156,12 @@
       			},
       			onBeforeClose : function() {
       			  jQuery('.morph-button').removeClass('scroll');
-      			  // push back main admin_panel
-      			  jQuery('#page_wrap, .page-cp #page, .page-cp #branding').removeClass('pushed');
       			  menu_state['main'] = false;
         		  scope.$apply(function () {
           	        $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
           	      });
       			}
-      		});
+      		}); 
   	   }
      };
    }]).directive('addLocation', function() {
