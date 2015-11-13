@@ -139,6 +139,9 @@
 
     $scope.$on('EntityService.files.delete', function (event, id) {
       // Don't want to worry about what happens when you modify an array you're looping over
+      if ($scope.selected_file.id == id) {
+        $scope.selected_file = null;
+      }
       var deleteMe = false;
       for (var i=0; i<$scope.files.length; i++) {
         if ($scope.files[i].id == id) {
