@@ -69,30 +69,20 @@ function os_news_process_node(&$vars) {
     // Moves the profile photo thumbnail before teaser title (full name)
     if (isset($vars['content']['field_photo'])) {
 
-      $photo_markup = '';
-      if (isset($vars['content']['field_photo'][0]['#item']['os_file_description'][LANGUAGE_NONE][0]['value'])) {
-        $image_style = image_style_load($vars['content']['field_photo'][0]['#image_style']);
-        $width = "auto";
+      $image_style = image_style_load($vars['content']['field_photo'][0]['#image_style']);
+      $width = "auto";
 
-        foreach ($image_style['effects'] as $delta => $effect) {
-          if (isset($effect['data']['width'])) {
-            $width = $effect['data']['width'] . "px";
-          }
+      foreach ($image_style['effects'] as $delta => $effect) {
+        if (isset($effect['data']['width'])) {
+          $width = $effect['data']['width'] . "px";
         }
-        $photo_markup .= '<div class="photo with-caption" style="width:' . $width . '">';
-        $photo_markup .= '<figure>';
-        $photo_markup .= render($vars['content']['field_photo'][0]);
-        $photo_markup .= '<figcaption>' . $vars['content']['field_photo'][0]['#item']['os_file_description'][LANGUAGE_NONE][0]['value'] . '</figcaption>';
-        $photo_markup .= '</figure>';
-        $photo_markup .= '</div>';
       }
-      else {
-        $photo_markup .= '<div class="photo no-caption clearfix">';
-        $photo_markup .= '<figure>';
-        $photo_markup .= render($vars['content']['field_photo'][0]);
-        $photo_markup .= '</figure>';
-        $photo_markup .= '</div>';
-      }
+      $photo_markup .= '<div class="photo with-caption" style="width:' . $width . '">';
+      $photo_markup .= '<figure>';
+      $photo_markup .= render($vars['content']['field_photo'][0]);
+      $photo_markup .= '</figure>';
+      $photo_markup .= '</div>';
+        
       $vars['content']['body'][0]['#markup'] = $photo_markup . $vars['content']['body'][0]['#markup'];
     }
 

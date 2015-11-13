@@ -460,7 +460,7 @@ function os_events_in_view_context($display_titles = array()) {
  * Output image fields as figure with figcaption for captioning.
  */
 function os_basetheme_field__image($vars) {
-  $output = ' ';
+  $output = '';
   // Static variable for obtaining image caption texts in theme_image function.
   $image_caption_static = &drupal_static('image_caption_static');
 
@@ -468,13 +468,18 @@ function os_basetheme_field__image($vars) {
   if (!$vars['label_hidden']) {
     $output .= '<h2 class="field-label"' . $vars['title_attributes'] . '>' . $vars['label'] . ':&nbsp;</h2>';
   }
+  $output .= '<div class="field-items"' . $vars['content_attributes'] . '>';
+
   foreach ($vars['items'] as $delta => $item) {
     if (isset($vars['element']['#object']->origname)) {
       $img_filename = $vars['element']['#object']->origname;
       // Putting image description text in static variable.
       $image_caption_static[$img_filename] = strip_tags($item['#markup']);
     }
+    $output = $vars['items'][$delta]['#children'];
   }
+  $output .= '</div>';
+  $output = '<div class="' . $vars['classes'] . '"' . $vars['attributes'] . '>' . $output . '</div>';
   return $output;
 }
 
