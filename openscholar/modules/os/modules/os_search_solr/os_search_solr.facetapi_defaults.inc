@@ -207,7 +207,7 @@ function os_search_solr_facetapi_default_facet_settings() {
   $facet->enabled = FALSE;
   $facet->settings = array(
     'operator' => 'and',
-    'hard_limit' => '75',
+    'hard_limit' => '-1',
     'dependencies' => array(
       'roles' => array(),
       'bundle' => 'none',

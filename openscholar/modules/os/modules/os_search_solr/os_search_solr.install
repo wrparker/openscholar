@@ -64,3 +64,16 @@ function os_search_solr_uninstall(){
   variable_del('os_search_solr_reindex_by_bundles');
   variable_del('os_search_og_vocabulary_operator');
 }
+
+/**
+ * Change the facets terms hard limit to unlimited.
+ */
+function os_search_solr_update_7000() {
+  foreach (array_keys(facetapi_get_searcher_info()) as $searcher) {
+    $adapter = facetapi_adapter_load($searcher);
+    $realm = facetapi_facet_load('sm_og_vocabulary', $searcher);
+    $global_settings = $adapter->getFacetSettingsGlobal($realm);
+    $global_settings->settings['hard_limit'] = -1;
+    ctools_export_crud_save('facetapi', $global_settings);
+  }
+}
