@@ -7,9 +7,11 @@
     entities = {},
     fetched = {},
     defers = {},
-    cache = {};
+    cache = {},
+    weSaved = {},
+    lockPromise;
 
-  angular.module('EntityService', [])
+  angular.module('EntityService', ['indexedDB'])
     .config(function () {
       restPath = Drupal.settings.paths.api;
     })
@@ -39,7 +41,7 @@
   /**
    * Service to maintain the list of files on a user's site
    */
-    .factory('EntityService', ['$rootScope', '$http', '$q', 'EntityConfig', function ($rootScope, $http, $q, config) {
+    .factory('EntityService', ['$rootScope', '$http', '$q', 'EntityConfig', '$indexedDB', 'EntityCacheUpdater', function ($rootScope, $http, $q, config, $idb, ECU) {
       var factory = function (entityType, idProp) {
         var type = entityType;
         var ents;
@@ -64,7 +66,6 @@
           // convert the key into a params array
           for (var i=0; i<resp.data.length; i++) {
             cache[key].data.push(resp.data[i]);
-            ents[resp.data[i][idProp]] = resp.data[i];
           }
 
           if (resp.next) {
@@ -74,6 +75,7 @@
             $http.get(resp.next.href, {pKey: key}).success(recursiveFetch);
           }
           else {
+            saveCache(key);
             defers[key].resolve(angular.copy(cache[key].data));
             $rootScope.$broadcast(eventName+'.fetch', angular.copy(cache[key].data), key);
           }
@@ -133,35 +135,47 @@
           }
 
           var key = entityType + ':' + JSON.stringify(params);
-
           if (!defers[key]) {
-            var url = restPath + '/' + entityType;
             defers[key] = $q.defer();
-            $http.get(url, {params: params, pKey: key})
-              .success(success)
-              .error(errorFunc);
-            setTimeout(function () {
-              defers[key].notify("Loading 0% complete.");
-            }, 1);
-            cache[key] = {
-              lastUpdated: parseInt(Date.now/1000),
-              data: [],
-              entityType: entityType,
-              matches: function(entity, entityType) {
-                if (entityType != this.entityType) {
-                  return false;
+
+            lockPromise.then(function (keys) {
+              if (!keys[key]) {
+                var url = restPath + '/' + entityType;
+                $http.get(url, {params: params, pKey: key})
+                  .success(success)
+                  .error(errorFunc);
+                setTimeout(function () {
+                  defers[key].notify("Loading 0% complete.");
+                }, 1);
+                cache[key] = {
+                  key: key,
+                  lastUpdated: parseInt(Date.now()/1000),
+                  data: [],
+                  entityType: entityType,
+                  idProperty: idProp,
+                  params: params,
+                  matches: function(entity, entityType) {
+                    if (entityType != this.entityType) {
+                      return false;
+                    }
+                    return testEntity.call(this, entity);
+                  }
                 }
-                return testEntity.call(this, entity, params);
               }
-            }
+            });
           }
+          defers[key].promise.then(function(data) {
+            for (var i = 0; i < data.length; i++) {
+              ents[data[i][idProp]] = data[i];
+            }
+          })
           return defers[key].promise;
         }
 
         this.get = function (id) {
-          var k = findByProp(idProp, id);
-          if (ents[k]) {
-            return ents[k];
+          var keys = getCacheKeysForId(entityType, idProp, id);
+          for (var k in keys) {
+            return cache[k].data[keys[k]];
           }
         };
 
@@ -191,6 +205,7 @@
               var entity = resp.data[0];
               ents[entity[idProp]] = entity;
 
+              weSaved[entity[idProp]] = Date.now();
               addToCaches(entityType, idProp, entity);
 
               $rootScope.$broadcast(eventName + '.add', entity);
@@ -205,24 +220,58 @@
           ignore = ignore || [];
           ignore.push(idProp);
 
-          var k = findByProp(idProp, entity[idProp]),
-            url = [restPath, entityType, entity[idProp]],
-            data = getDiff(ents[k], entity, ignore);
+          var keys = getCacheKeysForEntity(type, idProp, entity),
+            data = {};
+          for (var k in keys) {
+            data = getDiff(cache[k].data[keys[k]], entity, ignore);
+            break;
+          }
+          var url = [restPath, entityType, entity[idProp]];
 
           if (data.length) {
             delete data.length;
 
-            return $http.patch(url.join('/'), data)
+            var config = {
+              headers: {}
+            };
+
+            var updated = 0;
+            if (weSaved[entity[idProp]] == undefined) {
+
+              for (var k in keys) {
+                updated = Math.max(updated, cache[k].lastUpdated);
+              }
+            }
+            else {
+              updated = weSaved[entity[idProp]];
+            }
+            config.headers['If-Unmodified-Since'] = (new Date(updated*1000)).toString().replace(/ \([^)]*\)/, '');
+
+            return $http.patch(url.join('/'), data, config)
               .success(function (resp) {
                 var entity = resp.data[0],
                   k = findByProp(idProp, entity[idProp]);
                 ents[k] = entity;
 
+                weSaved[entity[idProp]] = data.updatedOn;
                 $rootScope.$broadcast(eventName + '.update', entity);
                 var keys = getCacheKeysForEntity(type, idProp, entity);
                 for (var k in keys) {
                   cache[k].data[keys[k]] = entity;
+                  saveCache(k);
                 }
+              })
+              .then(angular.noOp, function (resp) {
+                switch (resp.status) {
+                  case 409:
+                    console.log('conflict');
+                    ECU.update(entityType);
+                    break;
+                  case 410:
+                    console.log('resource gone');
+                    ECU.update(entityType);
+                }
+                return $q.reject(resp);
               });
           }
           else {
@@ -234,8 +283,19 @@
 
         this.delete = function (entity) {
 
+          var config = {
+            headers: {}
+          };
+
+          var keys = getCacheKeysForEntity(type, idProp, entity);
+          var updated = 0
+          for (var k in keys) {
+            updated = Math.max(updated, cache[k].lastUpdated);
+          }
+          config.headers['If-Unmodified-Since'] = (new Date(updated*1000)).toString().replace(/ \([^)]*\)/, '');
+
           //rest API call to delete entity from server
-          return $http.delete(restPath+'/'+entityType+'/'+entity[idProp]).success(function (resp) {
+          return $http.delete(restPath+'/'+entityType+'/'+entity[idProp], config).success(function (resp) {
             var k = findByProp(idProp, entity[idProp]);
             delete ents[k];
 
@@ -243,6 +303,7 @@
             var keys = getCacheKeysForEntity(type, idProp, entity);
             for (var k in keys) {
               cache[k].data.splice(keys[k], 1);
+              saveCache(k);
             }
           });
         }
@@ -253,35 +314,8 @@
           ents[entity[idProp]] = entity;
 
           addToCaches(entityType, idProp, entity);
-        }
-
-        /**
-         * Test entity fetched with a set of params to see if it matches a cache
-         *
-         * Proper usage:
-         *  this function should use the cache object as it's 'this', by using the call() method.
-         *  Ex. testEntity.call(this, entity, params);
-         */
-        function testEntity(entity, params) {
-          for (var k in params) {
-            if (entity[k] == undefined) {
-              // this is not something that comes returned on the object
-              // try other things
-              switch (k) {
-                case 'vsite':
-                  if (params[k] != vsite) {
-                    return false;
-                  }
-                  break;
-              }
-            }
-            else if (entity[k] != params[k]) {
-              return false;
-            }
-          }
-          return true;
-        }
-      };
+        };
+      }
 
       function getDiff(oEntity, nEntity, ignore) {
         var diff = {},
@@ -298,8 +332,234 @@
         return diff;
       }
 
+      function saveCache(key) {
+        $idb.openStore('entities', function (store) {
+          cache[key].matches = cache[key].matches.toString();
+          store.upsert(cache[key]);
+          cache[key].matches = eval('(' + cache[key].matches + ')');
+        });
+      }
+
+      /**
+       * Add an entity to all caches it matches
+       */
+      function addToCaches(type, idProp, entity) {
+        var keys = getCacheKeysForEntity(type, idProp, entity);
+
+        for (var k in cache) {
+          if (keys[k] != undefined) {
+            cache[k].data[keys[k]] = entity;
+            continue;
+          }
+
+          if (cache[k].matches(entity, type)) {
+            cache[k].data.push(entity);
+            saveCache(k);
+          }
+        }
+      }
+
       return factory;
+    }])
+  .run(['EntityCacheUpdater', '$q', '$indexedDB', function (ECU, $q, $idb) {
+      var entityTypes = {},
+        lock = $q.defer();
+      lockPromise = lock.promise;
+
+      $idb.openStore('entities', function (store) {
+        store.getAll().then (function (caches) {
+          var keys = {};
+          for (var i = 0; i < caches.length; i++) {
+            var key = caches[i].key,
+              type = caches[i].entityType;;
+            keys[key] = key;
+            cache[key] = caches[i];
+            cache[key].matches = eval('(' + cache[key].matches + ')');
+            if (!defers[key]) {
+              defers[key] = $q.defer();
+            }
+            entityTypes[type] = true;
+          }
+          lock.resolve(keys);
+
+          for (var t in entityTypes) {
+            ECU.update(t);
+          }
+        }, function (error) {
+          console.log(error);
+        });
+      });
+    }])
+    .config(['$indexedDBProvider', function ($idbp) {
+      $idbp
+        .connection('EntityService')
+        .upgradeDatabase(1, function (event, db, tx) {
+           var store = db.createObjectStore('entities', { keyPath: "key" });
+           store.createIndex('key_idx', 'key', {unique: true});
+        });
+    }])
+  .service('EntityCacheUpdater', ['$http', '$q', '$indexedDB', '$rootScope', function ($http, $q, $idb, $rs) {
+      var urlBase = restPath + '/:type/updates/:time';
+
+      function update(updateType) {
+        var keys = {},
+          timestamps = {};
+        for (var key in cache) {
+          var type = cache[key].entityType;
+          if (updateType == undefined) {
+            keys[type] = keys[type] || [];
+            keys[type].push(key);
+          }
+          else if (updateType == type) {
+            keys[type] = keys[type] || [];
+            keys[type].push(key);
+          }
+          timestamps[type] = timestamps[type] || cache[key].lastUpdated;
+        }
+        for (var t in keys) {
+          fetchUpdates(t, keys[t], timestamps[t]);
+        }
+      }
+
+      function fetchUpdates(type, keys, timestamp, nextUrl) {
+        var url;
+        if (nextUrl == undefined) {
+          url = urlBase.replace(':type', type).replace(':time', timestamp)
+        }
+        else {
+          url = nextUrl;
+        }
+
+        if (Drupal.settings.spaces.id) {
+          if (url.indexOf('?') == -1) {
+            url += '?vsite=' + Drupal.settings.spaces.id;
+          }
+          else {
+            url += '&vsite=' + Drupal.settings.spaces.id;
+          }
+        }
+
+        $http.get(url).then(function (resp) {
+          for (var i = 0; i < keys.length; i++) {
+            if (nextUrl == undefined) {
+              if (resp.data.allEntitiesAsOf) {
+                cache[keys[i]].data = [];
+                cache[keys[i]].lastUpdated = resp.data.allEntitiesAsOf;
+              }
+              else if (resp.data.updatesAsOf) {
+                cache[keys[i]].lastUpdated = resp.data.updatesAsOf;
+              }
+            }
+          }
+
+          for (var i=0; i<resp.data.data.length; i++) {
+            // get all caches this entity exists in
+            var cacheKeys = getCacheKeysForEntity(type, cache[keys[0]].idProperty, resp.data.data[i])
+            // handle this entity for all caches it exists in
+            for (var k in cacheKeys) {
+              if (resp.data.data[i].status == 'deleted') {
+                cache[k].data.splice(cacheKeys[k], 1);
+              }
+              else {
+                cache[k].data.splice(cacheKeys[k], 1, resp.data.data[i]);
+              }
+            }
+            if (resp.data.data[i].status != 'deleted') {
+              // add new entities to the caches
+              for (var k in cache) {
+                if (cacheKeys[k] == undefined && cache[k].matches(resp.data.data[i], type)) {
+                  cache[k].data.push(resp.data.data[i]);
+                }
+              }
+            }
+          }
+
+          if (resp.next) {
+            var max = Math.ceil(resp.count/resp.data.data.length),
+              curr = resp.next.href.match(/page=([\d]+)/)[1];
+            for (var i = 0; i < keys.length; i++) {
+              var k = keys[i];
+              defers[k].notify(("Loading updates: $p% complete.").replace('$p', Math.round(((curr - 1) / max) * 100)));
+            }
+            fetchUpdates(type, keys, timestamp, resp.next);
+          }
+          else {
+            for (var i = 0; i < keys.length; i++) {
+              var key = keys[i];
+              defers[key].resolve(angular.copy(cache[key].data));
+              $rs.$broadcast('EntityCacheUpdater.cacheUpdated');
+              $idb.openStore('entities', function(store) {
+                cache[key].matches = cache[key].matches.toString();
+                store.upsert(cache[key]);
+                cache[key].matches = eval('(' + cache[key].matches + ')');
+              });
+            }
+          }
+        })
+      }
+
+      this.update = update;
     }]);
+
+  /**
+   * Test entity fetched with a set of params to see if it matches a cache
+   *
+   * Proper usage:
+   *  this function should use the cache object as it's 'this', by using the call() method.
+   *  Ex. testEntity.call(this, entity, params);
+   */
+  function testEntity(entity) {
+    // params is the search query we return
+    var params = this.params,
+      type = this.entityType;
+
+    for (var k in params) {
+      if (entity[k] == undefined) {
+        // this is not something that comes returned on the object
+        // try other things
+        switch (k) {
+          case 'vsite':
+            if (params[k] != Drupal.settings.spaces.id) {
+              return false;
+            }
+            break;
+        }
+      }
+      else if ((k == 'entity_type' || k == 'bundle') && typeof entity.bundles == 'object') {
+        // this thing refers to other entities, like vocabs do. It can accept multiple types of entity type / file combinations
+
+        if (entity.bundles[params.entity_type]) {
+          var found = false;
+          for (var l in entity.bundles[params.entity_type]) {
+            if ( entity.bundles[params.entity_type][l] == params.bundle) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            return false;
+          }
+        }
+      }
+      // allow for a property on the entity to be a container that we only need to match one of to pass
+      else if (entity[k] instanceof Object && (typeof params[k] == 'string' || typeof params[k] == 'number')) {
+        var found = false;
+        for (var l in entity[k]) {
+          if (entity[k][l] == params[k]) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          return false;
+        }
+      }
+      else if (entity[k] != params[k]) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   /**
    * Collect the keys an entity exists in for every cache available
@@ -320,6 +580,7 @@
       for (var i = 0; i < cache[k].data.length; i++) {
         if (cache[k].data[i][idProp] == entity[idProp]) {
           keys[k] = i;
+          break;
         }
       }
     }
@@ -327,21 +588,24 @@
   }
 
   /**
-   * Add an entity to all caches it matches
+   * Collect the keys an id exists in for every cache available
    */
-  function addToCaches(type, idProp, entity) {
-    var keys = getCacheKeysForEntity(type, idProp, entity);
-
+  function getCacheKeysForId(type, idProp, id) {
+    var keys = {};
     for (var k in cache) {
-      if (keys[k] != undefined) {
-        cache[k].data[keys[k]] = entity;
+      // Wrong type.
+      if (k.indexOf(type) == -1) {
         continue;
       }
 
-      if (cache[k].matches(entity, type)) {
-        cache[k].data.push(entity);
+      for (var i = 0; i < cache[k].data.length; i++) {
+        if (cache[k].data[i][idProp] == id) {
+          keys[k] = i;
+          break;
+        }
       }
     }
+    return keys;
   }
 
   /*

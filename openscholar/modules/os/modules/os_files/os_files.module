@@ -446,8 +446,7 @@ function os_files_upload_validate_image_dimensions(stdClass $file) {
   $available_memory = $memory_limit - $memory_drupal;
 
   if ($memory_to_process > $available_memory) {
-    $errors[] = t('The dimensions of this image are too large for us to handle. Use photo-editing software or an online
-      tool like !resizer to shrink the image.', array(
+    $errors[] = t('The dimensions of this image are too large for us to handle. Use photo-editing software or an online tool like !resizer to shrink the image.', array(
       '!resizer' => l('picresize.com', 'http://www.picresize.com/')
     ));
   }
@@ -1603,7 +1602,8 @@ function os_files_file_view($file, $view_mode, $langcode) {
     ),
   );
 
-  if (!isset($file->oembed) || !$file->oembed) {
+  // HTML embeded files will not have any Download link.
+  if ((!isset($file->oembed) || !$file->oembed) && $file->filemime != 'html/embed') {
     $content['file-info']['download'] = array(
       '#theme' => 'link',
       '#path' => file_create_url($file->uri),

@@ -162,6 +162,7 @@ function os_common_library() {
     ),
     'dependencies' => array(
       array('os_common', 'angularjs'),
+      array('os_common', 'angular-indexed-db'),
       array('os_common', 'helpers')
     )
   );
@@ -223,6 +224,17 @@ function os_common_library() {
     )
   );
 
+  $info['angular-indexed-db'] = array(
+    'title' => t('Angular Indexed DB'),
+    'version' => '1.1.0',
+    'js' => array(
+      libraries_get_path('angular-indexed-db') . '/angular-indexed-db.js' => array()
+    ),
+    'dependencies' => array(
+      array('os_common', 'angularjs')
+    )
+  );
+
   $info['TaxonomyWidget'] = array(
     'title' => 'Angular Taxonomy Widget',
     'version' => '1.0',
@@ -260,7 +272,7 @@ function os_common_library() {
             'FileEditor' => url($path.'/FileEditor', $disable),
           ),
           'version' => array(
-            'FileEditor' => '1.0.1',
+            'FileEditor' => '1.0.2',
           )
         ),
         'type' => 'setting',

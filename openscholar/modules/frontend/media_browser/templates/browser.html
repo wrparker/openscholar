@@ -45,8 +45,7 @@
                     <div id="media-browser-upload-counter">{{$parent.uploadProgress().index}} of {{$parent.uploadProgress().numFiles}}</div>
                 </div>
                 <div id="media-browser-rejected">
-                    <div ng-repeat="m in messages" class="message">
-                        {{m.text}}
+                    <div ng-repeat="m in messages" class="message" ng-bind-html="m.text">
                     </div>
                 </div>
             </div>

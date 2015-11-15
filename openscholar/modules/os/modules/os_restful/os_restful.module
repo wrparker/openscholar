@@ -19,6 +19,16 @@ function os_restful_ctools_plugin_directory($module, $plugin) {
 }
 
 /**
+ * Implements hook_cron().
+ */
+function os_restful_cron() {
+  $time = strtotime('-30 days');
+  db_delete('entities_deleted')
+    ->condition('deleted', $time, '<')
+    ->execute();
+}
+
+/**
  * Implements hook_entity_property_info_alter().
  */
 function os_restful_entity_property_info_alter(&$info) {
@@ -175,9 +185,37 @@ function os_restful_restful_parse_request_alter(&$request) {
  *
  * file_save() automatically sets the timestamp to REQUEST_TIME.
  * If we want to change it, it has to be done in a file_presave or entity_presave hook.
+ *
+ * Also, make sure file->changed is always the current REQUEST_TIME
  */
 function os_restful_file_presave($file) {
   if ($timestamp = _os_restful_store_props('timestamp')) {
     $file->timestamp = $timestamp;
+  }
+
+  $file->changed = REQUEST_TIME;
+}
+
+/**
+ * Implements hook_entity_delete().
+ *
+ * Logs all entities that are deleted so they can be returned in restful update results
+ */
+function os_restful_entity_delete($entity, $type) {
+  $wrapper = entity_metadata_wrapper($type, $entity);
+  $id = $wrapper->getIdentifier();
+
+  if ($id !== FALSE) {
+    $extra = module_invoke_all('os_restful_entity_delete_data', $type, $entity);
+    drupal_alter('os_restful_entity_delete_data', $extra);
+
+    db_insert('entities_deleted')
+      ->fields(array(
+        'entity_id' => $id,
+        'entity_type' => $type,
+        'deleted' => REQUEST_TIME,
+        'extra' => serialize($extra)
+      ))
+      ->execute();
   }
 }

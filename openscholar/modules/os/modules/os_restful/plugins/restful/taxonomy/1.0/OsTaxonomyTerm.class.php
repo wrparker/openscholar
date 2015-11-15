@@ -1,6 +1,6 @@
 <?php
 
-class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
+class OsTaxonomyTerm extends OsRestfulEntityCacheableBase {
 
   /**
    * {@inheritdoc}
@@ -33,7 +33,7 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
    * {@inheritdoc}
    */
   public function getBundle() {
-    if ($this->path) {
+    if ($this->path && !$this->fetchingUpdates()) {
       $wrapper = entity_metadata_wrapper('taxonomy_term', $this->path);
       return $wrapper->vocabulary->machine_name->value();
     }
@@ -178,6 +178,12 @@ class OsTaxonomyTerm extends \RestfulEntityBaseTaxonomyTerm {
       return true;
     }
 
+  }
+
+  protected function getLastModified($id) {
+    // Vocabularies cannot really be editted. When they were first created isn't stored either.
+    // This function is only concerned with modifications, so as long as we assume it's really old, we're fine for now
+    return strotime('-31 days', REQUEST_TIME);
   }
 
 }

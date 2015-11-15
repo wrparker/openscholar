@@ -5,8 +5,8 @@
 <div ng-show="file.schema == 'public' || file.schema == 'private'">
     <label for="fe-filepath">File Name</label>
     <span class="full-url">{{fullPath}}</span>
-    <span class="fe-filepath-wrapper"><input id="fe-filepath" type="text" ng-model="file.filename" class="form-text"></span>
-    <div ng-show="invalidName" class="error">A file with this name already exists!</div>
+    <span class="fe-filepath-wrapper"><input id="fe-filepath" type="text" ng-model="file.filename" class="form-text" ng-class="{error: invalidName}"></span>
+    <div ng-show="invalidName && file.filename" class="error">This filename cannot contain illegal characters, or a file with this name already exists!</div>
 </div>
 
 <div ng-include="fileEditAddt"></div>
@@ -15,7 +15,7 @@
 <textarea id="fe-file-description" ng-model="file.description"></textarea>
 
 <label for="fe-file-timestamp">Uploaded On</label>
-<input id="fe-file-timestamp" type="text" ng-model="date" class="form-text">
+<input id="fe-file-timestamp" type="text" ng-model="date" class="form-text" ng-class="{error: invalidDate}">
 
 <div class="fe-replace-wrapper" ng-show="!file.new && !file.replaced && (file.schema == 'public' || file.schema == 'private')">
     <label for="fe-file-replace"></label>
@@ -33,6 +33,6 @@
 </div>
 
 <div class="error" ng-show="showErrorMessages">
-    <span ng-click="showErrorMessages = false;" class="error-close">Close</span>
-    <span>{{errorMessages}}</span>
+    <span ng-click="closeErrors()" class="error-close">Close</span>
+    <span ng-bind-html="errorMessages"></span>
 </div>

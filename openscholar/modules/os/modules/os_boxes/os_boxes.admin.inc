@@ -195,7 +195,7 @@ function os_boxes_widget_delete_submit($form, &$form_state) {
 /**
  * Handles removing a widget from a theme region, provides undo link.
  */
-function os_boxes_remove_widget($module, $delta, $region = NULL) {
+function os_boxes_remove_widget($module, $delta, $region = FALSE) {
   $contexts = $_GET['contexts'];
 
   // Removes the box from the contexts.
