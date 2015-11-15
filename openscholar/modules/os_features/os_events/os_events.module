@@ -108,12 +108,6 @@ function os_events_entity_view_alter(&$build, $type) {
     unset($build['created']);
     $build['created'] = $created_tmp;
 
-    // Overriding Updated date display.
-    $build['updated']['#weight'] = -10;
-    $updated_tmp = $build['updated'];
-    unset($build['updated']);
-    $build['updated'] = $updated_tmp;
-
     // Reset additional fields display.
     unset($build['spaces']);
     unset($build['author']);
