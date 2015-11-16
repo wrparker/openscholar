@@ -2457,7 +2457,7 @@ function os_files_add_fields($type) {
       ),
       'entity_type' => 'file',
       'field_name' => 'os_file_description',
-      'label' => 'Description',
+      'label' => $type == 'image' ? 'Image Caption' : 'Description',
       'required' => FALSE,
       'settings' => array(
         'display_summary' => 0,

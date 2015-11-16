@@ -279,9 +279,15 @@ function os_events_update_7021() {
   features_revert(array('os_events' => array('field_instance')));
 }
 
+/*
+ * Alteration for registration display fields for event registrants details display
+ */
+function os_events_update_7022() {
+  features_revert(array('os_events' => array('field_instance')));
+}
 /**
  * Reverting OS events views.
  */
-function os_events_update_7022() {
+function os_events_update_7023() {
   features_revert(array('os_events' => array('field_instance', 'views')));
 }
