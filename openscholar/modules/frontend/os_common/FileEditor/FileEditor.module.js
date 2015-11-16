@@ -23,6 +23,7 @@
 
           scope.fileEditAddt = '';
           scope.date = '';
+          scope.description_label = 'Description';
 
           scope.$watch('file', function (f) {
             if (!f) return;
@@ -32,6 +33,9 @@
 
             scope.fullPath = f.url.slice(0, f.url.lastIndexOf('/')+1);
             scope.extension = '.' + getExtension(f.url);
+            if (scope.file.type == 'image') {
+              scope.description_label = 'Image Caption';
+            }
           });
 
           var dateTimeout;
