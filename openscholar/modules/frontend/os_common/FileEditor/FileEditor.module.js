@@ -62,13 +62,13 @@
             if (typeof filename != 'string') {
               return;
             }
-            scope.invalidName = false;
+            scope.invalidFileName = false;
             if (filename == "") {
-              scope.invalidName = true;
+              scope.invalidFileName = true;
               return;
             }
             if (!filename.match(/^([a-zA-Z0-9_\.-]*)$/)) {
-              scope.invalidName = true;
+              scope.invalidFileName = true;
               return;
             }
             var lower = filename.toLowerCase();
@@ -76,10 +76,20 @@
               var files = fileService.getAll();
               for (var i in files) {
                 if (lower == files[i].filename && scope.file.id != files[i].id) {
-                  scope.invalidName = true;
+                  scope.invalidFileName = true;
                   return;
                 }
               }
+            }
+          });
+
+          scope.invalidName = true;
+          scope.$watch('file.name', function (name, old) {
+            if (!name) {
+              scope.invalidName = true;
+            }
+            else {
+              scope.invalidName = false;
             }
           });
 
@@ -139,7 +149,7 @@
           };
 
           scope.canSave = function () {
-            return scope.invalidName;
+            return scope.invalidFileName || scope.invalidName;
           }
 
           scope.save = function () {
