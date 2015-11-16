@@ -45,14 +45,14 @@ class OsRestfulUserReport extends \OsRestfulReports {
     $query->addField('n', 'title', 'title');
     $query->addField('n', 'uid', 'owner');
     $query->addField('n', 'nid', 'vsite_id');
-    $query->innerJoin("og_membership", "og", "og.entity_type = 'user' AND og.etid = users.uid");
+    $query->innerJoin("og_membership", "ogm", "ogm.entity_type = 'user' AND ogm.etid = users.uid");
     if ($this->userRoles != "owners") {
-      $query->innerJoin("node", "n", "og.entity_type = 'user' AND og.etid = users.uid AND og.gid = n.nid");
+      $query->innerJoin("node", "n", "ogm.entity_type = 'user' AND ogm.etid = users.uid AND ogm.gid = n.nid");
     }
     else {
-      $query->innerJoin("node", "n", "og.entity_type = 'user' AND og.etid = users.uid AND og.gid = n.nid AND users.uid = n.uid");
+      $query->innerJoin("node", "n", "ogm.entity_type = 'user' AND ogm.etid = users.uid AND ogm.gid = n.nid AND users.uid = n.uid");
     }
-    $query->innerJoin("og_users_roles", "ogur", "ogur.uid = users.uid AND ogur.gid = og.gid");
+    $query->innerJoin("og_users_roles", "ogur", "ogur.uid = users.uid AND ogur.gid = ogm.gid");
     $query->groupBy("users.uid, n.nid");
 
     $fields = $this->getPublicFields();
@@ -104,7 +104,7 @@ class OsRestfulUserReport extends \OsRestfulReports {
     if (isset($row->latest_content)) {
       $query = db_select("node", "n")
                ->condition('n.uid', $row->uid, '=');
-       $query->innerJoin('og_membership', 'og', "og.etid = n.nid AND og.gid = '" . $row->vsite_id . "'");
+      $query->innerJoin('og_membership', 'ogm', "ogm.etid = n.nid AND ogm.gid = '" . $row->vsite_id . "'");
       $query->addExpression('MAX(n.changed)');
       $date = $query->execute()->fetchField();
       if ($date) {
@@ -116,5 +116,4 @@ class OsRestfulUserReport extends \OsRestfulReports {
     }
     return $new_row;
   }
-
 }
