@@ -122,6 +122,14 @@ abstract class os_boxes_default extends boxes_box {
   }
 
   /**
+   * Allow widgets to alter the form before processed by boxes.
+   *
+   * @param $values
+   *   The form values.
+   */
+  public function alterOptions(&$values) {}
+
+  /**
    * Get the caching of the box.
    *
    * @param $bundle
