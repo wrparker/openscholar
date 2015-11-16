@@ -1979,6 +1979,19 @@ function os_taxonomy_attach_fields_to_vocabulary($entity_type, $bundle) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_taxonomy_form_taxonomy_overview_terms_alter(&$form, &$form_state) {
+  if (empty($form_state['confirm_reset_alphabetical'])) {
+    return;
+  }
+
+  // Change the cancel link destination from the reset to alphabetical form to
+  // path in the current vsite.
+  $form['actions']['cancel']['#href'] = 'cp/build/taxonomy/' . $form['machine_name']['#value'];
+}
+
+/**
  * Implements hook_og_fields_info().
  */
 function os_taxonomy_og_fields_info() {
