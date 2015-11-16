@@ -128,6 +128,11 @@ class spaces_controller_menus extends spaces_controller {
 
     $links = array();
     foreach ( $menu_links as $mlid => $ml ) {
+      // Check for special case where menu link is hidden in tree.
+      if ($ml['hidden'] < 0) {
+        continue;
+      }
+        
       // May not return data if it is an external link
       $item = $this->get_router_data($ml['router_path']);
 

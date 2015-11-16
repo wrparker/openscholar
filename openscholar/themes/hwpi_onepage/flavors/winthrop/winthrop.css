@@ -139,3 +139,6 @@ h1#page-title,
 #footer .footer-login:after {
     background-image: none;
 }
+.block-os-search-solr {
+font-size: .97em;
+}
