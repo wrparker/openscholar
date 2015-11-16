@@ -28,3 +28,11 @@ Feature:
        And I should see "Wrote A Brief History of Time"
        And I visit "john/authors/stephen-william-hawking?page=1"
        And I should not see "Wrote A Brief History of Time"
+
+  @api @taxonomy
+  Scenario: Testing the cancel button for the reset terms to alphabetical order
+     Given I am logging in as "john"
+       And I visit "john/cp/build/taxonomy/authors_personal1"
+      When I press "Reset to alphabetical"
+       And I click "Cancel"
+      Then I should see "Stephen William Hawking"
