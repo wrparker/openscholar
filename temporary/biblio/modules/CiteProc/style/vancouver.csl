@@ -34,10 +34,14 @@
       </names>
    </macro>
    <macro name="editor">
-      <names variable="editor" suffix=". ">
-         <name sort-separator=" " initialize-with="" name-as-sort-order="all" delimiter=", " delimiter-precedes-last="always"/>
-         <label form="long" prefix=", " text-case="lowercase"/>
-      </names>
+      <choose>
+         <if variable="author">
+            <names variable="editor" suffix=". ">
+               <name sort-separator=" " initialize-with="" name-as-sort-order="all" delimiter=", " delimiter-precedes-last="always"/>
+               <label form="long" prefix=", " text-case="lowercase"/>
+            </names>
+         </if>
+      </choose>
    </macro>
    <macro name="publisher">
      <choose>      
