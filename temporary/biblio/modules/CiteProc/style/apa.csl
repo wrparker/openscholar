@@ -33,20 +33,40 @@
       <choose>
          <if type="chapter paper-conference" match="any">
             <text term="in" text-case="capitalize-first" suffix=" "/>
-            <names variable="editor translator" delimiter=", " suffix=", ">
-               <name and="symbol" initialize-with=". " delimiter=", "/>
-               <label form="short" prefix=" (" text-case="capitalize-first" suffix=".)" strip-periods="true"/>
-            </names>
+            <choose>
+               <if variable="author" match="any">
+                  <names variable="editor translator" delimiter=", " suffix=", ">
+                     <name and="symbol" initialize-with=". " delimiter=", "/>
+                     <label form="short" prefix=" (" text-case="capitalize-first" suffix=".)" strip-periods="true"/>
+                  </names>
+               </if>
+               <else>
+                  <names variable="translator" delimiter=", " suffix=", ">
+                     <name and="symbol" initialize-with=". " delimiter=", "/>
+                     <label form="short" prefix=" (" text-case="capitalize-first" suffix=".)" strip-periods="true"/>
+                  </names>
+               </else>
+            </choose>
          </if>
       </choose>
    </macro>
    <macro name="secondary-contributors">
       <choose>
          <if type="chapter paper-conference" match="none">
-            <names variable="editor translator" delimiter=", " prefix=" (" suffix=")">
-               <name and="symbol" initialize-with=". " delimiter=", "/>
-               <label form="short" prefix=", " text-case="capitalize-first" suffix="." strip-periods="true"/>
-            </names>
+            <choose>
+               <if variable="author" match="any">
+                  <names variable="editor translator" delimiter=", " suffix=", ">
+                     <name and="symbol" initialize-with=". " delimiter=", "/>
+                     <label form="short" prefix=" (" text-case="capitalize-first" suffix=".)" strip-periods="true"/>
+                  </names>
+               </if>
+               <else>
+                  <names variable="translator" delimiter=", " suffix=", ">
+                     <name and="symbol" initialize-with=". " delimiter=", "/>
+                     <label form="short" prefix=" (" text-case="capitalize-first" suffix=".)" strip-periods="true"/>
+                  </names>
+               </else>
+            </choose>
          </if>
       </choose>
    </macro>
