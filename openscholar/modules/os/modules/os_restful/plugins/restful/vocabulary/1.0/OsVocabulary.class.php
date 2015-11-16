@@ -288,4 +288,16 @@ class OsVocabulary extends OsRestfulEntityCacheableBase {
     // This function is only concerned with modifications, so as long as we assume it's really old, we're fine for now
     return strotime('-31 days', REQUEST_TIME);
   }
+
+  // Vocabs don't have a 'changed' variable, so this is the best we can do at the moment.
+  public function additionalHateoas() {
+    $addtl = array();
+    $path = $this->getPath();
+
+    if ($this->method == \RestfulInterface::GET) {
+      $addtl['allEntitiesAsOf'] = REQUEST_TIME;
+    }
+
+    return $addtl;
+  }
 }
