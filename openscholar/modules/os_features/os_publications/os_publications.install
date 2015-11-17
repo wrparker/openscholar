@@ -1438,3 +1438,28 @@ function os_publications_update_7037() {
   }
 }
 
+/**
+ * Fix CSL styles so editors aren't printed twice when there are no authors
+ */
+function os_publications_update_7038() {
+  $citations = array(
+    'ama',
+    'apa',
+    'apsa',
+    'asa',
+    'chicago-author-date',
+    'cse',
+    'harvard-chicago-author-date',
+    'harvard1',
+    'ieee',
+    'mhra',
+    'mla',
+    'nlm',
+    'vancouver'
+  );
+
+  foreach ($citations as $citation) {
+    os_publications_revert_citeproc_style($citation);
+  }
+}
+
