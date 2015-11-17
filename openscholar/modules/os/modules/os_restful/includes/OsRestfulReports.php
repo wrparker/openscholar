@@ -46,7 +46,7 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
    */
   public function access() {
     $account = $this->getAccount();
-//     return user_access('adminsiter reports', $account);
+//     return user_access('access reports', $account);
     return TRUE;
   }
 

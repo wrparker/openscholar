@@ -1,0 +1,9 @@
+.container-inline {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+fieldset .container-inline {
+	padding-top: 2px;
+	padding-bottom: 2px;
+}

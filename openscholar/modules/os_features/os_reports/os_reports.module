@@ -1,0 +1,135 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * 
+ * OS Reports module file
+ */
+
+
+/**
+ * Implement hook_permission().
+ */
+function os_reports_permission() {
+  return array(
+    'access reports' => array(
+      'title' => t('View OS Reports'),
+      'description' => t('Access the OS reports.'),
+      'restrict access' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implement hook_menu().
+ */
+function os_reports_menu() {
+  $items = array();
+  $items['admin/reports/site'] = array(
+    'title' => 'Site Report',
+    'page callback' => 'drupal_get_form',
+		'page arguments' => array('os_reports_site_form'),
+    'access callback' => TRUE,
+//     'access callback' => 'user_access',
+//     'access arguments' => array('access reports'),
+    'type' => MENU_CALLBACK,
+  );
+  // Define another taxonomy autocomplete because the default one of drupal
+  // does not support a vid a argument anymore
+  $items['admin/reports/user'] = array(
+    'title' => 'User Report',
+    'page callback' => 'drupal_get_form',
+		'page arguments' => array('os_reports_user_form'),
+//     'access callback' => 'user_access',
+//     'access arguments' => array('access reports'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_preprocess_page().
+ *
+ * Adds the user_panel angular library.
+ */
+function admin_panel_preprocess_page(&$vars) {
+	if (user_is_logged_in() && variable_get('admin_panel_enabled', FALSE)) {
+	}
+}
+
+/**
+ * OS Site report form
+ */
+function os_reports_site_form($form, &$form_state) {
+ 	os_common_angular_app('ReportModule');
+ 	drupal_add_css(drupal_get_path('module', 'os_reports') . '/os_reports.css');
+
+	$form['#prefix'] = '<div ng-controller="SiteReport">';
+	$form['#suffix'] = '</div>';
+	
+	$form['keyword_set'] = array(
+    '#type' => 'fieldset',
+		'#title' => 'Keyword search'
+	);
+	
+	$form['keyword_set']['keyword'] = array(
+    '#prefix' => '<div class="container-inline">',
+		'#suffix' => '</div>',
+		'#type' => 'textfield',
+		'#title' => 'Keyword',
+		'#attributes' => array(
+			'ng-model' => 'query.keyword',
+		),
+	);
+	
+	$form['keyword_set']['kfields'] = array(
+    '#prefix' => '<div class="container-inline">',
+		'#suffix' => '</div>',
+		'#type' => 'checkboxes',
+		'#title' => 'Search in fields',
+		'#options' => array(
+			'mail' => 'email',
+			'name' => 'username',
+			'title' => 'site name',
+			'#default_value' => 'mail', 
+		),
+		'#attributes' => array(
+			'ng-model' => 'query.kfields',
+		),
+	);
+	$form['columns'] = array(
+    '#prefix' => '<div class="container-inline">',
+		'#suffix' => '</div>',
+		'#type' => 'checkboxes',
+		'#title' => 'Optional columns',
+		'#options' => array(
+			'owner_email' => 'Owner email',
+			'privacy' => 'Privacy level',
+// 			'theme' => 'Custom theme',
+		),
+		'#attributes' => array(
+			'ng-model' => 'query.columns',
+		),
+	);
+	$form['lastupdate'] = array(
+    '#prefix' => '<div class="container-inline">',
+		'#suffix' => '</div>',
+		'#type' => 'textfield',
+		'#title' => 'Content last updated before',
+    '#size' => 10,
+		'#description' => 'format: YYYYMMDD',
+		'#attributes' => array(
+			'ng-model' => 'query.lastupdate',
+		),
+	);
+	$form['submit'] = array(
+		'#markup' => '<a href="#" ng-click="update(query)">Submit</a>'
+	);
+	$form['results'] = array(
+		'#prefix' => '<div id="results">',
+		'#suffix' => '</div>',
+	);
+
+	return $form;
+}
