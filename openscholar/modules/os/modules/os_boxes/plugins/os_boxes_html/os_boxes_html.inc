@@ -94,18 +94,12 @@ class os_boxes_html extends os_boxes_default {
   /**
    * {@inheritdoc}
    */
-  public function alterOptions(&$values) {
+  public function validate(&$values) {
     if (strlen($values['text']['value']) < 65000) {
       return;
     }
-
-    // We need to make sure the text does not passing the 60000 string length.
-    // We need to trim it to 60000 in order to make sure the closed html tags,
-    // if there any, and other settings won't pass the 65000 chars.
-    $values['text']['value'] = views_trim_text(array('max_length' => 60000, 'html' => TRUE), $values['text']['value']);
-
     // Notify the users his text was trimmed.
-    drupal_set_message(t('The text you provided is bigger than 6500 there for we trimmed it to 60000 characters.'), 'warning');
+    form_set_error('', t('The text you provided is bigger than 6500 characters. Please decrease the number of characters before re-submitting the form.'));
   }
 
   public function render() {
