@@ -205,7 +205,7 @@
               var entity = resp.data[0];
               ents[entity[idProp]] = entity;
 
-              weSaved[entity[idProp]] = Date.now();
+              weSaved[entity[idProp]] = entity.timestamp;
               addToCaches(entityType, idProp, entity);
 
               $rootScope.$broadcast(eventName + '.add', entity);
@@ -313,6 +313,7 @@
         this.register = function (entity) {
           ents[entity[idProp]] = entity;
 
+          weSaved[entity[idProp]] = entity.timestamp;
           addToCaches(entityType, idProp, entity);
         };
       }

@@ -461,6 +461,7 @@
         if (e.data.length) {
           $scope.embed = '';
           $scope.setSelection(e.data[0].id);
+          service.register(e.data[0]);
 
           $scope.changePanes('edit')
         }
