@@ -14,6 +14,13 @@ class OsRestfulSiteReport extends \OsRestfulReports {
   protected $latestUpdate = '';
 
   /**
+   * @var array
+   *
+   * The content types that should not be included in the latest updated content search.
+   */
+  protected $excludedContentTypes = array();
+
+  /**
    * {@inheritdoc}
    */
   public function publicFieldsInfo() {
@@ -31,6 +38,9 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       $fields['content_last_updated'] = array("property" => 'last_changed');
       $this->setPublicFields($fields);
       $this->latestUpdate = $request['lastupdate'];
+      if (isset($request['exclude'])) {
+        $this->excludedContentTypes = $request['exclude'];
+      }
     }
 
     $results = $this->getQueryForList()->execute();
@@ -57,14 +67,11 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       $query->innerJoin('users', 'u', 'u.uid = n.uid');
     }
     if (isset($this->latestUpdate)) {
-      $subquery = db_select('node');
-      $subquery->condition('node.type', array('harvard_course', 'feed', 'feed_importer', 'person'), 'NOT IN');
-      $subquery->innerJoin('og_membership', 'ogm', 'etid = nid AND entity_type = :type', array(':type' => 'node'));
-      $subquery->addField('ogm', 'gid');
-      $subquery->addExpression('FROM_UNIXTIME(MAX(changed))', 'latest');
-
-      $query->addField('subq', 'latest', 'last_changed');
-      $query->innerJoin($subqery, 'subq', 'gid = purl.id AND latest <= :cutoff', array(':cutoff' => strtotime($this->latestUpdate)));
+      $query->addExpression('MAX(content.changed)', 'latest_change');
+      $query->innerJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.entity_type = 'node' AND ogm.group_type = 'node'");
+      $query->innerJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
+      $query->groupBy('ogm.gid');
+      $query->havingCondition('latest_change', strtotime($this->latestUpdate), '<=');
     }
 
     $this->queryForListSort($query);
@@ -82,6 +89,9 @@ class OsRestfulSiteReport extends \OsRestfulReports {
    */
   public function mapDbRowToPublicFields($row) {
     $new_row = parent::mapDbRowToPublicFields($row);
+    if (isset($new_row['content_last_updated'])) {
+      $new_row['content_last_updated'] = date('M j, Y h:ia', $row->latest_change);
+    }
     return $new_row;
   }
 }
