@@ -211,10 +211,10 @@ body {
 .topRight_Menu {
     position: fixed;
     top: 0;
-    right: 0;
+    right: 15px;
     padding: 10px;
     color: white;
-    background: #999;
+    background: #49505a;
     z-index: 10;
     display: inline-block;
     font-family: helvetica;
@@ -222,10 +222,10 @@ body {
     cursor: pointer;
 }
 #topRightMenu {
-    background: url('images/my_account-bg.png') 4px 0 no-repeat;
-    width: 50px;
+    background: url('images/my_account-bg.png') 10px 3px no-repeat;
+    width: 35px;
     height: 18px;
-    background-color: #999;
+    background-color: #49505a;
 }
 .topRight_Menu a {
     font-style: normal;
@@ -250,13 +250,13 @@ body {
     color: #215990;
 }
 #user-name {
-    background-color: #B2B2B2;
+    background-color: #6C7A89;
 }
 #user-name:hover {
     cursor: text;
 }
 .slate {
-    background: #6C7A89;
+    background: #454545;
 }
 .slate.alert {
     background: #EF0812;

@@ -127,9 +127,9 @@
         		  e.preventDefault();
         		  element.siblings('div').each( function () {
         	        if(this.style.display == 'none') {
-        	          jQuery(this).slideDown();	
+        	          jQuery(this).fadeIn('fast');	
         	        } else {
-        	          jQuery(this).slideUp();
+        	          jQuery(this).fadeOut('fast');
         	        }
         	      });
               })  
