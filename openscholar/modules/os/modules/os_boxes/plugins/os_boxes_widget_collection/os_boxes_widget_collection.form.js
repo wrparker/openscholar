@@ -35,7 +35,7 @@ Drupal.behaviors.tabs = {
         desc = matches.input.replace(matches[0], '');
       }
       else {
-        desc = title = select.options[select.selectedIndex].innerHTML;
+        desc = title = select.options[select.selectedIndex].innerText;
       }
 
       count.val(parseInt(count.val())+1);
