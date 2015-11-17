@@ -2,8 +2,6 @@
 
 class os_sv_list_file extends os_sv_list {
 
-  protected $checkEntityAccess = TRUE;
-
   public function __construct() {
     parent::__construct();
     $this->entity_type = 'file';
