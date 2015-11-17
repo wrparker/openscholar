@@ -9,33 +9,19 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
   /**
    * @var string
    *
-   * The name of the report being requested.
-   */
-  protected $reportName = '';
-
-  /**
-   * @var string
-   *
-   * The string to search for within user fields.
+   * The string to search for
    */
   protected $keywordString = '';
 
   /**
-   * @var string
-   *
-   * The type of users to show.
-   */
-  protected $userRoles = '';
-
-  /**
    * @var array
    *
-   * The fields within which to do a keyword search.
+   * The fields within which to do a keyword search
    */
   protected $keywordFields = array();
 
   /**
-   * Overrides \RestfulDataProviderEFQ::controllersInfo().
+   * Overrides \RestfulDataProviderEFQ::controllersInfo()
    */
   public static function controllersInfo() {
     return array(
@@ -51,7 +37,7 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
         \RestfulInterface::PUT => 'replace',
         \RestfulInterface::PATCH => 'update',
         \RestfulInterface::DELETE => 'remove',      
-        ),
+      ),
     );
   }
 
@@ -73,19 +59,18 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
   }
 
   /**
-   * View a report.
+   * Display the report
    *
    * @param string $name_string
-   *  the name of the report you would like to retrieve.
+   *  the name of the report you would like to retrieve
    */
   public function getReport($name_string) {
     $output = array();
     $request = $this->getRequest();
     $function = "get_{$name_string}_report";
 
-    // if additional public fields have been requested, add them
-    // then call function for the requested report
     if (method_exists($this, $function)) {
+      // if additional public fields have been requested, add them
       if(isset($request['columns'])) {
         $new_public_fields = array();
         foreach ($request['columns'] as $column) {
@@ -93,11 +78,11 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
         }
         $this->setPublicFields(array_merge($this->getPublicFields(), $new_public_fields));
       }
+      // if keyword search is involved, set appropriate properties
       if (isset($request['keyword']) && isset($request['kfields'])) {
         $this->keywordString = $request['keyword'];
         $this->keywordFields = $request['kfields'];
       }
-      $this->reportName = $name_string;
       $output = $this->{$function}();
     }
 
@@ -139,18 +124,12 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
        }
       $query->condition($keyword_or);
     }
-
-    // limit by role, if needed
-    // radio buttons: only site owners, site owners/admins, all users
-    if ($this->userRoles == "admins") {
-      $query->condition("ogr.name", '%' . db_like("vsite") . '%', "LIKE");
-    }
   }
 
   /**
    * {@inheritdoc}
    *
-   * plus remove whitespace
+   * remove whitespace
    */
   public function mapDbRowToPublicFields($row) {
     $new_row = parent::mapDbRowToPublicFields($row);
