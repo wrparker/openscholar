@@ -858,7 +858,7 @@ function os_files_update_7021() {
   return t('Changed @n files to use the Icon bundle.');
 }
 
-/*
+/**
  * Changes name of Description field to Image Caption for images.
  */
 function os_files_update_7022() {
