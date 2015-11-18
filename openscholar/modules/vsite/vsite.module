@@ -248,21 +248,35 @@ function vsite_js_alter(&$javascript) {
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter() for spaces_features_form and cp_appearance_theme_picker_form
+ * Implements hook_form_FORM_ID_alter() for cp_appearance_theme_picker_form
  *
  * Overrides 'Save for <SITENAME>'button text.
  */
-function vsite_form_alter(&$form, &$form_state, $form_id) {
+function vsite_form_cp_appearance_theme_picker_form_alter(&$form, &$form_state, $form_id) {
   $space = spaces_get_space();
-  $target_forms = array('spaces_features_form', 'cp_appearance_theme_picker_form');
-  if ($space && !empty($form['#submit']) && in_array($form_id, $target_forms)) {
-    if (array_search('spaces_system_settings_form_submit', $form['#submit'], TRUE) !== FALSE) {
-      // Overriding submit button text to allow '&' to be displayed correctly.
-      if (isset($form['actions']) && spaces_access_admin_perms(array('administer spaces'))) {
-        $form['actions']['submit']['#value'] = t('Save for !name', array(
-          '!name' => $space->title(),
-        ));
-      }
+  if ($space && !empty($form['#submit'])) {
+    // Overriding submit button text to allow '&' to be displayed correctly.
+    if (isset($form['actions']) && spaces_access_admin_perms(array('administer spaces'))) {
+      $form['actions']['submit']['#value'] = t('Save for !name', array(
+        '!name' => $space->title(),
+      ));
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for spaces_features_form
+ *
+ * Overrides 'Save for <SITENAME>'button text.
+ */
+function vsite_form_spaces_features_form_alter(&$form, &$form_state, $form_id) {
+  $space = spaces_get_space();
+  if ($space && !empty($form['#submit'])) {
+    // Overriding submit button text to allow '&' to be displayed correctly.
+    if (isset($form['actions']) && spaces_access_admin_perms(array('administer spaces'))) {
+      $form['actions']['submit']['#value'] = t('Save for !name', array(
+        '!name' => $space->title(),
+      ));
     }
   }
 }
@@ -3478,6 +3492,16 @@ function vsite_redirect_parse_url_alter(&$parsed, $original_url) {
  * form_state in hook_cp_settings().
  */
 function vsite_form_cp_settings_form_alter(&$form, &$form_state, $form_id) {
+  $space = spaces_get_space();
+  if ($space && !empty($form['#submit'])) {
+    // Overriding submit button text to allow '&' to be displayed correctly.
+    if (isset($form['actions']) && spaces_access_admin_perms(array('administer spaces'))) {
+      $form['actions']['submit']['#value'] = t('Save for !name', array(
+        '!name' => $space->title(),
+      ));
+    }
+  }
+
   // Only continues if we have a purl (in order to save the favicon properly).
   if (!($purl = vsite_get_purl()) || !$vsite = vsite_get_vsite()) {
     return;
