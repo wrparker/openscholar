@@ -99,7 +99,7 @@ class os_boxes_html extends os_boxes_default {
       return;
     }
     // Notify the users his text was trimmed.
-    form_set_error('', t('The text you provided is bigger than 6500 characters. Please decrease the number of characters before re-submitting the form.'));
+    form_set_error('', t('The text you entered is more than 65,000 characters. Please shorten the text before re-submitting the form.'));
   }
 
   public function render() {
