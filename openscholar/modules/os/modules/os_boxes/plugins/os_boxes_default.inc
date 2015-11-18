@@ -122,6 +122,14 @@ abstract class os_boxes_default extends boxes_box {
   }
 
   /**
+   * Allow widgets to validate the form before processed by boxes.
+   *
+   * @param $values
+   *   The form values.
+   */
+  public function validate(&$values) {}
+
+  /**
    * Get the caching of the box.
    *
    * @param $bundle
