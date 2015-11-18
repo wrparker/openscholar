@@ -47,6 +47,14 @@
         border-top: 1px solid #4a4a4a!important;
         margin-left: 0!important;
     }
+    .front .block-boxes-os_boxes_tabs,
+    .front .block-boxes-os_sv_list_box,
+    .front .block.block-boxes-os_boxes_columns,
+    .front .block.block-boxes-os_slideshow_box #layout_16_9_side,
+    .front .block.block-boxes-os_slideshow_box #layout_16_9_overlay,
+    .front .block.block-boxes-os_slideshow_box #layout_16_9_below {
+        width: 100%;
+    }
 }
 /*--------------------------------------------------------*/
 
