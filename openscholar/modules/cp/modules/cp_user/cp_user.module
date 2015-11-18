@@ -19,6 +19,7 @@ function cp_user_menu_alter(&$items) {
   // Overriding admin theme callback for role and permission edit page.
   $items['group/%/%/admin/role/%/edit']['theme callback'] = 'cp_theme_name';
   $items['group/%/%/admin/permission/%/edit']['theme callback'] = 'cp_theme_name';
+  $items['group/%/%/admin/roles']['theme callback'] = 'cp_theme_name';
 }
 
 /**
