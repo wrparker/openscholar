@@ -28,7 +28,7 @@ Drupal.behaviors.tabs = {
         select = $('#edit-new').get(0),
         desc = '',
         title = '',
-        matches = (/ \(([^\)]*)\)/).exec(select.options[select.selectedIndex].innerHTML);
+        matches = (/ \(([^\)]*)\)/).exec(select.options[select.selectedIndex].innerText);
       
       if (matches != null) {
         title = matches[1];
