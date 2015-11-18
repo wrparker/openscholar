@@ -81,6 +81,7 @@
 	      feed.setNumEntries(notify_settings.max);
 	      feed.load(function (result) {
 	        if (result.error) {
+            element.hide();
 	          return;
 	        }
 	          
@@ -117,6 +118,9 @@
         	    hopscotch.startTour(tour);
               })
 	        }
+          else {
+            element.hide();
+          }
 	      });
     	},
   	  }
