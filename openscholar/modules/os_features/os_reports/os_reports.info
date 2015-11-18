@@ -1,3 +1,6 @@
 name = OS Reports
 description = Get site and user data on current OpenScholar installation
 core = 7.x
+dependencies[] = restful
+dependencies[] = os
+dependencies[] = vsite
