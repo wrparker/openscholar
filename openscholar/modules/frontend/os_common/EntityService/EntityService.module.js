@@ -495,6 +495,11 @@
               });
             }
           }
+        }, function (response) {
+          // there was an error. Probably an access thing
+          for (var i = 0; i < keys.length; i++) {
+            defers[key].resolve(angular.copy(cache[key].data));
+          }
         })
       }
 

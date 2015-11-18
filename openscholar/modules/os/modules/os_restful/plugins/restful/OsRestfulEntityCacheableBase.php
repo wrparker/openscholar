@@ -89,6 +89,7 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
     if (in_array('changed', $info['schema_fields_sql']['base table'])) {
       $query->propertyCondition('changed', (int)$timestamp, '>');
     }
+
     return $query;
   }
 
