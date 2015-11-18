@@ -9,7 +9,7 @@ projects[ossap][download][url] = "git://github.com/openscholar/ossap.git"
 projects[integrated_support][type] = module
 projects[integrated_support][download][type] = git
 projects[integrated_support][download][branch] = master
-projects[integrated_support][download][url] = "http://github.com/openscholar/integrated_support.git"
+projects[integrated_support][download][url] = "https://github.com/openscholar/integrated_support.git"
 
 ; Libraries.
 libraries[tapir][type] = "libraries"
