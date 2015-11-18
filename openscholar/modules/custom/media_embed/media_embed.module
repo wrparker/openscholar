@@ -185,8 +185,8 @@ function media_embed_file_default_types() {
   $types['html'] = (object) array(
     'api_version' => 1,
     'type' => 'html',
-    'label' => t('HTML'),
-    'description' => t('An <em>HTML</em> file is a block of HTML code that contains an iframe, object, embed or script tag.'),
+    'label' => t('Embedded Media'),
+    'description' => t('An <em>Embedded Media</em> file is a block of HTML code that contains an iframe, object, embed or script tag.'),
     'mimetypes' => array(
       'html/embed',
     ),

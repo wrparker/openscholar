@@ -857,3 +857,13 @@ function os_files_update_7021() {
 
   return t('Changed @n files to use the Icon bundle.');
 }
+
+/*
+ * Changes name of Description field to Image Caption for images.
+ */
+function os_files_update_7022() {
+  $instance = field_info_instance('file', 'os_file_description', 'image');
+  $instance['label'] = 'Image Caption';
+  field_update_instance($instance);
+  return t('Label for File Image Description field changed to Image Caption');
+}

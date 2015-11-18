@@ -91,7 +91,28 @@ div[file-edit] h4,
   padding: 5px;
 }
 
-[file-edit] input.error {
+[file-edit] input.error,
+[file-edit] .ng-invalid {
   border-color: red !important;
   outline-color: red !important;
+}
+
+#fe-file-name + div {
+  position: relative;
+}
+
+#fe-file-name + div::before {
+  content: "Label can not be empty!";
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: red;
+  color: white;
+  border: 1px solid darkred;
+  padding: 3px;
+  display: none;
+}
+
+#fe-file-name.error + div::before {
+  display: block;
 }
