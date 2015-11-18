@@ -38,7 +38,7 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     $request = $this->getRequest();
     if (isset($request['lastupdate'])) {
       $fields = $this->getPublicFields();
-      $fields['content_last_updated'] = array("property" => 'last_changed');
+      $fields['content_last_updated'] = array("property" => 'latest_change');
       $this->setPublicFields($fields);
       $this->latestUpdate = $request['lastupdate'];
       if (isset($request['exclude'])) {
@@ -67,7 +67,7 @@ class OsRestfulSiteReport extends \OsRestfulReports {
 
     $query->innerJoin('node', 'n', 'purl.id = n.nid AND provider = :provider', array(':provider' => 'spaces_og'));
     $query->addField('n', 'title');
-    if (isset($fields['owner_email'])) {
+    if (isset($fields['owner_email']) || in_array('mail', $this->keywordFields) || in_array('name', $this->keywordFields)) {
       $query->addField('u', 'mail', 'owner_email');
       $query->innerJoin('users', 'u', 'u.uid = n.uid');
     }

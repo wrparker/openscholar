@@ -83,6 +83,10 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
         $this->keywordString = $request['keyword'];
         $this->keywordFields = $request['kfields'];
       }
+      // set range if it's passed (even if it's 0)
+      if (isset($request['range'])) {
+        $this->setRange($request['range']);
+      }
       $output = $this->{$function}();
     }
 
@@ -117,7 +121,7 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
     parent::queryForListFilter($query);
 
     // add in keyword search on requested fields
-    if ($this->keywordString) {
+    if ($this->keywordString && $this->keywordFields) {
       $keyword_or = db_or();
       foreach ($this->keywordFields as $field) {
         $keyword_or->condition($field, '%' . db_like($this->keywordString) . '%', "LIKE");
@@ -147,5 +151,15 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
    */
   public function throwException($message) {
     throw new \RestfulBadRequestException($message);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function queryForListPagination(\SelectQuery $query) {
+    list($offset, $range) = $this->parseRequestForListPagination();
+    if ($range) {
+      $query->range($offset, $range);
+    }
   }
 }

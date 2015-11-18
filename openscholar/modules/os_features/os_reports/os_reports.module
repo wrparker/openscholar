@@ -47,30 +47,22 @@ function os_reports_menu() {
 }
 
 /**
- * Implements hook_preprocess_page().
- *
- * Adds the user_panel angular library.
- */
-function admin_panel_preprocess_page(&$vars) {
-  if (user_is_logged_in() && variable_get('admin_panel_enabled', FALSE)) {
-  }
-}
-
-/**
  * OS Site report form
  */
 function os_reports_site_form($form, &$form_state) {
-   os_common_angular_app('ReportModule');
-   drupal_add_css(drupal_get_path('module', 'os_reports') . '/os_reports.css');
+//   os_common_angular_app('ReportModule');
+//   drupal_add_library('os_common', 'EntityService');
+//   drupal_add_library('os_common', 'JSPager');
+//   drupal_add_library('os_common', 'auth');
+//   drupal_add_js(drupal_get_path('module', 'os_reports').'/js/ReportModule.js');
+  drupal_add_css(drupal_get_path('module', 'os_reports') . '/os_reports.css');
 
-  $form['#prefix'] = '<div ng-controller="SiteReport as query" ng-app="ReportModule">';
+  $form['#prefix'] = '<div ng-controller="SiteReport" ng-app="ReportModule">';
   $form['#suffix'] = '</div>';
-  
   $form['keyword_set'] = array(
     '#type' => 'fieldset',
     '#title' => 'Keyword search'
   );
-  
   $form['keyword_set']['keyword'] = array(
     '#prefix' => '<div class="container-inline">',
     '#suffix' => '</div>',
@@ -80,7 +72,6 @@ function os_reports_site_form($form, &$form_state) {
       'ng-model' => 'query.keyword',
     ),
   );
-  
   $form['keyword_set']['kfields'] = array(
     '#prefix' => '<div class="container-inline">',
     '#suffix' => '</div>',
@@ -90,11 +81,11 @@ function os_reports_site_form($form, &$form_state) {
       'mail' => 'email',
       'name' => 'username',
       'title' => 'site name',
-      '#default_value' => 'mail', 
     ),
     '#attributes' => array(
       'ng-model' => 'query.kfields',
     ),
+    '#default_value' => array('mail'),
   );
   $form['columns'] = array(
     '#prefix' => '<div class="container-inline">',
@@ -121,10 +112,14 @@ function os_reports_site_form($form, &$form_state) {
       'ng-model' => 'query.lastupdate',
     ),
   );
-  $form['submit'] = array(
-    '#markup' => '<a href="#" ng-click="update(query)">Submit</a>',
+  $form['buttons'] = array(
+    '#prefix' => '<div class="buttons">',
+    '#suffix' => '</div>',
   );
-  $form['download'] = array(
+  $form['buttons']['submit'] = array(
+    '#markup' => '<a class="button" ng-click="update(query)">Submit</a>',
+  );
+  $form['buttons']['download'] = array(
     '#type' => 'submit',
     '#value' => 'Download CSV of Full Report',
   );
@@ -137,17 +132,44 @@ function os_reports_site_form($form, &$form_state) {
 
 function os_reports_site_form_submit($form, &$form_state) {
   global $base_url;
-  drupal_add_http_header("Cache-Control", "public");
-  drupal_add_http_header("Content-Type", "application/octet-stream");
-  drupal_add_http_header("Cache-Control", "o-store, no-cache, must-revalidate");
-  drupal_add_http_header("Cache-Control", "post-check=0, pre-check=0");
-
-  $filename = str_replace("http://", "", $base_url) . "-site-report.csv";
-  
-  drupal_add_http_header("Content-Disposition", "attachment; filename=\"$filename\";" );
-  drupal_add_http_header("Content-Transfer-Encoding", "binary");
   
   //make restful call to get data
-    
-  drupal_exit();
+  $handler = restful_get_restful_handler('report_sites');
+  $params = $form_state['values'];
+  foreach ($params as $key => $value) {
+    if (is_array($value)) {
+      foreach ($value as $index => $selected) {
+        if ($selected === 0) {
+          unset($value[$index]);
+        }
+      }
+      $params[$key] = array_keys($value);
+    }
+    elseif ($value == "") {
+      unset($params[$key]);
+    }
+  }
+  $params['range'] = 0;
+  $results = $handler->get('attributes', $params);
+
+  if ($results) {
+    $filename = str_replace("http://", "", $base_url) . "-site-report.csv";
+
+    drupal_add_http_header("Cache-Control", "public");
+    drupal_add_http_header("Content-Type", "application/octet-stream");
+    drupal_add_http_header("Cache-Control", "o-store, no-cache, must-revalidate");
+    drupal_add_http_header("Cache-Control", "post-check=0, pre-check=0");
+    drupal_add_http_header("Content-Disposition", "attachment; filename=\"$filename\";" );
+    drupal_add_http_header("Content-Transfer-Encoding", "binary");
+
+    $headers = array_keys($results[0]);
+    print implode($headers, ", ") . "\n";
+    foreach ($results as $row) {
+      print implode($row, ", ") . "\n";
+    }
+    drupal_exit();
+  }
+  else {
+    drupal_set_message('No results in report.', 'warning');
+  }
 }
