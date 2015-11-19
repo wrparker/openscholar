@@ -499,16 +499,16 @@ function os_basetheme_field__image($vars) {
     $output .= drupal_render($item);
 
     // Captions
-    if (isset($item['#item']['os_file_description'][LANGUAGE_NONE][0]['value']) && !empty(strip_tags($item['#item']['os_file_description'][LANGUAGE_NONE][0]['value']))) {
+    if (isset($item['#item']['os_file_description'][LANGUAGE_NONE][0]['value'])) {
       // Ouch this is ugly, please tell me how to get the image style width?
       $styles = '';
       $width = 'auto';
       preg_match('/< *img[^>]*width *= *["\']?([^"\']*)/i', $item['#children'], $matches);
       $width = $matches[1] . 'px';
       $styles = 'style="width:' . $width . ';"';
-
+      $image_caption = strip_tags($item['#item']['os_file_description'][LANGUAGE_NONE][0]['value']);
       if ($vars['field_view_mode'] == 'full') {
-        $output .= '<figcaption ' . $styles . '>' . strip_tags($item['#item']['os_file_description'][LANGUAGE_NONE][0]['value']) . '</figcaption>';
+        $output .= '<figcaption ' . $styles . '>' . $image_caption . '</figcaption>';
       }
     }
 

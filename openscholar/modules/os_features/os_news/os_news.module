@@ -143,7 +143,7 @@ function os_news_media_token_to_markup_alter(&$element, &$tag_info, &$settings) 
   $output = '';
   $output .= $img_markup;
   // If image description is present, then figcaption tag will be displayed.
-  if(isset($element['content']['os_file_description'][0]['#markup']) && !empty(strip_tags($element['content']['os_file_description'][0]['#markup']))) {
+  if(isset($element['content']['os_file_description'][0]['#markup'])) {
     $output .= '<figcaption>';
     $output .= strip_tags($element['content']['os_file_description'][0]['#markup']);
     $output .= '</figcaption>';
