@@ -33,7 +33,7 @@
         $http({method: 'get', url: url}).
           then(function(response) {
         	if(typeof(response.data.data[0].og_user_node) == 'undefined') {
-        	  $scope.site_data = {};
+        	  $scope.site_data = [];
         	} else {
               $scope.site_data = response.data.data[0].og_user_node;
         	}
