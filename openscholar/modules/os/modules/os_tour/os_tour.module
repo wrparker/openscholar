@@ -109,10 +109,9 @@ function os_tour_form_os_settings_form_alter(&$form, &$form_state, $form_id) {
   );
 }
 
-function os_tour_get_tour_settings($u = false) {
-  if ($u) {
-    global $user;
-    $u = $user;
+function os_tour_get_tour_settings($user = false) {
+  if (!$user) {
+    $user = $GLOBALS['user'];
   }
 
   // Only continues if there are feeds to attempt to display from.

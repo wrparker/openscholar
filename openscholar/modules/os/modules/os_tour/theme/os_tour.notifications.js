@@ -62,7 +62,7 @@
 			      yOffset: -3,
 			      xOffset: -10,
 			      onShow: function() {
-			        notifications_count(count_element, num_remaining)
+			        osTour.notifications_count(count_element, num_remaining)
 			      }
 			    };
 			    return item;
@@ -123,7 +123,7 @@
 	      */
 		  notifications_read_update: function () {
 			    var settings = Drupal.settings.os_notifications;
-			    var url = '/os/tour/user/' + settings.uid + '/notifications_read';
+			    var url = window.location.origin + Drupal.settings.basePath + '/os/tour/user/' + settings.uid + '/notifications_read';
 			    $.get(url, function(data) {
 			      console.log(data);
 			    });
