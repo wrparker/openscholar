@@ -50,14 +50,14 @@ function os_reports_menu() {
  * OS Site report form
  */
 function os_reports_site_form($form, &$form_state) {
-//   os_common_angular_app('ReportModule');
-//   drupal_add_library('os_common', 'EntityService');
-//   drupal_add_library('os_common', 'JSPager');
-//   drupal_add_library('os_common', 'auth');
-//   drupal_add_js(drupal_get_path('module', 'os_reports').'/js/ReportModule.js');
+  os_common_angular_app('ReportModule');
+  drupal_add_library('os_common', 'EntityService');
+  drupal_add_library('os_common', 'JSPager');
+  drupal_add_library('os_common', 'auth');
+  drupal_add_js(drupal_get_path('module', 'os_reports').'/js/ReportModule.js');
   drupal_add_css(drupal_get_path('module', 'os_reports') . '/os_reports.css');
 
-  $form['#prefix'] = '<div ng-controller="SiteReport" ng-app="ReportModule">';
+  $form['#prefix'] = '<div ng-controller="SiteReportQuery" ng-app="ReportModule">';
   $form['#suffix'] = '</div>';
   $form['keyword_set'] = array(
     '#type' => 'fieldset',
@@ -77,28 +77,51 @@ function os_reports_site_form($form, &$form_state) {
     '#suffix' => '</div>',
     '#type' => 'checkboxes',
     '#title' => 'Search in fields',
-    '#options' => array(
-      'mail' => 'email',
-      'name' => 'username',
-      'title' => 'site name',
-    ),
+  );
+  $form['keyword_set']['kfields']['mail'] = array(
+    '#value' => 'mail',
+    '#title' => 'email',
+    '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'query.kfields',
+      'ng-model' => 'query.kfields.mail',
     ),
-    '#default_value' => array('mail'),
+  );
+  $form['keyword_set']['kfields']['name'] = array(
+    '#value' => 'name',
+    '#title' => 'username',
+    '#type' => 'checkbox',
+    '#attributes' => array(
+      'ng-model' => 'query.kfields.name',
+    ),
+  );
+  $form['keyword_set']['kfields']['title'] = array(
+    '#value' => 'title',
+    '#title' => 'site name',
+    '#type' => 'checkbox',
+    '#attributes' => array(
+      'ng-model' => 'query.kfields.title',
+    ),
   );
   $form['columns'] = array(
     '#prefix' => '<div class="container-inline">',
     '#suffix' => '</div>',
     '#type' => 'checkboxes',
     '#title' => 'Optional columns',
-    '#options' => array(
-      'owner_email' => 'Owner email',
-      'privacy' => 'Privacy level',
-//       'theme' => 'Custom theme',
-    ),
+  );
+  $form['columns']['owner_email'] = array(
+    '#value' => 'owner_email',
+    '#title' => 'Owner email',
+    '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'query.columns',
+      'ng-model' => 'query.kfields.owner_email',
+    ),
+  );
+  $form['columns']['privacy'] = array(
+    '#value' => 'privacy',
+    '#title' => 'Privacy level',
+    '#type' => 'checkbox',
+    '#attributes' => array(
+      'ng-model' => 'query.kfields.privacy',
     ),
   );
   $form['lastupdate'] = array(
@@ -124,7 +147,7 @@ function os_reports_site_form($form, &$form_state) {
     '#value' => 'Download CSV of Full Report',
   );
   $form['results'] = array(
-    '#markup' => '<div ng-model="query.results"></div>',
+    '#markup' => '<table><thead><tr><th ng-repeat="header in headers">{{ header }}</th></tr></thead><tbody><tr ng-repeat="row in rows"><td ng-repeat="header in headers">{{ row[header] }}</td></tr></tbody></table>',
   );
 
   return $form;
@@ -136,10 +159,12 @@ function os_reports_site_form_submit($form, &$form_state) {
   //make restful call to get data
   $handler = restful_get_restful_handler('report_sites');
   $params = $form_state['values'];
+
+  // clean up submitted form values to send as parameters for rest call
   foreach ($params as $key => $value) {
     if (is_array($value)) {
       foreach ($value as $index => $selected) {
-        if ($selected === 0) {
+        if ($selected === 0|| is_int($index)) {
           unset($value[$index]);
         }
       }
