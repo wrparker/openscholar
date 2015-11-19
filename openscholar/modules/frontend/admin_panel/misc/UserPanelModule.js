@@ -75,7 +75,6 @@
   		  count_element = angular.element('<span class="slate alert" ng-alert=></span>');
   		  // @TODO: Add support for multiple feeds.
 	      var feed = new google.feeds.Feed(notify_settings.url);
-	      var items = [];
 	      var link = element.find('a')[0];
 	      
 	      feed.setNumEntries(notify_settings.max);
@@ -84,16 +83,23 @@
             element.hide();
 	          return;
 	        }
+
+          var items = [],
+            oldItems = [];
 	          
 	        for (var i = 0; i < result.feed.entries.length; i++) {
 	          var num_remaining = (result.feed.entries.length - i);
 	          var entry = result.feed.entries[i];
+            var item = osTour.notifications_item(entry, num_remaining, count_element, link);
 	          if (osTour.notifications_is_new(entry)) {
-	            var item = osTour.notifications_item(entry, num_remaining, count_element, link);
 	            items.push(item);
 	          }
+            else {
+              oldItems.push(item);
+            }
 	        }
 
+          var tour = {};
 	        // If there are new items
 	        if (items.length) {
 	          // Sets up the DOM elements.
@@ -102,7 +108,7 @@
 	            //$('#os-tour-notifications-menu-link').slideDown('slow');
 	          
 	          // Sets up the tour object with the loaded feed item steps.
-	          var tour = {
+	          tour = {
 	            showPrevButton: true,
 	            scrollTopMargin: 100,
 	            id: "os-tour-notifications",
@@ -112,18 +118,25 @@
 	              osTour.notifications_read_update();
 	            }
 	          };
-
-	          element.find('a').bind('click', function(e) {
-        	    e.preventDefault();
-        	    hopscotch.startTour(tour);
-              })
 	        }
           else {
-            element.hide();
+            oldItems.reverse();
+
+            tour = {
+              showPrevButton: true,
+              scrollTopMargin: 100,
+              id: "os-tour-notifications",
+              steps: oldItems
+            };
           }
+
+          element.find('a').bind('click', function(e) {
+            e.preventDefault();
+            hopscotch.startTour(tour);
+          });
 	      });
     	},
-  	  }
+    }
     }).directive('rightMenuToggle', function() {
         return {
             link: function(scope, element, attrs) {
