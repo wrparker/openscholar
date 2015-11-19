@@ -150,17 +150,29 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['filters']['current']['id'] = 'current';
   $handler->display->display_options['filters']['current']['table'] = 'spaces';
   $handler->display->display_options['filters']['current']['field'] = 'current';
-  /* Filter criterion: File: Name */
-  $handler->display->display_options['filters']['filename']['id'] = 'filename';
-  $handler->display->display_options['filters']['filename']['table'] = 'file_managed';
-  $handler->display->display_options['filters']['filename']['field'] = 'filename';
-  $handler->display->display_options['filters']['filename']['operator'] = 'contains';
-  $handler->display->display_options['filters']['filename']['group'] = 1;
-  $handler->display->display_options['filters']['filename']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['filename']['expose']['operator_id'] = 'filename_op';
-  $handler->display->display_options['filters']['filename']['expose']['label'] = 'Name';
-  $handler->display->display_options['filters']['filename']['expose']['operator'] = 'filename_op';
-  $handler->display->display_options['filters']['filename']['expose']['identifier'] = 'filename';
+  $handler->display->display_options['filters']['current']['group'] = 1;
+  /* Filter criterion: File: File name or title */
+  $handler->display->display_options['filters']['file_name_title']['id'] = 'file_name_title';
+  $handler->display->display_options['filters']['file_name_title']['table'] = 'file_managed';
+  $handler->display->display_options['filters']['file_name_title']['field'] = 'file_name_title';
+  $handler->display->display_options['filters']['file_name_title']['value'] = 'File name or title';
+  $handler->display->display_options['filters']['file_name_title']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['file_name_title']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['file_name_title']['expose']['label'] = 'File name or title';
+  $handler->display->display_options['filters']['file_name_title']['expose']['operator'] = 'file_name_title_op';
+  $handler->display->display_options['filters']['file_name_title']['expose']['identifier'] = 'file_name_title';
+  $handler->display->display_options['filters']['file_name_title']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    11 => 0,
+    21 => 0,
+    26 => 0,
+    31 => 0,
+    16 => 0,
+    36 => 0,
+    41 => 0,
+  );
+
   /* Filter criterion: File: Schema type */
   $handler->display->display_options['filters']['schema_type']['id'] = 'schema_type';
   $handler->display->display_options['filters']['schema_type']['table'] = 'file_managed';
