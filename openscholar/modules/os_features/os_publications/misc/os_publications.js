@@ -95,6 +95,8 @@ Drupal.behaviors.osPublications = {
    */
   Drupal.behaviors.stipTagsFromTitleOnPaste = {
     attach: function () {
+      Drupal.textPasted = false;
+
       tinyMCE.onAddEditor.add(function(mgr, editor) {
 
         if (editor.id != 'edit-title-field-und-0-value') {
@@ -107,7 +109,20 @@ Drupal.behaviors.osPublications = {
             return;
           }
 
-          // todo: check the value and strip it from tags.
+          // A text was pasted to the wysiwyg. Notify other events.
+          Drupal.textPasted = true;
+        });
+
+        editor.onChange.add(function(ed, l) {
+          if (!Drupal.textPasted) {
+            return;
+          }
+
+          // A text was pasted. Trim non-allowed tags from the editor.
+
+
+          // Set back the false.
+          Drupal.textPasted = false;
         });
       });
     }
