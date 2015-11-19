@@ -90,4 +90,27 @@ Drupal.behaviors.osPublications = {
     }
   };
 
+  /**
+   * Override pathauto.js implementation to change summaries of the path field.
+   */
+  Drupal.behaviors.stipTagsFromTitleOnPaste = {
+    attach: function () {
+      tinyMCE.onAddEditor.add(function(mgr, editor) {
+
+        if (editor.id != 'edit-title-field-und-0-value') {
+          return;
+        }
+
+        editor.onKeyDown.add(function(ed, event) {
+
+          if (!(event.keyCode == 86 && event.metaKey)) {
+            return;
+          }
+
+          // todo: check the value and strip it from tags.
+        });
+      });
+    }
+  };
+
 })(jQuery);
