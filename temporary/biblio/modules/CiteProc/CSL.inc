@@ -301,6 +301,7 @@ class csl_format extends csl_rendering_element {
           $text = drupal_strtolower($text);
           break;
         case 'capitalize-all':
+        case 'title':
           $text = mb_convert_case($text, MB_CASE_TITLE);
           $text = $this->handleCapitalizeCaseConversion($text);
           break;
@@ -861,6 +862,7 @@ class csl_names extends csl_format {
       $this->delimiter = (isset($mode_delimiter)) ? $mode_delimiter : (isset($style_delimiter) ? $style_delimiter : '');
     }
 
+    $macro = '';
     $variables  = explode(' ', $this->variable);
     foreach ($variables as $var) {
       list($contributor, $category) = explode(':', $var);
@@ -886,26 +888,44 @@ class csl_names extends csl_format {
               }
             }
           }
+          elseif ($element instanceof csl_text) {
+            $vars = explode(' ', $element->variable);
+            foreach ($vars as $var) {
+              list($contributor, $category) = explode(':', $var);
+              if (!empty($contributor) && $this->_get_category($data->{$contributor}, $category)) {
+                $matches++;
+                $macro = $element;
+                $variables = array();
+                break 2;
+              }
+            }
+          }
         }
       }
     }
 
-    foreach ($variables as $var) {
-      $text = '';
-      list($contributor, $category) = explode(':', $var);
-      if (!empty($contributor) && $authors = $this->_get_category($data->{$contributor}, $category)) {
-        foreach ($this->elements as $element) {
-          if (is_a($element, 'csl_label')) {
-            $data->{$var}['variable'] = $var;
-          }
-          $text .= $element->render($authors, $mode);
-          // String replace the weird spacing with " ,"
-          $text = str_replace(" ,", ",", $text);
-          if (!$element->suffix) {
-            $text = rtrim($text);
+    if (!empty($variables)) {
+      foreach ($variables as $var) {
+        $text = '';
+        list($contributor, $category) = explode(':', $var);
+        if (!empty($contributor) && $authors = $this->_get_category($data->{$contributor}, $category)) {
+          foreach ($this->elements as $element) {
+            if (is_a($element, 'csl_label')) {
+              $data->{$var}['variable'] = $var;
+            }
+            $text .= $element->render($authors, $mode);
+            // String replace the weird spacing with " ,"
+            $text = str_replace(" ,", ",", $text);
+            if (!$element->suffix) {
+              $text = rtrim($text);
+            }
           }
         }
+        if (!empty($text)) $variable_parts[] = $text;
       }
+    }
+    elseif ($macro) {
+      $text = $macro->render($data, $mode);
       if (!empty($text)) $variable_parts[] = $text;
     }
 
@@ -1252,6 +1272,8 @@ class csl_label extends csl_format {
         elseif (count($data) > 1) {
           $plural = 'multiple';
         }
+      default:
+          $plural = 'single';
     }
     if (is_array($data) && isset($data['variable'])) {
       $text = $this->citeproc->get_locale('term', $data['variable'], $form, $plural);
