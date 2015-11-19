@@ -1448,6 +1448,7 @@ function os_publications_update_7038() {
     'apsa',
     'asa',
     'chicago-author-date',
+    'chicago-fullnote-bibliography',
     'cse',
     'harvard-chicago-author-date',
     'harvard1',
