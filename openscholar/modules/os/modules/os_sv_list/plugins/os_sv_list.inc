@@ -187,7 +187,7 @@ class os_sv_list extends os_boxes_default {
       '#suffix' => '</div>',
       '#attached' => array(
         'js' => array(
-          array('data' => array('more_link_defaults' => $this->_more_link_defaults(),),'type' => 'setting',)
+          array('data' => array('more_link_defaults' => $this->_more_link_defaults()),'type' => 'setting'),
         ),
       ),
     );
