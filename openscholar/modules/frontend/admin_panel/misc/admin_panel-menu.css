@@ -207,6 +207,7 @@ body {
 }
 #rightMenuSlide {
     top: 4px;
+        z-index: 20;
 }
 .topRight_Menu {
     position: fixed;
