@@ -3,7 +3,7 @@
 	<div ng-repeat="(key, own) in [true,false]" ng-init="currentPage[key] = 0">
 		<h3 ng-show="own && (site_data | filter:{owner: own}:strict).length" class="bottom_margin">My Sites</h3>
 		<h3 ng-show="!own && (site_data | filter:{owner: own}:strict).length" class="bottom_margin">Other Sites</h3>
-		<div ng-repeat="(key, site) in filtered = (site_data | filter:{owner: own}:strict) | limitTo: pageSize * (currentPage[key] + 1) | limitTo: pageSize * -1  " class="site-list">
+		<div ng-repeat="(key, site) in filtered = (site_data | filter:{owner: own}:strict) | limitTo: pageSize: pageSize * currentPage[key] " class="site-list">
 			<ul class="user-sites">
 				<li class="site-name"><a href="/node/{{ site.id }}" class="text_link">{{ site.title }}</a></li>
 				<li class="button-add"><a ng-show="site.subsite_access" href="/site/register?parent={{ site.id }}" class="btton add">Add subsite</a></li>
