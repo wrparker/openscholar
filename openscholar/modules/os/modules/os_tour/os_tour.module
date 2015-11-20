@@ -58,6 +58,7 @@ function os_tour_library() {
   $os_tour_path = drupal_get_path('module', 'os_tour');
   $libraries['os_tour'] = array(
     'title' => 'Os Tour',
+    'version' => '1.0',
     'js' => array(
       "{$os_tour_path}/theme/os_tour.notifications.js" => array(),
       array(

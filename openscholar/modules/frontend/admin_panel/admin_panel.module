@@ -52,6 +52,7 @@ function admin_panel_library() {
   // Includes resources needed to create the admin panel.
   $libs['admin_panel'] = array(
     'title' => 'Admin Panel libraries',
+    'version' => '0.0.1',
   );
 
   $perms = isset($perm[$user->uid]) ? $perm[$user->uid] : array();
@@ -90,6 +91,7 @@ function admin_panel_library() {
     $path.'/misc/admin_panel-menu.css',
   );
 
+  $libs['user_panel']['version'] = '0.0.1';
   $libs['user_panel']['js'] = array(
     $path . '/misc/UserPanelModule.js' => array(),
     array(
