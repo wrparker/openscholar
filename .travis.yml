@@ -98,6 +98,7 @@ before_script:
 
   # Install a multi-tanent, development site.
   - cd www
+  - pwd
   - mkdir -p /tmp
   - mkdir -p /tmp/devel-mails
   - mkdir -p /tmp/screenshots
