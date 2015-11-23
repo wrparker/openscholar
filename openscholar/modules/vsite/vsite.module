@@ -248,35 +248,19 @@ function vsite_js_alter(&$javascript) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for cp_appearance_theme_picker_form
- *
- * Overrides 'Save for <SITENAME>'button text.
+ * Implements hook_form_alter()
  */
-function vsite_form_cp_appearance_theme_picker_form_alter(&$form, &$form_state, $form_id) {
+function vsite_form_alter(&$form, &$form_state, $form_id) {
   $space = spaces_get_space();
-  if ($space && !empty($form['#submit'])) {
-    // Overriding submit button text to allow '&' to be displayed correctly.
-    if (isset($form['actions']) && spaces_access_admin_perms(array('administer spaces'))) {
-      $form['actions']['submit']['#value'] = t('Save for !name', array(
-        '!name' => $space->title(),
-      ));
-    }
-  }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter() for spaces_features_form
- *
- * Overrides 'Save for <SITENAME>'button text.
- */
-function vsite_form_spaces_features_form_alter(&$form, &$form_state, $form_id) {
-  $space = spaces_get_space();
-  if ($space && !empty($form['#submit'])) {
-    // Overriding submit button text to allow '&' to be displayed correctly.
-    if (isset($form['actions']) && spaces_access_admin_perms(array('administer spaces'))) {
-      $form['actions']['submit']['#value'] = t('Save for !name', array(
-        '!name' => $space->title(),
-      ));
+  if ($space) {
+     if ($preset = $space->controllers->variable->get('spaces_preset_' . $space->type)) {
+       $preset = spaces_preset_load($preset, $space->type);
+       if (!empty($form['actions']['preset'])) {
+        $form['actions']['preset']['#value'] = t('Save to !title', array('!title' => $preset->title));
+       }
+       if (!empty($form['actions']['submit'])) {
+        $form['actions']['submit']['#value'] = t('Save for !name', array('!name' => $space->title()));
+       }
     }
   }
 }
@@ -2724,6 +2708,7 @@ function vsite_user_autocomplete($string = '') {
         ->condition('fn.field_first_name_value', db_like($string) . '%', 'LIKE')
         ->condition('ln.field_last_name_value', db_like($string) . '%', 'LIKE')
     );
+    $query->condition('u.status', 1);
     $query->fields('u', array('name'));
     // CONCAT the display, if there is no last name entered, show the username/email only, if there is a last name, show first/last/email.
     $query->addExpression("IF(ln.field_last_name_value = '' OR ln.field_last_name_value IS NULL, CONCAT(u.name, ' (', u.mail , ') '), CONCAT(IFNULL(fn.field_first_name_value,''), ' ', IFNULL(ln.field_last_name_value,''), ' (',u.name,', ', u.mail , ') '))", 'myname');
@@ -3492,16 +3477,6 @@ function vsite_redirect_parse_url_alter(&$parsed, $original_url) {
  * form_state in hook_cp_settings().
  */
 function vsite_form_cp_settings_form_alter(&$form, &$form_state, $form_id) {
-  $space = spaces_get_space();
-  if ($space && !empty($form['#submit'])) {
-    // Overriding submit button text to allow '&' to be displayed correctly.
-    if (isset($form['actions']) && spaces_access_admin_perms(array('administer spaces'))) {
-      $form['actions']['submit']['#value'] = t('Save for !name', array(
-        '!name' => $space->title(),
-      ));
-    }
-  }
-
   // Only continues if we have a purl (in order to save the favicon properly).
   if (!($purl = vsite_get_purl()) || !$vsite = vsite_get_vsite()) {
     return;
