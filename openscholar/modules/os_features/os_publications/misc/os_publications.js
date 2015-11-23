@@ -119,20 +119,21 @@ Drupal.behaviors.osPublications = {
           }
 
           // A text was pasted. Trim non-allowed tags from the editor.
-          // todo: fix.
-          var message = strip_tags(content, '<i><sub><sup>');
-          console.log(message);
+          editor.setContent(strip_tags(content, '<i><sub><sup>'));
 
           // Set back the false.
           Drupal.textPasted = false;
         });
       });
 
+      // Stripping text from tags. Taken from phpjs library.
       function strip_tags(input, allowed) {
         allowed = (((allowed || '') + '')
           .toLowerCase()
           .match(/<[a-z][a-z0-9]*>/g) || [])
-          .join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+          .join('');
+        // making sure the allowed arg is a string containing only tags in
+        // lowercase (<a><b><c>).
         var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
         return input.content.replace(commentsAndPhpTags, '').replace(tags, function($0, $1) {
           return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
