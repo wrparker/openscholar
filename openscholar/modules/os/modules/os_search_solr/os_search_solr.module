@@ -21,7 +21,7 @@ function os_search_solr_boxes_plugins() {
 
   $plugins['os_search_solr_search_box'] = array(
     'title' => t('Search box'),
-    'tags' => array('bar'),
+    'tags' => array('Content'),
     'handler' => array(
       'class' => 'os_search_solr_search_box',
       'file' => 'os_search_solr_search_box.inc',

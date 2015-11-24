@@ -19,11 +19,6 @@ class os_search_solr_search_box extends os_boxes_default {
   public function options_defaults() {
     $options = parent::options_defaults();
 
-    $options['num_results'] = 5;
-    $options['mlt_type_filters'] = array();
-    $options['results_from_type'] = TRUE;
-    $options['mlt_fl'] = array('label');
-
     return $options;
   }
 
@@ -38,16 +33,19 @@ class os_search_solr_search_box extends os_boxes_default {
   }
 
   /**
-   * Implements boxes_content::render().
-   *
-   * @see apachesolr_search_block_view()
+   * {@inheritdoc}
    */
   public function render() {
+    $return = parent::render();
+
     if (module_exists('vsite') && !vsite_get_vsite()) {
-      return array('delta' => $this->delta);
+      return $return;
     }
 
-    return drupal_get_form('search_block_form');
+    $form = drupal_get_form('search_block_form');
+    $return['content'] = render($form);
+
+    return $return;
   }
 
 }
