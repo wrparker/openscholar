@@ -17,9 +17,11 @@ class os_search_solr_search_box extends os_boxes_default {
    * Implements of boxes_content::options_defaults().
    */
   public function options_defaults() {
-    $options = parent::options_defaults();
-
-    return $options;
+    return parent::options_defaults() + array(
+      'bundle' => array(),
+      'terms' => array(),
+      'sort' => array(),
+    );
   }
 
   /**
@@ -28,6 +30,44 @@ class os_search_solr_search_box extends os_boxes_default {
   public function options_form(&$form_state) {
     $form = parent::options_form($form_state);
     $this->options = ($this->options) ? array_merge($this->options_defaults(), $this->options) : $this->options_defaults();
+
+    $bundle = $this->options['bundle'];
+    $bundles = os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP));
+    // Use first bundle of the list in case none was selected before.
+    if (!$bundle) {
+      $bundles_keys = array_keys($bundles);
+      $bundle = reset($bundles_keys);
+    }
+
+    $form['bundle'] = array(
+      '#type' => 'select',
+      '#description' => t('Which bundle would you like to use.'),
+      '#title' => t('Content type'),
+      '#options' => $bundles,
+      '#required' => TRUE,
+      '#default_value' => $bundle,
+      '#ajax' => array(
+        'callback' => 'os_boxes_facetapi_vocabulary_ajax_callback',
+        'wrapper' => 'vocab-wrapper',
+      ),
+    );
+
+    $form['terms'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Filter by: Terms'),
+      '#options' => array('a' => 'A'),
+      '#default_value' => $this->options['terms'],
+    );
+
+    $form['sort'] = array(
+      '#type' => 'select',
+      '#title' => t('Sort by'),
+      '#options' => array(
+        'asc' => t('Ascending'),
+        'desc' => t('Descending'),
+      ),
+      '#default_value' => $this->options['sort'],
+    );
 
     return $form;
   }
@@ -42,7 +82,7 @@ class os_search_solr_search_box extends os_boxes_default {
       return $return;
     }
 
-    $form = drupal_get_form('search_block_form');
+    $form = drupal_get_form('search_block_form', array('widget_options' => $this->options));
     $return['content'] = render($form);
 
     return $return;
