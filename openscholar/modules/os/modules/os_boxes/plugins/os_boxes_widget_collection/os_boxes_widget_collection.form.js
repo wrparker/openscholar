@@ -27,16 +27,11 @@ Drupal.behaviors.tabs = {
         count = $('#edit-count'),
         select = $('#edit-new').get(0),
         desc = '',
-        title = '',
-        matches = (/ \(([^\)]*)\)/).exec(select.options[select.selectedIndex].innerText);
-      
-      if (matches != null) {
-        title = matches[1];
-        desc = matches.input.replace(matches[0], '');
-      }
-      else {
-        desc = title = select.options[select.selectedIndex].innerText;
-      }
+        title = '';
+
+      // Obtaining widget title and description from Drupal.settings.os_boxes.widget_collection object.
+      var title = Drupal.settings.os_boxes.widget_collection[bid].title;
+      var desc = Drupal.settings.os_boxes.widget_collection[bid].info;
 
       count.val(parseInt(count.val())+1);
       id = 'widget-'+(new_id++);
