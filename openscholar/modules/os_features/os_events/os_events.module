@@ -1418,12 +1418,12 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   $form['state']['#access'] = FALSE;
 
   if (isset($form['#entity']->registration_id)) {
-  	$form['actions']['cancel'] = array(
+    $form['actions']['cancel'] = array(
       '#type' => 'submit',
       '#value' => t('Cancel'),
       '#submit' => array('cancel_button_destination_callback'),
       '#limit_validation_errors' => array(),
-  	);  	
+    );
   } else {
     $form['actions']['cancel']['#access'] = FALSE;
   }
