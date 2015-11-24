@@ -1269,3 +1269,7 @@ function os_search_solr_facet_time($timestamp, $gap) {
       return format_date($timestamp, 'custom', 'Y', 'UTC');
   }
 }
+
+function os_search_solr_vocabularies_switch($form, $form_state)  {
+  return $form['options']['terms'];
+}

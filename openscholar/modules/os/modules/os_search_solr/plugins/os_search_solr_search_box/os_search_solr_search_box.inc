@@ -20,7 +20,8 @@ class os_search_solr_search_box extends os_boxes_default {
     return parent::options_defaults() + array(
       'bundle' => array(),
       'terms' => array(),
-      'sort' => array(),
+      'vocab' => array(),
+      'sort' => '',
     );
   }
 
@@ -51,17 +52,50 @@ class os_search_solr_search_box extends os_boxes_default {
 
     ctools_include('taxonomy', 'os');
 
-    $form['terms'] = array(
+    $form['vocab'] = array(
       '#type' => 'select',
       '#title' => t('Filter by: vocab'),
-      '#default_value' => $this->options['terms'],
+      '#default_value' => $this->options['vocab'],
+      '#options' => array(
+        '-none-' => t('None'),
+      ),
+      '#ajax' => array(
+        'callback' => 'os_search_solr_vocabularies_switch',
+        'wrapper' => 'terms',
+      ),
     );
 
     $vocabularies = taxonomy_vocabulary_load_multiple(array_keys(os_get_vocabularies()));
 
     foreach ($vocabularies as $vocabulary) {
-      $form['terms']['#options'][$vocabulary->vid] = $vocabulary->name;
+      $form['vocab']['#options'][$vocabulary->vid] = $vocabulary->name;
     }
+
+    if (($this->options['vocab'] && $this->options['vocab'] != '-none-') || !empty($form_state['values']['vocab'])) {
+      if (!empty($form_state['values']['vocab'])) {
+        $vocab = $form_state['values']['vocab'];
+      }
+      else {
+        $vocab = $this->options['vocab'];
+      }
+
+      $terms = taxonomy_get_tree($vocab, 0, NULL, 1);
+      $taxonomies = array();
+      foreach ($terms as $term) {
+        $taxonomies[$term->tid] = $term->name;
+      }
+      $form['terms'] = array(
+        '#type' => 'checkboxes',
+        '#title' => t('Filter by: terms'),
+        '#options' => $taxonomies,
+        '#default_value' => $this->options['terms'],
+        '#perfix' => '<div id="terms">',
+        '#suffix' => '</div>',
+      );
+
+    }
+
+    dpm($form_state);
 
     $form['sort'] = array(
       '#type' => 'select',
