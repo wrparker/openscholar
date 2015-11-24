@@ -46,18 +46,22 @@ class os_search_solr_search_box extends os_boxes_default {
       '#options' => $bundles,
       '#required' => TRUE,
       '#default_value' => $bundle,
-      '#ajax' => array(
-        'callback' => 'os_boxes_facetapi_vocabulary_ajax_callback',
-        'wrapper' => 'vocab-wrapper',
-      ),
+      '#multiple' => TRUE,
     );
 
+    ctools_include('taxonomy', 'os');
+
     $form['terms'] = array(
-      '#type' => 'checkboxes',
-      '#title' => t('Filter by: Terms'),
-      '#options' => array('a' => 'A'),
+      '#type' => 'select',
+      '#title' => t('Filter by: vocab'),
       '#default_value' => $this->options['terms'],
     );
+
+    $vocabularies = taxonomy_vocabulary_load_multiple(array_keys(os_get_vocabularies()));
+
+    foreach ($vocabularies as $vocabulary) {
+      $form['terms']['#options'][$vocabulary->vid] = $vocabulary->name;
+    }
 
     $form['sort'] = array(
       '#type' => 'select',
