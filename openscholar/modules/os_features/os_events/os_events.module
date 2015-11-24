@@ -683,6 +683,10 @@ function os_events_modal_validate($form, &$form_state) {
     $email_query = new EntityFieldQuery();
     $email_query->entityCondition('entity_type', 'registration')->propertyCondition('anon_mail', $form_state['values']['anon_mail']);
 
+    if (isset($form['#entity']->registration_id)) {
+      $email_query->propertyCondition('registration_id', $form['#entity']->registration_id, '<>');
+    }
+
     if ($date) {
       $email_query->fieldCondition('field_repeating_event_date', 'value', $date);
     } //Flter to just this occurance
@@ -1413,8 +1417,18 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   //Don't show the state dropdown
   $form['state']['#access'] = FALSE;
 
-  $form['actions']['cancel']['#access'] = FALSE;
-  $form['actions']['submit']['#value'] = t('Signup');
+  if (isset($form['#entity']->registration_id)) {
+  	$form['actions']['cancel'] = array(
+      '#type' => 'submit',
+      '#value' => t('Cancel'),
+      '#submit' => array('cancel_button_destination_callback'),
+      '#limit_validation_errors' => array(),
+  	);  	
+  } else {
+    $form['actions']['cancel']['#access'] = FALSE;
+  }
+
+  $form['actions']['submit']['#value'] = isset($form['#entity']->registration_id) ? t('Save') : t('Signup');
 
   $form['event_register'] = array(
     '#type' => 'container',
@@ -1433,6 +1447,21 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
 
   $form['#validate'][] = 'os_events_modal_validate';
   $form['#submit'][] = 'os_events_modal_submit';
+}
+
+/**
+ * When clicking on cancel button in event registration edit page.
+ */
+function cancel_button_destination_callback($form, &$form_state) {
+  $destination = drupal_get_destination();
+  drupal_goto($destination);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_events_form_registration_delete_confirm_alter(&$form, &$form_state) {
+  drupal_set_title(t('Are you sure you want to delete registration for !name (@email)?', array('!name' => $form['registration']['#value']->field_full_name[LANGUAGE_NONE][0]['value'], '@email' => $form['registration']['#value']->anon_mail)));
 }
 
 /**
