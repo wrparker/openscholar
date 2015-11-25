@@ -118,13 +118,13 @@ function os_reports_site_form($form, &$form_state) {
       'ng-click' => "updateCheckedValues('kfields', 'name')"
     ),
   );
-  $form['keyword_set']['kfields']['title'] = array(
-    '#value' => 'title',
+  $form['keyword_set']['kfields']['n.title'] = array(
+    '#value' => 'n.title',
     '#title' => 'site name',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'query.kfields.title',
-      'ng-click' => "updateCheckedValues('kfields', 'title')"
+      'ng-model' => 'query.kfields.n.title',
+      'ng-click' => "updateCheckedValues('kfields', 'n.title')"
     ),
   );
    $form['lastupdate'] = array(
@@ -200,6 +200,7 @@ function os_reports_site_form_submit($form, &$form_state) {
       $params[$key] = $values;
     }
   }
+
   // make restful call to get data
   $results = $handler->post('attributes', $params);
 
