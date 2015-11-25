@@ -66,6 +66,8 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     $fields = $this->getPublicFields();
 
     $query->innerJoin('node', 'n', 'purl.id = n.nid AND provider = :provider', array(':provider' => 'spaces_og'));
+    $query->addField('so', 'value', 'custom_domain');
+    $query->leftJoin('spaces_overrides', 'so', "so.id = n.nid AND object_id = :object_id and so.value <> :value1 and so.value <> :value2 and so.object_type = 'variable'", array('object_id' => 'vsite_domain_name', 'value1' => 'N;', 'value2' => 's:0:"";'));
     $query->addField('n', 'title');
     if (isset($fields['owner_email']) || in_array('mail', $this->keywordFields) || in_array('name', $this->keywordFields)) {
       $query->addField('u', 'mail', 'owner_email');
@@ -104,7 +106,12 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       $new_row['content_last_updated'] = date('M j, Y h:ia', $row->latest_change);
     }
 
-    $new_row['site_url'] = $base_url . "/node/" . $new_row['site_url'];
+    if ($row->custom_domain) {
+      $new_row['site_url'] = "http://" . $row->custom_domain;
+    }
+    else {
+      $new_row['site_url'] = $base_url . "/" . $row->value;
+    }
 
     if (isset($new_row['privacy'])) {
       $privacy_values = array(

@@ -51,14 +51,36 @@ function os_reports_menu() {
  */
 function os_reports_site_form($form, &$form_state) {
   os_common_angular_app('ReportModule');
-  drupal_add_library('os_common', 'EntityService');
-  drupal_add_library('os_common', 'JSPager');
-  drupal_add_library('os_common', 'auth');
-  drupal_add_js(drupal_get_path('module', 'os_reports').'/js/ReportModule.js');
-  drupal_add_css(drupal_get_path('module', 'os_reports') . '/os_reports.css');
 
-  $form['#prefix'] = '<div ng-controller="SiteReportQuery" ng-app="ReportModule">';
-  $form['#suffix'] = '</div>';
+  $form['#attached'] = array(
+    'js' => array(
+      array(
+        'data' => array(
+          'osRestModulePath' => $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'os_reports'),
+          'restBasePath' => url('api'),
+        ),
+        'type' => 'setting',
+      ),
+      array (
+        'data' => drupal_get_path('module', 'os_reports').'/js/ReportModule.js',
+        'type' => 'file',
+      ),
+    ),
+    'css' => array(
+      drupal_get_path('module', 'os_reports') . '/os_reports.css',
+    ),
+    'library' => array(
+      array('os_common', 'EntityService'),
+      array('os_common', 'auth'),
+      array('os_common', 'angular-modal-service'),
+    )
+  );
+
+  $form['#attributes'] = array(
+    'ng-controller' => 'SiteReportQuery',
+    'ng-app' => 'ReportModule',
+    'name' => 'queryForm',
+  );
   $form['keyword_set'] = array(
     '#type' => 'fieldset',
     '#title' => 'Keyword search'
@@ -70,13 +92,12 @@ function os_reports_site_form($form, &$form_state) {
     '#title' => 'Keyword',
     '#attributes' => array(
       'ng-model' => 'query.keyword',
+      'ng-change' => "updateParam('keyword')"
     ),
   );
   $form['keyword_set']['kfields'] = array(
-    '#prefix' => '<div class="container-inline">',
+    '#prefix' => '<div class="container-inline"><label for="edit-kfields">Search in fields </label>',
     '#suffix' => '</div>',
-    '#type' => 'checkboxes',
-    '#title' => 'Search in fields',
   );
   $form['keyword_set']['kfields']['mail'] = array(
     '#value' => 'mail',
@@ -84,6 +105,7 @@ function os_reports_site_form($form, &$form_state) {
     '#type' => 'checkbox',
     '#attributes' => array(
       'ng-model' => 'query.kfields.mail',
+      'ng-click' => "updateCheckedValues('kfields', 'mail')"
     ),
   );
   $form['keyword_set']['kfields']['name'] = array(
@@ -92,6 +114,7 @@ function os_reports_site_form($form, &$form_state) {
     '#type' => 'checkbox',
     '#attributes' => array(
       'ng-model' => 'query.kfields.name',
+      'ng-click' => "updateCheckedValues('kfields', 'name')"
     ),
   );
   $form['keyword_set']['kfields']['title'] = array(
@@ -100,31 +123,10 @@ function os_reports_site_form($form, &$form_state) {
     '#type' => 'checkbox',
     '#attributes' => array(
       'ng-model' => 'query.kfields.title',
+      'ng-click' => "updateCheckedValues('kfields', 'title')"
     ),
   );
-  $form['columns'] = array(
-    '#prefix' => '<div class="container-inline">',
-    '#suffix' => '</div>',
-    '#type' => 'checkboxes',
-    '#title' => 'Optional columns',
-  );
-  $form['columns']['owner_email'] = array(
-    '#value' => 'owner_email',
-    '#title' => 'Owner email',
-    '#type' => 'checkbox',
-    '#attributes' => array(
-      'ng-model' => 'query.kfields.owner_email',
-    ),
-  );
-  $form['columns']['privacy'] = array(
-    '#value' => 'privacy',
-    '#title' => 'Privacy level',
-    '#type' => 'checkbox',
-    '#attributes' => array(
-      'ng-model' => 'query.kfields.privacy',
-    ),
-  );
-  $form['lastupdate'] = array(
+   $form['lastupdate'] = array(
     '#prefix' => '<div class="container-inline">',
     '#suffix' => '</div>',
     '#type' => 'textfield',
@@ -133,6 +135,29 @@ function os_reports_site_form($form, &$form_state) {
     '#description' => 'format: YYYYMMDD',
     '#attributes' => array(
       'ng-model' => 'query.lastupdate',
+      'ng-change' => "updateParam('lastupdate')"
+    ),
+  );
+ $form['columns'] = array(
+    '#prefix' => '<div class="container-inline"><label for="edit-kfields">Optional columns </label>',
+    '#suffix' => '</div>',
+ );
+  $form['columns']['owner_email'] = array(
+    '#value' => 'owner_email',
+    '#title' => 'Owner email',
+    '#type' => 'checkbox',
+    '#attributes' => array(
+      'ng-model' => 'query.columns.owner_email',
+      'ng-click' => "updateCheckedValues('columns', 'owner_email')"
+    ),
+  );
+  $form['columns']['privacy'] = array(
+    '#value' => 'privacy',
+    '#title' => 'Privacy level',
+    '#type' => 'checkbox',
+    '#attributes' => array(
+      'ng-model' => 'query.columns.privacy',
+      'ng-click' => "updateCheckedValues('columns', 'privacy')"
     ),
   );
   $form['buttons'] = array(
@@ -140,14 +165,17 @@ function os_reports_site_form($form, &$form_state) {
     '#suffix' => '</div>',
   );
   $form['buttons']['submit'] = array(
-    '#markup' => '<a class="button" ng-click="update(query)">Submit</a>',
+    '#markup' => '<a class="button" ng-click="update()">Run Report</a>',
   );
   $form['buttons']['download'] = array(
     '#type' => 'submit',
     '#value' => 'Download CSV of Full Report',
   );
+
+  $buttons = '<div class="pager"><div class="container-inline"><div class="back"><a ng-click="">‹ previous</a></div><div class="forward"><a ng-click="">next ›</a></div></div></div>';
+
   $form['results'] = array(
-    '#markup' => '<table><thead><tr><th ng-repeat="header in headers">{{ header }}</th></tr></thead><tbody><tr ng-repeat="row in rows"><td ng-repeat="header in headers">{{ row[header] }}</td></tr></tbody></table>',
+    '#markup' => $buttons . '<table><thead><tr><th ng-repeat="header in headers"><a ng-click="sort(this)">{{ header | formatHeader }}</a></th></tr></thead><tbody><tr ng-repeat="row in rows" ng-class-even="\'even\'" ng-class-odd="\'odd\'"><td ng-repeat="header in headers"><span ng-bind-html="row[header] | makelink:header:row"></span></td></tr></tbody></table>' . $buttons,
   );
 
   return $form;
@@ -175,7 +203,7 @@ function os_reports_site_form_submit($form, &$form_state) {
     }
   }
   $params['range'] = 0;
-  $results = $handler->get('attributes', $params);
+  $results = $handler->post('attributes', $params);
 
   if ($results) {
     $filename = str_replace("http://", "", $base_url) . "-site-report.csv";
@@ -196,5 +224,17 @@ function os_reports_site_form_submit($form, &$form_state) {
   }
   else {
     drupal_set_message('No results in report.', 'warning');
+  }
+}
+
+/**
+ * Move angular to the top of the list scripts list.
+ * We need it to load before jQuery because the version in Drupal is too old.
+ */
+function os_reports_process_html(&$vars) {
+  $search = '<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>';
+  $style = str_replace($search, '', $vars['scripts'], $count);
+  if ($count) {
+    $vars['scripts'] = $search . "\n" . $style;
   }
 }

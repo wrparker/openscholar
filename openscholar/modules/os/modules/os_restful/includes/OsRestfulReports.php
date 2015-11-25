@@ -7,6 +7,13 @@
 abstract class OsRestfulReports extends \OsRestfulDataProvider {
 
   /**
+   * Determines the number of items that should be returned when viewing lists.
+   *
+   * @var int
+   */
+  protected $range = 20;
+
+  /**
    * @var string
    *
    * The string to search for
@@ -33,6 +40,7 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
       ),
       '^.*$' => array(
         \RestfulInterface::GET => 'getReport',
+        \RestfulInterface::POST => 'getReport',
         \RestfulInterface::HEAD => 'getReport',
         \RestfulInterface::PUT => 'replace',
         \RestfulInterface::PATCH => 'update',
@@ -80,8 +88,8 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
       }
       // if keyword search is involved, set appropriate properties
       if (isset($request['keyword']) && isset($request['kfields'])) {
-        $this->keywordString = $request['keyword'];
-        $this->keywordFields = $request['kfields'];
+        $this->keywordString = $this->cleanArrayParameter($request['keyword']);
+        $this->keywordFields = $this->cleanArrayParameter($request['kfields']);
       }
       // set range if it's passed (even if it's 0)
       if (isset($request['range'])) {
@@ -161,5 +169,24 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
     if ($range) {
       $query->range($offset, $range);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+  protected function addExtraInfoToQuery($query) {
+    $query->addMetaData('count', $this->getTotalCount());
+  }
+   */
+
+  /**
+   * helper function to clean array report parameters
+   */
+  private function cleanArrayParameter($param) {
+		if (is_array($param)) {
+			return array_filter($param);
+		}
+		else {
+			return $param;
+		}
   }
 }

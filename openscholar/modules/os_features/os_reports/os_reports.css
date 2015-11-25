@@ -1,13 +1,40 @@
 .container-inline {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 0;
 }
 
-fieldset .container-inline {
-  padding-top: 2px;
-  padding-bottom: 2px;
+form fieldset {
+  margin: 0;
+  border: 0px none;
+  padding-top: 0;
+  padding-bottom: 5px;
+}
+
+form fieldset .fieldset-wrapper {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0;
 }
 
 .buttons {
   margin-top: 1em;
+  margin-bottom: 0;
+}
+
+.back {
+   margin-right: 20px;
+}
+
+.pager {
+  text-align: center;
+}
+
+form fieldset .fieldset-legend {
+  margin: 0;
+  padding-left: 0px;
+  position: relative;
+}
+
+form table td,
+form table th {
+  padding: 6px 8px;
 }
