@@ -182,11 +182,11 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
    * helper function to clean array report parameters
    */
   private function cleanArrayParameter($param) {
-		if (is_array($param)) {
-			return array_filter($param);
-		}
-		else {
-			return $param;
-		}
+    if (is_array($param)) {
+      return array_filter($param);
+    }
+    else {
+      return $param;
+    }
   }
 }

@@ -107,7 +107,7 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     }
 
     if ($row->custom_domain) {
-      $new_row['site_url'] = "http://" . $row->custom_domain;
+      $new_row['site_url'] = "http://" . unserialize($row->custom_domain);
     }
     else {
       $new_row['site_url'] = $base_url . "/" . $row->value;
