@@ -50,6 +50,17 @@ function os_boxes_form_boxes_box_form_alter(&$form, &$form_state) {
 
   $form['cancel']['#submit'][] = 'os_boxes_widget_submit';
   $form['#submit'][] = 'os_boxes_widget_submit';
+
+  if (method_exists($form_state['box'], 'validate')) {
+    $form['#validate'][] = 'os_boxes_alter_options_widget';
+  }
+}
+
+/**
+ * Allow widgets alter the values of the forms before process by boxes.
+ */
+function os_boxes_alter_options_widget($form, &$form_state) {
+  $form_state['box']->validate($form_state['values']);
 }
 
 /**
