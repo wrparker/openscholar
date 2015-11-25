@@ -35,7 +35,8 @@ h2.block-title,
 #layout_16_9_overlay .slide-copy h2,
 #layout_16_9_side .slide-copy p,
 #layout_16_9_side .slide-copy h2,
-.slide-copy p {
+.slide-copy p,
+.block-boxes-os_sv_list_box .os_sv_list_box.sv-list-link.sv-list-view-links h1 a  {
     font-family: 'Merriweather', Georgia, serif !important;
 }
 #footer ul.menu a,
@@ -50,6 +51,7 @@ h2.block-title,
 .front #content-panels .region-content-second {
     background-color: #293352;
 }
+#footer a,
 #footer,
 #footer .footer-login,
 .front #content-panels .region-content-second a,
@@ -117,10 +119,15 @@ ul.nice-menu ul {
 .front .block-boxes-os_boxes_html {
     line-height: 1.4em;
 }
+.field-name-body h2,
 h1#page-title,
 .sidebar h2.block-title {
     font-weight: normal;
 }
+.field-name-body h2 {
+    margin-bottom: 8px;
+}
+
 .section-nav .menu-depth-1 > a {
     background-color: #F3f3f1 !important;
     color: #a51c30 !important;
@@ -141,4 +148,11 @@ h1#page-title,
 }
 .block-os-search-solr {
 font-size: .97em;
+}
+
+.cal-export {
+    background-position: 62px -902px;
+}
+.attachment.attachment-before ul li {
+    font-size: 14px;
 }
