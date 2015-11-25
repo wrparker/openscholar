@@ -71,7 +71,14 @@ class os_search_solr_search_box extends os_boxes_default {
       $form['vocab']['#options'][$vocabulary->vid] = $vocabulary->name;
     }
 
-    if (($this->options['vocab'] && $this->options['vocab'] != '-none-') || !empty($form_state['values']['vocab'])) {
+    $form['terms'] = array(
+      '#type' => 'markup',
+      '#tree' => TRUE,
+      '#prefix' => '<div id="terms">',
+      '#suffix' => '</div>',
+    );
+
+    if ($this->options['vocab'] != 'none' || !empty($form_state['values']['vocab'])) {
       if (!empty($form_state['values']['vocab'])) {
         $vocab = $form_state['values']['vocab'];
       }
@@ -84,18 +91,13 @@ class os_search_solr_search_box extends os_boxes_default {
       foreach ($terms as $term) {
         $taxonomies[$term->tid] = $term->name;
       }
-      $form['terms'] = array(
+      $form['terms']['terms'] = array(
         '#type' => 'checkboxes',
         '#title' => t('Filter by: terms'),
         '#options' => $taxonomies,
-        '#default_value' => $this->options['terms'],
-        '#perfix' => '<div id="terms">',
-        '#suffix' => '</div>',
+        '#default_value' => $this->options['terms']['terms'],
       );
-
     }
-
-    dpm($form_state);
 
     $form['sort'] = array(
       '#type' => 'select',
