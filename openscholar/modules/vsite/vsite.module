@@ -252,7 +252,19 @@ function vsite_js_alter(&$javascript) {
  */
 function vsite_form_alter(&$form, &$form_state, $form_id) {
   $space = spaces_get_space();
-  if ($space) {
+  // Getting menu router object of the current path.
+  $menu_item = menu_get_item();
+
+  // Only these pages form will be overridden.
+  $target_paths = array(
+    'cp/appearance',
+    'cp/settings',
+    'cp/build',
+    'cp/build/layout',
+    'cp/build/menu'
+    );
+
+  if ($space && in_array($menu_item['path'], $target_paths)) {
      if ($preset = $space->controllers->variable->get('spaces_preset_' . $space->type)) {
        $preset = spaces_preset_load($preset, $space->type);
        if (!empty($form['actions']['preset'])) {
