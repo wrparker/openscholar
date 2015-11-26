@@ -1270,6 +1270,46 @@ function os_search_solr_facet_time($timestamp, $gap) {
   }
 }
 
+/**
+ * Ajax form callback;
+ */
 function os_search_solr_vocabularies_switch($form, $form_state)  {
   return $form['options']['terms'];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_search_solr_form_search_block_form_alter(&$form, $form_state) {
+  if (empty($form_state['box_settings'])) {
+    return;
+  }
+
+  $form['#submit'][] = 'os_search_solr_change_search_path';
+}
+
+/**
+ * Submit handler; Adding the settings of the search
+ */
+function os_search_solr_change_search_path($form, $form_state) {
+  $options = array('query' => array('f' => array()));
+  $filters = &$options['query']['f'];
+  $box_settings = $form_state['box_settings'];
+
+  // Collect bundles.
+  foreach ($box_settings['bundle'] as $bundle) {
+    $filters[] = 'bundle:' . $bundle;
+  }
+
+  // Collect terms.
+  foreach ($box_settings['terms']['terms'] as $term) {
+    if (!$term) {
+      continue;
+    }
+
+    $filters[] = 'sm_og_vocabulary:taxonomy_term:' . $term;
+  }
+
+  // Collect terms.
+  drupal_goto('search/site/' . $form_state['values']['search_block_form'], $options);
 }
