@@ -124,13 +124,6 @@ class os_search_solr_search_box extends os_boxes_default {
   }
 
   /**
-   * @inheritDoc
-   */
-  public function validate(&$values) {
-    dpm($values);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function render() {

@@ -1293,12 +1293,12 @@ function os_search_solr_form_search_block_form_alter(&$form, $form_state) {
  */
 function os_search_solr_change_search_path($form, $form_state) {
   $options = array('query' => array('f' => array()));
-  $filters = &$options['query']['f'];
+  $filters = &$options['query'];
   $box_settings = $form_state['box_settings'];
 
   // Collect bundles.
   foreach ($box_settings['bundle'] as $bundle) {
-    $filters[] = 'bundle:' . $bundle;
+    $filters['f'][] = 'bundle:' . $bundle;
   }
 
   // Collect terms.
@@ -1307,7 +1307,12 @@ function os_search_solr_change_search_path($form, $form_state) {
       continue;
     }
 
-    $filters[] = 'sm_og_vocabulary:taxonomy_term:' . $term;
+    $filters['f'][] = 'sm_og_vocabulary:taxonomy_term:' . $term;
+  }
+
+  // Add sort order
+  if ($box_settings['sort_property'] != 'relevancy') {
+    $filters['solrsort'] = $box_settings['sort_property'] . ' ' . $box_settings['sort_order'];
   }
 
   // Collect terms.
