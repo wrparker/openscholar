@@ -458,8 +458,7 @@ function os_events_process_node(&$variables) {
       // Checking if the event has not reached its max registration limit.
       if (os_events_event_registration_reach_capacity($variables['node'], $date)) {
         $register = '<div class="register-link-teaser">' . t('Registration is required') . '</div>';
-      }
-      else {
+      } else {
         $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
       }
     }
