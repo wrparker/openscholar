@@ -1296,22 +1296,35 @@ function os_search_solr_change_search_path($form, $form_state) {
   $filters = &$options['query'];
   $box_settings = $form_state['box_settings'];
 
+  // keep array of the facet we don't want to hide from the facets list.
+  $filters['keep_filters'] = array();
+
   // Collect bundles.
-  foreach ($box_settings['bundle'] as $bundle) {
-    $filters['f'][] = 'bundle:' . $bundle;
+  if ($box_settings['bundle']) {
+    $filters['keep_filters'][] = 'bundle';
+
+    foreach ($box_settings['bundle'] as $bundle) {
+      $filters['f'][] = 'bundle:' . $bundle;
+    }
   }
 
   // Collect terms.
-  foreach ($box_settings['terms']['terms'] as $term) {
-    if (!$term) {
-      continue;
-    }
+  if ($box_settings['terms']['terms']) {
+    $filters['keep_filters'][] = 'terms';
 
-    $filters['f'][] = 'sm_og_vocabulary:taxonomy_term:' . $term;
+
+    foreach ($box_settings['terms']['terms'] as $term) {
+      if (!$term) {
+        continue;
+      }
+
+      $filters['f'][] = 'sm_og_vocabulary:taxonomy_term:' . $term;
+    }
   }
 
   // Add sort order
   if ($box_settings['sort_property'] != 'relevancy') {
+    $filters['keep_filters'][] = 'sort';
     $filters['solrsort'] = $box_settings['sort_property'] . ' ' . $box_settings['sort_order'];
   }
 
