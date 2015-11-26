@@ -21,7 +21,8 @@ class os_search_solr_search_box extends os_boxes_default {
       'bundle' => array(),
       'terms' => array(),
       'vocab' => array(),
-      'sort' => '',
+      'sort_property' => '',
+      'sort_order' => '',
     );
   }
 
@@ -78,19 +79,16 @@ class os_search_solr_search_box extends os_boxes_default {
       '#suffix' => '</div>',
     );
 
-    if ($this->options['vocab'] != 'none' || !empty($form_state['values']['vocab'])) {
-      if (!empty($form_state['values']['vocab'])) {
-        $vocab = $form_state['values']['vocab'];
-      }
-      else {
-        $vocab = $this->options['vocab'];
-      }
+    $vocab = !empty($form_state['values']['vocab']) ? $form_state['values']['vocab'] : $this->options['vocab'];
 
-      $terms = taxonomy_get_tree($vocab, 0, NULL, 1);
+    if (!empty($vocab)) {
+      $terms = taxonomy_get_tree($vocab, 0, NULL, TRUE);
+
       $taxonomies = array();
       foreach ($terms as $term) {
         $taxonomies[$term->tid] = $term->name;
       }
+
       $form['terms']['terms'] = array(
         '#type' => 'checkboxes',
         '#title' => t('Filter by: terms'),
@@ -99,17 +97,37 @@ class os_search_solr_search_box extends os_boxes_default {
       );
     }
 
-    $form['sort'] = array(
+    $form['sort_property'] = array(
       '#type' => 'select',
       '#title' => t('Sort by'),
+      '#options' => array(
+        'relevancy' => t('Relevancy (default)'),
+        'sort_label' => t('Label'),
+        'bundle' => t('Type'),
+        'sort_name' => t('Author'),
+        'ds_created' => t('Date'),
+      ),
+      '#default_value' => $this->options['sort_property'],
+    );
+
+    $form['sort_order'] = array(
+      '#type' => 'select',
+      '#title' => t('Sort in'),
       '#options' => array(
         'asc' => t('Ascending'),
         'desc' => t('Descending'),
       ),
-      '#default_value' => $this->options['sort'],
+      '#default_value' => $this->options['sort_order'],
     );
 
     return $form;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function validate(&$values) {
+    dpm($values);
   }
 
   /**
