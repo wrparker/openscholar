@@ -190,13 +190,13 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
     $filters[$filter['#name']][] = $filter['#value'];
   }
 
-  if (in_array('bundle', $_GET['keep_filters']) && count($filters['bundle']) > 1) {
+  if (in_array('bundle', $_GET['keep_filters']) && !empty($filters['bundle']) && count($filters['bundle']) > 1) {
     // We have multiple bundles. Change the query to support multiple bundles.
     $query->removeFilter('bundle');
     $query->addFilter('bundle', '('. implode(' OR ', $filters['bundle']) .')');
   }
 
-  if (in_array('terms', $_GET['keep_filters']) && count($filters['sm_og_vocabulary']) > 1) {
+  if (in_array('terms', $_GET['keep_filters']) && !empty($filters['sm_og_vocabulary']) && count($filters['sm_og_vocabulary']) > 1) {
     // We have multiple terms. Change the query to support multiple terms.
     $query->removeFilter('sm_og_vocabulary');
     $terms = '("'. implode('" OR "', $filters['sm_og_vocabulary']) . '")';
@@ -239,10 +239,18 @@ function os_search_solr_block_view_alter(&$data, $block) {
     $data['title'] = 'Filter By Post Type';
 
     // Hide the Filter by Post Type block if there is only one filter.
-    if(isset($data['content']['bundle']) && isset($data['content']['bundle']['#items'])) {
+    if (isset($data['content']['bundle']) && isset($data['content']['bundle']['#items'])) {
       $type_array = $data['content']['bundle']['#items'];
-      if(is_array($type_array) && count($type_array) <= 1) {
+      if (is_array($type_array) && count($type_array) <= 1) {
         $data['content'] = NULL;
+      }
+    }
+
+    // Check if we need to disable the facets.
+    if (!empty($_GET['keep_filters']) && !in_array('bundle', $_GET['keep_filters'])) {
+
+      foreach ($data['content']['bundle']['#items'] as &$item) {
+        $item['data'] = preg_replace('/(<a.+?)href=".+?">(.+?)/i', "$2", $item['data']);
       }
     }
   }
@@ -292,6 +300,15 @@ function os_search_solr_block_view_alter(&$data, $block) {
   if ($block->delta == $delta) {
     $data['title'] = t('Filter By Taxonomy');
   }
+
+  _os_search_solr_block_view_alter($data, $block);
+}
+
+/**
+ * Helper function; Change the content of blocks which wasn't selected in the
+ * widget settings.
+ */
+function _os_search_solr_block_view_alter(&$data, $block) {
 }
 
 /**
@@ -308,7 +325,7 @@ function os_search_solr_apachesolr_entity_info_alter(&$entity_info) {
  */
 function os_search_solr_apachesolr_index_node_solr_document(ApacheSolrDocument $document, $node, $entity_type, $env_id) {
 
-  if($entity_type == 'node') {
+  if ($entity_type == 'node') {
     $document->bs_private = !os_search_solr_apachesolr_privacy_callback($node->nid, $entity_type);
   }
 
@@ -510,9 +527,9 @@ function os_search_solr_add_vsite_to_reindex($vsite_id, $bundles = array()) {
   $values = variable_get('os_search_solr_reindex_by_bundles', array());
 
   // If we already have an index in progress, merge the settings.
-  if(isset($values[$vsite_id]) && count($bundles)) {
+  if (isset($values[$vsite_id]) && count($bundles)) {
     // If only some nodes were being indexed, add the new bundles to the list.
-    if(count($values[$vsite_id]['bundles'])) {
+    if (count($values[$vsite_id]['bundles'])) {
       $bundles = array_merge($bundles, $values[$vsite_id]['bundles']);
     } else {
       // If all nodes were getting indexed, start over.
@@ -900,7 +917,7 @@ function os_search_solr_apachesolr_search_default_searchers() {
     $export[$page_id] = os_search_solr_setup_bundle_searcher($bundle_name, $bundle_info['title'], $bundle_info['url']);
 
     $solr_view_modes = variable_get('os_search_solr_display_mode', array());
-    if($solr_view_modes[$page_id] != $bundle_info['display_mode']) {
+    if ($solr_view_modes[$page_id] != $bundle_info['display_mode']) {
       // Set the default display mode for the searcher.
       os_search_solr_save_view_mode($page_id, $bundle_info['display_mode']);
     }
@@ -1083,7 +1100,7 @@ function os_search_solr_preprocess_search_results(&$variables) {
   $view_mode = !empty($solr_view_modes[$page_id]) ? $solr_view_modes[$page_id] : 'teaser';
 
   //Only alter 'search_results' and render node if it is a non-search view mode.
-  if(!in_array($view_mode, array('search_result', 'search_index'))){
+  if (!in_array($view_mode, array('search_result', 'search_index'))){
 
     // Reset Search Results, we are going to completely override
     $variables['search_results'] = '';
