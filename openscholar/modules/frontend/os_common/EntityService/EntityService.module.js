@@ -288,9 +288,15 @@
           };
 
           var keys = getCacheKeysForEntity(type, idProp, entity);
-          var updated = 0
-          for (var k in keys) {
-            updated = Math.max(updated, cache[k].lastUpdated);
+          var updated = 0;
+          if (weSaved[entity[idProp]] == undefined) {
+
+            for (var k in keys) {
+              updated = Math.max(updated, cache[k].lastUpdated);
+            }
+          }
+          else {
+            updated = weSaved[entity[idProp]];
           }
           config.headers['If-Unmodified-Since'] = (new Date(updated*1000)).toString().replace(/ \([^)]*\)/, '');
 
