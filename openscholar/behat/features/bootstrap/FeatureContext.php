@@ -1682,6 +1682,7 @@ class FeatureContext extends DrupalContext {
     $element = $page->find('xpath', "//div[contains(@class, 'field-name-field-photo')]//img[contains(@src, '{$image_name}')]");
 
     if (!$element) {
+      $this->iShouldPrintPage();
       throw new Exception(sprintf("The feed item's image %s was not imported into field_photo.", $image_name));
     }
   }
