@@ -88,12 +88,12 @@
             </div>
             <div id="mb-library-header">
                 <span class="mb-preview">&nbsp;</span>
-                <span class="mb-title">Title</span>
-                <span class="mb-filename">Filename</span>
-                <span class="mb-created">Upload Date</span>
+                <span class="mb-title" ng-click="sortReverse=(sortType == 'name')?!sortReverse:false; sortType='name';">Title</span>
+                <span class="mb-filename" ng-click="sortReverse=(sortType == 'filename')?!sortReverse:false; sortType='filename';">Filename</span>
+                <span class="mb-created" ng-click="sortReverse=(sortType == 'timestamp')?!sortReverse:true; sortType='timestamp';">Upload Date</span>
                 <span class="mb-file-actions">&nbsp;</span>
             </div>
-            <div js-pager="file in files | mbFilename:$parent.search | mbType:filteredTypes | mbExtensions:extensions | filter:{status:'!deleting'} | orderBy:'-timestamp' track by file.id" page-size="5">
+            <div js-pager="file in files | mbFilename:$parent.search | mbType:filteredTypes | mbExtensions:extensions | filter:{status:'!deleting'} | orderBy:sortType:sortReverse track by file.id" page-size="5">
                 <div class="media-row" data-fid="{{file.id}}" ng-click="setSelection(file.id)" ng-class="{selected : selection == file.id, new : file.new}">
                     <span class="mb-preview" ng-bind-html="file.preview"></span>
                     <span class="mb-title">{{file.name}}</span>
