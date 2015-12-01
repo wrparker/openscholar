@@ -146,7 +146,7 @@
       			closeEl : '.icon-close',
       			onBeforeOpen : function() {
       				// push main admin_panel
-      				//jQuery('#page_wrap, .page-cp #page, .page-cp #branding').addClass('pushed');
+      				jQuery('#page_wrap, .page-cp #page, .page-cp #branding').addClass('pushed');
       			},
       			onAfterOpen : function() {
       			  // add scroll class to main el
@@ -158,6 +158,7 @@
       			},
       			onBeforeClose : function() {
       			  jQuery('.morph-button').removeClass('scroll');
+      			  jQuery('#page_wrap, .page-cp #page, .page-cp #branding').removeClass('pushed');
       			  menu_state['main'] = false;
         		  scope.$apply(function () {
           	        $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
