@@ -325,3 +325,29 @@ function os_image_gallery_preprocess_views_view_list(&$vars) {
     }
   }
 }
+
+/**
+ * Implements hook_field_attach_presave().
+ */
+function os_image_gallery_field_attach_update($entity_type, $entity) {
+  if ($entity_type != 'node') {
+    return;
+  }
+
+  $original_wrapper = entity_metadata_wrapper($entity_type, $entity->original);
+  $wrapper = entity_metadata_wrapper($entity_type, $entity);
+
+  if ($wrapper->getBundle() != 'media_gallery') {
+    return;
+  }
+
+  if ($wrapper->media_gallery_file->value() == $original_wrapper->media_gallery_file->value()) {
+    return;
+  }
+
+  if (!$new_files = drupal_array_diff_assoc_recursive($wrapper->media_gallery_file->value(), $original_wrapper->media_gallery_file->value())) {
+    return;
+  }
+
+  $entity->media_gallery_file[LANGUAGE_NONE] = $new_files + $original_wrapper->media_gallery_file->value();
+}
