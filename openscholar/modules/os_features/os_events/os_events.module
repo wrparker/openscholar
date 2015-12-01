@@ -469,7 +469,7 @@ function os_events_process_node(&$variables) {
         $register = '<div class="register-link-teaser">' . t('Registration is required') . '</div>';
       } else {
         $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
-      }$registrations_type = !empty($variables['node']->field_event_registration[LANGUAGE_NONE][0]['registration_type']);
+      }
     } elseif ($registrations_type && !$show_register_link) {
         $event_start_date = $variables['node']->field_date[LANGUAGE_NONE][0]['value'];
         // If the event is a past event        
