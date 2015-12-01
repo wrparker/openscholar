@@ -28,7 +28,7 @@
                     </div>
                     <div class="actions">
                         <div><button value="rename" ng-click="$parent.rename($index, $last)">Rename</button> The new name will be {{dupe.newName}}</div>
-                        <div><button value="replace" ng-click="$parent.replace($index, $last)">Replace</button> This CANNOT be undone!</div>
+                        <div><button value="replace" ng-click="$parent.replace($index, $last)">Replace</button> Warning: replacing the existing file cannot be undone.</div>
                         <div><button value="cancel" ng-click="$parent.cancelUpload($index, $last)">Cancel</button></div>
                     </div>
                     <div class="media-browser-dupe-counter" ng-show="$parent.dupes.length > 1">{{$index+1}}/{{$parent.dupes.length}}</div>
@@ -117,7 +117,7 @@
             <div file-edit file="$parent.selected_file" on-close="closeFileEdit(saved);"></div>
         </div>
         <div class="media-browser-pane" ng-switch-when="delete">
-            <div class="mb-delete-warning">Are you sure you want to delete {{$parent.selected_file.name}}? This operation CANNOT be undone.</div>
+            <div class="mb-delete-warning">Are you sure you want to delete {{$parent.selected_file.name}}? Warning: replacing the existing file cannot be undone.</div>
             <div>WARNING: Any links to this file will be broken!</div>
 
             <div class="actions">
