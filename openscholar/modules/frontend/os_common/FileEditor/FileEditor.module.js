@@ -23,7 +23,7 @@
 
           scope.fileEditAddt = '';
           scope.date = '';
-          scope.description_label = 'Description';
+          scope.description_label = 'Note (seen only by site admins)';
 
           scope.$watch('file', function (f) {
             if (!f) return;
