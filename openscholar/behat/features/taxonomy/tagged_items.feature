@@ -35,3 +35,17 @@ Feature: Testing the tagged items.
       And I bind the content type "class" with "science"
       And I visit "john/classes/john-f-kennedy"
      Then I should see "Air"
+
+  @api @taxonomy
+  Scenario: Verify count of tagged events works as expected.
+    Given I am logging in as "john"
+      And the widget "Filter by term" is set in the "Calendar" page with the following <settings>:
+        | Vocabularies          | authors             | select list |
+        | Post types            | Select post type    | select list |
+        | Select Post type      | Upcoming event      | select list |
+        | Show number of posts  | check               | checkbox    |
+      And I visit "john/calendar"
+      And I should see "Stephen William Hawking (3)"
+     When I change the date of "Future event" in "john"
+     Then I visit "john/calendar"
+      And I should see "Stephen William Hawking (2)"

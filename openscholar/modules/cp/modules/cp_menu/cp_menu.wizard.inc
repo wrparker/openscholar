@@ -335,18 +335,14 @@ function cp_menu_url_validate(&$form, &$state) {
       curl_setopt($ch, CURLOPT_HEADER, TRUE);
       curl_setopt($ch, CURLOPT_SSLVERSION, 3);
       $data = curl_exec($ch);
+      $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-      if ($data === FALSE) {
+      if($http_code == 404) {
         form_set_error('url', t('Could not connect to url: %url', array('%url' => $url)));
-      }
-      else {
-        if (strpos($data, 'HTTP/1.1 404') === 0) {
-          form_set_error('url', t('URL Returned Error: 404 File Not Found'));
-        }
       }
       return;
     } else {
-      //absolute path to internal url coud be same vsite or external vsite
+      //absolute path to internal url could be same vsite or external vsite
       if ($external_vsite) {
         $path = $url;
       } else {

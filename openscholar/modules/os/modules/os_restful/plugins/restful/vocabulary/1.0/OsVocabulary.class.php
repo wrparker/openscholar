@@ -1,6 +1,6 @@
 <?php
 
-class OsVocabulary extends \RestfulEntityBase {
+class OsVocabulary extends OsRestfulEntityCacheableBase {
 
   /**
    * {@inheritdoc}
@@ -22,6 +22,10 @@ class OsVocabulary extends \RestfulEntityBase {
 
     $fields['tree'] = array(
       'callback' => array($this, 'getVocabularyTree'),
+    );
+
+    $fields['bundles'] = array(
+      'callback' => array($this, 'getBundles')
     );
 
     return $fields;
@@ -262,4 +266,38 @@ class OsVocabulary extends \RestfulEntityBase {
     return $return;
   }
 
+  protected function getBundles($wrapper) {
+    if (module_exists('og_vocab')) {
+      // why
+      $q = db_select('og_vocab', 'ogv')
+        ->fields('ogv', array('entity_type', 'bundle'))
+        ->condition('vid', $wrapper->getIdentifier())
+        ->execute();
+
+      $output = array();
+      foreach ($q as $r) {
+        $output[$r->entity_type][] = $r->bundle;
+      }
+
+      return $output;
+    }
+  }
+
+  protected function getLastModified($id) {
+    // Vocabularies cannot really be editted. When they were first created isn't stored either.
+    // This function is only concerned with modifications, so as long as we assume it's really old, we're fine for now
+    return strotime('-31 days', REQUEST_TIME);
+  }
+
+  // Vocabs don't have a 'changed' variable, so this is the best we can do at the moment.
+  public function additionalHateoas() {
+    $addtl = array();
+    $path = $this->getPath();
+
+    if ($this->method == \RestfulInterface::GET) {
+      $addtl['allEntitiesAsOf'] = REQUEST_TIME;
+    }
+
+    return $addtl;
+  }
 }

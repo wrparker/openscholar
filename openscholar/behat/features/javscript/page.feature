@@ -13,4 +13,3 @@ Feature:
      Then I verify the page kept the same
       And I press "Save"
       And I verify the url did not changed
-  

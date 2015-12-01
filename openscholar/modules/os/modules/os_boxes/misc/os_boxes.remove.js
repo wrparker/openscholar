@@ -11,20 +11,22 @@ Drupal.behaviors.osBoxesRemove = {
       e.stopPropagation();
     })
   }
-}
+};
 
 var removed_widgets = {},
-  template = 'This widget has been removed from this section. You can <a href="/os/site01/os/widget/boxes/{delta}/remove/{region}{query}">undo this action</a>';
+  template = 'This widget has been removed from this section. You can <a href="os/widget/{module}/{delta}/remove/{region}/{query}">undo this action</a>';
 
 function removeWidget(widget, query) {
   var id = widget.attr('id'),
-      delta = id.replace('block-boxes-', '').replace(/--\d/, ''),
+      delta = widget.attr('delta'),
       region = findRegion(widget),
+      module = widget.attr('module'),
       html = template;
 
   html = html.replace('{delta}', delta);
   html = html.replace('{region}', region);
   html = html.replace('{query}', query);
+  html = html.replace('{module}', module);
 
   removed_widgets[id] = widget.children().detach();
   widget.html(html);
@@ -44,7 +46,7 @@ function undoRemoveWidget(widget) {
 }
 
 function findRegion(widget) {
-  var region = widget.closest('.region'),
+  var region = widget.closest('.region, .nav'),
     classes = region.attr('class').split(' '),
     region_name = '';
 
@@ -55,7 +57,7 @@ function findRegion(widget) {
       // break out of the loop
       return false;
     }
-  })
+  });
 
   return region_name;
 }

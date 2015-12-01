@@ -5,7 +5,7 @@
 
       function link(scope, elem, attr) {
         // everything to define
-        scope.field_name = elem.parent().attr('id').match(/edit-([\w-]*)/)[1].replace('-', '_');
+        scope.field_name = elem.parent().attr('id').match(/edit-([\w-]*)/)[1].replace(/-/g, '_');
         scope.showHelp = false;
         scope.panes = ['upload', 'web', 'library'];
 
@@ -22,23 +22,24 @@
         scope.extensionsFull.sort();
 
         if (scope.selectedFiles.length == 0) {
-          try {
-            var fids = Drupal.settings.mediaBrowserField[elem.parent().attr('id')].selectedFiles,
-              service = new EntityService('files', 'id');
-
-            service.fetch().then(function () {
-              for (var i = 0; i<fids.length; i++) {
-                scope.selectedFiles.push(angular.copy(service.get(fids[i])));
+          var fids = Drupal.settings.mediaBrowserField[elem.parent().attr('id')].selectedFiles,
+            service = new EntityService('files', 'id'),
+            generateFunc = function (i) {
+              return function(file) {
+                scope.selectedFiles[i] = angular.copy(file);
               }
-            })
-          }
-          catch (e) {
-            // do nothing
-            // assume the entity has no files attached to it yet
+            };
+
+          for (var i = 0; i<fids.length; i++) {
+            var fid = fids[i];
+            service.fetchOne(fid).then(generateFunc(i));
           }
         }
 
-        scope.$on('EntityService.files.update', function (file) {
+        // prefetch the files now so user can open Media Browser later
+        service.fetch();
+
+        scope.$on('EntityService.files.update', function (e, file) {
           for (var i = 0; i<scope.selectedFiles.length; i++) {
             if (file.id == scope.selectedFiles[i].id) {
               scope.selectedFiles[i] = angular.copy(file);
@@ -53,11 +54,26 @@
             types: types
           };
           mbModal.open(params);
+          for (var i = 0; i < scope.selectedFiles; i++) {
+            highlightDupe(scope.selectedFiles[i], false);
+          }
         }
 
         scope.addFile = function ($files) {
           for (var i = 0; i < $files.length; i++) {
-            scope.selectedFiles.push($files[i]);
+            var found = false;
+            for (var j = 0; j < scope.selectedFiles.length; j++) {
+              highlightDupe(scope.selectedFiles[j], false);
+              if ($files[i].id == scope.selectedFiles[j].id) {
+                scope.selectedFiles[j] = angular.copy($files[i]);
+                highlightDupe(scope.selectedFiles[j], true);
+                found = true;
+                break;
+              }
+            }
+            if (!found) {
+              scope.selectedFiles.push($files[i]);
+            }
           }
         }
 
@@ -69,7 +85,13 @@
           scope.selectedFiles.splice($index, 1, $inserted[0]);
         }
 
+        function highlightDupe(file, toHighlight) {
+          file.highlight = toHighlight;
+        }
+
+        var label = elem.parent().find(' label');
         elem.parent().find(' > *').not(elem).remove();
+        elem.before(label);
       }
 
       if (mbModal.requirementsMet()) {

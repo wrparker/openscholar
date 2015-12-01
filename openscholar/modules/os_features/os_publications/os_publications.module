@@ -87,6 +87,9 @@ function os_publications_menu_alter(&$items) {
 
   // Change access callback to publications/keywords.
   $items['publications/keywords']['access callback'] = FALSE;
+
+  // Change access callback to publications/import.
+  $items['publications/import']['access callback'] = FALSE;
 }
 
 /**
@@ -655,7 +658,7 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
  */
 function os_publications_remove_spaces(&$form, &$form_state) {
   // We can't use trim() on the title field value since it contains html tags.
-  $trimmed_title = preg_replace('/\s*&nbsp;/', '', $form_state['values']['title_field'][LANGUAGE_NONE][0]['value']);
+  $trimmed_title = preg_replace('/\s*&nbsp;/', ' ', $form_state['values']['title_field'][LANGUAGE_NONE][0]['value']);
   $form_state['values']['title_field'][LANGUAGE_NONE][0]['value'] = $trimmed_title;
 }
 

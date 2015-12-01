@@ -366,7 +366,7 @@ function os_slideshow_preprocess_os_slideshow_slide(&$vars) {
     $item = reset($items);
   }
   if (!empty($item)) {
-    $img_vars['alt'] = $item['safe_value'];
+    $img_vars['alt'] = $item['value'];
   }
 
   if ($items = field_get_items('node', $node, 'field_slideshow_title_text')) {
@@ -376,13 +376,16 @@ function os_slideshow_preprocess_os_slideshow_slide(&$vars) {
     $item = reset($items);
   }
   if (!empty($item)) {
-    $img_vars['title'] = $item['safe_value'];
+    $img_vars['title'] = $item['value'];
   }
 
   $vars['image'] = theme('image_style', $img_vars);
   $url = ($node->field_link) ? $node->field_link[$lang][0]['url'] : '';
   if ($url) {
     foreach (array('headline', 'description', 'image') as $elem) {
+      if (empty($vars[$elem])) {
+        continue;
+      }
       $vars[$elem] = l($vars[$elem], $url, array('html' => TRUE));
     }
   }

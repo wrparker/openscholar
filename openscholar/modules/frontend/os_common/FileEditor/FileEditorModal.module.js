@@ -42,7 +42,8 @@
       function clickHandler(event) {
         event.preventDefault();
         event.stopPropagation();
-        var fid = event.data.attr.fid;
+        var fid = event.data.attr.fid,
+          scope = event.data.scope;
 
         ModalService.showModal({
           template: '<div><div class="file-entity-loading" ng-show="loading"><div class="file-entity-loading-message">Loading files...<br />' +
@@ -55,7 +56,6 @@
         }).then(function (modal) {
           modal.element.dialog(dialogParams);
           modal.close.then(function(result) {
-            var scope = event.data.scope;
             if (scope.runViews) {
               scope.viewsClose({result: result});
             }

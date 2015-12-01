@@ -5,7 +5,12 @@
     config(function () {
       libraryPath = Drupal.settings.paths.FileEditor;
     }).
-    directive('fileEdit', ['EntityService', '$http', '$timeout', '$filter', function (EntityService, $http, $timeout, $filter) {
+    constant("FILEEDITOR_RESPONSES", {
+      SAVED: "saved",
+      NO_CHANGES: "no changes",
+      CANCELED: "canceled"
+    }).
+    directive('fileEdit', ['EntityService', '$http', '$timeout', '$filter', 'FILEEDITOR_RESPONSES', function (EntityService, $http, $timeout, $filter, FER) {
       return {
         scope: {
           file :  '=',
@@ -18,6 +23,7 @@
 
           scope.fileEditAddt = '';
           scope.date = '';
+          scope.description_label = 'Description';
 
           scope.$watch('file', function (f) {
             if (!f) return;
@@ -27,26 +33,63 @@
 
             scope.fullPath = f.url.slice(0, f.url.lastIndexOf('/')+1);
             scope.extension = '.' + getExtension(f.url);
+            if (scope.file.type == 'image') {
+              scope.description_label = 'Image Caption';
+            }
           });
 
+          var dateTimeout;
           scope.$watch('date', function (value, old) {
             if (value == old ) return;
+            scope.invalidDate = false;
             var d = new Date(value);
+            if (isNaN(d.getTime())) {
+              scope.invalidDate = true;
+              return;
+            }
             if (d) {
               scope.file.timestamp = parseInt(d.getTime() / 1000);
+              if (dateTimeout) {
+                $timeout.cancel(dateTimeout);
+              }
+              dateTimeout = $timeout(function () {
+                scope.date = $filter('date')(scope.file.timestamp+'000', 'short');
+              }, 3000);
             }
           });
 
           scope.$watch('file.filename', function (filename, old) {
-            scope.invalidName = false;
-            if (filename && filename != old) {
+            if (typeof filename != 'string') {
+              return;
+            }
+            scope.invalidFileName = false;
+            if (filename == "") {
+              scope.invalidFileName = true;
+              return;
+            }
+            if (!filename.match(/^([a-zA-Z0-9_\.-]*)$/)) {
+              scope.invalidFileName = true;
+              return;
+            }
+            var lower = filename.toLowerCase();
+            if (lower != old) {
               var files = fileService.getAll();
-              for (var i = 0; i < files.length; i++) {
-                if (filename == files[i].filename && scope.file.id != files[i].id) {
-                  scope.invalidName = true;
+              for (var i in files) {
+                if (lower == files[i].filename && scope.file.id != files[i].id) {
+                  scope.invalidFileName = true;
                   return;
                 }
               }
+            }
+          });
+
+          scope.invalidName = true;
+          scope.$watch('file.name', function (name, old) {
+            if (!name) {
+              scope.invalidName = true;
+            }
+            else {
+              scope.invalidName = false;
             }
           });
 
@@ -91,7 +134,11 @@
                   $timeout(function () {
                     scope.replaceSuccess = false;
                   }, 5000);
-                });
+                })
+              .error(function (error) {
+                  scope.errorMessages = error.title;
+                  scope.showErrorMessages = true;
+              });
             }
             else {
               scope.replaceReject = true;
@@ -102,25 +149,58 @@
           };
 
           scope.canSave = function () {
-            return scope.invalidName;
+            return scope.invalidFileName || scope.invalidName;
           }
 
           scope.save = function () {
             fileService.edit(scope.file, ['preview', 'url']).then(function(result) {
-                if (result) {
-                  scope.onClose({saved: true});
+                if (result.data) {
+                  scope.onClose({saved: FER.SAVED});
+                }
+                else if (result.detail) {
+                  scope.onClose({saved: FER.NO_CHANGES})
                 }
                 else {
-                  scope.onClose({saved: false});
+                  scope.onClose({saved: FER.CANCELED})
                 }
             },
-            function() {
-              console.log('error happened');
+            function(result) {
+              switch (result.status) {
+                case 409:
+                  scope.errorMessages = 'This file has been changed since it was last retrieved from the server. Please wait while we get an updated version.';
+                  scope.showErrorMessages = true;
+                  break;
+                case 410:
+                  scope.errorMessages = 'This file has been deleted. It will be removed from your listing shortly.';
+                  scope.showErrorMessages = true;
+                  scope.deletedRedirect = true;
+                  break;
+                default:
+                  scope.errorMessages = result.data.title.replace(/[^\s:]*: /, '');
+                  scope.showErrorMessages = true;
+              }
             });
-          };
+          }
+
+          scope.$on('EntityCacheUpdater.cacheUpdated', function () {
+            if (scope.showErrorMessages) {
+              $timeout(function () {
+                scope.showErrorMessages = false;
+              }, 5000);
+              scope.file = angular.copy(fileService.get(scope.file.id));
+            }
+          });
 
           scope.cancel = function () {
-            scope.onClose({saved: false});
+            scope.onClose({saved: FER.CANCELED});
+          }
+
+          scope.closeErrors = function () {
+            scope.showErrorMessages = false;
+            if (scope.deletedRedirect) {
+              scope.deletedRedirect = false;
+              scope.cancel();
+            }
           }
         }
       }

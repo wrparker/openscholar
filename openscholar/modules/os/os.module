@@ -497,6 +497,10 @@ function os_theme() {
  */
 function os_theme_registry_alter(&$reg) {
   $reg['menu_tree']['preprocess functions'] = array_diff($reg['menu_tree']['preprocess functions'], array('template_preprocess_menu_tree'));
+
+  // Removing the original process function with our function.
+  $key = array_search('adaptivetheme_process_region', $reg['region']['process functions']);
+  $reg['region']['process functions'][$key] = 'os_process_region';
 }
 
 /**
@@ -880,7 +884,14 @@ function os_form_alter(&$form, &$form_state, $form_id) {
   // /people
   if ($form_id == 'node_delete_confirm') {
     $paths = os_get_app_path();
-    if (isset($paths[$form['#node']->type])) {
+
+    // Obtaining destination parameter from URL
+    $query = drupal_get_destination();
+    $destination_menu_object = menu_get_item($query['destination']);
+
+    // If destination is the deleted node itself, then redirecting to default app path
+    // Also if no destination parameter is found in URL, then redirecting to default app path
+    if(($destination_menu_object['path'] == 'node/%' || empty($_GET['destination'])) && isset($paths[$form['#node']->type])) {
       $_GET['destination'] = $paths[$form['#node']->type];
     }
   }
@@ -2561,4 +2572,82 @@ function os_field_access($op, $field, $entity_type, $entity, $account) {
   }
 
   return user_access('bypass redirection', $account);
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function os_preprocess_block(&$vars) {
+  // Adding the name of the module and the delta.
+  $vars['attributes_array']['module'] = $vars['block']->module;
+  $vars['attributes_array']['delta'] = $vars['block']->delta;
+}
+
+/**
+ * Replacing adaptivetheme_process_region function with our function in order to
+ * add the name of the region to the class attribute.
+ */
+function os_process_region(&$vars) {
+
+  if (empty($vars['classes'])) {
+    $vars['classes'] = '';
+  }
+
+  // Initialize and populate the outer wrapper variables.
+  $vars['outer_prefix'] = '<div class="' . $vars['classes'] . '">';
+  $vars['outer_suffix'] = '</div>';
+
+  // Initialize and populate the inner wrapper variables.
+  $vars['inner_prefix'] = '<div class="region-inner clearfix">';
+  $vars['inner_suffix'] = '</div>';
+
+  // Some regions need different or no markup .Use a region template with no
+  // wrappers for the main content.
+  if ($vars['region'] === 'content') {
+    $vars['outer_prefix'] = '';
+    $vars['outer_suffix'] = '';
+    $vars['inner_prefix'] = '';
+    $vars['inner_suffix'] = '';
+  }
+
+  // Menu bar needs an id, nav class and no inner wrapper.
+  if ($vars['region'] === 'menu_bar') {
+    $vars['outer_prefix'] = '<div id="menu-bar" class="nav region-menu-bar clearfix">';
+    $vars['inner_prefix'] = '';
+    $vars['inner_suffix'] = '';
+  }
+}
+/**
+* Implements hook_entity_query_alter().
+*
+* todo: remove once the og security issue will be merged.
+*/
+function os_entity_query_alter(EntityFieldQuery $query) {
+  if ($query->entityConditions['entity_type']['value'] != 'og_membership') {
+    return;
+}
+
+if (in_array('skip_blocked_users', $query->tags)) {
+  // This is not a query against og memberships or we want to return
+  // memberships of blocked users.
+    return;
+}
+
+foreach ($query->propertyConditions as $condition) {
+  if ($condition['column'] == 'entity_type' && $condition['value'] == 'user' && ($condition['operator'] == '=' || empty($condition['operator']))) {
+    $query->addTag('og_membership_blocked_users');
+      }
+   }
+}
+
+/**
+* Implements hook_query_TAG_alter().
+*
+* When the querying against og memberships and the entity type is user we need
+* to make sure we won't return memberships of blocked users.
+*/
+function og_query_og_membership_blocked_users_alter(QueryAlterableInterface $query) {
+  $tables = $query->getTables();
+  $query->join('users', 'u', 'u.uid = ' . $tables['og_membership']['alias'] . '.etid');
+  $query->condition('u.status', 1);
 }

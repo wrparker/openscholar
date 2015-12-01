@@ -6,9 +6,9 @@
 
       ecp.addField('files', 'private', 'only');
     }])
-    .controller('OSFilesPrivateController', ['$scope', function ($scope) {
+    .controller('OSFilesPrivateController', ['$scope', 'FILEEDITOR_RESPONSES', function ($scope, FER) {
       $scope.reload = function (result) {
-        if (result) {
+        if (result == FER.SAVED || result === true) {
           window.location.reload();
         }
       }

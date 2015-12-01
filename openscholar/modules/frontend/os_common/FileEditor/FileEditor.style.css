@@ -65,3 +65,54 @@ div[file-edit] h4,
 [file-edit] label {
   margin-top: 10px;
 }
+
+/* Error window */
+
+[file-edit] div.error {
+  position: absolute;
+  top: 30%;
+  left: calc(50% - (500px / 2));
+  background-color: red;
+  color: white;
+  padding: 20px;
+  border: 2px solid darkred;
+  cursor: pointer;
+  width: 450px;
+}
+
+[file-edit] span {
+  white-space: pre-line;
+}
+
+[file-edit] div.error .error-close {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 5px;
+}
+
+[file-edit] input.error,
+[file-edit] .ng-invalid {
+  border-color: red !important;
+  outline-color: red !important;
+}
+
+#fe-file-name + div {
+  position: relative;
+}
+
+#fe-file-name + div::before {
+  content: "Label can not be empty!";
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: red;
+  color: white;
+  border: 1px solid darkred;
+  padding: 3px;
+  display: none;
+}
+
+#fe-file-name.error + div::before {
+  display: block;
+}

@@ -126,6 +126,9 @@
     });
 
     $scope.$on('EntityService.files.update', function (event, file) {
+      if ($scope.selected_file.id == file.id) {
+        $scope.selected_file = angular.copy(file);
+      }
       for (var i=0; i < $scope.files.length; i++) {
         if ($scope.files[i].id == file.id) {
           $scope.files[i] = file;
@@ -136,6 +139,9 @@
 
     $scope.$on('EntityService.files.delete', function (event, id) {
       // Don't want to worry about what happens when you modify an array you're looping over
+      if ($scope.selected_file.id == id) {
+        $scope.selected_file = null;
+      }
       var deleteMe = false;
       for (var i=0; i<$scope.files.length; i++) {
         if ($scope.files[i].id == id) {
@@ -181,7 +187,7 @@
 
         var maxFilesize = params.max_filesize_raw || Drupal.settings.maximumFileSizeRaw;
         var size = maxFilesize > file.size,   // file is smaller than max
-          ext = file.name.slice(file.name.lastIndexOf('.')+1),
+          ext = file.name.slice(file.name.lastIndexOf('.')+1).toLowerCase(),
           extension = $scope.extensions.indexOf(ext) !== -1,    // extension is found
           id;
 
@@ -192,9 +198,7 @@
           addMessage(file.name + ' is not an accepted file type.');
         }
         // if file is image and params specify max dimensions
-        if (file.type.indexOf('image/') !== -1 && params.min_dimensions) {
-          // since we can't force this function to wait, we have to use an onload
-          // and check this before uploading
+        if (file.type.indexOf('image/') !== -1) {
         }
 
         return size && extension;
@@ -223,9 +227,13 @@
       $scope.dupes = [];
       for (var i=0; i<$files.length; i++) {
         var similar = [],
-            basename = $files[i].name.replace(/\.[a-zA-Z0-9]*$/, ''),
-            extension = $files[i].name.replace(basename, ''),
+            basename = $files[i].name.replace(/\.[a-zA-Z0-9]*$/, ''),   // remove extension from filename
+            extension = $files[i].name.replace(basename, ''),           // remove filename from filename to get extension
             dupeFound = false;
+
+        // rewrite the filename the same way PHP will
+        basename = basename.replace(/ /g, '_').replace(/[^a-zA-Z0-9-_.~]/g, '');
+        $files[i].filename = basename + extension;
 
         for (var j=0; j<$scope.files.length; j++) {
           // find any file with a name that matches "basename{_dd}.ext" and add it to list of similar files
@@ -233,7 +241,7 @@
             similar.push($scope.files[j]);
             // also check if there is a file with the full filename and save this fact for later
             // this allows file.jpg to be uploaded when file_01.jpg already exists
-            if ($scope.files[j].filename == $files[i].name) {
+            if ($scope.files[j].filename == $files[i].filename) {
               dupeFound = true;
             }
           }
@@ -266,6 +274,9 @@
           $scope.dupes.push($files[i]);
         }
         else {
+          if ($files[i].filename != $files[i].name) {
+            addMessage("This file was renamed from \"" + $files[i].name + "\" due to having invalid characters in its name.")
+          }
           // not a dupe, just upload it silently
           toBeUploaded.push($files[i]);
         }
@@ -351,6 +362,9 @@
               $scope.setSelection(firstId);
               $scope.changePanes('edit');
             }
+            else if (typeof $scope.messages[$scope.messages.next-1] != 'undefined') {
+              // do nothing. This usually means there was an error during upload.
+            }
             else {
               $scope.changePanes('library');
             }
@@ -381,22 +395,26 @@
           progress = e;
         }).success(function (e) {
           for (var i = 0; i< e.data.length; i++) {
-            e.data[i].new = true;
             service.register(e.data[i]);
             var found = false;
+            // check to see if this file exists
             for (var j = 0; j < $scope.files.length; j++) {
               if ($scope.files[j].id == e.data[i].id) {
+                // we just replaced an existing file.
+                e.data[i].replaced = true;
                 $scope.files[j] = e.data[i];
                 found = true;
               }
             }
             if (!found) {
+              // This is a brand-new file. Set the true flag and add it to the list.
+              e.data[i].new = true;
               $scope.files.push(e.data[i]);
             }
           }
           uploadNext(e.data[0].id);
         }).error(function (e) {
-          addMessage('Unable to upload file. Contact site administrator.');
+          addMessage(e.title);
           uploadNext();
         });
       }
@@ -404,7 +422,7 @@
       $scope.uploadProgress = function () {
         return {
           uploading: uploading,
-          filename: uploading ? toBeUploaded[currentlyUploading].name : '',
+          filename: uploading ? toBeUploaded[currentlyUploading].filename : '',
           progressBar: (uploading && progress) ? parseInt(100.0 * progress.loaded / progress.total) : 0,
           index: currentlyUploading+1,
           numFiles: toBeUploaded.length
@@ -422,8 +440,13 @@
     $scope.deleteConfirmed = function() {
       service.delete($scope.selected_file)
         .then(function (resp) {
-          $scope.changePanes('library');
         });
+      for (var j = 0; j < $scope.files.length; j++) {
+        if ($scope.files[j].id == $scope.selected_file.id) {
+          $scope.files[j].status = 'deleting';
+        }
+      }
+      $scope.changePanes('library');
     };
 
 
@@ -438,6 +461,7 @@
         if (e.data.length) {
           $scope.embed = '';
           $scope.setSelection(e.data[0].id);
+
           $scope.changePanes('edit')
         }
       })
@@ -447,6 +471,19 @@
             $scope.embedFailure = false;
           }, 5000);
       });
+    }
+
+    $scope.closeFileEdit = function (result) {
+      if (result == 'canceled' && $scope.selected_file.new) {
+        service.delete($scope.selected_file);
+        for (var j = 0; j < $scope.files.length; j++) {
+          if ($scope.files[j].id == $scope.selected_file.id) {
+            $scope.files[j].status = 'deleting';
+          }
+        }
+        $scope.selected_file = null;
+      }
+      $scope.changePanes('library');
     }
 
     $scope.insert = function () {

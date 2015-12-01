@@ -88,7 +88,7 @@ function os_events_views_default_views() {
   $handler->display->display_options['arguments']['entity_id']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['entity_id']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['entity_id']['summary_options']['items_per_page'] = '25';
-  /* Contextual filter: Registration: repeating_event_date (field_repeating_event_date) */
+  /* Contextual filter: : field_repeating_event_date (field_repeating_event_date) */
   $handler->display->display_options['arguments']['field_repeating_event_date_value']['id'] = 'field_repeating_event_date_value';
   $handler->display->display_options['arguments']['field_repeating_event_date_value']['table'] = 'field_data_field_repeating_event_date';
   $handler->display->display_options['arguments']['field_repeating_event_date_value']['field'] = 'field_repeating_event_date_value';
@@ -661,7 +661,7 @@ function os_events_views_default_views() {
   $handler->display->display_options['menu']['context'] = 0;
 
   /* Display: Feed */
-  $handler = $view->new_display('feed', 'Feed', 'feed_1');
+  $handler = $view->new_display('feed', 'Upcoming Events Feed', 'feed_1');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Ical';
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
@@ -708,7 +708,7 @@ function os_events_views_default_views() {
   $handler->display->display_options['filters']['field_date_value']['field'] = 'field_date_value';
   $handler->display->display_options['filters']['field_date_value']['operator'] = '>=';
   $handler->display->display_options['filters']['field_date_value']['default_date'] = 'now';
-  $handler->display->display_options['path'] = 'calendar/export.ics';
+  $handler->display->display_options['path'] = 'calendar/%/%/export.ics';
   $handler->display->display_options['sitename_title'] = 0;
 
   /* Display: RSS */
@@ -830,8 +830,9 @@ function os_events_views_default_views() {
   $handler->display->display_options['filters']['field_date_value']['field'] = 'field_date_value';
   $handler->display->display_options['filters']['field_date_value']['operator'] = '>=';
   $handler->display->display_options['filters']['field_date_value']['default_date'] = 'now';
-  $handler->display->display_options['path'] = 'calendar/rss.xml';
+  $handler->display->display_options['path'] = 'calendar/%/%/rss.xml';
   $handler->display->display_options['sitename_title'] = 0;
+
   $export['os_events'] = $view;
 
   return $export;

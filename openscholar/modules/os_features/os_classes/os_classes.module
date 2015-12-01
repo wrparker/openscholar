@@ -9,6 +9,46 @@
 include_once 'os_classes.features.inc';
 
 /**
+ * Implements hook_views_query_alter().
+ */
+function os_classes_views_query_alter(&$view, &$query) {
+  // Order override for semester values in /classes page as N/A, Winter, Fall, Summer, Spring.
+  if ($view->name == 'os_classes' && $view->current_display == 'page') {
+    $query->orderby[2]['field'] = "CASE field_data_field_semester_field_semester_value WHEN 'Winter' THEN 1 WHEN 'Fall' THEN 2 WHEN 'Summer' THEN 3 WHEN 'Spring' THEN 4 ELSE 0 END";
+    $query->orderby[2]['direction'] = 'ASC';
+  }
+}
+
+/**
+ * Implements hook_field_attach_load().
+ */
+function os_classes_field_attach_load($entity_type, $entities, $age, $options) {
+  // Targeting only 'node' type entity of bundle 'class' for all view modes.
+  if ($entity_type == 'node') {
+    foreach ($entities as $entity) {
+      if ($entity->type == 'class') {
+        // If attached field 'field_semester' have no value, displaying N/A as default value.
+        // If field has the value for N/A, N/a or n/A by class import csv, then also output should be displayed as N/A.
+        if (empty($entity->field_semester) || (isset($entity->field_semester[LANGUAGE_NONE][0]['value']) && strtolower($entity->field_semester[LANGUAGE_NONE][0]['value']) == 'n/a')) {
+          $entity->field_semester[LANGUAGE_NONE][0]['value'] = 'N/A';
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_classes_form_class_node_form_alter(&$form, &$form_state) {
+  // If field semester default value is empty, then option N/A will be selected in edit mode
+  // During new class creation, default value is empty, then also n/a will be selected.
+  if (empty($form['field_semester'][LANGUAGE_NONE]['#default_value'])) {
+    $form['field_semester'][LANGUAGE_NONE]['#default_value'] = '_none';
+  }
+}
+
+/**
  * Implements hook_os_app_info().
  */
 function os_classes_os_app_info() {

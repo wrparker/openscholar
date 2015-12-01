@@ -244,15 +244,16 @@ button[ng-disabled="!pager.canPage(-1)"] {
     color: #215990;
     cursor: pointer;
 }
+
+.fe-replace-wrapper .description {
+    display: inline-block;
+    margin-left: 10px;
+}
+
 #file-delete-section.open {
     display: block;
 }
-div[file-edit] .fe-warning ~ .control {
-    display: none;
-}
-div[file-edit] .fe-warning.ng-hide ~ .control {
-    display: block;
-}
+
 .tw-widget h4 {
     font-size: .97em;
 }
@@ -267,6 +268,7 @@ div[file-edit] .fe-warning.ng-hide ~ .control {
 [media-browser-field] .form-managed-file {
     position: relative;
 }
+
 .field-widget-media-draggable-file span.ng-binding.ng-scope,
 #media-browser-file-select {
     height: 20px;
@@ -332,6 +334,7 @@ div[file-edit] .control button {
 .node-form .media-browser-drop-box {
     height: 180px;
     background-color: #FFF;
+    margin-top: 0;
 }
 .media-browser-dupe {
     position: absolute;
@@ -395,3 +398,34 @@ div[file-edit] .control button {
 .ui-dialog-titlebar {
     display: none;
 }
+
+
+/**
+ * Misc label styling associated with MB
+ */
+
+.field-name-field-upload label[for="edit-field-upload-und-drop"] {
+
+  margin-top: 15px;
+}
+
+@keyframes highlight {
+  0% {
+    margin-left: 0px;
+    animation-timing-function: ease-out;
+  }
+  50% {
+    margin-left: 20px;
+    animation-timing-function: ease-in;
+  }
+  100% {
+    margin-left: 0px;
+  }
+}
+
+[media-browser-field] .file-list-single.highlight {
+  animation-name: highlight;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+

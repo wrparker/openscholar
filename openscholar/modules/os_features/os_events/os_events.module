@@ -86,6 +86,36 @@ function os_events_menu() {
 }
 
 /**
+ * Implements hook_entity_view_alter().
+ */
+function os_events_entity_view_alter(&$build, $type) {
+  // Removing extra fields from event registration page in full view mode.
+  if ($type == 'registration' && $build['#view_mode'] == 'full' && $build['#bundle'] == 'event_signup_simple') {
+    $param = drupal_get_query_parameters();
+    $node = node_load($build['#entity']->entity_id);
+
+    // Overriding Event entity link display.
+    $build['host_entity_link']['#label'] = t('Event');
+    $build['host_entity_link']['#items'][0]['#markup'] = isset($build['host_entity_link']['#items'][0]['#markup']) ? l($node->title, 'node/' . $build['#entity']->entity_id, array('query' => $param)) : NULL;
+    $build['host_entity_link']['#weight'] = -20;
+    $entity_link_tmp = $build['host_entity_link'];
+    unset($build['host_entity_link']);
+    $build['entity_link'] = $entity_link_tmp;
+
+    // Overriding Created date display.
+    $build['created']['#weight'] = -9;
+    $created_tmp = $build['created'];
+    unset($build['created']);
+    $build['created'] = $created_tmp;
+
+    // Reset additional fields display.
+    unset($build['spaces']);
+    unset($build['author']);
+    unset($build['state']);
+  }
+}
+
+/**
  * Page callback; Exports event's registrants.
  */
 function os_events_export_to_csv($node, $delta = FALSE) {
@@ -275,7 +305,10 @@ function os_events_views_pre_render(&$view) {
     return;
   }
 
-  $view->attachment_before = '<a class="cal-export">' . t('Export') . '</a>' . $view->attachment_before;
+  // only display subscribe links if listing is the events landing page or a list of upcoming events
+  if ((isset($view->exposed_input['month']) && $view->exposed_input['month'] == date('Y-m')) || strpos($view->get_path(), "calendar/upcoming") !== FALSE) {
+    $view->attachment_before = '<a class="cal-export">' . t('Export') . '</a>' . $view->attachment_before;
+  }
 }
 
 function os_events_date_formatter_pre_view_alter(&$entity, $vars) {
@@ -366,10 +399,10 @@ function os_events_process_node(&$variables) {
     }
   }
 
+  $register = '';
   if ($variables['page'] && empty($variables['sv_list'])) {
 
     $registrations_type = !empty($variables['node']->field_event_registration[LANGUAGE_NONE][0]['registration_type']);
-    $register = '';
 
     // Show the signup link if capacity isn't reached.
     if ($registrations_type && os_events_event_registration_reach_capacity($variables['node'], $date)) {
@@ -396,7 +429,7 @@ function os_events_process_node(&$variables) {
     }
 
     $options = array('absolute' => TRUE, 'attributes' => array('class' => array('subscribe')));
-    $subscribe = l(t('subscribe'), 'calendar/export.ics/' . $variables['node']->nid, $options);
+    $subscribe = l(t('subscribe'), 'calendar/single/'  . $variables['node']->nid . '/export.ics', $options);
     $subscribe = str_replace('http://', 'webcal://', $subscribe);
 
     // Hiding the original registration link because we are using our own link
@@ -404,7 +437,7 @@ function os_events_process_node(&$variables) {
     // in the export area.
     hide($variables['content']['field_event_registration']);
 
-    $ical = l(t('iCal'), 'calendar/export.ics/' . $variables['node']->nid, array('attributes' => array('class' => array('ical'))));
+    $ical = l(t('iCal'), 'calendar/single/' . $variables['node']->nid . '/export.ics', array('attributes' => array('class' => array('ical'))));
 
     $params = array(
       'register' => $register,
@@ -690,7 +723,7 @@ function os_events_modal_submit($form, &$form_state) {
   // dismiss the window
   $commands[] = ctools_modal_command_dismiss();
   // Display messages.
-  $commands[] = ajax_command_before('#columns', theme('status_messages'));
+  $commands[] = ajax_command_before('#header', theme('status_messages'));
 
   // In case event is full update the register links via ajax.
   $event = node_load($form_state['registration']->entity_id);
@@ -745,19 +778,21 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
 
   if (!in_array($display_id, array('block_2', 'block_1'))) {
     $buttons = array(
-      'subscribe' => 'calendar/export.ics',
-      'iCal' => 'calendar/export.ics',
-      'rss' => 'calendar/rss.xml'
+      'subscribe' => 'calendar/upcoming/all/export.ics',
+      'iCal' => 'calendar/upcoming/all/export.ics',
+      'rss' => 'calendar/upcoming/all/rss.xml'
     );
 
     foreach ($buttons as $label => $path) {
-
       // When the user is filtering events by taxonomy term we need to add the
       // path to the iCal/rss export path.
-      if (os_taxonomy_in_taxonomy_term_context($view)) {
+      $term_path = os_taxonomy_in_taxonomy_term_context($view);
+      if ($term_path) {
         // Get the current taxonomy term path from the $_GET['q'] and remove the
         // word calendar for prevent duplication of the word.
-        $path .= str_replace('calendar', '', $_GET['q']);
+        $path_parts = explode("/", $term_path);
+        $tid = array_pop($path_parts);
+        $path = str_replace("upcoming/all/", "term/$tid/", $path);
       }
 
       $links[$label] = array(
@@ -778,10 +813,6 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
 
   if (empty($view->display_handler->display->display_options['pager']['options']['date_id'])) {
     // Not a calendar view, or a mini-calendar
-    return;
-  }
-
-  if (empty($_GET['type']) || !in_array($_GET['type'], array('day', 'week', 'month', 'year'))) {
     return;
   }
 
@@ -809,6 +840,10 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
     }
 
     $view->args[0] = date($format['month'], $time);
+    return;
+  }
+
+  if (empty($_GET['type']) || !in_array($_GET['type'], array('day', 'week', 'month', 'year'))) {
     return;
   }
 
@@ -890,29 +925,34 @@ function os_events_views_query_alter($view, views_plugin_query_default $query) {
   if ($view->name != 'os_events' ) {
     return;
   }
-  $format = array('year' => 'Y', 'month' => 'Y-m', 'week' => 'Y-\W', 'day' => 'Y-m-d');
 
-  // Determine the type of the displayed month by the argument from the address.
-  $_GET['type'] = isset($_GET['type']) ? $_GET['type'] : 'month';
-
-  // Determine the value of the calendar view mode(day, year, month) argument
-  // value.
-  $_GET[$_GET['type']] = isset($_GET[$_GET['type']]) ? $_GET[$_GET['type']] : date($format[$_GET['type']], time());
-
-  if ($view->current_display == 'feed_1') {
+	// is this a view a feed view?
+  if ($view->current_display == 'feed_1' || $view->current_display == 'feed_2') {
     // Alter the exported events according the current path.
     $menu = menu_get_item();
 
-    if ($menu['map'][2] == 'upcoming') {
-      $query->where[1]['conditions'][3]['field'] = "DATE_FORMAT(ADDTIME(field_data_field_date.field_date_value, SEC_TO_TIME(-18000)), '%Y-%m-%d\T%H:%i') >= :field_data_field_date_field_date_value";
-      $query->where[1]['conditions'][3]['value'][':field_data_field_date_field_date_value'] = date("Y-m-d\TH:i");
+    // narrow down export to single event
+    if ($menu['map'][1] == "single" && is_numeric($menu['map'][2])) {
       unset($query->where[1]['conditions'][4]);
-
-      if (!empty($menu['map'][3]) && !empty($menu['map'][4])) {
-        // We need to filter by the current taxonomy term filtering.
-        os_taxonomy_views_query_alter($view, $query);
+      $query->add_where($query->options['group'], "node.nid", $menu['map'][2], "=");
+    }
+    else {
+      // filter by the current taxonomy term filtering.
+      if ($menu['map'][1] == 'term' && is_numeric($menu['map'][2])) {
+        $alias = $query->add_table('field_data_og_vocabulary');
+        $query->set_distinct();
+        $query->add_where($query->options['group'], "$alias.og_vocabulary_target_id", $menu['map'][2], '=');
       }
     }
+  }
+  else {
+    $format = array('year' => 'Y', 'month' => 'Y-m', 'week' => 'Y-\W', 'day' => 'Y-m-d');
+
+    // Determine the type of the displayed month by the argument from the address
+    $_GET['type'] = isset($_GET['type']) ? $_GET['type'] : 'month';
+
+    // Determine the value of the calendar view mode(day, year, month) argument value
+    $_GET[$_GET['type']] = isset($_GET[$_GET['type']]) ? $_GET[$_GET['type']] : date($format[$_GET['type']], time());
   }
 }
 
@@ -922,6 +962,16 @@ function os_events_views_query_alter($view, views_plugin_query_default $query) {
  * Change the url of the prev and next links.
  */
 function os_events_url_outbound_alter(&$path, &$options, $original_path) {
+
+  // Overriding View/Edit/Delete links in Event sign up registration listing.
+  if (preg_match('|^registration/([0-9]*)(/.*)?|', $path, $matches)) {
+    if (isset($matches[2]) && in_array($matches[2], array('/edit', '/delete'))) {
+      $options['query'] = array_merge(drupal_get_query_parameters(), drupal_get_destination());
+    } else {
+      $options['query'] = drupal_get_query_parameters();
+    }
+  }
+
   $view_modes = array(
     'calendar/week',
     'calendar/day',
@@ -1106,7 +1156,7 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
     '#type' => 'date_popup',
     '#title' => t('Reminder Date'),
     '#description' => t('When to send reminders.'),
-    '#default_value' => $reminder_on ? date('Y-m-d H:i', $reminder) : '',
+    '#default_value' => $reminder && !empty($reminder_date) ? date('Y-m-d H:i', strtotime($reminder_date)) : date('Y-m-d H:i'),
     '#date_format' => $format,
     '#states' => array(
       'visible' => array(
@@ -1116,12 +1166,13 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
   );
 
   // Remove the template, reminder date is no longer inside a container.
+  $delta = empty($_GET['delta']) ? 0 : $_GET['delta'];
   $form['reminder']['reminder_settings']['reminder_template'] = $form['reminder']['reminder_settings']['reminder_template'] + array(
     '#access' => FALSE,
     '#value'  => $reminder_on ? variable_get('os_reminder_template', "
-Hello[registration:attendee_name],
+Hello,
 
-You request to send a reminder for the event <a href='[node:url]'>[node:title]</a>.") : '',
+This is only a friendly reminder that you registered the event <a href='[node:url]?delta={$delta}'>[node:title]</a>.") : '',
   );
   $form['reminder']['reminder_settings']['token_tree']['#access'] = FALSE;
   $form['reminder']['reminder_settings']['#type'] = 'container';
@@ -1181,6 +1232,31 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
   $form['#submit'][] = 'os_events_invalidate_cache';
 
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
+
+  $form['#after_build'][] = 'os_events_registration_entity_after_build';
+}
+
+/**
+ * After build; Change the order the validation handlers.
+ */
+function os_events_registration_entity_after_build($form, $form_state) {
+  array_unshift($form['#validate'], 'os_events_validate_handle_reminder');
+  return $form;
+}
+
+/**
+ * Validate handler; Take care with bad values from the reminder part.
+ */
+function os_events_validate_handle_reminder($form, &$form_state) {
+  // Since we are hiding the reminder template from the form the and the user
+  // switch from not reminding to reminding the original validation handler
+  // messed up.
+  $delta = empty($_GET['delta']) ? 0 : $_GET['delta'];
+  $reminder = &$form_state['values']['reminder'];
+  $reminder['reminder_settings']['reminder_template'] = $form_state['values']['reminder']['send_reminder'] ? variable_get('os_reminder_template', "
+Hello,
+
+This is only a friendly reminder that you registered the event <a href='[node:url]?delta={$delta}'>[node:title]</a>.") : '';
 }
 
 /**
@@ -1633,11 +1709,21 @@ function os_events_entity_insert($entity, $type) {
   $wrapper = entity_metadata_Wrapper($type, $entity);
   $node = node_load($entity->entity_id);
 
+  // Obtaining menu router item of the Ajax URL.
+  $menu_item = menu_get_item();
+
+  // If delta argument is present in URL, then query option will be available in url parameter otherwise no delta parameter will be available in email link.
+  if ($menu_item['path'] == "os_events/%/registration/%" && isset($menu_item['original_map'][4]) && !empty($menu_item['original_map'][4])) {
+     $query = array('delta' => $menu_item['original_map'][4]);
+  } else {
+    $query = array();
+  }
+
   $module = 'os_events';
   $key = 'registration_confirmation';
   $language = language_default();
   $params = array(
-    '@url' => url('node/' . $node->nid, array('absolute' => TRUE)),
+    '@url' => url('node/' . $node->nid, array('absolute' => TRUE, 'query' => $query)),
     '@title' => $node->title,
     '@user-name' => $wrapper->field_full_name->value(),
   );
@@ -1661,6 +1747,10 @@ function os_events_entity_insert($entity, $type) {
   else {
     $from = $registration_settings['settings']['from_address'];
   }
+
+  // Displaying confirmation message to user's screen.
+  drupal_set_message(t('You have successfully registered for the event. Please check your email for confirmation.'));
+
   drupal_mail($module, $key, $wrapper->anon_mail->value(), $language, $params, $from);
 }
 
@@ -1707,6 +1797,36 @@ function os_events_mail_alter(&$message) {
  */
 function os_events_form_event_node_form_alter(&$form, &$form_state) {
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
+  $form['#validate'][] = 'os_events_validate_repeat_on_checkbox';
+}
+
+/**
+ * Validate handler; Verifying if at least one day/month checkbox is selected for 'Repeat on' section in Weekly/Monthly/Yearly repeating event form.
+ */
+function os_events_validate_repeat_on_checkbox($form, $form_state) {
+  // Obtaining repeat rules from form submission.
+  $repeating = $form_state['values']['field_date'][LANGUAGE_NONE][0]['rrule'];
+
+  // For non-repeating events, $repeating will be NULL.
+  if ($repeating) {
+    // Formatting repeat rules in structured array.
+    $parts = date_repeat_split_rrule($repeating);
+    $rrule = $parts[0];
+    // Validation for weekly, monthly and yearly repeating events.
+    if (!isset($rrule['BYDAY']) && $rrule['FREQ'] == 'WEEKLY') {
+      form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][FREQ', t('You must select at least one day.'));
+    } elseif (!isset($rrule['BYMONTH']) && $rrule['FREQ'] == 'MONTHLY') {
+        form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][FREQ', t('You must select at least one month.'));
+    } elseif (!isset($rrule['BYMONTH']) && $rrule['FREQ'] == 'YEARLY') {
+        // Validation for two types of radio button choice for monthly and yearly repeating events.
+        // e.g On day <NUM> of <MONTH> / On the <FIRST> <SUNDAY> of <MONTH>.
+        if (!isset($rrule['BYMONTHDAY'])) {
+          form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][FREQ', t('Repeats On the field must have at least one month option checked.'));
+        } else {
+          form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][FREQ', t('You must select at least one month.'));
+        }
+    }
+  }
 }
 
 /**
@@ -1852,6 +1972,7 @@ function os_events_entity_settings_page($entity_type, $entity) {
   list($entity_id) = entity_extract_ids($entity_type, $entity);
   $repeating = $entity->field_date['und'][0]['rrule'];
 
+  $date = '';
   if ($repeating && isset($_GET['delta'])) {
     $delta = intval($_GET['delta']);
     $date = field_get_items('node', $entity, 'field_date');
@@ -2052,4 +2173,167 @@ function os_events_get_event_duration($item) {
   $hours = round(($event_end - $event_start) / 3600, 1);
 
   return 80 * $hours . 'px';
+}
+
+/**
+ * Constructs a human-readable description of the repeat rule.
+ * @param string $rrule
+ * repeat rules string
+ * @param string $format
+ * date format for displaying the day, month and year.
+ * @return string
+ * human-readable description as output
+ */
+function os_date_repeat_rrule_description($rrule, $format = 'D M d Y') {
+  // Empty or invalid value.
+  if (empty($rrule) || !strstr($rrule, 'RRULE')) {
+    return;
+  }
+
+  module_load_include('inc', 'date_api', 'date_api_ical');
+  module_load_include('inc', 'date_repeat', 'date_repeat_calc');
+
+  $parts = date_repeat_split_rrule($rrule);
+
+  $additions = $parts[2];
+  $exceptions = $parts[1];
+  $rrule = $parts[0];
+  if ($rrule['FREQ'] == 'NONE') {
+    return;
+  }
+
+  // Make sure there will be an empty description for any unused parts.
+  $description = array(
+    '!interval' => '',
+    '!byday' => '',
+    '!bymonth' => '',
+    '!count' => '',
+    '!until' => '',
+    '!except' => '',
+    '!additional' => '',
+    '!week_starts_on' => '',
+    );
+  $interval = date_repeat_interval_options();
+  switch ($rrule['FREQ']) {
+    case 'WEEKLY':
+      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every week', 'every @count weeks');
+      $freq_type = 'weekly';
+      break;
+    case 'MONTHLY':
+      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every month', 'every @count months');
+      $freq_type = 'monthly';
+      break;
+    case 'YEARLY':
+      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every year', 'every @count years');
+      $freq_type = 'yearly';
+      break;
+    default:
+      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every day', 'every @count days');
+      $freq_type = 'daily';
+      break;
+  }
+
+  if (!empty($rrule['BYDAY'])) {
+    $days = date_repeat_dow_day_options();
+    $counts = date_repeat_dow_count_options();
+    $days_results = array();
+    $day_count = 0;
+    foreach ($rrule['BYDAY'] as $byday) {
+      // Get the numeric part of the BYDAY option, i.e. +3 from +3MO.
+      $day = substr($byday, -2);
+      $count = str_replace($day, '', $byday);
+      $day_count++;
+
+      if (!empty($count)) {
+        // See if there is a 'pretty' option for this count, i.e. +1 => First.
+        $order = array_key_exists($count, $counts) ? strtolower($counts[$count]) : $count;
+        $days_results[] = trim(t(' on the !date_order !day_of_week', array('!date_order' => $order, '!day_of_week' => $days[$day])));
+      }
+      else {
+        $days_results[] = trim(t('!day_of_week', array('!day_of_week' => $days[$day])));
+      }
+    }
+  }
+
+  if (!empty($rrule['BYMONTH'])) {
+    if (sizeof($rrule['BYMONTH']) < 12) {
+      $results = array();
+      $months = date_month_names();
+      foreach ($rrule['BYMONTH'] as $month) {
+        $results[] = $months[$month];
+      }
+      if (!empty($rrule['BYMONTHDAY'])) {
+        $description['!bymonth'] = trim(t(' on the !month_days of !month_names', array('!month_days' => implode(', ', $rrule['BYMONTHDAY']), '!month_names' => implode(', ', $results))));
+      }
+      else {
+        $description['!bymonth'] = trim(t(' of !month_names', array('!month_names' => implode(', ', $results))));
+      }
+    }
+  }
+
+  if ($freq_type == 'daily') {
+    // Omitting 'every day' string for daily events
+    if (isset($days_results)) {
+      $description['!interval'] = '';
+      $description['!byday'] = t('every ') . implode(', ', $days_results);
+    }
+    // It will be displayed as every weekday
+    if (isset($rrule['BYDAY']) && count($rrule['BYDAY']) == 5) {
+      $description['!byday'] = 'every weekday';
+    }
+  } elseif ($freq_type == 'weekly') {
+      if (isset($days_results) && count($days_results) > 1 && empty($rrule['COUNT'])) {
+        $prefix_day_weekly = ' on ';
+      } else {
+        $prefix_day_weekly = count($days_results) > 0 ? ' every ' : '';
+      }
+    $description['!byday'] = t($prefix_day_weekly) . implode(', ', $days_results);
+  } elseif ($freq_type == 'monthly') {
+      if(isset($days_results)) {
+        $description['!interval'] = '';
+        $description['!byday'] = implode(', ', $days_results) . (!empty($description['!bymonth']) ? ' ' . $description['!bymonth'] : '' );
+        $description['!bymonth'] = '';
+      }
+      $description['!interval'] .= (!empty($description['!bymonth']) ? ' ' : '' );
+  } elseif ($freq_type == 'yearly') {
+      if(isset($days_results)) {
+        $description['!byday'] = implode(', ', $days_results) . (!empty($description['!bymonth']) ? ' ' . $description['!bymonth'] : '' );
+        $description['!bymonth'] = '';
+      }
+      $description['!interval'] .= (!empty($description['!bymonth']) ? ' ' : '' );
+  }
+  if ($rrule['INTERVAL'] < 1) {
+    $rrule['INTERVAL'] = 1;
+  }
+  if (!empty($rrule['COUNT'])) {
+    $description['!count'] = trim(t(', !count times', array('!count' => $rrule['COUNT'])));
+  }
+  if (!empty($rrule['UNTIL'])) {
+    $until = date_ical_date($rrule['UNTIL'], 'UTC');
+    date_timezone_set($until, date_default_timezone_object());
+    $description['!until'] = trim(t(' until !until_date', array('!until_date' => date_format_date($until, 'custom', $format))));
+  }
+  if ($exceptions) {
+    $values = array();
+    foreach ($exceptions as $exception) {
+      $except = date_ical_date($exception, 'UTC');
+      date_timezone_set($except, date_default_timezone_object());
+      $values[] = date_format_date($except, 'custom', $format);
+    }
+    $description['!except'] = trim(t('!repeats_every_interval except !except_dates', array('!repeats_every_interval ' => '', '!except_dates' => implode(', ', $values))));
+  }
+  if (!empty($rrule['WKST'])) {
+    $day_names = date_repeat_dow_day_options();
+    $description['!week_starts_on'] = trim(t('!repeats_every_interval where the week start on !day_of_week', array('!repeats_every_interval ' => '', '!day_of_week' => $day_names[trim($rrule['WKST'])])));
+  }
+  if ($additions) {
+    $values = array();
+    foreach ($additions as $addition) {
+      $add = date_ical_date($addition, 'UTC');
+      date_timezone_set($add, date_default_timezone_object());
+      $values[] = date_format_date($add, 'custom', $format);
+    }
+    $description['!additional'] = trim(t('Also includes !additional_dates.', array('!additional_dates' => implode(', ', $values))));
+  }
+  return t('Repeats !interval!bymonth!byday!count !until !except. !additional', $description);
 }

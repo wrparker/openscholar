@@ -446,8 +446,7 @@ function os_files_upload_validate_image_dimensions(stdClass $file) {
   $available_memory = $memory_limit - $memory_drupal;
 
   if ($memory_to_process > $available_memory) {
-    $errors[] = t('The dimensions of this image are too large for us to handle. Use photo-editing software or an online
-      tool like !resizer to shrink the image.', array(
+    $errors[] = t('The dimensions of this image are too large for us to handle. Use photo-editing software or an online tool like !resizer to shrink the image.', array(
       '!resizer' => l('picresize.com', 'http://www.picresize.com/')
     ));
   }
@@ -1603,7 +1602,8 @@ function os_files_file_view($file, $view_mode, $langcode) {
     ),
   );
 
-  if (!isset($file->oembed) || !$file->oembed) {
+  // HTML embeded files will not have any Download link.
+  if ((!isset($file->oembed) || !$file->oembed) && $file->filemime != 'html/embed') {
     $content['file-info']['download'] = array(
       '#theme' => 'link',
       '#path' => file_create_url($file->uri),
@@ -1965,7 +1965,7 @@ function os_files_views_data_alter(&$data){
  */
 function os_files_os_entity_view_modes() {
   $modes = array('file' => array_fill_keys(
-    array('image', 'video', 'audio', 'document', 'executable', 'html'),
+    array('image', 'video', 'audio', 'document', 'executable', 'html', 'icon'),
     array('os_files_link', 'os_files_link_icon', 'teaser', 'full', 'os_files_title')
   ));
 
@@ -1999,15 +1999,28 @@ function os_files_file_default_types() {
     ),
   );
 
+  $types['icon'] = (object) array(
+    'api_version' => 1,
+    'type' => 'icon',
+    'label' => t('Icon'),
+    'description' => t('Small image files used as favicons or as UI elements.'),
+    'mimetypes' => array(
+      'image/ico',
+      'application/ico',
+      'application/x-ico',
+      'image/vnd.microsoft.icon',
+    ),
+    'streams' => array(
+      'public'
+    )
+  );
+
   return $types;
 }
 
 function os_files_file_default_types_alter(&$types){
   $image = array(
     // *.ico files
-    'image/ico',
-    'application/ico',
-    'application/x-ico',
     'application/x-win-bitmap',
     'image/x-win-bitmap'
   );
@@ -2220,8 +2233,12 @@ function _os_files_extensions_from_type($type) {
       'jpeg',
       'gif',
       'png',
+    );
+
+    $types['icon'] = array(
       'ico',
     );
+
     $types['document'] = array(
       'txt',
       'pdf',
@@ -2457,7 +2474,7 @@ function os_files_add_fields($type) {
       ),
       'entity_type' => 'file',
       'field_name' => 'os_file_description',
-      'label' => 'Description',
+      'label' => $type == 'image' ? 'Image Caption' : 'Description',
       'required' => FALSE,
       'settings' => array(
         'display_summary' => 0,

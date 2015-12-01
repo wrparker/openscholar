@@ -1,5 +1,5 @@
 <div class="container-fluid" ng-switch="pane">
-    <div class="media-browser-buttons">
+    <div class="media-browser-buttons" ng-show="pane != 'edit' && pane != 'delete'">
         <div class="media-browser-button" ng-class="{active:pane=='upload'}" ng-show="activePanes.upload" ng-click="changePanes('upload')">Upload from your computer</div>
         <div class="media-browser-button" ng-class="{active:pane=='web'}" ng-show="activePanes.web" ng-click="changePanes('web')">Embed from the web</div>
         <div class="media-browser-button" ng-class="{active:pane=='library'}" ng-show="activePanes.library" ng-click="changePanes('library')">Previously uploaded files</div>
@@ -11,21 +11,24 @@
             {{loadingMessage}}
         </div>
         <div class="media-browser-pane" ng-switch-when="upload">
-        	<span id="drag-text">Drag and drop files here. <span class="help_icon" ng-mouseenter="showHelp = true" ng-mouseleave="showHelp = false">?</span></span>
-            <a href="#" id="media-browser-file-select" ng-file-select ng-file-change="$parent.checkForDupes($files, $event)"
-                 ng-accept="$parent.validate($file)" accept="{{'.'+extensions.join(',.')}}" ng-multiple="true">Select files to Add</a>
-            <div class="help" ng-show="showHelp">Files must be less than <strong>{{maxFilesize}}</strong>.<br />
-                    Allowed file types: <strong>{{extensions.join(' ')}}</strong></div>
             <div ng-file-drop ng-file-change="$parent.checkForDupes($files, $event)" class="media-browser-drop-box"
                  drag-over-class="media-browser-drag-over" ng-multiple="true" allow-dir="true"
                  hide-on-drop-not-available="true" ng-accept="$parent.validate($file)">
+                <span id="drag-text">Drag and drop files here. <span class="help_icon" ng-mouseenter="showHelp = true" ng-mouseleave="showHelp = false">?</span></span>
+                <a href="#" id="media-browser-file-select" ng-file-select ng-file-change="$parent.checkForDupes($files, $event)"
+                   ng-accept="$parent.validate($file)" accept="{{'.'+extensions.join(',.')}}" ng-multiple="true">Select files to Add</a>
+                <div class="help" ng-show="showHelp">Files must be less than <strong>{{maxFilesize}}</strong>.<br />
+                    Allowed file types: <strong>{{extensions.join(' ')}}</strong></div>
             </div>
             <div id="media-browser-duplicate-check" ng-show="$parent.dupes.length > 0">
                 <div class="media-browser-dupe" ng-repeat="dupe in $parent.dupes" ng-show="!dupe.processed" style="z-index: {{1000-$index}}">
-                    A file with the name '{{dupe.name}}' already exists.
+                    A file with the name '{{dupe.filename}}' already exists.
+                    <div ng-show="dupe.name != dupe.filename">
+                        This file was renamed from '{{dupe.name}}' due to having invalid characters in its name.
+                    </div>
                     <div class="actions">
                         <div><button value="rename" ng-click="$parent.rename($index, $last)">Rename</button> The new name will be {{dupe.newName}}</div>
-                        <div><button value="replace" ng-click="$parent.replace($index, $last)">Replace</button></div>
+                        <div><button value="replace" ng-click="$parent.replace($index, $last)">Replace</button> This CANNOT be undone!</div>
                         <div><button value="cancel" ng-click="$parent.cancelUpload($index, $last)">Cancel</button></div>
                     </div>
                     <div class="media-browser-dupe-counter" ng-show="$parent.dupes.length > 1">{{$index+1}}/{{$parent.dupes.length}}</div>
@@ -42,8 +45,7 @@
                     <div id="media-browser-upload-counter">{{$parent.uploadProgress().index}} of {{$parent.uploadProgress().numFiles}}</div>
                 </div>
                 <div id="media-browser-rejected">
-                    <div ng-repeat="m in messages" class="message">
-                        {{m.text}}
+                    <div ng-repeat="m in messages" class="message" ng-bind-html="m.text">
                     </div>
                 </div>
             </div>
@@ -91,14 +93,14 @@
                 <span class="mb-created">Upload Date</span>
                 <span class="mb-file-actions">&nbsp;</span>
             </div>
-            <div js-pager="file in files | mbFilename:$parent.search | mbType:filteredTypes | mbExtensions:extensions | orderBy:'-timestamp' track by file.id" page-size="5">
+            <div js-pager="file in files | mbFilename:$parent.search | mbType:filteredTypes | mbExtensions:extensions | filter:{status:'!deleting'} | orderBy:'-timestamp' track by file.id" page-size="5">
                 <div class="media-row" data-fid="{{file.id}}" ng-click="setSelection(file.id)" ng-class="{selected : selection == file.id, new : file.new}">
                     <span class="mb-preview" ng-bind-html="file.preview"></span>
                     <span class="mb-title">{{file.name}}</span>
                     <span class="mb-filename">{{file.filename}}</span>
                     <span class="mb-created">{{(file.timestamp + '000') | date:'short'}}</span>
                     <span class="mb-file-actions">
-                        <span class="mb-actions-edit" ng-click="setSelection(file.id); changePanes('edit')">Edit</span>
+                        <span class="mb-actions-edit" ng-click="setSelection(file.id); selected_file.new = false; selected_file.replaced = false; changePanes('edit')">Edit</span>
                         <span class="mb-actions-delete" ng-click="setSelection(file.id); changePanes('delete')">Delete</span>
                     </span>
                 </div>
@@ -112,7 +114,7 @@
             </div>
         </div>
         <div class="media-browser-pane" ng-switch-when="edit">
-            <div file-edit file="$parent.selected_file" on-close="changePanes('library')"></div>
+            <div file-edit file="$parent.selected_file" on-close="closeFileEdit(saved);"></div>
         </div>
         <div class="media-browser-pane" ng-switch-when="delete">
             <div class="mb-delete-warning">Are you sure you want to delete {{$parent.selected_file.name}}? This operation CANNOT be undone.</div>

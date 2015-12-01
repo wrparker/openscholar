@@ -132,7 +132,9 @@
  *}
  *
  */
-class OsFilesResource extends RestfulEntityBase {
+class OsFilesResource extends OsRestfulEntityCacheableBase {
+
+  protected $errors = array();
 
   /**
    * Overrides RestfulEntityBase::publicFieldsInfo().
@@ -213,6 +215,13 @@ class OsFilesResource extends RestfulEntityBase {
       'sub_property' => 'value',
       'callback' => array($this, 'getImageTitleText'),
       'saveCallback' => array($this, 'setImageTitleText'),
+    );
+
+    $info['embed_code'] = array(
+      'property' => 'field_html_code',
+      'sub_property' => 'value',
+      'callback' => array($this, 'getHtmlCode'),
+      'saveCallback' => array($this, 'setHtmlCode'),
     );
 
     $info['preview'] = array(
@@ -298,6 +307,13 @@ class OsFilesResource extends RestfulEntityBase {
   public function getIconUrl($wrapper) {
     $file = $wrapper->value();
     return file_icon_url($file);
+  }
+
+  /**
+   * Callback for embed codes
+   */
+  public function getHtmlCode($wrapper) {
+    return $this->getBundleProperty($wrapper, 'field_html_code');
   }
 
   /**
@@ -428,6 +444,9 @@ class OsFilesResource extends RestfulEntityBase {
     elseif (isset($_FILES['files']) && $_FILES['files']['errors']['upload']) {
       throw new RestfulUnprocessableEntityException('Error uploading new file to server.');
     }
+    elseif ($errors = form_get_errors()) {
+      throw new RestfulUnprocessableEntityException($errors['upload']);
+    }
     elseif (isset($this->request['embed']) && module_exists('media_internet')) {
 
       $provider = media_internet_get_provider($this->request['embed']);
@@ -491,7 +510,8 @@ class OsFilesResource extends RestfulEntityBase {
       ),
       'file_validate_size' => array(
         parse_size(file_upload_max_size())
-      )
+      ),
+      'os_files_upload_validate_image_dimensions' => array()
     );
 
     return $validators;
@@ -520,6 +540,16 @@ class OsFilesResource extends RestfulEntityBase {
     // no other data is addeed
     if ($this->request['file']) {
       $oldFile = file_load($entity_id);
+      $validators = $this->getValidators();
+      preg_match('|\.([a-zA-Z0-3]*)$|', $oldFile->uri, $match);
+      if ($match[1]) {
+        unset($validators['file_validate_extensions']);
+        $validators['file_validate_extension_from_mimetype'] = array($match[1]);
+      }
+      if ($errors = file_validate($this->request['file'], $validators)) {
+        throw new RestfulUnprocessableEntityException(implode("\n", $errors));
+      };
+
       $this->request['file']->filename = $oldFile->filename;
       if ($file = file_move($this->request['file'], $oldFile->uri, FILE_EXISTS_REPLACE)) {
         if ($oldFile->{OG_AUDIENCE_FIELD}) {
@@ -529,7 +559,7 @@ class OsFilesResource extends RestfulEntityBase {
         return array($this->viewEntity($entity_id));
       }
       else {
-        throw new RestfulBadRequestException('Error moving file.');
+        throw new RestfulBadRequestException('Error moving file. Please contact your server administrator.');
       }
     }
 
@@ -588,6 +618,11 @@ class OsFilesResource extends RestfulEntityBase {
     }
 
 
+    if ($this->getErrors()) {
+      $e = new RestfulBadRequestException("The following errors occured when attempting to save this file.\n".
+        implode("\n", $this->getErrors()));
+      throw $e;
+    }
     if (!$save) {
       // No request was sent.
       throw new RestfulBadRequestException('No values were sent with the request');
@@ -623,6 +658,24 @@ class OsFilesResource extends RestfulEntityBase {
     }
 
     return parent::propertyValuesPreprocess($property_name, $value, $public_field_name);
+  }
+
+  /**
+   * Add an error to be returned to the client.
+   *
+   * @param $field - the field that errored
+   * @param $error - the string message describing the error
+   */
+  public function addError($field, $error) {
+    $this->errors[] = "$field: $error";
+  }
+
+  /**
+   * Get the list of errors displayed so far
+   * @return array
+   */
+  public function getErrors() {
+    return $this->errors;
   }
 
   protected function updateFileLocation($wrapper) {
@@ -670,6 +723,18 @@ class OsFilesResource extends RestfulEntityBase {
     return false;
   }
 
+  protected function setHtmlCode($wrapper) {
+    if (isset($this->request['embed_code'])) {
+      if (media_embed_check_src($this->request['embed_code'])) {
+        $wrapper->field_html_code->set($this->request['embed_code']);
+
+        return true;
+      }
+      $this->addError('embed_code', 'This embed code failed validation. Please check that all urls are from accepted domains');
+    }
+    return false;
+  }
+
   protected function setTerms($wrapper) {
     if (isset($this->request['terms'])) {
       $values = $this->request['terms'];
@@ -684,4 +749,36 @@ class OsFilesResource extends RestfulEntityBase {
     }
     return false;
   }
+
+  protected function getLastModified($id) {
+    $q = db_select('file_managed', 'fm')
+      ->fields('fm', array('changed'))
+      ->condition('fid', $id)
+      ->execute();
+
+    foreach ($q as $r) {
+      return $r->changed;
+    }
+
+    return FALSE;
+  }
+}
+
+/*
+ * Replaces the core file_validate_extensions function when the file in question has a temporary extension.
+ */
+function file_validate_extension_from_mimetype(stdClass $file, $extensions) {
+  include_once DRUPAL_ROOT . '/includes/file.mimetypes.inc';
+  $maps = file_mimetype_mapping();
+  $ext_arr = explode(' ', $extensions);
+  $index = array_search($file->filemime, $maps['mimetypes']);
+  $exts = array_keys($maps['extensions'], $index);
+  $passes = array_intersect($ext_arr, $exts);
+
+  $errors = array();
+  if (!count($passes)) {
+    $errors[] = t('Only files with the following extensions are allowed: %files-allowed.', array('%files-allowed' => $extensions));
+  }
+
+  return $errors;
 }

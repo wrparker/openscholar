@@ -2,7 +2,7 @@
 
   var m = angular.module('os-public-page', ['FileEditorModal']);
 
-  m.run(['$rootScope', function ($rs) {
+  m.run(['$rootScope', 'FILEEDITOR_RESPONSES', function ($rs, FER) {
     $('li.link-count-file-edit a').each(function () {
       var $this = $(this),
         fid = this.href.match(/file\/([\d]*)\/edit/)[1];
@@ -15,7 +15,7 @@
     });
 
     $rs.reload = function (result) {
-      if (result) {
+      if (result == FER.SAVED) {
         window.location.reload();
       }
     }

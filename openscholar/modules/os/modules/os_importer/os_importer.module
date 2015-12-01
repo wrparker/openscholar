@@ -744,7 +744,12 @@ function os_importer_verify_uploaded_file($form, $form_state) {
         $value = intval($value);
       }
       elseif ($field == 'created' && is_string($value)) {
+        $orig_value_created = $value;
         $value = strtotime($value);
+        // if strtotime() output is blank, then date format is not correct, displaying error message.
+        if(empty($value)) {
+          form_set_error('created', t('Invalid date value entered for the field "!field" with value "!value".', array('!field' => $field, '!value' => $orig_value_created)));
+        }
       }
 
       try {
