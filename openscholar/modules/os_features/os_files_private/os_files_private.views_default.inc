@@ -34,6 +34,97 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '15';
   $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'fid' => 'fid',
+    'filename' => 'filename',
+    'os_files_copy_link_1' => 'os_files_copy_link_1',
+    'nothing' => 'nothing',
+    'filemime' => 'filemime',
+    'filesize' => 'filesize',
+    'timestamp' => 'timestamp',
+    'id' => 'id',
+    'title' => 'title',
+    'edit' => 'edit',
+    'delete' => 'delete',
+    'nothing_1' => 'nothing_1',
+  );
+  $handler->display->display_options['style_options']['default'] = 'timestamp';
+  $handler->display->display_options['style_options']['info'] = array(
+    'fid' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'filename' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'os_files_copy_link_1' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nothing' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'filemime' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'filesize' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'timestamp' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'desc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'id' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'title' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'edit' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'delete' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'nothing_1' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
   /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
@@ -127,25 +218,7 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['fields']['nothing_1']['label'] = 'Manage';
   $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<a file-editor-modal fid="[fid]" href="#" views-close="reload(result)">Edit</a> [delete]';
   $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
-  /* Sort criterion: File: Upload date */
-  $handler->display->display_options['sorts']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['sorts']['timestamp']['table'] = 'file_managed';
-  $handler->display->display_options['sorts']['timestamp']['field'] = 'timestamp';
-  $handler->display->display_options['sorts']['timestamp']['order'] = 'DESC';
-  $handler->display->display_options['sorts']['timestamp']['exposed'] = TRUE;
-  $handler->display->display_options['sorts']['timestamp']['expose']['label'] = 'Upload date';
-  /* Sort criterion: File: Size */
-  $handler->display->display_options['sorts']['filesize']['id'] = 'filesize';
-  $handler->display->display_options['sorts']['filesize']['table'] = 'file_managed';
-  $handler->display->display_options['sorts']['filesize']['field'] = 'filesize';
-  $handler->display->display_options['sorts']['filesize']['exposed'] = TRUE;
-  $handler->display->display_options['sorts']['filesize']['expose']['label'] = 'Size';
-  /* Sort criterion: File Usage: Use count */
-  $handler->display->display_options['sorts']['count']['id'] = 'count';
-  $handler->display->display_options['sorts']['count']['table'] = 'file_usage';
-  $handler->display->display_options['sorts']['count']['field'] = 'count';
-  $handler->display->display_options['sorts']['count']['order'] = 'DESC';
-  $handler->display->display_options['filter_groups']['operator'] = 'OR';
+  
   /* Filter criterion: Spaces: Content in current space */
   $handler->display->display_options['filters']['current']['id'] = 'current';
   $handler->display->display_options['filters']['current']['table'] = 'spaces';
@@ -156,6 +229,7 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['filters']['file_name_title']['table'] = 'file_managed';
   $handler->display->display_options['filters']['file_name_title']['field'] = 'file_name_title';
   $handler->display->display_options['filters']['file_name_title']['value'] = 'File name or title';
+  $handler->display->display_options['filters']['file_name_title']['group'] = 1;
   $handler->display->display_options['filters']['file_name_title']['exposed'] = TRUE;
   $handler->display->display_options['filters']['file_name_title']['expose']['operator_id'] = '';
   $handler->display->display_options['filters']['file_name_title']['expose']['label'] = 'File name or title';
@@ -187,6 +261,7 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['filters']['title']['field'] = 'title';
   $handler->display->display_options['filters']['title']['relationship'] = 'file_to_node';
   $handler->display->display_options['filters']['title']['operator'] = 'contains';
+  $handler->display->display_options['filters']['title']['group'] = 1;
   $handler->display->display_options['filters']['title']['exposed'] = TRUE;
   $handler->display->display_options['filters']['title']['expose']['operator_id'] = 'title_op';
   $handler->display->display_options['filters']['title']['expose']['label'] = 'Used in';
@@ -203,6 +278,27 @@ function os_files_private_views_default_views() {
     36 => 0,
     41 => 0,
   );
+  /* Filter criterion: File: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'file_managed';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['type']['expose']['operator_id'] = 'type_op';
+  $handler->display->display_options['filters']['type']['expose']['label'] = 'Type';
+  $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
+  $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
+  $handler->display->display_options['filters']['type']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    11 => 0,
+    21 => 0,
+    26 => 0,
+    31 => 0,
+    16 => 0,
+    36 => 0,
+    41 => 0,
+  );
+
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
