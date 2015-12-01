@@ -235,15 +235,6 @@ button[ng-disabled="!pager.canPage(-1)"] {
     border-radius: 3px;
     padding: 10px;
 }
-#fe-file-display-warning {
-    background: url('images/replace_icon.png?abc') no-repeat 3px 4px #E6E6E6;
-    border: none;
-    padding: 10px 10px 10px 32px;
-    font-size: .95em;
-    margin: 10px 0;
-    color: #215990;
-    cursor: pointer;
-}
 
 .fe-replace-wrapper .description {
     display: inline-block;
@@ -286,7 +277,8 @@ button[ng-disabled="!pager.canPage(-1)"] {
 .media-browser-pane .file-clear button,
 .media-browser-pane #media-browser-file-select,
 .media-browser-pane .actions button,
-div[file-edit] .control button {
+div[file-edit] .control button,
+#fe-file-display-warning {
     cursor: pointer;
     padding: 5px 17px;
     margin-bottom: 1em;

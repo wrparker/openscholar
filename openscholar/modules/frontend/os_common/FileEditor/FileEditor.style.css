@@ -41,6 +41,10 @@ div[ng-include="fileEditAddt"] {
     font-size: 1.2em;
     color: #000;
 }
+.success {
+background-color: #dff0d8;
+    padding: 5px;
+}
 .file-entity-loading-message {
     position: absolute;
     top: calc(50% - 259px/2);
