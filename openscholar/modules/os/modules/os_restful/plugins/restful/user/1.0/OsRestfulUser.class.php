@@ -86,6 +86,7 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
       $groups[] = array(
         'title' => $value->title,
         'id' => $value->nid,
+        'purl' => $value->purl,
         'owner' => ($value->uid == $account->uid),
         'subsite_access' => vsite_subsite_access('create', $value),
         'delete_access' => node_access('delete', $value),
