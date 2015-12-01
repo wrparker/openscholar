@@ -3,7 +3,7 @@
 /**
  * Perform any needed search setup functions
  */
-function os_search_solr_install(){
+function os_search_solr_install() {
 
   // Set the default search page to search/site
   variable_set('apachesolr_search_default_search_page', 'core_search');
@@ -60,7 +60,7 @@ function os_search_solr_install(){
 /**
  * Implements hook_uninstall().
  */
-function os_search_solr_uninstall(){
+function os_search_solr_uninstall() {
   variable_del('os_search_solr_reindex_by_bundles');
   variable_del('os_search_og_vocabulary_operator');
 }
@@ -75,5 +75,49 @@ function os_search_solr_update_7000() {
     $global_settings = $adapter->getFacetSettingsGlobal($realm);
     $global_settings->settings['hard_limit'] = -1;
     ctools_export_crud_save('facetapi', $global_settings);
+  }
+}
+
+/**
+ * Migrate search blocks to boxes.
+ */
+function os_search_solr_update_7001() {
+  $overrides = db_select('spaces_overrides', 'so')
+    ->fields('so', array('object_id', 'value', 'id'))
+    ->condition('object_type', 'context')
+    ->condition('object_id', '%reaction:block', 'LIKE')
+    ->condition('value', '%os_search_solr-site-search%', 'LIKE')
+    ->execute()
+    ->fetchAllAssoc('id');
+
+  // Creating a new widget instance.
+  $box = boxes_box::factory('os_search_solr_search_box', array());
+  $box->description = t('Site search');
+  $box->delta = time();
+  $box->save();
+
+  foreach ($overrides as $override) {
+    $blocks = unserialize($override->value);
+
+    // In case the view is used, create a new block that will replace it.
+    if (isset($blocks['blocks']['os_search_solr-site-search'])) {
+      // Replace the old one with the new instance.
+      $old_block = $blocks['blocks']['os_search_solr-site-search'];
+      $blocks['blocks']['boxes-' . $box->delta] = array(
+        'module' => 'boxes',
+        'delta' => $box->delta,
+        'region' => $old_block['region'],
+        'weight' => $old_block['weight'],
+      );
+      unset($blocks['blocks']['os_search_solr-site-search']);
+      $override->value = serialize($blocks);
+    }
+
+    db_update('spaces_overrides')
+      ->fields(array('value' => $override->value))
+      ->condition('id', $override->id)
+      ->condition('object_type', 'context')
+      ->condition('object_id', $override->object_id)
+      ->execute();
   }
 }
