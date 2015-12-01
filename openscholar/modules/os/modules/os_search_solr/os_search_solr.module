@@ -178,25 +178,19 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
     $query->addFilter('hash', apachesolr_site_hash());
   }
 
-  if (empty($_GET['keep_filters'])) {
-    // We don't need to keep the filters which mean the search wasn't invoked
-    // from the search widget. That mean we don't need to alter the query.
-    return;
-  }
-
   // Building a nicer array to work with.
   $filters = array();
   foreach ($query->getFilters() as $filter) {
     $filters[$filter['#name']][] = $filter['#value'];
   }
 
-  if (in_array('bundle', $_GET['keep_filters']) && !empty($filters['bundle']) && count($filters['bundle']) > 1) {
+  if (!empty($filters['bundle']) && count($filters['bundle']) > 1) {
     // We have multiple bundles. Change the query to support multiple bundles.
     $query->removeFilter('bundle');
     $query->addFilter('bundle', '('. implode(' OR ', $filters['bundle']) .')');
   }
 
-  if (in_array('terms', $_GET['keep_filters']) && !empty($filters['sm_og_vocabulary']) && count($filters['sm_og_vocabulary']) > 1) {
+  if (!empty($filters['sm_og_vocabulary']) && count($filters['sm_og_vocabulary']) > 1) {
     // We have multiple terms. Change the query to support multiple terms.
     $query->removeFilter('sm_og_vocabulary');
     $terms = '("'. implode('" OR "', $filters['sm_og_vocabulary']) . '")';
@@ -243,14 +237,6 @@ function os_search_solr_block_view_alter(&$data, $block) {
       $type_array = $data['content']['bundle']['#items'];
       if (is_array($type_array) && count($type_array) <= 1) {
         $data['content'] = NULL;
-      }
-    }
-
-    // Check if we need to disable the facets.
-    if (!empty($_GET['keep_filters']) && !in_array('bundle', $_GET['keep_filters'])) {
-
-      foreach ($data['content']['bundle']['#items'] as &$item) {
-        $item['data'] = preg_replace('/(<a.+?)href=".+?">(.+?)/i', "$2", $item['data']);
       }
     }
   }
@@ -1338,12 +1324,8 @@ function os_search_solr_change_search_path($form, $form_state) {
   $filters = &$options['query'];
   $box_settings = $form_state['box_settings'];
 
-  // keep array of the facet we don't want to hide from the facets list.
-  $filters['keep_filters'] = array();
-
   // Collect bundles.
   if ($box_settings['bundle']) {
-    $filters['keep_filters'][] = 'bundle';
 
     foreach ($box_settings['bundle'] as $bundle) {
       $filters['f'][] = 'bundle:' . $bundle;
@@ -1352,8 +1334,6 @@ function os_search_solr_change_search_path($form, $form_state) {
 
   // Collect terms.
   if ($box_settings['terms']['terms']) {
-    $filters['keep_filters'][] = 'terms';
-
 
     foreach ($box_settings['terms']['terms'] as $term) {
       if (!$term) {
@@ -1366,7 +1346,6 @@ function os_search_solr_change_search_path($form, $form_state) {
 
   // Add sort order
   if ($box_settings['sort_property'] != 'relevancy') {
-    $filters['keep_filters'][] = 'sort';
     $filters['solrsort'] = $box_settings['sort_property'] . ' ' . $box_settings['sort_order'];
   }
 
