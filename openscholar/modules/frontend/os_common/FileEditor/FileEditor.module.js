@@ -167,7 +167,7 @@
             function(result) {
               switch (result.status) {
                 case 409:
-                  scope.errorMessages = 'This file has been changed since it was last retrieved from the server. Please wait while we get an updated version.';
+                  scope.errorMessages = 'Please wait. Another member of your website has updated this file since you last updated it, and we\'re retrieving an updated version. Once this message disappears, you\'ll need re-enter any changes you had made.<br><img src="fix/path/to/large-spin_loader.gif" style="width:60px;height:60px;margin-left:42%">';
                   scope.showErrorMessages = true;
                   break;
                 case 410:
