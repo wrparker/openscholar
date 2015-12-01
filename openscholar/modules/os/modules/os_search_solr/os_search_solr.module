@@ -178,19 +178,26 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
     $query->addFilter('hash', apachesolr_site_hash());
   }
 
+  $multiple_bundles = !empty($filters['bundle']) && count($filters['bundle']) > 1;
+  $multiple_taxonomy = !empty($filters['sm_og_vocabulary']) && count($filters['sm_og_vocabulary']) > 1;
+
+  if (!($multiple_bundles && $multiple_taxonomy)) {
+    return;
+  }
+
   // Building a nicer array to work with.
   $filters = array();
   foreach ($query->getFilters() as $filter) {
     $filters[$filter['#name']][] = $filter['#value'];
   }
 
-  if (!empty($filters['bundle']) && count($filters['bundle']) > 1) {
+  if ($multiple_bundles) {
     // We have multiple bundles. Change the query to support multiple bundles.
     $query->removeFilter('bundle');
     $query->addFilter('bundle', '('. implode(' OR ', $filters['bundle']) .')');
   }
 
-  if (!empty($filters['sm_og_vocabulary']) && count($filters['sm_og_vocabulary']) > 1) {
+  if ($multiple_taxonomy) {
     // We have multiple terms. Change the query to support multiple terms.
     $query->removeFilter('sm_og_vocabulary');
     $terms = '("'. implode('" OR "', $filters['sm_og_vocabulary']) . '")';
@@ -287,14 +294,6 @@ function os_search_solr_block_view_alter(&$data, $block) {
     $data['title'] = t('Filter By Taxonomy');
   }
 
-  _os_search_solr_block_view_alter($data, $block);
-}
-
-/**
- * Helper function; Change the content of blocks which wasn't selected in the
- * widget settings.
- */
-function _os_search_solr_block_view_alter(&$data, $block) {
 }
 
 /**
