@@ -13,6 +13,16 @@ define('OS_USER_ROLE_EDITOR', 'content editor');
 define('OS_USER_ROLE_BASIC', 'vsite user');
 
 /**
+ * Implements hook_menu_alter().
+ */
+function cp_user_menu_alter(&$items) {
+  // Overriding admin theme callback for role and permission edit page.
+  $items['group/%/%/admin/role/%/edit']['theme callback'] = 'cp_theme_name';
+  $items['group/%/%/admin/permission/%/edit']['theme callback'] = 'cp_theme_name';
+  $items['group/%/%/admin/roles']['theme callback'] = 'cp_theme_name';
+}
+
+/**
  * Implements hook_menu().
  */
 function cp_user_menu() {

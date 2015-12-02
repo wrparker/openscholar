@@ -187,7 +187,7 @@
 
         var maxFilesize = params.max_filesize_raw || Drupal.settings.maximumFileSizeRaw;
         var size = maxFilesize > file.size,   // file is smaller than max
-          ext = file.name.slice(file.name.lastIndexOf('.')+1),
+          ext = file.name.slice(file.name.lastIndexOf('.')+1).toLowerCase(),
           extension = $scope.extensions.indexOf(ext) !== -1,    // extension is found
           id;
 

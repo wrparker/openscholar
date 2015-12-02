@@ -2616,3 +2616,37 @@ function os_process_region(&$vars) {
     $vars['inner_suffix'] = '';
   }
 }
+/**
+* Implements hook_entity_query_alter().
+*
+* todo: remove once the og security issue will be merged.
+*/
+function os_entity_query_alter(EntityFieldQuery $query) {
+  if ($query->entityConditions['entity_type']['value'] != 'og_membership') {
+    return;
+}
+
+if (in_array('skip_blocked_users', $query->tags)) {
+  // This is not a query against og memberships or we want to return
+  // memberships of blocked users.
+    return;
+}
+
+foreach ($query->propertyConditions as $condition) {
+  if ($condition['column'] == 'entity_type' && $condition['value'] == 'user' && ($condition['operator'] == '=' || empty($condition['operator']))) {
+    $query->addTag('og_membership_blocked_users');
+      }
+   }
+}
+
+/**
+* Implements hook_query_TAG_alter().
+*
+* When the querying against og memberships and the entity type is user we need
+* to make sure we won't return memberships of blocked users.
+*/
+function og_query_og_membership_blocked_users_alter(QueryAlterableInterface $query) {
+  $tables = $query->getTables();
+  $query->join('users', 'u', 'u.uid = ' . $tables['og_membership']['alias'] . '.etid');
+  $query->condition('u.status', 1);
+}
