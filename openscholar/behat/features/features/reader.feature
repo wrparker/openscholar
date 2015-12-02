@@ -41,7 +41,7 @@ Feature:
     Given I am logging in as "admin"
      When I visit "john/cp/os-importer/news/manage"
       And I should see the feed item "JFK was murdered" was imported
-     Then I should see the news photo "druplicon.small__"
+     Then I should see the news photo "Harvard_shield-College"
 
   @api @features_second
   Scenario: Test the Contains filter on OS feed import page.
