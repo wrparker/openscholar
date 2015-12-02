@@ -33,18 +33,9 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
   public static function controllersInfo() {
     return array(
       '' => array(
-        // If they don't pass report name then display nothing.
-        \RestfulInterface::GET => 'index',
-        \RestfulInterface::HEAD => 'index',
-        \RestfulInterface::POST => 'create',
-      ),
-      '^.*$' => array(
         \RestfulInterface::GET => 'getReport',
-        \RestfulInterface::POST => 'getReport',
         \RestfulInterface::HEAD => 'getReport',
-        \RestfulInterface::PUT => 'replace',
-        \RestfulInterface::PATCH => 'update',
-        \RestfulInterface::DELETE => 'remove',      
+        \RestfulInterface::POST => 'getReport',
       ),
     );
   }
@@ -59,14 +50,6 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function index() {
-    $this->throwException('You must provide the name of the report.');
-    return $return;
-  }
-
-  /**
    * Display the report
    *
    * @param string $name_string
@@ -75,28 +58,26 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
   public function getReport($name_string) {
     $output = array();
     $request = $this->getRequest();
-    $function = "get_{$name_string}_report";
 
-    if (method_exists($this, $function)) {
-      // if additional public fields have been requested, add them
-      if(isset($request['columns'])) {
-        $new_public_fields = array();
-        foreach ($request['columns'] as $column) {
-          $new_public_fields[$column] = array("property" => $column);
-        }
-        $this->setPublicFields(array_merge($this->getPublicFields(), $new_public_fields));
+    // if additional public fields have been requested, add them
+    if(isset($request['columns'])) {
+      $new_public_fields = array();
+      foreach ($request['columns'] as $column) {
+        $new_public_fields[$column] = array("property" => $column);
       }
-      // if keyword search is involved, set appropriate properties
-      if (isset($request['keyword']) && isset($request['kfields'])) {
-        $this->keywordString = $this->cleanArrayParameter($request['keyword']);
-        $this->keywordFields = $this->cleanArrayParameter($request['kfields']);
-      }
-      // set range if it's passed (even if it's 0)
-      if (isset($request['range'])) {
-        $this->setRange($request['range']);
-      }
-      $output = $this->{$function}();
+      $this->setPublicFields(array_merge($this->getPublicFields(), $new_public_fields));
     }
+    // if keyword search is involved, set appropriate properties
+    if (isset($request['keyword']) && isset($request['kfields'])) {
+      $this->keywordString = $this->cleanArrayParameter($request['keyword']);
+      $this->keywordFields = $this->cleanArrayParameter($request['kfields']);
+    }
+    // set range if it's passed (even if it's 0)
+    if (isset($request['range'])) {
+      $this->setRange($request['range']);
+    }
+
+    $output = $this->runReport();
 
     return $output;
   }
@@ -158,6 +139,7 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
    * @throws RestfulBadRequestException
    */
   public function throwException($message) {
+    trigger_error("\n\nRestful bad request exception: $message\n\n", E_USER_ERROR);
     throw new \RestfulBadRequestException($message);
   }
 
@@ -173,10 +155,40 @@ abstract class OsRestfulReports extends \OsRestfulDataProvider {
 
   /**
    * {@inheritdoc}
-  protected function addExtraInfoToQuery($query) {
-    $query->addMetaData('count', $this->getTotalCount());
-  }
    */
+  public function getTotalCount() {
+    return intval($this
+      ->getQueryCount()
+      ->execute()
+      ->fetchField());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getQueryCount() {
+    $oldrange = $this->getRange();
+    $this->setRange('0');
+    $query = $this->getQueryForList();
+    $this->setRange($oldrange);
+
+    return $query->countQuery();
+  }
+
+  /**
+   * Helper method to know if the current request is for a list.
+   *
+   * @return boolean
+   *   TRUE if the request is for a list. FALSE otherwise.
+   */
+  public function isListRequest() {
+    if (($this->getMethod() == \RestfulInterface::GET) || ($this->getMethod() == \RestfulInterface::POST)) {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
+  }
 
   /**
    * helper function to clean array report parameters

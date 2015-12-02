@@ -27,7 +27,7 @@ class OsRestfulUserReport extends \OsRestfulReports {
     );
   }
 
-  public function get_role_report() {
+  public function runReport() {
     $request = $this->getRequest();
     $this->userRoles = (isset($request['vsite']) && isset($request['roles'])) ? $request['roles'] : "all";
     $results = $this->getQueryForList()->execute();

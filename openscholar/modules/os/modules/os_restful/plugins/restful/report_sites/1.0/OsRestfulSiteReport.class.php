@@ -34,7 +34,7 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     );
   }
 
-  public function get_attributes_report() {
+  public function runReport() {
     $request = $this->getRequest();
     if (isset($request['lastupdate'])) {
       $fields = $this->getPublicFields();
