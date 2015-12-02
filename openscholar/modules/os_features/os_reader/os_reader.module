@@ -490,7 +490,7 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
 
     $feed->description = $doc->saveHTML($doc->documentElement);
   }
-  
+
   $wrapper->body->set(array('value' => $feed->description, 'format' => 'filtered_html'));
   $wrapper->save();
 
