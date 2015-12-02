@@ -1644,7 +1644,6 @@ function os_events_mollom_form_info($form_id) {
 /**
  * Save the settings for the mollom form.
  */
-
 function os_events_save_mollom_settings() {
   $mollom_form = array(
     'form_id' => 'registration_form',
