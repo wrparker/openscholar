@@ -18,8 +18,11 @@
         },
         templateUrl: libraryPath + '/file_edit_base.html?vers='+Drupal.settings.version.FileEditor,
         link: function (scope, elem, attr, c, trans) {
-          var fileService = new EntityService('files', 'id');
-          //fileService.fetch({});
+          var fileService = new EntityService('files', 'id'),
+              files = [];
+          fileService.fetch().then(function (data) {
+            files = data;
+          });
 
           scope.fileEditAddt = '';
           scope.date = '';
@@ -73,7 +76,6 @@
             }
             var lower = filename.toLowerCase();
             if (lower != old) {
-              var files = fileService.getAll();
               for (var i in files) {
                 if (lower == files[i].filename && scope.file.id != files[i].id) {
                   scope.invalidFileName = true;
