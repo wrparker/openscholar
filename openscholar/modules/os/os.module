@@ -2004,12 +2004,12 @@ function os_form_user_login_alter(&$form, $form_state) {
   if (variable_get('os_login_with_email', TRUE)) {
     // Replace 'username' with 'Username or e-mail'.
     $form['name']['#title'] = t('Username or e-mail');
-    // Replace the description of the user/email login field.
-    $form['name']['#description'] = t('You may login with either your assigned username or your e-mail address.');
     // Add a new validation.
     // Validation function vsite_user_login_validate must run first.
     array_unshift($form['#validate'],'os_user_login_validate');
   }
+  unset($form['name']['#description']);
+  unset($form['pass']['#description']);
 }
 
 /**
