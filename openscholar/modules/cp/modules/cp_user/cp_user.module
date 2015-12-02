@@ -502,6 +502,26 @@ function cp_user_og_ui_admin_permissions_validate($form, &$form_state) {
 }
 
 /**
+ * Implements template_preprocess_HOOK() for overlay.tpl.php
+ *
+ * If the current page request is inside the overlay, remove the local tasks in some instances.
+ *
+ * @see template_process_overlay()
+ * @see overlay.tpl.php
+ */
+function cp_user_preprocess_overlay(&$variables) {
+  $item = menu_get_item();
+  $paths = array(
+      'user/%/edit',
+  );
+  if (!in_array($item['path'], $paths)) {
+    return;
+  }
+  
+  unset($variables['tabs']);
+}
+
+/**
  * Get category from permission key, and add category title if needed.
  *
  * @param $permission
