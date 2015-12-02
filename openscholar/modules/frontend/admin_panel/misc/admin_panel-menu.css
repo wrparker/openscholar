@@ -43,7 +43,7 @@ body {
     margin-left: 40px;
 }
 .page-cp #branding.pushed {
-    margin-left: 0;
+    margin-left: 110px;
 }
 .no-js .page-cp #branding,
 .no-js .page-cp #page,
@@ -67,7 +67,7 @@ body {
     margin-right: 0;
 }
 .page-cp #page.pushed {
-    margin-left: 40px;
+    margin-left: 150px;
     width: 80%;
 }
 .admin-menu-homeicon {
