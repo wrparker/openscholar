@@ -2008,8 +2008,15 @@ function os_form_user_login_alter(&$form, $form_state) {
     // Validation function vsite_user_login_validate must run first.
     array_unshift($form['#validate'],'os_user_login_validate');
   }
-  unset($form['name']['#description']);
-  unset($form['pass']['#description']);
+
+  // If user login form is overridden by pinserver_authenticate module 
+  if (!variable_get('login_via_pin_by_default', FALSE)) {
+    unset($form['pin-fieldset']['name']['#description']);
+    $form['pin-fieldset']['pass']['#description'] = t('!request', array('!request' => l('Forgot your password?', 'user/password')));
+  } else {
+    unset($form['name']['#description']);
+    unset($form['pass']['#description']);
+  }
 }
 
 /**
