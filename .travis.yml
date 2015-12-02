@@ -117,15 +117,13 @@ before_script:
   - cp behat.local.yml.travis behat.local.yml
   - curl -s https://getcomposer.org/installer | php
   - php composer.phar install --prefer-source
-  - sudo cat /var/log/apache2/error.log
 
   # Other
   - drush vset oembedembedly_api_key $EMBEDLYAPIKEY
 
   # Fire up php built in server.
   - cd ../../www
-  - sudo php -S localhost:80
-  -
+  - sudo php -S localhost:80 ../router.php
 
 script:
 
@@ -140,9 +138,6 @@ script:
   - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
 
   - ./bin/behat --tags=$TEST_SUITE
-
-after_script:
-  - sudo cat /var/log/apache2/error.log
 
 after_failure: # this will of course run only on failure
   - "travis-artifacts upload --path /tmp/screenshots"
