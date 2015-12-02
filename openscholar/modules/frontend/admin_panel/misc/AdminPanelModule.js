@@ -115,7 +115,9 @@
 	          } else {
 	        	if ( element.hasClass('close-siblings') ) {
 		      	  parent.siblings('.open').each(function() {
-		       	    closeLink(jQuery(this));
+		      		var sibling = jQuery(this);
+		      		menu_state[sibling.find("a").first().attr('id')] = false;
+		       	    closeLink(sibling);
 		       	  });
 		       	}
 	            menu_state[attrs.id] = true;
