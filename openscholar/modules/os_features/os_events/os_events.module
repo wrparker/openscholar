@@ -1416,6 +1416,9 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   $form['actions']['cancel']['#access'] = FALSE;
   $form['actions']['submit']['#value'] = t('Signup');
 
+  $form['anon_mail']['#required'] = TRUE;
+  $form['field_full_name'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+
   $form['event_register'] = array(
     '#type' => 'container',
     '#title' => t('Sign up for this event'),
@@ -1641,6 +1644,7 @@ function os_events_mollom_form_info($form_id) {
 /**
  * Save the settings for the mollom form.
  */
+
 function os_events_save_mollom_settings() {
   $mollom_form = array(
     'form_id' => 'registration_form',
