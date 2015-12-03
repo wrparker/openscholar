@@ -94,7 +94,7 @@ function os_reader_import_news_access_callback() {
  */
 function os_reader_import_news() {
   drupal_add_css(drupal_get_path('module', 'os_reader') . '/os_reader.css');
-  drupal_add_js(drupal_get_path('module', 'os_reader') . '/os_reader.js');
+  drupal_add_js(drupal_get_path('module', 'os_reader') . '/js/os_reader.js');
 
   $item = menu_get_item();
   $feed_importer_nid = isset($item['map'][4]) ? $item['map'][4] : NULL;
