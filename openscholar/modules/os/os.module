@@ -2001,20 +2001,22 @@ function os_get_app_by_bundle($bundle) {
  * Implements hook_form_BASE_FORM_ID_alter() for user_login form.
  */
 function os_form_user_login_alter(&$form, $form_state) {
-  if (variable_get('os_login_with_email', TRUE)) {
-    // Replace 'username' with 'Username or e-mail'.
-    $form['name']['#title'] = t('Username or e-mail');
+  if (variable_get('os_login_with_email', TRUE)) {    
     // Add a new validation.
     // Validation function vsite_user_login_validate must run first.
     array_unshift($form['#validate'],'os_user_login_validate');
   }
 
-  // If user login form is overridden by pinserver_authenticate module 
-  if (!variable_get('login_via_pin_by_default', FALSE)) {
+  // If user login form is overridden by pinserver_authenticate module, then $form['pin-fieldset'] will be initialized from there.
+  // $form['name'] and $form['pass'] both will be unset from pinserver_authenticate module
+  if (isset($form['pin-fieldset'])) {
     $form['pin-fieldset']['name']['#title'] = t('Username / E-Mail');
-    unset($form['pin-fieldset']['name']['#description']);
     $form['pin-fieldset']['pass']['#description'] = t('!request', array('!request' => l('Forgot your password?', 'user/password')));
-  } else {
+    unset($form['pin-fieldset']['name']['#description']);
+  }
+
+  // If pinserver_authenticate module is not overriding login form, then $form['name'] and $form['pass'] will not be unset.
+  if (isset($form['name']) && isset($form['pass'])) {
     $form['name']['#title'] = t('Username / E-Mail');
     unset($form['name']['#description']);
     unset($form['pass']['#description']);
