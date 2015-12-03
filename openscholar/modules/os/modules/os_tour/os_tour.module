@@ -262,26 +262,6 @@ function _os_tour_help() {
     );
   }
 
-  // Provides tour for "home".
-  if (arg(0) == 'home' && arg(1) === NULL) {
-    $contexts = context_get();
-    if (!isset($contexts['context']['os_sitewide_front'])) {
-      $path = drupal_get_path('module', 'os_tour');
-      $tour_info = array(
-        'id' => 'os-tour-home',
-        'title' => t('Take a tour'),
-        'attached' => array(
-          'css' => array(
-            "$path/theme/os_tour.home.css",
-          ),
-          'js' => array(
-            "$path/theme/os_tour.home.js",
-          ),
-        ),
-      );
-    }
-  }
-
   // Provides tour for "cp/users*".
   if (arg(0) == 'cp' && arg(1) == 'users') {
     $path = drupal_get_path('module', 'os_tour');
