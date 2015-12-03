@@ -90,13 +90,13 @@
 	        for (var i = 0; i < result.feed.entries.length; i++) {
 	          var num_remaining = (result.feed.entries.length - i);
 	          var entry = result.feed.entries[i];
-            var item = osTour.notifications_item(entry, num_remaining, count_element, link);
+              var item = osTour.notifications_item(entry, num_remaining, count_element, link);
 	          if (osTour.notifications_is_new(entry)) {
 	            items.push(item);
 	          }
-            else {
-              oldItems.push(item);
-            }
+              else {
+                oldItems.push(item);
+              }
 	        }
 
           var tour = {};
@@ -132,7 +132,11 @@
 
           element.find('a').bind('click', function(e) {
             e.preventDefault();
-            hopscotch.startTour(tour);
+            if(hopscotch.getCurrTour()) {
+              hopscotch.endTour();
+            } else {
+              hopscotch.startTour(tour);
+            }
           });
 	      });
     	},
