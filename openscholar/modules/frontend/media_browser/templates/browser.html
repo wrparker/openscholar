@@ -1,5 +1,5 @@
 <div class="container-fluid" ng-switch="pane">
-    <div class="media-browser-buttons">
+    <div class="media-browser-buttons" ng-show="pane != 'edit' && pane != 'delete'">
         <div class="media-browser-button" ng-class="{active:pane=='upload'}" ng-show="activePanes.upload" ng-click="changePanes('upload')">Upload from your computer</div>
         <div class="media-browser-button" ng-class="{active:pane=='web'}" ng-show="activePanes.web" ng-click="changePanes('web')">Embed from the web</div>
         <div class="media-browser-button" ng-class="{active:pane=='library'}" ng-show="activePanes.library" ng-click="changePanes('library')">Previously uploaded files</div>

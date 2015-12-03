@@ -9,7 +9,7 @@ projects[ossap][download][url] = "git://github.com/openscholar/ossap.git"
 projects[integrated_support][type] = module
 projects[integrated_support][download][type] = git
 projects[integrated_support][download][branch] = master
-projects[integrated_support][download][url] = "http://github.com/openscholar/integrated_support.git"
+projects[integrated_support][download][url] = "https://github.com/openscholar/integrated_support.git"
 
 ; Libraries.
 libraries[tapir][type] = "libraries"
@@ -31,4 +31,4 @@ libraries[php-trello][download][url] = "http://bitbucket.org/mattzuba/php-trello
 libraries[php-markdown][type] = "libraries"
 libraries[php-markdown][download][type] = "git"
 libraries[php-markdown][download][tag] = "1.4.0"
-libraries[php-markdown][download][url] = "http://github.com/michelf/php-markdown.git"
+libraries[php-markdown][download][url] = "https://github.com/michelf/php-markdown.git"
