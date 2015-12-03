@@ -20,7 +20,7 @@ function os_boxes_edit_widget($box, $source = '') {
     drupal_set_title(t('Add New "@plugin" Widget', array('@plugin' => $info['title'])));
   }
   else {
-    drupal_set_title(t('Edit "@plugin" Widget - @info', array('@plugin' => $info['title'], '@info' => $box->description)));
+    drupal_set_title(t('Edit "@plugin" Widget - !info', array('@plugin' => $info['title'], '!info' => $box->description)));
   }
 
   $form_state = array(
@@ -130,7 +130,7 @@ function os_boxes_delete_widget($box) {
     'box' => $box,
   );
 
-  drupal_set_title(t('Delete @info', array('@info' => $box->description)));
+  drupal_set_title(t('Delete !info', array('!info' => $box->description)));
 
   $form = drupal_build_form('os_boxes_delete_widget_form', $form_state);
 
