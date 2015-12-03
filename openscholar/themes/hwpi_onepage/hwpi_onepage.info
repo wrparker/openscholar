@@ -24,6 +24,7 @@
 
   stylesheets[screen][] = css/hwpi_onepage.layout.css
   stylesheets[screen][] = css/hwpi_onepage.css
+  stylesheets[screen][] = css/responsive.onepage.css
   
    scripts[] = hwpi_onepage.js
 
