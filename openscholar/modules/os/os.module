@@ -2011,9 +2011,11 @@ function os_form_user_login_alter(&$form, $form_state) {
 
   // If user login form is overridden by pinserver_authenticate module 
   if (!variable_get('login_via_pin_by_default', FALSE)) {
+    $form['pin-fieldset']['name']['#title'] = t('Username / E-Mail');
     unset($form['pin-fieldset']['name']['#description']);
     $form['pin-fieldset']['pass']['#description'] = t('!request', array('!request' => l('Forgot your password?', 'user/password')));
   } else {
+    $form['name']['#title'] = t('Username / E-Mail');
     unset($form['name']['#description']);
     unset($form['pass']['#description']);
   }
