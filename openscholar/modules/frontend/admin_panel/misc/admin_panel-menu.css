@@ -79,6 +79,17 @@ body {
     background: url('images/home_button.png') no-repeat;
     background-size: 25px 25px;
 }
+
+
+ul.primary {
+    margin-right: 10%;
+}
+
+.pushed ul.primary {
+    margin-right: 20%;
+}
+
+
 /* MENU SPECIFIC */
 
 #cssmenu,
