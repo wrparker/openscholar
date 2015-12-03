@@ -156,7 +156,7 @@
 
           scope.save = function () {
             fileService.edit(scope.file, ['preview', 'url']).then(function(result) {
-                if (result.data) {
+                if (result.data || typeof scope.file.new != 'undefined') {
                   scope.onClose({saved: FER.SAVED});
                 }
                 else if (result.detail) {
