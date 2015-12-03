@@ -473,3 +473,86 @@ function os_basetheme_date_repeat_display($vars) {
   }
   return $output;
 }
+
+/**
+ * Implements override for theme_media_gallery_media_item_lightbox of contrib module media_gallery
+ * @param array $variables
+ * theme parameters
+ * Here we are altering the html of the media gallery lightbox items
+ * @return string
+ * returning the output as HTML.
+ */
+function os_basetheme_media_gallery_media_item_lightbox($variables) {
+  $element = $variables['element'];
+  $gallery_node = new FieldsRSIPreventor($element['#media_gallery_entity']);
+  $file = $element['#file'];
+
+  // The lightbox JavaScript requires width and height attributes to be set on
+  // the displayed image, but if we're displaying an image derivative, we need
+  // to create it in order to know its width and height.
+  // @todo Improve the JavaScript to not require this.
+  if ($element['file']['#theme'] == 'image_style') {
+    $style_name = $element['file']['#style_name'];
+    $style_path = image_style_path($style_name, $file->uri);
+    if (!file_exists($style_path)) {
+      $style = image_style_load($style_name);
+      image_style_create_derivative($style, $file->uri, $style_path);
+    }
+    $info = image_get_info($style_path);
+    $element['file'] += array('#attributes' => array());
+    $element['file']['#attributes'] += array('width' => $info['width'], 'height' => $info['height']);
+  }
+
+  $image = drupal_render($element['file']);
+
+  $matches = NULL;
+  if (preg_match('@<img .*?/>@', $image, $matches)) {
+    $image = $matches[0];
+  }  
+
+  $gallery_id = $element['#media_gallery_entity']->nid;
+  $media_id = $element['#file']->fid;
+
+  // Create an array of variables to be added to the main image link.
+  $link_vars = array();
+  $link_vars['image'] = $image;
+  $link_vars['link_path'] = "media-gallery/detail/$gallery_id/$media_id";
+  $link_vars['no_link'] = $element['#bundle'] != 'image' ? TRUE : FALSE;
+
+  if ($gallery_node->getValue('media_gallery_allow_download') == TRUE) {
+    $download_link = $element['#bundle'] == 'image' ? theme('media_gallery_download_link', array('file' => $file)) : l(t('View detail page'), $link_vars['link_path']);
+  }
+
+  else {    
+    $download_link = '&nbsp;';
+  }
+
+  $media_gallery_detail =
+      '<div class="lightbox-stack">' .
+      theme('media_gallery_item', $link_vars) .
+      '<div class="media-gallery-detail-info">' .
+      $download_link .
+      theme('media_gallery_license', array('element' => isset($element['field_license']) ? $element['field_license'] : array(), 'color' => 'medium', 'file' => $file)) .
+      '</div></div>';
+  // The license info has been themed already, keep it from being rendered as a child
+  $element['field_license']['#access'] = FALSE;
+
+  $output = 'Error';
+  // If the format is to have the description as well, we add it here
+  if (!empty($gallery_node->media_gallery_lightbox_extras[LANGUAGE_NONE][0]['value'])) {
+    $output =
+    '<div class="mg-lightbox-wrapper clearfix">' .
+      '<div class="lightbox-title">' . drupal_render($element['media_title']) . '</div>' .
+      '<div class="mg-lightbox-detail">' .
+      $media_gallery_detail .
+      '</div><div class="mg-lightbox-description">' .
+        $file->os_file_description[LANGUAGE_NONE][0]['value'] .
+      '</div>' .
+    '</div>';
+  }
+  else {
+    $output = $media_gallery_detail;
+  }
+
+  return $output;
+}
