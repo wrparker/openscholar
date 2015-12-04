@@ -37,9 +37,10 @@ div[ng-include="fileEditAddt"] {
     bottom: 0;
     position: absolute;
 }
-.messages {
+.alert-message {
     font-size: 1.2em;
-    color: #000;
+    color: #000 !important;
+    border: none !important;
 }
 .success {
 background-color: #dff0d8;
@@ -72,6 +73,7 @@ div[file-edit] h4,
     padding: 20px;
     cursor: pointer;
     width: 450px;
+    
 }
 [file-edit] span {
     white-space: pre-line;
