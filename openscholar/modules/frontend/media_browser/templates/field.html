@@ -6,10 +6,9 @@
         <span id="drag-text">{{droppable_text}}<span class="help_icon" ng-mouseenter="showHelp = true" ng-mouseleave="showHelp = false">?</span></span>
 
         <a href="#" mb-open-modal panes="{{panes.join(',')}}" types="{{types}}" on-select="addFile($inserted)">{{upload_text}}</a>
-
-        <div class="help" ng-show="showHelp">Files must be less than <strong>{{maxFilesize}}</strong>.<br />
-            Allowed file types: <strong>{{extensionsFull.join(' ')}}</strong></div>
-    </div>
+		 <strong>Allowed file types:</strong><br /> {{extensions.join(' ')}}</div><br />
+         <div class="help" ng-show="showHelp"><strong>Max file size:</strong> {{maxFilesize}}.
+  </div>
 </div>
 <div class="file-list-single form-wrapper" ng-repeat="file in selectedFiles" ng-class="{even: $even, odd: $odd, highlight: file.highlight}">
     <input type="hidden" name="{{field_name}}[und][{{$index}}][fid]" value="{{file.id}}">
