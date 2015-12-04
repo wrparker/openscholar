@@ -11,6 +11,40 @@
             Allowed file types: <strong>{{extensionsFull.join(' ')}}</strong></div>
     </div>
 </div>
+<table>
+    <thead>
+        <tr>
+            <th>File</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="file in selectedFiles" ng-class="{even: $even, odd: $odd, highlight: file.highlight}">
+            <td>
+                <input type="hidden" name="{{field_name}}[und][{{$index}}][fid]" value="{{file.id}}">
+                <img class="file-icon" alt="Icon for {{file.mime}}" title="{{file.mime}}" src="{{file.icon}}">
+                {{file.label}} ({{file.filename}})
+            </td>
+            <td>
+                <ul>
+                    <li class="replace first">
+                        <a href="" mb-open-modal panes="{{panes.join(',')}}" types="{{types}}" on-select="replaceFile($inserted, $index)">Replace</a>
+                    </li>
+                    <li class="edit">
+                        <a href="" file-editor-modal fid="{{file.id}}">Edit</a>
+                    </li>
+                    <li class="remove last">
+                        <a href="" ng-click="removeFile($index)">Remove</a>
+                    </li>
+                </ul>
+            </td>
+            <td>
+                <select class="{{field_name}}-delta-order form-select" id="edit-{{field_name}}-und-{{$index}}-weight" name="{{field_name}}[und][{{$index}}][_weight]">
+                    <option value="{{$index}}" selected="selected">{{$index}}</option>
+                </select>
+            </td>
+        </tr>
+    </tbody>
+</table>
 <div class="file-list-single form-wrapper" ng-repeat="file in selectedFiles" ng-class="{even: $even, odd: $odd, highlight: file.highlight}">
     <input type="hidden" name="{{field_name}}[und][{{$index}}][fid]" value="{{file.id}}">
     <span>

@@ -144,6 +144,15 @@ function media_draggable_field_widget_form(&$form, &$form_state, $field, $instan
       '#type' => 'value',
       '#value' => true,
     ),
+    '_weight' => array(
+      '#type' => 'weight',
+      '#title' => t('Weight'),
+      '#title_display' => 'invisible',
+      // Note: this 'delta' is the FAPI 'weight' element's property.
+      '#delta' => 0,
+      '#default_value' => 0,
+      '#weight' => 100,
+    ),
     '#process' => array(
       'media_draggable_field_widget_indiv_process',
     ),
@@ -154,6 +163,9 @@ function media_draggable_field_widget_form(&$form, &$form_state, $field, $instan
       $element[$delta] = $element['template'];
       $element[$delta]['#file'] = $file;
       $element[$delta]['fid']['#default_value'] = $item['fid'];
+
+      $element[$delta]['_weight']['#delta'] = count($items);
+      $element[$delta]['_weight']['#default_value'] = $delta;
 
       // prevent Drupal from automatically deleting files by adding a file_usage ref to itself
       $usage = file_usage_list($file);
