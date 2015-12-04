@@ -22,6 +22,7 @@ div[file-edit] div.description {
 }
 div[file-edit] div.display_inline {
     margin-top: .5em;
+    vertical-align: top;
 }
 div[ng-include="fileEditAddt"] {
     background: #efefef;
