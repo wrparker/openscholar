@@ -48,10 +48,9 @@ abstract class os_boxes_widget_collection extends os_boxes_default {
         if (!empty($info['title'])) {
           $options[$wgt] .= ' ('.trim($info['title']).')';
         }
-        
+
         // Saving widget title and description in array to use in JavaScript Layer as Drupal.settings object.
-        $widget_collection[$wgt]['title'] = !empty($info['title']) ? trim($info['title']) : trim($info['info']);
-        $widget_collection[$wgt]['info'] = trim($info['info']);
+        $widget_collection[$wgt]['title'] = !empty($info['title']) ? trim($info['info']) . ' (' . trim($info['title']) . ')' : trim($info['info']);
       }
     }
     asort($options);
