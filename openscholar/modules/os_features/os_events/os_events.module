@@ -675,6 +675,12 @@ function os_events_modal_validate($form, &$form_state) {
 
   if (!empty($form_state['values']['anon_mail'])) {
 
+    // Checking if email address has a valid format.
+    $form_state['values']['anon_mail'] = trim($form_state['values']['anon_mail']);
+    if (!valid_email_address($form_state['values']['anon_mail'])) {
+      form_set_error('anon_mail', t('The email address is invalid.'));
+    }
+
     $date = '';
     if (!empty($form_state['values']['field_repeating_event_date']['und'][0]['value'])) {
       $date = $form_state['values']['field_repeating_event_date']['und'][0]['value'];
@@ -1429,6 +1435,9 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   }
 
   $form['actions']['submit']['#value'] = isset($form['#entity']->registration_id) ? t('Save') : t('Signup');
+
+  $form['anon_mail']['#required'] = TRUE;
+  $form['field_full_name'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
 
   $form['event_register'] = array(
     '#type' => 'container',
