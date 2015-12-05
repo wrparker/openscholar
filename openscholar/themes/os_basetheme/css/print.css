@@ -110,6 +110,7 @@
     }
     .sidebar .block.block-boxes-os_boxes_html {
         display: block !important;
+        clear:both !important;
     }
     .region {
         border-bottom: 1px solid #ccc;
