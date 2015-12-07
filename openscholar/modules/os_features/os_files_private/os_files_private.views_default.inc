@@ -255,33 +255,11 @@ function os_files_private_views_default_views() {
     'private' => 'private',
   );
 
-  /* Filter criterion: Content: Title */
-  $handler->display->display_options['filters']['title']['id'] = 'title';
-  $handler->display->display_options['filters']['title']['table'] = 'node';
-  $handler->display->display_options['filters']['title']['field'] = 'title';
-  $handler->display->display_options['filters']['title']['relationship'] = 'file_to_node';
-  $handler->display->display_options['filters']['title']['operator'] = 'contains';
-  $handler->display->display_options['filters']['title']['group'] = 1;
-  $handler->display->display_options['filters']['title']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['title']['expose']['operator_id'] = 'title_op';
-  $handler->display->display_options['filters']['title']['expose']['label'] = 'Used in';
-  $handler->display->display_options['filters']['title']['expose']['operator'] = 'title_op';
-  $handler->display->display_options['filters']['title']['expose']['identifier'] = 'title';
-  $handler->display->display_options['filters']['title']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    11 => 0,
-    21 => 0,
-    26 => 0,
-    31 => 0,
-    16 => 0,
-    36 => 0,
-    41 => 0,
-  );
   /* Filter criterion: File: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'file_managed';
   $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['group'] = 1;
   $handler->display->display_options['filters']['type']['exposed'] = TRUE;
   $handler->display->display_options['filters']['type']['expose']['operator_id'] = 'type_op';
   $handler->display->display_options['filters']['type']['expose']['label'] = 'Type';
@@ -451,12 +429,6 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['fields']['id']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['id']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['id']['alter']['path'] = 'node/[id]';
-  /* Field: Content: Title */
-  $handler->display->display_options['fields']['title']['id'] = 'title';
-  $handler->display->display_options['fields']['title']['table'] = 'node';
-  $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['relationship'] = 'file_to_node';
-  $handler->display->display_options['fields']['title']['label'] = 'Used in';
   /* Field: File: Edit link */
   $handler->display->display_options['fields']['edit']['id'] = 'edit';
   $handler->display->display_options['fields']['edit']['table'] = 'file_managed';
@@ -476,6 +448,66 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['fields']['nothing_1']['label'] = 'Manage';
   $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<a file-editor-modal fid="[fid]" href="#" views-close="reload(result)">Edit</a> [delete]';
   $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
+$handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Spaces: Content in current space */
+  $handler->display->display_options['filters']['current']['id'] = 'current';
+  $handler->display->display_options['filters']['current']['table'] = 'spaces';
+  $handler->display->display_options['filters']['current']['field'] = 'current';
+  $handler->display->display_options['filters']['current']['group'] = 1;
+  /* Filter criterion: File: File name or title */
+  $handler->display->display_options['filters']['file_name_title']['id'] = 'file_name_title';
+  $handler->display->display_options['filters']['file_name_title']['table'] = 'file_managed';
+  $handler->display->display_options['filters']['file_name_title']['field'] = 'file_name_title';
+  $handler->display->display_options['filters']['file_name_title']['value'] = 'File name or title';
+  $handler->display->display_options['filters']['file_name_title']['group'] = 1;
+  $handler->display->display_options['filters']['file_name_title']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['file_name_title']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['file_name_title']['expose']['label'] = 'File name or title';
+  $handler->display->display_options['filters']['file_name_title']['expose']['operator'] = 'file_name_title_op';
+  $handler->display->display_options['filters']['file_name_title']['expose']['identifier'] = 'file_name_title';
+  $handler->display->display_options['filters']['file_name_title']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    11 => 0,
+    21 => 0,
+    26 => 0,
+    31 => 0,
+    16 => 0,
+    36 => 0,
+    41 => 0,
+  );
+  /* Filter criterion: File: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'file_managed';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'audio' => 'audio',
+    'document' => 'document',
+    'html' => 'html',
+    'executable' => 'executable',
+    'image' => 'image',
+    'undefined' => 'undefined',
+    'video' => 'video',
+  );
+  $handler->display->display_options['filters']['type']['group'] = 1;
+  $handler->display->display_options['filters']['type']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['type']['expose']['operator_id'] = 'type_op';
+  $handler->display->display_options['filters']['type']['expose']['label'] = 'Type';
+  $handler->display->display_options['filters']['type']['expose']['operator'] = 'type_op';
+  $handler->display->display_options['filters']['type']['expose']['identifier'] = 'type';
+  $handler->display->display_options['filters']['type']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    11 => 0,
+    21 => 0,
+    26 => 0,
+    31 => 0,
+    16 => 0,
+    36 => 0,
+    41 => 0,
+  );
+  $handler->display->display_options['filters']['type']['expose']['reduce'] = TRUE;
   $handler->display->display_options['path'] = 'cp/content/files-private';
   $handler->display->display_options['menu']['type'] = 'tab';
   $handler->display->display_options['menu']['title'] = 'Private Files';
