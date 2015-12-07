@@ -7,9 +7,9 @@
       <div class="field-item <?php print $delta % 2 ? 'odd' : 'even'; ?>"<?php print $item_attributes[$delta]; ?>>
       <figure>
         <?php print render($item); ?>
-        <?php if(!empty($item['#item']['os_file_description']['und'][0]['value'])): ?>
+        <?php if(!empty($item['#item']['os_file_description'][LANGUAGE_NONE][0]['value'])): ?>
          <figcaption>
-           <?php print $item['#item']['os_file_description']['und'][0]['value'];?>
+           <?php print $item['#item']['os_file_description'][LANGUAGE_NONE][0]['value'];?>
          </figcaption>
         <?php endif;?>
       </figure>
