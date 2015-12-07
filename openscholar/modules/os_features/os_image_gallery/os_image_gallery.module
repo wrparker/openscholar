@@ -333,7 +333,8 @@ function os_image_gallery_node_presave($node) {
   $original_wrapper = entity_metadata_wrapper('node', $node->original);
   $wrapper = entity_metadata_wrapper('node', $node);
 
-  if ($wrapper->getBundle() != 'media_gallery') {
+
+  if ($wrapper->getBundle() != 'media_gallery' || !$wrapper->__isset('media_gallery_file')) {
     return;
   }
 
