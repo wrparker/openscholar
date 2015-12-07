@@ -1965,7 +1965,7 @@ function os_files_views_data_alter(&$data){
  */
 function os_files_os_entity_view_modes() {
   $modes = array('file' => array_fill_keys(
-    array('image', 'video', 'audio', 'document', 'executable', 'html'),
+    array('image', 'video', 'audio', 'document', 'executable', 'html', 'icon'),
     array('os_files_link', 'os_files_link_icon', 'teaser', 'full', 'os_files_title')
   ));
 
@@ -1999,15 +1999,28 @@ function os_files_file_default_types() {
     ),
   );
 
+  $types['icon'] = (object) array(
+    'api_version' => 1,
+    'type' => 'icon',
+    'label' => t('Icon'),
+    'description' => t('Small image files used as favicons or as UI elements.'),
+    'mimetypes' => array(
+      'image/ico',
+      'application/ico',
+      'application/x-ico',
+      'image/vnd.microsoft.icon',
+    ),
+    'streams' => array(
+      'public'
+    )
+  );
+
   return $types;
 }
 
 function os_files_file_default_types_alter(&$types){
   $image = array(
     // *.ico files
-    'image/ico',
-    'application/ico',
-    'application/x-ico',
     'application/x-win-bitmap',
     'image/x-win-bitmap'
   );
@@ -2220,8 +2233,12 @@ function _os_files_extensions_from_type($type) {
       'jpeg',
       'gif',
       'png',
+    );
+
+    $types['icon'] = array(
       'ico',
     );
+
     $types['document'] = array(
       'txt',
       'pdf',
