@@ -475,6 +475,114 @@ function os_basetheme_date_repeat_display($vars) {
 }
 
 /**
+ * Implements override for theme_media_gallery_media_item_detail of contrib module media_gallery
+ * @param array $variables
+ * theme parameters
+ * Here we are altering the html of the media gallery lightbox items
+ * @return string
+ * returning the output as HTML.
+ */
+function os_basetheme_media_gallery_media_item_detail($variables) {
+  $element = $variables['element'];
+  $gallery_node = new FieldsRSIPreventor($element['#media_gallery_entity']);
+  $file = $element['#file'];
+  // Page number for next and previous pages and current page.
+  $i_next = NULL;
+  $i_previous = NULL;
+  $i_current = NULL;
+
+  // Not considering the possibility of this field being translatable, at the
+  // moment. Is there a use-case for a media field (which is just a reference to
+  // a media entity) to be translatable?
+  $media_ids = array();
+  foreach ($gallery_node->media_gallery_file[LANGUAGE_NONE] as $delta => $item) {
+    $media_ids[] = _media_gallery_get_media_fid($item);
+  }
+  $media_ids = array_values(array_unique($media_ids));
+
+  // Get the variables needed for previous and next buttons and "Image X of Y"
+  // text.
+  $num_items = count($media_ids);
+  foreach ($media_ids as $i => $id) {
+    if ($id == $file->fid) {
+      $i_current = $i;
+      break;
+    }
+  }
+
+  $i_previous = $i_current - 1;
+  $i_next = $i_current + 1;
+
+  if ($i_previous < 0) {
+    $i_previous = NULL;
+  }
+
+  $i_next = $i_current + 1;
+  if ($i_next > $num_items - 1) {
+    $i_next = NULL;
+  }
+
+  if ($gallery_node->getValue('media_gallery_allow_download') == TRUE) {
+    $download_link = $element['#bundle'] == 'image' ? theme('media_gallery_download_link', array('file' => $file)) : '&nbsp;';
+  }
+  else {
+    // Very ugly fix: This prevents the license info from being either hidden
+    // or causing scrollbars (depending on the browser) in cases where a
+    // download link is not being shown. There may be a CSS-only fix for this,
+    // but we haven't found one yet.
+    $download_link = '&nbsp;';
+  }
+
+  $previous_link = !is_null($i_previous) ? l(t('« Previous'), "media-gallery/detail/{$gallery_node->nid}/{$media_ids[$i_previous]}", array('html' => TRUE, 'attributes' => array('class' => 'prev'))) : '';
+  $next_link = !is_null($i_next) ? l(t('Next »'), "media-gallery/detail/{$gallery_node->nid}/{$media_ids[$i_next]}", array('html' => TRUE, 'attributes' => array('class' => 'next'))) : '';
+  
+  $image_description = !empty($element['#file']->os_file_description[LANGUAGE_NONE][0]['value']) ? '<div>' . $element['#file']->os_file_description[LANGUAGE_NONE][0]['value'] . '</div>' : '';
+  // Render the file out in a wrapper
+  $output =
+    '<div class="media-gallery-detail-wrapper">' .
+    '<div class="media-gallery-detail">' .
+      drupal_render($element['file']) . $image_description . 
+      '<div class="media-gallery-detail-info">' . $download_link .
+        theme('media_gallery_license', array('element' => isset($element['field_license']) ? $element['field_license'] : array('#view_mode' => 'media_gallery_detail'), 'color' => 'dark', 'file' => $file)) .
+      '</div>' .
+      '<div class="media-gallery-detail-info">' .
+        '<span class="media-gallery-back-link">' .
+          l(t('« Back to gallery'), 'node/' . $gallery_node->nid) .
+        '</span>' .
+        '<span class="media-gallery-detail-image-info-wrapper">' .
+          '<span class="media-gallery-image-count">' .
+            t("Item @current of @total", array('@current' => $i_current + 1, '@total' => $num_items)) .
+          '</span>' .
+          '<span class="media-gallery-controls">' .
+            $previous_link .
+            (!empty($previous_link) && !empty($next_link) ? ' | ' : '') .
+            $next_link .
+          '</span>' .
+        '</span>' .
+      '</div>' .
+    '</div>';
+
+  // The license was already output above via a direct theme() call rather
+  // than drupal_render().
+  $element['field_license']['#printed'] = TRUE;
+
+  // The file was rendered above, but due to a drupal_render() bug, might not be
+  // marked as printed.
+  // @todo Remove when http://drupal.org/node/1305220 is fixed.
+  $element['file']['#printed'] = TRUE;
+
+  // Render the remaining fields, but not the title, since that's output as
+  // part of the page title.
+  $element['media_title']['#access'] = FALSE;
+  $output .=
+    '<div class="no-overflow">' .
+      drupal_render_children($element) .
+    '</div></div>';
+
+  return $output;
+}
+
+/**
  * Implements override for theme_media_gallery_media_item_lightbox of contrib module media_gallery
  * @param array $variables
  * theme parameters
@@ -540,14 +648,13 @@ function os_basetheme_media_gallery_media_item_lightbox($variables) {
   $output = 'Error';
   // If the format is to have the description as well, we add it here
   if (!empty($gallery_node->media_gallery_lightbox_extras[LANGUAGE_NONE][0]['value'])) {
+  	$image_description = !empty($file->os_file_description[LANGUAGE_NONE][0]['value']) ? '<div class="mg-lightbox-description">' . $file->os_file_description[LANGUAGE_NONE][0]['value'] . '</div>' : '';
     $output =
     '<div class="mg-lightbox-wrapper clearfix">' .
       '<div class="lightbox-title">' . drupal_render($element['media_title']) . '</div>' .
       '<div class="mg-lightbox-detail">' .
       $media_gallery_detail .
-      '</div><div class="mg-lightbox-description">' .
-        $file->os_file_description[LANGUAGE_NONE][0]['value'] .
-      '</div>' .
+      '</div>' . $image_description .
     '</div>';
   }
   else {
