@@ -727,7 +727,7 @@ ul.nice-menu-right li, ul.nice-menu-left li {
 ul.nice-menu-down {
   float: left; /* LTR */
   border: 0 !important;
-  z-index: 11;
+  z-index: 101;
 }
 
 ul.nice-menu-down li {
