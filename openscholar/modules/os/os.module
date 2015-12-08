@@ -895,17 +895,24 @@ function os_form_alter(&$form, &$form_state, $form_id) {
       $_GET['destination'] = $paths[$form['#node']->type];
     }
   }
-
+  
   // Add a cancel link to node forms.
   if (strpos($form_id, '_node_form')) {
     if (!empty($_GET['destination'])) {
       // If available in the query, set destination of the button link.
-      $destination = $_GET['destination'];
+      // Obtaining destination parameter from URL
+      $url_destination = drupal_get_destination();
+      $redirect_path = isset($url_destination['destination']) ? $url_destination['destination'] : '';
+      // creating $parsed_url array for path and query attributes for page redirect to destination url.
+      $parsed_url = drupal_parse_url($redirect_path);
+      $destination = $parsed_url['path'];
+      $query = $parsed_url['query'];
     }
     else {
       // Otherwise redirect the users to the app path (e.g. if users edit a
       // node people object, they will be redirected to people).
       $paths = os_get_app_path();
+      $query = array();
       if (isset($paths[$form['#node']->type])) {
         $destination = $paths[$form['#node']->type];
       }
@@ -914,7 +921,7 @@ function os_form_alter(&$form, &$form_state, $form_id) {
       }
     }
     $form['actions']['cancel'] = array(
-      '#markup'   => l(t('Cancel'), $destination, array('attributes' => array('class' => 'form-cancel'))),
+      '#markup'   => l(t('Cancel'), $destination, array('query' => $query, 'attributes' => array('class' => 'form-cancel'))),
       '#weight' => 99,
     );
   }

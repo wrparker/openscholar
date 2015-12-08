@@ -70,8 +70,8 @@ function vsite_layout_form_cp_layout_full_form_alter(&$form, &$form_state, $form
             '#type' => 'submit',
             '#value' => t('Reset to defaults'),
           );
-          $form['actions']['submit']['#value'] = t('Save for @name', array(
-              '@name' => $vsite->title(),
+          $form['actions']['submit']['#value'] = t('Save for !name', array(
+              '!name' => $vsite->title(),
             ));
         }
       }
