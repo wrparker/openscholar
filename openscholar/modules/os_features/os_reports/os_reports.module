@@ -162,6 +162,15 @@ function os_reports_site_form($form, &$form_state) {
       'ng-click' => "updateCheckedValues('columns', 'privacy')"
     ),
   );
+  $handler = restful_get_restful_handler('report_sites');
+  $form['limit'] = array(
+    '#value' => $handler->getRange(),
+    '#type' => 'hidden',
+    '#attributes' => array(
+      'ng-model' => 'query.limit',
+      'ng-init' => "query.limit = '" . $handler->getRange() . "'",
+    ),
+  );
   $form['buttons'] = array(
     '#prefix' => '<div class="buttons">',
     '#suffix' => '</div>',
@@ -174,10 +183,10 @@ function os_reports_site_form($form, &$form_state) {
     '#value' => 'Download CSV of Full Report',
   );
 
-  $buttons = '<div class="pager"><div class="container-inline"><div class="back"><a ng-click="">‹ previous</a></div><div class="forward"><a ng-click="">next ›</a></div></div></div>';
+  $buttons = '<div class="pager"><div class="container-inline"><div class="previous"><a ng-click="pager(\'previous\')">‹ previous</a></div><div class="status_count">{{ status }}</div><div class="next"><a ng-click="pager(\'next\')">next ›</a></div></div></div>';
 
   $form['results'] = array(
-    '#markup' => $buttons . '<table><thead><tr><th ng-repeat="header in headers"><a ng-click="sort(this)">{{ header | formatHeader }}</a></th></tr></thead><tbody><tr ng-repeat="row in rows" ng-class-even="\'even\'" ng-class-odd="\'odd\'"><td ng-repeat="header in headers"><span ng-bind-html="row[header] | makelink:header:row"></span></td></tr></tbody></table>' . $buttons,
+    '#markup' => $buttons . '<div class="results"><table><thead><tr><th ng-repeat="header in headers"><a ng-click="sort(this)" class="{{ header }}">{{ header | formatHeader }}</a></th></tr></thead><tbody><tr ng-repeat="row in rows" ng-class-even="\'even\'" ng-class-odd="\'odd\'"><td ng-repeat="header in headers"><span ng-bind-html="row[header] | makelink:header:row"></span></td></tr></tbody></table></div>' . $buttons,
   );
 
   return $form;
@@ -201,8 +210,10 @@ function os_reports_site_form_submit($form, &$form_state) {
     }
   }
 
+  $params['range'] = 0;
+
   // make restful call to get data
-  $results = $handler->post('attributes', $params);
+  $results = $handler->post('', $params);
 
   if ($results) {
     $filename = str_replace("http://", "", $base_url) . "-site-report.csv";
@@ -215,7 +226,7 @@ function os_reports_site_form_submit($form, &$form_state) {
     drupal_add_http_header("Content-Transfer-Encoding", "binary");
 
     $headers = array_keys($results[0]);
-    print implode($headers, ", ") . "\n";
+    print ucfirst(str_replace("_", " ", implode($headers, ", "))) . "\n";
     foreach ($results as $row) {
       print implode($row, ", ") . "\n";
     }

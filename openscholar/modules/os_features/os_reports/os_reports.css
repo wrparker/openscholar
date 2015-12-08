@@ -20,12 +20,13 @@ form fieldset .fieldset-wrapper {
   margin-bottom: 0;
 }
 
-.back {
-   margin-right: 20px;
-}
-
 .pager {
   text-align: center;
+}
+
+.pager .previous a,
+.pager .next a {
+  display: none;
 }
 
 form fieldset .fieldset-legend {
@@ -37,4 +38,22 @@ form fieldset .fieldset-legend {
 form table td,
 form table th {
   padding: 6px 8px;
+}
+
+form table th a.selected {
+  font-weight: bold;
+}
+
+.results {
+  min-height: 300px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.status_count {
+  padding: 0px 40px;
+}
+
+input.hidden {
+  display: none;
 }
