@@ -61,8 +61,8 @@
     $scope.activePanes.delete = true;
     $scope.loading = true;
     $scope.loadingMessage = '';
-    $scope.sortBy = 'date';
-    $scope.sortReverse = false;
+    $scope.sortType = 'timestamp';
+    $scope.sortReverse = true;
 
     $scope.availTypes = [
       {label: 'Image', value: 'image'},

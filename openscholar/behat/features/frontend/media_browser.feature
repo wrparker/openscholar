@@ -46,6 +46,7 @@ Feature: Media Browser
       And I should wait for "File Edit" directive to "appear"
      When I click on the "Save" control
      Then I should see the media browser "Previously uploaded files" tab is active
+      And I break
       And I should see "kitten-2.jpg" in the "div.media-row.new" element
 
   @media_browser @javascript
