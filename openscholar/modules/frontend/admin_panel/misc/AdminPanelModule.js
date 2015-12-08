@@ -6,8 +6,14 @@
   var auto_open;
   var morphButton;
   var menu_state;
+  var dialogParams = {
+	      minWidth: 600,
+	      minHeight: 350,
+	      modal: true,
+	      position: 'center',
+	    };
 
-    angular.module('AdminPanel', [ 'os-auth', 'ngCookies','ngStorage'])
+    angular.module('AdminPanel', [ 'os-auth', 'ngCookies', 'ngStorage', 'angularModalService', 'OSSettingsEditor'])
     .config(function (){
        paths = Drupal.settings.paths
        vsite = Drupal.settings.spaces.id || 0;
@@ -184,6 +190,55 @@
     	  element.attr('href', attrs.href + '?osurl=' + encodeURIComponent(location.href) + '&uid=' + uid);
         },
       }
-    });
+    }).directive('adminSettingsModal', ['ModalService', function(ModalService) {
+
+        function link(scope, elem, attr) {
+          var data = {
+            attr: attr,
+            scope: scope
+          }
+
+          elem.bind('click', data, clickHandler);
+        }
+
+        function clickHandler(event) {
+          if(jQuery(this).attr('id') != 'os-am-3_settings-1_feature_os_publications') {
+        	  return true;
+          }
+          
+          event.preventDefault();
+          event.stopPropagation();
+          ModalService.showModal({
+            template: '<div edit-feature-blog on-close="closeModal()"></div>',
+            controller: 'adminSettingsModalController',
+            inputs: {
+              
+            }
+          }).then(function (modal) {
+            modal.element.dialog(dialogParams);
+          });
+
+          return false;
+        }
+
+        return {
+          link: link,
+          scope: {
+            onClose: '&',
+            viewsClose: '&'
+          }
+        }
+      }])
+      .controller('adminSettingsModalController', ['$scope', function ($scope) {
+          
+          $scope.closeModal = function () {
+        	alert('Richard says Bye!');
+            close();
+          }
+          $scope.save = function() {
+            $http.put('', $scope.person);
+          };
+          
+        }]);
   
 })(jQuery);

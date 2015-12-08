@@ -300,6 +300,28 @@ function os_common_library() {
       array('os_common', 'TaxonomyWidget'),
     )
   );
+  
+  $info['OSSettingsEditor'] = array(
+      'title' => 'OS Site Settings Editor',
+      'version' => '1.0.0',
+      'js' => array(
+          $path.'/OSSettingsEditor/OSSettingsEditor.module.js' => array(),
+          array(
+              'data' => array(
+                'paths' => array(
+                  'OSSettingsEditor' => url($path.'/OSSettingsEditor', $disable),
+                ),
+                'version' => array(
+                  'FileEditor' => '1.0.3',
+                )
+              ),
+              'type' => 'setting',
+          )
+      ),
+      'dependencies' => array(
+        array('os_common', 'auth'),
+      )
+  );
 
   $info['FileEditorModal'] = array(
     'title' => 'Angular File Editor Modal',

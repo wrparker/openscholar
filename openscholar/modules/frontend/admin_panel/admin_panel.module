@@ -85,6 +85,7 @@ function admin_panel_library() {
   $libs['admin_panel']['dependencies'] = array(
     array('os_common', 'auth'),
     array('os_common', 'helpers'),
+    array('os_common', 'OSSettingsEditor'),
   );
 
   $libs['admin_panel']['css'] = array(
@@ -122,6 +123,7 @@ function admin_panel_library() {
     array('google_feedapi', 'google_jsapi_feeds'),
     array('os_tour', 'hopscotch'),
     array('os_tour', 'os_tour'),
+    array('os_common', 'angular-modal-service'),
   );
 
   return $libs;
