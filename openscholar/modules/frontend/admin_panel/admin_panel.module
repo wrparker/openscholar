@@ -71,9 +71,11 @@ function admin_panel_library() {
         'admin_panel' => array(
           'user' => $user->uid,
           'cid' => $cid,
+          //The menu should stay open if we are in an administrative area.
+          'keep_open' => !context_isset('context', 'os_public'),
         ),
         'version' => array(
-          'adminPanel' => '0.0.1'
+          'adminPanel' => '0.0.2'
         ),
       ),
       'type' => 'setting',
@@ -91,7 +93,7 @@ function admin_panel_library() {
     $path.'/misc/admin_panel-menu.css',
   );
 
-  $libs['user_panel']['version'] = '0.0.1';
+  $libs['user_panel']['version'] = '0.0.2';
   $libs['user_panel']['js'] = array(
     $path . '/misc/UserPanelModule.js' => array(),
     array(

@@ -3,6 +3,7 @@
   var vsite;
   var cid;
   var uid;
+  var auto_open;
   var morphButton;
   var menu_state;
 
@@ -12,6 +13,7 @@
        vsite = Drupal.settings.spaces.id || 0;
        cid = Drupal.settings.admin_panel.cid;
        uid = Drupal.settings.admin_panel.user;
+       auto_open = Drupal.settings.admin_panel.keep_open;
     }).controller("AdminMenuController",['$scope', '$http', '$cookies','$localStorage', function ($scope, $http, $cookies, $localStorage) {
     
       var menu = 'admin_panel';
@@ -36,7 +38,7 @@
       if (typeof($localStorage.admin_menu[uid]) !== 'undefined' && typeof($localStorage.admin_menu[uid][vsite]) !== 'undefined' && typeof($localStorage.admin_menu[uid][vsite][cid]) !== 'undefined') {
         $scope.admin_panel = $localStorage.admin_menu[uid][vsite][cid];
         
-        if (typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main) {
+        if (auto_open && typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main) {
           // Turn off transitions and toggle open, there are a bunch of damn set-timeouts in morphbutton so we need to delay things here.
           window.setTimeout(function () {
             morphButton.openTransition = false;
@@ -50,6 +52,9 @@
         	morphButton.expanded = true;
           },1000);
         } else {
+          if (typeof(menu_state) !== 'undefined') {
+            menu_state.main = false;
+          }
           jQuery('.morph-button').removeClass('no-transition');
         }
         
@@ -69,8 +74,11 @@
           $localStorage.admin_menu[uid][vsite] = {};
           $localStorage.admin_menu[uid][vsite][cid] = response.data.data;
           $scope.admin_panel = response.data.data;
-          if (typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main) {
+          if (auto_open && typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main) {
         	morphButton.toggle();  
+          } else if (typeof(menu_state) !== 'undefined') {
+        	//Set the menu state to closed.
+            menu_state.main = false;
           }
         }); 
       
