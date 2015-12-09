@@ -58,13 +58,16 @@
     $scope.update = function update() {
       // make sure request isn't already in process
       if (!jQuery("div.results").attr("style")) {
+        if (!$scope.params) {
+          $scope.reset();
+        }
+
         // reset values
         $scope.headers = [];
         $scope.rows = [];
         jQuery("div.results").css("background-image", "url('/profiles/openscholar/modules/frontend/os_common/FileEditor/large-spin_loader.gif')");
         jQuery(".pager a").hide();
         $scope.status = "";
-        $scope.params.range = $scope.query.range;
         jQuery("div#page-wrapper #messages").remove();
 
         if ($scope.params && $scope.params.lastupdate) {
@@ -112,7 +115,7 @@
           jQuery("div.results").attr("style", "");
           $scope.rows = $responseData;
 
-          if ($scope.params.page == null) {
+          if (!$scope.params || !$scope.params.page) {
             $scope.params.page = 1;
           }
 
@@ -137,7 +140,17 @@
         }
       );
      }
-    };    
+    };
+
+    $scope.reset = function() {
+      for (var key in $scope.query) {
+        if ($scope.query.hasOwnProperty(key) && key != "range") {
+            delete $scope.query[key];
+        }
+      }
+      $scope.params = {};
+      $scope.params.range = $scope.query.range;
+    };
 
     $scope.sort = function sort($obj) {
       if ($scope.params.sort && ($scope.params.sort == $obj.header)) {
@@ -146,10 +159,8 @@
       else {
         $scope.params.sort = $obj.header;
       }
-
-      // reset to page 1
+      // reset to page 1 and update
       $scope.params.page = '1';
-
       $scope.update();
     };
   }]);

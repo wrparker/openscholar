@@ -72,7 +72,6 @@ function os_reports_site_form($form, &$form_state) {
     'library' => array(
       array('os_common', 'EntityService'),
       array('os_common', 'auth'),
-      array('os_common', 'angular-modal-service'),
     )
   );
 
@@ -177,6 +176,9 @@ function os_reports_site_form($form, &$form_state) {
   );
   $form['buttons']['submit'] = array(
     '#markup' => '<a class="button" ng-click="update()">Run Report</a>',
+  );
+  $form['buttons']['clear'] = array(
+    '#markup' => '<a class="button" ng-click="reset()">Clear</a>',
   );
   $form['buttons']['download'] = array(
     '#type' => 'submit',
