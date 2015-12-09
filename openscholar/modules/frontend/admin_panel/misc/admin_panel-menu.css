@@ -325,6 +325,16 @@ a {
 .site-list {
     height: 35px;
 }
+.close-container .close {
+    color: #999;
+    font-weight: 600;
+    font-family: verdana;
+    font-size: 1.1em;
+}
+
+.close-container {
+text-align: right;
+}
 ul.user-sites li {
     padding: 0;
     display: inline-block;
