@@ -50,3 +50,22 @@ div.hopscotch-bubble.os-tour-notifications .hopscotch-bubble-number {
 div.hopscotch-bubble.os-tour-notifications .hopscotch-actions {
     margin: 24px 0 0;
 }
+
+/* OVERRIDES FOR THE NOTIFICATIONS POPOUT */
+.hopscotch-bubble:after {
+    display:none;
+}
+
+.hopscotch-bubble[style] {
+    top: 69px !important;
+    left: auto !important;
+    right: 152px !important;
+    color: #1e1e1e;
+    border: 1px solid #CCC;
+    -webkit-box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
+    -moz-box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
+    box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
+}
+.hopscotch-bubble-arrow-container {
+    display: none;
+}
