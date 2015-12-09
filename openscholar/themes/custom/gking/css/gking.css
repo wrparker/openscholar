@@ -1918,3 +1918,8 @@ li.term-evaluating-us-social-security-administration-forecasts
   padding-left: 60px !important;
 }
 
+/* OVERRIDE FOR NEW ADMIN/UX MENU */
+.morph-button-sidebar {
+    bottom: 35px;
+   
+}
