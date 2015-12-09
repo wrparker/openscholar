@@ -82,6 +82,10 @@ function os_search_solr_update_7000() {
  * Migrate search blocks to boxes.
  */
 function os_search_solr_update_7001() {
+  if (!boxes_box::factory('os_search_solr_search_box', array())) {
+    throw new Exception('The new search plugin does not exist. Please clear the cache and re trigger this update path.');
+  }
+
   $overrides = db_select('spaces_overrides', 'so')
     ->fields('so', array('object_id', 'value', 'id'))
     ->condition('object_type', 'context')
