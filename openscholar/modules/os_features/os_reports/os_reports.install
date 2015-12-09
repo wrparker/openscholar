@@ -1,0 +1,19 @@
+<?php
+// $Id$
+
+
+/**
+ * Implements hook_install().
+ */
+function os_reports_install() {
+  $roles = user_roles();
+  $report_rid = array_search("report admin", $roles);
+  if ($report_rid) {
+    $report_perms = array(
+      'OS Reports' => array(
+        'access reports',
+      ),
+    );
+    user_role_grant_permissions($report_rid, $report_perms);
+  }
+}

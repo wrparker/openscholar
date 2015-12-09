@@ -30,17 +30,16 @@ function os_reports_menu() {
     'title' => 'Site Report',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_reports_site_form'),
-    'access callback' => TRUE,
-//     'access callback' => 'user_access',
-//     'access arguments' => array('access reports'),
+    'access callback' => 'user_access',
+    'access arguments' => array('access reports'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/reports/user'] = array(
     'title' => 'User Report',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_reports_user_form'),
-//     'access callback' => 'user_access',
-//     'access arguments' => array('access reports'),
+    'access callback' => 'user_access',
+    'access arguments' => array('access reports'),
     'type' => MENU_CALLBACK,
   );
   return $items;
@@ -68,6 +67,7 @@ function os_reports_site_form($form, &$form_state) {
     ),
     'css' => array(
       drupal_get_path('module', 'os_reports') . '/os_reports.css',
+      drupal_get_path('theme', 'seven') . '/style.css',
     ),
     'library' => array(
       array('os_common', 'EntityService'),
@@ -163,12 +163,12 @@ function os_reports_site_form($form, &$form_state) {
     ),
   );
   $handler = restful_get_restful_handler('report_sites');
-  $form['limit'] = array(
+  $form['range'] = array(
     '#value' => $handler->getRange(),
     '#type' => 'hidden',
     '#attributes' => array(
-      'ng-model' => 'query.limit',
-      'ng-init' => "query.limit = '" . $handler->getRange() . "'",
+      'ng-model' => 'query.range',
+      'ng-init' => "query.range = '" . $handler->getRange() . "'",
     ),
   );
   $form['buttons'] = array(

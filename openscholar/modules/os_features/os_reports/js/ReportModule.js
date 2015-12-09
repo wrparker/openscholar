@@ -30,6 +30,9 @@
           delete $scope.params[$set];
         }
       }
+
+      // reset to page 1
+      $scope.params.page = '1';
     };
 
     $scope.updateParam = function($field) {
@@ -45,6 +48,9 @@
       else if ($scope.params[$field]) {
         delete $scope.params[$field];
       }
+
+      // reset to page 1
+      $scope.params.page = '1';
     };
 
     $scope.update = function update() {
@@ -54,7 +60,7 @@
       jQuery("div.results").css("background-image", "url('/profiles/openscholar/modules/frontend/os_common/FileEditor/large-spin_loader.gif')");
       jQuery(".pager a").hide();
       $scope.status = "";
-      $scope.params.range = $scope.query.limit;
+      $scope.params.range = $scope.query.range;
 
       if ($scope.params && $scope.params.lastupdate) {
         $scope.params.exclude = ['feed_importer', 'profile', 'harvard_course'];
@@ -98,6 +104,7 @@
             $scope.headers.push($key);
           }
         }
+        jQuery("div.results").attr("style", "");
         $scope.rows = $responseData;
 
         if ($scope.params.page == null) {
@@ -117,9 +124,7 @@
       },
       // error
       function() {
-        jQuery("div.results").css("background-image", "none");
-        ajax_command_remove('#messages');
-        ajax_command_after('#header-region', '<div id="messages">Something went wrong.</div>');
+        jQuery("div.results").attr("style", "");
       });
     };    
 

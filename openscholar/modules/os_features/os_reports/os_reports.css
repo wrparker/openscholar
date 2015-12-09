@@ -1,12 +1,14 @@
 .container-inline {
-  padding: 0;
+  padding: 2px 0px;
+  margin: 0;
 }
 
 form fieldset {
   margin: 0;
   border: 0px none;
-  padding-top: 0;
+  padding: 0;
   padding-bottom: 5px;
+  background: none;
 }
 
 form fieldset .fieldset-wrapper {
@@ -35,6 +37,14 @@ form fieldset .fieldset-legend {
   position: relative;
 }
 
+form input.form-text,
+form textarea {
+  background: none;
+  padding: 0px;
+  margin: 0px;
+  width: auto;
+}
+
 form table td,
 form table th {
   padding: 6px 8px;
@@ -56,4 +66,21 @@ form table th a.selected {
 
 input.hidden {
   display: none;
+}
+
+h1#page-title {
+  background: none;
+  padding-top: 20px;
+}
+
+.results table tr.even {
+  background: #f3f4ee none repeat scroll 0 0;
+}
+
+.results table td {
+  border: 1px solid #bebfb9;
+}
+
+#page.container {
+  width: auto;
 }
