@@ -66,8 +66,6 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     $fields = $this->getPublicFields();
 
     $query->innerJoin('node', 'n', 'purl.id = n.nid AND provider = :provider', array(':provider' => 'spaces_og'));
-    $query->addField('so', 'value', 'custom_domain');
-    $query->leftJoin('spaces_overrides', 'so', "so.id = n.nid AND object_id = :object_id and so.value <> :value1 and so.value <> :value2 and so.object_type = 'variable'", array('object_id' => 'vsite_domain_name', 'value1' => 'N;', 'value2' => 's:0:"";'));
     $query->addField('n', 'title');
     if (isset($fields['owner_email']) || in_array('mail', $this->keywordFields) || in_array('name', $this->keywordFields)) {
       $query->addField('u', 'mail', 'owner_email');
@@ -75,14 +73,14 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     }
     if ($this->latestUpdate) {
       $query->addExpression('MAX(content.changed)', 'latest_change');
-      $query->innerJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.entity_type = 'node' AND ogm.group_type = 'node'");
+      $query->innerJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
       $query->innerJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
       $query->groupBy('ogm.gid');
       $query->havingCondition('latest_change', strtotime($this->latestUpdate), '<=');
     }
     if (isset($fields['privacy'])) {
       $query->addField('access', 'group_access_value', 'privacy');
-      $query->leftJoin('field_data_group_access', 'access', 'access.entity_id = purl.id');
+      $query->innerJoin('field_data_group_access', 'access', 'access.entity_id = purl.id');
     }
 
     $this->queryForListSort($query);
@@ -106,6 +104,17 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       $new_row['content_last_updated'] = date('M j, Y h:ia', $row->latest_change);
     }
 
+    // check for custom domain
+    $row->custom_domain = db_select('spaces_overrides', 'so')
+                          ->fields('so', array('value'))
+                          ->condition('id', $row->id, '=')
+                          ->condition('type', 'og', '=')
+                          ->condition('object_id', 'vsite_domain_name', '=')
+                          ->condition('object_type', 'variable', '=')
+                          ->condition('value', 'N;', '<>')
+                          ->condition('value', 's:0:"";', '<>')
+                          ->execute()
+                          ->fetchField();
     if ($row->custom_domain) {
       $new_row['site_url'] = "http://" . unserialize($row->custom_domain);
     }
