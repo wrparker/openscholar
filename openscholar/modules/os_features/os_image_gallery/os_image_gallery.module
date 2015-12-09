@@ -327,15 +327,11 @@ function os_image_gallery_preprocess_views_view_list(&$vars) {
 }
 
 /**
- * Implements hook_node_presave().
+ * Implements hook_node_update().
  */
-function os_image_gallery_node_presave($node) {
+function os_image_gallery_node_update($node) {
   $original_wrapper = entity_metadata_wrapper('node', $node->original);
   $wrapper = entity_metadata_wrapper('node', $node);
-
-  if (!empty($node->is_new)) {
-    return;
-  }
 
   if ($wrapper->getBundle() != 'media_gallery' || !$wrapper->__isset('media_gallery_file')) {
     return;
