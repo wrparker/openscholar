@@ -2008,14 +2008,25 @@ function os_get_app_by_bundle($bundle) {
  * Implements hook_form_BASE_FORM_ID_alter() for user_login form.
  */
 function os_form_user_login_alter(&$form, $form_state) {
-  if (variable_get('os_login_with_email', TRUE)) {
-    // Replace 'username' with 'Username or e-mail'.
-    $form['name']['#title'] = t('Username or e-mail');
-    // Replace the description of the user/email login field.
-    $form['name']['#description'] = t('You may login with either your assigned username or your e-mail address.');
+  if (variable_get('os_login_with_email', TRUE)) {    
     // Add a new validation.
     // Validation function vsite_user_login_validate must run first.
     array_unshift($form['#validate'],'os_user_login_validate');
+  }
+
+  // If user login form is overridden by pinserver_authenticate module, then $form['pin-fieldset'] will be initialized from there.
+  // $form['name'] and $form['pass'] both will be unset from pinserver_authenticate module
+  if (isset($form['pin-fieldset'])) {
+    $form['pin-fieldset']['name']['#title'] = t('Username / E-Mail');
+    $form['pin-fieldset']['pass']['#description'] = t('!request', array('!request' => l('Forgot your password?', 'user/password')));
+    unset($form['pin-fieldset']['name']['#description']);
+  }
+
+  // If pinserver_authenticate module is not overriding login form, then $form['name'] and $form['pass'] will not be unset.
+  if (isset($form['name']) && isset($form['pass'])) {
+    $form['name']['#title'] = t('Username / E-Mail');
+    unset($form['name']['#description']);
+    unset($form['pass']['#description']);
   }
 }
 
@@ -2027,8 +2038,13 @@ function os_user_login_validate($form, &$form_state) {
   if (isset($form_state['values']['name']) && $form_state['values']['name']) {
     // Load their username from their email address.
     if ($name = db_query("SELECT name FROM {users} WHERE LOWER(mail) = LOWER(:email)", array(':email' => $form_state['values']['name']))->fetchField()) {
-      // Set the form['name'] to the users username for proper drupal user login form validation.
-      form_set_value($form['name'], $name, $form_state);
+      // Set the form['name'] / form['pin-fieldset']['name'] to the users username for proper drupal user login form validation.
+      // $form['pin-fieldset']['name'] will be set if Pinserver module is used for login process, else only $form['name'] will be set.
+      if (isset($form['pin-fieldset']['name'])) {
+        form_set_value($form['pin-fieldset']['name'], $name, $form_state);
+      } else {
+        form_set_value($form['name'], $name, $form_state);
+      }
     }
   }
 }
