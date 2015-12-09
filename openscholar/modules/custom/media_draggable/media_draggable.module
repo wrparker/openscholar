@@ -128,7 +128,11 @@ function media_draggable_field_widget_form(&$form, &$form_state, $field, $instan
     '#weight' => -1,
   );
 
-  $element['template'] = array(
+  $element['table'] = array(
+    '#theme' => 'media_draggable_table',
+  );
+
+  $element['table']['template'] = array(
     '#type' => 'container',
     '#attributes' => array(
       'class' => array(
@@ -160,22 +164,25 @@ function media_draggable_field_widget_form(&$form, &$form_state, $field, $instan
 
   foreach ($items as $delta => $item) {
     if ($file = file_load($item['fid'])) {
-      $element[$delta] = $element['template'];
-      $element[$delta]['#file'] = $file;
-      $element[$delta]['fid']['#default_value'] = $item['fid'];
+      $element['table'][$delta] = $element['table']['template'];
+      $element['table'][$delta]['#file'] = $file;
+      $element['table'][$delta]['fid']['#default_value'] = $item['fid'];
 
-      $element[$delta]['_weight']['#delta'] = count($items);
-      $element[$delta]['_weight']['#default_value'] = $delta;
+      $element['table'][$delta]['_weight']['#delta'] = count($items);
+      $element['table'][$delta]['_weight']['#default_value'] = $delta;
 
       // prevent Drupal from automatically deleting files by adding a file_usage ref to itself
       $usage = file_usage_list($file);
       if (!isset($usage['media_draggable']['file'][$item['fid']])) {
-        file_usage_add($element[$delta]['#file'], 'media_draggable', 'file', $item['fid']);
+        file_usage_add($element['table'][$delta]['#file'], 'media_draggable', 'file', $item['fid']);
       }
     }
   }
 
   $element['template']['#attributes']['hidden'] = 'hidden';
+  $order_class = drupal_html_class('edit-'.$element['#field_name']) . '-delta-order';
+
+  drupal_add_tabledrag(drupal_html_class('edit-'.$element['#field_name']).'-values', 'order', 'sibling', $order_class);
 
   return $element;
 }

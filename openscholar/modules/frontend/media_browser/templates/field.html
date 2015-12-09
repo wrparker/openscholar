@@ -11,10 +11,12 @@
             Allowed file types: <strong>{{extensionsFull.join(' ')}}</strong></div>
     </div>
 </div>
-<table>
+<table id="{{field_name}}-values">
     <thead>
         <tr>
             <th>File</th>
+            <td>Controls</td>
+            <td>Weight</td>
         </tr>
     </thead>
     <tbody>
@@ -45,6 +47,7 @@
         </tr>
     </tbody>
 </table>
+<!--
 <div class="file-list-single form-wrapper" ng-repeat="file in selectedFiles" ng-class="{even: $even, odd: $odd, highlight: file.highlight}">
     <input type="hidden" name="{{field_name}}[und][{{$index}}][fid]" value="{{file.id}}">
     <span>
@@ -62,4 +65,4 @@
             <a href="" ng-click="removeFile($index)">Remove</a>
         </li>
     </ul>
-</div>
+</div> -->
