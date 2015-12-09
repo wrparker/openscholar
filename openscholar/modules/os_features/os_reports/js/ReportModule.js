@@ -31,8 +31,9 @@
         }
       }
 
-      // reset to page 1
+      // reset to page 1 and no sort
       $scope.params.page = '1';
+      $scope.params.sort = "";
     };
 
     $scope.updateParam = function($field) {
@@ -49,83 +50,93 @@
         delete $scope.params[$field];
       }
 
-      // reset to page 1
+      // reset to page 1 and no sort
       $scope.params.page = '1';
+      $scope.params.sort = "";
     };
 
     $scope.update = function update() {
-      // reset values
-      $scope.headers = [];
-      $scope.rows = [];
-      jQuery("div.results").css("background-image", "url('/profiles/openscholar/modules/frontend/os_common/FileEditor/large-spin_loader.gif')");
-      jQuery(".pager a").hide();
-      $scope.status = "";
-      $scope.params.range = $scope.query.range;
+      // make sure request isn't already in process
+      if (!jQuery("div.results").attr("style")) {
+        // reset values
+        $scope.headers = [];
+        $scope.rows = [];
+        jQuery("div.results").css("background-image", "url('/profiles/openscholar/modules/frontend/os_common/FileEditor/large-spin_loader.gif')");
+        jQuery(".pager a").hide();
+        $scope.status = "";
+        $scope.params.range = $scope.query.range;
+        jQuery("div#page-wrapper #messages").remove();
 
-      if ($scope.params && $scope.params.lastupdate) {
-        $scope.params.exclude = ['feed_importer', 'profile', 'harvard_course'];
-      }
-
-      var $request = {
-        method: 'POST',
-        url : Drupal.settings.paths.api + '/report_sites',
-        headers : {'Content-Type' : 'application/json'},
-        data : $scope.params,
-      };
-
-      $http($request).then(function($response) {
-        var $responseData = angular.fromJson($response.data.data);
-
-        $scope.total = $response.data.count;
-
-        if ($response.data.next != null) {
-          $scope.next = $response.data.next.href;
-          jQuery(".pager .next a").show();
-        }
-        else {
-          $scope.next = null;
-          jQuery(".pager .next a").hide();
+        if ($scope.params && $scope.params.lastupdate) {
+          $scope.params.exclude = ['feed_importer', 'profile', 'harvard_course'];
         }
 
-        if ($response.data.previous != null) {
-          $scope.previous = $response.data.previous.href;
-          jQuery(".pager .previous a").show();
-        }
-        else {
-          $scope.previous = null;
-          jQuery(".pager .previous a").hide();
-        }
+        var $request = {
+          method: 'POST',
+          url : Drupal.settings.paths.api + '/report_sites',
+          headers : {'Content-Type' : 'application/json'},
+          data : $scope.params,
+        };
 
-        var $keys = [];
+        $http($request).then(function($response) {
+          var $responseData = angular.fromJson($response.data.data);
 
-        // get table headers from returned data
-        for ($key in $responseData[0]) {
-          if ($key && $key != "site_url") {
-            $scope.headers.push($key);
+          $scope.total = $response.data.count;
+
+          if ($response.data.next != null) {
+            $scope.next = $response.data.next.href;
+            jQuery(".pager .next a").show();
           }
-        }
-        jQuery("div.results").attr("style", "");
-        $scope.rows = $responseData;
+          else {
+            $scope.next = null;
+            jQuery(".pager .next a").hide();
+          }
 
-        if ($scope.params.page == null) {
-          $scope.params.page = 1;
-        }
+          if ($response.data.previous != null) {
+            $scope.previous = $response.data.previous.href;
+            jQuery(".pager .previous a").show();
+          }
+          else {
+            $scope.previous = null;
+            jQuery(".pager .previous a").hide();
+          }
 
-        if (($scope.params.page * $scope.params.range) < $scope.total) {
-          $end = ($scope.params.page * $scope.params.range);
-        }
-        else {
-          $end = $scope.total;
-        }
+          var $keys = [];
 
-        if ($scope.total) {
-          $scope.status = "showing " + ((($scope.params.page - 1) * $scope.params.range) + 1) + " - " + $end + " of " + $scope.total;
+          // get table headers from returned data
+          for ($key in $responseData[0]) {
+            if ($key && $key != "site_url") {
+              $scope.headers.push($key);
+            }
+          }
+          jQuery("div.results").attr("style", "");
+          $scope.rows = $responseData;
+
+          if ($scope.params.page == null) {
+            $scope.params.page = 1;
+          }
+
+          if (($scope.params.page * $scope.params.range) < $scope.total) {
+            $end = ($scope.params.page * $scope.params.range);
+          }
+          else {
+            $end = $scope.total;
+          }
+
+          if ($scope.total) {
+            $scope.status = "showing " + ((($scope.params.page - 1) * $scope.params.range) + 1) + " - " + $end + " of " + $scope.total;
+          }
+          else {
+            jQuery("div#page-wrapper").prepend('<div id="messages"><div class="messages warning"><a class="dismiss">X</a>No results in report.</div></div>');
+          }
+        },
+        // error
+        function() {
+          jQuery("div.results").attr("style", "");
+          jQuery("div#page-wrapper").prepend('<div id="messages"><div class="messages error"><a class="dismiss">X</a>An error occurred.</div></div>');
         }
-      },
-      // error
-      function() {
-        jQuery("div.results").attr("style", "");
-      });
+      );
+     }
     };    
 
     $scope.sort = function sort($obj) {
