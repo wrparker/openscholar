@@ -92,6 +92,11 @@ div[file-edit] h4,
     border-color: red !important;
     outline-color: red !important;
 }
+.file-retrieve-spinner {
+	width: 60px;
+    height: 60px;
+    margin-left: 42%;
+}
 #fe-file-name + div {
     position: relative;
 }

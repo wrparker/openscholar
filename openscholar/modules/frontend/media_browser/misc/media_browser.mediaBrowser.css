@@ -238,7 +238,6 @@ button[ng-disabled="!pager.canPage(-1)"] {
 
 .fe-replace-wrapper .description {
     display: inline-block;
-    margin-left: 10px;
 }
 
 #file-delete-section.open {
