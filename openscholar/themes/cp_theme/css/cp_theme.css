@@ -1176,3 +1176,7 @@ div.error:before {
   padding: 5px;
   width: 96%;
 }
+/** News edit page calendar field override */
+.node-news-form .date-padding {
+    padding: 0;
+}
