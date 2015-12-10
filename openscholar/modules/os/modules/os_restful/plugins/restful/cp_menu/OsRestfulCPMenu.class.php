@@ -234,7 +234,8 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
 //                'href' => '/cp/content'
 //              ),
               'tagging' => array(
-                'label' => 'Tagging',
+                //'label' => 'Tagging',
+                  'label' => 'Taxonomy',
                 'type' => 'link',
                 'href' => 'cp/build/taxonomy'
               ),
