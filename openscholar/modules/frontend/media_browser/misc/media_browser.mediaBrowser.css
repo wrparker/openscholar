@@ -365,7 +365,6 @@ div[file-edit] .control button,
     left: 50%;
     width: 95%;
     transform: translate(-50%, -50%);
-    height: 70px;
 }
 #media-browser-rejected {
     position: absolute;
