@@ -31,6 +31,8 @@ Drupal.behaviors.tabs = {
 
       // Obtaining widget title and description from Drupal.settings.os_boxes.widget_collection object.
       var title = Drupal.settings.os_boxes.widget_collection[bid].title;
+      var desc = Drupal.settings.os_boxes.widget_collection[bid].desc;
+
       count.val(parseInt(count.val())+1);
       id = 'widget-'+(new_id++);
       new_row = $(template.replace(/widget-new/g, id));
@@ -48,7 +50,7 @@ Drupal.behaviors.tabs = {
 
       // set all the form elements in the new row
       $('input[name="widgets['+id+'][bid]"]', new_row).val(bid);
-      $('span', new_row).text(title);
+      $('span', new_row).text(desc);
       $('input[name="widgets['+id+'][title]"]', new_row).val(title);
       $('input[name="widgets['+id+'][weight]"]', new_row).addClass('field-weight').val(weight+1);
       $('.tabledrag-handle', new_row).remove();
