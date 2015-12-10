@@ -1816,7 +1816,7 @@ function os_files_field_formatter_view($entity_type, $entity, $field, $instance,
           $alt = isset($alt[0]) ? $alt[0]['value'] : $i['filename'];
           $image_info = image_get_info($i['uri']);
           $images[] = array(
-            'href' => file_create_url($i['uri']),
+            'href' => 'media-gallery/lightbox/' . $entity->nid . '/' . $i['fid'],
             'title' => theme('image_style', array(
               'path' => $i['uri'],
               'style_name' => 'thumbnail',
