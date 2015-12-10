@@ -28,7 +28,7 @@ class update implements osUpdateBatch {
   public static function Iterator($entity) {
     $nobel_roles = array('content editor', 'vsite admin');
 
-    self::assignRoles($entity, $nobel_roles + array('vsite user'), array('add content to books'));
+    self::assignRoles($entity, array_merge($nobel_roles, array('vsite user')), array('add content to books'));
     self::assignRoles($entity, $nobel_roles, array('administer book outlines'));
   }
 
