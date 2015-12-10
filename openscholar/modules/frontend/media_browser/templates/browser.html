@@ -56,8 +56,8 @@
         <div class="media-browser-pane" ng-switch-when="web">
             <label for="media-browser-web">URL or HTML:</label>
             <textarea id="media-browser-web" cols="60" rows="5" ng-model="$parent.embed" placeholder="Enter the URL or HTML here"></textarea>
-            <div class="description">Enter a URL from one of <a href="http://embed.ly/embed/features/providers" target="_blank">
-                these providers</a> or paste a snippet of HTML. The HTML may contain references to any of the following sites:
+            <div class="description embedly">Enter a URL from one of <a href="http://embed.ly/embed/features/providers" target="_blank">
+                these providers</a> or paste a snippet of HTML. The HTML may contain references to any of the following sites:<br><br>
                 <span ng-init="limit = -21" ng-repeat="domain in whitelist" ng-mouseenter="limit = -120" ng-mouseleave="limit = -21" tooltip="{{domain}}" >
                   <span ng-hide="(limit *-1) >= domain.length">...</span>{{domain | limitTo:limit}}{{$last ? '' : ', '}}
                 </span>
