@@ -207,10 +207,7 @@ ul.nice-menu-down li ul li ul {
 }
 h1#page-title {
     font-size: 25px;
-    line-height: 1;
-    /* Font size is larger than the default line-height, so will overlap if the title wraps */
-    
-    margin: 0 0 2%;
+      margin: 0 0 2%;
 }
 .node-type-page h1#page-title {
     margin: 1% 0 2%;

@@ -157,7 +157,6 @@ left: 12em;
 
 h1#page-title {
   font-size: 30px;
-  line-height: 1; /* Font size is larger than the default line-height, so will overlap if the title wraps */
    margin: 0 0 20px;
 }
 

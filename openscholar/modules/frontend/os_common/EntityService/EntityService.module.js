@@ -205,7 +205,7 @@
               var entity = resp.data[0];
               ents[entity[idProp]] = entity;
 
-              weSaved[entity[idProp]] = Date.now();
+              weSaved[entity[idProp]] = entity.timestamp;
               addToCaches(entityType, idProp, entity);
 
               $rootScope.$broadcast(eventName + '.add', entity);
@@ -288,9 +288,15 @@
           };
 
           var keys = getCacheKeysForEntity(type, idProp, entity);
-          var updated = 0
-          for (var k in keys) {
-            updated = Math.max(updated, cache[k].lastUpdated);
+          var updated = 0;
+          if (weSaved[entity[idProp]] == undefined) {
+
+            for (var k in keys) {
+              updated = Math.max(updated, cache[k].lastUpdated);
+            }
+          }
+          else {
+            updated = weSaved[entity[idProp]];
           }
           config.headers['If-Unmodified-Since'] = (new Date(updated*1000)).toString().replace(/ \([^)]*\)/, '');
 
@@ -313,6 +319,7 @@
         this.register = function (entity) {
           ents[entity[idProp]] = entity;
 
+          weSaved[entity[idProp]] = entity.timestamp;
           addToCaches(entityType, idProp, entity);
         };
       }
