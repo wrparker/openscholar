@@ -548,3 +548,13 @@ line-height:20px;
 }
 
 
+.mg-lightbox-detail {
+    float: left;
+    padding-right: 320px;
+}
+
+.mg-lightbox-description {
+    width: 300px;
+    margin-left: -300px;
+    float: left;
+}
