@@ -308,7 +308,7 @@ a {
 
 .account_tab_popout {
     position: absolute;
-    right: 138px;
+    right: 152px;
     background-color: #FFF;
     width: 350px;
     color: #1e1e1e;
@@ -320,7 +320,7 @@ a {
 }
 
 .account_tab_popout.user_sites {
-    top: 32px;
+    top: 28px;
 }
 .site-list {
     height: 35px;
