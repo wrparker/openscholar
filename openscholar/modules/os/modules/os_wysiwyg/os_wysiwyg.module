@@ -45,6 +45,14 @@ function os_wysiwyg_media_token_to_markup_alter(&$element, $tag_info, $settings)
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_wysiwyg_form_media_format_form_alter(&$form, &$form_state) {
+  $form['options']['#title'] = t('You have the option override the default alt and/or title text. This will not change the default alt and title text, only this specific use of the file.');
+  $form['options']['alt']['#description'] = t('Appears when the image is loading or fails to load, important for accessibility.');
+}
+
+/**
  * Implements hook_wysiwyg_editor_settings_alter().
  */
 function os_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
