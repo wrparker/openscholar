@@ -39,6 +39,9 @@ p:empty {
 .sidebar h1.node-title {
     margin-bottom: 0;
 }
+h1#page-title {
+    line-height: 1.1;
+}
 table,
 th,
 td,
@@ -638,6 +641,14 @@ article.node-teaser.node-person .field-name-field-person-photo ~ .node-content {
     vertical-align: top;
     width: 100%;
 }
+
+.node-person .field-name-field-website {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 42ch;
+}
+
 .node-link.node-teaser {
     padding: 10px 0 5px;
 }

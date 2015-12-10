@@ -38,6 +38,7 @@ abstract class os_boxes_widget_collection extends os_boxes_default {
 
     // filter out factories
     $options = array();
+    $widget_collection = array();
     ctools_include('layout', 'os');
     foreach ($widgets as $wgt => $info) {
       if (isset($info['info']) && $info['delta'] != $this->delta) {
@@ -47,9 +48,15 @@ abstract class os_boxes_widget_collection extends os_boxes_default {
         if (!empty($info['title'])) {
           $options[$wgt] .= ' ('.trim($info['title']).')';
         }
+        
+        // Saving widget title and description in array to use in JavaScript Layer as Drupal.settings object.
+        $widget_collection[$wgt]['title'] = !empty($info['title']) ? trim($info['title']) : trim($info['info']);
+        $widget_collection[$wgt]['info'] = trim($info['info']);
       }
     }
     asort($options);
+    // Adding widget collection Drupal.settings object.
+    drupal_add_js(array('os_boxes' => array('widget_collection' => $widget_collection)), 'setting');
 
     $form['add'] = array(
       '#type' => 'fieldset',

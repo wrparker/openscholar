@@ -38,8 +38,8 @@
         }
       }
     }])
-  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', 'EntityConfig', '$sce', '$upload', '$timeout', 'params', 'close',
-      function ($scope, $filter, $http, EntityService, config, $sce, $upload, $timeout, params, close) {
+  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', 'EntityConfig', '$sce', '$upload', '$timeout', 'FILEEDITOR_RESPONSES', 'params', 'close',
+      function ($scope, $filter, $http, EntityService, config, $sce, $upload, $timeout, FER, params, close) {
 
     // Initialization
     var service = new EntityService('files', 'id'),
@@ -61,6 +61,8 @@
     $scope.activePanes.delete = true;
     $scope.loading = true;
     $scope.loadingMessage = '';
+    $scope.sortType = 'timestamp';
+    $scope.sortReverse = true;
 
     $scope.availTypes = [
       {label: 'Image', value: 'image'},
@@ -170,13 +172,13 @@
       });
 
 
-    $scope.changePanes = function (pane) {
+    $scope.changePanes = function (pane, result) {
       if ($scope.activePanes[pane]) {
         $scope.pane = pane;
         return true;
       }
       else {
-        close(true);
+        close(result != undefined ? result : true);
       }
     }
 
@@ -461,6 +463,7 @@
         if (e.data.length) {
           $scope.embed = '';
           $scope.setSelection(e.data[0].id);
+          service.register(e.data[0]);
 
           $scope.changePanes('edit')
         }
@@ -474,7 +477,7 @@
     }
 
     $scope.closeFileEdit = function (result) {
-      if (result == 'canceled' && $scope.selected_file.new) {
+      if (result == FER.CANCELED && $scope.selected_file.new) {
         service.delete($scope.selected_file);
         for (var j = 0; j < $scope.files.length; j++) {
           if ($scope.files[j].id == $scope.selected_file.id) {
@@ -483,7 +486,7 @@
         }
         $scope.selected_file = null;
       }
-      $scope.changePanes('library');
+      $scope.changePanes('library', result);
     }
 
     $scope.insert = function () {
