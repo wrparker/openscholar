@@ -11,10 +11,10 @@ function os_reports_user_default_permissions() {
   $permissions = array();
 
   // Exported permission: 'access reports'.
-  $permissions['access reports'] = array(
-    'name' => 'access reports',
+  $permissions['access os reports'] = array(
+    'name' => 'access os reports',
     'roles' => array(
-      'report admin' => 'report admin',
+      'os report admin' => 'os report admin',
     ),
     'module' => 'os_reports',
   );

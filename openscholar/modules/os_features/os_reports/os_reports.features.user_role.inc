@@ -10,9 +10,9 @@
 function os_reports_user_default_roles() {
   $roles = array();
 
-  // Exported role: support team.
-  $roles['report admin'] = array(
-    'name' => 'report admin',
+  // Exported role: os report admin.
+  $roles['os report admin'] = array(
+    'name' => 'os report admin',
     'weight' => 9,
   );
 

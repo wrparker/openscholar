@@ -62,6 +62,8 @@
           $scope.reset();
         }
 
+        $scope.params.range = $scope.query.range;
+
         // reset values
         $scope.headers = [];
         $scope.rows = [];
@@ -149,12 +151,14 @@
         }
       }
       $scope.params = {};
-      $scope.params.range = $scope.query.range;
     };
 
     $scope.sort = function sort($obj) {
       if ($scope.params.sort && ($scope.params.sort == $obj.header)) {
         $scope.params.sort = "-" + $obj.header;
+      }
+      else if ($scope.params.sort && ($scope.params.sort == "-" + $obj.header)) {
+        delete $scope.params.sort;
       }
       else {
         $scope.params.sort = $obj.header;
@@ -162,6 +166,18 @@
       // reset to page 1 and update
       $scope.params.page = '1';
       $scope.update();
+    };
+
+    $scope.isActive = function isActive($header) {
+      if ($scope.params.sort == $header) {
+        return "active desc";
+      }
+      else if ($scope.params.sort == ("-" + $header)) {
+        return "active asc";
+      }
+      else {
+        return false;
+      }
     };
   }]);
 

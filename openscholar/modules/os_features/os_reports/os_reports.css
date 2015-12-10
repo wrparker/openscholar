@@ -37,6 +37,11 @@ form fieldset .fieldset-legend {
   position: relative;
 }
 
+form fieldset legend {
+  font-size: inherit;
+  line-height: inherit;
+}
+
 form input.form-text,
 form textarea {
   background: none;
@@ -71,6 +76,7 @@ input.hidden {
 h1#page-title {
   background: none;
   padding-top: 20px;
+  font-size: 1.5em;
 }
 
 .results table tr.even {
@@ -83,4 +89,17 @@ h1#page-title {
 
 #page.container {
   width: auto;
+  font-family: "Lucida Grande",Verdana,sans-serif;
+}
+
+form th.active {
+	background-color: #bdbeb9;
+}
+
+form th.asc a {
+	background: url('/themes/seven/images/arrow-asc.png') no-repeat right;
+}
+
+form th.desc a {
+	background: url('/themes/seven/images/arrow-desc.png') no-repeat right;
 }

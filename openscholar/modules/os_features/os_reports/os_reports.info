@@ -5,5 +5,5 @@ dependencies[] = os
 dependencies[] = os_common
 dependencies[] = restful
 dependencies[] = vsite
-features[user_permission][] = access reports
-features[user_role][] = report admin
+features[user_permission][] = access os reports
+features[user_role][] = os report admin
