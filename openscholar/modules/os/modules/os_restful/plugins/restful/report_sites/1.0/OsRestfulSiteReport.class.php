@@ -31,19 +31,26 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       'site_url' => array(
         'property' => 'id',
       ),
+      'owner_email' => array(
+        'property' => 'owner_email',
+      ),
+      'site_creation_date' => array(
+        'property' => 'site_creation_date',
+      ),
+      'site_update_date' => array(
+        'property' => 'site_update_date',
+      ),
+      'installation' => array(
+        'property' => 'installation',
+      ),
     );
   }
 
   public function runReport() {
     $request = $this->getRequest();
-    if (isset($request['lastupdate'])) {
-      $fields = $this->getPublicFields();
-      $fields['content_last_updated'] = array("property" => 'latest_change');
-      $this->setPublicFields($fields);
-      $this->latestUpdate = $request['lastupdate'];
-      if (isset($request['exclude'])) {
-        $this->excludedContentTypes = $request['exclude'];
-      }
+    $this->latestUpdate = $request['lastupdatebefore'];
+    if (isset($request['exclude'])) {
+      $this->excludedContentTypes = $request['exclude'];
     }
 
     $results = $this->getQueryForList()->execute();
@@ -62,26 +69,29 @@ class OsRestfulSiteReport extends \OsRestfulReports {
    * add additional fields and table joins
    */
   public function getQueryForList() {
+    global $base_url;
     $query = $this->getQuery();
     $fields = $this->getPublicFields();
 
     $query->innerJoin('node', 'n', 'purl.id = n.nid AND provider = :provider', array(':provider' => 'spaces_og'));
     $query->addField('n', 'title');
-    if (isset($fields['owner_email']) || in_array('mail', $this->keywordFields) || in_array('name', $this->keywordFields)) {
-      $query->addField('u', 'mail', 'owner_email');
-      $query->innerJoin('users', 'u', 'u.uid = n.uid');
-    }
+    $query->addField('n', 'created', 'site_creation_date');
+    $query->addField('u', 'mail', 'owner_email');
+    $query->innerJoin('users', 'u', 'u.uid = n.uid');
+    $query->addExpression('MAX(content.changed)', 'site_update_date');
+    $query->leftJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
+    $query->leftJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
+    $query->groupBy('purl.id');
     if ($this->latestUpdate) {
-      $query->addExpression('MAX(content.changed)', 'latest_change');
-      $query->innerJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
-      $query->innerJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
-      $query->groupBy('ogm.gid');
-      $query->havingCondition('latest_change', strtotime($this->latestUpdate), '<=');
+      $query->havingCondition('site_update_date', strtotime($this->latestUpdate), '<=');
     }
     if (isset($fields['privacy'])) {
       $query->addField('access', 'group_access_value', 'privacy');
       $query->innerJoin('field_data_group_access', 'access', 'access.entity_id = purl.id');
     }
+
+    $url_parts = explode(".", str_replace("http://", "", $base_url));
+    $query->addExpression("'" . $url_parts[0] . "'", 'installation');
 
     $this->queryForListSort($query);
     $this->queryForListFilter($query);
@@ -100,8 +110,13 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     global $base_url;
 
     $new_row = parent::mapDbRowToPublicFields($row);
-    if (isset($new_row['content_last_updated'])) {
-      $new_row['content_last_updated'] = date('M j, Y h:ia', $row->latest_change);
+    if (isset($new_row['site_update_date'])) {
+      if ($new_row['site_update_date']) {
+        $new_row['site_update_date'] = date('M j, Y h:ia', $row->site_update_date);
+      }
+    }
+    if (isset($new_row['site_creation_date'])) {
+      $new_row['site_creation_date'] = date('M j, Y h:ia', $row->site_creation_date);
     }
 
     // check for custom domain

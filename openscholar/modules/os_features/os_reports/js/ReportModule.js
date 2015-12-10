@@ -1,6 +1,10 @@
 (function () {
   var reportModule = angular.module('ReportModule', ['os-auth']);
   reportModule.controller('SiteReportQuery', ['$http', '$scope', function ($http, $scope) {
+    $scope.query = {};
+    $scope.query.includesites = 'content';
+
+
     $scope.pager = function($direction) {
       var url = '';
       eval ('url = $scope.' + $direction + ';');
@@ -11,6 +15,10 @@
     $scope.updateCheckedValues = function($set, $value) {
       if (!$scope.params) {
         $scope.params = new Object();
+      }
+
+      if (eval("!$scope.query." + $set)) {
+        eval ("$scope.query." + $set + " = {};");
       }
       $checked = eval ("$scope.query." + $set + "." + $value);
 
@@ -62,8 +70,6 @@
           $scope.reset();
         }
 
-        $scope.params.range = $scope.query.range;
-
         // reset values
         $scope.headers = [];
         $scope.rows = [];
@@ -72,9 +78,7 @@
         $scope.status = "";
         jQuery("div#page-wrapper #messages").remove();
 
-        if ($scope.params && $scope.params.lastupdate) {
-          $scope.params.exclude = ['feed_importer', 'profile', 'harvard_course'];
-        }
+        $scope.params.exclude = ['feed_importer', 'profile', 'harvard_course'];
 
         var $request = {
           method: 'POST',
@@ -132,19 +136,20 @@
             $scope.status = "showing " + ((($scope.params.page - 1) * $scope.params.range) + 1) + " - " + $end + " of " + $scope.total;
           }
           else {
-            jQuery("div#page-wrapper").prepend('<div id="messages"><div class="messages warning"><a class="dismiss">X</a>No results in report.</div></div>');
+            jQuery("div#page-wrapper").prepend('<div id="messages"><div class="messages warning">No results in report.</div></div>');
           }
         },
         // error
         function() {
           jQuery("div.results").attr("style", "");
-          jQuery("div#page-wrapper").prepend('<div id="messages"><div class="messages error"><a class="dismiss">X</a>An error occurred.</div></div>');
+          jQuery("div#page-wrapper").prepend('<div id="messages"><div class="messages error">An error occurred.</div></div>');
         }
       );
      }
     };
 
     $scope.reset = function() {
+      jQuery("div#page-wrapper #messages").remove();
       for (var key in $scope.query) {
         if ($scope.query.hasOwnProperty(key) && key != "range") {
             delete $scope.query[key];

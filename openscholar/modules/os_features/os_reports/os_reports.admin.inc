@@ -61,33 +61,37 @@ function os_reports_site_form($form, &$form_state) {
     '#type' => 'checkboxes',
   );
   $form['keyword_set']['kfields']['mail'] = array(
-    '#value' => 'mail',
     '#title' => 'email',
     '#type' => 'checkbox',
     '#attributes' => array(
       'ng-model' => 'query.kfields.mail',
-      'ng-click' => "updateCheckedValues('kfields', 'mail')"
+      'ng-click' => "updateCheckedValues('kfields', 'mail')",
+      'value' => 'mail',
     ),
   );
   $form['keyword_set']['kfields']['name'] = array(
-    '#value' => 'name',
     '#title' => 'username',
     '#type' => 'checkbox',
     '#attributes' => array(
       'ng-model' => 'query.kfields.name',
-      'ng-click' => "updateCheckedValues('kfields', 'name')"
+      'ng-click' => "updateCheckedValues('kfields', 'name')",
+      'value' => 'name',
     ),
   );
   $form['keyword_set']['kfields']['n.title'] = array(
-    '#value' => 'n.title',
     '#title' => 'site name',
     '#type' => 'checkbox',
     '#attributes' => array(
       'ng-model' => 'query.kfields.n.title',
-      'ng-click' => "updateCheckedValues('kfields', 'n.title')"
+      'ng-click' => "updateCheckedValues('kfields', 'n.title')",
+      'value' => 'n.title',
     ),
   );
-   $form['lastupdate'] = array(
+  $form['content'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Site Content'
+  );
+  $form['content']['lastupdatebefore'] = array(
     '#prefix' => '<div class="container-inline">',
     '#suffix' => '</div>',
     '#type' => 'textfield',
@@ -95,31 +99,93 @@ function os_reports_site_form($form, &$form_state) {
     '#size' => 10,
     '#description' => 'format: YYYYMMDD',
     '#attributes' => array(
-      'ng-model' => 'query.lastupdate',
-      'ng-change' => "updateParam('lastupdate')"
+      'ng-model' => 'query.lastupdatebefore',
+      'ng-change' => "updateParam('lastupdatebefore')",
     ),
   );
- $form['columns'] = array(
-    '#prefix' => '<div class="container-inline"><label for="edit-columns">Optional columns </label>',
+  $form['content']['includesites'] = array(
+    '#prefix' => '<div class="container-inline"><label for="edit-includesites">Sites to include</label>',
     '#suffix' => '</div>',
-    '#type' => 'checkboxes',
- );
-  $form['columns']['owner_email'] = array(
-    '#value' => 'owner_email',
-    '#title' => 'Owner email',
+  );
+  $form['content']['includesites']['all'] = array(
+    '#name' => 'includesites',
+    '#title' => 'all sites',
+    '#type' => 'radio',
+    '#attributes' => array(
+      'ng-model' => 'query.includesites',
+      'ng-click' => "updateParam('includesites')",
+      'value' => 'all',
+   ),
+  );
+  $form['content']['includesites']['content'] = array(
+    '#name' => 'includesites',
+    '#title' => 'only sites with content',
+    '#type' => 'radio',
+    '#attributes' => array(
+      'ng-model' => 'query.includesites',
+      'ng-click' => "updateParam('includesites')",
+      'value' => 'content',
+    ),
+  );
+  $form['content']['includesites']['nocontent'] = array(
+    '#name' => 'includesites',
+    '#title' => 'only sites with no content',
+    '#type' => 'radio',
+    '#attributes' => array(
+      'ng-model' => 'query.includesites',
+      'ng-click' => "updateParam('includesites')",
+      'value' => 'nocontent',
+    ),
+  );
+  $form['columns'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Optional Columns',
+    '#prefix' => '<div class="container-inline">',
+    '#suffix' => '</div>',
+  );
+  $form['columns']['subdomain'] = array(
+    '#title' => 'Subdomain of site owner',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'query.columns.owner_email',
-      'ng-click' => "updateCheckedValues('columns', 'owner_email')"
+      'ng-model' => 'query.columns.subdomain',
+      'ng-click' => "updateCheckedValues('columns', 'subdomain')",
+      'value' => 'subdomain',
+    ),
+  );
+  $form['columns']['createdate'] = array(
+    '#title' => 'Creation date',
+    '#type' => 'checkbox',
+    '#attributes' => array(
+      'ng-model' => 'query.columns.createdate',
+      'ng-click' => "updateCheckedValues('columns', 'createdate')",
+      'value' => 'createdate',
+    ),
+  );
+  $form['columns']['updatedate'] = array(
+    '#title' => 'Date of last content update',
+    '#type' => 'checkbox',
+    '#attributes' => array(
+      'ng-model' => 'query.columns.updatedate',
+      'ng-click' => "updateCheckedValues('columns', 'updatedate')",
+      'value' => 'updatedate',
     ),
   );
   $form['columns']['privacy'] = array(
-    '#value' => 'privacy',
     '#title' => 'Privacy level',
     '#type' => 'checkbox',
     '#attributes' => array(
       'ng-model' => 'query.columns.privacy',
-      'ng-click' => "updateCheckedValues('columns', 'privacy')"
+      'ng-click' => "updateCheckedValues('columns', 'privacy')",
+      'value' => 'privacy',
+    ),
+  );
+  $form['columns']['customtheme'] = array(
+    '#title' => 'Custom theme',
+    '#type' => 'checkbox',
+    '#attributes' => array(
+      'ng-model' => 'query.columns.customtheme',
+      'ng-click' => "updateCheckedValues('columns', 'customtheme')",
+      'value' => 'customtheme',
     ),
   );
   $handler = restful_get_restful_handler('report_sites');
@@ -128,7 +194,7 @@ function os_reports_site_form($form, &$form_state) {
     '#type' => 'hidden',
     '#attributes' => array(
       'ng-model' => 'query.range',
-      'ng-init' => "query.range = '" . $handler->getRange() . "'",
+      'ng-init' => "params.range = '" . $handler->getRange() . "'",
     ),
   );
   $form['buttons'] = array(

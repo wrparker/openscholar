@@ -3,6 +3,10 @@
   margin: 0;
 }
 
+.container-inline .form-item label {
+  margin-right: 10px;
+}
+
 form fieldset {
   margin: 0;
   border: 0px none;
@@ -93,13 +97,17 @@ h1#page-title {
 }
 
 form th.active {
-	background-color: #bdbeb9;
+  background-color: #bdbeb9;
 }
 
 form th.asc a {
-	background: url('/themes/seven/images/arrow-asc.png') no-repeat right;
+  background: url('/themes/seven/images/arrow-asc.png') no-repeat right;
 }
 
 form th.desc a {
-	background: url('/themes/seven/images/arrow-desc.png') no-repeat right;
+  background: url('/themes/seven/images/arrow-desc.png') no-repeat right;
+}
+
+#page.container div.messages::before {
+  background-image: none;
 }
