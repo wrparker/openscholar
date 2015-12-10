@@ -17,7 +17,7 @@
                 <span id="drag-text">Drag and drop files here. <span class="help_icon" ng-mouseenter="showHelp = true" ng-mouseleave="showHelp = false">?</span></span>
                 <a href="#" id="media-browser-file-select" ng-file-select ng-file-change="$parent.checkForDupes($files, $event)"
                    ng-accept="$parent.validate($file)" accept="{{'.'+extensions.join(',.')}}" ng-multiple="true">Select files to Add</a>
-                     <div class="help" ng-show="showHelp"><strong>Allowed file types:</strong><br /> {{extensions.join(',')}}<br /><br />
+                     <div class="help" ng-show="showHelp"><strong>Allowed file types:</strong><br /> {{extensions.join(' ')}}<br /><br />
                    <strong>Max file size:</strong> {{maxFilesize}}.</div>
             </div>
             <div id="media-browser-duplicate-check" ng-show="$parent.dupes.length > 0">
