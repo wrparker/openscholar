@@ -72,10 +72,10 @@ function admin_panel_library() {
           'user' => $user->uid,
           'cid' => $cid,
           //The menu should stay open if we are in an administrative area.
-          'keep_open' => !context_isset('context', 'os_public'),
+          'keep_open' => _admin_panel_persist_open(),
         ),
         'version' => array(
-          'adminPanel' => '0.0.2'
+          'adminPanel' => '0.0.4'
         ),
       ),
       'type' => 'setting',
@@ -162,4 +162,36 @@ function admin_panel_cp_settings() {
   );
 
   return $setting;
+}
+
+/**
+ * Return the cases when the user is performing an admin action.
+ */
+function _admin_panel_persist_open() {
+  $on_public_site = context_isset('context', 'os_public');
+  
+  //Always persist in cp
+  if(!$on_public_site) return true;
+  
+  if (!empty($_SERVER["HTTP_REFERER"])) {
+    $referer = parse_url($_SERVER["HTTP_REFERER"]);
+    $referer = purl_get_normal_path($referer['path']);
+    
+    $open_paths = array(
+      'user',
+      'node/*/edit',
+      'node/add/*'
+    );
+    $paths = implode("\n", $open_paths);
+    if (drupal_match_path($referer, $paths)) {
+      return true;
+    }
+  }
+  
+  //We passed a param to force the menu to persist.
+  if(!empty($_GET['admin_panel'])) {
+    return true;
+  }
+  
+  return false;
 }

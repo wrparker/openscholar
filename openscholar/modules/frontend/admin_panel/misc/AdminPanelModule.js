@@ -11,7 +11,7 @@
     .config(function (){
        paths = Drupal.settings.paths
        vsite = Drupal.settings.spaces.id || 0;
-       cid = Drupal.settings.admin_panel.cid;
+       cid = Drupal.settings.admin_panel.cid + Drupal.settings.version.adminPanel;
        uid = Drupal.settings.admin_panel.user;
        auto_open = Drupal.settings.admin_panel.keep_open;
     }).controller("AdminMenuController",['$scope', '$http', '$cookies','$localStorage', function ($scope, $http, $cookies, $localStorage) {

@@ -201,6 +201,12 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         }
       }
     }
+    
+    $private_files = !empty($spaces_features['os_files_private'])? array('files_private' => array(
+        'label' => 'Private Files',
+        'type' => 'link',
+        'href' => 'cp/content/files-private'
+    )):array();
 
     //Order alphabetically
     ksort($add_links);
@@ -226,14 +232,15 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
                 'label' => 'Files',
                 'type' => 'link',
                 'href' => 'cp/content/files'
-              ),
+              )) + $private_files +
+              
 //              @tbd v2
 //              'widgets' => array(
 //                'label' => 'Widgets',
 //                'type' => 'link',
 //                'href' => '/cp/content'
 //              ),
-              'tagging' => array(
+              array('tagging' => array(
                 //'label' => 'Tagging',
                   'label' => 'Taxonomy',
                 'type' => 'link',
