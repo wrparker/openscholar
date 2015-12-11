@@ -1,9 +1,8 @@
 (function () {
   var reportModule = angular.module('ReportModule', ['os-auth']);
   reportModule.controller('SiteReportQuery', ['$http', '$scope', function ($http, $scope) {
-    $scope.query = {};
-    $scope.query.includesites = 'content';
-
+    $scope.params = {};
+    $scope.params.includesites = 'content';
 
     $scope.pager = function($direction) {
       var url = '';
@@ -12,28 +11,23 @@
       $scope.update();
     }
 
-    $scope.updateCheckedValues = function($set, $value) {
-      if (!$scope.params) {
-        $scope.params = new Object();
+    $scope.updateCheckedValues = function updateCheckedValues($set, $value) {
+      if (eval("!$scope.queryform." + $set)) {
+        eval ("$scope.queryform." + $set + " = {};");
       }
+      $checked = eval("$scope.queryform." + $set + "." + $value);
 
-      if (eval("!$scope.query." + $set)) {
-        eval ("$scope.query." + $set + " = {};");
+      if ($checked && !$scope.params[$set]) {
+        $scope.params[$set] = [$value.replace(/_/, ".")];
       }
-      $checked = eval ("$scope.query." + $set + "." + $value);
-
-      if ($checked && $scope.params[$set]) {
-        $scope.params[$set].push($value);
-      }
-      else if ($checked) {
-        $scope.params[$set] = [$value];
-      }
-      else if ($scope.params[$set]) {
-        angular.forEach($scope.params[$set], function($val, $index) {
-          if ($val == $value) {
-            delete $scope.params[$set][$index];
+      else {
+        $valueArray = new Array();
+        for ($key in $scope.queryform[$set]) {
+          if ($scope.queryform[$set][$key]) {
+            $valueArray.push($key.replace(/_/, "."));
           }
-        });
+        }
+        $scope.params[$set] = $valueArray;
         if ($scope.params[$set].length == 0) {
           delete $scope.params[$set];
         }
@@ -44,39 +38,39 @@
       $scope.params.sort = "";
     };
 
-    $scope.updateParam = function($field) {
-      if (!$scope.params) {
-        $scope.params = new Object();
+    $scope.setContentOptions = function setContentOptions($fieldname) {
+      $value = eval('$scope.params.' + $fieldname);
+      if (($fieldname == "changed" && $scope.queryform.columns.changed) || ($fieldname == 'lastupdatebefore' && $value)) {
+        jQuery("input[value='all']").attr('disabled','disabled');
+        jQuery("input[value='nocontent']").attr('disabled','disabled');
+        $scope.params.includesites = 'content';
       }
-
-      $value = eval ("$scope.query." + $field);
-
-      if ($value) {
-        $scope.params[$field] = $value;
+      else if ($fieldname == "changed" || $fieldname == 'lastupdatebefore') {
+        jQuery("input[value='all']").removeAttr('disabled');
+        jQuery("input[value='nocontent']").removeAttr('disabled');
+        jQuery("input[value='changed']").removeAttr('disabled');
       }
-      else if ($scope.params[$field]) {
-        delete $scope.params[$field];
+      else if ($fieldname == "includesites" && $value != "content") {
+        jQuery("input[name='lastupdatebefore']").attr('disabled','disabled');
+        jQuery("input[value='changed']").attr('disabled','disabled');
+        $scope.queryform.columns.changed = false;
       }
-
-      // reset to page 1 and no sort
-      $scope.params.page = '1';
-      $scope.params.sort = "";
+      else if ($fieldname == "includesites") {
+        jQuery("input[name='lastupdatebefore']").removeAttr('disabled');
+        jQuery("input[value='changed']").removeAttr('disabled');
+      }
     };
 
     $scope.update = function update() {
       // make sure request isn't already in process
       if (!jQuery("div.results").attr("style")) {
-        if (!$scope.params) {
-          $scope.reset();
-        }
-
         // reset values
         $scope.headers = [];
         $scope.rows = [];
         jQuery("div.results").css("background-image", "url('/profiles/openscholar/modules/frontend/os_common/FileEditor/large-spin_loader.gif')");
         jQuery(".pager a").hide();
         $scope.status = "";
-        jQuery("div#page-wrapper #messages").remove();
+        jQuery("div#page #messages").remove();
 
         $scope.params.exclude = ['feed_importer', 'profile', 'harvard_course'];
 
@@ -88,74 +82,84 @@
         };
 
         $http($request).then(function($response) {
-          var $responseData = angular.fromJson($response.data.data);
-
-          $scope.total = $response.data.count;
-
-          if ($response.data.next != null) {
-            $scope.next = $response.data.next.href;
-            jQuery(".pager .next a").show();
+          if(!$response.data.data) {
+            jQuery("div#page").prepend('<div id="messages"><div class="messages error">' + jQuery($response.data).text() + '</div></div>');
+            jQuery("div.results").attr("style", "");
           }
           else {
-            $scope.next = null;
-            jQuery(".pager .next a").hide();
-          }
+            var $responseData = angular.fromJson($response.data.data);
 
-          if ($response.data.previous != null) {
-            $scope.previous = $response.data.previous.href;
-            jQuery(".pager .previous a").show();
-          }
-          else {
-            $scope.previous = null;
-            jQuery(".pager .previous a").hide();
-          }
+            $scope.total = $response.data.count;
 
-          var $keys = [];
-
-          // get table headers from returned data
-          for ($key in $responseData[0]) {
-            if ($key && $key != "site_url") {
-              $scope.headers.push($key);
+            if ($response.data.next != null) {
+              $scope.next = $response.data.next.href;
+              jQuery(".pager .next a").show();
             }
-          }
-          jQuery("div.results").attr("style", "");
-          $scope.rows = $responseData;
+            else {
+              $scope.next = null;
+              jQuery(".pager .next a").hide();
+            }
 
-          if (!$scope.params || !$scope.params.page) {
-            $scope.params.page = 1;
-          }
+            if ($response.data.previous != null) {
+              $scope.previous = $response.data.previous.href;
+              jQuery(".pager .previous a").show();
+            }
+            else {
+              $scope.previous = null;
+              jQuery(".pager .previous a").hide();
+            }
 
-          if (($scope.params.page * $scope.params.range) < $scope.total) {
-            $end = ($scope.params.page * $scope.params.range);
-          }
-          else {
-            $end = $scope.total;
-          }
+            var $keys = [];
 
-          if ($scope.total) {
-            $scope.status = "showing " + ((($scope.params.page - 1) * $scope.params.range) + 1) + " - " + $end + " of " + $scope.total;
-          }
-          else {
-            jQuery("div#page-wrapper").prepend('<div id="messages"><div class="messages warning">No results in report.</div></div>');
+            // get table headers from returned data
+            for ($key in $responseData[0]) {
+              if ($key && $key != "site_url") {
+                $scope.headers.push($key);
+              }
+            }
+            jQuery("div.results").attr("style", "");
+            $scope.rows = $responseData;
+
+            if (!$scope.params || !$scope.params.page) {
+              $scope.params.page = 1;
+            }
+
+            if (($scope.params.page * $scope.params.range) < $scope.total) {
+              $end = ($scope.params.page * $scope.params.range);
+            }
+            else {
+              $end = $scope.total;
+            }
+
+            if ($scope.total) {
+              $scope.status = "showing " + ((($scope.params.page - 1) * $scope.params.range) + 1) + " - " + $end + " of " + $scope.total;
+            }
+            else {
+              jQuery("div#page").prepend('<div id="messages"><div class="messages warning">No results in report.</div></div>');
+            }
           }
         },
         // error
         function() {
           jQuery("div.results").attr("style", "");
-          jQuery("div#page-wrapper").prepend('<div id="messages"><div class="messages error">An error occurred.</div></div>');
+          jQuery("div#page").prepend('<div id="messages"><div class="messages error">An error occurred.</div></div>');
         }
       );
      }
     };
 
     $scope.reset = function() {
-      jQuery("div#page-wrapper #messages").remove();
-      for (var key in $scope.query) {
-        if ($scope.query.hasOwnProperty(key) && key != "range") {
-            delete $scope.query[key];
+      jQuery("div.results").attr("style", "");
+      jQuery("div#page #messages").remove();
+      for (var key in $scope.params) {
+        if ($scope.params.hasOwnProperty(key) && key != "range") {
+          delete $scope.params[key];
         }
       }
-      $scope.params = {};
+      $scope.params.includesites = 'content';
+      for (var key in $scope.queryform) {
+        delete $scope.queryform[key];
+      }
     };
 
     $scope.sort = function sort($obj) {
@@ -204,6 +208,10 @@
 
   reportModule.filter('formatHeader', function($sce) {
     return function($header) {
+      var parts = $header.split("_");
+      if (parts.length == 1) {
+        $header = "site_" + $header;
+      }
       return $header.replace(/_/g, " ");
     };
   });

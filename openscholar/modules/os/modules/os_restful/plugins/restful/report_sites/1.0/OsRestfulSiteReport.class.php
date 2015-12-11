@@ -34,12 +34,6 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       'owner_email' => array(
         'property' => 'owner_email',
       ),
-      'site_creation_date' => array(
-        'property' => 'site_creation_date',
-      ),
-      'site_update_date' => array(
-        'property' => 'site_update_date',
-      ),
       'installation' => array(
         'property' => 'installation',
       ),
@@ -72,18 +66,46 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     global $base_url;
     $query = $this->getQuery();
     $fields = $this->getPublicFields();
+    $request = $this->getRequest();
 
     $query->innerJoin('node', 'n', 'purl.id = n.nid AND provider = :provider', array(':provider' => 'spaces_og'));
     $query->addField('n', 'title');
-    $query->addField('n', 'created', 'site_creation_date');
+
+    if (isset($fields['created'])) {
+      $query->addField('n', 'created');
+    }
+
     $query->addField('u', 'mail', 'owner_email');
     $query->innerJoin('users', 'u', 'u.uid = n.uid');
-    $query->addExpression('MAX(content.changed)', 'site_update_date');
-    $query->leftJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
-    $query->leftJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
-    $query->groupBy('purl.id');
-    if ($this->latestUpdate) {
-      $query->havingCondition('site_update_date', strtotime($this->latestUpdate), '<=');
+
+    if ($request['includesites'] == "all") {
+      $query->addExpression('MAX(content.changed)', 'changed');
+      $query->leftJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
+      $query->leftJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
+      $query->groupBy('purl.id');
+    }
+    elseif ($fields['changed'] || $request['includesites'] == "content"){
+      $query->addExpression('MAX(content.changed)', 'changed');
+      $query->innerJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
+      $query->innerJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
+      $query->groupBy('purl.id');
+    }
+    elseif ($request['includesites'] == "nocontent"){
+      $query->addExpression('COUNT(etid)', 'total');
+      $query->leftJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
+      $query->groupBy('purl.id');
+      $query->havingCondition('total', '0', '=');
+      if ($this->latestUpdate) {
+        $fields['changed'] = array('property' => 'changed');
+        $query->addExpression('NULL', 'changed');
+        $this->setPublicFields($fields);
+      }
+    }
+
+    if ($this->latestUpdate && $request['includesites'] != "nocontent") {
+      $query->havingCondition('changed', strtotime($this->latestUpdate), '<=');
+      $fields['changed'] = array('property' => 'changed');
+      $this->setPublicFields($fields);
     }
     if (isset($fields['privacy'])) {
       $query->addField('access', 'group_access_value', 'privacy');
@@ -108,15 +130,15 @@ class OsRestfulSiteReport extends \OsRestfulReports {
    */
   public function mapDbRowToPublicFields($row) {
     global $base_url;
-
     $new_row = parent::mapDbRowToPublicFields($row);
-    if (isset($new_row['site_update_date'])) {
-      if ($new_row['site_update_date']) {
-        $new_row['site_update_date'] = date('M j, Y h:ia', $row->site_update_date);
+
+    if (isset($new_row['changed'])) {
+      if ($new_row['changed']) {
+        $new_row['changed'] = date('M j, Y h:ia', $row->changed);
       }
     }
-    if (isset($new_row['site_creation_date'])) {
-      $new_row['site_creation_date'] = date('M j, Y h:ia', $row->site_creation_date);
+    if (isset($new_row['created'])) {
+      $new_row['created'] = date('M j, Y h:ia', $row->created);
     }
 
     // check for custom domain

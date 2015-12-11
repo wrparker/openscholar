@@ -39,7 +39,7 @@ function os_reports_site_form($form, &$form_state) {
   $form['#attributes'] = array(
     'ng-controller' => 'SiteReportQuery',
     'ng-app' => 'ReportModule',
-    'name' => 'queryForm',
+    'name' => 'reportForm',
   );
   $form['keyword_set'] = array(
     '#type' => 'fieldset',
@@ -49,14 +49,14 @@ function os_reports_site_form($form, &$form_state) {
     '#prefix' => '<div class="container-inline">',
     '#suffix' => '</div>',
     '#type' => 'textfield',
+    '#size' => 100,
     '#title' => 'Keyword',
     '#attributes' => array(
-      'ng-model' => 'query.keyword',
-      'ng-change' => "updateParam('keyword')"
+      'ng-model' => 'params.keyword',
     ),
   );
   $form['keyword_set']['kfields'] = array(
-    '#prefix' => '<div class="container-inline"><label for="edit-kfields">Search in fields </label>',
+    '#prefix' => '<div class="container-inline"><label for="edit-kfields">Search in fields</label>',
     '#suffix' => '</div>',
     '#type' => 'checkboxes',
   );
@@ -64,7 +64,7 @@ function os_reports_site_form($form, &$form_state) {
     '#title' => 'email',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'query.kfields.mail',
+      'ng-model' => 'queryform.kfields.mail',
       'ng-click' => "updateCheckedValues('kfields', 'mail')",
       'value' => 'mail',
     ),
@@ -73,18 +73,18 @@ function os_reports_site_form($form, &$form_state) {
     '#title' => 'username',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'query.kfields.name',
+      'ng-model' => 'queryform.kfields.name',
       'ng-click' => "updateCheckedValues('kfields', 'name')",
       'value' => 'name',
     ),
   );
-  $form['keyword_set']['kfields']['n.title'] = array(
+  $form['keyword_set']['kfields']['n_title'] = array(
     '#title' => 'site name',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'query.kfields.n.title',
-      'ng-click' => "updateCheckedValues('kfields', 'n.title')",
-      'value' => 'n.title',
+      'ng-model' => 'queryform.kfields.n_title',
+      'ng-click' => "updateCheckedValues('kfields', 'n_title')",
+      'value' => 'n_title',
     ),
   );
   $form['content'] = array(
@@ -99,8 +99,8 @@ function os_reports_site_form($form, &$form_state) {
     '#size' => 10,
     '#description' => 'format: YYYYMMDD',
     '#attributes' => array(
-      'ng-model' => 'query.lastupdatebefore',
-      'ng-change' => "updateParam('lastupdatebefore')",
+      'ng-model' => 'params.lastupdatebefore',
+      'ng-blur' => 'setContentOptions("lastupdatebefore")',
     ),
   );
   $form['content']['includesites'] = array(
@@ -112,9 +112,9 @@ function os_reports_site_form($form, &$form_state) {
     '#title' => 'all sites',
     '#type' => 'radio',
     '#attributes' => array(
-      'ng-model' => 'query.includesites',
-      'ng-click' => "updateParam('includesites')",
+      'ng-model' => 'params.includesites',
       'value' => 'all',
+      'ng-change' => 'setContentOptions("includesites")',
    ),
   );
   $form['content']['includesites']['content'] = array(
@@ -122,9 +122,9 @@ function os_reports_site_form($form, &$form_state) {
     '#title' => 'only sites with content',
     '#type' => 'radio',
     '#attributes' => array(
-      'ng-model' => 'query.includesites',
-      'ng-click' => "updateParam('includesites')",
+      'ng-model' => 'params.includesites',
       'value' => 'content',
+      'ng-change' => 'setContentOptions("includesites")',
     ),
   );
   $form['content']['includesites']['nocontent'] = array(
@@ -132,9 +132,32 @@ function os_reports_site_form($form, &$form_state) {
     '#title' => 'only sites with no content',
     '#type' => 'radio',
     '#attributes' => array(
-      'ng-model' => 'query.includesites',
-      'ng-click' => "updateParam('includesites')",
+      'ng-model' => 'params.includesites',
       'value' => 'nocontent',
+      'ng-change' => 'setContentOptions("includesites")',
+    ),
+  );
+  $form['createdrange'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Site creation',
+    '#prefix' => '<div class="container-inline">',
+    '#suffix' => '</div>',
+  );
+  $form['createdrange']['creationstart'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Between',
+    '#size' => 10,
+    '#attributes' => array(
+      'ng-model' => 'params.creationstart',
+    ),
+  );
+  $form['createdrange']['creationend'] = array(
+    '#type' => 'textfield',
+    '#title' => 'and',
+    '#size' => 10,
+    '#description' => 'format: YYYYMMDD',
+    '#attributes' => array(
+      'ng-model' => 'params.creationend',
     ),
   );
   $form['columns'] = array(
@@ -147,45 +170,63 @@ function os_reports_site_form($form, &$form_state) {
     '#title' => 'Subdomain of site owner',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'query.columns.subdomain',
+      'ng-model' => 'queryform.columns.subdomain',
       'ng-click' => "updateCheckedValues('columns', 'subdomain')",
       'value' => 'subdomain',
     ),
   );
-  $form['columns']['createdate'] = array(
+  $form['columns']['created'] = array(
     '#title' => 'Creation date',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'query.columns.createdate',
-      'ng-click' => "updateCheckedValues('columns', 'createdate')",
-      'value' => 'createdate',
+      'ng-model' => 'queryform.columns.created',
+      'ng-click' => "updateCheckedValues('columns', 'created')",
+      'value' => 'created',
     ),
   );
-  $form['columns']['updatedate'] = array(
+  $form['columns']['changed'] = array(
     '#title' => 'Date of last content update',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'query.columns.updatedate',
-      'ng-click' => "updateCheckedValues('columns', 'updatedate')",
-      'value' => 'updatedate',
+      'ng-model' => 'queryform.columns.changed',
+      'ng-click' => "updateCheckedValues('columns', 'changed'); setContentOptions('changed')",
+      'value' => 'changed',
     ),
   );
   $form['columns']['privacy'] = array(
     '#title' => 'Privacy level',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'query.columns.privacy',
+      'ng-model' => 'queryform.columns.privacy',
       'ng-click' => "updateCheckedValues('columns', 'privacy')",
       'value' => 'privacy',
+    ),
+  );
+  $form['columns']['customdomain'] = array(
+    '#title' => 'Custom domain',
+    '#type' => 'checkbox',
+    '#attributes' => array(
+      'ng-model' => 'queryform.columns.customdomain',
+      'ng-click' => "updateCheckedValues('columns', 'customdomain')",
+      'value' => 'customdomain',
     ),
   );
   $form['columns']['customtheme'] = array(
     '#title' => 'Custom theme',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'query.columns.customtheme',
+      'ng-model' => 'queryform.columns.customtheme',
       'ng-click' => "updateCheckedValues('columns', 'customtheme')",
       'value' => 'customtheme',
+    ),
+  );
+  $form['columns']['preset'] = array(
+    '#title' => 'Site preset (type)',
+    '#type' => 'checkbox',
+    '#attributes' => array(
+      'ng-model' => 'queryform.columns.preset',
+      'ng-click' => "updateCheckedValues('columns', 'preset')",
+      'value' => 'preset',
     ),
   );
   $handler = restful_get_restful_handler('report_sites');
@@ -193,7 +234,7 @@ function os_reports_site_form($form, &$form_state) {
     '#value' => $handler->getRange(),
     '#type' => 'hidden',
     '#attributes' => array(
-      'ng-model' => 'query.range',
+      'ng-model' => 'params.range',
       'ng-init' => "params.range = '" . $handler->getRange() . "'",
     ),
   );

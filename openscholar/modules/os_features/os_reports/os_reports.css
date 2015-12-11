@@ -52,6 +52,8 @@ form textarea {
   padding: 0px;
   margin: 0px;
   width: auto;
+  font-size: 0.9em;
+  height: 1.5em;
 }
 
 form table td,
@@ -110,4 +112,8 @@ form th.desc a {
 
 #page.container div.messages::before {
   background-image: none;
+}
+
+.container-inline .form-item-creationend label {
+  margin-left: 10px;
 }
