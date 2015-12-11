@@ -360,6 +360,7 @@ table.table-shading {
     width: 100%;
     border: none;
     color: #444;
+    margin-bottom: 0;
 }
 .header-row {
     background-color: #EAEAEA;
