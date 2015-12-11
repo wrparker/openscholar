@@ -89,6 +89,9 @@ abstract class os_boxes_widget_collection extends os_boxes_default {
       if (isset($info['info'])) {
         // not everything we get back from hook_os_widget has an info field.
         $options[$wgt] = $info['info'];
+        if (!empty($info['title'])) {
+          $options[$wgt] .= ' (' . trim($info['title']) . ')';
+        } 
       }
     }
 
