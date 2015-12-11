@@ -1,5 +1,4 @@
 @import url(https://fonts.googleapis.com/css?family=Raleway:400,200);
-
 .morph-button-sidebar .morph-content {
     background: #111;
 }
@@ -13,7 +12,6 @@ body {
     height: 100%;
     position: relative;
 }
-
 .page-cp #branding,
 .page-cp #page,
 .page_wrap {
@@ -22,11 +20,9 @@ body {
     -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.7, 0, 0.3, 1) 0.1s;
     transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1) 0.1s;
 }
-
 #overlay .page_wrap {
-	position: relative;
+    position: relative;
 }
-
 .page-cp.overlay #branding,
 .page-cp.overlay #page {
     position: relative;
@@ -51,7 +47,6 @@ body {
     width: calc(100% - 300px);
     right: 0;
 }
-
 .page-cp #branding.pushed,
 .page-cp #page.pushed,
 .pushed.page_wrap {
@@ -60,7 +55,6 @@ body {
     -webkit-transform: translateX(15px);
     transform: translateX(15px);
 }
-
 .page-cp #page {
     width: 90%;
     margin-left: 80px;
@@ -79,17 +73,12 @@ body {
     background: url('images/home_button.png') no-repeat;
     background-size: 25px 25px;
 }
-
-
 ul.primary {
     margin: 0 10% 0 !important;
 }
-
 .pushed ul.primary {
     margin: 0 20% 0 !important;
 }
-
-
 /* MENU SPECIFIC */
 
 #cssmenu,
@@ -122,7 +111,6 @@ ul.primary {
 .align-right {
     float: right;
 }
-
 #cssmenu > ul > li > a {
     padding: 10px 10px;
     cursor: pointer;
@@ -195,7 +183,6 @@ ul.primary {
     -o-transition: color .2s ease;
     transition: color .2s ease;
 }
-
 #cssmenu .heading {
     padding: 10px 15px;
     background: #444;
@@ -223,7 +210,7 @@ ul.primary {
 }
 #rightMenuSlide {
     top: 4px;
-        z-index: 20;
+    z-index: 20;
 }
 .topRight_Menu {
     position: fixed;
@@ -239,7 +226,7 @@ ul.primary {
     cursor: pointer;
 }
 #topRightMenu {
-    background: url('images/my_account-bg.png') 10px 3px no-repeat;
+    background: url('images/my_account-bg.png') 12px 3px no-repeat;
     width: 35px;
     height: 18px;
     background-color: #49505a;
@@ -262,7 +249,7 @@ ul.primary {
 }
 .topRight_subMenu li a {
     color: #FFF;
-        text-decoration: none;
+    text-decoration: none;
 }
 .topRight_subMenu li a.text_link {
     color: #215990;
@@ -316,50 +303,51 @@ a {
     -webkit-box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
     -moz-box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
     box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
-    padding: 15px;
+    padding: 3px 12px 12px;
 }
-
 .account_tab_popout.user_sites {
     top: 28px;
 }
-.site-list {
-    height: 35px;
-}
-.close-container .close {
-    color: #999;
-    font-weight: 600;
-    font-family: verdana;
-    font-size: 1.1em;
-}
-
-.close-container {
-text-align: right;
-}
-ul.user-sites li {
-    padding: 0;
-    display: inline-block;
-}
-ul.user-sites li.site-name {
-    max-width: 60%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 30ch;
-}
-ul.user-sites li.button-delete {
-    position: absolute;
-    right: 15px;
-}
-ul.user-sites li.button-add {
-    position: absolute;
-    right: 70px;
-}
-
 .animated {
     animation-duration: 0s !important;
 }
+td.site-name {
+    width: 59%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 25ch;
+}
+td.user-site-controls {
+    width: 41%;
+    text-align: right;
+}
+.user_sites .site-list:nth-child(odd) {
+    background-color: #FFF;
+}
+.user_sites .site-list:nth-child(even) {
+    background-color: #F7F7F7;
+}
+.other-sites,
+.my-sites,
+.user_sites .site-list {
+    border-bottom: 1px solid #DADADA;
+    border-left: 1px solid #DADADA;
+    border-right: 1px solid #DADADA;
+}
+.my-sites {
+    border-top: 1px solid #DADADA;
+}
+.user_sites-close {
+    margin: 0 0 2px 97%;
+}
 /* these need to be moved to the os_common dir*/
 
+.close-link {
+    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') 0 -926px no-repeat;
+    width: 20px;
+    height: 20px;
+}
 .text_link {
     color: #215990;
 }
@@ -376,6 +364,17 @@ ul.user-sites li.button-add {
 .btton.remove {
     background-color: #FF3E00;
 }
-.bottom_margin {
-    margin-bottom: 8px;
+/* Table styling*/
+
+table.table-shading {
+    width: 100%;
+    border: none;
+    color: #444;
+    margin-bottom: 0;
+}
+.header-row {
+    background-color: #EAEAEA;
+    padding: 6px 0 6px 8px;
+    color: #444;
+    font-weight: bold;
 }
