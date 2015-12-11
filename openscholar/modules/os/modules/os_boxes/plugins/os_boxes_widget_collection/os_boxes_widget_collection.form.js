@@ -31,7 +31,7 @@ Drupal.behaviors.tabs = {
 
       // Obtaining widget title and description from Drupal.settings.os_boxes.widget_collection object.
       var title = Drupal.settings.os_boxes.widget_collection[bid].title;
-      var desc = Drupal.settings.os_boxes.widget_collection[bid].info;
+      var desc = Drupal.settings.os_boxes.widget_collection[bid].desc;
 
       count.val(parseInt(count.val())+1);
       id = 'widget-'+(new_id++);
