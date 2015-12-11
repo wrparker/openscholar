@@ -121,6 +121,7 @@ function media_browser_field_widget_media_draggable_file_form_alter(&$elements, 
 
   $elements['#attached']['library'][] = array('os_common', 'FileEditorModal');
   $elements['#attached']['library'][] = array('media', 'media_browser');
+  $elements['#attached']['library'][] = array('os_common', 'angular-ui-sortable');
   $elements['#attached']['js'][] = drupal_get_path('module', 'media_browser').'/misc/MediaBrowserField.js';
   $elements['#attached']['js'][] = array(
     'type' => 'setting',

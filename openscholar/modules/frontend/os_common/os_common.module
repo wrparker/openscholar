@@ -24,7 +24,6 @@ function os_common_library() {
         'group' => JS_LIBRARY,
         'weight' => -14
       ),
-      libraries_get_path('es5-shim') . '/es5-shim.js' => array(),
     )
   );
 
@@ -231,6 +230,18 @@ function os_common_library() {
       libraries_get_path('angular-indexed-db') . '/angular-indexed-db.js' => array()
     ),
     'dependencies' => array(
+      array('os_common', 'angularjs')
+    )
+  );
+
+  $info['angular-ui-sortable'] = array(
+    'title' => t('Angular UI Sortable'),
+    'version' => '0.13.4',
+    'js' => array(
+      libraries_get_path('angular-ui-sortable'). '/sortable.js' => array()
+    ),
+    'dependencies' => array(
+      array('system', 'ui.sortable'),
       array('os_common', 'angularjs')
     )
   );
