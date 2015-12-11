@@ -409,6 +409,8 @@ function os_events_process_node(&$variables) {
       // In full view mode show a link to a modal.
       if ($variables['view_mode'] == 'full' && os_events_register_show_register_link($variables['node'], $date)) {
         $register = os_events_generate_modal_register_link($variables['node']->nid, $delta, array());
+      } elseif ($variables['view_mode'] == 'full' && !os_events_register_show_register_link($variables['node'], $date)) {
+        $register = '<span class="register-event-full">' . t('Registration Closed') . '</span>';
       }
       // In teaser view mode link to the event page.
       elseif ($variables['view_mode'] == 'teaser') {
@@ -419,8 +421,14 @@ function os_events_process_node(&$variables) {
         $register = '<div class="register-link-teaser">' . l(t('Registration is required'), 'node/' . $variables['node']->nid, $options) . '</div>';
       }
     }
-    elseif ($registrations_type) {
-      $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
+    elseif ($registrations_type && $variables['view_mode'] == 'full' ) {
+      $event_start_date = $variables['node']->field_date[LANGUAGE_NONE][0]['value'];
+      // If the event is a past event
+      if(!empty($event_start_date) && REQUEST_TIME > strtotime($event_start_date)) {
+        $register = '<span class="register-event-full">' . t('Registration Closed') . '</span>';
+      } else {
+        $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
+      }
     }
 
     // Change the date markup if this is a recurring event.
@@ -452,6 +460,28 @@ function os_events_process_node(&$variables) {
 
   // In case of a "teaser" view mode, put the link before the date.
   if ($variables['view_mode'] == 'teaser') {
+    $registrations_type = !empty($variables['node']->field_event_registration[LANGUAGE_NONE][0]['registration_type']);
+    // If the event is allowed for signup and allowed to show to the users.
+    $show_register_link = os_events_register_show_register_link($variables['node'], $date);
+    if ($registrations_type && $show_register_link) {
+      // Checking if the event has not reached its max registration limit.
+      if (os_events_event_registration_reach_capacity($variables['node'], $date)) {
+        $register = '<div class="register-link-teaser">' . t('Registration is required') . '</div>';
+      } else {
+        $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
+      }
+    } elseif ($registrations_type && !$show_register_link) {
+        $event_start_date = $variables['node']->field_date[LANGUAGE_NONE][0]['value'];
+        // If the event is a past event        
+        if (!empty($event_start_date) && REQUEST_TIME > strtotime($event_start_date)) {
+          $register = '<span class="register-event-full">' . t('Registration Closed') . '</span>';
+        } elseif (os_events_event_registration_reach_capacity($variables['node'], $date)) {
+          // Checking if the event has not reached its max registration limit.
+          $register = '<span class="register-event-full">' . t('Registration Closed') . '</span>';
+        } else {
+          $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
+        }
+    }
     $variables['content']['field_date'][0]['#markup'] = $register . $variables['content']['field_date'][0]['#markup'];
   }
 
@@ -675,6 +705,12 @@ function os_events_modal_validate($form, &$form_state) {
 
   if (!empty($form_state['values']['anon_mail'])) {
 
+    // Checking if email address has a valid format.
+    $form_state['values']['anon_mail'] = trim($form_state['values']['anon_mail']);
+    if (!valid_email_address($form_state['values']['anon_mail'])) {
+      form_set_error('anon_mail', t('The email address is invalid.'));
+    }
+
     $date = '';
     if (!empty($form_state['values']['field_repeating_event_date']['und'][0]['value'])) {
       $date = $form_state['values']['field_repeating_event_date']['und'][0]['value'];
@@ -682,6 +718,10 @@ function os_events_modal_validate($form, &$form_state) {
 
     $email_query = new EntityFieldQuery();
     $email_query->entityCondition('entity_type', 'registration')->propertyCondition('anon_mail', $form_state['values']['anon_mail']);
+
+    if (isset($form['#entity']->registration_id)) {
+      $email_query->propertyCondition('registration_id', $form['#entity']->registration_id, '<>');
+    }
 
     if ($date) {
       $email_query->fieldCondition('field_repeating_event_date', 'value', $date);
@@ -823,7 +863,7 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
   $handler = &$view->display_handler;
 
   // Adding the JS for side by side events display for the week view mode.
-  if ($_GET['type'] == 'week') {
+  if (isset($_GET['type']) && $_GET['type'] == 'week') {
     drupal_add_js(drupal_get_path('module', 'os_events') . '/js/os_events.js');
   }
 
@@ -831,12 +871,16 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
     // Set the default date of the mini calendar to the date the user watching.
     $format = array('year' => 'Y', 'month' => 'Y-m', 'week' => 'Y-\W', 'day' => 'Y-m-d');
 
-    if ($_GET['type'] == 'year') {
+    if (isset($_GET['type']) && $_GET['type'] == 'year') {
       // The user watch a year, return him the current time.
       $time = time();
     }
     else {
-      $time = strtotime($_GET[$_GET['type']]);
+        if (isset($_GET['type']) && isset($_GET[$_GET['type']])) {
+          $time = strtotime($_GET[$_GET['type']]);
+        } else {
+          $time = time();
+        }
     }
 
     $view->args[0] = date($format['month'], $time);
@@ -1413,8 +1457,21 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   //Don't show the state dropdown
   $form['state']['#access'] = FALSE;
 
-  $form['actions']['cancel']['#access'] = FALSE;
-  $form['actions']['submit']['#value'] = t('Signup');
+  if (isset($form['#entity']->registration_id)) {
+    $form['actions']['cancel'] = array(
+      '#type' => 'submit',
+      '#value' => t('Cancel'),
+      '#submit' => array('cancel_button_destination_callback'),
+      '#limit_validation_errors' => array(),
+    );
+  } else {
+    $form['actions']['cancel']['#access'] = FALSE;
+  }
+
+  $form['actions']['submit']['#value'] = isset($form['#entity']->registration_id) ? t('Save') : t('Signup');
+
+  $form['anon_mail']['#required'] = TRUE;
+  $form['field_full_name'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
 
   $form['event_register'] = array(
     '#type' => 'container',
@@ -1433,6 +1490,21 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
 
   $form['#validate'][] = 'os_events_modal_validate';
   $form['#submit'][] = 'os_events_modal_submit';
+}
+
+/**
+ * When clicking on cancel button in event registration edit page.
+ */
+function cancel_button_destination_callback($form, &$form_state) {
+  $destination = drupal_get_destination();
+  drupal_goto($destination);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_events_form_registration_delete_confirm_alter(&$form, &$form_state) {
+  drupal_set_title(t('Are you sure you want to delete registration for !name (@email)?', array('!name' => $form['registration']['#value']->field_full_name[LANGUAGE_NONE][0]['value'], '@email' => $form['registration']['#value']->anon_mail)));
 }
 
 /**
