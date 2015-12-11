@@ -312,14 +312,14 @@ a {
     animation-duration: 0s !important;
 }
 td.site-name {
-    width: 60%;
+    width: 59%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 25ch;
 }
 td.user-site-controls {
-    width: 40%;
+    width: 41%;
     text-align: right;
 }
 .user_sites .site-list:nth-child(odd) {
@@ -327,6 +327,16 @@ td.user-site-controls {
 }
 .user_sites .site-list:nth-child(even) {
     background-color: #F7F7F7;
+}
+.other-sites,
+.my-sites,
+.user_sites .site-list {
+    border-bottom: 1px solid #DADADA;
+    border-left: 1px solid #DADADA;
+    border-right: 1px solid #DADADA;
+}
+.my-sites {
+    border-top: 1px solid #DADADA;
 }
 .user_sites-close {
     margin: 0 0 2px 97%;
@@ -364,7 +374,7 @@ table.table-shading {
 }
 .header-row {
     background-color: #EAEAEA;
-    padding: 4px 0 4px 8px;
+    padding: 6px 0 6px 8px;
     color: #444;
     font-weight: bold;
 }

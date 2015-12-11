@@ -2,8 +2,8 @@
 <div class="account_tab_popout user_sites" ng-show="showSites">
  <div class="close-link user_sites-close" ng-click="showSites = ! showSites"></div>
 	<div ng-repeat="(key, own) in [true,false]" ng-init="currentPage[key] = 0">
-	<div ng-show="own && (site_data | filter:{owner: own}:strict).length" class="header-row">My Sites</div>
-	<div ng-show="!own && (site_data | filter:{owner: own}:strict).length" class="header-row">Other Sites</div>
+	<div ng-show="own && (site_data | filter:{owner: own}:strict).length" class="header-row my-sites">My Sites</div>
+	<div ng-show="!own && (site_data | filter:{owner: own}:strict).length" class="header-row other-sites">Other Sites</div>
 		<div ng-repeat="(key, site) in filtered = (site_data | filter:{owner: own}:strict) | limitTo: pageSize: pageSize * currentPage[key]" class="site-list">
 			<table class="table-shading">
 				<tr>
