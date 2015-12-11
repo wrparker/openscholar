@@ -13,10 +13,17 @@ class os_sv_list_box extends os_sv_list {
   public function options_form(&$form_state) {
     $form = parent::options_form($form_state);
     $defaults = $this->options_defaults();
+    //$options = array();
     
     $content_types = array('all' => t('All')) + os_get_bundles(array(1));
+    // Removing Feed Importer and Slideshow Image from dropdown.
+    foreach ($content_types as $key => $val) {
+      if ($key == 'feed_importer' || $key == 'slideshow_slide') {
+        //$options[$key] = $val;
+        unset($content_types[$key]);
+      }
+    }
     $form['content']['content_type']['#options'] = $content_types;
-
     return $form;
   }
 
