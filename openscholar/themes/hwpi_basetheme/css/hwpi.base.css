@@ -39,6 +39,9 @@ p:empty {
 .sidebar h1.node-title {
     margin-bottom: 0;
 }
+h1#page-title {
+    line-height: 1.1;
+}
 table,
 th,
 td,

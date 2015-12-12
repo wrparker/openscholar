@@ -7,3 +7,11 @@
 #flex-pager>.active {
   border-bottom: 1px #aaa solid;
 }
+
+#media-format-form fieldset .fieldset-legend {
+    text-transform:none;
+}
+
+#media-format-form fieldset .fieldset-wrapper {
+    padding-top:10px;
+}
