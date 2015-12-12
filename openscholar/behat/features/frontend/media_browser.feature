@@ -149,7 +149,7 @@ Feature: Media Browser
       And I mouse over the ".media-browser-pane .help_icon" element
      Then I should see "jpeg jpg png"
       And I should not see "pdf"
-      And I should see "Files must be less than 15 MB."
+      And I should see "Max file size: 15 MB."
       And I drop the file "abc.pdf" onto the "Drag and drop files here." area
       And I should see "abc.pdf is not an accepted file type."
       And I wait "6 seconds"
