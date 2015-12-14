@@ -90,4 +90,56 @@ Drupal.behaviors.osPublications = {
     }
   };
 
+  /**
+   * Override pathauto.js implementation to change summaries of the path field.
+   */
+  Drupal.behaviors.stipTagsFromTitleOnPaste = {
+    attach: function () {
+      Drupal.textPasted = false;
+
+      tinyMCE.onAddEditor.add(function(mgr, editor) {
+
+        if (editor.id != 'edit-title-field-und-0-value') {
+          return;
+        }
+
+        editor.onKeyDown.add(function(editor, event) {
+
+          if (!(event.keyCode == 86 && event.metaKey)) {
+            return;
+          }
+
+          // A text was pasted to the wysiwyg. Notify other events.
+          Drupal.textPasted = true;
+        });
+
+        editor.onChange.add(function(editor, content) {
+          if (!Drupal.textPasted) {
+            return;
+          }
+
+          // A text was pasted. Trim non-allowed tags from the editor.
+          editor.setContent(strip_tags(content, '<i><sub><sup>'));
+
+          // Set back the false.
+          Drupal.textPasted = false;
+        });
+      });
+
+      // Stripping text from tags. Taken from phpjs library.
+      function strip_tags(input, allowed) {
+        allowed = (((allowed || '') + '')
+          .toLowerCase()
+          .match(/<[a-z][a-z0-9]*>/g) || [])
+          .join('');
+        // making sure the allowed arg is a string containing only tags in
+        // lowercase (<a><b><c>).
+        var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+        return input.content.replace(commentsAndPhpTags, '').replace(tags, function($0, $1) {
+          return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+        });
+      }
+    }
+  };
+
 })(jQuery);

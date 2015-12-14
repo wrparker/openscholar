@@ -567,8 +567,8 @@ function vsite_menu_form_cp_menu_build_form_alter(&$form, &$form_state, $form_id
               '#type' => 'submit',
               '#value' => t('Reset to defaults')
           );
-          $form['actions']['submit']['#value'] = t('Save for @name', array(
-              '@name' => $vsite->title()
+          $form['actions']['submit']['#value'] = t('Save for !name', array(
+              '!name' => $vsite->title()
           ));
         }
       }
