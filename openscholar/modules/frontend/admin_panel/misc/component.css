@@ -165,7 +165,7 @@
     position: fixed;
     bottom: 15px;
     left: 15px;
-    z-index: 3;
+    z-index: 11;
 }
 .morph-button-sidebar > button {
     line-height: 60px;

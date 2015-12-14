@@ -16,8 +16,6 @@ body {
 .page-cp #page {
     width: 100%;
     position: absolute;
-    -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.7, 0, 0.3, 1) 0.1s;
-    transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1) 0.1s;
 }
 #overlay .page_wrap {
     position: relative;
@@ -48,8 +46,6 @@ body {
 }
 .page-cp #branding.pushed,
 .page-cp #page.pushed {
-    -webkit-transition-duration: 0.5s;
-    transition-duration: 0.5s;
     -webkit-transform: translateX(15px);
     transform: translateX(15px);
 }
@@ -310,14 +306,13 @@ a {
     animation-duration: 0s !important;
 }
 td.site-name {
-    width: 59%;
+    width: 58%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 25ch;
 }
 td.user-site-controls {
-    width: 41%;
     text-align: right;
 }
 .user_sites .site-list:nth-child(odd) {
