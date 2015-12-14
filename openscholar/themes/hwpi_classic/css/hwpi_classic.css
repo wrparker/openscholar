@@ -132,7 +132,6 @@ h1.node-title,
 
 h1#page-title {
 	font-size: 30px;
-	line-height: 1; /* Font size is larger than the default line-height, so will overlap if the title wraps */
 	margin: 15px 0 30px;
 }
 
