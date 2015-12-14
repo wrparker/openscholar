@@ -2694,7 +2694,10 @@ class FeatureContext extends DrupalContext {
       if ($file['filename'] == $filename) {
         continue;
       }
-      $new_files[] = $file;
+      $new_files[] = array(
+        'fid' => $file['fid'],
+        'display' => 1,
+      );
     }
 
     // Set the field again and save.
