@@ -535,13 +535,12 @@ function os_basetheme_media_gallery_media_item_detail($variables) {
 
   $previous_link = !is_null($i_previous) ? l(t('« Previous'), "media-gallery/detail/{$gallery_node->nid}/{$media_ids[$i_previous]}", array('html' => TRUE, 'attributes' => array('class' => 'prev'))) : '';
   $next_link = !is_null($i_next) ? l(t('Next »'), "media-gallery/detail/{$gallery_node->nid}/{$media_ids[$i_next]}", array('html' => TRUE, 'attributes' => array('class' => 'next'))) : '';
-  
-  $image_description = !empty($element['#file']->os_file_description[LANGUAGE_NONE][0]['value']) ? '<div>' . $element['#file']->os_file_description[LANGUAGE_NONE][0]['value'] . '</div>' : '';
+
   // Render the file out in a wrapper
   $output =
     '<div class="media-gallery-detail-wrapper">' .
     '<div class="media-gallery-detail">' .
-      drupal_render($element['file']) . $image_description . 
+      drupal_render($element['file']) . 
       '<div class="media-gallery-detail-info">' . $download_link .
         theme('media_gallery_license', array('element' => isset($element['field_license']) ? $element['field_license'] : array('#view_mode' => 'media_gallery_detail'), 'color' => 'dark', 'file' => $file)) .
       '</div>' .
