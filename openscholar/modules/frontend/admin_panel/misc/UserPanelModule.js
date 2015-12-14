@@ -21,13 +21,23 @@
        user_data = Drupal.settings.user_panel.user;
        paths = Drupal.settings.paths;
        notify_settings = Drupal.settings.os_notifications;
-    }).controller("UserMenuController",['$scope', '$http', function ($scope, $http) {
+    }).controller("UserMenuController",['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
     
       $scope.user = user_data;
       $scope.vsite = { id: vsite };
       $scope.paths = paths;
       $scope.close_others = function(id){
-        jQuery('#rightMenuSlide .menu_modal_open').filter("[data-id='"+id+"']").click();  
+    	//Protect the current link
+    	if(!jQuery("#rightMenuSlide .click-processing").length) {
+          jQuery("#rightMenuSlide [data-id='"+id+"']").addClass('click-processing');
+    	}
+        
+        $timeout(function() {
+          jQuery('#rightMenuSlide .menu_modal_open').not("[data-id='"+id+"']").not('.click-processing').click();
+          $timeout(function() {
+            jQuery("#rightMenuSlide .click-processing").removeClass('click-processing');
+          });
+      	});
       };
      
     }]).controller("UserSitesController",['$scope', '$http', function ($scope, $http) {
