@@ -325,3 +325,28 @@ function os_image_gallery_preprocess_views_view_list(&$vars) {
     }
   }
 }
+
+/**
+ * Implements hook_node_update().
+ */
+function os_image_gallery_node_update($node) {
+  $original_wrapper = entity_metadata_wrapper('node', $node->original);
+  $wrapper = entity_metadata_wrapper('node', $node);
+
+  if ($wrapper->getBundle() != 'media_gallery' || !$wrapper->__isset('media_gallery_file')) {
+    return;
+  }
+
+  if ($wrapper->media_gallery_file->value() == $original_wrapper->media_gallery_file->value()) {
+    return;
+  }
+
+  if (!$new_files = drupal_array_diff_assoc_recursive($wrapper->media_gallery_file->value(), $original_wrapper->media_gallery_file->value())) {
+    return;
+  }
+
+  // Field API order the values by their key in the array. That mean that 3,1,2
+  // will be ordered as 1,2,3. Using array merge will set 3,1,2 as 1,2,3 and
+  // insure us the new images at the beginning of the array.
+  $wrapper->media_gallery_file->set(array_merge($new_files, $original_wrapper->media_gallery_file->value()));
+}
