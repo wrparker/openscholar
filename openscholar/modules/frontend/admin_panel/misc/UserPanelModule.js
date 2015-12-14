@@ -26,6 +26,9 @@
       $scope.user = user_data;
       $scope.vsite = { id: vsite };
       $scope.paths = paths;
+      $scope.close_others = function(id){
+        jQuery('#rightMenuSlide .menu_modal_open').filter("[data-id='"+id+"']").click();  
+      };
      
     }]).controller("UserSitesController",['$scope', '$http', function ($scope, $http) {
         
@@ -136,6 +139,7 @@
               hopscotch.endTour();
             } else {
               hopscotch.startTour(tour);
+              jQuery('.hopscotch-bubble').addClass('os-tour-notifications');
             }
           });
 	      });
@@ -148,9 +152,11 @@
         		  e.preventDefault();
         		  element.siblings('div').each( function () {
         	        if(this.style.display == 'none') {
-        	          jQuery(this).fadeIn('fast');	
+        	          jQuery(this).fadeIn('fast');
+        	          jQuery(this).addClass('open');
         	        } else {
         	          jQuery(this).fadeOut('fast');
+        	          jQuery(this).removeClass('open');
         	        }
         	      });
               })  

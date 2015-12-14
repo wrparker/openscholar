@@ -8,7 +8,7 @@
           <a ng-href="/user/{{ user.uid }}/edit">Manage my account</a>
         </li>
         <li notification-check>
-          <a ng-class="{menu_modal_open: showNotify}" ng-click="showNotify = !showNotify">Notifications</a>
+          <a ng-class="{menu_modal_open: showNotify}" data-id='100' ng-click='close_others(100); showNotify = !showNotify'>Notifications</a>
         </li>
         <li load-my-sites>
           <a href="/user">My sites</a>
