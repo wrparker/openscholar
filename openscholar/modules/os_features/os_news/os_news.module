@@ -151,3 +151,13 @@ function os_news_media_token_to_markup_alter(&$element, &$tag_info, &$settings) 
   // Overriding image description output with figure tags.
   $element['content']['os_file_description'][0]['#markup'] = $output;
 }
+
+/*
+ * Implements hook_date_popup_process_alter().
+ */
+function os_news_date_popup_process_alter(&$element, &$form_state, $context) {
+  // Removing label for calendar popup in news add/edit form as the fieldset already contains the label 'Date'
+  if ($context['form']['form_id']['#value'] == 'news_node_form') {
+    unset($element['date']['#title']);
+  }
+}
