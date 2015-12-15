@@ -43,7 +43,8 @@
 
     // Initialization
     var service = new EntityService('files', 'id'),
-      toEditForm = false;
+      toEditForm = false,
+      directInsert = true;
     $scope.files = [];
     $scope.numFiles = 0;
     $scope.templatePath = rootPath;
@@ -63,6 +64,8 @@
     $scope.loadingMessage = '';
     $scope.sortType = 'timestamp';
     $scope.sortReverse = true;
+
+    $scope.toInsert = [];
 
     $scope.availTypes = [
       {label: 'Image', value: 'image'},
@@ -227,6 +230,7 @@
       }
       var toBeUploaded = [];
       $scope.dupes = [];
+      $scope.toInsert = [];
       for (var i=0; i<$files.length; i++) {
         var similar = [],
             basename = $files[i].name.replace(/\.[a-zA-Z0-9]*$/, ''),   // remove extension from filename
@@ -368,7 +372,12 @@
               // do nothing. This usually means there was an error during upload.
             }
             else {
-              $scope.changePanes('library');
+              if (directInsert) {
+                $scope.insert();
+              }
+              else {
+                $scope.changePanes('library');
+              }
             }
           }
         }
@@ -413,6 +422,7 @@
               e.data[i].new = true;
               $scope.files.push(e.data[i]);
             }
+            $scope.toInsert.push(e.data[i]);
           }
           uploadNext(e.data[0].id);
         }).error(function (e) {
@@ -487,15 +497,28 @@
         $scope.selected_file = null;
       }
       else if ((result == FER.NO_CHANGES || result == FER.SAVED) && $scope.selected_file.new) {
-        $scope.insert();
+        if (directInsert) {
+          $scope.insert();
+        }
+        else {
+          $scope.changePanes('library', result);
+        }
       }
       $scope.changePanes('library', result);
     }
 
     $scope.insert = function () {
       var results = [];
-      $scope.selected_file.fid = $scope.selected_file.id; // hack to prevent rewriting a lot of Media's code.
-      results.push($scope.selected_file);
+      if ($scope.toInsert.length) {
+        for (var i = 0; i < $scope.toInsert.length; i++) {
+          $scope.toInsert[i].fid = $scope.toInsert[i].id;
+          results.push($scope.toInsert[i]);
+        }
+      }
+      else {
+        $scope.selected_file.fid = $scope.selected_file.id; // hack to prevent rewriting a lot of Media's code.
+        results.push($scope.selected_file);
+      }
 
       close(results);
     }
