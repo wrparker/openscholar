@@ -999,6 +999,14 @@ div.error:before {
     background-position: 0 -675px;
 }
 #og-vocabulary-add-more-wrapper #edit-og-vocabulary-und .fieldset-wrapper {
+  border: 1px solid #ccc;
+  background: #f1f1f1;
+  padding: 5px;
+  width: 96%;
+}
+/** News edit page calendar field override */
+.node-news-form .date-padding {
+    padding: 0;
     border: 1px solid #ccc;
     background: #f1f1f1;
     padding: 5px;
