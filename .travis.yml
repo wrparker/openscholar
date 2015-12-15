@@ -45,19 +45,6 @@ before_script:
   - echo "$(curl -fsSL https://gist.github.com/roderik/16d751c979fdeb5a14e3/raw/74f4fec92c064c4f683fef28a6098caf0f038de7/gistfile1.txt)" | sudo tee /etc/apache2/conf.d/phpconfig > /dev/null
   - echo "$(curl -fsSL https://gist.github.com/roderik/2eb301570ed4a1f4c33d/raw/8066fda124b6c86f69ad32a010b8c22bbaf868e8/gistfile1.txt)" | sed -e "s,PATH,`pwd`/www,g" | sudo tee /etc/apache2/sites-available/default > /dev/null
 
- # Install phantom JS.
-  - sudo apt-get update
-  - sudo apt-get install build-essential chrpath libssl-dev libxft-dev
-  - sudo apt-get install libfreetype6 libfreetype6-dev
-  - sudo apt-get install libfontconfig1 libfontconfig1-dev
-  - export PHANTOM_JS="phantomjs-1.9.7-linux-x86_64"
-  - wget https://bitbucket.org/ariya/phantomjs/downloads/$PHANTOM_JS.tar.bz2
-  - sudo mv $PHANTOM_JS.tar.bz2 /usr/local/share/
-  - sudo tar xvjf /usr/local/share/$PHANTOM_JS.tar.bz2
-  - sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/share/phantomjs
-  - sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin/phantomjs
-  - sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/bin/phantomjs
-
   # Install bower
   - npm install -g bower
 
@@ -142,9 +129,6 @@ script:
   - wget http://selenium-release.storage.googleapis.com/2.40/selenium-server-standalone-2.40.0.jar
   - nohup bash -c "java -jar selenium-server-standalone-2.40.0.jar -p 4444 2>&1 &"
   - sleep 5
-
-  # Run phantomJs.
-  - nohup bash -c "phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &"
 
   - ./bin/behat --tags=$TEST_SUITE
 
