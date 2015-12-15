@@ -68,11 +68,30 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     $fields = $this->getPublicFields();
     $request = $this->getRequest();
 
-    $query->innerJoin('node', 'n', 'purl.id = n.nid AND provider = :provider', array(':provider' => 'spaces_og'));
     $query->addField('n', 'title');
 
-    if (isset($fields['created'])) {
+    if (isset($fields['created']) || isset($request['creationstart']) || isset($request['creationend'])) {
       $query->addField('n', 'created');
+      $joinCondition = 'purl.id = n.nid AND provider = :provider';
+      $arguments = array(':provider' => 'spaces_og');
+
+      if (!isset($fields['created'])) {
+        $fields['created'] = array('property' => 'created');
+        $this->setPublicFields($fields);
+      }
+
+      if (isset($request['creationstart'])) {
+        $joinCondition .= " AND n.created >= UNIX_TIMESTAMP(STR_TO_DATE(:startdate, '%Y%m%d'))";
+        $arguments[':startdate'] = $request['creationstart'];
+      }
+      if (isset($request['creationend'])) {
+        $joinCondition .= " AND n.created <= UNIX_TIMESTAMP(STR_TO_DATE(:enddate, '%Y%m%d'))";
+        $arguments[':enddate'] = $request['creationend'];
+      }
+      $query->innerJoin('node', 'n', $joinCondition, $arguments);
+    }
+    else {
+      $query->innerJoin('node', 'n', 'purl.id = n.nid AND provider = :provider', array(':provider' => 'spaces_og'));
     }
 
     $query->addField('u', 'mail', 'owner_email');
@@ -111,6 +130,9 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       $query->addField('access', 'group_access_value', 'privacy');
       $query->innerJoin('field_data_group_access', 'access', 'access.entity_id = purl.id');
     }
+    if (isset($fields['subdomain'])) {
+      $query->addField('u', 'mail', 'subdomain');
+    }
 
     $url_parts = explode(".", str_replace("http://", "", $base_url));
     $query->addExpression("'" . $url_parts[0] . "'", 'installation');
@@ -139,6 +161,15 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     }
     if (isset($new_row['created'])) {
       $new_row['created'] = date('M j, Y h:ia', $row->created);
+    }
+    if (isset($new_row['subdomain'])) {
+      $domain_parts = explode(".", preg_replace('/.*@/', "", $new_row['subdomain']));
+      if (count($domain_parts) > 2 && in_array("harvard", $domain_parts) && in_array("edu", $domain_parts)) {
+        $new_row['subdomain'] = implode(" ", array_slice($domain_parts, -4, count($domain_parts) - 2));
+      }
+      else {
+        $new_row['subdomain'] = "";
+      }
     }
 
     // check for custom domain
