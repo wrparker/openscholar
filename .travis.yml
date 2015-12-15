@@ -144,7 +144,7 @@ script:
   - sleep 5
 
   # Run phantomJs.
-  - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
+  - nohup bash -c "phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &"
 
   - ./bin/behat --tags=$TEST_SUITE
 
