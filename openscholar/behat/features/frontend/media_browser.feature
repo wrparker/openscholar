@@ -45,8 +45,7 @@ Feature: Media Browser
       And I drop the file "kitten-2.jpg" onto the "Drag and drop files here." area
       And I should wait for "File Edit" directive to "appear"
      When I click on the "Save" control
-     Then I should see the media browser "Previously uploaded files" tab is active
-      And I should see "kitten-2.jpg" in the "div.media-row.new" element
+      And I should see "kitten-2.jpg" in a ".file-list-single" element
 
   @media_browser @javascript
   Scenario: Test the file upload work flow for a single, valid, duplicate file, which we replace
@@ -64,8 +63,6 @@ Feature: Media Browser
       And I press the "Replace" button
       And I should wait for "File Edit" directive to "appear"
      When I click on the "Save" control
-     Then I should see the media browser "Previously uploaded files" tab is active
-      And I wait for page actions to complete
       And I confirm the file "kitten-2.jpg" in the site "john" is the same file as "duplicate/kitten-2.jpg"
       And I confirm the file "kitten-2.jpg" in the site "john" is not the same file as "kitten-2.jpg"
 
@@ -85,8 +82,7 @@ Feature: Media Browser
       And I press the "Rename" button
       And I should wait for "File Edit" directive to "appear"
      When I click on the "Save" control
-     Then I should see the media browser "Previously uploaded files" tab is active
-      And I should see "kitten-2_01.jpg" in the "div.media-row.new" element
+      And I should see "kitten-2_01.jpg" in a ".file-list-single" element
 
   @media_browser @javascript
   Scenario: Test the work flow for a single, valid, duplicate file, which we cancel
@@ -119,8 +115,8 @@ Feature: Media Browser
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I drop the files "rubber-duck.jpg, conservatory_of_flowers3.jpg" onto the "Drag and drop files here." area
      Then I should see the media browser "Previously uploaded files" tab is active
-      And I should see "rubber-duck.jpg" in a "div.media-row.new" element
-      And I should see "conservatory_of_flowers3.jpg" in a "div.media-row.new" element
+      And I should see "rubber-duck.jpg" in a ".file-list-single" element
+      And I should see "conservatory_of_flowers3.jpg" in a ".file-list-single" element
 
   @media_browser @javascript
   Scenario: Test the file upload work flow for multiple, valid, duplicate files, which we cancel
@@ -168,9 +164,7 @@ Feature: Media Browser
       And I drop the files "abc.pdf, kitten-2.jpg" onto the "Drag and drop files here." area
      Then I should see "A file with the name 'kitten-2.jpg' already exists."
       And I press the "Cancel" button
-      And I should see the media browser "Upload from your computer" tab is active
-      And I click on the tab "Previously uploaded files"
-      And I should see "abc.pdf" in a "div.media-row.new" element
+      And I should see "abc.pdf" in a ".file-list-single" element
 
   @media_browser @javascript
   Scenario: Test adding a youtube video to a site
@@ -186,8 +180,7 @@ Feature: Media Browser
       And I should wait for "File Edit" directive to "appear"
      Then the "Label" field should contain "Me at the zoo"
       And I click on the "Save" control in the "div[file-edit]" element
-      And I should see the media browser "Previously uploaded files" tab is active
-      And I should see "Me at the zoo" in a "div.media-row.selected" element
+      And I should see "Me at the zoo" in a ".file-list-single" element
 
   @media_browser @javascript
   Scenario: Test adding an unknown URL to a site
