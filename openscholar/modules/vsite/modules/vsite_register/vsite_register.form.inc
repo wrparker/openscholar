@@ -32,7 +32,7 @@ function vsite_register_form($form, &$state) {
     '#required' => TRUE,
     '#field_prefix' => $base_url . '/',
     '#size' => 35,
-    '#description' => t('Minimum of 3 characters, which must be lowercase. Punctuation is not allowed except for hyphens and underscores. <br />Example: a choice of \'jdoe\' would result in the URL: %site.', array('%site' => $base_url . '/jdoe')),
+    '#description' => t('Enter a minimum of 3 characters, lowercase only. Punctuation is not allowed except for hyphens and underscores. <br />Example: Entering jdoe into the field above will result in this URL: %site.', array('%site' => $base_url . '/jdoe')),
     '#ajax' => array(
       'callback' => 'vsite_register_ajax_validation',
       'wrapper' => 'domain-errors',
