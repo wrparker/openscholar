@@ -350,3 +350,39 @@ function os_image_gallery_node_update($node) {
   // insure us the new images at the beginning of the array.
   $wrapper->media_gallery_file->set(array_merge($new_files, $original_wrapper->media_gallery_file->value()));
 }
+
+/**
+ * Implements hook_entity_prepare_view.
+ */
+function os_image_gallery_entity_prepare_view($entities, $type, $langcode) {
+  // Iterating through $entities object for altering media_title property value by reference.
+  foreach ($entities as $entity) {
+    if (!empty($entity->filename)) {
+      $entity->media_title[LANGUAGE_NONE][0]['value'] = _os_image_gallery_get_media_title($entity);
+    }
+  }
+}
+
+/**
+ * Returns the title of a media entity based on the $entity's filename property.
+ */
+function _os_image_gallery_get_media_title($entity) {
+  $media_title = &drupal_static(__FUNCTION__);
+  // If media title is available in static variable then returning immediately.
+  if (isset($media_title[$entity->fid])) {
+    return $media_title[$entity->fid];
+  }
+
+  $replacements = array(
+    '/\..*/' => '',                     // Remove first "." and everything after.
+    '/[^a-zA-Z0-9:]+/' => ' ',          // Replace non letters or numbers with a single space.
+    '/([a-z])([A-Z])/' => '\1 \2',      // Insert a space between a lowercase letter and an uppercase letter.
+    '/([a-zA-Z])([0-9])/' => '\1 \2',   // Insert a space between a letter and a number.
+    '/([0-9])([a-zA-Z])/' => '\1 \2',   // Insert a space between a number and a letter.
+  );
+  // In addition to above replacements, also capitalize the first letter of
+  // each word, and remove leading and trailing spaces.
+  $media_title[$entity->fid] = trim(ucwords(preg_replace(array_keys($replacements), array_values($replacements), $entity->filename)));
+  
+  return $media_title[$entity->fid];
+}
