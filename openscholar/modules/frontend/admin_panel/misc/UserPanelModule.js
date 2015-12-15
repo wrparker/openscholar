@@ -173,5 +173,12 @@
             },
           }
         });
+        
+        
+       // $(".close-user-menu").click(function(){
+    	//	$("#rightMenuSlide").hide('slow');
+		//});
+        
+        
   
 })();

@@ -40,15 +40,15 @@ div.hopscotch-bubble.os-tour-notifications .hopscotch-bubble-number {
     margin-top: 1em;
     margin-bottom: -3.5em;
 }
-div.hopscotch-bubble.os-tour-notifications .hopscotch-actions {
+div.hopscotch-bubble .hopscotch-actions {
     margin: 24px 0 0;
 }
 /* OVERRIDES FOR THE NOTIFICATIONS POPOUT */
 
-.hopscotch-bubble:after {
+ .os-tour-notifications.hopscotch-bubble:after {
     display: none;
 }
-.hopscotch-bubble[style] {
+.os-tour-notifications.hopscotch-bubble[style] {
     top: 69px !important;
     left: auto !important;
     right: 168px !important;
@@ -58,10 +58,10 @@ div.hopscotch-bubble.os-tour-notifications .hopscotch-actions {
     -moz-box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
     box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
 }
-.hopscotch-bubble-arrow-container {
+.os-tour-notifications .hopscotch-bubble-arrow-container {
     display: none;
 }
-div.hopscotch-bubble .hopscotch-bubble-close {
+.os-tour-notifications.hopscotch-bubble .hopscotch-bubble-close {
     background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') 0 -926px no-repeat;
     width: 20px;
     height: 20px;
