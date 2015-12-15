@@ -18,12 +18,15 @@
         },
         templateUrl: libraryPath + '/file_edit_base.html?vers='+Drupal.settings.version.FileEditor,
         link: function (scope, elem, attr, c, trans) {
-          var fileService = new EntityService('files', 'id');
-          //fileService.fetch({});
+          var fileService = new EntityService('files', 'id'),
+              files = [];
+          fileService.fetch().then(function (data) {
+            files = data;
+          });
 
           scope.fileEditAddt = '';
           scope.date = '';
-          scope.description_label = 'Description';
+          scope.description_label = 'Note (seen only by site admins)';
 
           scope.$watch('file', function (f) {
             if (!f) return;
@@ -73,7 +76,6 @@
             }
             var lower = filename.toLowerCase();
             if (lower != old) {
-              var files = fileService.getAll();
               for (var i in files) {
                 if (lower == files[i].filename && scope.file.id != files[i].id) {
                   scope.invalidFileName = true;
@@ -154,7 +156,7 @@
 
           scope.save = function () {
             fileService.edit(scope.file, ['preview', 'url']).then(function(result) {
-                if (result.data) {
+                if (result.data || typeof scope.file.new != 'undefined') {
                   scope.onClose({saved: FER.SAVED});
                 }
                 else if (result.detail) {
@@ -167,7 +169,7 @@
             function(result) {
               switch (result.status) {
                 case 409:
-                  scope.errorMessages = 'This file has been changed since it was last retrieved from the server. Please wait while we get an updated version.';
+                  scope.errorMessages = 'Please wait. Another member of your website has updated this file since you last updated it, and we\'re retrieving an updated version. Once this message disappears, you\'ll need re-enter any changes you had made.<br><img src="'+Drupal.settings.paths.FileEditor+'/large-spin_loader.gif" class="file-retrieve-spinner">';
                   scope.showErrorMessages = true;
                   break;
                 case 410:

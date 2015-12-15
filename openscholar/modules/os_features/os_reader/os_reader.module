@@ -94,7 +94,7 @@ function os_reader_import_news_access_callback() {
  */
 function os_reader_import_news() {
   drupal_add_css(drupal_get_path('module', 'os_reader') . '/os_reader.css');
-  drupal_add_js(drupal_get_path('module', 'os_reader') . '/os_reader.js');
+  drupal_add_js(drupal_get_path('module', 'os_reader') . '/js/os_reader.js');
 
   $item = menu_get_item();
   $feed_importer_nid = isset($item['map'][4]) ? $item['map'][4] : NULL;
@@ -442,6 +442,7 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
   $wrapper->author->set($user->uid);
   $wrapper->body->set(array('value' => $feed->description, 'format' => 'filtered_html'));
   $doc = new DOMDocument();
+  $doc->encoding = 'utf-8';
 
   if ($feed->importer_type == 'news') {
     // Get the first image src.
@@ -450,7 +451,7 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
     // todo: use os_copy_file();
     try {
       if ($feed->description) {
-        $doc->loadHTML($feed->description);
+        $doc->loadHTML(mb_convert_encoding($feed->description, 'HTML-ENTITIES', "UTF-8"));
         $images = $doc->getElementsByTagName('img')->item(0);
         $extenstions = array('gif', 'png', 'jpg', 'jpeg');
 
@@ -479,7 +480,7 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
 
   // Remove style attribute from div tags anv p tags.
   if (property_exists($feed, 'description')) {
-    $doc->loadHTML($feed->description);
+    $doc->loadHTML(mb_convert_encoding($feed->description, 'HTML-ENTITIES', "UTF-8"));
     $xpath = new DOMXPath($doc);
     $items = $xpath->query("//*[(local-name()='div' or local-name()='span') and @style]");
 
@@ -487,7 +488,7 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
       $item->removeAttribute("style");
     }
 
-    $feed->description = $doc->saveHTML();
+    $feed->description = $doc->saveHTML($doc->documentElement);
   }
 
   $wrapper->body->set(array('value' => $feed->description, 'format' => 'filtered_html'));

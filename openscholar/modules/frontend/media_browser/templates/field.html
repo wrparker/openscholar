@@ -1,15 +1,13 @@
 <div id="edit-{{field_name}}-und-drop" class="form-managed-file">
-
+<div class="description">Files attached here will appear below the main content area of the page.</div>
     <div class="media-browser-drop-box" ng-file-drop ng-file-change="sendToBrowser($files, $event)" class="droppable"
          drag-over-class="media-browser-drag-over" ng-multiple="true" allow-dir="true"
          hide-on-drop-not-available="true" ng-accept="validate($file)">
         <span id="drag-text">{{droppable_text}}<span class="help_icon" ng-mouseenter="showHelp = true" ng-mouseleave="showHelp = false">?</span></span>
 
         <a href="#" mb-open-modal panes="{{panes.join(',')}}" types="{{types}}" on-select="addFile($inserted)">{{upload_text}}</a>
-
-        <div class="help" ng-show="showHelp">Files must be less than <strong>{{maxFilesize}}</strong>.<br />
-            Allowed file types: <strong>{{extensionsFull.join(' ')}}</strong></div>
-    </div>
+		 <div class="help" ng-show="showHelp"><strong>Allowed file types:</strong><br /> {{extensionsFull.join(' ')}}<br /><br />
+                   <strong>Max file size:</strong> {{maxFilesize}}.</div>
 </div>
 <div ui-sortable="sortableOptions" ng-model="selectedFiles">
     <div class="file-list-single form-wrapper" ng-repeat="file in selectedFiles" ng-class="{even: $even, odd: $odd, highlight: file.highlight}">

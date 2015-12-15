@@ -56,6 +56,8 @@ class os_reader_handler_copy_feed_to_news extends views_handler_field {
       }
     }
 
+    drupal_add_js(drupal_get_path('module', 'os_reader') . '/js/os_reader.js');
+
     return theme('item_list', array('items' => $items));
   }
 }
