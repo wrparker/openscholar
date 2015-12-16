@@ -2846,8 +2846,8 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @AfterStep
-   */
+   * AfterStep
+   *
    public function takeScreenshotAfterFailedStep($event)
    {
      if ($event->getResult() == 4) {
