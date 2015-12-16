@@ -204,7 +204,7 @@ function _admin_panel_persist_open() {
  * Rewrites path to add admin_panel state.
  */
 function admin_panel_url_outbound_alter(&$path, &$options, $original) {
-  
+   
   $always_open_pages = array(
       'user',
       'user/pin',
@@ -218,4 +218,26 @@ function admin_panel_url_outbound_alter(&$path, &$options, $original) {
     return;
   }
   $options['query']['admin_panel'] = '1';
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ */
+function admin_panel_module_implements_alter(&$implementations, $hook) {
+  
+  if ($hook == 'url_outbound_alter') {
+    // Make the admin_panel implementation last so os will be done.
+    // override the "/user" page callback.
+    unset($implementations['admin_panel']);
+    $implementations['admin_panel'] = FALSE;
+  }
+}
+
+function admin_panel_drupal_goto_alter(&$path, &$options, &$http_response_code) {
+  
+  //If we are in an overlay, and redirecting to a regular page, keep the admin panel open.
+  if (module_exists('overlay') && overlay_get_mode() == 'child' && !path_is_admin($path) && !url_is_external($path)) {
+    $options['query']['admin_panel'] = '1';
+  }
 }

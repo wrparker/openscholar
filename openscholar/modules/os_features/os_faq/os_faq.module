@@ -57,7 +57,7 @@ function os_faq_menu() {
   $items = array();
 
   $items['features/os_faq'] = array(
-    'title' => 'Settings',
+    'title' => 'FAQ Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_faq_settings'),
     'access arguments' => array('administer site configuration'),

@@ -193,8 +193,9 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       foreach (array_keys(array_filter($spaces_features)) as $feature) {
         $item = menu_get_item("cp/build/features/{$feature}");
         if ($item && $item['href'] == "cp/build/features/{$feature}") {
+          $feature = feature_load($feature_name);
           $feature_settings["feature_{$feature}"] = array(
-            'label' => $item['title'],
+            'label' => features_get_feature_title($feature),
             'type' => 'link',
             'href' => $item['href'],
           );

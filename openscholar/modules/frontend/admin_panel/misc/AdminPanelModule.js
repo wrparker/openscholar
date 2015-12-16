@@ -26,6 +26,11 @@
       	return {};
       };
       
+      //Get Refferer Special case
+      var refer = document.createElement('a');
+      refer.href= document.referrer;
+      var force_open = (refer.pathname == '/user');
+      
       //Init storage
       if (typeof($localStorage.admin_menu) == 'undefined') {
         $localStorage.admin_menu = {};
@@ -38,7 +43,7 @@
       if (typeof($localStorage.admin_menu[uid]) !== 'undefined' && typeof($localStorage.admin_menu[uid][vsite]) !== 'undefined' && typeof($localStorage.admin_menu[uid][vsite][cid]) !== 'undefined') {
         $scope.admin_panel = $localStorage.admin_menu[uid][vsite][cid];
         
-        if (auto_open && typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main) {
+        if (force_open || (auto_open && typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main)) {
           // Turn off transitions and toggle open, there are a bunch of damn set-timeouts in morphbutton so we need to delay things here.
           window.setTimeout(function () {
             morphButton.openTransition = false;
@@ -74,7 +79,7 @@
           $localStorage.admin_menu[uid][vsite] = {};
           $localStorage.admin_menu[uid][vsite][cid] = response.data.data;
           $scope.admin_panel = response.data.data;
-          if (auto_open && typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main) {
+          if (force_open || (auto_open && typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main)) {
         	morphButton.toggle();  
           } else if (typeof(menu_state) !== 'undefined') {
         	//Set the menu state to closed.
