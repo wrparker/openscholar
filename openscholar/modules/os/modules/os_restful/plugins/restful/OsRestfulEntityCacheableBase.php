@@ -48,8 +48,13 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
       // If no IDs were requested, we should not throw an exception in case an
       // entity is un-accessible by the user.
       foreach ($ids as $id) {
-        if ($row = $this->viewEntity($id)) {
-          $return[] = $row;
+        try {
+          if ($row = $this->viewEntity($id)) {
+            $return[] = $row;
+          }
+        }
+        catch (RestfulForbiddenException $rfe) {
+          // do nothing. We just want to prevent the code from bailing out without giving us any updates.
         }
       }
     }
@@ -89,6 +94,7 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
     if (in_array('changed', $info['schema_fields_sql']['base table'])) {
       $query->propertyCondition('changed', (int)$timestamp, '>');
     }
+
     return $query;
   }
 
