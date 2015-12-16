@@ -5,18 +5,26 @@
     $scope.params.includesites = 'content';
     $scope.report_url = 'report_sites';
 
-    $scope.headerConversion = {
+    $scope.fieldConversion = {
       'site_name' : {
         'display' : 'site title',
       },
       'owner_email' : {
         'display' : 'site owner email',
+        'data_field' : 'u.mail',
+      },
+      'username' : {
+        'data_field' : 'u.name',
+      },
+      'site_title' : {
+        'data_field' : 'n.title',
       },
       'install' : {
         'display' : 'os install',
       },
       'subdomain' : {
         'display' : 'owner subdomain',
+        'sort' : false,
       },
       'created' : {
         'display' : 'site created',
@@ -38,6 +46,7 @@
       },
       'preset' : {
         'display' : 'site preset',
+        'sort' : false,
       },
     };
 
@@ -54,6 +63,10 @@
       }
       $checked = eval("$scope.queryform." + $set + "." + $value);
 
+      if ($scope.fieldConversion[$value] && $scope.fieldConversion[$value]['data_field']) {
+         $value = $scope.fieldConversion[$value]['data_field'];
+        }
+
       if ($checked && !$scope.params[$set]) {
         $scope.params[$set] = $value;
       }
@@ -61,6 +74,9 @@
         $valueArray = new Array();
         for ($key in $scope.queryform[$set]) {
           if ($scope.queryform[$set][$key]) {
+            if ($scope.fieldConversion[$key] && $scope.fieldConversion[$key]['data_field']) {
+              $key = $scope.fieldConversion[$key]['data_field'];
+            }
             $valueArray.push($key);
           }
         }
@@ -200,18 +216,20 @@
     };
 
     $scope.sort = function sort($obj) {
-      if ($scope.params.sort && ($scope.params.sort == $obj.header)) {
-        $scope.params.sort = "-" + $obj.header;
+      if ($scope.fieldConversion[$obj.header]['sort'] !== false) {
+        if ($scope.params.sort && ($scope.params.sort == $obj.header)) {
+          $scope.params.sort = "-" + $obj.header;
+        }
+        else if ($scope.params.sort && ($scope.params.sort == "-" + $obj.header)) {
+          delete $scope.params.sort;
+        }
+        else {
+          $scope.params.sort = $obj.header;
+        }
+        // reset to page 1 and update
+        $scope.params.page = '1';
+        $scope.update();
       }
-      else if ($scope.params.sort && ($scope.params.sort == "-" + $obj.header)) {
-        delete $scope.params.sort;
-      }
-      else {
-        $scope.params.sort = $obj.header;
-      }
-      // reset to page 1 and update
-      $scope.params.page = '1';
-      $scope.update();
     };
 
     $scope.isActive = function isActive($header) {
@@ -221,14 +239,14 @@
       else if ($scope.params.sort == ("-" + $header)) {
         return "active asc";
       }
-      else {
-        return false;
+      else if ($scope.fieldConversion[$header]['sort'] === false) {
+        return "nosort";
       }
     };
 
     $scope.formatHeader = function formatHeader($header) {
-      if ($scope.headerConversion[$header]) {
-        return $sce.trustAsHtml($scope.headerConversion[$header]['display']);
+      if ($scope.fieldConversion[$header]) {
+        return $sce.trustAsHtml($scope.fieldConversion[$header]['display']);
       }
       else {
         return $sce.trustAsHtml($header);

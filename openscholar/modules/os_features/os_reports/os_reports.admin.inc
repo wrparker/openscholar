@@ -60,31 +60,31 @@ function os_reports_site_form($form, &$form_state) {
     '#suffix' => '</div>',
     '#type' => 'checkboxes',
   );
-  $form['keyword_set']['kfields']['mail'] = array(
+  $form['keyword_set']['kfields']['owner_email'] = array(
     '#title' => 'email',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.kfields.mail',
-      'ng-click' => "updateCheckedValues('kfields', 'mail')",
-      'value' => 'mail',
+      'ng-model' => 'queryform.kfields.owner_email',
+      'ng-click' => "updateCheckedValues('kfields', 'owner_email')",
+      'value' => 'owner_email',
     ),
   );
-  $form['keyword_set']['kfields']['name'] = array(
+  $form['keyword_set']['kfields']['username'] = array(
     '#title' => 'username',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.kfields.name',
-      'ng-click' => "updateCheckedValues('kfields', 'name')",
-      'value' => 'name',
+      'ng-model' => 'queryform.kfields.username',
+      'ng-click' => "updateCheckedValues('kfields', 'username')",
+      'value' => 'username',
     ),
   );
-  $form['keyword_set']['kfields']['n_title'] = array(
+  $form['keyword_set']['kfields']['site_title'] = array(
     '#title' => 'site name',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.kfields.n_title',
-      'ng-click' => "updateCheckedValues('kfields', 'n_title')",
-      'value' => 'n_title',
+      'ng-model' => 'queryform.kfields.site_title',
+      'ng-click' => "updateCheckedValues('kfields', 'site_title')",
+      'value' => 'site_title',
     ),
   );
   $form['content'] = array(
