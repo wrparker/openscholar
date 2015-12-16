@@ -27,22 +27,20 @@ function os_reports_permission() {
 function os_reports_menu() {
   $items = array();
   $items['admin/reports/site'] = array(
-    'title' => 'Site Report',
+    'title' => 'Sites Report',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_reports_site_form'),
-    'access callback' => 'user_access',
     'access arguments' => array('access os reports'),
+    'description' => 'Report on various aspects of all the sites hosted by OpenScholar.',
     'file' => 'os_reports.admin.inc',
-    'type' => MENU_CALLBACK,
   );
   $items['admin/reports/user'] = array(
-    'title' => 'User Report',
+    'title' => 'Users Report',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_reports_user_form'),
-    'access callback' => 'user_access',
     'access arguments' => array('access os reports'),
+    'description' => 'Report on various aspects of all the users associated with OpenScholar sites.',
     'file' => 'os_reports.admin.inc',
-    'type' => MENU_CALLBACK,
   );
   return $items;
 }

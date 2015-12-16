@@ -22,8 +22,13 @@ form fieldset .fieldset-wrapper {
 }
 
 .buttons {
-  margin-top: 1em;
+  margin-top: 0.25em;
   margin-bottom: 0;
+}
+
+form .buttons input.form-submit,
+form a.button {
+	margin-bottom: 0.25em;
 }
 
 .pager {
@@ -61,6 +66,15 @@ form table th {
   padding: 6px 8px;
 }
 
+form table th {
+	vertical-align: bottom;
+	line-height: 1.25em;
+}
+
+form table td {
+	vertical-align: top;
+}
+
 form table th a,
 form table td {
   white-space: nowrap;
@@ -79,9 +93,13 @@ input.hidden {
   display: none;
 }
 
+section#main-content {
+	padding-top: 10px;
+}
+
 h1#page-title {
   background: none;
-  padding-top: 20px;
+  padding-top: 0px;
   font-size: 1.5em;
 }
 
@@ -100,6 +118,10 @@ h1#page-title {
 
 form th.active {
   background-color: #bdbeb9;
+}
+
+form table th.nosort a {
+  white-space: normal;
 }
 
 form th.asc a {

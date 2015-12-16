@@ -230,7 +230,7 @@ function os_reports_site_form($form, &$form_state) {
     ),
   );
   $form['columns']['preset'] = array(
-    '#title' => 'Site preset type',
+    '#title' => 'Site type/preset',
     '#type' => 'checkbox',
     '#attributes' => array(
       'ng-model' => 'queryform.columns.preset',

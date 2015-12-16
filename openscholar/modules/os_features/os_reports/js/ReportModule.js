@@ -45,7 +45,7 @@
         'display' : 'content last updated',
       },
       'preset' : {
-        'display' : 'site preset',
+        'display' : 'site type (preset)',
         'sort' : false,
       },
     };
