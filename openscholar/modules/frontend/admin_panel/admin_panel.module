@@ -113,6 +113,7 @@ function admin_panel_library() {
         'paths' => array(
           'support_subscribe' => ($vsite) ? $vsite->get_absolute_url('group/node/' . $vsite->id . '/subscribe/vsite_support_expire') : '',
           'support_unsubscribe' => ($vsite) ? $vsite->get_absolute_url('group/node/' . $vsite->id . '/unsubscribe') : '',
+          'logout' => url('user/logout'),
         ),
       ),
       'type' => 'setting',
@@ -195,4 +196,26 @@ function _admin_panel_persist_open() {
   }
   
   return false;
+}
+
+/**
+ * Implements hook_url_outbound_alter().
+ *
+ * Rewrites path to add admin_panel state.
+ */
+function admin_panel_url_outbound_alter(&$path, &$options, $original) {
+  
+  $always_open_pages = array(
+      'user',
+      'user/pin',
+  );
+
+  // Only altering the login path and
+  // only when there is a destination
+  // only alter login path if the user is logged
+  // out, otherwise it is a link to "My account"
+  if (!in_array($path, $always_open_pages) || empty($options['query']['destination']) || ($path == 'user' && $user->uid)) {
+    return;
+  }
+  $options['query']['admin_panel'] = '1';
 }
