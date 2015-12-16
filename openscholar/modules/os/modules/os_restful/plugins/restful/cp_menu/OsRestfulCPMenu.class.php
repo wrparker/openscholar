@@ -193,9 +193,9 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       foreach (array_keys(array_filter($spaces_features)) as $feature) {
         $item = menu_get_item("cp/build/features/{$feature}");
         if ($item && $item['href'] == "cp/build/features/{$feature}") {
-          $feature = feature_load($feature_name);
+          $feature_object = feature_load($feature);
           $feature_settings["feature_{$feature}"] = array(
-            'label' => features_get_feature_title($feature),
+            'label' => features_get_feature_title($feature_object),
             'type' => 'link',
             'href' => $item['href'],
           );
@@ -412,7 +412,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         $this->alterURLs($menu[$key]['children']);
       }
 
-      if (!empty($value['href']) && $value['href'] != '#') {
+      if (!empty($value['href']) && $value['href'] != '#' && $vsite_object) {
         $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href']);
       }
     }
