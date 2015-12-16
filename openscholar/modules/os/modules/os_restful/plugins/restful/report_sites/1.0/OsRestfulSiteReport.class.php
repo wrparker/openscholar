@@ -34,15 +34,17 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       'owner_email' => array(
         'property' => 'owner_email',
       ),
-      'installation' => array(
-        'property' => 'installation',
+      'install' => array(
+        'property' => 'install',
       ),
     );
   }
 
   public function runReport() {
     $request = $this->getRequest();
-    $this->latestUpdate = $request['lastupdatebefore'];
+    if (isset($request['lastupdatebefore'])) {
+      $this->latestUpdate = $request['lastupdatebefore'];
+    }
     if (isset($request['exclude'])) {
       $this->excludedContentTypes = $request['exclude'];
     }
@@ -68,8 +70,7 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     $fields = $this->getPublicFields();
     $request = $this->getRequest();
 
-    $query->addField('n', 'title');
-
+    // site creation data
     if (isset($fields['created']) || isset($request['creationstart']) || isset($request['creationend'])) {
       $query->addField('n', 'created');
       $joinCondition = 'purl.id = n.nid AND provider = :provider';
@@ -79,7 +80,6 @@ class OsRestfulSiteReport extends \OsRestfulReports {
         $fields['created'] = array('property' => 'created');
         $this->setPublicFields($fields);
       }
-
       if (isset($request['creationstart'])) {
         $joinCondition .= " AND n.created >= UNIX_TIMESTAMP(STR_TO_DATE(:startdate, '%Y%m%d'))";
         $arguments[':startdate'] = $request['creationstart'];
@@ -88,15 +88,20 @@ class OsRestfulSiteReport extends \OsRestfulReports {
         $joinCondition .= " AND n.created <= UNIX_TIMESTAMP(STR_TO_DATE(:enddate, '%Y%m%d'))";
         $arguments[':enddate'] = $request['creationend'];
       }
+
       $query->innerJoin('node', 'n', $joinCondition, $arguments);
     }
     else {
       $query->innerJoin('node', 'n', 'purl.id = n.nid AND provider = :provider', array(':provider' => 'spaces_og'));
     }
 
+    $url_parts = explode(".", str_replace("http://", "", $base_url));
+    $query->addExpression("'" . $url_parts[0] . "'", 'install');
+    $query->addField('n', 'title');
     $query->addField('u', 'mail', 'owner_email');
     $query->innerJoin('users', 'u', 'u.uid = n.uid');
 
+    // site content data
     if ($request['includesites'] == "all") {
       $query->addExpression('MAX(content.changed)', 'changed');
       $query->leftJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
@@ -121,6 +126,18 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       }
     }
 
+    // optional fields
+    if (isset($fields['created_by'])) {
+      $query->addField('creators', 'mail', 'created_by');
+      $subquery = db_select('og_membership','ogm')
+                  ->fields('ogm', array('gid', 'etid'))
+                  ->condition('group_type', 'node', '=')
+                  ->condition('entity_type', 'user', '=');
+      $subquery->addExpression('MIN(created)', 'date');
+      $subquery->groupBy('gid');
+      $query->innerJoin($subquery, 'vsite_created', 'vsite_created.gid = purl.id');
+      $query->innerJoin('users', 'creators', 'vsite_created.etid = creators.uid');
+    }
     if ($this->latestUpdate && $request['includesites'] != "nocontent") {
       $query->havingCondition('changed', strtotime($this->latestUpdate), '<=');
       $fields['changed'] = array('property' => 'changed');
@@ -133,9 +150,15 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     if (isset($fields['subdomain'])) {
       $query->addField('u', 'mail', 'subdomain');
     }
-
-    $url_parts = explode(".", str_replace("http://", "", $base_url));
-    $query->addExpression("'" . $url_parts[0] . "'", 'installation');
+    if (isset($fields['domain'])) {
+      $query->addExpression("'N'", 'domain');
+    }
+    if (isset($fields['custom_theme'])) {
+      $query->addExpression("'N'", "custom_theme");
+    }
+    if (isset($fields['preset'])) {
+      $query->addField('n', 'type', 'preset');
+    }
 
     $this->queryForListSort($query);
     $this->queryForListFilter($query);
@@ -154,6 +177,7 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     global $base_url;
     $new_row = parent::mapDbRowToPublicFields($row);
 
+    // format dates
     if (isset($new_row['changed'])) {
       if ($new_row['changed']) {
         $new_row['changed'] = date('M j, Y h:ia', $row->changed);
@@ -162,6 +186,8 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     if (isset($new_row['created'])) {
       $new_row['created'] = date('M j, Y h:ia', $row->created);
     }
+
+    // tease out subdomain from email address
     if (isset($new_row['subdomain'])) {
       $domain_parts = explode(".", preg_replace('/.*@/', "", $new_row['subdomain']));
       if (count($domain_parts) > 2 && in_array("harvard", $domain_parts) && in_array("edu", $domain_parts)) {
@@ -173,7 +199,7 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     }
 
     // check for custom domain
-    $row->custom_domain = db_select('spaces_overrides', 'so')
+    $row->customdomain = db_select('spaces_overrides', 'so')
                           ->fields('so', array('value'))
                           ->condition('id', $row->id, '=')
                           ->condition('type', 'og', '=')
@@ -183,13 +209,35 @@ class OsRestfulSiteReport extends \OsRestfulReports {
                           ->condition('value', 's:0:"";', '<>')
                           ->execute()
                           ->fetchField();
-    if ($row->custom_domain) {
-      $new_row['site_url'] = "http://" . unserialize($row->custom_domain);
+    if ($row->customdomain) {
+      $new_row['site_url'] = "http://" . unserialize($row->customdomain);
+      if (isset($row->domain)) {
+        $new_row['domain'] = 'Y';
+      }
     }
     else {
       $new_row['site_url'] = $base_url . "/" . $row->value;
     }
 
+    // optional preset column
+    if(isset($new_row['preset'])) {
+      $preset_serialized = db_select('spaces_overrides', 'preset')
+                            ->fields('preset', array('value'))
+                            ->condition('id', $row->id, '=')
+                            ->condition('type', 'og', '=')
+                            ->condition('object_id', 'spaces_preset_og', '=')
+                            ->condition('object_type', 'variable', '=')
+                            ->execute()
+                            ->fetchField();
+      if ($preset_serialized) {
+        $new_row['preset'] .= " (" . str_replace("_", " ", unserialize($preset_serialized)) . ")";
+      }
+      else {
+        $new_row['preset'] .= " (minimal)";
+      }
+    }
+
+    // optional privacy column
     if (isset($new_row['privacy'])) {
       $privacy_values = array(
         '0' => 'Public on the web.',

@@ -61,6 +61,11 @@ form table th {
   padding: 6px 8px;
 }
 
+form table th a,
+form table td {
+  white-space: nowrap;
+}
+
 form table th a.selected {
   font-weight: bold;
 }

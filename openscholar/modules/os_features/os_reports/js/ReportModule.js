@@ -1,8 +1,45 @@
 (function () {
   var reportModule = angular.module('ReportModule', ['os-auth']);
-  reportModule.controller('SiteReportQuery', ['$http', '$scope', function ($http, $scope) {
+  reportModule.controller('SiteReportQuery', ['$sce', '$http', '$scope', function ($sce, $http, $scope) {
     $scope.params = {};
     $scope.params.includesites = 'content';
+    $scope.report_url = 'report_sites';
+
+    $scope.headerConversion = {
+      'site_name' : {
+        'display' : 'site title',
+      },
+      'owner_email' : {
+        'display' : 'site owner email',
+      },
+      'install' : {
+        'display' : 'os install',
+      },
+      'subdomain' : {
+        'display' : 'owner subdomain',
+      },
+      'created' : {
+        'display' : 'site created',
+      },
+      'created_by' : {
+        'display' : 'site created by',
+      },
+      'privacy' : {
+        'display' : 'site privacy setting',
+      },
+      'domain' : {
+        'display' : 'custom domain',
+      },
+      'custom_theme' : {
+        'display' : 'custom theme',
+      },
+      'changed' : {
+        'display' : 'content last updated',
+      },
+      'preset' : {
+        'display' : 'site preset',
+      },
+    };
 
     $scope.pager = function($direction) {
       var url = '';
@@ -18,13 +55,13 @@
       $checked = eval("$scope.queryform." + $set + "." + $value);
 
       if ($checked && !$scope.params[$set]) {
-        $scope.params[$set] = [$value.replace(/_/, ".")];
+        $scope.params[$set] = $value;
       }
       else {
         $valueArray = new Array();
         for ($key in $scope.queryform[$set]) {
           if ($scope.queryform[$set][$key]) {
-            $valueArray.push($key.replace(/_/, "."));
+            $valueArray.push($key);
           }
         }
         $scope.params[$set] = $valueArray;
@@ -76,7 +113,7 @@
 
         var $request = {
           method: 'POST',
-          url : Drupal.settings.paths.api + '/report_sites',
+          url : Drupal.settings.paths.api + '/' + $scope.report_url,
           headers : {'Content-Type' : 'application/json'},
           data : $scope.params,
         };
@@ -188,6 +225,15 @@
         return false;
       }
     };
+
+    $scope.formatHeader = function formatHeader($header) {
+      if ($scope.headerConversion[$header]) {
+        return $sce.trustAsHtml($scope.headerConversion[$header]['display']);
+      }
+      else {
+        return $sce.trustAsHtml($header);
+      }
+    };
   }]);
 
   reportModule.filter('makelink', ['$sce', function($sce) {
@@ -205,16 +251,6 @@
       }
     };
   }]);
-
-  reportModule.filter('formatHeader', function($sce) {
-    return function($header) {
-      var parts = $header.split("_");
-      if (parts.length == 1) {
-        $header = "site_" + $header;
-      }
-      return $header.replace(/_/g, " ");
-    };
-  });
 
   // function to take URL and return a javascript object of the query string
   var convertRestURLtoObj = function (url) {
