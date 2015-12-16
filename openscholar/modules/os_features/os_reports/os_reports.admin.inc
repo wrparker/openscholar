@@ -59,6 +59,7 @@ function os_reports_site_form($form, &$form_state) {
     '#prefix' => '<div class="container-inline"><label for="edit-kfields">Search in fields</label>',
     '#suffix' => '</div>',
     '#type' => 'checkboxes',
+    '#options' => array(),
   );
   $form['keyword_set']['kfields']['owner_email'] = array(
     '#title' => 'email',
@@ -369,6 +370,7 @@ function os_reports_user_form($form, &$form_state) {
     '#prefix' => '<div class="container-inline"><label for="edit-kfields">Search in fields</label>',
     '#suffix' => '</div>',
     '#type' => 'checkboxes',
+    '#options' => array(),
   );
   $form['keyword_set']['kfields']['mail'] = array(
     '#title' => 'email',

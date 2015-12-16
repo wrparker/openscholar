@@ -1,6 +1,6 @@
 .container-inline {
-  padding: 2px 0px;
-  margin: 0;
+  padding: 0px;
+  margin: 20px 0px;
 }
 
 .container-inline .form-item label {
@@ -8,10 +8,9 @@
 }
 
 form fieldset {
-  margin: 0;
+  margin: 20px 0px;
   border: 0px none;
   padding: 0;
-  padding-bottom: 5px;
   background: none;
 }
 
@@ -21,6 +20,14 @@ form fieldset .fieldset-wrapper {
   padding: 0;
 }
 
+form .container-inline fieldset{
+  margin: 0px;
+}
+
+form fieldset .container-inline {
+  margin: 2px 0px;
+}
+
 .buttons {
   margin-top: 0.25em;
   margin-bottom: 0;
@@ -28,7 +35,11 @@ form fieldset .fieldset-wrapper {
 
 form .buttons input.form-submit,
 form a.button {
-	margin-bottom: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+.pager .container-inline {
+  margin: 2px;
 }
 
 .pager {
@@ -41,9 +52,10 @@ form a.button {
 }
 
 form fieldset .fieldset-legend {
-  margin: 0;
+  margin: 0px 0px 5px 0px;
   padding-left: 0px;
   position: relative;
+  display: block;
 }
 
 form fieldset legend {
@@ -67,12 +79,12 @@ form table th {
 }
 
 form table th {
-	vertical-align: bottom;
-	line-height: 1.25em;
+  vertical-align: bottom;
+  line-height: 1.25em;
 }
 
 form table td {
-	vertical-align: top;
+  vertical-align: top;
 }
 
 form table th a,
@@ -94,7 +106,7 @@ input.hidden {
 }
 
 section#main-content {
-	padding-top: 10px;
+  padding-top: 10px;
 }
 
 h1#page-title {
@@ -133,8 +145,8 @@ form th.desc a {
 }
 
 form th.nosort a {
-	color: #000;
-	text-decoration: none;
+  color: #000;
+  text-decoration: none;
 }
 
 #page.container div.messages::before {
