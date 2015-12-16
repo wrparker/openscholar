@@ -157,7 +157,7 @@ function vsite_preset_spaces_presets() {
           ),
           'os_search_solr-site-search' => array(
             'module' => 'os_search_solr',
-            'delta' => 'site-search',
+            'delta' => 'solr_search_box',
             'region' => 'header_third',
             'weight' => '-10',
             'status' => 0,
@@ -351,7 +351,7 @@ function vsite_preset_spaces_presets() {
           ),
           'os_search_solr-site-search' => array(
             'module' => 'os_search_solr',
-            'delta' => 'site-search',
+            'delta' => 'solr_search_box',
             'region' => 'header_third',
             'weight' => '-10',
             'status' => 0,
@@ -518,7 +518,7 @@ function vsite_preset_spaces_presets() {
           ),
           'os_search_solr-site-search' => array(
             'module' => 'os_search_solr',
-            'delta' => 'site-search',
+            'delta' => 'solr_search_box',
             'region' => 'header_third',
             'weight' => '-10',
             'status' => 0,
@@ -625,7 +625,7 @@ function vsite_preset_spaces_presets() {
           ),
           'os_search_solr-site-search' => array(
             'module' => 'os_search_solr',
-            'delta' => 'site-search',
+            'delta' => 'solr_search_box',
             'region' => 'header_third',
             'weight' => '-10',
             'status' => 0,
@@ -796,7 +796,7 @@ function vsite_preset_spaces_presets() {
           ),
           'os_search_solr-site-search' => array(
             'module' => 'os_search_solr',
-            'delta' => 'site-search',
+            'delta' => 'solr_search_box',
             'region' => 'header_third',
             'weight' => '-10',
             'status' => 0,
