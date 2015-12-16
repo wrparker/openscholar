@@ -157,5 +157,5 @@
 
 	// add to global namespace
 	window.UIMorphingButton = UIMorphingButton;
-
+	
 })( window );

@@ -160,7 +160,7 @@
             link: function(scope, element, attrs) {
         	  element.bind('click', function(e) {
         		  e.preventDefault();
-        		  element.siblings('div').each( function () {
+        		  jQuery('div#rightMenuSlide').each( function () {
         	        if(this.style.display == 'none') {
         	          jQuery(this).fadeIn('fast');
         	          jQuery(this).addClass('open');
@@ -173,12 +173,4 @@
             },
           }
         });
-        
-        
-       // $(".close-user-menu").click(function(){
-    	//	$("#rightMenuSlide").hide('slow');
-		//});
-        
-        
-  
 })();

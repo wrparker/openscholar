@@ -162,6 +162,7 @@
       			  // add scroll class to main el
       			  jQuery('.morph-button').addClass('scroll');
       			  menu_state['main'] = true;
+      			  Drupal.settings.admin_panel.keep_open = true;
       			  scope.$apply(function () {
         	        $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
         	      });
