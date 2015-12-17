@@ -473,3 +473,35 @@ function os_basetheme_date_repeat_display($vars) {
   }
   return $output;
 }
+
+/**
+ * Implements override for theme_pager_lite_next of contrib module views_litepager
+ * @param array $variables
+ * theme parameters
+ * @return string
+ * returning the output as HTML.
+ */
+function os_basetheme_pager_lite_next($variables) {
+  $text = $variables['text'];
+  $element = $variables['element'];
+  $interval = $variables['interval'];
+  $parameters = $variables['parameters'];
+
+  global $pager_page_array, $pager_total;
+  $output = '';
+
+  // If we are anywhere but the last page
+  if ($pager_page_array[$element] <= ($pager_total[$element] - 1) || $pager_page_array[$element] == 0) {
+    $page_new = pager_load_array($pager_page_array[$element] + $interval, $element, $pager_page_array);
+    // If the next page is the last page, mark the link as such.
+    if ($pager_page_array[$element] == $pager_total[$element]) {
+      $output = theme('pager_last', array('text' => $text, 'element' => $element, 'parameters' => $parameters));
+    }
+    // The next page is not the last page.
+    else {
+      $output = theme('pager_link', array('text' => $text, 'page_new' => $page_new, 'element' => $element, 'parameters' => $parameters));
+    }
+  }
+
+  return $output;
+}
