@@ -155,8 +155,8 @@ function vsite_preset_spaces_presets() {
             'status' => 0,
             'title' => '',
           ),
-          'os_search_solr-site-search' => array(
-            'module' => 'os_search_solr',
+          'boxes-solr_search_box' => array(
+            'module' => 'boxes',
             'delta' => 'solr_search_box',
             'region' => 'header_third',
             'weight' => '-10',
@@ -349,8 +349,8 @@ function vsite_preset_spaces_presets() {
             'status' => 0,
             'title' => '',
           ),
-          'os_search_solr-site-search' => array(
-            'module' => 'os_search_solr',
+          'boxes-solr_search_box' => array(
+            'module' => 'boxes',
             'delta' => 'solr_search_box',
             'region' => 'header_third',
             'weight' => '-10',
@@ -516,8 +516,8 @@ function vsite_preset_spaces_presets() {
             'status' => 0,
             'title' => '',
           ),
-          'os_search_solr-site-search' => array(
-            'module' => 'os_search_solr',
+          'boxes-solr_search_box' => array(
+            'module' => 'boxes',
             'delta' => 'solr_search_box',
             'region' => 'header_third',
             'weight' => '-10',
@@ -623,8 +623,8 @@ function vsite_preset_spaces_presets() {
             'status' => 0,
             'title' => '',
           ),
-          'os_search_solr-site-search' => array(
-            'module' => 'os_search_solr',
+          'boxes-solr_search_box' => array(
+            'module' => 'boxes',
             'delta' => 'solr_search_box',
             'region' => 'header_third',
             'weight' => '-10',
@@ -794,8 +794,8 @@ function vsite_preset_spaces_presets() {
             'status' => 0,
             'title' => '',
           ),
-          'os_search_solr-site-search' => array(
-            'module' => 'os_search_solr',
+          'boxes-solr_search_box' => array(
+            'module' => 'boxes',
             'delta' => 'solr_search_box',
             'region' => 'header_third',
             'weight' => '-10',
