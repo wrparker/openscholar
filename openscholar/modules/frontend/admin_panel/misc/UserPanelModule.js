@@ -147,7 +147,7 @@
             e.preventDefault();
             if(hopscotch.getCurrTour()) {
               hopscotch.endTour();
-            } else {
+            } else if(jQuery(e.target).hasClass('click-processing')) {
               hopscotch.startTour(tour);
               jQuery('.hopscotch-bubble').addClass('os-tour-notifications');
             }
