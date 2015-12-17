@@ -1196,11 +1196,14 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
   // Set the default time for a reminder to be a day before the event.
   $event_date = $wrapper->field_date->get(0)->value();
   $reminder = empty($reminder_date) ? strtotime('-1 day', strtotime($repeating_event_date?$repeating_event_date:$event_date['value'])) : strtotime($reminder_date);
+  $reminder_date_default = $reminder && !empty($reminder_date) ? date('Y-m-d H:i', strtotime($reminder_date)) : date('Y-m-d H:i');
+  $reminder_date_default = $form_state['build_info']['args'][0]['send_reminder'] == 1 ? $reminder_date_default : '';
+
   $form['reminder']['reminder_settings']['reminder_date'] = array(
     '#type' => 'date_popup',
     '#title' => t('Reminder Date'),
     '#description' => t('When to send reminders.'),
-    '#default_value' => $reminder && !empty($reminder_date) ? date('Y-m-d H:i', strtotime($reminder_date)) : date('Y-m-d H:i'),
+    '#default_value' => $reminder_date_default,
     '#date_format' => $format,
     '#states' => array(
       'visible' => array(
