@@ -341,6 +341,9 @@ function cp_use_cp_theme() {
   elseif (arg(0) == 'taxonomy') {
     return (arg(2) == 'add' || in_array(arg(3), $ops));
   }
+  elseif (in_array(arg(0), array('user')) && $_GET['render'] == 'overlay') {
+    return in_array(arg(2), $ops);
+  }
 
   return FALSE;
 }
