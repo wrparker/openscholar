@@ -69,6 +69,9 @@
     }
   }
 
+  /**
+   * Empty the reminder date-time textfields while Send Reminder checkbox is unchecked.
+   */
   Drupal.behaviors.osSendReminderToggle = {
     attach: function () {
       $("#edit-reminder-send-reminder").click(function() {
