@@ -101,8 +101,8 @@
       
       closeLink  = function(elm) {
     	elm.removeClass('open');
-    	elm.find('li').removeClass('open');
-    	elm.find('ul').slideUp(200);
+    	//elm.find('li').removeClass('open');
+    	//elm.find('ul').slideUp(200);
       }
       
       return {
@@ -127,7 +127,13 @@
                 closeLink(parent);
 	          } else {
 	        	if ( element.hasClass('close-siblings') ) {
-		      	  parent.siblings('.open').each(function() {
+	              if( parent.hasClass('heading') ) {
+	            	togglers = parent.parent('ul').siblings('ul').find('li.open');
+	              } else {
+	            	togglers = parent.siblings('.open');
+	              }
+	              
+		      	  togglers.each(function() {
 		      		var sibling = jQuery(this);
 		      		menu_state[sibling.find("a").first().attr('id')] = false;
 		       	    closeLink(sibling);
