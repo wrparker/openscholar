@@ -1470,7 +1470,7 @@ function os_profiles_create_site_from_profile($form, &$form_state, $node) {
     '#type' => 'textfield',
     '#title' => t('URL'),
     '#required' => TRUE,
-    '#description' => t("Minimun 3 characters, which must be lowercase. Punctuations is not allowed except for hyphens and underscores. <Br /> Example: a choice of 'jdoe' would result the URL: @url", $params),
+    '#description' => t("Enter a minimum of 3 characters, lowercase only. Punctuation is not allowed except for hyphens and underscores. <Br /> Example: Entering jdoe into the field above will result in this URL: @url", $params),
   );
 
   $form['results'] = array(

@@ -17,8 +17,8 @@
                 <span id="drag-text">Drag and drop files here. <span class="help_icon" ng-mouseenter="showHelp = true" ng-mouseleave="showHelp = false">?</span></span>
                 <a href="#" id="media-browser-file-select" ng-file-select ng-file-change="$parent.checkForDupes($files, $event)"
                    ng-accept="$parent.validate($file)" accept="{{'.'+extensions.join(',.')}}" ng-multiple="true">Select files to Add</a>
-                <div class="help" ng-show="showHelp">Files must be less than <strong>{{maxFilesize}}</strong>.<br />
-                    Allowed file types: <strong>{{extensions.join(' ')}}</strong></div>
+                     <div class="help" ng-show="showHelp"><strong>Allowed file types:</strong><br /> {{extensions.join(' ')}}<br /><br />
+                   <strong>Max file size:</strong> {{maxFilesize}}.</div>
             </div>
             <div id="media-browser-duplicate-check" ng-show="$parent.dupes.length > 0">
                 <div class="media-browser-dupe" ng-repeat="dupe in $parent.dupes" ng-show="!dupe.processed" style="z-index: {{1000-$index}}">
@@ -28,7 +28,7 @@
                     </div>
                     <div class="actions">
                         <div><button value="rename" ng-click="$parent.rename($index, $last)">Rename</button> The new name will be {{dupe.newName}}</div>
-                        <div><button value="replace" ng-click="$parent.replace($index, $last)">Replace</button> This CANNOT be undone!</div>
+                        <div><button value="replace" ng-click="$parent.replace($index, $last)">Replace</button> Warning: replacing the existing file cannot be undone.</div>
                         <div><button value="cancel" ng-click="$parent.cancelUpload($index, $last)">Cancel</button></div>
                     </div>
                     <div class="media-browser-dupe-counter" ng-show="$parent.dupes.length > 1">{{$index+1}}/{{$parent.dupes.length}}</div>
@@ -56,8 +56,8 @@
         <div class="media-browser-pane" ng-switch-when="web">
             <label for="media-browser-web">URL or HTML:</label>
             <textarea id="media-browser-web" cols="60" rows="5" ng-model="$parent.embed" placeholder="Enter the URL or HTML here"></textarea>
-            <div class="description">Enter a URL from one of <a href="http://embed.ly/embed/features/providers" target="_blank">
-                these providers</a> or paste a snippet of HTML. The HTML may contain references to any of the following sites:
+            <div class="description embedly">Enter a URL from one of <a href="http://embed.ly/embed/features/providers" target="_blank">
+                these providers</a> or paste a snippet of HTML. The HTML may contain references to any of the following sites. Don't see what you're looking for? <a href="http://docs.openscholar.harvard.edu/embedding-third-party-content" target="_blank">Learn more about how to whitelist.</a>   <br><br>
                 <span ng-init="limit = -21" ng-repeat="domain in whitelist" ng-mouseenter="limit = -120" ng-mouseleave="limit = -21" tooltip="{{domain}}" >
                   <span ng-hide="(limit *-1) >= domain.length">...</span>{{domain | limitTo:limit}}{{$last ? '' : ', '}}
                 </span>
@@ -117,7 +117,7 @@
             <div file-edit file="$parent.selected_file" on-close="closeFileEdit(saved);"></div>
         </div>
         <div class="media-browser-pane" ng-switch-when="delete">
-            <div class="mb-delete-warning">Are you sure you want to delete {{$parent.selected_file.name}}? This operation CANNOT be undone.</div>
+            <div class="mb-delete-warning">Are you sure you want to delete {{$parent.selected_file.name}}? Warning: replacing the existing file cannot be undone.</div>
             <div>WARNING: Any links to this file will be broken!</div>
 
             <div class="actions">

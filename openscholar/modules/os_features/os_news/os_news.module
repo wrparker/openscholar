@@ -137,3 +137,12 @@ function os_news_field_attach_load($entity_type, $entities, $view_mode) {
   }
 }
 
+/**
+ * Implements hook_date_popup_process_alter().
+ */
+function os_news_date_popup_process_alter(&$element, &$form_state, $context) {
+  // Removing label for calendar popup in news add/edit form as the fieldset already contains the label 'Date'
+  if ($context['form']['form_id']['#value'] == 'news_node_form') {
+    unset($element['date']['#title']);
+  }
+}
