@@ -22,7 +22,7 @@ function os_wysiwyg_media_token_to_markup_alter(&$element, $tag_info, $settings)
     $container_settings = array();
     foreach ($settings['attributes'] as $attr => $val) {
       if ($attr != 'class' && $attr != 'height' && $attr != 'width') {
-        //$container_settings[$attr] = $val;
+        $container_settings[$attr] = $val;
       }
     }
   
