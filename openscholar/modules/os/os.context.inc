@@ -28,6 +28,7 @@ function os_context_default_contexts() {
         'cp' => 'cp',
         'cp/*' => 'cp/*',
         'group/node/*' => 'group/node/*',
+        'os/widget/*' => 'os/widget/*',
       ),
     ),
   );
