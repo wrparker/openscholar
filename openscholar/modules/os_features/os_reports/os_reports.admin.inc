@@ -60,32 +60,33 @@ function os_reports_site_form($form, &$form_state) {
     '#suffix' => '</div>',
     '#type' => 'checkboxes',
     '#options' => array(),
+    '#validated' => TRUE,
   );
-  $form['keyword_set']['kfields']['owner_email'] = array(
+  $form['keyword_set']['kfields']['u_mail'] = array(
     '#title' => 'email',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.kfields.owner_email',
-      'ng-click' => "updateCheckedValues('kfields', 'owner_email')",
-      'value' => 'owner_email',
+      'ng-model' => 'queryform.kfields.u_mail',
+      'ng-click' => "updateCheckedValues('kfields', 'u_mail')",
+      'value' => 'u_mail',
     ),
   );
-  $form['keyword_set']['kfields']['username'] = array(
+  $form['keyword_set']['kfields']['u_name'] = array(
     '#title' => 'username',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.kfields.username',
-      'ng-click' => "updateCheckedValues('kfields', 'username')",
-      'value' => 'username',
+      'ng-model' => 'queryform.kfields.u_name',
+      'ng-click' => "updateCheckedValues('kfields', 'u_name')",
+      'value' => 'u_name',
     ),
   );
-  $form['keyword_set']['kfields']['site_title'] = array(
+  $form['keyword_set']['kfields']['n_title'] = array(
     '#title' => 'site name',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.kfields.site_title',
-      'ng-click' => "updateCheckedValues('kfields', 'site_title')",
-      'value' => 'site_title',
+      'ng-model' => 'queryform.kfields.n_title',
+      'ng-click' => "updateCheckedValues('kfields', 'n_title')",
+      'value' => 'n_title',
     ),
   );
   $form['content'] = array(
@@ -101,12 +102,12 @@ function os_reports_site_form($form, &$form_state) {
     '#description' => 'format: YYYYMMDD',
     '#attributes' => array(
       'ng-model' => 'params.lastupdatebefore',
-      'ng-blur' => 'setContentOptions("lastupdatebefore")',
     ),
   );
   $form['content']['includesites'] = array(
     '#prefix' => '<div class="container-inline"><label for="edit-includesites">Sites to include</label>',
     '#suffix' => '</div>',
+    '#options' => array(),
   );
   $form['content']['includesites']['all'] = array(
     '#name' => 'includesites',
@@ -115,7 +116,6 @@ function os_reports_site_form($form, &$form_state) {
     '#attributes' => array(
       'ng-model' => 'params.includesites',
       'value' => 'all',
-      'ng-change' => 'setContentOptions("includesites")',
    ),
   );
   $form['content']['includesites']['content'] = array(
@@ -125,7 +125,6 @@ function os_reports_site_form($form, &$form_state) {
     '#attributes' => array(
       'ng-model' => 'params.includesites',
       'value' => 'content',
-      'ng-change' => 'setContentOptions("includesites")',
     ),
   );
   $form['content']['includesites']['nocontent'] = array(
@@ -135,7 +134,6 @@ function os_reports_site_form($form, &$form_state) {
     '#attributes' => array(
       'ng-model' => 'params.includesites',
       'value' => 'nocontent',
-      'ng-change' => 'setContentOptions("includesites")',
     ),
   );
   $form['createdrange'] = array(
@@ -161,13 +159,19 @@ function os_reports_site_form($form, &$form_state) {
       'ng-model' => 'params.creationend',
     ),
   );
-  $form['columns'] = array(
+  $form['columns_set'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Optional Columns',
-    '#prefix' => '<div class="container-inline">',
+    '#prefix' => '<div class="container-inline"><label for="edit-columns">Optional Columns</label>',
     '#suffix' => '</div>',
   );
-  $form['columns']['subdomain'] = array(
+  $form['columns_set']['columns'] = array(
+    '#prefix' => '<div class="container-inline">',
+    '#suffix' => '</div>',
+    '#type' => 'checkboxes',
+    '#validated' => TRUE,
+    '#options' => array(),
+  );
+  $form['columns_set']['columns']['subdomain'] = array(
     '#title' => 'Subdomain of site owner',
     '#type' => 'checkbox',
     '#attributes' => array(
@@ -176,7 +180,7 @@ function os_reports_site_form($form, &$form_state) {
       'value' => 'subdomain',
     ),
   );
-  $form['columns']['created'] = array(
+  $form['columns_set']['columns']['created'] = array(
     '#title' => 'Creation date',
     '#type' => 'checkbox',
     '#attributes' => array(
@@ -185,7 +189,7 @@ function os_reports_site_form($form, &$form_state) {
       'value' => 'created',
     ),
   );
-  $form['columns']['created_by'] = array(
+  $form['columns_set']['columns']['created_by'] = array(
     '#title' => 'Created by',
     '#type' => 'checkbox',
     '#attributes' => array(
@@ -194,16 +198,16 @@ function os_reports_site_form($form, &$form_state) {
       'value' => 'created_by',
     ),
   );
-  $form['columns']['changed'] = array(
+  $form['columns_set']['columns']['changed'] = array(
     '#title' => 'Date of last content update',
     '#type' => 'checkbox',
     '#attributes' => array(
       'ng-model' => 'queryform.columns.changed',
-      'ng-click' => "updateCheckedValues('columns', 'changed'); setContentOptions('changed')",
+      'ng-click' => "updateCheckedValues('columns', 'changed')",
       'value' => 'changed',
     ),
   );
-  $form['columns']['privacy'] = array(
+  $form['columns_set']['columns']['privacy'] = array(
     '#title' => 'Privacy level',
     '#type' => 'checkbox',
     '#attributes' => array(
@@ -212,7 +216,7 @@ function os_reports_site_form($form, &$form_state) {
       'value' => 'privacy',
     ),
   );
-  $form['columns']['domain'] = array(
+  $form['columns_set']['columns']['domain'] = array(
     '#title' => 'Custom domain',
     '#type' => 'checkbox',
     '#attributes' => array(
@@ -221,8 +225,8 @@ function os_reports_site_form($form, &$form_state) {
       'value' => 'domain',
     ),
   );
-  $form['columns']['custom_theme'] = array(
-    '#title' => 'Custom theme',
+  $form['columns_set']['columns']['custom_theme'] = array(
+    '#title' => 'Custom theme uploaded',
     '#type' => 'checkbox',
     '#attributes' => array(
       'ng-model' => 'queryform.columns.custom_theme',
@@ -230,7 +234,7 @@ function os_reports_site_form($form, &$form_state) {
       'value' => 'custom_theme',
     ),
   );
-  $form['columns']['preset'] = array(
+  $form['columns_set']['columns']['preset'] = array(
     '#title' => 'Site type/preset',
     '#type' => 'checkbox',
     '#attributes' => array(
@@ -273,10 +277,8 @@ function os_reports_site_form($form, &$form_state) {
 }
 
 function os_reports_site_form_submit($form, &$form_state) {
-  global $base_url;
   $form_state['rebuild'] = TRUE;
-  
-  $handler = restful_get_restful_handler('report_sites');
+
   $params = $form_state['input'];
 
   // clean up parameters before rest call
@@ -289,28 +291,33 @@ function os_reports_site_form_submit($form, &$form_state) {
       $params[$key] = $values;
     }
   }
-
   $params['range'] = 0;
 
   // make restful call to get data
+  $handler = restful_get_restful_handler('report_sites');
   $results = $handler->post('', $params);
 
   if ($results) {
-    $filename = str_replace("http://", "", $base_url) . "-site-report.csv";
-
-    drupal_add_http_header("Cache-Control", "public");
-    drupal_add_http_header("Content-Type", "application/octet-stream");
-    drupal_add_http_header("Cache-Control", "o-store, no-cache, must-revalidate");
-    drupal_add_http_header("Cache-Control", "post-check=0, pre-check=0");
-    drupal_add_http_header("Content-Disposition", "attachment; filename=\"$filename\";" );
-    drupal_add_http_header("Content-Transfer-Encoding", "binary");
-
+    $operations = array();
     $headers = array_keys($results[0]);
-    print ucfirst(str_replace("_", " ", implode($headers, ", "))) . "\n";
-    foreach ($results as $row) {
-      print implode($row, ", ") . "\n";
+    $operations = array(array("os_reports_assemble_header_row", array($headers)));
+
+    while($results) {
+      $rows = array_splice($results, 0, 50);
+      $operations[] = array("os_reports_assemble_file_rows", array($rows));
     }
-    drupal_exit();
+    $operations[] = array("os_reports_print_file", array());
+    $batch = array(
+      'operations' =>  $operations,
+      'title' => t('Creating the CSV file'),
+      'progress_message' => t('Processed @current out of @total.'),
+      'error_message' => t('File creation has encountered an error.'),
+    );
+
+    batch_set($batch);
+    $batch =& batch_get();
+    $batch['progressive'] = FALSE;
+    batch_process($batch);
   }
   else {
     drupal_set_message('No results in report.', 'warning');
@@ -375,6 +382,7 @@ function os_reports_user_form($form, &$form_state) {
   $form['keyword_set']['kfields']['mail'] = array(
     '#title' => 'email',
     '#type' => 'checkbox',
+    '#value' => 'mail',
     '#attributes' => array(
       'ng-model' => 'queryform.kfields.mail',
       'ng-click' => "updateCheckedValues('kfields', 'mail')",
@@ -384,6 +392,7 @@ function os_reports_user_form($form, &$form_state) {
   $form['keyword_set']['kfields']['name'] = array(
     '#title' => 'username',
     '#type' => 'checkbox',
+    '#value' => 'name',
     '#attributes' => array(
       'ng-model' => 'queryform.kfields.name',
       'ng-click' => "updateCheckedValues('kfields', 'name')",
@@ -393,6 +402,7 @@ function os_reports_user_form($form, &$form_state) {
   $form['keyword_set']['kfields']['real_name'] = array(
     '#title' => 'real name',
     '#type' => 'checkbox',
+    '#value' => 'real_name',
     '#attributes' => array(
       'ng-model' => 'queryform.kfields.real_name',
       'ng-click' => "updateCheckedValues('kfields', 'real_name')",

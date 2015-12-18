@@ -6,18 +6,18 @@
     $scope.report_url = 'report_sites';
 
     $scope.fieldConversion = {
-      'site_name' : {
-        'display' : 'site title',
-      },
-      'owner_email' : {
+      'u_mail' : {
         'display' : 'site owner email',
-        'data_field' : 'u.mail',
+        'field_name' : 'u.mail',
+        'field_alias' : 'owner_email',
       },
-      'username' : {
-        'data_field' : 'u.name',
+      'u_name' : {
+        'field_alias' : 'username',
+        'field_name' : 'u.name',
       },
-      'site_title' : {
-        'data_field' : 'n.title',
+      'n_title' : {
+        'field_name' : 'n.title',
+        'field_alias' : 'site_title',
       },
       'install' : {
         'display' : 'os install',
@@ -39,7 +39,7 @@
         'display' : 'custom domain',
       },
       'custom_theme' : {
-        'display' : 'custom theme',
+        'display' : 'custom theme uploaded',
       },
       'changed' : {
         'display' : 'content last updated',
@@ -58,13 +58,14 @@
     }
 
     $scope.updateCheckedValues = function updateCheckedValues($set, $value) {
+console.log('update: ' + $value);
       if (eval("!$scope.queryform." + $set)) {
         eval ("$scope.queryform." + $set + " = {};");
       }
       $checked = eval("$scope.queryform." + $set + "." + $value);
 
-      if ($scope.fieldConversion[$value] && $scope.fieldConversion[$value]['data_field']) {
-         $value = $scope.fieldConversion[$value]['data_field'];
+      if ($scope.fieldConversion[$value] && $scope.fieldConversion[$value]['field_name']) {
+         $value = $scope.fieldConversion[$value]['field_name'];
         }
 
       if ($checked && !$scope.params[$set]) {
@@ -74,8 +75,8 @@
         $valueArray = new Array();
         for ($key in $scope.queryform[$set]) {
           if ($scope.queryform[$set][$key]) {
-            if ($scope.fieldConversion[$key] && $scope.fieldConversion[$key]['data_field']) {
-              $key = $scope.fieldConversion[$key]['data_field'];
+            if ($scope.fieldConversion[$key] && $scope.fieldConversion[$key]['field_name']) {
+              $key = $scope.fieldConversion[$key]['field_name'];
             }
             $valueArray.push($key);
           }
@@ -216,6 +217,7 @@
     };
 
     $scope.sort = function sort($obj) {
+console.log('sort: ' + $obj.header);
       if ($scope.fieldConversion[$obj.header]['sort'] !== false) {
         if ($scope.params.sort && ($scope.params.sort == $obj.header)) {
           $scope.params.sort = "-" + $obj.header;
@@ -233,6 +235,7 @@
     };
 
     $scope.isActive = function isActive($header) {
+console.log('isActive: ' + $header);
       if ($scope.params.sort == $header) {
         return "active desc";
       }
@@ -245,6 +248,7 @@
     };
 
     $scope.formatHeader = function formatHeader($header) {
+console.log('format header: ' + $header);
       if ($scope.fieldConversion[$header]) {
         return $sce.trustAsHtml($scope.fieldConversion[$header]['display']);
       }

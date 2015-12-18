@@ -12,6 +12,7 @@ form fieldset {
   border: 0px none;
   padding: 0;
   background: none;
+  width: 100%;
 }
 
 form fieldset .fieldset-wrapper {

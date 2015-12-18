@@ -108,7 +108,7 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       $query->leftJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
       $query->groupBy('purl.id');
     }
-    elseif ($fields['changed'] || $request['includesites'] == "content"){
+    elseif (isset($fields['changed']) || $request['includesites'] == "content"){
       $query->addExpression('MAX(content.changed)', 'changed');
       $query->innerJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
       $query->innerJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
@@ -180,11 +180,11 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     // format dates
     if (isset($new_row['changed'])) {
       if ($new_row['changed']) {
-        $new_row['changed'] = date('M j, Y h:ia', $row->changed);
+        $new_row['changed'] = date('M j Y h:ia', $row->changed);
       }
     }
     if (isset($new_row['created'])) {
-      $new_row['created'] = date('M j, Y h:ia', $row->created);
+      $new_row['created'] = date('M j Y h:ia', $row->created);
     }
 
     // tease out subdomain from email address
@@ -210,7 +210,7 @@ class OsRestfulSiteReport extends \OsRestfulReports {
                           ->execute()
                           ->fetchField();
     if ($row->customdomain) {
-      $new_row['site_url'] = "http://" . unserialize($row->customdomain);
+      $new_row['site_url'] = "http://" . unserialize($row->customdomain) . "/" . $row->value;
       if (isset($row->domain)) {
         $new_row['domain'] = 'Y';
       }
