@@ -334,7 +334,11 @@ td.user-site-controls {
 .user_sites-close {
     margin: 0 0 2px 97%;
 }
-/* these need to be moved to the os_common dir*/
+.close-user-menu {
+    margin: 0 0 0px 90%;
+}
+
+/* these need to be moved to the os_common dir */
 
 .close-link {
     background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') 0 -926px no-repeat;
