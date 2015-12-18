@@ -26,10 +26,8 @@
       	return {};
       };
       
-      //Get Refferer Special case
-      var refer = document.createElement('a');
-      refer.href= document.referrer;
-      var force_open = (refer.pathname == '/user');
+      //Force menu open Special case
+      var force_open = (window.location.search.indexOf('login=1') > -1);
       
       //Init storage
       if (typeof($localStorage.admin_menu) == 'undefined') {

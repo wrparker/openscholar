@@ -75,7 +75,7 @@ function admin_panel_library() {
           'keep_open' => _admin_panel_persist_open(),
         ),
         'version' => array(
-          'adminPanel' => '0.0.7'
+          'adminPanel' => '0.0.8'
         ),
       ),
       'type' => 'setting',
@@ -217,7 +217,7 @@ function admin_panel_url_outbound_alter(&$path, &$options, $original) {
   if (!in_array($path, $always_open_pages) || empty($options['query']['destination']) || ($path == 'user' && $user->uid)) {
     return;
   }
-  $queryparam_add = (strpos($options['query']['destination'], '?') ? '&' : '?').drupal_http_build_query(array("admin_panel" => 1));
+  $queryparam_add = (strpos($options['query']['destination'], '?') ? '&' : '?').drupal_http_build_query(array("admin_panel" => 1, 'login' => 1));
   $options['query']['destination'] = $options['query']['destination'] . $queryparam_add;
 }
 
