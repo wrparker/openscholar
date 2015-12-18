@@ -12,6 +12,9 @@ body {
     height: 100%;
     position: relative;
 }
+body.overlay {
+overflow-x: visible;
+}
 .page-cp #branding,
 .page-cp #page {
     width: 100%;
