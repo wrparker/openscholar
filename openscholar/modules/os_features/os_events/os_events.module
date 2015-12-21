@@ -1196,16 +1196,11 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
   // Set the default time for a reminder to be a day before the event.
   $event_date = $wrapper->field_date->get(0)->value();
   $reminder = empty($reminder_date) ? strtotime('-1 day', strtotime($repeating_event_date?$repeating_event_date:$event_date['value'])) : strtotime($reminder_date);
-  
-  // If Send reminder checkbox is not 'checked', then reminder date values should be empty.
-  $reminder_date_default = $reminder && !empty($reminder_date) ? date('Y-m-d H:i', strtotime($reminder_date)) : date('Y-m-d H:i');
-  $reminder_date_default = $form_state['build_info']['args'][0]['send_reminder'] == 1 ? $reminder_date_default : '';
-
   $form['reminder']['reminder_settings']['reminder_date'] = array(
     '#type' => 'date_popup',
     '#title' => t('Reminder Date'),
     '#description' => t('When to send reminders.'),
-    '#default_value' => $reminder_date_default,
+    '#default_value' => $reminder && !empty($reminder_date) ? date('Y-m-d H:i', strtotime($reminder_date)) : date('Y-m-d H:i'),
     '#date_format' => $format,
     '#states' => array(
       'visible' => array(
@@ -1274,6 +1269,7 @@ This is only a friendly reminder that you registered the event <a href='[node:ur
   // submitted in the "from" field. This is done since the registration module
   // needs the email value to be in the "settings" element which is given a
   // "#access = FALSE".
+  $form['#validate'][0] = 'os_registration_entity_settings_form_validate';
   $form['#validate'][] = '_os_events_update_from_address';
   $form['#validate'][] = 'os_events_validate_end_date_after_start';
   $default_submit = array_search('registration_entity_settings_form_submit',$form['#submit']);
@@ -1283,6 +1279,68 @@ This is only a friendly reminder that you registered the event <a href='[node:ur
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
 
   $form['#after_build'][] = 'os_events_registration_entity_after_build';
+}
+
+/**
+ * Custom Submit handler for registration_entity_settings_form().
+ *
+ * @array $form
+ * @array $form_state
+ */
+function os_registration_entity_settings_form_validate($form, &$form_state) {
+  // Ensure capacity is a non-negative integer.
+  $capacity = $form_state['values']['capacity'];
+  if (!is_numeric($capacity) || ((int) $capacity != $capacity) || ($capacity < 0)) {
+    form_set_error('capacity', t('"Capacity" must be a positive integer or 0 for unlimited.'));
+  }
+
+  // Ensure slot limit is a non-negative integer.
+  $slot_limit = $form_state['values']['settings']['maximum_spaces'];
+  if (!is_numeric($slot_limit) || ((int) $slot_limit != $slot_limit) || ($slot_limit < 0)) {
+    form_set_error('maximum_spaces', t('"Spaces allowed" must be a positive integer or 0 for unlimited.'));
+  }
+
+  // Validate from address:
+  if (!valid_email_address($form_state['values']['settings']['from_address'])) {
+    form_set_error('settings][from_address', t('From email address is invalid.'));
+  }
+
+  // Validate open date:
+  if (!empty($form_state['values']['scheduling']['open']) && is_string($form_state['values']['scheduling']['open']) && strtotime($form_state['values']['scheduling']['open']) === FALSE) {
+    form_set_error('scheduling][open', t('Date is invalid.'));
+  }
+
+  // Validate close date:
+  if (!empty($form_state['values']['scheduling']['close']) && is_string($form_state['values']['scheduling']['close']) && strtotime($form_state['values']['scheduling']['close']) === FALSE) {
+    form_set_error('scheduling][close', t('Date is invalid.'));
+  }
+
+  // If sending a reminder, ensure date and template are set.
+  $reminder = $form_state['values']['reminder'];
+  if ($reminder['send_reminder'] && (empty($reminder['reminder_settings']['reminder_date']) || empty($reminder['reminder_settings']['reminder_template']))) {
+    form_set_error('reminder][send_reminder', t('If sending a reminder, provide a date and template.'));
+  }
+
+  // If reminder date or template are set, ensure we're sending a reminder.
+  if (empty($reminder['send_reminder'])) {
+    if (!empty($reminder['reminder_settings']['reminder_template'])) {
+      form_set_error('reminder][reminder_settings][reminder_template', t('You have provided a reminder template, but not opted to send a reminder. Either check the box to send a reminder, or do not provide a reminder template.'));
+    }
+  }
+
+  // Validate reminder date:
+  if (!empty($reminder['reminder_settings']['reminder_date'])
+    && strtotime($reminder['reminder_settings']['reminder_date']) === FALSE
+  ) {
+    form_set_error('reminder][reminder_settings][reminder_date', t('Reminder date is invalid.'));
+  }
+
+  // Ensure reminder date is not in the past when "send_reminder" is TRUE:
+  if ($reminder['send_reminder'] && !empty($reminder['reminder_settings']['reminder_date'])) {
+    if (strtotime($reminder['reminder_settings']['reminder_date']) <= time()) {
+      form_set_error('reminder][reminder_settings][reminder_date', t('Reminder must be in the future.'));
+    }
+  }
 }
 
 /**

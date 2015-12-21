@@ -69,18 +69,4 @@
     }
   }
 
-  /**
-   * Empty the reminder date-time textfields while Send Reminder checkbox is unchecked.
-   */
-  Drupal.behaviors.osSendReminderToggle = {
-    attach: function () {
-      $("#edit-reminder-send-reminder").click(function() {
-        if (!$(this).is(':checked')) {
-          $('#edit-reminder-reminder-settings-reminder-date-datepicker-popup-0').val('');
-          $('#edit-reminder-reminder-settings-reminder-date-timeEntry-popup-1').val('');
-        }
-      });     
-    }
-  }
-
 })(jQuery);
