@@ -35,6 +35,7 @@ function os_faq_os_app_info() {
         'menu_item' => 'faq',
       ),
     ),
+    'has_settings' => TRUE,
   );
 
   return $apps;
@@ -54,15 +55,15 @@ function os_faq_vsite_og_node_type_info() {
  */
 function os_faq_menu() {
   $items = array();
-  
+
   $items['features/os_faq'] = array(
-    'title' => 'Settings',
+    'title' => 'FAQ Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_faq_settings'),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
   );
-  
+
   return $items;
 }
 
@@ -71,7 +72,7 @@ function os_faq_menu() {
  */
 function os_faq_settings($form, $form_state) {
   $form = array();
-  
+
   $form['os_faq_use_toggle'] = array(
     '#title' => t('Enable Slider Behavior'),
     '#type' => 'checkbox',
@@ -80,7 +81,7 @@ function os_faq_settings($form, $form_state) {
     	By disabling slider behavior, you can force the answer to always appear.'),
     '#weight' => -1
   );
-  
+
   return system_settings_form($form);
 }
 
@@ -109,7 +110,7 @@ function os_faq_field_attach_view_alter(&$output, &$context) {
  */
 function os_faq_preprocess_node(&$vars) {
   if ($vars['node']->type != 'faq') return;
-  
+
   if (!$vars['page'] && variable_get('os_faq_use_toggle', TRUE)) {
     $vars['header_attributes_array']['class'][] = 'toggle';
     $vars['content_attributes_array']['class'][] = 'os-slider';
