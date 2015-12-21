@@ -17,6 +17,7 @@ function os_files_private_os_app_info() {
 
   $apps['os_files_private'] = array(
     'path' => OS_FILES_PRIVATE_PATH,
+    'has_settings' => TRUE,
   );
 
   return $apps;
@@ -321,7 +322,7 @@ function os_files_private_stream_wrappers_alter(&$wrappers){
  */
 function os_files_private_preprocess_views_view(&$vars) {
   if ($vars['view']->name == 'os_files_private') {
-    os_common_angular_app('os-files-private');
+    os_common_angular_apps('os-files-private');
     drupal_add_library('media', 'media_browser');
     drupal_add_library('os_common', 'FileEditorModal');
     drupal_add_js(drupal_get_path('module', 'os_files_private').'/apps/os_files_private.js');
