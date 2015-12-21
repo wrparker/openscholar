@@ -768,8 +768,10 @@ function os_publications_validate_year_field($form, &$form_state) {
   // Set the coded value as the year if exist.
   if ($form_state['values']['biblio_year_coded'] && !$form_state['values']['biblio_year']) {
     $form_state['values']['biblio_year'] = $form_state['values']['biblio_year_coded'];
-    if ($form_state['values']['biblio_year_coded_extrayear']) {
+    if (!empty($form_state['values']['biblio_year_coded_extrayear'])) {
       $form_state['values']['biblio_date'] = $form_state['values']['biblio_year_coded_extrayear'];
+    } else {
+      $form_state['values']['biblio_date'] = NULL;
     }
   }
 }
