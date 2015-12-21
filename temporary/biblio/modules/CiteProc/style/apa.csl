@@ -154,14 +154,12 @@
       <choose>
          <if type="report" match="any">
             <group delimiter=": ">
-               <text variable="publisher-place"/>
                <text variable="publisher"/>
             </group>
          </if>
          <else-if type="thesis" match="any">
             <group delimiter=", ">
                <text variable="publisher"/>
-               <text variable="publisher-place"/>
             </group>
          </else-if>
          <else>
@@ -171,7 +169,6 @@
                </if>
             </choose>
             <group delimiter=": ">
-               <text variable="publisher-place"/>
                <text variable="publisher"/>
             </group>
          </else>
