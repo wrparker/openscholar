@@ -276,7 +276,7 @@ padding-top: 0;
   }
 
 .sidebar h2.block-title {
-  text-transform: uppercase;
+  text-transform: none;
   font-weight: normal;
   }
 

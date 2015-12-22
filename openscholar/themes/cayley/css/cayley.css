@@ -63,7 +63,7 @@ h1#page-title {
   color: #d43808;
   font: 13px/normal "Lucida Grande","Lucida Sans Unicode",Arial,Verdana,sans-serif;
   font-weight: normal;
-  text-transform:uppercase;
+  text-transform:none;
   letter-spacing: .5px;
   margin-bottom: 10px;
   }
