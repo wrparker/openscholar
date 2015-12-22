@@ -117,7 +117,10 @@ function cp_menu() {
 
   // Provides a customize form for each OS App and a version that will load in a modal
   $apps = spaces_features('site');
+  $app_info = os_app_info();
   foreach ($apps as $name => $app) {
+    if(!$app_info[$name]['has_settings']) continue;
+
     $items['cp/build/features/' . $name] = array(
       'title callback' => '_cp_app_settings_page_title',
       'title arguments' => array(3),
@@ -138,6 +141,20 @@ function cp_menu() {
     'weight' => 30,
     'description' => t('Control various settings of your site, such as making your site private or configuring your site to integrate with 3rd party services.'),
   );
+
+  $items["cp/apps"] = array(
+    'title' => 'Apps',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array(
+      'cp_app_settings_form',
+    ),
+    'file' => 'cp.form.inc',
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => 'spaces_access_admin',
+    'weight' => 30,
+    'description' => t('Manage and customize your site\'s apps.')
+  );
+
 
   if (module_exists('contact')) {
     $items['cp/support'] = array(
@@ -315,7 +332,7 @@ function cp_custom_theme() {
  */
 function cp_use_cp_theme() {
   $ops = array('edit', 'usage', 'delete', 'devel');
-  if (in_array(arg(0), array('cp', 'os', 'media'))) {
+  if (in_array(arg(0), array('cp', 'os', 'media', 'group'))) {
     return TRUE;
   }
   elseif (in_array(arg(0), array('file', 'node'))) {
@@ -323,6 +340,9 @@ function cp_use_cp_theme() {
   }
   elseif (arg(0) == 'taxonomy') {
     return (arg(2) == 'add' || in_array(arg(3), $ops));
+  }
+  elseif (in_array(arg(0), array('user')) && $_GET['render'] == 'overlay') {
+    return in_array(arg(2), $ops);
   }
 
   return FALSE;
@@ -472,19 +492,6 @@ function cp_get_setting_forms() {
  */
 function cp_cp_settings() {
   $settings = array();
-  $settings['cp_admin_menu'] = array(
-    'group' => array(
-      '#title' => t('Admin Menu'),
-      '#id' => 'admin-menu',
-    ),
-    'form' => array(
-      '#type' => 'checkbox',
-      '#default_value' => variable_get('cp_admin_menu', 0),
-      '#title' => t('Display Admin Menu Bar'),
-      '#description' => t('The admin menu bar displays at the top of the page when you are logged in as a side adminstrator. <br>
-      Checking this will cause the admin menu at the top of the page now to be displayed at the top of the public view of your site as well. Only managers of your site will see this bar.'),
-    ),
-  );
 
   if (module_exists('redirect')) {
     $settings['redirects'] = array(
