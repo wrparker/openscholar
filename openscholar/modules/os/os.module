@@ -1944,6 +1944,7 @@ function os_app_info($app_name = NULL) {
             'importers' => array(),
             'require_parent_node' => FALSE,
             'browse_pages' => FALSE,
+            'has_settings' => FALSE,
           );
 
           // Adds the module information.
@@ -1972,7 +1973,7 @@ function os_app_info($app_name = NULL) {
 function os_app_info_declared_node_bundle($bundle = '') {
   $bundles = &drupal_static(__FUNCTION__, array());
 
-  if (empty($info)) {
+  if (empty($bundles)) {
     $apps = os_app_info();
     $bundles = array();
     foreach ($apps as $app) {
@@ -1982,7 +1983,7 @@ function os_app_info_declared_node_bundle($bundle = '') {
     }
   }
 
-  return in_array($bundle, $bundles);
+  return empty($bundle)? $bundles : in_array($bundle, $bundles);
 }
 
 /**

@@ -71,6 +71,9 @@ function os_classes_os_app_info() {
     'require_parent_node' => array(
       'class_material'=> TRUE,
     ),
+    'hide from toolbar' => array(
+      'class_material',
+    ),
     'browse_pages' => array(
       'class' => array(
         'url' => 'browse/classes',

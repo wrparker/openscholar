@@ -21,10 +21,14 @@ function cp_page_alter(&$page) {
 }
 
 function cp_toolbar_pre_render($toolbar) {
+  if(variable_get('admin_panel_enabled', FALSE)) {
+    $toolbar['#access'] = FALSE;
+    return $toolbar;
+  }
   $toolbar = array_merge($toolbar, cp_toolbar_view());
   $toolbar['toolbar_drawer'] = array_merge($toolbar['toolbar_drawer'], cp_toolbar_fill_drawer());
   $toolbar['tooltips'] = cp_toolbar_set_tooltips($toolbar);
-  
+
   // Let other modules alter the content of the toolbar.
   drupal_alter('cp_toolbar_pre_render', $toolbar);
 
