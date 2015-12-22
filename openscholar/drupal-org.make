@@ -3,9 +3,6 @@
 core = 7.x
 api = 2
 
-projects[admin_menu][subdir] = "contrib"
-projects[admin_menu][version] = 3.0-rc1
-
 projects[advagg][subdir] = "contrib"
 projects[advagg][version] = 2.6
 

@@ -220,8 +220,7 @@ function hwpi_basetheme_node_view_alter(&$build) {
         $titles[] = $title_field[$key]['#markup'];
         unset($title_field[$key]);
       }
-      $glue = ($build['#view_mode'] == 'sidebar_teaser') ? ', ' : "<br />\n";
-      $title_field[0] = array('#markup' => implode($glue, $titles));
+      $title_field[0] = array('#markup' => implode('<br />', $titles));
     }
 
     // We dont want the other fields on teasers

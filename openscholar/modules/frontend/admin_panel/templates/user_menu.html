@@ -1,0 +1,26 @@
+    <div id="topRightMenu" class="topRight_Menu" title="My Account" right-menu-toggle></div>
+    <div id="rightMenuSlide" class="topRight_Menu topRight_subMenu" style='display:none;'>
+      <ul>
+      	<li><div class="close-link close-user-menu" right-menu-toggle></div></li>
+      	<li id="user-name">
+          {{ user.name }}
+        </li>
+        <li>
+          <a ng-href="/user/{{ user.uid }}/edit">Manage my account</a>
+        </li>
+        <li notification-check>
+          <a ng-class="{menu_modal_open: showNotify}" data-id='100' ng-click='close_others(100); showNotify = !showNotify'>Notifications</a>
+        </li>
+        <li load-my-sites>
+          <a href="/user">My sites</a>
+        </li>
+        <li>
+          <a ng-href="{{ paths.support_subscribe }}" add-destination ng-if="user.support_user && !user.is_member">Support this site</a>
+          <a ng-href="{{ paths.support_unsubscribe }}" add-destination ng-if="user.support_user && user.is_member">Un-Subscribe from site</a>
+        </li>
+        <li class="slate">
+          <a href="{{ paths.logout }}">Logout</a>
+        </li>
+      </ul>
+    </div>
+  

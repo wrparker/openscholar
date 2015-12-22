@@ -26,6 +26,7 @@ function harvard_courses_os_app_info() {
         'display_mode' => 'teaser',
       ),
     ),
+    'has_settings' => TRUE,
   );
 
   return $apps;
@@ -737,6 +738,8 @@ function harvard_courses_form_cp_app_settings_form_alter(&$form, &$form_state) {
 
 /**
  * Implements hook_form_FORM_ID_alter().
+ *
+ * @todo Remove when new admin panel is live
  */
 function harvard_courses_form_spaces_features_form_alter(&$form, &$form_state) {
   if (!$space = spaces_get_space()) {
@@ -757,6 +760,19 @@ function harvard_courses_form_spaces_features_form_alter(&$form, &$form_state) {
     }
   }
 }
+
+/**
+ * Implements hook_os_restful_cp_menu_admin_panel_alter().
+ */
+function harvard_courses_os_restful_cp_menu_admin_panel_alter(&$menu, $user) {
+
+  // The user don't have access to edit the settings of the Harvard courses
+  // app settings.
+  if (isset($menu['settings']['children']['feature_harvard_courses']) && !user_access('edit harvard courses app settings', $user)) {
+    unset($menu['settings']['children']['feature_harvard_courses']);
+  }
+}
+
 
 /**
  * Implements hook_form_FORM_ID_alter().

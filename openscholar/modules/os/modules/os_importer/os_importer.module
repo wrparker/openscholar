@@ -180,11 +180,12 @@ function os_importer_os_add_new_links_alter(&$links) {
 function os_importer_importable_content($type = '') {
   $apps = os_app_info();
   $types = array();
+  $space = spaces_get_space();
 
   // Loop through the apps and check which app has an importer.
   foreach ($apps as $feature => $app) {
-    // Check to which bundle the user can import content.
-    if (!spaces_access_feature('create', $feature)) {
+    // Check to which bundle the user can import content if we are in a space.
+    if ($space && !spaces_access_feature('create', $feature)) {
       continue;
     }
 
