@@ -84,6 +84,47 @@ html.js input.throbbing {
     list-style-type: none !important;
     list-style: none !important;
 }
+
+.cp-controls-wrapper .add_new {
+  float:left;
+  display:inline;
+   background: url("../images/scholarbase-sprite.png") no-repeat scroll 3px -379px #A1D4A1 !important;
+    border-radius: 5px 5px 5px 5px;
+    float: left;
+     margin: 0 22px 0 0;
+    padding: 0 8px 0 22px !important;
+    text-decoration:none !important;
+  }
+  
+
+
+/* Special behavior for action link and help position on CP > Content > Find: Files */
+.view-id-cp_files .cp-controls-wrapper {
+    margin: 11px 29px 10px 0;
+}
+
+
+.view-id-cp_files .cp-controls-wrapper .add_new {
+    margin-right: 0;
+}
+
+.view-id-cp_files .cp-controls-wrapper .add_new {
+    line-height: 15px !important;
+    display: inline-block;
+    padding: 5px 10px !important;
+    border: none;
+    font-size: 13px;
+    font-weight: bold;
+    color: #FFF !important;
+    text-shadow: 0px -1px 0px rgba(30, 30, 30, 0.25);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background: rgb(61, 155, 19) !important;
+    text-decoration: none !important;
+	float:right;
+}
+
 .view-os-files-private .cp-controls-wrapper .add_new {
     background: #2C890D !important;
     padding: 5px 10px !important;
