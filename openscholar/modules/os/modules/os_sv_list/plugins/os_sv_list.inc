@@ -212,7 +212,7 @@ class os_sv_list extends os_boxes_default {
     $form['details']['number_of_items'] = array(
       '#title' => 'Number of items to display',
       '#type' => 'select',
-      '#options' => array_slice(range(0, 20), 1, NULL, TRUE),
+      '#options' => array_slice(range(0, 30), 1, NULL, TRUE),
       '#default_value' => $this->options['number_of_items'],
     );
 
