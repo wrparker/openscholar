@@ -1,0 +1,380 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,200);
+.morph-button-sidebar .morph-content {
+    background: #111;
+}
+.morph-button > button {
+    background: url('images/os-cp_button.png') no-repeat;
+    background-color: #111;
+}
+html,
+body {
+    overflow-x: hidden;
+    height: 100%;
+    position: relative;
+}
+body.overlay {
+overflow-x: visible;
+}
+.page-cp #branding,
+.page-cp #page {
+    width: 100%;
+    position: absolute;
+}
+#overlay .page_wrap {
+    position: relative;
+}
+.page-cp.overlay #branding,
+.page-cp.overlay #page {
+    position: relative;
+    width: auto;
+}
+.page-cp #branding.no-transition,
+.page-cp #page.no-transition,
+.page_wrap.no-transition {
+    -webkit-transition: none;
+    transition: none;
+}
+.page-cp #branding {
+    position: relative;
+    margin-left: 40px;
+}
+.page-cp #branding.pushed {
+    margin-left: 110px;
+}
+.no-js .page-cp #branding,
+.no-js .page-cp #page,
+.no-js .page_wrap {
+    width: calc(100% - 300px);
+    right: 0;
+}
+.page-cp #branding.pushed,
+.page-cp #page.pushed {
+    -webkit-transform: translateX(15px);
+    transform: translateX(15px);
+}
+.page-cp #page {
+    width: 90%;
+    margin-left: 80px;
+    margin-right: 0;
+}
+.page-cp #page.pushed {
+    margin-left: 150px;
+    width: 80%;
+}
+.admin-menu-homeicon {
+    position: absolute;
+    left: 10px;
+    top: 7px;
+    width: 25px;
+    height: 25px;
+    background: url('images/home_button.png') no-repeat;
+    background-size: 25px 25px;
+}
+ul.primary {
+    margin: 0 10% 0 !important;
+}
+.pushed ul.primary {
+    margin: 0 20% 0 !important;
+}
+/* MENU SPECIFIC */
+
+#cssmenu,
+#cssmenu ul,
+#cssmenu ul li,
+#cssmenu ul li a {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    list-style: none;
+    line-height: 1;
+    display: block;
+    position: relative;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    font-style: normal;
+}
+#cssmenu {
+    font-family: helvetica;
+    color: #ffffff;
+    margin-top: 25px;
+}
+#cssmenu ul ul {
+    display: none;
+}
+#cssmenu > ul > li.active > ul {
+    display: block;
+}
+.align-right {
+    float: right;
+}
+#cssmenu > ul > li > a {
+    padding: 10px 10px;
+    cursor: pointer;
+    z-index: 2;
+    font-size: 14px;
+    text-decoration: none;
+    color: #ffffff;
+    background: #6C7A89;
+    -webkit-transition: color .2s ease;
+    -o-transition: color .2s ease;
+    transition: color .2s ease;
+}
+#cssmenu > ul > li > a:hover {
+    color: #CCC;
+}
+#cssmenu ul > li.has-sub > a:after {
+    position: absolute;
+    right: 22px;
+    top: 14px;
+    z-index: 5;
+    display: block;
+    height: 10px;
+    width: 2px;
+    background: #ffffff;
+    content: "";
+    -webkit-transition: all 0.1s ease-out;
+    -moz-transition: all 0.1s ease-out;
+    -ms-transition: all 0.1s ease-out;
+    -o-transition: all 0.1s ease-out;
+    transition: all 0.1s ease-out;
+}
+#cssmenu ul > li.has-sub > a:before {
+    position: absolute;
+    right: 18px;
+    top: 18px;
+    display: block;
+    width: 10px;
+    height: 2px;
+    background: #ffffff;
+    content: "";
+    -webkit-transition: all 0.1s ease-out;
+    -moz-transition: all 0.1s ease-out;
+    -ms-transition: all 0.1s ease-out;
+    -o-transition: all 0.1s ease-out;
+    transition: all 0.1s ease-out;
+}
+#cssmenu ul > li.has-sub.open > a:after,
+#cssmenu ul > li.has-sub.open > a:before {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+    height: 2px;
+    width: 10px;
+}
+#cssmenu ul > li.has-sub.open > a:after {
+    content: none;
+}
+#cssmenu ul ul li a,
+#cssmenu .heading {
+    padding: 10px 18px 10px 17px;
+    cursor: pointer;
+    z-index: 2;
+    font-size: 14px;
+    text-decoration: none;
+    color: #dddddd;
+    background: #49505a;
+    -webkit-transition: color .2s ease;
+    -o-transition: color .2s ease;
+    transition: color .2s ease;
+}
+#cssmenu .heading {
+    padding: 10px 15px;
+    background: #444;
+}
+#cssmenu .heading.submenu {
+    padding: 0;
+}
+#cssmenu .heading a.submenu_heading {
+    background: #454545;
+}
+#cssmenu ul ul ul li a {
+    padding-left: 22px;
+}
+#cssmenu ul ul li a:hover {
+    color: #ffffff;
+}
+#cssmenu ul ul > li.has-sub > a:after {
+    top: 14px;
+    right: 22px;
+    background: #dddddd;
+}
+#cssmenu ul ul > li.has-sub > a:before {
+    top: 18px;
+    background: #dddddd;
+}
+#rightMenuSlide {
+    top: 4px;
+    z-index: 20;
+}
+.topRight_Menu {
+    position: fixed;
+    top: 0;
+    right: 15px;
+    padding: 10px;
+    color: white;
+    background: #49505a;
+    z-index: 10;
+    display: inline-block;
+    font-family: helvetica;
+    font-size: 14px;
+    cursor: pointer;
+}
+#topRightMenu {
+    background: url('images/my_account-bg.png') 12px 3px no-repeat;
+    width: 35px;
+    height: 18px;
+    background-color: #49505a;
+}
+.topRight_Menu a {
+    font-style: normal;
+}
+.topRight_subMenu {
+    margin-top: 34px;
+    font-size: 13px;
+    display: none;
+    padding: 0;
+}
+.topRight_subMenu ul {
+    margin: 0;
+    list-style-type: none;
+}
+.topRight_subMenu li {
+    padding: 5px 10px;
+}
+.topRight_subMenu li a {
+    color: #FFF;
+    text-decoration: none;
+}
+.topRight_subMenu li a.text_link {
+    color: #215990;
+}
+#user-name {
+    background-color: #6C7A89;
+}
+#user-name:hover {
+    cursor: text;
+}
+.slate {
+    background: #454545;
+}
+.slate.alert {
+    background: #EF0812;
+}
+.alert {
+    padding: 0 4px;
+}
+.arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 7px solid #fff;
+    z-index: 10;
+    position: absolute;
+    right: 28px;
+}
+a {
+    cursor: pointer;
+    color: #fff;
+    text-decoration: none;
+}
+.close_panel {
+    position: absolute;
+    right: 35px;
+    top: 9px;
+    font-family: helvetica;
+    font-size: 1.3em;
+}
+/* account tab popouts */
+
+.account_tab_popout {
+    position: absolute;
+    right: 152px;
+    background-color: #FFF;
+    width: 350px;
+    color: #1e1e1e;
+    border: 1px solid #CCC;
+    -webkit-box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
+    -moz-box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
+    box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
+    padding: 3px 12px 12px;
+}
+.account_tab_popout.user_sites {
+    top: 28px;
+}
+.animated {
+    animation-duration: 0s !important;
+}
+td.site-name {
+    width: 58%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 25ch;
+}
+td.user-site-controls {
+    text-align: right;
+}
+.user_sites .site-list:nth-child(odd) {
+    background-color: #FFF;
+}
+.user_sites .site-list:nth-child(even) {
+    background-color: #F7F7F7;
+}
+.other-sites,
+.my-sites,
+.user_sites .site-list {
+    border-bottom: 1px solid #DADADA;
+    border-left: 1px solid #DADADA;
+    border-right: 1px solid #DADADA;
+}
+.my-sites {
+    border-top: 1px solid #DADADA;
+}
+.user_sites-close {
+    margin: 0 0 2px 97%;
+}
+.close-user-menu {
+    margin: 0 0 0px 90%;
+}
+
+/* these need to be moved to the os_common dir */
+
+.close-link {
+    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') 0 -926px no-repeat;
+    width: 20px;
+    height: 20px;
+}
+.text_link {
+    color: #215990;
+}
+.btton {
+    border-radius: 3px 3px 3px 3px;
+    -moz-border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px 3px 3px 3px;
+    color: #FFF;
+    padding: 3px 4px;
+}
+.btton.add {
+    background-color: #458C00;
+}
+.btton.remove {
+    background-color: #FF3E00;
+}
+/* Table styling*/
+
+table.table-shading {
+    width: 100%;
+    border: none;
+    color: #444;
+    margin-bottom: 0;
+}
+.header-row {
+    background-color: #EAEAEA;
+    padding: 6px 0 6px 8px;
+    color: #444;
+    font-weight: bold;
+}

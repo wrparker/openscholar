@@ -1,3 +1,4 @@
+<div id="page_wrap" class="page_wrap">
 <!--REGION TO HOUSE RESPONSIVE MENU. OTHER CONTENT CAN'T BE PLACED HERE-->
 <div class="responive-menu-container clearfix">
   <?php print render($page['responsive_menu']); ?>
@@ -55,7 +56,10 @@
 			<div class="hg-container">
 				<div id="content-column" role="main">
 					<div class="content-inner">
-					  <?php if ($breadcrumb): print $breadcrumb; endif; ?>
+					  <?php
+					if ($breadcrumb) : print $breadcrumb;
+					endif;
+ ?>
 
 						<?php if ($is_front || $use_content_regions): ?>
 							<?php print render($title_prefix); ?>
@@ -162,9 +166,11 @@
 		<!--footer region end-->
   <?php endif; ?>
   <div id="powerby-login">
-  	<?php if (isset($login_link)) {
-    print render($login_link);
-  } ?>
+  	<?php
+	if (isset($login_link)) {
+		print render($login_link);
+	}
+ ?>
   	<div id="powered-by"><a href="http://theopenscholar.org">OpenScholar</a></div>
     </div>
   </footer>
@@ -181,3 +187,6 @@
 		</div>
   </div>
 <?php endif; ?>
+
+</div><!-- /page_wrap -->
+
