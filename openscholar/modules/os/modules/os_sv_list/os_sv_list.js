@@ -114,23 +114,7 @@
               var sort_type = sort_by.val();
               var show_type = $(this).val();
               showField(sort_type, show_type);
-            });
-
-            function showField(sort_type, show_type) {
-              var expire_event_appear = $('.form-item-event-expire-appear');
-              expire_event_appear.hide();
-              if (sort_type == 'sort_event_asc' && show_type == 'upcoming_events') {
-                expire_event_appear.show();
-                expire_event_appear.find('label').text(Drupal.t('Events should expire'));
-              }
-              else if (sort_type == 'sort_event_desc' && show_type == 'past_events') {
-                expire_event_appear.show();
-                expire_event_appear.find('label').text(Drupal.t('Events should appear'));
-              }
-              else {
-                expire_event_appear.hide();
-              }
-            }
+            });            
           }
           else {
             $('.form-item-event-expire-appear').hide();
@@ -158,3 +142,19 @@
     }
   };
 }(jQuery));
+
+function showField(sort_type, show_type) {
+  var expire_event_appear = jQuery('.form-item-event-expire-appear');
+  expire_event_appear.hide();
+  if (sort_type == 'sort_event_asc' && show_type == 'upcoming_events') {
+    expire_event_appear.show();
+    expire_event_appear.find('label').text(Drupal.t('Events should expire'));
+  }
+  else if (sort_type == 'sort_event_desc' && show_type == 'past_events') {
+    expire_event_appear.show();
+    expire_event_appear.find('label').text(Drupal.t('Events should appear'));
+  }
+  else {
+    expire_event_appear.hide();
+  }
+}
