@@ -1679,7 +1679,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldSeeTheNewsPhoto($image_name) {
     $page = $this->getSession()->getPage();
-    $element = $page->find('xpath', "//div[contains(@class, 'field-name-field-photo')]//img[contains(@src, '{$image_name}')]");
+    $element = $page->find('xpath', "//div[contains(@class, 'field-name-field-photo')]//figure//img[contains(@src, '{$image_name}')]");
 
     if (!$element) {
       $this->iShouldPrintPage();
