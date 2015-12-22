@@ -27,7 +27,7 @@ class os_boxes_site_logo extends os_boxes_default {
       }
 
       if (module_exists('os_common')) {
-        os_common_angular_app('os-boxes');
+        os_common_angular_apps('os-boxes');
         $form['#attached']['library'][] = array('os_common', 'FileEditorModal');
         $form['#attached']['js'][] = drupal_get_path('module', 'os_boxes') . '/misc/os_boxes.app.js';
       }
@@ -87,7 +87,7 @@ class os_boxes_site_logo extends os_boxes_default {
           )
         )
       );
-      
+
       if (function_exists('imagefield_crop_upload_validate')) {
         $form['file']['#upload_validators']['imagefield_crop_upload_validate'] = array(null, $instance);
       }
@@ -131,7 +131,7 @@ class os_boxes_site_logo extends os_boxes_default {
       // get the title of the site so we can use it in an alt attribute
       $site_info = boxes_box_load('site_info');
       $site_title = $site_info->options['site_title'];
-      
+
       // if we happen to be in a vsite, load the logo from their field
       $fid = $this->options['fid'];
       if (module_exists('vsite') && $vsite = spaces_get_space()) {

@@ -502,6 +502,26 @@ function cp_user_og_ui_admin_permissions_validate($form, &$form_state) {
 }
 
 /**
+ * Implements template_preprocess_HOOK() for overlay.tpl.php
+ *
+ * If the current page request is inside the overlay, remove the local tasks in some instances.
+ *
+ * @see template_process_overlay()
+ * @see overlay.tpl.php
+ */
+function cp_user_preprocess_overlay(&$variables) {
+  $item = menu_get_item();
+  $paths = array(
+      'user/%/edit',
+  );
+  if (!in_array($item['path'], $paths)) {
+    return;
+  }
+  
+  unset($variables['tabs']);
+}
+
+/**
  * Get category from permission key, and add category title if needed.
  *
  * @param $permission
@@ -831,15 +851,6 @@ function cp_user_user_register_submit($form, &$form_state) {
     drupal_set_message(t('!user has been added to the website: !website', array('!user' => $form_state['user']->name, '!website' => $space->group->title)));
     // Redirect the user after they add/create someone.
     $form_state['redirect'] = 'cp/users';
-  }
-}
-
-/**
- * Implements hook_form_BASE_FORM_ID_alter() for cp_settings_form.
- */
-function cp_user_form_cp_settings_form_alter(&$form, &$form_state) {
-  if (isset($form['admin-menu'])) {
-    $form['admin-menu']['#access'] = FALSE;
   }
 }
 

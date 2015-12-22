@@ -18,8 +18,10 @@ function vsite_subsite_access($op = 'create', $vsite = false){
   }
 
   $subsite_parents = variable_get('subsite_parents',array('department', 'project'));
+  // Account for Space and Node
+  $type = isset($vsite->group)? $vsite->group->type : $vsite->type;
 
-  return ($vsite && in_array($vsite->group->type,$subsite_parents) && spaces_access_admin() && user_access("{$op} subsites"));
+  return ($vsite && in_array($type,$subsite_parents) && spaces_access_admin() && user_access("{$op} subsites"));
 }
 
 /**
