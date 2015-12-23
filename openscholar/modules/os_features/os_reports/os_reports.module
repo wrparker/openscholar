@@ -18,6 +18,11 @@ function os_reports_permission() {
       'description' => t('Access the OS reports.'),
       'restrict access' => TRUE,
     ),
+    'administer os reports' => array(
+      'title' => t('Administer OS Reports'),
+      'description' => t('Change the OS reports settings.'),
+      'restrict access' => TRUE,
+    ),
   );
 }
 
@@ -40,6 +45,14 @@ function os_reports_menu() {
     'page arguments' => array('os_reports_user_form'),
     'access arguments' => array('access os reports'),
     'description' => 'Report on various aspects of all the users associated with OpenScholar sites.',
+    'file' => 'os_reports.admin.inc',
+  );
+  $items['admin/config/openscholar/os_reports'] = array(
+    'title' => 'OpenScholar Reports',
+    'description' => 'Change the back-end report settings.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('administer_os_reports_form'),
+    'access arguments' => array('administer os reports'),
     'file' => 'os_reports.admin.inc',
   );
   return $items;

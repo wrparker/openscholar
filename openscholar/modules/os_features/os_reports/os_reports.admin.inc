@@ -63,7 +63,7 @@ function os_reports_site_form($form, &$form_state) {
     '#validated' => TRUE,
   );
   $form['keyword_set']['kfields']['owner_email'] = array(
-    '#title' => 'email',
+    '#title' => 'site owner email',
     '#type' => 'checkbox',
     '#attributes' => array(
       'ng-model' => 'queryform.kfields.owner_email',
@@ -72,7 +72,7 @@ function os_reports_site_form($form, &$form_state) {
     ),
   );
   $form['keyword_set']['kfields']['username'] = array(
-    '#title' => 'username',
+    '#title' => 'site owner username',
     '#type' => 'checkbox',
     '#attributes' => array(
       'ng-model' => 'queryform.kfields.username',
@@ -258,6 +258,16 @@ function os_reports_site_form($form, &$form_state) {
       'ng-init' => "params.range = '" . $handler->getRange() . "'",
     ),
   );
+  $sources = array_filter(explode("\n", variable_get('os_reports_domains', '')));
+  $form['source'] = array(
+    '#value' => $sources,
+    '#type' => 'hidden',
+    '#attributes' => array(
+      'ng-model' => 'params.source',
+      'ng-init' => 'params.source = [\'' . implode("','", $sources) . "']",
+    ),
+  );
+
   $form['buttons'] = array(
     '#prefix' => '<div class="buttons">',
     '#suffix' => '</div>',
@@ -275,9 +285,17 @@ function os_reports_site_form($form, &$form_state) {
 
   $buttons = '<div class="pager"><div class="container-inline"><div class="previous"><a ng-click="pager(\'previous\')">‹ previous</a></div><div class="status_count">{{ status }}</div><div class="next"><a ng-click="pager(\'next\')">next ›</a></div></div></div>';
 
-  $form['results'] = array(
-    '#markup' => $buttons . '<div class="results"><table><thead><tr><th ng-repeat="header in headers" ng-class="isActive(header)"><a ng-click="sort(this)" class="{{ header }}" ng-bind-html="formatHeader(header)"></a></th></tr></thead><tbody><tr ng-repeat="row in rows" ng-class-even="\'even\'" ng-class-odd="\'odd\'"><td ng-repeat="header in headers"><span ng-bind-html="row[header] | makelink:header:row"></span></td></tr></tbody></table></div>' . $buttons,
-  );
+  // enable sorting only if data is coming from one source
+  if (count($sources) <= 1) {
+    $form['results'] = array(
+      '#markup' => $buttons . '<div class="results"><table><thead><tr><th ng-repeat="header in headers" ng-class="isActive(header)"><a ng-click="sort(this)" class="{{ header }}" ng-bind-html="formatHeader(header)"></a></th></tr></thead><tbody><tr ng-repeat="row in rows" ng-class-even="\'even\'" ng-class-odd="\'odd\'"><td ng-repeat="header in headers"><span ng-bind-html="row[header] | makelink:header:row"></span></td></tr></tbody></table></div>' . $buttons,
+    );
+  }
+  else {
+    $form['results'] = array(
+      '#markup' => $buttons . '<div class="results"><table><thead><tr><th ng-repeat="header in headers"><span class="{{ header }}" ng-bind-html="formatHeader(header)"></span></th></tr></thead><tbody><tr ng-repeat="row in rows" ng-class-even="\'even\'" ng-class-odd="\'odd\'"><td ng-repeat="header in headers"><span ng-bind-html="row[header] | makelink:header:row"></span></td></tr></tbody></table></div>' . $buttons,
+    );
+  }
 
   return $form;
 }
@@ -333,7 +351,7 @@ function os_reports_site_form_submit($form, &$form_state) {
  * OS User report form
  */
 function os_reports_user_form($form, &$form_state) {
-  os_common_angular_app('ReportModule');
+  os_common_angular_apps('ReportModule');
 
   $form['#attached'] = array(
     'js' => array(
@@ -505,4 +523,17 @@ function os_reports_user_form($form, &$form_state) {
   );
 
   return $form;
+}
+
+/**
+ * Configure OS Reports module
+ */
+function administer_os_reports_form($form, &$form_state) {
+  $form['os_reports_domains'] = array(
+    '#title' => 'Domains',
+    '#description' => 'The domains of the OS installations to query (example: scholar.harvard.edu) one per line.',
+    '#type' => 'textarea',
+    '#default_value' => variable_get('os_reports_domains', ''),
+  );
+  return system_settings_form($form);
 }
