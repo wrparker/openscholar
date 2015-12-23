@@ -10,7 +10,7 @@
  * OS Site report form
  */
 function os_reports_site_form($form, &$form_state) {
-  os_common_angular_app('ReportModule');
+  os_common_angular_apps('ReportModule');
 
   $form['#attached'] = array(
     'js' => array(
@@ -62,31 +62,31 @@ function os_reports_site_form($form, &$form_state) {
     '#options' => array(),
     '#validated' => TRUE,
   );
-  $form['keyword_set']['kfields']['u_mail'] = array(
+  $form['keyword_set']['kfields']['owner_email'] = array(
     '#title' => 'email',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.kfields.u_mail',
-      'ng-click' => "updateCheckedValues('kfields', 'u_mail')",
-      'value' => 'u_mail',
+      'ng-model' => 'queryform.kfields.owner_email',
+      'ng-click' => "updateCheckedValues('kfields', 'owner_email')",
+      'value' => 'u.mail',
     ),
   );
-  $form['keyword_set']['kfields']['u_name'] = array(
+  $form['keyword_set']['kfields']['username'] = array(
     '#title' => 'username',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.kfields.u_name',
-      'ng-click' => "updateCheckedValues('kfields', 'u_name')",
-      'value' => 'u_name',
+      'ng-model' => 'queryform.kfields.username',
+      'ng-click' => "updateCheckedValues('kfields', 'username')",
+      'value' => 'u.name',
     ),
   );
-  $form['keyword_set']['kfields']['n_title'] = array(
+  $form['keyword_set']['kfields']['site_title'] = array(
     '#title' => 'site name',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.kfields.n_title',
-      'ng-click' => "updateCheckedValues('kfields', 'n_title')",
-      'value' => 'n_title',
+      'ng-model' => 'queryform.kfields.site_title',
+      'ng-click' => "updateCheckedValues('kfields', 'site_title')",
+      'value' => 'n.title',
     ),
   );
   $form['content'] = array(
@@ -102,6 +102,7 @@ function os_reports_site_form($form, &$form_state) {
     '#description' => 'format: YYYYMMDD',
     '#attributes' => array(
       'ng-model' => 'params.lastupdatebefore',
+      'ng-blur' => 'updateValues(params.lastupdatebefore)',
     ),
   );
   $form['content']['includesites'] = array(
@@ -116,6 +117,7 @@ function os_reports_site_form($form, &$form_state) {
     '#attributes' => array(
       'ng-model' => 'params.includesites',
       'value' => 'all',
+      'ng-click' => 'updateValues(params.includesites)',
    ),
   );
   $form['content']['includesites']['content'] = array(
@@ -125,6 +127,7 @@ function os_reports_site_form($form, &$form_state) {
     '#attributes' => array(
       'ng-model' => 'params.includesites',
       'value' => 'content',
+      'ng-click' => 'updateValues(params.includesites)',
     ),
   );
   $form['content']['includesites']['nocontent'] = array(
@@ -134,6 +137,7 @@ function os_reports_site_form($form, &$form_state) {
     '#attributes' => array(
       'ng-model' => 'params.includesites',
       'value' => 'nocontent',
+      'ng-click' => 'updateValues(params.includesites)',
     ),
   );
   $form['createdrange'] = array(
@@ -148,6 +152,7 @@ function os_reports_site_form($form, &$form_state) {
     '#size' => 10,
     '#attributes' => array(
       'ng-model' => 'params.creationstart',
+      'ng-blur' => 'updateValues(params.creationstart)',
     ),
   );
   $form['createdrange']['creationend'] = array(
@@ -157,6 +162,7 @@ function os_reports_site_form($form, &$form_state) {
     '#description' => 'format: YYYYMMDD',
     '#attributes' => array(
       'ng-model' => 'params.creationend',
+      'ng-blur' => 'updateValues(params.creationend)',
     ),
   );
   $form['columns_set'] = array(
@@ -278,7 +284,6 @@ function os_reports_site_form($form, &$form_state) {
 
 function os_reports_site_form_submit($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
-
   $params = $form_state['input'];
 
   // clean up parameters before rest call
@@ -287,7 +292,7 @@ function os_reports_site_form_submit($form, &$form_state) {
       unset($params[$key]);
     }
     if (is_array($value)) {
-      $values = array_keys($value);
+      $values = array_filter(array_values($value));
       $params[$key] = $values;
     }
   }
@@ -325,7 +330,7 @@ function os_reports_site_form_submit($form, &$form_state) {
 }
 
 /**
- * OS Site report form
+ * OS User report form
  */
 function os_reports_user_form($form, &$form_state) {
   os_common_angular_app('ReportModule');

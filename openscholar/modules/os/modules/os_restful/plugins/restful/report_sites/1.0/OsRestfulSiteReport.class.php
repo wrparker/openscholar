@@ -25,7 +25,7 @@ class OsRestfulSiteReport extends \OsRestfulReports {
    */
   public function publicFieldsInfo() {
     return array(
-      'site_name' => array(
+      'site_title' => array(
         'property' => 'title',
       ),
       'site_url' => array(
@@ -102,8 +102,10 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     $query->innerJoin('users', 'u', 'u.uid = n.uid');
 
     // site content data
-    if ($request['includesites'] == "all") {
-      $query->addExpression('MAX(content.changed)', 'changed');
+    if (!isset($request['includesites']) || $request['includesites'] == "all") {
+      if ($this->latestUpdate || isset($fields['changed'])) {
+        $query->addExpression('MAX(content.changed)', 'changed');
+      }
       $query->leftJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
       $query->leftJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
       $query->groupBy('purl.id');
@@ -153,11 +155,12 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     if (isset($fields['domain'])) {
       $query->addExpression("'N'", 'domain');
     }
-    if (isset($fields['custom_theme'])) {
-      $query->addExpression("'N'", "custom_theme");
-    }
     if (isset($fields['preset'])) {
       $query->addField('n', 'type', 'preset');
+    }
+    if (isset($fields['custom_theme'])) {
+      $query->addField('so', 'value', 'custom_theme');
+      $query->leftJoin('spaces_overrides', 'so', "so.id = purl.id and so.type = 'og' and so.object_type = 'variable' AND so.object_id = 'flavors' and so.value <> :empty", array(':empty' => 'a:0:{}'));
     }
 
     $this->queryForListSort($query);
@@ -247,6 +250,17 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       );
       $new_row['privacy'] = $privacy_values[$row->privacy];
     }
+
+    // optional custom theme uploaded column
+    if (isset($new_row['custom_theme'])) {
+      if ($new_row['custom_theme']) {
+        $new_row['custom_theme'] = "Y";
+      }
+      else {
+        $new_row['custom_theme'] = "N";
+      }
+    }
+
     return $new_row;
   }
 }

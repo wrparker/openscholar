@@ -6,18 +6,16 @@
     $scope.report_url = 'report_sites';
 
     $scope.fieldConversion = {
-      'u_mail' : {
+      'owner_email' : {
         'display' : 'site owner email',
         'field_name' : 'u.mail',
-        'field_alias' : 'owner_email',
       },
-      'u_name' : {
-        'field_alias' : 'username',
+      'username' : {
         'field_name' : 'u.name',
       },
-      'n_title' : {
+      'site_title' : {
+        'display' : 'site title',
         'field_name' : 'n.title',
-        'field_alias' : 'site_title',
       },
       'install' : {
         'display' : 'os install',
@@ -58,7 +56,6 @@
     }
 
     $scope.updateCheckedValues = function updateCheckedValues($set, $value) {
-console.log('update: ' + $value);
       if (eval("!$scope.queryform." + $set)) {
         eval ("$scope.queryform." + $set + " = {};");
       }
@@ -69,7 +66,7 @@ console.log('update: ' + $value);
         }
 
       if ($checked && !$scope.params[$set]) {
-        $scope.params[$set] = $value;
+        $scope.params[$set] = new Array($value);
       }
       else {
         $valueArray = new Array();
@@ -92,26 +89,11 @@ console.log('update: ' + $value);
       $scope.params.sort = "";
     };
 
-    $scope.setContentOptions = function setContentOptions($fieldname) {
-      $value = eval('$scope.params.' + $fieldname);
-      if (($fieldname == "changed" && $scope.queryform.columns.changed) || ($fieldname == 'lastupdatebefore' && $value)) {
-        jQuery("input[value='all']").attr('disabled','disabled');
-        jQuery("input[value='nocontent']").attr('disabled','disabled');
-        $scope.params.includesites = 'content';
-      }
-      else if ($fieldname == "changed" || $fieldname == 'lastupdatebefore') {
-        jQuery("input[value='all']").removeAttr('disabled');
-        jQuery("input[value='nocontent']").removeAttr('disabled');
-        jQuery("input[value='changed']").removeAttr('disabled');
-      }
-      else if ($fieldname == "includesites" && $value != "content") {
-        jQuery("input[name='lastupdatebefore']").attr('disabled','disabled');
-        jQuery("input[value='changed']").attr('disabled','disabled');
-        $scope.queryform.columns.changed = false;
-      }
-      else if ($fieldname == "includesites") {
-        jQuery("input[name='lastupdatebefore']").removeAttr('disabled');
-        jQuery("input[value='changed']").removeAttr('disabled');
+    $scope.updateValues = function updateValues($obj) {
+      if ($obj != null) {
+        // reset to page 1 and no sort
+        $scope.params.page = '1';
+        $scope.params.sort = "";
       }
     };
 
@@ -217,7 +199,6 @@ console.log('update: ' + $value);
     };
 
     $scope.sort = function sort($obj) {
-console.log('sort: ' + $obj.header);
       if ($scope.fieldConversion[$obj.header]['sort'] !== false) {
         if ($scope.params.sort && ($scope.params.sort == $obj.header)) {
           $scope.params.sort = "-" + $obj.header;
@@ -235,7 +216,6 @@ console.log('sort: ' + $obj.header);
     };
 
     $scope.isActive = function isActive($header) {
-console.log('isActive: ' + $header);
       if ($scope.params.sort == $header) {
         return "active desc";
       }
@@ -248,7 +228,6 @@ console.log('isActive: ' + $header);
     };
 
     $scope.formatHeader = function formatHeader($header) {
-console.log('format header: ' + $header);
       if ($scope.fieldConversion[$header]) {
         return $sce.trustAsHtml($scope.fieldConversion[$header]['display']);
       }
@@ -260,11 +239,11 @@ console.log('format header: ' + $header);
 
   reportModule.filter('makelink', ['$sce', function($sce) {
     return function($value, $header, $row) {
-      if ($header == "site_name" && $value) {
+      if ($header == "site_title" && $value) {
         $html = '<a href="' + $row['site_url'] + '" target="_new">' + $value + '</a>'
         return $sce.trustAsHtml($html);
       }
-      else if ($header == "site_name") {
+      else if ($header == "site_title") {
         $html = '<a href="' + $row['site_url'] + '" target="_new">[No Title]</a>'
         return $sce.trustAsHtml($html);
       }
