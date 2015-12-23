@@ -95,7 +95,7 @@ Feature: Testing OpenScholar calendar page.
     Given I visit "john/calendar/upcoming"
      Then I should see the link "Someone" under "view-os-events"
       And I should not see the link "John F. Kennedy birthday" under "view-os-events"
-     When I click on link "iCal" under "content"
+     When I visit "?q=john/calendar/upcoming/all/export.ics"
      Then I should find the text "SUMMARY:Halleys Comet" in the file
       And I should not find the text "John F. Kennedy birthday" in the file
       
@@ -104,14 +104,14 @@ Feature: Testing OpenScholar calendar page.
     Given I visit "john/calendar/upcoming/event-type/birthday"
      Then I should see the link "Someone" under "view-os-events"
       And I should not see the link "Halleys Comet" under "view-os-events"
-     When I click on link "iCal" under "content"
+     When I visit "?q=john/calendar/term/18/export.ics"
      Then I should find the text "SUMMARY:Someone" in the file
       And I should not find the text "SUMMARY:Halleys Comet" in the file
       
   @api @features_first
   Scenario: Testing the single event export in iCal format.
     Given I visit "john/event/testing-event"
-     When I click on link "iCal" under "content"
+     When I visit "?q=john/calendar/single/31/export.ics"
      Then I should find the text "SUMMARY:Testing event" in the file
       And I should not find the text "SUMMARY:John F. Kennedy birthday" in the file
       And I should not find the text "SUMMARY:Halleys Comet" in the file
