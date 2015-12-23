@@ -21,9 +21,14 @@
     border-bottom: 1px solid #ccc;
     padding: 5px 0;
 }
+.field-widget-media-draggable-file .file-list-single .tabledrag-handle {
+    display: inline-block;
+    position: relative;
+    top: -5px;
+}
 .field-widget-media-draggable-file .file-list-single span {
     display: inline-block;
-    width: 65%;
+    width: 55%;
 }
 .field-widget-media-draggable-file .file-list-single ul {
     display: inline-block;
