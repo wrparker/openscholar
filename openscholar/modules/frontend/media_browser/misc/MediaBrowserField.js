@@ -1,11 +1,12 @@
 (function () {
 
-  angular.module('MediaBrowserField', ['mediaBrowser', 'FileEditorModal', 'EntityService'])
+  angular.module('MediaBrowserField', ['mediaBrowser', 'FileEditorModal', 'EntityService', 'ui.sortable'])
     .directive('mediaBrowserField', ['mbModal', 'EntityService', function (mbModal, EntityService) {
 
       function link(scope, elem, attr) {
         // everything to define
         scope.field_name = elem.parent().attr('id').match(/edit-([\w-]*)/)[1].replace(/-/g, '_');
+        scope.field_id = elem.parent().attr('id');
         scope.showHelp = false;
         scope.panes = ['upload', 'web', 'library'];
 
@@ -21,15 +22,20 @@
         }
         scope.extensionsFull.sort();
 
+        scope.sortableOptions = {
+          axis: 'y',
+          handle: '.tabledrag-handle'
+        };
+
         if (scope.selectedFiles.length == 0) {
           var fids = Drupal.settings.mediaBrowserField[elem.parent().attr('id')].selectedFiles,
             service = new EntityService('files', 'id'),
             generateFunc = function (i) {
               return function(file) {
                 scope.selectedFiles[i] = angular.copy(file);
+                return file;
               }
             };
-
           for (var i = 0; i<fids.length; i++) {
             var fid = fids[i];
             service.fetchOne(fid).then(generateFunc(i));
