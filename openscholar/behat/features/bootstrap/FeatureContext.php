@@ -2846,22 +2846,22 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @AfterStep
-   */
-   public function takeScreenshotAfterFailedStep($event)
-   {
-     if ($event->getResult() == 4) {
-       if ($this->getSession()->getDriver() instanceof
-       \Behat\Mink\Driver\Selenium2Driver) {
-         $stepText = $event->getStep()->getText();
-         $fileTitle = preg_replace("#[^a-zA-Z0-9\._-]#", '', $stepText);
-         $fileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR . $fileTitle . '.png';
-         $screenshot = $this->getSession()->getDriver()->getScreenshot();
-         file_put_contents($fileName, $screenshot);
-         print "Screenshot for '{$stepText}' placed in {$fileName}\n";
-       }
-     }
- }
+  * AfterStep
+  */
+  public function takeScreenshotAfterFailedStep($event)
+  {
+    if ($event->getResult() == 4) {
+      if ($this->getSession()->getDriver() instanceof
+      \Behat\Mink\Driver\Selenium2Driver) {
+        $stepText = $event->getStep()->getText();
+        $fileTitle = preg_replace("#[^a-zA-Z0-9\._-]#", '', $stepText);
+        $fileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR . $fileTitle . '.png';
+        $screenshot = $this->getSession()->getDriver()->getScreenshot();
+        file_put_contents($fileName, $screenshot);
+        print "Screenshot for '{$stepText}' placed in {$fileName}\n";
+      }
+    }
+  }
 
   /**
    * @When /^I change the date of "([^"]*)" in "([^"]*)"$/
