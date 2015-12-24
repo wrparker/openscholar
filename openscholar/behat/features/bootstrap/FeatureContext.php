@@ -118,6 +118,33 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I am logging in as a user who "([^"]*)" "([^"]*)"$/
+   */
+  public function iAmLoggingInAsAUserWho($can, $permission) {
+    $can_flag = ($can == "can") ? true : false;
+
+    if ($can_flag && $this->assertLoggedInWithPermissions($permission)) {
+      return true;
+    }
+    else {
+      // find a user without selected permission
+      $query = db_select('og_users_roles', 'ogur');
+      $query->addField('u', 'uid');
+      $query->innerJoin('users', 'u', 'u.uid = ogur.uid and u.uid <> 1 and name <> :empty', array(':empty' => "''"));
+      $query->innerJoin('og_role_permission', 'ogrp', 'ogrp.rid = ogur.rid and permission <> :permission', array(':permission' => $permission));
+      $query->innerJoin('og_role', 'ogr', 'ogur.rid = ogr.rid');
+      $uid = $query->range(0,1)->execute()->fetchField();
+
+      if($user = user_load($uid)) {
+        new Step\When('I am logging in as "' . $user->name . '"');
+      }
+      else {
+        throw new Exception("Unable to log in as a user you can't $permission.");
+      }
+    }
+  }
+
+  /**
    * @Given /^I am on a "([^"]*)" page titled "([^"]*)"(?:, in the tab "([^"]*)"|)$/
    */
   public function iAmOnAPageTitled($page_type, $title, $subpage = NULL) {
