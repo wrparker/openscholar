@@ -454,7 +454,7 @@ function os_events_in_view_context($display_titles = array()) {
   return in_array($view->current_display, $display_names);
 }
 
-/**
+/*
  * Implements override for theme_date_repeat_display of contrib module date_repeat
  * @param array $vars
  * theme parameters
@@ -471,5 +471,87 @@ function os_basetheme_date_repeat_display($vars) {
     $output = os_date_repeat_rrule_description($item['rrule']);
     $output = '<div class="date-repeat-rule">' . $output . '</div>';
   }
+  return $output;
+}
+
+/**
+ * Returns HTML for an image field.
+ *
+ * Output image fields as figure with figcaption for captioning.
+ */
+function os_basetheme_field__image($vars) {
+  global $theme_key;
+  $theme_name = $theme_key;
+  $output = '';
+
+  // Render the label, if it's not hidden.
+  if (!$vars['label_hidden']) {
+    $output .= '<h2 class="field-label"' . $vars['title_attributes'] . '>' . $vars['label'] . ':&nbsp;</h2>';
+  }
+
+  // Render the items.
+  $output .= '<div class="field-items"' . $vars['content_attributes'] . '>';
+
+  foreach ($vars['items'] as $delta => $item) {
+
+    $classes = 'field-item ' . ($delta % 2 ? 'odd' : 'even');
+    $output .= '<figure class="clearfix ' . $classes . '"' . $vars['item_attributes'][$delta] .'>';
+    $output .= drupal_render($item);
+
+    // Captions
+    if (isset($item['#item']['os_file_description'][LANGUAGE_NONE][0]['value'])) {
+      // Ouch this is ugly, please tell me how to get the image style width?
+      $styles = '';
+      $width = 'auto';
+      preg_match('/< *img[^>]*width *= *["\']?([^"\']*)/i', $item['#children'], $matches);
+      $width = $matches[1] . 'px';
+      $styles = 'style="width:' . $width . ';"';
+      $image_caption = strip_tags($item['#item']['os_file_description'][LANGUAGE_NONE][0]['value']);
+      if ($vars['field_view_mode'] == 'full') {
+        $output .= '<figcaption ' . $styles . '>' . $image_caption . '</figcaption>';
+      }
+    }
+
+    $output .= '</figure>';
+  }
+
+  $output .= '</div>';
+
+  // Render the top-level wrapper element.
+  $tag = $vars['tag'];
+  $output = "<$tag class=\"" . $vars['classes'] . '"' . $vars['attributes'] . '>' . $output . "</$tag>";
+
+  return $output;
+}
+
+/**
+ * Implements override for theme_pager_lite_next of contrib module views_litepager
+ * @param array $variables
+ * theme parameters
+ * @return string
+ * returning the output as HTML.
+ */
+function os_basetheme_pager_lite_next($variables) {
+  $text = $variables['text'];
+  $element = $variables['element'];
+  $interval = $variables['interval'];
+  $parameters = $variables['parameters'];
+
+  global $pager_page_array, $pager_total;
+  $output = '';
+
+  // If we are anywhere but the last page
+  if ($pager_page_array[$element] <= ($pager_total[$element] - 1) || $pager_page_array[$element] == 0) {
+    $page_new = pager_load_array($pager_page_array[$element] + $interval, $element, $pager_page_array);
+    // If the next page is the last page, mark the link as such.
+    if ($pager_page_array[$element] == $pager_total[$element]) {
+      $output = theme('pager_last', array('text' => $text, 'element' => $element, 'parameters' => $parameters));
+    }
+    // The next page is not the last page.
+    else {
+      $output = theme('pager_link', array('text' => $text, 'page_new' => $page_new, 'element' => $element, 'parameters' => $parameters));
+    }
+  }
+
   return $output;
 }

@@ -32,6 +32,7 @@ function os_publications_os_app_info() {
         'menu_item' => 'publications',
       ),
     ),
+    'has_settings' => TRUE,
   );
 
   return $apps;

@@ -410,7 +410,8 @@ function os_events_process_node(&$variables) {
       if ($variables['view_mode'] == 'full' && os_events_register_show_register_link($variables['node'], $date)) {
         $register = os_events_generate_modal_register_link($variables['node']->nid, $delta, array());
       } elseif ($variables['view_mode'] == 'full' && !os_events_register_show_register_link($variables['node'], $date)) {
-        $register = '<span class="register-event-full">' . t('Registration Closed') . '</span>';
+        $result = os_events_registration_repeating_entity_settings('node', $variables['node']->nid, $date);
+        $register = REQUEST_TIME >= strtotime($result['open']) ? '<span class="register-event-full">' . t('Registration Closed') . '</span>' : '';
       }
       // In teaser view mode link to the event page.
       elseif ($variables['view_mode'] == 'teaser') {
@@ -1923,16 +1924,18 @@ function os_events_register_show_register_link($node, $date = '') {
   if (!$result['status']) {
     return FALSE;
   }
-
-  if (!$result['close'] || (!$result['close'] && !$result['close'])) {
+  
+  // If there is no closing date given, checking if current date is greater than the opening date or not.
+  if (isset($result['open']) && REQUEST_TIME >= strtotime($result['open']) && !$result['close']) {
     return os_events_show_register_by_node($node, $date);
   }
 
-  if (!empty($result['close'])) {
-    return time() >= strtotime($result['open']) && time() <= strtotime($result['close']);
-  }
 
-  return time() >= strtotime($result['open']);
+  if (!empty($result['close'])) {
+    return REQUEST_TIME >= strtotime($result['open']) && REQUEST_TIME <= strtotime($result['close']);
+  }
+  
+  return REQUEST_TIME >= strtotime($result['open']);
 }
 
 /**
