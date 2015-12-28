@@ -594,7 +594,7 @@ function _citation_distribute_plugins() {
   }
 
   // Merging arrays 1.without plugin title and 2.with title (sorted)
-  $plugin_sorted += $plugins;
+  $plugin_sorted = array_merge($plugin_sorted, $plugins);
 
   return $plugin_sorted;
 }
