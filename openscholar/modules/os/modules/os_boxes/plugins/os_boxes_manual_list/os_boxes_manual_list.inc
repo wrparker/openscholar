@@ -111,7 +111,7 @@ class os_boxes_manual_list extends os_boxes_default {
       '#type' =>'checkbox',
       '#title' => t('Apply call-out styling to the widget'),
       '#default_value' => $this->options['callout_styling'],
-      '#description' => t('When checked, the widget will use background shading and/or unique font styling'),
+      '#description' => t('When checked, the widget will use background shading and/or unique font styling.'),
     );
 
     $form['random'] = array(
