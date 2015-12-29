@@ -484,9 +484,20 @@ function os_profile_return_auto_complete($string = '') {
   $last_name_field = _field_sql_storage_tablename($field_info);
 
   // Create the DB or condition we'll pass to the query.
-  $db_or = db_or()
-    ->condition('first.field_first_name_value', '%' . $string . '%', 'LIKE')
-    ->condition('last.field_last_name_value', '%' . $string . '%', 'LIKE');
+  $explode = explode(" ", $string);
+  if (count($explode) > 1) {
+    // Searching for a person with first name and last name.
+    $name_condition = db_and()
+      ->condition('first.field_first_name_value', '%' . $explode[0] . '%', 'LIKE')
+      ->condition('last.field_last_name_value', '%' . $explode[1] . '%', 'LIKE');
+  }
+  else {
+    // Searching for a person with first and last which might contain the
+    // search criteria.
+    $name_condition = db_or()
+      ->condition('first.field_first_name_value', '%' . $string . '%', 'LIKE')
+      ->condition('last.field_last_name_value', '%' . $string . '%', 'LIKE');
+  }
 
   // Build the SQL query. We use DB select and not EFQ due to lack of support
   // EFQ has with NULL values.
@@ -509,7 +520,7 @@ function os_profile_return_auto_complete($string = '') {
 
   $results = $query
     ->condition('n.type', 'person')
-    ->condition($db_or)
+    ->condition($name_condition)
     ->condition('n.status', NODE_PUBLISHED)
     ->fields('n', array('nid', 'title'))
     ->range(0, 25)
