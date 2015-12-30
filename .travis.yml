@@ -83,7 +83,7 @@ before_install:
   - drush en os_migrate_demo -y
   - drush mi --all --user=1
 
-  - bash openscholar/behat/install_modules.sh
+  - bash profiles/openscholar/behat/install_modules.sh
 
   # Index site using Apache solr
 #  - drush en os_search_solr -y
