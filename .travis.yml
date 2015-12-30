@@ -83,8 +83,9 @@ before_install:
   - drush en os_migrate_demo -y
   - drush mi --all --user=1
 
+  - echo $TEST_SUITE
   - if [ $TEST_SUITE == "harvard" ]; then
-      drush en harvard_courses -y && drush cc all
+    drush en harvard_courses -y && drush cc all
     fi
 #  - drush search-index
 
