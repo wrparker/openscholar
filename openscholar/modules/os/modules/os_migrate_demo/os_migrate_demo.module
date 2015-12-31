@@ -51,6 +51,11 @@ function os_migrate_demo_menu() {
     'access callback' => TRUE,
   );
 
+  $items['harvard_courses_xml'] = array(
+    'page callback' => 'os_migrate_demo_dummy_xml_courses',
+    'access callback' => TRUE,
+  );
+
   return $items;
 }
 
@@ -182,4 +187,12 @@ function os_migrate_demo_migrate_api() {
 function os_migrate_demo_package_file() {
   $url = 'http://www.colorado.edu/conflict/peace/download/peace.zip';
   drupal_json_output(os_copy_file($url));
+}
+
+/**
+ * Output the dummy courses.
+ */
+function os_migrate_demo_dummy_xml_courses() {
+  drupal_add_http_header('Content-Type', 'application/xml; charset=utf-8');
+  echo file_get_contents(drupal_get_path('module', 'harvard_courses') . '/dummy_courses.xml');
 }

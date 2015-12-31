@@ -85,7 +85,14 @@ class HarvardFetcher extends FeedsFetcher {
 
     if ($result->code != 200) {
       // oops... error!
-      drupal_set_message(t('Unable to get feeds from : ' . $this->buildUrl($import_value, $rows, $start)));
+      $params = array(
+        '@url' => $this->buildUrl($import_value, $rows, $start),
+        '@error' => $result->error,
+        '@request' => $result->request,
+      );
+      $text = t('Unable to get feeds from: @url due to @error. The request information is @request', $params);
+      drupal_set_message($text);
+      watchdog('harvard_courses', $text);
       return new FeedsFetcherResult('<courses></courses>');
     }
 
@@ -122,7 +129,7 @@ class HarvardFetcher extends FeedsFetcher {
       if ($start != 0) {
         return;
       }
-      return variable_get('purl_base_domain') . '/' . drupal_get_path('module', 'harvard_courses') . '/dummy_courses.xml';
+      return variable_get('purl_base_domain') . '/harvard_courses_xml';
     }
     else {
       if (is_array($this->url_param)) {
