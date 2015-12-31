@@ -15,6 +15,8 @@ addons:
     - php5-cgi
     - php5-mysql
     - php5-curl
+    - apache2
+
   cache:
     directories:
       - openscholar/solr-script
@@ -31,9 +33,9 @@ env:
 #     - TEST_SUITE=restful
 #    - TEST_SUITE=features_first
 #    - TEST_SUITE=features_second
+#    - TEST_SUITE=harvard
 
-    - TEST_SUITE=harvard
-#    - TEST_SUITE=misc_first
+    - TEST_SUITE=misc_first
 #    - TEST_SUITE=misc_second
 #    - TEST_SUITE=solr
 #    - TEST_SUITE=taxonomy
@@ -52,6 +54,8 @@ before_install:
   - npm install -g bower
 
   # Set up the lincoln virtual domain.
+  - a2enmod actions
+  - a2enmod rewrite
 #  -  sh -c "echo 127.0.1.1	lincoln.local >> /etc/hosts"
 #  -  sh -c "cat openscholar/behat/lincoln-vhost.txt > /etc/apache2/sites-available/lincoln"
 #  -  a2ensite lincoln
@@ -77,7 +81,7 @@ before_install:
   # Install a multi-tanent, development site.
   - cd www
   - time drush si openscholar --account-pass=admin --db-url=mysql://root:@127.0.0.1/drupal openscholar_flavor_form.os_profile_flavor=development openscholar_install_type.os_profile_type=vsite --yes
-  - drush vset purl_base_domain http://127.0.0.1:8888/
+  - drush vset purl_base_domain http://127.0.0.1
 
   # Migrate, enable harvard courses and index data.
   - drush en os_migrate_demo -y
@@ -93,10 +97,6 @@ before_install:
   # Trying to execute the internal solr commit
 #  - sleep 10
 #  - wget http://localhost:8983/solr/update?commit=true
-
-  # Fire up the server.
-  - cp profiles/openscholar/behat/router.php router.php
-  - drush rs 8888 router.php > ~/rs.log 2>&1 &
 
   # Copy Behat configuration file.
   - cd profiles/openscholar/behat
