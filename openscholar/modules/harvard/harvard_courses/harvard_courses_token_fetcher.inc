@@ -129,7 +129,8 @@ class HarvardFetcher extends FeedsFetcher {
       if ($start != 0) {
         return;
       }
-      return variable_get('purl_base_domain') . '/harvard_courses_xml';
+
+      return 'http://localhost:3000/index?file=courses.xml';
     }
     else {
       if (is_array($this->url_param)) {

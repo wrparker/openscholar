@@ -13,6 +13,7 @@
 
 #behat
 openscholar/behat/vendor
+openscholar/behat/node_backend/node_modules
 openscholar/behat/bin
 openscholar/behat.local.yml
 composer.phar

@@ -116,7 +116,12 @@ script:
   - nohup bash -c "java -jar selenium-server-standalone-2.48.0.jar -p 4444 2>&1 &"
   - sleep 5
 
-  - curl -I http://127.0.0.1:8888/harvard_courses_xml
+  # Run the assets backend.
+  - cd node_backend
+  - npm install
+  - nohup bash -c "node index.js 2>&1 &"
+
+  # Start running the tests.
   - ./bin/behat --tags=$TEST_SUITE
 
 after_failure: # this will of course run only on failure
