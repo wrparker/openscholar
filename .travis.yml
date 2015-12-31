@@ -120,6 +120,7 @@ script:
   - cd node_backend
   - npm install
   - nohup bash -c "node index.js 2>&1 &"
+  - cd -
 
   # Start running the tests.
   - ./bin/behat --tags=$TEST_SUITE
