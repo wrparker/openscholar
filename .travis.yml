@@ -54,7 +54,6 @@ before_install:
   - npm install -g bower
 
   # Set up the lincoln virtual domain.
-  - a2enmod actions
   - a2enmod rewrite
 #  -  sh -c "echo 127.0.1.1	lincoln.local >> /etc/hosts"
 #  -  sh -c "cat openscholar/behat/lincoln-vhost.txt > /etc/apache2/sites-available/lincoln"
