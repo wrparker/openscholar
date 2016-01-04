@@ -9,8 +9,8 @@ use Behat\Behat\Context\Step;
 require 'vendor/autoload.php';
 require_once 'RestfulTrait.php';
 
-// prevent behat from failing on PHP notification
-define("BEHAT_ERROR_REPORTING", E_ALL ^ E_NOTICE);
+// prevent behat from failing on PHP notification or warning
+define("BEHAT_ERROR_REPORTING", E_ALL ^ E_NOTICE ^ E_WARNING);
 
 class FeatureContext extends DrupalContext {
 
@@ -136,6 +136,9 @@ class FeatureContext extends DrupalContext {
       else {
         $operator = '<>';
       }
+      $query = db_select('og_users_roles', 'ogur');
+      $query->addField('u', 'uid');
+      $query->innerJoin('users', 'u', 'u.uid = ogur.uid and u.uid <> 1 and name <> :empty', array(':empty' => "''"));
       $query->innerJoin('og_role_permission', 'ogrp', 'ogrp.rid = ogur.rid and permission ' . $operator . ' :permission', array(':permission' => $permission));
       $query->innerJoin('og_role', 'ogr', 'ogur.rid = ogr.rid');
       $uid = $query->range(0,1)->execute()->fetchField();
