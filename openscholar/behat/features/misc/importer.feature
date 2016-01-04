@@ -1,6 +1,6 @@
 Feature: Testing the importer.
 
-  @api @misc_first
+  @api @misc_first @now
   Scenario Outline: Testing the csv importing for content types.
     Given I am logging in as "admin"
      When I visit <import-address>
@@ -36,13 +36,13 @@ Feature: Testing the importer.
      Then I should find the text "Artists"
 
 
-  @api @misc_first
+  @api
   Scenario: Verify the hebrew text was imported.
     Given I visit "john/blog"
      Then I should see "בדיקה של כותרת"
       And I should see "בדיקה של תוכן"
 
-  @api @misc_first
+  @api
   Scenario: Verify the spanish text was imported.
     Given I visit "john/news"
      Then I should see "Text in spanish"
