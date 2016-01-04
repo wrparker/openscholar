@@ -9,6 +9,9 @@ use Behat\Behat\Context\Step;
 require 'vendor/autoload.php';
 require_once 'RestfulTrait.php';
 
+// prevent behat from failing on PHP notification
+define("BEHAT_ERROR_REPORTING", E_ALL ^ E_NOTICE);
+
 class FeatureContext extends DrupalContext {
 
   use RestfulTrait;
@@ -115,6 +118,41 @@ class FeatureContext extends DrupalContext {
     $element->fillField('Password', $password);
     $submit = $element->findButton('Log in');
     $submit->click();
+  }
+
+  /**
+   * @Given /^I am logging in as a user who "([^"]*)" "([^"]*)"$/
+   */
+  public function iAmLoggingInAsAUserWho($can, $permission) {
+    $can_flag = ($can == "can") ? true : false;
+
+    if ($this->loggedIn() && $can_flag && $this->assertLoggedInWithPermissions($permission)) {
+      return true;
+    }
+    else {
+      if ($can_flag) {
+        $operator = '=';
+      }
+      else {
+        $operator = '<>';
+      }
+      // find a user without selected permission
+      $query = db_select('og_users_roles', 'ogur');
+      $query->addField('u', 'uid');
+      $query->innerJoin('users', 'u', 'u.uid = ogur.uid and u.uid <> 1 and name <> :empty', array(':empty' => "''"));
+      $query->innerJoin('og_role_permission', 'ogrp', 'ogrp.rid = ogur.rid and permission ' . $operator . ' :permission', array(':permission' => $permission));
+      $query->innerJoin('og_role', 'ogr', 'ogur.rid = ogr.rid');
+      $uid = $query->range(0,1)->execute()->fetchField();
+
+      if($uid && $user = user_load($uid)) {
+        new Step\When('I am logging in as "' . $user->name . '"');
+      }
+      else {
+        if (!$this->assertAuthenticatedByRole("os report admin")) {
+          throw new Exception("Unable to log in as a user who $can $permission.");
+        }
+      }
+    }
   }
 
   /**
