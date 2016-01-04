@@ -121,7 +121,7 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Given /^I am logging in as a user who "([^"]*)" "([^"]*)"$/
+   * @Given /^I am logging in as a user who "(can[^"]*)" "([^"]*)"$/
    */
   public function iAmLoggingInAsAUserWho($can, $permission) {
     $can_flag = ($can == "can") ? true : false;
@@ -2912,6 +2912,29 @@ class FeatureContext extends DrupalContext {
     $date[0]['value2'] = str_replace(date('Y'), date('Y') - 1, $date[0]['value2']);
     $wrapper->field_date->set($date);
     $wrapper->save();
+  }
+
+  /**
+   * @Given /^I run the "([^"]*)" report with "([^"]*)" <checked>:$/
+   */
+  public function iRunTheReportWithChecked($report, $multiValueFieldLabel, TableNode $table) {
+    $steps = array();
+    $steps[] = new Step\When('I visit "admin/reports/' . $report . '"');
+    $table_rows = $table->getRows();
+    // Iterate over each row, just so if there's an error we can supply
+    // the row number, or empty values.
+    foreach ($table_rows as $i => $checkbox) {
+      $steps[] = new Step\When('I check the box "' . $checkbox[0] . '"');
+    }
+    $steps[] = new Step\When('I press "Download CSV of Full Report"');
+    return $steps;
+  }
+
+  /**
+   * @Then /^I will see a report with content in the following <columns>:$/
+   */
+  public function iWillSeeAReportWithContentInTheFollowingColumns(TableNode $table) {
+    $reportParams = $this->getSession()->getDriver()->getClient()->getInternalRequest()->getParameters();
   }
 
 }
