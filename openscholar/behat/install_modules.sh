@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ! -d "/home/travis/build/openscholar/openscholar/openscholar/modules/contrib" ]; then
+if [ -d "/home/travis/build/openscholar/openscholar/openscholar/modules/contrib" ]; then
   echo "library already exists!!!!"
 fi
 
