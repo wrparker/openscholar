@@ -442,7 +442,7 @@ h1#page-title {
     font-weight: bold;
     letter-spacing: 0;
     line-height: 16px;
-    text-transform: none;
+    text-transform: uppercase;
     padding-bottom: 1em;
 }
 
@@ -455,7 +455,7 @@ h2.block-title {
     font-weight: bold !important;
     letter-spacing: 0;
     line-height: 16px;
-    text-transform: none;
+    text-transform: uppercase;
     padding-bottom: 1em;
 }
 

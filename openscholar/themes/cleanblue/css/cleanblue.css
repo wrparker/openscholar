@@ -75,7 +75,7 @@ h2.block-title {
     color: #219910;
     font: 13px/normal Arial, Verdana, sans-serif;
     font-weight: normal;
-    text-transform: none;
+    text-transform: uppercase;
     letter-spacing: .5px;
     margin-bottom: 10px;
 }
