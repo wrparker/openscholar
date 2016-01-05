@@ -6,7 +6,7 @@
     $scope.report_url = 'report_sites';
 
     $scope.fieldConversion = {
-      'owner_email' : {
+      'site_owner_email' : {
         'display' : 'site owner email',
         'field_name' : 'u.mail',
       },
@@ -17,29 +17,29 @@
         'display' : 'site title',
         'field_name' : 'n.title',
       },
-      'install' : {
+      'os_install' : {
         'display' : 'os install',
       },
-      'subdomain' : {
+      'owner_subdomain' : {
         'display' : 'owner subdomain',
         'sort' : false,
       },
-      'created' : {
+      'site_created' : {
         'display' : 'site created',
       },
-      'created_by' : {
+      'site_created_by' : {
         'display' : 'site created by',
       },
-      'privacy' : {
+      'site_privacy_setting' : {
         'display' : 'site privacy setting',
       },
-      'domain' : {
+      'custom_domain' : {
         'display' : 'custom domain',
       },
-      'custom_theme' : {
+      'custom_theme_uploaded' : {
         'display' : 'custom theme uploaded',
       },
-      'changed' : {
+      'content_last_updated' : {
         'display' : 'content last updated',
       },
       'preset' : {

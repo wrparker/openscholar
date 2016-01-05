@@ -62,12 +62,12 @@ function os_reports_site_form($form, &$form_state) {
     '#options' => array(),
     '#validated' => TRUE,
   );
-  $form['keyword_set']['kfields']['owner_email'] = array(
+  $form['keyword_set']['kfields']['site_owner_email'] = array(
     '#title' => 'site owner email',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.kfields.owner_email',
-      'ng-click' => "updateCheckedValues('kfields', 'owner_email')",
+      'ng-model' => 'queryform.kfields.site_owner_email',
+      'ng-click' => "updateCheckedValues('kfields', 'site_owner_email')",
       'value' => 'u.mail',
     ),
   );
@@ -177,67 +177,67 @@ function os_reports_site_form($form, &$form_state) {
     '#validated' => TRUE,
     '#options' => array(),
   );
-  $form['columns_set']['columns']['subdomain'] = array(
+  $form['columns_set']['columns']['owner_subdomain'] = array(
     '#title' => 'Subdomain of site owner',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.columns.subdomain',
-      'ng-click' => "updateCheckedValues('columns', 'subdomain')",
-      'value' => 'subdomain',
+      'ng-model' => 'queryform.columns.owner_subdomain',
+      'ng-click' => "updateCheckedValues('columns', 'owner_subdomain')",
+      'value' => 'owner_subdomain',
     ),
   );
-  $form['columns_set']['columns']['created'] = array(
+  $form['columns_set']['columns']['site_created'] = array(
     '#title' => 'Creation date',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.columns.created',
-      'ng-click' => "updateCheckedValues('columns', 'created')",
-      'value' => 'created',
+      'ng-model' => 'queryform.columns.site_created',
+      'ng-click' => "updateCheckedValues('columns', 'site_created')",
+      'value' => 'site_created',
     ),
   );
-  $form['columns_set']['columns']['created_by'] = array(
+  $form['columns_set']['columns']['site_created_by'] = array(
     '#title' => 'Created by',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.columns.created_by',
-      'ng-click' => "updateCheckedValues('columns', 'created_by')",
-      'value' => 'created_by',
+      'ng-model' => 'queryform.columns.site_created_by',
+      'ng-click' => "updateCheckedValues('columns', 'site_created_by')",
+      'value' => 'site_created_by',
     ),
   );
-  $form['columns_set']['columns']['changed'] = array(
+  $form['columns_set']['columns']['content_last_updated'] = array(
     '#title' => 'Date of last content update',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.columns.changed',
-      'ng-click' => "updateCheckedValues('columns', 'changed')",
-      'value' => 'changed',
+      'ng-model' => 'queryform.columns.content_last_updated',
+      'ng-click' => "updateCheckedValues('columns', 'content_last_updated')",
+      'value' => 'content_last_updated',
     ),
   );
-  $form['columns_set']['columns']['privacy'] = array(
+  $form['columns_set']['columns']['site_privacy_setting'] = array(
     '#title' => 'Privacy level',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.columns.privacy',
-      'ng-click' => "updateCheckedValues('columns', 'privacy')",
-      'value' => 'privacy',
+      'ng-model' => 'queryform.columns.site_privacy_setting',
+      'ng-click' => "updateCheckedValues('columns', 'site_privacy_setting')",
+      'value' => 'site_privacy_setting',
     ),
   );
-  $form['columns_set']['columns']['domain'] = array(
+  $form['columns_set']['columns']['custom_domain'] = array(
     '#title' => 'Custom domain',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.columns.domain',
-      'ng-click' => "updateCheckedValues('columns', 'domain')",
-      'value' => 'domain',
+      'ng-model' => 'queryform.columns.custom_domain',
+      'ng-click' => "updateCheckedValues('columns', 'custom_domain')",
+      'value' => 'custom_domain',
     ),
   );
-  $form['columns_set']['columns']['custom_theme'] = array(
+  $form['columns_set']['columns']['custom_theme_uploaded'] = array(
     '#title' => 'Custom theme uploaded',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.columns.custom_theme',
-      'ng-click' => "updateCheckedValues('columns', 'custom_theme')",
-      'value' => 'custom_theme',
+      'ng-model' => 'queryform.columns.custom_theme_uploaded',
+      'ng-click' => "updateCheckedValues('columns', 'custom_theme_uploaded')",
+      'value' => 'custom_theme_uploaded',
     ),
   );
   $form['columns_set']['columns']['preset'] = array(
@@ -315,6 +315,8 @@ function os_reports_site_form_submit($form, &$form_state) {
     }
   }
   $params['range'] = 0;
+  $params['exclude'] = array('feed_importer', 'profile', 'harvard_course');
+
 
   // make restful call to get data
   $handler = restful_get_restful_handler('report_sites');
@@ -465,13 +467,13 @@ function os_reports_user_form($form, &$form_state) {
       'value' => 'full_name',
     ),
   );
-  $form['columns']['subdomain'] = array(
+  $form['columns']['owner_subdomain'] = array(
     '#title' => 'Subdomain from email address',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.columns.subdomain',
-      'ng-click' => "updateCheckedValues('columns', 'subdomain')",
-      'value' => 'subdomain',
+      'ng-model' => 'queryform.columns.owner_subdomain',
+      'ng-click' => "updateCheckedValues('columns', 'owner_subdomain')",
+      'value' => 'owner_subdomain',
     ),
   );
   $form['columns']['site_association'] = array(

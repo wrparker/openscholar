@@ -31,11 +31,11 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       'site_url' => array(
         'property' => 'id',
       ),
-      'owner_email' => array(
-        'property' => 'owner_email',
+      'site_owner_email' => array(
+        'property' => 'site_owner_email',
       ),
-      'install' => array(
-        'property' => 'install',
+      'os_install' => array(
+        'property' => 'os_install',
       ),
     );
   }
@@ -71,13 +71,13 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     $request = $this->getRequest();
 
     // site creation data
-    if (isset($fields['created']) || isset($request['creationstart']) || isset($request['creationend'])) {
-      $query->addField('n', 'created');
+    if (isset($fields['site_created']) || isset($request['creationstart']) || isset($request['creationend'])) {
+      $query->addField('n', 'created', 'site_created');
       $joinCondition = 'purl.id = n.nid AND provider = :provider';
       $arguments = array(':provider' => 'spaces_og');
 
-      if (!isset($fields['created'])) {
-        $fields['created'] = array('property' => 'created');
+      if (!isset($fields['site_created'])) {
+        $fields['site_created'] = array('property' => 'site_created');
         $this->setPublicFields($fields);
       }
       if (isset($request['creationstart'])) {
@@ -96,22 +96,22 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     }
 
     $url_parts = explode(".", str_replace("http://", "", $base_url));
-    $query->addExpression("'" . $url_parts[0] . "'", 'install');
+    $query->addExpression("'" . $url_parts[0] . "'", 'os_install');
     $query->addField('n', 'title');
-    $query->addField('u', 'mail', 'owner_email');
+    $query->addField('u', 'mail', 'site_owner_email');
     $query->innerJoin('users', 'u', 'u.uid = n.uid');
 
     // site content data
     if (!isset($request['includesites']) || $request['includesites'] == "all") {
-      if ($this->latestUpdate || isset($fields['changed'])) {
-        $query->addExpression('MAX(content.changed)', 'changed');
+      if ($this->latestUpdate || isset($fields['content_last_updated'])) {
+        $query->addExpression('MAX(content.changed)', 'content_last_updated');
       }
       $query->leftJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
       $query->leftJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
       $query->groupBy('purl.id');
     }
-    elseif (isset($fields['changed']) || $request['includesites'] == "content"){
-      $query->addExpression('MAX(content.changed)', 'changed');
+    elseif (isset($fields['content_last_updated']) || $request['includesites'] == "content"){
+      $query->addExpression('MAX(content.changed)', 'content_last_updated');
       $query->innerJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
       $query->innerJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
       $query->groupBy('purl.id');
@@ -122,15 +122,15 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       $query->groupBy('purl.id');
       $query->havingCondition('total', '0', '=');
       if ($this->latestUpdate) {
-        $fields['changed'] = array('property' => 'changed');
-        $query->addExpression('NULL', 'changed');
+        $fields['content_last_updated'] = array('property' => 'content_last_updated');
+        $query->addExpression('NULL', 'content_last_updated');
         $this->setPublicFields($fields);
       }
     }
 
     // optional fields
-    if (isset($fields['created_by'])) {
-      $query->addField('creators', 'mail', 'created_by');
+    if (isset($fields['site_created_by'])) {
+      $query->addField('creators', 'mail', 'site_created_by');
       $subquery = db_select('og_membership','ogm')
                   ->fields('ogm', array('gid', 'etid'))
                   ->condition('group_type', 'node', '=')
@@ -141,25 +141,25 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       $query->innerJoin('users', 'creators', 'vsite_created.etid = creators.uid');
     }
     if ($this->latestUpdate && $request['includesites'] != "nocontent") {
-      $query->havingCondition('changed', strtotime($this->latestUpdate), '<=');
-      $fields['changed'] = array('property' => 'changed');
+      $query->havingCondition('content_last_updated', strtotime($this->latestUpdate), '<=');
+      $fields['content_last_updated'] = array('property' => 'content_last_updated');
       $this->setPublicFields($fields);
     }
-    if (isset($fields['privacy'])) {
-      $query->addField('access', 'group_access_value', 'privacy');
+    if (isset($fields['site_privacy_setting'])) {
+      $query->addField('access', 'group_access_value', 'site_privacy_setting');
       $query->innerJoin('field_data_group_access', 'access', 'access.entity_id = purl.id');
     }
-    if (isset($fields['subdomain'])) {
-      $query->addField('u', 'mail', 'subdomain');
+    if (isset($fields['owner_subdomain'])) {
+      $query->addField('u', 'mail', 'owner_subdomain');
     }
-    if (isset($fields['domain'])) {
-      $query->addExpression("'N'", 'domain');
+    if (isset($fields['custom_domain'])) {
+      $query->addExpression("'N'", 'custom_domain');
     }
     if (isset($fields['preset'])) {
       $query->addField('n', 'type', 'preset');
     }
-    if (isset($fields['custom_theme'])) {
-      $query->addField('so', 'value', 'custom_theme');
+    if (isset($fields['custom_theme_uploaded'])) {
+      $query->addField('so', 'value', 'custom_theme_uploaded');
       $query->leftJoin('spaces_overrides', 'so', "so.id = purl.id and so.type = 'og' and so.object_type = 'variable' AND so.object_id = 'flavors' and so.value <> :empty", array(':empty' => 'a:0:{}'));
     }
 
@@ -181,23 +181,23 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     $new_row = parent::mapDbRowToPublicFields($row);
 
     // format dates
-    if (isset($new_row['changed'])) {
-      if ($new_row['changed']) {
-        $new_row['changed'] = date('M j Y h:ia', $row->changed);
+    if (isset($new_row['content_last_updated'])) {
+      if ($new_row['content_last_updated']) {
+        $new_row['content_last_updated'] = date('M j Y h:ia', $row->content_last_updated);
       }
     }
-    if (isset($new_row['created'])) {
-      $new_row['created'] = date('M j Y h:ia', $row->created);
+    if (isset($new_row['site_created'])) {
+      $new_row['site_created'] = date('M j Y h:ia', $row->site_created);
     }
 
     // tease out subdomain from email address
-    if (isset($new_row['subdomain'])) {
-      $domain_parts = explode(".", preg_replace('/.*@/', "", $new_row['subdomain']));
+    if (isset($new_row['owner_subdomain'])) {
+      $domain_parts = explode(".", preg_replace('/.*@/', "", $new_row['owner_subdomain']));
       if (count($domain_parts) > 2 && in_array("harvard", $domain_parts) && in_array("edu", $domain_parts)) {
-        $new_row['subdomain'] = implode(" ", array_slice($domain_parts, -4, count($domain_parts) - 2));
+        $new_row['owner_subdomain'] = implode(" ", array_slice($domain_parts, -4, count($domain_parts) - 2));
       }
       else {
-        $new_row['subdomain'] = "";
+        $new_row['owner_subdomain'] = "";
       }
     }
 
@@ -214,8 +214,8 @@ class OsRestfulSiteReport extends \OsRestfulReports {
                           ->fetchField();
     if ($row->customdomain) {
       $new_row['site_url'] = "http://" . unserialize($row->customdomain) . "/" . $row->value;
-      if (isset($row->domain)) {
-        $new_row['domain'] = 'Y';
+      if (isset($row->custom_domain)) {
+        $new_row['custom_domain'] = 'Y';
       }
     }
     else {
@@ -241,23 +241,23 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     }
 
     // optional privacy column
-    if (isset($new_row['privacy'])) {
+    if (isset($new_row['site_privacy_setting'])) {
       $privacy_values = array(
         '0' => 'Public on the web.',
         '1' => 'Invite only during site creation.',
         '2' => 'Anyone with the link.',
         '4' => 'Harvard Community'
       );
-      $new_row['privacy'] = $privacy_values[$row->privacy];
+      $new_row['site_privacy_setting'] = $privacy_values[$row->site_privacy_setting];
     }
 
     // optional custom theme uploaded column
-    if (isset($new_row['custom_theme'])) {
-      if ($new_row['custom_theme']) {
-        $new_row['custom_theme'] = "Y";
+    if (isset($new_row['custom_theme_uploaded'])) {
+      if ($new_row['custom_theme_uploaded']) {
+        $new_row['custom_theme_uploaded'] = "Y";
       }
       else {
-        $new_row['custom_theme'] = "N";
+        $new_row['custom_theme_uploaded'] = "N";
       }
     }
 

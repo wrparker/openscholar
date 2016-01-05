@@ -2933,8 +2933,37 @@ class FeatureContext extends DrupalContext {
   /**
    * @Then /^I will see a report with content in the following <columns>:$/
    */
-  public function iWillSeeAReportWithContentInTheFollowingColumns(TableNode $table) {
-    $reportParams = $this->getSession()->getDriver()->getClient()->getInternalRequest()->getParameters();
+  public function iWillSeeAReportWithContentInTheFollowingColumns(TableNode $contentRequirements) {
+    $element = $this->getSession()->getPage();
+    $rows = explode("\n", $element->getContent());
+    $data = array();
+    $headers = array();
+    // get data from file
+    for ($count = 0; $count < count($rows); $count++) {
+      if ($count == 0) {
+        $headers = str_getcsv($rows[0]);
+      }
+      else {
+        $values = explode('", "', trim($rows[$count], '"'));
+        for ($column = 0; $column < count($values); $column++) {
+          $data[$count][$headers[$column]] = $values[$column];
+        }
+      }
+    }
+    // get content requirements from test case
+    $requirements = array();
+    foreach($contentRequirements->getRows() as $row) {
+      $requirements[ucfirst($row[0])] = ($row[1] == 'populated') ? 1 : 0;
+    }
+
+    // compare data to requirements
+    foreach($data as $count => $data_row) {
+      foreach($requirements as $header => $content) {
+        if((!isset($data_row[$header]) || !$data_row[$header]) && $requirements[$header]) {
+          throw new Exception(sprintf("Row #" . ($count + 1) . ", column '$header' should contain content but it doesn't."));
+        }
+      }
+    }
   }
 
 }

@@ -26,13 +26,14 @@ Feature:
             | Site type/preset             |
        Then I will see a report with content in the following <columns>:
             | site title            | populated       |
+            | site url              | populated       |
+            | os install            | populated       |
             | site owner email      | populated       |
             | owner subdomain       | may be blank    |
-            | os install            | populated       |
             | site created          | populated       |
-            | content last updated  | populated       |
+            | content last updated  | may be blank    |
             | site created by       | populated       |
             | site privacy setting  | populated       |
             | custom domain         | populated       |
             | custom theme uploaded | populated       |
-            | site type (preset)    | populated       |
+            | preset                | populated       |
