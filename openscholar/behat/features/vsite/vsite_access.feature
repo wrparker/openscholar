@@ -22,7 +22,7 @@ Feature:
       And I visit "lincoln/cp/settings"
       And I select the radio button named "vsite_private" with value "1"
       And I press "edit-submit"
-      And I visit "lincoln/robots.txt"
+      And I visit "?q=lincoln/robots.txt"
       And I should get:
       """
       User-agent: *
@@ -32,7 +32,7 @@ Disallow: /lincoln/
       """
      When I visit "lincoln/cp/settings"
       And I press "edit-submit"
-      And I visit "lincoln/robots.txt"
+      And I visit "?q=lincoln/robots.txt"
      Then I should get:
     """
     User-agent: *
