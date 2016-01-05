@@ -1,4 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+if [ ! -d "/home/travis/build/openscholar/openscholar/openscholar/modules/contrib" ]; then
+  echo "library already exists!!!!"
+fi
 
 if [ "${TEST_SUITE}" == "harvard" ]; then
   drush en harvard_courses -y && drush cc all

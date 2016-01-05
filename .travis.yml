@@ -21,6 +21,8 @@ cache:
   directories:
     - openscholar/solr-script
     - openscholar/modules/contrib
+    - openscholar/themes/contrib
+    - openscholar/libraries
 
 env:
   global:
@@ -38,8 +40,8 @@ env:
 #    - TEST_SUITE=misc_first
 #    - TEST_SUITE=misc_second
 #    - TEST_SUITE=solr - working
-    - TEST_SUITE=taxonomy
-#    - TEST_SUITE=vsite
+#    - TEST_SUITE=taxonomy - working
+    - TEST_SUITE=vsite
 #    - TEST_SUITE=widgets
 #    - TEST_SUITE=media_browser
 
