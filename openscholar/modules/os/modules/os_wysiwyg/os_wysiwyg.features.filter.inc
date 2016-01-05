@@ -157,7 +157,9 @@ function os_wysiwyg_filter_default_formats() {
             'outline-color' => 0,
             'zoom' => 0,
           ),
-          'rule_valid_classes' => array(),
+          'rule_valid_classes' => array(
+            0 => '*'
+          ),
           'rule_valid_ids' => array(
             0 => 'os-*',
           ),
