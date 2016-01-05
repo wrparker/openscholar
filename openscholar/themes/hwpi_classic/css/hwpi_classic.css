@@ -140,7 +140,7 @@ h1#page-title {
 }
 
 h2.block-title {
-	text-transform:none;
+	text-transform:uppercase;
 	font-size:12px;
 	font-weight:normal;
 	letter-spacing:0.1em;
