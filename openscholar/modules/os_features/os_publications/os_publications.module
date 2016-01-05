@@ -961,7 +961,7 @@ function _os_publications_attach_notes(&$entry, $node) {
         ),
       ),
       'notes' => array(
-        '#markup' => filter_xss_admin($node->biblio_notes),
+        '#markup' => check_markup($node->biblio_notes, 'filtered_html'),
       ),
     );
   }
@@ -991,7 +991,7 @@ function _os_publications_attach_abstract(&$entry, $node, $markup_element) {
         ),
       ),
       'abstract' => array(
-        '#markup' => filter_xss_admin($node->biblio_abst_e),
+        '#markup' => check_markup($node->biblio_abst_e, 'filtered_html'),
       ),
     );
     $insert = strrpos($html, '</div>');
