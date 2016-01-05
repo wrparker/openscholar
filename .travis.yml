@@ -15,10 +15,11 @@ addons:
     - php5-cgi
     - php5-mysql
     - php5-curl
-  cache:
-    directories:
-      - openscholar/solr-script
-      - openscholar/modules/contrib
+
+cache:
+  directories:
+    - openscholar/solr-script
+    - openscholar/modules/contrib
 
 env:
   global:
