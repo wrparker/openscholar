@@ -17,6 +17,7 @@ addons:
     - php5-curl
 
 cache:
+  apt: true
   directories:
     - openscholar/solr-script
     - openscholar/modules/contrib
@@ -70,15 +71,6 @@ before_install:
   - drush mi --all --user=1
 
   - bash profiles/openscholar/behat/install_modules.sh
-
-  # Index site using Apache solr
-#  - drush en os_search_solr -y
-#  - drush solr-mark-all
-#  - drush solr-index
-
-  # Trying to execute the internal solr commit
-#  - sleep 10
-#  - wget http://localhost:8983/solr/update?commit=true
 
   # Fire up the server.
   - cp profiles/openscholar/behat/router.php router.php
