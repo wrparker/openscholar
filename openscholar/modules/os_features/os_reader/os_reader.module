@@ -499,6 +499,10 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
 
     $reduce_brs = function($string) use(&$reduce_brs) {
 
+      if (strpos($string, '<br />')) {
+        $string = str_replace('<br />', '<br>', $string);
+      }
+
       if (strpos($string, '<br><br>')) {
         // Looping over the string until we don't have double br tags.
         $string = preg_replace('/<br(.*)><br(.*)>/im', '<br>', $string);
