@@ -38,6 +38,10 @@ done
 # Build base.
 [[ $BUILD_ROOT && ${BUILD_ROOT-x} ]] || BUILD_ROOT="."
 
+if [ -d "/home/travis/build/openscholar/openscholar/openscholar/modules/contrib" ]; then
+  echo "library already exists!!!!"
+fi
+
 # Move to the top directory.
 ROOT="$(dirname $0)/.."
 cd $ROOT
