@@ -58,19 +58,21 @@ cd $ROOT
     rm -Rf $DIR
   done
 
-  if [ $download = false ] && [ -d "openscholar/modules/contrib" ] && [ -d "openscholar/modules/contrib" ] && [ -d "openscholar/libraries" ]; then
-    echo "caching!"
+  if [ $download = true ]; then
+    for DIR in openscholar/modules/contrib openscholar/themes/contrib openscholar/libraries; do
+      rm -Rf $DIR
+    done
   fi
-
-  for DIR in openscholar/modules/contrib openscholar/themes/contrib openscholar/libraries; do
-    rm -Rf $DIR
-  done
 )
 
 # Build the profile itself.
 (
   cd openscholar
-  $DRUSH make --no-core --contrib-destination=. drupal-org.make .
+
+  if [ $download = false ] && [ -d "openscholar/modules/contrib" ] && [ -d "openscholar/modules/contrib" ] && [ -d "openscholar/libraries" ]; then
+    $DRUSH make --no-core --contrib-destination=. drupal-org.make .
+  fi
+
   # Download the git wrapper library using the composer.
   # todo: don\'t do it on Travis-CI.
   curl -s https://getcomposer.org/installer | php
