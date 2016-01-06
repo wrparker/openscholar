@@ -38,7 +38,7 @@ done
 # Build base.
 [[ $BUILD_ROOT && ${BUILD_ROOT-x} ]] || BUILD_ROOT="."
 
-if [ -d "/home/travis/build/openscholar/openscholar/openscholar/modules/contrib" ]; then
+if [ -d "openscholar/modules/contrib" ]; then
   echo "library already exists!!!!"
 fi
 
