@@ -234,7 +234,15 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldPrintPage() {
     $element = $this->getSession()->getPage();
-    print_r($element->getContent());
+    $request = $this->invokeRestRequest('post', 'https://api.github.com/gists', [], [
+      'description' => 'http log',
+      'public' => TRUE,
+      'files' => [
+        'file.html' => ['content' => $element->getContent()],
+      ],
+    ]);
+    $json = $request->json();
+    throw new Exception('There was error in the page. You can have a look here: ' . $json['files']['file.html']['raw_url']);
   }
   /**
    * @Then /^I should print page to "([^"]*)"$/
