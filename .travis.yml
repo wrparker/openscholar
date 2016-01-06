@@ -66,7 +66,7 @@ before_install:
   # Install a multi-tanent, development site.
   - cd www
   - time drush si openscholar --account-pass=admin --db-url=mysql://root:@127.0.0.1/drupal openscholar_flavor_form.os_profile_flavor=development openscholar_install_type.os_profile_type=vsite --yes
-  - drush vset purl_base_domain http://127.0.0.1:8888/
+  - drush vset purl_base_domain http://127.0.0.1:8888
 
   # Migrate, enable harvard courses and index data.
   - drush en os_migrate_demo -y
