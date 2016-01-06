@@ -63,7 +63,7 @@ before_install:
   - bash scripts/setup
   - bash scripts/build cached
 
-  # Install a multi-tanent, development site.
+  # Install a multi-tenent, development site.
   - cd www
   - time drush si openscholar --account-pass=admin --db-url=mysql://root:@127.0.0.1/drupal openscholar_flavor_form.os_profile_flavor=development openscholar_install_type.os_profile_type=vsite --yes
   - drush vset purl_base_domain http://127.0.0.1:8888
