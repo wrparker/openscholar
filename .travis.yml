@@ -41,8 +41,8 @@ env:
 #    - TEST_SUITE=misc_second
 #    - TEST_SUITE=solr # - working
 #    - TEST_SUITE=taxonomy # - working
-    - TEST_SUITE=vsite
-#    - TEST_SUITE=widgets
+#    - TEST_SUITE=vsite # - working with wip
+    - TEST_SUITE=widgets
 #    - TEST_SUITE=media_browser
 
 before_install:
@@ -71,6 +71,7 @@ before_install:
   # Migrate, enable harvard courses and index data.
   - drush en os_migrate_demo -y
   - drush mi --all --user=1
+  - drush cc all
 
   - bash profiles/openscholar/behat/install_modules.sh
 
