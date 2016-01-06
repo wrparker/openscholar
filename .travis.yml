@@ -89,13 +89,6 @@ before_install:
 
 script:
 
-  # Run selenium.
-  - sh -e /etc/init.d/xvfb start
-  - export DISPLAY=:99.0
-  - wget http://selenium-release.storage.googleapis.com/2.48/selenium-server-standalone-2.48.0.jar
-  - nohup bash -c "java -jar selenium-server-standalone-2.48.0.jar -p 4444 2>&1 &"
-  - sleep 5
-
   # Run the assets backend.
   - cd node_backend
   - npm install
