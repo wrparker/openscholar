@@ -38,7 +38,18 @@ done
 # Build base.
 [[ $BUILD_ROOT && ${BUILD_ROOT-x} ]] || BUILD_ROOT="."
 
-if [ -d "openscholar/modules/contrib" ]; then
+# Check if we need to download the components or not.
+caching="$1"
+download=true
+
+if [ $# -ne 0 ]; then
+  if [ "$caching" = "cached" ]; then
+    download=false
+  fi
+fi
+
+
+if [ -d "openscholar/modules/contrib" ] && [ -d "openscholar/modules/contrib" ] && [ -d "openscholar/libraries" ] ; then
   echo "library already exists!!!!"
   ls openscholar/modules/contrib
 fi
@@ -49,7 +60,15 @@ cd $ROOT
 
 # Chores.
 (
-  for DIR in $BUILD_ROOT/www-build sites-backup openscholar/1 openscholar/modules/contrib openscholar/themes/contrib openscholar/libraries; do
+  for DIR in $BUILD_ROOT/www-build sites-backup openscholar/1; do
+    rm -Rf $DIR
+  done
+
+  if [ $download = true ]; then
+    echo "caching!"
+  fi
+
+  for DIR in openscholar/modules/contrib openscholar/themes/contrib openscholar/libraries; do
     rm -Rf $DIR
   done
 )

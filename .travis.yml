@@ -61,7 +61,7 @@ before_install:
 #  -  a2ensite lincoln
   - phpenv rehash
   - bash scripts/setup
-  - bash scripts/build
+  - bash scripts/build cached
 
   # Install a multi-tanent, development site.
   - cd www
