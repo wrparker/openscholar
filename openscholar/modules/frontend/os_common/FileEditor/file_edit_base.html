@@ -1,6 +1,9 @@
-<label for="fe-file-name">Label</label>
+<label for="fe-file-name">Name of file as seen by your site's visitors</label>
 <input id="fe-file-name" type="text" ng-model="file.name" class="form-text" ng-class="{error: invalidName}"/>
-<div class="description">Name of file as seen by your site's visitors.</div>
+
+<div ng-include="fileEditAddt"></div>
+
+<div style="background-color:#CCC;">
 
 <div ng-show="file.schema == 'public' || file.schema == 'private'">
     <label for="fe-filepath">File Name</label>
@@ -9,7 +12,6 @@
     <div ng-show="invalidFileName && file.filename" class="error">This filename cannot contain illegal characters, or a file with this name already exists!</div>
 </div>
 
-<div ng-include="fileEditAddt"></div>
 
 <label for="fe-file-description">{{description_label}}</label>
 <textarea id="fe-file-description" ng-model="file.description"></textarea>
@@ -26,6 +28,8 @@
 </div>
 
 <taxonomy-widget entity-type="file" terms="file.terms" bundle="{{file.type}}"></taxonomy-widget>
+
+</div>
 
 <div class="control">
     <button ng-click="save()" ng-disabled="canSave()">Save</button> 
