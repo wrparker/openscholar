@@ -48,12 +48,6 @@ if [ $# -ne 0 ]; then
   fi
 fi
 
-
-if [ -d "openscholar/modules/contrib" ] && [ -d "openscholar/modules/contrib" ] && [ -d "openscholar/libraries" ] ; then
-  echo "library already exists!!!!"
-  ls openscholar/modules/contrib
-fi
-
 # Move to the top directory.
 ROOT="$(dirname $0)/.."
 cd $ROOT
@@ -64,7 +58,7 @@ cd $ROOT
     rm -Rf $DIR
   done
 
-  if [ $download = true ]; then
+  if [ $download = false ] && [ -d "openscholar/modules/contrib" ] && [ -d "openscholar/modules/contrib" ] && [ -d "openscholar/libraries" ]; then
     echo "caching!"
   fi
 
