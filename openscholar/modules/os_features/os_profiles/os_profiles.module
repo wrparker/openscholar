@@ -1295,6 +1295,19 @@ function _os_profiles_build_display_style_example($style) {
 }
 
 /**
+ * Implements hook_node_view_alter().
+ *
+ * Adds a link "full profile" as the last field in the slider
+ * when the profiles are set to Slide teaser display style
+ */
+function os_profiles_node_view_alter(&$build) {
+  if ($build['#view_mode'] == 'slide_teaser') {
+    $build['os_profile_link']['#markup'] = l('Full Profile', 'node/' . $build['#node']->nid);
+    $build['os_profile_link']['#weight'] = 10;
+  }
+}
+
+/**
  * Implements hook_entity_view_mode_alter().
  *
  * Changes the display type for profiles in the "/people" page or in a person
