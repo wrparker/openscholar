@@ -40,6 +40,7 @@ done
 
 if [ -d "openscholar/modules/contrib" ]; then
   echo "library already exists!!!!"
+  ls openscholar/modules/contrib
 fi
 
 # Move to the top directory.
