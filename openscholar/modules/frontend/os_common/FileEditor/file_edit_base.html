@@ -3,15 +3,15 @@
 
 <div ng-include="fileEditAddt"></div>
 
-<div style="background-color:#CCC;">
-
+<fieldset class="adv-settings">
+<legend ng-click="showAdvSettings">Advanced</legend>
+<div ng-show="showAdvSettings">
 <div ng-show="file.schema == 'public' || file.schema == 'private'">
     <label for="fe-filepath">File Name</label>
     <span class="full-url">{{fullPath}}</span>
     <span class="fe-filepath-wrapper"><input id="fe-filepath" type="text" ng-model="file.filename" class="form-text" ng-class="{error: invalidFileName}"></span>
     <div ng-show="invalidFileName && file.filename" class="error">This filename cannot contain illegal characters, or a file with this name already exists!</div>
 </div>
-
 
 <label for="fe-file-description">{{description_label}}</label>
 <textarea id="fe-file-description" ng-model="file.description"></textarea>
@@ -28,8 +28,8 @@
 </div>
 
 <taxonomy-widget entity-type="file" terms="file.terms" bundle="{{file.type}}"></taxonomy-widget>
-
 </div>
+</fieldset>
 
 <div class="control">
     <button ng-click="save()" ng-disabled="canSave()">Save</button> 
