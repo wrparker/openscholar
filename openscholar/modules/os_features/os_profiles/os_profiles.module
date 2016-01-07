@@ -521,10 +521,13 @@ function os_profile_return_auto_complete($string = '') {
   $results = $query
     ->condition('n.type', 'person')
     ->condition($name_condition)
+    ->condition('first.entity_type', 'node')
+    ->condition('last.entity_type', 'node')
     ->condition('n.status', NODE_PUBLISHED)
     ->fields('n', array('nid', 'title'))
     ->range(0, 25)
     ->orderBy('n.nid')
+    ->orderBy('n.title')
     ->execute()
     ->fetchAllAssoc('nid');
 
