@@ -1,6 +1,6 @@
 Feature: Testing the importer.
 
-  @api @misc_first @now
+  @api @misc_first
   Scenario Outline: Testing the csv importing for content types.
     Given I am logging in as "admin"
      When I visit <import-address>

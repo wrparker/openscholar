@@ -1,12 +1,14 @@
 Feature: Media Browser
   Testing the Media Browser
 
-  @media_browser @javascript @now2
+  @media_browser @javascript
   Scenario: Invoke the browser from the standard media field
     Given I am logging in as "john"
       And I wait for page actions to complete
       And I edit the entity "node" with title "About"
     And I should print page
+     
+    And I sleep for "10"
      When I click on the "Upload" control
     And I should print page
       And I wait "1 second" for the media browser to open
