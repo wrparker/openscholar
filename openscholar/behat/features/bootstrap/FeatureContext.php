@@ -242,7 +242,7 @@ class FeatureContext extends DrupalContext {
       ],
     ]);
     $json = $request->json();
-    throw new Exception('There was error in the page. You can have a look here: ' . $json['files']['file.html']['raw_url']);
+    print_r('You asked to see the page content. Here is a gist contain the html: ' . $json['files']['file.html']['raw_url']);
   }
   /**
    * @Then /^I should print page to "([^"]*)"$/
