@@ -888,3 +888,12 @@ function os_update_7041() {
 
   return t('Upgraded the Media Browser across the whole site.');
 }
+
+/**
+ * Setting the default jquery version
+ */
+function os_update_7042() {
+  variable_set('jquery_update_jquery_version', '1.8');
+
+  return t('Updated JQuery to 1.8.');
+}
