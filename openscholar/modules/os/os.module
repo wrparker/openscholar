@@ -2016,13 +2016,11 @@ function os_form_user_login_alter(&$form, $form_state) {
   if (isset($form['pin-fieldset'])) {
     $form['pin-fieldset']['name']['#title'] = t('Username / E-Mail');
     $form['pin-fieldset']['pass']['#description'] = t('!request', array('!request' => l('Forgot your password?', 'user/password')));
-    unset($form['pin-fieldset']['name']['#description']);
   }
 
   // If pinserver_authenticate module is not overriding login form, then $form['name'] and $form['pass'] will not be unset.
   if (isset($form['name']) && isset($form['pass'])) {
     $form['name']['#title'] = t('Username / E-Mail');
-    unset($form['name']['#description']);
     unset($form['pass']['#description']);
   }
 }
