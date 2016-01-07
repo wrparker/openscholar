@@ -964,6 +964,7 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['filename']['exclude'] = TRUE;
   $handler->display->display_options['fields']['filename']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['filename']['alter']['text'] = '<a href="[os_files_file_link]">[filename]</a>';
+  $handler->display->display_options['fields']['filename']['alter']['path'] = '[os_files_file_link]';
   $handler->display->display_options['fields']['filename']['alter']['absolute'] = TRUE;
   $handler->display->display_options['fields']['filename']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['filename']['alter']['ellipsis'] = FALSE;
