@@ -11,16 +11,6 @@
 function os_files_views_data() {
   $data = array();
 
-  // Managed file path of the file entity.
-  $data['file_managed']['os_files_file_link'] = array(
-    'field' => array(
-      'field' => 'uri',
-      'title' => t('Managed file path'),
-      'help' => t('Managed file path.'),
-      'handler' => 'os_files_handler_field_file_link',
-    ),
-  );
-
   // Copy link of the file.
   $data['file_managed']['os_files_copy_link'] = array(
     'field' => array(
