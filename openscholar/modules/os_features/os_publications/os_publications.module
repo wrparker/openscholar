@@ -1273,7 +1273,7 @@ function os_publications_preprocess_page(&$variables) {
       drupal_set_title($new_page_title);
       break;
     case "author":
-      $new_page_title = $current_page_title . t(" by Co-Author: ") . ucwords($menu['map'][3]);
+      $new_page_title = $current_page_title . t(" by Author: ") . ucwords($menu['map'][3]);
       // Set the new page title.
       drupal_set_title($new_page_title);
       break;
