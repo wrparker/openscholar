@@ -5,6 +5,13 @@ class os_boxes_rand_widget extends os_boxes_widget_collection {
   public $embed_as = array(
     'iframe',
   );
+  
+  // Overriding boxes_box form to execute '_os_boxes_rand_widget_field_display_handler' callback as #after_build property.
+  function options_form(&$form_state) {
+    $form = parent::options_form($form_state);
+    $form['advanced']['#after_build'][] = '_os_boxes_rand_widget_field_display_handler';
+    return $form;
+  }
 
   public function render() {
     $block = parent::render();
@@ -19,4 +26,12 @@ class os_boxes_rand_widget extends os_boxes_widget_collection {
 
     return $block;
   }
+}
+
+/**
+ * Callback handler to display settings form field for random widgets.
+ * To hide the 'Title' field while editing random widget.
+ */
+function _os_boxes_rand_widget_field_display_handler($element, &$form_state) {
+  $form_state['complete form']['title']['#access'] = FALSE;  
 }
