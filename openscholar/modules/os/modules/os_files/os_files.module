@@ -2527,7 +2527,7 @@ function _os_files_use_static_domain($path) {
     // aggregated js file.
     return TRUE;
   }
-  elseif (in_array(pathinfo($path, PATHINFO_EXTENSION), array('js', 'ico'))) {
+  elseif (in_array(pathinfo($path, PATHINFO_EXTENSION), array('js'))) {
     // keep adding things here as they come up
     return TRUE;
   }
