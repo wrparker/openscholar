@@ -350,3 +350,16 @@ function os_image_gallery_node_update($node) {
   // insure us the new images at the beginning of the array.
   $wrapper->media_gallery_file->set(array_merge($new_files, $original_wrapper->media_gallery_file->value()));
 }
+
+/**
+ * Implements hook_entity_prepare_view.
+ */
+function os_image_gallery_entity_prepare_view($entities, $type, $langcode) {
+  // Iterating through $entities object for altering media_title property value by reference.
+  foreach ($entities as $entity) {
+    if (!empty($entity->filename)) {
+      $entity->media_title[LANGUAGE_NONE][0]['value'] = filter_xss(trim($entity->filename));
+      $entity->media_title[LANGUAGE_NONE][0]['safe_value'] = filter_xss(trim($entity->filename));
+    }
+  }
+}
