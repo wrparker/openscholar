@@ -40,12 +40,6 @@ function os_boxes_edit_widget($box, $source = '') {
  * Implements hook_form_FORM_ID_form_alter() for boxes_box
  */
 function os_boxes_form_boxes_box_form_alter(&$form, &$form_state) {
-  
-  // Title field will not be visible for random widgets add / edit form
-  if (isset($form['plugin_key']['#value']) && $form['plugin_key']['#value'] == 'os_boxes_rand_widget') {
-    $form['title']['#access'] = FALSE;
-  }
-
   $form['boxes_adv']['#access'] = false;
 
   $form['description']['#title'] = t('Widget Description');
