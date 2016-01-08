@@ -483,7 +483,7 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
 
   // Remove style attribute from div tags anv p tags.
   if (property_exists($feed, 'description')) {
-    $doc->loadHTML(mb_convert_encoding($feed->description, 'HTML-ENTITIES', "UTF-8"));
+    $doc->loadHTML(mb_convert_encoding($feed->description, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED);
     $xpath = new DOMXPath($doc);
     $items = $xpath->query("//*[(local-name()='div' or local-name()='span') and @style]");
 
@@ -491,7 +491,37 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
       $item->removeAttribute("style");
     }
 
+    // Remove empty a tags.
+    $items = $xpath->query("//a[.='']");
+
+    foreach ($items as $item) {
+      $item->parentNode->removeChild($item);
+    }
+
     $feed->description = $doc->saveHTML($doc->documentElement);
+
+    $reduce_brs = function($string) use(&$reduce_brs) {
+
+      if (strpos($string, '<br />')) {
+        $string = str_replace('<br />', '<br>', $string);
+      }
+
+      if (strpos($string, '<br><br>')) {
+        // Looping over the string until we don't have double br tags.
+        $string = preg_replace('/<br(.*)><br(.*)>/im', '<br>', $string);
+
+        return $reduce_brs($string);
+      }
+
+      if (($temp = strlen($string) - strlen('<br>')) >= 0 && strpos($string, '<br>', $temp) !== FALSE) {
+        // There is a <br> at the end of the string. Remove it.
+        return substr($string, 0, strlen($string) - 4);
+      }
+
+      return $string;
+    };
+
+    $feed->description = $reduce_brs($feed->description);
   }
 
   $wrapper->body->set(array('value' => $feed->description, 'format' => 'filtered_html'));
