@@ -29,7 +29,7 @@ class os_boxes_rand_widget extends os_boxes_widget_collection {
 }
 
 /**
- * Callback handler to display settings form field for random widgets.
+ * #after_build handler in options_form to display settings form field for random widgets.
  * To hide the 'Title' field while editing random widget.
  */
 function _os_boxes_rand_widget_field_display_handler($element, &$form_state) {
