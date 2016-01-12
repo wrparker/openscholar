@@ -14,10 +14,6 @@ include_once ('includes/os.inc');
  */
 define('OS_READONLY_MODE_MESSAGE', 'Site is under maintenance, login and registration is currently disabled.');
 
-// Load the correct jQuery version. This is done before the call to os_init().
-global $conf;
-$conf['jquery_update_jquery_version'] = strpos($_GET['q'], 'admin') === 0 ? '1.5' : '1.8';
-
 /**
  * Implements hook_menu().
  */
@@ -1944,6 +1940,7 @@ function os_app_info($app_name = NULL) {
             'importers' => array(),
             'require_parent_node' => FALSE,
             'browse_pages' => FALSE,
+            'has_settings' => FALSE,
           );
 
           // Adds the module information.
@@ -1972,7 +1969,7 @@ function os_app_info($app_name = NULL) {
 function os_app_info_declared_node_bundle($bundle = '') {
   $bundles = &drupal_static(__FUNCTION__, array());
 
-  if (empty($info)) {
+  if (empty($bundles)) {
     $apps = os_app_info();
     $bundles = array();
     foreach ($apps as $app) {
@@ -1982,7 +1979,7 @@ function os_app_info_declared_node_bundle($bundle = '') {
     }
   }
 
-  return in_array($bundle, $bundles);
+  return empty($bundle)? $bundles : in_array($bundle, $bundles);
 }
 
 /**
@@ -2019,13 +2016,11 @@ function os_form_user_login_alter(&$form, $form_state) {
   if (isset($form['pin-fieldset'])) {
     $form['pin-fieldset']['name']['#title'] = t('Username / E-Mail');
     $form['pin-fieldset']['pass']['#description'] = t('!request', array('!request' => l('Forgot your password?', 'user/password')));
-    unset($form['pin-fieldset']['name']['#description']);
   }
 
   // If pinserver_authenticate module is not overriding login form, then $form['name'] and $form['pass'] will not be unset.
   if (isset($form['name']) && isset($form['pass'])) {
     $form['name']['#title'] = t('Username / E-Mail');
-    unset($form['name']['#description']);
     unset($form['pass']['#description']);
   }
 }

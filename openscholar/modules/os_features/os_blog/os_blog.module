@@ -39,6 +39,7 @@ function os_blog_os_app_info() {
         'menu_item' => 'blog',
       ),
     ),
+    'has_settings' => TRUE,
   );
 
   return $apps;
@@ -53,12 +54,12 @@ function os_blog_process_node(&$vars) {
   if ($vars['type'] !== 'blog') {
     return;
   }
-  
+
   if ($vars['view_mode'] == 'title') {
     unset($vars['submitted']);
     return;
   }
-  
+
   // Builds the submitted variable used by default in node templates
   $pubdate = format_date($vars['created'], 'custom', 'F j, Y');
   // Publication date, formatted with time element
