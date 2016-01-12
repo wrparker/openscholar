@@ -2680,9 +2680,12 @@ function og_query_og_membership_blocked_users_alter(QueryAlterableInterface $que
  * Implements hook_advagg_save_aggregate_alter().
  */
 function os_advagg_save_aggregate_alter(&$files_to_save, $aggregate_settings, $other_parameters) {
-
-  if (!variable_get('vsite_domain_name', '')) {
-    return;
+  if (variable_get('vsite_domain_name', '')) {
+    $domain = url('<front>');
+  }
+  else {
+    global $base_url;
+    $domain = $base_url;
   }
 
   if (!$static = variable_get('os_files_static_domain')) {
@@ -2690,7 +2693,7 @@ function os_advagg_save_aggregate_alter(&$files_to_save, $aggregate_settings, $o
   }
 
   foreach ($files_to_save as $file_name => $file) {
-    $files_to_save[$file_name] = str_replace(url('<front>'), $static, $file);
+    $files_to_save[$file_name] = str_replace($domain, $static, $file);
   }
 
 }
