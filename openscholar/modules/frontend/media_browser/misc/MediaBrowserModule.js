@@ -496,7 +496,7 @@
         }
         $scope.selected_file = null;
       }
-      else if ((result == FER.NO_CHANGES || result == FER.SAVED) && $scope.selected_file.new) {
+      else if ((result == FER.NO_CHANGES || result == FER.SAVED) && ($scope.selected_file.new || $scope.selected_file.replaced)) {
         if (directInsert) {
           $scope.insert();
         }
