@@ -11,16 +11,22 @@ express().get('*', function(req, response) {
 
     if (req.query.file == '56.json') {
       response.set('Content-Type', 'application/json; charset=utf-8');
-      http.get('http://127.0.0.1:8888/?q=obama/node/56.json', function(res) {
 
-        // Buffer the body entirely for processing as a whole.
-        var bodyChunks = [];
-        res.on('data', function(chunk) {
-          bodyChunks.push(chunk);
-        }).on('end', function() {
-          response.send(Buffer.concat(bodyChunks));
+      if (req.query.hide_address != null) {
+        response.send(JSON.stringify({"field_address": null}));
+      }
+      else {
+        http.get('http://127.0.0.1:8888/?q=obama/node/56.json', function(res) {
+
+          // Buffer the body entirely for processing as a whole.
+          var bodyChunks = [];
+          res.on('data', function(chunk) {
+            bodyChunks.push(chunk);
+          }).on('end', function() {
+            response.send(Buffer.concat(bodyChunks));
+          });
         });
-      });
+      }
 
       return;
     }
