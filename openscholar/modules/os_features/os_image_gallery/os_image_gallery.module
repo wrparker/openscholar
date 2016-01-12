@@ -363,3 +363,10 @@ function os_image_gallery_entity_prepare_view($entities, $type, $langcode) {
     }
   }
 }
+
+/**
+ * Implements hook_os_entity_view_modes_alter
+ **/
+function os_image_gallery_os_entity_view_modes_alter(&$info) {
+  $info['node']['media_gallery'] = array_diff($info['node']['media_gallery'], array('slide_teaser'));
+}
