@@ -395,6 +395,8 @@
         }, function (error) {
           console.log(error);
         });
+      }).then(angular.noOp, function (results) {
+        console.log(results);
       });
     }])
     .config(['$indexedDBProvider', function ($idbp) {
