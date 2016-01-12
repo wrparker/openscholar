@@ -197,3 +197,32 @@ function os_migrate_demo_dummy_xml_courses() {
   drupal_add_http_header('Content-Type', 'application/xml; charset=utf-8');
   echo file_get_contents(drupal_get_path('module', 'harvard_courses') . '/dummy_courses.xml');
 }
+
+function os_migrate_demo_http_request_alter($url, array $options = array()) {
+  // check if we need to alter the URl.
+
+  // Set the variable to FALSE in order to prevent recursion error.
+  if ($parse = drupal_parse_url($url)) {
+    $query = new EntityFieldQuery();
+    $result = $query
+      ->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'person')
+      ->fieldCondition('field_uuid', 'value', $parse['query']['UUID'])
+      ->execute();
+
+    if (!empty($result['node']) && in_array(56, array_keys($result['node']))) {
+      $url = "http://localhost:3000/index?file=56.json";
+    }
+
+  }
+
+  variable_set('drupal_http_request_function', FALSE);
+
+  $result = drupal_http_request($url, $options);
+
+  // Set back this function as the alter function for drupal_http_request().
+  variable_set('drupal_http_request_function', 'os_migrate_demo_http_request_alter');
+
+  // Return the results we got.
+  return $result;
+}

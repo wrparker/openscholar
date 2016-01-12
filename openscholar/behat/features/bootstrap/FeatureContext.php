@@ -2198,7 +2198,7 @@ class FeatureContext extends DrupalContext {
   public function iFillInTheFieldWithTheNode($id, $title) {
     $nid = FeatureHelp::getNodeId($title);
     $element = $this->getSession()->getPage();
-    $value = $title . ' (' . $nid . ')';
+    $value = $title . ' [' . $nid . ']';
     $element->fillField($id, $value);
   }
 
