@@ -31,7 +31,7 @@ if [ "${TEST_SUITE}" == "solr" ]; then
   wget http://localhost:8983/solr/update?commit=true
 fi
 
-if [ "${TEST_SUITE}" == "media_browser" ] || [ "${TEST_SUITE}" == "harvard" ] || [ "${TEST_SUITE}" == "javascript" ] || [ "${TEST_SUITE}" == "features_second" ]; then
+if [ "${TEST_SUITE}" == "features_second" ]; then
   # Run selenium.
   sh -e /etc/init.d/xvfb start
   export DISPLAY=:99.0
