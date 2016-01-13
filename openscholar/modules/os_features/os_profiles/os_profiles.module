@@ -1589,3 +1589,21 @@ function os_profiles_copy_bio_to_new_vsite($original_person, $new_vsite) {
 function os_profiles_form_node_form_alter(&$form, $form_state) {
   $form['field_child_site']['#access'] = FALSE;
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_profiles_form_person_node_form_alter(&$form, $form_state) {
+  $form['#after_build'][] = 'os_profiles_website_field_after_build';
+}
+
+// After build callback for alterting website title field on profile edit form.
+function os_profiles_website_field_after_build($form, $form_state) {
+  foreach ($form['field_website'][LANGUAGE_NONE] as $key => $link_field) {
+    if (is_numeric($key) && isset($form['field_website'][LANGUAGE_NONE][$key])) {
+      $form['field_website'][LANGUAGE_NONE][$key]['title']['#title'] = t('Link Text');
+    }
+  }
+
+  return $form;
+}
