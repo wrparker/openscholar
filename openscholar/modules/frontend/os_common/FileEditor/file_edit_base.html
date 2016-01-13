@@ -4,8 +4,8 @@
 <div ng-include="fileEditAddt"></div>
 
 <fieldset class="adv-settings">
-<legend><span class="legend-open-link" ng-click="showAdvSettings()">Advanced</span></legend>
-<div ng-show="showAdvSettings()">
+<legend><span class="legend-open-link" ng-click="showAdvSettings =!showAdvSettings">Advanced</span></legend>
+<div ng-show="showAdvSettings">
 <div ng-show="file.schema == 'public' || file.schema == 'private'">
     <label for="fe-filepath">File Name</label>
     <span class="full-url">{{fullPath}}</span>
