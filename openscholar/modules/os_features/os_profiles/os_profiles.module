@@ -1591,19 +1591,21 @@ function os_profiles_form_node_form_alter(&$form, $form_state) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_element_info_alter().
  */
-function os_profiles_form_person_node_form_alter(&$form, $form_state) {
-  $form['#after_build'][] = 'os_profiles_website_field_after_build';
+function os_profiles_element_info_alter(&$type) {
+  if (isset($type['link_field'])) {
+    $type['link_field']['#process'][] = 'os_profiles_link_field_process';
+  }
 }
 
-// After build callback for altering website title field on profile edit form.
-function os_profiles_website_field_after_build($form, $form_state) {
-  foreach ($form['field_website'][LANGUAGE_NONE] as $key => $link_field) {
-    if (is_numeric($key) && isset($form['field_website'][LANGUAGE_NONE][$key])) {
-      $form['field_website'][LANGUAGE_NONE][$key]['title']['#title'] = t('Link Text');
-    }
+/**
+ * process callback for link_field
+ */
+function os_profiles_link_field_process($element, $form_state, $complete_form) {
+  if ($element['#field_name'] == 'field_website') {
+    $element['title']['#title'] = t('Link Text');
   }
 
-  return $form;
+  return $element;
 }
