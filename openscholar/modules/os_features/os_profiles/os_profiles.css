@@ -3,37 +3,33 @@
 .block-boxes-os_boxes_manual_list .node-person .field-name-field-person-photo,
 #content-column .node-person .field-name-field-phone,
 #content .node-person .field-name-field-email {
-  float: left;
-  margin-right: 1em;
+    float: left;
+    margin-right: 1em;
 }
-
 #content .node-person .os-slider .field-name-field-email,
 #content .node-person .field-name-field-phone.view-mode-slide_teaser {
-  float: none;
+    float: none;
 }
-
+#content .node-person .os-slider .profile-link {
+    display: block;
+}
 #content .node-person .field-name-field-email.view-mode-no_image_teaser {
-  clear: both;
-  margin-right: 1em;
+    clear: both;
+    margin-right: 1em;
 }
-
 #content .node-person .field-name-field-professional-title h4,
 #content .node-person .field-name-field-professional-title h3 {
-  margin: 0;
+    margin: 0;
 }
-
-#content .node-person .pic-bio.people-sidebar-teaser{
-  float: left;
+#content .node-person .pic-bio.people-sidebar-teaser {
+    float: left;
 }
-
 .page-node.node-type-person #content-column header h1 {
-  display: none;
+    display: none;
 }
-
 .node-person .field-name-field-professional-title {
-	font-weight: bold;
+    font-weight: bold;
 }
-
 .sv-list-view-full .node-person .pic-bio {
-  width: 100%;
+    width: 100%;
 }
