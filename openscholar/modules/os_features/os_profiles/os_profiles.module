@@ -1273,7 +1273,7 @@ function _os_profiles_build_display_style_example($style) {
           <div>Often referred to by his initials JFK, was the 35th President of the United States, serving from 1961 until his assassination in 1963.</div>
           <div>555-1234</div>
           <div><a>example@address.com</a></div>
-          <div><a>Full Profile</a></div>
+          <div><a class="profile-link">Full Profile</a></div>
         </div>
       ';
       break;
@@ -1304,7 +1304,7 @@ function _os_profiles_build_display_style_example($style) {
 function os_profiles_node_view_alter(&$build) {
   // If 'person' content type are displayed in slide_teaser view mode, then appending additional element for Full Profile link.
   if ($build['#bundle'] == 'person' && $build['#view_mode'] == 'slide_teaser') {
-    $build['os_profile_link']['#markup'] = l('Full Profile', 'node/' . $build['#node']->nid);
+    $build['os_profile_link']['#markup'] = l('Full Profile', 'node/' . $build['#node']->nid, array('attributes' => array('class' => 'profile-link')));
     $build['os_profile_link']['#weight'] = 10;
   }
 }
