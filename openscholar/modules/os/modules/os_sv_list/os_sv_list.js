@@ -5,6 +5,23 @@
 (function($) {
   Drupal.behaviors.os_sv_list = {
     attach : function(context) {
+
+        function showField(sort_type, show_type) {
+          var expire_event_appear = jQuery('.form-item-event-expire-appear');
+          expire_event_appear.hide();
+          if (sort_type == 'sort_event_asc' && show_type == 'upcoming_events') {
+            expire_event_appear.show();
+            expire_event_appear.find('label').text(Drupal.t('Events should expire'));
+          }
+          else if (sort_type == 'sort_event_desc' && show_type == 'past_events') {
+            expire_event_appear.show();
+            expire_event_appear.find('label').text(Drupal.t('Events should appear'));
+          }
+          else {
+            expire_event_appear.hide();
+          }
+        }
+
       $('#os_sv_list_content_type').once('once', function() {
         // when content type changes, update all the options
         $('#os_sv_list_content_type').change(function() {
@@ -114,23 +131,7 @@
               var sort_type = sort_by.val();
               var show_type = $(this).val();
               showField(sort_type, show_type);
-            });
-
-            function showField(sort_type, show_type) {
-              var expire_event_appear = $('.form-item-event-expire-appear');
-              expire_event_appear.hide();
-              if (sort_type == 'sort_event_asc' && show_type == 'upcoming_events') {
-                expire_event_appear.show();
-                expire_event_appear.find('label').text(Drupal.t('Events should expire'));
-              }
-              else if (sort_type == 'sort_event_desc' && show_type == 'past_events') {
-                expire_event_appear.show();
-                expire_event_appear.find('label').text(Drupal.t('Events should appear'));
-              }
-              else {
-                expire_event_appear.hide();
-              }
-            }
+            });            
           }
           else {
             $('.form-item-event-expire-appear').hide();
