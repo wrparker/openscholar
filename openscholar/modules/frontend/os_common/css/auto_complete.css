@@ -35,3 +35,14 @@ div[ng-repeat="vocab in vocabs"] div[ng-repeat="selectedTerm in selectedTerms[vo
     background-color: #e1e1e1;
     cursor: pointer;
 }
+
+/* move these to a better location */
+
+legend.legend-open-link {
+    color: #4E84C4;
+    font-weight:normal;
+}
+fieldset.fieldset {
+    padding: 1em;
+}
+
