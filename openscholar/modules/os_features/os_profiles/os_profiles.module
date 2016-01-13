@@ -1597,7 +1597,7 @@ function os_profiles_form_person_node_form_alter(&$form, $form_state) {
   $form['#after_build'][] = 'os_profiles_website_field_after_build';
 }
 
-// After build callback for alterting website title field on profile edit form.
+// After build callback for altering website title field on profile edit form.
 function os_profiles_website_field_after_build($form, $form_state) {
   foreach ($form['field_website'][LANGUAGE_NONE] as $key => $link_field) {
     if (is_numeric($key) && isset($form['field_website'][LANGUAGE_NONE][$key])) {
