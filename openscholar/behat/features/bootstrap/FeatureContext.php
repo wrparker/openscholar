@@ -2934,22 +2934,7 @@ class FeatureContext extends DrupalContext {
    * @Then /^I will see a report with content in the following <columns>:$/
    */
   public function iWillSeeAReportWithContentInTheFollowingColumns(TableNode $contentRequirements) {
-    $element = $this->getSession()->getPage();
-    $rows = explode("\n", $element->getContent());
-    $data = array();
-    $headers = array();
-    // get data from file
-    for ($count = 0; $count < count($rows); $count++) {
-      if ($count == 0) {
-        $headers = str_getcsv($rows[0]);
-      }
-      else {
-        $values = explode('", "', trim($rows[$count], '"'));
-        for ($column = 0; $column < count($values); $column++) {
-          $data[$count][$headers[$column]] = $values[$column];
-        }
-      }
-    }
+    $data = $this->getDataFromCSVFile($this->getSession()->getPage());
     // get content requirements from test case
     $requirements = array();
     foreach($contentRequirements->getRows() as $row) {
@@ -2964,6 +2949,85 @@ class FeatureContext extends DrupalContext {
         }
       }
     }
+  }
+
+  /**
+   * @Given /^I run the "([^"]*)" report with "([^"]*)" set to "([^"]*)" and <checkboxes> selected:$/
+   */
+  public function iRunTheReportWithSetToAndCheckboxesSelected($report, $fieldName, $fieldValue, TableNode $table) {
+    $steps = array();
+    $steps[] = new Step\When('I visit "admin/reports/' . $report . '"');
+    $steps[] = new Step\When('I fill in "' . $fieldName . '" with "' . $fieldValue. '"');
+    $table_rows = $table->getRows();
+    // Iterate over each row, just so if there's an error we can supply
+    // the row number, or empty values.
+    foreach ($table_rows as $i => $checkbox) {
+      $steps[] = new Step\When('I check the box "' . $checkbox[0] . '"');
+    }
+    $steps[] = new Step\When('I press "Download CSV of Full Report"');
+    return $steps;
+  }
+
+  /**
+   * @Then /^I will see a report with the following <rows>:$/
+   */
+  public function iWillSeeAReportWithTheFollowingRows(TableNode $requiredRows) {
+    global $base_url;
+    $url_parts = explode(".", str_replace("http://", "", $base_url));
+    $install = $url_parts[0];
+
+    $file_data = $this->getDataFromCSVFile($this->getSession()->getPage());
+    $required_data = $requiredRows->getRows();
+    $headers = array_splice($required_data, 0, 1);
+    foreach ($required_data as $num => $row) {
+      foreach ($row as $index => $value) {
+        $header = strtolower($headers[0][(int)$index]);
+        if ($header == "os install") {
+          $required_data[(int)$num][$header] = $install;
+        }
+        elseif ($header == "site url") {
+          $required_data[(int)$num][$header] = $base_url . "/" . $value;
+        }
+        else {
+          $required_data[(int)$num][$header] = $value;
+        }
+        unset($required_data[(int)$num][(int)$index]);
+      }
+    }
+    foreach ($required_data as $index => $row) {
+      if (array_diff($row, $file_data[$index]) !== array()) {
+        throw new Exception(sprintf("Row #" . ($index + 1) . " does not match."));
+      }
+    }
+  }
+
+  /**
+   * @Then /^I will see a report with no results$/
+   */
+  public function iWillSeeAReportWithNoResults() {
+    return new Step\Then('I should see "No results in report."');
+  }
+
+  /**
+   * Helper function to convert CSV file to associative array
+   */
+  public function getDataFromCSVFile($source) {
+    $content = explode("\n", $source->getContent());
+    $data = array();
+    $headers = array();
+    // get data from file
+    for ($count = 0; $count < count($content); $count++) {
+      if ($count == 0) {
+        $headers = str_getcsv($content[0]);
+      }
+      else {
+        $values = explode('", "', trim($content[$count], '"'));
+        for ($column = 0; $column < count($values); $column++) {
+          $data[$count - 1][$headers[$column]] = $values[$column];
+        }
+      }
+    }
+    return $data;
   }
 
 }

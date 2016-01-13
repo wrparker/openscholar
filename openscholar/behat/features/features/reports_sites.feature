@@ -37,3 +37,48 @@ Feature:
             | custom domain         | populated       |
             | custom theme uploaded | populated       |
             | preset                | populated       |
+
+  @api @reports
+  Scenario: Running a site report that searches site owner email addresses for a keyword
+      Given I am logging in as a user who "can" "access os reports"
+        And I run the "site" report with "keyword" set to "gov" and <checkboxes> selected:
+            | email |
+       Then I will see a report with the following <rows>:
+            | site title | site url | site owner email   | os install |
+            | Edison     | edison   | alexander@bell.gov |            |
+            | John       | john     | jfk@whitehouse.gov |            |
+            | Obama      | obama    | jfk@whitehouse.gov |            |
+            | Abraham    | lincoln  | jfk@whitehouse.gov |            |
+            | Einstein   | einstein | jfk@whitehouse.gov |            |
+            | Tesla      | tesla    | jfk@whitehouse.gov |            |
+
+  @api @reports
+  Scenario: Running a site report that searches site owner email addresses for a keyword
+      Given I am logging in as a user who "can" "access os reports"
+        And I run the "site" report with "keyword" set to "john" and <checkboxes> selected:
+            | username |
+       Then I will see a report with the following <rows>:
+            | site title | site url | site owner email   | os install |
+            | John       | john     | jfk@whitehouse.gov |            |
+            | Obama      | obama    | jfk@whitehouse.gov |            |
+            | Abraham    | lincoln  | jfk@whitehouse.gov |            |
+            | Einstein   | einstein | jfk@whitehouse.gov |            |
+            | Tesla      | tesla    | jfk@whitehouse.gov |            |
+
+  @api @reports
+  Scenario: Running a site report that searches site owner email addresses for a keyword
+      Given I am logging in as a user who "can" "access os reports"
+        And I run the "site" report with "keyword" set to "john" and <checkboxes> selected:
+            | site name |
+       Then I will see a report with the following <rows>:
+            | site title | site url | site owner email   | os install |
+            | John       | john     | jfk@whitehouse.gov |            |
+
+  @api @reports
+  Scenario: Running a site report that searches site owner email addresses for a keyword
+      Given I am logging in as a user who "can" "access os reports"
+        And I run the "site" report with "keyword" set to "Rumpelstiltskin" and <checkboxes> selected:
+            | email     |
+            | username  |
+            | site name |
+       Then I will see a report with no results
