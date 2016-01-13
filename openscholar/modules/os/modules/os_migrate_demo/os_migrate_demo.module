@@ -198,10 +198,12 @@ function os_migrate_demo_dummy_xml_courses() {
   echo file_get_contents(drupal_get_path('module', 'harvard_courses') . '/dummy_courses.xml');
 }
 
+/**
+ * Alter callback for drupal_http_request function.
+ */
 function os_migrate_demo_http_request_alter($url, array $options = array()) {
-  // check if we need to alter the URl.
 
-  // Set the variable to FALSE in order to prevent recursion error.
+  // check if we need to alter the URl.
   if ($parse = drupal_parse_url($url)) {
     $query = new EntityFieldQuery();
     $result = $query
@@ -220,6 +222,7 @@ function os_migrate_demo_http_request_alter($url, array $options = array()) {
 
   }
 
+  // Set the variable to FALSE in order to prevent recursion error.
   variable_set('drupal_http_request_function', FALSE);
 
   $result = drupal_http_request($url, $options);
