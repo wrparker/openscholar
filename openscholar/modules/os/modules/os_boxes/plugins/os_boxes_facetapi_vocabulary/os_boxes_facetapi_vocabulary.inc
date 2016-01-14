@@ -238,6 +238,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
 
         if (!empty($block['content']['sm_og_vocabulary'])) {
           // Sort by the Vocabulary weight if that option is selected.
+        	//print_r($this->options);
           if ($this->options['sort_by'] == 'weight') {
             $query = new EntityFieldQuery();
             $results = $query->entityCondition('entity_type', 'taxonomy_vocabulary')
@@ -254,8 +255,10 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
             $block['content']['sm_og_vocabulary'] = $ordered_vocab;
           }
           else {
-            // Default is to sort by vocab's title.
-            ksort($block['content']['sm_og_vocabulary']);
+            // Default is to sort by title.
+            foreach (array_keys($block['content']['sm_og_vocabulary']) as $vocabulary_name) {
+              array_sort_by_column($block['content']['sm_og_vocabulary'][$vocabulary_name]['#items'], 'data');              
+            }
           }
         }
 
@@ -271,7 +274,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
   /**
    * When submitting a box we need to invalidate here.
    */
-  public function options_submit() {
+  public function options_submit($form, $form_state) {
     if (module_exists('vsite') && !$vsite = vsite_get_vsite()) {
       return;
     }
@@ -300,4 +303,22 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
  */
 function os_boxes_facetapi_vocabulary_ajax_callback($form, &$form_state) {
   return $form['options']['vocab_wrapper'];
+}
+
+/**
+ * Function to sort multidimentional array.
+ *
+ * @param $arr
+ *   The reference to the actual array element that needs to be sorted.
+ * @param $col
+ *   The inner array key for sorting.
+ * @param $dir
+ *   To define sorting order.
+ */
+function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
+  $sort_col = array();
+  foreach ($arr as $key=> $row) {
+    $sort_col[$key] = strip_tags($row[$col]);
+  }
+  array_multisort($sort_col, $dir, $arr);
 }
