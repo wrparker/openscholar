@@ -238,7 +238,6 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
 
         if (!empty($block['content']['sm_og_vocabulary'])) {
           // Sort by the Vocabulary weight if that option is selected.
-        	//print_r($this->options);
           if ($this->options['sort_by'] == 'weight') {
             $query = new EntityFieldQuery();
             $results = $query->entityCondition('entity_type', 'taxonomy_vocabulary')
