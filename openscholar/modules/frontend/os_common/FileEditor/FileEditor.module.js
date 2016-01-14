@@ -26,7 +26,7 @@
 
           scope.fileEditAddt = '';
           scope.date = '';
-          scope.description_label = 'Note (seen only by site admins)';
+          scope.description_label = 'Descriptive Text - will display under the filename';
 
           scope.$watch('file', function (f) {
             if (!f) return;
