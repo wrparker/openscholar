@@ -7,6 +7,7 @@
     }).
     constant("FILEEDITOR_RESPONSES", {
       SAVED: "saved",
+      REPLACED: "replaced",
       NO_CHANGES: "no changes",
       CANCELED: "canceled"
     }).
@@ -19,7 +20,9 @@
         templateUrl: libraryPath + '/file_edit_base.html?vers='+Drupal.settings.version.FileEditor,
         link: function (scope, elem, attr, c, trans) {
           var fileService = new EntityService('files', 'id'),
-              files = [];
+              files = [],
+              file_replaced = false;
+
           fileService.fetch().then(function (data) {
             files = data;
           });
@@ -132,6 +135,7 @@
                 .success(function (result) {
                   scope.showWarning = false;
                   scope.replaceSuccess = true;
+                  file_replaced = true;
 
                   $timeout(function () {
                     scope.replaceSuccess = false;
@@ -159,11 +163,14 @@
                 if (result.data || typeof scope.file.new != 'undefined') {
                   scope.onClose({saved: FER.SAVED});
                 }
+                else if (file_replaced) {
+                  scope.onClose({saved: FER.REPLACED});
+                }
                 else if (result.detail) {
-                  scope.onClose({saved: FER.NO_CHANGES})
+                  scope.onClose({saved: FER.NO_CHANGES});
                 }
                 else {
-                  scope.onClose({saved: FER.CANCELED})
+                  scope.onClose({saved: FER.CANCELED});
                 }
             },
             function(result) {
@@ -194,7 +201,7 @@
           });
 
           scope.cancel = function () {
-            scope.onClose({saved: FER.CANCELED});
+            scope.onClose({saved: file_replaced ? FER.REPLACED : FER.CANCELED});
           }
 
           scope.closeErrors = function () {
