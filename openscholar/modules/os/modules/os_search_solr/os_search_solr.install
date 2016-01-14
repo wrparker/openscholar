@@ -79,21 +79,18 @@ function os_search_solr_update_7000() {
 }
 
 /**
- * Clearing the cache before running the search solr updates.
- */
-function os_search_solr_update_7001() {
-  drupal_flush_all_caches();
-}
-
-/**
  * Migrate search blocks to boxes.
  */
-function os_search_solr_update_7002() {
+function os_search_solr_update_7001() {
+  if (!boxes_box::factory('os_search_solr_search_box', array())) {
+    throw new Exception('The new search plugin does not exist. Please clear the cache and re trigger this update path.');
+  }
+
   $overrides = db_select('spaces_overrides', 'so')
     ->fields('so', array('object_id', 'value', 'id'))
     ->condition('object_type', 'context')
     ->condition('object_id', '%reaction:block', 'LIKE')
-    ->condition('value', '%os_search_db-site-search%', 'LIKE')
+    ->condition('value', '%site-search%', 'LIKE')
     ->orderBy('so.id')
     ->execute();
 
@@ -101,23 +98,24 @@ function os_search_solr_update_7002() {
     $blocks = unserialize($override->value);
 
     // In case the view is used, create a new block that will replace it.
-    if (isset($blocks['blocks']['os_search_db-site-search'])) {
-      // Creating a new widget instance.
-      $box = boxes_box::factory('os_search_solr_search_box', array());
-      $box->description = t('Site search');
-      $box->delta = time();
-      $box->save();
+    foreach ($blocks['blocks'] as $key => &$block) {
 
-      // Replace the old one with the new instance.
-      $old_block = $blocks['blocks']['os_search_db-site-search'];
-      $blocks['blocks']['boxes-' . $box->delta] = array(
-        'module' => 'boxes',
-        'delta' => $box->delta,
-        'region' => $old_block['region'],
-        'weight' => $old_block['weight'],
-      );
-      unset($blocks['blocks']['os_search_db-site-search']);
-      $override->value = serialize($blocks);
+      if (strpos($key, 'site-search') !== FALSE) {
+        // Creating a new widget instance.
+        $box = boxes_box::factory('os_search_solr_search_box', array());
+        $box->description = t('Site search');
+        $box->delta = time();
+        $box->save();
+
+        // Replace the old one with the new instance.
+        $old_block = $blocks['blocks'][$key];
+        $block = array(
+          'module' => 'boxes',
+          'delta' => $box->delta,
+          'region' => $old_block['region'],
+          'weight' => $old_block['weight'],
+        );
+      }
     }
 
     db_update('spaces_overrides')
