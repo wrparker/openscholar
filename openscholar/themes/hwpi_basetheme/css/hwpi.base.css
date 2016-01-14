@@ -642,7 +642,7 @@ article.node-teaser.node-person .field-name-field-person-photo ~ .node-content {
     width: 100%;
 }
 
-.node-person .field-name-field-website {
+.two-sidebars .node-person .field-name-field-website {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

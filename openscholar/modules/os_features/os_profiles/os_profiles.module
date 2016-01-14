@@ -1589,3 +1589,23 @@ function os_profiles_copy_bio_to_new_vsite($original_person, $new_vsite) {
 function os_profiles_form_node_form_alter(&$form, $form_state) {
   $form['field_child_site']['#access'] = FALSE;
 }
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function os_profiles_element_info_alter(&$type) {
+  if (isset($type['link_field'])) {
+    $type['link_field']['#process'][] = 'os_profiles_link_field_process';
+  }
+}
+
+/**
+ * process callback for link_field
+ */
+function os_profiles_link_field_process($element, $form_state, $complete_form) {
+  if ($element['#field_name'] == 'field_website') {
+    $element['title']['#title'] = t('Link Text');
+  }
+
+  return $element;
+}
