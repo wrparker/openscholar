@@ -12,7 +12,8 @@
       angular.element(elem).attr({
         href: '#',
         'file-editor-modal': '',
-        fid: urlBits[1]
+        fid: urlBits[1],
+        'on-close': 'close(result, '+urlBits[1]+')'
       });
     }
 
@@ -40,5 +41,38 @@
 
       jQuery('a.media-gallery-add.launcher.media-gallery-add-processed').bind('click', Drupal.media_gallery.open_browser);
     }
-  });
+  })
+  .directive('mediaGalleryItem', ['FILEEDITOR_RESPONSES', function (FER) {
+
+      return {
+        restrict: 'AE',
+        link: function (scope, elem, attrs, ctrls, transclude) {
+          scope.images = scope.images || {};
+          var fid = 0;
+          angular.forEach(elem.find('a'), function (el) {
+            var f = angular.element(el).attr('fid');
+            if (f) {
+              fid = f;
+            }
+          });
+
+          var imgs = elem.find('img');
+          for (var i=0; i< imgs.length; i++) {
+            var el = imgs[i];
+            if (el.classList.contains('image-style-media-gallery-thumbnail')) {
+              scope.images[fid] = el;
+              break;
+            }
+          };
+
+          scope.close = function (result, fid) {
+            if (result == FER.REPLACED || result == FER.SAVED) {
+              var new_url = scope.images[fid].src.replace(/m=(\d*)/, 'm='+Math.floor(Date.now()/1000))
+              scope.images[fid].src = new_url;
+            }
+          }
+
+        }
+      }
+  }]);
 })();
