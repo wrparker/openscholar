@@ -110,3 +110,9 @@
 .front .block-boxes-os_boxes_columns .block-boxes-os_sv_list_box .node {
     width: 100%;
 }
+#header-container .region-inner .boxes-box-content p {
+    margin: 0px;
+}
+#header-container .region-inner .block-boxes-os_boxes_html {
+    width: 100%;
+}
