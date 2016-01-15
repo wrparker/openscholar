@@ -36,7 +36,7 @@
 .front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html,
 .front .block-boxes-os_boxes_tabs .block-boxes-os_boxes_html,
 .front .block-boxes-os_boxes_accordion .block-boxes-os_boxes_html,
-.front .block-boxes-os_boxes_media img {
+.front #columns .block-boxes-os_boxes_media img {
     width: 100%;
 }
 .front .block.block-boxes-os_slideshow_box #layout_3_1_overlay,
@@ -108,11 +108,5 @@
 }
 .front .block-boxes-os_boxes_columns .block-boxes-os_sv_list_box,
 .front .block-boxes-os_boxes_columns .block-boxes-os_sv_list_box .node {
-    width: 100%;
-}
-#header-container .region-inner .boxes-box-content p {
-    margin: 0px;
-}
-#header-container .region-inner .block-boxes-os_boxes_html {
     width: 100%;
 }
