@@ -36,7 +36,7 @@
 .front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html,
 .front .block-boxes-os_boxes_tabs .block-boxes-os_boxes_html,
 .front .block-boxes-os_boxes_accordion .block-boxes-os_boxes_html,
-.front .block-boxes-os_boxes_media img {
+.front #columns .block-boxes-os_boxes_media img {
     width: 100%;
 }
 .front .block.block-boxes-os_slideshow_box #layout_3_1_overlay,
