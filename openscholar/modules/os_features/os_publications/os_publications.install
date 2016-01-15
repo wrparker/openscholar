@@ -1438,3 +1438,14 @@ function os_publications_update_7037() {
   }
 }
 
+/**
+ * Update the csl fields.
+ */
+function os_publications_update_7038() {
+  _reset_csl_map(FALSE);
+  $citations = array('mhra', 'chicago-author-date', 'apa');
+  foreach ($citations as $citateion) {
+    os_publications_revert_citeproc_style($citateion);
+  }
+}
+

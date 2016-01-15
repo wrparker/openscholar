@@ -536,6 +536,7 @@
         <text macro="date"/>
         <text macro="title"/>
       </group>
+      <text variable="container-title" prefix=". " />
       <text macro="description"/>
       <text macro="secondary-contributors" prefix=". "/>
       <text variable="sceondary-title"/>
