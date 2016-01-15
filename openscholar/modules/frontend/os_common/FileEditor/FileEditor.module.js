@@ -137,6 +137,8 @@
                   scope.replaceSuccess = true;
                   file_replaced = true;
 
+                  fileService.register(result.data[0]);
+
                   $timeout(function () {
                     scope.replaceSuccess = false;
                   }, 5000);
@@ -159,7 +161,7 @@
           }
 
           scope.save = function () {
-            fileService.edit(scope.file, ['preview', 'url']).then(function(result) {
+            fileService.edit(scope.file, ['preview', 'url', 'size', 'changed']).then(function(result) {
                 if (result.data || typeof scope.file.new != 'undefined') {
                   scope.onClose({saved: FER.SAVED});
                 }
