@@ -319,7 +319,7 @@
         this.register = function (entity) {
           ents[entity[idProp]] = entity;
 
-          weSaved[entity[idProp]] = entity.timestamp;
+          weSaved[entity[idProp]] = entity.changed;
           addToCaches(entityType, idProp, entity);
         };
       }
