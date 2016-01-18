@@ -210,28 +210,31 @@ function os_migrate_demo_http_request_alter($url, array $options = array()) {
       $url = "http://localhost:3000/index?file=56.json&empty_address=1";
     }
 
-    $query = new EntityFieldQuery();
-    $result = $query
-      ->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'person')
-      ->fieldCondition('field_uuid', 'value', $parse['query']['UUID'])
-      ->execute();
+    if (!empty($parse['query']['UUID'])) {
+      $query = new EntityFieldQuery();
+      $result = $query
+        ->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', 'person')
+        ->fieldCondition('field_uuid', 'value', $parse['query']['UUID'])
+        ->execute();
 
-    if (!empty($result['node']) && in_array(56, array_keys($result['node']))) {
-      $url = "http://localhost:3000/index?file=56.json";
+      if (!empty($result['node']) && in_array(56, array_keys($result['node']))) {
+        $url = "http://localhost:3000/index?file=56.json";
 
-      if (!empty($parse['query']['action'])) {
-        if ($parse['query']['action'] == 'update') {
-          variable_set('os_profiles_nodes_uuid', $parse['query']['UUID']);
-          variable_set('os_profiles_nodes_uuid_time', time());
-        }
-        else {
-          // Update the original module.
-          $wrapper = entity_metadata_wrapper('node', 56);
-          $wrapper->field_destination_url->set(array($parse['query']['listener']));
-          $wrapper->save();
+        if (!empty($parse['query']['action'])) {
+          if ($parse['query']['action'] == 'update') {
+            variable_set('os_profiles_nodes_uuid', $parse['query']['UUID']);
+            variable_set('os_profiles_nodes_uuid_time', time());
+          }
+          else {
+            // Update the original module.
+            $wrapper = entity_metadata_wrapper('node', 56);
+            $wrapper->field_destination_url->set(array($parse['query']['listener']));
+            $wrapper->save();
+          }
         }
       }
+
     }
   }
 
