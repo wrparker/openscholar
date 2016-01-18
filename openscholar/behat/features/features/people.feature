@@ -54,11 +54,11 @@ Feature:
     Given I am logging in as "john"
       And I visit "john/people/hillary-diane-rodham-clinton"
       And I edit the node "Hillary Diane Rodham Clinton" in the group "john"
-      And I should not see "Professional Titles/Affiliations"
+      And I should not see "67th United States Secretary of State"
           # Delete the original node.
      When I delete the node of type "person" named "Hillary Diane Rodham Clinton" in the group "obama"
       And I edit the node "Hillary Diane Rodham Clinton" in the group "john"
-     Then I should see "Professional Titles/Affiliations"
+     Then I should see "67th United States Secretary of State"
 
   @api @features_second
   Scenario: Test changing the owner of a VSite.
