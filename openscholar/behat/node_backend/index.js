@@ -1,6 +1,8 @@
 var express = require('express');
 var http = require("http");
 var fs = require('fs');
+var NodeCache = require( "node-cache" );
+var cache = new NodeCache();
 
 express().get('*', function(req, response) {
   fs.readFile(__dirname + '/public/' + req.query.file, 'utf8', function (err, data) {
@@ -10,19 +12,35 @@ express().get('*', function(req, response) {
     }
 
     if (req.query.file == '56.json') {
+
+      if (req.query.empty_address == 1) {
+        response.send(JSON.stringify({'field_address': ''}));
+        return;
+      }
+
       response.set('Content-Type', 'application/json; charset=utf-8');
 
-      http.get('http://127.0.0.1:8888/?q=obama/node/56.json', function(res) {
+      cache.get('cachedResult', function(err, value) {
+        if (err) {
+          return;
+        }
+        if (value == undefined) {
+          http.get('http://127.0.0.1:8888/?q=obama/node/56.json', function(res) {
 
-        // Buffer the body entirely for processing as a whole.
-        var bodyChunks = [];
-        res
-          .on('data', function(chunk) {
-            bodyChunks.push(chunk);
-          })
-          .on('end', function() {
-            response.send(Buffer.concat(bodyChunks));
-        });
+            var bodyChunks = [];
+            res
+              .on('data', function(chunk) {
+                bodyChunks.push(chunk);
+              })
+              .on('end', function() {
+                cache.set('cachedResult', Buffer.concat(bodyChunks).toString());
+                response.send(Buffer.concat(bodyChunks));
+              });
+          });
+        }
+        else {
+          response.send(value);
+        }
       });
 
       return;

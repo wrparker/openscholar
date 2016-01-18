@@ -9,6 +9,7 @@
   "author": "Roy Segall",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.13.3"
+    "express": "^4.13.3",
+    "node-cache": "^3.0.1"
   }
 }

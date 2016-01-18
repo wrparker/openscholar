@@ -807,6 +807,10 @@ function os_profiles_get_origin_node_values($address, $fields) {
   $values = array();
 
   foreach ($fields as $field) {
+    if (!in_array($field, array_keys($data))) {
+      continue;
+    }
+
     $info = field_info_field($field);
     if (empty($data[$field])) {
       // The field value in the original node is empty. Entity metadata wrapper
