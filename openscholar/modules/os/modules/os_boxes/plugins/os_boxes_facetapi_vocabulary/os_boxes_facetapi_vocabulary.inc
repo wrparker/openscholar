@@ -338,6 +338,8 @@ function os_boxes_facetapi_vocabulary_ajax_callback($form, &$form_state) {
  *
  * @param $arr
  *   The reference to the actual array element that needs to be sorted.
+ * @param $col
+ *   To define target column name of multi-dimentional array for sorting.
  * @param $dir
  *   To define sorting order.
  */
