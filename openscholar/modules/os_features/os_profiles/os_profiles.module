@@ -815,7 +815,7 @@ function os_profiles_get_origin_node_values($address, $fields) {
       $value = $info['cardinality'] == 1 ? NULL : array(NULL);
     }
     else {
-      $value = $data[$field];
+      $value = empty($data[$field]) ? NULL : $data[$field];
     }
 
     $values[$field] = $value;
