@@ -37,8 +37,8 @@ env:
 #    - TEST_SUITE=features_second #- working
 #    - TEST_SUITE=harvard #- working
 
-    - TEST_SUITE=misc_first
-#    - TEST_SUITE=misc_second
+#    - TEST_SUITE=misc_first #- working
+    - TEST_SUITE=misc_second
 #    - TEST_SUITE=solr # - working
 #    - TEST_SUITE=taxonomy # - working
 #    - TEST_SUITE=vsite # - working with wip
