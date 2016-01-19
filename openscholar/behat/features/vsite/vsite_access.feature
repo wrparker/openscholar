@@ -16,7 +16,7 @@ Feature:
       And I should not see "More tests to the semester"
       And I should see "Lou's site news"
 
-  @api @vsite
+  @api @wip
   Scenario: Testing the robot txt when site is private
     Given I am logging in as "john"
       And I visit "lincoln/cp/settings"
