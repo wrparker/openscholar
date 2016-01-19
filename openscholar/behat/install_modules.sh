@@ -31,11 +31,11 @@ if [ "${TEST_SUITE}" == "solr" ]; then
   wget http://localhost:8983/solr/update?commit=true
 fi
 
-if [ "${TEST_SUITE}" == "features_second" ]; then
+#if [ "${TEST_SUITE}" == "features_second" ]; then
   # Run selenium.
   sh -e /etc/init.d/xvfb start
   export DISPLAY=:99.0
-  wget http://selenium-release.storage.googleapis.com/2.48/selenium-server-standalone-2.48.0.jar
+  wget http://selenium-release.storage.googleapis.com/2.48/selenium-server-standalone-2.49.0.jar
   nohup bash -c "java -jar selenium-server-standalone-2.48.0.jar -p 4444 2>&1 &"
   sleep 5
-fi
+#fi
