@@ -253,7 +253,7 @@
                   k = findByProp(idProp, entity[idProp]);
                 ents[k] = entity;
 
-                weSaved[entity[idProp]] = data.updatedOn;
+                weSaved[entity[idProp]] = entity.changed;
                 $rootScope.$broadcast(eventName + '.update', entity);
                 var keys = getCacheKeysForEntity(type, idProp, entity);
                 for (var k in keys) {
