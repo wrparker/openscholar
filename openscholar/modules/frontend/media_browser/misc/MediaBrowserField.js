@@ -95,6 +95,14 @@
           file.highlight = toHighlight;
         }
 
+        scope.fieldIsFull = function () {
+          if (scope.cardinality == -1) {
+            return false;
+          }
+
+          return scope.selectedFiles.length >= scope.cardinality;
+        }
+
         var label = elem.parent().find(' label');
         elem.parent().find(' > *').not(elem).remove();
         elem.before(label);
@@ -112,7 +120,8 @@
             types: '@',
             extensions: '@',
             upload_text: '@uploadText',
-            droppable_text: '@droppableText'
+            droppable_text: '@droppableText',
+            cardinality: '@'
           }
         }
       }

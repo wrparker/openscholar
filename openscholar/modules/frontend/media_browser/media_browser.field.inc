@@ -96,12 +96,13 @@ function media_browser_field_widget_form(&$form, &$form_state, $field, $instance
         )
       ),
     ),
-    '#markup' => format_string('<div media-browser-field max-filesize="@filesize" types="@types" extensions="@extensions" upload-text="@upload-text" droppable-text="@droppable-text" files="[]"></div>', array(
+    '#markup' => format_string('<div media-browser-field max-filesize="@filesize" types="@types" extensions="@extensions" upload-text="@upload-text" droppable-text="@droppable-text" files="[]" cardinality="@cardinality"></div>', array(
       '@filesize' => $max_size,
       '@types' => implode(',', array_filter($widget_settings['allowed_types'])),
       '@extensions' => isset($field_settings['file_extensions']) ? $field_settings['file_extensions'] : media_variable_get('file_extensions'),
       '@upload-text' => $widget_settings['upload_button_text'],
-      '@droppable-text' => $widget_settings['droppable_area_text']
+      '@droppable-text' => $widget_settings['droppable_area_text'],
+      '@cardinality' => $field['cardinality']
     ))
   );
 
@@ -138,12 +139,13 @@ function media_browser_field_widget_media_draggable_file_form_alter(&$elements, 
   $max_size = preg_replace('/^([\d]+)([^\d\s]).*/', '$1 $2B', $max_size);
 
   $elements['angularbrowser'] = array(
-    '#markup' => format_string('<div media-browser-field max-filesize="@filesize" types="@types" extensions="@extensions" upload-text="@upload-text" droppable-text="@droppable-text" files="[]"></div>', array(
+    '#markup' => format_string('<div media-browser-field max-filesize="@filesize" types="@types" extensions="@extensions" upload-text="@upload-text" droppable-text="@droppable-text" files="[]" cardinality="@cardinality"></div>', array(
       '@filesize' => $max_size,
       '@types' => implode(',', array_filter($widget_settings['allowed_types'])),
       '@extensions' => !empty($field_settings['file_extensions']) ? $field_settings['file_extensions'] : media_variable_get('file_extensions'),
       '@upload-text' => $widget_settings['upload_button_text'],
-      '@droppable-text' => $widget_settings['droppable_area_text']
+      '@droppable-text' => $widget_settings['droppable_area_text'],
+      '@cardinality' => $elements['#field']['cardinality']
     ))
   );
 }
