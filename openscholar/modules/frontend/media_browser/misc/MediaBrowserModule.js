@@ -67,7 +67,7 @@
 
     $scope.toInsert = [];
 
-    $scope.availTypes = [
+    var allTypes = [
       {label: 'Image', value: 'image'},
       {label: 'Document', value: 'document'},
       {label: 'Video', value: 'video'},
@@ -75,6 +75,18 @@
       {label: 'Executable', value: 'executable'},
       {label: 'Audio', value: 'audio'}
     ];
+
+    var defaultFilteredTypes = params.types;
+    $scope.availTypes = [];
+    $scope.availFilter = [];
+    for (var j in defaultFilteredTypes) {
+      for (var k=0; k<allTypes.length; k++) {
+        if (defaultFilteredTypes[j] == allTypes[k].value) {
+          $scope.availTypes.push(allTypes[k]);
+          $scope.availFilter.push(allTypes[k].value);
+        }
+      }
+    }
 
     $scope.extensions = [];
     if (params.file_extensions) {
@@ -111,7 +123,7 @@
     }
 
     $scope.clearFilters = function () {
-      $scope.filteredTypes = [];
+      $scope.filteredTypes = defaultFilteredTypes;
       $scope.search = '';
     }
 
