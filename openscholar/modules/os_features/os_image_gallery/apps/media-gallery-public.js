@@ -46,8 +46,8 @@
 
       return {
         restrict: 'AE',
+        scope: true,
         link: function (scope, elem, attrs, ctrls, transclude) {
-          scope.images = scope.images || {};
           var fid = 0;
           angular.forEach(elem.find('a'), function (el) {
             var f = angular.element(el).attr('fid');
@@ -56,19 +56,39 @@
             }
           });
 
-          var imgs = elem.find('img');
-          for (var i=0; i< imgs.length; i++) {
-            var el = imgs[i];
-            if (el.classList.contains('image-style-media-gallery-thumbnail')) {
-              scope.images[fid] = el;
-              break;
+          scope.$on('EntityService.files.update', function (event, entity) {
+            if (entity.id == fid) {
+              var c = elem,
+                  children = c.children();
+
+              for (var i=0; i<children.length; i++) {
+                if (children[i].nodeName == 'A') {
+                  var spans = angular.element(children[i]).find('span');
+                  for (var j=0; j<spans.length; j++) {
+                    if (spans[j].classList.contains('media-title')) {
+                      spans[j].innerHTML = entity.name;
+                    }
+                  }
+                }
+              }
             }
-          };
+          });
 
           scope.close = function (result, fid) {
             if (result == FER.REPLACED || result == FER.SAVED) {
-              var new_url = scope.images[fid].src.replace(/m=(\d*)/, 'm='+Math.floor(Date.now()/1000))
-              scope.images[fid].src = new_url;
+
+              var imgs = elem.find('img'),
+                img;
+              for (var i=0; i< imgs.length; i++) {
+                var el = imgs[i];
+                if (el.classList.contains('image-style-media-gallery-thumbnail')) {
+                  img = el;
+                  break;
+                }
+              };
+
+              var new_url = img.src.replace(/m=(\d*)/, 'm='+Math.floor(Date.now()/1000))
+              img.src = new_url;
             }
           }
 
