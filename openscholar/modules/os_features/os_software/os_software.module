@@ -294,7 +294,7 @@ function os_software_os_packaging_method_option() {
  * Finds other recommended releases, marks them "Not recommended"
  */
 function _os_software_new_recommended_release($node) {
-  // if this release is set as 'not recommended', then no need to alter other releases.
+  // If this release is set as 'not recommended', then no need to alter other releases.
   if ($node->field_software_recommended[LANGUAGE_NONE][0]['value'] == 0) {
     return;
   }
