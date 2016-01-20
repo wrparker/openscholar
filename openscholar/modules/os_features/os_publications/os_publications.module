@@ -652,7 +652,7 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
   // Locate the URL redirect field under the biblio URL field.
   $form['field_biblio_redirect']['#weight'] = $form['url']['#weight'] + 0.1;
   
-  // define after_build callback for altering empty vocabulary values on submit.
+  // Define after_build callback for altering empty vocabulary values on submit.
   $form['og_vocabulary'][LANGUAGE_NONE]['#after_build'][] = '_os_publications_vocabulary_after_build';
 }
 
