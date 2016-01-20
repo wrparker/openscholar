@@ -98,9 +98,10 @@ function os_search_solr_update_7001() {
     $blocks = unserialize($override->value);
 
     // In case the view is used, create a new block that will replace it.
-    foreach ($blocks['blocks'] as $key => &$block) {
-
+    unset($blocks['blocks']['os_search_db-site-search']);
+    foreach ($blocks['blocks'] as $key => $block) {
       if (strpos($key, 'site-search') !== FALSE) {
+
         // Creating a new widget instance.
         $box = boxes_box::factory('os_search_solr_search_box', array());
         $box->description = t('Site search');
@@ -109,7 +110,7 @@ function os_search_solr_update_7001() {
 
         // Replace the old one with the new instance.
         $old_block = $blocks['blocks'][$key];
-        $block = array(
+        $blocks['blocks'][$key] = array(
           'module' => 'boxes',
           'delta' => $box->delta,
           'region' => $old_block['region'],
@@ -117,6 +118,8 @@ function os_search_solr_update_7001() {
         );
       }
     }
+
+    $override->value = serialize($blocks);
 
     db_update('spaces_overrides')
       ->fields(array('value' => $override->value))
