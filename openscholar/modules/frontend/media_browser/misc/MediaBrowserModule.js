@@ -7,6 +7,11 @@
        rootPath = Drupal.settings.paths.moduleRoot;
     })
     .run(['mbModal', function (mbModal) {
+      // Disable drag and drop behaviors on the window object, to prevent files from
+      angular.element(window).on('dragover drop', function(e) {
+        e = e || event;
+        e.preventDefault();
+      });
 
       // if the File object is not supported by this browser, fallback to the original media browser
       if (mbModal.requirementsMet()) {
