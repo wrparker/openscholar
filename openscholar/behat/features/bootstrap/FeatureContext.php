@@ -2938,7 +2938,7 @@ class FeatureContext extends DrupalContext {
     // get content requirements from test case
     $requirements = array();
     foreach($contentRequirements->getRows() as $row) {
-      $requirements[ucfirst($row[0])] = ($row[1] == 'populated') ? 1 : 0;
+      $requirements[$row[0]] = ($row[1] == 'populated') ? 1 : 0;
     }
 
     // compare data to requirements
@@ -2981,7 +2981,7 @@ class FeatureContext extends DrupalContext {
     $headers = array_splice($required_data, 0, 1);
     foreach ($required_data as $num => $row) {
       foreach ($row as $index => $value) {
-        $header = strtolower($headers[0][(int)$index]);
+        $header = $headers[0][(int)$index];
         if ($header == "os install") {
           $required_data[(int)$num][$header] = $install;
         }
@@ -3009,25 +3009,95 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I run the "([^"]*)" report with "([^"]*)" set to the "([^"]*)" of this "([^"]*)"$/
+   */
+  public function iRunTheReportWithSetToTheOfThis($report, $dateField, $dateParameter, $datePeriod) {
+    $steps = array();
+    $steps[] = new Step\When('I visit "admin/reports/' . $report . '"');
+
+    $beginning = "";
+    $end = "";
+    $now = time();
+    switch ($datePeriod) {
+      case "year":
+        $beginning = date("Y", $now) . "0101";
+        $end = date("Y", $now) . "1231";
+        break;
+    }
+    $fieldValue = ${$dateParameter};
+    if ($dateField == "Creation start") {
+      $steps[] = new Step\When('I fill in "edit-creationstart" with "' . $fieldValue . '"');
+    } elseif ($dateField == "Creation end") {
+      $steps[] = new Step\When('I fill in "edit-creationend" with "' . $fieldValue . '"');
+    } else {
+      $steps[] = new Step\When('I fill in "' . $dateField . '" with "' . $fieldValue . '"');
+    }
+    $steps[] = new Step\When('I select the radio button named "includesites" with value "content"');
+    $steps[] = new Step\When('I press "Download CSV of Full Report"');
+
+    return $steps;
+  }
+
+  /**
+   * @Then /^I will see a report with "([^"]*)" values "([^"]*)" to the "([^"]*)" of this "([^"]*)"$/
+   */
+  public function iWillSeeAReportWithValuesToTheOfThis($column, $operator, $dateParameter, $datePeriod) {
+    $beginning = "";
+    $end = "";
+    $now = time();
+    switch ($datePeriod) {
+      case "year":
+        $beginning = date("Y", $now) . "0101";
+        $end = date("Y", $now) . "1231";
+        break;
+    }
+    $submittedValue = ${$dateParameter};
+    switch ($operator) {
+      case "equal":
+        $operatorCode = "=";
+        break;
+      case "less than or equal":
+        $operatorCode = "<=";
+        break;
+      case "greater than or equal":
+        $operatorCode = ">=";
+        break;
+    }
+
+    $file_data = $this->getDataFromCSVFile($this->getSession()->getPage());
+    foreach ($file_data as $num => $row) {
+      $fileValue = $row[$column];
+      eval('$dateComparison = strtotime($fileValue) ' . $operatorCode . ' strtotime($submittedValue);');
+      if (!$dateComparison) {
+        throw new Exception(sprintf("Row #" . ($num + 1) . " has a '$column' value that is not $operator to $submittedValue."));
+      }
+    }
+  }
+
+  /**
    * Helper function to convert CSV file to associative array
    */
   public function getDataFromCSVFile($source) {
-    $content = explode("\n", $source->getContent());
+    $fileContent = $source->getContent();
+    if (strpos($fileContent, "html>") !== FALSE) {
+        throw new Exception(sprintf("CSV file was not created."));
+    }
+    $contentArray = explode("\n", $fileContent);
+
     $data = array();
     $headers = array();
     // get data from file
-    for ($count = 0; $count < count($content); $count++) {
+    for ($count = 0; $count < count($contentArray); $count++) {
       if ($count == 0) {
-        $headers = str_getcsv($content[0]);
+        $headers = str_getcsv($contentArray[0]);
       }
       else {
-        $values = explode('", "', trim($content[$count], '"'));
+        $values = explode('", "', trim($contentArray[$count], '"'));
         for ($column = 0; $column < count($values); $column++) {
-          $data[$count - 1][$headers[$column]] = $values[$column];
+          $data[$count - 1][strtolower($headers[$column])] = $values[$column];
         }
       }
     }
     return $data;
   }
-
 }

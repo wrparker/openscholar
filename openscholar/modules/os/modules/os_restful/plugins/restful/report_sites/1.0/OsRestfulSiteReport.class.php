@@ -66,9 +66,12 @@ class OsRestfulSiteReport extends \OsRestfulReports {
    */
   public function getQueryForList() {
     global $base_url;
-    $query = $this->getQuery();
+
     $fields = $this->getPublicFields();
     $request = $this->getRequest();
+    $query = db_select('purl');
+    $query->addField('purl', 'id');
+    $query->addField('purl', 'value');
 
     // site creation data
     if (isset($fields['site_created']) || isset($request['creationstart']) || isset($request['creationend'])) {
@@ -108,18 +111,18 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       }
       $query->leftJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
       $query->leftJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
-      $query->groupBy('purl.id');
+      $query->groupBy('purl.id, purl.value');
     }
     elseif (isset($fields['content_last_updated']) || $request['includesites'] == "content"){
       $query->addExpression('MAX(content.changed)', 'content_last_updated');
       $query->innerJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
       $query->innerJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
-      $query->groupBy('purl.id');
+      $query->groupBy('purl.id, purl.value');
     }
     elseif ($request['includesites'] == "nocontent"){
       $query->addExpression('COUNT(etid)', 'total');
       $query->leftJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
-      $query->groupBy('purl.id');
+      $query->groupBy('purl.id, purl.value');
       $query->havingCondition('total', '0', '=');
       if ($this->latestUpdate) {
         $fields['content_last_updated'] = array('property' => 'content_last_updated');
@@ -130,15 +133,18 @@ class OsRestfulSiteReport extends \OsRestfulReports {
 
     // optional fields
     if (isset($fields['site_created_by'])) {
-      $query->addField('creators', 'mail', 'site_created_by');
+      // fields are converted to expressions to satisfy sql_mode ONLY_FULL_GROUP_BY
+      $query->addExpression('MIN(creators.mail)', 'site_created_by');
       $subquery = db_select('og_membership','ogm')
-                  ->fields('ogm', array('gid', 'etid'))
                   ->condition('group_type', 'node', '=')
                   ->condition('entity_type', 'user', '=');
+      $subquery->groupBy('ogm.gid');
       $subquery->addExpression('MIN(created)', 'date');
-      $subquery->groupBy('gid');
+      $subquery->addExpression('MIN(etid)', 'etid');
+      $subquery->addExpression('MIN(gid)', 'gid');
       $query->innerJoin($subquery, 'vsite_created', 'vsite_created.gid = purl.id');
       $query->innerJoin('users', 'creators', 'vsite_created.etid = creators.uid');
+      $query->groupBy('purl.id, purl.value');
     }
     if ($this->latestUpdate && $request['includesites'] != "nocontent") {
       $query->havingCondition('content_last_updated', strtotime($this->latestUpdate), '<=');
@@ -146,20 +152,23 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       $this->setPublicFields($fields);
     }
     if (isset($fields['site_privacy_setting'])) {
-      $query->addField('access', 'group_access_value', 'site_privacy_setting');
+      // field is converted to expression to satisfy sql_mode ONLY_FULL_GROUP_BY
+      $query->addExpression('MIN(access.group_access_value)', 'site_privacy_setting');
       $query->innerJoin('field_data_group_access', 'access', 'access.entity_id = purl.id');
     }
     if (isset($fields['owner_subdomain'])) {
       $query->addField('u', 'mail', 'owner_subdomain');
     }
     if (isset($fields['custom_domain'])) {
-      $query->addExpression("'N'", 'custom_domain');
+       // field is converted to expression to satisfy sql_mode ONLY_FULL_GROUP_BY
+     $query->addExpression("'N'", 'custom_domain');
     }
     if (isset($fields['preset'])) {
       $query->addField('n', 'type', 'preset');
     }
     if (isset($fields['custom_theme_uploaded'])) {
-      $query->addField('so', 'value', 'custom_theme_uploaded');
+      // field is converted to expression to satisfy sql_mode ONLY_FULL_GROUP_BY
+      $query->addExpression('MIN(so.value)', 'custom_theme_uploaded');
       $query->leftJoin('spaces_overrides', 'so', "so.id = purl.id and so.type = 'og' and so.object_type = 'variable' AND so.object_id = 'flavors' and so.value <> :empty", array(':empty' => 'a:0:{}'));
     }
 
