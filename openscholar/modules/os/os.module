@@ -728,9 +728,11 @@ function os_preprocess_page(&$vars) {
   }
 
   $section_links['header'] = array(
-      'title' => 'This Section',
-    );
-  if ($module != 'os_front') {
+    'title' => 'This Section',
+  );
+
+  $item = menu_get_item("cp/build/features/{$module}");
+  if ($module != 'os_front' & $menu_item && $menu_item['href'] == "cp/build/features/{$module}") {
     $section_links['settings'] = array(
       'title' => t('Settings'),
       'href' => 'cp/build/features/' . $module,
