@@ -899,7 +899,7 @@ function os_update_7042() {
 }
 
 /**
- * Install OS exporter.
+ * Install OS Reports module.
  */
 function os_update_7043() {
   module_enable(array('os_reports'));
