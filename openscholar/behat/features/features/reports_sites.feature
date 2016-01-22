@@ -87,7 +87,7 @@ Feature:
   Scenario: Running a site report limited by content last updated dates
       Given I am logging in as a user who "can" "access os reports"
         And I run the "site" report with "Content last updated before" set to the "beginning" of this "year"
-			 Then I will see a report with no results
+       Then I will see a report with no results
 
   @api @reports
   Scenario: Running a site report limited by content last updated dates
@@ -96,25 +96,25 @@ Feature:
        Then I will see a report with "content last updated" values "less than or equal" to the "end" of this "year"
 
   @api @reports
-	Scenario: Running a site report limited by site creation date start
-			Given I am logging in as a user who "can" "access os reports"
-				And I run the "site" report with "Creation start" set to the "beginning" of this "year"
-			 Then I will see a report with "site created" values "greater than or equal" to the "beginning" of this "year"
+  Scenario: Running a site report limited by site creation date start
+      Given I am logging in as a user who "can" "access os reports"
+        And I run the "site" report with "Creation start" set to the "beginning" of this "year"
+       Then I will see a report with "site created" values "greater than or equal" to the "beginning" of this "year"
 
   @api @reports
-	Scenario: Running a site report limited by site creation date end
-			Given I am logging in as a user who "can" "access os reports"
-				And I run the "site" report with "Creation start" set to the "end" of this "year"
-			 Then I will see a report with no results
+  Scenario: Running a site report limited by site creation date end
+      Given I am logging in as a user who "can" "access os reports"
+        And I run the "site" report with "Creation start" set to the "end" of this "year"
+       Then I will see a report with no results
 
   @api @reports
-	Scenario: Running a site report limited by site creation date end
-			Given I am logging in as a user who "can" "access os reports"
-				And I run the "site" report with "Creation end" set to the "beginning" of this "year"
-			 Then I will see a report with no results
+  Scenario: Running a site report limited by site creation date end
+      Given I am logging in as a user who "can" "access os reports"
+        And I run the "site" report with "Creation end" set to the "beginning" of this "year"
+       Then I will see a report with no results
 
   @api @reports
-	Scenario: Running a site report limited by site creation date start
-			Given I am logging in as a user who "can" "access os reports"
-				And I run the "site" report with "Creation end" set to the "end" of this "year"
-			 Then I will see a report with "site created" values "less than or equal" to the "end" of this "year"
+  Scenario: Running a site report limited by site creation date start
+      Given I am logging in as a user who "can" "access os reports"
+        And I run the "site" report with "Creation end" set to the "end" of this "year"
+       Then I will see a report with "site created" values "less than or equal" to the "end" of this "year"
