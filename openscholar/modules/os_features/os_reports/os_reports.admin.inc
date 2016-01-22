@@ -351,7 +351,7 @@ function os_reports_site_form_submit($form, &$form_state) {
 
 /**
  * OS User report form
- */
+
 function os_reports_user_form($form, &$form_state) {
   os_common_angular_apps('ReportModule');
 
@@ -526,6 +526,7 @@ function os_reports_user_form($form, &$form_state) {
 
   return $form;
 }
+ */
 
 /**
  * Configure OS Reports module
