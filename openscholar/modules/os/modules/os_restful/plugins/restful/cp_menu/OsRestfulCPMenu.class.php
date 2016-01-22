@@ -346,7 +346,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         $admin_links[$key] = array(
           'label' => $link['title'],
           'type' => 'link',
-          'href' => "/{$link['href']}",
+          'href' => "{$link['href']}",
         );
       }
 

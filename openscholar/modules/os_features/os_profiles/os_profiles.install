@@ -71,3 +71,10 @@ function os_profiles_update_7006() {
 function os_profiles_update_7007() {
  features_revert(array('os_profiles' => array('field_instance')));
 }
+
+/**
+ * Updating website title max character limit from 128 to 75
+ */
+function os_profiles_update_7008() {
+ features_revert(array('os_profiles' => array('field_instance')));
+}

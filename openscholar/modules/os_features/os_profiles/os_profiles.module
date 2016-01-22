@@ -1273,6 +1273,7 @@ function _os_profiles_build_display_style_example($style) {
           <div>Often referred to by his initials JFK, was the 35th President of the United States, serving from 1961 until his assassination in 1963.</div>
           <div>555-1234</div>
           <div><a>example@address.com</a></div>
+          <div><a class="profile-link">Full Profile</a></div>
         </div>
       ';
       break;
@@ -1292,6 +1293,20 @@ function _os_profiles_build_display_style_example($style) {
   }
 
   return $result;
+}
+
+/**
+ * Implements hook_node_view_alter().
+ *
+ * Adds a link "full profile" as the last field in the slider
+ * when the profiles are set to Slide teaser display style
+ */
+function os_profiles_node_view_alter(&$build) {
+  // If 'person' content type are displayed in slide_teaser view mode, then appending additional element for Full Profile link.
+  if ($build['#bundle'] == 'person' && $build['#view_mode'] == 'slide_teaser') {
+    $build['os_profile_link']['#markup'] = l('Full Profile', 'node/' . $build['#node']->nid, array('attributes' => array('class' => 'profile-link')));
+    $build['os_profile_link']['#weight'] = 10;
+  }
 }
 
 /**
@@ -1588,4 +1603,24 @@ function os_profiles_copy_bio_to_new_vsite($original_person, $new_vsite) {
  */
 function os_profiles_form_node_form_alter(&$form, $form_state) {
   $form['field_child_site']['#access'] = FALSE;
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function os_profiles_element_info_alter(&$type) {
+  if (isset($type['link_field'])) {
+    $type['link_field']['#process'][] = 'os_profiles_link_field_process';
+  }
+}
+
+/**
+ * process callback for link_field
+ */
+function os_profiles_link_field_process($element, $form_state, $complete_form) {
+  if ($element['#field_name'] == 'field_website') {
+    $element['title']['#title'] = t('Link Text');
+  }
+
+  return $element;
 }

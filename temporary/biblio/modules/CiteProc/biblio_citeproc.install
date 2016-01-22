@@ -227,7 +227,7 @@ function _get_csl_field_map() {
         array(
           'title'                       => 'title',
           'container-title'             => 'biblio_secondary_title',
-          'collection-title'            => 'biblio_secondary_title',
+          'collection-title'            => '',
           'original-title'              => 'biblio_alternate_title',
           'publisher'                   => 'biblio_publisher',
           'publisher-place'             => 'biblio_place_published',
