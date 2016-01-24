@@ -177,7 +177,7 @@ a.biblio-abstract-link.toggle.expanded {
     padding: 8px;
     border: 1px solid #CCC;
 }
-.biblio-abstract-display .os-slider ol {
+.biblio-abstract-display ol {
     margin: 0 0 1.5em 25px;
 }
 /* ADD A LEFT MARGIN TO THE ABSTRACT SLIDER WHEN A BIBLIO THUMBNAIL IS USED */
