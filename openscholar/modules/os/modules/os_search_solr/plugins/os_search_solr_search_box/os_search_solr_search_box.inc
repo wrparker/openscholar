@@ -36,17 +36,19 @@ class os_search_solr_search_box extends os_boxes_default {
     $bundle = $this->options['bundle'];
     $bundles = os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP));
     // Use first bundle of the list in case none was selected before.
-    if (!$bundle) {
+    if (empty($bundle)) {
       $bundles_keys = array_keys($bundles);
       $bundle = reset($bundles_keys);
     }
+
+    unset($bundles['slideshow_slide'], $bundles['feed_importer']);
 
     $form['bundle'] = array(
       '#type' => 'select',
       '#description' => t('Which bundle would you like to use.'),
       '#title' => t('Content type'),
-      '#options' => array(NULL => t('None')) + $bundles,
-      '#default_value' => $bundle,
+      '#options' => array('-none-' => t('All')) + $bundles,
+      '#default_value' => !empty($bundle) ? $bundle : '-none-',
       '#multiple' => TRUE,
     );
 
@@ -145,8 +147,8 @@ class os_search_solr_search_box extends os_boxes_default {
   public function validate(&$values) {
     $bundles_keys = array_keys($values['bundle']);
 
-    if (count($bundles_keys) == 1 && $bundles_keys[0] == NULL) {
-      $values['bundle'] = array();
+    if (in_array('-none-', $bundles_keys)) {
+      $values['bundle'] = array('-none-');
     }
   }
 

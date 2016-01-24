@@ -1324,7 +1324,7 @@ function os_search_solr_change_search_path($form, $form_state) {
   $box_settings = $form_state['box_settings'];
 
   // Collect bundles.
-  if ($box_settings['bundle']) {
+  if ($box_settings['bundle'] && !in_array('-none-', $box_settings['bundle'])) {
 
     foreach ($box_settings['bundle'] as $bundle) {
       $filters['f'][] = 'bundle:' . $bundle;
