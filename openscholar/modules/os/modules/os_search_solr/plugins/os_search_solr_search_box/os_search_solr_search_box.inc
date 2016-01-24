@@ -72,6 +72,7 @@ class os_search_solr_search_box extends os_boxes_default {
     foreach ($vocabularies as $vocabulary) {
       $form['vocab']['#options'][$vocabulary->vid] = $vocabulary->name;
     }
+    asort($form['vocab']['#options']);
 
     $form['terms'] = array(
       '#type' => 'markup',
@@ -103,7 +104,7 @@ class os_search_solr_search_box extends os_boxes_default {
       '#title' => t('Sort by'),
       '#options' => array(
         'relevancy' => t('Relevancy (default)'),
-        'sort_label' => t('Label'),
+        'sort_label' => t('Title'),
         'bundle' => t('Type'),
         'sort_name' => t('Author'),
         'ds_created' => t('Date'),
