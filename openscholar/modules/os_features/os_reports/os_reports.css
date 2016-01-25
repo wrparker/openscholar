@@ -1,18 +1,17 @@
-.container-inline {
+body.page-admin-reports-os .container-inline {
   padding: 0px;
   margin: 20px 0px;
 }
 
-.container-inline .form-item label {
+body.page-admin-reports-os .container-inline .form-item label {
   margin-right: 10px;
 }
 
-.container-inline .form-item label.option {
+body.page-admin-reports-os .container-inline .form-item label.option {
   margin-right: 15px;
 }
 
-
-form fieldset {
+body.page-admin-reports-os form fieldset {
   margin: 20px 0px;
   border: 0px none;
   padding: 0;
@@ -20,57 +19,57 @@ form fieldset {
   width: 100%;
 }
 
-form fieldset .fieldset-wrapper {
+body.page-admin-reports-os form fieldset .fieldset-wrapper {
   margin-left: 0;
   margin-right: 0;
   padding: 0;
 }
 
-form .container-inline fieldset{
+body.page-admin-reports-os form .container-inline fieldset{
   margin: 0px;
 }
 
-form fieldset .container-inline {
+body.page-admin-reports-os form fieldset .container-inline {
   margin: 2px 0px;
 }
 
-.buttons {
+body.page-admin-reports-os .buttons {
   margin-top: 0.25em;
   margin-bottom: 0;
 }
 
-form .buttons input.form-submit,
-form a.button {
+body.page-admin-reports-os form .buttons input.form-submit,
+body.page-admin-reports-os form a.button {
   margin-bottom: 0.25em;
 }
 
-.pager .container-inline {
+body.page-admin-reports-os .pager .container-inline {
   margin: 2px;
 }
 
-.pager {
+body.page-admin-reports-os .pager {
   text-align: center;
 }
 
-.pager .previous a,
-.pager .next a {
+body.page-admin-reports-os .pager .previous a,
+body.page-admin-reports-os .pager .next a {
   display: none;
 }
 
-form fieldset .fieldset-legend {
+body.page-admin-reports-os form fieldset .fieldset-legend {
   margin: 0px 0px 5px 0px;
   padding-left: 0px;
   position: relative;
   display: block;
 }
 
-form fieldset legend {
+body.page-admin-reports-os form fieldset legend {
   font-size: inherit;
   line-height: inherit;
 }
 
-form input.form-text,
-form textarea {
+body.page-admin-reports-os form input.form-text,
+body.page-admin-reports-os form textarea {
   background: none;
   padding: 0px;
   margin: 0px;
@@ -79,86 +78,87 @@ form textarea {
   height: 1.5em;
 }
 
-form table td,
-form table th {
+body.page-admin-reports-os form table td,
+body.page-admin-reports-os form table th {
   padding: 6px 8px;
 }
 
-form table th {
+body.page-admin-reports-os form table th {
   vertical-align: bottom;
   line-height: 1.25em;
 }
 
-form table td {
+body.page-admin-reports-os form table td {
   vertical-align: top;
 }
 
-form table th a,
-form table td {
+body.page-admin-reports-os form table th a,
+body.page-admin-reports-os form table td {
   white-space: nowrap;
 }
-.results {
+
+body.page-admin-reports-os .results {
   min-height: 300px;
   background-position: center;
   background-repeat: no-repeat;
 }
 
-.status_count {
+body.page-admin-reports-os .status_count {
   padding: 0px 40px;
 }
 
-input.hidden {
+body.page-admin-reports-os input.hidden {
   display: none;
 }
 
-section#main-content {
+body.page-admin-reports-os section#main-content {
   padding-top: 10px;
 }
 
-h1#page-title {
+body.page-admin-reports-os h1#page-title {
   background: none;
   padding-top: 0px;
   font-size: 1.5em;
 }
 
-.results table tr.even {
+body.page-admin-reports-os .results table tr.even {
   background: #f3f4ee none repeat scroll 0 0;
 }
 
-.results table td {
+body.page-admin-reports-os .results table td {
   border: 1px solid #bebfb9;
 }
 
-#page.container {
+body.page-admin-reports-os #page.container {
   width: auto;
   font-family: "Lucida Grande",Verdana,sans-serif;
 }
 
-form th.active {
+body.page-admin-reports-os form th.active {
   background-color: #bdbeb9;
 }
 
-form table th.nosort a {
+body.page-admin-reports-os form table th.nosort a {
   white-space: normal;
 }
 
-form th.asc a {
+body.page-admin-reports-os form th.asc a {
   background: url('/themes/seven/images/arrow-asc.png') no-repeat right;
 }
 
-form th.desc a {
+body.page-admin-reports-os form th.desc a {
   background: url('/themes/seven/images/arrow-desc.png') no-repeat right;
 }
 
-form th.nosort a {
+body.page-admin-reports-os form th.nosort a {
   color: #000;
   text-decoration: none;
 }
 
-#page.container div.messages::before {
+body.page-admin-reports-os #page.container div.messages::before {
   background-image: none;
 }
 
-.container-inline .form-item-creationend label {
+body.page-admin-reports-os .container-inline .form-item-creationend label {
   margin-left: 10px;
 }

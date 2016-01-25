@@ -31,7 +31,7 @@ function os_reports_permission() {
  */
 function os_reports_menu() {
   $items = array();
-  $items['admin/reports/site'] = array(
+  $items['admin/reports/os/site'] = array(
     'title' => 'Sites Report',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_reports_site_form'),
@@ -40,7 +40,7 @@ function os_reports_menu() {
     'file' => 'os_reports.admin.inc',
   );
 /*
-  $items['admin/reports/user'] = array(
+  $items['admin/reports/os/user'] = array(
     'title' => 'Users Report',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_reports_user_form'),

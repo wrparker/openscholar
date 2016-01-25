@@ -2919,7 +2919,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iRunTheReportWithChecked($report, $multiValueFieldLabel, TableNode $table) {
     $steps = array();
-    $steps[] = new Step\When('I visit "admin/reports/' . $report . '"');
+    $steps[] = new Step\When('I visit "admin/reports/os/' . $report . '"');
     $table_rows = $table->getRows();
     // Iterate over each row, just so if there's an error we can supply
     // the row number, or empty values.
@@ -2956,7 +2956,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iRunTheReportWithSetToAndCheckboxesSelected($report, $fieldName, $fieldValue, TableNode $table) {
     $steps = array();
-    $steps[] = new Step\When('I visit "admin/reports/' . $report . '"');
+    $steps[] = new Step\When('I visit "admin/reports/os/' . $report . '"');
     $steps[] = new Step\When('I fill in "' . $fieldName . '" with "' . $fieldValue. '"');
     $table_rows = $table->getRows();
     // Iterate over each row, just so if there's an error we can supply
@@ -3013,7 +3013,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iRunTheReportWithSetToTheOfThis($report, $dateField, $dateParameter, $datePeriod) {
     $steps = array();
-    $steps[] = new Step\When('I visit "admin/reports/' . $report . '"');
+    $steps[] = new Step\When('I visit "admin/reports/os/' . $report . '"');
 
     $beginning = "";
     $end = "";

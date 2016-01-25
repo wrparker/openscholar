@@ -4,12 +4,12 @@ Feature:
   @api @features_second
   Scenario: Trying to view the report form without the proper access
       Given I am logging in as a user who "can't" "access os reports"
-       Then I can't visit "/admin/reports/site"
+       Then I can't visit "/admin/reports/os/site"
 
   @api @features_second
   Scenario: Trying to view the report form with the proper access
       Given I am logging in as a user who "can" "access os reports"
-        And I go to "/admin/reports/site"
+        And I go to "/admin/reports/os/site"
        Then I should see the text "Sites Report"
 
   @api @features_second
