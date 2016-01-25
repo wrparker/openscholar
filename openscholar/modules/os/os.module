@@ -2692,6 +2692,13 @@ function os_advagg_save_aggregate_alter(&$files_to_save, $aggregate_settings, $o
     return;
   }
 
+  // When the base domain and the static domain does not end with the same
+  // closing character we need to add it so won't get BASE_ADDRESSCSS_ADDRESS
+  // and we will get BASE_ADDRESS/CSS_ADDRESS.
+  if (substr($domain, -1) == "/" && substr($static, -1) != "/") {
+    $static .= '/';
+  }
+
   foreach ($files_to_save as $file_name => $file) {
     $files_to_save[$file_name] = str_replace($domain, $static, $file);
   }
