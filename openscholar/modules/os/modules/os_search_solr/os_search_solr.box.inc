@@ -15,7 +15,7 @@ function os_search_solr_default_box() {
   $box->api_version = 1;
   $box->delta = 'solr_search_box';
   $box->plugin_key = 'os_search_solr_search_box';
-  $box->title = 'Search box';
+  $box->title = '';
   $box->description = 'Search box';
   $box->options = array();
   $export['solr_search_box'] = $box;
