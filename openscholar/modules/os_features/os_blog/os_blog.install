@@ -6,3 +6,12 @@
 function os_blog_update_7001() {
   features_revert(array('os_blog' => 'view'));
 }
+
+/**
+ * Delete the bookmark flag from blogs.
+ */
+function os_blog_update_7001() {
+  if ($flag = flag_get_flag('bookmarks')) {
+    $flag->delete();
+  }
+}
