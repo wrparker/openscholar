@@ -253,6 +253,29 @@
       delete this.messages[id];
     }
 
+    // filter out weird characters that look like normal characters, like –, which gets converted to â€“
+    function cleanPaths(text) {
+      var s = text;
+      // smart single quotes and apostrophe
+      s = s.replace(/[\u2018\u2019\u201A]/g, "\'");
+      // smart double quotes
+      s = s.replace(/[\u201C\u201D\u201E]/g, "\"");
+      // ellipsis
+      s = s.replace(/\u2026/g, "...");
+      // dashes
+      s = s.replace(/[\u2013\u2014]/g, "-");
+      // circumflex
+      s = s.replace(/\u02C6/g, "^");
+      // open angle bracket
+      s = s.replace(/\u2039/g, "<");
+      // close angle bracket
+      s = s.replace(/\u203A/g, ">");
+      // spaces
+      s = s.replace(/[\u02DC\u00A0]/g, " ");
+
+      return s;
+    }
+
     // looks for any files with a similar basename and extension to this file
     // if it finds any, it adds it to a list of dupes, then scans every file to find what the new name should be
     $scope.checkForDupes = function($files, $event, $rejected) {
@@ -310,7 +333,8 @@
             dupeFound = false;
 
         // rewrite the filename the same way PHP will
-        basename = basename.replace(/ /g, '_').replace(/[^a-zA-Z0-9-_.~]/g, '');
+        basename = cleanPaths(basename);
+        basename = basename.toLowerCase().replace(/ /g, '_').replace(/[^a-zA-Z0-9-_.~]/g, '');
         $files[i].filename = basename + extension;
 
         for (var j=0; j<$scope.files.length; j++) {
