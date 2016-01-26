@@ -10,7 +10,7 @@ function os_blog_update_7001() {
 /**
  * Delete the bookmark flag from blogs.
  */
-function os_blog_update_7001() {
+function os_blog_update_7002() {
   if ($flag = flag_get_flag('bookmarks')) {
     $flag->delete();
   }
