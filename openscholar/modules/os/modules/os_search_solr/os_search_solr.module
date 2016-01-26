@@ -178,17 +178,17 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
     $query->addFilter('hash', apachesolr_site_hash());
   }
 
-  $multiple_bundles = !empty($filters['bundle']) && count($filters['bundle']) > 1;
-  $multiple_taxonomy = !empty($filters['sm_og_vocabulary']) && count($filters['sm_og_vocabulary']) > 1;
-
-  if (!($multiple_bundles && $multiple_taxonomy)) {
-    return;
-  }
-
   // Building a nicer array to work with.
   $filters = array();
   foreach ($query->getFilters() as $filter) {
     $filters[$filter['#name']][] = $filter['#value'];
+  }
+
+  $multiple_bundles = !empty($filters['bundle']) && count($filters['bundle']) > 1;
+  $multiple_taxonomy = !empty($filters['sm_og_vocabulary']) && count($filters['sm_og_vocabulary']) > 1;
+
+  if (!($multiple_bundles || $multiple_taxonomy)) {
+    return;
   }
 
   if ($multiple_bundles) {
