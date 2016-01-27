@@ -2891,7 +2891,7 @@ class FeatureContext extends DrupalContext {
     $purl_base_path = $base_url . '/' . $vsite->group->purl;
 
     // Expected urls.
-    $urls = array(
+    $expected_urls = array(
       'canonical' => url('node/' . $node->nid , array('absolute' => TRUE)),
       'shortlink' => $purl_base_path . '/node/' . $node->nid,
     );
@@ -2910,12 +2910,12 @@ class FeatureContext extends DrupalContext {
 
       // In case the metatag url in wrong.
       $metatag_href = $metatag_element->getAttribute('href');
-      if ($metatag_href != $urls[$metatag_name]) {
+      if ($metatag_href != $expected_urls[$metatag_name]) {
         // In case the target element is not found.
         $variables = array(
           '@metatag' => $metatag_name,
           '@metatag_given_url' => $metatag_href,
-          '@metatag_expected_url' => $urls[$metatag_name],
+          '@metatag_expected_url' => $expected_urls[$metatag_name],
         );
 
         throw new \Exception(format_string("The '@metatag' metatag expected url is: '@metatag_expected_url' but the given url is: '@metatag_given_url'", $variables));
