@@ -2892,7 +2892,7 @@ class FeatureContext extends DrupalContext {
 
     // Expected urls.
     $expected_urls = array(
-      'canonical' => url('node/' . $node->nid , array('absolute' => TRUE)),
+      'canonical' => url('node/' . $node->nid, array('absolute' => TRUE)),
       'shortlink' => $purl_base_path . '/node/' . $node->nid,
     );
 
