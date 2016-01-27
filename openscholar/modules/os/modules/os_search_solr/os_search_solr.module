@@ -1274,8 +1274,15 @@ function os_search_solr_facet_time($timestamp, $gap) {
 /**
  * Ajax form callback;
  */
-function os_search_solr_vocabularies_switch($form, $form_state)  {
+function os_search_solr_terms_switch($form, $form_state)  {
   return $form['options']['terms'];
+}
+
+/**
+ * Ajax form callback;
+ */
+function os_search_solr_vocabularies_switch($form, $form_state)  {
+  return $form['options']['vocab'];
 }
 
 /**

@@ -49,7 +49,14 @@ class os_search_solr_search_box extends os_boxes_default {
       '#title' => t('Content type'),
       '#options' => array('-none-' => t('All')) + $bundles,
       '#default_value' => !empty($bundle) ? $bundle : '-none-',
+      '#ajax' => array(
+        'callback' => 'os_search_solr_vocabularies_switch',
+        'wrapper' => 'vocab',
+      ),
     );
+
+    // dpm($form_state['values']['bundle']);
+
 
     ctools_include('taxonomy', 'os');
 
@@ -60,8 +67,10 @@ class os_search_solr_search_box extends os_boxes_default {
       '#options' => array(
         '-none-' => t('None'),
       ),
+      '#prefix' => '<div id="vocab">',
+      '#suffix' => '</div>',
       '#ajax' => array(
-        'callback' => 'os_search_solr_vocabularies_switch',
+        'callback' => 'os_search_solr_terms_switch',
         'wrapper' => 'terms',
       ),
     );
@@ -81,7 +90,6 @@ class os_search_solr_search_box extends os_boxes_default {
     );
 
     $vocab = !empty($form_state['values']['vocab']) ? $form_state['values']['vocab'] : $this->options['vocab'];
-
     if (!empty($vocab)) {
       $terms = taxonomy_get_tree($vocab, 0, NULL, TRUE);
 
