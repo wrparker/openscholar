@@ -856,6 +856,9 @@ div[id^=event-popover] .event-title a {
 .ui-widget-header {
     background: none !important;
 }
+.ui-dialog.ui-front {
+    z-index: 101;
+}
 /** OS LOGIN CONTAINER STYLES **/
 /** SLIDER **/
 
