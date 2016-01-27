@@ -313,6 +313,13 @@ function os_publications_theme_registry_alter(&$theme_registry) {
  * Alters the biblio form to do a lot of things
  */
 function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
+
+  dpm(variable_get('biblio_citeproc_style'));
+
+  if (in_array(variable_get('biblio_citeproc_style'), array('apa.csl', 'ieee.csl'))) {
+    $form['biblio_tabs'][3]['biblio_place_published']['#title'] = t('Presented at');
+  }
+
   $form['#attached']['js'][] = drupal_get_path('module', 'os_publications') . '/misc/os_publications.js';
   $form['#attached']['css'][] = drupal_get_path('module', 'os_publications') . '/misc/os_publications.css';
 
