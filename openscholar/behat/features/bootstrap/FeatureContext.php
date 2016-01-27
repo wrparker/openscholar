@@ -2878,9 +2878,9 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Then /^I validate the following metatags:$/
+   * @Then /^I validate the href attribute of metatags link from type:$/
    */
-  public function iValidateTheFollowingMetatags(TableNode $table) {
+  public function iValidateTheHrefAttributeOfMetatagsLinkFromType(TableNode $table) {
 
     // Getting the current node been viewed.
     $node = node_load(FeatureHelp::getNodeIdInVsite('About', 'john'));
@@ -2922,4 +2922,5 @@ class FeatureContext extends DrupalContext {
       }
     }
   }
+
 }
