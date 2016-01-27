@@ -2877,4 +2877,52 @@ class FeatureContext extends DrupalContext {
     $wrapper->save();
   }
 
+  /**
+   * @Then /^I validate the following metatags:$/
+   */
+  public function iValidateTheFollowingMetatags(TableNode $table) {
+    $page = $this->getSession()->getPage();
+
+    // Getting the current node been viewed.
+    $node = node_load(FeatureHelp::getNodeIdInVsite('About', 'john'));
+
+    // Base path including the purl.
+    $vsite = vsite_get_vsite();
+    $base_url = variable_get('purl_base_domain');
+
+    print_r($base_url);
+    print_r("\n");
+    print_r("\n");
+    print_r($vsite);
+
+    return;
+
+    $purl_base_path = $base_url . '/' . $vsite->group->purl;
+
+    // Iterate over each filter and set it's field value accordingly.
+    foreach ($table->getRows() as $metatag) {
+
+      // The metatag rel name e.g. rel="canonical".
+      $metatag_name = $metatag[0];
+
+      // Getting the metatag element.
+      if (!$metatag_element = $page->find('xpath', "//head/link[@rel='{$metatag_name}']")) {
+        throw new \Exception(format_string("Could not find the target metatag: '@metatag'", array('@metatag' => $metatag_name)));
+      }
+
+      $urls = array(
+        'canonical' => $purl_base_path,
+        'shortlink' => $purl_base_path . '/node/' . $node->nid,
+      );
+
+      // In case the target element is not found.
+      $variables = array(
+        '@metatag' => $metatag_name,
+        '@metatag_url' => $metatag_element->getAttribute('href'),
+        '@metatag_expected_url' => $urls[$metatag_name],
+      );
+
+      throw new \Exception(format_string("The '@metatag' metatag expected url is: '@metatag_expected_url' but the given url is: '@metatag_url'", $variables));
+    }
+  }
 }
