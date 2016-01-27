@@ -49,6 +49,7 @@ legend.legend-open-link:hover {
     cursor: pointer;
 }
 fieldset.fieldset {
-    padding: 1em;
+    padding: .5em 0 0 1em;
     background-color: #FFF;
+    width: 96%;
 }
