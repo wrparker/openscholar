@@ -42,7 +42,20 @@ legend.legend-open-link {
     color: #4E84C4;
     font-weight:normal;
 }
+legend.legend-open-link:before {
+ content: '';
+    position: absolute;
+    background-image: url("/profiles/openscholar/themes/cp_theme/images/cp-sprite.png");
+    background-position: -10px -452px;
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+    top: 3px;
+    left: 0;
+}
 fieldset.fieldset {
     padding: 1em;
+    background-color:#FFF;
 }
+
 
