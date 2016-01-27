@@ -362,6 +362,15 @@ function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
  *   To define sorting order.
  */
 function array_sort_by_term_weight(&$arr, $vocabulary, $dir = SORT_ASC) {
+  $vocab = taxonomy_vocabulary_machine_name_load($vocabulary);
+  $term_tree = taxonomy_get_tree($vocab->vid);
+  $ordered_term = array();
+  
+  // Preparing ordered array for taxonomy tree.
+  foreach ($term_tree as $key => $term) {
+    $ordered_term[$term->name] = $key;
+  }
+
   // Iterating through target taxonomy term array.
   foreach ($arr as $key => $row) {
     $matches = array();
@@ -370,8 +379,9 @@ function array_sort_by_term_weight(&$arr, $vocabulary, $dir = SORT_ASC) {
     $term = taxonomy_get_term_by_name($matches[1], $vocabulary);
     $keys = array_keys($term);
     // Obtaining defined weight of the taxonomy term.
-    $arr[$key]['weight'] = $term[$keys[0]]->weight;
+    $arr[$key]['weight'] = $ordered_term[$term[$keys[0]]->name];
   }
+
   // Sorting array by taxonomy weight.
-  array_sort_by_column($arr, 'weight');  
+  array_sort_by_column($arr, 'weight');
 }
