@@ -35,11 +35,6 @@ class os_search_solr_search_box extends os_boxes_default {
 
     $bundle = $this->options['bundle'];
     $bundles = os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP));
-    // Use first bundle of the list in case none was selected before.
-    if (empty($bundle)) {
-      $bundles_keys = array_keys($bundles);
-      $bundle = reset($bundles_keys);
-    }
 
     unset($bundles['slideshow_slide'], $bundles['feed_importer']);
 
@@ -55,18 +50,12 @@ class os_search_solr_search_box extends os_boxes_default {
       ),
     );
 
-    // dpm($form_state['values']['bundle']);
-
-
     ctools_include('taxonomy', 'os');
 
     $form['vocab'] = array(
       '#type' => 'select',
       '#title' => t('Filter by: vocab'),
-      '#default_value' => $this->options['vocab'],
-      '#options' => array(
-        '-none-' => t('None'),
-      ),
+      '#options' => array('-none-' => t('None')),
       '#prefix' => '<div id="vocab">',
       '#suffix' => '</div>',
       '#ajax' => array(
@@ -75,7 +64,16 @@ class os_search_solr_search_box extends os_boxes_default {
       ),
     );
 
-    $vocabularies = taxonomy_vocabulary_load_multiple(array_keys(os_get_vocabularies()));
+    // In case we have a selected content type. Then filter vocabularies by it.
+    // Default vocabularies are all of the m without filtering.
+    $vids = taxonomy_vocabulary_load_multiple(array_keys(os_get_vocabularies()));
+
+    $selected_bundle = empty($form_state['values']['bundle']) ? $bundle : $form_state['values']['bundle'];
+    if ($selected_bundle && $selected_bundle != '-none-') {
+      $vids = array_keys(os_get_vocabularies_by_bundle('node', $selected_bundle));
+    }
+
+    $vocabularies = taxonomy_vocabulary_load_multiple($vids);
 
     foreach ($vocabularies as $vocabulary) {
       $form['vocab']['#options'][$vocabulary->vid] = $vocabulary->name;
