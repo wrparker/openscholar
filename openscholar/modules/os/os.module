@@ -2671,29 +2671,34 @@ function og_query_og_membership_blocked_users_alter(QueryAlterableInterface $que
   $query->condition('u.status', 1);
 }
 
-
 /**
  * Implements hook_html_head_alter().
  */
 function os_html_head_alter(&$head_elements) {
 
-  // Exit early in case we are not on a vsite and we have no shortlink metatag.
+  // Exit early in case we are on a "custom domain".
+  $custom_domain = variable_get('vsite_domain_name', '');
+  if (!empty($custom_domain)) {
+    return;
+  }
+
+  // Exit early in case we have no shortlink metatag and we are not on a "vsite".
   $vsite = vsite_get_vsite();
-  if (!isset($head_elements['metatag_shortlink']) && !$vsite) {
+  if (!isset($head_elements['metatag_shortlink']) && $vsite) {
     return;
   }
 
   // Base path.
   $base_url = variable_get('purl_base_domain');
+
   // Base path including the purl.
   $base_url_purl = $base_url . '/' . $vsite->group->purl;
 
-  // Exit early if the shortlink value already contains the purl.
+  // Do nothing in case the shortlink value already contains the purl.
   if (strpos($head_elements['metatag_shortlink']['#value'], $base_url_purl) === 0) {
-   return;
+    return;
   }
 
   // Alter the shortlink value to the correct url including the purl.
   $head_elements['metatag_shortlink']['#value'] = str_replace($base_url, $base_url_purl, $head_elements['metatag_shortlink']['#value']);
-
 }
