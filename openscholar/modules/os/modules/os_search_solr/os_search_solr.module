@@ -177,32 +177,6 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
     // Limit searches to just this OpenScholar install in shared indexes.
     $query->addFilter('hash', apachesolr_site_hash());
   }
-
-  // Building a nicer array to work with.
-  $filters = array();
-  foreach ($query->getFilters() as $filter) {
-    $filters[$filter['#name']][] = $filter['#value'];
-  }
-
-  $multiple_bundles = !empty($filters['bundle']) && count($filters['bundle']) > 1;
-  $multiple_taxonomy = !empty($filters['sm_og_vocabulary']) && count($filters['sm_og_vocabulary']) > 1;
-
-  if (!($multiple_bundles || $multiple_taxonomy)) {
-    return;
-  }
-
-  if ($multiple_bundles) {
-    // We have multiple bundles. Change the query to support multiple bundles.
-    $query->removeFilter('bundle');
-    $query->addFilter('bundle', '('. implode(' OR ', $filters['bundle']) .')');
-  }
-
-  if ($multiple_taxonomy) {
-    // We have multiple terms. Change the query to support multiple terms.
-    $query->removeFilter('sm_og_vocabulary');
-    $terms = '("'. implode('" OR "', $filters['sm_og_vocabulary']) . '")';
-    $query->addFilter('sm_og_vocabulary', $terms);
-  }
 }
 
 /**
@@ -1324,11 +1298,8 @@ function os_search_solr_change_search_path($form, $form_state) {
   $box_settings = $form_state['box_settings'];
 
   // Collect bundles.
-  if ($box_settings['bundle'] && !in_array('-none-', $box_settings['bundle'])) {
-
-    foreach ($box_settings['bundle'] as $bundle) {
-      $filters['f'][] = 'bundle:' . $bundle;
-    }
+  if ($box_settings['bundle']) {
+    $filters['f'][] = 'bundle:' . $box_settings['bundle'];
   }
 
   // Collect terms.

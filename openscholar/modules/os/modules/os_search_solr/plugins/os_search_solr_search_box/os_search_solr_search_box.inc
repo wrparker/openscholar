@@ -49,7 +49,6 @@ class os_search_solr_search_box extends os_boxes_default {
       '#title' => t('Content type'),
       '#options' => array('-none-' => t('All')) + $bundles,
       '#default_value' => !empty($bundle) ? $bundle : '-none-',
-      '#multiple' => TRUE,
     );
 
     ctools_include('taxonomy', 'os');
@@ -140,17 +139,6 @@ class os_search_solr_search_box extends os_boxes_default {
     $return['content'] = render($form);
 
     return $return;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function validate(&$values) {
-    $bundles_keys = array_keys($values['bundle']);
-
-    if (in_array('-none-', $bundles_keys)) {
-      $values['bundle'] = array('-none-');
-    }
   }
 
 }
