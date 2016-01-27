@@ -2677,8 +2677,7 @@ function og_query_og_membership_blocked_users_alter(QueryAlterableInterface $que
 function os_html_head_alter(&$head_elements) {
 
   // Exit early in case we are on a "custom domain".
-  $custom_domain = variable_get('vsite_domain_name', '');
-  if (!empty($custom_domain)) {
+  if (variable_get('vsite_domain_name', '')) {
     return;
   }
 
