@@ -9,6 +9,7 @@
         scope.field_id = elem.parent().attr('id');
         scope.showHelp = false;
         scope.panes = ['upload', 'web', 'library'];
+        scope.required = attr['required'] == "";
 
         var types = {};
         scope.allowedTypes = scope.types.split(',');
