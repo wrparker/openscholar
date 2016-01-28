@@ -41,20 +41,11 @@ function theme_os_publications_style(&$variables) {
       }
       if (!empty($csl->parent)) {
         $csl_file_contents = db_query("SELECT csl FROM biblio_citeproc_styles WHERE id = :id", array(':id' => $csl->parent))->fetchField();
-
       }
       else {
         $csl_file_contents = $csl->csl;
       }
-      //    $cslid = $csl_file_name . '-' . $language->language;
-      //    $cached = cache_get($cslid, 'cache_biblio_csl_object');
-      if (!$cached) {
-        $citeproc = new citeproc($csl_file_contents, $language->language);
-        //      cache_set($cslid, $citeproc, 'cache_biblio_csl_object');
-      }
-      else {
-        $citeproc = $cached->data;
-      }
+      $citeproc = new citeproc($csl_file_contents, $language->language);
     }
   }
   $styled_node = $citeproc->render($node);
