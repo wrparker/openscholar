@@ -66,7 +66,7 @@ class os_search_solr_search_box extends os_boxes_default {
 
     // In case we have a selected content type. Then filter vocabularies by it.
     // Default vocabularies are all of the m without filtering.
-    $vids = taxonomy_vocabulary_load_multiple(array_keys(os_get_vocabularies()));
+    $vids = array_keys(os_get_vocabularies());
 
     $selected_bundle = empty($form_state['values']['bundle']) ? $bundle : $form_state['values']['bundle'];
     if ($selected_bundle && $selected_bundle != '-none-') {
@@ -111,7 +111,6 @@ class os_search_solr_search_box extends os_boxes_default {
         'relevancy' => t('Relevancy (default)'),
         'sort_label' => t('Title'),
         'bundle' => t('Type'),
-        'sort_name' => t('Author'),
         'ds_created' => t('Date'),
       ),
       '#default_value' => $this->options['sort_property'],

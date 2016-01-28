@@ -19,6 +19,12 @@ function os_search_solr_install() {
   // Let the solr server parse/extract attachments
   variable_set('apachesolr_attachments_extract_using', 'solr');
 
+  // Change the facets terms hard limit to unlimited.
+  variable_set('apachesolr_query_class', array(
+    'file' => 'Solr_Base_Query',
+    'module' => 'apachesolr',
+    'class' => 'OsSolrBaseQuery'));
+
   // Enable the facets
   if(module_exists('facetapi')) {
   	$searcher_name = '';
@@ -79,9 +85,19 @@ function os_search_solr_update_7000() {
 }
 
 /**
- * Migrate search blocks to boxes.
+ * Change the facetAPI handler.
  */
 function os_search_solr_update_7001() {
+  variable_set('apachesolr_query_class', array(
+    'file' => 'Solr_Base_Query',
+    'module' => 'apachesolr',
+    'class' => 'OsSolrBaseQuery'));
+}
+
+/**
+ * Migrate search blocks to boxes.
+ */
+function os_search_solr_update_7002() {
   if (!boxes_box::factory('os_search_solr_search_box', array())) {
     throw new Exception('The new search plugin does not exist. Please clear the cache and re trigger this update path.');
   }
@@ -101,12 +117,6 @@ function os_search_solr_update_7001() {
     unset($blocks['blocks']['os_search_db-site-search']);
     foreach ($blocks['blocks'] as $key => $block) {
       if (strpos($key, 'site-search') !== FALSE) {
-
-        // Creating a new widget instance.
-//        $box = boxes_box::factory('os_search_solr_search_box', array());
-//        $box->description = t('Site search');
-//        $box->delta = time();
-//        $box->save();
 
         // Replace the old one with the new instance.
         $old_block = $blocks['blocks'][$key];

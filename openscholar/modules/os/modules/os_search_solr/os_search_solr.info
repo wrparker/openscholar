@@ -15,3 +15,4 @@ features[box][] = solr_search_box
 
 files[] = plugins/facetapi/os_adapter.inc
 files[] = plugins/facetapi/os_search_solr_other_sites_links.inc
+files[] = includes/OsSolrBaseQuery.php
