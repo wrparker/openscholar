@@ -2,6 +2,68 @@
 // $Id$
 
 /**
+ * Overridden theme function for biblio_citeproc module
+ * To alter Publication listing View
+ *
+ * @param Array $variables
+ */
+function theme_os_publications_style(&$variables) {
+  static $citeproc;
+  global $language;
+
+  $cached = NULL;
+  $node = $variables['node'];
+  $style = isset($variables['style_name']) ? $variables['style_name'] : NULL;
+
+  module_load_include('inc', 'biblio_citeproc', 'CSL');
+
+  if (!$citeproc) {
+    $csl_id = ($style) ? $style : biblio_get_style();
+
+    if (strpos($csl_id, '.csl') === FALSE) {// try to convert old style names to csl...
+      if (in_array($csl_id, array('ama', 'apa', 'cse', 'ieee', 'mla', 'vancouver'))) {
+        $csl_id .= '.csl';
+      }
+      elseif ($csl_id == 'chicago') {
+        $csl_id = 'chicago-fullnote-bibliography.csl';
+      }
+      else {
+        $csl_id = '';
+        $message = t('An invalid style "@style" was selected, please check your "CiteProc" style settings.', array('@style' => $csl_id));
+        drupal_set_message($message, 'error');
+      }
+    }
+    if (!empty($csl_id)) {
+      $csl = db_query('SELECT parent,csl FROM {biblio_citeproc_styles} WHERE filename = :id', array(':id' => $csl_id))->fetchObject();
+      if (!isset($csl->csl)) {
+        drupal_set_message(t('Biblio-CiteProc could not fetch the style file: !csl_id from the database. Check your CiteProc settings.', array('!csl_id' => $csl_id)), 'error');
+        return;
+      }
+      if (!empty($csl->parent)) {
+        $csl_file_contents = db_query("SELECT csl FROM biblio_citeproc_styles WHERE id = :id", array(':id' => $csl->parent))->fetchField();
+
+      }
+      else {
+        $csl_file_contents = $csl->csl;
+      }
+      //    $cslid = $csl_file_name . '-' . $language->language;
+      //    $cached = cache_get($cslid, 'cache_biblio_csl_object');
+      if (!$cached) {
+        $citeproc = new citeproc($csl_file_contents, $language->language);
+        //      cache_set($cslid, $citeproc, 'cache_biblio_csl_object');
+      }
+      else {
+        $citeproc = $cached->data;
+      }
+    }
+  }
+  $styled_node = $citeproc->render($node);
+  $patent = !empty($node->biblio_issue) ? ' ' . filter_xss($node->biblio_issue, array('span')) . '.' : '';
+
+  return ($styled_node . $patent . filter_xss($node->biblio_coins, array('span')));
+}
+
+/**
  * Full Node View
  * Displays the citation in a field that can be clicked to select all of it
  * Also displays abstract, full text and notes if enabled.
@@ -213,7 +275,7 @@ function _os_publications_plain_citation($node) {
       $citation .= ' Patent ' . $node->biblio_volume . '.';
     }
     if (!empty($node->biblio_issue) && strpos($citation, $node->biblio_issue) === FALSE){
-      $citation .= ' Patent source: ' . $node->biblio_issue . '.';
+      $citation .= ' ' . $node->biblio_issue . '.';
     }
   }
 

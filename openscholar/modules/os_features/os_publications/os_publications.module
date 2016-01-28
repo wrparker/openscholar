@@ -282,6 +282,13 @@ function os_publications_theme_registry_alter(&$theme_registry) {
       'function' => 'theme_os_publications_tabular',
     ));
   $theme_registry['biblio_tabular']['includes'][] = drupal_get_path('module', 'os_publications') . '/os_publications.theme.inc';
+  
+  $theme_registry['biblio_style'] = array_merge($theme_registry['biblio_style'], array(
+      'file' => 'os_publications.theme.inc',
+      'theme path' => drupal_get_path('module', 'os_publications'),
+      'function' => 'theme_os_publications_style',
+    ));
+  $theme_registry['biblio_style']['includes'][] = drupal_get_path('module', 'os_publications') . '/os_publications.theme.inc';
 
   $theme_registry['biblio_export_links'] = array_merge($theme_registry['biblio_export_links'], array(
       'file' => 'os_publications.theme.inc',
