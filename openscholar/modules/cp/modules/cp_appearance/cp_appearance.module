@@ -869,7 +869,7 @@ function cp_appearance_manage_git($form, &$form_state, $type) {
 
   $branches = array();
 
-  if ($repository_address = !empty($form_state['values']['repository']) ? $form_state['values']['repository'] : FALSE) {
+  if ($repository_address = !empty($form_state['values']['repository']) ? trim($form_state['values']['repository']) : FALSE) {
     $wrapper = new GitWrapper();
     $wrapper->setPrivateKey('.');
 
