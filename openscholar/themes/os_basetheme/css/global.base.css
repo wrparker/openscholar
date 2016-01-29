@@ -821,7 +821,7 @@ dd {
  * - Google maps break also, see below for fixes.
  */
 
-body.html img:not(.media-element) {
+body.html img {
     max-width: 100%;
     height: auto;
     -ms-interpolation-mode: bicubic;
