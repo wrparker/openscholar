@@ -18,6 +18,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     $options['bundle'] = FALSE;
     $options['vocabularies'] = array();
     $options['sort_by'] = 'alpha';
+    $options['sort_by_term'] = 'rel';
 
     return $options;
   }
@@ -31,12 +32,14 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     $bundle = $this->options['bundle'];
     $selected_vocab = $this->options['vocabularies'];
     $sort_by = $this->options['sort_by'];
+    $sort_by_term = $this->options['sort_by_term'];
 
     if (!empty($form_state['values']['bundle'])) {
       // We have the bundle from the AJAX.
       $bundle = $form_state['values']['bundle'];
       $selected_vocab = 'all';
       $sort_by = $form_state['values']['sort_by'];
+      $sort_by_term = $form_state['values']['sort_by_term'];
     }
 
     $bundles = os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP));
@@ -75,15 +78,29 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
       '#default_value' => $selected_vocab,
     );
 
-    $options = array(
+    $options_vocab = array(
       'alpha' => t('Alphabetical'),
       'weight' => t('Vocabulary weight')
     );
+
+    $options_term = array(
+      'rel' => t('Relevance'),
+      'alpha' => t('Alphabetical'),
+      'weight' => t('Term Weight')
+    );
+
     $form['sort_by'] = array(
-      '#title' => t('Sort by:'),
+      '#title' => t('Vocabulary Order:'),
       '#type' => 'select',
-      '#options' => $options,
+      '#options' => $options_vocab,
       '#default_value' => $sort_by,
+    );
+
+    $form['sort_by_term'] = array(
+      '#title' => t('Term Order:'),
+      '#type' => 'select',
+      '#options' => $options_term,
+      '#default_value' => $sort_by_term,
     );
 
     return $form;
@@ -253,9 +270,23 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
             }
             $block['content']['sm_og_vocabulary'] = $ordered_vocab;
           }
-          else {
-            // Default is to sort by vocab's title.
+          else {             
+            // Default is to sort by term relavance.
             ksort($block['content']['sm_og_vocabulary']);
+          }
+
+          // Checking term render option for relevance/alphabetical/weighted sorting of links.
+          // Default term sorting order would be ordered by relevancy.
+          if ($this->options['sort_by_term'] == 'alpha') {
+            // Term sorting by alphabetical order.
+            foreach (array_keys($block['content']['sm_og_vocabulary']) as $vocabulary_name) {
+              array_sort_by_column($block['content']['sm_og_vocabulary'][$vocabulary_name]['#items'], 'data');
+            }
+          } elseif ($this->options['sort_by_term'] == 'weight') {
+            // Term sorting by weight.
+            foreach (array_keys($block['content']['sm_og_vocabulary']) as $vocabulary_name) {
+              array_sort_by_term_weight($block['content']['sm_og_vocabulary'][$vocabulary_name]['#items'], $vocabulary_name);
+            }
           }
         }
 
@@ -271,7 +302,7 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
   /**
    * When submitting a box we need to invalidate here.
    */
-  public function options_submit() {
+  public function options_submit($form, $form_state) {
     if (module_exists('vsite') && !$vsite = vsite_get_vsite()) {
       return;
     }
@@ -300,4 +331,57 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
  */
 function os_boxes_facetapi_vocabulary_ajax_callback($form, &$form_state) {
   return $form['options']['vocab_wrapper'];
+}
+
+/**
+ * Function to sort vocabulary terms alphabetically.
+ *
+ * @param $arr
+ *   The reference to the actual array element that needs to be sorted.
+ * @param $col
+ *   To define target column name of multi-dimentional array for sorting.
+ * @param $dir
+ *   To define sorting order.
+ */
+function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
+  $sort_col = array();
+  foreach ($arr as $key => $row) {
+    $sort_col[$key] = strip_tags($row[$col]);
+  }
+  array_multisort($sort_col, $dir, $arr);
+}
+
+/**
+ * Function to sort vocabulary terms by weight.
+ *
+ * @param $arr
+ *   The reference to the actual array element that needs to be sorted.
+ * @param $vocabulary
+ *   The name of the vocabulary.
+ * @param $dir
+ *   To define sorting order.
+ */
+function array_sort_by_term_weight(&$arr, $vocabulary, $dir = SORT_ASC) {
+  $vocab = taxonomy_vocabulary_machine_name_load($vocabulary);
+  $term_tree = taxonomy_get_tree($vocab->vid);
+  $ordered_term = array();
+  
+  // Preparing ordered array for taxonomy tree.
+  foreach ($term_tree as $key => $term) {
+    $ordered_term[$term->name] = $key;
+  }
+
+  // Iterating through target taxonomy term array.
+  foreach ($arr as $key => $row) {
+    $matches = array();
+    // Filtering the term name from string coming from ApacheSolr and FacetAPI.
+    preg_match("/Apply(.*?)filter/s", $row['data'], $matches);
+    $term = taxonomy_get_term_by_name($matches[1], $vocabulary);
+    $keys = array_keys($term);
+    // Obtaining defined weight of the taxonomy term.
+    $arr[$key]['weight'] = $ordered_term[$term[$keys[0]]->name];
+  }
+
+  // Sorting array by taxonomy weight.
+  array_sort_by_column($arr, 'weight');
 }
