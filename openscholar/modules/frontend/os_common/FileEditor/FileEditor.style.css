@@ -37,6 +37,7 @@ div[ng-include="fileEditAddt"] {
     left: 0;
     bottom: 0;
     position: absolute;
+    z-index: 50;
 }
 .alert-message {
     font-size: 1.2em;
