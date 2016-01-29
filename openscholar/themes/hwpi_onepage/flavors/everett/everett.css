@@ -66,21 +66,20 @@ a.os-swipe-small:hover {
 #footer {
     background-color: #D16103;
 }
-
-.front #content-panels .region-content-second span,
-.front #content-panels .region-content-second {
+.front .region-content-second span,
+.front .region-content-second {
     background-color: #999;
 }
-.front #content-panels .region-content-second .event-location, 
-.front #content-panels .region-content-second .node-event .field-name-field-date, 
-.front #content-panels .region-content-second .node-event .field-name-field-event-location, 
+.front #content-panels .region-content-second .event-location,
+.front #content-panels .region-content-second .node-event .field-name-field-date,
+.front #content-panels .region-content-second .node-event .field-name-field-event-location,
 .front #content-panels .region-content-second .date-display-single,
 #footer a,
 #footer,
 #footer .footer-login,
-.front #content-panels .region-content-second a,
-.front #content-panels .region-content-second span,
-.front #content-panels .region-content-second {
+.front .region-content-second a,
+.front .region-content-second span,
+.front .region-content-second {
     color: #FFF;
 }
 #header,
@@ -181,7 +180,11 @@ h1#page-title,
     -moz-border-radius-bottomleft: 0;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
-        background: transparent;
+}
+.front .region-content-second .event-start span.event-start-month,
+.front .region-content-second .event-start span.event-start-day {
+    background-color: #FFF;
+    color: #555;
 }
 .attachment.attachment-before ul li {
     font-size: 14px;
@@ -195,8 +198,8 @@ h1#page-title,
     background: none;
     background-image: none;
 }
-#search-block-form input.form-submit, 
-#search-block-form #edit-submit, 
+#search-block-form input.form-submit,
+#search-block-form #edit-submit,
 #search-form #edit-submit {
     background-color: #52854C;
 }
