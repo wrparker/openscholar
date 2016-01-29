@@ -21,7 +21,6 @@ jQuery(document).ready(function() {
 	});
 
     jQuery("figure img.media-element").each(function() {
-
         var imgwidth = jQuery("figure img.media-element").attr('width');
         var imgheight = jQuery("figure img.media-element").attr('height');
         // Adjusting figure images css height property same as height attribute value of img tag.
@@ -29,7 +28,7 @@ jQuery(document).ready(function() {
             "height" : + imgheight
         });
         jQuery("figure img.media-element ~ figcaption").css({
-            "width" : +imgwidth
+            "width" : + imgwidth
         });
     );
 
