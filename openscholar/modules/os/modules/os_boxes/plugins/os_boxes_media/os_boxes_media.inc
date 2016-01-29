@@ -109,6 +109,8 @@ class os_boxes_media extends os_boxes_default {
         }
 
         $render = file_view($file, 'full');
+        $render['file']['file-info']['file']['#width'] = $file->image_dimensions['width'];
+        $render['file']['file-info']['file']['#height'] = $file->image_dimensions['height'];
         if (isset($render['file']['file-info'])) {
           $render['file'] = $render['file']['file-info']['file'];
         }
