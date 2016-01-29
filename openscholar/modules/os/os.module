@@ -526,6 +526,13 @@ function os_module_implements_alter(&$implementations, $hook) {
     unset($implementations['os']);
     $implementations['os'] = FALSE;
   }
+  elseif ($hook == 'advagg_save_aggregate_alter') {
+    // advagg is compressing the css files into gzip. We need that our module
+    // will be first. This will ensure that the static domain will be in the
+    // compressed as well.
+    unset($implementations['os']);
+    $implementations = array_merge(array('os' => 'advagg'), $implementations);
+  }
 }
 
 /**
@@ -2669,4 +2676,33 @@ function og_query_og_membership_blocked_users_alter(QueryAlterableInterface $que
   $tables = $query->getTables();
   $query->join('users', 'u', 'u.uid = ' . $tables['og_membership']['alias'] . '.etid');
   $query->condition('u.status', 1);
+}
+
+/**
+ * Implements hook_advagg_save_aggregate_alter().
+ */
+function os_advagg_save_aggregate_alter(&$files_to_save, $aggregate_settings, $other_parameters) {
+  if (variable_get('vsite_domain_name', '')) {
+    $domain = url('<front>');
+  }
+  else {
+    global $base_url;
+    $domain = $base_url;
+  }
+
+  if (!$static = variable_get('os_files_static_domain')) {
+    return;
+  }
+
+  // When the base domain and the static domain does not end with the same
+  // closing character we need to add it so won't get BASE_ADDRESSCSS_ADDRESS
+  // and we will get BASE_ADDRESS/CSS_ADDRESS.
+  if (substr($domain, -1) == "/" && substr($static, -1) != "/") {
+    $static .= '/';
+  }
+
+  foreach ($files_to_save as $file_name => $file) {
+    $files_to_save[$file_name] = str_replace($domain, $static, $file);
+  }
+
 }
