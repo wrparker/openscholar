@@ -61,6 +61,7 @@ function media_draggable_field_widget_form(&$form, &$form_state, $field, $instan
   $element += array(
     '#field' => $field,
     '#instance' => $instance,
+    '#theme_wrappers' => array('form_element'),
     '#process' => array(
       'media_draggable_field_widget_process',
     ),
@@ -106,7 +107,6 @@ function media_draggable_field_widget_form(&$form, &$form_state, $field, $instan
   $info = element_info('dragndrop_upload');
 
   $element['drop'] = array(
-    '#title' => isset($instance['label']) ? $instance['label'] : '',
     '#type' => 'dragndrop_upload',
     '#upload_location' => file_field_widget_uri($element['#field'], $element['#instance']),
     '#upload_validators' => file_field_widget_upload_validators(
@@ -356,6 +356,6 @@ function media_draggable_field_validate_required($element, $form_state, $complet
   $input = drupal_array_get_nested_value($form_state['values'], $element['#parents'], $input_exists);
   $filtered = array_diff_key($input, array('drop' => array(), 'template' => array()));
   if (!count($filtered)) {
-    form_set_error('angualarbrowser', t('Field is required'));
+    form_set_error($element['#parents'][0], t('!name field is required.', array('!name' => $element['#title'])));
   }
 }
