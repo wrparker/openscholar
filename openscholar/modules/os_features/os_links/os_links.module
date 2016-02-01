@@ -147,3 +147,16 @@ function _url_encode_link_validate($form, &$form_state) {
     $form_state['values']['field_links_link'][LANGUAGE_NONE][0]['url'] = $domain . rawurlencode($path[1]);
   }
 }
+
+/**
+ * Implements hook_preprocess_field
+ * For url decoding of link field for node / lising page html output.
+ **/
+function os_links_preprocess_field(&$variables, $hook) {
+  $element = $variables['element'];
+  if ($element['#bundle'] == 'link' && isset($element['#field_name']) && $element['#field_name'] == 'field_links_link') {
+  	// Decoding URL, otherwise it would display the link as URL encoded format in title.
+    $url = l(rawurldecode($element['#items'][0]['title']), $element['#items'][0]['url'], $element['#items'][0]['attributes']);
+    $variables['items'][0]['#markup'] = $url;
+  }
+}
