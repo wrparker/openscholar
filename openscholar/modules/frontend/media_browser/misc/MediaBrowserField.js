@@ -5,8 +5,13 @@
 
       function link(scope, elem, attr) {
         // everything to define
-        scope.field_name = elem.parent().attr('id').match(/edit-([\w-]*)/)[1].replace(/-/g, '_');
-        scope.field_id = elem.parent().attr('id');
+        var field_root = elem.parent();
+        while (!field_root.attr('id')) {
+          field_root = field_root.parent();
+        }
+        var service = new EntityService('files', 'id');
+        scope.field_name = field_root.attr('id').match(/edit-([\w-]*)/)[1].replace(/-/g, '_');
+        scope.field_id = field_root.attr('id');
         scope.showHelp = false;
         scope.panes = ['upload', 'web', 'library'];
         scope.required = attr['required'] == "";
@@ -28,19 +33,26 @@
           handle: '.tabledrag-handle'
         };
 
-        if (scope.selectedFiles.length == 0) {
-          var fids = Drupal.settings.mediaBrowserField[elem.parent().attr('id')].selectedFiles,
-            service = new EntityService('files', 'id'),
+        if (!store.isNew()) {
+          scope.selectedFiles = store.fetchData();
+        }
+        else if (!Array.isArray(scope.selectedFiles)) {
+          scope.selectedFiles = [];
+        }
+        else if (scope.selectedFiles.length == 0) {
+          var fids = Drupal.settings.mediaBrowserField[scope.field_id].selectedFiles,
             generateFunc = function (i) {
               return function(file) {
                 scope.selectedFiles[i] = angular.copy(file);
                 return file;
               }
             };
-          for (var i = 0; i<fids.length; i++) {
+
+          for (var i = 0; i < fids.length; i++) {
             var fid = fids[i];
             service.fetchOne(fid).then(generateFunc(i));
           }
+          store.setData(scope.selectedFiles);
         }
 
         // prefetch the files now so user can open Media Browser later
@@ -52,6 +64,7 @@
               scope.selectedFiles[i] = angular.copy(file);
             }
           }
+          store.setData(scope.selectedFiles);
         });
 
         scope.sendToBrowser = function($files) {
@@ -82,14 +95,17 @@
               scope.selectedFiles.push($files[i]);
             }
           }
+          store.setData(scope.selectedFiles);
         }
 
         scope.removeFile = function ($index) {
           scope.selectedFiles.splice($index, 1);
+          store.setData(scope.selectedFiles);
         }
 
         scope.replaceFile = function ($inserted, $index) {
           scope.selectedFiles.splice($index, 1, $inserted[0]);
+          store.setData(scope.selectedFiles);
         }
 
         function highlightDupe(file, toHighlight) {
@@ -134,5 +150,46 @@
           }
         }
       }
-    }])
+    }]);
+
+  var store;
+  (function () {
+    var form_id,
+      new_form,
+      data = [],
+      inited = false;
+    store = {
+      init: function () {
+        if (inited) {
+          return;
+        }
+
+        inited = true;
+        var old_id = sessionStorage['last_form'];
+        form_id = document.querySelector('form input[name="form_build_id"]').value;
+
+        if (form_id != old_id) {
+          delete sessionStorage[old_id];
+          new_form = true;
+          sessionStorage['last_form'] = form_id;
+        }
+        else {
+          data = JSON.parse(sessionStorage[form_id]);
+          new_form = false;
+        }
+      },
+      fetchData: function () {
+        this.init();
+        return data;
+      },
+      setData: function (data) {
+        this.init();
+        sessionStorage[form_id] = JSON.stringify(data);
+      },
+      isNew: function () {
+        this.init();
+        return new_form;
+      }
+    };
+  })();
 })();
