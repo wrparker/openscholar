@@ -827,7 +827,7 @@ body.html img {
     -ms-interpolation-mode: bicubic;
 }
 body.html figure img.media-element {
-    height: 100%;
+    width: 100%;
 }
 /* /ht Ethan Marcotte - http://front.ie/l8rJaA */
 
