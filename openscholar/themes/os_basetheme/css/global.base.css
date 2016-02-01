@@ -826,9 +826,6 @@ body.html img {
     height: auto;
     -ms-interpolation-mode: bicubic;
 }
-body.html figure img.media-element {
-    width: 100%;
-}
 /* /ht Ethan Marcotte - http://front.ie/l8rJaA */
 
 body.html img,
