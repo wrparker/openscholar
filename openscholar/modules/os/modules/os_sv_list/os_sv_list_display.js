@@ -30,6 +30,9 @@
         var args = query_args(e.target.href),
             delta = args.sv_list_box_delta;
         
+        // After clicking on next/prev page ajax link, page will be slowly scrolled to the position where respective 'List of Post' widget markup starts.
+        $("html, body").animate({ scrollTop: $("#block-boxes-" + delta).offset().top }, "slow");
+
         // if there's no page set in the query, assume its the first page
         if (typeof args.page == 'undefined') {
           args.page = 0;

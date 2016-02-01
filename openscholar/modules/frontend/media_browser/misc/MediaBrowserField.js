@@ -150,7 +150,13 @@
           }
         }
       }
-    }]);
+    }])
+    .run(function () {
+      angular.element(window).on('dragover drop', function(e) {
+        e = e || event;
+        e.preventDefault();
+      });
+    });
 
   var store;
   (function () {

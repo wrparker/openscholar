@@ -867,3 +867,11 @@ function os_files_update_7022() {
   field_update_instance($instance);
   return t('Label for File Image Description field changed to Image Caption');
 }
+
+/**
+ * Adds .rar to Executable file type.
+ */
+function os_files_update_7023() {
+  ctools_include('export');
+  ctools_export_crud_delete('file_type', 'executable');
+}

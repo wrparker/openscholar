@@ -248,7 +248,7 @@ function _biblio_bibtex_import($entries, $terms = array(), $batch = FALSE, $sess
       }
     }
     $node->biblio_volume          = (!empty($entry['volume'])) ? $entry['volume'] : NULL;
-    $node->biblio_number          = (!empty($entry['number'])) ? $entry['number'] : NULL;
+    $node->biblio_issue           = (!empty($entry['number'])) ? $entry['number'] : NULL;
     $node->biblio_year            = (!empty($entry['year'])) ? $entry['year'] : NULL;
     $node->biblio_notes           = (!empty($entry['note'])) ? $entry['note'] : NULL;
     $node->biblio_date            = (!empty($entry['month'])) ? $entry['month'] : NULL;
@@ -341,7 +341,7 @@ function _biblio_bibtex_export($node) {
   $bibtex .= _biblio_bibtex_format_entry('booktitle', $booktitle);
   $bibtex .= _biblio_bibtex_format_entry('series', $series);
   $bibtex .= _biblio_bibtex_format_entry('volume', $node->biblio_volume);
-  $bibtex .= _biblio_bibtex_format_entry('number', $node->biblio_number);
+  $bibtex .= _biblio_bibtex_format_entry('number', $node->biblio_issue);
   $bibtex .= _biblio_bibtex_format_entry('year', $node->biblio_year);
   $bibtex .= _biblio_bibtex_format_entry('note', $node->biblio_notes);
   $bibtex .= _biblio_bibtex_format_entry('month', $node->biblio_date);
