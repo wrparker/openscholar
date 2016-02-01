@@ -129,7 +129,7 @@ function os_links_os_entity_view_modes_alter(&$info) {
  **/
 function os_links_form_link_node_form_alter(&$form, &$form_state) {
   $form['field_links_link']['#element_validate'][] = '_url_encode_link_validate';
-  $form['field_links_link']['und'][0]['#default_value']['url'] = rawurldecode($form['field_links_link']['und'][0]['#default_value']['url']);
+  $form['field_links_link'][LANGUAGE_NONE][0]['#default_value']['url'] = rawurldecode($form['field_links_link'][LANGUAGE_NONE][0]['#default_value']['url']);
 }
 
 /**
@@ -139,8 +139,11 @@ function _url_encode_link_validate($form, &$form_state) {
   $url = $form_state['values']['field_links_link'][LANGUAGE_NONE][0]['url'];
   // Extracting domain name from given URL.
   preg_match('/(http(|s)):\/\/(.*?)\//si',  $url, $matches);
-  $domain = $matches[0];
-  $path = explode($domain, $url);
-  // Generating URL encoded string from given URL and assigning it into form_state value.
-  $form_state['values']['field_links_link'][LANGUAGE_NONE][0]['url'] = $domain . rawurlencode($path[1]);
+  // If given URL has a valid domain starting with http or https.
+  if (isset($matches[0])) {
+    $domain = $matches[0];
+    $path = explode($domain, $url);
+    // Generating URL encoded string from given URL and assigning it into form_state value.
+    $form_state['values']['field_links_link'][LANGUAGE_NONE][0]['url'] = $domain . rawurlencode($path[1]);
+  }
 }
