@@ -61,8 +61,9 @@
             }
           });
 
+          scope.invalidFileName = false;
           scope.$watch('file.filename', function (filename, old) {
-            if (typeof filename != 'string') {
+            if (typeof filename != 'string' || !scope.file) {
               return;
             }
             scope.invalidFileName = false;
