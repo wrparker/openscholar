@@ -34,7 +34,7 @@
         };
 
         if (!store.isNew()) {
-          scope.selectedFiles = store.fetchData();
+          scope.selectedFiles = store.fetchData(scope.field_name);
         }
         else if (!Array.isArray(scope.selectedFiles)) {
           scope.selectedFiles = [];
@@ -52,7 +52,7 @@
             var fid = fids[i];
             service.fetchOne(fid).then(generateFunc(i));
           }
-          store.setData(scope.selectedFiles);
+          store.setData(scope.field_name, scope.selectedFiles);
         }
 
         // prefetch the files now so user can open Media Browser later
@@ -64,7 +64,7 @@
               scope.selectedFiles[i] = angular.copy(file);
             }
           }
-          store.setData(scope.selectedFiles);
+          store.setData(scope.field_name, scope.selectedFiles);
         });
 
         scope.sendToBrowser = function($files) {
@@ -95,17 +95,17 @@
               scope.selectedFiles.push($files[i]);
             }
           }
-          store.setData(scope.selectedFiles);
+          store.setData(scope.field_name, scope.selectedFiles);
         }
 
         scope.removeFile = function ($index) {
           scope.selectedFiles.splice($index, 1);
-          store.setData(scope.selectedFiles);
+          store.setData(scope.field_name, scope.selectedFiles);
         }
 
         scope.replaceFile = function ($inserted, $index) {
           scope.selectedFiles.splice($index, 1, $inserted[0]);
-          store.setData(scope.selectedFiles);
+          store.setData(scope.field_name, scope.selectedFiles);
         }
 
         function highlightDupe(file, toHighlight) {
@@ -162,7 +162,7 @@
   (function () {
     var form_id,
       new_form,
-      data = [],
+      data = {},
       inited = false;
     store = {
       init: function () {
@@ -184,12 +184,13 @@
           new_form = false;
         }
       },
-      fetchData: function () {
+      fetchData: function (field_name) {
         this.init();
-        return data;
+        return data[field_name];
       },
-      setData: function (data) {
+      setData: function (field_name, newData) {
         this.init();
+        data[field_name] = newData;
         sessionStorage[form_id] = JSON.stringify(data);
       },
       isNew: function () {
