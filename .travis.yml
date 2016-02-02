@@ -23,6 +23,8 @@ cache:
     - openscholar/modules/contrib
     - openscholar/themes/contrib
     - openscholar/libraries
+#    - openscholar/behat/vendor
+#    - openscholar/behat/node_backend
 
 env:
   global:
@@ -94,10 +96,12 @@ before_install:
   - drush rs 8888 router.php > ~/rs.log 2>&1 &
 
   # Copy Behat configuration file.
+  - php -r "echo ini_get('memory_limit');"
   - cd profiles/openscholar/behat
   - cp behat.local.yml.travis behat.local.yml
   - curl -s https://getcomposer.org/installer | php
   - php composer.phar install --prefer-source
+#  - bash profiles/openscholar/behat/install_behat.sh
 
   # Other
   - drush vset oembedembedly_api_key $EMBEDLYAPIKEY

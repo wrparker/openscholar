@@ -2463,6 +2463,10 @@ class FeatureContext extends DrupalContext {
    * @Then /^I should see the media browser "([^"]*)" tab is active$/
    */
   public function iShouldSeeTabActive($tab) {
+    // Js is async may take up to 3 sec to appear. so we wait.
+    $duration = 5000;
+    $this->getSession()->wait($duration);
+    // In case element doesn't exists.
     if (!($elem = $this->getSession()->getPage()->find('css', '.media-browser-button.active'))) {
       throw new Exception('No Media Browser tab is active.');
     }

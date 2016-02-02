@@ -1,21 +1,17 @@
 Feature: Media Browser
   Testing the Media Browser
 
-  @media_browser @javascript
+  @media_browser @javascript @1
   Scenario: Invoke the browser from the standard media field
     Given I am logging in as "john"
       And I wait for page actions to complete
       And I edit the entity "node" with title "About"
-#    And I should print page
-     
-    And I sleep for "10"
+      And I sleep for "10"
      When I click on the "Upload" control
-#    And I should print page
       And I wait "1 second" for the media browser to open
-#      And I should print page
      Then I should see "Select files to Add"
 
-  @media_browser @javascript
+  @media_browser @javascript @2
   Scenario: Navigate through tabs
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -28,7 +24,7 @@ Feature: Media Browser
      When I click on the tab "Embed from the web"
       And I should see "URL or HTML:"
 
-  @media_browser @javascript
+  @media_browser @javascript @3
   Scenario: Verify files show up in the "Previously uploaded files" tab
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -40,7 +36,7 @@ Feature: Media Browser
       And I press ">>"
      Then I should see "slideshow1.jpg"
 
-  @media_browser @javascript
+  @media_browser @javascript @4
   Scenario: Test the file upload work flow for a single, valid, non-duplicate file
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -54,7 +50,7 @@ Feature: Media Browser
      Then I should see the media browser "Previously uploaded files" tab is active
       And I should see "kitten-2.jpg" in the "div.media-row.new" element
 
-  @media_browser @javascript
+  @media_browser @javascript @5
   Scenario: Test the file upload work flow for a single, valid, duplicate file, which we replace
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -75,7 +71,7 @@ Feature: Media Browser
       And I confirm the file "kitten-2.jpg" in the site "john" is the same file as "duplicate/kitten-2.jpg"
       And I confirm the file "kitten-2.jpg" in the site "john" is not the same file as "kitten-2.jpg"
 
-  @media_browser @javascript
+  @media_browser @javascript @6
   Scenario: Test the work flow for a single, valid, duplicate file, which we rename
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -94,7 +90,7 @@ Feature: Media Browser
      Then I should see the media browser "Previously uploaded files" tab is active
       And I should see "kitten-2_01.jpg" in the "div.media-row.new" element
 
-  @media_browser @javascript
+  @media_browser @javascript @7
   Scenario: Test the work flow for a single, valid, duplicate file, which we cancel
     Given I am logging in as "john"
      And I wait for page actions to complete
@@ -115,7 +111,7 @@ Feature: Media Browser
      And I should not see "kitten-2_02.jpg" in a "div.media-row" element
      And I confirm the file "kitten-2.jpg" in the site "john" is not the same file as "kitten-2.jpg"
 
-  @media_browser @javascript
+  @media_browser @javascript @8
   Scenario: Test the file upload work flow for multiple, valid, non-duplicate files
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -128,7 +124,7 @@ Feature: Media Browser
       And I should see "rubber-duck.jpg" in a "div.media-row.new" element
       And I should see "conservatory_of_flowers3.jpg" in a "div.media-row.new" element
 
-  @media_browser @javascript
+  @media_browser @javascript @9
   Scenario: Test the file upload work flow for multiple, valid, duplicate files, which we cancel
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -144,7 +140,7 @@ Feature: Media Browser
       And I click on the "Cancel" control in the ".media-browser-dupe" element
      Then I should see the media browser "Upload from your computer" tab is active
 
-  @media_browser @javascript
+  @media_browser @javascript @10
   Scenario: Test the file upload work flow for a single, invalid file.
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -163,7 +159,7 @@ Feature: Media Browser
       And I drop the file "Expeditionary_Fighting_Vehicle_test.jpg" onto the "Drag and drop files here." area
       And I should see "Expeditionary_Fighting_Vehicle_test.jpg is larger than the maximum filesize of 15 MB"
 
-  @media_browser @javascript
+  @media_browser @javascript @11
   Scenario: Test the file upload work flow for multiple valid files, some of which are duplicates and some of which are not.
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -178,7 +174,7 @@ Feature: Media Browser
       And I click on the tab "Previously uploaded files"
       And I should see "abc.pdf" in a "div.media-row.new" element
 
-  @media_browser @javascript
+  @media_browser @javascript @12
   Scenario: Test adding a youtube video to a site
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -195,7 +191,7 @@ Feature: Media Browser
       And I should see the media browser "Previously uploaded files" tab is active
       And I should see "Me at the zoo" in a "div.media-row.selected" element
 
-  @media_browser @javascript
+  @media_browser @javascript @13
   Scenario: Test adding an unknown URL to a site
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -209,7 +205,7 @@ Feature: Media Browser
       And I wait "3 seconds"
      Then I should see "URL(s) not from accepted domain!"
 
-  @media_browser @javascript
+  @media_browser @javascript @14
   Scenario: Test adding embed codes from trusted and untrusted sources
     Given I am logging in as "john"
       And I wait for page actions to complete
