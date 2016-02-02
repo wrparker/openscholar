@@ -81,7 +81,7 @@ function os_reports_site_form($form, &$form_state) {
     ),
   );
   $form['keyword_set']['kfields']['site_title'] = array(
-    '#title' => 'site name',
+    '#title' => 'site title',
     '#type' => 'checkbox',
     '#attributes' => array(
       'ng-model' => 'queryform.kfields.site_title',

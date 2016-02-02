@@ -120,7 +120,7 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       $query->groupBy('purl.id, purl.value');
     }
     elseif ($request['includesites'] == "nocontent"){
-      $query->addExpression('COUNT(etid)', 'total');
+      $query->addExpression('COUNT(ogm.etid)', 'total');
       $query->leftJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
       $query->groupBy('purl.id, purl.value');
       $query->havingCondition('total', '0', '=');
