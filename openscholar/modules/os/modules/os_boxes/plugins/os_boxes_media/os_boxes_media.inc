@@ -119,6 +119,11 @@ class os_boxes_media extends os_boxes_default {
           $render['file'] = $render['file']['file-info']['file'];
         }
 
+        // For oembed media objects, need to define additional pre_render callback to control final output dimension.
+        if (isset($file->oembed)) {
+          $render['file']['#pre_render'][] = 'os_boxes_media_oembed_pre_render';
+        }
+
         if (isset($file->oembed) && $file->oembed['provider'] == 'box') {
           $render['file']['#attached']['js'][] = drupal_get_path('module', 'os_boxes').'/plugins/os_boxes_media/os_boxes_media.box_oembed.js';
           $render['file']['#attached']['js'][] = array(
@@ -145,4 +150,18 @@ class os_boxes_media extends os_boxes_default {
     }
     return $block;
   }
+}
+
+/**
+ * #pre_render calback for oembed objects to control the dimension as per max width settings.
+ * Also sets the height for oembed objects based on aspect ratio.
+ */
+function os_boxes_media_oembed_pre_render($embed) {
+  if (isset($embed['#width']) && $embed['#width'] < $embed['#embed']['width']) {
+    $embed['#embed']['width'] = $embed['#width'];    
+  }
+  if (isset($embed['#height']) && $embed['#height'] < $embed['#embed']['height']) {
+    $embed['#embed']['height'] = ceil($embed['#height']);    
+  }
+  return $embed;
 }
