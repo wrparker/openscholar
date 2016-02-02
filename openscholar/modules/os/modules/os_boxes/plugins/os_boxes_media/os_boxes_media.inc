@@ -62,7 +62,7 @@ class os_boxes_media extends os_boxes_default {
     return $form;
   }
 
-  public function options_submit($form, &$form_state) {
+  public function options_submit($form, $form_state) {
     parent::options_submit($form, $form_state);
 
     $old = $form['options']['fid']['#default_value']['fid'];
@@ -115,7 +115,7 @@ class os_boxes_media extends os_boxes_default {
           $render['file']['file-info']['file']['#height'] = $file->image_dimensions['height'];
         }
 
-        if (isset($render['file']['file-info'])) {
+        if (isset($render['file']['file-info']['file'])) {
           $render['file'] = $render['file']['file-info']['file'];
         }
 
