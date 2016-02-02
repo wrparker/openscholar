@@ -41,9 +41,10 @@ class os_boxes_media extends os_boxes_default {
       '#type' => 'textfield',
       '#default_value' => $this->options['maxwidth'],
       '#field_suffix' => 'px',
-      '#description' => t('Enter the maximum width the media can be when displayed. Use to 0 to leave it at the default
-        size. WARNING: This may cause the video to break out of columns in your page layout. Some trial and error may
-        be needed to ensure the embed looks good in your site layout.')
+      '#description' => t('To change the width of the media, enter a maximum width value that is LESS than the the media\'s original width. 
+      Entering 0 or a value larger than the media\'s original width will result in the media displaying at its default size. 
+      WARNING: This may cause the video to break out of columns in your page layout. Some trial and error may be needed to ensure the 
+      embed looks good in your site layout.')
     );
 
     $form['help'] = array(
