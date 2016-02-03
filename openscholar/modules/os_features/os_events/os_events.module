@@ -1018,7 +1018,6 @@ function os_events_url_outbound_alter(&$path, &$options, $original_path) {
   }
 
   $view_modes = array(
-    'calendar/week',
     'calendar/day',
     'calendar/year',
   );
@@ -1037,7 +1036,7 @@ function os_events_url_outbound_alter(&$path, &$options, $original_path) {
   // The second part "\WW" is actually "\W" and "W", meaning the first W is
   // escaped and would be written as "W" and the second W is not escaped and
   // thus stands for the number of the week,
-  $format = array('year' => 'Y', 'month' => 'Y-m', 'week' => 'Y-\WW', 'day' => 'Y-m-d');
+  $format = array('year' => 'Y', 'month' => 'Y-m', 'day' => 'Y-m-d');
   $date_format = new DateTime;
 
   if (isset($_GET[$data[1]])) {
