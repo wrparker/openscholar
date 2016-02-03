@@ -211,6 +211,10 @@ class sv_list_node_event extends sv_list_plugin  {
     // use this instead of a foreach because this query can have more results
     // than expected.
     for ($i=0; $i<$options['number_of_items']; $i++) {
+      if (empty($raw[$i])) {
+        continue;
+      }
+
       if ($row = $raw[$i]) {
         if (empty($entities[$row->entity_id])) {
           continue;
