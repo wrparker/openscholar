@@ -81,7 +81,7 @@ function os_reports_assemble_file_rows($rows, &$context) {
     foreach ($headers as $header) {
       $row_array[] = _make_csv_safe($row[$header]);
     }
-    $row_string = implode(", ", $row_array);
+    $row_string = implode(",", $row_array);
 
     $context['results'][] = $row_string;
   }
