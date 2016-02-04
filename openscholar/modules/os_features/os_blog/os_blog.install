@@ -8,7 +8,7 @@ function os_blog_update_7001() {
 }
 
 /**
- * Delete the bookmark flag from blogs but only if flags module is enabled or can be enabled.
+ * Delete the bookmark flag from blogs but only if flags module is enabled
  */
 function os_blog_update_7002() {
   if (module_exists('flag')) {
