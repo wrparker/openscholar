@@ -6,6 +6,4 @@ Feature:
             path on the "href" attribute.
     Given I am logging in as "john"
      When I visit "john/about"
-     Then I validate the href attribute of metatags link from type:
-        | canonical |
-        | shortlink |
+     Then I validate the href attribute of metatags link from type
