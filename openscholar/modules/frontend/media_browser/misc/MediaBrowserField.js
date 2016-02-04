@@ -39,7 +39,8 @@
         else if (!Array.isArray(scope.selectedFiles)) {
           scope.selectedFiles = [];
         }
-        else if (scope.selectedFiles.length == 0) {
+
+        if (scope.selectedFiles.length == 0) {
           var fids = Drupal.settings.mediaBrowserField[scope.field_id].selectedFiles,
             generateFunc = function (i) {
               return function(file) {
