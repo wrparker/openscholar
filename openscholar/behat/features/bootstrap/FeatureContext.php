@@ -2878,9 +2878,9 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Then /^I validate the href attribute of metatags link from type:$/
+   * @Then /^I validate the href attribute of metatags link from type$/
    */
-  public function iValidateTheHrefAttributeOfMetatagsLinkFromType(TableNode $table) {
+  public function iValidateTheHrefAttributeOfMetatagsLinkFromType() {
 
     // Getting the current node been viewed.
     $node = node_load(FeatureHelp::getNodeIdInVsite('About', 'john'));
@@ -2891,16 +2891,13 @@ class FeatureContext extends DrupalContext {
     $purl_base_path = $base_url . '/' . $vsite->group->purl;
 
     // Expected urls.
-    $expected_urls = array(
+    $expected_tags_value = array(
       'canonical' => url('node/' . $node->nid, array('absolute' => TRUE)),
       'shortlink' => $purl_base_path . '/node/' . $node->nid,
     );
 
     // Iterate over each metatag and validate its "href" value accordingly.
-    foreach ($table->getRows() as $metatag) {
-
-      // The metatag rel value (e.g. rel="canonical").
-      $metatag_name = $metatag[0];
+    foreach ($expected_tags_value as $metatag_name => $value) {
 
       // Getting the metatag element.
       $page = $this->getSession()->getPage();
@@ -2910,12 +2907,12 @@ class FeatureContext extends DrupalContext {
 
       // In case the metatag url in wrong.
       $metatag_href = $metatag_element->getAttribute('href');
-      if ($metatag_href != $expected_urls[$metatag_name]) {
+      if ($metatag_href != $expected_tags_value[$metatag_name]) {
         // In case the target element is not found.
         $variables = array(
           '@metatag' => $metatag_name,
           '@metatag_given_url' => $metatag_href,
-          '@metatag_expected_url' => $expected_urls[$metatag_name],
+          '@metatag_expected_url' => $expected_tags_value[$metatag_name],
         );
 
         throw new \Exception(format_string("The '@metatag' metatag expected url is: '@metatag_expected_url' but the given url is: '@metatag_given_url'", $variables));
