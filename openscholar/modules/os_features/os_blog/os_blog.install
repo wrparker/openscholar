@@ -16,7 +16,4 @@ function os_blog_update_7002() {
       $flag->delete();
     }
   }
-  else {
-    return;
-  }
 }
