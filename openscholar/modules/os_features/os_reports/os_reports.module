@@ -18,12 +18,14 @@ function os_reports_permission() {
       'description' => t('Access the OS reports.'),
       'restrict access' => TRUE,
     ),
+/*
     'administer os reports' => array(
       'title' => t('Administer OS Reports'),
       'description' => t('Change the OS reports settings.'),
       'restrict access' => TRUE,
     ),
   );
+*/
 }
 
 /**
