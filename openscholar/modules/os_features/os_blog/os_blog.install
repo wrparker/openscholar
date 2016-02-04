@@ -17,10 +17,6 @@ function os_blog_update_7002() {
     }
   }
   else {
-    if (module_enable(array('flag'))) {
-      if ($flag = flag_get_flag('flag')) {
-        $flag->delete();
-      }
-    }
+    return;
   }
 }
