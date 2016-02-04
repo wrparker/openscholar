@@ -526,6 +526,13 @@ function os_module_implements_alter(&$implementations, $hook) {
     unset($implementations['os']);
     $implementations['os'] = FALSE;
   }
+  elseif ($hook == 'advagg_save_aggregate_alter') {
+    // advagg is compressing the css files into gzip. We need that our module
+    // will be first. This will ensure that the static domain will be in the
+    // compressed as well.
+    unset($implementations['os']);
+    $implementations = array_merge(array('os' => 'advagg'), $implementations);
+  }
 }
 
 /**
@@ -671,7 +678,8 @@ function os_preprocess_page(&$vars) {
     return;
   }
 
-  // Sets page title to match the menu link title
+  // Sets page title to match the menu link title.
+  $menu_item = NULL;
   if ($view = views_get_page_view()) {
     ctools_include('menu', 'os');
     $menu_item = os_menu_load_link_path($_GET['q']);
@@ -2013,9 +2021,16 @@ function os_form_user_login_alter(&$form, $form_state) {
     array_unshift($form['#validate'],'os_user_login_validate');
   }
 
+  // Overriding the text of first button on the login screen.
+  if (isset($form['pin'])) {
+    $query['destination'] = isset($_GET['destination']) ? $_GET['destination'] : 'user';
+    $form['pin']['#markup'] = l('Log in with Harvard credentials', 'user/pin', array('query' => $query));
+  }
+
   // If user login form is overridden by pinserver_authenticate module, then $form['pin-fieldset'] will be initialized from there.
   // $form['name'] and $form['pass'] both will be unset from pinserver_authenticate module
   if (isset($form['pin-fieldset'])) {
+    $form['pin-fieldset']['#title'] = t('Log in with your OpenScholar account');
     $form['pin-fieldset']['name']['#title'] = t('Username / E-Mail');
     $form['pin-fieldset']['pass']['#description'] = t('!request', array('!request' => l('Forgot your password?', 'user/password')));
   }
@@ -2707,4 +2722,33 @@ function os_html_head_alter(&$head_elements) {
 
   // Alter the shortlink value to the correct url including the purl.
   $head_elements['metatag_shortlink']['#value'] = str_replace($base_url, $base_url_purl, $head_elements['metatag_shortlink']['#value']);
+}
+
+/**
+ * Implements hook_advagg_save_aggregate_alter().
+ */
+function os_advagg_save_aggregate_alter(&$files_to_save, $aggregate_settings, $other_parameters) {
+  if (variable_get('vsite_domain_name', '')) {
+    $domain = url('<front>');
+  }
+  else {
+    global $base_url;
+    $domain = $base_url;
+  }
+
+  if (!$static = variable_get('os_files_static_domain')) {
+    return;
+  }
+
+  // When the base domain and the static domain does not end with the same
+  // closing character we need to add it so won't get BASE_ADDRESSCSS_ADDRESS
+  // and we will get BASE_ADDRESS/CSS_ADDRESS.
+  if (substr($domain, -1) == "/" && substr($static, -1) != "/") {
+    $static .= '/';
+  }
+
+  foreach ($files_to_save as $file_name => $file) {
+    $files_to_save[$file_name] = str_replace($domain, $static, $file);
+  }
+
 }

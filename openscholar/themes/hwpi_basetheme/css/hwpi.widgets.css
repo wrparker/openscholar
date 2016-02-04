@@ -517,14 +517,14 @@ table td.mini .mini-day-on a {
 }
 /* Latest News */
 
-.block-boxes-os_sv_list_box li {
+.block-boxes-os_sv_list_box ul {
     list-style: none;
 }
-.block-boxes-os_sv_list_box .os-slider li {
-    list-style: disc;
-}
-.block-boxes-os_sv_list_box .os-slider li ~ ul li {
-    list-style: circle;
+.block-boxes-os_sv_list_box .os-slider li ~ ul,
+.block-boxes-os_sv_list_box .field-name-body ul,
+.block-boxes-os_sv_list_box .field-name-body ol,
+.block-boxes-os_sv_list_box .os-slider ul {
+    list-style: inherit;
 }
 /* Bio */
 
