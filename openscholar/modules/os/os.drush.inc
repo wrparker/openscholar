@@ -89,6 +89,18 @@ function os_drush_command() {
       'aliases' => array('os-ds'),
       'bootstrap' => DRUSH_BOOTSTRAP_NONE,
     ),
+
+    'os-update-role' => array(
+      'description' => dt('Bring back the last update of a specific module.'),
+      'arguments' => array(
+        'module' => dt('The module name.'),
+        'update' => dt('The update number.')
+      ),
+      'examples' => array(
+        'drush osu os_publications 7038' => dt('Set os_publication module schema version one update before 7038')
+      ),
+      'aliases' => array('osu'),
+    ),
   );
 }
 
@@ -540,4 +552,26 @@ function _os_drush_domain_htaccess_rewrite_condition($domains) {
     $domains[$n] = str_replace('.', '\.', $condition);
   }
   return "\n" . implode(" [OR]\n", $domains) . "\n";
+}
+
+/**
+ * Re role module schema version a one number backward. This is useful when an
+ * update need to be invoke again.
+ */
+function drush_os_update_role($module, $schema) {
+  // Decrease by one the schema version.
+  $schema--;
+
+  if ($schema <= 7001) {
+    // The scheham number is smaller than 7001 which mean the user want to re
+    // run the first update.
+    $schema = 7000;
+  }
+
+  db_update('system')
+    ->fields(array('schema_version' => $schema))
+    ->condition('name', $module)
+    ->execute();
+
+  drush_log(dt('The schema changed. You can run drush updb again.'), 'success');
 }
