@@ -70,6 +70,14 @@
                     }
                   }
                 }
+                else if (children[i].classList.contains('media-gallery-item')) {
+                  var imgs = angular.element(children[i]).find('img');
+                  for (var j=0; j<imgs.length; j++) {
+                    if (imgs[j].classList.contains('image-style-media-gallery-thumbnail')) {
+                      //imgs[j].src = imgs[j].src.replace(/files\/([^?\/]*)\?/, 'files/'+entity.filename+'?');
+                    }
+                  }
+                }
               }
             }
           });
