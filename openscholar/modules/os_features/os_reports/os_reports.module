@@ -24,8 +24,8 @@ function os_reports_permission() {
       'description' => t('Change the OS reports settings.'),
       'restrict access' => TRUE,
     ),
-  );
 */
+  );
 }
 
 /**
