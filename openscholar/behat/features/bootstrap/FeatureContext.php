@@ -9,6 +9,9 @@ use Behat\Behat\Context\Step;
 require 'vendor/autoload.php';
 require_once 'RestfulTrait.php';
 
+// prevent behat from failing on PHP notification or warning
+define("BEHAT_ERROR_REPORTING", E_ALL ^ E_NOTICE ^ E_WARNING);
+
 class FeatureContext extends DrupalContext {
 
   use RestfulTrait;
@@ -115,6 +118,40 @@ class FeatureContext extends DrupalContext {
     $element->fillField('Password', $password);
     $submit = $element->findButton('Log in');
     $submit->click();
+  }
+
+  /**
+   * @Given /^I am logging in as a user who "(can[^"]*)" "([^"]*)"$/
+   */
+  public function iAmLoggingInAsAUserWho($can, $permission) {
+    $can_flag = ($can == "can") ? true : false;
+
+    if ($this->loggedIn() && $can_flag && $this->assertLoggedInWithPermissions($permission)) {
+      return true;
+    }
+    else {
+      if ($can_flag) {
+        $operator = '=';
+      }
+      else {
+        $operator = '<>';
+      }
+      $query = db_select('og_users_roles', 'ogur');
+      $query->addField('u', 'uid');
+      $query->innerJoin('users', 'u', 'u.uid = ogur.uid and u.uid <> 1 and name <> :empty', array(':empty' => "''"));
+      $query->innerJoin('og_role_permission', 'ogrp', 'ogrp.rid = ogur.rid and permission ' . $operator . ' :permission', array(':permission' => $permission));
+      $query->innerJoin('og_role', 'ogr', 'ogur.rid = ogr.rid');
+      $uid = $query->range(0,1)->execute()->fetchField();
+
+      if($uid && $user = user_load($uid)) {
+        new Step\When('I am logging in as "' . $user->name . '"');
+      }
+      else {
+        if (!$this->assertAuthenticatedByRole("os report admin")) {
+          throw new Exception("Unable to log in as a user who $can $permission.");
+        }
+      }
+    }
   }
 
   /**
@@ -2877,4 +2914,190 @@ class FeatureContext extends DrupalContext {
     $wrapper->save();
   }
 
+  /**
+   * @Given /^I run the "([^"]*)" report with "([^"]*)" <checked>:$/
+   */
+  public function iRunTheReportWithChecked($report, $multiValueFieldLabel, TableNode $table) {
+    $steps = array();
+    $steps[] = new Step\When('I visit "admin/reports/os/' . $report . '"');
+    $table_rows = $table->getRows();
+    // Iterate over each row, just so if there's an error we can supply
+    // the row number, or empty values.
+    foreach ($table_rows as $i => $checkbox) {
+      $steps[] = new Step\When('I check the box "' . $checkbox[0] . '"');
+    }
+    $steps[] = new Step\When('I press "Download CSV of Full Report"');
+    return $steps;
+  }
+
+  /**
+   * @Then /^I will see a report with content in the following <columns>:$/
+   */
+  public function iWillSeeAReportWithContentInTheFollowingColumns(TableNode $contentRequirements) {
+    $data = $this->getDataFromCSVFile($this->getSession()->getPage());
+    // get content requirements from test case
+    $requirements = array();
+    foreach($contentRequirements->getRows() as $row) {
+      $requirements[$row[0]] = ($row[1] == 'populated') ? 1 : 0;
+    }
+
+    // compare data to requirements
+    foreach($data as $count => $data_row) {
+      foreach($requirements as $header => $content) {
+        if((!isset($data_row[$header]) || !$data_row[$header]) && $requirements[$header]) {
+          throw new Exception(sprintf("Row #" . ($count + 1) . ", column '$header' should contain content but it doesn't."));
+        }
+      }
+    }
+  }
+
+  /**
+   * @Given /^I run the "([^"]*)" report with "([^"]*)" set to "([^"]*)" and <checkboxes> selected:$/
+   */
+  public function iRunTheReportWithSetToAndCheckboxesSelected($report, $fieldName, $fieldValue, TableNode $table) {
+    $steps = array();
+    $steps[] = new Step\When('I visit "admin/reports/os/' . $report . '"');
+    $steps[] = new Step\When('I fill in "' . $fieldName . '" with "' . $fieldValue. '"');
+    $table_rows = $table->getRows();
+    // Iterate over each row, just so if there's an error we can supply
+    // the row number, or empty values.
+    foreach ($table_rows as $i => $checkbox) {
+      $steps[] = new Step\When('I check the box "' . $checkbox[0] . '"');
+    }
+    $steps[] = new Step\When('I press "Download CSV of Full Report"');
+    return $steps;
+  }
+
+  /**
+   * @Then /^I will see a report with the following <rows>:$/
+   */
+  public function iWillSeeAReportWithTheFollowingRows(TableNode $requiredRows) {
+    global $base_url;
+    $url_parts = explode(".", str_replace("http://", "", $base_url));
+    $install = $url_parts[0];
+
+    $file_data = $this->getDataFromCSVFile($this->getSession()->getPage());
+    $required_data = $requiredRows->getRows();
+    $headers = array_splice($required_data, 0, 1);
+    foreach ($required_data as $num => $row) {
+      foreach ($row as $index => $value) {
+        $header = $headers[0][(int)$index];
+        if ($header == "os install") {
+          $required_data[(int)$num][$header] = $install;
+        }
+        elseif ($header == "site url") {
+          $required_data[(int)$num][$header] = $base_url . "/" . $value;
+        }
+        else {
+          $required_data[(int)$num][$header] = $value;
+        }
+        unset($required_data[(int)$num][(int)$index]);
+      }
+    }
+    foreach ($required_data as $index => $row) {
+      if (array_diff($row, $file_data[$index]) !== array()) {
+        throw new Exception(sprintf("Row #" . ($index + 1) . " does not match."));
+      }
+    }
+  }
+
+  /**
+   * @Then /^I will see a report with no results$/
+   */
+  public function iWillSeeAReportWithNoResults() {
+    return new Step\Then('I should see "No results in report."');
+  }
+
+  /**
+   * @Given /^I run the "([^"]*)" report with "([^"]*)" set to the "([^"]*)" of this "([^"]*)"$/
+   */
+  public function iRunTheReportWithSetToTheOfThis($report, $dateField, $dateParameter, $datePeriod) {
+    $steps = array();
+    $steps[] = new Step\When('I visit "admin/reports/os/' . $report . '"');
+
+    $beginning = "";
+    $end = "";
+    $now = time();
+    switch ($datePeriod) {
+      case "year":
+        $beginning = date("Y", $now) . "0101";
+        $end = date("Y", $now) . "1231";
+        break;
+    }
+    $fieldValue = ${$dateParameter};
+    if ($dateField == "Creation start") {
+      $steps[] = new Step\When('I fill in "edit-creationstart" with "' . $fieldValue . '"');
+    } elseif ($dateField == "Creation end") {
+      $steps[] = new Step\When('I fill in "edit-creationend" with "' . $fieldValue . '"');
+    } else {
+      $steps[] = new Step\When('I fill in "' . $dateField . '" with "' . $fieldValue . '"');
+    }
+    $steps[] = new Step\When('I select the radio button named "includesites" with value "content"');
+    $steps[] = new Step\When('I press "Download CSV of Full Report"');
+
+    return $steps;
+  }
+
+  /**
+   * @Then /^I will see a report with "([^"]*)" values "([^"]*)" to the "([^"]*)" of this "([^"]*)"$/
+   */
+  public function iWillSeeAReportWithValuesToTheOfThis($column, $operator, $dateParameter, $datePeriod) {
+    $beginning = "";
+    $end = "";
+    $now = time();
+    switch ($datePeriod) {
+      case "year":
+        $beginning = date("Y", $now) . "0101";
+        $end = date("Y", $now) . "1231";
+        break;
+    }
+    $submittedValue = ${$dateParameter};
+    switch ($operator) {
+      case "equal":
+        $operatorCode = "=";
+        break;
+      case "less than or equal":
+        $operatorCode = "<=";
+        break;
+      case "greater than or equal":
+        $operatorCode = ">=";
+        break;
+    }
+
+    $file_data = $this->getDataFromCSVFile($this->getSession()->getPage());
+    foreach ($file_data as $num => $row) {
+      $fileValue = $row[$column];
+      eval('$dateComparison = strtotime($fileValue) ' . $operatorCode . ' strtotime($submittedValue);');
+      if (!$dateComparison) {
+        throw new Exception(sprintf("Row #" . ($num + 1) . " has a '$column' value that is not $operator to $submittedValue."));
+      }
+    }
+  }
+
+  /**
+   * Helper function to convert CSV file to associative array
+   */
+  public function getDataFromCSVFile($source) {
+    $fileContent = $source->getContent();
+    if (strpos($fileContent, "html>") !== FALSE) {
+        throw new Exception(sprintf("CSV file was not created."));
+    }
+    $contentArray = explode("\n", $fileContent);
+
+    $data = array();
+    $headers = array();
+    // get data from file
+    for ($count = 0; $count < count($contentArray); $count++) {
+      if ($count == 0) {
+        $headers = str_getcsv($contentArray[0]);
+      }
+      else {
+        $values = explode('", "', trim($contentArray[$count], '"'));
+        for ($column = 0; $column < count($values); $column++) {
+          $data[$count - 1][strtolower($headers[$column])] = $values[$column];
+        }
+      }
+    }
+    return $data;
+  }
 }
