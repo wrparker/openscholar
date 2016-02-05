@@ -368,14 +368,24 @@ function os_common_preprocess_html(&$vars) {
  * Implements hook_node_form_alter().
  */
 function os_common_form_node_form_alter(&$form, &$form_state) {
+  $form['#after_build'][] = 'os_common_set_node_form_angular_app';
+}
+
+/**
+ * Implements after_build.
+ *
+ * We have to do it this way, otherwise nothing angular related will load if form validation fails.
+ */
+function os_common_set_node_form_angular_app($element, $form_state) {
+  $form_id = $form_state['complete form']['#id'];
 
   //Determine if this form has an angular app.
-  if($app = os_common_get_angular_module($form['#id'])) {
+  if ($app = os_common_get_angular_module($form_id)) {
     // Set the active angular app as the app with the same name as this form id.
     os_common_angular_apps($app->name);
-    $form['#attached']['js'][] = $app->uri;
+    $element['#attached']['js'][] = $app->uri;
   }
-
+  return $element;
 }
 
 /**
