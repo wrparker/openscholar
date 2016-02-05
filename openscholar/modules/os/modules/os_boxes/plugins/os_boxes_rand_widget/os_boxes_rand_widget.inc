@@ -20,6 +20,7 @@ class os_boxes_rand_widget extends os_boxes_widget_collection {
     list(,$delta) = explode('-', $this->options['widgets'][$k]['bid'], 2);
     $box = boxes_box_load($delta);
     $box->title = $this->options['widgets'][$k]['title'];
+    $box->options['make_embeddable'] = $this->options['make_embeddable'];
     if ($box instanceof boxes_box) {
       return $box->render();
     }
