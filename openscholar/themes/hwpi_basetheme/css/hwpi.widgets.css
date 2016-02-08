@@ -1,15 +1,15 @@
 /* Site Info */
-.block-boxes-os_boxes_site_info {
-    min-height: 135px; 	
+
+#header-container .block-boxes-os_boxes_site_info {
+    min-height: 135px;
     display: table;
 }
-.block-boxes-os_boxes_site_info .block-inner {
-	display: table-cell;
+#header-container .block-boxes-os_boxes_site_info .block-inner {
+    display: table-cell;
     vertical-align: middle;
 }
-
-#boxes-box-site_info {
-vertical-align:middle;
+.region-header-second .region-inner.site-info {
+    padding-top: 0;
 }
 #boxes-box-site_info,
 #boxes-box-site_info a {
@@ -31,7 +31,6 @@ vertical-align:middle;
     font-size: 24px;
     font-style: italic;
 }
-
 /* Search */
 
 #search-block-form {
