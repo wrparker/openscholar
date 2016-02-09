@@ -5,7 +5,7 @@
          hide-on-drop-not-available="true" ng-accept="validate($file)">
         <span id="drag-text">{{droppable_text}}<span class="help_icon" ng-mouseenter="showHelp = true" ng-mouseleave="showHelp = false">?</span></span>
 
-        <a href="#" mb-open-modal panes="{{panes.join(',')}}" types="{{types}}" on-select="addFile($inserted)">{{upload_text}}</a>
+        <a href="#" class="button-wrapper" mb-open-modal panes="{{panes.join(',')}}" types="{{types}}" on-select="addFile($inserted)">{{upload_text}}</a>
 		 <div class="help" ng-show="showHelp"><strong>Allowed file types:</strong><br /> {{extensionsFull.join(' ')}}<br /><br />
                    <strong>Max file size:</strong> {{maxFilesize}}.</div>
 </div>
@@ -29,4 +29,5 @@
             </li>
         </ul>
     </div>
+</div>
 </div>
