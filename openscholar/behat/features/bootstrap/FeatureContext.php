@@ -2752,9 +2752,6 @@ class FeatureContext extends DrupalContext {
     if (!$element = $this->getSession()->getPage()->find('xpath', "//*[text() = '{$text}']")) {
       throw new \Exception(format_string("Could not find an element with the: '@text'.", array('@text' => $text)));
     }
-
-    print_r($element);
-
     $element->click();
   }
 
