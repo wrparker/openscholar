@@ -395,6 +395,7 @@
         }, function (error) {
           console.log(error);
           lock.resolve({});
+          return error;
         });
       }).then(angular.noOp, function (results) {  // openStore returns a promise. We can call .then() on it to attach handlers
         console.log(results);
