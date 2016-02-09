@@ -24,7 +24,7 @@ cache:
     - openscholar/themes/contrib
     - openscholar/libraries
     - openscholar/behat/vendor
-    - openscholar/behat/node_backend/node_modules
+#    - openscholar/behat/node_backend/node_modules
 
 env:
   global:
@@ -108,12 +108,13 @@ script:
 
   # Run the assets backend.
   - cd node_backend
-  - bash install_node.sh
+  - npm install
+#  - bash install_node.sh
   - nohup bash -c "node index.js 2>&1 &"
   - cd -
 
   # Start running the tests.
-  - bin/behat --tags=$TEST_SUITE
+  - ./bin/behat --tags=$TEST_SUITE
 
 after_failure: # this will of course run only on failure
   - "travis-artifacts upload --path /tmp/screenshots"
