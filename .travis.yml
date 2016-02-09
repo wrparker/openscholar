@@ -113,7 +113,7 @@ script:
   - cd -
 
   # Start running the tests.
-  - ./bin/behat --tags=$TEST_SUITE
+  - bin/behat --tags=$TEST_SUITE
 
 after_failure: # this will of course run only on failure
   - "travis-artifacts upload --path /tmp/screenshots"
