@@ -108,7 +108,7 @@ script:
 
   # Run the assets backend.
   - cd node_backend
-  - bash profiles/openscholar/behat/node_backend/install_node.sh
+  - bash install_node.sh
   - nohup bash -c "node index.js 2>&1 &"
   - cd -
 
