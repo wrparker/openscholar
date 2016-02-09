@@ -300,9 +300,9 @@ div[file-edit] .control button,
 }
 .field-widget-media-draggable-file span.ng-binding.ng-scope {
     width: 80px;
-    position: static;
-    margin-top: 20px;
-    display: inline-block;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 #drag-text {
     position: absolute;
@@ -322,12 +322,6 @@ div[file-edit] .control button,
     margin: 3% 0 2%;
     border: 2px dashed #ccc;
 }
-
-.media-browser-drop-box .button-wrapper {
-    display: block;
-    text-align: center;
-}
-
 .node-form .media-browser-drop-box {
     height: 180px;
     background-color: #FFF;
