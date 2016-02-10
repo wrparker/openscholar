@@ -2438,7 +2438,7 @@ class FeatureContext extends DrupalContext {
       // Selenium has no support for <input type="file" multiple>. So instead, we use multiple input elements,
       // then dummy up a JS FilesList object to pass to the element.
       $driver = $this->getSession()->getDriver();
-      $inputs = [];
+      $inputs = array();
       foreach ($paths as $k => $path) {
         $inputId = 'elem_' . substr(md5(time()), 0, 7) . '_' . $k;
         $driver->executeScript("$inputId = window.jQuery('<input id=\"$inputId\" type=\"file\">').appendTo('body');");
