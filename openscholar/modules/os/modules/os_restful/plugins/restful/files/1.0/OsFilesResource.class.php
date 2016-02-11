@@ -137,6 +137,18 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
   protected $errors = array();
 
   /**
+   * Overrides OsRestfulEntityCacheableBase::controllersInfo().
+   */
+  static public function controllersInfo() {
+    return array(
+      'filename\/[^\/]+$' => array(
+        RestfulInterface::GET => 'checkFilename',
+        RestfulInterface::HEAD => 'checkFilename'
+      )
+    ) + parent::controllersInfo();
+  }
+
+  /**
    * Overrides RestfulEntityBase::publicFieldsInfo().
    */
   public function publicFieldsInfo() {
@@ -761,6 +773,39 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     }
 
     return FALSE;
+  }
+
+  protected function checkFilename($filename) {
+    list (,$filename) = explode('/', $filename);
+    $dir = 'public://';
+    if (isset($this->request['private'])) {
+      $dir = 'private://';
+    }
+
+    if (isset($this->request['vsite'])) {
+      $vsite = db_select('purl', 'p')
+        ->fields('p', array('value'))
+        ->condition('provider', 'spaces_og')
+        ->condition('id', $this->request['vsite'])
+        ->execute()
+        ->fetchField();
+
+      if ($vsite) {
+        $dir .= $vsite . '/files/';
+      }
+    }
+
+    $new_filename = strtolower($filename);
+    $new_filename = preg_replace('|[^a-z0-9\-_\.]|', '_', $new_filename);
+    $new_filename = preg_replace(':__:', '_', $new_filename);
+
+    $new_name = file_create_filename($new_filename, $dir);
+
+    return array(
+      'collision' => basename($new_name) != $new_filename,
+      'invalidChars' => $new_filename != $filename,
+      'expectedFileName' => basename($new_name)
+    );
   }
 }
 
