@@ -43,7 +43,7 @@ index b70c5c6..dd9b99d 100644
 +/**
 + * Returns pipe separated string of valid domain suffixes.
 + */
-+ function _link_domains() {
++function _link_domains() {
 +  $link_iana_domains = variable_get('link_iana_domains', '');
 +  return empty($link_iana_domains) ? LINK_DOMAINS : $link_iana_domains;
 +}
