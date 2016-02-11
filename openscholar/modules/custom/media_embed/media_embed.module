@@ -336,7 +336,14 @@ function media_embed_file_formatter_media_embed_view($file, $display, $langcode)
           if ($fetchheight) {
             $height = $fetchheight[1];
           }
-          $width = $fetchwidth[1];
+          if (strpos($fetchwidth[1], '%') !== FALSE) {
+            // the width is relative.
+            // we're going to assume the aspect ratio is 1:1 and use the height
+            $width = $height;
+          }
+          else {
+            $width = $fetchwidth[1];
+          }
         }
       }
 
