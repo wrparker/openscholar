@@ -195,6 +195,7 @@ projects[libraries][patch][] = "http://drupal.org/files/0001-Fix-1938638-by-core
 ; projects[link][patch][] = "http://drupal.org/files/link-MigrateLinkFieldHandler-1010850-54.patch"
 projects[link][patch][] = "http://drupal.org/files/link-MigrateLinkFieldHandler-1010850-61.patch"
 projects[link][patch][] = "http://drupal.org/files/link-7.x-1.x-required_fields-1368616-11.patch"
+projects[link][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/831d1d024dfecafbfeeb410ac8c841f27175d912/patches/link-updated-tld-list-7947.patch"
 projects[link][subdir] = "contrib"
 projects[link][download][branch] = 7.x-1.x
 projects[link][download][type] = git
