@@ -78,7 +78,7 @@
                     <input id="file-search-input" type="text" ng-model="$parent.search" class="form-text" size="30" maxlength="128">
                     <div class="description">Type in a filename or label to filter list of files.</div>
                 </div>
-                <div class="file-type">
+                <div class="file-type" ng-show="$parent.availTypes.length > 1">
                     <label for="file-type-input">File Type</label>
                     <select id="file-type-input" type="select" ng-model="$parent.filteredTypes" ng-options="type.value as type.label for type in availTypes" multiple="multiple"></select>
                 </div>
@@ -93,7 +93,7 @@
                 <span class="mb-created" ng-click="sortReverse=(sortType == 'timestamp')?!sortReverse:true; sortType='timestamp';">Upload Date</span>
                 <span class="mb-file-actions">&nbsp;</span>
             </div>
-            <div js-pager="file in files | mbFilename:$parent.search | mbType:filteredTypes | mbExtensions:extensions | filter:{status:'!deleting'} | orderBy:sortType:sortReverse track by file.id" page-size="5">
+            <div js-pager="file in files | mbFilename:$parent.search | mbType:availFilter | mbType:filteredTypes | mbExtensions:extensions | filter:{status:'!deleting'} | orderBy:sortType:sortReverse track by file.id" page-size="5">
                 <div class="media-row" data-fid="{{file.id}}" ng-click="setSelection(file.id)" ng-class="{selected : selection == file.id, new : file.new}">
                     <span class="mb-preview" ng-bind-html="file.preview"></span>
                     <span class="mb-title">{{file.name}}</span>

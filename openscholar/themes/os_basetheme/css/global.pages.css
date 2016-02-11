@@ -1099,6 +1099,10 @@ color: #555;
 }
 
 
+.node-person.node-teaser figure figcaption {
+	display:none;
+}
+
 .lt-ie9 img.media-element.file-default[style*="FLOAT:"][style*="RIGHT;"] ~ figcaption,
 img.media-element.file-default[style*="float:"][style*="right;"] ~ figcaption {
 padding-left: 15px;
