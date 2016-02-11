@@ -250,10 +250,8 @@ projects[mollom][version] = 2.14
 projects[multiform][subdir] = "contrib"
 projects[multiform][version] = 1.0
 
-projects[nice_menus][patch][] = "http://drupal.org/files/translate-menu-item-1050352-17-v2.1.patch"
-projects[nice_menus][patch][] = "https://raw.github.com/openscholar/openscholar/b0cb4b6b2ee8d0e162c0a35527ca8d4dcbfc490b/patches/nice_menus.fatal_localized_options.patch"
 projects[nice_menus][subdir] = "contrib"
-projects[nice_menus][version] = 2.1
+projects[nice_menus][version] = 2.5
 
 projects[nodeformcols][subdir] = "contrib"
 projects[nodeformcols][version] = 1.0
