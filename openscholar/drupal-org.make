@@ -73,7 +73,7 @@ projects[disqus][version] = 1.9
 projects[disqus][patch][] = "http://drupal.org/files/comment_sources-disqus-2120703-1.patch"
 
 projects[dragndrop_upload][subdir] = "contrib"
-projects[dragndrop_upload][version] = 1.0-alpha2
+projects[dragndrop_upload][version] = 1.x-dev
 
 projects[dyntextfield][subdir] = "contrib"
 projects[dyntextfield][type] = module
