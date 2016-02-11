@@ -294,6 +294,11 @@ function os_software_os_packaging_method_option() {
  * Finds other recommended releases, marks them "Not recommended"
  */
 function _os_software_new_recommended_release($node) {
+  // If this release is set as 'not recommended', then no need to alter other releases.
+  if ($node->field_software_recommended[LANGUAGE_NONE][0]['value'] == 0) {
+    return;
+  }
+
   // Retrieves the list of all other software releases for this node's parent
   // Software Project node.
   $field_name   = 'field_software_project';
@@ -308,7 +313,7 @@ function _os_software_new_recommended_release($node) {
   foreach ($release_nids as $nid) {
     // Skips over the release that triggered this update.
     if ((int) $nid === (int) $node->nid) {
-      return;
+      continue;
     }
     $release_node = node_load($nid);
     $language = isset($release_node->language) ? $release_node->language : LANGUAGE_NONE;

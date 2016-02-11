@@ -75,7 +75,7 @@ function admin_panel_library() {
           'keep_open' => _admin_panel_persist_open(),
         ),
         'version' => array(
-          'adminPanel' => '0.0.8'
+          'adminPanel' => '0.0.9'
         ),
       ),
       'type' => 'setting',

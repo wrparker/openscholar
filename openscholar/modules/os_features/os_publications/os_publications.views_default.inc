@@ -384,8 +384,8 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['filters']['current']['table'] = 'spaces';
   $handler->display->display_options['filters']['current']['field'] = 'current';
 
-  /* Display: Co-Authors List */
-  $handler = $view->new_display('block', 'Co-Authors List', 'block');
+  /* Display: Authors List */
+  $handler = $view->new_display('block', 'Authors List', 'block');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $export['co_author_list'] = $view;
 

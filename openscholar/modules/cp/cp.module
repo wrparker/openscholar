@@ -341,7 +341,7 @@ function cp_use_cp_theme() {
   elseif (arg(0) == 'taxonomy') {
     return (arg(2) == 'add' || in_array(arg(3), $ops));
   }
-  elseif (in_array(arg(0), array('user')) && $_GET['render'] == 'overlay') {
+  elseif (in_array(arg(0), array('user')) && !empty($_GET['render']) && $_GET['render'] == 'overlay') {
     return in_array(arg(2), $ops);
   }
 
@@ -405,7 +405,8 @@ function cp_form_spaces_features_form_alter(&$form, &$form_state, $form_id) {
 
     // Only displays "settings" gear-icon link for enabled & private OS Apps.
     $is_not_disabled = ((int) $form['spaces_features'][$app_name]['#default_value'] !== 0);
-    if ($is_not_disabled) {
+    $item = menu_get_item("cp/build/features/{$app_name}");
+    if ($is_not_disabled && $item && $item['href'] == "cp/build/features/{$app_name}") {
       $link = l(t('settings'), 'cp/build/features/' . $app_name);
       $form['settings'][$app_name] = array(
         '#type' => 'markup',

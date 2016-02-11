@@ -99,8 +99,8 @@ function _os_boxes_boxes_plugins() {
 
   // Publication Boxes
   $info['os_boxes_pub_ca'] = array(
-    'title' => 'Publications: Coauthors',
-    'description' => 'Displays a list of coauthors of your publications',
+    'title' => 'Publications: Authors',
+    'description' => 'Displays a list of authors of your publications',
     'tags' => array('Content'),
     'module dependencies' => array('os_publications'),
     'handler' => array(

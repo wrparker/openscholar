@@ -31,9 +31,10 @@
 	   */
 	  Drupal.behaviors.AdminPanelProcessURL = {
 	    attach: function() {
+// Commenting this out till issues with tabs loading and seeing a different URL is fixed	    	
 	      //Remove Admin panel param from URL
-		  var current_url = jQuery(location).attr('href');
-		  history.pushState(null, null, current_url.replace(/\?admin_panel=1(&?)/, '$1'));
+//		  var current_url = jQuery(location).attr('href');
+//		  history.pushState(null, null, current_url.replace(/\?admin_panel=1&?(.*)/, '\?$1'));
 	    }
 	  };
 	

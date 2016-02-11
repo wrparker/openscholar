@@ -26,7 +26,7 @@
 
           scope.fileEditAddt = '';
           scope.date = '';
-          scope.description_label = 'Note (seen only by site admins)';
+          scope.description_label = 'Descriptive Text - will display under the filename';
 
           scope.$watch('file', function (f) {
             if (!f) return;
@@ -61,8 +61,9 @@
             }
           });
 
+          scope.invalidFileName = false;
           scope.$watch('file.filename', function (filename, old) {
-            if (typeof filename != 'string') {
+            if (typeof filename != 'string' || !scope.file) {
               return;
             }
             scope.invalidFileName = false;

@@ -1996,6 +1996,7 @@ function os_files_file_default_types() {
       'application/x-compressed',
       'application/x-tar',
       'application/x-gtar',
+      'application/x-rar-compressed'
     ),
     'streams' => array(
       'public',
@@ -2278,6 +2279,7 @@ function _os_files_extensions_from_type($type) {
       'gz',
       'exe',
       'tar',
+      'rar'
     );
   }
 
@@ -2325,6 +2327,7 @@ function os_files_file_mimetype_mapping_alter(&$mimes) {
     'application/vnd.ms-powerpoint' => 'pot',
     'application/vnd.openxmlformats-officedocument.presentationml.template' => 'potx',
     'text/csv' => 'csv',
+    'application/x-rar-compressed' => 'rar'
   );
 
   foreach ($types as $mime => $ext) {
@@ -2530,7 +2533,7 @@ function _os_files_use_static_domain($path) {
     // aggregated js file.
     return TRUE;
   }
-  elseif (in_array(pathinfo($path, PATHINFO_EXTENSION), array('js', 'ico'))) {
+  elseif (in_array(pathinfo($path, PATHINFO_EXTENSION), array('js'))) {
     // keep adding things here as they come up
     return TRUE;
   }

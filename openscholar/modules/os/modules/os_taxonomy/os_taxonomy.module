@@ -650,7 +650,7 @@ function os_taxonomy_preprocess_page(&$page) {
   if (!empty($active['vid'])) {
 
     $ctxs = array_keys(context_active_contexts());
-    $section = array_diff($ctxs, array('os_taxonomy-term-' . $active['vid']));
+    $section = isset($active['tid']) ? array_diff($ctxs, array('os_taxonomy-term-' . $active['tid'])) : $ctxs;
 
     $section_links['section-header'] = array(
       'title' => t('This Vocabulary'),

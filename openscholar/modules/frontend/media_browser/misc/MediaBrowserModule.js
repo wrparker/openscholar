@@ -7,6 +7,11 @@
        rootPath = Drupal.settings.paths.moduleRoot;
     })
     .run(['mbModal', function (mbModal) {
+      // Disable drag and drop behaviors on the window object, to prevent files from
+      angular.element(window).on('dragover drop', function(e) {
+        e = e || event;
+        e.preventDefault();
+      });
 
       // if the File object is not supported by this browser, fallback to the original media browser
       if (mbModal.requirementsMet()) {
@@ -43,7 +48,8 @@
 
     // Initialization
     var service = new EntityService('files', 'id'),
-      toEditForm = false;
+      toEditForm = false,
+      directInsert = true;
     $scope.files = [];
     $scope.numFiles = 0;
     $scope.templatePath = rootPath;
@@ -64,7 +70,9 @@
     $scope.sortType = 'timestamp';
     $scope.sortReverse = true;
 
-    $scope.availTypes = [
+    $scope.toInsert = [];
+
+    var allTypes = [
       {label: 'Image', value: 'image'},
       {label: 'Document', value: 'document'},
       {label: 'Video', value: 'video'},
@@ -72,6 +80,18 @@
       {label: 'Executable', value: 'executable'},
       {label: 'Audio', value: 'audio'}
     ];
+
+    var defaultFilteredTypes = params.types;
+    $scope.availTypes = [];
+    $scope.availFilter = [];
+    for (var j in defaultFilteredTypes) {
+      for (var k=0; k<allTypes.length; k++) {
+        if (defaultFilteredTypes[j] == allTypes[k].value) {
+          $scope.availTypes.push(allTypes[k]);
+          $scope.availFilter.push(allTypes[k].value);
+        }
+      }
+    }
 
     $scope.extensions = [];
     if (params.file_extensions) {
@@ -108,7 +128,7 @@
     }
 
     $scope.clearFilters = function () {
-      $scope.filteredTypes = [];
+      $scope.filteredTypes = defaultFilteredTypes;
       $scope.search = '';
     }
 
@@ -227,6 +247,7 @@
       }
       var toBeUploaded = [];
       $scope.dupes = [];
+      $scope.toInsert = [];
       for (var i=0; i<$files.length; i++) {
         var similar = [],
             basename = $files[i].name.replace(/\.[a-zA-Z0-9]*$/, ''),   // remove extension from filename
@@ -368,7 +389,12 @@
               // do nothing. This usually means there was an error during upload.
             }
             else {
-              $scope.changePanes('library');
+              if (directInsert) {
+                $scope.insert();
+              }
+              else {
+                $scope.changePanes('library');
+              }
             }
           }
         }
@@ -413,6 +439,7 @@
               e.data[i].new = true;
               $scope.files.push(e.data[i]);
             }
+            $scope.toInsert.push(e.data[i]);
           }
           uploadNext(e.data[0].id);
         }).error(function (e) {
@@ -486,13 +513,29 @@
         }
         $scope.selected_file = null;
       }
+      else if ((result == FER.NO_CHANGES || result == FER.SAVED) && ($scope.selected_file.new || $scope.selected_file.replaced)) {
+        if (directInsert) {
+          $scope.insert();
+        }
+        else {
+          $scope.changePanes('library', result);
+        }
+      }
       $scope.changePanes('library', result);
     }
 
     $scope.insert = function () {
       var results = [];
-      $scope.selected_file.fid = $scope.selected_file.id; // hack to prevent rewriting a lot of Media's code.
-      results.push($scope.selected_file);
+      if ($scope.toInsert.length) {
+        for (var i = 0; i < $scope.toInsert.length; i++) {
+          $scope.toInsert[i].fid = $scope.toInsert[i].id;
+          results.push($scope.toInsert[i]);
+        }
+      }
+      else {
+        $scope.selected_file.fid = $scope.selected_file.id; // hack to prevent rewriting a lot of Media's code.
+        results.push($scope.selected_file);
+      }
 
       close(results);
     }
