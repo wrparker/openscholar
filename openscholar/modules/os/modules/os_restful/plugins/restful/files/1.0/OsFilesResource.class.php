@@ -413,14 +413,19 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     }
 
     $destination = 'public://';
+    // Public files are put inside of a files directory within the vsite folder
+    // This keeps user uploaded files seperate from other vsite resources.
+    $vsite_directory = '/files';
+    
     // do spaces/private file stuff here
     if (isset($this->request['private'])) {
       $destination = 'private://';
+      $vsite_directory = '';
     }
 
     if (isset($this->request['vsite'])) {
       $path = db_select('purl', 'p')->fields('p', array('value'))->condition('id', $this->request['vsite'])->execute()->fetchField();
-      $destination .= $path . '/files';
+      $destination .= $path . $vsite_directory;
     }
 
     $writable = file_prepare_directory($destination, FILE_MODIFY_PERMISSIONS | FILE_CREATE_DIRECTORY);
