@@ -251,7 +251,7 @@ projects[multiform][subdir] = "contrib"
 projects[multiform][version] = 1.0
 
 projects[nice_menus][subdir] = "contrib"
-projects[nice_menus][version] = 2.5
+projects[nice_menus][version] = 3.x-dev
 
 projects[nodeformcols][subdir] = "contrib"
 projects[nodeformcols][version] = 1.0
