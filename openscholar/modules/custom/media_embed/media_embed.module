@@ -268,12 +268,14 @@ function media_embed_file_formatter_media_embed_view($file, $display, $langcode)
 
       // copied from dead embedfilter module
       preg_match('/height="([0-9]*)"/', $html, $fetchheight);
-      preg_match('/width="([0-9%]*)"/', $html, $fetchwidth);
+      preg_match('/width="(\d+(\.\d+)?%)"/', $html, $fetchwidth);
       if ($fetchheight && $fetchwidth) {
         $height = $fetchheight[1];
         // if the width is a percentage in the iframe, assume the aspect ratio is 1:1 and use the height
         if (strpos($fetchwidth[1], '%') !== FALSE) {
-          $width = $height;
+          $term = explode("%", $fetchwidth[1]);
+          $width = ceil(($term[0]/100) * 1000);
+          $file->field_html_code[LANGUAGE_NONE][0]['safe_value'] = preg_replace('/width="(\d+(\.\d+)?%)"/', 'width=' . $width, $file->field_html_code[LANGUAGE_NONE][0]['safe_value']);
         }
         else {
           $width = $fetchwidth[1];
@@ -330,7 +332,7 @@ function media_embed_file_formatter_media_embed_view($file, $display, $langcode)
       }
       else {
         $html = $file->field_html_code[LANGUAGE_NONE][0]['value'];
-        preg_match('/width="([0-9%]*)"/', $html, $fetchwidth);
+        preg_match('/width="(\d+(\.\d+)?%)"/', $html, $fetchwidth);
         if ($fetchwidth) {
           preg_match('/height="([0-9]*)"/', $html, $fetchheight);
           if ($fetchheight) {
@@ -339,7 +341,8 @@ function media_embed_file_formatter_media_embed_view($file, $display, $langcode)
           if (strpos($fetchwidth[1], '%') !== FALSE) {
             // the width is relative.
             // we're going to assume the aspect ratio is 1:1 and use the height
-            $width = $height;
+            $term = explode("%", $fetchwidth[1]);
+            $width = ceil(($term[0]/100) * 1000);
           }
           else {
             $width = $fetchwidth[1];
