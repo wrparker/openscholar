@@ -271,7 +271,8 @@ function media_embed_file_formatter_media_embed_view($file, $display, $langcode)
       preg_match('/width="(\d+(\.\d+)?%)"/', $html, $fetchwidth);
       if ($fetchheight && $fetchwidth) {
         $height = $fetchheight[1];
-        // if the width is a percentage in the iframe, assume the aspect ratio is 1:1 and use the height
+        // we're going to assume that the max width is 1000px
+        // the final width value is calculated as %value * 1000px
         if (strpos($fetchwidth[1], '%') !== FALSE) {
           $term = explode("%", $fetchwidth[1]);
           $width = ceil(($term[0]/100) * 1000);
@@ -340,7 +341,8 @@ function media_embed_file_formatter_media_embed_view($file, $display, $langcode)
           }
           if (strpos($fetchwidth[1], '%') !== FALSE) {
             // the width is relative.
-            // we're going to assume the aspect ratio is 1:1 and use the height
+            // we're going to assume that the max width is 1000px
+            // the final width value is calculated as %value * 1000px
             $term = explode("%", $fetchwidth[1]);
             $width = ceil(($term[0]/100) * 1000);
           }
