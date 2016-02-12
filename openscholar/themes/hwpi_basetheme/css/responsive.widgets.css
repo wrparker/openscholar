@@ -59,7 +59,7 @@
     width: 100%;
 }
 
-#content-column .block.block-boxes-os_boxes_manual_list {
+#content-column .block.block-boxes-os_boxes_manual_list.styled {
     padding: 0!important;
 }
 

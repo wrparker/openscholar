@@ -60,7 +60,7 @@ class os_boxes_manual_list extends os_boxes_default {
       else {
         // Collecting all the weight so we could get the maximum and place the
         // new added node to the bottom.
-        $weights = [];
+        $weights = array();
         foreach ($this->options['nodes'] as $node) {
           $weights[] = $node['weight'];
         }
