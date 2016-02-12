@@ -205,18 +205,18 @@ span.date-display-single {
 #content-column .field-name-body h2, #content-column .field-name-body h3, #content-column .field-name-body h4 {
     font-weight: normal;
 }
-.front #content-panels .block.block-boxes-os_boxes_manual_list {
+.front #content-panels .block.block-boxes-os_boxes_manual_list.styled {
     background-color: #FFFFFF;
     border: 1px solid #E3EAEF;
     color: #000000;
     padding: 15px;
 }
-.front #content-panels .block.block-boxes-os_boxes_manual_list a {
+.front #content-panels .block.block-boxes-os_boxes_manual_list.styled a {
     color: #215990;
     font-weight: normal;
 }
 
-.front #content-panels .block.block-boxes-os_boxes_manual_list .block-title {
+.front #content-panels .block.block-boxes-os_boxes_manual_list.styled .block-title {
     background: none repeat scroll 0 0 transparent;
     border-bottom: medium none;
     color: #666666 !important;
