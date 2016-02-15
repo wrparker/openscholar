@@ -1988,7 +1988,7 @@ function os_events_register_show_register_link($node, $date = '') {
     return os_events_show_register_by_node($node, $date);
   }
 
-  // Checking if event date is in future or not. else signup link will not be shown.
+  // Checking if the event date is in future or not. else signup link will not be shown.
   if (isset($node->field_date[LANGUAGE_NONE][0]['value']) && REQUEST_TIME > strtotime($node->field_date[LANGUAGE_NONE][0]['value'])) {
     // Checking repeating event date and non-repeating event dates.
     if (isset($result['repeating_event_date']) && REQUEST_TIME > strtotime($result['repeating_event_date'] . ' UTC')) {
