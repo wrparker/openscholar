@@ -115,18 +115,18 @@ function os_search_solr_update_7002() {
 
     // In case the view is used, create a new block that will replace it.
     unset($blocks['blocks']['os_search_db-site-search']);
-    foreach ($blocks['blocks'] as $key => $block) {
-      if (strpos($key, 'site-search') !== FALSE) {
 
-        // Replace the old one with the new instance.
-        $old_block = $blocks['blocks'][$key];
-        $blocks['blocks'][$key] = array(
-          'module' => 'boxes',
-          'delta' => 'solr_search_box',
-          'region' => $old_block['region'],
-          'weight' => $old_block['weight'],
-        );
-      }
+    $key = 'os_search_solr-site-search';
+    if (in_array($key, array_keys($blocks['blocks']))) {
+
+      // Replace the old one with the new instance.
+      $old_block = $blocks['blocks'][$key];
+      $blocks['blocks'][$key] = array(
+        'module' => 'boxes',
+        'delta' => 'solr_search_box',
+        'region' => $old_block['region'],
+        'weight' => $old_block['weight'],
+      );
     }
 
     $override->value = serialize($blocks);
