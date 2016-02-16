@@ -137,6 +137,20 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
     return parent::deleteEntity($entity_id);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getQueryCount() {
+    $query = $this->getEntityFieldQuery();
+
+    $this->queryForListFilter($query);
+
+    $this->addExtraInfoToQuery($query);
+    $query->addTag('restful_count');
+
+    return $query->count();
+  }
+
   public function additionalHateoas() {
     $addtl = array();
     $path = $this->getPath();
@@ -152,6 +166,8 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
         } else {
           $addtl['updatesAsOf'] = REQUEST_TIME;
         }
+
+        $addtl['totalEntities'] = $this->getTotalCount();
       }
     }
 
