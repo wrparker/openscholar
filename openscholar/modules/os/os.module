@@ -2687,6 +2687,44 @@ function og_query_og_membership_blocked_users_alter(QueryAlterableInterface $que
 }
 
 /**
+ * Implements hook_html_head_alter().
+ */
+function os_html_head_alter(&$head_elements) {
+  // Base path.
+  $base_url = variable_get('purl_base_domain');
+
+  // Exit early in case we are on a "custom domain".
+  if (variable_get('vsite_domain_name', '')) {
+    // Check if this shared domain.
+    if (!variable_get('vsite_domain_shared')) {
+      return;
+    }
+
+    // Define the custom domain address as the base url since the vsite is under
+    // a shared custom domain.
+    $base_url = variable_get('vsite_domain_name', '');
+  }
+
+  // Exit early in case we have no shortlink metatag and we are not on a "vsite".
+  $vsite = vsite_get_vsite();
+  if (!isset($head_elements['metatag_shortlink']) && $vsite) {
+    return;
+  }
+
+  // Base path including the purl.
+  $base_url_purl = $base_url . '/' . $vsite->group->purl;
+
+
+  // Do nothing in case the shortlink value already contains the purl.
+  if (strpos($head_elements['metatag_shortlink']['#value'], $base_url_purl) === 0) {
+    return;
+  }
+
+  // Alter the shortlink value to the correct url including the purl.
+  $head_elements['metatag_shortlink']['#value'] = str_replace($base_url, $base_url_purl, $head_elements['metatag_shortlink']['#value']);
+}
+
+/**
  * Implements hook_advagg_save_aggregate_alter().
  */
 function os_advagg_save_aggregate_alter(&$files_to_save, $aggregate_settings, $other_parameters) {
