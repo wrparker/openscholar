@@ -586,8 +586,6 @@ function os_events_generate_modal_register_link($nid, $delta = FALSE, $modal_set
         foreach ($wrapper->field_date as $d => $field_date) {
           $date = $field_date->value();
           if($d == $delta) continue;
-          // Repetitive events 'choose another date' dropdown options should have only future dates.
-          if (REQUEST_TIME >= strtotime($date['value'].' UTC')) continue;
           $options_cache[$nid][url($_GET['q'],array('query' => array('delta' => $d)))] = date('l, F j, Y', strtotime($date['value'].' UTC'));
         }
       }
@@ -1988,15 +1986,6 @@ function os_events_register_show_register_link($node, $date = '') {
     return os_events_show_register_by_node($node, $date);
   }
 
-  // Checking if event date is in future or not. else signup link will not be shown.
-  if (isset($node->field_date[LANGUAGE_NONE][0]['value']) && REQUEST_TIME > strtotime($node->field_date[LANGUAGE_NONE][0]['value'])) {
-    // Checking repeating event date and non-repeating event dates.
-    if (isset($result['repeating_event_date']) && REQUEST_TIME > strtotime($result['repeating_event_date'] . ' UTC')) {
-      return FALSE;
-    } elseif (isset($result['repeating_event_date']) && $result['repeating_event_date'] == '') {
-      return FALSE;
-    }
-  }
 
   if (!empty($result['close'])) {
     return REQUEST_TIME >= strtotime($result['open']) && REQUEST_TIME <= strtotime($result['close']);
