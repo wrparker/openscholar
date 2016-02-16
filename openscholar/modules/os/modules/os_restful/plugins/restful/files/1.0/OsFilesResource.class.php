@@ -799,12 +799,28 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     $new_filename = preg_replace('|[^a-z0-9\-_\.]|', '_', $new_filename);
     $new_filename = preg_replace(':__:', '_', $new_filename);
 
-    $new_name = file_create_filename($new_filename, $dir);
+    $fullname = $dir . $new_filename;
+    $counter = 0;
+    $collision = false;
+    while (file_exists($fullname)) {
+      $collision = true;
+      $pos = strrpos($new_filename, '.');
+      if ($pos !== FALSE) {
+        $name = substr($new_filename, 0, $pos);
+        $ext = substr($new_filename, $pos);
+      }
+      else {
+        $name = $basename;
+        $ext = '';
+      }
+
+      $fullname = sprintf("%s%s_%02d%s", $dir, $name, ++$counter, $ext);
+    }
 
     return array(
-      'collision' => basename($new_name) != $new_filename,
-      'invalidChars' => $new_filename != $filename,
-      'expectedFileName' => basename($new_name)
+      'collision' => $collision,
+      'invalidChars' => basename($new_filename) != $filename,
+      'expectedFileName' => basename($fullname)
     );
   }
 }
