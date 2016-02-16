@@ -1053,3 +1053,7 @@ div.error:before {
     padding: 5px;
     width: 96%;
 }
+/*Media browser position set to fixed to show media browser in same position inspite of page scrolling.*/
+.ui-dialog.media-wrapper {
+ position:fixed;
+}
