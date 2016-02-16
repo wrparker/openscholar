@@ -73,7 +73,8 @@ projects[disqus][version] = 1.9
 projects[disqus][patch][] = "http://drupal.org/files/comment_sources-disqus-2120703-1.patch"
 
 projects[dragndrop_upload][subdir] = "contrib"
-projects[dragndrop_upload][version] = 1.0-alpha2
+projects[dragndrop_upload][version] = 1.x-dev
+projects[dragndrop_upload][revision] = f356772
 
 projects[dyntextfield][subdir] = "contrib"
 projects[dyntextfield][type] = module
@@ -251,10 +252,10 @@ projects[mollom][version] = 2.14
 projects[multiform][subdir] = "contrib"
 projects[multiform][version] = 1.0
 
-projects[nice_menus][patch][] = "http://drupal.org/files/translate-menu-item-1050352-17-v2.1.patch"
-projects[nice_menus][patch][] = "https://raw.github.com/openscholar/openscholar/b0cb4b6b2ee8d0e162c0a35527ca8d4dcbfc490b/patches/nice_menus.fatal_localized_options.patch"
 projects[nice_menus][subdir] = "contrib"
-projects[nice_menus][version] = 2.1
+projects[nice_menus][version] = 2.5
+; todo change the address of the patch once the PR is merged,
+projects[nice_menus][patch][] = "https://gist.githubusercontent.com/RoySegall/6118a03520c81ae4e012/raw/733e63036dd6d6ad4706f90569a6dc075f5ca0a3/nice_menus.fatal_localized_options.patch"
 
 projects[nodeformcols][subdir] = "contrib"
 projects[nodeformcols][version] = 1.0

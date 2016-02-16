@@ -9,7 +9,7 @@ Drupal.behaviors.osWysiwygHideTips = {
       $(e.currentTarget).parents('.text-format-wrapper').find('.filter-wrapper').toggle();
     }
     $('.filter-wrapper', ctx).hide();
-    $('.wysiwyg-toggle-wrapper a', ctx).die('click', toggle).live('click', toggle);
+    $('.wysiwyg-toggle-wrapper a', ctx).off('click', toggle).on('click', toggle);
   }
 };
 
