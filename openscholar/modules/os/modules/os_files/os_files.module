@@ -428,11 +428,13 @@ function os_files_upload_validate_file_type(stdclass $file, $types) {
 function os_files_upload_validate_image_dimensions(stdClass $file) {
   $errors = array();
 
-  $memory_limit = parse_size(ini_get('memory_limit'));
+  $memory_limit = ini_get('memory_limit');
 
   if (file_get_type($file) != 'image' || $memory_limit == -1) {
     return $errors;
   }
+
+  $memory_limit = parse_size($memory_limit);
 
   // estimate code from devshed
   // see: http://forums.devshed.com/php-development-5/gd-image-resizing-memory-requirements-605060.html
