@@ -136,6 +136,14 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
 
   protected $errors = array();
 
+  public static function controllersInfo() {
+    return array(
+      '\d\/image_style\/*' => array(
+        RestfulInterface::GET => 'getImageStyle',
+      )
+    ) + parent::controllersInfo();
+  }
+
   /**
    * Overrides RestfulEntityBase::publicFieldsInfo().
    */
@@ -778,10 +786,10 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
   /**
    * Return the URL of the image style of a given file.
    */
-  public function processImageStyleUrl() {
-    $request = $this->getRequest();
-    $file = file_load($this->getPath());
-    return image_style_url($request['image_style'], $file->uri);
+  public function getImageStyle() {
+    $path = explode("/", $this->getPath());
+    $file = file_load($path[0]);
+    return image_style_url($path[2], $file->uri);
   }
 }
 
