@@ -388,8 +388,7 @@ function os_image_gallery_form_media_gallery_remove_item_form_alter(&$form, &$fo
 function os_image_gallery_menu_alter(&$items) {
   // The media gallery path when removing an image from the gallery.
   $menu_path = 'media-gallery/detail/%media_gallery_mg_node/%media_gallery_mg_item/remove';
-    // Adding settings for hiding the breadcrumbs data. this setting is been
-    // validate on the "os_breadcrumbs_preprocess_page()".
-    $items[$menu_path]['hide_breadcrumbs'] = TRUE;
-  dpm($items[$menu_path]);
+  // Adding settings for hiding the breadcrumbs data. this setting is been
+  // validate on the "os_breadcrumbs_preprocess_page()".
+  $items[$menu_path]['hide_breadcrumbs'] = TRUE;
 }
