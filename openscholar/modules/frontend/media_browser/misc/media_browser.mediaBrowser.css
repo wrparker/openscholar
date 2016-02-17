@@ -129,8 +129,7 @@ div.file-filters {
     background: #e1e1e1;
 }
 .media-browser-pane .media-row.selected {
-    background-color: #D1D6E2;
-    border: 1px solid #999;
+    background-color: #E0E4EA;
 }
 .media-browser-pane .media-row.new.selected {
     background-color: #E6EFC3;
@@ -155,7 +154,10 @@ div.file-filters {
     margin-bottom: 12px;
 }
 #mb-library-header {
-    text-transform: uppercase;
+    font-weight: bold;
+}
+#mb-library-header:hover {
+    cursor: pointer;
 }
 .mb-preview {
     width: 60px;
