@@ -1047,3 +1047,6 @@ div.error:before {
     bottom: 0;
     left: 10px;
 }
+#media-browser-file-select {
+ font-size: 1em !important;
+}
