@@ -798,6 +798,7 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     $new_filename = strtolower($filename);
     $new_filename = preg_replace('|[^a-z0-9\-_\.]|', '_', $new_filename);
     $new_filename = preg_replace(':__:', '_', $new_filename);
+    $new_filename = preg_replace('|_\.|', '.', $new_filename);
 
     $fullname = $dir . $new_filename;
     $counter = 0;
