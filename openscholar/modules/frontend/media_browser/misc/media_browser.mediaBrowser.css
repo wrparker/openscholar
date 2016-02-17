@@ -159,6 +159,12 @@ div.file-filters {
 #mb-library-header:hover {
     cursor: pointer;
 }
+#mb-library-header .mb-title, 
+#mb-library-header .mb-filename,
+#mb-library-header .mb-created {
+    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 80px -942px;
+   
+}
 .mb-preview {
     width: 60px;
 }
