@@ -370,3 +370,26 @@ function os_image_gallery_entity_prepare_view($entities, $type, $langcode) {
 function os_image_gallery_os_entity_view_modes_alter(&$info) {
   $info['node']['media_gallery'] = array_diff($info['node']['media_gallery'], array('slide_teaser'));
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_image_gallery_form_media_gallery_remove_item_form_alter(&$form, &$form_state, $form_id) {
+
+//  dpm(menu_get_item());
+
+  $form['description']['#markup'] = t('The file will still be available to be used in elsewhere on this site..');
+
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function os_image_gallery_menu_alter(&$items) {
+  // The media gallery path when removing an image from the gallery.
+  $menu_path = 'media-gallery/detail/%media_gallery_mg_node/%media_gallery_mg_item/remove';
+    // Adding settings for hiding the breadcrumbs data. this setting is been
+    // validate on the "os_breadcrumbs_preprocess_page()".
+    $items[$menu_path]['hide_breadcrumbs'] = TRUE;
+  dpm($items[$menu_path]);
+}

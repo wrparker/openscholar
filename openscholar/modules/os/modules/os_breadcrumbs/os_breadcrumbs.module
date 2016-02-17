@@ -656,10 +656,16 @@ function os_breadcrumbs_preprocess_page(&$variables) {
     return;
   }
 
-  $hide_breadcrumbs = variable_get('os_breadcrumbs_show_breadcrumbs', 1);
-  if ($hide_breadcrumbs) {
+  // Global settings for displaying/hiding breadcrumbs.
+  if (variable_get('os_breadcrumbs_show_breadcrumbs', 1)) {
     return;
   }
+
+  // Menu settings for hiding the breadcrumbs data for a specific menu.
+//  $menu_item = menu_get_item();
+//  if (isset($menu_item['hide_breadcrumbs'])) {
+//    return;
+//  }
 
   $breadcrumb = os_breadcrumbs_setup_breadcrumbs(os_breadcrumbs_build_breadcrumbs());
   $variables['breadcrumb'] = $breadcrumb;
