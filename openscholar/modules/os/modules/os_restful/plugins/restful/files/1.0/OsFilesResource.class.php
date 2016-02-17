@@ -142,6 +142,18 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
   public function publicFieldsInfo() {
     $info = parent::publicFieldsInfo();
 
+    $request = $this->getRequest();
+    if (!empty($request['image_style'])) {
+      return array(
+        'url' => array(
+          'property' => 'url',
+          'process_callbacks' => array(
+            array($this, 'processImageStyleUrl'),
+          ),
+        ),
+      );
+    }
+
     $info['size'] = array(
       'property' => 'size',
       'discovery' => array(
@@ -761,6 +773,15 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     }
 
     return FALSE;
+  }
+
+  /**
+   * Return the URL of the image style of a given file.
+   */
+  public function processImageStyleUrl() {
+    $request = $this->getRequest();
+    $file = file_load($this->getPath());
+    return image_style_url($request['image_style'], $file->uri);
   }
 }
 
