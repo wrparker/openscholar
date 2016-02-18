@@ -791,7 +791,7 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     $file = file_load($path[0]);
 
     return array(
-      image_style_url($path[2], $file->uri)
+      'url' => image_style_url($path[2], $file->uri),
     );
   }
 }
