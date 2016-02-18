@@ -138,7 +138,7 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
 
   public static function controllersInfo() {
     return array(
-      '\d\/image_style\/*' => array(
+      '\d\/image_style\/\w*' => array(
         RestfulInterface::GET => 'getImageStyle',
       )
     ) + parent::controllersInfo();
@@ -789,12 +789,16 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
   public function getImageStyle() {
     $path = explode("/", $this->getPath());
     $file = file_load($path[0]);
-    return image_style_url($path[2], $file->uri);
+
+    return array(
+      image_style_url($path[2], $file->uri)
+    );
   }
 }
 
-/*
- * Replaces the core file_validate_extensions function when the file in question has a temporary extension.
+/**
+ * Replaces the core file_validate_extensions function when the file in question
+ * has a temporary extension.
  */
 function file_validate_extension_from_mimetype(stdClass $file, $extensions) {
   include_once DRUPAL_ROOT . '/includes/file.mimetypes.inc';
