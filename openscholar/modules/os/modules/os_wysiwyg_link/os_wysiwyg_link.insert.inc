@@ -145,7 +145,7 @@ function _os_link_external_form($form, $form_state, $params) {
   $form['target_option'] = array(
     '#type' => 'checkbox',
     '#title' => t('Open this link in a new tab'),
-    'description' => t('Note: depending on the usage, may cause accessibility concerns. <a href="@link">Learn more</a>', array('@link' => 'https://www.w3.org/TR/WCAG20-TECHS/G200.html')),
+    '#description' => t('Note: depending on the usage, may cause accessibility concerns. <a href="@link">Learn more</a>', array('@link' => 'https://www.w3.org/TR/WCAG20-TECHS/G200.html')),
     '#default_value' => 0,
   );
 
