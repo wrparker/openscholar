@@ -17,6 +17,32 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getQueryForList() {
+    $entity_type = $this->getEntityType();
+    $query = $this->getEntityFieldQuery();
+    if ($path = $this->getPath()) {
+      list($ids, $subrequest) = explode('/', $path);
+
+      // only filter by individual ids if no request for a dependent resource was made
+      if (!$subrequest) {
+        $ids = explode(',', $path);
+        if (!empty($ids)) {
+          $query->entityCondition('entity_id', $ids, 'IN');
+        }
+      }
+    }
+
+    $this->queryForListSort($query);
+    $this->queryForListFilter($query);
+    $this->queryForListPagination($query);
+    $this->addExtraInfoToQuery($query);
+
+    return $query;
+  }
+
+  /**
    * Returns all entities that have been updated since the timestamp given
    */
   public function getUpdates($path) {
