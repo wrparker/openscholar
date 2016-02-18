@@ -142,6 +142,13 @@ function _os_link_external_form($form, $form_state, $params) {
     '#default_value' => isset($params['url'])?$params['url']:'',
   );
 
+  $form['target_option'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Open this link in a new tab'),
+    '#description' => t('Check this option to open this link in a new tab.'),
+    '#default_value' => 0,
+  );
+
   $form['actions'] = array(
     '#type' => 'actions',
     'insert' => array(
