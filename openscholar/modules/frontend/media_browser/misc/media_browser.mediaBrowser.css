@@ -416,4 +416,8 @@ div[file-edit] .control button,
 /*Media browser position set to fixed to show media browser in same position inspite of page scrolling.*/
 .ui-dialog.media-wrapper {
  position:fixed;
-} 
+}
+
+#media-browser-file-select {
+ font-size: 1em !important;
+}
