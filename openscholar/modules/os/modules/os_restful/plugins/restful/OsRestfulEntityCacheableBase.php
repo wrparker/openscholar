@@ -163,6 +163,41 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
     return parent::deleteEntity($entity_id);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getQueryCount() {
+
+    list ($arg1, $arg2) = explode('/', $this->getPath());
+    if ($arg1 == 'updates' && $arg2 > strtotime("-30 days")) {
+      $query = $this->getQueryForUpdates($arg2);
+    }
+    else {
+      $query = $this->getEntityFieldQuery();
+      $this->queryForListFilter($query);
+      $this->addExtraInfoToQuery($query);
+    }
+
+    $query->addTag('restful_count');
+
+    return $query->count();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isListRequest() {
+    $isList = false;
+
+    $path = $this->getPath();
+    list ($arg1, $arg2) = explode('/', $path);
+    if ($arg1 == 'updates') {
+      $isList = true;
+    }
+
+    return $isList || parent::isListRequest();
+  }
+
   public function additionalHateoas() {
     $addtl = array();
     $path = $this->getPath();
@@ -180,6 +215,29 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
     }
 
     return $addtl;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+
+  public function getUrl($request = NULL, $options = array(), $keep_query = TRUE) {
+    // By default set URL to be absolute.
+    $options += array(
+      'absolute' => TRUE,
+      'query' => array(),
+    );
+
+    if ($keep_query) {
+      // Remove special params.
+      unset($request['q']);
+      static::cleanRequest($request);
+
+      // Add the request as query strings.
+      $options['query'] += $request;
+    }
+
+    return $this->versionedUrl($this->getPath(), $options);
   }
 }
 
