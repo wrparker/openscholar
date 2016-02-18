@@ -248,7 +248,34 @@
       var toBeUploaded = [];
       $scope.dupes = [];
       $scope.toInsert = [];
+      var promises = [];
       for (var i=0; i<$files.length; i++) {
+        var url = Drupal.settings.paths.api+'/files/filename/'+$files[i].name;
+
+        if (Drupal.settings.spaces) {
+          url += '?vsite=' + Drupal.settings.spaces.id;
+        }
+        var config = {
+          originalFile: $files[i]
+        };
+        promises.push($http.get(url, config).then(function (response) {
+          var file = response.config.originalFile;
+          var data = response.data.data;
+          if (data.collision) {
+            file.newName = data.expectedFileName;
+            $scope.dupes.push(file);
+          }
+          else {
+            if (data.invalidChars) {
+              addMessage("This file was renamed from \"" + $files[i].name + "\" due to having invalid characters in its name.")
+            }
+            toBeUploaded.push(file);
+          }
+        },
+        function (errorResponse) {
+
+        }));
+
         var similar = [],
             basename = $files[i].name.replace(/\.[a-zA-Z0-9]*$/, ''),   // remove extension from filename
             extension = $files[i].name.replace(basename, ''),           // remove filename from filename to get extension
