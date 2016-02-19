@@ -162,13 +162,18 @@
                   }
                 }
               }
+
+              return keys;
+            });
+
+            defers[key].promise.then(function(data) {
+              for (var i = 0; i < data.length; i++) {
+                ents[data[i][idProp]] = data[i];
+              }
+
+              return data;
             });
           }
-          defers[key].promise.then(function(data) {
-            for (var i = 0; i < data.length; i++) {
-              ents[data[i][idProp]] = data[i];
-            }
-          })
           return defers[key].promise;
         }
 
@@ -378,7 +383,7 @@
           var keys = {};
           for (var i = 0; i < caches.length; i++) {
             var key = caches[i].key,
-              type = caches[i].entityType;;
+              type = caches[i].entityType;
             keys[key] = key;
             cache[key] = caches[i];
             cache[key].matches = eval('(' + cache[key].matches + ')');
@@ -398,6 +403,22 @@
       }).then(angular.noOp, function (results) {  // openStore returns a promise. We can call .then() on it to attach handlers
         console.log(results);
       });
+
+      window.EntityServiceDebug = {
+        setTimestamps: function (newTimestamp) {
+          $idb.openStore('entities', function (store) {
+            store.getAll().then(function (caches) {
+              var counter = 0;
+              for (var i = 0; i < caches.length; i++) {
+                caches[i].lastUpdated = newTimestamp;
+                store.upsert(caches[i]).then(function (e) {
+                  console.log((++counter) + " of " + caches.length + " caches completed.");
+                });
+              }
+            });
+          });
+        }
+      };
     }])
     .config(['$indexedDBProvider', function ($idbp) {
       $idbp
@@ -483,14 +504,15 @@
             }
           }
 
-          if (resp.next) {
-            var max = Math.ceil(resp.count/resp.data.data.length),
-              curr = resp.next.href.match(/page=([\d]+)/)[1];
+          if (resp.data.next) {
+            var next = resp.data.next.href,
+              max = Math.ceil(resp.count/resp.data.data.length),
+              curr = next.match(/page=([\d]+)/)[1];
             for (var i = 0; i < keys.length; i++) {
               var k = keys[i];
               defers[k].notify(("Loading updates: $p% complete.").replace('$p', Math.round(((curr - 1) / max) * 100)));
             }
-            fetchUpdates(type, keys, timestamp, resp.next);
+            fetchUpdates(type, keys, timestamp, next);
           }
           else {
             for (var i = 0; i < keys.length; i++) {
