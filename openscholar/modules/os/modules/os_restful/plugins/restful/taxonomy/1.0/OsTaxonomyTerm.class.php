@@ -70,7 +70,6 @@ class OsTaxonomyTerm extends OsRestfulEntityCacheableBase {
 
     module_load_include('inc', 'vsite_vocab', 'includes/taxonomy');
     $vocabData = vsite_vocab_get_vocabularies($vsite);
-    $vocabs = array_keys($vocabData);
     $requested = array();
     $badVocabs = array();
 
@@ -94,6 +93,10 @@ class OsTaxonomyTerm extends OsRestfulEntityCacheableBase {
           $badVocabs[] = $vid;
         }
       }
+    }
+    else {
+      // no filtered vocabs requested, so return everything based on the vsite.
+      $requested = array_keys($vocabData);
     }
 
     if (empty($requested)) {
