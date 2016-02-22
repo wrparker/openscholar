@@ -20,6 +20,7 @@
 .field-widget-media-draggable-file .file-list-single {
     border-bottom: 1px solid #ccc;
     padding: 5px 0;
+    word-wrap: break-word;
 }
 .field-widget-media-draggable-file .file-list-single .tabledrag-handle {
     display: inline-block;
