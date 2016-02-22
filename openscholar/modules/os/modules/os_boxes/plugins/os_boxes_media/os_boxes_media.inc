@@ -137,7 +137,7 @@ class os_boxes_media extends os_boxes_default {
           );
         }
         
-        // Removing embedded media file title from render element.
+        // Removing embedded media title from render element.
         unset($render['file']['file-info']['title']);
         $block['content'] = drupal_render($render);
         $assets = NULL;
