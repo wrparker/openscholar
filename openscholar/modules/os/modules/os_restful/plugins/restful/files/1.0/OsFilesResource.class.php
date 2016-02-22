@@ -788,10 +788,24 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
    */
   public function getImageStyle() {
     $path = explode("/", $this->getPath());
-    $file = file_load($path[0]);
+    $style_name = $path[2];
+
+    if (!in_array($style_name, array_keys(image_styles()))) {
+      throw new RestfulBadRequestException(format_string('There is no image style with the nme @id', array('@id' => $style_name)));
+    }
+
+    $fid = $path[0];
+
+    if (!$file = file_load($fid)) {
+      throw new RestfulBadRequestException(format_string('There is no file with the id @id', array('@id' => $fid)));
+    }
+
+    if ($file->type != 'image') {
+      throw new RestfulBadRequestException(format_string('The file @name is not an image.', array('@name' => $file->filename)));
+    }
 
     return array(
-      'url' => image_style_url($path[2], $file->uri),
+      'url' => image_style_url($style_name, $file->uri),
     );
   }
 }
