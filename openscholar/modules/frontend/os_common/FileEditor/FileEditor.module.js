@@ -34,10 +34,6 @@
               return;
             }
 
-            if (['html', 'image'].indexOf(f.type) == -1) {
-              return;
-            }
-
             scope.fileEditAddt = libraryPath+'/file_edit_'+f.type+'.html?vers='+Drupal.settings.version.FileEditor;
             scope.date = $filter('date')(f.timestamp+'000', 'short');
             scope.file.terms = scope.file.terms || [];
