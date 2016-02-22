@@ -115,6 +115,7 @@ div[file-edit] h4,
     display: block;
 }
 
-
-
-
+.select2-search-field,
+.select2-search-field input {
+    width: auto !important;
+}
