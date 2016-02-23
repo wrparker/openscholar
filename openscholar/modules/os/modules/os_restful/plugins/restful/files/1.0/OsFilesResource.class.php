@@ -791,7 +791,7 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     $style_name = $path[2];
 
     if (!in_array($style_name, array_keys(image_styles()))) {
-      throw new RestfulBadRequestException(format_string('There is no image style with the nme @id', array('@id' => $style_name)));
+      throw new RestfulBadRequestException(format_string('There is no image style with the name @name', array('@name' => $style_name)));
     }
 
     $fid = $path[0];
