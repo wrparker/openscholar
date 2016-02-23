@@ -249,6 +249,7 @@
       $scope.dupes = [];
       $scope.toInsert = [];
       var promises = [];
+      $scope.checkingFilenames = true;
       for (var i = 0; i < $files.length; i++) {
         var url = Drupal.settings.paths.api + '/files/filename/' + $files[i].name;
 
@@ -261,6 +262,7 @@
         promises.push($http.get(url, config).then(function (response) {
             var file = response.config.originalFile;
             var data = response.data.data;
+            file.filename = file.name;
             if (data.collision) {
               file.newName = data.expectedFileName;
               $scope.dupes.push(file);
@@ -271,6 +273,7 @@
               }
               toBeUploaded.push(file);
             }
+            console.log(file);
           },
           function (errorResponse) {
             console.log(errorResponse);
@@ -278,9 +281,11 @@
       }
 
       var promise = $q.all(promises).then(function () {
+          $scope.checkingFilenames = false;
           $scope.upload(toBeUploaded);
         },
         function () {
+          $scope.checkingFilenames = false;
           console.log('Error happened with all promises');
         })
     }
