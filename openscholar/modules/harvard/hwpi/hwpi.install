@@ -102,3 +102,10 @@ function hwpi_update_7006() {
     theme_enable(array('hwpi_onepage'));
 }
 
+/**
+ * Enables `College` theme on enabling this module.
+ */
+function hwpi_enable() {
+  // Enables the new `hwpi_college` theme.
+  theme_enable(array('hwpi_college'));
+}

@@ -148,7 +148,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
   $default_flavor = '';
 
   $themes_sorted = array();
-  $featured_themes = array_filter(variable_get('cp_appearance_featured_themes', array('aberdeen' => 'aberdeen', 'airstream' => 'airstream')));
+  $featured_themes = array_filter(variable_get('cp_appearance_featured_themes', array('aberdeen' => 'aberdeen', 'airstream' => 'airstream', 'hwpi_college' => 'hwpi_college')));
 
   // From where we get the list of single page themes?
   $single_themes = array();
