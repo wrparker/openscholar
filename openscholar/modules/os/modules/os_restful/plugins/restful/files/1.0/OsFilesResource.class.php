@@ -150,18 +150,6 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
   public function publicFieldsInfo() {
     $info = parent::publicFieldsInfo();
 
-    $request = $this->getRequest();
-    if (!empty($request['image_style'])) {
-      return array(
-        'url' => array(
-          'property' => 'url',
-          'process_callbacks' => array(
-            array($this, 'processImageStyleUrl'),
-          ),
-        ),
-      );
-    }
-
     $info['size'] = array(
       'property' => 'size',
       'discovery' => array(
