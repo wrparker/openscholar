@@ -173,7 +173,10 @@ function os_in_readonly_mode($page) {
     return variable_get('os_readonly_mode_message', OS_READONLY_MODE_MESSAGE);
   }
 
-  if (user_is_anonymous()) {
+  // When a user, logged in or not, ask to reset password we should throw 404.
+  $trigger_404 = $page == 'password' ? FALSE : user_is_anonymous();
+
+  if ($trigger_404) {
     // Get custom callback function from variable.
     $function = variable_get($custom_callback_variable, NULL);
     if ($function) {
