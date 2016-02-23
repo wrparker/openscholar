@@ -43,8 +43,8 @@
         }
       }
     }])
-  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', 'EntityConfig', '$sce', '$upload', '$timeout', 'FILEEDITOR_RESPONSES', 'params', 'close',
-      function ($scope, $filter, $http, EntityService, config, $sce, $upload, $timeout, FER, params, close) {
+  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', 'EntityConfig', '$sce', '$q', '$upload', '$timeout', 'FILEEDITOR_RESPONSES', 'params', 'close',
+      function ($scope, $filter, $http, EntityService, config, $sce, $q, $upload, $timeout, FER, params, close) {
 
     // Initialization
     var service = new EntityService('files', 'id'),
@@ -249,8 +249,8 @@
       $scope.dupes = [];
       $scope.toInsert = [];
       var promises = [];
-      for (var i=0; i<$files.length; i++) {
-        var url = Drupal.settings.paths.api+'/files/filename/'+$files[i].name;
+      for (var i = 0; i < $files.length; i++) {
+        var url = Drupal.settings.paths.api + '/files/filename/' + $files[i].name;
 
         if (Drupal.settings.spaces) {
           url += '?vsite=' + Drupal.settings.spaces.id;
@@ -259,23 +259,33 @@
           originalFile: $files[i]
         };
         promises.push($http.get(url, config).then(function (response) {
-          var file = response.config.originalFile;
-          var data = response.data.data;
-          if (data.collision) {
-            file.newName = data.expectedFileName;
-            $scope.dupes.push(file);
-          }
-          else {
-            if (data.invalidChars) {
-              addMessage("This file was renamed from \"" + $files[i].name + "\" due to having invalid characters in its name.")
+            var file = response.config.originalFile;
+            var data = response.data.data;
+            if (data.collision) {
+              file.newName = data.expectedFileName;
+              $scope.dupes.push(file);
             }
-            toBeUploaded.push(file);
-          }
+            else {
+              if (data.invalidChars) {
+                addMessage("This file was renamed from \"" + $files[i].name + "\" due to having invalid characters in its name.")
+              }
+              toBeUploaded.push(file);
+            }
+          },
+          function (errorResponse) {
+            console.log(errorResponse);
+          }));
+      }
+
+      var promise = $q.all(promises).then(function () {
+          $scope.upload(toBeUploaded);
         },
-        function (errorResponse) {
+        function () {
+          console.log('Error happened with all promises');
+        })
+    }
 
-        }));
-
+/*
         var similar = [],
             basename = $files[i].name.replace(/\.[a-zA-Z0-9]*$/, ''),   // remove extension from filename
             extension = $files[i].name.replace(basename, ''),           // remove filename from filename to get extension
@@ -333,7 +343,7 @@
       }
 
       $scope.upload(toBeUploaded);
-    }
+    }*/
 
     // renames the file before uploading
     $scope.rename = function ($index, $last) {
