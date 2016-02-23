@@ -160,7 +160,7 @@
           }
 
           scope.save = function () {
-            fileService.edit(scope.file, ['preview', 'url']).then(function(result) {
+            fileService.edit(scope.file, ['preview', 'url', '$$hashKey']).then(function(result) {
                 if (result.data || typeof scope.file.new != 'undefined') {
                   scope.onClose({saved: FER.SAVED});
                 }
