@@ -394,12 +394,13 @@
           }
 
           $q.all(promises).then(function (args) {
+            console.log(args);
             var keys = [];
             keys = keys.concat.apply(keys, args);
             console.log(keys);
-          });
 
-          lock.resolve(keys);
+            lock.resolve(keys);
+          });
 
         }, function (error) {
           console.log(error);
