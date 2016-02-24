@@ -404,9 +404,11 @@
 
         }, function (error) {
           console.log(error);
+          lock.resolve([]);
         });
       }).then(angular.noOp, function (results) {  // openStore returns a promise. We can call .then() on it to attach handlers
         console.log(results);
+        lock.resolve([]);
       });
 
       window.EntityServiceDebug = {
