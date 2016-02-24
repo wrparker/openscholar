@@ -1,4 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=Lato);
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+
 body,
 #page-title,
 .node-title,
@@ -26,7 +27,7 @@ h2.block-title,
 #menu-bar ul.nice-menu a,
 #boxes-box-site_info,
 #boxes-box-site_info a {
-    font-family: 'Lato', Georgia, serif !important;
+    font-family: 'Montserrat', sans-serif !important;
 }
 /* Main wrappers */
 

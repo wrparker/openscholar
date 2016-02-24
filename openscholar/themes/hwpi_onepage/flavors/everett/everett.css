@@ -1,4 +1,5 @@
 @import url(https://fonts.googleapis.com/css?family=Droid+Sans);
+
 html,
 body,
 .field-item span {
@@ -45,7 +46,7 @@ h2.block-title,
 #footer ul.menu a,
 #footer a,
 .region-header-third ul.nice-menu a {
-    font-family: 'Droid Sans', Georgia, serif !important;
+    font-family: 'Droid Sans', sans-serif !important;
 }
 .front #content-panels .region-content-first {
     background: #FFF;
