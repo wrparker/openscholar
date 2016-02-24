@@ -295,6 +295,6 @@ function os_events_update_7023() {
 /**
  * Set registration field as required.
  */
-function os_events_update_7023() {
+function os_events_update_7024() {
   features_revert(array('os_events' => array('field_instance')));
 }
