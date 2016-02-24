@@ -69,6 +69,7 @@ dependencies[] = views_litepager
 
 ; web services
 dependencies[] = restful
+dependencies[] = restful_token_auth
 dependencies[] = restws
 
 ; boxes
