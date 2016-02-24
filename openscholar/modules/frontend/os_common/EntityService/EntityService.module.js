@@ -539,7 +539,7 @@
             }
             k = type + ":" + JSON.stringify(k);
             // check the count against what the server reported. If it's wrong, we need to fetch everything from scratch
-            if (!isUpdates && cache[k] && resp.data.count != cache[k].data.length) {
+            if (!isUpdates && cache[k] && (resp.data.count != cache[k].data.length || resp.data.totalEntities != cache[k].data.length)) {
               defer.resolve([]);
             }
             else {
