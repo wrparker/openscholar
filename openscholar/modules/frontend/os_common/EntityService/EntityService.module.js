@@ -168,7 +168,7 @@
             for (var i = 0; i < data.length; i++) {
               ents[data[i][idProp]] = data[i];
             }
-          })
+          });
           return defers[key].promise;
         }
 
@@ -387,11 +387,20 @@
             }
             entityTypes[type] = true;
           }
+
+          var promises = [];
+          for (var t in entityTypes) {
+            promises.concat(ECU.update(t));
+          }
+
+          $q.all(promises).then(function (args) {
+            var keys = [];
+            keys = keys.concat.apply(keys, args);
+            console.log(keys);
+          });
+
           lock.resolve(keys);
 
-          for (var t in entityTypes) {
-            ECU.update(t);
-          }
         }, function (error) {
           console.log(error);
         });
@@ -425,9 +434,12 @@
           }
           timestamps[type] = timestamps[type] || cache[key].lastUpdated;
         }
+        var promises = [];
         for (var t in keys) {
-          fetchUpdates(t, keys[t], timestamps[t]);
+          promises.push(fetchUpdates(t, keys[t], timestamps[t]));
         }
+
+        return $q.all(promises);
       }
 
       function fetchUpdates(type, keys, timestamp, nextUrl) {
@@ -448,6 +460,8 @@
           }
         }
 
+        var defer = $q.defer();
+
         $http.get(url).then(function (resp) {
           for (var i = 0; i < keys.length; i++) {
             if (nextUrl == undefined) {
@@ -461,7 +475,7 @@
             }
           }
 
-          for (var i=0; i<resp.data.data.length; i++) {
+          for (var i = 0; i < resp.data.data.length; i++) {
             // get all caches this entity exists in
             var cacheKeys = getCacheKeysForEntity(type, cache[keys[0]].idProperty, resp.data.data[i])
             // handle this entity for all caches it exists in
@@ -484,7 +498,7 @@
           }
 
           if (resp.next) {
-            var max = Math.ceil(resp.count/resp.data.data.length),
+            var max = Math.ceil(resp.count / resp.data.data.length),
               curr = resp.next.href.match(/page=([\d]+)/)[1];
             for (var i = 0; i < keys.length; i++) {
               var k = keys[i];
@@ -493,15 +507,32 @@
             fetchUpdates(type, keys, timestamp, resp.next);
           }
           else {
-            for (var i = 0; i < keys.length; i++) {
-              var key = keys[i];
-              defers[key].resolve(angular.copy(cache[key].data));
-              $rs.$broadcast('EntityCacheUpdater.cacheUpdated');
-              $idb.openStore('entities', function(store) {
-                cache[key].matches = cache[key].matches.toString();
-                store.upsert(cache[key]);
-                cache[key].matches = eval('(' + cache[key].matches + ')');
-              });
+            // construct 'everything' key
+            var k = {};
+            if (Drupal.settings.spaces.id) {
+              k.vsite = Drupal.settings.spaces.id;
+            }
+            k = JSON.stringify(k);
+            // check the count against what the server reported. If it's wrong, we need to fetch everything from scratch
+            if (cache[k] && resp.data.count != cache[k].data.length) {
+              for (var l in keys) {
+                defer.resolve([]);
+              }
+            }
+            else {
+              defer.resolve(keys);
+
+              // we're good, so let's update the cache with what we had.
+              for (var i = 0; i < keys.length; i++) {
+                var key = keys[i];
+                defers[key].resolve(angular.copy(cache[key].data));
+                $rs.$broadcast('EntityCacheUpdater.cacheUpdated');
+                $idb.openStore('entities', function (store) {
+                  cache[key].matches = cache[key].matches.toString();
+                  store.upsert(cache[key]);
+                  cache[key].matches = eval('(' + cache[key].matches + ')');
+                });
+              }
             }
           }
         }, function (response) {
@@ -509,7 +540,9 @@
           for (var i = 0; i < keys.length; i++) {
             defers[key].resolve(angular.copy(cache[key].data));
           }
-        })
+        });
+
+        return defer.promise;
       }
 
       this.update = update;
