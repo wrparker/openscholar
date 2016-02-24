@@ -540,7 +540,7 @@
             k = type + ":" + JSON.stringify(k);
             var serverCount = resp.data.count || resp.data.totalEntities;
             // check the count against what the server reported. If it's wrong, we need to fetch everything from scratch
-            if (!isUpdates && cache[k] && serverCount != cache[k].data.length) {
+            if (cache[k] && serverCount != cache[k].data.length) {
               defer.resolve([]);
             }
             else {
