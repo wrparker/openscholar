@@ -487,6 +487,7 @@
         var defer = $q.defer();
 
         $http.get(url).then(function (resp) {
+          var isUpdates = typeof resp.data.updatesAsOf != 'undefined';
           for (var i = 0; i < keys.length; i++) {
             if (nextUrl == undefined) {
               if (resp.data.allEntitiesAsOf) {
@@ -538,7 +539,7 @@
             }
             k = type + ":" + JSON.stringify(k);
             // check the count against what the server reported. If it's wrong, we need to fetch everything from scratch
-            if (cache[k] && resp.data.count != cache[k].data.length) {
+            if (!isUpdates && cache[k] && resp.data.count != cache[k].data.length) {
               defer.resolve([]);
             }
             else {
