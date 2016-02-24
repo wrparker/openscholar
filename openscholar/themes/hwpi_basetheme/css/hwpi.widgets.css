@@ -4,6 +4,11 @@
     min-height: 135px;
     display: table;
 }
+@-moz-document url-prefix() { 
+  #header-container .block-boxes-os_boxes_site_info {
+    height: 135px;
+}
+}
 #header-container .block-boxes-os_boxes_site_info .block-inner {
     display: table-cell;
     vertical-align: middle;
