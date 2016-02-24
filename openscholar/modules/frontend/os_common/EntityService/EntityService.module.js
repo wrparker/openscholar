@@ -408,6 +408,22 @@
       }).then(angular.noOp, function (results) {  // openStore returns a promise. We can call .then() on it to attach handlers
         console.log(results);
       });
+
+      window.EntityServiceDebug = {
+        setTimestamps: function (newTimestamp) {
+          $idb.openStore('entities', function (store) {
+            store.getAll().then(function (caches) {
+              var counter = 0;
+              for (var i = 0; i < caches.length; i++) {
+                caches[i].lastUpdated = newTimestamp;
+                store.upsert(caches[i]).then(function (e) {
+                  console.log((++counter) + " of " + caches.length + " caches completed.");
+                });
+              }
+            });
+          });
+        }
+      };
     }])
     .config(['$indexedDBProvider', function ($idbp) {
       $idbp
