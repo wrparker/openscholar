@@ -709,47 +709,41 @@ function os_events_events_register($js, $node, $date_id = FALSE) {
  */
 function os_events_modal_validate($form, &$form_state) {
 
-  if (!empty($form_state['values']['anon_mail'])) {
+  if (empty($form_state['values']['anon_mail'])) {
+    return;
+  }
 
-    // Checking if email address has a valid format.
-    $form_state['values']['anon_mail'] = trim($form_state['values']['anon_mail']);
-    if (!valid_email_address($form_state['values']['anon_mail'])) {
-      form_set_error('anon_mail', t('The email address is invalid.'));
-    }
+  $date = '';
+  if (!empty($form_state['values']['field_repeating_event_date']['und'][0]['value'])) {
+    $date = $form_state['values']['field_repeating_event_date']['und'][0]['value'];
+  }
+  $email_query = new EntityFieldQuery();
+  $email_query->entityCondition('entity_type', 'registration')->propertyCondition('anon_mail', $form_state['values']['anon_mail']);
 
-    $date = '';
-    if (!empty($form_state['values']['field_repeating_event_date']['und'][0]['value'])) {
-      $date = $form_state['values']['field_repeating_event_date']['und'][0]['value'];
-    }
+  if (isset($form['#entity']->registration_id)) {
+    $email_query->propertyCondition('registration_id', $form['#entity']->registration_id, '<>');
+  }
 
-    $email_query = new EntityFieldQuery();
-    $email_query->entityCondition('entity_type', 'registration')->propertyCondition('anon_mail', $form_state['values']['anon_mail']);
+  if ($date) {
+    $email_query->fieldCondition('field_repeating_event_date', 'value', $date);
+  } //Flter to just this occurance
 
-    if (isset($form['#entity']->registration_id)) {
-      $email_query->propertyCondition('registration_id', $form['#entity']->registration_id, '<>');
-    }
+  if(count($email_query->execute())) {
+    form_set_error('anon_mail', t('You have already registered and may not register again.'));
+    return;
+  }
+
+  if ($user = user_load_by_mail($form_state['values']['anon_mail'])) {
+    $user_query = new EntityFieldQuery();
+    $user_query->entityCondition('entity_type', 'registration')->propertyCondition('user_uid', $user->uid);
 
     if ($date) {
-      $email_query->fieldCondition('field_repeating_event_date', 'value', $date);
-    } //Flter to just this occurance
+      $user_query->fieldCondition('field_repeating_event_date', 'value', $date);
+    }
 
     if(count($email_query->execute())) {
       form_set_error('anon_mail', t('You have already registered and may not register again.'));
       return;
-    }
-
-    if ($user = user_load_by_mail($form_state['values']['anon_mail'])) {
-      $user_query = new EntityFieldQuery();
-      $user_query->entityCondition('entity_type', 'registration')->propertyCondition('user_uid', $user->uid);
-
-      if ($date) {
-        $user_query->fieldCondition('field_repeating_event_date', 'value', $date);
-      }
-
-      if(count($email_query->execute())) {
-        form_set_error('anon_mail', t('You have already registered and may not register again.'));
-        return;
-      }
     }
   }
 }
@@ -1533,7 +1527,6 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   $form['actions']['submit']['#value'] = isset($form['#entity']->registration_id) ? t('Save') : t('Signup');
 
   $form['anon_mail']['#required'] = TRUE;
-  $form['field_full_name'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
 
   $form['event_register'] = array(
     '#type' => 'container',
@@ -1550,9 +1543,8 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   $form_state['rebuild'] = TRUE;
   unset($form['actions'], $form['field_full_name'], $form['field_department'], $form['anon_mail'], $form['user']);
 
-  $form['event_register']['anon_mail']['#required'] = TRUE;
-  $form['#validate'][] = 'os_events_modal_validate';
   $form['#validate'][] = 'registration_form_validate';
+  $form['#validate'][] = 'os_events_modal_validate';
   $form['#submit'][] = 'os_events_modal_submit';
 }
 
