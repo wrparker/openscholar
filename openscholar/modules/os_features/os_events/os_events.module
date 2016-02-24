@@ -1686,7 +1686,7 @@ function os_events_preprocess_page(&$variables) {
     }
   }
 
-  //If there are no registrants, do not display the download link
+  // If there are no registrants, do not display the download link.
   if (empty($menu['original_map'][1])) {
     return;
   }
@@ -1705,9 +1705,10 @@ function os_events_preprocess_page(&$variables) {
       ->propertyCondition('entity_id', $event_id)
       ->propertyCondition('entity_type', 'node');
 
+  // Filter to just this occurrence.
   if ($date) {
     $query->fieldCondition('field_repeating_event_date', 'value', $date);
-  } //Flter to just this occurance
+  }
 
   $result = $query->execute();
 
@@ -1715,7 +1716,7 @@ function os_events_preprocess_page(&$variables) {
     return;
   }
 
-  // Create dropdown links for simple view and export of registrants.
+  // Create drop-down links for simple view and export of registrants.
   $event = node_load($event_id);
   $registration_links = array(
     'export' => array(
@@ -1774,7 +1775,10 @@ function os_events_save_mollom_settings() {
     'form_id' => 'registration_form',
     'mode' => '1',
     'checks' => array('spam'),
-    'enabled_fields' => array('field_department][und][0][value','field_full_name][und][0][value'),
+    'enabled_fields' => array(
+      'field_department][und][0][value',
+      'field_full_name][und][0][value',
+    ),
     'strictness' => 'normal',
     'discard' => '1',
     'moderation' => 0,
