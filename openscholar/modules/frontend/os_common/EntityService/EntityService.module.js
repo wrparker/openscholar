@@ -536,7 +536,7 @@
             if (Drupal.settings.spaces.id) {
               k.vsite = Drupal.settings.spaces.id;
             }
-            k = JSON.stringify(k);
+            k = type + ":" + JSON.stringify(k);
             // check the count against what the server reported. If it's wrong, we need to fetch everything from scratch
             if (cache[k] && resp.data.count != cache[k].data.length) {
               for (var l in keys) {
