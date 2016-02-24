@@ -139,7 +139,7 @@
             defers[key] = $q.defer();
 
             lockPromise.then(function (keys) {
-              if (!keys[key]) {
+              if (!keys[key] && keys.indexOf(key) === -1) {
                 var url = restPath + '/' + entityType;
                 $http.get(url, {params: params, pKey: key})
                   .success(success)
@@ -162,12 +162,15 @@
                   }
                 }
               }
+
+              return keys;
             });
           }
           defers[key].promise.then(function(data) {
             for (var i = 0; i < data.length; i++) {
               ents[data[i][idProp]] = data[i];
             }
+            return data;
           });
           return defers[key].promise;
         }
@@ -390,13 +393,15 @@
 
           var promises = [];
           for (var t in entityTypes) {
-            promises.concat(ECU.update(t));
+            promises = promises.concat(ECU.update(t));
           }
 
           $q.all(promises).then(function (args) {
-            console.log(args);
-            var keys = [];
-            keys = keys.concat.apply(keys, args);
+            var keys = args;
+            while (Array.isArray(keys[0])) {
+              var t = [];
+              keys = keys.concat.apply(t, keys);
+            }
             console.log(keys);
 
             lock.resolve(keys);
