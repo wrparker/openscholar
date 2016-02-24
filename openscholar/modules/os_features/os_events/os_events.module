@@ -623,6 +623,9 @@ function os_events_generate_modal_register_link($nid, $delta = FALSE, $modal_set
     }
   }
 
+  // Adding Mollom's js since ctools modal don't add the js.
+  drupal_add_js(drupal_get_path('module', 'mollom') . '/mollom.js');
+
   $sign_up = ctools_ajax_text_button(t('Sign up for this event'), $path, '', 'ctools-use-modal ctools-modal-events-modal-style register use-ajax');
 
   return isset($date_switch)? $sign_up . $date_switch . $slider : $sign_up;
@@ -1547,7 +1550,9 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   $form_state['rebuild'] = TRUE;
   unset($form['actions'], $form['field_full_name'], $form['field_department'], $form['anon_mail'], $form['user']);
 
+  $form['event_register']['anon_mail']['#required'] = TRUE;
   $form['#validate'][] = 'os_events_modal_validate';
+  $form['#validate'][] = 'registration_form_validate';
   $form['#submit'][] = 'os_events_modal_submit';
 }
 
