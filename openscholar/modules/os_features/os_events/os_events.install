@@ -291,3 +291,10 @@ function os_events_update_7022() {
 function os_events_update_7023() {
   features_revert(array('os_events' => array('field_instance', 'views')));
 }
+
+/**
+ * Set registration field as required.
+ */
+function os_events_update_7023() {
+  features_revert(array('os_events' => array('field_instance')));
+}
