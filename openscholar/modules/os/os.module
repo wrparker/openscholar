@@ -2765,8 +2765,8 @@ function os_page_build(&$page) {
   if ($header == '403 Forbidden') {
     $vsite = vsite_get_vsite();
     $redirect = drupal_get_destination();
-    // vsite title will be a part of destination url.
-    $redirect['destination'] = isset($vsite->group->title) ? $vsite->group->title . '/' . $redirect['destination'] : $redirect['destination'];
+    // vsite purl will be a part of destination url.
+    $redirect['destination'] = isset($vsite->group->purl) ? $vsite->group->purl . '/' . $redirect['destination'] : $redirect['destination'];
     $main_content_display = &drupal_static('system_main_content_added', FALSE);
     $warning_msg = t('You are not authorized to access this page.');
     $warning_msg .= '<br/>' . 'You need to ' . l('log in', 'user/login', array('query' => array('destination' => $redirect['destination']) )) . ' to access this page';
