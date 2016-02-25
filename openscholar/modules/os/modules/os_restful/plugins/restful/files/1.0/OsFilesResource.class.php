@@ -140,6 +140,10 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     return array(
       '\d\/image_style\/\w*' => array(
         RestfulInterface::GET => 'getImageStyle',
+      ),
+      'filename\/[^\/]+$' => array(
+        RestfulInterface::GET => 'checkFilename',
+        RestfulInterface::HEAD => 'checkFilename'
       )
     ) + parent::controllersInfo();
   }
@@ -787,6 +791,54 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     }
 
     return FALSE;
+  }
+
+  protected function checkFilename($filename) {
+    list (, $filename) = explode('/', $filename);
+    $dir = 'public://';
+    if (isset($this->request['private'])) {
+      $dir = 'private://';
+    }
+
+    if (isset($this->request['vsite'])) {
+      $vsite = db_select('purl', 'p')
+        ->fields('p', array('value'))
+        ->condition('provider', 'spaces_og')
+        ->condition('id', $this->request['vsite'])
+        ->execute()
+        ->fetchField();
+
+      if ($vsite) {
+        $dir .= $vsite . '/files/';
+      }
+    }
+
+    $new_filename = strtolower($filename);
+    $new_filename = preg_replace('|[^a-z0-9\-_\.]|', '_', $new_filename);
+    $new_filename = preg_replace(':__:', '_', $new_filename);
+
+    $fullname = $dir . $new_filename;
+    $counter = 0;
+    $collision = false;
+    while (file_exists($fullname)) {
+      $collision = true;
+      $pos = strrpos($new_filename, '.');
+      if ($pos !== FALSE) {
+        $name = substr($new_filename, 0, $pos);
+        $ext = substr($new_filename, $pos);
+      } else {
+        $name = $basename;
+        $ext = '';
+      }
+
+      $fullname = sprintf("%s%s_%02d%s", $dir, $name, ++$counter, $ext);
+    }
+
+    return array(
+      'collision' => $collision,
+      'invalidChars' => basename($new_filename) != $filename,
+      'expectedFileName' => basename($fullname)
+    );
   }
 
   /**
