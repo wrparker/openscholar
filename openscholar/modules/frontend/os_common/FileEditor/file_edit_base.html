@@ -21,7 +21,7 @@
     <label for="fe-file-replace"></label>
     <button id="fe-file-display-warning" ng-show="!showWarning && !showSuccess" ng-file-select ng-multiple="false" ng-accept="validate($file)" ng-file-change="prepForReplace($files, $event)" accept="{{extension}}">Replace File</button>
     <div class="description"><em>Warning:</em> replacing the existing file cannot be undone.</div>
-    <div class="fe-replace-message" ng-show="replaceReject">Selected file does not match extensions!</div>
+    <div class="fe-replace-message error" ng-show="replaceReject">Selected file does not match extensions!</div>
 <div class="fe-replace-message success" ng-show="replaceSuccess">Successfully replaced file.</div>
 </div>
 
@@ -32,7 +32,7 @@
     <button ng-click="cancel()">Cancel</button>
 </div>
 
-<div class="error alert-message" ng-show="showErrorMessages">
+<div class="warning float alert-message" ng-show="showErrorMessages">
     <span ng-click="closeErrors()" class="error-close">Close</span>
     <span ng-bind-html="errorMessages"></span>
 </div>

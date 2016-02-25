@@ -205,6 +205,10 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
       'property' => 'timestamp',
     );
 
+    $info['changed'] = array(
+      'callback' => array($this, 'getChanged'),
+    );
+
     $info['description'] = array(
       'property' => 'os_file_description',
       'sub_property' => 'value',
@@ -322,6 +326,15 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
    */
   public function getHtmlCode($wrapper) {
     return $this->getBundleProperty($wrapper, 'field_html_code');
+  }
+
+  /**
+   * Callback for file last changed timestamp
+   */
+  public function getChanged($wrapper) {
+    $file = $wrapper->value();
+
+    return $file->changed;
   }
 
   /**
