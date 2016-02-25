@@ -33,10 +33,12 @@ h2.block-title,
 
 html,
 body {
-    color: #333;
-    font-size: .98em;
+    color: #444;
 }
 /* Elements */
+h1, h2, h3 {
+    font-weight: normal;
+}
 
 #columns a.node-readmore {
     border-bottom: none;
@@ -111,7 +113,7 @@ a.os-swipe-small:hover {
 }
 #menu-bar ul.nice-menu a {
     color: #FFF;
-    padding: 16px 15px;
+    padding: 16px 14px;
     text-transform: uppercase;
 }
 #menu-bar ul.nice-menu ul a {
@@ -216,7 +218,7 @@ h1#page-title {
 h2.block-title {
     padding: 20px 0 25px;
     font-size: 1.3em;
-    font-weight: bold;
+
 }
 .block-boxes-os_boxes_columns h2.block-title {
     padding: 7px 0;
@@ -436,6 +438,9 @@ a.rslides_nav {
     width: 48%;
     margin: 10% 0 0 0;
     text-align: center;
+}
+.cal-export {
+    background-position:65px -901px;
 }
 /** PEOPLE DETAIL PAGE **/
 
