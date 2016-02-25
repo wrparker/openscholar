@@ -219,3 +219,43 @@ function os_restful_entity_delete($entity, $type) {
       ->execute();
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_restful_form_os_settings_form_alter(&$form, $form_state) {
+  $form['os_restful'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('OS restful'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    'os_restful_parent_site' => array(
+      '#type' => 'textfield',
+      '#title' => t('OpenScholar parent site'),
+      '#description' => t('The parent OpenScholar site which will be used as an SSO service.'),
+      '#default_value' => variable_get('os_restful_parent_site'),
+    ),
+  );
+
+  $form['#validate'][] = 'os_restful_os_settings_validate_parent_site';
+}
+
+/**
+ * Validate handler; Validate the parent site have restufl token auth enabled.
+ */
+function os_restful_os_settings_validate_parent_site($form, $form_state) {
+  $parent_url = $form_state['values']['os_restful_parent_site'];
+  $request = drupal_http_request($parent_url);
+
+  if ($request->code != 200) {
+    form_set_error('os_restful_parent_site', t('The given address is not a valid. Please try a real OpenScholar installation.'));
+    return;
+  }
+
+
+  $request = drupal_http_request($parent_url . '/api/login-token');
+
+  if ($request->code != 200) {
+    form_set_error('os_restful_parent_site', t('The given site does have the Restful token auth module enable.'));
+  }
+}
