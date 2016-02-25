@@ -136,6 +136,14 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
 
   protected $errors = array();
 
+  public static function controllersInfo() {
+    return array(
+      '\d\/image_style\/\w*' => array(
+        RestfulInterface::GET => 'getImageStyle',
+      )
+    ) + parent::controllersInfo();
+  }
+
   /**
    * Overrides RestfulEntityBase::publicFieldsInfo().
    */
@@ -767,10 +775,37 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
 
     return FALSE;
   }
+
+  /**
+   * Return the URL of the image style of a given file.
+   */
+  public function getImageStyle() {
+    $path = explode("/", $this->getPath());
+    $style_name = $path[2];
+
+    if (!in_array($style_name, array_keys(image_styles()))) {
+      throw new RestfulBadRequestException(format_string('There is no image style with the name @name', array('@name' => $style_name)));
+    }
+
+    $fid = $path[0];
+
+    if (!$file = file_load($fid)) {
+      throw new RestfulBadRequestException(format_string('There is no file with the id @id', array('@id' => $fid)));
+    }
+
+    if ($file->type != 'image') {
+      throw new RestfulBadRequestException(format_string('The file @name is not an image.', array('@name' => $file->filename)));
+    }
+
+    return array(
+      'url' => image_style_url($style_name, $file->uri),
+    );
+  }
 }
 
-/*
- * Replaces the core file_validate_extensions function when the file in question has a temporary extension.
+/**
+ * Replaces the core file_validate_extensions function when the file in question
+ * has a temporary extension.
  */
 function file_validate_extension_from_mimetype(stdClass $file, $extensions) {
   include_once DRUPAL_ROOT . '/includes/file.mimetypes.inc';
