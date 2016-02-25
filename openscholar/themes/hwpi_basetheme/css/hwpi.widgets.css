@@ -1,8 +1,15 @@
 /* Site Info */
 
-#boxes-box-site_info {
-    min-height: 80px;
-    padding-top: 38px;
+#header-container .block-boxes-os_boxes_site_info {
+    min-height: 135px;
+    display: table;
+}
+#header-container .block-boxes-os_boxes_site_info .block-inner {
+    display: table-cell;
+    vertical-align: middle;
+}
+.region-header-second .region-inner.site-info {
+    padding-top: 0;
 }
 #boxes-box-site_info,
 #boxes-box-site_info a {
@@ -23,9 +30,6 @@
 #boxes-box-site_info h2 {
     font-size: 24px;
     font-style: italic;
-}
-#boxes-box-site_info h1 + h2 {
-    margin-bottom: 10px;
 }
 /* Search */
 

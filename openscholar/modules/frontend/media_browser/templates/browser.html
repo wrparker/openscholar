@@ -90,7 +90,7 @@
                 <span class="mb-preview">&nbsp;</span>
                 <span class="mb-title" ng-click="sortReverse=(sortType == 'name')?!sortReverse:false; sortType='name';">Title</span>
                 <span class="mb-filename" ng-click="sortReverse=(sortType == 'filename')?!sortReverse:false; sortType='filename';">Filename</span>
-                <span class="mb-created" ng-click="sortReverse=(sortType == 'timestamp')?!sortReverse:true; sortType='timestamp';">Upload Date</span>
+                <span class="mb-created" ng-click="sortReverse=(sortType == 'timestamp')?!sortReverse:true; sortType='timestamp';">Uploaded</span>
                 <span class="mb-file-actions">&nbsp;</span>
             </div>
             <div js-pager="file in files | mbFilename:$parent.search | mbType:availFilter | mbType:filteredTypes | mbExtensions:extensions | filter:{status:'!deleting'} | orderBy:sortType:sortReverse track by file.id" page-size="5">

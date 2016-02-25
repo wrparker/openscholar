@@ -129,8 +129,7 @@ div.file-filters {
     background: #e1e1e1;
 }
 .media-browser-pane .media-row.selected {
-    background-color: #D1D6E2;
-    border: 1px solid #999;
+    background-color: #E0E4EA;
 }
 .media-browser-pane .media-row.new.selected {
     background-color: #E6EFC3;
@@ -155,7 +154,20 @@ div.file-filters {
     margin-bottom: 12px;
 }
 #mb-library-header {
-    text-transform: uppercase;
+    font-weight: bold;
+}
+#mb-library-header:hover {
+    cursor: pointer;
+}
+#mb-library-header .mb-title, 
+#mb-library-header .mb-filename,
+#mb-library-header .mb-created {
+    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 75px -944px;
+   
+}
+#mb-library-header .mb-title {
+    background-position: 45px -944px;
+   
 }
 .mb-preview {
     width: 60px;
@@ -412,4 +424,12 @@ div[file-edit] .control button,
     animation-name: highlight;
     animation-duration: 2s;
     animation-iteration-count: infinite;
+}
+/*Media browser position set to fixed to show media browser in same position inspite of page scrolling.*/
+.ui-dialog.media-wrapper {
+ position:fixed;
+}
+
+#media-browser-file-select {
+ font-size: 14px !important;
 }

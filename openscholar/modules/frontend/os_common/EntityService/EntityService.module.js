@@ -253,7 +253,7 @@
                   k = findByProp(idProp, entity[idProp]);
                 ents[k] = entity;
 
-                weSaved[entity[idProp]] = data.updatedOn;
+                weSaved[entity[idProp]] = entity.changed;
                 $rootScope.$broadcast(eventName + '.update', entity);
                 var keys = getCacheKeysForEntity(type, idProp, entity);
                 for (var k in keys) {
@@ -319,7 +319,7 @@
         this.register = function (entity) {
           ents[entity[idProp]] = entity;
 
-          weSaved[entity[idProp]] = entity.timestamp;
+          weSaved[entity[idProp]] = entity.changed;
           addToCaches(entityType, idProp, entity);
         };
       }
@@ -394,15 +394,20 @@
           }
         }, function (error) {
           console.log(error);
+          lock.resolve({});
+          return error;
         });
       }).then(angular.noOp, function (results) {  // openStore returns a promise. We can call .then() on it to attach handlers
         console.log(results);
+        indexedDB.deleteDatabase("EntityService");
+        lock.resolve({});
+        return results;
       });
     }])
     .config(['$indexedDBProvider', function ($idbp) {
       $idbp
         .connection('EntityService')
-        .upgradeDatabase(1, function (event, db, tx) {
+        .upgradeDatabase(2, function (event, db, tx) {
            var store = db.createObjectStore('entities', { keyPath: "key" });
            store.createIndex('key_idx', 'key', {unique: true});
         });
