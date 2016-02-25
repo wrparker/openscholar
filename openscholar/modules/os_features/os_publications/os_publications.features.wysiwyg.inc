@@ -13,7 +13,7 @@ function os_publications_wysiwyg_default_profiles() {
   // Exported profile: title_filter
   $profiles['title_filter'] = array(
     'format' => 'title_filter',
-    'editor' => 'tinymce',
+    'editor' => 'ckeditor',
     'settings' => array(
       'default' => 1,
       'user_choose' => 0,

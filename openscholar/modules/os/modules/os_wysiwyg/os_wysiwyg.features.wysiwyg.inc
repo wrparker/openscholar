@@ -13,7 +13,7 @@ function os_wysiwyg_wysiwyg_default_profiles() {
   // Exported profile: filtered_html
   $profiles['filtered_html'] = array(
     'format' => 'filtered_html',
-    'editor' => 'tinymce',
+    'editor' => 'ckeditor',
     'settings' => array(
       'default' => 1,
       'user_choose' => 0,
