@@ -107,6 +107,14 @@ function os_common_library() {
     ),
   );
 
+  $info['base64'] = array(
+    'title' => t('Base 64'),
+    'version' => '2.1.9',
+    'js' => array(
+      libraries_get_path('js-base64') . '/base64.min.js' => array(),
+    ),
+  );
+
   $info['taxonomy_tree'] = array(
     'title' => t('Angular taxonomy tree'),
     'version' => '0.0.5',
@@ -325,6 +333,21 @@ function os_common_library() {
     )
   );
 
+  $info['remoteLogin'] = array(
+    'title' => 'Remote login',
+    'version' => '1.0',
+    'js' => array(
+      $path . '/remote_login/remoteLogin.js' => array(
+        'group' => JS_LIBRARY,
+        'weight' => -10
+      ),
+    ),
+    'dependencies' => array(
+      array('os_common', 'angularjs'),
+      array('os_common', 'base64'),
+    ),
+  );
+
   return $info;
 }
 
@@ -430,4 +453,40 @@ function os_common_menu_contextual_links_alter(&$links, $router_item, $root_path
     drupal_add_js(drupal_get_path('module', 'os_common').'/modules/os-public-page.js');
     drupal_add_library('os_common', 'FileEditorModal');
   }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function os_common_menu() {
+  $items = array();
+
+  $items['os_common/remote_authenticate'] = array(
+    'title' => 'Remote login',
+    'access callback' => TRUE,
+    'page callback' => 'os_common_remote_authenticate',
+  );
+
+  return $items;
+}
+
+/**
+ * Implment hook_theme().
+ */
+function os_common_theme() {
+  return array(
+    'os_common_remote_login' => array(
+      'template' => 'os-common-remote-login',
+      'path' => drupal_Get_path('module', 'os_common') . '/template'
+    ),
+  );
+}
+
+/**
+ * Page callback; Provide a remote login form.
+ */
+function os_common_remote_authenticate() {
+  drupal_add_library('os_common', 'remoteLogin');
+  drupal_add_js(array('os_restful' => array('parentUrl' => variable_get('os_restful_parent_site'))), 'setting');
+  return theme('os_common_remote_login');
 }
