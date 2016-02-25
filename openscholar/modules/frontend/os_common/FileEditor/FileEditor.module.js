@@ -7,6 +7,7 @@
     }).
     constant("FILEEDITOR_RESPONSES", {
       SAVED: "saved",
+      REPLACED: "replaced",
       NO_CHANGES: "no changes",
       CANCELED: "canceled"
     }).
@@ -19,7 +20,9 @@
         templateUrl: libraryPath + '/file_edit_base.html?vers='+Drupal.settings.version.FileEditor,
         link: function (scope, elem, attr, c, trans) {
           var fileService = new EntityService('files', 'id'),
-              files = [];
+              files = [],
+              file_replaced = false;
+
           fileService.fetch().then(function (data) {
             files = data;
           });
@@ -29,7 +32,11 @@
           scope.description_label = 'Descriptive Text - will display under the filename';
 
           scope.$watch('file', function (f) {
-            if (!f) return;
+
+            if (!f) {
+              return;
+            }
+
             scope.fileEditAddt = libraryPath+'/file_edit_'+f.type+'.html?vers='+Drupal.settings.version.FileEditor;
             scope.date = $filter('date')(f.timestamp+'000', 'short');
             scope.file.terms = scope.file.terms || [];
@@ -133,6 +140,9 @@
                 .success(function (result) {
                   scope.showWarning = false;
                   scope.replaceSuccess = true;
+                  file_replaced = true;
+
+                  fileService.register(result.data[0]);
 
                   $timeout(function () {
                     scope.replaceSuccess = false;
@@ -156,15 +166,18 @@
           }
 
           scope.save = function () {
-            fileService.edit(scope.file, ['preview', 'url']).then(function(result) {
+            fileService.edit(scope.file, ['preview', 'url', 'size', 'changed']).then(function(result) {
                 if (result.data || typeof scope.file.new != 'undefined') {
                   scope.onClose({saved: FER.SAVED});
                 }
+                else if (file_replaced) {
+                  scope.onClose({saved: FER.REPLACED});
+                }
                 else if (result.detail) {
-                  scope.onClose({saved: FER.NO_CHANGES})
+                  scope.onClose({saved: FER.NO_CHANGES});
                 }
                 else {
-                  scope.onClose({saved: FER.CANCELED})
+                  scope.onClose({saved: FER.CANCELED});
                 }
             },
             function(result) {
@@ -195,7 +208,7 @@
           });
 
           scope.cancel = function () {
-            scope.onClose({saved: FER.CANCELED});
+            scope.onClose({saved: file_replaced ? FER.REPLACED : FER.CANCELED});
           }
 
           scope.closeErrors = function () {
