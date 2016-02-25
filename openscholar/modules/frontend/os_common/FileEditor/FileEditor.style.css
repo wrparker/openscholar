@@ -120,3 +120,8 @@ div[file-edit] h4,
 #fe-file-name.error + div::before {
     display: block;
 }
+
+.select2-search-field,
+.select2-search-field input {
+    width: auto !important;
+}
