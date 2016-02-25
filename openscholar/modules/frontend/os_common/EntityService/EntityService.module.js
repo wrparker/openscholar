@@ -440,7 +440,7 @@
            store.createIndex('key_idx', 'key', {unique: true});
         });
     }])
-  .service('EntityCacheUpdater', ['$http', '$q', '$indexedDB', '$rootScope', function ($http, $q, $idb, $rs) {
+  .service('EntityCacheUpdater', ['$http', '$q', '$indexedDB', '$rootScope', 'EntityConfig', function ($http, $q, $idb, $rs, EntityConfig) {
       var urlBase = restPath + '/:type/updates/:time';
 
       function update(updateType) {
@@ -481,6 +481,17 @@
           }
           else {
             url += '&vsite=' + Drupal.settings.spaces.id;
+          }
+        }
+
+        if (EntityConfig[type]) {
+          if (type == 'files' && EntityConfig[type].fields.private == 'only') {
+            if (url.indexOf('?') == -1) {
+              url += '?private=' + EntityConfig[type].fields.private;
+            }
+            else {
+              url += '&private=' + EntityConfig[type].fields.private;
+            }
           }
         }
 
@@ -537,10 +548,19 @@
             if (Drupal.settings.spaces.id) {
               k.vsite = Drupal.settings.spaces.id;
             }
+            for (var p in EntityConfig[type]) {
+              k[p] = EntityConfig[type][p];
+            }
+
             k = type + ":" + JSON.stringify(k);
             var serverCount = resp.data.count || resp.data.totalEntities;
             // check the count against what the server reported. If it's wrong, we need to fetch everything from scratch
             if (cache[k] && serverCount != cache[k].data.length) {
+              // wipe db
+              for (var i = 0; i < keys.length; i++) {
+                var key = keys[i];
+                cache[key].data = [];
+              }
               defer.resolve([]);
             }
             else {
@@ -583,6 +603,11 @@
     // params is the search query we return
     var params = this.params,
       type = this.entityType;
+
+    // if this cache isn't for private files, and the entity is private, drop it.
+    //if (!params.private && entity.schema == 'private') {
+    //  return false;
+    //}
 
     for (var k in params) {
       if ((k == 'entity_type' || k == 'bundle') && typeof entity.bundles == 'object') {
@@ -627,6 +652,11 @@
               return false;
             }
             break;
+          case 'private': {
+            if (params[k] == 'only' && entity.schema != 'private') {
+              return false;
+            }
+          }
         }
       }
       else if (entity[k] != params[k]) {
