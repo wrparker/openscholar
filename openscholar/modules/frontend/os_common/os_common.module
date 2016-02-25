@@ -477,7 +477,7 @@ function os_common_theme() {
   return array(
     'os_common_remote_login' => array(
       'template' => 'os-common-remote-login',
-      'path' => drupal_Get_path('module', 'os_common') . '/template'
+      'path' => drupal_Get_path('module', 'os_common') . '/template',
     ),
   );
 }
