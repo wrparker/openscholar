@@ -26,7 +26,8 @@ h2.block-title,
 .region-header-third ul.nice-menu a,
 #menu-bar ul.nice-menu a,
 #boxes-box-site_info,
-#boxes-box-site_info a {
+#boxes-box-site_info a,
+.date-nav h3 {
     font-family: 'Montserrat', sans-serif !important;
 }
 /* Main wrappers */
@@ -47,7 +48,7 @@ h1, h2, h3 {
     position: relative;
     z-index: 9;
     text-decoration: none;
-    font-size: .78em;
+    font-size: .90em;
 }
 #columns a.node-readmore:after {
     background: url("../../hwpi_basetheme/images/hwpi_basesprite.png") no-repeat 3px -572px;
@@ -441,6 +442,11 @@ a.rslides_nav {
 }
 .cal-export {
     background-position:65px -901px;
+}
+.os_events_export_links .last, 
+.view-os-events.view-id-os_events .attachment-before .links {
+
+    font-size: .85em;
 }
 /** PEOPLE DETAIL PAGE **/
 
