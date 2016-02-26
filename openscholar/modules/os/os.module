@@ -2747,8 +2747,31 @@ function os_advagg_save_aggregate_alter(&$files_to_save, $aggregate_settings, $o
     $static .= '/';
   }
 
+  // Defining static variable to be used inside preg_replace callback for search and replace domain strings.
+  $replace = &drupal_static('advagg_aggregate_replace');
+  $replace = array('domain' => $domain, 'static' => $static);
+  
   foreach ($files_to_save as $file_name => $file) {
-    $files_to_save[$file_name] = str_replace($domain, $static, $file);
+    $files_to_save[$file_name] = preg_replace_callback('/url\(\s*[\'"]?(\S*\.(?:jpeg|jpg|gif|png|js|css|svg|woff|eot|ttf))[\'"]?\s*\)[^;}]*?/i', '_os_advagg_build_css_path', $file);
   }
+}
 
+/**
+ * preg replace callback for replacing urls of static assets in a css file.
+ */
+function _os_advagg_build_css_path($matches) {
+  // Defining file extensions for fonts.
+  $font_file_extensions = array('svg', 'woff', 'eot', 'ttf');
+  $replace = &drupal_static('advagg_aggregate_replace');
+  $path = $matches[1];
+  $ext = pathinfo($path, PATHINFO_EXTENSION);
+  // If reference is not a font file, then replacing base domain into static domain.
+  if (!in_array($ext, $font_file_extensions)) {
+    $path = str_replace($replace['domain'], $replace['static'], $path);
+  }
+  else {
+    // Else relative path will be used for font files. starting with "/"
+    $path = str_replace($replace['domain'], '', $path);
+  }  
+  return 'url(' . $path . ')';
 }
