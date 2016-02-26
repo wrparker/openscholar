@@ -148,14 +148,22 @@
     });
 
     $scope.$on('EntityService.files.update', function (event, file) {
-      if ($scope.selected_file.id == file.id) {
-        $scope.selected_file = angular.copy(file);
-      }
+      var t = $scope.selected_file;
       for (var i=0; i < $scope.files.length; i++) {
         if ($scope.files[i].id == file.id) {
+          if ($scope.files[i].replaced) {
+            file.replaced = $scope.files[i].replaced;
+          }
+          if ($scope.files[i].new) {
+            file.new = $scope.files[i].new;
+          }
           $scope.files[i] = file;
           break;
         }
+      }
+
+      if ($scope.selected_file.id == file.id) {
+        $scope.selected_file = angular.copy(file);
       }
     });
 
@@ -500,11 +508,22 @@
       }
     })();
 
+    function getKeyForFile(fid) {
+      for (var i=0; i<$scope.files.length; i++) {
+        if ($scope.files[i].id == fid) {
+          return i;
+        }
+      }
+      return FALSE;
+    }
 
     // selected file
     $scope.setSelection = function (fid) {
-      $scope.selection = fid;
-      $scope.selected_file = angular.copy(service.get(fid));
+      var key = getKeyForFile(fid);
+      if (key !== false) {
+        $scope.selection = fid;
+        $scope.selected_file = $scope.files[key];
+      }
     };
 
     $scope.deleteConfirmed = function() {
