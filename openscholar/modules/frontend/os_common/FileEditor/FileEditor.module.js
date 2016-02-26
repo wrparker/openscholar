@@ -25,6 +25,7 @@
 
           fileService.fetch().then(function (data) {
             files = data;
+            return data;
           });
 
           scope.fileEditAddt = '';
