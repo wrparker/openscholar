@@ -259,7 +259,7 @@
                 ents[k] = entity;
 
                 weSaved[entity[idProp]] = entity.changed;
-                $rootScope.$broadcast(eventName + '.update', entity);
+                $rootScope.$broadcast(eventName + '.update', angular.copy(entity));
                 var keys = getCacheKeysForEntity(type, idProp, entity);
                 for (var k in keys) {
                   cache[k].data[keys[k]] = entity;
@@ -322,6 +322,7 @@
         // registers an entity with this service
         // used for entities that are added outside of this service
         this.register = function (entity) {
+          entity = angular.copy(entity);
           ents[entity[idProp]] = entity;
 
           weSaved[entity[idProp]] = entity.changed;
