@@ -561,6 +561,7 @@
         else {
           $scope.changePanes('library', result);
         }
+        return;
       }
       $scope.changePanes('library', result);
     }
