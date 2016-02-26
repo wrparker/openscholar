@@ -8,7 +8,18 @@
     }])
     .controller('OSFilesPrivateController', ['$scope', 'FILEEDITOR_RESPONSES', function ($scope, FER) {
       $scope.reload = function (result) {
-        if (result == FER.SAVED || result === true) {
+        var reload = false;
+        if (result == FER.SAVED || result == FER.REPLACED) {
+          reload = true;
+        }
+        if (Array.isArray(result) && result.length) {
+          reload = true;
+        }
+        if (result === true) {
+          reload = true;
+        }
+
+        if (reload) {
           window.location.reload();
         }
       }
