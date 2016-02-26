@@ -43,7 +43,7 @@ taxonomy.directive('taxonomyWidget', ['EntityService', function (EntityService) 
 
                 scope.selectedTerms[vocab.id] = scope.selectedTerms[vocab.id] || [];
 
-                termService.fetch({vocab: vocab.id}).then(function (result) {
+                termService.fetch({vid: vocab.id}).then(function (result) {
                   // If this vocab has no terms, bail out.
                   if (result.length == 0) return;
 
