@@ -45,8 +45,15 @@ div[ng-include="fileEditAddt"] {
     border: none !important;
 }
 .success {
-background-color: #dff0d8;
-    padding: 5px;
+    background-color: #dff0d8;
+    padding: 7px;
+}
+.error {
+    background-color: #dff0d8;
+    padding: 7px;
+}
+.warning {
+    background-color: #fcf8e3;
 }
 .file-entity-loading-message {
     position: absolute;
@@ -67,20 +74,18 @@ div[file-edit] h4,
 }
 /* Error window */
 
-[file-edit] div.error {
+[file-edit] .warning.float {
     position: absolute;
     top: 30%;
     left: calc(50% - (500px / 2));
-    background-color: #fcf8e3;
     padding: 20px;
     cursor: pointer;
     width: 450px;
-    
 }
 [file-edit] span {
     white-space: pre-line;
 }
-[file-edit] div.error .error-close {
+[file-edit] .warning .error-close {
     position: absolute;
     bottom: 0;
     right: 0;
@@ -94,7 +99,7 @@ div[file-edit] h4,
     outline-color: red !important;
 }
 .file-retrieve-spinner {
-	width: 60px;
+    width: 60px;
     height: 60px;
     margin-left: 42%;
 }
@@ -114,4 +119,9 @@ div[file-edit] h4,
 }
 #fe-file-name.error + div::before {
     display: block;
+}
+
+.select2-search-field,
+.select2-search-field input {
+    width: auto !important;
 }

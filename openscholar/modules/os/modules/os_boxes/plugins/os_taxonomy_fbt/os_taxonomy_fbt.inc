@@ -312,7 +312,15 @@ class os_taxonomy_fbt extends os_boxes_default {
       return $block;
     }
 
-    $id = 'vocabulary:' . $this->options['vocabulary'];
+    // Content type's machine name is added in cache id.
+    // So that different set of cached links can be generated per content type for 'Determine for me' settings.
+    if ($this->options['behavior'] == 'contextual') {
+      $id = 'vocabulary:' . $this->options['vocabulary'] . ':' . implode(":", $this->options['bundles']);
+    }
+    else {
+      $id = 'vocabulary:' . $this->options['vocabulary'];
+    }
+
     $this->set_cache_id($id);
     if (($block['content'] = $this->get_cache()) === FALSE) {
       if (is_array($this->options['vocabulary'])) {
