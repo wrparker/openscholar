@@ -269,11 +269,10 @@
             }
             else {
               if (data.invalidChars) {
-                addMessage("This file was renamed from \"" + $files[i].name + "\" due to having invalid characters in its name.")
+                addMessage("This file was renamed from \"" + file.name + "\" due to having invalid characters in its name.")
               }
               toBeUploaded.push(file);
             }
-            console.log(file);
           },
           function (errorResponse) {
             console.log(errorResponse);
