@@ -75,6 +75,10 @@
             if (typeof filename != 'string' || !scope.file) {
               return;
             }
+            if (scope.file.schema == 'oembed') {
+              scope.invalidFileName = false;
+              return;
+            }
             scope.invalidFileName = false;
             if (filename == "") {
               scope.invalidFileName = true;
@@ -164,9 +168,7 @@
           };
 
           scope.canSave = function () {
-            // When we have an embedded video we might have bad file name and
-            // this will prevent from us saving the file.
-            return scope.schema != 'oembed' && (scope.invalidFileName || scope.invalidName);
+            return scope.invalidFileName || scope.invalidName;
           };
 
           scope.save = function () {
