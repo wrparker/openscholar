@@ -202,7 +202,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         }
       }
     }
-    
+
     $private_files = !empty($spaces_features['os_files_private'])? array('files_private' => array(
         'label' => 'Private Files',
         'type' => 'link',
@@ -233,21 +233,13 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
                 'label' => 'Files',
                 'type' => 'link',
                 'href' => 'cp/content/files'
-              )) + $private_files +
-              
+              )) + $private_files
 //              @tbd v2
 //              'widgets' => array(
 //                'label' => 'Widgets',
 //                'type' => 'link',
 //                'href' => '/cp/content'
 //              ),
-              array('tagging' => array(
-                //'label' => 'Tagging',
-                  'label' => 'Taxonomy',
-                'type' => 'link',
-                'href' => 'cp/build/taxonomy'
-              ),
-            ),
           ),
           'add' => array(
             'label' => 'Add',
@@ -289,6 +281,11 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
 //              'href' => 'dev/null'
 //            ),
           ),
+      ),
+      'tagging' => array(
+        'label' => 'Taxonomy',
+        'type' => 'link',
+        'href' => 'cp/build/taxonomy'
       ),
       'settings' => array(
         'label' => 'Settings',
