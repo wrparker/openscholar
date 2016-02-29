@@ -633,6 +633,7 @@
     function link(scope, elem, attr, contr) {
       elem.bind('click', function (event) {
         event.preventDefault();
+        event.stopPropagation();
         // get stuff from the element we clicked on and Drupal.settings
         var elem = event.currentTarget,
           params = mbModal.defaultParams(),
