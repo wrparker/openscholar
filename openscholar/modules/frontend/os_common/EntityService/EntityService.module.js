@@ -139,7 +139,7 @@
             defers[key] = $q.defer();
 
             lockPromise.then(function (keys) {
-              if (!keys[key]) {
+              if (!keys[key] && keys.indexOf(key) === -1) {
                 var url = restPath + '/' + entityType;
                 $http.get(url, {params: params, pKey: key})
                   .success(success)
@@ -397,11 +397,23 @@
             }
             entityTypes[type] = true;
           }
-          lock.resolve(keys);
 
+          var promises = [];
           for (var t in entityTypes) {
-            ECU.update(t);
+            promises = promises.concat(ECU.update(t));
           }
+
+          $q.all(promises).then(function (args) {
+            var keys = args;
+            while (Array.isArray(keys[0])) {
+              var t = [];
+              keys = keys.concat.apply(t, keys);
+            }
+            console.log(keys);
+
+            lock.resolve(keys);
+          });
+
         }, function (error) {
           console.log(error);
           lock.resolve({});
@@ -438,7 +450,7 @@
            store.createIndex('key_idx', 'key', {unique: true});
         });
     }])
-  .service('EntityCacheUpdater', ['$http', '$q', '$indexedDB', '$rootScope', function ($http, $q, $idb, $rs) {
+  .service('EntityCacheUpdater', ['$http', '$q', '$indexedDB', '$rootScope', 'EntityConfig', function ($http, $q, $idb, $rs, EntityConfig) {
       var urlBase = restPath + '/:type/updates/:time';
 
       function update(updateType) {
@@ -456,9 +468,12 @@
           }
           timestamps[type] = timestamps[type] || cache[key].lastUpdated;
         }
+        var promises = [];
         for (var t in keys) {
-          fetchUpdates(t, keys[t], timestamps[t]);
+          promises.push(fetchUpdates(t, keys[t], timestamps[t]));
         }
+
+        return $q.all(promises);
       }
 
       function fetchUpdates(type, keys, timestamp, nextUrl) {
@@ -479,7 +494,21 @@
           }
         }
 
+        if (EntityConfig[type]) {
+          if (type == 'files' && EntityConfig[type].fields.private == 'only') {
+            if (url.indexOf('?') == -1) {
+              url += '?private=' + EntityConfig[type].fields.private;
+            }
+            else {
+              url += '&private=' + EntityConfig[type].fields.private;
+            }
+          }
+        }
+
+        var defer = $q.defer();
+
         $http.get(url).then(function (resp) {
+          var isUpdates = typeof resp.data.updatesAsOf != 'undefined';
           for (var i = 0; i < keys.length; i++) {
             if (nextUrl == undefined) {
               if (resp.data.allEntitiesAsOf) {
@@ -492,7 +521,7 @@
             }
           }
 
-          for (var i=0; i<resp.data.data.length; i++) {
+          for (var i = 0; i < resp.data.data.length; i++) {
             // get all caches this entity exists in
             var cacheKeys = getCacheKeysForEntity(type, cache[keys[0]].idProperty, resp.data.data[i])
             // handle this entity for all caches it exists in
@@ -525,23 +554,50 @@
             fetchUpdates(type, keys, timestamp, next);
           }
           else {
-            for (var i = 0; i < keys.length; i++) {
-              var key = keys[i];
-              defers[key].resolve(angular.copy(cache[key].data));
-              $rs.$broadcast('EntityCacheUpdater.cacheUpdated');
-              $idb.openStore('entities', function(store) {
-                cache[key].matches = cache[key].matches.toString();
-                store.upsert(cache[key]);
-                cache[key].matches = eval('(' + cache[key].matches + ')');
-              });
+            // construct 'everything' key
+            var k = {};
+            if (Drupal.settings.spaces.id) {
+              k.vsite = Drupal.settings.spaces.id;
+            }
+            for (var p in EntityConfig[type]) {
+              k[p] = EntityConfig[type][p];
+            }
+
+            k = type + ":" + JSON.stringify(k);
+            var serverCount = resp.data.count || resp.data.totalEntities;
+            // check the count against what the server reported. If it's wrong, we need to fetch everything from scratch
+            if (cache[k] && serverCount != cache[k].data.length) {
+              // wipe db
+              for (var i = 0; i < keys.length; i++) {
+                var key = keys[i];
+                cache[key].data = [];
+              }
+              defer.resolve([]);
+            }
+            else {
+              defer.resolve(keys);
+
+              // we're good, so let's update the cache with what we had.
+              for (var i = 0; i < keys.length; i++) {
+                var key = keys[i];
+                defers[key].resolve(angular.copy(cache[key].data));
+                $rs.$broadcast('EntityCacheUpdater.cacheUpdated');
+                $idb.openStore('entities', function (store) {
+                  cache[key].matches = cache[key].matches.toString();
+                  store.upsert(cache[key]);
+                  cache[key].matches = eval('(' + cache[key].matches + ')');
+                });
+              }
             }
           }
         }, function (response) {
           // there was an error. Probably an access thing
           for (var i = 0; i < keys.length; i++) {
-            defers[key].resolve(angular.copy(cache[key].data));
+            defers[keys[i]].resolve(angular.copy(cache[keys[i]].data));
           }
-        })
+        });
+
+        return defer.promise;
       }
 
       this.update = update;
@@ -558,6 +614,11 @@
     // params is the search query we return
     var params = this.params,
       type = this.entityType;
+
+    // if this cache isn't for private files, and the entity is private, drop it.
+    //if (!params.private && entity.schema == 'private') {
+    //  return false;
+    //}
 
     for (var k in params) {
       if ((k == 'entity_type' || k == 'bundle') && typeof entity.bundles == 'object') {
@@ -602,6 +663,11 @@
               return false;
             }
             break;
+          case 'private': {
+            if (params[k] == 'only' && entity.schema != 'private') {
+              return false;
+            }
+          }
         }
       }
       else if (entity[k] != params[k]) {
