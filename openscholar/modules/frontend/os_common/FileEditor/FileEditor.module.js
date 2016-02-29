@@ -31,13 +31,14 @@
           scope.fileEditAddt = '';
           scope.date = '';
           scope.description_label = 'Descriptive Text - will display under the filename';
-
+          scope.schema = '';
           scope.$watch('file', function (f) {
 
             if (!f) {
               return;
             }
 
+            scope.schema = f.schema;
             scope.fileEditAddt = libraryPath+'/file_edit_'+f.type+'.html?vers='+Drupal.settings.version.FileEditor;
             scope.date = $filter('date')(f.timestamp+'000', 'short');
             scope.file.terms = scope.file.terms || [];
@@ -163,8 +164,10 @@
           };
 
           scope.canSave = function () {
-            return scope.invalidFileName || scope.invalidName;
-          }
+            // When we have an embedded video we might have bad file name and
+            // this will prevent from us saving the file.
+            return scope.schema != 'oembed' && (scope.invalidFileName || scope.invalidName);
+          };
 
           scope.save = function () {
             fileService.edit(scope.file, ['preview', 'url', 'size', 'changed']).then(function(result) {
