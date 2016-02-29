@@ -5,11 +5,6 @@
         <div class="media-browser-button" ng-class="{active:pane=='library'}" ng-show="activePanes.library" ng-click="changePanes('library')">Previously uploaded files</div>
     </div>
     <div class="media-browser-panes">
-        <div class="loading" ng-show="loading">
-            Please wait while we get information on your files.<br />
-            <img src="{{templatePath}}/misc/images/large-spin_loader.gif"><br />
-            {{loadingMessage}}
-        </div>
         <div class="media-browser-pane" ng-switch-when="upload">
             <div ng-file-drop ng-file-change="$parent.checkForDupes($files, $event)" class="media-browser-drop-box"
                  drag-over-class="media-browser-drag-over" ng-multiple="true" allow-dir="true"
@@ -19,6 +14,7 @@
                    ng-accept="$parent.validate($file)" accept="{{'.'+extensions.join(',.')}}" ng-multiple="true">Select files to Add</a>
                      <div class="help" ng-show="showHelp"><strong>Allowed file types:</strong><br /> {{extensions.join(' ')}}<br /><br />
                    <strong>Max file size:</strong> {{maxFilesize}}.</div>
+                <span id="filename-check" ng-show="$parent.checkingFilenames">Checking for duplicate files...</span>
             </div>
             <div id="media-browser-duplicate-check" ng-show="$parent.dupes.length > 0">
                 <div class="media-browser-dupe" ng-repeat="dupe in $parent.dupes" ng-show="!dupe.processed" style="z-index: {{1000-$index}}">
@@ -72,6 +68,11 @@
             </div>
         </div>
         <div class="media-browser-pane" ng-switch-when="library">
+            <div class="loading" ng-show="loading">
+                Please wait while we get information on your files.<br />
+                <img src="{{templatePath}}/misc/images/large-spin_loader.gif"><br />
+                {{loadingMessage}}
+            </div>
             <div class="file-filters" ng-show="numFiles">
                 <div class="file-search">
                     <label for="file-search-input">Filename</label>
@@ -90,7 +91,7 @@
                 <span class="mb-preview">&nbsp;</span>
                 <span class="mb-title" ng-click="sortReverse=(sortType == 'name')?!sortReverse:false; sortType='name';">Title</span>
                 <span class="mb-filename" ng-click="sortReverse=(sortType == 'filename')?!sortReverse:false; sortType='filename';">Filename</span>
-                <span class="mb-created" ng-click="sortReverse=(sortType == 'timestamp')?!sortReverse:true; sortType='timestamp';">Upload Date</span>
+                <span class="mb-created" ng-click="sortReverse=(sortType == 'timestamp')?!sortReverse:true; sortType='timestamp';">Uploaded</span>
                 <span class="mb-file-actions">&nbsp;</span>
             </div>
             <div js-pager="file in files | mbFilename:$parent.search | mbType:availFilter | mbType:filteredTypes | mbExtensions:extensions | filter:{status:'!deleting'} | orderBy:sortType:sortReverse track by file.id" page-size="5">

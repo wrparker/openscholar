@@ -2438,7 +2438,7 @@ class FeatureContext extends DrupalContext {
       // Selenium has no support for <input type="file" multiple>. So instead, we use multiple input elements,
       // then dummy up a JS FilesList object to pass to the element.
       $driver = $this->getSession()->getDriver();
-      $inputs = [];
+      $inputs = array();
       foreach ($paths as $k => $path) {
         $inputId = 'elem_' . substr(md5(time()), 0, 7) . '_' . $k;
         $driver->executeScript("$inputId = window.jQuery('<input id=\"$inputId\" type=\"file\">').appendTo('body');");
@@ -3100,4 +3100,48 @@ class FeatureContext extends DrupalContext {
     }
     return $data;
   }
+
+  /**
+   * @Then /^I validate the href attribute of metatags link from type$/
+   */
+  public function iValidateTheHrefAttributeOfMetatagsLinkFromType() {
+
+    // Getting the current node been viewed.
+    $node = node_load(FeatureHelp::getNodeIdInVsite('About', 'john'));
+
+    // Base path including the purl.
+    $vsite = vsite_get_vsite(2);
+    $base_url = variable_get('purl_base_domain');
+    $purl_base_path = $base_url . '/' . $vsite->group->purl;
+
+    // Expected urls.
+    $expected_tags_value = array(
+      'canonical' => url('node/' . $node->nid, array('absolute' => TRUE)),
+      'shortlink' => $purl_base_path . '/node/' . $node->nid,
+    );
+
+    // Iterate over each metatag and validate its "href" value accordingly.
+    foreach ($expected_tags_value as $metatag_name => $value) {
+
+      // Getting the metatag element.
+      $page = $this->getSession()->getPage();
+      if (!$metatag_element = $page->find('xpath', "//head/link[@rel='{$metatag_name}']")) {
+        throw new \Exception(format_string("Could not find the target metatag: '@metatag'", array('@metatag' => $metatag_name)));
+      }
+
+      // In case the metatag url in wrong.
+      $metatag_href = $metatag_element->getAttribute('href');
+      if ($metatag_href != $expected_tags_value[$metatag_name]) {
+        // In case the target element is not found.
+        $variables = array(
+          '@metatag' => $metatag_name,
+          '@metatag_given_url' => $metatag_href,
+          '@metatag_expected_url' => $expected_tags_value[$metatag_name],
+        );
+
+        throw new \Exception(format_string("The '@metatag' metatag expected url is: '@metatag_expected_url' but the given url is: '@metatag_given_url'", $variables));
+      }
+    }
+  }
+
 }

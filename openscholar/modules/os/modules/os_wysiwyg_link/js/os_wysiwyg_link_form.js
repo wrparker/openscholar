@@ -7,10 +7,14 @@ Drupal.behaviors.osLinkExternal = {
   attach: function (ctx) {
     $('#-os-link-external-form').submit(function (e) {
       if ($(this).filter(':visible').length > 0) {
-        var value = $('#edit-external', this).val()
+        var value = $('#edit-external', this).val();
+        var target_option = $('#edit-target-option', this).prop('checked');
         // Trims the leading slash from the raw input value.
         Drupal.settings.osWysiwygLinkResult = value.replace(/^\//, "");
         Drupal.settings.osWysiwygLinkAttributes = {'data-url': Drupal.settings.osWysiwygLinkResult};
+        if (target_option) {
+          Drupal.settings.osWysiwygLinkAttributes.target = '_blank';
+        }
         e.preventDefault();
       }
     });
