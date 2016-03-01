@@ -713,11 +713,7 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     if ($this->request['filename']) {
       $file = file_load($wrapper->getIdentifier());
       $label = $wrapper->name->value();
-      $destination = dirname($file->uri) . '/' . $this->request['filename'];
-      $schema = file_uri_scheme($file->uri);
-      if (strpos($destination, $schema . ':/') === 0) {
-        $destination = str_replace($schema . ':/', $schema . '://', $destination);
-      }
+      $destination = drupal_dirname($file->uri) . '/' . $this->request['filename'];
 
       if ($file = file_move($file, $destination)) {
         $wrapper->set($file);
