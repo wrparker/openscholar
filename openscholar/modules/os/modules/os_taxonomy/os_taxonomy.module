@@ -947,7 +947,7 @@ function os_taxonomy_build_child_item($items, $parent, $options) {
         $hierarchy .= '-';
       }
       $content[$item->tid] = $hierarchy . ' ' . $item->name;
-      $content[$item->tid] .= $number ? ' (' . $number .')' : '';
+      $content[$item->tid] .= $number ? ' (' . $number . ')' : '';
 
       if (!empty($item->below)) {
         $content += os_taxonomy_build_child_item($item->below, $item, $options);
