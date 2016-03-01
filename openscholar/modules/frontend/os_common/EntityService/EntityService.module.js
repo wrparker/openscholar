@@ -117,7 +117,14 @@
               });
           }
           return defers[cKey].promise;
-        }
+        };
+
+        this.fetchImageStyle = function(id, imageStyle) {
+          var url = restPath + '/' + entityType + '/' + id + '/image_style/' + imageStyle;
+          var cKey = entityType + ':' + id;
+
+          return $http.get(url, {pKey: cKey});
+        };
 
         this.fetch = function (params) {
           if (!params) {
