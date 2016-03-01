@@ -54,12 +54,30 @@ class os_taxonomy_fbt extends os_boxes_default {
       $form[$setting]['#default_value'] = $setting_value;
     }
 
+    // This hidden field will be used to hold the default value for as_nav checkbox
+    // As Drupal states API will force to check/uncheck as_nav checkbox as per widget_type value on page load time.
+    $form['as_nav_hidden'] = array(
+      '#type' => 'hidden',
+      '#value' => $this->options['as_nav'],
+    );
+
     $form['advanced']['as_nav'] = array(
       '#type' => 'checkbox',
       '#default_value' => $this->options['as_nav'],
       '#title' => t('Display As Navigation'),
       '#description' => t('Check this to make this vocabulary display like a menu.'),
       '#return_value' => TRUE,
+      '#states' => array(
+       'unchecked' => array(
+        ':input[name="widget_type"]' => array('value' => 'select'),
+        ),
+       'checked' => array(
+        ':input[name="as_nav_hidden"]' => array('value' => '1'),
+        ),
+       'disabled' => array(
+        ':input[name="widget_type"]' => array('value' => 'select'),
+        ),       
+       ),
     );
 
     return $form;
