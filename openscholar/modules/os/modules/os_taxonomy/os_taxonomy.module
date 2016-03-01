@@ -474,12 +474,6 @@ function theme_os_taxonomy_vocabulary_item_list($variables) {
 
     if (!empty($options['widget_type']) && $options['widget_type'] == 'select') {
       $data[$tid] = '- ' . $term->name;
-      // The attached number to the term name.
-      $number = NULL;
-      if ($options['show_count'] || !$options['show_empty_terms']) {
-        $number = os_taxonomy_count_term_tagged_items(array($term), $options['bundles']);
-      }
-      $data[$tid] .= $number ? ' (' . $number . ')' : '';
       $data += !empty($term->below) ? os_taxonomy_build_child_item($term->below, $term, $options) : array();
     }
     else {
@@ -947,8 +941,6 @@ function os_taxonomy_build_child_item($items, $parent, $options) {
         $hierarchy .= '-';
       }
       $content[$item->tid] = $hierarchy . ' ' . $item->name;
-      $content[$item->tid] .= $number ? ' (' . $number .')' : '';
-
       if (!empty($item->below)) {
         $content += os_taxonomy_build_child_item($item->below, $item, $options);
       }
