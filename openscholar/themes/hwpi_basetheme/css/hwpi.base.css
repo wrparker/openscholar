@@ -880,3 +880,5 @@ ul.pager li.pager-item {
 .two-sidebars .sidebar .node-person.node-teaser .field-name-field-email {
     float: none;
 }
+/* remove later */
+.event-start .event-year {display:none;}
