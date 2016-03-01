@@ -42,8 +42,7 @@
       jQuery('a.media-gallery-add.launcher.media-gallery-add-processed').bind('click', Drupal.media_gallery.open_browser);
     }
   })
-  .directive('mediaGalleryItem', ['FILEEDITOR_RESPONSES', function (FER) {
-
+  .directive('mediaGalleryItem', ['FILEEDITOR_RESPONSES', 'EntityService', function (FER, EntityService) {
       return {
         restrict: 'AE',
         scope: true,
@@ -95,11 +94,13 @@
                 }
               };
 
-              var new_url = img.src.replace(/m=(\d*)/, 'm='+Math.floor(Date.now()/1000))
-              img.src = new_url;
+              var service = new EntityService('files', 'id');
+
+              service.fetchImageStyle(fid, 'media_gallery_thumbnail').then(function (response) {
+                img.src = response.data.data.url;
+              });
             }
           }
-
         }
       }
   }]);
