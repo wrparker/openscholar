@@ -291,7 +291,7 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
    * We use this to prevent user from changing the filename
    */
   public function getSchema($wrapper) {
-    $uri = $wrapper->value()->uri;
+    $uri = str_replace('///', '//', $wrapper->value()->uri);  // band aid fix
     return parse_url($uri, PHP_URL_SCHEME);
   }
 
