@@ -454,18 +454,15 @@ ol.search-results li.search-result:last-child {
     text-align: center;
     line-height: 1;
 }
-.event-year {
-    color: #616161;
-    font-size: 11px;
-    text-transform: uppercase;
-    padding: 11px 0 0;
-}
 .event-start-month {
     color: #7e7e7e;
     font-size: 12px;
     text-transform: uppercase;
-    padding: 2px 0 0;
+    padding: 16px 0 0;
 }
+/* remove later */
+.event-start .event-year {display:none !important;}
+
 .event-start-day {
     color: #000;
     font-size: 18px;
@@ -880,3 +877,4 @@ ul.pager li.pager-item {
 .two-sidebars .sidebar .node-person.node-teaser .field-name-field-email {
     float: none;
 }
+
