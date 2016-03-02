@@ -207,6 +207,7 @@ function os_wysiwyg_field_widget_info() {
  */
 function os_wysiwyg_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $info = element_info('text_format');
+
   $element += array(
     '#type' => 'text_format',
     '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
@@ -220,14 +221,13 @@ function os_wysiwyg_field_widget_form(&$form, &$form_state, $field, $instance, $
       'data-minrows' => $instance['widget']['settings']['rows']
     ),
     '#attached' => array(
-      'js' => array_merge(array(
-          drupal_get_path('module', 'os_wysiwyg').'/os_wysiwyg.widget.js',
+      'js' => array(
+        drupal_get_path('module', 'os_wysiwyg') . '/os_wysiwyg.widget.js' => array (
+          'weight' => 5000,
+          'scope' => 'footer',
         ),
-        $info['#attached']['js']
-      ),
-      'css' => array(
-        drupal_get_path('module', 'os_wysiwyg').'/os_wysiwyg.widget.css',
-      )
+      ) + $info['#attached']['js'],
+      'css' => array( drupal_get_path('module', 'os_wysiwyg').'/os_wysiwyg.widget.css'),
     )
   );
 
