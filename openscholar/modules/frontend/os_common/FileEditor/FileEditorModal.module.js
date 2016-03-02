@@ -22,7 +22,6 @@
 
       function link(scope, elem, attr) {
         var data = {
-          attr: attr,
           scope: scope
         }
         elem.bind('click', data, clickHandler);
@@ -42,7 +41,7 @@
       function clickHandler(event) {
         event.preventDefault();
         event.stopPropagation();
-        var fid = event.data.attr.fid,
+        var fid = event.currentTarget.attributes.fid.value,
           scope = event.data.scope;
 
         ModalService.showModal({

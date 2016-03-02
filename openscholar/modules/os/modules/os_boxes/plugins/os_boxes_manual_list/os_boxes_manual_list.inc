@@ -165,14 +165,16 @@ class os_boxes_manual_list extends os_boxes_default {
           }
           elseif ($this->options['style'] == 'full') {
             $node = node_load($n['nid']);
-            $links[$n['weight']] = render(node_view($node, 'full'));
+            $rendered_node = node_view($node, 'full');
+            if (empty($rendered_node['#contextual_links'])) {
+              $rendered_node['#contextual_links']['node'] = array('node', array($n['nid']));
+            }            
+            $links[$n['weight']] = render($rendered_node);
           }
           else {
-            $l = array(
-              'href' => 'node/' . $n['nid'],
-              'title' => $n['title'],
-            );
-            $links[$n['weight']] = $l;
+            $l = array('#node' => $node, '#theme' => 'node', '#view_mode' => 'title', '#children' => NULL);
+            $l['#contextual_links']['node'] = array('node', array($n['nid']));
+            $links[$n['weight']] = render($l);
           }
         }
       }
@@ -184,7 +186,7 @@ class os_boxes_manual_list extends os_boxes_default {
         $block['content'] = theme('item_list', array('items' => $links, 'attributes' => array('class' => array('featured-links'))));
       }
       else {
-        $block['content'] = theme('links', array('links' => $links, 'attributes' => array('class' => array('featured-links'))));
+        $block['content'] = theme('item_list', array('items' => $links, 'attributes' => array('class' => array('featured-links title-only'))));
       }
 
       if (!$random) {

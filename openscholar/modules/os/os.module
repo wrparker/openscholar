@@ -1623,7 +1623,7 @@ function os_node_view_alter(&$build) {
   }
 
   // fixes broken tags when <!--break--> is used
-  if (in_array($build['#view_mode'], array('teaser', 'no_image_teaser')) && isset($build['body']) && is_array($build['body'])) {
+  if (in_array($build['#view_mode'], array('teaser', 'no_image_teaser', 'slide_teaser')) && isset($build['body']) && is_array($build['body'])) {
     foreach (element_children($build['body']) as $c) {
       $build['body'][$c]['#markup'] = _filter_htmlcorrector($build['body'][$c]['#markup']);
     }

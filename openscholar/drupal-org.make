@@ -318,7 +318,7 @@ projects[pinserver][subdir] = "contrib"
 projects[pinserver][type] = module
 projects[pinserver][download][type] = git
 projects[pinserver][download][url] = "git://github.com/openscholar/pinserver.git"
-projects[pinserver][download][tag] = 7.x-3.4.7
+projects[pinserver][download][tag] = 7.x-3.4.8
 
 projects[purl][subdir] = "contrib"
 ;: projects[purl][version] = 1.0-beta1+11-dev
@@ -500,6 +500,10 @@ libraries[html5shiv][download][url] = "http://raw.github.com/aFarkas/html5shiv/m
 libraries[hopscotch][type] = "libraries"
 libraries[hopscotch][download][type] = "file"
 libraries[hopscotch][download][url] = "https://github.com/linkedin/hopscotch/archive/b41ab659507175264ab6347d0032f03e42b961d1.zip"
+
+libraries[jquery.bgiframe][type] = "libraries"
+libraries[jquery.bgiframe][download][type] = "git"
+libraries[jquery.bgiframe][download][url] = "https://github.com/brandonaaron/bgiframe.git"
 
 ; Angular js libraries.
 libraries[angular_select2][type] = "libraries"

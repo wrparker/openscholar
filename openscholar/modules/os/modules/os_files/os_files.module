@@ -2568,3 +2568,42 @@ function os_files_file_url_alter(&$uri) {
     drupal_add_html_head($link, 'dns-prefetch');
   }
 }
+
+/**
+ * Implements hook_file_move().
+ */
+function os_files_file_move($file, $source) {
+  _os_file_invalidate_cache($file);
+}
+
+/**
+ * Implements hook_file_upload().
+ */
+function os_files_file_update($file) {
+  _os_file_invalidate_cache($file);
+}
+
+/**
+ * After the file is updated or moved we need to invalidate the cache of the
+ * media gallery which the file belong to.
+ *
+ * @param $file
+ *   The file which been moved of updated.
+ */
+function _os_file_invalidate_cache($file) {
+
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'node')
+    ->fieldCondition('media_gallery_file', 'fid', $file->fid)
+    ->execute();
+
+  if (empty($result['node'])) {
+    return;
+  }
+
+  $nids = array_keys($result['node']);
+  foreach ($nids as $nid) {
+    cache_clear_all($nid, 'cache_entity_node');
+  }
+}
