@@ -368,7 +368,10 @@ function os_image_gallery_node_update($node) {
   // Field API order the values by their key in the array. That mean that 3,1,2
   // will be ordered as 1,2,3. Using array merge will set 3,1,2 as 1,2,3 and
   // insure us the new images at the beginning of the array.
-  $wrapper->media_gallery_file->set(array_merge($new_files, $original_wrapper->media_gallery_file->value()));
+  $menu_item = menu_get_item();
+  if ($menu_item['path'] != 'media-gallery/sort/gallery/%/%') {
+    $wrapper->media_gallery_file->set(array_merge($new_files, $original_wrapper->media_gallery_file->value()));
+  }
 }
 
 /**
