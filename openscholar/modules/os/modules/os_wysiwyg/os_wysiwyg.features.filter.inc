@@ -158,7 +158,7 @@ function os_wysiwyg_filter_default_formats() {
             'zoom' => 0,
           ),
           'rule_valid_classes' => array(
-            0 => '*'
+            0 => '*',
           ),
           'rule_valid_ids' => array(
             0 => 'os-*',
