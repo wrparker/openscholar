@@ -464,9 +464,9 @@
               $scope.setSelection(firstId);
               $scope.changePanes('edit');
             }
-            else if (typeof $scope.messages[$scope.messages.next-1] != 'undefined') {
-              // do nothing. This usually means there was an error during upload.
-            }
+            //else if (typeof $scope.messages[$scope.messages.next-1] != 'undefined') {
+            //  // do nothing. This usually means there was an error during upload.
+            //}
             else {
               if (directInsert) {
                 $scope.insert();
