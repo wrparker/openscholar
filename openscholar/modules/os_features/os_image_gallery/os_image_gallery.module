@@ -56,11 +56,10 @@ function os_image_gallery_menu_alter(&$items) {
  * Implement hook_menu_local_tasks_alter().
  */
 function os_image_gallery_menu_local_tasks_alter(&$tasks, $item, $path) {
-  if ($item == 'media-gallery/detail/%/%/remove') {
+  if ($path == 'media-gallery/detail/%/%/remove') {
+    $tasks['tabs'] = [];
     return;
   }
-
-  $tasks['tabs'] = [];
 }
 
 /**
