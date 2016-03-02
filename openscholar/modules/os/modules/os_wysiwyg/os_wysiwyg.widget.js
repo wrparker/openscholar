@@ -8,11 +8,12 @@ Drupal.behaviors.osWysiwygHideTips = {
   attach: function (ctx) {
     localStorage.osWysiwygExpandableTextarea = localStorage.osWysiwygExpandableTextarea || JSON.stringify({});
     var settings = JSON.parse(localStorage.osWysiwygExpandableTextarea);
-    CKEDITOR.disableAutoInline = true;
-    for(name in CKEDITOR.instances)
-    {
-      CKEDITOR.instances[name].destroy(true);
-    }
+    //for(name in CKEDITOR.instances) {
+    //
+    //  CKEDITOR.instances[name].destroy(true);
+    //}
+
+    //CKEDITOR.disableAutoInline = true;
     CKEDITOR.inline('edit-body-und-0-value');
   }
 };
