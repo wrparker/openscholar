@@ -558,6 +558,10 @@ ul ul ul ul {
 .boxes-box ul.featured-links li {
     margin-bottom: 15px;
 }
+.boxes-box ul.featured-links.title-only li h1.node-title a{
+ font-size: 1em !important;
+ font-weight: normal !important;
+}
 /* CALENDAR - UPCOMING LI'S */
 
 .view-os-events ul li {
@@ -821,7 +825,7 @@ dd {
  * - Google maps break also, see below for fixes.
  */
 
-body.html img:not(.media-element) {
+body.html img {
     max-width: 100%;
     height: auto;
     -ms-interpolation-mode: bicubic;

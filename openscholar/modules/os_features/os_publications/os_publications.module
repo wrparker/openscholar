@@ -313,6 +313,24 @@ function os_publications_theme_registry_alter(&$theme_registry) {
  * Alters the biblio form to do a lot of things
  */
 function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
+
+  $style = variable_get('biblio_citeproc_style');
+  if (in_array($style, array('apa.csl', 'ieee.csl', 'mhra.csl'))) {
+
+    $descriptions = array(
+      'apa.csl' => t('eg "The meeting of the American Psychological Association, Orlando, FL"'),
+      'ieee.csl' => t('e.g. "J. K. Author, “IEEE paper,” presented at the IEEE Conference., Orlando, FL, 2016"'),
+      'mhra.csl' => t('e.g. "Johnson, Thomas H., ed., Emily Dickinson: Selected Letters, 2nd edn (Cambridge, MA: Harvard University Press, 1985)"'),
+    );
+
+    if (in_array($style, array('apa.csl', 'ieee.csl'))) {
+      // Change the label of the field.
+      $form['biblio_tabs'][3]['biblio_place_published']['#title'] = t('Presented at');
+    }
+
+    $form['biblio_tabs'][3]['biblio_place_published']['#description'] = $descriptions[$style];
+  }
+
   $form['#attached']['js'][] = drupal_get_path('module', 'os_publications') . '/misc/os_publications.js';
   $form['#attached']['css'][] = drupal_get_path('module', 'os_publications') . '/misc/os_publications.css';
 

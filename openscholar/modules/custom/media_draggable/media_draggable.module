@@ -61,6 +61,7 @@ function media_draggable_field_widget_form(&$form, &$form_state, $field, $instan
   $element += array(
     '#field' => $field,
     '#instance' => $instance,
+    '#theme_wrappers' => array('form_element'),
     '#process' => array(
       'media_draggable_field_widget_process',
     ),
@@ -94,6 +95,10 @@ function media_draggable_field_widget_form(&$form, &$form_state, $field, $instan
     )
   );
 
+  if ($instance['required']) {
+    $element['#element_validate'][] = 'media_draggable_field_validate_required';
+  }
+
   // Essentially we use the `dragndrop_upload_file` type,
   // extended with some enhancements.
   $widget_settings = $element['#instance']['widget']['settings'];
@@ -102,7 +107,6 @@ function media_draggable_field_widget_form(&$form, &$form_state, $field, $instan
   $info = element_info('dragndrop_upload');
 
   $element['drop'] = array(
-    '#title' => isset($instance['label']) ? $instance['label'] : '',
     '#type' => 'dragndrop_upload',
     '#upload_location' => file_field_widget_uri($element['#field'], $element['#instance']),
     '#upload_validators' => file_field_widget_upload_validators(
@@ -338,4 +342,20 @@ function media_draggable_file_edit_submit($form, $form_state) {
       'editedFile' => $file
     )
   ), 'setting');
+}
+
+/**
+ * Makes sure the field has some data in it if it's required.
+ */
+function media_draggable_field_validate_required($element, $form_state, $complete_form) {
+  $instance = $element['#instance'];
+  if (!$instance['required']) {
+    return;
+  }
+
+  $input = drupal_array_get_nested_value($form_state['values'], $element['#parents'], $input_exists);
+  $filtered = array_diff_key($input, array('drop' => array(), 'template' => array()));
+  if (!count($filtered)) {
+    form_set_error($element['#parents'][0], t('!name field is required.', array('!name' => $element['#title'])));
+  }
 }

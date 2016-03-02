@@ -69,35 +69,41 @@ class OsTaxonomyTerm extends OsRestfulEntityCacheableBase {
     }
 
     module_load_include('inc', 'vsite_vocab', 'includes/taxonomy');
-    $vocabs = array_keys(vsite_vocab_get_vocabularies($vsite));
+    $vocabData = vsite_vocab_get_vocabularies($vsite);
+    $requested = array();
+    $badVocabs = array();
 
     if (!empty($this->request['vocab'])) {
-      // The user asked for vocabularies. Check if they belong to the vsite.
-      $requested_vocabulary = $this->request['vocab'];
-      if (!is_array($requested_vocabulary)) {
-        if (!$in_array = in_array($requested_vocabulary, $vocabs)) {
-          $bad_vocab = $requested_vocabulary;
+      $condition = is_array($this->request['vocab']) ? $this->request['vocab'] : array($this->request['vocab']);
+      foreach ($vocabData as $v) {
+        if (in_array($v->machine_name, $condition)) {
+          $requested[] = $v->vid;
+          $condition = array_diff($condition, array($v->machine_name));
         }
       }
-      else {
-        $in_array = TRUE;
-
-        foreach ($requested_vocabulary as $requested) {
-          if (!$in_array = in_array($requested, $vocabs)) {
-            $bad_vocab = $requested;
-            break;
-          }
+      $badVocabs = $condition;
+    }
+    elseif (!empty($this->request['vid'])) {
+      $condition = is_array($this->request['vid']) ? $this->request['vid'] : array($this->request['vid']);
+      foreach ($condition as $vid) {
+        if (isset($vocabData[$vid])) {
+          $requested[] = $vid;
+        }
+        else {
+          $badVocabs[] = $vid;
         }
       }
-
-      if (!$in_array) {
-        throw new \RestfulBadRequestException(format_string('The vocab @vocab you asked is not part of the vsite.', array('@vocab' => $bad_vocab)));
-      }
-
-      $vocabs = is_array($this->request['vocab']) ? $this->request['vocab'] : array($this->request['vocab']);
+    }
+    else {
+      // no filtered vocabs requested, so return everything based on the vsite.
+      $requested = array_keys($vocabData);
     }
 
-    $query->propertyCondition('vid', $vocabs, 'IN');
+    if (empty($requested)) {
+      throw new \RestfulBadRequestException(format_string('The vocab(s) @vocab you asked for is not part of the vsite.', array('@vocab' => explode(', ', $badVocabs))));
+    }
+
+    $query->propertyCondition('vid', $requested, 'IN');
   }
 
   /**

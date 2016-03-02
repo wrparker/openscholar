@@ -341,7 +341,7 @@ function cp_use_cp_theme() {
   elseif (arg(0) == 'taxonomy') {
     return (arg(2) == 'add' || in_array(arg(3), $ops));
   }
-  elseif (in_array(arg(0), array('user')) && $_GET['render'] == 'overlay') {
+  elseif (in_array(arg(0), array('user')) && !empty($_GET['render']) && $_GET['render'] == 'overlay') {
     return in_array(arg(2), $ops);
   }
 
@@ -914,4 +914,14 @@ function cp_og_permission() {
       'description' => t('Allow the user to clear the site cache for this site.'),
     ),
   );
+}
+
+/**
+ * Implements hook_redirect_parse_url_alter().
+ */
+function cp_redirect_parse_url_alter(&$parsed, $original_url) {
+  if (isset($parsed['fragment']) && strpos('/', $parsed['fragment']) == 0) {
+    $parsed['url'] .= '/#' . $parsed['fragment'];
+    unset($parsed['fragment']);
+  }
 }

@@ -460,6 +460,9 @@ ol.search-results li.search-result:last-child {
     text-transform: uppercase;
     padding: 16px 0 0;
 }
+/* remove later */
+.event-start .event-year {display:none !important;}
+
 .event-start-day {
     color: #000;
     font-size: 18px;
@@ -874,3 +877,4 @@ ul.pager li.pager-item {
 .two-sidebars .sidebar .node-person.node-teaser .field-name-field-email {
     float: none;
 }
+

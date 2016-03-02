@@ -20,14 +20,10 @@ jQuery(document).ready(function() {
 
 	});
 
-	jQuery("figure img.media-element").each(function() {
-
-		var imgwidth = jQuery("figure img.media-element").width();
-
-		jQuery("figure img.media-element ~ figcaption").css({
-			"width" : +imgwidth
-		});
-	});
-
+    jQuery("figure img").each(function() {
+        var imgwidth = jQuery(this).attr('width');
+        jQuery(this).parent().find('figcaption').css({
+            "width" : + imgwidth
+        });
+    });
 });
-

@@ -897,3 +897,11 @@ function os_update_7042() {
 
   return t('Updated JQuery to 1.8.');
 }
+
+/**
+ * Install OS Reports module.
+ */
+function os_update_7043() {
+  module_enable(array('os_reports'));
+  return t('Enabled OS Reports module.');
+}
