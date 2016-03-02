@@ -714,7 +714,7 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
       $label = $wrapper->name->value();
       $destination = dirname($file->uri) . '/' . $this->request['filename'];
       $schema = file_uri_scheme($file->uri);
-      if (!preg_match('^' . $schema . '\:\/\/.*$^', $destination)) {
+      if (strpos($destination, $schema . ':/') === 0) {
         $destination = str_replace($schema . ':/', $schema . '://', $destination);
       }
 
