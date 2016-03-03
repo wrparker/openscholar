@@ -60,6 +60,10 @@ function os_image_gallery_menu_local_tasks_alter(&$tasks, $item, $path) {
     return;
   }
 
+  if (path_is_admin($_GET['q'])) {
+    return;
+  }
+
   $tasks['tabs'] = [];
 }
 

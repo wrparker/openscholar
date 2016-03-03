@@ -1,130 +1,21 @@
 (function($) {
 
+  /**
+   * Hides the ckeditor.
+   */
+  Drupal.behaviors.osWysiwygInlineCKEDITOR = {
+    attach: function (context) {
+      $('.wysiwyg', context).once('wysiwyg', function () {
+        if (!this.id || typeof Drupal.settings.wysiwyg.triggers[this.id] === 'undefined') {
+          return;
+        }
 
-/**
- * Hides the ckeditor.
- */
-Drupal.behaviors.osWysiwygHideTips = {
-  attach: function (ctx) {
-    localStorage.osWysiwygExpandableTextarea = localStorage.osWysiwygExpandableTextarea || JSON.stringify({});
-    var settings = JSON.parse(localStorage.osWysiwygExpandableTextarea);
-    //for(name in CKEDITOR.instances) {
-    //
-    //  CKEDITOR.instances[name].destroy(true);
-    //}
+        var params = Drupal.settings.wysiwyg.triggers[this.id];
 
-    //CKEDITOR.disableAutoInline = true;
-    CKEDITOR.inline('edit-body-und-0-value');
-  }
-};
-
-
-
-  ///**
-    // * Initialize editor libraries.
-    // *
-    // * Some editors need to be initialized before the DOM is fully loaded. The
-    // * init hook gives them a chance to do so.
-    // */
-    //Drupal.wysiwygInit = function() {
-    //  // This breaks in Konqueror. Prevent it from running.
-    //  if (/KDE/.test(navigator.vendor)) {
-    //    return;
-    //  }
-    //  jQuery.each(Drupal.wysiwyg.editor.init, function(editor) {
-    //    // Clone, so original settings are not overwritten.
-    //    this(jQuery.extend(true, {}, Drupal.settings.wysiwyg.configs[editor]));
-    //  });
-    //};
-    //
-    ///**
-    // * Attach editors to input formats and target elements (f.e. textareas).
-    // *
-    // * This behavior searches for input format selectors and formatting guidelines
-    // * that have been preprocessed by Wysiwyg API. All CSS classes of those elements
-    // * with the prefix 'wysiwyg-' are parsed into input format parameters, defining
-    // * the input format, configured editor, target element id, and variable other
-    // * properties, which are passed to the attach/detach hooks of the corresponding
-    // * editor.
-    // *
-    // * Furthermore, an "enable/disable rich-text" toggle link is added after the
-    // * target element to allow users to alter its contents in plain text.
-    // *
-    // * This is executed once, while editor attach/detach hooks can be invoked
-    // * multiple times.
-    // *
-    // * @param context
-    // *   A DOM element, supplied by Drupal.attachBehaviors().
-    // */
-    //Drupal.behaviors.attachWysiwyg = {
-    //  attach: function (context, settings) {
-    //    // This breaks in Konqueror. Prevent it from running.
-    //    if (/KDE/.test(navigator.vendor)) {
-    //      return;
-    //    }
-    //
-    //    $('.wysiwyg', context).once('wysiwyg', function () {
-    //      if (!this.id || typeof Drupal.settings.wysiwyg.triggers[this.id] === 'undefined') {
-    //        return;
-    //      }
-    //      var $this = $(this);
-    //      var params = Drupal.settings.wysiwyg.triggers[this.id];
-    //      for (var format in params) {
-    //        params[format].format = format;
-    //        params[format].trigger = this.id;
-    //        params[format].field = params.field;
-    //      }
-    //      var format = 'format' + this.value;
-    //      // Directly attach this editor, if the input format is enabled or there is
-    //      // only one input format at all.
-    //      if ($this.is(':input')) {
-    //        Drupal.wysiwygAttach(context, params[format]);
-    //      }
-    //      // Attach onChange handlers to input format selector elements.
-    //      if ($this.is('select')) {
-    //        $this.change(function() {
-    //          // If not disabled, detach the current and attach a new editor.
-    //          Drupal.wysiwygDetach(context, params[format]);
-    //          format = 'format' + this.value;
-    //          Drupal.wysiwygAttach(context, params[format]);
-    //        });
-    //      }
-    //      // Detach any editor when the containing form is submitted.
-    //      $('#' + params.field).parents('form').submit(function (event) {
-    //        // Do not detach if the event was cancelled.
-    //        if (event.isDefaultPrevented()) {
-    //          return;
-    //        }
-    //        Drupal.wysiwygDetach(context, params[format], 'serialize');
-    //      });
-    //    });
-    //  },
-    //
-    //  detach: function (context, settings, trigger) {
-    //    var wysiwygs;
-    //    // The 'serialize' trigger indicates that we should simply update the
-    //    // underlying element with the new text, without destroying the editor.
-    //    if (trigger == 'serialize') {
-    //      // Removing the wysiwyg-processed class guarantees that the editor will
-    //      // be reattached. Only do this if we're planning to destroy the editor.
-    //      wysiwygs = $('.wysiwyg-processed', context);
-    //    }
-    //    else {
-    //      wysiwygs = $('.wysiwyg', context).removeOnce('wysiwyg');
-    //    }
-    //    wysiwygs.each(function () {
-    //      var params = Drupal.settings.wysiwyg.triggers[this.id];
-    //      Drupal.wysiwygDetach(context, params, trigger);
-    //    });
-    //  }
-    //};
-
-
-  // ########################################################################################
-
-
-  //localStorage.osWysiwygExpandableTextarea = localStorage.osWysiwygExpandableTextarea || JSON.stringify({});
-  //var settings = JSON.parse(localStorage.osWysiwygExpandableTextarea);
+        CKEDITOR.inline(params.field, Drupal.settings.wysiwyg.configs.ckeditor.formatfiltered_html);
+      });
+    }
+  };
 
   //function wysiwyg_expand(e) {
   //  var parent;

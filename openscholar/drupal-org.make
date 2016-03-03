@@ -433,10 +433,10 @@ projects[web_widgets][subdir] = "contrib"
 projects[web_widgets][version] = 1.0-alpha2
 
 projects[wysiwyg][subdir] = "contrib"
-projects[wysiwyg][version] = 2.2
+projects[wysiwyg][version] = "2.x-dev"
+projects[wysiwyg][revision] = "9490393"
 projects[wysiwyg][patch][] = "http://drupal.org/files/wysiwyg-remove-breaks-1964806-2.patch"
 projects[wysiwyg][patch][] = "http://drupal.org/files/wysiwyg-table-format.patch"
-projects[wysiwyg][patch][] = "https://drupal.org/files/wysiwyg-ckeditor4-1853550-4.patch"
 
 projects[wysiwyg_filter][subdir] = "contrib"
 projects[wysiwyg_filter][version] = 1.6-rc2
@@ -462,7 +462,7 @@ libraries[tinymce][download][url] = "http://github.com/downloads/tinymce/tinymce
 
 libraries[ckeditor][type] = "libraries"
 libraries[ckeditor][download][type] = "get"
-libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.4.6/ckeditor_4.4.6_full.zip"
+libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.5.7/ckeditor_4.5.7_standard.zip"
 
 libraries[spyc][type] = "libraries"
 libraries[spyc][download][type] = "file"
