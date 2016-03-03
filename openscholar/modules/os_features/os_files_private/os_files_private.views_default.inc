@@ -384,6 +384,14 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['fields']['fid']['label'] = '';
   $handler->display->display_options['fields']['fid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['fid']['element_label_colon'] = FALSE;
+  /* Field: File: Path */
+  $handler->display->display_options['fields']['uri']['id'] = 'uri';
+  $handler->display->display_options['fields']['uri']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['uri']['field'] = 'uri';
+  $handler->display->display_options['fields']['uri']['label'] = '';
+  $handler->display->display_options['fields']['uri']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['uri']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['uri']['file_download_path'] = TRUE;
   /* Field: File: Copy link */
   $handler->display->display_options['fields']['os_files_copy_link_1']['id'] = 'os_files_copy_link_1';
   $handler->display->display_options['fields']['os_files_copy_link_1']['table'] = 'file_managed';
@@ -397,11 +405,11 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['fields']['filename']['field'] = 'filename';
   $handler->display->display_options['fields']['filename']['label'] = 'Link to Share';
   $handler->display->display_options['fields']['filename']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['filename']['alter']['text'] = '[filename] [os_files_copy_link_1]';
+  $handler->display->display_options['fields']['filename']['alter']['text'] = '<a href="[uri]">[filename]</a> [os_files_copy_link_1]';
   $handler->display->display_options['fields']['filename']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['filename']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['filename']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['filename']['link_to_file'] = TRUE;
+  $handler->display->display_options['fields']['filename']['link_to_file'] = FALSE;
   /* Field: File: Mime type */
   $handler->display->display_options['fields']['filemime']['id'] = 'filemime';
   $handler->display->display_options['fields']['filemime']['table'] = 'file_managed';
