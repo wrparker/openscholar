@@ -221,12 +221,12 @@ function os_wysiwyg_field_widget_form(&$form, &$form_state, $field, $instance, $
       'data-minrows' => $instance['widget']['settings']['rows']
     ),
     '#attached' => array(
-      'js' => array(
+      'js' => $info['#attached']['js'] + array(
         drupal_get_path('module', 'os_wysiwyg') . '/os_wysiwyg.widget.js' => array (
           'weight' => 5000,
           'scope' => 'footer',
         ),
-      ) + $info['#attached']['js'],
+      ),
       'css' => array( drupal_get_path('module', 'os_wysiwyg').'/os_wysiwyg.widget.css'),
     )
   );

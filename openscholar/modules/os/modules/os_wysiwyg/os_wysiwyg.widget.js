@@ -5,17 +5,17 @@
    */
   Drupal.behaviors.osWysiwygInlineCKEDITOR = {
     attach: function (context) {
-      $('.wysiwyg', context).once('wysiwyg', function () {
-        if (!this.id || typeof Drupal.settings.wysiwyg.triggers[this.id] === 'undefined') {
-          return;
-        }
 
-        var params = Drupal.settings.wysiwyg.triggers[this.id];
-
-        CKEDITOR.inline(params.field, Drupal.settings.wysiwyg.configs.ckeditor.formatfiltered_html);
+      CKEDITOR.on("instanceReady", function(event) {
+        // todo Handle inline editing.
+        return;
+        var editor = event.editor;
+        $('#cke_' + editor.name).find('.cke_reset_all').hide();
       });
+
     }
   };
+
 
   //function wysiwyg_expand(e) {
   //  var parent;

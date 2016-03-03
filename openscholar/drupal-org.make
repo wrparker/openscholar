@@ -435,7 +435,6 @@ projects[web_widgets][version] = 1.0-alpha2
 projects[wysiwyg][subdir] = "contrib"
 projects[wysiwyg][version] = "2.x-dev"
 projects[wysiwyg][revision] = "9490393"
-projects[wysiwyg][patch][] = "http://drupal.org/files/wysiwyg-remove-breaks-1964806-2.patch"
 projects[wysiwyg][patch][] = "http://drupal.org/files/wysiwyg-table-format.patch"
 
 projects[wysiwyg_filter][subdir] = "contrib"
