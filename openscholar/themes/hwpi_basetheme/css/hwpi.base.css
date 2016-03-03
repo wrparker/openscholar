@@ -799,6 +799,9 @@ div.messages {
     margin: 0 90px 0;
     padding: 15px 0;
 }
+#modal-content div.messages {
+    margin: 0;
+}
 .messages h2 {
     font-size: 1.1em;
     margin: 0;
