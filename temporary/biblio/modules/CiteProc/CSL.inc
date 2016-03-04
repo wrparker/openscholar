@@ -664,6 +664,11 @@ class csl_name extends csl_format {
                 $text = $given . ' ' . $name['lastname'] ;
             }
           }
+
+          if ($name['auth_type'] == 2) {
+            $text .= ', Ed.';
+          }
+
           $name['name'] = $text;
         }
       }
