@@ -301,7 +301,7 @@ ul.primary {
 .front #content-column .block,.comment-wrapper {
     border-top: 6px solid #e1e1e1;
 }
-.block-boxes block-boxes-os_sv_list_box,.block-boxes-os_boxes_manual_list,.sidebar .block.section-nav,#content-column .block.section-nav {
+.block-boxes block-boxes-os_sv_list_box,.block-boxes-os_boxes_manual_list.styled,.sidebar .block.section-nav,#content-column .block.section-nav {
     border-top: none;
 }
 .front #content-panels .block,.sidebar .block {
@@ -377,12 +377,12 @@ ul.primary {
 .front #content-panels .block-boxes-os_boxes_tabs .block-content,.block-boxes-os_boxes_tabs .block-content {
     padding: 0;
 }
-.front #content-panels .block.block-boxes-os_boxes_manual_list {
+.front #content-panels .block.block-boxes-os_boxes_manual_list.styled {
     background-color: #252525;
     color: #FFF;
     padding: 0;
 }
-.front #content-panels .block.block-boxes-os_boxes_manual_list a {
+.front #content-panels .block.block-boxes-os_boxes_manual_list.styled a {
     color: #57ACFF;
 }
 .front #content-panels .block.block-boxes-os_boxes_manual_list.converted-bio {
@@ -392,7 +392,7 @@ ul.primary {
 .front #content-panels .block.block-boxes-os_boxes_manual_list.converted-bio a {
     color: #215990;
 }
-.front #content-panels .block.block-boxes-os_boxes_manual_list .block-title {
+.front #content-panels .block.block-boxes-os_boxes_manual_list.styled .block-title {
     border-bottom: none;
     margin-bottom: 0;
     color: #FFFFFF !important;
@@ -406,7 +406,7 @@ ul.primary {
     filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ac253a', endColorstr='#880f1c',GradientType=0 );
     padding: 8px 15px;
 }
-.front #content-panels .block.block-boxes-os_boxes_manual_list .block-content, .sidebar .block.block-boxes-os_boxes_manual_list .block-content {
+.front #content-panels .block.block-boxes-os_boxes_manual_list.styled .block-content, .sidebar .block.block-boxes-os_boxes_manual_list.styled .block-content {
     border-top: none;
 }
 #block-views-os-events-block-1 .view .date-nav-wrapper {
