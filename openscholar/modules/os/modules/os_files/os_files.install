@@ -832,3 +832,46 @@ function os_files_update_7020() {
   ctools_include('export');
   ctools_export_crud_delete('file_type', 'document');
 }
+
+/**
+ * Adds the Icon file type for *.ico files
+ */
+function os_files_update_7021() {
+  ctools_include('export');
+  $file_type = ctools_export_crud_load('file_type', 'icon');
+  ctools_export_crud_save('file_type', $file_type);
+  field_attach_create_bundle('file', 'icon'); // do this manually for reasons
+  ctools_export_crud_delete('file_type', 'image');
+
+  $count = db_update('file_managed')
+    ->condition('filemime', array(
+      'image/ico',
+      'application/ico',
+      'application/x-ico',
+      'image/vnd.microsoft.icon',
+    ))
+    ->fields(array(
+      'type' => 'icon'
+    ))
+    ->execute();
+
+  return t('Changed @n files to use the Icon bundle.');
+}
+
+/**
+ * Changes name of Description field to Image Caption for images.
+ */
+function os_files_update_7022() {
+  $instance = field_info_instance('file', 'os_file_description', 'image');
+  $instance['label'] = 'Image Caption';
+  field_update_instance($instance);
+  return t('Label for File Image Description field changed to Image Caption');
+}
+
+/**
+ * Adds .rar to Executable file type.
+ */
+function os_files_update_7023() {
+  ctools_include('export');
+  ctools_export_crud_delete('file_type', 'executable');
+}

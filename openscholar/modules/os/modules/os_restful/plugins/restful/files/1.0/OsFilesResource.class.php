@@ -136,6 +136,18 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
 
   protected $errors = array();
 
+  public static function controllersInfo() {
+    return array(
+      '\d\/image_style\/\w*' => array(
+        RestfulInterface::GET => 'getImageStyle',
+      ),
+      'filename\/[^\/]+$' => array(
+        RestfulInterface::GET => 'checkFilename',
+        RestfulInterface::HEAD => 'checkFilename'
+      )
+    ) + parent::controllersInfo();
+  }
+
   /**
    * Overrides RestfulEntityBase::publicFieldsInfo().
    */
@@ -195,6 +207,10 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
 
     $info['timestamp'] = array(
       'property' => 'timestamp',
+    );
+
+    $info['changed'] = array(
+      'callback' => array($this, 'getChanged'),
     );
 
     $info['description'] = array(
@@ -275,7 +291,7 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
    * We use this to prevent user from changing the filename
    */
   public function getSchema($wrapper) {
-    $uri = $wrapper->value()->uri;
+    $uri = str_replace('///', '//', $wrapper->value()->uri);  // band aid fix
     return parse_url($uri, PHP_URL_SCHEME);
   }
 
@@ -314,6 +330,15 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
    */
   public function getHtmlCode($wrapper) {
     return $this->getBundleProperty($wrapper, 'field_html_code');
+  }
+
+  /**
+   * Callback for file last changed timestamp
+   */
+  public function getChanged($wrapper) {
+    $file = $wrapper->value();
+
+    return $file->changed;
   }
 
   /**
@@ -382,6 +407,7 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
    * Filter files by vsite
    */
   protected function queryForListFilter(EntityFieldQuery $query) {
+    $query->propertyCondition('status', 1);
     if ($this->request['vsite']) {
       if ($vsite = vsite_get_vsite($this->request['vsite'])) {
         $query->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $this->request['vsite']);
@@ -413,14 +439,19 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     }
 
     $destination = 'public://';
+    // Public files are put inside of a files directory within the vsite folder
+    // This keeps user uploaded files seperate from other vsite resources.
+    $vsite_directory = '/files';
+    
     // do spaces/private file stuff here
     if (isset($this->request['private'])) {
       $destination = 'private://';
+      $vsite_directory = '';
     }
 
     if (isset($this->request['vsite'])) {
       $path = db_select('purl', 'p')->fields('p', array('value'))->condition('id', $this->request['vsite'])->execute()->fetchField();
-      $destination .= $path . '/files';
+      $destination .= $path . $vsite_directory;
     }
 
     $writable = file_prepare_directory($destination, FILE_MODIFY_PERMISSIONS | FILE_CREATE_DIRECTORY);
@@ -443,6 +474,9 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     }
     elseif (isset($_FILES['files']) && $_FILES['files']['errors']['upload']) {
       throw new RestfulUnprocessableEntityException('Error uploading new file to server.');
+    }
+    elseif ($errors = form_get_errors()) {
+      throw new RestfulUnprocessableEntityException($errors['upload']);
     }
     elseif (isset($this->request['embed']) && module_exists('media_internet')) {
 
@@ -507,7 +541,8 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
       ),
       'file_validate_size' => array(
         parse_size(file_upload_max_size())
-      )
+      ),
+      'os_files_upload_validate_image_dimensions' => array()
     );
 
     return $validators;
@@ -536,6 +571,16 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     // no other data is addeed
     if ($this->request['file']) {
       $oldFile = file_load($entity_id);
+      $validators = $this->getValidators();
+      preg_match('|\.([a-zA-Z0-3]*)$|', $oldFile->uri, $match);
+      if ($match[1]) {
+        unset($validators['file_validate_extensions']);
+        $validators['file_validate_extension_from_mimetype'] = array($match[1]);
+      }
+      if ($errors = file_validate($this->request['file'], $validators)) {
+        throw new RestfulUnprocessableEntityException(implode("\n", $errors));
+      };
+
       $this->request['file']->filename = $oldFile->filename;
       if ($file = file_move($this->request['file'], $oldFile->uri, FILE_EXISTS_REPLACE)) {
         if ($oldFile->{OG_AUDIENCE_FIELD}) {
@@ -545,7 +590,7 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
         return array($this->viewEntity($entity_id));
       }
       else {
-        throw new RestfulBadRequestException('Error moving file.');
+        throw new RestfulBadRequestException('Error moving file. Please contact your server administrator.');
       }
     }
 
@@ -668,7 +713,8 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     if ($this->request['filename']) {
       $file = file_load($wrapper->getIdentifier());
       $label = $wrapper->name->value();
-      $destination = dirname($file->uri) . '/' . $this->request['filename'];
+      $destination = drupal_dirname($file->uri) . '/' . $this->request['filename'];
+
       if ($file = file_move($file, $destination)) {
         $wrapper->set($file);
         $wrapper->name->set($label);
@@ -748,4 +794,99 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
 
     return FALSE;
   }
+
+  protected function checkFilename($filename) {
+    list (, $filename) = explode('/', $filename);
+    $dir = 'public://';
+    if (isset($this->request['private'])) {
+      $dir = 'private://';
+    }
+
+    if (isset($this->request['vsite'])) {
+      $vsite = db_select('purl', 'p')
+        ->fields('p', array('value'))
+        ->condition('provider', 'spaces_og')
+        ->condition('id', $this->request['vsite'])
+        ->execute()
+        ->fetchField();
+
+      if ($vsite) {
+        $dir .= $vsite . '/files/';
+      }
+    }
+
+    $new_filename = strtolower($filename);
+    $new_filename = preg_replace('|[^a-z0-9\-_\.]|', '_', $new_filename);
+    $new_filename = preg_replace(':__:', '_', $new_filename);
+    $new_filename = preg_replace('|_\.|', '.', $new_filename);
+
+    $fullname = $dir . $new_filename;
+    $counter = 0;
+    $collision = false;
+    while (file_exists($fullname)) {
+      $collision = true;
+      $pos = strrpos($new_filename, '.');
+      if ($pos !== FALSE) {
+        $name = substr($new_filename, 0, $pos);
+        $ext = substr($new_filename, $pos);
+      } else {
+        $name = $basename;
+        $ext = '';
+      }
+
+      $fullname = sprintf("%s%s_%02d%s", $dir, $name, ++$counter, $ext);
+    }
+
+    return array(
+      'collision' => $collision,
+      'invalidChars' => basename($new_filename) != $filename,
+      'expectedFileName' => basename($fullname)
+    );
+  }
+
+  /**
+   * Return the URL of the image style of a given file.
+   */
+  public function getImageStyle() {
+    $path = explode("/", $this->getPath());
+    $style_name = $path[2];
+
+    if (!in_array($style_name, array_keys(image_styles()))) {
+      throw new RestfulBadRequestException(format_string('There is no image style with the name @name', array('@name' => $style_name)));
+    }
+
+    $fid = $path[0];
+
+    if (!$file = file_load($fid)) {
+      throw new RestfulBadRequestException(format_string('There is no file with the id @id', array('@id' => $fid)));
+    }
+
+    if ($file->type != 'image') {
+      throw new RestfulBadRequestException(format_string('The file @name is not an image.', array('@name' => $file->filename)));
+    }
+
+    return array(
+      'url' => image_style_url($style_name, $file->uri),
+    );
+  }
+}
+
+/**
+ * Replaces the core file_validate_extensions function when the file in question
+ * has a temporary extension.
+ */
+function file_validate_extension_from_mimetype(stdClass $file, $extensions) {
+  include_once DRUPAL_ROOT . '/includes/file.mimetypes.inc';
+  $maps = file_mimetype_mapping();
+  $ext_arr = explode(' ', $extensions);
+  $index = array_search($file->filemime, $maps['mimetypes']);
+  $exts = array_keys($maps['extensions'], $index);
+  $passes = array_intersect($ext_arr, $exts);
+
+  $errors = array();
+  if (!count($passes)) {
+    $errors[] = t('Only files with the following extensions are allowed: %files-allowed.', array('%files-allowed' => $extensions));
+  }
+
+  return $errors;
 }

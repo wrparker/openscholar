@@ -7,6 +7,11 @@
        rootPath = Drupal.settings.paths.moduleRoot;
     })
     .run(['mbModal', function (mbModal) {
+      // Disable drag and drop behaviors on the window object, to prevent files from
+      angular.element(window).on('dragover drop', function(e) {
+        e = e || event;
+        e.preventDefault();
+      });
 
       // if the File object is not supported by this browser, fallback to the original media browser
       if (mbModal.requirementsMet()) {
@@ -38,12 +43,13 @@
         }
       }
     }])
-  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', 'EntityConfig', '$sce', '$upload', '$timeout', 'params', 'close',
-      function ($scope, $filter, $http, EntityService, config, $sce, $upload, $timeout, params, close) {
+  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', 'EntityConfig', '$sce', '$q', '$upload', '$timeout', 'FILEEDITOR_RESPONSES', 'params', 'close',
+      function ($scope, $filter, $http, EntityService, config, $sce, $q, $upload, $timeout, FER, params, close) {
 
     // Initialization
     var service = new EntityService('files', 'id'),
-      toEditForm = false;
+      toEditForm = false,
+      directInsert = true;
     $scope.files = [];
     $scope.numFiles = 0;
     $scope.templatePath = rootPath;
@@ -61,8 +67,12 @@
     $scope.activePanes.delete = true;
     $scope.loading = true;
     $scope.loadingMessage = '';
+    $scope.sortType = 'timestamp';
+    $scope.sortReverse = true;
 
-    $scope.availTypes = [
+    $scope.toInsert = [];
+
+    var allTypes = [
       {label: 'Image', value: 'image'},
       {label: 'Document', value: 'document'},
       {label: 'Video', value: 'video'},
@@ -70,6 +80,18 @@
       {label: 'Executable', value: 'executable'},
       {label: 'Audio', value: 'audio'}
     ];
+
+    var defaultFilteredTypes = params.types;
+    $scope.availTypes = [];
+    $scope.availFilter = [];
+    for (var j in defaultFilteredTypes) {
+      for (var k=0; k<allTypes.length; k++) {
+        if (defaultFilteredTypes[j] == allTypes[k].value) {
+          $scope.availTypes.push(allTypes[k]);
+          $scope.availFilter.push(allTypes[k].value);
+        }
+      }
+    }
 
     $scope.extensions = [];
     if (params.file_extensions) {
@@ -106,7 +128,7 @@
     }
 
     $scope.clearFilters = function () {
-      $scope.filteredTypes = [];
+      $scope.filteredTypes = defaultFilteredTypes;
       $scope.search = '';
     }
 
@@ -122,20 +144,40 @@
 
     // Watch for changes in file list
     $scope.$on('EntityService.files.add', function (event, file) {
-      $scope.files.push(file)
+      $scope.files.push(file);
     });
 
     $scope.$on('EntityService.files.update', function (event, file) {
+      var t = $scope.selected_file;
       for (var i=0; i < $scope.files.length; i++) {
         if ($scope.files[i].id == file.id) {
+          if ($scope.files[i].replaced) {
+            file.replaced = $scope.files[i].replaced;
+          }
+          if ($scope.files[i].new) {
+            file.new = $scope.files[i].new;
+          }
           $scope.files[i] = file;
           break;
         }
+      }
+
+      for (i=0; i<$scope.toInsert.length; i++) {
+        if ($scope.toInsert[i].id == file.id) {
+          $scope.toInsert[i] = file;
+        }
+      }
+
+      if ($scope.selected_file.id == file.id) {
+        $scope.selected_file = angular.copy(file);
       }
     });
 
     $scope.$on('EntityService.files.delete', function (event, id) {
       // Don't want to worry about what happens when you modify an array you're looping over
+      if ($scope.selected_file.id == id) {
+        $scope.selected_file = null;
+      }
       var deleteMe = false;
       for (var i=0; i<$scope.files.length; i++) {
         if ($scope.files[i].id == id) {
@@ -164,13 +206,13 @@
       });
 
 
-    $scope.changePanes = function (pane) {
+    $scope.changePanes = function (pane, result) {
       if ($scope.activePanes[pane]) {
         $scope.pane = pane;
         return true;
       }
       else {
-        close(true);
+        close(result != undefined ? result : true);
       }
     }
 
@@ -181,7 +223,7 @@
 
         var maxFilesize = params.max_filesize_raw || Drupal.settings.maximumFileSizeRaw;
         var size = maxFilesize > file.size,   // file is smaller than max
-          ext = file.name.slice(file.name.lastIndexOf('.')+1),
+          ext = file.name.slice(file.name.lastIndexOf('.')+1).toLowerCase(),
           extension = $scope.extensions.indexOf(ext) !== -1,    // extension is found
           id;
 
@@ -192,9 +234,7 @@
           addMessage(file.name + ' is not an accepted file type.');
         }
         // if file is image and params specify max dimensions
-        if (file.type.indexOf('image/') !== -1 && params.min_dimensions) {
-          // since we can't force this function to wait, we have to use an onload
-          // and check this before uploading
+        if (file.type.indexOf('image/') !== -1) {
         }
 
         return size && extension;
@@ -221,7 +261,49 @@
       }
       var toBeUploaded = [];
       $scope.dupes = [];
-      for (var i=0; i<$files.length; i++) {
+      $scope.toInsert = [];
+      var promises = [];
+      $scope.checkingFilenames = true;
+      for (var i = 0; i < $files.length; i++) {
+        var url = Drupal.settings.paths.api + '/files/filename/' + $files[i].name;
+
+        if (Drupal.settings.spaces) {
+          url += '?vsite=' + Drupal.settings.spaces.id;
+        }
+        var config = {
+          originalFile: $files[i]
+        };
+        promises.push($http.get(url, config).then(function (response) {
+            var file = response.config.originalFile;
+            var data = response.data.data;
+            file.filename = file.name;
+            if (data.collision) {
+              file.newName = data.expectedFileName;
+              $scope.dupes.push(file);
+            }
+            else {
+              if (data.invalidChars) {
+                addMessage("This file was renamed from \"" + file.name + "\" due to having invalid characters in its name.")
+              }
+              toBeUploaded.push(file);
+            }
+          },
+          function (errorResponse) {
+            console.log(errorResponse);
+          }));
+      }
+
+      var promise = $q.all(promises).then(function () {
+          $scope.checkingFilenames = false;
+          $scope.upload(toBeUploaded);
+        },
+        function () {
+          $scope.checkingFilenames = false;
+          console.log('Error happened with all promises');
+        })
+    }
+
+/*
         var similar = [],
             basename = $files[i].name.replace(/\.[a-zA-Z0-9]*$/, ''),   // remove extension from filename
             extension = $files[i].name.replace(basename, ''),           // remove filename from filename to get extension
@@ -279,7 +361,7 @@
       }
 
       $scope.upload(toBeUploaded);
-    }
+    }*/
 
     // renames the file before uploading
     $scope.rename = function ($index, $last) {
@@ -358,8 +440,16 @@
               $scope.setSelection(firstId);
               $scope.changePanes('edit');
             }
+            else if (typeof $scope.messages[$scope.messages.next-1] != 'undefined') {
+              // do nothing. This usually means there was an error during upload.
+            }
             else {
-              $scope.changePanes('library');
+              if (directInsert) {
+                $scope.insert();
+              }
+              else {
+                $scope.changePanes('library');
+              }
             }
           }
         }
@@ -404,10 +494,11 @@
               e.data[i].new = true;
               $scope.files.push(e.data[i]);
             }
+            $scope.toInsert.push(e.data[i]);
           }
           uploadNext(e.data[0].id);
         }).error(function (e) {
-          addMessage('Unable to upload file. Contact site administrator.');
+          addMessage(e.title);
           uploadNext();
         });
       }
@@ -423,11 +514,22 @@
       }
     })();
 
+    function getKeyForFile(fid) {
+      for (var i=0; i<$scope.files.length; i++) {
+        if ($scope.files[i].id == fid) {
+          return i;
+        }
+      }
+      return FALSE;
+    }
 
     // selected file
     $scope.setSelection = function (fid) {
-      $scope.selection = fid;
-      $scope.selected_file = angular.copy(service.get(fid));
+      var key = getKeyForFile(fid);
+      if (key !== false) {
+        $scope.selection = fid;
+        $scope.selected_file = $scope.files[key];
+      }
     };
 
     $scope.deleteConfirmed = function() {
@@ -454,6 +556,7 @@
         if (e.data.length) {
           $scope.embed = '';
           $scope.setSelection(e.data[0].id);
+          service.register(e.data[0]);
 
           $scope.changePanes('edit')
         }
@@ -467,7 +570,7 @@
     }
 
     $scope.closeFileEdit = function (result) {
-      if (result == 'canceled' && $scope.selected_file.new) {
+      if (result == FER.CANCELED && $scope.selected_file.new) {
         service.delete($scope.selected_file);
         for (var j = 0; j < $scope.files.length; j++) {
           if ($scope.files[j].id == $scope.selected_file.id) {
@@ -476,13 +579,30 @@
         }
         $scope.selected_file = null;
       }
-      $scope.changePanes('library');
+      else if ((result == FER.NO_CHANGES || result == FER.SAVED) && ($scope.selected_file.new || $scope.selected_file.replaced)) {
+        if (directInsert) {
+          $scope.insert();
+        }
+        else {
+          $scope.changePanes('library', result);
+        }
+        return;
+      }
+      $scope.changePanes('library', result);
     }
 
     $scope.insert = function () {
       var results = [];
-      $scope.selected_file.fid = $scope.selected_file.id; // hack to prevent rewriting a lot of Media's code.
-      results.push($scope.selected_file);
+      if ($scope.toInsert.length) {
+        for (var i = 0; i < $scope.toInsert.length; i++) {
+          $scope.toInsert[i].fid = $scope.toInsert[i].id;
+          results.push($scope.toInsert[i]);
+        }
+      }
+      else {
+        $scope.selected_file.fid = $scope.selected_file.id; // hack to prevent rewriting a lot of Media's code.
+        results.push($scope.selected_file);
+      }
 
       close(results);
     }
@@ -513,6 +633,7 @@
     function link(scope, elem, attr, contr) {
       elem.bind('click', function (event) {
         event.preventDefault();
+        event.stopPropagation();
         // get stuff from the element we clicked on and Drupal.settings
         var elem = event.currentTarget,
           params = mbModal.defaultParams(),

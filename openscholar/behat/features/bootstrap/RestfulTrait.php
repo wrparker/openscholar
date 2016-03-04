@@ -58,14 +58,14 @@ trait RestfulTrait {
    *
    * Holds the access token for the user.
    */
-  private $accessToken = [];
+  private $accessToken = array();
 
   /**
    * @var array
    *
    * Generic metadata from tests.
    */
-  private $meta = [];
+  private $meta = array();
 
   /**
    * @var array
@@ -84,7 +84,7 @@ trait RestfulTrait {
    *
    * Results from a JSON request.
    */
-  private $results = [];
+  private $results = array();
 
   /**
    * Alias for Guzzle client.
@@ -173,7 +173,7 @@ trait RestfulTrait {
       }
     }
 
-    $return = [];
+    $return = array();
 
     foreach (array_slice($table->getRows(), 1) as $tbody) {
       $return[] = array_combine($rows[0], $tbody);

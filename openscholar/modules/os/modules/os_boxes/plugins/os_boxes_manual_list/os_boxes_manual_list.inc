@@ -17,62 +17,83 @@ class os_boxes_manual_list extends os_boxes_default {
   }
 
   public function options_form(&$form_state) {
+    // Will prevent fatal error and the FAPI from failing.
+    include_once (drupal_get_path('module', 'vsite') . '/includes/nodeautocomplete.inc');
+    $form_state['build_info']['files'][] = drupal_get_path('module', 'vsite') . '/includes/nodeautocomplete.inc';
     $form = parent::options_form($form_state);
 
-    $form['#attached']['js'] = array(
-      drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_manual_list/os_boxes_manual_list.js'
-    );
+    $form['#attached']['js'][] = drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_manual_list/os_boxes_manual_list.js';
 
-    include_once (drupal_get_path('module', 'vsite') . '/includes/nodeautocomplete.inc');
-    $form['add'] = array(
+    $form['search'] = array(
       '#type' => 'fieldset',
       '#title' => t('Add New Post'),
-      'node_to_add' => vsite_node_autocomplete_element() + array('#field_suffix' => '<input type="button" class="add_new" value="Add" />'),
+      'node_to_add' => vsite_node_autocomplete_element(),
+      'add' => array(
+        '#type' => 'button',
+        '#value' => t('Add post'),
+        '#href' => '',
+        '#add' => TRUE,
+        '#ajax' => array(
+          'callback' => 'os_boxes_manual_add',
+          'wrapper' => 'nodes',
+        ),
+      ),
     );
 
-    // Build a normal form.
+    // Keep which nodes removed.
+    $form_state['storage']['nodes'] = isset($form_state['storage']['nodes']) ? $form_state['storage']['nodes'] : 0;
+
     $form['nodes'] = array(
       '#type' => 'markup',
       '#tree' => TRUE,
+      '#prefix' => '<div id="nodes">',
+      '#suffix' => '</div>',
       '#pre_render' => array('os_boxes_manual_list_table'),
     );
 
-    $nodes = &$form['nodes'];
-    usort($this->options['nodes'], 'element_sort');
+    if (!empty($form_state['triggering_element']['#add'])) {
 
-    // Blank element for copying purposes.
-    $this->options['nodes']['blank'] = array('nid' => 0, 'title' => '__blank__', 'weight' => 2000000);
-    foreach ($this->options['nodes'] as $k => $v) {
-      $deleted = '';
-      if (!($node = node_load($v['nid']))) {
-        $deleted = ' &lt;Deleted! Please remove!&gt;';
+      if (empty($form_state['values']['node_to_add'])) {
+        form_set_error('', t('Please choose a node to add.'));
       }
-      $n = array(
-        '#weight' => $v['weight'],
-        'nid' => array(
-          '#type' => 'hidden',
-          '#default_value' => $v['nid'],
-        ),
-        'text' => array(
-          '#type' => 'markup',
-          '#markup' => '<span>' . $v['title'] . $deleted . '</span> <a href="#" class="remove" title="Remove Post">Remove</a>',
-        ),
-        'title' => array(
-          '#type' => 'hidden',
-          '#default_value' => $v['title'],
-        ),
-        'weight' => array(
-          '#type' => 'textfield',
-          '#default_value' => $v['weight'],
-          '#size' => 3,
-          '#attributes' => array(
-            'class' => (string)$k!='blank'?array('field-weight'):array(),
-          )
-        ),
-      );
-      $nodes[$k] = $n;
+      else {
+        // Collecting all the weight so we could get the maximum and place the
+        // new added node to the bottom.
+        $weights = array();
+        foreach ($this->options['nodes'] as $node) {
+          $weights[] = $node['weight'];
+        }
+
+        // Get the node.
+        $explode = explode('[', $form_state['values']['node_to_add']);
+        $nid = intval(end($explode));
+        $node = node_load($nid);
+        // The node is added again, remove from the list of removed nodes.
+        unset($form_state['storage']['removed'][$nid]);
+        $this->options['nodes'][$nid] = array('title' => $node->title, 'nid' => $node->nid, 'weight' => max($weights) + 1);
+      }
     }
 
+    // Check which node was removed.
+    $form_state['storage']['removed'] = empty($form_state['storage']['removed']) ? array() : $form_state['storage']['removed'];
+
+    if (!empty($form_state['triggering_element']['#remove'])) {
+      $form_state['storage']['removed'][$form_state['triggering_element']['#remove']] = $form_state['triggering_element']['#remove'];
+    }
+
+    $nodes = &$form['nodes'];
+
+    $delta = 0;
+    foreach ($this->options['nodes'] as &$node) {
+      if (in_array($node['nid'], $form_state['storage']['removed'])) {
+        // Don't add the node to the list.
+        continue;
+      }
+      $nodes[$node['nid']] = $this->addNode($node, $delta);
+      $delta++;
+    }
+
+    // Blank element for copying purposes.
     $form['style'] = array(
       '#type' => 'select',
       '#title' => t('Display Style'),
@@ -144,14 +165,16 @@ class os_boxes_manual_list extends os_boxes_default {
           }
           elseif ($this->options['style'] == 'full') {
             $node = node_load($n['nid']);
-            $links[$n['weight']] = render(node_view($node, 'full'));
+            $rendered_node = node_view($node, 'full');
+            if (empty($rendered_node['#contextual_links'])) {
+              $rendered_node['#contextual_links']['node'] = array('node', array($n['nid']));
+            }            
+            $links[$n['weight']] = render($rendered_node);
           }
           else {
-            $l = array(
-              'href' => 'node/' . $n['nid'],
-              'title' => $n['title'],
-            );
-            $links[$n['weight']] = $l;
+            $l = array('#node' => $node, '#theme' => 'node', '#view_mode' => 'title', '#children' => NULL);
+            $l['#contextual_links']['node'] = array('node', array($n['nid']));
+            $links[$n['weight']] = render($l);
           }
         }
       }
@@ -163,7 +186,7 @@ class os_boxes_manual_list extends os_boxes_default {
         $block['content'] = theme('item_list', array('items' => $links, 'attributes' => array('class' => array('featured-links'))));
       }
       else {
-        $block['content'] = theme('links', array('links' => $links, 'attributes' => array('class' => array('featured-links'))));
+        $block['content'] = theme('item_list', array('items' => $links, 'attributes' => array('class' => array('featured-links title-only'))));
       }
 
       if (!$random) {
@@ -172,6 +195,73 @@ class os_boxes_manual_list extends os_boxes_default {
     }
 
     return $block;
+  }
+
+  /**
+   * Adding a single node.
+   *
+   * @param $node
+   *   The node array.
+   * @param $delta
+   *   The delta of the node.
+   *
+   * @return array
+   *   A new table row.
+   */
+  private function addNode($node, $delta) {
+    return array(
+      '#weight' => $node['weight'],
+      'nid' => array(
+        '#type' => 'hidden',
+        '#default_value' => $node['nid'],
+      ),
+      'text' => array(
+        '#type' => 'markup',
+        '#markup' => $node['title'],
+      ),
+      'title' => array(
+        '#type' => 'hidden',
+        '#default_value' => $node['title'],
+      ),
+      'remove' => array(
+        '#type' => 'button',
+        '#name' => 'remove_' . $node['nid'],
+        '#value' => t('Remove'),
+        '#remove' => $node['nid'],
+        '#ajax' => array(
+          'callback' => 'os_boxes_manual_add',
+          'wrapper' => 'nodes',
+        ),
+      ),
+      'weight' => array(
+        '#type' => 'textfield',
+        '#default_value' => $node['weight'],
+        '#size' => 3,
+        '#attributes' => array(
+          'class' => (string)$delta != 'blank' ? array('field-weight') : array(),
+        ),
+      ),
+    );
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function options_submit($form, $form_state) {
+    // When assigning the first element as the last element and then adding
+    // another without the changing the order the weight of the nodes get messy.
+    // The loop will verify that nodes won't have the same weight.
+    $weights = array();
+    foreach ($this->options['nodes'] as &$node) {
+
+      if (in_array($node['weight'], $weights)) {
+        $node['weight'] = max($weights) + 1;
+      }
+
+      $weights[] = $node['weight'];
+    }
+
+    parent::options_submit($form, $form_state);
   }
 }
 
@@ -182,8 +272,9 @@ function os_boxes_manual_list_table($element) {
   foreach (element_children($element) as $c) {
     $rows[] = array(
       'data' => array(
-        drupal_render($element[$c]['nid']).drupal_render($element[$c]['text']).drupal_render($element[$c]['title']),
+        drupal_render($element[$c]['nid']) . drupal_render($element[$c]['text']) . drupal_render($element[$c]['title']),
         drupal_render($element[$c]['weight']),
+        drupal_render($element[$c]['remove']),
       ),
       'class' => (string)$c!='blank'?array('draggable'):array(),
     );
@@ -192,7 +283,6 @@ function os_boxes_manual_list_table($element) {
   $element['#attributes'] = array('id' => 'manual-nodes-list');
   $element['#rows'] = $rows;
   $element['#sticky'] = false;
-  $element['#empty'] = true;
 
   $element['#theme'] = 'table';
   drupal_add_tabledrag('manual-nodes-list', 'order', 'sibling', 'field-weight');
@@ -220,7 +310,7 @@ function os_boxes_manual_list_add_new_fields($element, &$form_state, &$form) {
   unset($form_state['values']['nodes']['blank']);
 
   // Remove nids that aren't in the post.
-  if (is_array($form_state['values'])) {
+  if (!empty($form_state['values']['nodes'])) {
     foreach ($form_state['values']['nodes'] as $k => $v) {
       if (!isset($form_state['input']['nodes'][$k]) || !isset($form_state['input']['nodes'][$k]['nid'])) {
         unset($form_state['values']['nodes'][$k]);
@@ -229,4 +319,11 @@ function os_boxes_manual_list_add_new_fields($element, &$form_state, &$form) {
   }
 
   return $element;
+}
+
+/**
+ * Ajax form callback.
+ */
+function os_boxes_manual_add($form, $form_state) {
+  return $form['options']['nodes'];
 }

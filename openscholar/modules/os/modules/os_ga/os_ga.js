@@ -11,13 +11,13 @@ $(document).ready(function() {
     $(event.target).closest("a,area").each(function() {
       // Fetches settings.
       var os_ga = Drupal.settings.os_ga;
-      // Checks for download links.
-      var isDownload = new RegExp("\\.(" + os_ga.trackDownloadExtensions + ")$", "i");
+      // Checks for download links (including query string)
+      var isDownload = new RegExp("\\.(" + os_ga.trackDownloadExtensions + ")(\\?.*)?$", "i");
 
       // Is the clicked URL internal?
       if (isInternal.test(this.href)) {
         // Is download tracking activated and the file extension configured for
-		// download tracking?
+    // download tracking?
         if (os_ga.trackDownload && isDownload.test(this.href)) {
           // Download link clicked.
           var extension = isDownload.exec(this.href);
@@ -30,14 +30,14 @@ $(document).ready(function() {
           _gaq.push(["_trackEvent", "Mails", "Click", this.href.substring(7)]);
         }
         else if (os_ga.trackOutbound && this.href.match(/^\w+:\/\//i)) {
-	      // External link clicked.
-	      _gaq.push(["_trackEvent", "Outbound links", "Click", this.href]);
+        // External link clicked.
+        _gaq.push(["_trackEvent", "Outbound links", "Click", this.href]);
         }
       }
       // Is this link in a main menu?
       if (os_ga.trackNavigation) {
-    	if ($(this).closest('#block-os-secondary-menu').length) {
-    	  var navType = "Secondary Nav";
+      if ($(this).closest('#block-os-secondary-menu').length) {
+        var navType = "Secondary Nav";
         }
         if ($(this).closest('#block-os-primary-menu').length) {
           var navType = "Primary Nav";

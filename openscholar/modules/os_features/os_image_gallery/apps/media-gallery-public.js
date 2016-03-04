@@ -12,7 +12,8 @@
       angular.element(elem).attr({
         href: '#',
         'file-editor-modal': '',
-        fid: urlBits[1]
+        fid: urlBits[1],
+        'on-close': 'close(result, '+urlBits[1]+')'
       });
     }
 
@@ -40,5 +41,67 @@
 
       jQuery('a.media-gallery-add.launcher.media-gallery-add-processed').bind('click', Drupal.media_gallery.open_browser);
     }
-  });
+  })
+  .directive('mediaGalleryItem', ['FILEEDITOR_RESPONSES', 'EntityService', function (FER, EntityService) {
+      return {
+        restrict: 'AE',
+        scope: true,
+        link: function (scope, elem, attrs, ctrls, transclude) {
+          var fid = 0;
+          angular.forEach(elem.find('a'), function (el) {
+            var f = angular.element(el).attr('fid');
+            if (f) {
+              fid = f;
+            }
+          });
+
+          scope.$on('EntityService.files.update', function (event, entity) {
+            if (entity.id == fid) {
+              var c = elem,
+                  children = c.children();
+
+              for (var i=0; i<children.length; i++) {
+                if (children[i].nodeName == 'A') {
+                  var spans = angular.element(children[i]).find('span');
+                  for (var j=0; j<spans.length; j++) {
+                    if (spans[j].classList.contains('media-title')) {
+                      spans[j].innerHTML = entity.name;
+                    }
+                  }
+                }
+                else if (children[i].classList.contains('media-gallery-item')) {
+                  var imgs = angular.element(children[i]).find('img');
+                  for (var j=0; j<imgs.length; j++) {
+                    if (imgs[j].classList.contains('image-style-media-gallery-thumbnail')) {
+                      //imgs[j].src = imgs[j].src.replace(/files\/([^?\/]*)\?/, 'files/'+entity.filename+'?');
+                    }
+                  }
+                }
+              }
+            }
+          });
+
+          scope.close = function (result, fid) {
+            if (result == FER.REPLACED || result == FER.SAVED) {
+
+              var imgs = elem.find('img'),
+                img;
+              for (var i=0; i< imgs.length; i++) {
+                var el = imgs[i];
+                if (el.classList.contains('image-style-media-gallery-thumbnail')) {
+                  img = el;
+                  break;
+                }
+              };
+
+              var service = new EntityService('files', 'id');
+
+              service.fetchImageStyle(fid, 'media_gallery_thumbnail').then(function (response) {
+                img.src = response.data.data.url;
+              });
+            }
+          }
+        }
+      }
+  }]);
 })();

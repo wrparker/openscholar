@@ -655,7 +655,7 @@ function os_profiles_field_default_field_instances() {
   $field_instances['node-person-field_person_photo'] = array(
     'bundle' => 'person',
     'deleted' => 0,
-    'description' => 'Image should not be smaller than 220 x 220.',
+    'description' => t('Image should not be smaller than 220 x 220. <a href="@link">Learn about the two crop ratios used in this feature.</a>', array('@link' => 'http://docs.openscholar.harvard.edu/people-profiles')),
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -1198,7 +1198,7 @@ function os_profiles_field_default_field_instances() {
       'enable_tokens' => 1,
       'rel_remove' => 'default',
       'title' => 'optional',
-      'title_maxlength' => 128,
+      'title_maxlength' => 75,
       'title_value' => '',
       'url' => 0,
       'user_register_form' => FALSE,

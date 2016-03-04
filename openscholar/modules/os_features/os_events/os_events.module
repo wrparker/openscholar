@@ -86,6 +86,36 @@ function os_events_menu() {
 }
 
 /**
+ * Implements hook_entity_view_alter().
+ */
+function os_events_entity_view_alter(&$build, $type) {
+  // Removing extra fields from event registration page in full view mode.
+  if ($type == 'registration' && $build['#view_mode'] == 'full' && $build['#bundle'] == 'event_signup_simple') {
+    $param = drupal_get_query_parameters();
+    $node = node_load($build['#entity']->entity_id);
+
+    // Overriding Event entity link display.
+    $build['host_entity_link']['#label'] = t('Event');
+    $build['host_entity_link']['#items'][0]['#markup'] = isset($build['host_entity_link']['#items'][0]['#markup']) ? l($node->title, 'node/' . $build['#entity']->entity_id, array('query' => $param)) : NULL;
+    $build['host_entity_link']['#weight'] = -20;
+    $entity_link_tmp = $build['host_entity_link'];
+    unset($build['host_entity_link']);
+    $build['entity_link'] = $entity_link_tmp;
+
+    // Overriding Created date display.
+    $build['created']['#weight'] = -9;
+    $created_tmp = $build['created'];
+    unset($build['created']);
+    $build['created'] = $created_tmp;
+
+    // Reset additional fields display.
+    unset($build['spaces']);
+    unset($build['author']);
+    unset($build['state']);
+  }
+}
+
+/**
  * Page callback; Exports event's registrants.
  */
 function os_events_export_to_csv($node, $delta = FALSE) {
@@ -379,6 +409,9 @@ function os_events_process_node(&$variables) {
       // In full view mode show a link to a modal.
       if ($variables['view_mode'] == 'full' && os_events_register_show_register_link($variables['node'], $date)) {
         $register = os_events_generate_modal_register_link($variables['node']->nid, $delta, array());
+      } elseif ($variables['view_mode'] == 'full' && !os_events_register_show_register_link($variables['node'], $date)) {
+        $result = os_events_registration_repeating_entity_settings('node', $variables['node']->nid, $date);
+        $register = REQUEST_TIME >= strtotime($result['open']) ? '<span class="register-event-full">' . t('Registration Closed') . '</span>' : '';
       }
       // In teaser view mode link to the event page.
       elseif ($variables['view_mode'] == 'teaser') {
@@ -389,8 +422,14 @@ function os_events_process_node(&$variables) {
         $register = '<div class="register-link-teaser">' . l(t('Registration is required'), 'node/' . $variables['node']->nid, $options) . '</div>';
       }
     }
-    elseif ($registrations_type) {
-      $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
+    elseif ($registrations_type && $variables['view_mode'] == 'full' ) {
+      $event_start_date = $variables['node']->field_date[LANGUAGE_NONE][0]['value'];
+      // If the event is a past event
+      if(!empty($event_start_date) && REQUEST_TIME > strtotime($event_start_date)) {
+        $register = '<span class="register-event-full">' . t('Registration Closed') . '</span>';
+      } else {
+        $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
+      }
     }
 
     // Change the date markup if this is a recurring event.
@@ -422,6 +461,28 @@ function os_events_process_node(&$variables) {
 
   // In case of a "teaser" view mode, put the link before the date.
   if ($variables['view_mode'] == 'teaser') {
+    $registrations_type = !empty($variables['node']->field_event_registration[LANGUAGE_NONE][0]['registration_type']);
+    // If the event is allowed for signup and allowed to show to the users.
+    $show_register_link = os_events_register_show_register_link($variables['node'], $date);
+    if ($registrations_type && $show_register_link) {
+      // Checking if the event has not reached its max registration limit.
+      if (os_events_event_registration_reach_capacity($variables['node'], $date)) {
+        $register = '<div class="register-link-teaser">' . t('Registration is required') . '</div>';
+      } else {
+        $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
+      }
+    } elseif ($registrations_type && !$show_register_link) {
+        $event_start_date = $variables['node']->field_date[LANGUAGE_NONE][0]['value'];
+        // If the event is a past event        
+        if (!empty($event_start_date) && REQUEST_TIME > strtotime($event_start_date)) {
+          $register = '<span class="register-event-full">' . t('Registration Closed') . '</span>';
+        } elseif (os_events_event_registration_reach_capacity($variables['node'], $date)) {
+          // Checking if the event has not reached its max registration limit.
+          $register = '<span class="register-event-full">' . t('Registration Closed') . '</span>';
+        } else {
+          $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
+        }
+    }
     $variables['content']['field_date'][0]['#markup'] = $register . $variables['content']['field_date'][0]['#markup'];
   }
 
@@ -525,6 +586,8 @@ function os_events_generate_modal_register_link($nid, $delta = FALSE, $modal_set
         foreach ($wrapper->field_date as $d => $field_date) {
           $date = $field_date->value();
           if($d == $delta) continue;
+          // Repetitive events 'choose another date' dropdown options should have only future dates.
+          if (REQUEST_TIME >= strtotime($date['value'].' UTC')) continue;
           $options_cache[$nid][url($_GET['q'],array('query' => array('delta' => $d)))] = date('l, F j, Y', strtotime($date['value'].' UTC'));
         }
       }
@@ -645,6 +708,12 @@ function os_events_modal_validate($form, &$form_state) {
 
   if (!empty($form_state['values']['anon_mail'])) {
 
+    // Checking if email address has a valid format.
+    $form_state['values']['anon_mail'] = trim($form_state['values']['anon_mail']);
+    if (!valid_email_address($form_state['values']['anon_mail'])) {
+      form_set_error('anon_mail', t('The email address is invalid.'));
+    }
+
     $date = '';
     if (!empty($form_state['values']['field_repeating_event_date']['und'][0]['value'])) {
       $date = $form_state['values']['field_repeating_event_date']['und'][0]['value'];
@@ -652,6 +721,10 @@ function os_events_modal_validate($form, &$form_state) {
 
     $email_query = new EntityFieldQuery();
     $email_query->entityCondition('entity_type', 'registration')->propertyCondition('anon_mail', $form_state['values']['anon_mail']);
+
+    if (isset($form['#entity']->registration_id)) {
+      $email_query->propertyCondition('registration_id', $form['#entity']->registration_id, '<>');
+    }
 
     if ($date) {
       $email_query->fieldCondition('field_repeating_event_date', 'value', $date);
@@ -793,7 +866,7 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
   $handler = &$view->display_handler;
 
   // Adding the JS for side by side events display for the week view mode.
-  if ($_GET['type'] == 'week') {
+  if (isset($_GET['type']) && $_GET['type'] == 'week') {
     drupal_add_js(drupal_get_path('module', 'os_events') . '/js/os_events.js');
   }
 
@@ -801,12 +874,16 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
     // Set the default date of the mini calendar to the date the user watching.
     $format = array('year' => 'Y', 'month' => 'Y-m', 'week' => 'Y-\W', 'day' => 'Y-m-d');
 
-    if ($_GET['type'] == 'year') {
+    if (isset($_GET['type']) && $_GET['type'] == 'year') {
       // The user watch a year, return him the current time.
       $time = time();
     }
     else {
-      $time = strtotime($_GET[$_GET['type']]);
+        if (isset($_GET['type']) && isset($_GET[$_GET['type']])) {
+          $time = strtotime($_GET[$_GET['type']]);
+        } else {
+          $time = time();
+        }
     }
 
     $view->args[0] = date($format['month'], $time);
@@ -858,8 +935,8 @@ function os_events_preprocess_date_views_pager(&$variables) {
   // Get information about dates.
   $min_date = $date_info->min_date;
 
-  $prev_date = clone($min_date);
-  $next_date = clone($min_date);
+  $prev_date = clone $min_date;
+  $next_date = clone $min_date;
 
   $prev_date->modify('-1 ' . $granularity);
   $next_date->modify('+1 ' . $granularity);
@@ -896,7 +973,7 @@ function os_events_views_query_alter($view, views_plugin_query_default $query) {
     return;
   }
 
-	// is this a view a feed view?
+  // is this a view a feed view?
   if ($view->current_display == 'feed_1' || $view->current_display == 'feed_2') {
     // Alter the exported events according the current path.
     $menu = menu_get_item();
@@ -932,8 +1009,17 @@ function os_events_views_query_alter($view, views_plugin_query_default $query) {
  * Change the url of the prev and next links.
  */
 function os_events_url_outbound_alter(&$path, &$options, $original_path) {
+
+  // Overriding View/Edit/Delete links in Event sign up registration listing.
+  if (preg_match('|^registration/([0-9]*)(/.*)?|', $path, $matches)) {
+    if (isset($matches[2]) && in_array($matches[2], array('/edit', '/delete'))) {
+      $options['query'] = array_merge(drupal_get_query_parameters(), drupal_get_destination());
+    } else {
+      $options['query'] = drupal_get_query_parameters();
+    }
+  }
+
   $view_modes = array(
-    'calendar/week',
     'calendar/day',
     'calendar/year',
   );
@@ -946,13 +1032,7 @@ function os_events_url_outbound_alter(&$path, &$options, $original_path) {
   $data = explode('/', $original_path);
   $path = $data[0];
 
-  // The format for week, "Y-\WW", is interpreted by date functions like so:
-  // The string consists of three parts delimited by dashes "-",
-  // The first part "Y" stands for the year in 4 digits,
-  // The second part "\WW" is actually "\W" and "W", meaning the first W is
-  // escaped and would be written as "W" and the second W is not escaped and
-  // thus stands for the number of the week,
-  $format = array('year' => 'Y', 'month' => 'Y-m', 'week' => 'Y-\WW', 'day' => 'Y-m-d');
+  $format = array('year' => 'Y', 'month' => 'Y-m', 'day' => 'Y-m-d');
   $date_format = new DateTime;
 
   if (isset($_GET[$data[1]])) {
@@ -1126,12 +1206,13 @@ function os_events_form_registration_entity_settings_form_alter(&$form, $form_st
   );
 
   // Remove the template, reminder date is no longer inside a container.
+  $delta = empty($_GET['delta']) ? 0 : $_GET['delta'];
   $form['reminder']['reminder_settings']['reminder_template'] = $form['reminder']['reminder_settings']['reminder_template'] + array(
     '#access' => FALSE,
     '#value'  => $reminder_on ? variable_get('os_reminder_template', "
-Hello[registration:attendee_name],
+Hello,
 
-You request to send a reminder for the event <a href='[node:url]'>[node:title]</a>.") : '',
+This is only a friendly reminder that you registered the event <a href='[node:url]?delta={$delta}'>[node:title]</a>.") : '',
   );
   $form['reminder']['reminder_settings']['token_tree']['#access'] = FALSE;
   $form['reminder']['reminder_settings']['#type'] = 'container';
@@ -1184,6 +1265,7 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
   // submitted in the "from" field. This is done since the registration module
   // needs the email value to be in the "settings" element which is given a
   // "#access = FALSE".
+  $form['#validate'][0] = 'os_registration_entity_settings_form_validate';
   $form['#validate'][] = '_os_events_update_from_address';
   $form['#validate'][] = 'os_events_validate_end_date_after_start';
   $default_submit = array_search('registration_entity_settings_form_submit',$form['#submit']);
@@ -1193,6 +1275,68 @@ You request to send a reminder for the event <a href='[node:url]'>[node:title]</
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
 
   $form['#after_build'][] = 'os_events_registration_entity_after_build';
+}
+
+/**
+ * Custom Submit handler for registration_entity_settings_form().
+ *
+ * @array $form
+ * @array $form_state
+ */
+function os_registration_entity_settings_form_validate($form, &$form_state) {
+  // Ensure capacity is a non-negative integer.
+  $capacity = $form_state['values']['capacity'];
+  if (!is_numeric($capacity) || ((int) $capacity != $capacity) || ($capacity < 0)) {
+    form_set_error('capacity', t('"Capacity" must be a positive integer or 0 for unlimited.'));
+  }
+
+  // Ensure slot limit is a non-negative integer.
+  $slot_limit = $form_state['values']['settings']['maximum_spaces'];
+  if (!is_numeric($slot_limit) || ((int) $slot_limit != $slot_limit) || ($slot_limit < 0)) {
+    form_set_error('maximum_spaces', t('"Spaces allowed" must be a positive integer or 0 for unlimited.'));
+  }
+
+  // Validate from address:
+  if (!valid_email_address($form_state['values']['settings']['from_address'])) {
+    form_set_error('settings][from_address', t('From email address is invalid.'));
+  }
+
+  // Validate open date:
+  if (!empty($form_state['values']['scheduling']['open']) && is_string($form_state['values']['scheduling']['open']) && strtotime($form_state['values']['scheduling']['open']) === FALSE) {
+    form_set_error('scheduling][open', t('Date is invalid.'));
+  }
+
+  // Validate close date:
+  if (!empty($form_state['values']['scheduling']['close']) && is_string($form_state['values']['scheduling']['close']) && strtotime($form_state['values']['scheduling']['close']) === FALSE) {
+    form_set_error('scheduling][close', t('Date is invalid.'));
+  }
+
+  // If sending a reminder, ensure date and template are set.
+  $reminder = $form_state['values']['reminder'];
+  if ($reminder['send_reminder'] && (empty($reminder['reminder_settings']['reminder_date']) || empty($reminder['reminder_settings']['reminder_template']))) {
+    form_set_error('reminder][send_reminder', t('If sending a reminder, provide a date and template.'));
+  }
+
+  // If reminder date or template are set, ensure we're sending a reminder.
+  if (empty($reminder['send_reminder'])) {
+    if (!empty($reminder['reminder_settings']['reminder_template'])) {
+      form_set_error('reminder][reminder_settings][reminder_template', t('You have provided a reminder template, but not opted to send a reminder. Either check the box to send a reminder, or do not provide a reminder template.'));
+    }
+  }
+
+  // Validate reminder date:
+  if (!empty($reminder['reminder_settings']['reminder_date'])
+    && strtotime($reminder['reminder_settings']['reminder_date']) === FALSE
+  ) {
+    form_set_error('reminder][reminder_settings][reminder_date', t('Reminder date is invalid.'));
+  }
+
+  // Ensure reminder date is not in the past when "send_reminder" is TRUE:
+  if ($reminder['send_reminder'] && !empty($reminder['reminder_settings']['reminder_date'])) {
+    if (strtotime($reminder['reminder_settings']['reminder_date']) <= time()) {
+      form_set_error('reminder][reminder_settings][reminder_date', t('Reminder must be in the future.'));
+    }
+  }
 }
 
 /**
@@ -1210,11 +1354,12 @@ function os_events_validate_handle_reminder($form, &$form_state) {
   // Since we are hiding the reminder template from the form the and the user
   // switch from not reminding to reminding the original validation handler
   // messed up.
+  $delta = empty($_GET['delta']) ? 0 : $_GET['delta'];
   $reminder = &$form_state['values']['reminder'];
   $reminder['reminder_settings']['reminder_template'] = $form_state['values']['reminder']['send_reminder'] ? variable_get('os_reminder_template', "
-Hello[registration:attendee_name],
+Hello,
 
-You request to send a reminder for the event <a href='[node:url]'>[node:title]</a>.") : '';
+This is only a friendly reminder that you registered the event <a href='[node:url]?delta={$delta}'>[node:title]</a>.") : '';
 }
 
 /**
@@ -1371,8 +1516,21 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   //Don't show the state dropdown
   $form['state']['#access'] = FALSE;
 
-  $form['actions']['cancel']['#access'] = FALSE;
-  $form['actions']['submit']['#value'] = t('Signup');
+  if (isset($form['#entity']->registration_id)) {
+    $form['actions']['cancel'] = array(
+      '#type' => 'submit',
+      '#value' => t('Cancel'),
+      '#submit' => array('cancel_button_destination_callback'),
+      '#limit_validation_errors' => array(),
+    );
+  } else {
+    $form['actions']['cancel']['#access'] = FALSE;
+  }
+
+  $form['actions']['submit']['#value'] = isset($form['#entity']->registration_id) ? t('Save') : t('Signup');
+
+  $form['anon_mail']['#required'] = TRUE;
+  $form['field_full_name'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
 
   $form['event_register'] = array(
     '#type' => 'container',
@@ -1391,6 +1549,21 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
 
   $form['#validate'][] = 'os_events_modal_validate';
   $form['#submit'][] = 'os_events_modal_submit';
+}
+
+/**
+ * When clicking on cancel button in event registration edit page.
+ */
+function cancel_button_destination_callback($form, &$form_state) {
+  $destination = drupal_get_destination();
+  drupal_goto($destination);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_events_form_registration_delete_confirm_alter(&$form, &$form_state) {
+  drupal_set_title(t('Are you sure you want to delete registration for !name (@email)?', array('!name' => $form['registration']['#value']->field_full_name[LANGUAGE_NONE][0]['value'], '@email' => $form['registration']['#value']->anon_mail)));
 }
 
 /**
@@ -1755,6 +1928,36 @@ function os_events_mail_alter(&$message) {
  */
 function os_events_form_event_node_form_alter(&$form, &$form_state) {
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
+  $form['#validate'][] = 'os_events_validate_repeat_on_checkbox';
+}
+
+/**
+ * Validate handler; Verifying if at least one day/month checkbox is selected for 'Repeat on' section in Weekly/Monthly/Yearly repeating event form.
+ */
+function os_events_validate_repeat_on_checkbox($form, $form_state) {
+  // Obtaining repeat rules from form submission.
+  $repeating = $form_state['values']['field_date'][LANGUAGE_NONE][0]['rrule'];
+
+  // For non-repeating events, $repeating will be NULL.
+  if ($repeating) {
+    // Formatting repeat rules in structured array.
+    $parts = date_repeat_split_rrule($repeating);
+    $rrule = $parts[0];
+    // Validation for weekly, monthly and yearly repeating events.
+    if (!isset($rrule['BYDAY']) && $rrule['FREQ'] == 'WEEKLY') {
+      form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][FREQ', t('You must select at least one day.'));
+    } elseif (!isset($rrule['BYMONTH']) && $rrule['FREQ'] == 'MONTHLY') {
+        form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][FREQ', t('You must select at least one month.'));
+    } elseif (!isset($rrule['BYMONTH']) && $rrule['FREQ'] == 'YEARLY') {
+        // Validation for two types of radio button choice for monthly and yearly repeating events.
+        // e.g On day <NUM> of <MONTH> / On the <FIRST> <SUNDAY> of <MONTH>.
+        if (!isset($rrule['BYMONTHDAY'])) {
+          form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][FREQ', t('Repeats On the field must have at least one month option checked.'));
+        } else {
+          form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][FREQ', t('You must select at least one month.'));
+        }
+    }
+  }
 }
 
 /**
@@ -1779,16 +1982,27 @@ function os_events_register_show_register_link($node, $date = '') {
   if (!$result['status']) {
     return FALSE;
   }
-
-  if (!$result['close'] || (!$result['close'] && !$result['close'])) {
+  
+  // If there is no closing date given, checking if current date is greater than the opening date or not.
+  if (isset($result['open']) && REQUEST_TIME >= strtotime($result['open']) && !$result['close']) {
     return os_events_show_register_by_node($node, $date);
   }
 
-  if (!empty($result['close'])) {
-    return time() >= strtotime($result['open']) && time() <= strtotime($result['close']);
+  // Checking if the event date is in future or not. else signup link will not be shown.
+  if (isset($node->field_date[LANGUAGE_NONE][0]['value']) && REQUEST_TIME > strtotime($node->field_date[LANGUAGE_NONE][0]['value'])) {
+    // Checking repeating event date and non-repeating event dates.
+    if (isset($result['repeating_event_date']) && REQUEST_TIME > strtotime($result['repeating_event_date'] . ' UTC')) {
+      return FALSE;
+    } elseif (isset($result['repeating_event_date']) && $result['repeating_event_date'] == '') {
+      return FALSE;
+    }
   }
 
-  return time() >= strtotime($result['open']);
+  if (!empty($result['close'])) {
+    return REQUEST_TIME >= strtotime($result['open']) && REQUEST_TIME <= strtotime($result['close']);
+  }
+  
+  return REQUEST_TIME >= strtotime($result['open']);
 }
 
 /**
@@ -2101,4 +2315,167 @@ function os_events_get_event_duration($item) {
   $hours = round(($event_end - $event_start) / 3600, 1);
 
   return 80 * $hours . 'px';
+}
+
+/**
+ * Constructs a human-readable description of the repeat rule.
+ * @param string $rrule
+ * repeat rules string
+ * @param string $format
+ * date format for displaying the day, month and year.
+ * @return string
+ * human-readable description as output
+ */
+function os_date_repeat_rrule_description($rrule, $format = 'D M d Y') {
+  // Empty or invalid value.
+  if (empty($rrule) || !strstr($rrule, 'RRULE')) {
+    return;
+  }
+
+  module_load_include('inc', 'date_api', 'date_api_ical');
+  module_load_include('inc', 'date_repeat', 'date_repeat_calc');
+
+  $parts = date_repeat_split_rrule($rrule);
+
+  $additions = $parts[2];
+  $exceptions = $parts[1];
+  $rrule = $parts[0];
+  if ($rrule['FREQ'] == 'NONE') {
+    return;
+  }
+
+  // Make sure there will be an empty description for any unused parts.
+  $description = array(
+    '!interval' => '',
+    '!byday' => '',
+    '!bymonth' => '',
+    '!count' => '',
+    '!until' => '',
+    '!except' => '',
+    '!additional' => '',
+    '!week_starts_on' => '',
+    );
+  $interval = date_repeat_interval_options();
+  switch ($rrule['FREQ']) {
+    case 'WEEKLY':
+      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every week', 'every @count weeks');
+      $freq_type = 'weekly';
+      break;
+    case 'MONTHLY':
+      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every month', 'every @count months');
+      $freq_type = 'monthly';
+      break;
+    case 'YEARLY':
+      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every year', 'every @count years');
+      $freq_type = 'yearly';
+      break;
+    default:
+      $description['!interval'] = format_plural($rrule['INTERVAL'], 'every day', 'every @count days');
+      $freq_type = 'daily';
+      break;
+  }
+
+  if (!empty($rrule['BYDAY'])) {
+    $days = date_repeat_dow_day_options();
+    $counts = date_repeat_dow_count_options();
+    $days_results = array();
+    $day_count = 0;
+    foreach ($rrule['BYDAY'] as $byday) {
+      // Get the numeric part of the BYDAY option, i.e. +3 from +3MO.
+      $day = substr($byday, -2);
+      $count = str_replace($day, '', $byday);
+      $day_count++;
+
+      if (!empty($count)) {
+        // See if there is a 'pretty' option for this count, i.e. +1 => First.
+        $order = array_key_exists($count, $counts) ? strtolower($counts[$count]) : $count;
+        $days_results[] = trim(t(' on the !date_order !day_of_week', array('!date_order' => $order, '!day_of_week' => $days[$day])));
+      }
+      else {
+        $days_results[] = trim(t('!day_of_week', array('!day_of_week' => $days[$day])));
+      }
+    }
+  }
+
+  if (!empty($rrule['BYMONTH'])) {
+    if (sizeof($rrule['BYMONTH']) < 12) {
+      $results = array();
+      $months = date_month_names();
+      foreach ($rrule['BYMONTH'] as $month) {
+        $results[] = $months[$month];
+      }
+      if (!empty($rrule['BYMONTHDAY'])) {
+        $description['!bymonth'] = trim(t(' on the !month_days of !month_names', array('!month_days' => implode(', ', $rrule['BYMONTHDAY']), '!month_names' => implode(', ', $results))));
+      }
+      else {
+        $description['!bymonth'] = trim(t(' of !month_names', array('!month_names' => implode(', ', $results))));
+      }
+    }
+  }
+
+  if ($freq_type == 'daily') {
+    // Omitting 'every day' string for daily events
+    if (isset($days_results)) {
+      $description['!interval'] = '';
+      $description['!byday'] = t('every ') . implode(', ', $days_results);
+    }
+    // It will be displayed as every weekday
+    if (isset($rrule['BYDAY']) && count($rrule['BYDAY']) == 5) {
+      $description['!byday'] = 'every weekday';
+    }
+  } elseif ($freq_type == 'weekly') {
+      if (isset($days_results) && count($days_results) > 1 && empty($rrule['COUNT'])) {
+        $prefix_day_weekly = ' on ';
+      } else {
+        $prefix_day_weekly = count($days_results) > 0 ? ' every ' : '';
+      }
+    $description['!byday'] = t($prefix_day_weekly) . implode(', ', $days_results);
+  } elseif ($freq_type == 'monthly') {
+      if(isset($days_results)) {
+        $description['!interval'] = '';
+        $description['!byday'] = implode(', ', $days_results) . (!empty($description['!bymonth']) ? ' ' . $description['!bymonth'] : '' );
+        $description['!bymonth'] = '';
+      }
+      $description['!interval'] .= (!empty($description['!bymonth']) ? ' ' : '' );
+  } elseif ($freq_type == 'yearly') {
+      if(isset($days_results)) {
+        $description['!byday'] = implode(', ', $days_results) . (!empty($description['!bymonth']) ? ' ' . $description['!bymonth'] : '' );
+        $description['!bymonth'] = '';
+      }
+      $description['!interval'] .= (!empty($description['!bymonth']) ? ' ' : '' );
+  }
+  if ($rrule['INTERVAL'] < 1) {
+    $rrule['INTERVAL'] = 1;
+  }
+  if (!empty($rrule['COUNT'])) {
+    $description['!count'] = trim(t(', !count times', array('!count' => $rrule['COUNT'])));
+  }
+  if (!empty($rrule['UNTIL'])) {
+    $until = date_ical_date($rrule['UNTIL'], 'UTC');
+    date_timezone_set($until, date_default_timezone_object());
+    $description['!until'] = trim(t(' until !until_date', array('!until_date' => date_format_date($until, 'custom', $format))));
+  }
+  if ($exceptions) {
+    $values = array();
+    foreach ($exceptions as $exception) {
+      $except = date_ical_date($exception, 'UTC');
+      date_timezone_set($except, date_default_timezone_object());
+      $values[] = date_format_date($except, 'custom', $format);
+    }
+    $description['!except'] = trim(t('!repeats_every_interval except !except_dates', array('!repeats_every_interval ' => '', '!except_dates' => implode(', ', $values))));
+  }
+  if (!empty($rrule['WKST'])) {
+    $day_names = date_repeat_dow_day_options();
+    $description['!week_starts_on'] = trim(t('!repeats_every_interval where the week start on !day_of_week', array('!repeats_every_interval ' => '', '!day_of_week' => $day_names[trim($rrule['WKST'])])));
+  }
+  if ($additions) {
+    $values = array();
+    foreach ($additions as $addition) {
+      $add = date_ical_date($addition, 'UTC');
+      date_timezone_set($add, date_default_timezone_object());
+      $values[] = date_format_date($add, 'custom', $format);
+    }
+    $description['!additional'] = trim(t('Also includes !additional_dates.', array('!additional_dates' => implode(', ', $values))));
+  }
+  return t('Repeats !interval!bymonth!byday!count !until !except. !additional', $description);
 }

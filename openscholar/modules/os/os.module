@@ -14,10 +14,6 @@ include_once ('includes/os.inc');
  */
 define('OS_READONLY_MODE_MESSAGE', 'Site is under maintenance, login and registration is currently disabled.');
 
-// Load the correct jQuery version. This is done before the call to os_init().
-global $conf;
-$conf['jquery_update_jquery_version'] = strpos($_GET['q'], 'admin') === 0 ? '1.5' : '1.8';
-
 /**
  * Implements hook_menu().
  */
@@ -497,6 +493,10 @@ function os_theme() {
  */
 function os_theme_registry_alter(&$reg) {
   $reg['menu_tree']['preprocess functions'] = array_diff($reg['menu_tree']['preprocess functions'], array('template_preprocess_menu_tree'));
+
+  // Removing the original process function with our function.
+  $key = array_search('adaptivetheme_process_region', $reg['region']['process functions']);
+  $reg['region']['process functions'][$key] = 'os_process_region';
 }
 
 /**
@@ -525,6 +525,13 @@ function os_module_implements_alter(&$implementations, $hook) {
     // Move the os implementation of js_alter last to support the move of all js to the footer.
     unset($implementations['os']);
     $implementations['os'] = FALSE;
+  }
+  elseif ($hook == 'advagg_save_aggregate_alter') {
+    // advagg is compressing the css files into gzip. We need that our module
+    // will be first. This will ensure that the static domain will be in the
+    // compressed as well.
+    unset($implementations['os']);
+    $implementations = array_merge(array('os' => 'advagg'), $implementations);
   }
 }
 
@@ -671,7 +678,8 @@ function os_preprocess_page(&$vars) {
     return;
   }
 
-  // Sets page title to match the menu link title
+  // Sets page title to match the menu link title.
+  $menu_item = NULL;
   if ($view = views_get_page_view()) {
     ctools_include('menu', 'os');
     $menu_item = os_menu_load_link_path($_GET['q']);
@@ -728,9 +736,11 @@ function os_preprocess_page(&$vars) {
   }
 
   $section_links['header'] = array(
-      'title' => 'This Section',
-    );
-  if ($module != 'os_front') {
+    'title' => 'This Section',
+  );
+
+  $item = menu_get_item("cp/build/features/{$module}");
+  if ($module != 'os_front' & $menu_item && $menu_item['href'] == "cp/build/features/{$module}") {
     $section_links['settings'] = array(
       'title' => t('Settings'),
       'href' => 'cp/build/features/' . $module,
@@ -891,17 +901,24 @@ function os_form_alter(&$form, &$form_state, $form_id) {
       $_GET['destination'] = $paths[$form['#node']->type];
     }
   }
-
+  
   // Add a cancel link to node forms.
   if (strpos($form_id, '_node_form')) {
     if (!empty($_GET['destination'])) {
       // If available in the query, set destination of the button link.
-      $destination = $_GET['destination'];
+      // Obtaining destination parameter from URL
+      $url_destination = drupal_get_destination();
+      $redirect_path = isset($url_destination['destination']) ? $url_destination['destination'] : '';
+      // creating $parsed_url array for path and query attributes for page redirect to destination url.
+      $parsed_url = drupal_parse_url($redirect_path);
+      $destination = $parsed_url['path'];
+      $query = $parsed_url['query'];
     }
     else {
       // Otherwise redirect the users to the app path (e.g. if users edit a
       // node people object, they will be redirected to people).
       $paths = os_get_app_path();
+      $query = array();
       if (isset($paths[$form['#node']->type])) {
         $destination = $paths[$form['#node']->type];
       }
@@ -910,7 +927,7 @@ function os_form_alter(&$form, &$form_state, $form_id) {
       }
     }
     $form['actions']['cancel'] = array(
-      '#markup'   => l(t('Cancel'), $destination, array('attributes' => array('class' => 'form-cancel'))),
+      '#markup'   => l(t('Cancel'), $destination, array('query' => $query, 'attributes' => array('class' => 'form-cancel'))),
       '#weight' => 99,
     );
   }
@@ -1606,7 +1623,7 @@ function os_node_view_alter(&$build) {
   }
 
   // fixes broken tags when <!--break--> is used
-  if (in_array($build['#view_mode'], array('teaser', 'no_image_teaser')) && isset($build['body']) && is_array($build['body'])) {
+  if (in_array($build['#view_mode'], array('teaser', 'no_image_teaser', 'slide_teaser')) && isset($build['body']) && is_array($build['body'])) {
     foreach (element_children($build['body']) as $c) {
       $build['body'][$c]['#markup'] = _filter_htmlcorrector($build['body'][$c]['#markup']);
     }
@@ -1933,6 +1950,7 @@ function os_app_info($app_name = NULL) {
             'importers' => array(),
             'require_parent_node' => FALSE,
             'browse_pages' => FALSE,
+            'has_settings' => FALSE,
           );
 
           // Adds the module information.
@@ -1961,7 +1979,7 @@ function os_app_info($app_name = NULL) {
 function os_app_info_declared_node_bundle($bundle = '') {
   $bundles = &drupal_static(__FUNCTION__, array());
 
-  if (empty($info)) {
+  if (empty($bundles)) {
     $apps = os_app_info();
     $bundles = array();
     foreach ($apps as $app) {
@@ -1971,7 +1989,7 @@ function os_app_info_declared_node_bundle($bundle = '') {
     }
   }
 
-  return in_array($bundle, $bundles);
+  return empty($bundle)? $bundles : in_array($bundle, $bundles);
 }
 
 /**
@@ -1997,14 +2015,30 @@ function os_get_app_by_bundle($bundle) {
  * Implements hook_form_BASE_FORM_ID_alter() for user_login form.
  */
 function os_form_user_login_alter(&$form, $form_state) {
-  if (variable_get('os_login_with_email', TRUE)) {
-    // Replace 'username' with 'Username or e-mail'.
-    $form['name']['#title'] = t('Username or e-mail');
-    // Replace the description of the user/email login field.
-    $form['name']['#description'] = t('You may login with either your assigned username or your e-mail address.');
+  if (variable_get('os_login_with_email', TRUE)) {    
     // Add a new validation.
     // Validation function vsite_user_login_validate must run first.
     array_unshift($form['#validate'],'os_user_login_validate');
+  }
+
+  // Overriding the text of first button on the login screen.
+  if (isset($form['pin'])) {
+    $query['destination'] = isset($_GET['destination']) ? $_GET['destination'] : 'user';
+    $form['pin']['#markup'] = l('Log in with Harvard credentials', 'user/pin', array('query' => $query));
+  }
+
+  // If user login form is overridden by pinserver_authenticate module, then $form['pin-fieldset'] will be initialized from there.
+  // $form['name'] and $form['pass'] both will be unset from pinserver_authenticate module
+  if (isset($form['pin-fieldset'])) {
+    $form['pin-fieldset']['#title'] = t('Log in with your OpenScholar account');
+    $form['pin-fieldset']['name']['#title'] = t('Username / E-Mail');
+    $form['pin-fieldset']['pass']['#description'] = t('!request', array('!request' => l('Forgot your password?', 'user/password')));
+  }
+
+  // If pinserver_authenticate module is not overriding login form, then $form['name'] and $form['pass'] will not be unset.
+  if (isset($form['name']) && isset($form['pass'])) {
+    $form['name']['#title'] = t('Username / E-Mail');
+    unset($form['pass']['#description']);
   }
 }
 
@@ -2016,8 +2050,13 @@ function os_user_login_validate($form, &$form_state) {
   if (isset($form_state['values']['name']) && $form_state['values']['name']) {
     // Load their username from their email address.
     if ($name = db_query("SELECT name FROM {users} WHERE LOWER(mail) = LOWER(:email)", array(':email' => $form_state['values']['name']))->fetchField()) {
-      // Set the form['name'] to the users username for proper drupal user login form validation.
-      form_set_value($form['name'], $name, $form_state);
+      // Set the form['name'] / form['pin-fieldset']['name'] to the users username for proper drupal user login form validation.
+      // $form['pin-fieldset']['name'] will be set if Pinserver module is used for login process, else only $form['name'] will be set.
+      if (isset($form['pin-fieldset']['name'])) {
+        form_set_value($form['pin-fieldset']['name'], $name, $form_state);
+      } else {
+        form_set_value($form['name'], $name, $form_state);
+      }
     }
   }
 }
@@ -2576,4 +2615,140 @@ function os_preprocess_block(&$vars) {
   // Adding the name of the module and the delta.
   $vars['attributes_array']['module'] = $vars['block']->module;
   $vars['attributes_array']['delta'] = $vars['block']->delta;
+}
+
+/**
+ * Replacing adaptivetheme_process_region function with our function in order to
+ * add the name of the region to the class attribute.
+ */
+function os_process_region(&$vars) {
+
+  if (empty($vars['classes'])) {
+    $vars['classes'] = '';
+  }
+
+  // Initialize and populate the outer wrapper variables.
+  $vars['outer_prefix'] = '<div class="' . $vars['classes'] . '">';
+  $vars['outer_suffix'] = '</div>';
+
+  // Initialize and populate the inner wrapper variables.
+  $vars['inner_prefix'] = '<div class="region-inner clearfix">';
+  $vars['inner_suffix'] = '</div>';
+
+  // Some regions need different or no markup .Use a region template with no
+  // wrappers for the main content.
+  if ($vars['region'] === 'content') {
+    $vars['outer_prefix'] = '';
+    $vars['outer_suffix'] = '';
+    $vars['inner_prefix'] = '';
+    $vars['inner_suffix'] = '';
+  }
+
+  // Menu bar needs an id, nav class and no inner wrapper.
+  if ($vars['region'] === 'menu_bar') {
+    $vars['outer_prefix'] = '<div id="menu-bar" class="nav region-menu-bar clearfix">';
+    $vars['inner_prefix'] = '';
+    $vars['inner_suffix'] = '';
+  }
+}
+/**
+* Implements hook_entity_query_alter().
+*
+* todo: remove once the og security issue will be merged.
+*/
+function os_entity_query_alter(EntityFieldQuery $query) {
+  if ($query->entityConditions['entity_type']['value'] != 'og_membership') {
+    return;
+}
+
+if (in_array('skip_blocked_users', $query->tags)) {
+  // This is not a query against og memberships or we want to return
+  // memberships of blocked users.
+    return;
+}
+
+foreach ($query->propertyConditions as $condition) {
+  if ($condition['column'] == 'entity_type' && $condition['value'] == 'user' && ($condition['operator'] == '=' || empty($condition['operator']))) {
+    $query->addTag('og_membership_blocked_users');
+      }
+   }
+}
+
+/**
+* Implements hook_query_TAG_alter().
+*
+* When the querying against og memberships and the entity type is user we need
+* to make sure we won't return memberships of blocked users.
+*/
+function og_query_og_membership_blocked_users_alter(QueryAlterableInterface $query) {
+  $tables = $query->getTables();
+  $query->join('users', 'u', 'u.uid = ' . $tables['og_membership']['alias'] . '.etid');
+  $query->condition('u.status', 1);
+}
+
+/**
+ * Implements hook_html_head_alter().
+ */
+function os_html_head_alter(&$head_elements) {
+  // Base path.
+  $base_url = variable_get('purl_base_domain');
+
+  // Exit early in case we are on a "custom domain".
+  if (variable_get('vsite_domain_name', '')) {
+    // Check if this shared domain.
+    if (!variable_get('vsite_domain_shared')) {
+      return;
+    }
+
+    // Define the custom domain address as the base url since the vsite is under
+    // a shared custom domain.
+    $base_url = variable_get('vsite_domain_name', '');
+  }
+
+  // Exit early in case we have no shortlink metatag and we are not on a "vsite".
+  $vsite = vsite_get_vsite();
+  if (!isset($head_elements['metatag_shortlink']) && $vsite) {
+    return;
+  }
+
+  // Base path including the purl.
+  $base_url_purl = $base_url . '/' . $vsite->group->purl;
+
+
+  // Do nothing in case the shortlink value already contains the purl.
+  if (strpos($head_elements['metatag_shortlink']['#value'], $base_url_purl) === 0) {
+    return;
+  }
+
+  // Alter the shortlink value to the correct url including the purl.
+  $head_elements['metatag_shortlink']['#value'] = str_replace($base_url, $base_url_purl, $head_elements['metatag_shortlink']['#value']);
+}
+
+/**
+ * Implements hook_advagg_save_aggregate_alter().
+ */
+function os_advagg_save_aggregate_alter(&$files_to_save, $aggregate_settings, $other_parameters) {
+  if (variable_get('vsite_domain_name', '')) {
+    $domain = url('<front>');
+  }
+  else {
+    global $base_url;
+    $domain = $base_url;
+  }
+
+  if (!$static = variable_get('os_files_static_domain')) {
+    return;
+  }
+
+  // When the base domain and the static domain does not end with the same
+  // closing character we need to add it so won't get BASE_ADDRESSCSS_ADDRESS
+  // and we will get BASE_ADDRESS/CSS_ADDRESS.
+  if (substr($domain, -1) == "/" && substr($static, -1) != "/") {
+    $static .= '/';
+  }
+
+  foreach ($files_to_save as $file_name => $file) {
+    $files_to_save[$file_name] = str_replace($domain, $static, $file);
+  }
+
 }

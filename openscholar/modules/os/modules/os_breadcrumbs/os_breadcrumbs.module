@@ -656,10 +656,11 @@ function os_breadcrumbs_preprocess_page(&$variables) {
     return;
   }
 
-  $hide_breadcrumbs = variable_get('os_breadcrumbs_show_breadcrumbs', 1);
-  if ($hide_breadcrumbs) {
+  // Global settings for displaying/hiding breadcrumbs.
+  if (variable_get('os_breadcrumbs_show_breadcrumbs', 1)) {
     return;
   }
+
 
   $breadcrumb = os_breadcrumbs_setup_breadcrumbs(os_breadcrumbs_build_breadcrumbs());
   $variables['breadcrumb'] = $breadcrumb;

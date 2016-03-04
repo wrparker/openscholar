@@ -11,6 +11,12 @@
     if (old_load) {
       old_load.call(this, current, next);
     }
+
+    if (next == undefined) {
+      // next is undefined when clicking on "Loading previous". Return early.
+      return;
+    }
+
     if (!next.page || next.page == NaN) {
       loadingAll = false;
     }

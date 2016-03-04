@@ -650,7 +650,7 @@ function os_taxonomy_preprocess_page(&$page) {
   if (!empty($active['vid'])) {
 
     $ctxs = array_keys(context_active_contexts());
-    $section = array_diff($ctxs, array('os_taxonomy-term-' . $active['vid']));
+    $section = isset($active['tid']) ? array_diff($ctxs, array('os_taxonomy-term-' . $active['tid'])) : $ctxs;
 
     $section_links['section-header'] = array(
       'title' => t('This Vocabulary'),
@@ -1976,6 +1976,19 @@ function os_taxonomy_attach_fields_to_vocabulary($entity_type, $bundle) {
   // performance.
   _field_write_instance($instance);
   field_cache_clear();
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_taxonomy_form_taxonomy_overview_terms_alter(&$form, &$form_state) {
+  if (empty($form_state['confirm_reset_alphabetical'])) {
+    return;
+  }
+
+  // Change the cancel link destination from the reset to alphabetical form to
+  // path in the current vsite.
+  $form['actions']['cancel']['#href'] = 'cp/build/taxonomy/' . $form['machine_name']['#value'];
 }
 
 /**

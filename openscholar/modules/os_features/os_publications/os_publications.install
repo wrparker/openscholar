@@ -1439,9 +1439,20 @@ function os_publications_update_7037() {
 }
 
 /**
- * Fix CSL styles so editors aren't printed twice when there are no authors
+ * Update the csl fields.
  */
 function os_publications_update_7038() {
+  _reset_csl_map(FALSE);
+  $citations = array('mhra', 'chicago-author-date', 'apa');
+  foreach ($citations as $citateion) {
+    os_publications_revert_citeproc_style($citateion);
+  }
+}
+
+/*
+* Fix CSL styles so editors aren't printed twice when there are no authors
+ */
+function os_publications_update_7039() {
   $citations = array(
     'ama',
     'apa',
@@ -1463,4 +1474,3 @@ function os_publications_update_7038() {
     os_publications_revert_citeproc_style($citation);
   }
 }
-

@@ -49,7 +49,7 @@
             <text variable="title" font-style="italic" text-case="title"/>
          </if>
          <else>
-            <text variable="title" prefix="‘" suffix="’" text-case="title"/>
+            <text variable="title" text-case="title"/>
          </else>
       </choose>
    </macro>
@@ -239,13 +239,12 @@
    </macro>
    <macro name="event">
       <group>
-         <text term="presented at" suffix=" "/>
+         <text suffix=" "/>
          <text variable="event"/>
       </group>
    </macro>
    <macro name="publisher">
       <group delimiter=": ">
-         <text variable="publisher-place"/>
          <text variable="publisher"/>
       </group>
    </macro>

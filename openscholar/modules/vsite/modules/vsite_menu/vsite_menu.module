@@ -567,8 +567,8 @@ function vsite_menu_form_cp_menu_build_form_alter(&$form, &$form_state, $form_id
               '#type' => 'submit',
               '#value' => t('Reset to defaults')
           );
-          $form['actions']['submit']['#value'] = t('Save for @name', array(
-              '@name' => $vsite->title()
+          $form['actions']['submit']['#value'] = t('Save for !name', array(
+              '!name' => $vsite->title()
           ));
         }
       }
@@ -592,7 +592,7 @@ function vsite_menu_cp_menu_form_submit($form, &$form_state) {
     switch ($op){
       case t('Reset to defaults'):
         if(os_menu_revert()){
-          drupal_set_message(t('The menus have been reset to thier default values.'));
+          drupal_set_message(t('The menus have been reset to their default values.'));
         }
         break;
       case t('Save to @title', array('@title' => $preset->title)):

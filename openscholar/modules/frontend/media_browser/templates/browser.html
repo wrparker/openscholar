@@ -1,15 +1,10 @@
 <div class="container-fluid" ng-switch="pane">
-    <div class="media-browser-buttons">
+    <div class="media-browser-buttons" ng-show="pane != 'edit' && pane != 'delete'">
         <div class="media-browser-button" ng-class="{active:pane=='upload'}" ng-show="activePanes.upload" ng-click="changePanes('upload')">Upload from your computer</div>
         <div class="media-browser-button" ng-class="{active:pane=='web'}" ng-show="activePanes.web" ng-click="changePanes('web')">Embed from the web</div>
         <div class="media-browser-button" ng-class="{active:pane=='library'}" ng-show="activePanes.library" ng-click="changePanes('library')">Previously uploaded files</div>
     </div>
     <div class="media-browser-panes">
-        <div class="loading" ng-show="loading">
-            Please wait while we get information on your files.<br />
-            <img src="{{templatePath}}/misc/images/large-spin_loader.gif"><br />
-            {{loadingMessage}}
-        </div>
         <div class="media-browser-pane" ng-switch-when="upload">
             <div ng-file-drop ng-file-change="$parent.checkForDupes($files, $event)" class="media-browser-drop-box"
                  drag-over-class="media-browser-drag-over" ng-multiple="true" allow-dir="true"
@@ -17,8 +12,9 @@
                 <span id="drag-text">Drag and drop files here. <span class="help_icon" ng-mouseenter="showHelp = true" ng-mouseleave="showHelp = false">?</span></span>
                 <a href="#" id="media-browser-file-select" ng-file-select ng-file-change="$parent.checkForDupes($files, $event)"
                    ng-accept="$parent.validate($file)" accept="{{'.'+extensions.join(',.')}}" ng-multiple="true">Select files to Add</a>
-                <div class="help" ng-show="showHelp">Files must be less than <strong>{{maxFilesize}}</strong>.<br />
-                    Allowed file types: <strong>{{extensions.join(' ')}}</strong></div>
+                     <div class="help" ng-show="showHelp"><strong>Allowed file types:</strong><br /> {{extensions.join(' ')}}<br /><br />
+                   <strong>Max file size:</strong> {{maxFilesize}}.</div>
+                <span id="filename-check" ng-show="$parent.checkingFilenames">Checking for duplicate files...</span>
             </div>
             <div id="media-browser-duplicate-check" ng-show="$parent.dupes.length > 0">
                 <div class="media-browser-dupe" ng-repeat="dupe in $parent.dupes" ng-show="!dupe.processed" style="z-index: {{1000-$index}}">
@@ -28,7 +24,7 @@
                     </div>
                     <div class="actions">
                         <div><button value="rename" ng-click="$parent.rename($index, $last)">Rename</button> The new name will be {{dupe.newName}}</div>
-                        <div><button value="replace" ng-click="$parent.replace($index, $last)">Replace</button> This CANNOT be undone!</div>
+                        <div><button value="replace" ng-click="$parent.replace($index, $last)">Replace</button> Warning: replacing the existing file cannot be undone.</div>
                         <div><button value="cancel" ng-click="$parent.cancelUpload($index, $last)">Cancel</button></div>
                     </div>
                     <div class="media-browser-dupe-counter" ng-show="$parent.dupes.length > 1">{{$index+1}}/{{$parent.dupes.length}}</div>
@@ -45,8 +41,7 @@
                     <div id="media-browser-upload-counter">{{$parent.uploadProgress().index}} of {{$parent.uploadProgress().numFiles}}</div>
                 </div>
                 <div id="media-browser-rejected">
-                    <div ng-repeat="m in messages" class="message">
-                        {{m.text}}
+                    <div ng-repeat="m in messages" class="message" ng-bind-html="m.text">
                     </div>
                 </div>
             </div>
@@ -57,8 +52,8 @@
         <div class="media-browser-pane" ng-switch-when="web">
             <label for="media-browser-web">URL or HTML:</label>
             <textarea id="media-browser-web" cols="60" rows="5" ng-model="$parent.embed" placeholder="Enter the URL or HTML here"></textarea>
-            <div class="description">Enter a URL from one of <a href="http://embed.ly/embed/features/providers" target="_blank">
-                these providers</a> or paste a snippet of HTML. The HTML may contain references to any of the following sites:
+            <div class="description embedly">Enter a URL from one of <a href="http://embed.ly/embed/features/providers" target="_blank">
+                these providers</a> or paste a snippet of HTML. The HTML may contain references to any of the following sites. Don't see what you're looking for? <a href="http://docs.openscholar.harvard.edu/embedding-third-party-content" target="_blank">Learn more about how to whitelist.</a>   <br><br>
                 <span ng-init="limit = -21" ng-repeat="domain in whitelist" ng-mouseenter="limit = -120" ng-mouseleave="limit = -21" tooltip="{{domain}}" >
                   <span ng-hide="(limit *-1) >= domain.length">...</span>{{domain | limitTo:limit}}{{$last ? '' : ', '}}
                 </span>
@@ -73,13 +68,18 @@
             </div>
         </div>
         <div class="media-browser-pane" ng-switch-when="library">
+            <div class="loading" ng-show="loading">
+                Please wait while we get information on your files.<br />
+                <img src="{{templatePath}}/misc/images/large-spin_loader.gif"><br />
+                {{loadingMessage}}
+            </div>
             <div class="file-filters" ng-show="numFiles">
                 <div class="file-search">
                     <label for="file-search-input">Filename</label>
                     <input id="file-search-input" type="text" ng-model="$parent.search" class="form-text" size="30" maxlength="128">
                     <div class="description">Type in a filename or label to filter list of files.</div>
                 </div>
-                <div class="file-type">
+                <div class="file-type" ng-show="$parent.availTypes.length > 1">
                     <label for="file-type-input">File Type</label>
                     <select id="file-type-input" type="select" ng-model="$parent.filteredTypes" ng-options="type.value as type.label for type in availTypes" multiple="multiple"></select>
                 </div>
@@ -89,12 +89,12 @@
             </div>
             <div id="mb-library-header">
                 <span class="mb-preview">&nbsp;</span>
-                <span class="mb-title">Title</span>
-                <span class="mb-filename">Filename</span>
-                <span class="mb-created">Upload Date</span>
+                <span class="mb-title" ng-click="sortReverse=(sortType == 'name')?!sortReverse:false; sortType='name';">Title</span>
+                <span class="mb-filename" ng-click="sortReverse=(sortType == 'filename')?!sortReverse:false; sortType='filename';">Filename</span>
+                <span class="mb-created" ng-click="sortReverse=(sortType == 'timestamp')?!sortReverse:true; sortType='timestamp';">Uploaded</span>
                 <span class="mb-file-actions">&nbsp;</span>
             </div>
-            <div js-pager="file in files | mbFilename:$parent.search | mbType:filteredTypes | mbExtensions:extensions | filter:{status:'!deleting'} | orderBy:'-timestamp' track by file.id" page-size="5">
+            <div js-pager="file in files | mbFilename:$parent.search | mbType:availFilter | mbType:filteredTypes | mbExtensions:extensions | filter:{status:'!deleting'} | orderBy:sortType:sortReverse track by file.id" page-size="5">
                 <div class="media-row" data-fid="{{file.id}}" ng-click="setSelection(file.id)" ng-class="{selected : selection == file.id, new : file.new}">
                     <span class="mb-preview" ng-bind-html="file.preview"></span>
                     <span class="mb-title">{{file.name}}</span>
@@ -118,7 +118,7 @@
             <div file-edit file="$parent.selected_file" on-close="closeFileEdit(saved);"></div>
         </div>
         <div class="media-browser-pane" ng-switch-when="delete">
-            <div class="mb-delete-warning">Are you sure you want to delete {{$parent.selected_file.name}}? This operation CANNOT be undone.</div>
+            <div class="mb-delete-warning">Are you sure you want to delete {{$parent.selected_file.name}}? Warning: replacing the existing file cannot be undone.</div>
             <div>WARNING: Any links to this file will be broken!</div>
 
             <div class="actions">

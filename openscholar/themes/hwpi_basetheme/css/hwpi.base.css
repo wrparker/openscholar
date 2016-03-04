@@ -39,6 +39,9 @@ p:empty {
 .sidebar h1.node-title {
     margin-bottom: 0;
 }
+h1#page-title {
+    line-height: 1.1;
+}
 table,
 th,
 td,
@@ -457,6 +460,9 @@ ol.search-results li.search-result:last-child {
     text-transform: uppercase;
     padding: 16px 0 0;
 }
+/* remove later */
+.event-start .event-year {display:none !important;}
+
 .event-start-day {
     color: #000;
     font-size: 18px;
@@ -638,6 +644,14 @@ article.node-teaser.node-person .field-name-field-person-photo ~ .node-content {
     vertical-align: top;
     width: 100%;
 }
+
+.two-sidebars .node-person .field-name-field-website {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 42ch;
+}
+
 .node-link.node-teaser {
     padding: 10px 0 5px;
 }
@@ -785,7 +799,7 @@ table.os-files-other-list {
 
 div.messages {
     border: 0 none;
-    margin: 0;
+    margin: 0 90px 0;
     padding: 15px 0;
 }
 .messages h2 {
@@ -863,3 +877,4 @@ ul.pager li.pager-item {
 .two-sidebars .sidebar .node-person.node-teaser .field-name-field-email {
     float: none;
 }
+
