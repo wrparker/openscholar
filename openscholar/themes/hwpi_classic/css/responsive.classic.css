@@ -51,7 +51,7 @@ ul.primary li a {
 
 /*--------------------------------------------------------*/
 @media (max-width: 768px) {
-.front #content-column .block.block-boxes-os_boxes_manual_list {
+.front #content-column .block.block-boxes-os_boxes_manual_list.styled {
     margin-bottom: 20px;
 }
 .front #content-column .block.block-boxes-os_boxes_manual_list.converted-bio {
