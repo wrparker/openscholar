@@ -53,7 +53,7 @@ class os_taxonomy_fbt extends os_boxes_default {
       $setting_value = !empty($this->options[$setting]) ? $this->options[$setting] : NULL;
       $form[$setting]['#default_value'] = $setting_value;
     }
-    
+
     $form['advanced']['as_nav'] = array(
       '#type' => 'checkbox',
       '#default_value' => $this->options['as_nav'],
