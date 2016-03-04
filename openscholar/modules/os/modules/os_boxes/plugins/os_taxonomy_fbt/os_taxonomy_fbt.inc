@@ -60,6 +60,11 @@ class os_taxonomy_fbt extends os_boxes_default {
       '#title' => t('Display As Navigation'),
       '#description' => t('Check this to make this vocabulary display like a menu.'),
       '#return_value' => TRUE,
+      '#states' => array(
+       'invisible' => array(
+        ':input[name="widget_type"]' => array('value' => 'select'),
+        ),             
+       ),
     );
 
     return $form;
