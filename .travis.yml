@@ -93,7 +93,7 @@ before_install:
 
   # Fire up the server.
   - cp profiles/openscholar/behat/router.php router.php
-  - drush rs 8888 router.php > ~/rs.log 2>&1 &
+  - php -S 127.0.0.1:8888 profiles/openscholar/behat/router.php > ~/rs.log 2>&1 &
 
   # Copy Behat configuration file.
   - cd profiles/openscholar/behat
