@@ -170,7 +170,9 @@ Feature: Media Browser
       And I drop the files "abc.pdf, kitten-2.jpg" onto the "Drag and drop files here." area
       And I sleep for "5"
      Then I should see "A file with the name 'kitten-2.jpg' already exists."
-      And I press the "Cancel" button
+    # todo fix
+#      And I press the "Cancel" button
+      And I press the "Replace" button
       And I should see "abc.pdf" in a ".file-list-single" element
 
   @media_browser @javascript
