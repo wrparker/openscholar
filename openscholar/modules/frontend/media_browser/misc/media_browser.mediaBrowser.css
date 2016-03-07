@@ -326,20 +326,19 @@ div[file-edit] .control button,
 }
 .field-widget-media-draggable-file span.ng-binding.ng-scope {
     width: 80px;
-    top: 55%;
-    left: 24%;
+    top: 25%;
+    left: 50%;
     transform: translate(-50%, -50%);
-    position: relative;
 }
 #drag-text {
-    position: relative;
+    position: absolute;
     top: 40%;
     left: 39%;
     font-size: 1.2em;
 }
 .field-widget-media-draggable-file #drag-text {
-    top: 75%;
-    left: 41%;
+    top: 43%;
+    left: 50%;
     font-size: 1em;
     transform: translate(-50%, -50%);
 }
@@ -354,7 +353,6 @@ div[file-edit] .control button,
     background-color: #FFF;
     margin-top: 0;
 }
-
 .media-browser-dupe {
     position: absolute;
     top: 0;
