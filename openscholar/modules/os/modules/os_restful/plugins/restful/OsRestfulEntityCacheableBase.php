@@ -184,6 +184,18 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
   }
 
   /**
+   * Return a count of all entities, ignoring filters
+   */
+  public function getAllCount() {
+    $query = $this->getEntityFieldQuery();
+    $this->queryForListFilter($query);
+    $this->addExtraInfoToQuery($query);
+    $query->addTag('restful_count');
+
+    return $query->count();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function isListRequest() {
@@ -215,7 +227,7 @@ abstract class OsRestfulEntityCacheableBase extends RestfulEntityBase {
           $addtl['updatesAsOf'] = REQUEST_TIME;
         }
 
-        $addtl['totalEntities'] = $this->getTotalCount();
+        $addtl['totalEntities'] = intval($this->getAllCount()->execute());
       }
     }
 
