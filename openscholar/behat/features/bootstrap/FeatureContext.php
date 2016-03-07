@@ -16,6 +16,13 @@ class FeatureContext extends DrupalContext {
 
   use RestfulTrait;
 
+  public function beforeScenario($event) {
+    // Set up the browser width.
+    $this->getSession()->resizeWindow(1440, 1200, 'current');
+
+    parent::beforeScenario($event);
+  }
+
   /**
    * Variable for storing the random string we used in the text.
    */

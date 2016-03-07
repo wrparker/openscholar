@@ -61,6 +61,7 @@ Feature: Media Browser
       And I should see "kitten-2.jpg" in a "div.media-row" element
       And I click on the tab "Upload from your computer"
       And I drop the file "duplicate/kitten-2.jpg" onto the "Drag and drop files here." area
+      And I sleep for "5"
      Then I should see the text "A file with the name 'kitten-2.jpg' already exists."
       And I press the "Replace" button
       And I should wait for "File Edit" directive to "appear"
@@ -80,6 +81,7 @@ Feature: Media Browser
       And I should see "kitten-2.jpg" in a "div.media-row" element
       And I click on the tab "Upload from your computer"
       And I drop the file "duplicate/kitten-2.jpg" onto the "Drag and drop files here." area
+      And I sleep for "5"
      Then I should see the text "A file with the name 'kitten-2.jpg' already exists."
       And I press the "Rename" button
       And I should wait for "File Edit" directive to "appear"
@@ -98,7 +100,8 @@ Feature: Media Browser
      And I should see "kitten-2.jpg" in a "div.media-row" element
      And I click on the tab "Upload from your computer"
      And I drop the file "kitten-2.jpg" onto the "Drag and drop files here." area
-    Then I should wait for the text "A file with the name 'kitten-2.jpg' already exists." to "appear"
+     And I sleep for "5"
+    Then I should wait for the text "A file with the name 'kitten-2.jpg' `already exists." to "appear"
      And I press the "Cancel" button
      And I should see the media browser "Upload from your computer" tab is active
     When I click on the tab "Previously uploaded files"
@@ -116,7 +119,7 @@ Feature: Media Browser
       And I wait "1 second" for the media browser to open
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I drop the files "rubber-duck.jpg, conservatory_of_flowers3.jpg" onto the "Drag and drop files here." area
-     Then I should see the media browser "Previously uploaded files" tab is active
+      And I sleep for "5"
       And I should see "rubber-duck.jpg" in a ".file-list-single" element
       And I should see "conservatory_of_flowers3.jpg" in a ".file-list-single" element
 
@@ -129,6 +132,7 @@ Feature: Media Browser
       And I wait "1 second" for the media browser to open
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I drop the files "rubber-duck.jpg, conservatory_of_flowers3.jpg" onto the "Drag and drop files here." area
+      And I sleep for "5"
      Then I should see "A file with the name 'rubber-duck.jpg' already exists."
       And I should see "1/2"
      When I press the "Cancel" button
@@ -164,6 +168,7 @@ Feature: Media Browser
       And I wait "1 second" for the media browser to open
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I drop the files "abc.pdf, kitten-2.jpg" onto the "Drag and drop files here." area
+      And I sleep for "5"
      Then I should see "A file with the name 'kitten-2.jpg' already exists."
       And I press the "Cancel" button
       And I should see "abc.pdf" in a ".file-list-single" element
