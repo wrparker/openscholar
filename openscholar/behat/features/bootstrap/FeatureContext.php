@@ -3162,4 +3162,12 @@ class FeatureContext extends DrupalContext {
     }
   }
 
+  /**
+   * @Given /^I adding the embedded video$/
+   */
+  public function iAddingTheEmbeddedVideo() {
+    $page = $this->getSession()->getPage();
+    $page->find('xpath', "//button[.='Insert']")->press();
+  }
+
 }

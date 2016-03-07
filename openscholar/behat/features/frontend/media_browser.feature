@@ -187,8 +187,9 @@ Feature: Media Browser
       And I fill in "URL or HTML" with "https://youtu.be/jNQXAC9IVRw"
       And I press the "Submit" button
       And I should wait for "File Edit" directive to "appear"
-     Then the "Label" field should contain "Me at the zoo"
+     Then the "fe-file-name" field should contain "Me at the zoo"
       And I click on the "Save" control in the "div[file-edit]" element
+      And I adding the embedded video
       And I should see "Me at the zoo" in a ".file-list-single" element
 
   @media_browser @javascript
