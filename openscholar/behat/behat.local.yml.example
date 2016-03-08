@@ -23,9 +23,9 @@ default:
         2
 
   extensions:
-    Behat\MinkExtension\Extension:
+    Behat\MinkExtension:
       base_url:  BASE_URL
-    Drupal\DrupalExtension\Extension:
+    Drupal\DrupalExtension:
       drupal:
         drupal_root: "PathToDrupal"
       api_driver: "drupal"

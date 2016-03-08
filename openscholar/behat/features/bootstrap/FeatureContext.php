@@ -42,7 +42,7 @@ class FeatureContext extends DrupalContext {
   /**
    * Hold the user name and password for the selenium tests for log in.
    */
-  private $users;
+  protected $users;
 
   /**
    * Hold the NID of the vsite.
@@ -57,20 +57,19 @@ class FeatureContext extends DrupalContext {
    * @param array $parameters .
    *   Context parameters (set them up through behat.yml or behat.local.yml).
    */
-  public function __construct(array $parameters) {
-    if (isset($parameters['drupal_users'])) {
-      $this->users = $parameters['drupal_users'];
-    }
-    else {
-      throw new Exception('behat.yml should include "drupal_users" property.');
-    }
+  public function __construct(array $parameters = []) {
+    $this->users = [
+      "michelle" => "FourMoreYears",
+      "admin" => "admin",
+      "demo" => "demo",
+      "bill" => "clinton",
+      "klark" => "klark",
+      "bruce" => "bruce",
+      "john" => "jfk",
+      "alexander" => "bell"
+    ];
 
-    if (isset($parameters['vsite'])) {
-      $this->nid = $parameters['vsite'];
-    }
-    else {
-      throw new Exception('behat.yml should include "vsite" property.');
-    }
+    $this->nid = 2;
   }
 
   /**

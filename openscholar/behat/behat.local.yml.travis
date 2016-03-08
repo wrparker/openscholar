@@ -23,10 +23,10 @@ default:
         2
 
   extensions:
-    Behat\MinkExtension\Extension:
+    Behat\MinkExtension:
       base_url:  http://127.0.0.1:8888
       files_path: "/home/travis/build/openscholar/openscholar/openscholar/behat/features/files"
-    Drupal\DrupalExtension\Extension:
+    Drupal\DrupalExtension:
       drupal:
         drupal_root: "/home/travis/build/openscholar/openscholar/www"
       api_driver: "drupal"
