@@ -9,6 +9,9 @@
     "guzzlehttp/guzzle": "~5.0"
   },
   "config": {
-    "bin-dir": "bin/"
+    "bin-dir": "bin/",
+    "preferred-install": {
+      "secure-http": false
+    }
   }
 }
