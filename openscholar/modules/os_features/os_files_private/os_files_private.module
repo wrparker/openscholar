@@ -302,6 +302,11 @@ function os_files_private_menu_local_tasks_alter(&$tasks, $router, $root) {
     $tasks['tabs'][0]['count'] = 0;
     $tasks['tabs'][0]['output'] = array();
   }
+  // Remove tabs in cp/content page.
+  if ($root == 'cp/content') {
+    $tasks['tabs'][0]['count'] = 0;
+    $tasks['tabs'][0]['output'] = array();
+  }
 }
 
 /**
