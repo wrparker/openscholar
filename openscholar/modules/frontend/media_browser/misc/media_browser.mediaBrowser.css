@@ -347,6 +347,7 @@ div[file-edit] .control button,
     width: 99%;
     margin: 3% 0 2%;
     border: 2px dashed #ccc;
+    position: relative;
 }
 .node-form .media-browser-drop-box {
     height: 180px;
