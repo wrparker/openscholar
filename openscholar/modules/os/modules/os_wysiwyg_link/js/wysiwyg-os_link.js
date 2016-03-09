@@ -1,7 +1,7 @@
 /**
  *
  */
-Drupal.wysiwyg.plugins.os_link = {
+Drupal.wysiwyg.plugins['os_link'] = {
   url: '',
 
   /**
@@ -86,9 +86,8 @@ Drupal.wysiwyg.plugins.os_link = {
     else {
       $('.form-item-link-text input', doc).val(selection.content);
     }
-    
     // If the link is set to be opened in a new window, then the checkbox will be in checked state.
-    if (selection.node.getAttribute('target') == '_blank') {
+    if (selection.node && (selection.node.getAttribute('target') == '_blank')) {
       $('#edit-target-option', doc).prop('checked', 'checked');
     }
 
