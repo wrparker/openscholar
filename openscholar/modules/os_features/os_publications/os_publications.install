@@ -1449,3 +1449,9 @@ function os_publications_update_7038() {
   }
 }
 
+/**
+ * Update default preferred bibliographic format.
+ */
+function os_publications_update_7039() {
+  variable_set('biblio_citeproc_style', 'harvard-chicago-author-date.csl');
+}
