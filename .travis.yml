@@ -23,8 +23,8 @@ cache:
     - openscholar/modules/contrib
     - openscholar/themes/contrib
     - openscholar/libraries
-#    - openscholar/behat/vendor
-#    - openscholar/behat/node_backend/node_modules
+    - openscholar/behat/vendor
+    - openscholar/behat/node_backend/node_modules
 
 env:
   global:
@@ -96,8 +96,7 @@ script:
 
   # Run the assets backend.
   - cd node_backend
-  - npm install
-#  - bash install_node.sh
+  - bash install_node.sh
   - nohup bash -c "node index.js 2>&1 &"
   - cd -
 
