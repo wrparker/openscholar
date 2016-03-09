@@ -55,7 +55,7 @@ class os_search_solr_search_box extends os_boxes_default {
     $form['vocab'] = array(
       '#type' => 'select',
       '#title' => t('Filter by: vocab'),
-      '#options' => array('-none-' => t('None')),
+      '#options' => array('-none-' => t('----')),
       '#prefix' => '<div id="vocab">',
       '#suffix' => '</div>',
       '#ajax' => array(
