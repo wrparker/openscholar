@@ -147,7 +147,7 @@ class os_taxonomy_fbt extends os_boxes_default {
 
     $form['depth'] = array(
       '#type' => 'select',
-      '#title' => ('Taxonomy tree depth.'),
+      '#title' => ('Taxonomy tree depth'),
       '#description' => t('How many levels would you like to display?'),
       '#options' => array(
         -1 => t("Show all children"),
