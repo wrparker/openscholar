@@ -15,14 +15,7 @@
 install.sh
 
 #behat
-openscholar/behat/vendor/behat
-openscholar/behat/vendor/composer
-openscholar/behat/vendor/behat
-openscholar/behat/vendor/fabpot
-openscholar/behat/vendor/guzzle
-openscholar/behat/vendor/instaclick
-openscholar/behat/vendor/symfony
-#openscholar/behat/vendor/
+openscholar/behat/vendor/
 openscholar/behat/node_backend/node_modules
 openscholar/behat/bin
 openscholar/behat.local.yml
