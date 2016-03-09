@@ -70,7 +70,7 @@
         <div class="media-browser-pane" ng-switch-when="library">
             <div class="loading" ng-show="loading">
                 Please wait while we get information on your files.<br />
-                <img src="{{templatePath}}/misc/images/large-spin_loader.gif"><br />
+                <div class="progress-bar progress-striped"><div class="progress-bar-completed" style="width: 100%"></div></div><br />
                 {{loadingMessage}}
             </div>
             <div class="file-filters" ng-show="numFiles">
