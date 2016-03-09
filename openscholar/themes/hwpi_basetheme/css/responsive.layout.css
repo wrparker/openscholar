@@ -175,11 +175,11 @@ span[style] {
 table[style] {
     max-width: 100% !important;
 }
-.block.block-boxes-os_boxes_manual_list article {
+.block.block-boxes-os_boxes_manual_list.styled article {
     padding-left: 15px;
     padding-right: 15px;
 }
-.block.block-boxes-os_boxes_manual_list h2{
+.block.block-boxes-os_boxes_manual_list.styled h2{
 	  padding-left: 15px;
 }
 
