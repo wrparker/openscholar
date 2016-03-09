@@ -1,5 +1,6 @@
 <?php
 
+use Behat\Mink\Driver\Selenium2Driver;
 use Drupal\DrupalExtension\Context\DrupalContext;
 use Behat\Behat\Context\Step\Given;
 use Behat\Gherkin\Node\TableNode;
@@ -18,7 +19,10 @@ class FeatureContext extends DrupalContext {
 
   public function beforeScenario($event) {
     // Set up the browser width.
-    $this->getSession()->resizeWindow(1440, 1200, 'current');
+
+    if ($this->getSession() instanceof Selenium2Driver) {
+      $this->getSession()->resizeWindow(1440, 1200, 'current');
+    }
 
     parent::beforeScenario($event);
   }
