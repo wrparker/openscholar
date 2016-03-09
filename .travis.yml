@@ -23,7 +23,7 @@ cache:
     - openscholar/modules/contrib
     - openscholar/themes/contrib
     - openscholar/libraries
-    - openscholar/behat/vendor
+#    - openscholar/behat/vendor
     - openscholar/behat/node_backend/node_modules
 
 env:
