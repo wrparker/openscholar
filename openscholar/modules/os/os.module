@@ -174,7 +174,7 @@ function os_in_readonly_mode($page) {
   }
 
   // When a user, logged in or not, ask to reset password we should throw 404.
-  $trigger_404 = $page == 'password' ? true : user_is_anonymous();
+  $trigger_404 = $page == 'password' ? TRUE : user_is_anonymous();
 
   if ($trigger_404) {
     // Get custom callback function from variable.
