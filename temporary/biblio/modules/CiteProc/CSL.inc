@@ -301,6 +301,7 @@ class csl_format extends csl_rendering_element {
           $text = drupal_strtolower($text);
           break;
         case 'capitalize-all':
+        case 'title':
           $text = mb_convert_case($text, MB_CASE_TITLE);
           $text = $this->handleCapitalizeCaseConversion($text);
           break;
@@ -663,6 +664,7 @@ class csl_name extends csl_format {
                 $text = $given . ' ' . $name['lastname'] ;
             }
           }
+
           $name['name'] = $text;
         }
       }
@@ -861,9 +863,10 @@ class csl_names extends csl_format {
       $this->delimiter = (isset($mode_delimiter)) ? $mode_delimiter : (isset($style_delimiter) ? $style_delimiter : '');
     }
 
+    $macro = '';
     $variables  = explode(' ', $this->variable);
     foreach ($variables as $var) {
-      list($contributor, $category) = explode(':', $var);
+      @list($contributor, $category) = explode(':', $var);
       if (!empty($contributor) && $this->_get_category($data->{$contributor}, $category) ) {
         $matches++;
         break;
@@ -882,7 +885,19 @@ class csl_names extends csl_format {
               list($contributor, $category) = explode(':', $var);
               if (!empty($contributor) && $this->_get_category($data->{$contributor}, $category)) {
                 $matches++;
-                break;
+                break 2;
+              }
+            }
+          }
+          elseif ($element instanceof csl_text) {
+            $vars = explode(' ', $element->variable);
+            foreach ($vars as $var) {
+              @list($contributor, $category) = explode(':', $var);
+              if (!empty($contributor) && $this->_get_category($data->{$contributor}, $category)) {
+                $matches++;
+                $macro = $element;
+                $variables = array();
+                break 2;
               }
             }
           }
@@ -890,22 +905,28 @@ class csl_names extends csl_format {
       }
     }
 
-    foreach ($variables as $var) {
-      $text = '';
-      list($contributor, $category) = explode(':', $var);
-      if (!empty($contributor) && $authors = $this->_get_category($data->{$contributor}, $category)) {
-        foreach ($this->elements as $element) {
-          if (is_a($element, 'csl_label')) {
-            $data->{$var}['variable'] = $var;
-          }
-          $text .= $element->render($authors, $mode);
-          // String replace the weird spacing with " ,"
-          $text = str_replace(" ,", ",", $text);
-          if (!$element->suffix) {
-            $text = rtrim($text);
+    if (!empty($variables)) {
+      foreach ($variables as $var) {
+        $text = '';
+        @list($contributor, $category) = explode(':', $var);
+        if (!empty($contributor) && $authors = $this->_get_category($data->{$contributor}, $category)) {
+          foreach ($this->elements as $element) {
+            if (is_a($element, 'csl_label')) {
+              $data->{$var}['variable'] = $var;
+            }
+            $text .= $element->render($authors, $mode);
+            // String replace the weird spacing with " ,"
+            $text = str_replace(" ,", ",", $text);
+            if (!$element->suffix) {
+              $text = rtrim($text);
+            }
           }
         }
+        if (!empty($text)) $variable_parts[] = $text;
       }
+    }
+    elseif ($macro) {
+      $text = $macro->render($data, $mode);
       if (!empty($text)) $variable_parts[] = $text;
     }
 
@@ -1252,6 +1273,8 @@ class csl_label extends csl_format {
         elseif (count($data) > 1) {
           $plural = 'multiple';
         }
+      default:
+          $plural = 'single';
     }
     if (is_array($data) && isset($data['variable'])) {
       $text = $this->citeproc->get_locale('term', $data['variable'], $form, $plural);
@@ -1259,9 +1282,19 @@ class csl_label extends csl_format {
     if (empty($text)) {
     foreach ($variables as $variable) {
       $t = (array)$data;
+      $termType = $variable;
       if (empty($t['nid'])) {
         // Data is a Biblio contributor.
         $show_term = TRUE;
+        // only one type of contributor will be in this array at a time
+        switch ($t[0]['auth_type']) {
+          case 1:
+            $termType = 'author';
+            break;
+          case 2:
+            $termType = 'editor';
+            break;
+        }
       }
       else {
         // Data is a Biblio node, so check if the field is not empty.
@@ -1273,7 +1306,7 @@ class csl_label extends csl_format {
         $plural = 'multiple';
       }
       
-      if ($show_term && $term = $this->citeproc->get_locale('term', $variable, $form, $plural)) {
+      if ($show_term && $term = $this->citeproc->get_locale('term', $termType, $form, $plural)) {
         $text = $term;
         break;
       }
@@ -1337,18 +1370,41 @@ class csl_group extends csl_format{
     if ($variables  && !$have_variables ) return; // there has to be at least one other none empty value before the term is output
     if (count($text_parts) == $terms) return; // there has to be at least one other none empty value before the term is output
 
-    $delimiter = $this->delimiter;
-    $text = implode($delimiter, $text_parts); // insert the delimiter if supplied.
-    $no_space = trim($delimiter);
-    $quotes = array(
-      '"'.$no_space,
-      '”'.$no_space
-    );
-    $replace = array(
-      $no_space.'"',
-      $no_space.'”',
-    );
-    $text = str_replace($quotes, $replace, $text);
+    if ($delimiter = $this->delimiter) {
+      $no_space = trim($delimiter);
+      $space = str_replace($no_space, '', $delimiter);
+
+      $text = '';
+      if (count($text_parts) > 1) {
+        foreach ($text_parts as $k => $t) {
+          if ($k == count($text_parts) - 1) {
+            $text .= $t;
+          }
+          else {
+            $stripped = strip_tags($t);
+            if (strrpos($stripped, $no_space) == strlen($stripped) - 1) {
+              $text .= $t . $space;
+            } else {
+              $text .= $t . $delimiter;
+            }
+          }
+        }
+      }
+      else {
+        $text = $text_parts[0];
+      }
+      $text = trim($text);
+      // $text = implode($delimiter, $text_parts); // insert the delimiter if supplied.
+      $quotes = array(
+        '"' . $no_space,
+        '”' . $no_space
+      );
+      $replace = array(
+        $no_space . '"',
+        $no_space . '”',
+      );
+      $text = str_replace($quotes, $replace, $text);
+    }
 
 
    return $this->format($text);
@@ -1524,9 +1580,20 @@ class csl_if extends csl_rendering_element {
         // to be the value that is tested
         if (strstr($var, ":") !== FALSE) {
           $variable_parts = explode(":", $var);
-          $value_array = $data->{$variable_parts[0]};
-          if (is_array($value_array)) {
-            $value_in_data = $value_array[$variable_parts[1]];
+          if ($variable_parts[0] == 'biblio_contributors') {
+            // special case
+            $value_in_data = array();
+            foreach ($data->{$variable_parts[0]} as $c) {
+              if ($c['auth_type'] == $variable_parts[1]) {
+                $value_in_data[] = $c;
+              }
+            }
+          }
+          else {
+            $value_array = $data->{$variable_parts[0]};
+            if (is_array($value_array)) {
+              $value_in_data = $value_array[$variable_parts[1]];
+            }
           }
         }
         else {
@@ -1671,6 +1738,9 @@ class csl_locale  {
        }
         if (!$term) {
           $term = $this->locale->xpath("//cs:term[@name='$arg1'$form]$plural");
+        }
+        if (!$term) {
+          $term = $this->locale->xpath("//cs:term[@name='$arg1'$form]");
         }
         if (isset($term[0])){
           if (isset($arg3) && isset($term[0]->{$arg3})) return (string)$term[0]->{$arg3};
