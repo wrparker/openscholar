@@ -19,7 +19,7 @@ if [ "${TEST_SUITE}" == "solr" ]; then
   cd ../../
   java -jar start.jar &
   sleep 10
-  cd /home/travis/build/openscholar/openscholar
+  cd /home/travis/build/openscholar/openscholar/www
 
   # Index site using Apache solr.
   drush en os_search_solr -y
