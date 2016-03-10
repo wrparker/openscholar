@@ -3174,4 +3174,11 @@ class FeatureContext extends DrupalContext {
     $page->find('xpath', "//button[.='Insert']")->press();
   }
 
+  /**
+   * @Given /^I logout$/
+   */
+  public function iLogout1() {
+    $this->getSession()->visit($this->locatePath('/user/logout'));
+  }
+
 }
