@@ -44,7 +44,7 @@ class os_search_solr_search_box extends os_boxes_default {
       '#type' => 'select',
       '#description' => t('Which bundle would you like to use.'),
       '#title' => t('Content type'),
-      '#options' => array('-none-' => t('All')) + $bundles,
+      '#options' => array(NULL => t('All')) + $bundles,
       '#default_value' => !empty($bundle) ? $bundle : '-none-',
       '#ajax' => array(
         'callback' => 'os_search_solr_vocabularies_switch',
@@ -57,7 +57,7 @@ class os_search_solr_search_box extends os_boxes_default {
     $form['vocab'] = array(
       '#type' => 'select',
       '#title' => t('Filter by: vocab'),
-      '#options' => array('-none-' => t('----')),
+      '#options' => array(NULL => t('----')),
       '#prefix' => '<div id="vocab">',
       '#suffix' => '</div>',
       '#ajax' => array(
