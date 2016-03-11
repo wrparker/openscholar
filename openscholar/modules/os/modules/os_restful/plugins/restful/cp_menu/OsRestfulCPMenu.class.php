@@ -188,6 +188,21 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       }
     }
 
+    # Files are a separate entity class, on the same level as nodes.
+    # Hard-code the file links in.
+    $add_links["{files}"] = array(
+      'label' => "Files",
+      'type' => 'link',
+      'href' => 'file/add/',
+      'alt' => t("One time bulk import of @type content.", array('@type' => "file")),
+    );
+    $add_links["{os_private_files}"] = array(
+      'label' => 'Private Files',
+      'type' => 'link',
+      'href' => 'cp/content/files-private',
+      'alt' => t("One time bulk import of @type content.", array('@type' => "private files")),
+    );
+
     $feature_settings = array();
     if (spaces_access_admin($user, $vsite_object)) {
       foreach (array_keys(array_filter($spaces_features)) as $feature) {
