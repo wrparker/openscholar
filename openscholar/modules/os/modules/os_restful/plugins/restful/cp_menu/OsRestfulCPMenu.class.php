@@ -432,4 +432,15 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       }
     }
   }
+
+  /**
+   * Throwing exception easily.
+   * @param $message
+   *   The exception message.
+   * @throws RestfulBadRequestException
+   */
+  public function throwException($message) {
+    throw new \RestfulBadRequestException($message);
+  }
+
 }
