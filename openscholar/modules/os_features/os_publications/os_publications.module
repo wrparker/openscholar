@@ -625,13 +625,6 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
 
   // Change labels and descriptions in node author fieldset.
   $form['author']['#title'] = t('Post Created/Edited By');
-  
-  if (isset($form['#node']->revision_uid)) {
-  	$form['author']['last_updated']['#weight'] = -10;
-    $revision_user = user_load($form['#node']->revision_uid);
-    $form['author']['last_updated']['#markup'] = '<div class="form-item"><label>Last updated</label><div class="description">by ' . $revision_user->name . ' on ' . date("m/d/Y", $form['#node']->changed) . '</div></div>';
-  }
-
   $form['author']['name']['#title'] = t('Posted by');
   $form['author']['name']['#description'] = '';
   $form['author']['date']['#title'] = t('Posted on');
