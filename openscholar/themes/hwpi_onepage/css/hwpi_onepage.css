@@ -262,16 +262,16 @@ h2.block-title {
 }
 /* Spotlight */
 
-#content-column .block.block-boxes-os_boxes_manual_list {
+#content-column .block.block-boxes-os_boxes_manual_list.styled {
     background: none;
     border: none;
     padding: 0;
 }
-#content-column .block.block-boxes-os_boxes_manual_list h2.block-title {
+#content-column .block.block-boxes-os_boxes_manual_list.styled h2.block-title {
     border-bottom: none;
     margin-bottom: 0;
 }
-#content-column .block.block-boxes-os_boxes_manual_list h1.node-title a {
+#content-column .block.block-boxes-os_boxes_manual_list.styled h1.node-title a {
     font-weight: bold;
     font-size: 22px;
 }
@@ -298,7 +298,10 @@ h2.block-title {
 }
 .event-start-month {
     color: #000;
-    padding: 12px 0 0;
+}
+.event-start .event-year {
+    padding: 6px 0 0;
+    font-size: 11px;
 }
 /* Tabs (widget) */
 

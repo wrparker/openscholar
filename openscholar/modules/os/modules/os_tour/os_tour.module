@@ -170,6 +170,9 @@ function os_tour_preprocess_toolbar(&$vars) {
       ),
     ),
     '#attached' => array(
+      'js' => array(
+        $path . '/theme/os_tour.toolbar.js',
+      ),
       'library' => array(
         array('google_feedapi', 'google_jsapi_feeds'),
         array('os_tour', 'hopscotch'),

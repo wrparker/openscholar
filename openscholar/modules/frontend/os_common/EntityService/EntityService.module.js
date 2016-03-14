@@ -117,7 +117,14 @@
               });
           }
           return defers[cKey].promise;
-        }
+        };
+
+        this.fetchImageStyle = function(id, imageStyle) {
+          var url = restPath + '/' + entityType + '/' + id + '/image_style/' + imageStyle;
+          var cKey = entityType + ':' + id;
+
+          return $http.get(url, {pKey: cKey});
+        };
 
         this.fetch = function (params) {
           if (!params) {
@@ -564,7 +571,7 @@
             }
 
             k = type + ":" + JSON.stringify(k);
-            var serverCount = resp.data.count || resp.data.totalEntities;
+            var serverCount = resp.data.totalEntities || resp.data.count;
             // check the count against what the server reported. If it's wrong, we need to fetch everything from scratch
             if (cache[k] && serverCount != cache[k].data.length) {
               // wipe db

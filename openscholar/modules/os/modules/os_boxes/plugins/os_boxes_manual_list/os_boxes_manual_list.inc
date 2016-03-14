@@ -13,6 +13,7 @@ class os_boxes_manual_list extends os_boxes_default {
       'style' => 'titles',
       'random' => false,
       'hide_title' => 0,
+      'callout_styling' => 1,
     );
   }
 
@@ -106,6 +107,13 @@ class os_boxes_manual_list extends os_boxes_default {
       '#default_value' => $this->options['style']
     );
 
+    $form['callout_styling'] = array(
+      '#type' =>'checkbox',
+      '#title' => t('Apply call-out styling to the widget'),
+      '#default_value' => $this->options['callout_styling'],
+      '#description' => t('When checked, the widget will use background shading and/or unique font styling.'),
+    );
+
     $form['random'] = array(
       '#type' =>'checkbox',
       '#title' => t('Random Post'),
@@ -193,7 +201,12 @@ class os_boxes_manual_list extends os_boxes_default {
         $this->set_cache($block['content']);
       }
     }
-
+    
+    // Adding 'styled' class in parent block wrapper if 'callout styling' option is checked.
+    if (isset($this->options['callout_styling']) && $this->options['callout_styling']) {
+      $block['additional_classes'] = 'styled';
+    }
+    
     return $block;
   }
 
