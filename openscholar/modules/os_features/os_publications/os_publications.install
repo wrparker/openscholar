@@ -1502,6 +1502,7 @@ function os_publications_update_7040() {
         'value' => serialize('cse.csl')
     ));
   }
+}
 
-  $insert_pub_style->execute();
+$insert_pub_style->execute();
 
