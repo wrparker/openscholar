@@ -1013,6 +1013,7 @@ function os_form_node_form_alter(&$form, $form_state) {
   // Add description to the name field in the author fieldset.
   $form['author']['name']['#description'] = t('You may change this if posting on behalf of someone else.');
 
+  // If the node form is opened in edit mode, then last revision username and date to be displayed.
   if (isset($form['#node']->revision_uid)) {
     $form['author']['last_updated']['#weight'] = -10;
     $revision_user = user_load($form['#node']->revision_uid);
