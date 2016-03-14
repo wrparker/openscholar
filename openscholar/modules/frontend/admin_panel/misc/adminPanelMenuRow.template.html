@@ -1,0 +1,6 @@
+<li ng-switch="menuRow.type">
+    <div ng-switch-when="heading">
+        <span toggle-open class="close-siblings" id="os-am-{{key}}" ng-class="{'toggleable': menuRow.children}">{{menuRow.label}}</span>
+    </div>
+    <ul ng-if="menuRow.children" ng-style="getListStyle('os-am-{{ key }}')"
+</li>

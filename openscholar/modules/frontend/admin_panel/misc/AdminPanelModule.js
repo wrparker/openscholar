@@ -177,45 +177,45 @@
     })
     .directive('adminPanelMenuRow', ['RecursionHelper', 'adminMenuStateService', function (RecursionHelper, $menuState) {
 
-        function link(scope, elem, attrs) {
-          scope.getListStyle = function (id) {
-            if ($menuState.GetState(id)) {
-              return {'display':'block'};
-            }
-            return {};
-          };
+      function link(scope, elem, attrs) {
+        scope.getListStyle = function (id) {
+          if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
+            return {'display':'block'};
+          }
+          return {};
+        };
 
-          scope.isActive = function (row) {
-            if (row.children) {
-              for (var k in row.children) {
-                var c = row.children[k];
-                if (scope.isActive(c)) {
-                  return true;
-                }
+        scope.isActive = function (row) {
+          if (row.children) {
+            for (var k in row.children) {
+              var c = row.children[k];
+              if (scope.isActive(c)) {
+                return true;
               }
-              return false;
             }
-            else if (row.type == 'link' && row.href == location.href) {
-              return true;
-            }
-            else {
-              return false;
-            }
+            return false;
+          }
+          else if (row.type == 'link' && row.href == location.href) {
+            return true;
+          }
+          else {
+            return false;
           }
         }
+      }
 
-        return {
-          scope: {
-            menuRow: '=',
-            key: '@'
-          },
-          templateUrl: paths.adminPanelModuleRoot + '/templates/adminPanelMenuRow.template.html?vers=' + Drupal.settings.version.adminPanel,
-          compile: function (element) {
-            // workaround so directives can be nested
-            return RecursionHelper.compile(element, link);
-          }
-        };
-      }]);
+      return {
+        scope: {
+          menuRow: '=',
+          key: '@'
+        },
+        templateUrl: paths.adminPanelModuleRoot + '/templates/adminPanelMenuRow.template.html?vers=' + Drupal.settings.version.adminPanel,
+        compile: function (element) {
+          // workaround so directives can be nested
+          return RecursionHelper.compile(element, link);
+        }
+      };
+    }]);
   
  
   
