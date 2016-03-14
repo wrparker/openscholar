@@ -81,10 +81,14 @@
       </names>
    </macro>
    <macro name="editor">
-      <names variable="editor">
-         <name initialize-with=". " delimiter=", " and="text"/>
-         <label form="short" prefix=", " text-case="capitalize-first" suffix="." strip-periods="true"/>
-      </names>
+      <choose>
+         <if variable="author">
+            <names variable="editor">
+               <name initialize-with=". " delimiter=", " and="text"/>
+               <label form="short" prefix=", " text-case="capitalize-first" suffix="." strip-periods="true"/>
+            </names>
+         </if>
+      </choose>
    </macro>
    <macro name="locators">
       <group delimiter=", ">

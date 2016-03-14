@@ -458,14 +458,15 @@ ol.search-results li.search-result:last-child {
     color: #7e7e7e;
     font-size: 12px;
     text-transform: uppercase;
-    padding: 16px 0 0;
 }
-/* remove later */
-.event-start .event-year {display:none !important;}
 
 .event-start-day {
     color: #000;
     font-size: 18px;
+}
+.event-start .event-year {
+    padding: 11px 0 0;
+font-size: 11px;
 }
 .event-start .event-content {
     margin-left: 70px;

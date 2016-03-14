@@ -46,7 +46,7 @@
 
         ModalService.showModal({
           template: '<div><div class="file-entity-loading" ng-show="loading"><div class="file-entity-loading-message">Loading files...<br />' +
-            '<img src="{{asset_path}}/large-spin_loader.gif"><br />Please wait...</div></div>' +
+            '<div class="progress-bar progress-striped"><div class="progress-bar-completed" style="width: 100%"></div></div></div></div>' +
             '<div file-edit file="file" on-close="closeModal(saved)"></div></div>',
           controller: 'FileEditorModalController',
           inputs: {
