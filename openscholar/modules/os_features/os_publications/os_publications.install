@@ -1474,3 +1474,36 @@ function os_publications_update_7039() {
     os_publications_revert_citeproc_style($citation);
   }
 }
+
+/**
+ * Update default preferred bibliographic format.
+ */
+function os_publications_update_7040() {
+  // Updating the default ciation style for new publications.
+  variable_set('biblio_citeproc_style', 'harvard-chicago-author-date.csl');
+
+  // Checking existing sites space ids whose default citation is not present in spaces_overrides table.
+  $query = db_select('purl', 'p');
+  $query->leftjoin('spaces_overrides', 'so', 'so.id = p.id AND object_type = :object_type AND object_id = :object_id', 
+  array(':object_type' => 'variable', ':object_id' => 'biblio_citeproc_style'));
+  $query->condition('p.provider', 'spaces_og', '=');
+  $query->isNull('so.value');
+  $query = $query->fields('p', array('id'));
+  $target_space_ids = $query->execute()->fetchCol();
+
+  // This will set previous default value cse.csl as the overridden value for existing sites' default publication style.
+  $insert_pub_style = db_insert('spaces_overrides')->fields(array('type', 'id', 'object_type', 'object_id', 'value'));
+  foreach ($target_space_ids as $key => $value) {
+    $insert_pub_style->values(array(
+        'type' => 'og',
+        'id' => $value,
+        'object_type' => 'variable',
+        'object_id' => 'biblio_citeproc_style',
+        'value' => serialize('cse.csl')
+    ));
+  }
+  $insert_pub_style->execute();
+}
+
+
+
