@@ -209,6 +209,23 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'href' => 'cp/content/files-private'
     )):array();
 
+    $settings_forms = cp_get_setting_forms();
+
+    $settings_links = array();
+    foreach ($settings_forms as $f) {
+      $group = $f['group']['#title'];
+      $id = $f['group']['#id'];
+
+      if (!isset($f['form']['#access']) || $f['form']['#access']) {
+        $settings_links[$id] = array(
+          'label' => $group,
+          'type' => 'directive',
+          'directive' => 'ap-settings-modal',
+          'directive-arg' => $id
+        );
+      }
+    }
+
     //Order alphabetically
     ksort($add_links);
     ksort($import_links);
@@ -295,6 +312,12 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'type' => 'heading',
         'default_state' => 'collapsed',
         'children' => array(
+          'analytics' => array(
+            'label' => 'Analytics',
+            'type' => 'directive',
+            'directive' => 'ap-settings-modal',
+            'directive-arg' => 'analytics'
+          ),
           'app' => array(
             'label' => 'Apps',
             'type' => 'link',
@@ -304,8 +327,9 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         array(
           'advanced' => array(
             'label' => 'Advanced',
-            'type' => 'link',
-            'href' => 'cp/settings'
+            'type' => 'heading',
+            'default_state' => 'collapsed',
+            'children' => $settings_links,
           )
         ),
       ),
