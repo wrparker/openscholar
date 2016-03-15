@@ -198,12 +198,13 @@
     .directive('adminPanelMenuRow', function () {
         return {
           scope: {
-            menuRow: '<',
+            menuRow: '=',
             key: '@'
           },
-          template: paths.,
+          templateUrl: paths.adminPanelModuleRoot+'/templates/adminPanelMenuRow.template.html?vers='+Drupal.settings.version.adminPanel,
           link: function (scope, element, attrs) {
-
+            console.log(scope.key);
+            console.log(scope.menuRow);
           }
         }
       });
