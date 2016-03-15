@@ -194,6 +194,18 @@
     	  element.attr('href', attrs.href + '?osurl=' + encodeURIComponent(location.href) + '&uid=' + uid);
         },
       }
-    });
+    })
+    .directive('adminPanelMenuRow', function () {
+        return {
+          scope: {
+            menuRow: '<',
+            key: '@'
+          },
+          template: '',
+          link: function (scope, element, attrs) {
+
+          }
+        }
+      });
   
 })(jQuery);
