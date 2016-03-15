@@ -6,11 +6,10 @@
             <div class="close_panel">
               <span style="color:#a39d9d;">O</span><span style="color:#df1f26;">S</span>
             </div><span class="icon icon-close">&#171; Close</span>
-            <div id='cssmenu'>
+            <div id="cssmenu">
               <ul>
                 <li>&nbsp;</li>
-                <li ng-repeat="(key, parent) in admin_panel" ng-class="{'has-sub': parent.children}">
-                  <span admin-panel-menu-row menu-row="parent" key="{{key}}"></span>
+                <li ng-repeat="(key, parent) in admin_panel" ng-class="{'has-sub': parent.children}" admin-panel-menu-row menu-row="parent" key="{{key}}">
                 </li>
                 <!--REMOVE THIS LI WHEN BETA TESTING IS COMPLETE-->
                 <li style="margin-top:50px;">

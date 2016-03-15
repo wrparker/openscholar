@@ -102,51 +102,66 @@
     	//elm.find('li').removeClass('open');
     	//elm.find('ul').slideUp(200);
       }
+
+      function getAncestor(elem, tagName) {
+        tagName = tagName.toUpperCase();
+        while (elem[0].tagName != tagName) {
+          if (elem[0].tagName == 'BODY') {
+            return false;
+          }
+          elem = elem.parent();
+        }
+
+        return elem;
+      }
       
       return {
         link: function(scope, element, attrs) {
-    	  if (element[0].nodeName == 'UL') {
-    		if (element.parent('li').hasClass('open')) {
-    		  element.css('display','block');	
-    		}
-    		return;
-    	  }
+          var parent = getAncestor(element, 'li');
+          if (element[0].nodeName == 'UL') {
+            if (parent.hasClass('open')) {
+              element.css('display','block');
+            }
+            return;
+          }
     	  
-    	  if (typeof(menu_state) !== 'undefined' && typeof(menu_state[attrs.id]) !== 'undefined' && menu_state[attrs.id]) {
-    		element.parent('li').addClass('open');
-    	  }
-    	  
-    	  element.bind('click', function() {
-        	if (element.hasClass('toggleable')){
+    	    if (typeof(menu_state) !== 'undefined' && typeof(menu_state[attrs.id]) !== 'undefined' && menu_state[attrs.id]) {
+            parent.addClass('open');
+          }
+
+          element.bind('click', function() {
+            if (element.hasClass('toggleable')){
               element.removeAttr('href');
-              var parent = jQuery(element).parent('li');
+
               if (parent.hasClass('open')) {
                 menu_state[attrs.id] = false;
                 closeLink(parent);
-	          } else {
-	        	if ( element.hasClass('close-siblings') ) {
-	              if( parent.hasClass('heading') ) {
-	            	togglers = parent.parent('ul').siblings('ul').find('li.open');
-	              } else {
-	            	togglers = parent.siblings('.open');
-	              }
+	            }
+              else {
+	        	    if ( element.hasClass('close-siblings') ) {
+	                if ( parent.hasClass('heading') ) {
+	            	    togglers = parent.parent().parent().find('li.open');
+	                }
+                  else {
+	            	    togglers = parent.parent().siblings('.open');
+	                }
 	              
-		      	  togglers.each(function() {
-		      		var sibling = jQuery(this);
-		      		menu_state[sibling.find("a").first().attr('id')] = false;
-		       	    closeLink(sibling);
-		       	  });
-		       	}
-	            menu_state[attrs.id] = true;
-	            openLink(parent);
-	          }
-        	}
-        	scope.$apply(function () {
-        	  $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
+		      	      togglers.each(function() {
+                    var sibling = jQuery(this);
+                    menu_state[sibling.find("a").first().attr('id')] = false;
+                    closeLink(sibling);
+                  });
+		       	    }
+                menu_state[attrs.id] = true;
+                openLink(parent);
+              }
+        	  }
+            scope.$apply(function () {
+              $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
             });
-          })  
+          });
         },
-      }
+      };
       
     }]).directive('leftMenu', ['$cookies', function($cookies) {
       if (typeof(menu_state) == 'undefined') {
