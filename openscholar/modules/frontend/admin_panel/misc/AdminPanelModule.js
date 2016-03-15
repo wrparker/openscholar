@@ -7,7 +7,7 @@
   var morphButton;
   var menu_state;
 
-    angular.module('AdminPanel', [ 'os-auth', 'ngCookies','ngStorage'])
+    angular.module('AdminPanel', [ 'os-auth', 'ngCookies','ngStorage', 'RecursionHelper'])
     .config(function (){
        paths = Drupal.settings.paths
        vsite = Drupal.settings.spaces.id || 0;
@@ -195,18 +195,18 @@
         },
       }
     })
-    .directive('adminPanelMenuRow', function () {
+    .directive('adminPanelMenuRow', ['RecursionHelper', function (RecursionHelper) {
         return {
           scope: {
             menuRow: '=',
             key: '@'
           },
-          templateUrl: paths.adminPanelModuleRoot+'/templates/adminPanelMenuRow.template.html?vers='+Drupal.settings.version.adminPanel,
-          link: function (scope, element, attrs) {
-            console.log(scope.key);
-            console.log(scope.menuRow);
+          templateUrl: paths.adminPanelModuleRoot + '/templates/adminPanelMenuRow.template.html?vers=' + Drupal.settings.version.adminPanel,
+          compile: function (element) {
+            // workaround so directives can be nested
+            return RecursionHelper.compile(element);
           }
-        }
-      });
+        };
+      }]);
   
 })(jQuery);
