@@ -43,8 +43,8 @@
         }
       }
     }])
-  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', 'EntityConfig', '$sce', '$upload', '$timeout', 'FILEEDITOR_RESPONSES', 'params', 'close',
-      function ($scope, $filter, $http, EntityService, config, $sce, $upload, $timeout, FER, params, close) {
+  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', 'EntityConfig', '$sce', '$q', '$upload', '$timeout', 'FILEEDITOR_RESPONSES', 'params', 'close',
+      function ($scope, $filter, $http, EntityService, config, $sce, $q, $upload, $timeout, FER, params, close) {
 
     // Initialization
     var service = new EntityService('files', 'id'),
@@ -144,18 +144,32 @@
 
     // Watch for changes in file list
     $scope.$on('EntityService.files.add', function (event, file) {
-      $scope.files.push(file)
+      $scope.files.push(file);
     });
 
     $scope.$on('EntityService.files.update', function (event, file) {
-      if ($scope.selected_file.id == file.id) {
-        $scope.selected_file = angular.copy(file);
-      }
+      var t = $scope.selected_file;
       for (var i=0; i < $scope.files.length; i++) {
         if ($scope.files[i].id == file.id) {
+          if ($scope.files[i].replaced) {
+            file.replaced = $scope.files[i].replaced;
+          }
+          if ($scope.files[i].new) {
+            file.new = $scope.files[i].new;
+          }
           $scope.files[i] = file;
           break;
         }
+      }
+
+      for (i=0; i<$scope.toInsert.length; i++) {
+        if ($scope.toInsert[i].id == file.id) {
+          $scope.toInsert[i] = file;
+        }
+      }
+
+      if ($scope.selected_file.id == file.id) {
+        $scope.selected_file = angular.copy(file);
       }
     });
 
@@ -239,6 +253,29 @@
       delete this.messages[id];
     }
 
+    // filter out weird characters that look like normal characters, like –, which gets converted to â€“
+    function cleanPaths(text) {
+      var s = text;
+      // smart single quotes and apostrophe
+      s = s.replace(/[\u2018\u2019\u201A]/g, "\'");
+      // smart double quotes
+      s = s.replace(/[\u201C\u201D\u201E]/g, "\"");
+      // ellipsis
+      s = s.replace(/\u2026/g, "...");
+      // dashes
+      s = s.replace(/[\u2013\u2014]/g, "-");
+      // circumflex
+      s = s.replace(/\u02C6/g, "^");
+      // open angle bracket
+      s = s.replace(/\u2039/g, "<");
+      // close angle bracket
+      s = s.replace(/\u203A/g, ">");
+      // spaces
+      s = s.replace(/[\u02DC\u00A0]/g, " ");
+
+      return s;
+    }
+
     // looks for any files with a similar basename and extension to this file
     // if it finds any, it adds it to a list of dupes, then scans every file to find what the new name should be
     $scope.checkForDupes = function($files, $event, $rejected) {
@@ -248,14 +285,56 @@
       var toBeUploaded = [];
       $scope.dupes = [];
       $scope.toInsert = [];
-      for (var i=0; i<$files.length; i++) {
+      var promises = [];
+      $scope.checkingFilenames = true;
+      for (var i = 0; i < $files.length; i++) {
+        var url = Drupal.settings.paths.api + '/files/filename/' + $files[i].name;
+
+        if (Drupal.settings.spaces) {
+          url += '?vsite=' + Drupal.settings.spaces.id;
+        }
+        var config = {
+          originalFile: $files[i]
+        };
+        promises.push($http.get(url, config).then(function (response) {
+            var file = response.config.originalFile;
+            var data = response.data.data;
+            file.filename = file.name;
+            if (data.collision) {
+              file.newName = data.expectedFileName;
+              $scope.dupes.push(file);
+            }
+            else {
+              if (data.invalidChars) {
+                addMessage("This file was renamed from \"" + file.name + "\" due to having invalid characters in its name.")
+              }
+              toBeUploaded.push(file);
+            }
+          },
+          function (errorResponse) {
+            console.log(errorResponse);
+          }));
+      }
+
+      var promise = $q.all(promises).then(function () {
+          $scope.checkingFilenames = false;
+          $scope.upload(toBeUploaded);
+        },
+        function () {
+          $scope.checkingFilenames = false;
+          console.log('Error happened with all promises');
+        })
+    }
+
+/*
         var similar = [],
             basename = $files[i].name.replace(/\.[a-zA-Z0-9]*$/, ''),   // remove extension from filename
             extension = $files[i].name.replace(basename, ''),           // remove filename from filename to get extension
             dupeFound = false;
 
         // rewrite the filename the same way PHP will
-        basename = basename.replace(/ /g, '_').replace(/[^a-zA-Z0-9-_.~]/g, '');
+        basename = cleanPaths(basename);
+        basename = basename.toLowerCase().replace(/ /g, '_').replace(/[^a-zA-Z0-9-_.~]/g, '');
         $files[i].filename = basename + extension;
 
         for (var j=0; j<$scope.files.length; j++) {
@@ -306,7 +385,7 @@
       }
 
       $scope.upload(toBeUploaded);
-    }
+    }*/
 
     // renames the file before uploading
     $scope.rename = function ($index, $last) {
@@ -385,9 +464,9 @@
               $scope.setSelection(firstId);
               $scope.changePanes('edit');
             }
-            else if (typeof $scope.messages[$scope.messages.next-1] != 'undefined') {
-              // do nothing. This usually means there was an error during upload.
-            }
+            //else if (typeof $scope.messages[$scope.messages.next-1] != 'undefined') {
+            //  // do nothing. This usually means there was an error during upload.
+            //}
             else {
               if (directInsert) {
                 $scope.insert();
@@ -459,11 +538,22 @@
       }
     })();
 
+    function getKeyForFile(fid) {
+      for (var i=0; i<$scope.files.length; i++) {
+        if ($scope.files[i].id == fid) {
+          return i;
+        }
+      }
+      return FALSE;
+    }
 
     // selected file
     $scope.setSelection = function (fid) {
-      $scope.selection = fid;
-      $scope.selected_file = angular.copy(service.get(fid));
+      var key = getKeyForFile(fid);
+      if (key !== false) {
+        $scope.selection = fid;
+        $scope.selected_file = $scope.files[key];
+      }
     };
 
     $scope.deleteConfirmed = function() {
@@ -520,6 +610,7 @@
         else {
           $scope.changePanes('library', result);
         }
+        return;
       }
       $scope.changePanes('library', result);
     }
@@ -566,6 +657,7 @@
     function link(scope, elem, attr, contr) {
       elem.bind('click', function (event) {
         event.preventDefault();
+        event.stopPropagation();
         // get stuff from the element we clicked on and Drupal.settings
         var elem = event.currentTarget,
           params = mbModal.defaultParams(),

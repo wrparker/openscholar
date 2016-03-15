@@ -38,7 +38,7 @@ function os_menu_create($title, $menu_name = false, $description = '') {
 
   if (!$menu_name) {
     // Strip non alphanumeric char's.
-    $menu_name = ereg_replace("[^a-z0-9-]", "",str_replace(" ","-",strtolower($title)));
+    $menu_name = pereg_replace("[^a-z0-9-]", "",str_replace(" ","-",strtolower($title)));
   }
 
   if (module_exists('vsite_menu')) {

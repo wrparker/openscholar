@@ -209,17 +209,6 @@ function os_common_library() {
     )
   );
 
-  $info['angular-modal-service'] = array(
-    'title' => 'Angular Modal Service',
-    'version' => '1.0',
-    'js' => array(
-      $bower.'/angular-modal-service/dst/angular-modal-service.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'ui.dialog'),
-    )
-  );
-
   $info['ng-file-upload'] = array(
     'title' => t('Angular File Upload'),
     'version' => '3.1.0',
@@ -236,7 +225,7 @@ function os_common_library() {
     'title' => t('Angular File Upload'),
     'version' => '3.1.0',
     'js' => array(
-      libraries_get_path('angular-modal-service') . '/dst/angular-modal-service.min.js' => array(),
+      libraries_get_path('angular-modal-service') . '/dst/angular-modal-service.js' => array(),
     ),
     'dependencies' => array(
       array('os_common', 'angularjs'),

@@ -23,15 +23,33 @@ div[ng-repeat="vocab in vocabs"] .tw-term-remove {
     padding: 0 4px;
     border: 1px solid #ccc;
     font-family: verdana;
-    float:right;
+    float: right;
 }
 div[ng-repeat="vocab in vocabs"] div[ng-repeat="selectedTerm in selectedTerms[vocab.id]"] {
     padding: 4px 8px;
     width: 95%;
-     background-color: #efefef;
+    background-color: #efefef;
 }
-
 div[ng-repeat="vocab in vocabs"] div[ng-repeat="selectedTerm in selectedTerms[vocab.id]"]:hover {
     background-color: #e1e1e1;
     cursor: pointer;
+}
+/* move these to a better location */
+
+legend.legend-open-link {
+    color: #4E84C4;
+    font-weight: normal;
+    content: '';
+    background-image: url("/profiles/openscholar/themes/cp_theme/images/cp-sprite.png");
+    background-position: -10px -448px;
+    background-repeat: no-repeat;
+    padding-left: 15px;
+}
+legend.legend-open-link:hover {
+    cursor: pointer;
+}
+fieldset.fieldset {
+    padding: .5em 0 0 1em;
+    background-color: #FFF;
+    width: 96%;
 }
