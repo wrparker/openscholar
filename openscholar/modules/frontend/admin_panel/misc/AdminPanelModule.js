@@ -201,7 +201,7 @@
             menuRow: '<',
             key: '@'
           },
-          template: '',
+          template: paths.,
           link: function (scope, element, attrs) {
 
           }

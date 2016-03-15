@@ -1,0 +1,13 @@
+<span ng-switch="menuRow.type">
+    <span ng-switch-when="heading">
+        <span toggle-open class="close-siblings" id="os-am-{{key}}" ng-class="{'toggleable': menuRow.children}">{{menuRow.label}}</span>
+    </span>
+    <div ng-switch-when="link">
+        <a ng-attr-href="{{menuRow.href || '#'}}" toggle-open class="close-siblings" id="os-am-{{ key }}" ng-class="{'toggleable': menuRow.children}">{{ menuRow.label }}</a>
+    </div>
+    <ul ng-if="menuRow.children" ng-style="getListStyle('os-am-{{ key }}')">
+        <li class='submenu' ng-class="{'has-sub': child.children, 'heading': child.type == 'heading'}" ng-repeat="(subkey, child) in menuRow.children">
+            <span admin-panel-menu-row menu-row="child" key="key + '-' + subkey">
+        </li>
+    </ul>
+</span>
