@@ -16,7 +16,7 @@ angular.module('remoteLogin', [])
 
         $http.get(Drupal.settings.os_restful.parentUrl + '/api/users/me', {
           headers: {
-            'access_token': data.access_token
+            'access-token': data.access_token
           }
         }).success(function(data) {
           console.log(data)
