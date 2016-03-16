@@ -7,6 +7,20 @@
 
 class OsRestfulUser extends \RestfulEntityBaseUser {
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function controllersInfo() {
+    return array(
+      'me' => array(
+        RestfulInterface::GET => 'getLoggedInUser',
+      )
+    ) + parent::controllersInfo();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();
 
@@ -94,4 +108,5 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
     }
     return $groups;
   }
+
 }

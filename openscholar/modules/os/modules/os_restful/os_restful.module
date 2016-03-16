@@ -252,7 +252,6 @@ function os_restful_os_settings_validate_parent_site($form, $form_state) {
     return;
   }
 
-
   $request = drupal_http_request($parent_url . '/api/login-token');
 
   if ($request->code != 200) {
