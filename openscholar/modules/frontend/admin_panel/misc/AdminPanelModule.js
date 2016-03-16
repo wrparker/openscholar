@@ -231,7 +231,7 @@
               }
               return false;
             }
-            else if (typeof row.href != 'undefined' && row.href == location.href) {
+            else if (row.type == 'link' && row.href == location.href) {
               return true;
             }
             else {
