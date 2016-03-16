@@ -220,6 +220,24 @@
             }
             return {};
           };
+
+          scope.isActive = function (row) {
+            if (row.children) {
+              for (var k in row.children) {
+                var c = row.children[k];
+                if (scope.isActive(c)) {
+                  return true;
+                }
+              }
+              return false;
+            }
+            else if (typeof row.href != 'undefined' && row.href == location.href) {
+              return true;
+            }
+            else {
+              return false;
+            }
+          }
         }
 
         return {
