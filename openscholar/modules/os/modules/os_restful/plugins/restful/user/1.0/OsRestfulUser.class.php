@@ -109,4 +109,10 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
     return $groups;
   }
 
+  public function getLoggedInUser() {
+    $user = $this->getAccount();
+
+    return array($this->view($user->uid));
+  }
+
 }

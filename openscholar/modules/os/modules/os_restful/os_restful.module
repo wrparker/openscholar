@@ -252,7 +252,7 @@ function os_restful_os_settings_validate_parent_site($form, $form_state) {
     return;
   }
 
-  $request = drupal_http_request($parent_url . '/api/login-token');
+  $request = drupal_http_request($parent_url . '/api');
 
   if ($request->code != 200) {
     form_set_error('os_restful_parent_site', t('The given site does have the Restful token auth module enable.'));

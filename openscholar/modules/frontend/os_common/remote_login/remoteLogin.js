@@ -13,9 +13,17 @@ angular.module('remoteLogin', [])
       })
       .success(function(data) {
         $scope.status = "Hi there! you are logged in!";
+
+        $http.get(Drupal.settings.os_restful.parentUrl + '/api/users/me', {
+          headers: {
+            'access_token': data.access_token
+          }
+        }).success(function(data) {
+          console.log(data)
+        });
       })
       .error(function(data) {
-        $scope.status = 'Wow! Are you sure this is your username and password?'
+        $scope.status = 'Wow! Are you sure this is your username and password?';
       })
     };
 
