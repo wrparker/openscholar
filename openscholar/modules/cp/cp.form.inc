@@ -14,6 +14,7 @@ function cp_settings_form($form_state) {
 
   // Loops over all implementations of hook_cp_settings().
   $settings = cp_get_setting_forms();
+  dpm($settings);
   foreach ($settings as $key => $setting) {
     if (!isset($setting['form'])) {
       continue;

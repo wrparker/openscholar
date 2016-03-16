@@ -81,7 +81,8 @@ ul.primary {
 #cssmenu,
 #cssmenu ul,
 #cssmenu ul li,
-#cssmenu ul li a {
+#cssmenu ul li a,
+#cssmenu ul li span {
     margin: 0;
     padding: 0;
     border: 0;
@@ -168,6 +169,7 @@ ul.primary {
     content: none;
 }
 #cssmenu ul ul li a,
+#cssmenu ul ul li span,
 #cssmenu .heading {
     padding: 10px 18px 10px 17px;
     cursor: pointer;

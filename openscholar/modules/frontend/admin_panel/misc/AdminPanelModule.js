@@ -19,11 +19,12 @@
       var menu = 'admin_panel';
       $scope.paths = paths;
       
-      $scope.getListStyle = function(id) { 
-      	if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
-      	  return {'display':'block'}; 
-      	}
-      	return {};
+      $scope.getListStyle = function(id) {
+        console.log(id);
+        if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
+          return {'display':'block'};
+        }
+        return {};
       };
       
       //Force menu open Special case
@@ -50,9 +51,9 @@
           },1);  
           
           window.setTimeout(function () {
-        	jQuery('.morph-button').removeClass('no-transition');
-        	morphButton.isAnimating = false;
-        	morphButton.expanded = true;
+          jQuery('.morph-button').removeClass('no-transition');
+          morphButton.isAnimating = false;
+          morphButton.expanded = true;
           },1000);
         } else {
           if (typeof(menu_state) !== 'undefined') {
@@ -78,9 +79,9 @@
           $localStorage.admin_menu[uid][vsite][cid] = response.data.data;
           $scope.admin_panel = response.data.data;
           if (force_open || (auto_open && typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main)) {
-        	morphButton.toggle();  
+          morphButton.toggle();
           } else if (typeof(menu_state) !== 'undefined') {
-        	//Set the menu state to closed.
+          //Set the menu state to closed.
             menu_state.main = false;
           }
         }); 
@@ -93,14 +94,14 @@
       }
       
       openLink = function(elm) {
-    	elm.addClass('open');
-    	elm.children('ul').slideDown(200);
+        elm.addClass('open');
+        elm.children('ul').slideDown(200);
       }
       
-      closeLink  = function(elm) {
-    	elm.removeClass('open');
-    	//elm.find('li').removeClass('open');
-    	//elm.find('ul').slideUp(200);
+      closeLink = function(elm) {
+        elm.removeClass('open');
+        //elm.find('li').removeClass('open');
+        //elm.find('ul').slideUp(200);
       }
 
       function getAncestor(elem, tagName) {
@@ -124,8 +125,8 @@
             }
             return;
           }
-    	  
-    	    if (typeof(menu_state) !== 'undefined' && typeof(menu_state[attrs.id]) !== 'undefined' && menu_state[attrs.id]) {
+
+          if (typeof(menu_state) !== 'undefined' && typeof(menu_state[attrs.id]) !== 'undefined' && menu_state[attrs.id]) {
             parent.addClass('open');
           }
 
@@ -136,26 +137,26 @@
               if (parent.hasClass('open')) {
                 menu_state[attrs.id] = false;
                 closeLink(parent);
-	            }
+              }
               else {
-	        	    if ( element.hasClass('close-siblings') ) {
-	                if ( parent.hasClass('heading') ) {
-	            	    togglers = parent.parent().parent().find('li.open');
-	                }
+                if ( element.hasClass('close-siblings') ) {
+                  if ( parent.hasClass('heading') ) {
+                    var togglers = parent.parent().parent().find('li.open');
+                  }
                   else {
-	            	    togglers = parent.parent().siblings('.open');
-	                }
-	              
-		      	      togglers.each(function() {
+                    var togglers = parent.parent().siblings('.open');
+                  }
+
+                  togglers.each(function() {
                     var sibling = jQuery(this);
                     menu_state[sibling.find("a").first().attr('id')] = false;
                     closeLink(sibling);
                   });
-		       	    }
+                }
                 menu_state[attrs.id] = true;
                 openLink(parent);
               }
-        	  }
+            }
             scope.$apply(function () {
               $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
             });
@@ -176,41 +177,51 @@
        templateUrl: paths.adminPanelModuleRoot+'/templates/admin_menu.html?vers='+Drupal.settings.version.adminPanel,
        controller: 'AdminMenuController',
        link: function(scope, element, attrs) {
-    	  morphButton = new UIMorphingButton(element[0], {
-      			closeEl : '.icon-close',
-      			onBeforeOpen : function() {
-      				// push main admin_panel
-      				jQuery('#page_wrap, .page-cp #page, .page-cp #branding').addClass('pushed');
-      			},
-      			onAfterOpen : function() {
-      			  // add scroll class to main el
-      			  jQuery('.morph-button').addClass('scroll');
-      			  menu_state['main'] = true;
-      			  Drupal.settings.admin_panel.keep_open = true;
-      			  scope.$apply(function () {
-        	        $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
-        	      });
-      			},
-      			onBeforeClose : function() {
-      			  jQuery('.morph-button').removeClass('scroll');
-      			  jQuery('#page_wrap, .page-cp #page, .page-cp #branding').removeClass('pushed');
-      			  menu_state['main'] = false;
-        		  scope.$apply(function () {
-          	        $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
-          	      });
-      			}
-      		}); 
-  	   }
+        morphButton = new UIMorphingButton(element[0], {
+            closeEl : '.icon-close',
+            onBeforeOpen : function() {
+              // push main admin_panel
+              jQuery('#page_wrap, .page-cp #page, .page-cp #branding').addClass('pushed');
+            },
+            onAfterOpen : function() {
+              // add scroll class to main el
+              jQuery('.morph-button').addClass('scroll');
+              menu_state['main'] = true;
+              Drupal.settings.admin_panel.keep_open = true;
+              scope.$apply(function () {
+                  $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
+                });
+            },
+            onBeforeClose : function() {
+              jQuery('.morph-button').removeClass('scroll');
+              jQuery('#page_wrap, .page-cp #page, .page-cp #branding').removeClass('pushed');
+              menu_state['main'] = false;
+              scope.$apply(function () {
+                    $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
+                  });
+            }
+          });
+       }
      };
    }]).directive('addLocation', function() {
-	  //For Qualtrics URL Remove after beta
+    //For Qualtrics URL Remove after beta
       return {
         link: function(scope, element, attrs) {
-    	  element.attr('href', attrs.href + '?osurl=' + encodeURIComponent(location.href) + '&uid=' + uid);
+        element.attr('href', attrs.href + '?osurl=' + encodeURIComponent(location.href) + '&uid=' + uid);
         },
       }
     })
     .directive('adminPanelMenuRow', ['RecursionHelper', function (RecursionHelper) {
+
+        function link(scope, elem, attrs) {
+          scope.getListStyle = function (id) {
+            if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
+              return {'display':'block'};
+            }
+            return {};
+          };
+        }
+
         return {
           scope: {
             menuRow: '=',
@@ -219,7 +230,7 @@
           templateUrl: paths.adminPanelModuleRoot + '/templates/adminPanelMenuRow.template.html?vers=' + Drupal.settings.version.adminPanel,
           compile: function (element) {
             // workaround so directives can be nested
-            return RecursionHelper.compile(element);
+            return RecursionHelper.compile(element, link);
           }
         };
       }]);
