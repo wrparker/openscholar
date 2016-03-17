@@ -7,7 +7,8 @@
 
         <a href="#" mb-open-modal panes="{{panes.join(',')}}" types="{{types}}" on-select="addFile($inserted)">{{upload_text}}</a>
 		 <div class="help" ng-show="showHelp"><strong>Allowed file types:</strong><br /> {{extensionsFull.join(' ')}}<br /><br />
-                   <strong>Max file size:</strong> {{maxFilesize}}.</div>
+                   <strong>Max file size:</strong> {{maxFilesize}}.
+         </div>
 </div>
 <div ui-sortable="sortableOptions" ng-model="selectedFiles">
     <div class="file-list-single form-wrapper" ng-repeat="file in selectedFiles" ng-class="{even: $even, odd: $odd, highlight: file.highlight}">

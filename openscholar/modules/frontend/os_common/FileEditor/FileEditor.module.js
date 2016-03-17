@@ -25,18 +25,20 @@
 
           fileService.fetch().then(function (data) {
             files = data;
+            return data;
           });
 
           scope.fileEditAddt = '';
           scope.date = '';
           scope.description_label = 'Descriptive Text - will display under the filename';
-
+          scope.schema = '';
           scope.$watch('file', function (f) {
 
             if (!f) {
               return;
             }
 
+            scope.schema = f.schema;
             scope.fileEditAddt = libraryPath+'/file_edit_'+f.type+'.html?vers='+Drupal.settings.version.FileEditor;
             scope.date = $filter('date')(f.timestamp+'000', 'short');
             scope.file.terms = scope.file.terms || [];
@@ -71,6 +73,10 @@
           scope.invalidFileName = false;
           scope.$watch('file.filename', function (filename, old) {
             if (typeof filename != 'string' || !scope.file) {
+              return;
+            }
+            if (scope.file.schema == 'oembed') {
+              scope.invalidFileName = false;
               return;
             }
             scope.invalidFileName = false;
@@ -163,7 +169,7 @@
 
           scope.canSave = function () {
             return scope.invalidFileName || scope.invalidName;
-          }
+          };
 
           scope.save = function () {
             fileService.edit(scope.file, ['preview', 'url', 'size', 'changed']).then(function(result) {

@@ -184,8 +184,8 @@
       <names variable="author">
          <name name-as-sort-order="first" and="text" sort-separator=", " delimiter=", " delimiter-precedes-last="always"/>
          <substitute>
-            <text macro="editor"/>
-            <text macro="translator"/>
+            <text macro="editor" variable="editor"/>
+            <text macro="translator" editor="translator"/>
          </substitute>
       </names>
       <text macro="recipient" prefix=". "/>

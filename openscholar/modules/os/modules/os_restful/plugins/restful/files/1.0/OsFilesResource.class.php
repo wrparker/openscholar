@@ -291,7 +291,7 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
    * We use this to prevent user from changing the filename
    */
   public function getSchema($wrapper) {
-    $uri = $wrapper->value()->uri;
+    $uri = str_replace('///', '//', $wrapper->value()->uri);  // band aid fix
     return parse_url($uri, PHP_URL_SCHEME);
   }
 
@@ -407,6 +407,7 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
    * Filter files by vsite
    */
   protected function queryForListFilter(EntityFieldQuery $query) {
+    $query->propertyCondition('status', 1);
     if ($this->request['vsite']) {
       if ($vsite = vsite_get_vsite($this->request['vsite'])) {
         $query->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $this->request['vsite']);
@@ -712,7 +713,8 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     if ($this->request['filename']) {
       $file = file_load($wrapper->getIdentifier());
       $label = $wrapper->name->value();
-      $destination = dirname($file->uri) . '/' . $this->request['filename'];
+      $destination = drupal_dirname($file->uri) . '/' . $this->request['filename'];
+
       if ($file = file_move($file, $destination)) {
         $wrapper->set($file);
         $wrapper->name->set($label);
