@@ -298,7 +298,7 @@ function os_files_private_redirect_after_delete_file($form, &$form_state) {
  * Removes tabs that we don't want when we're uploading a private file
  */
 function os_files_private_menu_local_tasks_alter(&$tasks, $router, $root) {
-  if ($root == 'file/add') {
+  if ($root == 'file/add' || $root == 'cp/content') {
     $tasks['tabs'][0]['count'] = 0;
     $tasks['tabs'][0]['output'] = array();
   }

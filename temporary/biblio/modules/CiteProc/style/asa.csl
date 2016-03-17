@@ -16,10 +16,14 @@
       <rights>This work is licensed under a Creative Commons Attribution-Share Alike 3.0 License: http://creativecommons.org/licenses/by-sa/3.0/</rights>
    </info>
    <macro name="editor">
-      <names variable="editor">
-         <label form="verb" text-case="lowercase" suffix=" "/>
-         <name and="text" delimiter=", "/>
-      </names>
+      <choose>
+         <if variable="author" match="any">
+            <names variable="editor">
+               <label form="verb" text-case="lowercase" suffix=" "/>
+               <name and="text" delimiter=", "/>
+            </names>
+         </if>
+      </choose>
    </macro>
    <macro name="series-editor">
       <names variable="original-author">
