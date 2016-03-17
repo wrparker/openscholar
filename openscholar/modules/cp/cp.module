@@ -502,6 +502,7 @@ function cp_cp_settings() {
       ),
       'form' => array(
         '#title' => t('Manage redirects'),
+        '#custom_directive' => 'redirects'
       ),
       'after_build' => array('_cp_settings_form_redirects_build'),
     );
