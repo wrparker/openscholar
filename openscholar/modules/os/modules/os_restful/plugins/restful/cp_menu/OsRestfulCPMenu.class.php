@@ -279,8 +279,10 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         $settings_links[$id] = array(
           'label' => $group,
           'type' => 'directive',
-          'directive' => 'ap-settings-modal',
-          'directive-arg' => $id
+          'directive' => array(
+            'ap-settings-form',
+            'form' => $f['group']['#id']
+          )
         );
       }
     }
@@ -379,8 +381,10 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
           'analytics' => array(
             'label' => 'Analytics',
             'type' => 'directive',
-            'directive' => 'ap-settings-modal',
-            'directive-arg' => 'analytics'
+            'directive' => array(
+              'ap-settings-modal',
+              'form' => 'analytics',
+            )
           ),
           'app' => array(
             'label' => 'Enable Apps',

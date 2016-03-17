@@ -66,7 +66,7 @@
    */
   m.directive('apSettingsForm', ['ModalService', 'apSettings', function (ModalService, apSettings) {
     function link(scope, elem, attrs) {
-
+      console.log('ap setting form directive active');
     }
 
     return {
