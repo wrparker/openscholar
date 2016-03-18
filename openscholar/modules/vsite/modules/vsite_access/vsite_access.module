@@ -158,7 +158,7 @@ function vsite_access_cp_settings() {
       ),
       'form' => array(
         '#type' => 'radios',
-          '#title' => t('Site visibility') . '<span id="site-visibility-help-text">' . t('The visibility change will take effect in 2 minutes') . '</span>',
+        '#title' => t('Site visibility') . '<span id="site-visibility-help-text">' . t('The visibility change will take effect in 2 minutes') . '</span>',
         '#default_value' => $wrapper->{VSITE_ACCESS_FIELD}->value(),
         '#options' => vsite_access_privacy_available_values(),
         '#description' => t('Choose who has access to view your site.'),
