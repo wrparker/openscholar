@@ -46,7 +46,7 @@
     }
 
     this.GetFormDefinitions = function (group_id) {
-      if (typeof settingsforms[group_id] != 'undefined') {
+      if (typeof settingsForms[group_id] != 'undefined') {
         return angular.copy(settingsForms[group_id]);
       }
      throw new Exception("No form group with id " + group_id + " exists.");
@@ -55,29 +55,74 @@
   }]);
 
   /**
-   * testing. delete when done.
-   */
-  m.run(['apSettings', function (apSettings) {
-
-  }]);
-
-  /**
    * Open modals for the settings forms
    */
   m.directive('apSettingsForm', ['ModalService', 'apSettings', function (ModalService, apSettings) {
+    var dialogOptions = {
+      minWidth: 800,
+      minHeight: 650,
+      modal: true,
+      position: 'center'
+    };
+
     function link(scope, elem, attrs) {
       console.log('ap setting form directive active');
+      elem.bind('click', function (e) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        ModalService.showModal({
+          controller: 'apSettingsFormController',
+          template: '<div id="{{formId}}"><div class="form-item" ng-repeat="(key, field) in formElements">' +
+            '<div form-element element="field" value="formData[key]"><span>placeholder</span></div>' +
+          '</div>' +
+          '<div class="actions"><input type="button" value="Submit"><input type="button" value="Cancel"></div></div>',
+          inputs: {
+            form: scope.form
+          }
+        })
+        .then(function (modal) {
+          modal.element.dialog(dialogOptions);
+          modal.close.then(function (result) {
+            if (result) {
+              window.location.reload();
+            }
+          });
+        });
+      });
     }
 
     return {
-      link: link
+      link: link,
+      scope: {
+        form: '@'
+      }
     };
   }]);
 
   /**
    * The controller for the forms themselves
    */
-  m.controller('apSettingsFormController', ['$scope', 'apSettings', function ($s, apSettings) {
+  m.controller('apSettingsFormController', ['$scope', 'apSettings', 'form', function ($s, apSettings, form) {
+    var formSettings = {};
+    $s.formId = form;
+    $s.formElements = {};
+    $s.formData = {};
 
+    apSettings.SettingsReady().then(function () {
+      var settingsRaw = apSettings.GetFormDefinitions(form);
+      console.log(settingsRaw);
+
+      for (var k in settingsRaw) {
+        $s.formData[k] == settingsRaw[k]['#default_value'] || null;
+        var attributes = {};
+        for (var j in settingsRaw[k]) {
+          if (j.indexOf('#') === 0 && j != '#default_value') {
+            var attr = j.substr(1, j.length);
+            attributes[attr] = settingsRaw[k][j];
+          }
+        }
+      }
+    })
   }]);
 })()
