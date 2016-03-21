@@ -146,7 +146,7 @@
             defers[key] = $q.defer();
 
             lockPromise.then(function (keys) {
-              if (!keys[key] && keys.indexOf(key) === -1) {
+              if (!keys[key]) {
                 var url = restPath + '/' + entityType;
                 $http.get(url, {params: params, pKey: key})
                   .success(success)
