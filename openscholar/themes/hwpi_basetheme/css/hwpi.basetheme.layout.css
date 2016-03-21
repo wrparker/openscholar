@@ -224,8 +224,7 @@ div.sidebar {
 .lt-ie9 .front .content-left.content-right.content-bottom #content-panels .block-boxes-os_boxes_columns .region {
     width: 29.8%;
 }
-.content-left.content-right .region-content-first .region-inner,
-.content-left.content-right.content-bottom .region-content-second .region-inner {
+.content-left.content-right .region-content-first .region-inner {
     border-right: 1px solid #e7e7e7;
 }
 .front .content-left.content-right.content-bottom .region-content-bottom .region-inner,
