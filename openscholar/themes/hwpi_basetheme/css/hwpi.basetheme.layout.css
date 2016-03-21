@@ -266,7 +266,7 @@
   .content-left.content-right .region-content-first .region-inner,
   .front .content-left.content-bottom .region-content-first .region-inner,
   .front .content-right.content-bottom .region-content-second .region-inner,
-  .content-left.content-right.content-bottom .region-content-second .region-inner {
+  .front .content-left.content-right.content-bottom .region-content-second .region-inner {
     border-right: 1px solid #e7e7e7;
   }
 
