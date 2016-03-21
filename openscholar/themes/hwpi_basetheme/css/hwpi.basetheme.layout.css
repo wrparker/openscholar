@@ -207,17 +207,12 @@ div.sidebar {
     clear: none;
     float: left;
 }
-.content-left.content-bottom #content-panels .region-content-first,
-.content-left.content-bottom #content-panels .region-content-bottom,
+
 .content-left.content-right #content-panels .region-content-first,
-.content-left.content-right #content-panels .region-content-second,
-.content-right.content-bottom #content-panels .region-content-second,
-.content-right.content-bottom #content-panels .region-content-bottom {
+.content-left.content-right #content-panels .region-content-second {
     width: 50%;
 }
-.not-front .content-bottom #content-panels .region-content-bottom {
-    width: 100%;
-}
+
 .front .content-left.content-right.content-bottom #content-panels .region-content-first,
 .front .content-left.content-right.content-bottom #content-panels .region-content-second,
 .front .content-left.content-right.content-bottom #content-panels .region-content-bottom {
@@ -230,8 +225,6 @@ div.sidebar {
     width: 29.8%;
 }
 .content-left.content-right .region-content-first .region-inner,
-.content-left.content-bottom .region-content-first .region-inner,
-.content-right.content-bottom .region-content-second .region-inner,
 .content-left.content-right.content-bottom .region-content-second .region-inner {
     border-right: 1px solid #e7e7e7;
 }
