@@ -27,7 +27,7 @@
     position: relative;
     top: -5px;
 }
-.field-widget-media-draggable-file .file-list-single div {
+.field-widget-media-draggable-file div {
     white-space: nowrap;
 }
 .field-widget-media-draggable-file .file-list-single span {
