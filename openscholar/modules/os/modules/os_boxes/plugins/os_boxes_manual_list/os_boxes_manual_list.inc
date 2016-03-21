@@ -171,7 +171,7 @@ class os_boxes_manual_list extends os_boxes_default {
             // Theme the nodes as a teaser.
             // For 'person' content type, determining the view mode set to be displayed in listing page.
             if ($node->type == 'person' && $vsite) {
-              $list_view_mode = $vsite->controllers->variable->get('os_profiles_display_type');
+              $list_view_mode = $vsite->controllers->variable->get('os_profiles_display_type') ? $vsite->controllers->variable->get('os_profiles_display_type') : 'teaser';
             } 
             else {
               $list_view_mode = 'teaser';
