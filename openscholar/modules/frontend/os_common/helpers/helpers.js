@@ -39,4 +39,14 @@
     return parser.protocol+'//'+parser.hostname;
   }
 
+  var m = angular.module('osHelpers', []);
+
+  m.filter('idClean', function () {
+    return function (input) {
+      if (input) {
+        // replaced _ and spaces with -
+      }
+    };
+  });
+
 })(window);
