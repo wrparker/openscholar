@@ -52,6 +52,10 @@
      throw new Exception("No form group with id " + group_id + " exists.");
     }
 
+    this.SaveSettings = function (settings) {
+      $http.put();
+    }
+
   }]);
 
   /**
@@ -73,10 +77,10 @@
 
         ModalService.showModal({
           controller: 'apSettingsFormController',
-          template: '<div id="{{formId}}"><div class="form-item" ng-repeat="(key, field) in formElements">' +
+          template: '<form id="{{formId}}"><div class="form-item" ng-repeat="(key, field) in formElements">' +
             '<div form-element element="field" value="formData[key]"><span>placeholder</span></div>' +
           '</div>' +
-          '<div class="actions"><input type="button" value="Submit"><input type="button" value="Cancel"></div></div>',
+          '<div class="actions"><input type="submit" value="Submit" ng-submit="submitForm()"><input type="button" value="Cancel" ng-click="close(false)"></div></form>',
           inputs: {
             form: scope.form
           }
@@ -103,7 +107,7 @@
   /**
    * The controller for the forms themselves
    */
-  m.controller('apSettingsFormController', ['$scope', 'apSettings', 'form', function ($s, apSettings, form) {
+  m.controller('apSettingsFormController', ['$scope', 'apSettings', 'form', 'close', function ($s, apSettings, form, close) {
     var formSettings = {};
     $s.formId = form;
     $s.formElements = {};
@@ -123,6 +127,10 @@
           }
         }
       }
-    })
+    });
+
+    function submitForm() {
+      apSettings.SaveSettings($s.formData);
+    }
   }]);
 })()
