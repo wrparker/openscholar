@@ -109,6 +109,7 @@ function os_wysiwyg_filter_default_formats() {
             'border-right-style' => 'border-right-style',
             'border-bottom-style' => 'border-bottom-style',
             'border-left-style' => 'border-left-style',
+            'border-radius' => 'border-radius',
           ),
           'style_dimension' => array(
             'height' => 'height',
