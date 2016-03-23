@@ -1,8 +1,8 @@
 (function () {
 
-  var m = angular.module('formElement', ['basicFormElements']);
+  var m = angular.module('formElement', ['basicFormElements', 'osHelpers']);
 
-  m.directive('formElement', ['$compile', function ($compile) {
+  m.directive('formElement', ['$compile', '$filter', function ($compile, $filter) {
     return {
       scope: {
         element: '=',
@@ -12,6 +12,9 @@
       '<span>Placeholder</span>' +
       '<div class="description">{{description}}</div>',
       link: function (scope, elem, attr) {
+        console.log(scope.element);
+        scope.id = $filter('idClean')(scope.element.id);
+
         var copy = elem.find('span').clone();
         for (var k in scope.element) {
           if (k == 'type') {

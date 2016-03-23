@@ -42,9 +42,9 @@
   var m = angular.module('osHelpers', []);
 
   m.filter('idClean', function () {
-    return function (input) {
+    return function (input, prefix) {
       if (input) {
-        // replaced _ and spaces with -
+        input = input.replace('_', '-');
       }
     };
   });
