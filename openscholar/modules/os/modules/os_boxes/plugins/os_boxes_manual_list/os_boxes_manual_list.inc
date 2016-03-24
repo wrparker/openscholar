@@ -169,15 +169,17 @@ class os_boxes_manual_list extends os_boxes_default {
           }
           if ($this->options['style'] == 'teasers') {
             // Theme the nodes as a teaser.
-            // For 'person' content type, determining the view mode set to be displayed in listing page.
-            if ($node->type == 'person' && $vsite) {
-              $list_view_mode = $vsite->controllers->variable->get('os_profiles_display_type') ? $vsite->controllers->variable->get('os_profiles_display_type') : 'teaser';
-            } 
-            else {
-              $list_view_mode = 'teaser';
+            $node_view = node_view($node, 'teaser');
+            // For 'person' content type, determining the view mode set to be displayed in listing page.            
+            if ($node->type == 'person' && $vsite->controllers->variable->get('os_profiles_display_type') && $vsite->controllers->variable->get('os_profiles_display_type') == 'sidebar_teaser') {
+              // Removing email, phone, short bio and website field for sidebar_teaser view mode.
+              unset($node_view['field_email']);
+              unset($node_view['field_phone']);
+              unset($node_view['pic_bio']['body']);
+              unset($node_view['pic_bio']['field_website']);
             }
             // Node may not load if it has since been deleted.
-            $links[$n['weight']] = render(node_view($node, $list_view_mode));
+            $links[$n['weight']] = render($node_view);
           }
           elseif ($this->options['style'] == 'full') {
             $node = node_load($n['nid']);
