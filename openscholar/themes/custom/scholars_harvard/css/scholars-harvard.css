@@ -154,18 +154,22 @@ p.os-leadin {
 
 
 
-.started-oneyour-own {
-color: #4b4b4b;font-size:20px;font-weight:bold;width:100%; background-color:#e3e3e3;text-align:center;
+.started-oneyour-own {color: #4b4b4b;font-size:20px;font-weight:bold;width:100%;background-color:#e3e3e3;text-align:center;padding: 10px 0 8px;}
+
+#block-vsite-register-get-your-site-block  {
+    width: 100%;
+    background-color:#e3e3e3;
+    margin: 0 !important;
+   
 }
 
-
-#block-vsite-register-get-your-site-block {
+#block-vsite-register-get-your-site-block .block-content {
     width: 231px;
     height: 50px;
     background: url('../images/getsitenowButton.gif')no-repeat;
-     padding: 10px 0px 10px 14px; 
-   margin: 0 !important; 
-     text-align: left; 
+    padding: 10px 0px 10px 14px;
+    text-align: left;
+    margin: 0 auto;
 }
 #block-vsite-register-get-your-site-block a {
     font-size: 30px;
