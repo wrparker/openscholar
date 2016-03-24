@@ -88,8 +88,8 @@ function iqss_scholars_front_default_box() {
 <li><span>Customize your site\'s layout and structure, and choose (or design) a unique look and feel</span></li>
 <li><span>Watch as your site is automatically updated with the latest web technology.</span></li>
 </ul>
-<p class="os-learnmore"><a href="#">Learn More</a></p>
-</div>',
+</div>
+<div class="started-oneyour-own">Get started on your own today</div>',
       'format' => 'filtered_html',
     ),
     'additional_classes' => '',
