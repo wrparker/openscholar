@@ -358,6 +358,9 @@ function os_common_preprocess_html(&$vars) {
  */
 function os_common_form_node_form_alter(&$form, &$form_state) {
   $form['#after_build'][] = 'os_common_set_node_form_angular_app';
+  $form['author']['#title'] = t('Post Created/Edited By');
+  $form['author']['name']['#title'] = t('Posted by');
+  $form['author']['date']['#title'] = t('Posted on');
 }
 
 /**
