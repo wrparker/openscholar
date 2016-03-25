@@ -159,8 +159,6 @@ class os_boxes_manual_list extends os_boxes_default {
         $nodes = array($nodes[array_rand($nodes)]);
       }
 
-      $vsite = vsite_get_vsite();
-
       foreach ($nodes as $n) {
         if ($node = node_load($n['nid'])) {
           // nullify title unless user has selected to show only titles
@@ -171,7 +169,7 @@ class os_boxes_manual_list extends os_boxes_default {
             // Theme the nodes as a teaser.
             $node_view = node_view($node, 'teaser');
             // For 'person' content type, determining the view mode set to be displayed in listing page.            
-            if ($node->type == 'person' && $vsite->controllers->variable->get('os_profiles_display_type') && $vsite->controllers->variable->get('os_profiles_display_type') == 'sidebar_teaser') {
+            if ($node->type == 'person' && variable_get('os_profiles_display_type') && variable_get('os_profiles_display_type') == 'sidebar_teaser') {
               // Removing email, phone, short bio and website field for sidebar_teaser view mode.
               unset($node_view['field_email']);
               unset($node_view['field_phone']);
