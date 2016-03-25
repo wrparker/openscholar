@@ -168,7 +168,7 @@ class os_boxes_manual_list extends os_boxes_default {
           if ($this->options['style'] == 'teasers') {
             // Theme the nodes as a teaser.
             $node_view = node_view($node, 'teaser');
-            // For 'person' content type, determining the view mode set to be displayed in listing page.            
+            // For 'person' content type, listing view mode 'sidebar_teaser' will have some fields removed from the display.            
             if ($node->type == 'person' && variable_get('os_profiles_display_type') && variable_get('os_profiles_display_type') == 'sidebar_teaser') {
               // Removing email, phone, short bio and website field for sidebar_teaser view mode.
               unset($node_view['field_email']);
