@@ -179,12 +179,20 @@ p.os-leadin {
 #block-vsite-register-get-your-site-block a:hover {
     color: #FEF1AB;
 }
+#block-boxes-iqss-scholars-fp-hwp-option span {display: block;height: 30px;width: 30px;line-height: 30px;-moz-border-radius: 30px; /* or 50% */border-radius: 30px; /* or 50% */background-color: #fff;color: #444;text-align: center;font-size: 1em;font-weight: bold;}
+
 .os-rightcol .os-learnmore a {
     background: url("../images/arrow2.png") no-repeat scroll 100% 50% transparent;
     color: #B23325;
     margin-left: 20px;
     padding-right: 30px;
 }
+.hwp_option {
+	    width: 80%;
+    font-size: 1.3em;
+    line-height: 1.2em;
+}
+
 .os-leftcol {
     margin: 0;
     padding: 35px 40px 0 29px;
