@@ -176,6 +176,15 @@ function os_common_library() {
     )
   );
 
+  $info['formElement'] = array(
+    'title' => 'Form Elements',
+    'version' => '1.0',
+    'js' => array(
+      $path.'/formElement/formElement.module.js' => array(),
+      $path.'/formElement/basicFormElements.module.js' => array()
+    )
+  );
+
   $info['EntityService'] = array(
     'title' => 'EntityService',
     'version' => '1.0',
