@@ -19,11 +19,9 @@ body {
 #page {
     position: relative;
 }
-
 .front .region-sidebar-second .block {
     margin-bottom: 0;
 }
-
 #content-column h1#page-title {
     margin-top: 1em;
 }
@@ -151,19 +149,21 @@ p.os-leadin {
     color: #414141;
     font-size: 17px;
 }
-
-
-
-.started-oneyour-own {color: #4b4b4b;font-size:20px;font-weight:bold;width:100%;background-color:#e3e3e3;text-align:center;padding: 10px 0 8px;}
-
-#block-boxes-iqss-scholars-fp-hwp-option,
-#block-vsite-register-get-your-site-block  {
+.started-oneyour-own {
+    color: #4b4b4b;
+    font-size: 20px;
+    font-weight: bold;
     width: 100%;
-    background-color:#e3e3e3;
-    margin: 0 !important;
-   
+    background-color: #e3e3e3;
+    text-align: center;
+    padding: 10px 0 8px;
 }
-
+#block-boxes-iqss-scholars-fp-hwp-option,
+#block-vsite-register-get-your-site-block {
+    width: 100%;
+    background-color: #e3e3e3;
+    margin: 0 !important;
+}
 #block-vsite-register-get-your-site-block .block-content {
     width: 231px;
     height: 50px;
@@ -179,8 +179,23 @@ p.os-leadin {
 #block-vsite-register-get-your-site-block a:hover {
     color: #FEF1AB;
 }
-#block-boxes-iqss-scholars-fp-hwp-option span {display: block;height: 30px;width: 30px;line-height: 30px;-moz-border-radius: 30px; /* or 50% */border-radius: 30px; /* or 50% */background-color: #fff;color: #444;text-align: center;font-size: 1em;font-weight: bold;}
-
+#block-boxes-iqss-scholars-fp-hwp-option span {
+    display: block;
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    -moz-border-radius: 30px;
+    /* or 50% */
+    
+    border-radius: 30px;
+    /* or 50% */
+    
+    background-color: #fff;
+    color: #444;
+    text-align: center;
+    font-size: 1em;
+    font-weight: bold;
+}
 .os-rightcol .os-learnmore a {
     background: url("../images/arrow2.png") no-repeat scroll 100% 50% transparent;
     color: #B23325;
@@ -188,12 +203,11 @@ p.os-leadin {
     padding-right: 30px;
 }
 .hwp_option {
-	    width: 80%;
+    width: 80%;
     font-size: 1.3em;
     line-height: 1.2em;
     padding: 10px;
 }
-
 .os-leftcol {
     margin: 0;
     padding: 35px 40px 0 29px;
