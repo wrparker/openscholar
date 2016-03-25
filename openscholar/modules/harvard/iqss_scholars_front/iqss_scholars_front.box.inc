@@ -95,6 +95,24 @@ function iqss_scholars_front_default_box() {
     'additional_classes' => '',
   );
   $export['iqss_scholars_fp_learnmore'] = $box;
+  
+
+   $box = new stdClass();
+  $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
+  $box->api_version = 1;
+  $box->delta = 'iqss_scholars_fp_hwp_option';
+  $box->plugin_key = 'simple';
+  $box->title = '';
+  $box->description = 'HWP Option Info text';
+  $box->options = array(
+    'body' => array(
+      'value' => 'html here',
+      'format' => 'filtered_html',
+    ),
+    'additional_classes' => '',
+  );
+  $export['iqss_scholars_fp_hwp_option'] = $box;
+
 
   $box = new stdClass();
   $box->disabled = FALSE; /* Edit this to true to make a default box disabled initially */
