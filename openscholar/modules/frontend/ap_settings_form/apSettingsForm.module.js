@@ -1,6 +1,6 @@
 (function () {
 
-  var m = angular.module('ApSettingsForm', ['angularModalService']);
+  var m = angular.module('ApSettingsForm', ['angularModalService', 'formElement']);
 
   /**
    * Fetches the settings forms from the server and makes them available directives and controllers
@@ -53,6 +53,7 @@
     }
 
     this.SaveSettings = function (settings) {
+      console.log(settings);
       $http.put();
     }
 
@@ -77,10 +78,10 @@
 
         ModalService.showModal({
           controller: 'apSettingsFormController',
-          template: '<form id="{{formId}}"><div class="form-item" ng-repeat="(key, field) in formElements">' +
+          template: '<form id="{{formId}}" ng-submit="submitForm()"><div class="form-item" ng-repeat="(key, field) in formElements">' +
             '<div form-element element="field" value="formData[key]"><span>placeholder</span></div>' +
           '</div>' +
-          '<div class="actions"><input type="submit" value="Submit" ng-submit="submitForm()"><input type="button" value="Cancel" ng-click="close(false)"></div></form>',
+          '<div class="actions"><input type="submit" value="Submit"><input type="button" value="Cancel" ng-click="close(false)"></div></form>',
           inputs: {
             form: scope.form
           }
@@ -118,19 +119,25 @@
       console.log(settingsRaw);
 
       for (var k in settingsRaw) {
-        $s.formData[k] == settingsRaw[k]['#default_value'] || null;
-        var attributes = {};
+        $s.formData[k] = settingsRaw[k]['#default_value'] || null;
+        var attributes = {
+          name: k
+        };
         for (var j in settingsRaw[k]) {
           if (j.indexOf('#') === 0 && j != '#default_value') {
             var attr = j.substr(1, j.length);
             attributes[attr] = settingsRaw[k][j];
           }
         }
+
+        attributes.value = 'formData[' + k + ']';
+        $s.formElements[k] = attributes;
       }
     });
 
     function submitForm() {
       apSettings.SaveSettings($s.formData);
     }
+    $s.submitForm = submitForm;
   }]);
 })()

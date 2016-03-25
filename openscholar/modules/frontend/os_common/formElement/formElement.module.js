@@ -12,22 +12,26 @@
       '<span>Placeholder</span>' +
       '<div class="description">{{description}}</div>',
       link: function (scope, elem, attr) {
-        console.log(scope.element);
-        scope.id = $filter('idClean')(scope.element.id);
+        scope.id = $filter('idClean')(scope.element.name, 'edit');
+        scope.description = scope.element.description;
+        scope.label = scope.element.title;
 
         var copy = elem.find('span').clone();
         for (var k in scope.element) {
           if (k == 'type') {
             copy.attr(scope.element[k], '');
           }
-          else {
-            copy.attr(k, scope.element[k]);
+          else if (k == 'name') {
+            copy.attr('name', scope.element[k]);
           }
-
-          copy.attr('value', scope.value);
-          copy = $compile(copy)(scope);
-          elem.find('span').replaceWith(copy);
         }
+
+        console.log(scope);
+
+        copy.attr('input-id', scope.id);
+        copy.attr('value', 'value');
+        copy = $compile(copy)(scope);
+        elem.find('span').replaceWith(copy);
       }
     }
   }]);
