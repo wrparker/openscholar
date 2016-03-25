@@ -44,7 +44,16 @@
   m.filter('idClean', function () {
     return function (input, prefix) {
       if (input) {
-        input = input.replace('_', '-');
+        input = input.replace(/_/g, '-');
+        input = input.replace(/\s/g, '-');
+        input = input.replace(/--/g, '-');
+
+        if (prefix) {
+          return prefix + '-' + input;
+        }
+        else {
+          return input;
+        }
       }
     };
   });
