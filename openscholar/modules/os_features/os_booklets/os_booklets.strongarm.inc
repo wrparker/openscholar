@@ -247,6 +247,7 @@ function os_booklets_strongarm() {
   $strongarm->value = TRUE;
   $export['enable_revisions_book'] = $strongarm;
 
+<<<<<<< 2db2bdc049360f103be782f303209e8f77efa07c
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
@@ -254,5 +255,7 @@ function os_booklets_strongarm() {
   $strongarm->value = 10;
   $export['restrict_node_revision_number_for_book'] = $strongarm;
 
+=======
+>>>>>>> added variables for all content types that will have revisions and check for variable
   return $export;
 }
