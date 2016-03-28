@@ -6,7 +6,6 @@
   var auto_open;
   var morphButton;
   var menu_state;
-
     angular.module('AdminPanel', [ 'os-auth', 'ngCookies','ngStorage'])
     .config(function (){
        paths = Drupal.settings.paths
@@ -14,8 +13,10 @@
        cid = Drupal.settings.admin_panel.cid + Drupal.settings.version.adminPanel;
        uid = Drupal.settings.admin_panel.user;
        auto_open = Drupal.settings.admin_panel.keep_open;
+                    
     }).controller("AdminMenuController",['$scope', '$http', '$cookies','$localStorage', function ($scope, $http, $cookies, $localStorage) {
     
+      auto_open = ($cookies.getObject('osAdminMenuOpen') == 1) ? true : false;
       var menu = 'admin_panel';
       $scope.paths = paths;
       
@@ -28,7 +29,6 @@
       
       //Force menu open Special case
       var force_open = (window.location.search.indexOf('login=1') > -1);
-      
       //Init storage
       if (typeof($localStorage.admin_menu) == 'undefined') {
         $localStorage.admin_menu = {};
@@ -174,6 +174,7 @@
       			  Drupal.settings.admin_panel.keep_open = true;
       			  scope.$apply(function () {
         	        $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
+                    $cookies.putObject('osAdminMenuOpen', 1);
         	      });
       			},
       			onBeforeClose : function() {
@@ -183,7 +184,12 @@
         		  scope.$apply(function () {
           	        $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
           	      });
-      			}
+      			},
+      			onAfterClose : function() {
+                  scope.$apply(function () {
+                    $cookies.putObject('osAdminMenuOpen', 0);
+                  });
+                }
       		}); 
   	   }
      };
