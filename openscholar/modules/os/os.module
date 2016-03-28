@@ -2800,7 +2800,7 @@ function os_page_build(&$page) {
     $redirect['destination'] = isset($vsite->group->purl) ? $vsite->group->purl . '/' . $redirect['destination'] : $redirect['destination'];
     $main_content_display = &drupal_static('system_main_content_added', FALSE);
 
-    // IF the user is logged in, but do not have access to view the page.
+    // If the user has logged in, but do not have access to view the page.
     if ($user->uid) {
       $warning_msg = t('Sorry, you are not authorized to access this page.<br/>Please contact the site owner to gain access.');
     }
