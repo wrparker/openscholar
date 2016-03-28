@@ -1051,3 +1051,6 @@ div.error:before {
     bottom: 0;
     left: 10px;
 }
+.boxes-box-content .ui-tabs {
+    padding: 0em;
+}
