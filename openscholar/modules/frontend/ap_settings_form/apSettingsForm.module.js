@@ -54,7 +54,8 @@
 
     this.SaveSettings = function (settings) {
       console.log(settings);
-      $http.put();
+
+      $http.put(baseUrl+'/variables', settings);
     }
 
   }]);
@@ -71,7 +72,6 @@
     };
 
     function link(scope, elem, attrs) {
-      console.log('ap setting form directive active');
       elem.bind('click', function (e) {
         event.preventDefault();
         event.stopPropagation();
@@ -137,7 +137,12 @@
 
     function submitForm() {
       apSettings.SaveSettings($s.formData);
+      $s.close(true);
     }
     $s.submitForm = submitForm;
+
+    $s.close = function (arg) {
+      close(arg);
+    }
   }]);
 })()
