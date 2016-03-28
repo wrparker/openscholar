@@ -28,6 +28,10 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
       'property' => 'name',
     );
 
+    $public_fields['mail'] = array(
+      'property' => 'mail',
+    );
+
     $public_fields['password'] = array(
       'property' => 'pass',
       'callback' => array($this, 'hideField')
