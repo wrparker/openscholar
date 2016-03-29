@@ -1025,6 +1025,14 @@ class FeatureContext extends DrupalContext {
       ->range(0, 1)
       ->execute();
 
+    print_r($result);
+
+    $result = $query
+      ->entityCondition('entity_type', 'taxonomy_term')
+      ->execute();
+
+    print_r($result);
+
     $entity = entity_create('field_collection_item', array('field_name' => 'field_department_school'));
     $entity->setHostEntity('node', node_load(FeatureHelp::getNodeId('john')));
     $wrapper = entity_metadata_wrapper('field_collection_item', $entity);
