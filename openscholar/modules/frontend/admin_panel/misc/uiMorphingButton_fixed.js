@@ -140,16 +140,16 @@
 				jQuery(self.el).removeClass('open');
 			}
 			else {
-				setTimeout( function() { 
-					if(self.openTransition) {
+				setTimeout( function() {
+					//if(self.openTransition) {
 					  jQuery(self.contentEl).removeClass('no-transition');
-					}
+					//}
 					
-					jQuery(self.el).addClass('open');
+					//jQuery(self.el).addClass('open');
 					
-					if(!self.openTransition) {
-					  jQuery(self.contentEl).removeClass('no-transition');
-				    }
+					//if(!self.openTransition) {
+					  ///jQuery(self.contentEl).removeClass('no-transition');
+				    //}
 				}, 25 );
 			}
 		}, 25 );
