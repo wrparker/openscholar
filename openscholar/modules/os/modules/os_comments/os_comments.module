@@ -366,7 +366,7 @@ function os_comments_form_node_form_alter(&$form, $form_state, $form_id) {
     }
     // Multi tenant
     if ($purl) {
-      $app_settings_path = "$purl/cp/build/#overlay=$purl/cp/build/features/$app";
+      $app_settings_path = "/$purl/cp/build/#overlay=$purl/cp/build/features/$app";
     }
     // Single tenant
     else {
