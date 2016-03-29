@@ -41,8 +41,6 @@ class os_taxonomy_fbt extends os_boxes_default {
    * Implements boxes_content::options_form().
    */
   public function options_form(&$form_state) {
-    $form = parent::options_form($form_state);
-
     ctools_include('dependent');
     ctools_add_js('dependent');
 
@@ -50,16 +48,23 @@ class os_taxonomy_fbt extends os_boxes_default {
 
     // Reset the keys.
     foreach (array_keys($form) as $setting) {
-      $setting_value = !empty($this->options[$setting]) ? $this->options[$setting] : NULL;
+      $option_value = $this->options[$setting];
+      // The form field 'depth' has an option with the value "0", This is why
+      // we check it literally so we won't reset it on that case.
+      $setting_value = !empty($option_value) || $option_value === '0' ? $this->options[$setting] : NULL;
       $form[$setting]['#default_value'] = $setting_value;
     }
 
     $form['advanced']['as_nav'] = array(
       '#type' => 'checkbox',
       '#default_value' => $this->options['as_nav'],
-      '#title' => t('Display As Navigation'),
-      '#description' => t('Check this to make this vocabulary display like a menu.'),
+      '#title' => t('Display as a menu'),
       '#return_value' => TRUE,
+      '#states' => array(
+       'invisible' => array(
+        ':input[name="widget_type"]' => array('value' => 'select'),
+        ),             
+       ),
     );
 
     return $form;
@@ -105,9 +110,8 @@ class os_taxonomy_fbt extends os_boxes_default {
 
     $form['bundles'] = array(
       '#type' => 'select',
-      '#title' => t('Select Post type'),
+      '#title' => t('Type'),
       '#options' => $this->getTaxonomyBundles(),
-      '#description' => t('The post types that will be included in the count'),
       '#multiple' => FALSE,
       '#size' => count($this->getTaxonomyBundles()) / 2,
       '#dependency' => array(
@@ -117,8 +121,7 @@ class os_taxonomy_fbt extends os_boxes_default {
 
     $form['range'] = array(
       '#type' => 'textfield',
-      '#title' => t('Number of terms to display'),
-      '#description' => t('Maximum number of terms to display.'),
+      '#title' => t('Maximum number of parent terms to display'),
       '#element_validate' => array('element_validate_integer_positive'),
     );
 
@@ -130,26 +133,23 @@ class os_taxonomy_fbt extends os_boxes_default {
 
     $form['show_empty_terms'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Show empty terms'),
-      '#description' => t('Should terms be shown that do not have any posts tagged to them.'),
+      '#title' => t('Show empty terms (terms with no posts tagged with them)'),
     );
 
     $form['show_term_descriptions'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show term descriptions'),
-      '#description' => t('Show the description of the term if available under each term.'),
     );
 
     $form['show_childs'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show child terms'),
-      '#description' => t('Control whether to child terms are shown with their parent term.'),
     );
 
     $form['depth'] = array(
       '#type' => 'select',
-      '#title' => ('Taxonomy tree depth.'),
-      '#description' => t('The maximum term level in the tree to count the tagged posts.'),
+      '#title' => ('Taxonomy tree depth'),
+      '#description' => t('How many levels would you like to display?'),
       '#options' => array(
         -1 => t("Show all children"),
         0 => t("Show only first level"),
@@ -185,6 +185,12 @@ class os_taxonomy_fbt extends os_boxes_default {
     }
 
     $bundles = os_get_bundles(array(1,2));
+    // Removing Feed Importer and Slideshow Image from dropdown.
+    foreach ($bundles as $key => $val) {
+      if (in_array($key, array('feed_importer', 'slideshow_slide'))) {
+        unset($bundles[$key]);
+      }
+    }
     $delta = array_search('event', array_keys($bundles));
     $first = array_slice($bundles, 0, $delta);
     $second = array_slice($bundles, $delta + 1);
@@ -312,7 +318,15 @@ class os_taxonomy_fbt extends os_boxes_default {
       return $block;
     }
 
-    $id = 'vocabulary:' . $this->options['vocabulary'];
+    // Content type's machine name is added in cache id.
+    // So that different set of cached links can be generated per content type for 'Determine for me' settings.
+    if ($this->options['behavior'] == 'contextual') {
+      $id = 'vocabulary:' . $this->options['vocabulary'] . ':' . implode(":", $this->options['bundles']);
+    }
+    else {
+      $id = 'vocabulary:' . $this->options['vocabulary'];
+    }
+
     $this->set_cache_id($id);
     if (($block['content'] = $this->get_cache()) === FALSE) {
       if (is_array($this->options['vocabulary'])) {

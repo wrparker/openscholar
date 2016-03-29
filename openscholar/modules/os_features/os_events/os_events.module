@@ -586,6 +586,8 @@ function os_events_generate_modal_register_link($nid, $delta = FALSE, $modal_set
         foreach ($wrapper->field_date as $d => $field_date) {
           $date = $field_date->value();
           if($d == $delta) continue;
+          // Repetitive events 'choose another date' dropdown options should have only future dates.
+          if (REQUEST_TIME >= strtotime($date['value'].' UTC')) continue;
           $options_cache[$nid][url($_GET['q'],array('query' => array('delta' => $d)))] = date('l, F j, Y', strtotime($date['value'].' UTC'));
         }
       }
@@ -620,6 +622,9 @@ function os_events_generate_modal_register_link($nid, $delta = FALSE, $modal_set
       $slider = drupal_render($slider);
     }
   }
+
+  // Adding Mollom's js since ctools modal don't add the js.
+  drupal_add_js(drupal_get_path('module', 'mollom') . '/mollom.js');
 
   $sign_up = ctools_ajax_text_button(t('Sign up for this event'), $path, '', 'ctools-use-modal ctools-modal-events-modal-style register use-ajax');
 
@@ -704,47 +709,41 @@ function os_events_events_register($js, $node, $date_id = FALSE) {
  */
 function os_events_modal_validate($form, &$form_state) {
 
-  if (!empty($form_state['values']['anon_mail'])) {
+  if (empty($form_state['values']['anon_mail'])) {
+    return;
+  }
 
-    // Checking if email address has a valid format.
-    $form_state['values']['anon_mail'] = trim($form_state['values']['anon_mail']);
-    if (!valid_email_address($form_state['values']['anon_mail'])) {
-      form_set_error('anon_mail', t('The email address is invalid.'));
-    }
+  $date = '';
+  if (!empty($form_state['values']['field_repeating_event_date']['und'][0]['value'])) {
+    $date = $form_state['values']['field_repeating_event_date']['und'][0]['value'];
+  }
+  $email_query = new EntityFieldQuery();
+  $email_query->entityCondition('entity_type', 'registration')->propertyCondition('anon_mail', $form_state['values']['anon_mail']);
 
-    $date = '';
-    if (!empty($form_state['values']['field_repeating_event_date']['und'][0]['value'])) {
-      $date = $form_state['values']['field_repeating_event_date']['und'][0]['value'];
-    }
+  if (isset($form['#entity']->registration_id)) {
+    $email_query->propertyCondition('registration_id', $form['#entity']->registration_id, '<>');
+  }
 
-    $email_query = new EntityFieldQuery();
-    $email_query->entityCondition('entity_type', 'registration')->propertyCondition('anon_mail', $form_state['values']['anon_mail']);
+  if ($date) {
+    $email_query->fieldCondition('field_repeating_event_date', 'value', $date);
+  } //Flter to just this occurance
 
-    if (isset($form['#entity']->registration_id)) {
-      $email_query->propertyCondition('registration_id', $form['#entity']->registration_id, '<>');
-    }
+  if(count($email_query->execute())) {
+    form_set_error('anon_mail', t('You have already registered and may not register again.'));
+    return;
+  }
+
+  if ($user = user_load_by_mail($form_state['values']['anon_mail'])) {
+    $user_query = new EntityFieldQuery();
+    $user_query->entityCondition('entity_type', 'registration')->propertyCondition('user_uid', $user->uid);
 
     if ($date) {
-      $email_query->fieldCondition('field_repeating_event_date', 'value', $date);
-    } //Flter to just this occurance
+      $user_query->fieldCondition('field_repeating_event_date', 'value', $date);
+    }
 
     if(count($email_query->execute())) {
       form_set_error('anon_mail', t('You have already registered and may not register again.'));
       return;
-    }
-
-    if ($user = user_load_by_mail($form_state['values']['anon_mail'])) {
-      $user_query = new EntityFieldQuery();
-      $user_query->entityCondition('entity_type', 'registration')->propertyCondition('user_uid', $user->uid);
-
-      if ($date) {
-        $user_query->fieldCondition('field_repeating_event_date', 'value', $date);
-      }
-
-      if(count($email_query->execute())) {
-        form_set_error('anon_mail', t('You have already registered and may not register again.'));
-        return;
-      }
     }
   }
 }
@@ -933,8 +932,8 @@ function os_events_preprocess_date_views_pager(&$variables) {
   // Get information about dates.
   $min_date = $date_info->min_date;
 
-  $prev_date = clone($min_date);
-  $next_date = clone($min_date);
+  $prev_date = clone $min_date;
+  $next_date = clone $min_date;
 
   $prev_date->modify('-1 ' . $granularity);
   $next_date->modify('+1 ' . $granularity);
@@ -971,7 +970,7 @@ function os_events_views_query_alter($view, views_plugin_query_default $query) {
     return;
   }
 
-	// is this a view a feed view?
+  // is this a view a feed view?
   if ($view->current_display == 'feed_1' || $view->current_display == 'feed_2') {
     // Alter the exported events according the current path.
     $menu = menu_get_item();
@@ -1018,7 +1017,6 @@ function os_events_url_outbound_alter(&$path, &$options, $original_path) {
   }
 
   $view_modes = array(
-    'calendar/week',
     'calendar/day',
     'calendar/year',
   );
@@ -1031,13 +1029,7 @@ function os_events_url_outbound_alter(&$path, &$options, $original_path) {
   $data = explode('/', $original_path);
   $path = $data[0];
 
-  // The format for week, "Y-\WW", is interpreted by date functions like so:
-  // The string consists of three parts delimited by dashes "-",
-  // The first part "Y" stands for the year in 4 digits,
-  // The second part "\WW" is actually "\W" and "W", meaning the first W is
-  // escaped and would be written as "W" and the second W is not escaped and
-  // thus stands for the number of the week,
-  $format = array('year' => 'Y', 'month' => 'Y-m', 'week' => 'Y-\WW', 'day' => 'Y-m-d');
+  $format = array('year' => 'Y', 'month' => 'Y-m', 'day' => 'Y-m-d');
   $date_format = new DateTime;
 
   if (isset($_GET[$data[1]])) {
@@ -1535,7 +1527,6 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   $form['actions']['submit']['#value'] = isset($form['#entity']->registration_id) ? t('Save') : t('Signup');
 
   $form['anon_mail']['#required'] = TRUE;
-  $form['field_full_name'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
 
   $form['event_register'] = array(
     '#type' => 'container',
@@ -1552,6 +1543,7 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   $form_state['rebuild'] = TRUE;
   unset($form['actions'], $form['field_full_name'], $form['field_department'], $form['anon_mail'], $form['user']);
 
+  $form['#validate'][] = 'registration_form_validate';
   $form['#validate'][] = 'os_events_modal_validate';
   $form['#submit'][] = 'os_events_modal_submit';
 }
@@ -1694,7 +1686,7 @@ function os_events_preprocess_page(&$variables) {
     }
   }
 
-  //If there are no registrants, do not display the download link
+  // If there are no registrants, do not display the download link.
   if (empty($menu['original_map'][1])) {
     return;
   }
@@ -1713,9 +1705,10 @@ function os_events_preprocess_page(&$variables) {
       ->propertyCondition('entity_id', $event_id)
       ->propertyCondition('entity_type', 'node');
 
+  // Filter to just this occurrence.
   if ($date) {
     $query->fieldCondition('field_repeating_event_date', 'value', $date);
-  } //Flter to just this occurance
+  }
 
   $result = $query->execute();
 
@@ -1723,7 +1716,7 @@ function os_events_preprocess_page(&$variables) {
     return;
   }
 
-  // Create dropdown links for simple view and export of registrants.
+  // Create drop-down links for simple view and export of registrants.
   $event = node_load($event_id);
   $registration_links = array(
     'export' => array(
@@ -1782,7 +1775,10 @@ function os_events_save_mollom_settings() {
     'form_id' => 'registration_form',
     'mode' => '1',
     'checks' => array('spam'),
-    'enabled_fields' => array('field_department][und][0][value','field_full_name][und][0][value'),
+    'enabled_fields' => array(
+      'field_department][und][0][value',
+      'field_full_name][und][0][value',
+    ),
     'strictness' => 'normal',
     'discard' => '1',
     'moderation' => 0,
@@ -1993,6 +1989,15 @@ function os_events_register_show_register_link($node, $date = '') {
     return os_events_show_register_by_node($node, $date);
   }
 
+  // Checking if the event date is in future or not. else signup link will not be shown.
+  if (isset($node->field_date[LANGUAGE_NONE][0]['value']) && REQUEST_TIME > strtotime($node->field_date[LANGUAGE_NONE][0]['value'])) {
+    // Checking repeating event date and non-repeating event dates.
+    if (isset($result['repeating_event_date']) && REQUEST_TIME > strtotime($result['repeating_event_date'] . ' UTC')) {
+      return FALSE;
+    } elseif (isset($result['repeating_event_date']) && $result['repeating_event_date'] == '') {
+      return FALSE;
+    }
+  }
 
   if (!empty($result['close'])) {
     return REQUEST_TIME >= strtotime($result['open']) && REQUEST_TIME <= strtotime($result['close']);

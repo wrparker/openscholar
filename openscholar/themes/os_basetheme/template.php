@@ -178,6 +178,7 @@ function os_basetheme_preprocess_node(&$vars) {
 
       $vars['event_start']['month'] = check_plain($date->format('M'));
       $vars['event_start']['day'] = check_plain($date->format('d'));
+      $vars['event_start']['year'] = check_plain($date->format('Y'));
       $vars['classes_array'][] = 'event-start';
 
       // For events with a repeat rule we add the delta to the query string.
