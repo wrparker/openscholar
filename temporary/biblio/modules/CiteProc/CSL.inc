@@ -305,6 +305,8 @@ class csl_format extends csl_rendering_element {
           $original = $text;
           $text = mb_convert_case($text, MB_CASE_TITLE, 'UTF-8');
 
+          // Make sure any character that's originally capitalized stays capitalized.
+          // e.g. acronyms, names with apostrophes in them, etc.
           for ($i = 0; $i<strlen($original); $i++) {
             if (ctype_upper($original[$i]) && !ctype_upper($text[$i])) {
               $text[$i] = $original[$i];
