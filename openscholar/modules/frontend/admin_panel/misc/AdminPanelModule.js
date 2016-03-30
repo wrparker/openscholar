@@ -148,8 +148,8 @@
                   }
 
                   togglers.each(function() {
-                    var sibling = jQuery(this);
-                    menu_state[sibling.find("a").first().attr('id')] = false;
+                    var sibling = angular.element(this);
+                    menu_state[sibling.find("span").children().first().attr('id')] = false;
                     closeLink(sibling);
                   });
                 }
