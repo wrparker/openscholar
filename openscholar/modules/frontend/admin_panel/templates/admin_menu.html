@@ -9,7 +9,7 @@
             <div id="cssmenu">
               <ul>
                 <li>&nbsp;</li>
-                <li ng-repeat="(key, parent) in admin_panel" class="heading" ng-class="{'has-sub': parent.children}" admin-panel-menu-row menu-row="parent" key="{{key}}">
+                <li ng-repeat="(key, parent) in admin_panel" class="heading" ng-class="{'has-sub': parent.children}" admin-panel-menu-row menu-row="parent" key="{{key}}" ng-if="parent.access">
                 </li>
                 <!--REMOVE THIS LI WHEN BETA TESTING IS COMPLETE-->
                 <li style="margin-top:50px;">
