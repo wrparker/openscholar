@@ -4,6 +4,10 @@ if [ "${TEST_SUITE}" == "harvard" ]; then
   drush en harvard_courses -y && drush cc all
 fi
 
+if [ "${TEST_SUITE}" == "features_second" ]; then
+  drush en os_reports -y
+fi
+
 if [ "${TEST_SUITE}" == "solr" ]; then
   # Download and install Apache solr.
   wget https://archive.apache.org/dist/lucene/solr/3.6.2/apache-solr-3.6.2.zip
