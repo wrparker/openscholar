@@ -20,7 +20,7 @@ function os_boxes_edit_widget($box, $source = '') {
     drupal_set_title(t('Add New "@plugin" Widget', array('@plugin' => $info['title'])));
   }
   else {
-    drupal_set_title(t('Edit "@plugin" Widget - @info', array('@plugin' => $info['title'], '@info' => $box->description)));
+    drupal_set_title(t('Edit "@plugin" Widget - !info', array('@plugin' => $info['title'], '!info' => $box->description)));
   }
 
   $form_state = array(
@@ -50,6 +50,17 @@ function os_boxes_form_boxes_box_form_alter(&$form, &$form_state) {
 
   $form['cancel']['#submit'][] = 'os_boxes_widget_submit';
   $form['#submit'][] = 'os_boxes_widget_submit';
+
+  if (method_exists($form_state['box'], 'validate')) {
+    $form['#validate'][] = 'os_boxes_alter_options_widget';
+  }
+}
+
+/**
+ * Allow widgets alter the values of the forms before process by boxes.
+ */
+function os_boxes_alter_options_widget($form, &$form_state) {
+  $form_state['box']->validate($form_state['values']);
 }
 
 /**
@@ -119,7 +130,7 @@ function os_boxes_delete_widget($box) {
     'box' => $box,
   );
 
-  drupal_set_title(t('Delete @info', array('@info' => $box->description)));
+  drupal_set_title(t('Delete !info', array('!info' => $box->description)));
 
   $form = drupal_build_form('os_boxes_delete_widget_form', $form_state);
 
@@ -170,13 +181,14 @@ function os_boxes_widget_delete_submit($form, &$form_state) {
   if ($form_state['values']['op'] == t('Yes')) {
     // Removes box from contexts
     ctools_include('layout', 'os');
-    os_layout_block_delete('boxes-' . $form_state['values']['bid']);
 
     // Deletes box instance
     if (module_exists('spaces') && $space = spaces_get_space()) {
       $space->controllers->boxes->del($form_state['values']['bid']);
+      os_layout_block_delete('boxes-' . $form_state['values']['bid'], NULL, $space);
     }
     else {
+      os_layout_block_delete('boxes-' . $form_state['values']['bid']);
       if ($box = boxes_box_load($form_state['values']['bid'])) {
         $box->delete();
       }
@@ -194,7 +206,7 @@ function os_boxes_widget_delete_submit($form, &$form_state) {
 /**
  * Handles removing a widget from a theme region, provides undo link.
  */
-function os_boxes_remove_widget($module, $delta, $target = FALSE) {
+function os_boxes_remove_widget($module, $delta, $region = FALSE) {
   $contexts = $_GET['contexts'];
 
   // Removes the box from the contexts.
@@ -203,8 +215,7 @@ function os_boxes_remove_widget($module, $delta, $target = FALSE) {
 
   $bid = $module . '-' . $delta;
 
-  $old_region = $blocks[$bid]['region'];
-  $blocks[$bid]['region'] = $target;
+  $blocks[$bid]['region'] = $region;
   os_layout_set_multiple($contexts, $blocks);
 }
 

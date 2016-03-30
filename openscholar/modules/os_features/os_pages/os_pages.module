@@ -830,16 +830,15 @@ function os_pages_preprocess_page(&$page) {
   }
 
   $item = menu_get_item('cp/build/layout/' . implode('/', $ctxs));
-  debug($item);
   if ($item['access']) {
-    $section_links['section-layout'] = array(
+    $section_links['page-layout'] = array(
       'title' => t('Layout'),
       'href' => 'cp/build/layout/' . implode('/', $ctxs),
       'query' => drupal_get_destination(),
     );
   }
   else {
-    unset($section_links['section-layout'], $section_links['section-header']);
+    unset($section_links['section-layout'], $section_links['section-header'], $section_links['page-header']);
   }
 
   $item = menu_get_item('os/pages/' . $node->nid . '/meta');
@@ -880,7 +879,7 @@ function os_pages_os_add_new_links_alter(&$links) {
       $links['book_add_child'] = array(
         'title' => t('Page'),
         'href' => 'node/add/page',
-        'query' => isset($node->book['mlid']) ? array('parent' => $node->book['mlid'], 'destination' => 'node/' . $node->nid) : array('parent_node' => $node->nid, 'destination' => 'node/' . $node->nid),
+        'query' => isset($node->book['mlid']) ? array('parent' => $node->book['mlid']) : array('parent_node' => $node->nid, 'destination' => 'node/' . $node->nid),
       );
       $links['book_move_child'] = array(
         'title' => t('Existing Page to Section'),
@@ -949,7 +948,7 @@ function os_pages_add_subpage_submit($form, &$form_state) {
   os_pages_make_subpage($node, $parent->nid);
   node_save($node);
 
-  $form_state['redirect'] = 'node/'.$parent->nid;
+  $form_state['redirect'] = 'node/' . $node->nid;
 }
 
 /**
@@ -1156,5 +1155,123 @@ function os_pages_preprocess_menu_link(&$vars) {
   if (in_array($vars['element']['#href'], $active_trail)) {
     $vars['element']['#attributes']['class'][] = 'active-trail';
     $vars['element']['#localized_options']['attributes']['class'][] = 'active';
+  }
+}
+
+/**
+ * Adds HTML widgets on pages to index
+ */
+function os_pages_apachesolr_index_document_build_node(ApacheSolrDocument $doc, $entity, $env_id) {
+  if ($entity->type == 'page') {
+    $ctx = context_load('os_pages-page-'.$entity->nid);
+    $loaded_boxes = array();
+
+    // Indexing happens outside the space so make an allowance for that
+    if (module_exists('vsite') && ($groups = og_get_entity_groups('node',$entity))) {
+      if ($groups['node'] && count($groups['node'])) {
+        $vsite = spaces_load('og', current($groups['node']));
+        $override = $vsite->controllers->context->get("os_pages-page-{$entity->nid}:reaction:block");
+        if (!is_null($override)) {
+          $ctx->reactions['block'] = $override;
+        }
+      }
+    }
+
+    if ($ctx && isset($ctx->reactions['block']['blocks'])) {
+      // Loop through the blocks in this page
+      foreach ($ctx->reactions['block']['blocks'] as $block) {
+        if($block['module'] != 'boxes' || !$block['region']) continue;
+
+        $box = boxes_box_load($block['delta']);
+        // Load from the vsite if needed.
+        if ($vsite && ($vsite_box = $vsite->controllers->boxes->get($block['delta']))) {
+          if (is_array($vsite_box))  $vsite_box = (object) $vsite_box;
+          $box = boxes_factory($vsite_box->plugin_key, $vsite_box);
+          $box->new = FALSE;
+        }
+        $boxes = array($box);
+
+        // Add Boxes within box collections.
+        if ($box instanceof os_boxes_widget_collection || $box instanceof os_boxes_columns) {
+          if(count($box->options['widgets'])) {
+            foreach ($box->options['widgets'] as $widget) {
+              // Collections and columns store the BID slightly differently
+              $bid = (is_array($widget))? $widget['bid'] : $widget;
+
+              list($module,$delta) = explode('-', $bid);
+              if ($module =='boxes') {
+                $new_box = boxes_box_load($delta);
+                // Load from the vsite if needed.
+                if ($vsite && ($vsite_box = $vsite->controllers->boxes->get($delta))) {
+                  if (is_array($vsite_box))  $vsite_box = (object) $vsite_box;
+                  $new_box = boxes_factory($vsite_box->plugin_key, $vsite_box);
+                  $new_box->new = FALSE;
+                }
+                $boxes[] = $new_box;
+              }
+            }
+          }
+        }
+
+        foreach ($boxes as $box) {
+          // Render the contents of this box into solr.
+          if ($box instanceof os_boxes_html) {
+            $doc->addField('tm_html_widget', check_markup($box->options['text']['value'], $box->options['text']['format']));
+          }
+        }
+
+      }
+    }
+  }
+}
+
+function os_pages_apachesolr_query_alter($query) {
+  $params['qf']['tm_html_widget'] = 'tm_html_widget^30';
+  $query->addParams($params);
+  $query->addParam('fl', 'tm_html_widget');
+}
+
+/**
+ * Implements hook_os_layout_set_alter
+ *
+ * Used to trigger re-index of a node when it's layout changes.
+ *
+ * @param array $blocks
+ * @param string $context_name
+ */
+function os_pages_os_layout_set_alter(&$blocks, $context_name) {
+  _os_pages_reindex_context($context_name);
+}
+
+/**
+ * Implements hook_form_FORM_ID_form_alter() for boxes_box
+ */
+function os_pages_form_boxes_box_form_alter(&$form, &$form_state) {
+  $form['#submit'][] = 'os_pages_widget_submit';
+}
+
+/**
+ * When a box is saved, if it is a HTML box then check if contexts need to be re-indexed.
+ */
+function os_pages_widget_submit($form, $form_state) {
+  if ($form_state['values']['op'] !== t('Cancel') && module_exists('vsite') && vsite_get_vsite() && $form_state['box']->plugin_key == 'os_boxes_html') {
+    // Get the relationship between blocks and contexts.
+    $context_blocks = vsite_layout_get_block_contexts('boxes',$form_state['box']->delta);
+    foreach ($context_blocks as $info) {
+    	_os_pages_reindex_context($info->context);
+    }
+  }
+}
+
+/**
+ * Re-Index a page in solr when it's context is modified.
+ */
+function _os_pages_reindex_context($context_name) {
+  if (strpos($context_name, 'os_pages-page-') !== FALSE && module_exists('apachesolr')) {
+    $nid = str_replace('os_pages-page-', '', $context_name);
+    $node = node_load($nid);
+    if ($node) {
+      apachesolr_entity_update($node, 'node');
+    }
   }
 }

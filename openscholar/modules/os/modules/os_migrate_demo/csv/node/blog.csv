@@ -8,3 +8,4 @@ blog6,"Mileva Marić","Yesterday I met Mileva, what a nice girl :).",personal4,S
 blog7,"Unpublish blog","This is an upublished blog",personal1,,,0
 blog8,"Michelle's Blog","Welcome to Michelle's blog.",personal2,,user1,1
 blog9,"Tesla's Blog","Welcome to Tesla's blog.",personal5,,user4,1
+blog10,"Third blog","This is a blog entry with a table.<br><table><thead><tr><th>Header</th><th>Header</th></tr></thead><tbody><tr><td>body</td><td>body</td></tr></tbody></table>",personal1,,user2,1

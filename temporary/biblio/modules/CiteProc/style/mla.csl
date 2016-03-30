@@ -44,10 +44,20 @@
       </terms>
    </locale>
    <macro name="editor-translator">
-      <names variable="editor translator" delimiter=". ">
-         <label form="verb-short" text-case="capitalize-first" suffix=". " strip-periods="true"/>
-         <name and="symbol" delimiter=", "/>
-      </names>
+      <choose>
+         <if variable="author" match="none">
+            <names variable="translator" delimiter=". ">
+               <label form="verb-short" text-case="capitalize-first" suffix=". " strip-periods="true"/>
+               <name and="symbol" delimiter=", "/>
+            </names>
+          </if>
+          <else>
+            <names variable="editor translator" delimiter=". ">
+               <label form="verb-short" text-case="capitalize-first" suffix=". " strip-periods="true"/>
+               <name and="symbol" delimiter=", "/>
+            </names>
+          </else>
+        </choose>
    </macro>
    <macro name="author">
       <names variable="author">
@@ -138,7 +148,9 @@
    <macro name="pages">
       <choose>
          <if variable="page">
-            <text variable="page"/>
+            <text variable="volume" prefix=", " font-style="italic"/>
+            <text variable="issue" prefix=", "/>
+            <text variable="page" prefix=", " />
          </if>
          <else>
             <text value="n. pag"/>

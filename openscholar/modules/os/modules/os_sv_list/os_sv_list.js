@@ -5,6 +5,23 @@
 (function($) {
   Drupal.behaviors.os_sv_list = {
     attach : function(context) {
+
+        function showField(sort_type, show_type) {
+          var expire_event_appear = jQuery('.form-item-event-expire-appear');
+          expire_event_appear.hide();
+          if (sort_type == 'sort_event_asc' && show_type == 'upcoming_events') {
+            expire_event_appear.show();
+            expire_event_appear.find('label').text(Drupal.t('Events should expire'));
+          }
+          else if (sort_type == 'sort_event_desc' && show_type == 'past_events') {
+            expire_event_appear.show();
+            expire_event_appear.find('label').text(Drupal.t('Events should appear'));
+          }
+          else {
+            expire_event_appear.hide();
+          }
+        }
+
       $('#os_sv_list_content_type').once('once', function() {
         // when content type changes, update all the options
         $('#os_sv_list_content_type').change(function() {
@@ -93,6 +110,33 @@
             $('#os_sv_list_content_type').change();
           });
 
+          // Handle the "event" content type.
+          if (content_type == 'event') {
+            $('.form-item-show').show();
+            var sort_by = $('#edit-sort-by');
+            var show = $('#edit-show');
+
+            // Show the "expire-event-appear" field if needed based on current
+            // form values.
+            showField(sort_by.val(), show.val());
+
+            // Show the "expire-event-appear" field when user selects ascending order
+            // for upcoming events or descending order for past events.
+            sort_by.change(function() {
+              var sort_type = $(this).val();
+              var show_type = show.val();
+              showField(sort_type, show_type);
+            });
+            show.change(function() {
+              var sort_type = sort_by.val();
+              var show_type = $(this).val();
+              showField(sort_type, show_type);
+            });            
+          }
+          else {
+            $('.form-item-event-expire-appear').hide();
+            $('.form-item-show').hide();
+          }
         });
   
         // perform the change callback once now.
@@ -102,7 +146,7 @@
         var content_type = $('#os_sv_list_content_type').val();
         var show_all_checked = $('#biblio_show_all_check').is(':checked') ? true : false;
   
-        });
+      });
 
       // Select2.
       //console.log($('#vocabs', context).find('.form-select:not(.select2-processed)'))

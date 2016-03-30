@@ -95,3 +95,17 @@ function os_news_update_7006() {
 
   features_revert($revert);
 }
+
+/**
+ * Reverts settings and exports field instance
+ */
+function os_news_update_7007() {
+  $revert = array(
+    'os_news' => array(
+      'variable',
+      'field_instance',
+    )
+  );
+
+  features_revert($revert);
+}

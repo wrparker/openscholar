@@ -1,6 +1,6 @@
 ;----------// Theme Information
 
-  name        = HWP Vibrant
+  name        = Bold
   description = A vibrant looking theme for use by departments at Harvard.
   core        = 7.x
   base theme  = hwpi_basetheme

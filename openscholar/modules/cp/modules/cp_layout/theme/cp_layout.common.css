@@ -149,7 +149,7 @@
   position: absolute;
   top: 10px;
   left: 29px;
-  background-image: url("images/cp-layout-sprite.png");
+  background-image: url("images/cp-layout-sprite.png?201504");
 }
 
 
@@ -214,17 +214,6 @@
   background-position-y: -528px;
 }
 
-.fb_social_activityf .widget-icon,
-.fb_social_recommend .widget-icon,
-.fb_social_comments .widget-icon,
-.fb_social_livestream .widget-icon,
-.fb_social_facepile .widget-icon,
-.fb_social_send .widget-icon,
-.fb_social_likebox .widget-icon,
-.fb_social_like .widget-icon {
-  background-position-y: -377px;
-}
-
 .os_boxes_twitterfeed .widget-icon {
   background-position-y: -958px;
 }
@@ -232,6 +221,11 @@
 .os_taxonomy_fbt .widget-icon {
   background-position-y: -862px;
 }
+
+.os_boxes_dataverse_search .widget-icon,
+.os_boxes_dataverse_list .widget-icon {
+    background-position-y: -1054px;
+  }
 
 #edit-layout-unused-widgets .cp-layout-widget.disabled,
 #edit-layout-unused-widgets .cp-layout-widget.hidden {

@@ -8,11 +8,9 @@ function os_migrate_demo_install() {
   // populated by the tie we enable this module.
   $preset = spaces_preset_load('os_scholar', 'og');
   $features = array(
-    'os_biocv',
     'os_blog',
     'os_booklets',
     'os_classes',
-    'os_dataverse',
     'os_events',
     'os_faq',
     'os_image_gallery',

@@ -148,6 +148,7 @@ class PARSEENTRIES
     $this->parseFile = TRUE;
     $this->outsideEntry = TRUE;
     $this->translate_latex = TRUE;
+    $this->error = "";
   }
   // Open bib file
   /**
@@ -159,17 +160,22 @@ class PARSEENTRIES
     if (!is_file($file))
     die;
     ini_set('auto_detect_line_endings', true);
-    $this->fid = fopen ($file,'r');
+
+    if($this->validate(file_get_contents($file))) {
+      $this->fid = fopen ($file,'r');
+    }
     $this->parseFile = TRUE;
   }
   // Load a bibtex string to parse it
   function loadBibtexString($bibtex_string)
   {
-    if (is_string($bibtex_string)) {
-      //$bibtex_string = $this->searchReplaceText($this->transtab_latex_unicode, $bibtex_string, FALSE);
-      $this->bibtexString = explode("\n",$bibtex_string);
-    } else {
-      $this->bibtexString = $bibtex_string;
+    if ($this->validate($bibtex_string)) {
+      if (is_string($bibtex_string)) {
+        //$bibtex_string = $this->searchReplaceText($this->transtab_latex_unicode, $bibtex_string, FALSE);
+        $this->bibtexString = explode("\n",$bibtex_string);
+      } else {
+        $this->bibtexString = $bibtex_string;
+      }
     }
     $this->parseFile = FALSE;
     $this->currentLine = 0;
@@ -234,10 +240,8 @@ class PARSEENTRIES
   // Extract a field
   function fieldSplit($seg)
   {
-    // echo "**** ";print_r($seg);echo "<BR>";
     // handle fields like another-field = {}
     $array = preg_split("/,\s*([-_.:,a-zA-Z0-9]+)\s*={1}\s*/U", $seg, PREG_SPLIT_DELIM_CAPTURE);
-    // echo "**** ";print_r($array);echo "<BR>";
     //$array = preg_split("/,\s*(\w+)\s*={1}\s*/U", $seg, PREG_SPLIT_DELIM_CAPTURE);
     if (!array_key_exists(1, $array))
     return array($array[0], FALSE);
@@ -288,7 +292,6 @@ class PARSEENTRIES
       $value = trim($value);
       $this->entries[$this->count][$key] = $value;
     }
-    // echo "**** ";print_r($this->entries[$this->count]);echo "<BR>";
   }
   // Start splitting a bibtex entry into component fields.
   // Store the entry type and citation.
@@ -354,7 +357,7 @@ class PARSEENTRIES
       $this->undefinedStrings[] = $string; // Undefined string that is not a year etc.
       return '';
     }
-    return $string;
+    return $this->removeNestedBraces($string);
   }
 
   // This function works like explode('#',$val) but has to take into account whether
@@ -391,22 +394,21 @@ class PARSEENTRIES
   //    to simply escape with \": Quotes must be placed inside braces.
   function closingDelimiter($val,$delimitEnd)
   {
-    //  echo "####>$delimitEnd $val<BR>";
     $openquote = $bracelevel = $i = $j = 0;
     while ($i < strlen($val))
     {
       // a '"' found at brace level 0 defines a value such as "ss{\"o}ss"
       if ($val[$i] == '"' && !$bracelevel)
-      $openquote = !$openquote;
+        $openquote = !$openquote;
       elseif ($val[$i] == '{')
-      $bracelevel++;
+        $bracelevel++;
       elseif ($val[$i] == '}')
-      $bracelevel--;
+        $bracelevel--;
+      
       if ( $val[$i] == $delimitEnd && !$openquote && !$bracelevel )
-      return $i;
+        return $i;
       $i++;
     }
-    // echo "--> $bracelevel, $openquote";
     return 0;
   }
 
@@ -451,6 +453,7 @@ class PARSEENTRIES
       {
         // throw all characters before the '@'
         $line=strstr($line,'@');
+
         if (!strchr($line, "{") && !strchr($line, "("))
         $possibleEntryStart = $line;
         elseif (preg_match("/@.*([{(])/U", preg_quote($line), $matches))
@@ -556,6 +559,38 @@ class PARSEENTRIES
     return $this->entries;
   }
 
+  // check to make sure entries are well-formed (no stray braces)
+  function validate($entries) {
+    if ((preg_match_all("/\{/", $entries, $matches)) != (preg_match_all("/\}/", $entries, $matches))) {
+     $this->error = "Error: invalid BibTex, contains unmatched braces.";
+      return FALSE;
+    }
+    else {
+      return TRUE;
+    }
+  }
+
+  // remove nested braces inside field value
+  function removeNestedBraces($string) {
+    $bracestart = strrpos($string, "{");
+    $braceend = strpos($string, "}");
+
+    if ($bracestart !== FALSE && $braceend !== FALSE) {
+      if ($bracestart > $braceend) {
+        $braceend = $bracestart + strpos(substr($string, $bracestart), "}");
+      }
+      $bracestart++;
+      $braceend--;
+
+      $string = substr($string, 0, $braceend + 1) . substr($string, $braceend + 2);
+      $string = substr($string, 0, $bracestart - 1) . substr($string, $bracestart);
+
+      return $this->removeNestedBraces($string);
+    }
+    else {
+      return $string;
+    }
+
+  }
+
 }
-
-

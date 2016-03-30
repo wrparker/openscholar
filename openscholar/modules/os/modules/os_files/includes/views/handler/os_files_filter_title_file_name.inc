@@ -18,7 +18,7 @@ class os_files_filter_title_file_name extends views_handler_filter {
     );
   }
 
-  function query($group_by) {
+  function query() {
     if (empty($this->view->exposed_raw_input['file_name_title'])) {
       return;
     }
@@ -28,7 +28,7 @@ class os_files_filter_title_file_name extends views_handler_filter {
       $db->condition($field, "%" . $this->view->exposed_raw_input['file_name_title'] . "%", 'LIKE');
     }
 
-    $this->query->add_where($group_by, $db);
+    $this->query->add_where($this->options['group'], $db);
   }
 
   function admin_summary() {

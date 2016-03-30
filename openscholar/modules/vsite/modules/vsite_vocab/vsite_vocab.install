@@ -65,3 +65,10 @@ function vsite_vocab_update_7002(&$sandbox) {
     'entity' => 'taxonomy_vocabulary',
   ));
 }
+
+/**
+ * Remove comma characters from the vocabulary machine name.
+ */
+function vsite_vocab_update_7003(&$sandbox) {
+  vsite_vocab_update_7002($sandbox);
+}

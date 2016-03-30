@@ -26,10 +26,15 @@ Feature: Testing the importer.
   Scenario: Verify that the vocabularies and terms from the CSV created
   successfully.
     Given I visit "john/blog/blog-csv"
-     Then I should see "Johnny B good"
+      And I should see "Johnny B good"
       And I should see "Californication"
       And I should see "Chuck Berry"
       And I should see "Red hot chili peppers"
+          # Verify that vocabularies are not being lower-cased.
+     When I am logging in as "john"
+      And I visit "john/cp/build/taxonomy"
+     Then I should find the text "Artists"
+
 
   @api @misc_first
   Scenario: Verify the hebrew text was imported.

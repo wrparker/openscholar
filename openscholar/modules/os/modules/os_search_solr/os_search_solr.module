@@ -153,7 +153,7 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
 
     // There may be private features, this user is a member and should get access to private features in search.
     if ($query->hasFilter('bs_private', 1, TRUE) && (user_access('administer group') || og_is_member('node', $group_wrapper->getIdentifier()))) {
-      $query->removeFilter('bs_private');
+       $query->removeFilter('bs_private');
     }
   }
   elseif (variable_get('file_default_scheme', 'public') == 'private') {
@@ -220,9 +220,15 @@ function os_search_solr_block_view_alter(&$data, $block) {
     $data['title'] = t('Filter by other sites');
 
     // Hide the Filter by Site block if there is only one filter.
-    if (isset($data['content']['sm_og_group_ref']) && isset($data['content']['sm_og_group_ref']['#items'])) {
-      $site_array = $data['content']['sm_og_group_ref']['#items'];
-      if(is_array($site_array) && count($site_array) <= 1) {
+    if (isset($data['content']['sm_og_group_ref'])) {
+      // Looping over the matching vsites and count the amount.
+      $vsites = 0;
+      foreach ($data['content']['sm_og_group_ref'] as $sites) {
+        $vsites += count($sites['#items']);
+      }
+
+      // We found 1 vsite(or non at all) - clearing the block content.
+      if ($vsites == 0) {
         $data['content'] = NULL;
       }
     }
@@ -466,6 +472,18 @@ function os_search_solr_node_update($node) {
  */
 function os_search_solr_add_vsite_to_reindex($vsite_id, $bundles = array()) {
   $values = variable_get('os_search_solr_reindex_by_bundles', array());
+
+  // If we already have an index in progress, merge the settings.
+  if(isset($values[$vsite_id]) && count($bundles)) {
+    // If only some nodes were being indexed, add the new bundles to the list.
+    if(count($values[$vsite_id]['bundles'])) {
+      $bundles = array_merge($bundles, $values[$vsite_id]['bundles']);
+    } else {
+      // If all nodes were getting indexed, start over.
+      $bundles = array();
+    }
+  }
+
   $values[$vsite_id] = array('bundles' => $bundles, 'last_nid' => 0);
   variable_set('os_search_solr_reindex_by_bundles', $values);
 }
@@ -507,7 +525,7 @@ function os_search_solr_mark_entity_by_bundles($vsite_id, $bundles = array(), $l
   $query = new EntityFieldQuery();
   $result = $query
     ->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', $bundles, 'IN')
+    ->entityCondition('bundle', array_keys($bundles), 'IN')
     ->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $vsite_id)
     ->propertyCondition('nid', $last_nid, '>')
     ->propertyOrderBy('nid')
@@ -845,8 +863,11 @@ function os_search_solr_apachesolr_search_default_searchers() {
     $page_id = 'browse_' . $bundle_name;
     $export[$page_id] = os_search_solr_setup_bundle_searcher($bundle_name, $bundle_info['title'], $bundle_info['url']);
 
-    // Set the default display mode for the searcher.
-    os_search_solr_save_view_mode($page_id, $bundle_info['display_mode']);
+    $solr_view_modes = variable_get('os_search_solr_display_mode', array());
+    if($solr_view_modes[$page_id] != $bundle_info['display_mode']) {
+      // Set the default display mode for the searcher.
+      os_search_solr_save_view_mode($page_id, $bundle_info['display_mode']);
+    }
   }
   return $export;
 }
@@ -1028,17 +1049,17 @@ function os_search_solr_preprocess_search_results(&$variables) {
   //Only alter 'search_results' and render node if it is a non-search view mode.
   if(!in_array($view_mode, array('search_result', 'search_index'))){
 
-	  // Reset Search Results, we are going to completely override
-	  $variables['search_results'] = '';
+    // Reset Search Results, we are going to completely override
+    $variables['search_results'] = '';
 
-	  foreach ($variables['results'] as $result) {
-	    if ($result['entity_type'] == 'node' && $node = node_load($result['node']->entity_id)) {
-	      $build = node_view($node, $view_mode);
-	      // Hide links.
-	      $build['links']['#access'] = FALSE;
-	      $variables['search_results'] .= render($build);
-	    }
-	  }
+    foreach ($variables['results'] as $result) {
+      if ($result['entity_type'] == 'node' && $node = node_load($result['node']->entity_id)) {
+        $build = node_view($node, $view_mode);
+        // Hide links.
+        $build['links']['#access'] = FALSE;
+        $variables['search_results'] .= render($build);
+      }
+    }
   }
 }
 

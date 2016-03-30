@@ -347,6 +347,8 @@ class vsite extends space_og {
       'admin/*',
       'pinserver/auth',
       'pinserver/error/*',
+      'pinserver/forbidden',
+      'pinserver/forbidden/*',
       // 'files/*', Need files menu entry to be loaded in a space so that the purl can be used to serve old file pats. -RB
     );
 
@@ -418,7 +420,7 @@ class vsite extends space_og {
    * the "user_access" static varaible we are able to trick Drupal to think that
    * user has a certain permission on a certain condition.
    */
-  protected function activate_user_roles() {
+  public function activate_user_roles() {
     global $user;
     if (user_is_anonymous()) {
       // Anon users never get any special permissions.

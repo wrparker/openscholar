@@ -40,7 +40,37 @@ function os_migrate_demo_menu() {
     'page arguments' => array(1),
   );
 
+  $items['variable/%'] = array(
+    'page callback' => 'variable_get',
+    'page arguments' => array(1, 'empty'),
+    'access callback' => TRUE,
+  );
+
+  $items['os-package-file'] = array(
+    'page callback' => 'os_migrate_demo_package_file',
+    'access callback' => TRUE,
+  );
+
   return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ *
+ * Use our custom access callback for event's attendees export for testing.
+ */
+function os_migrate_demo_menu_alter(&$items) {
+  $items['node/%node/registrations/export']['access callback'] = 'os_migrate_testing_event_export';
+}
+
+/**
+ * Access callback;
+ *
+ * If "testing" is set in the query string, give access to export the event's
+ * list of attendees.
+ */
+function os_migrate_testing_event_export($permission) {
+  return !empty($_GET['testing']) ? TRUE : user_access($permission);
 }
 
 /**
@@ -114,11 +144,9 @@ function os_migrate_demo_migrate_api() {
     'OsMigrateScienceTaxonomyTerm',
     'OsMigratePersonalNode',
     'OsMigrateProjectNode',
-    'OsMigrateBioagrphyNode',
     'OsMigratePublicationNode',
     'OsMigrateClassesNode',
     'OsMigrateClassesMaterialNode',
-    'OsMigrateCurriculumVitaeNode',
     'OsMigrateNewsNode',
     'OsMigrateEventsNode',
     'OsMigrateBlogNode',
@@ -146,4 +174,12 @@ function os_migrate_demo_migrate_api() {
     'migrations' => $migrations,
   );
   return $api;
+}
+
+/**
+ * Get a file ID for the tests.
+ */
+function os_migrate_demo_package_file() {
+  $url = 'http://www.colorado.edu/conflict/peace/download/peace.zip';
+  drupal_json_output(os_copy_file($url));
 }

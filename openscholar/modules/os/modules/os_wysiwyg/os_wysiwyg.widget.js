@@ -139,4 +139,43 @@
       }
     }
   };
+
+  // We override some default code of the wysiwyg module.
+  // See @OS custom logic in prepareContent().
+  Drupal.wysiwyg.editor.instance.tinymce.prepareContent = function(content) {
+    // @OS custom logic. We need to do this since there is a use case for when
+    // a user enters broken HTML when disabling the rich text feature.
+    var d = document.createElement('div');
+    d.innerHTML = content;
+    content = d.innerHTML;
+    // End of OS custom logic.
+
+    // Certain content elements need to have additional DOM properties applied
+    // to prevent this editor from highlighting an internal button in addition
+    // to the button of a Drupal plugin.
+    var specialProperties = {
+      img: { 'class': 'mceItem' }
+    };
+    var $content = $('<div>' + content + '</div>'); // No .outerHTML() in jQuery :(
+    // Find all placeholder/replacement content of Drupal plugins.
+    $content.find('.drupal-content').each(function() {
+      // Recursively process DOM elements below this element to apply special
+      // properties.
+      var $drupalContent = $(this);
+      $.each(specialProperties, function(element, properties) {
+        $drupalContent.find(element).andSelf().each(function() {
+          for (var property in properties) {
+            if (property == 'class') {
+              $(this).addClass(properties[property]);
+            }
+            else {
+              $(this).attr(property, properties[property]);
+            }
+          }
+        });
+      });
+    });
+    return $content.html();
+  };
+
 })(jQuery);

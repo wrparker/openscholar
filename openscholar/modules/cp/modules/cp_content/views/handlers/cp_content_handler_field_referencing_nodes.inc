@@ -40,15 +40,17 @@ class cp_content_handler_field_referencing_nodes extends views_handler_field {
     $fids_data = array();
     foreach ($result as $row) {
       $nid = $row->id;
-      $fids_data[$row->fid][] = l($nodes[$nid]->title, 'node/' . $nid);
+
+      // Don't show links to a VSite.
+      $fids_data[$row->fid][] = !og_is_group('node', $nid) ? l($nodes[$nid]->title, 'node/' . $nid) : "";
     }
 
     $this->fids_data = $fids_data;
   }
 
   function render($values) {
-    // Return the node titles of the referencing
+    // Return the node titles of the referencing.
     $fid = $values->fid;
-    return !empty($this->fids_data[$fid]) ? implode(', ', $this->fids_data[$fid]) : '';
+    return !empty($this->fids_data[$fid]) ? implode(', ', array_filter($this->fids_data[$fid])) : '';
   }
 }

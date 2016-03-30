@@ -18,7 +18,6 @@ dependencies[] = og
 dependencies[] = og_ui
 dependencies[] = og_vocab
 dependencies[] = os
-dependencies[] = os_biocv
 dependencies[] = spaces
 dependencies[] = strongarm
 dependencies[] = taxonomy

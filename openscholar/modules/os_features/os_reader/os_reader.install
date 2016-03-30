@@ -112,7 +112,7 @@ function os_reader_update_7000() {
  */
 function os_reader_update_7001() {
   $schema = os_reader_schema();
-  if(!db_field_exists('os_feed_item', 'importer_type')){
+  if (!db_field_exists('os_feed_item', 'importer_type')) {
     db_add_field('os_feed_item', 'importer_type', $schema['os_feed_item']['fields']['importer_type']);
   }
 }
@@ -279,4 +279,12 @@ function os_reader_update_7004() {
  */
 function os_reader_update_7005(&$sandbox) {
   os_reader_update_7003($sandbox);
+}
+
+/**
+ * Reset the last importer item we process since the logic for pruning
+ * un-imported items has changed.
+ */
+function os_reader_update_7006() {
+  variable_set('os_reader_last_feed_item', 0);
 }

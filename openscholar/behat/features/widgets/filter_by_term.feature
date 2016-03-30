@@ -118,7 +118,7 @@ Feature:
         | Show empty terms     | uncheck   | checkbox    |
       And I set the term "Douglas Noël Adams" under the term "Antoine de Saint-Exupéry"
       And I set the term "Stephen William Hawking" under the term "Douglas Noël Adams"
-      And I unassign the node "Halley's Comet" with the type "event" from the term "Douglas Noël Adams"
+      And I unassign the node "Halleys Comet" with the type "event" from the term "Douglas Noël Adams"
      When I visit "john/calendar"
      Then I should see "Douglas Noël Adams"
       And I should see "Antoine de Saint-Exupéry"
@@ -137,7 +137,7 @@ Feature:
       And I should not see "There are more tests available on the tests list"
 
   @api @widgets
-  Scenario: Verify automatic port type determination is working properly
+  Scenario: Verify automatic post type determination is working properly
     Given I am logging in as "john"
       And the widget "Filter by term" is set in the "News" page with the following <settings>:
         | Post types           | Determine for me  | select list |
@@ -150,3 +150,34 @@ Feature:
         | Show number of posts | check             | checkbox    |
     And I visit "john/news"
      Then I should see "Air (1)"
+
+  @api @widgets
+  Scenario: Verify past tagged events link to the past events view.
+    Given I am logging in as "john"
+      And I bind the content type "event" with "science"
+      And I assign the node "John F. Kennedy birthday" with the type "event" to the term "air"
+      And the widget "Filter by term" is set in the "News" page with the following <settings>:
+        | Post types           | Select post type   | select list |
+        | Vocabularies         | science            | select list |
+        | Select Post type     | Past event         | select list |
+     When I visit "john/news"
+      And I should see "Air (1)"
+      And I click "Air (1)"
+          # Verify only tagged events show up.
+     Then I should see "John's 96th birthday"
+      And I should not see "Past event body"
+
+  @api @widgets
+  Scenario: Verify past tagged events link to the upcoming events view.
+    Given I am logging in as "john"
+      And I bind the content type "event" with "authors"
+      And the widget "Filter by term" is set in the "News" page with the following <settings>:
+        | Post types           | Select post type   | select list |
+        | Vocabularies         | authors            | select list |
+        | Select Post type     | Upcoming event     | select list |
+     When I visit "john/news"
+      And I should see "Antoine de Saint-Exupéry (1)"
+      And I click "Antoine de Saint-Exupéry (1)"
+          # Verify only tagged events show up.
+     Then I should see "Halley's Comet appearing"
+      And I should not see "Testing event body"

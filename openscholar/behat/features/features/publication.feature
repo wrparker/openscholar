@@ -69,17 +69,26 @@ Feature:
 
   @api @features_second
   Scenario: Test that Conference Papers using the Chicago-Author-Date style
-            print 'In' correctly
+            print 'In' correctly and doesn't capitalize unneeded words.
     Given I am logging in as "john"
      When I go to the "os_publications" app settings in the vsite "john"
       And I select the radio button named "biblio_citeproc_style" with value "chicago-author-date.csl"
       And I press "Save configuration"
       And I visit "john/publications/confpapers-tests"
-     Then I should not see "ConfPapers tests. In:"
-     Then I should see "ConfPapers tests, in"
+     Then I should see "“Confpapers Tests.”"
+      And I visit "john/publications/journal-article-title"
+      And I should see "Journal of Publications"
+      And I should not find the text "Journal Of Publications"
 
-  @api
-  Scenario: verify the user can see message the the publication won't display
+  @api @features_second
+  Scenario: Verify that the publication citations contain the indent CSS class
+            when format is Chicago Author-Date style.
+    Given I am logging in as "john"
+      And I visit "john/cp/build/features/os_publications"
+     Then I should see "div" element with the class "bib-neg-indent"
+
+  @api @features_second
+  Scenario: Verify the user can see message the the publication won't display
             in the publication form.
     Given I am logging in as "john"
       And I visit "john/cp/build/features/os_publications"
@@ -87,3 +96,25 @@ Feature:
       And I press "edit-submit"
       And I visit "john/node/add/biblio"
      Then I should see "Note: The publication type Journal Article is not currently shown in publication lists."
+
+  @api @features_second
+  Scenario: Verify that when filtering publications with a taxonomy term, the
+            title of the publication list is the term name.
+    Given I am logging in as "john"
+      And I visit "john/publications/science/air"
+     Then I should see "Air"
+      And I should see the link "The Little Prince"
+
+  @api @features_second
+  Scenario: Verify that when filtering publications by publication type, the
+            title of the publication list is the publication type.
+    Given I am logging in as "john"
+      And I visit "john/publications/type/book"
+     Then I should see "Publications by Type: Book"
+
+  @api @features_second
+  Scenario: Verify that when filtering publications by year, the
+            title of the publication list is given year.
+    Given I am logging in as "john"
+      And I visit "john/publications/year/1943"
+     Then I should see "Publications by Year: 1943"

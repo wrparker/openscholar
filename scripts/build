@@ -32,6 +32,9 @@ done
 # Drush executable.
 [[ $DRUSH && ${DRUSH-x} ]] || DRUSH=drush
 
+# Bower executable
+[[ $BOWER && ${BOWER-x} ]] || BOWER=bower
+
 # Build base.
 [[ $BUILD_ROOT && ${BUILD_ROOT-x} ]] || BUILD_ROOT="."
 
@@ -49,7 +52,7 @@ cd $ROOT
 # Build the profile itself.
 (
   cd openscholar
-  $DRUSH make --no-core --contrib-destination drupal-org.make .
+  $DRUSH make --no-core --contrib-destination=. drupal-org.make .
   # Download the git wrapper library using the composer.
   # todo: don\'t do it on Travis-CI.
   curl -s https://getcomposer.org/installer | php
@@ -109,4 +112,11 @@ CUR_DIR=$(pwd)
 (
   rm $DOCROOT/.htaccess
   cp .htaccess $DOCROOT
+)
+
+# Get the angualr components.
+(
+  cd $BUILD_ROOT/openscholar
+  bower install
+  cd -
 )

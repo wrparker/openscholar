@@ -9,7 +9,7 @@ Feature: Testing that when searching for a name on th site, the search doesn't
      When I search for "john"
       And I click on "Event" under facet "Filter By Post Type"
      Then I should see "John F. Kennedy birthday"
-      And I should not see "Halley's Comet"
+      And I should not see "Halleys Comet"
 
   @api @solr
   Scenario: Testing that results include nodes created by the searched author

@@ -1,13 +1,14 @@
 ;----------// Theme Information
 
-  name        = HWP College
+  name        = College
   description = A college inspired theme for use by departments at Harvard.
   core        = 7.x
   base theme  = hwpi_basetheme
   release     = 7.x-3.x
   engine      = phptemplate
   screenshot  = screenshot.png
-
+  flavor_name = "College"
+  plugins[os][flavor] = flavors
 
 ;----------// OpenScholar
 

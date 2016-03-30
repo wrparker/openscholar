@@ -1,12 +1,5 @@
 /* Pale Blue*/
 
-body {
-  background:#AAB7C5;
-  }
-
-body.navbar-off #page {
-  background-image:url('images/body-bg-alt-paleblue.png');
-  }
 
 #menu-bar {
   background: rgb(146, 158, 173);

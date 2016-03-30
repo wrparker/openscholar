@@ -23,7 +23,7 @@
  * @param $options (optional)
  *   Associative array of additional autopager options. <http://code.google.com/p/jquery-autopager/>
  */
-function _os_add_infinite_scroll($name, $next_link = 'li.pager-next>a', $content = '#content', $options = array()) {
+function _os_add_infinite_scroll($name, $next_link = 'li.pager-next a', $content = '#content', $options = array()) {
   if (($lib = libraries_get_path('autopager')) == FALSE) {
     watchdog('os', t('Please install autopager library'), WATCHDOG_WARNING);
     return FALSE;
@@ -39,10 +39,10 @@ function _os_add_infinite_scroll($name, $next_link = 'li.pager-next>a', $content
        'loading_image' => $img,
        'pager' => '#content ul.pager',
        'noAutoScroll' => 4,
-       'link_prev' => '#content li.pager-previous>a',
-     ),   
+       'link_prev' => '#content li.pager-previous a',
+     ),
    );
-  
+
   $options = array_diff($options, array('link', 'content')); //link and content could be supplied in two places.  always use function args, not opts array.
   $settings[$name] += $options;
   

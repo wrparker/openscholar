@@ -21,6 +21,12 @@ class os_boxes_html extends os_boxes_default {
   public function options_form(&$form_state) {
     $form = parent::options_form($form_state);
 
+    if (module_exists('os_common')) {
+      os_common_angular_apps('os-boxes');
+      $form['#attached']['library'][] = array('os_common', 'FileEditorModal');
+      $form['#attached']['js'][] = drupal_get_path('module', 'os_boxes') . '/misc/os_boxes.app.js';
+    }
+
     $form['text'] = array(
       '#type' => 'text_format',
       '#default_value' => $this->options['text']['value'],
@@ -83,6 +89,17 @@ class os_boxes_html extends os_boxes_default {
         file_usage_add($file, 'media', 'node', $vsite->group->nid, $entity_count);
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validate(&$values) {
+    if (strlen($values['text']['value']) < 65000) {
+      return;
+    }
+    // Notify the users his text was trimmed.
+    form_set_error('', t('The text you entered is more than 65,000 characters. Please shorten the text before re-submitting the form.'));
   }
 
   public function render() {

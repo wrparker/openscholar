@@ -571,10 +571,8 @@ function cp_content_views_default_views() {
   $handler->display->display_options['filters']['type']['table'] = 'node';
   $handler->display->display_options['filters']['type']['field'] = 'type';
   $handler->display->display_options['filters']['type']['value'] = array(
-    'bio' => 'bio',
     'blog' => 'blog',
     'book' => 'book',
-    'cv' => 'cv',
     'class' => 'class',
     'class_material' => 'class_material',
     'event' => 'event',
@@ -656,7 +654,7 @@ function cp_content_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Files';
+  $handler->display->display_options['title'] = 'Public Files';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['access']['perm'] = 'administer files';
@@ -755,7 +753,7 @@ function cp_content_views_default_views() {
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['empty'] = TRUE;
-  $handler->display->display_options['header']['area']['content'] = '<div class="cp-controls-wrapper"><ul><li><a href="../../file/add" class="add_new">Add file</a></li></ul></div>';
+  $handler->display->display_options['header']['area']['content'] = '<div class="cp-controls-wrapper"><div class="add_new" mb-open-modal panes="upload,web" types="image,video,audio,document,executable,html" on-select="reload($inserted)">Add file</div></div>';
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   /* Relationship: File Usage: Content */
   $handler->display->display_options['relationships']['file_to_node']['id'] = 'file_to_node';
@@ -809,11 +807,6 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'medium';
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['referencing_nodes']['id'] = 'referencing_nodes';
-  $handler->display->display_options['fields']['referencing_nodes']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['referencing_nodes']['field'] = 'referencing_nodes';
-  $handler->display->display_options['fields']['referencing_nodes']['label'] = 'Used in';
   /* Field: File: Edit link */
   $handler->display->display_options['fields']['edit']['id'] = 'edit';
   $handler->display->display_options['fields']['edit']['table'] = 'file_managed';
@@ -827,12 +820,18 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['delete']['field'] = 'delete';
   $handler->display->display_options['fields']['delete']['label'] = 'Delete';
   $handler->display->display_options['fields']['delete']['exclude'] = TRUE;
+  /* Field: File: Referencing content */
+  $handler->display->display_options['fields']['referencing_nodes']['id'] = 'referencing_nodes';
+  $handler->display->display_options['fields']['referencing_nodes']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['referencing_nodes']['field'] = 'referencing_nodes';
+  $handler->display->display_options['fields']['referencing_nodes']['label'] = 'Used in';
+  $handler->display->display_options['fields']['referencing_nodes']['element_label_colon'] = FALSE;
   /* Field: Global: Custom text */
   $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
   $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
   $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing_1']['label'] = 'Manage';
-  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '[edit] [delete]';
+  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<a file-editor-modal fid="[fid]" href="#" views-close="reload(result)">Edit</a> [delete]';
   $handler->display->display_options['filter_groups']['groups'] = array(
     1 => 'AND',
     2 => 'OR',

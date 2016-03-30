@@ -49,18 +49,20 @@
                 $(settings.pager).hide();
               }
             }
-            
+
             //hide redundant biblio headers
             function os_publications_hide_biblio_category_bar() {
-              selector = '.biblio-separator-bar';            
+              selector = '.biblio-separator-bar';
               $selectors = $(selector);
-                
+
               $selectors.each(function(selectors) {
                 html = $(this).html()
-                $selectors.filter(':contains("'+html+'"):not(:first)').remove() //filter(':contains("'+html+'")').remove();
+                $selectors.filter(function() {
+                  return $(this).text() === html;
+                }).not(':first').remove();
               });
             }
-                      
+
             //prep settings
             var settings = Drupal.settings.autopager[mod]
             if (settings.loading_image) {
@@ -86,7 +88,7 @@
           }
         }
       });
-    }, 
+    }
   }
-  
+
 })(jQuery);

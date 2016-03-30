@@ -48,7 +48,6 @@ function os_help_get_variables_from_id($type, $id) {
         'os_blog' => array('url' => 'http://docs.openscholar.harvard.edu/blog', 'title' => 'Blog App'),
         'os_booklets' => array('url' => 'http://docs.openscholar.harvard.edu/booklet', 'title' => 'Booklets App'),
         'os_classes' => array('url' => 'http://docs.openscholar.harvard.edu/classes', 'title' => 'Classes App'),
-        'os_dataverse' => array('url' => 'http://docs.openscholar.harvard.edu/dataverse', 'title' => 'Dataverse App'),
         'os_events' => array('url' => 'http://docs.openscholar.harvard.edu/events-app', 'title' => 'Events App'),
         'os_faq' => array('url' => 'http://docs.openscholar.harvard.edu/faq-app', 'title' => 'FAQ App'),
         'os_files_private' => array('url' => 'http://docs.openscholar.harvard.edu/private-files', 'title' => 'Private Files App'),
@@ -87,14 +86,6 @@ function os_help_get_variables_from_id($type, $id) {
         'os_boxes_rand_widget' => array('url' => 'http://docs.openscholar.harvard.edu/random-widget', 'title' => 'Random Widget'),
         'os_boxes_columns' => array('url' => 'http://docs.openscholar.harvard.edu/columns-widget', 'title' => 'Columns Widget'),
         'os_boxes_facetapi_vocabulary' => array('url' => '', 'title' => ''),
-        'fb_social_activityf' => array('url' => 'http://docs.openscholar.harvard.edu/facebook-activity-feed-widget', 'title' => 'Facebook Activity Feed'),
-        'fb_social_recommend' => array('url' => 'http://docs.openscholar.harvard.edu/facebook-recommendations-widget', 'title' => 'Facebook Recommendations Widget'),
-        'fb_social_send' => array('url' => 'http://docs.openscholar.harvard.edu/facebook-send-widget', 'title' => 'Facebook Send Widget'),
-        'fb_social_likebox' => array('url' => 'http://docs.openscholar.harvard.edu/facebook-likebox-widget', 'title' => 'Facebook Like Box Widget'),
-        'fb_social_facepile' => array('url' => 'http://docs.openscholar.harvard.edu/facebook-facepile-widget', 'title' => 'Facebook Facepile Widget'),
-        'fb_social_livestream' => array('url' => 'http://docs.openscholar.harvard.edu/facebook-livestream-widget', 'title' => 'Facebook Livestream Widget'),
-        'fb_social_comments' => array('url' => 'http://docs.openscholar.harvard.edu/facebook-comments-widget', 'title' => 'Facebook Comments Widget'),
-        'fb_social_like' => array('url' => 'http://docs.openscholar.harvard.edu/facebook-like-widget', 'title' => 'Facebook Like Widget'),
       );
       break;
   }

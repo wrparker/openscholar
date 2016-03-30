@@ -25,7 +25,7 @@ function os_events_feeds_importer_default() {
       ),
     ),
     'parser' => array(
-      'plugin_key' => 'FeedsCSVParser',
+      'plugin_key' => 'OsFeedsCSVParser',
       'config' => array(
         'delimiter' => ',',
         'no_headers' => 0,
@@ -149,6 +149,11 @@ function os_events_feeds_importer_default() {
           4 => array(
             'source' => 'Files',
             'target' => 'file',
+            'unique' => FALSE,
+          ),
+          5 => array(
+            'source' => 'location',
+            'target' => 'field_event_location',
             'unique' => FALSE,
           ),
         ),

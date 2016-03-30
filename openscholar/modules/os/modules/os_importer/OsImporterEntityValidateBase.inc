@@ -10,6 +10,14 @@
  */
 class OsImporterEntityValidateBase extends EntityValidateBase {
 
+  /**
+   * @var bool
+   * Determine if the validation invoked during a rest call. This is useful when
+   * we have different validation for rest call and other validation when
+   * importing CSV.
+   */
+  public $rest = TRUE;
+
   public function publicFieldsInfo() {
     $fields = parent::publicFieldsInfo();
 
@@ -53,31 +61,55 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
     // Add path validator.
     $fields['path_alias']['validators'][] = array($this, 'validatorPath');
 
+    if ($this->rest) {
+      $fields[OG_AUDIENCE_FIELD] = array(
+        'required' => TRUE,
+      );
+    }
+
     return $fields;
   }
 
   /**
    * Verify the start is occurring before the end date.
    */
-  public function validateOsDate($field_name, $value) {
+  public function validateOsDate($field_name, $value, EntityMetadataWrapper $wrapper, EntityMetadataWrapper $property_wrapper) {
     // Empty values are checked for in 'isNotEmpty'.
-    if (empty($value)) {
+    if (empty($value) || $this->rest) {
       return;
     }
 
     $value = reset($value);
     // Validate the date format for the start and end date.
-    $date = DateTime::createFromFormat('M j Y', $value);
+    $this->validateDateFormats(array('M j Y'), $value, $field_name);
+  }
 
-    if ($date && $date->format('M j Y') == $value) {
-      return;
+  /**
+   * Verify the value is in a given format.
+   *
+   * @param $formats
+   *   Array of formats.
+   * @param $value
+   *   The value of the field.
+   * @param $field_name
+   *   The field name.
+   */
+  protected function validateDateFormats($formats, $value, $field_name) {
+    // Validate the date format for the start and end date.
+    foreach ($formats as $format) {
+      if ($date = DateTime::createFromFormat($format, $value)) {
+        if ($date->format($format) != $value) {
+          $params = array(
+            '@date' => $value,
+            '@format' => date($format, $date->getTimestamp()),
+          );
+          $this->setError($field_name, 'The value of the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
+          return;
+        }
+      }
     }
 
-    $params = array(
-      '@date' => $value,
-      '@format' => date('M j Y'),
-    );
-    $this->setError($field_name, 'The value of the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
+    return TRUE;
   }
 
   /**
@@ -148,5 +180,12 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
       );
       $this->setError($field_name, t('The path "@path" is already in use. Please supply a different path.', $params));
     }
+  }
+
+  /**
+   * Display the id and the title of the group.
+   */
+  public function vsiteFieldDisplay($value) {
+    return array('title' => $value[0]->title, 'id' => $value[0]->nid);
   }
 }

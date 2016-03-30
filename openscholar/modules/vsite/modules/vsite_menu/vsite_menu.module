@@ -131,25 +131,39 @@ function vsite_menu_menu_link_save(&$item, $gid = FALSE) {
     return FALSE;
   }
 
+  if (list($menu, $existing_menu) = _vsite_menu_prepare_menu_item($item, $vsite)) {
+    $vsite->controllers->menus->set($menu, $existing_menu);
+
+    /**
+     * Now clear the cached menu tree for this vsite.
+     */
+    vsite_menu_cache_clear($menu, $vsite->id);
+  }
+
+  return $item['mlid'];
+}
+
+/**
+ * Helper function for preparing the new menu object.
+ */
+function _vsite_menu_prepare_menu_item(&$item, $vsite) {
   $default_menu = key(os_get_menus());
-  $existing_menu = FALSE;
-  $existing_item = FALSE;
 
   // This is the easiest way to handle the unique internal path '<front>',
   // since a path marked as external does not need to match a router path.
   $item['external'] = !isset($item['external'])? ((url_is_external($item['link_path']) || $item['link_path'] == '<front>') ? 1 : 0) : $item['external'];
   // Load os defaults.
   $item += array(
-      'menu_name' => $default_menu,
-      'weight' => 0,
-      'link_title' => '',
-      'hidden' => 0,
-      'has_children' => 0,
-      'expanded' => 0,
-      'options' => array(),
-      'module' => 'menu',
-      'customized' => 0,
-      'updated' => 0
+    'menu_name' => $default_menu,
+    'weight' => 0,
+    'link_title' => '',
+    'hidden' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'options' => array(),
+    'module' => 'menu',
+    'customized' => 0,
+    'updated' => 0
   );
 
   $menu = $item['menu_name'];
@@ -204,12 +218,13 @@ function vsite_menu_menu_link_save(&$item, $gid = FALSE) {
       $item['router_path'] = _menu_find_router_path($item['link_path']);
     }
   }
+
   // If every value in $existing_item is the same in the $item, there is no
   // reason to clear the caches. We use
   // array_intersect_assoc() with the $item as the first parameter because
   // $item may have additional keys left over from building a router entry.
   // The intersect removes the extra keys, allowing a meaningful comparison.
-  if (! $existing_item || (array_intersect_assoc($item, $existing_item)) != $existing_item) {
+  if (!$existing_item || (array_intersect_assoc($item, $existing_item)) != $existing_item) {
 
     $menu_links_schema = drupal_get_schema('menu_links');
 
@@ -229,16 +244,8 @@ function vsite_menu_menu_link_save(&$item, $gid = FALSE) {
       $existing_menu[$existing_item['plid']]['has_children'] = count($remaining_children)?1:0;
     }
 
-    //Save the Menu to Overrides
-    $vsite->controllers->menus->set($menu, $existing_menu);
-
-    /**
-     * Now clear the cached menu tree for this vsite.
-     */
-    vsite_menu_cache_clear($menu, $vsite->id);
+    return array($menu, $existing_menu);
   }
-
-  return $item['mlid'];
 }
 
 /**
@@ -560,8 +567,8 @@ function vsite_menu_form_cp_menu_build_form_alter(&$form, &$form_state, $form_id
               '#type' => 'submit',
               '#value' => t('Reset to defaults')
           );
-          $form['actions']['submit']['#value'] = t('Save for @name', array(
-              '@name' => $vsite->title()
+          $form['actions']['submit']['#value'] = t('Save for !name', array(
+              '!name' => $vsite->title()
           ));
         }
       }
@@ -585,7 +592,7 @@ function vsite_menu_cp_menu_form_submit($form, &$form_state) {
     switch ($op){
       case t('Reset to defaults'):
         if(os_menu_revert()){
-          drupal_set_message(t('The menus have been reset to thier default values.'));
+          drupal_set_message(t('The menus have been reset to their default values.'));
         }
         break;
       case t('Save to @title', array('@title' => $preset->title)):

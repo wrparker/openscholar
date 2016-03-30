@@ -116,3 +116,19 @@ function os_pages_update_7005() {
   );
   variable_set($name, $value);
 }
+
+/**
+ * Mark pages for re-index
+ */
+function os_pages_update_7006() {
+
+  if(module_exists('apachesolr')) {
+    // Mark the page content type for re-index
+    $indexer_table = apachesolr_get_indexer_table('node');
+    db_update($indexer_table)
+      ->fields(array('changed' => REQUEST_TIME, 'status' => 1))
+      ->condition('entity_type', 'node')
+      ->condition('bundle', 'page')
+      ->execute();
+  }
+}

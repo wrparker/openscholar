@@ -185,8 +185,8 @@ function media_embed_file_default_types() {
   $types['html'] = (object) array(
     'api_version' => 1,
     'type' => 'html',
-    'label' => t('HTML'),
-    'description' => t('An <em>HTML</em> file is a block of HTML code that contains an iframe, object, embed or script tag.'),
+    'label' => t('Embedded Media'),
+    'description' => t('An <em>Embedded Media</em> file is a block of HTML code that contains an iframe, object, embed or script tag.'),
     'mimetypes' => array(
       'html/embed',
     ),
@@ -268,12 +268,15 @@ function media_embed_file_formatter_media_embed_view($file, $display, $langcode)
 
       // copied from dead embedfilter module
       preg_match('/height="([0-9]*)"/', $html, $fetchheight);
-      preg_match('/width="([0-9%]*)"/', $html, $fetchwidth);
+      preg_match('/width="([^\"]*)"/', $html, $fetchwidth);
       if ($fetchheight && $fetchwidth) {
         $height = $fetchheight[1];
-        // if the width is a percentage in the iframe, assume the aspect ratio is 1:1 and use the height
+        // We're going to assume that the max width is 1000px
+        // The final width value is calculated as %value * 1000px
         if (strpos($fetchwidth[1], '%') !== FALSE) {
-          $width = $height;
+          $term = explode("%", $fetchwidth[1]);
+          $width = ceil(($term[0]/100) * 1000);
+          $file->field_html_code[LANGUAGE_NONE][0]['safe_value'] = preg_replace('/width="(\d+(\.\d+)?%)"/', 'width=' . $width, $file->field_html_code[LANGUAGE_NONE][0]['safe_value']);
         }
         else {
           $width = $fetchwidth[1];
@@ -288,11 +291,23 @@ function media_embed_file_formatter_media_embed_view($file, $display, $langcode)
         $target_width = $file->override['maxwidth'];
       }
 
+      $target_height = 0;
+      if (isset($file->override['attributes']['height'])) {
+        $target_height = $file->override['attributes']['height'];
+      }
+      elseif (isset($file->override['maxheight']) && $file->override['maxheight'] && $height > $file->override['maxheight']) {
+        $target_height = $file->override['maxheight'];
+      }
+
       if ($target_width) {
-        $diff = abs($width-$target_width);
-        $ratio = $diff/$width;
-        $heightdiff = $ratio*$height;
-        $height = round($height-$heightdiff);
+        if (!$target_height) {
+          $diff = abs($width - $target_width);
+          $ratio = ($width - $diff) / $width;
+          $height = $ratio * $height;
+        }
+        else {
+          $height = $target_height;
+        }
         $width = $target_width;
 
         $patterns[0] = '/height="([0-9]*)"/';
@@ -309,21 +324,27 @@ function media_embed_file_formatter_media_embed_view($file, $display, $langcode)
 
     // WYSIWYG will not handle iframes and the like properly.
     else {
-      $width = 100;
+      $width = $height = 100;
       if (isset($file->override['width'])) {
         $width = $file->override['width'];
+        if (isset($file->override['height'])) {
+          $height = $file->override['height'];
+        }
       }
       else {
         $html = $file->field_html_code[LANGUAGE_NONE][0]['value'];
-        preg_match('/width="([0-9%]*)"/', $html, $fetchwidth);
+        preg_match('/width="([^\"]*)"/', $html, $fetchwidth);
         if ($fetchwidth) {
+          preg_match('/height="([0-9]*)"/', $html, $fetchheight);
+          if ($fetchheight) {
+            $height = $fetchheight[1];
+          }
           if (strpos($fetchwidth[1], '%') !== FALSE) {
-            // the width is relative.
-            // we're going to assume the aspect ratio is 1:1 and use the height
-            preg_match('/height="([0-9]*)"/', $html, $fetchheight);
-            if ($fetchheight) {
-              $width = $fetchheight[1];
-            }
+            // The width is relative.
+            // We're going to assume that the max width is 1000px
+            // The final width value is calculated as %value * 1000px
+            $term = explode("%", $fetchwidth[1]);
+            $width = ceil(($term[0]/100) * 1000);
           }
           else {
             $width = $fetchwidth[1];
@@ -338,6 +359,7 @@ function media_embed_file_formatter_media_embed_view($file, $display, $langcode)
         ),
         '#path' => drupal_get_path('module', 'media').'/images/icons/default/file-unknown.png',
         '#width' => $width,
+        '#height' => $height,
       );
 
       return $output;
@@ -355,4 +377,36 @@ function media_embed_field_attach_form($entity_type, $entity, &$form, &$form_sta
   catch (EntityMalformedException $e) {
     // do nothing
   }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * Moves our implementation of library_alter to the end.
+ */
+function media_embed_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'library_alter') {
+    // Move the media_embed implementation of library_alter last.
+    unset($implementations['media_embed']);
+    $implementations['media_embed'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_library_alter().
+ *
+ * Adds params media browser code.
+ */
+function media_embed_library_alter(&$libs) {
+  if (!isset($libs['media_browser']) || !isset($libs['media_browser']['js'])) {
+    return;
+  }
+
+  $whitelist = media_embed_get_whitelist();
+
+  $libs['media_browser']['js'][] = array(
+    'data' => array('embedWhitelist' => $whitelist),
+    'type' => 'setting',
+  );
+
 }

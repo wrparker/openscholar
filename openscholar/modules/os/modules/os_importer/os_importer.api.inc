@@ -9,7 +9,7 @@
 /**
  * Parsing the header.
  */
-function _os_importer_parse_header(ParserCSV $parser, ParserCSVIterator $iterator) {
+function _os_importer_parse_header(ParserCSV $parser, ParserCSVIterator $iterator, $mappings) {
   $parser->setLineLimit(1);
   $rows = $parser->parse($iterator);
   if (!count($rows)) {
@@ -58,6 +58,7 @@ function _os_importer_import_behalf_of_user(FeedsSource $source, $entity, $item,
  */
 function _os_importer_import_vocab(FeedsSource $source, $entity, $item, $id) {
   $config = $source->importer->getConfig();
+  $pattern = '/[^a-zA-Z0-9_]/';
 
   // Getting the mappings from the processor config.
   $mappings = array();
@@ -72,12 +73,15 @@ function _os_importer_import_vocab(FeedsSource $source, $entity, $item, $id) {
   foreach ($new_vocabs as $vocab) {
     $original_name = $vocab;
     // Create the terms and the vocabulary.
-    if (preg_match('@[^a-z0-9_]+@', $vocab)) {
+    if (preg_match('@[^a-zA-Z0-9_ ]+@', $vocab)) {
       $params['@name'] = $vocab;
-      $vocab = str_replace(array(' ', '.', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')'), '', strtolower($vocab));
-      $vocab = str_replace(array('_', '-'), '_', $vocab);
+      $vocab = preg_replace($pattern, '', $vocab);
       $params['@new-name'] = $vocab;
-      drupal_set_message(t("The vocab name @name contained not allowed characters. The vocab name is @new-name. You can change vocabulary's name in the future.", $params), 'notice');
+      $params['@taxonomy-page'] = url('cp/build/build/taxonomy');
+      $text = "The vocabulary name \"@name\" contains disallowed character(s), it has been changed to \"@new-name\".";
+      $text .= "All special characters and spaces are removed from the original name during importing.";
+      $text .= "You can change the vocabulary name in <a href='@taxonomy-page'>cp/build/build/taxonomy</a> in the future.";
+      drupal_set_message(t($text, $params), 'notice');
     }
     $info = _os_importer_create_vocab($vocab, $item[$original_name], 'node', $id, 'node', $entity->type);
 
@@ -132,7 +136,7 @@ function _os_importer_create_vocab($name, $terms, $group_type, $gid, $entity_typ
   else {
     // We didn't found any vocabulary - create a new one.
     $i = 0;
-    $machine_name = str_replace(array(' ', '-'), '_', strtolower($name));
+    $machine_name = str_replace(array(' ', '-', ','), array('_', '_', ''), strtolower($name));
     while (taxonomy_vocabulary_machine_name_load($machine_name)) {
       $machine_name = substr($machine_name, 0, 32 - strlen($i)) . $i;
       $i++;

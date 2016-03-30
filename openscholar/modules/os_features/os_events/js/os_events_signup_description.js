@@ -7,12 +7,12 @@
       var signup = $('#field-event-registration-add-more-wrapper');
 
       if (repeat.is(':checked')) {
-        signup.find('.description').text(Drupal.t('Only applicable to non repeated events.'));
+        signup.find('.description').html(Drupal.t('If checked, users will be able to signup for every <b>future</b> date in this repeating event. Past repeating events are removed.'));
       }
       
       repeat.change(function() {
         if ($(this).is(':checked')) {
-          signup.find('.description').text(Drupal.t('Only applicable to non repeated events.'));
+          signup.find('.description').html(Drupal.t('If checked, users will be able to signup for every <b>future</b> date in this repeating event. Past repeating events are removed.'));
         }
         else {
           signup.find('.description').text(Drupal.t('If checked, users will be able to signup for this event.'));

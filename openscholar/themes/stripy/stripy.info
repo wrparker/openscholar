@@ -1,9 +1,10 @@
+
 ;----------// Theme Information
 
   name        = Stripy
   description = A clean fixed layout design - white background with a single orange stripe for the menu area.
   core        = 7.x
-  base theme  = os_basetheme
+  base theme  = hwpi_basetheme
   release     = 7.x-3.x
   engine      = phptemplate
   screenshot  = screenshot.png
@@ -12,17 +13,15 @@
 
 ;----------// OpenScholar
 
-os[theme_type]   = 'vsite'
-os[theme_access] = 'public'
+	os[theme_type]   = 'vsite'
+    os[theme_access] = 'public'
 
 ;----------// Stylesheets
 
-  stylesheets[screen][] = css/stripy.responsive.layout.css
+  stylesheets[screen][] = css/stripy.layout.css
   stylesheets[screen][] = css/stripy.css
   
-  ie_stylesheets[screen][lt IE 10][] = css/stripy-ie.css
-
-
+ 
 
 ;----------// Theme Settings
 

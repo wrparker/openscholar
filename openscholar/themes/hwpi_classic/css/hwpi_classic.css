@@ -132,7 +132,6 @@ h1.node-title,
 
 h1#page-title {
 	font-size: 30px;
-	line-height: 1; /* Font size is larger than the default line-height, so will overlap if the title wraps */
 	margin: 15px 0 30px;
 }
 
@@ -207,9 +206,16 @@ margin-left:6em;
 	border-top: none;
 }
 
-.front #content-column .block.block-boxes-os_boxes_manual_list {
+.front #content-column .block.block-boxes-os_boxes_manual_list.styled {
     border-top: 1px solid #CCCCCC;
 }
+
+.front #content-column .block.block-boxes-os_boxes_manual_list.converted-bio {
+    border-top: none;
+}
+
+
+
 
 #content-column .item-list ul.pager li {
     font-family: arial;

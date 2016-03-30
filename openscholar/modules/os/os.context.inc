@@ -28,6 +28,7 @@ function os_context_default_contexts() {
         'cp' => 'cp',
         'cp/*' => 'cp/*',
         'group/node/*' => 'group/node/*',
+        'os/widget/*' => 'os/widget/*',
       ),
     ),
   );
@@ -75,12 +76,6 @@ function os_context_default_contexts() {
           'module' => 'os_search_db',
           'delta' => 'site-search',
           'region' => 'sidebar_second',
-          'weight' => '-10',
-        ),
-        'boxes-bio_teaser' => array(
-          'module' => 'boxes',
-          'delta' => 'bio_teaser',
-          'region' => 'content_top',
           'weight' => '-10',
         ),
       ),

@@ -11,6 +11,8 @@ function os_wysiwyg_install() {
   // Add HTML as an allowed type for WYSIWYG files.
   $types = media_variable_get('wysiwyg_allowed_types');
   $types[] = 'html';
+  $types = array_unique(array_diff($types, array('document')));
+  $types = array_combine($types, $types);
   media_variable_set('wysiwyg_allowed_types', $types);
 
 }
@@ -62,4 +64,21 @@ function os_wysiwyg_update_7004() {
   );
 
   features_revert(array_fill_keys($modules, $reset));
+}
+
+/*
+ * Revert os_wysiwyg filter component to allow <th> and <thead> tags.
+ */
+function os_wysiwyg_update_7006() {
+  features_revert(array('os_wysiwyg' => array('filter')));
+}
+
+/**
+ * Removes document from the wysiwyg allowed type var
+ */
+function os_wysiwyg_update_7007() {
+  $types = media_variable_get('wysiwyg_allowed_types');
+  $types = array_unique(array_diff($types, array('document')));
+  $types = array_combine($types, $types);
+  media_variable_set('wysiwyg_allowed_types', $types);
 }

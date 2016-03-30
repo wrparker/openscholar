@@ -29,7 +29,7 @@ function os_events_feeds_tamper_default() {
   $feeds_tamper->importer = 'os_events_csv';
   $feeds_tamper->source = 'Created date';
   $feeds_tamper->plugin_id = 'adjust_date_to_timezone';
-  $feeds_tamper->settings = '';
+  $feeds_tamper->settings = array();
   $feeds_tamper->weight = 0;
   $feeds_tamper->description = 'Adjust date to timezone';
   $export['os_events_csv-created_date-adjust_date_to_timezone'] = $feeds_tamper;

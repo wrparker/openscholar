@@ -1,6 +1,16 @@
 <?php
 
 /**
+ * Implements hook_entity_info_alter().
+ */
+function huji_pdf_entity_info_alter(&$info) {
+  $info['node']['view modes']['export'] = array(
+    'label' => t('Export'),
+    'custom settings' => TRUE,
+  );
+}
+
+/**
  * Implements hook_install_tasks().
  */
 function openscholar_install_tasks($install_state) {

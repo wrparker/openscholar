@@ -35,16 +35,6 @@ class OsImporterPresentationValidator extends OsImporterEntityValidateBase {
     }
 
     // Validate the date format for the start and end date.
-    $date = DateTime::createFromFormat('M j Y', $value);
-
-    if ($date && $date->format('M j Y') == $value) {
-      return;
-    }
-
-    $params = array(
-      '@date' => $value,
-      '@format' => date('M j Y'),
-    );
-    $this->setError($field_name, 'The value in the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
+    $this->validateDateFormats(array('M j Y'), $value, $field_name);
   }
 }

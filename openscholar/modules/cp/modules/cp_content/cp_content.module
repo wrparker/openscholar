@@ -338,7 +338,7 @@ function cp_content_assign_taxonomy_action(&$node, $context) {
   $applied_titles = array();
   $wrapper = entity_metadata_wrapper('node', $node);
   // Check if the bundle of the node is associated with selected vocabulary.
-  if (!in_array($node->type, $bundle_names)) {
+  if (in_array($node->type, $bundle_names)) {
     // Assign the term(s) to the current node.
     $node_terms = $wrapper->{OG_VOCAB_FIELD}->value(array('identifier' => TRUE));
     $node_terms = array_merge($node_terms ,$selected_terms);
@@ -447,10 +447,10 @@ function cp_content_remove_taxonomy_action(&$node, $context) {
 
       $params = array(
         '%terms' => implode(", ", $names),
-        '%node' => $removed_title['title'],
+        '!node' => $removed_title['title'],
       );
 
-      $message = format_plural(count($removed_title['removed_terms']), 'Taxonomy term %terms was removed from the content: %node', '@count taxonomy terms %terms were removed from the content: %node', $params);
+      $message = format_plural(count($removed_title['removed_terms']), 'Taxonomy term %terms was removed from the content: !node', '@count taxonomy terms %terms were removed from the content: !node', $params);
       drupal_set_message($message);
     }
   }
@@ -488,5 +488,18 @@ function cp_content_form_views_form_cp_content_page_alter(&$form, &$form_state) 
       ),
     );
     $form['actions']['submit']['#suffix'] = l(t('Cancel'), 'cp/content', $options);
+  }
+}
+
+/**
+ * Implements hook_preprocess_view_view().
+ */
+function cp_content_preprocess_views_view(&$vars) {
+  if ($vars['view']->name == 'cp_files') {
+    os_common_angular_apps('cp-files');
+    drupal_add_library('media', 'media_browser');
+    drupal_add_library('os_common', 'FileEditorModal');
+    drupal_add_js(drupal_get_path('module', 'cp_content').'/apps/cp_files.js');
+    // $vars['attributes_array']['ng-controller'] = 'CpFilesController'; Reminder to myself that this doesn't work cause Views doesn't print attributes
   }
 }

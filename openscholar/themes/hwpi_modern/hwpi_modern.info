@@ -1,6 +1,6 @@
 ;----------// Theme Information
 
-  name        = HWP Modern
+  name        = Crimson
   description = A modern looking theme for use by departments at Harvard.
   core        = 7.x
   base theme  = hwpi_basetheme

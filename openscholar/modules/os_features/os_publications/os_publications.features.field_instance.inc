@@ -230,6 +230,93 @@ function os_publications_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-biblio-field_biblio_redirect'
+  $field_instances['node-biblio-field_biblio_redirect'] = array(
+    'bundle' => 'biblio',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'ex. http://amazon.com/mybook If used the publication title in the citation will link directly to the URL provided here and will bypass the landing page.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'field_redirection',
+        'settings' => array(
+          '404_if_empty' => FALSE,
+          'code' => 301,
+        ),
+        'type' => 'field_redirection',
+        'weight' => 9,
+      ),
+      'links' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'no_image_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'sidebar_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'slide_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'title' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_biblio_redirect',
+    'label' => 'Link citation directly to: ',
+    'required' => 0,
+    'settings' => array(
+      'attributes' => array(
+        'class' => '',
+        'configurable_title' => 0,
+        'rel' => '',
+        'target' => 'default',
+        'title' => '',
+      ),
+      'display' => array(
+        'url_cutoff' => 80,
+      ),
+      'enable_tokens' => 1,
+      'rel_remove' => 'default',
+      'title' => 'none',
+      'title_maxlength' => 128,
+      'title_value' => '',
+      'url' => 0,
+      'user_register_form' => FALSE,
+      'validate_url' => 1,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'link',
+      'settings' => array(),
+      'type' => 'link_field',
+      'weight' => 35,
+    ),
+  );
+
   // Exported field_instance: 'node-biblio-field_upload'
   $field_instances['node-biblio-field_upload'] = array(
     'bundle' => 'biblio',
@@ -282,7 +369,7 @@ function os_publications_field_default_field_instances() {
     'settings' => array(
       'description_field' => 0,
       'file_directory' => '',
-      'file_extensions' => 'jpg jpeg gif png txt doc docx gz xls xlsx pdf ppt pptx pps odt ods odp tex tgz xml zip',
+      'file_extensions' => 'jpg jpeg gif png txt doc docx gz xls xlsx pdf ppt pptx pps odt ods odp tex tgz xml zip sas',
       'filefield_paths' => array(
         'active_updating' => 0,
         'file_name' => array(
@@ -413,7 +500,8 @@ function os_publications_field_default_field_instances() {
   t('Image should not be less than 150px wide.');
   t('Publication Image');
   t('Title');
-  t('You may use these fields to add extra information about your publication that may not be common to publications if this type. For example, key "Publication Global ID" and value "http://hdl.handle.net/1902.1".');
+  t('You may use these fields to add extra information about your publication that may not be common to publications if this type. For example, key "Publication Global ID" and value "http://hdl.handle.net/1902.1". These fields will be displayed at the bottom of the detail page of this publication.');
+  t('ex. http://amazon.com/mybook If used the publication title in the citation will link directly to the URL provided here and will bypass the landing page.');
 
   return $field_instances;
 }

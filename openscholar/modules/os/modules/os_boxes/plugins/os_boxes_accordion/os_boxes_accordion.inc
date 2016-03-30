@@ -29,6 +29,16 @@ class os_boxes_accordion extends os_boxes_widget_collection {
   function render() {
     $output = parent::render();
 
+    // Static variable to hold multiple accordion per page.
+    $os_accordion_boxes = &drupal_static('os_accordion_boxes');
+
+    if ($os_accordion_boxes[$this->delta] >= 1) {
+      $delta = $this->delta . '--' . $os_accordion_boxes[$this->delta]++;
+    } else {
+      $delta = $this->delta;
+      $os_accordion_boxes[$this->delta] = 2;
+    }
+
     // disable caching for this block for now
     // if (($output['content'] = $this->get_cache()) === FALSE) {
       $content = array(
@@ -47,7 +57,7 @@ class os_boxes_accordion extends os_boxes_widget_collection {
                   'accordion' => array(
                     $this->delta => array(
                       'active' => $this->options['collapsed'] ? FALSE : 0,
-                      'delta' => $this->delta,
+                      'delta' => $delta,
                     )
                   )
                 )
@@ -59,8 +69,10 @@ class os_boxes_accordion extends os_boxes_widget_collection {
 
       foreach ($this->options['widgets'] as $k => $w) {
         $block_output = $this->render_widget($k);
-        unset($block_output['#theme_wrappers']);
         if (!empty($block_output)) {
+          // hide titles for widgets within the accordian block
+          unset($block_output['#block']->subject);
+
           $content[$k] = array(
             '#weight' => $w['weight'],
             'title' => array(

@@ -567,7 +567,7 @@ function media_format_form($form, $form_state, $file) {
   // These will get passed on to WYSIWYG.
   $form['options'] = array(
     '#type' => 'fieldset',
-    '#title' => t('options'),
+    '#title' => t('You have the option override the default alt and/or title text. This will not change the default alt and title text, only this specific use of the file.'),
   );
 
   $form['options']['format'] = array(
@@ -581,7 +581,7 @@ function media_format_form($form, $form_state, $file) {
     $form['options']['alt'] = array(
       '#type' => 'textfield',
       '#title' => t('Alternate text'),
-      '#description' => t('This text will be used by screen readers, search engines, or when the image cannot be loaded.'),
+      '#description' => t('Appears when the image is loading or fails to load, important for accessibility.'),
       '#default_value' => isset($file->field_file_image_alt_text['und'][0]['safe_value']) ? $file->field_file_image_alt_text['und'][0]['safe_value'] : '',
     );
 

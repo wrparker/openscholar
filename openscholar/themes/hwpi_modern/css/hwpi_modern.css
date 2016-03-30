@@ -157,7 +157,6 @@ left: 12em;
 
 h1#page-title {
   font-size: 30px;
-  line-height: 1; /* Font size is larger than the default line-height, so will overlap if the title wraps */
    margin: 0 0 20px;
 }
 
@@ -242,7 +241,6 @@ h2.block-title {
   font-size: 14px;
   line-height: 16px;
   padding: 7px 10px;
-  text-transform: capitalize;
   font-weight: normal;
 }
 
@@ -261,20 +259,20 @@ h2.block-title {
 
 
 /* Spotlight */
-#content-column .block.block-boxes-os_boxes_manual_list {
+#content-column .block.block-boxes-os_boxes_manual_list.styled {
     background: none;
     border: none;
     border-top: 6px solid #E1E1E1;
     padding: 0;
 }
 
-#content-column .block.block-boxes-os_boxes_manual_list h2.block-title {
+#content-column .block.block-boxes-os_boxes_manual_list.styled h2.block-title {
     border-bottom: none;
     margin-bottom: 0;
 }
 
 
-#content-column .block.block-boxes-os_boxes_manual_list h1.node-title a {
+#content-column .block.block-boxes-os_boxes_manual_list.styled h1.node-title a {
 	font-weight:bold;
 	font-size: 22px;
 }

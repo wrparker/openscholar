@@ -72,6 +72,8 @@ h3, h4 {
   margin: 0;
   }
 
+
+.node-type-presentation .node-presentation h2.field-label,
 .biblio-download-links-label,
 h3 {
   color: #6e7a7a;
@@ -83,21 +85,35 @@ h3 {
   color:#222;
   }
 
-h3.cv-direct-download {
+.os-cvlink,
+.os-cvlink:visited{
   background: #717171;
   padding: 3px 15px;
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
   border-radius: 20px;
   margin: 0 0 15px 0;
-  color: #fff;
+  color: #FFF;
   width: 110px;
+ font-weight: bold;
   }
 
 h3.cv-direct-download a,
 h3.cv-direct-download a:visited {
   color: #fa8b18;
   }
+
+span.os-cvlinkwrap {
+  margin-bottom: 3em;
+}
+
+
+
+
+.front .block-boxes-os_boxes_manual_list h1.node-title {
+position: absolute; 
+    clip: rect(0px 0px 0px 0px);
+}
 
 .more-link a {
   text-decoration: underline;
@@ -1392,6 +1408,53 @@ padding-top: 20px;
 vertical-align: top;
 }
 
+/* STYLES THE ATTACHED FILES TABLE IN PRESENTATION PAGE VIEW */
+.node-type-presentation .node-presentation .field-name-field-presentation-date {
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+width: 73%;
+    float: right;
+    vertical-align: top;
+}
+
+.node-type-presentation .node-presentation .field-name-field-presentation-location {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+width: 73%;
+    float: right;
+    vertical-align: top;
+}
+
+.node-type-presentation .node-presentation .field-name-body {
+float: right;
+    width: 75%;
+    margin-top: 20px;
+}
+
+
+.node-type-presentation .node-presentation .field-name-field-presentation-file .field-item {
+   background: #D95C00;
+    padding: 3px;
+    display: inline-block;
+    width: 21%;
+    margin-bottom: 10px;
+
+}
+
+.node-type-presentation .node-presentation .field-name-field-presentation-file .field-item a {
+    color: #FFF;
+text-decoration:underline;
+
+}
+
+.node-type-presentation .node-presentation .os-files-other-list {
+width: 22%;
+}
+
 /* TAXONOMY */
 
 body.section-category .node-teaser,
@@ -1847,4 +1910,16 @@ body.page-taxonomy .taxonomy-term h2 {
 /* Adds spacing before "Read more" links on Software page view. */
 .page-software #content .view-content .links.inline {
   margin-top: 1em;
+}
+
+li.term-evaluating-us-social-security-administration-forecasts 
+{
+  width: 200px !important;
+  padding-left: 60px !important;
+}
+
+/* OVERRIDE FOR NEW ADMIN/UX MENU */
+.morph-button-sidebar {
+    bottom: 35px;
+   
 }

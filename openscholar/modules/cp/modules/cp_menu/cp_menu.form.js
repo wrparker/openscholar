@@ -81,3 +81,13 @@ Drupal.behaviors.cp_menu_form = {
   }
 };
 })(jQuery);
+
+/** 
+ * Deal with ctools modal after form submission page refresh.
+ * Alternative for ctools_ajax_command_reload.
+ */
+(function($, Drupal) {
+  Drupal.ajax.prototype.commands.os_modal_parent_refresh = function(ajax, response, status) {
+  location.reload();
+}
+})(jQuery, Drupal);

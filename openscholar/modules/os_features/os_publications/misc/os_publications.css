@@ -37,6 +37,10 @@
   border-bottom: 2px solid #C4C2C2;
 }
 
+#overlay-title-wrapper {
+  max-width: 910px;
+}
+
 a.cite-pop {
   color: #333;
   cursor: default;

@@ -741,8 +741,174 @@ function os_update_7035() {
 }
 
 /**
- * Disable nodeorder taxonomy page override.
+ * Revert blog and events views to add "sticky" sort criteria.
  */
 function os_update_7036() {
+  $revert = array(
+    'os_events' => array('views_view'),
+    'os_blog' => array('views_view'),
+  );
+  features_revert($revert);
+}
+
+/**
+ * Install OS exporter.
+ */
+function os_update_7037() {
+  module_enable(array('os_exporter'));
+}
+
+/**
+ * Uninstall the os_biocv module
+ */
+function os_update_7038(&$sandbox) {
+  if (module_exists('os_biocv')) {
+    if (!isset($sandbox['dataset'])) {
+      $sandbox['notices'] = "";
+      $sandbox['completed'] = 0;
+      $dataset = _get_vsite_biocv_data();
+      $sandbox['dataset'] = $dataset;
+      $sandbox['total'] = count($dataset);
+      $sandbox['#finished'] = 0.0;
+    }
+
+    $vsites = array_splice($sandbox['dataset'], 0, 100);
+
+    $sandbox['notices'] .= _replace_biocvs_with_pages($vsites);
+    $sandbox['completed'] += count($vsites);
+    if ($sandbox['total']) {
+      $sandbox['#finished'] = (float)$sandbox['completed'] / (float)$sandbox['total'];
+    }
+    else {
+       $sandbox['#finished'] = 1;
+    }
+
+    if($sandbox['#finished'] >= 1) {
+      module_disable(array('os_biocv'), FALSE);
+      drupal_uninstall_modules(array('os_biocv'), FALSE);
+
+      $sandbox['#finished'] = 1;
+      return "Completed " . $sandbox['completed'] . " out of " . $sandbox['total'] . " migrations.<br/>" . $sandbox['notices'];
+    }
+  }
+}
+
+/**
+ * Remove bio and cv options from content list after the os_biocv module has been uninstalled
+ */
+function os_update_7039() {
+  features_revert(array('cp_content' => array('views_view')));
+}
+
+/**
+ * Uninstall fb_social module and remove instances of facebook widgets
+ */
+function os_update_7040() {
+  if (module_exists('fb_social')) {
+    $status = "";
+
+    $query = db_select('spaces_overrides', 'so')->fields('so', array('id','object_id','value'));
+    $query->condition("so.type", 'og');
+    $query->condition('so.object_type','boxes', '=');
+    $query->condition('so.value', '%"fb_plugin_name"%', 'like');
+    $results = $query->execute();
+
+    $count = "0";
+    // loop through instances of fb widget boxes
+    while ($box = $results->fetchObject()) {
+      $box_data = unserialize($box->value);
+
+      // make sure the box is really associated with an fb_social plugin
+      if(isset($box_data->fb_plugin_name)) {
+        $query = db_select('spaces_overrides', 'so')->fields('so', array('object_id', 'value'));
+        $query->condition("so.type", 'og');
+        $query->condition("so.id", $box->id);
+        $query->condition('so.object_type','context', '=');
+        $query->condition('so.value', '%' . $box->object_id . '%', 'like');
+        $contexts = $query->execute();
+
+        // loop through places where instance is placed on the site
+        while ($context = $contexts->fetchObject()) {
+          $boxes = unserialize($context->value);
+
+          // unset index for widget and update spaces_overrides row
+          if (isset($boxes['blocks']["boxes-" . $box->object_id])) {
+            unset($boxes['blocks']["boxes-" . $box->object_id]);
+            $update_query = db_update('spaces_overrides')
+              ->fields(array('type' => 'og', 'id' => $box->id, 'object_type' => 'context', 'object_id' => $context->object_id, 'value' => serialize($boxes)))
+              ->condition('id', $box->id, "=")
+              ->condition('object_id', $context->object_id, "=")
+              ->condition('object_type', 'context', "=")
+              ->execute();
+          }
+        }
+
+        // remove boxes spaces_overrides row for widget
+        $delete_query = db_delete('spaces_overrides')
+          ->condition('id', $box->id, "=")
+          ->condition('object_id', $box->object_id, "=")
+          ->condition('object_type', "boxes", "=")
+          ->execute();
+        $count++;
+      }
+    }
+    module_disable(array('fb_social'), FALSE);
+    drupal_uninstall_modules(array('fb_social'), FALSE);
+    $status = "$count instances of FB widgets have been removed. ";
+    return $status;
+  }
+}
+
+/**
+ * Enabling OS Restful, and the new Media Browser.
+ *
+ * Revert modules that use the new feature.
+ */
+function os_update_7041() {
+  module_enable(array('os_app_base', 'os_restful', 'media_browser'));
+
+  $revert = array(
+    'field_instance'
+  );
+  $modules = array(
+    'os_blog' => $revert,
+    'os_booklets' => $revert,
+    'os_classes'  => $revert,
+    'os_events' => $revert,
+    'os_faq' => $revert,
+    'os_links' => $revert,
+    'os_news' => $revert,
+    'os_pages' => $revert,
+    'os_presentations' => $revert,
+    'os_profiles' => $revert,
+    'os_publications' => $revert,
+    'os_software' => $revert,
+  );
+  features_revert($modules);
+
+  return t('Upgraded the Media Browser across the whole site.');
+}
+
+/**
+ * Setting the default jquery version
+ */
+function os_update_7042() {
+  variable_set('jquery_update_jquery_version', '1.8');
+
+  return t('Updated JQuery to 1.8.');
+}
+
+/**
+ * Install OS Reports module.
+ */
+function os_update_7043() {
+  module_enable(array('os_reports'));
+  return t('Enabled OS Reports module.');
+}
+
+/**
+ * Disable nodeorder taxonomy page override.
+ */
+function os_update_7044() {
   variable_set('nodeorder_override_taxonomy_page', FALSE);
 }

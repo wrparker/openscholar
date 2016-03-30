@@ -120,11 +120,12 @@ background-color: #777 !important;
 }
 
 
+div.tweets-pulled-listing div.tweet-divider,
 .front #content-column .block, 
 .node-person .block-inner, 
 .comment-wrapper,
 #content-column .block.block-boxes-os_boxes_manual_list {
-border-top: 2px dotted #ccc;
+border-top: 1px dotted #999;
 
 }
 

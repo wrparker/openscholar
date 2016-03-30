@@ -388,7 +388,7 @@ function os_news_field_default_field_instances() {
     'settings' => array(
       'description_field' => 0,
       'file_directory' => '',
-      'file_extensions' => 'jpg jpeg gif png txt doc docx gz xls xlsx pdf ppt pptx pps odt ods odp tex tgz xml zip',
+      'file_extensions' => 'jpg jpeg gif png txt doc docx gz xls xlsx pdf ppt pptx pps odt ods odp tex tgz xml zip sas',
       'filefield_paths' => array(
         'active_updating' => 0,
         'file_name' => array(
@@ -412,8 +412,9 @@ function os_news_field_default_field_instances() {
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'media',
+      'module' => 'media_draggable',
       'settings' => array(
+        'allow_replace' => 0,
         'allowed_schemes' => array(
           'embed' => 'embed',
           'oembed' => 'oembed',
@@ -434,9 +435,14 @@ function os_news_field_default_field_instances() {
           'media_internet' => 'media_internet',
           'upload' => 'upload',
         ),
+        'droppable_area_text' => 'Drop files here to upload',
+        'multiupload' => 0,
         'progress_indicator' => 'throbber',
+        'standard_upload' => 1,
+        'upload_button_text' => 'Upload',
+        'upload_event' => 'auto',
       ),
-      'type' => 'media_generic',
+      'type' => 'media_draggable_file',
       'weight' => 7,
     ),
   );
@@ -525,6 +531,62 @@ function os_news_field_default_field_instances() {
       'settings' => array(),
       'type' => 'link_field',
       'weight' => 35,
+    ),
+  );
+
+  // Exported field: 'node-news-og_vocabulary'.
+  $field_instances['node-news-og_vocabulary'] = array(
+    'bundle' => 'news',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+      'full' => array(
+        'label' => 'hidden',
+        'module' => 'vsite_vocab',
+        'settings' => array(
+          'concatenate' => TRUE,
+        ),
+        'type' => 'og_vocab',
+        'weight' => 6,
+      ),
+      'links' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+      'no_image_teaser' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+      'rss' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+      'sidebar_teaser' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+      'slide_teaser' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+      'title' => array(
+        'label' => 'above',
+        'type' => 'hidden',
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'og_vocabulary',
+    'label' => 'OG vocabulary',
+    'widget' => array(
+      'module' => 'og_vocab',
+      'type' => 'og_vocab_complex',
+      'weight' => 36,
     ),
   );
 

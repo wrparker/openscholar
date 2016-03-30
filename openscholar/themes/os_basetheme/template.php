@@ -162,7 +162,7 @@ function os_basetheme_menu_link(array $vars) {
  */
 function os_basetheme_preprocess_node(&$vars) {
   // Event nodes, inject variables for date month and day shield
-  if ($vars['node']->type == 'event' && !$vars['page']) {
+  if ($vars['node']->type == 'event' && (!empty($vars['sv_list']) || !$vars['page'])) {
     $vars['event_start'] = array();
     $delta = 0;
     if (isset($vars['node']->date_id)) {
@@ -178,11 +178,45 @@ function os_basetheme_preprocess_node(&$vars) {
 
       $vars['event_start']['month'] = check_plain($date->format('M'));
       $vars['event_start']['day'] = check_plain($date->format('d'));
+      $vars['event_start']['year'] = check_plain($date->format('Y'));
       $vars['classes_array'][] = 'event-start';
+
+      // For events with a repeat rule we add the delta to the query string.
+      if ($vars['content']['field_date']['#items'][0]['rrule']) {
+        $vars['node_url'] .= '?delta=' . $delta;
+      }
 
       // Unset the date id to avoid displaying the first repeat in all the
       // event's results on the page.
       $vars['node']->date_id = NULL;
+    }
+  }
+  elseif ($vars['node']->type == 'event' && $vars['page'] && !empty($vars['content']['field_date']['#items'][0]['rrule'])) {
+    // We are in a page of a repeated event so we need to display the date
+    // according to the delta.
+    $delta = isset($_GET['delta']) ? $_GET['delta'] : 0;
+
+    // We move the wanted delta to be the first element in order to get the
+    // desired markup.
+    $vars['node']->field_date['und'][0] = $vars['node']->field_date['und'][$delta];
+
+    // Get the repeat rule.
+    $rule = theme('date_repeat_display', array(
+      'item' => array('rrule' => $vars['content']['field_date']['#items'][0]['rrule']),
+      'field' => field_info_field('field_date'),
+    ));
+
+    // Get the date field. The delta we want to display will be returned.
+    $field = field_view_field('node', $vars['node'], 'field_date', array('full'));
+
+    // Rebuild the markup for the date field.
+    $vars['content']['field_date'][0]['#markup'] = $rule . ' ' . $field[0]['#markup'];
+
+    // Don't display the repeats in full view mode.
+    foreach ($vars['content']['field_date'] as $index => $repeat ) {
+      if ($index && is_integer($index)) {
+        hide($vars['content']['field_date'][$index]);
+      }
     }
   }
 
@@ -195,6 +229,12 @@ function os_basetheme_preprocess_node(&$vars) {
         $vars['title_prefix']['#suffix'] = '<div class="toggle">' . $vars['title_prefix']['#suffix'] . '</div>';
       }
     }
+
+  }
+
+  // Show the body last in a presentation.
+  if ($vars['type'] == 'presentation' && $vars['view_mode'] == 'full') {
+    $vars['content']['body']['#weight'] = 999;
   }
 }
 
@@ -298,5 +338,221 @@ function os_basetheme_status_messages($vars) {
     }
     $output .= "</div></div>";
   }
+  return $output;
+}
+
+/**
+ * Implements theme_views_view_field.
+ *
+ * Here we add the delta to the query string for the node title's link and
+ * returning the new output.
+ */
+function os_basetheme_views_view_field($vars) {
+  $view = $vars['view'];
+  if ($view->name != 'os_events') {
+    return $vars['output'];
+  }
+
+  $field = $vars['field'];
+  if ($field->field != 'title') {
+    return $vars['output'];
+  }
+  $row = $vars['row'];
+
+  $options = array(
+    'query' => array(
+      'delta' => $row->field_data_field_date_delta,
+    ),
+  );
+  return l($row->node_title, 'node/' . $row->nid, $options);
+}
+
+/**
+ * Returns HTML for a date element formatted as a range.
+ *
+ * Changes the "to" in a date range to a "-" for the month/week/day views.
+ *
+ * @see theme_date_display_range().
+ */
+function os_basetheme_date_display_range($variables) {
+  $date1 = $variables['date1'];
+  $date2 = $variables['date2'];
+  $timezone = $variables['timezone'];
+  $attributes_start = $variables['attributes_start'];
+  $attributes_end = $variables['attributes_end'];
+
+  $displays = array(
+    'month',
+    'week',
+    'day',
+  );
+  $from_to = ' to ';
+  if (os_events_in_view_context($displays))  {
+    $from_to = ' - ';
+    $date1 = str_replace(array('am', 'pm'), array('a', 'p'), $date1);
+    $date2 = str_replace(array('am', 'pm'), array('a', 'p'), $date2);
+  }
+
+  // Wrap the result with the attributes.
+  return t('!start-date ' . $from_to .' !end-date', array(
+    '!start-date' => '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . $date1 . '</span>',
+    '!end-date' => '<span class="date-display-end"' . drupal_attributes($attributes_end) . '>' . $date2 . $timezone . '</span>',
+  ));
+}
+
+/**
+ * Returns HTML for a date element formatted as a single date.
+ *
+ * Changes am/pm to be a/p and adds a span around the date.
+ */
+function os_basetheme_date_display_single($variables) {
+  $date = $variables['date'];
+  $timezone = $variables['timezone'];
+  $attributes = $variables['attributes'];
+
+  $displays = array(
+    'month',
+    'week',
+    'day',
+  );
+  if (os_events_in_view_context($displays))  {
+    $date = str_replace(array('am', 'pm'), array('a', 'p'), $date);
+    $formatted_date = $variables['dates']['value']['formatted_date'];
+    $date = str_replace($formatted_date, '<span class="event-date">' . $formatted_date . '</span>', $date);
+  }
+
+  // Wrap the result with the attributes.
+  return '<span class="date-display-single"' . drupal_attributes($attributes) . '>' . $date . $timezone . '</span>';
+}
+
+/**
+ * Check if we are in the os_events view context.
+ *
+ * @param array $display_titles
+ *   The display titles to check for. If not provided we check only for
+ *   the view context with no particular display.
+ * @return bool
+ *   Returns TRUE if we are in the os_events view context with the optional
+ *   supplied display titles. FALSE otherwise.
+ */
+function os_events_in_view_context($display_titles = array()) {
+  $view = views_get_current_view();
+  if (!$view || $view->name != 'os_events') {
+    return FALSE;
+  }
+
+  if (empty($display_titles)) {
+    return $view->name == 'os_events';
+  }
+
+  $display_names = array();
+  foreach ($view->display as $name => $display) {
+    if (in_array(strtolower($display->display_title), $display_titles)) {
+      $display_names[] = $name;
+    }
+  }
+
+  return in_array($view->current_display, $display_names);
+}
+
+/*
+ * Implements override for theme_date_repeat_display of contrib module date_repeat
+ * @param array $vars
+ * theme parameters
+ * Here we are altering the display text of the event occurrences in repetitive events
+ * @return string
+ * returning the output as HTML.
+ */
+function os_basetheme_date_repeat_display($vars) {
+  $field = $vars['field'];
+  $item = $vars['item'];
+  $entity = !empty($vars['node']) ? $vars['node'] : NULL;
+  $output = '';
+  if (!empty($item['rrule'])) {
+    $output = os_date_repeat_rrule_description($item['rrule']);
+    $output = '<div class="date-repeat-rule">' . $output . '</div>';
+  }
+  return $output;
+}
+
+/**
+ * Returns HTML for an image field.
+ *
+ * Output image fields as figure with figcaption for captioning.
+ */
+function os_basetheme_field__image($vars) {
+  global $theme_key;
+  $theme_name = $theme_key;
+  $output = '';
+
+  // Render the label, if it's not hidden.
+  if (!$vars['label_hidden']) {
+    $output .= '<h2 class="field-label"' . $vars['title_attributes'] . '>' . $vars['label'] . ':&nbsp;</h2>';
+  }
+
+  // Render the items.
+  $output .= '<div class="field-items"' . $vars['content_attributes'] . '>';
+
+  foreach ($vars['items'] as $delta => $item) {
+
+    $classes = 'field-item ' . ($delta % 2 ? 'odd' : 'even');
+    $output .= '<figure class="clearfix ' . $classes . '"' . $vars['item_attributes'][$delta] .'>';
+    $output .= drupal_render($item);
+
+    // Captions
+    if (isset($item['#item']['os_file_description'][LANGUAGE_NONE][0]['value'])) {
+      // Ouch this is ugly, please tell me how to get the image style width?
+      $styles = '';
+      $width = 'auto';
+      preg_match('/< *img[^>]*width *= *["\']?([^"\']*)/i', $item['#children'], $matches);
+      $width = $matches[1] . 'px';
+      $styles = 'style="width:' . $width . ';"';
+      $image_caption = strip_tags($item['#item']['os_file_description'][LANGUAGE_NONE][0]['value']);
+      if ($vars['field_view_mode'] == 'full') {
+        $output .= '<figcaption ' . $styles . '>' . $image_caption . '</figcaption>';
+      }
+    }
+
+    $output .= '</figure>';
+  }
+
+  $output .= '</div>';
+
+  // Render the top-level wrapper element.
+  $tag = $vars['tag'];
+  $output = "<$tag class=\"" . $vars['classes'] . '"' . $vars['attributes'] . '>' . $output . "</$tag>";
+
+  return $output;
+}
+
+/**
+ * Implements override for theme_pager_lite_next of contrib module views_litepager
+ * @param array $variables
+ * theme parameters
+ * @return string
+ * returning the output as HTML.
+ */
+function os_basetheme_pager_lite_next($variables) {
+  $text = $variables['text'];
+  $element = $variables['element'];
+  $interval = $variables['interval'];
+  $parameters = $variables['parameters'];
+
+  global $pager_page_array, $pager_total;
+  $output = '';
+
+  // If we are anywhere but the last page
+  if ($pager_page_array[$element] <= ($pager_total[$element] - 1) || $pager_page_array[$element] == 0) {
+    $page_new = pager_load_array($pager_page_array[$element] + $interval, $element, $pager_page_array);
+    // If the next page is the last page, mark the link as such.
+    if ($pager_page_array[$element] == $pager_total[$element]) {
+      $output = theme('pager_last', array('text' => $text, 'element' => $element, 'parameters' => $parameters));
+    }
+    // The next page is not the last page.
+    else {
+      $output = theme('pager_link', array('text' => $text, 'page_new' => $page_new, 'element' => $element, 'parameters' => $parameters));
+    }
+  }
+
   return $output;
 }

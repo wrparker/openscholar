@@ -33,20 +33,40 @@
       <choose>
          <if type="chapter paper-conference" match="any">
             <text term="in" text-case="capitalize-first" suffix=" "/>
-            <names variable="editor translator" delimiter=", " suffix=", ">
-               <name and="symbol" initialize-with=". " delimiter=", "/>
-               <label form="short" prefix=" (" text-case="capitalize-first" suffix=".)" strip-periods="true"/>
-            </names>
+            <choose>
+               <if variable="author" match="any">
+                  <names variable="editor translator" delimiter=", " suffix=", ">
+                     <name and="symbol" initialize-with=". " delimiter=", "/>
+                     <label form="short" prefix=" (" text-case="capitalize-first" suffix=".)" strip-periods="true"/>
+                  </names>
+               </if>
+               <else>
+                  <names variable="translator" delimiter=", " suffix=", ">
+                     <name and="symbol" initialize-with=". " delimiter=", "/>
+                     <label form="short" prefix=" (" text-case="capitalize-first" suffix=".)" strip-periods="true"/>
+                  </names>
+               </else>
+            </choose>
          </if>
       </choose>
    </macro>
    <macro name="secondary-contributors">
       <choose>
          <if type="chapter paper-conference" match="none">
-            <names variable="editor translator" delimiter=", " prefix=" (" suffix=")">
-               <name and="symbol" initialize-with=". " delimiter=", "/>
-               <label form="short" prefix=", " text-case="capitalize-first" suffix="." strip-periods="true"/>
-            </names>
+            <choose>
+               <if variable="author" match="any">
+                  <names variable="editor translator" delimiter=", " suffix=", ">
+                     <name and="symbol" initialize-with=". " delimiter=", "/>
+                     <label form="short" prefix=" (" text-case="capitalize-first" suffix=".)" strip-periods="true"/>
+                  </names>
+               </if>
+               <else>
+                  <names variable="translator" delimiter=", " suffix=", ">
+                     <name and="symbol" initialize-with=". " delimiter=", "/>
+                     <label form="short" prefix=" (" text-case="capitalize-first" suffix=".)" strip-periods="true"/>
+                  </names>
+               </else>
+            </choose>
          </if>
       </choose>
    </macro>
@@ -154,14 +174,12 @@
       <choose>
          <if type="report" match="any">
             <group delimiter=": ">
-               <text variable="publisher-place"/>
                <text variable="publisher"/>
             </group>
          </if>
          <else-if type="thesis" match="any">
             <group delimiter=", ">
                <text variable="publisher"/>
-               <text variable="publisher-place"/>
             </group>
          </else-if>
          <else>
@@ -171,7 +189,6 @@
                </if>
             </choose>
             <group delimiter=": ">
-               <text variable="publisher-place"/>
                <text variable="publisher"/>
             </group>
          </else>
@@ -182,13 +199,11 @@
          <if variable="event">
             <choose>
                <if variable="genre" match="none">
-                  <text term="presented at" text-case="capitalize-first" suffix=" "/>
                   <text variable="event"/>
                </if>
                <else>
                   <group delimiter=" ">
                      <text variable="genre" text-case="capitalize-first"/>
-                     <text term="presented at"/>
                      <text variable="event"/>
                   </group>
                </else>
@@ -245,7 +260,7 @@
    </macro>
    <macro name="locators">
       <choose>
-         <if type="article-journal article-magazine article-newspaper" match="any">
+         <if type="article-journal article-magazine article-newspaper miscellaneous" match="any">
             <group prefix=", " delimiter=", ">
                <group>
                   <text variable="volume" font-style="italic"/>

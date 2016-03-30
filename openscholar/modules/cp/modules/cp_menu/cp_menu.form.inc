@@ -153,6 +153,21 @@ function _cp_menu_flatten_tree($tree){
 }
 
 /**
+ * Validate handler; Verify the menu are not exceeded after drag and drop items.
+ */
+function cp_menu_build_form_validate($form, $form_state) {
+  $space = spaces_get_space();
+
+  foreach ($form_state['values']['menus'] as $menu) {
+    if (strlen(serialize($space->controllers->menus->get($menu['menu-name']))) > 65000) {
+      $loaded_menu = menu_load($menu['menu-name']);
+      $args['@name'] = $loaded_menu['title'];
+      form_set_error('', t('The menu @name has exceeded the maximum size.', $args));
+    }
+  }
+}
+
+/**
  * Renders the form array as a table and sets up the tabledrag.
  *
  * @param unknown_type $variables
@@ -179,19 +194,23 @@ function theme_cp_menu_table($variables){
 
   $rows = array();
   foreach ( element_children($table_data) as $d ) {
+    $link = l(t('+ Add new link'),'cp/build/menu/link/new/'.$d,array('attributes' => array('title' => 'Add a new menu item.', 'class' => array('add-new-link'))));
     $extra_classes = array();
     if ($table_data[$d]['#hidden']) {
       $extra_classes[] = 'hidden';
     }
+		
+    $remove_link_text = in_array($d,$revert) ? 'Reset' : 'Remove';
+		
     $rows[] = array(
       'data' => array(
         array(
-          'data' => $menus[$d] . drupal_render($table_data[$d]['menu-name']).' '.ctools_modal_text_button((in_array($d,$revert)?'Reset':'Remove'), 'cp/build/menu/nojs/remove/'.$d, 'Remove'),
+          'data' => $menus[$d] . drupal_render($table_data[$d]['menu-name']).' '.ctools_modal_text_button($remove_link_text, 'cp/build/menu/nojs/remove/'.$d, $remove_link_text),
           'colspan' => count($headers) - 2,
         ),
         array(
           //'data' => ctools_modal_text_button('Add New Link', 'cp/menu/nojs/new/'.$d, 'Add New Link'),
-          'data' => l(t('+ Add new link'),'cp/build/menu/link/new/'.$d,array('attributes' => array('title' => 'Add a new menu item.', 'class' => array('add-new-link')))),
+          'data' => $link,
         ),
         array(
           'data' => '',
@@ -292,8 +311,7 @@ function cp_menu_add_menu($ajax) {
     if ($form_state['executed']) {
       $output[] = ctools_modal_command_dismiss();
       if (isset($form_state['values']['op']) && $form_state['values']['op'] == t('Save')) {
-        ctools_include('ajax');
-        $output[] = ctools_ajax_command_reload();
+        $output[] = array('command' => 'os_modal_parent_refresh');
       }
     }
     echo ajax_render($output);
@@ -383,7 +401,7 @@ function cp_menu_edit_submit($form, &$form_state) {
 
 function cp_menu_remove_menu($ajax, $menu) {
   if (!$ajax) {
-    return drupal_get_form('cp_menu_remove_confim', $menu);
+    return drupal_get_form('cp_menu_remove_confirm', $menu);
   }
 
   ctools_include('modal');
@@ -395,22 +413,27 @@ function cp_menu_remove_menu($ajax, $menu) {
   $output = ctools_modal_form_wrapper('cp_menu_remove_confirm', $form_state);
   if ($form_state['executed']) {
     if (isset($form_state['values']['op'])) {
-      if ($form_state['values']['op'] == t('Confirm')) {
-        ctools_include('ajax');
-        $output[] = ctools_ajax_command_reload();
-      }
-      else {
-        $output[] = ctools_modal_command_dismiss();
-      }
+	$output[] = ctools_modal_command_dismiss();
+      if ($form_state['values']['op'] == 'Confirm') {
+        $output[] = array('command' => 'os_modal_parent_refresh');
+      }      
     }
-  }
+  }	 
   echo ajax_render($output);
-  exit;
+  drupal_exit();
 }
 
 function cp_menu_remove_confirm($form, &$form_state) {
   $menu = $form_state['menu'];
-  $form = confirm_form($form, t('Are you sure you want to remove the menu: @menu?', array('@menu' => $menu)));
+	
+  $revert = array(
+    'primary-menu',
+    'secondary-menu',
+  ); 
+
+  $remove_link_text = in_array($menu,$revert) ? 'reset' : 'remove';
+	
+  $form = confirm_form($form, t('Are you sure you want to ' . $remove_link_text . ' the menu: @menu?', array('@menu' => $menu)));
 
   $form['actions']['cancel'] = array(
     '#type' => 'submit',

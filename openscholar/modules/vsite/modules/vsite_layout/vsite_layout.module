@@ -9,8 +9,11 @@
  *
  * @see os_layout_set()
  */
-function vsite_layout_context_set($context_name, $blocks) {
-  $vsite = spaces_get_space();
+function vsite_layout_context_set($context_name, $blocks, $vsite = FALSE) {
+
+  if (!$vsite) {
+    $vsite = spaces_get_space();
+  }
 
   if ($vsite && isset($vsite->controllers->context)) {
     $vsite->controllers->context->set($context_name . ":reaction:block", array(
@@ -67,8 +70,8 @@ function vsite_layout_form_cp_layout_full_form_alter(&$form, &$form_state, $form
             '#type' => 'submit',
             '#value' => t('Reset to defaults'),
           );
-          $form['actions']['submit']['#value'] = t('Save for @name', array(
-              '@name' => $vsite->title(),
+          $form['actions']['submit']['#value'] = t('Save for !name', array(
+              '!name' => $vsite->title(),
             ));
         }
       }
@@ -124,3 +127,164 @@ function vsite_layout_cp_layout_form_submit($form, &$form_state) {
   }
 }
 
+
+/**
+ * Implements hook_os_layout_set_alter
+ *
+ * Used to trigger re-build of the block relationships when a layout changes.
+ *
+ * @param array $blocks
+ * @param string $context_name
+ */
+function vsite_layout_os_layout_set_alter(&$blocks, $context_name) {
+
+  // Check if a rebuild of the block relationships is needed.
+  if(variable_get('vsite_layout_rebuild_block_contexts', TRUE)) {
+    vsite_layout_rebuild_block_contexts();
+  }
+
+  $vsite = vsite_get_vsite();
+  if ($vsite) {
+    // Delete the old block relationships.
+    db_delete('vsite_layout_block')->condition('sid', $vsite->id)->condition('context', $context_name)->execute();
+
+    foreach ($blocks as $block) {
+      //skip blocks that are not in the context.
+      if(!$block['region']) continue;
+
+      $block['sid'] = $vsite->id;
+      $block['context'] = $context_name;
+      drupal_write_record('vsite_layout_block', $block);
+    }
+  }
+}
+
+/**
+ * Get a list of the contexts a block is in.
+ */
+function vsite_layout_get_block_contexts($module, $delta, $vsite = FALSE) {
+
+  // Check if a rebuild of the block relationships is needed.
+  if(variable_get('vsite_layout_rebuild_block_contexts', TRUE)) {
+    vsite_layout_rebuild_block_contexts($vsite);
+  }
+
+  if (!$vsite) {
+    $vsite = vsite_get_vsite();
+
+    // If we don't have a vsite bail out here.
+    if(!$vsite) return FALSE;
+  }
+
+  $query = db_select('vsite_layout_block', 'vlb');
+  $query->condition('sid', $vsite->id);
+  $query->condition('module', $module);
+  $query->condition('delta', $delta);
+  $query->fields('vlb', array('module','delta','context','region','weight'));
+
+  return $query->execute()->fetchAll();
+}
+
+/**
+ * Rebuild the block_context relationships
+ */
+function vsite_layout_rebuild_block_contexts($vsite = FALSE) {
+
+  if (!$vsite) {
+    $vsite = vsite_get_vsite();
+
+    // If we don't have a vsite bail out here.
+    if(!$vsite) return FALSE;
+  }
+
+  // Delete the existing block relationships.
+  db_delete('vsite_layout_block')->condition('sid', $vsite->id)->execute();
+
+  //Get all contexts.
+  $contexts = os_layout_get_contexts(TRUE, TRUE);
+
+  foreach ($contexts as $context_id => $title) {
+    $blocks = os_layout_get($context_id);
+    foreach ($blocks as $block) {
+      //skip blocks that are not in the context.
+      if(!$block['region']) continue;
+
+      $block['sid'] = $vsite->id;
+      $block['context'] = $context_id;
+      drupal_write_record('vsite_layout_block', $block);
+    }
+  }
+
+  $vsite->controllers->variable->set('vsite_layout_rebuild_block_contexts', FALSE);
+}
+
+/**
+ * Implements hook os_layout_contexts().
+ *
+ * @param $privacy boolean (optional)
+ * Privacy conditions to honor
+ *
+ * @return
+ *  Avalible contexts with thier descriptions.
+ */
+function vsite_layout_os_layout_contexts($privacy = TRUE, $dynamic = FALSE) {
+  if(!$dynamic) return array();
+
+  $provided_contexts = &drupal_static(__FUNCTION__, array());
+
+  // Static cache of avalible contexts.
+  if (count($provided_contexts)) {
+    return $provided_contexts;
+  }
+
+  $vsite = vsite_get_vsite();
+
+  // If we don't have a vsite bail out here.
+  if(!$vsite) return FALSE;
+
+  //Default Contexts
+  $contexts = array_map(function($a) { return $a.":reaction:block"; }, array_keys(os_layout_get_contexts(TRUE)));
+
+  $query = db_select('spaces_overrides', 'so');
+  $query->condition('id', $vsite->id);
+  $query->condition('type', 'og');
+  $query->condition('object_type', 'context');
+  $query->condition('object_id', '%_:reaction:block', 'LIKE');
+  $query->condition('object_id', $contexts, 'NOT IN');
+  $query->fields('so',array('object_id'));
+  $result = $query->execute()->fetchCol();
+
+  foreach ($result as $object_id) {
+  	list($context_id,) = explode(":",$object_id);
+
+  	// Loop through Node based contexts.
+  	foreach (array('os_pages-page-' => 'Page:', 'os_books-book-' => 'Book:') as $context_prefix => $title_prefix) {
+  	  if (strpos($context_id, $context_prefix) === 0){
+        $nid = str_replace($context_prefix, '', $context_id);
+        $node = node_load($nid);
+        if ($node) {
+         $provided_contexts[$context_id] = $title_prefix . " " . $node->title;
+        }
+        continue 2;
+      }
+  	}
+
+  	if (strpos($context_id, 'os_taxonomy-vocab-') === 0) {
+  	  // Handle Vocabulary Contexts
+  	  $vid = str_replace('os_taxonomy-vocab-', '', $context_id);
+      $vocab = taxonomy_vocabulary_load($vid);
+      if ($vocab) {
+       $provided_contexts[$context_id] = "Vocabulary: " . $vocab->title;
+      }
+  	} elseif (strpos($context_id, 'os_taxonomy-term-') === 0) {
+  	  // Handle Term Contexts
+  	  $tid = str_replace('os_taxonomy-term-', '', $context_id);
+      $term = taxonomy_term_load($tid);
+      if ($term) {
+       $provided_contexts[$context_id] = "Term: " . $term->title;
+      }
+  	}
+  }
+
+  return $provided_contexts;
+}

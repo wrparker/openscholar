@@ -77,8 +77,6 @@ function template_preprocess_cp_layout_widget(&$variables) {
   if (!isset($widget['info'])) {
     // This is an error case, but "Untitled" is better than a blank widget
     $variables['widget_title'] = 'Untitled';
-
-    error_log("Widget [{$widget['delta']}] was created without a description.", LOG_NOTICE);
   }
   else {
     $variables['widget_title'] = $widget['info'];

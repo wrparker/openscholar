@@ -23,6 +23,11 @@ function vsite_preset_og_tasks_info($entity_type, $entity) {
     ),
     'Academics' => array(),
     'Activities' => array(),
+    'Bio' => array(
+      'subpages' => array(
+        'CV',
+      ),
+    ),
     'News & Events' => array(),
     'Overview' => array(),
     'Research' => array(),

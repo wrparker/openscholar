@@ -20,6 +20,9 @@ class os_boxes_pub_type extends os_boxes_default {
     $options['whitelist'] = array('all' => 'all');
     $options['display_num'] = 1;
 
+    // needed for caching to work
+    $options['content_type'] = 'biblio';
+
     return $options;
   }
 
@@ -69,7 +72,7 @@ class os_boxes_pub_type extends os_boxes_default {
    */
   public function render() {
     $block = parent::render();
-    $this->set_cache_id('biblio');
+    $this->set_cache_id('node:biblio');
     if (($block['content'] = $this->get_cache()) === FALSE) {
       $delta = 'publication_types-block';
       list($name, $display_id) = explode('-', $delta);

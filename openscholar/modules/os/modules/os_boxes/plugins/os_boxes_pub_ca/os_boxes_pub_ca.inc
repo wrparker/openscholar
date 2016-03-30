@@ -19,6 +19,9 @@ class os_boxes_pub_ca extends os_boxes_default {
 
     $options['display_num'] = 1;
 
+    // needed for caching to work
+    $options['content_type'] = 'biblio';
+
     return $options;
   }
 
@@ -42,7 +45,7 @@ class os_boxes_pub_ca extends os_boxes_default {
    */
   public function render() {
     $block = parent::render();
-    $this->set_cache_id('biblio');
+    $this->set_cache_id('node:biblio');
     if (($block['content'] = $this->get_cache()) === FALSE) {
       $delta = 'co_author_list-block';
       list($name, $display_id) = explode('-', $delta);

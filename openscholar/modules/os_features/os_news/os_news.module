@@ -56,8 +56,6 @@ function os_news_os_entity_view_modes() {
  * Customizes $submitted for new nodes as just "M D, YYYY"
  *
  * Moves the photo field before the title for teaser display.
- *
- * Moves the taxonomy terms to top of the node rather than the bottom.
  */
 function os_news_process_node(&$vars) {
   if ($vars['type'] !== 'news') {
@@ -93,9 +91,7 @@ function os_news_process_node(&$vars) {
             $width = $effect['data']['width'] . "px";
           }
         }
-        $photo_markup .= '<div class="photo with-caption" style="width:' . $width . '">' . render($vars['content']['field_photo']);
-        $photo_markup .= '<div class="caption">' . $vars['content']['field_photo'][0]['#item']['os_file_description'][LANGUAGE_NONE][0]['value'] . '</div>';
-        $photo_markup .= '</div>';
+        $photo_markup .= '<div class="photo with-caption" style="width:' . $width . '">' . render($vars['content']['field_photo']) . '</div>';
       }
       else {
         $photo_markup .= '<div class="photo no-caption clearfix">' . render($vars['content']['field_photo']) . '</div>';
@@ -103,11 +99,6 @@ function os_news_process_node(&$vars) {
       $vars['content']['body'][0]['#markup'] = $photo_markup . $vars['content']['body'][0]['#markup'];
       unset($vars['content']['field_photo']);
     }
-  }
-
-  // Move the terms to the top of the node display.
-  if(isset($vars['content']['og_vocabulary'])) {
-    $vars['content']['og_vocabulary']['#weight'] = 0;
   }
 
   // Includes custom CSS
@@ -129,18 +120,6 @@ function os_news_vsite_og_node_type_info() {
 }
 
 /**
- * Implements hook_field_access().
- *
- * Restrict access to the redirect field on the news node.
- */
-function os_news_field_access($op, $field, $entity_type, $entity, $account) {
-  if (!empty($entity) && $field['field_name'] == 'field_url' && $entity_type == 'node' && $entity->type == 'news' && $op == 'edit') {
-    return user_access('bypass redirection', $account);
-  }
-  return TRUE;
-}
-
-/**
  * Adds alt and title text where appropriate
  */
 function os_news_field_attach_load($entity_type, $entities, $view_mode) {
@@ -156,3 +135,29 @@ function os_news_field_attach_load($entity_type, $entities, $view_mode) {
   }
 }
 
+/**
+ * Implements hook_media_token_to_markup_alter()
+ */
+function os_news_media_token_to_markup_alter(&$element, &$tag_info, &$settings) {
+  $img_markup = isset($element['content']['file']) ? drupal_render($element['content']['file']) : '';
+  $output = '';
+  $output .= $img_markup;
+  // If image description is present, then figcaption tag will be displayed.
+  if(isset($element['content']['os_file_description'][0]['#markup'])) {
+    $output .= '<figcaption>';
+    $output .= strip_tags($element['content']['os_file_description'][0]['#markup']);
+    $output .= '</figcaption>';
+  }
+  // Overriding image description output with figure tags.
+  $element['content']['os_file_description'][0]['#markup'] = $output;
+}
+
+/*
+ * Implements hook_date_popup_process_alter().
+ */
+function os_news_date_popup_process_alter(&$element, &$form_state, $context) {
+  // Removing label for calendar popup in news add/edit form as the fieldset already contains the label 'Date'
+  if ($context['form']['form_id']['#value'] == 'news_node_form') {
+    unset($element['date']['#title']);
+  }
+}

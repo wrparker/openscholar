@@ -29,7 +29,7 @@ function os_classes_feeds_importer_default() {
       ),
     ),
     'parser' => array(
-      'plugin_key' => 'FeedsCSVParser',
+      'plugin_key' => 'OsFeedsCSVParser',
       'config' => array(
         'delimiter' => ',',
         'no_headers' => 0,

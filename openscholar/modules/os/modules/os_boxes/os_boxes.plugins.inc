@@ -34,18 +34,6 @@ function _os_boxes_boxes_plugins() {
     ),
   );
 
-  $info['os_boxes_bio'] = array(
-    'title' => 'Bio',
-    'description' => 'Your personal bio',
-    'tags' => array('Social'),
-    'handler' => array(
-      'class' => 'os_boxes_bio',
-      'file' => 'os_boxes_bio.inc',
-      'path' => $path . '/os_boxes_bio',
-      'parent' => 'os_boxes_default',
-    ),
-  );
-
   $info['os_boxes_manual_list'] = array(
     'title' => 'Featured Posts',
     'description' => 'Create your own list of posts',
@@ -111,8 +99,8 @@ function _os_boxes_boxes_plugins() {
 
   // Publication Boxes
   $info['os_boxes_pub_ca'] = array(
-    'title' => 'Publications: Coauthors',
-    'description' => 'Displays a list of coauthors of your publications',
+    'title' => 'Publications: Authors',
+    'description' => 'Displays a list of authors of your publications',
     'tags' => array('Content'),
     'module dependencies' => array('os_publications'),
     'handler' => array(

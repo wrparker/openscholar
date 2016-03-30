@@ -12,8 +12,7 @@ function hwpi_basetheme_preprocess_html(&$vars) {
 
   $scripts = array(
     'matchMedia.js', // matchMedia polyfill for older browsers
-    'eq.js',         // Equalheights script
-    'eq-os.js',      // Call Equalheights for specific elements
+    'stacktable.js', // Call stacktable jQuery plugins for responsive behavior for table markups.
     'scripts.js',    // General stuff, currently removes ui-helper-clearfix class from ui tabs
   );
   foreach ($scripts as $script) {
@@ -219,8 +218,7 @@ function hwpi_basetheme_node_view_alter(&$build) {
         $titles[] = $title_field[$key]['#markup'];
         unset($title_field[$key]);
       }
-      $glue = ($build['#view_mode'] == 'sidebar_teaser') ? ', ' : "<br />\n";
-      $title_field[0] = array('#markup' => implode($glue, $titles));
+      $title_field[0] = array('#markup' => implode('<br />', $titles));
     }
 
     // We dont want the other fields on teasers

@@ -65,9 +65,14 @@ function biblio_bibtex_form_biblio_node_form_submit($form, &$form_state) {
   $dups = array();
 
   if (strlen($form_state['values']['paste_data_bibtex'])) {
-    list($node_data, $dups) = biblio_bibtex_biblio_import($form_state['values']['paste_data_bibtex'], array(), FALSE, NULL, FALSE, TRUE);
+    list($node_data, $dups, $error) = biblio_bibtex_biblio_import($form_state['values']['paste_data_bibtex'], array(), FALSE, NULL, FALSE, TRUE);
   }
-  if (!empty($node_data) && is_object($node_data[0])) {
+  
+  if($error) {
+    $form_state['results']['error'] = $error;
+    form_set_error('paste_data_bibtex', $error);
+  }
+  elseif (!empty($node_data) && is_object($node_data[0])) {
     $form_state['values'] = array_merge($form_state['values'], (array)$node_data[0]);
     $form_state['input']['biblio_type'] = $form_state['biblio_type'] =  $node_data[0]->biblio_type;
 
@@ -169,13 +174,14 @@ function biblio_bibtex_biblio_import($file, $terms = array(), $batch = FALSE, $s
     $bibtex->openBib($file->uri);
   }
 
-  $bibtex->extractEntries();
-
-  if ($bibtex->count) {
-    $entries =& $bibtex->getEntries();
-    list($nids, $dups) = _biblio_bibtex_import($entries, $terms, $batch, $session_id, $save);
+  if(!$bibtex->error) {
+    $bibtex->extractEntries();
+    if ($bibtex->count) {
+      $entries =& $bibtex->getEntries();
+      list($nids, $dups) = _biblio_bibtex_import($entries, $terms, $batch, $session_id, $save);
+    }
   }
-  return array($nids, $dups);
+  return array($nids, $dups, $bibtex->error);
 }
 function biblio_bibtex_biblio_export($nids) {
   if (module_exists('popups') && $nid) {
@@ -242,7 +248,7 @@ function _biblio_bibtex_import($entries, $terms = array(), $batch = FALSE, $sess
       }
     }
     $node->biblio_volume          = (!empty($entry['volume'])) ? $entry['volume'] : NULL;
-    $node->biblio_number          = (!empty($entry['number'])) ? $entry['number'] : NULL;
+    $node->biblio_issue           = (!empty($entry['number'])) ? $entry['number'] : NULL;
     $node->biblio_year            = (!empty($entry['year'])) ? $entry['year'] : NULL;
     $node->biblio_notes           = (!empty($entry['note'])) ? $entry['note'] : NULL;
     $node->biblio_date            = (!empty($entry['month'])) ? $entry['month'] : NULL;
@@ -335,7 +341,7 @@ function _biblio_bibtex_export($node) {
   $bibtex .= _biblio_bibtex_format_entry('booktitle', $booktitle);
   $bibtex .= _biblio_bibtex_format_entry('series', $series);
   $bibtex .= _biblio_bibtex_format_entry('volume', $node->biblio_volume);
-  $bibtex .= _biblio_bibtex_format_entry('number', $node->biblio_number);
+  $bibtex .= _biblio_bibtex_format_entry('number', $node->biblio_issue);
   $bibtex .= _biblio_bibtex_format_entry('year', $node->biblio_year);
   $bibtex .= _biblio_bibtex_format_entry('note', $node->biblio_notes);
   $bibtex .= _biblio_bibtex_format_entry('month', $node->biblio_date);
@@ -349,6 +355,9 @@ function _biblio_bibtex_export($node) {
   $bibtex .= _biblio_bibtex_format_entry('chapter', $node->biblio_section);
   $bibtex .= _biblio_bibtex_format_entry('address', $node->biblio_place_published);
   $bibtex .= _biblio_bibtex_format_entry('abstract', $node->biblio_abst_e);
+
+  //stripping out the html tags
+  $bibtex= strip_tags($bibtex);
 
   $kw_array = array();
   if (!empty($node->terms)) {

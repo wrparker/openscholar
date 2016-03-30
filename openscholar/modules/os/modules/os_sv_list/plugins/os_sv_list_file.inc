@@ -1,6 +1,7 @@
 <?php 
 
 class os_sv_list_file extends os_sv_list {
+
   public function __construct() {
     parent::__construct();
     $this->entity_type = 'file';
@@ -42,7 +43,6 @@ class os_sv_list_file extends os_sv_list {
       'sort_random' => t('Random'),
     );
   }
-  
 
   /**
    * sorting functions
@@ -50,14 +50,27 @@ class os_sv_list_file extends os_sv_list {
   function sort_newest(&$efq) {
     $efq->propertyOrderBy('timestamp', 'DESC');
   }
+
   function sort_oldest(&$efq) {
     $efq->propertyOrderBy('timestamp', 'ASC');
   }
+
   function sort_alpha(&$efq) {
     $efq->propertyOrderBy('filename', 'ASC');
   }
+
   function sort_filesize(&$efq) {
     $efq->propertyOrderBy('filesize', 'DESC');
   }
-  
+
+  /**
+   * Check access to the the box.
+   *
+   * We return here TRUE because in the case of file, a public file attached to
+   * a private bundle would still be considered public.
+   */
+  public function checkWidgetAccess($bundle) {
+    return TRUE;
+  }
+
 }

@@ -389,7 +389,12 @@ function biblio_import_finalize($success, $results) {
   }
   else {
     $count = count($nids);
-    $message = t('Import finished with an error!  ') . format_plural($count, 'One node imported.', '@count nodes imported.');
+    if ($results['error']) {
+      $message = "Error: invalid BibTex, contains unmatched braces.";
+    }
+    else {
+      $message = t('Import finished with an error!  ') . format_plural($count, 'One node imported.', '@count nodes imported.');
+    }
     drupal_set_message($message, 'error');
     watchdog($format, $message, array('@count' => $count), WATCHDOG_ERROR);
   }
@@ -479,7 +484,7 @@ function biblio_import($import_file, $type, $userid = 1, $terms = NULL, $batch =
       $parsed = biblio_restore($file_content, $node_template, $node_array);
       break;
     default:
-      list($nids, $dups) = module_invoke($type, 'biblio_import', $import_file, $terms, $batch, $session_id);
+      list($nids, $dups, $error) = module_invoke($type, 'biblio_import', $import_file, $terms, $batch, $session_id);
       break;
   }
   $context['results']['nids']   = $nids;
@@ -488,6 +493,8 @@ function biblio_import($import_file, $type, $userid = 1, $terms = NULL, $batch =
   $context['results']['userid'] = $userid;
   $context['results']['user']   = $user;
   $context['results']['file']   = $import_file;
+  $context['results']['error']  = $error;
+
 
   return $batch ? NULL : $nids;
 }

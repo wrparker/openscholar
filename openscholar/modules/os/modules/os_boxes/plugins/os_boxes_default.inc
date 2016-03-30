@@ -22,6 +22,11 @@ abstract class os_boxes_default extends boxes_box {
   public $changed;
 
   /**
+   * Holds the array of contexts that this item is in.
+   */
+  protected $os_contexts;
+
+  /**
    * Holds the cache id.
    */
   protected $cache_id;
@@ -115,6 +120,14 @@ abstract class os_boxes_default extends boxes_box {
 
     return $block;
   }
+
+  /**
+   * Allow widgets to validate the form before processed by boxes.
+   *
+   * @param $values
+   *   The form values.
+   */
+  public function validate(&$values) {}
 
   /**
    * Get the caching of the box.
@@ -376,6 +389,96 @@ abstract class os_boxes_default extends boxes_box {
 
     cache_clear_all($cid, 'cache_os_boxes', TRUE);
     cache_clear_all('assets:' . $cid, 'cache_os_boxes', TRUE);
+  }
+
+  /**
+   * Get the contexts where this box is located.
+   */
+  public function get_contexts() {
+
+    if(!isset($this->os_contexts) && module_exists('vsite_layout') && $this->delta) {
+      // Get the relationship between blocks and contexts.
+      $this->os_contexts = vsite_layout_get_block_contexts('boxes', $this->delta);
+    }
+
+    return $this->os_contexts;
+  }
+
+  /**
+   * Check access to the the box.
+   *
+   * @param $bundle
+   *  The bundle displayed in the widget.
+   *
+   * @return bool
+   *  Returns TRUE if the user can view the widget's content.
+   *  FALSE otherwise.
+   */
+  public function checkWidgetAccess($bundle) {
+    $bundles = $this->getBundles();
+
+    if (in_array($bundle, $bundles['public_bundles'])) {
+      // Widget displays a single public bundle.
+      return TRUE;
+    }
+
+    if (in_array($bundle, $bundles['private_bundles'])) {
+      // Widget displays a single private bundle.
+      return node_access('view', $bundle);
+    }
+    return TRUE;
+  }
+
+  /**
+   * Get the associated bundles for an App type.
+   *
+   * @param string $app_type
+   *  The App type to get the bundles for. Can be OS_PRIVATE_APP to get the
+   *  private bundles or OS_PUBLIC_APP to get the public bundles. If empty, get
+   *  all the bundles.
+   *
+   * @param string $entity_type
+   *  Type of the entity for which to get bundles for.
+   *
+   * @return array
+   *  An array keyed by the app type and valued with the matching bundles.
+   */
+  protected function getBundles($app_type = '', $entity_type = 'node') {
+    if ($entity_type == 'node') {
+      switch ($app_type) {
+        case OS_PRIVATE_APP:
+          $bundles = array_keys(os_get_bundles(array(OS_PRIVATE_APP)));
+          break;
+        case OS_PUBLIC_APP:
+          $bundles = array_keys(os_get_bundles(array(OS_PUBLIC_APP)));
+          break;
+        default:
+          $bundles['public_bundles'] = array_keys(os_get_bundles(array(OS_PUBLIC_APP)));
+          $bundles['private_bundles'] = array_keys(os_get_bundles(array(OS_PRIVATE_APP)));
+          break;
+      }
+    }
+    elseif ($entity_type == 'file') {
+      switch ($app_type) {
+        case OS_PRIVATE_APP:
+          $bundles = array();
+          break;
+        case OS_PUBLIC_APP:
+          $file_bundles = os_files_get_bundles();
+          $bundles = array_keys($file_bundles);
+          break;
+        default:
+          $file_bundles = os_files_get_bundles();
+          $bundles['public_bundles'] = array_keys($file_bundles);
+          $bundles['private_bundles'] = array();
+          break;
+      }
+    }
+    else {
+      $bundles = array();
+    }
+
+    return $bundles;
   }
 }
 

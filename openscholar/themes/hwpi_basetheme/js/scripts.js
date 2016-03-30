@@ -37,4 +37,12 @@
       );
     }
   }
+// Call to stacktable plugin for responsive table implementation
+$('.field-name-body table.os-datatable, .block-boxes-os_boxes_html table.os-datatable').cardtable();
 })(jQuery);
+
+jQuery(document).ready(function(){
+if (jQuery('.region-header-second .region-inner').has('.block-boxes-os_boxes_site_info').length) {
+  jQuery('.region-header-second .region-inner').addClass('site-info');
+}
+});

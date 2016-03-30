@@ -799,3 +799,79 @@ function os_files_update_7018() {
   return t('Microsoft Office template files can now be uploaded to OpenScholar sites.');
 
 }
+
+/**
+ * Add csv files to Document file type
+ * Added in 3.20
+ */
+function os_files_update_7019() {
+  ctools_include('export');
+  ctools_export_crud_delete('file_type', 'document');
+}
+
+/**
+ * Update files extensions and add the SAS to Document file types.
+ */
+function os_files_update_7020() {
+  $feature = array('field_instance');
+  $revert = array(
+    'os_biocv' => $feature,
+    'os_blog' => $feature,
+    'os_booklets' => $feature,
+    'os_classes' => $feature,
+    'os_events' => $feature,
+    'os_faq' => $feature,
+    'os_news' => $feature,
+    'os_pages' => $feature,
+    'os_presentations' => $feature,
+    'os_publications' => $feature,
+    'os_software' => $feature,
+  );
+  features_revert($revert);
+
+  ctools_include('export');
+  ctools_export_crud_delete('file_type', 'document');
+}
+
+/**
+ * Adds the Icon file type for *.ico files
+ */
+function os_files_update_7021() {
+  ctools_include('export');
+  $file_type = ctools_export_crud_load('file_type', 'icon');
+  ctools_export_crud_save('file_type', $file_type);
+  field_attach_create_bundle('file', 'icon'); // do this manually for reasons
+  ctools_export_crud_delete('file_type', 'image');
+
+  $count = db_update('file_managed')
+    ->condition('filemime', array(
+      'image/ico',
+      'application/ico',
+      'application/x-ico',
+      'image/vnd.microsoft.icon',
+    ))
+    ->fields(array(
+      'type' => 'icon'
+    ))
+    ->execute();
+
+  return t('Changed @n files to use the Icon bundle.');
+}
+
+/**
+ * Changes name of Description field to Image Caption for images.
+ */
+function os_files_update_7022() {
+  $instance = field_info_instance('file', 'os_file_description', 'image');
+  $instance['label'] = 'Image Caption';
+  field_update_instance($instance);
+  return t('Label for File Image Description field changed to Image Caption');
+}
+
+/**
+ * Adds .rar to Executable file type.
+ */
+function os_files_update_7023() {
+  ctools_include('export');
+  ctools_export_crud_delete('file_type', 'executable');
+}

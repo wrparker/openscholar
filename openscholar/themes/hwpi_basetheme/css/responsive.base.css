@@ -36,7 +36,7 @@
     right: 90% ;
 }
 iframe {
-    max-width: 95% !important;
+    width: 95% !important;
 }		
 }
 
@@ -73,6 +73,11 @@ iframe {
   .node-event .node-content,
   .node-event .clearfix { margin-left: 70px !important; }
   .node-event .field-name-field-event-location  { margin-left: 0 ! important; }
+}
+
+#content .node-event .event-content .node-content section,
+#content .node-event .event-content .node-content {
+margin-left: 0 !important;
 }
 
 /*--------------------------------------------------------*/
@@ -117,6 +122,11 @@ iframe {
 
 .page-calendar #main-content-header ul.primary {
     line-height: 27px !important;
+}
+
+iframe {
+    width: 95% !important;
+    height:auto !important;
 }
 
 	

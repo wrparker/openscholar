@@ -664,15 +664,15 @@ function vsite_update_7025() {
   // For each of the roles add the permissions that are missing.
   foreach ($results as $result) {
     switch ($result->name) {
-    	case 'vsite admin':
-    	  og_role_grant_permissions($result->rid, $vsite_admin_perms);
-    	break;
-    	case 'vsite user':
-    		og_role_grant_permissions($result->rid, $vsite_user_perms);
-    	break;
-    	case 'content editor':
-    	  og_role_grant_permissions($result->rid, $content_editor_perms);
-    	break;
+      case 'vsite admin':
+        og_role_grant_permissions($result->rid, $vsite_admin_perms);
+      break;
+      case 'vsite user':
+        og_role_grant_permissions($result->rid, $vsite_user_perms);
+      break;
+      case 'content editor':
+        og_role_grant_permissions($result->rid, $content_editor_perms);
+      break;
     }
   }
 }
@@ -712,5 +712,77 @@ function vsite_update_7026() {
   return $counter . " " . t('aliases fixed.');
 }
 
+/**
+ * Adds file-related permissions to default site roles.
+ */
+function vsite_update_7027() {
+  $permissions = array(
+    'create files',
+    'add media from remote sources',
+    'edit any files',
+    'delete any files',
+  );
 
+  $group_bundles = og_get_all_group_bundle('node');
+  $default_roles = array('vsite admin', 'content editor', 'vsite user');
 
+  // handle the defaults
+  foreach (array_keys($group_bundles) as $bundle) {
+    $og_roles = og_roles('node', $bundle);
+    foreach ($default_roles as $role) {
+      $rid = array_search($role, $og_roles);
+      og_role_grant_permissions($rid, $permissions);
+    }
+  }
+
+  // handle the overridden roles
+  $results = db_query("SELECT ogr.*
+    FROM og_role ogr
+    WHERE ogr.name IN('vsite user','vsite admin','content editor')
+      AND ogr.gid >= 1");
+
+  // For each of the roles add the permissions that are missing.
+  foreach ($results as $r) {
+    og_role_grant_permissions($r->rid, $permissions);
+  }
+}
+
+/**
+ * Fixes view showing grid of featured sites
+ */
+function vsite_update_7028() {
+  features_revert(array('vsite' => array('views_view')));
+}
+
+/**
+ * Apply by pass redirection og permission to vsite content managers.
+ */
+function vsite_update_7029(&$sandbox) {
+  os_set_update_batch($sandbox, array(
+    'batch' => 250,
+    'entity' => 'node',
+    'path' => drupal_get_path('module', 'vsite') . '/updates/update7029.php',
+  ));
+}
+
+/**
+ * Apply access content overview og permission to vsite content managers.
+ */
+function vsite_update_7030(&$sandbox) {
+  os_set_update_batch($sandbox, array(
+    'batch' => 250,
+    'entity' => 'node',
+    'path' => drupal_get_path('module', 'vsite') . '/updates/update7030.php',
+  ));
+}
+
+/**
+ * Apply create sub book pages permissions.
+ */
+function vsite_update_7031(&$sandbox) {
+  os_set_update_batch($sandbox, array(
+    'batch' => 250,
+    'entity' => 'node',
+    'path' => drupal_get_path('module', 'vsite') . '/updates/update7031.php',
+  ));
+}

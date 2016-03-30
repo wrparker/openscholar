@@ -105,20 +105,32 @@ function _get_csl_type_map() {
               'article-magazine'        => 106,
               'article-newspaper'       => 105,
               'article-journal'         => 102,
+              'artwork'                 => 112,
+              'audiovisual'             => 114,
               'bill'                    => 117,
               'book'                    => 100,
               'broadcast'               => 111,
+              'case'                    => 116,
               'chapter'                 => 101,
+              'chart'                   => 123,
+              'classical'               => 127,
+              'database'                => 125,
               'entry'                   => '',
               'entry-dictionary'        => '',
               'entry-encyclopedia'      => '',
               'figure'                  => '',
+              'film'                    => 110,
+              'government-report'       => 126,
               'graphic'                 => '',
+              'hearing'                 => 115,
               'interview'               => '',
               'legislation'             => 118,
               'legal_case'              => 128,
+              'journal'                 => 131,
               'manuscript'              => 121,
               'map'                     => 122,
+              'miscellaneous'           => 129,
+              'miscellaneous-section'   => 130,
               'motion_picture'          => 110,
               'musical_score'           => '',
               'pamphlet'                => '',
@@ -127,14 +139,21 @@ function _get_csl_type_map() {
               'post'                    => '',
               'post-weblog'             => '',
               'personal\_communication' => 120,
+              'presentation'            => 135,
+              'proceedings-conference'  => 104,
               'report'                  => 109,
               'review'                  => '',
               'review-book'             => '',
+              'software'                => 113,
               'song'                    => '',
               'speech'                  => '',
               'thesis'                  => 108,
               'treaty'                  => '',
-              'webpage'                 => 107,
+              'unpublished'             => 124,
+              'webarticle'              => 107,
+              'webprojectpage'          => 134,
+              'webservice'              => 133,
+              'website'                 => 132,
         )
   );
   $map['format'] = 'csl';
@@ -147,20 +166,32 @@ function _get_csl_type_names() {
               'article-magazine'        => "Magazine Article",
               'article-newspaper'       => "Newspaper Article",
               'article-journal'         => "Journal Article",
+              'artwork'                 => "Artwork",
+              'audiovisual'             => "Audiovisual",
               'bill'                    => 'Bill',
               'book'                    => "Book",
               'broadcast'               => 'Broadcast',
+              'case'                    => 'Case',
               'chapter'                 => "Book Section",
+              'chart'                   => "Chart",
+              'classical'               => "Classical",
+              'Database'                => "database",
               'entry'                   => '',
               'entry-dictionary'        => '',
               'entry-encyclopedia'      => '',
               'figure'                  => '',
+              'film'                    => "Film",
+              'government-report'       => "Government Report",
               'graphic'                 => '',
+              'hearing'                 => "Hearing",
               'interview'               => '',
               'legislation'             => 'Legislation',
               'legal_case'              => 'Legal Ruling',
+              'journal'                 => "Journal",
               'manuscript'              => 'Manuscript',
               'map'                     => 'Map',
+              'miscellaneous'           => "Miscellaneous",
+              'miscellaneous-section'   => "Miscellaneous Section",
               'motion_picture'          => "Film or Broadcast",
               'musical_score'           => '',
               'pamphlet'                => '',
@@ -169,14 +200,21 @@ function _get_csl_type_names() {
               'post'                    => '',
               'post-weblog'             => '',
               'personal\_communication' => 'Personal Communication',
+              'presentation'            => "Presentation",
+              'proceedings-conference'  => 'Conference Proceedings',
               'report'                  => "Report",
               'review'                  => '',
               'review-book'             => '',
+              'software'                => 'Software',
               'song'                    => '',
               'speech'                  => '',
               'thesis'                  => "Thesis",
               'treaty'                  => '',
+              'unpublished'             => "Unpublished",
+              'webarticle'              => "Web Article",
               'webpage'                 => "Web Page",
+              'webservice'              => "Web Service",
+              'website'                 => "Website",
          )
   );
 
@@ -189,7 +227,7 @@ function _get_csl_field_map() {
         array(
           'title'                       => 'title',
           'container-title'             => 'biblio_secondary_title',
-          'collection-title'            => 'biblio_secondary_title',
+          'collection-title'            => '',
           'original-title'              => 'biblio_alternate_title',
           'publisher'                   => 'biblio_publisher',
           'publisher-place'             => 'biblio_place_published',
@@ -290,4 +328,17 @@ function _reset_csl_map($type = NULL) {
  */
 function biblio_citeproc_update_7001() {
   _reset_csl_map();
+}
+
+/**
+ *
+ * Update Chicago Manual of Style (author-date format) schema
+ * and remove indentation information from the citation styles
+ */
+function biblio_citeproc_update_7002() {
+  $style_file = 'chicago-author-date.csl';
+  $path = drupal_get_path('module', 'biblio_citeproc') . "/style/$style_file";
+  $csl = file_get_contents($path);
+	$csl = str_replace('<bibliography hanging-indent="true"', '<bibliography hanging-indent="false"', $csl);
+  biblio_citeproc_install_style($style_file, $csl);
 }

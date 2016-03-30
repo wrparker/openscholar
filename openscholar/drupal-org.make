@@ -1,10 +1,7 @@
-;Drupal.org MakeFile for OpenScholar
+;Drupal.org Makefile for OpenScholar
 
 core = 7.x
 api = 2
-
-projects[admin_menu][subdir] = "contrib"
-projects[admin_menu][version] = 3.0-rc1
 
 projects[advagg][subdir] = "contrib"
 projects[advagg][version] = 2.6
@@ -24,9 +21,13 @@ projects[boxes][patch][] = "http://raw.github.com/openscholar/openscholar/b38919
 projects[boxes][patch][] = "https://www.drupal.org/files/1859150-1-boxes-strict_warning.patch"
 projects[boxes][patch][] = "https://www.drupal.org/files/issues/default_object_empty_value-2042101-3.patch"
 
+projects[cache_consistent][subdir] = "contrib"
+projects[cache_consistent][version] = 1.2
+
 projects[calendar][subdir] = "contrib"
 projects[calendar][version] = 3.5
 projects[calendar][patch][] = "http://raw.github.com/openscholar/openscholar/72d63ee3537c31505b7481975886ec13789feeb5/patches/calendar-fix-week-view-overflow.patch"
+projects[calendar][patch][] = "http://raw.github.com/openscholar/openscholar/b334cd4b6831a5a1869647b7cbaaec1e8058d9bc/patches/calendar.scroll_to_first_event.patch"
 
 projects[colorbox][subdir] = "contrib"
 projects[colorbox][version] = 2.5
@@ -34,6 +35,7 @@ projects[colorbox][version] = 2.5
 projects[comment_sources][subdir] = "contrib"
 projects[comment_sources][version] = 2.0
 projects[comment_sources][patch][] = "https://drupal.org/files/issues/22086870-comment-source-wrong-query-field-1.patch"
+projects[comment_sources][patch][] = "https://drupal.org/files/issues/change-submit-handler-index-2513794-2.patch"
 
 projects[context][subdir] = "contrib"
 projects[context][version] = 3.0-beta4
@@ -55,8 +57,7 @@ projects[ctools][patch][] = "http://drupal.org/files/ctools-plugin_extension-162
 projects[ctools][patch][] = "https://drupal.org/files/issues/2147905-allow-alter-with-more-context-1.patch"
 
 projects[date][subdir] = "contrib"
-projects[date][version] = 2.6
-projects[date][patch][] = "http://drupal.org/files/date-migrate_v24-1715700-1.patch"
+projects[date][version] = 2.8
 
 projects[date_ical][subdir] = "contrib"
 projects[date_ical][version] = 2.7
@@ -72,8 +73,8 @@ projects[disqus][version] = 1.9
 projects[disqus][patch][] = "http://drupal.org/files/comment_sources-disqus-2120703-1.patch"
 
 projects[dragndrop_upload][subdir] = "contrib"
-projects[dragndrop_upload][version] = 1.0-alpha1
-projects[dragndrop_upload][patch][] = "http://cgit.drupalcode.org/dragndrop_upload/patch/?id=164d2dd7526c297b544f5f367e48f5106f6bca5e"
+projects[dragndrop_upload][version] = 1.x-dev
+projects[dragndrop_upload][revision] = f356772
 
 projects[dyntextfield][subdir] = "contrib"
 projects[dyntextfield][type] = module
@@ -82,9 +83,9 @@ projects[dyntextfield][download][tag] = 1.0
 projects[dyntextfield][download][url] = "git://github.com/amitaibu/dyntextfield.git"
 
 projects[entity][subdir] = "contrib"
-projects[entity][version] = 1.0
+projects[entity][branch] = 7.x-1.x
 projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
-projects[entity][patch][] = http://drupal.org/files/entity-file_entity_access-1831578-9.patch
+projects[entity][patch][] = https://www.drupal.org/files/issues/2086225-entity-access-check-18.patch
 
 projects[entitycache][subdir] = "contrib"
 projects[entitycache][version] = 1.1
@@ -111,23 +112,14 @@ projects[facetapi][subdir] = "contrib"
 projects[facetapi][version] = 1.1
 projects[facetapi][patch][] = "http://drupal.org/files/2006704-facetapi-er-regroup-2.patch"
 
-projects[fb_social][subdir] = "contrib"
-;projects[fb_social][version] = 2.0-beta4+1-dev
-projects[fb_social][download][type] = git
-projects[fb_social][download][branch] = 7.x-2.x
-projects[fb_social][download][revision] = cd73e9b
-projects[fb_social][patch][] = "http://drupal.org/files/comment_sources-fb_social-2120709-1.patch"
-
 projects[features][subdir] = "contrib"
 projects[features][version] = 2.0
 
 projects[feeds][subdir] = "contrib"
 projects[feeds][version] = 2.0-alpha7
 
-projects[feeds_tamper‏][subdir] = "contrib"
-projects[feeds_tamper‏][type] = "module"
-projects[feeds_tamper‏][download][type] = "git"
-projects[feeds_tamper‏][download][url]="http://git.drupal.org/project/feeds_tamper.git"
+projects[feeds_tamper][subdir] = "contrib"
+projects[feeds_tamper][version] = 1.1
 
 projects[feeds_xpathparser][subdir] = "contrib"
 projects[feeds_xpathparser][download][type] = git
@@ -204,6 +196,7 @@ projects[libraries][patch][] = "http://drupal.org/files/0001-Fix-1938638-by-core
 ; projects[link][patch][] = "http://drupal.org/files/link-MigrateLinkFieldHandler-1010850-54.patch"
 projects[link][patch][] = "http://drupal.org/files/link-MigrateLinkFieldHandler-1010850-61.patch"
 projects[link][patch][] = "http://drupal.org/files/link-7.x-1.x-required_fields-1368616-11.patch"
+projects[link][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/831d1d024dfecafbfeeb410ac8c841f27175d912/patches/link-updated-tld-list-7947.patch"
 projects[link][subdir] = "contrib"
 projects[link][download][branch] = 7.x-1.x
 projects[link][download][type] = git
@@ -231,6 +224,8 @@ projects[media_gallery][patch][] = "http://drupal.org/files/media_gallery-double
 projects[media_gallery][patch][] = "http://drupal.org/files/media_gallery-remove_taxonomy_shenanigans-1686498-9.patch"
 projects[media_gallery][patch][] = "http://drupal.org/files/media_gallery-rename_field-1940036-3.patch"
 projects[media_gallery][patch][] = "http://drupal.org/files/media_gallery-lightbox_double_file-1977822-1.patch"
+projects[media_gallery][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/b92cbafb00bdec32c18dd3a98d936b79c4d801a9/patches/media_gallery-multiple.full.display.patch"
+projects[media_gallery][patch][] = "https://www.drupal.org/files/issues/2585509-media_gallery-lost_files.patch"
 
 projects[message][subdir] = "contrib"
 projects[message][version] = 1.8
@@ -242,7 +237,7 @@ projects[module_filter][subdir] = "contrib"
 projects[module_filter][version] = 1.7
 
 projects[memcache][subdir] = "contrib"
-projects[memcache][version] = 1.1-beta5
+projects[memcache][version] = 1.5
 
 projects[migrate][subdir] = "contrib"
 projects[migrate][version] = 2.5
@@ -252,15 +247,15 @@ projects[migrate_extras][subdir] = "contrib"
 projects[migrate_extras][version] = 2.4
 
 projects[mollom][subdir] = "contrib"
-projects[mollom][version] = 2.10
+projects[mollom][version] = 2.14
 
 projects[multiform][subdir] = "contrib"
 projects[multiform][version] = 1.0
 
-projects[nice_menus][patch][] = "http://drupal.org/files/translate-menu-item-1050352-17-v2.1.patch"
-projects[nice_menus][patch][] = "https://raw.github.com/openscholar/openscholar/b0cb4b6b2ee8d0e162c0a35527ca8d4dcbfc490b/patches/nice_menus.fatal_localized_options.patch"
 projects[nice_menus][subdir] = "contrib"
-projects[nice_menus][version] = 2.1
+projects[nice_menus][version] = 2.5
+; todo change the address of the patch once the PR is merged,
+projects[nice_menus][patch][] = "https://gist.githubusercontent.com/RoySegall/6118a03520c81ae4e012/raw/733e63036dd6d6ad4706f90569a6dc075f5ca0a3/nice_menus.fatal_localized_options.patch"
 
 projects[nodeformcols][subdir] = "contrib"
 projects[nodeformcols][version] = 1.0
@@ -269,7 +264,7 @@ projects[entity_validator][subdir] = "contrib"
 projects[entity_validator][download][type] = git
 projects[entity_validator][download][url] = "https://github.com/Gizra/entity_validator.git"
 projects[entity_validator][download][branch] = "7.x-1.x"
-projects[entity_validator][download][revision] = 802289168aa6a30c1f191284153d4899564287ac
+projects[entity_validator][download][revision] = dc26154
 
 projects[nodeorder][subdir] = "contrib"
 projects[nodeorder][version] = 1.1
@@ -323,7 +318,7 @@ projects[pinserver][subdir] = "contrib"
 projects[pinserver][type] = module
 projects[pinserver][download][type] = git
 projects[pinserver][download][url] = "git://github.com/openscholar/pinserver.git"
-projects[pinserver][download][tag] = 7.x-3.4.7
+projects[pinserver][download][tag] = 7.x-3.4.9
 
 projects[purl][subdir] = "contrib"
 ;: projects[purl][version] = 1.0-beta1+11-dev
@@ -336,11 +331,21 @@ projects[purl][patch][] = "http://drupal.org/files/729862-9-purl-inbound-alter-m
 projects[purl][patch][] = "http://drupal.org/files/issues/purl-integrate_redirect_keep_options-1735266-4.patch"
 
 projects[registration][subdir] = "contrib"
-projects[registration][version] = 1.1
-projects[registration][patch][] = "https://drupal.org/files/issues/2183509-registration-broadcast-context-1.patch"
+projects[registration][version] = 1.5
+projects[registration][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/fff85ce1e059985dac494d6bde5e923e25a74feb/patches/registration_link_pass_entity.patch"
+projects[registration][patch][] = "https://www.drupal.org/files/issues/registration-add-context-to-headers-2564355-1.patch"
+projects[registration][patch][] = "https://www.drupal.org/files/issues/registration_fatal_error_class-2546836-6.patch"
 
 projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
+
+projects[restful][subdir] = "contrib"
+projects[restful][download][type] = git
+projects[restful][download][url] = "https://github.com/RoySegall/restful.git"
+projects[restful][download][branch] = 444
+projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/839d0cc214f2422e924e35d33133d1268b8cc1cd/patches/restful.put_file.patch"
+;projects[restful][download][branch] = "7.x-1.x"
+;projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
 
 projects[redirect][subdir] = "contrib"
 projects[redirect][version] = 1.0-rc1
@@ -365,7 +370,7 @@ projects[services][download][branch] = 7.x-3.x
 projects[services][download][revision] = 761e620
 
 projects[services_basic_auth][subdir] = "contrib"
-projects[services_basic_auth][version] = "1.1"
+projects[services_basic_auth][version] = "1.3"
 
 projects[spaces][subdir] = "contrib"
 ;projects[spaces][version] = 3.0-alpha1+9-dev
@@ -403,7 +408,6 @@ projects[twitter_pull][patch][] = 'http://drupal.org/files/twitter_pull-twitter_
 projects[views][subdir] = "contrib"
 projects[views][version] = 3.8
 projects[views][patch][] = "https://drupal.org/files/issues/views-jquery_dialog-2125261-1.patch"
-
 
 projects[views_bulk_operations][subdir] = "contrib"
 projects[views_bulk_operations][version] = 3.0
@@ -464,9 +468,10 @@ libraries[respondjs][download][type] = "file"
 libraries[respondjs][download][url] = "https://github.com/scottjehl/Respond/archive/1.3.0.zip"
 
 libraries[responsiveslides][type] = "libraries"
-libraries[responsiveslides][download][type] = "file"
-libraries[responsiveslides][download][url] = "https://github.com/viljamis/ResponsiveSlides.js/archive/v1.53.tar.gz"
-libraries[responsiveslides][patch][] = "https://raw.github.com/openscholar/openscholar/c5b00de5f1c79a679446467296ab16ebff6c19e0/patches/responsiveslides-hc_changes.patch"
+libraries[responsiveslides][download][type] = "git"
+libraries[responsiveslides][download][url] = "https://github.com/viljamis/ResponsiveSlides.js.git"
+libraries[responsiveslides][download][revision] = "120079561d7a4f8a6459f7a5d8aa657ad5d3db83"
+libraries[responsiveslides][patch][] = "https://gist.githubusercontent.com/RoySegall/412084926772e2e4181d/raw/8b98aa3d880ab40ac74a6343d74928a7a1667b7a/foo.patch"
 
 libraries[flexslider][type] = "libraries"
 libraries[flexslider][download][type] = "file"
@@ -478,16 +483,26 @@ libraries[select2][download][url] = "https://github.com/ivaynberg/select2/archiv
 
 libraries[twitter-api-php][type] = "libraries"
 libraries[twitter-api-php][download][type] = "file"
-libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/master.zip"
+libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/1.0.3.zip"
 
 libraries[autopager][type] = "libraries"
 libraries[autopager][download][type] = "file"
 libraries[autopager][download][url] = "https://github.com/sagotsky/jquery-autopager/archive/v1.2.zip"
 
-libraries[html5shiv[type] = "libraries"
+libraries[html5shiv][type] = "libraries"
 libraries[html5shiv][download][type] = "file"
 libraries[html5shiv][download][url] = "http://raw.github.com/aFarkas/html5shiv/master/dist/html5shiv.js"
 
 libraries[hopscotch][type] = "libraries"
 libraries[hopscotch][download][type] = "file"
 libraries[hopscotch][download][url] = "https://github.com/linkedin/hopscotch/archive/b41ab659507175264ab6347d0032f03e42b961d1.zip"
+
+libraries[jquery.bgiframe][type] = "libraries"
+libraries[jquery.bgiframe][download][type] = "git"
+libraries[jquery.bgiframe][download][url] = "https://github.com/brandonaaron/bgiframe.git"
+
+; Angular js libraries.
+libraries[angular_select2][type] = "libraries"
+libraries[angular_select2][download][type] = "get"
+libraries[angular_select2][download][url] = "https://github.com/angular-ui/ui-select/archive/v0.12.0.zip"
+libraries[angular_select2][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/ad2fd2d198e91ac9a77eacbae996579e55510a3a/patches/angular_select-7024-async.patch"

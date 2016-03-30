@@ -298,6 +298,7 @@ if(module_exists(\'apachesolr_search\')){
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Co-Author List';
+  $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['group_by'] = TRUE;
   $handler->display->display_options['access']['type'] = 'spaces_feature';
@@ -314,13 +315,11 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['pager']['options']['tags']['next'] = '»';
   $handler->display->display_options['style_plugin'] = 'list';
   $handler->display->display_options['row_plugin'] = 'fields';
-  $handler->display->display_options['use_ajax'] = TRUE;
-  $handler->display->display_options['row_options']['hide_empty'] = FALSE;
   $handler->display->display_options['row_options']['inline'] = array(
     'firstname' => 'firstname',
     'title' => 'title',
   );
-  /* Field: Publication: Author ID */
+  /* Field: Publication: Author id */
   $handler->display->display_options['fields']['cid']['id'] = 'cid';
   $handler->display->display_options['fields']['cid']['table'] = 'biblio_contributor_data';
   $handler->display->display_options['fields']['cid']['field'] = 'cid';
@@ -331,27 +330,27 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['fields']['name']['table'] = 'biblio_contributor_data';
   $handler->display->display_options['fields']['name']['field'] = 'name';
   $handler->display->display_options['fields']['name']['label'] = '';
-  $handler->display->display_options['fields']['name']['alter']['trim_whitespace'] = 1;
   $handler->display->display_options['fields']['name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['name']['alter']['trim_whitespace'] = TRUE;
   /* Field: Publication: Author last name */
   $handler->display->display_options['fields']['lastname']['id'] = 'lastname';
   $handler->display->display_options['fields']['lastname']['table'] = 'biblio_contributor_data';
   $handler->display->display_options['fields']['lastname']['field'] = 'lastname';
   $handler->display->display_options['fields']['lastname']['label'] = '';
   $handler->display->display_options['fields']['lastname']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['lastname']['alter']['trim_whitespace'] = 1;
+  $handler->display->display_options['fields']['lastname']['alter']['trim_whitespace'] = TRUE;
   /* Field: Publication: Author first name */
   $handler->display->display_options['fields']['firstname']['id'] = 'firstname';
   $handler->display->display_options['fields']['firstname']['table'] = 'biblio_contributor_data';
   $handler->display->display_options['fields']['firstname']['field'] = 'firstname';
   $handler->display->display_options['fields']['firstname']['label'] = '';
-  $handler->display->display_options['fields']['firstname']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['firstname']['alter']['trim_whitespace'] = 1;
-  $handler->display->display_options['fields']['firstname']['alter']['alter_text'] = 1;
+  $handler->display->display_options['fields']['firstname']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['firstname']['alter']['text'] = '[lastname], [firstname]';
   $handler->display->display_options['fields']['firstname']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['firstname']['alter']['path'] = 'publications/author/[cid]/[name]';
-  /* Field: COUNT(DISTINCT Content: Title) */
+  $handler->display->display_options['fields']['firstname']['alter']['trim_whitespace'] = TRUE;
+  $handler->display->display_options['fields']['firstname']['element_label_colon'] = FALSE;
+  /* Field: COUNT(Content: Title) */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
@@ -384,20 +383,9 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['filters']['current']['id'] = 'current';
   $handler->display->display_options['filters']['current']['table'] = 'spaces';
   $handler->display->display_options['filters']['current']['field'] = 'current';
-  /* Filter criterion: Content: First name not blank */
-  $handler->display->display_options['filters']['firstname']['id'] = 'firstname';
-  $handler->display->display_options['filters']['firstname']['table'] = 'biblio_contributor_data';
-  $handler->display->display_options['filters']['firstname']['field'] = 'firstname';
-  $handler->display->display_options['filters']['firstname']['operator'] = '!=';
-  $handler->display->display_options['filters']['firstname']['value'] = '';
-  /* Filter criterion: Content: Last name not blank */
-  $handler->display->display_options['filters']['lastname']['id'] = 'lastname';
-  $handler->display->display_options['filters']['lastname']['table'] = 'biblio_contributor_data';
-  $handler->display->display_options['filters']['lastname']['field'] = 'lastname';
-  $handler->display->display_options['filters']['lastname']['operator'] = '!=';
-  $handler->display->display_options['filters']['lastname']['value'] = '';
-  /* Display: Co-Authors List */
-  $handler = $view->new_display('block', 'Co-Authors List', 'block');
+
+  /* Display: Authors List */
+  $handler = $view->new_display('block', 'Authors List', 'block');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $export['co_author_list'] = $view;
 
@@ -703,7 +691,7 @@ if(module_exists(\'apachesolr_search\')){
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
   $handler->display->display_options['defaults']['use_ajax'] = FALSE;
-  $handler->display->display_options['use_ajax'] = TRUE;
+  $handler->display->display_options['use_ajax'] = FALSE;
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['defaults']['pager'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'mini';

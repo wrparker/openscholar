@@ -36,6 +36,8 @@ function os_wysiwyg_filter_default_formats() {
     table[style|border|align<center?left?right|cellpadding|cellspacing|bgcolor],
     tr[align<center?justify?left?right|valign],
     td[colspan|rowspan|align<center?justify?left?right|valign],
+    th[colspan|rowspan|align<center?justify?left?right|valign],
+    thead,
     caption,
     address,h2,h3,h4,h5,h6,pre,
     strong/b,em/i,strike,u',
@@ -156,7 +158,7 @@ function os_wysiwyg_filter_default_formats() {
             'zoom' => 0,
           ),
           'rule_valid_classes' => array(
-            0 => 'os-*',
+            0 => '*'
           ),
           'rule_valid_ids' => array(
             0 => 'os-*',

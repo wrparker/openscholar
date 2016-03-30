@@ -81,6 +81,8 @@ function os_publications_install() {
   }
 
   variable_set('biblio_years_text', $new_bibyears);
+
+  _reset_csl_map(FALSE);
 }
 
 // Implements hook_schema_alter().
@@ -1277,4 +1279,235 @@ function os_publications_update_7027() {
   db_delete('spaces_overrides')
     ->condition('object_id', 'biblio_export_links')
     ->execute();
+}
+
+/**
+ * Remove indentation information from the citation styles
+ */
+function os_publications_update_7028(){
+
+  if(module_exists('biblio_citeproc')){
+    //Remove Line indentation from citeproc styles
+    foreach (biblio_get_styles() as $name => $desc){
+      $csl = db_query('SELECT csl FROM {biblio_citeproc_styles} WHERE filename = :id', array(':id' => $name))->fetchObject();
+      if (isset($csl->csl)) {
+        $csl_file_contents = $csl->csl;
+        if(($csl_file_contents = str_replace('<bibliography hanging-indent="true"', '<bibliography hanging-indent="false"', $csl_file_contents)) && ($csl_file_contents != $csl->csl)){
+          biblio_citeproc_install_style($name, $csl_file_contents);
+        }
+      }
+    }
+  }
+
+  return t('Removed inline indents from biblio_citeproc citations.');
+}
+
+/**
+ * Reset the bibtex mappings to include all biblio types.
+ */
+function os_publications_update_7029() {
+  db_delete('biblio_type_maps')
+    ->condition('format', 'bibtex')
+    ->execute();
+
+  // Get the id of a working paper.
+  $tid = db_select('biblio_types', 'bt')
+    ->fields('bt', array('tid'))
+    ->condition('name', 'Working paper')
+    ->execute()
+    ->fetchField();
+
+  // Get the original type map and set the id for a working paper.
+  $typemap = _get_bibtex_type_map();
+  $types = unserialize($typemap['type_map']);
+  $types['workingpaper'] = $tid;
+  $typemap['type_map'] = serialize($types);
+
+  // Get the names and the field map.
+  $typenames = _get_bibtex_type_names();
+  $fieldmap = _get_bibtex_field_map();
+  $maps = array_merge($typemap, $typenames, $fieldmap);
+
+  biblio_save_map($maps);
+}
+
+/**
+ * Define the publication citation as the og:description value.
+ */
+function os_publications_update_7030() {
+  features_revert(array('os_publications' => array('metatag')));
+}
+
+/**
+ * Adding biblio field 'biblio_date' to Newspaper and magazine.
+ */
+function os_publications_update_7031() {
+  _os_publications_update_field_data();
+}
+
+/**
+ * Reset the citeproc mappings to include all biblio types
+ * and add the new chicago author-date based style.
+ */
+function os_publications_update_7032() {
+  _reset_csl_map(FALSE);
+  os_publications_revert_citeproc_style('harvard-chicago-author-date');
+}
+
+/**
+ * Bring back the Year of publication title for working paper.
+ */
+function os_publications_update_7033() {
+  os_publications_restore_field('biblio_year', 'Working paper', array(
+    'common' => 1,
+    'vtab' => 2,
+    'autocomplete' => 0,
+    'required' => 1,
+    'weight' => '-45',
+    'visible' => '1'
+  ));
+}
+
+/**
+ * Bring back the abstract and note fields for working paper.
+ */
+function os_publications_update_7034() {
+  os_publications_restore_field('biblio_abst_e', 'Working paper', array(
+    'common' => 1,
+    'vtab' => 2,
+    'autocomplete' => 0,
+    'required' => 1,
+    'weight' => '-45',
+    'visible' => '1'
+  ));
+
+  os_publications_restore_field('biblio_notes', 'Working paper', array(
+    'common' => 0,
+    'vtab' => 7,
+    'autocomplete' => 0,
+    'required' => 0,
+    'weight' => '157',
+    'visible' => '1'
+  ));
+
+  os_publications_restore_field('biblio_url', 'Working paper', array(
+    'common' => 1,
+    'vtab' => 5,
+    'autocomplete' => 0,
+    'required' => 0,
+    'weight' => '158',
+    'visible' => '1'
+  ));
+}
+
+/**
+ * Fix the duplication of secondary title.
+ */
+function os_publications_update_7035() {
+  $map = biblio_get_map('field_map', 'csl');
+  $map['collection-title'] = '';
+  biblio_set_map('field_map', 'csl', $map);
+}
+
+/**
+ * Add redirect field.
+ */
+function os_publications_update_7036() {
+  features_revert(array('os_publications' => array('field_base', 'field_instance')));
+}
+
+/**
+ * Un-hiding the miscellaneous fields upon publications.
+ */
+function os_publications_update_7037() {
+  $citations = array(
+    'american-chemical-society-with-titles',
+    'american-chemical-society',
+    'apa',
+    'chicago-author-date',
+    'chicago-fullnote-bibliography',
+    'chicago-note-bibliography',
+    'mhra',
+    'mla',
+    'nature',
+  );
+
+  _reset_csl_map(FALSE);
+  foreach ($citations as $citateion) {
+    os_publications_revert_citeproc_style($citateion);
+  }
+}
+
+/**
+ * Update the csl fields.
+ */
+function os_publications_update_7038() {
+  _reset_csl_map(FALSE);
+  $citations = array('mhra', 'chicago-author-date', 'apa');
+  foreach ($citations as $citateion) {
+    os_publications_revert_citeproc_style($citateion);
+  }
+}
+
+/*
+* Fix CSL styles so editors aren't printed twice when there are no authors
+ */
+function os_publications_update_7039() {
+  $citations = array(
+    'ama',
+    'apa',
+    'apsa',
+    'asa',
+    'chicago-author-date',
+    'chicago-fullnote-bibliography',
+    'cse',
+    'harvard-chicago-author-date',
+    'harvard1',
+    'ieee',
+    'mhra',
+    'mla',
+    'nlm',
+    'vancouver'
+  );
+
+  foreach ($citations as $citation) {
+    os_publications_revert_citeproc_style($citation);
+  }
+}
+
+/**
+ * Update default preferred bibliographic format.
+ */
+function os_publications_update_7040() {
+  // Updating the default ciation style for new publications.
+  variable_set('biblio_citeproc_style', 'harvard-chicago-author-date.csl');
+
+  // Checking existing sites space ids whose default citation is not present in spaces_overrides table.
+  $query = db_select('purl', 'p');
+  $query->leftjoin('spaces_overrides', 'so', 'so.id = p.id AND object_type = :object_type AND object_id = :object_id', 
+  array(':object_type' => 'variable', ':object_id' => 'biblio_citeproc_style'));
+  $query->condition('p.provider', 'spaces_og', '=');
+  $query->isNull('so.value');
+  $query = $query->fields('p', array('id'));
+  $target_space_ids = $query->execute()->fetchCol();
+
+  // This will set previous default value cse.csl as the overridden value for existing sites' default publication style.
+  $insert_pub_style = db_insert('spaces_overrides')->fields(array('type', 'id', 'object_type', 'object_id', 'value'));
+  foreach ($target_space_ids as $key => $value) {
+    $insert_pub_style->values(array(
+        'type' => 'og',
+        'id' => $value,
+        'object_type' => 'variable',
+        'object_id' => 'biblio_citeproc_style',
+        'value' => serialize('cse.csl')
+    ));
+  }
+  $insert_pub_style->execute();
+}
+
+/**
+ * Adding biblio field 'biblio_date' to Journal Article.
+ */
+function os_publications_update_7041() {
+  _os_publications_update_field_data();
 }
