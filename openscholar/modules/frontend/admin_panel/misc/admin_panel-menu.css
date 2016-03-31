@@ -170,7 +170,7 @@ ul.primary {
     content: none;
 }
 #cssmenu ul ul li a, #cssmenu ul ul li span, #cssmenu .heading {
-    padding: 6px 8px;
+    padding: 5px 8px;
     cursor: pointer;
     z-index: 2;
     font-size: 14px;
@@ -182,7 +182,7 @@ ul.primary {
     transition: color .2s ease;
     box-shadow: inset 0 1px rgba(0, 0, 0, 0.1);
 }
-
+#cssmenu ul ul li span.close-siblings,
 #cssmenu ul ul li a {
  
     box-shadow: none;
