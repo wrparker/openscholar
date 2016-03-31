@@ -125,7 +125,7 @@ ul.primary {
 #cssmenu > ul > li > a:hover {
     color: #CCC;
 }
-#cssmenu ul > li.has-sub > a:after {
+#cssmenu ul > li.has-sub > span:after {
     position: absolute;
     right: 22px;
     top: 14px;
@@ -141,7 +141,7 @@ ul.primary {
     -o-transition: all 0.1s ease-out;
     transition: all 0.1s ease-out;
 }
-#cssmenu ul > li.has-sub > a:before {
+#cssmenu ul > li.has-sub > span:before {
     position: absolute;
     right: 18px;
     top: 18px;
@@ -156,8 +156,8 @@ ul.primary {
     -o-transition: all 0.1s ease-out;
     transition: all 0.1s ease-out;
 }
-#cssmenu ul > li.has-sub.open > a:after,
-#cssmenu ul > li.has-sub.open > a:before {
+#cssmenu ul > li.has-sub.open > span:after,
+#cssmenu ul > li.has-sub.open > span:before {
     -webkit-transform: rotate(180deg);
     -moz-transform: rotate(180deg);
     -ms-transform: rotate(180deg);
@@ -166,7 +166,7 @@ ul.primary {
     height: 2px;
     width: 10px;
 }
-#cssmenu ul > li.has-sub.open > a:after {
+#cssmenu ul > li.has-sub.open > span:after {
     content: none;
 }
 #cssmenu ul ul li a, #cssmenu ul ul li span, #cssmenu .heading {
@@ -198,7 +198,7 @@ ul.primary {
     background: #454545;
 }
 #cssmenu ul ul ul li a {
-    padding-left: 22px;
+    padding-left: 16px;
 }
 #cssmenu ul ul li a:hover {
     color: #ffffff;
