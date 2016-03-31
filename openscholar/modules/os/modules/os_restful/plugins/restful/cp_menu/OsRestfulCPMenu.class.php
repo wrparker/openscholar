@@ -210,8 +210,11 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     )):array();
 
     //Order alphabetically
-    ksort($add_links);
-    ksort($import_links);
+    $labelcmp = function ($a, $b) {
+        return strnatcmp($a['label'], $b['label']);
+    };
+    uasort($add_links, $labelcmp);
+    uasort($import_links, $labelcmp);
 
     $structure = array(
       'content' => array(
