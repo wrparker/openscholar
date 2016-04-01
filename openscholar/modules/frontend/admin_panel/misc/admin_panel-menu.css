@@ -203,12 +203,12 @@ ul.primary {
 #cssmenu ul ul li a:hover {
     color: #ffffff;
 }
-#cssmenu ul ul > li.has-sub > a:after {
+#cssmenu ul ul > li.has-sub > span:after {
     top: 14px;
     right: 22px;
     background: #dddddd;
 }
-#cssmenu ul ul > li.has-sub > a:before {
+#cssmenu ul ul > li.has-sub > span:before {
     top: 18px;
     background: #dddddd;
 }
