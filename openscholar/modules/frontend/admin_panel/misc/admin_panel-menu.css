@@ -123,7 +123,7 @@ ul.primary {
 }
 #cssmenu ul li a:hover,
 #cssmenu ul li span:hover {
-    color: #999;
+    color: #CCC;
     text-decoration: none;
 }
 #cssmenu ul li a.active {
