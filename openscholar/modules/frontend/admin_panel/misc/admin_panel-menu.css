@@ -10,9 +10,10 @@ body {
     overflow-x: hidden;
     height: 100%;
     position: relative;
+    -webkit-font-smoothing: antialiased;
 }
 body.overlay {
-overflow-x: visible;
+    overflow-x: visible;
 }
 .page-cp #branding,
 .page-cp #page {
@@ -92,6 +93,7 @@ ul.primary {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     /* box-sizing: border-box; */
+    
     font-style: normal;
 }
 #cssmenu {
@@ -101,9 +103,8 @@ ul.primary {
 }
 #cssmenu ul ul {
     display: none;
-    background-color:#49505a;
+    background-color: #49505a;
 }
-
 .align-right {
     float: right;
 }
@@ -122,13 +123,12 @@ ul.primary {
 }
 #cssmenu ul li a:hover,
 #cssmenu ul li span:hover {
-    color: #CCC;
-    text-decoration:none;
+    color: #999;
+    text-decoration: none;
 }
 #cssmenu ul li a.active {
     font-style: italic;
 }
-
 #cssmenu ul > li.has-sub > span:after {
     position: absolute;
     right: 22px;
@@ -173,7 +173,9 @@ ul.primary {
 #cssmenu ul > li.has-sub.open > span:after {
     content: none;
 }
-#cssmenu ul ul li a, #cssmenu ul ul li span, #cssmenu .heading {
+#cssmenu ul ul li a,
+#cssmenu ul ul li span,
+#cssmenu .heading {
     padding: 5px 8px;
     cursor: pointer;
     z-index: 2;
@@ -187,7 +189,6 @@ ul.primary {
 }
 #cssmenu ul ul li span.close-siblings,
 #cssmenu ul ul li a {
- 
     box-shadow: none;
 }
 #cssmenu .heading {
@@ -203,10 +204,6 @@ ul.primary {
 #cssmenu ul ul ul li a {
     padding-left: 16px;
 }
-#cssmenu ul ul li a:hover {
-    color: #ffffff;
-}
-
 #rightMenuSlide {
     top: 4px;
     z-index: 20;
@@ -342,7 +339,6 @@ td.user-site-controls {
 .close-user-menu {
     margin: 0 0 0px 90%;
 }
-
 /* these need to be moved to the os_common dir */
 
 .close-link {
