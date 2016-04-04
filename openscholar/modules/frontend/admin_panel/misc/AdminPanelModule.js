@@ -6,7 +6,8 @@
   var auto_open;
   var morphButton;
   var menu_state;
-    angular.module('AdminPanel', [ 'os-auth', 'ngCookies','ngStorage'])
+
+    angular.module('AdminPanel', [ 'os-auth', 'ngCookies','ngStorage', 'RecursionHelper'])
     .config(function (){
        paths = Drupal.settings.paths
        vsite = Drupal.settings.spaces.id || 0;
@@ -20,11 +21,12 @@
       var menu = 'admin_panel';
       $scope.paths = paths;
       
-      $scope.getListStyle = function(id) { 
-      	if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
-      	  return {'display':'block'}; 
-      	}
-      	return {};
+      $scope.getListStyle = function(id) {
+        console.log(id);
+        if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
+          return {'display':'block'};
+        }
+        return {};
       };
       
       //Force menu open Special case
@@ -50,9 +52,9 @@
           },1);  
           
           window.setTimeout(function () {
-        	jQuery('.morph-button').removeClass('no-transition');
-        	morphButton.isAnimating = false;
-        	morphButton.expanded = true;
+          jQuery('.morph-button').removeClass('no-transition');
+          morphButton.isAnimating = false;
+          morphButton.expanded = true;
           },1000);
         } else {
           if (typeof(menu_state) !== 'undefined') {
@@ -78,8 +80,9 @@
           $localStorage.admin_menu[uid][vsite][cid] = response.data.data;
           $scope.admin_panel = response.data.data;
           if (force_open || (auto_open && typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main)) {
-        	morphButton.toggle();  
+          morphButton.toggle();
           } else if (typeof(menu_state) !== 'undefined') {
+
         	//Set the menu state to closed.
             menu_state.main = true;
           }
@@ -93,60 +96,75 @@
       }
       
       openLink = function(elm) {
-    	elm.addClass('open');
-    	elm.children('ul').slideDown(200);
+        elm.addClass('open');
+        elm.children('ul').slideDown(200);
       }
       
-      closeLink  = function(elm) {
-    	elm.removeClass('open');
-    	//elm.find('li').removeClass('open');
-    	//elm.find('ul').slideUp(200);
+      closeLink = function(elm) {
+        elm.removeClass('open');
+        //elm.find('li').removeClass('open');
+        //elm.find('ul').slideUp(200);
+      }
+
+      function getAncestor(elem, tagName) {
+        tagName = tagName.toUpperCase();
+        while (elem[0].tagName != tagName) {
+          if (elem[0].tagName == 'BODY') {
+            return false;
+          }
+          elem = elem.parent();
+        }
+
+        return elem;
       }
       
       return {
         link: function(scope, element, attrs) {
-    	  if (element[0].nodeName == 'UL') {
-    		if (element.parent('li').hasClass('open')) {
-    		  element.css('display','block');	
-    		}
-    		return;
-    	  }
-    	  
-    	  if (typeof(menu_state) !== 'undefined' && typeof(menu_state[attrs.id]) !== 'undefined' && menu_state[attrs.id]) {
-    		element.parent('li').addClass('open');
-    	  }
-    	  
-    	  element.bind('click', function() {
-        	if (element.hasClass('toggleable')){
+          var parent = getAncestor(element, 'li');
+          if (element[0].nodeName == 'UL') {
+            if (parent.hasClass('open')) {
+              element.css('display','block');
+            }
+            return;
+          }
+
+          if (typeof(menu_state) !== 'undefined' && typeof(menu_state[attrs.id]) !== 'undefined' && menu_state[attrs.id]) {
+            parent.addClass('open');
+          }
+
+          element.bind('click', function() {
+            if (element.hasClass('toggleable')){
               element.removeAttr('href');
-              var parent = jQuery(element).parent('li');
+
               if (parent.hasClass('open')) {
                 menu_state[attrs.id] = false;
                 closeLink(parent);
-	          } else {
-	        	if ( element.hasClass('close-siblings') ) {
-	              if( parent.hasClass('heading') ) {
-	            	togglers = parent.parent('ul').siblings('ul').find('li.open');
-	              } else {
-	            	togglers = parent.siblings('.open');
-	              }
-	              
-		      	  togglers.each(function() {
-		      		var sibling = jQuery(this);
-		      		menu_state[sibling.find("a").first().attr('id')] = false;
-		       	    closeLink(sibling);
-		       	  });
-		       	}
-	            menu_state[attrs.id] = true;
-	            openLink(parent);
-	          }
-        	}
-        	scope.$apply(function () {
-        	  $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
+              }
+              else {
+                if ( element.hasClass('close-siblings') ) {
+                  if ( parent.hasClass('heading') ) {
+                    var togglers = parent.parent().parent().find('li.open');
+                  }
+                  else {
+                    var togglers = parent.parent().siblings('.open');
+                  }
+
+                  togglers.each(function() {
+                    var sibling = jQuery(this);
+                    menu_state[sibling.find("a").first().attr('id')] = false;
+                    closeLink(sibling);
+                  });
+                }
+                menu_state[attrs.id] = true;
+                openLink(parent);
+              }
+            }
+            scope.$apply(function () {
+              $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
             });
-          })  
+          });
         },
-      }
+      };
       
     }]).directive('leftMenu', ['$cookies', function($cookies) {
       if (typeof(menu_state) == 'undefined') {
@@ -194,12 +212,53 @@
   	   }
      };
    }]).directive('addLocation', function() {
-	  //For Qualtrics URL Remove after beta
+    //For Qualtrics URL Remove after beta
       return {
         link: function(scope, element, attrs) {
-    	  element.attr('href', attrs.href + '?osurl=' + encodeURIComponent(location.href) + '&uid=' + uid);
+        element.attr('href', attrs.href + '?osurl=' + encodeURIComponent(location.href) + '&uid=' + uid);
         },
       }
-    });
+    })
+    .directive('adminPanelMenuRow', ['RecursionHelper', function (RecursionHelper) {
+
+        function link(scope, elem, attrs) {
+          scope.getListStyle = function (id) {
+            if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
+              return {'display':'block'};
+            }
+            return {};
+          };
+
+          scope.isActive = function (row) {
+            if (row.children) {
+              for (var k in row.children) {
+                var c = row.children[k];
+                if (scope.isActive(c)) {
+                  return true;
+                }
+              }
+              return false;
+            }
+            else if (row.type == 'link' && row.href == location.href) {
+              return true;
+            }
+            else {
+              return false;
+            }
+          }
+        }
+
+        return {
+          scope: {
+            menuRow: '=',
+            key: '@'
+          },
+          templateUrl: paths.adminPanelModuleRoot + '/templates/adminPanelMenuRow.template.html?vers=' + Drupal.settings.version.adminPanel,
+          compile: function (element) {
+            // workaround so directives can be nested
+            return RecursionHelper.compile(element, link);
+          }
+        };
+      }]);
   
 })(jQuery);
