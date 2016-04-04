@@ -16,7 +16,7 @@ class update extends AbstractUpdate {
    * @inheritdoc
    */
   public static function Iterator($entity) {
-    self::assignRoles($entity, self::$nobelRoles, array('add content to books'));
+    self::assignRoles($entity, self::$nobelRoles, array('insert link into wysiwyg'));
   }
 
 }
