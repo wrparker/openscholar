@@ -409,12 +409,14 @@ ul.contextual-links li a:hover {
 /** CONTEXTUAL ADD NEW AND CONFIG DROPDOWN LINK CONTROLS **/
 
 .contextual-controls-wrapper {
-    margin: 15px 0 10px;
-    position: absolute;
+    margin: 0px 3px;
+    padding: 5px 0;
+    position: relative;
     right: 0;
-    top: 0;
+    top: 0px;
     width: auto;
     z-index: 18;
+    height: 25px;
 }
 #content-column div.contextual-links-wrapper.contextual-links-processed {
     /*right: -15px;*/
