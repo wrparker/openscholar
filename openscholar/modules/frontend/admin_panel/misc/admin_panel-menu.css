@@ -205,7 +205,7 @@ ul.primary {
 }
 #rightMenuSlide {
     top: 4px;
-    z-index: 20;
+    z-index: 101;
 }
 .topRight_Menu {
     position: fixed;

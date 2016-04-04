@@ -14,8 +14,10 @@
        cid = Drupal.settings.admin_panel.cid + Drupal.settings.version.adminPanel;
        uid = Drupal.settings.admin_panel.user;
        auto_open = Drupal.settings.admin_panel.keep_open;
+                    
     }).controller("AdminMenuController",['$scope', '$http', '$cookies','$localStorage', function ($scope, $http, $cookies, $localStorage) {
     
+      auto_open = ($cookies.getObject('osAdminMenuOpen') == 1) ? true : false;
       var menu = 'admin_panel';
       $scope.paths = paths;
       
@@ -29,7 +31,6 @@
       
       //Force menu open Special case
       var force_open = (window.location.search.indexOf('login=1') > -1);
-      
       //Init storage
       if (typeof($localStorage.admin_menu) == 'undefined') {
         $localStorage.admin_menu = {};
@@ -81,8 +82,9 @@
           if (force_open || (auto_open && typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main)) {
           morphButton.toggle();
           } else if (typeof(menu_state) !== 'undefined') {
-          //Set the menu state to closed.
-            menu_state.main = false;
+
+        	//Set the menu state to closed.
+            menu_state.main = true;
           }
         }); 
       
@@ -177,31 +179,37 @@
        templateUrl: paths.adminPanelModuleRoot+'/templates/admin_menu.html?vers='+Drupal.settings.version.adminPanel,
        controller: 'AdminMenuController',
        link: function(scope, element, attrs) {
-        morphButton = new UIMorphingButton(element[0], {
-            closeEl : '.icon-close',
-            onBeforeOpen : function() {
-              // push main admin_panel
-              jQuery('#page_wrap, .page-cp #page, .page-cp #branding').addClass('pushed');
-            },
-            onAfterOpen : function() {
-              // add scroll class to main el
-              jQuery('.morph-button').addClass('scroll');
-              menu_state['main'] = true;
-              Drupal.settings.admin_panel.keep_open = true;
-              scope.$apply(function () {
-                  $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
-                });
-            },
-            onBeforeClose : function() {
-              jQuery('.morph-button').removeClass('scroll');
-              jQuery('#page_wrap, .page-cp #page, .page-cp #branding').removeClass('pushed');
-              menu_state['main'] = false;
-              scope.$apply(function () {
-                    $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
+    	  morphButton = new UIMorphingButton(element[0], {
+      			closeEl : '.icon-close',
+      			onBeforeOpen : function() {
+      				// push main admin_panel
+      				jQuery('#page_wrap, .page-cp #page, .page-cp #branding').addClass('pushed');
+      			},
+      			onAfterOpen : function() {
+      			  // add scroll class to main el
+      			  jQuery('.morph-button').addClass('scroll');
+      			  menu_state['main'] = true;
+      			  Drupal.settings.admin_panel.keep_open = true;
+      			  scope.$apply(function () {
+        	        $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
+                    $cookies.putObject('osAdminMenuOpen', 1);
+        	      });
+      			},
+      			onBeforeClose : function() {
+      			  jQuery('.morph-button').removeClass('scroll');
+      			  jQuery('#page_wrap, .page-cp #page, .page-cp #branding').removeClass('pushed');
+      			  menu_state['main'] = false;
+        		  scope.$apply(function () {
+          	        $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
+          	      });
+      			},
+      			onAfterClose : function() {
+                  scope.$apply(function () {
+                    $cookies.putObject('osAdminMenuOpen', 0);
                   });
-            }
-          });
-       }
+                }
+      		}); 
+  	   }
      };
    }]).directive('addLocation', function() {
     //For Qualtrics URL Remove after beta

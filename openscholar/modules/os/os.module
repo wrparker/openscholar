@@ -1010,6 +1010,11 @@ function os_form_node_form_alter(&$form, $form_state) {
 
   $form['actions_top'] = $form['actions'];
 
+  // Overriding Author section title, name and date field title for all content types.
+  $form['author']['#title'] = t('Post Created/Edited By');
+  $form['author']['name']['#title'] = t('Posted by');
+  $form['author']['date']['#title'] = t('Posted on');
+
   // Add description to the name field in the author fieldset.
   $form['author']['name']['#description'] = t('You may change this if posting on behalf of someone else.');
 
@@ -2716,8 +2721,8 @@ function os_html_head_alter(&$head_elements) {
   }
 
   // Exit early in case we have no shortlink metatag and we are not on a "vsite".
-  $vsite = vsite_get_vsite();
-  if (!isset($head_elements['metatag_shortlink']) && $vsite) {
+  $vsite = module_exists('vsite') ? vsite_get_vsite() : FALSE;
+  if (!isset($head_elements['metatag_shortlink']) && !$vsite) {
     return;
   }
 
@@ -2762,7 +2767,14 @@ function os_advagg_save_aggregate_alter(&$files_to_save, $aggregate_settings, $o
   $replace = array('domain' => $domain, 'static' => $static);
   
   foreach ($files_to_save as $file_name => $file) {
-    $files_to_save[$file_name] = preg_replace_callback('/url\(\s*[\'"]?(\S*\.(?:jpeg|jpg|gif|png|css|svg|woff|eot|ttf))[\'"]?\s*\)[^;}]*?/i', '_os_advagg_build_css_path', $file);
+    $file_info = pathinfo($file_name);
+    // For aggregated css files, image paths to be started with static domain, fonts to be used as relative paths.
+    if ($file_info['extension'] == 'css') {
+      $files_to_save[$file_name] = preg_replace_callback('/url\(\s*[\'"]?(\S*\.(?:jpeg|jpg|gif|png|css|svg|woff|eot|ttf))[\'"]?\s*\)[^;}]*?/i', '_os_advagg_build_css_path', $file);
+    }
+    else {
+      $files_to_save[$file_name] = str_replace($domain, $static, $file);
+    }
   }
 }
 
