@@ -31,4 +31,32 @@ abstract class AbstractUpdate implements osUpdateBatch {
     }
   }
 
+  /**
+   * Return a base query object for iterating over all the available groups.
+   *
+   * @return EntityFieldQuery
+   */
+  static protected function getBaseQuery() {
+    $query = new EntityFieldQuery();
+
+    $query
+      ->entityCondition('entity_type', 'node')
+      ->propertyCondition('type', array_keys(vsite_vsite_og_node_type_info()), 'IN');
+
+    return $query;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public static function Query($id = NULL) {
+    $query = self::getBaseQuery();
+
+    if ($id) {
+      $query->propertyCondition('nid', $id, '>=');
+    }
+
+    return $query;
+  }
+
 }

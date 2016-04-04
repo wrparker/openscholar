@@ -9,16 +9,7 @@ class update extends AbstractUpdate {
    * @inheritdoc
    */
   public static function Query($id = NULL) {
-
-    $query = self::getBaseQuery();
-    $query
-      ->fieldCondition('og_roles_permissions', 'value', TRUE);
-
-    if ($id) {
-      $query->propertyCondition('nid', $id, '>=');
-    }
-
-    return $query;
+    return parent::Query()->fieldCondition('og_roles_permissions', 'value', TRUE);
   }
 
   /**
