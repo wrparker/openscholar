@@ -318,7 +318,7 @@ fieldset.pin-fieldset legend a,
 .pin-button,
 fieldset.pin-fieldset legend,
 #user-login fieldset legend {
-    background-color: none;
+    background-color: transparent;
     margin: 15px 0 0;
 }
 #user-login fieldset,
