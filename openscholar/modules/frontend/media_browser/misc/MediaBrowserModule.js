@@ -69,6 +69,7 @@
     $scope.loadingMessage = '';
     $scope.sortType = 'timestamp';
     $scope.sortReverse = true;
+    $scope.button_text = params.replace ? 'Select Replacement File' : 'Select files to Add'
 
     $scope.toInsert = [];
 
