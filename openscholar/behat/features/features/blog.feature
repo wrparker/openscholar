@@ -28,7 +28,7 @@ Feature:
      Then I should see the feed item "NASA" was imported
       And I should see "NASA stands National Aeronautics and Space Administration."
 
-  @api @features_first @now
+  @api @features_first
   Scenario: Update the created date of a blog to be older than should
             be allowed.
     Given I am logging in as "john"
@@ -38,7 +38,7 @@ Feature:
       And I sleep for "2"
      Then I should see "Please enter a valid date for 'Posted on'"
      
- @api @features_first @now
+ @api @features_first
   Scenario: Update the created date of a blog to be futher in the furture
             than allowed.
     Given I am logging in as "john"
