@@ -651,6 +651,7 @@ function _os_process_node_links_comment_add_class(&$vars) {
  * Implements hook_preprocess_HOOK() for page.tpl.php.
  */
 function os_preprocess_page(&$vars) {
+  global $user;
   // Add the dismiss messages JS.
   drupal_add_js(drupal_get_path('module', 'os') . "/theme/os_dismiss.js", "file");
 
@@ -758,14 +759,18 @@ function os_preprocess_page(&$vars) {
   drupal_alter('os_add_new_links', $links);
 
   ksort($links);
-  $vars['title_suffix']['controls'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'class' => array(
-        'contextual-controls-wrapper',
+  if ($user->uid) {
+    $vars['title_suffix']['controls'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array(
+          'contextual-controls-wrapper',
+        ),
       ),
-    ),
-  );
+    );
+  }
+  
+
   if (count($links) > 1) {
     $vars['title_suffix']['controls']['add_new'] = array(
       '#theme' => 'ctools_dropdown',
