@@ -8,7 +8,7 @@
   var menu_state;
 
     angular.module('AdminPanel', [ 'os-auth', 'ngCookies','ngStorage', 'RecursionHelper'])
-    .config(function (){
+    .config(function () {
        paths = Drupal.settings.paths
        vsite = Drupal.settings.spaces.id || 0;
        cid = Drupal.settings.admin_panel.cid + Drupal.settings.version.adminPanel;
@@ -20,6 +20,8 @@
       auto_open = ($cookies.getObject('osAdminMenuOpen') == 1) ? true : false;
       var menu = 'admin_panel';
       $scope.paths = paths;
+
+      menu_state = $cookies.getObject('osAdminMenuState')
       
       $scope.getListStyle = function(id) {
         console.log(id);
@@ -43,7 +45,7 @@
       if (typeof($localStorage.admin_menu[uid]) !== 'undefined' && typeof($localStorage.admin_menu[uid][vsite]) !== 'undefined' && typeof($localStorage.admin_menu[uid][vsite][cid]) !== 'undefined') {
         $scope.admin_panel = $localStorage.admin_menu[uid][vsite][cid];
         
-        if (force_open || (auto_open && typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main)) {
+        if (force_open || auto_open || (typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main)) {
           // Turn off transitions and toggle open, there are a bunch of damn set-timeouts in morphbutton so we need to delay things here.
           window.setTimeout(function () {
             morphButton.openTransition = false;
@@ -192,7 +194,7 @@
       			  Drupal.settings.admin_panel.keep_open = true;
       			  scope.$apply(function () {
         	        $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
-                    $cookies.putObject('osAdminMenuOpen', 1);
+                  $cookies.putObject('osAdminMenuOpen', 1);
         	      });
       			},
       			onBeforeClose : function() {
