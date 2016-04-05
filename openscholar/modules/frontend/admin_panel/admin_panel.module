@@ -143,31 +143,6 @@ function admin_panel_admin_paths() {
 }
 
 /**
- * Implements hook_cp_settings().
- *
- * Temp allow admin panel to be enbabled conditionally
- */
-function admin_panel_cp_settings() {
-  $setting = array();
-  $setting['admin_panel_enabled'] = array(
-    'group' => array(
-      '#title' => t('UX/UI Beta Options'),
-      '#id' => 'ux-ui',
-    ),
-    'form' => array(
-      '#type' => 'checkbox',
-      '#default_value' => variable_get('admin_panel_enabled', FALSE),
-      '#title' => t('Enable the Admin Panel Beta'),
-      '#description' => t('Checking this will switch this site to use the new beta admin panel.  This will impact all users of this site.  Deselecting will revert to the old menu.'),
-      // Use existing access permission since this is just temporary.
-      '#access' => user_access('change vsite domain'),
-    ),
-  );
-
-  return $setting;
-}
-
-/**
  * Return the cases when the user is performing an admin action.
  */
 function _admin_panel_persist_open() {
