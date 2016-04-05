@@ -307,7 +307,7 @@ function os_events_views_pre_render(&$view) {
 
   // only display subscribe links if listing is the events landing page or a list of upcoming events
   if ((isset($view->exposed_input['month']) && $view->exposed_input['month'] == date('Y-m')) || strpos($view->get_path(), "calendar/upcoming") !== FALSE) {
-    $view->attachment_before = '<a title="Note:past events are not included" class="cal-export">' . t('Export') . '</a>' . $view->attachment_before;
+    $view->attachment_before = '<a title="Note: Past events are not included" class="cal-export">' . t('Export') . '</a>' . $view->attachment_before;
   }
 }
 
@@ -856,7 +856,7 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
       // Checking if there are no rows in views result for export as ical or rss
       if (count($export_result) == 0) {
         $warning_msg = array();
-        $warning_msg[] = t('No events are available for export.');
+        $warning_msg[] = t('No events are available for export');
         $view->attachment_before = theme('item_list', array('items' => $warning_msg, 'attributes' => array('class' => 'links no-event-export')));
       }
     }  
