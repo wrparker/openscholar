@@ -28,22 +28,22 @@ Feature:
      Then I should see the feed item "NASA" was imported
       And I should see "NASA stands National Aeronautics and Space Administration."
 
-  @api @features_first
+  @api @features_first @now
   Scenario: Update the created date of a blog to be older than should
             be allowed.
     Given I am logging in as "john"
       And I visit "tesla/node/22/edit"
-     When I fill in "Authored on" with "1901-05-30 10:43:58 -0400"
+     When I fill in "Posted on" with "1901-05-30 10:43:58 -0400"
       And I press "Save"
       And I sleep for "2"
-     Then I should see "Please enter a valid date for 'Authored on'"
+     Then I should see "Please enter a valid date for 'Posted on'"
      
- @api @features_first
+ @api @features_first @now
   Scenario: Update the created date of a blog to be futher in the furture
             than allowed.
     Given I am logging in as "john"
       And I visit "tesla/node/22/edit"
-     When I fill in "Authored on" with "3040-05-30 10:43:58 -0400"
+     When I fill in "Posted on" with "3040-05-30 10:43:58 -0400"
       And I press "Save"
       And I sleep for "2"
-     Then I should see "Please enter a valid date for 'Authored on'"
+     Then I should see "Please enter a valid date for 'Posted on'"
