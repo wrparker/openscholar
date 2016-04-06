@@ -95,27 +95,11 @@
 	     /**
 		  * Updates the notifications count of remaining notifications.
 		  */
-		  notifications_count: function (count_element, num_remaining) {
-				count_element = $(count_element);
-			    var value = parseInt(count_element.text());
-			    if (arguments.length === 0) {
-			      return value;
-			    }
-			    if (parseInt(num_remaining) === -1) {
-			      count_element.text('0');
-			      $("#os-tour-notifications-menu-link").slideUp('slow');
-			      return;
-			    }
-			    if (parseInt(num_remaining) > -1) {
-			    	count_element.text(num_remaining);
-			      if (!isNaN(parseFloat(value)) && isFinite(value)) {
-			    	  count_element.show();
-			        if (num_remaining > value) {
-			          count_element.text(value);
-			        }
-			      }
-			    }
-			  },
+          notifications_count: function(count_element, num_remaining) {
+              if (num_remaining > 0) {
+                count_element.text(num_remaining - 1);
+              }
+          },
 		 /**
 		  * Sets the current user's "notifications_read" to the current time.
 		  *

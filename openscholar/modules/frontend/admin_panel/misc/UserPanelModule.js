@@ -141,7 +141,7 @@
 	            id: "os-tour-notifications",
 	            steps: items,
 	            onEnd: function() {
-	              osTour.notifications_count(-1, count_element);
+                  osTour.notifications_count(count_element, -1);
 	              osTour.notifications_read_update();
 	            }
 	          };
