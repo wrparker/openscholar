@@ -11,6 +11,7 @@
         $t(function () {
           elem.triggerHandler('click');
         }, 0);
+        $w.location.hash = '';
       }
     }])
     .controller('CpFilesController', ['$scope', 'FILEEDITOR_RESPONSES', function ($scope, FER) {
