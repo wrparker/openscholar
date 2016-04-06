@@ -11,6 +11,9 @@ body {
     position: relative;
     -webkit-font-smoothing: antialiased;
 }
+body.page-cp {
+    overflow-x:hidden;
+}
 body.overlay {
     overflow-x: visible;
 }
@@ -127,6 +130,7 @@ ul.primary {
 }
 #cssmenu ul li a.active {
     font-style: italic;
+    font-weight:bold;
 }
 #cssmenu ul > li.has-sub > span:after {
     position: absolute;
@@ -279,13 +283,7 @@ a {
     color: #fff;
     text-decoration: none;
 }
-.close_panel {
-    position: absolute;
-    right: 35px;
-    top: 9px;
-    font-family: helvetica;
-    font-size: 1.3em;
-}
+
 /* account tab popouts */
 
 .account_tab_popout {
