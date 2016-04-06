@@ -393,7 +393,7 @@
             <text macro="title-note"/>
             <text macro="editor-translator"/>
             <text macro="collection-title"/>
-			<text macro="container-title" prefix=". "/>
+	    <text macro="container-title" prefix=". "/>
             <text macro="volume"/>
          </group>
          <text macro="issue-note"/>
