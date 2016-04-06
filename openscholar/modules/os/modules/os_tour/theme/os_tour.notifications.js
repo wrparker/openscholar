@@ -133,9 +133,6 @@
    			    $.get(url, function(data) {
   			      console.log(data);
   			    });
-
-                var mainAnnouncementUrl = "http://hwp.harvard.edu/os-alerts/announcement";
-                window.open(mainAnnouncementUrl, "_blank");
 			  }
   };
   
