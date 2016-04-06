@@ -119,7 +119,6 @@
                  categories: [],
                  content: lastEntryContent,
                  contentSnippet: lastEntryContent,
-                 link: "http://hwp.harvard.edu/os-alerts/announcement",
                  publisheddDate: "Fri, 1 Jan 1971 00:00:00 -0800",
                  title: "No new announcements."
             };
