@@ -97,12 +97,12 @@
         menu_state = {'main': false};  
       }
       
-      openLink = function(elm) {
+      function openLink(elm) {
         elm.addClass('open');
         elm.children('ul').slideDown(200);
       }
       
-      closeLink = function(elm) {
+      function closeLink(elm) {
         elm.removeClass('open');
         //elm.find('li').removeClass('open');
         //elm.find('ul').slideUp(200);
@@ -136,6 +136,8 @@
 
           element.bind('click', function() {
             // close all sibling links regardless of what type of link this is
+            var isOpen = menu_state[attrs.id];
+
             if ( element.hasClass('close-siblings') ) {
               if ( parent.hasClass('heading') ) {
                 var togglers = parent.parent().parent().find('li.open');
@@ -155,11 +157,7 @@
             if (element.hasClass('toggleable')){
               element.removeAttr('href');
 
-              if (parent.hasClass('open')) {
-                menu_state[attrs.id] = false;
-                closeLink(parent);
-              }
-              else {
+              if (!isOpen) {
                 menu_state[attrs.id] = true;
                 openLink(parent);
               }
