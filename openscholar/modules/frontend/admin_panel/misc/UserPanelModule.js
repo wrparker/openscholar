@@ -123,7 +123,7 @@
                  publisheddDate: "Fri, 1 Jan 1971 00:00:00 -0800",
                  title: "No new announcements."
             };
-            var lastItem = osTour.notifications_item(lastEntry, num_remaining, count_element, link);
+            var lastItem = osTour.notifications_item(lastEntry, num_remaining, count_element, link, hideTeaser = true);
             items.push(lastItem);
 
           var tour = {};
@@ -141,7 +141,7 @@
 	            id: "os-tour-notifications",
 	            steps: items,
 	            onEnd: function() {
-	              osTour.notifications_count(-1, count_element);
+                  osTour.notifications_count(count_element, -1);
 	              osTour.notifications_read_update();
 	            }
 	          };
