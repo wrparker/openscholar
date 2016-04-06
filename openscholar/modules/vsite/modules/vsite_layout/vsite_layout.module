@@ -255,7 +255,7 @@ function vsite_layout_os_layout_contexts($privacy = TRUE, $dynamic = FALSE) {
   $result = $query->execute()->fetchCol();
 
   foreach ($result as $object_id) {
-  	list($context_id,) = split(":",$object_id);
+  	list($context_id,) = explode(":",$object_id);
 
   	// Loop through Node based contexts.
   	foreach (array('os_pages-page-' => 'Page:', 'os_books-book-' => 'Book:') as $context_prefix => $title_prefix) {

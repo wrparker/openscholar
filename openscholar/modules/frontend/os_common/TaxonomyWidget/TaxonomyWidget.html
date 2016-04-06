@@ -1,5 +1,5 @@
 <div class="tw-widget" class="clearfix">
-  <div ng-repeat="vocab in vocabs" ng-switch="vocab.form" class="clearfix">
+  <div ng-repeat="vocab in vocabs" ng-switch="vocab.form" ng-show="allTerms[vocab.id].length" class="clearfix">
     <h4>{{vocab.label}}</h4>
 
     <div ng-switch-when="options_select">
@@ -42,5 +42,3 @@
     </div>
   </div>
 </div>
-
-

@@ -173,7 +173,10 @@ function os_in_readonly_mode($page) {
     return variable_get('os_readonly_mode_message', OS_READONLY_MODE_MESSAGE);
   }
 
-  if (user_is_anonymous()) {
+  // When a user, logged in or not, ask to reset password we should throw 404.
+  $trigger_404 = $page == 'password' ? TRUE : user_is_anonymous();
+
+  if ($trigger_404) {
     // Get custom callback function from variable.
     $function = variable_get($custom_callback_variable, NULL);
     if ($function) {
@@ -1007,8 +1010,20 @@ function os_form_node_form_alter(&$form, $form_state) {
 
   $form['actions_top'] = $form['actions'];
 
+  // Overriding Author section title, name and date field title for all content types.
+  $form['author']['#title'] = t('Post Created/Edited By');
+  $form['author']['name']['#title'] = t('Posted by');
+  $form['author']['date']['#title'] = t('Posted on');
+
   // Add description to the name field in the author fieldset.
   $form['author']['name']['#description'] = t('You may change this if posting on behalf of someone else.');
+
+  // If the node form is opened in edit mode, then last revision username and date to be displayed.
+  if (isset($form['#node']->revision_uid)) {
+    $form['author']['last_updated']['#weight'] = -10;
+    $revision_user = user_load($form['#node']->revision_uid);
+    $form['author']['last_updated']['#markup'] = '<div class="form-item"><label>Last updated</label><div class="description">by ' . $revision_user->name . ' on ' . date("m/d/Y", $form['#node']->changed) . '</div></div>';
+  }
 
   // Allow access to the following form elements if the user can create or edit
   // the current node type.
@@ -1623,7 +1638,7 @@ function os_node_view_alter(&$build) {
   }
 
   // fixes broken tags when <!--break--> is used
-  if (in_array($build['#view_mode'], array('teaser', 'no_image_teaser')) && isset($build['body']) && is_array($build['body'])) {
+  if (in_array($build['#view_mode'], array('teaser', 'no_image_teaser', 'slide_teaser')) && isset($build['body']) && is_array($build['body'])) {
     foreach (element_children($build['body']) as $c) {
       $build['body'][$c]['#markup'] = _filter_htmlcorrector($build['body'][$c]['#markup']);
     }
@@ -2706,8 +2721,8 @@ function os_html_head_alter(&$head_elements) {
   }
 
   // Exit early in case we have no shortlink metatag and we are not on a "vsite".
-  $vsite = vsite_get_vsite();
-  if (!isset($head_elements['metatag_shortlink']) && $vsite) {
+  $vsite = module_exists('vsite') ? vsite_get_vsite() : FALSE;
+  if (!isset($head_elements['metatag_shortlink']) && !$vsite) {
     return;
   }
 
@@ -2747,8 +2762,57 @@ function os_advagg_save_aggregate_alter(&$files_to_save, $aggregate_settings, $o
     $static .= '/';
   }
 
+  // Defining static variable to be used inside preg_replace callback for search and replace domain strings.
+  $replace = &drupal_static('advagg_aggregate_replace');
+  $replace = array('domain' => $domain, 'static' => $static);
+  
   foreach ($files_to_save as $file_name => $file) {
-    $files_to_save[$file_name] = str_replace($domain, $static, $file);
+    $file_info = pathinfo($file_name);
+    // For aggregated css files, image paths to be started with static domain, fonts to be used as relative paths.
+    if ($file_info['extension'] == 'css') {
+      $files_to_save[$file_name] = preg_replace_callback('/url\(\s*[\'"]?(\S*\.(?:jpeg|jpg|gif|png|css|svg|woff|eot|ttf))[\'"]?\s*\)[^;}]*?/i', '_os_advagg_build_css_path', $file);
+    }
+    else {
+      $files_to_save[$file_name] = str_replace($domain, $static, $file);
+    }
   }
+}
 
+/**
+ * preg replace callback for replacing urls of static assets in a css file.
+ */
+function _os_advagg_build_css_path($matches) {
+  // Defining file extensions for fonts.
+  $font_file_extensions = array('svg', 'woff', 'eot', 'ttf');
+  $replace = &drupal_static('advagg_aggregate_replace');
+  $path = $matches[1];
+  $ext = pathinfo($path, PATHINFO_EXTENSION);
+  // If reference is not a font file, then replacing base domain into static domain.
+  if (!in_array($ext, $font_file_extensions)) {
+    $path = str_replace($replace['domain'], $replace['static'], $path);
+  }
+  else {
+    // Else relative path will be used for font files. starting with "/"
+    $path = str_replace($replace['domain'], '', $path);
+  }  
+  return 'url(' . $path . ')';
+}
+
+/**
+ * Implements hook_page_build().
+ */
+function os_page_build(&$page) {
+  $header = drupal_get_http_header('status');
+  // Checking if currently displayed page has HTTP 403 access denied status in http header.
+  if ($header == '403 Forbidden') {
+    $vsite = vsite_get_vsite();
+    $redirect = drupal_get_destination();
+    // vsite purl will be a part of destination url.
+    $redirect['destination'] = isset($vsite->group->purl) ? $vsite->group->purl . '/' . $redirect['destination'] : $redirect['destination'];
+    $main_content_display = &drupal_static('system_main_content_added', FALSE);
+    $warning_msg = t('You are not authorized to access this page.');
+    $warning_msg .= '<br/>' . 'You need to ' . l('log in', 'user/login', array('query' => array('destination' => $redirect['destination']) )) . ' to access this page';
+    $page['content']['system_main']['main']['#markup'] = $warning_msg;
+    $main_content_display = TRUE;
+  }
 }

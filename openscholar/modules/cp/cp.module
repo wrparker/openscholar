@@ -915,3 +915,13 @@ function cp_og_permission() {
     ),
   );
 }
+
+/**
+ * Implements hook_redirect_parse_url_alter().
+ */
+function cp_redirect_parse_url_alter(&$parsed, $original_url) {
+  if (isset($parsed['fragment']) && strpos('/', $parsed['fragment']) == 0) {
+    $parsed['url'] .= '/#' . $parsed['fragment'];
+    unset($parsed['fragment']);
+  }
+}

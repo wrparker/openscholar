@@ -558,6 +558,10 @@ ul ul ul ul {
 .boxes-box ul.featured-links li {
     margin-bottom: 15px;
 }
+.boxes-box ul.featured-links.title-only li h1.node-title a{
+ font-size: 1em !important;
+ font-weight: normal !important;
+}
 /* CALENDAR - UPCOMING LI'S */
 
 .view-os-events ul li {
@@ -596,7 +600,7 @@ ul ul ul ul {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    background: url('../images/scholarbase-sprite.png?abh') no-repeat 57px -902px #f3f3f1;
+    background: url('../images/scholarbase-sprite.png?abf') no-repeat 57px -958px #f3f3f1;
 }
 .cal-export:hover {
     cursor: pointer;
@@ -1046,4 +1050,9 @@ div.error:before {
     top: 0;
     bottom: 0;
     left: 10px;
+}
+ul.no-event-export {
+    width: 200px;
+    left: -110px;
+    font-size: 12px;
 }

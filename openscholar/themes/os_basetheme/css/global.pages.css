@@ -856,6 +856,9 @@ div[id^=event-popover] .event-title a {
 .ui-widget-header {
     background: none !important;
 }
+.ui-dialog.ui-front {
+    z-index: 101;
+}
 /** OS LOGIN CONTAINER STYLES **/
 /** SLIDER **/
 
@@ -1026,8 +1029,8 @@ div.toggle {
     margin: 0;
 }
 .jcarousel-container {
-    background: #efefef;
-    border: 1px solid #CCC;
+    background: #FAFAFA;
+    border: 1px solid #e1e1e1;
 }
 .jcarousel-container .jcarousel-clip-horizontal {
     width: auto;

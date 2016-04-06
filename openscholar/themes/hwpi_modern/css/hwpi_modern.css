@@ -259,20 +259,20 @@ h2.block-title {
 
 
 /* Spotlight */
-#content-column .block.block-boxes-os_boxes_manual_list {
+#content-column .block.block-boxes-os_boxes_manual_list.styled {
     background: none;
     border: none;
     border-top: 6px solid #E1E1E1;
     padding: 0;
 }
 
-#content-column .block.block-boxes-os_boxes_manual_list h2.block-title {
+#content-column .block.block-boxes-os_boxes_manual_list.styled h2.block-title {
     border-bottom: none;
     margin-bottom: 0;
 }
 
 
-#content-column .block.block-boxes-os_boxes_manual_list h1.node-title a {
+#content-column .block.block-boxes-os_boxes_manual_list.styled h1.node-title a {
 	font-weight:bold;
 	font-size: 22px;
 }
