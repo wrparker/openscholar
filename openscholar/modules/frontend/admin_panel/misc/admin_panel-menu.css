@@ -72,10 +72,10 @@ body.overlay {
     background: url('images/home_button.png') no-repeat;
     background-size: 25px 25px;
 }
-ul.primary {
+#branding ul.primary {
     margin: 0 10% 0 !important;
 }
-.pushed ul.primary {
+#branding.pushed ul.primary {
     margin: 0 20% 0 !important;
 }
 /* MENU SPECIFIC */
