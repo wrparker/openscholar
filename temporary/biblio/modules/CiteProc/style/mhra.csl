@@ -75,7 +75,7 @@
    </macro>
    <macro name="container-prefix">
     <text term="in" text-case="capitalize-first"/>
-  </macro>
+   </macro>
    <macro name="container-title">
     <choose>
       <if type="chapter paper-conference" match="any">
@@ -87,7 +87,7 @@
         <text variable="container-title" text-case="title" font-style="italic"/>
       </if>
     </choose>
-  </macro>
+   </macro>
    <macro name="collection-title">
       <text variable="collection-title" text-case="title"/>
       <text variable="collection-number" prefix=", "/>
