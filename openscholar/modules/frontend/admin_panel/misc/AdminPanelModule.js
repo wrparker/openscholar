@@ -135,6 +135,23 @@
           }
 
           element.bind('click', function() {
+            // close all sibling links regardless of what type of link this is
+            if ( element.hasClass('close-siblings') ) {
+              if ( parent.hasClass('heading') ) {
+                var togglers = parent.parent().parent().find('li.open');
+              }
+              else {
+                var togglers = parent.parent().siblings('.open');
+              }
+
+              togglers.each(function() {
+                var sibling = angular.element(this);
+                menu_state[sibling.find("span").children().first().attr('id')] = false;
+                closeLink(sibling);
+              });
+            }
+
+            // if this link has children, toggle their visibility.
             if (element.hasClass('toggleable')){
               element.removeAttr('href');
 
@@ -143,24 +160,11 @@
                 closeLink(parent);
               }
               else {
-                if ( element.hasClass('close-siblings') ) {
-                  if ( parent.hasClass('heading') ) {
-                    var togglers = parent.parent().parent().find('li.open');
-                  }
-                  else {
-                    var togglers = parent.parent().siblings('.open');
-                  }
-
-                  togglers.each(function() {
-                    var sibling = angular.element(this);
-                    menu_state[sibling.find("span").children().first().attr('id')] = false;
-                    closeLink(sibling);
-                  });
-                }
                 menu_state[attrs.id] = true;
                 openLink(parent);
               }
             }
+
             scope.$apply(function () {
               $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
             });
