@@ -193,14 +193,20 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     $add_links["{files}"] = array(
       'label' => "Files",
       'type' => 'link',
-      'href' => 'file/add/',
+      'href' => 'cp/content/files',
       'alt' => t("One time bulk import of @type content.", array('@type' => "file")),
+      'options' => array(
+        'fragment' => 'open'
+      )
     );
     $add_links["{os_private_files}"] = array(
       'label' => 'Private Files',
       'type' => 'link',
       'href' => 'cp/content/files-private',
       'alt' => t("One time bulk import of @type content.", array('@type' => "private files")),
+      'options' => array(
+        'fragment' => 'open'
+      )
     );
 
     $feature_settings = array();
@@ -247,7 +253,10 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
               'files' => array(
                 'label' => 'Files',
                 'type' => 'link',
-                'href' => 'cp/content/files'
+                'href' => 'cp/content/files',
+                'options' => array(
+                  'fragment' => 'open'
+                )
               )) + $private_files +
               
 //              @tbd v2
@@ -428,7 +437,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       }
 
       if (!empty($value['href']) && $value['href'] != '#' && $vsite_object) {
-        $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href']);
+        $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href'], !empty($value['options']) ? $value['options'] : array());
       }
     }
   }
