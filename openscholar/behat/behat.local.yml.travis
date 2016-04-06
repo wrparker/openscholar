@@ -24,7 +24,7 @@ default:
 
   extensions:
     Behat\MinkExtension\Extension:
-      base_url:  http://localhost/openscholar/www
+      base_url:  http://127.0.0.1
       files_path: "/home/travis/build/openscholar/openscholar/openscholar/behat/features/files"
     Drupal\DrupalExtension\Extension:
       drupal:
