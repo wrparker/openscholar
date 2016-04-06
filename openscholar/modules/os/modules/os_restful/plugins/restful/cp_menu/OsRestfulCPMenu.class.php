@@ -225,6 +225,27 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       }
     }
 
+    # Files are a separate entity class, on the same level as nodes.
+    # Hard-code the file links in.
+    $add_links["{files}"] = array(
+      'label' => "Files",
+      'type' => 'link',
+      'href' => 'cp/content/files',
+      'alt' => t("One time bulk import of @type content.", array('@type' => "file")),
+      'options' => array(
+        'fragment' => 'open'
+      )
+    );
+    $add_links["{os_private_files}"] = array(
+      'label' => 'Private Files',
+      'type' => 'link',
+      'href' => 'cp/content/files-private',
+      'alt' => t("One time bulk import of @type content.", array('@type' => "private files")),
+      'options' => array(
+        'fragment' => 'open'
+      )
+    );
+
     $feature_settings = array();
     if (spaces_access_admin($user, $vsite_object)) {
       foreach (array_keys(array_filter($spaces_features)) as $feature) {
@@ -454,7 +475,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       }
 
       if (!empty($value['href']) && $value['href'] != '#' && $vsite_object) {
-        $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href']);
+        $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href'], !empty($value['options']) ? $value['options'] : array());
       }
     }
   }
