@@ -37,7 +37,7 @@ Feature:
       And I press "Join"
      Then I should see "Your subscription request was sent."
 
-  @api @vsite
+  @api
   Scenario: Testing unsubscribing a support team member.
     Given I am logging in as "bill"
       And I go to "obama"
