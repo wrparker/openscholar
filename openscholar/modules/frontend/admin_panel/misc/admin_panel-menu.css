@@ -150,7 +150,7 @@ body.overlay {
 #cssmenu ul > li.has-sub > span:before {
     position: absolute;
     right: 18px;
-    top: 14px;
+    top: 17px;
     display: block;
     width: 10px;
     height: 2px;
