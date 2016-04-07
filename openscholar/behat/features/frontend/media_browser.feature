@@ -168,7 +168,7 @@ Feature: Media Browser
       And I wait "1 second" for the media browser to open
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I drop the files "abc.pdf, kitten-2.jpg" onto the "Drag and drop files here." area
-      And I sleep for "5"
+      And I sleep for "10"
      Then I should see "A file with the name 'kitten-2.jpg' already exists."
     # todo fix
 #      And I press the "Cancel" button
