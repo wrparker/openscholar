@@ -164,6 +164,12 @@
             } else if(jQuery(e.target).hasClass('click-processing')) {
               hopscotch.startTour(tour);
               jQuery('.hopscotch-bubble').addClass('os-tour-notifications');
+
+              // Hide notifications counter when there are none left
+              var value = parseInt(jQuery('.slate.alert').text());
+              if (value < 1) {
+                jQuery('.slate.alert').hide();
+              }
             }
           });
 	      });
