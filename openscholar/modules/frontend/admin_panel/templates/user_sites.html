@@ -1,5 +1,6 @@
 <div href="#" ng-show="site_data.length" data-id='101' ng-click="close_others(101); showSites = ! showSites" ng-class="{menu_modal_open: showSites}">My Sites</div>
 <div class="account_tab_popout user_sites" ng-show="showSites">
+    <div class="new-site-link" ng-show="create_access"><a href="{{baseUrl}}site/register">New Site</a></div>
     <div class="close-link user_sites-close" ng-click="showSites = ! showSites"></div>
 	<div ng-repeat="(key, own) in [true,false]" ng-init="currentPage[key] = 0">
         <div ng-show="own && (site_data | filter:{owner: own}:strict).length" class="header-row my-sites">My Sites</div>
