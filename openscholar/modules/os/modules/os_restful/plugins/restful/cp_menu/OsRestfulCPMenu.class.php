@@ -326,15 +326,15 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'type' => 'heading',
         'default_state' => 'collapsed',
         'children' => array(
+            'layout' => array(
+                'label' => 'Layout',
+                'type' => 'link',
+                'href' => 'cp/build/layout'
+            ),
             'themes' => array(
               'label' => 'Themes',
               'type' => 'link',
               'href' => 'cp/appearance'
-            ),
-            'layout' => array(
-              'label' => 'Layout',
-              'type' => 'link',
-              'href' => 'cp/build/layout'
             ),
 //            'theme_settings' => array(
 //              'label' => 'Theme Settings',
@@ -377,15 +377,15 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'type' => 'heading',
         'default_state' => 'collapsed',
         'children' => array(
-          'support' => array(
-            'label' => 'Support',
-            'type' => 'link',
-            'href' => 'cp/support'
-          ),
           'documentation' => array(
             'label' => 'Documentation',
             'type' => 'link',
             'href' => 'cp/welcome'
+          ),
+          'support' => array(
+            'label' => 'Support',
+            'type' => 'link',
+            'href' => 'cp/support'
           ),
         ),
       ),
