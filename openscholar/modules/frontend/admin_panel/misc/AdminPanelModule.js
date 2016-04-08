@@ -51,6 +51,7 @@
             morphButton.openTransition = false;
             morphButton.toggle();
             morphButton.openTransition = true;
+            jQuery('.morph-button').addClass('scroll');
           },1);  
           
           window.setTimeout(function () {
@@ -87,6 +88,7 @@
 
         	//Set the menu state to closed.
             menu_state.main = true;
+            jQuery('.morph-button').addClass('scroll');
           }
         }); 
       
