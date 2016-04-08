@@ -299,6 +299,12 @@ a {
     box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
     padding: 3px 12px 12px;
 }
+
+.new-site-link {
+    position: absolute;
+    top: 32px;
+    right: 20px;
+}
 .account_tab_popout.user_sites {
     top: 28px;
 }
