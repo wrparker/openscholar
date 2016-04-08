@@ -54,6 +54,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
    * {@inheritdoc}
    */
   public function access() {
+    return true;  // access on each link is checked individually. we don't need to allow/deny the whole menu anymore.
     $account = $this->getAccount();
     return user_access('adminsiter site configuration', $account) || $this->checkGroupAccess();;
   }
@@ -72,7 +73,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     if ($vsite) {
       return user_access('administer spaces', $account) || og_is_member('node', $vsite, 'user', $account);
     } else {
-      $this->throwException('The vsite ID is missing.');
+      return false;
     }
 
     return false;
