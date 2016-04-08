@@ -311,6 +311,9 @@ a {
 .animated {
     animation-duration: 0s !important;
 }
+table {
+    font-size: 1em !important;
+}
 td.site-name {
     width: 58%;
     white-space: nowrap;
