@@ -74,9 +74,7 @@
     transition: opacity 0s 0s;
 }
 
-.morph-button-fixed.active > button {
-    z-index: 2000;
-}
+
 .morph-button-fixed.active .morph-content {
     z-index: 1900;
 }
