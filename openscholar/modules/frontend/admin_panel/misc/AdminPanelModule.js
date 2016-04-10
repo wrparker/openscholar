@@ -10,7 +10,7 @@
     angular.module('AdminPanel', [ 'os-auth', 'ngCookies','ngStorage', 'RecursionHelper'])
     .config(function () {
        paths = Drupal.settings.paths
-       vsite = Drupal.settings.spaces.id || 0;
+       vsite = typeof Drupal.settings.spaces != 'undefined' ? Drupal.settings.spaces.id : 0;
        cid = Drupal.settings.admin_panel.cid + Drupal.settings.version.adminPanel;
        uid = Drupal.settings.admin_panel.user;
        auto_open = Drupal.settings.admin_panel.keep_open;
@@ -51,6 +51,7 @@
             morphButton.openTransition = false;
             morphButton.toggle();
             morphButton.openTransition = true;
+            jQuery('.morph-button').addClass('scroll');
           },1);  
           
           window.setTimeout(function () {
@@ -87,6 +88,7 @@
 
         	//Set the menu state to closed.
             menu_state.main = true;
+            jQuery('.morph-button').addClass('scroll');
           }
         }); 
       
@@ -97,12 +99,12 @@
         menu_state = {'main': false};  
       }
       
-      openLink = function(elm) {
+      function openLink(elm) {
         elm.addClass('open');
         elm.children('ul').slideDown(200);
       }
       
-      closeLink = function(elm) {
+      function closeLink(elm) {
         elm.removeClass('open');
         //elm.find('li').removeClass('open');
         //elm.find('ul').slideUp(200);
@@ -135,32 +137,34 @@
           }
 
           element.bind('click', function() {
+            // close all sibling links regardless of what type of link this is
+            var isOpen = menu_state[attrs.id];
+
+            if ( element.hasClass('close-siblings') ) {
+              if ( parent.hasClass('heading') ) {
+                var togglers = parent.parent().parent().find('li.open');
+              }
+              else {
+                var togglers = parent.parent().siblings('.open');
+              }
+
+              togglers.each(function() {
+                var sibling = angular.element(this);
+                menu_state[sibling.find("span").children().first().attr('id')] = false;
+                closeLink(sibling);
+              });
+            }
+
+            // if this link has children, toggle their visibility.
             if (element.hasClass('toggleable')){
               element.removeAttr('href');
 
-              if (parent.hasClass('open')) {
-                menu_state[attrs.id] = false;
-                closeLink(parent);
-              }
-              else {
-                if ( element.hasClass('close-siblings') ) {
-                  if ( parent.hasClass('heading') ) {
-                    var togglers = parent.parent().parent().find('li.open');
-                  }
-                  else {
-                    var togglers = parent.parent().siblings('.open');
-                  }
-
-                  togglers.each(function() {
-                    var sibling = angular.element(this);
-                    menu_state[sibling.find("span").children().first().attr('id')] = false;
-                    closeLink(sibling);
-                  });
-                }
+              if (!isOpen) {
                 menu_state[attrs.id] = true;
                 openLink(parent);
               }
             }
+
             scope.$apply(function () {
               $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
             });

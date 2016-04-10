@@ -41,15 +41,18 @@
       };
      
     }]).controller("UserSitesController",['$scope', '$http', function ($scope, $http) {
+        $scope.baseUrl = Drupal.settings.basePath;
         
         var url = paths.api + '/users/' + user_data.uid;
         $http({method: 'get', url: url}).
           then(function(response) {
-        	if(typeof(response.data.data[0].og_user_node) == 'undefined') {
-        	  $scope.site_data = [];
-        	} else {
+            if(typeof(response.data.data[0].og_user_node) == 'undefined') {
+              $scope.site_data = [];
+            } else {
               $scope.site_data = response.data.data[0].og_user_node;
-        	}
+            }
+
+            $scope.create_access = response.data.data[0].create_access;
           });
           $scope.pageSize = 7;
           $scope.numberOfPages=function(data){
@@ -119,11 +122,10 @@
                  categories: [],
                  content: lastEntryContent,
                  contentSnippet: lastEntryContent,
-                 link: "http://hwp.harvard.edu/os-alerts/announcement",
                  publisheddDate: "Fri, 1 Jan 1971 00:00:00 -0800",
                  title: "No new announcements."
             };
-            var lastItem = osTour.notifications_item(lastEntry, num_remaining, count_element, link);
+            var lastItem = osTour.notifications_item(lastEntry, num_remaining, count_element, link, hideTeaser = true);
             items.push(lastItem);
 
           var tour = {};
@@ -141,7 +143,7 @@
 	            id: "os-tour-notifications",
 	            steps: items,
 	            onEnd: function() {
-	              osTour.notifications_count(-1, count_element);
+                  osTour.notifications_count(count_element, -1);
 	              osTour.notifications_read_update();
 	            }
 	          };
@@ -164,6 +166,12 @@
             } else if(jQuery(e.target).hasClass('click-processing')) {
               hopscotch.startTour(tour);
               jQuery('.hopscotch-bubble').addClass('os-tour-notifications');
+
+              // Hide notifications counter when there are none left
+              var value = parseInt(jQuery('.slate.alert').text());
+              if (value < 1) {
+                jQuery('.slate.alert').hide();
+              }
             }
           });
 	      });

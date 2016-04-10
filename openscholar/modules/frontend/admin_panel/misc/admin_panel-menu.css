@@ -11,6 +11,9 @@ body {
     position: relative;
     -webkit-font-smoothing: antialiased;
 }
+body.page-cp {
+    overflow-x: hidden;
+}
 body.overlay {
     overflow-x: visible;
 }
@@ -69,10 +72,10 @@ body.overlay {
     background: url('images/home_button.png') no-repeat;
     background-size: 25px 25px;
 }
-ul.primary {
+#branding ul.primary {
     margin: 0 10% 0 !important;
 }
-.pushed ul.primary {
+#branding.pushed ul.primary {
     margin: 0 20% 0 !important;
 }
 /* MENU SPECIFIC */
@@ -108,7 +111,6 @@ ul.primary {
     float: right;
 }
 #cssmenu > ul > li > span {
-    padding: 10px 10px;
     cursor: pointer;
     z-index: 2;
     font-size: 14px;
@@ -127,11 +129,12 @@ ul.primary {
 }
 #cssmenu ul li a.active {
     font-style: italic;
+    font-weight: bold;
 }
 #cssmenu ul > li.has-sub > span:after {
     position: absolute;
     right: 22px;
-    top: 14px;
+    top: 13px;
     z-index: 5;
     display: block;
     height: 10px;
@@ -147,7 +150,7 @@ ul.primary {
 #cssmenu ul > li.has-sub > span:before {
     position: absolute;
     right: 18px;
-    top: 18px;
+    top: 17px;
     display: block;
     width: 10px;
     height: 2px;
@@ -175,7 +178,6 @@ ul.primary {
 #cssmenu ul ul li a,
 #cssmenu ul ul li span,
 #cssmenu .heading {
-    padding: 5px 8px;
     cursor: pointer;
     z-index: 2;
     font-size: 14px;
@@ -186,9 +188,13 @@ ul.primary {
     transition: color .2s ease;
     box-shadow: inset 0 1px rgba(0, 0, 0, 0.1);
 }
+[toggle-open] {
+    padding: 10px !important;
+}
 #cssmenu ul ul li span.close-siblings,
 #cssmenu ul ul li a {
     box-shadow: none;
+    padding-left: 15px !important;
 }
 #cssmenu .heading {
     padding: 0;
@@ -201,7 +207,7 @@ ul.primary {
     background: #454545;
 }
 #cssmenu ul ul ul li a {
-    padding-left: 16px;
+    padding-left: 20px !important;
 }
 #rightMenuSlide {
     top: 4px;
@@ -279,13 +285,6 @@ a {
     color: #fff;
     text-decoration: none;
 }
-.close_panel {
-    position: absolute;
-    right: 35px;
-    top: 9px;
-    font-family: helvetica;
-    font-size: 1.3em;
-}
 /* account tab popouts */
 
 .account_tab_popout {
@@ -300,11 +299,20 @@ a {
     box-shadow: 3px 3px 3px 0px rgba(50, 50, 50, 0.3);
     padding: 3px 12px 12px;
 }
+
+.new-site-link {
+    position: absolute;
+    top: 32px;
+    right: 20px;
+}
 .account_tab_popout.user_sites {
     top: 28px;
 }
 .animated {
     animation-duration: 0s !important;
+}
+table {
+    font-size: 1em !important;
 }
 td.site-name {
     width: 58%;
