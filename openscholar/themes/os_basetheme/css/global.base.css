@@ -1056,3 +1056,6 @@ ul.no-event-export {
     left: -110px;
     font-size: 12px;
 }
+.field-name-field-event-location.view-mode-full .field-items {
+    float:none;
+}
