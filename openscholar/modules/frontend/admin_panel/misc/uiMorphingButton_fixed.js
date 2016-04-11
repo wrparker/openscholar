@@ -75,7 +75,15 @@
 	}
 
 	UIMorphingButton.prototype.toggle = function() {
-		if( this.isAnimating ) return false;
+        if( this.isAnimating ) { 
+
+            setTimeout(function() { 
+                jQuery(".morph-content").attr("style", "left:60px; right:60px;") 
+                jQuery(".morph-button").removeClass("open") 
+            }, 25);
+
+            return false;
+        }
 
 		// callback
 		if( this.expanded ) {
