@@ -259,9 +259,7 @@ body.overlay {
 #user-name {
     background-color: #49505a;
 }
-#user-name:hover {
-    cursor: text;
-}
+
 .slate {
     background: #454545;
 }
