@@ -58,6 +58,7 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
     if ($this->request['vsite'] && $vsite = vsite_get_vsite($this->request['vsite'])) {
       // Make sure the Drupal $user account is the account Restful authenticated
       $account = $this->getAccount();
+      spaces_set_space($vsite);
       $vsite->activate_user_roles();
       $vsite->init_overrides();
       return true;
