@@ -36,13 +36,15 @@ class os_search_solr_search_box extends os_boxes_default {
     $bundle = $this->options['bundle'];
     $bundles = os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP));
 
+    unset($bundles['feed'], $bundles['link']);
+
     unset($bundles['slideshow_slide'], $bundles['feed_importer']);
 
     $form['bundle'] = array(
       '#type' => 'select',
       '#description' => t('Which bundle would you like to use.'),
       '#title' => t('Content type'),
-      '#options' => array('-none-' => t('All')) + $bundles,
+      '#options' => array(NULL => t('All')) + $bundles,
       '#default_value' => !empty($bundle) ? $bundle : '-none-',
       '#ajax' => array(
         'callback' => 'os_search_solr_vocabularies_switch',
@@ -55,13 +57,14 @@ class os_search_solr_search_box extends os_boxes_default {
     $form['vocab'] = array(
       '#type' => 'select',
       '#title' => t('Filter by: vocab'),
-      '#options' => array('-none-' => t('None')),
+      '#options' => array(NULL => t('----')),
       '#prefix' => '<div id="vocab">',
       '#suffix' => '</div>',
       '#ajax' => array(
         'callback' => 'os_search_solr_terms_switch',
         'wrapper' => 'terms',
       ),
+      '#default_value' => $this->options['vocab'],
     );
 
     // In case we have a selected content type. Then filter vocabularies by it.
@@ -76,6 +79,11 @@ class os_search_solr_search_box extends os_boxes_default {
     $vocabularies = taxonomy_vocabulary_load_multiple($vids);
 
     foreach ($vocabularies as $vocabulary) {
+
+      if (!taxonomy_get_tree($vocabulary->vid, 0, NULL, TRUE)) {
+        continue;
+      }
+
       $form['vocab']['#options'][$vocabulary->vid] = $vocabulary->name;
     }
     asort($form['vocab']['#options']);
