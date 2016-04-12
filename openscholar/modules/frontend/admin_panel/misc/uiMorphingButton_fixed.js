@@ -69,21 +69,19 @@
 		if( this.options.closeEl !== '' ) {
 			var closeEl = this.el.querySelector( this.options.closeEl );
 			if( closeEl ) {
-				closeEl.addEventListener( 'click', function() { self.toggle(); } );
+
+                closeEl.addEventListener('click', function() {
+
+                    self.closeLeftPanel();
+                    self.expanded = !self.expanded;
+                });
+
+
 			}
 		}
 	}
 
 	UIMorphingButton.prototype.toggle = function() {
-        if( this.isAnimating ) { 
-
-            setTimeout(function() { 
-                jQuery(".morph-content").attr("style", "left:60px; right:60px;") 
-                jQuery(".morph-button").removeClass("open") 
-            }, 25);
-
-            return false;
-        }
 
 		// callback
 		if( this.expanded ) {
@@ -162,6 +160,14 @@
 			}
 		}, 25 );
 	}
+
+    UIMorphingButton.prototype.closeLeftPanel = function() {
+
+        setTimeout(function() {
+            jQuery(".morph-content").attr("style", "left:60px; right:60px;")
+            jQuery(".morph-button").removeClass("open")
+        }, 25);
+    }
 
 	// add to global namespace
 	window.UIMorphingButton = UIMorphingButton;
