@@ -217,7 +217,7 @@ body.overlay {
 .topRight_Menu {
     position: fixed;
     top: 0;
-    right: 15px;
+    right: 0;
     padding: 10px;
     color: white;
     background: #6C7A89;
