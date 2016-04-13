@@ -1519,3 +1519,10 @@ function os_publications_update_7042() {
   _reset_csl_map(FALSE);
   os_publications_revert_citeproc_style('mhra');
 }
+
+/**
+ * Bring back the abstract and note fields for working paper.
+ */
+function os_publications_update_7043() {
+  os_publications_update_7034();
+}
