@@ -2954,26 +2954,29 @@ function os_user_migration_ownership_submit($form, &$form_state) {
 
   // Get all of the users content.
   foreach (array('node', 'taxonomy_term') as $entity_type) {
-    os_user_get_user_content($secondary_user->uid, $entity_type);
+    $entities = os_user_get_user_content($secondary_user->uid, $entity_type);
 
-    $operations = array(
-      array('os_user_block_user', array($secondary->uid)),
-      array('os_user_change_content_ownership', array($secondary->uid, 'node', [1,2,3,4,5,6])),
-    );
 
-    $batch = array(
-      'operations' => $operations,
-      'finished' => 'batch_example_finished',
-      'title' => t('Processing Example Batch'),
-      'init_message' => t('Starting to switch content ownership from: @primary to: @secondary', array('@primary' => $primary_user->name, '@secondary' => $secondary_user->name)),
-      'progress_message' => t('Processed @current out of @total.'),
-      'error_message' => t('Example Batch has encountered an error.'),
-      'file' => drupal_get_path('module', 'batch_example') . '/batch_example.inc',
-    );
+    // Process and change the entity ownership in batches.
+    $batches = array_chunk($entities, $form_state['values']['batch_cycles']);
+    foreach ($batches as $batch) {
+      $operations = array(
+        array('os_user_block_user', array($secondary->uid)),
+        array('os_user_change_content_ownership', array($secondary->uid, 'node', [1,2,3,4,5,6])),
+      );
 
-    batch_set($batch);
+      $batch = array(
+        'operations' => $operations,
+        'finished' => 'batch_example_finished',
+        'title' => t('Processing Example Batch'),
+        'init_message' => t('Starting to switch content ownership from: @primary to: @secondary', array('@primary' => $primary_user->name, '@secondary' => $secondary_user->name)),
+        'progress_message' => t('Processed @current out of @total.'),
+        'error_message' => t('Example Batch has encountered an error.'),
+        'file' => drupal_get_path('module', 'batch_example') . '/batch_example.inc',
+      );
+      batch_set($batch);
+    }
   }
-
 }
 
 /**
