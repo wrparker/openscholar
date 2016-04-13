@@ -422,6 +422,10 @@ ul.contextual-links li a:hover {
     right: 0;
     z-index: 19;
 }
+.contextual-links-region .block-inner > .contextual-links-wrapper {
+    right: 35px !important;
+    top: 0px !important;
+}
 .node-type-page #content-column div.contextual-links-wrapper.contextual-links-processed {
     top: 16px;
 }
