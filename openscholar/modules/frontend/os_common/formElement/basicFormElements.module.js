@@ -13,10 +13,12 @@
       scope: {
         name: '@',
         value: '=',
+        element: '='
       },
-      template: '<input type="checkbox" id="{{id}}" name="{{name}}" value="1" class="form-checkbox" ng-model="value" ng-true-value="1" ng-false-value="0"/>',
+      template: '<input type="checkbox" id="{{id}}" name="{{name}}" value="1" class="form-checkbox" ng-model="value" ng-true-value="1" ng-false-value="0"/><label class="option" for="{{id}}">{{title}}</label>',
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];
+        scope.title = scope.element.title;
       }
     }
   }]);
@@ -29,10 +31,13 @@
       scope: {
         name: '@',
         value: '=',
+        element: '='
       },
-      template: '<input type="textfield" id="{{id}}" name="{{name}}" ng-model="value" class="form-text">',
+      template: '<label for="{{id}}">{{title}}</label><br />' +
+      '<input type="textfield" id="{{id}}" name="{{name}}" ng-model="value" class="form-text">',
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];
+        scope.title = scope.element.title;
       }
     }
   }]);
@@ -47,7 +52,8 @@
         value: '=',
         element: '='
       },
-      template: '<div id="{{id}}" class="form-radios">' +
+      template: '<label for="{{id}}">{{title}}</label>' +
+      '<div id="{{id}}" class="form-radios">' +
         '<div class="form-item form-type-radio" ng-repeat="(val, label) in options">' +
           '<input type="radio" id="{{id}}-{{val}}" name="{{name}}" value="{{val}}" ng-model="$parent.value" class="form-radio"><label class="option" for="{{id}}-{{val}}" ng-bind-html="label"></label>' +
         '</div>' +
@@ -55,6 +61,7 @@
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];
         scope.options = scope.element.options;
+        scope.title = scope.element.title;
       }
     }
   }]);
