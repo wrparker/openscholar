@@ -2923,6 +2923,11 @@ function os_user_migration_ownership_validate($form, &$form_state) {
  * form successfully processes
  */
 function os_user_migration_ownership_submit($form, &$form_state) {
+
+//  $query = new EntityFieldQuery();
+//  $query
+//    ->entityCondition('entity_type', 'node');
+
   $wrapper = entity_metadata_wrapper('node', 71);
   _os_user_chane_content_ownership($form_state['values']['secondary_user']->uid, $wrapper);
 }
@@ -2937,6 +2942,7 @@ function os_user_migration_ownership_submit($form, &$form_state) {
  *  The target content.
  */
 function _os_user_chane_content_ownership($uid, $wrapper) {
-  dpm($uid, 'uid');
-  dpm($wrapper->value(), 'wrapper');
+  // Set the new content author
+  $wrapper->uid->set($uid);
+  $wrapper->save();
 }
