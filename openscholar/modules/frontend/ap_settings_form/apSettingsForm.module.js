@@ -55,7 +55,7 @@
     this.SaveSettings = function (settings) {
       console.log(settings);
 
-      $http.put(baseUrl+'/variables', settings, config);
+      $http.put(baseUrl+'/settings', settings, config);
     }
 
   }]);
