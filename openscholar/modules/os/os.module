@@ -2923,6 +2923,20 @@ function os_user_migration_ownership_validate($form, &$form_state) {
  * form successfully processes
  */
 function os_user_migration_ownership_submit($form, &$form_state) {
-  dpm($form_state);
-  drupal_set_message(t('The form has been submitted.'));
+  $wrapper = entity_metadata_wrapper('node', 71);
+  _os_user_chane_content_ownership($form_state['values']['secondary_user']->uid, $wrapper);
+}
+
+
+/**
+ * Chane the content author.
+ *
+ * @param $uid
+ *  The author user ID.
+ * @param $wrapper
+ *  The target content.
+ */
+function _os_user_chane_content_ownership($uid, $wrapper) {
+  dpm($uid, 'uid');
+  dpm($wrapper->value(), 'wrapper');
 }
