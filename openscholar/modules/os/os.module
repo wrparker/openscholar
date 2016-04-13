@@ -2861,6 +2861,13 @@ function os_user_migration_ownership($form, &$form_state) {
     '#autocomplete_path' => 'user/autocomplete',
   );
 
+  # a drupal form submit button
+  $form['submit'] = array(
+    '#value' => t('Replace'),
+    '#description' => t('Change the content ownership from primary user into secondary user'),
+    '#type' => 'submit',
+  );
+
   return $form;
 }
 
@@ -2871,10 +2878,11 @@ function os_user_migration_ownership($form, &$form_state) {
 function os_user_migration_ownership_validate($form, &$form_state) {
 
     dpm($form);
-  dpm($form_state);
+
+  //todo not empty and have to be user type!!
 
 //  if ($year_of_birth && ($year_of_birth < 1900 || $year_of_birth > 2000)) {
-    form_set_error('year_of_birth', 'Enter a year between 1900 and 2000.');
+//    form_set_error('year_of_birth', 'Enter a year between 1900 and 2000.');
 //  }
 
 }
