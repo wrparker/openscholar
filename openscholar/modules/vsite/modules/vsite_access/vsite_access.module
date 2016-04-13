@@ -162,6 +162,7 @@ function vsite_access_cp_settings() {
       'submit' => array(
         'vsite_access_cp_settings_node_submit',
       ),
+      'rest_submit' => 'vsite_access_cp_settings_save'
     );
   }
 
@@ -180,10 +181,18 @@ function vsite_access_cp_settings_node_submit($form, &$form_state) {
   $space = spaces_get_space();
   // Get the vsite_privacy value.
   if (isset($form_state['values']['vsite_private']) && $space) {
-    $wrapper = entity_metadata_wrapper('node', $space->group);
-    $wrapper->{VSITE_ACCESS_FIELD}->set($form_state['values']['vsite_private']);
-    $wrapper->save();
+    vsite_access_cp_settings_save('vsite_private', $form_state['values']['vsite_private']);
   }
+}
+
+/**
+ * Save the vsite privacy level.
+ */
+function vsite_access_cp_settings_save($val) {
+  $space = spaces_get_space();
+  $wrapper = entity_metadata_wrapper('node', $space->group);
+  $wrapper->{VSITE_ACCESS_FIELD}->set($val);
+  $wrapper->save();
 }
 
 /**
