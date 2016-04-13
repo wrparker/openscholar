@@ -2928,21 +2928,47 @@ function os_user_migration_ownership_submit($form, &$form_state) {
 //  $query
 //    ->entityCondition('entity_type', 'node');
 
-  $wrapper = entity_metadata_wrapper('node', 71);
-  _os_user_chane_content_ownership($form_state['values']['secondary_user']->uid, $wrapper);
+//  $wrapper = entity_metadata_wrapper('node', 71);
+//  _os_user_chane_content_ownership($form_state['values']['secondary_user']->uid, $wrapper);
+
+  $result = ['node' => [1,2,3,4,5,6,7,8,9,0,10,30,40]];
+
+  [1,2,3,4,5,6];
+  [8,9,0,10];
+
+
+  $operations = array(
+    array('os_user_change_content_ownerships', array($secondary->uid, 'node', [1,2,3,4,5,6])),
+  );
+
+  $batch = array(
+    'operations' => $operations,
+    'finished' => 'batch_example_finished',
+    'title' => t('Processing Example Batch'),
+    'init_message' => t('Example Batch is starting.'),
+    'progress_message' => t('Processed @current out of @total.'),
+    'error_message' => t('Example Batch has encountered an error.'),
+    'file' => drupal_get_path('module', 'batch_example') . '/batch_example.inc',
+  );
+
+  batch_set($batch);
 }
 
+function os_user_change_content_ownerships($uid, $entity_type, $entity_ids) {
+  $entities = entity_load($entity_type, $entity_ids);
+  // todo: user array_map
+  array_walk($entities, 'os_user_change_content_ownership', array('uid' => $uid, 'entity_type' => $entity_type));
+}
 
 /**
  * Chane the content author.
  *
  * @param $uid
- *  The author user ID.
+ *   The author user ID.
  * @param $wrapper
- *  The target content.
+ *   The target content.
  */
-function _os_user_chane_content_ownership($uid, $wrapper) {
-  // Set the new content author
-  $wrapper->uid->set($uid);
-  $wrapper->save();
+function os_user_change_content_ownership($entity, $uid, $entity_type) {
+  $entity_type->uid = $uid;
+  entity_save($entity_type, $entity_type);
 }
