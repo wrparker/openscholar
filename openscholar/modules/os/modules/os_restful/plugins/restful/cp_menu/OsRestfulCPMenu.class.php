@@ -475,8 +475,13 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         $this->alterURLs($menu[$key]['children']);
       }
 
-      if (!empty($value['href']) && $value['href'] != '#' && $vsite_object) {
-        $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href'], !empty($value['options']) ? $value['options'] : array());
+      if (!empty($value['href']) && $value['href'] != '#') {
+        if ($vsite_object) {
+          $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href'], !empty($value['options']) ? $value['options'] : array());
+        }
+        else {
+          $menu[$key]['href'] = url($value['href'], !empty($value['options']) ? $value['options'] : array());
+        }
       }
     }
   }
