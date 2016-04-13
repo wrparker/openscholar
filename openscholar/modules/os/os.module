@@ -2900,7 +2900,7 @@ function os_user_migration_ownership_validate($form, &$form_state) {
   $items_number = trim($form_state['values']['batch_cycles']);
 
   // Return early in case one of the fields is empty.
-  if (empty($primary_name) || empty($secondary_name) || $items_number) {
+  if (empty($primary_name) || empty($secondary_name) || empty($items_number)) {
     return;
   }
 
@@ -2921,7 +2921,7 @@ function os_user_migration_ownership_validate($form, &$form_state) {
 
   // In case the "secondary user" and the current logged in user are the same user.
   if ($secondary_user->uid == $user->uid) {
-    form_set_error('secondary_user', t('The secondary user must not be yourself, You cannot change ownership of your own content'));
+    form_set_error('secondary_user', t('The secondary user must not be yourself, You cannot change ownership of your own content.'));
     return;
   }
 
