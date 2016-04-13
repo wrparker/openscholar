@@ -3006,12 +3006,20 @@ function os_user_get_user_content($uid, $entity_type) {
   return array_keys($result[$entity_type]);
 }
 
+/**
+ * Callback to handle the batch cycle.
+ *
+ * @param $uid
+ *  The new entity owner - user ID
+ * @param $entity_type
+ *  The entity type
+ * @param $entity_ids
+ *  The current batch ens ids
+ */
 function os_user_change_content_ownerships($uid, $entity_type, $entity_ids) {
   $entities = entity_load($entity_type, $entity_ids);
-  // todo: user array_map
   array_map($entities, 'os_user_change_single_content_ownership', array('uid' => $uid, 'entity_type' => $entity_type));
 }
-
 
 /**
  * Block a certain user.
