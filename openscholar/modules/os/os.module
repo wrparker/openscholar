@@ -2843,8 +2843,9 @@ function os_page_build(&$page) {
  */
 function os_user_migration_ownership($form, &$form_state) {
 
-  $form['users']['primary'] = array(
+  $form['primary_user'] = array(
     '#type' => 'textfield',
+    '#required' => TRUE,
     '#title' => t('Primary user'),
     '#description' => t('The target content user'),
     '#size' => 30,
@@ -2852,8 +2853,9 @@ function os_user_migration_ownership($form, &$form_state) {
     '#autocomplete_path' => 'user/autocomplete',
   );
 
-  $form['users']['secondary'] = array(
+  $form['secondary_user'] = array(
     '#type' => 'textfield',
+    '#required' => TRUE,
     '#title' => t('Secondary user'),
     '#description' => t('The target user that will be the new content owner'),
     '#size' => 30,
@@ -2863,7 +2865,7 @@ function os_user_migration_ownership($form, &$form_state) {
 
   # a drupal form submit button
   $form['submit'] = array(
-    '#value' => t('Replace'),
+    '#value' => t('Change ownership'),
     '#description' => t('Change the content ownership from primary user into secondary user'),
     '#type' => 'submit',
   );
@@ -2873,18 +2875,45 @@ function os_user_migration_ownership($form, &$form_state) {
 
 
 /**
- * Validates the form.
+ * Add a validate handler/function to the form.
  */
 function os_user_migration_ownership_validate($form, &$form_state) {
 
-    dpm($form);
+  // The primary user name.
+  $primary_name = trim($form_state['values']['primary_user']);
 
-  //todo not empty and have to be user type!!
+  // The secondary user name.
+  $secondary_name = trim($form_state['values']['secondary_user']);
 
-//  if ($year_of_birth && ($year_of_birth < 1900 || $year_of_birth > 2000)) {
-//    form_set_error('year_of_birth', 'Enter a year between 1900 and 2000.');
-//  }
+  // Return early in case one of the user fields is empty.
+  if (empty($primary_name) || empty($secondary_name)) {
+    return;
+  }
 
+  //  In case the "primary" user does not exists.
+  if (!$primary_user = user_load_by_name($primary_name)) {
+    form_set_error('primary_user', t('Primary user does not exists'));
+  }
+
+  //  In case the "secondary" user does not exists.
+  if (!$secondary_user = user_load_by_name($secondary_name)) {
+    form_set_error('secondary_user', t('Secondary user does not exists'));
+  }
+
+  // Exit early in case one of the users does not exists.
+  if (empty($primary_user) || empty($secondary_user)) {
+    return;
+  }
+
+  // In case both users are the same user.
+  if ($primary_user->uid === $secondary_user->uid) {
+    form_set_error('secondary_user', t('The secondary user must not be the same as the primary user'));
+    return;
+  }
+
+  // In case we have no errors then add the users objects.
+  $form_state['values']['primary_user'] = $primary_user;
+  $form_state['values']['secondary_user'] = $secondary_user;
 }
 
 /**
@@ -2894,8 +2923,6 @@ function os_user_migration_ownership_validate($form, &$form_state) {
  * form successfully processes
  */
 function os_user_migration_ownership_submit($form, &$form_state) {
-
-//  dpm($form);
-//  dpm($form_state);
+  dpm($form_state);
   drupal_set_message(t('The form has been submitted.'));
 }
