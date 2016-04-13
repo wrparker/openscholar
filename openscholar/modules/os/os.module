@@ -2863,6 +2863,16 @@ function os_user_migration_ownership($form, &$form_state) {
     '#autocomplete_path' => 'user/autocomplete',
   );
 
+  $form['batch_cycles'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Number of items'),
+    '#description' => t('Set a limit of how many items to process for each content migration batch.'),
+    '#size' => 30,
+    '#maxlength' => 60,
+    '#default_value' => 250,
+  );
+
   # a drupal form submit button
   $form['submit'] = array(
     '#value' => t('Change ownership'),
@@ -2878,6 +2888,7 @@ function os_user_migration_ownership($form, &$form_state) {
  * Add a validate handler/function to the form.
  */
 function os_user_migration_ownership_validate($form, &$form_state) {
+  global $user;
 
   // The primary user name.
   $primary_name = trim($form_state['values']['primary_user']);
@@ -2885,8 +2896,11 @@ function os_user_migration_ownership_validate($form, &$form_state) {
   // The secondary user name.
   $secondary_name = trim($form_state['values']['secondary_user']);
 
-  // Return early in case one of the user fields is empty.
-  if (empty($primary_name) || empty($secondary_name)) {
+  // The number of items.
+  $items_number = trim($form_state['values']['batch_cycles']);
+
+  // Return early in case one of the fields is empty.
+  if (empty($primary_name) || empty($secondary_name) || $items_number) {
     return;
   }
 
@@ -2902,6 +2916,12 @@ function os_user_migration_ownership_validate($form, &$form_state) {
 
   // Exit early in case one of the users does not exists.
   if (empty($primary_user) || empty($secondary_user)) {
+    return;
+  }
+
+  // In case the "secondary user" and the current logged in user are the same user.
+  if ($secondary_user->uid == $user->uid) {
+    form_set_error('secondary_user', t('The secondary user must not be yourself, You cannot change ownership of your own content'));
     return;
   }
 
@@ -2923,52 +2943,91 @@ function os_user_migration_ownership_validate($form, &$form_state) {
  * form successfully processes
  */
 function os_user_migration_ownership_submit($form, &$form_state) {
+  drupal_set_message('Done!');
+  return;
 
-//  $query = new EntityFieldQuery();
-//  $query
-//    ->entityCondition('entity_type', 'node');
+  // The primary user.
+  $primary_user = $form_state['values']['primary_user'];
 
-//  $wrapper = entity_metadata_wrapper('node', 71);
-//  _os_user_chane_content_ownership($form_state['values']['secondary_user']->uid, $wrapper);
+  // The secondary user.
+  $secondary_user = $form_state['values']['secondary_user'];
 
-  $result = ['node' => [1,2,3,4,5,6,7,8,9,0,10,30,40]];
+  // Get all of the users content.
+  foreach (array('node', 'taxonomy_term') as $entity_type) {
+    os_user_get_user_content($secondary_user->uid, $entity_type);
 
-  [1,2,3,4,5,6];
-  [8,9,0,10];
+    $operations = array(
+      array('os_user_block_user', array($secondary->uid)),
+      array('os_user_change_content_ownership', array($secondary->uid, 'node', [1,2,3,4,5,6])),
+    );
 
+    $batch = array(
+      'operations' => $operations,
+      'finished' => 'batch_example_finished',
+      'title' => t('Processing Example Batch'),
+      'init_message' => t('Starting to switch content ownership from: @primary to: @secondary', array('@primary' => $primary_user->name, '@secondary' => $secondary_user->name)),
+      'progress_message' => t('Processed @current out of @total.'),
+      'error_message' => t('Example Batch has encountered an error.'),
+      'file' => drupal_get_path('module', 'batch_example') . '/batch_example.inc',
+    );
 
-  $operations = array(
-    array('os_user_change_content_ownerships', array($secondary->uid, 'node', [1,2,3,4,5,6])),
-  );
+    batch_set($batch);
+  }
 
-  $batch = array(
-    'operations' => $operations,
-    'finished' => 'batch_example_finished',
-    'title' => t('Processing Example Batch'),
-    'init_message' => t('Example Batch is starting.'),
-    'progress_message' => t('Processed @current out of @total.'),
-    'error_message' => t('Example Batch has encountered an error.'),
-    'file' => drupal_get_path('module', 'batch_example') . '/batch_example.inc',
-  );
+}
 
-  batch_set($batch);
+/**
+ * Change the content author.
+ *
+ * @param $uid
+ *   The content author - user ID.
+ * @param $entity_type
+ *   The target entity type.
+ * @return array|bool
+ */
+function os_user_get_user_content($uid, $entity_type) {
+
+  // Get all of the target entities.
+  $query = new EntityFieldQuery();
+  $query
+    ->entityCondition('entity_type', $entity_type)
+    ->propertyCondition('uid', $uid);
+
+  $result = $query->execute();
+
+  // In case their is no related content.
+  if (!$result[$entity_type]) {
+    return FALSE;
+  }
+
+  return array_keys($result[$entity_type]);
 }
 
 function os_user_change_content_ownerships($uid, $entity_type, $entity_ids) {
   $entities = entity_load($entity_type, $entity_ids);
   // todo: user array_map
-  array_walk($entities, 'os_user_change_content_ownership', array('uid' => $uid, 'entity_type' => $entity_type));
+  array_map($entities, 'os_user_change_single_content_ownership', array('uid' => $uid, 'entity_type' => $entity_type));
+}
+
+
+/**
+ * Block a certain user.
+ *
+ * @param $uid
+ */
+function os_user_block_user($uid) {
+  $user = entity_load_single('user', $uid);
+  $user->status = 0;
+  entity_save('user', $user);
 }
 
 /**
  * Chane the content author.
- *
+ * @param $entity
  * @param $uid
- *   The author user ID.
- * @param $wrapper
- *   The target content.
+ * @param $entity_type
  */
-function os_user_change_content_ownership($entity, $uid, $entity_type) {
+function os_user_change_single_content_ownership($entity, $uid, $entity_type) {
   $entity_type->uid = $uid;
   entity_save($entity_type, $entity_type);
 }
