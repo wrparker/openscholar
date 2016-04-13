@@ -776,7 +776,7 @@ function os_events_modal_submit($form, &$form_state) {
 
     foreach ($selectors as $selector) {
       $commands[] = ajax_command_html($selector, '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>');
-    }
+    }    
   }
 
   // Clean any message.
@@ -1901,10 +1901,22 @@ function os_events_entity_insert($entity, $type) {
  * Implements hook_mail().
  */
 function os_events_mail($key, &$message, $params) {
-  $message['subject'] = t("@title event registration confirmation", $params);
-  $message['body'] = array();
-  $message['body'][] = t("Hello @user-name", $params);
-  $message['body'][] = t("You have successfully registered for @title (@url).", $params);
+  switch ($key) {
+    case 'registration_broadcast':
+    case 'registration_confirmation':
+        $message['subject'] = t("@title event registration confirmation", $params);
+        $message['body'] = array();
+        $message['body'][] = t("Hello @user-name", $params);
+        $message['body'][] = t("You have successfully registered for @title (@url).", $params);
+        break;
+
+    case 'registration_full_notification':
+        $message['subject'] = t("@title event is full", $params);
+        $message['body'] = array();
+        $message['body'][] = t("Hi @user-name", $params);
+        $message['body'][] = t("This email is to let you know that the event you created, @title, is now full.\nYou can manage your registrations here: @url.\n\nThe OpenScholar Team", $params);
+        break;  
+  }
 }
 
 /**
