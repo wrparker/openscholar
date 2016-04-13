@@ -95,6 +95,14 @@ function os_menu() {
     'weight' => 3,
   );
 
+  $items['admin/config/people/user_ownership_migration'] = array(
+    'title' => 'User ownership migration',
+    'description' => 'Transfer user content ownership from one user to another',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os_user_migration_ownership'),
+    'access arguments' => array('administer users'),
+  );
+
   return $items;
 }
 
@@ -2824,4 +2832,62 @@ function os_page_build(&$page) {
     $page['content']['system_main']['main']['#markup'] = $warning_msg;
     $main_content_display = TRUE;
   }
+}
+
+
+/**
+ * The callback function to declare the os user migration ownership form.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function os_user_migration_ownership($form, &$form_state) {
+
+  $form['users']['primary'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Primary user'),
+    '#description' => t('The target content user'),
+    '#size' => 30,
+    '#maxlength' => 60,
+    '#autocomplete_path' => 'user/autocomplete',
+  );
+
+  $form['users']['secondary'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Secondary user'),
+    '#description' => t('The target user that will be the new content owner'),
+    '#size' => 30,
+    '#maxlength' => 60,
+    '#autocomplete_path' => 'user/autocomplete',
+  );
+
+  return $form;
+}
+
+
+/**
+ * Validates the form.
+ */
+function os_user_migration_ownership_validate($form, &$form_state) {
+
+    dpm($form);
+  dpm($form_state);
+
+//  if ($year_of_birth && ($year_of_birth < 1900 || $year_of_birth > 2000)) {
+    form_set_error('year_of_birth', 'Enter a year between 1900 and 2000.');
+//  }
+
+}
+
+/**
+ * Add a submit handler/function to the form.
+ *
+ * This will add a completion message to the screen when the
+ * form successfully processes
+ */
+function os_user_migration_ownership_submit($form, &$form_state) {
+
+//  dpm($form);
+//  dpm($form_state);
+  drupal_set_message(t('The form has been submitted.'));
 }
