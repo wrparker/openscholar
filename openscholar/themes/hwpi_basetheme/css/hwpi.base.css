@@ -181,7 +181,7 @@ ol.search-results li.search-result:last-child {
 /* Controls wrapper */
 
 .contextual-controls-wrapper {
-    top: -20px;
+    top: -45px;
     /* Shift into whitespace */
 }
 .node-type-page .region-content-top .contextual-links-region:first-child .contextual-links-wrapper {
