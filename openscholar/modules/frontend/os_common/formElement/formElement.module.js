@@ -8,7 +8,7 @@
         element: '=',
         value: '='
       },
-      template: '<label for="{{id}}">{{label}}</label>' +
+      template: '<span ng-if="element.prefix" ng-bind-html="element.prefix"></span>' +
       '<span>Placeholder</span>' +
       '<div class="description" ng-bind-html="description"></div>',
       link: function (scope, elem, attr) {
