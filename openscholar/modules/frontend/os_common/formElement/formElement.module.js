@@ -1,8 +1,8 @@
 (function () {
 
-  var m = angular.module('formElement', ['basicFormElements', 'osHelpers']);
+  var m = angular.module('formElement', ['basicFormElements', 'osHelpers', 'ngSanitize']);
 
-  m.directive('formElement', ['$compile', '$filter', function ($compile, $filter) {
+  m.directive('formElement', ['$compile', '$filter', '$sce', function ($compile, $filter, $sce) {
     return {
       scope: {
         element: '=',
@@ -10,7 +10,7 @@
       },
       template: '<label for="{{id}}">{{label}}</label>' +
       '<span>Placeholder</span>' +
-      '<div class="description">{{description}}</div>',
+      '<div class="description" ng-bind-html="description"></div>',
       link: function (scope, elem, attr) {
         scope.id = $filter('idClean')(scope.element.name, 'edit');
         scope.description = scope.element.description;
@@ -25,6 +25,8 @@
             copy.attr('name', scope.element[k]);
           }
         }
+
+        copy.attr('element', 'element');
 
         console.log(scope);
 
