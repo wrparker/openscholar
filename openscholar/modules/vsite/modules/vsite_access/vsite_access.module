@@ -166,6 +166,7 @@ function vsite_access_cp_settings() {
       'submit' => array(
         'vsite_access_cp_settings_node_submit',
       ),
+      'rest_submit' => 'vsite_access_cp_settings_save'
     );
   }
 
@@ -184,16 +185,18 @@ function vsite_access_cp_settings_node_submit($form, &$form_state) {
   $space = spaces_get_space();
   // Get the vsite_privacy value.
   if (isset($form_state['values']['vsite_private']) && $space) {
-    $wrapper = entity_metadata_wrapper('node', $space->group);
-    $current_vsite_access = $space->group->group_access[LANGUAGE_NONE][0]['value'];
-    $wrapper->{VSITE_ACCESS_FIELD}->set($form_state['values']['vsite_private']);
-    $wrapper->save();
-    // Clear the cache when we switch the privacy in ALL cases except toggling between invite only (value = 1) and Harvard (value = 4).
-    // For toggling, the sum of previous and selected value will be always '5' for such case; other two radio buttons values are 0 and 2.
-    if (($current_vsite_access + $form_state['values']['vsite_private']) != 5 && $current_vsite_access != $form_state['values']['vsite_private']) {
-      cp_clear_site_cache();
-    }
+    vsite_access_cp_settings_save('vsite_private', $form_state['values']['vsite_private']);
   }
+}
+
+/**
+ * Save the vsite privacy level.
+ */
+function vsite_access_cp_settings_save($val) {
+  $space = spaces_get_space();
+  $wrapper = entity_metadata_wrapper('node', $space->group);
+  $wrapper->{VSITE_ACCESS_FIELD}->set($val);
+  $wrapper->save();
 }
 
 /**
