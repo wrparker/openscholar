@@ -9,6 +9,7 @@
 
     var settingsForms = {};
     var settings = {};
+    var formTitles = {};
     var promises = [];
 
     var queryArgs = {};
@@ -26,13 +27,14 @@
     promises.push($http.get(baseUrl+'/settings', config).then(function (response) {
       var data = response.data;
 
-      console.log(data);
       for (var varName in data.data) {
         var varForm = data.data[varName];
         var group = varForm.group['#id'];
 
         settingsForms[group] = settingsForms[group] || {};
         settingsForms[group][varName] = varForm.form;
+
+        formTitles[group] = varForm.group['#title'];
 
         settings[varName] = varForm.form['#default_value'];
       }
@@ -49,7 +51,14 @@
       if (typeof settingsForms[group_id] != 'undefined') {
         return angular.copy(settingsForms[group_id]);
       }
-     throw new Exception("No form group with id " + group_id + " exists.");
+      throw new Exception("No form group with id " + group_id + " exists.");
+    }
+
+    this.GetFormTitle = function (group_id) {
+      if (typeof formTitles[group_id] != 'undefined') {
+        return formTitles[group_id];
+      }
+      throw new Exception("No form group with the id " + group_id + " exists.");
     }
 
     this.SaveSettings = function (settings) {
@@ -72,6 +81,9 @@
     };
 
     function link(scope, elem, attrs) {
+      apSettings.SettingsReady().then(function () {
+        scope.title = apSettings.GetFormTitle(scope.form);
+      })
       elem.bind('click', function (e) {
         event.preventDefault();
         event.stopPropagation();
@@ -87,6 +99,7 @@
           }
         })
         .then(function (modal) {
+          dialogOptions.title = scope.title;
           modal.element.dialog(dialogOptions);
           modal.close.then(function (result) {
             if (result) {
