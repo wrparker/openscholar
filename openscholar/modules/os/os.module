@@ -2840,7 +2840,6 @@ function os_page_build(&$page) {
 function os_user_migration_ownership($form, &$form_state) {
 
   $form['primary_user'] = array(
-    '#default_value' => 'admin',
     '#type' => 'textfield',
     '#required' => TRUE,
     '#title' => t('Primary user'),
@@ -2851,7 +2850,6 @@ function os_user_migration_ownership($form, &$form_state) {
   );
 
   $form['secondary_user'] = array(
-    '#default_value' => 'john',
     '#type' => 'textfield',
     '#required' => TRUE,
     '#title' => t('Secondary user'),
@@ -2868,7 +2866,7 @@ function os_user_migration_ownership($form, &$form_state) {
     '#description' => t('Set a limit of how many items to process for each content migration batch.'),
     '#size' => 30,
     '#maxlength' => 60,
-    '#default_value' => 15,
+    '#default_value' => 250,
   );
 
   # a drupal form submit button
@@ -2947,20 +2945,13 @@ function os_user_migration_ownership_submit($form, &$form_state) {
   // The secondary user.
   $secondary_user = $form_state['values']['secondary_user'];
 
-  // Get all of the target entities.
-  $query = new EntityFieldQuery();
-  $result = $query
-    ->entityCondition('entity_type', 'node')
-    ->propertyCondition('uid', $secondary_user->uid)
-    ->execute();
+  $entities = os_get_user_node_content($secondary_user->uid);
 
   // In case their is no content.
-  if (!$result['node']) {
+  if (!$entities) {
     drupal_set_message(t('User: "@name" has no content on the site', array('@name' => $secondary_user->name)));
     return;
   }
-
-  $entities = array_keys($result['node']);
 
   $operations = array(
     array('os_user_block_user', array($secondary_user->uid)),
@@ -2983,6 +2974,28 @@ function os_user_migration_ownership_submit($form, &$form_state) {
 }
 
 /**
+ * Get all of the user nodes
+ *
+ * @param $uid
+ * @return array|bool
+ */
+function os_get_user_node_content($uid) {
+  // Get all of the target entities.
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('uid', $uid)
+    ->execute();
+
+  // Return early in case their is no content.
+  if (!$result) {
+    return FALSE;
+  }
+
+  return array_keys($result['node']);
+}
+
+/**
  * Callback to handle the batch cycle.
  *
  * @param $uid
@@ -2990,9 +3003,11 @@ function os_user_migration_ownership_submit($form, &$form_state) {
  * @param $entity_ids
  *   The current batch entities IDs
  */
-function os_user_change_content_ownerships($uid, $entity_ids) {
+function os_user_change_content_ownership($uid, $entity_ids) {
   $entities = entity_load('node', $entity_ids);
-  array_walk($entities, 'os_user_change_single_content_ownership', array('uid' => $uid));
+  foreach ($entities as $entity) {
+    os_user_change_single_content_ownership($entity, $uid);
+  }
 }
 
 /**
