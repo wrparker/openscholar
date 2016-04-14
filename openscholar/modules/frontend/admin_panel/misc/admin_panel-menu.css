@@ -115,7 +115,6 @@ body.overlay {
     font-size: 13px;
     text-decoration: none;
     color: #ffffff;
-    background: #6C7A89;
     -webkit-transition: color .2s ease;
     -o-transition: color .2s ease;
     transition: color .2s ease;
@@ -132,12 +131,12 @@ body.overlay {
 }
 #cssmenu li.heading.has-sub,
 #cssmenu li.heading.submenu {
-    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 110px -996px;
+    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 110px -1009px;
     background-color: #444;
 }
 #cssmenu li.heading.has-sub.open,
 #cssmenu li.heading.submenu.open {
-    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 110px -977px;
+    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 110px -983px;
     background-color: #444;
 }
 #cssmenu li.heading.parent,
