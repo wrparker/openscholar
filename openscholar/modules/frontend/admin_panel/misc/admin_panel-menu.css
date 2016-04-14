@@ -95,8 +95,6 @@ body.overlay {
     position: relative;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    /* box-sizing: border-box; */
-    
     font-style: normal;
 }
 #cssmenu {
@@ -132,21 +130,20 @@ body.overlay {
     font-style: italic;
     font-weight: bold;
 }
-
-
-#cssmenu li.heading,
+#cssmenu li.heading.has-sub,
 #cssmenu li.heading.submenu {
-    background: url('http://staging.hwpi.harvard.edu/files/test/files/scholarbase-sprite.png') no-repeat 110px -996px;
+    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 110px -996px;
     background-color: #444;
 }
-
-#cssmenu li.heading.open,
+#cssmenu li.heading.has-sub.open,
 #cssmenu li.heading.submenu.open {
-    background: url('http://staging.hwpi.harvard.edu/files/test/files/scholarbase-sprite.png') no-repeat 110px -977px;
-    background-color:#444;
+    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 110px -977px;
+    background-color: #444;
 }
-
-
+#cssmenu li.heading.parent,
+#cssmenu li.heading.parent.open {
+    background-color: #6C7A89;
+}
 #cssmenu ul ul li a,
 #cssmenu ul ul li span,
 #cssmenu .heading {
