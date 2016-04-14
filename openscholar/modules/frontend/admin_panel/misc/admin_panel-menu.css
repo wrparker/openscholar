@@ -132,50 +132,21 @@ body.overlay {
     font-style: italic;
     font-weight: bold;
 }
-#cssmenu ul > li.has-sub > span:after {
-    position: absolute;
-    right: 22px;
-    top: 13px;
-    z-index: 5;
-    display: block;
-    height: 10px;
-    width: 2px;
-    background: #ffffff;
-    content: "";
-    -webkit-transition: all 0.1s ease-out;
-    -moz-transition: all 0.1s ease-out;
-    -ms-transition: all 0.1s ease-out;
-    -o-transition: all 0.1s ease-out;
-    transition: all 0.1s ease-out;
+
+
+#cssmenu li.heading,
+#cssmenu li.heading.submenu {
+    background: url('http://staging.hwpi.harvard.edu/files/test/files/scholarbase-sprite.png') no-repeat 110px -996px;
+    background-color: #444;
 }
-#cssmenu ul > li.has-sub > span:before {
-    position: absolute;
-    right: 18px;
-    top: 17px;
-    display: block;
-    width: 10px;
-    height: 2px;
-    background: #ffffff;
-    content: "";
-    -webkit-transition: all 0.1s ease-out;
-    -moz-transition: all 0.1s ease-out;
-    -ms-transition: all 0.1s ease-out;
-    -o-transition: all 0.1s ease-out;
-    transition: all 0.1s ease-out;
+
+#cssmenu li.heading.open,
+#cssmenu li.heading.submenu.open {
+    background: url('http://staging.hwpi.harvard.edu/files/test/files/scholarbase-sprite.png') no-repeat 110px -977px;
+    background-color:#444;
 }
-#cssmenu ul > li.has-sub.open > span:after,
-#cssmenu ul > li.has-sub.open > span:before {
-    -webkit-transform: rotate(180deg);
-    -moz-transform: rotate(180deg);
-    -ms-transform: rotate(180deg);
-    -o-transform: rotate(180deg);
-    transform: rotate(180deg);
-    height: 2px;
-    width: 10px;
-}
-#cssmenu ul > li.has-sub.open > span:after {
-    content: none;
-}
+
+
 #cssmenu ul ul li a,
 #cssmenu ul ul li span,
 #cssmenu .heading {
