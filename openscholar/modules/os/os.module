@@ -2834,12 +2834,8 @@ function os_page_build(&$page) {
   }
 }
 
-
 /**
  * The callback function to declare the os user migration ownership form.
- *
- * @param $form
- * @param $form_state
  */
 function os_user_migration_ownership($form, &$form_state) {
 
@@ -2990,7 +2986,7 @@ function os_user_migration_ownership_submit($form, &$form_state) {
  * @param $uid
  *  The new entity owner - user ID
  * @param $entity_ids
- *  The current batch ens ids
+ *  The current batch entities IDs
  */
 function os_user_change_content_ownerships($uid, $entity_ids) {
   $entities = entity_load('node', $entity_ids);
