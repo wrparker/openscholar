@@ -2251,10 +2251,12 @@ function vsite_delete_request_form($form, &$form_state) {
   );
 
   $form['cancel'] = array(
-    '#markup' => l(t('Cancel'), 'user'),
+    '#markup' => l(t('Cancel'), 'user', array('attributes' => array('id' => 'edit-cancel'))),
   );
 
   $form['#submit'][] = 'vsite_delete_request_submit';
+
+  $form['#attached']['js'][] = drupal_get_path('module', 'vsite' ).'/js/vsite_delete_confirm.js';
 
   return $form;
 }
