@@ -2840,6 +2840,7 @@ function os_page_build(&$page) {
 function os_user_migration_ownership($form, &$form_state) {
 
   $form['primary_user'] = array(
+    '#default_value' => 'admin',
     '#type' => 'textfield',
     '#required' => TRUE,
     '#title' => t('Primary user'),
@@ -2850,6 +2851,7 @@ function os_user_migration_ownership($form, &$form_state) {
   );
 
   $form['secondary_user'] = array(
+    '#default_value' => 'john',
     '#type' => 'textfield',
     '#required' => TRUE,
     '#title' => t('Secondary user'),
@@ -2866,7 +2868,7 @@ function os_user_migration_ownership($form, &$form_state) {
     '#description' => t('Set a limit of how many items to process for each content migration batch.'),
     '#size' => 30,
     '#maxlength' => 60,
-    '#default_value' => 250,
+    '#default_value' => 15,
   );
 
   # a drupal form submit button
@@ -2960,31 +2962,33 @@ function os_user_migration_ownership_submit($form, &$form_state) {
 
   $entities = array_keys($result['node']);
 
-  // Process and change the entity ownership in batches.
-  $batches = array_chunk($entities, $form_state['values']['batch_cycles']);
-  foreach ($batches as $batch) {
+  $operations = array(
+    array('os_user_block_user', array($secondary_user->uid)),
+  );
 
-    // Prepare batch settings
-    $batch = array(
-      'operations' => array(
-        array('os_user_block_user', array($secondary_user->uid)),
-        array('os_user_change_content_ownership', array($secondary_user->uid, 'node', $batch)),
-      ),
-      'finished' => '',
-      'init_message' => t('Starting to switch content ownership from: @primary to: @secondary', array('@primary' => $primary_user->name, '@secondary' => $secondary_user->name)),
-      'error_message' => t('Changing ownership process failed.'),
-    );
-    batch_set($batch);
+  // Process and change the entity ownership in batches.
+  $chunks = array_chunk($entities, $form_state['values']['batch_cycles']);
+  foreach ($chunks as $chunk) {
+    $operations[] = array('os_user_change_content_ownership', array($primary_user->uid, $chunk));
   }
+
+  // Prepare batch settings
+  $batch = array(
+    'operations' => $operations,
+    'finished' => 'os_ownership_batch_finished',
+    'init_message' => t('Starting to switch content ownership from user: @secondary to user: @primary', array('@primary' => $primary_user->name, '@secondary' => $secondary_user->name)),
+    'error_message' => t('Changing ownership process failed.'),
+  );
+  batch_set($batch);
 }
 
 /**
  * Callback to handle the batch cycle.
  *
  * @param $uid
- *  The new entity owner - user ID
+ *   The new entity owner - user ID
  * @param $entity_ids
- *  The current batch entities IDs
+ *   The current batch entities IDs
  */
 function os_user_change_content_ownerships($uid, $entity_ids) {
   $entities = entity_load('node', $entity_ids);
@@ -2995,9 +2999,16 @@ function os_user_change_content_ownerships($uid, $entity_ids) {
  * Block a certain user.
  *
  * @param $uid
+ *   The user ID.
  */
 function os_user_block_user($uid) {
   $user = entity_load_single('user', $uid);
+
+  // Return early in case the user is already blocked.
+  if (!$user->status) {
+    return;
+  }
+
   $user->status = 0;
   entity_save('user', $user);
 }
@@ -3011,4 +3022,11 @@ function os_user_block_user($uid) {
 function os_user_change_single_content_ownership($entity, $uid) {
   $entity->uid = $uid;
   entity_save('node', $entity);
+}
+
+/**
+ * Finished callback of the batch oparation.
+ */
+function os_ownership_batch_finished($success, $results, $operations) {
+  $message = t('Batch finished');
 }
