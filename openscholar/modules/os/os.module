@@ -2956,23 +2956,26 @@ function os_user_migration_ownership_submit($form, &$form_state) {
   foreach (array('node', 'taxonomy_term') as $entity_type) {
     $entities = os_user_get_user_content($secondary_user->uid, $entity_type);
 
+    // Exit early in case we have no entities.
+    if (!$entities) {
+      return;
+    }
 
     // Process and change the entity ownership in batches.
     $batches = array_chunk($entities, $form_state['values']['batch_cycles']);
     foreach ($batches as $batch) {
       $operations = array(
         array('os_user_block_user', array($secondary->uid)),
-        array('os_user_change_content_ownership', array($secondary->uid, 'node', [1,2,3,4,5,6])),
+//        array('os_user_change_content_ownership', array($secondary->uid, 'node', $batch)),
       );
 
       $batch = array(
         'operations' => $operations,
-        'finished' => 'batch_example_finished',
-        'title' => t('Processing Example Batch'),
+        'finished' => '',
+        'title' => t('Processing...'),
         'init_message' => t('Starting to switch content ownership from: @primary to: @secondary', array('@primary' => $primary_user->name, '@secondary' => $secondary_user->name)),
         'progress_message' => t('Processed @current out of @total.'),
-        'error_message' => t('Example Batch has encountered an error.'),
-        'file' => drupal_get_path('module', 'batch_example') . '/batch_example.inc',
+        'error_message' => t('Changing ownership process failed.'),
       );
       batch_set($batch);
     }
@@ -3017,8 +3020,9 @@ function os_user_get_user_content($uid, $entity_type) {
  *  The current batch ens ids
  */
 function os_user_change_content_ownerships($uid, $entity_type, $entity_ids) {
+  return;
   $entities = entity_load($entity_type, $entity_ids);
-  array_map($entities, 'os_user_change_single_content_ownership', array('uid' => $uid, 'entity_type' => $entity_type));
+  array_walk($entities, 'os_user_change_single_content_ownership', array('uid' => $uid, 'entity_type' => $entity_type));
 }
 
 /**
