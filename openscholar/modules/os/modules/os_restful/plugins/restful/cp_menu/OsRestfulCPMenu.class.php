@@ -190,6 +190,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     $user = $this->getAccount();
     $vsite = $this->request['vsite'];
     $vsite_object = vsite_get_vsite($vsite);
+    spaces_set_space($vsite_object);
 
     $bundles = os_app_info_declared_node_bundle();
     $type_info = node_type_get_types();
