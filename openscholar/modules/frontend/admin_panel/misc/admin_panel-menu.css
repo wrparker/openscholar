@@ -95,8 +95,6 @@ body.overlay {
     position: relative;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    /* box-sizing: border-box; */
-    
     font-style: normal;
 }
 #cssmenu {
@@ -117,7 +115,6 @@ body.overlay {
     font-size: 13px;
     text-decoration: none;
     color: #ffffff;
-    background: #6C7A89;
     -webkit-transition: color .2s ease;
     -o-transition: color .2s ease;
     transition: color .2s ease;
@@ -132,49 +129,19 @@ body.overlay {
     font-style: italic;
     font-weight: bold;
 }
-#cssmenu ul > li.has-sub > span:after {
-    position: absolute;
-    right: 22px;
-    top: 13px;
-    z-index: 5;
-    display: block;
-    height: 10px;
-    width: 2px;
-    background: #ffffff;
-    content: "";
-    -webkit-transition: all 0.1s ease-out;
-    -moz-transition: all 0.1s ease-out;
-    -ms-transition: all 0.1s ease-out;
-    -o-transition: all 0.1s ease-out;
-    transition: all 0.1s ease-out;
+#cssmenu li.heading.has-sub,
+#cssmenu li.heading.submenu {
+    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 110px -1009px;
+    background-color: #444;
 }
-#cssmenu ul > li.has-sub > span:before {
-    position: absolute;
-    right: 18px;
-    top: 17px;
-    display: block;
-    width: 10px;
-    height: 2px;
-    background: #ffffff;
-    content: "";
-    -webkit-transition: all 0.1s ease-out;
-    -moz-transition: all 0.1s ease-out;
-    -ms-transition: all 0.1s ease-out;
-    -o-transition: all 0.1s ease-out;
-    transition: all 0.1s ease-out;
+#cssmenu li.heading.has-sub.open,
+#cssmenu li.heading.submenu.open {
+    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 110px -983px;
+    background-color: #444;
 }
-#cssmenu ul > li.has-sub.open > span:after,
-#cssmenu ul > li.has-sub.open > span:before {
-    -webkit-transform: rotate(180deg);
-    -moz-transform: rotate(180deg);
-    -ms-transform: rotate(180deg);
-    -o-transform: rotate(180deg);
-    transform: rotate(180deg);
-    height: 2px;
-    width: 10px;
-}
-#cssmenu ul > li.has-sub.open > span:after {
-    content: none;
+#cssmenu li.heading.parent,
+#cssmenu li.heading.parent.open {
+    background-color: #6C7A89;
 }
 #cssmenu ul ul li a,
 #cssmenu ul ul li span,
