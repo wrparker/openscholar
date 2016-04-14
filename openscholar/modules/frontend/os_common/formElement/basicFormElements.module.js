@@ -81,7 +81,7 @@
       template: '<input type="submit" id="{{id}}" name="{{name}}" value="{{label}}" class="form-submit">',
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];
-        scope.title = scope.element.title;
+        scope.label = scope.element.value;
 
         elem.click(function (click) {
           scope.value = (scope.value + 1)%2;

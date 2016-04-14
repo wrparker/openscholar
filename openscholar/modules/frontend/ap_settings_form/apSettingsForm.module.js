@@ -143,7 +143,10 @@
           }
         }
 
-        attributes.value = 'formData[' + k + ']';
+        if (attributes.value) {
+          attributes.origValue = attributes.value;
+        }
+        //attributes.value = 'formData[' + k + ']';
         $s.formElements[k] = attributes;
       }
     });
