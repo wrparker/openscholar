@@ -2879,7 +2879,6 @@ function os_user_migration_ownership($form, &$form_state) {
   return $form;
 }
 
-
 /**
  * Add a validate handler/function to the form.
  */
