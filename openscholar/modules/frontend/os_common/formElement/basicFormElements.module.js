@@ -66,4 +66,28 @@
     }
   }]);
 
+  /**
+   * Submit button directive
+   *
+   * This type of form element should always have some kind of handler on the server end to take care of whatever this needs to do.
+   */
+  m.directive('submit', [function () {
+    return {
+      scope: {
+        name: '@',
+        value: '=',
+        element: '='
+      },
+      template: '<input type="submit" id="{{id}}" name="{{name}}" value="{{label}}" class="form-submit">',
+      link: function (scope, elem, attr) {
+        scope.id = attr['inputId'];
+        scope.title = scope.element.title;
+
+        elem.click(function (click) {
+          scope.value = (scope.value + 1)%2;
+        });
+      }
+    }
+  }]);
+
 })();
