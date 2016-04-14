@@ -2947,11 +2947,10 @@ function os_user_migration_ownership_submit($form, &$form_state) {
 
   // Get all of the target entities.
   $query = new EntityFieldQuery();
-  $query
+  $result = $query
     ->entityCondition('entity_type', 'node')
-    ->propertyCondition('uid', $secondary_user->uid);
-
-  $result = $query->execute();
+    ->propertyCondition('uid', $secondary_user->uid)
+    ->execute();
 
   // In case their is no content.
   if (!$result['node']) {
