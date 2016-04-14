@@ -286,6 +286,11 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
             'type' => 'heading',
             'default_state' => 'collapsed',
             'children' => array(
+              'files' => array(
+                'label' => 'Files',
+                'type' => 'link',
+                'href' => 'cp/content/comments'
+              ),
               'content' => array(
                 'label' => 'Content',
                 'type' => 'link',
