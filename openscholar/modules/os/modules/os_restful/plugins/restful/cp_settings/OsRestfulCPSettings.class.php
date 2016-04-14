@@ -59,7 +59,13 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
         if (!isset($forms[$var])) continue;
         if (!empty($forms[$var]['rest_submit']) && function_exists($forms[$var]['rest_submit'])) {
           $forms[$var]['rest_submit']($value);
-        } else {
+        }
+        elseif (!empty($forms[$var]['rest_trigger']) && function_exists($forms[$var]['rest_trigger'])) {
+          if ($value) {
+            $forms[$var]['rest_trigger']();
+          }
+        }
+        else {
           $this->saveVariable($var, $value);
         }
       }
