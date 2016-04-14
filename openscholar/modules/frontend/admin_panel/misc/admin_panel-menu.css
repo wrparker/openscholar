@@ -312,9 +312,7 @@ td.user-site-controls {
 .my-sites {
     border-top: 1px solid #DADADA;
 }
-.user_sites-close {
-    margin: 0 0 2px 97%;
-}
+
 .close-user-menu {
     position: absolute;
     top: 6px;
@@ -327,6 +325,10 @@ td.user-site-controls {
     width: 20px;
     height: 20px;
     background-color: #49505a;
+}
+.user_sites-close {
+    margin: 0 0 2px 97%;
+    background-color: #FFF;
 }
 .text_link {
     color: #215990;
