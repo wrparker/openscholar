@@ -91,9 +91,9 @@
 
 		var self = this,
 			onEndTransitionFn = function( ev ) {
-				if( self.support.transitions && ev.target !== this ) return false;
+				if( self.support.transitions && !self.el.classList.contains('no-transition') && ev.target !== this ) return false;
 
-				if( self.support.transitions ) {
+				if( self.support.transitions && !self.el.classList.contains('no-transition') ) {
 					// open: first opacity then width/height/left/top
 					// close: first width/height/left/top then opacity
 					if( self.expanded && ev.propertyName !== 'opacity' || !self.expanded && ev.propertyName !== 'width' && ev.propertyName !== 'height' && ev.propertyName !== 'left' && ev.propertyName !== 'top' ) {
@@ -115,13 +115,6 @@
 
 				self.expanded = !self.expanded;
 			};
-
-		if( this.support.transitions ) {
-			this.contentEl.addEventListener( transEndEventName, onEndTransitionFn );
-		}
-		else {
-			onEndTransitionFn();
-		}
 			
 		// set the left and top values of the contentEl (same like the button)
 		var buttonPos = this.button.getBoundingClientRect();
@@ -153,6 +146,13 @@
 				}, 25 );
 			}
 		}, 25 );
+
+    if( this.support.transitions && !this.el.classList.contains('no-transition') ) {
+      this.contentEl.addEventListener( transEndEventName, onEndTransitionFn );
+    }
+    else {
+      setTimeout(onEndTransitionFn, 30);
+    }
 	}
 
 	// add to global namespace
