@@ -245,8 +245,15 @@ body.overlay {
 .topRight_subMenu li.slate {
     background: #444;
 }
+.topRight_subMenu li.notifications {
+    position: #relative;
+}
+
 .slate.alert {
     background: #EF0812;
+    position: absolute;
+    top: 5px;
+    right: 50px;
 }
 .alert {
     padding: 0 4px;
