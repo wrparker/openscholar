@@ -72,7 +72,7 @@
 
                 closeEl.addEventListener('click', function() {
 
-                    self.closeLeftPanel();
+                    self.toggle();
                     self.expanded = !self.expanded;
                 });
 
@@ -160,14 +160,6 @@
 			}
 		}, 25 );
 	}
-
-    UIMorphingButton.prototype.closeLeftPanel = function() {
-
-        setTimeout(function() {
-            jQuery(".morph-content").attr("style", "left:60px; right:60px;")
-            jQuery(".morph-button").removeClass("open")
-        }, 25);
-    }
 
 	// add to global namespace
 	window.UIMorphingButton = UIMorphingButton;
