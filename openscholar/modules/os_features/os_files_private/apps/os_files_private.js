@@ -6,6 +6,18 @@
 
       ecp.addField('files', 'private', 'only');
     }])
+    .run (['$window', '$timeout', function ($w, $t) {
+
+      var hash = $w.location.hash;
+      if (hash == '#open') {
+        var elem = document.querySelector('.add_new');
+        elem = angular.element(elem);
+        $t(function () {
+          elem.triggerHandler('click');
+        }, 0);
+        $w.location.hash = '';
+      }
+    }])
     .controller('OSFilesPrivateController', ['$scope', 'FILEEDITOR_RESPONSES', function ($scope, FER) {
       $scope.reload = function (result) {
         var reload = false;
