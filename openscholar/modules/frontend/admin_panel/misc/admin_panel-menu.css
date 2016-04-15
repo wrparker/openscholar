@@ -246,7 +246,7 @@ body.overlay {
     background: #444;
 }
 .topRight_subMenu li.notifications {
-    position: #relative;
+    position: relative;
 }
 
 .slate.alert {
