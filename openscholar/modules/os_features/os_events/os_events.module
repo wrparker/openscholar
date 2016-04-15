@@ -1923,7 +1923,7 @@ function os_events_entity_insert($entity, $type) {
   // Displaying confirmation message to user's screen.
   drupal_set_message(t('You have successfully registered for the event. Please check your email for confirmation.'));
 
-  drupal_mail($module, $key, $wrapper->anon_mail->value(), $language, $params, $from);  
+  drupal_mail($module, $key, $wrapper->anon_mail->value(), $language, $params, $from);
 }
 
 /**
