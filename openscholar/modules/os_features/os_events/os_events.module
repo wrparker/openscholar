@@ -767,7 +767,24 @@ function os_events_modal_submit($form, &$form_state) {
 
   // In case event is full update the register links via ajax.
   $event = node_load($form_state['registration']->entity_id);
-  if (!os_events_event_registration_reach_capacity($event)) {
+ 
+  // Obtaining menu router item of the Ajax URL.
+  $menu_item = menu_get_item();
+
+  // If delta argument is present in URL, then query option will be available in url parameter otherwise no delta parameter will be available in email link.
+  if ($menu_item['path'] == "os_events/%/registration/%" && isset($menu_item['original_map'][4]) && !empty($menu_item['original_map'][4])) {
+    $query = array('delta' => $menu_item['original_map'][4]);
+  } else {
+    $query = array();
+  }
+
+  // Checking if this event is repeating event.
+  $date = '';
+  if (isset($menu_item['original_map'][4])) {
+    $date = $event->field_date[LANGUAGE_NONE][$menu_item['original_map'][4]]['value'];
+  }
+
+  if (!os_events_event_registration_reach_capacity($event, $date)) {
     $selectors = array(
       '#node-' . $event->nid . ' .field-name-field-event-registration',
       '.os_events_export_links .first',
@@ -776,7 +793,19 @@ function os_events_modal_submit($form, &$form_state) {
 
     foreach ($selectors as $selector) {
       $commands[] = ajax_command_html($selector, '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>');
-    }    
+    }
+
+    // Triggering email to event author if the registration quota is full.
+    $event_author = user_load($event->uid);
+    $from = variable_get('site_mail', ini_get('sendmail_from'));
+    $language = language_default();
+    $params = array(
+      '@url' => url('node/' . $event->nid, array('absolute' => TRUE, 'query' => $query)),
+      '@title' => $event->title,
+      '@user-name' => isset($event_author->field_first_name[LANGUAGE_NONE][0]['value']) ? $event_author->field_first_name[LANGUAGE_NONE][0]['value'] : $event_author->name,
+      '@site' => variable_get('site_name', 'OpenScholar')
+    );
+    drupal_mail('os_events', 'registration_full_notification', $event_author->mail, $language, $params, $from);    
   }
 
   // Clean any message.
@@ -1894,7 +1923,7 @@ function os_events_entity_insert($entity, $type) {
   // Displaying confirmation message to user's screen.
   drupal_set_message(t('You have successfully registered for the event. Please check your email for confirmation.'));
 
-  drupal_mail($module, $key, $wrapper->anon_mail->value(), $language, $params, $from);
+  drupal_mail($module, $key, $wrapper->anon_mail->value(), $language, $params, $from);  
 }
 
 /**
@@ -1911,10 +1940,10 @@ function os_events_mail($key, &$message, $params) {
         break;
 
     case 'registration_full_notification':
-        $message['subject'] = t("@title event is full", $params);
+        $message['subject'] = t("@title event registration is full", $params);
         $message['body'] = array();
         $message['body'][] = t("Hi @user-name", $params);
-        $message['body'][] = t("This email is to let you know that the event you created, @title, is now full.\nYou can manage your registrations here: @url.\n\nThe OpenScholar Team", $params);
+        $message['body'][] = t("This email is to let you know that the event you created, @title, is now full.\nYou can manage your registrations here: @url.\n\nThe @site Team", $params);
         break;  
   }
 }
