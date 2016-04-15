@@ -215,12 +215,15 @@ body.overlay {
     background-color: #49505a;
 }
 .topRight_subMenu li {
-    padding: 5px 10px;
+
     background: #6C7A89;
 }
-.topRight_subMenu li a {
+.topRight_subMenu ul.user-menu > li > a {
     color: #FFF;
     text-decoration: none;
+    display: block;
+    width: 100%;
+
 }
 .topRight_subMenu li a.text_link {
     color: #215990;
@@ -233,6 +236,11 @@ body.overlay {
     text-overflow: ellipsis;
     max-width: 15ch;
     margin-right: 0;
+}
+.topRight_subMenu ul.user-menu > li > a,
+#user-name,
+.my-sites-click{
+    padding: 5px 10px;
 }
 .topRight_subMenu li.slate {
     background: #444;
