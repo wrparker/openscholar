@@ -69,13 +69,19 @@
 		if( this.options.closeEl !== '' ) {
 			var closeEl = this.el.querySelector( this.options.closeEl );
 			if( closeEl ) {
-				closeEl.addEventListener( 'click', function() { self.toggle(); } );
+
+                closeEl.addEventListener('click', function() {
+
+                    self.toggle();
+                    self.expanded = !self.expanded;
+                });
+
+
 			}
 		}
 	}
 
 	UIMorphingButton.prototype.toggle = function() {
-		if( this.isAnimating ) return false;
 
 		// callback
 		if( this.expanded ) {
