@@ -16,6 +16,16 @@
 .icon-close:hover {
     color: #a50a05;
 }
+.close-panel {
+    display: block;
+    width: 60px;
+    height: 60px;
+    background-color: transparent;
+    cursor: pointer;
+    position: absolute;
+    bottom: 8px;
+    right: 38px;
+}
 .content-style-sidebar ul {
     list-style: none;
     margin: 0;
