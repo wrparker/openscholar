@@ -40,7 +40,6 @@
 
 	UIMorphingButton.prototype.options = {
 		closeEl : '',
-		closeEl2 : '',
 		onBeforeOpen : function() { return false; },
 		onAfterOpen : function() { return false; },
 		onBeforeClose : function() { return false; },
@@ -73,12 +72,7 @@
 				closeEl.addEventListener( 'click', function() { self.toggle(); } );
 			}
 		}
-		if( this.options.closeEl2 !== '' ) {
-			var closeEl2 = this.el.querySelector( this.options.closeEl2 );
-			if( closeEl2 ) {
-				closeEl2.addEventListener( 'click', function() { self.toggle(); } );
-			}
-		}
+		
 	}
 
 	UIMorphingButton.prototype.toggle = function() {

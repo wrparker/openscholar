@@ -187,7 +187,6 @@
        link: function(scope, element, attrs) {
     	  morphButton = new UIMorphingButton(element[0], {
       			closeEl : '.icon-close',
-      			closeEl2 : '.close-panel',
       			onBeforeOpen : function() {
       				// push main admin_panel
       				jQuery('#page_wrap, .page-cp #page, .page-cp #branding').addClass('pushed');
