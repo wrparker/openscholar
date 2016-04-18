@@ -116,7 +116,7 @@
 	        }
 
           /* Add a permanent "stop" node to the end of the list. */
-          var lastEntryContent = "There are no new announcements. Click here to view the <a href=\"http://hwp.harvard.edu/os-alerts/announcement\">archive</a>.";
+          var lastEntryContent = "There are no new announcements. Click here to view the <a href=\"http://hwp.harvard.edu/os-alerts/announcement\" target=\"_blank\">archive</a>.";
           var lastEntry = {
                author: "scholar",
                categories: [],

@@ -457,6 +457,10 @@ function vsite_form_node_delete_confirm_alter(&$form, $form_state) {
     '#required' => TRUE,
     '#element_validate' => array('vsite_delete_vsite_confirm_title'),
   );
+
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'vsite').'/js/vsite_delete_confirm.js'
+  );
 }
 
 /**
@@ -2247,10 +2251,12 @@ function vsite_delete_request_form($form, &$form_state) {
   );
 
   $form['cancel'] = array(
-    '#markup' => l(t('Cancel'), 'user'),
+    '#markup' => l(t('Cancel'), 'user', array('attributes' => array('id' => 'edit-cancel'))),
   );
 
   $form['#submit'][] = 'vsite_delete_request_submit';
+
+  $form['#attached']['js'][] = drupal_get_path('module', 'vsite' ).'/js/vsite_delete_confirm.js';
 
   return $form;
 }

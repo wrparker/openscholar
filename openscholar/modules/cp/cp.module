@@ -162,7 +162,7 @@ function cp_menu() {
       'description' => 'Contact the OpenScholar support team.',
       'page callback' => 'cp_site_sitewide_contact',
       'page arguments' => array('support'),
-      'access callback' => 'spaces_access_admin',
+      'access callback' => 'user_is_logged_in',
       'type' => MENU_NORMAL_ITEM,
       'weight'=> 40,
     );
