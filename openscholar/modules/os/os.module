@@ -103,6 +103,27 @@ function os_menu() {
     'access arguments' => array('administer users'),
   );
 
+  $items['admin/config/people/user_ownership_migration/migrate'] = array(
+    'title' => 'Migrate',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+
+  $items['admin/config/people/user_ownership_migration/review'] = array(
+    'title' => 'Review migrations',
+    'page callback' => 'os_view_migrated_users',
+    'access callback' => 'os_view_migrated_users_access',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $items['admin/config/people/user_ownership_migration/delete/%user'] = array(
+    'title' => 'Review migrations',
+    'page callback' => 'os_view_migrated_users_delete',
+    'page arguments' => array(5),
+    'access callback' => 'os_view_migrated_users_access',
+    'type' => MENU_LOCAL_TASK,
+  );
+
   return $items;
 }
 
@@ -3041,4 +3062,63 @@ function os_user_change_single_content_ownership($entity, $uid) {
 function os_ownership_batch_finished($success, $results, $operations) {
   $message = t('The migration has done.');
   drupal_set_message($message);
+}
+
+/**
+ * Page callback; A table with the users which their content was migrated to
+ * another user. The table also contains a link to the delete the user when
+ * possible.
+ *
+ * @return string
+ *   The table's html string.
+ *
+ * @throws Exception
+ */
+function os_view_migrated_users() {
+  $users = user_load_multiple(variable_get('os_ownership_migration_uids'));
+
+  $rows = array();
+  foreach ($users as $user) {
+
+    if (!os_get_user_node_content($user->uid)) {
+      $can_delete = t('Yes - <a href="@url">Delete</a>', array('@url' => url('admin/config/people/user_ownership_migration/delete/' . $user->uid)));
+    }
+    else {
+      $can_delete = t('No. The user still have content reltate to him. Please try to migrate agin.');
+    }
+
+    $rows[] = array(
+      $user->name,
+      $can_delete,
+    );
+  }
+
+  return theme('table', array(
+    'header' => array(
+      t('Username'),
+      t('Can delete?'),
+    ),
+    'rows' => $rows,
+  ));
+}
+
+/**
+ * Access callback for the review of the migrated users and the delete user
+ * from the system.
+ *
+ * @return bool
+ */
+function os_view_migrated_users_access() {
+  return user_access('administer users') && variable_get('os_ownership_migration_uids');
+}
+
+/**
+ * Delete the user from the system and revoke the user ID form the array of
+ * migrate users.
+ *
+ * @param stdClass $user
+ *   The user object.
+ */
+function os_view_migrated_users_delete(stdClass $user) {
+
 }
