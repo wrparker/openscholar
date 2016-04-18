@@ -2869,11 +2869,14 @@ function os_user_migration_ownership($form, &$form_state) {
     '#default_value' => 250,
   );
 
-  # a drupal form submit button
-  $form['submit'] = array(
-    '#value' => t('Change ownership'),
-    '#description' => t('Change the content ownership from primary user into secondary user'),
-    '#type' => 'submit',
+  $form['actions'] = array(
+    '#type' => 'actions',
+
+    'submit' => array(
+      '#value' => t('Change ownership'),
+      '#description' => t('Change the content ownership from primary user into secondary user'),
+      '#type' => 'submit',
+    ),
   );
 
   return $form;
@@ -2885,27 +2888,13 @@ function os_user_migration_ownership($form, &$form_state) {
 function os_user_migration_ownership_validate($form, &$form_state) {
   global $user;
 
-  // The primary user name.
-  $primary_name = trim($form_state['values']['primary_user']);
-
-  // The secondary user name.
-  $secondary_name = trim($form_state['values']['secondary_user']);
-
-  // The number of items.
-  $items_number = trim($form_state['values']['batch_cycles']);
-
-  // Return early in case one of the fields is empty.
-  if (empty($primary_name) || empty($secondary_name) || empty($items_number)) {
-    return;
-  }
-
   //  In case the "primary" user does not exists.
-  if (!$primary_user = user_load_by_name($primary_name)) {
+  if (!$primary_user = user_load_by_name(trim($form_state['values']['primary_user']))) {
     form_set_error('primary_user', t('Primary user does not exists'));
   }
 
   //  In case the "secondary" user does not exists.
-  if (!$secondary_user = user_load_by_name($secondary_name)) {
+  if (!$secondary_user = user_load_by_name(trim($form_state['values']['secondary_user']))) {
     form_set_error('secondary_user', t('Secondary user does not exists'));
   }
 
@@ -2977,6 +2966,8 @@ function os_user_migration_ownership_submit($form, &$form_state) {
  * Get all of the user nodes
  *
  * @param $uid
+ *   The user ID.
+ *
  * @return array|bool
  */
 function os_get_user_node_content($uid) {
@@ -2999,7 +2990,7 @@ function os_get_user_node_content($uid) {
  * Callback to handle the batch cycle.
  *
  * @param $uid
- *   The new entity owner - user ID
+ *   The new user ID owner.
  * @param $entity_ids
  *   The current batch entities IDs
  */
@@ -3025,14 +3016,19 @@ function os_user_block_user($uid) {
   }
 
   $user->status = 0;
+  $uids = variable_get('os_ownership_migration_uids', array());
+  $uids[] = $user->uid;
+  variable_set('os_ownership_migration_uids', $uids);
   entity_save('user', $user);
 }
 
 /**
  * Chane the content author.
+ *
  * @param $entity
+ *   The entity object.
  * @param $uid
- * @param $entity_type
+ *   The user ID.
  */
 function os_user_change_single_content_ownership($entity, $uid) {
   $entity->uid = $uid;
@@ -3043,5 +3039,6 @@ function os_user_change_single_content_ownership($entity, $uid) {
  * Finished callback of the batch oparation.
  */
 function os_ownership_batch_finished($success, $results, $operations) {
-  $message = t('Batch finished');
+  $message = t('The migration has done.');
+  drupal_set_message($message);
 }
