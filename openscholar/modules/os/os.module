@@ -3120,5 +3120,12 @@ function os_view_migrated_users_access() {
  *   The user object.
  */
 function os_view_migrated_users_delete(stdClass $user) {
+  // Delete the user.
+  user_delete($user->uid);
 
+  // Remove the user from the list of users.
+  $uids = variable_get('os_ownership_migration_uids');
+  $key = array_search($user->uid, $uids);
+  unset($uids[$key]);
+  variable_set('os_ownership_migration_uids', $uids);
 }
