@@ -1652,11 +1652,6 @@ function os_profiles_link_field_process($element, $form_state, $complete_form) {
 }
 
 /**
- * @file
- * On behalf implementation of Feeds mapping API for os_profiles.module.
- */
-
-/**
  * Implements hook_feeds_processor_targets_alter().
  *
  * @see FeedsProcessor::getMappingTargets()
