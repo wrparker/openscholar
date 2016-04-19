@@ -137,28 +137,28 @@
 		this.contentEl.style.top = 'auto';
 		
 		// add/remove class "open" to the button wraper
-		setTimeout( function() { 
-			self.contentEl.style.left = buttonPos.left + 'px';
-			self.contentEl.style.top = buttonPos.top + 'px';
-			
-			if( self.expanded ) {
-				jQuery(self.contentEl).removeClass('no-transition');
-				jQuery(self.el).removeClass('open');
-			}
-			else {
-				setTimeout( function() {
-					if (self.openTransition) {
-					  jQuery(self.contentEl).removeClass('no-transition');
-					}
+		self.contentEl.style.left = buttonPos.left + 'px';
+		self.contentEl.style.top = buttonPos.top + 'px';
+
+		// Don't put this in a setTimeout, it relies on self.expanded to be set correctly
+		// self.expanded is changed just after the toggle function runs in most cases.
+		if( self.expanded ) {
+			jQuery(self.contentEl).removeClass('no-transition');
+			jQuery(self.el).removeClass('open');
+		}
+		else {
+			setTimeout( function() {
+				if (self.openTransition) {
+					jQuery(self.contentEl).removeClass('no-transition');
+				}
 					
-					jQuery(self.el).addClass('open');
+				jQuery(self.el).addClass('open');
 					
-					if (!self.openTransition) {
-					  jQuery(self.contentEl).removeClass('no-transition');
-          }
-				}, 25 );
-			}
-		}, 25 );
+				if (!self.openTransition) {
+					jQuery(self.contentEl).removeClass('no-transition');
+          		}
+			}, 25 );
+		}
 	}
 
 	// add to global namespace
