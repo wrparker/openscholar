@@ -295,6 +295,9 @@ function os_events_views_default_views() {
   $handler->display->display_options['menu']['weight'] = '2';
   $handler->display->display_options['menu']['context'] = 0;
 
+  /* This line has been added manually to ensure the week view has an HTML page title */
+  $handler->display->display_options['tab_options']['title'] = 'Calendar';
+
   /* Display: Day */
   $handler = $view->new_display('page', 'Day', 'page_3');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
