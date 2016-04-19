@@ -64,14 +64,15 @@
 	UIMorphingButton.prototype._initEvents = function() {
 		var self = this;
 		// open
-		this.button.addEventListener( 'click', function() { self.toggle(); } );
+		this.button.addEventListener( 'click', function() {
+            self.toggle();
+            self.expanded = !self.expanded;
+        } );
 		// close
 		if( this.options.closeEl !== '' ) {
 			var closeEl = this.el.querySelector( this.options.closeEl );
 			if( closeEl ) {
-
                 closeEl.addEventListener('click', function() {
-
                     self.toggle();
                     self.expanded = !self.expanded;
                 });
@@ -105,7 +106,7 @@
 					if( self.expanded && ev.propertyName !== 'opacity' || !self.expanded && ev.propertyName !== 'width' && ev.propertyName !== 'height' && ev.propertyName !== 'left' && ev.propertyName !== 'top' ) {
 						return false;
 					}
-					this.removeEventListener( transEndEventName, onEndTransitionFn );
+				 	this.removeEventListener( transEndEventName, onEndTransitionFn );
 				}
 				self.isAnimating = false;
 				
@@ -118,8 +119,6 @@
 				else {
 					self.options.onAfterOpen();
 				}
-
-				self.expanded = !self.expanded;
 			};
 
 		if( this.support.transitions ) {
@@ -151,14 +150,15 @@
 				if (self.openTransition) {
 					jQuery(self.contentEl).removeClass('no-transition');
 				}
-					
+
 				jQuery(self.el).addClass('open');
-					
+
 				if (!self.openTransition) {
 					jQuery(self.contentEl).removeClass('no-transition');
           		}
 			}, 25 );
 		}
+
 	}
 
 	// add to global namespace
