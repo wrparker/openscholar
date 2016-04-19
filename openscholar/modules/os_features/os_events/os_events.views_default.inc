@@ -88,7 +88,7 @@ function os_events_views_default_views() {
   $handler->display->display_options['arguments']['entity_id']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['entity_id']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['entity_id']['summary_options']['items_per_page'] = '25';
-  /* Contextual filter: : field_repeating_event_date (field_repeating_event_date) */
+  /* Contextual filter: Registration: repeating_event_date (field_repeating_event_date) */
   $handler->display->display_options['arguments']['field_repeating_event_date_value']['id'] = 'field_repeating_event_date_value';
   $handler->display->display_options['arguments']['field_repeating_event_date_value']['table'] = 'field_data_field_repeating_event_date';
   $handler->display->display_options['arguments']['field_repeating_event_date_value']['field'] = 'field_repeating_event_date_value';
@@ -119,6 +119,7 @@ function os_events_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Calendar';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['link_display'] = 'page_1';
   $handler->display->display_options['access']['type'] = 'spaces_feature';
@@ -291,11 +292,9 @@ function os_events_views_default_views() {
   );
   $handler->display->display_options['path'] = 'calendar/week';
   $handler->display->display_options['menu']['type'] = 'tab';
-  $handler->display->display_options['menu']['title'] = 'Week';
+  $handler->display->display_options['menu']['title'] = 'EAM Week';
   $handler->display->display_options['menu']['weight'] = '2';
   $handler->display->display_options['menu']['context'] = 0;
-
-  /* This line has been added manually to ensure the week view has an HTML page title */
   $handler->display->display_options['tab_options']['title'] = 'Calendar';
 
   /* Display: Day */
@@ -663,7 +662,7 @@ function os_events_views_default_views() {
   $handler->display->display_options['menu']['weight'] = '55';
   $handler->display->display_options['menu']['context'] = 0;
 
-  /* Display: Feed */
+  /* Display: Upcoming Events Feed */
   $handler = $view->new_display('feed', 'Upcoming Events Feed', 'feed_1');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Ical';
@@ -835,7 +834,6 @@ function os_events_views_default_views() {
   $handler->display->display_options['filters']['field_date_value']['default_date'] = 'now';
   $handler->display->display_options['path'] = 'calendar/%/%/rss.xml';
   $handler->display->display_options['sitename_title'] = 0;
-
   $export['os_events'] = $view;
 
   return $export;
