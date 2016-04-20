@@ -48,8 +48,8 @@ function os_wysiwyg_link_permission() {
   $perms = array();
 
   $perms['insert link into wysiwyg'] = array(
-    'title' => 'Insert a link into the Wysiwyg',
-    'description' => 'Insert a link into the wysiwyg'
+    'title' => t('Insert a link into the Wysiwyg'),
+    'description' => t('Insert a link into the wysiwyg'),
   );
 
   return $perms;
