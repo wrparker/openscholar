@@ -2035,6 +2035,23 @@ function os_get_app_by_bundle($bundle) {
  * Implements hook_form_BASE_FORM_ID_alter() for user_login form.
  */
 function os_form_user_login_alter(&$form, $form_state) {
+
+  // Add an optional announcement to login page (e.g., new feature)
+  if (variable_get('os_login_message')) {
+    $form['login_announcement_message'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array(
+          'login-announcements',
+        )
+      ),
+      'message-text' => array(
+        '#markup' => variable_get('os_login_message')
+      ),
+      '#weight' => -100
+    );
+  }
+
   if (variable_get('os_login_with_email', TRUE)) {    
     // Add a new validation.
     // Validation function vsite_user_login_validate must run first.
