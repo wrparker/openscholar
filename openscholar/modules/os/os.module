@@ -2042,8 +2042,9 @@ function os_form_user_login_alter(&$form, $form_state) {
       ),
       'message-text' => array(
         '#markup' => variable_get('os_login_message')
-        )
-      );
+      ),
+      '#weight' => -100
+    );
   }
 
   if (variable_get('os_login_with_email', TRUE)) {    
