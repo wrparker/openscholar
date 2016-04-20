@@ -2033,7 +2033,7 @@ function os_form_user_login_alter(&$form, $form_state) {
 
   // Add an optional announcement to login page (e.g., new feature)
   if (variable_get('os_login_message')) {
-    $form['message'] = array(
+    $form['login_announcement_message'] = array(
       '#type' => 'container',
       '#attributes' => array(
         'class' => array(
