@@ -121,7 +121,7 @@
 
 								<?php if ($content = render($page['content'])): ?>
 									<div id="content">
-										<div id="login-announcements" class="login-announcements">Placeholder</div>
+										<div id="login-announcements" class="login-announcements" />
 										<?php print $content; ?>
 									</div>
 								<?php endif; ?>
