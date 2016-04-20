@@ -2037,7 +2037,7 @@ function os_form_user_login_alter(&$form, $form_state) {
       '#type' => 'container',
       '#attributes' => array(
         'class' => array(
-          'login-announcements-message-text',
+          'login-announcements',
         )
       ),
       'message-text' => array(
