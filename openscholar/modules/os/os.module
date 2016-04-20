@@ -2041,7 +2041,7 @@ function os_form_user_login_alter(&$form, $form_state) {
         )
       ),
       'message-text' => array(
-        '#markup' => variable_get('os_login_message')
+        '#markup' => variable_get('<strong>ANNOUNCEMENT</strong><br>The control panel is changing soon! <a href="http://docs.openscholar.harvard.edu/cp-changes">Learn more about it.</a>')
       ),
       '#weight' => -100
     );
