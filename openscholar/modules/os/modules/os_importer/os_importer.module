@@ -562,6 +562,42 @@ function os_importer_import($form, &$form_state, $type) {
  */
 function os_importer_import_validate($form, $form_state) {
 
+  // Checking uploaded csv files for person.
+  if ($form_state['values']['format'] == 'csv' && $form_state['type'] == 'person') {
+    $file = file_load($form_state['values']['file']);
+    feeds_include_library('ParserCSV.inc', 'ParserCSV');
+    $parser = new ParserCSV();
+    $parser->setDelimiter(',');
+    $iterator = new ParserCSVIterator($file->uri);
+    $rows = $parser->parse($iterator);
+    // Iterate over the rows for field_website validation.
+    $valid = TRUE;
+    foreach ($rows as $key => $row) {
+      if ($key == 0) {
+        continue;
+      }
+
+      // If title is not empty but url is empty.
+      if (!empty($row[11]) && empty($row[12])) {
+        $valid = FALSE;        
+        break;
+      }
+      else if (!empty($row[13]) && empty($row[14])) {
+        $valid = FALSE;        
+        break;
+      }
+      else if (!empty($row[15]) && empty($row[16])) {
+        $valid = FALSE;        
+        break;
+      }
+    }
+
+    if (!$valid) {
+      form_set_error('url', t("The field Websites URL cannot be empty."));
+    }
+  }
+
+
   // Checking uploaded csv files for events.
   if ($form_state['values']['format'] == 'csv' && $form_state['type'] == 'event') {
   	// Load the uploaded csv file and parse its content with ParserCSV class.
