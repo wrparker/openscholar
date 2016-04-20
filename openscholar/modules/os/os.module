@@ -2955,10 +2955,12 @@ function os_user_migration_ownership_submit($form, &$form_state) {
   // The secondary user.
   $secondary_user = $form_state['values']['secondary_user'];
 
-  $entities = os_get_user_node_content($secondary_user->uid);
+  $content = os_get_user_content($secondary_user->uid);
+
+  $memberships = os_get_user_content($secondary_user, 'og_membership', 'etid');
 
   // In case their is no content.
-  if (!$entities) {
+  if (!$content && $memberships) {
     drupal_set_message(t('User: "@name" has no content on the site', array('@name' => $secondary_user->name)));
     return;
   }
@@ -2968,7 +2970,7 @@ function os_user_migration_ownership_submit($form, &$form_state) {
   );
 
   // Process and change the entity ownership in batches.
-  $chunks = array_chunk($entities, $form_state['values']['batch_cycles']);
+  $chunks = array_chunk($content, $form_state['values']['batch_cycles']);
   foreach ($chunks as $chunk) {
     $operations[] = array('os_user_change_content_ownership', array($primary_user->uid, $chunk));
   }
@@ -2988,15 +2990,19 @@ function os_user_migration_ownership_submit($form, &$form_state) {
  *
  * @param $uid
  *   The user ID.
+ * @param $entity_type
+ *   The entity type: OG membership, node etc. etc.
+ * @param $owner_property
+ *   The property in the table which specify the owner of the entity.
  *
  * @return array|bool
  */
-function os_get_user_node_content($uid) {
+function os_get_user_content($uid, $entity_type = 'node', $owner_property = 'uid') {
   // Get all of the target entities.
   $query = new EntityFieldQuery();
   $result = $query
-    ->entityCondition('entity_type', 'node')
-    ->propertyCondition('uid', $uid)
+    ->entityCondition('entity_type', $entity_type)
+    ->propertyCondition($owner_property, $uid)
     ->execute();
 
   // Return early in case their is no content.
@@ -3004,7 +3010,7 @@ function os_get_user_node_content($uid) {
     return FALSE;
   }
 
-  return array_keys($result['node']);
+  return array_keys($result[$entity_type]);
 }
 
 /**
@@ -3080,7 +3086,7 @@ function os_view_migrated_users() {
   $rows = array();
   foreach ($users as $user) {
 
-    if (!os_get_user_node_content($user->uid)) {
+    if (!os_get_user_content($user->uid)) {
       $can_delete = t('Yes - <a href="@url">Delete</a>', array('@url' => url('admin/config/people/user_ownership_migration/delete/' . $user->uid)));
     }
     else {
