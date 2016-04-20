@@ -5,6 +5,8 @@
  */
 class update extends AbstractUpdate {
 
+  static $nobelRoles = array('content editor', 'vsite admin', 'member');
+
   /**
    * @inheritdoc
    */
