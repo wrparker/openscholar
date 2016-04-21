@@ -185,7 +185,7 @@
           	      });
       			}
       		}); 
-  	   }
+  	   }  
      };
    }]).directive('addLocation', function() {
 	  //For Qualtrics URL Remove after beta
