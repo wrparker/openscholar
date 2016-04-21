@@ -16,7 +16,7 @@
 .icon-close:hover {
     color: #a50a05;
 }
-.close-panel {
+.morph-button-fixed.open .close-panel {
     display: block;
     width: 60px;
     height: 60px;
@@ -25,6 +25,9 @@
     position: absolute;
     bottom: 8px;
     right: 38px;
+}
+.morph-button-fixed .close-panel {
+display:none;
 }
 .content-style-sidebar ul {
     list-style: none;
