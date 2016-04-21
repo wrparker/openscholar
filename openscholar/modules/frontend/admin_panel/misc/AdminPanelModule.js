@@ -184,8 +184,8 @@
           	        $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
           	      });
       			}
-      		}); 
-  	   }  
+      		});
+  	   }
      };
    }]).directive('addLocation', function() {
 	  //For Qualtrics URL Remove after beta
