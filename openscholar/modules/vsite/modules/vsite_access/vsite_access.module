@@ -118,7 +118,8 @@ function vsite_access_node_access($node, $op, $account) {
         case VSITE_ACCESS_INTRANET_PRIVATE:
         case VSITE_ACCESS_PRIVATE:
           // Private group.
-          if (!user_access('administer group') && !og_is_member('node', $node->nid, 'user', $account)) {
+          // Viewer role will have read only access for all apps.
+          if (!user_access('administer group') && !og_is_member('node', $node->nid, 'user', $account) && !user_access('access viewer app', $account)) {
             // They are not a member, deny access
             return NODE_ACCESS_DENY;
           }
