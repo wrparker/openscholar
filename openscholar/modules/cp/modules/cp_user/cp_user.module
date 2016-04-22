@@ -11,6 +11,31 @@
 define('OS_USER_ROLE_ADMIN', 'vsite admin');
 define('OS_USER_ROLE_EDITOR', 'content editor');
 define('OS_USER_ROLE_BASIC', 'vsite user');
+define('OS_USER_ROLE_VIEWER', 'viewer');
+
+/**
+ * Implements hook_node_access().
+ */
+function cp_user_node_access($node, $op, $account) {
+  // Viewer roles will be able to see unpublished content.
+  if (isset($node->status) && $node->status == NODE_NOT_PUBLISHED && $op == 'view') {
+    if (user_access('access viewer app', $account)) {
+      return NODE_ACCESS_ALLOW;
+    }
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function cp_user_permission() {
+  return array(
+    'access viewer app' => array(
+      'title' => t('Access Content in Readonly mode'),
+      'description' => t('Access Private sites and unpublished content in read only mode.'),
+    ),
+  );
+}
 
 /**
  * Implements hook_menu_alter().
@@ -610,6 +635,8 @@ function cp_user_og_ui_admin_new_role($variables) {
     'Administrator',
     // This should have been OS_USER_ROLE_EDITOR but we renamed it.
     'Content editor',
+    // This should have been OS_USER_ROLE_VIEWER but we renamed it.
+    'Viewer',
   );
 
   foreach ($role_names as $rid => $name) {
@@ -813,6 +840,7 @@ function cp_user_form_user_register_form_alter(&$form, &$form_state, $form_id) {
     'vsite user',
     'vsite admin',
     'content editor',
+    'viewer',
   );
   foreach ($roles as $role) {
     if (($key = array_search($role, $form['account']['roles']['#options'])) !== FALSE)  {
@@ -903,6 +931,10 @@ function _cp_user_list_roles($format, $bundle, $gid = 0) {
     OS_USER_ROLE_ADMIN => array(
       'human_name' => t('Administrator'),
       'description' => t('<em>Administrators</em> may add, edit or delete any post, and change site settings.'),
+    ),
+    OS_USER_ROLE_VIEWER => array(
+      'human_name' => t('Viewer'),
+      'description' => t('<em>Viewer</em> may have read-only access to private sites and unpublished content.'),
     ),
   );
 

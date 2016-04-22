@@ -184,6 +184,7 @@ function vsite_user_admin_roles($variables) {
       'content editor',
       'vsite admin',
       'vsite user',
+	  'viewer',
     );
 
     if (in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID)) || in_array($name, $role_names)) {
@@ -2054,6 +2055,7 @@ function vsite_form_user_profile_form_alter(&$form, &$form_state, &$form_id){
       'content editor',
       'vsite admin',
       'vsite user',
+	  'viewer',
     );
     foreach ($role_names  as $role_name) {
       $role = user_role_load_by_name($role_name);
