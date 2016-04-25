@@ -318,7 +318,7 @@ projects[pinserver][subdir] = "contrib"
 projects[pinserver][type] = module
 projects[pinserver][download][type] = git
 projects[pinserver][download][url] = "git://github.com/openscholar/pinserver.git"
-projects[pinserver][download][tag] = 7.x-3.4.8
+projects[pinserver][download][tag] = 7.x-3.4.10
 
 projects[purl][subdir] = "contrib"
 ;: projects[purl][version] = 1.0-beta1+11-dev
@@ -443,6 +443,10 @@ projects[wysiwyg_filter][revision] = "4848d306a2f7526f7eeaf22edb9268d3c96654fe"
 projects[wysiwyg_filter][patch][] = "https://www.drupal.org/files/issues/wysiwyg-filter-border-radius-support-2692163-1.patch"
 
 ; Libraries.
+libraries[jquery.bgiframe][type] = "libraries"
+libraries[jquery.bgiframe][download][type] = "git"
+libraries[jquery.bgiframe][download][url] = "https://github.com/brandonaaron/bgiframe.git"
+
 libraries[clippy][type] = "libraries"
 libraries[clippy][download][type] = "file"
 libraries[clippy][download][url] = "https://github.com/mojombo/clippy/archive/master.zip"

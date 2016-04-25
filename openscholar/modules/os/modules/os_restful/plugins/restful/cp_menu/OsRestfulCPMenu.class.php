@@ -54,6 +54,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
    * {@inheritdoc}
    */
   public function access() {
+    return true;  // access on each link is checked individually. we don't need to allow/deny the whole menu anymore.
     $account = $this->getAccount();
     return user_access('adminsiter site configuration', $account) || $this->checkGroupAccess();;
   }
@@ -72,10 +73,47 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     if ($vsite) {
       return user_access('administer spaces', $account) || og_is_member('node', $vsite, 'user', $account);
     } else {
-      $this->throwException('The vsite ID is missing.');
+      return false;
     }
 
     return false;
+  }
+
+  /**
+   * Check access for the given user against a single menu path
+   */
+  public function menuAccess(&$menuItem) {
+    static $vsiteActivated = false;
+    if (!$vsiteActivated) {
+      if (module_exists('vsite') && $vsite = vsite_get_vsite($this->request['vsite'])) {
+        spaces_set_space($vsite);
+        $vsite->activate_user_roles();
+      }
+      $vsiteActivated = true;
+    }
+
+    $access = false;
+    if ($menuItem['children']) {
+      foreach ($menuItem['children'] as &$c) {
+        $access = $this->menuAccess($c) || $access;
+      }
+    }
+    $urlParams = array();
+    switch ($menuItem['type']) {
+      case 'link':
+        $item = menu_get_item($menuItem['href']);
+        $menuItem['access'] = $item['access'];
+        break;
+      case 'heading':
+        $menuItem['access'] = $access;
+        break;
+      case 'directive':
+        // ?????????
+        $menuItem['access'] = true; // what do we even do here?
+        break;
+    }
+
+    return $menuItem['access'];
   }
 
   /**
@@ -188,6 +226,27 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       }
     }
 
+    # Files are a separate entity class, on the same level as nodes.
+    # Hard-code the file links in.
+    $add_links["{files}"] = array(
+      'label' => "Files",
+      'type' => 'link',
+      'href' => 'cp/content/files',
+      'alt' => t("One time bulk import of @type content.", array('@type' => "file")),
+      'options' => array(
+        'fragment' => 'open'
+      )
+    );
+    $add_links["{os_private_files}"] = array(
+      'label' => 'Private Files',
+      'type' => 'link',
+      'href' => 'cp/content/files-private',
+      'alt' => t("One time bulk import of @type content.", array('@type' => "private files")),
+      'options' => array(
+        'fragment' => 'open'
+      )
+    );
+
     $feature_settings = array();
     if (spaces_access_admin($user, $vsite_object)) {
       foreach (array_keys(array_filter($spaces_features)) as $feature) {
@@ -202,7 +261,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         }
       }
     }
-    
+
     $private_files = !empty($spaces_features['os_files_private'])? array('files_private' => array(
         'label' => 'Private Files',
         'type' => 'link',
@@ -210,8 +269,11 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     )):array();
 
     //Order alphabetically
-    ksort($add_links);
-    ksort($import_links);
+    $labelcmp = function ($a, $b) {
+        return strnatcmp($a['label'], $b['label']);
+    };
+    uasort($add_links, $labelcmp);
+    uasort($import_links, $labelcmp);
 
     $structure = array(
       'content' => array(
@@ -224,6 +286,11 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
             'type' => 'heading',
             'default_state' => 'collapsed',
             'children' => array(
+              'comments' => array(
+                'label' => 'Comments',
+                'type' => 'link',
+                'href' => 'cp/content/comments'
+              ),
               'content' => array(
                 'label' => 'Content',
                 'type' => 'link',
@@ -233,21 +300,13 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
                 'label' => 'Files',
                 'type' => 'link',
                 'href' => 'cp/content/files'
-              )) + $private_files +
-              
+              )) + $private_files
 //              @tbd v2
 //              'widgets' => array(
 //                'label' => 'Widgets',
 //                'type' => 'link',
 //                'href' => '/cp/content'
 //              ),
-              array('tagging' => array(
-                //'label' => 'Tagging',
-                  'label' => 'Taxonomy',
-                'type' => 'link',
-                'href' => 'cp/build/taxonomy'
-              ),
-            ),
           ),
           'add' => array(
             'label' => 'Add',
@@ -266,22 +325,22 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       'menus' => array(
         'label' => 'Menus',
         'type' => 'link',
-        'href' => 'cp/build/menu'
+        'href' => 'cp/build/menu',
       ),
       'appearance' => array(
         'label' => 'Appearance',
         'type' => 'heading',
         'default_state' => 'collapsed',
         'children' => array(
+            'layout' => array(
+                'label' => 'Layout',
+                'type' => 'link',
+                'href' => 'cp/build/layout'
+            ),
             'themes' => array(
               'label' => 'Themes',
               'type' => 'link',
               'href' => 'cp/appearance'
-            ),
-            'layout' => array(
-              'label' => 'Layout',
-              'type' => 'link',
-              'href' => 'cp/build/layout'
             ),
 //            'theme_settings' => array(
 //              'label' => 'Theme Settings',
@@ -289,6 +348,11 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
 //              'href' => 'dev/null'
 //            ),
           ),
+      ),
+      'tagging' => array(
+        'label' => 'Taxonomy',
+        'type' => 'link',
+        'href' => 'cp/build/taxonomy'
       ),
       'settings' => array(
         'label' => 'Settings',
@@ -319,15 +383,15 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'type' => 'heading',
         'default_state' => 'collapsed',
         'children' => array(
-          'support' => array(
-            'label' => 'Support',
-            'type' => 'link',
-            'href' => 'cp/support'
-          ),
           'documentation' => array(
             'label' => 'Documentation',
             'type' => 'link',
             'href' => 'cp/welcome'
+          ),
+          'support' => array(
+            'label' => 'Support',
+            'type' => 'link',
+            'href' => 'cp/support'
           ),
         ),
       ),
@@ -356,6 +420,10 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'default_state' => 'collapsed',
         'children' => $admin_links,
       );
+    }
+
+    foreach ($structure as &$link) {
+      $this->menuAccess($link);
     }
 
     return $structure;
@@ -412,8 +480,13 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         $this->alterURLs($menu[$key]['children']);
       }
 
-      if (!empty($value['href']) && $value['href'] != '#' && $vsite_object) {
-        $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href']);
+      if (!empty($value['href']) && $value['href'] != '#') {
+        if ($vsite_object) {
+          $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href'], !empty($value['options']) ? $value['options'] : array());
+        }
+        else {
+          $menu[$key]['href'] = url($value['href'], !empty($value['options']) ? $value['options'] : array());
+        }
       }
     }
   }
