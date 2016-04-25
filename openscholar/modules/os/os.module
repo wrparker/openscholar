@@ -2960,7 +2960,7 @@ function os_user_migration_ownership_submit($form, &$form_state) {
   $memberships = os_get_user_content($secondary_user, 'og_membership', 'etid');
 
   // In case their is no content.
-  if (!$content && $memberships) {
+  if (!$content && !$memberships) {
     drupal_set_message(t('User: "@name" has no content on the site', array('@name' => $secondary_user->name)));
     return;
   }
@@ -2972,7 +2972,12 @@ function os_user_migration_ownership_submit($form, &$form_state) {
   // Process and change the entity ownership in batches.
   $chunks = array_chunk($content, $form_state['values']['batch_cycles']);
   foreach ($chunks as $chunk) {
-    $operations[] = array('os_user_change_content_ownership', array($primary_user->uid, $chunk));
+    $operations[] = array('os_user_change_content_ownership', array('node', $primary_user->uid, $chunk));
+  }
+
+  $chunks = array_chunk($memberships, $form_state['values']['batch_cycles']);
+  foreach ($chunks as $chunk) {
+    $operations[] = array('os_user_change_content_ownership', array('og_membership', $primary_user->uid, $chunk));
   }
 
   // Prepare batch settings
@@ -3016,15 +3021,17 @@ function os_get_user_content($uid, $entity_type = 'node', $owner_property = 'uid
 /**
  * Callback to handle the batch cycle.
  *
+ * @param $entity_type
+ *   The entity type.
  * @param $uid
  *   The new user ID owner.
  * @param $entity_ids
  *   The current batch entities IDs
  */
-function os_user_change_content_ownership($uid, $entity_ids) {
-  $entities = entity_load('node', $entity_ids);
+function os_user_change_content_ownership($entity_type, $uid, $entity_ids) {
+  $entities = entity_load($entity_type, $entity_ids);
   foreach ($entities as $entity) {
-    os_user_change_single_content_ownership($entity, $uid);
+    os_user_change_single_content_ownership($entity_type, $entity, $uid);
   }
 }
 
@@ -3052,14 +3059,16 @@ function os_user_block_user($uid) {
 /**
  * Chane the content author.
  *
+ * @param $entity_type
+ *   The entity type - node, OG membership.
  * @param $entity
  *   The entity object.
  * @param $uid
  *   The user ID.
  */
-function os_user_change_single_content_ownership($entity, $uid) {
+function os_user_change_single_content_ownership($entity_type, $entity, $uid) {
   $entity->uid = $uid;
-  entity_save('node', $entity);
+  entity_save($entity_type, $entity);
 }
 
 /**
