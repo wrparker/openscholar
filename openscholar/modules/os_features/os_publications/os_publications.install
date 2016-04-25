@@ -1544,3 +1544,10 @@ function os_publications_update_7043() {
     'visible' => '1'
   ));
 }
+
+/**
+ * Re run update #7043.
+ */
+function os_publications_update_7044() {
+  os_publications_update_7043();
+}
