@@ -2980,6 +2980,9 @@ function os_user_migration_ownership_submit($form, &$form_state) {
     $operations[] = array('os_user_change_content_ownership', array('og_membership', $primary_user->uid, $chunk));
   }
 
+  // todo: move all the og roles
+  // todo: handle duplicated memberships and roles.
+
   // Prepare batch settings
   $batch = array(
     'operations' => $operations,
