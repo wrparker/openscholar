@@ -2,6 +2,7 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:700);
 @import url(https://fonts.googleapis.com/css?family=Oswald);
 
+
 .node-title,
 .page-search .title a,
 #content-column .block.block-boxes-os_boxes_manual_list .links.inline a,
@@ -17,13 +18,15 @@
 body,
 h2.block-title,
 #menu-bar ul.nice-menu a,
-.region-header-third ul.nice-menu a {
+.region-header-third ul.nice-menu a,
+#page-title, #content-column h2, #content-column h3, #content-column h4, #tinymce h2, #tinymce h3, #tinymce h4 {
     font-family: 'Open Sans', sans-serif !important;
 }
 a,
 a:visited {
     color: #215990;
 }
+h1#page-title,
 .page-node h1#page-title {
     color: #8c8179;
     font-family: 'Oswald', sans-serif !important;
@@ -133,4 +136,11 @@ h2.block-title {
 .rslides_tabs a,
 .rslides_tabs a:visited {
     color: #86111E;
+}
+
+
+#search-block-form input.form-submit,
+#search-block-form #edit-submit,
+#search-form #edit-submit {
+   background: url(/profiles/openscholar/themes/hwpi_basetheme/images/hwpi_basesprite.png) no-repeat 2px -441px #444;
 }
