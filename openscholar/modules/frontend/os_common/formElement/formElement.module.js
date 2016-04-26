@@ -2,6 +2,13 @@
 
   var m = angular.module('formElement', ['basicFormElements', 'osHelpers', 'ngSanitize']);
 
+  //m.run(function () {
+  //  var deps = addDependencies('formElement');
+  //  for (var i=0; i<deps.length; i++) {
+  //    m.requires.push(deps[i]);
+  //  }
+  //});
+
   m.directive('formElement', ['$compile', '$filter', '$sce', function ($compile, $filter, $sce) {
     return {
       scope: {
