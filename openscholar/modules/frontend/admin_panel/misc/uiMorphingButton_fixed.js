@@ -84,7 +84,7 @@
 		if( this.options.closeEl2 !== '' ) {
 			var closeEl2 = this.el.querySelector( this.options.closeEl2 );
 			if( closeEl2 ) {
-				closeEl2.addEventListener( 'click', function() { self.toggle(); } );
+				//closeEl2.addEventListener( 'click', function() { self.toggle(); } );
 			}
 		}
 	}
