@@ -20,25 +20,46 @@
 .field-widget-media-draggable-file .file-list-single {
     border-bottom: 1px solid #ccc;
     padding: 5px 0;
+    word-wrap: break-word;
 }
 .field-widget-media-draggable-file .file-list-single .tabledrag-handle {
     display: inline-block;
     position: relative;
     top: -5px;
 }
+.field-widget-media-draggable-file div {
+    white-space: nowrap;
+    overflow: hidden;
+}
 .field-widget-media-draggable-file .file-list-single span {
     display: inline-block;
-    width: 55%;
+    width: 60%;
+
+    /* Prevent Edit/Replace/Remove controls from wrapping */
+    white-space: nowrap;
+
+    /* Truncate long filenames with "..." */
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
 }
 .field-widget-media-draggable-file .file-list-single ul {
     display: inline-block;
     width: 34%;
     margin: 0;
 }
+
 .field-widget-media-draggable-file .file-list-single ul li {
     display: inline-block;
     width: 32%;
     text-align: center;
+    white-space: nowrap;
+}
+
+/* Do not ellipsi-fy the edit/replace/remove control links */
+.field-widget-media-draggable-file .file-list-single ul li span {
+    text-overflow: visible;
+    overflow: visible;
 }
 .droppable-message,
 .droppable-standard-upload span {
