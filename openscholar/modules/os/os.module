@@ -2994,12 +2994,12 @@ function os_user_migration_ownership_submit($form, &$form_state) {
   // Process and change the entity ownership in batches.
   $chunks = array_chunk($content, $form_state['values']['batch_cycles']);
   foreach ($chunks as $chunk) {
-    $operations[] = array('os_user_change_content_ownership', array('node', $primary_user->uid, $chunk));
+    $operations[] = array('os_user_change_content_ownership', array('node', 'uid', $primary_user->uid, $chunk));
   }
 
   $chunks = array_chunk($memberships, $form_state['values']['batch_cycles']);
   foreach ($chunks as $chunk) {
-    $operations[] = array('os_user_change_content_ownership', array('og_membership', $primary_user->uid, $chunk));
+    $operations[] = array('os_user_change_content_ownership', array('og_membership', 'etid', $primary_user->uid, $chunk));
   }
 
   // Move all the og roles.
@@ -3051,15 +3051,17 @@ function os_get_user_content($uid, $entity_type = 'node', $owner_property = 'uid
  *
  * @param $entity_type
  *   The entity type.
+ * @param $property_type
+ *   The property type - uid or etid.
  * @param $uid
  *   The new user ID owner.
  * @param $entity_ids
  *   The current batch entities IDs
  */
-function os_user_change_content_ownership($entity_type, $uid, $entity_ids) {
+function os_user_change_content_ownership($entity_type, $property_type, $uid, $entity_ids) {
   $entities = entity_load($entity_type, $entity_ids);
   foreach ($entities as $entity) {
-    os_user_change_single_content_ownership($entity_type, $entity, $uid);
+    os_user_change_single_content_ownership($entity_type, $property_type, $entity, $uid);
   }
 }
 
@@ -3089,13 +3091,15 @@ function os_user_block_user($uid) {
  *
  * @param $entity_type
  *   The entity type - node, OG membership.
+ * @param $property_type
+ *   The property type - uid or etid.
  * @param $entity
  *   The entity object.
  * @param $uid
  *   The user ID.
  */
-function os_user_change_single_content_ownership($entity_type, $entity, $uid) {
-  $entity->uid = $uid;
+function os_user_change_single_content_ownership($entity_type, $property_type, $entity, $uid) {
+  $entity->{$property_type} = $uid;
   entity_save($entity_type, $entity);
 }
 
@@ -3130,9 +3134,7 @@ function os_user_transfer_og_roles($primary_user, $secondary_user) {
       ->condition('gid', $og_role->gid)
       ->condition('rid', $og_role->rid);
 
-    $count_query = clone $primary_user_roles;
-
-    if ($count_query->execute()->rowCount()) {
+    if ($primary_user_roles->execute()->rowCount()) {
       db_delete('og_users_roles')
         ->condition('uid', $primary_user->uid)
         ->condition('group_type', $og_role->group_type)
