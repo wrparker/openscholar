@@ -33,6 +33,7 @@ h1#page-title,
     font-size: 2.1em;
     font-weight: bold;
 }
+.section-nav ul.menu li a,
 #boxes-box-site_info,
 #boxes-box-site_info a {
     color: #fff;
@@ -65,24 +66,40 @@ h1#page-title,
 #menu-bar nav {
     background-color: #5a5a5a;
 }
-
+.section-nav .menu-depth-1 > a:hover,
+.section-nav .menu-depth-1 > a,
 .section-nav .menu-depth-1 > a[class="active-trail active active"] {
     background-color: #86111E !important;
     color: #ffdb6d !important;
 }
 
+
 .section-nav .expanded.menu-depth-2 > a:hover, 
 .section-nav .expanded.menu-depth-2 > a[class="active-trail active active"], 
 .section-nav a[class="active-trail active active"], 
 .section-nav a:hover {
-    background-color: #851824 !important;
-    color: #FFF  !important;
+    background-color: #a51c30  !important;
+    color: #ffdb6d  !important;
+}
+
+
+.section-nav ul.menu li {
+
+    background-color: #a51c30;
+
 }
 
 
 .block-boxes-os_boxes_sectionnav ul {
     border-top: none;
 }
+
+.section-nav ul.menu li a {
+ 
+    border-bottom: 1px solid #a51c30;
+   
+}
+
 
 #header {
     background-color: #444;
@@ -177,11 +194,11 @@ h1#page-title,
 }
 .rslides_tabs a,
 .rslides_tabs a:visited {
-    color: #86111E;
+    color: #a51c30;
 }
 
 a.rslides_nav {
-    background-color: #86111E;
+    background-color: #a51c30;
 }
 
 #search-block-form input.form-submit,
