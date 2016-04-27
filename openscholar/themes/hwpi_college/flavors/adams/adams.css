@@ -47,6 +47,20 @@ h1#page-title,
     text-transform: uppercase;
 }
 
+.section-nav .expanded.menu-depth-2 .menu-depth-3 > a, 
+.section-nav .expanded.menu-depth-2 .menu-depth-4 > a, 
+.section-nav .expanded.menu-depth-2 .menu-depth-5 > a, 
+.section-nav .expanded.menu-depth-2 .menu-depth-6 > a, 
+.section-nav .leaf.menu-depth-3 > a,
+.section-nav .leaf.menu-depth-4 > a, 
+.section-nav .leaf.menu-depth-5 > a, 
+.section-nav .leaf.menu-depth-6 > a,
+.section-nav .expanded.menu-depth-2 > a,
+.section-nav ul.menu li,
+.section-nav .expanded.menu-depth-2 > a:hover, 
+.section-nav .expanded.menu-depth-2 > a[class="active-trail active active"], 
+.section-nav a[class="active-trail active active"], 
+.section-nav a:hover,
 #menu-bar ul.nice-menu ul,
 #menu-bar ul.nice-menu .active-trail ul,
 #menu-bar ul.nice-menu a:hover,
@@ -55,7 +69,7 @@ h1#page-title,
 #menu-bar ul.nice-menu .menuparent a:hover,
 #menu-bar ul.nice-menu .menuparent a.active,
 #menu-bar ul.nice-menu .menuparent a.active:hover {
-    background-color: #a51c30;
+    background-color: #a51c30 !important;
 }
 
 
@@ -73,20 +87,18 @@ h1#page-title,
     color: #ffdb6d !important;
 }
 
-
+.section-nav ul.menu li,
 .section-nav .expanded.menu-depth-2 > a:hover, 
 .section-nav .expanded.menu-depth-2 > a[class="active-trail active active"], 
 .section-nav a[class="active-trail active active"], 
 .section-nav a:hover {
-    background-color: #a51c30  !important;
+
     color: #ffdb6d  !important;
 }
 
 
-.section-nav ul.menu li {
-
-    background-color: #a51c30;
-
+.section-nav .expanded.menu-depth-2 > a {
+    color: #fff  !important;
 }
 
 
