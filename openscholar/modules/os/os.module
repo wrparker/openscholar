@@ -3095,9 +3095,40 @@ function os_ownership_batch_finished($success, $results, $operations) {
  */
 function os_user_transfer_og_roles($primary_user, $secondary_user) {
   // Get secondary user roles
+  $og_roles = db_select('og_users_roles', 'ogu')
+    ->fields('ogu')
+    ->condition('uid', $secondary_user->uid)
+    ->execute();
 
-  // If the role in the role isn't assigned already to the primary user assign
-  // it. If not - delete.
+  foreach ($og_roles as $og_role) {
+    $primary_user_roles = db_select('og_users_roles', 'ogu')
+      ->fields('ogu')
+      ->condition('uid', $primary_user->uid)
+      ->condition('group_type', $og_role->group_type)
+      ->condition('gid', $og_role->gid)
+      ->condition('rid', $og_role->rid);
+
+    $count_query = clone $primary_user_roles;
+
+    if ($count_query->execute()->rowCount()) {
+      db_delete('og_users_roles')
+        ->condition('uid', $primary_user->uid)
+        ->condition('group_type', $og_role->group_type)
+        ->condition('gid', $og_role->gid)
+        ->condition('rid', $og_role->rid)
+        ->execute();
+    }
+    else {
+      db_insert('og_users_roles')
+        ->fields(array(
+          'uid' => $primary_user->uid,
+          'group_type' => $og_role->group_type,
+          'gid' => $og_role->gid,
+          'rid' => $og_role->rid,
+        ))
+        ->execute();
+    }
+  }
 }
 
 /**
