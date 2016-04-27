@@ -45,6 +45,22 @@ h1#page-title,
     font-size: 16px;
     text-transform: uppercase;
 }
+
+
+
+#menu-bar ul.nice-menu .menuparent.over > a,
+#menu-bar ul.nice-menu .menuparent a:hover,
+#menu-bar ul.nice-menu .menuparent a.active,
+#menu-bar ul.nice-menu .menuparent a.active:hover {
+
+      background-color: #86111E;
+}
+
+
+
+
+
+
 #menu-bar nav {
     background-color: #5a5a5a;
 }
@@ -90,8 +106,7 @@ h1#page-title,
 #powered-by a {
     background-position: -14px -548px;
 }
-.sidebar .block h2.block-title,
-h2.block-title {
+.sidebar .block h2.block-title, #content-column h2.block-title {
     background-color: #8c8179;
     color: #fff;
     padding: .5em 1em;
@@ -104,7 +119,6 @@ h2.block-title {
     color: #8c8179;
     padding: 0;
     font-size: 1.2em;
-    /* font-weight: bold !important; */
 }
 #content-column .block-inner,
 .sidebar .block {
@@ -138,6 +152,9 @@ h2.block-title {
     color: #86111E;
 }
 
+a.rslides_nav {
+    background-color: #86111E;
+}
 
 #search-block-form input.form-submit,
 #search-block-form #edit-submit,
