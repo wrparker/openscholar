@@ -46,14 +46,15 @@ h1#page-title,
     text-transform: uppercase;
 }
 
-
-
+#menu-bar ul.nice-menu ul,
+#menu-bar ul.nice-menu .active-trail ul,
+#menu-bar ul.nice-menu a:hover,
+#menu-bar ul.nice-menu a.active,
 #menu-bar ul.nice-menu .menuparent.over > a,
 #menu-bar ul.nice-menu .menuparent a:hover,
 #menu-bar ul.nice-menu .menuparent a.active,
 #menu-bar ul.nice-menu .menuparent a.active:hover {
-
-      background-color: #86111E;
+    background-color: #a51c30;
 }
 
 
@@ -67,7 +68,7 @@ h1#page-title,
 
 .section-nav .menu-depth-1 > a[class="active-trail active active"] {
     background-color: #86111E !important;
-    color: #fff !important;
+    color: #ffdb6d !important;
 }
 
 .section-nav .expanded.menu-depth-2 > a:hover, 
@@ -75,7 +76,7 @@ h1#page-title,
 .section-nav a[class="active-trail active active"], 
 .section-nav a:hover {
     background-color: #851824 !important;
-    color: #ffdb6d  !important;
+    color: #FFF  !important;
 }
 
 
