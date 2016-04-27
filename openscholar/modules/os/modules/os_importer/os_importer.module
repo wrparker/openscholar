@@ -566,6 +566,7 @@ function os_importer_import_validate($form, $form_state) {
   if ($form_state['values']['format'] == 'csv' && $form_state['type'] == 'person') {
     $file = file_load($form_state['values']['file']);
     feeds_include_library('ParserCSV.inc', 'ParserCSV');
+    ini_set("auto_detect_line_endings", TRUE);
     $parser = new ParserCSV();
     $parser->setDelimiter(',');
     $iterator = new ParserCSVIterator($file->uri);
