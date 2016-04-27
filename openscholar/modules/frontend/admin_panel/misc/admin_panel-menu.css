@@ -361,6 +361,9 @@ td.user-site-controls {
 .btton.remove {
     background-color: #FF3E00;
 }
+.btton:visited {
+   color: #FFF;
+}
 /* Table styling*/
 
 table.table-shading {

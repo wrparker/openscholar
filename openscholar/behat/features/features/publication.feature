@@ -118,3 +118,12 @@ Feature:
     Given I am logging in as "john"
       And I visit "john/publications/year/1943"
      Then I should see "Publications by Year: 1943"
+
+  @api @features_second
+  Scenario: Verify we don't get html tags in the publication title.
+    Given I am logging in as "john"
+      And I go to the "os_publications" app settings in the vsite "john"
+      And I select the radio button named "biblio_citeproc_style" with value "chicago-author-date.csl"
+      And I press "Save configuration"
+     When I visit "john/publications/reevaluation-Chinas-Co2-Emissions"
+     Then I should not see "<sub>2</sub>"
