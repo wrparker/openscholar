@@ -58,5 +58,14 @@ function os_news_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'view news content'.
+  $permissions['view news content'] = array(
+    'name' => 'view news content',
+    'roles' => array(
+      'viewer' => 'viewer',
+    ),
+    'module' => 'node',
+  );
+
   return $permissions;
 }

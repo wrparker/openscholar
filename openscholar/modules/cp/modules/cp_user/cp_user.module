@@ -29,12 +29,23 @@ function cp_user_node_access($node, $op, $account) {
  * Implements hook_permission().
  */
 function cp_user_permission() {
-  return array(
-    'access viewer app' => array(
-      'title' => t('Access Content in Readonly mode'),
-      'description' => t('Access Private sites and unpublished content in read only mode.'),
-    ),
-  );
+  // Generate standard permissions for all applicable OS apps features.
+  $app_info = os_app_info();
+  $perms = array();
+  foreach ($app_info as $app_name => $info) {
+    if (!isset($info['nodetypes'][0]) || in_array($app_name, array('os_files_private', 'os_importer'))) {
+      continue;
+    }
+    foreach($info['nodetypes'] as $node_type) {
+      $perms += array(
+        "view " . $node_type . " content" => array(
+          'title' => t('View @type_name content', array(
+            '@type_name' => $node_type)),
+        )
+      );
+    }
+  }
+  return $perms;
 }
 
 /**

@@ -106,5 +106,23 @@ function os_classes_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'view class content'.
+  $permissions['view class content'] = array(
+    'name' => 'view class content',
+    'roles' => array(
+      'viewer' => 'viewer',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'view class_material content'.
+  $permissions['view class_material content'] = array(
+    'name' => 'view class_material content',
+    'roles' => array(
+      'viewer' => 'viewer',
+    ),
+    'module' => 'node',
+  );
+
   return $permissions;
 }

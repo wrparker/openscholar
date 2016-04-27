@@ -4,7 +4,7 @@
  * Updates for adding new role 'Viewer' and its permission set for readonly access.
  */
 function cp_user_update_7000() {
-  features_revert(array('cp_user' => array('user_role', 'user_permission')));
+  features_revert(array('cp_user' => array('user_role')));
   // Inserting into 'og_role' table for 'viewer' role entry.
   $viewer_role_ids = array(23 => 'department', 33 => 'personal', 53 => 'project');
   foreach ($viewer_role_ids as $rid => $group_bundle) {

@@ -58,5 +58,14 @@ function os_faq_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'view faq content'.
+  $permissions['view faq content'] = array(
+    'name' => 'view faq content',
+    'roles' => array(
+      'viewer' => 'viewer',
+    ),
+    'module' => 'node',
+  );
+
   return $permissions;
 }

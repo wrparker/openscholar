@@ -58,5 +58,14 @@ function os_reader_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'view feed content'.
+  $permissions['view feed content'] = array(
+    'name' => 'view feed content',
+    'roles' => array(
+      'viewer' => 'viewer',
+    ),
+    'module' => 'node',
+  );
+
   return $permissions;
 }

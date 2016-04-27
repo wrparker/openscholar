@@ -58,5 +58,14 @@ function os_presentations_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'view presentation content'.
+  $permissions['view presentation content'] = array(
+    'name' => 'view presentation content',
+    'roles' => array(
+      'viewer' => 'viewer',
+    ),
+    'module' => 'node',
+  );
+
   return $permissions;
 }

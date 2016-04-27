@@ -59,5 +59,14 @@ function os_pages_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'view page content'.
+  $permissions['view page content'] = array(
+    'name' => 'view page content',
+    'roles' => array(
+      'viewer' => 'viewer',
+    ),
+    'module' => 'node',
+  );
+
   return $permissions;
 }
