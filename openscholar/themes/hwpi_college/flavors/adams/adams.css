@@ -51,11 +51,10 @@ h1#page-title,
     font-weight: bold;
 }
 #header,
-.section-nav .expanded.menu-depth-2 > a,
 .section-nav ul.menu li a,
 #boxes-box-site_info,
 #boxes-box-site_info a {
-    color: #fff !important;
+    color: #fff;
 }
 #menu-bar {
     background: #444;
@@ -90,8 +89,10 @@ a.rslides_nav,
 #menu-bar ul.nice-menu .menuparent a.active:hover {
     background-color: #a51c30 !important;
 }
+ 
+.rslides_tabs li,
 #menu-bar nav {
-    background-color: #5a5a5a;
+    background: #5a5a5a !important;
 }
 .section-nav .menu-depth-1 > a:hover,
 .section-nav .menu-depth-1 > a,
@@ -107,6 +108,9 @@ a.rslides_nav,
 .section-nav a[class="active-trail active active"],
 .section-nav a:hover {
     color: #ffdb6d !important;
+}
+.section-nav .expanded.menu-depth-2 > a {
+	 color: #fff !important;
 }
 
 .block-boxes-os_taxonomy_fbt.navigation h2,
@@ -203,9 +207,7 @@ a.rslides_nav,
     padding: 8px 0 2px;
 }
  
-.rslides_tabs li {
-    background: #5a5a5a !important;
-}
+
 .rslides_tabs a,
 .rslides_tabs a:visited {
     color: #a51c30;
@@ -224,6 +226,15 @@ a.rslides_nav,
 .ui-tabs .ui-tabs-nav li a {
     text-transform: none;
     font-weight: normal;
+}
+.block-boxes-os_boxes_tabs .ui-state-default {
+    border: none !important;
+}
+
+.ui-tabs ul.ui-tabs-nav {
+    border-left:1px solid #ccc;
+    border-right:1px solid #ccc;
+    border-top:1px solid #ccc;
 }
 .front.no-sidebars .region-content-top .block-boxes-os_slideshow_box:after {
     position: relative;
