@@ -40,6 +40,7 @@
 
 	UIMorphingButton.prototype.options = {
 		closeEl : '',
+		closeEl2 : '',
 		onBeforeOpen : function() { return false; },
 		onAfterOpen : function() { return false; },
 		onBeforeClose : function() { return false; },
@@ -64,18 +65,31 @@
 	UIMorphingButton.prototype._initEvents = function() {
 		var self = this;
 		// open
-		this.button.addEventListener( 'click', function() { self.toggle(); } );
+		this.button.addEventListener( 'click', function() {
+            self.toggle();
+            self.expanded = !self.expanded;
+        } );
 		// close
 		if( this.options.closeEl !== '' ) {
 			var closeEl = this.el.querySelector( this.options.closeEl );
 			if( closeEl ) {
-				closeEl.addEventListener( 'click', function() { self.toggle(); } );
+                closeEl.addEventListener('click', function() {
+                    self.toggle();
+                    self.expanded = !self.expanded;
+                });
+
+
+			}
+		}
+		if( this.options.closeEl2 !== '' ) {
+			var closeEl2 = this.el.querySelector( this.options.closeEl2 );
+			if( closeEl2 ) {
+				//closeEl2.addEventListener( 'click', function() { self.toggle(); } );
 			}
 		}
 	}
 
 	UIMorphingButton.prototype.toggle = function() {
-		if( this.isAnimating ) return false;
 
 		// callback
 		if( this.expanded ) {
@@ -99,7 +113,7 @@
 					if( self.expanded && ev.propertyName !== 'opacity' || !self.expanded && ev.propertyName !== 'width' && ev.propertyName !== 'height' && ev.propertyName !== 'left' && ev.propertyName !== 'top' ) {
 						return false;
 					}
-					this.removeEventListener( transEndEventName, onEndTransitionFn );
+				 	this.removeEventListener( transEndEventName, onEndTransitionFn );
 				}
 				self.isAnimating = false;
 				
@@ -112,8 +126,6 @@
 				else {
 					self.options.onAfterOpen();
 				}
-
-				self.expanded = !self.expanded;
 			};
 			
 		// set the left and top values of the contentEl (same like the button)

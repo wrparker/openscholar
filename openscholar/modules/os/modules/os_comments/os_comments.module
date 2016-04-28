@@ -338,13 +338,13 @@ function os_comments_form_node_form_alter(&$form, $form_state, $form_id) {
   // Default values in case we don't find the app info.
   $app = '';
   $settings = t('App settings');
+  $vsite = vsite_get_vsite();
 
-  $vsite_enabled = module_exists('vsite');
-  if ($vsite_enabled && $purl = vsite_get_purl()) {
-    $app_settings_path = "/$purl/cp/build";
+  if ($vsite) {
+    $app_settings_path = $vsite->get_absolute_url() . '/cp/build';
   }
   else {
-    $app_settings_path = '/cp/build';
+    $app_settings_path = url('/cp/build');
   }
 
   // Try to find this app's info...
@@ -365,12 +365,12 @@ function os_comments_form_node_form_alter(&$form, $form_state, $form_id) {
       $settings = $menu_item['title'];
     }
     // Multi tenant
-    if ($purl) {
-      $app_settings_path = "$purl/cp/build/#overlay=$purl/cp/build/features/$app";
+    if ($vsite) {
+      $app_settings_path = $vsite->get_absolute_url() . "/cp/build/features/$app";
     }
     // Single tenant
     else {
-      $app_settings_path = "/cp/build/#overlay=cp/build/features/$app";
+      $app_settings_path = url("/cp/build/features/$app");
     }
   }
 

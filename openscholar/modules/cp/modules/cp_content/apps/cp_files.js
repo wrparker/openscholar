@@ -4,15 +4,24 @@
       var elem = angular.element(document.querySelectorAll('.view-id-cp_files'));
       elem.attr('ng-controller', 'CpFilesController');
 
+      var addNew = document.querySelector('.add_new');
+      addNew = angular.element(addNew);
+
       var hash = $w.location.hash;
       if (hash == '#open') {
-        var elem = document.querySelector('.add_new');
-        elem = angular.element(elem);
         $t(function () {
-          elem.triggerHandler('click');
+          addNew.triggerHandler('click');
         }, 0);
         $w.location.hash = '';
       }
+      angular.element(window).on('hashchange', function (e) {
+        if (e.fragment == 'open') {
+          $t(function () {
+            addNew.triggerHandler('click');
+          }, 0);
+          $w.location.hash = '';
+        }
+      });
     }])
     .controller('CpFilesController', ['$scope', 'FILEEDITOR_RESPONSES', function ($scope, FER) {
       $scope.reload = function (result) {
@@ -31,5 +40,7 @@
           window.location.reload();
         }
       }
+
+
     }]);
 })();
