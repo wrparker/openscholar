@@ -23,7 +23,10 @@ h2.block-title,
 #content-column h4,
 #tinymce h2,
 #tinymce h3,
-#tinymce h4 {
+#tinymce h4,
+.sidebar .boxes-box-content, 
+.sidebar .boxes-box-content p,
+.ui-tabs {
     font-family: 'Open Sans', sans-serif !important;
 }
 .sidebar .block h2.block-title,
@@ -89,8 +92,10 @@ a.rslides_nav,
 .section-nav .menu-depth-1 > a,
 .section-nav .menu-depth-1 > a[class="active-trail active active"] {
     background-color: #86111E !important;
-    color: #ffdb6d !important;
 }
+.section-nav .menu-depth-1 > a:hover,
+.section-nav .menu-depth-1 > a,
+.section-nav .menu-depth-1 > a[class="active-trail active active"],
 .section-nav ul.menu li,
 .section-nav .expanded.menu-depth-2 > a:hover,
 .section-nav .expanded.menu-depth-2 > a[class="active-trail active active"],
@@ -190,6 +195,9 @@ a.rslides_nav,
 .event-start .event-start {
     height: 60px;
 }
+.event-start .event-year {
+    padding: 8px 0 2px;
+}
 #branding_footer,
 #branding_header {
     background: #000;
@@ -205,4 +213,14 @@ a.rslides_nav,
 #search-block-form #edit-submit,
 #search-form #edit-submit {
     background: url(/profiles/openscholar/themes/hwpi_basetheme/images/hwpi_basesprite.png) no-repeat 2px -441px #444;
+}
+.ui-tabs ul.ui-tabs-nav li.ui-tabs-active a {
+    background: #a51c30 !important;
+    border: none;
+    border-bottom-width: 0;
+    color: #fff;
+}
+.ui-tabs .ui-tabs-nav li a {
+    text-transform: none;
+    font-weight: normal;
 }
