@@ -1,6 +1,9 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 @import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:700);
 @import url(https://fonts.googleapis.com/css?family=Oswald);
+body {
+    overflow-x: initial;
+}
 .node-title,
 .page-search .title a,
 #content-column .block.block-boxes-os_boxes_manual_list .links.inline a,
@@ -47,10 +50,12 @@ h1#page-title,
     font-size: 2.1em;
     font-weight: bold;
 }
+#header,
+.section-nav .expanded.menu-depth-2 > a,
 .section-nav ul.menu li a,
 #boxes-box-site_info,
 #boxes-box-site_info a {
-    color: #fff;
+    color: #fff !important;
 }
 #menu-bar {
     background: #444;
@@ -103,10 +108,7 @@ a.rslides_nav,
 .section-nav a:hover {
     color: #ffdb6d !important;
 }
-#header,
-.section-nav .expanded.menu-depth-2 > a {
-    color: #fff !important;
-}
+
 .block-boxes-os_taxonomy_fbt.navigation h2,
 .block-boxes-os_boxes_sectionnav ul {
     border-top: none;
@@ -138,6 +140,8 @@ a.rslides_nav,
     border-top: none;
     color: #FFF;
 }
+#branding_footer,
+#branding_header,
 #footer {
     background-color: #000;
 }
@@ -198,10 +202,7 @@ a.rslides_nav,
 .event-start .event-year {
     padding: 8px 0 2px;
 }
-#branding_footer,
-#branding_header {
-    background: #000;
-}
+ 
 .rslides_tabs li {
     background: #5a5a5a !important;
 }
@@ -223,4 +224,7 @@ a.rslides_nav,
 .ui-tabs .ui-tabs-nav li a {
     text-transform: none;
     font-weight: normal;
+}
+.front.no-sidebars .region-content-top .block-boxes-os_slideshow_box:after {
+    position: relative;
 }
