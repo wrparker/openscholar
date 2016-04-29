@@ -29,7 +29,8 @@ h2.block-title,
 #tinymce h4,
 .sidebar .boxes-box-content, 
 .sidebar .boxes-box-content p,
-.ui-tabs {
+.ui-tabs,
+.slide-copy h2 {
     font-family: 'Open Sans', sans-serif !important;
 }
 .sidebar .block h2.block-title,
@@ -238,4 +239,7 @@ a.rslides_nav,
 }
 .front.no-sidebars .region-content-top .block-boxes-os_slideshow_box:after {
     position: relative;
+}
+#layout_16_9_side .slide {
+    background: #333;
 }
