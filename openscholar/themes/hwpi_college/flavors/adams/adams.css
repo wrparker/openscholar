@@ -30,7 +30,8 @@ h2.block-title,
 .sidebar .boxes-box-content, 
 .sidebar .boxes-box-content p,
 .ui-tabs,
-.slide-copy h2 {
+.slide-copy h2,
+#layout_3_1_overlay .slide-copy h2 {
     font-family: 'Open Sans', sans-serif !important;
 }
 .sidebar .block h2.block-title,
