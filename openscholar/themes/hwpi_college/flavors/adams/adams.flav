@@ -4,3 +4,4 @@ screenshot = screenshot.png
 
 css[] = adams.css
 css[] = responsive.adams.css
+scripts[] = adams.js
