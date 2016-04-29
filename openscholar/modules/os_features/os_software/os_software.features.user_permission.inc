@@ -106,23 +106,5 @@ function os_software_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'view software_project content'.
-  $permissions['view software_project content'] = array(
-    'name' => 'view software_project content',
-    'roles' => array(
-      'viewer' => 'viewer',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'view software_release content'.
-  $permissions['view software_release content'] = array(
-    'name' => 'view software_release content',
-    'roles' => array(
-      'viewer' => 'viewer',
-    ),
-    'module' => 'node',
-  );
-
   return $permissions;
 }

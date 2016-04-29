@@ -260,7 +260,7 @@ class vsite extends space_og {
 
         case 2:
           // Admin or group member?
-          if (!og_is_member($this->group_type, $this->id, 'user', $account) && !user_access('administer nodes')) {
+          if (!og_is_member($this->group_type, $this->id, 'user', $account) && !user_access('administer nodes') && !user_access('access viewer app', $account)) {
             $access = FALSE;
           }
           break;

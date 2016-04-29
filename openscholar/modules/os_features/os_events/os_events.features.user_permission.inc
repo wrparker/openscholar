@@ -235,14 +235,5 @@ function os_events_user_default_permissions() {
     'module' => 'registration',
   );
 
-  // Exported permission: 'view event content'.
-  $permissions['view event content'] = array(
-    'name' => 'view event content',
-    'roles' => array(
-      'viewer' => 'viewer',
-    ),
-    'module' => 'node',
-  );
-
   return $permissions;
 }

@@ -58,14 +58,5 @@ function os_blog_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'view blog content'.
-  $permissions['view blog content'] = array(
-    'name' => 'view blog content',
-    'roles' => array(
-      'viewer' => 'viewer',
-    ),
-    'module' => 'node',
-  );
-
   return $permissions;
 }

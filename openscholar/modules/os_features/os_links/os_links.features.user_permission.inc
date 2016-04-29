@@ -58,14 +58,5 @@ function os_links_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'view link content'.
-  $permissions['view link content'] = array(
-    'name' => 'view link content',
-    'roles' => array(
-      'viewer' => 'viewer',
-    ),
-    'module' => 'node',
-  );
-
   return $permissions;
 }

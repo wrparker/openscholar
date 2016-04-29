@@ -60,23 +60,5 @@ function os_image_gallery_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'view slideshow_slide content'.
-  $permissions['view slideshow_slide content'] = array(
-    'name' => 'view slideshow_slide content',
-    'roles' => array(
-      'viewer' => 'viewer',
-    ),
-    'module' => 'node',
-  );
-
-  // Exported permission: 'view media_gallery content'.
-  $permissions['view media_gallery content'] = array(
-    'name' => 'view media_gallery content',
-    'roles' => array(
-      'viewer' => 'viewer',
-    ),
-    'module' => 'node',
-  );
-
   return $permissions;
 }

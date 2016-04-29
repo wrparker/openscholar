@@ -67,14 +67,5 @@ function os_profiles_user_default_permissions() {
     'module' => 'node',
   );
 
-  // Exported permission: 'view person content'.
-  $permissions['view person content'] = array(
-    'name' => 'view person content',
-    'roles' => array(
-      'viewer' => 'viewer',
-    ),
-    'module' => 'node',
-  );
-
   return $permissions;
 }

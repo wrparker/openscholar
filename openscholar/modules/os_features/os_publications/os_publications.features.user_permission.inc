@@ -184,14 +184,5 @@ function os_publications_user_default_permissions() {
     'module' => 'biblio',
   );
 
-    // Exported permission: 'view biblio content'.
-  $permissions['view biblio content'] = array(
-    'name' => 'view biblio content',
-    'roles' => array(
-      'viewer' => 'viewer',
-    ),
-    'module' => 'node',
-  );
-
   return $permissions;
 }
