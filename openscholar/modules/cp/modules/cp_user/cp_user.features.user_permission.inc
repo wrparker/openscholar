@@ -9,13 +9,16 @@
  */
 function cp_user_user_default_permissions() {
   $permissions = array();
-  // Exported permission: 'access viewer app'.
-  $permissions['access viewer app'] = array(
-    'name' => 'access viewer app',
+  // Exported permission: 'access content overview'.
+  $permissions['access content overview'] = array(
+    'name' => 'access content overview',
     'roles' => array(
       'viewer' => 'viewer',
+      'administrator' => 'administrator',
+      'manager' => 'manager',
+      'vsite admin' => 'vsite admin'
     ),
-    'module' => 'cp_user',
+    'module' => 'node',
   );
 
   return $permissions;

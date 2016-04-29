@@ -17,24 +17,13 @@ define('OS_USER_ROLE_VIEWER', 'viewer');
  * Implements hook_node_access().
  */
 function cp_user_node_access($node, $op, $account) {
+  $vsite = vsite_get_vsite();
   // Viewer roles will be able to see unpublished content.
-  if (isset($node->status) && $node->status == NODE_NOT_PUBLISHED && $op == 'view') {
-    if (user_access('access viewer app', $account)) {
+  if (isset($node->status) && $node->status == NODE_NOT_PUBLISHED && $op == 'view' && isset($vsite->group->nid)) {
+      if (user_access('access content overview', $account) || in_array(OS_USER_ROLE_VIEWER, og_get_user_roles($vsite->group_type, $vsite->group->nid))) {
       return NODE_ACCESS_ALLOW;
     }
   }
-}
-
-/**
- * Implements hook_permission().
- */
-function cp_user_permission() {
-  return array(
-    'access viewer app' => array(
-      'title' => t('Access Content in Readonly mode'),
-      'description' => t('Access Private sites and unpublished content in read only mode.'),
-    ),
-  );
 }
 
 /**
