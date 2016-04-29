@@ -243,3 +243,10 @@ a.rslides_nav,
 #layout_16_9_side .slide {
     background: #333;
 }
+#footer .footer-login {
+text-shadow: none;
+  color:#ddd;
+}
+#footer .footer-login:after {
+    background-image: none;
+  }
