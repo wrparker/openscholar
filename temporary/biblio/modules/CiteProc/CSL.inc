@@ -1210,11 +1210,14 @@ class csl_text extends csl_format {
       case 'variable':
         if (!isset($data->{$this->variable}) || empty($data->{$this->variable}) || trim($data->{$this->variable}) == FALSE) return;
         if ($this->variable == 'biblio_url') {
-          $text = l(htmlentities($data->{$this->variable}, ENT_QUOTES), $data->{$this->variable});
+          $text = l($data->{$this->variable}, $data->{$this->variable});
         }
         else {
-          $text = htmlentities($data->{$this->variable}, ENT_QUOTES); //$this->data[$this->var];  // include the contents of a variable
+          $text = $data->{$this->variable}; //$this->data[$this->var];  // include the contents of a variable
         }
+
+        // Filter only specific tags of html.
+        $text = filter_xss($text, array('sup', 'sub', 'i'));
         break;
       case 'macro':
         $macro = $this->var;

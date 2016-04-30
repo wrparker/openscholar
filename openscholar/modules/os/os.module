@@ -651,6 +651,7 @@ function _os_process_node_links_comment_add_class(&$vars) {
  * Implements hook_preprocess_HOOK() for page.tpl.php.
  */
 function os_preprocess_page(&$vars) {
+  global $user;
   // Add the dismiss messages JS.
   drupal_add_js(drupal_get_path('module', 'os') . "/theme/os_dismiss.js", "file");
 
@@ -758,14 +759,18 @@ function os_preprocess_page(&$vars) {
   drupal_alter('os_add_new_links', $links);
 
   ksort($links);
-  $vars['title_suffix']['controls'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'class' => array(
-        'contextual-controls-wrapper',
+  if ($user->uid) {
+    $vars['title_suffix']['controls'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array(
+          'contextual-controls-wrapper',
+        ),
       ),
-    ),
-  );
+    );
+  }
+  
+
   if (count($links) > 1) {
     $vars['title_suffix']['controls']['add_new'] = array(
       '#theme' => 'ctools_dropdown',
@@ -2030,6 +2035,23 @@ function os_get_app_by_bundle($bundle) {
  * Implements hook_form_BASE_FORM_ID_alter() for user_login form.
  */
 function os_form_user_login_alter(&$form, $form_state) {
+
+  // Add an optional announcement to login page (e.g., new feature)
+  if (variable_get('os_login_message')) {
+    $form['login_announcement_message'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array(
+          'login-announcements',
+        )
+      ),
+      'message-text' => array(
+        '#markup' => variable_get('os_login_message')
+      ),
+      '#weight' => -100
+    );
+  }
+
   if (variable_get('os_login_with_email', TRUE)) {    
     // Add a new validation.
     // Validation function vsite_user_login_validate must run first.
@@ -2802,6 +2824,7 @@ function _os_advagg_build_css_path($matches) {
  * Implements hook_page_build().
  */
 function os_page_build(&$page) {
+  global $user;
   $header = drupal_get_http_header('status');
   // Checking if currently displayed page has HTTP 403 access denied status in http header.
   if ($header == '403 Forbidden') {
@@ -2810,8 +2833,16 @@ function os_page_build(&$page) {
     // vsite purl will be a part of destination url.
     $redirect['destination'] = isset($vsite->group->purl) ? $vsite->group->purl . '/' . $redirect['destination'] : $redirect['destination'];
     $main_content_display = &drupal_static('system_main_content_added', FALSE);
-    $warning_msg = t('You are not authorized to access this page.');
-    $warning_msg .= '<br/>' . 'You need to ' . l('log in', 'user/login', array('query' => array('destination' => $redirect['destination']) )) . ' to access this page';
+
+    // If the user has logged in, but do not have access to view the page.
+    if ($user->uid) {
+      $warning_msg = t('Sorry, you are not authorized to access this page.<br/>Please contact the site owner to gain access.');
+    }
+    else {
+      $warning_msg = t('You are not authorized to access this page.');
+      $warning_msg .= '<br/>' . 'You need to ' . l('log in', 'user/login', array('query' => array('destination' => $redirect['destination']) )) . ' to access this page';
+    }
+    
     $page['content']['system_main']['main']['#markup'] = $warning_msg;
     $main_content_display = TRUE;
   }
