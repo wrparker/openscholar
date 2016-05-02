@@ -329,13 +329,16 @@ function hwpi_theme_set_defaults() {
  * The string must be UTF-8 compliant. Which is why the wierd A's are in there.
  */
 function hwpi_vsite_register_notify_author_body_text_alter(&$body_text) {
+
+  global $base_url;
+
   $body_text = "Hi !username,\n\n"
     . "Congratulations! Your new website !site_url has been activated, and you can log into your site at !site_login_uri with the username !username. "
     . "Don't forget to bookmark your new site and save this email for future reference.\n"
     . "\n"
     . "Here are some handy links for you:\n"
     . "\n"
-    . " * Logging in to your site: /user/?destination=!username \n"
+    . " * Logging in to your site: $base_url/user/?destination=!username \n"
     . " * Sign up for training: http://hwp.harvard.edu/calendar/upcoming \n"
     . " * OpenScholar documentation: http://docs.openscholar.harvard.edu \n"
     . " * Need help with your project? http://hwp.harvard.edu \n"
