@@ -250,6 +250,14 @@ body.overlay {
     position: relative;
 }
 
+.notifications-headsup .slate.alert {
+   border-radius: 13px;
+   font-size: 0.8em;
+   line-height: 1.6em;
+   top: 20px;
+   right: 35px;
+ }
+
 .slate.alert {
     background: #EF0812;
     position: absolute;

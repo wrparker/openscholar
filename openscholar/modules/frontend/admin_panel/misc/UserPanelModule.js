@@ -88,7 +88,7 @@
       //Go to feed and check for notifications.
   	  return {
   	    link: function(scope, element, attrs) {
-  		  count_element = angular.element('<span class="slate alert" ng-alert=></span>');
+  		  var count_element = angular.element('<span class="slate alert" ng-alert=></span>');
   		  // @TODO: Add support for multiple feeds.
 	      var feed = new google.feeds.Feed(notify_settings.url);
 	      var link = element.find('a')[0];
