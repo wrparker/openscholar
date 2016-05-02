@@ -1526,15 +1526,6 @@ function os_publications_update_7042() {
 function os_publications_update_7043() {
   os_publications_update_7034();
 
-  os_publications_restore_field('biblio_date', 'Working paper', array(
-    'common' => 1,
-    'vtab' => 2,
-    'autocomplete' => 0,
-    'required' => 1,
-    'weight' => '-46',
-    'visible' => '1'
-  ));
-
   os_publications_restore_field('biblio_year', 'Working paper', array(
     'common' => 1,
     'vtab' => 2,
@@ -1543,11 +1534,4 @@ function os_publications_update_7043() {
     'weight' => '-47',
     'visible' => '1'
   ));
-}
-
-/**
- * Re run update #7043.
- */
-function os_publications_update_7044() {
-  os_publications_update_7043();
 }
