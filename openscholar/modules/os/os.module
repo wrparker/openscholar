@@ -3005,8 +3005,8 @@ function os_user_migration_ownership_submit($form, &$form_state) {
   // Move all the og roles.
   $operations[] = array('os_user_transfer_og_roles', array($primary_user, $secondary_user));
 
-  // Handle duplicated memberships and roles.
-  $operations[] = array('os_user_clear_duplicated_ownerships', array($primary_user));
+  // Remove all the duplicate memberships.
+  $operations[] = array('os_user_remove_duplicated_ownerships', array($primary_user));
 
   // Prepare batch settings
   $batch = array(
@@ -3027,15 +3027,23 @@ function os_user_migration_ownership_submit($form, &$form_state) {
  *   The entity type: OG membership, node etc. etc.
  * @param $owner_property
  *   The property in the table which specify the owner of the entity.
+ * @param $order_key
+ *   The order to order by. Optional.
  *
  * @return array|bool
  */
-function os_get_user_content($uid, $entity_type = 'node', $owner_property = 'uid') {
+function os_get_user_content($uid, $entity_type = 'node', $owner_property = 'uid', $order_key = NULL) {
   // Get all of the target entities.
   $query = new EntityFieldQuery();
-  $result = $query
+  $query
     ->entityCondition('entity_type', $entity_type)
-    ->propertyCondition($owner_property, $uid)
+    ->propertyCondition($owner_property, $uid);
+
+  if ($order_key) {
+    $query->propertyOrderBy($order_key);
+  }
+
+  $result = $query
     ->execute();
 
   // Return early in case their is no content.
@@ -3156,13 +3164,30 @@ function os_user_transfer_og_roles($primary_user, $secondary_user) {
 }
 
 /**
- * Remove duplicate membership the user own.
+ * Prepare duplicate memberships for deletion.
  *
  * @param $user
- *   The user object which might have duplicate memberships and OG roles.
+ *   The user object.
  */
-function os_user_clear_duplicated_ownerships($user) {
-// todo: do it. do it now, common.
+function os_user_remove_duplicated_ownerships($user) {
+  $mids = os_get_user_content($user->uid, 'og_membership', 'etid', 'gid');
+  $memberships = og_membership_load_multiple($mids);
+
+  $obj = new ArrayObject($memberships);
+  $it = $obj->getIterator();
+
+  $ids_delete = array();
+  while ($it->valid()) {
+    $current = $it->current();
+    $it->next();
+    $next = $it->current();
+
+    if ($next->gid == $current->gid && $next->group_type == $current->group_type) {
+      $ids_delete[] = $next->id;
+    }
+  }
+
+  og_membership_delete_multiple($ids_delete);
 }
 
 /**
