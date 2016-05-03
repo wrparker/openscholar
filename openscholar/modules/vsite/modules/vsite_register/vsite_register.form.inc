@@ -775,7 +775,7 @@ function _vsite_register_mail_replacements($vsite, $author, $key) {
   $replacements = array(
     '!username' => $author->name,
     '!site_login_uri' => url($base_url . '/' . $vsite->group->purl . '/user/login', array('absolute' => TRUE, 'query' => array('destination' => $vsite->group->purl))),
-    '!site_uri' => url($base_url . '/' . $vsite->group->purl . '/user?', array('absolute' => TRUE, 'query' => array('destination' => $vsite->group->purl))),
+    '!site_uri' => url($base_url . '/user', array('absolute' => TRUE, 'query' => array('destination' => $vsite->group->purl))),
     '!user_mail' => $author->mail,
     '!site_url' => url($base_url . '/' . $vsite->group->purl, array('absolute' => TRUE)),
     '!sitewide_name' => variable_get('site_name', 'OpenScholar'),
