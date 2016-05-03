@@ -121,7 +121,6 @@ function os_menu() {
     'page callback' => 'os_view_migrated_users_delete',
     'page arguments' => array(5),
     'access callback' => 'os_view_migrated_users_access',
-    'type' => MENU_LOCAL_TASK,
   );
 
   return $items;
@@ -2909,7 +2908,7 @@ function os_user_migration_ownership($form, &$form_state) {
     '#description' => t('Set a limit of how many items to process for each content migration batch.'),
     '#size' => 30,
     '#maxlength' => 60,
-    '#default_value' => 250,
+    '#default_value' => 50,
   );
 
   $form['actions'] = array(
@@ -3081,11 +3080,6 @@ function os_user_change_content_ownership($entity_type, $property_type, $uid, $e
  */
 function os_user_block_user($uid) {
   $user = entity_load_single('user', $uid);
-
-  // Return early in case the user is already blocked.
-  if (!$user->status) {
-    return;
-  }
 
   $user->status = 0;
   $uids = variable_get('os_ownership_migration_uids', array());
