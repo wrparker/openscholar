@@ -21,10 +21,9 @@
       var menu = 'admin_panel';
       $scope.paths = paths;
 
-      menu_state = $cookies.getObject('osAdminMenuState')
+      menu_state = $cookies.getObject('osAdminMenuState') || {};
       
       $scope.getListStyle = function(id) {
-        console.log(id);
         if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
           return {'display':'block'};
         }
@@ -55,9 +54,9 @@
           },1);  
           
           window.setTimeout(function () {
-          jQuery('.morph-button').removeClass('no-transition');
-          morphButton.isAnimating = false;
-          morphButton.expanded = true;
+            jQuery('.morph-button').removeClass('no-transition');
+            morphButton.isAnimating = false;
+            morphButton.expanded = true;
           },1000);
         } else {
           if (typeof(menu_state) !== 'undefined') {
@@ -83,7 +82,7 @@
           $localStorage.admin_menu[uid][vsite][cid] = response.data.data;
           $scope.admin_panel = response.data.data;
           if (force_open || (auto_open && typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main)) {
-          morphButton.toggle();
+            morphButton.toggle();
           } else if (typeof(menu_state) !== 'undefined') {
 
         	//Set the menu state to closed.
@@ -172,13 +171,9 @@
         },
       };
       
-    }]).directive('leftMenu', ['$cookies', function($cookies) {
+    }]).directive('leftMenu', ['$cookies', '$timeout', function($cookies, $t) {
       if (typeof(menu_state) == 'undefined') {
-        menu_state = $cookies.getObject('osAdminMenuState');
-      }
-      // If it is still undefined init it.
-      if (typeof(menu_state) == 'undefined') {
-        menu_state = {'main': false};  
+        menu_state = $cookies.getObject('osAdminMenuState') || {main: false};
       }
       
       return {
@@ -197,7 +192,7 @@
       			  jQuery('.morph-button').addClass('scroll');
       			  menu_state['main'] = true;
       			  Drupal.settings.admin_panel.keep_open = true;
-      			  scope.$apply(function () {
+      			  $t(function () {
         	        $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
                   $cookies.putObject('osAdminMenuOpen', 1);
         	      });
@@ -206,9 +201,9 @@
       			  jQuery('.morph-button').removeClass('scroll');
       			  jQuery('#page_wrap, .page-cp #page, .page-cp #branding').removeClass('pushed');
       			  menu_state['main'] = false;
-        		  scope.$apply(function () {
-          	        $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
-          	      });
+        		  $t(function () {
+                $cookies.putObject('osAdminMenuState', menu_state, {path:'/'});
+              });
       			},
       			onAfterClose : function() {
                   scope.$apply(function () {
