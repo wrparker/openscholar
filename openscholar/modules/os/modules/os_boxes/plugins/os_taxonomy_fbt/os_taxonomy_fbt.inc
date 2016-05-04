@@ -76,7 +76,7 @@ class os_taxonomy_fbt extends os_boxes_default {
    */
   public function form_elements(&$form_state) {
     $form = array();
-    $selected_vid = isset($form_state['values']['vocabulary']) ? $form_state['values']['vocabulary'] : NULL;
+    $selected_vid = isset($form_state['values']['vocabulary']) ? $form_state['values']['vocabulary'] : $this->options['vocabulary'];
     $form['vocabulary'] = array(
       '#type' => 'select',
       '#description' => t('Which vocabularies would you like to use to filter posts.'),
