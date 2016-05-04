@@ -98,6 +98,7 @@
       
       function closeLink(elm) {
         elm.removeClass('open');
+        elm.children('ul').css('display', 'none');
         //elm.find('li').removeClass('open');
         //elm.find('ul').slideUp(200);
       }
@@ -117,12 +118,6 @@
       return {
         link: function(scope, element, attrs) {
           var parent = getAncestor(element, 'li');
-          if (element[0].nodeName == 'UL') {
-            if (parent.hasClass('open')) {
-              element.css('display','block');
-            }
-            return;
-          }
 
           if ($menuState.GetState(attrs.id)) {
             parent.addClass('open');
@@ -133,12 +128,8 @@
             var isOpen = $menuState.GetState(attrs.id);
 
             if ( element.hasClass('close-siblings') ) {
-              if ( parent.hasClass('heading') ) {
-                var togglers = parent.parent().parent().find('li.open');
-              }
-              else {
-                var togglers = parent.parent().siblings('.open');
-              }
+              var li = element.parent().parent();
+              var togglers = angular.element(li.parent()[0].querySelectorAll('li.open'));
 
               togglers.each(function() {
                 var sibling = angular.element(this),
