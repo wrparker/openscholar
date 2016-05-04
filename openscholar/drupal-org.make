@@ -511,6 +511,15 @@ libraries[jquery.bgiframe][type] = "libraries"
 libraries[jquery.bgiframe][download][type] = "git"
 libraries[jquery.bgiframe][download][url] = "https://github.com/brandonaaron/bgiframe.git"
 
+; CKEDITOR plugins
+libraries[colorbutton][type] = "libraries"
+libraries[colorbutton][download][type] = "file"
+libraries[colorbutton][download][url] = "http://download.ckeditor.com/colorbutton/releases/colorbutton_4.5.8.zip"
+
+libraries[panelbutton][type] = "libraries"
+libraries[panelbutton][download][type] = "git"
+libraries[panelbutton][download][url] = "http://download.ckeditor.com/panelbutton/releases/panelbutton_4.5.8.zip"
+
 ; Angular js libraries.
 libraries[angular_select2][type] = "libraries"
 libraries[angular_select2][download][type] = "get"

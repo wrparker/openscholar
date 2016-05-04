@@ -256,3 +256,14 @@ function os_wysiwyg_field_widget_settings_form($field, $instance) {
 
   return $form;
 }
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function os_wysiwyg_field_widget_form_alter(&$element, &$form_state, $context) {
+  if ($context['instance']['widget']['type'] != 'os_wysiwyg_expanding_textarea') {
+    return;
+  }
+
+  array_unshift($element['#attached']['js'], drupal_get_path('module', 'os_wysiwyg') . '/js/wrap_plugins.js');
+}
