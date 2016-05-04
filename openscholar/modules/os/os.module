@@ -3204,7 +3204,7 @@ function os_view_migrated_users() {
       $can_delete = t('Yes - <a href="@url">Delete</a>', array('@url' => url('admin/config/people/user_ownership_migration/delete/' . $user->uid)));
     }
     else {
-      $can_delete = t('No. The user still have content reltate to him. Please try to migrate agin.');
+      $can_delete = t('No. The user still have content relate to him. Please try to migrate again.');
     }
 
     $rows[] = array(
