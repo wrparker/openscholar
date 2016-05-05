@@ -5,7 +5,7 @@
  */
 function os_wysiwyg_panelbutton_plugin() {
   $plugins['panelbutton'] = array(
-    'title' => t('Color button'),
+    'title' => t('Panel button'),
     'vendor url' => 'http://www.neele.name/pdw_toggle_toolbars',
     'icon file' => 'toolbars.gif',
     'icon title' => t('Toggle additional toolbars'),

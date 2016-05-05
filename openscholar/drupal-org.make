@@ -517,8 +517,12 @@ libraries[colorbutton][download][type] = "file"
 libraries[colorbutton][download][url] = "http://download.ckeditor.com/colorbutton/releases/colorbutton_4.5.8.zip"
 
 libraries[panelbutton][type] = "libraries"
-libraries[panelbutton][download][type] = "git"
+libraries[panelbutton][download][type] = "file"
 libraries[panelbutton][download][url] = "http://download.ckeditor.com/panelbutton/releases/panelbutton_4.5.8.zip"
+
+libraries[justify][type] = "libraries"
+libraries[justify][download][type] = "file"
+libraries[justify][download][url] = "http://download.ckeditor.com/justify/releases/justify_4.5.8.zip"
 
 ; Angular js libraries.
 libraries[angular_select2][type] = "libraries"
