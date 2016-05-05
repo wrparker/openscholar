@@ -190,20 +190,10 @@ function os_publications_settings() {
   $style = module_exists('biblio_citeproc') ? 'biblio_citeproc_style' : 'biblio_style';
   // Attach extra HTML to the citation array to allow for a popup box that will display an example of the citation format.
   $biblio_styles = biblio_get_styles();
-  $biblio_styles_hover = array();
-
-  $deprecated_style = 'american-chemical-society-with-titles.csl';
-
-  if (isset($biblio_styles) && is_array($biblio_styles)) {
+  if(isset($biblio_styles) && is_array($biblio_styles)) {
+    $biblio_styles_hover = array();
     $counter = 0;
-
     foreach($biblio_styles as $styles => $name) {
-
-      if ($styles == $deprecated_style) {
-        // Deprecated style.
-        continue;
-      }
-
       $counter ++;
       // Setup the new citation options to be wrapped for a popup.
       $cite_example_link = '<a href="#" class="cite-pop" data-popbox="pop'.$counter.'">' . t('@link_name', array('@link_name' => $name)) . '</a>';
@@ -217,17 +207,11 @@ function os_publications_settings() {
       $biblio_styles_hover[$styles] = $cite_example_output;
     }
   }
-
-  $biblio_style = biblio_get_style();
-  if ($biblio_style == $deprecated_style) {
-    $biblio_style = 'american-chemical-society.csl';
-  }
-
   $form['left'][$style] = array(
     '#type' => 'radios',
     '#title' => t('Select your preferred bibliographic format'),
     //'#description' => t('This alters the bibliographic format of your publications.'),
-    '#default_value' => $biblio_style,
+    '#default_value' => biblio_get_style(),
     '#options' => $biblio_styles_hover,
     '#attached' => array(
       'css' => array(
