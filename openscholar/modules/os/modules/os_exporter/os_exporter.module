@@ -35,29 +35,9 @@ function os_exporter_cp_settings() {
       '#title' => t('Do not display export options on event pages.'),
       '#default_value' => $default_value,
     ),
-    'submit' => array(
-      'os_exporter_cp_settings_submit',
-    ),
   );
 
   return $form;
-}
-
-/**
- * Submit callback for cp/settings form.
- *
- * Clears boxes cache if 'Do not display export options on event pages' checkbox settings is changed.
- *
- * @see os_exporter_cp_settings()
- */
-function os_exporter_cp_settings_submit($form, &$form_state) {
-  // Get the current vsite.
-  /*$vsite = vsite_get_vsite();
-  $current_term_settings = variable_get('os_taxonomy_display_term_under_content', 1);
-  // Clearing os boxes cache if os_taxonomy_display_term_under_content field settings is changed.
-  if (isset($form_state['values']['os_taxonomy_display_term_under_content']) && $vsite && ($current_term_settings != $form_state['values']['os_taxonomy_display_term_under_content'])) {
-    cache_clear_all('os_boxes_cache:' . $vsite->id, 'cache_os_boxes', TRUE);
-  }*/
 }
 
 /**
