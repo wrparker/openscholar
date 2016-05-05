@@ -527,6 +527,11 @@ libraries[justify][subdir] = "ckeditor/plugins"
 libraries[justify][download][type] = "file"
 libraries[justify][download][url] = "http://download.ckeditor.com/justify/releases/justify_4.5.8.zip"
 
+libraries[font][type] = "libraries"
+libraries[font][subdir] = "ckeditor/plugins"
+libraries[font][download][type] = "file"
+libraries[font][download][url] = "http://download.ckeditor.com/font/releases/font_4.5.8.zip"
+
 ; Angular js libraries.
 libraries[angular_select2][type] = "libraries"
 libraries[angular_select2][download][type] = "get"

@@ -41,6 +41,7 @@ function os_wysiwyg_wysiwyg_default_profiles() {
           'Superscript' => 1,
           'Subscript' => 1,
           'Blockquote' => 1,
+          'Source' => 1,
           'PasteFromWord' => 1,
           'RemoveFormat' => 1,
           'Format' => 1,
@@ -52,6 +53,7 @@ function os_wysiwyg_wysiwyg_default_profiles() {
         'drupal' => array(
           'media' => 1,
           'colorbutton' => 1,
+          'font' => 1,
           'justify' => 1,
           'panelbutton' => 1,
           'os_link' => 1,
