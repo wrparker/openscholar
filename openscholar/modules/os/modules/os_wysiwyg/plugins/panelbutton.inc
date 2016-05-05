@@ -9,7 +9,7 @@ function os_wysiwyg_panelbutton_plugin() {
     'vendor url' => 'http://www.neele.name/pdw_toggle_toolbars',
     'icon file' => 'toolbars.gif',
     'icon title' => t('Toggle additional toolbars'),
-    'js path' => libraries_get_path('panelbutton'),
+    'js path' => libraries_get_path('ckeditor') . '/plugins/panelbutton',
     'js file' => 'plugin.js',
     'settings' => array(),
   );
