@@ -2572,11 +2572,29 @@ function os_drupal_goto_alter(&$path, &$options, &$http_response_code) {
  */
 function os_set_update_batch(&$sandbox, $info) {
 
+  // Get the stack of the function to get the number of update.
+  $backtrace = debug_backtrace();
+  $function = '';
+
+  array_walk($backtrace, function($backtrace) use (&$function) {
+    if (preg_match('/[a-z]_update_[0-9]/', $backtrace['function'])) {
+      $function = $backtrace['function'];
+    }
+  });
+
+  $update = '';
+  if ($function) {
+    // Get the number of the update in order to attache it to the default class
+    // name.
+    $explode = explode('_', $function);
+    $update = end($explode);
+  }
+
   $info += array(
     'entity' => 'node',
     'batch' => drupal_is_cli() ? 400: 150,
-    'query' => array('update', 'Query'),
-    'iterator' => array('update', 'Iterator'),
+    'query' => array('update' . $update, 'Query'),
+    'iterator' => array('update' . $update, 'Iterator'),
   );
 
   if (!empty($info['path'])) {
