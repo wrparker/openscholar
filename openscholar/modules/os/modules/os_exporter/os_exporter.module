@@ -18,6 +18,49 @@ function os_exporter_ctools_plugin_type() {
 }
 
 /**
+ * Implements hook_cp_settings().
+ */
+function os_exporter_cp_settings() {
+  $form = array();
+  $event_page_display_export = variable_get('os_exporter_event_page_display_export', 0);
+  $default_value = isset($event_page_display_export) ? $event_page_display_export : 0;
+  $form['os_exporter_event_page_display_export'] = array(
+    'group' => array(
+      '#id' => 'os_exporter',
+      '#title' => t('Events'),
+      '#weight' => 60,
+    ),
+    'form' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Do not display export options on event pages.'),
+      '#default_value' => $default_value,
+    ),
+    'submit' => array(
+      'os_exporter_cp_settings_submit',
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit callback for cp/settings form.
+ *
+ * Clears boxes cache if 'Do not display export options on event pages' checkbox settings is changed.
+ *
+ * @see os_exporter_cp_settings()
+ */
+function os_exporter_cp_settings_submit($form, &$form_state) {
+  // Get the current vsite.
+  /*$vsite = vsite_get_vsite();
+  $current_term_settings = variable_get('os_taxonomy_display_term_under_content', 1);
+  // Clearing os boxes cache if os_taxonomy_display_term_under_content field settings is changed.
+  if (isset($form_state['values']['os_taxonomy_display_term_under_content']) && $vsite && ($current_term_settings != $form_state['values']['os_taxonomy_display_term_under_content'])) {
+    cache_clear_all('os_boxes_cache:' . $vsite->id, 'cache_os_boxes', TRUE);
+  }*/
+}
+
+/**
  * Include CTools plugins and get all exporter plugins.
  *
  * @return array
