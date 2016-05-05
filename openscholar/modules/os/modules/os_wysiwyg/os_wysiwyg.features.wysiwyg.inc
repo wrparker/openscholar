@@ -52,6 +52,7 @@ function os_wysiwyg_wysiwyg_default_profiles() {
         'drupal' => array(
           'media' => 1,
           'colorbutton' => 1,
+          'justify' => 1,
           'panelbutton' => 1,
           'os_link' => 1,
           'break' => 1,
