@@ -16,30 +16,18 @@
 .icon-close:hover {
     color: #a50a05;
 }
-.morph-button-fixed.open .close-panel {
-    display: block;
-    width: 60px;
-    height: 60px;
-    background-color: transparent;
-    cursor: pointer;
-    position: absolute;
-    bottom: 8px;
-    right: 38px;
-}
-.morph-button-fixed .close-panel {
-display:none;
-}
-.content-style-sidebar ul {
+
+.menu-container ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
-.content-style-sidebar ul li a {
+.menu-container ul li a {
     display: block;
     padding: 12px 20px;
     color: #fff;
 }
-.content-style-sidebar ul li:last-child a {
+.menu-container ul li:last-child a {
     box-shadow: inset 0 1px rgba(0, 0, 0, 0.1), inset 0 -1px rgba(0, 0, 0, 0.1);
 }
 @media screen and (max-width: 770px) {
