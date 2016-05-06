@@ -38,5 +38,10 @@
 	    }
 	  };
 	
+	
+	jQuery(".close-menu-panel").click(function() {
+  jQuery(".menu-container").toggleClass("closed");
+});
+	
 
 })(jQuery);

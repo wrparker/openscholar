@@ -1,0 +1,25 @@
+.menu-container {
+	    position: fixed;
+    width: 130px;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: #000;
+    transition-property: left;
+    transition-duration: .25s;
+    transition-timing-function: linear;
+    transition-delay: .25s;
+}
+.menu-container.closed {
+left: -130px;
+   
+}
+	
+button.close-menu-panel {
+    width: 30px;
+    height: 30px;
+    background-color: #ff0000;
+    position: absolute;
+    top: 50%;
+    left: 120px;
+}
