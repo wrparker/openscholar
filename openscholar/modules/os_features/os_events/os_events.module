@@ -305,8 +305,9 @@ function os_events_views_pre_render(&$view) {
     return;
   }
 
-  // only display subscribe links if listing is the events landing page or a list of upcoming events
-  if ((isset($view->exposed_input['month']) && $view->exposed_input['month'] == date('Y-m')) || strpos($view->get_path(), "calendar/upcoming") !== FALSE) {
+  // only display subscribe links if listing is the events landing page or a list of upcoming events 
+  // and if it is set to be displayed as per cp/settings page checkbox
+  if (!variable_get('os_exporter_disable_event_export', 0) && ((isset($view->exposed_input['month']) && $view->exposed_input['month'] == date('Y-m')) || strpos($view->get_path(), "calendar/upcoming") !== FALSE)) {
     $view->attachment_before = '<a title="Note: Past events are not included" class="cal-export">' . t('Export') . '</a>' . $view->attachment_before;
   }
 }
@@ -453,10 +454,13 @@ function os_events_process_node(&$variables) {
       'ical' => $ical,
       'subscribe' => $subscribe,
     );
-    $variables['content']['export'] = array(
-      '#markup' => theme('os_events_export_links', $params),
-      '#weight' => 10,
-    );
+    // Do not display event export links as per cp/settings page checkbox option.
+    if (!variable_get('os_exporter_disable_event_export', 0)) {
+      $variables['content']['export'] = array(
+        '#markup' => theme('os_events_export_links', $params),
+        '#weight' => 10,
+      );
+    }    
   }
 
   // In case of a "teaser" view mode, put the link before the date.
