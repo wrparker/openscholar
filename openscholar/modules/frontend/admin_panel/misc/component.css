@@ -6,9 +6,9 @@
     top: 0;
     background-color: #000;
     transition-property: left;
-    transition-duration: .25s;
-    transition-timing-function: linear;
-    transition-delay: .25s;
+    transition-duration: .125s;
+    transition-timing-function: ease-in-out;
+    transition-delay: .125s;
 }
 .menu-container.closed {
 left: -130px;
@@ -22,4 +22,14 @@ button.close-menu-panel {
     position: absolute;
     top: 50%;
     left: 120px;
+    transition-property: left;
+    transition-duration: .125s;
+    transition-timing-function: ease-in-out;
+    transition-delay: .125s;
+}
+
+.closed button.close-menu-panel {
+ 
+    left: 100px;
+  
 }
