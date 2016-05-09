@@ -7,7 +7,7 @@
  * 
  * Copyright 2014, Codrops
  * http://www.codrops.com
- */
+ 
 ;( function( window ) {
 	
 	'use strict';
@@ -170,4 +170,4 @@
 	// add to global namespace
 	window.UIMorphingButton = UIMorphingButton;
 	
-})( window );
+})( window );*/

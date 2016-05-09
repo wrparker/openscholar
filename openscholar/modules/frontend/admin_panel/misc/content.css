@@ -1,4 +1,4 @@
-.icon-close {
+.top-close {
     z-index: 100;
     display: block;
     overflow: hidden;
@@ -13,7 +13,7 @@
     right: 2px;
     font-size: 0;
 }
-.icon-close:hover {
+.top-close:hover {
     color: #a50a05;
 }
 
