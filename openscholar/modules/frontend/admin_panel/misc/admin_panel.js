@@ -39,9 +39,15 @@
 	  };
 	
 	
-	jQuery('.close-menu-panel').click(function() {
-  jQuery('.menu-container').toggleClass('closed');
-});
-	
+
 
 })(jQuery);
+
+jQuery(document).ready(function() {
+   	jQuery('.close-menu-panel').click(function() {
+  jQuery('.menu-container').toggleClass('closed');
+});
+});
+
+
+	

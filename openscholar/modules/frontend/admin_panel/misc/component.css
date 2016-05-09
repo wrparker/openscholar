@@ -15,21 +15,21 @@ left: -130px;
    
 }
 	
-button.close-menu-panel {
+button.close-menu-button {
     width: 30px;
     height: 30px;
     background-color: #ff0000;
     position: absolute;
     top: 50%;
-    left: 120px;
+    left: 100px;
     transition-property: left;
     transition-duration: .125s;
     transition-timing-function: ease-in-out;
     transition-delay: .125s;
 }
 
-.closed button.close-menu-panel {
+.closed button.close-menu-button {
  
-    left: 100px;
+    left: 120px;
   
 }
