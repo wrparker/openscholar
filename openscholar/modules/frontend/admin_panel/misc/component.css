@@ -22,6 +22,12 @@ button.close-menu-button {
     position: absolute;
     top: 50%;
     left: 100px;
+     margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: inherit;
+  font-size: 1em;
+  cursor: pointer;
     transition-property: left;
     transition-duration: .125s;
     transition-timing-function: ease-in-out;
