@@ -1,4 +1,4 @@
-(function ($) {
+/**(function ($) {
   var paths;
   var vsite;
   var cid;
@@ -263,7 +263,7 @@
         };
       }]);
   
-})(jQuery);
+})(jQuery);*/
 jQuery(document).ready(function() {
    	jQuery('.close-menu-panel').click(function() {
   jQuery('.menu-container').toggleClass('closed');
