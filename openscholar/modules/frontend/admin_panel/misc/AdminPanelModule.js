@@ -181,7 +181,7 @@
        controller: 'AdminMenuController',
        link: function(scope, element, attrs) {
     	  morphButton = new UIMorphingButton(element[0], {
-      			closeEl : '.icon-close',
+      			closeEl : '[ng-button-action="close"]',
       			closeEl2 : '.close-panel',
       			onBeforeOpen : function() {
       				// push main admin_panel

@@ -71,20 +71,12 @@
         } );
 		// close
 		if( this.options.closeEl !== '' ) {
-			var closeEl = this.el.querySelector( this.options.closeEl );
-			if( closeEl ) {
-                closeEl.addEventListener('click', function() {
-                    self.toggle();
-                    self.expanded = !self.expanded;
-                });
-
-
-			}
-		}
-		if( this.options.closeEl2 !== '' ) {
-			var closeEl2 = this.el.querySelector( this.options.closeEl2 );
-			if( closeEl2 ) {
-				//closeEl2.addEventListener( 'click', function() { self.toggle(); } );
+			var close = this.el.querySelectorAll( this.options.closeEl );
+			for (var i = 0; i < close.length; i++) {
+        close[i].addEventListener('click', function() {
+            self.toggle();
+            self.expanded = !self.expanded;
+        });
 			}
 		}
 	}
