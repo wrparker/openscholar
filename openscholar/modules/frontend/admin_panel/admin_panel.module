@@ -26,7 +26,7 @@ function admin_panel_page_build(&$vars) {
 
   $vars['page_bottom']['admin_menu'] = array(
     '#weight' => 25,
-    '#markup' => '<div class="menu-container"></div>',
+    '#markup' => '<div class="menu-container" left-menu></div>',
   );
 
   $vars['page_bottom']['user_menu'] = array(
