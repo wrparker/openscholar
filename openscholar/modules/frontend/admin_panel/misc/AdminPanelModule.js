@@ -1,4 +1,4 @@
-/**(function ($) {
+(function ($) {
   var paths;
   var vsite;
   var cid;
@@ -43,7 +43,7 @@
       // Check for the menu data in local storage.
       if (typeof($localStorage.admin_menu[uid]) !== 'undefined' && typeof($localStorage.admin_menu[uid][vsite]) !== 'undefined' && typeof($localStorage.admin_menu[uid][vsite][cid]) !== 'undefined') {
         $scope.admin_panel = $localStorage.admin_menu[uid][vsite][cid];
-        
+        /**
         if (force_open || auto_open || (typeof(menu_state) !== 'undefined' && typeof(menu_state.main) !== 'undefined' && menu_state.main)) {
           // Turn off transitions and toggle open, there are a bunch of damn set-timeouts in morphbutton so we need to delay things here.
           window.setTimeout(function () {
@@ -66,7 +66,7 @@
         }
         
         return;
-      }
+      }*/
       
       //Go get the admin menu from the server.
       params = { cid: cid, uid: uid};
@@ -263,7 +263,7 @@
         };
       }]);
   
-})(jQuery);*/
+})(jQuery);
 jQuery(document).ready(function() {
    	jQuery('.close-menu-panel').click(function() {
   jQuery('.menu-container').toggleClass('closed');
