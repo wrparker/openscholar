@@ -1297,31 +1297,37 @@ function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array
 
   // In case the bundle is of the type "event", filter by the type of the event.
   if (!empty($bundles) && is_array($bundles) && strpos(reset($bundles), 'event') !== FALSE && count($bundles) == 1) {
-    $query->leftJoin('field_data_field_date', 'fd', '(ogv.entity_id = fd.entity_id)');
+    
     $event_type = reset($bundles);
 
     // Get the number of seconds form the server timezone to GMT timezone.
     $seconds = date("Z");
 
-    // Here we use the same where condition as the "upcoming events" and "past
-    // events" in order to get the correct number of results.
-    if (in_array($event_type, array('upcoming_event', 'event'))) {
-      // When user selected "upcoming event" or the "Determine for me" option,
-      // get upcoming events.
-      $str = date('Y-m-d\TH:i', strtotime('-30 minutes'));
-      $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(" . $seconds . ")), '%Y-%m-%d\T%H:%i') >= :str", array(":str" => $str));
-    }
-    else {
-      // Get past events.
-      $str = date('Y-m-d');
-      $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(" . $seconds . ")), '%Y-%m-%d') < :str", array(":str" => $str));
+    // Get events which are either "upcoming events" or "past events"
+    if(!in_array($event_type, array('event'))) {
+    
+      $query->leftJoin('field_data_field_date', 'fd', '(ogv.entity_id = fd.entity_id)');
+
+      // Here we use the same where condition as the "upcoming events" and "past
+      // events" in order to get the correct number of results.   
+      if (in_array($event_type, array('upcoming_event'))) {
+        // When user selected "upcoming event" or the "Determine for me" option,
+        // get upcoming events.
+        $str = date('Y-m-d\TH:i', strtotime('-30 minutes'));
+        $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(" . $seconds . ")), '%Y-%m-%d\T%H:%i') >= :str", array(":str" => $str));
+      }   
+      else {
+        // Get past events.
+        $str = date('Y-m-d');
+        $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(" . $seconds . ")), '%Y-%m-%d') < :str", array(":str" => $str));
+      }
     }
     $query->condition('ogv.bundle', array('event'), 'IN');
   }
   elseif (!empty($bundles) && is_array($bundles) && reset($bundles) != '--all--') {
     $query->condition('ogv.bundle', $bundles, 'IN');
   }
-
+  
   return $query;
 }
 
