@@ -97,7 +97,6 @@ function admin_panel_library() {
 
   $libs['admin_panel']['css'] = array(
     $path.'/misc/component.css',
-    $path.'/misc/content.css',
     $path.'/misc/admin_panel-menu.css',
   );
 
