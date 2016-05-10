@@ -24,9 +24,16 @@ function admin_panel_page_build(&$vars) {
     return;
   }
 
+  $classes = array(
+    'menu-container',
+  );
+  if (isset($_COOKIE['AdminMenuState']) && !$_COOKIE['AdminMenuState']) {
+    $classes[] = 'closed';
+  }
+
   $vars['page_bottom']['admin_menu'] = array(
     '#weight' => 25,
-    '#markup' => '<div class="menu-container" left-menu></div>',
+    '#markup' => '<div class="'.implode(' ', $classes).'" left-menu></div>',
   );
 
   $vars['page_bottom']['user_menu'] = array(
