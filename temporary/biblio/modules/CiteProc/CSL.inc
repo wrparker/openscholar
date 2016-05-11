@@ -1215,8 +1215,7 @@ class csl_text extends csl_format {
           $text = $data->{$this->variable}; //$this->data[$this->var];  // include the contents of a variable
         }
 
-        // Filter only specific tags of html.
-        $text = filter_xss($text, array('sup', 'sub', 'i'));
+        $text = filter_xss($text, array('sup', 'sub', 'i', 'em'));
         break;
       case 'macro':
         $macro = $this->var;
