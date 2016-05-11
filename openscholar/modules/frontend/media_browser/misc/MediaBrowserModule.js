@@ -325,7 +325,7 @@
             }
             else {
               if (data.invalidChars || hadHashtag) {
-                addMessage("This file was renamed from \"" + file.name + "\" due to having invalid characters in its name.")
+                addMessage("This file was renamed from \"" + file.name + "\" due to having invalid characters in its name. The new file will replace any file with the same name.");
               }
               toBeUploaded.push(file);
             }
