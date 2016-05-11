@@ -2569,6 +2569,8 @@ function os_drupal_goto_alter(&$path, &$options, &$http_response_code) {
  *    - batch: The number of nodes we need to iterate at once.
  *    - entity: The entity type.
  *    - path: Path for the file contain the classes or the functions.
+ *    - query: The class name and funciton to run, by default this is (queryXXXX, Query) 
+ *             where xxxx is the number if the update calling the batch. ex.( query7001, Query) 
  */
 function os_set_update_batch(&$sandbox, $info) {
 
