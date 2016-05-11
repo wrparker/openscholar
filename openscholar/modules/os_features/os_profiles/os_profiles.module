@@ -42,6 +42,82 @@ function os_profiles_os_app_info() {
 }
 
 /**
+ * Implements hook_cp_settings().
+ */
+function os_profiles_cp_settings() {
+  $form = array();
+  $display_filter_by_alphabetical_group = variable_get('os_profiles_display_filter_by_alphabetical_group', 0);
+  $form['os_profiles_display_filter_by_alphabetical_group'] = array(
+    'group' => array(
+      '#id' => 'os_profiles',
+      '#title' => t('Profile'),
+      '#weight' => 50,
+    ),
+    'form' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Display alphabetical grouping filter by last name: A-E F-J K-O P-T U-Z'),
+      '#default_value' => $display_filter_by_alphabetical_group,
+    ),
+    'submit' => array(
+      'os_profiles_cp_settings_filter_by_alphabet_submit',
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit callback for cp/settings form.
+ *
+ * @see os_profiles_cp_settings()
+ */
+function os_profiles_cp_settings_filter_by_alphabet_submit($form, &$form_state) {
+  // Get the current vsite.
+  $current_value = variable_get('os_profiles_display_filter_by_alphabetical_group', 0);
+  if (isset($form_state['values']['os_profiles_display_filter_by_alphabetical_group']) && isset($current_value)) {    
+    // Clear the context cache when checkbox is actually differs than its stored value.
+    if ($current_value != $form_state['values']['os_profiles_display_filter_by_alphabetical_group']) {
+      cache_clear_all('context', 'cache');
+    }
+  }
+}
+
+/**
+ * Implements template_preprocess_views_view_summary().
+ */
+function os_profiles_preprocess_views_view_summary(&$vars) {
+  // Targets only view name 'os_profiles' for alphabetical profile glossary link display.
+  if ($vars['view']->name == 'os_profiles' && $vars['view']->current_display == 'profile_alphabet_group_block') {
+    $result = $vars['view']->result;
+    $summary_base_path = url($vars['view']->style_options['base_path']);
+    $overridden_result = array();
+    $glossary_links = array(
+      'A-E' => range('a', 'e'),
+      'F-J' => range('f', 'j'),
+      'K-O' => range('k', 'o'),
+      'P-T' => range('p', 't'),
+      'U-Z' => range('u', 'z'),
+    );    
+    // Building the glossary links as A-E, F-J etc.
+    foreach ($result as $letter) {
+      $rendered[] = strtolower($letter->field_last_name_value_truncated);
+    }
+    $i = 0;
+    foreach ($glossary_links as $key => $alphabet_set) {
+      if (array_intersect($rendered, $alphabet_set)) {
+        $overridden_result[$i]->field_last_name_value_truncated = $key;
+        $overridden_result[$i]->num_records = 1;
+        $overridden_result[$i]->link = $key;
+        $overridden_result[$i]->url = $summary_base_path . '/' . implode(',', $glossary_links[$key]);
+        $overridden_result[$i]->count = 1;
+        $i++;
+      }
+    }
+    $vars['rows'] = $overridden_result;
+  }
+}
+
+/**
  * Implements hook_init().
  */
 function os_profiles_init() {

@@ -42,6 +42,80 @@ function os_news_os_app_info() {
 }
 
 /**
+ * Implements hook_cp_settings().
+ */
+function os_news_cp_settings() {
+  $form = array();
+  $display_filter_by_month = variable_get('os_news_display_filter_by_month', 0);
+  $display_filter_by_year = variable_get('os_news_display_filter_by_year', 0);
+  $form['os_news_display_filter_by_month'] = array(
+    'group' => array(
+      '#id' => 'os_news',
+      '#title' => t('News'),
+      '#weight' => 50,
+    ),
+    'form' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Display filter for news by month'),
+      '#default_value' => $display_filter_by_month,
+    ),
+    'submit' => array(
+      'os_news_cp_settings_filter_by_month_submit',
+    ),
+  );
+
+  $form['os_news_display_filter_by_year'] = array(
+    'group' => array(
+      '#id' => 'os_news',
+      '#title' => t('News'),
+      '#weight' => 50,
+    ),
+    'form' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Display filter for news by year'),
+      '#default_value' => $display_filter_by_year,
+    ),
+    'submit' => array(
+      'os_news_cp_settings_filter_by_year_submit',
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit callback for cp/settings form.
+ *
+ * @see os_news_cp_settings()
+ */
+function os_news_cp_settings_filter_by_year_submit($form, &$form_state) {
+  // Get the current vsite.
+  $current_value = variable_get('os_news_display_filter_by_year', 0);
+  if (isset($form_state['values']['os_news_display_filter_by_year']) && isset($current_value)) {    
+    // Clear the context cache when checkbox is actually differs than its stored value.
+    if ($current_value != $form_state['values']['os_news_display_filter_by_year']) {
+      cache_clear_all('context', 'cache');
+    }
+  }
+}
+
+/**
+ * Submit callback for cp/settings form.
+ *
+ * @see os_news_cp_settings()
+ */
+function os_news_cp_settings_filter_by_month_submit($form, &$form_state) {
+  // Get the current vsite.
+  $current_value = variable_get('os_news_display_filter_by_month', 0);
+  if (isset($form_state['values']['os_news_display_filter_by_month']) && isset($current_value)) {    
+    // Clear the context cache when checkbox is actually differs than its stored value.
+    if ($current_value != $form_state['values']['os_news_display_filter_by_month']) {
+      cache_clear_all('context', 'cache');
+    }
+  }
+}
+
+/**
  * Implements hook_os_entity_view_modes()
  */
 function os_news_os_entity_view_modes() {

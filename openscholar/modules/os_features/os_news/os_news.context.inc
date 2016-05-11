@@ -66,6 +66,24 @@ function os_news_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
+  if (variable_get('os_news_display_filter_by_month', 0)) {
+    $context->reactions['block']['blocks']['views-os_news-news_by_month_block'] = array(
+      'module' => 'views',
+      'delta' => 'os_news-news_by_month_block',
+      'region' => 'sidebar_second',
+      'weight' => -8,
+    );
+  }
+
+  if (variable_get('os_news_display_filter_by_year', 0)) {
+    $context->reactions['block']['blocks']['views-os_news-news_by_year_block'] = array(
+      'module' => 'views',
+      'delta' => 'os_news-news_by_year_block',
+      'region' => 'sidebar_second',
+      'weight' => -8,
+    );
+  }
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Context that is active in the news section of your site');

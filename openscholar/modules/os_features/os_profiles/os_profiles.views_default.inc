@@ -108,6 +108,59 @@ function os_profiles_views_default_views() {
     'default' => 'default',
     'page' => 'page',
   );
+
+  /* Display: Filter by alphabetical grouping of Last Name */
+  $handler = $view->new_display('block', 'Filter by alphabetical grouping of Last Name', 'profile_alphabet_group_block');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Filter by alphabetical grouping of Last Name';
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Field: Last Name (field_last_name) */
+  $handler->display->display_options['arguments']['field_last_name_value']['id'] = 'field_last_name_value';
+  $handler->display->display_options['arguments']['field_last_name_value']['table'] = 'field_data_field_last_name';
+  $handler->display->display_options['arguments']['field_last_name_value']['field'] = 'field_last_name_value';
+  $handler->display->display_options['arguments']['field_last_name_value']['default_action'] = 'summary';
+  $handler->display->display_options['arguments']['field_last_name_value']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['field_last_name_value']['default_argument_options']['argument'] = 'A';
+  $handler->display->display_options['arguments']['field_last_name_value']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_last_name_value']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_last_name_value']['summary_options']['base_path'] = 'people/glossary';
+  $handler->display->display_options['arguments']['field_last_name_value']['summary_options']['count'] = FALSE;
+  $handler->display->display_options['arguments']['field_last_name_value']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_last_name_value']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['field_last_name_value']['validate']['fail'] = 'summary';
+  $handler->display->display_options['arguments']['field_last_name_value']['glossary'] = TRUE;
+  $handler->display->display_options['arguments']['field_last_name_value']['limit'] = '1';
+  $handler->display->display_options['arguments']['field_last_name_value']['case'] = 'upper';
+  $handler->display->display_options['arguments']['field_last_name_value']['path_case'] = 'lower';
+  $handler->display->display_options['arguments']['field_last_name_value']['transform_dash'] = TRUE;
+  $handler->display->display_options['arguments']['field_last_name_value']['break_phrase'] = TRUE;
+
+  /* Display: Page */
+  $handler = $view->new_display('page', 'Page', 'page_1');
+  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Field: Last Name (field_last_name) */
+  $handler->display->display_options['arguments']['field_last_name_value']['id'] = 'field_last_name_value';
+  $handler->display->display_options['arguments']['field_last_name_value']['table'] = 'field_data_field_last_name';
+  $handler->display->display_options['arguments']['field_last_name_value']['field'] = 'field_last_name_value';
+  $handler->display->display_options['arguments']['field_last_name_value']['default_action'] = 'not found';
+  $handler->display->display_options['arguments']['field_last_name_value']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['field_last_name_value']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_last_name_value']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_last_name_value']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_last_name_value']['glossary'] = TRUE;
+  $handler->display->display_options['arguments']['field_last_name_value']['limit'] = '1';
+  $handler->display->display_options['arguments']['field_last_name_value']['break_phrase'] = TRUE;
+  $handler->display->display_options['path'] = 'people/glossary';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'People';
+  $handler->display->display_options['menu']['description'] = 'List of people';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'primary-menu';
+  $handler->display->display_options['menu']['context'] = 0;
   $export['os_profiles'] = $view;
 
   return $export;
