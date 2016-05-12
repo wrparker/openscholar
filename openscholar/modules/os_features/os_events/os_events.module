@@ -1906,7 +1906,7 @@ function os_events_entity_insert($entity, $type) {
   $all_day = date_is_all_day($start, $end);
 
   // Showing time value in case of not All Day event
-  if($all_day){
+  if ($all_day) {
     $date = date('l, F j, Y', strtotime($node->field_date['und'][$delta]['value'].' UTC'));
   } else {
     $date = date('l, F j, Y g:ia', strtotime($node->field_date['und'][$delta]['value'].' UTC'));
@@ -1961,10 +1961,10 @@ function os_events_mail($key, &$message, $params) {
         $message['body'] = array();
         $message['body'][0] = t("Hello @user-name", $params);
         $message['body'][1] = t("You have been registered for @title", $params);
-        if(!empty($params['@event_date_time'])) {
+        if (!empty($params['@event_date_time'])) {
           $message['body'][1].= t(" on @event_date_time", $params);
         }
-        if(!empty($params['@event_location'])) {
+        if (!empty($params['@event_location'])) {
           $message['body'][1].= t(" at @event_location", $params);
         }
         $message['body'][1].= ".";
@@ -1992,7 +1992,6 @@ function os_events_mail_alter(&$message) {
 
   // Get event default email address.
   $wrapper = entity_metadata_wrapper($message['params']['context']['entity_type'], $message['params']['context']['entity_id']);
-
   $event_author_email = $wrapper->author->mail->value();
 
   // Default value of the "From" field should be the author of the event's e-mail
