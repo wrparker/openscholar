@@ -1885,14 +1885,31 @@ function os_events_entity_insert($entity, $type) {
   $wrapper = entity_metadata_Wrapper($type, $entity);
   $node = node_load($entity->entity_id);
 
+  // Get author mail id
+  $event_author = user_load($node->uid);
+
   // Obtaining menu router item of the Ajax URL.
   $menu_item = menu_get_item();
 
   // If delta argument is present in URL, then query option will be available in url parameter otherwise no delta parameter will be available in email link.
   if ($menu_item['path'] == "os_events/%/registration/%" && isset($menu_item['original_map'][4]) && !empty($menu_item['original_map'][4])) {
      $query = array('delta' => $menu_item['original_map'][4]);
+     $delta = $menu_item['original_map'][4];
   } else {
     $query = array();
+    $delta = 0;
+  }
+
+  // Determine if the event is a All Day event
+  $start = date('Y-m-d H:i:s', strtotime($node->field_date['und'][$delta]['value'].' UTC'));
+  $end = date('Y-m-d H:i:s', strtotime($node->field_date['und'][$delta]['value2'].' UTC'));
+  $all_day = date_is_all_day($start, $end);
+
+  // Showing time value in case of not All Day event
+  if($all_day){
+    $date = date('l, F j, Y', strtotime($node->field_date['und'][$delta]['value'].' UTC'));
+  } else {
+    $date = date('l, F j, Y g:ia', strtotime($node->field_date['und'][$delta]['value'].' UTC'));
   }
 
   $module = 'os_events';
@@ -1902,6 +1919,9 @@ function os_events_entity_insert($entity, $type) {
     '@url' => url('node/' . $node->nid, array('absolute' => TRUE, 'query' => $query)),
     '@title' => $node->title,
     '@user-name' => $wrapper->field_full_name->value(),
+    '@event_date_time' => $date,
+    '@event_location' => $node->field_event_location['und'][0]['value'],
+    '@event_creator_email' => $event_author->mail,
   );
 
   // Pass the entity type and ID to give modules implementing
@@ -1939,8 +1959,18 @@ function os_events_mail($key, &$message, $params) {
     case 'registration_confirmation':
         $message['subject'] = t("@title event registration confirmation", $params);
         $message['body'] = array();
-        $message['body'][] = t("Hello @user-name", $params);
-        $message['body'][] = t("You have successfully registered for @title (@url).", $params);
+        $message['body'][0] = t("Hello @user-name", $params);
+        $message['body'][1] = t("You have been registered for @title", $params);
+        if(!empty($params['@event_date_time'])) {
+          $message['body'][1].= t(" on @event_date_time", $params);
+        }
+        if(!empty($params['@event_location'])) {
+          $message['body'][1].= t(" at @event_location", $params);
+        }
+        $message['body'][1].= ".";
+        $message['body'][2] = t("View the event listing here: @url", $params);
+        $message['body'][3] = t("Questions? Email the event organizer @event_creator_email", $params);
+        $message['body'][4] = t("See you there!", $params);
         break;
 
     case 'registration_full_notification':
@@ -1962,6 +1992,7 @@ function os_events_mail_alter(&$message) {
 
   // Get event default email address.
   $wrapper = entity_metadata_wrapper($message['params']['context']['entity_type'], $message['params']['context']['entity_id']);
+
   $event_author_email = $wrapper->author->mail->value();
 
   // Default value of the "From" field should be the author of the event's e-mail
