@@ -89,7 +89,7 @@ function os_news_cp_settings() {
  * @see os_news_cp_settings()
  */
 function os_news_cp_settings_filter_by_year_submit($form, &$form_state) {
-  // Get the current vsite.
+  // Get the current value for the settings.
   $current_value = variable_get('os_news_display_filter_by_year', 0);
   if (isset($form_state['values']['os_news_display_filter_by_year']) && isset($current_value)) {    
     // Clear the context cache when checkbox is actually differs than its stored value.
@@ -105,7 +105,7 @@ function os_news_cp_settings_filter_by_year_submit($form, &$form_state) {
  * @see os_news_cp_settings()
  */
 function os_news_cp_settings_filter_by_month_submit($form, &$form_state) {
-  // Get the current vsite.
+  // Get the current value for the settings.
   $current_value = variable_get('os_news_display_filter_by_month', 0);
   if (isset($form_state['values']['os_news_display_filter_by_month']) && isset($current_value)) {    
     // Clear the context cache when checkbox is actually differs than its stored value.

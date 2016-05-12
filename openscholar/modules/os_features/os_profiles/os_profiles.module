@@ -62,7 +62,6 @@ function os_profiles_cp_settings() {
       'os_profiles_cp_settings_filter_by_alphabet_submit',
     ),
   );
-
   return $form;
 }
 
@@ -72,7 +71,7 @@ function os_profiles_cp_settings() {
  * @see os_profiles_cp_settings()
  */
 function os_profiles_cp_settings_filter_by_alphabet_submit($form, &$form_state) {
-  // Get the current vsite.
+  // Get the current value for the settings.
   $current_value = variable_get('os_profiles_display_filter_by_alphabetical_group', 0);
   if (isset($form_state['values']['os_profiles_display_filter_by_alphabetical_group']) && isset($current_value)) {    
     // Clear the context cache when checkbox is actually differs than its stored value.
@@ -102,18 +101,16 @@ function os_profiles_preprocess_views_view_summary(&$vars) {
     foreach ($result as $letter) {
       $rendered[] = strtolower($letter->field_last_name_value_truncated);
     }
-    $i = 0;
+    $rows = array();
     foreach ($glossary_links as $key => $alphabet_set) {
       if (array_intersect($rendered, $alphabet_set)) {
-        $overridden_result[$i]->field_last_name_value_truncated = $key;
-        $overridden_result[$i]->num_records = 1;
-        $overridden_result[$i]->link = $key;
-        $overridden_result[$i]->url = $summary_base_path . '/' . implode(',', $glossary_links[$key]);
-        $overridden_result[$i]->count = 1;
-        $i++;
+        $overridden_result = new stdClass;
+        $overridden_result->link = $key;
+        $overridden_result->url = $summary_base_path . '/' . implode(',', $glossary_links[$key]);
+        $rows[] = $overridden_result;
       }
     }
-    $vars['rows'] = $overridden_result;
+    $vars['rows'] = $rows;
   }
 }
 
