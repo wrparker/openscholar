@@ -446,6 +446,12 @@
               }
             });
           });
+        },
+        delete: function () {
+          var r = indexedDB.deleteDatabase("EntityService");
+          r.onerror = r.onsuccess = function (e) {
+            console.log(e);
+          }
         }
       };
     }])
