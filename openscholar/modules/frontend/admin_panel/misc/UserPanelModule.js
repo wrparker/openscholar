@@ -143,11 +143,9 @@
       items.push(lastItem);
 
       // If there are new items
-      if (items.length) {
+      if (trueCount) {
         // Sets up the DOM elements.
-        if (trueCount) {
-          count = trueCount;
-        }
+        count = trueCount;
         //$('#os-tour-notifications-menu-link').slideDown('slow');
 
         // Sets up the tour object with the loaded feed item steps.
