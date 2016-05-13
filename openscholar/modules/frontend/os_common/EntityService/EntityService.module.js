@@ -391,7 +391,20 @@
       lockPromise = lock.promise;
 
       $idb.openStore('entities', function (store) {
-        store.getAll().then (function (caches) {
+        var results;
+        // if we're in a vsite, only get a subset of the entityservice
+        // we really don't need to loop through everything
+        if (Drupal.settings.spaces && Drupal.settings.spaces.id) {
+          var query = store.query()
+              .$index('vsite')
+              .$eq(Drupal.settings.spaces.id);
+
+          results = store.eachWhere(query);
+        }
+        else {
+          results = store.getAll();
+        }
+        results.then (function (caches) {
           var keys = {};
           for (var i = 0; i < caches.length; i++) {
             var key = caches[i].key,
@@ -461,6 +474,10 @@
         .upgradeDatabase(2, function (event, db, tx) {
            var store = db.createObjectStore('entities', { keyPath: "key" });
            store.createIndex('key_idx', 'key', {unique: true});
+        })
+        .upgradeDatabase(3, function (event, db, tx) {
+            var store = tx.objectStore('entities');
+            store.createIndex('vsite', 'vsite', { unique: false });
         });
     }])
   .service('EntityCacheUpdater', ['$http', '$q', '$indexedDB', '$rootScope', 'EntityConfig', function ($http, $q, $idb, $rs, EntityConfig) {
