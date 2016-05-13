@@ -302,7 +302,7 @@ function os_events_field_default_field_instances() {
           'label' => 'Sign up for this event',
         ),
         'type' => 'registration_link',
-        'weight' => 4,
+        'weight' => 10,
       ),
       'links' => array(
         'label' => 'above',
