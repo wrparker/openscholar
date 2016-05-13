@@ -441,7 +441,12 @@
         });
       }).then(angular.noOp, function (results) {  // openStore returns a promise. We can call .then() on it to attach handlers
         console.log(results);
-        indexedDB.deleteDatabase("EntityService");
+        if (results.indexOf('Operation pending') != -1) {
+          alert('There is a problem accessing your site\'s data. Please restart your browser.');
+        }
+        else {
+          indexedDB.deleteDatabase("EntityService");
+        }
         lock.resolve([]);
         return results;
       });
