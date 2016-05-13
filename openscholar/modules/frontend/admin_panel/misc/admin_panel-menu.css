@@ -31,39 +31,33 @@ body.overlay {
     position: relative;
     width: auto;
 }
-.page-cp #branding.no-transition,
-.page-cp #page.no-transition,
-.page_wrap.no-transition {
-    -webkit-transition: none;
-    transition: none;
-}
+
 .page-cp #branding {
     position: relative;
-    margin-left: 40px;
-}
-.page-cp #branding.pushed {
     margin-left: 110px;
 }
-.no-js .page-cp #branding,
-.no-js .page-cp #page,
-.no-js .page_wrap {
-    width: calc(100% - 300px);
-    right: 0;
-}
-.page-cp #branding.pushed,
-.page-cp #page.pushed {
-    -webkit-transform: translateX(15px);
-    transform: translateX(15px);
-}
+
+
+
 .page-cp #page {
-    width: 90%;
-    margin-left: 80px;
-    margin-right: 0;
-}
-.page-cp #page.pushed {
     margin-left: 150px;
-    width: 80%;
+    width:85%;
 }
+
+.page-cp #branding {
+    position: relative;
+    margin-left: 8px;
+}
+
+
+
+.page-cp #page.closed {
+    margin-left: 3%;
+    width:95%;
+}
+
+
+
 .admin-menu-homeicon {
     position: absolute;
     left: 10px;
