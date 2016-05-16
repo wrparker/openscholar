@@ -43,6 +43,7 @@
 }
 .media-browser-button:hover {
     cursor:pointer;
+    background-color:#eee;
 }
 .media-browser-button.active {
     border: 1px solid lightgray;
@@ -178,10 +179,10 @@ div.file-filters {
 #mb-library-header .mb-title,
 #mb-library-header .mb-filename,
 #mb-library-header .mb-created {
-    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 75px -944px;
+    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 75px -904px;
 }
 #mb-library-header .mb-title {
-    background-position: 45px -944px;
+    background-position: 45px -904px;
 }
 .mb-preview {
     width: 60px;

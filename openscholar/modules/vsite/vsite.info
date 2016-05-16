@@ -128,3 +128,4 @@ files[] = tests/vsite_access.test
 files[] = tests/vsite_user.test
 files[] = includes/spaces.views.inc
 files[] = views/vsite_views_og_cache_plugin_cache_time.inc
+files[] = includes/AbstractUpdate.php

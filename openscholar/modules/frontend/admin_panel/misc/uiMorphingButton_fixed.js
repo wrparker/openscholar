@@ -40,6 +40,7 @@
 
 	UIMorphingButton.prototype.options = {
 		closeEl : '',
+		closeEl2 : '',
 		onBeforeOpen : function() { return false; },
 		onAfterOpen : function() { return false; },
 		onBeforeClose : function() { return false; },
@@ -64,18 +65,27 @@
 	UIMorphingButton.prototype._initEvents = function() {
 		var self = this;
 		// open
-		this.button.addEventListener( 'click', function() { self.toggle(); } );
+		this.button.addEventListener( 'click', function() {
+        self.toggle();
+    } );
 		// close
 		if( this.options.closeEl !== '' ) {
 			var closeEl = this.el.querySelector( this.options.closeEl );
-			if( closeEl ) {
-				closeEl.addEventListener( 'click', function() { self.toggle(); } );
+      if( closeEl ) {
+        closeEl.addEventListener('click', function() {
+            self.toggle();
+        });
+			}
+		}
+		if( this.options.closeEl2 !== '' ) {
+			var closeEl2 = this.el.querySelector( this.options.closeEl2 );
+			if( closeEl2 ) {
+				//closeEl2.addEventListener( 'click', function() { self.toggle(); } );
 			}
 		}
 	}
 
 	UIMorphingButton.prototype.toggle = function() {
-		if( this.isAnimating ) return false;
 
 		// callback
 		if( this.expanded ) {
@@ -91,15 +101,15 @@
 
 		var self = this,
 			onEndTransitionFn = function( ev ) {
-				if( self.support.transitions && ev.target !== this ) return false;
+				if( self.support.transitions && !self.el.classList.contains('no-transition') && ev.target !== this ) return false;
 
-				if( self.support.transitions ) {
+				if( self.support.transitions && !self.el.classList.contains('no-transition') ) {
 					// open: first opacity then width/height/left/top
 					// close: first width/height/left/top then opacity
 					if( self.expanded && ev.propertyName !== 'opacity' || !self.expanded && ev.propertyName !== 'width' && ev.propertyName !== 'height' && ev.propertyName !== 'left' && ev.propertyName !== 'top' ) {
 						return false;
 					}
-					this.removeEventListener( transEndEventName, onEndTransitionFn );
+				 	this.removeEventListener( transEndEventName, onEndTransitionFn );
 				}
 				self.isAnimating = false;
 				
@@ -112,16 +122,8 @@
 				else {
 					self.options.onAfterOpen();
 				}
-
-				self.expanded = !self.expanded;
+        self.expanded = !self.expanded;
 			};
-
-		if( this.support.transitions ) {
-			this.contentEl.addEventListener( transEndEventName, onEndTransitionFn );
-		}
-		else {
-			onEndTransitionFn();
-		}
 			
 		// set the left and top values of the contentEl (same like the button)
 		var buttonPos = this.button.getBoundingClientRect();
@@ -153,6 +155,13 @@
 				}, 25 );
 			}
 		}, 25 );
+
+    if( this.support.transitions && !this.el.classList.contains('no-transition') ) {
+      this.contentEl.addEventListener( transEndEventName, onEndTransitionFn );
+    }
+    else {
+      setTimeout(onEndTransitionFn, 30);
+    }
 	}
 
 	// add to global namespace

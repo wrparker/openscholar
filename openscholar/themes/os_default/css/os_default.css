@@ -202,6 +202,15 @@ ul.primary li {
 .not-logged-in.page-user ul.primary li.active a:hover {
     text-decoration: none;
 }
+.login-announcements {
+background:url('../images/announce_icon.png') center left no-repeat;
+background-size: 60px 60px;
+   background-color:#fcf8e3;
+   padding:10px 0 10px 70px;
+   margin-top:10px;
+   height:60px;
+   border:1px solid #eee;
+}
 /* USER ACCOUNT PAGE */
 
 .page-site-register #footer,
@@ -339,7 +348,7 @@ fieldset#edit-pin-fieldset {
 #user-login .user-login-message-text {
     position: absolute;
     width: 160px;
-    top: 10px;
+    top: 105px;
     right: 0px;
     background-color: #FFF;
     padding: 8px;

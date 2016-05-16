@@ -651,6 +651,7 @@ function _os_process_node_links_comment_add_class(&$vars) {
  * Implements hook_preprocess_HOOK() for page.tpl.php.
  */
 function os_preprocess_page(&$vars) {
+  global $user;
   // Add the dismiss messages JS.
   drupal_add_js(drupal_get_path('module', 'os') . "/theme/os_dismiss.js", "file");
 
@@ -758,14 +759,18 @@ function os_preprocess_page(&$vars) {
   drupal_alter('os_add_new_links', $links);
 
   ksort($links);
-  $vars['title_suffix']['controls'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'class' => array(
-        'contextual-controls-wrapper',
+  if ($user->uid) {
+    $vars['title_suffix']['controls'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array(
+          'contextual-controls-wrapper',
+        ),
       ),
-    ),
-  );
+    );
+  }
+  
+
   if (count($links) > 1) {
     $vars['title_suffix']['controls']['add_new'] = array(
       '#theme' => 'ctools_dropdown',
@@ -2030,6 +2035,23 @@ function os_get_app_by_bundle($bundle) {
  * Implements hook_form_BASE_FORM_ID_alter() for user_login form.
  */
 function os_form_user_login_alter(&$form, $form_state) {
+
+  // Add an optional announcement to login page (e.g., new feature)
+  if (variable_get('os_login_message')) {
+    $form['login_announcement_message'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array(
+          'login-announcements',
+        )
+      ),
+      'message-text' => array(
+        '#markup' => variable_get('os_login_message')
+      ),
+      '#weight' => -100
+    );
+  }
+
   if (variable_get('os_login_with_email', TRUE)) {    
     // Add a new validation.
     // Validation function vsite_user_login_validate must run first.
@@ -2547,14 +2569,34 @@ function os_drupal_goto_alter(&$path, &$options, &$http_response_code) {
  *    - batch: The number of nodes we need to iterate at once.
  *    - entity: The entity type.
  *    - path: Path for the file contain the classes or the functions.
+ *    - query: The class name and funciton to run, by default this is (queryXXXX, Query) 
+ *             where xxxx is the number if the update calling the batch. ex.( query7001, Query) 
  */
 function os_set_update_batch(&$sandbox, $info) {
+
+  // Get the stack of the function to get the number of update.
+  $backtrace = debug_backtrace();
+  $function = '';
+
+  array_walk($backtrace, function($backtrace) use (&$function) {
+    if (preg_match('/[a-z]_update_[0-9]/', $backtrace['function'])) {
+      $function = $backtrace['function'];
+    }
+  });
+
+  $update = '';
+  if ($function) {
+    // Get the number of the update in order to attache it to the default class
+    // name.
+    $explode = explode('_', $function);
+    $update = end($explode);
+  }
 
   $info += array(
     'entity' => 'node',
     'batch' => drupal_is_cli() ? 400: 150,
-    'query' => array('update', 'Query'),
-    'iterator' => array('update', 'Iterator'),
+    'query' => array('update' . $update, 'Query'),
+    'iterator' => array('update' . $update, 'Iterator'),
   );
 
   if (!empty($info['path'])) {
