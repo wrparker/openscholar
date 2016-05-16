@@ -66,7 +66,7 @@ function os_wysiwyg_update_7004() {
   features_revert(array_fill_keys($modules, $reset));
 }
 
-/*
+/**
  * Revert os_wysiwyg filter component to allow <th> and <thead> tags.
  */
 function os_wysiwyg_update_7006() {
