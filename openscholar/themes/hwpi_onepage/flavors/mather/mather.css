@@ -45,7 +45,7 @@ h2.block-title,
 }
 
 #header, .front #content-panels .region-content-first, .front #content-panels .region-content-bottom {
-    background: #FFFCF1;
+    background-color: #F5F1DE;
 }
 
 .event-start-day, .event-start-month, .event-start .event-year {
