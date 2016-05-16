@@ -82,3 +82,10 @@ function os_wysiwyg_update_7007() {
   $types = array_combine($types, $types);
   media_variable_set('wysiwyg_allowed_types', $types);
 }
+
+/**
+ * Set back the wysiwyg handlers to tinymce.
+ */
+function os_wysiwyg_update_7008() {
+  features_revert(array('os_wysiwyg' => array('wysiwyg'), 'os_publications' => array('wysiwyg')));
+}
