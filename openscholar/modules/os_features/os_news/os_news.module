@@ -59,9 +59,6 @@ function os_news_cp_settings() {
       '#title' => t('Display filter for news by month'),
       '#default_value' => $display_filter_by_month,
     ),
-    'submit' => array(
-      'os_news_cp_settings_filter_by_month_submit',
-    ),
   );
 
   $form['os_news_display_filter_by_year'] = array(
@@ -75,42 +72,23 @@ function os_news_cp_settings() {
       '#title' => t('Display filter for news by year'),
       '#default_value' => $display_filter_by_year,
     ),
-    'submit' => array(
-      'os_news_cp_settings_filter_by_year_submit',
-    ),
   );
 
   return $form;
 }
 
 /**
- * Submit callback for cp/settings form.
- *
- * @see os_news_cp_settings()
+ * Implements hook_views_pre_build()
  */
-function os_news_cp_settings_filter_by_year_submit($form, &$form_state) {
-  // Get the current value for the settings.
-  $current_value = variable_get('os_news_display_filter_by_year', 0);
-  if (isset($form_state['values']['os_news_display_filter_by_year']) && isset($current_value)) {    
-    // Clear the context cache when checkbox is actually differs than its stored value.
-    if ($current_value != $form_state['values']['os_news_display_filter_by_year']) {
-      cache_clear_all('context', 'cache');
+function os_news_views_pre_build(&$view) {
+  if ($view->name == 'os_news') {
+    // If display filter by year is not checked, then views will not execute its code to render the block.
+    if ($view->current_display == 'news_by_year_block' && !variable_get('os_news_display_filter_by_year', 0)) {
+      $view->executed = TRUE;
     }
-  }
-}
-
-/**
- * Submit callback for cp/settings form.
- *
- * @see os_news_cp_settings()
- */
-function os_news_cp_settings_filter_by_month_submit($form, &$form_state) {
-  // Get the current value for the settings.
-  $current_value = variable_get('os_news_display_filter_by_month', 0);
-  if (isset($form_state['values']['os_news_display_filter_by_month']) && isset($current_value)) {    
-    // Clear the context cache when checkbox is actually differs than its stored value.
-    if ($current_value != $form_state['values']['os_news_display_filter_by_month']) {
-      cache_clear_all('context', 'cache');
+    // If display filter by month is not checked, then views will not execute its code to render the block.
+    if ($view->current_display == 'news_by_month_block' && !variable_get('os_news_display_filter_by_month', 0)) {
+      $view->executed = TRUE;
     }
   }
 }

@@ -58,25 +58,18 @@ function os_profiles_cp_settings() {
       '#title' => t('Display alphabetical grouping filter by last name: A-E F-J K-O P-T U-Z'),
       '#default_value' => $display_filter_by_alphabetical_group,
     ),
-    'submit' => array(
-      'os_profiles_cp_settings_filter_by_alphabet_submit',
-    ),
   );
   return $form;
 }
 
 /**
- * Submit callback for cp/settings form.
- *
- * @see os_profiles_cp_settings()
+ * Implements hook_views_pre_build()
  */
-function os_profiles_cp_settings_filter_by_alphabet_submit($form, &$form_state) {
-  // Get the current value for the settings.
-  $current_value = variable_get('os_profiles_display_filter_by_alphabetical_group', 0);
-  if (isset($form_state['values']['os_profiles_display_filter_by_alphabetical_group']) && isset($current_value)) {    
-    // Clear the context cache when checkbox is actually differs than its stored value.
-    if ($current_value != $form_state['values']['os_profiles_display_filter_by_alphabetical_group']) {
-      cache_clear_all('context', 'cache');
+function os_profiles_views_pre_build(&$view) {
+  if ($view->name == 'os_profiles') {
+    // If display filter by alphabetical group is not checked, then views will not execute its code to render the block.
+    if ($view->current_display == 'profile_alphabet_group_block' && !variable_get('os_profiles_display_filter_by_alphabetical_group', 0)) {
+      $view->executed = TRUE;
     }
   }
 }

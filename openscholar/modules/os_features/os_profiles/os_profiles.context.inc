@@ -44,17 +44,20 @@ function os_profiles_context_default_contexts() {
       ),
     ),
   );
-  $context->reactions = array();
 
-  if (variable_get('os_profiles_display_filter_by_alphabetical_group', 0)) {
-    $context->reactions['block']['blocks']['views-os_profiles-profile_alphabet_group_block'] = array(
-      'module' => 'views',
-      'delta' => 'os_profiles-profile_alphabet_group_block',
-      'region' => 'sidebar_second',
-      'weight' => -8,
-    );
-  }
-  
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'views-os_profiles-profile_alphabet_group_block' => array(
+          'module' => 'views',
+          'delta' => 'os_profiles-profile_alphabet_group_block',
+          'weight' => -8,
+          'region' => 'sidebar_second',
+        ),
+      ),
+    ),
+  );
+
   $context->condition_mode = 0;
 
   // Translatables
