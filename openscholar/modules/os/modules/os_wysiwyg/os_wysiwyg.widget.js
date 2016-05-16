@@ -25,14 +25,6 @@
         });
 
         editor.on('insertElement', function(editor) {
-
-          // Not working. todo fix.
-          CKEDITOR.plugins.get('imageresize').resizeAll(
-            editor.editor,
-            editor.editor.document,
-            800,
-            800
-          );
         });
 
         editor.on('blur', function() {
