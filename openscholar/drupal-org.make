@@ -532,6 +532,11 @@ libraries[font][subdir] = "ckeditor/plugins"
 libraries[font][download][type] = "file"
 libraries[font][download][url] = "http://download.ckeditor.com/font/releases/font_4.5.8.zip"
 
+libraries[dragresize][type] = "libraries"
+libraries[dragresize][subdir] = "ckeditor/plugins"
+libraries[dragresize][download][type] = "git"
+libraries[dragresize][download][url] = "https://github.com/sstur/ck-dragresize.git"
+
 ; Angular js libraries.
 libraries[angular_select2][type] = "libraries"
 libraries[angular_select2][download][type] = "get"

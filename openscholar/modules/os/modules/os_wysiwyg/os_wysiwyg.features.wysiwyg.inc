@@ -56,6 +56,7 @@ function os_wysiwyg_wysiwyg_default_profiles() {
           'font' => 1,
           'justify' => 1,
           'panelbutton' => 1,
+          'dragresize' => 1,
           'os_link' => 1,
           'break' => 1,
         ),
