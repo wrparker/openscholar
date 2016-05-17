@@ -149,13 +149,16 @@
             $menuState.SetState('main', scope.open);
             setClass();
           });
+          var body = angular.element(document).find('body');
 
           function setClass() {
             if (scope.open) {
               element.removeClass('closed');
+              body.removeClass('admin-menu-closed');
             }
             else {
               element.addClass('closed');
+              body.addClass('admin-menu-closed');
             }
           }
 
