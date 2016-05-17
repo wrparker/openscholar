@@ -3189,4 +3189,26 @@ class FeatureContext extends DrupalContext {
     $this->getSession()->visit($this->locatePath('/user/logout'));
   }
 
+  /**
+   * @Then /^I case sensitive check the text "([^"]*)"$/
+   */
+  public function iCaseSensitiveCheckTheText($text) {
+    $page = $this->getSession()->getPage();
+
+    if (!$page->find('xpath', '//*[.="' . $text . '"]')) {
+      throw new \Exception("The text '{$text}'' was not found in the screen");
+    }
+  }
+
+  /**
+   * @Given /^I case sensitive check the text "([^"]*)" not exists$/
+   */
+  public function iCaseSensitiveCheckTheTextNotExists($text) {
+    $page = $this->getSession()->getPage();
+
+    if ($page->find('xpath', '//*[.="' . $text . '"]')) {
+      throw new \Exception("The text '{$text}'' was not found in the screen");
+    }
+  }
+
 }

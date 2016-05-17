@@ -1535,3 +1535,17 @@ function os_publications_update_7043() {
     'visible' => '1'
   ));
 }
+
+/*
+* Fix CSL style so title is not italic.
+ */
+function os_publications_update_7044() {
+  $citations = array(
+    'harvard-chicago-author-date',
+    'harvard1',
+  );
+
+  foreach ($citations as $citation) {
+    os_publications_revert_citeproc_style($citation);
+  }
+}
