@@ -48,7 +48,11 @@ h2.block-title,
     background-color: #F5F1DE;
 }
 
-.event-start-day, .event-start-month, .event-start .event-year {
+.event-start .event-start span, .event-start-day, .event-start-month, .event-start .event-year {
 color:#fff;
 }
 
+.event-start .event-start span {
+
+    padding: 0;
+}
