@@ -28,7 +28,8 @@ if (!class_exists('purl_vsite_path')) {
      */
     public function parse($valid_values, $q) {
       $valid_values = array_diff_key($valid_values, _vsite_domain_processed_purls());
-      $parsed = parent::parse($valid_values, $q);
+      // Match case insensitive to lowercase.
+      $parsed = parent::parse($valid_values, strtolower($q));
 
       $space_found = FALSE;
       // Does not return spaces without the correct domain
