@@ -303,7 +303,7 @@
         }
 
         // replace # in filenames cause they will break filename detection
-        var newName = $files[i].name.replace(/#/g, '_');
+        var newName = $files[i].name.replace(/#/g, '_').replace(/_\./g, '.');
         var hadHashtag = newName != $files[i].name;
         $files[i].sanitized = newName;
 
