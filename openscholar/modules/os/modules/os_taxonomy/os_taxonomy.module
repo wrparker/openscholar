@@ -438,7 +438,6 @@ function theme_os_taxonomy_term_item($variables) {
  *        added to the tagged node number of the father term.
  */
 function theme_os_taxonomy_vocabulary_item_list($variables) {
-  //dsm($variables);
   $options = $variables['options'] + array(
     'range' => 10,
     'offset' => 0,
@@ -1059,7 +1058,6 @@ function os_taxonomy_build_child_item($items, $parent, $options) {
  * @see gkplus_preprocess_os_taxonomy_tagged_nodes()
  */
 function theme_os_taxonomy_tagged_nodes($variables) {
-  //dsm($variables);
   global $language;
 
   $output = '';
