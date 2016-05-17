@@ -251,7 +251,7 @@ function os_taxonomy_term_page($taxonomy_term) {
         ':otype' => 'boxes'
     ));
     foreach ($result as $row) {
-      // Check with current delta value
+      // Check with current delta value and get the value from spaces_overrides
       if($vsite->controllers->context->values['space']['os_taxonomy-vocab-'.$vid.':reaction:block']['blocks']['boxes-'.$row->object_id]['delta'] == $row->object_id) {
         $space_value = unserialize($row->value);
         break;
