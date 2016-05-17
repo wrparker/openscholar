@@ -1519,3 +1519,17 @@ function os_publications_update_7042() {
   _reset_csl_map(FALSE);
   os_publications_revert_citeproc_style('mhra');
 }
+
+/*
+* Fix CSL style so title is not italic.
+ */
+function os_publications_update_7043() {
+  $citations = array(
+    'harvard-chicago-author-date',
+    'harvard1',
+  );
+
+  foreach ($citations as $citation) {
+    os_publications_revert_citeproc_style($citation);
+  }
+}
