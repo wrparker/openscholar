@@ -109,3 +109,45 @@ function os_news_update_7007() {
 
   features_revert($revert);
 }
+
+/**
+ * Adds two new filter blocks in existing vsites overridden context set for news pages.
+ */
+function os_news_update_7008() {
+  // Array definition for two new filter context blocks.
+  $news_filter_context = array(
+    'views-os_news-news_by_month_block' => array(
+      'module' => 'views',
+      'delta' => 'os_news-news_by_month_block',
+      'region' => 'sidebar_second',
+      'weight' => -8,
+    ),
+    'views-os_news-news_by_year_block' => array(
+      'module' => 'views',
+      'delta' => 'os_news-news_by_year_block',
+      'region' => 'sidebar_second',
+      'weight' => -8,
+    ),
+  );
+
+  // Fetching existing vsites context override entry for news reaction block 
+  $query = db_select('spaces_overrides','so')
+    ->fields('so', array('id', 'value'))
+    ->condition('so.object_type','context','=')
+    ->condition('so.object_id','news_news:reaction:block','=');
+  $result = $query->execute()->fetchAll();
+
+  // Iterating the context override entries, merging new array items and saving it.
+  foreach ($result as $override) {
+    $context = unserialize($override->value);
+    $context['blocks'] += $news_filter_context;
+    $override = array(
+      'id' => $override->id,
+      'object_type' => 'context',
+      'object_id' => 'news_news:reaction:block',
+    );
+    $keys = array_keys($override);
+    $override['value'] = $context;
+    drupal_write_record('spaces_overrides', $override, $keys);
+  }
+}
