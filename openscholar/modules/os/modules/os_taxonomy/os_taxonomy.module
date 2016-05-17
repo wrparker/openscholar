@@ -233,7 +233,43 @@ function os_taxonomy_vocab_page($vocabulary) {
  * @see os_taxonomy_menu_alter()
  */
 function os_taxonomy_term_page($taxonomy_term) {
-  $options = variable_get('os_taxonomy_term_page_options', array('max_depth' => 0));
+
+  // Loading vsite_get_vsite()
+  if(module_exists('vsite') && $vsite = vsite_get_vsite()) {
+    $vid = $taxonomy_term->vid;
+
+    // Get spaces_overrides value
+    $result = db_query("
+      SELECT object_id AS object_id, value
+      FROM {spaces_overrides}
+      WHERE type = :type
+        AND id = :id
+        AND object_type = :otype",
+      array(
+        ':type' => $vsite->controllers->variable->space_type,
+        ':id' => $vsite->controllers->variable->space_id,
+        ':otype' => 'boxes'
+    ));
+    foreach ($result as $row) {
+      // Check with current delta value
+      if($vsite->controllers->context->values['space']['os_taxonomy-vocab-'.$vid.':reaction:block']['blocks']['boxes-'.$row->object_id]['delta'] == $row->object_id) {
+        $space_value = unserialize($row->value);
+        break;
+      }
+    }
+
+    // Adding condition for Event type with "All post" Post types
+    if(is_object($space_value) && $space_value->options['bundles'] == 'event' && $space_value->options['behavior'] == '--all--') {
+      $os_taxonomy_term_page_options = array('max_depth' => 0, 'bundles' => 'event');
+    }
+    else {
+      $os_taxonomy_term_page_options = array('max_depth' =>0);
+    }
+  }
+  else {
+    $os_taxonomy_term_page_options = array('max_depth' =>0);
+  }
+  $options = variable_get('os_taxonomy_term_page_options', $os_taxonomy_term_page_options);
 
   $variables = array(
     'taxonomy_term' => $taxonomy_term,
@@ -402,6 +438,7 @@ function theme_os_taxonomy_term_item($variables) {
  *        added to the tagged node number of the father term.
  */
 function theme_os_taxonomy_vocabulary_item_list($variables) {
+  //dsm($variables);
   $options = $variables['options'] + array(
     'range' => 10,
     'offset' => 0,
@@ -995,6 +1032,7 @@ function os_taxonomy_build_child_item($items, $parent, $options) {
   }
 }
 
+
 /**
  * Theme callback; prints term heading, description, and lists nodes in a term.
  *
@@ -1021,6 +1059,7 @@ function os_taxonomy_build_child_item($items, $parent, $options) {
  * @see gkplus_preprocess_os_taxonomy_tagged_nodes()
  */
 function theme_os_taxonomy_tagged_nodes($variables) {
+  //dsm($variables);
   global $language;
 
   $output = '';
@@ -1297,37 +1336,31 @@ function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array
 
   // In case the bundle is of the type "event", filter by the type of the event.
   if (!empty($bundles) && is_array($bundles) && strpos(reset($bundles), 'event') !== FALSE && count($bundles) == 1) {
-    
+    $query->leftJoin('field_data_field_date', 'fd', '(ogv.entity_id = fd.entity_id)');
     $event_type = reset($bundles);
 
     // Get the number of seconds form the server timezone to GMT timezone.
     $seconds = date("Z");
 
-    // Get events which are either "upcoming events" or "past events"
-    if(!in_array($event_type, array('event'))) {
-    
-      $query->leftJoin('field_data_field_date', 'fd', '(ogv.entity_id = fd.entity_id)');
-
-      // Here we use the same where condition as the "upcoming events" and "past
-      // events" in order to get the correct number of results.   
-      if (in_array($event_type, array('upcoming_event'))) {
-        // When user selected "upcoming event" or the "Determine for me" option,
-        // get upcoming events.
-        $str = date('Y-m-d\TH:i', strtotime('-30 minutes'));
-        $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(" . $seconds . ")), '%Y-%m-%d\T%H:%i') >= :str", array(":str" => $str));
-      }   
-      else {
-        // Get past events.
-        $str = date('Y-m-d');
-        $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(" . $seconds . ")), '%Y-%m-%d') < :str", array(":str" => $str));
-      }
+    // Here we use the same where condition as the "upcoming events" and "past
+    // events" in order to get the correct number of results.
+    if (in_array($event_type, array('upcoming_event', 'event'))) {
+      // When user selected "upcoming event" or the "Determine for me" option,
+      // get upcoming events.
+      $str = date('Y-m-d\TH:i', strtotime('-30 minutes'));
+      $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(" . $seconds . ")), '%Y-%m-%d\T%H:%i') >= :str", array(":str" => $str));
+    }
+    else {
+      // Get past events.
+      $str = date('Y-m-d');
+      $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(" . $seconds . ")), '%Y-%m-%d') < :str", array(":str" => $str));
     }
     $query->condition('ogv.bundle', array('event'), 'IN');
   }
   elseif (!empty($bundles) && is_array($bundles) && reset($bundles) != '--all--') {
     $query->condition('ogv.bundle', $bundles, 'IN');
   }
-  
+
   return $query;
 }
 
