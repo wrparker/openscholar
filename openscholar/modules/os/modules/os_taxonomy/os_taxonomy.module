@@ -233,44 +233,44 @@ function os_taxonomy_vocab_page($vocabulary) {
  * @see os_taxonomy_menu_alter()
  */
 function os_taxonomy_term_page($taxonomy_term) {
+  $os_taxonomy_term_page_options = array('max_depth' =>0);
 
   // Loading vsite_get_vsite()
-  if(module_exists('vsite') && $vsite = vsite_get_vsite()) {
+  if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
     $vid = $taxonomy_term->vid;
 
-    // Get spaces_overrides value
-    $result = db_query("
-      SELECT object_id AS object_id, value
-      FROM {spaces_overrides}
-      WHERE type = :type
-        AND id = :id
-        AND object_type = :otype",
-      array(
-        ':type' => $vsite->controllers->variable->space_type,
-        ':id' => $vsite->controllers->variable->space_id,
-        ':otype' => 'boxes'
-    ));
-    foreach ($result as $row) {
-      // Check with current delta value and get the value from spaces_overrides
-      if($vsite->controllers->context->values['space']['os_taxonomy-vocab-'.$vid.':reaction:block']['blocks']['boxes-'.$row->object_id]['delta'] == $row->object_id) {
-        $space_value = unserialize($row->value);
-        break;
+    // Get the delta value
+    if (is_array($boxes_delta = $vsite->controllers->context->values['space']['os_taxonomy-vocab-'.$vid.':reaction:block']['blocks'])) {
+      $boxes_delta_key = array_keys($boxes_delta);
+      $boxes_delta_key = $boxes_delta_key[0];
+      if (strstr($boxes_delta_key, "boxes-")) {
+        $delta = str_replace("boxes-", "", $boxes_delta_key);
+
+        // Get value from spaces_overrides table
+        $result = db_query("
+          SELECT value
+          FROM {spaces_overrides}
+          WHERE type = :type
+            AND id = :id
+            AND object_type = :otype
+            AND object_id = :objid",
+          array(
+            ':type' => $vsite->controllers->variable->space_type,
+            ':id' => $vsite->controllers->variable->space_id,
+            ':otype' => 'boxes',
+            ':objid' => $delta,
+        ))->fetchField();
+        $space_value = unserialize($result);
       }
     }
 
     // Adding condition for Event type with "All post" Post types
-    if(is_object($space_value) && $space_value->options['bundles'] == 'event' && $space_value->options['behavior'] == '--all--') {
+    if (is_object($space_value) && $space_value->options['bundles'] == 'event' && $space_value->options['behavior'] == '--all--') {
       $os_taxonomy_term_page_options = array('max_depth' => 0, 'bundles' => 'event');
     }
-    else {
-      $os_taxonomy_term_page_options = array('max_depth' =>0);
-    }
   }
-  else {
-    $os_taxonomy_term_page_options = array('max_depth' =>0);
-  }
-  $options = variable_get('os_taxonomy_term_page_options', $os_taxonomy_term_page_options);
 
+  $options = variable_get('os_taxonomy_term_page_options', $os_taxonomy_term_page_options);
   $variables = array(
     'taxonomy_term' => $taxonomy_term,
     'options' => $options,
