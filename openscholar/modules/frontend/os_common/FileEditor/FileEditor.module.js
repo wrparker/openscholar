@@ -229,7 +229,17 @@
     }]);
 
   function getExtension(url) {
-    return url.slice(url.lastIndexOf('.')+1, (url.lastIndexOf('?') != -1)?url.lastIndexOf('?'):url.length).toLowerCase();
+    // patterns
+    // .?= (file with query params at the end) /\.([a-zA-Z0-9])*\?/
+    // ?. (file with ? in the middle for some reason) /$([a-zA-Z0-9?]
+    // .?. (file with multiple . and ? before the last one
+    // .?=. (file with . in query param
+    var r = /^[a-zA-Z0-9?.]+\.([a-zA-Z0-9]+)[.?a-zA-Z0-9=]*/,
+      result = r.exec(url);
+
+    if (result) {
+      return result[1].toLowerCase();
+    }
   }
 
 })(jQuery);
