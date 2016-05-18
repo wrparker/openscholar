@@ -2070,7 +2070,19 @@ function os_events_form_event_node_form_alter(&$form, &$form_state) {
       ':input[name="field_event_registration[und][0][registration_type]"]' => array('checked' => TRUE),
       ':input[name="field_date[und][0][show_repeat_settings]"]' => array('checked' => TRUE),
     ),
-  );  
+  );
+  // Div wrapper to display Sign up and multiple registration select checkbox jointly.
+  $form['event_registration_group'] = array(
+    '#type' => '#markup',
+    '#prefix' => '<div>',
+    '#suffix' => '</div>',
+    '#weight' => 6
+  );
+  // Inserting both checkboxes into above container div and removing form form element array.
+  $form['event_registration_group']['field_mutliple_event_signup'] = $form['field_mutliple_event_signup'];
+  $form['event_registration_group']['field_event_registration'] = $form['field_event_registration'];
+  unset($form['field_mutliple_event_signup']);
+  unset($form['field_event_registration']);
 }
 
 /**
