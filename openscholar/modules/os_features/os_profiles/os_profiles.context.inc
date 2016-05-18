@@ -48,11 +48,12 @@ function os_profiles_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-os_profiles-profile_alphabet_group_block' => array(
+        'views-os_profiles-filter_by_alphabet' => array(
           'module' => 'views',
-          'delta' => 'os_profiles-profile_alphabet_group_block',
+          'delta' => 'os_profiles-filter_by_alphabet',
           'weight' => -8,
-          'region' => 'sidebar_second',
+          'region' => FALSE,
+          'info' => t('Filter Profiles by Alphabetical Groups'),
         ),
       ),
     ),

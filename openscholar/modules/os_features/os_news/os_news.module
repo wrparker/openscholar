@@ -42,55 +42,30 @@ function os_news_os_app_info() {
 }
 
 /**
- * Implements hook_cp_settings().
+ * Implements hook_os_widget().
  */
-function os_news_cp_settings() {
-  $form = array();
-  $display_filter_by_month = variable_get('os_news_display_filter_by_month', 0);
-  $display_filter_by_year = variable_get('os_news_display_filter_by_year', 0);
-  $form['os_news_display_filter_by_month'] = array(
-    'group' => array(
-      '#id' => 'os_news',
-      '#title' => t('News'),
-      '#weight' => 50,
-    ),
-    'form' => array(
-      '#type' => 'checkbox',
-      '#title' => t('Display filter for news by month'),
-      '#default_value' => $display_filter_by_month,
-    ),
+function os_news_os_widget() {
+  $items = array();
+
+  // Filter news by months.
+  $items['views-os_news-news_by_month_block'] = array(
+    'module' => 'views',
+    'delta' => 'os_news-news_by_month_block',
+    'region' => FALSE,
+    'weight' => '-10',
+    'info' => t('Filter News by Month'),
   );
 
-  $form['os_news_display_filter_by_year'] = array(
-    'group' => array(
-      '#id' => 'os_news',
-      '#title' => t('News'),
-      '#weight' => 50,
-    ),
-    'form' => array(
-      '#type' => 'checkbox',
-      '#title' => t('Display filter for news by year'),
-      '#default_value' => $display_filter_by_year,
-    ),
+  // Filter news by year.
+  $items['views-os_news-news_by_year_block'] = array(
+    'module' => 'views',
+    'delta' => 'os_news-news_by_year_block',
+    'region' => FALSE,
+    'weight' => '-10',
+    'info' => t('Filter News by Year'),
   );
 
-  return $form;
-}
-
-/**
- * Implements hook_views_pre_build()
- */
-function os_news_views_pre_build(&$view) {
-  if ($view->name == 'os_news') {
-    // If display filter by year is not checked, then views will not execute its code to render the block.
-    if ($view->current_display == 'news_by_year_block' && !variable_get('os_news_display_filter_by_year', 0)) {
-      $view->executed = TRUE;
-    }
-    // If display filter by month is not checked, then views will not execute its code to render the block.
-    if ($view->current_display == 'news_by_month_block' && !variable_get('os_news_display_filter_by_month', 0)) {
-      $view->executed = TRUE;
-    }
-  }
+  return $items;
 }
 
 /**
