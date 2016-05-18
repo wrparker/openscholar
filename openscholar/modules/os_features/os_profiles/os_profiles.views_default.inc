@@ -110,7 +110,7 @@ function os_profiles_views_default_views() {
   );
 
   /* Display: Filter by alphabetical grouping of Last Name */
-  $handler = $view->new_display('block', 'Filter by alphabetical grouping of Last Name', 'profile_alphabet_group_block');
+  $handler = $view->new_display('block', 'Filter by alphabetical grouping of Last Name', 'filter_by_alphabet');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Filter by alphabetical grouping of Last Name';
   $handler->display->display_options['defaults']['pager'] = FALSE;

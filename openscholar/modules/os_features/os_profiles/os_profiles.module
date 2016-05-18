@@ -42,36 +42,21 @@ function os_profiles_os_app_info() {
 }
 
 /**
- * Implements hook_cp_settings().
+ * Implements hook_os_widget().
  */
-function os_profiles_cp_settings() {
-  $form = array();
-  $display_filter_by_alphabetical_group = variable_get('os_profiles_display_filter_by_alphabetical_group', 0);
-  $form['os_profiles_display_filter_by_alphabetical_group'] = array(
-    'group' => array(
-      '#id' => 'os_profiles',
-      '#title' => t('Profile'),
-      '#weight' => 50,
-    ),
-    'form' => array(
-      '#type' => 'checkbox',
-      '#title' => t('Display alphabetical grouping filter by last name: A-E F-J K-O P-T U-Z'),
-      '#default_value' => $display_filter_by_alphabetical_group,
-    ),
-  );
-  return $form;
-}
+function os_profiles_os_widget() {
+  $items = array();
 
-/**
- * Implements hook_views_pre_build()
- */
-function os_profiles_views_pre_build(&$view) {
-  if ($view->name == 'os_profiles') {
-    // If display filter by alphabetical group is not checked, then views will not execute its code to render the block.
-    if ($view->current_display == 'profile_alphabet_group_block' && !variable_get('os_profiles_display_filter_by_alphabetical_group', 0)) {
-      $view->executed = TRUE;
-    }
-  }
+  // Filter profiles by alphabrtical groups.
+  $items['views-os_profiles-filter_by_alphabet'] = array(
+    'module' => 'views',
+    'delta' => 'os_profiles-filter_by_alphabet',
+    'region' => FALSE,
+    'weight' => '-10',
+    'info' => t('Filter Profiles by Alphabetical Groups'),
+  );
+
+  return $items;
 }
 
 /**
