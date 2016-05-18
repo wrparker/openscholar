@@ -47,7 +47,7 @@ function os_profiles_os_app_info() {
 function os_profiles_os_widget() {
   $items = array();
 
-  // Filter profiles by alphabrtical groups.
+  // Filter profiles by alphabetical groups.
   $items['views-os_profiles-filter_by_alphabet'] = array(
     'module' => 'views',
     'delta' => 'os_profiles-filter_by_alphabet',

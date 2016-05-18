@@ -41,7 +41,6 @@ function os_news_os_app_info() {
   return $apps;
 }
 
-
 /**
  * Implements hook_os_widget().
  */
