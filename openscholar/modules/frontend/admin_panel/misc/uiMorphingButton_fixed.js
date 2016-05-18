@@ -66,19 +66,15 @@
 		var self = this;
 		// open
 		this.button.addEventListener( 'click', function() {
-            self.toggle();
-            self.expanded = !self.expanded;
-        } );
+        self.toggle();
+    } );
 		// close
 		if( this.options.closeEl !== '' ) {
 			var closeEl = this.el.querySelector( this.options.closeEl );
-			if( closeEl ) {
-                closeEl.addEventListener('click', function() {
-                    self.toggle();
-                    self.expanded = !self.expanded;
-                });
-
-
+      if( closeEl ) {
+        closeEl.addEventListener('click', function() {
+            self.toggle();
+        });
 			}
 		}
 		if( this.options.closeEl2 !== '' ) {
@@ -126,6 +122,7 @@
 				else {
 					self.options.onAfterOpen();
 				}
+        self.expanded = !self.expanded;
 			};
 			
 		// set the left and top values of the contentEl (same like the button)
