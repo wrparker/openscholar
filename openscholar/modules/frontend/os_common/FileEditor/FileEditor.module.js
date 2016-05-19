@@ -228,17 +228,33 @@
       }
     }]);
 
+  /**
+   * The regex contained within was tested against the following strings:
+   *
+   * #derp.txt?mtime=garbage
+   * derp.txt
+   * de?rp.txt
+   * de?rp.txt?mtime=garbage
+   * de#rp.txt
+   * de#4p.txt#herp
+   * de.rp.txt
+   * derp.txt?mtime=garbage#herp
+   * http://customdomain.com/sites/default/files/department/files/accordion_widget.png?m=1432822855
+   * derp.txt?mtime=gar.bage
+   *
+   * Tested with regexr.com
+   */
   function getExtension(url) {
     // patterns
     // .?= (file with query params at the end) /\.([a-zA-Z0-9])*\?/
     // ?. (file with ? in the middle for some reason) /$([a-zA-Z0-9?]
     // .?. (file with multiple . and ? before the last one
     // .?=. (file with . in query param
-    var r = /^[^.]+\.([a-zA-Z0-9]+).*/,
+    var r = /^([a-z]+:\/\/[a-zA-Z0-9.\/]+\/)?[a-zA-Z0-9.?#_-]+\.([a-zA-Z0-9]+)($|[?#])/,
       result = r.exec(url);
 
     if (result) {
-      return result[1].toLowerCase();
+      return result[2].toLowerCase();
     }
   }
 
