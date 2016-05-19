@@ -51,6 +51,7 @@ h1#page-title,
     font-family: 'Oswald', sans-serif !important;
     font-size: 2.1em;
     font-weight: bold;
+    line-height: 1.2;
 }
 #header,
 .section-nav ul.menu li a,

@@ -38,7 +38,7 @@
           });
       	});
       };
-     
+
   }]).controller("UserSitesController",['$scope', '$http', function ($scope, $http) {
     $scope.baseUrl = Drupal.settings.basePath;
 

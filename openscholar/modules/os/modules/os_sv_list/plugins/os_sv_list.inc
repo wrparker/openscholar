@@ -264,6 +264,9 @@ class os_sv_list extends os_boxes_default {
           'pager_id' => $this->pager_element,
           'destination' => $_GET['q'],
         );
+        // Keep random query params on the page from impacting how the pager is rendered, by forcing it to our params only.
+        $query_pager = &drupal_static('pager_get_query_parameters');
+        $query_pager = $parameters;
 
         $use_pager = 'views_mini_pager';
 
@@ -272,6 +275,8 @@ class os_sv_list extends os_boxes_default {
           'element' => $this->pager_element,
           'quantity' => $this->options['number_of_items'],
         ));
+        // Reset back to defaults.
+        $query_pager = NULL;
 
         // If the pager is active, the more link needs its vars to know whether
         // or not to display.

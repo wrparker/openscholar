@@ -411,3 +411,27 @@ function vsite_register_contextual_links_view_alter(&$element, $items) {
     );
   }
 }
+
+/**
+ * Implements hook_mail_alter().
+ */
+function vsite_register_mail_alter(&$message) {
+  if (!in_array($message['id'], array('user_password_reset'))) {
+    return;
+  }
+
+  $params = array(
+    '@user_name' => $message['params']['account']->name,
+    '@one-time-login-url' => user_pass_reset_url($message['params']['account']),
+    '@site_name' => variable_get('vsite_register_owner_of_install'),
+  );
+
+  // Overwrite mail body in case of Reset Password mail
+  $message['body'][0] = t("Hello @user_name", $params);
+  $message['body'][1] = t("To reset your password, please copy and paste this link into a browser:", $params);
+  $message['body'][2] = t("@one-time-login-url", $params);
+  $message['body'][3] = t("For your security, this link can only be used once to log in and will lead you to a page where you can create a new password. It expires after one day and nothing will happen if it's not used.", $params);
+  if ($params['@site_name']) {
+    $message['body'][4] = t("-@site_name", $params);
+  }
+ }
