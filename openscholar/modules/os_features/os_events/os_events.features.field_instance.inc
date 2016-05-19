@@ -432,7 +432,7 @@ function os_events_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_mutliple_event_signup',
-    'label' => 'Allow a user to sign up for multiple sessions',
+    'label' => 'Allow a user to sign up for multiple occurrences',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -694,7 +694,7 @@ function os_events_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Allow a user to sign up for multiple sessions');
+  t('Allow a user to sign up for multiple occurrences');
   t('Attach Files');
   t('Body');
   t('Date');
