@@ -250,7 +250,12 @@
     // ?. (file with ? in the middle for some reason) /$([a-zA-Z0-9?]
     // .?. (file with multiple . and ? before the last one
     // .?=. (file with . in query param
-    var r = /^([a-z]+:\/\/[a-zA-Z0-9.\/]+\/)?[a-zA-Z0-9.?#_-]+\.([a-zA-Z0-9]+)($|[?#])/,
+
+    // ([a-z]+:\/\/[a-zA-Z0-9.\/-]+\/)? matches against http://something.com/a/b/ or nothing at all
+    // [a-zA-Z0-9.?#_-]+ matches against the filename without extension
+    // ([a-zA-Z0-9]+) matches the extension itself
+    // ($|[?#]) matches end of the string or a URL filename terminator (? or #)
+    var r = /^([a-z]+:\/\/[a-zA-Z0-9.\/-]+\/)?[a-zA-Z0-9.?#_-]+\.([a-zA-Z0-9]+)($|[?#])/,
       result = r.exec(url);
 
     if (result) {
