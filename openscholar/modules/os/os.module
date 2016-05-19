@@ -107,7 +107,7 @@ function os_cp_settings() {
   $setting = array();
   $setting['long_list_content_pagination'] = array(
     'group' => array(
-      '#title' => t('For pages with long lists of content'),
+      '#title' => t('Display pages with long lists of content using'),
       '#id' => 'long-list-content-pagination',
       '#weight' => 40
     ),
