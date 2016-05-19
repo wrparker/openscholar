@@ -64,7 +64,7 @@ function os_profiles_os_widget() {
  */
 function os_profiles_preprocess_views_view_summary(&$vars) {
   // Targets only view name 'os_profiles' for alphabetical profile glossary link display.
-  if ($vars['view']->name == 'os_profiles' && $vars['view']->current_display == 'profile_alphabet_group_block') {
+  if ($vars['view']->name == 'os_profiles' && $vars['view']->current_display == 'filter_by_alphabet') {
     $result = $vars['view']->result;
     $summary_base_path = url($vars['view']->style_options['base_path']);
     $overridden_result = array();
