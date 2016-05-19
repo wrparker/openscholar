@@ -479,7 +479,7 @@ libraries[responsiveslides][patch][] = "https://gist.githubusercontent.com/RoySe
 
 libraries[flexslider][type] = "libraries"
 libraries[flexslider][download][type] = "file"
-libraries[flexslider][download][url] = "https://github.com/woothemes/FlexSlider/archive/flexslider1.zip"
+libraries[flexslider][download][url] = "https://github.com/downloads/woothemes/FlexSlider/FlexSlider-2.0.zip"
 
 libraries[select2][type] = "libraries"
 libraries[select2][download][type] = "file"
