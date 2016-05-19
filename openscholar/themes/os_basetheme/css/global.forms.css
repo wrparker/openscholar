@@ -232,9 +232,7 @@ input[type="radio"] {
 [hidden] {
     display: none;
 }
-.select2-container {
-    min-width: 300px;
-}
+
 /* Tips for Drupal's input formats */
 
 .tips {
