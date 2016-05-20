@@ -212,7 +212,44 @@ function os_taxonomy_in_taxonomy_term_context($view = NULL) {
  * @see os_taxonomy_menu_alter()
  */
 function os_taxonomy_vocab_page($vocabulary) {
-  $options = variable_get('os_taxonomy_term_page_options', array('max_depth' => 0));
+  $os_taxonomy_term_page_options = array('max_depth' =>0);
+
+  // Loading vsite_get_vsite()
+  if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
+    $vid = $taxonomy_term->vid;
+
+    // Get the delta value
+    if (is_array($boxes_delta = $vsite->controllers->context->values['space']['os_taxonomy-vocab-'.$vid.':reaction:block']['blocks'])) {
+      $boxes_delta_key = array_keys($boxes_delta);
+      $boxes_delta_key = $boxes_delta_key[0];
+      if (strstr($boxes_delta_key, "boxes-")) {
+        $delta = str_replace("boxes-", "", $boxes_delta_key);
+
+        // Get value from spaces_overrides table
+        $result = db_query("
+          SELECT value
+          FROM {spaces_overrides}
+          WHERE type = :type
+            AND id = :id
+            AND object_type = :otype
+            AND object_id = :objid",
+          array(
+            ':type' => $vsite->controllers->variable->space_type,
+            ':id' => $vsite->controllers->variable->space_id,
+            ':otype' => 'boxes',
+            ':objid' => $delta,
+        ))->fetchField();
+        $space_value = unserialize($result);
+      }
+    }
+
+    // Adding condition for Event type with "All post" Post types
+    if (is_object($space_value) && $space_value->options['bundles'] == 'event' && $space_value->options['behavior'] == '--all--') {
+      $os_taxonomy_term_page_options = array('max_depth' => 0, 'bundles' => 'event');
+    }
+  }
+
+  $options = variable_get('os_taxonomy_term_page_options', $os_taxonomy_term_page_options);
 
   $variables = array(
     'vocabulary' => $vocabulary,
@@ -223,7 +260,6 @@ function os_taxonomy_vocab_page($vocabulary) {
 
   ctools_include('infinite_scroll', 'os');
   _os_add_infinite_scroll('os_taxonomy');
-
   return theme('os_taxonomy_tagged_nodes', $variables);
 }
 
@@ -1058,6 +1094,7 @@ function os_taxonomy_build_child_item($items, $parent, $options) {
  * @see gkplus_preprocess_os_taxonomy_tagged_nodes()
  */
 function theme_os_taxonomy_tagged_nodes($variables) {
+
   global $language;
 
   $output = '';
