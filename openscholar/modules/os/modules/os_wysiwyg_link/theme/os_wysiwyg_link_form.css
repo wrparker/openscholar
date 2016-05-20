@@ -41,8 +41,8 @@ div.vertical-tabs .vertical-tabs-panes {
 	margin-top: -25px
 }
 
-.vertical-tabs-pane input[type=submit] {
-	display: none;
+.vertical-tabs-pane input[value=Upload] {
+	display: inherit !important;
 }
 
 div.vertical-tabs .vertical-tabs-list {
