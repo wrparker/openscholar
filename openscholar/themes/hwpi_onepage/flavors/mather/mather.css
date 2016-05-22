@@ -22,12 +22,15 @@ body,
 #layout_16_9_below .slide-copy h2,
 #layout_16_9_overlay .slide-copy h2,
 h2.block-title,
-.region-header-third ul.nice-menu a,
-#menu-bar ul.nice-menu a,
 #boxes-box-site_info,
 #boxes-box-site_info a,
 .date-nav h3 {
     font-family: 'Cardo', sans-serif !important;
+}
+
+.region-header-third ul.nice-menu a,
+#menu-bar ul.nice-menu a {
+    font-family: helvetica, sans-serif !important;
 }
 
 #menu-bar {
@@ -35,7 +38,11 @@ h2.block-title,
     border-top: 3px solid #333;
     border-bottom: 1px solid #ddd;
 }
-#footer ,
+#menu-bar ul.nice-menu ul,
+ #search-block-form input.form-submit, 
+ #search-block-form #edit-submit, 
+ #search-form #edit-submit,
+#footer,
 #menu-bar ul.nice-menu a.active,
 #menu-bar ul.nice-menu a:hover,
 #menu-bar ul.nice-menu .menuparent.over > a,
@@ -44,15 +51,52 @@ h2.block-title,
     background-color: #333;
 }
 
-#header, .front #content-panels .region-content-first, .front #content-panels .region-content-bottom {
-    background-color: #F5F1DE;
+
+#menu-bar ul.nice-menu a {
+    color:#333;
+}
+
+
+#page,#header, .front #content-panels .region-content-first, .front #content-panels .region-content-bottom {
+    background-color: #FBFBF1;
 }
 
 .event-start .event-start span, .event-start-day, .event-start-month, .event-start .event-year {
 color:#fff;
 }
 
-.event-start .event-start span {
-
-    padding: 0;
+.event-start .event-year {
+    padding: 8px 0 0;
+ 
 }
+    
+.event-start .event-start {
+background: #000;
+    border: none;
+    border-top: none;
+    -webkit-border-bottom-right-radius: 0px;
+    -webkit-border-bottom-left-radius: 0px;
+    -moz-border-radius-bottomright: 0px;
+    -moz-border-radius-bottomleft: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    }
+
+.section-nav .menu-depth-1 > a {
+    background-color: #333 !important;
+    color: #fff !important;
+    border-bottom: 1px solid #999 !important;
+}
+
+#footer .footer-login {
+ 
+    color: #fff;
+
+    text-shadow: none;
+  
+}
+
+.cal-export {
+    background-position: 58px -956px;
+}
+  
