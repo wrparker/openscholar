@@ -38,6 +38,15 @@ h2.block-title,
     border-top: 3px solid #333;
     border-bottom: 1px solid #ddd;
 }
+#menu-bar ul.nice-menu .menuparent a:before {
+    background-position: -69px -566px;
+}
+
+.region-content-top,
+.region-content-second {
+background-color:#fff;
+}
+
 #menu-bar ul.nice-menu ul,
  #search-block-form input.form-submit, 
  #search-block-form #edit-submit, 
@@ -54,6 +63,7 @@ h2.block-title,
 
 #menu-bar ul.nice-menu a {
     color:#333;
+    font-size: 1.2em;
 }
 
 
@@ -99,4 +109,8 @@ background: #000;
 .cal-export {
     background-position: 58px -956px;
 }
+
+#footer .footer-login:after {
+    background-image: none;
+   }
   
