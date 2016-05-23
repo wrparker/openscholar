@@ -105,6 +105,99 @@ function os_news_views_default_views() {
     'default' => 'default',
     'page' => 'page',
   );
+
+  /* Display: Filter News Block by Month */
+  $handler = $view->new_display('block', 'Filter News Block by Month', 'news_by_month_block');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Filter News by Month';
+  $handler->display->display_options['defaults']['use_ajax'] = FALSE;
+  $handler->display->display_options['use_ajax'] = TRUE;
+  $handler->display->display_options['defaults']['query'] = FALSE;
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['pure_distinct'] = TRUE;
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'mini';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '5';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'node';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Content: Date (field_news_date) */
+  $handler->display->display_options['arguments']['field_news_date_value']['id'] = 'field_news_date_value';
+  $handler->display->display_options['arguments']['field_news_date_value']['table'] = 'field_data_field_news_date';
+  $handler->display->display_options['arguments']['field_news_date_value']['field'] = 'field_news_date_value';
+  $handler->display->display_options['arguments']['field_news_date_value']['default_action'] = 'summary';
+  $handler->display->display_options['arguments']['field_news_date_value']['default_argument_type'] = 'date';
+  $handler->display->display_options['arguments']['field_news_date_value']['summary']['sort_order'] = 'desc';
+  $handler->display->display_options['arguments']['field_news_date_value']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_news_date_value']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_news_date_value']['summary_options']['base_path'] = 'news/archive';
+  $handler->display->display_options['arguments']['field_news_date_value']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_news_date_value']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['field_news_date_value']['use_fromto'] = 'no';
+  $handler->display->display_options['arguments']['field_news_date_value']['title_format'] = 'custom';
+  $handler->display->display_options['arguments']['field_news_date_value']['title_format_custom'] = 'F Y';
+
+  /* Display: Filter News Block by Year */
+  $handler = $view->new_display('block', 'Filter News Block by Year', 'news_by_year_block');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Filter News by Year';
+  $handler->display->display_options['defaults']['use_ajax'] = FALSE;
+  $handler->display->display_options['use_ajax'] = TRUE;
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'mini';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '5';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'node';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Content: Date (field_news_date) */
+  $handler->display->display_options['arguments']['field_news_date_value']['id'] = 'field_news_date_value';
+  $handler->display->display_options['arguments']['field_news_date_value']['table'] = 'field_data_field_news_date';
+  $handler->display->display_options['arguments']['field_news_date_value']['field'] = 'field_news_date_value';
+  $handler->display->display_options['arguments']['field_news_date_value']['default_action'] = 'summary';
+  $handler->display->display_options['arguments']['field_news_date_value']['default_argument_type'] = 'date';
+  $handler->display->display_options['arguments']['field_news_date_value']['summary']['sort_order'] = 'desc';
+  $handler->display->display_options['arguments']['field_news_date_value']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_news_date_value']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_news_date_value']['summary_options']['base_path'] = 'news/archive';
+  $handler->display->display_options['arguments']['field_news_date_value']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_news_date_value']['specify_validation'] = TRUE;
+  $handler->display->display_options['arguments']['field_news_date_value']['granularity'] = 'year';
+  $handler->display->display_options['arguments']['field_news_date_value']['use_fromto'] = 'no';
+  $handler->display->display_options['arguments']['field_news_date_value']['title_format'] = 'custom';
+  $handler->display->display_options['arguments']['field_news_date_value']['title_format_custom'] = 'Y';
+
+  /* Display: Page for News Archive */
+  $handler = $view->new_display('page', 'Page', 'page_1');
+  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Content: Date (field_news_date) */
+  $handler->display->display_options['arguments']['field_news_date_value']['id'] = 'field_news_date_value';
+  $handler->display->display_options['arguments']['field_news_date_value']['table'] = 'field_data_field_news_date';
+  $handler->display->display_options['arguments']['field_news_date_value']['field'] = 'field_news_date_value';
+  $handler->display->display_options['arguments']['field_news_date_value']['default_argument_type'] = 'date';
+  $handler->display->display_options['arguments']['field_news_date_value']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_news_date_value']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_news_date_value']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['path'] = 'news/archive';
+  $handler->display->display_options['menu']['title'] = 'News';
+  $handler->display->display_options['menu']['description'] = 'List of news';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'primary-menu';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
+
   $export['os_news'] = $view;
 
   return $export;

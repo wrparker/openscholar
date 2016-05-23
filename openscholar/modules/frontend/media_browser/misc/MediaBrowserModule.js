@@ -302,7 +302,12 @@
           }
         }
 
-        var url = Drupal.settings.paths.api + '/files/filename/' + $files[i].name;
+        // replace # in filenames cause they will break filename detection
+        var newName = $files[i].name.replace(/[#|\?]/g, '_').replace(/__/g, '_').replace(/_\./g, '.');
+        var hadHashtag = newName != $files[i].name;
+        $files[i].sanitized = newName;
+
+        var url = Drupal.settings.paths.api + '/files/filename/' + $files[i].sanitized;
 
         if (Drupal.settings.spaces) {
           url += '?vsite=' + Drupal.settings.spaces.id;
@@ -313,14 +318,14 @@
         promises.push($http.get(url, config).then(function (response) {
             var file = response.config.originalFile;
             var data = response.data.data;
-            file.filename = file.name;
+            file.filename = file.sanitized;
             if (data.collision) {
               file.newName = data.expectedFileName;
               $scope.dupes.push(file);
             }
             else {
-              if (data.invalidChars) {
-                addMessage("This file was renamed from \"" + file.name + "\" due to having invalid characters in its name.")
+              if (data.invalidChars || hadHashtag) {
+                addMessage("This file was renamed from \"" + file.name + "\" due to having invalid characters in its name. The new file will replace any file with the same name.");
               }
               toBeUploaded.push(file);
             }

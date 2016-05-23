@@ -61,9 +61,24 @@ function os_news_context_default_contexts() {
           'weight' => 50,
           'region' => 'sidebar_second',
         ),
+        'views-os_news-news_by_month_block' => array(
+          'module' => 'views',
+          'delta' => 'os_news-news_by_month_block',
+          'region' => FALSE,
+          'weight' => -8,
+          'info' => t('Filter News by Month'),
+        ),
+        'views-os_news-news_by_year_block' => array(
+          'module' => 'views',
+          'delta' => 'os_news-news_by_year_block',
+          'region' => FALSE,
+          'weight' => -8,
+          'info' => t('Filter News by Year'),
+        ),
       ),
     ),
   );
+
   $context->condition_mode = 0;
 
   // Translatables

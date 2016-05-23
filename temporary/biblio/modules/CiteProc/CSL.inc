@@ -301,7 +301,6 @@ class csl_format extends csl_rendering_element {
           $text = drupal_strtolower($text);
           break;
         case 'capitalize-all':
-        case 'title':
           $original = $text;
           $text = mb_convert_case($text, MB_CASE_TITLE, 'UTF-8');
 
@@ -1216,8 +1215,7 @@ class csl_text extends csl_format {
           $text = $data->{$this->variable}; //$this->data[$this->var];  // include the contents of a variable
         }
 
-        // Filter only specific tags of html.
-        $text = filter_xss($text, array('sup', 'sub', 'i'));
+        $text = filter_xss($text, array('sup', 'sub', 'i', 'em'));
         break;
       case 'macro':
         $macro = $this->var;

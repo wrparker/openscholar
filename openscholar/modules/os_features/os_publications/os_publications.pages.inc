@@ -49,7 +49,15 @@ function os_publications_overview() {
   else {
     // Change the page title to match the menu entry.
     ctools_include('menu', 'os');
-    $menu_item = os_menu_load_link_path($_GET['q']);
+
+    if (!$menu_item = os_menu_load_link_path($_GET['q'])) {
+      drupal_set_title('');
+      // This could a non valid menu item or non-exiting publication. Throwing
+      // 404.
+      drupal_not_found();
+      drupal_exit();
+    }
+
     drupal_set_title($menu_item['title']);
   }
 
