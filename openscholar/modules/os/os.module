@@ -3007,6 +3007,9 @@ function os_user_migration_ownership_submit($form, &$form_state) {
   // Remove all the duplicate memberships.
   $operations[] = array('os_user_remove_duplicated_ownerships', array($primary_user));
 
+  // Save information about the operation.
+  $operations[] = array('os_user_transfer_statistics_save', array(count($content), count($memberships), $secondary_user));
+
   // Prepare batch settings
   $batch = array(
     'operations' => $operations,
@@ -3185,6 +3188,22 @@ function os_user_remove_duplicated_ownerships($user) {
 }
 
 /**
+ * Saving statistics information about the operation.
+ *
+ * @param $nodes
+ *   The number of nodes.
+ * @param $memberships
+ *   The number of OG memberships.
+ * @param $user
+ *   The secondary user object which all the content have been migrated from.
+ */
+function os_user_transfer_statistics_save($nodes, $memberships, $user) {
+  $statistics = variable_get('os_ownership_migration_stats', array());
+  $statistics[$user->uid] = array('nodes' => $nodes, 'memberships' => $memberships);
+  variable_set('os_ownership_migration_stats', $statistics);
+}
+
+/**
  * Page callback; A table with the users which their content was migrated to
  * another user. The table also contains a link to the delete the user when
  * possible.
@@ -3196,6 +3215,7 @@ function os_user_remove_duplicated_ownerships($user) {
  */
 function os_view_migrated_users() {
   $users = user_load_multiple(variable_get('os_ownership_migration_uids'));
+  $information = variable_get('os_ownership_migration_stats');
 
   $rows = array();
   foreach ($users as $user) {
@@ -3207,9 +3227,12 @@ function os_view_migrated_users() {
       $can_delete = t('No. The user still have content relate to him. Please try to migrate again.');
     }
 
+    $user_info = $information[$user->uid];
+
     $rows[] = array(
       $user->name,
       $can_delete,
+      format_plural($user_info['nodes'], '1 Node', '@count Nodes') . '<br />' . format_plural($user_info['memberships'], '1 Membership', '@count Memberships'),
     );
   }
 
@@ -3217,6 +3240,7 @@ function os_view_migrated_users() {
     'header' => array(
       t('Username'),
       t('Can delete?'),
+      t('Statistics information'),
     ),
     'rows' => $rows,
   ));
