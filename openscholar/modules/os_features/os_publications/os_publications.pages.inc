@@ -51,6 +51,7 @@ function os_publications_overview() {
     ctools_include('menu', 'os');
 
     if (!$menu_item = os_menu_load_link_path($_GET['q'])) {
+      drupal_set_title('');
       // This could a non valid menu item or non-exiting publication. Throwing
       // 404.
       drupal_not_found();
