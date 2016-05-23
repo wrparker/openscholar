@@ -1,3 +1,7 @@
+html, body {
+    color: #000;
+}
+
 body,
 #page-title,
 .node-title,
@@ -35,9 +39,13 @@ h2.block-title,
 h1#page-title {
     font-size: 2em;
 }
+
+.ui-tabs ul.ui-tabs-nav li.ui-tabs-active,
+#menu-bar {
+    border-top: 3px solid #333;
+}
 #menu-bar {
     background: #fff;
-    border-top: 3px solid #333;
     border-bottom: 1px solid #ddd;
 }
 #menu-bar ul.nice-menu .menuparent a:before {
@@ -104,6 +112,10 @@ h1#page-title {
     color: #fff !important;
     border-bottom: 1px solid #999 !important;
 }
+.node-type-person .node-person .field-name-field-professional-title {
+	font-style:italic;
+}
+
 #footer .footer-login {
     text-shadow: none;
 }
@@ -115,4 +127,8 @@ h1#page-title {
 }
 #footer .footer-login:after {
     background-image: none;
+}
+
+#powered-by a {
+    background-position: -14px -520px;
 }
