@@ -3041,6 +3041,11 @@ function os_get_user_content($uid, $entity_type = 'node', $owner_property = 'uid
     ->entityCondition('entity_type', $entity_type)
     ->propertyCondition($owner_property, $uid);
 
+  if ($entity_type == 'og_membership') {
+    // In case of OG membership the entity type should be user.
+    $query->propertyCondition('entity_type', 'user');
+  }
+
   if ($order_key) {
     $query->propertyOrderBy($order_key);
   }
