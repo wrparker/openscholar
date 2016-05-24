@@ -64,46 +64,76 @@ function os_profiles_feeds_importer_default() {
             'unique' => FALSE,
           ),
           5 => array(
-            'source' => 'Titles',
+            'source' => 'Title 1',
             'target' => 'field_professional_title',
             'unique' => FALSE,
           ),
           6 => array(
+            'source' => 'Title 2',
+            'target' => 'field_professional_title',
+            'unique' => FALSE,
+          ),
+          7 => array(
+            'source' => 'Title 3',
+            'target' => 'field_professional_title',
+            'unique' => FALSE,
+          ),
+          8 => array(
             'source' => 'Address',
             'target' => 'field_address',
             'unique' => FALSE,
           ),
-          7 => array(
+          9 => array(
             'source' => 'Phone',
             'target' => 'field_phone',
             'unique' => FALSE,
           ),
-          8 => array(
+          10 => array(
             'source' => 'Email',
             'target' => 'field_email',
             'unique' => FALSE,
           ),
-          9 => array(
-            'source' => 'Websites title',
+          11 => array(
+            'source' => 'Websites title 1',
             'target' => 'field_website:title',
             'unique' => FALSE,
           ),
-          10 => array(
-            'source' => 'Websites url',
+          12 => array(
+            'source' => 'Websites url 1',
             'target' => 'field_website:url',
             'unique' => FALSE,
           ),
-          11 => array(
+          13 => array(
+            'source' => 'Websites title 2',
+            'target' => 'field_website:title',
+            'unique' => FALSE,
+          ),
+          14 => array(
+            'source' => 'Websites url 2',
+            'target' => 'field_website:url',
+            'unique' => FALSE,
+          ),
+          15 => array(
+            'source' => 'Websites title 3',
+            'target' => 'field_website:title',
+            'unique' => FALSE,
+          ),
+          16 => array(
+            'source' => 'Websites url 3',
+            'target' => 'field_website:url',
+            'unique' => FALSE,
+          ),
+          17 => array(
             'source' => 'Short bio',
             'target' => 'body',
             'unique' => FALSE,
           ),
-          12 => array(
+          18 => array(
             'source' => 'Created date',
             'target' => 'created',
             'unique' => FALSE,
           ),
-          13 => array(
+          19 => array(
             'source' => 'Path',
             'target' => 'path_alias',
             'pathauto_override' => 1,

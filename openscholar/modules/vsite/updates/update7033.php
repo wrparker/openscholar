@@ -3,9 +3,7 @@
 /**
  * Contains static methods for vsite update 7032.
  */
-class update7032 extends AbstractUpdate {
-
-  static $nobelRoles = array('content editor', 'vsite admin', 'member');
+class update7033 extends AbstractUpdate {
 
   /**
    * @inheritdoc
@@ -18,7 +16,8 @@ class update7032 extends AbstractUpdate {
    * @inheritdoc
    */
   public static function Iterator($entity) {
-    self::assignRoles($entity, self::$nobelRoles, array('insert link into wysiwyg'));
+    $roles = og_roles('node', $entity->type, $entity->nid, false, false);
+    self::assignRoles($entity, $roles, array('insert link into wysiwyg'));
   }
 
 }
