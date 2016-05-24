@@ -61,6 +61,58 @@ function os_events_theme() {
 }
 
 /**
+ * Implements hook_node_update().
+ */
+function os_events_node_update($node) {
+  if ($node->type !== 'event') {
+    return;
+  }
+  // If the event is not recurring event, then registration data will not be deleted.
+  if (empty($node->field_date[LANGUAGE_NONE][0]['rrule'])) {
+    return;
+  }
+  
+  $deleted_dates = array();
+  $submitted_dates = array();
+  foreach ($node->field_date[LANGUAGE_NONE] as $date) {
+    $submitted_dates[] = format_date(strtotime($date['value']), 'custom', 'Y-m-d');
+  }
+
+  // Detecting deleted event date instances for repeating events.
+  foreach ($node->original->field_date[LANGUAGE_NONE] as $date) {
+    if (!in_array(format_date(strtotime($date['value']), 'custom', 'Y-m-d'), $submitted_dates)) {
+      $deleted_dates[] = format_date(strtotime($date['value']), 'custom', 'Y-m-d');
+    }
+  }
+  // Checking if event date instances have been deleted.
+  if (count($deleted_dates) > 0) {
+    // Checking each deleted dates if they have registration data.
+    foreach ($deleted_dates as $date) {
+      $query = db_select('registration', 'r');
+      $query->innerjoin('field_data_field_repeating_event_date', 'fred', 'r.registration_id = fred.entity_id');
+      $query->fields('r', array('registration_id'))
+        ->condition('r.entity_id', $node->nid, '=')
+        ->where("DATE_FORMAT(fred.field_repeating_event_date_value, '%Y-%m-%d') = :date", array(':date' => $date));
+      $result = $query->execute()->fetchAll();
+      // Deleting references of registration id from registration and field data and revision tables.
+      foreach ($result as $registration) {
+        db_delete('registration')
+          ->condition('registration_id', $registration->registration_id)
+          ->execute();
+        db_delete('field_data_field_repeating_event_date')
+         ->condition('entity_type', 'registration')
+         ->condition('entity_id', $registration->registration_id)
+         ->execute();
+        db_delete('field_revision_field_repeating_event_date')
+         ->condition('entity_type', 'registration')
+         ->condition('entity_id', $registration->registration_id)
+         ->execute();         
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_menu().
  */
 function os_events_menu() {
