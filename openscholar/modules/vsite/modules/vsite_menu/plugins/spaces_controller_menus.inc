@@ -141,7 +141,7 @@ class spaces_controller_menus extends spaces_controller {
       if (is_array($item))
         $ml = array_merge($item, $ml);
 
-      $links[$ml['mlid'] . '-' . $mlid] = $ml;
+      $links[] = $ml;
     }
 
     $this->menuLinks = $this->prepareMenuTree($links);
