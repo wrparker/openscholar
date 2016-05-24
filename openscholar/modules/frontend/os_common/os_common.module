@@ -153,6 +153,17 @@ function os_common_library() {
     )
   );
 
+  $info['DependencyManager'] = array(
+    'title' => 'Dependency Manager',
+    'version' => '1.0',
+    'js' => array(
+      $path.'/DependencyManager/DependencyManager.module.js' => array()
+    ),
+    'dependencies' => array(
+      array('os_common', 'angularjs')
+    )
+  );
+
   $info['JSPager'] = array(
     'title' => 'JS Pager',
     'version' => '1.0',
@@ -182,6 +193,9 @@ function os_common_library() {
     'js' => array(
       $path.'/formElement/formElement.module.js' => array(),
       $path.'/formElement/basicFormElements.module.js' => array()
+    ),
+    'dependencies' => array(
+      array('os_common', 'DependencyManager')
     )
   );
 

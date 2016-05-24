@@ -3,8 +3,9 @@
   var m = angular.module('formElement', ['basicFormElements', 'osHelpers', 'ngSanitize', 'DependencyManager']);
 
   m.run(['Dependencies', function (dm) {
-    m.requires = m.requires.concat(dm.GetDependencies());
-  }])
+    var deps = dm.GetDependencies();
+    Array.prototype.push.apply(m.requires, deps);
+  }]);
 
   m.directive('formElement', ['$compile', '$filter', '$sce', function ($compile, $filter, $sce) {
     return {
