@@ -115,6 +115,7 @@ function os_cp_settings() {
       '#type' => 'radios',
       '#default_value' => variable_get('long_list_content_pagination', 'infinite_scroll'),
       '#options' => array('infinite_scroll' => 'Infinite scrolling', 'pager' => 'Pagination'),
+      '#description' => t('<i>This applies only to blog, links, news, FAQs, publications and profiles.</i>')
     ),
   );
 
