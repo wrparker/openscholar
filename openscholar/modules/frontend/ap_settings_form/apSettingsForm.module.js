@@ -84,6 +84,7 @@
       apSettings.SettingsReady().then(function () {
         scope.title = apSettings.GetFormTitle(scope.form);
       })
+      console.log(elem);
       elem.bind('click', function (e) {
         event.preventDefault();
         event.stopPropagation();

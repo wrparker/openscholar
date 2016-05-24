@@ -158,11 +158,13 @@ body.overlay {
     transition: color .2s ease;
     box-shadow: inset 0 1px rgba(0, 0, 0, 0.1);
 }
-[toggle-open] {
+[toggle-open],
+[admin-panel-directive-link] span {
     padding: 10px !important;
 }
 #cssmenu ul ul li span.close-siblings,
-#cssmenu ul ul li a {
+#cssmenu ul ul li a,
+#cssmenu ul ul li [admin-panel-directive-link] span {
     box-shadow: none;
     padding-left: 15px !important;
 }
@@ -176,7 +178,9 @@ body.overlay {
 #cssmenu .heading a.submenu_heading {
     background: #454545;
 }
-#cssmenu ul ul ul li a {
+#cssmenu ul ul ul li a,
+#cssmenu ul ul ul li span.close-siblings,
+#cssmenu ul ul ul li [admin-panel-directive-link] span {
     padding-left: 20px !important;
 }
 #rightMenuSlide {
