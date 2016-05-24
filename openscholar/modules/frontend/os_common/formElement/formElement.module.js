@@ -1,13 +1,10 @@
 (function () {
 
-  var m = angular.module('formElement', ['basicFormElements', 'osHelpers', 'ngSanitize']);
+  var m = angular.module('formElement', ['basicFormElements', 'osHelpers', 'ngSanitize', 'DependencyManager']);
 
-  //m.run(function () {
-  //  var deps = addDependencies('formElement');
-  //  for (var i=0; i<deps.length; i++) {
-  //    m.requires.push(deps[i]);
-  //  }
-  //});
+  m.run(['Dependencies', function (dm) {
+    m.requires = m.requires.concat(dm.GetDependencies());
+  }])
 
   m.directive('formElement', ['$compile', '$filter', '$sce', function ($compile, $filter, $sce) {
     return {
