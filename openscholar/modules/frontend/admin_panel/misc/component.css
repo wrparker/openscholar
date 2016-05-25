@@ -1,4 +1,4 @@
-button {
+.menu-container button {
     margin: 0;
     padding: 0;
     border: 0;
@@ -43,20 +43,19 @@ button.close-menu-button {
 }
 
 button.close-menu-button:before {
-    content: "←";
+    content: url('images/close-menu-panel.png');
     left: -17px;
     width: 20px;
     height: 20px;
-    position:relative;
+    position: relative;
     color: #fff;
-    font-weight:bold;
+    font-weight: bold;
     font-size: 25px;
     }
 
 .closed button.close-menu-button:before {
-    content: "→";
-    left: -28px;
-  
+    content: url('images/open-menu-panel.png');
+    left: -20px;
     }
 
 .closed button.close-menu-button {
