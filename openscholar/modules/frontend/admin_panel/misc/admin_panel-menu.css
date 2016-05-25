@@ -64,7 +64,7 @@ body.overlay {
     height: 38px;
     position: fixed;
     z-index: 102;
-    background: url('images/home_button.png') no-repeat;
+    background: url('images/home_button.png') no-repeat 12px;
     background-color: #000;
     text-indent: -10000px;
     left: 0;

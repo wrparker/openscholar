@@ -45,12 +45,11 @@ button.close-menu-button {
 button.close-menu-button:before {
     content: url('images/close-menu-panel.png');
     left: -17px;
-    width: 20px;
-    height: 20px;
     position: relative;
     color: #fff;
     font-weight: bold;
     font-size: 25px;
+    top: -3px;
     }
 
 .closed button.close-menu-button:before {
