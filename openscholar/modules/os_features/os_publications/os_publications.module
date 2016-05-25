@@ -163,21 +163,6 @@ function os_publications_query_biblio_alter(QueryAlterableInterface $query) {
   }
 
   $item = menu_get_item();
-  // Add custom sorting to all filter by publications filters.
-  $filter_array = array('type','year','author');
-  if(isset($item['path']) && $item['path'] == 'publications' && isset($item['map'][1]) && in_array($item['map'][1], $filter_array)) {
-    // Reset the order.
-    $order = &$query->getOrderBy();
-    $order = array();
-    // Sort by year, then by node post date.
-    $order['biblio_year'] = isset($biblio_year_sort) ? $biblio_year_sort : 'DESC';
-    $order['n.sticky'] = 'DESC';
-    $order['biblio_date'] = 'DESC';
-    $order['n.created'] = 'DESC';
-    $order['biblio_sort_title'] = (isset($biblio_sort_title)) ? $biblio_sort_title : 'ASC';
-    return;
-  }
-
   // Check the sort order for biblio.
   // If we're sorting by year, we want to sort by date as well to replicate D6
   // sorting.
