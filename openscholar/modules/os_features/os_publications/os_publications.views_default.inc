@@ -530,7 +530,7 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['pager']['type'] = 'mini';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['pager']['options']['id'] = '1';
+  $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['pager']['options']['tags']['previous'] = '«';
   $handler->display->display_options['pager']['options']['tags']['next'] = '»';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
@@ -697,7 +697,7 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['pager']['type'] = 'mini';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['pager']['options']['id'] = '1';
+  $handler->display->display_options['pager']['options']['id'] = '5';
   $handler->display->display_options['pager']['options']['tags']['previous'] = '«';
   $handler->display->display_options['pager']['options']['tags']['next'] = '»';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
