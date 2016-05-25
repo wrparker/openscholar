@@ -383,8 +383,8 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
             'label' => 'Analytics',
             'type' => 'directive',
             'directive' => array(
-              'ap-settings-modal',
-              'form' => 'analytics',
+              'ap-settings-form',
+              'form' => 'ga',
             )
           ),
           'app' => array(
