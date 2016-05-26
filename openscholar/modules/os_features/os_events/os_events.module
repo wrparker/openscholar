@@ -61,6 +61,51 @@ function os_events_theme() {
 }
 
 /**
+ * Implements hook_node_update().
+ */
+function os_events_node_update($node) {
+  if ($node->type !== 'event') {
+    return;
+  }
+  // If the event is not recurring event, then registration data will not be deleted.
+  if (empty($node->field_date[LANGUAGE_NONE][0]['rrule'])) {
+    return;
+  }
+  
+  $deleted_dates = array();
+  $submitted_dates = array();
+  foreach ($node->field_date[LANGUAGE_NONE] as $date) {
+    $submitted_dates[] = format_date(strtotime($date['value']), 'custom', 'Y-m-d');
+  }
+
+  // Detecting deleted event date instances for repeating events.
+  foreach ($node->original->field_date[LANGUAGE_NONE] as $date) {
+    if (!in_array(format_date(strtotime($date['value']), 'custom', 'Y-m-d'), $submitted_dates)) {
+      $deleted_dates[] = format_date(strtotime($date['value']), 'custom', 'Y-m-d');
+    }
+  }
+  // Checking if event date instances have been deleted.
+  if (count($deleted_dates) > 0) {
+    $registration_entities = array();
+    // Checking each deleted dates, if they have registration entities for the editing event node.
+    foreach ($deleted_dates as $date) {
+      // Initializing EntityFieldQuery to obtain all registration entities with a certain deleted date
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'registration')
+        ->entityCondition('bundle', 'event_signup_simple')
+        ->propertyCondition('entity_id', $node->nid)
+        ->fieldCondition('field_repeating_event_date', 'value', $date . '%', 'LIKE');
+      $result = $query->execute();
+      foreach ($result['registration'] as $registration) {
+        $registration_entities[] = $registration->registration_id;
+      }
+    }
+    // Deleting registration entities for target registration ids for all deleted event dates.
+    entity_delete_multiple('registration', $registration_entities);
+  }
+}
+
+/**
  * Implements hook_menu().
  */
 function os_events_menu() {
