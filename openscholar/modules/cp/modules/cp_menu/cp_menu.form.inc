@@ -134,9 +134,8 @@ function cp_menu_build_form($form, $form_state, $menu = ''){
     )
   );
 
-  $form['#submit'] = array(
-    'cp_menu_submit_form'
-  );
+  $form['#validate'] = array('cp_menu_submit_validate');
+  $form['#submit'] = array('cp_menu_submit_form');
 
   return $form;
 }
@@ -269,13 +268,65 @@ function theme_cp_menu_table($variables){
   ));
 }
 
-function cp_menu_submit_form($form, &$form_state){
+function cp_menu_submit_validate($form, $form_state) {
+  if ($form_state['triggering_element']['#id'] != 'edit-submit') {
+    return;
+  }
 
   //Save as normal
   foreach ($form_state['values']['menus'] as $links) {
-    foreach ($links as $l) {
-      if (! is_array($l))
+    // Flags for the max depth and the last plid we iterate over.
+    $depths = array();
+
+    // What was the last plid we iterate.
+    $last_plid = 0;
+
+    // The parent mlid menu item.
+    $highest_plid = 0;
+
+    foreach ($links as $link) {
+      if (!is_array($link)) {
         continue;
+      }
+
+      if ($link['plid'] == 0) {
+        // Save the most highest plid we have.
+        $highest_plid = $link['mlid'];
+
+        // Starting a new sub-tree. Save how many depth the sub tree have.
+        $depths[$highest_plid] = 0;
+        continue;
+      }
+
+      if ($link['plid'] != $last_plid) {
+        // It's a new sub-plid we been to. Increase by 1 the depths the local
+        // subtree have.
+        $depths[$highest_plid]++;
+      }
+
+      $last_plid = $link['plid'];
+
+      if ($depths[$highest_plid] > 3) {
+        // The highest sub tree has passed the maximum we allowed. Prevent form
+        // submission.
+        $link_info = os_menu_link_load($highest_plid, $link['menu-old']);
+        $args['@title'] = $link_info['title'];
+        form_set_error('', t('You cannot create menu with nesting level greater than 4. The menu item @title have more childrens then allowed.', $args));
+        break;
+      }
+    }
+  }
+}
+
+function cp_menu_submit_form($form, &$form_state) {
+
+  //Save as normal
+  foreach ($form_state['values']['menus'] as $links) {
+
+    foreach ($links as $l) {
+      if (!is_array($l)) {
+        continue;
+      }
 
       $l['menu_name'] = $l['menu'];
       $link = os_menu_link_load($l['mlid'], $l['menu-old']);
