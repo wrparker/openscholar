@@ -1,11 +1,3 @@
-.morph-button-sidebar .morph-content {
-    background: url('images/os-cp_button.png') no-repeat 47% 99%;
-    background-color: #111;
-}
-.morph-button > button {
-    background: url('images/os-cp_button.png') no-repeat;
-    background-color: #111;
-}
 html,
 body {
     height: 100%;
@@ -31,50 +23,54 @@ body.overlay {
     position: relative;
     width: auto;
 }
-
-.page-cp #branding {
-    position: relative;
-    margin-left: 110px;
-}
-
-
+/* PAGE WHEN MENU IS OPEN */
 
 .page-cp #page {
     margin-left: 150px;
-    width:85%;
+    width: 85%;
+    transition-property: margin-left, width;
+    transition-duration: .125s;
+    transition-timing-function: ease-in-out;
+    transition-delay: .125s;
 }
-
 .page-cp #branding {
     position: relative;
-    margin-left: 8px;
+    margin-left: 110px;
+    transition-property: margin-left;
+    transition-duration: .125s;
+    transition-timing-function: ease-in-out;
+    transition-delay: .125s;
 }
-
-
-
-.page-cp #page.closed {
-    margin-left: 3%;
-    width:95%;
+#branding ul.primary {
+    margin: 0 15% 0 !important;
+    transition-property: margin;
+    transition-duration: .125s;
+    transition-timing-function: ease-in-out;
+    transition-delay: .125s;
 }
+/* PAGE WHEN MENU IS CLOSED */
 
-
-
+.admin-menu-closed.page-cp #page {
+    margin-left: 40px;
+    width: 95%;
+}
+.admin-menu-closed.page-cp #branding {
+    margin-left: 5px;
+}
+.admin-menu-closed #branding ul.primary {
+    margin: 0 5% 0 !important;
+}
 .admin-menu-homeicon {
     display: block;
     width: 55px;
     height: 38px;
     position: fixed;
     z-index: 102;
-    background: url('images/home_button.png') no-repeat 12px;
+    background: url('images/home_button.png') no-repeat 11px;
     background-color: #000;
     text-indent: -10000px;
     left: 0;
     top: 0;
-}
-#branding ul.primary {
-    margin: 0 10% 0 !important;
-}
-#branding.pushed ul.primary {
-    margin: 0 20% 0 !important;
 }
 /* MENU SPECIFIC */
 
@@ -103,7 +99,6 @@ body.overlay {
     display: none;
     background-color: #49505a;
 }
-
 .align-right {
     float: right;
 }
@@ -213,7 +208,6 @@ body.overlay {
     background-color: #49505a;
 }
 .topRight_subMenu li {
-
     background: #6C7A89;
 }
 .topRight_subMenu ul.user-menu > li > a {
@@ -221,7 +215,6 @@ body.overlay {
     text-decoration: none;
     display: block;
     width: 100%;
-
 }
 .topRight_subMenu li a.text_link {
     color: #215990;
@@ -237,7 +230,7 @@ body.overlay {
 }
 .topRight_subMenu ul.user-menu > li > a,
 #user-name,
-.my-sites-click{
+.my-sites-click {
     padding: 5px 10px;
 }
 .topRight_subMenu li.slate {
@@ -246,7 +239,6 @@ body.overlay {
 .topRight_subMenu li.notifications {
     position: relative;
 }
-
 .slate.alert {
     background: #EF0812;
     position: absolute;
@@ -325,7 +317,6 @@ td.user-site-controls {
 .my-sites {
     border-top: 1px solid #DADADA;
 }
-
 .close-user-menu {
     position: absolute;
     top: 6px;
@@ -360,7 +351,7 @@ td.user-site-controls {
     background-color: #FF3E00;
 }
 .btton:visited {
-   color: #FFF;
+    color: #FFF;
 }
 /* Table styling*/
 
