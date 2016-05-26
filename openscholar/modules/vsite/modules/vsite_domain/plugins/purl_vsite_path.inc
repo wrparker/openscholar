@@ -51,6 +51,9 @@ if (!class_exists('purl_vsite_path')) {
             (!strlen($vsite_domain) && str_replace('http://', '', $_SERVER['HTTP_HOST']) != parse_url(variable_get('purl_base_domain', $base_url),PHP_URL_HOST))
           ) {
             unset($parsed[$site]);
+            if (!$space_found) {
+              drupal_goto('http://'.$vsite_domain);
+            }
           }else{
             //We have a valid OG Space
             $space_found = TRUE;

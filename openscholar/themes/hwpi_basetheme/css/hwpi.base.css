@@ -638,7 +638,7 @@ article.node-teaser.node-person .field-name-field-person-photo ~ .node-content {
 }
 @-moz-document url-prefix() {
     .node-teaser.node-person {
-        display: table;
+        table-layout:fixed;
     }
 }
 .block-boxes-os_boxes_manual_list .node-teaser.node-person {
