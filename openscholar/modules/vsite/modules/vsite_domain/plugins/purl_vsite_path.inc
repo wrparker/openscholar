@@ -51,8 +51,13 @@ if (!class_exists('purl_vsite_path')) {
             (!strlen($vsite_domain) && str_replace('http://', '', $_SERVER['HTTP_HOST']) != parse_url(variable_get('purl_base_domain', $base_url),PHP_URL_HOST))
           ) {
             unset($parsed[$site]);
-            if (!$space_found) {
-              drupal_goto('http://'.$vsite_domain);
+            if (!$space_found && strlen($vsite_domain) && count(explode('/', $q)) < 2) {
+              purl_goto("<front>", array(
+                'purl' => array(
+                  'provider' => 'vsite_domain',
+                  'id' => $settings->id,
+                ),
+              ));
             }
           }else{
             //We have a valid OG Space
