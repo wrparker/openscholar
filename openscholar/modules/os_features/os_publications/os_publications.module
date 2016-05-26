@@ -1521,7 +1521,6 @@ function os_publications_views_pre_render(&$view) {
     $i = 0;
     foreach ($view->result as $r) {
       if (!$r->biblio_contributor_data_firstname) {
-        $t = str_split(", ");
         $t = preg_split ("/(,\s*|\s+)/", $r->biblio_contributor_data_name, 2);
         if (count($t) > 1) {
           $view->result[$i]->biblio_contributor_data_firstname = $t[1];
