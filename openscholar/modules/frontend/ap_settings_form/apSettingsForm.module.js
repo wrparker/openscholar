@@ -51,14 +51,14 @@
       if (typeof settingsForms[group_id] != 'undefined') {
         return angular.copy(settingsForms[group_id]);
       }
-      throw new Exception("No form group with id " + group_id + " exists.");
+      throw "No form group with id " + group_id + " exists.";
     }
 
     this.GetFormTitle = function (group_id) {
       if (typeof formTitles[group_id] != 'undefined') {
         return formTitles[group_id];
       }
-      throw new Exception("No form group with the id " + group_id + " exists.");
+      throw "No form group with the id " + group_id + " exists.";
     }
 
     this.SaveSettings = function (settings) {

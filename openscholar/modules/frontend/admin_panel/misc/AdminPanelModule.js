@@ -232,6 +232,7 @@
                 copy.attr(k, directives[k]);
               }
             }
+
             copy = $compile(copy)(scope);
             elem.find('span').replaceWith(copy);
           }

@@ -195,7 +195,8 @@ function os_common_library() {
       $path.'/formElement/basicFormElements.module.js' => array()
     ),
     'dependencies' => array(
-      array('os_common', 'DependencyManager')
+      array('os_common', 'DependencyManager'),
+      array('system', 'drupal.states')
     )
   );
 
