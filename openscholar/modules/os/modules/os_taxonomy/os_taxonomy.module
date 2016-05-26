@@ -1144,46 +1144,13 @@ function theme_os_taxonomy_tagged_nodes($variables) {
     pager_default_initialize($entity_count, $tagged_item_per_page);
     $pager = theme('pager', array('quantity' => $entity_count));
 
-    // Declaring an empty behavior parameter for os_taxonomy_list_attached_entities()
-    $behavior = "";
     //restrict bundles not jsut to widget settings, but vocab settings as well.  we want to avoid collated file/node lists when possible.
     if (($space = spaces_get_space()) && ($v_bundles = os_taxonomy_og_vocabulary_bundles($vocabulary->vid, $space->id))) {
       $v_bundles = array_map(function($o) {return $o->bundle;}, $v_bundles);
       $options['bundles'] = (empty($options['bundles'])) ? $v_bundles : array_intersect($options['bundles'], $v_bundles);
-      // Get the delta value
-      if (is_array($boxes_delta = $space->controllers->context->values['space']['os_taxonomy-vocab-'.$vocabulary->vid.':reaction:block']['blocks'])) {
-        $boxes_delta_keys = array_keys($boxes_delta);
-        foreach($boxes_delta_keys as $boxes_delta_key) {
-          if (strstr($boxes_delta_key, "boxes-")) {
-            $delta = str_replace("boxes-", "", $boxes_delta_key);
-
-            // Get value from spaces_overrides table
-            $result = db_query("
-              SELECT value
-              FROM {spaces_overrides}
-              WHERE type = :type
-                AND id = :id
-                AND object_type = :otype
-                AND object_id = :objid",
-              array(
-                ':type' => $space->controllers->variable->space_type,
-                ':id' => $space->controllers->variable->space_id,
-                ':otype' => 'boxes',
-                ':objid' => $delta,
-            ))->fetchField();
-            $space_value = unserialize($result);
-
-            // Adding value for behavior parameter in case of Event
-            if (is_object($space_value) && $space_value->options['bundles'] == 'event') {
-              $behavior = $space_value->options['behavior'];
-            }
-            break;
-          }
-        }
-      }
     }
 
-    $entities = os_taxonomy_list_attached_entities($tid, $options['bundles'], $options['range'], $options['offset'], $behavior);
+    $entities = os_taxonomy_list_attached_entities($tid, $options['bundles'], $options['range'], $options['offset']);
 
     // This array map is only necessary when entity types are mixed. Would it be
     // more efficient to use the TYPE_load_multiple and TYPE_view_multipe
@@ -1302,7 +1269,7 @@ function os_taxonomy_count_attached_nodes_query_object($tid, $node_bundles = arr
  *
  * @return SelectQuery
  */
-function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array(), $behavior = "") {
+function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array(), $list_all = FALSE) {
   $query = db_select('field_data_og_vocabulary', 'ogv');
   $query->condition('og_vocabulary_target_id', $tid, is_array($tid)?'IN':"=")
     ->distinct()
@@ -1328,29 +1295,26 @@ function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array
     $query->condition($node_published);
   }
 
-  // In case the bundle is of the type "event", filter by the type of the event.
-  if (!empty($bundles) && is_array($bundles) && strpos(reset($bundles), 'event') !== FALSE && count($bundles) == 1) {
+  // In case the bundle is of the type "event" and not "All post" type, filter by the type of the event.
+  if (!empty($bundles) && is_array($bundles) && strpos(reset($bundles), 'event') !== FALSE && count($bundles) == 1 && $list_all == FALSE) {
     $query->leftJoin('field_data_field_date', 'fd', '(ogv.entity_id = fd.entity_id)');
     $event_type = reset($bundles);
 
     // Get the number of seconds form the server timezone to GMT timezone.
     $seconds = date("Z");
 
-    // List all the events in case of "--all--" post type settings
-    if ($behavior!="--all--") {
-      // Here we use the same where condition as the "upcoming events" and "past
-      // events" in order to get the correct number of results.
-      if (in_array($event_type, array('upcoming_event', 'event')) ) {
-        // When user selected "upcoming event" or the "Determine for me" option,
-        // get upcoming events.
-        $str = date('Y-m-d\TH:i', strtotime('-30 minutes'));
-        $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(" . $seconds . ")), '%Y-%m-%d\T%H:%i') >= :str", array(":str" => $str));
-      }
-      else {
-        // Get past events.
-        $str = date('Y-m-d');
-        $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(" . $seconds . ")), '%Y-%m-%d') < :str", array(":str" => $str));
-      }
+    // Here we use the same where condition as the "upcoming events" and "past
+    // events" in order to get the correct number of results.
+    if (in_array($event_type, array('upcoming_event', 'event'))) {
+      // When user selected "upcoming event" or the "Determine for me" option,
+      // get upcoming events.
+      $str = date('Y-m-d\TH:i', strtotime('-30 minutes'));
+      $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(" . $seconds . ")), '%Y-%m-%d\T%H:%i') >= :str", array(":str" => $str));
+    }
+    else {
+      // Get past events.
+      $str = date('Y-m-d');
+      $query->where("DATE_FORMAT(ADDTIME(fd.field_date_value, SEC_TO_TIME(" . $seconds . ")), '%Y-%m-%d') < :str", array(":str" => $str));
     }
     $query->condition('ogv.bundle', array('event'), 'IN');
   }
@@ -1416,8 +1380,10 @@ function os_taxonomy_count_attached_entities($tid, $bundles = array()) {
  *  @return array $nids
  *    Array of tagged node IDs.
  */
-function os_taxonomy_list_attached_entities($tid, $bundles = array(), $range = NULL, $offset = NULL, $behavior = "") {
-  $query = os_taxonomy_count_attached_entities_query_object($tid, $bundles, $behavior);
+function os_taxonomy_list_attached_entities($tid, $bundles = array(), $range = NULL, $offset = NULL) {
+  // Showing all entities
+  $list_all = TRUE;
+  $query = os_taxonomy_count_attached_entities_query_object($tid, $bundles, $list_all);
 
   // Order by weight only if "nodeorder" is on and order has been set.
   if (module_exists('nodeorder') && _os_taxonomy_noderoder_exists($tid)) {
