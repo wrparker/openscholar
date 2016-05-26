@@ -166,6 +166,15 @@ function vsite_domain_cp_settings() {
   if (!(($parent && $parent->group->field_subsite_domains) || user_access('change vsite domain'))) {
     return;
   }
+
+  $template = array(
+    'group' => array(
+      '#id' => 'domain',
+      '#title' => t('Domain'),
+      '#weight' => 0,
+    ),
+    'rest_submit' => 'vsite_domain_cp_settings_submit',
+  );
   
   $settings = array('vsite_domain_name' => array(
     'group' => array(
@@ -173,7 +182,7 @@ function vsite_domain_cp_settings() {
       '#title' => t('Domain'),
       '#weight' => 0,
     ),
-    'submit' => array('vsite_domain_cp_settings_domain_submit'),
+    //'submit' => array('vsite_domain_cp_settings_domain_submit'),
   ));
   $domain = variable_get('vsite_domain_name', '');
   $shared = variable_get('vsite_domain_shared', '');
@@ -190,15 +199,15 @@ function vsite_domain_cp_settings() {
     '#type' => 'hidden',
     '#value' => isset($vsite->group->nid) ? $vsite->group->nid : 0,
   );
-  
+
   // Adds the option to share multiple vsites on one domain
   // If this option is selected, we actually do not make a purl record.
   $form['vsite_domain_shared'] = array(
     // Disable/check the box when no domain is set. Attempts to align with the actual allowed states.
     '#states' => array(
-      'enabled' =>  array(':input[name="vsite_domain_name[value]"]' => array('filled' => TRUE)),
-      'disabled' => array(':input[name="vsite_domain_name[value]"]' => array('filled' => FALSE)),
-      'checked' =>  array(':input[name="vsite_domain_name[value]"]' => array('filled' => FALSE)),
+      'enabled' =>  array(':input[name="vsite_domain_name"]' => array('filled' => TRUE)),
+      'disabled' => array(':input[name="vsite_domain_name"]' => array('filled' => FALSE)),
+      'checked' =>  array(':input[name="vsite_domain_name"]' => array('filled' => FALSE)),
     ),
     '#type' => 'checkbox',
     '#title' => t('Share domain name'),
@@ -206,14 +215,7 @@ function vsite_domain_cp_settings() {
     '#weight' => 10,
     '#description' => t("Add \"<em><strong>/@site</strong></em>\" to the URL and share this domain name with other sites (default).<br/>If you own this custom domain, uncheck to use for just this site.", array('@site' => vsite_get_purl($vsite))),
   );
-  
-  // If shared, makes sure to display the shared option as "checked".
-  // Needed because checkbox #default_value = 1 does NOT show as checked.
-  // @see http://drupal.org/node/104852
-  if ($shared) {
-    $form['vsite_domain_shared']['#states']['checked'][':input[name="vsite_domain_name[value]"]'] = array('enabled' => TRUE);
-  }
-  
+
   //subsite domains - non-admins can only add domains provided by parent site
   if (!user_access('change vsite domain')) {
     $parent_domains = array_map(function($a) {return $a['value'];}, $parent->group->field_subsite_domains[LANGUAGE_NONE]);
@@ -224,18 +226,34 @@ function vsite_domain_cp_settings() {
       '#size' => null,
       '#description' => t('Change your site\'s domain name.'),
     ));
-          
+
     $form['vsite_domain_shared'] = array_merge($form['vsite_domain_shared'], array(
       '#type' => 'hidden',
-      '#value' => TRUE,  
+      '#value' => TRUE,
     ));
-    
+
   } else {
-    $form['#access'] = user_access('change vsite domain');
+    $form['value']['#access'] = user_access('change vsite domain');
+  }
+
+  $s['vsite_domain_name'] = $template + array(
+    'form' => $form['value']
+  );
+
+  $s['vsite_domain_shared'] = $template + array(
+    'form' => $form['vsite_domain_shared']
+  );
+  
+  // If shared, makes sure to display the shared option as "checked".
+  // Needed because checkbox #default_value = 1 does NOT show as checked.
+  // @see http://drupal.org/node/104852
+  if ($shared) {
+    $s['vsite_domain_shared']['form']['#states']['checked'][':input[name="vsite_domain_name"]'] = array('enabled' => TRUE);
+    $form['vsite_domain_shared']['#states']['checked'][':input[name="vsite_domain_name[value]"]'] = array('enabled' => TRUE);
   }
   
   $settings['vsite_domain_name']['form'] = $form;  
-  return $settings;
+  return $s;
 }
 
 /**

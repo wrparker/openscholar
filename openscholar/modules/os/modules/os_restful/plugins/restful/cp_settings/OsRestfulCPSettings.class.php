@@ -27,7 +27,7 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
 
   public function getAllForms() {
     if ($this->activateSpace()) {
-      return cp_get_setting_forms();
+      return $this->processForms(cp_get_setting_forms());
     }
 
     throw new RestfulForbiddenException("Vsite ID is required.");
@@ -36,7 +36,7 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
   public function getForms($args) {
     if ($this->activateSpace()) {
       $forms = explode(',', $args);
-      $all = cp_get_setting_forms();
+      $all = $this->processForms(cp_get_setting_forms());
 
       $output = array();
       foreach ($all as $f) {
@@ -51,12 +51,31 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
     throw new RestfulForbiddenException("Vsite ID is required.");
   }
 
+  public function processForms($form) {
+    foreach ($form as $var => &$elem) {
+      if (!isset($elem['form']['#id'])) {
+        $elem['form']['#id'] = drupal_html_id('edit-' . $var);
+      }
+      if ($elem['form']['#states']) {
+        drupal_process_states($elem['form']);
+      }
+    }
+
+    return $form;
+  }
+
   public function saveSettings() {
     if ($this->activateSpace()) {
       $forms = cp_get_setting_forms();
 
       foreach ($this->request as $var => $value) {
         if (!isset($forms[$var])) continue;
+        if (!empty($forms[$var]['rest_validate'] && function_exists($forms[$var]['rest_validate']))) {
+          if (!$forms[$var]['rest_validate']($value)) {
+            // do something with this information
+            continue;
+          }
+        }
         if (!empty($forms[$var]['rest_submit']) && function_exists($forms[$var]['rest_submit'])) {
           $forms[$var]['rest_submit']($value);
         }
