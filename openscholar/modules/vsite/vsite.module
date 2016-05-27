@@ -1685,7 +1685,7 @@ function vsite_admin_paths() {
  */
 function vsite_load_user_sites($user_id) {
   drupal_add_css(drupal_get_path('module', 'vsite') . '/css/vsite.css');
-
+  global $base_url;
   $sites_array = array();
   // Grab their sites.
   $vsites_owner = vsite_get_vsite_by_owner($user_id);
@@ -1696,21 +1696,7 @@ function vsite_load_user_sites($user_id) {
     $node = node_load($site->group->nid);
     $items = array();
     $items[] = l($node->title, $site->get_absolute_url());
-    //Display "Add subsite" link
-    if (vsite_subsite_access('create', $site)) {
-      $subsite_link = l(t('Add subsite'), 'site/register', array('query' => array('parent' => $node->nid)));
-      $items[] = array(
-        'data' => $subsite_link,
-        'class' => array('add-subsite'),
-      );
-    }
-    //Display "Delete site" link
-    $delete_url = (node_access('delete', $node)) ? 'node/' . $node->nid . '/delete' : 'os/vsite/delete/' . $node->nid;
-    $delete_link = l(t('Delete site'), $site->get_absolute_url($delete_url));
-    $items[] = array(
-      'data' => $delete_link,
-      'class' => array('delete-link'),
-    );
+    
     // Prepare them for theme_list_item.
     $sites_array[] = theme('item_list', array('items' => $items, 'attributes' => array('class' => array('inline'))));
   }
@@ -1817,30 +1803,6 @@ function vsite_user_view_alter(&$build){
   if(isset($build['field_first_name']) && isset($build['field_last_name'])) {
     $title = $first_name . ' ' . $last_name;
     drupal_set_title($title);
-  }
-
-
-  // Additions section.
-  // Add in an "Add website" link if user has permissions to create vsites.
-  // Make sure they're logged in and it's their user page they're viewing.
-  $own_user_page = (bool) (isset($build['#account']) && ($user->uid == $build['#account']->uid));
-  if (vsite_vsite_exists_access() && user_is_logged_in() && $own_user_page) {
-    $purl_base_domain = variable_get('purl_base_domain', '');
-    $title = t('Add a new site');
-    $description = t('Create an additional site');
-    $parent = NULL;
-    $options = array(
-      'attributes' => array('class' => array('user-add-website')),
-    );
-    $create_new_link = _vsite_add_site_link($title, $description, $parent, $options);
-    $build['add_new_site'] = array(
-      '#title' => '',
-      '#prefix' => '<div class="user-add-site-block">',
-      '#suffix' => '</div>',
-      '#type' => 'user_profile_item',
-      '#markup' => theme_link($create_new_link),
-      '#weight' => '10',
-    );
   }
 
   // Load data of their sites.

@@ -44,7 +44,8 @@ class os_boxes_pub_year extends os_boxes_default {
   public function render() {
     $block = parent::render();
     $this->set_cache_id('node:biblio');
-    if (($block['content'] = $this->get_cache()) === FALSE) {
+    // Do not cache this block, it relies on non-ajax pagination see #6669
+    //if (($block['content'] = $this->get_cache()) === FALSE) {
       $delta = 'publication_years-block';
       list($name, $display_id) = explode('-', $delta);
       if ($view = views_get_view($name)) {
@@ -58,13 +59,16 @@ class os_boxes_pub_year extends os_boxes_default {
           $arguments = $view->display_handler->get_option('arguments');
           $arguments['biblio_year']['summary_options']['count'] = ($this->options['display_num'])?1:0;
           $view->display_handler->override_option('arguments', $arguments);
+//          if($this->options['display_num']) {
+//            $view->display_handler->override_option('use_ajax', true);
+//          }
 
           $output = $view->execute_display($display_id);
           $block['content'] = $output['content'];
         }
         $view->destroy();
-      }
-      $this->set_cache($block['content']);
+      //}
+      //$this->set_cache($block['content']);
     }
 
     return $block;

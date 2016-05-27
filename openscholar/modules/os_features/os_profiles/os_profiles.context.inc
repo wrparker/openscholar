@@ -44,7 +44,21 @@ function os_profiles_context_default_contexts() {
       ),
     ),
   );
-  $context->reactions = array();
+
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'views-os_profiles-filter_by_alphabet' => array(
+          'module' => 'views',
+          'delta' => 'os_profiles-filter_by_alphabet',
+          'weight' => -8,
+          'region' => FALSE,
+          'info' => t('Filter Profiles by Alphabetical Groups'),
+        ),
+      ),
+    ),
+  );
+
   $context->condition_mode = 0;
 
   // Translatables
