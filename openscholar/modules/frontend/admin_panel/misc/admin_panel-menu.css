@@ -51,14 +51,14 @@ body.overlay {
 /* PAGE WHEN MENU IS CLOSED */
 
 .admin-menu-closed.page-cp #page {
-    margin-left: 40px;
-    width: 95%;
+    margin-left: 60px;
+    width: 94%;
 }
 .admin-menu-closed.page-cp #branding {
-    margin-left: 5px;
+    margin-left: 20px;
 }
 .admin-menu-closed #branding ul.primary {
-    margin: 0 5% 0 !important;
+    margin: 0 6% 0 !important;
 }
 .admin-menu-homeicon {
     display: block;
