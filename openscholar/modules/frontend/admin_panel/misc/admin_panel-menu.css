@@ -105,7 +105,7 @@ body.overlay {
 #cssmenu > ul > li > span {
     cursor: pointer;
     z-index: 2;
-    font-size: 13px;
+    font-size: 12px;
     text-decoration: none;
     color: #ffffff;
     -webkit-transition: color .2s ease;
@@ -141,7 +141,7 @@ body.overlay {
 #cssmenu .heading {
     cursor: pointer;
     z-index: 2;
-    font-size: 13px;
+    font-size: 12px;
     text-decoration: none;
     color: #fff;
     -webkit-transition: color .2s ease;
@@ -150,7 +150,7 @@ body.overlay {
     box-shadow: inset 0 1px rgba(0, 0, 0, 0.1);
 }
 [toggle-open] {
-    padding: 10px !important;
+    padding: 10px 10px 10px 8px !important;
 }
 #cssmenu ul ul li span.close-siblings,
 #cssmenu ul ul li a {
@@ -184,7 +184,7 @@ body.overlay {
     z-index: 10;
     display: inline-block;
     font-family: helvetica;
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
 }
 #topRightMenu {
@@ -198,7 +198,7 @@ body.overlay {
 }
 .topRight_subMenu {
     margin-top: 34px;
-    font-size: 13px;
+    font-size: 12px;
     display: none;
     padding: 0;
 }
@@ -206,6 +206,7 @@ body.overlay {
     margin: 0;
     list-style-type: none;
     background-color: #49505a;
+    width: 152px;
 }
 .topRight_subMenu li {
     background: #6C7A89;
