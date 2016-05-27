@@ -4,7 +4,7 @@
   name        = Gary King Custom Theme
  description = Custom Theme for Gary King.
   core        = 7.x
-  base theme  = os_basetheme
+  base theme  = hwpi_onepage
   release     = 7.x-3.x
   engine      = phptemplate
   screenshot  = screenshot.png
