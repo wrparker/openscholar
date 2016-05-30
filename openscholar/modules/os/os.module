@@ -1649,7 +1649,7 @@ function os_views_pre_build(&$view) {
   $pager = $view->display_handler->get_option('pager');
   // If long list content pagination type is not set as infinite scroll, then switching back to mini pager.
   if ($pager['type'] == 'infinite_scroll' && variable_get('long_list_content_pagination', 'infinite_scroll') == 'pager') {
-    $pager['type'] = 'mini';
+    $pager['type'] = 'full';
     $view->display_handler->set_option('pager', $pager);
   }
 }
