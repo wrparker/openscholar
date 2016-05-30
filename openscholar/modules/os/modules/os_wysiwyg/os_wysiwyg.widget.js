@@ -19,7 +19,7 @@
 
           if (!context.changed) {
             // Changing the size when focusing.
-            instance.find('#cke_1_contents').height('200');
+            instance.find('#cke_1_contents').height('550');
             context.changed = true;
           }
         });
