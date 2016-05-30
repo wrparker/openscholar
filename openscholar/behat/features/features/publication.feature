@@ -127,3 +127,9 @@ Feature:
       And I press "Save configuration"
      When I visit "john/publications/reevaluation-Chinas-Co2-Emissions"
      Then I should not see "<sub>2</sub>"
+
+  @api @features_second
+  Scenario: verify the title is not being capitilise.
+    Given I visit "john/publications/bilsis-test-title"
+     Then I case sensitive check the text "bilsi's test title"
+      And I case sensitive check the text "Bilsi's Test Title" not exists
