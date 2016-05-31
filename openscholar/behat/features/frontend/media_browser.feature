@@ -81,7 +81,7 @@ Feature: Media Browser
       And I should see "kitten-2.jpg" in a "div.media-row" element
       And I click on the tab "Upload from your computer"
       And I drop the file "duplicate/kitten-2.jpg" onto the "Drag and drop files here." area
-      And I sleep for "5"
+      And I sleep for "10"
      Then I should see the text "A file with the name 'kitten-2.jpg' already exists."
       And I press the "Rename" button
       And I should wait for "File Edit" directive to "appear"
