@@ -31,11 +31,7 @@ class OSPublicStreamWrapper extends DrupalPublicStreamWrapper {
 
     $url = $base_url . '/' . self::getExternalDirectoryPath() . '/' . drupal_encode_path($path);
 
-    $files = file_load_multiple(array(), array('uri' => $this->getUri()));
-    $file = reset($files);
-
-    // file will be false if the uri in question is an image_style url, in which case it's an image anyway
-    if ((!$file || $file->type == 'image') && variable_get('os_files_mtime_query', TRUE)) {
+    if (variable_get('os_files_mtime_query', TRUE)) {
       $mtime = @filemtime($this->getLocalPath());
       if (!$mtime) {
         $mtime = REQUEST_TIME;
