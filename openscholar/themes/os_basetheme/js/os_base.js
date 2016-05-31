@@ -26,4 +26,9 @@ jQuery(document).ready(function() {
             "width" : + imgwidth
         });
     });
+    // Fix for old browser versions to support whitespace inside options tag.
+    jQuery("select option").each(function(i,option){
+      $option = jQuery(option);
+      $option.text($option.text().replace(/&nbsp;/g,'\u00A0'));
+    });
 });

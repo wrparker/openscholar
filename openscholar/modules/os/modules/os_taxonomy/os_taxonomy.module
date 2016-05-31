@@ -473,7 +473,7 @@ function theme_os_taxonomy_vocabulary_item_list($variables) {
     }
 
     if (!empty($options['widget_type']) && $options['widget_type'] == 'select') {
-      $data[$tid] = '- ' . $term->name;
+      $data[$tid] = '&nbsp; ' . $term->name;
       // The attached number to the term name.
       $number = NULL;
       if ($options['show_count'] || !$options['show_empty_terms']) {
@@ -942,9 +942,9 @@ function os_taxonomy_build_child_item($items, $parent, $options) {
     }
 
     if ($options['widget_type'] == 'select') {
-      $hierarchy = '-';
+      $hierarchy = '&nbsp;';
       for ($i = 0; $i <= $item->depth; $i++) {
-        $hierarchy .= '-';
+        $hierarchy .= '&nbsp;';
       }
       $content[$item->tid] = $hierarchy . ' ' . $item->name;
       $content[$item->tid] .= $number ? ' (' . $number . ')' : '';
