@@ -93,7 +93,9 @@ body.overlay {
 #cssmenu {
     font-family: helvetica;
     color: #ffffff;
-    margin-top: 25px;
+    margin-top: 25px;    
+    overflow-y: auto;
+    height: 100%;
 }
 #cssmenu ul ul {
     display: none;
