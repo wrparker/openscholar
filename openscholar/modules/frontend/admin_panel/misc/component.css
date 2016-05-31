@@ -7,6 +7,7 @@
     cursor: pointer;
     text-indent: 100%;
     white-space: nowrap;
+    overflow:hidden;
 }
 .menu-container {
     position: fixed;
@@ -17,15 +18,9 @@
     background-color: #000;
     transition: left, .125s, ease-in-out, .125s;
     z-index: 101;
-     overflow:auto;
+     
 }
-.menu-container.scroll-wide {
-    
-    width: 148px;
-   
-  
- 
-}
+
 .menu-container.closed {
     left: -125px;
 }
