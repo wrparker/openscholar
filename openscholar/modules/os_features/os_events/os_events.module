@@ -2626,7 +2626,7 @@ function os_date_repeat_rrule_description($rrule, $format = 'D M d Y') {
         $description['!byday'] = implode(', ', $days_results) . (!empty($description['!bymonth']) ? ' ' . $description['!bymonth'] : '' );
         $description['!bymonth'] = '';
       }
-      $description['!interval'] .= ' ';
+      $description['!interval'] .= (!empty($description['!bymonth']) ? ' ' : '' );
   }
   if ($rrule['INTERVAL'] < 1) {
     $rrule['INTERVAL'] = 1;
