@@ -1524,16 +1524,16 @@ function os_publications_update_7042() {
  * Bring back the abstract and note fields for working paper.
  */
 function os_publications_update_7043() {
-  os_publications_update_7034();
+  //os_publications_update_7034();
 
-  os_publications_restore_field('biblio_year', 'Working paper', array(
+  /*os_publications_restore_field('biblio_year', 'Working paper', array(
     'common' => 1,
     'vtab' => 2,
     'autocomplete' => 0,
     'required' => 1,
     'weight' => '-47',
     'visible' => '1'
-  ));
+  ));*/
 }
 
 /*
@@ -1548,4 +1548,11 @@ function os_publications_update_7044() {
   foreach ($citations as $citation) {
     os_publications_revert_citeproc_style($citation);
   }
+}
+
+/**
+ * Set biblio to use 'full' type pagination for main content pages.
+ */
+function os_publications_update_7045() {
+  variable_set('biblio_pager', 'pager');
 }
