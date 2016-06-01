@@ -20,6 +20,13 @@
     z-index: 101;
      
 }
+.menu-container.wide {
+
+    width: 148px;
+ 
+     
+}
+
 
 .menu-container.closed {
     left: -125px;
@@ -40,7 +47,11 @@ button.close-menu-button {
     transition-delay: .125s, .125s, .125s, .125s, .125s,.125s;
     z-index:3;
 }
-
+.wide button.close-menu-button {
+  
+    left: 110px;
+   
+}
 button.close-menu-button:before {
     content: url('images/close-menu-panel.png');
     left: -17px;

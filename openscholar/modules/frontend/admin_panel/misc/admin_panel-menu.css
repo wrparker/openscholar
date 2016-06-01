@@ -95,6 +95,9 @@ body.overlay {
     color: #ffffff;
     margin-top: 25px;    
     overflow-y: auto;
+}
+.wide #cssmenu {
+    
     height: 100%;
 }
 #cssmenu ul ul {
