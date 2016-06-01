@@ -310,8 +310,7 @@ function cp_menu_submit_validate($form, $form_state) {
         // The highest sub tree has passed the maximum we allowed. Prevent form
         // submission.
         $link_info = os_menu_link_load($highest_plid, $link['menu-old']);
-        $args['@title'] = $link_info['title'];
-        form_set_error('', t('You cannot create menu with nesting level greater than 4. The menu item @title have more childrens then allowed.', $args));
+        form_set_error('', t('Our themes do not support more than three menu levels.'));
         break;
       }
     }
