@@ -174,4 +174,7 @@
     #content-column .block {
         padding: 10px;
     }
+    .ui-accordion-content {
+        display: block !important;
+    }
 }
