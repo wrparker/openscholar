@@ -25,10 +25,5 @@ jQuery(document).ready(function() {
         jQuery(this).parent().find('figcaption').css({
             "width" : + imgwidth
         });
-    });
-    // Fix for old browser versions to support whitespace inside options tag.
-    jQuery("select option").each(function(i,option){
-      $option = jQuery(option);
-      $option.text($option.text().replace(/&nbsp;/g,'\u00A0'));
-    });
+    });    
 });
