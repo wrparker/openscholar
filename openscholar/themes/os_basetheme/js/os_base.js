@@ -25,5 +25,5 @@ jQuery(document).ready(function() {
         jQuery(this).parent().find('figcaption').css({
             "width" : + imgwidth
         });
-    });    
+    });
 });
