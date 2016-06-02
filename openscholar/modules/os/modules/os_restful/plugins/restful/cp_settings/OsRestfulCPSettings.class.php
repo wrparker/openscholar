@@ -68,24 +68,44 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
     if ($this->activateSpace()) {
       $forms = cp_get_setting_forms();
 
+      $valid = array();
+
       foreach ($this->request as $var => $value) {
         if (!isset($forms[$var])) continue;
-        if (!empty($forms[$var]['rest_validate'] && function_exists($forms[$var]['rest_validate']))) {
-          if (!$forms[$var]['rest_validate']($value)) {
-            // do something with this information
-            continue;
+
+        // validation
+        if (!isset($valid[$var])) {
+          if (!empty($forms[$var]['group']['#group_validate'])) {
+            $values = array();
+            foreach ($this->request as $v2 => $val2) {
+              if ($forms[$var]['group']['#id'] == $forms[$v2]['group']['#id']) {
+                $values[$v2] = $val2;
+              }
+            }
+            $result = $forms[$var]['group']['#group_validate']($values);
+            foreach ($values as $k => $t) {
+              $valid[$k] = $result;
+            }
+          }
+          else if (!empty($forms[$var]['rest_validate'] && function_exists($forms[$var]['rest_validate']))) {
+            $valid[$var] = $forms[$var]['rest_validate']($value);
           }
         }
-        if (!empty($forms[$var]['rest_submit']) && function_exists($forms[$var]['rest_submit'])) {
-          $forms[$var]['rest_submit']($value);
-        }
-        elseif (!empty($forms[$var]['rest_trigger']) && function_exists($forms[$var]['rest_trigger'])) {
-          if ($value) {
-            $forms[$var]['rest_trigger']();
+
+        // submission
+        if ($valid[$var]) {
+          if (!empty($forms[$var]['rest_submit']) && function_exists($forms[$var]['rest_submit'])) {
+            $forms[$var]['rest_submit']($value);
+          } elseif (!empty($forms[$var]['rest_trigger']) && function_exists($forms[$var]['rest_trigger'])) {
+            if ($value) {
+              $forms[$var]['rest_trigger']();
+            }
+          } else {
+            $this->saveVariable($var, $value);
           }
         }
         else {
-          $this->saveVariable($var, $value);
+          // something about an error?
         }
       }
 
