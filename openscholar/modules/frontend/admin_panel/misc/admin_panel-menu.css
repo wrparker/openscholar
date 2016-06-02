@@ -132,12 +132,12 @@ body.overlay {
 }
 #cssmenu li.heading.has-sub,
 #cssmenu li.heading.submenu {
-    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 108px -1009px;
+    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 109px -1009px;
     background-color: #444;
 }
 #cssmenu li.heading.has-sub.open,
 #cssmenu li.heading.submenu.open {
-    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 108px -983px;
+    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 109px -983px;
     background-color: #444;
 }
 #cssmenu li.heading.parent,

@@ -129,7 +129,7 @@ button.close-menu-button:hover {
     position: absolute;
     left: 0;
     right: 0;
-    top: 0;
+    top: 38px;
     bottom: 0;
     -ms-overflow-style: none; /* hide browser scrollbar on IE10+ */
 }
@@ -148,7 +148,7 @@ button.close-menu-button:hover {
 .simplebar-track {
     z-index: 99;
     position: absolute;
-    top: 0;
+    top: 38px;
     right: 0;
     bottom: 0;
     width: 11px;
