@@ -85,9 +85,12 @@ function vsite_domain_cp_settings_domain_submit(&$form, &$form_state) {
   $form_state['values']['vsite_domain_name'] = $form_state['values']['vsite_domain_name']['value'];
 
   // Does nothing else if there is no change to the existing values.
-  if (!$new_values) {
-    return;
+  if ($new_values) {
+    _vsite_domain_set_domain($new_values, $vsite);
   }
+}
+
+function _vsite_domain_set_domain($new_values, $vsite) {
 
   // Otherwise, sets the new field value on the vsite node.
   vsite_domain_set_group_path($new_values['group_path'], $vsite);
@@ -119,10 +122,6 @@ function vsite_domain_cp_settings_domain_submit(&$form, &$form_state) {
   }
 
   watchdog('vsite_domain', "actions, new values: \n@a\n@v\n", array('@a' => json_encode($actions), '@v' => json_encode($new_values)));
-  // Redirects this form to the correct new URL if necessary.
-  if ($actions['redirect']) {
-    $form_state['redirect'] = $actions['redirect'];
-  }
 }
 
 
