@@ -245,9 +245,9 @@ function vsite_domain_cp_settings() {
 
   $s['vsite_domain_shared'] = $template + array(
     'form' => $form['vsite_domain_shared'],
-      'rest_submit' => function ($value) {
-        vsite_domain_cp_settings_submit('vsite_domain_shared', $value);
-      },
+    'rest_submit' => function ($value) {
+      vsite_domain_cp_settings_submit('vsite_domain_shared', $value);
+    },
   );
   
   // If shared, makes sure to display the shared option as "checked".
@@ -274,7 +274,7 @@ function vsite_domain_cp_settings_validate($values) {
   $domain = $values['vsite_domain_name'];
   $shared = $values['vsite_domain_shared'];
 
-  if ($hared == 0) {
+  if ($shared == 0) {
     if (empty($domain)) {
       return TRUE;
     }
