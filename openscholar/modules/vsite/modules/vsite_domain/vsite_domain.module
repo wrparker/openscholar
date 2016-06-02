@@ -333,11 +333,11 @@ function vsite_domain_cp_settings_submit($var, $value) {
     'group_path' => '',
     'domain' => array(
       'modified' => false,
-      'original' => variable_get('purl_base_domain', $GLOBALS['base_url']),
+      'original' => variable_get('vsite_domain_name', ''),
     ),
     'shared' => array(
       'modified' => false,
-      'original' => 0
+      'original' => variable_get('vsite_domain_shared', 0)
     ),
   );
 
@@ -359,27 +359,23 @@ function vsite_domain_cp_settings_submit($var, $value) {
   if ($processed['vsite_domain_name'] !== FALSE && $processed['vsite_domain_shared'] !== FALSE) {
     module_load_include('inc', 'vsite_domain', 'includes/form');
 
-    if ($processed['vsite_domain_name'] != variable_get('vsite_domain_name')) {
-      if ($processed['vsite_domain_name'] == '') {
-        $new_values['group_path'] = $vsite->og->purl;
-        $new_values['shared']['new'] = 1;
-        $new_values['shared']['modified'] = $new_values['shared']['new'] != $new_values['shared']['original'];
+    if ($processed['vsite_domain_name'] == "") {
+      $new_values['group_path'] = '[site:url]' . $vsite->og->purl;
+      $new_values['shared']['new'] = 0;
+    }
+    else {
+      $new_values['group_path'] = 'http://'.$processed['vsite_domain_name'];
+      if ($processed['vsite_domain_shared']) {
+        $new_values['group_path'] .= '/' . $vsite->og->purl;
       }
-      else if ($processed['vsite_domain_shared']) {
-        $new_values['group_path'] = $vsite->og->purl;
-        $new_values['domain']['new'] = $processed['vsite_domain_name'];
-        $new_values['domain']['modified'] = $new_values['domain']['new'] != $new_values['domain']['original'];
-        $new_values['shared']['new'] = 1;
-        $new_values['shared']['modified'] = $new_values['shared']['new'] != $new_values['shared']['original'];
-      }
-      else {
-        $new_values['group_path'] = 'http://'.$processed['vsite_domain_name'];
-        $new_values['domain']['new'] = $processed['vsite_domain_name'];
-        $new_values['domain']['modified'] = $new_values['domain']['new'] != $new_values['domain']['original'];
-      }
+      $new_values['domain']['new'] = $processed['vsite_domain_name'];
+      $new_values['shared']['new'] = $processed['vsite_domain_shared'];
     }
 
-    _vsite_domain_set_domain($new_values, vsite_get_vsite());
+    $new_values['domain']['modified'] = $new_values['domain']['new'] != $new_values['domain']['original'];
+    $new_values['shared']['modified'] = $new_values['shared']['new'] != $new_values['shared']['original'];
+
+    _vsite_domain_set_domain($new_values, $vsite);
   }
 }
 
