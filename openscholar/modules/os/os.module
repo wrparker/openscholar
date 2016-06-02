@@ -613,7 +613,17 @@ function os_process_node(&$vars) {
     $link = $vars['content']['links']['node']['#links']['node-readmore'];
     $link['attributes']['class'][] = 'node-readmore';
     $link['href'] = $base_url . $vars['node_url'];
-    $vars['content']['body'][0]['#markup'] = preg_replace('/<\!--break-->.*/is',  "&nbsp;" . l($link['title'], $link['href'], $link) . "</p>", $body_full);
+
+    if (preg_match("/<\!--break-->/", $body_full)) {
+      $vars['content']['body'][0]['#markup'] = preg_replace('/<\!--break-->.*/is', "&nbsp;" . l($link['title'], $link['href'], $link) . "</p>", $body_full);
+    } else if (preg_match("/<\\p>/", $body_full)) {
+      $vars['content']['body'][0]['#markup'] = preg_replace('/<\\p>.*/is', "&nbsp;" . l($link['title'], $link['href'], $link) . "</p>", $body_full);
+    } else {
+      $vars['content']['body'][0]['#markup'] = $body_full;
+    }
+
+    // Remove duplicate content from render array
+    unset($vars['content']['pic_bio']['body'][0]['#markup']);
   }
 
   // Hide the original "Read more" link by removing it from the render array.
