@@ -42,6 +42,57 @@ function os_profiles_os_app_info() {
 }
 
 /**
+ * Implements hook_os_widget().
+ */
+function os_profiles_os_widget() {
+  $items = array();
+
+  // Filter profiles by alphabetical groups.
+  $items['views-os_profiles-filter_by_alphabet'] = array(
+    'module' => 'views',
+    'delta' => 'os_profiles-filter_by_alphabet',
+    'region' => FALSE,
+    'weight' => '-10',
+    'info' => t('Filter Profiles by Alphabetical Groups'),
+  );
+
+  return $items;
+}
+
+/**
+ * Implements template_preprocess_views_view_summary().
+ */
+function os_profiles_preprocess_views_view_summary(&$vars) {
+  // Targets only view name 'os_profiles' for alphabetical profile glossary link display.
+  if ($vars['view']->name == 'os_profiles' && $vars['view']->current_display == 'filter_by_alphabet') {
+    $result = $vars['view']->result;
+    $summary_base_path = url($vars['view']->style_options['base_path']);
+    $overridden_result = array();
+    $glossary_links = array(
+      'A-E' => range('a', 'e'),
+      'F-J' => range('f', 'j'),
+      'K-O' => range('k', 'o'),
+      'P-T' => range('p', 't'),
+      'U-Z' => range('u', 'z'),
+    );    
+    // Building the glossary links as A-E, F-J etc.
+    foreach ($result as $letter) {
+      $rendered[] = strtolower($letter->field_last_name_value_truncated);
+    }
+    $rows = array();
+    foreach ($glossary_links as $key => $alphabet_set) {
+      if (array_intersect($rendered, $alphabet_set)) {
+        $overridden_result = new stdClass;
+        $overridden_result->link = $key;
+        $overridden_result->url = $summary_base_path . '/' . implode(',', $glossary_links[$key]);
+        $rows[] = $overridden_result;
+      }
+    }
+    $vars['rows'] = $rows;
+  }
+}
+
+/**
  * Implements hook_init().
  */
 function os_profiles_init() {

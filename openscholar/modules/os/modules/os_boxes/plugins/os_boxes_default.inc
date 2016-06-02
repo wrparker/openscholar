@@ -216,6 +216,10 @@ abstract class os_boxes_default extends boxes_box {
       else if (is_array($cache->data) && is_string($cache->data['content'])) {
         $cache->data['content'] .= "<!--From Cache CID[{$this->cache_id}]-->";
       }
+    } elseif ($cache->data === FALSE) {
+      // In the case where we have a valid cache hit but the contents of the box are FALSE,
+      // we should return empty string instead.  FALSE will be treated as a cache miss.
+      $cache->data = '';
     }
 
     drupal_add_http_header('x-drupal-cache-os-boxes-plugin', $this->plugin_key, TRUE);
