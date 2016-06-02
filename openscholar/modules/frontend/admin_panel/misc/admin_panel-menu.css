@@ -83,11 +83,19 @@ body.overlay {
     padding: 0;
     border: 0;
     list-style: none;
-    line-height: 1;
+    line-height: 0;
     display: block;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     font-style: normal;
+}
+
+
+#cssmenu ul li a,
+#cssmenu ul li span {
+ 
+    line-height: 1;
+    
 }
 #cssmenu {
     font-family: helvetica;
