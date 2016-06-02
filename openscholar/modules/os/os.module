@@ -107,12 +107,13 @@ function os_cp_settings() {
   $setting = array();
   $setting['long_list_content_pagination'] = array(
     'group' => array(
-      '#title' => t('Display pages with long lists of content using'),
+      '#title' => t('Content Display'),
       '#id' => 'long-list-content-pagination',
       '#weight' => 40
     ),
     'form' => array(
       '#type' => 'radios',
+      '#title' => t('Display pages with long lists of content using'),
       '#default_value' => variable_get('long_list_content_pagination', 'infinite_scroll'),
       '#options' => array('infinite_scroll' => 'Infinite scrolling', 'pager' => 'Pagination'),
       '#description' => t('<i>This applies only to blog, links, news, FAQs, publications and profiles.</i>')
