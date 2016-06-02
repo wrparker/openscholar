@@ -87,17 +87,17 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
               $valid[$k] = $result;
             }
           }
-          else if (!empty($forms[$var]['rest_validate'] && function_exists($forms[$var]['rest_validate']))) {
+          else if (!empty($forms[$var]['rest_validate'] && is_callable($forms[$var]['rest_validate']))) {
             $valid[$var] = $forms[$var]['rest_validate']($value);
           }
         }
 
         // submission
         if ($valid[$var]) {
-          if (!empty($forms[$var]['rest_submit']) && function_exists($forms[$var]['rest_submit'])) {
+          if (!empty($forms[$var]['rest_submit']) && is_callable($forms[$var]['rest_submit'])) {
             $forms[$var]['rest_submit']($value);
           }
-          elseif (!empty($forms[$var]['rest_trigger']) && function_exists($forms[$var]['rest_trigger'])) {
+          elseif (!empty($forms[$var]['rest_trigger']) && is_callable($forms[$var]['rest_trigger'])) {
             if ($value) {
               $forms[$var]['rest_trigger']();
             }

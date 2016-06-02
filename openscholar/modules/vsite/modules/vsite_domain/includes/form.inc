@@ -109,6 +109,13 @@ function _vsite_domain_set_domain($new_values, $vsite) {
     call_user_func_array($callback, array($modifier));
   }
 
+  if ($new_values['domain']['modified']) {
+    $vsite->controllers->variable->set('vsite_domain_name', $new_values['domain']['new']);
+  }
+  if ($new_values['shared']['modified']) {
+    $vsite->controllers->variable->set('vsite_domain_shared', $new_values['domain']['shared']);
+  }
+
   _vsite_domain_clear_field_caches($vsite->id);
 
   // Clears the specified cache if necessary (i.e. "purl_modifiers_en" cid).
