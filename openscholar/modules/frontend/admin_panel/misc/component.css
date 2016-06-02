@@ -139,11 +139,7 @@ button.close-menu-button:hover {
     display: none;
 }
 
-[data-simplebar-direction="horizontal"] .simplebar-scroll-content,
-.simplebar.horizontal .simplebar-scroll-content {
-    overflow-x: scroll;
-    overflow-y: auto;
-}
+
 
 .simplebar-track {
     z-index: 99;
@@ -190,23 +186,7 @@ button.close-menu-button:hover {
     opacity: 0.7;
 }
 
-[data-simplebar-direction="horizontal"] .simplebar-track,
-.simplebar.horizontal .simplebar-track {
-    top: auto;
-    left: 0;
-    width: auto;
-    height: 11px;
-}
 
-[data-simplebar-direction="horizontal"] .simplebar-track .simplebar-scrollbar,
-.simplebar.horizontal .simplebar-track .simplebar-scrollbar {
-    right: auto;
-    top: 2px;
-    height: 7px;
-    min-height: 0;
-    min-width: 10px;
-    width: auto;
-}
 
 
 
