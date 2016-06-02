@@ -113,7 +113,7 @@ function _vsite_domain_set_domain($new_values, $vsite) {
     $vsite->controllers->variable->set('vsite_domain_name', $new_values['domain']['new']);
   }
   if ($new_values['shared']['modified']) {
-    $vsite->controllers->variable->set('vsite_domain_shared', $new_values['domain']['shared']);
+    $vsite->controllers->variable->set('vsite_domain_shared', $new_values['shared']['new']);
   }
 
   _vsite_domain_clear_field_caches($vsite->id);
