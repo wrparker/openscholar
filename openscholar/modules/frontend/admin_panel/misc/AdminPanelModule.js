@@ -220,7 +220,5 @@
   
 })(jQuery);
 
-jQuery(document).ready(function() {
- jQuery('#cssmenu').simplebar('recalculate');
- });
+
  
