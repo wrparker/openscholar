@@ -1958,7 +1958,7 @@ function vsite_mail_alter(&$message){
       }
 
       $vsite = spaces_get_space();
-      $site_owner = user_load($space->group->uid);
+      $site_owner = user_load($vsite->group->uid);
 
       // Alter the subject.
       $message['subject'] = t('An OpenScholar account has been created for you at !site_name', array(
