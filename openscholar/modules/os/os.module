@@ -614,13 +614,9 @@ function os_process_node(&$vars) {
     $link['attributes']['class'][] = 'node-readmore';
     $link['href'] = $base_url . $vars['node_url'];
 
-    if (preg_match("/<\!--break-->/", $body_full)) {
-      $vars['content']['body'][0]['#markup'] = preg_replace('/<\!--break-->.*/is', "&nbsp;" . l($link['title'], $link['href'], $link) . "</p>", $body_full);
-    } else if (strlen($body_full) > 600) {
-      $vars['content']['body'][0]['#markup'] = substr($body_full, 0, 600) . l($link['title'], $link['href'], $link) . "</p>";
-    } else {
-      $vars['content']['body'][0]['#markup'] = $body_full;
-    }
+    $body_summary = text_summary($body_full);
+
+    $vars['content']['body'][0]['#markup'] = $body_summary . (strlen($body_summary) < strlen($body_full) ? l($link['title'], $link['href'], $link) : "");
 
     // Remove duplicate content from render array
     unset($vars['content']['pic_bio']['body'][0]['#markup']);
