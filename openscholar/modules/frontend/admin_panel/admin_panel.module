@@ -85,9 +85,9 @@ function admin_panel_library() {
   $cid = drupal_hash_base64(implode("",array_merge(array_filter($spaces_features),$perms)));
 
   $libs['admin_panel']['js'] = array(
-    $path . '/misc/simplebar.min.js' => array(),
     $path . '/misc/AdminPanelModule.js' => array(),
     $path . '/misc/modernizr.custom.js' => array(),
+    $path . '/misc/simplebar.min.js' => array(),
     array(
       'data' => array(
         'paths' => array(

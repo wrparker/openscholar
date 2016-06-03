@@ -89,19 +89,14 @@ body.overlay {
     -moz-box-sizing: border-box;
     font-style: normal;
 }
-
-
 #cssmenu ul li a,
 #cssmenu ul li span {
- 
     line-height: 1;
-    
 }
 #cssmenu {
     font-family: helvetica;
     color: #ffffff;
 }
-
 #cssmenu ul ul {
     display: none;
     background-color: #49505a;
@@ -124,7 +119,6 @@ body.overlay {
 #cssmenu ul li span:hover {
     color: #CCC;
     text-decoration: none;
-    
 }
 #cssmenu ul li a.active {
     font-style: italic;

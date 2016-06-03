@@ -7,7 +7,7 @@
     cursor: pointer;
     text-indent: 100%;
     white-space: nowrap;
-    overflow:hidden;
+    overflow: hidden;
 }
 .menu-container {
     position: fixed;
@@ -18,11 +18,7 @@
     background-color: #000;
     transition: left, .125s, ease-in-out, .125s;
     z-index: 101;
-     
 }
-
-
-
 .menu-container.closed {
     left: -128px;
 }
@@ -34,15 +30,14 @@ button.close-menu-button {
     top: 50%;
     left: 119px;
     border-radius: 4px;
-    -moz-border-radius:  4px;
-    -webkit-border-radius:  4px;
-    transition-property: left, top, width, height, background-color,content;
-    transition-duration: .125s, .125s, .125s, .125s, .125s,.125s;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    transition-property: left, top, width, height, background-color, content;
+    transition-duration: .125s, .125s, .125s, .125s, .125s, .125s;
     transition-timing-function: ease-in-out;
-    transition-delay: .125s, .125s, .125s, .125s, .125s,.125s;
-    z-index:3;
+    transition-delay: .125s, .125s, .125s, .125s, .125s, .125s;
+    z-index: 3;
 }
-
 button.close-menu-button:before {
     content: url('images/close-menu-panel.png');
     left: -17px;
@@ -51,13 +46,11 @@ button.close-menu-button:before {
     font-weight: bold;
     font-size: 25px;
     top: -2px;
-    }
-
+}
 .closed button.close-menu-button:before {
     content: url('images/open-menu-panel.png');
     left: -20px;
-    }
-
+}
 .closed button.close-menu-button {
     width: 30px;
     left: 118px;
@@ -113,15 +106,16 @@ button.close-menu-button:hover {
 .menu-container ul li:last-child a {
     box-shadow: inset 0 1px rgba(0, 0, 0, 0.1), inset 0 -1px rgba(0, 0, 0, 0.1);
 }
-
 /*
  *  SimpleBar.js - v1.1.9
  */
-.simplebar, [data-simplebar-direction] {
-    overflow: hidden;
-    -webkit-overflow-scrolling: touch; /* Trigger native scrolling for mobile, if not supported, plugin is used. */
-}
 
+.simplebar,
+[data-simplebar-direction] {
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+    /* Trigger native scrolling for mobile, if not supported, plugin is used. */
+}
 .simplebar .simplebar-scroll-content,
 [data-simplebar-direction] .simplebar-scroll-content {
     overflow: hidden;
@@ -130,21 +124,18 @@ button.close-menu-button:hover {
     right: 0;
     top: 38px;
     bottom: 0;
-    -ms-overflow-style: none; /* hide browser scrollbar on IE10+ */
+    -ms-overflow-style: none;
+    /* hide browser scrollbar on IE10+ */
 }
-
-
 /* hide browser scrollbar on Webkit (Safari & Chrome) */
+
 .simplebar-scroll-content::-webkit-scrollbar {
     display: none;
 }
-
 .simplebar-scroll-content {
-height: auto !important;
+    height: auto !important;
     width: 128px !important;
 }
-
-
 .simplebar-track {
     z-index: 99;
     position: absolute;
@@ -153,7 +144,6 @@ height: auto !important;
     bottom: 0;
     width: 11px;
 }
-
 .simplebar-track .simplebar-scrollbar {
     position: absolute;
     right: 0;
@@ -173,9 +163,9 @@ height: auto !important;
     -webkit-background-clip: padding-box;
     -moz-background-clip: padding;
 }
-
 .simplebar-track:hover .simplebar-scrollbar {
     /* When hovered, remove all transitions from drag handle */
+    
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
     opacity: 0.7;
     -webkit-transition: opacity 0 linear;
@@ -184,16 +174,10 @@ height: auto !important;
     -ms-transition: opacity 0 linear;
     transition: opacity 0 linear;
 }
-
 .simplebar-track .simplebar-scrollbar.visible {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
     opacity: 0.7;
 }
-
-
-
-
-
 @media screen and (max-width: 770px) {
     .content-style-overlay {
         font-size: 75%;
