@@ -1975,7 +1975,7 @@ function vsite_mail_alter(&$message){
       );
 
       // Alter the body message.
-      $message['body'][0] = t("Dear !firstname, \n\n !site_owner, site owner of !site, has created a user account for you so that you may access this website. Log in by clicking on the following link or by pasting it into your browser: \n\n !login_url \n\n For your security, this link can be used only once.  \n\n Your username is: !username \n\n After setting your password with the included link, you will be able to log in at !futurelogin in the future.  \n\n-The OpenScholar Team", $replacements);
+      $message['body'][0] = t("Dear !firstname, \n\n!site_owner, site owner of !site, has created a user account for you so that you may access this website. Log in by clicking on the following link or by pasting it into your browser: \n\n!login_url \n\nFor your security, this link can be used only once.  \n\nYour username is: !username \n\nAfter setting your password with the included link, you will be able to log in at !futurelogin in the future.  \n\n-The OpenScholar Team", $replacements);
 
       break;
 
@@ -1992,12 +1992,17 @@ function vsite_mail_alter(&$message){
       else {
         $first_name = $user->name;
       }
+
+      $vsite = spaces_get_space();
+      $site_owner = user_load($vsite->group->uid);
+
       // Alter the email subject.
       $message['subject'] = t('An OpenScholar account has been created for you at !site_name', array(
         '!site_name' => variable_get('site_name', 'OpenScholar')
       ));
       $replacements = array(
         '!site' => variable_get('site_name', 'OpenScholar'),
+        '!site_owner' => $site_owner->name,
         '!login_url' => user_pass_reset_url($user),
         '!mailto' => $user->mail,
         '!firstname' => $first_name,
@@ -2005,8 +2010,11 @@ function vsite_mail_alter(&$message){
         '!futurelogin' => $base_url . '/user/'
       );
       // Alter the message body.
-      $message['body'][0] = t("Dear !firstname,\n\nA site owner at the !site website has created an account for you. You may now log in by either clicking through on the following link or pasting it into your browser:\n\n !login_url\n\n(Note: This login can be used only once.)\n\nYour username is: !username \n\nAfter setting your password with the included link, you will be able to log in at !futurelogin in the future.\n\nSincerely,\nThe !site Team", $replacements);
+      // Alter the body message.
+      $message['body'][0] = t("Dear !firstname, \n\n!site_owner, site owner of !site, has created a user account for you so that you may access this website. Log in by clicking on the following link or by pasting it into your browser: \n\n!login_url \n\nFor your security, this link can be used only once.  \n\nYour username is: !username \n\nAfter setting your password with the included link, you will be able to log in at !futurelogin in the future.  \n\n-The OpenScholar Team", $replacements);
+
       break;
+
     case 'contact_page_mail':
       $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
       break;
