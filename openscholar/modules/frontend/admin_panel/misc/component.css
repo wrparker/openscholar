@@ -133,11 +133,16 @@ button.close-menu-button:hover {
     -ms-overflow-style: none; /* hide browser scrollbar on IE10+ */
 }
 
+
 /* hide browser scrollbar on Webkit (Safari & Chrome) */
 .simplebar-scroll-content::-webkit-scrollbar {
     display: none;
 }
 
+.simplebar-scroll-content {
+height: auto !important;
+    width: 128px !important;
+}
 
 
 .simplebar-track {
