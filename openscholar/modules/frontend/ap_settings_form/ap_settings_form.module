@@ -26,7 +26,16 @@ function ap_settings_form_library() {
     ),
     'dependencies' => array(
       array('os_common', 'angular-modal-service'),
-      array('os_common', 'formElement')
+      array('os_common', 'formElement'),
+      array('ap_settings_form', 'redirect')
+    )
+  );
+
+  $libs['redirect'] = array(
+    'title' => 'Redirect Form',
+    'version' => '0.1',
+    'js' => array(
+      $self.'/redirects.module.js' => array()
     )
   );
 
