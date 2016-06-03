@@ -79,20 +79,14 @@
       
       function openLink(elm) {
         elm.addClass('open');
-        elm.children('ul').slideDown({
-          complete: function(){
-            // Trigger resize of #cssmenu when leaf is opened.
-            angular.element(document).find('#cssmenu').triggerHandler('resize');
-          },
-          duration: 200
-        });
+        elm.children('ul').slideDown(200);
       }
       
       function closeLink(elm) {
         elm.removeClass('open');
         elm.children('ul').css('display', 'none');
-        // Trigger resize of #cssmenu when leaf is closed.
-        angular.element(document).find('#cssmenu').triggerHandler('resize');
+        //elm.find('li').removeClass('open');
+        //elm.find('ul').slideUp(200);
       }
 
       function getAncestor(elem, tagName) {
@@ -156,22 +150,6 @@
             setClass();
           });
           var body = angular.element(document).find('body');
-
-          angular.element(element[0].querySelectorAll('#cssmenu')).resize(function() {
-            if (angular.element(window).height() < $(this).height()) {
-              angular.element(element[0]).addClass('wide');
-            } else {
-              angular.element(element[0]).removeClass('wide');
-            }
-          });
-
-          // Trigger resize of #cssmenu when window size is dragged.
-          angular.element(window).resize(function() {
-            angular.element(document).find('#cssmenu').triggerHandler('resize');
-          });
-
-          // Init state.
-          angular.element(document).find('#cssmenu').triggerHandler('resize');
 
           function setClass() {
             if (scope.open) {
@@ -238,4 +216,8 @@
         };
       }]);
   
+  $('#cssmenu').simplebar('recalculate');
+  
 })(jQuery);
+
+
