@@ -100,7 +100,7 @@ body.overlay {
 #cssmenu {
     font-family: helvetica;
     color: #ffffff;
-   
+    min-height:300px;
 }
 
 #cssmenu ul ul {
