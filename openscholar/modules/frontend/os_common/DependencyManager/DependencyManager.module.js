@@ -7,6 +7,8 @@
 
     this.AddDependency = function (mod, dep) {
       dependencies[mod] = dependencies[mod] || [];
+
+      dependencies[mod].push(dep);
     };
 
     this.$get = [function () {

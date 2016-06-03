@@ -3,7 +3,7 @@
   var m = angular.module('formElement', ['basicFormElements', 'osHelpers', 'ngSanitize', 'DependencyManager']);
 
   m.run(['Dependencies', function (dm) {
-    var deps = dm.GetDependencies();
+    var deps = dm.GetDependencies('formElement');
     Array.prototype.push.apply(m.requires, deps);
   }]);
 
@@ -23,7 +23,7 @@
 
         var copy = elem.find('span').clone();
         for (var k in scope.element) {
-          if (k == 'type') {
+          if (k == 'type' || k == 'custom_directive') {
             copy.attr(scope.element[k], '');
           }
           else if (k == 'name') {
