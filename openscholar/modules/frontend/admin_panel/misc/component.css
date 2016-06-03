@@ -124,8 +124,7 @@ button.close-menu-button:hover {
 
 .simplebar .simplebar-scroll-content,
 [data-simplebar-direction] .simplebar-scroll-content {
-    overflow-y: scroll;
-    overflow-x: auto;
+    overflow: hidden;
     position: absolute;
     left: 0;
     right: 0;

@@ -124,6 +124,8 @@ body.overlay {
 #cssmenu ul li span:hover {
     color: #CCC;
     text-decoration: none;
+    height: auto !important;
+    width: 128px !important;
 }
 #cssmenu ul li a.active {
     font-style: italic;
