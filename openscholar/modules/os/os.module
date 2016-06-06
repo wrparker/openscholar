@@ -1632,6 +1632,24 @@ function os_context_block_info_alter(&$blocks) {
 }
 
 /**
+ * Implements hook_node_insert().
+ */
+function os_node_insert($node) {
+  if ($node->status == NODE_PUBLISHED) {
+    drupal_set_message(t('Your updates will go live within the next 15 minutes.'));
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function os_node_update($node) {
+  if ($node->original->status == NODE_PUBLISHED || $node->status == NODE_PUBLISHED) {
+    drupal_set_message(t('Your updates will go live within the next 15 minutes.'));
+  }
+}
+
+/**
  * Implements hook_views_pre_build().
  *
  * Allow altering of views before build but after the filters are attached.
