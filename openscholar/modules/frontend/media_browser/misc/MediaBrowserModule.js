@@ -598,7 +598,6 @@
       service.add(data).success(function (e) {
         if (e.data.length) {
           $scope.embed = '';
-          e.data[0].new = true;
           $scope.setSelection(e.data[0].id);
           service.register(e.data[0]);
 
