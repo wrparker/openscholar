@@ -97,6 +97,10 @@ body.overlay {
     font-family: helvetica;
     color: #ffffff;
 }
+#cssmenu ul {
+    z-index: 2;
+    position: relative;
+}
 #cssmenu ul ul {
     display: none;
     background-color: #49505a;

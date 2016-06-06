@@ -73,7 +73,8 @@ button.close-menu-button:hover {
     height: 60px;
     position: absolute;
     bottom: 20px;
-    left: 30px;
+    left: 33px;
+    z-index: 1;
 }
 .top-close {
     z-index: 100;
