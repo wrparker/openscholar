@@ -570,8 +570,8 @@ function os_process_node(&$vars) {
   // adds theme hook suggestion to load this template if it exists
   $vars['theme_hook_suggestions'][] = 'node__'.$vars['type'].'__'.$vars['view_mode'];
 
-  // Only proceeds if we are in "teaser" mode
-  if ($vars['view_mode'] != "teaser") {
+  // Only proceeds if we have a "Read more" link.
+  if ($vars['content']['pic_bio']['body']['#view_mode'] != "teaser") {
     return;
   }
 
@@ -607,19 +607,15 @@ function os_process_node(&$vars) {
   // Now we know whether the read more links needs to be displayed or not.
   // With this information we can move the read more link so it can be displayed inline with the block
   if ($body_shortened && !$trailing_break_tag) {
-
-    global $base_url;
-
     $link = $vars['content']['links']['node']['#links']['node-readmore'];
     $link['attributes']['class'][] = 'node-readmore';
-    $link['href'] = $base_url . $vars['node_url'];
+    // Get last position of the last closing marker in teaser.
+    if (preg_match('!</?(?:p)[^>]*>\s*$!i', $vars['content']['pic_bio']['body'][0]['#markup'], $match, PREG_OFFSET_CAPTURE)) {
+      $insert_point = $match[0][1];
+      // Insert the link.
+      $vars['content']['body'][0]['#markup'] = substr_replace($vars['content']['body'][0]['#markup'], ' '.l($link['title'], $link['href'], $link), $insert_point, 0);
+    }
 
-    $body_summary = text_summary($body_full);
-
-    $vars['content']['body'][0]['#markup'] = $body_summary . (strlen($body_summary) < strlen($body_full) ? l($link['title'], $link['href'], $link) : "");
-
-    // Remove duplicate content from render array
-    unset($vars['content']['pic_bio']['body'][0]['#markup']);
   }
 
   // Hide the original "Read more" link by removing it from the render array.
