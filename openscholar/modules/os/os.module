@@ -99,6 +99,31 @@ function os_menu() {
 }
 
 /**
+ * Implements hook_cp_settings().
+ *
+ * Add the option to choose between Infinite scrolling or Pagination display for long list of content.
+ */
+function os_cp_settings() {
+  $setting = array();
+  $setting['long_list_content_pagination'] = array(
+    'group' => array(
+      '#title' => t('Content Display'),
+      '#id' => 'long-list-content-pagination',
+      '#weight' => 40
+    ),
+    'form' => array(
+      '#type' => 'radios',
+      '#title' => t('Display pages with long lists of content using'),
+      '#default_value' => variable_get('long_list_content_pagination', 'infinite_scroll'),
+      '#options' => array('infinite_scroll' => 'Infinite scrolling', 'pager' => 'Pagination'),
+      '#description' => t('<i>This applies only to blog, links, news, FAQs, publications and profiles.</i>')
+    ),
+  );
+
+  return $setting;
+}
+
+/**
  * Implements hook_menu_alter().
  */
 function os_menu_alter(&$items) {
@@ -1619,6 +1644,14 @@ function os_views_pre_build(&$view) {
 
     $bundles = array_keys(os_get_bundles());
     $view->filter['type']->value = $bundles;
+  }
+
+  // Get pagination type of current views display.
+  $pager = $view->display_handler->get_option('pager');
+  // If long list content pagination type is not set as infinite scroll, then switching back to mini pager.
+  if ($pager['type'] == 'infinite_scroll' && variable_get('long_list_content_pagination', 'infinite_scroll') == 'pager') {
+    $pager['type'] = 'full';
+    $view->display_handler->set_option('pager', $pager);
   }
 }
 
