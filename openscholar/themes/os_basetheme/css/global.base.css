@@ -468,7 +468,7 @@ ol {
 .block.block-boxes-os_boxes_html ul,
 .block .field-name-body ul {
     list-style: disc inside !important;
-    margin-left: 0 !important;
+    margin-left: 0;
 }
 ul ul,
 ul ol,
