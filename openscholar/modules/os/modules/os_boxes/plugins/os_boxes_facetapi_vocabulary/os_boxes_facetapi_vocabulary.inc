@@ -316,12 +316,14 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
         }
 
         $block['content'] = render($block['content']);
-        // If "Show number of posts" is off
-        if($this->options['show_count'] == FALSE) {
-          $block['content'] = preg_replace("/ \([\d+]\)/", "", $block['content']);
-        }
-        // If " Display as a menu" is on
-        if ($this->options['as_nav']) {
+        if ($this->options['show_count'] == FALSE && $this->options['as_nav']) {
+          // If "Show number of posts" is off "but Display as a menu is" on
+          $this->options['additional_classes'] = 'hide-count navigation';
+        } elseif ($this->options['show_count'] == FALSE) {
+          // If both "Show number of posts" and "but Display as a menu is" are off
+          $this->options['additional_classes'] = 'hide-count';
+        } elseif ($this->options['as_nav']) {
+          // If both "Show number of posts" and "but Display as a menu is" are on
           $this->options['additional_classes'] = 'navigation';
         }
         if ($use_cache) {
