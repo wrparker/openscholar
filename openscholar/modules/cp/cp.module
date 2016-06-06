@@ -495,6 +495,9 @@ function cp_cp_settings() {
   $settings = array();
 
   if (module_exists('redirect')) {
+    $rids = cp_redirect_get_redirects();
+    $redirects = redirect_load_multiple(array_keys($rids));
+
     $settings['redirects'] = array(
       'group' => array(
         '#title' => t('URL Redirects'),
@@ -502,7 +505,9 @@ function cp_cp_settings() {
       ),
       'form' => array(
         '#title' => t('Manage redirects'),
-        '#custom_directive' => 'redirects'
+        '#access' => cp_create_redirect_access(),
+        '#custom_directive' => 'redirects',
+        '#value' => array()
       ),
       'after_build' => array('_cp_settings_form_redirects_build'),
     );
