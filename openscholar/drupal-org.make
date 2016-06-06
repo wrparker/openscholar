@@ -404,7 +404,8 @@ projects[transliteration][version] = 3.1
 
 projects[twitter_pull][subdir] = "contrib"
 projects[twitter_pull][version] = 1.0-rc4
-projects[twitter_pull][patch][] = 'http://drupal.org/files/twitter_pull-twitter_api_php-1781024-40.patch'
+projects[twitter_pull][patch][] = "http://drupal.org/files/twitter_pull-twitter_api_php-1781024-40.patch"
+projects[twitter_pull][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/96ddefa8af2cce2579ea4eac39b20ccb840b1e41/patches/twitter_pull-8376-disable_retweets.patch"
 
 projects[views][subdir] = "contrib"
 projects[views][version] = 3.8
@@ -488,7 +489,7 @@ libraries[select2][download][url] = "https://github.com/ivaynberg/select2/archiv
 
 libraries[twitter-api-php][type] = "libraries"
 libraries[twitter-api-php][download][type] = "file"
-libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/1.0.3.zip"
+libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/1.0.5.zip"
 
 libraries[autopager][type] = "libraries"
 libraries[autopager][download][type] = "file"
