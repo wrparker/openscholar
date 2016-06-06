@@ -1975,7 +1975,7 @@ function vsite_mail_alter(&$message){
       ));
       $replacements = array(
         '!site' => $vsite->group->title,
-        '!site_owner' => $site_owner->name,
+        '!site_owner' => $site_owner_name,
         '!login_url' => user_pass_reset_url($user),
         '!mailto' => $user->mail,
         '!firstname' => $first_name,
