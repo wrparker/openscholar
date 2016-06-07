@@ -61,7 +61,7 @@ function os_events_theme() {
 }
 
 /**
- * Helper function to send notificaiton emails to event registrants if there is any cancellations or change in event timings.
+ * Helper function to send notification emails to event registrants if there is any cancellations or change in event timings.
  *
  * @param $registration
  *   The registration entity.
