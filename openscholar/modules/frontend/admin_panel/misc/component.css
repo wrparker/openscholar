@@ -77,11 +77,18 @@ button.close-menu-button:hover {
     z-index: 1;
 }
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  button.close-menu-button:before {
+    left: -17px;
+  }
   button.close-menu-button:before,
   .closed button.close-menu-button:before {
     top: 8px;
     position:absolute;
   }
+  button.close-menu-button:hover {
+    top: 51%;
+   
+}
    
 }
 
