@@ -150,6 +150,7 @@
             setClass();
           });
           var body = angular.element(document).find('body');
+          angular.element(element[0].querySelectorAll('#cssmenu')).simplebar();
 
           function setClass() {
             if (scope.open) {
