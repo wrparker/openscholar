@@ -76,6 +76,16 @@ button.close-menu-button:hover {
     left: 33px;
     z-index: 1;
 }
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  button.close-menu-button:before {
+    left: -17px;
+  }
+  .closed button.close-menu-button:before {
+    left: 9px;
+  }
+  
+}
+
 .top-close {
     z-index: 100;
     display: block;
