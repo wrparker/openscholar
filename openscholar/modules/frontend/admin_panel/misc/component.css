@@ -25,6 +25,7 @@
 button.close-menu-button {
     width: 18px;
     height: 50px;
+    background:url('images/close-menu-panel.png') no-repeat center;
     background-color: #A51C30;
     position: absolute;
     top: 50%;
@@ -38,20 +39,11 @@ button.close-menu-button {
     transition-delay: .125s, .125s, .125s, .125s, .125s, .125s;
     z-index: 3;
 }
-button.close-menu-button:before {
-    content: url('images/close-menu-panel.png');
-    left: -15px;
-    position: absolute;
-    color: #fff;
-    font-weight: bold;
-    font-size: 25px;
-    top: 8px;
-}
-.closed button.close-menu-button:before {
-    content: url('images/open-menu-panel.png');
-    left: -20px;
-}
+
+
 .closed button.close-menu-button {
+    background:url('images/open-menu-panel.png') no-repeat center;
+    background-color: #A51C30;
     width: 30px;
     left: 118px;
 }
