@@ -40,12 +40,12 @@ button.close-menu-button {
 }
 button.close-menu-button:before {
     content: url('images/close-menu-panel.png');
-    left: -17px;
-    position: relative;
+    left: -32px;
+    position: absolute;
     color: #fff;
     font-weight: bold;
     font-size: 25px;
-    top: -2px;
+    top: 8px;
 }
 .closed button.close-menu-button:before {
     content: url('images/open-menu-panel.png');
@@ -57,14 +57,11 @@ button.close-menu-button:before {
 }
 button.close-menu-button:hover {
     width: 30px;
-    height: 60px;
     background-color: #000;
-    top: 49.5%;
     left: 113px;
 }
 .closed button.close-menu-button:hover {
-    width: 40px;
-    height: 60px;
+    width: 50px;
     left: 120px;
 }
 .close-menu-button-oslogo {
@@ -76,22 +73,21 @@ button.close-menu-button:hover {
     left: 33px;
     z-index: 1;
 }
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-  button.close-menu-button:before {
-    left: -17px;
-  }
-  button.close-menu-button:before,
-  .closed button.close-menu-button:before {
-    top: 8px;
-    position:absolute;
-  }
-  button.close-menu-button:hover {
-    top: 51%;
-   
-}
-   
-}
-
+/*
+@media all and (-ms-high-contrast: none),
+(-ms-high-contrast: active) {
+    button.close-menu-button:before {
+        left: -17px;
+    }
+    button.close-menu-button:before,
+    .closed button.close-menu-button:before {
+        top: 8px;
+        position: absolute;
+    }
+    button.close-menu-button:hover {
+        top: 51%;
+    }
+}*/
 .top-close {
     z-index: 100;
     display: block;
