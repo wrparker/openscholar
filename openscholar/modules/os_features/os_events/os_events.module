@@ -60,6 +60,16 @@ function os_events_theme() {
   );
 }
 
+/**
+ * Helper function to send notificaiton emails to event registrants if there is any cancellations or change in event timings.
+ *
+ * @param $registration
+ *   The registration entity.
+ * @param $params
+ *   The email content parameters.
+ * @param $mail_key
+ *   The mail key for notification.
+ */
 function os_events_event_change_notification($registration, $params, $mail_key) {
   // Triggering email to registrants event timings are changed.
   $from = $params['@event-creator-mail'];
