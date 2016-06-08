@@ -1948,7 +1948,7 @@ function vsite_mail_alter(&$message){
     $site_owner_name .= $site_owner->field_first_name['und'][0]['value'];
   }
   if ($site_owner->field_last_name['und'][0]['value']) {
-    $site_owner_name .= $site_owner->field_last_name['und'][0]['value'];
+    $site_owner_name .= " " . $site_owner->field_last_name['und'][0]['value'];
   }
   if (! $site_owner_name) {
     $site_owner_name = $site_owner->name;
