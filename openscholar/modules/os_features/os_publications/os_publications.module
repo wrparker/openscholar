@@ -163,18 +163,6 @@ function os_publications_query_biblio_alter(QueryAlterableInterface $query) {
   }
 
   $item = menu_get_item();
-  // Add custom sorting to all filter by publications filters.
-  $filter_array = array('type','year','author');
-  if(isset($item['path']) && $item['path'] == 'publications' && isset($item['map'][1]) && in_array($item['map'][1], $filter_array)) {
-    // Reset the order.
-    $order = &$query->getOrderBy();
-    $order = array();
-    // Sort by year, then by node post date.
-    $order['biblio_year'] = 'DESC';
-    $order['n.created'] = 'DESC';
-    return;
-  }
-
   // Check the sort order for biblio.
   // If we're sorting by year, we want to sort by date as well to replicate D6
   // sorting.
@@ -1259,8 +1247,11 @@ function os_publications_preprocess_page(&$variables) {
     return;
   }
 
-  ctools_include('infinite_scroll', 'os');
-  _os_add_infinite_scroll('os_publications', '#content li.pager-next a', '#content>.biblio-category-section', array('pager' => '#content ul.pager', 'hide_biblio_categories' => TRUE));
+  // If long list content pagination type is set as infinite scroll, then attaching infinite scroll libraries instead of default pager of biblio module.
+  if (variable_get('long_list_content_pagination', 'infinite_scroll') == 'infinite_scroll') {
+    ctools_include('infinite_scroll', 'os');
+    _os_add_infinite_scroll('os_publications', '#content li.pager-next a', '#content>.biblio-category-section', array('pager' => '#content ul.pager', 'hide_biblio_categories' => TRUE));
+  }
   // Hide the numbers of results found for anonymous users.
   if (user_is_anonymous()) {
     unset($variables['page']['content']['system_main']['biblio_page']['header']['export_links']);

@@ -58,6 +58,12 @@ html {} body {} #page
 {
     padding-top: 15px;
 }
+.region-page-bottom .region-inner
+/* Remove white horizontal bar at bottom after login */
+
+{
+    padding-top: 0;
+}
 .region-page-top .region-inner
 /* Remove ugly space between branding region and toolbar */
 
@@ -1099,6 +1105,7 @@ img ~ figcaption {
 color: #555;
     font-style: italic;
     clear: both;
+    max-width:100%;
 }
 
 

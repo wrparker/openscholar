@@ -253,6 +253,7 @@ table td.mini .mini-day-on a {
 .ui-tabs ul.ui-tabs-nav {
     display: table !important;
     width: 100%;
+    word-break: break-all;
 }
 .lt-ie9 .ui-tabs ul.ui-tabs-nav {
     table-layout: auto;

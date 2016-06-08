@@ -61,6 +61,51 @@ function os_events_theme() {
 }
 
 /**
+ * Implements hook_node_update().
+ */
+function os_events_node_update($node) {
+  if ($node->type !== 'event') {
+    return;
+  }
+  // If the event is not recurring event, then registration data will not be deleted.
+  if (empty($node->field_date[LANGUAGE_NONE][0]['rrule'])) {
+    return;
+  }
+  
+  $deleted_dates = array();
+  $submitted_dates = array();
+  foreach ($node->field_date[LANGUAGE_NONE] as $date) {
+    $submitted_dates[] = format_date(strtotime($date['value']), 'custom', 'Y-m-d');
+  }
+
+  // Detecting deleted event date instances for repeating events.
+  foreach ($node->original->field_date[LANGUAGE_NONE] as $date) {
+    if (!in_array(format_date(strtotime($date['value']), 'custom', 'Y-m-d'), $submitted_dates)) {
+      $deleted_dates[] = format_date(strtotime($date['value']), 'custom', 'Y-m-d');
+    }
+  }
+  // Checking if event date instances have been deleted.
+  if (count($deleted_dates) > 0) {
+    $registration_entities = array();
+    // Checking each deleted dates, if they have registration entities for the editing event node.
+    foreach ($deleted_dates as $date) {
+      // Initializing EntityFieldQuery to obtain all registration entities with a certain deleted date
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'registration')
+        ->entityCondition('bundle', 'event_signup_simple')
+        ->propertyCondition('entity_id', $node->nid)
+        ->fieldCondition('field_repeating_event_date', 'value', $date . '%', 'LIKE');
+      $result = $query->execute();
+      foreach ($result['registration'] as $registration) {
+        $registration_entities[] = $registration->registration_id;
+      }
+    }
+    // Deleting registration entities for target registration ids for all deleted event dates.
+    entity_delete_multiple('registration', $registration_entities);
+  }
+}
+
+/**
  * Implements hook_menu().
  */
 function os_events_menu() {
@@ -1587,9 +1632,87 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   $form_state['rebuild'] = TRUE;
   unset($form['actions'], $form['field_full_name'], $form['field_department'], $form['anon_mail'], $form['user']);
 
-  $form['#validate'][] = 'registration_form_validate';
+  $form['#validate'][] = 'os_events_registration_form_validate';
   $form['#validate'][] = 'os_events_modal_validate';
   $form['#submit'][] = 'os_events_modal_submit';
+}
+
+/**
+ * Validation callback for registration_form().
+ */
+function os_events_registration_form_validate($form, &$form_state) {
+  $registration = $form_state['registration'];
+  $count = $form_state['values']['count'];
+  $entity = entity_load_single($registration->entity_type, $registration->entity_id);
+  $label = entity_label($registration->entity_type, $entity);
+  // Test status on new registrations.
+  if (isset($registration->is_new) && $registration->is_new) {
+    $errors = array();
+    $registration_status = registration_status($registration->entity_type, $registration->entity_id, TRUE, $count, $registration->registration_id, $errors);
+
+    if (!$registration_status) {
+      form_set_error('', t('Sorry, unable to register for %label due to: %errors.',
+        array('%label' => $label, '%errors' => implode(', ', $errors))
+      ));
+    }
+  }
+  // Only check capacity for existing registrations that are active.
+  elseif (in_array($registration->state, registration_get_active_states())) {
+    $has_room = registration_has_room($registration->entity_type, $registration->entity_id, $count, $registration->registration_id);
+    if (!$has_room) {
+      form_set_error('', t('Sorry, unable to register for %label due to: insufficient spaces remaining.',
+        array('%label' => $label)));
+    }
+  }
+
+  $settings = registration_entity_settings($registration->entity_type, $registration->entity_id);
+  $allow_multiple = $entity->field_mutliple_event_signup['und'][0]['value'];
+
+  // Validate according to who's registering.
+  switch ($form_state['values']['who_is_registering']) {
+    case REGISTRATION_REGISTRANT_TYPE_ANON:
+      $form_state['values']['anon_mail'] = trim($form_state['values']['anon_mail']);
+      if (!valid_email_address($form_state['values']['anon_mail'])) {
+        form_set_error('anon_mail', t('The email address is invalid.'));
+      }
+      if (!$allow_multiple && registration_is_registered($registration, $form_state['values']['anon_mail'])) {
+        form_set_error('anon_mail', t('%mail is already registered for this event.',
+          array('%mail' => $form_state['values']['anon_mail'])));
+      }
+      break;
+
+    case REGISTRATION_REGISTRANT_TYPE_ME:
+      global $user;
+      if (!$allow_multiple && registration_is_registered($registration, NULL, $user->uid)) {
+        form_set_error('user', t('You are already registered for this event.'));
+      }
+      break;
+
+    case REGISTRATION_REGISTRANT_TYPE_USER:
+      if (empty($form_state['values']['user'])) {
+        form_set_error('user', t('User name is required.'));
+      }
+      $user = user_load_by_name($form_state['values']['user']);
+      if ($user) {
+        if (!$allow_multiple && registration_is_registered($registration, NULL, $user->uid)) {
+          if (user_access('access user profiles')) {
+            form_set_error('user', t('%user is already registered for this event.', array('%user' => $user->name)));
+          }
+          else {
+            form_set_error('user', t('Registration Failed.'));
+          }
+        }
+      }
+      else {
+        if (user_access('access user profiles')) {
+          form_set_error('user', t('%user is not a valid user.', array('%user' => $form_state['values']['user'])));
+        }
+        else {
+          form_set_error('user', t('Registration Failed.'));
+        }
+      }
+      break;
+  }  
 }
 
 /**
@@ -2016,6 +2139,25 @@ function os_events_mail_alter(&$message) {
 function os_events_form_event_node_form_alter(&$form, &$form_state) {
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
   $form['#validate'][] = 'os_events_validate_repeat_on_checkbox';
+  // Attaching form state behavior to show the checkbox only when signup and repeat checkboxes are with checked state.
+  $form['field_mutliple_event_signup']['#states'] = array(
+    'visible' => array(
+      ':input[name="field_event_registration[und][0][registration_type]"]' => array('checked' => TRUE),
+      ':input[name="field_date[und][0][show_repeat_settings]"]' => array('checked' => TRUE),
+    ),
+  );
+  // Div wrapper to display Sign up and multiple registration select checkbox jointly.
+  $form['event_registration_group'] = array(
+    '#type' => '#markup',
+    '#prefix' => '<div>',
+    '#suffix' => '</div>',
+    '#weight' => 6
+  );
+  // Inserting both checkboxes into above container div and removing form form element array.
+  $form['event_registration_group']['field_mutliple_event_signup'] = $form['field_mutliple_event_signup'];
+  $form['event_registration_group']['field_event_registration'] = $form['field_event_registration'];
+  unset($form['field_mutliple_event_signup']);
+  unset($form['field_event_registration']);
 }
 
 /**

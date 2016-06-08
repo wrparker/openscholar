@@ -18,10 +18,10 @@
             </div>
             <div id="media-browser-duplicate-check" ng-show="$parent.dupes.length > 0">
                 <div class="media-browser-dupe" ng-repeat="dupe in $parent.dupes" ng-show="!dupe.processed" style="z-index: {{1000-$index}}">
-                    A file with the name '{{dupe.filename}}' already exists.
                     <div ng-show="dupe.name != dupe.filename">
                         This file was renamed from '{{dupe.name}}' due to having invalid characters in its name.
                     </div>
+                    A file with the name '{{dupe.filename}}' already exists.
                     <div class="actions">
                         <div><button value="rename" ng-click="$parent.rename($index, $last)">Rename</button> The new name will be {{dupe.newName}}</div>
                         <div><button value="replace" ng-click="$parent.replace($index, $last)">Replace</button> Warning: replacing the existing file cannot be undone.</div>
@@ -60,7 +60,7 @@
             </div>
             <div class="embed-failure" ng-show="embedFailure" ng-click="$parent.embedFailure = false">
                 <span class="error-icon"></span>
-                URL(s) not from accepted domain! Please check that all URLs are from an accepted provider, and all URLS in HTML code are from an accepted domin.
+                URL(s) not from accepted domain! Please check that all URLs are from an accepted provider, and all URLs in HTML code are from an accepted domain.
             </div>
             <div class="actions">
                 <button value="submit" ng-click="$parent.embedSubmit()">Submit</button>
