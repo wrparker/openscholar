@@ -1501,3 +1501,51 @@ function _os_publications_vocabulary_after_build(&$elements) {
   
   return $elements;
 }
+
+/*
+ * Implements hook_views_pre_render
+ *
+ * Add missing first names to contributor objects
+ */
+function os_publications_views_pre_render(&$view) {
+  if ($view->name == "co_author_list") {
+    $i = 0;
+    foreach ($view->result as $r) {
+      if (!$r->biblio_contributor_data_firstname) {
+        if (strstr($r->biblio_contributor_data_name, ",")) {
+          $t = preg_split ("/,\s*/", $r->biblio_contributor_data_name, 2);
+          if (count($t) > 1) {
+            $view->result[$i]->biblio_contributor_data_firstname = $t[1];
+          } else {
+            $view->result[$i]->biblio_contributor_data_firstname = $r->biblio_contributor_data_name;
+          }
+        } else if (strstr($r->biblio_contributor_data_name, " ")) {
+          $t = preg_split ("/\s+/", $r->biblio_contributor_data_name, 2);
+          if (count($t) > 1) {
+            $view->result[$i]->biblio_contributor_data_firstname = $t[0];
+          } else {
+            $view->result[$i]->biblio_contributor_data_firstname = $r->biblio_contributor_data_name;
+          }
+        }
+      } else if (!$r->biblio_contributor_data_lastname) {
+        if (strstr($r->biblio_contributor_data_name, ",")) {
+          $t = preg_split ("/,\s*/", $r->biblio_contributor_data_name, 2);
+          if (count($t) > 1) {
+            $view->result[$i]->biblio_contributor_data_lastname = $t[0];
+          } else {
+            $view->result[$i]->biblio_contributor_data_lastname = $r->biblio_contributor_data_name;
+          }
+        } else if (strstr($r->biblio_contributor_data_name, " ")) {
+          $t = preg_split ("/\s+/", $r->biblio_contributor_data_name, 2);
+          if (count($t) > 1) {
+            $view->result[$i]->biblio_contributor_data_lastname = $t[1];
+          } else {
+            $view->result[$i]->biblio_contributor_data_lastname = $r->biblio_contributor_data_name;
+          }
+        }
+      }
+
+      $i++;
+    }
+  }
+}
