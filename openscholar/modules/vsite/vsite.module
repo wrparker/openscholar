@@ -1969,22 +1969,27 @@ function vsite_mail_alter(&$message){
         $first_name = $user->name;
       }
 
+      if (! empty($user->field_last_name['und'][0]['value'])) {
+        $last_name = $user->field_last_name['und'][0]['value'];
+      }
+
       // Alter the subject.
       $message['subject'] = t('An OpenScholar account has been created for you at !site_name', array(
         '!site_name' => $vsite->group->title
       ));
       $replacements = array(
-        '!site' => $vsite->group->title,
+        '!site' => $base_url . $vsite->group->title,
         '!site_owner' => $site_owner_name,
         '!login_url' => user_pass_reset_url($user),
         '!mailto' => $user->mail,
         '!firstname' => $first_name,
+        '!lastname' => $last_name,
         '!username' => $user->name,
         '!futurelogin' => $base_url . '/user/'
       );
 
       // Alter the body message.
-      $message['body'][0] = t("Dear !firstname, \n\n!site_owner, site owner of !site, has created a user account for you so that you may access this website. Log in by clicking on the following link or by pasting it into your browser: \n\n!login_url \n\nFor your security, this link can be used only once.  \n\nYour username is: !username \n\nAfter setting your password with the included link, you will be able to log in at !futurelogin in the future.  \n\n-The OpenScholar Team", $replacements);
+      $message['body'][0] = t("Dear !firstname !lastname, \n\n!site_owner, site owner of !site, has created a user account for you so that you may access this website. Log in by clicking on the following link or by pasting it into your browser: \n\n!login_url \n\nFor your security, this link can be used only once.  \n\nYour username is: !username \n\nAfter setting your password with the included link, you will be able to log in at !futurelogin in the future.  \n\n-The OpenScholar Team", $replacements);
 
       break;
 
@@ -2002,22 +2007,28 @@ function vsite_mail_alter(&$message){
         $first_name = $user->name;
       }
 
+      // Grab their last name, if it doesnt exist, use their user name.
+      if (! empty($user->field_last_name['und'][0]['value'])) {
+        $last_name = $user->field_last_name['und'][0]['value'];
+      }
+
       // Alter the email subject.
       $message['subject'] = t('An OpenScholar account has been created for you at !site_name', array(
         '!site_name' => $vsite->group->title
       ));
       $replacements = array(
-        '!site' => $vsite->group->title,
+        '!site' => $base_url . $vsite->group->title,
         '!site_owner' => $site_owner_name,
         '!login_url' => user_pass_reset_url($user),
         '!mailto' => $user->mail,
         '!firstname' => $first_name,
+        '!lastname' => $last_name,
         '!username' => $user->name,
         '!futurelogin' => $base_url . '/user/'
       );
       // Alter the message body.
       // Alter the body message.
-      $message['body'][0] = t("Dear !firstname, \n\n!site_owner, site owner of !site, has created a user account for you so that you may access this website. Log in by clicking on the following link or by pasting it into your browser: \n\n!login_url \n\nFor your security, this link can be used only once.  \n\nYour username is: !username \n\nAfter setting your password with the included link, you will be able to log in at !futurelogin in the future.  \n\n-The OpenScholar Team", $replacements);
+      $message['body'][0] = t("Dear !firstname !lastname, \n\n!site_owner, site owner of !site, has created a user account for you so that you may access this website. Log in by clicking on the following link or by pasting it into your browser: \n\n!login_url \n\nFor your security, this link can be used only once.  \n\nYour username is: !username \n\nAfter setting your password with the included link, you will be able to log in at !futurelogin in the future.  \n\n-The OpenScholar Team", $replacements);
 
       break;
 
