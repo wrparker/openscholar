@@ -7,6 +7,7 @@
  */
 
 include_once 'os_profiles.features.inc';
+include_once ('includes/os.inc');
 
 /**
  * Implements hook_os_app_info().
@@ -276,9 +277,15 @@ function os_profiles_os_entity_view_modes() {
  * Implements hook_process_node().
  */
 function os_profiles_process_node(&$vars) {
+
   if ($vars['type'] !== 'person') {
     return;
   }
+
+  global $base_url;
+  $link['href'] = $base_url . $vars['node_url'];
+  $link['title'] = "Read more";
+  _os_insert_link_into_paragraph($vars['content']['pic_bio']['body'][0]['#markup'], $link);
 
   // Adding the prefix value to the title of the person.
   if (!empty($vars['field_prefix'])) {

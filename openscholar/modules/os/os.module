@@ -609,17 +609,14 @@ function os_process_node(&$vars) {
   if ($body_shortened && !$trailing_break_tag) {
     $link = $vars['content']['links']['node']['#links']['node-readmore'];
     $link['attributes']['class'][] = 'node-readmore';
-    // Get last position of the last closing marker in teaser.
-    if (preg_match('!</?(?:p)[^>]*>\s*$!i', $vars['content']['pic_bio']['body'][0]['#markup'], $match, PREG_OFFSET_CAPTURE)) {
-      $insert_point = $match[0][1];
-      // Insert the link.
-      $vars['content']['body'][0]['#markup'] = substr_replace($vars['content']['body'][0]['#markup'], ' '.l($link['title'], $link['href'], $link), $insert_point, 0);
-    }
 
+    _os_insert_link_into_paragraph($vars['content']['body'][0]['#markup'], $link);
   }
 
   // Hide the original "Read more" link by removing it from the render array.
-  unset($vars['content']['links']['node']['#links']['node-readmore']);
+  if (isset($vars['content']['body'][0]['#markup'])) {
+    unset($vars['content']['links']['node']['#links']['node-readmore']);
+  }
 }
 
 /**
