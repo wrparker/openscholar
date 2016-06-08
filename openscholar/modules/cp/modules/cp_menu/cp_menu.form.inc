@@ -11,6 +11,7 @@ function cp_menu_build_form($form, $form_state, $menu = ''){
   ctools_include('ajax');
   ctools_include('modal');
   ctools_include('menu', 'os');
+  drupal_add_library('system', 'ui.dialog');
 
   $menus = os_get_menus();
 
@@ -116,6 +117,12 @@ function cp_menu_build_form($form, $form_state, $menu = ''){
   $text = t('Add new menu');
   $form['add_new'] = array(
     '#markup' => ctools_modal_text_button($text, 'cp/build/menu/nojs/add', $text),
+  );
+
+  $form['dialog'] = array(
+    '#markup' => '<div id="dialog" title="' . t('To many nested items') . '" style="display: none">
+      <p>' . t('Our themes do not support more than three menu levels.') . ' </p>
+    </div>',
   );
 
   $form['actions'] = array(
@@ -266,55 +273,6 @@ function theme_cp_menu_table($variables){
       'id' => 'edit-menu-table'
     )
   ));
-}
-
-function cp_menu_submit_validate($form, $form_state) {
-  if ($form_state['triggering_element']['#id'] != 'edit-submit') {
-    return;
-  }
-
-  //Save as normal
-  foreach ($form_state['values']['menus'] as $links) {
-    // Flags for the max depth and the last plid we iterate over.
-    $depths = array();
-
-    // What was the last plid we iterate.
-    $last_plid = 0;
-
-    // The parent mlid menu item.
-    $highest_plid = 0;
-
-    foreach ($links as $link) {
-      if (!is_array($link)) {
-        continue;
-      }
-
-      if ($link['plid'] == 0) {
-        // Save the most highest plid we have.
-        $highest_plid = $link['mlid'];
-
-        // Starting a new sub-tree. Save how many depth the sub tree have.
-        $depths[$highest_plid] = 0;
-        continue;
-      }
-
-      if ($link['plid'] != $last_plid) {
-        // It's a new sub-plid we been to. Increase by 1 the depths the local
-        // subtree have.
-        $depths[$highest_plid]++;
-      }
-
-      $last_plid = $link['plid'];
-
-      if ($depths[$highest_plid] > 3) {
-        // The highest sub tree has passed the maximum we allowed. Prevent form
-        // submission.
-        $link_info = os_menu_link_load($highest_plid, $link['menu-old']);
-        form_set_error('', t('Our themes do not support more than three menu levels.'));
-        break;
-      }
-    }
-  }
 }
 
 function cp_menu_submit_form($form, &$form_state) {
