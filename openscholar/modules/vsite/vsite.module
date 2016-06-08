@@ -1944,11 +1944,11 @@ function vsite_mail_alter(&$message){
 
   $vsite = spaces_get_space();
   $site_owner = user_load($vsite->group->uid);
-  if ($site_owner->field_first_name) {
-    $site_owner_name .= $site_owner->field_first_name[0];
+  if ($site_owner->field_first_name['und'][0]['value']) {
+    $site_owner_name .= $site_owner->field_first_name['und'][0]['value'];
   }
-  if ($site_owner->field_last_name) {
-    $site_owner_name .= $site_owner->field_last_name[0];
+  if ($site_owner->field_last_name['und'][0]['value']) {
+    $site_owner_name .= $site_owner->field_last_name['und'][0]['value'];
   }
   if (! $site_owner_name) {
     $site_owner_name = $site_owner->name;
