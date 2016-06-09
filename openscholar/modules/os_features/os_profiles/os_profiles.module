@@ -283,7 +283,6 @@ function os_profiles_process_node(&$vars) {
     return;
   }
 
-  global $base_url;
   _os_insert_link_into_paragraph($vars['content']['pic_bio']['body'][0]['#markup'], $vars['content']['links']['node']['#links']['node-readmore']);
   unset($vars['content']['links']['node']['#links']['node-readmore']);
 
