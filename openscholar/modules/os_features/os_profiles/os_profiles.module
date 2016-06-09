@@ -7,7 +7,8 @@
  */
 
 include_once 'os_profiles.features.inc';
-include_once ('includes/os.inc');
+define('DOC_ROOT_PATH', $_SERVER['DOCUMENT_ROOT'].'/');
+include_once DOC_ROOT_PATH . "../openscholar/modules/os/includes/os.inc";
 
 /**
  * Implements hook_os_app_info().
@@ -283,9 +284,8 @@ function os_profiles_process_node(&$vars) {
   }
 
   global $base_url;
-  $link['href'] = $base_url . $vars['node_url'];
-  $link['title'] = "Read more";
-  _os_insert_link_into_paragraph($vars['content']['pic_bio']['body'][0]['#markup'], $link);
+  _os_insert_link_into_paragraph($vars['content']['pic_bio']['body'][0]['#markup'], $vars['content']['links']['node']['#links']['node-readmore']);
+  unset($vars['content']['links']['node']['#links']['node-readmore']);
 
   // Adding the prefix value to the title of the person.
   if (!empty($vars['field_prefix'])) {
