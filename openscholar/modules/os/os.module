@@ -2873,6 +2873,11 @@ function os_page_build(&$page) {
  */
 function os_form_redirect_edit_form_alter(&$form, $form_state) {
   $form['source']['#element_validate'] = array('os_redirect_element_validate_source');
+
+  if (vsite_get_vsite()) {
+    // Only when we in a vsite context send the user to the settings CP.
+    $form['actions']['cancel']['#href'] = 'cp/settings';
+  }
 }
 
 /**
