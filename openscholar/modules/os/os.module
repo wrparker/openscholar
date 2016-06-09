@@ -571,7 +571,7 @@ function os_process_node(&$vars) {
   $vars['theme_hook_suggestions'][] = 'node__'.$vars['type'].'__'.$vars['view_mode'];
 
   // Only proceeds if we have a "Read more" link.
-  if ($vars['content']['pic_bio']['body']['#view_mode'] != "teaser") {
+  if (!isset($vars['content']['links']['node']['#links']['node-readmore'])) {
     return;
   }
 
