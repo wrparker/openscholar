@@ -41,10 +41,16 @@
     }
   };
 
-  // Fix for old browser versions to support whitespace inside options tag.
-  jQuery("select option").each(function(i,option){
-    $option = jQuery(option);
-    $option.text($option.text().replace(/&nbsp;/g,'\u00A0'));
-  });
+  /**
+   * Fix for old browser versions to support whitespace inside options tag.
+   */
+  Drupal.behaviors.taxonomyDropdownWhitespace = {
+    attach: function () {
+      $("select option").each(function(i,option){
+        $option = $(option);
+        $option.text($option.text().replace(/&nbsp;/g,'\u00A0'));
+      });
+    }
+  };
 
 })(jQuery);
