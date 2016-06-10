@@ -113,7 +113,6 @@ class sv_list_node_event extends sv_list_plugin  {
   public function sort_event_asc($options, EntityFieldQuery $efq) {
     $efq->addTag('sv_list_events');
     $efq->addMetaData('sort_event', 'ASC');
-    $efq->fieldOrderBy('field_date', 'value', 'ASC');
 
     if ($options['show'] != 'upcoming_events') {
       $this->query = $efq;
@@ -137,6 +136,7 @@ class sv_list_node_event extends sv_list_plugin  {
         $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime($str)), '>=', 'sv_list_events');
         $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '>=', 'sv_list_events');
     }
+    $efq->fieldOrderBy('field_date', 'value', 'ASC');
 
     $this->query = $efq;
   }
