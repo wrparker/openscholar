@@ -1077,6 +1077,11 @@ function os_publications_node_view_alter(&$build, $type) {
         $build['field_biblio_image']['#access'] = FALSE;
       }
 
+      // Display user and date revision info
+      $user = user_load($build['#node']->revision_uid);
+      $build['footer']['#markup'] = "<i>This entry was last updated by " . $user->name . " on " . format_date($build['#node']->changed) . "</i>";
+      $build['footer']['#weight'] = 99;
+
       // Remove the second export links that appear at the bottom of full view
       // of a publication.
       unset($build['links']['biblio_tagged'], $build['links']['biblio_xml'], $build['links']['biblio_bibtex'], $build['links']['biblio_google_scholar']);
