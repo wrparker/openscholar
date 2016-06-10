@@ -498,6 +498,15 @@ function cp_cp_settings() {
     $rids = cp_redirect_get_redirects();
     $redirects = redirect_load_multiple(array_keys($rids));
 
+    $redirect_values = array();
+    foreach ($redirects as $r) {
+      $redirect_values[] = array(
+        'id' => $r->rid,
+        'path' => $r->source,
+        'target' => $r->redirect
+      );
+    }
+
     $settings['redirects'] = array(
       'group' => array(
         '#title' => t('URL Redirects'),
@@ -507,7 +516,8 @@ function cp_cp_settings() {
         '#title' => t('Manage redirects'),
         '#access' => cp_create_redirect_access(),
         '#custom_directive' => 'redirects',
-        '#value' => array()
+        '#value' => $redirect_values,
+        '#maximum_value_count' => variable_get('cp_redirect_max', CP_REDIRECT_MAX_DEFAULT)
       ),
       'after_build' => array('_cp_settings_form_redirects_build'),
     );
@@ -677,6 +687,8 @@ function cp_form_redirect_edit_form_alter(&$form, &$form_state, $form_id) {
     'module' => 'purl',
     'name' => 'purl.admin',
   );
+
+  dpm($form['purl']['modifier']);
 
   // Determines this vsite's purl modifier value.
   if (empty($form['purl']['modifier']['#default_value'])) {
