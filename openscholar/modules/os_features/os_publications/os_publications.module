@@ -729,27 +729,11 @@ function os_publications_alter_year_field(&$form, &$form_state) {
   $form['biblio_year_coded_extrayear'] = array(
     '#type' => 'textfield',
     '#description' => 'e.g. 2015',
-    '#title' => 'Expected In Press Year',
+    '#title' => 'Year',
     '#size' => 10,
     '#default_value' => $date_value,
-    '#states' => array(
-      // Only show this field when 'biblio_years_text' is used.
-      'visible' => array(
-        ':input[name="biblio_year_coded"]' => array('value' => "{$in_press_year}"),
-      ),
-    ),
     '#weight' => $form['biblio_year_group']['#weight'] + 1,
   );
-
-  // Hide biblio_date field if we are using it for "In Press Extra".
-  if (!empty($form['biblio_date'])) {
-    $form['biblio_date']['#states'] = array(
-      // Only show this field when 'biblio_years_text' is not used.
-      'invisible' => array(
-        ':input[name="biblio_year_coded"]' => array('value' => "{$in_press_year}"),
-      ),
-    );
-  }
 
   // Add validation message for validating the field via JS.
   $form['biblio_year_group']['#suffix'] = '<div id="biblio-year-group-validate">' . t('Input must be in the form YYYY. Only numerical digits are allowed.') . '</div>';
