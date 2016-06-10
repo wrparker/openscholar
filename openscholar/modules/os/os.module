@@ -1708,6 +1708,12 @@ function os_node_view_alter(&$build) {
  * revisions of a node and hides the link for a single revision.
  */
 function os_contextual_links_view_alter(&$element, $items) {
+
+  // Delete "Remove Widget" from main content region
+  if ($element['#element']['#block']->region == "content_top") {
+    unset($element['#links']['widget-remove']);
+  }
+
   if (empty($element['#element']['#entity_type']) || $element['#element']['#entity_type'] != 'node') {
     // Not a node element.
     return;
