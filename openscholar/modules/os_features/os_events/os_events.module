@@ -70,14 +70,17 @@ function os_events_theme() {
  * @param $mail_key
  *   The mail key for notification.
  */
-function os_events_event_change_notification($registration, $params, $mail_key) {
-  // Triggering email to registrants event timings are changed.
+function os_events_event_change_notification($registration, $params, $mail_key) {  
+  // Not sending notification to past events registrants.
+  if (strtotime($params['@event-date']) < REQUEST_TIME) {
+    return;
+  }
+  // Triggering email to registrants if event timings / location are changed or events are deleted.
   $from = $params['@event-creator-mail'];
   $language = language_default();
-  $to = $registration->anon_mail;
-  $site_timezone = variable_get('date_default_timezone', 'UTC');
-  $params['@old-date'] = $params['@old-date'] . ' ' . $site_timezone;
-  $params['@new-date'] = $params['@new-date'] . ' ' . $site_timezone;
+  $to = $registration->anon_mail;  
+  $params['@event-date'] = date('l, F j, Y g:ia', strtotime($params['@event-date'] .' UTC'));
+  $params['@event-new-date'] = date('l, F j, Y g:ia', strtotime($params['@event-new-date'] .' UTC'));
   $params['@user-name'] = $registration->field_full_name[LANGUAGE_NONE][0]['value'];
   drupal_mail('os_events', $mail_key, $to, $language, $params, $from);
 }
@@ -100,7 +103,7 @@ function os_events_node_delete($node) {
   $event_author = user_load($node->uid);
   $params = array(
     '@title' => $node->title,
-    '@location' => $node->field_event_location[LANGUAGE_NONE][0]['value'],
+    '@location' => !empty($node->field_event_location[LANGUAGE_NONE][0]['value']) ? ' at ' . $node->field_event_location[LANGUAGE_NONE][0]['value'] : '',
     '@event-creator-mail' => $event_author->mail,
     '@site' => variable_get('site_name', 'OpenScholar'),
     '@event-url' => url('calendar', array('absolute' => TRUE))
@@ -134,10 +137,10 @@ function os_events_node_update($node) {
       $event_author = user_load($node->uid);
       $params = array(
         '@title' => $node->title,
-        '@old-date' => $node->original->field_date[LANGUAGE_NONE][0]['value'],
-        '@new-date' => $node->field_date[LANGUAGE_NONE][0]['value'],
-        '@location' => $node->original->field_event_location[LANGUAGE_NONE][0]['value'],
-        '@new-location' => $node->field_event_location[LANGUAGE_NONE][0]['value'],
+        '@event-date' => $node->original->field_date[LANGUAGE_NONE][0]['value'],
+        '@event-new-date' => $node->field_date[LANGUAGE_NONE][0]['value'],
+        '@location' => !empty($node->original->field_event_location[LANGUAGE_NONE][0]['value']) ? ' at ' . $node->original->field_event_location[LANGUAGE_NONE][0]['value'] : '',
+        '@new-location' => !empty($node->field_event_location[LANGUAGE_NONE][0]['value']) ? ' at ' . $node->field_event_location[LANGUAGE_NONE][0]['value'] : '',
         '@event-url' => url('node/' . $node->nid, array('absolute' => TRUE)),
         '@event-creator-mail' => $event_author->mail,
         '@site' => variable_get('site_name', 'OpenScholar')
@@ -175,8 +178,8 @@ function os_events_node_update($node) {
     $event_author = user_load($node->uid);
     $params = array(
       '@title' => $node->title,
-      '@location' => $node->original->field_event_location[LANGUAGE_NONE][0]['value'],
-      '@new-location' => $node->field_event_location[LANGUAGE_NONE][0]['value'],
+      '@location' => !empty($node->original->field_event_location[LANGUAGE_NONE][0]['value']) ? ' at ' . $node->original->field_event_location[LANGUAGE_NONE][0]['value'] : '',
+      '@new-location' => !empty($node->field_event_location[LANGUAGE_NONE][0]['value']) ? ' at ' . $node->field_event_location[LANGUAGE_NONE][0]['value'] : '',
       '@event-creator-mail' => $event_author->mail,
       '@site' => variable_get('site_name', 'OpenScholar')
     );
@@ -192,10 +195,10 @@ function os_events_node_update($node) {
       if (in_array($event_date, $deleted_dates)) {
         continue;
       }
-      $params['@old-date'] = $registration->field_repeating_event_date[LANGUAGE_NONE][0]['value'];
+      $params['@event-date'] = $registration->field_repeating_event_date[LANGUAGE_NONE][0]['value'];
       $registration->field_repeating_event_date[LANGUAGE_NONE][0]['value'] = format_date(strtotime($registration->field_repeating_event_date[LANGUAGE_NONE][0]['value']), 'custom', 'Y-m-d') . ' ' . format_date(strtotime($node->field_date[LANGUAGE_NONE][0]['value']), 'custom', 'H:i:s');
-      $params['@new-date'] = $registration->field_repeating_event_date[LANGUAGE_NONE][0]['value'];
-      $params['@event-url'] = url('node/' . $node->nid, array('absolute' => TRUE, 'query' => array('delta' => $repeats[$params['@new-date']])));
+      $params['@event-new-date'] = $registration->field_repeating_event_date[LANGUAGE_NONE][0]['value'];
+      $params['@event-url'] = url('node/' . $node->nid, array('absolute' => TRUE, 'query' => array('delta' => $repeats[$params['@event-new-date']])));
       entity_save('registration', $registration);
       // Sending email notification to registrants.
       os_events_event_change_notification($registration, $params, 'event_time_updated_notification');
@@ -207,7 +210,7 @@ function os_events_node_update($node) {
     $event_author = user_load($node->uid);
     $params = array(
       '@title' => $node->title,
-      '@location' => $node->original->field_event_location[LANGUAGE_NONE][0]['value'],
+      '@location' => !empty($node->original->field_event_location[LANGUAGE_NONE][0]['value']) ? ' at ' . $node->original->field_event_location[LANGUAGE_NONE][0]['value'] : '',
       '@event-creator-mail' => $event_author->mail,
       '@site' => variable_get('site_name', 'OpenScholar'),
       '@event-url' => url('calendar', array('absolute' => TRUE))
@@ -2236,7 +2239,7 @@ function os_events_mail($key, &$message, $params) {
         $message['subject'] = t("@title has been cancelled", $params);
         $message['body'] = array();
         $message['body'][] = t("Hello @user-name,", $params);
-        $message['body'][] = t('You had been registered for @title on @event-date at @location.', $params);
+        $message['body'][] = t('You had been registered for @title on @event-date@location.', $params);
         $message['body'][] = t('This event has been cancelled. To view our other events, please visit the event page here: @event-url', $params);
         $message['body'][] = t("Questions? Email the event organizer @event-creator-mail.\n\nThe @site Team", $params);
         break;  
@@ -2245,8 +2248,8 @@ function os_events_mail($key, &$message, $params) {
         $message['subject'] = t("Change in @title", $params);
         $message['body'] = array();
         $message['body'][] = t("Hello @user-name,", $params);
-        $message['body'][] = t('You had been registered for @title on @old-date at @location.', $params);
-        $message['body'][] = t('That ​event​ has been changed, and you are now registered for @new-date at @new-location.', $params);
+        $message['body'][] = t('You had been registered for @title on @event-date@location.', $params);
+        $message['body'][] = t('That ​event​ has been changed, and you are now registered for @event-new-date@new-location.', $params);
         $message['body'][] = t('Please visit the event page here: @event-url', $params);
         $message['body'][] = t("Questions? Email the event organizer @event-creator-mail.\n\nThe @site Team", $params);
         break;  
