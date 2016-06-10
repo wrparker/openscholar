@@ -1079,7 +1079,7 @@ function os_publications_node_view_alter(&$build, $type) {
 
       // Display user and date revision info
       $user = user_load($build['#node']->revision_uid);
-      $build['footer']['#markup'] = "<i>This entry was last updated by " . $user->name . " on " . format_date($build['#node']->changed) . "</i>";
+      $build['footer']['#markup'] = "<i>Last updated on " . format_date($build['#node']->changed) . "</i>";
       $build['footer']['#weight'] = 99;
 
       // Remove the second export links that appear at the bottom of full view
