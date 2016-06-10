@@ -2708,3 +2708,10 @@ function os_date_repeat_rrule_description($rrule, $format = 'D M d Y') {
   }
   return t('Repeats !interval!bymonth!byday!count !until !except. !additional', $description);
 }
+
+function os_events_form_node_delete_confirm_alter($form) {
+  if ($form['#node']->type == "event") {
+    $paths = os_get_app_path();
+    $_GET['destination'] = $paths[$form['#node']->type];
+  }
+}
