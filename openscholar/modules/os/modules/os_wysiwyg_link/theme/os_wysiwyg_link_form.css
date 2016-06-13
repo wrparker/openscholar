@@ -99,7 +99,7 @@ div.vertical-tabs .vertical-tabs-list {
 #file-entity-add-upload .form-help {
 	position: absolute;
 	top: 0;
-	right: 0;
+	right: -15px;
 }
 
 #file-entity-add-upload .description {
@@ -109,7 +109,7 @@ div.vertical-tabs .vertical-tabs-list {
 	border: 1px solid lightgray;
 	border-radius: 5px;
 	width: 200px;
-	bottom: -125px;
+	bottom: -146px;
 	left: 0;
 }
 
