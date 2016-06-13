@@ -725,31 +725,14 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#default_value' => $year_coded_value,
   );
 
-  $in_press_year = array_search('In Press', $years);
   $form['biblio_year_coded_extrayear'] = array(
     '#type' => 'textfield',
     '#description' => 'e.g. 2015',
-    '#title' => 'Expected In Press Year',
+    '#title' => 'Year',
     '#size' => 10,
     '#default_value' => $date_value,
-    '#states' => array(
-      // Only show this field when 'biblio_years_text' is used.
-      'visible' => array(
-        ':input[name="biblio_year_coded"]' => array('value' => "{$in_press_year}"),
-      ),
-    ),
     '#weight' => $form['biblio_year_group']['#weight'] + 1,
   );
-
-  // Hide biblio_date field if we are using it for "In Press Extra".
-  if (!empty($form['biblio_date'])) {
-    $form['biblio_date']['#states'] = array(
-      // Only show this field when 'biblio_years_text' is not used.
-      'invisible' => array(
-        ':input[name="biblio_year_coded"]' => array('value' => "{$in_press_year}"),
-      ),
-    );
-  }
 
   // Add validation message for validating the field via JS.
   $form['biblio_year_group']['#suffix'] = '<div id="biblio-year-group-validate">' . t('Input must be in the form YYYY. Only numerical digits are allowed.') . '</div>';
@@ -878,7 +861,7 @@ function os_publications_entity_prepare_view($entities, $type, $langcode) {
   // Load a specific node into the user object for later theming.
   if ($type == 'node') {
     foreach ($entities as $nid => $entity) {
-      if($entity->type == 'biblio' && $entity->biblio_year == 'In Press' && !empty($entity->biblio_date)) {
+      if($entity->type == 'biblio' && ($entity->biblio_year == 'In Press' || $entity->biblio_year == 'In Preparation' || $entity->biblio_year == 'Working Paper' ) && !empty($entity->biblio_date)) {
         $entity->biblio_year .= ", {$entity->biblio_date}";
         $entity->biblio_date = '';
       }
