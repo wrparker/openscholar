@@ -1060,6 +1060,12 @@ function os_publications_node_view_alter(&$build, $type) {
         $build['field_biblio_image']['#access'] = FALSE;
       }
 
+      // Do not display update time on a newly created node
+      if ($build['#node']->created != $build['#node']->changed) {
+        $build['footer']['#markup'] = "<i>Last updated on " . format_date($build['#node']->changed, $type = 'custom', $format = 'm/d/Y') . "</i>";
+        $build['footer']['#weight'] = 99;
+      }
+
       // Remove the second export links that appear at the bottom of full view
       // of a publication.
       unset($build['links']['biblio_tagged'], $build['links']['biblio_xml'], $build['links']['biblio_bibtex'], $build['links']['biblio_google_scholar']);
@@ -1166,6 +1172,11 @@ function os_publications_node_presave($node) {
   $tags = variable_get('html_title_allowed_elements', array('em', 'sub', 'sup'));
 
   $node->title = substr(strip_tags($text, '<' . implode('><', $tags) . '>'), 0, 255);
+
+  // Ensure created and changed timestamps are synced when the node is new
+  if ($node->is_new) {
+    $node->changed = $node->created;
+  }
 }
 
 /**
