@@ -1077,10 +1077,11 @@ function os_publications_node_view_alter(&$build, $type) {
         $build['field_biblio_image']['#access'] = FALSE;
       }
 
-      // Display user and date revision info
-      $user = user_load($build['#node']->revision_uid);
-      $build['footer']['#markup'] = "<i>Last updated on " . format_date($build['#node']->changed) . "</i>";
-      $build['footer']['#weight'] = 99;
+      // Do not display update time on a newly created node
+      if ($build['#node']->created != $build['#node']->changed) {
+        $build['footer']['#markup'] = "<i>Last updated on " . format_date($build['#node']->changed) . "</i>";
+        $build['footer']['#weight'] = 99;
+      }
 
       // Remove the second export links that appear at the bottom of full view
       // of a publication.
