@@ -1,5 +1,5 @@
 (function ($) {
 
-  angular.module('cp-app-settings-form', ['mediaBrowser', 'MediaBrowserField']);
+  angular.module('file-entity-add-upload', ['mediaBrowser', 'MediaBrowserField']);
 
 })(jQuery);
