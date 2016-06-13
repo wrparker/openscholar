@@ -1189,6 +1189,11 @@ function os_publications_node_presave($node) {
   $tags = variable_get('html_title_allowed_elements', array('em', 'sub', 'sup'));
 
   $node->title = substr(strip_tags($text, '<' . implode('><', $tags) . '>'), 0, 255);
+
+  // Ensure created and changed timestamps are synced when the node is new
+  if ($node->is_new) {
+    $node->changed = $node->created;
+  }
 }
 
 /**
