@@ -725,7 +725,6 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#default_value' => $year_coded_value,
   );
 
-  $in_press_year = array_search('In Press', $years);
   $form['biblio_year_coded_extrayear'] = array(
     '#type' => 'textfield',
     '#description' => 'e.g. 2015',
@@ -862,7 +861,7 @@ function os_publications_entity_prepare_view($entities, $type, $langcode) {
   // Load a specific node into the user object for later theming.
   if ($type == 'node') {
     foreach ($entities as $nid => $entity) {
-      if($entity->type == 'biblio' && $entity->biblio_year == 'In Press' && !empty($entity->biblio_date)) {
+      if($entity->type == 'biblio' && ($entity->biblio_year == 'In Press' || $entity->biblio_year == 'In Preparation' || $entity->biblio_year == 'Working Paper' ) && !empty($entity->biblio_date)) {
         $entity->biblio_year .= ", {$entity->biblio_date}";
         $entity->biblio_date = '';
       }
