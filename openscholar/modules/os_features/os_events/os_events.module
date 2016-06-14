@@ -2309,6 +2309,12 @@ function os_events_form_event_node_form_alter(&$form, &$form_state) {
   $form['event_registration_group']['field_event_registration'] = $form['field_event_registration'];
   unset($form['field_mutliple_event_signup']);
   unset($form['field_event_registration']);
+  // Markup for repeating event warning message.
+  $form['field_date'][LANGUAGE_NONE][0]['repeat_event_change_message'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div id="event-change-notify" class="messages warning element-hidden">If you make any changes to the event, please inform the registrants.</div>',
+    '#weight' => 1.3
+  );
 }
 
 /**
