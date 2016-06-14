@@ -376,11 +376,8 @@ function os_common_form_node_form_alter(&$form, &$form_state) {
  */
 function os_common_form_cp_app_settings_form_alter(&$form, $form_state) {
   // Adding the media browser to the profile settings page.
-  $form['#attached']['js'][] = drupal_get_path('module', 'media_browser') . '/misc/MediaBrowserField.js';
-  $form['#attached']['library'][] = array('os_common', 'FileEditorModal');
-  $form['#attached']['library'][] = array('os_common', 'media_browser');
-  $form['#attached']['library'][] = array('os_common', 'angular-ui-sortable');
   $form['#after_build'][] = 'os_common_set_node_form_angular_app';
+  os_common_angular_apps('mediaBrowser');
 }
 
 /**
