@@ -631,6 +631,7 @@ function os_process_node(&$vars) {
   // Now we know whether the read more links needs to be displayed or not.
   // With this information we can move the read more link so it can be displayed inline with the block
   if ($body_shortened && !$trailing_break_tag) {
+    module_load_include('inc', 'os', 'includes/os');
     $link = $vars['content']['links']['node']['#links']['node-readmore'];
     $link['attributes']['class'][] = 'node-readmore';
 
