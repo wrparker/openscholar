@@ -5,7 +5,8 @@
  *   1. Changes the menu select when the user drags a row
  *   2. Removes the 'hidden' class when the user selects a new menu from the select.
  */
-(function($) {
+(function ($) {
+
   var drag;
 
   function changeSelect() {

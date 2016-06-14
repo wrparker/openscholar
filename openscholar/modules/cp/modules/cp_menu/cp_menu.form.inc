@@ -141,7 +141,6 @@ function cp_menu_build_form($form, $form_state, $menu = ''){
     )
   );
 
-  $form['#validate'] = array('cp_menu_submit_validate');
   $form['#submit'] = array('cp_menu_submit_form');
 
   return $form;
