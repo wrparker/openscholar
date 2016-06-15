@@ -2116,8 +2116,11 @@ function os_form_user_login_alter(&$form, $form_state) {
   // $form['name'] and $form['pass'] both will be unset from pinserver_authenticate module
   if (isset($form['pin-fieldset'])) {
     $form['pin-fieldset']['#title'] = t('Log in using your OpenScholar username');
-    $form['pin-fieldset']['name']['#title'] = t('Username / E-Mail');
+    $form['pin-fieldset']['name']['#title'] = t('OpenScholar Username / E-Mail');
     $form['pin-fieldset']['pass']['#description'] = t('!request', array('!request' => l('Forgot your password?', 'user/password')));
+    $form['pin-fieldset']['pass']['#title'] = "OpenScholar Password";
+
+    unset($form['pin-fieldset']['name']['#description']);
   }
 
   // If pinserver_authenticate module is not overriding login form, then $form['name'] and $form['pass'] will not be unset.
