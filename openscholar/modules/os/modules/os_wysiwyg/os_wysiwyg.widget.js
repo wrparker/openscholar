@@ -11,11 +11,9 @@
 
       CKEDITOR.on("instanceReady", function(event) {
         var editor = event.editor;
-        $('#cke_' + editor.name).find('.cke_reset_all').hide();
 
         editor.on('focus', function() {
           var instance = $('#cke_' + editor.name);
-          instance.find('.cke_reset_all').show();
 
           if (!context.changed) {
             // Changing the size when focusing.
@@ -24,12 +22,6 @@
           }
         });
 
-        editor.on('insertElement', function(editor) {
-        });
-
-        editor.on('blur', function() {
-          $('#cke_' + editor.name).find('.cke_reset_all').hide();
-        });
       });
     }
   };
