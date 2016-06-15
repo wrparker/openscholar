@@ -35,9 +35,9 @@ function os_wysiwyg_filter_default_formats() {
     sup,sub,
     table[scope|id|headers|style|border|align<center?left?right|cellpadding|cellspacing|bgcolor],
     tr[scope|id|headers|align<center?justify?left?right|valign],
-    td[scope|id|headers|colspan|rowspan|align<center?justify?left?right|valign],
+    td[vertical-align|scope|id|headers|colspan|rowspan|align<center?justify?left?right|valign],
     th[scope|id|headers|colspan|rowspan|align<center?justify?left?right|valign],
-    thead,
+    thead[scope|id|headers],
     caption,
     address,h2,h3,h4,h5,h6,pre,
     strong/b,em/i,strike,s,u',
@@ -146,9 +146,9 @@ function os_wysiwyg_filter_default_formats() {
           'style_table' => array(
             'border-collapse' => 'border-collapse',
             'border-spacing' => 'border-spacing',
+            'table-layout' => 'table-layout',
             'caption-side' => 0,
             'empty-cells' => 0,
-            'table-layout' => 'table-layout',
           ),
           'style_user' => array(
             'cursor' => 0,
