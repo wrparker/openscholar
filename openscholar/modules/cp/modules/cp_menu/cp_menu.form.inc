@@ -120,8 +120,8 @@ function cp_menu_build_form($form, $form_state, $menu = ''){
   );
 
   $form['dialog'] = array(
-    '#markup' => '<div id="dialog" title="' . t('To many nested items') . '" style="display: none">
-      <p>' . t('Our themes do not support more than three menu levels.') . ' </p>
+    '#markup' => '<div id="dialog" title="' . t('Too many nested items') . '" style="display: none">
+      <p>' . t('Our themes do not support more than four menu levels.') . ' </p>
     </div>',
   );
 
