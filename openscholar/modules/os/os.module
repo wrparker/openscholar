@@ -2115,17 +2115,33 @@ function os_form_user_login_alter(&$form, $form_state) {
   // If user login form is overridden by pinserver_authenticate module, then $form['pin-fieldset'] will be initialized from there.
   // $form['name'] and $form['pass'] both will be unset from pinserver_authenticate module
   if (isset($form['pin-fieldset'])) {
-    $form['pin-fieldset']['#title'] = t('Log in using your OpenScholar username');
+    $form['pin-fieldset']['#title'] = t('                                         ');
     $form['pin-fieldset']['name']['#title'] = t('OpenScholar Username / E-Mail');
     $form['pin-fieldset']['pass']['#description'] = t('!request', array('!request' => l('Forgot your password?', 'user/password')));
     $form['pin-fieldset']['pass']['#title'] = "OpenScholar Password";
 
+    $form['pin-fieldset']['login'] = array(
+        '#type' => 'submit',
+        '#prefix' => '<span class="pin-button">',
+        '#value' => t('Log in'),
+        '#suffix' => '</span>',
+    );
+    $form['pin-fieldset']['back'] = array(
+        '#type' => 'button',
+        '#prefix' => '<a href="cancel">',
+        '#value' => t('Back'),
+        '#suffix' => '</a>',
+    );
+    $form['pin-fieldset']['#collapsible'] = false;
+    $form['pin-fieldset']['#collapsed'] = false;
+
     unset($form['pin-fieldset']['name']['#description']);
+    unset($form['pin-fieldset']['actions']['submit']);
   }
 
   // If pinserver_authenticate module is not overriding login form, then $form['name'] and $form['pass'] will not be unset.
   if (isset($form['name']) && isset($form['pass'])) {
-    $form['name']['#title'] = t('Username / E-Mail');
+    $form['name']['#title'] = t('OpenScholar Username / E-Mail');
     unset($form['pass']['#description']);
   }
 }
