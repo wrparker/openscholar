@@ -28,6 +28,7 @@ body.overlay {
 .page-cp.overlay #page {
   position: relative;
   width: auto;
+}
 
 /* PAGE WHEN MENU IS OPEN */
 
