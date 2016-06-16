@@ -35,7 +35,7 @@ function os_wysiwyg_filter_default_formats() {
     sup,sub,
     table[scope|id|headers|style|border|align<center?left?right|cellpadding|cellspacing|bgcolor],
     tr[scope|id|headers|align<center?justify?left?right|valign],
-    td[vertical-align|scope|id|headers|colspan|rowspan|align<center?justify?left?right|valign],
+    td[scope|id|headers|colspan|rowspan|align<center?justify?left?right|valign],
     th[scope|id|headers|colspan|rowspan|align<center?justify?left?right|valign],
     thead[scope|id|headers],
     caption,
