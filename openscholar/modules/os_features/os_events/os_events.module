@@ -2312,7 +2312,7 @@ function os_events_form_event_node_form_alter(&$form, &$form_state) {
   // Markup for repeating event warning message.
   $form['field_date'][LANGUAGE_NONE][0]['repeat_event_change_message'] = array(
     '#type' => 'markup',
-    '#markup' => '<div id="event-change-notify" class="messages warning element-hidden">If you make any changes to the event, please inform the registrants.</div>',
+    '#markup' => '<div id="event-change-notify" class="messages warning element-hidden">You will need to inform the registrants if you make any changes to this event. If you change the date, registrants will be removed and will have to re-register.</div>',
     '#weight' => 1.3
   );
 }
