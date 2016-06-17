@@ -253,7 +253,7 @@ ul.nice-menu ul {
 .block-boxes-os_taxonomy_fbt.navigation ul li {
     background-color: #FFF;
   }
-.block-boxes-os_boxes_facetapi_vocabulary.navigation ,ul
+.block-boxes-os_boxes_facetapi_vocabulary.navigation ul,
 .block-boxes-os_taxonomy_fbt.navigation ul {
     border-bottom: 1px solid #EBE3DF;
     border-left: 1px solid #EBE3DF;
