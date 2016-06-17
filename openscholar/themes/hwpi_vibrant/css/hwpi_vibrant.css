@@ -601,18 +601,22 @@ table td.mini .mini-day-on a {
 .section-nav ul ul a.active {
     color: #1E1E1E !important;
 }
+.block-boxes-os_boxes_facetapi_vocabulary.navigation .block-content,
 .block-boxes-os_taxonomy_fbt.navigation .block-content {
     padding: 0 !important;
 }
+.block-boxes-os_boxes_facetapi_vocabulary.navigation ul,
 .block-boxes-os_taxonomy_fbt.navigation ul {
     border-bottom: none;
     border-left: none;
     border-right: none;
     border-top: none;
 }
+.block-boxes-os_boxes_facetapi_vocabulary.navigation ul li,
 .block-boxes-os_taxonomy_fbt.navigation ul li {
     border-top: none;
 }
+.block-boxes-os_boxes_facetapi_vocabulary.navigation a,
 .block-boxes-os_taxonomy_fbt.navigation a {
     font-weight: bold;
 }
