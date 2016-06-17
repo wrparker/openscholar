@@ -598,6 +598,8 @@ function os_process_node(&$vars) {
   // Only proceeds if we have a "Read more" link.
   if (!isset($vars['content']['links']['node']['#links']['node-readmore'])) {
     return;
+  } else {
+    $vars['content']['links']['node']['#links']['node-readmore']['attributes']['class'][] = 'node-readmore';
   }
 
   // Hides the "Read more" link if there is no body value.
