@@ -443,6 +443,12 @@ class os_sv_list extends os_boxes_default {
     if (module_exists('vsite') && $space = spaces_get_space()) {
       $efq->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $space->id);
     }
+    // Drupal broke this and after two years has not fixed it.
+    // @see: https://www.drupal.org/node/1292930
+    // They made a new property, orderedResults, but still put the actual results in the old property, ordered_results
+    // So the documented variable is always empty and the undocumented variable is sometimes not present
+    // so I set the initial variable here.
+    $efq->ordered_results = array();
     return $efq;
   }
 
