@@ -1,51 +1,114 @@
-@import url(https://fonts.googleapis.com/css?family=Ovo);
-@import url(https://fonts.googleapis.com/css?family=Muli);
+@import url(https://fonts.googleapis.com/css?family=Oswald:400,700,300);
+@import url(https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700);
 
-
- #boxes-box-site_info, #boxes-box-site_info a{
-    font-family: 'ovo',sans-serif !important;
+#branding_footer,
+#branding_header {
+    display: none;
 }
+.node-type-page .breadcrumb, .breadcrumb, .breadcrumb a,
+h1#page-title {color:#fff;}
 
-#menu-bar ul.nice-menu a {
-    font-family: 'muli',sans-serif !important;
+.not-front .sidebar {margin-top:170px;}
+
+.not-front #content-panels,
+#main-content #content {
+  
+    margin-top: 100px;
 }
-
 
 body {
-background-color:#ECF0F1;
+    color: #545454;
+}
+.page {
+	background:url('/files/gking2/files/commencement3.jpg?m=1466196653') center 50px no-repeat;
+	
+}
+.biblio-title a,
+a,
+a:visited {
+    color: #065DB2;
 }
 
-#branding_header {
-    display:none;
-}
-
-#boxes-box-site_info a {
-    color: #fff;
+.biblio-title a, .biblio-title-chicago a {
+	font-weight:normal !important;
 }
 
 #menu-bar {
-   
-background: #444;
-   border-top:3px solid #E67E22;
-    opacity: .60;
-  
+    background-color: #FFF;
+    border-top: 3px solid #FFB63B;
+}
+#menu-bar ul.nice-menu a {
+    color: #444;
+    border-bottom: 3px solid #fff;
+    padding:16px 14px 13px 14px;
+    transition: all .125s linear .125s;
+}
+
+
+
+#menu-bar ul.nice-menu a.active,
+#menu-bar ul.nice-menu a:hover,
+#menu-bar ul.nice-menu .menuparent.over > a,
+#menu-bar ul.nice-menu .menuparent a:hover,
+#menu-bar ul.nice-menu .menuparent a.active {
+    background-color: #FFF;
+    border-bottom: 3px solid #065DB2;
+       color: #444;
 }
 
 .header-none #menu-bar {
     top: 0;
-
-   
 }
+body,
 
-#menu-bar ul.nice-menu a {
-    
-    font-size: 16px;
-   
-   
+.page-search .title a,
+#content-column .block.block-boxes-os_boxes_manual_list .links.inline a,
+.more-link,
+.links a,
+#footer ul.menu a,
+.boxes-box-content h2,
+.section-nav a,
+
+#tinymce h2,
+#tinymce h3,
+#tinymce h4,
+.block-boxes-os_taxonomy_fbt.navigation,
+#footer ul.menu li ul li a,
+
+
+.date-nav h3 {
+    font-family: 'Merriweather', sans-serif !important;
 }
+.node-type-page .breadcrumb, .breadcrumb, .breadcrumb a,
+.region-header-third ul.nice-menu a,
+#menu-bar ul.nice-menu a,
+#boxes-box-site_info,
+#boxes-box-site_info a,
+h2.block-title,
+#content-column h2,
+#content-column h3,
+#content-column h4,
+#page-title,
+.node-title
 
-a.biblio-abstract-link.toggle {
- 
-    background-position:  0 -398px;
+ {
+    font-family: 'Oswald', sans-serif !important;
+}
+#block-os-primary-menu {
+    float: right;
+    width: 75% !important;
+}
+#block-boxes-site-info {
+    float: left;
+    width: 25% !important;
+}
+ul.nice-menu-down {
+    float: right;
+}
+#boxes-box-site_info h1 {
+    padding: 8px 0 8px 12px;
+}
+#footer {
+    background-color: #555;
    
 }
