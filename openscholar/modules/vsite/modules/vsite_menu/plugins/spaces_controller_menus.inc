@@ -138,10 +138,11 @@ class spaces_controller_menus extends spaces_controller {
       // May not return data if it is an external link
       $item = $this->get_router_data($ml['router_path']);
 
-      if (is_array($item))
+      if (is_array($item)) {
         $ml = array_merge($item, $ml);
+      }
 
-      $links[] = $ml;
+      $links[$ml['mlid']] = $ml;
     }
 
     $this->menuLinks = $this->prepareMenuTree($links);
@@ -166,10 +167,10 @@ class spaces_controller_menus extends spaces_controller {
     foreach ($links as $link) {
 
       if ($link['depth'] > 1) {
-        $depths[$link['depth']][$link['plid']][] = $link;
+        $depths[$link['depth']][$link['plid']][$link['mlid']] = $link;
       }
       else {
-        $depths[$link['depth']][] = $link;
+        $depths[$link['depth']][$link['mlid']] = $link;
       }
     }
 
@@ -188,13 +189,22 @@ class spaces_controller_menus extends spaces_controller {
    * @return array
    */
   protected function menuBuildTree($menu_links, $depth) {
-
     $links = [];
 
     foreach ($menu_links as $item => $menu_link) {
       $next_depth = $depth + 1;
 
       $below = array();
+
+      if (isset($this->menuLinks[$next_depth + 1][$menu_link['mlid']])) {
+        // In case we took a sub menu and move it one level down, the sub menus
+        // of that menu are still in the previous depth.
+
+        // todo check at the form submit that the depth of the menus is correct
+        // and fix it.
+        $next_depth = $next_depth + 1;
+      }
+
       if (isset($this->menuLinks[$next_depth][$menu_link['mlid']])) {
         $below = $this->menuBuildTree($this->menuLinks[$next_depth][$menu_link['mlid']], $next_depth);
       }

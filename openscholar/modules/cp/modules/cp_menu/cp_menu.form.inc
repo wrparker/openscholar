@@ -11,7 +11,6 @@ function cp_menu_build_form($form, $form_state, $menu = ''){
   ctools_include('ajax');
   ctools_include('modal');
   ctools_include('menu', 'os');
-  drupal_add_library('system', 'ui.dialog');
 
   $menus = os_get_menus();
 
