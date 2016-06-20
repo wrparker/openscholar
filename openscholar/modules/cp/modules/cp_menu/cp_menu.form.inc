@@ -119,12 +119,6 @@ function cp_menu_build_form($form, $form_state, $menu = ''){
     '#markup' => ctools_modal_text_button($text, 'cp/build/menu/nojs/add', $text),
   );
 
-  $form['dialog'] = array(
-    '#markup' => '<div id="dialog" title="' . t('Too many nested items') . '" style="display: none">
-      <p>' . t('Our themes do not support more than four menu levels.') . ' </p>
-    </div>',
-  );
-
   $form['actions'] = array(
     '#type' => 'actions',
     'submit' => array(

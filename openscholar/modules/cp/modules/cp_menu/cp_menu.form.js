@@ -85,12 +85,17 @@
   Drupal.behaviors.cpMenuFormValidation = {
     attach: function(ctx) {
       $('#cp-menu-build-form').submit( function(event) {
+        var show = false;
         $('.draggable').each(function() {
           if ($(this).find('.indentation').length >= 4) {
-            jQuery("#dialog").dialog({ modal: true });
             event.preventDefault();
+            show = true;
           }
         });
+
+        if (show) {
+          $('#cp-menu-build-form').prepend('<div class="messages error">' + Drupal.t('Our themes do not support more than four menu levels') + '</div>');
+        }
       });
     }
   };
