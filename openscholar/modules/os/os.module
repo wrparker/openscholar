@@ -2120,20 +2120,29 @@ function os_form_user_login_alter(&$form, $form_state) {
     $form['pin-fieldset']['pass']['#description'] = t('!request', array('!request' => l('Forgot your password?', 'user/password')));
     $form['pin-fieldset']['pass']['#title'] = "OpenScholar Password";
 
+    $pin_button_attributes = array(
+        'style' => array(
+            'display: inline-block;',
+            'width: 100px;',
+            'margin: 0 3px 0 0;'
+        ),
+    );
+
     $form['pin-fieldset']['login'] = array(
         '#type' => 'submit',
-        '#prefix' => '<span class="pin-button">',
         '#value' => t('Log in'),
-        '#suffix' => '</span>',
+        '#attributes' => $pin_button_attributes
     );
     $form['pin-fieldset']['back'] = array(
         '#type' => 'button',
         '#prefix' => '<a href="cancel">',
         '#value' => t('Back'),
         '#suffix' => '</a>',
+        '#attributes' => $pin_button_attributes
     );
-    $form['pin-fieldset']['#collapsible'] = false;
-    $form['pin-fieldset']['#collapsed'] = false;
+
+    unset($form['pin-fieldset']['#collapsible']);
+    unset($form['pin-fieldset']['#collapsed']);
 
     unset($form['pin-fieldset']['name']['#description']);
     unset($form['pin-fieldset']['actions']['submit']);

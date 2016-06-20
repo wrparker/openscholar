@@ -284,6 +284,7 @@ background-size: 60px 60px;
     background: #FF3A2D;
 }
 .pin-button a,
+#edit-login, #edit-back,
 fieldset.pin-fieldset legend a,
 #user-login fieldset legend a,
 .page-site-register .form-submit,
