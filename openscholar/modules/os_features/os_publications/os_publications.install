@@ -1563,3 +1563,22 @@ function os_profiles_update_7045() {
 function os_publications_update_7046() {
   variable_set('biblio_pager', 'pager');
 }
+
+/**
+ * Add 'Import from file' permission to default roles.
+ */
+function os_publications_update_7047() {
+  $default = og_get_default_roles();
+  $q = db_select('og_role', 'ogr')
+      ->fields('ogr', array('rid'))
+      ->condition('name', $default, 'IN')
+      ->execute();
+
+  $count = 0;
+  foreach ($q as $r) {
+    $count++;
+    og_role_grant_permissions($r->rid, array('import from file'));
+  }
+
+  return t('Added \'import from file\' permission to '.$count.' roles.');
+}
