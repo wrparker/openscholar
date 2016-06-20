@@ -543,6 +543,12 @@ function os_events_process_node(&$variables) {
     ));
     $variables['content']['field_date'][0]['#markup'] = str_replace($rule, '', $variables['content']['field_date'][0]['#markup'] );
   }
+
+  // If the readmore link has already been inserted inline into the body,
+  // remove it from the render array, so it's not printed twice
+  if (preg_match("/\bnode-readmore\b/", $vars['content']['body'][0]['#markup'])) {
+    unset($vars['content']['links']['node']['#links']['node-readmore']);
+  }
 }
 
 /**
@@ -2707,4 +2713,19 @@ function os_date_repeat_rrule_description($rrule, $format = 'D M d Y') {
     $description['!additional'] = trim(t('Also includes !additional_dates.', array('!additional_dates' => implode(', ', $values))));
   }
   return t('Repeats !interval!bymonth!byday!count !until !except. !additional', $description);
+}
+
+/*
+ * Implements hook_form_{form_id}_alter
+ *
+ * Fix destination for event deletion
+ */
+function os_events_form_node_delete_confirm_alter($form) {
+  if ($form['#node']->type == "event") {
+        if ((strpos($_GET['destination'], "calendar/past_events") === FALSE) &&
+            (strpos($_GET['destination'], "calendar/upcoming") === FALSE)) {
+        $paths = os_get_app_path();
+        $_GET['destination'] = $paths[$form['#node']->type];
+    }
+  }
 }

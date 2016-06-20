@@ -598,6 +598,8 @@ function os_process_node(&$vars) {
   // Only proceeds if we have a "Read more" link.
   if (!isset($vars['content']['links']['node']['#links']['node-readmore'])) {
     return;
+  } else {
+    $vars['content']['links']['node']['#links']['node-readmore']['attributes']['class'][] = 'node-readmore';
   }
 
   // Hides the "Read more" link if there is no body value.
@@ -631,6 +633,7 @@ function os_process_node(&$vars) {
   // Now we know whether the read more links needs to be displayed or not.
   // With this information we can move the read more link so it can be displayed inline with the block
   if ($body_shortened && !$trailing_break_tag) {
+    module_load_include('inc', 'os', 'includes/os');
     $link = $vars['content']['links']['node']['#links']['node-readmore'];
     $link['attributes']['class'][] = 'node-readmore';
 
@@ -1627,7 +1630,7 @@ function os_context_block_info_alter(&$blocks) {
  */
 function os_node_insert($node) {
   if ($node->status == NODE_PUBLISHED) {
-    drupal_set_message(t('Your updates will go live within the next 15 minutes.'));
+    drupal_set_message(t('Your updates will go live within the next 15 minutes.'), 'status', FALSE);
   }
 }
 
@@ -1636,7 +1639,7 @@ function os_node_insert($node) {
  */
 function os_node_update($node) {
   if ($node->original->status == NODE_PUBLISHED || $node->status == NODE_PUBLISHED) {
-    drupal_set_message(t('Your updates will go live within the next 15 minutes.'));
+    drupal_set_message(t('Your updates will go live within the next 15 minutes.'), 'status', FALSE);
   }
 }
 
@@ -1699,6 +1702,12 @@ function os_node_view_alter(&$build) {
  * revisions of a node and hides the link for a single revision.
  */
 function os_contextual_links_view_alter(&$element, $items) {
+
+  // Delete "Remove Widget" from main content region
+  if ($element['#element']['#block']->delta == "main_content") {
+    unset($element['#links']['widget-remove']);
+  }
+
   if (empty($element['#element']['#entity_type']) || $element['#element']['#entity_type'] != 'node') {
     // Not a node element.
     return;
