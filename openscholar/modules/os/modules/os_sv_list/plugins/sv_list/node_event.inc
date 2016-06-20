@@ -82,6 +82,9 @@ class sv_list_node_event extends sv_list_plugin  {
     $events_to_show = $options['show'];
     switch ($events_to_show) {
       case 'all_events':
+
+        // force the date field to be added to the query
+        $efq->fieldDeltaCondition('field_date', NULL, 'IS NOT NULL');
         break;
       case 'past_events':
         // Show past events. For all sorts except for
