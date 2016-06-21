@@ -2291,12 +2291,16 @@ function os_events_form_event_node_form_alter(&$form, &$form_state) {
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
   $form['#validate'][] = 'os_events_validate_repeat_on_checkbox';
   // Attaching form state behavior to show the checkbox only when signup and repeat checkboxes are with checked state.
-  $form['field_mutliple_event_signup']['#states'] = array(
-    'visible' => array(
-      ':input[name="field_event_registration[und][0][registration_type]"]' => array('checked' => TRUE),
-      ':input[name="field_date[und][0][show_repeat_settings]"]' => array('checked' => TRUE),
-    ),
-  );
+  if( !isset($form_state['storage']['confirm'] ) ) {
+    $form['field_mutliple_event_signup']['#states'] = array(
+      'visible' => array(
+        ':input[name="field_event_registration[und][0][registration_type]"]' => array('checked' => TRUE),
+        ':input[name="field_date[und][0][show_repeat_settings]"]' => array('checked' => TRUE),
+      ),
+    );
+  } else {
+    $form['event_registration_group']['field_mutliple_event_signup']['#attributes']['class'][] = 'element-hidden';
+  }
   // Div wrapper to display Sign up and multiple registration select checkbox jointly.
   $form['event_registration_group'] = array(
     '#type' => '#markup',
@@ -2315,6 +2319,69 @@ function os_events_form_event_node_form_alter(&$form, &$form_state) {
     '#markup' => '<div id="event-change-notify" class="messages warning element-hidden">You will need to inform the registrants if you make any changes to this event. If you change the date, registrants will be removed and will have to re-register.</div>',
     '#weight' => 1.3
   );
+
+  if(!isset($form_state['storage']['confirm']) && isset($form['nid']['#value'])) {
+    $form['actions']['submit']['#submit'] = array('os_events_form_submit');
+  } elseif (isset($form_state['storage']['confirm']) && isset($form['nid']['#value'])) {
+    $form = confirm_form($form, '', '', $description = "Warning: If you change the date, registrants will be removed and will have to re-register. Learn how to export the registrant list " . l('here', 'http://docs.openscholar.harvard.edu', array('attributes' => array('target' => '_blank'))) . ".<br/></br>", "Ok", "Cancel" );
+    $form['actions']['submit']['#submit'][] = 'node_form_submit';
+    $form['menu']['#attributes']['class'][] = 'element-hidden';
+    $form['#after_build'][] = 'os_events_confirm_after_build';
+    hide($form['title']);
+    $form['title']['#default_value'] = $form_state['values']['title'];
+  }
+}
+
+/**
+ * After build callback for event_node_form form.
+ */
+function os_events_confirm_after_build(&$form, &$form_state) {
+  global $base_path;
+  $form['field_date']['#attributes']['class'][] = 'element-hidden';
+  $form['actions_top']['#attributes']['class'][] = 'element-hidden';
+  $form['event_registration_group']['#attributes']['class'][] = 'element-hidden';
+  $form['field_upload']['#attributes']['class'][] = 'element-hidden';
+  $form['body']['#attributes']['class'][] = 'element-hidden';
+  $form['field_event_location']['#attributes']['class'][] = 'element-hidden';
+  $form['options']['#attributes']['class'][] = 'element-hidden';
+  $form['author']['#attributes']['class'][] = 'element-hidden';
+  $form['path']['#attributes']['class'][] = 'element-hidden';
+  $form['actions']['delete']['#access'] = FALSE;
+  $form['og_vocabulary']['#attributes']['class'][] = 'element-hidden';
+  $form['event_registration_group']['field_event_registration']['#attributes']['class'][] = 'element-hidden';
+  $form['event_registration_group']['field_mutliple_event_signup']['#attributes']['class'][] = 'element-hidden';
+  $menu_item = menu_get_item();
+  $form['actions']['cancel']['#markup'] = l('Cancel', $menu_item['href'], array('query' => drupal_get_destination(), 'attributes' => array('class' => array('form-cancel'))));
+  return $form;
+}
+
+/**
+ * #submit callback for event_node_form form.
+ */
+function os_events_form_submit($form, &$form_state) {
+  $repeating_event = isset($form_state['values']['field_date'][LANGUAGE_NONE][0]['rrule']);
+  if($repeating_event && !isset($form_state['storage']['confirm'])) {
+    $deleted_dates = array();
+    $submitted_dates = array();
+    foreach ($form_state['values']['field_date'][LANGUAGE_NONE] as $date) {
+      $submitted_dates[] = format_date(strtotime($date['value']), 'custom', 'Y-m-d');
+    }
+    // Detecting deleted event date instances for repeating events.
+    foreach ($form['#node']->field_date[LANGUAGE_NONE] as $date) {
+      if (!in_array(format_date(strtotime($date['value']), 'custom', 'Y-m-d'), $submitted_dates)) {
+        $deleted_dates[] = format_date(strtotime($date['value']), 'custom', 'Y-m-d');
+      }
+    }
+    // If at least one existing event dates are deleted, warning will be shown, otherwise form will be submitted as it is.
+    if (count($deleted_dates) > 0) {
+      $form_state['storage']['confirm'] = TRUE;
+      $form_state['rebuild'] = TRUE;
+    } else {
+      node_form_submit($form, $form_state);
+    }
+  } else {
+    node_form_submit($form, $form_state);
+  }
 }
 
 /**

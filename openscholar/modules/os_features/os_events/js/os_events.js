@@ -75,20 +75,15 @@
   Drupal.behaviors.osRepeatingEventChange = {
     attach: function () {
       // Warning will be hidden if repeat checkbox is unchecked.
+      if ($('#edit-field-date-und-0-show-repeat-settings:checked').length) {
+        $('#event-change-notify').removeClass('element-hidden');
+      }
+      // Warning will be shown if repeat checkbox in checked.
       $('#edit-field-date-und-0-show-repeat-settings').change(function(){
-        if (!$('#edit-field-date-und-0-show-repeat-settings:checked').length) {
+        if ($('#edit-field-date-und-0-show-repeat-settings:checked').length) {
+          $('#event-change-notify').removeClass('element-hidden');
+        } else {
           $('#event-change-notify').addClass('element-hidden');
-        }
-      });
-      // Any changes other than start date time and location field will display the warning message for repeating event edit page
-      $('.field-name-field-date input[type="radio"], .field-name-field-date input[type="text"], .field-name-field-date input[type="checkbox"], .field-name-field-date select, #edit-field-date-und-0-rrule-until-child-datetime-datepicker-popup-0').not('#edit-field-date-und-0-show-repeat-settings, #edit-field-date-und-0-value-datepicker-popup-0, #edit-field-date-und-0-value-timeEntry-popup-1').change(function(){
-        if ($('#edit-field-date-und-0-show-repeat-settings:checked').length && !$('body').hasClass('page-node-add-event')) {
-          $('#event-change-notify').removeClass('element-hidden');
-        }
-      });
-      $('.field-name-field-date input[type="text"]').not('#edit-field-date-und-0-value-datepicker-popup-0, #edit-field-date-und-0-value-timeEntry-popup-1').keydown(function(){
-        if ($('#edit-field-date-und-0-show-repeat-settings:checked').length && !$('body').hasClass('page-node-add-event')) {
-          $('#event-change-notify').removeClass('element-hidden');
         }
       });
     }
