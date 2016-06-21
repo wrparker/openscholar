@@ -18,7 +18,7 @@
       '<div class="redirect-add-form" ng-show="showAddForm()">' +
         '<label for="redirect-path">From:</label> <input type="text" id="redirect-path" class="redirect-new-element" ng-model="newRedirectPath" placeholder="Local path"><br />' +
         '<label for="redirect-target">To: </label> <input type="text" id="redirect-target" class="redirect-new-element" ng-model="newRedirectTarget" placeholder="Target URL (i.e. http://www.google.com)"><br />' +
-        '<button value="Add Redirect" ng-click="addRedirect()">' +
+        '<button type="button" value="Add Redirect" ng-click="addRedirect()">Add Redirect</button>' +
       '</div>',
       scope: {
         value: '=',
@@ -50,7 +50,7 @@
           }
         })
         scope.redirects = scope.element.value;
-        var restApi = Drupal.settings.paths.api + '/redirects/';
+        var restApi = Drupal.settings.paths.api + '/redirect/';
 
         scope.newRedirectPath = '';
         scope.newRedirectTarget = '';
