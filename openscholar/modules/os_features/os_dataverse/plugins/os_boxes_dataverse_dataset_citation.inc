@@ -2,10 +2,10 @@
 
 /**
  * @file
- * The class for Dataverse Listing boxes.
+ * The class for Dataverse Dataset Citation boxes.
  */
 
-class os_boxes_dataverse_listing extends os_boxes_default {
+class os_boxes_dataverse_dataset_citation extends os_boxes_default {
 
   public $embed_as = array(
     'iframe',
@@ -32,7 +32,8 @@ class os_boxes_dataverse_listing extends os_boxes_default {
 
     $form['user_alias'] = array(
       '#type' => 'textfield',
-      '#title' => t('Identifier'),
+      '#title' => t('Dataset Persistent Identifier'),
+      '#description' => t('Need help finding your Dataset Persistent Identifier? Learn how to here: ') . l('http://docs.openscholar.harvard.edu/dataverse'),
       '#required' => TRUE,
       '#field_prefix' => $base_url,
       '#default_value' => $this->options['user_alias'],

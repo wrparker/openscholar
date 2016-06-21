@@ -117,20 +117,20 @@ function os_dataverse_update_7002() {
         );
         $list_box->plugin_key = "os_boxes_dataverse_list";
 
-        $listing_delta = $search_delta + 2;
-        $listing_box = new stdClass();
-        $listing_box->embed_as = array("iframe");
-        $listing_box->changed = NULL;
-        $listing_box->delta = $listing_delta;
-        $listing_box->title = "";
-        $listing_box->description = "Dataverse listing";
-        $listing_box->options = array(
+        $dataset_citation_delta = $search_delta + 2;
+        $dataset_citation_box = new stdClass();
+        $dataset_citation_box->embed_as = array("iframe");
+        $dataset_citation_box->changed = NULL;
+        $dataset_citation_box->delta = $dataset_citation_delta;
+        $dataset_citation_box->title = "";
+        $dataset_citation_box->description = "Dataverse Dataset Citation";
+        $dataset_citation_box->options = array(
           "make_embeddable" => 0,
           "user_alias" => $user_alias,
           "embed_height" => "500px",
           "additional_classes" => ""
         );
-        $listing_box->plugin_key = "os_boxes_dataverse_listing";
+        $dataset_citation_box->plugin_key = "os_boxes_dataverse_dataset_citation";
 
         $dataset_delta = $search_delta + 3;
         $dataset_box = new stdClass();
@@ -169,15 +169,15 @@ function os_dataverse_update_7002() {
             "boxes-$list_delta" => array(
               "module" => "boxes",
               "delta" => $list_delta,
-              "title" => "Dataverse list",
+              "title" => "Dataverse List",
               "region" => "content_top",
               "status" => 0,
               "weight" => 2
             ),
-            "boxes-$listing_delta" => array(
+            "boxes-$dataset_citation_delta" => array(
               "module" => "boxes",
-              "delta" => $listing_delta,
-              "title" => "Dataverse listing",
+              "delta" => $dataset_citation_delta,
+              "title" => "Dataverse Dataset Citation",
               "region" => "content_top",
               "status" => 0,
               "weight" => 3
@@ -202,7 +202,7 @@ function os_dataverse_update_7002() {
           ->execute();
 
         db_insert('spaces_overrides')
-          ->fields(array('type' => 'og', 'id' => $vsite_id, 'object_type' => 'boxes', 'object_id' => $listing_delta, 'value' => serialize($listing_box)))
+          ->fields(array('type' => 'og', 'id' => $vsite_id, 'object_type' => 'boxes', 'object_id' => $dataset_citation_delta, 'value' => serialize($dataset_citation_box)))
           ->execute();
 
         db_insert('spaces_overrides')

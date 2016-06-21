@@ -38,13 +38,13 @@ function os_dataverse_boxes_plugins(){
     ),
   );
 
-  $info['os_boxes_dataverse_listing'] = array(
-      'title' => 'Dataverse Listing',
-      'description' => 'Add a way embed a Dataverse Listing',
+  $info['os_boxes_dataverse_dataset_citation'] = array(
+      'title' => 'Dataverse Dataset Citation',
+      'description' => 'Add a way embed a Dataverse Dataset Citation',
       'tags' => array('Misc'),
       'handler' => array(
-          'class' => 'os_boxes_dataverse_listing',
-          'file' => 'os_boxes_dataverse_listing.inc',
+          'class' => 'os_boxes_dataverse_dataset_citation',
+          'file' => 'os_boxes_dataverse_dataset_citation.inc',
           'path' => $path,
           'parent' => 'os_boxes_default',
       ),
