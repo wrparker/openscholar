@@ -7,6 +7,8 @@
 
 class os_boxes_dataverse_dataset extends os_boxes_default {
 
+  private $dataverse_base_url_default = "https://dataverse-internal.iq.harvard.edu";
+
   public $embed_as = array(
     'iframe',
   );
@@ -28,7 +30,7 @@ class os_boxes_dataverse_dataset extends os_boxes_default {
   public function options_form(&$form_state){
     $form = parent::options_form($form_state);
 
-    $base_url = variable_get("dataverse_base_url", "https://dataverse.harvard.edu") . "/dataverse/";
+    $base_url = variable_get("dataverse_base_url", $this->dataverse_base_url_default) . "/dataverse/";
 
     $form['persistent_id'] = array(
       '#type' => 'textfield',
@@ -57,7 +59,7 @@ class os_boxes_dataverse_dataset extends os_boxes_default {
     }
 
     $embed_height = preg_replace('/\D/', '', $this->options['embed_height']);
-    $base_url = variable_get("dataverse_base_url", "https://dataverse.harvard.edu") . "/resources/js/widgets.js?persistentId=" . $this->options['persistent_id'] . "&amp;dvUrl=" . variable_get("dataverse_base_url", "https://dataverse.harvard.edu") . "&amp;widget=iframe&amp;heightPx=" . $embed_height;
+    $base_url = variable_get("dataverse_base_url", $this->dataverse_base_url_default) . "/resources/js/widgets.js?persistentId=" . $this->options['persistent_id'] . "&amp;dvUrl=" . variable_get("dataverse_base_url", $this->dataverse_base_url_default) . "&amp;widget=iframe&amp;heightPx=" . $embed_height;
 
     $block = parent::render();
     $block['content'] = "<script src=\"$base_url\"></script>";
