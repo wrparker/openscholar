@@ -70,7 +70,7 @@
   }
 
   /**
-   * Display warning message under repeat checkbox if any field other than location / date is changed for repeating events.
+   * Display warning message under repeat checkbox if repeating checkbox is checked.
    */
   Drupal.behaviors.osRepeatingEventChange = {
     attach: function () {
