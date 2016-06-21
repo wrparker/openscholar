@@ -301,6 +301,11 @@ fieldset.pin-fieldset legend a,
     border-radius: 4px;
     background: #3b76b1;
 }
+.pin-button-inline {
+    display: inline-block;
+    width: 100px;
+    margin: 0 3px 0 0;
+}
 .logged-in.no-sidebars.page-user #content .add-subsite a {
     color: #FFFFFF;
 }
