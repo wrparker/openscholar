@@ -50,7 +50,15 @@
           }
         })
         scope.redirects = scope.element.value;
+
         var restApi = Drupal.settings.paths.api + '/redirect/';
+        var http_config = {
+          params: {}
+        };
+
+        if (typeof Drupal.settings.spaces != 'undefined' && Drupal.settings.spaces.id) {
+          http_config.params.vsite = Drupal.settings.spaces.id;
+        }
 
         scope.newRedirectPath = '';
         scope.newRedirectTarget = '';
@@ -60,7 +68,7 @@
             target: scope.newRedirectTarget
           };
 
-          $http.post(restApi, vals).then(function (r) {
+          $http.post(restApi, vals, http_config).then(function (r) {
             console.log(redirects);
           },
           function (e) {
@@ -70,7 +78,7 @@
 
         scope.deleteRedirect = function (id) {
           var k = 0;
-          $http.delete(restApi+'/'+id).then(function (r) {
+          $http.delete(restApi+'/'+id, http_config).then(function (r) {
               scope.redirects.slice()
           },
           function (e) {

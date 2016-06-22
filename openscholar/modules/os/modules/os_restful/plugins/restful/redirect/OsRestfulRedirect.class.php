@@ -2,6 +2,10 @@
 
 class OsRestfulRedirect extends \RestfulBase implements \RestfulDataProviderInterface {
 
+  public function publicFieldsInfo() {
+    // what is this even for
+  }
+
   public function create() {
     $redirect = new stdClass();
 
