@@ -1564,10 +1564,29 @@ function os_publications_update_7046() {
   variable_set('biblio_pager', 'pager');
 }
 
+/*
+ * Add 'Import from file' permission to default roles.
+ */
+function os_publications_update_7047() {
+  $default = og_get_default_roles();
+  $q = db_select('og_role', 'ogr')
+      ->fields('ogr', array('rid'))
+      ->condition('name', $default, 'IN')
+      ->execute();
+
+  $count = 0;
+  foreach ($q as $r) {
+    $count++;
+    og_role_grant_permissions($r->rid, array('import from file'));
+  }
+
+  return t('Added \'import from file\' permission to '.$count.' roles.');
+}
+
 /**
  * Add month and day fields for Harvard - Chicago Author cititation
  */
-function os_publications_update_7047() {
+function os_publications_update_7048() {
   db_insert('biblio_field_type_data')
   ->fields(array(
     'ftdid' => 491,
@@ -1615,4 +1634,3 @@ function os_publications_update_7047() {
     'not null' => FALSE,
     'description' => 'Publication day for Harvard chicago style'
   ));
-}

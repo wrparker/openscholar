@@ -125,6 +125,25 @@ function os_publications_vsite_og_node_type_info() {
 }
 
 /**
+ * Implements hook_og_permission().
+ */
+function os_publications_og_permission() {
+  return array(
+    'import from file' => array(
+      'title' => t('Import publications from file.'),
+      'description' => t("Allow user to upload a file to import publications from."),
+      'os_override' => TRUE,
+      'default role' => array(  // FYI this property is worthless
+        'vsite user',
+        'content editor',
+        'vsite admin',
+      ),
+    ),
+  );
+}
+
+
+/**
  * Adds process function to text_format to remove our filter format when necessary
  */
 function os_publications_element_info_alter(&$info) {
