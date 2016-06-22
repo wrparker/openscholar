@@ -696,6 +696,10 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     unset($form['biblio_year']['#default_value']);
     $year_coded_value = _biblio_numeric_year($year_value);
   }
+  // Modifying Title for Harvard - Chicago Author cititation
+  if (in_array($style, array('harvard-chicago-author-date.csl'))) {
+    $form['biblio_year']['#title'] = "Date of Publication&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+  }
 
   $years = variable_get('biblio_years_text', array(9999 => t('Submitted'), 9998 => t('In Press')));
   $form['biblio_year_group'] = array(
