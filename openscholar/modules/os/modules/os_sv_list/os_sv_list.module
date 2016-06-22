@@ -122,6 +122,32 @@ function os_sv_list_boxes_plugins() {
 }
 
 /**
+ * Implements hook_entity_query_alter().
+ *
+ * After this point, no more fields are being added to the query.
+ */
+function os_sv_list_entity_query_alter(EntityFieldQuery $efq) {
+
+  $key = false;
+  foreach ($efq->fieldConditions as $k => $fc) {
+    if ($fc['delta_group'] == 'sv_list_events') {
+      $key = $k;
+      break;
+    }
+  }
+
+  if ($key) {
+    foreach ($efq->order as &$o) {
+      if (!empty($o['specifier']['field']['field_name']) && $o['specifier']['field']['field_name'] == 'field_date') {
+        $oldIndex = $o['specifier']['index'];
+        unset($efq->fields[$oldIndex]);
+        $o['specifier']['index'] = $key;
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_query_TAG_alter
  *
  * EFQs tagged with random will be randomly sorted.
@@ -180,6 +206,7 @@ function os_sv_list_query_sv_list_events_alter(SelectQueryInterface $query) {
 
   if(!$date_table) {
     watchdog('os_sv_list_events',"Can not sort because field_data_field_date has not been joined.");
+    return;
   }
 
   $query->fields($date_table, array('delta'));
