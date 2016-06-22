@@ -41,7 +41,7 @@ class OsRestfulRedirect extends \RestfulBase implements \RestfulDataProviderInte
       }
     }
 
-    $redirect = redirect_save($redirect);
+    redirect_save($redirect);
     return $this->renderRedirect($redirect);
   }
 
