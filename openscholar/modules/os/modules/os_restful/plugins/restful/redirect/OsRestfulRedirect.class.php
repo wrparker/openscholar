@@ -52,11 +52,13 @@ class OsRestfulRedirect extends \RestfulBase implements \RestfulDataProviderInte
   }
 
   public function view($id) {
+    $id = trim($id, '/');
     $redirect = redirect_load($id);
     return $this->renderRedirect($redirect);
   }
 
   public function remove($id) {
+    $id = trim($id, '/');
     redirect_delete($id);
 
     // Set the HTTP headers.

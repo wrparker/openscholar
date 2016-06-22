@@ -81,7 +81,7 @@
           $http.delete(restApi+'/'+id, http_config).then(function (r) {
               for (var i = 0; i < scope.redirects.length; i++) {
                 if (scope.redirects[i].id == id) {
-                  scope.redirects.splice(id, 1);
+                  scope.redirects.splice(i, 1);
                   break;
                 }
               }
