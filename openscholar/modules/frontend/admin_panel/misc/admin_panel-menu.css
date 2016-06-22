@@ -1,3 +1,12 @@
+.morph-button-sidebar .morph-content {
+  background: url('images/os-cp_button.png') no-repeat 47% 99%;
+  background-color: #111;
+}
+
+.morph-button > button {
+  background: url('images/os-cp_button.png') no-repeat;
+  background-color: #111;
+}
 
 html,
 body {
@@ -30,56 +39,63 @@ body.overlay {
   width: auto;
 }
 
-/* PAGE WHEN MENU IS OPEN */
-
-.page-cp #page {
-    margin-left: 150px;
-    width: 85%;
-    transition-property: margin-left, width;
-    transition-duration: .125s;
-    transition-timing-function: ease-in-out;
-    transition-delay: .125s;
+.page-cp #branding.no-transition,
+.page-cp #page.no-transition,
+.page_wrap.no-transition {
+  -webkit-transition: none;
+  transition: none;
 }
 
 .page-cp #branding {
-    position: relative;
-    margin-left: 110px;
-    transition-property: margin-left;
-    transition-duration: .125s;
-    transition-timing-function: ease-in-out;
-    transition-delay: .125s;
+  position: relative;
+  margin-left: 40px;
 }
-#branding ul.primary {
-    margin: 0 15% 0 !important;
-    transition-property: margin;
-    transition-duration: .125s;
-    transition-timing-function: ease-in-out;
-    transition-delay: .125s;
-}
-/* PAGE WHEN MENU IS CLOSED */
 
-.admin-menu-closed.page-cp #page {
-    margin-left: 60px;
-    width: 94%;
+.page-cp #branding.pushed {
+  margin-left: 110px;
 }
-.admin-menu-closed.page-cp #branding {
-    margin-left: 20px;
+
+.no-js .page-cp #branding,
+.no-js .page-cp #page,
+.no-js .page_wrap {
+  width: calc(100% - 300px);
+  right: 0;
 }
-.admin-menu-closed #branding ul.primary {
-    margin: 0 6% 0 !important;
+
+.page-cp #branding.pushed,
+.page-cp #page.pushed {
+  -webkit-transform: translateX(15px);
+  transform: translateX(15px);
+}
+
+.page-cp #page {
+  width: 90%;
+  margin-left: 80px;
+  margin-right: 0;
+}
+
+.page-cp #page.pushed {
+  margin-left: 150px;
+  width: 80%;
 }
 
 .admin-menu-homeicon {
-    display: block;
-    width: 55px;
-    height: 38px;
-    position: fixed;
-    z-index: 102;
-    background: url('images/home_button.png') no-repeat 10px 1px;
-    background-color: #000;
-    text-indent: -10000px;
-    left: 0;
-    top: 0;
+  position: absolute;
+  left: 10px;
+  top: 7px;
+  width: 25px;
+  height: 25px;
+  background: url('images/home_button.png') no-repeat;
+  background-size: 25px 25px;
+  text-indent: -10000px;
+}
+
+#branding ul.primary {
+  margin: 0 10% 0 !important;
+}
+
+#branding.pushed ul.primary {
+  margin: 0 20% 0 !important;
 }
 /* MENU SPECIFIC */
 
@@ -88,27 +104,27 @@ body.overlay {
 #cssmenu ul li,
 #cssmenu ul li a,
 #cssmenu ul li span {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    list-style: none;
-    line-height: 0;
-    display: block;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    font-style: normal;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  list-style: none;
+  line-height: 1;
+  display: block;
+  position: relative;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  font-style: normal;
 }
-#cssmenu ul li a,
-#cssmenu ul li span {
-    line-height: 1;
-}
+
 #cssmenu {
-    font-family: helvetica;
-    color: #ffffff;
+  font-family: helvetica;
+  color: #ffffff;
+  margin-top: 25px;
 }
-#cssmenu ul {
-    z-index: 2;
-    position: relative;
+
+#cssmenu ul ul {
+  display: none;
+  background-color: #49505a;
 }
 
 #cssmenu ul ul {
@@ -120,15 +136,15 @@ body.overlay {
 }
 
 #cssmenu > ul > li > span {
-    cursor: pointer;
-    z-index: 2;
-    font-size: 12px;
-    text-decoration: none;
-    color: #ffffff;
-    -webkit-transition: color .2s ease;
-    -o-transition: color .2s ease;
-    transition: color .2s ease;
-    box-shadow: inset 0 1px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 2;
+  font-size: 13px;
+  text-decoration: none;
+  color: #ffffff;
+  -webkit-transition: color .2s ease;
+  -o-transition: color .2s ease;
+  transition: color .2s ease;
+  box-shadow: inset 0 1px rgba(0, 0, 0, 0.1);
 }
 
 #cssmenu ul li a:hover,
@@ -144,14 +160,14 @@ body.overlay {
 
 #cssmenu li.heading.has-sub,
 #cssmenu li.heading.submenu {
-    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 109px -1009px;
-    background-color: #444;
+  background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 110px -1009px;
+  background-color: #444;
 }
 
 #cssmenu li.heading.has-sub.open,
 #cssmenu li.heading.submenu.open {
-    background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 109px -983px;
-    background-color: #444;
+  background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 110px -983px;
+  background-color: #444;
 }
 
 #cssmenu li.heading.parent,
@@ -162,19 +178,19 @@ body.overlay {
 #cssmenu ul ul li a,
 #cssmenu ul ul li span,
 #cssmenu .heading {
-    cursor: pointer;
-    z-index: 2;
-    font-size: 12px;
-    text-decoration: none;
-    color: #fff;
-    -webkit-transition: color .2s ease;
-    -o-transition: color .2s ease;
-    transition: color .2s ease;
-    box-shadow: inset 0 1px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 2;
+  font-size: 13px;
+  text-decoration: none;
+  color: #fff;
+  -webkit-transition: color .2s ease;
+  -o-transition: color .2s ease;
+  transition: color .2s ease;
+  box-shadow: inset 0 1px rgba(0, 0, 0, 0.1);
 }
 
 [toggle-open] {
-    padding: 10px 10px 10px 8px !important;
+  padding: 10px !important;
 }
 
 #cssmenu ul ul li span.close-siblings,
@@ -206,17 +222,17 @@ body.overlay {
 }
 
 .topRight_Menu {
-    position: fixed;
-    top: 0;
-    right: 0;
-    padding: 10px;
-    color: white;
-    background: #6C7A89;
-    z-index: 10;
-    display: inline-block;
-    font-family: helvetica;
-    font-size: 12px;
-    cursor: pointer;
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  color: white;
+  background: #6C7A89;
+  z-index: 10;
+  display: inline-block;
+  font-family: helvetica;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 #topRightMenu {
@@ -231,26 +247,27 @@ body.overlay {
 }
 
 .topRight_subMenu {
-    margin-top: 34px;
-    font-size: 12px;
-    display: none;
-    padding: 0;
+  margin-top: 34px;
+  font-size: 13px;
+  display: none;
+  padding: 0;
 }
 
 .topRight_subMenu ul {
-    margin: 0;
-    list-style-type: none;
-    background-color: #49505a;
-    width: 152px;
+  margin: 0;
+  list-style-type: none;
+  background-color: #49505a;
 }
+
 .topRight_subMenu li {
-    background: #6C7A89;
+  background: #6C7A89;
 }
+
 .topRight_subMenu ul.user-menu > li > a {
-    color: #FFF;
-    text-decoration: none;
-    display: block;
-    width: 100%;
+  color: #FFF;
+  text-decoration: none;
+  display: block;
+  width: 100%;
 }
 
 .topRight_subMenu li a.text_link {
@@ -270,7 +287,7 @@ body.overlay {
 .topRight_subMenu ul.user-menu > li > a,
 #user-name,
 .my-sites-click {
-    padding: 5px 10px;
+  padding: 5px 10px;
 }
 
 .topRight_subMenu li.slate {
@@ -279,6 +296,19 @@ body.overlay {
 
 .topRight_subMenu li.notifications {
   position: relative;
+}
+
+.notifications-headsup .slate.alert {
+  font-size: 0.8em;
+  top: 20px;
+  right: 35px;
+  border-radius: 20px;
+  height: 18px;
+  width: 12px;
+  display: block;
+  text-align: center;
+  line-height: 16px;
+  font-weight: bold;
 }
 
 .notifications-headsup .slate.alert {
@@ -432,7 +462,7 @@ td.user-site-controls {
 }
 
 .btton:visited {
-    color: #FFF;
+  color: #FFF;
 }
 /* Table styling*/
 
@@ -444,8 +474,8 @@ table.table-shading {
 }
 
 .header-row {
-    background-color: #EAEAEA;
-    padding: 6px 0 6px 8px;
-    color: #444;
-    font-weight: bold;
+  background-color: #EAEAEA;
+  padding: 6px 0 6px 8px;
+  color: #444;
+  font-weight: bold;
 }
