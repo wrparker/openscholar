@@ -117,6 +117,120 @@ function os_dataverse_update_7002() {
         );
         $list_box->plugin_key = "os_boxes_dataverse_list";
 
+        // create page array
+        $page = array(
+          "blocks" => array(
+            "os_pages-main_content" => array(
+              "module" => "os_pages",
+              "delta" => "main_content",
+              "region" => "content_top",
+              "weight" => 0,
+              "status" => 0,
+              "title" => ""
+            ),
+            "boxes-$search_delta" => array(
+              "module" => "boxes",
+              "delta" => $search_delta,
+              "title" => "Dataverse search",
+              "region" => "content_top",
+              "status" => 0,
+              "weight" => 1
+            ),
+            "boxes-$list_delta" => array(
+              "module" => "boxes",
+              "delta" => $list_delta,
+              "title" => "Dataverse list",
+              "region" => "content_top",
+              "status" => 0,
+              "weight" => 2
+            )
+          )
+        );
+
+        db_insert('spaces_overrides')
+          ->fields(array('type' => 'og', 'id' => $vsite_id, 'object_type' => 'boxes', 'object_id' => $search_delta, 'value' => serialize($search_box)))
+          ->execute();
+
+        db_insert('spaces_overrides')
+          ->fields(array('type' => 'og', 'id' => $vsite_id, 'object_type' => 'boxes', 'object_id' => $list_delta, 'value' => serialize($list_box)))
+          ->execute();
+
+        db_insert('spaces_overrides')
+          ->fields(array('type' => 'og', 'id' => $vsite_id, 'object_type' => 'context', 'object_id' => 'os_pages-page-' . $node->nid . ':reaction:block', 'value' => serialize($page)))
+          ->execute();
+        $done++;
+      }
+      catch (Exception $e) {
+        $transaction->rollback();
+        watchdog_exception('spaces_overrides', $e);
+        throw $e;
+      }
+    }
+  }
+  return t('Updated @count sites.', array('@count' => $done));
+}
+
+/**
+ *  Add two new Dataverse app widgets: Dataset and Dataset Citation
+ **/
+function os_dataverse_update_7003() {
+  $query = db_select('spaces_overrides', 'spaces_overrides')
+    ->condition('object_type', 'variable')
+    ->condition('object_id', 'os_dataverse_dvn_alias')
+    ->fields('spaces_overrides', array('id', 'value'));
+  $results = $query->execute();
+
+  $done = 0;
+
+  while ($row = $results->fetchObject()) {
+    $vsite_id = $row->id;
+    $vsite = vsite_get_vsite($vsite_id)->og;
+    $vsite_name = $vsite->purl;
+
+    // get dataverse account user alias
+    preg_match('/dvn\/dv\/([\w_\d]+)/', $row->value, $matches);
+
+    if (isset($matches[1])) {
+      $user_alias = $matches[1];
+      $transaction = db_transaction();
+
+      try {
+        // create new page and add it to the vsite
+        $node = os_create_node('Dataverse', 'page', 1);
+        vsite_add_node($node, $vsite_id);
+        $path = array(
+          "source" => "node/" . $node->nid, 
+          "alias" => "$vsite_name/data"
+        );
+        path_save($path);
+
+        // fix primary menu to link to that page
+        $menu_data = db_select('spaces_overrides', 'spaces_overrides')
+          ->condition('object_id', 'primary-menu')
+          ->condition('id', $vsite_id)
+          ->fields('spaces_overrides', array('value'))
+          ->execute()
+          ->fetchField();
+
+        if ($menu_data) {
+          $menu = unserialize($menu_data);
+          $menu['2566']['link_path'] = "node/" . $node->nid;
+          $menu['2566']['module'] = "menu";
+          $menu['2566']['router_path'] = "node/%";
+          $menu_data = serialize($menu);
+
+          db_update('spaces_overrides')
+            ->fields(array('value' => $menu_data))
+            ->condition('object_id', 'primary-menu')
+            ->condition('id', $vsite_id)
+            ->execute();
+        }
+
+        // create the dataverse box objects
+        $search_delta = os_boxes_create_delta();
+
+        $list_delta = $search_delta + 1;
+
         $dataset_citation_delta = $search_delta + 2;
         $dataset_citation_box = new stdClass();
         $dataset_citation_box->embed_as = array("iframe");
@@ -192,14 +306,6 @@ function os_dataverse_update_7002() {
             ),
           )
         );
-
-        db_insert('spaces_overrides')
-          ->fields(array('type' => 'og', 'id' => $vsite_id, 'object_type' => 'boxes', 'object_id' => $search_delta, 'value' => serialize($search_box)))
-          ->execute();
-
-        db_insert('spaces_overrides')
-          ->fields(array('type' => 'og', 'id' => $vsite_id, 'object_type' => 'boxes', 'object_id' => $list_delta, 'value' => serialize($list_box)))
-          ->execute();
 
         db_insert('spaces_overrides')
           ->fields(array('type' => 'og', 'id' => $vsite_id, 'object_type' => 'boxes', 'object_id' => $dataset_citation_delta, 'value' => serialize($dataset_citation_box)))
