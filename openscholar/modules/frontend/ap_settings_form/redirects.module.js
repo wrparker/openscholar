@@ -69,7 +69,7 @@
           };
 
           $http.post(restApi, vals, http_config).then(function (r) {
-            console.log(redirects);
+            scope.redirects.push(r.data)
           },
           function (e) {
 
@@ -79,7 +79,12 @@
         scope.deleteRedirect = function (id) {
           var k = 0;
           $http.delete(restApi+'/'+id, http_config).then(function (r) {
-              scope.redirects.slice()
+              for (var i = 0; i < scope.redirects.length; i++) {
+                if (scope.redirects[i].id == id) {
+                  scope.redirects.splice(id, 1);
+                  break;
+                }
+              }
           },
           function (e) {
 
