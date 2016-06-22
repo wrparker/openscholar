@@ -2133,9 +2133,6 @@ function os_form_user_login_alter(&$form, $form_state) {
         '#attributes' => array('class' => array('pin-button-inline')),
     );
 
-    unset($form['pin-fieldset']['#collapsible']);
-    unset($form['pin-fieldset']['#collapsed']);
-
     unset($form['pin-fieldset']['name']['#description']);
     unset($form['pin-fieldset']['actions']['submit']);
   }
