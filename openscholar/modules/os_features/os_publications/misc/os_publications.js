@@ -24,48 +24,138 @@ Drupal.behaviors.osPublications = {
     // Allowed year input.
     var numbers = /^[0-9]+$/;
 
-    // Publication year can be either given in a numerical value or by a coded
-    // value ("in press", "submitted" and so on). If the user fills a numerical
-    // value the radio buttons are unchecked and disabled. Clearing the numerical
-    // value enables the radio buttons again.
-    yearField.keyup(function() {
-      if (this.value != '') {
-        // Uncheck all radio buttons.
-        codedYear.each(function () {
-          $(this).prop('checked', false);
-        });
-        codedYear.prop("disabled", true);
+    // Check whether month publication field exists
+    // It is visible only for Harvard - Chicago Author cititation
+    if($("#edit-biblio-pub-month").length) {
+      // Handle month fields
+      var monthField = $("#edit-biblio-pub-month");
+      // Add validation warning.
+      var monthWarning = $("#biblio-month-group-validate");
+      if (!monthField.hasClass('error')) {
+        monthWarning.css('visibility', 'hidden');
+      }
+      monthWarning.css('color', 'red');
 
-        // Validate year input.
-        userInput = this.value;
-        if ((userInput.length != 4 && userInput.match(numbers)) || !userInput.match(numbers)) {
-          yearWarning.css('visibility', 'visible');
-          yearField.addClass("error");
+      // Handle day fields
+      var dayField = $("#edit-biblio-pub-day");
+      // Add validation warning.
+      var dayWarning = $("#biblio-day-group-validate");
+      if (!dayField.hasClass('error')) {
+        dayWarning.css('visibility', 'hidden');
+      }
+      dayWarning.css('color', 'red');
+
+      // Publication year can be either given in a numerical value or by a coded
+      // value ("in press", "submitted" and so on). If the user fills a numerical
+      // value the radio buttons are unchecked and disabled. Clearing the numerical
+      // value enables the radio buttons again.
+      // Validation is checked for both month and day fields as well
+      $("#edit-biblio-year, #edit-biblio-pub-month, #edit-biblio-pub-day").keyup(function() {
+        if (this.value != '') {
+          // Uncheck all radio buttons.
+          codedYear.each(function () {
+            $(this).prop('checked', false);
+          });
+          codedYear.prop("disabled", true);
+
+          // Validate year input.
+          var yearFieldVal = yearField.val();
+          var monthFieldVal = monthField.val();
+          var dayFieldVal = dayField.val();
+          if (yearFieldVal.trim() != '' && (!yearFieldVal.match(numbers) || yearFieldVal.length != 4)) {
+            yearWarning.css('visibility', 'visible');
+            yearField.addClass("error");
+          }
+          else if (yearFieldVal.trim() == '' || (yearFieldVal.match(numbers) && yearFieldVal.length == 4)) {
+            yearWarning.css('visibility', 'hidden');
+            yearField.removeClass("error");
+          }
+          if (monthFieldVal.trim() != '' && (!monthFieldVal.match(numbers) || (monthFieldVal <=0 || monthFieldVal > 12))) {
+            monthWarning.css('visibility', 'visible');
+            monthField.addClass("error");
+          }
+          else if (monthFieldVal.trim() == '' || monthFieldVal.match(numbers) || (monthFieldVal > 0 && monthFieldVal <= 12)) {
+            monthWarning.css('visibility', 'hidden');
+            monthField.removeClass("error");
+          }
+          if (dayFieldVal.trim() != '' && (!dayFieldVal.match(numbers) || (dayFieldVal <=0 || dayFieldVal > 31))) {
+            dayWarning.css('visibility', 'visible');
+            dayField.addClass("error");
+          }
+          else if (dayFieldVal.trim() == '' || dayFieldVal.match(numbers) || (dayFieldVal > 0 && dayFieldVal <= 31)){
+            dayWarning.css('visibility', 'hidden');
+            dayField.removeClass("error");
+          }
         }
-        else if (userInput.length == 4 && userInput.match(numbers)){
+        else {
+          codedYear.prop("disabled", false);
+          yearWarning.css('visibility', 'hidden');
+          yearField.removeClass("error");
+          monthWarning.css('visibility', 'hidden');
+          monthField.removeClass("error");
+          dayWarning.css('visibility', 'hidden');
+          dayField.removeClass("error");
+        }
+      }).focus(function() {
+        if ((yearFieldVal == '' || yearFieldVal == undefined || monthFieldVal == '' || monthFieldVal == undefined || dayFieldVal == '' || dayFieldVal == undefined) && (!yearField.hasClass('error') || !monthField.hasClass('error') || !dayField.hasClass('error'))) {
+          codedYear.prop("disabled", false);
+        }
+        else {
+          codedYear.prop("disabled", true);
+        }
+      });
+      codedYear.change(function() {
+        if (this.value != '') {
+          // Empty year field.
+          yearField[0].value = '';
+          monthField[0].value = '';
+          dayField[0].value = '';
+        }
+      });
+    } else {
+      // Publication year can be either given in a numerical value or by a coded
+      // value ("in press", "submitted" and so on). If the user fills a numerical
+      // value the radio buttons are unchecked and disabled. Clearing the numerical
+      // value enables the radio buttons again.
+      yearField.keyup(function() {
+        if (this.value != '') {
+          // Uncheck all radio buttons.
+          codedYear.each(function () {
+            $(this).prop('checked', false);
+          });
+          codedYear.prop("disabled", true);
+
+          // Validate year input.
+          userInput = this.value;
+          if ((userInput.length != 4 && userInput.match(numbers)) || !userInput.match(numbers)) {
+            yearWarning.css('visibility', 'visible');
+            yearField.addClass("error");
+          }
+          else if (userInput.length == 4 && userInput.match(numbers)){
+            yearWarning.css('visibility', 'hidden');
+            yearField.removeClass("error");
+          }
+        }
+        else {
+          codedYear.prop("disabled", false);
           yearWarning.css('visibility', 'hidden');
           yearField.removeClass("error");
         }
-      }
-      else {
-        codedYear.prop("disabled", false);
-        yearWarning.css('visibility', 'hidden');
-        yearField.removeClass("error");
-      }
-    }).focus(function() {
-      if ((yearField.value == '' || yearField.value == undefined) && !yearField.hasClass('error') ) {
-        codedYear.prop("disabled", false);
-      }
-      else {
-        codedYear.prop("disabled", true);
-      }
-    });
-    codedYear.change(function() {
-      if (this.value != '') {
-        // Empty year field.
-        yearField[0].value = '';
-      }
-    });
+      }).focus(function() {
+        if ((yearField.value == '' || yearField.value == undefined) && !yearField.hasClass('error') ) {
+          codedYear.prop("disabled", false);
+        }
+        else {
+          codedYear.prop("disabled", true);
+        }
+      });
+      codedYear.change(function() {
+        if (this.value != '') {
+          // Empty year field.
+          yearField[0].value = '';
+        }
+      });
+    }
   }
 };
 

@@ -1563,3 +1563,61 @@ function os_profiles_update_7045() {
 function os_publications_update_7046() {
   variable_set('biblio_pager', 'pager');
 }
+
+/**
+ * Add month and day fields for Harvard - Chicago Author cititation
+ */
+function os_publications_update_7047() {
+  db_update('biblio_field_type_data')
+  ->fields(array('title' => 'Date of Publication'))
+  ->condition('ftdid', 15)
+  ->execute();
+
+  db_insert('biblio_field_type_data')
+  ->fields(array(
+    'ftdid' => 491,
+    'title' => 'Month of publish',
+    'hint' => '',
+  ))
+  ->execute();
+  db_insert('biblio_fields')
+  ->fields(array(
+    'fid' => 491,
+    'name' => 'biblio_pub_month',
+    'type' => 'textfield',
+    'size' => 2,
+    'maxsize' => 2,
+  ))
+  ->execute();
+
+  db_insert('biblio_field_type_data')
+  ->fields(array(
+    'ftdid' => 492,
+    'title' => 'Day of publish',
+    'hint' => '',
+  ))
+  ->execute();
+  db_insert('biblio_fields')
+  ->fields(array(
+    'fid' => 492,
+    'name' => 'biblio_pub_day',
+    'type' => 'textfield',
+    'size' => 2,
+    'maxsize' => 2,
+  ))
+  ->execute();
+
+  db_add_field('biblio', 'biblio_pub_month', array(
+    'type' => 'int',
+    'length' => 11,
+    'not null' => FALSE,
+    'description' => 'Publication month for Harvard chicago style',
+  ));
+
+  db_add_field('biblio', 'biblio_pub_day', array(
+    'type' => 'int',
+    'length' => 11,
+    'not null' => FALSE,
+    'description' => 'Publication day for Harvard chicago style'
+  ));
+}

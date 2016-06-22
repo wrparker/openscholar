@@ -607,6 +607,15 @@ table.biblio-contributors tr:first-child input.form-submit {
     font-size: 1em;
     font-weight: normal;
 }
+#edit-biblio-year-coded .form-item.form-type-radio {
+    margin-left: 0;
+}
+#edit-biblio-year-coded .form-item label.option {
+    font-size: 0.85em;
+}
+#edit-biblio-year-group input.form-text {
+    font-size: 10px !important;
+}
 fieldset#edit-biblio-year-group {
     background: none;
     border: none;

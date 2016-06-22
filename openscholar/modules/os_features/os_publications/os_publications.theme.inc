@@ -41,6 +41,8 @@ function theme_os_publications_tabular(&$vars) {
     'biblio_secondary_title',
     'biblio_coins',
     'biblio_lang',
+    'biblio_pub_month',
+    'biblio_pub_day',
   );
 
   if (variable_get('biblio_citeproc_style') == 'harvard-chicago-author-date.csl') {
@@ -218,6 +220,11 @@ function _os_publications_plain_citation($node) {
   }
 
   if (variable_get('biblio_citeproc_style') == 'harvard-chicago-author-date.csl') {
+    // Pushing day and month in those both are present in Publication for Harvard - Chicago Author cititation
+    if (!empty($node->biblio_year) && strpos($citation, ' ' . $node->biblio_year) !== FALSE && !empty($node->biblio_pub_month) && !empty($node->biblio_pub_day)){
+      $citation = str_replace('. ' . $node->biblio_year . '.', '. ' . $node->biblio_pub_month . '/' . $node->biblio_pub_day . '/' . $node->biblio_year . '.', $citation);
+    }
+
     $fields = array(
       103 => array(
         'biblio_date' => 'Date Presented',
