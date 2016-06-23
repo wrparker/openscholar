@@ -311,7 +311,7 @@ function os_events_export_to_csv($node, $delta = FALSE) {
 
   if ($delta !== FALSE && isset($node->field_date['und'][$delta])) {
     $dates[] = $node->field_date['und'][$delta]['value'];
-    $query->fieldCondition('field_repeating_event_date', 'value', $date);
+    $query->fieldCondition('field_repeating_event_date', 'value', $dates[0]);
   } else {
 
     // cycle through the [possibly repeating] event date(s)
