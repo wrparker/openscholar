@@ -19,6 +19,7 @@ class os_boxes_dataverse_dataset_citation extends os_boxes_default {
   public function options_defaults(){
     $options = parent::options_defaults();
     $options['persistent_id'] = '';
+    $options['doi_or_hdl'] = 'doi';
     $options['embed_height'] = '500px';
     $options['visibility'] = 'feature';
     return $options;
@@ -41,6 +42,13 @@ class os_boxes_dataverse_dataset_citation extends os_boxes_default {
       '#default_value' => $this->options['persistent_id'],
     );
 
+    $form['doi_or_hdl'] = array(
+      '#type' => 'radios',
+      '#required' => TRUE,
+      '#default_value' => $this->options['doi_or_hdl'],
+      '#options' => array('doi' => t('DOI'), 'hdl' => t('HDL')),
+    );
+
     $form['embed_height'] = array(
       '#type' => 'textfield',
       '#title' => 'Embed Height',
@@ -59,7 +67,12 @@ class os_boxes_dataverse_dataset_citation extends os_boxes_default {
     }
 
     $embed_height = preg_replace('/\D/', '', $this->options['embed_height']);
-    $base_url = variable_get("dataverse_base_url", $this->dataverse_base_url_default) . "/resources/js/widgets.js?persistentId=" . $this->options['persistent_id'] . "&amp;dvUrl=" . variable_get("dataverse_base_url", $this->dataverse_base_url_default) . "&amp;widget=citation&amp;heightPx=" . $embed_height;
+    $persistent_id = preg_replace('/^\s*(doi|hdl)/', '', $this->options['persistent_id']);
+    $base_url = variable_get("dataverse_base_url", $this->dataverse_base_url_default) . "/resources/js/widgets.js?" . 
+                "persistentId=" . strtolower($this->options['doi_or_hdl']) . ":" . trim($persistent_id) . "&amp;" .
+                "dvUrl=" .  variable_get("dataverse_base_url", $this->dataverse_base_url_default) . "&amp;" .
+                "widget=citation&amp;" . 
+                "heightPx=" . $embed_height;
 
     $block = parent::render();
     $block['content'] = "<script src=\"$base_url\"></script>";
