@@ -122,9 +122,9 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
       '#title' => t('Display Styles'),
       '#default_value' => empty($as_nav) ? 0 : $as_nav,
       '#options' => array(
-      	0 => t('Classic/List'),
-      	1 => t('Menu'),
-      	2 => t('Collapsible Accordion')
+        0 => t('Classic/List'),
+        1 => t('Menu'),
+        2 => t('Collapsible Accordion')
       ),
     );
 
@@ -312,6 +312,31 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
               array_sort_by_term_weight($block['content']['sm_og_vocabulary'][$vocabulary_name]['#items'], $vocabulary_name);
             }
           }
+        }        
+        // Initializing jQuery UI Accordion for this widget instance if display style is set as "Collapsible"
+        if ($this->options['as_nav'] == 2) {
+          $block['content']['#prefix'] = '<div class="accordion">';
+          $block['content']['#suffix'] = '</div>';
+          $block['content']['#attached'] = array(
+            'library' => array(
+              array('system', 'ui.accordion'),
+            ),
+            'js' => array(
+              drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_facetapi_vocabulary/os_boxes_facetapi_vocabulary_accordion.render.js',
+              array(
+                'type' => 'setting',
+                'data' => array(
+                  'os_boxes' => array(
+                    'faceted_taxonomy' => array(
+                      $this->delta => array(
+                        'delta' => $this->delta,
+                      )
+                    )
+                  )
+                )
+              ),
+            ),
+          );
         }
 
         $block['content'] = render($block['content']);
