@@ -734,10 +734,15 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     $form['field_biblio_pub_day']['und'][0]['value']['#attributes'] = array('maxlength' => 2, 'size' => 2, 'placeholder' => t('Day'));
     $form['biblio_year_group']['field_biblio_pub_month'] = $form['field_biblio_pub_month'];
     $form['biblio_year_group']['field_biblio_pub_day'] = $form['field_biblio_pub_day'];
+    $form['biblio_year_group']['field_biblio_pub_month']['#weight'] = -2;
+    $form['biblio_year_group']['field_biblio_pub_day']['#weight'] = -1;
     unset($form['biblio_year_group']['field_biblio_pub_month']['und'][0]['value']['#title']);
     unset($form['biblio_year_group']['field_biblio_pub_day']['und'][0]['value']['#title']);
     $form['biblio_year_group']['field_biblio_pub_month']['#attributes'] = array('placeholder' => t('Month'));
     $form['biblio_year_group']['field_biblio_pub_month']['#attributes'] = array('placeholder' => t('Day'));
+    unset($form['field_biblio_pub_month']);
+    unset($form['field_biblio_pub_day']);
+  } else {
     unset($form['field_biblio_pub_month']);
     unset($form['field_biblio_pub_day']);
   }
@@ -1009,8 +1014,8 @@ function _os_publications_biblio_entry_alter($markup, $node) {
   $style = variable_get('biblio_citeproc_style');
   // Pushing day and month in those both are present in Publication for Harvard - Chicago Author cititation
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-    if (!empty($node->biblio_year) && strpos($html, ' ' . $node->biblio_year) !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value']) && !empty($node->field_biblio_pub_day['und'][0]['value'])){
-      $html = str_replace('. ' . $node->biblio_year . '.', '. ' . $node->field_biblio_pub_month['und'][0]['value'] . '/' . $node->field_biblio_pub_day['und'][0]['value'] . '/' . $node->biblio_year . '.', $html);
+    if (!empty($node->biblio_year) && strpos($html, $node->biblio_year.'. ') !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value']) && !empty($node->field_biblio_pub_day['und'][0]['value'])){
+      $html = str_replace($node->biblio_year . '. ', $node->field_biblio_pub_month['und'][0]['value'] . '/' . $node->field_biblio_pub_day['und'][0]['value'] . '/' . $node->biblio_year . '. ', $html);
     }
   }
   $insert = strrpos($html, '</div>');

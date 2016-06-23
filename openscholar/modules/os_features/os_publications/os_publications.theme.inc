@@ -218,10 +218,12 @@ function _os_publications_plain_citation($node) {
   }
 
   if (variable_get('biblio_citeproc_style') == 'harvard-chicago-author-date.csl') {
+
     // Pushing day and month in those both are present in Publication for Harvard - Chicago Author cititation
-    if (!empty($node->biblio_year) && strpos($citation, ' ' . $node->biblio_year) !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value']) && !empty($node->field_biblio_pub_day['und'][0]['value'])){
-      $citation = str_replace('. ' . $node->biblio_year . '.', '. ' . $node->field_biblio_pub_month['und'][0]['value'] . '/' . $node->field_biblio_pub_day['und'][0]['value'] . '/' . $node->biblio_year . '.', $citation);
+    if (!empty($node->biblio_year) && strpos($citation, $node->biblio_year.'. ') !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value']) && !empty($node->field_biblio_pub_day['und'][0]['value'])){
+      $citation = str_replace($node->biblio_year . '. ', $node->field_biblio_pub_month['und'][0]['value'] . '/' . $node->field_biblio_pub_day['und'][0]['value'] . '/' . $node->biblio_year . '. ', $citation);
     }
+
 
     $fields = array(
       103 => array(
