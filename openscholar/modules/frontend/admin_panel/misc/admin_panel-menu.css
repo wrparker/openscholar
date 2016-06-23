@@ -110,7 +110,6 @@ body.overlay {
   list-style: none;
   line-height: 1;
   display: block;
-  position: relative;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   font-style: normal;
