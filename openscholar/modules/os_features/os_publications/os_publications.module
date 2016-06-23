@@ -802,21 +802,20 @@ function os_publications_validate_year_field($form, &$form_state) {
   $style = variable_get('biblio_citeproc_style');
   // Adding extra validation for date and month for Harvard - Chicago Author cititation
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-    if(($form_state['values']['field_biblio_pub_day']['und'][0]['value'] || $form_state['values']['field_biblio_pub_day']['und'][0]['value']) &&  !$form_state['values']['biblio_year']) {
+    $pub_month = $form_state['values']['field_biblio_pub_month']['und'][0]['value'];
+    $pub_day = $form_state['values']['field_biblio_pub_day']['und'][0]['value'];
+    if(($pub_month || $pub_day) &&  !$form_state['values']['biblio_year']) {
       form_set_error('biblio_year', t('Year is mandetory'));
-      $return = TRUE;
+      return;
     }
-    if ($form_state['values']['biblio_year'] && !is_numeric($form_state['values']['biblio_year']) || is_numeric($form_state['values']['biblio_year']) && ($form_state['values']['biblio_year'] < 1000 || $form_state['values']['biblio_year'] > 9999)) {
+    else if ($form_state['values']['biblio_year'] && !is_numeric($form_state['values']['biblio_year']) || is_numeric($form_state['values']['biblio_year']) && ($form_state['values']['biblio_year'] < 1000 || $form_state['values']['biblio_year'] > 9999)) {
       form_set_error('biblio_year', t('Year value must be in a YYYY format.'));
-      $return = TRUE;
+      return;
     }
-    if(!_os_publications_validate_year_field($form_state['values']['field_biblio_pub_month']['und'][0]['value'], $form_state['values']['field_biblio_pub_day']['und'][0]['value'], $form_state['values']['biblio_year'])) {
+    else if(($pub_month && $pub_day) && !_os_publications_validate_year_field($pub_month, $pub_day, $form_state['values']['biblio_year'])) {
       form_set_error('field_biblio_pub_month', t('Date must be valid.'));
-      form_set_error('field_biblio_pub_day', '');
-      form_set_error('biblio_year', '');
-      $return = TRUE;
-    }
-    if($return == TRUE) {
+      form_set_error('field_biblio_pub_day');
+      form_set_error('biblio_year');
       return;
     }
   } else {
