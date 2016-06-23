@@ -26,9 +26,9 @@ Drupal.behaviors.osPublications = {
 
     // Check whether month publication field exists
     // It is visible only for Harvard - Chicago Author cititation
-    if($("#edit-biblio-pub-month").length) {
+    if($("#edit-field-biblio-pub-month-und-0-value").length || $("#edit-field-biblio-pub-day-und-0-value").length) {
       // Handle month fields
-      var monthField = $("#edit-biblio-pub-month");
+      var monthField = $("#edit-field-biblio-pub-month-und-0-value");
       // Add validation warning.
       var monthWarning = $("#biblio-month-group-validate");
       if (!monthField.hasClass('error')) {
@@ -37,7 +37,7 @@ Drupal.behaviors.osPublications = {
       monthWarning.css('color', 'red');
 
       // Handle day fields
-      var dayField = $("#edit-biblio-pub-day");
+      var dayField = $("#edit-field-biblio-pub-day-und-0-value");
       // Add validation warning.
       var dayWarning = $("#biblio-day-group-validate");
       if (!dayField.hasClass('error')) {
@@ -50,7 +50,7 @@ Drupal.behaviors.osPublications = {
       // value the radio buttons are unchecked and disabled. Clearing the numerical
       // value enables the radio buttons again.
       // Validation is checked for both month and day fields as well
-      $("#edit-biblio-year, #edit-biblio-pub-month, #edit-biblio-pub-day").keyup(function() {
+      $("#edit-biblio-year, #edit-field-biblio-pub-month-und-0-value, #edit-field-biblio-pub-day-und-0-value").keyup(function() {
         if (this.value != '') {
           // Uncheck all radio buttons.
           codedYear.each(function () {

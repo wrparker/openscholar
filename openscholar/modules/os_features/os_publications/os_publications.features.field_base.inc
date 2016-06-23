@@ -58,6 +58,38 @@ function os_publications_field_default_field_bases() {
     'type' => 'image',
   );
 
+  // Exported field_base: 'field_biblio_pub_day'
+  $field_bases['field_biblio_pub_day'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_biblio_pub_day',
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
+  );
+
+  // Exported field_base: 'field_biblio_pub_month'
+  $field_bases['field_biblio_pub_month'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_biblio_pub_month',
+    'foreign keys' => array(),
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
+  );
+
   // Exported field_base: 'field_biblio_redirect'
   $field_bases['field_biblio_redirect'] = array(
     'active' => 1,

@@ -728,23 +728,24 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#weight' => $form['biblio_year']['#weight'],
   );
 
+  // Adding date and month fields for publication day for Harvard - Chicago Author cititation
+  if (in_array($style, array('harvard-chicago-author-date.csl'))) {
+    $form['field_biblio_pub_month']['und'][0]['value']['#attributes'] = array('maxlength' => 2, 'size' => 2, 'placeholder' => t('Month'));
+    $form['field_biblio_pub_day']['und'][0]['value']['#attributes'] = array('maxlength' => 2, 'size' => 2, 'placeholder' => t('Day'));
+    $form['biblio_year_group']['field_biblio_pub_month'] = $form['field_biblio_pub_month'];
+    $form['biblio_year_group']['field_biblio_pub_day'] = $form['field_biblio_pub_day'];
+    unset($form['biblio_year_group']['field_biblio_pub_month']['und'][0]['value']['#title']);
+    unset($form['biblio_year_group']['field_biblio_pub_day']['und'][0]['value']['#title']);
+    $form['biblio_year_group']['field_biblio_pub_month']['#attributes'] = array('placeholder' => t('Month'));
+    $form['biblio_year_group']['field_biblio_pub_month']['#attributes'] = array('placeholder' => t('Day'));
+    unset($form['field_biblio_pub_month']);
+    unset($form['field_biblio_pub_day']);
+  }
   // Form element changes - wrap in a fieldset with the checkboxes element, and
   // fix additional attributes accordingly.
   $form['biblio_year_group']['biblio_year'] = $form['biblio_year'];
   unset($form['biblio_year_group']['biblio_year']['#title']);
   unset($form['biblio_year_group']['biblio_year']['#description']);
-
-  // Adding date and month fields for publication day for Harvard - Chicago Author cititation
-  if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-    $form['biblio_year_group']['biblio_pub_month'] = $form['biblio_pub_month'];
-    $form['biblio_year_group']['biblio_pub_day'] = $form['biblio_pub_day'];
-    unset($form['biblio_year_group']['biblio_pub_month']['#title']);
-    unset($form['biblio_year_group']['biblio_pub_day']['#title']);
-    $form['biblio_year_group']['biblio_pub_month']['#attributes'] = array('placeholder' => t('Month'));
-    $form['biblio_year_group']['biblio_pub_day']['#attributes'] = array('placeholder' => t('Day'));
-  }
-  unset($form['biblio_pub_month']);
-  unset($form['biblio_pub_day']);
   $form['biblio_year_group']['biblio_year']['#size'] = 100;
   $form['biblio_year_group']['biblio_year']['#attributes'] = array('placeholder' => t('Year'));
   $form['biblio_year_group']['biblio_year']['#weight'] = 0;
@@ -796,7 +797,7 @@ function os_publications_validate_year_field($form, &$form_state) {
   $style = variable_get('biblio_citeproc_style');
   // Adding extra validation for date and month for Harvard - Chicago Author cititation
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-    if(($form_state['values']['biblio_pub_day'] || $form_state['values']['biblio_pub_day']) &&  !$form_state['values']['biblio_year']) {
+    if(($form_state['values']['field_biblio_pub_day']['und'][0]['value'] || $form_state['values']['field_biblio_pub_day']['und'][0]['value']) &&  !$form_state['values']['biblio_year']) {
       form_set_error('biblio_year', t('Year is mandetory'));
       $return = TRUE;
     }
@@ -804,9 +805,9 @@ function os_publications_validate_year_field($form, &$form_state) {
       form_set_error('biblio_year', t('Year value must be in a YYYY format.'));
       $return = TRUE;
     }
-    if(!_os_publications_validate_year_field($form_state['values']['biblio_pub_month'], $form_state['values']['biblio_pub_day'], $form_state['values']['biblio_year'])) {
-      form_set_error('biblio_pub_month', t('Date must be valid.'));
-      form_set_error('biblio_pub_day', '');
+    if(!_os_publications_validate_year_field($form_state['values']['field_biblio_pub_month']['und'][0]['value'], $form_state['values']['field_biblio_pub_day']['und'][0]['value'], $form_state['values']['biblio_year'])) {
+      form_set_error('field_biblio_pub_month', t('Date must be valid.'));
+      form_set_error('field_biblio_pub_day', '');
       form_set_error('biblio_year', '');
       $return = TRUE;
     }
@@ -1003,12 +1004,13 @@ function os_publications_biblio_entry_alter(&$entry, $node) {
  *    The HTML output to display.
  */
 function _os_publications_biblio_entry_alter($markup, $node) {
+
   $html = $markup;
   $style = variable_get('biblio_citeproc_style');
   // Pushing day and month in those both are present in Publication for Harvard - Chicago Author cititation
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-    if (!empty($node->biblio_year) && strpos($html, ' ' . $node->biblio_year) !== FALSE && !empty($node->biblio_pub_month) && !empty($node->biblio_pub_day)){
-      $html = str_replace('. ' . $node->biblio_year . '.', '. ' . $node->biblio_pub_month . '/' . $node->biblio_pub_day . '/' . $node->biblio_year . '.', $html);
+    if (!empty($node->biblio_year) && strpos($html, ' ' . $node->biblio_year) !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value']) && !empty($node->field_biblio_pub_day['und'][0]['value'])){
+      $html = str_replace('. ' . $node->biblio_year . '.', '. ' . $node->field_biblio_pub_month['und'][0]['value'] . '/' . $node->field_biblio_pub_day['und'][0]['value'] . '/' . $node->biblio_year . '.', $html);
     }
   }
   $insert = strrpos($html, '</div>');
@@ -1235,37 +1237,13 @@ function os_publications_batch_alter(&$batch) {
 // Clear relevant caches when a biblio node is added, changed or deleted
 function os_publications_node_insert($node) {
   if ($node->type == 'biblio') {
-    if(isset($node->biblio_pub_month) && !empty($node->biblio_pub_month)) {
-      $node->biblio_pub_month = NUll;
-    }
-    if(isset($node->biblio_pub_day) && !empty($node->biblio_pub_day)) {
-      $node->biblio_pub_day = NUll;
-    }
     _os_publications_handle_import($node);
-    db_update('biblio')
-    ->condition('nid', $node->nid)
-    ->fields(array('biblio_pub_month' => $biblio_pub_month, 'biblio_pub_day' => $biblio_pub_day))
-    ->execute();
     _os_publications_clear_cache($node);
   }
 }
 
 function os_publications_node_update($node) {
   if ($node->type == 'biblio') {
-    if(isset($node->biblio_pub_month) && !empty($node->biblio_pub_month)) {
-      $biblio_pub_month = $node->biblio_pub_month;
-    } else {
-      $biblio_pub_month = NULL;
-    }
-    if(isset($node->biblio_pub_day) && !empty($node->biblio_pub_day)) {
-      $biblio_pub_day = $node->biblio_pub_day;
-    } else {
-      $biblio_pub_day = NULL;
-    }
-    db_update('biblio')
-      ->condition('nid', $node->nid)
-      ->fields(array('biblio_pub_month' => $biblio_pub_month, 'biblio_pub_day' => $biblio_pub_day))
-      ->execute();
     _os_publications_clear_cache($node);
   }
 }
