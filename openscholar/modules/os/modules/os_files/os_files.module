@@ -1318,6 +1318,7 @@ function os_files_imagefield_crop_process($element, $form_state, $form) {
   module_load_include('inc', 'media', 'includes/media.browser');
   media_attach_browser_js($element['selected_file']);
   $element['selected_file']['#attached']['library'][] = array('os_common', 'FileEditorModal');
+  os_common_angular_apps('mediaBrowser');
 
   $element['#element_validate'] = array(
     'os_files_file_element_validate',
