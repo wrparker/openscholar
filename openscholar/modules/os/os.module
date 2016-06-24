@@ -2127,10 +2127,12 @@ function os_form_user_login_alter(&$form, $form_state) {
     );
     $form['pin-fieldset']['back'] = array(
         '#type' => 'button',
-        '#prefix' => '<a href="cancel">',
         '#value' => t('Back'),
         '#suffix' => '</a>',
-        '#attributes' => array('class' => array('pin-button-inline')),
+        '#attributes' => array(
+            'class' => array('pin-button-inline'),
+            'onclick' => "window.history.back()",
+        ),
     );
 
     unset($form['pin-fieldset']['name']['#description']);
