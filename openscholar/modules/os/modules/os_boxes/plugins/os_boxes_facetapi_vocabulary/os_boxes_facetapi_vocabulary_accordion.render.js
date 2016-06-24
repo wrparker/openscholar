@@ -10,6 +10,7 @@
           heightStyle: 'content',
           active: true
         });
+        $('#boxes-box-' + data.delta + ' > .boxes-box-content > .accordion > .item-list:first > h3').trigger('click');
       });
     }
   }
