@@ -31,7 +31,7 @@ class os_boxes_dataverse_dataset extends os_boxes_default {
   public function options_form(&$form_state){
     $form = parent::options_form($form_state);
 
-    $base_url = variable_get("dataverse_base_url", $this->dataverse_base_url_default) . "/dataverse/";
+    $base_url = variable_get("dataverse_base_url", $this->dataverse_base_url_default);
 
     $form['persistent_id'] = array(
       '#type' => 'textfield',
@@ -41,6 +41,8 @@ class os_boxes_dataverse_dataset extends os_boxes_default {
       '#field_prefix' => $base_url,
       '#default_value' => $this->options['persistent_id'],
     );
+
+    $form['persistent_id']['#element_validate'][] = 'dataverse_widget_validate';
 
     $form['doi_or_hdl'] = array(
       '#type' => 'radios',
@@ -68,7 +70,7 @@ class os_boxes_dataverse_dataset extends os_boxes_default {
 
     $embed_height = preg_replace('/\D/', '', $this->options['embed_height']);
     $persistent_id = preg_replace('/^\s*(doi|hdl)/', '', $this->options['persistent_id']);
-    $base_url = variable_get("dataverse_base_url", $this->dataverse_base_url_default) . "/resources/js/widgets.js?" . 
+    $base_url = variable_get("dataverse_base_url", $this->dataverse_base_url_default) . "/resources/js/widgets.js?" .
                 "persistentId=" . strtolower($this->options['doi_or_hdl']) . ":" . trim($persistent_id) . "&amp;" .
                 "dvUrl=" .  variable_get("dataverse_base_url", $this->dataverse_base_url_default) . "&amp;" .
                 "widget=iframe&amp;" . 

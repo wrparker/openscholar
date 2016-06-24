@@ -64,3 +64,14 @@ function os_dataverse_boxes_plugins(){
 
   return $info;
 }
+
+function dataverse_widget_validate($form, $form_state) {
+    echo ("dataverse_widget_validate validating!");
+
+    $dataverse_url = $form['#field_prefix'] . "/dataset.xhtml?persistentId=" . $form_state['values']['doi_or_hdl'] . ":" . $form['#value'];
+    $response = drupal_http_request($dataverse_url);
+    if ($response->code != 200) {
+        // form_error($form['#value'], t("The Dataverse URL '!dataverse_url' is not accessible.  Please enter a valid DOI or HDL.", array("!dataverse_url" => $dataverse_url)));
+        drupal_set_message(t("The Dataverse URL '!dataverse_url' is not accessible.  Please enter a valid DOI or HDL.", array("!dataverse_url" => $dataverse_url)), 'error');
+    }
+}
