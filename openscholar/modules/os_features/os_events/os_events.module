@@ -310,16 +310,10 @@ function os_events_export_to_csv($node, $delta = FALSE) {
     ->propertyCondition('entity_type', 'node');
 
   if ($delta !== FALSE && isset($node->field_date['und'][$delta])) {
-    $dates[] = $node->field_date['und'][$delta]['value'];
-    $query->fieldCondition('field_repeating_event_date', 'value', $dates[0]);
-  } else {
-
-    // cycle through the [possibly repeating] event date(s)
-    $delta = 0;
-    while ($node->field_date['und'][$delta]) {
-      $dates[] = $node->field_date['und'][$delta]['value'];
-      $delta++;
-    }
+    $date = $node->field_date['und'][$delta]['value'];
+    $query->fieldCondition('field_repeating_event_date', 'value', $date);
+  } else if (isset($node->field_date['und'][0]['value'])) {
+    $date = $node->field_date['und'][0]['value'];
   }
 
   $result = $query->execute();
@@ -330,20 +324,17 @@ function os_events_export_to_csv($node, $delta = FALSE) {
 
   $attendees = entity_load('registration', array_keys($result['registration']));
 
-  foreach ($dates as $_date) {
+  foreach ($attendees as $attendee) {
     $wrapper = entity_metadata_wrapper('registration', $attendee);
 
-    foreach ($attendees as $attendee) {
-
-      $exporter->addContent(array(
-          $_date,
-          $node->title,
-          $attendee->anon_mail,
-          '"' . format_date($attendee->created) . '"',
-          $wrapper->field_department->value(),
-          $wrapper->field_full_name->value(),
-      ));
-    }
+    $exporter->addContent(array(
+        $date,
+        $node->title,
+        $attendee->anon_mail,
+        '"' . format_date($attendee->created) . '"',
+        $wrapper->field_department->value(),
+        $wrapper->field_full_name->value(),
+    ));
   }
 
   $exporter->exportToFile($node->title . '-' . (isset($date)?$date . '-':'') .'attendees.csv');
