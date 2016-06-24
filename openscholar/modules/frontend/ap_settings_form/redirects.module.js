@@ -69,7 +69,10 @@
           };
 
           $http.post(restApi, vals, http_config).then(function (r) {
-            scope.redirects.push(r.data)
+            scope.redirects.push(r.data.data);
+            scope.newRedirectPath = '';
+            scope.newRedirectTarget= '';
+            scope.showAddForm = false;
           },
           function (e) {
 
