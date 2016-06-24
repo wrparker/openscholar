@@ -51,6 +51,20 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
   }
 
   /**
+   * Activate user roles
+   */
+  public function activateRoles() {
+    static $vsiteActivated = false;
+    if (!$vsiteActivated) {
+      if (module_exists('vsite') && $vsite = vsite_get_vsite($this->request['vsite'])) {
+        spaces_set_space($vsite);
+        $vsite->activate_user_roles();
+      }
+      $vsiteActivated = true;
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function access() {
@@ -83,14 +97,8 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
    * Check access for the given user against a single menu path
    */
   public function menuAccess(&$menuItem) {
-    static $vsiteActivated = false;
-    if (!$vsiteActivated) {
-      if (module_exists('vsite') && $vsite = vsite_get_vsite($this->request['vsite'])) {
-        spaces_set_space($vsite);
-        $vsite->activate_user_roles();
-      }
-      $vsiteActivated = true;
-    }
+
+    $this->activateRoles();
 
     $access = false;
     if ($menuItem['children']) {
@@ -135,6 +143,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
   public function getMenu($name_string) {
 
     $output = array();
+    $this->activateRoles();
 
     $function = "get_$name_string";
     if (method_exists($this, $function)) {
