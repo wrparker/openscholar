@@ -107,6 +107,7 @@ abstract class os_boxes_default extends boxes_box {
         '#default_value' => (isset($this->options['additional_class'])) ? $this->options['additional_class'] : '',
         '#access' => og_user_access('node', $vsite->group->nid, 'add widget custom class'),
         '#weight' => 9002,
+        '#element_validate' => array('os_boxes_additional_class_validate'),
       );
     }
 
@@ -517,4 +518,13 @@ function _os_boxes_default_advanced_handler($element, $form_state) {
   }
 
   return $element;
+}
+
+/**
+ * Validation callback for additional_class field element for widget settings form.
+ */
+function os_boxes_additional_class_validate($element, $form_state) {
+  if (!empty($element['#value']) && substr($element['#value'], 0, 3) !== 'os-') {
+    form_error($element, t('Custom container class name should be started with "os-".'));
+  }
 }
