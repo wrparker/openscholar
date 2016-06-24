@@ -330,10 +330,10 @@ function os_events_export_to_csv($node, $delta = FALSE) {
 
   $attendees = entity_load('registration', array_keys($result['registration']));
 
-  foreach ($attendees as $attendee) {
+  foreach ($dates as $_date) {
     $wrapper = entity_metadata_wrapper('registration', $attendee);
 
-    foreach ($dates as $_date) {
+    foreach ($attendees as $attendee) {
 
       $exporter->addContent(array(
           $_date,
