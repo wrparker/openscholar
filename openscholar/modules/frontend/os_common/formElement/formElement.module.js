@@ -13,34 +13,45 @@
         element: '=',
         value: '='
       },
-      template: '<span ng-if="element.prefix" ng-bind-html="element.prefix"></span>' +
-      '<span>Placeholder</span>' +
-      '<div class="description" ng-bind-html="description"></div>',
+      template: '<div class="form-wrapper">' +
+        '<span ng-if="element.prefix" ng-bind-html="element.prefix"></span>' +
+        '<span>Placeholder</span>' +
+        '<div class="description" ng-bind-html="description"></div>' +
+      '</div>',
       link: function (scope, elem, attr) {
         scope.id = $filter('idClean')(scope.element.name, 'edit');
         scope.description = scope.element.description;
         scope.label = scope.element.title;
-
-        var copy = elem.find('span').clone();
-        for (var k in scope.element) {
-          if (k == 'type' || k == 'custom_directive') {
-            copy.attr(scope.element[k], '');
-          }
-          else if (k == 'name') {
-            copy.attr('name', scope.element[k]);
-          }
+        scope.access = scope.element.access;
+        if (scope.access == undefined) {
+          scope.access = true;
         }
 
-        copy.attr('element', 'element');
+        if (scope.access) {
+          var copy = elem.find('span').clone();
+          for (var k in scope.element) {
+            if (k == 'type' || k == 'custom_directive') {
+              copy.attr(scope.element[k], '');
+            }
+            else if (k == 'name') {
+              copy.attr('name', scope.element[k]);
+            }
+          }
 
-        copy.attr('input-id', scope.id);
-        copy.attr('value', 'value');
-        copy = $compile(copy)(scope);
-        elem.find('span').replaceWith(copy);
-        if (scope.element.attached) {
-          $t(function () {
-            Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[0].data);
-          });
+          copy.attr('element', 'element');
+
+          copy.attr('input-id', scope.id);
+          copy.attr('value', 'value');
+          copy = $compile(copy)(scope);
+          elem.find('span').replaceWith(copy);
+          if (scope.element.attached) {
+            $t(function () {
+              Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[0].data);
+            });
+          }
+        }
+        else {
+          elem.remove();
         }
       }
     }
