@@ -131,6 +131,10 @@ abstract class OsMigrate extends Migration {
     $vocabulary = taxonomy_vocabulary_machine_name_load($entity->vocabulary_machine_name);
     $gid = $entity->og_group_ref['destid1'];
 
+    if (!og_vocab_relation_get($vocabulary->vid)) {
+      return;
+    }
+
     og_vocab_relation_save($vocabulary->vid, 'node', $gid);
   }
 
