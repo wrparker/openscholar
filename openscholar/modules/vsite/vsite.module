@@ -1690,16 +1690,35 @@ function vsite_load_user_sites($user_id) {
   // Grab their sites.
   $vsites_owner = vsite_get_vsite_by_owner($user_id);
   // Create each site as a link.
+
+  $items = array();
   foreach ($vsites_owner as $site ) {
     ctools_include('subsite', 'vsite');
 
     $node = node_load($site->group->nid);
-    $items = array();
-    $items[] = l($node->title, $site->get_absolute_url());
-    
-    // Prepare them for theme_list_item.
-    $sites_array[] = theme('item_list', array('items' => $items, 'attributes' => array('class' => array('inline'))));
+    $items[$site->id] = array(
+      '0' => l($node->title, $site->get_absolute_url()),
+      'parent_id' => (isset($site->group->field_group_parent['und'][0]['target_id']) ? $site->group->field_group_parent['und'][0]['target_id'] : null),
+    );
   }
+
+  // Add children to list
+  foreach (array_keys($items) as $k) {
+    if ($items[$k]['parent_id']) {
+      $items[$items[$k]['parent_id']]['children'][] = $items[$k][0];
+      unset($items[$k]);
+    }
+    unset($items[$k]['parent_id']);
+  }
+
+  // Prepare them for theme_list_item.
+  $sites_array[] = theme('item_list', array(
+          'items' => $items,
+          'attributes' => array(
+              'class' => array('inline-block')
+          ),
+      )
+  );
 
   return $sites_array;
 }

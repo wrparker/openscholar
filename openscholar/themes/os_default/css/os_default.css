@@ -249,6 +249,9 @@ background-size: 60px 60px;
     border: 1px solid #e1e1e1;
     margin-bottom: 10px;
 }
+.item-list > ul li {
+    margin-left: 20px;
+}
 .logged-in.no-sidebars.page-user #content li .item-list {
     border-radius: 0;
     -moz-border-radius: 0;
