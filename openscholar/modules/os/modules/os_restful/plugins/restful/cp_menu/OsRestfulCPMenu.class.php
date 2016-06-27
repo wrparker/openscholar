@@ -284,6 +284,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     foreach ($settings_forms as $f) {
       $group = $f['group']['#title'];
       $id = $f['group']['#id'];
+      if ($id == 'ga') continue;  // this form is hard-coded into the menu tree
 
       if (!isset($f['form']['#access']) || $f['form']['#access']) {
         $settings_links[$id] = array(
