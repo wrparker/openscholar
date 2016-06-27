@@ -196,13 +196,11 @@ class spaces_controller_menus extends spaces_controller {
 
       $below = array();
 
-      if (isset($this->menuLinks[$next_depth + 1][$menu_link['mlid']])) {
+      $fix_depth = isset($this->menuLinks[$next_depth + 1][$menu_link['mlid']]);
+      if ($fix_depth) {
         // In case we took a sub menu and move it one level down, the sub menus
         // of that menu are still in the previous depth.
-
-        // todo check at the form submit that the depth of the menus is correct
-        // and fix it.
-        $next_depth = $next_depth + 1;
+        $next_depth++;
       }
 
       if (isset($this->menuLinks[$next_depth][$menu_link['mlid']])) {
@@ -267,7 +265,7 @@ class spaces_controller_menus extends spaces_controller {
 
     $result = array();
     foreach ($links as $mlid => $link) {
-      if(in_array($link['plid'], $parents) && !in_array($mlid, $parents)){
+      if (in_array($link['plid'], $parents) && !in_array($mlid, $parents)) {
         $result[$mlid] = $link;
       }
     }
