@@ -473,16 +473,23 @@ ol {
 }
 .item-list .field-name-body ul li {
     margin: 0;
-  
 }
 .block ul {
     padding-left: 0;
     list-style: none;
 }
-.block.block-boxes-os_boxes_html ul,
-.block .field-name-body ul {
+.block.block-boxes-os_boxes_html ul {
     list-style: disc inside !important;
     margin-left: 0;
+}
+.field-name-body ul {
+    list-style-position: inside !important;
+}
+.field-name-body ul ul ul {
+    list-style-type: square !important;
+}
+.field-name-body ul ul ul ul{
+    list-style-type: circle !important;
 }
 ul ul,
 ul ol,
