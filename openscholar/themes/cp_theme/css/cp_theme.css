@@ -377,7 +377,7 @@ table th label {
 }
 #edit-menu-table,
 #cp-menu-build-form {
-    width: 775px;
+    width: 100%;
 }
 #cp-appearance-theme-picker-form select {
     max-width: 90px;
@@ -1058,6 +1058,7 @@ div.error:before {
     font-weight: normal;
     padding: 8px 0;
 }
+
 .select2-container {
     min-width: 300px;
 }
