@@ -88,7 +88,7 @@ projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
 projects[entity][patch][] = https://www.drupal.org/files/issues/2086225-entity-access-check-18.patch
 
 projects[entitycache][subdir] = "contrib"
-projects[entitycache][version] = 1.1
+projects[entitycache][version] = 1.5
 
 projects[entityreference][subdir] = "contrib"
 projects[entityreference][version] = 1.1
