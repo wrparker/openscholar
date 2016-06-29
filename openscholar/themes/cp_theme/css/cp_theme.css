@@ -600,12 +600,18 @@ table.biblio-contributors tr:first-child input.form-submit {
     margin-top: 10px;
 }
 #edit-biblio-year {
-    width: 50px;
+    width: 35px;
 }
 .form-item.form-type-radio {
     margin-left: 10px;
     font-size: 1em;
     font-weight: normal;
+}
+#edit-biblio-year-coded .form-item.form-type-radio {
+    margin-left: 0;
+}
+#edit-biblio-year-coded .form-item label.option {
+   font-size: 0.85em;
 }
 fieldset#edit-biblio-year-group {
     background: none;
