@@ -6,7 +6,7 @@ Feature:
     Given I visit "john/about"
      Then I should see the meta tag "description" with value "Page about john"
 
-  @api @misc_second
+  @api @misc_second @now
   Scenario: Testing custom metatags.
     Given I am logging in as "john"
       And I edit the page meta data of "about" in "john"
