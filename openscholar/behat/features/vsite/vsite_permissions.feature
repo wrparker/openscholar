@@ -62,7 +62,7 @@ Feature:
      When I visit "john/publications"
      Then I should not see the link "Links" under "ctools-dropdown-link-wrapper"
 
-  @api @vsite
+  @api @wip
   Scenario: Testing vsite owner cannot delete its own vsite, only to request a delete.
     Given I am logging in as "john"
      When I visit "user"
@@ -71,7 +71,7 @@ Feature:
      Then I should see "Delete website request"
       And I should not see "This action cannot be undone"
 
-  @api @vsite
+  @api @wip
   Scenario: Testing admin can delete vsite.
     Given I am logging in as "admin"
      When I visit "users/john"
