@@ -140,7 +140,9 @@ function os_sv_list_entity_query_alter(EntityFieldQuery $efq) {
     foreach ($efq->order as &$o) {
       if (!empty($o['specifier']['field']['field_name']) && $o['specifier']['field']['field_name'] == 'field_date') {
         $oldIndex = $o['specifier']['index'];
-        unset($efq->fields[$oldIndex]);
+        if ($oldIndex != $key) {
+          unset($efq->fields[$oldIndex]);
+        }
         $o['specifier']['index'] = $key;
       }
     }
