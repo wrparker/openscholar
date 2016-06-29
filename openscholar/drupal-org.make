@@ -89,6 +89,7 @@ projects[entity][patch][] = https://www.drupal.org/files/issues/2086225-entity-a
 
 projects[entitycache][subdir] = "contrib"
 projects[entitycache][version] = 1.5
+projects[entitycache][patch][] = https://www.drupal.org/files/issues/2516094-1-entitycache_fix_arry_flip.patch
 
 projects[entityreference][subdir] = "contrib"
 projects[entityreference][version] = 1.1

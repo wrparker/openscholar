@@ -245,8 +245,6 @@ function os_entity_info_alter(&$info) {
     'label' => t('No image Teaser'),
     'custom settings' => TRUE,
   );
-
-  $info['node']['controller'] = 'OsNodesController';
 }
 
 /**
