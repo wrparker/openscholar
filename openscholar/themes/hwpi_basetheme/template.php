@@ -167,10 +167,6 @@ function hwpi_basetheme_process_node(&$build) {
         $build['title_prefix']['#suffix'] = '<div class="toggle">' . $build['title_prefix']['#suffix'] . '</div>';
       }
     }
-  }
-
-  // Persons, heavily modify the output to match the HC designs
-  if ($build['#node']->type == 'person') {
 
     if ($build['#view_mode'] == 'sidebar_teaser') {
       $build['pic_bio']['#prefix'] = '<div class="pic-bio clearfix people-sidebar-teaser">';
@@ -250,6 +246,18 @@ function hwpi_basetheme_process_node(&$build) {
     if (empty($children)) {
       $build['pic_bio']['#access'] = false;
     }
+
+  }
+}
+
+/*
+ * Implements hook_node_view_alter
+ *
+ */
+function hwpi_basetheme_node_view_alter(&$build) { 
+
+  // Persons, heavily modify the output to match the HC designs
+  if ($build['#node']->type == 'person') {
 
     // Note that Contact and Website details will print wrappers and titles regardless of any field content.
     // This is kind of deliberate to avoid having to handle the complexity of dealing with the layout or
@@ -360,9 +368,8 @@ function hwpi_basetheme_process_node(&$build) {
       unset($build['og_vocabulary']);
     }
   }
-
-
 }
+
 
 /**
  * Implements hook_field_display_ENTITY_TYPE_alter().
