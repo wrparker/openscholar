@@ -152,46 +152,23 @@ function hwpi_basetheme_profile_default_image($size = 'small') {
 /**
  * Process variables for comment.tpl.php
  */
-function hwpi_basetheme_process_node(&$vars) {
+function hwpi_basetheme_process_node(&$build) {
   // Event persons, change title markup to h1.
-  if ($vars['type'] == 'person') {
-    if ($vars['view_mode'] == 'title') {
-      $vars['title_prefix']['#suffix'] = '<h1 class="node-title">' . l($vars['title'], 'node/' . $vars['nid']) . '</h1>';
-      $vars['title'] = NULL;
+  if ($build['type'] == 'person') {
+    if ($build['view_mode'] == 'title') {
+      $build['title_prefix']['#suffix'] = '<h1 class="node-title">' . l($build['title'], 'node/' . $build['nid']) . '</h1>';
+      $build['title'] = NULL;
     }
-    elseif (!$vars['teaser'] && $vars['view_mode'] != 'sidebar_teaser') {
-      $vars['title_prefix']['#suffix'] = '<h1 class="node-title">' . $vars['title'] . '</h1>';
-      $vars['title'] = NULL;
+    elseif (!$build['teaser'] && $build['view_mode'] != 'sidebar_teaser') {
+      $build['title_prefix']['#suffix'] = '<h1 class="node-title">' . $build['title'] . '</h1>';
+      $build['title'] = NULL;
 
-      if ($vars['view_mode'] == 'slide_teaser') {
-        $vars['title_prefix']['#suffix'] = '<div class="toggle">' . $vars['title_prefix']['#suffix'] . '</div>';
+      if ($build['view_mode'] == 'slide_teaser') {
+        $build['title_prefix']['#suffix'] = '<div class="toggle">' . $build['title_prefix']['#suffix'] . '</div>';
       }
     }
   }
-}
 
-/**
- * Implements hook_field_display_ENTITY_TYPE_alter().
- */
-function hwpi_basetheme_field_display_node_alter(&$display, $context) {
-  if ($context['entity']->type == 'event' && $context['instance']['field_name'] == 'field_date') {
-    if (($context['view_mode'] != 'full') || (isset($context['entity']->os_sv_list_box) && $context['entity']->os_sv_list_box)) {
-
-      if (isset($context['entity']->field_date[LANGUAGE_NONE][0]['value2']) &&
-          (strtotime($context['entity']->field_date[LANGUAGE_NONE][0]['value2']) - strtotime($context['entity']->field_date[LANGUAGE_NONE][0]['value']) > 24*60*60)) {
-        return; //event is more than one day long - keep both dates visible
-      }
-
-      //hide the date - it's already visible in the shield
-      $display['settings']['format_type'] = 'os_time';
-    }
-  }
-}
-
-/**
- * Alter the results of node_view().
- */
-function hwpi_basetheme_node_view_alter(&$build) {
   // Persons, heavily modify the output to match the HC designs
   if ($build['#node']->type == 'person') {
 
@@ -385,8 +362,27 @@ function hwpi_basetheme_node_view_alter(&$build) {
       unset($build['og_vocabulary']);
     }
   }
+
+
 }
 
+/**
+ * Implements hook_field_display_ENTITY_TYPE_alter().
+ */
+function hwpi_basetheme_field_display_node_alter(&$display, $context) {
+  if ($context['entity']->type == 'event' && $context['instance']['field_name'] == 'field_date') {
+    if (($context['view_mode'] != 'full') || (isset($context['entity']->os_sv_list_box) && $context['entity']->os_sv_list_box)) {
+
+      if (isset($context['entity']->field_date[LANGUAGE_NONE][0]['value2']) &&
+          (strtotime($context['entity']->field_date[LANGUAGE_NONE][0]['value2']) - strtotime($context['entity']->field_date[LANGUAGE_NONE][0]['value']) > 24*60*60)) {
+        return; //event is more than one day long - keep both dates visible
+      }
+
+      //hide the date - it's already visible in the shield
+      $display['settings']['format_type'] = 'os_time';
+    }
+  }
+}
 
 /**
  * Preprocess variables for comment.tpl.php
