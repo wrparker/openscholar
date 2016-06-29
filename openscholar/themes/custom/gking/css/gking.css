@@ -1717,38 +1717,71 @@ body.front .block-boxes-os_taxonomy_fbt ul.termchild-applications .description {
     left:-227px;
     }
 
-body.front .block-boxes-os_taxonomy_fbt li.term-event-counts-and-durations .description,
+body.front .block-boxes-os_taxonomy_fbt li.term-unifying-statistical-analysis .description {
+  top: -210px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-survey-research .description {
+  top: -185px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-rare-events .description {
+  top: -160px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-qualitative-research .description {
+  top: -135px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-missing-data .description {
+  top: -110px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-ecological-inference .description {
+  top: -85px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-event-counts-and-durations .description {
+  top: -60px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-causal-inference .description {
+  top: -35px;
+}
+
+
+
 body.front .block-boxes-os_taxonomy_fbt li.term-incumbency-advantage .description {
-top:-36px;
+  top: -50px;
 }
-body.front .block-boxes-os_taxonomy_fbt li.term-ecological-inference .description,  
-body.front .block-boxes-os_taxonomy_fbt li.term-mexican-health-care-evaluation .description {
-top:-61px;
+
+ body.front .block-boxes-os_taxonomy_fbt li.term-mexican-health-care-evaluation .description {
+  top: -75px;
 }
-body.front .block-boxes-os_taxonomy_fbt li.term-missing-data .description,
-body.front .block-boxes-os_taxonomy_fbt li.term-presidency-research-voting-behavior .description {
-top:-86px;
+
+ body.front .block-boxes-os_taxonomy_fbt li.term-presidency-research-voting-behavior .description {
+  top: -100px;
 }
-body.front .block-boxes-os_taxonomy_fbt li.term-qualitative-research .description,
+
 body.front .block-boxes-os_taxonomy_fbt li.term-informatics-and-data-sharing .description {
-top:-111px;
+  top: -125px;
 }
-body.front .block-boxes-os_taxonomy_fbt li.term-rare-events .description, 
 body.front .block-boxes-os_taxonomy_fbt li.term-international-conflict .description {
-top:-136px;
+  top: -150px;
 }
-body.front .block-boxes-os_taxonomy_fbt li.term-survey-research .description, 
-body.front .block-boxes-os_taxonomy_fbt li.term-legislative-redistricting .description {
-top:-161px;
+
+ body.front .block-boxes-os_taxonomy_fbt li.term-legislative-redistricting .description {
+  top: -175px;
 }
-body.front .block-boxes-os_taxonomy_fbt li.term-unifying-statistical-analysis .description, 
+
 body.front .block-boxes-os_taxonomy_fbt li.term-mortality-studies .description {
-top:-186px;
+  top: -200px;
 }
+
 body.front .block-boxes-os_taxonomy_fbt li.term-teaching-and-administration .description {
-top:-211px;    
-  } 
-  
+  top: -225px;
+}
+
 /* FIREFOX OVERRIDES FOR AOR DESCR  
  @-moz-document url-prefix() {  
 body.front .block-boxes-os_taxonomy_fbt li.term-event-counts-and-durations .description,
