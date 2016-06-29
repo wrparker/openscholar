@@ -1784,37 +1784,7 @@ body.front .block-boxes-os_taxonomy_fbt li.term-teaching-and-administration .des
 
 /* FIREFOX OVERRIDES FOR AOR DESCR  
  @-moz-document url-prefix() {  
-body.front .block-boxes-os_taxonomy_fbt li.term-event-counts-and-durations .description,
-body.front .block-boxes-os_taxonomy_fbt li.term-incumbency-advantage .description {
-top:-37px;
-}
-body.front .block-boxes-os_taxonomy_fbt li.term-ecological-inference .description,  
-body.front .block-boxes-os_taxonomy_fbt li.term-mexican-health-care-evaluation .description {
-top:-64px;
-}
-body.front .block-boxes-os_taxonomy_fbt li.term-missing-data .description,
-body.front .block-boxes-os_taxonomy_fbt li.term-presidency-research-voting-behavior .description {
-top:-90px;
-}
-body.front .block-boxes-os_taxonomy_fbt li.term-qualitative-research .description,
-body.front .block-boxes-os_taxonomy_fbt li.term-informatics-and-data-sharing .description {
-top:-116px;
-}
-body.front .block-boxes-os_taxonomy_fbt li.term-rare-events .description, 
-body.front .block-boxes-os_taxonomy_fbt li.term-international-conflict .description {
-top:-143px;
-}
-body.front .block-boxes-os_taxonomy_fbt li.term-survey-research .description, 
-body.front .block-boxes-os_taxonomy_fbt li.term-legislative-redistricting .description {
-top:-169px;
-}
-body.front .block-boxes-os_taxonomy_fbt li.term-unifying-statistical-analysis .description, 
-body.front .block-boxes-os_taxonomy_fbt li.term-mortality-studies .description {
-top:-195px;
-}
-body.front .block-boxes-os_taxonomy_fbt li.term-teaching-and-administration .description {
-top:-222px;    
-  } 
+
  }  
 */
 body.front .block-boxes-os_taxonomy_fbt li {
@@ -1836,6 +1806,10 @@ body.front .block-boxes-os_taxonomy_fbt .item-list ul.termchild-applications a {
      left: 0; 
      padding-left: 59px;
   
+}
+
+li.term-evaluating-us-social-security-administration-forecasts a {
+    padding-left: 0 !important;
 }
 
 body.front .block-boxes-os_taxonomy_fbt .item-list li.term-methods a {
