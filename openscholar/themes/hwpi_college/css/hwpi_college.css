@@ -10,8 +10,8 @@ body {
 }
 
 /* Show infinite scrolling after login */
-.front body {
-overflow-x: hidden;
+body.front {
+    overflow-y: hidden;
 }
 #page-wrapper {
     background: none repeat scroll 0 0 #F3F3F1;
