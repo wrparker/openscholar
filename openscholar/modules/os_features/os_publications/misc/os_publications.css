@@ -47,7 +47,7 @@ a.cite-pop {
 }
 
 
-#edit-biblio-year-coded, .form-item-biblio-year-coded, .form-item-biblio-year, #edit-field-biblio-pub-month, #field-biblio-pub-month-add-more-wrapper, .form-item-field-biblio-pub-month-und-0-value, #edit-field-biblio-pub-day, #field-biblio-pub-day-add-more-wrapper, .form-item-field-biblio-pub-day-und-0-value {
+#edit-biblio-year-coded, .form-item-biblio-year-coded, .form-item-biblio-year, #edit-field-biblio-pub-month, .form-item-field-biblio-pub-month-und, #edit-field-biblio-pub-day, .form-item-field-biblio-pub-day-und {
   display: inline;
 }
 

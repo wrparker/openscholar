@@ -730,22 +730,17 @@ function os_publications_alter_year_field(&$form, &$form_state) {
 
   // Adding date and month fields for publication day for Harvard - Chicago Author cititation
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-    $form['field_biblio_pub_month']['und'][0]['value']['#attributes'] = array('maxlength' => 2, 'size' => 2, 'placeholder' => t('Month'));
-    $form['field_biblio_pub_day']['und'][0]['value']['#attributes'] = array('maxlength' => 2, 'size' => 2, 'placeholder' => t('Day'));
+    $form['field_biblio_pub_month']['und']['#options']['_none'] = 'Month';
+    $form['field_biblio_pub_day']['und']['#options']['_none'] = 'Day';
     $form['biblio_year_group']['field_biblio_pub_month'] = $form['field_biblio_pub_month'];
     $form['biblio_year_group']['field_biblio_pub_day'] = $form['field_biblio_pub_day'];
     $form['biblio_year_group']['field_biblio_pub_month']['#weight'] = -2;
     $form['biblio_year_group']['field_biblio_pub_day']['#weight'] = -1;
-    unset($form['biblio_year_group']['field_biblio_pub_month']['und'][0]['value']['#title']);
-    unset($form['biblio_year_group']['field_biblio_pub_day']['und'][0]['value']['#title']);
-    $form['biblio_year_group']['field_biblio_pub_month']['#attributes'] = array('placeholder' => t('Month'));
-    $form['biblio_year_group']['field_biblio_pub_month']['#attributes'] = array('placeholder' => t('Day'));
-    unset($form['field_biblio_pub_month']);
-    unset($form['field_biblio_pub_day']);
-  } else {
-    unset($form['field_biblio_pub_month']);
-    unset($form['field_biblio_pub_day']);
+    unset($form['biblio_year_group']['field_biblio_pub_month']['und']['#title']);
+    unset($form['biblio_year_group']['field_biblio_pub_day']['und']['#title']);
   }
+  unset($form['field_biblio_pub_month']);
+  unset($form['field_biblio_pub_day']);
   // Form element changes - wrap in a fieldset with the checkboxes element, and
   // fix additional attributes accordingly.
   $form['biblio_year_group']['biblio_year'] = $form['biblio_year'];
@@ -778,12 +773,12 @@ function os_publications_alter_year_field(&$form, &$form_state) {
 
   // Adding date and month validation message for Harvard - Chicago Author cititation
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-    $form_validation_date_month = '<div id="biblio-month-group-validate">' . t('Month must be in the form MM. Only numerical digits are allowed upto 31.') . '</div><div id="biblio-day-group-validate">' . t('Day must be in the form DD. Only numerical digits are allowed upto 12.') . '</div>';
+    $form_validation_date_month = '<div id="biblio-month-group-validate">' . t(' Permitted date formats: 2/10/' . date('Y') . ', 2/' . date('Y') . ', ' . date('Y') . '.') . '</div>';
   } else {
     $form_validation_date_month = '';
   }
   // Add validation message for validating the field via JS.
-  $form['biblio_year_group']['#suffix'] =  $form_validation_date_month . '<div id="biblio-year-group-validate">' . t('Year must be in the form YYYY. Only numerical digits are allowed.') . '</div>';
+  $form['biblio_year_group']['#suffix'] =  $form_validation_date_month . '<div id="biblio-year-group-validate">' . t('Year must be in the form YYYY. Only numerical digits are allowed.') .  '</div>';
 
   // Remove original form element.
   unset($form['biblio_year']);
@@ -937,6 +932,7 @@ function os_publications_nodeformcols_pre_placement_alter(&$form) {
  */
 function os_publications_biblio_form_patent_validate(&$form, &$form_state) {
   // Only altering for patent types.
+
   if($form_state['values']['biblio_type'] != '119') {
     return;
   }
@@ -1013,8 +1009,14 @@ function _os_publications_biblio_entry_alter($markup, $node) {
   $style = variable_get('biblio_citeproc_style');
   // Pushing day and month in those both are present in Publication for Harvard - Chicago Author cititation
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-    if (!empty($node->biblio_year) && strpos($html, $node->biblio_year.'. ') !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value']) && !empty($node->field_biblio_pub_day['und'][0]['value'])){
-      $html = str_replace($node->biblio_year . '. ', $node->field_biblio_pub_month['und'][0]['value'] . '/' . $node->field_biblio_pub_day['und'][0]['value'] . '/' . $node->biblio_year . '. ', $html);
+    if (!empty($node->biblio_year) && strpos($html, $node->biblio_year.'. ') !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value'])) {
+      // In case day value is present
+      if(!empty($node->field_biblio_pub_day['und'][0]['value'])) {
+        $day = $node->field_biblio_pub_day['und'][0]['value'] . '/';
+      } else {
+        $day = '';
+      }
+      $html = str_replace($node->biblio_year . '. ', $node->field_biblio_pub_month['und'][0]['value'] . '/' . $day . $node->biblio_year . '. ', $html);
     }
   }
   $insert = strrpos($html, '</div>');

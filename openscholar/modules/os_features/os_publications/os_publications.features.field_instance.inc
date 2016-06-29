@@ -233,7 +233,11 @@ function os_publications_field_default_field_instances() {
   // Exported field_instance: 'node-biblio-field_biblio_pub_day'
   $field_instances['node-biblio-field_biblio_pub_day'] = array(
     'bundle' => 'biblio',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -285,25 +289,25 @@ function os_publications_field_default_field_instances() {
     'label' => 'Day of Publication',
     'required' => 0,
     'settings' => array(
-      'max' => '',
-      'min' => '',
-      'prefix' => '',
-      'suffix' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'active' => 0,
-      'module' => 'number',
+      'active' => 1,
+      'module' => 'options',
       'settings' => array(),
-      'type' => 'number',
-      'weight' => 2,
+      'type' => 'options_select',
+      'weight' => 3,
     ),
   );
 
   // Exported field_instance: 'node-biblio-field_biblio_pub_month'
   $field_instances['node-biblio-field_biblio_pub_month'] = array(
     'bundle' => 'biblio',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
     'deleted' => 0,
     'description' => '',
     'display' => array(
@@ -355,18 +359,14 @@ function os_publications_field_default_field_instances() {
     'label' => 'Month of Publication',
     'required' => 0,
     'settings' => array(
-      'max' => '',
-      'min' => '',
-      'prefix' => '',
-      'suffix' => '',
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'active' => 0,
-      'module' => 'number',
+      'active' => 1,
+      'module' => 'options',
       'settings' => array(),
-      'type' => 'number',
-      'weight' => 1,
+      'type' => 'options_select',
+      'weight' => 2,
     ),
   );
 
