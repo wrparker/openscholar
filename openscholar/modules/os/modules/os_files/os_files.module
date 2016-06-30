@@ -1857,6 +1857,26 @@ function os_files_field_formatter_view($entity_type, $entity, $field, $instance,
               'maxwidth' => 350,
             )
           );
+          $images[] = array(
+            'href' => '',
+            'title' => theme('image', array(
+              'path' => $i['oembed']['thumbnail_url'],
+              'title' => $i['oembed']['title'],
+              'alt' => $i['oembed']['title'],
+              'width' => 100,
+            )),
+            'html' => TRUE,
+            'query' => array('innerWidth' => $i['oembed']['width'], 'innerHeight' => $i['oembed']['height'], 'inline' => 'true'),
+            'fragment' => 'embed-colorbox-' . $i['fid'],
+            'attributes' => array(
+              'class' => array(
+                'colorbox-inline'
+              ),
+              'rel' => array(
+                $display['type'] . $entity->vid
+              )
+            )
+          );          
         }
         elseif (file_uri_scheme($i['uri']) == 'embed') {
           $file = (object)$i;
@@ -1921,7 +1941,7 @@ function os_files_field_formatter_view($entity_type, $entity, $field, $instance,
         $elements['videos'] = array(
           '#type' => 'container',
           '#attributes' => array(
-            'class' => array('os-files-videos-list'),
+            'class' => array('os-files-videos-list', 'element-hidden'),
           )
         );
         foreach ($videos as $v) {
@@ -2216,9 +2236,18 @@ function _os_files_video_thumb($file, $width_max = 500, $height_max = 500) {
     '#url' => $url,
     '#attributes' => array('width' => min($w, 250) . 'px'),
     '#options' => array(),
+    '#pre_render' => array(
+      'oembed_pre_render_fetch',
+      'oembed_pre_render_thumbnail',
+      'os_files_pre_render_oembed_thumbnail'
+    ),
   );
-
   return $video;
+}
+
+function os_files_pre_render_oembed_thumbnail($element) {
+  $element['#width'] = 100;
+  return $element;
 }
 
 function _os_files_extensions_from_type($type) {
