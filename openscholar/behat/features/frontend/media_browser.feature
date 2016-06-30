@@ -123,7 +123,7 @@ Feature: Media Browser
       And I should see "rubber-duck.jpg" in a ".file-list-single" element
       And I should see "conservatory_of_flowers3.jpg" in a ".file-list-single" element
 
-  @media_browser @wip
+  @wip @javascript
   Scenario: Test the file upload work flow for multiple, valid, duplicate files, which we cancel
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -140,7 +140,7 @@ Feature: Media Browser
       And I click on the "Cancel" control in the ".media-browser-dupe" element
      Then I should see the media browser "Upload from your computer" tab is active
 
-  @media_browser @javascript
+  @wip @javascript
   Scenario: Test the file upload work flow for a single, invalid file.
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -159,7 +159,7 @@ Feature: Media Browser
       And I drop the file "Expeditionary_Fighting_Vehicle_test.jpg" onto the "Drag and drop files here." area
       And I should see "Expeditionary_Fighting_Vehicle_test.jpg is larger than the maximum filesize of 15 MB"
 
-  @media_browser @wip
+  @wip @javascript
   Scenario: Test the file upload work flow for multiple valid files, some of which are duplicates and some of which are not.
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -175,7 +175,7 @@ Feature: Media Browser
       And I press the "Replace" button
       And I should see "abc.pdf" in a ".file-list-single" element
 
-  @media_browser @wip
+  @wip @javascript
   Scenario: Test adding a youtube video to a site
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -192,7 +192,7 @@ Feature: Media Browser
       And I adding the embedded video
       And I should see "Me at the zoo" in a ".file-list-single" element
 
-  @media_browser @wip
+  @wip @javascript
   Scenario: Test adding an unknown URL to a site
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -206,7 +206,7 @@ Feature: Media Browser
       And I wait "3 seconds"
      Then I should see "URL(s) not from accepted domain!"
 
-  @media_browser @wip
+  @wip @javascript
   Scenario: Test adding embed codes from trusted and untrusted sources
     Given I am logging in as "john"
       And I wait for page actions to complete
