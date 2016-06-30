@@ -110,7 +110,7 @@ Feature: Media Browser
      And I should not see "kitten-2_02.jpg" in a "div.media-row" element
      And I confirm the file "kitten-2.jpg" in the site "john" is not the same file as "kitten-2.jpg"
 
-  @media_browser @wip
+  @wip @javascript
   Scenario: Test the file upload work flow for multiple, valid, non-duplicate files
     Given I am logging in as "john"
       And I wait for page actions to complete
