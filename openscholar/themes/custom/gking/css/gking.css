@@ -1194,7 +1194,7 @@ float: none;
   
   
 #powerby-login {
-   margin: -57px 10px;
+   margin: -27px 10px;
    position: relative;
    z-index: 5;
  }
@@ -1270,8 +1270,7 @@ float: none;
 
 
 #footer .block-boxes-os_boxes_addthis {
-	margin: 7px 0 0 30px;
-	width: 170px;
+	margin-left: 20px;
 }
 
 
