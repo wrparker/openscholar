@@ -69,7 +69,7 @@ Feature: Media Browser
       And I confirm the file "kitten-2.jpg" in the site "john" is the same file as "duplicate/kitten-2.jpg"
       And I confirm the file "kitten-2.jpg" in the site "john" is not the same file as "kitten-2.jpg"
 
-  @media_browser @wip
+  @wip @javascript
   Scenario: Test the work flow for a single, valid, duplicate file, which we rename
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -88,7 +88,7 @@ Feature: Media Browser
      When I click on the "Save" control
       And I should see "kitten-2_01.jpg" in a ".file-list-single" element
 
-  @media_browser @javascript
+  @wip @javascript
   Scenario: Test the work flow for a single, valid, duplicate file, which we cancel
     Given I am logging in as "john"
      And I wait for page actions to complete
