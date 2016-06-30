@@ -1782,11 +1782,69 @@ body.front .block-boxes-os_taxonomy_fbt li.term-teaching-and-administration .des
   top: -225px;
 }
 
-/* FIREFOX OVERRIDES FOR AOR DESCR  
+/* FIREFOX OVERRIDES FOR AOR DESCR  */
  @-moz-document url-prefix() {  
 
+body.front .block-boxes-os_taxonomy_fbt li.term-event-counts-and-durations .description {
+    top: -62px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-ecological-inference .description {
+    top: -88px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-missing-data .description {
+    top: -113px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-qualitative-research .description {
+    top: -140px;
+}
+
+
+body.front .block-boxes-os_taxonomy_fbt li.term-rare-events .description {
+    top: -168px;
+}
+
+
+body.front .block-boxes-os_taxonomy_fbt li.term-survey-research .description {
+    top: -193px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-unifying-statistical-analysis .description {
+    top: -220px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-incumbency-advantage .description {
+    top: -52px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-mexican-health-care-evaluation .description {
+    top: -78px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-presidency-research-voting-behavior .description {
+    top: -105px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-informatics-and-data-sharing .description {
+    top: -130px;
+}
+body.front .block-boxes-os_taxonomy_fbt li.term-international-conflict .description {
+    top: -156px;
+}
+body.front .block-boxes-os_taxonomy_fbt li.term-legislative-redistricting .description {
+    top: -183px;
+}
+
+body.front .block-boxes-os_taxonomy_fbt li.term-mortality-studies .description {
+    top: -210px;
+}
+body.front .block-boxes-os_taxonomy_fbt li.term-teaching-and-administration .description {
+    top: -237px;
+}
  }  
-*/
+
 body.front .block-boxes-os_taxonomy_fbt li {
     position:relative;
     line-height: normal;
