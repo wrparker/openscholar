@@ -269,7 +269,7 @@ function hwpi_basetheme_node_view_alter(&$build) {
     if ($build['#view_mode'] != 'sidebar_teaser') {
       // $build['contact_details']['#prefix'] = '<div class="block contact-details '.(($block_zebra++ % 2)?'even':'odd').'"><div class="block-inner"><h2 class="block-title">Contact Information</h2>';
       // $build['contact_details']['#suffix'] = '</div></div>';
-      $build['contact_details']['#weight'] = 51;
+      $build['contact_details']['#weight'] = 50;
 
       // Contact Details > address
       if (isset($build['field_address'])) {
@@ -287,7 +287,7 @@ function hwpi_basetheme_node_view_alter(&$build) {
           $build['field_email'][0]['#markup'] = l($email_plain, 'mailto:'.$email_plain, array('absolute'=>TRUE));
         }
         $build['contact_details']['field_email'] = $build['field_email'];
-        $build['contact_details']['field_email']['#weight'] = 50;
+        $build['contact_details']['field_email']['#weight'] = 52;
         unset($build['field_email']);
       }
       // Contact Details > phone
@@ -298,7 +298,7 @@ function hwpi_basetheme_node_view_alter(&$build) {
           $build['field_phone'][0]['#markup'] = t('p: ') . $phone_plain;
         }
         $build['contact_details']['field_phone'] = $build['field_phone'];
-        $build['contact_details']['field_phone']['#weight'] = 52;
+        $build['contact_details']['field_phone']['#weight'] = 51;
         unset($build['field_phone']);
       }
 
