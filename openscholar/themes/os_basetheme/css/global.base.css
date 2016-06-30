@@ -570,7 +570,7 @@ ul ul ul ul {
     list-style: none !important;
     margin-left: 0;
 }
-.boxes-box ul.featured-links li {
+ul.featured-links li {
     margin-bottom: 15px;
 }
 .boxes-box ul.featured-links.title-only li h1.node-title a{
