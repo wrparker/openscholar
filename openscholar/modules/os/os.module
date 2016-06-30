@@ -2422,6 +2422,45 @@ function os_expire_cache($urls, $wildcards, $object_type, $object) {
 }
 
 /**
+ * Adds feed pages to expired url lists.
+ */
+function os_expire_cache_alter(&$urls, $object_type, $object) {
+
+  if ($object_type == 'node') {
+    $node = $object;
+    $terms = array();
+    $field_info = field_info_fields();
+    $field_instances = field_info_instances($object_type, $node->type);
+
+    foreach ($field_instances as $name => $instance) {
+      if ($field_info[$name]['type'] == 'entityreference' && $field_info[$name]['settings']['target_type'] == 'taxonomy_term') {
+        $new_terms = field_get_items('node', $node, $name);
+        if (is_array($new_terms) && !empty($new_terms)) {
+          $terms = array_merge($new_terms, $terms);
+        }
+        $old_terms = isset($node->original) && !empty($node->original) ? field_get_items('node', $node->original, $name) : array();
+        if (is_array($old_terms) && !empty($old_terms)) {
+          $terms = array_merge($old_terms, $terms);
+        }
+      }
+    }
+
+    $urls = array();
+    foreach ($terms as $term) {
+      $urls['term-' . $term['target_id']] = 'taxonomy/term/' . $term['target_id'];
+    }
+
+    $addtl = array();
+    foreach ($urls as $k => $u) {
+      if (strpos($u, 'taxonomy/term/') !== FALSE) {
+        $addtl[$k.'-feed'] = $u.'/feed';
+      }
+    }
+    $urls += $addtl;
+  }
+}
+
+/**
  * Logging out all non-admin logged-in users.
  *
  * Keep admin and all users with "administer site configuration" logged.
