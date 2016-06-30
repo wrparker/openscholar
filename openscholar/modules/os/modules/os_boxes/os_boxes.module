@@ -480,6 +480,7 @@ function os_boxes_og_permission() {
     'add widget custom class' => array(
       'title' => t('Add specific css class names to widgets'),
       'description' => t('For custom theming purposes only.'),
+      'os_override' => TRUE,
     ),
   );
 }
