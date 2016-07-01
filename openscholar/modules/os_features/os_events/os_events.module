@@ -310,11 +310,33 @@ function os_events_export_to_csv($node, $delta = FALSE) {
     ->propertyCondition('entity_type', 'node');
 
   if ($delta !== FALSE && isset($node->field_date['und'][$delta])) {
-    $date = $node->field_date['und'][$delta]['value'];
+    $dates[] = $node->field_date['und'][$delta]['value'];
     $query->fieldCondition('field_repeating_event_date', 'value', $date);
   } else if (isset($node->field_date['und'][0]['value'])) {
-    $date = $node->field_date['und'][0]['value'];
+
+    // cycle through the [possibly repeating] event date(s)
+    $delta = 0;
+    while ($node->field_date['und'][$delta]) {
+      $dates[] = $node->field_date['und'][$delta]['value'];
+      $delta++;
+    }
   }
+
+  // Compute the nearest upcoming date
+  $now = time();
+  $date1 = null;
+  $date2 = $dates[0];
+  foreach ($dates as $d) {
+    $date2 = $d;
+
+    // if date1 is in the past (or isn't set) and date2 is in the future,
+    // then we have found the the nearest upcoming date for the event
+    if (($date1 === null || $now > strtotime($date1)) && ($now < strtotime($date2))) {
+      break;
+    }
+    $date1 = $date2;
+  }
+  $date = $date2;
 
   $result = $query->execute();
 
