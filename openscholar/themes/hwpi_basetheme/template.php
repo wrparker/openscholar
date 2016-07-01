@@ -304,8 +304,6 @@ function hwpi_basetheme_node_view_alter(&$build) {
 
       // Websites
       if (isset($build['field_website'])) {
-//        $build['website_details']['#prefix'] = '<div class="block website-details '.(($block_zebra++ % 2)?'even':'odd').'"><div class="block-inner"><h2 class="block-title">Websites</h2>';
-//        $build['website_details']['#suffix'] = '</div></div>';
         $build['website_details']['#weight'] = -7;
         $build['field_website']['#label_display'] = 'hidden';
         $build['website_details']['field_website'] = $build['field_website'];
