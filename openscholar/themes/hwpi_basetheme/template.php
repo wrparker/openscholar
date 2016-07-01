@@ -152,21 +152,48 @@ function hwpi_basetheme_profile_default_image($size = 'small') {
 /**
  * Process variables for comment.tpl.php
  */
-function hwpi_basetheme_process_node(&$build) {
+function hwpi_basetheme_process_node(&$vars) {
   // Event persons, change title markup to h1.
-  if ($build['type'] == 'person') {
-    if ($build['view_mode'] == 'title') {
-      $build['title_prefix']['#suffix'] = '<h1 class="node-title">' . l($build['title'], 'node/' . $build['nid']) . '</h1>';
-      $build['title'] = NULL;
+  if ($vars['type'] == 'person') {
+    if ($vars['view_mode'] == 'title') {
+      $vars['title_prefix']['#suffix'] = '<h1 class="node-title">' . l($vars['title'], 'node/' . $vars['nid']) . '</h1>';
+      $vars['title'] = NULL;
     }
-    elseif (!$build['teaser'] && $build['view_mode'] != 'sidebar_teaser') {
-      $build['title_prefix']['#suffix'] = '<h1 class="node-title">' . $build['title'] . '</h1>';
-      $build['title'] = NULL;
+    elseif (!$vars['teaser'] && $vars['view_mode'] != 'sidebar_teaser') {
+      $vars['title_prefix']['#suffix'] = '<h1 class="node-title">' . $vars['title'] . '</h1>';
+      $vars['title'] = NULL;
 
-      if ($build['view_mode'] == 'slide_teaser') {
-        $build['title_prefix']['#suffix'] = '<div class="toggle">' . $build['title_prefix']['#suffix'] . '</div>';
+      if ($vars['view_mode'] == 'slide_teaser') {
+        $vars['title_prefix']['#suffix'] = '<div class="toggle">' . $vars['title_prefix']['#suffix'] . '</div>';
       }
     }
+  }
+}
+
+/**
+ * Implements hook_field_display_ENTITY_TYPE_alter().
+ */
+function hwpi_basetheme_field_display_node_alter(&$display, $context) {
+  if ($context['entity']->type == 'event' && $context['instance']['field_name'] == 'field_date') {
+    if (($context['view_mode'] != 'full') || (isset($context['entity']->os_sv_list_box) && $context['entity']->os_sv_list_box)) {
+
+      if (isset($context['entity']->field_date[LANGUAGE_NONE][0]['value2']) &&
+          (strtotime($context['entity']->field_date[LANGUAGE_NONE][0]['value2']) - strtotime($context['entity']->field_date[LANGUAGE_NONE][0]['value']) > 24*60*60)) {
+        return; //event is more than one day long - keep both dates visible
+      }
+
+      //hide the date - it's already visible in the shield
+      $display['settings']['format_type'] = 'os_time';
+    }
+  }
+}
+
+/**
+ * Alter the results of node_view().
+ */
+function hwpi_basetheme_node_view_alter(&$build) {
+  // Persons, heavily modify the output to match the HC designs
+  if ($build['#node']->type == 'person') {
 
     if ($build['#view_mode'] == 'sidebar_teaser') {
       $build['pic_bio']['#prefix'] = '<div class="pic-bio clearfix people-sidebar-teaser">';
@@ -247,18 +274,6 @@ function hwpi_basetheme_process_node(&$build) {
       $build['pic_bio']['#access'] = false;
     }
 
-  }
-}
-
-/*
- * Implements hook_node_view_alter
- *
- */
-function hwpi_basetheme_node_view_alter(&$build) { 
-
-  // Persons, heavily modify the output to match the HC designs
-  if ($build['#node']->type == 'person') {
-
     // Note that Contact and Website details will print wrappers and titles regardless of any field content.
     // This is kind of deliberate to avoid having to handle the complexity of dealing with the layout or
     // setting messages etc.
@@ -267,9 +282,9 @@ function hwpi_basetheme_node_view_alter(&$build) {
 
     // Contact Details
     if ($build['#view_mode'] != 'sidebar_teaser') {
-      // $build['contact_details']['#prefix'] = '<div class="block contact-details '.(($block_zebra++ % 2)?'even':'odd').'"><div class="block-inner"><h2 class="block-title">Contact Information</h2>';
-      // $build['contact_details']['#suffix'] = '</div></div>';
-      $build['contact_details']['#weight'] = 50;
+      $build['contact_details']['#prefix'] = '<div class="block contact-details '.(($block_zebra++ % 2)?'even':'odd').'"><div class="block-inner"><h2 class="block-title">Contact Information</h2>';
+      $build['contact_details']['#suffix'] = '</div></div>';
+      $build['contact_details']['#weight'] = -8;
 
       // Contact Details > address
       if (isset($build['field_address'])) {
@@ -287,7 +302,7 @@ function hwpi_basetheme_node_view_alter(&$build) {
           $build['field_email'][0]['#markup'] = l($email_plain, 'mailto:'.$email_plain, array('absolute'=>TRUE));
         }
         $build['contact_details']['field_email'] = $build['field_email'];
-        $build['contact_details']['field_email']['#weight'] = 52;
+        $build['contact_details']['field_email']['#weight'] = -50;
         unset($build['field_email']);
       }
       // Contact Details > phone
@@ -298,7 +313,7 @@ function hwpi_basetheme_node_view_alter(&$build) {
           $build['field_phone'][0]['#markup'] = t('p: ') . $phone_plain;
         }
         $build['contact_details']['field_phone'] = $build['field_phone'];
-        $build['contact_details']['field_phone']['#weight'] = 51;
+        $build['contact_details']['field_phone']['#weight'] = 50;
         unset($build['field_phone']);
       }
 
@@ -370,24 +385,6 @@ function hwpi_basetheme_node_view_alter(&$build) {
   }
 }
 
-
-/**
- * Implements hook_field_display_ENTITY_TYPE_alter().
- */
-function hwpi_basetheme_field_display_node_alter(&$display, $context) {
-  if ($context['entity']->type == 'event' && $context['instance']['field_name'] == 'field_date') {
-    if (($context['view_mode'] != 'full') || (isset($context['entity']->os_sv_list_box) && $context['entity']->os_sv_list_box)) {
-
-      if (isset($context['entity']->field_date[LANGUAGE_NONE][0]['value2']) &&
-          (strtotime($context['entity']->field_date[LANGUAGE_NONE][0]['value2']) - strtotime($context['entity']->field_date[LANGUAGE_NONE][0]['value']) > 24*60*60)) {
-        return; //event is more than one day long - keep both dates visible
-      }
-
-      //hide the date - it's already visible in the shield
-      $display['settings']['format_type'] = 'os_time';
-    }
-  }
-}
 
 /**
  * Preprocess variables for comment.tpl.php
