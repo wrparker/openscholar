@@ -105,7 +105,7 @@ abstract class os_boxes_default extends boxes_box {
         '#title' => t('Apply css class name to this widget\'s container'),
         '#description' => t('Warning: this is to be used for custom themeing purposes only.'),
         '#default_value' => (isset($this->options['additional_class'])) ? $this->options['additional_class'] : '',
-        '#access' => og_user_access('node', $vsite->group->nid, 'add widget custom class'),
+        '#access' => og_user_access('node', $vsite->group->nid, 'add widget custom class', NULL, FALSE, TRUE),
         '#weight' => 9002,
       );
     }
