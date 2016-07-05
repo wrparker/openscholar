@@ -1847,7 +1847,7 @@ function os_files_field_formatter_view($entity_type, $entity, $field, $instance,
         // Determining file extension for inclusion of the item in jcarousal render array.
         $parts = explode('.', $i['uri']);
         $file_extension = end($parts);
-
+        // If file type is image or have extension of $allowed_extensions_in_carousal array, then rendering them in jcarousal.
         if ($i['type'] == 'image' || in_array($file_extension, $allowed_extensions_in_carousal)) {
           // For jpeg, jpg, gif and png type files.
           if ($i['type'] == 'image') {
