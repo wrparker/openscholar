@@ -1289,12 +1289,6 @@ function os_search_solr_vocabularies_switch($form, $form_state)  {
  * Implements hook_form_FORM_ID_alter().
  */
 function os_search_solr_form_search_block_form_alter(&$form, $form_state) {
-  $variable_name = 'os_boxes_solr_search_search' . str_replace('-', '_', $form['#id']);
-
-  if (!variable_get($variable_name)) {
-    return;
-  }
-
   $form['#submit'][] = 'os_search_solr_change_search_path';
 }
 
@@ -1302,8 +1296,7 @@ function os_search_solr_form_search_block_form_alter(&$form, $form_state) {
  * Submit handler; Adding the settings of the search
  */
 function os_search_solr_change_search_path($form, $form_state) {
-  $variable_name = 'os_boxes_solr_search_search' . str_replace('-', '_', $form['#id']);
-  $box_settings = variable_get($variable_name);
+  $box_settings = $form_state['box_settings'];
   $options = array('query' => array('f' => array()));
   $filters = &$options['query'];
 
