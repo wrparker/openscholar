@@ -309,15 +309,15 @@ function os_events_export_to_csv($node, $delta = FALSE) {
     ->propertyCondition('entity_id', $node->nid)
     ->propertyCondition('entity_type', 'node');
 
-  if ($delta !== FALSE && isset($node->field_date['und'][$delta])) {
-    $dates[] = $node->field_date['und'][$delta]['value'];
+  if ($delta !== FALSE && isset($node->field_date[LANGUAGE_NONE][$delta])) {
+    $dates[] = $node->field_date[LANGUAGE_NONE][$delta]['value'];
     $query->fieldCondition('field_repeating_event_date', 'value', $date);
-  } else if (isset($node->field_date['und'][0]['value'])) {
+  } else if (isset($node->field_date[LANGUAGE_NONE][0]['value'])) {
 
     // cycle through the [possibly repeating] event date(s)
     $delta = 0;
-    while ($node->field_date['und'][$delta]) {
-      $dates[] = $node->field_date['und'][$delta]['value'];
+    while ($node->field_date[LANGUAGE_NONE][$delta]) {
+      $dates[] = $node->field_date[LANGUAGE_NONE][$delta]['value'];
       $delta++;
     }
   }
