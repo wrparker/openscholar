@@ -340,7 +340,7 @@ function os_events_export_to_csv($node, $delta = FALSE) {
     $wrapper = entity_metadata_wrapper('registration', $attendee);
 
     // Attendees register for specific or all occurrences of the event
-    $date = $attendee->field_repeating_event_date['und'][0]['value'];
+    $date = $attendee->field_repeating_event_date[LANGUAGE_NONE][0]['value'];
     if (! $date) {
       foreach ($dates as $d) {
         $exporter->addContent(array(
