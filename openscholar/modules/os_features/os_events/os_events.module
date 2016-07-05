@@ -300,6 +300,11 @@ function os_events_export_to_csv($node, $delta = FALSE) {
     return;
   }
 
+  if (! $delta) {
+    $url = drupal_parse_url($_SERVER['HTTP_REFERER']);
+    $delta = $url['query']['delta'];
+  }
+
   $exporter = os_exporter_get_exporter_handler('csv');
   $exporter->setFileHeader(array(t('Event Date'), t('Event Title'), t('Email'), t('Created Time'), t('Department'), t('Full name')));
 
@@ -311,7 +316,7 @@ function os_events_export_to_csv($node, $delta = FALSE) {
 
   if ($delta !== FALSE && isset($node->field_date[LANGUAGE_NONE][$delta])) {
     $dates[] = $node->field_date[LANGUAGE_NONE][$delta]['value'];
-    $query->fieldCondition('field_repeating_event_date', 'value', $date);
+    $query->fieldCondition('field_repeating_event_date', 'value', $dates[0]);
   } else if (isset($node->field_date[LANGUAGE_NONE][0]['value'])) {
 
     // cycle through the [possibly repeating] event date(s)
@@ -322,22 +327,6 @@ function os_events_export_to_csv($node, $delta = FALSE) {
     }
   }
 
-  // Compute the nearest upcoming date
-  $now = time();
-  $date1 = null;
-  $date2 = $dates[0];
-  foreach ($dates as $d) {
-    $date2 = $d;
-
-    // if date1 is in the past (or isn't set) and date2 is in the future,
-    // then we have found the the nearest upcoming date for the event
-    if (($date1 === null || $now > strtotime($date1)) && ($now < strtotime($date2))) {
-      break;
-    }
-    $date1 = $date2;
-  }
-  $date = $date2;
-
   $result = $query->execute();
 
   if (empty($result['registration'])) {
@@ -347,16 +336,33 @@ function os_events_export_to_csv($node, $delta = FALSE) {
   $attendees = entity_load('registration', array_keys($result['registration']));
 
   foreach ($attendees as $attendee) {
+
     $wrapper = entity_metadata_wrapper('registration', $attendee);
 
-    $exporter->addContent(array(
-        $date,
-        $node->title,
-        $attendee->anon_mail,
-        '"' . format_date($attendee->created) . '"',
-        $wrapper->field_department->value(),
-        $wrapper->field_full_name->value(),
-    ));
+    // Attendees register for specific or all occurrences of the event
+    $date = $attendee->field_repeating_event_date['und'][0]['value'];
+    if (! $date) {
+      foreach ($dates as $d) {
+        $exporter->addContent(array(
+            $d,
+            $node->title,
+            $attendee->anon_mail,
+            '"' . format_date($attendee->created) . '"',
+            $wrapper->field_department->value(),
+            $wrapper->field_full_name->value(),
+        ));
+      }
+    } else {
+
+      $exporter->addContent(array(
+          $date,
+          $node->title,
+          $attendee->anon_mail,
+          '"' . format_date($attendee->created) . '"',
+          $wrapper->field_department->value(),
+          $wrapper->field_full_name->value(),
+      ));
+    }
   }
 
   $exporter->exportToFile($node->title . '-' . (isset($date)?$date . '-':'') .'attendees.csv');
