@@ -48,7 +48,7 @@ margin-bottom:10px !important;
 #menu-bar ul.nice-menu a.active,
 #menu-bar ul.nice-menu a:hover {
 	
-	background: rgba(0, 0, 0, 0.35) !important;
+	background: #686868 !important;
 
 }
 #menu-bar ul.nice-menu .menuparent {
@@ -97,8 +97,7 @@ background-position: -57px -566px;
 
 
 #menu-bar ul.nice-menu ul {/*submenu background attributes*/
-    background:#6d7172;
-	background:rgba(140, 142, 143, 0.89);
+    background:#686868;
 	border-top-left-radius: 0;
 border-top-right-radius: 0;
 border-bottom-right-radius: 0;
@@ -130,11 +129,11 @@ border-bottom-left-radius: 0;
     background-color: #f3f3f1 !important;
 }
 .section-nav a {
-	color: #737B7F;
+	color: #636a6d;
 }
 .section-nav a.active {
 	background-color:#F3F2F1;
-	color: #737B7F;
+	color: #636a6d;
 }
 
 

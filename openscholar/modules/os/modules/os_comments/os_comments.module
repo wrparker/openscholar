@@ -21,6 +21,11 @@ function os_comments_form_cp_app_settings_form_alter(&$form, &$form_state, $form
   }
 
   $node_types = $info->info['features']['node'];
+  if(!in_array('blog',$node_types)) {
+    //Disable comment form for non-blog content types.
+    return;
+  }
+
   foreach ($node_types as $key => $type) {
     $node_types[$key] = 'comment_sources_' . $type;
   }
@@ -32,54 +37,23 @@ function os_comments_form_cp_app_settings_form_alter(&$form, &$form_state, $form
     $form['actions'] = array();
   }
 
-  switch ($type) {
-    // Adds the comment settings into a specific position on the biblio form.
-    case 'biblio':
-      if (!isset($form['left'])) {
-        $form['left'] = array();
-      }
-      $form['left']['comment_settings'] = array(
-        '#type' => 'fieldset',
-        '#id' => "comment_settings",
-        '#title' => t('Comment Settings'),
-        '#weight' => 10,
-      );
-      $form['left']["comment_settings"] += drupal_retrieve_form('comment_sources_admin_settings_form', $form_state);
-      // Moves the system setting form buttons
-      $form['actions'] = array_merge($form['left']["comment_settings"]['actions'], $form['actions']);
-      unset($form['left']["comment_settings"]['actions']);
+  $form['comment_settings'] = array(
+    '#type' => 'fieldset',
+    '#id' => "comment_settings",
+    '#title' => t('Comment Settings'),
+    '#weight' => 0,
+  );
+  $form["comment_settings"] += drupal_retrieve_form('comment_sources_admin_settings_form', $form_state);
+  // Moves the system setting form buttons
+  $form['actions'] = array_merge($form["comment_settings"]['actions'], $form['actions']);
+  unset($form["comment_settings"]['actions']);
 
-      // Loops through the available node types' comment source settings forms...
-      foreach (element_children($form['left']["comment_settings"]) as $child) {
-        // Hides non-applicable node types from this app's setting page.
-        if (strpos($child, 'comment_sources_') === 0 && !in_array($child, $node_types)) {
-          $form['left']["comment_settings"][$child]['#access'] = FALSE;
-        }
-      }
-      break;
-
-    // Otherwise, adds the settings directly onto the form for other types.
-    default:
-      $form['comment_settings'] = array(
-        '#type' => 'fieldset',
-        '#id' => "comment_settings",
-        '#title' => t('Comment Settings'),
-        '#weight' => 0,
-      );
-      $form["comment_settings"] += drupal_retrieve_form('comment_sources_admin_settings_form', $form_state);
-      // Moves the system setting form buttons
-      $form['actions'] = array_merge($form["comment_settings"]['actions'], $form['actions']);
-      unset($form["comment_settings"]['actions']);
-
-      // Loops through the available node types' comment source settings forms...
-      foreach (element_children($form["comment_settings"]) as $child) {
-        // Hides non-applicable node types from this app's setting page.
-        if (strpos($child, 'comment_sources_') === 0 && !in_array($child, $node_types)) {
-          $form["comment_settings"][$child]['#access'] = FALSE;
-        }
-      }
-
-      break;
+  // Loops through the available node types' comment source settings forms...
+  foreach (element_children($form["comment_settings"]) as $child) {
+    // Hides non-applicable node types from this app's setting page.
+    if (strpos($child, 'comment_sources_') === 0 && !in_array($child, $node_types)) {
+      $form["comment_settings"][$child]['#access'] = FALSE;
+    }
   }
 
   // Uses a secondary validator.
@@ -364,13 +338,13 @@ function os_comments_form_node_form_alter(&$form, $form_state, $form_id) {
   // Default values in case we don't find the app info.
   $app = '';
   $settings = t('App settings');
+  $vsite = vsite_get_vsite();
 
-  $vsite_enabled = module_exists('vsite');
-  if ($vsite_enabled && $purl = vsite_get_purl()) {
-    $app_settings_path = "/$purl/cp/build";
+  if ($vsite) {
+    $app_settings_path = $vsite->get_absolute_url() . '/cp/build';
   }
   else {
-    $app_settings_path = '/cp/build';
+    $app_settings_path = url('/cp/build');
   }
 
   // Try to find this app's info...
@@ -391,12 +365,12 @@ function os_comments_form_node_form_alter(&$form, $form_state, $form_id) {
       $settings = $menu_item['title'];
     }
     // Multi tenant
-    if ($purl) {
-      $app_settings_path = "$purl/cp/build/#overlay=$purl/cp/build/features/$app";
+    if ($vsite) {
+      $app_settings_path = $vsite->get_absolute_url() . "/cp/build/features/$app";
     }
     // Single tenant
     else {
-      $app_settings_path = "/cp/build/#overlay=cp/build/features/$app";
+      $app_settings_path = url("/cp/build/features/$app");
     }
   }
 

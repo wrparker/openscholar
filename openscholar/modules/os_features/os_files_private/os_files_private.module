@@ -17,6 +17,7 @@ function os_files_private_os_app_info() {
 
   $apps['os_files_private'] = array(
     'path' => OS_FILES_PRIVATE_PATH,
+    'has_settings' => TRUE,
   );
 
   return $apps;
@@ -281,6 +282,7 @@ function os_files_private_form_spaces_features_form_alter(&$form, &$form_state, 
  */
 function os_files_private_form_file_entity_delete_form_alter(&$form, $form_state) {
   if (strpos($form_state['file']->uri, 'private') === 0) {
+    $form['description']['#markup'] = t('This action cannot be undone. If this file is currently in use, it may cause problems if deleted.');
     $form['#submit'][] = 'os_files_private_redirect_after_delete_file';
   }
 }
@@ -296,7 +298,7 @@ function os_files_private_redirect_after_delete_file($form, &$form_state) {
  * Removes tabs that we don't want when we're uploading a private file
  */
 function os_files_private_menu_local_tasks_alter(&$tasks, $router, $root) {
-  if ($root == 'file/add') {
+  if ($root == 'file/add' || $root == 'cp/content') {
     $tasks['tabs'][0]['count'] = 0;
     $tasks['tabs'][0]['output'] = array();
   }
@@ -320,7 +322,7 @@ function os_files_private_stream_wrappers_alter(&$wrappers){
  */
 function os_files_private_preprocess_views_view(&$vars) {
   if ($vars['view']->name == 'os_files_private') {
-    os_common_angular_app('os-files-private');
+    os_common_angular_apps('os-files-private');
     drupal_add_library('media', 'media_browser');
     drupal_add_library('os_common', 'FileEditorModal');
     drupal_add_js(drupal_get_path('module', 'os_files_private').'/apps/os_files_private.js');

@@ -94,7 +94,7 @@ function os_reader_import_news_access_callback() {
  */
 function os_reader_import_news() {
   drupal_add_css(drupal_get_path('module', 'os_reader') . '/os_reader.css');
-  drupal_add_js(drupal_get_path('module', 'os_reader') . '/os_reader.js');
+  drupal_add_js(drupal_get_path('module', 'os_reader') . '/js/os_reader.js');
 
   $item = menu_get_item();
   $feed_importer_nid = isset($item['map'][4]) ? $item['map'][4] : NULL;
@@ -265,6 +265,9 @@ function os_reader_os_app_info() {
     'path' => 'reader',
   	'nodetypes' => array(
   	  'feed',
+      'feed_importer',
+    ),
+    'hide from toolbar' => array(
       'feed_importer',
     ),
     'views tabs' => array(
@@ -440,8 +443,9 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
   $wrapper = entity_metadata_wrapper('node', $node);
   $wrapper->{OG_AUDIENCE_FIELD}->set(array($vsite->id));
   $wrapper->author->set($user->uid);
-  $wrapper->body->set(array('value' => $feed->description, 'format' => 'filtered_html'));
+  $new_description = $feed->description;
   $doc = new DOMDocument();
+  $doc->encoding = 'utf-8';
 
   if ($feed->importer_type == 'news') {
     // Get the first image src.
@@ -450,7 +454,7 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
     // todo: use os_copy_file();
     try {
       if ($feed->description) {
-        $doc->loadHTML($feed->description);
+        $doc->loadHTML(mb_convert_encoding($new_description, 'HTML-ENTITIES', "UTF-8"));
         $images = $doc->getElementsByTagName('img')->item(0);
         $extenstions = array('gif', 'png', 'jpg', 'jpeg');
 
@@ -462,7 +466,7 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
           }
           // Images are found so delete the tags from the description before
           // assigning it to the body of the node.
-          $feed->description = preg_replace('/<img[^>]+\>/i', '', $feed->description);
+          $new_description = preg_replace('/<img[^>]+\>/i', '', $new_description);
         }
       }
     }
@@ -479,7 +483,7 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
 
   // Remove style attribute from div tags anv p tags.
   if (property_exists($feed, 'description')) {
-    $doc->loadHTML($feed->description);
+    $doc->loadHTML(mb_convert_encoding($new_description, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED);
     $xpath = new DOMXPath($doc);
     $items = $xpath->query("//*[(local-name()='div' or local-name()='span') and @style]");
 
@@ -487,10 +491,40 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
       $item->removeAttribute("style");
     }
 
-    $feed->description = $doc->saveHTML();
+    // Remove empty a tags.
+    $items = $xpath->query("//a[.='']");
+
+    foreach ($items as $item) {
+      $item->parentNode->removeChild($item);
+    }
+
+    $new_description = $doc->saveHTML($doc->documentElement);
+
+    $reduce_brs = function($string) use(&$reduce_brs) {
+
+      if (strpos($string, '<br />')) {
+        $string = str_replace('<br />', '<br>', $string);
+      }
+
+      if (strpos($string, '<br><br>')) {
+        // Looping over the string until we don't have double br tags.
+        $string = preg_replace('/<br(.*)><br(.*)>/im', '<br>', $string);
+
+        return $reduce_brs($string);
+      }
+
+      if (($temp = strlen($string) - strlen('<br>')) >= 0 && strpos($string, '<br>', $temp) !== FALSE) {
+        // There is a <br> at the end of the string. Remove it.
+        return substr($string, 0, strlen($string) - 4);
+      }
+
+      return $string;
+    };
+
+    $new_description = $reduce_brs($new_description);
   }
 
-  $wrapper->body->set(array('value' => $feed->description, 'format' => 'filtered_html'));
+  $wrapper->body->set(array('value' => $new_description, 'format' => 'filtered_html'));
   $wrapper->save();
 
   // Reference the feed to the VSite.

@@ -3,12 +3,15 @@ html,
 body {
   background: #ffffff;
   color: #1e1e1e;
-  overflow-x: hidden;
-  
 }
 body {
     color: #1F1F1F;
     line-height: 24px;
+}
+
+/* Show infinite scrolling after login */
+body.front {
+    overflow-y: hidden;
 }
 #page-wrapper {
     background: none repeat scroll 0 0 #F3F3F1;
@@ -326,7 +329,6 @@ a:link {
 
 h1#page-title {
   font-size: 30px;
-  line-height: 1; /* Font size is larger than the default line-height, so will overlap if the title wraps */
    margin: 0 0 20px;
 }
 .page-node h1#page-title{
@@ -397,6 +399,7 @@ h1#page-title {
 .not-front #content-column .region-content-second .block,
 .sidebar .block,
 .front #content-column .block,
+.front #content-column .block.styled,
 .node-person .block-inner,
 .comment-wrapper {
 	border-top: 4px solid #8996A1;
@@ -486,7 +489,7 @@ a, a:visited {
     color: #346ba6;
 }
 /* Spotlight */
-#content-column .block.block-boxes-os_boxes_manual_list {
+#content-column .block.block-boxes-os_boxes_manual_list.styled {
     -moz-border-bottom-colors: none;
     -moz-border-left-colors: none;
     -moz-border-right-colors: none;
@@ -495,7 +498,7 @@ a, a:visited {
     padding: 0;
 }
 
-#content-column .block.block-boxes-os_boxes_manual_list h2.block-title {
+#content-column .block.block-boxes-os_boxes_manual_list.styled h2.block-title {
     border-bottom: medium none;
     border-top: medium none;
     margin-bottom: 0;
@@ -503,14 +506,14 @@ a, a:visited {
     padding-top: 0;
 }
 
-.block-boxes-os_boxes_manual_list .featured-links li {
+#content-column .block-boxes-os_boxes_manual_list.styled .featured-links li {
     margin-left: 15px;
     margin-right: 15px;
 }
-.block-boxes-os_boxes_manual_list .link-count-node-readmore {
+.block-boxes-os_boxes_manual_list.styled .link-count-node-readmore {
     margin-left: 0 !important;
 }
-#content-column .block.block-boxes-os_boxes_manual_list h1.node-title a {
+#content-column .block.block-boxes-os_boxes_manual_list.styled h1.node-title a {
 	font-weight:normal;
 	font-size: 18px;
 }
@@ -707,6 +710,7 @@ padding: 20px 0;
 /** SECTION NAV **/
 
 .section-nav a,
+.block-boxes-os_boxes_facetapi_vocabulary.navigation a,
 .block-boxes-os_taxonomy_fbt.navigation a {
 	color: #6C6C6C;
 	font-weight: bold;
@@ -749,26 +753,26 @@ padding: 20px 0;
 background-color: #f3f3f1 !important;
 }
 
-
+.block-boxes-os_boxes_facetapi_vocabulary.navigation,
 .block-boxes-os_taxonomy_fbt.navigation {
 border-top: none;
 }
 
-
+.block-boxes-os_boxes_facetapi_vocabulary.navigation h2,
 .block-boxes-os_taxonomy_fbt.navigation h2 {
 	border-top: 4px solid #A51C30;
 	padding-top:12px;
 }
 
-
+.block-boxes-os_boxes_facetapi_vocabulary.navigation ul,
 .block-boxes-os_taxonomy_fbt.navigation ul {
 	border-top: 4px solid #A51C30;
 }
-
+.block-boxes-os_boxes_facetapi_vocabulary.navigation h2 ~ .block-content ul,
 .block-boxes-os_taxonomy_fbt.navigation h2 ~ .block-content ul {
 	border-top: none !important;
 }
-
+.block-boxes-os_boxes_facetapi_vocabulary.navigation ul,
 .block-boxes-os_taxonomy_fbt.navigation ul {
 border-bottom: none;
 border-left: none;

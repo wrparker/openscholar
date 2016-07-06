@@ -6,9 +6,6 @@ body {
     line-height: 23px;
     min-height: inherit;
 }
-.not-front #content-column {
-    font-size: 16px;
-}
 a,
 a:visited {
     color: #215990;
@@ -38,6 +35,9 @@ p:empty {
 }
 .sidebar h1.node-title {
     margin-bottom: 0;
+}
+h1#page-title {
+    line-height: 1.1;
 }
 table,
 th,
@@ -455,11 +455,15 @@ ol.search-results li.search-result:last-child {
     color: #7e7e7e;
     font-size: 12px;
     text-transform: uppercase;
-    padding: 16px 0 0;
 }
+
 .event-start-day {
     color: #000;
     font-size: 18px;
+}
+.event-start .event-year {
+    padding: 11px 0 0;
+font-size: 11px;
 }
 .event-start .event-content {
     margin-left: 70px;
@@ -493,6 +497,10 @@ ol.search-results li.search-result:last-child {
 }
 .event-content .node-header h1.node-title {
     margin-bottom: 0;
+}
+.field-name-field-event-location .field-items {
+    float:none;
+    display: inline;
 }
 /* Class nodes */
 
@@ -627,7 +635,7 @@ article.node-teaser.node-person .field-name-field-person-photo ~ .node-content {
 }
 @-moz-document url-prefix() {
     .node-teaser.node-person {
-        display: table;
+        table-layout:fixed;
     }
 }
 .block-boxes-os_boxes_manual_list .node-teaser.node-person {
@@ -638,6 +646,14 @@ article.node-teaser.node-person .field-name-field-person-photo ~ .node-content {
     vertical-align: top;
     width: 100%;
 }
+
+.two-sidebars .node-person .field-name-field-website {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 42ch;
+}
+
 .node-link.node-teaser {
     padding: 10px 0 5px;
 }
@@ -785,8 +801,11 @@ table.os-files-other-list {
 
 div.messages {
     border: 0 none;
-    margin: 0;
+    margin: 0 90px 0;
     padding: 15px 0;
+}
+#modal-content div.messages {
+    margin: 0;
 }
 .messages h2 {
     font-size: 1.1em;

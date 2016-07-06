@@ -49,7 +49,25 @@ function os_publications_overview() {
   else {
     // Change the page title to match the menu entry.
     ctools_include('menu', 'os');
+
+    $item = menu_get_item();
     $menu_item = os_menu_load_link_path($_GET['q']);
+
+    if (count($item['map']) > 1) {
+      // This is a sub patch of the publications. Check if the router is a valid
+      // one.
+      if (!$menu_item) {
+        if (preg_match('/publications\/(type|year|author)/', $_GET['q'])) {
+          return $output;
+        }
+
+        // This could a non valid menu item or non-exiting publication.
+        drupal_set_title('');
+        drupal_not_found();
+        drupal_exit();
+      }
+    }
+
     drupal_set_title($menu_item['title']);
   }
 
@@ -346,35 +364,38 @@ function _os_publications_get_citation_example() {
       'firstname' => 'John',
       'initials' => 'A',
       'auth_category' => 1,
+      'auth_type' => 1,
       'cid' => -1),
     1 => array(
       'lastname' => 'Smith',
       'firstname' => 'Richard',
       'initials' => 'B',
       'auth_category' => 1,
+      'auth_type' => 1,
       'cid' => -2),
     3 => array(
       'lastname' => 'Editor',
       'firstname' => 'Edwin',
       'initials' => 'Z',
       'auth_category' => 2,
+      'auth_type' => 2,
       'cid' => -3),
   );
 
   // 10+ author example to display the different ways "et al" works.
   $contributors_etall = array(
-    0 => array( 'lastname' => 'Doe', 'firstname' => 'John', 'initials' => 'A', 'auth_category' => 1, 'cid' => -1),
-    1 => array( 'lastname' => 'Smith', 'firstname' => 'Richard', 'initials' => 'B', 'auth_category' => 1, 'cid' => -2),
-    3 => array( 'lastname' => 'Rodgers', 'firstname' => 'Edwin', 'initials' => 'Z', 'auth_category' => 1, 'cid' => -3),
-    4 => array( 'lastname' => 'Howard', 'firstname' => 'Ron', 'initials' => 'Z', 'auth_category' => 1, 'cid' => -4),
-    5 => array( 'lastname' => 'Rodgers', 'firstname' => 'Jill', 'initials' => 'Z', 'auth_category' => 1, 'cid' => -5),
-    6 => array( 'lastname' => "O'Donnell", 'firstname' => 'Frank', 'initials' => 'Z', 'auth_category' => 1, 'cid' => -6),
-    7 => array( 'lastname' => 'McQuiad', 'firstname' => 'Robert', 'initials' => 'Z', 'auth_category' => 1, 'cid' => -7),
-    8 => array( 'lastname' => 'Smith', 'firstname' => 'Jane', 'initials' => 'Z', 'auth_category' => 1, 'cid' => -8),
-    9 => array( 'lastname' => 'Ortiz', 'firstname' => 'Oscar', 'initials' => 'Z', 'auth_category' => 1, 'cid' => -9),
-    10 => array( 'lastname' => 'Edwards', 'firstname' => 'Rebecca', 'initials' => 'Z', 'auth_category' => 1, 'cid' => -10),
-    11 => array( 'lastname' => "O'Neil", 'firstname' => 'Thomas', 'initials' => 'Z', 'auth_category' => 1, 'cid' => -11),
-    12 => array( 'lastname' => 'Smith', 'firstname' => 'Kathrine', 'initials' => 'Z', 'auth_category' => 1, 'cid' => -12),
+    0 => array( 'lastname' => 'Doe', 'firstname' => 'John', 'initials' => 'A', 'auth_category' => 1, 'auth_type' => 1, 'cid' => -1),
+    1 => array( 'lastname' => 'Smith', 'firstname' => 'Richard', 'initials' => 'B', 'auth_category' => 1, 'auth_type' => 1, 'cid' => -2),
+    3 => array( 'lastname' => 'Rodgers', 'firstname' => 'Edwin', 'initials' => 'Z', 'auth_category' => 1, 'auth_type' => 1, 'cid' => -3),
+    4 => array( 'lastname' => 'Howard', 'firstname' => 'Ron', 'initials' => 'Z', 'auth_category' => 1, 'auth_type' => 1, 'cid' => -4),
+    5 => array( 'lastname' => 'Rodgers', 'firstname' => 'Jill', 'initials' => 'Z', 'auth_category' => 1, 'auth_type' => 1, 'cid' => -5),
+    6 => array( 'lastname' => "O'Donnell", 'firstname' => 'Frank', 'initials' => 'Z', 'auth_category' => 1, 'auth_type' => 1, 'cid' => -6),
+    7 => array( 'lastname' => 'McQuiad', 'firstname' => 'Robert', 'initials' => 'Z', 'auth_category' => 1, 'auth_type' => 1, 'cid' => -7),
+    8 => array( 'lastname' => 'Smith', 'firstname' => 'Jane', 'initials' => 'Z', 'auth_category' => 1, 'auth_type' => 1, 'cid' => -8),
+    9 => array( 'lastname' => 'Ortiz', 'firstname' => 'Oscar', 'initials' => 'Z', 'auth_category' => 1, 'auth_type' => 1, 'cid' => -9),
+    10 => array( 'lastname' => 'Edwards', 'firstname' => 'Rebecca', 'initials' => 'Z', 'auth_category' => 1, 'auth_type' => 1, 'cid' => -10),
+    11 => array( 'lastname' => "O'Neil", 'firstname' => 'Thomas', 'initials' => 'Z', 'auth_category' => 1, 'auth_type' => 1, 'cid' => -11),
+    12 => array( 'lastname' => 'Smith', 'firstname' => 'Kathrine', 'initials' => 'Z', 'auth_category' => 1, 'auth_type' => 1, 'cid' => -12),
   );
 
   // Book Chapter.

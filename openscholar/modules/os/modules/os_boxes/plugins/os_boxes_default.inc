@@ -69,6 +69,7 @@ abstract class os_boxes_default extends boxes_box {
   public function options_defaults() {
     return array(
       'make_embeddable' => false,
+      'additional_class' => '',
     );
   }
 
@@ -86,6 +87,28 @@ abstract class os_boxes_default extends boxes_box {
       '#access' => !empty($this->embed_as),
       '#weight' => 9001,
     );
+    // The below widgets will have the settings for custom class addition is outermost wrapper div/section tag.
+    $additional_class_allowed_plugins = array(
+      'os_sv_list_box',
+      'os_sv_list_file',
+      'os_boxes_manual_list',
+      'os_boxes_tabs',
+      'os_boxes_accordion',
+      'os_boxes_media',
+      'os_boxes_rand_widget',
+      'os_boxes_html'
+    );
+
+    if (in_array($this->plugin_key, $additional_class_allowed_plugins) && module_exists('vsite') && $vsite = vsite_get_vsite()) {
+      $form['additional_class'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Apply css class name to this widget\'s container'),
+        '#description' => t('Warning: this is to be used for custom themeing purposes only.'),
+        '#default_value' => (isset($this->options['additional_class'])) ? $this->options['additional_class'] : '',
+        '#access' => og_user_access('node', $vsite->group->nid, 'add widget custom class', NULL, FALSE, TRUE),
+        '#weight' => 9002,
+      );
+    }
 
     $form['advanced'] = array(
       '#type' => 'fieldset',
@@ -114,10 +137,11 @@ abstract class os_boxes_default extends boxes_box {
     if (!empty($this->options['make_embeddable'])) {
       $block['embed_link'] = true;
     }
-
+    if (!empty($this->options['additional_class'])) {
+      $block['additional_class'] = $this->options['additional_class'];
+    }
     // Get the assets from the cache.
     $block['assets'] = $this->get_assets();
-
     return $block;
   }
 
@@ -145,11 +169,11 @@ abstract class os_boxes_default extends boxes_box {
       return;
     }
 
-    $this->cache_id = 'os_boxes_cache:' . $vsite->id;
+    $this->cache_id = 'os_boxes_cache:' . $vsite->id . ':' . $this->delta;
+
     if ($bundle && is_string($bundle)) {
       $this->cache_id .= ':' . $bundle;
     }
-    $this->cache_id .= ':' . $this->delta;
 
     if ($page) {
       $this->cache_id .= ':' . $page;
@@ -216,6 +240,10 @@ abstract class os_boxes_default extends boxes_box {
       else if (is_array($cache->data) && is_string($cache->data['content'])) {
         $cache->data['content'] .= "<!--From Cache CID[{$this->cache_id}]-->";
       }
+    } elseif ($cache->data === FALSE) {
+      // In the case where we have a valid cache hit but the contents of the box are FALSE,
+      // we should return empty string instead.  FALSE will be treated as a cache miss.
+      $cache->data = '';
     }
 
     drupal_add_http_header('x-drupal-cache-os-boxes-plugin', $this->plugin_key, TRUE);

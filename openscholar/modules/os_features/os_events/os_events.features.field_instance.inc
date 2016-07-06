@@ -376,6 +376,78 @@ function os_events_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-event-field_mutliple_event_signup'
+  $field_instances['node-event-field_mutliple_event_signup'] = array(
+    'bundle' => 'event',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 7,
+      ),
+      'links' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'no_image_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'sidebar_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'slide_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'title' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_mutliple_event_signup',
+    'label' => 'Allow a user to sign up for multiple occurrences',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+      ),
+      'type' => 'options_onoff',
+      'weight' => 44,
+    ),
+  );
+
   // Exported field_instance: 'node-event-field_upload'
   $field_instances['node-event-field_upload'] = array(
     'bundle' => 'event',
@@ -565,7 +637,7 @@ function os_events_field_default_field_instances() {
     'entity_type' => 'registration',
     'field_name' => 'field_full_name',
     'label' => 'Full name',
-    'required' => 0,
+    'required' => 1,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,
@@ -622,6 +694,7 @@ function os_events_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Allow a user to sign up for multiple occurrences');
   t('Attach Files');
   t('Body');
   t('Date');

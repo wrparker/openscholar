@@ -33,6 +33,7 @@ class os_taxonomy_fbt extends os_boxes_default {
     $options['depth'] = 0;
     $options['behavior'] = 'contextual';
     $options['as_nav'] = FALSE;
+    $options['additional_class'] = '';
 
     return $options;
   }
@@ -41,26 +42,42 @@ class os_taxonomy_fbt extends os_boxes_default {
    * Implements boxes_content::options_form().
    */
   public function options_form(&$form_state) {
-    $form = parent::options_form($form_state);
-
     ctools_include('dependent');
     ctools_add_js('dependent');
 
-    $form = $this->form_elements();
+    $form = $this->form_elements($form_state);
 
     // Reset the keys.
     foreach (array_keys($form) as $setting) {
-      $setting_value = !empty($this->options[$setting]) ? $this->options[$setting] : NULL;
+      $option_value = $this->options[$setting];
+      // The form field 'depth' has an option with the value "0", This is why
+      // we check it literally so we won't reset it on that case.
+      $setting_value = !empty($option_value) || $option_value === '0' ? $this->options[$setting] : NULL;
       $form[$setting]['#default_value'] = $setting_value;
     }
 
     $form['advanced']['as_nav'] = array(
       '#type' => 'checkbox',
       '#default_value' => $this->options['as_nav'],
-      '#title' => t('Display As Navigation'),
-      '#description' => t('Check this to make this vocabulary display like a menu.'),
+      '#title' => t('Display as a menu'),
       '#return_value' => TRUE,
+      '#states' => array(
+       'invisible' => array(
+        ':input[name="widget_type"]' => array('value' => 'select'),
+        ),             
+       ),
     );
+
+    if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
+      $form['additional_class'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Apply css class name to this widget\'s container'),
+        '#description' => t('Warning: this is to be used for custom themeing purposes only.'),
+        '#default_value' => (isset($this->options['additional_class'])) ? $this->options['additional_class'] : '',
+        '#access' => og_user_access('node', $vsite->group->nid, 'add widget custom class', NULL, FALSE, TRUE),
+        '#weight' => 9002,
+      );
+    }
 
     return $form;
   }
@@ -69,15 +86,19 @@ class os_taxonomy_fbt extends os_boxes_default {
    * Returning the form for building the form and reset the form values with
    * $form keys.
    */
-  public function form_elements() {
+  public function form_elements(&$form_state) {
     $form = array();
-
+    $selected_vid = isset($form_state['values']['vocabulary']) ? $form_state['values']['vocabulary'] : $this->options['vocabulary'];
     $form['vocabulary'] = array(
       '#type' => 'select',
       '#description' => t('Which vocabularies would you like to use to filter posts.'),
       '#title' => t('Vocabularies'),
       '#options' => self::get_all_vocabularies(),
       '#required' => TRUE,
+      '#ajax' => array(
+        'callback' => 'os_boxes_taxonomy_fbt_vocab_ajax_callback',
+        'wrapper' => 'bundles-wrapper',
+      ),
     );
 
     $form['widget_type'] = array(
@@ -104,12 +125,13 @@ class os_taxonomy_fbt extends os_boxes_default {
     );
 
     $form['bundles'] = array(
+      '#prefix' => '<div id="bundles-wrapper">',
+      '#suffix' => '</div>',
       '#type' => 'select',
-      '#title' => t('Select Post type'),
-      '#options' => $this->getTaxonomyBundles(),
-      '#description' => t('The post types that will be included in the count'),
+      '#title' =>  t('Type'),
+      '#options' => $this->getTaxonomyBundles($selected_vid),
       '#multiple' => FALSE,
-      '#size' => count($this->getTaxonomyBundles()) / 2,
+      '#size' => ceil(count($this->getTaxonomyBundles($selected_vid)) / 2),
       '#dependency' => array(
         'edit-behavior' => array('select'),
       ),
@@ -117,8 +139,7 @@ class os_taxonomy_fbt extends os_boxes_default {
 
     $form['range'] = array(
       '#type' => 'textfield',
-      '#title' => t('Number of terms to display'),
-      '#description' => t('Maximum number of terms to display.'),
+      '#title' => t('Maximum number of parent terms to display'),
       '#element_validate' => array('element_validate_integer_positive'),
     );
 
@@ -130,26 +151,23 @@ class os_taxonomy_fbt extends os_boxes_default {
 
     $form['show_empty_terms'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Show empty terms'),
-      '#description' => t('Should terms be shown that do not have any posts tagged to them.'),
+      '#title' => t('Show empty terms (terms with no posts tagged with them)'),
     );
 
     $form['show_term_descriptions'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show term descriptions'),
-      '#description' => t('Show the description of the term if available under each term.'),
     );
 
     $form['show_childs'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show child terms'),
-      '#description' => t('Control whether to child terms are shown with their parent term.'),
     );
 
     $form['depth'] = array(
       '#type' => 'select',
-      '#title' => ('Taxonomy tree depth.'),
-      '#description' => t('The maximum term level in the tree to count the tagged posts.'),
+      '#title' => ('Taxonomy tree depth'),
+      '#description' => t('How many levels would you like to display?'),
       '#options' => array(
         -1 => t("Show all children"),
         0 => t("Show only first level"),
@@ -177,7 +195,7 @@ class os_taxonomy_fbt extends os_boxes_default {
    * 
    * @return array
    */
-  protected function getTaxonomyBundles() {
+  protected function getTaxonomyBundles($vid = NULL) {
     $info = &drupal_static(__METHOD__);
 
     if ($info) {
@@ -185,16 +203,40 @@ class os_taxonomy_fbt extends os_boxes_default {
     }
 
     $bundles = os_get_bundles(array(1,2));
+    $allowed_bundles = array();
+
+    if ($vid != NULL) {
+      $allowed_bundles = db_select('og_vocab', 'ogv')
+        ->fields('ogv', array('bundle'))
+        ->condition('ogv.vid', $vid, '=')
+        ->condition('ogv.entity_type', 'node', '=')
+        ->execute()
+        ->fetchCol();
+    }
+
+    // Removing Feed Importer and Slideshow Image from dropdown.
+    foreach ($bundles as $key => $val) {
+      if (in_array($key, array('feed_importer', 'slideshow_slide'))) {
+        unset($bundles[$key]);
+      }
+      else if (!in_array($key, $allowed_bundles) && $vid != NULL) {
+        unset($bundles[$key]);
+      }
+    }
+    // Checking if event bundle is available in allowed list of bundles.
     $delta = array_search('event', array_keys($bundles));
-    $first = array_slice($bundles, 0, $delta);
-    $second = array_slice($bundles, $delta + 1);
-    $events_type = array(
-      'past_event' => t('Past event'),
-      'upcoming_event' => t('Upcoming event'),
-    );
-
-    $info = $first + $events_type + $second;
-
+    if (!empty($delta)) {
+      $first = array_slice($bundles, 0, $delta);
+      $second = array_slice($bundles, $delta + 1);
+      $events_type = array(
+        'past_event' => t('Past event'),
+        'upcoming_event' => t('Upcoming event'),
+      );
+      $info = $first + $events_type + $second;
+    }
+    else {
+      return $bundles;
+    }
     return $info;
   }
 
@@ -312,7 +354,15 @@ class os_taxonomy_fbt extends os_boxes_default {
       return $block;
     }
 
-    $id = 'vocabulary:' . $this->options['vocabulary'];
+    // Content type's machine name is added in cache id.
+    // So that different set of cached links can be generated per content type for 'Determine for me' settings.
+    if ($this->options['behavior'] == 'contextual') {
+      $id = 'vocabulary:' . $this->options['vocabulary'] . ':' . implode(":", $this->options['bundles']);
+    }
+    else {
+      $id = 'vocabulary:' . $this->options['vocabulary'];
+    }
+
     $this->set_cache_id($id);
     if (($block['content'] = $this->get_cache()) === FALSE) {
       if (is_array($this->options['vocabulary'])) {
@@ -361,3 +411,10 @@ class os_taxonomy_fbt extends os_boxes_default {
     return $vocabularies;
   }
 }
+
+  /**
+  * AJAX callback to update Bundles set as per selected vocabulary.
+  */
+  function os_boxes_taxonomy_fbt_vocab_ajax_callback($form, &$form_state) {
+    return $form['options']['bundles'];
+  }

@@ -35,9 +35,61 @@ function os_profiles_os_app_info() {
         'menu_item' => 'people',
       ),
     ),
+    'has_settings' => TRUE,
   );
 
   return $apps;
+}
+
+/**
+ * Implements hook_os_widget().
+ */
+function os_profiles_os_widget() {
+  $items = array();
+
+  // Filter profiles by alphabetical groups.
+  $items['views-os_profiles-filter_by_alphabet'] = array(
+    'module' => 'views',
+    'delta' => 'os_profiles-filter_by_alphabet',
+    'region' => FALSE,
+    'weight' => '-10',
+    'info' => t('Filter Profiles by Alphabetical Groups'),
+  );
+
+  return $items;
+}
+
+/**
+ * Implements template_preprocess_views_view_summary().
+ */
+function os_profiles_preprocess_views_view_summary(&$vars) {
+  // Targets only view name 'os_profiles' for alphabetical profile glossary link display.
+  if ($vars['view']->name == 'os_profiles' && $vars['view']->current_display == 'filter_by_alphabet') {
+    $result = $vars['view']->result;
+    $summary_base_path = url($vars['view']->style_options['base_path']);
+    $overridden_result = array();
+    $glossary_links = array(
+      'A-E' => range('a', 'e'),
+      'F-J' => range('f', 'j'),
+      'K-O' => range('k', 'o'),
+      'P-T' => range('p', 't'),
+      'U-Z' => range('u', 'z'),
+    );    
+    // Building the glossary links as A-E, F-J etc.
+    foreach ($result as $letter) {
+      $rendered[] = strtolower($letter->field_last_name_value_truncated);
+    }
+    $rows = array();
+    foreach ($glossary_links as $key => $alphabet_set) {
+      if (array_intersect($rendered, $alphabet_set)) {
+        $overridden_result = new stdClass;
+        $overridden_result->link = $key;
+        $overridden_result->url = $summary_base_path . '/' . implode(',', $glossary_links[$key]);
+        $rows[] = $overridden_result;
+      }
+    }
+    $vars['rows'] = $rows;
+  }
 }
 
 /**
@@ -227,6 +279,8 @@ function os_profiles_process_node(&$vars) {
   if ($vars['type'] !== 'person') {
     return;
   }
+
+  module_load_include('inc', 'os', 'includes/os');
 
   // Adding the prefix value to the title of the person.
   if (!empty($vars['field_prefix'])) {
@@ -483,9 +537,20 @@ function os_profile_return_auto_complete($string = '') {
   $last_name_field = _field_sql_storage_tablename($field_info);
 
   // Create the DB or condition we'll pass to the query.
-  $db_or = db_or()
-    ->condition('first.field_first_name_value', '%' . $string . '%', 'LIKE')
-    ->condition('last.field_last_name_value', '%' . $string . '%', 'LIKE');
+  $explode = explode(" ", $string);
+  if (count($explode) > 1) {
+    // Searching for a person with first name and last name.
+    $name_condition = db_and()
+      ->condition('first.field_first_name_value', '%' . $explode[0] . '%', 'LIKE')
+      ->condition('last.field_last_name_value', '%' . $explode[1] . '%', 'LIKE');
+  }
+  else {
+    // Searching for a person with first and last which might contain the
+    // search criteria.
+    $name_condition = db_or()
+      ->condition('first.field_first_name_value', '%' . $string . '%', 'LIKE')
+      ->condition('last.field_last_name_value', '%' . $string . '%', 'LIKE');
+  }
 
   // Build the SQL query. We use DB select and not EFQ due to lack of support
   // EFQ has with NULL values.
@@ -508,11 +573,14 @@ function os_profile_return_auto_complete($string = '') {
 
   $results = $query
     ->condition('n.type', 'person')
-    ->condition($db_or)
+    ->condition($name_condition)
+    ->condition('first.entity_type', 'node')
+    ->condition('last.entity_type', 'node')
     ->condition('n.status', NODE_PUBLISHED)
     ->fields('n', array('nid', 'title'))
     ->range(0, 25)
     ->orderBy('n.nid')
+    ->orderBy('n.title')
     ->execute()
     ->fetchAllAssoc('nid');
 
@@ -581,10 +649,18 @@ function os_profiles_sync_profile_validate($form, &$form_state) {
   if (!empty($form_state['values']['autocomplete'])) {
     preg_match("/.+\((\d+)\)/", $form_state['values']['autocomplete'], $matches);
     if (empty($matches[1])) {
-      $params = array(
-        '%label' => $form_state['values']['autocomplete'],
-      );
-      form_set_error('autocomplete', t("There isn't any node with the name %label", $params));
+
+      preg_match("/.+\[(\d+)\]/", $form_state['values']['autocomplete'], $matches);
+
+      if (empty($matches)) {
+        $params = array(
+          '%label' => $form_state['values']['autocomplete'],
+        );
+        form_set_error('autocomplete', t("There isn't any node with the name %label", $params));
+      }
+      else {
+        $form_state['autocomplete_nid'] = $matches[1];
+      }
     }
     else {
       $form_state['autocomplete_nid'] = $matches[1];
@@ -798,6 +874,10 @@ function os_profiles_get_origin_node_values($address, $fields) {
   $values = array();
 
   foreach ($fields as $field) {
+    if (!in_array($field, array_keys($data))) {
+      continue;
+    }
+
     $info = field_info_field($field);
     if (empty($data[$field])) {
       // The field value in the original node is empty. Entity metadata wrapper
@@ -806,7 +886,7 @@ function os_profiles_get_origin_node_values($address, $fields) {
       $value = $info['cardinality'] == 1 ? NULL : array(NULL);
     }
     else {
-      $value = $data[$field];
+      $value = empty($data[$field]) ? NULL : $data[$field];
     }
 
     $values[$field] = $value;
@@ -1272,6 +1352,7 @@ function _os_profiles_build_display_style_example($style) {
           <div>Often referred to by his initials JFK, was the 35th President of the United States, serving from 1961 until his assassination in 1963.</div>
           <div>555-1234</div>
           <div><a>example@address.com</a></div>
+          <div><a class="profile-link">Full Profile</a></div>
         </div>
       ';
       break;
@@ -1291,6 +1372,20 @@ function _os_profiles_build_display_style_example($style) {
   }
 
   return $result;
+}
+
+/**
+ * Implements hook_node_view_alter().
+ *
+ * Adds a link "full profile" as the last field in the slider
+ * when the profiles are set to Slide teaser display style
+ */
+function os_profiles_node_view_alter(&$build) {
+  // If 'person' content type are displayed in slide_teaser view mode, then appending additional element for Full Profile link.
+  if ($build['#bundle'] == 'person' && $build['#view_mode'] == 'slide_teaser') {
+    $build['os_profile_link']['#markup'] = l('Full Profile', 'node/' . $build['#node']->nid, array('attributes' => array('class' => 'profile-link')));
+    $build['os_profile_link']['#weight'] = 10;
+  }
 }
 
 /**
@@ -1454,7 +1549,7 @@ function os_profiles_preprocess_node(&$variables) {
  */
 function os_profiles_create_site_from_profile($form, &$form_state, $node) {
   global $base_url;
-
+  $purl_base_domain = variable_get('purl_base_domain', $base_url);
   module_load_include('form.inc', 'vsite_register', 'vsite_register');
 
   $form_state['node'] = $node;
@@ -1462,14 +1557,14 @@ function os_profiles_create_site_from_profile($form, &$form_state, $node) {
   // Building URL by code and not via url() since url() will change it based
   // on the current space.
   $params = array(
-    '@url' => $base_url . '/jdoe',
+    '@url' => $purl_base_domain . '/jdoe',
   );
 
   $form['domain'] = array(
     '#type' => 'textfield',
     '#title' => t('URL'),
     '#required' => TRUE,
-    '#description' => t("Minimun 3 characters, which must be lowercase. Punctuations is not allowed except for hyphens and underscores. <Br /> Example: a choice of 'jdoe' would result the URL: @url", $params),
+    '#description' => t("Enter a minimum of 3 characters, lowercase only. Punctuation is not allowed except for hyphens and underscores. <Br /> Example: Entering jdoe into the field above will result in this URL: @url", $params),
   );
 
   $form['results'] = array(
@@ -1478,7 +1573,7 @@ function os_profiles_create_site_from_profile($form, &$form_state, $node) {
   );
 
   // Adds the prefix to URL field.
-  $form['domain']['#field_prefix'] = $base_url . '/';
+  $form['domain']['#field_prefix'] = $purl_base_domain . '/';
 
   // Show the "create subsite" checkbox only in a "department" site.
   $vsite = vsite_get_vsite();
@@ -1587,4 +1682,99 @@ function os_profiles_copy_bio_to_new_vsite($original_person, $new_vsite) {
  */
 function os_profiles_form_node_form_alter(&$form, $form_state) {
   $form['field_child_site']['#access'] = FALSE;
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function os_profiles_element_info_alter(&$type) {
+  if (isset($type['link_field'])) {
+    $type['link_field']['#process'][] = 'os_profiles_link_field_process';
+  }
+}
+
+/**
+ * process callback for link_field
+ */
+function os_profiles_link_field_process($element, $form_state, $complete_form) {
+  if ($element['#field_name'] == 'field_website') {
+    $element['title']['#title'] = t('Link Text');
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_feeds_processor_targets_alter().
+ *
+ * @see FeedsProcessor::getMappingTargets()
+ */
+function os_profiles_feeds_processor_targets_alter(&$targets, $entity_type, $bundle_name) {
+
+  if ($bundle_name !== 'person') {
+    return;
+  }
+
+  foreach (field_info_instances($entity_type, $bundle_name) as $name => $instance) {
+    $info = field_info_field($name);
+    if ($info['type'] == 'link_field') {
+      if (array_key_exists('url', $info['columns'])) {
+        $targets[$name . ':url'] = array(
+          'name' => t('@name: URL', array('@name' => $instance['label'])),
+          'callback' => 'os_profile_feeds_set_target',
+          'description' => t('The @label field of the entity.', array('@label' => $instance['label'])),
+          'real_target' => $name,
+        );
+      }
+      if (array_key_exists('title', $info['columns'])) {
+        $targets[$name . ':title'] = array(
+          'name' => t('@name: Title', array('@name' => $instance['label'])),
+          'callback' => 'os_profile_feeds_set_target',
+          'description' => t('The @label field of the entity.', array('@label' => $instance['label'])),
+          'real_target' => $name,
+        );
+      }
+    }
+  }
+}
+
+/**
+ * Callback for mapping. Here is where the actual mapping happens.
+ *
+ * When the callback is invoked, $target contains the name of the field the
+ * user has decided to map to and $value contains the value of the feed item
+ * element the user has picked as a source.
+ */
+function os_profile_feeds_set_target($source, $entity, $target, $value) {
+  if (empty($value)) {
+    return;
+  }
+
+  // Handle non-multiple value fields.
+  if (!is_array($value)) {
+    $value = array($value);
+  }
+
+  // Iterate over all values.
+  list($field_name, $column) = explode(':', $target);
+  $info = field_info_field($field_name);
+
+  $field = isset($entity->$field_name) ? $entity->$field_name : array();
+  
+  // Initializing static variable for field delta value for this callback.
+  $field_delta = &drupal_static(__FUNCTION__);
+  if (!isset($field_delta[$column])) {
+    $field_delta[$column] = 0;
+  }
+
+  foreach ($value as $v) {
+    if (is_object($v) && ($v instanceof FeedsElement)) {
+      $v = $v->getValue();
+    }
+    if (is_scalar($v)) {
+      $field[LANGUAGE_NONE][$field_delta[$column]][$column] = $v;
+      $field_delta[$column]++;
+    }
+  }
+  $entity->$field_name = $field;
 }

@@ -22,7 +22,7 @@ class os_boxes_html extends os_boxes_default {
     $form = parent::options_form($form_state);
 
     if (module_exists('os_common')) {
-      os_common_angular_app('os-boxes');
+      os_common_angular_apps('os-boxes');
       $form['#attached']['library'][] = array('os_common', 'FileEditorModal');
       $form['#attached']['js'][] = drupal_get_path('module', 'os_boxes') . '/misc/os_boxes.app.js';
     }

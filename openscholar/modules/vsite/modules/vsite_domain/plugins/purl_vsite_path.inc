@@ -28,7 +28,8 @@ if (!class_exists('purl_vsite_path')) {
      */
     public function parse($valid_values, $q) {
       $valid_values = array_diff_key($valid_values, _vsite_domain_processed_purls());
-      $parsed = parent::parse($valid_values, $q);
+      // Match case insensitive to lowercase.
+      $parsed = parent::parse($valid_values, strtolower($q));
 
       $space_found = FALSE;
       // Does not return spaces without the correct domain
@@ -45,11 +46,20 @@ if (!class_exists('purl_vsite_path')) {
           }
 
           global $base_url;
+          $on_base_domain = str_replace('http://', '', $_SERVER['HTTP_HOST']) == parse_url(variable_get('purl_base_domain', $base_url),PHP_URL_HOST);
           if ($space_found || in_array($settings->value, self::$disabled) ||
             (strlen($vsite_domain) && str_replace('http://', '', $_SERVER['HTTP_HOST']) != $vsite_domain) ||
-            (!strlen($vsite_domain) && str_replace('http://', '', $_SERVER['HTTP_HOST']) != parse_url(variable_get('purl_base_domain', $base_url),PHP_URL_HOST))
+            (!strlen($vsite_domain) && !$on_base_domain)
           ) {
             unset($parsed[$site]);
+            if (!$space_found && $on_base_domain && strlen($vsite_domain) && count(explode('/', $q)) < 2) {
+              purl_goto("<front>", array(
+                'purl' => array(
+                  'provider' => 'vsite_domain',
+                  'id' => $settings->id,
+                ),
+              ));
+            }
           }else{
             //We have a valid OG Space
             $space_found = TRUE;

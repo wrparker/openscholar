@@ -569,7 +569,39 @@ function citation_distribute_cron() {
 function _citation_distribute_plugins() {
   ctools_include('plugins');
   $plugins = ctools_get_plugins('citation_distribute', 'service');
-  return $plugins;
+  $plugin_sorted = &drupal_static(__FUNCTION__);
+  
+  // If static cache is already set, returning immediately. 
+  if (isset($plugin_sorted)) {
+    return $plugin_sorted;
+  }
+
+  // In case we have no plugins.
+  if (!$plugins) {
+    return array();
+  }
+
+  // Iterating through plugins having plugin title. 
+  foreach ($plugins as $key => $plugin) {
+    if (isset($plugin['title'])) {
+      $plugin_sorted[$key]['title'] = $plugin['title'];
+    }
+  }
+
+  // Sorting plugins as per alphabetical order of the title.
+  asort($plugin_sorted);
+
+  // Regenerating sorted array of plugins.
+  foreach ($plugin_sorted as $sorted_key => $plugin) {
+    $plugin_sorted[$sorted_key] = $plugins[$sorted_key];
+    // Removing the array item from initial $plugins array returned by ctools.
+    unset($plugins[$sorted_key]);
+  }
+
+  // Merging arrays 1.without plugin title and 2.with title (sorted)
+  $plugin_sorted = array_merge($plugin_sorted, $plugins);
+
+  return $plugin_sorted;
 }
 
 /**

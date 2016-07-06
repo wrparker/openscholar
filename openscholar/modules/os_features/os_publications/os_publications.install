@@ -200,15 +200,15 @@ function os_publications_update_7002(){
  */
 function os_publications_update_7003() {
   if(!module_exists('biblio_citeproc')){
-  	return t('CiteProc not installed, update not needed.');
+    return t('CiteProc not installed, update not needed.');
   }
   $field_map = biblio_get_map('field_map','csl');
   if(isset($field_map['collection-title']) && isset($field_map['container-title'])) {
     if($field_map['collection-title'] == 'biblio_secondary_title' && $field_map['container-title'] == 'biblio_secondary_title') {
-	  $field_map['collection-title'] = '';
-	  biblio_set_map('field_map', 'csl', $field_map);
-	  return t('Second biblio_secondary_title field mapping removed.');
-	}
+    $field_map['collection-title'] = '';
+    biblio_set_map('field_map', 'csl', $field_map);
+    return t('Second biblio_secondary_title field mapping removed.');
+  }
   }
 }
 
@@ -217,7 +217,7 @@ function os_publications_update_7003() {
  */
 function os_publications_update_7004() {
   if(!db_table_exists('biblio_types')) {
-  	return;
+    return;
   }
 
   $result = db_select('biblio_types', 'b')
@@ -227,12 +227,12 @@ function os_publications_update_7004() {
     ->fetchField();
 
   if(empty($result)) {
-  	return;
+    return;
   }
 
   $delete_type = db_delete('biblio_types')
     ->condition('tid',$result)
-  	->execute();
+    ->execute();
 
   return t('Select Type... has been removed from the biblio_types table.');
 }
@@ -279,7 +279,7 @@ function os_publications_update_7005() {
  */
 function os_publications_update_7006() {
   if(!module_exists('biblio_citeproc')) {
-  	return;
+    return;
   }
 
   $dir = drupal_get_path('module', 'biblio_citeproc') . '/style';
@@ -334,17 +334,17 @@ function os_publications_update_7007() {
   // Before we wipe out all the other contributors, sanity check to make sure there are no rogue contributers attached to biblio nodes.
   $auth_type_check = db_query('SELECT nid, vid, cid, auth_type FROM {biblio_contributor} WHERE auth_type > :auth_id', array('auth_id' => 2))->fetchAll();
   if($auth_type_check) {
-  	// Set anything greater than 2 to 2 because they should be editors.
-  	foreach($auth_type_check as $auth => $type) {
-  	  $auth_type_update = db_update('biblio_contributor')
-  	    ->fields(array(
-  	      'auth_type' => 2,
-  	    ))
-  	    ->condition('nid', $type->nid, '=')
-  	    ->condition('vid', $type->vid, '=')
-  	    ->condition('cid', $type->cid, '=')
-  	    ->execute();
-  	}
+    // Set anything greater than 2 to 2 because they should be editors.
+    foreach($auth_type_check as $auth => $type) {
+      $auth_type_update = db_update('biblio_contributor')
+        ->fields(array(
+          'auth_type' => 2,
+        ))
+        ->condition('nid', $type->nid, '=')
+        ->condition('vid', $type->vid, '=')
+        ->condition('cid', $type->cid, '=')
+        ->execute();
+    }
   }
   // Delete all the other contributer types.
   $contributor_select = db_query('SELECT auth_type FROM {biblio_contributor_type_data} WHERE auth_type > :auth_id', array(':auth_id' => 2))->fetchAll();
@@ -1438,3 +1438,154 @@ function os_publications_update_7037() {
   }
 }
 
+/**
+ * Update the csl fields.
+ */
+function os_publications_update_7038() {
+  _reset_csl_map(FALSE);
+  $citations = array('mhra', 'chicago-author-date', 'apa');
+  foreach ($citations as $citateion) {
+    os_publications_revert_citeproc_style($citateion);
+  }
+}
+
+/**
+ * Fix CSL styles so editors aren't printed twice when there are no authors
+ */
+function os_publications_update_7039() {
+  $citations = array(
+    'ama',
+    'apa',
+    'apsa',
+    'asa',
+    'chicago-author-date',
+    'chicago-fullnote-bibliography',
+    'cse',
+    'harvard-chicago-author-date',
+    'harvard1',
+    'ieee',
+    'mhra',
+    'mla',
+    'nlm',
+    'vancouver'
+  );
+
+  foreach ($citations as $citation) {
+    os_publications_revert_citeproc_style($citation);
+  }
+}
+
+/**
+ * Update default preferred bibliographic format.
+ */
+function os_publications_update_7040() {
+  // Updating the default ciation style for new publications.
+  variable_set('biblio_citeproc_style', 'harvard-chicago-author-date.csl');
+
+  // Checking existing sites space ids whose default citation is not present in spaces_overrides table.
+  $query = db_select('purl', 'p');
+  $query->leftjoin('spaces_overrides', 'so', 'so.id = p.id AND object_type = :object_type AND object_id = :object_id', 
+  array(':object_type' => 'variable', ':object_id' => 'biblio_citeproc_style'));
+  $query->condition('p.provider', 'spaces_og', '=');
+  $query->isNull('so.value');
+  $query = $query->fields('p', array('id'));
+  $target_space_ids = $query->execute()->fetchCol();
+
+  // This will set previous default value cse.csl as the overridden value for existing sites' default publication style.
+  $insert_pub_style = db_insert('spaces_overrides')->fields(array('type', 'id', 'object_type', 'object_id', 'value'));
+  foreach ($target_space_ids as $key => $value) {
+    $insert_pub_style->values(array(
+        'type' => 'og',
+        'id' => $value,
+        'object_type' => 'variable',
+        'object_id' => 'biblio_citeproc_style',
+        'value' => serialize('cse.csl')
+    ));
+  }
+  $insert_pub_style->execute();
+}
+
+/**
+ * Adding biblio field 'biblio_date' to Journal Article.
+ */
+function os_publications_update_7041() {
+  _os_publications_update_field_data();
+}
+
+/**
+ * Update the mhra.csl file.
+ */
+function os_publications_update_7042() {
+  _reset_csl_map(FALSE);
+  os_publications_revert_citeproc_style('mhra');
+}
+
+/**
+ * Bring back the abstract and note fields for working paper.
+ */
+function os_publications_update_7043() {
+  os_publications_update_7034();
+
+  os_publications_restore_field('biblio_year', 'Working paper', array(
+    'common' => 1,
+    'vtab' => 2,
+    'autocomplete' => 0,
+    'required' => 1,
+    'weight' => '-47',
+    'visible' => '1'
+  ));
+}
+
+/*
+* Fix CSL style so title is not italic.
+ */
+function os_publications_update_7044() {
+  $citations = array(
+    'harvard-chicago-author-date',
+    'harvard1',
+  );
+
+  foreach ($citations as $citation) {
+    os_publications_revert_citeproc_style($citation);
+  }
+}
+
+/**
+ * revert the view.
+ */
+function os_profiles_update_7045() {
+  features_revert(array('os_publications' => array('views_view')));
+}
+
+/**
+ * Set biblio to use 'full' type pagination for main content pages.
+ */
+function os_publications_update_7046() {
+  variable_set('biblio_pager', 'pager');
+}
+
+/**
+ * Add 'Import from file' permission to default roles.
+ */
+function os_publications_update_7047() {
+  $default = og_get_default_roles();
+  $q = db_select('og_role', 'ogr')
+      ->fields('ogr', array('rid'))
+      ->condition('name', $default, 'IN')
+      ->execute();
+
+  $count = 0;
+  foreach ($q as $r) {
+    $count++;
+    og_role_grant_permissions($r->rid, array('import from file'));
+  }
+
+  return t('Added \'import from file\' permission to '.$count.' roles.');
+}
+
+/**
+ * Add Day and Month of Publication fields.
+ */
+function os_profiles_update_7048() {
+  features_revert(array('os_publications' => array('field_base', 'field_instance')));
+}

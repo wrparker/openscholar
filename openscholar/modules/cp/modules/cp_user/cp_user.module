@@ -11,6 +11,7 @@
 define('OS_USER_ROLE_ADMIN', 'vsite admin');
 define('OS_USER_ROLE_EDITOR', 'content editor');
 define('OS_USER_ROLE_BASIC', 'vsite user');
+define('OS_USER_ROLE_VIEWER', 'viewer');
 
 /**
  * Implements hook_menu_alter().
@@ -502,6 +503,26 @@ function cp_user_og_ui_admin_permissions_validate($form, &$form_state) {
 }
 
 /**
+ * Implements template_preprocess_HOOK() for overlay.tpl.php
+ *
+ * If the current page request is inside the overlay, remove the local tasks in some instances.
+ *
+ * @see template_process_overlay()
+ * @see overlay.tpl.php
+ */
+function cp_user_preprocess_overlay(&$variables) {
+  $item = menu_get_item();
+  $paths = array(
+      'user/%/edit',
+  );
+  if (!in_array($item['path'], $paths)) {
+    return;
+  }
+  
+  unset($variables['tabs']);
+}
+
+/**
  * Get category from permission key, and add category title if needed.
  *
  * @param $permission
@@ -563,6 +584,7 @@ function cp_user_og_ui_admin_new_role($variables) {
   // name than the one in the DB. Here we get the "human" names for all roles in
   // the vsite and use them to rename all roles on the list.
   $roles_human_names = _cp_user_list_roles('rids-human', NULL, $form['gid']['#value']);
+  $form['role_names']['#value'] = _cp_user_list_roles_reorder($form['role_names']['#value']);
   foreach (array_keys($form['role_names']['#value']) as $rid) {
     if (!is_numeric($rid) || empty($roles_human_names[$rid])) {
       // Not a role.
@@ -590,6 +612,8 @@ function cp_user_og_ui_admin_new_role($variables) {
     'Administrator',
     // This should have been OS_USER_ROLE_EDITOR but we renamed it.
     'Content editor',
+    // This should have been OS_USER_ROLE_VIEWER but we renamed it.
+    'Viewer',
   );
 
   foreach ($role_names as $rid => $name) {
@@ -793,6 +817,7 @@ function cp_user_form_user_register_form_alter(&$form, &$form_state, $form_id) {
     'vsite user',
     'vsite admin',
     'content editor',
+    'viewer',
   );
   foreach ($roles as $role) {
     if (($key = array_search($role, $form['account']['roles']['#options'])) !== FALSE)  {
@@ -831,15 +856,6 @@ function cp_user_user_register_submit($form, &$form_state) {
     drupal_set_message(t('!user has been added to the website: !website', array('!user' => $form_state['user']->name, '!website' => $space->group->title)));
     // Redirect the user after they add/create someone.
     $form_state['redirect'] = 'cp/users';
-  }
-}
-
-/**
- * Implements hook_form_BASE_FORM_ID_alter() for cp_settings_form.
- */
-function cp_user_form_cp_settings_form_alter(&$form, &$form_state) {
-  if (isset($form['admin-menu'])) {
-    $form['admin-menu']['#access'] = FALSE;
   }
 }
 
@@ -892,6 +908,10 @@ function _cp_user_list_roles($format, $bundle, $gid = 0) {
     OS_USER_ROLE_ADMIN => array(
       'human_name' => t('Administrator'),
       'description' => t('<em>Administrators</em> may add, edit or delete any post, and change site settings.'),
+    ),
+    OS_USER_ROLE_VIEWER => array(
+      'human_name' => t('Viewer'),
+      'description' => t('<em>Viewer</em> may have read-only access to private sites and private apps.'),
     ),
   );
 
@@ -958,29 +978,42 @@ function _cp_user_list_roles($format, $bundle, $gid = 0) {
 function _cp_user_list_roles_reorder($og_roles) {
   // The first array is for the Basic Member role, the last array is for the
   // Administrator role, and the middle array is for all other roles.
-  $og_roles_first = array();
-  $og_roles_middle = array();
+  $og_roles_admin = array();
+  $og_roles_editor = array();
+  $og_roles_member = array();
+  $og_roles_viewer = array();
   $og_roles_last = array();
 
   foreach ($og_roles as $rid => $role_name) {
-    if ($role_name == OS_USER_ROLE_BASIC) {
-      // Basic Member role, insert it to the first array.
-      $og_roles_first[$rid] = $role_name;
-      continue;
-    }
-
     if ($role_name == OS_USER_ROLE_ADMIN) {
-      // Administrator role, insert it to the last array.
-      $og_roles_last[$rid] = $role_name;
+      // Administrator role, insert it to the first array.
+      $og_roles_admin[$rid] = $role_name;
       continue;
     }
 
-    // Not Basic Member or Administrator role, insert it to the middle array.
-    $og_roles_middle[$rid] = $role_name;
+    if ($role_name == OS_USER_ROLE_EDITOR) {
+      // Content Editor role, insert it to the second array.
+      $og_roles_editor[$rid] = $role_name;
+      continue;
+    }
+
+    if ($role_name == OS_USER_ROLE_BASIC) {
+      // Basic Member role, insert it to the third array.
+      $og_roles_member[$rid] = $role_name;
+      continue;
+    }
+
+    if ($role_name == OS_USER_ROLE_VIEWER) {
+      // Viewer role, insert it to the fourth array.
+      $og_roles_viewer[$rid] = $role_name;
+      continue;
+    }
+    // Not Basic Member or Administrator role, insert it to the last array.
+    $og_roles_last[$rid] = $role_name;
   }
 
-  // Merge the 3 arrays back together in the correct order.
-  $og_roles = $og_roles_first + $og_roles_middle + $og_roles_last;
+  // Merge the 5 arrays back together in the correct order.
+  $og_roles = $og_roles_admin + $og_roles_editor + $og_roles_member + $og_roles_viewer + $og_roles_last;
 
   return $og_roles;
 }

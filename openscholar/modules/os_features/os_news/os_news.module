@@ -42,6 +42,33 @@ function os_news_os_app_info() {
 }
 
 /**
+ * Implements hook_os_widget().
+ */
+function os_news_os_widget() {
+  $items = array();
+
+  // Filter news by months.
+  $items['views-os_news-news_by_month_block'] = array(
+    'module' => 'views',
+    'delta' => 'os_news-news_by_month_block',
+    'region' => 'sidebar_second',
+    'weight' => '-10',
+    'info' => t('Filter News by Month'),
+  );
+
+  // Filter news by year.
+  $items['views-os_news-news_by_year_block'] = array(
+    'module' => 'views',
+    'delta' => 'os_news-news_by_year_block',
+    'region' => FALSE,
+    'weight' => '-10',
+    'info' => t('Filter News by Year'),
+  );
+
+  return $items;
+}
+
+/**
  * Implements hook_os_entity_view_modes()
  */
 function os_news_os_entity_view_modes() {
@@ -91,9 +118,7 @@ function os_news_process_node(&$vars) {
             $width = $effect['data']['width'] . "px";
           }
         }
-        $photo_markup .= '<div class="photo with-caption" style="width:' . $width . '">' . render($vars['content']['field_photo']);
-        $photo_markup .= '<div class="caption">' . $vars['content']['field_photo'][0]['#item']['os_file_description'][LANGUAGE_NONE][0]['value'] . '</div>';
-        $photo_markup .= '</div>';
+        $photo_markup .= '<div class="photo with-caption" style="width:' . $width . '">' . render($vars['content']['field_photo']) . '</div>';
       }
       else {
         $photo_markup .= '<div class="photo no-caption clearfix">' . render($vars['content']['field_photo']) . '</div>';
@@ -137,3 +162,29 @@ function os_news_field_attach_load($entity_type, $entities, $view_mode) {
   }
 }
 
+/**
+ * Implements hook_media_token_to_markup_alter()
+ */
+function os_news_media_token_to_markup_alter(&$element, &$tag_info, &$settings) {
+  $img_markup = isset($element['content']['file']) ? drupal_render($element['content']['file']) : '';
+  $output = '';
+  $output .= $img_markup;
+  // If image description is present, then figcaption tag will be displayed.
+  if(isset($element['content']['os_file_description'][0]['#markup'])) {
+    $output .= '<figcaption>';
+    $output .= strip_tags($element['content']['os_file_description'][0]['#markup']);
+    $output .= '</figcaption>';
+  }
+  // Overriding image description output with figure tags.
+  $element['content']['os_file_description'][0]['#markup'] = $output;
+}
+
+/*
+ * Implements hook_date_popup_process_alter().
+ */
+function os_news_date_popup_process_alter(&$element, &$form_state, $context) {
+  // Removing label for calendar popup in news add/edit form as the fieldset already contains the label 'Date'
+  if ($context['form']['form_id']['#value'] == 'news_node_form') {
+    unset($element['date']['#title']);
+  }
+}

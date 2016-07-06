@@ -6,7 +6,6 @@
     $('li.link-count-file-edit a').each(function () {
       var $this = $(this),
         fid = this.href.match(/file\/([\d]*)\/edit/)[1];
-
       $this.attr({
         'file-editor-modal': '',
         'fid': fid,

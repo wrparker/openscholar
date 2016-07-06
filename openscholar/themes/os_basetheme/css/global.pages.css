@@ -58,6 +58,12 @@ html {} body {} #page
 {
     padding-top: 15px;
 }
+.region-page-bottom .region-inner
+/* Remove white horizontal bar at bottom after login */
+
+{
+    padding-top: 0;
+}
 .region-page-top .region-inner
 /* Remove ugly space between branding region and toolbar */
 
@@ -575,7 +581,7 @@ ul.class_material_field_class a.class_material_field_class_anchor {
 .block-boxes-os_search_solr_more_like_this .item-list ul li,
 .block-boxes-os_sv_list_box .item-list ul li,
 .block-boxes .block-boxes-os_boxes_manual_list ul li {
-    margin-bottom: .75em;
+    margin-bottom: .9em;
 }
 /*
  * First sidebar (on left in LTR languages, on right in RTL)
@@ -856,6 +862,9 @@ div[id^=event-popover] .event-title a {
 .ui-widget-header {
     background: none !important;
 }
+.ui-dialog.ui-front {
+    z-index: 101;
+}
 /** OS LOGIN CONTAINER STYLES **/
 /** SLIDER **/
 
@@ -1026,8 +1035,8 @@ div.toggle {
     margin: 0;
 }
 .jcarousel-container {
-    background: #efefef;
-    border: 1px solid #CCC;
+    background: #FAFAFA;
+    border: 1px solid #e1e1e1;
 }
 .jcarousel-container .jcarousel-clip-horizontal {
     width: auto;
@@ -1091,6 +1100,24 @@ img.media-element.file-default[style*="float:"][style*="right;"] {
     padding-left: 15px;
     padding-right: 0;
 }
+
+img ~ figcaption {
+color: #555;
+    font-style: italic;
+    clear: both;
+    max-width:100%;
+}
+
+
+.node-person.node-teaser figure figcaption {
+	display:none;
+}
+
+.lt-ie9 img.media-element.file-default[style*="FLOAT:"][style*="RIGHT;"] ~ figcaption,
+img.media-element.file-default[style*="float:"][style*="right;"] ~ figcaption {
+padding-left: 15px;
+}
+
 .block-boxes-os_sv_list_box .os_sv_list_box.sv-list-link.sv-list-view-links h1 a {
     font-weight: normal;
     font-size: initial;

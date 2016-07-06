@@ -202,6 +202,15 @@ ul.primary li {
 .not-logged-in.page-user ul.primary li.active a:hover {
     text-decoration: none;
 }
+.login-announcements {
+background:url('../images/announce_icon.png') center left no-repeat;
+background-size: 60px 60px;
+   background-color:#fcf8e3;
+   padding:10px 0 10px 70px;
+   margin-top:10px;
+   height:60px;
+   border:1px solid #eee;
+}
 /* USER ACCOUNT PAGE */
 
 .page-site-register #footer,
@@ -275,10 +284,12 @@ ul.primary li {
     background: #FF3A2D;
 }
 .pin-button a,
+#edit-login, #edit-back,
 fieldset.pin-fieldset legend a,
 #user-login fieldset legend a,
 .page-site-register .form-submit,
 .logged-in.no-sidebars.page-user #content .user-add-website,
+.logged-in.no-sidebars.page-user #content .add-subsite,
 .os-green-button {
     padding: 5px 10px;
     border: none;
@@ -290,12 +301,26 @@ fieldset.pin-fieldset legend a,
     border-radius: 4px;
     background: #3b76b1;
 }
+.pin-button-inline {
+    display: inline-block;
+    width: 100px;
+    margin: 0 3px 0 0;
+}
+.logged-in.no-sidebars.page-user #content .add-subsite a {
+    color: #FFFFFF;
+}
 #pin-register.pin-button,
 #pin-register.pin-button:hover {
     background-color: transparent;
 }
-.logged-in.no-sidebars.page-user #content .user-add-website {
+.logged-in.no-sidebars.page-user #content .user-add-website,
+.logged-in.no-sidebars.page-user #content .add-subsite {
     background: #3D9B13;
+}
+.logged-in.no-sidebars.page-user #content .add-subsite {
+    right: 120px;
+    position: absolute;
+    padding: .04em 10px;
 }
 fieldset.pin-fieldset legend,
 #user-login fieldset legend,
@@ -308,7 +333,7 @@ fieldset.pin-fieldset legend a,
 .pin-button,
 fieldset.pin-fieldset legend,
 #user-login fieldset legend {
-    background-color: none;
+    background-color: transparent;
     margin: 15px 0 0;
 }
 #user-login fieldset,
@@ -329,13 +354,14 @@ fieldset#edit-pin-fieldset {
 #user-login .user-login-message-text {
     position: absolute;
     width: 160px;
-    top: 10px;
+    top: 105px;
     right: 0px;
     background-color: #FFF;
     padding: 8px;
     border: 1px solid #e1e1e1;
     z-index: 2;
 }
+
 .pin-button#pin-nvm {
     display: block;
     margin-bottom: 20px;

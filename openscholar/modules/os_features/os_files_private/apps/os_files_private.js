@@ -6,9 +6,40 @@
 
       ecp.addField('files', 'private', 'only');
     }])
+    .run (['$window', '$timeout', function ($w, $t) {
+      var elem = document.querySelector('.add_new');
+      elem = angular.element(elem);
+
+      var hash = $w.location.hash;
+      if (hash == '#open') {
+        $t(function () {
+          elem.triggerHandler('click');
+        }, 0);
+        $w.location.hash = '';
+      }
+      angular.element(window).on('hashchange', function (e) {
+        if (e.fragment == 'open') {
+          $t(function () {
+            elem.triggerHandler('click');
+          }, 0);
+          $w.location.hash = '';
+        }
+      });
+    }])
     .controller('OSFilesPrivateController', ['$scope', 'FILEEDITOR_RESPONSES', function ($scope, FER) {
       $scope.reload = function (result) {
-        if (result == FER.SAVED || result === true) {
+        var reload = false;
+        if (result == FER.SAVED || result == FER.REPLACED) {
+          reload = true;
+        }
+        if (Array.isArray(result) && result.length) {
+          reload = true;
+        }
+        if (result === true) {
+          reload = true;
+        }
+
+        if (reload) {
           window.location.reload();
         }
       }

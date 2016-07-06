@@ -196,6 +196,11 @@ function os_files_file_presave($file) {
   if ($file->type == 'undefined' || $file->filemime == 'application/octet-stream') {
     $file->type = os_files_get_type($file);
   }
+
+  if (isset($file->original) && $file->status == 0) {
+    // this combination ensures that this was a file upload with the FILE_EXISTS_RENAME flag
+    $file->filename = $file->original->filename;
+  }
 }
 
 /**
@@ -428,7 +433,13 @@ function os_files_upload_validate_file_type(stdclass $file, $types) {
 function os_files_upload_validate_image_dimensions(stdClass $file) {
   $errors = array();
 
-  if (file_get_type($file) != 'image') return $errors;
+  $memory_limit = ini_get('memory_limit');
+
+  if (file_get_type($file) != 'image' || $memory_limit == -1) {
+    return $errors;
+  }
+
+  $memory_limit = parse_size($memory_limit);
 
   // estimate code from devshed
   // see: http://forums.devshed.com/php-development-5/gd-image-resizing-memory-requirements-605060.html
@@ -441,7 +452,6 @@ function os_files_upload_validate_image_dimensions(stdClass $file) {
 
   $memory_to_process = $memory_needed * 2;    // gross overestimate, but to be safe
 
-  $memory_limit = parse_size(ini_get('memory_limit'));
   $memory_drupal = parse_size('100MB'); // estimate how much memory Drupal will use
   $available_memory = $memory_limit - $memory_drupal;
 
@@ -1308,6 +1318,7 @@ function os_files_imagefield_crop_process($element, $form_state, $form) {
   module_load_include('inc', 'media', 'includes/media.browser');
   media_attach_browser_js($element['selected_file']);
   $element['selected_file']['#attached']['library'][] = array('os_common', 'FileEditorModal');
+  os_common_angular_apps('mediaBrowser');
 
   $element['#element_validate'] = array(
     'os_files_file_element_validate',
@@ -1414,7 +1425,7 @@ function os_files_media_browser_plugins_alter(&$output){
   $output['upload']['#title'] = t('My Computer');
   $output['media_default--media_browser_1']['#title'] = t('My Library');
 
-  // add an area to the views form to put the file edit form
+  // Add an area to the views form to put the file edit form.
   $html = &$output['media_default--media_browser_1']['#markup'];
   $html = str_replace(array('Submit', 'File name'), array('Insert', 'Search'), $html);
   $html .= '<div id="file-edit-section"><div id="file-edit-no-selection">Select a file to edit it.</div></div>';
@@ -1993,6 +2004,7 @@ function os_files_file_default_types() {
       'application/x-compressed',
       'application/x-tar',
       'application/x-gtar',
+      'application/x-rar-compressed'
     ),
     'streams' => array(
       'public',
@@ -2275,6 +2287,7 @@ function _os_files_extensions_from_type($type) {
       'gz',
       'exe',
       'tar',
+      'rar'
     );
   }
 
@@ -2322,6 +2335,7 @@ function os_files_file_mimetype_mapping_alter(&$mimes) {
     'application/vnd.ms-powerpoint' => 'pot',
     'application/vnd.openxmlformats-officedocument.presentationml.template' => 'potx',
     'text/csv' => 'csv',
+    'application/x-rar-compressed' => 'rar'
   );
 
   foreach ($types as $mime => $ext) {
@@ -2527,7 +2541,7 @@ function _os_files_use_static_domain($path) {
     // aggregated js file.
     return TRUE;
   }
-  elseif (in_array(pathinfo($path, PATHINFO_EXTENSION), array('js', 'ico'))) {
+  elseif (in_array(pathinfo($path, PATHINFO_EXTENSION), array('js'))) {
     // keep adding things here as they come up
     return TRUE;
   }
@@ -2558,5 +2572,44 @@ function os_files_file_url_alter(&$uri) {
       )
     );
     drupal_add_html_head($link, 'dns-prefetch');
+  }
+}
+
+/**
+ * Implements hook_file_move().
+ */
+function os_files_file_move($file, $source) {
+  _os_file_invalidate_cache($file);
+}
+
+/**
+ * Implements hook_file_upload().
+ */
+function os_files_file_update($file) {
+  _os_file_invalidate_cache($file);
+}
+
+/**
+ * After the file is updated or moved we need to invalidate the cache of the
+ * media gallery which the file belong to.
+ *
+ * @param $file
+ *   The file which been moved of updated.
+ */
+function _os_file_invalidate_cache($file) {
+
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'node')
+    ->fieldCondition('media_gallery_file', 'fid', $file->fid)
+    ->execute();
+
+  if (empty($result['node'])) {
+    return;
+  }
+
+  $nids = array_keys($result['node']);
+  foreach ($nids as $nid) {
+    cache_clear_all($nid, 'cache_entity_node');
   }
 }

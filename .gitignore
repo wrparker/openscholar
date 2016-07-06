@@ -11,7 +11,11 @@
 # Dont's track coder module backups
 *.coder.orig
 
+# Dont's track install configuration files.
+install.sh
+
 #behat
+openscholar/behat/vendor/
 openscholar/behat/vendor
 openscholar/behat/bin
 openscholar/behat.local.yml

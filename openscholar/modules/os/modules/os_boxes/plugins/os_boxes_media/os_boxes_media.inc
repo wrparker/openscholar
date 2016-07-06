@@ -41,9 +41,10 @@ class os_boxes_media extends os_boxes_default {
       '#type' => 'textfield',
       '#default_value' => $this->options['maxwidth'],
       '#field_suffix' => 'px',
-      '#description' => t('Enter the maximum width the media can be when displayed. Use to 0 to leave it at the default
-        size. WARNING: This may cause the video to break out of columns in your page layout. Some trial and error may
-        be needed to ensure the embed looks good in your site layout.')
+      '#description' => t('To change the width of the media, enter a maximum width value that is LESS than the the media\'s original width. 
+      Entering 0 or a value larger than the media\'s original width will result in the media displaying at its default size. 
+      WARNING: This may cause the video to break out of columns in your page layout. Some trial and error may be needed to ensure the 
+      embed looks good in your site layout.')
     );
 
     $form['help'] = array(
@@ -54,7 +55,7 @@ class os_boxes_media extends os_boxes_default {
     );
 
     if (module_exists('os_common')) {
-      os_common_angular_app('os-boxes');
+      os_common_angular_apps('os-boxes');
       $form['#attached']['library'][] = array('os_common', 'FileEditorModal');
       $form['#attached']['js'][] = drupal_get_path('module', 'os_boxes') . '/misc/os_boxes.app.js';
     }
@@ -62,7 +63,7 @@ class os_boxes_media extends os_boxes_default {
     return $form;
   }
 
-  public function options_submit($form, &$form_state) {
+  public function options_submit($form, $form_state) {
     parent::options_submit($form, $form_state);
 
     $old = $form['options']['fid']['#default_value']['fid'];
@@ -109,8 +110,19 @@ class os_boxes_media extends os_boxes_default {
         }
 
         $render = file_view($file, 'full');
-        if (isset($render['file']['file-info'])) {
+        // If embedded object is an image, then $file->image_dimensions will be set.
+        if (isset($file->image_dimensions)) {
+          $render['file']['file-info']['file']['#width'] = $file->image_dimensions['width'];
+          $render['file']['file-info']['file']['#height'] = $file->image_dimensions['height'];
+        }
+
+        if (isset($render['file']['file-info']['file'])) {
           $render['file'] = $render['file']['file-info']['file'];
+        }
+
+        // For oembed media objects, need to define additional pre_render callback to control final output dimension.
+        if (isset($file->oembed)) {
+          $render['file']['#pre_render'][] = 'os_boxes_media_oembed_pre_render';
         }
 
         if (isset($file->oembed) && $file->oembed['provider'] == 'box') {
@@ -124,6 +136,9 @@ class os_boxes_media extends os_boxes_default {
             )
           );
         }
+        
+        // Removing embedded media title from render element.
+        unset($render['file']['file-info']['title']);
         $block['content'] = drupal_render($render);
         $assets = NULL;
         if (isset($render['file']['#attached'])) {
@@ -133,10 +148,24 @@ class os_boxes_media extends os_boxes_default {
         $this->set_cache($block['content'], $assets);
       }
       else {
-        $block['content'] = t('No media given.');
+        $block['content'] = '';
         $this->set_cache($block['content']);
       }
     }
     return $block;
   }
+}
+
+/**
+ * #pre_render calback for oembed objects to control the dimension as per max width settings.
+ * Also sets the height for oembed objects based on aspect ratio.
+ */
+function os_boxes_media_oembed_pre_render($embed) {
+  if (isset($embed['#width']) && $embed['#width'] < $embed['#embed']['width']) {
+    $embed['#embed']['width'] = $embed['#width'];    
+  }
+  if (isset($embed['#height']) && $embed['#height'] < $embed['#embed']['height']) {
+    $embed['#embed']['height'] = ceil($embed['#height']);    
+  }
+  return $embed;
 }

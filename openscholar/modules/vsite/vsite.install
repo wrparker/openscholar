@@ -775,3 +775,36 @@ function vsite_update_7030(&$sandbox) {
     'path' => drupal_get_path('module', 'vsite') . '/updates/update7030.php',
   ));
 }
+
+/**
+ * Apply create sub book pages permissions.
+ */
+function vsite_update_7031(&$sandbox) {
+  os_set_update_batch($sandbox, array(
+    'batch' => 250,
+    'entity' => 'node',
+    'path' => drupal_get_path('module', 'vsite') . '/updates/update7031.php',
+  ));
+}
+
+/**
+ * Apply insert a link into wysiwyg permissions.
+ */
+function vsite_update_7032(&$sandbox) {
+  os_set_update_batch($sandbox, array(
+    'batch' => 250,
+    'entity' => 'node',
+    'path' => drupal_get_path('module', 'vsite') . '/updates/update7032.php',
+  ));
+}
+
+/**
+ * Apply insert a link into wysiwyg permissions.
+ */
+function vsite_update_7033(&$sandbox) {
+  os_set_update_batch($sandbox, array(
+    'batch' => 250,
+    'entity' => 'node',
+    'path' => drupal_get_path('module', 'vsite') . '/updates/update7033.php',
+  ));
+}
