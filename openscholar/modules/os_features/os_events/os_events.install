@@ -21,6 +21,9 @@ function os_events_install() {
       'description' => 'A optional date when a repeating event occurs.',
     ));
   db_add_primary_key('registration_entity', array('entity_id', 'entity_type', 'repeating_event_date'));
+
+  db_add_index('field_data_field_date', 'date_start', array('field_date_value'));
+  db_add_index('field_data_field_date', 'date_end', array('field_date_value2'));
 }
 
 function os_events_uninstall() {
@@ -297,4 +300,12 @@ function os_events_update_7023() {
  */
 function os_events_update_7024() {
   features_revert(array('os_events' => array('field_instance')));
+}
+
+/**
+ * Add indexes to date columns
+ */
+function os_events_update_7025() {
+  db_add_index('field_data_field_date', 'date_start', array('field_date_value'));
+  db_add_index('field_data_field_date', 'date_end', array('field_date_value2'));
 }

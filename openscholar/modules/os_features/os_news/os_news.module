@@ -42,6 +42,33 @@ function os_news_os_app_info() {
 }
 
 /**
+ * Implements hook_os_widget().
+ */
+function os_news_os_widget() {
+  $items = array();
+
+  // Filter news by months.
+  $items['views-os_news-news_by_month_block'] = array(
+    'module' => 'views',
+    'delta' => 'os_news-news_by_month_block',
+    'region' => 'sidebar_second',
+    'weight' => '-10',
+    'info' => t('Filter News by Month'),
+  );
+
+  // Filter news by year.
+  $items['views-os_news-news_by_year_block'] = array(
+    'module' => 'views',
+    'delta' => 'os_news-news_by_year_block',
+    'region' => FALSE,
+    'weight' => '-10',
+    'info' => t('Filter News by Year'),
+  );
+
+  return $items;
+}
+
+/**
  * Implements hook_os_entity_view_modes()
  */
 function os_news_os_entity_view_modes() {
@@ -108,6 +135,12 @@ function os_news_process_node(&$vars) {
       'data' => drupal_get_path('module', 'os_news') . '/os_news.css',
     ),
   );
+
+  // If the readmore link has already been inserted inline into the body,
+  // remove it from the render array, so it's not printed twice
+  if (preg_match("/\bnode-readmore\b/", $vars['content']['body'][0]['#markup'])) {
+    unset($vars['content']['links']['node']['#links']['node-readmore']);
+  }
 }
 
 /**

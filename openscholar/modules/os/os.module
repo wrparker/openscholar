@@ -127,6 +127,31 @@ function os_menu() {
 }
 
 /**
+ * Implements hook_cp_settings().
+ *
+ * Add the option to choose between Infinite scrolling or Pagination display for long list of content.
+ */
+function os_cp_settings() {
+  $setting = array();
+  $setting['long_list_content_pagination'] = array(
+    'group' => array(
+      '#title' => t('Content Display'),
+      '#id' => 'long-list-content-pagination',
+      '#weight' => 40
+    ),
+    'form' => array(
+      '#type' => 'radios',
+      '#title' => t('Display pages with long lists of content using'),
+      '#default_value' => variable_get('long_list_content_pagination', 'infinite_scroll'),
+      '#options' => array('infinite_scroll' => 'Infinite scrolling', 'pager' => 'Pagination'),
+      '#description' => t('<i>This applies only to blog, links, news, FAQs, publications and profiles.</i>')
+    ),
+  );
+
+  return $setting;
+}
+
+/**
  * Implements hook_menu_alter().
  */
 function os_menu_alter(&$items) {
@@ -601,6 +626,8 @@ function os_process_node(&$vars) {
   // Only proceeds if we have a "Read more" link.
   if (!isset($vars['content']['links']['node']['#links']['node-readmore'])) {
     return;
+  } else {
+    $vars['content']['links']['node']['#links']['node-readmore']['attributes']['class'][] = 'node-readmore';
   }
 
   // Hides the "Read more" link if there is no body value.
@@ -634,20 +661,16 @@ function os_process_node(&$vars) {
 
   // Now we know whether the read more links needs to be displayed or not.
   // With this information we can move the read more link so it can be displayed inline with the block
-  if ($body_shortened && !$trailing_break_tag) {
+  if (($body_shortened && !$trailing_break_tag) || isset($vars['content']['links']['node']['#links']['node-readmore'])) {
+    module_load_include('inc', 'os', 'includes/os');
     $link = $vars['content']['links']['node']['#links']['node-readmore'];
     $link['attributes']['class'][] = 'node-readmore';
-    // Get last position of the last closing marker in teaser.
-    if (preg_match('!</?(?:p)[^>]*>\s*$!i', $vars['content']['body'][0]['#markup'], $match, PREG_OFFSET_CAPTURE)) {
-      $insert_point = $match[0][1];
-      // Insert the link.
-      $vars['content']['body'][0]['#markup'] = substr_replace($vars['content']['body'][0]['#markup'], ' '.l($link['title'], $link['href'], $link), $insert_point, 0);
-    }
 
+    _os_insert_link_into_paragraph($vars['content']['body'][0]['#markup'], $link);
+
+    // The readmore link is in the body.  Don't render it again.
+    unset($vars['content']['links']['node']['#links']['node-readmore']);
   }
-
-  // Hide the original "Read more" link by removing it from the render array.
-  unset($vars['content']['links']['node']['#links']['node-readmore']);
 }
 
 /**
@@ -1635,6 +1658,24 @@ function os_context_block_info_alter(&$blocks) {
 }
 
 /**
+ * Implements hook_node_insert().
+ */
+function os_node_insert($node) {
+  if ($node->status == NODE_PUBLISHED) {
+    drupal_set_message(t('Your updates will go live within the next 15 minutes.'), 'status', FALSE);
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function os_node_update($node) {
+  if ($node->original->status == NODE_PUBLISHED || $node->status == NODE_PUBLISHED) {
+    drupal_set_message(t('Your updates will go live within the next 15 minutes.'), 'status', FALSE);
+  }
+}
+
+/**
  * Implements hook_views_pre_build().
  *
  * Allow altering of views before build but after the filters are attached.
@@ -1647,6 +1688,14 @@ function os_views_pre_build(&$view) {
 
     $bundles = array_keys(os_get_bundles());
     $view->filter['type']->value = $bundles;
+  }
+
+  // Get pagination type of current views display.
+  $pager = $view->display_handler->get_option('pager');
+  // If long list content pagination type is not set as infinite scroll, then switching back to mini pager.
+  if ($pager['type'] == 'infinite_scroll' && variable_get('long_list_content_pagination', 'infinite_scroll') == 'pager') {
+    $pager['type'] = 'full';
+    $view->display_handler->set_option('pager', $pager);
   }
 }
 
@@ -1685,6 +1734,12 @@ function os_node_view_alter(&$build) {
  * revisions of a node and hides the link for a single revision.
  */
 function os_contextual_links_view_alter(&$element, $items) {
+
+  // Delete "Remove Widget" from main content region
+  if ($element['#element']['#block']->delta == "main_content") {
+    unset($element['#links']['widget-remove']);
+  }
+
   if (empty($element['#element']['#entity_type']) || $element['#element']['#entity_type'] != 'node') {
     // Not a node element.
     return;
@@ -2089,20 +2144,39 @@ function os_form_user_login_alter(&$form, $form_state) {
   // Overriding the text of first button on the login screen.
   if (isset($form['pin'])) {
     $query['destination'] = isset($_GET['destination']) ? $_GET['destination'] : 'user';
-    $form['pin']['#markup'] = l('Log in with Harvard credentials', 'user/pin', array('query' => $query));
+    $form['pin']['#markup'] = l('Log in using your Harvard Key', 'user/pin', array('query' => $query));
   }
 
   // If user login form is overridden by pinserver_authenticate module, then $form['pin-fieldset'] will be initialized from there.
   // $form['name'] and $form['pass'] both will be unset from pinserver_authenticate module
   if (isset($form['pin-fieldset'])) {
-    $form['pin-fieldset']['#title'] = t('Log in with your OpenScholar account');
-    $form['pin-fieldset']['name']['#title'] = t('Username / E-Mail');
+    unset($form['pin-fieldset']['#title']);
+    $form['pin-fieldset']['name']['#title'] = t('OpenScholar Username / E-Mail');
     $form['pin-fieldset']['pass']['#description'] = t('!request', array('!request' => l('Forgot your password?', 'user/password')));
+    $form['pin-fieldset']['pass']['#title'] = "OpenScholar Password";
+
+    $form['pin-fieldset']['login'] = array(
+        '#type' => 'submit',
+        '#value' => t('Log in'),
+        '#attributes' => array('class' => array('pin-button-inline')),
+    );
+    $form['pin-fieldset']['back'] = array(
+        '#type' => 'button',
+        '#value' => t('Back'),
+        '#suffix' => '</a>',
+        '#attributes' => array(
+            'class' => array('pin-button-inline'),
+            'onclick' => "window.history.back()",
+        ),
+    );
+
+    unset($form['pin-fieldset']['name']['#description']);
+    unset($form['pin-fieldset']['actions']['submit']);
   }
 
   // If pinserver_authenticate module is not overriding login form, then $form['name'] and $form['pass'] will not be unset.
   if (isset($form['name']) && isset($form['pass'])) {
-    $form['name']['#title'] = t('Username / E-Mail');
+    $form['name']['#title'] = t('OpenScholar Username / E-Mail');
     unset($form['pass']['#description']);
   }
 }
@@ -2597,14 +2671,34 @@ function os_drupal_goto_alter(&$path, &$options, &$http_response_code) {
  *    - batch: The number of nodes we need to iterate at once.
  *    - entity: The entity type.
  *    - path: Path for the file contain the classes or the functions.
+ *    - query: The class name and funciton to run, by default this is (queryXXXX, Query) 
+ *             where xxxx is the number if the update calling the batch. ex.( query7001, Query) 
  */
 function os_set_update_batch(&$sandbox, $info) {
+
+  // Get the stack of the function to get the number of update.
+  $backtrace = debug_backtrace();
+  $function = '';
+
+  array_walk($backtrace, function($backtrace) use (&$function) {
+    if (preg_match('/[a-z]_update_[0-9]/', $backtrace['function'])) {
+      $function = $backtrace['function'];
+    }
+  });
+
+  $update = '';
+  if ($function) {
+    // Get the number of the update in order to attache it to the default class
+    // name.
+    $explode = explode('_', $function);
+    $update = end($explode);
+  }
 
   $info += array(
     'entity' => 'node',
     'batch' => drupal_is_cli() ? 400: 150,
-    'query' => array('update', 'Query'),
-    'iterator' => array('update', 'Iterator'),
+    'query' => array('update' . $update, 'Query'),
+    'iterator' => array('update' . $update, 'Iterator'),
   );
 
   if (!empty($info['path'])) {
@@ -3268,14 +3362,60 @@ function os_view_migrated_users_access() {
  * @param stdClass $user
  *   The user object.
  */
-function os_view_migrated_users_delete(stdClass $user) {
-  // Delete the user.
-  user_delete($user->uid);
+function os_view_migrated_users_delete(stdClass $user)
+{
+    // Delete the user.
+    user_delete($user->uid);
 
-  // Remove the user from the list of users.
-  $uids = variable_get('os_ownership_migration_uids');
-  $key = array_search($user->uid, $uids);
-  unset($uids[$key]);
-  variable_set('os_ownership_migration_uids', $uids);
-  drupal_goto('admin/config/people/user_ownership_migration/migrate');
+    // Remove the user from the list of users.
+    $uids = variable_get('os_ownership_migration_uids');
+    $key = array_search($user->uid, $uids);
+    unset($uids[$key]);
+    variable_set('os_ownership_migration_uids', $uids);
+    drupal_goto('admin/config/people/user_ownership_migration/migrate');
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_form_redirect_edit_form_alter(&$form, $form_state) {
+  $form['source']['#element_validate'] = array('os_redirect_element_validate_source');
+
+  if (vsite_get_vsite()) {
+    // Only when we in a vsite context send the user to the settings CP.
+    $form['actions']['cancel']['#href'] = 'cp/settings';
+  }
+}
+
+/**
+ * Overriding the alert message for redirect paths.
+ *
+ * @see redirect_element_validate_source()
+ */
+function os_redirect_element_validate_source($element, &$form_state) {
+  $value = &$element['#value'];
+
+  // Check that the source contains no URL fragment.
+  if (strpos($value, '#') !== FALSE) {
+    form_error($element, t('The source path cannot contain an URL fragment anchor.'));
+  }
+
+  _redirect_extract_url_options($element, $form_state);
+
+  // Disallow redirections from the frontpage.
+  if ($value === '<front>') {
+    form_error($element, t('The source path cannot be the front page.'));
+  }
+
+  // Cannot create redirects for valid paths.
+  if (empty($form_state['values']['override'])) {
+    $menu_item = menu_get_item($value);
+    if ($menu_item && $menu_item['page_callback'] != 'redirect_redirect' && $value == $menu_item['path']) {
+      // Removing the link to create URL aliases.
+      $form_state['storage']['override_messages']['valid-path'] = t('The source path %path is likely a valid path. It is preferred to create URL aliases for existing paths rather than redirects.', array('%path' => $value, '@url-alias' => url('admin/config/search/path/add')));
+      $form_state['rebuild'] = TRUE;
+    }
+  }
+
+  return $element;
 }

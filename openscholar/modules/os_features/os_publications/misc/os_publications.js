@@ -64,6 +64,14 @@ Drupal.behaviors.osPublications = {
       if (this.value != '') {
         // Empty year field.
         yearField[0].value = '';
+        if($("#edit-field-biblio-pub-month-und").length) {
+          $('#edit-field-biblio-pub-month-und').val('_none');
+          $('#s2id_edit-field-biblio-pub-month-und span:first').text('Month');
+        }
+        if($("#edit-field-biblio-pub-day-und").length) {
+          $('#edit-field-biblio-pub-day-und').val('_none');
+          $('#s2id_edit-field-biblio-pub-day-und span:first').text('Day');
+        }
       }
     });
   }
@@ -139,6 +147,42 @@ Drupal.behaviors.osPublications = {
           return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
         });
       }
+    }
+  };
+
+  /**
+   * Behavior for Year of Publication radio button field.
+   */
+  Drupal.behaviors.yearFieldDisplay = {
+    attach: function () {
+      var target_extrayear = $('.form-item-biblio-year-coded-extrayear');
+      var target_date_published = $('.form-item-biblio-date');
+      // In edit mode, if one radio button is selected.
+      if ($('input[name="biblio_year_coded"]:checked').length > 0) {
+        var selectedOption = $.trim($('input[name="biblio_year_coded"]:checked').next().html());
+        if (selectedOption == 'Forthcoming' || selectedOption == 'Submitted') {
+          target_extrayear.hide();
+          target_date_published.show();
+        } else {
+          target_extrayear.css({position:'relative', left: $('input[name="biblio_year_coded"]:checked').position().left + 'px', top:'-20px'});
+          target_extrayear.show();
+          target_date_published.hide();
+        }
+      } else {
+        target_extrayear.hide();
+      }
+      // The onchange event handling for 'biblio_year_coded' radio buttons.
+      $('input[name="biblio_year_coded"]').change(function(){
+        var selectedOption = $.trim($(this).next().html());
+        if (selectedOption == 'Forthcoming' || selectedOption == 'Submitted') {
+          target_extrayear.hide();
+          target_date_published.show();
+        } else {
+          target_extrayear.css({position:'relative', left:$(this).position().left + 'px', top:'-20px'});
+          target_extrayear.show();
+          target_date_published.hide();
+        }
+      });
     }
   };
 

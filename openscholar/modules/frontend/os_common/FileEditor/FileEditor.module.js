@@ -228,8 +228,40 @@
       }
     }]);
 
+  /**
+   * The regex contained within was tested against the following strings:
+   *
+   * #derp.txt?mtime=garbage
+   * derp.txt
+   * de?rp.txt
+   * de?rp.txt?mtime=garbage
+   * de#rp.txt
+   * de#4p.txt#herp
+   * de.rp.txt
+   * derp.txt?mtime=garbage#herp
+   * http://customdomain.com/sites/default/files/department/files/accordion_widget.png?m=1432822855
+   * http://hwpi.harvard.edu/os_fast/files/able/t-bill_rates.pdf  ((private files path))
+   * derp.txt?mtime=gar.bage
+   *
+   * Tested with regexr.com
+   */
   function getExtension(url) {
-    return url.slice(url.lastIndexOf('.')+1, (url.lastIndexOf('?') != -1)?url.lastIndexOf('?'):url.length).toLowerCase();
+    // patterns
+    // .?= (file with query params at the end) /\.([a-zA-Z0-9])*\?/
+    // ?. (file with ? in the middle for some reason) /$([a-zA-Z0-9?]
+    // .?. (file with multiple . and ? before the last one
+    // .?=. (file with . in query param
+
+    // ([a-z]+:\/\/[a-zA-Z0-9.\/-]+\/)? matches against http://something.com/a/b/ or nothing at all
+    // [a-zA-Z0-9.?#_-]+ matches against the filename without extension
+    // ([a-zA-Z0-9]+) matches the extension itself
+    // ($|[?#]) matches end of the string or a URL filename terminator (? or #)
+    var r = /^([a-z]+:\/\/[a-zA-Z0-9.\/_-]+\/)?[a-zA-Z0-9.?#_-]+\.([a-zA-Z0-9]+)($|[?#])/,
+      result = r.exec(url);
+
+    if (result) {
+      return result[2].toLowerCase();
+    }
   }
 
 })(jQuery);
