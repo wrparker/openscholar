@@ -2445,18 +2445,10 @@ function os_expire_cache_alter(&$urls, $object_type, $object) {
       }
     }
 
-    $urls = array();
     foreach ($terms as $term) {
       $urls['term-' . $term['target_id']] = 'taxonomy/term/' . $term['target_id'];
+      $urls['term-' . $term['target_id'] . '-feed'] = 'taxonomy/term/' . $term['target-id'] . '/feed';
     }
-
-    $addtl = array();
-    foreach ($urls as $k => $u) {
-      if (strpos($u, 'taxonomy/term/') !== FALSE) {
-        $addtl[$k.'-feed'] = $u.'/feed';
-      }
-    }
-    $urls += $addtl;
   }
 }
 
