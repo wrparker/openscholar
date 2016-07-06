@@ -327,5 +327,12 @@ function os_dataverse_update_7003() {
       }
     }
   }
+
   return t('Updated @count sites.', array('@count' => $done));
+}
+
+function os_dataverse_update_7004() {
+  // Needed to enable new Dataverse items in the "Add New Widget" menu
+  module_disable(array("os_dataverse"));
+  module_enable(array("os_dataverse"));
 }
