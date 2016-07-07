@@ -10,8 +10,8 @@ class OsProfilesResource extends RestfulEntityBaseNode {
   /**
    * Overrides RestfulEntityBase::getPublicFields().
    */
-  public function getPublicFields() {
-    $public_fields = parent::getPublicFields();
+  public function publicFieldsInfo() {
+    $public_fields = parent::publicFieldsInfo();
 
     $public_fields['description'] = array(
       'property' => 'body',
@@ -82,14 +82,14 @@ class OsProfilesResource extends RestfulEntityBaseNode {
   /**
    * Overrides RestfulEntityBase::viewEntity().
    */
-  public function viewEntity($entity_id, $request, stdClass $account) {
-    $values = parent::viewEntity($entity_id, $request, $account);
+  public function viewEntity($id) {
+    $values = parent::viewEntity($id);
 
-    $wrapper = entity_metadata_wrapper('node', $entity_id);
+    $wrapper = entity_metadata_wrapper('node', $id);
 
     if (isset($wrapper->field_uuid) && !$wrapper->field_uuid->value()) {
       // No UUID in the UUID field. Set it.
-      $wrapper->field_uuid->set(md5($entity_id));
+      $wrapper->field_uuid->set(md5($id));
       $wrapper->save();
     }
 
