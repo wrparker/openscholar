@@ -65,6 +65,9 @@ cd $ROOT
   # Build core.
   $DRUSH make openscholar/drupal-org-core.make $BUILD_ROOT/www-build
 
+  # Patch node.module for OpenScholar view modes
+  patch -p0 < patches/drupal.teaser_readmore.patch
+
   # Check if sites/default exists, which means it is an existing installation.
   if [ -d $BUILD_ROOT/$DOCROOT/sites/default ]; then
     cp -rp $BUILD_ROOT/$DOCROOT/sites/default sites-backup

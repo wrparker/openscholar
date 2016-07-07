@@ -1,0 +1,11 @@
+--- ./www-build/modules/node/node.module	2016-07-07 16:08:08.000000000 -0400
++++ ./www-build/modules/node/node.module	2016-07-07 16:07:48.000000000 -0400
+@@ -1422,7 +1422,7 @@
+     '#pre_render' => array('drupal_pre_render_links'),
+     '#attributes' => array('class' => array('links', 'inline')),
+   );
+-  if ($view_mode == 'teaser') {
++  if ($view_mode == 'teaser' || $view_mode == 'no_image_teaser' || $view_mode == 'slide_teaser' || $view_mode == 'sidebar_teaser') {
+     $node_title_stripped = strip_tags($node->title);
+     $links['node-readmore'] = array(
+       'title' => t('Read more<span class="element-invisible"> about @title</span>', array('@title' => $node_title_stripped)),
