@@ -3211,7 +3211,7 @@ function os_user_change_single_content_ownership($entity_type, $property_type, $
  * Finished callback of the batch oparation.
  */
 function os_ownership_batch_finished($success, $results, $operations) {
-  $message = t('The migration has done.');
+  $message = t('The migration is complete.');
   drupal_set_message($message);
 }
 
