@@ -300,8 +300,13 @@ function os_events_export_to_csv($node, $delta = FALSE) {
     return;
   }
 
+  if (! $delta) {
+    $url = drupal_parse_url($_SERVER['HTTP_REFERER']);
+    $delta = $url['query']['delta'];
+  }
+
   $exporter = os_exporter_get_exporter_handler('csv');
-  $exporter->setFileHeader(array(t('Email'), t('Created Time'), t('Department'), t('Full name')));
+  $exporter->setFileHeader(array(t('Event Date'), t('Event Title'), t('Email'), t('Created Time'), t('Department'), t('Full name')));
 
   $query = new EntityFieldQuery();
   $result = $query
@@ -309,9 +314,17 @@ function os_events_export_to_csv($node, $delta = FALSE) {
     ->propertyCondition('entity_id', $node->nid)
     ->propertyCondition('entity_type', 'node');
 
-  if ($delta !== FALSE && isset($node->field_date['und'][$delta])) {
-    $date = $node->field_date['und'][$delta]['value'];
-    $query->fieldCondition('field_repeating_event_date', 'value', $date);
+  if ($delta !== FALSE && isset($node->field_date[LANGUAGE_NONE][$delta])) {
+    $dates[] = $node->field_date[LANGUAGE_NONE][$delta]['value'];
+    $query->fieldCondition('field_repeating_event_date', 'value', $dates[0]);
+  } else if (isset($node->field_date[LANGUAGE_NONE][0]['value'])) {
+
+    // cycle through the [possibly repeating] event date(s)
+    $delta = 0;
+    while ($node->field_date[LANGUAGE_NONE][$delta]) {
+      $dates[] = $node->field_date[LANGUAGE_NONE][$delta]['value'];
+      $delta++;
+    }
   }
 
   $result = $query->execute();
@@ -323,14 +336,33 @@ function os_events_export_to_csv($node, $delta = FALSE) {
   $attendees = entity_load('registration', array_keys($result['registration']));
 
   foreach ($attendees as $attendee) {
+
     $wrapper = entity_metadata_wrapper('registration', $attendee);
 
-    $exporter->addContent(array(
-      $attendee->anon_mail,
-      '"' . format_date($attendee->created) . '"',
-      $wrapper->field_department->value(),
-      $wrapper->field_full_name->value(),
-    ));
+    // Attendees register for specific or all occurrences of the event
+    $date = $attendee->field_repeating_event_date[LANGUAGE_NONE][0]['value'];
+    if (! $date) {
+      foreach ($dates as $d) {
+        $exporter->addContent(array(
+            $d,
+            $node->title,
+            $attendee->anon_mail,
+            '"' . format_date($attendee->created) . '"',
+            $wrapper->field_department->value(),
+            $wrapper->field_full_name->value(),
+        ));
+      }
+    } else {
+
+      $exporter->addContent(array(
+          $date,
+          $node->title,
+          $attendee->anon_mail,
+          '"' . format_date($attendee->created) . '"',
+          $wrapper->field_department->value(),
+          $wrapper->field_full_name->value(),
+      ));
+    }
   }
 
   $exporter->exportToFile($node->title . '-' . (isset($date)?$date . '-':'') .'attendees.csv');
@@ -2933,7 +2965,7 @@ function os_date_repeat_rrule_description($rrule, $format = 'D M d Y') {
   return t('Repeats !interval!bymonth!byday!count !until !except. !additional', $description);
 }
 
-/*
+/**
  * Implements hook_form_{form_id}_alter
  *
  * Fix destination for event deletion
@@ -2946,4 +2978,16 @@ function os_events_form_node_delete_confirm_alter($form) {
         $_GET['destination'] = $paths[$form['#node']->type];
     }
   }
+}
+
+/**
+ * Implements hook_field_create_field().
+ */
+function os_events_field_create_field($field) {
+  if ($field['field_name'] != 'field_date') {
+    return;
+  }
+
+  db_add_index('field_data_field_date', 'date_start', array('field_date_value'));
+  db_add_index('field_data_field_date', 'date_end', array('field_date_value2'));
 }
