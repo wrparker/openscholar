@@ -1076,4 +1076,10 @@ ul.no-event-export {
     display: inline-block;
     clear: both;
 }
-
+/*For widget slider*/
+.block-boxes-os_boxes_widget_slider ul.rslides > li {
+    list-style-type: none;
+}
+.block-boxes-os_boxes_widget_slider #layout_16_9_side div.slide {
+    background: none;
+}

@@ -9,7 +9,5 @@
   <ul class="rslides">
     <?php print implode("\n", $slides); ?>
   </ul>
-  
-  <?php print $controls; ?>
 </div>
 </div>

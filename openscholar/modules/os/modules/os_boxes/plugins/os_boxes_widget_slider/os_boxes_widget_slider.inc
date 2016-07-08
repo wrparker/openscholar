@@ -5,25 +5,83 @@ class os_boxes_widget_slider extends os_boxes_widget_collection {
   public $embed_as = array(
     'iframe',
   );
+
+  public function options_defaults() {
+    $options = parent::options_defaults();
+    return $options + array(
+      'effect' => 'fade',
+      'timeout' => 5000,
+      'speed' => 700,
+    );
+  }
+
+  public function options_form(&$form_state) {
+    $form = parent::options_form($form_state);
+    $defaults = $this->options_defaults();
+    $form['advanced']['#after_build'][] = '_os_boxes_widget_slider_field_display_handler';
+    $form['display'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Display Options'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#weight' => 10,
+    );
+
+    $form['display']['timeout'] = array(
+      '#type' => 'select',
+      '#description' => t('Each slide will be displayed for this length of time.'),
+      '#title' => t('Duration'),
+      '#default_value' => isset($this->options['timeout']) ? $this->options['timeout'] : $defaults['timeout'],
+      '#options' => $this->_transition_speed_opts(1, 10, .5),
+    );
+
+    $form['display']['speed'] = array(
+      '#type' => 'select',
+      '#description' => t('Transitions between slides will take this long.'),
+      '#title' => t('Transition Speed'),
+      '#default_value' => isset($this->options['speed']) ? $this->options['speed'] : $defaults['speed'],
+      '#options' => $this->_transition_speed_opts(0, 1, .1),
+    );
+
+    return $form;
+  }
+
+   /**
+   * @function _transition_speed_opts()
+   *
+   * Helper function for making for time selects.  All args are seconds.
+   *
+   * @returns array( $milliseconds => $seconds . 's')
+   */
+  private function _transition_speed_opts($min, $max, $increment) {
+    $precision = explode('.', $increment);
+    $decimals = (count($precision) > 1) ? strlen($precision[1]) : 0;
+
+    $return = array();
+    for ($i = $min; $i <= $max; $i += $increment) {
+      $return[$i * 1000] = number_format($i, $decimals) . ' sec';
+    }
+    return $return;
+  }
   
   public function render() {
     $block = parent::render();
+    $defaults = $this->options_defaults();
     $slides = array();
     foreach ($this->options['widgets'] as $key => $widget) {
-      list(,$delta) = explode('-', $widget['bid'], 2);
+      list(, $delta) = explode('-', $widget['bid'], 2);
       $box = boxes_box_load($delta);
       $content = $box->render();
       $slides[] = $content['content'];     
     }
-       
+
     $vars = array();
     $vars['slides'] = $slides;
     $block['content'] = theme('os_slideshow_widget_slideshow', $vars);
-    //dsm($this);
-    $assets = $this->setup_assets($this->delta, 5000, 500, 0);
+    $timeout = isset($this->options['timeout']) ? $this->options['timeout'] : $defaults['timeout'];
+    $speed = isset($this->options['speed']) ? $this->options['speed'] : $defaults['speed'];
+    $assets = $this->setup_assets($this->delta, $timeout, $speed, 0);
     $this->add_assets($assets);
-
-   // $box->title = $this->options['widgets'][$k]['title'];
     //$box->options['make_embeddable'] = $this->options['make_embeddable'];
      
     return $block;
@@ -72,4 +130,12 @@ class os_boxes_widget_slider extends os_boxes_widget_collection {
 
     return $assets;
   }
+}
+
+/**
+ * #after_build handler in options_form to display settings form field for widget_slider widget.
+ * To hide the 'Widget Title' field while editing widget slider widget.
+ */
+function _os_boxes_widget_slider_field_display_handler($element, &$form_state) {
+  $form_state['complete form']['title']['#access'] = FALSE;  
 }
