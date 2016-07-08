@@ -187,8 +187,8 @@ function hwpi_basetheme_node_view_alter(&$build) {
 
     // Contact Details
     if ($build['#view_mode'] != 'sidebar_teaser') {
-      // $build['contact_details']['#prefix'] = '<div class="block contact-details '.(($block_zebra++ % 2)?'even':'odd').'"><div class="block-inner"><h2 class="block-title">Contact Information</h2>';
-      // $build['contact_details']['#suffix'] = '</div></div>';
+      $build['contact_details']['#prefix'] = '<div class="block contact-details '.(($block_zebra++ % 2)?'even':'odd').'"><div class="block-inner"><h2 class="block-title">Contact Information</h2>';
+      $build['contact_details']['#suffix'] = '</div></div>';
       $build['contact_details']['#weight'] = 51;
 
       // Contact Details > address
@@ -251,9 +251,11 @@ function hwpi_basetheme_node_view_alter(&$build) {
       // We dont want the other fields on teasers
       if (in_array($build['#view_mode'], array('teaser', 'slide_teaser','no_image_teaser'))) {
 
+        unset($build['contact_details']['#prefix'], $build['contact_details']['#suffix']);
+
         //move title, website. body
         $build['pic_bio']['body']['#weight'] = 5;
-        foreach (array(0=>'field_professional_title', 10=>'field_website') as $weight => $field) {
+        foreach (array(0=>'field_professional_title', 15=>'field_website') as $weight => $field) {
           if (isset($build[$field])) {
             $build['pic_bio'][$field] = $build[$field];
             $build['pic_bio'][$field]['#weight'] = $weight;
@@ -324,6 +326,9 @@ function hwpi_basetheme_node_view_alter(&$build) {
       //Don't show an empty contact details section.
       if (!element_children($build['contact_details'])) {
         unset($build['contact_details']);
+      }
+      else {
+        $build['contact_details']['#weight'] = -9;
       }
     }
 
