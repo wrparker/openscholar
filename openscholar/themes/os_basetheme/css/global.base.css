@@ -494,6 +494,12 @@ ol ul,
 .item-list ol ul {
     margin-bottom: 0;
 }
+
+
+.item-list .field-name-body ul,
+.item-list .field-name-body ol {
+	margin: 0 0 1.5em 17px;
+}
 /** 1 A a (1) **/
 
 .mceContentBody ol,
@@ -568,6 +574,9 @@ ul ul ul ul {
 }
 .boxes-box ul.featured-links li {
     margin-bottom: 15px;
+}
+.boxes-box ul.featured-links .field-name-body li {
+    margin-bottom: 0;
 }
 .boxes-box ul.featured-links.title-only li h1.node-title a{
  font-size: 1em !important;
