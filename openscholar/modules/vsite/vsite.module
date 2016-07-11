@@ -4029,3 +4029,14 @@ function _vsite_cleanup_id_list($vsite_id_array) {
   }
   return $clean_array;
 }
+
+/**
+ * Implements hook_oembed_uri_directory().
+ *
+ * Adds the vsite purl to the url.
+ */
+function vsite_oembed_uri_directory($uri) {
+  if ($vsite = vsite_get_vsite()) {
+    $uri[] = $vsite->group->purl;
+  }
+}
