@@ -200,7 +200,7 @@ function hwpi_basetheme_node_view_alter(&$build) {
       }
       // Contact Details > email
       if (isset($build['field_email'])) {
-        $build['field_email']['#label_display'] = 'inline';
+        $build['field_email']['#label_display'] = 'hidden';
         $email_plain = mb_strtolower($build['field_email'][0]['#markup']);
         if ($email_plain) {
 
