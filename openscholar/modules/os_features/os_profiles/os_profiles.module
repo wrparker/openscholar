@@ -914,7 +914,8 @@ function os_profiles_get_origin_node_values($address, $fields) {
   // data. This won't allow us to pull the updated data of the node. In order
   // to get un-cached node we need to add the time stamp to the query string.
   $request = drupal_http_request(url($address, array('query' => array('REST_CALL' => 1, 'override_cache' => time()))));
-  $data = drupal_json_decode($request->data);
+  $response = drupal_json_decode($request->data);
+  $data = $response['data'][0];
   $values = array();
 
   foreach ($fields as $key => $field) {

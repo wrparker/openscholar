@@ -128,4 +128,13 @@ class OsProfilesResource extends RestfulEntityBaseNode {
   protected function url() {
     return url('', array('absolute' => TRUE));
   }
+
+  /**
+   * overrides RestfulEntityBase::entityValidate().
+   */
+  public function entityValidate(\EntityMetadataWrapper $wrapper) {
+    // No need to override the profiles that coming from OpenScholar
+    // installations.
+  }
+
 }
