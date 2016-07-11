@@ -836,7 +836,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
 
   $handler = restful_get_restful_handler('profiles');
   $result = $handler->post('', $values);
-  $nid = $result['id'];
+  $nid = $result[0]['id'];
 
   if ($method == 'update') {
     $nid = $arguments[0];
