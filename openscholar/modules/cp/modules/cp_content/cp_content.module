@@ -181,7 +181,7 @@ function cp_content_action_info() {
 function cp_content_assign_taxonomy_action_form($form, $form_state) {
   $title = t('Apply Terms to Content');
   $list_title = t('The selected terms above will be applied to the following content:');
-  $action = t('apply_terms');
+  $action = 'apply_terms';
   $vbo = _views_bulk_operations_get_field($form['view']);
   $form = _cp_content_build_taxonomy_action_form($title, $list_title,  $action, $form_state, $vbo);
 
@@ -194,7 +194,7 @@ function cp_content_assign_taxonomy_action_form($form, $form_state) {
 function cp_content_remove_taxonomy_action_form($form, $form_state) {
   $title = t('Remove Terms from Content');
   $list_title = t('The selected terms above will be removed from the following content:');
-  $action = t('remove_terms');
+  $action = 'remove_terms';
   $vbo = _views_bulk_operations_get_field($form['view']);
   $form = _cp_content_build_taxonomy_action_form($title, $list_title, $action, $form_state, $vbo);
 
