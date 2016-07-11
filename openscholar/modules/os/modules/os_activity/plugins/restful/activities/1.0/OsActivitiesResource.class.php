@@ -42,7 +42,7 @@ class OsActivitiesResource extends RestfulEntityBaseMultipleBundles {
 
     $entity_type = $this->entityType;
     $result = $this
-      ->getQueryForList($request, $account)
+      ->getQueryForList()
       ->execute();
 
     if (empty($result[$entity_type])) {
@@ -87,10 +87,10 @@ class OsActivitiesResource extends RestfulEntityBaseMultipleBundles {
       $query->fieldCondition('field_private_message', 'value', VSITE_ACCESS_PUBLIC);
     }
 
-    $range = isset($request['range']) ? $request['range'] : 10;
-    $query->range(0, $range);
+    list($offset, $range) = $this->parseRequestForListPagination();
+    $query->range($offset, $range);
     $query->propertyOrderBy('timestamp', 'DESC');
-
+    $query->propertyOrderBy('mid', 'DESC');
 
     // Only continues to filter by current space if we can load the vsite.
     // @FIXME This condition currently returns empty results when not site-wide...

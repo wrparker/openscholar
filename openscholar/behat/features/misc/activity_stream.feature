@@ -13,7 +13,7 @@ Feature:
       And I change privacy of the site "obama" to "Invite only during site creation. "
       And I create a new "blog" entry with the name "private different title" in the group "obama"
       And I click "Log out"
-     When I visit "activity.json"
+     When I visit "api/v1.0/activities"
      Then I should see the following message <json>:
           | !title | public unique title     |
       And I should not see the following message <json>:

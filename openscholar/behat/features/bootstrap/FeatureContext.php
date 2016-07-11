@@ -842,8 +842,8 @@ class FeatureContext extends DrupalContext {
     // Hashing table, and define variables for later.
     $hash = $table->getRows();
 
-    if (isset($json->messages)) {
-      foreach ($json->messages as $message) {
+    if (isset($json->data)) {
+      foreach ($json->data->messages as $message) {
         $error = array();
         foreach ($hash as $table_row) {
           if (isset($message->arguments->{$table_row[0]})) {
@@ -898,8 +898,8 @@ class FeatureContext extends DrupalContext {
     // Hashing table, and define variables for later.
     $hash = $table->getRows();
 
-    if (isset($json->messages)) {
-      foreach ($json->messages as $message) {
+    if (isset($json->data)) {
+      foreach ($json->data as $message) {
         $error = array();
         foreach ($hash as $table_row) {
           if (isset($message->arguments->{$table_row[0]})) {
