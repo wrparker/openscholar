@@ -3383,6 +3383,7 @@ function os_view_migrated_users_delete(stdClass $user)
  */
 function os_form_redirect_edit_form_alter(&$form, $form_state) {
   $form['source']['#element_validate'] = array('os_redirect_element_validate_source');
+  $form['redirect']['#element_validate'] = array('os_redirect_element_validate_redirect');
 
   if (vsite_get_vsite()) {
     // Only when we in a vsite context send the user to the settings CP.
@@ -3421,4 +3422,15 @@ function os_redirect_element_validate_source($element, &$form_state) {
   }
 
   return $element;
+}
+
+/*
+ * Check for a query string in the destination URL for "Add URL redirect"
+ */
+function os_redirect_element_validate_redirect($element, &$form_state) {
+  if (preg_match("/\?.*/", $element['#value'])) {
+    form_error($element, t('The "To" path cannot contain a query string.'));
+  } else {
+    return $element;
+  }
 }

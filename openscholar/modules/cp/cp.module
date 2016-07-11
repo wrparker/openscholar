@@ -700,7 +700,7 @@ function cp_form_redirect_edit_form_alter(&$form, &$form_state, $form_id) {
   // Updates field descriptions to replace Drupal-specific wording.
   $description = t('Enter any non-existing path from your site to trigger a redirect on. Fragment anchors (e.g. #anchor) are not allowed');
   $form['source']['#description'] = $description;
-  $description = t('Enter any existing destination URL (like http://example.com/) to redirect to.');
+  $description = t('Redirect URL can not contain a query string (e.g., /path?query-string=example)');
   $form['redirect']['#description'] = $description;
 
   // Adds redirect behavior to return to CP > Settings.
