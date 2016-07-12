@@ -382,7 +382,6 @@ function hwpi_basetheme_node_view_alter(&$build) {
       unset($build['og_vocabulary']);
     }
   }
-  dpm($build);
 }
 
 
