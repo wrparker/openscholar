@@ -328,7 +328,7 @@ function hwpi_basetheme_node_view_alter(&$build) {
         unset($build['contact_details']);
       }
       else {
-        $build['contact_details']['#weight'] = -9;
+        $build['contact_details']['#weight'] = -8;
       }
     }
 
