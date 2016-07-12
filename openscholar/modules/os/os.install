@@ -905,3 +905,11 @@ function os_update_7043() {
   module_enable(array('os_reports'));
   return t('Enabled OS Reports module.');
 }
+
+/*
+ * Do not carry the query string portion of the source URL to the redirect destination
+ * (The redirect may still function with the query string, but the Google Analytics reports will be muddled.)
+ */
+function os_update_7044() {
+  variable_set('redirect_passthrough_querystring', 0);
+}
