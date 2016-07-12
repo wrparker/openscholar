@@ -130,23 +130,6 @@ diff --git a/twitter_pull.module b/twitter_pull.module
 index c356d3f..e79d172 100644
 --- a/twitter_pull.module
 +++ b/twitter_pull.module
-@@ -34,6 +34,16 @@ function twitter_pull_menu() {
-     'access arguments' => array('access content'),
-   );
- 
-+  $items['admin/config/twitter_pull'] = array(
-+    'page callback' => 'drupal_get_form',
-+    'page arguments' => array('twitter_pull_config_page'),
-+    'access arguments' => array('administer site configuration'),
-+    'file' => 'twitter_pull.admin.inc',
-+    'type' => MENU_NORMAL_ITEM,
-+    'description' => t('Configure twitter_pull module.'),
-+    'title' => 'twitter_pull',
-+  );
-+
-   return $items;
- }
- 
 @@ -91,7 +101,7 @@ function twitter_pull_preprocess(&$variables, $hook) {
   * @param $lazy_load
   *     Use javascript to retrieve the twitter results once the page is loaded.
