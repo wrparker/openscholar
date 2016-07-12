@@ -82,8 +82,7 @@ class os_boxes_widget_slider extends os_boxes_widget_collection {
     $speed = isset($this->options['speed']) ? $this->options['speed'] : $defaults['speed'];
     $assets = $this->setup_assets($this->delta, $timeout, $speed, 0);
     $this->add_assets($assets);
-    //$box->options['make_embeddable'] = $this->options['make_embeddable'];
-     
+
     return $block;
   }
 
@@ -108,6 +107,7 @@ class os_boxes_widget_slider extends os_boxes_widget_collection {
 
     $assets['js'] = array();
     $assets['js'][] = drupal_get_path('module', 'os_slideshow') . '/os_slideshow_slider.js';
+    $assets['js'][] = drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_widget_slider/os_boxes_widget_slider.js';
 
     $assets['settings'] = array();
     $assets['settings'][] = array(
