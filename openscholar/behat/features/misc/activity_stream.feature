@@ -1,7 +1,7 @@
 Feature:
   Testing the activity stream
 
-  @api @misc_first
+  @api @wip
   Scenario: Check activity stream page
     Given I visit "/api/v1/activities"
      Then I should see "John created Software Project: Windows 7"
