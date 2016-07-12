@@ -60,3 +60,22 @@ function os_taxonomy_update_7004(&$sandbox) {
     ->condition('source', "%/taxonomy/term/%", 'LIKE')
     ->execute();
 }
+
+/**
+ * Turn on the og_vocabulary field display for teaser view
+ */
+function os_taxonomy_update_7005() {
+  // List all content types
+  $bundles = array_keys(os_get_bundles(TRUE));
+  foreach ($bundles as $bundle) {
+    $instance = field_info_instance('node', 'og_vocabulary', $bundle);
+    $instance['display']['teaser'] = Array ('label' => 'hidden',
+                                             'type' => 'og_vocab',
+                                             'weight' => 10,
+                                             'settings' => Array ('concatenate' => 1),
+                                             'module' => 'vsite_vocab',
+                                             );
+    // Display the teaser view of og_vocabulary like the default view
+    field_update_instance($instance);
+  }
+}

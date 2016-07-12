@@ -53,6 +53,7 @@ if (!$page) {
     <?php if (isset($file_value) && !empty($file_value)): ?>
       <?php print $file_value; ?>
     <?php endif; ?>
+  <?php print render($content['og_vocabulary']); ?>
   <?php endif; // end teaser ?>
 
   <?php if (!$teaser): // begin default adaptivetheme full page node tpl ?>
