@@ -137,4 +137,19 @@ class OsProfilesResource extends RestfulEntityBaseNode {
     // installations.
   }
 
+  /**
+   * Overrides RestfulEntityBase::getPublicFields().
+   */
+  public function checkPropertyAccess($op, $public_field_name, EntityMetadataWrapper $property_wrapper, EntityMetadataWrapper $wrapper) {
+    $fields = array('field_uuid', 'field_original_destination_url', 'field_destination_url');
+    $property_info = $property_wrapper->info();
+
+    if (in_array($property_info['name'], $fields)) {
+      // The fields access for the fields above should be handled via restful.
+      return TRUE;
+    }
+
+    return parent::checkPropertyAccess($op, $public_field_name, $property_wrapper, $wrapper);
+  }
+
 }
