@@ -1,5 +1,6 @@
 <?php
 
+use Behat\Behat\Event\StepEvent;
 use Behat\Mink\Driver\Selenium2Driver;
 use Drupal\DrupalExtension\Context\DrupalContext;
 use Behat\Behat\Context\Step\Given;
@@ -1993,15 +1994,11 @@ class FeatureContext extends DrupalContext {
     $purl = FeatureHelp::GetNodeVsitePurl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
 
-    try {
-      array(
-        new Step\When('I visit "' . $purl . 'node/' . $nid . '/edit"'),
-        new Step\When('I fill in "' . $field . '" with "' . $value . '"'),
-        new Step\When('I press "Save"'),
-      );
-    } catch (\Exception $e) {
-      $this->iDisplayWatchdog();
-    }
+    return array(
+      new Step\When('I visit "' . $purl . 'node/' . $nid . '/edit"'),
+      new Step\When('I fill in "' . $field . '" with "' . $value . '"'),
+      new Step\When('I press "Save"'),
+    );
   }
 
   /**
@@ -2923,6 +2920,15 @@ class FeatureContext extends DrupalContext {
   public function iVerifyTheFileContainsTheUserWithEmailOf($name, $email) {
     if (!preg_match("/" . $email . "(.*)" . $name . "/", $this->exportedRegistrants)) {
       throw new Exception(sprintf("List of registrants is exported wrong."));
+    }
+  }
+
+  /**
+   * @AfterStep
+   */
+  public function dumpInfoAfterFailedStep(StepEvent $event) {
+    if ($event->getResult() == StepEvent::FAILED)  {
+      $this->iDisplayWatchdog();
     }
   }
 
