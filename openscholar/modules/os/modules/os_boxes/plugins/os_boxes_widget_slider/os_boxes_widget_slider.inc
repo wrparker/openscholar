@@ -99,10 +99,12 @@ class os_boxes_widget_slider extends os_boxes_widget_collection {
     $block = parent::render();
     $defaults = $this->options_defaults();
     $slides = array();
+    // Iterating all selected widgets to be rendered.
     foreach ($this->options['widgets'] as $key => $widget) {
       list(, $delta) = explode('-', $widget['bid'], 2);
       $box = boxes_box_load($delta);
       $content = $box->render();
+      // Setting inline height attributes for div wrapper for each widget content.
       $inline_height = !empty($this->options['slider_height']) ? $this->options['slider_height'] : $defaults['slider_height'];
       $title = !empty($widget['title']) ? '<h2>' . $widget['title'] . '</h2>' : '';
       $slides[] = '<div style="height:'. $inline_height . 'px;">' . $title . $content['content'] . '</div>';
@@ -110,9 +112,11 @@ class os_boxes_widget_slider extends os_boxes_widget_collection {
 
     $vars = array();
     $vars['slides'] = $slides;
+    // Setting inline height for outer most ul tag.
     $vars['widget_height'] = !empty($this->options['slider_height']) ? $this->options['slider_height'] : $defaults['slider_height'];
     $vars['display_scrollbar'] = !empty($this->options['display_scrollbar']) ? $this->options['display_scrollbar'] : FALSE;
     $block['content'] = theme('os_slideshow_widget_slideshow', $vars);
+    // Assigning slideshow timing control variables.
     $timeout = isset($this->options['timeout']) ? $this->options['timeout'] : $defaults['timeout'];
     $speed = isset($this->options['speed']) ? $this->options['speed'] : $defaults['speed'];
     $assets = $this->setup_assets($this->delta, $timeout, $speed, 0);
