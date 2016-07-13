@@ -4037,6 +4037,6 @@ function _vsite_cleanup_id_list($vsite_id_array) {
  */
 function vsite_oembed_uri_directory($uri) {
   if ($vsite = vsite_get_vsite()) {
-    $uri[] = $vsite->group->purl;
+    return array($vsite->group->purl);
   }
 }
