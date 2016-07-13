@@ -12,11 +12,27 @@ class os_boxes_widget_slider extends os_boxes_widget_collection {
       'effect' => 'fade',
       'timeout' => 5000,
       'speed' => 700,
+      'display_scrollbar' => FALSE,
+      'slider_height' => '450'
     );
   }
 
   public function options_form(&$form_state) {
     $form = parent::options_form($form_state);
+    // Fetching only HTML widgets and personal_contact widget as it is also an HTML widget.
+    $widgets = module_invoke_all('os_widget');
+    $widget_options = array();
+    foreach ($widgets as $wgt => $info) {
+      if ($info['module'] == 'boxes' && isset($info['delta']) && boxes_box_load($info['delta'])->plugin_key == 'os_boxes_html') {
+        $widget_options[$wgt] = trim($info['info']);
+        if (!empty($info['title'])) {
+          $widget_options[$wgt] .= ' ('.trim($info['title']).')';
+        }
+      }
+    }
+    // Rendering HTML widgets in Widget select list.
+    $form['add']['new']['#options'] = $widget_options; 
+    
     $defaults = $this->options_defaults();
     $form['advanced']['#after_build'][] = '_os_boxes_widget_slider_field_display_handler';
     $form['display'] = array(
@@ -41,6 +57,21 @@ class os_boxes_widget_slider extends os_boxes_widget_collection {
       '#title' => t('Transition Speed'),
       '#default_value' => isset($this->options['speed']) ? $this->options['speed'] : $defaults['speed'],
       '#options' => $this->_transition_speed_opts(0, 1, .1),
+    );
+
+    $form['display']['display_scrollbar'] = array(
+      '#type' => 'checkbox',
+      '#description' => t('Render a vertical scrollbar to view longer contents.'),
+      '#title' => t('Display scrollbar'),
+      '#default_value' => isset($this->options['display_scrollbar']) ? $this->options['display_scrollbar'] : $defaults['display_scrollbar'],
+    );
+
+    $form['display']['slider_height'] = array(
+      '#type' => 'textfield',
+      '#description' => t('Enter a numeric value for height of the slider in pixels. If left blank, Slider height will be calculated as 450px.'),
+      '#title' => t('Slider height in pixels'),
+      '#element_validate' => array('os_boxes_widget_slider_height_validate'),
+      '#default_value' => isset($this->options['slider_height']) ? $this->options['slider_height'] : $defaults['slider_height'],
     );
 
     return $form;
@@ -72,11 +103,15 @@ class os_boxes_widget_slider extends os_boxes_widget_collection {
       list(, $delta) = explode('-', $widget['bid'], 2);
       $box = boxes_box_load($delta);
       $content = $box->render();
-      $slides[] = $content['content'];     
+      $inline_height = !empty($this->options['slider_height']) ? $this->options['slider_height'] : $defaults['slider_height'];
+      $title = !empty($widget['title']) ? '<h2>' . $widget['title'] . '</h2>' : '';
+      $slides[] = '<div style="height:'. $inline_height . 'px;">' . $title . $content['content'] . '</div>';
     }
 
     $vars = array();
     $vars['slides'] = $slides;
+    $vars['widget_height'] = !empty($this->options['slider_height']) ? $this->options['slider_height'] : $defaults['slider_height'];
+    $vars['display_scrollbar'] = !empty($this->options['display_scrollbar']) ? $this->options['display_scrollbar'] : FALSE;
     $block['content'] = theme('os_slideshow_widget_slideshow', $vars);
     $timeout = isset($this->options['timeout']) ? $this->options['timeout'] : $defaults['timeout'];
     $speed = isset($this->options['speed']) ? $this->options['speed'] : $defaults['speed'];
@@ -107,7 +142,6 @@ class os_boxes_widget_slider extends os_boxes_widget_collection {
 
     $assets['js'] = array();
     $assets['js'][] = drupal_get_path('module', 'os_slideshow') . '/os_slideshow_slider.js';
-    $assets['js'][] = drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_widget_slider/os_boxes_widget_slider.js';
 
     $assets['settings'] = array();
     $assets['settings'][] = array(
@@ -138,4 +172,14 @@ class os_boxes_widget_slider extends os_boxes_widget_collection {
  */
 function _os_boxes_widget_slider_field_display_handler($element, &$form_state) {
   $form_state['complete form']['title']['#access'] = FALSE;  
+}
+
+/**
+ * Ensures the pixel value given is a numeric digit
+ */
+function os_boxes_widget_slider_height_validate($element, &$form_state) {
+  if (!empty($element['#value']) && !is_numeric($element['#value'])) {
+    form_error($element, t('Please enter a numeric value as pixels.'));
+  }
+  return $element;
 }

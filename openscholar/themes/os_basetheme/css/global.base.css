@@ -1080,6 +1080,16 @@ ul.no-event-export {
 .block-boxes-os_boxes_widget_slider ul.rslides > li {
     list-style-type: none;
 }
-.block-boxes-os_boxes_widget_slider #layout_16_9_side div.slide {
+.region .block-boxes-os_boxes_widget_slider #layout_16_9_side div.slide {
     background: none;
+    height:450px;
+}
+.region .block-boxes-os_boxes_widget_slider #layout_16_9_side .slide ul.scroll li > div {
+  overflow: auto;
+}
+.region .block-boxes-os_boxes_widget_slider #layout_16_9_side .rslides_tabs {
+    float:right;
+    left: 0%;
+    position: relative;
+    top:2%;
 }

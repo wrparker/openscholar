@@ -313,18 +313,16 @@ function os_slideshow_theme($existing, $type, $theme, $path) {
     'os_slideshow_widget_slideshow' => array(
       'template' => 'os_slideshow_widget_slideshow',
       'variables' => array(
-        'slides' => NULL,
-        'controls' => NULL,
+        'slides' => NULL,        
+        'display_scrollbar' => NULL,
+        'widget_height' => NULL,
       ),
     ),
     'os_slideshow_widget_slide' => array(
       'template' => 'os_slideshow_widget_slide',
       'variables' => array(
-        'title' => NULL,        
         'widget' => NULL,
-        'style_name' => 'slideshow_980',
-        'box_delta' => NULL,
-      )
+      ),
     ),
     'os_slideshow_slideshow' => array(
       'template' => 'os_slideshow_slideshow',
@@ -411,6 +409,7 @@ function os_slideshow_preprocess_os_slideshow_slide(&$vars) {
  * Implements hook_preprocess_hook().
  */
 function os_slideshow_preprocess_os_slideshow_widget_slideshow(&$vars) {
+  $slide_vars = array();
   foreach ($vars['slides'] as $key => $slide) {
     $slide_vars['widget'] = $slide;    
     $vars['slides'][$key] = theme('os_slideshow_widget_slide', $slide_vars);
