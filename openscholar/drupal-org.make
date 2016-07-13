@@ -405,7 +405,7 @@ projects[transliteration][version] = 3.1
 
 projects[twitter_pull][subdir] = "contrib"
 projects[twitter_pull][version] = 1.0-rc4
-projects[twitter_pull][patch][] = "https://raw.github.com/openscholar/openscholar/50036f67594f210d8a4450fdf9bc10a9402877ea/patches/twitter_pull-8577-retweet_option.patch"
+projects[twitter_pull][patch][] = "https://raw.github.com/openscholar/openscholar/cb4bfa4c382c3ef6d2c8a48c10d55695792c37d5/patches/twitter_pull-8577-retweet_option.patch"
 
 projects[views][subdir] = "contrib"
 projects[views][version] = 3.8
