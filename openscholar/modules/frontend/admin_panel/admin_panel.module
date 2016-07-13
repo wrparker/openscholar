@@ -100,7 +100,7 @@ function admin_panel_library() {
           'keep_open' => _admin_panel_persist_open(),
         ),
         'version' => array(
-          'adminPanel' => '0.0.11'
+          'adminPanel' => '0.0.12'
         ),
       ),
       'type' => 'setting',

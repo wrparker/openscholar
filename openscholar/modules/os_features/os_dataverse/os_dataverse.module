@@ -15,7 +15,7 @@ function os_dataverse_boxes_plugins(){
   $info = array();
 
   $info['os_boxes_dataverse_list'] = array(
-    'title' => 'Dataverse Listing',
+    'title' => 'Dataverse List',
     'description' => 'Add a way for visitors on your website to be able to search Dataverse',
     'tags' => array('Misc'),
     'handler' => array(
@@ -36,6 +36,30 @@ function os_dataverse_boxes_plugins(){
       'path' => $path,
       'parent' => 'os_boxes_default',
     ),
+  );
+
+  $info['os_boxes_dataverse_dataset_citation'] = array(
+      'title' => 'Dataverse Dataset Citation',
+      'description' => 'Add a way to embed a Dataverse Dataset Citation',
+      'tags' => array('Misc'),
+      'handler' => array(
+          'class' => 'os_boxes_dataverse_dataset_citation',
+          'file' => 'os_boxes_dataverse_dataset_citation.inc',
+          'path' => $path,
+          'parent' => 'os_boxes_default',
+      ),
+  );
+
+  $info['os_boxes_dataverse_dataset'] = array(
+      'title' => 'Dataverse Dataset',
+      'description' => 'Add a way to embed a Dataverse dataset',
+      'tags' => array('Misc'),
+      'handler' => array(
+          'class' => 'os_boxes_dataverse_dataset',
+          'file' => 'os_boxes_dataverse_dataset.inc',
+          'path' => $path,
+          'parent' => 'os_boxes_default',
+      ),
   );
 
   return $info;

@@ -909,7 +909,10 @@ function os_pages_add_subpage_form($form, &$form_state, $node) {
     '#title' =>  t('Select a Page'),
     '#maxlength' => 180,
     '#autocomplete_path' => 'os/pages/autocomplete/'.$node->nid,
-    '#element_validate' => array('vsite_node_autocomplete_validate'),
+    '#element_validate' => array(
+      'vsite_node_autocomplete_validate',
+      'os_pages_add_subpage_element_validate'
+    ),
     '#description' => t('Start typing the title of an existing page. If this page is part of a section already, it and
     all of its children pages will be moved to this section. '),
   );
@@ -933,6 +936,32 @@ function os_pages_add_subpage_form($form, &$form_state, $node) {
   );
 
   return $form;
+}
+
+/**
+ * Makes sure the given node is a page and in our site.
+ */
+function os_pages_add_subpage_element_validate($element, &$form_state) {
+  $nid = $form_state['vsite_autocomplete_nid'];
+  $node = node_load($nid);
+
+  if ($node->type != 'page') {
+    form_error($element, t('Selected post is not a page.'));
+  }
+
+  if ($vsite = vsite_get_vsite()) {
+    $sites = field_get_items('node', $node, OG_AUDIENCE_FIELD);
+    $pass = false;
+    foreach ($sites as $delta => $value) {
+      if ($vsite->og->nid == $value['target_id']) {
+        $pass = true;
+      }
+    }
+
+    if (!$pass) {
+      form_error($element, t('Selected post is not a part of this site.'));
+    }
+  }
 }
 
 /**
