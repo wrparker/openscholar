@@ -6,7 +6,7 @@
  */
 
 // Implements hook_install().
-function os_publications_install() {
+function os_taxonomy_install() {
   // List all content types
   $bundles = array_keys(os_get_bundles(TRUE));
   foreach ($bundles as $bundle) {
