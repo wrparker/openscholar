@@ -4,6 +4,9 @@
  * os.features.inc
  */
 
+// Do not carry query strings over to redirects
+variable_set('redirect_passthrough_querystring', 0);
+
 /**
  * Implements hook_ctools_plugin_api().
  */
