@@ -3422,3 +3422,13 @@ function os_redirect_element_validate_source($element, &$form_state) {
 
   return $element;
 }
+
+/*
+ * Implements hook_views_pre_view
+ */
+function os_views_pre_view($view, &$display_id, &$args) {
+  // Fix the pager for child pages of /news
+  if ($display_id == "news_by_month_block") {
+    $args = "";
+  }
+}
