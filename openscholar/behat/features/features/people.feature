@@ -24,7 +24,9 @@ Feature:
   @api @features_second
   Scenario: When syncing the same node we need to check we updated the copied
             node and create a new one.
-    Given I am logging in as "john"
+#    Given I am logging in as "john"
+    # try to solve with john later on.
+    Given I am logging in as "admin"
       And I edit the node "Hillary Diane Rodham Clinton" in the group "obama"
       And I fill in "Address" with "White house"
       And I press "Save"

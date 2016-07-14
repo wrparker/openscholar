@@ -488,7 +488,7 @@ class FeatureHelp {
    */
   static public function getNodeIdInVsite($title, $vsite) {
     $gid = self::GetNodeId($vsite, TRUE);
-    $query = new entityFieldQuery();
+    $query = new \entityFieldQuery();
     $result = $query
       ->entityCondition('entity_type', 'node')
       ->propertyCondition('title', $title)
