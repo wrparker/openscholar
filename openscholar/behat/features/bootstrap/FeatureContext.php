@@ -1563,10 +1563,14 @@ class FeatureContext extends DrupalContext {
     $nid = FeatureHelp::GetNodeIdInVsite($title, $group);
     $purl = FeatureHelp::GetNodeVsitePurl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
+    $page = $purl . 'node/' . $nid . '/edit';
 
-    return array(
-      new Step\When('I visit "' . $purl . 'node/' . $nid . '/edit"'),
-    );
+    try {
+      $this->visit($page);
+    } catch (\Exception $e) {
+      print_r('An error: ' . $e->getMessage());
+      print_r('page: ' . $page);
+    }
   }
 
   /**
