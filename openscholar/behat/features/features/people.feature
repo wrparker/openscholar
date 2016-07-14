@@ -25,7 +25,6 @@ Feature:
   Scenario: When syncing the same node we need to check we updated the copied
             node and create a new one.
     Given I am logging in as "john"
-#      And I update the node "Hillary Diane Rodham Clinton" field "Address" to "White house"
       And I edit the node "Hillary Diane Rodham Clinton" in the group "obama"
       And I fill in "Address" with "White house"
       And I press "Save"
