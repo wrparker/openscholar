@@ -798,6 +798,11 @@
     else if (typeof(prop1) == typeof(prop2)) {
       return prop1 == prop2;
     }
+    // if one property is undefined, its usually a meta property the client uses
+    // it shouldn't be used at all
+    else if (typeof(prop1) == 'undefined' || typeof(prop2) == 'undefined') {
+      return true;
+    }
     else {
       return prop1.toString() == prop2.toString();
     }
