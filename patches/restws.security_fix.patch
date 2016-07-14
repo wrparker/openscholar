@@ -1,5 +1,5 @@
 diff --git a/restws.module b/restws.module
-index 3121da3..0a8fd81 100644
+index 3121da3..f9e139f 100644
 --- a/restws.module
 +++ b/restws.module
 @@ -210,7 +210,7 @@ function restws_menu_alter(&$items) {
@@ -29,7 +29,7 @@ index 3121da3..0a8fd81 100644
            'access callback' => TRUE,
            'type' => MENU_CALLBACK,
          );
-@@ -261,8 +261,18 @@ function restws_menu_alter(&$items) {
+@@ -261,8 +261,17 @@ function restws_menu_alter(&$items) {
  
  /**
   * Menu page callback.
@@ -42,14 +42,13 @@ index 3121da3..0a8fd81 100644
 + *   should be passed explicitly.
 + * @param mixed $arg1,...
 + *   Further arguments that are passed through to the given page callback.
-+ */
   */
 -function restws_page_callback($resource, $page_callback = NULL) {
 +function restws_page_callback($resource, $page_callback) {
    $id_arg = arg(1);
    $resource_arg = arg(0);
    $format = FALSE;
-@@ -345,15 +355,9 @@ function restws_page_callback($resource, $page_callback = NULL) {
+@@ -345,15 +354,9 @@ function restws_page_callback($resource, $page_callback = NULL) {
  
    // @todo: Determine human readable URIs and redirect, if there is no
    // page callback.
