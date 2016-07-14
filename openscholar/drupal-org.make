@@ -359,6 +359,7 @@ projects[robotstxt][patch][] = "http://drupal.org/files/issues/send_cache_header
 projects[restws][subdir] = "contrib"
 projects[restws][version] = "2.0-alpha3"
 projects[restws][patch][] = "http://drupal.org/files/1806142-restws-property-exception.patch"
+projects[restws][patch][] = "http://cgit.drupalcode.org/restws/patch/?id=a588261a887a71203eba817f67e3c28b9a834940"
 
 projects[shorten][subdir] = "contrib"
 projects[shorten][version] = 1.2
