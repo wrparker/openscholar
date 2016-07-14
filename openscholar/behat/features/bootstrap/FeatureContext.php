@@ -1989,7 +1989,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I update the node "([^"]*)" field "([^"]*)" to "([^"]*)"$/
    */
   public function iUpdateTheNodeFieldTo($title, $field, $value) {
-    $nid = FeatureHelp::GetNodeId($title);
+    $nid = FeatureHelp::getNodeId($title);
 
     $purl = FeatureHelp::GetNodeVsitePurl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
