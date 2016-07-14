@@ -13,7 +13,7 @@ class os_boxes_widget_slider extends os_boxes_widget_collection {
       'timeout' => 5000,
       'speed' => 700,
       'display_scrollbar' => FALSE,
-      'slider_height' => '450'
+      'slider_height' => '400'
     );
   }
 
