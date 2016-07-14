@@ -598,7 +598,7 @@
       service.add(data).success(function (e) {
         if (e.data.length) {
           $scope.embed = '';
-          e.data[0].new = true;
+          e.data[0].new = e.data[0].changed == e.data[0].timestamp;
           $scope.setSelection(e.data[0].id);
           service.register(e.data[0]);
 
