@@ -157,6 +157,9 @@ function os_strongarm() {
   $strongarm->value = 0;
   $export['redirect_passthrough_querystring'] = $strongarm;
 
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'securepages_enable';
   $strongarm->value = '1';
   $export['securepages_enable'] = $strongarm;
