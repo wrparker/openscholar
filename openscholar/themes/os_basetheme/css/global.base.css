@@ -1097,7 +1097,7 @@ ul.no-event-export {
 .block-boxes-os_boxes_widget_slider #layout_16_9_side .rslides_tabs li {
     float:none;
     background:transparent !important;
-        margin: 0 1px;
+        margin: 0 2px;
 }
 .block-boxes-os_boxes_widget_slider #layout_16_9_side .rslides_tabs li:first-of-type,
 .block-boxes-os_boxes_widget_slider #layout_16_9_side .rslides_tabs li:last-of-type {
@@ -1119,5 +1119,8 @@ ul.no-event-export {
     padding: 0;
 }
 
+.block-boxes-os_boxes_widget_slider #layout_16_9_side .rslides li {
+  list-style:none;
+}
 
 

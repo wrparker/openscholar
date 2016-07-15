@@ -16,6 +16,12 @@
     top: 0 !important;
     background: #444 !important;
  }
+ .block-boxes-os_boxes_widget_slider #layout_16_9_side .rslides_tabs {
+    background: transparent !important;
+ }
+ .block-boxes-os_boxes_widget_slider #layout_16_9_side .rslides_tabs li {
+    margin: 0 8px;
+}
 
 #layout_16_9_overlay .slide-copy,
 #layout_16_9_side .slide-copy,
