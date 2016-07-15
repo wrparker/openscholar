@@ -359,6 +359,7 @@ projects[robotstxt][patch][] = "http://drupal.org/files/issues/send_cache_header
 projects[restws][subdir] = "contrib"
 projects[restws][version] = "2.0-alpha3"
 projects[restws][patch][] = "http://drupal.org/files/1806142-restws-property-exception.patch"
+projects[restws][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/6c679219a3259d682abb87e9b9f0f1834bc08ee9/patches/restws.security_fix.patch"
 
 projects[shorten][subdir] = "contrib"
 projects[shorten][version] = 1.2
