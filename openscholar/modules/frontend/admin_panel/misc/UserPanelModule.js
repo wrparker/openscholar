@@ -30,7 +30,9 @@
     	if(!jQuery("#rightMenuSlide .click-processing").length) {
           jQuery("#rightMenuSlide [data-id='"+id+"']").addClass('click-processing');
     	}
-        
+        // After closing the modal, setting the search text field as blank and resetting search results.
+        $scope.searchString = '';
+        $scope.site_rows = $scope.site_data;
         $timeout(function() {
           jQuery('#rightMenuSlide .menu_modal_open').not("[data-id='"+id+"']").not('.click-processing').click();
           $timeout(function() {
@@ -51,10 +53,21 @@
       }
 
       $scope.create_access = response.data.data[0].create_access;
+      $scope.orig_result = $scope.site_rows = $scope.site_data;
     });
     $scope.pageSize = 7;
     $scope.numberOfPages=function(data){
       return Math.ceil(data.length/$scope.pageSize);
+    }
+    // ng-click callback to filter site list based on given search string.
+    $scope.search = function () {
+      var result = [];
+      angular.forEach($scope.orig_result, function (item) {
+        if (item.title.toLowerCase().indexOf($scope.searchString.toLowerCase()) > -1) {
+          result.push(item);
+        }
+      });
+      $scope.site_rows = result;
     }
   }]).directive('rightMenu', function() {
       return {
