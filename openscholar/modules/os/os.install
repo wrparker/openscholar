@@ -906,6 +906,9 @@ function os_update_7043() {
   return t('Enabled OS Reports module.');
 }
 
+/**
+ * Override redirect_passthrough_querystring var
+ */
 function os_update_7044() {
-  features_revert(array('redirect' => array('variable')));
+  features_revert(array('os' => array('variable')));
 }
