@@ -5,22 +5,6 @@
  * Install file for the OS taxonomy module.
  */
 
-// Implements hook_install().
-function os_taxonomy_install() {
-  // List all content types
-  $bundles = array_keys(os_get_bundles(TRUE));
-  foreach ($bundles as $bundle) {
-    $instance = field_info_instance('node', 'og_vocabulary', $bundle);
-    $instance['display']['teaser'] = Array ('label' => 'hidden',
-                                             'type' => 'og_vocab',
-                                             'weight' => 10,
-                                             'settings' => Array ('concatenate' => 1),
-                                             'module' => 'vsite_vocab',
-                                             );
-    // Display the teaser view of og_vocabulary like the default view
-    field_update_instance($instance);
-  }
-}
 /**
  * Enable the Hierarchical taxonomy module.
  */

@@ -2008,6 +2008,22 @@ function os_taxonomy_form_taxonomy_overview_terms_alter(&$form, &$form_state) {
  */
 function os_taxonomy_og_fields_info() {
 
+  // List all content types
+  $bundles = array_keys(os_get_bundles(TRUE));
+  foreach ($bundles as $bundle) {
+    $instance = field_info_instance('node', 'og_vocabulary', $bundle);
+    // Checking whether og_vocab is set in the teaser view
+    if ($instance['display']['teaser']['type'] != 'og_vocab') {
+      $instance['display']['teaser'] = Array ('label' => 'hidden',
+                                             'type' => 'og_vocab',
+                                             'weight' => 10,
+                                             'settings' => Array ('concatenate' => 1),
+                                             'module' => 'vsite_vocab',
+                                             );
+    // Display the teaser view of og_vocabulary like the default view
+      field_update_instance($instance);
+    }
+  }
   $items['show_description'] = array(
     'type' => array('group content'),
     'description' => t('Show taxonomy term description.'),
