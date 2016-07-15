@@ -18,8 +18,8 @@
 			    </tr>
 			</table>
 		</div>
-		<div ng-show="own && !(site_rows | filter:{owner: own}:strict).length" class="site-list no-search-result">No site found.</div>
-		<div ng-show="!own && !(site_rows | filter:{owner: own}:strict).length" class="site-list no-search-result">No site found.</div>
+		<div ng-show="own && (site_data | filter:{owner: own}:strict).length && !(site_rows | filter:{owner: own}:strict).length" class="site-list no-search-result">No site found.</div>
+		<div ng-show="!own && (site_data | filter:{owner: own}:strict).length && !(site_rows | filter:{owner: own}:strict).length" class="site-list no-search-result">No site found.</div>
 		<div ng-if='filtered.length > pageSize' class='pager'>
 			<button ng-disabled="currentPage[key] == 0" ng-click="currentPage[key]=currentPage[key]-1">
 				&lt;
