@@ -68,7 +68,7 @@ class os_boxes_widget_slider extends os_boxes_widget_collection {
 
     $form['display']['slider_height'] = array(
       '#type' => 'textfield',
-      '#description' => t('Enter a numeric value for height of the slider in pixels. If left blank, Slider height will be calculated as 450px.'),
+      '#description' => t('Enter a numeric value for height of the slider in pixels. If left blank, Slider height will be calculated as 400px.'),
       '#title' => t('Slider height in pixels'),
       '#element_validate' => array('os_boxes_widget_slider_height_validate'),
       '#default_value' => isset($this->options['slider_height']) ? $this->options['slider_height'] : $defaults['slider_height'],
