@@ -905,3 +905,7 @@ function os_update_7043() {
   module_enable(array('os_reports'));
   return t('Enabled OS Reports module.');
 }
+
+function os_update_7044() {
+  features_revert(array('redirect' => array('variable')));
+}
