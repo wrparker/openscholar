@@ -88,7 +88,8 @@ projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
 projects[entity][patch][] = https://www.drupal.org/files/issues/2086225-entity-access-check-18.patch
 
 projects[entitycache][subdir] = "contrib"
-projects[entitycache][version] = 1.1
+projects[entitycache][version] = 1.5
+projects[entitycache][patch][] = https://www.drupal.org/files/issues/2516094-1-entitycache_fix_arry_flip.patch
 
 projects[entityreference][subdir] = "contrib"
 projects[entityreference][version] = 1.1
@@ -274,6 +275,7 @@ projects[oembed][version] = 1.0-rc2
 projects[oembed][patch][] = "http://cgit.drupalcode.org/oembed/patch/?id=a27adf7c1afe763ee5f386f30f0aea73a6097ff1"
 projects[oembed][patch][] = "http://drupal.org/files/issues/oembed.2134415.wysiwyg_dimensions.patch"
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/514d6c636dc69ea76ea307a874c7cd9c3e0fb045/patches/oembed.alt_tags_no_escape.patch"
+projects[oembed][patch][] = "http://drupal.org/files/issues/split-up-regex-2739023-1.patch"
 
 projects[og][subdir] = "contrib"
 projects[og][version] = 2.6
@@ -318,7 +320,7 @@ projects[pinserver][subdir] = "contrib"
 projects[pinserver][type] = module
 projects[pinserver][download][type] = git
 projects[pinserver][download][url] = "git://github.com/openscholar/pinserver.git"
-projects[pinserver][download][tag] = 7.x-3.4.10
+projects[pinserver][download][tag] = 7.x-3.4.17
 
 projects[purl][subdir] = "contrib"
 ;: projects[purl][version] = 1.0-beta1+11-dev
@@ -403,7 +405,8 @@ projects[transliteration][version] = 3.1
 
 projects[twitter_pull][subdir] = "contrib"
 projects[twitter_pull][version] = 1.0-rc4
-projects[twitter_pull][patch][] = 'http://drupal.org/files/twitter_pull-twitter_api_php-1781024-40.patch'
+projects[twitter_pull][patch][] = "http://drupal.org/files/twitter_pull-twitter_api_php-1781024-40.patch"
+projects[twitter_pull][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/96ddefa8af2cce2579ea4eac39b20ccb840b1e41/patches/twitter_pull-8376-disable_retweets.patch"
 
 projects[views][subdir] = "contrib"
 projects[views][version] = 3.8
@@ -493,7 +496,7 @@ libraries[select2][download][url] = "https://github.com/ivaynberg/select2/archiv
 
 libraries[twitter-api-php][type] = "libraries"
 libraries[twitter-api-php][download][type] = "file"
-libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/1.0.3.zip"
+libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/1.0.5.zip"
 
 libraries[autopager][type] = "libraries"
 libraries[autopager][download][type] = "file"

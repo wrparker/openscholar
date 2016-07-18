@@ -280,6 +280,8 @@ function os_profiles_process_node(&$vars) {
     return;
   }
 
+  module_load_include('inc', 'os', 'includes/os');
+
   // Adding the prefix value to the title of the person.
   if (!empty($vars['field_prefix'])) {
     $vars['title'] = $vars['field_prefix'][LANGUAGE_NONE][0]['value'] . ' ' . $vars['title'];

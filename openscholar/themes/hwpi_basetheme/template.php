@@ -152,129 +152,32 @@ function hwpi_basetheme_profile_default_image($size = 'small') {
 /**
  * Process variables for comment.tpl.php
  */
-function hwpi_basetheme_process_node(&$vars) {
+function hwpi_basetheme_process_node(&$build) {
   // Event persons, change title markup to h1.
-  if ($vars['type'] == 'person') {
-    if ($vars['view_mode'] == 'title') {
-      $vars['title_prefix']['#suffix'] = '<h1 class="node-title">' . l($vars['title'], 'node/' . $vars['nid']) . '</h1>';
-      $vars['title'] = NULL;
+  if ($build['type'] == 'person') {
+    if ($build['view_mode'] == 'title') {
+      $build['title_prefix']['#suffix'] = '<h1 class="node-title">' . l($build['title'], 'node/' . $build['nid']) . '</h1>';
+      $build['title'] = NULL;
     }
-    elseif (!$vars['teaser'] && $vars['view_mode'] != 'sidebar_teaser') {
-      $vars['title_prefix']['#suffix'] = '<h1 class="node-title">' . $vars['title'] . '</h1>';
-      $vars['title'] = NULL;
+    elseif (!$build['teaser'] && $build['view_mode'] != 'sidebar_teaser') {
+      $build['title_prefix']['#suffix'] = '<h1 class="node-title">' . $build['title'] . '</h1>';
+      $build['title'] = NULL;
 
-      if ($vars['view_mode'] == 'slide_teaser') {
-        $vars['title_prefix']['#suffix'] = '<div class="toggle">' . $vars['title_prefix']['#suffix'] . '</div>';
+      if ($build['view_mode'] == 'slide_teaser') {
+        $build['title_prefix']['#suffix'] = '<div class="toggle">' . $build['title_prefix']['#suffix'] . '</div>';
       }
     }
   }
 }
 
-/**
- * Implements hook_field_display_ENTITY_TYPE_alter().
+/*
+ * Implements hook_node_view_alter
+ *
  */
-function hwpi_basetheme_field_display_node_alter(&$display, $context) {
-  if ($context['entity']->type == 'event' && $context['instance']['field_name'] == 'field_date') {
-    if (($context['view_mode'] != 'full') || (isset($context['entity']->os_sv_list_box) && $context['entity']->os_sv_list_box)) {
+function hwpi_basetheme_node_view_alter(&$build) { 
 
-      if (isset($context['entity']->field_date[LANGUAGE_NONE][0]['value2']) &&
-          (strtotime($context['entity']->field_date[LANGUAGE_NONE][0]['value2']) - strtotime($context['entity']->field_date[LANGUAGE_NONE][0]['value']) > 24*60*60)) {
-        return; //event is more than one day long - keep both dates visible
-      }
-
-      //hide the date - it's already visible in the shield
-      $display['settings']['format_type'] = 'os_time';
-    }
-  }
-}
-
-/**
- * Alter the results of node_view().
- */
-function hwpi_basetheme_node_view_alter(&$build) {
   // Persons, heavily modify the output to match the HC designs
   if ($build['#node']->type == 'person') {
-
-    if ($build['#view_mode'] == 'sidebar_teaser') {
-      $build['pic_bio']['#prefix'] = '<div class="pic-bio clearfix people-sidebar-teaser">';
-    }
-    else {
-      $build['pic_bio']['#prefix'] = '<div class="pic-bio clearfix">';
-    }
-    $build['pic_bio']['#suffix'] = '</div>';
-    $build['pic_bio']['#weight'] = -9;
-
-    if (isset($build['body'])) {
-      $build['body']['#label_display'] = 'hidden';
-      $build['pic_bio']['body'] = $build['body'];
-      unset($build['body']);
-    }
-
-    //join titles
-    $title_field = &$build['field_professional_title'];
-    if ($title_field) {
-      $keys = array_filter(array_keys($title_field), 'is_numeric');
-      foreach ($keys as $key) {
-        $titles[] = $title_field[$key]['#markup'];
-        unset($title_field[$key]);
-      }
-      $title_field[0] = array('#markup' => implode('<br />', $titles));
-    }
-
-    // We dont want the other fields on teasers
-    if (in_array($build['#view_mode'], array('teaser', 'slide_teaser','no_image_teaser'))) {
-
-      //move title, website. body
-      $build['pic_bio']['body']['#weight'] = 5;
-      foreach (array(0=>'field_professional_title', 10=>'field_website') as $weight => $field) {
-        if (isset($build[$field])) {
-          $build['pic_bio'][$field] = $build[$field];
-          $build['pic_bio'][$field]['#weight'] = $weight;
-          unset($build[$field]);
-        }
-      }
-
-      //hide the rest
-      foreach (array('field_address') as $field) {
-        if (isset($build[$field])) {
-          unset($build[$field]);
-        }
-      }
-
-      if (isset($build['field_email'])) {
-        $email_plain = $build['field_email'][0]['#markup'];
-        $build['field_email'][0]['#markup'] = '<a href="mailto:' . $email_plain . '">' . $email_plain . '</a>';
-      }
-
-      // Newlines after website.
-      if (isset($build['pic_bio']['field_website'])) {
-        foreach (array_filter(array_keys($build['pic_bio']['field_website']), 'is_numeric') as $delta) {
-          $item = $build['pic_bio']['field_website']['#items'][$delta];
-          $build['pic_bio']['field_website'][$delta]['#markup'] = l($item['title'], $item['url'], $item) . '<br />';
-        }
-      }
-
-      unset($build['links']['node']);
-
-      return;
-    }
-
-    // Professional titles
-    if (isset($build['field_professional_title'])) {
-      $build['field_professional_title']['#label_display'] = 'hidden';
-      $build['field_professional_title']['#weight'] = -10;
-    }
-
-    if (isset($build['field_person_photo'])) {
-      $build['field_person_photo']['#label_display'] = 'hidden';
-      $build['pic_bio']['field_person_photo'] = $build['field_person_photo'];
-      unset($build['field_person_photo']);
-    }
-
-    $children = element_children($build['pic_bio']);
-    if (empty($children)) {
-      $build['pic_bio']['#access'] = false;
-    }
 
     // Note that Contact and Website details will print wrappers and titles regardless of any field content.
     // This is kind of deliberate to avoid having to handle the complexity of dealing with the layout or
@@ -286,7 +189,7 @@ function hwpi_basetheme_node_view_alter(&$build) {
     if ($build['#view_mode'] != 'sidebar_teaser') {
       $build['contact_details']['#prefix'] = '<div class="block contact-details '.(($block_zebra++ % 2)?'even':'odd').'"><div class="block-inner"><h2 class="block-title">Contact Information</h2>';
       $build['contact_details']['#suffix'] = '</div></div>';
-      $build['contact_details']['#weight'] = -8;
+      $build['contact_details']['#weight'] = 51;
 
       // Contact Details > address
       if (isset($build['field_address'])) {
@@ -297,14 +200,14 @@ function hwpi_basetheme_node_view_alter(&$build) {
       }
       // Contact Details > email
       if (isset($build['field_email'])) {
-        $build['field_email']['#label_display'] = 'inline';
+        $build['field_email']['#label_display'] = 'hidden';
         $email_plain = mb_strtolower($build['field_email'][0]['#markup']);
         if ($email_plain) {
 
           $build['field_email'][0]['#markup'] = l($email_plain, 'mailto:'.$email_plain, array('absolute'=>TRUE));
         }
         $build['contact_details']['field_email'] = $build['field_email'];
-        $build['contact_details']['field_email']['#weight'] = -50;
+        $build['contact_details']['field_email']['#weight'] = 50;
         unset($build['field_email']);
       }
       // Contact Details > phone
@@ -315,9 +218,100 @@ function hwpi_basetheme_node_view_alter(&$build) {
           $build['field_phone'][0]['#markup'] = t('p: ') . $phone_plain;
         }
         $build['contact_details']['field_phone'] = $build['field_phone'];
-        $build['contact_details']['field_phone']['#weight'] = 50;
+        $build['contact_details']['field_phone']['#weight'] = 52;
         unset($build['field_phone']);
       }
+
+      if ($build['#view_mode'] == 'sidebar_teaser') {
+        $build['pic_bio']['#prefix'] = '<div class="pic-bio clearfix people-sidebar-teaser">';
+      }
+      else {
+        $build['pic_bio']['#prefix'] = '<div class="pic-bio clearfix">';
+      }
+      $build['pic_bio']['#suffix'] = '</div>';
+      $build['pic_bio']['#weight'] = -9;
+
+      if (isset($build['body'])) {
+        $build['body']['#label_display'] = 'hidden';
+        $build['pic_bio']['body'] = $build['body'];
+        unset($build['body']);
+      }
+
+      //join titles
+      $title_field = &$build['field_professional_title'];
+      if ($title_field) {
+        $keys = array_filter(array_keys($title_field), 'is_numeric');
+        foreach ($keys as $key) {
+          $titles[] = $title_field[$key]['#markup'];
+          unset($title_field[$key]);
+        }
+        $title_field[0] = array('#markup' => implode('<br />', $titles));
+      }
+
+      // We dont want the other fields on teasers
+      if (in_array($build['#view_mode'], array('teaser', 'slide_teaser','no_image_teaser'))) {
+
+        unset($build['contact_details']['#prefix'], $build['contact_details']['#suffix']);
+
+        //move title, website. body
+        $build['pic_bio']['body']['#weight'] = 5;
+        foreach (array(0=>'field_professional_title', 15=>'field_website') as $weight => $field) {
+          if (isset($build[$field])) {
+            $build['pic_bio'][$field] = $build[$field];
+            $build['pic_bio'][$field]['#weight'] = $weight;
+            unset($build[$field]);
+          }
+        }
+
+        //hide the rest
+        foreach (array('field_address') as $field) {
+          if (isset($build[$field])) {
+            unset($build[$field]);
+          }
+        }
+
+        if (isset($build['field_email'])) {
+          $email_plain = $build['field_email'][0]['#markup'];
+          $build['field_email'][0]['#markup'] = '<a href="mailto:' . $email_plain . '">' . $email_plain . '</a>';
+        }
+
+        // Newlines after website.
+        if (isset($build['pic_bio']['field_website'])) {
+          foreach (array_filter(array_keys($build['pic_bio']['field_website']), 'is_numeric') as $delta) {
+            $item = $build['pic_bio']['field_website']['#items'][$delta];
+            $build['pic_bio']['field_website'][$delta]['#markup'] = l($item['title'], $item['url'], $item) . '<br />';
+          }
+        }
+
+        if (isset($build['links']['node']['#links']['node-readmore'])) {
+          $link = $build['links']['node']['#links']['node-readmore'];
+          if (preg_match('!</?(?:p)[^>]*>\s*$!i', $build['pic_bio']['body'][0]['#markup'], $match, PREG_OFFSET_CAPTURE)) {
+            $insert_point = $match[0][1];
+            // Insert the link.
+            $build['pic_bio']['body'][0]['#markup'] = substr_replace($build['pic_bio']['body'][0]['#markup'], ' '.l($link['title'], $link['href'], $link), $insert_point, 0);
+          }
+        }
+
+        return;
+      }
+
+      // Professional titles
+      if (isset($build['field_professional_title'])) {
+        $build['field_professional_title']['#label_display'] = 'hidden';
+        $build['field_professional_title']['#weight'] = -10;
+      }
+
+      if (isset($build['field_person_photo'])) {
+        $build['field_person_photo']['#label_display'] = 'hidden';
+        $build['pic_bio']['field_person_photo'] = $build['field_person_photo'];
+        unset($build['field_person_photo']);
+      }
+
+      $children = element_children($build['pic_bio']);
+      if (empty($children)) {
+        $build['pic_bio']['#access'] = false;
+      }
+
 
       // Websites
       if (isset($build['field_website'])) {
@@ -332,6 +326,9 @@ function hwpi_basetheme_node_view_alter(&$build) {
       //Don't show an empty contact details section.
       if (!element_children($build['contact_details'])) {
         unset($build['contact_details']);
+      }
+      else {
+        $build['contact_details']['#weight'] = -8;
       }
     }
 
@@ -387,6 +384,24 @@ function hwpi_basetheme_node_view_alter(&$build) {
   }
 }
 
+
+/**
+ * Implements hook_field_display_ENTITY_TYPE_alter().
+ */
+function hwpi_basetheme_field_display_node_alter(&$display, $context) {
+  if ($context['entity']->type == 'event' && $context['instance']['field_name'] == 'field_date') {
+    if (($context['view_mode'] != 'full') || (isset($context['entity']->os_sv_list_box) && $context['entity']->os_sv_list_box)) {
+
+      if (isset($context['entity']->field_date[LANGUAGE_NONE][0]['value2']) &&
+          (strtotime($context['entity']->field_date[LANGUAGE_NONE][0]['value2']) - strtotime($context['entity']->field_date[LANGUAGE_NONE][0]['value']) > 24*60*60)) {
+        return; //event is more than one day long - keep both dates visible
+      }
+
+      //hide the date - it's already visible in the shield
+      $display['settings']['format_type'] = 'os_time';
+    }
+  }
+}
 
 /**
  * Preprocess variables for comment.tpl.php

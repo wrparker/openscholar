@@ -267,6 +267,16 @@ a img {
     float: left;
     position: relative;
 }
+.content-left.content-right.content-bottom .region-content-first .sv-list-video.sv-list-view-teaser .file-info,
+.content-left.content-right.content-bottom .region-content-second .sv-list-video.sv-list-view-teaser .file-info,
+.content-left.content-right.content-bottom .region-content-bottom .sv-list-video.sv-list-view-teaser .file-info,
+.sidebar .sv-list-video.sv-list-view-teaser .file-info {
+    clear: both;
+}
+.content-left.content-right.content-bottom .region-content-first .sv-list-video.sv-list-view-teaser .file-info,
+.content-left.content-right.content-bottom .region-content-second .sv-list-video.sv-list-view-teaser .file-info,
+.content-left.content-right.content-bottom .region-content-bottom .sv-list-video.sv-list-view-teaser .file-info,
+.sidebar .sv-list-video.sv-list-view-teaser .file-info,
 #content-column .sv-list-video.sv-list-view-teaser img,
 #content-column .sv-list-image.sv-list-view-teaser .file-image img {
     margin-bottom: 20px;
@@ -458,9 +468,10 @@ ol {
     margin: 0 0 1.5em 17px;
 }
 .item-list ul li {
-    margin: 0 !important;
+    margin: 0;
     padding: 0;
 }
+
 .block ul {
     padding-left: 0;
     list-style: none;
@@ -482,6 +493,12 @@ ol ul,
 .item-list ol ol,
 .item-list ol ul {
     margin-bottom: 0;
+}
+
+
+.item-list .field-name-body ul,
+.item-list .field-name-body ol {
+	margin: 0 0 1.5em 17px;
 }
 /** 1 A a (1) **/
 
@@ -548,6 +565,7 @@ ul ul ul ul {
 .sidebar .block-boxes-os_boxes_facetapi_vocabulary .item-list {
     margin-bottom: 15px;
 }
+.sidebar .block-boxes-os_boxes_facetapi_vocabulary.collapsible .item-list,
 .sidebar .block-boxes-os_boxes_facetapi_vocabulary .item-list:last-chld {
     margin-bottom: 0;
 }
@@ -557,6 +575,9 @@ ul ul ul ul {
 }
 .boxes-box ul.featured-links li {
     margin-bottom: 15px;
+}
+.boxes-box ul.featured-links .field-name-body li {
+    margin-bottom: 0;
 }
 .boxes-box ul.featured-links.title-only li h1.node-title a{
  font-size: 1em !important;

@@ -19,6 +19,8 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     $options['vocabularies'] = array();
     $options['sort_by'] = 'alpha';
     $options['sort_by_term'] = 'rel';
+    $options['show_count'] = TRUE;
+    $options['as_nav'] = FALSE;
 
     return $options;
   }
@@ -33,6 +35,8 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     $selected_vocab = $this->options['vocabularies'];
     $sort_by = $this->options['sort_by'];
     $sort_by_term = $this->options['sort_by_term'];
+    $as_nav = $this->options['as_nav'];
+    $show_count = $this->options['show_count'];
 
     if (!empty($form_state['values']['bundle'])) {
       // We have the bundle from the AJAX.
@@ -40,6 +44,8 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
       $selected_vocab = 'all';
       $sort_by = $form_state['values']['sort_by'];
       $sort_by_term = $form_state['values']['sort_by_term'];
+      $as_nav = $form_state['as_nav'];
+      $show_count = $form_state['show_count'];
     }
 
     $bundles = os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP));
@@ -101,6 +107,25 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
       '#type' => 'select',
       '#options' => $options_term,
       '#default_value' => $sort_by_term,
+    );
+
+    // Extra option added like taxonomy widget
+    $form['show_count'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show number of posts'),
+      '#description' => t('Show number of posts tagged to a term next to the term.'),
+      '#default_value' => $show_count,
+    );
+
+    $form['as_nav'] = array(
+      '#type' => 'radios',
+      '#title' => t('Display Styles'),
+      '#default_value' => empty($as_nav) ? 0 : $as_nav,
+      '#options' => array(
+        0 => t('Classic/List'),
+        1 => t('Menu'),
+        2 => t('Collapsible Accordion')
+      ),
     );
 
     return $form;
@@ -211,7 +236,6 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     // If empty search happened, we will cache the block.
     $use_cache = $this->call_empty_search_if_needed();
     if (!$use_cache || (($block = $this->get_cache()) === FALSE)) {
-
       $block = module_invoke('facetapi', 'block_view', $delta_og_vocab);
       $block['delta'] = $delta;
 
@@ -288,14 +312,55 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
               array_sort_by_term_weight($block['content']['sm_og_vocabulary'][$vocabulary_name]['#items'], $vocabulary_name);
             }
           }
+        }        
+        // Initializing jQuery UI Accordion for this widget instance if display style is set as "Collapsible"
+        if ($this->options['as_nav'] == 2) {
+          $block['content']['#prefix'] = '<div class="accordion">';
+          $block['content']['#suffix'] = '</div>';
+          $block['content']['#attached'] = array(
+            'library' => array(
+              array('system', 'ui.accordion'),
+            ),
+            'js' => array(
+              drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_facetapi_vocabulary/os_boxes_facetapi_vocabulary_accordion.render.js',
+              array(
+                'type' => 'setting',
+                'data' => array(
+                  'os_boxes' => array(
+                    'faceted_taxonomy' => array(
+                      $this->delta => array(
+                        'delta' => $this->delta,
+                      )
+                    )
+                  )
+                )
+              ),
+            ),
+          );
         }
 
         $block['content'] = render($block['content']);
+
+        $additional_classes = array();
+        if ($this->options['show_count'] == FALSE) {
+          $additional_classes[] = 'hide-count';
+        }
+        if ($this->options['as_nav'] == 1) {
+          $additional_classes[] = 'navigation';
+        } elseif ($this->options['as_nav'] == 2) {
+          $additional_classes[] = 'collapsible';
+        }
+
+        if (!empty($additional_classes)) {
+          $this->options['additional_classes'] = implode(" ", $additional_classes);
+        }
+
         if ($use_cache) {
           $this->set_cache($block);
         }
       }
     }
+
     return $block;
   }
 

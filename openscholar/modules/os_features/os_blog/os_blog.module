@@ -101,3 +101,18 @@ function os_blog_os_widget_alter(&$widget) {
     $widget['info'] = 'Blog Archive';
   }
 }
+
+/**
+ * Implements hook_node_delete().
+ *
+ * Deletes data from os_feed_item when their node is deleted.
+ */
+function os_blog_node_delete($node) {
+  if($node->type != 'blog_import') {
+    return;
+  }
+  $nid = $node->nid;
+  db_delete('os_feed_item')
+  ->condition('importer_nid', $nid)
+  ->execute();
+}
