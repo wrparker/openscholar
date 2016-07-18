@@ -33,7 +33,6 @@
         // After closing the modal, setting the search text field as blank and resetting search results.
         $scope.searchString = '';
         $scope.siteFilter = '';
-        //$scope.site_data = $scope.orig_result;
         $timeout(function() {
           jQuery('#rightMenuSlide .menu_modal_open').not("[data-id='"+id+"']").not('.click-processing').click();
           $timeout(function() {
