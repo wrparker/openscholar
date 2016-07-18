@@ -61,13 +61,7 @@
     }
     // ng-click callback to filter site list based on given search string.
     $scope.search = function () {
-      var result = [];
-      angular.forEach($scope.orig_result, function (item) {
-        if (item.title.toLowerCase().indexOf($scope.searchString.toLowerCase()) > -1) {
-          result.push(item);
-        }
-      });
-      $scope.site_rows = result;
+     $scope.siteFilter = $scope.searchString;
     }
   }]).directive('rightMenu', function() {
       return {
