@@ -32,7 +32,8 @@
     	}
         // After closing the modal, setting the search text field as blank and resetting search results.
         $scope.searchString = '';
-        $scope.site_rows = $scope.site_data;
+        $scope.siteFilter = '';
+        //$scope.site_data = $scope.orig_result;
         $timeout(function() {
           jQuery('#rightMenuSlide .menu_modal_open').not("[data-id='"+id+"']").not('.click-processing').click();
           $timeout(function() {
@@ -53,7 +54,7 @@
       }
 
       $scope.create_access = response.data.data[0].create_access;
-      $scope.orig_result = $scope.site_rows = $scope.site_data;
+      $scope.orig_result = $scope.site_data;
     });
     $scope.pageSize = 7;
     $scope.numberOfPages=function(data){
