@@ -739,7 +739,7 @@ function cp_user_form_og_ui_add_users_alter(&$form, $form_state) {
   // Add a secondary submit function that redirects the users out of the
   // admin overlay
   $form['#submit'][] = 'cp_user_og_ui_add_users_submit';
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Add members'));
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Add member'));
 }
 
 /**
