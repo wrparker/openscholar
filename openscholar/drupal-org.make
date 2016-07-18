@@ -535,6 +535,16 @@ libraries[font][subdir] = "ckeditor/plugins"
 libraries[font][download][type] = "file"
 libraries[font][download][url] = "http://download.ckeditor.com/font/releases/font_4.5.8.zip"
 
+libraries[lineutils][type] = "libraries"
+libraries[lineutils][subdir] = "ckeditor/plugins"
+libraries[lineutils][download][type] = "file"
+libraries[lineutils][download][url] = "http://download.ckeditor.com/lineutils/releases/lineutils_4.5.9.zip"
+
+libraries[widget][type] = "libraries"
+libraries[widget][subdir] = "ckeditor/plugins"
+libraries[widget][download][type] = "file"
+libraries[widget][download][url] = "http://download.ckeditor.com/widget/releases/widget_4.5.9.zip"
+
 libraries[dragresize][type] = "libraries"
 libraries[dragresize][subdir] = "ckeditor/plugins"
 libraries[dragresize][download][type] = "git"
