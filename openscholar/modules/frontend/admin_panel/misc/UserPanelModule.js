@@ -53,7 +53,6 @@
       }
 
       $scope.create_access = response.data.data[0].create_access;
-      $scope.orig_result = $scope.site_data;
     });
     $scope.pageSize = 7;
     $scope.numberOfPages=function(data){
