@@ -2933,13 +2933,13 @@ class FeatureContext extends DrupalContext {
   public function dumpInfoAfterFailedStep(StepEvent $event) {
     if ($event->getResult() == StepEvent::FAILED)  {
       $this->iDisplayWatchdog();
-    }
 
-    try {
-      $this->iShouldPrintPage();
-    }
-    catch (\Exception $e) {
+      try {
+        $this->iShouldPrintPage();
+      }
+      catch (\Exception $e) {
 
+      }
     }
   }
 
