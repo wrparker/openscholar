@@ -1560,10 +1560,12 @@ class FeatureContext extends DrupalContext {
    * @When /^I edit the node "([^"]*)" in the group "([^"]*)"$/
    */
   public function iEditTheNodeInGroup($title, $group) {
-    $nid = FeatureHelp::GetNodeIdInVsite($title, $group);
+    $nid = FeatureHelp::getNodeIdInVsite($title, $group);
     $purl = FeatureHelp::GetNodeVsitePurl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
     $page = $purl . 'node/' . $nid . '/edit';
+
+    print_r($page);
 
     try {
       $this->visit($page);
