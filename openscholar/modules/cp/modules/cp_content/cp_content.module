@@ -511,3 +511,46 @@ function cp_content_preprocess_views_view(&$vars) {
     // $vars['attributes_array']['ng-controller'] = 'CpFilesController'; Reminder to myself that this doesn't work cause Views doesn't print attributes
   }
 }
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function cp_content_views_query_alter(&$view, views_plugin_query_default &$query) {
+  if ($view->base_table != 'node') {
+    return;
+  }
+
+  if (!empty($query->where[1]['conditions'])) {
+    return;
+  }
+
+  if (!$vsite = vsite_get_vsite()) {
+    return;
+  }
+
+  // We have no filter in the view and we in a site context. We need to add the
+  // OG membership table and filter nodes that belong to the current group.
+  $join = new views_join();
+  $join->table = 'og_membership';
+  $join->field = 'etid';
+  $join->left_table = 'node';
+  $join->left_field = 'nid';
+  $join->type = 'left';
+
+  // Add the join the the view query.
+  $view->query->add_relationship('og_membership', $join, 'node');
+  $where = &$view->query->where[1]['conditions'];
+
+  // Filter by the current group ID and the entity type we display in the view.
+  $where[] = array(
+    'field' => 'og_membership.gid',
+    'value' => $vsite->id,
+    'opperator' => '='
+  );
+
+  $where[] = array(
+    'field' => 'og_membership.entity_type',
+    'value' => 'node',
+    'opperator' => '='
+  );
+}
