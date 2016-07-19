@@ -24,6 +24,9 @@ function ap_settings_form_library() {
         'type' => 'setting',
       )
     ),
+    'css' => array(
+      drupal_get_path('theme', 'cp_theme') . '/css/cp_theme.css',
+    ),
     'dependencies' => array(
       array('os_common', 'angular-modal-service'),
       array('os_common', 'formElement'),
