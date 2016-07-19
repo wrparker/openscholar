@@ -175,6 +175,7 @@ features[variable][] = imageapi_optimize_toolkit
 features[variable][] = pathauto_node_pattern
 features[variable][] = pathauto_taxonomy_vocabulary_pattern
 features[variable][] = pathauto_update_action
+features[variable][] = redirect_passthrough_querystring
 features[variable][] = securepages_enable
 features[variable][] = securepages_pages
 features[variable][] = securepages_switch
