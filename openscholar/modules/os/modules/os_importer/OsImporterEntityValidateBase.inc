@@ -131,6 +131,11 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
    * Validating the image minimum size.
    */
   public function validatorPhoto($field_name, $value, $min_width, $min_height) {
+    if (empty($value)) {
+      return;
+
+    }
+
     list($width, $height) = getimagesize($value);
 
     if ($width < $min_width || $height < $min_height) {
