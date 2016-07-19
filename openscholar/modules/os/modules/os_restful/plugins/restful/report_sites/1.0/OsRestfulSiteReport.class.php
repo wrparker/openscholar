@@ -25,11 +25,11 @@ class OsRestfulSiteReport extends \OsRestfulReports {
    */
   public function publicFieldsInfo() {
     return array(
-      'site_title' => array(
-        'property' => 'title',
-      ),
-      'site_url' => array(
+     'id' => array(
         'property' => 'id',
+      ),
+     'site_title' => array(
+        'property' => 'title',
       ),
       'site_owner_email' => array(
         'property' => 'site_owner_email',
@@ -131,45 +131,48 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       }
     }
 
-    // optional fields
-    if (isset($fields['site_created_by'])) {
-      // fields are converted to expressions to satisfy sql_mode ONLY_FULL_GROUP_BY
-      $query->addExpression('MIN(creators.mail)', 'site_created_by');
-      $subquery = db_select('og_membership','ogm')
-                  ->condition('group_type', 'node', '=')
-                  ->condition('entity_type', 'user', '=');
-      $subquery->groupBy('ogm.gid');
-      $subquery->addExpression('MIN(created)', 'date');
-      $subquery->addExpression('MIN(etid)', 'etid');
-      $subquery->addExpression('MIN(gid)', 'gid');
-      $query->innerJoin($subquery, 'vsite_created', 'vsite_created.gid = purl.id');
-      $query->innerJoin('users', 'creators', 'vsite_created.etid = creators.uid');
-      $query->groupBy('purl.id, purl.value');
-    }
-    if ($this->latestUpdate && $request['includesites'] != "nocontent") {
-      $query->havingCondition('content_last_updated', strtotime($this->latestUpdate), '<=');
-      $fields['content_last_updated'] = array('property' => 'content_last_updated');
-      $this->setPublicFields($fields);
-    }
-    if (isset($fields['site_privacy_setting'])) {
-      // field is converted to expression to satisfy sql_mode ONLY_FULL_GROUP_BY
-      $query->addExpression('MIN(access.group_access_value)', 'site_privacy_setting');
-      $query->innerJoin('field_data_group_access', 'access', 'access.entity_id = purl.id');
-    }
-    if (isset($fields['owner_subdomain'])) {
-      $query->addField('u', 'mail', 'owner_subdomain');
-    }
-    if (isset($fields['custom_domain'])) {
-       // field is converted to expression to satisfy sql_mode ONLY_FULL_GROUP_BY
-     $query->addExpression("'N'", 'custom_domain');
-    }
-    if (isset($fields['preset'])) {
-      $query->addField('n', 'type', 'preset');
-    }
-    if (isset($fields['custom_theme_uploaded'])) {
-      // field is converted to expression to satisfy sql_mode ONLY_FULL_GROUP_BY
-      $query->addExpression('MIN(so.value)', 'custom_theme_uploaded');
-      $query->leftJoin('spaces_overrides', 'so', "so.id = purl.id and so.type = 'og' and so.object_type = 'variable' AND so.object_id = 'flavors' and so.value <> :empty", array(':empty' => 'a:0:{}'));
+    //optional fields
+    if (!isset($fields['only_vsite_ids'])) {
+      // set marker if vsite id should be included
+      if (isset($fields['vsite_id'])) {
+        $query->addExpression("'Y'", 'vsite_id');
+      }
+      if (isset($fields['site_created_by'])) {
+        // fields are converted to expressions to satisfy sql_mode ONLY_FULL_GROUP_BY
+        $query->addExpression('MIN(creators.mail)', 'site_created_by');
+        $subquery = db_select('og_membership','ogm')
+                    ->condition('group_type', 'node', '=')
+                    ->condition('entity_type', 'user', '=');
+        $subquery->groupBy('ogm.gid');
+        $subquery->addExpression('MIN(created)', 'date');
+        $subquery->addExpression('MIN(etid)', 'etid');
+        $subquery->addExpression('MIN(gid)', 'gid');
+        $query->innerJoin($subquery, 'vsite_created', 'vsite_created.gid = purl.id');
+        $query->innerJoin('users', 'creators', 'vsite_created.etid = creators.uid');
+        $query->groupBy('purl.id, purl.value');
+      }
+      if ($this->latestUpdate && $request['includesites'] != "nocontent") {
+        $query->havingCondition('content_last_updated', strtotime($this->latestUpdate), '<=');
+        $fields['content_last_updated'] = array('property' => 'content_last_updated');
+        $this->setPublicFields($fields);
+      }
+      if (isset($fields['site_privacy_setting'])) {
+        // field is converted to expression to satisfy sql_mode ONLY_FULL_GROUP_BY
+        $query->addExpression('MIN(access.group_access_value)', 'site_privacy_setting');
+        $query->innerJoin('field_data_group_access', 'access', 'access.entity_id = purl.id');
+      }
+      if (isset($fields['custom_domain'])) {
+         // field is converted to expression to satisfy sql_mode ONLY_FULL_GROUP_BY
+       $query->addExpression("'N'", 'custom_domain');
+      }
+      if (isset($fields['preset'])) {
+        $query->addField('n', 'type', 'preset');
+      }
+      if (isset($fields['custom_theme_uploaded'])) {
+        // field is converted to expression to satisfy sql_mode ONLY_FULL_GROUP_BY
+        $query->addExpression('MIN(so.value)', 'custom_theme_uploaded');
+        $query->leftJoin('spaces_overrides', 'so', "so.id = purl.id and so.type = 'og' and so.object_type = 'variable' AND so.object_id = 'flavors' and so.value <> :empty", array(':empty' => 'a:0:{}'));
+      }
     }
 
     $this->queryForListSort($query);
@@ -189,6 +192,12 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     global $base_url;
     $new_row = parent::mapDbRowToPublicFields($row);
 
+    // if vsite id isn't a requested column, remove from result set
+    if (!isset($row->vsite_id)) {
+      unset($new_row['id']);
+      unset($new_row['vsite_id']);
+    }
+
     // format dates
     if (isset($new_row['content_last_updated'])) {
       if ($new_row['content_last_updated']) {
@@ -197,17 +206,6 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     }
     if (isset($new_row['site_created'])) {
       $new_row['site_created'] = date('M j Y h:ia', $row->site_created);
-    }
-
-    // tease out subdomain from email address
-    if (isset($new_row['owner_subdomain'])) {
-      $domain_parts = explode(".", preg_replace('/.*@/', "", $new_row['owner_subdomain']));
-      if (count($domain_parts) > 2 && in_array("harvard", $domain_parts) && in_array("edu", $domain_parts)) {
-        $new_row['owner_subdomain'] = implode(" ", array_slice($domain_parts, -4, count($domain_parts) - 2));
-      }
-      else {
-        $new_row['owner_subdomain'] = "";
-      }
     }
 
     // check for custom domain
