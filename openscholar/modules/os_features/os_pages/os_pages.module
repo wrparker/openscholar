@@ -374,6 +374,19 @@ function os_pages_node_view_alter(&$build, $type) {
  */
 function os_pages_translated_menu_link_alter(&$link, $map) {
 
+  // Anons can never see unpublished page. Bail out early
+  if (user_is_anonymous()) {
+    return;
+  }
+
+  // Non-site members can never see unpublished page.
+  // User 1 should be able to though
+  if ($vsite = vsite_get_vsite()) {
+    if ($GLOBALS['user']->uid != 1 && !og_is_member('node', $vsite->group->id)) {
+      return;
+    }
+  }
+
   if ($link['router_path'] == 'node/%') {
     if (!$link['access']) {
       // The $map saves the pieces of the path as strings, while elements in
