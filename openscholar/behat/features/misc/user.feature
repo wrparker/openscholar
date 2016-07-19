@@ -1,13 +1,13 @@
 Feature: User functionality testing.
 
-  @api @misc_second @now2
+  @api @misc_second
   Scenario: Verify that user pages are inaccessible to anonymous users.
     Given I am not logged in
      Then I should be redirected in the following <cases>:
   #  | Request                    | Response Code | Final URL   |
      | users/admin                | 403           | users/admin |
 
-  @api @misc_second @now2
+  @api @misc_second
   Scenario: User pages are accessible to the logging in user.
     Given I am logging in as "john"
      When I visit "/user"

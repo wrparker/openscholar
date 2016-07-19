@@ -229,7 +229,7 @@ projects[media_gallery][patch][] = "https://raw.githubusercontent.com/openschola
 projects[media_gallery][patch][] = "https://www.drupal.org/files/issues/2585509-media_gallery-lost_files.patch"
 
 projects[message][subdir] = "contrib"
-projects[message][version] = 1.8
+projects[message][version] = 1.12
 
 projects[metatag][subdir] = "contrib"
 projects[metatag][version] = 1.0-beta9
@@ -342,12 +342,9 @@ projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
 
 projects[restful][subdir] = "contrib"
-projects[restful][download][type] = git
-projects[restful][download][url] = "https://github.com/RoySegall/restful.git"
-projects[restful][download][branch] = 444
-projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/839d0cc214f2422e924e35d33133d1268b8cc1cd/patches/restful.put_file.patch"
-;projects[restful][download][branch] = "7.x-1.x"
-;projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
+projects[restful][version] = "1.6"
+# Patch to be able to update a taxonomy term.
+projects[restful][patch][] = "https://patch-diff.githubusercontent.com/raw/RESTful-Drupal/restful/pull/445.diff"
 
 projects[redirect][subdir] = "contrib"
 projects[redirect][version] = 1.0-rc1
@@ -355,11 +352,6 @@ projects[redirect][version] = 1.0-rc1
 projects[robotstxt][subdir] = "contrib"
 projects[robotstxt][version] = "1.1"
 projects[robotstxt][patch][] = "http://drupal.org/files/issues/send_cache_headers-1923838-5.patch"
-
-projects[restws][subdir] = "contrib"
-projects[restws][version] = "2.0-alpha3"
-projects[restws][patch][] = "http://drupal.org/files/1806142-restws-property-exception.patch"
-projects[restws][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/6c679219a3259d682abb87e9b9f0f1834bc08ee9/patches/restws.security_fix.patch"
 
 projects[shorten][subdir] = "contrib"
 projects[shorten][version] = 1.2
