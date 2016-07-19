@@ -441,12 +441,13 @@ function _os_pages_get_link_children($link, $can_access = false) {
       'type',
       'description',
     ));
-    $query->condition('plid', $mlid)
-          ->condition('hidden', 0);
+    $query->condition('plid', $mlid);
 
     $links[$mlid] = array();
     foreach ($query->execute() as $item) {
-      $links[$mlid][] = $item;
+      if (!$item['hidden']) {
+        $links[$mlid][] = $item;
+      }
     }
   }
 
