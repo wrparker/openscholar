@@ -104,6 +104,7 @@ before_script:
   - drush en os_search_solr -y
   - drush solr-mark-all
   - drush solr-index
+  - drush vset oembedembedly_api_key $EMBEDLYAPIKEY
 
   # Trying to execute the internal solr commit
   - sleep 10
@@ -115,9 +116,6 @@ before_script:
   - curl -s https://getcomposer.org/installer | php
   - php composer.phar install --prefer-source
   - sudo cat /var/log/apache2/error.log
-
-  # Other
-  - drush vset oembedembedly_api_key $EMBEDLYAPIKEY
 
 script:
 
