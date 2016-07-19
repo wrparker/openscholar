@@ -88,7 +88,8 @@ projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
 projects[entity][patch][] = https://www.drupal.org/files/issues/2086225-entity-access-check-18.patch
 
 projects[entitycache][subdir] = "contrib"
-projects[entitycache][version] = 1.1
+projects[entitycache][version] = 1.5
+projects[entitycache][patch][] = https://www.drupal.org/files/issues/2516094-1-entitycache_fix_arry_flip.patch
 
 projects[entityreference][subdir] = "contrib"
 projects[entityreference][version] = 1.1
@@ -358,6 +359,7 @@ projects[robotstxt][patch][] = "http://drupal.org/files/issues/send_cache_header
 projects[restws][subdir] = "contrib"
 projects[restws][version] = "2.0-alpha3"
 projects[restws][patch][] = "http://drupal.org/files/1806142-restws-property-exception.patch"
+projects[restws][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/6c679219a3259d682abb87e9b9f0f1834bc08ee9/patches/restws.security_fix.patch"
 
 projects[shorten][subdir] = "contrib"
 projects[shorten][version] = 1.2
@@ -404,8 +406,7 @@ projects[transliteration][version] = 3.1
 
 projects[twitter_pull][subdir] = "contrib"
 projects[twitter_pull][version] = 1.0-rc4
-projects[twitter_pull][patch][] = "http://drupal.org/files/twitter_pull-twitter_api_php-1781024-40.patch"
-projects[twitter_pull][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/96ddefa8af2cce2579ea4eac39b20ccb840b1e41/patches/twitter_pull-8376-disable_retweets.patch"
+projects[twitter_pull][patch][] = "https://raw.github.com/openscholar/openscholar/cb4bfa4c382c3ef6d2c8a48c10d55695792c37d5/patches/twitter_pull-8577-retweet_option.patch"
 
 projects[views][subdir] = "contrib"
 projects[views][version] = 3.8
