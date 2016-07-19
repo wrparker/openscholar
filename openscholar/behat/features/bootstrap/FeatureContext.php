@@ -2934,6 +2934,13 @@ class FeatureContext extends DrupalContext {
     if ($event->getResult() == StepEvent::FAILED)  {
       $this->iDisplayWatchdog();
     }
+
+    try {
+      $this->iShouldPrintPage();
+    }
+    catch (\Exception $e) {
+
+    }
   }
 
   /**
