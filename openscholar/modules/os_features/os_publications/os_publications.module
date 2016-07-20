@@ -1036,7 +1036,7 @@ function _os_publications_biblio_entry_alter($markup, $node) {
   }
 
   // Adding og_vocabulary to the output
-  if ($node->type == 'biblio' && variable_get('os_taxonomy_display_term_under_content_biblio', 0)) {
+  if (variable_get('os_taxonomy_display_term_under_content_biblio', 0)) {
     $content = field_attach_view('node', $node, 'teaser');
     $og_vocab_content = render($content['og_vocabulary']);
     $html .= $og_vocab_content;
