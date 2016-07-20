@@ -2092,13 +2092,11 @@ function os_taxonomy_cp_settings() {
   $form = array();
   // Get active content types
   $active_content_types = os_get_bundles(array(1,2));
-  $content_type_term_not_required = array('biblio' => 'Publication',
-                                          'event' => 'Event',
-                                          'page' => 'Page',
+  $content_type_term_not_required = array('page' => 'Page',
                                           'software_release' => 'Software Release',
                                           'slideshow_slide' => 'Slideshow Image',
                                           'class_material' => 'Class Material',
-                                          'media_gallery' => 'Media Gallery'
+                                          'feed_importer' => 'Feed importer',
                                           );
   $active_content_types = array_diff($active_content_types, $content_type_term_not_required);
   foreach($active_content_types as $content_types_key => $content_types_val) {
