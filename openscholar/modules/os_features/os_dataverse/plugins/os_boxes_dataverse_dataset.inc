@@ -36,7 +36,8 @@ class os_boxes_dataverse_dataset extends os_boxes_default {
     $form['persistent_id'] = array(
       '#type' => 'textfield',
       '#title' => t('Dataset Persistent Identifier'),
-      '#description' => t('Need help finding your Dataset Persistent Identifier? Learn how to here: ') . l('http://docs.openscholar.harvard.edu/dataverse'),
+      '#description' => t('Need help finding your Dataset Persistent Identifier? Learn how to here: ') .
+          l('http://docs.openscholar.harvard.edu/dataverse', 'http://docs.openscholar.harvard.edu/dataverse', array('attributes' => array('target' => '_blank'))),
       '#required' => TRUE,
       '#field_prefix' => $base_url,
       '#default_value' => $this->options['persistent_id'],
