@@ -123,6 +123,13 @@ function os_menu() {
     'access callback' => 'os_view_migrated_users_access',
   );
 
+  $items['extend_os_session'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => '',
+    'page callback' => 'extend_os_session',
+    'access arguments' => array('access content'),
+  );
+
   return $items;
 }
 
@@ -1303,6 +1310,21 @@ function os_date_format_types() {
  * Implements hook_init().
  */
 function os_init() {
+  global $user;
+  $gc_maxlifetime = ini_get('session.gc_maxlifetime');
+  if ($user->uid) {
+    $session_write_interval = variable_get('session_write_interval', 180);
+    $session_timeout_threshold = REQUEST_TIME - $gc_maxlifetime - $session_write_interval;
+    // JavaScript will trigger page refresh after actual session expire timeout + session write interval time offset.
+    $setting = array('session_expire_age' => $gc_maxlifetime + $session_write_interval);
+    drupal_add_js(array('os' => $setting), 'setting');
+    drupal_add_js(drupal_get_path('theme', 'os_basetheme') . '/js/jquery.rooster.js');
+    drupal_add_js(drupal_get_path('theme', 'os_basetheme') . '/js/os_session_timeout.js');
+    // Checking whether current user is active for last 1 hour or not, if not, then destroying drupal session.
+    if ($user->timestamp < $session_timeout_threshold) {
+      _drupal_session_destroy($user->sid);
+    }
+  }
   // Execute the "In a OS Site" context condition
   if ($plugin = context_get_plugin('condition', 'os_site')) {
     $plugin->execute();
@@ -3452,4 +3474,8 @@ function os_redirect_element_validate_source($element, &$form_state) {
   }
 
   return $element;
+}
+
+function extend_os_session() {
+  drupal_session_regenerate();
 }
