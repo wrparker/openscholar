@@ -264,22 +264,28 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     position: relative;
     margin: -28px 10px;
 }
-#overlay-titlebar {
+.ui-dialog .ui-dialog-titlebar, #overlay-titlebar {
     padding: 7px 10px 17px;
     position: relative;
     white-space: nowrap;
     z-index: 100;
-    background: #EFEFEF;
+    background: #EFEFEF !important;
     border-bottom: 2px solid #C4C2C2;
     height: 24px;
 }
-#overlay-title {
+#overlay-title,
+.ui-dialog-title {
     float: left;
     margin: 0;
     padding: 0.3em 0;
     color: #666;
     font-size: 24px;
     font-weight: normal;
+}
+.ui-dialog-title {
+   
+    padding: 0.1em 0;
+   
 }
 #overlay-tabs {
     margin: -30px 0 0;
