@@ -93,11 +93,7 @@ class FeatureContext extends DrupalContext {
     }
 
     if ($this->loggedIn()) {
-      print_r('logged in already');
       $this->logout();
-    }
-    else {
-      print_r('not logged in.');
     }
 
     $element = $this->getSession()->getPage();
@@ -1568,8 +1564,6 @@ class FeatureContext extends DrupalContext {
     $purl = FeatureHelp::GetNodeVsitePurl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
     $page = $purl . 'node/' . $nid . '/edit';
-
-    print_r($page);
 
     try {
       $this->visit($page);
