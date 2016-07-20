@@ -396,11 +396,18 @@ table.table-shading {
 .search-vsite-textfield {
     margin: 0px 0px 5px 0px;
 }
-.vsite-search-row .vsite-search-btn {
-    margin: 0 0 0 5px;
-    color: #fff;
-    text-decoration: none;
-}
 .no-search-result{
     padding: 5px 8px;
+}
+.clearable{
+    background: url(images/clear_site_search.gif) no-repeat right 6px center;
+    border: 1px solid #999;
+    padding: 3px 18px 3px 4px;
+    border-radius: 3px;
+    transition: background 0.4s;
+}
+a.search-clear {
+    position: relative;
+    left: -13px;
+    color: transparent;
 }

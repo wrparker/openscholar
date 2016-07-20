@@ -32,7 +32,6 @@
     	}
         // After closing the modal, setting the search text field as blank and resetting search results.
         $scope.searchString = '';
-        $scope.siteFilter = '';
         $timeout(function() {
           jQuery('#rightMenuSlide .menu_modal_open').not("[data-id='"+id+"']").not('.click-processing').click();
           $timeout(function() {
@@ -51,16 +50,11 @@
       } else {
         $scope.site_data = response.data.data[0].og_user_node;
       }
-
       $scope.create_access = response.data.data[0].create_access;
     });
     $scope.pageSize = 7;
     $scope.numberOfPages=function(data){
       return Math.ceil(data.length/$scope.pageSize);
-    }
-    // ng-click callback to filter site list based on given search string.
-    $scope.search = function () {
-     $scope.siteFilter = $scope.searchString;
     }
   }]).directive('rightMenu', function() {
       return {
