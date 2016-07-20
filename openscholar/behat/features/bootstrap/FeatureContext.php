@@ -93,7 +93,11 @@ class FeatureContext extends DrupalContext {
     }
 
     if ($this->loggedIn()) {
+      print_r('logged in already');
       $this->logout();
+    }
+    else {
+      print_r('not logged in.');
     }
 
     $element = $this->getSession()->getPage();
