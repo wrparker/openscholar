@@ -2414,6 +2414,17 @@ function os_files_filter_media_process($text, $filter = NULL, $format = NULL, $l
     $loading--;
   }
 
+  if (!empty($text)) {
+    $subject = '/<span\s*style="font-size: initial;"><div class="media media-element-container media-default" style="font-size: initial;">(.*)<\/span>(.*)<span>(.*)<\/span>/i';
+    preg_match_all($subject, $text, $matches);
+
+    foreach ($matches[3] as $span_text) {
+      if (strpos($text, '<span>' . $span_text . '</span>') !== FALSE) {
+        $text = str_replace('<span>' . $span_text . '</span>', '<p>' . $span_text . '</p>', $text);
+      }
+    }
+  }
+
   return $text;
 }
 
