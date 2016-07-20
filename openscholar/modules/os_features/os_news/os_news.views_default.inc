@@ -101,6 +101,10 @@ function os_news_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'node_rss';
   $handler->display->display_options['row_options']['item_length'] = 'rss';
   $handler->display->display_options['path'] = 'news.rss';
+  $handler->display->display_options['displays'] = array(
+    'default' => 'default',
+    'page' => 'page',
+  );
 
   /* Display: Filter News Block by Month */
   $handler = $view->new_display('block', 'Filter News Block by Month', 'news_by_month_block');
@@ -139,10 +143,6 @@ function os_news_views_default_views() {
   $handler->display->display_options['arguments']['field_news_date_value']['use_fromto'] = 'no';
   $handler->display->display_options['arguments']['field_news_date_value']['title_format'] = 'custom';
   $handler->display->display_options['arguments']['field_news_date_value']['title_format_custom'] = 'F Y';
-  $handler->display->display_options['displays'] = array(
-      'default' => 'default',
-      'page' => 'page',
-  );
 
   /* Display: Filter News Block by Year */
   $handler = $view->new_display('block', 'Filter News Block by Year', 'news_by_year_block');
