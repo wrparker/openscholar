@@ -179,15 +179,16 @@ function os_reports_site_form($form, &$form_state) {
     '#type' => 'fieldset',
     '#title' => 'Columns',
   );
-	$form['columns_set']['only_vsite_ids'] = array(
-		'#type' => 'checkbox',
-		'#title' => 'Vsite IDs only',
+  $form['columns_set']['only_vsite_ids'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Vsite IDs only',
+    '#description' => 'Checking this means all "optional columns" below will be ignored.',
     '#attributes' => array(
       'ng-model' => 'queryform.columns.only_vsite_ids',
       'ng-click' => "updateCheckedValues('columns', 'only_vsite_ids')",
       'value' => 'only_vsite_ids',
     ),
-	);
+  );
   $form['columns_set']['columns'] = array(
     '#prefix' => '<label for="edit-columns">Optional Columns</label><div class="container-inline">',
     '#suffix' => '</div>',
@@ -303,9 +304,9 @@ function os_reports_site_form($form, &$form_state) {
 
   $buttons = '<div class="pager"><div class="container-inline"><div class="previous"><a ng-click="pager(\'previous\')">‹ previous</a></div><div class="status_count">{{ status }}</div><div class="next"><a ng-click="pager(\'next\')">next ›</a></div></div></div>';
 
-	$form['results'] = array(
-		'#markup' => $buttons . '<div class="results"><table><thead><tr><th ng-repeat="header in headers" ng-class="isActive(header)"><a ng-click="sort(this)" class="{{ header }}" ng-bind-html="formatHeader(header)"></a></th></tr></thead><tbody><tr ng-repeat="row in rows" ng-class-even="\'even\'" ng-class-odd="\'odd\'"><td ng-repeat="header in headers"><span ng-bind-html="row[header] | makelink:header:row"></span></td></tr></tbody></table></div>' . $buttons,
-	);
+  $form['results'] = array(
+    '#markup' => $buttons . '<div class="results"><table><thead><tr><th ng-repeat="header in headers" ng-class="isActive(header)"><a ng-click="sort(this)" class="{{ header }}" ng-bind-html="formatHeader(header)"></a></th></tr></thead><tbody><tr ng-repeat="row in rows" ng-class-even="\'even\'" ng-class-odd="\'odd\'"><td ng-repeat="header in headers"><span ng-bind-html="row[header] | makelink:header:row"></span></td></tr></tbody></table></div>' . $buttons,
+  );
 
   return $form;
 }
@@ -327,6 +328,11 @@ function os_reports_site_form_submit($form, &$form_state) {
   $params['range'] = 0;
   $params['exclude'] = array('feed_importer', 'profile', 'harvard_course');
 
+  // handle vsite ids only checkbox
+  if (isset($params['only_vsite_ids'])) {
+    unset($params['only_vsite_ids']);
+    $params['columns'][] = 'only_vsite_ids';
+  }
 
   // make restful call to get data
   $handler = restful_get_restful_handler('report_sites');

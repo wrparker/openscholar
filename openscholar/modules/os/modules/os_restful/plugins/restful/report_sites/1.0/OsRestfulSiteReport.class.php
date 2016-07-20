@@ -174,6 +174,9 @@ class OsRestfulSiteReport extends \OsRestfulReports {
         $query->leftJoin('spaces_overrides', 'so', "so.id = purl.id and so.type = 'og' and so.object_type = 'variable' AND so.object_id = 'flavors' and so.value <> :empty", array(':empty' => 'a:0:{}'));
       }
     }
+    else {
+        $query->addExpression("'Y'", 'only_vsite_ids');
+    }
 
     $this->queryForListSort($query);
     $this->queryForListFilter($query);
@@ -189,83 +192,90 @@ class OsRestfulSiteReport extends \OsRestfulReports {
    * adds logic to handle site roles and latest updated content, if needed
    */
   public function mapDbRowToPublicFields($row) {
-    global $base_url;
-    $new_row = parent::mapDbRowToPublicFields($row);
+    if (!isset($row->only_vsite_ids)) {
+      global $base_url;
+      $new_row = parent::mapDbRowToPublicFields($row);
 
-    // if vsite id isn't a requested column, remove from result set
-    if (!isset($row->vsite_id)) {
-      unset($new_row['id']);
-      unset($new_row['vsite_id']);
-    }
-
-    // format dates
-    if (isset($new_row['content_last_updated'])) {
-      if ($new_row['content_last_updated']) {
-        $new_row['content_last_updated'] = date('M j Y h:ia', $row->content_last_updated);
+      // if vsite id isn't a requested column, remove from result set
+      if (isset($row->vsite_id)) {
+        unset($new_row['vsite_id']);
       }
-    }
-    if (isset($new_row['site_created'])) {
-      $new_row['site_created'] = date('M j Y h:ia', $row->site_created);
-    }
+      else {
+        unset($new_row['id']);
+      }
 
-    // check for custom domain
-    $row->customdomain = db_select('spaces_overrides', 'so')
-                          ->fields('so', array('value'))
-                          ->condition('id', $row->id, '=')
-                          ->condition('type', 'og', '=')
-                          ->condition('object_id', 'vsite_domain_name', '=')
-                          ->condition('object_type', 'variable', '=')
-                          ->condition('value', 'N;', '<>')
-                          ->condition('value', 's:0:"";', '<>')
-                          ->execute()
-                          ->fetchField();
-    if ($row->customdomain) {
-      $new_row['site_url'] = "http://" . unserialize($row->customdomain) . "/" . $row->value;
-      if (isset($row->custom_domain)) {
-        $new_row['custom_domain'] = 'Y';
+      // format dates
+      if (isset($new_row['content_last_updated'])) {
+        if ($new_row['content_last_updated']) {
+          $new_row['content_last_updated'] = date('M j Y h:ia', $row->content_last_updated);
+        }
+      }
+      if (isset($new_row['site_created'])) {
+        $new_row['site_created'] = date('M j Y h:ia', $row->site_created);
+      }
+
+      // check for custom domain
+      $row->customdomain = db_select('spaces_overrides', 'so')
+                            ->fields('so', array('value'))
+                            ->condition('id', $row->id, '=')
+                            ->condition('type', 'og', '=')
+                            ->condition('object_id', 'vsite_domain_name', '=')
+                            ->condition('object_type', 'variable', '=')
+                            ->condition('value', 'N;', '<>')
+                            ->condition('value', 's:0:"";', '<>')
+                            ->execute()
+                            ->fetchField();
+      if ($row->customdomain) {
+        $new_row['site_url'] = "http://" . unserialize($row->customdomain) . "/" . $row->value;
+        if (isset($row->custom_domain)) {
+          $new_row['custom_domain'] = 'Y';
+        }
+      }
+      else {
+        $new_row['site_url'] = $base_url . "/" . $row->value;
+      }
+
+      // optional preset column
+      if(isset($new_row['preset'])) {
+        $preset_serialized = db_select('spaces_overrides', 'preset')
+                              ->fields('preset', array('value'))
+                              ->condition('id', $row->id, '=')
+                              ->condition('type', 'og', '=')
+                              ->condition('object_id', 'spaces_preset_og', '=')
+                              ->condition('object_type', 'variable', '=')
+                              ->execute()
+                              ->fetchField();
+        if ($preset_serialized) {
+          $new_row['preset'] .= " (" . str_replace("_", " ", unserialize($preset_serialized)) . ")";
+        }
+        else {
+          $new_row['preset'] .= " (minimal)";
+        }
+      }
+
+      // optional privacy column
+      if (isset($new_row['site_privacy_setting'])) {
+        $privacy_values = array(
+          '0' => 'Public on the web.',
+          '1' => 'Invite only during site creation.',
+          '2' => 'Anyone with the link.',
+          '4' => 'Harvard Community'
+        );
+        $new_row['site_privacy_setting'] = $privacy_values[$row->site_privacy_setting];
+      }
+
+      // optional custom theme uploaded column
+      if (isset($new_row['custom_theme_uploaded'])) {
+        if ($new_row['custom_theme_uploaded']) {
+          $new_row['custom_theme_uploaded'] = "Y";
+        }
+        else {
+          $new_row['custom_theme_uploaded'] = "N";
+        }
       }
     }
     else {
-      $new_row['site_url'] = $base_url . "/" . $row->value;
-    }
-
-    // optional preset column
-    if(isset($new_row['preset'])) {
-      $preset_serialized = db_select('spaces_overrides', 'preset')
-                            ->fields('preset', array('value'))
-                            ->condition('id', $row->id, '=')
-                            ->condition('type', 'og', '=')
-                            ->condition('object_id', 'spaces_preset_og', '=')
-                            ->condition('object_type', 'variable', '=')
-                            ->execute()
-                            ->fetchField();
-      if ($preset_serialized) {
-        $new_row['preset'] .= " (" . str_replace("_", " ", unserialize($preset_serialized)) . ")";
-      }
-      else {
-        $new_row['preset'] .= " (minimal)";
-      }
-    }
-
-    // optional privacy column
-    if (isset($new_row['site_privacy_setting'])) {
-      $privacy_values = array(
-        '0' => 'Public on the web.',
-        '1' => 'Invite only during site creation.',
-        '2' => 'Anyone with the link.',
-        '4' => 'Harvard Community'
-      );
-      $new_row['site_privacy_setting'] = $privacy_values[$row->site_privacy_setting];
-    }
-
-    // optional custom theme uploaded column
-    if (isset($new_row['custom_theme_uploaded'])) {
-      if ($new_row['custom_theme_uploaded']) {
-        $new_row['custom_theme_uploaded'] = "Y";
-      }
-      else {
-        $new_row['custom_theme_uploaded'] = "N";
-      }
+      $new_row['id'] = $row->id;
     }
 
     return $new_row;
