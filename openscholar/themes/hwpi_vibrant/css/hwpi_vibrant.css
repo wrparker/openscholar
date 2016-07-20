@@ -51,6 +51,10 @@ body.no-sidebars .content-top-slideshow-enabled #content-panels .region-content-
     margin-top: 0;
     overflow: hidden;
 }
+body.no-sidebars .content-top-slideshow-enabled #content-panels .region-content-top .block-boxes-os_boxes_widget_slider .block-inner {
+    overflow: visible;
+}
+
 body.no-sidebars .content-top-slideshow-enabled #menu-bar {
     border-bottom: 0;
 }
