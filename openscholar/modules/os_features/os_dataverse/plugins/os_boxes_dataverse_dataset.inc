@@ -31,7 +31,7 @@ class os_boxes_dataverse_dataset extends os_boxes_default {
   public function options_form(&$form_state){
     $form = parent::options_form($form_state);
 
-    $base_url = variable_get("dataverse_base_url", $this->dataverse_base_url_default) . "/dataverse/";
+    $base_url = variable_get("dataverse_base_url", $this->dataverse_base_url_default);
 
     $form['persistent_id'] = array(
       '#type' => 'textfield',
