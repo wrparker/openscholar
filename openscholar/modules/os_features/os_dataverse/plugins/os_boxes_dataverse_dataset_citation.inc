@@ -7,7 +7,7 @@
 
 class os_boxes_dataverse_dataset_citation extends os_boxes_default {
 
-  private $dataverse_base_url_default = "https://dataverse-internal.iq.harvard.edu";
+  private $dataverse_base_url_default = "https://dataverse.harvard.edu/";
 
   public $embed_as = array(
     'iframe',
