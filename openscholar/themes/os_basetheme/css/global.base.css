@@ -1084,7 +1084,6 @@ ul.no-event-export {
 /*For widget slider*/
 .block-boxes-os_boxes_widget_slider #layout_16_9_side div.slide {
     background: none;
-    height:450px;
 }
 .block-boxes-os_boxes_widget_slider #layout_16_9_side .slide ul.scroll li > div {
   overflow: auto;
