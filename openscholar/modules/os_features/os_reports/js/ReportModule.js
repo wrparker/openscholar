@@ -25,8 +25,8 @@
       'os_install' : {
         'display' : 'os install',
       },
-      'owner_subdomain' : {
-        'display' : 'owner subdomain',
+      'other_site_changes' : {
+        'display' : 'non-content site changes',
         'sort' : false,
       },
       'site_created' : {

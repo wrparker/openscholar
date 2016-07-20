@@ -232,13 +232,13 @@ function os_reports_site_form($form, &$form_state) {
       'value' => 'content_last_updated',
     ),
   );
-  $form['columns_set']['columns']['non_content_changes'] = array(
+  $form['columns_set']['columns']['other_site_changes'] = array(
     '#title' => 'Non-content changes',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.columns.non_content_changes',
-      'ng-click' => "updateCheckedValues('columns', 'non_content_changes')",
-      'value' => 'non_content_changes',
+      'ng-model' => 'queryform.columns.other_site_changes',
+      'ng-click' => "updateCheckedValues('columns', 'other_site_changes')",
+      'value' => 'other_site_changes',
     ),
   );
   $form['columns_set']['columns']['site_privacy_setting'] = array(

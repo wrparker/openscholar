@@ -119,11 +119,32 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       $query->innerJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
       $query->groupBy('purl.id, purl.value');
     }
+    elseif ($request['includesites'] == "noncontent"){
+      $subquery = db_select('spaces_overrides')
+                  ->condition('object_type', 'variable', '<>')
+                  ->condition('type', 'og', '=');
+      $subquery->addExpression('GROUP_CONCAT(DISTINCT spaces_overrides.object_type)', 'other_site_changes');
+      $subquery->addField('spaces_overrides','id');
+      $subquery->groupBy('id');
+      $query->innerJoin($subquery, 'configuration', 'configuration.id = purl.id');
+      $query->addField('configuration', 'other_site_changes');
+      $fields['other_site_changes'] = array('property' => 'other_site_changes');
+      $this->setPublicFields($fields);
+    }
     elseif ($request['includesites'] == "nocontent"){
       $query->addExpression('COUNT(ogm.etid)', 'total');
       $query->leftJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
       $query->groupBy('purl.id, purl.value');
       $query->havingCondition('total', '0', '=');
+      $query->havingCondition('other_site_changes', 'variable', '=');
+      $subquery = db_select('spaces_overrides')
+                  ->condition('type', 'og', '=');
+      $subquery->addExpression('GROUP_CONCAT(DISTINCT spaces_overrides.object_type)', 'other_site_changes');
+      $subquery->addField('spaces_overrides','id');
+      $subquery->groupBy('id');
+      $query->leftJoin($subquery, 'configuration', 'configuration.id = purl.id');
+      $query->addField('configuration', 'other_site_changes');
+
       if ($this->latestUpdate) {
         $fields['content_last_updated'] = array('property' => 'content_last_updated');
         $query->addExpression('NULL', 'content_last_updated');
@@ -173,6 +194,18 @@ class OsRestfulSiteReport extends \OsRestfulReports {
         $query->addExpression('MIN(so.value)', 'custom_theme_uploaded');
         $query->leftJoin('spaces_overrides', 'so', "so.id = purl.id and so.type = 'og' and so.object_type = 'variable' AND so.object_id = 'flavors' and so.value <> :empty", array(':empty' => 'a:0:{}'));
       }
+      if (isset($fields['other_site_changes']) && $request['includesites'] != "noncontent" && $request['includesites'] != "nocontent") {
+        $subquery = db_select('spaces_overrides')
+                    ->condition('object_type', 'variable', '<>')
+                    ->condition('type', 'og', '=');
+        $subquery->addExpression('GROUP_CONCAT(DISTINCT spaces_overrides.object_type)', 'other_site_changes');
+        $subquery->addField('spaces_overrides','id');
+        $subquery->groupBy('id');
+        $query->leftJoin($subquery, 'configuration', 'configuration.id = purl.id');
+        $query->addField('configuration', 'other_site_changes');
+        $fields['other_site_changes'] = array('property' => 'other_site_changes');
+        $this->setPublicFields($fields);
+      }
     }
     else {
         $query->addExpression("'Y'", 'only_vsite_ids');
@@ -212,6 +245,10 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       }
       if (isset($new_row['site_created'])) {
         $new_row['site_created'] = date('M j Y h:ia', $row->site_created);
+      }
+
+      if (isset($new_row['other_site_changes']) && $new_row['other_site_changes'] == "variable") {
+        $new_row['other_site_changes'] = "";
       }
 
       // check for custom domain
