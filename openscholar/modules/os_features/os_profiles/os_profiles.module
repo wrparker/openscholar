@@ -360,6 +360,13 @@ function os_profiles_process_node(&$vars) {
       $vars['content']['field_phone'][0]['#markup'] = t('p: ') . $phone_plain;
     }
   }
+
+  // Add condition to display og_vocabulary at the end.
+  if(isset($vars['content']['og_vocabulary'])) {
+    if ($vars['elements']['#view_mode'] == 'teaser') {
+      $vars['content']['og_vocabulary']['#weight'] = 100;
+    }
+  }
 }
 
 /**
