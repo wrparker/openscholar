@@ -84,6 +84,7 @@ function os_help_get_variables_from_id($type, $id) {
         'os_boxes_accordion' => array('url' => 'http://docs.openscholar.harvard.edu/accordion-widget', 'title' => 'Accordian Widget'),
         'os_boxes_tabs' => array('url' => 'http://docs.openscholar.harvard.edu/tabs-widget', 'title' => 'Tabs Widget'),
         'os_boxes_rand_widget' => array('url' => 'http://docs.openscholar.harvard.edu/random-widget', 'title' => 'Random Widget'),
+        'os_boxes_widget_slider' => array('url' => 'http://docs.openscholar.harvard.edu/widget-slider', 'title' => 'Widget Slider Widget'),
         'os_boxes_columns' => array('url' => 'http://docs.openscholar.harvard.edu/columns-widget', 'title' => 'Columns Widget'),
         'os_boxes_facetapi_vocabulary' => array('url' => '', 'title' => ''),
       );
