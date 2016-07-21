@@ -113,7 +113,7 @@ class OsRestfulSiteReport extends \OsRestfulReports {
      }
       $query->groupBy('purl.id, purl.value');
     }
-    elseif (isset($fields['content_last_updated']) && $request['includesites'] == "content"){
+    elseif ($request['includesites'] == "content"){
       $query->addExpression('MAX(content.changed)', 'content_last_updated');
       $query->innerJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
       $query->innerJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
@@ -128,8 +128,6 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       $subquery->groupBy('id');
       $query->addField('configuration', 'other_site_changes');
       $query->innerJoin($subquery, 'configuration', 'configuration.id = purl.id');
-      $fields['other_site_changes'] = array('property' => 'other_site_changes');
-      $this->setPublicFields($fields);
 
       if (isset($fields['content_last_updated']) || $this->latestUpdate) {
         $query->addExpression('MAX(content.changed)', 'content_last_updated');
@@ -179,7 +177,7 @@ class OsRestfulSiteReport extends \OsRestfulReports {
         $query->innerJoin('users', 'creators', 'vsite_created.etid = creators.uid');
         $query->groupBy('purl.id, purl.value');
       }
-      if ($this->latestUpdate && $request['includesites'] != "nocontent") {
+      if ($this->latestUpdate) {
         $query->havingCondition('content_last_updated', strtotime($this->latestUpdate), '<=');
         $fields['content_last_updated'] = array('property' => 'content_last_updated');
         $this->setPublicFields($fields);
