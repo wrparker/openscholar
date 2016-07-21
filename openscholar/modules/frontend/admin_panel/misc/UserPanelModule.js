@@ -30,7 +30,8 @@
     	if(!jQuery("#rightMenuSlide .click-processing").length) {
           jQuery("#rightMenuSlide [data-id='"+id+"']").addClass('click-processing');
     	}
-        
+        // After closing the modal, setting the search text field as blank and resetting search results.
+        $scope.searchString = '';
         $timeout(function() {
           jQuery('#rightMenuSlide .menu_modal_open').not("[data-id='"+id+"']").not('.click-processing').click();
           $timeout(function() {
@@ -50,7 +51,6 @@
       } else {
         $scope.site_data = response.data.data[0].og_user_node;
       }
-
       $scope.create_access = response.data.data[0].create_access;
     });
     $scope.pageSize = 7;
