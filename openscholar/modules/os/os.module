@@ -1344,7 +1344,6 @@ function os_date_format_types() {
  * Implements hook_init().
  */
 function os_init() {
-  
   // Execute the "In a OS Site" context condition
   if ($plugin = context_get_plugin('condition', 'os_site')) {
     $plugin->execute();
