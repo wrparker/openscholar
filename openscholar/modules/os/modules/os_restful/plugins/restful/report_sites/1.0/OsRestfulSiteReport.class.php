@@ -108,12 +108,12 @@ class OsRestfulSiteReport extends \OsRestfulReports {
     if (!isset($request['includesites']) || $request['includesites'] == "all") {
       if ($this->latestUpdate || isset($fields['content_last_updated'])) {
         $query->addExpression('MAX(content.changed)', 'content_last_updated');
-      }
-      $query->leftJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
-      $query->leftJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
+        $query->leftJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
+        $query->leftJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
+     }
       $query->groupBy('purl.id, purl.value');
     }
-    elseif (isset($fields['content_last_updated']) || $request['includesites'] == "content"){
+    elseif (isset($fields['content_last_updated']) && $request['includesites'] == "content"){
       $query->addExpression('MAX(content.changed)', 'content_last_updated');
       $query->innerJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
       $query->innerJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
@@ -123,13 +123,20 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       $subquery = db_select('spaces_overrides')
                   ->condition('object_type', 'variable', '<>')
                   ->condition('type', 'og', '=');
-      $subquery->addExpression('GROUP_CONCAT(DISTINCT spaces_overrides.object_type)', 'other_site_changes');
+      $subquery->addExpression('GROUP_CONCAT(DISTINCT object_type)', 'other_site_changes');
       $subquery->addField('spaces_overrides','id');
       $subquery->groupBy('id');
-      $query->innerJoin($subquery, 'configuration', 'configuration.id = purl.id');
       $query->addField('configuration', 'other_site_changes');
+      $query->innerJoin($subquery, 'configuration', 'configuration.id = purl.id');
       $fields['other_site_changes'] = array('property' => 'other_site_changes');
       $this->setPublicFields($fields);
+
+      if (isset($fields['content_last_updated']) || $this->latestUpdate) {
+        $query->addExpression('MAX(content.changed)', 'content_last_updated');
+        $query->leftJoin('og_membership', 'ogm', "ogm.gid = purl.id AND ogm.group_type = 'node' AND ogm.entity_type = 'node'");
+        $query->leftJoin('node', 'content', "ogm.etid = content.nid and content.type NOT IN ('" . implode("','", $this->excludedContentTypes) . "')");
+        $query->groupBy('purl.id, purl.value');
+      }
     }
     elseif ($request['includesites'] == "nocontent"){
       $query->addExpression('COUNT(ogm.etid)', 'total');
@@ -194,7 +201,7 @@ class OsRestfulSiteReport extends \OsRestfulReports {
         $query->addExpression('MIN(so.value)', 'custom_theme_uploaded');
         $query->leftJoin('spaces_overrides', 'so', "so.id = purl.id and so.type = 'og' and so.object_type = 'variable' AND so.object_id = 'flavors' and so.value <> :empty", array(':empty' => 'a:0:{}'));
       }
-      if (isset($fields['other_site_changes']) && $request['includesites'] != "noncontent" && $request['includesites'] != "nocontent") {
+      if (isset($fields['other_site_changes']) && ($request['includesites'] == "all" || $request['includesites'] == "content")) {
         $subquery = db_select('spaces_overrides')
                     ->condition('object_type', 'variable', '<>')
                     ->condition('type', 'og', '=');
@@ -247,6 +254,7 @@ class OsRestfulSiteReport extends \OsRestfulReports {
         $new_row['site_created'] = date('M j Y h:ia', $row->site_created);
       }
 
+      // don't display site configuration changes if it's only variable settings
       if (isset($new_row['other_site_changes']) && $new_row['other_site_changes'] == "variable") {
         $new_row['other_site_changes'] = "";
       }

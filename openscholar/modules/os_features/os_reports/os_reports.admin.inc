@@ -122,7 +122,7 @@ function os_reports_site_form($form, &$form_state) {
   );
   $form['content']['includesites']['content'] = array(
     '#name' => 'includesites',
-    '#title' => 'only sites with content',
+    '#title' => 'sites with content',
     '#type' => 'radio',
     '#attributes' => array(
       'ng-model' => 'params.includesites',
@@ -132,7 +132,7 @@ function os_reports_site_form($form, &$form_state) {
   );
   $form['content']['includesites']['noncontent'] = array(
     '#name' => 'includesites',
-    '#title' => 'sites with only non-content changes',
+    '#title' => 'sites with non-content changes',
     '#type' => 'radio',
     '#attributes' => array(
       'ng-model' => 'params.includesites',
@@ -142,7 +142,7 @@ function os_reports_site_form($form, &$form_state) {
   );
   $form['content']['includesites']['nocontent'] = array(
     '#name' => 'includesites',
-    '#title' => 'only sites with no content or non-content changes',
+    '#title' => 'sites with no content or non-content changes',
     '#type' => 'radio',
     '#attributes' => array(
       'ng-model' => 'params.includesites',
