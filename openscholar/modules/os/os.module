@@ -1336,9 +1336,7 @@ function os_init() {
     $gc_maxlifetime = ini_get('session.gc_maxlifetime');
     // JavaScript will trigger page refresh after actual session expire timeout + session write interval time offset.
     $setting = array(
-      'current_timestamp' => REQUEST_TIME,
-      'session_expire_timestamp' => REQUEST_TIME + $gc_maxlifetime,
-      'warning_display_timestamp' => REQUEST_TIME + $gc_maxlifetime - OS_SESSION_TIMEOUT_WARNING_INTERVAL,
+      'session_lifetime' => $gc_maxlifetime,
       'warning_interval_before_timeout' => OS_SESSION_TIMEOUT_WARNING_INTERVAL
     );
     drupal_add_js(array('os' => $setting), 'setting');
@@ -3502,14 +3500,6 @@ function os_redirect_element_validate_source($element, &$form_state) {
  */
 function extend_os_session() {
   drupal_session_regenerate();
-  $gc_maxlifetime = ini_get('session.gc_maxlifetime');
-  // JavaScript will trigger page refresh after actual session expire timeout + session write interval time offset.
-  $setting = array(
-    'current_timestamp' => REQUEST_TIME,
-    'session_expire_timestamp' => REQUEST_TIME + $gc_maxlifetime,
-    'warning_display_timestamp' => REQUEST_TIME + $gc_maxlifetime - OS_SESSION_TIMEOUT_WARNING_INTERVAL,
-  );
-  print drupal_json_encode($setting);
   exit();
 }
 

@@ -1,10 +1,11 @@
 (function ($) {
   Drupal.behaviors.osSessionTimeout = {
     attach: function (context) {
+      Drupal.settings.os.current_timestamp = Math.round(new Date().getTime()/1000);
       // On page load, saving the localStorage key values, according to these values, other tabs will update their clocks.
       localStorage.setItem('last_hit_timestamp', Drupal.settings.os.current_timestamp);
-      localStorage.setItem('session_expire_timestamp', Drupal.settings.os.session_expire_timestamp);
-      localStorage.setItem('warning_display_timestamp', Drupal.settings.os.warning_display_timestamp);
+      localStorage.setItem('session_expire_timestamp', Drupal.settings.os.current_timestamp + parseInt(Drupal.settings.os.session_lifetime));
+      localStorage.setItem('warning_display_timestamp', Drupal.settings.os.current_timestamp + parseInt(Drupal.settings.os.session_lifetime) - parseInt(Drupal.settings.os.warning_interval_before_timeout));
       // Starting the timer to determine when to display warning message and refresh the the after session timeout.
       // Every 1 sec interval, values of the above variables will be compared so that timing in all tabs are synced +/-3 secs 
       setInterval(checkSessionStatus, 1000);
@@ -72,9 +73,10 @@ function extend_os_session() {
     success: function(jData) {
       // Hiding warning message div.
       jQuery('#timeout-warning-wrapper').slideUp('slow', function(){jQuery('#timeout-warning-wrapper').remove();});
-      localStorage.setItem('last_hit_timestamp', jData.current_timestamp);
-      localStorage.setItem('session_expire_timestamp', jData.session_expire_timestamp);
-      localStorage.setItem('warning_display_timestamp', jData.warning_display_timestamp);
+      var current_timestamp = Math.round(new Date().getTime()/1000);
+      localStorage.setItem('last_hit_timestamp', current_timestamp);
+      localStorage.setItem('session_expire_timestamp', current_timestamp + parseInt(Drupal.settings.os.session_lifetime));
+      localStorage.setItem('warning_display_timestamp', current_timestamp + parseInt(Drupal.settings.os.session_lifetime) - parseInt(Drupal.settings.os.warning_interval_before_timeout));
     }
   });
 }
