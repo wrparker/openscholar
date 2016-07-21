@@ -18,10 +18,6 @@
     last_hit_timestamp = localStorage.getItem('last_hit_timestamp');
     session_expire_timestamp = localStorage.getItem('session_expire_timestamp');
     warning_display_timestamp = localStorage.getItem('warning_display_timestamp');
-    // Checking if any other tabs were opened/refreshed after the current page was opened, if yes then syncing current timestamp with the newly opened tab's load timestamp 
-    if (last_hit_timestamp > Drupal.settings.os.current_timestamp) {
-      Drupal.settings.os.current_timestamp = last_hit_timestamp;
-    }
     // Incrementing timestamp counter by 1 sec.
     Drupal.settings.os.current_timestamp++;
     // Checking if current timestamp value meets the criteria to display warning message or not.
