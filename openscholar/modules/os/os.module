@@ -15,6 +15,11 @@ include_once ('includes/os.inc');
 define('OS_READONLY_MODE_MESSAGE', 'Site is under maintenance, login and registration is currently disabled.');
 
 /**
+ * Define the number of seconds before session timeout when warning message will be displayed.
+ */
+define('OS_SESSION_TIMEOUT_WARNING_INTERVAL', 10);
+
+/**
  * Implements hook_menu().
  */
 function os_menu() {
@@ -129,6 +134,20 @@ function os_menu() {
     'page callback' => 'extend_os_session',
     'access arguments' => array('access content'),
   );
+
+  $items['check_os_session_status'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => '',
+    'page callback' => 'check_os_session_status',
+    'access arguments' => array('access content'),
+  );
+
+  $items['os_session_destroy'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => '',
+    'page callback' => 'os_session_destroy',
+    'access arguments' => array('access content'),
+  ); 
 
   return $items;
 }
@@ -1311,19 +1330,21 @@ function os_date_format_types() {
  */
 function os_init() {
   global $user;
-  $gc_maxlifetime = ini_get('session.gc_maxlifetime');
+  // Session timeout checking will be only for logged in users.
   if ($user->uid) {
-    $session_write_interval = variable_get('session_write_interval', 180);
-    $session_timeout_threshold = REQUEST_TIME - $gc_maxlifetime - $session_write_interval;
+    // Obtaining session lifetime value from php configuration.
+    $gc_maxlifetime = ini_get('session.gc_maxlifetime');
     // JavaScript will trigger page refresh after actual session expire timeout + session write interval time offset.
-    $setting = array('session_expire_age' => $gc_maxlifetime + $session_write_interval);
+    $setting = array(
+      'current_timestamp' => REQUEST_TIME,
+      'session_expire_timestamp' => REQUEST_TIME + $gc_maxlifetime,
+      'warning_display_timestamp' => REQUEST_TIME + $gc_maxlifetime - OS_SESSION_TIMEOUT_WARNING_INTERVAL,
+      'warning_interval_before_timeout' => OS_SESSION_TIMEOUT_WARNING_INTERVAL
+    );
     drupal_add_js(array('os' => $setting), 'setting');
-    drupal_add_js(drupal_get_path('theme', 'os_basetheme') . '/js/jquery.rooster.js');
-    drupal_add_js(drupal_get_path('theme', 'os_basetheme') . '/js/os_session_timeout.js');
-    // Checking whether current user is active for last 1 hour or not, if not, then destroying drupal session.
-    if ($user->timestamp < $session_timeout_threshold) {
-      _drupal_session_destroy($user->sid);
-    }
+    // Including jquery rooster plugins for timer countdown display in session timeout warning message.
+    drupal_add_js(drupal_get_path('module', 'os') . '/js/jquery.rooster.js');
+    drupal_add_js(drupal_get_path('module', 'os') . '/js/os_session_timeout.js');
   }
   // Execute the "In a OS Site" context condition
   if ($plugin = context_get_plugin('condition', 'os_site')) {
@@ -3476,6 +3497,45 @@ function os_redirect_element_validate_source($element, &$form_state) {
   return $element;
 }
 
+/**
+ * Ajax callback for regnerating drupal session and extending session timeout value.
+ */
 function extend_os_session() {
   drupal_session_regenerate();
+  $gc_maxlifetime = ini_get('session.gc_maxlifetime');
+  // JavaScript will trigger page refresh after actual session expire timeout + session write interval time offset.
+  $setting = array(
+    'current_timestamp' => REQUEST_TIME,
+    'session_expire_timestamp' => REQUEST_TIME + $gc_maxlifetime,
+    'warning_display_timestamp' => REQUEST_TIME + $gc_maxlifetime - OS_SESSION_TIMEOUT_WARNING_INTERVAL,
+  );
+  print drupal_json_encode($setting);
+  exit();
+}
+
+/**
+ * Ajax callback for destroying drupal session of currently logged in user.
+ */
+function os_session_destroy() {
+  global $user;
+  // Session timeout checking will be only for logged in users.
+  if ($user->uid) {
+    _drupal_session_destroy($user->sid);
+  }
+  exit();
+}
+
+/**
+ * Ajax callback to check whether current user is logged in or not. Used to check before displaying warning message for session timeout.
+ */
+function check_os_session_status() {
+  global $user;
+  if ($user->uid) {
+    $return = array('show_warning' => 1);
+  } else {
+    // If already logged out from another tab.
+    $return = array('show_warning' => 0);
+  }
+  print drupal_json_encode($return);
+  exit();
 }
