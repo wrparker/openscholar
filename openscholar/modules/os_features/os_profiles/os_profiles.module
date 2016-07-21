@@ -360,10 +360,14 @@ function os_profiles_process_node(&$vars) {
       $vars['content']['field_phone'][0]['#markup'] = t('p: ') . $phone_plain;
     }
   }
-
+  $vocabulary_teasers = array('teaser', 'slide_teaser', 'no_image_teaser');
+  // Unset og_vocabulary for slide_teaser and no_image_teaser too if those are OFF from cp/settings
+  if (!variable_get('os_taxonomy_display_term_under_content_person', 0) && in_array($vars['elements']['#view_mode'], $vocabulary_teasers)) {
+    unset($vars['content']['og_vocabulary']);
+  }
   // Add condition to display og_vocabulary at the end.
   if(isset($vars['content']['og_vocabulary'])) {
-    if ($vars['elements']['#view_mode'] == 'teaser') {
+    if (in_array($vars['elements']['#view_mode'], $vocabulary_teasers)) {
       $vars['content']['og_vocabulary']['#weight'] = 100;
     }
   }

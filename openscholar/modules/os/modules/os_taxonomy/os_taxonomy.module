@@ -1941,6 +1941,23 @@ function os_taxonomy_field_attach_create_bundle($entity_type, $bundle) {
     // Display the teaser view of og_vocabulary like the default view
       field_update_instance($instance);
     }
+    // Added the same for profile slide_teaser and no_image_teaser
+    if($bundle == 'person') {
+      $profile_teasers = array('slide_teaser', 'no_image_teaser');
+      foreach ($profile_teasers as $profile_teaser) {
+        $instance = field_info_instance($entity_type, 'og_vocabulary', $bundle);
+        // Checking whether og_vocab is set in the teaser view
+        if (is_array($instance) && $instance['display'][$profile_teaser]['type'] != 'og_vocab') {
+          $instance['display'][$profile_teaser] = Array ('label' => 'hidden',
+                                                     'type' => 'og_vocab',
+                                                     'weight' => 10,
+                                                     'settings' => Array ('concatenate' => 1),
+                                                     'module' => 'vsite_vocab',
+                                                     );
+          field_update_instance($instance);
+        }
+      }
+    }
   }
   if ($entity_type != 'taxonomy_term') {
     return;
