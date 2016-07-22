@@ -20,6 +20,14 @@
     for (i=0; i<iframes.length; i++) {
       if (typeof data.width != 'undefined') {
         iframes[i].width = data.width;
+
+        if (jQuery('.boxes-box-content :has(iframe[src="'+data.url+'"])')) {
+          iframes[i].width = jQuery('.boxes-box-content :has(iframe[src="' + data.url + '"])').width();
+        }
+
+        if (jQuery('iframe[src="' + data.url+ '"]').contents().find('iframe')) {
+          jQuery('iframe[src="' + data.url + '"]').contents().find('iframe').attr('width', iframes[i].width);
+        }
       }
       if (typeof data.height != 'undefined') {
         iframes[i].height = data.height;
