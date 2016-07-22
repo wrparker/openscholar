@@ -244,6 +244,9 @@ a img {
 .block-boxes-os_sv_list_file .file img.file-icon {
     display: inline;
 }
+.field-type-file img.file-icon {
+	width:16px;
+	}
 .block-boxes-os_sv_list_file .file-info iframe {
     display: block;
 }
