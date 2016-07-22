@@ -21,11 +21,11 @@
     // Incrementing timestamp counter by 1 sec.
     Drupal.settings.os.current_timestamp++;
     // Checking if current timestamp value meets the criteria to display warning message or not.
-    if (Drupal.settings.os.current_timestamp == warning_display_timestamp) {
+    if (Drupal.settings.os.current_timestamp == warning_display_timestamp && !jQuery('#timeout-warning-wrapper').length) {
       displayTimeoutWarning();
     }
     // Hiding the warning message, if any other tabs are opened/refreshed/extend session link clicked on other tabs.
-    if (Drupal.settings.os.current_timestamp < warning_display_timestamp) {
+    if (Drupal.settings.os.current_timestamp < warning_display_timestamp && jQuery('#timeout-warning-wrapper').length) {
       // After displaying the warning, if another tab is refreshed, then hiding the warning msg.
       jQuery('#timeout-warning-wrapper').slideUp('slow', function(){jQuery('#timeout-warning-wrapper').remove();});
     }
