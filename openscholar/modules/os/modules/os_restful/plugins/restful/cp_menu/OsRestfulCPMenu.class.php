@@ -398,7 +398,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
             )
           ),
           'app' => array(
-            'label' => 'Apps',
+            'label' => 'Enable Apps',
             'type' => 'link',
             'href' => 'cp/apps'
           )
@@ -413,7 +413,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         ),
       ),
       'users_roles' => array(
-        'label' => 'Users & Roles',
+        'label' => 'Members & Roles',
         'type' => 'link',
         'href' => 'cp/users'
       ),

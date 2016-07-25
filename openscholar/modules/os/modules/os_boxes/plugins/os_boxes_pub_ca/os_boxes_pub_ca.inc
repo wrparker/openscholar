@@ -60,6 +60,7 @@ class os_boxes_pub_ca extends os_boxes_default {
           $fields = $view->display_handler->get_option('fields');
           $fields['title']['exclude'] = ($this->options['display_num']) ? 0 : 1;
           $view->display_handler->override_option('fields', $fields);
+          //$view->display_handler->override_option('use_ajax', true);
 
           $output = $view->execute_display('block');
           $view->destroy();

@@ -26,7 +26,7 @@
 		  * @param {object} entry
 		  * @returns {string} output
 		  */
-		  notifications_item: function (entry, num_remaining, count_element, target, hideTeaser) {
+		  notifications_item: function (entry, num_remaining, hideTeaser, handler, target) {
 			    // Prepare the output to display inside the tour's content region.
 			    var output = "<div class='feed_item'>";
 
@@ -52,9 +52,9 @@
 			    }
 			    output += content + "</span>";
 
-                if (! hideTeaser) {
-                  output += '<div class="os-tour-notifications-readmore"><a target="_blank" href="' + entry.link + '">Read more &raquo;</a></div></div>';
-                }
+          if (! hideTeaser) {
+            output += '<div class="os-tour-notifications-readmore"><a target="_blank" href="' + entry.link + '">Read more &raquo;</a></div></div>';
+          }
 
 			    // Returns the item to be added to the tour's (array) `items` property .
 			    var item = {
@@ -65,7 +65,9 @@
 			      yOffset: -3,
 			      xOffset: -10,
 			      onShow: function() {
-			        osTour.notifications_count(count_element, num_remaining)
+              if (typeof handler == 'function') {
+                handler(num_remaining);
+              }
 			      }
 			    };
 			    return item;
@@ -100,26 +102,26 @@
 		  */
 		  notifications_count: function (count_element, num_remaining) {
 				count_element = $(count_element);
-			    var value = parseInt(count_element.text());
-			    if (arguments.length === 0) {
-			      return value;
-			    }
-			    if (parseInt(num_remaining) === -1) {
-			      count_element.text('0');
-			      count_element.hide();
-			      $("#os-tour-notifications-menu-link").slideUp('slow');
-			      return;
-			    }
-			    if (parseInt(num_remaining) > -1) {
-			    	count_element.text(num_remaining);
-			      if (!isNaN(parseFloat(value)) && isFinite(value)) {
-			    	  count_element.show();
-			        if (num_remaining > value) {
-			          count_element.text(value);
-			        }
-			      }
-			    }
-          },
+        var value = parseInt(count_element.text());
+        if (arguments.length === 0) {
+          return value;
+        }
+        if (parseInt(num_remaining) === -1) {
+          count_element.text('0');
+          count_element.hide();
+          $("#os-tour-notifications-menu-link").slideUp('slow');
+          return;
+        }
+        if (parseInt(num_remaining) > -1) {
+          count_element.text(num_remaining);
+          if (!isNaN(parseFloat(value)) && isFinite(value)) {
+            count_element.show();
+            if (num_remaining > value) {
+              count_element.text(value);
+            }
+          }
+        }
+      },
 		 /**
 		  * Sets the current user's "notifications_read" to the current time.
 		  *
@@ -129,7 +131,6 @@
 
 			    var settings = Drupal.settings.os_notifications;
 			    var url = window.location.origin + Drupal.settings.basePath + '/os/tour/user/' + settings.uid + '/notifications_read';
-                console.log(url);
    			    $.get(url, function(data) {
   			      console.log(data);
   			    });

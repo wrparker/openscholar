@@ -61,6 +61,183 @@ function os_events_theme() {
 }
 
 /**
+ * Helper function to send notification emails to event registrants if there is any cancellations or change in event timings.
+ *
+ * @param $registration
+ *   The registration entity.
+ * @param $params
+ *   The email content parameters.
+ * @param $mail_key
+ *   The mail key for notification.
+ */
+function os_events_event_change_notification($registration, $params, $mail_key) {  
+  // Not sending notification to past events registrants.
+  if (strtotime($params['@event-date']) < REQUEST_TIME) {
+    return;
+  }
+  // Triggering email to registrants if event timings / location are changed or events are deleted.
+  $from = $params['@event-creator-mail'];
+  $language = language_default();
+  $to = $registration->anon_mail;  
+  $params['@event-date'] = date('l, F j, Y g:ia', strtotime($params['@event-date'] .' UTC'));
+  $params['@event-new-date'] = date('l, F j, Y g:ia', strtotime($params['@event-new-date'] .' UTC'));
+  $params['@user-name'] = $registration->field_full_name[LANGUAGE_NONE][0]['value'];
+  drupal_mail('os_events', $mail_key, $to, $language, $params, $from);
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function os_events_node_delete($node) {
+  if ($node->type !== 'event') {
+    return;
+  }
+  // Initializing EntityFieldQuery to obtain all registration entities with a certain event node id
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'registration')
+    ->entityCondition('bundle', 'event_signup_simple')
+    ->propertyCondition('entity_id', $node->nid);
+  $result = $query->execute();
+  $entity_ids = array_keys($result['registration']);
+  $registration_entities = entity_load('registration', $entity_ids);
+  $event_author = user_load($node->uid);
+  $params = array(
+    '@title' => $node->title,
+    '@location' => !empty($node->field_event_location[LANGUAGE_NONE][0]['value']) ? ' at ' . $node->field_event_location[LANGUAGE_NONE][0]['value'] : '',
+    '@event-creator-mail' => $event_author->mail,
+    '@site' => variable_get('site_name', 'OpenScholar'),
+    '@event-url' => url('calendar', array('absolute' => TRUE))
+  );
+  foreach ($registration_entities as $registration) {
+    // Sending email notification to registrants for event cancellation.
+    $params['@event-date'] = $registration->field_repeating_event_date[LANGUAGE_NONE][0]['value'];
+    os_events_event_change_notification($registration, $params, 'event_cancel_notification');
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function os_events_node_update($node) {
+  if ($node->type !== 'event') {
+    return;
+  }
+  // For non-recurring events.
+  if (empty($node->field_date[LANGUAGE_NONE][0]['rrule'])) {
+    // If event start date or location has been altered, then registrants should be notified.
+    if ($node->field_date[LANGUAGE_NONE][0]['value'] != $node->original->field_date[LANGUAGE_NONE][0]['value'] || $node->field_event_location[LANGUAGE_NONE][0]['value'] != $node->original->field_event_location[LANGUAGE_NONE][0]['value']) {
+      // Initializing EntityFieldQuery to obtain all registration entities with a certain event node id
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'registration')
+        ->entityCondition('bundle', 'event_signup_simple')
+        ->propertyCondition('entity_id', $node->nid);
+      $result = $query->execute();
+      $entity_ids = array_keys($result['registration']);
+      $registration_entities = entity_load('registration', $entity_ids);
+      $event_author = user_load($node->uid);
+      $params = array(
+        '@title' => $node->title,
+        '@event-date' => $node->original->field_date[LANGUAGE_NONE][0]['value'],
+        '@event-new-date' => $node->field_date[LANGUAGE_NONE][0]['value'],
+        '@location' => !empty($node->original->field_event_location[LANGUAGE_NONE][0]['value']) ? ' at ' . $node->original->field_event_location[LANGUAGE_NONE][0]['value'] : '',
+        '@new-location' => !empty($node->field_event_location[LANGUAGE_NONE][0]['value']) ? ' at ' . $node->field_event_location[LANGUAGE_NONE][0]['value'] : '',
+        '@event-url' => url('node/' . $node->nid, array('absolute' => TRUE)),
+        '@event-creator-mail' => $event_author->mail,
+        '@site' => variable_get('site_name', 'OpenScholar')
+      );
+      // Sending notification email to each registrants for this event time change.
+      foreach ($registration_entities as $registration) {
+        os_events_event_change_notification($registration, $params, 'event_time_updated_notification');
+      }
+    }
+    return;
+  }
+  
+  $deleted_dates = array();
+  $submitted_dates = array();
+  foreach ($node->field_date[LANGUAGE_NONE] as $date) {
+    $submitted_dates[] = format_date(strtotime($date['value']), 'custom', 'Y-m-d');
+  }
+
+  // Detecting deleted event date instances for repeating events.
+  foreach ($node->original->field_date[LANGUAGE_NONE] as $date) {
+    if (!in_array(format_date(strtotime($date['value']), 'custom', 'Y-m-d'), $submitted_dates)) {
+      $deleted_dates[] = format_date(strtotime($date['value']), 'custom', 'Y-m-d');
+    }
+  }
+
+  // If time-slot or location is changed for repeating events, all registrants will be notified.
+  if ((format_date(strtotime($node->original->field_date[LANGUAGE_NONE][0]['value']), 'custom', 'H:i:s') != format_date(strtotime($node->field_date[LANGUAGE_NONE][0]['value']), 'custom', 'H:i:s')) || $node->field_event_location[LANGUAGE_NONE][0]['value'] != $node->original->field_event_location[LANGUAGE_NONE][0]['value']) {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'registration')
+      ->entityCondition('bundle', 'event_signup_simple')
+      ->propertyCondition('entity_id', $node->nid);
+    $result = $query->execute();
+    $entity_ids = array_keys($result['registration']);
+    $registration_entities = entity_load('registration', $entity_ids);
+    $event_author = user_load($node->uid);
+    $params = array(
+      '@title' => $node->title,
+      '@location' => !empty($node->original->field_event_location[LANGUAGE_NONE][0]['value']) ? ' at ' . $node->original->field_event_location[LANGUAGE_NONE][0]['value'] : '',
+      '@new-location' => !empty($node->field_event_location[LANGUAGE_NONE][0]['value']) ? ' at ' . $node->field_event_location[LANGUAGE_NONE][0]['value'] : '',
+      '@event-creator-mail' => $event_author->mail,
+      '@site' => variable_get('site_name', 'OpenScholar')
+    );
+    $repeats = array();
+    // Generating repeat date array to determine the delta value from repeat date.
+    foreach ($node->field_date[LANGUAGE_NONE] as $delta => $date) {
+      $repeats[$date['value']] = $delta;
+    }
+    // Saving registration entity with new time slots and sending notifications to registrants.
+    foreach ($registration_entities as $registration) {
+      $event_date = format_date(strtotime($registration->field_repeating_event_date[LANGUAGE_NONE][0]['value']), 'custom', 'Y-m-d');
+      // If this registration entity is going to be deleted, then notification for event update will not be sent.
+      if (in_array($event_date, $deleted_dates)) {
+        continue;
+      }
+      $params['@event-date'] = $registration->field_repeating_event_date[LANGUAGE_NONE][0]['value'];
+      $registration->field_repeating_event_date[LANGUAGE_NONE][0]['value'] = format_date(strtotime($registration->field_repeating_event_date[LANGUAGE_NONE][0]['value']), 'custom', 'Y-m-d') . ' ' . format_date(strtotime($node->field_date[LANGUAGE_NONE][0]['value']), 'custom', 'H:i:s');
+      $params['@event-new-date'] = $registration->field_repeating_event_date[LANGUAGE_NONE][0]['value'];
+      $params['@event-url'] = url('node/' . $node->nid, array('absolute' => TRUE, 'query' => array('delta' => $repeats[$params['@event-new-date']])));
+      entity_save('registration', $registration);
+      // Sending email notification to registrants.
+      os_events_event_change_notification($registration, $params, 'event_time_updated_notification');
+    }
+  }
+
+  // Checking if event date instances have been deleted.
+  if (count($deleted_dates) > 0) {
+    $event_author = user_load($node->uid);
+    $params = array(
+      '@title' => $node->title,
+      '@location' => !empty($node->original->field_event_location[LANGUAGE_NONE][0]['value']) ? ' at ' . $node->original->field_event_location[LANGUAGE_NONE][0]['value'] : '',
+      '@event-creator-mail' => $event_author->mail,
+      '@site' => variable_get('site_name', 'OpenScholar'),
+      '@event-url' => url('calendar', array('absolute' => TRUE))
+    );
+    // Checking each deleted dates, if they have registration entities for the editing event node.
+    foreach ($deleted_dates as $date) {
+      // Initializing EntityFieldQuery to obtain all registration entities with a certain deleted date
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'registration')
+        ->entityCondition('bundle', 'event_signup_simple')
+        ->propertyCondition('entity_id', $node->nid)
+        ->fieldCondition('field_repeating_event_date', 'value', $date . '%', 'LIKE');
+      $result = $query->execute();
+      $entity_ids = array_keys($result['registration']);
+      $registration_entities = entity_load('registration', $entity_ids);
+      foreach ($registration_entities as $registration) {
+        // Sending email notification to registrants for event cancellation.
+        $params['@event-date'] = $registration->field_repeating_event_date[LANGUAGE_NONE][0]['value'];
+        os_events_event_change_notification($registration, $params, 'event_cancel_notification');
+      }
+      // Deleting registration entities for target registration ids for all deleted event dates.
+      entity_delete_multiple('registration', $entity_ids);
+    }
+  }
+}
+
+/**
  * Implements hook_menu().
  */
 function os_events_menu() {
@@ -123,8 +300,13 @@ function os_events_export_to_csv($node, $delta = FALSE) {
     return;
   }
 
+  if (! $delta) {
+    $url = drupal_parse_url($_SERVER['HTTP_REFERER']);
+    $delta = $url['query']['delta'];
+  }
+
   $exporter = os_exporter_get_exporter_handler('csv');
-  $exporter->setFileHeader(array(t('Email'), t('Created Time'), t('Department'), t('Full name')));
+  $exporter->setFileHeader(array(t('Event Date'), t('Event Title'), t('Email'), t('Created Time'), t('Department'), t('Full name')));
 
   $query = new EntityFieldQuery();
   $result = $query
@@ -132,9 +314,17 @@ function os_events_export_to_csv($node, $delta = FALSE) {
     ->propertyCondition('entity_id', $node->nid)
     ->propertyCondition('entity_type', 'node');
 
-  if ($delta !== FALSE && isset($node->field_date['und'][$delta])) {
-    $date = $node->field_date['und'][$delta]['value'];
-    $query->fieldCondition('field_repeating_event_date', 'value', $date);
+  if ($delta !== FALSE && isset($node->field_date[LANGUAGE_NONE][$delta])) {
+    $dates[] = $node->field_date[LANGUAGE_NONE][$delta]['value'];
+    $query->fieldCondition('field_repeating_event_date', 'value', $dates[0]);
+  } else if (isset($node->field_date[LANGUAGE_NONE][0]['value'])) {
+
+    // cycle through the [possibly repeating] event date(s)
+    $delta = 0;
+    while ($node->field_date[LANGUAGE_NONE][$delta]) {
+      $dates[] = $node->field_date[LANGUAGE_NONE][$delta]['value'];
+      $delta++;
+    }
   }
 
   $result = $query->execute();
@@ -146,14 +336,33 @@ function os_events_export_to_csv($node, $delta = FALSE) {
   $attendees = entity_load('registration', array_keys($result['registration']));
 
   foreach ($attendees as $attendee) {
+
     $wrapper = entity_metadata_wrapper('registration', $attendee);
 
-    $exporter->addContent(array(
-      $attendee->anon_mail,
-      '"' . format_date($attendee->created) . '"',
-      $wrapper->field_department->value(),
-      $wrapper->field_full_name->value(),
-    ));
+    // Attendees register for specific or all occurrences of the event
+    $date = $attendee->field_repeating_event_date[LANGUAGE_NONE][0]['value'];
+    if (! $date) {
+      foreach ($dates as $d) {
+        $exporter->addContent(array(
+            $d,
+            $node->title,
+            $attendee->anon_mail,
+            '"' . format_date($attendee->created) . '"',
+            $wrapper->field_department->value(),
+            $wrapper->field_full_name->value(),
+        ));
+      }
+    } else {
+
+      $exporter->addContent(array(
+          $date,
+          $node->title,
+          $attendee->anon_mail,
+          '"' . format_date($attendee->created) . '"',
+          $wrapper->field_department->value(),
+          $wrapper->field_full_name->value(),
+      ));
+    }
   }
 
   $exporter->exportToFile($node->title . '-' . (isset($date)?$date . '-':'') .'attendees.csv');
@@ -2056,6 +2265,25 @@ function os_events_mail($key, &$message, $params) {
         $message['body'] = array();
         $message['body'][] = t("Hi @user-name", $params);
         $message['body'][] = t("This email is to let you know that the event you created, @title, is now full.\nYou can manage your registrations here: @url.\n\nThe @site Team", $params);
+        break;
+
+    case 'event_cancel_notification':
+        $message['subject'] = t("@title has been cancelled", $params);
+        $message['body'] = array();
+        $message['body'][] = t("Hello @user-name,", $params);
+        $message['body'][] = t('You had been registered for @title on @event-date@location.', $params);
+        $message['body'][] = t('This event has been cancelled. To view our other events, please visit the event page here: @event-url', $params);
+        $message['body'][] = t("Questions? Email the event organizer @event-creator-mail.\n\nThe @site Team", $params);
+        break;  
+
+    case 'event_time_updated_notification':
+        $message['subject'] = t("Change in @title", $params);
+        $message['body'] = array();
+        $message['body'][] = t("Hello @user-name,", $params);
+        $message['body'][] = t('You had been registered for @title on @event-date@location.', $params);
+        $message['body'][] = t('That ​event​ has been changed, and you are now registered for @event-new-date@new-location.', $params);
+        $message['body'][] = t('Please visit the event page here: @event-url', $params);
+        $message['body'][] = t("Questions? Email the event organizer @event-creator-mail.\n\nThe @site Team", $params);
         break;  
   }
 }
@@ -2095,12 +2323,16 @@ function os_events_form_event_node_form_alter(&$form, &$form_state) {
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
   $form['#validate'][] = 'os_events_validate_repeat_on_checkbox';
   // Attaching form state behavior to show the checkbox only when signup and repeat checkboxes are with checked state.
-  $form['field_mutliple_event_signup']['#states'] = array(
-    'visible' => array(
-      ':input[name="field_event_registration[und][0][registration_type]"]' => array('checked' => TRUE),
-      ':input[name="field_date[und][0][show_repeat_settings]"]' => array('checked' => TRUE),
-    ),
-  );
+  if( !isset($form_state['storage']['confirm'] ) ) {
+    $form['field_mutliple_event_signup']['#states'] = array(
+      'visible' => array(
+        ':input[name="field_event_registration[und][0][registration_type]"]' => array('checked' => TRUE),
+        ':input[name="field_date[und][0][show_repeat_settings]"]' => array('checked' => TRUE),
+      ),
+    );
+  } else {
+    $form['event_registration_group']['field_mutliple_event_signup']['#attributes']['class'][] = 'element-hidden';
+  }
   // Div wrapper to display Sign up and multiple registration select checkbox jointly.
   $form['event_registration_group'] = array(
     '#type' => '#markup',
@@ -2113,6 +2345,75 @@ function os_events_form_event_node_form_alter(&$form, &$form_state) {
   $form['event_registration_group']['field_event_registration'] = $form['field_event_registration'];
   unset($form['field_mutliple_event_signup']);
   unset($form['field_event_registration']);
+  // Markup for repeating event warning message.
+  $form['field_date'][LANGUAGE_NONE][0]['repeat_event_change_message'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div id="event-change-notify" class="messages warning element-hidden">You will need to inform the registrants if you make any changes to this event. If you change the date, registrants will be removed and will have to re-register.</div>',
+    '#weight' => 1.3
+  );
+
+  if(!isset($form_state['storage']['confirm']) && isset($form['nid']['#value'])) {
+    $form['actions']['submit']['#submit'] = array('os_events_form_submit');
+  } elseif (isset($form_state['storage']['confirm']) && isset($form['nid']['#value'])) {
+    $form = confirm_form($form, '', '', $description = "Warning: If you change the date, registrants will be removed and will have to re-register. Learn how to export the registrant list " . l('here', 'http://docs.openscholar.harvard.edu', array('attributes' => array('target' => '_blank'))) . ".<br/></br>", "Ok", "Cancel" );
+    $form['actions']['submit']['#submit'][] = 'node_form_submit';
+    $form['menu']['#attributes']['class'][] = 'element-hidden';
+    $form['#after_build'][] = 'os_events_confirm_after_build';
+    hide($form['title']);
+    $form['title']['#default_value'] = $form_state['values']['title'];
+  }
+}
+
+/**
+ * After build callback for event_node_form form.
+ */
+function os_events_confirm_after_build(&$form, &$form_state) {
+  global $base_path;
+  $form['field_date']['#attributes']['class'][] = 'element-hidden';
+  $form['actions_top']['#attributes']['class'][] = 'element-hidden';
+  $form['event_registration_group']['#attributes']['class'][] = 'element-hidden';
+  $form['field_upload']['#attributes']['class'][] = 'element-hidden';
+  $form['body']['#attributes']['class'][] = 'element-hidden';
+  $form['field_event_location']['#attributes']['class'][] = 'element-hidden';
+  $form['options']['#attributes']['class'][] = 'element-hidden';
+  $form['author']['#attributes']['class'][] = 'element-hidden';
+  $form['path']['#attributes']['class'][] = 'element-hidden';
+  $form['actions']['delete']['#access'] = FALSE;
+  $form['og_vocabulary']['#attributes']['class'][] = 'element-hidden';
+  $form['event_registration_group']['field_event_registration']['#attributes']['class'][] = 'element-hidden';
+  $form['event_registration_group']['field_mutliple_event_signup']['#attributes']['class'][] = 'element-hidden';
+  $menu_item = menu_get_item();
+  $form['actions']['cancel']['#markup'] = l('Cancel', $menu_item['href'], array('query' => drupal_get_destination(), 'attributes' => array('class' => array('form-cancel'))));
+  return $form;
+}
+
+/**
+ * #submit callback for event_node_form form.
+ */
+function os_events_form_submit($form, &$form_state) {
+  $repeating_event = isset($form_state['values']['field_date'][LANGUAGE_NONE][0]['rrule']);
+  if($repeating_event && !isset($form_state['storage']['confirm'])) {
+    $deleted_dates = array();
+    $submitted_dates = array();
+    foreach ($form_state['values']['field_date'][LANGUAGE_NONE] as $date) {
+      $submitted_dates[] = format_date(strtotime($date['value']), 'custom', 'Y-m-d');
+    }
+    // Detecting deleted event date instances for repeating events.
+    foreach ($form['#node']->field_date[LANGUAGE_NONE] as $date) {
+      if (!in_array(format_date(strtotime($date['value']), 'custom', 'Y-m-d'), $submitted_dates)) {
+        $deleted_dates[] = format_date(strtotime($date['value']), 'custom', 'Y-m-d');
+      }
+    }
+    // If at least one existing event dates are deleted, warning will be shown, otherwise form will be submitted as it is.
+    if (count($deleted_dates) > 0) {
+      $form_state['storage']['confirm'] = TRUE;
+      $form_state['rebuild'] = TRUE;
+    } else {
+      node_form_submit($form, $form_state);
+    }
+  } else {
+    node_form_submit($form, $form_state);
+  }
 }
 
 /**
@@ -2662,4 +2963,31 @@ function os_date_repeat_rrule_description($rrule, $format = 'D M d Y') {
     $description['!additional'] = trim(t('Also includes !additional_dates.', array('!additional_dates' => implode(', ', $values))));
   }
   return t('Repeats !interval!bymonth!byday!count !until !except. !additional', $description);
+}
+
+/**
+ * Implements hook_form_{form_id}_alter
+ *
+ * Fix destination for event deletion
+ */
+function os_events_form_node_delete_confirm_alter($form) {
+  if ($form['#node']->type == "event") {
+        if ((strpos($_GET['destination'], "calendar/past_events") === FALSE) &&
+            (strpos($_GET['destination'], "calendar/upcoming") === FALSE)) {
+        $paths = os_get_app_path();
+        $_GET['destination'] = $paths[$form['#node']->type];
+    }
+  }
+}
+
+/**
+ * Implements hook_field_create_field().
+ */
+function os_events_field_create_field($field) {
+  if ($field['field_name'] != 'field_date') {
+    return;
+  }
+
+  db_add_index('field_data_field_date', 'date_start', array('field_date_value'));
+  db_add_index('field_data_field_date', 'date_end', array('field_date_value2'));
 }

@@ -69,4 +69,24 @@
     }
   }
 
+  /**
+   * Display warning message under repeat checkbox if repeating checkbox is checked.
+   */
+  Drupal.behaviors.osRepeatingEventChange = {
+    attach: function () {
+      // Warning will be hidden if repeat checkbox is unchecked.
+      if ($('#edit-field-date-und-0-show-repeat-settings:checked').length) {
+        $('#event-change-notify').removeClass('element-hidden');
+      }
+      // Warning will be shown if repeat checkbox in checked.
+      $('#edit-field-date-und-0-show-repeat-settings').change(function(){
+        if ($('#edit-field-date-und-0-show-repeat-settings:checked').length) {
+          $('#event-change-notify').removeClass('element-hidden');
+        } else {
+          $('#event-change-notify').addClass('element-hidden');
+        }
+      });
+    }
+  }
+
 })(jQuery);

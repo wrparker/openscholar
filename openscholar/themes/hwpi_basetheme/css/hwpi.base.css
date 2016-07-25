@@ -6,9 +6,6 @@ body {
     line-height: 23px;
     min-height: inherit;
 }
-.not-front #content-column {
-    font-size: 16px;
-}
 a,
 a:visited {
     color: #215990;
@@ -638,7 +635,7 @@ article.node-teaser.node-person .field-name-field-person-photo ~ .node-content {
 }
 @-moz-document url-prefix() {
     .node-teaser.node-person {
-        display: table;
+        table-layout:fixed;
     }
 }
 .block-boxes-os_boxes_manual_list .node-teaser.node-person {
@@ -885,4 +882,3 @@ ul.pager li.pager-item {
 .two-sidebars .sidebar .node-person.node-teaser .field-name-field-email {
     float: none;
 }
-

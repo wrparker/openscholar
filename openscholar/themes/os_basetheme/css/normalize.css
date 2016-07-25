@@ -21,13 +21,6 @@ summary {
     display: block;
 }
 
-/*
- * Overwrite .node-teaser.node-person { display: table; } in hwpi.base.css for Firefox  
- */
-
-article {
-    display: block !important;
-}
 
 /*
  * Corrects `inline-block` display not defined in IE 8/9.

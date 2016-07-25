@@ -1318,6 +1318,7 @@ function os_files_imagefield_crop_process($element, $form_state, $form) {
   module_load_include('inc', 'media', 'includes/media.browser');
   media_attach_browser_js($element['selected_file']);
   $element['selected_file']['#attached']['library'][] = array('os_common', 'FileEditorModal');
+  os_common_angular_apps('mediaBrowser');
 
   $element['#element_validate'] = array(
     'os_files_file_element_validate',
@@ -1424,7 +1425,7 @@ function os_files_media_browser_plugins_alter(&$output){
   $output['upload']['#title'] = t('My Computer');
   $output['media_default--media_browser_1']['#title'] = t('My Library');
 
-  // add an area to the views form to put the file edit form
+  // Add an area to the views form to put the file edit form.
   $html = &$output['media_default--media_browser_1']['#markup'];
   $html = str_replace(array('Submit', 'File name'), array('Insert', 'Search'), $html);
   $html .= '<div id="file-edit-section"><div id="file-edit-no-selection">Select a file to edit it.</div></div>';
