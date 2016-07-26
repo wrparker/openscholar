@@ -2147,6 +2147,8 @@ function os_taxonomy_cp_settings() {
       '#default_value' => ${'default_value_' . $content_types_key},
     );
   }
+
+  $form['os_taxonomy']['form']['#attached']['js'][] = drupal_get_path('module', 'os_taxonomy') . '/os_taxonomy.js';
   $form['os_taxonomy']['submit'][] = 'os_taxonomy_cp_settings_node_submit';
 
   return $form;
