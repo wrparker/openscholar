@@ -525,6 +525,11 @@ libraries[panelbutton][subdir] = "ckeditor/plugins"
 libraries[panelbutton][download][type] = "file"
 libraries[panelbutton][download][url] = "http://download.ckeditor.com/panelbutton/releases/panelbutton_4.5.8.zip"
 
+libraries[mathjax][type] = "libraries"
+libraries[mathjax][subdir] = "ckeditor/plugins"
+libraries[mathjax][download][type] = "file"
+libraries[mathjax][download][url] = "http://download.ckeditor.com/mathjax/releases/mathjax_4.5.10.zip"
+
 libraries[justify][type] = "libraries"
 libraries[justify][subdir] = "ckeditor/plugins"
 libraries[justify][download][type] = "file"
