@@ -53,25 +53,4 @@
     }
   };
 
-  /**
-   * Change all bundle checkboxes in Display terms under content is changed.
-   */
-  Drupal.behaviors.taxonomyShowTerms = {
-    attach: function () {
-      if ($('#edit-os-taxonomy-display-term-under-content').prop("checked")) {
-        $('input:checkbox[id^="edit-os-taxonomy-display-term-under-content-"]').prop('disabled', false);
-      } else {
-        $('input:checkbox[id^="edit-os-taxonomy-display-term-under-content-"]').prop('disabled', true);
-      }
-      $('#edit-os-taxonomy-display-term-under-content').change(function () {
-        if ($(this).prop("checked")) {
-          $('input:checkbox[id^="edit-os-taxonomy-display-term-under-content-"]').prop('disabled', false);
-        } else {
-          $('input:checkbox[id^="edit-os-taxonomy-display-term-under-content-"]').prop('disabled', true);
-          $('input:checkbox[id^="edit-os-taxonomy-display-term-under-content-"]').prop('checked', false);
-        }
-      });
-    }
-  };
-
 })(jQuery);
