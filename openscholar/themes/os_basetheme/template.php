@@ -572,15 +572,12 @@ function os_basetheme_file_icon($variables) {
   $alt = $variables['alt'];
   $icon_directory = $variables['icon_directory'];
 
-  // Use the default set of icons if none specified.
-  if (!isset($icon_directory)) {
-    $icon_directory = variable_get('file_icon_directory', drupal_get_path('module', 'os_files') . '/icons');
-  }
+  // Setting icon directory for svg files
+  $icon_directory = variable_get('file_icon_directory', drupal_get_path('module', 'os_files') . '/icons');
   $icon_url = file_icon_url($file, $icon_directory);
 
-  // Replace png files with svg
+   // Replacing png icons with svg
   $svg_url = str_replace('.png', '.svg', $icon_url );
-
   $mime = check_plain($file->filemime);
   return '<img class="file-icon" alt="' . check_plain($alt) . '" title="' . $mime . '" src="' . $svg_url . '" />';
 }
