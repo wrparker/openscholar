@@ -29,3 +29,9 @@ Drupal.behaviors.osWysiwygBrowserAutoSubmit = {
     };
   }
 };
+// Setting the url of paste from word plugin of tinymce editor to use site's base url instead of static asset domain.
+(function($) {
+  jQuery.each(tinymce.editors, function(key, editor) {
+    editor.plugins.paste.url = Drupal.settings.paths.vsite_home + 'profiles/openscholar/libraries/tinymce/jscripts/tiny_mce/plugins/paste';
+  });
+})(jQuery);
