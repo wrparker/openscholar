@@ -354,3 +354,6 @@ body.node-type-biblio .biblio-export {
 	margin-right: 5px;
     content: ",";
 }
+.page-publications .biblio_file_links img.file-icon {
+    margin-left: 5px;
+}

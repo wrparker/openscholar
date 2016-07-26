@@ -233,7 +233,7 @@ a img {
     display: block;
 }
 .block-boxes-os_sv_list_file .file img.file-icon {
-    margin-right: 8px;
+    margin-right: 5px;
 }
 .sv-list-all.sv-list-view-os_files_link_icon .file img.file-icon {
     margin-right: 4px;
@@ -244,6 +244,8 @@ a img {
 .block-boxes-os_sv_list_file .file img.file-icon {
     display: inline;
 }
+.block .file .file-info img.file-icon,
+.field-type-file .file-list-single img,
 .biblio_file_links img.file-icon,
 .field-type-file img.file-icon {
 	width:16px;
