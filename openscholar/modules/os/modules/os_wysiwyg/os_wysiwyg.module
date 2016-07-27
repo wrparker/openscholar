@@ -102,6 +102,7 @@ function os_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
     // PDW settings
     $settings['pdw_toggle_toolbars'] = '2,3,4';
     $settings['pdw_toggle_on'] = 1;
+    $settings['init_instance_callback'] = 'tinymce_set_plugin_path';
   }
 }
 
