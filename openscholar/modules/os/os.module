@@ -735,9 +735,9 @@ function os_preprocess_page(&$vars) {
   // Session timeout checking will be only for logged in users.
   if ($user->uid) {
     // Obtaining session lifetime value from php configuration.
-    $gc_maxlifetime = ini_get('session.gc_maxlifetime');
+    $cookie_lifetime = ini_get('session.cookie_lifetime');
     $setting = array(
-      'session_lifetime' => $gc_maxlifetime,
+      'session_lifetime' => $cookie_lifetime,
       'warning_interval_before_timeout' => OS_SESSION_TIMEOUT_WARNING_INTERVAL
     );
     drupal_add_js(array('os' => $setting), 'setting');
