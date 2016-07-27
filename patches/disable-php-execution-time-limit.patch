@@ -1,0 +1,11 @@
+--- www/index.php	2016-07-27 15:25:46.000000000 -0400
++++ www/index.php.new	2016-07-27 15:25:32.000000000 -0400
+@@ -16,6 +16,8 @@
+  */
+ define('DRUPAL_ROOT', getcwd());
+ 
++set_time_limit(0);
++
+ require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+ drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+ menu_execute_active_handler();
