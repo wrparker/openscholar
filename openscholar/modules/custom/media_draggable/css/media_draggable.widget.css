@@ -43,6 +43,9 @@
     overflow: hidden;
     -o-text-overflow: ellipsis;
 }
+.form-managed-file img.file-icon {
+width:16px;
+}
 .field-widget-media-draggable-file .file-list-single ul {
     display: inline-block;
     width: 34%;
