@@ -2278,9 +2278,10 @@ function os_views_query_alter(&$view, &$query) {
   $allowed_types = array();
   foreach ($query->where as $where) {
     foreach ($where['conditions'] as $condition) {
+
       if (empty($condition['field']) || empty($condition['operator'])) {
         // Not a real condition.
-        return;
+        continue;
       }
 
       // Check if the condition allows specific node types.
