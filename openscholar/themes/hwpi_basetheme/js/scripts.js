@@ -10,6 +10,8 @@
     attach: function (ctx) {
       if ($('.mobile-buttons', ctx).length == 0) return;
 
+      // Adding open-submenu class to adjust submenu in mobile view
+      $('.menuparent').children('a').after('<span class="open-submenu"></span>');
       $('.mobile-buttons a[data-target]').each(function () {
           var $this = $(this),
               $pop = $($this.attr('data-target'));
