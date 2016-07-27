@@ -110,7 +110,7 @@ function os_profiles_preprocess_views_view_summary(&$vars) {
  * Implements hook_init().
  */
 function os_profiles_init() {
-  if (variable_get('os_profiles_no_restws', FALSE) || !module_exists('restful')) {
+  if (!module_exists('restful')) {
     // No RestWS.
     return;
   }
