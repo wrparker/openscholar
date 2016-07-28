@@ -277,7 +277,7 @@ function cp_menu_form_node_form_alter(&$form, &$form_state, $form_id) {
 
   	// Set the title from the cache title and set the form title to the cache title if it exists.
     if (isset($cache['title'])) {
-  	  $title = check_plain($cache['title']);
+      $title = htmlspecialchars($cache['title'], ENT_NOQUOTES, 'UTF-8');
   	  // Check for the form title
   	  if(isset($form['title'])) {
     	    $form['title']['#default_value'] = $title;
@@ -290,7 +290,7 @@ function cp_menu_form_node_form_alter(&$form, &$form_state, $form_id) {
 	    $form['os_menu']['enabled']['#default_value'] = 1;
 	    $form['os_menu']['link']['parent']['#default_value'] = $menu;
 	    $form['os_menu']['link']['link_title']['#default_value'] = isset($title) ? $title : '' ;
-	    $form['os_menu']['link']['description']['#default_value'] = isset($cache['tooltip']) ? check_plain($cache['tooltip']) : '';
+	    $form['os_menu']['link']['description']['#default_value'] = isset($cache['tooltip']) ? htmlspecialchars($cache['tooltip'], ENT_NOQUOTES, 'UTF-8') : '';
     }
 
     if (isset($cache['new_window']) && $cache['new_window']) {
