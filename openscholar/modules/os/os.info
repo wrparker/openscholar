@@ -152,7 +152,6 @@ features[user_role][] = content editor
 features[user_role][] = manager
 features[user_role][] = vsite admin
 features[user_role][] = vsite user
-features[user_role][] = web services
 features[variable][] = advagg_js_compress_packer
 features[variable][] = advagg_js_compressor
 features[variable][] = advagg_js_inline_compress_if_not_cacheable

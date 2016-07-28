@@ -352,16 +352,6 @@ function os_user_default_permissions() {
     'module' => 'system',
   );
 
-  // Exported permission: 'bypass node access'.
-  $permissions['bypass node access'] = array(
-    'name' => 'bypass node access',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'web services' => 'web services',
-    ),
-    'module' => 'node',
-  );
-
   // Exported permission: 'cancel account'.
   $permissions['cancel account'] = array(
     'name' => 'cancel account',
