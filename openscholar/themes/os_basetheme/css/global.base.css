@@ -248,7 +248,7 @@ a img {
 .block .file .file-info img.file-icon,
 .field-type-file .file-list-single img,
 .biblio_file_links img.file-icon,
-.field-type-file img.file-icon {
+.node-inner .field-type-file img.file-icon {
 	width:16px;
 	}
 .block-boxes-os_sv_list_file .file-info iframe {
