@@ -43,9 +43,9 @@
       dataType:'json',
       success: function(jData) {
         if (jData.show_warning == 1) {
-          jQuery('#page').prepend('<div id="timeout-warning-wrapper" class="messages warning element-hidden"><div class="message-inner"><div class="message-wrapper">Warning: Your session will expire in <span id="session-timeout-timer" data-rooster-seconds=' + Drupal.settings.os.warning_interval_before_timeout + '></span> minutes. <a href="javascript:extend_os_session();" class="session-extend-link">Click here to continue your session.</div></div></div>');
+          jQuery('#page').prepend('<div id="timeout-warning-wrapper" class="messages warning element-hidden"><div class="message-inner"><div class="message-wrapper">Warning: Your session will expire in <span id="session-timeout-timer" data-seconds-left=' + Drupal.settings.os.warning_interval_before_timeout + '></span> minutes. <a href="javascript:extend_os_session();" class="session-extend-link">Click here to continue your session.</div></div></div>');
           jQuery('#timeout-warning-wrapper').slideDown('slow');
-          jQuery('#session-timeout-timer').rooster('start');
+          jQuery('#session-timeout-timer').startTimer();
         }
       }
     });
