@@ -273,6 +273,12 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     border: 0;
     cursor: pointer;
 }
+.ui-state-default .ui-icon,
+.ui-state-hover .ui-icon,
+.ui-state-focus .ui-icon,
+.ui-state-active .ui-icon {
+  background-image: none;
+}
 .ui-dialog .ui-dialog-titlebar,
 #overlay-titlebar {
     padding: 7px 10px 17px;
@@ -727,7 +733,12 @@ fieldset#edit-biblio-authors .fieldset-legend {
  */
 
 .ui-front {
-    z-index: 1000;
+    z-index: 101;
+}
+.ui-widget-overlay {
+    background: #000;
+    opacity: .7;
+    filter: Alpha(Opacity=70);
 }
 /** STYLE IMPROVEMENTS BASED ON MOCKUP https://d2r1vs3d9006ap.cloudfront.net/s3_images/1010882/pubform_expanded.png **/
 
