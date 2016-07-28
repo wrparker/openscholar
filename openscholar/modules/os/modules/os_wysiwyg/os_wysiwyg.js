@@ -5,7 +5,6 @@
   Drupal.behaviors.osWysiwygHideTips = {
     attach: function (context) {
       // don't do this for every thing
-      var $ = jQuery;
       function toggle (e) {
         $(e.currentTarget).parents('.text-format-wrapper').find('.filter-wrapper').toggle();
       }
@@ -16,7 +15,6 @@
 
   Drupal.behaviors.osWysiwygBrowserAutoSubmit = {
     attach: function (ctx) {
-      var $ = jQuery;
 
       Drupal.media.popups.mediaStyleSelector.mediaBrowserOnLoad = function (e) {
         var doc = $(e.currentTarget.contentDocument);
