@@ -128,6 +128,8 @@ html.js input.throbbing {
     color: #FFF;
     font-weight: bold;
 }
+.ui-dialog .actions input[type="button"],
+.ui-dialog .actions input[type="submit"],
 a#edit-cancel,
 a.form-cancel {
     cursor: pointer;
@@ -267,7 +269,7 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 }
 .ui-dialog button.ui-dialog-titlebar-close {
     float: right;
-    margin: 0;
+    margin: -8px 0;;
     border: 0;
     cursor: pointer;
 }
@@ -290,9 +292,11 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     font-size: 24px;
     font-weight: normal;
 }
-.ui-dialog-title {
-    padding: 0.1em 0;
+
+.ui-dialog {
+	padding:0;
 }
+
 #overlay-tabs {
     margin: -30px 0 0;
     right: 50px;
