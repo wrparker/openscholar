@@ -214,6 +214,7 @@ function os_layout_set($context_name, $blocks, $vsite = NULL) {
     $q = null;
     if ($vsite) {
       $q = db_select('spaces_overrides', 'so')
+           ->condition('type', 'og')
            ->condition('id', $vsite->group->nid)
            ->condition('object_type', 'context');
       $q   ->addExpression('DISTINCT SUBSTRING(object_id, 1, LOCATE(\':\', object_id)-1)', 'name');
