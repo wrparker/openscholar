@@ -100,7 +100,6 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
         'title' => $value->title,
         'id' => $value->nid,
         'purl' => $value->purl,
-        'base_url' => $value->field_group_path[LANGUAGE_NONE][0]['url'],
         'owner' => ($value->uid == $account->uid),
         'subsite_access' => vsite_subsite_access('create', $value),
         'delete_access' => node_access('delete', $value),
