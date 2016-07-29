@@ -625,6 +625,15 @@ table.biblio-contributors tr:first-child input.form-submit {
 #edit-biblio-year-coded .form-item.form-type-radio {
     margin-left: 0;
 }
+span[radios] input[type="radio"] {
+    vertical-align: initial;
+margin-right:5px;
+}
+
+span[radios] .form-type-radio {
+	margin-left:0;
+}
+
 #edit-biblio-year-coded .form-item label.option {
     font-size: 0.85em;
 }
