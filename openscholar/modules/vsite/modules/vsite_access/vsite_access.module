@@ -231,7 +231,7 @@ function vsite_access_privacy_available_values() {
   // @fixme Labels shouldn't contain a period at the end.
   // Once this function has the option to return just labels, vs. labels AND
   // descriptions, the period should be removed from the label-only return vals.
-  $prefix = '. <br><span class="radio-description">';
+  $prefix = '. <br><span class="description">';
   $suffix = '</span>';
   $descriptions = array(
     VSITE_ACCESS_PUBLIC => t('Anyone on the Internet can find and access. No sign-in required.'),
