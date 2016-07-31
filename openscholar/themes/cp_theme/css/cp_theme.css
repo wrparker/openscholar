@@ -128,8 +128,9 @@ html.js input.throbbing {
     color: #FFF;
     font-weight: bold;
 }
-.ui-dialog .actions input[type="button"],
-.ui-dialog .actions input[type="submit"],
+.ui-dialog button,
+.ui-dialog input[type="button"],
+.ui-dialog input[type="submit"],
 a#edit-cancel,
 a.form-cancel {
     cursor: pointer;
@@ -1130,7 +1131,7 @@ ul.table-list li:nth-child(odd) {
 ul.table-list li:nth-child(even) {
     background-color: #F7F7F7;
 }
-
+.redirect-delete {float:right;}
 
 
 
