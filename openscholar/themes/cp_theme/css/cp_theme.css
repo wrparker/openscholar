@@ -15,6 +15,7 @@ body {
     background-color: #FFF;
 }
 /* GENERAL CP STYLES */
+
 .ui-widget-content a,
 a {
     color: #215990;
@@ -271,7 +272,8 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 }
 .ui-dialog button.ui-dialog-titlebar-close {
     float: right;
-    margin: -8px 0;;
+    margin: -8px 0;
+    ;
     border: 0;
     cursor: pointer;
 }
@@ -279,7 +281,7 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon,
 .ui-state-active .ui-icon {
-  background-image: none;
+    background-image: none;
 }
 .ui-dialog .ui-dialog-titlebar,
 #overlay-titlebar {
@@ -300,11 +302,9 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     font-size: 24px;
     font-weight: normal;
 }
-
 .ui-dialog {
-	padding:0;
+    padding: 0;
 }
-
 #overlay-tabs {
     margin: -30px 0 0;
     right: 50px;
@@ -630,13 +630,11 @@ table.biblio-contributors tr:first-child input.form-submit {
 span[checkbox] input[type="checkbox"],
 span[radios] input[type="radio"] {
     vertical-align: initial;
-margin-right:5px;
+    margin-right: 5px;
 }
-
 span[radios] .form-type-radio {
-	margin-left:0;
+    margin-left: 0;
 }
-
 #edit-biblio-year-coded .form-item label.option {
     font-size: 0.85em;
 }
@@ -1116,9 +1114,8 @@ div.error:before {
     font-size: 0.923em !important;
     color: #666 !important;
 }
-
 ul.table-list {
-list-style-type: none;
+    list-style-type: none;
     margin-left: 0;
     border: 1px solid #ccc;
 }
@@ -1131,7 +1128,17 @@ ul.table-list li:nth-child(odd) {
 ul.table-list li:nth-child(even) {
     background-color: #F7F7F7;
 }
-.redirect-delete {float:right;}
-
-
-
+.redirect-delete {
+    float: right;
+}
+.display-inline,
+form#os-maintenance .form-item,
+{
+    display: inline-block;
+}
+.redirect-add-form .display-inline {
+    width: 40%;
+}
+.redirect-add-form input {
+    width: 280px
+}
