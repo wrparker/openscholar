@@ -1144,5 +1144,7 @@ form#os-maintenance .form-item {
 }
 
 .redirect-add-form input {
-    width: 280px
+       width: 280px;
+    height: 25px;
+    border: 1px solid #ccc;
 }
