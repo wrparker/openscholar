@@ -16,8 +16,8 @@
       '</ul>' +
       '<a class="redirect-add" ng-show="showAddLink()" ng-click="toggleAddForm()">+ Add new redirect</a>' +
       '<div class="redirect-add-form" ng-show="showAddForm()">' +
-        '<label for="redirect-path">From:</label> <input type="text" id="redirect-path" class="redirect-new-element" ng-model="newRedirectPath" placeholder="Local path"><br />' +
-        '<label for="redirect-target">To: </label> <input type="text" id="redirect-target" class="redirect-new-element" ng-model="newRedirectTarget" placeholder="Target URL (i.e. http://www.google.com)"><br />' +
+        '<div class="display-inline"><label for="redirect-path">From</label> <input type="text" id="redirect-path" class="redirect-new-element" ng-model="newRedirectPath" placeholder="Local path"></div>' +
+        '<div class="display-inline"><label for="redirect-target">To </label> <input type="text" id="redirect-target" class="redirect-new-element" ng-model="newRedirectTarget" placeholder="Target URL (i.e. http://www.google.com)"></div>' +
         '<button type="button" value="Add Redirect" ng-click="addRedirect()">Add Redirect</button>' +
       '</div>',
       scope: {
