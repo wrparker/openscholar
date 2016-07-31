@@ -1132,13 +1132,17 @@ ul.table-list li:nth-child(even) {
     float: right;
 }
 .display-inline,
-form#os-maintenance .form-item,
-{
+form#os-maintenance .form-item {
     display: inline-block;
 }
 .redirect-add-form .display-inline {
     width: 40%;
 }
+.redirect-add-form {
+    background-color: #eee;
+    padding: 10px;
+}
+
 .redirect-add-form input {
     width: 280px
 }
