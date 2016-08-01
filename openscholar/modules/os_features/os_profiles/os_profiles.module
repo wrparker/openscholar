@@ -1382,6 +1382,9 @@ function _os_profiles_build_display_style_example($style) {
  */
 function os_profiles_node_view_alter(&$build) {
 
+  if ($build['#bundle'] != 'person')
+      return;
+
   // Too many complaints about the "read more" feature.  Remove it from profiles.
   if (isset($build['links']['node']['#links']['node-readmore'])) {
     unset($build['links']['node']['#links']['node-readmore']);
