@@ -708,6 +708,8 @@ function os_preprocess_page(&$vars) {
   global $user;
   // Add the dismiss messages JS.
   drupal_add_js(drupal_get_path('module', 'os') . "/theme/os_dismiss.js", "file");
+  // Add JS to initialize window.tinyMCEPreInit object before tinymce loading to work with static domain. 
+  drupal_add_js(drupal_get_path('module', 'os') . "/js/os_tinymce_init.js", "file");
 
   // Add the dismiss messages CSS.
   drupal_add_css(drupal_get_path('module', 'os') . "/theme/os_dismiss.css", array(
