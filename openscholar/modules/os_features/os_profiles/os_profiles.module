@@ -368,7 +368,7 @@ function os_profiles_process_node(&$vars) {
   // Add condition to display og_vocabulary at the end.
   if(isset($vars['content']['og_vocabulary'])) {
     if (in_array($vars['elements']['#view_mode'], $vocabulary_teasers)) {
-      $vars['content']['og_vocabulary']['#weight'] = 100;
+      $vars['content']['og_vocabulary']['#weight'] = 1000;
     }
   }
 }
