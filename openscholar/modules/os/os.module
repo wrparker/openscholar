@@ -15,6 +15,11 @@ include_once ('includes/os.inc');
 define('OS_READONLY_MODE_MESSAGE', 'Site is under maintenance, login and registration is currently disabled.');
 
 /**
+ * Define the number of seconds before session timeout when warning message will be displayed.
+ */
+define('OS_SESSION_TIMEOUT_WARNING_INTERVAL', 300);
+
+/**
  * Implements hook_menu().
  */
 function os_menu() {
@@ -122,6 +127,27 @@ function os_menu() {
     'page arguments' => array(5),
     'access callback' => 'os_view_migrated_users_access',
   );
+
+  $items['extend_os_session'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => '',
+    'page callback' => 'extend_os_session',
+    'access arguments' => array('access content'),
+  );
+
+  $items['check_os_session_status'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => '',
+    'page callback' => 'check_os_session_status',
+    'access arguments' => array('access content'),
+  );
+
+  $items['os_session_destroy'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => '',
+    'page callback' => 'os_session_destroy',
+    'access arguments' => array('access content'),
+  ); 
 
   return $items;
 }
@@ -706,6 +732,20 @@ function _os_process_node_links_comment_add_class(&$vars) {
  */
 function os_preprocess_page(&$vars) {
   global $user;
+  // Session timeout checking will be only for logged in users.
+  if ($user->uid) {
+    // Obtaining session lifetime value from php configuration.
+    $cookie_lifetime = ini_get('session.cookie_lifetime');
+    $setting = array(
+      'session_lifetime' => $cookie_lifetime,
+      'warning_interval_before_timeout' => OS_SESSION_TIMEOUT_WARNING_INTERVAL
+    );
+    drupal_add_js(array('os' => $setting), 'setting');
+    // Including jquery rooster plugins for timer countdown display in session timeout warning message.
+    drupal_add_js(drupal_get_path('module', 'os') . '/js/jquery.simple.timer.js');
+    drupal_add_js(drupal_get_path('module', 'os') . '/js/os_session_timeout.js');
+  }
+
   // Add the dismiss messages JS.
   drupal_add_js(drupal_get_path('module', 'os') . "/theme/os_dismiss.js", "file");
 
@@ -3452,6 +3492,41 @@ function os_redirect_element_validate_source($element, &$form_state) {
   }
 
   return $element;
+}
+
+/**
+ * Ajax callback for regnerating drupal session and extending session timeout value.
+ */
+function extend_os_session() {
+  drupal_session_regenerate();
+  exit();
+}
+
+/**
+ * Ajax callback for destroying drupal session of currently logged in user.
+ */
+function os_session_destroy() {
+  global $user;
+  // Session timeout checking will be only for logged in users.
+  if ($user->uid) {
+    _drupal_session_destroy($user->sid);
+  }
+  exit();
+}
+
+/**
+ * Ajax callback to check whether current user is logged in or not. Used to check before displaying warning message for session timeout.
+ */
+function check_os_session_status() {
+  global $user;
+  if ($user->uid) {
+    $return = array('show_warning' => 1);
+  } else {
+    // If already logged out from another tab.
+    $return = array('show_warning' => 0);
+  }
+  print drupal_json_encode($return);
+  exit();
 }
 
 /*
