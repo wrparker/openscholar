@@ -6,6 +6,7 @@
   color: #999999;
   font-size: smaller;
   display: none;
+  z-index:3;
 }
 
 .block-boxes:hover .os-embed-link {
