@@ -2318,9 +2318,10 @@ function os_views_query_alter(&$view, &$query) {
   $allowed_types = array();
   foreach ($query->where as $where) {
     foreach ($where['conditions'] as $condition) {
+
       if (empty($condition['field']) || empty($condition['operator'])) {
         // Not a real condition.
-        return;
+        continue;
       }
 
       // Check if the condition allows specific node types.
@@ -2541,7 +2542,7 @@ function os_expire_cache_alter(&$urls, $object_type, $object) {
 
     foreach ($terms as $term) {
       $urls['term-' . $term['target_id']] = 'taxonomy/term/' . $term['target_id'];
-      $urls['term-' . $term['target_id'] . '-feed'] = 'taxonomy/term/' . $term['target-id'] . '/feed';
+      $urls['term-' . $term['target_id'] . '-feed'] = 'taxonomy/term/' . $term['target_id'] . '/feed';
     }
   }
 }
