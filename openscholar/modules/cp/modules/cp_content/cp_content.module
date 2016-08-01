@@ -516,7 +516,7 @@ function cp_content_preprocess_views_view(&$vars) {
  * Implements hook_views_query_alter().
  */
 function cp_content_views_query_alter(&$view, views_plugin_query_default &$query) {
-  if ($view->base_table != 'node') {
+  if ($view->name != 'cp_content') {
     return;
   }
 
@@ -548,13 +548,13 @@ function cp_content_views_query_alter(&$view, views_plugin_query_default &$query
     $where[] = array(
       'field' => 'og_membership.gid',
       'value' => $vsite->id,
-      'opperator' => '=',
+      'operator' => '=',
     );
 
     $where[] = array(
       'field' => 'og_membership.entity_type',
       'value' => 'node',
-      'opperator' => '=',
+      'operator' => '=',
     );
   }
 

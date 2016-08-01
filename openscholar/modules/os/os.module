@@ -2542,7 +2542,7 @@ function os_expire_cache_alter(&$urls, $object_type, $object) {
 
     foreach ($terms as $term) {
       $urls['term-' . $term['target_id']] = 'taxonomy/term/' . $term['target_id'];
-      $urls['term-' . $term['target_id'] . '-feed'] = 'taxonomy/term/' . $term['target-id'] . '/feed';
+      $urls['term-' . $term['target_id'] . '-feed'] = 'taxonomy/term/' . $term['target_id'] . '/feed';
     }
   }
 }
