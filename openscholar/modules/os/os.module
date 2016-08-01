@@ -299,6 +299,17 @@ function os_entity_info_alter(&$info) {
     'label' => t('No image Teaser'),
     'custom settings' => TRUE,
   );
+
+  // Remove field replacement for entities that don't need it
+  if (!empty($entity_info['file']['field replacement'])) {
+    unset($entity_info['file']['field replacement']);
+  }
+  if (!empty($entity_info['taxonomy_term']['field replacement'])) {
+    unset($entity_info['taxonomy_term']['field replacement']);
+  }
+  if (!empty($entity_info['comment']['field replacement'])) {
+    unset($entity_info['comment']['field replacement']);
+  }
 }
 
 /**
