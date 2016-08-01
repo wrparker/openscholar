@@ -841,6 +841,9 @@ div.status .message-wrapper:before {
 div.error .message-wrapper:before {
     background-position: -72px -231px;
 }
+div.warning .message-wrapper:before {
+    background-position: -38px -260px;
+}
 
 /* Pagers */
 

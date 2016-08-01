@@ -18,8 +18,8 @@ Feature: User functionality testing.
   Scenario: Adding a user to a vsite.
     Given I am logging in as "john"
      When I visit "john/cp/users/add"
-      And I fill in "User" with "michelle"
-      And I press "Add users"
+      And I fill in "Member" with "michelle"
+      And I press "Add member"
      Then I should see "michelle has been added to the group John."
 
   @api @misc_second @now2
