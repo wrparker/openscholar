@@ -697,7 +697,7 @@ function cp_user_admin($op = 'list') {
 function cp_user_form_og_ui_add_users_alter(&$form, $form_state) {
   $item = menu_get_item();
 
-  $form['og_user']['#title'] = t('Add an existing member to this website');
+  $form['og_user']['#title'] = t('Add an existing OpenScholar member to this website');
 
   // Create and add a link for the user to click on to create a new user.
   $ajax_link = '<a href="javascript:void(0)" id="new-user-link">' . t('Create a new member') . '</a>';
