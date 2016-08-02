@@ -1778,6 +1778,8 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
   }
 
   $form['actions']['submit']['#value'] = isset($form['#entity']->registration_id) ? t('Save') : t('Signup');
+  // Adding weight so that $form['mollom']['#weight'] reduced by 1 set to 99.
+  $form['actions']['#weight'] = 100;
 
   $form['anon_mail']['#required'] = TRUE;
 
