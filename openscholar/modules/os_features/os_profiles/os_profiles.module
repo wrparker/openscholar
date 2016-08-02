@@ -720,8 +720,8 @@ function os_profiles_profiles_fields() {
   return array(
     'title' => 'label',
     'body' => 'description',
-    'author' => 'author',
     'type' => 'type',
+    'field_prefix' => 'field_prefix',
     'field_first_name' => 'first_name',
     'field_last_name' => 'last_name',
     'field_middle_name_or_initial' => 'middle_name',
