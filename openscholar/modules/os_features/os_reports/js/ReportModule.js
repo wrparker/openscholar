@@ -14,6 +14,10 @@
       'username' : {
         'field_name' : 'u.name',
       },
+      'id' : {
+        'display' : 'Vsite ID',
+        'field_name' : 'purl.id',
+      },
       'site_title' : {
         'display' : 'site title',
         'field_name' : 'n.title',
@@ -21,8 +25,8 @@
       'os_install' : {
         'display' : 'os install',
       },
-      'owner_subdomain' : {
-        'display' : 'owner subdomain',
+      'other_site_changes' : {
+        'display' : 'non-content site changes',
         'sort' : false,
       },
       'site_created' : {
@@ -63,8 +67,8 @@
       $checked = eval("$scope.queryform." + $set + "." + $value);
 
       if ($scope.fieldConversion[$value] && $scope.fieldConversion[$value]['field_name']) {
-         $value = $scope.fieldConversion[$value]['field_name'];
-        }
+        $value = $scope.fieldConversion[$value]['field_name'];
+      }
 
       if ($checked && !$scope.params[$set]) {
         $scope.params[$set] = new Array($value);

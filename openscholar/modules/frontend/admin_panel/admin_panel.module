@@ -100,7 +100,7 @@ function admin_panel_library() {
           'keep_open' => _admin_panel_persist_open(),
         ),
         'version' => array(
-          'adminPanel' => '0.0.10'
+          'adminPanel' => '0.0.12'
         ),
       ),
       'type' => 'setting',
@@ -118,7 +118,7 @@ function admin_panel_library() {
     $path.'/misc/admin_panel-menu.css',
   );
 
-  $libs['user_panel']['version'] = '0.0.3';
+  $libs['user_panel']['version'] = '0.0.4';
   $libs['user_panel']['js'] = array(
     $path . '/misc/UserPanelModule.js' => array(),
     $path . '/misc/admin_panel.js' => array(),

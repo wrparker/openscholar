@@ -1427,7 +1427,7 @@ function os_files_media_browser_plugins_alter(&$output){
   $output['upload']['#title'] = t('My Computer');
   $output['media_default--media_browser_1']['#title'] = t('My Library');
 
-  // add an area to the views form to put the file edit form
+  // Add an area to the views form to put the file edit form.
   $html = &$output['media_default--media_browser_1']['#markup'];
   $html = str_replace(array('Submit', 'File name'), array('Insert', 'Search'), $html);
   $html .= '<div id="file-edit-section"><div id="file-edit-no-selection">Select a file to edit it.</div></div>';

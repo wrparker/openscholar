@@ -6,9 +6,6 @@ body {
     line-height: 23px;
     min-height: inherit;
 }
-.not-front #content-column {
-    font-size: 16px;
-}
 a,
 a:visited {
     color: #215990;
@@ -844,6 +841,9 @@ div.status .message-wrapper:before {
 div.error .message-wrapper:before {
     background-position: -72px -231px;
 }
+div.warning .message-wrapper:before {
+    background-position: -38px -260px;
+}
 
 /* Pagers */
 
@@ -885,4 +885,3 @@ ul.pager li.pager-item {
 .two-sidebars .sidebar .node-person.node-teaser .field-name-field-email {
     float: none;
 }
-

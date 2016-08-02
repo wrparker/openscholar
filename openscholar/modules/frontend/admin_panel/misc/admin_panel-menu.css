@@ -246,11 +246,30 @@ body.overlay {
 .topRight_subMenu li.notifications {
     position: relative;
 }
+.notifications-headsup .slate.alert {
+    top: 20px;
+    right: 35px;
+    border-radius: 20px;
+    height: 18px;
+    width: 12px;
+    display: block;
+    text-align: center;
+    line-height: 16px;
+    font-weight: bold;
+}
 .slate.alert {
     background: #EF0812;
     position: absolute;
-    top: 5px;
-    right: 50px;
+    top: 7px;
+    right: 52px;
+    font-size: 1em;
+    border-radius: 20px;
+    height: 18px;
+    width: 12px;
+    display: block;
+    text-align: center;
+    line-height: 16px;
+    font-weight: bold;
 }
 .alert {
     padding: 0 4px;
@@ -286,7 +305,7 @@ a {
 }
 .new-site-link {
     position: absolute;
-    top: 32px;
+    top: 57px;
     right: 20px;
 }
 .account_tab_popout.user_sites {
@@ -373,4 +392,22 @@ table.table-shading {
     padding: 6px 0 6px 8px;
     color: #444;
     font-weight: bold;
+}
+.search-vsite-textfield {
+    margin: 0px 0px 5px 0px;
+}
+.no-search-result{
+    padding: 5px 8px;
+}
+.clearable{
+    background: url(images/clear_site_search.gif) no-repeat right 6px center;
+    border: 1px solid #999;
+    padding: 3px 18px 3px 4px;
+    border-radius: 3px;
+    transition: background 0.4s;
+}
+a.search-clear {
+    position: relative;
+    left: -13px;
+    color: transparent;
 }

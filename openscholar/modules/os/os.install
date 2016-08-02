@@ -905,3 +905,18 @@ function os_update_7043() {
   module_enable(array('os_reports'));
   return t('Enabled OS Reports module.');
 }
+
+/**
+ * Override redirect_passthrough_querystring var
+ */
+function os_update_7044() {
+  features_revert(array('os' => array('variable')));
+}
+
+/**
+ * Clear entity cache.
+ */
+function os_update_7045() {
+  // Empty update to clear entity cache.
+  return t('entity cache cleared.');
+}
