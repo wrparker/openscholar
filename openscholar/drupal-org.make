@@ -316,6 +316,12 @@ projects[password_policy][patch][] = "https://gist.github.com/sagotsky/7321750/r
 projects[pathauto][subdir] = "contrib"
 projects[pathauto][version] = 1.2
 
+projects[plug][subdir] = "contrib"
+projects[plug][version] = "1.1"
+
+projects[registry_autoload][subdir] = "contrib"
+projects[registry_autoload][version] = "1.3"
+
 projects[pinserver][subdir] = "contrib"
 projects[pinserver][type] = module
 projects[pinserver][download][type] = git
@@ -342,10 +348,13 @@ projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
 
 projects[restful][subdir] = "contrib"
-projects[restful][download][type] = git
-projects[restful][download][url] = "https://github.com/RoySegall/restful.git"
-projects[restful][download][branch] = 444
-projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/839d0cc214f2422e924e35d33133d1268b8cc1cd/patches/restful.put_file.patch"
+projects[restful][version] = "2.11"
+
+;projects[restful][subdir] = "contrib"
+;projects[restful][download][type] = git
+;projects[restful][download][url] = "https://github.com/RoySegall/restful.git"
+;projects[restful][download][branch] = 444
+;projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/839d0cc214f2422e924e35d33133d1268b8cc1cd/patches/restful.put_file.patch"
 ;projects[restful][download][branch] = "7.x-1.x"
 ;projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
 

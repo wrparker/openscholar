@@ -7,18 +7,6 @@ if (!drupal_is_cli()) {
 }
 
 /**
- * Implements hook_ctools_plugin_directory().
- */
-function os_restful_ctools_plugin_directory($module, $plugin) {
-  if ($module == 'restful') {
-    return 'plugins/' . $plugin;
-  }
-  if ($module == 'entity_validator') {
-    return 'plugins/' . $plugin;
-  }
-}
-
-/**
  * Implements hook_cron().
  */
 function os_restful_cron() {
@@ -165,18 +153,21 @@ function _os_restful_store_props($key, $value = null) {
   return $stored[$key];
 }
 
-function os_restful_restful_parse_request_alter(&$request) {
-  if (!empty($request['timestamp'])) {
-    _os_restful_store_props('timestamp', $request['timestamp']);
+function os_restful_restful_parse_request_alter(\Drupal\restful\Http\RequestInterface &$request) {
+  $request_payload = $request->getParsedBody();
+
+  if (!empty($request_payload['timestamp'])) {
+    _os_restful_store_props('timestamp', $request_payload['timestamp']);
   }
 
-  if (!empty($request['vsite'])) {    // find way to get vsite when it's not explicitly given
-    $vsite = vsite_get_vsite($request['vsite']);
+  if (!empty($request_payload['vsite'])) {
+    // Find way to get vsite when it's not explicitly given.
+    $vsite = vsite_get_vsite($request_payload['vsite']);
     $vsite->activate_user_roles();
   }
 
-  if (!empty($request['file'])) {
-    $request['file']->type = file_get_type($request['file']);
+  if (!empty($request_payload['file'])) {
+    $request_payload['file']->type = file_get_type($request_payload['file']);
   }
 }
 
