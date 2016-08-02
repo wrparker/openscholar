@@ -93,7 +93,7 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
   public function vsiteFieldDisplay($values) {
     $account = $this->getAccount();
     ctools_include('subsite', 'vsite');
-   
+
     $groups = array();
     // Obtaining associative array of custom domains, keyed by space id
     $custom_domains = $this->getCustomDomains($values);
@@ -116,14 +116,14 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
    * Returns associative array of custom domains, keyed by space id
    */
   protected function getCustomDomains($vsites) {
-    $space_id = array();
+    $space_ids = array();
     foreach ($vsites as $vsite) {
-      $space_id[] = $vsite->nid;
+      $space_ids[] = $vsite->nid;
     }
     $result = db_select('purl', 'p')
       ->fields('p', array('id', 'value'))
       ->condition('provider', 'vsite_domain','=')
-      ->condition('id', $space_id, 'IN')
+      ->condition('id', $space_ids, 'IN')
       ->execute()
       ->fetchAllKeyed(0, 1);
     return $result;
