@@ -141,13 +141,28 @@
     #menu-bar #block-os-primary-menu a.active.active ~ ul li a:hover {
         background: none !important;
     }
-    .open-submenu {
+  .open-submenu {
     position: absolute;
     width: 40px;
     height: 40px;
-    background-color: #ccc;
+    background-color: #efefef;
     top: 0;
     right: 0;
+}
+     .open-submenu:after {
+    content:'+';
+    font-size:30px;
+    
+    color:#444;
+  
+}
+
+ .open-submenu.open:after {
+    content:'-';
+     font-size:40px;
+   
+ color:#444;
+   
 }
     
     
