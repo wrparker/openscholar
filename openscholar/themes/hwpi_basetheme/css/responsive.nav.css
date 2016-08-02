@@ -143,9 +143,9 @@
     }
     .open-submenu {
     position: absolute;
-    width: 30px;
-    height: 30px;
-    background-color: #ff0000;
+    width: 40px;
+    height: 40px;
+    background-color: #ccc;
     top: 0;
     right: 0;
 }
