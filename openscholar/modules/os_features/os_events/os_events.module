@@ -1958,7 +1958,7 @@ function os_events_preprocess_table(&$variables) {
 function os_events_entity_query_alter($query) {
 
   // Skip this if we are not looking for registrations.
-  if (empty($query->entityConditions) || $query->entityConditions['entity_type']['value'] != 'registration') {
+  if (empty($query->entityConditions['entity_type']) || $query->entityConditions['entity_type']['value'] != 'registration') {
     return;
   }
 
