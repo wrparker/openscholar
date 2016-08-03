@@ -150,23 +150,13 @@
     right: 0;
 }
      .open-submenu:after {
-    content:'+';
-    font-size:30px;
-    
-    color:#444;
+    content: url('../images/resp-menu-dwnarrw.png');
+   
   
 }
 
- .open-submenu.open:after {
-    content:'-';
-     font-size:40px;
-   
- color:#444;
-   
-}
-    
-    
-    
+
+  
     
     /*Secondary menu*/
     
