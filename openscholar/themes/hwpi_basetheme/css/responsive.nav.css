@@ -150,7 +150,7 @@
     right: 0;
 }
      .open-submenu:after {
-    content: url('../images/resp-menu-dwnarrw.png');
+    content: url('../images/resp-menu-dwnarrw.png?123');
    
   
 }
