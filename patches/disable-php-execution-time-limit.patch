@@ -1,10 +1,11 @@
---- ./www-build/index.php
-+++ ./www-build/index.php
-@@ -16,6 +16,8 @@
+--- www/index.php
++++ www/index.php
+@@ -16,6 +16,9 @@
   */
  define('DRUPAL_ROOT', getcwd());
  
 +set_time_limit(0);
++ini_set('memory_limit', '4G');
 +
  require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
  drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
