@@ -33,3 +33,6 @@
 .sv-list-view-full .node-person .pic-bio {
     width: 100%;
 }
+.node-person .field-name-field-professional-title.view-mode-sidebar_teaser .field-items .field-item {
+    display:block;
+}
