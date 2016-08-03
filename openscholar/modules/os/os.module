@@ -2906,7 +2906,7 @@ function os_process_region(&$vars) {
 * todo: remove once the og security issue will be merged.
 */
 function os_entity_query_alter(EntityFieldQuery $query) {
-  if ($query->entityConditions['entity_type']['value'] != 'og_membership') {
+  if (empty($query->entityConditions['entity_type']) || $query->entityConditions['entity_type']['value'] != 'og_membership') {
     return;
 }
 
