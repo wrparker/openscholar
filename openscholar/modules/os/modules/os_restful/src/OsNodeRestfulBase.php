@@ -1,32 +1,37 @@
 <?php
 
-class OsNodeRestfulBase extends RestfulEntityBaseNode {
+namespace Drupal\os_restful;
+
+use Drupal\restful\Http\RequestInterface;
+use Drupal\restful\Plugin\resource\ResourceNode;
+
+class OsNodeRestfulBase extends ResourceNode {
 
   /**
    * Overrides \RestfulDataProviderEFQ::controllersInfo().
    */
-  public static function controllersInfo() {
+  public function controllersInfo() {
     return array(
       '' => array(
-        \RestfulInterface::GET => 'getList',
-        \RestfulInterface::HEAD => 'getList',
-        \RestfulInterface::POST => 'createEntity',
-        \RestfulInterface::DELETE => 'deleteEntity',
+        RequestInterface::METHOD_GET => 'getList',
+        RequestInterface::METHOD_HEAD => 'getList',
+        RequestInterface::METHOD_POST => 'createEntity',
+        RequestInterface::METHOD_DELETE => 'deleteEntity',
       ),
       '^(\d+,)*\d+$' => array(
-        \RestfulInterface::GET => 'viewEntities',
-        \RestfulInterface::HEAD => 'viewEntities',
-        \RestfulInterface::PUT => 'putEntity',
-        \RestfulInterface::PATCH => 'patchEntity',
-        \RestfulInterface::DELETE => 'deleteEntity',
+        RequestInterface::METHOD_GET => 'viewEntities',
+        RequestInterface::METHOD_HEAD => 'viewEntities',
+        RequestInterface::METHOD_PUT => 'putEntity',
+        RequestInterface::METHOD_PATCH => 'patchEntity',
+        RequestInterface::METHOD_DELETE => 'deleteEntity',
       ),
     );
   }
 
-  public function publicFieldsInfo() {
-    $public_fields = parent::publicFieldsInfo();
+  public function publicFields() {
+    $public_fields = parent::publicFields();
 
-    if ($this->getBundle()) {
+    if ($this->getBundles()) {
       $public_fields['vsite'] = array(
         'property' => OG_AUDIENCE_FIELD,
         'process_callbacks' => array(
@@ -40,13 +45,17 @@ class OsNodeRestfulBase extends RestfulEntityBaseNode {
       'sub_property' => 'value',
     );
 
-    if (field_info_instance($this->getEntityType(), 'field_upload', $this->getBundle())) {
-      $public_fields['files'] = array(
-        'property' => 'field_upload',
-        'process_callbacks' => array(
-          array($this, 'fileFieldDisplay'),
-        ),
-      );
+    foreach ($this->getBundles() as $bundle) {
+      if (field_info_instance($this->getEntityType(), 'field_upload', $bundle)) {
+        $public_fields['files'] = array(
+          'property' => 'field_upload',
+          'process_callbacks' => array(
+            array($this, 'fileFieldDisplay'),
+          ),
+        );
+
+        break;
+      }
     }
 
     return $public_fields;
