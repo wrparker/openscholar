@@ -1788,13 +1788,12 @@ function os_events_form_registration_form_alter(&$form, &$form_state) {
     'field_full_name' => $form['field_full_name'],
     'field_department' => $form['field_department'],
     'anon_mail' => $form['anon_mail'],
-    'actions' => $form['actions'],
   );
 
   // Make sure the form it rebuilt, so if there's a validation error, we can
   // keep the event registration fieldset open.
   $form_state['rebuild'] = TRUE;
-  unset($form['actions'], $form['field_full_name'], $form['field_department'], $form['anon_mail'], $form['user']);
+  unset($form['field_full_name'], $form['field_department'], $form['anon_mail'], $form['user']);
 
   $form['#validate'][] = 'os_events_registration_form_validate';
   $form['#validate'][] = 'os_events_modal_validate';
