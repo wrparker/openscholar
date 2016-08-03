@@ -712,7 +712,7 @@ function os_profiles_profiles_fields() {
     'title' => 'label',
     'body' => 'description',
     'type' => 'type',
-    'field_prefix' => 'field_prefix',
+    'field_prefix' => 'prefix',
     'field_first_name' => 'first_name',
     'field_last_name' => 'last_name',
     'field_middle_name_or_initial' => 'middle_name',

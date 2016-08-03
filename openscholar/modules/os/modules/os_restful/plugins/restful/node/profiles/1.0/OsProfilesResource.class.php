@@ -26,6 +26,10 @@ class OsProfilesResource extends RestfulEntityBaseNode {
       'property' => 'field_email',
     );
 
+    $public_fields['prefix'] = array(
+      'property' => 'field_prefix',
+    );
+
     $public_fields['first_name'] = array(
       'property' => 'field_first_name',
     );
