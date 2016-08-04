@@ -50,7 +50,7 @@ abstract class os_boxes_widget_collection extends os_boxes_default {
         }
 
         // Saving widget title and description in array to use in JavaScript Layer as Drupal.settings object.
-        $widget_collection[$wgt]['title'] = empty($info['title']) ? trim($info['info']) : trim($info['title']);
+        $widget_collection[$wgt]['title'] = trim($info['title']);
         $widget_collection[$wgt]['desc'] = $options[$wgt];
       }
     }
