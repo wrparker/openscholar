@@ -26,9 +26,14 @@
     background-color: #f3f3f1 !important;
     color: #FFF !important;
   }
+    #menu-bar #block-os-primary-menu .menuparent ul li a,
   #menu-bar #block-os-primary-menu a {
     color: #222 !important;
   }
+
+#menu-bar #block-os-primary-menu a.active {
+    color: #FFF !important;
+}
   #menu-bar #block-os-primary-menu li {
     border-bottom: 1px solid #f4f4f4!important;
     border-top: none!important;
