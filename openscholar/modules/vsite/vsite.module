@@ -464,7 +464,7 @@ function vsite_form_node_delete_confirm_alter(&$form, &$form_state) {
   $redirect_url = drupal_parse_url($destination['destination']);
   $cancel_link = isset($destination['destination']) ? $redirect_url['path'] : 'user';
   $form['actions']['cancel'] = array(
-    '#markup' => l(t('Cancel'), $cancel_link, array('query' => $redirect_url['query'], 'absolute' => TRUE, 'attributes' => array('class' => 'form-cancel'))),
+    '#markup' => l(t('Cancel'), $cancel_link, array('query' => $redirect_url['query'], 'absolute' => TRUE, 'attributes' => array('class' => array('form-cancel')))),
   );
   $options = array();
   $options['query'] = $redirect_url['query'];
@@ -2277,7 +2277,7 @@ function vsite_delete_request_form($form, &$form_state) {
   $redirect_url = drupal_parse_url($destination['destination']);
   $cancel_link = isset($destination['destination']) ? $redirect_url['path'] : 'user';
   $form['cancel'] = array(
-    '#markup' => l(t('Cancel'), $cancel_link, array('query' => $redirect_url['query'], 'attributes' => array('class' => 'form-cancel'))),
+    '#markup' => l(t('Cancel'), $cancel_link, array('query' => $redirect_url['query'], 'attributes' => array('class' => array('form-cancel')))),
   );
 
   $form['#submit'][] = 'vsite_delete_request_submit';
