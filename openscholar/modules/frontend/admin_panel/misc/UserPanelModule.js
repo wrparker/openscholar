@@ -54,7 +54,11 @@
       $scope.create_access = response.data.data[0].create_access;
     });
     $scope.pageSize = 7;
-    $scope.delete_destination = encodeURIComponent('?destination=node/' + Drupal.settings.spaces.id + encodeURIComponent('?destination=' + window.location.pathname.replace(/^\/|\/$/g, '')));    
+    if (Drupal.settings.spaces.id) {
+      $scope.delete_destination = encodeURIComponent('?destination=node/' + Drupal.settings.spaces.id + encodeURIComponent('?destination=' + window.location.pathname.replace(/^\/|\/$/g, '')));
+    } else {
+      $scope.delete_destination = '';
+    }
     $scope.numberOfPages=function(data){
       return Math.ceil(data.length/$scope.pageSize);
     }

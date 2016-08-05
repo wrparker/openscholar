@@ -445,7 +445,6 @@ function vsite_alias_has_purl_prefix($alias, $vsite_id) {
  * Prevent accidental delete of VSites, by hardening the confirmation page.
  */
 function vsite_form_node_delete_confirm_alter(&$form, &$form_state) {
-  global $base_url;
   $node = $form['#node'];
   if (!og_is_group_type('node', $node->type)) {
     // Not a group node.
@@ -464,11 +463,9 @@ function vsite_form_node_delete_confirm_alter(&$form, &$form_state) {
   $destination = drupal_get_destination();
   $redirect_url = drupal_parse_url($destination['destination']);
   $cancel_link = isset($destination['destination']) ? $redirect_url['path'] : 'user';
-
   $form['actions']['cancel'] = array(
     '#markup' => l(t('Cancel'), $cancel_link, array('query' => $redirect_url['query'], 'absolute' => TRUE, 'attributes' => array('class' => 'form-cancel'))),
   );
-
   $options = array();
   $options['query'] = $redirect_url['query'];
   $form_state['redirect'] = isset($redirect_url['path']) ? array($redirect_url['path'], $options) : 'user';
@@ -2279,7 +2276,6 @@ function vsite_delete_request_form($form, &$form_state) {
   $destination = drupal_get_destination();
   $redirect_url = drupal_parse_url($destination['destination']);
   $cancel_link = isset($destination['destination']) ? $redirect_url['path'] : 'user';
-
   $form['cancel'] = array(
     '#markup' => l(t('Cancel'), $cancel_link, array('query' => $redirect_url['query'], 'attributes' => array('class' => 'form-cancel'))),
   );
