@@ -93,7 +93,7 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
   public function vsiteFieldDisplay($values) {
     $account = $this->getAccount();
     ctools_include('subsite', 'vsite');
-
+ 
     $groups = array();
     // Obtaining associative array of custom domains, keyed by space id
     $custom_domains = $this->getCustomDomains($values);
@@ -103,7 +103,7 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
         'title' => $value->title,
         'id' => $value->nid,
         'purl' => $value->purl,
-        'base_url' => isset($custom_domains[$value->nid]) ? 'http://' . $custom_domains[$value->nid] : $purl_base_domain . '/' . $value->purl,
+        'delete_base_url' => isset($custom_domains[$value->nid]) ? 'http://' . $custom_domains[$value->nid] . '/#overlay=' : $purl_base_domain . '/#overlay=' . $value->purl . '/',
         'owner' => ($value->uid == $account->uid),
         'subsite_access' => vsite_subsite_access('create', $value),
         'delete_access' => node_access('delete', $value),
