@@ -54,7 +54,7 @@
       $scope.create_access = response.data.data[0].create_access;
     });
     $scope.pageSize = 7;
-    if (Drupal.settings.spaces.id) {
+    if (Drupal.settings.spaces) {
       $scope.delete_destination = encodeURIComponent('?destination=node/' + Drupal.settings.spaces.id + encodeURIComponent('?destination=' + window.location.pathname.replace(/^\/|\/$/g, '')));
     } else {
       $scope.delete_destination = '';
