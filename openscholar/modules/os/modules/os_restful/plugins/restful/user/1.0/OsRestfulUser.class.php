@@ -122,7 +122,7 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
     }
     $result = db_select('purl', 'p')
       ->fields('p', array('id', 'value'))
-      ->condition('provider', 'vsite_domain','=')
+      ->condition('provider', 'vsite_domain', '=')
       ->condition('id', $space_ids, 'IN')
       ->execute()
       ->fetchAllKeyed(0, 1);
