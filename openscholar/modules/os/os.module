@@ -15,6 +15,11 @@ include_once ('includes/os.inc');
 define('OS_READONLY_MODE_MESSAGE', 'Site is under maintenance, login and registration is currently disabled.');
 
 /**
+ * Define the number of seconds before session timeout when warning message will be displayed.
+ */
+define('OS_SESSION_TIMEOUT_WARNING_INTERVAL', 300);
+
+/**
  * Implements hook_menu().
  */
 function os_menu() {
@@ -94,6 +99,55 @@ function os_menu() {
     'context' => MENU_CONTEXT_INLINE,
     'weight' => 3,
   );
+
+  $items['admin/config/people/user_ownership_migration'] = array(
+    'title' => 'User ownership migration',
+    'description' => 'Transfer user content ownership from one user to another',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os_user_migration_ownership'),
+    'access arguments' => array('administer users'),
+  );
+
+  $items['admin/config/people/user_ownership_migration/migrate'] = array(
+    'title' => 'Migrate',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+
+  $items['admin/config/people/user_ownership_migration/review'] = array(
+    'title' => 'Review migrations',
+    'page callback' => 'os_view_migrated_users',
+    'access callback' => 'os_view_migrated_users_access',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $items['admin/config/people/user_ownership_migration/delete/%user'] = array(
+    'title' => 'Review migrations',
+    'page callback' => 'os_view_migrated_users_delete',
+    'page arguments' => array(5),
+    'access callback' => 'os_view_migrated_users_access',
+  );
+
+  $items['extend_os_session'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => '',
+    'page callback' => 'extend_os_session',
+    'access arguments' => array('access content'),
+  );
+
+  $items['check_os_session_status'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => '',
+    'page callback' => 'check_os_session_status',
+    'access arguments' => array('access content'),
+  );
+
+  $items['os_session_destroy'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => '',
+    'page callback' => 'os_session_destroy',
+    'access arguments' => array('access content'),
+  ); 
 
   return $items;
 }
@@ -245,6 +299,17 @@ function os_entity_info_alter(&$info) {
     'label' => t('No image Teaser'),
     'custom settings' => TRUE,
   );
+
+  // Remove field replacement for entities that don't need it
+  if (!empty($entity_info['file']['field replacement'])) {
+    unset($entity_info['file']['field replacement']);
+  }
+  if (!empty($entity_info['taxonomy_term']['field replacement'])) {
+    unset($entity_info['taxonomy_term']['field replacement']);
+  }
+  if (!empty($entity_info['comment']['field replacement'])) {
+    unset($entity_info['comment']['field replacement']);
+  }
 }
 
 /**
@@ -678,8 +743,24 @@ function _os_process_node_links_comment_add_class(&$vars) {
  */
 function os_preprocess_page(&$vars) {
   global $user;
+  // Session timeout checking will be only for logged in users.
+  if ($user->uid) {
+    // Obtaining session lifetime value from php configuration.
+    $cookie_lifetime = ini_get('session.cookie_lifetime');
+    $setting = array(
+      'session_lifetime' => $cookie_lifetime,
+      'warning_interval_before_timeout' => OS_SESSION_TIMEOUT_WARNING_INTERVAL
+    );
+    drupal_add_js(array('os' => $setting), 'setting');
+    // Including jquery rooster plugins for timer countdown display in session timeout warning message.
+    drupal_add_js(drupal_get_path('module', 'os') . '/js/jquery.simple.timer.js');
+    drupal_add_js(drupal_get_path('module', 'os') . '/js/os_session_timeout.js');
+  }
+
   // Add the dismiss messages JS.
   drupal_add_js(drupal_get_path('module', 'os') . "/theme/os_dismiss.js", "file");
+  // Add JS to initialize window.tinyMCEPreInit object before tinymce loading to work with static domain. 
+  drupal_add_js(drupal_get_path('module', 'os') . "/js/os_tinymce_init.js", "file");
 
   // Add the dismiss messages CSS.
   drupal_add_css(drupal_get_path('module', 'os') . "/theme/os_dismiss.css", array(
@@ -1711,7 +1792,7 @@ function os_node_view_alter(&$build) {
 function os_contextual_links_view_alter(&$element, $items) {
 
   // Delete "Remove Widget" from main content region
-  if ($element['#element']['#block']->delta == "main_content") {
+  if (isset($element['#element']['#block']) && $element['#element']['#block']->delta == "main_content") {
     unset($element['#links']['widget-remove']);
   }
 
@@ -2125,7 +2206,7 @@ function os_form_user_login_alter(&$form, $form_state) {
   // If user login form is overridden by pinserver_authenticate module, then $form['pin-fieldset'] will be initialized from there.
   // $form['name'] and $form['pass'] both will be unset from pinserver_authenticate module
   if (isset($form['pin-fieldset'])) {
-    unset($form['pin-fieldset']['#title']);
+    //unset($form['pin-fieldset']['#title']);
     $form['pin-fieldset']['name']['#title'] = t('OpenScholar Username / E-Mail');
     $form['pin-fieldset']['pass']['#description'] = t('!request', array('!request' => l('Forgot your password?', 'user/password')));
     $form['pin-fieldset']['pass']['#title'] = "OpenScholar Password";
@@ -2219,16 +2300,18 @@ function os_libraries_autopager_add_js() {
 function os_grant_unpublished_viewing_permission() {
   $group_content = og_get_all_group_content_bundle('node');
 
-  foreach (array_keys($group_content) as $bundle) {
-    $group_types = array('department', 'personal', 'project');
+  if (is_array($group_content)) {
+    foreach (array_keys($group_content) as $bundle) {
+      $group_types = array('department', 'personal', 'project');
 
-    foreach ($group_types as $group_type) {
-      $roles = og_roles('node', $group_type);
-      foreach ($roles as $rid => $role) {
-        if (!in_array($role, array('vsite admin', 'content editor'))) {
-          continue;
+      foreach ($group_types as $group_type) {
+        $roles = og_roles('node', $group_type);
+        foreach ($roles as $rid => $role) {
+          if (!in_array($role, array('vsite admin', 'content editor'))) {
+            continue;
+          }
+          og_role_grant_permissions($rid, array('view any unpublished ' . $bundle . ' content'));
         }
-        og_role_grant_permissions($rid, array('view any unpublished ' . $bundle . ' content'));
       }
     }
   }
@@ -2250,9 +2333,10 @@ function os_views_query_alter(&$view, &$query) {
   $allowed_types = array();
   foreach ($query->where as $where) {
     foreach ($where['conditions'] as $condition) {
+
       if (empty($condition['field']) || empty($condition['operator'])) {
         // Not a real condition.
-        return;
+        continue;
       }
 
       // Check if the condition allows specific node types.
@@ -2444,6 +2528,37 @@ function os_expire_cache($urls, $wildcards, $object_type, $object) {
 
     // Clear cached page data.
     cache_clear_all($absolute_url, 'cache_page', $wildcard);
+  }
+}
+
+/**
+ * Adds feed pages to expired url lists.
+ */
+function os_expire_cache_alter(&$urls, $object_type, $object) {
+
+  if ($object_type == 'node') {
+    $node = $object;
+    $terms = array();
+    $field_info = field_info_fields();
+    $field_instances = field_info_instances($object_type, $node->type);
+
+    foreach ($field_instances as $name => $instance) {
+      if ($field_info[$name]['type'] == 'entityreference' && $field_info[$name]['settings']['target_type'] == 'taxonomy_term') {
+        $new_terms = field_get_items('node', $node, $name);
+        if (is_array($new_terms) && !empty($new_terms)) {
+          $terms = array_merge($new_terms, $terms);
+        }
+        $old_terms = isset($node->original) && !empty($node->original) ? field_get_items('node', $node->original, $name) : array();
+        if (is_array($old_terms) && !empty($old_terms)) {
+          $terms = array_merge($old_terms, $terms);
+        }
+      }
+    }
+
+    foreach ($terms as $term) {
+      $urls['term-' . $term['target_id']] = 'taxonomy/term/' . $term['target_id'];
+      $urls['term-' . $term['target_id'] . '-feed'] = 'taxonomy/term/' . $term['target_id'] . '/feed';
+    }
   }
 }
 
@@ -2791,7 +2906,7 @@ function os_process_region(&$vars) {
 * todo: remove once the og security issue will be merged.
 */
 function os_entity_query_alter(EntityFieldQuery $query) {
-  if ($query->entityConditions['entity_type']['value'] != 'og_membership') {
+  if (empty($query->entityConditions['entity_type']) || $query->entityConditions['entity_type']['value'] != 'og_membership') {
     return;
 }
 
@@ -2946,6 +3061,411 @@ function os_page_build(&$page) {
 }
 
 /**
+ * The callback function to declare the os user migration ownership form.
+ */
+function os_user_migration_ownership($form, &$form_state) {
+
+  $form['primary_user'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Primary user'),
+    '#description' => t('The target content user'),
+    '#size' => 30,
+    '#maxlength' => 60,
+    '#autocomplete_path' => 'user/autocomplete',
+  );
+
+  $form['secondary_user'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Secondary user'),
+    '#description' => t('The target user that will be the new content owner'),
+    '#size' => 30,
+    '#maxlength' => 60,
+    '#autocomplete_path' => 'user/autocomplete',
+  );
+
+  $form['batch_cycles'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Number of items'),
+    '#description' => t('Set a limit of how many items to process for each content migration batch.'),
+    '#size' => 30,
+    '#maxlength' => 60,
+    '#default_value' => 50,
+  );
+
+  $form['actions'] = array(
+    '#type' => 'actions',
+
+    'submit' => array(
+      '#value' => t('Change ownership'),
+      '#description' => t('Change the content ownership from primary user into secondary user'),
+      '#type' => 'submit',
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * Add a validate handler/function to the form.
+ */
+function os_user_migration_ownership_validate($form, &$form_state) {
+  global $user;
+
+  //  In case the "primary" user does not exists.
+  if (!$primary_user = user_load_by_name(trim($form_state['values']['primary_user']))) {
+    form_set_error('primary_user', t('Primary user does not exists'));
+  }
+
+  //  In case the "secondary" user does not exists.
+  if (!$secondary_user = user_load_by_name(trim($form_state['values']['secondary_user']))) {
+    form_set_error('secondary_user', t('Secondary user does not exists'));
+  }
+
+  // Exit early in case one of the users does not exists.
+  if (empty($primary_user) || empty($secondary_user)) {
+    return;
+  }
+
+  // In case the "secondary user" and the current logged in user are the same user.
+  if ($secondary_user->uid == $user->uid) {
+    form_set_error('secondary_user', t('The secondary user must not be yourself, You cannot change ownership of your own content.'));
+    return;
+  }
+
+  // In case both users are the same user.
+  if ($primary_user->uid === $secondary_user->uid) {
+    form_set_error('secondary_user', t('The secondary user must not be the same as the primary user'));
+    return;
+  }
+
+  // In case we have no errors then add the users objects.
+  $form_state['values']['primary_user'] = $primary_user;
+  $form_state['values']['secondary_user'] = $secondary_user;
+}
+
+/**
+ * Add a submit handler/function to the form.
+ *
+ * This will add a completion message to the screen when the
+ * form successfully processes
+ */
+function os_user_migration_ownership_submit($form, &$form_state) {
+
+  // The primary user.
+  $primary_user = $form_state['values']['primary_user'];
+
+  // The secondary user.
+  $secondary_user = $form_state['values']['secondary_user'];
+
+  $content = os_get_user_content($secondary_user->uid);
+
+  $memberships = os_get_user_content($secondary_user->uid, 'og_membership', 'etid');
+
+  // In case their is no content.
+  if (!$content && !$memberships) {
+    drupal_set_message(t('User: "@name" has no content on the site', array('@name' => $secondary_user->name)));
+    return;
+  }
+
+  $operations = array(
+    array('os_user_block_user', array($secondary_user->uid)),
+  );
+
+  // Process and change the entity ownership in batches.
+  $chunks = array_chunk($content, $form_state['values']['batch_cycles']);
+  foreach ($chunks as $chunk) {
+    $operations[] = array('os_user_change_content_ownership', array('node', 'uid', $primary_user->uid, $chunk));
+  }
+
+  $chunks = array_chunk($memberships, $form_state['values']['batch_cycles']);
+  foreach ($chunks as $chunk) {
+    $operations[] = array('os_user_change_content_ownership', array('og_membership', 'etid', $primary_user->uid, $chunk));
+  }
+
+  // Move all the og roles.
+  $operations[] = array('os_user_transfer_og_roles', array($primary_user, $secondary_user));
+
+  // Remove all the duplicate memberships.
+  $operations[] = array('os_user_remove_duplicated_ownerships', array($primary_user));
+
+  // Save information about the operation.
+  $operations[] = array('os_user_transfer_statistics_save', array(count($content), count($memberships), $secondary_user));
+
+  // Prepare batch settings
+  $batch = array(
+    'operations' => $operations,
+    'finished' => 'os_ownership_batch_finished',
+    'init_message' => t('Starting to switch content ownership from user: @secondary to user: @primary', array('@primary' => $primary_user->name, '@secondary' => $secondary_user->name)),
+    'error_message' => t('Changing ownership process failed.'),
+  );
+  batch_set($batch);
+}
+
+/**
+ * Get all of the user nodes
+ *
+ * @param $uid
+ *   The user ID.
+ * @param $entity_type
+ *   The entity type: OG membership, node etc. etc.
+ * @param $owner_property
+ *   The property in the table which specify the owner of the entity.
+ * @param $order_key
+ *   The order to order by. Optional.
+ *
+ * @return array|bool
+ */
+function os_get_user_content($uid, $entity_type = 'node', $owner_property = 'uid', $order_key = NULL) {
+  // Get all of the target entities.
+  $query = new EntityFieldQuery();
+  $query
+    ->entityCondition('entity_type', $entity_type)
+    ->propertyCondition($owner_property, $uid);
+
+  if ($entity_type == 'og_membership') {
+    // In case of OG membership the entity type should be user.
+    $query->propertyCondition('entity_type', 'user');
+  }
+
+  if ($order_key) {
+    $query->propertyOrderBy($order_key);
+  }
+
+  $result = $query
+    ->execute();
+
+  // Return early in case their is no content.
+  if (!$result) {
+    return FALSE;
+  }
+
+  return array_keys($result[$entity_type]);
+}
+
+/**
+ * Callback to handle the batch cycle.
+ *
+ * @param $entity_type
+ *   The entity type.
+ * @param $property_type
+ *   The property type - uid or etid.
+ * @param $uid
+ *   The new user ID owner.
+ * @param $entity_ids
+ *   The current batch entities IDs
+ */
+function os_user_change_content_ownership($entity_type, $property_type, $uid, $entity_ids) {
+  $entities = entity_load($entity_type, $entity_ids);
+  foreach ($entities as $entity) {
+    os_user_change_single_content_ownership($entity_type, $property_type, $entity, $uid);
+  }
+}
+
+/**
+ * Block a certain user.
+ *
+ * @param $uid
+ *   The user ID.
+ */
+function os_user_block_user($uid) {
+  $user = entity_load_single('user', $uid);
+
+  $user->status = 0;
+  $uids = variable_get('os_ownership_migration_uids', array());
+  $uids[] = $user->uid;
+  variable_set('os_ownership_migration_uids', $uids);
+  entity_save('user', $user);
+}
+
+/**
+ * Chane the content author.
+ *
+ * @param $entity_type
+ *   The entity type - node, OG membership.
+ * @param $property_type
+ *   The property type - uid or etid.
+ * @param $entity
+ *   The entity object.
+ * @param $uid
+ *   The user ID.
+ */
+function os_user_change_single_content_ownership($entity_type, $property_type, $entity, $uid) {
+  $entity->{$property_type} = $uid;
+  entity_save($entity_type, $entity);
+}
+
+/**
+ * Finished callback of the batch oparation.
+ */
+function os_ownership_batch_finished($success, $results, $operations) {
+  $message = t('The migration is complete.');
+  drupal_set_message($message);
+}
+
+/**
+ * Move OG roles.
+ *
+ * @param $primary_user
+ *   The user which the own the roles.
+ * @param $secondary_user
+ *   The user which the roles he own will move to the primary user.
+ */
+function os_user_transfer_og_roles($primary_user, $secondary_user) {
+  // Get secondary user roles
+  $og_roles = db_select('og_users_roles', 'ogu')
+    ->fields('ogu')
+    ->condition('uid', $secondary_user->uid)
+    ->execute();
+
+  foreach ($og_roles as $og_role) {
+    $primary_user_roles = db_select('og_users_roles', 'ogu')
+      ->fields('ogu')
+      ->condition('uid', $primary_user->uid)
+      ->condition('group_type', $og_role->group_type)
+      ->condition('gid', $og_role->gid)
+      ->condition('rid', $og_role->rid);
+
+    if ($primary_user_roles->execute()->rowCount()) {
+      db_delete('og_users_roles')
+        ->condition('uid', $primary_user->uid)
+        ->condition('group_type', $og_role->group_type)
+        ->condition('gid', $og_role->gid)
+        ->condition('rid', $og_role->rid)
+        ->execute();
+    }
+    else {
+      db_insert('og_users_roles')
+        ->fields(array(
+          'uid' => $primary_user->uid,
+          'group_type' => $og_role->group_type,
+          'gid' => $og_role->gid,
+          'rid' => $og_role->rid,
+        ))
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Prepare duplicate memberships for deletion.
+ *
+ * @param $user
+ *   The user object.
+ */
+function os_user_remove_duplicated_ownerships($user) {
+  $mids = os_get_user_content($user->uid, 'og_membership', 'etid', 'gid');
+  $memberships = og_membership_load_multiple($mids);
+
+  $obj = new ArrayObject($memberships);
+  $it = $obj->getIterator();
+
+  $ids_delete = array();
+  while ($it->valid()) {
+    $current = $it->current();
+    $it->next();
+    $next = $it->current();
+
+    if ($next->gid == $current->gid && $next->group_type == $current->group_type) {
+      $ids_delete[] = $next->id;
+    }
+  }
+
+  og_membership_delete_multiple($ids_delete);
+}
+
+/**
+ * Saving statistics information about the operation.
+ *
+ * @param $nodes
+ *   The number of nodes.
+ * @param $memberships
+ *   The number of OG memberships.
+ * @param $user
+ *   The secondary user object which all the content have been migrated from.
+ */
+function os_user_transfer_statistics_save($nodes, $memberships, $user) {
+  $statistics = variable_get('os_ownership_migration_stats', array());
+  $statistics[$user->uid] = array('nodes' => $nodes, 'memberships' => $memberships);
+  variable_set('os_ownership_migration_stats', $statistics);
+}
+
+/**
+ * Page callback; A table with the users which their content was migrated to
+ * another user. The table also contains a link to the delete the user when
+ * possible.
+ *
+ * @return string
+ *   The table's html string.
+ *
+ * @throws Exception
+ */
+function os_view_migrated_users() {
+  $users = user_load_multiple(variable_get('os_ownership_migration_uids'));
+  $information = variable_get('os_ownership_migration_stats');
+
+  $rows = array();
+  foreach ($users as $user) {
+
+    if (!os_get_user_content($user->uid)) {
+      $can_delete = t('Yes - <a href="@url">Delete</a>', array('@url' => url('admin/config/people/user_ownership_migration/delete/' . $user->uid)));
+    }
+    else {
+      $can_delete = t('No. The user still have content relate to him. Please try to migrate again.');
+    }
+
+    $user_info = $information[$user->uid];
+
+    $rows[] = array(
+      $user->name,
+      $can_delete,
+      format_plural($user_info['nodes'], '1 Node', '@count Nodes') . '<br />' . format_plural($user_info['memberships'], '1 Membership', '@count Memberships'),
+    );
+  }
+
+  return theme('table', array(
+    'header' => array(
+      t('Username'),
+      t('Can delete?'),
+      t('Statistics information'),
+    ),
+    'rows' => $rows,
+  ));
+}
+
+/**
+ * Access callback for the review of the migrated users and the delete user
+ * from the system.
+ *
+ * @return bool
+ */
+function os_view_migrated_users_access() {
+  return user_access('administer users') && variable_get('os_ownership_migration_uids');
+}
+
+/**
+ * Delete the user from the system and revoke the user ID form the array of
+ * migrate users.
+ *
+ * @param stdClass $user
+ *   The user object.
+ */
+function os_view_migrated_users_delete(stdClass $user)
+{
+    // Delete the user.
+    user_delete($user->uid);
+
+    // Remove the user from the list of users.
+    $uids = variable_get('os_ownership_migration_uids');
+    $key = array_search($user->uid, $uids);
+    unset($uids[$key]);
+    variable_set('os_ownership_migration_uids', $uids);
+    drupal_goto('admin/config/people/user_ownership_migration/migrate');
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function os_form_redirect_edit_form_alter(&$form, $form_state) {
@@ -2988,4 +3508,50 @@ function os_redirect_element_validate_source($element, &$form_state) {
   }
 
   return $element;
+}
+
+/**
+ * Ajax callback for regnerating drupal session and extending session timeout value.
+ */
+function extend_os_session() {
+  drupal_session_regenerate();
+  exit();
+}
+
+/**
+ * Ajax callback for destroying drupal session of currently logged in user.
+ */
+function os_session_destroy() {
+  global $user;
+  // Session timeout checking will be only for logged in users.
+  if ($user->uid) {
+    _drupal_session_destroy($user->sid);
+  }
+  exit();
+}
+
+/**
+ * Ajax callback to check whether current user is logged in or not. Used to check before displaying warning message for session timeout.
+ */
+function check_os_session_status() {
+  global $user;
+  if ($user->uid) {
+    $return = array('show_warning' => 1);
+  } else {
+    // If already logged out from another tab.
+    $return = array('show_warning' => 0);
+  }
+  print drupal_json_encode($return);
+  exit();
+}
+
+/*
+ * Implements hook_views_pre_view
+ */
+function os_views_pre_view($view, &$display_id, &$args) {
+  // Fix the pager for child pages of /news by
+  // forcing the view to use the default_argument_date
+  if ($display_id == "news_by_month_block") {
+    $args = "";
+  }
 }

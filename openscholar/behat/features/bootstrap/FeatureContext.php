@@ -1279,10 +1279,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldSeeTheMetaTag($tag, $value) {
     $page = $this->getSession()->getPage();
-    if (!$text = $page->find('xpath', "//meta[@name='{$tag}']/@content")) {
-      throw new Exception("The meta tag {$tag} does not exist");
-    }
-    if ($text->getText() != $value) {
+    if (!$text = $page->find('xpath', "//meta[(@property='{$tag}' or @name='{$tag}') and @content='{$value}']")) {
       throw new Exception("The meta tag {$tag} value is not {$value}");
     }
   }
@@ -1351,7 +1348,7 @@ class FeatureContext extends DrupalContext {
     return array(
       new Step\When('I visit "' . $group . '/cp/users/add"'),
       new Step\When('I fill in "edit-name" with "' . $name . '"'),
-      new Step\When('I press "Add users"'),
+      new Step\When('I press "Add member"'),
       new Step\When('I visit "' . $group . '/cp/users/edit_membership/' . $uid . '"'),
       new Step\When('I select the radio button named "edit_role" with value "' . $role . '"'),
       new Step\When('I press "Save"'),
@@ -1997,7 +1994,7 @@ class FeatureContext extends DrupalContext {
     return array(
       new Step\When('I visit "' . $group . '/cp/users/add"'),
       new Step\When('I fill in "User" with "' . $username . '"'),
-      new Step\When('I press "Add users"'),
+      new Step\When('I press "Add member"'),
     );
   }
 
