@@ -93,7 +93,7 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
   public function vsiteFieldDisplay($values) {
     $account = $this->getAccount();
     ctools_include('subsite', 'vsite');
- 
+
     $groups = array();
     // Obtaining associative array of custom domains, keyed by space id
     $custom_domains = $this->getCustomDomains($values);
