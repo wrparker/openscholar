@@ -35,6 +35,8 @@ class os_boxes_html extends os_boxes_default {
       '#description' => t('You can put almost anything into here to place it in a widget. Text, HTML, Images, Video, whatever works in the editor.')
     );
 
+    array_unshift($form['#attached']['js'], drupal_get_path('module', 'os_wysiwyg') . '/js/wrap_plugins.js');
+
     $form['files'] = array(
       '#type' => 'value',
       '#value' => $this->files(),

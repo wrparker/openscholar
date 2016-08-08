@@ -47,7 +47,6 @@ function os_wysiwyg_wysiwyg_default_profiles() {
           'Format' => 1,
           'Font' => 1,
           'FontSize' => 1,
-          'Styles' => 1,
           'Table' => 1,
         ),
         'drupal' => array(
