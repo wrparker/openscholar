@@ -673,7 +673,7 @@ function os_events_process_node(&$variables) {
   }
 
   // In case of a "teaser" view mode, put the link before the date.
-  if ($variables['view_mode'] == 'teaser') {
+  if ($variables['view_mode'] == 'teaser' || $variables['view_mode'] == 'slide_teaser') {
     $registrations_type = !empty($variables['node']->field_event_registration[LANGUAGE_NONE][0]['registration_type']);
     // If the event is allowed for signup and allowed to show to the users.
     $show_register_link = os_events_register_show_register_link($variables['node'], $date);
