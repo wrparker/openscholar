@@ -72,7 +72,7 @@ function os_help_get_variables_from_id($type, $id) {
         'os_boxes_feedreader' => array('url' => 'http://docs.openscholar.harvard.edu/feed-reader-widget', 'title' => 'Feed Reader Widget'),
         'os_boxes_pub_year' => array('url' => 'http://docs.openscholar.harvard.edu/publications-year-widget', 'title' => 'Publications by Year Widget'),
         'os_boxes_booktoc' => array('url' => 'http://docs.openscholar.harvard.edu/booklet-table-contents-widget', 'title' => 'Booklet Table of Content Widget'),
-        'os_boxes_pub_ca' => array('url' => 'http://docs.openscholar.harvard.edu/publications-coauthor-widget', 'title' => 'Publications by Coauthor Widget'),
+        'os_boxes_pub_ca' => array('url' => 'http://docs.openscholar.harvard.edu/publications-authors-widget', 'title' => 'Publications by Authors Widget'),
         'os_boxes_pub_type' => array('url' => 'http://docs.openscholar.harvard.edu/publications-types-widget', 'title' => 'Publications: Types Widget'),
         'os_slideshow_box' => array('url' => 'http://docs.openscholar.harvard.edu/photo-slideshow-widget', 'title' => 'Slideshow Widget'),
         'os_boxes_media' => array('url' => 'http://docs.openscholar.harvard.edu/embed-media-widget', 'title' => 'Embed Media Widget'),
