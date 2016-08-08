@@ -7,7 +7,7 @@
 
 class os_boxes_dataverse_dataset_citation extends os_boxes_default {
 
-  private $dataverse_base_url_default = "https://dataverse-internal.iq.harvard.edu";
+  private $dataverse_base_url_default = "https://dataverse.harvard.edu/";
 
   public $embed_as = array(
     'iframe',
@@ -31,12 +31,16 @@ class os_boxes_dataverse_dataset_citation extends os_boxes_default {
   public function options_form(&$form_state){
     $form = parent::options_form($form_state);
 
-    $base_url = variable_get("dataverse_base_url", $this->dataverse_base_url_default) . "/dataverse/";
+    $base_url = variable_get("dataverse_base_url", $this->dataverse_base_url_default);
 
     $form['persistent_id'] = array(
       '#type' => 'textfield',
       '#title' => t('Dataset Persistent Identifier'),
-      '#description' => t('Need help finding your Dataset Persistent Identifier? Learn how to here: ') . l('http://docs.openscholar.harvard.edu/dataverse'),
+      '#description' => t('Need help finding your Dataset Persistent Identifier? Learn how to here: !link. ' .
+                          'Note: this widget should be placed in the main content area, not in sidebar.',
+          array('!link' => l('http://docs.openscholar.harvard.edu/dataverse',
+                              'http://docs.openscholar.harvard.edu/dataverse',
+                              array('attributes' => array('target' => '_blank'))))),
       '#required' => TRUE,
       '#field_prefix' => $base_url,
       '#default_value' => $this->options['persistent_id'],

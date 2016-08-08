@@ -244,6 +244,35 @@ function os_layout_set($context_name, $blocks, $vsite = NULL) {
 
   drupal_alter(array('os_layout_set'), $blocks, $context_name);
 
+  if ($context_name == 'os_public') {
+    // Unset the widgets with empty region for all contexts have region set in os_public context
+    $os_public_blocks = os_layout_get('os_public');
+
+    // Get all the contexts
+    $ctxs = $vsite->controllers->context->values['space'];
+    foreach ($ctxs as $ctx => $title) {
+      if ((strpos($ctx, ':reaction:block') !== FALSE) && (strpos($ctx, 'os_public') === FALSE)) {
+
+        // Get context id
+        $ctx_name = str_replace(':reaction:block', '', $ctx);
+        $other_context_blocks = os_layout_get($ctx_name);
+
+        // get the common elements between os_public and other contexts
+        $blocks_common = array_intersect_key($os_public_blocks, $other_context_blocks);
+          if (is_array($blocks_common)) {
+          // Get the array keys for those common blocks
+          foreach (array_keys($blocks_common) as $blocks_common_key) {
+            if (isset($os_public_blocks[$blocks_common_key]['region']) && (!isset($other_context_blocks[$blocks_common_key]['region']) || $other_context_blocks[$blocks_common_key]['region'] == '')) {
+              // Blocks have got the set region will get preference
+              unset($other_context_blocks[$blocks_common_key]);
+              vsite_layout_context_set($ctx_name, $other_context_blocks, $vsite);
+            }
+          }
+        }
+      }
+    }
+  }
+
   if (module_exists('vsite_layout')) {
     // Writes the context to the overrides table.
     vsite_layout_context_set($context_name, $blocks, $vsite);
