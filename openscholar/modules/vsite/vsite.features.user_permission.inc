@@ -19,6 +19,36 @@ function vsite_user_default_permissions() {
     'module' => 'og',
   );
 
+  // Exported permission: 'create department content'.
+  $permissions['create department content'] = array(
+    'name' => 'create department content',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'create personal content'.
+  $permissions['create personal content'] = array(
+    'name' => 'create personal content',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
+      'administrator' => 'administrator',
+      'manager' => 'manager',
+      'support team' => 'support team',
+    ),
+    'module' => 'node',
+  );
+
+  // Exported permission: 'create project content'.
+  $permissions['create project content'] = array(
+    'name' => 'create project content',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'node',
+  );
+
   // Exported permission: 'create subsites'.
   $permissions['create subsites'] = array(
     'name' => 'create subsites',
