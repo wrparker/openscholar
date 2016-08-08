@@ -66,6 +66,7 @@ function os_help_get_variables_from_id($type, $id) {
         'os_boxes_html' => array('url' => 'http://docs.openscholar.harvard.edu/custom-texthtml-widget', 'title' => 'Custom text widget'),
         'os_taxonomy_fbt' => array('url' => 'http://docs.openscholar.harvard.edu/taxonomy-widget', 'title' => 'Taxonomy Widget'),
         'os_boxes_manual_list' => array('url' => 'http://docs.openscholar.harvard.edu/featured-posts-widget', 'title' => 'Featured Posts Widget'),
+        'os_search_solr_more_like_this' => array('url' => 'http://docs.openscholar.harvard.edu/more', 'title' => 'More like this Widget'),
         'os_sv_list_box' => array('url' => 'http://docs.openscholar.harvard.edu/list-of-posts-widget', 'title' => 'List of Posts Widget'),
         'os_sv_list_file' => array('url' => 'http://docs.openscholar.harvard.edu/list-files', 'title' => 'List of Files Widget'),
         'os_boxes_feedreader' => array('url' => 'http://docs.openscholar.harvard.edu/feed-reader-widget', 'title' => 'Feed Reader Widget'),
@@ -86,7 +87,7 @@ function os_help_get_variables_from_id($type, $id) {
         'os_boxes_rand_widget' => array('url' => 'http://docs.openscholar.harvard.edu/random-widget', 'title' => 'Random Widget'),
         'os_boxes_widget_slider' => array('url' => 'http://docs.openscholar.harvard.edu/widget-slider', 'title' => 'Widget Slider Widget'),
         'os_boxes_columns' => array('url' => 'http://docs.openscholar.harvard.edu/columns-widget', 'title' => 'Columns Widget'),
-        'os_boxes_facetapi_vocabulary' => array('url' => '', 'title' => ''),
+        'os_boxes_facetapi_vocabulary' => array('url' => 'http://docs.openscholar.harvard.edu/filtering-content-faceted-taxonomy-widget', 'title' => 'Faceted Taxonomy Widget'),
       );
       break;
   }
