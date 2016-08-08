@@ -146,7 +146,6 @@ class OsProfilesResource extends RestfulEntityBaseNode {
    */
   public function checkPropertyAccess($op, $public_field_name, EntityMetadataWrapper $property_wrapper, EntityMetadataWrapper $wrapper) {
     // Testing for travis.
-    return TRUE;
     $fields = array('field_uuid', 'field_original_destination_url', 'field_destination_url');
     $property_info = $property_wrapper->info();
 
