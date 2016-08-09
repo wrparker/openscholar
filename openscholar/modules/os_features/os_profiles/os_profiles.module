@@ -1800,10 +1800,13 @@ function os_profile_feeds_set_target($source, $entity, $target, $value) {
  * Override misc/autocomplete.js by /misc/os_autocomplete.js
  */
 function os_profiles_js_alter(&$javascript) {
-  foreach ($javascript as $url => $js) {
-    if (strpos($url, 'autocomplete.js') == TRUE) {
-      $file = drupal_get_path('module', 'os_profiles') . '/misc/os_autocomplete.js';
-      $javascript['misc/autocomplete.js']['data'] = $file;
+  // Only for sync-profiles action
+  if (strpos($_GET['q'], 'sync-profiles') !== FALSE) {
+    foreach ($javascript as $url => $js) {
+      if (strpos($url, 'autocomplete.js') == TRUE) {
+        $file = drupal_get_path('module', 'os_profiles') . '/misc/os_autocomplete.js';
+        $javascript['misc/autocomplete.js']['data'] = $file;
+      }
     }
   }
 }
