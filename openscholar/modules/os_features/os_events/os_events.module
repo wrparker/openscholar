@@ -696,8 +696,11 @@ function os_events_process_node(&$variables) {
           $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
         }
     }
-    $variables['content']['field_date'][0]['#markup'] = $variables['content']['field_date'][0]['#markup'] . $register;
-    $variables['content']['field_date']['#weight'] = 20;
+    $variables['content']['field_date'][0]['#markup'] = $variables['content']['field_date'][0]['#markup'];
+
+    $variables['content']['field_event_registration'][0]['#markup'] = $register;
+    $variables['content']['field_event_registration']['#weight'] = 20;
+
   }
 
   // Hide the repeat rule summary from sidebar_teaser.
