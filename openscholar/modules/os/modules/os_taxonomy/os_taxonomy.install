@@ -60,3 +60,36 @@ function os_taxonomy_update_7004(&$sandbox) {
     ->condition('source', "%/taxonomy/term/%", 'LIKE')
     ->execute();
 }
+
+/**
+ * Turn on the og_vocabulary field display for teaser view
+ */
+function os_taxonomy_update_7005() {
+  // List all content types
+  $bundles = array_keys(os_get_bundles(TRUE));
+  foreach ($bundles as $bundle) {
+    $instance = field_info_instance('node', 'og_vocabulary', $bundle);
+    $profile_teasers = array('slide_teaser', 'no_image_teaser');
+    $instance['display']['teaser'] = Array ('label' => 'hidden',
+                                             'type' => 'og_vocab',
+                                             'weight' => 10,
+                                             'settings' => Array ('concatenate' => 1),
+                                             'module' => 'vsite_vocab',
+                                             );
+    // Display the teaser view of og_vocabulary like the default view
+    field_update_instance($instance);
+  }
+
+  // Added the same for profile slide_teaser and no_image_teaser
+  $profile_teasers = array('slide_teaser', 'no_image_teaser');
+  foreach ($profile_teasers as $profile_teaser) {
+    $instance = field_info_instance('node', 'og_vocabulary', 'person');
+    $instance['display'][$profile_teaser] = Array ('label' => 'hidden',
+                                               'type' => 'og_vocab',
+                                               'weight' => 10,
+                                               'settings' => Array ('concatenate' => 1),
+                                               'module' => 'vsite_vocab',
+                                               );
+    field_update_instance($instance);
+  }
+}
