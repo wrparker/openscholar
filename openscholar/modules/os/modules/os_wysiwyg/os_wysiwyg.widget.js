@@ -5,23 +5,20 @@
    */
   Drupal.behaviors.osWysiwygInlineCKEDITOR = {
     attach: function (context) {
-      // Marking if the wysywig got bigger when we focused on the editor for the
-      // first time.
-      context.changed = false;
-
       CKEDITOR.on("instanceReady", function(event) {
         var editor = event.editor;
+        var instance = $('#cke_' + editor.name);
+        var height = $(window).height();
 
-        editor.on('focus', function() {
-          var instance = $('#cke_' + editor.name);
+        // Adjusting the height of the wysiwyg according to the window height.
+        var editor_height = height / 2;
 
-          if (!context.changed) {
-            // Changing the size when focusing.
-            instance.find('#cke_1_contents').height('550');
-            context.changed = true;
-          }
-        });
+        if (editor_height > 550) {
+          // The height can be more than 550.
+          editor_height = 550;
+        }
 
+        instance.find('#cke_1_contents').height(editor_height);
       });
     }
   };
