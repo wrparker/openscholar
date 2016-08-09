@@ -2226,7 +2226,6 @@ function os_form_user_login_alter(&$form, $form_state) {
         ),
     );
 
-    unset($form['pin-fieldset']['name']['#description']);
     unset($form['pin-fieldset']['actions']['submit']);
   }
 
