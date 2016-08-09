@@ -332,7 +332,8 @@ function hwpi_basetheme_node_view_alter(&$build) {
       }
     }
 
-    if (isset($build['og_vocabulary'])) {
+    // Adding condition so that change in display in terms will show for full view mode
+    if (isset($build['og_vocabulary']) && $build['#view_mode'] == 'full') {
       $terms = array();
       foreach ($build['og_vocabulary']['#items'] as $i) {
         if (isset($i['target_id'])) {
