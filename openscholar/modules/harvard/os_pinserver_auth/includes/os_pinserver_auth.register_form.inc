@@ -8,7 +8,7 @@ function os_pinserver_auth_vsite_register_form_page() {
   global $user;
 
   // Handle users logged in already.
-  if (!$user->uid){
+  if ($user->uid){
 
     // Sends user to pinserver if not logged-in locally or via the pinserver
     if (!pinserver_check_status()) {
