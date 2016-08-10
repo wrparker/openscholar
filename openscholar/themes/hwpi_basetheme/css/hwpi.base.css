@@ -773,7 +773,6 @@ h2.comment-title.comment-form {
 }
 a.node-readmore {
     text-decoration: underline;
-    font-size: 13px;
 }
 /* Files tables, for attached files to nodes such as PDF's */
 
@@ -841,6 +840,9 @@ div.status .message-wrapper:before {
 }
 div.error .message-wrapper:before {
     background-position: -72px -231px;
+}
+div.warning .message-wrapper:before {
+    background-position: -38px -260px;
 }
 
 /* Pagers */

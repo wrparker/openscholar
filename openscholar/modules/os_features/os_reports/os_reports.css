@@ -162,3 +162,8 @@ body.page-admin-reports-os #page.container div.messages::before {
 body.page-admin-reports-os .container-inline .form-item-creationend label {
   margin-left: 10px;
 }
+
+body.page-admin-reports-os .fieldset-wrapper .form-item-only-vsite-ids {
+  margin-top: -5px;
+  padding-bottom: 8px;
+}

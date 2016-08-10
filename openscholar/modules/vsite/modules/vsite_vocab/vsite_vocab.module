@@ -24,7 +24,7 @@ function vsite_vocab_menu() {
     'description' => t('Manage your site\'s vocabularies')
   );
 
-  $items["cp/build/taxonomy/add"] = array(
+  $items["cp/build/taxonomy_term/add"] = array(
     'title' => 'Add vocabulary',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_vocabulary'),

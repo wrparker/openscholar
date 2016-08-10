@@ -77,8 +77,8 @@ function os_booklets_menu_alter(&$items) {
   if (isset($items['book'])) {
     // Provided by core book
     // Shows a list of all books in the system, formatted poorly.
-    // restrict access to this page
-    $items['book']['access arguments'] = array('administer book outlines');
+    // remove this page
+    unset($items['book']);
   }
 }
 
@@ -304,17 +304,5 @@ function os_booklets_os_add_new_links_alter(&$links) {
   // Otherwise it would be "Add Book page".
   if (isset($links['book']['title'])) {
     $links['book']['title'] = t('Booklet');
-  }
-}
-
-
-/**
- * Implements hook_process_hook() for node.
- */
-function os_booklets_process_node(&$vars) {
-  // If the readmore link has already been inserted inline into the body,
-  // remove it from the render array, so it's not printed twice
-  if (preg_match("/\bnode-readmore\b/", $vars['content']['body'][0]['#markup'])) {
-    unset($vars['content']['links']['node']['#links']['node-readmore']);
   }
 }
