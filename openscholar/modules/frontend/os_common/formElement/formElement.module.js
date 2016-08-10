@@ -30,7 +30,10 @@
         if (scope.access) {
           var copy = elem.find('span').clone();
           for (var k in scope.element) {
-            if (k == 'type' || k == 'custom_directive') {
+            if (k == 'type') {
+              copy.attr('fe-'+scope.element[k], '');
+            }
+            else if (k == 'custom_directive') {
               copy.attr(scope.element[k], '');
             }
             else if (k == 'name') {

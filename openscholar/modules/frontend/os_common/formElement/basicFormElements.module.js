@@ -8,7 +8,7 @@
    *   name - string - the name of the element as Drupal expects it
    *   value - property on parent scope
    */
-  m.directive('checkbox', [function () {
+  m.directive('feCheckbox', [function () {
     return {
       scope: {
         name: '@',
@@ -26,15 +26,34 @@
   /**
    * Textbox directive.
    */
-  m.directive('textfield', [function () {
+  m.directive('feTextfield', [function () {
     return {
       scope: {
         name: '@',
         value: '=',
         element: '='
       },
-      template: '<label for="{{id}}">{{title}}</label><br />' +
+      template: '<label for="{{id}}">{{title}}</label>' +
       '<input type="textfield" id="{{id}}" name="{{name}}" ng-model="value" class="form-text">',
+      link: function (scope, elem, attr) {
+        scope.id = attr['inputId'];
+        scope.title = scope.element.title;
+      }
+    }
+  }]);
+
+  /**
+   * Textarea directive
+   */
+  m.directive('feTextarea', [function () {
+    return {
+      scope: {
+        name: '@',
+        value: '=',
+        element: '='
+      },
+      template: '<label for="{{id}}">{{title}}</label>' +
+      '<textarea id="{{id}}" name="{{name}}" ng-model="value" class="form-textarea"></textarea>',
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];
         scope.title = scope.element.title;
@@ -45,7 +64,7 @@
   /**
    * Radios directive.
    */
-  m.directive('radios', ['$sce', function ($sce) {
+  m.directive('feRadios', ['$sce', function ($sce) {
     return {
       scope: {
         name: '@',
@@ -71,7 +90,7 @@
    *
    * This type of form element should always have some kind of handler on the server end to take care of whatever this needs to do.
    */
-  m.directive('submit', [function () {
+  m.directive('feSubmit', [function () {
     return {
       scope: {
         name: '@',
