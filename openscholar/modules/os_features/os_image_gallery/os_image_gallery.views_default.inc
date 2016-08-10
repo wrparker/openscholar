@@ -37,6 +37,17 @@ function os_image_gallery_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['style_plugin'] = 'list';
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = '';
+  $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['nid']['spaces'] = array(
+    'type' => 'spaces_og',
+    'frontpage' => 0,
+  );
   /* Field: Content: Post date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'node';
@@ -61,6 +72,12 @@ function os_image_gallery_views_default_views() {
   $handler->display->display_options['fields']['media_gallery_description']['table'] = 'field_data_media_gallery_description';
   $handler->display->display_options['fields']['media_gallery_description']['field'] = 'media_gallery_description';
   $handler->display->display_options['fields']['media_gallery_description']['label'] = '';
+  $handler->display->display_options['fields']['media_gallery_description']['alter']['max_length'] = '600';
+  $handler->display->display_options['fields']['media_gallery_description']['alter']['more_link'] = TRUE;
+  $handler->display->display_options['fields']['media_gallery_description']['alter']['more_link_text'] = 'Read more';
+  $handler->display->display_options['fields']['media_gallery_description']['alter']['more_link_path'] = 'node/[nid]';
+  $handler->display->display_options['fields']['media_gallery_description']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['media_gallery_description']['alter']['html'] = TRUE;
   $handler->display->display_options['fields']['media_gallery_description']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['media_gallery_description']['hide_empty'] = TRUE;
   /* Field: Content: Gallery media */
