@@ -3206,26 +3206,101 @@ function vsite_cp_settings() {
   }
   $settings = array();
 
-  $default = array('department', 'project');
-  $subsite_parents = variable_get('subsite_parents', $default);
+  // Builds the "Site favicon" file field widget.
+  // Renders a fieldset with a managed file widget.
+
+  $subsite_parents = variable_get('subsite_parents', array('department', 'project'));
+  $inherit_theme = variable_get('vsite_subsite_inherit_theme', 0);
   if (!in_array($vsite->group->type, $subsite_parents)) {
-    return $settings;
+    $settings['vsite_subsite_inherit_theme'] = array(
+      'form' => array(
+        '#type' => 'checkbox',
+        '#title' => t('Inherit parent site theme'),
+        '#default_value' => $inherit_theme,
+        '#description' => t('Check to have newly created subsites start with this site\'s currently enabled theme by default.'),
+      ),
+      'group' => array(
+        '#id' => 'vsite_subsite',
+        '#title' => t('Subsites'),
+        '#weight' => 31,
+      ),
+    );
   }
 
-  $default = 0;
-  $inherit_theme = variable_get('vsite_subsite_inherit_theme', $default);
-  $settings['vsite_subsite_inherit_theme'] = array(
+  $settings['vsite_title'] = array(
     'form' => array(
-      '#type' => 'checkbox',
-      '#title' => t('Inherit parent site theme'),
-      '#default_value' => $inherit_theme,
-      '#description' => t('Check to have newly created subsites start with this site\'s currently enabled theme by default.'),
+      '#type' => 'textfield',
+      '#required' => TRUE,
+      '#title' => t('Site title'),
+      '#default_value' => $vsite->group->title,
+      '#description' => t('Your site\'s official title, as displayed in your Site info widget, in search results, and in browser tabs.'),
     ),
     'group' => array(
-      '#id' => 'vsite_subsite',
-      '#title' => t('Subsites'),
-      '#weight' => 31,
+      '#id' => 'vsite-seo',
+      '#title' => t('SEO'),
+      '#weight' => 30,
     ),
+    'rest_submit' => 'vsite_rest_cp_settings_submit',
+    'submit' => 'vsite_cp_settings_form_submit'
+  );
+
+  $meta_description = '';
+  $items = field_get_items('node', $vsite->group, 'field_meta_description');
+  if (isset($items[0]['value'])) {
+    $meta_description = $items[0]['value'];
+  }
+  $settings['field_meta_description'] = array(
+    'form' => array(
+      '#type' => 'textarea',
+      '#rows' => 2,
+      '#title' => t('Meta description'),
+      '#resizable' => FALSE,
+      '#default_value' => $meta_description,
+      '#description' => t('A brief summary to appear in search results for your site\'s home page. Ideally 155 characters or less.'),
+    ),
+    'group' => array(
+      '#id' => 'vsite-seo',
+      '#title' => t('SEO'),
+      '#weight' => 30,
+    ),
+    'rest_submit' => 'vsite_rest_cp_settings_submit',
+    'submit' => 'vsite_cp_settings_form_submit'
+  );
+
+  $purl = vsite_get_purl();
+  $settings['site_favicon_fid'] = array(
+    'form' => array(
+      '#type' => 'managed_file',
+      '#title' => t('Favicon'),
+      '#description' => t('A 16x16 .ico file to be displayed in browser shortcut icons and tabs when for any page on your site. For help generating a favicon file, try <a href="http://www.favicon.cc/">http://www.favicon.cc/</a>.'),
+      '#default_value' => variable_get('site_favicon_fid', ''),
+      '#upload_location' => $purl ? "public://{$purl}/files" : "public://",
+      '#upload_validators' => array(
+        'file_validate_extensions' => array('ico'),
+        'file_validate_size' => array(2*1024*1024),
+      ),
+    ),
+    'group' => array(
+      '#id' => 'vsite-seo',
+      '#title' => t('SEO'),
+      '#weight' => 30,
+    ),
+    'submit' => 'vsite_cp_settings_form_submit'
+  );
+
+  $settings['vsite_head_link_rel_publisher'] = array(
+    'form' => array(
+      '#type' => 'textfield',
+      '#title' => t('Publisher URL'),
+      '#default_value' => variable_get('vsite_head_link_rel_publisher', ''),
+      '#description' => t('Enter the URL to your publishing entity\'s permanent web address. Use a Google+ page URL to be eligible for a branded knowledge panel in Google search results.'),
+    ),
+    'group' => array(
+      '#id' => 'vsite-seo',
+      '#title' => t('SEO'),
+      '#weight' => 30,
+    ),
+    'submit' => 'vsite_cp_settings_form_submit'
   );
 
   return $settings;
