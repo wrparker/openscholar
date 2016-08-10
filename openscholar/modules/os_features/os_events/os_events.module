@@ -2526,6 +2526,39 @@ function os_events_show_register_by_node($node, $date = FALSE) {
  */
 function os_events_theme_registry_alter(&$theme_registry) {
   $theme_registry['registration_link']['function'] = 'os_events_registration_link';
+
+  if (isset($theme_registry['date_display_range'])) {
+    $theme_registry['date_display_range']['function'] = 'theme_custom_date_display_range';
+  }
+}
+
+/**
+ * Returns HTML for a date element formatted as a range.
+ */
+function theme_custom_date_display_range($variables) {
+  $date1 = $variables['date1'];
+  $date2 = $variables['date2'];
+  $attributes_start = $variables['attributes_start'];
+  $attributes_end = $variables['attributes_end'];
+
+  // Show days of the week for a multi-day event
+  $multi_day_prefix = "";
+  if (strtotime($date2) - strtotime($date1) > (24 * 60 * 60)) {
+    $day_of_the_week1 = date('D', strtotime($variables['date1']));
+    $day_of_the_week2 = date('D', strtotime($variables['date2']));
+
+    $multi_day_prefix = t('!start-date-day - !end-date-day, ', array(
+      '!start-date-day' => $day_of_the_week1,
+      '!end-date-day' => $day_of_the_week2,
+    ));
+  }
+
+  // Wrap the result with the attributes.
+  return t('!multi-day-prefix !start-date to !end-date', array(
+      '!multi-day-prefix' => $multi_day_prefix,
+      '!start-date' => '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . $date1 . '</span>',
+      '!end-date' => '<span class="date-display-end"' . drupal_attributes($attributes_end) . '>' . $date2 . '</span>',
+  ));
 }
 
 /**
