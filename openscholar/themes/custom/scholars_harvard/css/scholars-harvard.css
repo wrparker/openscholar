@@ -91,6 +91,7 @@ body {
 .os-leftcol ul {
     float: right;
     margin: 5px 0 0 20px;
+    visibility: hidden;
 }
 .os-leftcol li {
     display: inline;

@@ -223,7 +223,9 @@
 }
 
 .os_boxes_dataverse_search .widget-icon,
-.os_boxes_dataverse_list .widget-icon {
+.os_boxes_dataverse_list .widget-icon,
+.os_boxes_dataverse_dataset .widget-icon,
+.os_boxes_dataverse_dataset_citation .widget-icon {
     background-position-y: -1054px;
   }
 
