@@ -331,7 +331,6 @@ Drupal.ACDB.prototype.cancel = function () {
   if (this.owner) this.owner.setStatus('cancel');
   if (this.timer) clearTimeout(this.timer);
   this.searchString = '';
-  $('#autocomplete-source-page').html('');
 };
 
 /**
@@ -341,7 +340,20 @@ Drupal.behaviors.autoremove = {
   attach: function (ctx) {
     $('#edit-autocomplete').bind('keyup change', function(event) {
       if ($(this).val() != '') {
-        $('#edit-url').val('');  
+        $('#edit-url').val('');
+        // Get the node id from the profile name (node id) output
+        var regExp = /\(([^)]+)\)/;
+        var nid = regExp.exec($(this).val());
+        if (nid != null && nid.length > 1) {
+          $.ajax({
+            url: Drupal.settings.paths.vsite_home + '/cp/people/get_profile_url/' + nid[1] + '/ajax',
+            type: 'get',
+            success: function (response) {
+                // Showing profile source to autocomplete-source-page span
+                $('#autocomplete-source-page').html(response);
+              }
+          });
+        }
       }
     });
     $('#edit-url').bind('keyup change', function(event) {
