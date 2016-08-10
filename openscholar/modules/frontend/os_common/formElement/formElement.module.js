@@ -39,6 +39,11 @@
             else if (k == 'name') {
               copy.attr('name', scope.element[k]);
             }
+            else if (k == 'custom_directive_parameters') {
+              for (var l in scope.element[k]) {
+                copy.attr(l, scope.element[k][l]);
+              }
+            }
           }
 
           copy.attr('element', 'element');

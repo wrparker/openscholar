@@ -1,19 +1,40 @@
 (function () {
 
   angular.module('MediaBrowserField', ['mediaBrowser', 'FileEditorModal', 'EntityService', 'ui.sortable'])
+    .config(['$injector', function ($injector) {
+      try {
+        depManager = $injector.get('DependenciesProvider');
+        depManager.AddDependency('formElement', 'mediaBrowserField');
+      }
+      catch (err) {
+      }
+    }])
     .directive('mediaBrowserField', ['mbModal', 'EntityService', function (mbModal, EntityService) {
 
       function link(scope, elem, attr) {
         // everything to define
-        var field_root = elem.parent();
-        while (!field_root.attr('id')) {
-          field_root = field_root.parent();
-        }
         var service = new EntityService('files', 'id');
-        scope.field_name = field_root.attr('id').match(/edit-([\w-]*)/)[1].replace(/-/g, '_');
-        scope.field_id = field_root.attr('id');
+        var field_root_id = "";
+        if (scope.$parent.element) {
+          field_root_id = scope.$parent.element.id;
+        }
+        else {
+          var field_root = elem.parent();
+          while (!field_root.attr('id')) {
+            field_root = field_root.parent();
+          }
+          field_root_id = field_root.attr('id');
+        }
+
+        scope.field_name = field_root_id.match(/edit-([\w-]*)/)[1].replace(/-/g, '_');
+        scope.field_id = field_root_id;
         scope.showHelp = false;
-        scope.panes = ['upload', 'web', 'library'];
+        if (attr['panes']) {
+          scope.panes = attr['panes'].split(',');
+        }
+        else {
+          scope.panes = ['upload', 'web', 'library'];
+        }
         scope.required = attr['required'] == "";
 
         var types = {};
@@ -40,7 +61,7 @@
           scope.selectedFiles = [];
         }
 
-        if (scope.selectedFiles.length == 0) {
+        if (scope.selectedFiles.length == 0 && Drupal.settings.mediaBrowserField != undefined) {
           var fids = Drupal.settings.mediaBrowserField[scope.field_id].selectedFiles,
             generateFunc = function (i) {
               return function(file) {
