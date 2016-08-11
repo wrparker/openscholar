@@ -91,11 +91,16 @@ body {
 .os-leftcol ul {
     float: right;
     margin: 5px 0 0 20px;
-    visibility: hidden;
+ 
 }
 .os-leftcol li {
     display: inline;
     margin-right: 5px;
+}
+.os-leftcol ul li:nth-of-type(2) {
+    float: right;
+    margin: 5px 0 0 20px;
+    visibility: hidden;
 }
 .os-leftcol ul li a {
     background: none repeat scroll 0 0 #EDEEF1;
@@ -232,11 +237,9 @@ p.os-leadin {
 }
 body.front {
     overflow: hidden;
-    background: url('../images/startpage-bg.png') no-repeat 50% 0 #698da2;
+    background: url('../images/startpage-bg.jpg') no-repeat 50% 0;
 }
-body.front.logged-in {
-    background: url('../images/startpage-bg.png') no-repeat 50% 35px #698da2;
-}
+
 #reasons {
     padding-bottom: 20px;
     width: 100%;
