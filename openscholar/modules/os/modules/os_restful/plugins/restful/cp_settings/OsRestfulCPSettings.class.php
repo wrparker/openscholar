@@ -93,9 +93,9 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
         }
 
         // submission
-        if ($valid[$var]) {
+        if (!isset($valid[$var]) || $valid[$var]) {
           if (!empty($forms[$var]['rest_submit']) && is_callable($forms[$var]['rest_submit'])) {
-            $forms[$var]['rest_submit']($value);
+            $forms[$var]['rest_submit']($value, $var);
           }
           elseif (!empty($forms[$var]['rest_trigger']) && is_callable($forms[$var]['rest_trigger'])) {
             if ($value) {
