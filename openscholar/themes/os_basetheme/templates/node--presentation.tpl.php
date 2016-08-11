@@ -88,5 +88,8 @@ if (!$page) {
   <div<?php print $content_attributes; ?>>
     <?php print $body_value; ?>
   </div>
+  <?php if ($teaser): // show vocabulary in case of teaser at bottom ?>
+    <?php print render($content['og_vocabulary']); ?>
+  <?php endif; // end teaser for vocabulary ?>
   </div> <!-- /div.node-inner -->
 </article>
