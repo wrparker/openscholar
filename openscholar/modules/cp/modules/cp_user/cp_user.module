@@ -746,6 +746,7 @@ function cp_user_form_og_ui_add_users_alter(&$form, $form_state) {
  * Submit handler; maybe grants a role, then redirects user back to "cp/users".
  */
 function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
+  global $user;
   $state = $form_state['values']['state'];
   $account = user_load_by_name($form_state['values']['name']);
 
@@ -754,9 +755,9 @@ function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
     og_group('node', $form_state['values']['gid'], array('entity' => $account->uid));
 
     $vsite = vsite_get_vsite();
-    // Loading site owner's user object for username, full name and email.
-    $site_owner_user = user_load($vsite->group->uid);
-    $site_owner_full_name = $site_owner_user->field_first_name[LANGUAGE_NONE][0]['value'] . ' ' . $site_owner_user->field_last_name[LANGUAGE_NONE][0]['value'];
+    // Loading logged in user's user object for full name.
+    $account_modifier = user_load($user->uid);
+    $account_modifier_full_name = $account_modifier->field_first_name[LANGUAGE_NONE][0]['value'] . ' ' . $account_modifier->field_last_name[LANGUAGE_NONE][0]['value'];
     $purl_base_domain = variable_get('purl_base_domain');
     // Checking if this is a custom domain site or not.
     $custom_domain = db_select('purl', 'p')
@@ -770,12 +771,13 @@ function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
     $from = variable_get('site_mail', ini_get('sendmail_from'));
     // Newly added users is always added as Basic Member by default.
     $params['!user-role'] = 'Basic member';
-    $params['!site-owner'] = !empty($site_owner_full_name) ? $site_owner_full_name : $site_owner_user->name;
+    $params['!account-modifier'] = !empty($account_modifier_full_name) ? $account_modifier_full_name : $account_modifier->name;
     $params['!username'] = $account->name;
     $params['!site-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl;
     $params['!login-url'] = !empty($custom_domain) ? 'http://' . $custom_domain . '/user?destination=home' : $purl_base_domain . '/user?destination=' . $vsite->group->purl;
     $params['!user-firstname'] = $account->field_first_name[LANGUAGE_NONE][0]['value'];
     $params['!sitewide-name'] = variable_get('site_name', 'Harvard Web Publishing');
+    $params['headers']['Cc'] = $account_modifier->mail;
     // Sending email notification to added user.
     drupal_mail('cp_user', 'os_user_add_to_group', $to, $language, $params, $from);
   }
@@ -792,7 +794,7 @@ function cp_user_mail($key, &$message, $params){
       $message['subject'] = t("You have been added as a member to an OpenScholar website");
       $message['body'] = array();
       $message['body'][] = t("Hi !user-firstname,", $params);
-      $message['body'][] = t("!site-owner has added you as a member to the website !site-url with the role of !user-role. You can log in at !login-url with the username !username.", $params);
+      $message['body'][] = t("!account-modifier has added you as a member to the website !site-url with the role of !user-role. You can log in at !login-url with the username !username.", $params);
       $message['body'][] = t("Don't forget to bookmark the site and save this email for future reference.");
       $message['body'][] = t("Here are some handy links for you:");
       $links = array();
@@ -801,22 +803,25 @@ function cp_user_mail($key, &$message, $params){
       $links[] = " * Need help with your project? http://hwp.harvard.edu/contact";
       $message['body'][] = implode("", $links);
       $message['body'][] = t("Sincerely,\n!sitewide-name", $params);
+      $message['headers'] += $params['headers'];
       break;
 
     case 'os_user_delete_from_group' :
       $message['subject'] = t("You have been removed from an OpenScholar website");
       $message['body'] = array();
       $message['body'][] = t("Hi !user-firstname,", $params);
-      $message['body'][] = t("!site-owner has removed you as a member with the role of !user-role from the website !site-url. If you feel this was in error or have any questions, please contact them at !site-owner-email", $params);
+      $message['body'][] = t("!account-modifier has removed you as a member with the role of !user-role from the website !site-url. If you feel this was in error or have any questions, please contact them at !account-modifier-email", $params);
       $message['body'][] = t("Sincerely,\n!sitewide-name", $params);
+      $message['headers'] += $params['headers'];
       break;
 
     case 'os_user_role_change' :
       $message['subject'] = t("Your role on an OpenScholar website has changed");
       $message['body'] = array();
       $message['body'][] = t("Hi !user-firstname,", $params);
-      $message['body'][] = t("!site-owner has changed your role to !user-role on the website !site-url. If you feel this was in error or have any questions, please contact them at !site-owner-email", $params);
+      $message['body'][] = t("!account-modifier has changed your role to !user-role on the website !site-url. If you feel this was in error or have any questions, please contact them at !account-modifier-email", $params);
       $message['body'][] = t("Sincerely,\n!sitewide-name", $params);
+      $message['headers'] += $params['headers'];
       break; 
   }
 }

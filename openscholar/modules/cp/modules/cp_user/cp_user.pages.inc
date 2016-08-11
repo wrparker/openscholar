@@ -216,6 +216,7 @@ function cp_user_remove_membership_confirm($form_state, $user_load) {
  * Submit callback; removes the specified member after user confirms action.
  */
 function cp_user_remove_membership_confirm_submit($form, &$form_state) {
+  global $user;
   // Ungroup the user from the node
   $gid = $form_state['values']['gid'];
   $uid = $form_state['values']['uid'];
@@ -230,9 +231,9 @@ function cp_user_remove_membership_confirm_submit($form, &$form_state) {
   drupal_set_message(t('Member <em>@user</em> has been removed from <em>@site</em>', array('@user' => $user_name, '@site' => $site_name)));
 
   $vsite = vsite_get_vsite();
-  // Loading site owner's user object for username, full name and email.
-  $site_owner_user = user_load($vsite->group->uid);
-  $site_owner_full_name = $site_owner_user->field_first_name[LANGUAGE_NONE][0]['value'] . ' ' . $site_owner_user->field_last_name[LANGUAGE_NONE][0]['value'];
+  // Loading logged in user's user object for full name.
+  $account_modifier = user_load($user->uid);
+  $account_modifier_full_name = $account_modifier->field_first_name[LANGUAGE_NONE][0]['value'] . ' ' . $account_modifier->field_last_name[LANGUAGE_NONE][0]['value'];
   $purl_base_domain = variable_get('purl_base_domain');
   $account = user_load($form_state['values']['uid']);
   // Checking if this vsite has a custom domain or not.
@@ -248,11 +249,12 @@ function cp_user_remove_membership_confirm_submit($form, &$form_state) {
   $from = variable_get('site_mail', ini_get('sendmail_from'));
   // Newly added users is always added as Basic Member by default.
   $params['!user-role'] = $roles_human_names[$deleted_member_rid[0]];
-  $params['!site-owner'] = !empty($site_owner_full_name) ? $site_owner_full_name : $site_owner_user->name;
+  $params['!account-modifier'] = !empty($account_modifier_full_name) ? $account_modifier_full_name : $account_modifier->name;
   $params['!site-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl;
-  $params['!site-owner-email'] = $site_owner_user->mail;
+  $params['!account-modifier-email'] = $account_modifier->mail;
   $params['!user-firstname'] = $account->field_first_name[LANGUAGE_NONE][0]['value'];
   $params['!sitewide-name'] = variable_get('site_name', 'Harvard Web Publishing');
+  $params['headers']['Cc'] = $account_modifier->mail;
   // Send email notification to deleted user.
   drupal_mail('cp_user', 'os_user_delete_from_group', $to, $language, $params, $from);
 
@@ -396,6 +398,7 @@ function cp_user_edit_membership_form($form_state, $user_load) {
  * Submit callback; updates roles after user confirms action.
  */
 function cp_user_edit_membership_form_submit($form, &$form_state) {
+  global $user;
   // Accesses values from the form.
   $bundle = $form_state['values']['bundle'];
   $new_role = $form_state['values']['edit_role'];
@@ -422,17 +425,17 @@ function cp_user_edit_membership_form_submit($form, &$form_state) {
   }
 
   // Set the message and redirect back to the cp/users page
-  $user = $form_state['values']['user_name'];
+  $user_name = $form_state['values']['user_name'];
   $site = $form_state['values']['site_name'];
-  drupal_set_message(t('User <em>@user\'s</em> role on site <em>@site</em> was updated successfully.', array('@user' => $user, '@site' => $site)));
+  drupal_set_message(t('User <em>@user\'s</em> role on site <em>@site</em> was updated successfully.', array('@user' => $user_name, '@site' => $site)));
 
   $modified_member_rid = array_keys(og_get_user_roles('node', $gid, $uid, FALSE));
   // If the changed role is not same as previously saved role, then only the email will be sent.
   if (!array_intersect($modified_member_rid, $member_rid_before_modification)) {
     $vsite = vsite_get_vsite();
-    // Loading site owner's user object for username, full name and email.
-    $site_owner_user = user_load($vsite->group->uid);
-    $site_owner_full_name = $site_owner_user->field_first_name[LANGUAGE_NONE][0]['value'] . ' ' . $site_owner_user->field_last_name[LANGUAGE_NONE][0]['value'];
+    // Loading logged in user's user object for full name.
+    $account_modifier = user_load($user->uid);
+    $account_modifier_full_name = $account_modifier->field_first_name[LANGUAGE_NONE][0]['value'] . ' ' . $account_modifier->field_last_name[LANGUAGE_NONE][0]['value'];
     $purl_base_domain = variable_get('purl_base_domain');  
     $roles_human_names = _cp_user_list_roles('rids-human', NULL, $gid);
 
@@ -449,11 +452,12 @@ function cp_user_edit_membership_form_submit($form, &$form_state) {
     $from = variable_get('site_mail', ini_get('sendmail_from'));
     // Newly added users is always added as Basic Member by default.
     $params['!user-role'] = $roles_human_names[$modified_member_rid[0]];
-    $params['!site-owner'] = !empty($site_owner_full_name) ? $site_owner_full_name : $site_owner_user->name;
+    $params['!account-modifier'] = !empty($account_modifier_full_name) ? $account_modifier_full_name : $account_modifier->name;
     $params['!site-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl;
-    $params['!site-owner-email'] = $site_owner_user->mail;
+    $params['!account-modifier-email'] = $account_modifier->mail;
     $params['!user-firstname'] = $account->field_first_name[LANGUAGE_NONE][0]['value'];
     $params['!sitewide-name'] = variable_get('site_name', 'Harvard Web Publishing');
+    $params['headers']['Cc'] = $account_modifier->mail;
     // Sending email notification to modified user.
     drupal_mail('cp_user', 'os_user_role_change', $to, $language, $params, $from);
   }
