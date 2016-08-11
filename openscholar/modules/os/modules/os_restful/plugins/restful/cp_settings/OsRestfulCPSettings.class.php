@@ -118,7 +118,7 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
   }
 
   private function saveVariable($var, $val) {
-    if (!empty($this->request['vsite'])) {
+    if (!empty($_GET['vsite'])) {
       if ($vsite = vsite_get_vsite($this->request['vsite'])) {
         $vsite->controllers->variable->set($var, $val);
       }
