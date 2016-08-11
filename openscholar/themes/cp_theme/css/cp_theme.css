@@ -627,8 +627,8 @@ table.biblio-contributors tr:first-child input.form-submit {
 #edit-biblio-year-coded .form-item.form-type-radio {
     margin-left: 0;
 }
-span[checkbox] input[type="checkbox"],
-span[radios] input[type="radio"] {
+span[fe-checkbox] input[type="checkbox"],
+span[fe-radios] input[type="radio"] {
     vertical-align: initial;
     margin-right: 5px;
 }
