@@ -3295,7 +3295,7 @@ function vsite_cp_settings() {
       '#title' => t('SEO'),
       '#weight' => 30,
     ),
-    'submit' => 'vsite_cp_settings_form_submit'
+    'submit' => 'vsite_cp_settings_form_submit',
   );
 
   $settings['vsite_head_link_rel_publisher'] = array(
@@ -3314,6 +3314,34 @@ function vsite_cp_settings() {
   );
 
   return $settings;
+}
+
+function vsite_rest_cp_settings_submit($value, $var) {
+  $values = &drupal_static(__FUNCTION__, array());
+
+  switch ($var) {
+    case 'vsite_title':
+    case 'field_meta_description':
+      $values[$var] = $value;
+      if (array_diff_key(array('vsite_title' => false, 'field_meta_description' => false), $values)) {
+        return;
+      }
+
+      $vsite = vsite_get_vsite();
+      $vsite->group->title = $values['vsite_title'];
+      $vsite->group->field_meta_description = array(
+        LANGUAGE_NONE => array(
+          0 => array(
+            'value' => $values['field_meta_description'],
+            'format' => NULL,
+          )
+        )
+      );
+
+      node_save($vsite->group);
+
+      break;
+  }
 }
 
 /**
