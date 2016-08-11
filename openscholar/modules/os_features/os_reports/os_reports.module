@@ -107,13 +107,16 @@ function os_reports_print_file(&$context) {
 }
 
 /**
- * replace quotes with single quotes, take out line returns and enclose in quotes
+ * replace quotes with single quotes, take out line returns and enclose in quotes if value contains a comma
  */
 function _make_csv_safe ($value) {
   $value = preg_replace('/ (\S+)="([^"]+)"/', " $1='$2'", preg_replace('/[\n\r]/', '', $value));
   $value = preg_replace('/"/', '&quot;', $value);
-  if ($value) {
+  if ($value && strpos($value, ",") !== FALSE) {
     return '"' . trim($value) . '"';
+  }
+  elseif ($value) {
+    return trim($value);
   }
   else {
     return '""';
