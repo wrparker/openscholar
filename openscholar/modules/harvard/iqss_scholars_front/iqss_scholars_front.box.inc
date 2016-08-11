@@ -106,7 +106,7 @@ Using OpenScholar, you can easily create and manage a highly dynamic, powerful, 
   $box->options = array(
     'body' => array(
       'value' => '<div align="center"><span>or</span><div class="hwp_option"><a href="http://faculty.hwp.harvard.edu/">Engage Harvard Web Publising</a> for custom
-content organization and design services</div></div><p>OpenScholar is continually enhanced by in-house Harvard developers and an open source community around the world. New features and enhancements are released on a rolling, two-week cycle. We provide free documentation, training and an online community forum.</p><p>Not a Harvard Scholar? Find out how to <a href="http://theopenscholar.org/">create a similar site at your institution</a>.<p>',
+content organization and design services<p style="text-align:left;">OpenScholar is continually enhanced by in-house Harvard developers and an open source community around the world. New features and enhancements are released on a rolling, two-week cycle. We provide free documentation, training and an online community forum.</p><p style="text-align:left;">Not a Harvard Scholar? Find out how to <a href="http://theopenscholar.org/">create a similar site at your institution</a>.<p></div></div>',
       'format' => 'filtered_html',
     ),
     'additional_classes' => '',
