@@ -64,13 +64,17 @@
         if (!store.isNew()) {
           scope.selectedFiles = store.fetchData(scope.field_name);
         }
-        else if (Array.isArray(scope.$parent.value)) {
-          for (i = 0; i < scope.$parent.value; i++) {
+        else if (!Array.isArray(scope.selectedFiles)) {
+          scope.selectedFiles = [];
+        }
+
+        if (Array.isArray(scope.$parent.value)) {
+          for (i = 0; i < scope.$parent.value.length; i++) {
             service.fetchOne(scope.$parent.value[i]).then(generateFunc(i));
           }
         }
-        else if (!Array.isArray(scope.selectedFiles)) {
-          scope.selectedFiles = [];
+        else if (scope.$parent.value) {
+          service.fetchOne(scope.$parent.value).then(generateFunc(0));
         }
 
         if (scope.selectedFiles.length == 0 && Drupal.settings.mediaBrowserField != undefined) {
@@ -121,8 +125,13 @@
             }
             if (!found) {
               scope.selectedFiles.push($files[i]);
-              scope.$parent.value = scope.$parent.value || [];
-              scope.$parent.value.push($files[i].id);
+              if (scope.cardinality == 1) {
+                scope.$parent.value = $files[i].id;
+              }
+              else {
+                scope.$parent.value = scope.$parent.value || [];
+                scope.$parent.value.push($files[i].id);
+              }
             }
           }
           store.setData(scope.field_name, scope.selectedFiles);
