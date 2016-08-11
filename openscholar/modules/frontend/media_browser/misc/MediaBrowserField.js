@@ -54,21 +54,27 @@
           handle: '.tabledrag-handle'
         };
 
+        var generateFunc = function (i) {
+          return function(file) {
+            scope.selectedFiles[i] = angular.copy(file);
+            return file;
+          }
+        };
+
         if (!store.isNew()) {
           scope.selectedFiles = store.fetchData(scope.field_name);
+        }
+        else if (Array.isArray(scope.$parent.value)) {
+          for (i = 0; i < scope.$parent.value; i++) {
+            service.fetchOne(scope.$parent.value[i]).then(generateFunc(i));
+          }
         }
         else if (!Array.isArray(scope.selectedFiles)) {
           scope.selectedFiles = [];
         }
 
         if (scope.selectedFiles.length == 0 && Drupal.settings.mediaBrowserField != undefined) {
-          var fids = Drupal.settings.mediaBrowserField[scope.field_id].selectedFiles,
-            generateFunc = function (i) {
-              return function(file) {
-                scope.selectedFiles[i] = angular.copy(file);
-                return file;
-              }
-            };
+          var fids = Drupal.settings.mediaBrowserField[scope.field_id].selectedFiles;
 
           for (var i = 0; i < fids.length; i++) {
             var fid = fids[i];
@@ -115,6 +121,8 @@
             }
             if (!found) {
               scope.selectedFiles.push($files[i]);
+              scope.$parent.value = scope.$parent.value || [];
+              scope.$parent.value.push($files[i].id);
             }
           }
           store.setData(scope.field_name, scope.selectedFiles);
