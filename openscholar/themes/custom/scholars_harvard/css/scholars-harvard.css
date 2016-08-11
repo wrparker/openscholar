@@ -1,3 +1,10 @@
+#block-views-os-activity-block-1,
+#block-os-stats-os-stats {
+	display:none;
+	
+}
+
+
 /* D6 retro css for older themes */
 
 #columns {
@@ -7,7 +14,7 @@ body {
     font-family: helvetica, arial, serif;
     font-size: 13px;
     line-height: 1.5;
-    background: #698da2;
+   background: url('../images/startpage-bg.jpg') no-repeat 50% 0;
 }
 .logged-in .region-page-top .region-inner {
     padding-top: 5px;
@@ -73,17 +80,23 @@ body {
 /* FRONT PAGE*/
 /* Specific Content Classes */
 
+
+
+.front .region-content-top .region-inner {
+	background-color: #e3e3e3; */
+}
+
+
+
 .front .more-link {
     display: none;
 }
 .os-topheadings {
-    color: #FFF;
     font-size: 13px;
     padding: 0 0 15px 50px;
+    display:none;
 }
-.os-topheadings a {
-    color: #FEF1AB;
-}
+
 .os-leftcol {
     color: #333;
     font-size: 1.3em;
@@ -103,21 +116,18 @@ body {
     visibility: hidden;
 }
 .os-leftcol ul li a {
-    background: none repeat scroll 0 0 #EDEEF1;
-    border: 1px solid #DCDCDD;
-    border-radius: 12px 12px 12px 12px;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5) inset;
-    color: #000000;
+  background: #005C9C;
+   
+    color: #fff;
     font-size: 11px;
     margin: 5px 5px 15px 0;
-    padding: 0 9px;
-    text-shadow: 0 1px 0 #FFFFFF;
+    padding: 3px 5px;
+
 }
 .os-featuredSites {
     float: left;
-    height: 19px;
-    margin: 3px 327px 0 0;
-    width: 162px;
+    margin: 3px 327px 0 10px;
+    font-size: 16px;
 }
 @-moz-document url-prefix() {
     .os-featuredSites {
@@ -212,7 +222,7 @@ p.os-leadin {
     width: 80%;
     font-size: 1.3em;
     line-height: 1.2em;
-    padding: 10px;
+       padding: 10px 10px 22px 10px;
 }
 .os-leftcol {
     margin: 0;
@@ -561,10 +571,7 @@ a.iqss-link {
 }
 /* FOOTER STYLES SPECIFIC TO STATS BLOCK ON FP ONLY */
 
-.front #footer {
-    height: 110px;
-    background: #7691A7;
-}
+
 .block-os-stats {
     height: 50px;
     width: 944px;
@@ -611,29 +618,11 @@ p.copy a:hover {
     color: #fff;
     border-color: #fff;
 }
-.front #footer #powered-by {
-    position: relative;
-    top: -119px;
-    margin-right: -10px;
-    width: 119px;
-    height: 115px;
-    background-color: #234f6e;
-    right: -56px;
-}
+
 .front.logged-in #footer #powered-by {
     top: -120px;
 }
-.front #powered-by a {
-    background-position: -14px -547px;
-    display: block;
-    width: 85px;
-    height: 26px;
-    text-indent: -9999px;
-    margin: 0;
-    position: absolute;
-    top: 40px;
-    left: 20px;
-}
+
 /* REASONS PAGE */
 
 #reasons_header {
@@ -783,7 +772,6 @@ p.copy a:hover {
 
 .os-scholar-header {
     height: 80px;
-    background: #3E5A72;
     position: fixed;
     top: 0;
     left: 0;
@@ -1025,9 +1013,7 @@ a.os-columns-home:hover {
 .page-websites #block-os-login {
     bottom: 100px;
 }
-.front #footer {
-    background: #698DA2;
-}
+
 /* CSS fixes for frontpage header */
 
 #header-container #block-boxes-iqss-scholars-fp-logoblock {
