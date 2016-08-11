@@ -168,8 +168,7 @@ function os_profiles_init() {
       // The field person is an array. Remove him for the update method but keep
       // it for later.
       unset($data->values['photo']);
-      $handler->put($node->nid, $data->values);
-
+      $handler->patch($node->nid, $data->values);
     } catch(\Exception $e) {
       variable_del('os_profiles_nodes_uuid');
       variable_del('os_profiles_nodes_uuid_time');
@@ -179,7 +178,7 @@ function os_profiles_init() {
     // We need to replace the file ID in the field with the new file ID we got.
     $file = NULL;
     if ($person_photo) {
-      $file_info = os_profiles_get_origin_node_values($person_photo['file']['uri'] . '.json', array('url'));
+      $file_info = drupal_http_request($person_photo['self']);
       // If the file was updated within 2 min of the node then update it as well.
       if (($data->values['changed'] - 120) < $file_info->values['timestamp']) {
         $copy_file = os_copy_file($person_photo['url'], TRUE);
@@ -192,7 +191,8 @@ function os_profiles_init() {
 
     if ($file || !isset($file_info)) {
       os_profiles_insert_image($node, $file, $data->data['photo']);
-    } else {
+    }
+    else {
       node_save($node);
     }
   }

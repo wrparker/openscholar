@@ -80,6 +80,10 @@ class OsProfilesResource extends RestfulEntityBaseNode {
       'sub_property' => 'uid',
     );
 
+    $public_fields['changed'] = array(
+      'property' => 'changed',
+    );
+
     return $public_fields;
   }
 
@@ -113,6 +117,7 @@ class OsProfilesResource extends RestfulEntityBaseNode {
       'cropbox_x' => $value['cropbox_x'],
       'cropbox_y' => $value['cropbox_y'],
       'url' => file_create_url($value['uri']),
+      'self' => url('api/files/' . $value['fid'], array('absolute' => TRUE)),
     );
   }
 
