@@ -2615,3 +2615,344 @@ function _os_file_invalidate_cache($file) {
     cache_clear_all($nid, 'cache_entity_node');
   }
 }
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function os_files_views_pre_view(&$view, &$display_id, &$args) {
+  if (in_array($view->name, array('os_files_private', 'cp_files'))) {
+    // Adding bulk delete operation for the views
+    $view->add_item($view->current_display, 'field', 'file_managed', 'views_bulk_operations', array(
+      'label' => '',
+      'vbo_settings' => array('enable_select_all_pages' => 1, 'display_result' => 1),
+      'vbo_operations' => array(
+        'action::os_files_assign_taxonomy_action' => array('selected' => 1, 'skip_confirmation' => 1),
+        'action::views_bulk_operations_delete_item' => array('selected' => 1),
+        'action::os_files_remove_taxonomy_action' => array('selected' => 1, 'skip_confirmation' => 1),
+        ),
+    ), 'views_bulk_operations');
+  }
+}
+
+/**
+ * Implements hook_action_info().
+ *
+ * Adds VBO operations to assign/remove taxonomy terms to nodes.
+ */
+function os_files_private_action_info() {
+  return array(
+    'os_files_assign_taxonomy_action' => array(
+      'type' => 'file',
+      'label' => t('Apply Taxonomy term'),
+      'triggers' => array('any'),
+      'configurable' => TRUE,
+    ),
+    'os_files_remove_taxonomy_action' => array(
+      'type' => 'file',
+      'label' => t('Remove Taxonomy term'),
+      'triggers' => array('any'),
+      'configurable' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Form for assigning taxonomy terms.
+ */
+function os_files_assign_taxonomy_action_form($form, $form_state) {
+  $title = t('Apply Terms to File');
+  $list_title = t('The selected terms above will be applied to the following files:');
+  $action = 'apply_terms';
+  $vbo = _views_bulk_operations_get_field($form['view']);
+  $form = _os_files_build_taxonomy_action_form($title, $list_title,  $action, $form_state, $vbo);
+
+  return $form;
+}
+
+/**
+ * Form for removing taxonomy terms.
+ */
+function os_files_remove_taxonomy_action_form($form, $form_state) {
+  $title = t('Remove Terms from File');
+  $list_title = t('The selected terms above will be removed from the following files:');
+  $action = 'remove_terms';
+  $vbo = _views_bulk_operations_get_field($form['view']);
+  $form = _os_files_build_taxonomy_action_form($title, $list_title, $action, $form_state, $vbo);
+
+  return $form;
+}
+
+/**
+ * Helper function; build the form for adding/removing taxonomy terms.
+ */
+function _os_files_build_taxonomy_action_form($title, $list_title, $action, $form_state, $vbo) {
+  module_load_include('inc', 'vsite_vocab', 'includes/taxonomy');
+  $vocabs = vsite_vocab_get_vocabularies();
+
+  $vocabularies = array();
+  foreach ($vocabs as $vocab) {
+    $vocabularies[$vocab->vid] = $vocab->name;
+  }
+
+  // Build a list of file titles to which we apply the action.
+  $file_titles = array();
+  $files = file_load_multiple($form_state['selection']);
+  foreach ($files as $file) {
+    $file_titles[] = $file->filename;
+  }
+
+  // All rows on all pages have been selected, so show a count of additional items.
+  if ($form_state['select_all_pages']) {
+    $more_count = $vbo->view->total_rows - count($vbo->view->result);
+    $file_titles[] = t('...and <strong>!count</strong> more.', array('!count' => $more_count));
+  }
+
+  $form = array();
+
+  $form['title'] = array(
+    '#type' => 'item',
+    '#markup' => '<h1>' . $title . '</h1>',
+  );
+
+  $form['vocab'] = array(
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#title' => t('Vocabulary'),
+    '#options' => $vocabularies,
+    '#ajax' => array(
+      'event' => 'change',
+      'callback' => 'cp_content_select_callback',
+      'wrapper' => 'select-terms',
+    ),
+  );
+
+  $form['terms'] = array(
+    '#type' => 'hidden',
+    '#prefix' => '<div id="select-terms">',
+    '#suffix' => '</div>',
+  );
+
+  $vid = !empty($form_state['values']['vocab']) ? $form_state['values']['vocab'] : 0;
+  if ($vid) {
+    $terms = taxonomy_get_tree($vid);
+
+    $options = array();
+    foreach ($terms as $term) {
+      $options[$term->tid] = $term->name;
+    }
+
+    // Adding the select2 functionality for multiple selection.
+    $form['terms'] = array(
+      '#type' => 'select',
+      '#prefix' => '<div id="select-terms">',
+      '#suffix' => '</div>',
+      '#options' => $options,
+      '#title' => t('Terms'),
+      '#required' => TRUE,
+      '#multiple' => TRUE,
+      '#after_build' => array('os_select2_widget_after_build'),
+      '#cardinality' => -1,
+      '#attached' => array(
+        'css' => array(
+          libraries_get_path('select2') . '/select2.css',
+          drupal_get_path('module', 'os') . '/css/select2-widget.css',
+        ),
+        'js' => array(
+          libraries_get_path('select2') . '/select2.min.js',
+          drupal_get_path('module', 'os') . '/js/select2-widget.js',
+        ),
+      ),
+    );
+  }
+
+  $variables = array(
+    'items' => $file_titles,
+    'title' => $list_title,
+  );
+
+  $form['file_titles'] = array(
+    '#type' => 'item',
+    '#markup' => theme('item_list', $variables),
+  );
+
+  $form['vbo_action'] = array(
+    '#type' => 'hidden',
+    '#value' => $action,
+  );
+
+  return $form;
+}
+
+/**
+ * Ajax callback to update the list of terms of the form.
+ */
+function os_files_select_callback($form, $form_state) {
+  return $form['terms'];
+}
+
+/**
+ * Submit handler; Passes the selected vocabulary and terms to the action function.
+ */
+function os_files_assign_taxonomy_action_submit($form, $form_state) {
+  $return = array();
+  $return['vocab'] = $form_state['values']['vocab'];
+  $return['terms'] = $form_state['values']['terms'];
+
+  return $return;
+}
+
+/**
+ * Action function; Assigns terms to files.
+ *
+ * @param $files
+ *  The files to perform the action on.
+ * @param $context
+ *  Contains information passed with the action's form submit handler.
+ */
+function os_files_assign_taxonomy_action(&$file, $context) {
+  $vocabulary = $context['vocab'];
+  $terms = $context['terms'];
+
+  // Make a list of bundles associated with the selected vocabulary.
+  $vsite = vsite_get_vsite();
+  $bundles = os_taxonomy_og_vocabulary_bundles($vocabulary, $vsite->id);
+  $bundle_names = array();
+  foreach ($bundles as $bundle) {
+    $bundle_names[] = $bundle->bundle;
+  }
+
+  $selected_terms = is_array($terms) ? $terms : array($terms);
+
+  $skipped_titles = array();
+  $applied_titles = array();
+  $wrapper = entity_metadata_wrapper('file', $file);
+  // Check if the bundle of the file is associated with selected vocabulary.
+  if (in_array($file->type, $bundle_names)) {
+    // Assign the term(s) to the current node.
+    $file_terms = $wrapper->{OG_VOCAB_FIELD}->value(array('identifier' => TRUE));
+    $file_terms = array_merge($file_terms ,$selected_terms);
+    $wrapper->{OG_VOCAB_FIELD}->set($file_terms);
+    $wrapper->save();
+    $applied_titles[] = $wrapper->label();
+  }
+  else {
+    $skipped_titles[] = $wrapper->label();
+  }
+
+  $terms = taxonomy_term_load_multiple($selected_terms);
+  $names = array();
+  foreach ($terms as $term) {
+    $names[] = $term->name;
+  }
+
+  // Notify the user on the applied files.
+  if (!empty($applied_titles)) {
+    $params = array(
+      '%terms' => implode(", ", $names),
+      '!files' => theme('item_list', array('items' => $applied_titles)),
+    );
+
+    $message = format_plural(count($selected_terms), 'Taxonomy term %terms was applied on the content: !files', '@count taxonomy terms %terms were applied on the content: !files', $params);
+    drupal_set_message($message);
+  }
+
+  // Notify the user on the skipped files (files whose bundle is not associated
+  // with the selected vocabulary).
+  if (!empty($skipped_titles)) {
+    $params = array(
+      '%terms' => implode(", ", $names),
+      '!files' => theme('item_list', array('items' => $skipped_titles)),
+    );
+
+    $message = format_plural(count($selected_terms), 'Taxonomy term %terms could not be applied on the content: !files', '@count taxonomy terms %terms could not be applied on the content: !files', $params);
+    drupal_set_message($message, 'warning');
+  }
+}
+
+/**
+ * Submit handler; Passes the selected terms to the action function.
+ */
+function os_files_remove_taxonomy_action_submit($form, $form_state) {
+  $return = array();
+  $return['vocab'] = $form_state['values']['vocab'];
+  $return['terms'] = $form_state['values']['terms'];
+
+  return $return;
+}
+
+/**
+ * Action function; Removes terms from nodes.
+ *
+ * @param $files
+ *  The files to perform the action on.
+ * @param $context
+ *  Contains information passed with the action's form submit handler.
+ */
+function os_files_remove_taxonomy_action(&$file, $context) {
+  $vocabulary = $context['vocab'];
+  $terms = $context['terms'];
+
+  // Make a list of bundles associated with the selected vocabulary.
+  $vsite = vsite_get_vsite();
+  $bundles = os_taxonomy_og_vocabulary_bundles($vocabulary, $vsite->id);
+  $bundle_names = array();
+  foreach ($bundles as $bundle) {
+    $bundle_names[] = $bundle->bundle;
+  }
+
+  $selected_terms = is_array($terms) ? $terms : array($terms);
+
+  $skipped_titles = array();
+  $removed_titles = array();
+
+  $wrapper = entity_metadata_wrapper('file', $file);
+  $file_terms = $wrapper->{OG_VOCAB_FIELD}->value(array('identifier' => TRUE));
+  $terms_to_remove = array_intersect($file_terms, $selected_terms);
+  // Check if the bundle of the file is associated with selected vocabulary
+  // or if the selected terms are not assigned to the current file.
+  if (in_array($file->type, $bundle_names) || !$terms_to_remove) {
+
+    // Remove the term(s) from the current file.
+    $file_terms = array_diff($file_terms, $selected_terms);
+    $wrapper->{OG_VOCAB_FIELD}->set($file_terms);
+    $wrapper->save();
+    $removed_titles[] = array(
+      'title' => $wrapper->label(),
+      'removed_terms' => $terms_to_remove,
+    );
+  }
+  else {
+    $skipped_titles[] = $wrapper->label();
+  }
+
+  // Notify the user on the files which terms were being removed of.
+  if (!empty($removed_titles)) {
+    foreach ($removed_titles as $removed_title) {
+      $terms = taxonomy_term_load_multiple($removed_title['removed_terms']);
+      $names = array();
+      foreach ($terms as $term) {
+        $names[] = $term->name;
+      }
+
+      $params = array(
+        '%terms' => implode(", ", $names),
+        '!file' => $removed_title['title'],
+      );
+
+      $message = format_plural(count($removed_title['removed_terms']), 'Taxonomy term %terms was removed from the content: !file', '@count taxonomy terms %terms were removed from the content: !file', $params);
+      drupal_set_message($message);
+    }
+  }
+
+  // Notify the user on the skipped files (files whose bundle is not associated
+  // with the selected vocabulary).
+  if (!empty($skipped_titles)) {
+    $params = array(
+      '%terms' => implode(", ", $names),
+      '!files' => theme('item_list', array('items' => $skipped_titles)),
+    );
+
+    $message = format_plural(count($selected_terms), 'No term was removed from the content: !files', 'No terms were removed from the content: !files', $params);
+    drupal_set_message($message, 'warning');
+  }
+}
