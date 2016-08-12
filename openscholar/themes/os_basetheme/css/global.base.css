@@ -1129,4 +1129,18 @@ ul.no-event-export {
   list-style:none;
 }
 
+li.pager-previous + li.pager-ellipsis {
+    display: none;
+}
+ul.pager > li {
+    border: 1px solid #dededc !important;
+    letter-spacing: normal;
+    padding: 0.7em !important;
+}
+ul.pager {
+    letter-spacing: -1em;
+}
 
+ul.mini-pager > li {
+    border: none !important;
+}
