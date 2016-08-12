@@ -261,8 +261,8 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       }
 
       // check for site owner HUID
-      if (isset($row->site_owner_uid)) {
-//        $huid = db_select('')
+      if (isset($row->site_owner_huid)) {
+        $new_row['site_owner_huid'] = (pinserver_user_has_associated_pin($row->site_owner_huid)) ? 'Y' : 'N';
       }
 
       // check for custom domain
