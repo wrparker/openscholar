@@ -3253,7 +3253,7 @@ function vsite_cp_settings() {
 
   $subsite_parents = variable_get('subsite_parents', array('department', 'project'));
   $inherit_theme = variable_get('vsite_subsite_inherit_theme', 0);
-  if (!in_array($vsite->group->type, $subsite_parents)) {
+  if (in_array($vsite->group->type, $subsite_parents)) {
     $settings['vsite_subsite_inherit_theme'] = array(
       'form' => array(
         '#type' => 'checkbox',
@@ -3262,7 +3262,7 @@ function vsite_cp_settings() {
         '#description' => t('Check to have newly created subsites start with this site\'s currently enabled theme by default.'),
       ),
       'group' => array(
-        '#id' => 'vsite_subsite',
+        '#id' => 'vsite-subsite',
         '#title' => t('Subsites'),
         '#weight' => 31,
       ),
