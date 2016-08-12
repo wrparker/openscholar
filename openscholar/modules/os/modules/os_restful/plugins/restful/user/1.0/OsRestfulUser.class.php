@@ -95,16 +95,37 @@ class OsRestfulUser extends \RestfulEntityBaseUser {
     ctools_include('subsite', 'vsite');
 
     $groups = array();
+    // Obtaining associative array of custom domains, keyed by space id
+    $custom_domains = $this->getCustomDomains($values);
+    $purl_base_domain = variable_get('purl_base_domain');
     foreach ($values as $value) {
       $groups[] = array(
         'title' => $value->title,
         'id' => $value->nid,
         'purl' => $value->purl,
+        'delete_base_url' => isset($custom_domains[$value->nid]) ? 'http://' . $custom_domains[$value->nid] . '/#overlay=' : $purl_base_domain . '/#overlay=' . $value->purl . '/',
         'owner' => ($value->uid == $account->uid),
         'subsite_access' => vsite_subsite_access('create', $value),
         'delete_access' => node_access('delete', $value),
       );
     }
     return $groups;
+  }
+
+  /**
+   * Returns associative array of custom domains, keyed by space id
+   */
+  protected function getCustomDomains($vsites) {
+    $space_ids = array();
+    foreach ($vsites as $vsite) {
+      $space_ids[] = $vsite->nid;
+    }
+    $result = db_select('purl', 'p')
+      ->fields('p', array('id', 'value'))
+      ->condition('provider', 'vsite_domain', '=')
+      ->condition('id', $space_ids, 'IN')
+      ->execute()
+      ->fetchAllKeyed(0, 1);
+    return $result;
   }
 }
