@@ -265,12 +265,11 @@ body.front {
 /*header*/
 
 #header-container #block-boxes-iqss-scholars-fp-logoblock {
-    width: 231px;
+    width: 450px;
     height: 76px;
     background: url(../images/logo.png) no-repeat;
     text-indent: -999em;
-    float: left;
-    margin-left: 9px;
+   
 }
 #block-os-search-db-site-search {
     margin-top: 15px;
@@ -776,6 +775,7 @@ p.copy a:hover {
     box-shadow: 0 10px 16px rgba(0, 0, 0, 0.15);
     z-index: 10;
     width: 100%;
+    background-color: #ededed;
 }
 .logged-in .os-scholar-header {
     top: 30px;
