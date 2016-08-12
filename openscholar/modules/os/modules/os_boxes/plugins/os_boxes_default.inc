@@ -193,7 +193,7 @@ abstract class os_boxes_default extends boxes_box {
    *   NULL is a valid return value for an empty box.
    */
   protected function get_cache() {
-    if (!variable_get('os_boxes_cache_enabled', TRUE)) {
+    if (!variable_get('os_boxes_cache_enabled', FALSE)) {
       return FALSE;
     }
 
@@ -257,7 +257,7 @@ abstract class os_boxes_default extends boxes_box {
    * Helper function for retrieve the assets easily.
    */
   protected function get_assets() {
-    if (!variable_get('os_boxes_cache_enabled', TRUE)) {
+    if (!variable_get('os_boxes_cache_enabled', FALSE)) {
       return array();
     }
 
@@ -321,7 +321,7 @@ abstract class os_boxes_default extends boxes_box {
    *  The assets of the box. Optional.
    */
   protected function set_cache($cache, $assets = NULL) {
-    if (!variable_get('os_boxes_cache_enabled', TRUE)) {
+    if (!variable_get('os_boxes_cache_enabled', FALSE)) {
       return FALSE;
     }
 
