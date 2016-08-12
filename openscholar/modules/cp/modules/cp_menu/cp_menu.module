@@ -349,7 +349,6 @@ function cp_menu_node_submit($node, $form, &$state) {
  * When menu link is enabled, it should have a title.
  */
 function cp_menu_node_validate($node, $form, &$form_state) {
-
   if ($os_menu = &$form_state['values']['os_menu']) {
     $os_menu['link_title'] = trim($os_menu['link_title']);
 
