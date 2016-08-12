@@ -102,9 +102,10 @@ body {
     font-size: 1.3em;
 }
 .os-leftcol ul {
-    float: right;
-    margin: 5px 0 0 20px;
- 
+  
+    position: absolute;
+    left: 340px;
+    top: 185px;
 }
 .os-leftcol li {
     display: inline;
@@ -149,7 +150,7 @@ body {
 }
 .os-rightcol li {
         list-style: disc outside none;
-    margin-bottom: 15px;
+    margin-bottom: 30px;
 }
 p.os-leadin {
     margin-top: 7px;
@@ -167,6 +168,7 @@ p.os-leadin {
     background-color: #e3e3e3;
     text-align: center;
     padding: 10px 0 8px;
+    margin-top: 98px;
 }
 #block-boxes-iqss-scholars-fp-hwp-option,
 #block-vsite-register-get-your-site-block {
@@ -220,7 +222,7 @@ p.os-leadin {
 }
 .os-leftcol {
     margin: 0;
-    padding:22px 40px 0 29px;
+    padding: 22px 40px 12px 29px;
     font-size: 18px;
 }
 .os-rightcol {
