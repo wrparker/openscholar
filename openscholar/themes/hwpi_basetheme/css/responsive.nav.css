@@ -99,6 +99,7 @@
         text-decoration: none;
         transition: none 0s ease 0s;
     }
+   
     /* KILL THE DOWN ARROWS IN THE MAIN MENU WHEN IN RESPONSIVE MODE */
     
     #menu-bar ul.nice-menu .menuparent > a:before {
@@ -123,7 +124,7 @@
     #menu-bar ul.nice-menu .menuparent a.active span {
         background: none !important;
     }
-
+    .menuparent ul span.open-submenu,
     #menu-bar ul.nice-menu ul ul {
         display: none !important;
     }
