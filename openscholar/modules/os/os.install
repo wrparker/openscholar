@@ -922,9 +922,13 @@ function os_update_7045() {
 }
 
 /**
- * Install OS Revisions module.
+ * Install OS Revisions module and disable Diff module.
  */
 function os_update_7046() {
+  if (module_exists('diff')) {
+    module_disable(array('diff'));
+    drupal_uninstall_modules(array('diff'));
+  }
   module_enable(array('os_revisions'));
-  return t('Enabled OS content revisions module.');
+  return t('Enabled OS content revisions module and disabled the Diff module.');
 }

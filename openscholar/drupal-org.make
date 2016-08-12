@@ -164,6 +164,7 @@ projects[hierarchical_taxonomy][patch][] = "http://drupal.org/files/2034713-hs-c
 
 projects[html_title][subdir] = "contrib"
 projects[html_title][version] = 1.1
+projects[html_title][patch][] = "https://www.drupal.org/files/issues/fix_for_other_titles-2783297.patch"
 
 projects[imageapi_optimize][subdir] = "contrib"
 projects[imageapi_optimize][version] = 1.0
