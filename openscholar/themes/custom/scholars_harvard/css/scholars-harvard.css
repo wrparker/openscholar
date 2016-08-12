@@ -307,8 +307,7 @@ body.front {
     font: 15px/normal 'PT Sans', arial, serif;
     font-weight: normal;
     color: #FEF1AB;
-    margin-bottom: 0;
-    margin-right: 100px
+    margin-top: 20px;
 }
 ul#header-info li {
     color: #fef1ab;
