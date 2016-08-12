@@ -63,7 +63,7 @@ function iqss_scholars_front_default_box() {
 <ul><li><a href="profiles/openscholar/themes/custom/scholars_harvard/Info-sheet-Scholars-at-Harvard-H-2011.03.17.pdf">Fact Sheet (PDF)</a></li>
 <li><a href="http://player.vimeo.com/video/9887585?title=0&amp;byline=0&amp;portrait=0">Video Intro</a></li>
 </ul></div>
-<div class="os-featuredSites"><a href="/websites">Featured Sites</a></div>',
+<div class="os-featuredSites"><a href="/websites"><img src="/profiles/openscholar/themes/custom/scholars_harvard/images/featuredSites.png"></a></div>',
       'format' => 'filtered_html',
     ),
     'additional_classes' => '',
@@ -80,15 +80,16 @@ function iqss_scholars_front_default_box() {
   $box->options = array(
     'body' => array(
       'value' => '<div class="os-rightcol">
-<p class="os-leadin">OpenScholar@Harvard is a website building tool provided by Harvard Web Publishing that is available to faculty, graduate students and visiting scholars at Harvard.</p>
-<p>
-Using OpenScholar, you can easily create and manage a highly dynamic, powerful, and customizable site, with an easy-to-use interface and a look and feel that is uniquely yours. </p>
+<p class="os-leadin">OpenScholar@Harvard is a free web site building tool available to faculty, graduate students and visiting scholars at Harvard.</p>
 <ul>
-<li><span>Receive more web visibility</span></li>
-<li><span>Build higher citation counts</span></li>
-<li><span>Choose from a multitude of designs that work on mobile devices</span></li>
+<li><span>Create a beautiful academic web site in seconds.</span></li>
+<li><span>Receive more web visibility.</span></li>
+<li><span>Build higher citation counts.</span></li>
+<li><span>Customize your site\'s layout and structure, and choose (or design) a unique look and feel</span></li>
+<li><span>Watch as your site is automatically updated with the latest web technology.</span></li>
 </ul>
-</div>',
+</div>
+<div class="started-oneyour-own">Get started on your own today</div>',
       'format' => 'filtered_html',
     ),
     'additional_classes' => '',
@@ -105,7 +106,8 @@ Using OpenScholar, you can easily create and manage a highly dynamic, powerful, 
   $box->description = 'HWP Option Info text';
   $box->options = array(
     'body' => array(
-      'value' => '<div align="center"><span>or</span><div class="hwp_option"><a href="http://faculty.hwp.harvard.edu/">Engage Harvard Web Publising</a> for custom content organization and xdesign services. OpenScholar is continually enhanced by in-house Harvard developers and an open source community around the world. New features and enhancements are released on a rolling, two-week cycle. We provide free documentation, training and an online community forum. Not a Harvard Scholar? Find out how to <a href="http://theopenscholar.org/">create a similar site at your institution</a>.</div></div>',
+      'value' => '<div align="center"><span>or</span><div class="hwp_option"><a href="http://faculty.hwp.harvard.edu/">Engage Harvard Web Publising</a> for custom
+content organization and design services</div></div>',
       'format' => 'filtered_html',
     ),
     'additional_classes' => '',
