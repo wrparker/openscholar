@@ -777,9 +777,7 @@ p.copy a:hover {
     width: 100%;
     background-color: #ededed;
 }
-.logged-in .os-scholar-header {
-    top: 30px;
-}
+
 .page-site-register .os-scholar-header {
     display: none;
 }
@@ -790,12 +788,11 @@ p.copy a:hover {
     margin: 0px auto;
 }
 .os-scholar-header h2 {
-    text-indent: -999em;
-    width: 183px;
+       text-indent: -999em;
+    width: 350px;
     height: 56px;
     background: url('../images/logo.png') no-repeat 0 0 transparent;
-    margin-top: 11px;
-    float: left;
+
 }
 .os-scholar-header h2 a,
 .os-scholar-header h2 a.visited {
