@@ -117,7 +117,7 @@ class OsProfilesResource extends RestfulEntityBaseNode {
       'cropbox_x' => $value['cropbox_x'],
       'cropbox_y' => $value['cropbox_y'],
       'url' => file_create_url($value['uri']),
-      'self' => url('api/files/' . $value['fid'], array('absolute' => TRUE)),
+      'timestamp' => $value['timestamp'],
     );
   }
 

@@ -178,9 +178,8 @@ function os_profiles_init() {
     // We need to replace the file ID in the field with the new file ID we got.
     $file = NULL;
     if ($person_photo) {
-      $file_info = drupal_http_request($person_photo['self']);
       // If the file was updated within 2 min of the node then update it as well.
-      if (($data->values['changed'] - 120) < $file_info->values['timestamp']) {
+      if (($data->values['changed'] - 120) < $person_photo['timestamp']) {
         $copy_file = os_copy_file($person_photo['url'], TRUE);
 
         if ($copy_file['type'] == 'file') {
