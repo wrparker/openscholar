@@ -163,6 +163,12 @@ function os_profiles_init() {
     // url too. Otherwise it will be cleared.
     $data->values['original_url'] = $node->field_original_destination_url[LANGUAGE_NONE][0]['value'];
 
+    // Get the changed timestamp of the node.
+    $changed = $data->values['changed'];
+
+    // Remove so the child won't get the same value.
+    unset($data->values['changed']);
+
     $person_photo = !empty($data->values['photo']) ? $data->values['photo'] : '';
     try {
       // The field person is an array. Remove him for the update method but keep
@@ -179,7 +185,7 @@ function os_profiles_init() {
     $file = NULL;
     if ($person_photo) {
       // If the file was updated within 2 min of the node then update it as well.
-      if (($data->values['changed'] - 120) < $person_photo['timestamp']) {
+      if (($changed - 120) < $person_photo['timestamp']) {
         $copy_file = os_copy_file($person_photo['url'], TRUE);
 
         if ($copy_file['type'] == 'file') {
@@ -188,7 +194,7 @@ function os_profiles_init() {
       }
     }
 
-    if ($file || !isset($file_info)) {
+    if ($file) {
       os_profiles_insert_image($node, $file, $data->data['photo']);
     }
     else {
@@ -735,6 +741,7 @@ function os_profiles_profiles_fields() {
     'field_person_photo' => 'photo',
     'field_uuid' => 'uuid',
     'field_original_destination_url' => 'original_url',
+    'changed' => 'changed',
   );
 }
 
@@ -928,12 +935,7 @@ function os_profiles_get_origin_node_values($address, $fields) {
 
   foreach ($fields as $key => $field) {
     $field_name = isset($data['restful']) ? $field : $key;
-    if (empty($data[$field_name])) {
-      continue;
-    }
-    else {
-      $values[$field] = $data[$field_name];
-    }
+    $values[$field] = $data[$field_name];
   }
 
   return (object) array(
