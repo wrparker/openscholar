@@ -2561,13 +2561,6 @@ function os_events_date_display_range($variables) {
     ));
   }
 
-  // If microdata attributes for the start date property have been passed in,
-  // add the microdata in meta tags.
-  if (!empty($variables['add_microdata'])) {
-    $start_date .= '<meta' . drupal_attributes($variables['microdata']['value']['#attributes']) . '/>';
-    $end_date .= '<meta' . drupal_attributes($variables['microdata']['value2']['#attributes']) . '/>';
-  }
-
   // Wrap the result with the attributes.
   return t('!multi-day-prefix !start-date to !end-date', array(
       '!multi-day-prefix' => $multi_day_prefix,
