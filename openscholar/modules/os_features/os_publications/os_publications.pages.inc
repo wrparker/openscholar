@@ -37,7 +37,7 @@ function os_publications_overview() {
   //cache_set($ckey, $output, 'cache_biblio_lists');
 
   // We try to match the filter to a taxonomy term path.
-  $path = str_replace('publications', vsite_get_purl(), $_GET['q']);
+  $path = vsite_get_purl() . '/' . substr($_GET['q'], strlen('publications/'));
   $source = drupal_lookup_path('source', $path);
   if (strpos($source, 'taxonomy/term') === 0) {
     // It is a term, so use the name of the term as the title.

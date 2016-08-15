@@ -30,7 +30,8 @@
     	if(!jQuery("#rightMenuSlide .click-processing").length) {
           jQuery("#rightMenuSlide [data-id='"+id+"']").addClass('click-processing');
     	}
-        
+        // After closing the modal, setting the search text field as blank and resetting search results.
+        $scope.searchString = '';
         $timeout(function() {
           jQuery('#rightMenuSlide .menu_modal_open').not("[data-id='"+id+"']").not('.click-processing').click();
           $timeout(function() {
@@ -41,6 +42,7 @@
 
   }]).controller("UserSitesController",['$scope', '$http', function ($scope, $http) {
     $scope.baseUrl = Drupal.settings.basePath;
+    $scope.purlBaseDomain = Drupal.settings.admin_panel.purl_base_domain + "/";
 
     var url = paths.api + '/users/' + user_data.uid;
     $http({method: 'get', url: url}).then(function(response) {
@@ -49,10 +51,14 @@
       } else {
         $scope.site_data = response.data.data[0].og_user_node;
       }
-
       $scope.create_access = response.data.data[0].create_access;
     });
     $scope.pageSize = 7;
+    if (Drupal.settings.spaces) {
+      $scope.delete_destination = encodeURIComponent('?destination=node/' + Drupal.settings.spaces.id + encodeURIComponent('?destination=' + window.location.pathname.replace(/^\/|\/$/g, '')));
+    } else {
+      $scope.delete_destination = '';
+    }
     $scope.numberOfPages=function(data){
       return Math.ceil(data.length/$scope.pageSize);
     }

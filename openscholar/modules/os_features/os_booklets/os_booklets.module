@@ -77,8 +77,8 @@ function os_booklets_menu_alter(&$items) {
   if (isset($items['book'])) {
     // Provided by core book
     // Shows a list of all books in the system, formatted poorly.
-    // restrict access to this page
-    $items['book']['access arguments'] = array('administer book outlines');
+    // remove this page
+    unset($items['book']);
   }
 }
 
