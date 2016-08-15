@@ -120,8 +120,8 @@ before_script:
 script:
 
   # Run selenium.
-  - apt-get install xvfb -y
-  - apt-get install openjdk-7-jre-headless -y
+  - sudo apt-get install xvfb -y
+  - sudo apt-get install openjdk-7-jre-headless -y
   - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
   - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
