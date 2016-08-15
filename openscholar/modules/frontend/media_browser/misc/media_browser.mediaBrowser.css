@@ -354,7 +354,7 @@ div[file-edit] .control button,
     font-size: 1em;
     transform: translate(-50%, -50%);
 }
-.media-browser-drop-box #drag-text {
+#edit-site_favicon_fid-und-drop .media-browser-drop-box #drag-text {
     top: 20%;
     left: 40%;
 }
