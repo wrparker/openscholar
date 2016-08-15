@@ -284,7 +284,7 @@ class FeatureContext extends DrupalContext {
   public function iShouldPrintPage() {
     $element = $this->getSession()->getPage();
     $url = $this->createGist($element->getContent());
-    print_r('You asked to see the page content. Here is a gist contain the html: ' . $url);
+    print_r('You asked to see the page content. Here is a gist contain the html: ' . $url . "\n");
   }
 
   /**
@@ -1770,7 +1770,7 @@ class FeatureContext extends DrupalContext {
   public function iDisplayWatchdog() {
     $watchdog = FeatureHelp::DisplayWatchdogs();
     $url = $this->createGist(implode("\n", $watchdog));
-    print_r('The watch dog url is: ' . $url);
+    print_r('The watch dog url is: ' . $url . "\n");
   }
 
   /**

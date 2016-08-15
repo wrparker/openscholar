@@ -122,8 +122,8 @@ script:
   # Run selenium.
   - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
-  - wget http://selenium-release.storage.googleapis.com/2.47/selenium-server-standalone-2.47.0.jar
-  - nohup bash -c "java -jar selenium-server-standalone-2.47.0.jar -p 4444 2>&1 &"
+  - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
+  - nohup bash -c "java -jar selenium-server-standalone-2.53.0.jar -p 4444 2>&1 &"
   - sleep 5
 
   - ./bin/behat --tags=$TEST_SUITE
