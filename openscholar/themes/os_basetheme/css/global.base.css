@@ -244,6 +244,7 @@ a img {
 .block-boxes-os_sv_list_file .file img.file-icon {
     display: inline;
 }
+#edit-site_favicon_fid-und-drop img.file-icon,
 .block .file img.file-icon,
 .block .file .file-info img.file-icon,
 .field-type-file .file-list-single img,
