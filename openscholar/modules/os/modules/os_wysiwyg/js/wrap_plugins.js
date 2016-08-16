@@ -6,3 +6,4 @@ Drupal.wysiwyg.plugins['dragresize'] = CKEDITOR.plugins.get('dragresize');
 Drupal.wysiwyg.plugins['mathjax'] = CKEDITOR.plugins.get('mathjax');
 Drupal.wysiwyg.plugins['lineutils'] = CKEDITOR.plugins.get('lineutils');
 Drupal.wysiwyg.plugins['widget'] = CKEDITOR.plugins.get('widget');
+CKEDITOR.plugins.link = Drupal.wysiwyg.plugins['os_link'];

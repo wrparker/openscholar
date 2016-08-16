@@ -50,6 +50,10 @@ Drupal.wysiwyg.plugins['os_link'] = {
       });
   },
 
+  tryRestoreFakeAnchor: function(a,b) {
+    self.insertLink();
+  },
+
   insertLink: function (editorId, body, target, attributes) {
     var html = '<a href="'+target+'">'+(body?body:target)+'</a>';
 
