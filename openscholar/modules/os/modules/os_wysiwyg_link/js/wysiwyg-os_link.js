@@ -50,9 +50,14 @@ Drupal.wysiwyg.plugins['os_link'] = {
       });
   },
 
-  tryRestoreFakeAnchor: function(a,b) {
-    self.insertLink();
-  },
+  /**
+   * When double click on a text in the wysiwyg the link appears.
+   *
+   * We should disable for now the feature due to lack of computability with OS
+   * link widget.
+   */
+  tryRestoreFakeAnchor: function(editor, dom) {},
+  getSelectedLink: function(editor) {},
 
   insertLink: function (editorId, body, target, attributes) {
     var html = '<a href="'+target+'">'+(body?body:target)+'</a>';
