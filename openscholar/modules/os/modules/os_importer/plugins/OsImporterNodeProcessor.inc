@@ -82,4 +82,26 @@ class OsImporterNodeProcessor extends FeedsNodeProcessor {
 
     return $targets;
   }
+
+  /**
+   * Validates entities.
+   * Checks made:
+   * * body value is below a set character length
+   */
+  public function entityValidate($entity) {
+    $instances = field_info_instances('node', $entity->type);
+    foreach ($instances as $i) {
+      $field_name = $i['field_name'];
+      $field = field_info_field($field_name);
+      if ($field['type'] != 'text_with_summary') {
+        continue;
+      }
+
+      $value = $entity->{$field_name}[LANGUAGE_NONE][0]['body_value'];
+      $max_length = variable_get('os_wysiwyg_maximum_length_' . $field_name, 5 * 1000000);
+      if (strlen($value) > $max_length) {
+        throw new FeedsValidationException(t('Entity cannot have greater than @max characters.', array('@max' => $max_length)));
+      }
+    }
+  }
 }
