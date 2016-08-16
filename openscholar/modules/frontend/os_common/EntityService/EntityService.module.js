@@ -215,12 +215,18 @@
           return $http.post(restPath + '/' + entityType, entity)
             .success(function (resp) {
               var entity = resp.data[0];
-              ents[entity[idProp]] = entity;
 
-              weSaved[entity[idProp]] = entity.timestamp;
+              weSaved[entity[idProp]] = entity.changed;
               addToCaches(entityType, idProp, entity);
 
-              $rootScope.$broadcast(eventName + '.add', entity);
+              if (typeof ents[entity[idProp]] == 'undefined') {
+                $rootScope.$broadcast(eventName + '.add', entity);
+              }
+              // this file already existed on the server
+              else {
+                $rootScope.$broadcast(eventName + '.update', entity);
+              }
+              ents[entity[idProp]] = entity;
             })
         };
 
