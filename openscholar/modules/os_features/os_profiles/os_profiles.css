@@ -2,12 +2,14 @@
 #content .node-person .no-default-image,
 .block-boxes-os_boxes_manual_list .node-person .field-name-field-person-photo,
 #content-column .node-person .field-name-field-phone,
-#content .node-person .field-name-field-email {
+#content .node-person .field-name-field-email,
+#content .node-person .field-name-og-vocabulary {
     float: left;
     margin-right: 1em;
 }
 #content .node-person .os-slider .field-name-field-email,
-#content .node-person .field-name-field-phone.view-mode-slide_teaser {
+#content .node-person .field-name-field-phone,
+#content .node-person .field-name-og-vocabulary.view-mode-slide_teaser {
     float: none;
 }
 #content .node-person .os-slider .profile-link {
@@ -32,4 +34,7 @@
 }
 .sv-list-view-full .node-person .pic-bio {
     width: 100%;
+}
+.node-person .field-name-field-professional-title.view-mode-sidebar_teaser .field-items .field-item {
+    display:block;
 }

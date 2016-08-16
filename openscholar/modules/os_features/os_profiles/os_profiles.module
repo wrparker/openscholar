@@ -276,17 +276,11 @@ function os_profiles_os_entity_view_modes() {
  * Implements hook_process_node().
  */
 function os_profiles_process_node(&$vars) {
-
   if ($vars['type'] !== 'person') {
     return;
   }
 
   module_load_include('inc', 'os', 'includes/os');
-
-  if (isset($vars['content']['links']['node']['#links']['node-readmore'])) {
-    _os_insert_link_into_paragraph($vars['content']['pic_bio']['body'][0]['#markup'], $vars['content']['links']['node']['#links']['node-readmore']);
-  }
-  unset($vars['content']['links']['node']['#links']['node-readmore']);
 
   // Adding the prefix value to the title of the person.
   if (!empty($vars['field_prefix'])) {
@@ -346,6 +340,18 @@ function os_profiles_process_node(&$vars) {
 
   if (!$vars['teaser'] && !in_array($vars['view_mode'], array('sidebar_teaser', 'title', 'full'))) {
     $vars['title_prefix']['#suffix'] = '<h2>' . $vars['title'] . '</h2>';
+  }
+
+  $vocabulary_teasers = array('teaser', 'slide_teaser', 'no_image_teaser');
+  // Unset og_vocabulary for slide_teaser and no_image_teaser too if those are OFF from cp/settings
+  if (!variable_get('os_taxonomy_display_term_under_content_person', 0) && in_array($vars['elements']['#view_mode'], $vocabulary_teasers)) {
+    unset($vars['content']['og_vocabulary']);
+  }
+  // Add condition to display og_vocabulary at the end.
+  if(isset($vars['content']['og_vocabulary'])) {
+    if (in_array($vars['elements']['#view_mode'], $vocabulary_teasers)) {
+      $vars['content']['og_vocabulary']['#weight'] = 1000;
+    }
   }
 
   // Exits if this was processed in hwpi_basetheme template.php
@@ -1387,6 +1393,15 @@ function _os_profiles_build_display_style_example($style) {
  * when the profiles are set to Slide teaser display style
  */
 function os_profiles_node_view_alter(&$build) {
+
+  if ($build['#bundle'] != 'person')
+      return;
+
+  // Too many complaints about the "read more" feature.  Remove it from profiles.
+  if (isset($build['links']['node']['#links']['node-readmore'])) {
+    unset($build['links']['node']['#links']['node-readmore']);
+  }
+
   // If 'person' content type are displayed in slide_teaser view mode, then appending additional element for Full Profile link.
   if ($build['#bundle'] == 'person' && $build['#view_mode'] == 'slide_teaser') {
     $build['os_profile_link']['#markup'] = l('Full Profile', 'node/' . $build['#node']->nid, array('attributes' => array('class' => 'profile-link')));
