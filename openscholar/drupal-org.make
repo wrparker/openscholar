@@ -276,7 +276,7 @@ projects[oembed][patch][] = "http://cgit.drupalcode.org/oembed/patch/?id=a27adf7
 projects[oembed][patch][] = "http://drupal.org/files/issues/oembed.2134415.wysiwyg_dimensions.patch"
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/514d6c636dc69ea76ea307a874c7cd9c3e0fb045/patches/oembed.alt_tags_no_escape.patch"
 projects[oembed][patch][] = "http://drupal.org/files/issues/split-up-regex-2739023-1.patch"
-projects[oembed][patch][] = "https://github.com/openscholar/openscholar/blob/61b4675841580356481463f4780627bab619f197/patches/oembed.8762.uri_fragments.patch"
+projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/61b4675841580356481463f4780627bab619f197/patches/oembed.8762.uri_fragments.patch"
 
 projects[og][subdir] = "contrib"
 projects[og][version] = 2.6
