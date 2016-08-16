@@ -54,13 +54,6 @@ function _os_date_formats() {
  * Allow access to node/%.json to all of the users.
  */
 function os_update_7005() {
-  //Only grant this if the module is installed
-  if (module_exists('restws')){
-    // Allow accessing resource node to all users.
-    foreach (array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID) as $rid) {
-      user_role_grant_permissions($rid, array('access resource node'));
-    }
-  }
 }
 
 /**
@@ -192,13 +185,6 @@ function os_update_7011() {
  * Allow access to file/*.json for all users
  */
 function os_update_7012() {
-  //Only grant this if the module is installed
-  if (module_exists('restws')){
-    // Allow accessing resource file to all users.
-    foreach (array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID) as $rid) {
-      user_role_grant_permissions($rid, array('access resource file'));
-    }
-  }
 }
 
 /**
@@ -904,4 +890,19 @@ function os_update_7042() {
 function os_update_7043() {
   module_enable(array('os_reports'));
   return t('Enabled OS Reports module.');
+}
+
+/**
+ * Override redirect_passthrough_querystring var
+ */
+function os_update_7044() {
+  features_revert(array('os' => array('variable')));
+}
+
+/**
+ * Clear entity cache.
+ */
+function os_update_7045() {
+  // Empty update to clear entity cache.
+  return t('entity cache cleared.');
 }

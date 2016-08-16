@@ -1000,6 +1000,9 @@ body.page-iqss-gking-research-group h3 {
 .node-presentation.node-teaser div.field-type-file img {
   vertical-align:middle;
   }
+.page-publications .biblio_file_links img.file-icon {
+    margin-left: 0;
+}
 
 /**	 QUICK TABS**/
 	

@@ -338,7 +338,12 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
    */
   public function getIconUrl($wrapper) {
     $file = $wrapper->value();
-    return file_icon_url($file);
+    // Setting icon directory for svg files
+    $icon_directory = variable_get('file_icon_directory', drupal_get_path('module', 'os_files') . '/icons');
+    $icon_url = file_icon_url($file, $icon_directory);
+    // Replacing png icons with svg
+    $svg_url = str_replace('.png', '.svg', $icon_url);
+    return $svg_url;
   }
 
   /**

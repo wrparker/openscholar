@@ -96,6 +96,7 @@ abstract class os_boxes_default extends boxes_box {
       'os_boxes_accordion',
       'os_boxes_media',
       'os_boxes_rand_widget',
+      'os_boxes_widget_slider',
       'os_boxes_html'
     );
 

@@ -15,7 +15,7 @@
         // Attach the onclick event to the new-user-link link
         $('#new-user-link').click(function() {
           // Change the title of the h1 to reflect we're creating a new user.
-          $('#overlay-title').text('Create and Add a New User');
+          $('#overlay-title').text('Create and Add a New Member');
           // Hide the og-ui-add-users form
     	  $('#og-ui-add-users').hide();
     	  // Toggle the display of the user-register-form

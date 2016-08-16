@@ -27,8 +27,12 @@ function media_browser_field_widget_info() {
 }
 
 function media_browser_file_load($files) {
+  // Setting icon directory for svg files
+  $icon_directory = variable_get('file_icon_directory', drupal_get_path('module', 'os_files') . '/icons');
   foreach ($files as $file) {
-    $file->icon = file_icon_url($file);
+    $file->icon = file_icon_url($file, $icon_directory);
+    // Replacing png icons with svg
+    $file->icon = str_replace('.png', '.svg', $file->icon);
   }
 }
 
