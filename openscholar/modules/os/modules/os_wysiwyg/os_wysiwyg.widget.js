@@ -8,10 +8,14 @@
       CKEDITOR.on("instanceReady", function(event) {
         var editor = event.editor;
         var instance = $('#cke_' + editor.name);
-        var height = $(window).height();
+        var editor_height = $('iframe').contents().find('body.cke_editable').height() + 25;
 
         // Adjusting the height of the wysiwyg according to the window height.
-        var editor_height = height / 2;
+        // var editor_height = height / 2;
+
+        if (editor_height < 100) {
+          editor_height = 100;
+        }
 
         if (editor_height > 550) {
           // The height can be more than 550.
