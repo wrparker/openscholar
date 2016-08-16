@@ -27,7 +27,7 @@ env:
     - TEST_SUITE=taxonomy
     - TEST_SUITE=vsite
     - TEST_SUITE=widgets
-    - TEST_SUITE=media_browser
+#    - TEST_SUITE=media_browser
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
