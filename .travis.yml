@@ -125,8 +125,8 @@ script:
   - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
   - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
-  - DISPLAY=:1 xvfb-run
-  - java -jar selenium-server-standalone-2.53.0.jar -p 4444 > /dev/null &
+#  - DISPLAY=:1 xvfb-run
+  - nohup java -jar selenium-server-standalone-2.53.0.jar -p 4444 &
   - sleep 5
 
   - ./bin/behat --tags=$TEST_SUITE
