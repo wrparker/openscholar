@@ -673,14 +673,14 @@ function os_events_process_node(&$variables) {
   }
 
   // In case of a "teaser" view mode, put the link before the date.
-  if ($variables['view_mode'] == 'teaser' || $variables['view_mode'] == 'slide_teaser') {
+  if ($variables['view_mode'] == 'teaser') {
     $registrations_type = !empty($variables['node']->field_event_registration[LANGUAGE_NONE][0]['registration_type']);
     // If the event is allowed for signup and allowed to show to the users.
     $show_register_link = os_events_register_show_register_link($variables['node'], $date);
     if ($registrations_type && $show_register_link) {
       // Checking if the event has not reached its max registration limit.
       if (os_events_event_registration_reach_capacity($variables['node'], $date)) {
-        $register = '<div class="register-link-teaser">' . os_events_generate_modal_register_link($variables['node']->nid, $delta, array()) . '</div>';
+        $register = '<div class="register-link-teaser">' . t('Registration is required') . '</div>';
       } else {
         $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
       }
@@ -696,11 +696,7 @@ function os_events_process_node(&$variables) {
           $register = '<span class="register-event-full">' . t('Sorry, the event is full') . '</span>';
         }
     }
-    $variables['content']['field_date'][0]['#markup'] = $variables['content']['field_date'][0]['#markup'];
-
-    $variables['content']['field_event_registration'][0]['#markup'] = $register;
-    $variables['content']['field_event_registration']['#weight'] = 20;
-
+    $variables['content']['field_date'][0]['#markup'] = $register . $variables['content']['field_date'][0]['#markup'];
   }
 
   // Hide the repeat rule summary from sidebar_teaser.
