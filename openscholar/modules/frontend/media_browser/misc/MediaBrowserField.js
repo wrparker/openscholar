@@ -212,7 +212,12 @@
 
         inited = true;
         var old_id = sessionStorage['last_form'];
-        form_id = document.querySelector('form input[name="form_build_id"]').value;
+        form_id_input = document.querySelector('form input[name="form_build_id"]'),
+        form_id = form_id_input != null ? form_id_input.value: "";
+
+        if (!form_id) {
+          return;
+        }
 
         if (form_id != old_id) {
           delete sessionStorage[old_id];
