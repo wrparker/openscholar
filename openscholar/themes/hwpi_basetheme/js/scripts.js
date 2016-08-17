@@ -45,4 +45,11 @@ jQuery(document).ready(function(){
 if (jQuery('.region-header-second .region-inner').has('.block-boxes-os_boxes_site_info').length) {
   jQuery('.region-header-second .region-inner').addClass('site-info');
 }
+
+// Allows toggling of submenus in responsive displays
+   jQuery('.open-submenu').click(function() {
+    jQuery(this).next('ul').toggle();
+//jQuery(this).toggleClass('open');
+    });
+
 });
