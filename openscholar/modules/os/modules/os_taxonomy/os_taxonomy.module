@@ -2133,31 +2133,41 @@ function os_taxonomy_cp_settings() {
   $display_term_under_content = variable_get('os_taxonomy_display_term_under_content', 1);
   $default_value = isset($display_term_under_content) ? $display_term_under_content : 1;
 
-  $form['os_taxonomy']['group'] = array(
+  $template = array(
+    'group' => array(
       '#id' => 'os_taxonomy',
       '#title' => t('Taxonomy'),
       '#weight' => 50,
+    ),
+    'rest_after_submit' => array(
+      'os_taxonomy_clear_caches'
+    )
   );
-  $form['os_taxonomy']['form']['os_taxonomy_display_term_under_content'] = array(
+
+  $form['os_taxonomy_display_term_under_content'] = $template + array(
+    'form' => array(
       '#type' => 'checkbox',
       '#title' => t('Display terms under content on a page'),
-      '#default_value' => $default_value,
+      '#default_value' => $default_value
+    )
   );
 
   foreach($active_content_types as $content_types_key => $content_types_val) {
-      if($content_types_val === reset($active_content_types)) {
-        $active_content_types_prefix = '<p>Display see also terms under each item in list pages of content</p>';
-      } else {
-        $active_content_types_prefix = '';
-      }
-      $form['os_taxonomy']['form']['os_taxonomy_display_term_under_content_' . $content_types_key] = array(
-      '#prefix' => $active_content_types_prefix,
-      '#type' => 'checkbox',
-      '#title' => t($content_types_val),
-      '#default_value' => ${'default_value_' . $content_types_key},
+    if ($content_types_val === reset($active_content_types)) {
+      $active_content_types_prefix = '<p>Display see also terms under each item in list pages of content</p>';
+    } else {
+      $active_content_types_prefix = '';
+    }
+    $vname = 'os_taxonomy_display_term_under_content_' . $content_types_key;
+    $form[$vname] = $template + array(
+      'form' => array(
+        '#prefix' => $active_content_types_prefix,
+        '#type' => 'checkbox',
+        '#title' => t($content_types_val),
+        '#default_value' => variable_get($vname, 0),
+      ),
     );
   }
-  $form['os_taxonomy']['submit'][] = 'os_taxonomy_cp_settings_node_submit';
 
   return $form;
 }
@@ -2187,6 +2197,21 @@ function os_taxonomy_cp_settings_node_submit($form, &$form_state) {
     }
   }
 }
+
+/**
+ * After submit for restful services.
+ *
+ * Clears box caches after taxonomy settings have been saved
+ */
+function os_taxonomy_clear_caches($value, $var) {
+  if ($vsite = vsite_get_vsite()) {
+    cache_clear_all('os_boxes_cache:' . $vsite->id, 'cache_os_boxes', TRUE);
+  }
+  else {
+    cache_clear_all('os_boxes_cache', 'cache_os_boxes', TRUE);
+  }
+}
+
 
 /**
  * Implements hook_node_view_alter().
