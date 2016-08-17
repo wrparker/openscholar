@@ -336,8 +336,8 @@ function os_events_field_default_field_instances() {
         'label' => 'above',
         'module' => 'registration',
         'settings' => array(
-          'i18n_string_key' => NULL,
-          'label' => NULL,
+          'i18n_string_key' => 'node:event:teaser:field_event_registration',
+          'label' => 'Registration: ',
         ),
         'type' => 'registration_link',
         'weight' => 0,
@@ -345,11 +345,8 @@ function os_events_field_default_field_instances() {
       'title' => array(
         'label' => 'above',
         'module' => 'registration',
-        'settings' => array(
-          'i18n_string_key' => NULL,
-          'label' => NULL,
-        ),
-        'type' => 'registration_link',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 0,
       ),
     ),
