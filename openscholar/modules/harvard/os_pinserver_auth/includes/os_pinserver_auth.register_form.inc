@@ -7,8 +7,8 @@ include_once (drupal_get_path('module', 'vsite_register') . '/vsite_register.for
 function os_pinserver_auth_vsite_register_form_page() {
   global $user;
 
-  // Handle users logged in already.
-  if ($user->uid){
+  // Handle users not logged in already.
+  if (!$user->uid){
 
     // Sends user to pinserver if not logged-in locally or via the pinserver
     if (!pinserver_check_status()) {
@@ -21,6 +21,14 @@ function os_pinserver_auth_vsite_register_form_page() {
       $user = user_load(array('uid' => $uid));
       $user->login = time();
       db_update('users')->fields(array('login' => $user->login))->condition('uid', $user->uid, '=')->execute();
+    }
+  }
+  else {
+    if(pinserver_user_has_associated_pin($user->uid)) {
+      return pinserver_redirect(array('redirect' => 'site/register'));
+    }
+    else {
+      return drupal_set_message('You need to have a HUID associated with your OpenScholar account in order to create new sites.  See our <a href="http://docs.openscholar.harvard.edu/logging-your-site#linking-your-huid-to-your-openscholar-account" target="_blank">documentation</a> for details.', 'error', FALSE);
     }
   }
 
