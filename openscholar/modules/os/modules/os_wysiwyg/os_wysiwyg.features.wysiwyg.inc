@@ -52,6 +52,7 @@ function os_wysiwyg_wysiwyg_default_profiles() {
         'drupal' => array(
           'media' => 1,
           'colorbutton' => 1,
+          'colordialog' => 1,
           'dragresize' => 1,
           'font' => 1,
           'justify' => 1,
