@@ -105,6 +105,19 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
           else {
             $this->saveVariable($var, $value);
           }
+
+          if (!empty($forms[$var]['rest_after_submit'])) {
+            if (is_array($forms[$var]['rest_after_submit']) && !is_callable($forms[$var]['rest_after_submit'])) {
+              foreach ($forms[$var]['rest_after_submit'] as $func) {
+                if (is_callable($func)) {
+                  $func($value, $var);
+                }
+              }
+            }
+            elseif (is_callable($forms[$var]['rest_after_submit'])) {
+              $forms[$var]['rest_after_submit']($value, $var);
+            }
+          }
         }
         else {
           // something about an error?
