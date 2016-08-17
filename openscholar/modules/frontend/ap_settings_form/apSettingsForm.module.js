@@ -77,7 +77,8 @@
       minWidth: 800,
       minHeight: 650,
       modal: true,
-      position: 'center'
+      position: 'center',
+      dialogClass: 'ap-settings-form'
     };
 
     function link(scope, elem, attrs) {

@@ -517,7 +517,7 @@ div[file-edit] .control button,
  * Dialog stuff
  */
 
-.ui-dialog-titlebar {
+.ui-dialog.media-wrapper .ui-dialog-titlebar {
     display: none;
 }
 /**
