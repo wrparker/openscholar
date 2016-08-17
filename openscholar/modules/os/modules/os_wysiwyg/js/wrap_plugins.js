@@ -6,6 +6,7 @@ Drupal.wysiwyg.plugins['dragresize'] = CKEDITOR.plugins.get('dragresize');
 Drupal.wysiwyg.plugins['mathjax'] = CKEDITOR.plugins.get('mathjax');
 Drupal.wysiwyg.plugins['lineutils'] = CKEDITOR.plugins.get('lineutils');
 Drupal.wysiwyg.plugins['widget'] = CKEDITOR.plugins.get('widget');
+Drupal.wysiwyg.plugins['colordialog'] = CKEDITOR.plugins.get('colordialog');
 
 // Override the normal link functionality.
 CKEDITOR.plugins.link = Drupal.wysiwyg.plugins['os_link'];

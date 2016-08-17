@@ -470,7 +470,7 @@ libraries[tinymce][download][url] = "http://github.com/downloads/tinymce/tinymce
 
 libraries[ckeditor][type] = "libraries"
 libraries[ckeditor][download][type] = "get"
-libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.5.7/ckeditor_4.5.7_standard.zip"
+libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.5.10/ckeditor_4.5.10_standard.zip"
 
 libraries[spyc][type] = "libraries"
 libraries[spyc][download][type] = "file"
@@ -549,6 +549,11 @@ libraries[widget][type] = "libraries"
 libraries[widget][subdir] = "ckeditor/plugins"
 libraries[widget][download][type] = "file"
 libraries[widget][download][url] = "http://download.ckeditor.com/widget/releases/widget_4.5.9.zip"
+
+libraries[colordialog][type] = "libraries"
+libraries[colordialog][subdir] = "ckeditor/plugins"
+libraries[colordialog][download][type] = "file"
+libraries[colordialog][download][url] = "http://download.ckeditor.com/colordialog/releases/colordialog_4.5.10.zip"
 
 libraries[dragresize][type] = "libraries"
 libraries[dragresize][subdir] = "ckeditor/plugins"
