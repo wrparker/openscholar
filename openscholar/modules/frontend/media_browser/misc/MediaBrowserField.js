@@ -17,6 +17,7 @@
         var field_root_id = "";
         if (scope.$parent.element) {
           field_root_id = scope.$parent.element.id;
+          scope.title = scope.$parent.element.title;
         }
         else {
           var field_root = elem.parent();

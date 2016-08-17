@@ -3319,7 +3319,7 @@ function vsite_cp_settings() {
         'panes' => array('upload', 'library'),
         'droppable_text' => t('Drag your file here'),
         'upload_text' => t('Upload file.'),
-        'maxFilesize' => '100kb',
+        'max-filesize' => '100kb',
         'extensions' => array('ico'),
         'types' => array('icon'),
       ),
