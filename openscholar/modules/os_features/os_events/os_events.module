@@ -2579,7 +2579,6 @@ function os_events_date_display_range($variables) {
     ));
   }
 
-  // Wrap the result with the attributes.
   return t('!multi-day-prefix !start-date to !end-date !multi-day-suffix', array(
       '!multi-day-prefix' => $multi_day_prefix,
       '!start-date' => $start_date,
