@@ -791,7 +791,7 @@ function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
 function cp_user_mail($key, &$message, $params){
   switch ($key) {
     case 'os_user_add_to_group' :
-      $message['subject'] = t("You have been added as a member to an OpenScholar website");
+      $message['subject'] = t("You have been added as a member to the !site-url website", $params);
       $message['body'] = array();
       $message['body'][] = t("Hi !user-firstname,", $params);
       $message['body'][] = t("!account-modifier has added you as a member to the website !site-url with the role of !user-role. You can log in at !login-url with the username !username.", $params);
@@ -807,7 +807,7 @@ function cp_user_mail($key, &$message, $params){
       break;
 
     case 'os_user_delete_from_group' :
-      $message['subject'] = t("You have been removed from an OpenScholar website");
+      $message['subject'] = t("You have been removed from the !site-url website", $params);
       $message['body'] = array();
       $message['body'][] = t("Hi !user-firstname,", $params);
       $message['body'][] = t("!account-modifier has removed you as a member with the role of !user-role from the website !site-url. If you feel this was in error or have any questions, please contact them at !account-modifier-email", $params);
@@ -816,7 +816,7 @@ function cp_user_mail($key, &$message, $params){
       break;
 
     case 'os_user_role_change' :
-      $message['subject'] = t("Your role on an OpenScholar website has changed");
+      $message['subject'] = t("Your role on the !site-url website has changed", $params);
       $message['body'] = array();
       $message['body'][] = t("Hi !user-firstname,", $params);
       $message['body'][] = t("!account-modifier has changed your role to !user-role on the website !site-url. If you feel this was in error or have any questions, please contact them at !account-modifier-email", $params);
