@@ -2549,23 +2549,42 @@ function os_events_date_display_range($variables) {
     $end_date .= '<meta' . drupal_attributes($variables['microdata']['value2']['#attributes']) . '/>';
   }
 
-  // Show days of the week for a multi-day event
+  // Prepend the days of the week for a multi-day event, and append the start and end time
+  // (this amounts to a sort of short-hand for a recurring event)
   $multi_day_prefix = "";
   if (strtotime($date2) - strtotime($date1) > (24 * 60 * 60)) {
-    $day_of_the_week1 = date('D', strtotime($variables['date1']));
-    $day_of_the_week2 = date('D', strtotime($variables['date2']));
+
+    // e.g., Mon - Fri
+    $day_of_the_week1 = '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . date('D', strtotime($variables['date1'])) . '</span>';
+    $day_of_the_week2 = '<span class="date-display-end"' . drupal_attributes($attributes_start) . '>' . date('D', strtotime($variables['date2'])) . '</span>';
 
     $multi_day_prefix = t('!start-date-day - !end-date-day, ', array(
       '!start-date-day' => $day_of_the_week1,
       '!end-date-day' => $day_of_the_week2,
     ));
+
+    // e.g., Aug 18 to Aug 22
+    $date1 = date('M j', strtotime($variables['date1']));
+    $date2 = date('M j', strtotime($variables['date2']));
+    $start_date = '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . $date1 . '</span>';
+    $end_date = '<span class="date-display-end"' . drupal_attributes($attributes_end) . '>' . $date2 . $timezone . '</span>, ';
+
+    // e.g., 8:30am - 4:30pm
+    $start_time = '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . date('h:ia', strtotime($variables['date1'])) . '</span>';
+    $end_time = '<span class="date-display-end"' . drupal_attributes($attributes_start) . '>' . date('h:ia', strtotime($variables['date2'])) . '</span>';
+
+    $multi_day_suffix = t('!start-time - !end-time', array(
+      '!start-time' => $start_time,
+      '!end-time' => $end_time,
+    ));
   }
 
   // Wrap the result with the attributes.
-  return t('!multi-day-prefix !start-date to !end-date', array(
+  return t('!multi-day-prefix !start-date to !end-date !multi-day-suffix', array(
       '!multi-day-prefix' => $multi_day_prefix,
       '!start-date' => $start_date,
       '!end-date' => $end_date,
+      '!multi-day-suffix' => $multi_day_suffix,
   ));
 }
 
