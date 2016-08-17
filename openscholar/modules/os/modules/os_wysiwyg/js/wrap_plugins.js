@@ -6,4 +6,27 @@ Drupal.wysiwyg.plugins['dragresize'] = CKEDITOR.plugins.get('dragresize');
 Drupal.wysiwyg.plugins['mathjax'] = CKEDITOR.plugins.get('mathjax');
 Drupal.wysiwyg.plugins['lineutils'] = CKEDITOR.plugins.get('lineutils');
 Drupal.wysiwyg.plugins['widget'] = CKEDITOR.plugins.get('widget');
+
+// Override the normal link functionality.
 CKEDITOR.plugins.link = Drupal.wysiwyg.plugins['os_link'];
+
+// Remove unsupported fonts.
+CKEDITOR.config.font_names =
+  'Andale Mono;' +
+  'Arial/Arial, Helvetica, sans-serif;' +
+  'Ariel Black;' +
+  'Book Antiqua;' +
+  'Comic Sans MS/Comic Sans MS, cursive;' +
+  'Courier New/Courier New, Courier, monospace;' +
+  'Georgia/Georgia, serif;' +
+  'Helvetica Neue Lt Std;' +
+  'Impact;' +
+  'Lucida Sans Unicode/Lucida Sans Unicode, Lucida Grande, sans-serif;' +
+  'Symbol;' +
+  'Tahoma/Tahoma, Geneva, sans-serif;' +
+  'Terminal;' +
+  'Times New Roman/Times New Roman, Times, serif;' +
+  'Trebuchet MS/Trebuchet MS, Helvetica, sans-serif;' +
+  'Verdana/Verdana, Geneva, sans-serif' +
+  'Webdings;' +
+  'Wingdings;';
