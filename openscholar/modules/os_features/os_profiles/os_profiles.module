@@ -919,6 +919,7 @@ function os_profiles_insert_image($node, $file, $dimensions, $save = TRUE) {
 
   if ($save) {
     node_save($node);
+    file_usage_add($file, 'os_pofiles', 'node', $node->nid);
   }
 }
 
