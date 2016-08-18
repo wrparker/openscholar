@@ -327,7 +327,7 @@ function os_events_field_default_field_instances() {
         'module' => 'registration',
         'settings' => array(
           'i18n_string_key' => 'node:event:slide_teaser:field_event_registration',
-          'label' => 'Registration: ',
+          'label' => '',
         ),
         'type' => 'registration_link',
         'weight' => 3,
