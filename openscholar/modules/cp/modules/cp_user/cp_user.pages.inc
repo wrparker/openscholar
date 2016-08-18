@@ -457,14 +457,21 @@ function cp_user_edit_membership_form_submit($form, &$form_state) {
   drupal_set_message(t('User <em>@user\'s</em> role on site <em>@site</em> was updated successfully.', array('@user' => $user_name, '@site' => $site)));
 
   $modified_member_rid = array_keys(og_get_user_roles('node', $gid, $uid, FALSE));
-  // If the changed role is not same as previously saved role, then only the email will be sent.
-  if (!array_intersect($modified_member_rid, $member_rid_before_modification)) {
+  // If the changed role is not same as previously saved role, or the user role is set as 'Site Owner' then only the email will be sent.
+  if (!array_intersect($modified_member_rid, $member_rid_before_modification) || $group_manager) {
     $vsite = vsite_get_vsite();
     // Loading logged in user's user object for full name.
     $account_modifier = user_load($user->uid);
     $account_modifier_full_name = $account_modifier->field_first_name[LANGUAGE_NONE][0]['value'] . ' ' . $account_modifier->field_last_name[LANGUAGE_NONE][0]['value'];
-    $purl_base_domain = variable_get('purl_base_domain');  
-    $roles_human_names = _cp_user_list_roles('rids-human', NULL, $gid);
+    $purl_base_domain = variable_get('purl_base_domain');
+
+    // Role will be 'Site Owner' is site owner checkbox is selected.
+    if ($group_manager) {
+      $new_role_name = 'Site Owner';
+    } else {
+      $roles_human_names = _cp_user_list_roles('rids-human', NULL, $gid);
+      $new_role_name = $roles_human_names[$modified_member_rid[0]];
+    }
 
     $account = user_load($uid);
     // Checking if this vsite has a custom domain or not.
@@ -477,8 +484,7 @@ function cp_user_edit_membership_form_submit($form, &$form_state) {
     // Setting up email parameters.
     $to = $account->mail;
     $from = variable_get('site_mail', ini_get('sendmail_from'));
-    // Role will be 'Site Owner' is site owner checkbox is selected.
-    $params['!user-role'] = $group_manager ? 'Site Owner' : $roles_human_names[$modified_member_rid[0]];
+    $params['!user-role'] = $new_role_name;
     $params['!account-modifier'] = !empty($account_modifier_full_name) ? $account_modifier_full_name : $account_modifier->name;
     $params['!site-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl;
     $params['!account-modifier-email'] = $account_modifier->mail;
