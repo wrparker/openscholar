@@ -30,7 +30,68 @@ function os_revisions_module_implements_alter(&$implementations, $hook) {
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter() for node_revision_revert_confirm form.
+ * Implements hook_menu().
  */
-function os_revisions_form_node_revision_revert_confirm_alter(&$form, $form_state) {
+function os_revisions_menu() {
+  $items = array();
+  $items['node/%node/revisions'] = array(
+    'title' => 'Revisions',
+    'page callback' => 'os_revisions_revision_overview',
+    'page arguments' => array(1),
+    'access callback' => '_node_revision_access',
+    'access arguments' => array(1),
+    'weight' => 2,
+    'type' => MENU_LOCAL_TASK,
+  );
+  
+  return $items;
+}
+
+function os_revisions_revision_overview($node) {
+  drupal_set_title(t('Revisions for %title', array('%title' => $node->title)), PASS_THROUGH);
+
+  $header = array(t('Revision'), array('data' => t('Operations'), 'colspan' => 2));
+
+  $revisions = node_revision_list($node);
+
+  $rows = array();
+  $revert_permission = FALSE;
+  if ((user_access('revert revisions') || user_access('administer nodes')) && node_access('update', $node)) {
+    $revert_permission = TRUE;
+  }
+  $delete_permission = FALSE;
+  if ((user_access('delete revisions') || user_access('administer nodes')) && node_access('delete', $node)) {
+    $delete_permission = TRUE;
+  }
+  foreach ($revisions as $revision) {
+    $row = array();
+    $operations = array();
+
+    if ($revision->current_vid > 0) {
+      $row[] = array('data' => t('!date by !username', array('!date' => format_date($revision->timestamp, 'short'), '!username' => theme('username', array('account' => $revision))))
+        . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
+        'class' => array('revision-current'));
+      $operations[] = array('data' => drupal_placeholder(t('current revision')), 'class' => array('revision-current'), 'colspan' => 2);
+    }
+    else {
+      $row[] = t('!date by !username', array('!date' => format_date($revision->timestamp, 'short'), '!username' => theme('username', array('account' => $revision))))
+        . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : '');
+      if ($revert_permission) {
+        $operations[] = l(t('revert'), "node/$node->nid/revisions/$revision->vid/revert");
+      }
+      if ($delete_permission) {
+        $operations[] = l(t('delete'), "node/$node->nid/revisions/$revision->vid/delete");
+      }
+    }
+    $rows[] = array_merge($row, $operations);
+  }
+
+  $build['node_revisions_table'] = array(
+    '#theme' => 'table',
+    '#rows' => $rows,
+    '#header' => $header,
+  );
+
+  return $build;
+
 }
