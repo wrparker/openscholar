@@ -2670,21 +2670,21 @@ function os_field_display_node_alter(&$display, $context) {
  *  Return array of the file or error if occurred and the type of the return
  *  data(file/text).
  */
-function os_copy_file($url, $exception = FALSE) {
+function os_copy_file($url, $exception = FALSE, $show_error = TRUE) {
   if (empty($url)) {
-    return os_file_copy_set_error(t('You need to pass a url of the file.'), $exception);
+    return os_file_copy_set_error(t('You need to pass a url of the file.'), $exception, $show_error);
   }
 
   if (drupal_http_request($url)->code != 200) {
-    return os_file_copy_set_error(t("The file was not reachable."), $exception);
+    return os_file_copy_set_error(t("The file was not reachable."), $exception, $show_error);
   }
 
   if (!is_writeable('public://')) {
-    return os_file_copy_set_error(t("The file directory is not wrietable. Please check her permission."), $exception);
+    return os_file_copy_set_error(t("The file directory is not wrietable. Please check her permission."), $exception, $show_error);
   }
 
   if (!$file = system_retrieve_file($url, 'public://', TRUE)) {
-    return os_file_copy_set_error(t('An error occurred due unknown reason.'), $exception);
+    return os_file_copy_set_error(t('An error occurred due unknown reason.'), $exception, $show_error);
   }
 
   return array(
@@ -2698,17 +2698,21 @@ function os_copy_file($url, $exception = FALSE) {
  *
  * @see os_copy_file().
  */
-function os_file_copy_set_error($message, $exception) {
+function os_file_copy_set_error($message, $exception, $show_error = TRUE) {
   watchdog('os', $message);
 
   if ($exception) {
     throw new Exception($message);
   }
 
-  return array(
-    'type' => 'error',
-    'message' => $message,
-  );
+  if ($show_error) {
+    return array(
+      'type' => 'error',
+      'message' => $message,
+    );
+  } else {
+    return TRUE;
+  }
 }
 
 /**
