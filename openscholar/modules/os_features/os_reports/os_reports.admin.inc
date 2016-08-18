@@ -205,7 +205,7 @@ function os_reports_site_form($form, &$form_state) {
       'value' => 'vsite_id',
     ),
   );
-  if (module_exists('os_pinserver_auth') && variable_get('os_pinserver_custom_domain', FALSE)) {
+  if (module_exists('os_pinserver_auth') && variable_get('pinserver_pin_url', FALSE)) {
     $form['columns_set']['columns']['site_owner_huid'] = array(
       '#title' => 'Site owner HUID',
       '#type' => 'checkbox',
