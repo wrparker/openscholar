@@ -287,15 +287,23 @@ function cp_user_change_site_owner_form($form_state) {
     $accounts = user_load_multiple($members_uids);
 
     foreach ($accounts as $account) {
-      $options[$account->uid] = $account->name;
+      // If the pinserver module is enabled, don't show users who don't have an associated HUID
+      if (!module_exists('pinserver') || (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE) && pinserver_user_has_associated_pin($account->uid))) {
+        $options[$account->uid] = $account->name;
+      }
     }
+  }
+
+  $description = t('Select the site member.');
+  if (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE)) {
+    $description .= t(' Only users with associated HUIDs are listed; for details, see the ', array('@name' => $name)) . l('documentation on how to link an OS account to a HUID', 'http://docs.openscholar.harvard.edu/logging-your-site#linking-your-huid-to-your-openscholar-account', array('attributes' => array('target' => '_blank'))) . '.';
   }
 
   $form['new_site_owner'] = array(
     '#type' => 'select',
     '#title' => t('User name'),
     '#required' => TRUE,
-    '#description' => t('Select the site member.'),
+    '#description' => $description,
     '#options' => $options,
   );
 
@@ -400,17 +408,22 @@ function cp_user_edit_membership_form($form_state, $user_load) {
     '#default_value' => _cp_user_get_role($group_user->uid, $space->group->nid),
   );
 
-  // Show the option to change site owner only for the current owner or
-  // a support team member with an associated HUID.
-  global $user;
+  // Show the option to change site owner only for the current owner or a support team member with an associated HUID if the pinserver module is enabled
+  if (!module_exists('pinserver') || (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE) && pinserver_user_has_associated_pin($group_user->uid))) {
+    global $user;
 
-  if (pinserver_user_has_associated_pin($group_user->uid)) {
     $form['edit_membership']['group_manager'] = array(
       '#type' => 'checkbox',
       // Theme the checkbox label to look like the radio options.
       '#title' => _cp_user_role_option(t('Set as site owner'), t('Make <em>@name</em> the site owner.', array('@name' => $name))),
       '#default_value' => $space->group->uid == $group_user->uid,
-      '#access' => in_array('support team', $user->roles) || $space->group->uid == $user->uid,
+      '#access' => in_array('support team', $user->roles) || ($space->group->uid == $user->uid) || ($user->uid == 1),
+    );
+  }
+  else {
+    $form['edit_membership']['group_manager'] = array(
+      '#type' => 'markup',
+      '#markup' => '<p>' . t('This OpenScholar account is not associated with a HUID, so @name can\'t be made site owner.  For details, see the ', array('@name' => $name)) . l('documentation on how to link an OS account to a HUID', 'http://docs.openscholar.harvard.edu/logging-your-site#linking-your-huid-to-your-openscholar-account', array('attributes' => array('target' => '_blank'))) . '.</p>',
     );
   }
 

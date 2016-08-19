@@ -2795,6 +2795,12 @@ function vsite_user_autocomplete($string = '') {
     $query->fields('u', array('name'));
     // CONCAT the display, if there is no last name entered, show the username/email only, if there is a last name, show first/last/email.
     $query->addExpression("IF(ln.field_last_name_value = '' OR ln.field_last_name_value IS NULL, CONCAT(u.name, ' (', u.mail , ') '), CONCAT(IFNULL(fn.field_first_name_value,''), ' ', IFNULL(ln.field_last_name_value,''), ' (',u.name,', ', u.mail , ') '))", 'myname');
+
+    // limit matches to users with associated HUID, if pinserver is set up
+    if (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE)) {
+      $query->innerJoin('pinserver_users', 'pin', 'pin.uid = u.uid');
+    }
+
     $query->range(0, 10);
     $query->addTag('user_autocomplete');
 
