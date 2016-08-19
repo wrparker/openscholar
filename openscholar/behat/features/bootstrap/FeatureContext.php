@@ -167,6 +167,24 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I create a new "([^"]*)" with title "([^"]*)"$/
+   */
+  public function iCreateANewWithTitle ($content_type, $title) {
+    $query = new EntityFieldQuery();
+    $results = $query->entityCondition('entity_type', 'node')
+                    ->propertyCondition('title', $title)
+                    ->propertyCondition('type', str_replace('-', '_', $content_type))
+                    ->execute();
+
+    if (!empty($results['node'])) {
+      FeatureHelp::deleteNode($title);
+    }
+    $entity = $this->createEntity($type, $title);
+
+
+  }
+
+  /**
    * @Given /^I am on a "([^"]*)" page titled "([^"]*)"(?:, in the tab "([^"]*)"|)$/
    */
   public function iAmOnAPageTitled($page_type, $title, $subpage = NULL) {
