@@ -14,7 +14,7 @@ include_once 'os_files.features.inc';
 define('OS_FILE_FILEPATH_MULTITENANT', '[vsite:site-purl]/files');
 define('OS_FILE_FILEPATH_SINGLETENANT', 'share');
 
-// To filter out mdeia files in span elements
+// To filter out media files in span elements
 define('MEDIA_TOKEN_REGEX_SPAN', '/<span.*?data-file_info=\"%7B.*?%7D\".*?<\/span>/s');
 
 /**
