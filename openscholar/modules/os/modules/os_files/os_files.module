@@ -14,6 +14,9 @@ include_once 'os_files.features.inc';
 define('OS_FILE_FILEPATH_MULTITENANT', '[vsite:site-purl]/files');
 define('OS_FILE_FILEPATH_SINGLETENANT', 'share');
 
+// To filter out mdeia files in span elements
+define('MEDIA_TOKEN_REGEX_SPAN', '/<span.*?data-file_info=\"%7B.*?%7D\".*?<\/span>/s');
+
 /**
  * Implements hook_init.
  * Ensures oembed plugin types are available
@@ -704,7 +707,7 @@ function _os_files_delete_remove_reference_batch($nids, $file) {
       $info = field_info_field($field);
 
       // Verify the field type.
-      if (!in_array($info['type'], array('file', 'imagefield_crop', 'image'))) {
+      if (!in_array($info['type'], array('file', 'imagefield_crop', 'image', 'media'))) {
         continue;
       }
 
@@ -729,8 +732,39 @@ function _os_files_delete_remove_reference_batch($nids, $file) {
       }
     }
 
+    // Cleaning node body
+    if (isset($node->body['und'][0]['value'])) {
+      $body = $node->body['und'][0]['value'];
+      $file_references = array();
+      // Search for media elements with json format
+      preg_match_all(MEDIA_TOKEN_REGEX, $body, $matches);
+      foreach ($matches[0] as $tag) {
+        $tag_strip = str_replace(array('[[', ']]'), '', $tag);
+        $tag_info = drupal_json_decode($tag_strip);
+        if (isset($tag_info['fid']) && $tag_info['type'] == 'media' && $tag_info['fid'] == $file->fid) {
+          // Delete file reference
+          $body = str_replace($tag, '', $body);
+        }
+      }
+      // Search for media elements with html format
+      preg_match_all(MEDIA_TOKEN_REGEX_SPAN, $body, $matches_alt);
+      foreach ($matches_alt[0] as $tag_span) {
+          // Search for media elements inside the span
+          preg_match_all(MEDIA_TOKEN_REGEX_ALT, $tag_span, $matches_alt_inner);
+          foreach ($matches_alt_inner[0] as $tag) {
+            $tag_strip = urldecode($tag);
+            $tag_info = drupal_json_decode($tag_strip);
+            if (isset($tag_info['fid']) && $tag_info['type'] == 'media' && $tag_info['fid'] == $file->fid) {
+              // Delete file reference
+              $body = str_replace($tag_span, '', $body);
+          }
+        }
+      }
+      // Update node content
+      $node->body['und'][0]['value'] = $body;
+    }
+    // Save node
     node_save($node);
-
     _os_files_delete_delete_orphan_slide($node);
   }
 }
@@ -2635,6 +2669,7 @@ function os_files_bulk_delete_remove_reference($form, $form_state) {
     $fields = array(
       'file',
       'imagefield_crop',
+      'media',
     );
     $file_usage = array();
     foreach ($usage as $module => $types) {
@@ -2644,6 +2679,7 @@ function os_files_bulk_delete_remove_reference($form, $form_state) {
         }
       }
     }
+
     foreach (array_chunk($file_usage, 10) as $chunk) {
       $operations[] = array('_os_files_delete_remove_reference_batch', array($chunk, $file));
     }
