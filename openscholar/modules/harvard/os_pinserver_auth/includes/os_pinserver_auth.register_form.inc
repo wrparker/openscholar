@@ -29,7 +29,8 @@ function os_pinserver_auth_vsite_register_form_page() {
         return pinserver_redirect(array('redirect' => 'site/register'));
       }
       else {
-        drupal_set_message(pinserver_get_errors(), 'error', FALSE);
+        drupal_set_message(implode(' ', pinserver_get_errors()), 'error', FALSE);
+        drupal_goto('/user');
       }
     }
     else {
