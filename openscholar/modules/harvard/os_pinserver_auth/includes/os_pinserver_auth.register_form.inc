@@ -25,7 +25,7 @@ function os_pinserver_auth_vsite_register_form_page() {
   }
   else {
     if(pinserver_user_has_associated_pin($user->uid)) {
-      $url = url('pinserver/auth', array('query' => array('redirect' => 'site/register'), 'absolute' => TRUE));
+      $url = url('pinserver/auth', array('query' => array('redirect' => 'site/register'), 'absolute' => FALSE));
       $pin_options = array(
         'redirect' => $url,
         'tk_forward' => 1
