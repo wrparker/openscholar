@@ -455,3 +455,34 @@ function os_image_gallery_views_pre_view(&$view, &$display_id, &$args) {
     }
   }
 }
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function os_image_gallery_field_formatter_info() {
+  return array(
+    'os_image_gallery_trim_text' => array(
+      'label' => t('OS gallery description'),
+      'field types' => array('text', 'text_long', 'text_long'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function os_image_gallery_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+
+  switch ($display['type']) {
+
+    case 'os_image_gallery_trim_text':
+      $element[0] = array(
+        '#markup' => '',
+      );
+      break;
+  }
+
+  return $element;
+
+}
