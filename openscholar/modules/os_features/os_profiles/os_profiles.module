@@ -184,9 +184,11 @@ function os_profiles_init() {
     // We need to replace the file ID in the field with the new file ID we got.
     $file = NULL;
     if ($person_photo) {
-      // If the file was updated within 2 min of the node then update it as well.
+      // If the file was updated within 2 min of the node then update it as
+      // well.
       if (($changed - 120) < $person_photo['timestamp']) {
-        $copy_file = os_copy_file($person_photo['url'], FALSE, FALSE);
+        $wrapper = entity_metadata_wrapper('node', $node);
+        $copy_file = os_copy_file($person_photo['url'], FALSE, FALSE, $wrapper->{OG_AUDIENCE_FIELD}->get(0)->value()->purl);
 
         if ($copy_file['type'] == 'file') {
           $file = $copy_file['file'];
@@ -919,7 +921,7 @@ function os_profiles_insert_image($node, $file, $dimensions, $save = TRUE) {
 
   if ($save) {
     node_save($node);
-    file_usage_add($file, 'os_pofiles', 'node', $node->nid);
+    file_usage_add($file, 'os_profiles', 'node', $node->nid);
   }
 }
 
