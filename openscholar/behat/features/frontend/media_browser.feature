@@ -6,7 +6,8 @@ Feature: Media Browser
     Given I am logging in as "john"
       And I wait for page actions to complete
       And I edit the entity "node" with title "About"
-      And I sleep for "10"
+#      And I sleep for "10"
+      And I print page screen shot
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
      Then I should see "Select files to Add"

@@ -3242,4 +3242,13 @@ class FeatureContext extends DrupalContext {
     }
   }
 
+  /**
+   * @Given /^I print page screen shot$/
+   */
+  public function iPrintPageScreenShot() {
+    $driver = $this->getSession()->getDriver();
+    $screenshot = $driver->getScreenshot();
+    print_r($this->createGist(base64_encode($screenshot)));
+  }
+
 }
