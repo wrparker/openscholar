@@ -361,8 +361,8 @@ function cp_menu_node_validate($node, $form, &$form_state) {
       'link_path' => '',
       'tooltip' => $os_menu['description'],
     );
-    if ($vsite) {
-      //list(, $existing_menu) = _vsite_menu_prepare_menu_item($item, $vsite);
+    if ($vsite && isset($os_menu['link_title']) && isset($os_menu['parent'])) {
+      list(, $existing_menu) = _vsite_menu_prepare_menu_item($item, $vsite);
     }
 
     if ($os_menu['enabled'] && strlen($os_menu['link_title']) == 0) {
