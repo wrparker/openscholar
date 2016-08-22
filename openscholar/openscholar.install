@@ -92,11 +92,5 @@ function openscholar_install() {
 
   // Turn on the OG vocab term page access.
   variable_set('og_vocab_term_page_access', TRUE);
-
-  // Allow accessing resource node to all users.
-  foreach (array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID) as $rid) {
-    user_role_grant_permissions($rid, array('access resource node'));
-    user_role_grant_permissions($rid, array('access resource file'));
-  }
 }
 
