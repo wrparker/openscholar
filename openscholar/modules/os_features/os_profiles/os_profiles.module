@@ -819,7 +819,10 @@ function os_profiles_sync_profile_submit($form, $form_state) {
   // Retrieve the file from the original node.
   $file = NULL;
   if (!empty($file_url)) {
-    $copy_file = os_copy_file($file_url, FALSE, FALSE);
+    if (!$vsite) {
+      $vsite = vsite_get_vsite();
+    }
+    $copy_file = os_copy_file($file_url, FALSE, FALSE, $vsite->group->purl);
 
     if ($copy_file['type'] == 'file') {
       $file = $copy_file['file'];
