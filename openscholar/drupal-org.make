@@ -83,7 +83,7 @@ projects[dyntextfield][download][tag] = 1.0
 projects[dyntextfield][download][url] = "git://github.com/amitaibu/dyntextfield.git"
 
 projects[entity][subdir] = "contrib"
-projects[entity][version] = 1.7
+projects[entity][branch] = 7.x-1.x
 projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
 projects[entity][patch][] = https://www.drupal.org/files/issues/2086225-entity-access-check-18.patch
 
@@ -229,7 +229,7 @@ projects[media_gallery][patch][] = "https://raw.githubusercontent.com/openschola
 projects[media_gallery][patch][] = "https://www.drupal.org/files/issues/2585509-media_gallery-lost_files.patch"
 
 projects[message][subdir] = "contrib"
-projects[message][version] = 1.11
+projects[message][version] = 1.12
 
 projects[metatag][subdir] = "contrib"
 projects[metatag][version] = 1.0-beta9
@@ -276,6 +276,7 @@ projects[oembed][patch][] = "http://cgit.drupalcode.org/oembed/patch/?id=a27adf7
 projects[oembed][patch][] = "http://drupal.org/files/issues/oembed.2134415.wysiwyg_dimensions.patch"
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/514d6c636dc69ea76ea307a874c7cd9c3e0fb045/patches/oembed.alt_tags_no_escape.patch"
 projects[oembed][patch][] = "http://drupal.org/files/issues/split-up-regex-2739023-1.patch"
+projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/61b4675841580356481463f4780627bab619f197/patches/oembed.8762.uri_fragments.patch"
 
 projects[og][subdir] = "contrib"
 projects[og][version] = 2.6
@@ -320,7 +321,7 @@ projects[pinserver][subdir] = "contrib"
 projects[pinserver][type] = module
 projects[pinserver][download][type] = git
 projects[pinserver][download][url] = "git://github.com/openscholar/pinserver.git"
-projects[pinserver][download][tag] = 7.x-3.4.18
+projects[pinserver][download][tag] = 7.x-3.4.19
 
 projects[purl][subdir] = "contrib"
 ;: projects[purl][version] = 1.0-beta1+11-dev
