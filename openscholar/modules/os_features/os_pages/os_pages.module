@@ -962,7 +962,8 @@ function os_pages_add_subpage_element_validate($element, &$form_state) {
   }
   $nid = $form_state['vsite_autocomplete_nid'];
   $node = node_load($nid);
-  // If provided nid is not a valid drupal node object, then returning from validate handler.
+  // If provided nid is not returning a valid drupal node object, then exiting from validate handler, exeption will be handled 
+  // by vsite_node_autocomplete_validate callback
   if (!$node) {
     return;
   }
