@@ -362,7 +362,7 @@ function cp_menu_node_validate($node, $form, &$form_state) {
       'tooltip' => $os_menu['description'],
     );
     if ($vsite) {
-      list(, $existing_menu) = _vsite_menu_prepare_menu_item($item, $vsite);
+      //list(, $existing_menu) = _vsite_menu_prepare_menu_item($item, $vsite);
     }
 
     if ($os_menu['enabled'] && strlen($os_menu['link_title']) == 0) {
