@@ -63,23 +63,21 @@ function os_image_gallery_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['title']['spaces'] = array(
-    'type' => 'spaces_og',
-    'frontpage' => 0,
-  );
   /* Field: Content: Description */
   $handler->display->display_options['fields']['media_gallery_description']['id'] = 'media_gallery_description';
   $handler->display->display_options['fields']['media_gallery_description']['table'] = 'field_data_media_gallery_description';
   $handler->display->display_options['fields']['media_gallery_description']['field'] = 'media_gallery_description';
   $handler->display->display_options['fields']['media_gallery_description']['label'] = '';
-  $handler->display->display_options['fields']['media_gallery_description']['alter']['max_length'] = '600';
-  $handler->display->display_options['fields']['media_gallery_description']['alter']['more_link'] = TRUE;
+  $handler->display->display_options['fields']['media_gallery_description']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['media_gallery_description']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['media_gallery_description']['alter']['more_link_text'] = 'Read more';
   $handler->display->display_options['fields']['media_gallery_description']['alter']['more_link_path'] = 'node/[nid]';
-  $handler->display->display_options['fields']['media_gallery_description']['alter']['trim'] = TRUE;
-  $handler->display->display_options['fields']['media_gallery_description']['alter']['html'] = TRUE;
   $handler->display->display_options['fields']['media_gallery_description']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['media_gallery_description']['hide_empty'] = TRUE;
+  $handler->display->display_options['fields']['media_gallery_description']['type'] = 'os_image_gallery_trim_text';
+  $handler->display->display_options['fields']['media_gallery_description']['settings'] = array(
+    'trim_length' => '600',
+  );
   /* Field: Content: Gallery media */
   $handler->display->display_options['fields']['media_gallery_file']['id'] = 'media_gallery_file';
   $handler->display->display_options['fields']['media_gallery_file']['table'] = 'field_data_media_gallery_file';
@@ -246,10 +244,6 @@ function os_image_gallery_views_default_views() {
   $handler->display->display_options['fields']['title_1']['label'] = '';
   $handler->display->display_options['fields']['title_1']['exclude'] = TRUE;
   $handler->display->display_options['fields']['title_1']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['title_1']['spaces'] = array(
-    'type' => 'spaces_og',
-    'frontpage' => 0,
-  );
   /* Field: File: Path */
   $handler->display->display_options['fields']['uri']['id'] = 'uri';
   $handler->display->display_options['fields']['uri']['table'] = 'file_managed';
