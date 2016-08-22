@@ -555,6 +555,11 @@ libraries[colordialog][subdir] = "ckeditor/plugins"
 libraries[colordialog][download][type] = "file"
 libraries[colordialog][download][url] = "http://download.ckeditor.com/colordialog/releases/colordialog_4.5.10.zip"
 
+libraries[indentblock][type] = "libraries"
+libraries[indentblock][subdir] = "ckeditor/plugins"
+libraries[indentblock][download][type] = "file"
+libraries[indentblock][download][url] = "http://download.ckeditor.com/indentblock/releases/indentblock_4.5.10.zip"
+
 libraries[dragresize][type] = "libraries"
 libraries[dragresize][subdir] = "ckeditor/plugins"
 libraries[dragresize][download][type] = "git"
