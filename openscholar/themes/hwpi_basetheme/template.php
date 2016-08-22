@@ -167,88 +167,6 @@ function hwpi_basetheme_process_node(&$build) {
         $build['title_prefix']['#suffix'] = '<div class="toggle">' . $build['title_prefix']['#suffix'] . '</div>';
       }
     }
-
-    if ($build['#view_mode'] == 'sidebar_teaser') {
-      $build['pic_bio']['#prefix'] = '<div class="pic-bio clearfix people-sidebar-teaser">';
-    }
-    else {
-      $build['pic_bio']['#prefix'] = '<div class="pic-bio clearfix">';
-    }
-    $build['pic_bio']['#suffix'] = '</div>';
-    $build['pic_bio']['#weight'] = -9;
-
-    if (isset($build['body'])) {
-      $build['body']['#label_display'] = 'hidden';
-      $build['pic_bio']['body'] = $build['body'];
-      unset($build['body']);
-    }
-
-    //join titles
-    $title_field = &$build['field_professional_title'];
-    if ($title_field) {
-      $keys = array_filter(array_keys($title_field), 'is_numeric');
-      foreach ($keys as $key) {
-        $titles[] = $title_field[$key]['#markup'];
-        unset($title_field[$key]);
-      }
-      $title_field[0] = array('#markup' => implode('<br />', $titles));
-    }
-
-    // We dont want the other fields on teasers
-    if (in_array($build['#view_mode'], array('teaser', 'slide_teaser','no_image_teaser'))) {
-
-      //move title, website. body
-      $build['pic_bio']['body']['#weight'] = 5;
-      foreach (array(0=>'field_professional_title', 10=>'field_website') as $weight => $field) {
-        if (isset($build[$field])) {
-          $build['pic_bio'][$field] = $build[$field];
-          $build['pic_bio'][$field]['#weight'] = $weight;
-          unset($build[$field]);
-        }
-      }
-
-      //hide the rest
-      foreach (array('field_address') as $field) {
-        if (isset($build[$field])) {
-          unset($build[$field]);
-        }
-      }
-
-      if (isset($build['field_email'])) {
-        $email_plain = $build['field_email'][0]['#markup'];
-        $build['field_email'][0]['#markup'] = '<a href="mailto:' . $email_plain . '">' . $email_plain . '</a>';
-      }
-
-      // Newlines after website.
-      if (isset($build['pic_bio']['field_website'])) {
-        foreach (array_filter(array_keys($build['pic_bio']['field_website']), 'is_numeric') as $delta) {
-          $item = $build['pic_bio']['field_website']['#items'][$delta];
-          $build['pic_bio']['field_website'][$delta]['#markup'] = l($item['title'], $item['url'], $item) . '<br />';
-        }
-      }
-
-      unset($build['links']['node']);
-
-      return;
-    }
-
-    // Professional titles
-    if (isset($build['field_professional_title'])) {
-      $build['field_professional_title']['#label_display'] = 'hidden';
-      $build['field_professional_title']['#weight'] = -10;
-    }
-
-    if (isset($build['field_person_photo'])) {
-      $build['field_person_photo']['#label_display'] = 'hidden';
-      $build['pic_bio']['field_person_photo'] = $build['field_person_photo'];
-      unset($build['field_person_photo']);
-    }
-
-    $children = element_children($build['pic_bio']);
-    if (empty($children)) {
-      $build['pic_bio']['#access'] = false;
-    }
-
   }
 }
 
@@ -269,8 +187,8 @@ function hwpi_basetheme_node_view_alter(&$build) {
 
     // Contact Details
     if ($build['#view_mode'] != 'sidebar_teaser') {
-      // $build['contact_details']['#prefix'] = '<div class="block contact-details '.(($block_zebra++ % 2)?'even':'odd').'"><div class="block-inner"><h2 class="block-title">Contact Information</h2>';
-      // $build['contact_details']['#suffix'] = '</div></div>';
+      $build['contact_details']['#prefix'] = '<div class="block contact-details '.(($block_zebra++ % 2)?'even':'odd').'"><div class="block-inner"><h2 class="block-title">Contact Information</h2>';
+      $build['contact_details']['#suffix'] = '</div></div>';
       $build['contact_details']['#weight'] = 51;
 
       // Contact Details > address
@@ -282,7 +200,7 @@ function hwpi_basetheme_node_view_alter(&$build) {
       }
       // Contact Details > email
       if (isset($build['field_email'])) {
-        $build['field_email']['#label_display'] = 'inline';
+        $build['field_email']['#label_display'] = 'hidden';
         $email_plain = mb_strtolower($build['field_email'][0]['#markup']);
         if ($email_plain) {
 
@@ -304,6 +222,97 @@ function hwpi_basetheme_node_view_alter(&$build) {
         unset($build['field_phone']);
       }
 
+      if ($build['#view_mode'] == 'sidebar_teaser') {
+        $build['pic_bio']['#prefix'] = '<div class="pic-bio clearfix people-sidebar-teaser">';
+      }
+      else {
+        $build['pic_bio']['#prefix'] = '<div class="pic-bio clearfix">';
+      }
+      $build['pic_bio']['#suffix'] = '</div>';
+      $build['pic_bio']['#weight'] = -9;
+
+      if (isset($build['body'])) {
+        $build['body']['#label_display'] = 'hidden';
+        $build['pic_bio']['body'] = $build['body'];
+        unset($build['body']);
+      }
+
+      //join titles
+      $title_field = &$build['field_professional_title'];
+      if ($title_field) {
+        $keys = array_filter(array_keys($title_field), 'is_numeric');
+        foreach ($keys as $key) {
+          $titles[] = $title_field[$key]['#markup'];
+          unset($title_field[$key]);
+        }
+        $title_field[0] = array('#markup' => implode('<br />', $titles));
+      }
+
+      // We dont want the other fields on teasers
+      if (in_array($build['#view_mode'], array('teaser', 'slide_teaser','no_image_teaser'))) {
+
+        unset($build['contact_details']['#prefix'], $build['contact_details']['#suffix']);
+
+        //move title, website. body
+        $build['pic_bio']['body']['#weight'] = 5;
+        foreach (array(0=>'field_professional_title', 15=>'field_website') as $weight => $field) {
+          if (isset($build[$field])) {
+            $build['pic_bio'][$field] = $build[$field];
+            $build['pic_bio'][$field]['#weight'] = $weight;
+            unset($build[$field]);
+          }
+        }
+
+        //hide the rest
+        foreach (array('field_address') as $field) {
+          if (isset($build[$field])) {
+            unset($build[$field]);
+          }
+        }
+
+        if (isset($build['field_email'])) {
+          $email_plain = $build['field_email'][0]['#markup'];
+          $build['field_email'][0]['#markup'] = '<a href="mailto:' . $email_plain . '">' . $email_plain . '</a>';
+        }
+
+        // Newlines after website.
+        if (isset($build['pic_bio']['field_website'])) {
+          foreach (array_filter(array_keys($build['pic_bio']['field_website']), 'is_numeric') as $delta) {
+            $item = $build['pic_bio']['field_website']['#items'][$delta];
+            $build['pic_bio']['field_website'][$delta]['#markup'] = l($item['title'], $item['url'], $item) . '<br />';
+          }
+        }
+
+        if (isset($build['links']['node']['#links']['node-readmore'])) {
+          $link = $build['links']['node']['#links']['node-readmore'];
+          if (preg_match('!</?(?:p)[^>]*>\s*$!i', $build['pic_bio']['body'][0]['#markup'], $match, PREG_OFFSET_CAPTURE)) {
+            $insert_point = $match[0][1];
+            // Insert the link.
+            $build['pic_bio']['body'][0]['#markup'] = substr_replace($build['pic_bio']['body'][0]['#markup'], ' '.l($link['title'], $link['href'], $link), $insert_point, 0);
+          }
+        }
+
+        return;
+      }
+
+      // Professional titles
+      if (isset($build['field_professional_title'])) {
+        $build['field_professional_title']['#label_display'] = 'hidden';
+        $build['field_professional_title']['#weight'] = -10;
+      }
+
+      if (isset($build['field_person_photo'])) {
+        $build['field_person_photo']['#label_display'] = 'hidden';
+        $build['pic_bio']['field_person_photo'] = $build['field_person_photo'];
+        unset($build['field_person_photo']);
+      }
+
+      $children = element_children($build['pic_bio']);
+      if (empty($children)) {
+        $build['pic_bio']['#access'] = false;
+      }
+
+
       // Websites
       if (isset($build['field_website'])) {
         $build['website_details']['#prefix'] = '<div class="block website-details '.(($block_zebra++ % 2)?'even':'odd').'"><div class="block-inner"><h2 class="block-title">Websites</h2>';
@@ -318,9 +327,13 @@ function hwpi_basetheme_node_view_alter(&$build) {
       if (!element_children($build['contact_details'])) {
         unset($build['contact_details']);
       }
+      else {
+        $build['contact_details']['#weight'] = -8;
+      }
     }
 
-    if (isset($build['og_vocabulary'])) {
+    // Adding condition so that change in display in terms will show for full view mode
+    if (isset($build['og_vocabulary']) && $build['#view_mode'] == 'full') {
       $terms = array();
       foreach ($build['og_vocabulary']['#items'] as $i) {
         if (isset($i['target_id'])) {
@@ -608,4 +621,86 @@ function hwpi_basetheme_process_pager_link($variables) {
   // Adds an HTML head link for rel='prev' or rel='next' for pager links.
   module_load_include('inc', 'os', 'includes/pager');
   _os_pager_add_html_head_link($variables);
+}
+
+// Overriding theme_nice_menus_build to add open-submenu span for menuparent's
+function hwpi_basetheme_nice_menus_build($variables) {
+  $menu = $variables['menu'];
+  $depth = $variables['depth'];
+  $trail = $variables['trail'];
+  $output = '';
+  // Prepare to count the links so we can mark first, last, odd and even.
+  $index = 0;
+  $count = 0;
+  foreach ($menu as $menu_count) {
+    if ($menu_count['link']['hidden'] == 0) {
+      $count++;
+    }
+  }
+  // Get to building the menu.
+  foreach ($menu as $menu_item) {
+    $mlid = $menu_item['link']['mlid'];
+    // Check to see if it is a visible menu item.
+    if (!isset($menu_item['link']['hidden']) || $menu_item['link']['hidden'] == 0) {
+      // Check our count and build first, last, odd/even classes.
+      $index++;
+      $first_class = $index == 1 ? ' first ' : '';
+      $oddeven_class = $index % 2 == 0 ? ' even ' : ' odd ';
+      $last_class = $index == $count ? ' last ' : '';
+      // Build class name based on menu path
+      // e.g. to give each menu item individual style.
+      // Strip funny symbols.
+      $clean_path = str_replace(array('http://', 'www', '<', '>', '&', '=', '?', ':', '.'), '', $menu_item['link']['href']);
+      // Convert slashes to dashes.
+      $clean_path = str_replace('/', '-', $clean_path);
+      $class = 'menu-path-' . $clean_path;
+      if ($trail && in_array($mlid, $trail)) {
+        $class .= ' active-trail';
+      }
+      // If it has children build a nice little tree under it.
+      if ((!empty($menu_item['link']['has_children'])) && (!empty($menu_item['below'])) && $depth != 0) {
+        // Keep passing children into the function 'til we get them all.
+        if ($menu_item['link']['depth'] <= $depth || $depth == -1) {
+          $children = array(
+            '#theme' => 'nice_menus_build',
+            '#prefix' => '<span class="open-submenu"></span><ul>',
+            '#suffix' => '</ul>',
+            '#menu' => $menu_item['below'],
+            '#depth' => $depth,
+            '#trail' => $trail,
+          );
+        }
+        else {
+          $children = '';
+        }
+        // Set the class to parent only of children are displayed.
+        $parent_class = ($children && ($menu_item['link']['depth'] <= $depth || $depth == -1)) ? 'menuparent ' : '';
+         $element = array(
+          '#below' => $children,
+          '#title' => $menu_item['link']['title'],
+          '#href' =>  $menu_item['link']['href'],
+          '#localized_options' => $menu_item['link']['localized_options'],
+          '#attributes' => array(
+            'class' => array('menu-' . $mlid, $parent_class, $class, $first_class, $oddeven_class, $last_class),
+          ),
+        );
+        $variables['element'] = $element;
+        $output .= theme('menu_link', $variables);
+      }
+      else {
+        $element = array(
+          '#below' => '',
+          '#title' => $menu_item['link']['title'],
+          '#href' =>  $menu_item['link']['href'],
+          '#localized_options' => isset($menu_item['link']['localized_options'])?$menu_item['link']['localized_options']:array(),
+          '#attributes' => array(
+            'class' => array('menu-' . $mlid, $class, $first_class, $oddeven_class, $last_class),
+          ),
+        );
+        $variables['element'] = $element;
+        $output .= theme('menu_link', $variables);
+      }
+    }
+  }
+  return $output;
 }

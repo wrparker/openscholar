@@ -28,10 +28,15 @@ function vsite_domain_cp_settings_domain_validate($form, $form_state) {
     // Checks that this domain isn't already shared by other sites.
     if ($domain) {
       // Finds any vsite_domain_name variables that match this domain.
+
+      // TODO: Fix this query.
+      // It doesn't work at all. It always returns nothing because the value field is serialized, and we're not
+      // serializing $domain. There are some edge cases involving shared domains and what not, or I would fix it right now.
       $result = db_select('spaces_overrides', 'so')
         ->fields('so', array('id'))
         ->condition('object_type', 'variable')
         ->condition('object_id', 'vsite_domain_name')
+        ->condition('type', 'og')
         ->condition('id', $sid, '!=')
         ->condition('value', $domain)
         ->execute()

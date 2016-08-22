@@ -229,7 +229,7 @@ projects[media_gallery][patch][] = "https://raw.githubusercontent.com/openschola
 projects[media_gallery][patch][] = "https://www.drupal.org/files/issues/2585509-media_gallery-lost_files.patch"
 
 projects[message][subdir] = "contrib"
-projects[message][version] = 1.8
+projects[message][version] = 1.12
 
 projects[metatag][subdir] = "contrib"
 projects[metatag][version] = 1.0-beta9
@@ -276,6 +276,7 @@ projects[oembed][patch][] = "http://cgit.drupalcode.org/oembed/patch/?id=a27adf7
 projects[oembed][patch][] = "http://drupal.org/files/issues/oembed.2134415.wysiwyg_dimensions.patch"
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/514d6c636dc69ea76ea307a874c7cd9c3e0fb045/patches/oembed.alt_tags_no_escape.patch"
 projects[oembed][patch][] = "http://drupal.org/files/issues/split-up-regex-2739023-1.patch"
+projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/61b4675841580356481463f4780627bab619f197/patches/oembed.8762.uri_fragments.patch"
 
 projects[og][subdir] = "contrib"
 projects[og][version] = 2.6
@@ -320,7 +321,7 @@ projects[pinserver][subdir] = "contrib"
 projects[pinserver][type] = module
 projects[pinserver][download][type] = git
 projects[pinserver][download][url] = "git://github.com/openscholar/pinserver.git"
-projects[pinserver][download][tag] = 7.x-3.4.17
+projects[pinserver][download][tag] = 7.x-3.4.19
 
 projects[purl][subdir] = "contrib"
 ;: projects[purl][version] = 1.0-beta1+11-dev
@@ -359,6 +360,7 @@ projects[robotstxt][patch][] = "http://drupal.org/files/issues/send_cache_header
 projects[restws][subdir] = "contrib"
 projects[restws][version] = "2.0-alpha3"
 projects[restws][patch][] = "http://drupal.org/files/1806142-restws-property-exception.patch"
+projects[restws][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/6c679219a3259d682abb87e9b9f0f1834bc08ee9/patches/restws.security_fix.patch"
 
 projects[shorten][subdir] = "contrib"
 projects[shorten][version] = 1.2
@@ -405,8 +407,7 @@ projects[transliteration][version] = 3.1
 
 projects[twitter_pull][subdir] = "contrib"
 projects[twitter_pull][version] = 1.0-rc4
-projects[twitter_pull][patch][] = "http://drupal.org/files/twitter_pull-twitter_api_php-1781024-40.patch"
-projects[twitter_pull][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/96ddefa8af2cce2579ea4eac39b20ccb840b1e41/patches/twitter_pull-8376-disable_retweets.patch"
+projects[twitter_pull][patch][] = "https://raw.github.com/openscholar/openscholar/cb4bfa4c382c3ef6d2c8a48c10d55695792c37d5/patches/twitter_pull-8577-retweet_option.patch"
 
 projects[views][subdir] = "contrib"
 projects[views][version] = 3.8

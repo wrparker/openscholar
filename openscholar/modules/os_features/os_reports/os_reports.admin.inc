@@ -122,7 +122,7 @@ function os_reports_site_form($form, &$form_state) {
   );
   $form['content']['includesites']['content'] = array(
     '#name' => 'includesites',
-    '#title' => 'only sites with content',
+    '#title' => 'sites with content',
     '#type' => 'radio',
     '#attributes' => array(
       'ng-model' => 'params.includesites',
@@ -130,9 +130,19 @@ function os_reports_site_form($form, &$form_state) {
       'ng-click' => 'updateValues(params.includesites)',
     ),
   );
+  $form['content']['includesites']['noncontent'] = array(
+    '#name' => 'includesites',
+    '#title' => 'sites with non-content changes',
+    '#type' => 'radio',
+    '#attributes' => array(
+      'ng-model' => 'params.includesites',
+      'value' => 'noncontent',
+      'ng-click' => 'updateValues(params.includesites)',
+    ),
+  );
   $form['content']['includesites']['nocontent'] = array(
     '#name' => 'includesites',
-    '#title' => 'only sites with no content',
+    '#title' => 'sites with no content or non-content changes',
     '#type' => 'radio',
     '#attributes' => array(
       'ng-model' => 'params.includesites',
@@ -167,25 +177,45 @@ function os_reports_site_form($form, &$form_state) {
   );
   $form['columns_set'] = array(
     '#type' => 'fieldset',
-    '#prefix' => '<div class="container-inline"><label for="edit-columns">Optional Columns</label>',
-    '#suffix' => '</div>',
+    '#title' => 'Columns',
+  );
+  $form['columns_set']['only_vsite_ids'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Vsite IDs only',
+    '#description' => 'Checking this means all "optional columns" below will be ignored.',
+    '#attributes' => array(
+      'ng-model' => 'queryform.columns.only_vsite_ids',
+      'ng-click' => "updateCheckedValues('columns', 'only_vsite_ids')",
+      'value' => 'only_vsite_ids',
+    ),
   );
   $form['columns_set']['columns'] = array(
-    '#prefix' => '<div class="container-inline">',
+    '#prefix' => '<label for="edit-columns">Optional Columns</label><div class="container-inline">',
     '#suffix' => '</div>',
     '#type' => 'checkboxes',
     '#validated' => TRUE,
     '#options' => array(),
   );
-  $form['columns_set']['columns']['owner_subdomain'] = array(
-    '#title' => 'Subdomain of site owner',
+  $form['columns_set']['columns']['vsite_id'] = array(
+    '#title' => 'Vsite ID',
     '#type' => 'checkbox',
     '#attributes' => array(
-      'ng-model' => 'queryform.columns.owner_subdomain',
-      'ng-click' => "updateCheckedValues('columns', 'owner_subdomain')",
-      'value' => 'owner_subdomain',
+      'ng-model' => 'queryform.columns.vsite_id',
+      'ng-click' => "updateCheckedValues('columns', 'vsite_id')",
+      'value' => 'vsite_id',
     ),
   );
+  if (module_exists('os_pinserver_auth') && variable_get('pinserver_pin_url', FALSE)) {
+    $form['columns_set']['columns']['site_owner_huid'] = array(
+      '#title' => 'Site owner HUID',
+      '#type' => 'checkbox',
+      '#attributes' => array(
+        'ng-model' => 'queryform.columns.site_owner_huid',
+        'ng-click' => "updateCheckedValues('columns', 'site_owner_huid')",
+        'value' => 'site_owner_huid',
+      ),
+    );
+  }
   $form['columns_set']['columns']['site_created'] = array(
     '#title' => 'Creation date',
     '#type' => 'checkbox',
@@ -205,12 +235,21 @@ function os_reports_site_form($form, &$form_state) {
     ),
   );
   $form['columns_set']['columns']['content_last_updated'] = array(
-    '#title' => 'Date of last content update',
+    '#title' => 'Last content update',
     '#type' => 'checkbox',
     '#attributes' => array(
       'ng-model' => 'queryform.columns.content_last_updated',
       'ng-click' => "updateCheckedValues('columns', 'content_last_updated')",
       'value' => 'content_last_updated',
+    ),
+  );
+  $form['columns_set']['columns']['other_site_changes'] = array(
+    '#title' => 'Non-content changes',
+    '#type' => 'checkbox',
+    '#attributes' => array(
+      'ng-model' => 'queryform.columns.other_site_changes',
+      'ng-click' => "updateCheckedValues('columns', 'other_site_changes')",
+      'value' => 'other_site_changes',
     ),
   );
   $form['columns_set']['columns']['site_privacy_setting'] = array(
@@ -258,15 +297,6 @@ function os_reports_site_form($form, &$form_state) {
       'ng-init' => "params.range = '" . $handler->getRange() . "'",
     ),
   );
-  $sources = array_filter(explode("\n", variable_get('os_reports_domains', '')));
-  $form['source'] = array(
-    '#value' => $sources,
-    '#type' => 'hidden',
-    '#attributes' => array(
-      'ng-model' => 'params.source',
-      'ng-init' => 'params.source = [\'' . implode("','", $sources) . "']",
-    ),
-  );
 
   $form['buttons'] = array(
     '#prefix' => '<div class="buttons">',
@@ -285,17 +315,9 @@ function os_reports_site_form($form, &$form_state) {
 
   $buttons = '<div class="pager"><div class="container-inline"><div class="previous"><a ng-click="pager(\'previous\')">‹ previous</a></div><div class="status_count">{{ status }}</div><div class="next"><a ng-click="pager(\'next\')">next ›</a></div></div></div>';
 
-  // enable sorting only if data is coming from one source
-  if (count($sources) <= 1) {
-    $form['results'] = array(
-      '#markup' => $buttons . '<div class="results"><table><thead><tr><th ng-repeat="header in headers" ng-class="isActive(header)"><a ng-click="sort(this)" class="{{ header }}" ng-bind-html="formatHeader(header)"></a></th></tr></thead><tbody><tr ng-repeat="row in rows" ng-class-even="\'even\'" ng-class-odd="\'odd\'"><td ng-repeat="header in headers"><span ng-bind-html="row[header] | makelink:header:row"></span></td></tr></tbody></table></div>' . $buttons,
-    );
-  }
-  else {
-    $form['results'] = array(
-      '#markup' => $buttons . '<div class="results"><table><thead><tr><th ng-repeat="header in headers"><span class="{{ header }}" ng-bind-html="formatHeader(header)"></span></th></tr></thead><tbody><tr ng-repeat="row in rows" ng-class-even="\'even\'" ng-class-odd="\'odd\'"><td ng-repeat="header in headers"><span ng-bind-html="row[header] | makelink:header:row"></span></td></tr></tbody></table></div>' . $buttons,
-    );
-  }
+  $form['results'] = array(
+    '#markup' => $buttons . '<div class="results"><table><thead><tr><th ng-repeat="header in headers" ng-class="isActive(header)"><a ng-click="sort(this)" class="{{ header }}" ng-bind-html="formatHeader(header)"></a></th></tr></thead><tbody><tr ng-repeat="row in rows" ng-class-even="\'even\'" ng-class-odd="\'odd\'"><td ng-repeat="header in headers"><span ng-bind-html="row[header] | makelink:header:row"></span></td></tr></tbody></table></div>' . $buttons,
+  );
 
   return $form;
 }
@@ -317,6 +339,11 @@ function os_reports_site_form_submit($form, &$form_state) {
   $params['range'] = 0;
   $params['exclude'] = array('feed_importer', 'profile', 'harvard_course');
 
+  // handle vsite ids only checkbox
+  if (isset($params['only_vsite_ids'])) {
+    unset($params['only_vsite_ids']);
+    $params['columns'][] = 'only_vsite_ids';
+  }
 
   // make restful call to get data
   $handler = restful_get_restful_handler('report_sites');
@@ -349,194 +376,3 @@ function os_reports_site_form_submit($form, &$form_state) {
   }
 }
 
-/**
- * OS User report form
-
-function os_reports_user_form($form, &$form_state) {
-  os_common_angular_apps('ReportModule');
-
-  $form['#attached'] = array(
-    'js' => array(
-      array(
-        'data' => array(
-          'osRestModulePath' => $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'os_reports'),
-          'restBasePath' => url('api'),
-        ),
-        'type' => 'setting',
-      ),
-      array (
-        'data' => drupal_get_path('module', 'os_reports').'/js/ReportModule.js',
-        'type' => 'file',
-      ),
-    ),
-    'css' => array(
-      drupal_get_path('module', 'os_reports') . '/os_reports.css',
-      drupal_get_path('theme', 'seven') . '/style.css',
-    ),
-    'library' => array(
-      array('os_common', 'EntityService'),
-      array('os_common', 'auth'),
-    )
-  );
-
-  $form['#attributes'] = array(
-    'ng-controller' => 'UserReportQuery',
-    'ng-app' => 'ReportModule',
-    'name' => 'reportForm',
-  );
-  $form['keyword_set'] = array(
-    '#type' => 'fieldset',
-    '#title' => 'Keyword search'
-  );
-  $form['keyword_set']['keyword'] = array(
-    '#prefix' => '<div class="container-inline">',
-    '#suffix' => '</div>',
-    '#type' => 'textfield',
-    '#size' => 100,
-    '#title' => 'Keyword',
-    '#attributes' => array(
-      'ng-model' => 'params.keyword',
-    ),
-  );
-  $form['keyword_set']['kfields'] = array(
-    '#prefix' => '<div class="container-inline"><label for="edit-kfields">Search in fields</label>',
-    '#suffix' => '</div>',
-    '#type' => 'checkboxes',
-    '#options' => array(),
-  );
-  $form['keyword_set']['kfields']['mail'] = array(
-    '#title' => 'email',
-    '#type' => 'checkbox',
-    '#value' => 'mail',
-    '#attributes' => array(
-      'ng-model' => 'queryform.kfields.mail',
-      'ng-click' => "updateCheckedValues('kfields', 'mail')",
-      'value' => 'mail',
-    ),
-  );
-  $form['keyword_set']['kfields']['name'] = array(
-    '#title' => 'username',
-    '#type' => 'checkbox',
-    '#value' => 'name',
-    '#attributes' => array(
-      'ng-model' => 'queryform.kfields.name',
-      'ng-click' => "updateCheckedValues('kfields', 'name')",
-      'value' => 'name',
-    ),
-  );
-  $form['keyword_set']['kfields']['real_name'] = array(
-    '#title' => 'real name',
-    '#type' => 'checkbox',
-    '#value' => 'real_name',
-    '#attributes' => array(
-      'ng-model' => 'queryform.kfields.real_name',
-      'ng-click' => "updateCheckedValues('kfields', 'real_name')",
-      'value' => 'real_name',
-    ),
-  );
-  $form['columns'] = array(
-    '#type' => 'fieldset',
-    '#title' => 'Optional Columns',
-    '#prefix' => '<div class="container-inline">',
-    '#suffix' => '</div>',
-  );
-  $form['columns']['fname'] = array(
-    '#title' => 'First name',
-    '#type' => 'checkbox',
-    '#attributes' => array(
-      'ng-model' => 'queryform.columns.fname',
-      'ng-click' => "updateCheckedValues('columns', 'fname')",
-      'value' => 'fname',
-    ),
-  );
-  $form['columns']['lname'] = array(
-    '#title' => 'Last name',
-    '#type' => 'checkbox',
-    '#attributes' => array(
-      'ng-model' => 'queryform.columns.lname',
-      'ng-click' => "updateCheckedValues('columns', 'lname')",
-      'value' => 'lname',
-    ),
-  );
-  $form['columns']['full_name'] = array(
-    '#title' => 'Full name',
-    '#type' => 'checkbox',
-    '#attributes' => array(
-      'ng-model' => 'queryform.columns.full_name',
-      'ng-click' => "updateCheckedValues('columns', 'full_name')",
-      'value' => 'full_name',
-    ),
-  );
-  $form['columns']['owner_subdomain'] = array(
-    '#title' => 'Subdomain from email address',
-    '#type' => 'checkbox',
-    '#attributes' => array(
-      'ng-model' => 'queryform.columns.owner_subdomain',
-      'ng-click' => "updateCheckedValues('columns', 'owner_subdomain')",
-      'value' => 'owner_subdomain',
-    ),
-  );
-  $form['columns']['site_association'] = array(
-    '#title' => 'Site association/role',
-    '#type' => 'checkbox',
-    '#attributes' => array(
-      'ng-model' => 'queryform.columns.site_association',
-      'ng-click' => "updateCheckedValues('columns', 'site_association')",
-      'value' => 'site_association',
-    ),
-  );
-  $form['columns']['lastlogin'] = array(
-    '#title' => 'Date of last login',
-    '#type' => 'checkbox',
-    '#attributes' => array(
-      'ng-model' => 'queryform.columns.lastlogin',
-      'ng-click' => "updateCheckedValues('columns', 'lastlogin')",
-      'value' => 'lastlogin',
-    ),
-  );
-  $handler = restful_get_restful_handler('report_sites');
-  $form['range'] = array(
-    '#value' => $handler->getRange(),
-    '#type' => 'hidden',
-    '#attributes' => array(
-      'ng-model' => 'params.range',
-      'ng-init' => "params.range = '" . $handler->getRange() . "'",
-    ),
-  );
-  $form['buttons'] = array(
-    '#prefix' => '<div class="buttons">',
-    '#suffix' => '</div>',
-  );
-  $form['buttons']['submit'] = array(
-    '#markup' => '<a class="button" ng-click="update()">Run Report</a>',
-  );
-  $form['buttons']['clear'] = array(
-    '#markup' => '<a class="button" ng-click="reset()">Clear</a>',
-  );
-  $form['buttons']['download'] = array(
-    '#type' => 'submit',
-    '#value' => 'Download CSV of Full Report',
-  );
-
-  $buttons = '<div class="pager"><div class="container-inline"><div class="previous"><a ng-click="pager(\'previous\')">‹ previous</a></div><div class="status_count">{{ status }}</div><div class="next"><a ng-click="pager(\'next\')">next ›</a></div></div></div>';
-
-  $form['results'] = array(
-    '#markup' => $buttons . '<div class="results"><table><thead><tr><th ng-repeat="header in headers" ng-class="isActive(header)"><a ng-click="sort(this)" class="{{ header }}">{{ header | formatHeader }}</a></th></tr></thead><tbody><tr ng-repeat="row in rows" ng-class-even="\'even\'" ng-class-odd="\'odd\'"><td ng-repeat="header in headers"><span ng-bind-html="row[header] | makelink:header:row"></span></td></tr></tbody></table></div>' . $buttons,
-  );
-
-  return $form;
-}
- */
-
-/**
- * Configure OS Reports module
- */
-function administer_os_reports_form($form, &$form_state) {
-  $form['os_reports_domains'] = array(
-    '#title' => 'Domains',
-    '#description' => 'The domains of the OS installations to query (example: scholar.harvard.edu) one per line.',
-    '#type' => 'textarea',
-    '#default_value' => variable_get('os_reports_domains', ''),
-  );
-  return system_settings_form($form);
-}

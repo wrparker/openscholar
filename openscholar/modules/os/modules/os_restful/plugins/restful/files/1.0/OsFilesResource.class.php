@@ -148,6 +148,22 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     ) + parent::controllersInfo();
   }
 
+  public function initSpace() {
+    static $hasRun = false;
+    $vid = 0;
+    if (!empty($GET['vsite'])) {
+      $vid = $_GET['vsite'];
+    }
+    else if (!empty($this->request['vsite'])) {
+      $vid = $this->request['vsite'];
+    }
+    if (!$hasRun && $vsite = vsite_get_vsite($vid)) {
+      spaces_set_space($vsite);
+      $vsite->activate_user_roles();
+      $hasRun = true;
+    }
+  }
+
   /**
    * Overrides RestfulEntityBase::publicFieldsInfo().
    */
@@ -322,7 +338,12 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
    */
   public function getIconUrl($wrapper) {
     $file = $wrapper->value();
-    return file_icon_url($file);
+    // Setting icon directory for svg files
+    $icon_directory = variable_get('file_icon_directory', drupal_get_path('module', 'os_files') . '/icons');
+    $icon_url = file_icon_url($file, $icon_directory);
+    // Replacing png icons with svg
+    $svg_url = str_replace('.png', '.svg', $icon_url);
+    return $svg_url;
   }
 
   /**
@@ -432,6 +453,7 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
    * The file could be a straight replacement, and this is where we handle that.
    */
   public function createEntity() {
+    $this->initSpace();
     if ($this->checkEntityAccess('create', 'file', NULL) === FALSE && $this->checkGroupAccess('create') === FALSE) {
       // User does not have access to create entity.
       $params = array('@resource' => $this->getPluginKey('label'));

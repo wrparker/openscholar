@@ -40,7 +40,7 @@ function cp_user_menu() {
   );
 
   $items['cp/users/add'] = array(
-    'title' => t('Add a User to Your Website'),
+    'title' => t('Add a Member to Your Website'),
     'page arguments' => array('add'),
     'access callback' => 'cp_user_admin_access',
     'file' => 'cp_user.pages.inc',
@@ -697,12 +697,12 @@ function cp_user_admin($op = 'list') {
 function cp_user_form_og_ui_add_users_alter(&$form, $form_state) {
   $item = menu_get_item();
 
-  $form['og_user']['#title'] = t('Add an existing user to this website');
+  $form['og_user']['#title'] = t('Add an existing OpenScholar member to this website');
 
   // Create and add a link for the user to click on to create a new user.
-  $ajax_link = '<a href="javascript:void(0)" id="new-user-link">' . t('Create a new user') . '</a>';
+  $ajax_link = '<a href="javascript:void(0)" id="new-user-link">' . t('Create a new member') . '</a>';
   // Added the link onto the form as just text and set the weight higher to bump it down the add user form.
-  $form['og_user']['name']['#title'] = t('User');
+  $form['og_user']['name']['#title'] = t('Member');
   // The new autocomplete is for vsites, only switch the autocomplete if vsite is enabled.
   if (module_exists('vsite')) {
     $form['og_user']['name']['#description'] = t('Type in a person\'s name, username, or e-mail address to search for their existing account.');
@@ -739,22 +739,91 @@ function cp_user_form_og_ui_add_users_alter(&$form, $form_state) {
   // Add a secondary submit function that redirects the users out of the
   // admin overlay
   $form['#submit'][] = 'cp_user_og_ui_add_users_submit';
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Add member'));
 }
 
 /**
  * Submit handler; maybe grants a role, then redirects user back to "cp/users".
  */
 function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
-
+  global $user;
   $state = $form_state['values']['state'];
   $account = user_load_by_name($form_state['values']['name']);
 
   if ($state) {
     // Associate the user with the group.
     og_group('node', $form_state['values']['gid'], array('entity' => $account->uid));
+
+    $vsite = vsite_get_vsite();
+    // Loading logged in user's user object for full name.
+    $account_modifier = user_load($user->uid);
+    $account_modifier_full_name = $account_modifier->field_first_name[LANGUAGE_NONE][0]['value'] . ' ' . $account_modifier->field_last_name[LANGUAGE_NONE][0]['value'];
+    $purl_base_domain = variable_get('purl_base_domain');
+    // Checking if this is a custom domain site or not.
+    $custom_domain = db_select('purl', 'p')
+      ->fields('p', array('value'))
+      ->condition('provider', 'vsite_domain', '=')
+      ->condition('id', $vsite->group->nid, '=')
+      ->execute()
+      ->fetchField();
+    // Setting up email parameters.
+    $to = $account->mail;
+    $from = variable_get('site_mail', ini_get('sendmail_from'));
+    // Newly added users is always added as Basic Member by default.
+    $params['!user-role'] = 'Basic member';
+    $params['!account-modifier'] = !empty($account_modifier_full_name) ? $account_modifier_full_name : $account_modifier->name;
+    $params['!username'] = $account->name;
+    $params['!site-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl;
+    $params['!login-url'] = !empty($custom_domain) ? 'http://' . $custom_domain . '/user?destination=home' : $purl_base_domain . '/user?destination=' . $vsite->group->purl;
+    $params['!user-firstname'] = $account->field_first_name[LANGUAGE_NONE][0]['value'];
+    $params['!sitewide-name'] = variable_get('site_name', 'Harvard Web Publishing');
+    $params['headers']['Cc'] = $account_modifier->mail;
+    // Sending email notification to added user.
+    drupal_mail('cp_user', 'os_user_add_to_group', $to, $language, $params, $from);
   }
 
   $form_state['redirect'] = 'cp/users';
+}
+
+/**
+ * Implements hook_mail().
+ */
+function cp_user_mail($key, &$message, $params){
+  switch ($key) {
+    case 'os_user_add_to_group' :
+      $message['subject'] = t("You have been added as a member to the !site-url website", $params);
+      $message['body'] = array();
+      $message['body'][] = t("Hi !user-firstname,", $params);
+      $message['body'][] = t("!account-modifier has added you as a member to the website !site-url with the role of !user-role. You can log in at !login-url with the username !username.", $params);
+      $message['body'][] = t("Don't forget to bookmark the site and save this email for future reference.");
+      $message['body'][] = t("Here are some handy links for you:");
+      $links = array();
+      $links[] = " * Sign up for training: http://hwp.harvard.edu/calendar/upcoming\n";
+      $links[] = " * OpenScholar documentation: http://docs.openscholar.harvard.edu\n";
+      $links[] = " * Need help with your project? http://hwp.harvard.edu/contact";
+      $message['body'][] = implode("", $links);
+      $message['body'][] = t("Sincerely,\n!sitewide-name", $params);
+      $message['headers'] += $params['headers'];
+      break;
+
+    case 'os_user_delete_from_group' :
+      $message['subject'] = t("You have been removed from the !site-url website", $params);
+      $message['body'] = array();
+      $message['body'][] = t("Hi !user-firstname,", $params);
+      $message['body'][] = t("!account-modifier has removed you as a member with the role of !user-role from the website !site-url. If you feel this was in error or have any questions, please contact them at !account-modifier-email", $params);
+      $message['body'][] = t("Sincerely,\n!sitewide-name", $params);
+      $message['headers'] += $params['headers'];
+      break;
+
+    case 'os_user_role_change' :
+      $message['subject'] = t("Your role on the !site-url website has changed", $params);
+      $message['body'] = array();
+      $message['body'][] = t("Hi !user-firstname,", $params);
+      $message['body'][] = t("!account-modifier has changed your role to !user-role on the website !site-url. If you feel this was in error or have any questions, please contact them at !account-modifier-email", $params);
+      $message['body'][] = t("Sincerely,\n!sitewide-name", $params);
+      $message['headers'] += $params['headers'];
+      break; 
+  }
 }
 
 /**
