@@ -2570,8 +2570,8 @@ function os_events_date_display_range($variables) {
     $end_date = '<span class="date-display-end"' . drupal_attributes($attributes_end) . '>' . $date2 . $timezone . '</span>, ';
 
     // e.g., 8:30am - 4:30pm
-    $start_time = '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . date('h:ia', strtotime($variables['date1'])) . '</span>';
-    $end_time = '<span class="date-display-end"' . drupal_attributes($attributes_start) . '>' . date('h:ia', strtotime($variables['date2'])) . '</span>';
+    $start_time = '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . date('g:ia', strtotime($variables['date1'])) . '</span>';
+    $end_time = '<span class="date-display-end"' . drupal_attributes($attributes_start) . '>' . date('g:ia', strtotime($variables['date2'])) . '</span>';
 
     $multi_day_suffix = t('!start-time - !end-time', array(
       '!start-time' => $start_time,
