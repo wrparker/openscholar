@@ -220,7 +220,9 @@ function vsite_register_form($form, &$state) {
       '#markup' => '<div id="new_user_div">',
     );
 
-    $form['user_fieldset'] += _vsite_register_user_form();
+    if (!module_exists('pinserver') || !variable_get('pinserver_pin_url', FALSE)) {
+      $form['user_fieldset'] += _vsite_register_user_form();
+    }
 
     $form['user_fieldset']['huid'] = array();
 
