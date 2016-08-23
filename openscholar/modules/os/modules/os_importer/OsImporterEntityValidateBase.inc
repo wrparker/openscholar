@@ -78,7 +78,7 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
     $length = variable_get('os_wysiwyg_maximum_length_' . $field_name, 5 * 1000000);
 
     if (strlen($value['value']) > $length) {
-      $this->setError($field_name, "The value of the \"$field_name\" field can not be longer than \"$length\" characters.");
+      $this->setError($field_name, "The value of the '$field_name' field can not be longer than '$length' characters.");
     }
   }
 
