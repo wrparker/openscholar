@@ -133,6 +133,7 @@ script:
 
 after_script:
   - sudo cat /var/log/apache2/error.log
+  - cat phantomjs.log
 
 after_failure: # this will of course run only on failure
   - "travis-artifacts upload --path /tmp/screenshots"
