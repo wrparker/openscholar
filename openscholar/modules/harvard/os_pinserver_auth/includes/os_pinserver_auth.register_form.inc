@@ -25,12 +25,7 @@ function os_pinserver_auth_vsite_register_form_page() {
   }
   else {
     if(pinserver_user_has_associated_pin($user->uid)) {
-      $url = url('pinserver/auth', array('query' => array('redirect' => 'site/register'), 'absolute' => FALSE));
-      $pin_options = array(
-        'redirect' => $url,
-        'tk_forward' => 1
-      );
-      pinserver_redirect($pin_options);
+      return drupal_get_form('vsite_register_form');
     }
     else {
       drupal_set_message('You need to have a HUID associated with your OpenScholar account in order to create new sites (see the <a href="http://docs.openscholar.harvard.edu/logging-your-site#linking-your-huid-to-your-openscholar-account" target="_blank">documentation on linking an account to a HUID</a>).', 'error', FALSE);
