@@ -2542,13 +2542,6 @@ function os_events_date_display_range($variables) {
   $start_date = '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . $date1 . '</span>';
   $end_date = '<span class="date-display-end"' . drupal_attributes($attributes_end) . '>' . $date2 . $timezone . '</span>';
 
-  // If microdata attributes for the start date property have been passed in,
-  // add the microdata in meta tags.
-  if (!empty($variables['add_microdata'])) {
-    $start_date .= '<meta' . drupal_attributes($variables['microdata']['value']['#attributes']) . '/>';
-    $end_date .= '<meta' . drupal_attributes($variables['microdata']['value2']['#attributes']) . '/>';
-  }
-
   // Prepend the days of the week for a multi-day event, and append the start and end time
   // (this amounts to a sort of short-hand for a recurring event)
   $multi_day_prefix = "";
@@ -2577,6 +2570,13 @@ function os_events_date_display_range($variables) {
       '!start-time' => $start_time,
       '!end-time' => $end_time,
     ));
+  }
+
+  // If microdata attributes for the start date property have been passed in,
+  // add the microdata in meta tags.
+  if (!empty($variables['add_microdata'])) {
+    $start_date .= '<meta' . drupal_attributes($variables['microdata']['value']['#attributes']) . '/>';
+    $end_date .= '<meta' . drupal_attributes($variables['microdata']['value2']['#attributes']) . '/>';
   }
 
   return t('!multi-day-prefix !start-date to !end-date !multi-day-suffix', array(
