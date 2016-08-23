@@ -28,7 +28,7 @@ function os_pinserver_auth_vsite_register_form_page() {
       $url = url('pinserver/auth', array('query' => array('redirect' => 'site/register'), 'absolute' => TRUE));
       $pin_options = array(
         'redirect' => $url,
-        'tk_forward' => 0
+        'tk_forward' => 1
       );
       pinserver_redirect($pin_options);
     }
