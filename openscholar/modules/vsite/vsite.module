@@ -444,7 +444,7 @@ function vsite_alias_has_purl_prefix($alias, $vsite_id) {
  *
  * Prevent accidental delete of VSites, by hardening the confirmation page.
  */
-function vsite_form_node_delete_confirm_alter(&$form, $form_state) {
+function vsite_form_node_delete_confirm_alter(&$form, &$form_state) {
   $node = $form['#node'];
   if (!og_is_group_type('node', $node->type)) {
     // Not a group node.
@@ -459,9 +459,36 @@ function vsite_form_node_delete_confirm_alter(&$form, $form_state) {
     '#element_validate' => array('vsite_delete_vsite_confirm_title'),
   );
 
+  // Obtaining destination parameter in URL
+  $destination = drupal_get_destination();
+  $redirect_url = drupal_parse_url($destination['destination']);
+  $cancel_link = isset($destination['destination']) ? $redirect_url['path'] : 'user';
+  $form['actions']['cancel'] = array(
+    '#markup' => l(t('Cancel'), $cancel_link, array('query' => $redirect_url['query'], 'absolute' => TRUE, 'attributes' => array('class' => array('form-cancel')))),
+  );
+  $form['#submit'][] = 'vsite_form_node_delete_confirm_submit';
   $form['#attached']['js'] = array(
     drupal_get_path('module', 'vsite').'/js/vsite_delete_confirm.js'
   );
+}
+
+/**
+ * Processes the site delete confirm form.
+ */
+function vsite_form_node_delete_confirm_submit($form, &$form_state) {
+  // Obtaining destination parameter in URL
+  $destination = drupal_get_destination();
+  $redirect_url = drupal_parse_url($destination['destination']);
+  $options = array();
+  $options['query'] = $redirect_url['query'];
+  // Closing the modal and redirecting the user to destination path.
+  if (isset($redirect_url['path'])) {
+    overlay_close_dialog($redirect_url['path'], $options);
+  } else {
+    overlay_close_dialog('user');
+  }
+  $form_state['rebuild'] = TRUE;
+  $form_state['redirect'] = FALSE;
 }
 
 /**
@@ -2262,8 +2289,11 @@ function vsite_delete_request_form($form, &$form_state) {
     '#value' => t('Submit'),
   );
 
+  $destination = drupal_get_destination();
+  $redirect_url = drupal_parse_url($destination['destination']);
+  $cancel_link = isset($destination['destination']) ? $redirect_url['path'] : 'user';
   $form['cancel'] = array(
-    '#markup' => l(t('Cancel'), 'user', array('attributes' => array('id' => 'edit-cancel'))),
+    '#markup' => l(t('Cancel'), $cancel_link, array('query' => $redirect_url['query'], 'attributes' => array('class' => array('form-cancel')))),
   );
 
   $form['#submit'][] = 'vsite_delete_request_submit';
@@ -2504,7 +2534,19 @@ function vsite_delete_request_submit($form, &$form_state) {
   // Add new message.
   drupal_set_message(t('The delete request has been sent.'));
 
-  $form_state['redirect'] = 'user';
+  // Obtaining destination parameter in URL
+  $destination = drupal_get_destination();
+  $redirect_url = drupal_parse_url($destination['destination']);
+  $options = array();
+  $options['query'] = $redirect_url['query'];
+  // Closing the modal and redirecting the user to destination path.
+  if (isset($redirect_url['path'])) {
+    overlay_close_dialog($redirect_url['path'], $options);
+  } else {
+    overlay_close_dialog('user');
+  }
+  $form_state['rebuild'] = TRUE;
+  $form_state['redirect'] = FALSE;
 }
 
 /**
@@ -4028,4 +4070,22 @@ function _vsite_cleanup_id_list($vsite_id_array) {
     }
   }
   return $clean_array;
+}
+
+/**
+ * Implements hook_oembed_uri_directory().
+ *
+ * Adds the vsite purl to the url.
+ */
+function vsite_oembed_uri_fragments($uri) {
+  if ($vsite = vsite_get_vsite()) {
+    $url = 'oembed://' . drupal_encode_path($uri);
+    $file = file_uri_to_object($url);
+
+    // this is a new file or this file exists in another site already
+    // if this file exists in this vsite already, add nothing. We don't want to cause duplicates.
+    if (!isset($file->{OG_AUDIENCE_FIELD}) || $file->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id'] != $vsite->id) {
+      return array($vsite->group->purl);
+    }
+  }
 }

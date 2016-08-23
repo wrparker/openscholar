@@ -72,26 +72,6 @@ function os_user_default_permissions() {
     'module' => 'overlay',
   );
 
-  // Exported permission: 'access resource node'.
-  $permissions['access resource node'] = array(
-    'name' => 'access resource node',
-    'roles' => array(
-      'anonymous user' => 'anonymous user',
-      'authenticated user' => 'authenticated user',
-      'web services' => 'web services',
-    ),
-    'module' => 'restws',
-  );
-
-  // Exported permission: 'access resource user'.
-  $permissions['access resource user'] = array(
-    'name' => 'access resource user',
-    'roles' => array(
-      'web services' => 'web services',
-    ),
-    'module' => 'restws',
-  );
-
   // Exported permission: 'access site in maintenance mode'.
   $permissions['access site in maintenance mode'] = array(
     'name' => 'access site in maintenance mode',
@@ -370,16 +350,6 @@ function os_user_default_permissions() {
       'manager' => 'manager',
     ),
     'module' => 'system',
-  );
-
-  // Exported permission: 'bypass node access'.
-  $permissions['bypass node access'] = array(
-    'name' => 'bypass node access',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'web services' => 'web services',
-    ),
-    'module' => 'node',
   );
 
   // Exported permission: 'cancel account'.
