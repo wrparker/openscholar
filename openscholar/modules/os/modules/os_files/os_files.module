@@ -2697,3 +2697,10 @@ function os_files_bulk_delete_remove_reference($form, $form_state) {
     batch_set($batch);
   }
 }
+
+/**
+ * Implements hook_file_delete().
+ */
+function os_files_file_delete($file) {
+  _os_file_invalidate_cache($file);
+}
