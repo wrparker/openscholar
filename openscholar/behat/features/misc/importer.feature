@@ -79,4 +79,5 @@ Feature: Testing the importer.
       And I attach the file "faq.csv" to "File"
      When I press "Submit"
      Then I should see "The value of the 'body' field can not be longer than '50' characters."
+      And I delete the variable "os_wysiwyg_maximum_length_body"
 
