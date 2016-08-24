@@ -18,7 +18,9 @@
     var iframes = document.querySelectorAll('iframe[src="'+data.url+'"]');
 
     for (i=0; i<iframes.length; i++) {
-      if (typeof data.width != 'undefined') {
+      if (typeof Drupal.settings.widget_max_width[i] != 'undefined' && Drupal.settings.widget_max_width[i] != '') {
+        iframes[i].width = Drupal.settings.widget_max_width[i];
+      } else if (typeof data.width != 'undefined') {
         iframes[i].width = data.width;
       }
       if (typeof data.height != 'undefined') {
@@ -26,5 +28,7 @@
       }
     }
   }
+
+  //$('section')
 
 })();

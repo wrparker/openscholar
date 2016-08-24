@@ -136,7 +136,12 @@ class os_boxes_media extends os_boxes_default {
             )
           );
         }
-        
+        $render['file']['#attached']['js'][] = array(
+            'type' => 'setting',
+            'data' => array(
+              'widget_max_width' => array($this->options['maxwidth'])
+            )
+          );
         // Removing embedded media title from render element.
         unset($render['file']['file-info']['title']);
         $block['content'] = drupal_render($render);
@@ -152,6 +157,7 @@ class os_boxes_media extends os_boxes_default {
         $this->set_cache($block['content']);
       }
     }
+
     return $block;
   }
 }
