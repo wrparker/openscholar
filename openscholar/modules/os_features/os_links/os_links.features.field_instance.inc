@@ -156,6 +156,79 @@ function os_links_field_default_field_instances() {
       'module' => 'link',
       'settings' => array(),
       'type' => 'link_field',
+      'weight' => 2,
+    ),
+  );
+
+  // Exported field_instance: 'node-link-field_open_this_link_in_a_new_ta'
+  $field_instances['node-link-field_open_this_link_in_a_new_ta'] = array(
+    'bundle' => 'link',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'Note: depending on the usage, may cause accessibility concerns. <a href="https://www.w3.org/TR/WCAG20-TECHS/G200.html" target="_blank">Learn more</a>.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 8,
+      ),
+      'links' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'no_image_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'sidebar_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'slide_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'title' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_open_this_link_in_a_new_ta',
+    'label' => 'Open this link in a new tab',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+      ),
+      'type' => 'options_onoff',
       'weight' => 1,
     ),
   );
@@ -276,6 +349,8 @@ function os_links_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Attach Files');
   t('Description');
+  t('Note: depending on the usage, may cause accessibility concerns. <a href="https://www.w3.org/TR/WCAG20-TECHS/G200.html" target="_blank">Learn more</a>.');
+  t('Open this link in a new tab');
   t('The web address of the link. Starts with: http://');
   t('URL (Web address)');
 
