@@ -167,9 +167,9 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Given /^I create a new "([^"]*)" with title "([^"]*)"$/
+   * @Given /^I create a new "([^"]*)" with title "([^"]*)" in the site "([^"]*)"$/
    */
-  public function iCreateANewWithTitle ($content_type, $title) {
+  public function iCreateANewWithTitle ($content_type, $title, $vsite_name) {
     $query = new EntityFieldQuery();
     $results = $query->entityCondition('entity_type', 'node')
                     ->propertyCondition('title', $title)
@@ -181,7 +181,54 @@ class FeatureContext extends DrupalContext {
     }
     $entity = $this->createEntity($type, $title);
 
+    // Set the group ref
+    $nid = FeatureHelp::getNodeId($vsite_name);
+    $wrapper->{OG_AUDIENCE_FIELD}->set(array($nid));
+    entity_save('node', $entity);
+  }
 
+  /**
+   * @Given /^I create a revision of "([^"]*)" where I change the "([^"]*)" to "([^"]*)"$/
+   */
+  public function iCreateARevisionOfWhereIChangeTheTo ($node_title, $field_name, $new_field_value) {
+    // grab first row returns when querying DB for node with the passed title
+    $query = db_select('node', 'n')
+            ->fields('n', array('nid', 'vid'))
+            ->condition('n.title', $node_title, '=');
+    $results = $query->execute()->fetchAllAssoc('nid');
+    list($nid => list($vid)) = array_pop($results);
+
+    $node = node_load($nid, $vid);
+    $wrapper = entity_metadata_wrapper('node', $node);
+    $wrapper->revision->set(TRUE);
+    $wrapper->is_current->set(TRUE);
+    $wrapper->status->set(1);
+    $wrapper->log->set("setting $field_name to '$new_field_value'");
+    $wrapper->revision_moderation->set(FALSE);
+    $wrapper->{$field_name}->set('value' => $new_field_value);
+    $wrapper->save();
+    $wrapper->delete();
+  }
+
+  /**
+   * @Then /^I should see "(\d+)" revisions for "([^"]*)"$/
+   */
+  public function iShouldSeeRevisionsFor($number_of_revisions, $node_title) {
+    $query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->fields('p', array('id','value'))
+      ->condition('n.title', $node_title, '=');
+    $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
+    $query->innerJoin('purl', 'p', 'p.id = ogm.gid')
+    $node_row = array_keys($query->execute()->fetchAllAssoc('nid'));
+    $url = "/" . $node_row['value'] . "/node/" . $node_row['nid'] . "/revisions";
+    $this->visit($url);
+
+    $query = "//div[@id='content']//table/tbody/tr";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $query);
+    if (count($elements) == $number_of_revisions) {
+      throw new Exception(sprintf("%s has %d revisions instead of %d.", $node_title, count($elements), $number_of_revisions));
+    }
   }
 
   /**
