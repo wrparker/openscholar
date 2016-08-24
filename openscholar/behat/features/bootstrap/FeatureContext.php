@@ -219,7 +219,7 @@ class FeatureContext extends DrupalContext {
       ->fields('p', array('id','value'))
       ->condition('n.title', $node_title, '=');
     $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
-    $query->innerJoin('purl', 'p', 'p.id = ogm.gid')
+    $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
     $node_row = array_keys($query->execute()->fetchAllAssoc('nid'));
     $url = "/" . $node_row['value'] . "/node/" . $node_row['nid'] . "/revisions";
     $this->visit($url);
