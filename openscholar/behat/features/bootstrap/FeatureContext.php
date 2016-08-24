@@ -200,36 +200,55 @@ class FeatureContext extends DrupalContext {
     $row = array_pop($results);
 
     $node = node_load($row->nid, $row->vid);
+
     $node->revision = TRUE;
     $node->is_current = TRUE;
     $node->status = 1;
     $node->log = "setting $field_name to '$new_field_value'";
     $node->revision_moderation = FALSE;
-    $node_save = node_save($node);
-    $wrapper = entity_metadata_wrapper('node', $node_save);
-    $wrapper->{$field_name}->value = $new_field_value;
-    $wrapper->save();
-    $wrapper->delete();
+    $node->{$field_name} = $new_field_value;
+    $node = node_submit($node);
+    node_save($node);
   }
 
   /**
-   * @Then /^I should see "(\d+)" revisions for "([^"]*)"$/
+   * @Then /^I should be able to see "(\d+)" revisions for "([^"]*)"$/
    */
-  public function iShouldSeeRevisionsFor($number_of_revisions, $node_title) {
+  public function iShouldBeAbleToSeeRevisionsFor($number_of_revisions, $node_title) {
     $query = db_select('node', 'n')
       ->fields('n', array('nid'))
       ->fields('p', array('id','value'))
       ->condition('n.title', $node_title, '=');
     $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
     $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
-    $node_row = array_keys($query->execute()->fetchAllAssoc('nid'));
-    $url = "/" . $node_row->value . "/node/" . $node_row->nid . "/revisions";
-    $this->visit($url);
+    $node_rows = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
 
-    $query = "//div[@id='content']//table/tbody/tr";
-    $elements = $this->getSession()->getPage()->findAll('xpath', $query);
-    if (count($elements) == $number_of_revisions) {
-      throw new Exception(sprintf("%s has %d revisions instead of %d.", $node_title, count($elements), $number_of_revisions));
+    if (!count($node_rows)) {
+      throw new Exception(sprintf("Could not find node with title of '%s'.", $node_title));
+    }
+    $node_row = array_pop($node_rows);
+
+    // check to make sure the "revisions" link is available on the node view page
+    $url = "/". $node_row['value'] . "/node/" . $node_row['nid'];
+    $this->visit($url);
+    $revisions_url = $url . "/revisions";
+    $xpath = "//div[@id='columns']//ul[contains(@class, 'contextual-links')]//a[contains(@href, '$revisions_url')]";
+
+    print "\nlooking for: " . $xpath . "\n";
+
+    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    if (!count($elements)) {
+      throw new Exception(sprintf("%s node page does not contain the 'revisions' contextual link.", $node_title, $url));
+    }
+
+    // check to see if the proper number of revision rows show up on the revisions page
+    $this->visit($revisions_url);
+    $xpath = "//div[@id='content']//table/tbody/tr";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    $actual_number_of_revisions = count(node_revision_list(node_load($node_row['nid'])));
+
+    if (($number_of_revisions != $actual_number_of_revisions) || (count($elements) != $number_of_revisions)) {
+      throw new Exception(sprintf("%s has %d revisions instead of %d.", $node_title, $actual_number_of_revisions, $number_of_revisions));
     }
   }
 
