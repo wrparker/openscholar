@@ -186,7 +186,7 @@ function vsite_access_cp_settings_node_submit($form, &$form_state) {
   $space = spaces_get_space();
   // Get the vsite_privacy value.
   if (isset($form_state['values']['vsite_private']) && $space) {
-    vsite_access_cp_settings_save('vsite_private', $form_state['values']['vsite_private']);
+    vsite_access_cp_settings_save($form_state['values']['vsite_private']);
   }
 }
 
