@@ -3377,7 +3377,7 @@ function vsite_rest_cp_settings_submit($value, $var) {
 
       $vsite = vsite_get_vsite();
       $vsite->group->title = $values['vsite_title'];
-      $vsite->group->field_meta_description = array(
+      $vsite->group->field_meta_description = $vsite->group->metatags = array(
         LANGUAGE_NONE => array(
           0 => array(
             'value' => $values['field_meta_description'],
@@ -3387,6 +3387,10 @@ function vsite_rest_cp_settings_submit($value, $var) {
       );
 
       node_save($vsite->group);
+
+      $cid_parts = _vsite_metatag_get_cid_parts($vsite);
+      $cid = metatag_cache_default_cid_parts($cid_parts);
+      cache_clear_all($cid, 'cache_metatag', TRUE);
 
       break;
   }
@@ -3702,7 +3706,7 @@ function vsite_redirect_parse_url_alter(&$parsed, $original_url) {
  * because the file field widget requires AJAX, which requires the form_state
  * to be modified. As of OpenScholar API version 7.x-3.10, we cannot modify
  * form_state in hook_cp_settings().
- */
+ *
 function vsite_form_cp_settings_form_alter(&$form, &$form_state, $form_id) {
   // Only continues if we have a purl (in order to save the favicon properly).
   if ( 1 || !($purl = vsite_get_purl()) || !$vsite = vsite_get_vsite()) {
