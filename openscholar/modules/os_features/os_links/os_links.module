@@ -127,6 +127,11 @@ function os_links_preprocess_node(&$variables) {
     return;
   }
 
+  if (($variables['field_open_this_link_in_a_new_ta'][LANGUAGE_NONE][0]['value'] == 1) &&
+      isset($variables['field_links_link'][LANGUAGE_NONE][0]['url'])) {
+    $variables['title'] = l($variables['title'], $variables['field_links_link'][LANGUAGE_NONE][0]['url'], array('attributes' => array("target" => '_blank')));
+  }
+
   if (empty($variables['sv_list']) || $variables['view_mode'] != 'full') {
     return;
   }
