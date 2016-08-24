@@ -483,16 +483,14 @@ form table .item-list ul {
 #devel-switch-user-form {
     margin-bottom: 0;
 }
-/* TINYMCE - WYSIWYG */
+/* CKEDITOR - WYSIWYG */
 
-body#tinymce,
-#tinymce {
-    background: #FFF;
-    font-size: initial;
-    height: 100%;
-    width: 98%;
-    margin: 0;
-    padding: 0 0 0 2%;
+body.cke_editable {
+    padding: 0 10px;
+}
+span.cke_button__break_icon {
+background-size: 20px;
+    width: 18px;
 }
 .tabledrag-toggle-weight-wrapper {
     display: none;
