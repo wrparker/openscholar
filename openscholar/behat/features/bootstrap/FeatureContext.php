@@ -179,10 +179,11 @@ class FeatureContext extends DrupalContext {
     if (!empty($results['node'])) {
       FeatureHelp::deleteNode($title);
     }
-    $entity = $this->createEntity($type, $title);
+    $entity = $this->createEntity($content_type, $title);
 
     // Set the group ref
     $nid = FeatureHelp::getNodeId($vsite_name);
+    $wrapper = entity_metadata_wrapper('node', $entity);
     $wrapper->{OG_AUDIENCE_FIELD}->set(array($nid));
     entity_save('node', $entity);
   }
@@ -196,16 +197,17 @@ class FeatureContext extends DrupalContext {
             ->fields('n', array('nid', 'vid'))
             ->condition('n.title', $node_title, '=');
     $results = $query->execute()->fetchAllAssoc('nid');
-    list($nid, $vid) = array_pop(array_pop($results));
+    $row = array_pop($results);
 
-    $node = node_load($nid, $vid);
-    $wrapper = entity_metadata_wrapper('node', $node);
-    $wrapper->revision->set(TRUE);
-    $wrapper->is_current->set(TRUE);
-    $wrapper->status->set(1);
-    $wrapper->log->set("setting $field_name to '$new_field_value'");
-    $wrapper->revision_moderation->set(FALSE);
-    $wrapper->{$field_name}->set(array('value' => $new_field_value));
+    $node = node_load($row->nid, $row->vid);
+    $node->revision = TRUE;
+    $node->is_current = TRUE;
+    $node->status = 1;
+    $node->log = "setting $field_name to '$new_field_value'";
+    $node->revision_moderation = FALSE;
+    $node_save = node_save($node);
+    $wrapper = entity_metadata_wrapper('node', $node_save);
+    $wrapper->{$field_name}->value = $new_field_value;
     $wrapper->save();
     $wrapper->delete();
   }
@@ -221,7 +223,7 @@ class FeatureContext extends DrupalContext {
     $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
     $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
     $node_row = array_keys($query->execute()->fetchAllAssoc('nid'));
-    $url = "/" . $node_row['value'] . "/node/" . $node_row['nid'] . "/revisions";
+    $url = "/" . $node_row->value . "/node/" . $node_row->nid . "/revisions";
     $this->visit($url);
 
     $query = "//div[@id='content']//table/tbody/tr";
