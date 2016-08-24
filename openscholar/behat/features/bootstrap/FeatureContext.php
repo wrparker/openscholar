@@ -2940,6 +2940,8 @@ class FeatureContext extends DrupalContext {
       catch (\Exception $e) {
 
       }
+
+      $this->takeScreenshotAfterFailedStep($event);
     }
   }
 
