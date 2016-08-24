@@ -207,7 +207,9 @@ function os_profiles_init() {
 
         if ($identical_photos) {
           // Delete the file.
-          file_delete(file_load($copy_file['file']->fid));
+          if ($delete_file = file_load($copy_file['file']->fid)) {
+            file_delete($delete_file, TRUE);
+          }
         }
 
         if (!$identical_photos && $copy_file['type'] == 'file') {
@@ -839,7 +841,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
   // Retrieve the file from the original node.
   $file = NULL;
   if (!empty($file_url)) {
-    if (!$vsite) {
+    if (empty($vsite)) {
       $vsite = vsite_get_vsite();
     }
     $copy_file = os_copy_file($file_url, FALSE, FALSE, $vsite->group->purl);

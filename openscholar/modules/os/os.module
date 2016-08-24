@@ -2686,11 +2686,18 @@ function os_copy_file($url, $exception = FALSE, $show_error = TRUE, $vsite = NUL
     return os_file_copy_set_error(t("The file directory is not wrietable. Please check her permission."), $exception, $show_error);
   }
 
-  if ($vsite) {
-    $vsite .= '/';
+  $path = 'public://';
+
+  if (!empty($vsite)) {
+    $path .= '/' . $vsite . '/files';
+
+    if (!file_exists(drupal_realpath($path))) {
+      // The directory does not exists. We need to create the directory.
+      drupal_mkdir(variable_get('file_public_path', 'sites/default/files') . '/' . $vsite . '/files', NULL, TRUE);
+    }
   }
 
-  if (!$file = system_retrieve_file($url, 'public://' . $vsite, TRUE)) {
+  if (!$file = system_retrieve_file($url, $path, TRUE)) {
     return os_file_copy_set_error(t('An error occurred due unknown reason.'), $exception, $show_error);
   }
 
