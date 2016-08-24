@@ -63,7 +63,7 @@ function iqss_scholars_front_default_box() {
 <ul><li><a href="profiles/openscholar/themes/custom/scholars_harvard/Info-sheet-Scholars-at-Harvard-H-2011.03.17.pdf">Fact Sheet (PDF)</a></li>
 <li><a href="http://player.vimeo.com/video/9887585?title=0&amp;byline=0&amp;portrait=0">Video Intro</a></li>
 </ul></div>
-<div class="os-featuredSites"><a href="/websites"><img src="/profiles/openscholar/themes/custom/scholars_harvard/images/featuredSites.png"></a></div>',
+<div class="os-featuredSites"><a href="/websites">Featured Sites</a></div>',
       'format' => 'filtered_html',
     ),
     'additional_classes' => '',
