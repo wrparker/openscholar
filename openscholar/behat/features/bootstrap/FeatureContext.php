@@ -463,7 +463,7 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @When /^I create a new "([^"]*)" with title "([^"]*)" in the site "([^"]*)"$/
+   * @When /^I create a new event "([^"]*)" with title "([^"]*)" in the site "([^"]*)"$/
    */
   public function iCreateANewEventWithTitle($type, $title, $vsite) {
     $tomorrow = time() + (24 * 60 * 60);
