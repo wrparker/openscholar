@@ -196,7 +196,7 @@ class FeatureContext extends DrupalContext {
             ->fields('n', array('nid', 'vid'))
             ->condition('n.title', $node_title, '=');
     $results = $query->execute()->fetchAllAssoc('nid');
-    list($nid => list($vid)) = array_pop($results);
+    list($nid, $vid) = array_pop(array_pop($results));
 
     $node = node_load($nid, $vid);
     $wrapper = entity_metadata_wrapper('node', $node);
