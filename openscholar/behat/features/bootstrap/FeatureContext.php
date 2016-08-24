@@ -285,6 +285,10 @@ class FeatureContext extends DrupalContext {
     $element = $this->getSession()->getPage();
     $url = $this->createGist($element->getContent());
     print_r('You asked to see the page content. Here is a gist contain the html: ' . $url . "\n");
+    $driver = $this->getSession()->getDriver();
+    $screenshot = $driver->getScreenshot();
+    $gistUrl = $this->createGist('<img src="data:image/png;base64,'.base64_encode($screenshot).'">');
+    print_r("Here is a screenshot of the page: $gistUrl\n");
   }
 
   /**
