@@ -106,6 +106,7 @@ dependencies[] = os_taxonomy
 dependencies[] = os_tour
 dependencies[] = os_wysiwyg
 dependencies[] = os_wysiwyg_link
+dependencies[] = admin_panel
 
 ; Control Panel
 dependencies[] = cp
