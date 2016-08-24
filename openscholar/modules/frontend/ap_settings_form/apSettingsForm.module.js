@@ -64,7 +64,7 @@
     this.SaveSettings = function (settings) {
       console.log(settings);
 
-      $http.put(baseUrl+'/settings', settings, config);
+      return $http.put(baseUrl+'/settings', settings, config);
     }
 
   }]);
@@ -154,8 +154,9 @@
     });
 
     function submitForm() {
-      apSettings.SaveSettings($s.formData);
-      $s.close(true);
+      apSettings.SaveSettings($s.formData).then(function () {
+        $s.close(true);
+      });
     }
     $s.submitForm = submitForm;
 
