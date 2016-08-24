@@ -205,7 +205,7 @@ class FeatureContext extends DrupalContext {
     $wrapper->status->set(1);
     $wrapper->log->set("setting $field_name to '$new_field_value'");
     $wrapper->revision_moderation->set(FALSE);
-    $wrapper->{$field_name}->set('value' => $new_field_value);
+    $wrapper->{$field_name}->set(array('value' => $new_field_value));
     $wrapper->save();
     $wrapper->delete();
   }
