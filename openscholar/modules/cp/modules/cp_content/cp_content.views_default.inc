@@ -759,79 +759,6 @@ function cp_content_views_default_views() {
   $handler->display->display_options['relationships']['file_to_node']['id'] = 'file_to_node';
   $handler->display->display_options['relationships']['file_to_node']['table'] = 'file_usage';
   $handler->display->display_options['relationships']['file_to_node']['field'] = 'file_to_node';
-  /* Field: File: File ID */
-  $handler->display->display_options['fields']['fid']['id'] = 'fid';
-  $handler->display->display_options['fields']['fid']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['fid']['field'] = 'fid';
-  $handler->display->display_options['fields']['fid']['label'] = '';
-  $handler->display->display_options['fields']['fid']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['fid']['element_label_colon'] = FALSE;
-  /* Field: File: Name */
-  $handler->display->display_options['fields']['filename']['id'] = 'filename';
-  $handler->display->display_options['fields']['filename']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['filename']['field'] = 'filename';
-  $handler->display->display_options['fields']['filename']['label'] = 'Display Name';
-  $handler->display->display_options['fields']['filename']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['filename']['alter']['word_boundary'] = FALSE;
-  $handler->display->display_options['fields']['filename']['alter']['ellipsis'] = FALSE;
-  $handler->display->display_options['fields']['filename']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['filename']['link_to_file'] = TRUE;
-  /* Field: File: Copy link */
-  $handler->display->display_options['fields']['os_files_copy_link_1']['id'] = 'os_files_copy_link_1';
-  $handler->display->display_options['fields']['os_files_copy_link_1']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['os_files_copy_link_1']['field'] = 'os_files_copy_link';
-  $handler->display->display_options['fields']['os_files_copy_link_1']['label'] = '';
-  $handler->display->display_options['fields']['os_files_copy_link_1']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['os_files_copy_link_1']['element_label_colon'] = FALSE;
-  /* Field: Global: Custom text */
-  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
-  $handler->display->display_options['fields']['nothing']['table'] = 'views';
-  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
-  $handler->display->display_options['fields']['nothing']['label'] = 'Link to share';
-  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[filename] [os_files_copy_link_1]';
-  $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
-  /* Field: File: Original Name */
-  $handler->display->display_options['fields']['filemime']['id'] = 'filemime';
-  $handler->display->display_options['fields']['filemime']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['filemime']['field'] = 'origname';
-  $handler->display->display_options['fields']['filemime']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['filemime']['file_size_display'] = 'bytes';
-  /* Field: File: Size */
-  $handler->display->display_options['fields']['filesize']['id'] = 'filesize';
-  $handler->display->display_options['fields']['filesize']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['filesize']['field'] = 'filesize';
-  $handler->display->display_options['fields']['filesize']['element_label_colon'] = FALSE;
-  /* Field: File: Upload date */
-  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['timestamp']['date_format'] = 'medium';
-  /* Field: File: Edit link */
-  $handler->display->display_options['fields']['edit']['id'] = 'edit';
-  $handler->display->display_options['fields']['edit']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['edit']['field'] = 'edit';
-  $handler->display->display_options['fields']['edit']['label'] = 'Edit';
-  $handler->display->display_options['fields']['edit']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['edit']['element_label_colon'] = FALSE;
-  /* Field: File: Delete link */
-  $handler->display->display_options['fields']['delete']['id'] = 'delete';
-  $handler->display->display_options['fields']['delete']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['delete']['field'] = 'delete';
-  $handler->display->display_options['fields']['delete']['label'] = 'Delete';
-  $handler->display->display_options['fields']['delete']['exclude'] = TRUE;
-  /* Field: File: Referencing content */
-  $handler->display->display_options['fields']['referencing_nodes']['id'] = 'referencing_nodes';
-  $handler->display->display_options['fields']['referencing_nodes']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['referencing_nodes']['field'] = 'referencing_nodes';
-  $handler->display->display_options['fields']['referencing_nodes']['label'] = 'Used in';
-  $handler->display->display_options['fields']['referencing_nodes']['element_label_colon'] = FALSE;
-  /* Field: Global: Custom text */
-  $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
-  $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
-  $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
-  $handler->display->display_options['fields']['nothing_1']['label'] = 'Manage';
-  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<a file-editor-modal fid="[fid]" href="#" views-close="reload(result)">Edit</a> [delete]';
   /* Field: Bulk operations: File */
   $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
   $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'file_managed';
@@ -927,6 +854,79 @@ function cp_content_views_default_views() {
       'label' => '',
     ),
   );
+  /* Field: File: File ID */
+  $handler->display->display_options['fields']['fid']['id'] = 'fid';
+  $handler->display->display_options['fields']['fid']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['fid']['field'] = 'fid';
+  $handler->display->display_options['fields']['fid']['label'] = '';
+  $handler->display->display_options['fields']['fid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['fid']['element_label_colon'] = FALSE;
+  /* Field: File: Name */
+  $handler->display->display_options['fields']['filename']['id'] = 'filename';
+  $handler->display->display_options['fields']['filename']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['filename']['field'] = 'filename';
+  $handler->display->display_options['fields']['filename']['label'] = 'Display Name';
+  $handler->display->display_options['fields']['filename']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['filename']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['filename']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['filename']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['filename']['link_to_file'] = TRUE;
+  /* Field: Broken/missing handler */
+  $handler->display->display_options['fields']['os_files_copy_link_1']['id'] = 'os_files_copy_link_1';
+  $handler->display->display_options['fields']['os_files_copy_link_1']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['os_files_copy_link_1']['field'] = 'os_files_copy_link';
+  $handler->display->display_options['fields']['os_files_copy_link_1']['label'] = '';
+  $handler->display->display_options['fields']['os_files_copy_link_1']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['os_files_copy_link_1']['element_label_colon'] = FALSE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['label'] = 'Link to share';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '[filename] [os_files_copy_link_1]';
+  $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
+  /* Field: File: Original Name */
+  $handler->display->display_options['fields']['filemime']['id'] = 'filemime';
+  $handler->display->display_options['fields']['filemime']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['filemime']['field'] = 'origname';
+  $handler->display->display_options['fields']['filemime']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['filemime']['file_size_display'] = 'bytes';
+  /* Field: File: Size */
+  $handler->display->display_options['fields']['filesize']['id'] = 'filesize';
+  $handler->display->display_options['fields']['filesize']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['filesize']['field'] = 'filesize';
+  $handler->display->display_options['fields']['filesize']['element_label_colon'] = FALSE;
+  /* Field: File: Upload date */
+  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['timestamp']['date_format'] = 'medium';
+  /* Field: File: Edit link */
+  $handler->display->display_options['fields']['edit']['id'] = 'edit';
+  $handler->display->display_options['fields']['edit']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['edit']['field'] = 'edit';
+  $handler->display->display_options['fields']['edit']['label'] = 'Edit';
+  $handler->display->display_options['fields']['edit']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['edit']['element_label_colon'] = FALSE;
+  /* Field: File: Delete link */
+  $handler->display->display_options['fields']['delete']['id'] = 'delete';
+  $handler->display->display_options['fields']['delete']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['delete']['field'] = 'delete';
+  $handler->display->display_options['fields']['delete']['label'] = 'Delete';
+  $handler->display->display_options['fields']['delete']['exclude'] = TRUE;
+  /* Field: File: Referencing content */
+  $handler->display->display_options['fields']['referencing_nodes']['id'] = 'referencing_nodes';
+  $handler->display->display_options['fields']['referencing_nodes']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['referencing_nodes']['field'] = 'referencing_nodes';
+  $handler->display->display_options['fields']['referencing_nodes']['label'] = 'Used in';
+  $handler->display->display_options['fields']['referencing_nodes']['element_label_colon'] = FALSE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
+  $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_1']['label'] = 'Manage';
+  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<a file-editor-modal fid="[fid]" href="#" views-close="reload(result)">Edit</a> [delete]';
   $handler->display->display_options['filter_groups']['groups'] = array(
     1 => 'AND',
     2 => 'OR',
