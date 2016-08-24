@@ -29,6 +29,7 @@ Feature: Media Browser
     Given I am logging in as "john"
       And I wait for page actions to complete
       And I edit the node "About" in the group "john"
+      And I print page screen shot
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
