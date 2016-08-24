@@ -126,6 +126,7 @@ script:
   - export DISPLAY=:99.0
   - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
 #  - DISPLAY=:1 xvfb-run
+  - sudo npm install -g phantomjs@2.1.1
   - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
   - sleep 5
 
