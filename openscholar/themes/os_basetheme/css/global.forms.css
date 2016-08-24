@@ -485,13 +485,6 @@ form table .item-list ul {
 }
 /* CKEDITOR - WYSIWYG */
 
-body.cke_editable {
-    padding: 0 10px;
-}
-span.cke_button__break_icon {
-background-size: 20px;
-    width: 18px;
-}
 .tabledrag-toggle-weight-wrapper {
     display: none;
 }
