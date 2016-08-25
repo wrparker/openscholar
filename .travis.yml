@@ -120,12 +120,18 @@ before_script:
 script:
 
   # Run selenium.
-  - sudo apt-get install xvfb -y
-  - sudo apt-get install openjdk-7-jre-headless -y
-  - sh -e /etc/init.d/xvfb start
-  - export DISPLAY=:99.0
-  - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
+#  - sudo apt-get install xvfb -y
+#  - sudo apt-get install openjdk-7-jre-headless -y
+#  - sh -e /etc/init.d/xvfb start
+#  - export DISPLAY=:99.0
+#  - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
 #  - DISPLAY=:1 xvfb-run
+  # Install node and npm.
+  - sudo apt-get install nodejs
+  - sudo apt-get install npm
+  - sudo ln -s /usr/bin/nodejs /usr/bin/node
+  - node -v
+  - npm -v
   - sudo npm install -g phantomjs@2.1.1
   - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
   - sleep 5
