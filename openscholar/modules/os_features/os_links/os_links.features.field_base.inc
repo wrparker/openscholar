@@ -40,13 +40,13 @@ function os_links_field_default_field_bases() {
     'type' => 'link_field',
   );
 
-  // Exported field_base: 'field_open_this_link_in_a_new_ta'
-  $field_bases['field_open_this_link_in_a_new_ta'] = array(
+  // Exported field_base: 'field_open_link_in_new_tab'
+  $field_bases['field_open_link_in_new_tab'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
-    'field_name' => 'field_open_this_link_in_a_new_ta',
+    'field_name' => 'field_open_link_in_new_tab',
     'foreign keys' => array(),
     'indexes' => array(
       'value' => array(

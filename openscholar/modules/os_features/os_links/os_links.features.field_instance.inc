@@ -160,8 +160,8 @@ function os_links_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-link-field_open_this_link_in_a_new_ta'
-  $field_instances['node-link-field_open_this_link_in_a_new_ta'] = array(
+  // Exported field_instance: 'node-link-field_open_link_in_new_tab'
+  $field_instances['node-link-field_open_link_in_new_tab'] = array(
     'bundle' => 'link',
     'default_value' => array(
       0 => array(
@@ -216,7 +216,7 @@ function os_links_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_open_this_link_in_a_new_ta',
+    'field_name' => 'field_open_link_in_new_tab',
     'label' => 'Open this link in a new tab',
     'required' => 0,
     'settings' => array(
