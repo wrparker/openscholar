@@ -254,9 +254,6 @@ a img {
 .block-boxes-os_sv_list_file .file-info iframe {
     display: block;
 }
-.block-boxes-os_boxes_media .file-html-embed img.file-icon {
-    display: none;
-}
 .block-boxes-os_sv_list_file .read-more {
     margin-left: 5px;
     font-size: 13px;
