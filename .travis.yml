@@ -37,10 +37,11 @@ before_script:
   - "gem install travis-artifacts"
 
   # Install node and npm.
-  - sudo apt-get remove --purge node
-  - sudo apt-get remove --purge npm
+  - sudo apt-get purge nodejs npm
+  - curl -sL https://deb.nodesource.com/setup | sudo bash -
   - sudo apt-get install nodejs
   - sudo apt-get install npm
+  - npm config set registry https://registry.npmjs.org/
   - node -v
   - npm -v
   - sudo npm install -g npm@'>=3'
