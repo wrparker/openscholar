@@ -36,6 +36,20 @@ before_script:
   - rvm 2.2.5 do gem install mime-types -v 2.6.2
   - "gem install travis-artifacts"
 
+  # Install node and npm.
+  - sudo apt-get remove --purge node
+  - sudo apt-get remove --purge npm
+  - sudo apt-get install nodejs
+  - sudo apt-get install npm
+  - node -v
+  - npm -v
+  - sudo npm install -g npm@'>=3'
+  - node -v
+  - npm -v
+  - sudo npm install -g phantomjs@2.1.7
+  - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
+  - sleep 5
+
   # Install apache
   - sudo apt-get update
   - sudo apt-get install apache2
@@ -118,21 +132,6 @@ before_script:
   - sudo cat /var/log/apache2/error.log
 
 script:
-
-  # Run selenium.
-#  - sudo apt-get install xvfb -y
-#  - sudo apt-get install openjdk-7-jre-headless -y
-#  - sh -e /etc/init.d/xvfb start
-#  - export DISPLAY=:99.0
-#  - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
-#  - DISPLAY=:1 xvfb-run
-  # Install node and npm.
-  - sudo npm install -g npm@'>=3'
-  - node -v
-  - npm -v
-  - sudo npm install -g phantomjs@2.1.7
-  - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
-  - sleep 5
 
   - ./bin/behat --tags=$TEST_SUITE
 
