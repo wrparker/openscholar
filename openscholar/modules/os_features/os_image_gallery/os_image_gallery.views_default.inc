@@ -68,10 +68,6 @@ function os_image_gallery_views_default_views() {
   $handler->display->display_options['fields']['media_gallery_description']['table'] = 'field_data_media_gallery_description';
   $handler->display->display_options['fields']['media_gallery_description']['field'] = 'media_gallery_description';
   $handler->display->display_options['fields']['media_gallery_description']['label'] = '';
-  $handler->display->display_options['fields']['media_gallery_description']['alter']['word_boundary'] = FALSE;
-  $handler->display->display_options['fields']['media_gallery_description']['alter']['ellipsis'] = FALSE;
-  $handler->display->display_options['fields']['media_gallery_description']['alter']['more_link_text'] = 'Read more';
-  $handler->display->display_options['fields']['media_gallery_description']['alter']['more_link_path'] = 'node/[nid]';
   $handler->display->display_options['fields']['media_gallery_description']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['media_gallery_description']['hide_empty'] = TRUE;
   $handler->display->display_options['fields']['media_gallery_description']['type'] = 'os_text_trimmed';
@@ -226,16 +222,6 @@ function os_image_gallery_views_default_views() {
   $handler->display->display_options['fields']['filename']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['filename']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['filename']['link_to_file'] = TRUE;
-  /* Field: Content: Nid */
-  $handler->display->display_options['fields']['nid']['id'] = 'nid';
-  $handler->display->display_options['fields']['nid']['table'] = 'node';
-  $handler->display->display_options['fields']['nid']['field'] = 'nid';
-  $handler->display->display_options['fields']['nid']['relationship'] = 'file_to_node';
-  $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['nid']['spaces'] = array(
-    'type' => 'spaces_og',
-    'frontpage' => 0,
-  );
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title_1']['id'] = 'title_1';
   $handler->display->display_options['fields']['title_1']['table'] = 'node';

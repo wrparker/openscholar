@@ -3632,5 +3632,4 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
   }
 
   return $element;
-
 }
