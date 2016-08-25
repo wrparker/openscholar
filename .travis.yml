@@ -132,7 +132,7 @@ script:
   - sudo ln -s /usr/bin/nodejs /usr/bin/node
   - node -v
   - npm -v
-  - sudo npm install -g phantomjs@2.1.1
+  - sudo npm install -g phantomjs@2.1.7
   - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
   - sleep 5
 
