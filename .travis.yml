@@ -127,6 +127,8 @@ script:
 #  - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
 #  - DISPLAY=:1 xvfb-run
   # Install node and npm.
+  - sudo apt-get remove --purge node
+  - sudo apt-get remove --purge npm
   - sudo apt-get install nodejs
   - sudo apt-get install npm
   - sudo ln -s /usr/bin/nodejs /usr/bin/node
