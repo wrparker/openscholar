@@ -3248,7 +3248,17 @@ class FeatureContext extends DrupalContext {
   public function iPrintPageScreenShot() {
     $driver = $this->getSession()->getDriver();
     $screenshot = $driver->getScreenshot();
-    print_r($this->createGist(base64_encode($screenshot)));
+
+    $client_id = 'f10ef45787db6fc';
+
+    $request = $this->invokeRestRequest('post', 'https://api.imgur.com/3/image.json',
+      ['Authorization' => 'Client-ID ' . $client_id],
+      ['image' => base64_encode($screenshot)]
+    );
+
+    $json = $request->json();
+
+    print_r($json['data']['link']);
   }
 
 }
