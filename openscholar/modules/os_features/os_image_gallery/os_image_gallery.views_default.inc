@@ -74,7 +74,7 @@ function os_image_gallery_views_default_views() {
   $handler->display->display_options['fields']['media_gallery_description']['alter']['more_link_path'] = 'node/[nid]';
   $handler->display->display_options['fields']['media_gallery_description']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['media_gallery_description']['hide_empty'] = TRUE;
-  $handler->display->display_options['fields']['media_gallery_description']['type'] = 'os_image_gallery_trim_text';
+  $handler->display->display_options['fields']['media_gallery_description']['type'] = 'os_text_trimmed';
   $handler->display->display_options['fields']['media_gallery_description']['settings'] = array(
     'trim_length' => '600',
   );

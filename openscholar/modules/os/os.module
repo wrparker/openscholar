@@ -3544,7 +3544,7 @@ function check_os_session_status() {
   exit();
 }
 
-/*
+/**
  * Implements hook_views_pre_view
  */
 function os_views_pre_view($view, &$display_id, &$args) {
@@ -3553,4 +3553,84 @@ function os_views_pre_view($view, &$display_id, &$args) {
   if ($display_id == "news_by_month_block") {
     $args = "";
   }
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function os_field_formatter_info() {
+  return array(
+    'os_text_trimmed' => array(
+      'label' => t('OS trim text'),
+      'field types' => array('text', 'text_long', 'text_long', 'text_with_summary'),
+      'settings' => array('trim_length' => 600),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function os_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $element = array();
+
+  if ($display['type'] == 'os_text_trimmed') {
+    $element['trim_length'] = array(
+      '#title' => t('Length'),
+      '#type' => 'textfield',
+      '#size' => 20,
+      '#default_value' => $settings['trim_length'],
+      '#element_validate' => array('element_validate_integer_positive'),
+      '#required' => TRUE,
+    );
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function os_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $summary = '';
+
+  if (strpos($display['type'], 'os_text_trimmed') !== FALSE) {
+    $summary = t('Trimmed limit: @trim_length characters', array('@trim_length' => $settings['trim_length']));
+  }
+
+  return $summary;
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function os_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+
+  switch ($display['type']) {
+
+    case 'os_text_trimmed':
+
+      foreach ($items as $delta => $item) {
+        $text = text_summary($items[0]['value'], $item['format'], $display['settings']['trim_length']);
+
+        if (strlen($item['value']) != strlen($text)) {
+          $uri = entity_uri($entity_type, $entity);
+          $text .= '… ' . l(t('Read more'), $uri['path']);
+        }
+
+        $element[$delta] = array('#markup' => $text);
+      }
+
+      break;
+  }
+
+  return $element;
+
 }
