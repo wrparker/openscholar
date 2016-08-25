@@ -432,3 +432,21 @@ function os_image_gallery_remove_item_form_submit($form, &$form_state) {
   // Adding self reference for the file in file_usage table to prevent file deletion.
   file_usage_add($file, 'media', 'file', $file->fid);
 }
+
+/**
+ * Implements hook_views_pre_view() for os_image_gallery view.
+ */
+function os_image_gallery_views_pre_view(&$view, &$display_id, &$args) {
+  if ($view->name == 'os_image_gallery' && variable_get('os_taxonomy_display_term_under_content_media_gallery', 0)) {
+    $view->add_item($view->current_display, 'field', 'field_data_og_vocabulary', 'og_vocabulary', array(
+      'table' => 'field_data_og_vocabulary',
+      'label' => '',
+      'type'  => 'og_vocab',
+      'alter' => array('text' => ''),
+      'element_class' => 'field-name-og-vocabulary',
+      'element_default_classes' => 1,
+      'settings' => array('concatenate' => 1),
+    ), 'og_vocabulary');
+    drupal_add_js(drupal_get_path('module', 'os').'/theme/os_toggle.js');
+  }
+}
