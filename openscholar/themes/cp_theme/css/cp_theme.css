@@ -1077,6 +1077,15 @@ div.error:before {
     font-weight: normal;
     height: 23px;
 }
+ul.pager > li:hover {
+    background-color:#efefef;
+
+}
+
+ul.pager > li a:hover {
+    text-decoration:none;
+
+}
 li.pager-previous + li.pager-ellipsis {
     display: none;
 }

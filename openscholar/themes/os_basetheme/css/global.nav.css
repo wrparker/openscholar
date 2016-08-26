@@ -204,6 +204,19 @@ ul.pager li.pager-current {
 .block ul.pager li {
     margin: 0;
 }
+
+ul.pager > li:hover {
+    background-color:#efefef;
+
+}
+
+ul.pager > li a:hover {
+    text-decoration:none;
+
+}
+
+
+
 li.pager-previous + li.pager-ellipsis {
     display: none;
 }
