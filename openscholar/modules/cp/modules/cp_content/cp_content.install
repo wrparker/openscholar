@@ -54,6 +54,6 @@ function cp_content_update_7006() {
 /**
  * Revert view.
  */
-function cp_content_update_7006() {
+function cp_content_update_7007() {
   features_revert(array('cp_content' => array('views_view')));
 }
