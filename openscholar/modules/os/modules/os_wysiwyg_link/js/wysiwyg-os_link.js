@@ -92,6 +92,11 @@ Drupal.wysiwyg.plugins.os_link = {
       $('#edit-target-option', doc).prop('checked', 'checked');
     }
 
+    // If the link has a title attribute
+    if (selection.node.getAttribute('title') != '') {
+      $('#edit-link-title', doc).val(selection.node.getAttribute('title'));
+    }
+
     $('.insert-buttons input[value="Insert"]', doc).click(function (e) {
       $('.vertical-tabs .vertical-tabs-pane:visible .form-actions input[value="Insert"]', doc).click();
 
