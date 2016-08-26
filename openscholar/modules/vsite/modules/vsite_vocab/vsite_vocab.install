@@ -4,6 +4,9 @@
  * Implements hook_install().
  */
 function vsite_vocab_install() {
+
+  drupal_static_reset('og_fields_info');
+
   //Get the weight of og_vocab
   $weight = db_query("SELECT weight FROM {system} WHERE type = 'module' AND name = 'og_vocab' ")->fetchField();
   $weight ++;
