@@ -1077,3 +1077,6 @@ div.error:before {
     font-weight: normal;
     height: 23px;
 }
+.file img.file-icon {
+    width:16px;
+}
