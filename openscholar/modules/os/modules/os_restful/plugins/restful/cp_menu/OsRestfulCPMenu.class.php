@@ -284,7 +284,6 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     foreach ($settings_forms as $f) {
       $group = $f['group']['#title'];
       $id = $f['group']['#id'];
-      if ($id == 'ga') continue;  // this form is hard-coded into the menu tree
 
       if (!isset($f['form']['#access']) || $f['form']['#access']) {
         $settings_links[$id] = array(
@@ -389,14 +388,6 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'type' => 'heading',
         'default_state' => 'collapsed',
         'children' => array(
-          'analytics' => array(
-            'label' => 'Analytics',
-            'type' => 'directive',
-            'directive' => array(
-              'ap-settings-form',
-              'form' => 'ga',
-            )
-          ),
           'app' => array(
             'label' => 'Enable Apps',
             'type' => 'link',
