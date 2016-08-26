@@ -244,13 +244,12 @@ a img {
 .block-boxes-os_sv_list_file .file img.file-icon {
     display: inline;
 }
-.block .file img.file-icon,
-.block .file .file-info img.file-icon,
-.field-type-file .file-list-single img,
-.biblio_file_links img.file-icon,
-.node-inner .field-type-file img.file-icon {
+img.file-icon {
 	width:16px;
-	}
+}
+.media-gallery-media-item-thumbnail img.file-icon {
+    width: 100%;
+}
 .block-boxes-os_sv_list_file .file-info iframe {
     display: block;
 }
