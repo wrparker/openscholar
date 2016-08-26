@@ -216,6 +216,7 @@
         form_id = form_id_input != null ? form_id_input.value: "";
 
         if (!form_id) {
+          new_form = true;
           return;
         }
 
