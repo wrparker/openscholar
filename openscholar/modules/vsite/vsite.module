@@ -3521,15 +3521,17 @@ function vsite_og_permission_alter(&$perms) {
  */
 function vsite_og_role_change_permissions($role, $grant, $revoke) {
   $content_types = og_get_all_group_content_bundle('node');
-  foreach ($content_types as $k => $v) {
-    $plist = array();
-    $plist[] = 'create '.$k.' content';
-    $plist[] = 'update own '.$k.' content';
-    $plist[] = 'update any '.$k.' content';
-    foreach ($plist as $p) {
-      if (isset($grant[$p])) {
-        og_role_grant_permissions($role->rid, array('create files', 'add media from remote sources', 'edit any files', 'delete any files'));
-        return;
+  if (is_array($content_types)) {
+    foreach ($content_types as $k => $v) {
+      $plist = array();
+      $plist[] = 'create ' . $k . ' content';
+      $plist[] = 'update own ' . $k . ' content';
+      $plist[] = 'update any ' . $k . ' content';
+      foreach ($plist as $p) {
+        if (isset($grant[$p])) {
+          og_role_grant_permissions($role->rid, array('create files', 'add media from remote sources', 'edit any files', 'delete any files'));
+          return;
+        }
       }
     }
   }
