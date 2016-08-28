@@ -1552,7 +1552,8 @@ function os_publications_restore_field($field_name, $publication_name, array $se
 
   if (!$fid = key($field_id)) {
     $args['@name'] = $field_name;
-    throw new \Exception(t('The field @name was not found', $args));
+    drupal_set_message(t('The field @name was not found', $args), 'error');
+    return;
   }
 
   $working_type_id = db_select('biblio_types', 'bt')
@@ -1562,8 +1563,9 @@ function os_publications_restore_field($field_name, $publication_name, array $se
     ->fetchAllKeyed();
 
   if (!$tid = key($working_type_id)) {
-    $args['@name'] = $field_name;
-    throw new \Exception(t('The biblio type @name was not found', $args));
+    $args['@name'] = $publication_name;
+    drupal_set_message(t('The biblio type @name was not found', $args), 'error');
+    return;
   }
 
   $field_exists = db_select('biblio_field_type', 'bft')

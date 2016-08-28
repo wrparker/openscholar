@@ -488,7 +488,7 @@ class FeatureHelp {
    */
   static public function getNodeIdInVsite($title, $vsite) {
     $gid = self::GetNodeId($vsite, TRUE);
-    $query = new entityFieldQuery();
+    $query = new \entityFieldQuery();
     $result = $query
       ->entityCondition('entity_type', 'node')
       ->propertyCondition('title', $title)
@@ -995,6 +995,32 @@ class FeatureHelp {
     }
 
     return array_keys($result['file']);
+  }
+
+  /**
+   * Return list of watchdog messages.
+   */
+  public static function DisplayWatchdogs() {
+    $query = db_select('watchdog', 'w');
+    $result = $query
+      ->fields('w', array('wid', 'uid', 'severity', 'type', 'timestamp', 'message', 'variables', 'link'))
+      ->orderBy('w.timestamp', 'DESC')
+      ->range(0, 200)
+      ->execute();
+
+    $messages = [];
+    foreach ($result as $dblog) {
+      $params = unserialize($dblog->variables);
+
+      if (!is_array($params)) {
+        $params = [];
+      }
+
+      $string = format_string($dblog->message, $params);
+      $messages[] = strip_tags($string);
+    }
+
+    return $messages;
   }
 
 }

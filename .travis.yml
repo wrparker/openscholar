@@ -27,11 +27,11 @@ env:
     - TEST_SUITE=taxonomy
     - TEST_SUITE=vsite
     - TEST_SUITE=widgets
-    - TEST_SUITE=media_browser
+#    - TEST_SUITE=media_browser
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  - composer global require drush/drush:7.0
+  - composer global require drush/drush:8.0.5
   - rvm 2.2.5 do gem install net-ssh -v 2.9.2
   - rvm 2.2.5 do gem install mime-types -v 2.6.2
   - "gem install travis-artifacts"
@@ -104,6 +104,7 @@ before_script:
   - drush en os_search_solr -y
   - drush solr-mark-all
   - drush solr-index
+  - drush vset oembedembedly_api_key $EMBEDLYAPIKEY
 
   # Trying to execute the internal solr commit
   - sleep 10
@@ -116,16 +117,16 @@ before_script:
   - php composer.phar install --prefer-source
   - sudo cat /var/log/apache2/error.log
 
-  # Other
-  - drush vset oembedembedly_api_key $EMBEDLYAPIKEY
-
 script:
 
   # Run selenium.
+  - sudo apt-get install xvfb -y
+  - sudo apt-get install openjdk-7-jre-headless -y
   - sh -e /etc/init.d/xvfb start
   - export DISPLAY=:99.0
-  - wget http://selenium-release.storage.googleapis.com/2.47/selenium-server-standalone-2.47.0.jar
-  - nohup bash -c "java -jar selenium-server-standalone-2.47.0.jar -p 4444 2>&1 &"
+  - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
+#  - DISPLAY=:1 xvfb-run
+  - nohup java -jar selenium-server-standalone-2.53.0.jar -p 4444 &
   - sleep 5
 
   - ./bin/behat --tags=$TEST_SUITE
