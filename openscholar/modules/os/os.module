@@ -3610,9 +3610,13 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
     case 'os_text_trimmed':
 
       foreach ($items as $delta => $item) {
-        $text = text_summary($items[0]['value'], $item['format'], $display['settings']['trim_length']);
+        $text = text_summary($item['value'], $item['format'], $display['settings']['trim_length']);
+        $delimiter = strpos($item['value'], '<!--break-->');
 
-        if (strlen($item['value']) != strlen($text)) {
+        // Check the if the text was trimmed and we don't have the break tag.
+        // The break tag will be handled in another place thus give us two
+        // 'Read more' links.
+        if (strlen($item['value']) != strlen($text) && $delimiter === FALSE) {
           $uri = entity_uri($entity_type, $entity);
           $text .= '… ' . l(t('Read more'), $uri['path']);
         }
