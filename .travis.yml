@@ -138,7 +138,7 @@ before_script:
   - export DISPLAY=:99.0
   - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
 #  - DISPLAY=:1 xvfb-run
-  - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
+  - nohup java -jar selenium-server-standalone-2.53.0.jar -p 4444 &
   - sleep 5
 
 script:
