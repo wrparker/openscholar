@@ -36,19 +36,19 @@ before_script:
   - rvm 2.2.5 do gem install mime-types -v 2.6.2
   - "gem install travis-artifacts"
 
-  # Install node and npm.
-  - sudo apt-get purge nodejs npm
-  - sudo apt-get install nodejs
-  - sudo apt-get install npm
-  - npm config set registry https://registry.npmjs.org/
-  - node -v
-  - npm -v
-  - sudo npm install -g npm@'>=3'
-  - node -v
-  - npm -v
-  - sudo npm install -g phantomjs@2.1.7
-  - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
-  - sleep 5
+#  # Install node and npm.
+#  - sudo apt-get purge nodejs npm
+#  - sudo apt-get install nodejs
+#  - sudo apt-get install npm
+#  - npm config set registry https://registry.npmjs.org/
+#  - node -v
+#  - npm -v
+#  - sudo npm install -g npm@'>=3'
+#  - node -v
+#  - npm -v
+#  - sudo npm install -g phantomjs@2.1.7
+#  - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
+#  - sleep 5
 
   # Install apache
   - sudo apt-get update
@@ -130,6 +130,16 @@ before_script:
   - curl -s https://getcomposer.org/installer | php
   - php composer.phar install --prefer-source
   - sudo cat /var/log/apache2/error.log
+
+  # Run selenium.
+  - sudo apt-get install xvfb -y
+  - sudo apt-get install openjdk-7-jre-headless -y
+  - sh -e /etc/init.d/xvfb start
+  - export DISPLAY=:99.0
+  - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
+#  - DISPLAY=:1 xvfb-run
+  - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
+  - sleep 5
 
 script:
 
