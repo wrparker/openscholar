@@ -2662,7 +2662,34 @@ function os_files_views_bulk_operations_form_alter(&$form, &$form_state, $vbo) {
  * reference for the files.
  */
 function os_files_bulk_delete_remove_reference($form, $form_state) {
-  $files = file_load_multiple($form_state['selection']);
+
+  $submits = array_diff($form['actions']['submit']['#submit'], array('os_files_bulk_delete_remove_reference'));
+  if (isset($form_state['select_all_pages']) && $form_state['select_all_pages'] == 1) {
+    // If all files are selected
+    $all = views_get_view($form_state['build_info']['args'][0]->name);
+    $all->display['default']->display_options['pager'] = array(
+      'type' => 'none',
+      'options' => array(
+        'offset' => 0,
+      ),
+    );
+    $all->set_display('all_pager_display');
+    $all->display[$all->current_display]->display_options['pager'] = array(
+      'type' => 'none',
+      'options' => array(
+        'offset' => 0,
+      ),
+    );
+    $all->pre_execute();
+    $all->execute();
+    $fids = array();
+    foreach ($all->result as $result) {
+      $fids[] = (int) $result->fid;
+    }
+    $files = file_load_multiple($fids);
+  } else {
+    $files = file_load_multiple($form_state['selection']);
+  }
 
   foreach ($files as $file) {
     $usage = file_usage_list($file);
@@ -2685,6 +2712,11 @@ function os_files_bulk_delete_remove_reference($form, $form_state) {
     }
   }
   if (count($operations) > 0) {
+    foreach ($submits as $f) {
+      if (function_exists($f)) {
+        $operations[] = array($f, array($form, $form_state));
+      }
+    }
     $batch = array(
       'operations' => $operations,
       'finished' => 'os_files_delete_remove_reference_finished',
