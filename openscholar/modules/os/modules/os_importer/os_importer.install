@@ -29,3 +29,10 @@ function os_importer_update_7001(&$sandbox) {
     features_revert($feature, array('feeds_tamper'));
   }
 }
+
+/**
+ * Override FeedsSource with OsFeedsSource in order to add a batch 'finished' call back function
+ */
+function os_importer_update_7002() {
+  variable_set('feeds_source_class', 'OsFeedsSource');
+}
