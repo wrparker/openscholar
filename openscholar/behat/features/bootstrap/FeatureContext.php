@@ -233,9 +233,6 @@ class FeatureContext extends DrupalContext {
     $this->visit($url);
     $revisions_url = $url . "/revisions";
     $xpath = "//div[@id='columns']//ul[contains(@class, 'contextual-links')]//a[contains(@href, '$revisions_url')]";
-
-    print "\nlooking for: " . $xpath . "\n";
-
     $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
     if (!count($elements)) {
       throw new Exception(sprintf("%s node page does not contain the 'revisions' contextual link.", $node_title, $url));
@@ -3110,7 +3107,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iRunTheReportWithSetToAndCheckboxesSelected($report, $fieldName, $fieldValue, TableNode $table) {
     $steps = array();
-    $steps[] = new Step\When('I visit "admin/reports/os/' . $report . '"');
+    $steps[] = new Step\When('I visit "admin/reports/os/' . $report . '"');fo
     $steps[] = new Step\When('I fill in "' . $fieldName . '" with "' . $fieldValue. '"');
     $table_rows = $table->getRows();
     // Iterate over each row, just so if there's an error we can supply
