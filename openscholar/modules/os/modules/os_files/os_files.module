@@ -1327,6 +1327,7 @@ function os_files_imagefield_crop_process($element, $form_state, $form) {
   }
 
   unset($element['upload']);
+  unset($element['filename']);
   $element['upload_button']['#submit'] = array(
     'os_files_no_func'
   );
@@ -1634,19 +1635,22 @@ function os_files_file_view($file, $view_mode, $langcode) {
   );
 
   //icon, title, download
-  $content = array(
-    'file-info' => array(
-      '#prefix' => '<div class="file-info">',
-      '#suffix' => '</div>',
-      'icon' => $icon,
-      'title' => array(
-        '#theme' => 'link',
-        '#path' => 'file/' . $file->fid,
-        '#text' => $file->filename,
-        '#options' => array('attributes' => array('class' => array('entity-link')), 'html' => FALSE),
+  $content = array();
+  if ((!isset($file->oembed) || !$file->oembed) && $file->filemime != 'html/embed') {
+    $content = array(
+      'file-info' => array(
+        '#prefix' => '<div class="file-info">',
+        '#suffix' => '</div>',
+        'icon' => $icon,
+        'title' => array(
+          '#theme' => 'link',
+          '#path' => 'file/' . $file->fid,
+          '#text' => $file->filename,
+          '#options' => array('attributes' => array('class' => array('entity-link')), 'html' => FALSE),
+        ),
       ),
-    ),
-  );
+    );
+  }
 
   // HTML embeded files will not have any Download link.
   if ((!isset($file->oembed) || !$file->oembed) && $file->filemime != 'html/embed') {

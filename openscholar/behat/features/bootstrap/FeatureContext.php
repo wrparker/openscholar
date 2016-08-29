@@ -995,6 +995,13 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @When /^I delete the variable "([^"]*)"$/
+   */
+  public function iDeleteVariable($variable) {
+    variable_del($variable);
+  }
+
+  /**
    * @Then /^I should see a pager$/
    */
   public function iShouldSeeAPager() {
