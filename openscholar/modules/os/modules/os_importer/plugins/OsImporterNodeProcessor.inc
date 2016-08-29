@@ -97,10 +97,12 @@ class OsImporterNodeProcessor extends FeedsNodeProcessor {
 
     try {
       node_save($entity);
-      $batch['sets'][0]['results'][] = $entity->nid;
+      $batch['sets'][0]['results']['nodes_inserted'][] = $entity->nid;
     }
     catch (Exception $e) {
       $batch['sets'][0]['results']['node_save_failed'] = TRUE;
+      $batch['sets'][0]['results']['node_save_failed_message'] =
+          ($e->getMessage()) ? $e->getMessage() : "No exception message available";
     }
   }
 }

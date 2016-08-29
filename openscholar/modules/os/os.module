@@ -3547,11 +3547,20 @@ function os_views_pre_view($view, &$display_id, &$args) {
   }
 }
 
-function os_batch_finished_callback($a, $results, $c, $d, $e, $f, $g) {
+/*
+ * 'finished' callback for os_importer batch processing (see @file OsFeedsSource.inc)
+ *
+ * If any of the calls to `node_save` didn't succeed, we will delete all newly inserted nodes
+ * in the current batch process.  This is a hacky way of keeping batch imports ACID
+ * (atomic, consistent, isolated, and durable).
+ */
+function os_batch_finished_callback($success, $results, $operations) {
 
   // There was an error - rollback the batch import (delete the newly inserted nodes)
   if ($results['node_save_failed']) {
-    node_delete_multiple($results);
+    drupal_set_message(t("Failed to import a node due to !error.  Deleting !num_nodes as rollback procedure.  " .
+          "Please fix import file and try again.",
+          array("!num_nodes" => sizeof($results['nodes_inserted']), "!error" => $results['node_save_failed_message'])), $type = 'error');
+      node_delete_multiple($results['nodes_inserted']);
   }
 }
-
