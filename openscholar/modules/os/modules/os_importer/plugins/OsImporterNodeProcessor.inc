@@ -82,4 +82,25 @@ class OsImporterNodeProcessor extends FeedsNodeProcessor {
 
     return $targets;
   }
+
+  /**
+   * Save a node.
+   * Override parent::entitySave().
+   */
+  public function entitySave($entity) {
+    // If nid is set and a node with that id doesn't exist, flag as new.
+    if (!empty($entity->nid) && !node_load($entity->nid)) {
+      $entity->is_new = TRUE;
+    }
+
+    $batch = &batch_get();
+
+    try {
+      node_save($entity);
+      $batch['sets'][0]['results'][] = $entity->nid;
+    }
+    catch (Exception $e) {
+      $batch['sets'][0]['results']['node_save_failed'] = TRUE;
+    }
+  }
 }
