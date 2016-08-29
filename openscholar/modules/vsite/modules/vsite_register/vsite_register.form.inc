@@ -203,7 +203,7 @@ function vsite_register_form($form, &$state) {
       '#description' => t('Enter the name of the user who will manage this new site!create_new.',
         array('!create_new' => $ajax_link)
       ),
-      '#autocomplete_path' => 'vsite/autocomplete/user',
+      '#autocomplete_path' => 'vsite/autocomplete/user/register',
     );
 
     if (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE)) {

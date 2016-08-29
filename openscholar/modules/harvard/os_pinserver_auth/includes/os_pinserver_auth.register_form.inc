@@ -24,7 +24,7 @@ function os_pinserver_auth_vsite_register_form_page() {
     }
   }
   else {
-    if(pinserver_user_has_associated_pin($user->uid)) {
+    if(pinserver_user_has_associated_pin($user->uid) || $user->uid == 1) {
       return drupal_get_form('vsite_register_form');
     }
     else {
