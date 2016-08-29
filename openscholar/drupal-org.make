@@ -166,7 +166,7 @@ projects[html_title][subdir] = "contrib"
 projects[html_title][version] = 1.1
 
 projects[imageapi_optimize][subdir] = "contrib"
-projects[imageapi_optimize][version] = 1.0
+projects[imageapi_optimize][version] = 1.2
 
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0
