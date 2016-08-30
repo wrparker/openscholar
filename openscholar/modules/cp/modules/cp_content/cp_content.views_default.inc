@@ -871,7 +871,7 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['filename']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['filename']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['filename']['link_to_file'] = TRUE;
-  /* Field: Broken/missing handler */
+  /* Field: File: Copy link */
   $handler->display->display_options['fields']['os_files_copy_link_1']['id'] = 'os_files_copy_link_1';
   $handler->display->display_options['fields']['os_files_copy_link_1']['table'] = 'file_managed';
   $handler->display->display_options['fields']['os_files_copy_link_1']['field'] = 'os_files_copy_link';
