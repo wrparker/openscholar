@@ -212,6 +212,137 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Then /^I should not be permitted to "([^"]*)" revisions for "([^"]*)"$/
+   */
+  public function iShouldNotBePermittedToRevisionsFor($action, $node_title) {
+    $query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->fields('p', array('id','value'))
+      ->condition('n.title', $node_title, '=');
+    $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
+    $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
+    $node_rows = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!count($node_rows)) {
+      throw new Exception(sprintf("Could not find node with title of '%s'.", $node_title));
+    }
+    $node_row = array_pop($node_rows);
+
+    // check to make sure the "revisions" list won't have any "revert" or "delete" links
+    $url = "/". $node_row['value'] . "/node/" . $node_row['nid'] . "/revisions";
+    $this->visit($url);
+    $xpath = "//div[@id='content']//table/tbody/tr";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    $actual_number_of_revisions = count(node_revision_list(node_load($node_row['nid'])));
+
+    // make sure we are actually on the revisions page
+    if (!count($elements) || (count($elements) != $actual_number_of_revisions)) {
+      throw new Exception(sprintf("%s revision page shows %d revisions instead of %d", $node_title, count($elements), $actual_number_of_revisions));
+    }
+
+    // make sure we can't revert or delete revisions
+    $action_xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='" . $action . "']";
+    $action_elements = $this->getSession()->getPage()->findAll('xpath', $action_xpath);
+    if (count($action_elements)) {
+      throw new Exception(sprintf("%s revision page contains %d links.", $node_title, count($action_elements)));
+    }
+  }
+
+
+  /**
+   * @Given /^I revert "([^"]*)" to revision "(\d+)"$/
+   */
+  public function iRevertToRevision($node_title, $revision_num) {
+    $query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->fields('p', array('id','value'))
+      ->condition('n.title', $node_title, '=');
+    $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
+    $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
+    $node_rows = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!count($node_rows)) {
+      throw new Exception(sprintf("Could not find node with title of '%s'.", $node_title));
+    }
+    $node_row = array_pop($node_rows);
+    $url = "/". $node_row['value'] . "/node/" . $node_row['nid'] . "/revisions";
+    $this->visit($url);
+
+    $xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='revert']";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    $link = $elements[$revision_num - 1];
+
+    if (!$link) {
+      throw new Exception(sprintf("Could not find revision %d for '%s'.", $revision_num, $node_title));
+    }
+    $link->press();
+
+    // lastly, click the submit button on the confirm modal
+    return array(
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
+   * @Given /^I delete revision "(\d+)" of "([^"]*)"$/
+   */
+  public function iDeleteRevisionof($revision_num, $node_title) {
+    $query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->fields('p', array('id','value'))
+      ->condition('n.title', $node_title, '=');
+    $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
+    $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
+    $node_rows = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!count($node_rows)) {
+      throw new Exception(sprintf("Could not find node with title of '%s'.", $node_title));
+    }
+    $node_row = array_pop($node_rows);
+    $url = "/". $node_row['value'] . "/node/" . $node_row['nid'] . "/revisions";
+    $this->visit($url);
+
+    $xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='delete']";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    $link = $elements[$revision_num - 1];
+
+    if (!$link) {
+      throw new Exception(sprintf("Could not find revision %d for '%s'.", $revision_num, $node_title));
+    }
+    $link->press();
+
+    // lastly, click the submit button on the confirm modal
+    return array(
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
+   * @Then /^I should not be able to see the "([^"]*)" contextual link for "([^"]*)"$/
+   */
+  public function iShouldNotBeAbleToSeeTheContextualLink($linktext, $node_title) {
+    $query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->fields('p', array('id','value'))
+      ->condition('n.title', $node_title, '=');
+    $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
+    $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
+    $node_rows = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!count($node_rows)) {
+      throw new Exception(sprintf("Could not find node with title of '%s'.", $node_title));
+    }
+    $node_row = array_pop($node_rows);
+    $url = "/". $node_row['value'] . "/node/" . $node_row['nid'];
+    $this->visit($url);
+    $xpath = "//div[@id='columns']//ul[contains(@class, 'contextual-links')]//a[text()='$linktext']";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    if (count($elements)) {
+      throw new Exception(sprintf("%s node page contains the '%s' contextual link.", $node_title, $linktext));
+    }
+  }
+
+  /**
    * @Then /^I should be able to see "(\d+)" revisions for "([^"]*)"$/
    */
   public function iShouldBeAbleToSeeRevisionsFor($number_of_revisions, $node_title) {
@@ -232,7 +363,8 @@ class FeatureContext extends DrupalContext {
     $url = "/". $node_row['value'] . "/node/" . $node_row['nid'];
     $this->visit($url);
     $revisions_url = $url . "/revisions";
-    $xpath = "//div[@id='columns']//ul[contains(@class, 'contextual-links')]//a[contains(@href, '$revisions_url')]";
+
+    $xpath = "//div[@id='columns']//ul[contains(@class, 'contextual-links')]//a[text()='Revisions']";
     $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
     if (!count($elements)) {
       throw new Exception(sprintf("%s node page does not contain the 'revisions' contextual link.", $node_title, $url));
@@ -240,12 +372,15 @@ class FeatureContext extends DrupalContext {
 
     // check to see if the proper number of revision rows show up on the revisions page
     $this->visit($revisions_url);
-    $xpath = "//div[@id='content']//table/tbody/tr";
-    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    // make sure we can't revert or delete revisions
+    $action_xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='revert']";
+    $revert_elements = $this->getSession()->getPage()->findAll('xpath', $action_xpath);
+    $action_xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='delete']";
+    $delete_elements = $this->getSession()->getPage()->findAll('xpath', $action_xpath);
     $actual_number_of_revisions = count(node_revision_list(node_load($node_row['nid'])));
 
-    if (($number_of_revisions != $actual_number_of_revisions) || (count($elements) != $number_of_revisions)) {
-      throw new Exception(sprintf("%s has %d revisions instead of %d.", $node_title, $actual_number_of_revisions, $number_of_revisions));
+    if (((count($revert_elements) + 1) != $actual_number_of_revisions) || ((count($delete_elements) + 1) != $actual_number_of_revisions)) {
+      throw new Exception(sprintf("%s has %d revisions instead of %d.", $node_title, $actual_number_of_revisions, (count($revert_elements) + 1)));
     }
   }
 
@@ -3107,7 +3242,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iRunTheReportWithSetToAndCheckboxesSelected($report, $fieldName, $fieldValue, TableNode $table) {
     $steps = array();
-    $steps[] = new Step\When('I visit "admin/reports/os/' . $report . '"');fo
+    $steps[] = new Step\When('I visit "admin/reports/os/' . $report . '"');
     $steps[] = new Step\When('I fill in "' . $fieldName . '" with "' . $fieldValue. '"');
     $table_rows = $table->getRows();
     // Iterate over each row, just so if there's an error we can supply
