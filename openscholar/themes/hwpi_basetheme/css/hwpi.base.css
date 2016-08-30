@@ -30,6 +30,12 @@ a:visited {
 #columns .block.block-boxes-twitter ul {
     list-style: none;
 }
+#columns .block-boxes-os_boxes_manual_list .field-name-body ul {
+    list-style: disc;
+}
+#columns .block-boxes-os_boxes_manual_list .field-name-body ul ul {
+    list-style: circle;
+}
 p:empty {
     display: none;
 }
