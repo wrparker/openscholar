@@ -477,7 +477,7 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['fields']['fid']['label'] = '';
   $handler->display->display_options['fields']['fid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['fid']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
+  /* Field: File: Copy link */
   $handler->display->display_options['fields']['os_files_copy_link_1']['id'] = 'os_files_copy_link_1';
   $handler->display->display_options['fields']['os_files_copy_link_1']['table'] = 'file_managed';
   $handler->display->display_options['fields']['os_files_copy_link_1']['field'] = 'os_files_copy_link';
