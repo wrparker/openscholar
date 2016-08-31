@@ -231,3 +231,38 @@ Feature: Revisions functionality testing.
        Then I should not be able to see the "revisions" contextual link for "My New Publication"
         And I should not be permitted to "revert" revisions for "My New Publication"
         And I should not be permitted to "delete" revisions for "My New Publication"
+
+  @misc_second @api @revisions
+  Scenario: Should not be able to create revisions of a class
+      Given I am logging in as "john"
+        And I create a new "class" with title "My New Class" in the site "john"
+        And I edit the node "My New Class"
+       Then I should not see "fieldset" element with the class "node-form-revision-information"
+
+  @misc_second @api @revisions
+  Scenario: Should not be able to create revisions of a event
+      Given I am logging in as "john"
+        And I create a new "event" with title "My New Event" in the site "john"
+        And I edit the node "My New Event"
+       Then I should not see "fieldset" element with the class "node-form-revision-information"
+
+  @misc_second @api @revisions
+  Scenario: Should not be able to create revisions of a gallery
+      Given I am logging in as "john"
+        And I create a new "media gallery" with title "My New Gallery" in the site "john"
+        And I edit the node "My New Gallery"
+       Then I should not see "fieldset" element with the class "node-form-revision-information"
+
+  @misc_second @api @revisions
+  Scenario: Should not be able to create revisions of a presentation
+      Given I am logging in as "john"
+        And I create a new "presentation" with title "My New Presentation" in the site "john"
+        And I edit the node "My New Presentation"
+       Then I should not see "fieldset" element with the class "node-form-revision-information"
+
+  @misc_second @api @revisions
+  Scenario: Should not be able to create revisions of a software project
+      Given I am logging in as "john"
+        And I create a new "software" with title "My New Software" in the site "john"
+        And I edit the node "My New Software"
+       Then I should not see "fieldset" element with the class "node-form-revision-information"
