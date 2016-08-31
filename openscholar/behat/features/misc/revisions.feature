@@ -25,9 +25,9 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: View revisions of a blog without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "My New Revised Blog Post"
-        And I should not be permitted to "revert" revisions for "My New Revised Blog Post"
-        And I should not be permitted to "delete" revisions for "My New Revised Blog Post"
+       Then I should not be able to see the "revisions" contextual link for "My New Blog Post"
+        And I should not be permitted to "revert" revisions for "My New Blog Post"
+        And I should not be permitted to "delete" revisions for "My New Blog Post"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a book
@@ -54,9 +54,9 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: View revisions of a book without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "My New Revised Book Page"
-        And I should not be permitted to "revert" revisions for "My New Revised Book Page"
-        And I should not be permitted to "delete" revisions for "My New Revised Book Page"
+       Then I should not be able to see the "revisions" contextual link for "My New Book Page"
+        And I should not be permitted to "revert" revisions for "My New Book Page"
+        And I should not be permitted to "delete" revisions for "My New Book Page"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a faq
@@ -83,9 +83,9 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: View revisions of a faq without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "My New Revised FAQ"
-        And I should not be permitted to "revert" revisions for "My New Revised FAQ"
-        And I should not be permitted to "delete" revisions for "My New Revised FAQ"
+       Then I should not be able to see the "revisions" contextual link for "My New FAQ"
+        And I should not be permitted to "revert" revisions for "My New FAQ"
+        And I should not be permitted to "delete" revisions for "My New FAQ"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a link
@@ -112,9 +112,9 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: View revisions of a link without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "My New Revised Link"
-        And I should not be permitted to "revert" revisions for "My New Revised Link"
-        And I should not be permitted to "delete" revisions for "My New Revised Link"
+       Then I should not be able to see the "revisions" contextual link for "My New Link"
+        And I should not be permitted to "revert" revisions for "My New Link"
+        And I should not be permitted to "delete" revisions for "My New Link"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a news item
@@ -141,9 +141,9 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: View revisions of a news without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "My New Revised News"
-        And I should not be permitted to "revert" revisions for "My New Revised News"
-        And I should not be permitted to "delete" revisions for "My New Revised News"
+       Then I should not be able to see the "revisions" contextual link for "My New News"
+        And I should not be permitted to "revert" revisions for "My New News"
+        And I should not be permitted to "delete" revisions for "My New News"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a page
@@ -170,9 +170,9 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: View revisions of a page without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "My New Revised page"
-        And I should not be permitted to "revert" revisions for "My New Revised page"
-        And I should not be permitted to "delete" revisions for "My New Revised page"
+       Then I should not be able to see the "revisions" contextual link for "My New page"
+        And I should not be permitted to "revert" revisions for "My New page"
+        And I should not be permitted to "delete" revisions for "My New page"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a profile
@@ -199,9 +199,9 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: View revisions of a profile without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "Person Test Revised"
-        And I should not be permitted to "revert" revisions for "Person Test Revised"
-        And I should not be permitted to "delete" revisions for "Person Test Revised"
+       Then I should not be able to see the "revisions" contextual link for "Person Test"
+        And I should not be permitted to "revert" revisions for "Person Test"
+        And I should not be permitted to "delete" revisions for "Person Test"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a publication
@@ -228,6 +228,6 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: View revisions of a publication without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "My New Revised Publication"
-        And I should not be permitted to "revert" revisions for "My New Revised Publication"
-        And I should not be permitted to "delete" revisions for "My New Revised Publication"
+       Then I should not be able to see the "revisions" contextual link for "My New Publication"
+        And I should not be permitted to "revert" revisions for "My New Publication"
+        And I should not be permitted to "delete" revisions for "My New Publication"
