@@ -180,30 +180,6 @@ ul.menu li a:active {} ul.menu li.active a {} ul.menu li.active-trail a {} ul.me
 #breadcrumb a:active {}
 /* Pager */
 
-ul.pager {
-    clear: both;
-    margin: 0;
-    text-align: center;
-}
-.item-list ul.pager li {
-    margin: 0;
-}
-ul.pager li {
-    background-image: none;
-    display: inline;
-    list-style-type: none;
-    padding: .7em !important;
-    border-style: solid;
-    border-color: #dededc;
-    border-width: 1px 1px 1px 0;
-    letter-spacing: normal;
-}
-
-
-
-
-
-
 
 ul.pager {
     margin-top: 30px !important;
@@ -238,7 +214,6 @@ ul.pager li.pager-last {
 ul.pager li.pager-next,
 ul.pager li.pager-previous {
 	font-weight: bold;
-    font-size: 1.2em;
 	}
 
 
