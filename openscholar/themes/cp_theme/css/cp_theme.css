@@ -1074,7 +1074,9 @@ div.error:before {
 /* CKEDITOR - WYSIWYG */
 
 body.cke_editable {
-    font-family: inherit;
+   font-family: inherit;
+    font-size: inherit;
+    padding: 0 10px;
 }
 span.cke_button__break_icon {
 	background-position-y: -1px;
