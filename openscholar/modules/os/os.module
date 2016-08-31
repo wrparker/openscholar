@@ -3554,8 +3554,8 @@ function os_preprocess_pager(&$variables, $hook) {
   if (is_array($variables['tags'])) {
     // To change full pager design
     $variables['tags'][0] = 'first';
-    $variables['tags'][1] = '◀';
-    $variables['tags'][3] = '▶';
+    $variables['tags'][1] = '<<';
+    $variables['tags'][3] = '>>';
     $variables['tags'][4] = 'last';
   }
 }

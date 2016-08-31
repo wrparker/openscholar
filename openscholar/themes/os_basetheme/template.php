@@ -602,7 +602,7 @@ function os_basetheme_views_mini_pager($vars) {
 
     $li_previous = theme('pager_previous',
       array(
-        'text' => (isset($tags[1]) ? $tags[1] : t('◀')),
+        'text' => (isset($tags[1]) ? $tags[1] : t('<<')),
         'element' => $element,
         'interval' => 1,
         'parameters' => $parameters,
@@ -614,7 +614,7 @@ function os_basetheme_views_mini_pager($vars) {
 
     $li_next = theme('pager_next',
       array(
-        'text' => (isset($tags[3]) ? $tags[3] : t('▶')),
+        'text' => (isset($tags[3]) ? $tags[3] : t('>>')),
         'element' => $element,
         'interval' => 1,
         'parameters' => $parameters,
