@@ -216,13 +216,19 @@ ul.pager li.pager-previous {
 	font-weight: bold;
 	}
 
-
-
-
-
 ul.mini-pager > li {
     border: none !important;
 }
+ul.mini-pager li.pager-current, 
+ul.mini-pager li:hover {
+    background-color: transparent;
+}
+
+ul.mini-pager li.pager-next,
+ul.mini-pager li.pager-previous {
+	padding:0 !important;
+}
+
 /* Throbber */
 
 .ajax-progress {
