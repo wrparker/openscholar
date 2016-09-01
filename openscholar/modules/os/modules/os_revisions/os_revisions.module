@@ -101,29 +101,26 @@ function os_revisions_revision_overview($node) {
 /**
  * Implements hook_form_alter().
  *
- * Add revision check to submit handlers for node_form
+ * Add revision information in hidden fields and javascript to check if the user has reached the max # of revisions for the node
  */
 function os_revisions_form_alter(&$form, &$form_state, $form_id){
-  if ($form_id == 'CONTENTTYPE_node_form') {
-    $node = node_load($form_state['values']['nid']);
-    if ($node && $node->revision && $node->is_current = TRUE) {
-      array_unshift($form['actions']['submit']['#submit'], 'os_revisions_confirm_revision_overwrite');
-    }
-  }
-}
+  $node_edit_forms = array(
+    'biblio_node_form',
+    'blog_node_form',
+    'book_node_form',
+    'faq_node_form',
+    'link_node_form',
+    'news_node_form',
+    'page_node_form',
+    'person_node_form',
+  );
 
-/**
- * Submit handler for CONTENTTYPE_node_form
- *
- * Check to see if user is about to create a revision after the max number
- * of revisions has been reached. If so, show confirm to make sure the user
- * understands the oldest revision will be deleted.
- */
-function os_revisions_confirm_revision_overwrite($form, &$form_state) {
-  $node = node_load($form_state['values']['nid']);
-  $revisions = node_revision_list($node);
-  $max_revisions = variable_get("node_revision_restrict_number_for_content_type_" . str_replace("-", "_", $node->type), FALSE);
-  if ($max_revisions && (count($revisions) >= $max_revisions - 1)) {
-    return confirm_form("Are you sure you want to delete your oldest revision?","You are allowed a maximum number of $max_revisions for this content and this will be #" . ($max_revisions + 1) . ". Saving this revision will permanently delete the oldest revision.");
+  if (in_array($form_id, $node_edit_forms) && $form_state['node']->nid) {
+    $max_revisions = (int)variable_get("restrict_node_revision_number_for_" . str_replace("-", "_", $form_state['node']->type), FALSE);
+    if ($max_revisions) {
+      $form['max_revisions'] = array('#type' => 'hidden', '#value' => $max_revisions);
+      $form['revisions'] =  array('#type' => 'hidden', '#value' => count(node_revision_list(node_load($form_state['node']->nid))));
+      $form['#attached']['js'][] = drupal_get_path('module', 'os_revisions') . '/os_revisions.js';
+    }
   }
 }
