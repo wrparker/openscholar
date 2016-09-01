@@ -183,9 +183,9 @@ class FeatureContext extends DrupalContext {
     $entity = $this->createEntity($content_type, $title);
 
     // Set the group ref
-    $nid = FeatureHelp::getNodeId($vsite_name);
+    $vid = FeatureHelp::getNodeId($vsite_name);
     $wrapper = entity_metadata_wrapper('node', $entity);
-    $wrapper->{OG_AUDIENCE_FIELD}->set(array($nid));
+    $wrapper->{OG_AUDIENCE_FIELD}->set(array($vid));
     entity_save('node', $entity);
   }
 

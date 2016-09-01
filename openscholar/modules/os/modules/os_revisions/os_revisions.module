@@ -47,6 +47,9 @@ function os_revisions_menu() {
   return $items;
 }
 
+/**
+ * Re-write the list of revisions for a node
+ */
 function os_revisions_revision_overview($node) {
   drupal_set_title(t('Revisions for %title', array('%title' => $node->title)), PASS_THROUGH);
 
@@ -99,7 +102,6 @@ function os_revisions_revision_overview($node) {
  * Implements hook_form_alter().
  *
  * Add revision check to submit handlers for node_form
- *
  */
 function os_revisions_form_alter(&$form, &$form_state, $form_id){
   if ($form_id == 'CONTENTTYPE_node_form') {
@@ -111,11 +113,11 @@ function os_revisions_form_alter(&$form, &$form_state, $form_id){
 }
 
 /**
+ * Submit handler for CONTENTTYPE_node_form
  *
  * Check to see if user is about to create a revision after the max number
  * of revisions has been reached. If so, show confirm to make sure the user
  * understands the oldest revision will be deleted.
- *
  */
 function os_revisions_confirm_revision_overwrite($form, &$form_state) {
   $node = node_load($form_state['values']['nid']);

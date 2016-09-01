@@ -263,6 +263,6 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: Should not be able to create revisions of a software project
       Given I am logging in as "john"
-        And I create a new "software" with title "My New Software" in the site "john"
+        And I create a new "software project" with title "My New Software" in the site "john"
         And I edit the node "My New Software"
        Then I should not see "fieldset" element with the class "node-form-revision-information"
