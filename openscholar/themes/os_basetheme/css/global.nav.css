@@ -180,38 +180,38 @@ ul.menu li a:active {} ul.menu li.active a {} ul.menu li.active-trail a {} ul.me
 #breadcrumb a:active {}
 /* Pager */
 
-.item-list ul.pager {
+.view-content ~ .item-list ul.pager {
     margin-top: 30px !important;
     letter-spacing: -1em;
 }
-.item-list ul.pager li.pager-current,
-.item-list ul.pager li:hover {
+.view-content ~ .item-list ul.pager li.pager-current,
+.view-content ~ .item-list ul.pager li:hover {
     background-color: #efefef;
 }
-.item-list ul.pager li a:hover {
+.view-content ~ .item-list ul.pager li a:hover {
     text-decoration: none;
 }
 li.pager-previous + li.pager-ellipsis {
     display: none;
 }
-.item-list ul.pager li {
+.view-content ~ .item-list ul.pager li {
     border-left: 1px solid #dededc !important;
     border-top: 1px solid #dededc !important;
     border-bottom: 1px solid #dededc !important;
     letter-spacing: normal;
     padding: 0.7em !important;
 }
-.item-list ul.pager li.pager-first {
+.view-content ~ .item-list ul.pager li.pager-first {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
 }
-.item-list ul.pager li.pager-last {
+.view-content ~ .item-list ul.pager li.pager-last {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
     border-right: 1px solid #dededc !important;
 }
-.item-list ul.pager li.pager-next,
-.item-list ul.pager li.pager-previous {
+.view-content ~ .item-list ul.pager li.pager-next,
+.view-content ~ .item-list ul.pager li.pager-previous {
 	font-weight: bold;
 	}
 
