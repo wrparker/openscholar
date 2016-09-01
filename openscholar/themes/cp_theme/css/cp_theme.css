@@ -1072,38 +1072,37 @@ div.error:before {
     height: 23px;
 }
 
-ul.pager {
+.item-list ul.pager {
     margin-top: 30px !important;
     letter-spacing: -1em;
 }
-ul.pager li.pager-current,
-ul.pager li:hover {
+.item-list ul.pager li.pager-current,
+.item-list ul.pager li:hover {
     background-color: #efefef;
 }
-ul.pager li a:hover {
+.item-list ul.pager li a:hover {
     text-decoration: none;
 }
 li.pager-previous + li.pager-ellipsis {
     display: none;
 }
-ul.pager li {
+.item-list ul.pager li {
     border-left: 1px solid #dededc !important;
     border-top: 1px solid #dededc !important;
     border-bottom: 1px solid #dededc !important;
     letter-spacing: normal;
     padding: 0.7em !important;
 }
-ul.pager li.pager-first {
+.item-list ul.pager li.pager-first {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
 }
-ul.pager li.pager-last {
+.item-list ul.pager li.pager-last {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
     border-right: 1px solid #dededc !important;
 }
-ul.pager li.pager-next,
-ul.pager li.pager-previous {
+.item-list ul.pager li.pager-next,
+.item-list ul.pager li.pager-previous {
 	font-weight: bold;
-    font-size: 1.2em;
 	}
