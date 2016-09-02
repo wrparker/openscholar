@@ -136,12 +136,16 @@ class os_boxes_media extends os_boxes_default {
             )
           );
         }
-        $render['file']['#attached']['js'][] = array(
+        // If there is any non-zero overridden value for max width for the widget.
+        if (!empty($this->options['maxwidth']) && $this->options['maxwidth'] != 0) {
+          $render['file']['#attached']['js'][] = array(
             'type' => 'setting',
             'data' => array(
-              'widget_max_width' => array($this->options['maxwidth'])
+              'widget_max_width' => array('boxes-box-' . $this->delta => $this->options['maxwidth'])
             )
           );
+          $render['file']['#attached']['js'][] = drupal_get_path('module', 'os_boxes').'/misc/os_boxes.resize_iframe.js';
+        }
         // Removing embedded media title from render element.
         unset($render['file']['file-info']['title']);
         $block['content'] = drupal_render($render);
