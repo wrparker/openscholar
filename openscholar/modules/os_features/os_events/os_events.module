@@ -2317,6 +2317,10 @@ function os_events_mail_alter(&$message) {
   $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
 }
 
+function os_events_form_alter(&$form, &$form_state) {
+
+}
+
 /**
  * Implements hook_form_FORM_ID_alter().
  *
@@ -2324,6 +2328,7 @@ function os_events_mail_alter(&$message) {
  * event node form.
  */
 function os_events_form_event_node_form_alter(&$form, &$form_state) {
+
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
   $form['#validate'][] = 'os_events_validate_repeat_on_checkbox';
   // Attaching form state behavior to show the checkbox only when signup and repeat checkboxes are with checked state.
@@ -2337,6 +2342,17 @@ function os_events_form_event_node_form_alter(&$form, &$form_state) {
   } else {
     $form['event_registration_group']['field_mutliple_event_signup']['#attributes']['class'][] = 'element-hidden';
   }
+    $form['event_registration_group']['exceptions']['exceptions_add'] = array(
+    '#type' => 'submit',
+    '#name' => 'exceptions_add|' . $instance,
+    '#value' => t('Add exception'),
+    '#submit' => array('date_repeat_add_exception'),
+    '#limit_validation_errors' => array(),
+    '#ajax' => array(
+      'callback' => 'date_repeat_add_exception_callback',
+      'wrapper' => 'date-repeat-exceptions-' . $instance,
+    ),
+  );
   // Div wrapper to display Sign up and multiple registration select checkbox jointly.
   $form['event_registration_group'] = array(
     '#type' => '#markup',
@@ -2424,6 +2440,7 @@ function os_events_form_submit($form, &$form_state) {
  * Validate handler; Verifying if at least one day/month checkbox is selected for 'Repeat on' section in Weekly/Monthly/Yearly repeating event form.
  */
 function os_events_validate_repeat_on_checkbox($form, $form_state) {
+
   // Obtaining repeat rules from form submission.
   $repeating = $form_state['values']['field_date'][LANGUAGE_NONE][0]['rrule'];
 
@@ -2432,6 +2449,28 @@ function os_events_validate_repeat_on_checkbox($form, $form_state) {
     // Formatting repeat rules in structured array.
     $parts = date_repeat_split_rrule($repeating);
     $rrule = $parts[0];
+    $parsed_exceptions = (array) $parts[1];
+    $exception_count = 0;
+    foreach ($parsed_exceptions as $exception) {
+      $date = date_ical_date($exception, 'UTC');
+      date_timezone_set($date, date_default_timezone_object());
+      $exceptions = date_format($date, 'Y-m-d');
+      if (isset($form_state['values']['field_date'][LANGUAGE_NONE][0]['value'])) {
+        $event_start_date = date('Y-m-d', strtotime($form_state['values']['field_date'][LANGUAGE_NONE][0]['value']));
+        if ($exceptions <= $event_start_date) {
+          form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][exceptions][EXDATE][' . $exception_count . '][datetime][date', t('You can not select event start date as exception.'));
+        }
+      }
+      if (isset($rrule['UNTIL'])) {
+        $end_date = date_ical_date($rrule['UNTIL'], 'UTC');
+        date_timezone_set($end_date, date_default_timezone_object());
+        $end_date = date_format($end_date, 'Y-m-d');
+        if ($exceptions >= $end_date) {
+          form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][exceptions][EXDATE][' . $exception_count . '][datetime][date', t('You can not select event end date as exception.'));
+        }
+      }
+      $exception_count++;
+    }
     // Validation for weekly, monthly and yearly repeating events.
     if (!isset($rrule['BYDAY']) && $rrule['FREQ'] == 'WEEKLY') {
       form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][FREQ', t('You must select at least one day.'));
