@@ -206,6 +206,7 @@ function cp_user_vsite_toggle_roles_permissions_confirm($form, &$form_state, $va
     // Changing to custom permissions.
     $title = t('Edit roles and permissions in %vsite', array('%vsite' => $vsite->group->title));
     $description = t('Are you sure you want to override the default roles and permissions in %vsite?', array('%vsite' => $vsite->group->title));
+    drupal_set_message("Changing the default roles and permissions is not recommended. Try creating a custom role instead.", $type = 'warning');
   }
   else {
     // Changing to default permissions.
