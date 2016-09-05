@@ -1071,6 +1071,7 @@ div.error:before {
     font-weight: normal;
     height: 23px;
 }
+<<<<<<< HEAD
 
 .view-content ~ .item-list ul.pager {
     margin-top: 30px !important;
@@ -1106,3 +1107,6 @@ li.pager-previous + li.pager-ellipsis {
 .view-content ~ .item-list ul.pager li.pager-previous {
 	font-weight: bold;
 	}
+.file img.file-icon {
+    width:16px;
+}
