@@ -121,13 +121,14 @@ function os_wysiwyg_filter_default_formats() {
             'min-width' => 0,
           ),
           'style_positioning' => array(
+            'vertical-align' => 'vertical-align',
+            'valign' => 'valign',
             'bottom' => 0,
             'clip' => 0,
             'left' => 0,
             'overflow' => 0,
             'right' => 0,
             'top' => 0,
-            'vertical-align' => 0,
             'z-index' => 0,
           ),
           'style_layout' => array(
