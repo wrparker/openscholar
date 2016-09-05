@@ -23,6 +23,7 @@ dependencies[] = strongarm
 dependencies[] = views
 dependencies[] = views_litepager
 dependencies[] = views_og_cache
+features[box][] = os_software_releases-block_1
 features[context][] = software_software
 features[ctools][] = boxes:box:1
 features[ctools][] = context:context:3
