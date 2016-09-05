@@ -38,3 +38,8 @@
 .node-person .field-name-field-professional-title.view-mode-sidebar_teaser .field-items .field-item {
     display:block;
 }
+.field-name-field-office-hours {
+    float: left;
+    display: block;
+    clear: both;
+}
