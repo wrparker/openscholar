@@ -59,6 +59,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       if (module_exists('vsite') && $vsite = vsite_get_vsite($this->request['vsite'])) {
         spaces_set_space($vsite);
         $vsite->activate_user_roles();
+        $vsite->init_overrides();
       }
       $vsiteActivated = true;
     }
