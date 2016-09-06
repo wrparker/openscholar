@@ -49,6 +49,7 @@ function os_wysiwyg_media_token_to_markup_alter(&$element, $tag_info, $settings)
  */
 function os_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
   global $base_url;
+
   // Settings there are no UI options for.
   $settings['gecko_spellcheck'] = true;
   $settings['theme_advanced_path'] = false;
@@ -60,6 +61,30 @@ function os_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
     $base_url . '/' . drupal_get_path('theme', 'hwpi_basetheme') . '/css/hwpi.base.css',
     $base_url . '/' . drupal_get_path('theme', 'cp_theme') . '/css/cp_theme.css',
   ];
+
+  ctools_include('themes', 'os');
+  $flavors = os_theme_get_flavors();
+  $theme = os_theme_get();
+
+  $theme_info = os_get_themes($theme);
+
+  if ($theme_info->stylesheets) {
+    // Adding the css of the theme.
+    foreach ($theme_info->stylesheets as $stylesheets) {
+      foreach ($stylesheets as $stylesheet) {
+        $settings['contentsCss'][] = $base_url . '/' . $stylesheet;
+      }
+    }
+  }
+
+  if ($flavor_name = variable_get('os_appearance_' . $theme . '_flavor')) {
+    $flavor_info = $flavors[$flavor_name];
+
+    // Adding the css of the current flavor.
+    foreach ($flavor_info['css'] as $css) {
+      $settings['contentsCss'][] = $base_url . '/' . $flavor_info['path'] . '/css/' . $css;
+    }
+  }
 
   _os_wysiwyg_add_public_css($settings, $context);
   if ($context['profile']->format == 'filtered_html') {
