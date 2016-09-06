@@ -689,6 +689,7 @@ function cp_appearance_og_permission() {
     'change theme' => array(
       'title' => t('Change theme'),
       'description' => t('Allow the user to change the theme.'),
+      'os_override' => true,
     ),
   );
 }

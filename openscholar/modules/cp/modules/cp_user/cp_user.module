@@ -398,7 +398,6 @@ function cp_user_get_allowed_permissions() {
   foreach (vsite_get_os_override_permissions() as $permission) {
     $allowed_permissions[$permission] = 'general';
   }
-  $allowed_permissions['change theme'] = 'general';
   $allowed_permissions['administer taxonomy'] = 'general';
   $allowed_permissions['edit terms'] = 'general';
   $allowed_permissions['delete terms'] = 'general';

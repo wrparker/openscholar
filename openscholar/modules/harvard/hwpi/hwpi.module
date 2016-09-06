@@ -194,10 +194,11 @@ function _hwpi_branding_footer() {
 function hwpi_cp_settings() {
   // For non-user-1, only adds the responsive setting for HWPI-themed sites.
   $theme = variable_get('theme_default');
-  if (!_is_hwpi_theme($theme) && !user_access('administer themes')) {
+  if (!_is_hwpi_theme($theme)) {
     return;
   }
 
+  $vsite = vsite_get_vsite();
   $settings = array(
     'enable_responsive' => array(
       'group' => array(
@@ -208,6 +209,7 @@ function hwpi_cp_settings() {
         '#type' => 'checkbox',
         '#default_value' => variable_get('enable_responsive', FALSE),
         '#title' => t('Enable responsive behaviors'),
+        '#access' => user_access('change theme'),
         '#description' => t('Responsive behaviors will change the layout of your page to fit the screens of smaller devices, such
           as phones or tablets. Disabling this will prevent the layout from changing, but could make using your site more difficult
           on smaller devices.'),
