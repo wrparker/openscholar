@@ -111,7 +111,7 @@ function os_files_theme() {
       'variables' => array('file' => NULL, 'icon_directory' => NULL),
     ),
     'os_file_gallery_carousal_icon' => array(
-      'variables' => array('file' => NULL, 'icon_directory' => NULL),
+      'variables' => array('file' => NULL),
     ),
   );
 
@@ -132,9 +132,8 @@ function os_files_theme() {
  */
 function theme_os_file_gallery_carousal_icon($variables) {
   $file = $variables['file'];
-  $icon_directory = $variables['icon_directory'];
-  $icon_file = 'gallery-non-img-file-icon.png';
-  return '<img class="file-icon" alt="' . $file->filename . '" title="' . $file->filename . '" src="' . base_path() . $icon_directory . '/' . $icon_file . '" />';
+  $file_icon = $file->icon;
+  return '<img class="media-gallery-carousal file-icon" alt="' . $file->filename . '" title="' . $file->filename . '" src="' . $file_icon . '" />';
 }
 
 /**
@@ -1887,7 +1886,7 @@ function os_files_field_formatter_view($entity_type, $entity, $field, $instance,
         $parts = explode('.', $i['uri']);
         $file_extension = end($parts);
         // If file type is image or have extension of $allowed_extensions_in_carousal array, then rendering them in jcarousal.
-        if ($i['type'] == 'image' || in_array($file_extension, $allowed_extensions_in_carousal)) {
+        if ($i['type'] == 'image' || (in_array($file_extension, $allowed_extensions_in_carousal) && $entity->type == 'media_gallery')) {
           // For jpeg, jpg, gif and png type files.
           if ($i['type'] == 'image') {
             $title = field_get_items('file', ( object ) $i, 'field_file_image_title_text');
@@ -1913,9 +1912,9 @@ function os_files_field_formatter_view($entity_type, $entity, $field, $instance,
             // Different icons as per file mimetypes.
             $file = new stdClass;
             $file->filename = $i['filename'];
+            $file->icon = $i['icon'];
             $jcarousal_thumbnail = theme('os_file_gallery_carousal_icon', array(
               'file' => $file,
-              'icon_directory' => $file_icon_directory,
             ));
           }
           $images[] = array(
