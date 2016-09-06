@@ -68,7 +68,7 @@ function vsite_node_autocomplete_validate($element, &$form_state) {
     $form_state['vsite_autocomplete_nid'] = $nid;
   }
   else {
-    form_error($element, t('This post title is not valid'));
+    form_error($element, t('The page does not exist.'));
   }
 }
 
