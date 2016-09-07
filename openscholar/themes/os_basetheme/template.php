@@ -587,7 +587,6 @@ function os_basetheme_file_icon($variables) {
  */
 function os_basetheme_views_mini_pager($vars) {
   global $pager_page_array, $pager_total;
-
   $tags = $vars['tags'];
   $element = $vars['element'];
   $parameters = $vars['parameters'];
@@ -602,7 +601,7 @@ function os_basetheme_views_mini_pager($vars) {
 
     $li_previous = theme('pager_previous',
       array(
-        'text' => (isset($tags[1]) ? $tags[1] : t('«')),
+        'text' => t('«'),
         'element' => $element,
         'interval' => 1,
         'parameters' => $parameters,
@@ -614,7 +613,7 @@ function os_basetheme_views_mini_pager($vars) {
 
     $li_next = theme('pager_next',
       array(
-        'text' => (isset($tags[3]) ? $tags[3] : t('»')),
+        'text' => t('»'),
         'element' => $element,
         'interval' => 1,
         'parameters' => $parameters,
