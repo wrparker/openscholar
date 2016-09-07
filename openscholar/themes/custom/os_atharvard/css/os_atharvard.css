@@ -324,10 +324,43 @@
     .top-arrow.show {
         right: -1px;
     }
+    .region-four-second .block-boxes-os_boxes_media,
+    .four-4x25 .row-2 .region-four-third .region-inner,
+    .four-4x25 .row-2 .region-four-fourth .region-inner,
+    .four-4x25 .row-1 .region-four-first .region-inner,
+    .three-3x33 .block-boxes-os_boxes_media {
+    
+         -webkit-transition: all .75s; 
+    transition: all .75s;
+    }
+
+.region-four-second .block-boxes-os_boxes_media:hover,
+    .four-4x25 .row-2 .region-four-third .region-inner:hover,
+    .four-4x25 .row-2 .region-four-fourth .region-inner:hover,
+    .four-4x25 .row-1 .region-four-first .region-inner:hover,
+    .three-3x33 .block-boxes-os_boxes_media:hover {
+        background-color: #f6f2eb !important;
+        border: 1px solid #ccc !important;
+      
+    }
+
+ a.orange-button {
+           padding: 10px;
+        -webkit-transition:background-color ease 0.75s, padding ease 0.125s;
+	-moz-transition: background-color ease 0.75s, padding ease 0.125s;
+	transition: background-color ease 0.75s, padding ease 0.125s;
+    }
+     a.orange-button:hover {
+        background-color: #f46e25;
+ padding: 15px;
+    }
     #powered-by a {
   background: url('../images/sprite.png') no-repeat;
         background-position: 0px -1632px;
     }
+    .region-content-bottom h3.stat-heading {
+font-weight:bold;
+}
     @media (max-width: 568px) {
         .region-four-second .block-boxes-os_boxes_media,
         .four-4x25 .row-2 .region-four-third .region-inner,

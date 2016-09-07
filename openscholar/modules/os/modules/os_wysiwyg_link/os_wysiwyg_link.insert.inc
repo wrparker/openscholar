@@ -39,6 +39,13 @@ function os_wysiwyg_link_insert() {
       '#description' => t('The text of the link. Leave blank to use the url of the link itself.'),
       '#name' => 'link-text',
     ),
+    'title' => array(
+      '#type' => 'textfield',
+      '#id' => 'edit-link-title',
+      '#title' => t('Title Text'),
+      '#description' => t('This text will appear on mouse hover and is used by screen readers, however, it will not appear for keyboard-only users or touch-only users.'),
+      '#name' => 'link-title',
+    ),
     'tabs' => array(
       '#title' => t('Link To'),
       '#type' => 'vertical_tabs',

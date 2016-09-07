@@ -1071,6 +1071,7 @@ div.error:before {
     font-weight: normal;
     height: 23px;
 }
+
 /* CKEDITOR - WYSIWYG */
 
 body.cke_editable {
@@ -1079,7 +1080,11 @@ body.cke_editable {
     padding: 0 10px;
 }
 span.cke_button__break_icon {
-	background-position-y: -1px;
+    background-position-y: -1px;
     background-size: 20px !important;
     width: 18px;
+}
+
+.file img.file-icon {
+    width: 16px;
 }
