@@ -52,12 +52,11 @@ function os_software_context_default_contexts() {
           'region' => 'sidebar_second',
           'weight' => '-9',
         ),
-        'boxes-os_software_releases-block_1' => array(
-          'module' => 'boxes',
+        'views-os_software_releases-block_1' => array(
+          'module' => 'views',
           'delta' => 'os_software_releases-block_1',
           'region' => 'sidebar_second',
-          'weight' => '-11',
-          'label' => 'Recent Software Releases',
+          'weight' => '-10',
         ),
       ),
     ),

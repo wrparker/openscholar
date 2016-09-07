@@ -254,6 +254,25 @@ function os_software_os_add_new_links_alter(&$links) {
   }
 }
 
+/**
+ * Implements hook_os_widget()
+ *
+ * Exposes blocks as OpenScholar widgets.
+ */
+function os_software_os_widget() {
+  $items = array();
+
+  $items['views-os_software_releases-block_1'] = array(
+    'module' => 'views',
+    'delta' => 'os_software_releases-block_1',
+    'region' => 'sidebar_second',
+    'weight' => '-10',
+    'info' => 'Recent Software Releases',
+  );
+
+  return $items;
+}
+
 //TODO: Remove with os_layout_get is refactored to handle widget titles better
 function os_software_os_widget_alter(&$widget) {
   if ($widget['delta'] == 'os_software_releases-block_1') {
