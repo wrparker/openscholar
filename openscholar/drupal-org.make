@@ -166,7 +166,9 @@ projects[html_title][subdir] = "contrib"
 projects[html_title][version] = 1.1
 
 projects[imageapi_optimize][subdir] = "contrib"
-projects[imageapi_optimize][version] = 1.2
+projects[imageapi_optimize][download][type] = git
+projects[imageapi_optimize][download][branch] = 7.x-1.x
+projects[imageapi_optimize][download][revision] = 234f208
 
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0
