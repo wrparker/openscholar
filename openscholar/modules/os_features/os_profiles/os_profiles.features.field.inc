@@ -749,7 +749,7 @@ function os_profiles_field_default_fields() {
         'sidebar_teaser' => array(
           'label' => 'inline',
           'settings' => array(),
-          'type' => 'hidden',
+          'type' => 'text_default',
           'weight' => '6',
         ),
         'teaser' => array(

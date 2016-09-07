@@ -170,3 +170,7 @@
 .registration-event-signup-simple .field-name-field-full-name .field-items {
   display:inline-block;
 }
+
+.view-mode-sidebar_teaser.field-name-field-office-hours {
+  margin-left:88px;
+}
