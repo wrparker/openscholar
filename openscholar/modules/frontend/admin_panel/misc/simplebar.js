@@ -23,7 +23,7 @@
         // We want the scrollbar width to always be 7px and not change based
         // on the users browser, in some cases a 0px overlayed scrollbar will
         // cause trouble otherwise.
-        return 7;
+        return 11;
 
         // Append a temporary scrolling element to the DOM, then measure
         // the difference between its outer and inner elements.
