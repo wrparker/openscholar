@@ -144,7 +144,6 @@ class os_boxes_media extends os_boxes_default {
               'widget_max_width' => array('boxes-box-' . $this->delta => $this->options['maxwidth'])
             )
           );
-          $render['file']['#attached']['js'][] = drupal_get_path('module', 'os_boxes').'/misc/os_boxes.resize_iframe.js';
         }
         // Removing embedded media title from render element.
         unset($render['file']['file-info']['title']);

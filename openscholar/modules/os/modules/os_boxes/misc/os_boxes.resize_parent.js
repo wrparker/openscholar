@@ -18,9 +18,10 @@
     var iframes = document.querySelectorAll('iframe[src="'+data.url+'"]');
 
     for (i=0; i<iframes.length; i++) {
-      if (typeof Drupal.settings.widget_max_width[i] != 'undefined' && Drupal.settings.widget_max_width[i] != '') {        
+      var delta = jQuery(iframes[i]).closest('.boxes-box').attr('id');
+      if (typeof Drupal.settings.widget_max_width != 'undefined' && typeof Drupal.settings.widget_max_width[delta] != 'undefined' && Drupal.settings.widget_max_width[delta] != '' && data.width > Drupal.settings.widget_max_width[delta]) {
         if (!iframes[i].resized) {
-          iframes[i].width = Drupal.settings.widget_max_width[i];
+          iframes[i].width = Drupal.settings.widget_max_width[delta];
           jQuery(iframes[i]).attr("scrolling", "auto");
           jQuery(iframes[i]).attr("src", jQuery(iframes[i]).attr("src"));
           iframes[i].resized = true;
