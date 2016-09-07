@@ -57,9 +57,7 @@ function os_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
   drupal_add_css(drupal_get_path('module', 'os_wysiwyg') . '/os_wysiwyg.css');
 
   $settings['contentsCss'] = [
-    $base_url . '/' . drupal_get_path('theme', 'hwpi_classic') . '/css/hwpi_classic.css',
     $base_url . '/' . drupal_get_path('theme', 'hwpi_basetheme') . '/css/hwpi.base.css',
-    $base_url . '/' . drupal_get_path('theme', 'cp_theme') . '/css/cp_theme.css',
   ];
 
   ctools_include('themes', 'os');
@@ -85,6 +83,8 @@ function os_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
       $settings['contentsCss'][] = $base_url . '/' . $flavor_info['path'] . '/css/' . $css;
     }
   }
+
+  $settings['contentsCss'][] = $base_url . '/' . drupal_get_path('theme', 'cp_theme') . '/css/cp_theme.css';
 
   _os_wysiwyg_add_public_css($settings, $context);
   if ($context['profile']->format == 'filtered_html') {
