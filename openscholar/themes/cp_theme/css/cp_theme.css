@@ -1075,10 +1075,15 @@ div.error:before {
 /* CKEDITOR - WYSIWYG */
 
 body.cke_editable {
-   font-family: inherit;
-    font-size: inherit;
+   font-family: inherit !important;
+    font-size: inherit !important;
     padding: 0 10px;
 }
+
+body.cke_editable table[align="left"] {margin-right:8px;}
+body.cke_editable table[align="right"] {margin-left:8px;}
+
+
 span.cke_button__break_icon {
     background-position-y: -1px;
     background-size: 20px !important;
