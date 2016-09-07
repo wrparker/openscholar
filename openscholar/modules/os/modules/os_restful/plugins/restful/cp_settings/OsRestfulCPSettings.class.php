@@ -87,7 +87,7 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
               $valid[$k] = $result;
             }
           }
-          else if (!empty($forms[$var]['rest_validate'] && is_callable($forms[$var]['rest_validate']))) {
+          else if (!empty($forms[$var]['rest_validate']) && is_callable($forms[$var]['rest_validate'])) {
             $valid[$var] = $forms[$var]['rest_validate']($value);
           }
         }
