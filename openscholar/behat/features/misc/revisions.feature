@@ -27,7 +27,8 @@ Feature: Revisions functionality testing.
       Given I set the variable "restrict_node_revision_number_for_blog" to "2"
         And I am logging in as "john"
         And I edit the node "My New Blog Post"
-        And I press "edit-revision"
+        And I click on link "Revision information" under "edit-revision-information"
+        And I check the box "edit-revision"
        Then I will see a confirm dialog box with the text "This content already has the maximum number of revisions saved (2). By creating a new revision, you will be permanently deleting the oldest revision.\n\nAre you sure you want to create a new revision?"
 
 
