@@ -914,3 +914,4 @@ function os_update_7046() {
   variable_set('imageapi_optimize_service', 'resmushit');
   variable_set('image_toolkit', 'imageapi_optimize');
 }
+
