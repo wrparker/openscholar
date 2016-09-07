@@ -3461,4 +3461,25 @@ class FeatureContext extends DrupalContext {
     }
   }
 
+  /**
+   * @Then /^I will see a confirm dialog box with the text "([^"]*)"$/
+   */
+  public function iWillSeeAConfirmDialogBoxWithTheText($text) {
+    $this->waitFor(function($context) use ($xpath, $appear) {
+      try {
+        $confirm_text = $context->getSession()->getDriver()->getAlert_text();
+        if (!$confirm_text) {
+          throw new \Exception("Confirm has no text.");
+        }
+        elseif ($confirm_text != $text) {
+          throw new \Exception("Confirm did not have the text '$text'.");
+        }
+      }
+      catch (WebDriver\Exception $e) {
+        if ($e->getCode() == WebDriver\Exception::NO_SUCH_ELEMENT) {
+          throw new \Exception("Unable to get confirm text.");
+        }
+      }
+    });
+  }
 }

@@ -22,6 +22,14 @@ Feature: Revisions functionality testing.
         And I delete revision "1" of "My New Blog Post"
        Then I should be able to see "2" revisions for "My New Blog Post"
 
+  @misc_second @api @javascript @revisions
+  Scenario: User is about to create a revision for a node that already has the maximum number for that content type
+      Given I set the variable "restrict_node_revision_number_for_blog" to "2"
+        And I edit the node "My New Blog Post"
+        And I press "edit-revision"
+       Then I will see a confirm dialog box with the text "This content already has the maximum number of revisions saved (2). By creating a new revision, you will be permanently deleting the oldest revision.\n\nAre you sure you want to create a new revision?"
+
+
   @misc_second @api @revisions
   Scenario: View revisions of a blog without the permissions to revert/delete
       Given I am logging in as "bill"
