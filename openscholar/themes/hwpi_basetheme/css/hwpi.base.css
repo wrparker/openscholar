@@ -30,6 +30,16 @@ a:visited {
 #columns .block.block-boxes-twitter ul {
     list-style: none;
 }
+#columns .block-boxes-os_boxes_manual_list .field-name-body ul {
+    list-style: disc;
+}
+#columns .block-boxes-os_boxes_manual_list .field-name-body ul ul {
+    list-style: circle;
+}
+#columns .block-boxes-os_boxes_manual_list .field-name-body ul ul ul {
+    list-style: square;
+}
+
 p:empty {
     display: none;
 }
@@ -147,6 +157,9 @@ table caption {
 }
 #content-column .block ul ul {
     list-style: circle;
+}
+#content-column .block ul ul ul {
+    list-style: square;
 }
 .block .node:last-child {
     margin-bottom: 0;
