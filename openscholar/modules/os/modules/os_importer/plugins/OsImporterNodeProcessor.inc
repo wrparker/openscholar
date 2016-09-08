@@ -106,7 +106,12 @@ class OsImporterNodeProcessor extends FeedsNodeProcessor {
 
       error_log("EAM line 107");
 
+      error_log("EAM line 109 " . var_export($batch));
+
       if ($batch) {
+
+        error_log("EAM line 113");
+
         $batch['sets'][0]['results']['node_save_failed'] = TRUE;
         $batch['sets'][0]['results']['node_save_failed_message'] =
           ($e->getMessage()) ? $e->getMessage() : "No exception message available";
@@ -123,5 +128,8 @@ class OsImporterNodeProcessor extends FeedsNodeProcessor {
       $batch['sets'][0]['results']['node_save_failed_message'] = "Uncaught exception.  Node did not insert.";
       return;
     }
+
+    error_log("EAM line 132");
+
   }
 }
