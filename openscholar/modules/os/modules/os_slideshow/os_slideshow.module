@@ -113,6 +113,14 @@ function os_slideshow_form_slideshow_slide_node_form_alter(&$form, &$state, $for
 
   // When adding a new slide hide the actions top button.
   hide($form['actions_top']);
+
+  // Add autocomplete search field for "Link"
+  $form['field_link'][LANGUAGE_NONE][0] = array(
+    '#type' => 'textfield',
+    '#title' => t('Link'),
+    '#description' => 'You may provide a link for each slide in your slideshow.',
+    '#autocomplete_path' => 'os/pages/autocomplete',
+  );
 }
 
 /**
