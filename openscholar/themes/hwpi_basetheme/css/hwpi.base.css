@@ -885,7 +885,6 @@ ul.pager li a {
     padding: 3px;
 }
 ul.pager li.pager-item {
-    display: inline-block;
     padding: 4px 8px;
 }
 /* Custom Person node style for /people page */
