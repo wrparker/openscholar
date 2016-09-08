@@ -140,11 +140,13 @@
 
         scope.removeFile = function ($index) {
           scope.selectedFiles.splice($index, 1);
+          scope.$parent.value.splice($index, 1);
           store.setData(scope.field_name, scope.selectedFiles);
         }
 
         scope.replaceFile = function ($inserted, $index) {
           scope.selectedFiles.splice($index, 1, $inserted[0]);
+          scope.$parent.value.splice($index, 1, $inserted[0]);
           store.setData(scope.field_name, scope.selectedFiles);
         }
 
