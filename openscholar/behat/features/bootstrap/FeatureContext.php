@@ -1805,9 +1805,11 @@ class FeatureContext extends DrupalContext {
    * @Given /^I set the Share domain name to "([^"]*)"$/
    */
   public function iSetTheShareDomainNameTo($value) {
-    $action = $value ? 'I checked "edit-vsite-domain-name-vsite-domain-shared"' : 'I uncheck "edit-vsite-domain-name-vsite-domain-shared"';
+    $action = $value ? 'I checked "edit-vsite-domain-shared"' : 'I uncheck "edit-vsite-domain-shared"';
     return array(
       new Step\When('I click "Settings"'),
+      new Step\When('I click "Advanced"'),
+      new Step\When('I click "Domain"'),
       new Step\When($action),
       new Step\When('I press "edit-submit"'),
     );
