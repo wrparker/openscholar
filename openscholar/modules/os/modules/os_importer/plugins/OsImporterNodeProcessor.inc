@@ -134,7 +134,7 @@ class OsImporterNodeProcessor extends FeedsNodeProcessor {
       return;
     }
 
-    error_log("EAM line 137 " . var_export($entity));
+//    error_log("EAM line 137 " . var_export($entity));
     error_log("EAM line 132");
 
   }
