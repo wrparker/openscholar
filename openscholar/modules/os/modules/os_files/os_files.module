@@ -2023,6 +2023,7 @@ function os_files_file_default_types() {
       'application/ico',
       'application/x-ico',
       'image/vnd.microsoft.icon',
+      'image/x-icon'
     ),
     'streams' => array(
       'public'
@@ -2033,12 +2034,6 @@ function os_files_file_default_types() {
 }
 
 function os_files_file_default_types_alter(&$types){
-  $image = array(
-    // *.ico files
-    'application/x-win-bitmap',
-    'image/x-win-bitmap'
-  );
-  $types['image']->mimetypes = (empty($types['image']->mimetypes)) ? $image : array_merge($types['image']->mimetypes, $image);
 
   $video = array(
     // *.mov files
@@ -2337,7 +2332,12 @@ function os_files_file_mimetype_mapping_alter(&$mimes) {
     'application/vnd.ms-powerpoint' => 'pot',
     'application/vnd.openxmlformats-officedocument.presentationml.template' => 'potx',
     'text/csv' => 'csv',
-    'application/x-rar-compressed' => 'rar'
+    'application/x-rar-compressed' => 'rar',
+    'image/ico' => 'ico',
+    'application/ico' => 'ico',
+    'application/x-ico' => 'ico',
+    'image/vnd.microsoft.icon' => 'ico',
+    'image/x-icon' => 'ico'
   );
 
   foreach ($types as $mime => $ext) {
