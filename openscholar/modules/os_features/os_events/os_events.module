@@ -2435,6 +2435,7 @@ function os_events_validate_repeat_on_checkbox($form, $form_state) {
     $rrule = $parts[0];
     $parsed_exceptions = (array) $parts[1];
     $exception_count = 0;
+    $event_dates = date_repeat_calc('RRULE:' . $rrule['DATA'], $form_state['values']['field_date'][LANGUAGE_NONE][0]['value'], '');
     foreach ($parsed_exceptions as $exception) {
       $date = date_ical_date($exception, 'UTC');
       date_timezone_set($date, date_default_timezone_object());
@@ -2452,6 +2453,9 @@ function os_events_validate_repeat_on_checkbox($form, $form_state) {
         if ($exceptions >= $end_date) {
           form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][exceptions][EXDATE][' . $exception_count . '][datetime][date', t('You can not select event end date as exception.'));
         }
+      }
+      if (isset($rrule['COUNT']) && $exceptions >= date('Y-m-d', strtotime(end($event_dates)))) {
+        form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][exceptions][EXDATE][' . $exception_count . '][datetime][date', t('You can not select event end date as exception.'));
       }
       $exception_count++;
     }
