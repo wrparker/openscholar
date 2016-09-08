@@ -361,11 +361,14 @@ function cp_menu_node_validate($node, $form, &$form_state) {
       'link_path' => '',
       'tooltip' => $os_menu['description'],
     );
-    list(, $existing_menu) = _vsite_menu_prepare_menu_item($item, $vsite);
+    if ($vsite) {
+      ctools_include('menu', 'os');
+      list(, $existing_menu) = _vsite_menu_prepare_menu_item($item, $vsite);
+    }
 
     if ($os_menu['enabled'] && strlen($os_menu['link_title']) == 0) {
       form_set_error('os_menu][link_title', t('Please provide a link title.'));
-    } elseif($os_menu['enabled'] && strlen($os_menu['link_title']) > 0 && strlen(serialize($existing_menu)) > 65000) {
+    } elseif($vsite && $os_menu['enabled'] && strlen($os_menu['link_title']) > 0 && strlen(serialize($existing_menu)) > 65000) {
       form_set_error('os_menu][link_title', t('You have reached the maximum number of items for this menu.'));
     }
   }

@@ -276,6 +276,7 @@ projects[oembed][patch][] = "http://cgit.drupalcode.org/oembed/patch/?id=a27adf7
 projects[oembed][patch][] = "http://drupal.org/files/issues/oembed.2134415.wysiwyg_dimensions.patch"
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/514d6c636dc69ea76ea307a874c7cd9c3e0fb045/patches/oembed.alt_tags_no_escape.patch"
 projects[oembed][patch][] = "http://drupal.org/files/issues/split-up-regex-2739023-1.patch"
+projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/61b4675841580356481463f4780627bab619f197/patches/oembed.8762.uri_fragments.patch"
 
 projects[og][subdir] = "contrib"
 projects[og][version] = 2.6
@@ -320,7 +321,7 @@ projects[pinserver][subdir] = "contrib"
 projects[pinserver][type] = module
 projects[pinserver][download][type] = git
 projects[pinserver][download][url] = "git://github.com/openscholar/pinserver.git"
-projects[pinserver][download][tag] = 7.x-3.4.17
+projects[pinserver][download][tag] = 7.x-3.4.19
 
 projects[purl][subdir] = "contrib"
 ;: projects[purl][version] = 1.0-beta1+11-dev
@@ -468,7 +469,7 @@ libraries[tinymce][download][url] = "http://github.com/downloads/tinymce/tinymce
 
 libraries[spyc][type] = "libraries"
 libraries[spyc][download][type] = "file"
-libraries[spyc][download][url] = "http://spyc.googlecode.com/files/spyc-0.5.zip"
+libraries[spyc][download][url] = "https://github.com/mustangostang/spyc/archive/0.5.1.zip"
 
 libraries[respondjs][type] = "libraries"
 libraries[respondjs][download][type] = "file"
