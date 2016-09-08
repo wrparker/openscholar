@@ -620,10 +620,10 @@ function os_profiles_field_default_field_instances() {
         'weight' => 2,
       ),
       'sidebar_teaser' => array(
-        'label' => 'inline',
+        'label' => 'above',
         'settings' => array(),
-        'type' => 'text_plain',
-        'weight' => 2,
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'slide_teaser' => array(
         'label' => 'above',
