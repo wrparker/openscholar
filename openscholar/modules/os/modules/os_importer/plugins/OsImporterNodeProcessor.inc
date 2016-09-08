@@ -104,14 +104,7 @@ class OsImporterNodeProcessor extends FeedsNodeProcessor {
     }
     catch (Exception $e) {
 
-      error_log("EAM line 107");
-
-      // causes AJAX error?
-//      error_log("EAM line 109 " . var_export($batch));
-
       if ($batch) {
-
-        error_log("EAM line 113");
 
         $batch['sets'][0]['results']['node_save_failed'] = TRUE;
         $batch['sets'][0]['results']['node_save_failed_message'] =
@@ -123,19 +116,5 @@ class OsImporterNodeProcessor extends FeedsNodeProcessor {
         return;
       }
     }
-
-    // In case an exception wasn't thrown, e.g., the query fails in write_drupal_record()
-    if (isset($entity->feeds_item->entity_id) && ! $entity->feeds_item->entity_id) {
-
-      error_log("EAM line 120");
-
-      $batch['sets'][0]['results']['node_save_failed'] = TRUE;
-      $batch['sets'][0]['results']['node_save_failed_message'] = "Uncaught exception.  Node did not insert.";
-      return;
-    }
-
-//    error_log("EAM line 137 " . var_export($entity));
-    error_log("EAM line 132");
-
   }
 }
