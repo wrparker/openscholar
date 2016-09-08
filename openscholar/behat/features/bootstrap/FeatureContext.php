@@ -3460,18 +3460,4 @@ class FeatureContext extends DrupalContext {
       throw new \Exception("The text '{$text}'' was not found in the screen");
     }
   }
-
-  /**
-   * @Then /^I will see a confirm dialog box with the text "([^"]*)"$/
-   */
-  public function iWillSeeAConfirmDialogBoxWithTheText($text) {
-    waitForPageActionsToComplete();
-    $confirm_text = $this->getSession()->getDriver()->getWebDriverSession()->getAlert_text();
-    if (!$confirm_text) {
-      throw new \Exception("Confirm has no text.");
-    }
-    elseif ($confirm_text != $text) {
-      throw new \Exception("Confirm did not have the text '$text'.");
-    }
-  }
 }

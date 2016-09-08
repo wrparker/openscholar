@@ -65,9 +65,6 @@ projects[date_ical][version] = 2.7
 projects[devel][subdir] = "contrib"
 projects[devel][version] = 1.3
 
-projects[diff][subdir] = "contrib"
-projects[diff][version] = 3.2
-
 projects[disqus][subdir] = "contrib"
 projects[disqus][version] = 1.9
 projects[disqus][patch][] = "http://drupal.org/files/comment_sources-disqus-2120703-1.patch"

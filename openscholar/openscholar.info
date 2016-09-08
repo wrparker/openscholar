@@ -97,6 +97,7 @@ dependencies[] = os_front
 dependencies[] = os_ga
 dependencies[] = os_help
 dependencies[] = os_importer
+dependencies[] = os_revisions
 dependencies[] = os_restful
 dependencies[] = os_rss
 dependencies[] = os_search_db
@@ -135,7 +136,6 @@ dependencies[] = os_stats
 dependencies[] = os_taxonomy
 
 ; other
-dependencies[] = diff
 dependencies[] = entity_validator
 dependencies[] = metatag
 dependencies[] = metatag_opengraph

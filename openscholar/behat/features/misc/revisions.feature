@@ -22,22 +22,19 @@ Feature: Revisions functionality testing.
         And I delete revision "1" of "My New Blog Post"
        Then I should be able to see "2" revisions for "My New Blog Post"
 
-  @misc_second @api @javascript @revisions
-  Scenario: User is about to create a revision for a node that already has the maximum number for that content type
+  @misc_second @api @revisions
+  Scenario: User is restricted in the number of revisions they are allowed to create
       Given I set the variable "restrict_node_revision_number_for_blog" to "2"
         And I am logging in as "john"
-        And I edit the node "My New Blog Post"
-        And I click on link "Revision information" under "edit-revision-information"
-        And I check the box "edit-revision"
-       Then I will see a confirm dialog box with the text "This content already has the maximum number of revisions saved (2). By creating a new revision, you will be permanently deleting the oldest revision.\n\nAre you sure you want to create a new revision?"
-
+        And I create a revision of "My New Blog Post" where I change the "title" to "My New Revised Again Blog Post"
+       Then I should be able to see "2" revisions for "My New Revised Again Blog Post"
 
   @misc_second @api @revisions
   Scenario: View revisions of a blog without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "My New Blog Post"
-        And I should not be permitted to "revert" revisions for "My New Blog Post"
-        And I should not be permitted to "delete" revisions for "My New Blog Post"
+       Then I should not be able to see the "revisions" contextual link for "My New Revised Again Blog Post"
+        And I should not be permitted to "revert" revisions for "My New Revised Again Blog Post"
+        And I should not be permitted to "delete" revisions for "My New Revised Again Blog Post"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a book
@@ -62,11 +59,18 @@ Feature: Revisions functionality testing.
        Then I should be able to see "2" revisions for "My New Book Page"
 
   @misc_second @api @revisions
+  Scenario: User is restricted in the number of revisions they are allowed to create
+      Given I set the variable "restrict_node_revision_number_for_book" to "2"
+        And I am logging in as "john"
+        And I create a revision of "My New Book Page" where I change the "title" to "My New Revised Again Book Page"
+       Then I should be able to see "2" revisions for "My New Revised Again Book Page"
+
+  @misc_second @api @revisions
   Scenario: View revisions of a book without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "My New Book Page"
-        And I should not be permitted to "revert" revisions for "My New Book Page"
-        And I should not be permitted to "delete" revisions for "My New Book Page"
+       Then I should not be able to see the "revisions" contextual link for "My New Revised Again Book Page"
+        And I should not be permitted to "revert" revisions for "My New Revised Again Book Page"
+        And I should not be permitted to "delete" revisions for "My New Revised Again Book Page"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a faq
@@ -91,11 +95,18 @@ Feature: Revisions functionality testing.
        Then I should be able to see "2" revisions for "My New FAQ"
 
   @misc_second @api @revisions
+  Scenario: User is restricted in the number of revisions they are allowed to create
+      Given I set the variable "restrict_node_revision_number_for_faq" to "2"
+        And I am logging in as "john"
+        And I create a revision of "My New FAQ" where I change the "title" to "My New Revised Again FAQ"
+       Then I should be able to see "2" revisions for "My New Revised Again FAQ"
+
+  @misc_second @api @revisions
   Scenario: View revisions of a faq without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "My New FAQ"
-        And I should not be permitted to "revert" revisions for "My New FAQ"
-        And I should not be permitted to "delete" revisions for "My New FAQ"
+       Then I should not be able to see the "revisions" contextual link for "My New Revised Again FAQ"
+        And I should not be permitted to "revert" revisions for "My New Revised Again FAQ"
+        And I should not be permitted to "delete" revisions for "My New Revised Again FAQ"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a link
@@ -120,11 +131,18 @@ Feature: Revisions functionality testing.
        Then I should be able to see "2" revisions for "My New Link"
 
   @misc_second @api @revisions
+  Scenario: User is restricted in the number of revisions they are allowed to create
+      Given I set the variable "restrict_node_revision_number_for_link" to "2"
+        And I am logging in as "john"
+        And I create a revision of "My New Link" where I change the "title" to "My New Revised Again Link"
+       Then I should be able to see "2" revisions for "My New Revised Again Link"
+
+  @misc_second @api @revisions
   Scenario: View revisions of a link without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "My New Link"
-        And I should not be permitted to "revert" revisions for "My New Link"
-        And I should not be permitted to "delete" revisions for "My New Link"
+       Then I should not be able to see the "revisions" contextual link for "My New Revised Again Link"
+        And I should not be permitted to "revert" revisions for "My New Revised Again Link"
+        And I should not be permitted to "delete" revisions for "My New Revised Again Link"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a news item
@@ -149,11 +167,18 @@ Feature: Revisions functionality testing.
        Then I should be able to see "2" revisions for "My New News"
 
   @misc_second @api @revisions
+  Scenario: User is restricted in the number of revisions they are allowed to create
+      Given I set the variable "restrict_node_revision_number_for_news" to "2"
+        And I am logging in as "john"
+        And I create a revision of "My New News" where I change the "title" to "My New Revised Again News"
+       Then I should be able to see "2" revisions for "My New Revised Again News"
+
+  @misc_second @api @revisions
   Scenario: View revisions of a news without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "My New News"
-        And I should not be permitted to "revert" revisions for "My New News"
-        And I should not be permitted to "delete" revisions for "My New News"
+       Then I should not be able to see the "revisions" contextual link for "My New Revised Again News"
+        And I should not be permitted to "revert" revisions for "My New Revised Again News"
+        And I should not be permitted to "delete" revisions for "My New Revised Again News"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a page
@@ -178,11 +203,18 @@ Feature: Revisions functionality testing.
        Then I should be able to see "2" revisions for "My New Page"
 
   @misc_second @api @revisions
+  Scenario: User is restricted in the number of revisions they are allowed to create
+      Given I set the variable "restrict_node_revision_number_for_page" to "2"
+        And I am logging in as "john"
+        And I create a revision of "My New Page" where I change the "title" to "My New Revised Again Page"
+       Then I should be able to see "2" revisions for "My New Revised Again Page"
+
+  @misc_second @api @revisions
   Scenario: View revisions of a page without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "My New page"
-        And I should not be permitted to "revert" revisions for "My New page"
-        And I should not be permitted to "delete" revisions for "My New page"
+       Then I should not be able to see the "revisions" contextual link for "My New Revised Again Page"
+        And I should not be permitted to "revert" revisions for "My New Revised Again Page"
+        And I should not be permitted to "delete" revisions for "My New Revised Again Page"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a profile
@@ -207,11 +239,18 @@ Feature: Revisions functionality testing.
        Then I should be able to see "2" revisions for "Person Test"
 
   @misc_second @api @revisions
+  Scenario: User is restricted in the number of revisions they are allowed to create
+      Given I set the variable "restrict_node_revision_number_for_person" to "2"
+        And I am logging in as "john"
+        And I create a revision of "Person Test" where I change the "title" to "Person Test Revised Again"
+       Then I should be able to see "2" revisions for "Person Test Revised Again"
+
+  @misc_second @api @revisions
   Scenario: View revisions of a profile without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "Person Test"
-        And I should not be permitted to "revert" revisions for "Person Test"
-        And I should not be permitted to "delete" revisions for "Person Test"
+       Then I should not be able to see the "revisions" contextual link for "Person Test Revised Again"
+        And I should not be permitted to "revert" revisions for "Person Test Revised Again"
+        And I should not be permitted to "delete" revisions for "Person Test Revised Again"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a publication
@@ -236,11 +275,18 @@ Feature: Revisions functionality testing.
        Then I should be able to see "2" revisions for "My New Publication"
 
   @misc_second @api @revisions
+  Scenario: User is restricted in the number of revisions they are allowed to create
+      Given I set the variable "restrict_node_revision_number_for_biblio" to "2"
+        And I am logging in as "john"
+        And I create a revision of "My New Publication" where I change the "title" to "My New Revised Again Publication"
+       Then I should be able to see "2" revisions for "My New Revised Again Publication"
+
+  @misc_second @api @revisions
   Scenario: View revisions of a publication without the permissions to revert/delete
       Given I am logging in as "bill"
-       Then I should not be able to see the "revisions" contextual link for "My New Publication"
-        And I should not be permitted to "revert" revisions for "My New Publication"
-        And I should not be permitted to "delete" revisions for "My New Publication"
+       Then I should not be able to see the "revisions" contextual link for "My New Revised Again Publication"
+        And I should not be permitted to "revert" revisions for "My New Revised Again Publication"
+        And I should not be permitted to "delete" revisions for "My New Revised Again Publication"
 
   @misc_second @api @revisions
   Scenario: Should not be able to create revisions of a class
