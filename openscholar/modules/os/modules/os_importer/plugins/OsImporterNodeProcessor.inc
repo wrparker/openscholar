@@ -106,7 +106,8 @@ class OsImporterNodeProcessor extends FeedsNodeProcessor {
 
       error_log("EAM line 107");
 
-      error_log("EAM line 109 " . var_export($batch));
+      // causes AJAX error?
+//      error_log("EAM line 109 " . var_export($batch));
 
       if ($batch) {
 
@@ -115,6 +116,10 @@ class OsImporterNodeProcessor extends FeedsNodeProcessor {
         $batch['sets'][0]['results']['node_save_failed'] = TRUE;
         $batch['sets'][0]['results']['node_save_failed_message'] =
           ($e->getMessage()) ? $e->getMessage() : "No exception message available";
+
+        // rethrow exception for the caller
+        throw $e;
+
         return;
       }
     }
