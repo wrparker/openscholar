@@ -325,6 +325,19 @@ function os_profiles_process_node(&$vars) {
 
   module_load_include('inc', 'os', 'includes/os');
 
+  // Display syncing information to administrators
+  if (spaces_access_admin()) {
+    if (isset($vars['field_original_destination_url'][LANGUAGE_NONE][0]['value'])) {
+
+      // The data is synced from the JSON web-service at api/, but we'll point to the themed page
+      $source_url_themed = preg_replace("/\bapi\/\w+\/\w+/", "node", $vars['field_original_destination_url'][LANGUAGE_NONE][0]['value']);
+
+      $vars['content']['field_original_destination_url']['#markup'] =
+        "<p><i>" . t("This profile is " . l(t("synced from another source"), $source_url_themed )) . "</i></p>";
+      $vars['content']['field_original_destination_url']['#weight'] = -100;
+    }
+  }
+
   // Adding the prefix value to the title of the person.
   if (!empty($vars['field_prefix'])) {
     $vars['title'] = $vars['field_prefix'][LANGUAGE_NONE][0]['value'] . ' ' . $vars['title'];
