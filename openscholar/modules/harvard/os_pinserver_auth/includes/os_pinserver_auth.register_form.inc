@@ -56,11 +56,6 @@ function _os_pinserver_auth_vsite_register_form_alter(&$form, $form_state, $form
   // Attaches submit and validate callbacks
   $form['#submit'][] = 'os_pinserver_auth_register_submit';
   $form['#validate'][] = 'os_pinserver_auth_register_validate';
-
-  // Loads additional field(s) if user has permission
-  if (user_access('create vsite content on behalf')) {
-    _os_pinserver_auth_huid_field($form);
-  }
 }
 
 /**
@@ -238,24 +233,6 @@ function os_pinserver_auth_register_vsite_users_profile_node_submit($form, &$for
   // Customizes confirmation message for add/edit form
   drupal_get_messages($type = NULL, $clear_queue = TRUE);
   drupal_set_message(t('Your personal information has been saved.'));
-}
-
-/**
- * Attaches a new HUID textfield element to the given form.
- */
-function _os_pinserver_auth_huid_field(&$form) {
-  $form['user_fieldset']['huid'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Harvard ID'),
-    '#size' => 35,
-    '#required' => FALSE,
-    '#description' => t('Enter the @huid of the web site owner', array('@huid' => 'Harvard ID')),
-    '#ajax' => array(
-      'callback' => 'os_pinserver_auth_register_ajax_validation',
-      'wrapper' => 'huid-errors',
-    ),
-    '#field_suffix' => theme('vsite_register_form_errors', array('name' => 'huid')),
-  );
 }
 
 /**
