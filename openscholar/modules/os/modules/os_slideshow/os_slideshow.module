@@ -119,7 +119,7 @@ function os_slideshow_form_slideshow_slide_node_form_alter(&$form, &$state, $for
     '#type' => 'textfield',
     '#title' => t('Link'),
     '#description' => 'You may provide a link for each slide in your slideshow.',
-    '#autocomplete_path' => 'os/pages/autocomplete',
+    '#autocomplete_path' => 'vsite/autocomplete/node',
     '#default_value' => (isset($form['#node']->field_link[LANGUAGE_NONE][0]['url']) ? $form['#node']->field_link[LANGUAGE_NONE][0]['url'] : ""),
   );
 }
