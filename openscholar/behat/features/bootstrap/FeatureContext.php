@@ -617,7 +617,7 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @When /^I create a new event "([^"]*)" with title "([^"]*)" in the site "([^"]*)"$/
+   * @When /^I create a new "([^"]*)" with title "([^"]*)" in the site "([^"]*)"$/
    */
   public function iCreateANewEventWithTitle($type, $title, $vsite) {
     $tomorrow = time() + (24 * 60 * 60);
@@ -1797,17 +1797,6 @@ class FeatureContext extends DrupalContext {
       print_r('An error: ' . $e->getMessage());
       print_r('page: ' . $page);
     }
-  }
-
-  /**
-   * @When /^I edit the page meta data of "([^"]*)" in "([^"]*)"$/
-   */
-  public function iEditTheMetaTags($title, $group) {
-    $nid = FeatureHelp::GetNodeId($title);
-
-    return array(
-      new Step\When('I visit "' . $group . '/os/pages/' . $nid . '/meta"'),
-    );
   }
 
   /**

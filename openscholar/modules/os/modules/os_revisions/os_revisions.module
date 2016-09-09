@@ -43,7 +43,6 @@ function os_revisions_menu() {
     'weight' => 2,
     'type' => MENU_LOCAL_TASK,
   );
-  
   return $items;
 }
 
