@@ -1880,7 +1880,7 @@ function os_files_field_formatter_view($entity_type, $entity, $field, $instance,
       $videos = array();
       $other = array();
       $file_icon_directory = drupal_get_path('module', 'os_files') . '/icons';
-      $allowed_extensions_in_carousal = variable_get('allowed_extensions_in_carousal', array('mp3', 'mov', 'mpeg', 'mp4', 'avi', 'wmv', 'txt', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'xlt', 'xltx', 'ppt', 'pptx', 'pps', 'ppsx', 'xml', 'rtf', 'csv', 'zip', 'gz', 'exe', 'tar', 'rar'));
+      $allowed_extensions_in_carousal = variable_get('allowed_extensions_in_carousal', array('mov', 'mpeg', 'mp4', 'avi', 'wmv'));
       foreach ( $items as $i ) {
         // Determining file extension for inclusion of the item in jcarousal render array.
         $parts = explode('.', $i['uri']);
