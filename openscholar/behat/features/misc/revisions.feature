@@ -3,7 +3,7 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: Create and View revisions of a blog with the right permissions
       Given I am logging in as "john"
-        And I create a new "blog" with title "My New Blog Post" in the site "john"
+        And I create a new "blog" with title "My New Blog Post" in the "john" site
        Then I should not be able to see the "revisions" contextual link for "My New Blog Post"
 
       Given I am logging in as "john"
@@ -39,7 +39,7 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: Create and View revisions of a book
       Given I am logging in as "john"
-        And I create a new "book" with title "My New Book Page" in the site "john"
+        And I create a new "book" with title "My New Book Page" in the "john" site
        Then I should not be able to see the "revisions" contextual link for "My New Book Page"
 
       Given I am logging in as "john"
@@ -75,7 +75,7 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: Create and View revisions of a faq
       Given I am logging in as "john"
-        And I create a new "faq" with title "My New FAQ" in the site "john"
+        And I create a new "faq" with title "My New FAQ" in the "john" site
        Then I should not be able to see the "revisions" contextual link for "My New FAQ"
 
       Given I am logging in as "john"
@@ -111,7 +111,7 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: Create and View revisions of a link
       Given I am logging in as "john"
-        And I create a new "link" with title "My New Link" in the site "john"
+        And I create a new "link" with title "My New Link" in the "john" site
        Then I should not be able to see the "revisions" contextual link for "My New Link"
 
       Given I am logging in as "john"
@@ -147,7 +147,7 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: Create and View revisions of a news item
       Given I am logging in as "john"
-        And I create a new "news" with title "My New News" in the site "john"
+        And I create a new "news" with title "My New News" in the "john" site
        Then I should not be able to see the "revisions" contextual link for "My New News"
 
       Given I am logging in as "john"
@@ -183,7 +183,7 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: Create and View revisions of a page
       Given I am logging in as "john"
-        And I create a new "page" with title "My New Page" in the site "john"
+        And I create a new "page" with title "My New Page" in the "john" site
        Then I should not be able to see the "revisions" contextual link for "My New Page"
 
       Given I am logging in as "john"
@@ -219,7 +219,7 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: Create and View revisions of a profile
       Given I am logging in as "john"
-        And I create a new "person" with title "Person Test" in the site "john"
+        And I create a new "person" with title "Person Test" in the "john" site
        Then I should not be able to see the "revisions" contextual link for "Person Test"
 
       Given I am logging in as "john"
@@ -255,7 +255,7 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: Create and View revisions of a publication
       Given I am logging in as "john"
-        And I create a new "biblio" with title "My New Publication" in the site "john"
+        And I create a new "biblio" with title "My New Publication" in the "john" site
        Then I should not be able to see the "revisions" contextual link for "My New Publication"
 
       Given I am logging in as "john"
@@ -291,34 +291,34 @@ Feature: Revisions functionality testing.
   @misc_second @api @revisions
   Scenario: Should not be able to create revisions of a class
       Given I am logging in as "john"
-        And I create a new "class" with title "My New Class" in the site "john"
+        And I create a new "class" with title "My New Class" in the "john" site
         And I edit the node "My New Class"
        Then I should not see "fieldset" element with the class "node-form-revision-information"
 
   @misc_second @api @revisions
   Scenario: Should not be able to create revisions of a event
       Given I am logging in as "john"
-        And I create a new "event" with title "My New Event" in the site "john"
+        And I create a new "event" with title "My New Event" in the "john" site
         And I edit the node "My New Event"
        Then I should not see "fieldset" element with the class "node-form-revision-information"
 
   @misc_second @api @revisions
   Scenario: Should not be able to create revisions of a gallery
       Given I am logging in as "john"
-        And I create a new "media gallery" with title "My New Gallery" in the site "john"
+        And I create a new "media gallery" with title "My New Gallery" in the "john" site
         And I edit the node "My New Gallery"
        Then I should not see "fieldset" element with the class "node-form-revision-information"
 
   @misc_second @api @revisions
   Scenario: Should not be able to create revisions of a presentation
       Given I am logging in as "john"
-        And I create a new "presentation" with title "My New Presentation" in the site "john"
+        And I create a new "presentation" with title "My New Presentation" in the "john" site
         And I edit the node "My New Presentation"
        Then I should not see "fieldset" element with the class "node-form-revision-information"
 
   @misc_second @api @revisions
   Scenario: Should not be able to create revisions of a software project
       Given I am logging in as "john"
-        And I create a new "software project" with title "My New Software" in the site "john"
+        And I create a new "software project" with title "My New Software" in the "john" site
         And I edit the node "My New Software"
        Then I should not see "fieldset" element with the class "node-form-revision-information"
