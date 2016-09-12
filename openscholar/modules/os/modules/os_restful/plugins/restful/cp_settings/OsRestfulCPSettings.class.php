@@ -121,6 +121,7 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
         }
         else {
           // something about an error?
+          watchdog("REST", "The value \"$value\" is not valid for \"$var\".");
         }
       }
 
