@@ -40,7 +40,7 @@ function os_wysiwyg_filter_default_formats() {
     thead[scope|id|headers],
     caption,
     address,h2,h3,h4,h5,h6,pre,
-    strong/b,em/i,strike,s,u',
+    strong/b,em/i,strike,s,u,abbr[title]',
           'allow_comments' => 1,
           'nofollow_policy' => 'disabled',
           'nofollow_domains' => array(),
