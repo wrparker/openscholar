@@ -100,8 +100,8 @@ Drupal.wysiwyg.plugins['os_link'] = {
       $('#edit-target-option', doc).prop('checked', 'checked');
     }
 
-    // If the link has a title attribute
-    if (selection.node.getAttribute('title') != '') {
+    // If the link has a title attribute.
+    if (selection.node != null && selection.node.getAttribute('title') != '') {
       $('#edit-link-title', doc).val(selection.node.getAttribute('title'));
     }
 
