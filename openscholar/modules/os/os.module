@@ -3558,9 +3558,27 @@ function os_batch_finished_callback($success, $results, $operations) {
 
   // There was an error - rollback the batch import (delete the newly inserted nodes)
   if ($results['node_save_failed']) {
-    drupal_set_message(t("Failed to import a node due to !error.  Deleting !num_nodes as rollback procedure.  " .
-          "Please fix import file and try again.",
-          array("!num_nodes" => sizeof($results['nodes_inserted']), "!error" => $results['node_save_failed_message'])), $type = 'error');
-      node_delete_multiple($results['nodes_inserted']);
+
+    $nodes_formatted = format_plural(sizeof($results['nodes_inserted']), '1 node', '@count nodes');
+    $error_position = "line " . sizeof($results['nodes_inserted']);
+    $match = preg_match("/(column \S+)/i", $results['node_save_failed_message'], $matches);
+    if ($match) {
+      $error_position .= " (" . $matches[1] . ")";
+    }
+
+    // Clear messages from the queue
+    drupal_get_messages();
+
+    drupal_set_message(t("Failed to import a node due to !error.",
+      array("!error" => $results['node_save_failed_message'])),
+      $type = 'error');
+    drupal_set_message(t("Deleting !nodes_formatted in rollback procedure.",
+      array("!nodes_formatted" => $nodes_formatted)),
+      $type = 'error');
+    drupal_set_message(t("Please fix error at !error_position of import file and try again.",
+      array("!error_position" => $error_position)),
+      $type = 'error');
+
+    node_delete_multiple($results['nodes_inserted']);
   }
 }
