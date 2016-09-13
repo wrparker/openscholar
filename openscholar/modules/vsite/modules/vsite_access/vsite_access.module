@@ -204,7 +204,9 @@ function vsite_access_cp_settings_save($val) {
   if (($current_vsite_access + $val) != 5 && $current_vsite_access != $val) {
     // hack to test
     $id = $space->group->nid;
-    cache_clear_all("field:node:$id", 'cache_field');
+    $cid = "field:node:$id";
+    drupal_set_message("Clearing cache_field $cid");
+    cache_clear_all($cid, 'cache_field');
     cp_clear_site_cache();
   }
 }
