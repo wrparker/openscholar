@@ -197,14 +197,14 @@ function vsite_access_cp_settings_save($val) {
   $space = spaces_get_space();
   $wrapper = entity_metadata_wrapper('node', $space->group);
   $current_vsite_access = $space->group->group_access[LANGUAGE_NONE][0]['value'];
-  watchdog('vsite_access', "Changing access from $current_vsite_access to $val", array(), WATCHDOG_DEBUG);
+  watchdog('vsite_access', "Changing access from $current_vsite_access to $val", array(), WATCHDOG_ERROR);
   $wrapper->{VSITE_ACCESS_FIELD}->set($val);
   $wrapper->save();
   // Clear the cache when we switch the privacy in ALL cases except toggling between invite only (value = 1) and Harvard (value = 4).
   // For toggling, the sum of previous and selected value will be always '5' for such case; other two radio buttons values are 0 and 2.
-  watchdog('vsite_access', "About to try clearing the cache.", array(), WATCHDOG_DEBUG);
+  watchdog('vsite_access', "About to try clearing the cache.", array(), WATCHDOG_ERROR);
   if (($current_vsite_access + $val) != 5 && $current_vsite_access != $val) {
-    watchdog('vsite_access', "Clearing the cache.", array(), WATCHDOG_DEBUG);
+    watchdog('vsite_access', "Clearing the cache.", array(), WATCHDOG_ERROR);
     cp_clear_site_cache();
   }
 }
