@@ -159,4 +159,10 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
     return false;
   }
 
+
+  public function additionalHateoas() {
+    return array(
+      'messages' => drupal_get_messages()
+    );
+  }
 }
