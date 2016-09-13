@@ -688,8 +688,6 @@ function cp_form_redirect_edit_form_alter(&$form, &$form_state, $form_id) {
     'name' => 'purl.admin',
   );
 
-  dpm($form['purl']['modifier']);
-
   // Determines this vsite's purl modifier value.
   if (empty($form['purl']['modifier']['#default_value'])) {
     $default_value = "{$vsite->purl_provider}:{$vsite->id}";
