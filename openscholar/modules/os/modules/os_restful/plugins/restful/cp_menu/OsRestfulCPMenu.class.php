@@ -390,7 +390,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'default_state' => 'collapsed',
         'children' => array(
           'app' => array(
-            'label' => 'Enable Apps',
+            'label' => 'App Management',
             'type' => 'link',
             'href' => 'cp/apps'
           )
