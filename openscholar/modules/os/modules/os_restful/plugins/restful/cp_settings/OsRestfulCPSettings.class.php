@@ -56,7 +56,7 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
       if (!isset($elem['form']['#id'])) {
         $elem['form']['#id'] = drupal_html_id('edit-' . $var);
       }
-      if ($elem['form']['#states']) {
+      if (!empty($elem['form']['#states'])) {
         drupal_process_states($elem['form']);
       }
     }
@@ -125,7 +125,7 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
         }
       }
 
-      return;
+      return array();
     }
 
     throw new RestfulForbiddenException("Vsite ID is required.");
@@ -133,7 +133,7 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
 
   private function saveVariable($var, $val) {
     if (!empty($_GET['vsite'])) {
-      if ($vsite = vsite_get_vsite($this->request['vsite'])) {
+      if ($vsite = vsite_get_vsite($_GET['vsite'])) {
         $vsite->controllers->variable->set($var, $val);
       }
     }

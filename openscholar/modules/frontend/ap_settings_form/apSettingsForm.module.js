@@ -154,7 +154,8 @@
     });
 
     function submitForm() {
-      apSettings.SaveSettings($s.formData).then(function () {
+      apSettings.SaveSettings($s.formData).then(function (response) {
+        console.log(angular.copy(response.data));
         $s.close(true);
       });
     }
