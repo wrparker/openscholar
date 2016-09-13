@@ -202,6 +202,9 @@ function vsite_access_cp_settings_save($val) {
   // Clear the cache when we switch the privacy in ALL cases except toggling between invite only (value = 1) and Harvard (value = 4).
   // For toggling, the sum of previous and selected value will be always '5' for such case; other two radio buttons values are 0 and 2.
   if (($current_vsite_access + $val) != 5 && $current_vsite_access != $val) {
+    // hack to test
+    $id = $space->group->id;
+    cache_clear_all("field:node:$id", 'cache_field');
     cp_clear_site_cache();
   }
 }
