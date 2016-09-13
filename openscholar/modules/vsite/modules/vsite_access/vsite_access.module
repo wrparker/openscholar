@@ -203,7 +203,7 @@ function vsite_access_cp_settings_save($val) {
   // For toggling, the sum of previous and selected value will be always '5' for such case; other two radio buttons values are 0 and 2.
   if (($current_vsite_access + $val) != 5 && $current_vsite_access != $val) {
     // hack to test
-    $id = $space->group->id;
+    $id = $space->group->nid;
     cache_clear_all("field:node:$id", 'cache_field');
     cp_clear_site_cache();
   }
