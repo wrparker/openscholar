@@ -3560,7 +3560,7 @@ function os_batch_finished_callback($success, $results, $operations) {
   if ($results['node_save_failed']) {
 
     $nodes_formatted = format_plural(sizeof($results['nodes_inserted']), '1 node', '@count nodes');
-    $error_position = "line " . sizeof($results['nodes_inserted']);
+    $error_position = "line " . (sizeof($results['nodes_inserted']) + 2);
     $match = preg_match("/(column \S+)/i", $results['node_save_failed_message'], $matches);
     if ($match) {
       $error_position .= " (" . $matches[1] . ")";
