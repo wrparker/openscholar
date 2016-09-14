@@ -23,6 +23,12 @@
         }
 
         instance.find('#cke_1_contents').height(editor_height);
+
+        editor.on('doubleclick', function(evt)  {
+          if (evt.data.element.is('a')) {
+            evt.data.dialog = null;
+          }
+        }, null, null, 100);
       });
     }
   };
