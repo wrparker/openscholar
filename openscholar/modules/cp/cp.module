@@ -541,7 +541,7 @@ function cp_cp_settings() {
   if (module_exists('vsite') && module_exists('expire')) {
     $settings['cp_clear_cache'] = array(
       'group' => array(
-        '#title' => t('Maintenance'),
+        '#title' => t('Cache / Reindex'),
         '#id' => 'os-maintenance',
       ),
       'form' => array(
