@@ -161,7 +161,7 @@ function os_cp_settings() {
   $setting = array();
   $setting['long_list_content_pagination'] = array(
     'group' => array(
-      '#title' => t('Content Display'),
+      '#title' => t('Long List Display'),
       '#id' => 'long-list-content-pagination',
       '#weight' => 40
     ),
