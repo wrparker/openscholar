@@ -200,21 +200,6 @@ function hwpi_cp_settings() {
 
   $vsite = vsite_get_vsite();
   $settings = array(
-    'enable_responsive' => array(
-      'group' => array(
-        '#title' => t('Responsive'),
-        '#id' => 'responsive',
-      ),
-      'form' => array(
-        '#type' => 'checkbox',
-        '#default_value' => variable_get('enable_responsive', FALSE),
-        '#title' => t('Enable responsive behaviors'),
-        '#access' => user_access('change theme'),
-        '#description' => t('Responsive behaviors will change the layout of your page to fit the screens of smaller devices, such
-          as phones or tablets. Disabling this will prevent the layout from changing, but could make using your site more difficult
-          on smaller devices.'),
-      ),
-    ),
     'privacy_policy' => array(
       'group' => array(
         '#title' => t('Privacy'),

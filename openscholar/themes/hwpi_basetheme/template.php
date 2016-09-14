@@ -68,7 +68,7 @@ function hwpi_basetheme_page_alter(&$page) {
     )
   );
 
-  if (context_isset('context', 'os_public') && variable_get('enable_responsive', false)) {
+  if (context_isset('context', 'os_public') && variable_get('enable_responsive', true)) {
     $path = drupal_get_path('theme', 'hwpi_basetheme').'/css/';
     drupal_add_css($path.'responsive.base.css');
     drupal_add_css($path.'responsive.layout.css');

@@ -19,7 +19,7 @@ function os_basetheme_preprocess_html(&$vars) {
     $vars['classes_array'][] = 'navbar-off';
   }
 
-  $vars['use_responsive_behaviors'] = (bool) variable_get('enable_responsive', FALSE);
+  $vars['use_responsive_behaviors'] = (bool) variable_get('enable_responsive', true);
 }
 
 /**
