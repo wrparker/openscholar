@@ -138,14 +138,7 @@ body.overlay {
     background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 109px -983px;
     background-color: #444;
 }
-#cssmenu li.heading.has-sub[key="4_settings-6_advanced"] {
-    background-position: 109px -1004px;
-   
-}
-#cssmenu li.heading.has-sub.open[key="4_settings-6_advanced"] {
-    background-position: 109px -978px;
-   
-}
+
 #cssmenu li.heading.parent,
 #cssmenu li.heading.parent.open {
     background-color: #6C7A89;

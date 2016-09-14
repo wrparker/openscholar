@@ -397,7 +397,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         ) + $feature_settings +
         array(
           'advanced' => array(
-            'label' => 'Global Site Settings',
+            'label' => 'Global Settings',
             'type' => 'heading',
             'default_state' => 'collapsed',
             'children' => $settings_links,
