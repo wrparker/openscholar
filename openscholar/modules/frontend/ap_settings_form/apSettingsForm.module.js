@@ -155,7 +155,7 @@
 
     function submitForm() {
       apSettings.SaveSettings($s.formData).then(function (response) {
-        sessionStorage['messages'] = response.data.messages;
+        sessionStorage['messages'] = JSON.stringify(response.data.messages);
         $s.close(true);
       });
     }
