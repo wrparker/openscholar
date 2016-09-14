@@ -206,6 +206,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     $type_info = node_type_get_types();
     $variable_controller = $this->getVariableController($vsite);
     $spaces_features = $variable_controller->get('spaces_features');
+    $settings_forms = cp_get_setting_forms();
 
     foreach ($bundles as $bundle) {
       if (!og_user_access('node', $vsite, 'create ' . $bundle . ' content')) {
@@ -264,11 +265,30 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         $item = menu_get_item("cp/build/features/{$feature}");
         if ($item && $item['href'] == "cp/build/features/{$feature}") {
           $feature_object = feature_load($feature);
-          $feature_settings["feature_{$feature}"] = array(
-            'label' => features_get_feature_title($feature_object),
-            'type' => 'link',
-            'href' => $item['href'],
-          );
+
+          $key = $feature == 'os_booklets' ? 'os_booklets_toc_position' : $feature;
+          if (in_array($key, array_keys($settings_forms))) {
+            $form = $settings_forms[$feature];
+            $group = $form['group']['#title'];
+            $id = $form['group']['#id'];
+            $link = array(
+              'label' => $group,
+              'type' => 'directive',
+              'directive' => array(
+                'ap-settings-form',
+                'form' => $form['group']['#id']
+              )
+            );
+          }
+          else {
+            $link = array(
+              'label' => features_get_feature_title($feature_object),
+              'type' => 'link',
+              'href' => $item['href'],
+            );
+          }
+
+          $feature_settings["feature_{$feature}"] = $link;
         }
       }
     }
@@ -278,8 +298,6 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'type' => 'link',
         'href' => 'cp/content/files-private'
     )):array();
-
-    $settings_forms = cp_get_setting_forms();
 
     $settings_links = array();
     foreach ($settings_forms as $f) {
