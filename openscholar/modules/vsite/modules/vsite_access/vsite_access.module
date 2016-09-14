@@ -211,6 +211,8 @@ function vsite_access_cp_settings_save($val) {
     drupal_set_message(print_r($cache, 1));
     cp_clear_site_cache();
     entity_get_controller('node')->resetCache(array($id));
+    $memcache_error = &drupal_static('_dmemcache_error_handler');
+    drupal_set_message("Memcache error response: \"$memcache_error\"");
   }
 }
 
