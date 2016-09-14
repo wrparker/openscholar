@@ -75,10 +75,9 @@ function os_presentations_os_entity_view_modes_alter(&$info) {
  * Implements hook_form_FORM_ID_alter
  */
 function os_presentations_form_presentation_node_form_alter(&$form, $form_state, $form_id) {
-  
-  // Hide the redundant file upload field.  Users can put files in field_presentation_files.
-  // We won't completely delete field_upload for back-compatibility with sites that have
-  // already stored files in field_upload.
-  $form['field_upload']['#prefix'] = '<div style="display:none;">';
-  $form['field_upload']['#suffix'] = '</div>';
+
+  // Clarify the purpose of the two file fields
+  $form['field_presentation_file'][LANGUAGE_NONE]['#title'] = 'Presentation Slides (ppt, pptx, pdf, etc.)';
+  unset($form['field_presentation_file'][LANGUAGE_NONE]['#description']);
+  $form['field_upload'][LANGUAGE_NONE]['#title'] = 'Attach Supplemental Presentation Files (handouts, notes, cirricula, etc.)';
 }
