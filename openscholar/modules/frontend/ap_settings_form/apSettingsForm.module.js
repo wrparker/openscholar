@@ -105,7 +105,7 @@
           modal.element.dialog(dialogOptions);
           modal.close.then(function (result) {
             if (result) {
-              //window.location.reload();
+              window.location.reload();
             }
           });
         });
