@@ -1473,11 +1473,6 @@ function os_profiles_node_view_alter(&$build) {
   if ($build['#bundle'] != 'person')
       return;
 
-  // Too many complaints about the "read more" feature.  Remove it from profiles.
-  if (isset($build['links']['node']['#links']['node-readmore'])) {
-    unset($build['links']['node']['#links']['node-readmore']);
-  }
-
   // If 'person' content type are displayed in slide_teaser view mode, then appending additional element for Full Profile link.
   if ($build['#bundle'] == 'person' && $build['#view_mode'] == 'slide_teaser') {
     $build['os_profile_link']['#markup'] = l('Full Profile', 'node/' . $build['#node']->nid, array('attributes' => array('class' => 'profile-link')));
