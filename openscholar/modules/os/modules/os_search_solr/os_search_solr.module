@@ -681,7 +681,7 @@ function os_search_solr_cp_settings() {
 
   $settings['os_search_solr'] = array(
     'group' => array(
-      '#title' => t('Maintenance'),
+      '#title' => t('Cache / Reindex'),
       '#id' => 'os-maintenance',
     ),
     'form' => array(

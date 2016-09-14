@@ -149,7 +149,7 @@ function vsite_access_cp_settings() {
     $form['vsite_private'] = array(
       'group' => array(
         '#id' => 'privacy',
-        '#title' => t('Privacy'),
+        '#title' => t('Site Visibility'),
         '#weight' => 10,
       ),
       'form' => array(
