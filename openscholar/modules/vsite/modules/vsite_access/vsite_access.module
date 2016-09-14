@@ -210,6 +210,7 @@ function vsite_access_cp_settings_save($val) {
     $cache = cache_get($cid, 'cache_field');
     drupal_set_message(print_r($cache, 1));
     cp_clear_site_cache();
+    entity_get_controller('node')->resetCache(array($id));
   }
 }
 
