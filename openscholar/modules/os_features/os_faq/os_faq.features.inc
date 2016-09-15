@@ -40,7 +40,7 @@ function os_faq_views_api($module = NULL, $api = NULL) {
 function os_faq_node_info() {
   $items = array(
     'faq' => array(
-      'name' => t('FAQs'),
+      'name' => t('FAQ'),
       'base' => 'node_content',
       'description' => t('A frequently asked question with an answer.'),
       'has_title' => '1',
