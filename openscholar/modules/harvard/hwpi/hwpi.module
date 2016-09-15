@@ -202,8 +202,8 @@ function hwpi_cp_settings() {
   $settings = array(
     'privacy_policy' => array(
       'group' => array(
-        '#title' => t('Privacy'),
-        '#id' => 'privacy',
+        '#title' => t('Privacy Policy'),
+        '#id' => 'privacy-policy',
       ),
       'form' => array(
         '#type' => 'textfield',

@@ -304,6 +304,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     };
     uasort($add_links, $labelcmp);
     uasort($import_links, $labelcmp);
+    uasort($settings_links, $labelcmp);
 
     $structure = array(
       'content' => array(
@@ -372,6 +373,12 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
               'type' => 'link',
               'href' => 'cp/appearance'
             ),
+            'breadcrumbs' => array(
+
+            ),
+            'favicon' => array(
+
+            ),
 //            'theme_settings' => array(
 //              'label' => 'Theme Settings',
 //              'type' => 'link',
@@ -393,8 +400,14 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
             'label' => 'Enable/Disable Apps',
             'type' => 'link',
             'href' => 'cp/apps'
+          ),
+          'app_settings' => array(
+            'label' => 'App Settings',
+            'type' => 'heading',
+            'default_state' => 'collapsed',
+            'children' => $feature_settings
           )
-        ) + $feature_settings +
+        ) +
         array(
           'advanced' => array(
             'label' => 'Global Settings',

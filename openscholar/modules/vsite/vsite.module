@@ -3339,8 +3339,8 @@ function vsite_cp_settings() {
       ),
     ),
     'group' => array(
-      '#id' => 'vsite-seo',
-      '#title' => t('SEO'),
+      '#id' => 'Favicon',
+      '#title' => t('Favicon'),
       '#weight' => 30,
     ),
     'submit' => 'vsite_cp_settings_form_submit',
