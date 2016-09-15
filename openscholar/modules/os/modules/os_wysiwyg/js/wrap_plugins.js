@@ -30,5 +30,4 @@ CKEDITOR.config.font_names =
   'Times New Roman/Times New Roman, Times, serif;' +
   'Trebuchet MS/Trebuchet MS, Helvetica, sans-serif;' +
   'Verdana/Verdana, Geneva, sans-serif;' +
-  'Webdings;' +
   'Wingdings;';
