@@ -910,8 +910,19 @@ function os_update_7045() {
 /**
  * Set image toolkit variables.
  */
-function os_update_7046() {
+function os_update_7047() {
   variable_set('imageapi_optimize_service', 'resmushit');
   variable_set('image_toolkit', 'imageapi_optimize');
+
+  // Save the last file ID for the compressing images cron task.
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'file')
+    ->propertyCondition('type', 'image')
+    ->propertyOrderBy('fid', 'DESC')
+    ->range(0, 1)
+    ->execute();
+
+  variable_set('os_last_un_compress_fid', reset($result['file'])->fid);
 }
 

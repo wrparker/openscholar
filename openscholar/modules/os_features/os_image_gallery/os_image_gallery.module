@@ -44,6 +44,43 @@ function os_image_gallery_os_app_info() {
 }
 
 /**
+ * Implements hook_cron().
+ */
+function os_image_gallery_cron() {
+  $last_fid = variable_get('os_last_un_compress_fid');
+  $recent_fid = variable_get('os_last_processed_fid', NULL);
+
+  if ($last_fid == $recent_fid) {
+    return;
+  }
+
+  $query = new EntityFieldQuery();
+  $query
+    ->entityCondition('entity_type', 'file')
+    ->propertyCondition('type', 'image');
+
+  if ($recent_fid) {
+    $query->propertyCondition('fid', [$recent_fid, $last_fid], 'BETWEEN');
+  }
+  else {
+    $query->propertyCondition('fid', $last_fid, '<=');
+  }
+
+  $result = $query
+    ->propertyOrderBy('fid', 'ASC')
+    ->execute();
+
+  $files = file_load_multiple(array_keys($result['file']));
+
+  foreach ($files as $file) {
+
+  }
+
+  dpm($file->fid);
+
+}
+
+/**
  * Implements hook_menu_alter().
  */
 function os_image_gallery_menu_alter(&$items) {
