@@ -908,20 +908,9 @@ function os_update_7045() {
 }
 
 /**
- * Set image toolkit variables.
+ * Enable enhanced settings forms
  */
-function os_update_7047() {
-  variable_set('imageapi_optimize_service', 'resmushit');
-  variable_set('image_toolkit', 'imageapi_optimize');
-
-  // Save the last file ID for the compressing images cron task.
-  $query = new EntityFieldQuery();
-  $result = $query
-    ->entityCondition('entity_type', 'file')
-    ->propertyCondition('type', 'image')
-    ->propertyOrderBy('fid', 'DESC')
-    ->range(0, 1)
-    ->execute();
-
-  variable_set('os_last_un_compress_fid', reset($result['file'])->fid);
+function os_update_7046() {
+  module_enable(array('ap_settings_form', 'restful_message'));
+  return t('Enhanced settings forms enabled.');
 }
