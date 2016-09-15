@@ -1078,16 +1078,32 @@ body.cke_editable {
    font-family: inherit !important;
     font-size: inherit !important;
     padding: 0 10px;
+    font-weight:inherit !important;
 }
 
-body.cke_editable table[align="left"] {margin-right:8px;}
-body.cke_editable table[align="right"] {margin-left:8px;}
+body.cke_editable h1,
+body.cke_editable h2,
+body.cke_editabl h3 {
+   font-family: inherit !important;
+    font-weight:inherit !important;
+}
 
+
+body.cke_editable blockquote {
+    border-left: 2px solid #807E6D;
+    font-style: italic;
+    margin: 1em 3em;
+    padding-left: 1em;
+}
 
 span.cke_button__break_icon {
     background-position-y: -1px;
     background-size: 20px !important;
     width: 18px;
+}
+
+.cke_ltr span.cke_button__anchor_icon {
+    background: url('/profiles/openscholar/themes/cp_theme/images/cp-sprite.png?123') no-repeat 0 -711px !important;
 }
 
 .file img.file-icon {
