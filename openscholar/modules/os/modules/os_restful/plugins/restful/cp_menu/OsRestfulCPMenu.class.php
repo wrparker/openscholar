@@ -260,23 +260,24 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     );
 
     $feature_settings = array();
+    $exclude_from_advanced = [];
     if (spaces_access_admin($user, $vsite_object)) {
       foreach (array_keys(array_filter($spaces_features)) as $feature) {
         $item = menu_get_item("cp/build/features/{$feature}");
         if ($item && $item['href'] == "cp/build/features/{$feature}") {
           $feature_object = feature_load($feature);
+          $app_info = os_app_info($feature);
 
-          $key = $feature == 'os_booklets' ? 'os_booklets_toc_position' : $feature;
-          if (in_array($key, array_keys($settings_forms))) {
-            $form = $settings_forms[$feature];
+          if (!empty($app_info['form_settings']) && in_array($app_info['form_settings'], array_keys($settings_forms))) {
+            $form = $settings_forms[$app_info['form_settings']];
+            $exclude_from_advanced[] = $form['group']['#id'];
             $group = $form['group']['#title'];
-            $id = $form['group']['#id'];
             $link = array(
               'label' => $group,
               'type' => 'directive',
               'directive' => array(
                 'ap-settings-form',
-                'form' => $form['group']['#id']
+                'form' => $form['group']['#id'],
               )
             );
           }
@@ -303,6 +304,11 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     foreach ($settings_forms as $f) {
       $group = $f['group']['#title'];
       $id = $f['group']['#id'];
+
+      if (in_array($f['group']['#id'], $exclude_from_advanced)) {
+        // The settings was applied in the non-advanced settings. Skipping.
+        continue;
+      }
 
       if (!isset($f['form']['#access']) || $f['form']['#access']) {
         $settings_links[$id] = array(

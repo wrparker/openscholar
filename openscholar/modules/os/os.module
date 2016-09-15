@@ -2110,6 +2110,7 @@ function os_app_info($app_name = NULL) {
             'require_parent_node' => FALSE,
             'browse_pages' => FALSE,
             'has_settings' => FALSE,
+            'form_settings' => '',
           );
 
           // Adds the module information.
