@@ -450,3 +450,38 @@ function os_image_gallery_views_pre_view(&$view, &$display_id, &$args) {
      drupal_add_js(drupal_get_path('module', 'os').'/theme/os_toggle.js');
   }
 }
+
+/**
+ * Implements hook_imageapi_optimize_info_alter().
+ */
+function os_image_gallery_imageapi_optimize_info_alter(&$info) {
+  $info['services']['resmushit']['callbacks']['process'] = 'os_image_gallery_image_optimize';
+}
+
+/**
+ * Overriding the original resmush.it callback function.
+ *
+ * @param $image
+ *   The name of the image.
+ * @param $dst
+ *   The destination.
+ *
+ * @return bool
+ */
+function os_image_gallery_image_optimize($image, $dst) {
+  // Call to the original function.
+  $results = imageapi_optimize_services_resmushit($image, $dst);
+
+  if (!$results) {
+    return false;
+  }
+
+  // Triggering a watchdog.
+  $explode = explode("/", $dst);
+  $params = array(
+    '@name' => end($explode),
+  );
+
+  watchdog('os_image_gallery', t('The image @name has been compressed.', $params));
+  return TRUE;
+}
