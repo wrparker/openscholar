@@ -51,8 +51,11 @@ function os_image_gallery_cron() {
   $recent_fid = variable_get('os_last_processed_fid', NULL);
 
   if ($last_fid == $recent_fid) {
+    // We processed all the existing images before the image using resmushit.it.
     return;
   }
+
+  require_once drupal_get_path('module', 'imageapi_optimize') . '/services/resmushit.inc';
 
   $query = new EntityFieldQuery();
   $query
@@ -68,16 +71,16 @@ function os_image_gallery_cron() {
 
   $result = $query
     ->propertyOrderBy('fid', 'ASC')
+    ->range(0, 25)
     ->execute();
 
   $files = file_load_multiple(array_keys($result['file']));
 
   foreach ($files as $file) {
-
+    os_image_gallery_image_optimize(NULL, $file->uri);
   }
 
-  dpm($file->fid);
-
+  variable_set('os_last_processed_fid', $file->fid);
 }
 
 /**
