@@ -41,3 +41,24 @@ function cp_appearance_requirements() {
   }
 }
  */
+
+/*
+ * Implements hook_update_N
+ *
+ * Enable single-page themes on demo site
+ *    (see http://docs.openscholar.harvard.edu/one-page-themes)
+ */
+function cp_appearance_update_7000() {
+  if (strpos($_SERVER['SERVER_NAME'], "scholar-demo") !== false) {
+    db_update('system')
+      ->fields(array('status' => 1))
+      ->condition('name', 'hwpi_onepage')
+      ->condition('type', 'theme')
+      ->execute();
+    db_update('system')
+      ->fields(array('status' => 1))
+      ->condition('name', 'os_atharvard')
+      ->condition('type', 'theme')
+      ->execute();
+  }
+}
