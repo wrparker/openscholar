@@ -778,7 +778,6 @@ function os_profiles_profiles_fields() {
     'field_middle_name_or_initial' => 'middle_name',
     'field_address' => 'address',
     'field_phone' => 'phone',
-    'field_office_hours' => 'office_hours',
     'field_email' => 'email',
     'field_professional_title' => 'professional_title',
     'field_website' => 'website',
