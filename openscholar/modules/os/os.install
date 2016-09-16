@@ -909,8 +909,8 @@ function os_update_7045() {
 
 /**
  * Enables enhanced sitewide settings forms.
+ */
 function os_update_7046() {
   module_enable(array('ap_settings_form'));
   return t('Enhanced settings forms are now enabled.');
 }
- */
