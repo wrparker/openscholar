@@ -330,7 +330,9 @@ function os_profiles_process_node(&$vars) {
     if (isset($vars['field_original_destination_url'][LANGUAGE_NONE][0]['value'])) {
 
       // The data is synced from the JSON web-service at api/, but we'll point to the themed page
-      $source_url_themed = preg_replace("/\bapi\/\w+\/\w+/", "node", $vars['field_original_destination_url'][LANGUAGE_NONE][0]['value']);
+      $source_url_themed = $vars['field_original_destination_url'][LANGUAGE_NONE][0]['value'];
+      $source_url_themed = preg_replace("/\bapi\/\w+\/\w+/", "node", $source_url_themed);
+      $source_url_themed = preg_replace("/\.json/", "", $source_url_themed);
 
       $vars['content']['field_original_destination_url']['#markup'] =
         "<p><i>" . t("This profile is " . l(t("synced from another source"), $source_url_themed )) . "</i></p>";
