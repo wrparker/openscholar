@@ -108,17 +108,21 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
    */
   protected function validateDateFormats($formats, $value, $field_name) {
     // Validate the date format for the start and end date.
+    $validationSuccess = false;
     foreach ($formats as $format) {
       if ($date = DateTime::createFromFormat($format, $value)) {
-        if ($date->format($format) != $value) {
-          $params = array(
-            '@date' => $value,
-            '@format' => date($format, $date->getTimestamp()),
-          );
-          $this->setError($field_name, 'The value of the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
-          return;
+        if ($date->format($format) == $value) {
+          $validationSuccess = true;
         }
       }
+    }
+
+    if (! $validationSuccess) {
+      $params = array(
+          '@date' => $value,
+          '@format' => join(", ", $formats),
+      );
+      $this->setError($field_name, 'The value of the date field (@date) is not valid. The date should be in a format similar to one of the following formats: @format.', $params);
     }
 
     return TRUE;
