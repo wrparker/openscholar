@@ -222,6 +222,18 @@ function hwpi_basetheme_node_view_alter(&$build) {
         unset($build['field_phone']);
       }
 
+      // Contact Details > office hours
+      if (isset($build['field_office_hours'])) {
+        $build['field_office_hours']['#label_display'] = 'hidden';
+        $office_hours = trim($build['field_office_hours'][0]['#markup']);
+        if ($phone_plain && !empty($office_hours)) {
+          $build['field_office_hours'][0]['#markup'] = t('Office Hours: ') . $office_hours;
+        }
+        $build['contact_details']['field_office_hours'] = $build['field_office_hours'];
+        $build['contact_details']['field_office_hours']['#weight'] = 53;
+        unset($build['field_office_hours']);
+      }
+
       if ($build['#view_mode'] == 'sidebar_teaser') {
         $build['pic_bio']['#prefix'] = '<div class="pic-bio clearfix people-sidebar-teaser">';
       }
