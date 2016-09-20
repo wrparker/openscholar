@@ -282,11 +282,12 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     $settings_forms = cp_get_setting_forms();
 
     $settings_links = array();
+    $space_access = spaces_access_admin();
     foreach ($settings_forms as $f) {
       $group = $f['group']['#title'];
       $id = $f['group']['#id'];
 
-      if (!isset($f['form']['#access']) || $f['form']['#access']) {
+      if ((!isset($f['form']['#access']) && $spaces_access) || $f['form']['#access'] && $spaces_access) {
         $settings_links[$id] = array(
           'label' => $group,
           'type' => 'directive',
