@@ -246,12 +246,9 @@ a img {
 }
 
 img.file-icon {
-    width:16px;
-}
-.media-gallery-carousal.file-icon {
-    width:100%;
-    margin-top: 2px;
-}
+	width:16px;
+	}
+	
 .media-gallery-media-item-thumbnail img.file-icon {
 	width:100%;
 	}
@@ -1133,3 +1130,5 @@ ul.no-event-export {
 .block-boxes-os_boxes_widget_slider #layout_16_9_side .rslides li {
   list-style:none;
 }
+
+

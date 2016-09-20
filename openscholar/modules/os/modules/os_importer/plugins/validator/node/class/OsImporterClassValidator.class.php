@@ -33,8 +33,6 @@ class OsImporterClassValidator extends OsImporterEntityValidateBase {
       return;
     }
 
-    $value = trim($value);
-
     $info = field_info_field($field_name_name);
 
     // Validate the semester.
