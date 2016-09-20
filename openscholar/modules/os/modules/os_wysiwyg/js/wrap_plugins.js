@@ -9,9 +9,6 @@ Drupal.wysiwyg.plugins['widget'] = CKEDITOR.plugins.get('widget');
 Drupal.wysiwyg.plugins['colordialog'] = CKEDITOR.plugins.get('colordialog');
 Drupal.wysiwyg.plugins['indentblock'] = CKEDITOR.plugins.get('indentblock');
 
-// Save the reference to the original CKEDITOR plugin.
-CKEDITOR.plugins.original_link = CKEDITOR.plugins.link;
-
 // Override the normal link functionality.
 CKEDITOR.plugins.link = Drupal.wysiwyg.plugins['os_link'];
 

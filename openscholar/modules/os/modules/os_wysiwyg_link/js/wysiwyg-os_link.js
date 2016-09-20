@@ -61,16 +61,9 @@ Drupal.wysiwyg.plugins['os_link'] = {
               : $html.wrap('<div>').parent().html();
     }
 
+    debugger;
     Drupal.wysiwyg.instances[editorId].insert(html);
-  },
-
-  tryRestoreFakeAnchor: function(editor, dom) {
-    CKEDITOR.plugins.original_link.tryRestoreFakeAnchor(editor, dom);
-  },
-
-  getSelectedLink: function(editor) {
-    // Calling the original function.
-    CKEDITOR.plugins.original_link.getSelectedLink(editor);
+    delete jQuery.selectLink;
   },
 
   popupOnLoad: function (e, selection, editorId) {
@@ -85,22 +78,47 @@ Drupal.wysiwyg.plugins['os_link'] = {
       window = iframe.contentWindow,
       selected = '[Rich content. Click here to overwrite.]';
 
+    // The user selected a link and not double clicked on a link.
+    var selectedLink = jQuery.selectLink != null && typeof(jQuery.selectLink) == 'object';
+
     if (this.selectLink(selection.node) && selection.content == '') {
       selection.content = selection.node.innerHTML;
     }
 
+    if (selectedLink) {
+      debugger;
+      $('.form-item-external input', doc).val(jQuery.selectLink.attr('href'));
+    }
+
     if (selection.node != null && selection.node.text != null) {
       $('.form-item-link-text input', doc).val(selection.node.text);
+    }
+    else {
+      if (selectedLink) {
+        $('.form-item-link-text input', doc).val(jQuery.selectLink.text());
+      }
     }
 
     // If the link is set to be opened in a new window, then the checkbox will be in checked state.
     if (selection.node && (selection.node.getAttribute('target') == '_blank')) {
       $('#edit-target-option', doc).prop('checked', 'checked');
     }
+    else {
+      if (jQuery.selectLink.attr('target') == "_blank") {
+        $('#edit-target-option', doc).prop('checked', 'checked');
+      }
+    }
 
     // If the link has a title attribute.
     if (selection.node != null && selection.node.getAttribute('title') != '') {
       $('#edit-link-title', doc).val(selection.node.getAttribute('title'));
+    }
+    else {
+      var title = jQuery.selectLink.attr('title');
+
+      if (title != null) {
+        $('#edit-link-title', doc).val(title);
+      }
     }
 
     $('.insert-buttons input[value="Insert"]', doc).click(function (e) {

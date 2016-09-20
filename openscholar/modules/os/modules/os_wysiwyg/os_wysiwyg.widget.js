@@ -29,6 +29,12 @@
             evt.data.dialog = null;
           }
         }, null, null, 100);
+
+        editor.on('selectionChange', function(evt) {
+          if (jQuery(this.getSelectedHtml().$).is('a')) {
+            jQuery.selectLink = jQuery(this.getSelectedHtml().$);
+          }
+        });
       });
     }
   };
