@@ -413,10 +413,8 @@ function os_books_menu_alter(&$callbacks) {
 
   if (!module_exists('vsite')) return;
 
-  $items['book/export/%/%'] = array(
-    'access callback' => 'os_books_access_export',
-    'access arguments' => array(3, 'access printer-friendly version'),
-  );
+  $callbacks['book/export/%/%']['access callback'] = 'os_books_access_export';
+  $callbacks['book/export/%/%']['access arguments'] = array(3, 'access printer-friendly version');
 }
 
 /**
