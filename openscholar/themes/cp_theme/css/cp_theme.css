@@ -84,30 +84,24 @@ html.js input.throbbing {
     list-style-type: none !important;
     list-style: none !important;
 }
-
 .cp-controls-wrapper .add_new {
-  float:left;
-  display:inline;
-   background: url("../images/scholarbase-sprite.png") no-repeat scroll 3px -379px #A1D4A1 !important;
+    float: left;
+    display: inline;
+    background: url("../images/scholarbase-sprite.png") no-repeat scroll 3px -379px #A1D4A1 !important;
     border-radius: 5px 5px 5px 5px;
     float: left;
-     margin: 0 22px 0 0;
+    margin: 0 22px 0 0;
     padding: 0 8px 0 22px !important;
-    text-decoration:none !important;
-  }
-  
-
-
+    text-decoration: none !important;
+}
 /* Special behavior for action link and help position on CP > Content > Find: Files */
+
 .view-id-cp_files .cp-controls-wrapper {
     margin: 11px 29px 10px 0;
 }
-
-
 .view-id-cp_files .cp-controls-wrapper .add_new {
     margin-right: 0;
 }
-
 .view-id-cp_files .cp-controls-wrapper .add_new {
     line-height: 15px !important;
     display: inline-block;
@@ -122,9 +116,8 @@ html.js input.throbbing {
     border-radius: 4px;
     background: rgb(61, 155, 19) !important;
     text-decoration: none !important;
-	float:right;
+    float: right;
 }
-
 .view-os-files-private .cp-controls-wrapper .add_new {
     background: #2C890D !important;
     padding: 5px 10px !important;
@@ -611,7 +604,7 @@ table.biblio-contributors tr:first-child input.form-submit {
     margin-left: 0;
 }
 #edit-biblio-year-coded .form-item label.option {
-   font-size: 0.85em;
+    font-size: 0.85em;
 }
 fieldset#edit-biblio-year-group {
     background: none;
@@ -1046,12 +1039,13 @@ div.error:before {
     background-position: 0 -675px;
 }
 #og-vocabulary-add-more-wrapper #edit-og-vocabulary-und .fieldset-wrapper {
-  border: 1px solid #ccc;
-  background: #f1f1f1;
-  padding: 5px;
-  width: 96%;
+    border: 1px solid #ccc;
+    background: #f1f1f1;
+    padding: 5px;
+    width: 96%;
 }
 /** News edit page calendar field override */
+
 .node-news-form .date-padding {
     padding: 0;
     border: 1px solid #ccc;
@@ -1064,11 +1058,11 @@ div.error:before {
     font-weight: normal;
     padding: 8px 0;
 }
-
 .select2-container {
     min-width: 300px;
 }
-.form-item-field-biblio-pub-month-und .select2-container, .form-item-field-biblio-pub-day-und .select2-container {
+.form-item-field-biblio-pub-month-und .select2-container,
+.form-item-field-biblio-pub-day-und .select2-container {
     min-width: 65px;
 }
 #edit-biblio-year-group .select2-container .select2-choice {
@@ -1076,4 +1070,42 @@ div.error:before {
     font-size: 13px !important;
     font-weight: normal;
     height: 23px;
+}
+
+.view-content ~ .item-list ul.pager {
+    margin-top: 30px !important;
+    letter-spacing: -1em;
+}
+.view-content ~ .item-list ul.pager li.pager-current,
+.view-content ~ .item-list ul.pager li:hover {
+    background-color: #efefef;
+}
+.view-content ~ .item-list ul.pager li a:hover {
+    text-decoration: none;
+}
+li.pager-previous + li.pager-ellipsis {
+    display: none;
+}
+.view-content ~ .item-list ul.pager li {
+    border-left: 1px solid #dededc !important;
+    border-top: 1px solid #dededc !important;
+    border-bottom: 1px solid #dededc !important;
+    letter-spacing: normal;
+    padding: 0.7em !important;
+}
+.view-content ~ .item-list ul.pager li.pager-first {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.view-content ~ .item-list ul.pager li.pager-last {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-right: 1px solid #dededc !important;
+}
+.view-content ~ .item-list ul.pager li.pager-next,
+.view-content ~ .item-list ul.pager li.pager-previous {
+	font-weight: bold;
+	}
+.file img.file-icon {
+    width:16px;
 }

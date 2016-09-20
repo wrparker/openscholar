@@ -2324,6 +2324,7 @@ function os_events_mail_alter(&$message) {
  * event node form.
  */
 function os_events_form_event_node_form_alter(&$form, &$form_state) {
+
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
   $form['#validate'][] = 'os_events_validate_repeat_on_checkbox';
   // Attaching form state behavior to show the checkbox only when signup and repeat checkboxes are with checked state.
@@ -2432,6 +2433,28 @@ function os_events_validate_repeat_on_checkbox($form, $form_state) {
     // Formatting repeat rules in structured array.
     $parts = date_repeat_split_rrule($repeating);
     $rrule = $parts[0];
+    $parsed_exceptions = (array) $parts[1];
+    $exception_count = 0;
+    foreach ($parsed_exceptions as $exception) {
+      $date = date_ical_date($exception, 'UTC');
+      date_timezone_set($date, date_default_timezone_object());
+      $exceptions = date_format($date, 'Y-m-d');
+      if (isset($form_state['values']['field_date'][LANGUAGE_NONE][0]['value'])) {
+        $event_start_date = date('Y-m-d', strtotime($form_state['values']['field_date'][LANGUAGE_NONE][0]['value']));
+        if ($exceptions <= $event_start_date) {
+          form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][exceptions][EXDATE][' . $exception_count . '][datetime][date', t('The first occurrence of a repeating event cannot be an exception.'));
+        }
+      }
+      if (isset($rrule['UNTIL'])) {
+        $end_date = date_ical_date($rrule['UNTIL'], 'UTC');
+        date_timezone_set($end_date, date_default_timezone_object());
+        $end_date = date_format($end_date, 'Y-m-d');
+        if ($exceptions >= $end_date) {
+          form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][exceptions][EXDATE][' . $exception_count . '][datetime][date', t('The first occurrence of a repeating event cannot be an exception.'));
+        }
+      }
+      $exception_count++;
+    }
     // Validation for weekly, monthly and yearly repeating events.
     if (!isset($rrule['BYDAY']) && $rrule['FREQ'] == 'WEEKLY') {
       form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][FREQ', t('You must select at least one day.'));
@@ -2526,6 +2549,65 @@ function os_events_show_register_by_node($node, $date = FALSE) {
  */
 function os_events_theme_registry_alter(&$theme_registry) {
   $theme_registry['registration_link']['function'] = 'os_events_registration_link';
+  $theme_registry['date_display_range']['function'] = 'os_events_date_display_range';
+}
+
+/**
+ * Returns HTML for a date element formatted as a range.
+ */
+function os_events_date_display_range($variables) {
+  $date1 = $variables['date1'];
+  $date2 = $variables['date2'];
+  $timezone = $variables['timezone'];
+  $attributes_start = $variables['attributes_start'];
+  $attributes_end = $variables['attributes_end'];
+
+  $start_date = '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . $date1 . '</span>';
+  $end_date = '<span class="date-display-end"' . drupal_attributes($attributes_end) . '>' . $date2 . $timezone . '</span>';
+
+  // Prepend the days of the week for a multi-day event, and append the start and end time
+  // (this amounts to a sort of short-hand for a recurring event)
+  $multi_day_prefix = "";
+  if (strtotime($date2) - strtotime($date1) > (24 * 60 * 60)) {
+
+    // e.g., Mon - Fri
+    $day_of_the_week1 = '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . date('D', strtotime($variables['date1'])) . '</span>';
+    $day_of_the_week2 = '<span class="date-display-end"' . drupal_attributes($attributes_start) . '>' . date('D', strtotime($variables['date2'])) . '</span>';
+
+    $multi_day_prefix = t('!start-date-day - !end-date-day, ', array(
+      '!start-date-day' => $day_of_the_week1,
+      '!end-date-day' => $day_of_the_week2,
+    ));
+
+    // e.g., Aug 18 to Aug 22
+    $date1 = date('M j', strtotime($variables['date1']));
+    $date2 = date('M j', strtotime($variables['date2']));
+    $start_date = '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . $date1 . '</span>';
+    $end_date = '<span class="date-display-end"' . drupal_attributes($attributes_end) . '>' . $date2 . $timezone . '</span>, ';
+
+    // e.g., 8:30am - 4:30pm
+    $start_time = '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . date('g:ia', strtotime($variables['date1'])) . '</span>';
+    $end_time = '<span class="date-display-end"' . drupal_attributes($attributes_start) . '>' . date('g:ia', strtotime($variables['date2'])) . '</span>';
+
+    $multi_day_suffix = t('!start-time - !end-time', array(
+      '!start-time' => $start_time,
+      '!end-time' => $end_time,
+    ));
+  }
+
+  // If microdata attributes for the start date property have been passed in,
+  // add the microdata in meta tags.
+  if (!empty($variables['add_microdata'])) {
+    $start_date .= '<meta' . drupal_attributes($variables['microdata']['value']['#attributes']) . '/>';
+    $end_date .= '<meta' . drupal_attributes($variables['microdata']['value2']['#attributes']) . '/>';
+  }
+
+  return t('!multi-day-prefix !start-date to !end-date !multi-day-suffix', array(
+      '!multi-day-prefix' => $multi_day_prefix,
+      '!start-date' => $start_date,
+      '!end-date' => $end_date,
+      '!multi-day-suffix' => $multi_day_suffix,
+  ));
 }
 
 /**
