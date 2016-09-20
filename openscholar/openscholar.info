@@ -117,7 +117,7 @@ dependencies[] = cp_toolbar
 dependencies[] = cp_user
 dependencies[] = admin_panel
 dependencies[] = ap_settings_form
-dependencies[] = messages
+dependencies[] = restful_messages
 
 ; Features
 dependencies[] = os_blog
