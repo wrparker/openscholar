@@ -673,6 +673,7 @@ function os_breadcrumbs_cp_settings() {
       '#id' => 'breadcrumbs',
       '#title' => t('Breadcrumbs'),
       '#weight' => 50,
+      '#menu_parent' => 'appearance'
     ),
     'form' => array(
       '#prefix' => '<p>'
