@@ -18,6 +18,7 @@ Drupal.wysiwyg.plugins['os_link'] = {
 
   invoke: function (selection, settings, editorId) {
     var self = this;
+    var info;
     if (this.isNode(selection.node)) {
       var link = jQuery(selection.node);
       if (link[0].nodeName != 'A') {
@@ -26,13 +27,22 @@ Drupal.wysiwyg.plugins['os_link'] = {
       if (link.length == 0) {
         link = jQuery(selection.node).parents('a');
       }
-      var info = this.parseAnchor(link[0]);
+      info = this.parseAnchor(link[0]);
       settings['global'].active = info.type;
       settings['global'].url = info.url;
     }
     else {
-      delete settings['global'].active;
-      delete settings['global'].url;
+      var selectedLink = jQuery.selectLink != null && typeof(jQuery.selectLink) == 'object';
+      if (selectedLink) {
+        info = this.parseAnchor(jQuery.selectLink[0]);
+        settings['global'].active = info.type;
+        settings['global'].url = info.url;
+      }
+      else {
+        delete settings['global'].active;
+        delete settings['global'].url;
+      }
+
     }
     Drupal.media.popups.mediaBrowserOld(function (insert) {
       self.insertLink();
@@ -61,9 +71,17 @@ Drupal.wysiwyg.plugins['os_link'] = {
               : $html.wrap('<div>').parent().html();
     }
 
-    debugger;
     Drupal.wysiwyg.instances[editorId].insert(html);
     delete jQuery.selectLink;
+  },
+
+  tryRestoreFakeAnchor: function(editor, dom) {
+    CKEDITOR.plugins.original_link.tryRestoreFakeAnchor(editor, dom);
+  },
+
+  getSelectedLink: function(editor) {
+    // Calling the original function.
+    CKEDITOR.plugins.original_link.getSelectedLink(editor);
   },
 
   popupOnLoad: function (e, selection, editorId) {
@@ -86,7 +104,6 @@ Drupal.wysiwyg.plugins['os_link'] = {
     }
 
     if (selectedLink) {
-      debugger;
       $('.form-item-external input', doc).val(jQuery.selectLink.attr('href'));
     }
 

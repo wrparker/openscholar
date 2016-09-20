@@ -10,6 +10,7 @@ Drupal.wysiwyg.plugins['colordialog'] = CKEDITOR.plugins.get('colordialog');
 Drupal.wysiwyg.plugins['indentblock'] = CKEDITOR.plugins.get('indentblock');
 
 // Override the normal link functionality.
+CKEDITOR.plugins.original_link = CKEDITOR.plugins.link;
 CKEDITOR.plugins.link = Drupal.wysiwyg.plugins['os_link'];
 
 // Remove unsupported fonts.
