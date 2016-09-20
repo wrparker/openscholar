@@ -305,6 +305,7 @@ class os_taxonomy_fbt extends os_boxes_default {
     }
 
     drupal_add_js($settings, array('type' => 'setting'));
+    drupal_add_js(drupal_get_path('module', 'os_boxes') . '/plugins/os_taxonomy_fbt/os_taxonomy_fbt.js');
 
     if ($this->options['behavior'] == '--all--') {
       $this->options['bundles'] = array();

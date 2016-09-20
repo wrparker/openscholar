@@ -25,6 +25,7 @@ Drupal.behaviors.os_boxes_tabs = { attach: function (ctx) {
       selected: (typeof window.sessionStorage != 'undefined' && typeof sessionStorage[id] != 'undefined')?sessionStorage[id]:0
     });
   });
+
   // When there is embeded media inside tabs widget, iframe src attribute needs to be reloaded for corresponding tab click event to render scrolbars.
   $('.ui-tabs-anchor').on("click", function( event, ui ) {
     var container_id = $(this).parent().attr('aria-controls');
