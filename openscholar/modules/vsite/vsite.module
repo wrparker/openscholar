@@ -3342,6 +3342,7 @@ function vsite_cp_settings() {
       '#id' => 'Favicon',
       '#title' => t('Favicon'),
       '#weight' => 30,
+      '#menu_parent' => 'appearance',
     ),
     'submit' => 'vsite_cp_settings_form_submit',
   );

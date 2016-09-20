@@ -293,7 +293,8 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
           'directive' => array(
             'ap-settings-form',
             'form' => $f['group']['#id']
-          )
+          ),
+          'parent' => !empty($f['group']['#menu_parent']) ? $f['group']['#menu_parent'] : 'advanced'
         );
       }
     }
@@ -373,12 +374,6 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
               'type' => 'link',
               'href' => 'cp/appearance'
             ),
-            'breadcrumbs' => array(
-
-            ),
-            'favicon' => array(
-
-            ),
 //            'theme_settings' => array(
 //              'label' => 'Theme Settings',
 //              'type' => 'link',
@@ -406,14 +401,11 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
             'type' => 'heading',
             'default_state' => 'collapsed',
             'children' => $feature_settings
-          )
-        ) +
-        array(
+          ),
           'advanced' => array(
             'label' => 'Global Settings',
             'type' => 'heading',
             'default_state' => 'collapsed',
-            'children' => $settings_links,
           )
         ),
       ),
@@ -440,6 +432,13 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         ),
       ),
     );
+
+    foreach ($settings_links as $k => $sl) {
+      $elem = &$this->findMenuElement($structure, (array)$sl['parent']);
+      unset($sl['parent']);
+      $elem['children'][$k] = $sl;
+      uasort($elem['children'], $labelcmp);
+    }
 
     //Should we show this user the admin links?
     if (user_access('access toolbar',$user)) {
@@ -471,6 +470,42 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     }
 
     return $structure;
+  }
+
+  /**
+   * @param $menu - The menu to search
+   * @param $identifier - An array of keys in the menu array that will lead to the target element
+   * Ex.
+   *      findMenuParent('browse', 'content')
+   *      findMenuParent('appearance')
+   */
+  private function &findMenuElement(&$menu, $args) {
+    $element = $args[0];//TODO::
+    if (isset($menu[$element])) {
+      if (count($args) == 1) {
+        return $menu[$element];
+      }
+      else if (empty($element['children'])) {
+        return false;
+      }
+      else {
+        array_shift($args);
+        $target = &$this->findMenuElement($menu[$element]['children'], $args);
+        return $target;
+      }
+    }
+    else {
+      foreach ($menu as &$m) {
+        if (empty($m['children'])) {
+          continue;
+        }
+        else {
+          if ($target = &$this->findMenuElement($m['children'], $args)) {
+            return $target;
+          }
+        }
+      }
+    }
   }
 
   protected function getVariableController($vsite) {
