@@ -80,15 +80,15 @@ before_script:
   - mysql -e "SET GLOBAL wait_timeout=300;"
   - mysql -e "SHOW VARIABLES LIKE 'max_allowed_packet';"
 
-    # Run selenium.
-    - sudo apt-get install xvfb -y
-    - sudo apt-get install openjdk-7-jre-headless -y
-    - sh -e /etc/init.d/xvfb start
-    - export DISPLAY=:99.0
-    - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
-  #  - DISPLAY=:1 xvfb-run
-    - nohup java -jar selenium-server-standalone-2.53.1.jar -p 4444 &
-    - sleep 5
+  # Run selenium.
+  - sudo apt-get install xvfb -y
+  - sudo apt-get install openjdk-7-jre-headless -y
+  - sh -e /etc/init.d/xvfb start
+  - export DISPLAY=:99.0
+  - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.1.jar
+#  - DISPLAY=:1 xvfb-run
+  - nohup java -jar selenium-server-standalone-2.53.1.jar -p 4444 &
+  - sleep 5
 
   # Download and install Apache solr
   - wget https://archive.apache.org/dist/lucene/solr/3.6.2/apache-solr-3.6.2.zip
