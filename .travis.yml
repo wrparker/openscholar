@@ -80,6 +80,16 @@ before_script:
   - mysql -e "SET GLOBAL wait_timeout=300;"
   - mysql -e "SHOW VARIABLES LIKE 'max_allowed_packet';"
 
+  # Install chrome
+  - export CHROME_BIN=/usr/bin/google-chrome
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - sudo apt-get update
+  - sudo apt-get install -y libappindicator1 fonts-liberation
+  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  - sudo dpkg -i google-chrome*.deb
+  - cp /home/travis/build/openscholar/openscholar/www/profiles/openscholar/behat/chromedriver ~/chromedriver
+
   # Run selenium.
   - sudo apt-get install xvfb -y
   - sudo apt-get install openjdk-7-jre-headless -y
