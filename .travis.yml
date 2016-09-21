@@ -86,7 +86,7 @@ before_script:
   - sh -e /etc/init.d/xvfb start
   - sudo apt-get update
   - sudo apt-get install -y libappindicator1 fonts-liberation
-  - yes | apt-get -f install
+  - yes | sudo apt-get -f install
   - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
   - sudo dpkg -i google-chrome*.deb
   - cp /home/travis/build/openscholar/openscholar/www/profiles/openscholar/behat/chromedriver ~/chromedriver
