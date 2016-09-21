@@ -110,4 +110,23 @@
     }
   }]);
 
+  /**
+   * Markup directive.
+   *
+   * Just markup that doesn't do anything.
+   */
+  m.directive('feMarkup', ['$sce', function ($sce) {
+    return {
+      scope: {
+        name: '@',
+        value: '=',
+        element: '=',
+      },
+      template: '<div ng-bind-html="markup"></div>',
+      link: function (scope, elem, attr) {
+        scope.markup = $sce.trustAsHtml(scope.element.markup);
+      }
+    }
+  }])
+
 })();
