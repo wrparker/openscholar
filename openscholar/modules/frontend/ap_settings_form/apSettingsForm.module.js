@@ -9,7 +9,7 @@
 
     var settingsForms = {};
     var settings = {};
-    var formTitles = {};
+    var groupInfo = {};
     var promises = [];
 
     var queryArgs = {};
@@ -34,7 +34,7 @@
         settingsForms[group] = settingsForms[group] || {};
         settingsForms[group][varName] = varForm.form;
 
-        formTitles[group] = varForm.group['#title'];
+        groupInfo[group] = varForm.group;
 
         settings[varName] = varForm.form['#default_value'];
       }
@@ -55,8 +55,15 @@
     }
 
     this.GetFormTitle = function (group_id) {
-      if (typeof formTitles[group_id] != 'undefined') {
-        return formTitles[group_id];
+      if (typeof groupInfo[group_id] != 'undefined') {
+        return groupInfo[group_id]['#title'];
+      }
+      throw "No form group with the id " + group_id + " exists.";
+    }
+
+    this.GetHelpLink = function (group_id) {
+      if (typeof groupInfo[group_id] != 'undefined') {
+        return groupInfo[group_id]['#help_link'];
       }
       throw "No form group with the id " + group_id + " exists.";
     }
@@ -92,10 +99,11 @@
 
         ModalService.showModal({
           controller: 'apSettingsFormController',
-          template: '<form id="{{formId}}" ng-submit="submitForm()"><div class="form-item" ng-repeat="(key, field) in formElements | weight">' +
+          template: '<form id="{{formId}}" ng-submit="submitForm()"><div class="form-wrapper"><div class="form-item" ng-repeat="(key, field) in formElements | weight">' +
             '<div form-element element="field" value="formData[key]"><span>placeholder</span></div>' +
           '</div>' +
-          '<div class="actions"><input type="submit" value="Submit"><input type="button" value="Cancel" ng-click="close(false)"></div></form>',
+          '<div class="help-link" ng-bind-html="help_link"></div></div>' +
+          '<div class="actions"><input type="submit" value="Save"><input type="button" value="Close" ng-click="close(false)"></div></form>',
           inputs: {
             form: scope.form
           }
@@ -123,7 +131,7 @@
   /**
    * The controller for the forms themselves
    */
-  m.controller('apSettingsFormController', ['$scope', 'apSettings', 'form', 'close', function ($s, apSettings, form, close) {
+  m.controller('apSettingsFormController', ['$scope', '$sce', 'apSettings', 'form', 'close', function ($s, $sce, apSettings, form, close) {
     var formSettings = {};
     $s.formId = form;
     $s.formElements = {};
@@ -132,6 +140,8 @@
     apSettings.SettingsReady().then(function () {
       var settingsRaw = apSettings.GetFormDefinitions(form);
       console.log(settingsRaw);
+
+      $s.help_link = $sce.trustAsHtml(apSettings.GetHelpLink(form));
 
       for (var k in settingsRaw) {
         $s.formData[k] = settingsRaw[k]['#default_value'] || null;
