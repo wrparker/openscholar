@@ -92,7 +92,7 @@
 
         ModalService.showModal({
           controller: 'apSettingsFormController',
-          template: '<form id="{{formId}}" ng-submit="submitForm()"><div class="form-item" ng-repeat="(key, field) in formElements">' +
+          template: '<form id="{{formId}}" ng-submit="submitForm()"><div class="form-item" ng-repeat="(key, field) in formElements | weight">' +
             '<div form-element element="field" value="formData[key]"><span>placeholder</span></div>' +
           '</div>' +
           '<div class="actions"><input type="submit" value="Submit"><input type="button" value="Cancel" ng-click="close(false)"></div></form>',
