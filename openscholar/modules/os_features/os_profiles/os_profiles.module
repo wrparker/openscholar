@@ -980,7 +980,6 @@ function os_profiles_get_origin_node_values($address, $fields) {
   // When accessing the json format of the node multiple times we get cached
   // data. This won't allow us to pull the updated data of the node. In order
   // to get un-cached node we need to add the time stamp to the query string.
-  $address = _convert_old_sync_url_to_new_format($address);
   $request = drupal_http_request(url($address, array('query' => array('REST_CALL' => 1, 'override_cache' => time()))));
   $response = drupal_json_decode($request->data);
   $data = $response['data'][0];
@@ -1908,21 +1907,4 @@ function os_profiles_get_profile_url($nid) {
     $source_url = 'Profile will be sourced from: <a href="' . $cutom_url . '" target="_blank">' . $cutom_url . '</a>';
     echo $source_url;
   }
-}
-
-/*
- * Helper function to convert from old format, e.g.,
- *
- *   http://sociology.fas.harvard.edu/node/5301.json
- *
- * to new format:
- *
- *   http://sociology.fas.harvard.edu/api/v1/profiles/5301
- */
-function _convert_old_sync_url_to_new_format($url) {
-  $old_url_pattern = "/(.*)\/node\/(\d+).json/";
-  if (preg_match($old_url_pattern, $url, $matches)) {
-    $url = preg_replace($old_url_pattern, $url, $matches[1] . "/" . OS_PROFILE_JSON_PREFIX . $matches[2]);
-  }
-  return $url;
 }
