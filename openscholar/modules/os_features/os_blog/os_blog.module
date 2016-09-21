@@ -126,3 +126,61 @@ function os_blog_node_delete($node) {
   ->condition('importer_nid', $nid)
   ->execute();
 }
+
+/**
+ * Implements hook_cp_settings().
+ */
+function os_blog_cp_settings() {
+  $form = array();
+
+  // Includes the admin form inc file.
+  module_load_include('admin.inc', 'comment_sources');
+  $params['build_info']['args'][] = 'os_blog';
+  $settings_form = drupal_retrieve_form('comment_sources_admin_settings_form', $params);
+  $settings_form['comment_sources_blog']['#title'] = t('Choose which comment type you\'d like to use');
+
+  $form['blog_comments_settings'] = array(
+      'group' => array(
+        '#id' => 'blog_comments',
+        '#title' => t('Blog Comments'),
+        '#weight' => 1,
+        '#menu_parent' => 'app_settings',
+      ),
+      'form' => $settings_form['comment_sources_blog'],
+      'submit' => array(
+        'system_settings_form_submit',
+      ),
+      'rest_submit' => function($value) {
+        $type_settings['blog'] = $value;
+        comment_sources_save_type_settings($type_settings);
+      },
+    );
+
+  $vsite = vsite_get_vsite();
+  if ($vsite) {
+    $disqus_shortname = $vsite->controllers->variable->get('disqus_domain', 'space');
+  } else {
+    $disqus_shortname = variable_get('disqus_domain', '');
+  }
+
+  $form['blog_comments_disqus_domain'] = array(
+      'group' => array(
+        '#id' => 'blog_comments',
+        '#title' => t('Blog Comments'),
+        '#weight' => 2,
+        '#menu_parent' => 'app_settings',
+      ),
+      'form' => array(
+        '#type' => 'textfield',
+        '#default_value' => $disqus_shortname,
+        '#states' => array(
+          'visible' => array(
+            ':input[name="blog_comments_settings"]' => array('value' => 'disqus'),
+            ),
+          ),
+        '#description' => t('Enter the website shortname you used to register your Disqus account. If you registered <br/>http://example.disqus.com, you would enter "example" here. ') . '<a href="#">Signup for a Disqus account &raquo;</a>' ,
+        ),
+    );
+
+  return $form;
+}
