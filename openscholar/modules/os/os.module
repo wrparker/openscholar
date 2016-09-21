@@ -2662,6 +2662,8 @@ function os_field_display_node_alter(&$display, $context) {
  *  Determine if an exception need to be thrown when the copy of the file
  *  failed. When set to false the reason for the failure will return as a text
  *  in the returned array.
+ * @param $vsite
+ *   The vsite which the file belong to.
  *
  * @throws Exception
  *  Throwing an error when the copy of the file failed and the $exception set to
@@ -2670,7 +2672,8 @@ function os_field_display_node_alter(&$display, $context) {
  *  Return array of the file or error if occurred and the type of the return
  *  data(file/text).
  */
-function os_copy_file($url, $exception = FALSE, $show_error = TRUE) {
+function os_copy_file($url, $exception = FALSE, $show_error = TRUE, $vsite = NULL) {
+
   if (empty($url)) {
     return os_file_copy_set_error(t('You need to pass a url of the file.'), $exception, $show_error);
   }
@@ -2683,7 +2686,18 @@ function os_copy_file($url, $exception = FALSE, $show_error = TRUE) {
     return os_file_copy_set_error(t("The file directory is not wrietable. Please check her permission."), $exception, $show_error);
   }
 
-  if (!$file = system_retrieve_file($url, 'public://', TRUE)) {
+  $path = 'public://';
+
+  if (!empty($vsite)) {
+    $path .= '/' . $vsite . '/files';
+
+    if (!file_exists(drupal_realpath($path))) {
+      // The directory does not exists. We need to create the directory.
+      drupal_mkdir(variable_get('file_public_path', 'sites/default/files') . '/' . $vsite . '/files', NULL, TRUE);
+    }
+  }
+
+  if (!$file = system_retrieve_file($url, $path, TRUE)) {
     return os_file_copy_set_error(t('An error occurred due unknown reason.'), $exception, $show_error);
   }
 
@@ -3628,4 +3642,17 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
   }
 
   return $element;
+}
+
+/**
+ * Implements hook_preprocess_pager
+ */
+function os_preprocess_pager(&$variables, $hook) {
+  if (is_array($variables['tags'])) {
+    // To change full pager design
+    $variables['tags'][0] = 'first';
+    $variables['tags'][1] = '«';
+    $variables['tags'][3] = '»';
+    $variables['tags'][4] = 'last';
+  }
 }
