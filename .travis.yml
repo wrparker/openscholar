@@ -36,19 +36,16 @@ before_script:
   - rvm 2.2.5 do gem install mime-types -v 2.6.2
   - "gem install travis-artifacts"
 
-#  # Install node and npm.
-#  - sudo apt-get purge nodejs npm
-#  - sudo apt-get install nodejs
-#  - sudo apt-get install npm
-#  - npm config set registry https://registry.npmjs.org/
-#  - node -v
-#  - npm -v
-#  - sudo npm install -g npm@'>=3'
-#  - node -v
-#  - npm -v
-#  - sudo npm install -g phantomjs@2.1.7
-#  - phantomjs --webdriver=4444 > ~/phantomjs.log 2>&1 &
-#  - sleep 5
+  # Install chrome
+  - export CHROME_BIN=/usr/bin/google-chrome
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - sudo apt-get update
+  - sudo apt-get install -y libappindicator1 fonts-liberation
+  - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+  - sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+  - sudo apt-get update
+  - sudo apt-get install google-chrome-stable
 
   # Install apache
   - sudo apt-get update
@@ -79,17 +76,6 @@ before_script:
   - sudo service mysql reload
   - mysql -e "SET GLOBAL wait_timeout=300;"
   - mysql -e "SHOW VARIABLES LIKE 'max_allowed_packet';"
-
-  # Install chrome
-  - export CHROME_BIN=/usr/bin/google-chrome
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sudo apt-get update
-  - sudo apt-get install -y libappindicator1 fonts-liberation
-  - yes | sudo apt-get -f install
-  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-  - sudo dpkg -i google-chrome*.deb
-  - cp /home/travis/build/openscholar/openscholar/www/profiles/openscholar/behat/chromedriver ~/chromedriver
 
   # Run selenium.
   - sudo apt-get install xvfb -y
