@@ -121,7 +121,7 @@ Drupal.wysiwyg.plugins['os_link'] = {
       $('#edit-target-option', doc).prop('checked', 'checked');
     }
     else {
-      if (jQuery.selectLink.attr('target') == "_blank") {
+      if (selectedLink && jQuery.selectLink.attr('target') == "_blank") {
         $('#edit-target-option', doc).prop('checked', 'checked');
       }
     }
@@ -131,10 +131,12 @@ Drupal.wysiwyg.plugins['os_link'] = {
       $('#edit-link-title', doc).val(selection.node.getAttribute('title'));
     }
     else {
-      var title = jQuery.selectLink.attr('title');
+      if (selectedLink) {
+        var title = jQuery.selectLink.attr('title');
 
-      if (title != null) {
-        $('#edit-link-title', doc).val(title);
+        if (title != null) {
+          $('#edit-link-title', doc).val(title);
+        }
       }
     }
 
