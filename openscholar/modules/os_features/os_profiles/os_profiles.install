@@ -85,3 +85,33 @@ function os_profiles_update_7008() {
 function os_profiles_update_7049() {
   features_revert(array('os_profiles' => array('field', 'field_base', 'field_instance')));
 }
+
+/*
+ * Update sync URLs from the old %.json format to the new api/v1/profiles format
+ */
+function os_profiles_update_7050() {
+
+  $result = db_select('field_data_field_original_destination_url', 'u')
+    ->fields('u')
+    ->condition('field_original_destination_url_value', '%node%.json', 'LIKE')
+    ->execute();
+
+  $i = 0;
+  while ($row = $result->fetchAssoc()) {
+
+    $old_url = $row['field_original_destination_url_value'];
+    $url_pattern = '/node\/+(\d+)/';
+    if (preg_match($url_pattern, $old_url, $matches)) {
+      $host = parse_url($old_url)['host'];
+      $new_url = "http://" . $host . "/" . OS_PROFILE_JSON_PREFIX . $matches[1];
+
+      db_update('field_data_field_original_destination_url')
+        ->fields(array('field_original_destination_url_value' => '$new_url'))
+        ->condition('entity_id', $row['entity_id'])
+        ->execute();
+
+      $i++;
+    }
+  }
+  return t('Updated !i URLs.', array('!i' => $i));
+}
