@@ -106,7 +106,6 @@ dependencies[] = os_taxonomy
 dependencies[] = os_tour
 dependencies[] = os_wysiwyg
 dependencies[] = os_wysiwyg_link
-dependencies[] = admin_panel
 
 ; Control Panel
 dependencies[] = cp
@@ -136,6 +135,7 @@ dependencies[] = os_stats
 dependencies[] = os_taxonomy
 
 ; other
+dependencies[] = admin_panel
 dependencies[] = diff
 dependencies[] = entity_validator
 dependencies[] = metatag
