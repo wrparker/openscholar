@@ -8,6 +8,13 @@
     float: left;
     margin-right: 1em;
 }
+#content .node-person .field-name-field-email {
+    /* Ensure email is on it's own line
+     * FIXME: dynamically take the width of a surrounding div, e.g., node-title, node-header, etc.
+    **/
+    width: 325px;
+}
+
 #content .node-person .os-slider .field-name-field-email,
 #content .node-person .field-name-field-phone,
 #content .node-person .field-name-field-office-hours,
