@@ -157,6 +157,10 @@ function os_profiles_init() {
       continue;
     }
 
+    // Get the node person file ID.
+    $wrapper = entity_metadata_wrapper('node', $node);
+    $original_photo = $wrapper->field_person_photo->value();
+
     $data = os_profiles_get_origin_node_values($node->field_original_destination_url[LANGUAGE_NONE][0]['value'], $fields);
 
     // Since using "put" will set NULL for missing fields we must send the original
@@ -184,11 +188,31 @@ function os_profiles_init() {
     // We need to replace the file ID in the field with the new file ID we got.
     $file = NULL;
     if ($person_photo) {
-      // If the file was updated within 2 min of the node then update it as well.
-      if (($changed - 120) < $person_photo['timestamp']) {
-        $copy_file = os_copy_file($person_photo['url'], FALSE, FALSE);
+      // If the file was updated within 2 min of the node then update it as
+      // well.
+      $original_photo_dimension = image_get_info(drupal_realpath($original_photo['uri']));
 
-        if ($copy_file['type'] == 'file') {
+      if (($changed - 120) < $person_photo['timestamp']) {
+        $wrapper = entity_metadata_wrapper('node', $node);
+        $copy_file = os_copy_file($person_photo['url'], FALSE, FALSE, $wrapper->{OG_AUDIENCE_FIELD}->get(0)->value()->purl);
+
+        $new_photo_dimension = image_get_info(drupal_realpath($copy_file['file']->uri));
+
+        $identical_photos = TRUE;
+        foreach (array_keys($new_photo_dimension) as $key) {
+          if ($new_photo_dimension[$key] != $original_photo_dimension[$key]) {
+            $identical_photos = FALSE;
+          }
+        }
+
+        if ($identical_photos) {
+          // Delete the file.
+          if ($delete_file = file_load($copy_file['file']->fid)) {
+            file_delete($delete_file, TRUE);
+          }
+        }
+
+        if (!$identical_photos && $copy_file['type'] == 'file') {
           $file = $copy_file['file'];
         }
       }
@@ -300,6 +324,16 @@ function os_profiles_process_node(&$vars) {
   }
 
   module_load_include('inc', 'os', 'includes/os');
+
+  // Display syncing information to administrators
+  if (spaces_access_admin()) {
+    if (isset($vars['field_original_destination_url'][LANGUAGE_NONE][0]['value'])) {
+      $url = $vars['field_original_destination_url'][LANGUAGE_NONE][0]['value'];
+      $vars['content']['field_original_destination_url']['#markup'] =
+        "<p><i>" . t("This profile is " . l(t("synced from another source"), _convert_json_endpoint_to_themed_url($url))) . "</i></p>";
+      $vars['content']['field_original_destination_url']['#weight'] = -100;
+    }
+  }
 
   // Adding the prefix value to the title of the person.
   if (!empty($vars['field_prefix'])) {
@@ -741,6 +775,7 @@ function os_profiles_profiles_fields() {
     'field_middle_name_or_initial' => 'middle_name',
     'field_address' => 'address',
     'field_phone' => 'phone',
+    'field_office_hours' => 'office_hours',
     'field_email' => 'email',
     'field_professional_title' => 'professional_title',
     'field_website' => 'website',
@@ -817,7 +852,10 @@ function os_profiles_sync_profile_submit($form, $form_state) {
   // Retrieve the file from the original node.
   $file = NULL;
   if (!empty($file_url)) {
-    $copy_file = os_copy_file($file_url, FALSE, FALSE);
+    if (empty($vsite)) {
+      $vsite = vsite_get_vsite();
+    }
+    $copy_file = os_copy_file($file_url, FALSE, FALSE, $vsite->group->purl);
 
     if ($copy_file['type'] == 'file') {
       $file = $copy_file['file'];
@@ -919,6 +957,9 @@ function os_profiles_insert_image($node, $file, $dimensions, $save = TRUE) {
 
   if ($save) {
     node_save($node);
+    if ($file) {
+      file_usage_add($file, 'os_profiles', 'node', $node->nid);
+    }
   }
 }
 
@@ -1438,7 +1479,7 @@ function os_profiles_node_view_alter(&$build) {
   // If 'person' content type are displayed in slide_teaser view mode, then appending additional element for Full Profile link.
   if ($build['#bundle'] == 'person' && $build['#view_mode'] == 'slide_teaser') {
     $build['os_profile_link']['#markup'] = l('Full Profile', 'node/' . $build['#node']->nid, array('attributes' => array('class' => 'profile-link')));
-    $build['os_profile_link']['#weight'] = 10;
+    $build['os_profile_link']['#weight'] = 55;
   }
 }
 
@@ -1864,4 +1905,18 @@ function os_profiles_get_profile_url($nid) {
     $source_url = 'Profile will be sourced from: <a href="' . $cutom_url . '" target="_blank">' . $cutom_url . '</a>';
     echo $source_url;
   }
+}
+
+/*
+ * Extract node ID from URLs of the form api/v1/profiles/%
+ * and node/%.json.  Used to create links to the themed version
+ * of a user profile.
+ */
+function _convert_json_endpoint_to_themed_url($url) {
+  $url_pattern = "/(?:node|api.v1.profiles)\/(\d+)/";
+  if (preg_match($url_pattern, $url, $matches)) {
+    $host = parse_url($url)['host'];
+    $url = "http://" . $host . "/node/" . $matches[1];
+  }
+  return $url;
 }

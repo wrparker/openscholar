@@ -999,6 +999,13 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @When /^I delete the variable "([^"]*)"$/
+   */
+  public function iDeleteVariable($variable) {
+    variable_del($variable);
+  }
+
+  /**
    * @Then /^I should see a pager$/
    */
   public function iShouldSeeAPager() {
@@ -3026,6 +3033,7 @@ class FeatureContext extends DrupalContext {
     $steps[] = new Step\When('I visit "admin/reports/os/' . $report . '"');
     $steps[] = new Step\When('I fill in "' . $fieldName . '" with "' . $fieldValue. '"');
     $table_rows = $table->getRows();
+
     // Iterate over each row, just so if there's an error we can supply
     // the row number, or empty values.
     foreach ($table_rows as $i => $checkbox) {
@@ -3149,23 +3157,15 @@ class FeatureContext extends DrupalContext {
     if (strpos($fileContent, "html>") !== FALSE) {
         throw new Exception(sprintf("CSV file was not created."));
     }
-    $contentArray = explode("\n", $fileContent);
 
-    $data = array();
-    $headers = array();
-    // get data from file
-    for ($count = 0; $count < count($contentArray); $count++) {
-      if ($count == 0) {
-        $headers = str_getcsv($contentArray[0]);
-      }
-      else {
-        $values = explode('", "', trim($contentArray[$count], '"'));
-        for ($column = 0; $column < count($values); $column++) {
-          $data[$count - 1][strtolower($headers[$column])] = $values[$column];
-        }
-      }
-    }
-    return $data;
+    $csv = array_map('str_getcsv', explode("\n", $fileContent));
+    array_walk($csv, function(&$a) use ($csv) {
+      $a = array_combine($csv[0], $a);
+    });
+    // remove column header
+    array_shift($csv);
+
+    return $csv;
   }
 
   /**
