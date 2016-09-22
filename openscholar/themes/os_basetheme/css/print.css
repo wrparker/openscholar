@@ -106,7 +106,7 @@
     #footer,
     .block-os-search-db,
     .block-boxes-os_slideshow_box,
-    .node-news .field-name-body .photo {
+    .field-name-body .photo {
         display: none !important;
     }
     .sidebar .block.block-boxes-os_boxes_html {
