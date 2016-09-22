@@ -98,3 +98,4 @@ function os_image_gallery_update_7005() {
 function os_image_gallery_update_7006() {
   features_revert(array('os_image_gallery' => array('views_view')));
 }
+
