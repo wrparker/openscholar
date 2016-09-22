@@ -887,6 +887,11 @@ function os_files_update_7024() {
   $instance_media_title['display']['teaser']['type'] = 'title_linked';
   $instance_media_title['display']['teaser']['settings'] = array('title_style' => '_none', 'title_link' => 'content');
   $instance_file_description['display']['teaser']['weight'] = 2;
+  $instance_media_title['display']['default']['label'] = 'hidden';
+  $instance_media_title['display']['default']['weight'] = 1;
+  $instance_media_title['display']['default']['type'] = 'title_linked';
+  $instance_media_title['display']['default']['settings'] = array('title_style' => '_none', 'title_link' => 'content');
+  $instance_file_description['display']['default']['weight'] = 2;
   field_update_instance($instance_media_title);
   field_update_instance($instance_file_description);
 }
