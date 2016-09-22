@@ -471,7 +471,7 @@ libraries[tinymce][download][url] = "http://github.com/downloads/tinymce/tinymce
 
 libraries[spyc][type] = "libraries"
 libraries[spyc][download][type] = "file"
-libraries[spyc][download][url] = "http://spyc.googlecode.com/files/spyc-0.5.zip"
+libraries[spyc][download][url] = "https://github.com/mustangostang/spyc/archive/0.5.1.zip"
 
 libraries[respondjs][type] = "libraries"
 libraries[respondjs][download][type] = "file"
