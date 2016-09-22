@@ -105,7 +105,7 @@
     .sidebar .block,
     #footer,
     .block-os-search-db,
-    .block-boxes-os_slideshow_box
+    .block-boxes-os_slideshow_box,
     .node-news .field-name-body .photo {
         display: none !important;
     }
