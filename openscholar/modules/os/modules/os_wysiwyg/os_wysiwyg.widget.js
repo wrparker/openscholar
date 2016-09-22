@@ -31,9 +31,16 @@
         }, null, null, 100);
 
         editor.on('selectionChange', function(evt) {
+          // Verify the selected content is a link or not. In case it's a link
+          // replace the text the user selected with a jQuery selector.
           if (jQuery(this.getSelectedHtml().$).is('a')) {
             jQuery.selectLink = jQuery(this.getSelectedHtml().$);
           }
+        });
+
+        event.editor.document.on('mouseup', function()  {
+          // Get the text that the user selected.
+          jQuery.selectLink = this.getSelection().getSelectedText();
         });
       });
     }

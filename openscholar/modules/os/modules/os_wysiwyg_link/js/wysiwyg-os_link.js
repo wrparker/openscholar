@@ -114,6 +114,9 @@ Drupal.wysiwyg.plugins['os_link'] = {
       if (selectedLink) {
         $('.form-item-link-text input', doc).val(jQuery.selectLink.text());
       }
+      else if(typeof(jQuery.selectLink) == 'string') {
+        $('.form-item-link-text input', doc).val(jQuery.selectLink);
+      }
     }
 
     // If the link is set to be opened in a new window, then the checkbox will be in checked state.
