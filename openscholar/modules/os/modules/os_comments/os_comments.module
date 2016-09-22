@@ -163,12 +163,18 @@ function os_comments_comment_save_vsite($comment_node_types) {
 function os_comments_cp_settings() {
   $settings = array();
 
+  $vsite = vsite_get_vsite();
+  $spaces_features = $vsite->controllers->variable->get('spaces_features');
+  // Blog settings link won't appear in CP menu if blog app is not enabled.
+  if (!$spaces_features['os_blog']) {
+    return $settings;
+  }
+
   // Returns empty array if Disqus module is not enabled.
   if (!module_exists('disqus')) {
     return $settings;
   }
 
-  $vsite = vsite_get_vsite();
   if ($vsite) {
     $disqus_shortname = $vsite->controllers->variable->get('disqus_domain', 'space');
   }
@@ -178,16 +184,21 @@ function os_comments_cp_settings() {
 
   $settings['disqus_domain'] = array(
     'group' => array(
-      '#id' => 'social',
-      '#title' => t('Social'),
-      '#weight' => 0,
+      '#id' => 'blog_comments',
+      '#title' => t('Blog Comments'),
+      '#weight' => 2,
+      '#menu_parent' => 'app_settings',
     ),
     'form' => array(
       '#type' => 'textfield',
-      '#title' => t('Disqus Shortname'),
       '#default_value' => $disqus_shortname,
-      '#description' => t('The website shortname that you registered Disqus with. If you registered http://example.disqus.com, you would enter "example" here. It is called "shortname" on the disqus site. You can <a href="http://disqus.com/" title="Disqus Signup">signup here</a> for a disqus account if you do not have one.'),
-    ),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="blog_comments_settings"]' => array('value' => 'disqus'),
+          ),
+        ),
+      '#description' => t('Enter the website shortname you used to register your Disqus account. If you registered <br/>http://example.disqus.com, you would enter "example" here. ') . '<a href="#">Signup for a Disqus account &raquo;</a>' ,
+      ),
   );
 
   return $settings;
