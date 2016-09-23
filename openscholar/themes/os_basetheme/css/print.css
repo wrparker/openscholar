@@ -106,7 +106,12 @@
     #footer,
     .block-os-search-db,
     .block-boxes-os_slideshow_box,
-    .field-name-body .photo {
+    .field-name-body .photo,
+    .os-files-image-list,
+    .os-files-other-lis,
+    .media,
+    .media-element-container,
+    .media-element {
         display: none !important;
     }
     .sidebar .block.block-boxes-os_boxes_html {
