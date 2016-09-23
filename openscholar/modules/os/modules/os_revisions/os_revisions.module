@@ -6,6 +6,11 @@
  */
 
 /**
+ * Define URL for OpenScholar revisions documentation
+ */
+define('OS_REVISIONS_DOCS_URL', 'http://docs.openscholar.harvard.edu');
+
+/**
  * Implements hook_form_BASE_FORM_ID_alter() for node_form.
  */
 function os_revisions_form_node_form_alter(&$form, $form_state) {
@@ -13,6 +18,21 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
 
   if (!variable_get("enable_revisions_$content_type", FALSE)) {
     $form['revision_information']['#access'] = FALSE;
+  }
+  else {
+    $form['revision_information']['revision']['#weight'] = 1;
+    $form['revision_information']['log']['#weight'] = 2;
+    $form['revision_information']['log']['#title'] = t('Revision Notes');
+    $form['revision_information']['log']['#description'] = t('Provide an explanation of the changes you are making.') . '<br><br>' . l(t('What’s being stored as a revision?'), OS_REVISIONS_DOCS_URL, array('attributes' => array('target' => '_blank', 'rel' => 'noopener')));
+
+    // if there are revisions, show them
+    $num_revisions = count(node_revision_list($form['#node']));
+    if ($num_revisions > 1) {
+      $revisions_url = "node/" . $form['#node']->nid . "/revisions";
+      $form['revision_information']['info']['#markup'] = t('<p>There are currently <a href="@url" id="revisions-link">@num revisions</a>.</p>', array('@url' => url($revisions_url), '@num' => $num_revisions));
+      $form['revision_information']['info']['#weight'] = 0;
+    }
+
   }
 }
 
@@ -73,25 +93,28 @@ function os_revisions_revision_overview($node) {
       $row[] = array('data' => t('!date by !username', array('!date' => format_date($revision->timestamp, 'short'), '!username' => theme('username', array('account' => $revision))))
         . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
         'class' => array('revision-current'));
-      $operations[] = array('data' => drupal_placeholder(t('current revision')), 'class' => array('revision-current'), 'colspan' => 2);
+      $operations[] = array('data' => drupal_placeholder(t('Current revision')), 'class' => array('revision-current'), 'colspan' => 2);
     }
     else {
       $row[] = t('!date by !username', array('!date' => format_date($revision->timestamp, 'short'), '!username' => theme('username', array('account' => $revision))))
         . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : '');
       if ($revert_permission) {
-        $operations[] = l(t('revert'), "node/$node->nid/revisions/$revision->vid/revert");
+        $operations[] = l(t('Revert'), "node/$node->nid/revisions/$revision->vid/revert");
       }
       if ($delete_permission) {
-        $operations[] = l(t('delete'), "node/$node->nid/revisions/$revision->vid/delete");
+        $operations[] = l(t('Delete'), "node/$node->nid/revisions/$revision->vid/delete");
       }
     }
     $rows[] = array_merge($row, $operations);
   }
 
+  $limit = variable_get("restrict_node_revision_number_for_" . str_replace("-", "_", $node->type), FALSE);
+
   $build['node_revisions_table'] = array(
     '#theme' => 'table',
     '#rows' => $rows,
     '#header' => $header,
+    '#caption' => t('When you revert to a prior revision, a new copy is created based on that revision. Maximum of @limit revisions allowed.', array('@limit' => $limit)) . ' ' . l(t('Learn more about revisions'), OS_REVISIONS_DOCS_URL),
   );
 
   return $build;
@@ -122,4 +145,30 @@ function os_revisions_form_alter(&$form, &$form_state, $form_id){
       $form['#attached']['js'][] = drupal_get_path('module', 'os_revisions') . '/os_revisions.js';
     }
   }
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Change title/text in confirm_form when user selects to revert to an older revision
+ */
+function os_revisions_form_node_revision_revert_confirm_alter(&$form, &$form_state, $form_id) {
+  $text = drupal_get_title();
+  drupal_set_title(t('Confirm Revert'));
+  $form['description'] = array(
+    '#markup' => $text,
+  );
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Change title/text in confirm_form when user selects to delete a revision
+ */
+function os_revisions_form_node_revision_delete_confirm_alter(&$form, &$form_state, $form_id) {
+  $text = drupal_get_title();
+  drupal_set_title(t('Confirm Delete'));
+  $form['description'] = array(
+    '#markup' => $text,
+  );
 }
