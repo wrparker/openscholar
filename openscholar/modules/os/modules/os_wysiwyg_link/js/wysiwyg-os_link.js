@@ -28,7 +28,7 @@ Drupal.wysiwyg.plugins['os_link'] = {
       var range = document.createRange();
       range.setStart(selection.anchorNode, selection.anchorOffset);
       range.setEnd(selection.focusNode, selection.focusOffset);
-      current = range.commonAncestorContainer();
+      current = range.commonAncestorContainer;
       text = range.toString();
     }
     else {
