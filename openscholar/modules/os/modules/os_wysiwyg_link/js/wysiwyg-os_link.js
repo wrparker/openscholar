@@ -3,13 +3,60 @@
  */
 Drupal.wysiwyg.plugins['os_link'] = {
   url: '',
+  iframeWindow: {},
+  getWindow: function () {
+    var aid = Drupal.wysiwyg.activeId;
+    if (this.iframeWindow[aid] == undefined) {
+      this.iframeWindow[aid] = document.querySelector('#'+aid+' + .cke iframe').contentWindow;
+    }
+
+    return this.iframeWindow[aid];
+  },
+  getSelection: function () {
+    var w = this.getWindow();
+    var selection = w.getSelection();
+    var current, text;
+
+    if (selection.type == "Caret") {
+      current = selection.anchorNode;
+      while (current.nodeType != Node.ELEMENT_NODE) {
+        current = current.parentNode;
+      }
+      text = "";
+    }
+    else if (selection.type == "Range") {
+      var range = document.createRange();
+      range.setStart(selection.anchorNode, selection.anchorOffset);
+      range.setEnd(selection.focusNode, selection.focusOffset);
+      current = range.commonAncestorContainer();
+      text = range.toString();
+    }
+    else {
+      return;
+    }
+
+    var output = {
+      content: text,
+      format: "html",
+      node: current
+    };
+    return output;
+  },
 
   /**
    * Determines if element belongs to this plugin or not
    * Returning true will cause the button to be 'down' when an element is selected
    */
   isNode: function (node) {
-    if (node == null || node == undefined) return false;
+    if (node == null || node == undefined) {
+      var selection = this.getSelection();
+      if (selection.node) {
+        node = selection.node;
+      }
+      else {
+        return false;
+      }
+    }
     while (node.nodeName != 'A' && node.nodeName != 'BODY') {
       node = node.parentNode;
     }
@@ -19,6 +66,9 @@ Drupal.wysiwyg.plugins['os_link'] = {
   invoke: function (selection, settings, editorId) {
     var self = this;
     var info;
+    if (selection.node == null) {
+      selection = this.getSelection();
+    }
     if (this.isNode(selection.node)) {
       var link = jQuery(selection.node);
       if (link[0].nodeName != 'A') {
