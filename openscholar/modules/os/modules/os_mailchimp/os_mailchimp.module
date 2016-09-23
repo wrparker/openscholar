@@ -339,7 +339,7 @@ function os_mailchimp_cp_settings(){
   $settings['os_mailchimp_vsite_api_key'] = array(
     'group' => array(
       '#id' => 'mailchimp',
-      '#title' => t('Mailchimp'),
+      '#title' => t('MailChimp'),
       '#weight' => 0,
       '#help_link' => l(t('Learn more about the mailing list'), '', array('attributes' => array('target' => '_blank')))
   ),
