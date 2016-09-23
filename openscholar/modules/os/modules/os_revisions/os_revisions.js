@@ -10,7 +10,7 @@
         $current = $("input[name='revisions']").val();
         $("input#edit-revision").click(function () {
           if ($max && $current && $(this).prop('checked')) {
-            if ($current > $max) {
+            if ($current - $max >= 0) {
               if (!confirm('This content already has the maximum number of revisions saved (' + $max + '). By creating a new revision, you will be permanently deleting the oldest revision.\n\nAre you sure you want to create a new revision?')) {
                 $(this).removeAttr('checked');
               }

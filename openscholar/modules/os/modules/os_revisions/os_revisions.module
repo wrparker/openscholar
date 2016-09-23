@@ -156,8 +156,13 @@ function os_revisions_form_node_revision_revert_confirm_alter(&$form, &$form_sta
   $text = drupal_get_title();
   drupal_set_title(t('Confirm Revert'));
   $form['description'] = array(
-    '#markup' => $text,
+    '#markup' => "<p>$text</p>",
   );
+
+  // replace existing submit handler that creates the revert revision log with one that maintains revision log message
+  $submit_handlers = array_flip($form['#submit']);
+  $submit_index = $submit_handlers['node_revision_revert_confirm_submit'];
+  $form['#submit'][$submit_index] = 'os_revisions_add_revert_notes';
 }
 
 /**
@@ -169,6 +174,23 @@ function os_revisions_form_node_revision_delete_confirm_alter(&$form, &$form_sta
   $text = drupal_get_title();
   drupal_set_title(t('Confirm Delete'));
   $form['description'] = array(
-    '#markup' => $text,
+    '#markup' => "<p>$text</p>",
   );
+}
+
+/**
+ * Submit handler for node_revision_revert_confirm form to append revision notes
+ * from the reverted revision to the new revision notes
+ */
+function os_revisions_add_revert_notes($form, &$form_state) {
+  $node_revision = $form['#node_revision'];
+  $node_revision->revision = 1;
+  $old_log = $node_revision->log;
+  $node_revision->log = t('Copy of the revision from %date: %log.', array('%date' => format_date($node_revision->revision_timestamp), '%log' => $old_log));
+
+  node_save($node_revision);
+
+  watchdog('content', '@type: reverted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
+  drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_type_get_name($node_revision), '%title' => $node_revision->title, '%revision-date' => format_date($node_revision->revision_timestamp))));
+  $form_state['redirect'] = 'node/' . $node_revision->nid . '/revisions';
 }
