@@ -17,14 +17,14 @@ Drupal.wysiwyg.plugins['os_link'] = {
     var selection = w.getSelection();
     var current, text;
 
-    if (selection.type == "Caret") {
+    if (selection.type == "Caret" || selection.isCollapsed == true) {
       current = selection.anchorNode;
       while (current.nodeType != Node.ELEMENT_NODE) {
         current = current.parentNode;
       }
       text = "";
     }
-    else if (selection.type == "Range") {
+    else if (selection.type == "Range" || selection.isCollapsed == false) {
       var range = document.createRange();
       range.setStart(selection.anchorNode, selection.anchorOffset);
       range.setEnd(selection.focusNode, selection.focusOffset);
