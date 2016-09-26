@@ -394,7 +394,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'default_state' => 'collapsed',
         'children' => array(
           'app' => array(
-            'label' => 'Enable/Disable Apps',
+            'label' => 'Enable / Disable Apps',
             'type' => 'link',
             'href' => 'cp/apps'
           ),

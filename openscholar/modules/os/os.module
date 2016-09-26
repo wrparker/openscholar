@@ -163,7 +163,8 @@ function os_cp_settings() {
     'group' => array(
       '#title' => t('Long List Display'),
       '#id' => 'long-list-content-pagination',
-      '#weight' => 40
+      '#weight' => 40,
+      '#help_link' => l(t('Learn more about Long list display'), '', array('attributes' => array('target' => '_blank')))
     ),
     'form' => array(
       '#type' => 'radios',

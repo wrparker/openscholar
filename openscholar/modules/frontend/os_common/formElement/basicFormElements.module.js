@@ -97,10 +97,11 @@
         value: '=',
         element: '='
       },
-      template: '<input type="submit" id="{{id}}" name="{{name}}" value="{{label}}" class="form-submit">',
+      template: '<label for="{{id}}">{{title}}<input type="submit" id="{{id}}" name="{{name}}" value="{{label}}" class="form-submit">',
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];
         scope.label = scope.element.value;
+        scope.title = scope.element.title;
 
         elem.click(function (click) {
           scope.value = (scope.value + 1)%2;
@@ -108,5 +109,24 @@
       }
     }
   }]);
+
+  /**
+   * Markup directive.
+   *
+   * Just markup that doesn't do anything.
+   */
+  m.directive('feMarkup', ['$sce', function ($sce) {
+    return {
+      scope: {
+        name: '@',
+        value: '=',
+        element: '=',
+      },
+      template: '<div ng-bind-html="markup"></div>',
+      link: function (scope, elem, attr) {
+        scope.markup = $sce.trustAsHtml(scope.element.markup);
+      }
+    }
+  }])
 
 })();
