@@ -28,9 +28,7 @@ h2.block-title,
 #menu-bar ul.nice-menu a,
 #boxes-box-site_info,
 #boxes-box-site_info a,
-.date-nav h3 {
-    font-family: 'Montserrat', sans-serif !important;
-}
+
 /* Main wrappers */
 
 html,
@@ -403,6 +401,12 @@ h2.block-title {
 #footer ul.menu li a.menu-heading {
     font-size: .9em;
 }
+
+.region-footer-bottom a,
+.region-footer-bottom a:visited {
+    color: #c5f0ff;
+}
+
 .page-news .view .node-teaser {
     padding: 10px 0 30px;
 }
