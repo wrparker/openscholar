@@ -8,18 +8,12 @@ Feature: Revisions functionality testing.
 
       Given I am logging in as "john"
         And I create a revision of "My New Blog Post" where I change the "title" to "My New Revised Blog Post"
-       Then I should be able to see "2" revisions for "My New Revised Blog Post"
+       Then I should be able to see "1" revisions for "My New Revised Blog Post"
 
   @misc_second @api @revisions
   Scenario: Revert to the first version of a blog
       Given I am logging in as "john"
         And I revert "My New Revised Blog Post" to revision "1"
-       Then I should be able to see "3" revisions for "My New Blog Post"
-
-  @misc_second @api @revisions
-  Scenario: Delete the first version of a blog
-      Given I am logging in as "john"
-        And I delete revision "1" of "My New Blog Post"
        Then I should be able to see "2" revisions for "My New Blog Post"
 
   @misc_second @api @revisions
@@ -30,11 +24,17 @@ Feature: Revisions functionality testing.
        Then I should be able to see "2" revisions for "My New Revised Again Blog Post"
 
   @misc_second @api @revisions
+  Scenario: Delete the first version of a blog
+      Given I am logging in as "john"
+        And I delete revision "1" of "My New Revised Again Blog Post"
+       Then I should be able to see "1" revisions for "My New Revised Again Blog Post"
+
+  @misc_second @api @revisions
   Scenario: View revisions of a blog without the permissions to revert/delete
       Given I am logging in as "bill"
        Then I should not be able to see the "revisions" contextual link for "My New Revised Again Blog Post"
-        And I should not be permitted to "revert" revisions for "My New Revised Again Blog Post"
-        And I should not be permitted to "delete" revisions for "My New Revised Again Blog Post"
+        And I should not be permitted to "Revert" revisions for "My New Revised Again Blog Post"
+        And I should not be permitted to "Delete" revisions for "My New Revised Again Blog Post"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a book
@@ -44,18 +44,12 @@ Feature: Revisions functionality testing.
 
       Given I am logging in as "john"
         And I create a revision of "My New Book Page" where I change the "title" to "My New Revised Book Page"
-       Then I should be able to see "2" revisions for "My New Revised Book Page"
+       Then I should be able to see "1" revisions for "My New Revised Book Page"
 
   @misc_second @api @revisions
   Scenario: Revert to the first version of a book
       Given I am logging in as "john"
         And I revert "My New Revised Book Page" to revision "1"
-       Then I should be able to see "3" revisions for "My New Book Page"
-
-  @misc_second @api @revisions
-  Scenario: Delete the first version of a book
-      Given I am logging in as "john"
-        And I delete revision "1" of "My New Book Page"
        Then I should be able to see "2" revisions for "My New Book Page"
 
   @misc_second @api @revisions
@@ -66,11 +60,17 @@ Feature: Revisions functionality testing.
        Then I should be able to see "2" revisions for "My New Revised Again Book Page"
 
   @misc_second @api @revisions
+  Scenario: Delete the first version of a book
+      Given I am logging in as "john"
+        And I delete revision "1" of "My New Revised Again Book Page"
+       Then I should be able to see "1" revisions for "My New Revised Again Book Page"
+
+  @misc_second @api @revisions
   Scenario: View revisions of a book without the permissions to revert/delete
       Given I am logging in as "bill"
        Then I should not be able to see the "revisions" contextual link for "My New Revised Again Book Page"
-        And I should not be permitted to "revert" revisions for "My New Revised Again Book Page"
-        And I should not be permitted to "delete" revisions for "My New Revised Again Book Page"
+        And I should not be permitted to "Revert" revisions for "My New Revised Again Book Page"
+        And I should not be permitted to "Delete" revisions for "My New Revised Again Book Page"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a faq
@@ -80,18 +80,12 @@ Feature: Revisions functionality testing.
 
       Given I am logging in as "john"
         And I create a revision of "My New FAQ" where I change the "title" to "My New Revised FAQ"
-       Then I should be able to see "2" revisions for "My New Revised FAQ"
+       Then I should be able to see "1" revisions for "My New Revised FAQ"
 
   @misc_second @api @revisions
   Scenario: Revert to the first version of a faq
       Given I am logging in as "john"
         And I revert "My New Revised FAQ" to revision "1"
-       Then I should be able to see "3" revisions for "My New FAQ"
-
-  @misc_second @api @revisions
-  Scenario: Delete the first version of a faq
-      Given I am logging in as "john"
-        And I delete revision "1" of "My New FAQ"
        Then I should be able to see "2" revisions for "My New FAQ"
 
   @misc_second @api @revisions
@@ -102,11 +96,17 @@ Feature: Revisions functionality testing.
        Then I should be able to see "2" revisions for "My New Revised Again FAQ"
 
   @misc_second @api @revisions
+  Scenario: Delete the first version of a faq
+      Given I am logging in as "john"
+        And I delete revision "1" of "My New Revised Again FAQ"
+       Then I should be able to see "1" revisions for "My New Revised Again FAQ"
+
+  @misc_second @api @revisions
   Scenario: View revisions of a faq without the permissions to revert/delete
       Given I am logging in as "bill"
        Then I should not be able to see the "revisions" contextual link for "My New Revised Again FAQ"
-        And I should not be permitted to "revert" revisions for "My New Revised Again FAQ"
-        And I should not be permitted to "delete" revisions for "My New Revised Again FAQ"
+        And I should not be permitted to "Revert" revisions for "My New Revised Again FAQ"
+        And I should not be permitted to "Delete" revisions for "My New Revised Again FAQ"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a link
@@ -116,18 +116,12 @@ Feature: Revisions functionality testing.
 
       Given I am logging in as "john"
         And I create a revision of "My New Link" where I change the "title" to "My New Revised Link"
-       Then I should be able to see "2" revisions for "My New Revised Link"
+       Then I should be able to see "1" revisions for "My New Revised Link"
 
   @misc_second @api @revisions
   Scenario: Revert to the first version of a link
       Given I am logging in as "john"
         And I revert "My New Revised Link" to revision "1"
-       Then I should be able to see "3" revisions for "My New Link"
-
-  @misc_second @api @revisions
-  Scenario: Delete the first version of a link
-      Given I am logging in as "john"
-        And I delete revision "1" of "My New Link"
        Then I should be able to see "2" revisions for "My New Link"
 
   @misc_second @api @revisions
@@ -138,11 +132,17 @@ Feature: Revisions functionality testing.
        Then I should be able to see "2" revisions for "My New Revised Again Link"
 
   @misc_second @api @revisions
+  Scenario: Delete the first version of a link
+      Given I am logging in as "john"
+        And I delete revision "1" of "My New Revised Again Link"
+       Then I should be able to see "1" revisions for "My New Revised Again Link"
+
+  @misc_second @api @revisions
   Scenario: View revisions of a link without the permissions to revert/delete
       Given I am logging in as "bill"
        Then I should not be able to see the "revisions" contextual link for "My New Revised Again Link"
-        And I should not be permitted to "revert" revisions for "My New Revised Again Link"
-        And I should not be permitted to "delete" revisions for "My New Revised Again Link"
+        And I should not be permitted to "Revert" revisions for "My New Revised Again Link"
+        And I should not be permitted to "Delete" revisions for "My New Revised Again Link"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a news item
@@ -152,18 +152,12 @@ Feature: Revisions functionality testing.
 
       Given I am logging in as "john"
         And I create a revision of "My New News" where I change the "title" to "My New Revised News"
-       Then I should be able to see "2" revisions for "My New Revised News"
+       Then I should be able to see "1" revisions for "My New Revised News"
 
   @misc_second @api @revisions
   Scenario: Revert to the first version of a news item
       Given I am logging in as "john"
         And I revert "My New Revised News" to revision "1"
-       Then I should be able to see "3" revisions for "My New News"
-
-  @misc_second @api @revisions
-  Scenario: Delete the first version of a news item
-      Given I am logging in as "john"
-        And I delete revision "1" of "My New News"
        Then I should be able to see "2" revisions for "My New News"
 
   @misc_second @api @revisions
@@ -174,11 +168,17 @@ Feature: Revisions functionality testing.
        Then I should be able to see "2" revisions for "My New Revised Again News"
 
   @misc_second @api @revisions
+  Scenario: Delete the first version of a news item
+      Given I am logging in as "john"
+        And I delete revision "1" of "My New Revised Again News"
+       Then I should be able to see "1" revisions for "My New Revised Again News"
+
+  @misc_second @api @revisions
   Scenario: View revisions of a news without the permissions to revert/delete
       Given I am logging in as "bill"
        Then I should not be able to see the "revisions" contextual link for "My New Revised Again News"
-        And I should not be permitted to "revert" revisions for "My New Revised Again News"
-        And I should not be permitted to "delete" revisions for "My New Revised Again News"
+        And I should not be permitted to "Revert" revisions for "My New Revised Again News"
+        And I should not be permitted to "Delete" revisions for "My New Revised Again News"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a page
@@ -188,18 +188,12 @@ Feature: Revisions functionality testing.
 
       Given I am logging in as "john"
         And I create a revision of "My New Page" where I change the "title" to "My New Revised page"
-       Then I should be able to see "2" revisions for "My New Revised page"
+       Then I should be able to see "1" revisions for "My New Revised page"
 
   @misc_second @api @revisions
   Scenario: Revert to the first version of a page
       Given I am logging in as "john"
         And I revert "My New Revised Page" to revision "1"
-       Then I should be able to see "3" revisions for "My New Page"
-
-  @misc_second @api @revisions
-  Scenario: Delete the first version of a page
-      Given I am logging in as "john"
-        And I delete revision "1" of "My New Page"
        Then I should be able to see "2" revisions for "My New Page"
 
   @misc_second @api @revisions
@@ -210,11 +204,17 @@ Feature: Revisions functionality testing.
        Then I should be able to see "2" revisions for "My New Revised Again Page"
 
   @misc_second @api @revisions
+  Scenario: Delete the first version of a page
+      Given I am logging in as "john"
+        And I delete revision "1" of "My New Revised Again Page"
+       Then I should be able to see "1" revisions for "My New Revised Again Page"
+
+  @misc_second @api @revisions
   Scenario: View revisions of a page without the permissions to revert/delete
       Given I am logging in as "bill"
        Then I should not be able to see the "revisions" contextual link for "My New Revised Again Page"
-        And I should not be permitted to "revert" revisions for "My New Revised Again Page"
-        And I should not be permitted to "delete" revisions for "My New Revised Again Page"
+        And I should not be permitted to "Revert" revisions for "My New Revised Again Page"
+        And I should not be permitted to "Delete" revisions for "My New Revised Again Page"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a profile
@@ -224,18 +224,12 @@ Feature: Revisions functionality testing.
 
       Given I am logging in as "john"
         And I create a revision of "Person Test" where I change the "title" to "Person Test Revised"
-       Then I should be able to see "2" revisions for "Person Test Revised"
+       Then I should be able to see "1" revisions for "Person Test Revised"
 
   @misc_second @api @revisions
   Scenario: Revert to the first version of a profile
       Given I am logging in as "john"
         And I revert "Person Test Revised" to revision "1"
-       Then I should be able to see "3" revisions for "Person Test"
-
-  @misc_second @api @revisions
-  Scenario: Delete the first version of a profile
-      Given I am logging in as "john"
-        And I delete revision "1" of "Person Test"
        Then I should be able to see "2" revisions for "Person Test"
 
   @misc_second @api @revisions
@@ -246,11 +240,17 @@ Feature: Revisions functionality testing.
        Then I should be able to see "2" revisions for "Person Test Revised Again"
 
   @misc_second @api @revisions
+  Scenario: Delete the first version of a profile
+      Given I am logging in as "john"
+        And I delete revision "1" of "Person Test Revised Again"
+       Then I should be able to see "1" revisions for "Person Test Revised Again"
+
+  @misc_second @api @revisions
   Scenario: View revisions of a profile without the permissions to revert/delete
       Given I am logging in as "bill"
        Then I should not be able to see the "revisions" contextual link for "Person Test Revised Again"
-        And I should not be permitted to "revert" revisions for "Person Test Revised Again"
-        And I should not be permitted to "delete" revisions for "Person Test Revised Again"
+        And I should not be permitted to "Revert" revisions for "Person Test Revised Again"
+        And I should not be permitted to "Delete" revisions for "Person Test Revised Again"
 
   @misc_second @api @revisions
   Scenario: Create and View revisions of a publication
@@ -260,18 +260,12 @@ Feature: Revisions functionality testing.
 
       Given I am logging in as "john"
         And I create a revision of "My New Publication" where I change the "title" to "My New Revised Publication"
-       Then I should be able to see "2" revisions for "My New Revised Publication"
+       Then I should be able to see "1" revisions for "My New Revised Publication"
 
   @misc_second @api @revisions
   Scenario: Revert to the first version of a publication
       Given I am logging in as "john"
         And I revert "My New Revised Publication" to revision "1"
-       Then I should be able to see "3" revisions for "My New Publication"
-
-  @misc_second @api @revisions
-  Scenario: Delete the first version of a publication
-      Given I am logging in as "john"
-        And I delete revision "1" of "My New Publication"
        Then I should be able to see "2" revisions for "My New Publication"
 
   @misc_second @api @revisions
@@ -282,11 +276,17 @@ Feature: Revisions functionality testing.
        Then I should be able to see "2" revisions for "My New Revised Again Publication"
 
   @misc_second @api @revisions
+  Scenario: Delete the first version of a publication
+      Given I am logging in as "john"
+        And I delete revision "1" of "My New Revised Again Publication"
+       Then I should be able to see "1" revisions for "My New Revised Again Publication"
+
+  @misc_second @api @revisions
   Scenario: View revisions of a publication without the permissions to revert/delete
       Given I am logging in as "bill"
        Then I should not be able to see the "revisions" contextual link for "My New Revised Again Publication"
-        And I should not be permitted to "revert" revisions for "My New Revised Again Publication"
-        And I should not be permitted to "delete" revisions for "My New Revised Again Publication"
+        And I should not be permitted to "Revert" revisions for "My New Revised Again Publication"
+        And I should not be permitted to "Delete" revisions for "My New Revised Again Publication"
 
   @misc_second @api @revisions
   Scenario: Should not be able to create revisions of a class

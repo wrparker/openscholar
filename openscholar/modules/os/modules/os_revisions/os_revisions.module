@@ -26,7 +26,7 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
     $form['revision_information']['log']['#description'] = t('Provide an explanation of the changes you are making.') . '<br><br>' . l(t('What’s being stored as a revision?'), OS_REVISIONS_DOCS_URL, array('attributes' => array('target' => '_blank', 'rel' => 'noopener')));
 
     // if there are revisions, show them
-    $num_revisions = count(node_revision_list($form['#node']));
+    $num_revisions = count(node_revision_list($form['#node'])) - 1;
     if ($num_revisions > 1) {
       $revisions_url = "node/" . $form['#node']->nid . "/revisions";
       $form['revision_information']['info']['#markup'] = t('<p>There are currently <a href="@url" id="revisions-link">@num revisions</a>.</p>', array('@url' => url($revisions_url), '@num' => $num_revisions));
@@ -141,7 +141,7 @@ function os_revisions_form_alter(&$form, &$form_state, $form_id){
     $max_revisions = (int)variable_get("restrict_node_revision_number_for_" . str_replace("-", "_", $form_state['node']->type), FALSE);
     if ($max_revisions) {
       $form['max_revisions'] = array('#type' => 'hidden', '#value' => $max_revisions);
-      $form['revisions'] =  array('#type' => 'hidden', '#value' => count(node_revision_list(node_load($form_state['node']->nid))));
+      $form['revisions'] =  array('#type' => 'hidden', '#value' => (count(node_revision_list(node_load($form_state['node']->nid))) - 1));
       $form['#attached']['js'][] = drupal_get_path('module', 'os_revisions') . '/os_revisions.js';
     }
   }

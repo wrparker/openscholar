@@ -269,7 +269,7 @@ class FeatureContext extends DrupalContext {
     $url = "/". $node_row['value'] . "/node/" . $node_row['nid'] . "/revisions";
     $this->visit($url);
 
-    $xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='revert']";
+    $xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='Revert']";
     $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
     $link = $elements[$revision_num - 1];
 
@@ -303,7 +303,7 @@ class FeatureContext extends DrupalContext {
     $url = "/". $node_row['value'] . "/node/" . $node_row['nid'] . "/revisions";
     $this->visit($url);
 
-    $xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='delete']";
+    $xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='Delete']";
     $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
     $link = $elements[$revision_num - 1];
 
@@ -373,15 +373,12 @@ class FeatureContext extends DrupalContext {
 
     // check to see if the proper number of revision rows show up on the revisions page
     $this->visit($revisions_url);
-    // make sure we can't revert or delete revisions
-    $action_xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='revert']";
+    $action_xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='Revert']";
     $revert_elements = $this->getSession()->getPage()->findAll('xpath', $action_xpath);
-    $action_xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='delete']";
-    $delete_elements = $this->getSession()->getPage()->findAll('xpath', $action_xpath);
-    $actual_number_of_revisions = count(node_revision_list(node_load($node_row['nid'])));
+    $actual_number_of_revisions = count(node_revision_list(node_load($node_row['nid']))) - 1;
 
-    if (((count($revert_elements) + 1) != $actual_number_of_revisions) || ((count($delete_elements) + 1) != $actual_number_of_revisions)) {
-      throw new Exception(sprintf("%s has %d revisions instead of %d.", $node_title, $actual_number_of_revisions, (count($revert_elements) + 1)));
+    if ((count($revert_elements) != $actual_number_of_revisions) || ($number_of_revisions != $actual_number_of_revisions)) {
+      throw new Exception(sprintf("%s has %d revisions instead of %d.", $node_title, $actual_number_of_revisions, $number_of_revisions));
     }
   }
 
