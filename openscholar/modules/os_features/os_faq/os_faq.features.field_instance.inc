@@ -38,11 +38,11 @@ function os_faq_field_default_field_instances() {
       ),
       'teaser' => array(
         'label' => 'hidden',
-        'module' => 'text',
+        'module' => 'os',
         'settings' => array(
-          'trim_length' => 100,
+          'trim_length' => 600,
         ),
-        'type' => 'text_summary_or_trimmed',
+        'type' => 'os_text_trimmed',
         'weight' => 0,
       ),
       'title' => array(
