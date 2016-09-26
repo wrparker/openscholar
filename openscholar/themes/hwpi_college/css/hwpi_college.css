@@ -736,6 +736,9 @@ padding: 20px 0;
   background-color: #E6E5E3 !important;
 }
 
+.section-nav .menu-depth-1 > a {
+  background-color: #c3c3c3 !important;
+}
 
 .section-nav .expanded.menu-depth-2 > a[class="active-trail active active"],
 .section-nav a[class="active-trail active active"] {
