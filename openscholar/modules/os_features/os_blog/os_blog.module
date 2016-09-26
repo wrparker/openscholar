@@ -161,9 +161,11 @@ function os_blog_cp_settings() {
         '#title' => t('Blog Comments'),
         '#weight' => 1,
         '#menu_parent' => 'app_settings',
-        '#help_link' => l(t('Learn more about blog comments'), '', array('attributes' => array('target' => '_blank')))
       ),
-      'form' => $settings_form['comment_sources_blog'],      
+      'form' => $settings_form['comment_sources_blog'],
+      'submit' => array(
+        'system_settings_form_submit',
+      ),
       'rest_submit' => function($value) {
         $type_settings['blog'] = ($value == 'nc') ? '' : $value;
         comment_sources_save_type_settings($type_settings);
