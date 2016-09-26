@@ -155,9 +155,6 @@ ul.menu li a:active {} ul.menu li.active a {} ul.menu li.active-trail a {} ul.me
     padding: 0;
     /* this class (if it exists) could be a problem so reset the padding */
 }
-.leaf.active-trail {
-    background-color: #cecece;
-}
 
 /* Breadcrumbs as an ordered list */
 
@@ -868,9 +865,6 @@ ul.nice-menu-down li li.menuparent:hover {
 }
 /* Remove it from leaf links */
 
-li.leaf.menu-depth-2 {
-    padding-left: 25px;
-}
 .section-nav .expanded.menu-depth-2 .leaf > a {
     background: none;
 }
