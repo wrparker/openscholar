@@ -103,12 +103,25 @@ function os_profiles_update_7050() {
     $url_pattern = '/node\/+(\d+)/';
     if (preg_match($url_pattern, $old_url, $matches)) {
       $host = parse_url($old_url)['host'];
-      $new_url = "http://" . $host . "/" . OS_PROFILE_JSON_PREFIX . $matches[1];
+      $entity_id = $matches[1];
+      $new_url = "http://" . $host . "/" . OS_PROFILE_JSON_PREFIX . $entity_id;
 
       db_update('field_data_field_original_destination_url')
         ->fields(array('field_original_destination_url_value' => '$new_url'))
         ->condition('entity_id', $row['entity_id'])
         ->execute();
+
+      // Now trigger a re-sync of the node data by notifying the listeners
+      $node = node_load($entity_id);
+      $uuid = $node->field_uuid[LANGUAGE_NONE][0]['value'];
+
+      $destination = "http://" . $host;
+      $arguments = array(
+        'action' => 'update',
+        'UUID' => $uuid,
+      );
+
+      os_profiles_manage_synced_profiles($destination, $arguments);
 
       $i++;
     }
