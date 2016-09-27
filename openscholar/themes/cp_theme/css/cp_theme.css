@@ -1109,3 +1109,17 @@ li.pager-previous + li.pager-ellipsis {
 .file img.file-icon {
     width:16px;
 }
+/* REVISIONS */
+body.page-node-revisions table.sticky-table caption {
+margin-bottom: 10px;
+}
+
+body.page-node-revisions table.sticky-table thead th:nth-of-type(2) {
+width: 15%;
+}
+
+body.page-node-revisions table.sticky-table td.revision-current {
+    background: #E0E4EA;
+}
+
+

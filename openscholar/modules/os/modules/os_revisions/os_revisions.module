@@ -72,7 +72,7 @@ function os_revisions_menu() {
 function os_revisions_revision_overview($node) {
   drupal_set_title(t('Revisions for %title', array('%title' => $node->title)), PASS_THROUGH);
 
-  $header = array(t('Revision'), array('data' => t('Operations'), 'colspan' => 2));
+  $header = array(t('Revision'), array('data' => t('Manage'), 'colspan' => 2));
 
   $revisions = node_revision_list($node);
 
@@ -114,7 +114,7 @@ function os_revisions_revision_overview($node) {
     '#theme' => 'table',
     '#rows' => $rows,
     '#header' => $header,
-    '#caption' => t('When you revert to a prior revision, a new copy is created based on that revision. Maximum of @limit revisions allowed.', array('@limit' => $limit)) . ' ' . l(t('Learn more about revisions'), OS_REVISIONS_DOCS_URL),
+    '#caption' => t('NOTE: When you revert to a prior revision, a new copy is created based on that revision. Maximum of @limit revisions allowed.', array('@limit' => $limit)) . ' ' . l(t('Learn more about revisions'), OS_REVISIONS_DOCS_URL),
   );
 
   return $build;
