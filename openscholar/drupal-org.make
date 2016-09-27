@@ -472,6 +472,7 @@ libraries[tinymce][download][url] = "http://github.com/downloads/tinymce/tinymce
 libraries[ckeditor][type] = "libraries"
 libraries[ckeditor][download][type] = "get"
 libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.5.10/ckeditor_4.5.10_standard.zip"
+libraries[ckeditor][patch][] = "https://github.com/openscholar/openscholar/blob/39f21cff901da1a83902c5197757704d26d4f5e4/patches/ckeditor-8028-image_resizing.patch"
 
 libraries[spyc][type] = "libraries"
 libraries[spyc][download][type] = "file"
