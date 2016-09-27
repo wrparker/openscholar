@@ -170,7 +170,7 @@ Drupal.wysiwyg.plugins['os_link'] = {
     }
 
     // If the link is set to be opened in a new window, then the checkbox will be in checked state.
-    if (selection.node && (selection.node.getAttribute('target') == '_blank')) {
+    if (selection.node && selection.node.nodeType == Node.ELEMENT_NODE && (selection.node.getAttribute('target') == '_blank')) {
       $('#edit-target-option', doc).prop('checked', 'checked');
     }
     else {
@@ -180,7 +180,7 @@ Drupal.wysiwyg.plugins['os_link'] = {
     }
 
     // If the link has a title attribute.
-    if (selection.node != null && selection.node.getAttribute('title') != '') {
+    if (selection.node && selection.node.nodeType == Node.ELEMENT_NODE && selection.node.getAttribute('title') != '') {
       $('#edit-link-title', doc).val(selection.node.getAttribute('title'));
     }
     else {
