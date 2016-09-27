@@ -200,15 +200,15 @@ function os_common_library() {
     )
   );
 
-  $bower = libraries_get_path('components');
+  $bootstrapPath = libraries_get_path('bootstrap');
   $info['bootstrap'] = array(
     'title' => 'Boostrap',
     'version' => '1.0',
     'js' => array(
-      $bower.'/bootstrap/dist/js/bootstrap.js' => array(),
+      $bootstrapPath.'/dist/js/bootstrap.js' => array(),
     ),
     'css' => array(
-      $bower.'/bootstrap/dist/css/bootstrap.css' => array(),
+      $bootstrapPath.'/dist/css/bootstrap.css' => array(),
     )
   );
 
