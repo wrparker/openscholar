@@ -1167,6 +1167,10 @@ function theme_os_taxonomy_tagged_nodes($variables) {
       // Render a non-node entity.
       $entity = entity_load_single($a['entity_type'], $a['entity_id']);
       $entity->contextual_annotation_key = 'tid-' . $term_id;
+      if ($entity->filemime == 'video/oembed' && empty($entity->os_file_description)) {
+        // Add an empty string to generate markup link in case no description is present for embedded videos
+        $entity->os_file_description['und'][0]['value'] = '';
+      }
       return entity_view($a['entity_type'], array($entity), $options['view_mode']);
     }, $entities);
 
