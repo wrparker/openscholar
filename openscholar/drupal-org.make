@@ -474,7 +474,6 @@ libraries[tinymce][download][url] = "http://github.com/downloads/tinymce/tinymce
 libraries[ckeditor][type] = "libraries"
 libraries[ckeditor][download][type] = "get"
 libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.5.10/ckeditor_4.5.10_standard.zip"
-libraries[ckeditor][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/39f21cff901da1a83902c5197757704d26d4f5e4/patches/ckeditor-8028-image_resizing.patch"
 
 libraries[spyc][type] = "libraries"
 libraries[spyc][download][type] = "file"
@@ -568,6 +567,7 @@ libraries[dragresize][type] = "libraries"
 libraries[dragresize][subdir] = "ckeditor/plugins"
 libraries[dragresize][download][type] = "git"
 libraries[dragresize][download][url] = "https://github.com/sstur/ck-dragresize.git"
+libraries[dragresize][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/291c2832f6b03051c064bcd9e3ea82bb7910b338/patches/ckeditor-8028-image_resizing.patch"
 
 ; Angular js libraries.
 libraries[angular_select2][type] = "libraries"
