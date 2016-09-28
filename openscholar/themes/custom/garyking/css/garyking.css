@@ -79,16 +79,7 @@
   .front .region-content-top .block-boxes-os_boxes_columns + .block-inner {
       margin-top: 0;
   }
-  .block-boxes-os_boxes_columns .region-two-66-33-first {
-      background: url('../images/homepage-left.jpg') center right no-repeat;
-      margin-right: 0;
-      min-height: 420px;
-      background-size: 100%;
-  }
-  .block-boxes-os_boxes_columns .region-two-66-33-first .region-inner {
-      width: 66%;
-      float: right;
-  }
+
   .block-boxes-os_boxes_columns .region-two-66-33-second {
       background-color: #ccc;
       margin-left: 0;
