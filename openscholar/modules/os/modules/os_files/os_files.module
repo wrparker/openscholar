@@ -110,9 +110,30 @@ function os_files_theme() {
     'os_file_icon' => array(
       'variables' => array('file' => NULL, 'icon_directory' => NULL),
     ),
+    'os_file_gallery_carousal_icon' => array(
+      'variables' => array('file' => NULL),
+    ),
   );
 
   return $items;
+}
+
+/**
+ * Returns HTML for an image with an appropriate icon to be used in gallery page jcarousal for the given file.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - file: A file object for which to make an icon.
+ *   - title: A string containing the file short title.
+ *   - icon_directory: A path to a directory of icons to be used for
+ *     files.
+ *
+ * @ingroup themeable
+ */
+function theme_os_file_gallery_carousal_icon($variables) {
+  $file = $variables['file'];
+  $file_icon = $file->icon;
+  return '<img class="media-gallery-carousal file-icon" alt="' . $file->filename . '" title="' . $file->filename . '" src="' . $file_icon . '" />';
 }
 
 /**
@@ -1858,31 +1879,58 @@ function os_files_field_formatter_view($entity_type, $entity, $field, $instance,
       $images = array();
       $videos = array();
       $other = array();
+      $file_icon_directory = drupal_get_path('module', 'os_files') . '/icons';
+      $allowed_extensions_in_carousal = variable_get('allowed_extensions_in_carousal', array('mov', 'mpeg', 'mp4', 'avi', 'wmv'));
       foreach ( $items as $i ) {
-        if ($i['type'] == 'image') {
-          $title = field_get_items('file', ( object ) $i, 'field_file_image_title_text');
-          $title = isset($title[0]) ? $title[0]['value'] : $i['filename'];
-          $alt = field_get_items('file', ( object ) $i, 'field_file_image_alt_text');
-          $alt = isset($alt[0]) ? $alt[0]['value'] : $i['filename'];
-          $image_info = image_get_info($i['uri']);
-          $images[] = array(
-            'href' => file_create_url($i['uri']),
-            'title' => theme('image_style', array(
+        // Determining file extension for inclusion of the item in jcarousal render array.
+        $parts = explode('.', $i['uri']);
+        $file_extension = end($parts);
+        // If file type is image or have extension of $allowed_extensions_in_carousal array, then rendering them in jcarousal.
+        if ($i['type'] == 'image' || (in_array($file_extension, $allowed_extensions_in_carousal) && $entity->type == 'media_gallery')) {
+          // For jpeg, jpg, gif and png type files.
+          if ($i['type'] == 'image') {
+            $title = field_get_items('file', ( object ) $i, 'field_file_image_title_text');
+            $title = isset($title[0]) ? $title[0]['value'] : $i['filename'];
+            $alt = field_get_items('file', ( object ) $i, 'field_file_image_alt_text');
+            $alt = isset($alt[0]) ? $alt[0]['value'] : $i['filename'];
+            $image_info = image_get_info($i['uri']);
+            $colorbox_class = 'colorbox';
+            $target_type = '_self';
+            $jcarousal_thumbnail = theme('image_style', array(
               'path' => $i['uri'],
               'style_name' => 'thumbnail',
               'title' => $title,
               'alt' => $alt,
               'width' => $image_info['width'],
               'height' => $image_info['height']
-            )),
+            ));
+          } else {
+            $title = $i['filename'];
+            $alt = $i['filename'];
+            $colorbox_class = '';
+            $target_type = '_blank';
+            // Different icons as per file mimetypes.
+            $file = new stdClass;
+            $file->filename = $i['filename'];
+            $file->icon = $i['icon'];
+            $jcarousal_thumbnail = theme('os_file_gallery_carousal_icon', array(
+              'file' => $file,
+            ));
+          }
+          $images[] = array(
+            'href' => file_create_url($i['uri']),
+            'title' => $jcarousal_thumbnail,
             'html' => TRUE,
             'attributes' => array(
               'class' => array(
-                'colorbox'
+                $colorbox_class
               ),
               'rel' => array(
-                $display['type'].$entity->vid
-              )
+                $display['type'] . $entity->vid
+              ),
+              'target' => array(
+                $target_type
+              ),
             )
           );
         }
@@ -1894,6 +1942,26 @@ function os_files_field_formatter_view($entity_type, $entity, $field, $instance,
             '#url' => $url,
             '#options' => array(
               'maxwidth' => 350,
+            )
+          );
+          $images[] = array(
+            'href' => '',
+            'title' => theme('image', array(
+              'path' => $i['oembed']['thumbnail_url'],
+              'title' => $i['oembed']['title'],
+              'alt' => $i['oembed']['title'],
+              'width' => 100,
+            )),
+            'html' => TRUE,
+            'query' => array('innerWidth' => $i['oembed']['width'], 'innerHeight' => $i['oembed']['height'], 'inline' => 'true'),
+            'fragment' => 'embed-colorbox-' . $i['fid'],
+            'attributes' => array(
+              'class' => array(
+                'colorbox-inline'
+              ),
+              'rel' => array(
+                $display['type'] . $entity->vid
+              )
             )
           );
         }
@@ -1960,7 +2028,7 @@ function os_files_field_formatter_view($entity_type, $entity, $field, $instance,
         $elements['videos'] = array(
           '#type' => 'container',
           '#attributes' => array(
-            'class' => array('os-files-videos-list'),
+            'class' => array('os-files-videos-list', 'element-hidden'),
           )
         );
         foreach ($videos as $v) {
@@ -2255,9 +2323,18 @@ function _os_files_video_thumb($file, $width_max = 500, $height_max = 500) {
     '#url' => $url,
     '#attributes' => array('width' => min($w, 250) . 'px'),
     '#options' => array(),
+    '#pre_render' => array(
+      'oembed_pre_render_fetch',
+      'oembed_pre_render_thumbnail',
+      'os_files_pre_render_oembed_thumbnail'
+    ),
   );
-
   return $video;
+}
+
+function os_files_pre_render_oembed_thumbnail($element) {
+  $element['#width'] = 100;
+  return $element;
 }
 
 function _os_files_extensions_from_type($type) {
