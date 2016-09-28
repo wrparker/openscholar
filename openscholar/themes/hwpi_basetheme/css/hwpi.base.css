@@ -628,6 +628,8 @@ article.node-teaser.node-person .field-name-field-person-photo ~ .node-content {
     margin-right: 30px;
     padding-top: 15px;
 }
+
+.node-type-person #content .node-person .field-name-field-office-hours,
 .node-type-person #content .node-person .field-name-field-phone,
 .node-type-person #content .node-person .field-name-field-email {
     float: none;
@@ -885,12 +887,12 @@ ul.pager li a {
     padding: 3px;
 }
 ul.pager li.pager-item {
-    display: inline-block;
     padding: 4px 8px;
 }
 /* Custom Person node style for /people page */
-
+.node-person.node-teaser .field-name-field-office-hours,
 .node-person.node-teaser .field-name-field-email,
+.node-person.node-teaser .field-name-og-vocabulary,
 .node-person.node-teaser .field-name-field-phone {
     clear: both;
     float: left;

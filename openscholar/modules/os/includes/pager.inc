@@ -22,8 +22,8 @@ function _os_pager_add_html_head_link($variables) {
   $text = $variables['text'];
   static $rel_prev = FALSE, $rel_next = FALSE;
   // Looks for both full pager link text and mini pager link text.
-  $prev_values = array(t('‹ previous'), t('‹‹'));
-  $next_values = array(t('next ›'), t('››'));
+  $prev_values = array(t('‹'));
+  $next_values = array(t('›'));
   $attributes = array();
   if (!$rel_prev && in_array($text, $prev_values)) {
     $rel_prev = TRUE;
