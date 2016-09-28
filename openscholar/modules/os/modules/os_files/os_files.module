@@ -2818,7 +2818,6 @@ function os_files_file_delete($file) {
   _os_file_invalidate_cache($file);
 }
 
-
 /**
  * Implements hook_file_view_alter().
  */
