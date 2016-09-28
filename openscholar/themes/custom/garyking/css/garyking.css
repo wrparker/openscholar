@@ -66,14 +66,11 @@
   .block-os-search-solr.open {
       opacity: 9;
   }
-  .front .block-boxes-os_boxes_tabs,
-  .front .block.block-boxes-os_boxes_columns.front-top-cloumn {
-      width: 100%;
-  }
+ 
   h1#page-title {
       font-size: 1.75em;
       line-height: 1.2em;
-      width: 980px;
+    
   }
   h3 {
       margin-bottom: 7px;
@@ -150,6 +147,12 @@
   .ui-tabs ul.ui-tabs-nav li.ui-tabs-active {
       border-top: 4px solid #ff884d;
   }
+  #content-panels .front-lop-software-tabs .block {
+     margin-bottom: 0;
+  }
+  
+  
+  
   .node-type-page .breadcrumb,
   .breadcrumb,
   .breadcrumb span,

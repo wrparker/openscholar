@@ -14,6 +14,7 @@
     margin-left: auto;
     margin-right: auto;
 }
+h1#page-title,
 .front .block-boxes-os_boxes_tabs,
 .front .block-boxes-os_sv_list_box,
 .front .block.block-boxes-os_boxes_columns,
@@ -37,11 +38,17 @@
 .front .block-boxes-os_boxes_tabs .block-boxes-os_boxes_html,
 .front .block-boxes-os_boxes_accordion .block-boxes-os_boxes_html,
 .front #columns .block-boxes-os_boxes_media img,
+.front .block.block-boxes-os_boxes_columns.front-top-cloumn,
 .front .block-boxes-os_boxes_columns .block.block-boxes-os_slideshow_box #layout_16_9_side, 
 .front .block-boxes-os_boxes_columns .block.block-boxes-os_slideshow_box #layout_16_9_overlay, 
 .front .block-boxes-os_boxes_columns .block.block-boxes-os_slideshow_box #layout_16_9_below {
     width: 100%;
 }
+
+.front .block-boxes-os_boxes_tabs {
+width: 104%;
+}
+
 .front .block.block-boxes-os_slideshow_box #layout_3_1_overlay,
 .front .block.block-boxes-os_slideshow_box #layout_3_1_overlay img {
     max-width: 1520px;
