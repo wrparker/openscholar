@@ -1994,7 +1994,8 @@ class FeatureContext extends DrupalContext {
   public function iSetFeatureStatus ($feature, $status, $group) {
     return array(
       new Step\When('I visit "' . $group . '"'),
-      new Step\When('I click "Build"'),
+      new Step\When('I open the admin panel to "Settings"'),
+      new Step\When('I click "Enable Apps"'),
       new Step\When('I select "' . $status . '" from "' . $feature . '"'),
       new Step\When('I press "edit-submit"'),
     );
@@ -2943,16 +2944,16 @@ class FeatureContext extends DrupalContext {
    */
   public function dumpInfoAfterFailedStep(StepEvent $event) {
     if ($event->getResult() == StepEvent::FAILED)  {
-      $this->iDisplayWatchdog();
 
       try {
+        $this->iDisplayWatchdog();
         $this->iShouldPrintPage();
+        $this->takeScreenshotAfterFailedStep($event);
       }
       catch (\Exception $e) {
 
       }
 
-      $this->takeScreenshotAfterFailedStep($event);
     }
   }
 
@@ -3246,6 +3247,40 @@ class FeatureContext extends DrupalContext {
     if ($page->find('xpath', '//*[.="' . $text . '"]')) {
       throw new \Exception("The text '{$text}'' was not found in the screen");
     }
+  }
+
+  /**
+   * @Given /^I make sure admin panel is open$/
+   */
+  public function adminPanelOpen() {
+    $page = $this->getSession()->getPage();
+    $this->waitForPageActionsToComplete();
+
+    if ($page->find('css', '[left-menu].closed')) {
+      return array(
+        new Step\When('I press "Close Menu"'),
+      );
+    }
+    elseif (!$page->find('css', '[left-menu]')) {
+      throw new \Exception("The admin panel was not found on this page. Are you sure its installed and enabled?");
+    }
+
+    return array();
+  }
+
+  /**
+   * @Given /^I open the admin panel to "([^"]*)"$/
+   */
+  public function iOpenAdminPanelTo($text) {
+    $output = $this->adminPanelOpen();
+    $page = $this->getSession()->getPage();
+
+    $elem = $page->find('xpath', "//*[text() = '{$text}']/ancestor::li[contains(@key, '".strtolower($text)."')]");
+    if (!$elem->hasClass('open')) {
+      $output[] = new Step\When('I click on the "'.$text.'" control');
+    }
+
+    return $output;
   }
 
 }

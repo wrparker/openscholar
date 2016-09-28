@@ -2,11 +2,13 @@ Feature:
   Testing the managing of OpenScholar
 
 
-  @api @features_first
+  @api @features_first @javascript
   Scenario: Check that all of the apps are turned on
     Given I am logging in as "john"
       And I visit "john"
-     When I click "Build"
+      And I make sure admin panel is open
+      And I open the admin panel to "Settings"
+     When I click "Enable Apps"
       #And I should see "Apps"
      Then I should see the "spaces" table with the following <contents>:
       | Blog          | Public |
@@ -24,17 +26,17 @@ Feature:
       | Reader        | Public |
       | Software      | Public |
 
-  @api @features_first
+  @api @features_first @javascript
     Scenario: Check site owner can't manage permissions of disabled app.
       Given I am logging in as "john"
-        And I set feature "edit-spaces-features-os-booklets" to "Disabled" on "john"
+        And I set feature "edit-os-booklets" to "Disabled" on "john"
        When I visit "john/cp/users/permissions"
        Then I should not see "Create book page content"
 
-  @api @features_first
+  @api @features_first @javascript
     Scenario: Check enabling app brings back its permissions.
       Given I am logging in as "john"
-        And I set feature "edit-spaces-features-os-booklets" to "Public" on "john"
+        And I set feature "edit-os-booklets" to "Public" on "john"
        When I visit "john/cp/users/permissions"
        Then I should see "Create book page content"
 
