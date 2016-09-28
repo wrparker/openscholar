@@ -566,8 +566,7 @@ libraries[indentblock][download][url] = "http://download.ckeditor.com/indentbloc
 libraries[dragresize][type] = "libraries"
 libraries[dragresize][subdir] = "ckeditor/plugins"
 libraries[dragresize][download][type] = "git"
-libraries[dragresize][download][url] = "https://github.com/sstur/ck-dragresize.git"
-libraries[dragresize][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/291c2832f6b03051c064bcd9e3ea82bb7910b338/patches/ckeditor-8028-image_resizing.patch"
+libraries[dragresize][download][url] = "https://github.com/openscholar/ck-dragresize.git"
 
 ; Angular js libraries.
 libraries[angular_select2][type] = "libraries"
