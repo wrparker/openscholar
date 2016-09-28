@@ -155,6 +155,7 @@ ul.menu li a:active {} ul.menu li.active a {} ul.menu li.active-trail a {} ul.me
     padding: 0;
     /* this class (if it exists) could be a problem so reset the padding */
 }
+
 /* Breadcrumbs as an ordered list */
 
 .breadcrumb {
