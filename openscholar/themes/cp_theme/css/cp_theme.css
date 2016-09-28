@@ -81,6 +81,14 @@ html.js input.throbbing {
 .os-help-link:hover {
     background: url("../images/cp-sprite.png") no-repeat 0 -170px;
 }
+.help-link.ng-binding {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    padding: 2px 0 2px 23px;
+    background: url('../images/cp-sprite.png') no-repeat 0 -708px;
+    
+}
 .view-os-files-private ul {
     list-style-type: none !important;
     list-style: none !important;
