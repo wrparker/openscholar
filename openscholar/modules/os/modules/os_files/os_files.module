@@ -1781,7 +1781,12 @@ function os_files_file_view($file, $view_mode, $langcode) {
     }
   }
 
-  $file->content['file'] = $content;
+  if (in_array($file->filemime, array('video/oembed', 'audio/oembed')) && $view_mode == 'teaser' && (!$file->os_file_description || $file->os_file_description['und'][0]['value'] =='')) {
+    // Showing embedded elements in case no description is present in teaser view
+    unset($file->content['os_file_description'][0]['#markup']);
+  } else {
+    $file->content['file'] = $content;
+  }
 }
 
 /**
