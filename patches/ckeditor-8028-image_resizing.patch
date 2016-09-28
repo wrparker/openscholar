@@ -1,7 +1,7 @@
-diff --git a/plugins/dragresize/plugin.js b/plugins/dragresize/plugin.js
+diff --git a/plugin.js b/plugin.js
 index 39f76b2..467e79b 100755
---- a/plugins/dragresize/plugin.js
-+++ b/plugins/dragresize/plugin.js
+--- a/plugin.js
++++ b/plugin.js
 @@ -372,8 +372,16 @@
    }
  
