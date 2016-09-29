@@ -50,7 +50,7 @@ Feature:
         And I go to "john/os/widget/boxes/os_addthis/edit"
        Then I should see "AddThis" in an "h1" element
 
-  @api @features_first
+  @api @features_first @javascript
     Scenario: Check content editor without edit widgets permission can't edit
       Given I am logging in as "john"
        When I give the user "klark" the role "content editor" in the group "john"
@@ -66,7 +66,7 @@ Feature:
         And I go to "john/os/widget/boxes/os_addthis/edit"
        Then I should not see the text "AddThis"
 
-  @api @features_first
+  @api @features_first @javascript
     Scenario: Check rolling abck permissions re-enable widget permissions
       Given I am logging in as "john"
        When I give the user "klark" the role "content editor" in the group "john"
