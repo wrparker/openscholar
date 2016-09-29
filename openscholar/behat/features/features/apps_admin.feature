@@ -48,7 +48,7 @@ Feature:
         And I click "Logout"
         And I am logging in as "klark"
         And I go to "john/os/widget/boxes/os_addthis/edit"
-       Then I should get a "200" HTTP response
+       Then I should see "AddThis" in an "h1" element
 
   @api @features_first
     Scenario: Check content editor without edit widgets permission can't edit
