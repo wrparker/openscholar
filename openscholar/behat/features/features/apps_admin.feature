@@ -48,9 +48,9 @@ Feature:
         And I click "Logout"
         And I am logging in as "klark"
         And I go to "john/os/widget/boxes/os_addthis/edit"
-       Then I should get a "200" HTTP response
+       Then I should see "AddThis" in an "h1" element
 
-  @api @features_first
+  @api @features_first @javascript
     Scenario: Check content editor without edit widgets permission can't edit
       Given I am logging in as "john"
        When I give the user "klark" the role "content editor" in the group "john"
@@ -60,19 +60,23 @@ Feature:
         And I go to "john/cp/users/permissions"
        Then I should see the button "Save permissions"
         And I remove from the role "content editor" in the group "john" the permission "edit-boxes"
-        And I click "Log out"
+        And I open the user menu
+        And I click "Logout"
         And I am logging in as "klark"
         And I go to "john/os/widget/boxes/os_addthis/edit"
-       Then I should get a "403" HTTP response
+       Then I should not see the text "AddThis"
 
-  @api @features_first
-    Scenario: Check rolling abck permissions re-enable widget permissions
+  @api @features_first @javascript
+    Scenario: Check rolling back permissions to re-enable widget permissions
       Given I am logging in as "john"
-       When I give the user "klark" the role "content editor" in the group "john"
+       #When I give the user "klark" the role "content editor" in the group "john"
         And I go to "john/cp/users/permissions"
        When I click "Restore default roles and permissions"
+        And I wait for the overlay to open
         And I press "Confirm"
-        And I click "Log out"
+        And the overlay closes
+        And I open the user menu
+        And I click "Logout"
         And I am logging in as "klark"
         And I go to "john/os/widget/boxes/os_addthis/edit"
-       Then I should get a "200" HTTP response
+       Then I should see "AddThis" in an "h1" element

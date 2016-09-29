@@ -3291,6 +3291,58 @@ class FeatureContext extends DrupalContext {
     if ($elem = $page->find('css', '[right-menu-toggle]')) {
       $elem->click();
     }
+    else {
+      $url = $this->getSession()->getCurrentUrl();
+      throw new \Exception("Could not find user menu on page $url");
+    }
+  }
+
+  /**
+   * @When /^the overlay opens$/
+   */
+  public function overlayOpens() {
+    if ($overlay = $this->getSession()->getPage()->find('css', 'iframe.overlay-active')) {
+      $function = <<<JS
+        (function () {
+          var old = document.getElementById("iframeSwitchTo");
+          if (old) {
+            if (old.classList.contains('overlay-active')) {
+              return;
+            }
+            else {
+              old.id = "";
+            }
+          }
+          var iframe = document.querySelector("iframe.overlay-active");
+          iframe.id = "iframeSwitchTo";
+        })();
+JS;
+      $this->getSession()->executeScript($function);
+      $this->getSession()->switchToIframe("iframeSwitchTo");
+    }
+    else {
+      throw new \Exception("Overlay not found.");
+    }
+  }
+
+  /**
+   * @When /^I wait for the overlay to open$/
+   */
+  public function iWaitOverlayOpen() {
+    return array(
+      new Step\When("I wait for page actions to complete"),
+      new Step\When("the overlay opens")
+    );
+  }
+
+  /**
+   * @When /^the overlay closes$/
+   */
+  public function overlayCloses() {
+    $this->getSession()->getDriver()->switchToIFrame(null);
+    return array(
+      new Step\When("I wait for page actions to complete")
+    );
   }
 
 }
