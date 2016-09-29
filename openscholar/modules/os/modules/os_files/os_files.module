@@ -2818,11 +2818,14 @@ function os_files_file_delete($file) {
   _os_file_invalidate_cache($file);
 }
 
+
 /**
  * Implements hook_file_view_alter().
  */
 function os_files_file_view_alter(&$build, $type) {  
-  if ($type == 'file' && $build['#bundle'] == 'video' && in_array($build['#view_mode'], array('full', 'teaser', 'os_files_link', 'os_files_link_icon'))) {
+  if ($type == 'file' && $build['#bundle'] == 'video' && in_array($build['#view_mode'], array('os_files_link', 'os_files_link_icon'))) {
+    $build['file']['link']['#path'] = 'file/' . $build['#file']->fid;
+  } else if ($type == 'file' && $build['#bundle'] == 'video' && in_array($build['#view_mode'], array('full', 'teaser'))) {
     $build['file']['link'] = array(
       '#theme' => 'link',
       '#href' => 'file/' . $build['#file']->fid,
@@ -2830,7 +2833,7 @@ function os_files_file_view_alter(&$build, $type) {
       '#text' => $build['#file']->media_title[LANGUAGE_NONE][0]['value'],
       '#prefix' => '<div>',
       '#suffix' => '</div>',
-      '#options' => array('html' => FALSE, 'attributes' => array())
+      '#options' => array('html' => TRUE, 'attributes' => array())
     );
   }
 }
