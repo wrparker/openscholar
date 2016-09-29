@@ -29,9 +29,7 @@
   .front .ui-tabs .ui-state-default a {
       font-family: 'Oswald', sans-serif !important;
   }
- /* .sidebar {
-      margin-top: 200px;
- }*/
+
   body,
   body.not-front {
       font-size: 16px;
@@ -42,6 +40,7 @@
   }
   .front #columns {
       padding-top: 0;
+          margin-top: 46px;
   }
   .front #content-panels .region-content-first {
       background-color: #FFF;
@@ -80,10 +79,24 @@
       margin-top: 0;
   }
 
-  .block-boxes-os_boxes_columns .region-two-66-33-second {
+  .front-top-cloumn .region-two-66-33-second {
       background-color: #ccc;
-      margin-left: 0;
+      margin: 0;
   }
+  
+  
+.front-top-cloumn .region-two-66-33-first  {
+    margin: 0;
+     background: url('../images/homepage-left.jpg') center right no-repeat;
+}
+  
+  
+  .top-bio-teaser {
+    width: 75%;
+    margin: 10% 20%;
+   
+}
+  
   .front-lop-blockgrid {
       padding: 10px;
       border-top-style: solid;
@@ -134,10 +147,12 @@
       font-size: 20.8px;
       font-weight: normal;
       letter-spacing: 0;
+          padding: 17px 12px;
   }
   .ui-tabs ul.ui-tabs-nav li.ui-tabs-active {
       border-top: 4px solid #ff884d;
   }
+  #content-panels .block.front-top-cloumn,
   #content-panels .front-lop-software-tabs .block {
      margin-bottom: 0;
   }

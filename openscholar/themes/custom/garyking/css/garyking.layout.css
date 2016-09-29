@@ -1,47 +1,11 @@
 /* Layout CSS */
 
-.front .block-boxes-os_boxes_tabs,
-.front .block-boxes-os_sv_list_box,
-.front .block.block-boxes-os_boxes_columns,
-.front .block.block-boxes-os_slideshow_box,
-.front #columns,
-.front .block-boxes-os_boxes_html,
-.front .block.block-boxes-os_slideshow_box #layout_3_1_overlay,
-.front .block.block-boxes-os_slideshow_box #layout_16_9_side,
-.front .block.block-boxes-os_slideshow_box #layout_16_9_overlay,
-.front .block.block-boxes-os_slideshow_box #layout_16_9_below,
-.front .block-boxes-os_boxes_media img {
-    margin-left: auto;
-    margin-right: auto;
-}
-h1#page-title,
-.front .block-boxes-os_boxes_tabs,
-.front .block-boxes-os_sv_list_box,
-.front .block.block-boxes-os_boxes_columns,
-.front .block.block-boxes-os_slideshow_box #layout_16_9_side,
-.front .block.block-boxes-os_slideshow_box #layout_16_9_overlay,
-.front .block.block-boxes-os_slideshow_box #layout_16_9_below {
+h1#page-title
+ {
     width: 980px;
 }
-.front #columns,
-.front .content-left.content-bottom #content-panels .region-content-first,
-.front .content-left.content-bottom #content-panels .region-content-bottom,
-.front .content-left.content-right #content-panels .region-content-first,
-.front .content-left.content-right #content-panels .region-content-second,
-.front .content-right.content-bottom #content-panels .region-content-second,
-.front .content-right.content-bottom #content-panels .region-content-bottom,
-.front .content-left.content-right.content-bottom #content-panels .region-content-first,
-.front .content-left.content-right.content-bottom #content-panels .region-content-second,
-.front .content-left.content-right.content-bottom #content-panels .region-content-bottom,
-.front .block.block-boxes-os_slideshow_box #layout_3_1_overlay img,
-.front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html,
-.front .block-boxes-os_boxes_tabs .block-boxes-os_boxes_html,
-.front .block-boxes-os_boxes_accordion .block-boxes-os_boxes_html,
-.front #columns .block-boxes-os_boxes_media img,
-.front .block.block-boxes-os_boxes_columns.front-top-cloumn,
-.front .block-boxes-os_boxes_columns .block.block-boxes-os_slideshow_box #layout_16_9_side, 
-.front .block-boxes-os_boxes_columns .block.block-boxes-os_slideshow_box #layout_16_9_overlay, 
-.front .block-boxes-os_boxes_columns .block.block-boxes-os_slideshow_box #layout_16_9_below {
+
+.front .block.block-boxes-os_boxes_columns.front-top-cloumn {
     width: 100%;
 }
 
@@ -49,9 +13,15 @@ h1#page-title,
 width: 104%;
 }
 
-
-
-.front #content-panels.at-panel .region .region-inner[style] {
-    min-height: auto !important;
-}
-
+.front-top-cloumn .region-two-66-33-second,
+.front-top-cloumn .region-two-66-33-first {
+      height: 300px;
+  }
+  
+  
+.front-top-cloumn .region-two-66-33-first {
+      width: 70%;
+  }
+  .front-top-cloumn .region-two-66-33-second {
+      width: 30%;
+  }
