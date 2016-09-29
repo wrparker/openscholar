@@ -3306,6 +3306,16 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @When /^I wait for the overlay to open$/
+   */
+  public function iWaitOverlayOpen() {
+    return array(
+      new Step\When("I wait for page actions to complete"),
+      new Step\When("the overlay opens")
+    );
+  }
+
+  /**
    * @When /^the overlay closes$/
    */
   public function overlayCloses() {

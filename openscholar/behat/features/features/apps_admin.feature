@@ -73,7 +73,7 @@ Feature:
         And I go to "john/cp/users/permissions"
        When I click "Restore default roles and permissions"
         And I break
-        And the overlay opens
+        And I wait for the overlay to open
         And I press "Confirm"
         And the overlay closes
         And I open the user menu
@@ -81,3 +81,4 @@ Feature:
         And I am logging in as "klark"
         And I go to "john/os/widget/boxes/os_addthis/edit"
        Then I should see "AddThis" in an "h1" element
+        And I should wait for the text "<string>" to "<string>"
