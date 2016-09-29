@@ -72,6 +72,7 @@ Feature:
        When I give the user "klark" the role "content editor" in the group "john"
         And I go to "john/cp/users/permissions"
        When I click "Restore default roles and permissions"
+        And I break
         And the overlay opens
         And I press "Confirm"
         And the overlay closes

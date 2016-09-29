@@ -1373,7 +1373,6 @@ class FeatureContext extends DrupalContext {
       new Step\When('I fill in "edit-name" with "' . $name . '"'),
       new Step\When('I press "Add member"'),
       new Step\When('I visit "' . $group . '/cp/users/edit_membership/' . $uid . '"'),
-      new Step\When('I break'),
       new Step\When('I select the radio button named "edit_role" with value "' . $role . '"'),
       new Step\When('I press "Save"'),
     );
