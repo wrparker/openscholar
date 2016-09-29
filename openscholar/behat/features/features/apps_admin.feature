@@ -67,7 +67,7 @@ Feature:
        Then I should not see the text "AddThis"
 
   @api @features_first @javascript
-    Scenario: Check rolling abck permissions re-enable widget permissions
+    Scenario: Check rolling back permissions to re-enable widget permissions
       Given I am logging in as "john"
        When I give the user "klark" the role "content editor" in the group "john"
         And I go to "john/cp/users/permissions"
