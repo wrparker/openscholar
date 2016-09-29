@@ -12,8 +12,6 @@ function os_files_install() {
   _os_files_clean_up_fields();
 
   _os_files_update_add_description_field();
-  // Altering 'media_title field to be displayed in default and teaser view mode.
-  _os_files_update_media_title_field();
 }
 
 /**
@@ -876,32 +874,4 @@ function os_files_update_7022() {
 function os_files_update_7023() {
   ctools_include('export');
   ctools_export_crud_delete('file_type', 'executable');
-}
-
-/**
- * Alters media_title field for teaser and default view mode.
- */
-function _os_files_update_media_title_field() {
-  $instance_media_title = field_info_instance('file', 'media_title', 'video');
-  $instance_file_description = field_info_instance('file', 'os_file_description', 'video');
-  $instance_media_title['display']['teaser']['label'] = 'hidden';
-  $instance_media_title['display']['teaser']['weight'] = 1;
-  $instance_media_title['display']['teaser']['type'] = 'title_linked';
-  $instance_media_title['display']['teaser']['settings'] = array('title_style' => '_none', 'title_link' => 'content');
-  $instance_file_description['display']['teaser']['weight'] = 2;
-  $instance_media_title['display']['default']['label'] = 'hidden';
-  $instance_media_title['display']['default']['weight'] = 1;
-  $instance_media_title['display']['default']['type'] = 'title_linked';
-  $instance_media_title['display']['default']['settings'] = array('title_style' => '_none', 'title_link' => 'content');
-  $instance_file_description['display']['default']['weight'] = 2;
-  field_update_instance($instance_media_title);
-  field_update_instance($instance_file_description);
-}
-
-/**
- * Alters media_title field for teaser and default view mode.
- */
-function os_files_update_7024() {
-  // Altering 'media_title field to be displayed in default and teaser view mode.
-  _os_files_update_media_title_field();
 }
