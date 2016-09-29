@@ -1683,6 +1683,11 @@ function os_files_file_view($file, $view_mode, $langcode) {
     );
   }
 
+  if ($view_mode == 'teaser' && !$file->os_file_description  && $file->filemime == 'video/oembed') {
+    // Adding an empty string in case no description present for the videos in teaser view to generate Read more link
+    $file->os_file_description['und'][0]['value'] = '';
+  }
+
   //teasers get read more link
   if ($view_mode == 'teaser' && $file->os_file_description) {
     $readmore = array(
@@ -1781,12 +1786,13 @@ function os_files_file_view($file, $view_mode, $langcode) {
     }
   }
 
-  if (in_array($file->filemime, array('video/oembed', 'audio/oembed')) && $view_mode == 'teaser' && (!$file->os_file_description || $file->os_file_description['und'][0]['value'] =='')) {
-    // Showing embedded elements in case no description is present in teaser view
-    unset($file->content['os_file_description'][0]['#markup']);
-  } else {
-    $file->content['file'] = $content;
+  if (!@$file->sv_list && $file->filemime == 'video/oembed' && $view_mode == 'teaser') {
+    // Changing display for the embedded videos in teaser view like sv_list
+    $content = array_merge(array('video_thumb' => _os_files_video_thumb($file)), $content);
+    $content['video_thumb']['#prefix'] = '<div class="list-view-teaser">' . $content['video_thumb']['#prefix'];
+    $content['video_thumb']['#suffix'] .= '</div>';
   }
+  $file->content['file'] = $content;
 }
 
 /**
