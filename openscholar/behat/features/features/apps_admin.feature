@@ -69,7 +69,7 @@ Feature:
   @api @features_first @javascript
     Scenario: Check rolling back permissions to re-enable widget permissions
       Given I am logging in as "john"
-       When I give the user "klark" the role "content editor" in the group "john"
+       #When I give the user "klark" the role "content editor" in the group "john"
         And I go to "john/cp/users/permissions"
        When I click "Restore default roles and permissions"
         And I break
