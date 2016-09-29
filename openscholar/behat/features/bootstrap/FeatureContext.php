@@ -3291,6 +3291,10 @@ class FeatureContext extends DrupalContext {
     if ($elem = $page->find('css', '[right-menu-toggle]')) {
       $elem->click();
     }
+    else {
+      $url = $this->getSession()->getCurrentUrl();
+      throw new \Exception("Could not find user menu on page $url");
+    }
   }
 
   /**
