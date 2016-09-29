@@ -80,7 +80,8 @@
   }
 
   .front-top-cloumn .region-two-66-33-second {
-      background-color: #ccc;
+         background: url('../images/working-paper_image.jpg') center right no-repeat;
+     background-size: cover;
       margin: 0;
   }
   
@@ -88,13 +89,13 @@
 .front-top-cloumn .region-two-66-33-first  {
     margin: 0;
      background: url('../images/homepage-left.jpg') center right no-repeat;
+     background-size: cover;
 }
   
   
-  .top-bio-teaser {
+.front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html.top-bio-teaser {
     width: 75%;
-    margin: 10% 20%;
-   
+    margin: 10% auto;
 }
   
   .front-lop-blockgrid {
