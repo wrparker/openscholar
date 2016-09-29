@@ -517,6 +517,9 @@ ul.class_material_field_class a.class_material_field_class_anchor {
     bottom: 0;
     right: 0;
 }
+.file-video {
+    clear: both;
+}
 .file-video-oembed {
     clear: both;
 }
