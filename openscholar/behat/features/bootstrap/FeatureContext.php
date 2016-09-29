@@ -3314,7 +3314,7 @@ class FeatureContext extends DrupalContext {
         })();
 JS;
       $this->getSession()->executeScript($function);
-      $this->getSession()->getDriver()->switchToIframe("iframeSwitchTo");
+      $this->getSession()->switchToIframe("iframeSwitchTo");
     }
     else {
       throw new \Exception("Overlay not found.");
@@ -3335,7 +3335,7 @@ JS;
    * @When /^the overlay closes$/
    */
   public function overlayCloses() {
-    $this->getSession()->switchToIFrame();
+    $this->getSession()->switchToIFrame(null);
   }
 
 }
