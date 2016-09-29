@@ -3298,7 +3298,23 @@ class FeatureContext extends DrupalContext {
    */
   public function overlayOpens() {
     if ($overlay = $this->getSession()->getPage()->find('css', 'iframe.overlay-active')) {
-      $this->getSession()->getDriver()->getWebDriverSession()->frame($overlay);
+      $function = <<<JS
+        (function () {
+          var old = document.findElementById("iframeSwitchTo");
+          if (old) {
+            if (old.classList.contains('overlay-active')) {
+              return;
+            }
+            else {
+              old.id = "";
+            }
+          }
+          var iframe = document.querySelector("iframe.overlay-active");
+          iframe.id = "iframeSwitchTo";
+        })();
+JS;
+      $this->getSession()->executeScript($function);
+      $this->getSession()->getDriver()->switchToIframe("iframeSwitchTo");
     }
     else {
       throw new \Exception("Overlay not found.");
