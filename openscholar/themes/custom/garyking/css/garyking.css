@@ -90,12 +90,21 @@
     margin: 0;
      background: url('../images/homepage-left.jpg') center right no-repeat;
      background-size: cover;
+     display: table;
 }
   
+  .front-top-cloumn .region-two-66-33-first .region-inner {
+  display: table-cell;
+    vertical-align: middle;
+   }
   
 .front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html.top-bio-teaser {
-    width: 75%;
-    margin: 10% auto;
+      width: 75%;
+
+    margin: 0 auto !important;
+  
+    font-size: 1.4em;
+    color:#fff;
 }
   
   .front-lop-blockgrid {
@@ -263,6 +272,9 @@
       position: absolute;
       top: 60px;
       right: 0;
+  
+    padding: 15px 0 15px 15px;
+    background-color: #c7c7c7;
   }
   #search-block-form .form-item label {
       text-indent: 100%;
