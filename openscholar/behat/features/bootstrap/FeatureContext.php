@@ -3298,7 +3298,7 @@ class FeatureContext extends DrupalContext {
    */
   public function overlayOpens() {
     if ($overlay = $this->getSession()->getPage()->find('css', 'iframe.overlay-active')) {
-      $this->getDriver()->getWebDriverSession()->frame($overlay);
+      $this->getSession()->getDriver()->getWebDriverSession()->frame($overlay);
     }
     else {
       throw new \Exception("Overlay not found.");
