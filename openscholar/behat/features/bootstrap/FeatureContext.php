@@ -3335,7 +3335,7 @@ JS;
    * @When /^the overlay closes$/
    */
   public function overlayCloses() {
-    $this->getSession()->switchToIFrame(null);
+    $this->getSession()->getDriver()->switchToIFrame(null);
   }
 
 }

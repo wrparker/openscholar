@@ -80,4 +80,3 @@ Feature:
         And I am logging in as "klark"
         And I go to "john/os/widget/boxes/os_addthis/edit"
        Then I should see "AddThis" in an "h1" element
-        And I should wait for the text "<string>" to "<string>"
