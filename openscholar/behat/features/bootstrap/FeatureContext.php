@@ -3294,4 +3294,11 @@ class FeatureContext extends DrupalContext {
     }
   }
 
+  /**
+   * @When /^The overlay opens$/
+   */
+  public function overlayOpens() {
+    $this->getSession()->switchToIFrame('test');
+  }
+
 }
