@@ -3300,7 +3300,7 @@ class FeatureContext extends DrupalContext {
     if ($overlay = $this->getSession()->getPage()->find('css', 'iframe.overlay-active')) {
       $function = <<<JS
         (function () {
-          var old = document.findElementById("iframeSwitchTo");
+          var old = document.getElementById("iframeSwitchTo");
           if (old) {
             if (old.classList.contains('overlay-active')) {
               return;
