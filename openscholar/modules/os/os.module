@@ -171,7 +171,7 @@ function os_cp_settings() {
       '#title' => t('Display pages with long lists of content using'),
       '#default_value' => variable_get('long_list_content_pagination', 'infinite_scroll'),
       '#options' => array('infinite_scroll' => 'Infinite scrolling', 'pager' => 'Pagination'),
-      '#description' => t('<i>This applies only to blog, links, news, FAQs, publications and profiles.</i>')
+      '#description' => t('This applies only to blog, links, news, FAQs, publications and profiles.')
     ),
   );
 
