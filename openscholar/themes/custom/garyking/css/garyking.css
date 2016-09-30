@@ -224,10 +224,7 @@
   
   
   
-  
-  .not-front .page {
-      background: url('../images/publications-bg.png') center 61px no-repeat;
-  }
+
   .front #content-panels .region-content-bottom {
       background: url('../images/front-page-twitter-bg3.jpg') center -30px no-repeat;
       text-align: center;
