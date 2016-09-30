@@ -2148,7 +2148,7 @@ function os_taxonomy_cp_settings() {
   $form['os_taxonomy_display_term_under_content'] = $template + array(
     'form' => array(
       '#type' => 'checkbox',
-      '#title' => t('Display terms under content on a page'),
+      '#title' => t('Display terms under the main content on a page'),
       '#default_value' => $default_value
     )
   );
