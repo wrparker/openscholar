@@ -39,9 +39,7 @@ fieldset {
     z-index: 10;
     text-align: right;
 }
-region-footer a {
-    color: #FFFFFF;
-}
+
 .region-footer .region-inner {
     padding: 10px 20px 0 15px;
     z-index: 1;
@@ -628,7 +626,6 @@ table.biblio-contributors tr:first-child input.form-submit {
     width: 35px;
 }
 .form-item.form-type-radio {
-    margin-left: 10px;
     font-size: 1em;
     font-weight: normal;
 }
@@ -1167,4 +1164,48 @@ form#os-maintenance .form-item {
     width: 32%;
     text-align: center;
     white-space: nowrap;
+   }
+   
+  .ui-dialog #os_taxonomy .form-item {
+    margin: 0 0 15px;
+}
+
+.view-content ~ .item-list ul.pager {
+    margin-top: 30px !important;
+    letter-spacing: -1em;
+}
+.view-content ~ .item-list ul.pager li.pager-current,
+.view-content ~ .item-list ul.pager li:hover {
+    background-color: #efefef;
+}
+.view-content ~ .item-list ul.pager li a:hover {
+    text-decoration: none;
+}
+li.pager-previous + li.pager-ellipsis {
+    display: none;
+}
+.view-content ~ .item-list ul.pager li {
+    border-left: 1px solid #dededc !important;
+    border-top: 1px solid #dededc !important;
+    border-bottom: 1px solid #dededc !important;
+    letter-spacing: normal;
+    padding: 0.7em !important;
+}
+.view-content ~ .item-list ul.pager li.pager-first {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.view-content ~ .item-list ul.pager li.pager-last {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-right: 1px solid #dededc !important;
+}
+.view-content ~ .item-list ul.pager li.pager-next,
+.view-content ~ .item-list ul.pager li.pager-previous {
+	font-weight: bold;
+	}
+
+.file img.file-icon {
+    width:16px;
+
 }
