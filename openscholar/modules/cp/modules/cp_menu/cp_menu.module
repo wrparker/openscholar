@@ -504,8 +504,7 @@ function cp_menu_delete_link_form_submit($form, &$form_state) {
   if ($form_state['values']['op'] == t('Delete')) {
     os_menu_link_remove($link['menu_name'], $link['mlid']);
   }
-  overlay_close_dialog();
-  overlay_request_page_refresh();
+  overlay_close_dialog('cp/build/menu');
   $form_state['no_redirect'] = true;
 }
 

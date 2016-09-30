@@ -83,7 +83,7 @@ projects[dyntextfield][download][tag] = 1.0
 projects[dyntextfield][download][url] = "git://github.com/amitaibu/dyntextfield.git"
 
 projects[entity][subdir] = "contrib"
-projects[entity][branch] = 7.x-1.x
+projects[entity][version] = 1.7
 projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
 projects[entity][patch][] = https://www.drupal.org/files/issues/2086225-entity-access-check-18.patch
 
@@ -166,7 +166,9 @@ projects[html_title][subdir] = "contrib"
 projects[html_title][version] = 1.1
 
 projects[imageapi_optimize][subdir] = "contrib"
-projects[imageapi_optimize][version] = 1.0
+projects[imageapi_optimize][download][type] = git
+projects[imageapi_optimize][download][branch] = 7.x-1.x
+projects[imageapi_optimize][download][revision] = 234f208
 
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0
@@ -469,7 +471,7 @@ libraries[tinymce][download][url] = "http://github.com/downloads/tinymce/tinymce
 
 libraries[spyc][type] = "libraries"
 libraries[spyc][download][type] = "file"
-libraries[spyc][download][url] = "http://spyc.googlecode.com/files/spyc-0.5.zip"
+libraries[spyc][download][url] = "https://github.com/mustangostang/spyc/archive/0.5.1.zip"
 
 libraries[respondjs][type] = "libraries"
 libraries[respondjs][download][type] = "file"
