@@ -59,6 +59,9 @@ function os_presentations_preprocess_node(&$vars) {
   	if(isset($vars['display_submitted'])) {
       $vars['display_submitted'] = FALSE;
   	}
+
+    // Display title differs from the node/add/ form title
+    $vars['content']['field_presentation_file']['#title'] = "Presentation Slides";
   }
 }
 
