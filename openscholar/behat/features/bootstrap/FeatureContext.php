@@ -3340,6 +3340,9 @@ JS;
    */
   public function overlayCloses() {
     $this->getSession()->getDriver()->switchToIFrame(null);
+    return array(
+      new Step\When("I wait for page actions to complete")
+    );
   }
 
 }
