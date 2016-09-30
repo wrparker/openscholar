@@ -156,9 +156,9 @@ function vsite_access_cp_settings() {
       'form' => array(
         '#type' => 'radios',
         '#title' => t('Site visibility'),
+        '#description' => t('Choose who has access to view your site. ') . '<span id="site-visibility-help-text">' . t('Any visibility changes will take effect in 2 minutes') . '</span>',
         '#default_value' => $wrapper->{VSITE_ACCESS_FIELD}->value(),
         '#options' => vsite_access_privacy_available_values(),
-        '#description' => t('Choose who has access to view your site. ') . '<span id="site-visibility-help-text">' . t('Any visibility changes will take effect in 2 minutes') . '</span>',
         '#attached' => array(
           'js' => array(
             drupal_get_path('module', 'vsite_access') . '/vsite_access.js'
