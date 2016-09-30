@@ -181,6 +181,50 @@
   #main-content #content {
       margin-top: 100px;
   }
+  
+  /* biocv page */
+  .page-node-287251 {
+      background: url('../images/biocv-bg.jpg') center 61px no-repeat;
+  }
+  
+  /* software page */
+  .page-node-107346 {
+      background: url('../images/software-bg.jpg') center 61px no-repeat;
+  }
+  
+   /* dataverse page */
+  .page-node-249171 {
+      background: url('../images/dataverse-bg.jpg') center 61px no-repeat;
+  }
+  
+  /* contact page */
+  .page-node-3794 {
+      background: url('../images/contact-bg.jpg') center 61px no-repeat;
+  }
+  
+   /* misc page */
+  .page-node-110811 {
+      background: url('../images/miscellania-bg.jpg') center 61px no-repeat;
+  }
+  
+  .page-publications,
+  .node-type-biblio  {
+      background: url('../images/publications-bg.png') center 61px no-repeat;
+  }
+  
+  .page-people,
+ .node-type-person {
+      background: url('../images/researchgroup-bg.jpg') center 61px no-repeat;
+  }
+  
+   .page-classes,
+   .node-type-class {
+      background: url('../images/teaching-bg.jpg') center 61px no-repeat;
+  }
+  
+  
+  
+  
   .not-front .page {
       background: url('../images/publications-bg.png') center 61px no-repeat;
   }
