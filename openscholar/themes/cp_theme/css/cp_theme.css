@@ -1166,8 +1166,8 @@ form#os-maintenance .form-item {
     white-space: nowrap;
    }
    
-  .ui-dialog #os_taxonomy .form-item {
-    margin: 0 0 15px;
+.ui-dialog #os_taxonomy .form-item {
+  padding: 0;
 }
 
 .view-content ~ .item-list ul.pager {
