@@ -2155,7 +2155,7 @@ function os_taxonomy_cp_settings() {
 
   foreach($active_content_types as $content_types_key => $content_types_val) {
     if ($content_types_val === reset($active_content_types)) {
-      $active_content_types_prefix = '<p>Display see also terms under each item in list pages of content</p>';
+      $active_content_types_prefix = '<span class="description">Display see also terms under each item in list pages of content</span>';
     } else {
       $active_content_types_prefix = '';
     }
