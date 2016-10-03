@@ -86,11 +86,17 @@ function os_profiles_update_7049() {
   features_revert(array('os_profiles' => array('field', 'field_base', 'field_instance')));
 }
 
-<<<<<<< HEAD
+/**
+ * Removing extra People link from primary menu
+ */
+function os_profiles_update_7050() {
+ features_revert(array('os_profiles' => array('views_view')));
+}
+
 /*
  * Update sync URLs from the old %.json format to the new api/v1/profiles format
  */
-function os_profiles_update_7050() {
+function os_profiles_update_7051() {
 
   $result = db_select('field_data_field_original_destination_url', 'u')
     ->fields('u')
@@ -129,11 +135,3 @@ function os_profiles_update_7050() {
   }
   return t('Updated !i URLs.', array('!i' => $i));
 }
-=======
-/**
- * Removing extra People link from primary menu
- */
-function os_profiles_update_7050() {
- features_revert(array('os_profiles' => array('views_view')));
-}
->>>>>>> SCHOLAR-3.x
