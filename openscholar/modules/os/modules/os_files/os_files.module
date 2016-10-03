@@ -1683,9 +1683,9 @@ function os_files_file_view($file, $view_mode, $langcode) {
     );
   }
 
-  if ($view_mode == 'teaser' && !$file->os_file_description  && $file->filemime == 'video/oembed') {
-    // Adding an empty string in case no description present for the videos in teaser view to generate Read more link
-    $file->os_file_description['und'][0]['value'] = '';
+  if ($view_mode == 'teaser' && $file->filemime == 'video/oembed' && $file->os_file_description['und'][0]['value'] == '') {
+    // Remove file description field if it has an empty string to stop showing Read more link for embedded videos
+    unset($file->os_file_description);
   }
 
   //teasers get read more link
