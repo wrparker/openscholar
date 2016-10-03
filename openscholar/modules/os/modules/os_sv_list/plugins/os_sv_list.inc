@@ -337,7 +337,7 @@ class os_sv_list extends os_boxes_default {
       // If we have entities render them out, otherwise cache (null) as the content.
       if (!empty($entities)) {
 
-        if ($this->options['display'] == 'os_files_title') {
+        if (in_array($this->options['display'], array('title', 'os_files_title'))) {
           $render = $this->display_title($entities);
         }
         else {
