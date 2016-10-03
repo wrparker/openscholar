@@ -114,7 +114,7 @@ function os_profiles_update_7051() {
       $new_url = "http://" . $host . "/" . OS_PROFILE_JSON_PREFIX . $entity_id;
 
       db_update('field_data_field_original_destination_url')
-        ->fields(array('field_original_destination_url_value' => '$new_url'))
+        ->fields(array('field_original_destination_url_value' => $new_url))
         ->condition('entity_id', $row['entity_id'])
         ->execute();
 
