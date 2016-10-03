@@ -17,3 +17,46 @@ function os_presentations_update_7000() {
 function os_presentations_update_7001() {
   features_revert(array('os_presentations' => array('field_instance')));
 }
+
+/*
+ * Update sync URLs from the old %.json format to the new api/v1/profiles format
+ */
+function os_profiles_update_7002() {
+
+  $result = db_select('field_data_field_original_destination_url', 'u')
+    ->fields('u')
+    ->condition('field_original_destination_url_value', '%node%.json', 'LIKE')
+    ->execute();
+
+  $i = 0;
+  while ($row = $result->fetchAssoc()) {
+
+    $old_url = $row['field_original_destination_url_value'];
+    $url_pattern = '/node\/+(\d+)/';
+    if (preg_match($url_pattern, $old_url, $matches)) {
+      $host = parse_url($old_url)['host'];
+      $entity_id = $matches[1];
+      $new_url = "http://" . $host . "/" . OS_PROFILE_JSON_PREFIX . $entity_id;
+
+      db_update('field_data_field_original_destination_url')
+        ->fields(array('field_original_destination_url_value' => $new_url))
+        ->condition('entity_id', $row['entity_id'])
+        ->execute();
+
+      // Now trigger a re-sync of the node data by notifying the listeners
+      $node = node_load($entity_id);
+      $uuid = $node->field_uuid[LANGUAGE_NONE][0]['value'];
+
+      $destination = "http://" . $host;
+      $arguments = array(
+        'action' => 'update',
+        'UUID' => $uuid,
+      );
+
+      os_profiles_manage_synced_profiles($destination, $arguments);
+
+      $i++;
+    }
+  }
+  return t('Updated !i URLs.', array('!i' => $i));
+}
