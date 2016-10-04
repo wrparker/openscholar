@@ -1140,6 +1140,14 @@ ul.table-list li:nth-child(even) {
 form#os-maintenance .form-item {
     display: inline-block;
 }
+form#os-maintenance .form-item:first-child {
+    margin-bottom: 0; 
+}
+
+form#os-maintenance .form-item .description {
+    margin-top: 0; 
+}
+
 .redirect-add-form .display-inline {
     width: 40%;
 }
@@ -1167,7 +1175,11 @@ form#os-maintenance .form-item {
    }
    
 .ui-dialog #os_taxonomy .form-item {
-  padding: 0;
+      margin: 15px 0;
+}
+
+.form-radios {
+	margin:15px 0;
 }
 
 .view-content ~ .item-list ul.pager {
