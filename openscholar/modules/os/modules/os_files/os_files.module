@@ -1577,8 +1577,8 @@ function os_files_preprocess_node(&$vars) {
     return;
   }
 
-  preg_match_all('`<span alt="([^"]+)" title="[^"]+">(<iframe [^>]+></iframe>)`', $body, $trim_match, PREG_SET_ORDER);
-  preg_match_all('`<span alt="([^"]+)" title="[^"]+">(<iframe [^>]+></iframe>)`', $original, $orig_match, PREG_SET_ORDER);
+  preg_match_all('`<span(?: style="[^"]+")? alt="([^"]+)" title="[^"]+">(<iframe [^>]+></iframe>)`', $body, $trim_match, PREG_SET_ORDER);
+  preg_match_all('`<span(?: style="[^"]+")? alt="([^"]+)" title="[^"]+">(<iframe [^>]+></iframe>)`', $original, $orig_match, PREG_SET_ORDER);
 
   foreach ($trim_match as $m) {
     foreach ($orig_match as $om) {
