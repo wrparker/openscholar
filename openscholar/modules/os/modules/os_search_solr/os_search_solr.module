@@ -697,7 +697,6 @@ function os_search_solr_cp_settings() {
       '#id' => 'os-maintenance',
     ),
     'form' => array(
-      '#title' => t('Search Index'),
       '#type' => 'submit',
       '#value' => t('Re-Index Search'),
       '#suffix' => "<div class=\"description\">".t('(Re)Index the sites searchable content.')."</div>",
