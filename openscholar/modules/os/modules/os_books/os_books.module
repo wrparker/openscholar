@@ -433,7 +433,7 @@ function os_books_access_export($node, $permission) {
   // Verify that the book page is in the current site.
   $groups = og_get_entity_groups('node', $node);
   if (empty($groups['node']) || in_array($vsite->id, $groups['node'])) {
-    return user_access($permission);
+    return user_access($permission) && $vsite->access_feature('view', 'os_booklets');
   }
 
   return FALSE;
