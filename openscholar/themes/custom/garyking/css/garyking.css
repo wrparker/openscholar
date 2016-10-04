@@ -182,43 +182,40 @@
       margin-top: 100px;
   }
   
-  /* biocv page */
-  .page-node-287251 {
+
+  .bg-one {
       background: url('../images/biocv-bg.jpg') center 61px no-repeat;
   }
   
-  /* software page */
-  .page-node-107346 {
+
+  .bg-two {
       background: url('../images/software-bg.jpg') center 61px no-repeat;
   }
   
-   /* dataverse page */
-  .page-node-249171 {
+   
+  .bg-three {
       background: url('../images/dataverse-bg.jpg') center 61px no-repeat;
   }
   
-  /* contact page */
-  .page-node-3794 {
+
+  .bg-four {
       background: url('../images/contact-bg.jpg') center 61px no-repeat;
   }
   
-   /* misc page */
-  .page-node-110811 {
+
+  .bg-five {
       background: url('../images/miscellania-bg.jpg') center 61px no-repeat;
   }
   
-  .page-publications,
-  .node-type-biblio  {
+  .bg-six  {
       background: url('../images/publications-bg.png') center 61px no-repeat;
   }
   
-  .page-people,
- .node-type-person {
+  .bg-seven {
       background: url('../images/researchgroup-bg.jpg') center 61px no-repeat;
   }
   
-   .page-classes,
-   .node-type-class {
+   .bg-eight {
       background: url('../images/teaching-bg.jpg') center 61px no-repeat;
   }
   

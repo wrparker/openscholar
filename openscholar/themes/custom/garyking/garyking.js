@@ -23,7 +23,7 @@ jQuery(document).ready(function(){
   
    var classes = ["bg-one", "bg-two", "bg-three", "bg-four", "bg-five", "bg-six", "bg-seven", "bg-eight"];
 
-    jQuery("body").each(function(){
+    jQuery("body.not-front").each(function(){
         jQuery(this).addClass(classes[~~(Math.random()*classes.length)]);
     });
 
