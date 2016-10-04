@@ -67,6 +67,9 @@
 
   m.filter('weight', [function () {
     return function (input) {
+      if (angular.isArray(input)) {
+        throw new Exception('weight filter does not support arrays. Please use an object instead');
+      }
       var keys = Object.keys(input),
         basics = [],
         defaultWeight = 0,
@@ -86,11 +89,12 @@
         return a.weight - b.weight;
       });
 
-      var output = [];
+      var output = {};
       for (i = 0; i < basics.length; i++) {
         var key = basics[i].key;
-        output.push(input[key]);
+        output[key] = input[key];
       }
+
       return output;
     }
   }]);
