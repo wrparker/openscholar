@@ -105,7 +105,6 @@ function os_profiles_update_7051() {
 
   $entity_ids = array();
 
-  $i = 0;
   while ($row = $result->fetchAssoc()) {
 
     $old_url = $row['field_original_destination_url_value'];
@@ -121,8 +120,6 @@ function os_profiles_update_7051() {
         ->execute();
 
       $entity_ids[] = array($entity_id, $host);
-
-      $i++;
     }
   }
 
@@ -144,13 +141,13 @@ function os_profiles_update_7051() {
     $batch['operations'][] = array('os_profiles_batch_force_sync_update', array('chunk' => $chunk));
   }
 
-  //Get the batch process all ready!
+  // Get the batch process all ready!
   batch_set($batch);
   $batch =& batch_get();
  
-  //Because we are doing this on the back-end, we set progressive to false.
+  // Because we are doing this on the back-end, we set progressive to false.
   $batch['progressive'] = FALSE;
  
-  //Start processing the batch operations.
+  // Start processing the batch operations.
   drush_backend_batch_process();
 }
