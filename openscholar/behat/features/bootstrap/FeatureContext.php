@@ -79,6 +79,13 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @BeforeScenario @javascript
+   */
+  public function beforeStep(StepEvent $e) {
+    usleep(500000);
+  }
+
+  /**
    * Authenticates a user with password from configuration.
    *
    * @Given /^I am logging in as "([^"]*)"$/
