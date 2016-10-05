@@ -10,7 +10,7 @@ function os_wysiwyg_link_os_link_plugin() {
 
   $path = drupal_get_path('module', 'os_wysiwyg_link');
   $plugins['os_link'] = array(
-    'title' => 'OS Link',
+    'title' => t('Link'),
     'vendor url' => 'http://openscholar.harvard.edu',
     'icon path' => $path.'/theme',
     'icon file' => 'os_link.gif',
