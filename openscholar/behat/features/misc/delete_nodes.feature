@@ -6,7 +6,8 @@ Feature: Testing the tagged items.
   Scenario: verify that the tagged items filter work as expected.
       Given I am logging in as "admin"
         And I visit "john/classes"
-        And I open the admin panel to "Site Content"
+        And I make sure admin panel is open
+        And I click on the "Site Content" control
         And I click on the "Add" control
         And I click "Class"
         And the overlay opens
