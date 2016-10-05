@@ -181,7 +181,7 @@ function vsite_register_form($form, &$state) {
     // - give a site to a new account.
     $form['vicarious_user'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Create this OS Site on behalf of another user.'),
+      '#title' => t('Create this site on behalf of another user.'),
     );
 
     $form['user_fieldset'] = array(
@@ -207,7 +207,7 @@ function vsite_register_form($form, &$state) {
     );
 
     if (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE)) {
-      $form['user_fieldset']['existing_username']['#description'] .= ' ' . t('Site owners are restricted to users with accounts linked to a HUID; see the') . ' ' . l('documentation on how to link an OS account to a HUID', 'http://docs.openscholar.harvard.edu/logging-your-site#linking-your-huid-to-your-openscholar-account', array('attributes' => array('target' => '_blank'))) . ' for instructions.';
+      $form['user_fieldset']['existing_username']['#description'] .= ' ' . t('Only users who have linked their OpenScholar accounts to HarvardKey are listed.') . ' ' . l('Learn more about linking accounts', 'http://docs.openscholar.harvard.edu/logging-your-site#linking-your-harvardkey-to-your-openscholar-account', array('attributes' => array('target' => '_blank', 'rel' => 'noopener')));
     }
 
       // Prepares flag for JS to set when create new user is clicked.

@@ -274,7 +274,7 @@ function cp_user_change_site_owner_form($form_state) {
 
   $form['title'] = array(
     '#type' => 'markup',
-    '#markup' => '<h2>' . t('Make an existing member the site owner') . '</h2>',
+    '#markup' => '<h2>' . t('Choose a new site owner for the @site site', array('@site' => $site_name)) . '</h2>',
   );
 
   // Get all VSite members UIDs.
@@ -294,26 +294,20 @@ function cp_user_change_site_owner_form($form_state) {
     }
   }
 
-  $description = t('Select the site member.');
   if (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE)) {
-    $description .= t(' Only users with associated HUIDs are listed; for details, see the ', array('@name' => $name)) . l('documentation on how to link an OS account to a HUID', 'http://docs.openscholar.harvard.edu/logging-your-site#linking-your-huid-to-your-openscholar-account', array('attributes' => array('target' => '_blank'))) . '.';
+    $description .= t('Only users who have linked their OpenScholar accounts to HarvardKey are listed.') . ' ' . l('Learn more about linking accounts', 'http://docs.openscholar.harvard.edu/logging-your-site#linking-your-harvardkey-to-your-openscholar-account', array('attributes' => array('target' => '_blank', 'rel' => 'noopener'))) . '.';
   }
 
   $form['new_site_owner'] = array(
     '#type' => 'select',
-    '#title' => t('User name'),
+    '#title' => t('Username'),
     '#required' => TRUE,
     '#description' => $description,
     '#options' => $options,
   );
 
-
-  $params = array(
-    '@site' => $site_name,
-  );
-
   // Builds and returns a confirmation form.
-  return confirm_form($form, t('Change the owner of the site <em>@site</em>', $params), 'cp/users', '', t('Save'), t('Cancel'));
+  return confirm_form($form, t('Change Site Ownership'), 'cp/users', '', t('Save'), t('Cancel'));
 }
 
 /**
@@ -423,7 +417,7 @@ function cp_user_edit_membership_form($form_state, $user_load) {
   else {
     $form['edit_membership']['group_manager'] = array(
       '#type' => 'markup',
-      '#markup' => '<p>' . t('This OpenScholar account is not associated with a HUID, so @name can\'t be made site owner.  For details, see the ', array('@name' => $name)) . l('documentation on how to link an OS account to a HUID', 'http://docs.openscholar.harvard.edu/logging-your-site#linking-your-huid-to-your-openscholar-account', array('attributes' => array('target' => '_blank'))) . '.</p>',
+      '#markup' => '<p>' . t('@name\'s OpenScholar account is not linked to HarvardKey, so this user cannot be made site owner.', array('@name' => $name)) . ' ' . l('Learn more about linking accounts', 'http://docs.openscholar.harvard.edu/logging-your-site#linking-your-harvardkey-to-your-openscholar-account', array('attributes' => array('target' => '_blank', 'rel' => 'noopener'))) . '.</p>',
     );
   }
 

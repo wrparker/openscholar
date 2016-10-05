@@ -28,7 +28,7 @@ function os_pinserver_auth_vsite_register_form_page() {
       return drupal_get_form('vsite_register_form');
     }
     else {
-      drupal_set_message('You need to have a HUID associated with your OpenScholar account in order to create new sites (see the <a href="http://docs.openscholar.harvard.edu/logging-your-site#linking-your-huid-to-your-openscholar-account" target="_blank">documentation on linking an account to a HUID</a>).', 'error', FALSE);
+      drupal_set_message(t('Only users who have linked their OpenScholar accounts to HarvardKey are eligible to create a new site.') . ' ' . l('Learn more about linking accounts', 'http://docs.openscholar.harvard.edu/logging-your-site#linking-your-harvardkey-to-your-openscholar-account', array('attributes' => array('target' => '_blank', 'rel' => 'noopener'))), 'error', FALSE);
       drupal_goto('/user');
     }
   }
