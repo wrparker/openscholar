@@ -3316,7 +3316,7 @@ class FeatureContext extends DrupalContext {
    * @When /^the overlay opens$/
    */
   public function overlayOpens() {
-    sleep(1);
+    sleep(3);
     if ($overlay = $this->getSession()->getPage()->find('css', 'iframe.overlay-active')) {
       $function = <<<JS
         (function () {
