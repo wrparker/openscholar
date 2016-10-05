@@ -310,6 +310,7 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 }
 .ui-dialog {
     padding: 0;
+    top:10% !important;
 }
 #overlay-tabs {
     margin: -30px 0 0;
