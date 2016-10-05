@@ -241,27 +241,23 @@ margin-top:-2px;
 #page-title,
 #content-column h2,
 #content-column h3,
-#content-column h4,
-#tinymce h2,
-#tinymce h3,
-#tinymce h4 {
+#content-column h4 {
     font-family: georgia,sans-serif;
     font-weight: normal;
 }
 
 #content-column .block-boxes-os_boxes_html .boxes-box-content h2,
-#tinymce h2,
 #content-column .field-name-body h2 {
 	font-size: 24px;
 	padding-bottom: 0;
 }
 
-#tinymce h3,
+
 #content-column .field-name-body h3 {
 	font-size: 22px;
 }
 
-#tinymce h4,
+
 #content-column .field-name-body h4 {
 	font-size: 19px;
 }
@@ -730,12 +726,14 @@ padding: 20px 0;
 
 .section-nav .expanded.menu-depth-2 > a:hover,
 .section-nav .expanded.menu-depth-2 > a[class="active-trail active active"],
-.section-nav .menu-depth-1 > a[class="active-trail active active"],
 .section-nav a[class="active-trail active active"],
 .section-nav a:hover {
   background-color: #E6E5E3 !important;
 }
 
+.section-nav .menu-depth-1 > a {
+  background-color: #ececec !important;
+}
 
 .section-nav .expanded.menu-depth-2 > a[class="active-trail active active"],
 .section-nav a[class="active-trail active active"] {

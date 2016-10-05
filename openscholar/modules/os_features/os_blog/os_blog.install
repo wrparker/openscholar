@@ -8,7 +8,7 @@ function os_blog_update_7001() {
 }
 
 /**
- * Delete the bookmark flag from blogs but only if flags module is enabled
+ * Delete the bookmark flag from blogs but only if flags module is enabled.
  */
 function os_blog_update_7002() {
   if (module_exists('flag')) {
@@ -16,4 +16,11 @@ function os_blog_update_7002() {
       $flag->delete();
     }
   }
+}
+
+/**
+ * Set the comment field to use normal input text.
+ */
+function os_blog_update_7003() {
+  features_revert(array('os_blog' => array('field_instance')));
 }
