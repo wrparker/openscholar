@@ -12,6 +12,9 @@ Feature: Testing the tagged items.
         And I fill in "Title" with "Dummy class"
         And I press "Save"
         And the overlay closes
+        And I click "Configure"
         And I click "Delete"
+        And the overlay opens
        When I press "Delete"
+        And the overlay closes
        Then I should verify i am at "john/classes"
