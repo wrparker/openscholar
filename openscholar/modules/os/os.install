@@ -910,7 +910,7 @@ function os_update_7045() {
 /**
  * Set image toolkit variables.
  */
-function os_update_7046() {
+function os_update_7047() {
   variable_set('imageapi_optimize_service', 'resmushit');
   variable_set('image_toolkit', 'imageapi_optimize');
 
@@ -929,7 +929,7 @@ function os_update_7046() {
 /**
  * Install OS Revisions module
  */
-function os_update_7047() {
+function os_update_7048() {
   module_enable(array('os_revisions'));
   return t('Enabled OS content revisions module.');
 }
