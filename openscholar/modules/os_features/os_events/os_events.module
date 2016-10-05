@@ -123,7 +123,7 @@ function os_events_node_update($node) {
     return;
   }
   // For non-recurring events.
-  if (!empty($node->field_date) && empty($node->field_date[LANGUAGE_NONE][0]['rrule'])) {
+  if (!empty($node->field_date) && !empty($node->original->field_date) && empty($node->field_date[LANGUAGE_NONE][0]['rrule'])) {
     // If event start date or location has been altered, then registrants should be notified.
     if ($node->field_date[LANGUAGE_NONE][0]['value'] != $node->original->field_date[LANGUAGE_NONE][0]['value'] || $node->field_event_location[LANGUAGE_NONE][0]['value'] != $node->original->field_event_location[LANGUAGE_NONE][0]['value']) {
       // Initializing EntityFieldQuery to obtain all registration entities with a certain event node id
