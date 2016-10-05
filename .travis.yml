@@ -117,14 +117,17 @@ before_script:
   - php composer.phar install --prefer-source
   - sudo cat /var/log/apache2/error.log
 
+  # Install selenium
+  - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
+
 script:
 
   # Run selenium.
-  - sudo apt-get install xvfb -y
-  - sudo apt-get install openjdk-7-jre-headless -y
-  - sh -e /etc/init.d/xvfb start
+  #- sudo apt-get install xvfb -y
+  #- sudo apt-get install openjdk-7-jre-headless -y
+  #- sh -e /etc/init.d/xvfb start
+  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x32"
   - export DISPLAY=:99.0
-  - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
 #  - DISPLAY=:1 xvfb-run
   - nohup java -jar selenium-server-standalone-2.53.0.jar -p 4444 &
   - sleep 5
