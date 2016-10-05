@@ -1119,6 +1119,10 @@ div.error:before {
     font-size: 0.923em !important;
     color: #666 !important;
 }
+form#os-maintenance #edit-os-search-solr,
+form#os-maintenance #edit-cp-clear-cache {
+display:block;
+}
 ul.table-list {
     list-style-type: none;
     margin-left: 0;
