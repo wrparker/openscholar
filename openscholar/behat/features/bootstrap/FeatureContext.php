@@ -7,6 +7,7 @@ use Behat\Behat\Context\Step\Given;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Behat\Context\Step;
+use Behat\Mink\Exception\ElementNotFoundException;
 
 require 'vendor/autoload.php';
 require_once 'RestfulTrait.php';
@@ -76,13 +77,6 @@ class FeatureContext extends DrupalContext {
     else {
       throw new Exception('behat.yml should include "vsite" property.');
     }
-  }
-
-  /**
-   * @BeforeStep @javascript
-   */
-  public function beforeStep(StepEvent $e) {
-    usleep(500000);
   }
 
   /**
@@ -2683,6 +2677,20 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @when /^I mouse over "([^"]*)"$/
+   */
+  public function iMouseOver($text) {
+    $elem = $this->getSession()->getPage()->find('xpath', "//*[text() = '$text']");
+
+    if ($elem) {
+      $elem->mouseOver();
+    }
+    else {
+      throw new Exception ("No element with text \"$text\" is found.");
+    }
+  }
+
+  /**
    * @When /^I mouse over the "([^"]*)" element$/
    */
   public function iMouseOverElement($selector) {
@@ -2846,16 +2854,24 @@ class FeatureContext extends DrupalContext {
    * @When /^I click on the tab "([^"]*)"$/
    */
   public function iClickOnTheTab($arg1) {
-    $element = $this->getSession()->getPage()->find('xpath', "//*[.='{$arg1}']");
-    $element->press();
+    if ($element = $this->getSession()->getPage()->find('xpath', "//*[.='{$arg1}']")) {
+      $element->press();
+    }
+    else {
+      throw new ElementNotFoundException("No tab with text ($text) found on page.");
+    }
   }
 
   /**
    * @When /^I click on the "([^"]*)" control$/
    */
   public function iClickOnControl($text) {
-    $element = $this->getSession()->getPage()->find('xpath', "//*[text() = '{$text}']");
-    $element->click();
+    if ($element = $this->getSession()->getPage()->find('xpath', "//*[text() = '{$text}']")) {
+      $element->click();
+    }
+    else {
+      throw new ElementNotFoundException("No element with text ($text) found on page.");
+    }
   }
 
   /**
@@ -2869,6 +2885,9 @@ class FeatureContext extends DrupalContext {
       if ($p->isVisible()) {
         if ($elem = $p->find('xpath', "//*[text() = '{$text}']")) {
           $elem->click();
+        }
+        else {
+          throw new ElementNotFoundException("No $control found in $css element.");
         }
       }
     }
@@ -3323,6 +3342,7 @@ class FeatureContext extends DrupalContext {
    * @When /^the overlay opens$/
    */
   public function overlayOpens() {
+    sleep(3);
     if ($overlay = $this->getSession()->getPage()->find('css', 'iframe.overlay-active')) {
       $function = <<<JS
         (function () {
@@ -3367,4 +3387,30 @@ JS;
     );
   }
 
+
+  /**
+   * @When /^I click on "([^"]*)" in the tools for "([^"]*)"$/
+   */
+  public function iClickOnTools($link, $node) {
+    $driver = $this->getSession()->getDriver();
+    $page = $this->getSession()->getPage();
+    if ($elem = $page->find('xpath', "//*[normalize-space(text()) = '$node']/ancestor::section//article")) {
+      $elem->mouseOver();
+      if ($clink = $elem->find('xpath', "//a[contains(@class, 'contextual-links-trigger')]")) {
+        $clink->click();
+        if ($target = $elem->find('xpath', "//ul[contains(@class, 'contextual-links')]//a[text() = '$link']")) {
+          $target->click();
+        }
+        else {
+          throw new Exception("No contextual link $link found for node $node");
+        }
+      }
+      else {
+        throw new Exception("No contextual links found for node $node");
+      }
+    }
+    else {
+      throw new Exception("No node $node found on page.");
+    }
+  }
 }
