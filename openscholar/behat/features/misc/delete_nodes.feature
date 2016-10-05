@@ -9,7 +9,7 @@ Feature: Testing the tagged items.
         And I make sure admin panel is open
         And I click on the "Site Content" control
         And I click on the "Add" control
-        And I click "Class"
+        And I click on the "Class" control in the "li[key='0_content-1_add-2_class']" element
         And the overlay opens
         And I fill in "Title" with "Dummy class"
         And I press "Save"
