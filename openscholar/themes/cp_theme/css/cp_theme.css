@@ -1178,6 +1178,10 @@ form#os-maintenance .form-item .description {
       margin: 15px 0;
 }
 
+.ui-dialog #os_taxonomy .os-taxonomy_label_heading {
+ margin: 20px 0 8px 0;
+}
+
 .form-radios {
 	margin:15px 0;
 }
