@@ -100,6 +100,7 @@ class FeatureContext extends DrupalContext {
     }
 
     if ($this->loggedIn()) {
+      error_log('were logged in. log us out please.');
       $this->logout();
       usleep(500000);
     }
