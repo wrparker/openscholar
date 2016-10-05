@@ -548,6 +548,7 @@ function cp_cp_settings() {
         '#help_link' => l(t('Learn more about cache and search index'), '', array('attributes' => array('target' => '_blank')))
       ),
       'form' => array(
+      	'#title' => t('Site Cache'),
         '#type' => 'submit',
         '#value' => t('Clear site cache'),
         '#description' => t('Clear the cache to so anonymous users see the most recent updates. This removes the normal ~15 minute delay for new/updated posts to show up in lists but can slow the site down for your visitors.'),
