@@ -79,7 +79,7 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @BeforeScenario @javascript
+   * @BeforeStep @javascript
    */
   public function beforeStep(StepEvent $e) {
     usleep(500000);
