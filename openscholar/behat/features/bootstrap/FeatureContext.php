@@ -86,6 +86,19 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * Override, since the admin panel screwes this check up
+   */
+  public function loggedIn() {
+    $session = $this->getSession();
+    $session->visit($this->locatePath('/'));
+
+    // If a logout link is found, we are logged in. While not perfect, this is
+    // how Drupal SimpleTests currently work as well.
+    $element = $session->getPage();
+    return !$element->findLink('Admin Login');
+  }
+
+  /**
    * Authenticates a user with password from configuration.
    *
    * @Given /^I am logging in as "([^"]*)"$/
@@ -100,7 +113,9 @@ class FeatureContext extends DrupalContext {
     }
 
     if ($this->loggedIn()) {
+      error_log('were logged in. log us out please.');
       $this->logout();
+      usleep(500000);
     }
 
     $element = $this->getSession()->getPage();
