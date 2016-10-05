@@ -160,7 +160,7 @@ function os_presentations_field_default_field_instances() {
   $field_instances['node-presentation-field_presentation_file'] = array(
     'bundle' => 'presentation',
     'deleted' => 0,
-    'description' => 'Upload the file(s) for this presentation.',
+    'description' => '.ppt, .pptx, and .pdf',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -197,7 +197,7 @@ function os_presentations_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_presentation_file',
-    'label' => 'Presentation Files',
+    'label' => 'Presentation Slides',
     'required' => 0,
     'settings' => array(
       'description_field' => 1,
@@ -355,7 +355,7 @@ function os_presentations_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_upload',
-    'label' => 'Attach Files',
+    'label' => 'Attach Supplemental Presentation Files (handouts, notes, cirricula, etc.)',
     'required' => 0,
     'settings' => array(
       'description_field' => 0,

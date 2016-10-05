@@ -1,0 +1,27 @@
+/* Layout CSS */
+
+h1#page-title
+ {
+    width: 980px;
+}
+
+.front .block.block-boxes-os_boxes_columns.front-top-cloumn {
+    width: 100%;
+}
+
+.front .block-boxes-os_boxes_tabs {
+width: 104%;
+}
+
+.front-top-cloumn .region-two-66-33-second,
+.front-top-cloumn .region-two-66-33-first {
+      height: 300px;
+  }
+  
+  
+.front-top-cloumn .region-two-66-33-first {
+      width: 70%;
+  }
+  .front-top-cloumn .region-two-66-33-second {
+      width: 30%;
+  }

@@ -35,6 +35,9 @@ class os_boxes_html extends os_boxes_default {
       '#description' => t('You can put almost anything into here to place it in a widget. Text, HTML, Images, Video, whatever works in the editor.')
     );
 
+    array_unshift($form['#attached']['js'], drupal_get_path('module', 'os_wysiwyg') . '/js/wrap_plugins.js');
+    array_unshift($form['#attached']['js'], drupal_get_path('module', 'os_wysiwyg') . '/os_wysiwyg.widget.js');
+
     $form['files'] = array(
       '#type' => 'value',
       '#value' => $this->files(),
@@ -107,7 +110,7 @@ class os_boxes_html extends os_boxes_default {
 
     if (($block['content'] = $this->get_cache()) === FALSE) {
       $block['content'] = check_markup($this->options['text']['value'], $this->options['text']['format']);
-      $this->set_cache($block['content']);
+      $this->set_cache($block['content'], array('js' => drupal_add_js('//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML', 'external')));
     }
 
     return $block;
