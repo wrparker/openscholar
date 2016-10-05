@@ -101,6 +101,7 @@ class FeatureContext extends DrupalContext {
 
     if ($this->loggedIn()) {
       $this->logout();
+      usleep(500000);
     }
 
     $element = $this->getSession()->getPage();
