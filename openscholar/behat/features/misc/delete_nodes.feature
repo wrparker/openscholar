@@ -8,7 +8,7 @@ Feature: Testing the tagged items.
         And I visit "john/classes"
         And I click "Add New"
         And I click "Class"
-        And I wait for page actions to complete
+        And I sleep for "5"
         And I fill in "Title" with "Dummy class"
         And I press "Save"
         And I click "Delete"
