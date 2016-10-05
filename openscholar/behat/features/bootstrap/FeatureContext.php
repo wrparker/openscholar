@@ -79,13 +79,6 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @BeforeStep @javascript
-   */
-  public function beforeStep(StepEvent $e) {
-    usleep(500000);
-  }
-
-  /**
    * Override, since the admin panel screwes this check up
    */
   public function loggedIn() {
