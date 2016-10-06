@@ -3402,7 +3402,7 @@ JS;
           $target->click();
         }
         else {
-          throw new ElementNotFoundException("No contextual link $link found for node $node")
+          throw new ElementNotFoundException("No contextual link $link found for node $node");
         }
       }
       else {
