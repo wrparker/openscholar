@@ -1,0 +1,58 @@
+<?php
+
+/*
+ * Unit test(s) for OS Profiles
+ */
+
+class OpenscholarProfilesTestCase extends DrupalTestCase {
+
+  public static function getInfo() {
+    print "Entering getInfo()\n";
+
+    return array(
+      'name' => 'os_profiles module functionality',
+      'description' => 'Tests hooks in the os_profiles module',
+      'group' => 'OS Profiles',
+    ); 
+  }
+
+  public function setUp() {
+    print "Entering setUp()\n";
+    $this->setup = TRUE;
+  }
+
+  /* 
+   * Method must begin with "test"
+   **/
+  public function testOpenscholarProfilesSyncLinks() {
+    print "Entering OsProfilesSyncLinksTest()\n";
+
+    // Take a random sample of 5 rows
+    $result = db_select('field_data_field_original_destination_url', 'u')
+      ->fields('u')
+      ->orderBy('rand()')
+      ->range(0, 10) 
+      ->execute();
+
+    print "EAM line 34 result " . var_export($result, true);
+
+    while ($row = $result->fetchAssoc()) {
+
+      $response = drupal_http_request($row['field_original_destination_url_value']);
+
+      print "EAM line 43 response = " . var_export($response, true);
+
+      // assertTrue();
+
+      if (isset($error)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  public function tearDown() {
+
+  }
+}
