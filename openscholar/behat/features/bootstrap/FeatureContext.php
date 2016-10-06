@@ -3393,8 +3393,13 @@ JS;
    */
   public function iClickOnTools($link, $node) {
     $driver = $this->getSession()->getDriver();
-    $driver->mouseOver("//*[text() = '$node']");
-    $driver->mouseOver("//*[text() = '$node']/ancestor::article//a[contains(@class, 'contextual-links-trigger')]");
+    $page = $this->getSession()->getPage();
+    if ($elem = $page->find('xpath', "//*[text() = '$node']")) {
+      $elem->mouseOver();
+      if ($link = $page->find('xpath', "//*[text() = '$node']/ancestor::article//a[contains(@class, 'contextual-links-trigger')]")) {
+        $link->mouseOver();
+      }
+    }
     $driver->click("//*[text() = '$node']/ancestor::article//a[contains(@class, 'contextual-links-trigger')]");
     $driver->click("//*[text() = '$node']/ancestor::article//a[contains(@class, 'contextual-links-trigger')]/[text() = '$link']");
   }
