@@ -1310,7 +1310,7 @@ class FeatureContext extends DrupalContext {
 
     $path_fragments = explode('?', $path);
 
-    if ($path != $path_fragments[0]) {
+    if ($given_url != $path_fragments[0]) {
       throw new Exception("The given url: '{$given_url}' is not equal to the current path {$path_fragments[0]}");
     }
   }
