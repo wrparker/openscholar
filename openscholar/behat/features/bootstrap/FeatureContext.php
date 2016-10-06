@@ -3394,7 +3394,7 @@ JS;
   public function iClickOnTools($link, $node) {
     $driver = $this->getSession()->getDriver();
     $page = $this->getSession()->getPage();
-    if ($elem = $page->find('xpath', "//*[normalize-space(text()) = '$node']/ancestor::section")) {
+    if ($elem = $page->find('xpath', "//*[normalize-space(text()) = '$node']/ancestor::section//article")) {
       $elem->mouseOver();
       if ($link = $elem->find('xpath', "//a[contains(@class, 'contextual-links-trigger')]")) {
         $link->click();
