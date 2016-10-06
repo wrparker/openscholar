@@ -3402,15 +3402,15 @@ JS;
           $target->click();
         }
         else {
-          throw new ElementNotFoundException("No contextual link $link found for node $node");
+          throw new ElementNotFoundException($this->getSession(), "No contextual link $link found for node $node");
         }
       }
       else {
-        throw new ElementNotFoundException("No contextual links found for node $node");
+        throw new ElementNotFoundException($this->getSession(), "No contextual links found for node $node");
       }
     }
     else {
-      throw new ElementNotFoundException("No node $node found on page.");
+      throw new ElementNotFoundException($this->getSession(), "No node $node found on page.");
     }
   }
 }
