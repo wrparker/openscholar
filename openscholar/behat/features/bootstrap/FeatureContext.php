@@ -3397,10 +3397,20 @@ JS;
     if ($elem = $page->find('xpath', "//*[text() = '$node']")) {
       $elem->mouseOver();
       if ($link = $page->find('xpath', "//*[text() = '$node']/ancestor::article//a[contains(@class, 'contextual-links-trigger')]")) {
-        $link->mouseOver();
+        $link->click();
+        if ($target = $page->find('xpath', "//*[text() = '$node']/ancestor::article//a[contains(@class, 'contextual-links-trigger')]/[text() = '$link']")) {
+          $target->click();
+        }
+        else {
+          throw new ElementNotFoundException("No contextual link $link found for node $node")
+        }
+      }
+      else {
+        throw new ElementNotFoundException("No contextual links found for node $node");
       }
     }
-    $driver->click("//*[text() = '$node']/ancestor::article//a[contains(@class, 'contextual-links-trigger')]");
-    $driver->click("//*[text() = '$node']/ancestor::article//a[contains(@class, 'contextual-links-trigger')]/[text() = '$link']");
+    else {
+      throw new ElementNotFoundException("No node $node found on page.");
+    }
   }
 }
