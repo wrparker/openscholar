@@ -13,6 +13,7 @@ Feature: Testing that nodes can be deleted
         And I fill in "Title" with "Dummy class"
         And I press "Save"
         And the overlay closes
+        And I mouse over "Dummy class"
         And I click on "Delete" in the tools for "Dummy class"
         And the overlay opens
        When I press "Delete"
