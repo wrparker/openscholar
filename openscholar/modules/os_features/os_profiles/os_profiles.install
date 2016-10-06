@@ -78,10 +78,3 @@ function os_profiles_update_7007() {
 function os_profiles_update_7008() {
  features_revert(array('os_profiles' => array('field_instance')));
 }
-
-/**
- * Adding office hours field.
- */
-function os_profiles_update_7049() {
-  features_revert(array('os_profiles' => array('field', 'field_base', 'field_instance')));
-}
