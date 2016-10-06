@@ -8,7 +8,7 @@
 
   m.directive('redirects', ['$http', function($http) {
     return {
-      template: '<p>URL redirects allow you to send users from a non-existing path on your site, to any other URL. You might want to use this to create a short link, or to transition users from an old URL that no longer exists to the new URL. Each site may only have a limited number of URL redirects.</p>' +
+      template: '<p>URL redirects allow you to send users from a URL on your site, to any other URL. You might want to use this to create a short link, or to transition users from an old URL to the new URL. Each site may only have a maximum of 50 of URL redirects.</p>' +
       '<ul class="redirect-list table-list">' +
         '<li class="redirect-item" ng-repeat="r in redirects">' +
           '<span class="redirect-path">{{r.path}}</span> --> <span class="redirect-target">{{r.target}}</span> <a class="redirect-delete" ng-click="deleteRedirect(r.id)">delete</a>' +
@@ -16,8 +16,8 @@
       '</ul>' +
       '<a class="redirect-add" ng-show="showAddLink()" ng-click="toggleAddForm()">+ Add new redirect</a>' +
       '<div class="redirect-add-form" ng-show="showAddForm()">' +
-        '<div class="display-inline"><label for="redirect-path">From</label> {{siteBaseUrl}}<input type="text" id="redirect-path" class="redirect-new-element" ng-model="newRedirectPath" placeholder="Local path"></div>' +
-        '<div class="display-inline"><label for="redirect-target">To </label> <input type="text" id="redirect-target" class="redirect-new-element" ng-model="newRedirectTarget" placeholder="Target URL (i.e. http://www.google.com)"></div>' +
+        '<div class="display-inline"><label for="redirect-path">Redirect From</label> {{siteBaseUrl}}<input type="text" id="redirect-path" class="redirect-new-element" ng-model="newRedirectPath" placeholder="Local path"></div><span class="description">(Example: /my-path). Fragment anchors (e.g. #anchor) are not allowed.</span>' +
+        '<div class="display-inline"><label for="redirect-target">Redirect To</label> <input type="text" id="redirect-target" class="redirect-new-element" ng-model="newRedirectTarget" placeholder="Target URL (i.e. http://www.google.com)"></div><span class="description">Enter any existing destination URL (like http://example.com) to redirect to.</span>' +
         '<button type="button" value="Add Redirect" ng-click="addRedirect()">Add Redirect</button>' +
       '</div>',
       scope: {

@@ -173,8 +173,7 @@ a.form-cancel:hover {
 }
 .redirect-delete,
 .form-actions .os-delete-link {
-    color: #f83535 !important;
-    text-decoration: underline;
+
     font-size: 1.1em;
 }
 /* CTools MODAL OVERRIDES */
