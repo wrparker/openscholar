@@ -94,16 +94,15 @@ function os_profiles_update_7050() {
 }
 
 /**
- * Update sync URLs from the old %.json format to the new api/v1/profiles format
+ * Update sync URLs from the old %.json format to the new api\v1\profiles format
  */
-function os_profiles_update_7051() {
+function os_profiles_update_7051(&$sandbox) {
 
-  $result = db_select('field_data_field_original_destination_url', 'u')
+  $query = db_select('field_data_field_original_destination_url', 'u')
     ->fields('u')
-    ->condition('field_original_destination_url_value', '%node%.json', 'LIKE')
-    ->execute();
+    ->condition('field_original_destination_url_value', '%node%.json', 'LIKE');
 
-  $entity_ids = array();
+  $result = $query->execute();
 
   while ($row = $result->fetchAssoc()) {
 
@@ -118,36 +117,12 @@ function os_profiles_update_7051() {
         ->fields(array('field_original_destination_url_value' => $new_url))
         ->condition('entity_id', $row['entity_id'])
         ->execute();
-
-      $entity_ids[] = array($entity_id, $host);
     }
   }
 
-  // Force the profiles to be updated
-  $batch = array(
-    'title' => t('Triggering profile sync'), // Title to display while running.
-    'operations' => array(), // Operations to complete, in order. Defined below.
-    'init_message' => t('Initializing...'),
-    'progress_message' => t('Updated @current out of @total.'),
-    'error_message' => t('Batch syncing of profiles encountered an error.'),
-    'file' => '../openscholar/modules/os_features/os_profiles/os_profiles.batch.inc',
-  );
-
-  // Add as many operations as you need. They'll run in the order specified.
-  // Parameters can be defined in the (currently) empty arrays and will need
-  // to also be added following the $context parameters for the operation
-  // functions below.
-  foreach (array_chunk($entity_ids, 100) as $chunk) {
-    $batch['operations'][] = array('os_profiles_batch_force_sync_update', array('chunk' => $chunk));
-  }
-
-  // Get the batch process all ready!
-  batch_set($batch);
-  $batch =& batch_get();
- 
-  // Because we are doing this on the back-end, we set progressive to false.
-  $batch['progressive'] = FALSE;
- 
-  // Start processing the batch operations.
-  drush_backend_batch_process();
+  os_set_update_batch($sandbox, array(
+    'batch' => 250,
+    'entity' => 'node',
+    'path' => drupal_get_path('module', 'os_profiles') . '/updates/update7051.php',
+  ));
 }
