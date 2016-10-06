@@ -2809,6 +2809,14 @@ function os_set_update_batch(&$sandbox, $info) {
       $sandbox['max'] = $query
         ->count()
         ->execute();
+    } else if (method_exists($query, "countQuery")) {
+        $result = $query->countQuery()->execute();
+        $count = $result->fetchAllAssoc('expression');
+        $sandbox['max'] = array_keys($count)[0];
+
+    } else {
+      drupal_set_message(t('Unable to get record count of query results.'));
+      return;
     }
   }
   $id = empty($sandbox['id']) ? 0 : $sandbox['id'];
