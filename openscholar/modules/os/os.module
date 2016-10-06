@@ -161,16 +161,17 @@ function os_cp_settings() {
   $setting = array();
   $setting['long_list_content_pagination'] = array(
     'group' => array(
-      '#title' => t('Content Display'),
+      '#title' => t('Long List Display'),
       '#id' => 'long-list-content-pagination',
-      '#weight' => 40
+      '#weight' => 40,
+      '#help_link' => l(t('Learn more about Long list display'), '', array('attributes' => array('target' => '_blank')))
     ),
     'form' => array(
       '#type' => 'radios',
       '#title' => t('Display pages with long lists of content using'),
       '#default_value' => variable_get('long_list_content_pagination', 'infinite_scroll'),
       '#options' => array('infinite_scroll' => 'Infinite scrolling', 'pager' => 'Pagination'),
-      '#description' => t('<i>This applies only to blog, links, news, FAQs, publications and profiles.</i>')
+      '#description' => t('This applies only to blog, links, news, FAQs, publications and profiles.')
     ),
   );
 
@@ -3553,5 +3554,18 @@ function os_views_pre_view($view, &$display_id, &$args) {
   // forcing the view to use the default_argument_date
   if ($display_id == "news_by_month_block") {
     $args = "";
+  }
+}
+
+/*
+ * Implements hook_preprocess_pager
+ */
+function os_preprocess_pager(&$variables, $hook) {
+  if (is_array($variables['tags'])) {
+    // To change full pager design
+    $variables['tags'][0] = 'first';
+    $variables['tags'][1] = '«';
+    $variables['tags'][3] = '»';
+    $variables['tags'][4] = 'last';
   }
 }

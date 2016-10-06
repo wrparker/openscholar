@@ -65,4 +65,38 @@
     }
   }]);
 
+  m.filter('weight', [function () {
+    return function (input) {
+      if (angular.isArray(input)) {
+        throw new Exception('weight filter does not support arrays. Please use an object instead');
+      }
+      var keys = Object.keys(input),
+        basics = [],
+        defaultWeight = 0,
+        weightIncrement = 0.001;
+      for (var i = 0; i < keys.length; i++) {
+        var w = defaultWeight;
+        if (input[keys[i]].weight != undefined) {
+          w = input[keys[i]].weight;
+        }
+        else {
+          defaultWeight += weightIncrement;
+        }
+        basics.push({key: keys[i], weight: w})
+      }
+
+      basics.sort(function (a,b) {
+        return a.weight - b.weight;
+      });
+
+      var output = {};
+      for (i = 0; i < basics.length; i++) {
+        var key = basics[i].key;
+        output[key] = input[key];
+      }
+
+      return output;
+    }
+  }]);
+
 })();

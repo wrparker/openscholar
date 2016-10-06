@@ -68,7 +68,7 @@ function hwpi_basetheme_page_alter(&$page) {
     )
   );
 
-  if (context_isset('context', 'os_public') && variable_get('enable_responsive', false)) {
+  if (context_isset('context', 'os_public') && variable_get('enable_responsive', true)) {
     $path = drupal_get_path('theme', 'hwpi_basetheme').'/css/';
     drupal_add_css($path.'responsive.base.css');
     drupal_add_css($path.'responsive.layout.css');
@@ -220,6 +220,18 @@ function hwpi_basetheme_node_view_alter(&$build) {
         $build['contact_details']['field_phone'] = $build['field_phone'];
         $build['contact_details']['field_phone']['#weight'] = 52;
         unset($build['field_phone']);
+      }
+
+      // Contact Details > office hours
+      if (isset($build['field_office_hours'])) {
+        $build['field_office_hours']['#label_display'] = 'hidden';
+        $office_hours = trim($build['field_office_hours'][0]['#markup']);
+        if ($phone_plain && !empty($office_hours)) {
+          $build['field_office_hours'][0]['#markup'] = t('Office Hours: ') . $office_hours;
+        }
+        $build['contact_details']['field_office_hours'] = $build['field_office_hours'];
+        $build['contact_details']['field_office_hours']['#weight'] = 53;
+        unset($build['field_office_hours']);
       }
 
       if ($build['#view_mode'] == 'sidebar_teaser') {

@@ -39,9 +39,7 @@ fieldset {
     z-index: 10;
     text-align: right;
 }
-region-footer a {
-    color: #FFFFFF;
-}
+
 .region-footer .region-inner {
     padding: 10px 20px 0 15px;
     z-index: 1;
@@ -80,6 +78,14 @@ html.js input.throbbing {
 }
 .os-help-link:hover {
     background: url("../images/cp-sprite.png") no-repeat 0 -170px;
+}
+.help-link.ng-binding {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    padding: 2px 0 2px 23px;
+    background: url('../images/cp-sprite.png') no-repeat 0 -708px;
+    
 }
 .view-os-files-private ul {
     list-style-type: none !important;
@@ -304,6 +310,7 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 }
 .ui-dialog {
     padding: 0;
+    top:10% !important;
 }
 #overlay-tabs {
     margin: -30px 0 0;
@@ -620,7 +627,6 @@ table.biblio-contributors tr:first-child input.form-submit {
     width: 35px;
 }
 .form-item.form-type-radio {
-    margin-left: 10px;
     font-size: 1em;
     font-weight: normal;
 }
@@ -1115,6 +1121,10 @@ div.error:before {
     font-size: 0.923em !important;
     color: #666 !important;
 }
+form#os-maintenance #edit-os-search-solr,
+form#os-maintenance #edit-cp-clear-cache {
+display:block;
+}
 ul.table-list {
     list-style-type: none;
     margin-left: 0;
@@ -1136,6 +1146,14 @@ ul.table-list li:nth-child(even) {
 form#os-maintenance .form-item {
     display: inline-block;
 }
+form#os-maintenance .form-item:first-child {
+    margin-bottom: 0; 
+}
+
+form#os-maintenance .form-item .description {
+    margin-top: 0; 
+}
+
 .redirect-add-form .display-inline {
     width: 40%;
 }
@@ -1160,6 +1178,55 @@ form#os-maintenance .form-item {
     width: 32%;
     text-align: center;
     white-space: nowrap;
+   }
+   
+.ui-dialog #os_taxonomy .form-item {
+      margin: 15px 0;
+}
+
+.ui-dialog #os_taxonomy .os-taxonomy_label_heading {
+ margin: 20px 0 8px 0;
+}
+
+.form-radios {
+	margin:15px 0;
+}
+
+.view-content ~ .item-list ul.pager {
+    margin-top: 30px !important;
+    letter-spacing: -1em;
+}
+.view-content ~ .item-list ul.pager li.pager-current,
+.view-content ~ .item-list ul.pager li:hover {
+    background-color: #efefef;
+}
+.view-content ~ .item-list ul.pager li a:hover {
+    text-decoration: none;
+}
+li.pager-previous + li.pager-ellipsis {
+    display: none;
+}
+.view-content ~ .item-list ul.pager li {
+    border-left: 1px solid #dededc !important;
+    border-top: 1px solid #dededc !important;
+    border-bottom: 1px solid #dededc !important;
+    letter-spacing: normal;
+    padding: 0.7em !important;
+}
+.view-content ~ .item-list ul.pager li.pager-first {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.view-content ~ .item-list ul.pager li.pager-last {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-right: 1px solid #dededc !important;
+}
+.view-content ~ .item-list ul.pager li.pager-next,
+.view-content ~ .item-list ul.pager li.pager-previous {
+	font-weight: bold;
+	}
+
 .file img.file-icon {
     width:16px;
 

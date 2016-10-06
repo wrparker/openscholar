@@ -149,15 +149,16 @@ function vsite_access_cp_settings() {
     $form['vsite_private'] = array(
       'group' => array(
         '#id' => 'privacy',
-        '#title' => t('Privacy'),
+        '#title' => t('Site Visibility'),
         '#weight' => 10,
+        '#help_link' => l(t('Learn more about site visibility'), '', array('attributes' => array('target' => '_blank')))
       ),
       'form' => array(
         '#type' => 'radios',
-        '#title' => t('Site visibility'),
+        '#title' => t('Choose who can view your site'),
+        '#description' => '<span id="site-visibility-help-text">' . t('Any visibility changes will take effect in 2 minutes') . '</span>',
         '#default_value' => $wrapper->{VSITE_ACCESS_FIELD}->value(),
         '#options' => vsite_access_privacy_available_values(),
-        '#description' => t('Choose who has access to view your site. ') . '<span id="site-visibility-help-text">' . t('Any visibility changes will take effect in 2 minutes') . '</span>',
         '#attached' => array(
           'js' => array(
             drupal_get_path('module', 'vsite_access') . '/vsite_access.js'
@@ -195,10 +196,15 @@ function vsite_access_cp_settings_node_submit($form, &$form_state) {
  */
 function vsite_access_cp_settings_save($val) {
   $space = spaces_get_space();
-  $wrapper = entity_metadata_wrapper('node', $space->group);
-  $current_vsite_access = $space->group->group_access[LANGUAGE_NONE][0]['value'];
-  $wrapper->{VSITE_ACCESS_FIELD}->set($val);
-  $wrapper->save();
+  $current_vsite_access = $space->group->{VSITE_ACCESS_FIELD}[LANGUAGE_NONE][0]['value'];
+
+  $space->group->{VSITE_ACCESS_FIELD}[LANGUAGE_NONE][0]['value'] = $val;
+  field_attach_presave('node', $space->group);
+  field_attach_update('node', $space->group);
+  entity_get_controller('node')->resetCache(array($space->group->nid));
+  $cid = "field:node:$id";
+  cache_clear_all($cid, 'cache_field');
+
   // Clear the cache when we switch the privacy in ALL cases except toggling between invite only (value = 1) and Harvard (value = 4).
   // For toggling, the sum of previous and selected value will be always '5' for such case; other two radio buttons values are 0 and 2.
   if (($current_vsite_access + $val) != 5 && $current_vsite_access != $val) {

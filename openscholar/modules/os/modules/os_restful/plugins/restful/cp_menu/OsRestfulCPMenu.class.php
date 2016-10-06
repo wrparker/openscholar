@@ -301,23 +301,23 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     )):array();
 
     $settings_links = array();
+    $space_access = spaces_access_admin();
     foreach ($settings_forms as $f) {
       $group = $f['group']['#title'];
       $id = $f['group']['#id'];
 
-      if (in_array($f['group']['#id'], $exclude_from_advanced)) {
-        // The settings was applied in the non-advanced settings. Skipping.
-        continue;
-      }
 
-      if (!isset($f['form']['#access']) || $f['form']['#access']) {
+      $access = !isset($f['form']['access']) ? $space_access : $f['form']['#access'];
+
+      if ($access) {
         $settings_links[$id] = array(
           'label' => $group,
           'type' => 'directive',
           'directive' => array(
             'ap-settings-form',
             'form' => $f['group']['#id']
-          )
+          ),
+          'parent' => !empty($f['group']['#menu_parent']) ? $f['group']['#menu_parent'] : 'advanced'
         );
       }
     }
@@ -414,17 +414,20 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'default_state' => 'collapsed',
         'children' => array(
           'app' => array(
-            'label' => 'Enable Apps',
+            'label' => 'Enable / Disable Apps',
             'type' => 'link',
             'href' => 'cp/apps'
-          )
-        ) + $feature_settings +
-        array(
-          'advanced' => array(
-            'label' => 'Advanced',
+          ),
+          'app_settings' => array(
+            'label' => 'App Settings',
             'type' => 'heading',
             'default_state' => 'collapsed',
-            'children' => $settings_links,
+            'children' => $feature_settings
+          ),
+          'advanced' => array(
+            'label' => 'Global Settings',
+            'type' => 'heading',
+            'default_state' => 'collapsed',
           )
         ),
       ),
@@ -451,6 +454,13 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         ),
       ),
     );
+
+    foreach ($settings_links as $k => $sl) {
+      $elem = &$this->findMenuElement($structure, (array)$sl['parent']);
+      unset($sl['parent']);
+      $elem['children'][$k] = $sl;
+      uasort($elem['children'], $labelcmp);
+    }
 
     //Should we show this user the admin links?
     if (user_access('access toolbar',$user)) {
@@ -482,6 +492,42 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     }
 
     return $structure;
+  }
+
+  /**
+   * @param $menu - The menu to search
+   * @param $identifier - An array of keys in the menu array that will lead to the target element
+   * Ex.
+   *      findMenuParent('browse', 'content')
+   *      findMenuParent('appearance')
+   */
+  private function &findMenuElement(&$menu, $args) {
+    $element = $args[0];//TODO::
+    if (isset($menu[$element])) {
+      if (count($args) == 1) {
+        return $menu[$element];
+      }
+      else if (empty($element['children'])) {
+        return false;
+      }
+      else {
+        array_shift($args);
+        $target = &$this->findMenuElement($menu[$element]['children'], $args);
+        return $target;
+      }
+    }
+    else {
+      foreach ($menu as &$m) {
+        if (empty($m['children'])) {
+          continue;
+        }
+        else {
+          if ($target = &$this->findMenuElement($m['children'], $args)) {
+            return $target;
+          }
+        }
+      }
+    }
   }
 
   protected function getVariableController($vsite) {

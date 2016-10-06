@@ -172,7 +172,7 @@
           };
 
           scope.save = function () {
-            fileService.edit(scope.file, ['preview', 'url', 'size', 'changed']).then(function(result) {
+            fileService.edit(scope.file, ['preview', 'url', 'size', 'changed', 'mimetype']).then(function(result) {
                 if (result.data || typeof scope.file.new != 'undefined') {
                   scope.onClose({saved: FER.SAVED});
                 }

@@ -19,7 +19,7 @@ function os_basetheme_preprocess_html(&$vars) {
     $vars['classes_array'][] = 'navbar-off';
   }
 
-  $vars['use_responsive_behaviors'] = (bool) variable_get('enable_responsive', FALSE);
+  $vars['use_responsive_behaviors'] = (bool) variable_get('enable_responsive', true);
 }
 
 /**
@@ -580,4 +580,71 @@ function os_basetheme_file_icon($variables) {
   $svg_url = str_replace('.png', '.svg', $icon_url );
   $mime = check_plain($file->filemime);
   return '<img class="file-icon" alt="' . check_plain($alt) . '" title="' . $mime . '" src="' . $svg_url . '" />';
+}
+
+/**
+ * Override theme_views_mini_pager
+ */
+function os_basetheme_views_mini_pager($vars) {
+  global $pager_page_array, $pager_total;
+  $tags = $vars['tags'];
+  $element = $vars['element'];
+  $parameters = $vars['parameters'];
+
+  // current is the page we are currently paged to
+  $pager_current = $pager_page_array[$element] + 1;
+  // max is the maximum page number
+  $pager_max = $pager_total[$element];
+  // End of marker calculations.
+
+  if ($pager_total[$element] > 1) {
+
+    $li_previous = theme('pager_previous',
+      array(
+        'text' => t('«'),
+        'element' => $element,
+        'interval' => 1,
+        'parameters' => $parameters,
+      )
+    );
+    if (empty($li_previous)) {
+      $li_previous = "&nbsp;";
+    }
+
+    $li_next = theme('pager_next',
+      array(
+        'text' => t('»'),
+        'element' => $element,
+        'interval' => 1,
+        'parameters' => $parameters,
+      )
+    );
+
+    if (empty($li_next)) {
+      $li_next = "&nbsp;";
+    }
+
+    $items[] = array(
+      'class' => array('pager-previous'),
+      'data' => $li_previous,
+    );
+
+    $items[] = array(
+      'class' => array('pager-current'),
+      'data' => t('@current of @max', array('@current' => $pager_current, '@max' => $pager_max)),
+    );
+
+    $items[] = array(
+      'class' => array('pager-next'),
+      'data' => $li_next,
+    );
+    return theme('item_list',
+      array(
+        'items' => $items,
+        'title' => NULL,
+        'type' => 'ul',
+        'attributes' => array('class' => array('pager mini-pager')),
+      )
+    );
+  }
 }

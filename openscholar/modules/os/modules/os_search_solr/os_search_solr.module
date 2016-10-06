@@ -681,11 +681,12 @@ function os_search_solr_cp_settings() {
 
   $settings['os_search_solr'] = array(
     'group' => array(
-      '#title' => t('Maintenance'),
+      '#title' => t('Cache / Reindex'),
       '#id' => 'os-maintenance',
     ),
     'form' => array(
       '#type' => 'submit',
+      '#title' => t('Search Index'),
       '#value' => t('Re-Index Search'),
       '#suffix' => "<div class=\"description\">".t('(Re)Index the sites searchable content.')."</div>",
       '#submit' => array('os_search_solr_reindex_site'),

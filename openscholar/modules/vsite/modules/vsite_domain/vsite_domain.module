@@ -170,9 +170,10 @@ function vsite_domain_cp_settings() {
   $template = array(
     'group' => array(
       '#id' => 'domain',
-      '#title' => t('Domain'),
+      '#title' => t('Custom Domain'),
       '#weight' => 0,
       '#group_validate' => 'vsite_domain_cp_settings_validate',
+      '#help_link' => l(t('Learn more about custom domains'), '', array('attributes' => array('target' => '_blank')))
     ),
   );
   

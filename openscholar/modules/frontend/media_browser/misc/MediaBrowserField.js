@@ -140,11 +140,23 @@
 
         scope.removeFile = function ($index) {
           scope.selectedFiles.splice($index, 1);
+          if (scope.cardinality == 1) {
+            scope.$parent.value = 0;
+          }
+          else {
+            scope.$parent.value.splice($index, 1);
+          }
           store.setData(scope.field_name, scope.selectedFiles);
         }
 
         scope.replaceFile = function ($inserted, $index) {
           scope.selectedFiles.splice($index, 1, $inserted[0]);
+          if (scope.cardinality == 1) {
+            scope.$parent.value = $inserted[0].id;
+          }
+          else {
+            scope.$parent.value.splice($index, 1, $inserted[0]);
+          }
           store.setData(scope.field_name, scope.selectedFiles);
         }
 
