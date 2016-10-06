@@ -93,7 +93,7 @@ function os_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
     // TODO: remove when WYSIWYG module can do this for us
 
     // Format select buttons.
-    if ($btns = reset($settings['toolbar'])) {
+    if (is_array($settings['toolbar']) && $btns = reset($settings['toolbar'])) {
       $format_start = array_search('formatselect', $btns);
       $selects = array_splice($btns, $format_start, 4);
       $format_start = array_search('pasteword', $btns);
