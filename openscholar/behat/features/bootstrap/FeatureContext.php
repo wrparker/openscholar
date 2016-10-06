@@ -7,6 +7,7 @@ use Behat\Behat\Context\Step\Given;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Behat\Context\Step;
+use Behat\Mink\Exception\ElementNotFoundException;
 
 require 'vendor/autoload.php';
 require_once 'RestfulTrait.php';
@@ -2853,16 +2854,24 @@ class FeatureContext extends DrupalContext {
    * @When /^I click on the tab "([^"]*)"$/
    */
   public function iClickOnTheTab($arg1) {
-    $element = $this->getSession()->getPage()->find('xpath', "//*[.='{$arg1}']");
-    $element->press();
+    if ($element = $this->getSession()->getPage()->find('xpath', "//*[.='{$arg1}']")) {
+      $element->press();
+    }
+    else {
+      throw new ElementNotFoundException("No tab with text ($text) found on page.");
+    }
   }
 
   /**
    * @When /^I click on the "([^"]*)" control$/
    */
   public function iClickOnControl($text) {
-    $element = $this->getSession()->getPage()->find('xpath', "//*[text() = '{$text}']");
-    $element->click();
+    if ($element = $this->getSession()->getPage()->find('xpath', "//*[text() = '{$text}']")) {
+      $element->click();
+    }
+    else {
+      throw new ElementNotFoundException("No element with text ($text) found on page.");
+    }
   }
 
   /**
@@ -2876,6 +2885,9 @@ class FeatureContext extends DrupalContext {
       if ($p->isVisible()) {
         if ($elem = $p->find('xpath', "//*[text() = '{$text}']")) {
           $elem->click();
+        }
+        else {
+          throw new ElementNotFoundException("No $control ")
         }
       }
     }
