@@ -3394,23 +3394,23 @@ JS;
   public function iClickOnTools($link, $node) {
     $driver = $this->getSession()->getDriver();
     $page = $this->getSession()->getPage();
-    if ($elem = $page->find('xpath', "//*[text() = '$node']")) {
+    if ($elem = $page->find('xpath', "//*[text() = '$node']/ancestor::article")) {
       $elem->mouseOver();
-      if ($link = $page->find('xpath', "//*[text() = '$node']/ancestor::article//a[contains(@class, 'contextual-links-trigger')]")) {
+      if ($link = $elem->find('xpath', "//a[contains(@class, 'contextual-links-trigger')]")) {
         $link->click();
-        if ($target = $page->find('xpath', "//*[text() = '$node']/ancestor::article//a[contains(@class, 'contextual-links-trigger')]/[text() = '$link']")) {
+        if ($target = $elem->find('xpath', "//ul[contains(@class, 'contextual-links')]/[text() = '$link']")) {
           $target->click();
         }
         else {
-          throw new ElementNotFoundException($this->getSession(), "No contextual link $link found for node $node");
+          throw new Exception("No contextual link $link found for node $node");
         }
       }
       else {
-        throw new ElementNotFoundException($this->getSession(), "No contextual links found for node $node");
+        throw new Exception("No contextual links found for node $node");
       }
     }
     else {
-      throw new ElementNotFoundException($this->getSession(), "No node $node found on page.");
+      throw new Exception("No node $node found on page.");
     }
   }
 }
