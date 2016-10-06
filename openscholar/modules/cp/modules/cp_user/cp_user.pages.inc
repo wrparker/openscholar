@@ -264,6 +264,7 @@ function cp_user_remove_membership_confirm_submit($form, &$form_state) {
  * Builds the "Change site owner" form.
  */
 function cp_user_change_site_owner_form($form_state) {
+  global $user;
   $vsite = vsite_get_vsite();
   $site_name = $vsite->group->title;
 
@@ -288,7 +289,7 @@ function cp_user_change_site_owner_form($form_state) {
 
     foreach ($accounts as $account) {
       // If the pinserver module is enabled, don't show users who don't have an associated HUID
-      if (!module_exists('pinserver') || (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE) && pinserver_user_has_associated_pin($account->uid))) {
+      if (in_array('administrator', $user->roles) || !module_exists('pinserver') || (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE) && pinserver_user_has_associated_pin($account->uid))) {
         $options[$account->uid] = $account->name;
       }
     }
