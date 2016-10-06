@@ -2887,7 +2887,7 @@ class FeatureContext extends DrupalContext {
           $elem->click();
         }
         else {
-          throw new ElementNotFoundException("No $control ")
+          throw new ElementNotFoundException("No $control found in $css element.");
         }
       }
     }
