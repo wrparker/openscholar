@@ -1,9 +1,8 @@
-Feature: Testing the tagged items.
-  Testing that two nodes tagged to one term and only one node tagged to another
-  term.
+Feature: Testing that nodes can be deleted
+  Test that nodes can be deleted from contextual tools
 
   @api @misc_first @javascript
-  Scenario: verify that the tagged items filter work as expected.
+  Scenario: Verify that nodes can be deleted
       Given I am logging in as "admin"
         And I visit "john/classes"
         And I make sure admin panel is open
@@ -14,8 +13,7 @@ Feature: Testing the tagged items.
         And I fill in "Title" with "Dummy class"
         And I press "Save"
         And the overlay closes
-        And I click "Configure"
-        And I click "Delete"
+        And I click on "Delete" in the tools for "Dummy class"
         And the overlay opens
        When I press "Delete"
         And the overlay closes
