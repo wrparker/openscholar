@@ -1308,8 +1308,10 @@ class FeatureContext extends DrupalContext {
 
     $path = str_replace($base_url, '', $url);
 
-    if ($path != $given_url) {
-      throw new Exception("The given url: '{$given_url}' is not equal to the current path {$path}");
+    $path_fragments = explode('?', $path);
+
+    if ($given_url != $path_fragments[0]) {
+      throw new Exception("The given url: '{$given_url}' is not equal to the current path {$path_fragments[0]}");
     }
   }
 

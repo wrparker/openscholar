@@ -1794,7 +1794,6 @@ function os_contextual_links_view_alter(&$element, $items) {
     $bundle = $element['#element']['#bundle'];
     $app = os_get_app_by_bundle($bundle);
     $app = os_app_info($app);
-    dpm($app);
 
     $redirect = "<front>";
     if (!empty($app['path'])) {
