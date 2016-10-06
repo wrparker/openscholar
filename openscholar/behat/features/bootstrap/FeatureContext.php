@@ -3396,8 +3396,8 @@ JS;
     $page = $this->getSession()->getPage();
     if ($elem = $page->find('xpath', "//*[normalize-space(text()) = '$node']/ancestor::section//article")) {
       $elem->mouseOver();
-      if ($link = $elem->find('xpath', "//a[contains(@class, 'contextual-links-trigger')]")) {
-        $link->click();
+      if ($clink = $elem->find('xpath', "//a[contains(@class, 'contextual-links-trigger')]")) {
+        $clink->click();
         if ($target = $elem->find('xpath', "//ul[contains(@class, 'contextual-links')]/[text() = '$link']")) {
           $target->click();
         }
