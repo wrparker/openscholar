@@ -2679,7 +2679,7 @@ class FeatureContext extends DrupalContext {
    * @when /^I mouse over "([^"]*)"$/
    */
   public function iMouseOver($text) {
-    $elem = $this->getSession()->getPage()->find('xpath', "//*[text() = '$text'");
+    $elem = $this->getSession()->getPage()->find('xpath', "//*[text() = '$text']");
 
     if ($elem) {
       $elem->mouseOver();
