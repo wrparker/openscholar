@@ -1789,6 +1789,20 @@ function os_contextual_links_view_alter(&$element, $items) {
     return;
   }
 
+  if (isset($element['#links']['node-delete'])) {
+    $link = &$element['#links']['node-delete'];
+    $bundle = $element['#element']['#bundle'];
+    $app = os_get_app_by_bundle($bundle);
+    $app = os_app_info($app);
+    dpm($app);
+
+    $redirect = "<front>";
+    if (!empty($app['path'])) {
+      $redirect = $app['path'];
+    }
+    $link['query']['destination'] = $redirect;
+  }
+
   if (!user_access('view revisions')) {
     // User can't view revisions.
     return;
