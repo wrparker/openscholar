@@ -3367,6 +3367,7 @@ JS;
    */
   public function iClickOnTools($link, $node) {
     $driver = $this->getSession()->getDriver();
+    $driver->mouseOver("//*[text() = '$node']");
     $driver->mouseOver("//*[text() = '$node']/ancestor::article//a[contains(@class, 'contextual-links-trigger')]");
     $driver->click("//*[text() = '$node']/ancestor::article//a[contains(@class, 'contextual-links-trigger')]");
     $driver->click("//*[text() = '$node']/ancestor::article//a[contains(@class, 'contextual-links-trigger')]/[text() = '$link']");
