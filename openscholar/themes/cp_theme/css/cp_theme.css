@@ -51,7 +51,8 @@ table {
     font-size: 1em;
 }
 input.form-text,
-textarea {
+textarea,
+.redirect-add-form input {
     font-size: 13px;
     height: auto;
     padding: 6px 7px;
@@ -80,13 +81,16 @@ html.js input.throbbing {
     background: url("../images/cp-sprite.png") no-repeat 0 -170px;
 }
 .help-link.ng-binding {
-    position: absolute;
-    bottom: 10px;
-    right: 20px;
-    padding: 2px 0 2px 23px;
-    background: url('../images/cp-sprite.png') no-repeat 0 -708px;
-    
+       position: absolute;
+    bottom: 7px;
+    right: 10px;
+    padding: 2px 25px 2px 0;
+    background: url(../images/cp-sprite.png) no-repeat right -618px;
+    background-size: 21px 700px;
+    font-size: .97em;
 }
+    
+
 .view-os-files-private ul {
     list-style-type: none !important;
     list-style: none !important;
@@ -170,8 +174,7 @@ a.form-cancel:hover {
 }
 .redirect-delete,
 .form-actions .os-delete-link {
-    color: #f83535 !important;
-    text-decoration: underline;
+
     font-size: 1.1em;
 }
 /* CTools MODAL OVERRIDES */
@@ -310,6 +313,7 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 }
 .ui-dialog {
     padding: 0;
+    top:10% !important;
 }
 #overlay-tabs {
     margin: -30px 0 0;
@@ -1120,10 +1124,14 @@ div.error:before {
     font-size: 0.923em !important;
     color: #666 !important;
 }
+form#os-maintenance #edit-os-search-solr,
+form#os-maintenance #edit-cp-clear-cache {
+display:block;
+}
 ul.table-list {
     list-style-type: none;
     margin-left: 0;
-    border: 1px solid #ccc;
+
 }
 ul.table-list li {
     padding: 10px;
@@ -1132,28 +1140,30 @@ ul.table-list li:nth-child(odd) {
     background-color: #FFF;
 }
 ul.table-list li:nth-child(even) {
-    background-color: #F7F7F7;
+    background-color: #EFEFEF;
 }
 .redirect-delete {
     float: right;
 }
-.display-inline,
-form#os-maintenance .form-item {
-    display: inline-block;
-}
-.redirect-add-form .display-inline {
-    width: 40%;
-}
-.redirect-add-form {
-    background-color: #eee;
-    padding: 10px;
+
+form#os-maintenance .form-item:first-child {
+    margin-bottom: 0; 
 }
 
-.redirect-add-form input {
-       width: 280px;
-    height: 25px;
-    border: 1px solid #ccc;
+form#os-maintenance .form-item .description {
+    margin-top: 0; 
 }
+
+
+
+.redirect-add-form input {
+       width: 98%;
+}
+
+.redirect-add-form div {
+    margin:15px 0;
+}
+
 .form-item .file-list-single ul {
     display: inline-block;
     width: 34%;
@@ -1168,7 +1178,15 @@ form#os-maintenance .form-item {
    }
    
 .ui-dialog #os_taxonomy .form-item {
-  padding: 0;
+      margin: 12px 0;
+}
+
+.ui-dialog #os_taxonomy .os-taxonomy_label_heading {
+ margin: 20px 0 8px 0;
+}
+
+.form-radios {
+	margin:15px 0;
 }
 
 .view-content ~ .item-list ul.pager {

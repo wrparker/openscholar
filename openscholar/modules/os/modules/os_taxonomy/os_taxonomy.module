@@ -2136,14 +2136,14 @@ function os_taxonomy_cp_settings() {
   $form['os_taxonomy_display_term_under_content'] = $template + array(
     'form' => array(
       '#type' => 'checkbox',
-      '#title' => t('Display terms under the main content on a page'),
+      '#title' => t('Display'),
       '#default_value' => variable_get('os_taxonomy_display_term_under_content', 1)
     )
   );
 
   foreach($active_content_types as $content_types_key => $content_types_val) {
     if ($content_types_val === reset($active_content_types)) {
-      $active_content_types_prefix = '<span class="description">Display see also terms under each item in list pages of content</span>';
+      $active_content_types_prefix = '<label class="os-taxonomy_label_heading">Under these content types when displayed in a list:</label>';
     } else {
       $active_content_types_prefix = '';
     }
