@@ -87,7 +87,10 @@
   }
   h3 {
       margin-bottom: 7px;
+    font-weight: 300;
+    font-size: 1.3em;}
   }
+   .node-person.node-teaser .field-name-field-person-photo,
   .block-boxes-os_boxes_tabs .ui-widget,
   .front .region-content-top .block-boxes-os_boxes_columns + .block-inner {
       margin-top: 0;
