@@ -30,6 +30,11 @@
   .front .ui-tabs .ui-state-default a {
       font-family: 'Oswald', sans-serif !important;
   }
+  .pager.mini-pager {
+    font-size: .8em;
+}
+  
+  
   body,
   body.not-front {
       font-size: 16px;
@@ -49,11 +54,17 @@
   #menu-bar #block-os-primary-menu {
       width: auto;
   }
-  .sidebar h2.block-title{
-    border-top: 2px solid #777;
-    padding: 15px 0;
+ h2.block-title{
+
+    font-weight: 300;
+    font-size: 1.4em;
 }
   
+    .sidebar h2.block-title{
+    border-top: 3px solid #777;
+    padding: 15px 0;
+ 
+} 
   .tweet-divider,
   .tweet-authorphoto,
   .tweet-author,
@@ -93,7 +104,7 @@
       color: #fff;
   }
   .front-top-featured {
-      padding: 0 25px;
+      padding: 0 30px;
   }
   .front-top-featured .block-inner {
       margin: 0;
@@ -116,6 +127,16 @@
       font-size: 1.4em;
       color: #fff;
   }
+  
+  
+   .front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html.top-bio-teaser a {
+    font-size: .9em;
+    text-decoration: none;
+    border-bottom: 1px solid #fff;
+    color: #fff;
+}
+  
+  
   .front-lop-blockgrid {
       padding: 10px;
       border-top-style: solid;
@@ -163,10 +184,10 @@
       border: none;
   }
   .front .ui-tabs .ui-state-default a {
-      font-size: 20.8px;
-      font-weight: normal;
-      letter-spacing: 0;
-      padding: 17px 12px;
+     font-weight: 300;
+    letter-spacing: 0;
+    padding: 17px 12px;
+    font-size: 1.4em;
   }
   .ui-tabs ul.ui-tabs-nav li.ui-tabs-active {
       border-top: 4px solid #ff884d;
