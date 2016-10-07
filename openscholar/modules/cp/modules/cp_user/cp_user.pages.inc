@@ -404,8 +404,8 @@ function cp_user_edit_membership_form($form_state, $user_load) {
   );
 
   // Show the option to change site owner only for the current owner or a support team member with an associated HUID if the pinserver module is enabled
-  if (!module_exists('pinserver') || (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE) && pinserver_user_has_associated_pin($group_user->uid))) {
-    global $user;
+  global $user;
+  if (in_array('administrator', $user->roles) || !module_exists('pinserver') || (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE) && pinserver_user_has_associated_pin($group_user->uid))) {
 
     $form['edit_membership']['group_manager'] = array(
       '#type' => 'checkbox',
