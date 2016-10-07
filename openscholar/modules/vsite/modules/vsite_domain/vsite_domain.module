@@ -192,7 +192,7 @@ function vsite_domain_cp_settings() {
   
   // Get purl form and modify it
   $form = purl_form('vsite_domain', $vsite->group->nid, $domain);
-  $form['value']['#title'] = t('Custom domain name');
+  $form['value']['#title'] = t('Custom domain name (Do not include http://)');
   $form['value']['#field_prefix'] = 'http://';
   $form['value']['#required'] = FALSE;   // Leaving the vsite domain name field blank means use purl base domain.
   $form['#element_validate'] = array('vsite_domain_cp_settings_domain_validate');  // Use our validate function (which still invokes purl's validate).
