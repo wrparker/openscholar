@@ -49,6 +49,11 @@
   #menu-bar #block-os-primary-menu {
       width: auto;
   }
+  .sidebar h2.block-title{
+    border-top: 2px solid #777;
+    padding: 15px 0;
+}
+  
   .tweet-divider,
   .tweet-authorphoto,
   .tweet-author,
@@ -324,3 +329,9 @@
       background-color: #3e464d;
       border-top: 4px solid #999;
   }
+  
+.footer .block-boxes-os_boxes_addthis {
+	float: right
+	
+}
+

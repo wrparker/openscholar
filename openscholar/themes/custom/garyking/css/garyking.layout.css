@@ -1,5 +1,10 @@
 /* Layout CSS */
 
+.sidebar    { 
+	top: 200px;
+    position: relative;
+}
+
 h1#page-title
  {
     width: 980px;
