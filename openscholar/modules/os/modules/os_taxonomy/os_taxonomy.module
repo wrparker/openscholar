@@ -2146,14 +2146,14 @@ function os_taxonomy_cp_settings() {
   $form['os_taxonomy_display_term_under_content'] = $template + array(
     'form' => array(
       '#type' => 'checkbox',
-      '#title' => t('Display "See also" terms under a page\'s main content area'),
+      '#title' => t('Display'),
       '#default_value' => $default_value
     )
   );
 
   foreach($active_content_types as $content_types_key => $content_types_val) {
     if ($content_types_val === reset($active_content_types)) {
-      $active_content_types_prefix = '<label class="os-taxonomy_label_heading">Display "See also" terms under each item shown in a list for these content types:</label>';
+      $active_content_types_prefix = '<label class="os-taxonomy_label_heading">Under these content types when displayed in a list:</label>';
     } else {
       $active_content_types_prefix = '';
     }

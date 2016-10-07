@@ -51,7 +51,8 @@ table {
     font-size: 1em;
 }
 input.form-text,
-textarea {
+textarea,
+.redirect-add-form input {
     font-size: 13px;
     height: auto;
     padding: 6px 7px;
@@ -1155,9 +1156,7 @@ form#os-maintenance .form-item .description {
 
 
 .redirect-add-form input {
-       width: 100%;
-       height: 25px;
-       border: 1px solid #ccc;
+       width: 98%;
 }
 
 .redirect-add-form div {
@@ -1178,7 +1177,7 @@ form#os-maintenance .form-item .description {
    }
    
 .ui-dialog #os_taxonomy .form-item {
-      margin: 15px 0;
+      margin: 12px 0;
 }
 
 .ui-dialog #os_taxonomy .os-taxonomy_label_heading {
