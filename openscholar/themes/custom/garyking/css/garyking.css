@@ -63,12 +63,25 @@
   
   .sidebar .block {
      border-top-style: solid;
-      border-width: 2px;  
+      border-width: 3px;  
+}
+  #menu-bar ul.nice-menu a.active,
+  #menu-bar ul.nice-menu a:hover,
+  #menu-bar ul.nice-menu .menuparent.over > a,
+  #menu-bar ul.nice-menu .menuparent a:hover,
+  #menu-bar ul.nice-menu .menuparent a.active,
+  .front .region-content-second,
+  #citation-wrapper,
+  body.node-type-biblio .biblio-export ,
+.sidebar .block-boxes-os_search_solr_more_like_this,
+.contact-page-info {
+ 
+    background-color: #f6f6f6;
 }
 
 .sidebar .block-boxes-os_search_solr_more_like_this{
     padding: 0 12px 0 12px;
-    background-color: #f6f6f6;
+
 }
 
   .sidebar h2.block-title {
@@ -145,10 +158,10 @@
   
    .front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html.top-bio-teaser a {
     font-size: .9em;
-    text-decoration: none !important
+    text-decoration: none !important;
     border-bottom: 1px solid #fff;
     color: #fff;
-        background: url(http://beta.scholar.harvard.edu/files/gking/files/sprite.png?m=1475877273) right -109px no-repeat;
+        background: url('../images/sprite.png') right -109px no-repeat;
     padding-right: 20px;
 }
   
@@ -300,7 +313,7 @@
   #citation-wrapper,
   body.node-type-biblio .biblio-export {
       border: none;
-      background-color: #f6f6f6;
+     
   }
   #menu-bar {
       position: fixed !important;
@@ -325,7 +338,7 @@
   #menu-bar ul.nice-menu .menuparent.over > a,
   #menu-bar ul.nice-menu .menuparent a:hover,
   #menu-bar ul.nice-menu .menuparent a.active {
-      background-color: #f6f6f6;
+   
       border-bottom: 3px solid #32526e;
       color: #444;
   }
