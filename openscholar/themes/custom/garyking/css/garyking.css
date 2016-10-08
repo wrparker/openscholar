@@ -66,9 +66,9 @@
       border-width: 2px;  
 }
 
-.sidebar .block.related{
-    padding: 0 12px 12px 12px;
-    background-color: #efefef;
+.sidebar .block-boxes-os_search_solr_more_like_this{
+    padding: 0 12px 0 12px;
+    background-color: #f6f6f6;
 }
 
   .sidebar h2.block-title {
@@ -99,7 +99,7 @@
   h3 {
       margin-bottom: 7px;
     font-weight: 300;
-    font-size: 1.3em;}
+    font-size: 1.3em;
   }
    .node-person.node-teaser .field-name-field-person-photo,
   .block-boxes-os_boxes_tabs .ui-widget,
@@ -133,6 +133,7 @@
   .front-top-cloumn .region-two-66-33-first .region-inner,
   .front-top-cloumn .region-two-66-33-second .region-inner {
       vertical-align: middle;
+      display: table-cell;
   }
   .front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html.top-bio-teaser {
       width: 75%;
