@@ -260,36 +260,16 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     );
 
     $feature_settings = array();
-    $exclude_from_advanced = [];
     if (spaces_access_admin($user, $vsite_object)) {
       foreach (array_keys(array_filter($spaces_features)) as $feature) {
         $item = menu_get_item("cp/build/features/{$feature}");
         if ($item && $item['href'] == "cp/build/features/{$feature}") {
           $feature_object = feature_load($feature);
-          $app_info = os_app_info($feature);
-
-          if (!empty($app_info['form_settings']) && in_array($app_info['form_settings'], array_keys($settings_forms))) {
-            $form = $settings_forms[$app_info['form_settings']];
-            $exclude_from_advanced[] = $form['group']['#id'];
-            $group = $form['group']['#title'];
-            $link = array(
-              'label' => $group,
-              'type' => 'directive',
-              'directive' => array(
-                'ap-settings-form',
-                'form' => $form['group']['#id'],
-              )
-            );
-          }
-          else {
-            $link = array(
-              'label' => features_get_feature_title($feature_object),
-              'type' => 'link',
-              'href' => $item['href'],
-            );
-          }
-
-          $feature_settings["feature_{$feature}"] = $link;
+          $feature_settings["feature_{$feature}"] = array(
+            'label' => features_get_feature_title($feature_object),
+            'type' => 'link',
+            'href' => $item['href'],
+          );
         }
       }
     }
