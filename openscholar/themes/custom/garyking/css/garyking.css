@@ -73,7 +73,8 @@ color: #666;
   #citation-wrapper,
   body.node-type-biblio .biblio-export ,
 .sidebar .block-boxes-os_search_solr_more_like_this,
-.contact-page-info {
+.contact-page-info,
+.os-files-other-list tr, .os-files-other-list td {
  
     background-color: #f6f6f6;
 }
@@ -156,7 +157,7 @@ background-color: #fff;
   .front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html.top-bio-teaser {
       width: 75%;
       margin: 0 auto !important;
-      font-size: 1.4em;
+      font-size: 1.3em;
       color: #fff;
   }
   
@@ -220,11 +221,13 @@ background-color: #fff;
       border-right: none;
       border: none;
   }
+  .ui-tabs ul.ui-tabs-nav li.ui-tabs-active a,
   .front .ui-tabs .ui-state-default a {
-     font-weight: 300;
+       font-weight: 400;
     letter-spacing: 0;
     padding: 17px 12px;
     font-size: 1.4em;
+    color: #666;
   }
   .ui-tabs ul.ui-tabs-nav li.ui-tabs-active {
       border-top: 4px solid #ff884d;
