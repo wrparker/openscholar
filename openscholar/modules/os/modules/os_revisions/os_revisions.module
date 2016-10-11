@@ -91,13 +91,13 @@ function os_revisions_revision_overview($node) {
 
     if ($revision->current_vid > 0) {
 
-      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => theme('username', array('account' => $revision))))
+      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid"), '!username' => theme('username', array('account' => $revision))))
         . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
         'class' => array('revision-current'));
       $operations[] = array('data' => drupal_placeholder(t('Current revision')), 'class' => array('revision-current'), 'colspan' => 2);
     }
     else {
-      $row[] = t('!date by !username', array('!date' => format_date($revision->timestamp, 'short'), '!username' => theme('username', array('account' => $revision))))
+      $row[] = t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => theme('username', array('account' => $revision))))
         . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : '');
       if ($revert_permission) {
         $operations[] = l(t('Revert'), "node/$node->nid/revisions/$revision->vid/revert");
