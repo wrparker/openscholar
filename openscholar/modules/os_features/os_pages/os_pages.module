@@ -338,7 +338,8 @@ function os_pages_context_custom($name) {
  */
 function os_pages_node_view($node, $view_mode) {
   if ($node->type == 'page' && $view_mode == 'full') {
-    if (node_is_page($node)) {
+    // We are on a node page in the public part of the site.
+    if (node_is_page($node) && !path_is_admin(current_path())) {
       $ctx = context_load('os_pages-page-'.$node->nid);
       if ($ctx) {
         context_set('context', $ctx->name, $ctx);
