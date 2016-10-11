@@ -90,7 +90,8 @@ function os_revisions_revision_overview($node) {
     $operations = array();
 
     if ($revision->current_vid > 0) {
-      $row[] = array('data' => t('!date by !username', array('!date' => format_date($revision->timestamp, 'short'), '!username' => theme('username', array('account' => $revision))))
+
+      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => theme('username', array('account' => $revision))))
         . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
         'class' => array('revision-current'));
       $operations[] = array('data' => drupal_placeholder(t('Current revision')), 'class' => array('revision-current'), 'colspan' => 2);
@@ -193,4 +194,17 @@ function os_revisions_add_revert_notes($form, &$form_state) {
   watchdog('content', '@type: reverted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
   drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_type_get_name($node_revision), '%title' => $node_revision->title, '%revision-date' => format_date($node_revision->revision_timestamp))));
   $form_state['redirect'] = 'node/' . $node_revision->nid . '/revisions';
+}
+
+/**
+ * Implements hook_admin_paths().
+ *
+ * Add node revision review to admin paths
+ */
+function os_revisions_admin_paths() {
+  $paths = array(
+    'node/*/revisions/*/view' => TRUE,
+  );
+
+  return $paths;
 }
