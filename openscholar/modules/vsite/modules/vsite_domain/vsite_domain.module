@@ -192,7 +192,7 @@ function vsite_domain_cp_settings() {
   
   // Get purl form and modify it
   $form = purl_form('vsite_domain', $vsite->group->nid, $domain);
-  $form['value']['#title'] = t('Custom domain name (Do not include http://)');
+  $form['value']['#title'] = t('Custom Domain Name (Do not include http://)');
   $form['value']['#field_prefix'] = 'http://';
   $form['value']['#required'] = FALSE;   // Leaving the vsite domain name field blank means use purl base domain.
   $form['#element_validate'] = array('vsite_domain_cp_settings_domain_validate');  // Use our validate function (which still invokes purl's validate).
@@ -214,7 +214,7 @@ function vsite_domain_cp_settings() {
     '#title' => t('Share domain name'),
     '#default_value' => $shared,
     '#weight' => 10,
-    '#description' => t("Add \"<em><strong>/@site</strong></em>\" to the URL and share this domain name with other sites (default).<br/>If you own this custom domain, uncheck to use for just this site.", array('@site' => vsite_get_purl($vsite))),
+    '#description' => t("This will add \"<em><strong>/@site</strong></em>\" to the URL and share this domain name with other sites (default).<br/>If you own this custom domain, uncheck to use for just this site.", array('@site' => vsite_get_purl($vsite))),
   );
 
   //subsite domains - non-admins can only add domains provided by parent site
