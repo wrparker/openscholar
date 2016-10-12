@@ -1,5 +1,5 @@
   WebFontConfig = {
-    google: { families: [ 'Oswald:400,300,700:latin', 'Lora:400,700,400italic,700italic:latin' ] }
+    google: { families: [ 'Oswald:400,300,700:latin', 'Quattrocento' ] }
   };
   (function() {
     var wf = document.createElement('script');
