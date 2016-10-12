@@ -41,6 +41,16 @@ Drupal.wysiwyg.plugins['os_link'] = {
       return;
     }
 
+    var trav = current;
+    while (trav.nodeName != 'BODY') {
+      trav = trav.parentNode;
+      if (trav.nodeName == 'A') {
+        current = trav;
+        break;
+      }
+    }
+
+
     var output = {
       content: text,
       format: "html",
@@ -79,6 +89,9 @@ Drupal.wysiwyg.plugins['os_link'] = {
       var link = jQuery(selection.node);
       if (link[0].nodeName != 'A') {
         link = link.find('a');
+        if (!link) {
+          link = link.closest('a');
+        }
       }
       if (link.length == 0) {
         link = jQuery(selection.node).parents('a');
@@ -167,14 +180,29 @@ Drupal.wysiwyg.plugins['os_link'] = {
     }
 
     if (selection.node && selection.node.nodeType == Node.ELEMENT_NODE) {
+      if (selection.node.nodeName != 'A') {
+        var trav = selection.node,
+          link = selection.node;
+        while (trav.nodeName != 'BODY') {
+          trav = trav.parentNode;
+          if (trav.nodeName == 'A') {
+            link = trav;
+            break;
+          }
+        }
+      }
+      else {
+        var link = selection.node;
+      }
+
       // If the link is set to be opened in a new window, then the checkbox will be in checked state.
-      if (selection.node.getAttribute('target') == '_blank') {
+      if (link.getAttribute('target') == '_blank') {
         $('#edit-target-option', doc).prop('checked', 'checked');
       }
 
       // If the link has a title attribute.
-      if (selection.node.getAttribute('title') != '') {
-        $('#edit-link-title', doc).val(selection.node.getAttribute('title'));
+      if (link.getAttribute('title') != '') {
+        $('#edit-link-title', doc).val(link.getAttribute('title'));
       }
     }
 
