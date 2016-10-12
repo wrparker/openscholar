@@ -217,6 +217,7 @@ function os_menu_alter(&$items) {
   // Apply CP theme for book revision page.
   $items['node/%node/revisions']['theme callback'] = 'cp_theme_name';
 }
+
 function os_in_readonly_mode($page) {
   // Callback data for each page.
   switch ($page) {
@@ -254,13 +255,13 @@ function os_in_readonly_mode($page) {
 
   // When a user, logged in or not, ask to reset password we should throw 404.
   $trigger_404 = $page == 'password' ? TRUE : user_is_anonymous();
+  // Get custom callback function from variable.
+  $custom_callback_function = variable_get($custom_callback_variable, NULL);
 
   if ($trigger_404) {
-    // Get custom callback function from variable.
-    $function = variable_get($custom_callback_variable, NULL);
-    if ($function) {
+    if ($custom_callback_function) {
       // Use the custom function.
-      return call_user_func($function);
+      return call_user_func($custom_callback_function);
     }
 
     // Use Drupal's default form.
@@ -270,6 +271,11 @@ function os_in_readonly_mode($page) {
   // The default form should be displayed if the user is admin or in case the user
   // tries to access "site/register" and he can create a VSite.
   if (user_access('administer site configuration') || (_vsite_user_access_create_vsite() && $page == 'site_register')) {
+    if ($custom_callback_function) {
+      // Use the custom function.
+      return call_user_func($custom_callback_function);
+    }
+
     return drupal_get_form($drupal_default_form);
   }
 
