@@ -26,8 +26,14 @@ Drupal.wysiwyg.plugins['os_link'] = {
     }
     else if (selection.type == "Range" || selection.isCollapsed == false) {
       var range = document.createRange();
-      range.setStart(selection.anchorNode, selection.anchorOffset);
-      range.setEnd(selection.focusNode, selection.focusOffset);
+      if (selection.anchorOffset > selection.focusOffset) {
+        range.setStart(selection.focusNode, selection.focusOffset);
+        range.setEnd(selection.anchorNode, selection.anchorOffset);
+      }
+      else {
+        range.setStart(selection.anchorNode, selection.anchorOffset);
+        range.setEnd(selection.focusNode, selection.focusOffset);
+      }
       current = range.commonAncestorContainer;
       text = range.toString();
     }
@@ -146,50 +152,29 @@ Drupal.wysiwyg.plugins['os_link'] = {
       window = iframe.contentWindow,
       selected = '[Rich content. Click here to overwrite.]';
 
-    // The user selected a link and not double clicked on a link.
-    var selectedLink = jQuery.selectLink != null && typeof(jQuery.selectLink) == 'object';
-
     if (this.selectLink(selection.node) && selection.content == '') {
       selection.content = selection.node.innerHTML;
     }
 
-    if (selectedLink) {
-      $('.form-item-external input', doc).val(jQuery.selectLink.attr('href'));
+    if (selection.content.indexOf('<') != -1) {
+      $('.form-item-link-text input', doc).val(selected);
     }
-
-    if (selection.node != null && selection.node.text != null) {
+    else if (selection.node != null && selection.node.text != null) {
       $('.form-item-link-text input', doc).val(selection.node.text);
     }
     else {
-      if (selectedLink) {
-        $('.form-item-link-text input', doc).val(jQuery.selectLink.text());
-      }
-      else if(typeof(jQuery.selectLink) == 'string') {
-        $('.form-item-link-text input', doc).val(jQuery.selectLink);
-      }
+      $('.form-item-link-text input', doc).val(selection.content);
     }
 
-    // If the link is set to be opened in a new window, then the checkbox will be in checked state.
-    if (selection.node && selection.node.nodeType == Node.ELEMENT_NODE && (selection.node.getAttribute('target') == '_blank')) {
-      $('#edit-target-option', doc).prop('checked', 'checked');
-    }
-    else {
-      if (selectedLink && jQuery.selectLink.attr('target') == "_blank") {
+    if (selection.node && selection.node.nodeType == Node.ELEMENT_NODE) {
+      // If the link is set to be opened in a new window, then the checkbox will be in checked state.
+      if (selection.node.getAttribute('target') == '_blank') {
         $('#edit-target-option', doc).prop('checked', 'checked');
       }
-    }
 
-    // If the link has a title attribute.
-    if (selection.node && selection.node.nodeType == Node.ELEMENT_NODE && selection.node.getAttribute('title') != '') {
-      $('#edit-link-title', doc).val(selection.node.getAttribute('title'));
-    }
-    else {
-      if (selectedLink) {
-        var title = jQuery.selectLink.attr('title');
-
-        if (title != null) {
-          $('#edit-link-title', doc).val(title);
-        }
+      // If the link has a title attribute.
+      if (selection.node.getAttribute('title') != '') {
+        $('#edit-link-title', doc).val(selection.node.getAttribute('title'));
       }
     }
 
