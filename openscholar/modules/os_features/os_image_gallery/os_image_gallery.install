@@ -76,3 +76,26 @@ function _os_image_gallery_hide_media_description_label() {
 function os_image_gallery_update_7004() {
   features_revert(array('os_image_gallery' => array('field_instance')));
 }
+
+/**
+ * Turn on the og_vocabulary field display for full view of image gallery.
+ */
+function os_image_gallery_update_7005() {
+  $instance = field_info_instance('node', 'og_vocabulary', 'media_gallery');
+  $instance['display']['full'] = array(
+    'label' => 'hidden',
+    'type' => 'og_vocab',
+    'weight' => 10,
+    'settings' => array('concatenate' => 1),
+    'module' => 'vsite_vocab',
+  );
+  field_update_instance($instance);
+}
+
+/**
+ * Update the image file.
+ */
+function os_image_gallery_update_7006() {
+  features_revert(array('os_image_gallery' => array('views_view')));
+}
+

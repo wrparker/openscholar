@@ -26,10 +26,14 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
       if ($info['required']) {
         // Check if the 'isNotEmpty' validator is already assigned to the field
         // in the base class. Don't re-add it to avoid duplicated messages.
-        if (!empty($fields[$field_name]['validators']) && in_array('isNotEmpty', $fields[$field_name]['validators'])) {
-          continue;
+        if (!in_array('isNotEmpty', $fields[$field_name]['validators'])) {
+          $fields[$field_name]['validators'][] = array($this, 'isNotEmpty');
         }
-        $fields[$field_name]['validators'][] = array($this, 'isNotEmpty');
+      }
+
+      $field = field_info_field($field_name);
+      if ($field['type'] == 'text_with_summary') {
+        $fields[$field_name]['validators'][] = array($this, 'validateTextAreaLength');
       }
     }
 
@@ -70,6 +74,14 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
     return $fields;
   }
 
+  public function validateTextAreaLength($field_name, $value, EntityMetadataWrapper $wrapper, EntityMetadataWrapper $property_wrapper) {
+    $length = variable_get('os_wysiwyg_maximum_length_' . $field_name, 5 * 1000000);
+
+    if (strlen($value['value']) > $length) {
+      $this->setError($field_name, "The value of the '$field_name' field can not be longer than '$length' characters.");
+    }
+  }
+
   /**
    * Verify the start is occurring before the end date.
    */
@@ -96,17 +108,21 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
    */
   protected function validateDateFormats($formats, $value, $field_name) {
     // Validate the date format for the start and end date.
+    $validationSuccess = false;
     foreach ($formats as $format) {
       if ($date = DateTime::createFromFormat($format, $value)) {
-        if ($date->format($format) != $value) {
-          $params = array(
-            '@date' => $value,
-            '@format' => date($format, $date->getTimestamp()),
-          );
-          $this->setError($field_name, 'The value of the date field (@date) is not valid. The date should be in a format similar to @format.', $params);
-          return;
+        if ($date->format($format) == $value) {
+          $validationSuccess = true;
         }
       }
+    }
+
+    if (! $validationSuccess) {
+      $params = array(
+          '@date' => $value,
+          '@format' => join(", ", $formats),
+      );
+      $this->setError($field_name, 'The value of the date field (@date) is not valid. The date should be in a format similar to one of the following formats: @format.', $params);
     }
 
     return TRUE;
@@ -127,6 +143,11 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
    * Validating the image minimum size.
    */
   public function validatorPhoto($field_name, $value, $min_width, $min_height) {
+    if (empty($value)) {
+      return;
+
+    }
+
     list($width, $height) = getimagesize($value);
 
     if ($width < $min_width || $height < $min_height) {

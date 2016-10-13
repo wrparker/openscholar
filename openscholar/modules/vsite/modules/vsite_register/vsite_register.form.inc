@@ -32,7 +32,7 @@ function vsite_register_form($form, &$state) {
     '#required' => TRUE,
     '#field_prefix' => $base_url . '/',
     '#size' => 35,
-    '#description' => t('Minimum of 3 characters, which must be lowercase. Punctuation is not allowed except for hyphens and underscores. <br />Example: a choice of \'jdoe\' would result in the URL: %site.', array('%site' => $base_url . '/jdoe')),
+    '#description' => t('Enter a minimum of 3 characters, lowercase only. Punctuation is not allowed except for hyphens and underscores. <br />Example: Entering jdoe into the field above will result in this URL: %site.', array('%site' => $base_url . '/jdoe')),
     '#ajax' => array(
       'callback' => 'vsite_register_ajax_validation',
       'wrapper' => 'domain-errors',
@@ -181,7 +181,7 @@ function vsite_register_form($form, &$state) {
     // - give a site to a new account.
     $form['vicarious_user'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Create this OS Site on behalf of another user.'),
+      '#title' => t('Create this site on behalf of another user.'),
     );
 
     $form['user_fieldset'] = array(
@@ -192,18 +192,25 @@ function vsite_register_form($form, &$state) {
 
     // $ajax_link = l(t('create a new user'), 'javascript:void(0)', array('attributes'=>array('id'=>array('new-user-link'))));
     // @todo figure out l() later
-    $ajax_link = '<a href="javascript:void(0)" id="new-user-link">' . t('create a new user') . '</a>';
+    $ajax_link = '';
+    if (!module_exists('pinserver')) {
+      $ajax_link = '  or <a href="javascript:void(0)" id="new-user-link">' . t('create a new user') . '</a>';
+    }
 
     $form['user_fieldset']['existing_username'] = array(
       '#type' => 'textfield',
       '#title' => t('Find Existing User'),
-      '#description' => t('Enter the name of the user who will manage this new site or !create_new.',
+      '#description' => t('Enter the name of the user who will manage this new site!create_new.',
         array('!create_new' => $ajax_link)
       ),
-      '#autocomplete_path' => 'vsite/autocomplete/user',
+      '#autocomplete_path' => 'vsite/autocomplete/user/register',
     );
 
-    // Prepares flag for JS to set when create new user is clicked.
+    if (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE)) {
+      $form['user_fieldset']['existing_username']['#description'] .= ' ' . t('Only users who have linked their OpenScholar accounts to HarvardKey are listed.') . ' ' . l('Learn more about linking accounts', 'http://docs.openscholar.harvard.edu/logging-your-site#linking-your-harvardkey-to-your-openscholar-account', array('attributes' => array('target' => '_blank', 'rel' => 'noopener')));
+    }
+
+      // Prepares flag for JS to set when create new user is clicked.
     $form['user_fieldset']['create_new_user'] = array(
       '#type' => 'hidden',
       '#default_value' => FALSE,
@@ -213,7 +220,9 @@ function vsite_register_form($form, &$state) {
       '#markup' => '<div id="new_user_div">',
     );
 
-    $form['user_fieldset'] += _vsite_register_user_form();
+    if (!module_exists('pinserver') || !variable_get('pinserver_pin_url', FALSE)) {
+      $form['user_fieldset'] += _vsite_register_user_form();
+    }
 
     $form['user_fieldset']['huid'] = array();
 
@@ -770,13 +779,14 @@ function vsite_register_mail($key, &$message, $params) {
  */
 function _vsite_register_mail_replacements($vsite, $author, $key) {
   global $base_url;
-
+  $purl_base_domain = variable_get('purl_base_domain', $base_url);
   // Initialize replacements array with values common to both mail keys.
   $replacements = array(
     '!username' => $author->name,
-    '!site_login_uri' => url($base_url . '/' . $vsite->group->purl . '/user/login', array('absolute' => TRUE, 'query' => array('destination' => $vsite->group->purl))),
+    '!site_login_uri' => url($purl_base_domain . '/' . $vsite->group->purl . '/user/login', array('absolute' => TRUE, 'query' => array('destination' => $vsite->group->purl))),
+    '!site_uri' => url($purl_base_domain . '/user', array('absolute' => TRUE, 'query' => array('destination' => $vsite->group->purl))),
     '!user_mail' => $author->mail,
-    '!site_url' => url($base_url . '/' . $vsite->group->purl, array('absolute' => TRUE)),
+    '!site_url' => url($purl_base_domain . '/' . $vsite->group->purl, array('absolute' => TRUE)),
     '!sitewide_name' => variable_get('site_name', 'OpenScholar'),
   );
 

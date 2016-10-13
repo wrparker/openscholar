@@ -1,6 +1,8 @@
 html,body {
     background: #fff;
     color: #1e1e1e;
+}
+body.front {
     overflow-x: hidden;
 }
 /** * - Leave this until after we know about the slideshow issue: https: //github.com/openscholar/openscholar/issues/1646 * - Set to full width for vibrant, we need to set the gradient */#columns {
@@ -49,6 +51,10 @@ body.no-sidebars .content-top-slideshow-enabled #content-panels .region-content-
     margin-top: 0;
     overflow: hidden;
 }
+body.no-sidebars .content-top-slideshow-enabled #content-panels .region-content-top .block-boxes-os_boxes_widget_slider .block-inner {
+    overflow: visible;
+}
+
 body.no-sidebars .content-top-slideshow-enabled #menu-bar {
     border-bottom: 0;
 }
@@ -248,20 +254,19 @@ h1.node-title {
 }
 h1#page-title {
     font-size: 30px;
-    line-height: 1;
     margin: 0;
     padding: 15px 0 30px;
 }
-#tinymce h2,#tinymce h3,#tinymce h4,#content-column .field-name-body h2, #content-column .field-name-body h3, #content-column .field-name-body h4 {
+#content-column .field-name-body h2, #content-column .field-name-body h3, #content-column .field-name-body h4 {
     margin-bottom: 16px;
 }
-#tinymce h2,#content-column .field-name-body h2 {
+#content-column .field-name-body h2 {
     font-size: 1.7em;
 }
-#tinymce h3,#content-column .field-name-body h3 {
+#content-column .field-name-body h3 {
     font-size: 1.4em;
 }
-#tinymce h4,#content-column .field-name-body h4 {
+#content-column .field-name-body h4 {
     font-size: 1.2em;
 }
 .node-type-person #content-column .node-person h1.node-title {
@@ -302,7 +307,7 @@ ul.primary {
 .front #content-column .block,.comment-wrapper {
     border-top: 6px solid #e1e1e1;
 }
-.block-boxes block-boxes-os_sv_list_box,.block-boxes-os_boxes_manual_list,.sidebar .block.section-nav,#content-column .block.section-nav {
+.block-boxes block-boxes-os_sv_list_box,.block-boxes-os_boxes_manual_list.styled,.sidebar .block.section-nav,#content-column .block.section-nav {
     border-top: none;
 }
 .front #content-panels .block,.sidebar .block {
@@ -347,6 +352,7 @@ ul.primary {
     font-size: 16px;
     line-height: 20px;
     font-weight: bold;
+    overflow: auto;
 }
 .front #content-panels .block-content,.sidebar .block-content {
     padding: 15px;
@@ -378,12 +384,12 @@ ul.primary {
 .front #content-panels .block-boxes-os_boxes_tabs .block-content,.block-boxes-os_boxes_tabs .block-content {
     padding: 0;
 }
-.front #content-panels .block.block-boxes-os_boxes_manual_list {
+.front #content-panels .block.block-boxes-os_boxes_manual_list.styled {
     background-color: #252525;
     color: #FFF;
     padding: 0;
 }
-.front #content-panels .block.block-boxes-os_boxes_manual_list a {
+.front #content-panels .block.block-boxes-os_boxes_manual_list.styled a {
     color: #57ACFF;
 }
 .front #content-panels .block.block-boxes-os_boxes_manual_list.converted-bio {
@@ -393,7 +399,7 @@ ul.primary {
 .front #content-panels .block.block-boxes-os_boxes_manual_list.converted-bio a {
     color: #215990;
 }
-.front #content-panels .block.block-boxes-os_boxes_manual_list .block-title {
+.front #content-panels .block.block-boxes-os_boxes_manual_list.styled .block-title {
     border-bottom: none;
     margin-bottom: 0;
     color: #FFFFFF !important;
@@ -407,7 +413,7 @@ ul.primary {
     filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ac253a', endColorstr='#880f1c',GradientType=0 );
     padding: 8px 15px;
 }
-.front #content-panels .block.block-boxes-os_boxes_manual_list .block-content, .sidebar .block.block-boxes-os_boxes_manual_list .block-content {
+.front #content-panels .block.block-boxes-os_boxes_manual_list.styled .block-content, .sidebar .block.block-boxes-os_boxes_manual_list.styled .block-content {
     border-top: none;
 }
 #block-views-os-events-block-1 .view .date-nav-wrapper {
@@ -599,18 +605,22 @@ table td.mini .mini-day-on a {
 .section-nav ul ul a.active {
     color: #1E1E1E !important;
 }
+.block-boxes-os_boxes_facetapi_vocabulary.navigation .block-content,
 .block-boxes-os_taxonomy_fbt.navigation .block-content {
     padding: 0 !important;
 }
+.block-boxes-os_boxes_facetapi_vocabulary.navigation ul,
 .block-boxes-os_taxonomy_fbt.navigation ul {
     border-bottom: none;
     border-left: none;
     border-right: none;
     border-top: none;
 }
+.block-boxes-os_boxes_facetapi_vocabulary.navigation ul li,
 .block-boxes-os_taxonomy_fbt.navigation ul li {
     border-top: none;
 }
+.block-boxes-os_boxes_facetapi_vocabulary.navigation a,
 .block-boxes-os_taxonomy_fbt.navigation a {
     font-weight: bold;
 }

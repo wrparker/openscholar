@@ -1,15 +1,62 @@
 /**
  *
  */
-Drupal.wysiwyg.plugins.os_link = {
+Drupal.wysiwyg.plugins['os_link'] = {
   url: '',
+  iframeWindow: {},
+  getWindow: function () {
+    var aid = Drupal.wysiwyg.activeId;
+    if (this.iframeWindow[aid] == undefined) {
+      this.iframeWindow[aid] = document.querySelector('#'+aid+' + .cke iframe').contentWindow;
+    }
+
+    return this.iframeWindow[aid];
+  },
+  getSelection: function () {
+    var w = this.getWindow();
+    var selection = w.getSelection();
+    var current, text;
+
+    if (selection.type == "Caret" || selection.isCollapsed == true) {
+      current = selection.anchorNode;
+      while (current.nodeType != Node.ELEMENT_NODE) {
+        current = current.parentNode;
+      }
+      text = "";
+    }
+    else if (selection.type == "Range" || selection.isCollapsed == false) {
+      var range = document.createRange();
+      range.setStart(selection.anchorNode, selection.anchorOffset);
+      range.setEnd(selection.focusNode, selection.focusOffset);
+      current = range.commonAncestorContainer;
+      text = range.toString();
+    }
+    else {
+      return;
+    }
+
+    var output = {
+      content: text,
+      format: "html",
+      node: current
+    };
+    return output;
+  },
 
   /**
    * Determines if element belongs to this plugin or not
    * Returning true will cause the button to be 'down' when an element is selected
    */
   isNode: function (node) {
-    if (node == null || node == undefined) return false;
+    if (node == null || node == undefined) {
+      var selection = this.getSelection();
+      if (selection.node) {
+        node = selection.node;
+      }
+      else {
+        return false;
+      }
+    }
     while (node.nodeName != 'A' && node.nodeName != 'BODY') {
       node = node.parentNode;
     }
@@ -18,6 +65,10 @@ Drupal.wysiwyg.plugins.os_link = {
 
   invoke: function (selection, settings, editorId) {
     var self = this;
+    var info;
+    if (selection.node == null) {
+      selection = this.getSelection();
+    }
     if (this.isNode(selection.node)) {
       var link = jQuery(selection.node);
       if (link[0].nodeName != 'A') {
@@ -26,13 +77,22 @@ Drupal.wysiwyg.plugins.os_link = {
       if (link.length == 0) {
         link = jQuery(selection.node).parents('a');
       }
-      var info = this.parseAnchor(link[0]);
+      info = this.parseAnchor(link[0]);
       settings['global'].active = info.type;
       settings['global'].url = info.url;
     }
     else {
-      delete settings['global'].active;
-      delete settings['global'].url;
+      var selectedLink = jQuery.selectLink != null && typeof(jQuery.selectLink) == 'object';
+      if (selectedLink) {
+        info = this.parseAnchor(jQuery.selectLink[0]);
+        settings['global'].active = info.type;
+        settings['global'].url = info.url;
+      }
+      else {
+        delete settings['global'].active;
+        delete settings['global'].url;
+      }
+
     }
     Drupal.media.popups.mediaBrowserOld(function (insert) {
       self.insertLink();
@@ -62,6 +122,16 @@ Drupal.wysiwyg.plugins.os_link = {
     }
 
     Drupal.wysiwyg.instances[editorId].insert(html);
+    delete jQuery.selectLink;
+  },
+
+  tryRestoreFakeAnchor: function(editor, dom) {
+    CKEDITOR.plugins.original_link.tryRestoreFakeAnchor(editor, dom);
+  },
+
+  getSelectedLink: function(editor) {
+    // Calling the original function.
+    CKEDITOR.plugins.original_link.getSelectedLink(editor);
   },
 
   popupOnLoad: function (e, selection, editorId) {
@@ -76,15 +146,51 @@ Drupal.wysiwyg.plugins.os_link = {
       window = iframe.contentWindow,
       selected = '[Rich content. Click here to overwrite.]';
 
+    // The user selected a link and not double clicked on a link.
+    var selectedLink = jQuery.selectLink != null && typeof(jQuery.selectLink) == 'object';
+
     if (this.selectLink(selection.node) && selection.content == '') {
       selection.content = selection.node.innerHTML;
     }
 
-    if (selection.content.indexOf('<') != -1) {
-      $('.form-item-link-text input', doc).val(selected);
+    if (selectedLink) {
+      $('.form-item-external input', doc).val(jQuery.selectLink.attr('href'));
+    }
+
+    if (selection.node != null && selection.node.text != null) {
+      $('.form-item-link-text input', doc).val(selection.node.text);
     }
     else {
-      $('.form-item-link-text input', doc).val(selection.content);
+      if (selectedLink) {
+        $('.form-item-link-text input', doc).val(jQuery.selectLink.text());
+      }
+      else if(typeof(jQuery.selectLink) == 'string') {
+        $('.form-item-link-text input', doc).val(jQuery.selectLink);
+      }
+    }
+
+    // If the link is set to be opened in a new window, then the checkbox will be in checked state.
+    if (selection.node && selection.node.nodeType == Node.ELEMENT_NODE && (selection.node.getAttribute('target') == '_blank')) {
+      $('#edit-target-option', doc).prop('checked', 'checked');
+    }
+    else {
+      if (selectedLink && jQuery.selectLink.attr('target') == "_blank") {
+        $('#edit-target-option', doc).prop('checked', 'checked');
+      }
+    }
+
+    // If the link has a title attribute.
+    if (selection.node && selection.node.nodeType == Node.ELEMENT_NODE && selection.node.getAttribute('title') != '') {
+      $('#edit-link-title', doc).val(selection.node.getAttribute('title'));
+    }
+    else {
+      if (selectedLink) {
+        var title = jQuery.selectLink.attr('title');
+
+        if (title != null) {
+          $('#edit-link-title', doc).val(title);
+        }
+      }
     }
 
     $('.insert-buttons input[value="Insert"]', doc).click(function (e) {
@@ -102,6 +208,7 @@ Drupal.wysiwyg.plugins.os_link = {
         else if (text == '') {
           text = window.Drupal.settings.osWysiwygLinkResult;
         }
+
 
         self.insertLink(editorId, text, window.Drupal.settings.osWysiwygLinkResult, attrs);
         $(iframe).dialog('destroy');

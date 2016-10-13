@@ -101,10 +101,12 @@ function os_books_build_toc($node, $style = 'partial', $separate = FALSE) {
     if ($separate) {
       $top = current($menu_tree);
       $block['subject'] = theme('book_title_link', array('link' => $top['link']));
-      $block['content'] = render(menu_tree_output($top['below']));
+      $output = menu_tree_output($top['below']);
+      $block['content'] = render($output);
     }
     else {
-      $block['content'] = render(menu_tree_output($menu_tree));
+      $output = menu_tree_output($menu_tree);
+      $block['content'] = render($output);
     }
   }
 
@@ -401,5 +403,38 @@ function _os_books_find_menu_link_in_tree($tree, $link) {
       }
     }
   }
+  return FALSE;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function os_books_menu_alter(&$callbacks) {
+
+  if (!module_exists('vsite')) return;
+
+  $callbacks['book/export/%/%']['access callback'] = 'os_books_access_export';
+  $callbacks['book/export/%/%']['access arguments'] = array(3, 'access printer-friendly version');
+}
+
+/**
+ * Check that the book page you are trying to export is in the current site.
+ *
+ * @param $node
+ * @param $permission
+ */
+function os_books_access_export($node, $permission) {
+
+  $vsite = vsite_get_vsite();
+  if (!$vsite) {
+    return user_access($permission);
+  }
+
+  // Verify that the book page is in the current site.
+  $groups = og_get_entity_groups('node', $node);
+  if (empty($groups['node']) || in_array($vsite->id, $groups['node'])) {
+    return user_access($permission) && $vsite->access_feature('view', 'os_booklets');
+  }
+
   return FALSE;
 }

@@ -25,10 +25,10 @@ include_once 'os_mailchimp.features.inc';
 function os_mailchimp_menu() {
   $items ['admin/config/openscholar/os_mailchimp'] = array(
     'title' => t( 'MailChimp' ),
-  	'page callback' => 'drupal_get_form',
-  	'page arguments' => array('os_mailchimp_admin' ),
-  	'file' => 'os_mailchimp.admin.inc',
-  	'access arguments' => array('access administration pages' ),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os_mailchimp_admin' ),
+    'file' => 'os_mailchimp.admin.inc',
+    'access arguments' => array('access administration pages' ),
   );
   $items['os_mailchimp/%ctools_js/subscribe/%'] = array(
     'title' => t('Subscribe to mailing list'),
@@ -50,8 +50,8 @@ function os_mailchimp_menu() {
 function os_mailchimp_user_insert(&$edit, $account, $category) {
   $api = variable_get('os_mailchimp_api', FALSE);
   $list = variable_get('os_mailchimp_list', FALSE);
-  $fn = ($edit['field_first_name'][LANGUAGE_NONE]) ? $edit['field_first_name'][LANGUAGE_NONE][0]['value'] : '';
-  $ln = ($edit['field_last_name'][LANGUAGE_NONE])  ? $edit['field_last_name'][LANGUAGE_NONE][0]['value']  : '';
+  $fn = (isset($edit['field_first_name']) && $edit['field_first_name'][LANGUAGE_NONE]) ? $edit['field_first_name'][LANGUAGE_NONE][0]['value'] : '';
+  $ln = (isset($edit['field_last_name']) && $edit['field_last_name'][LANGUAGE_NONE])  ? $edit['field_last_name'][LANGUAGE_NONE][0]['value']  : '';
   $sub = os_mailchimp_subscribe($api, $list, $edit['mail'], $fn, $ln);
 }
 
@@ -167,14 +167,13 @@ function os_mailchimp_subscribe_page($js=TRUE, $delta) {
  * @function os_mailchimp_subscribe()
  * Subscribe a user to a mailing list.
  *
- * @param $api	mailchimp api key
- * @param $list	list to subscribe to
+ * @param $api  mailchimp api key
+ * @param $list  list to subscribe to
  * @param $email email address to subscribe
  * @param $fn  user's firstname (optional)
  * @param $ln  user's lastname (optional)
  */
 function os_mailchimp_subscribe($api, $listid, $email, $fn=NULL, $ln=NULL) {
-  include_once( drupal_get_path('module', 'os_mailchimp') . '/MCAPI.class.php');
   $MC = new MCAPI($api);
 
   //vsite isn't created yet so we can't get its purl.  but user isn't subbed yet, so when
@@ -199,7 +198,7 @@ function os_mailchimp_subscribe($api, $listid, $email, $fn=NULL, $ln=NULL) {
   if ($MC->listSubscribe($listid, $email, $merge_vars)) {
     return array('success'=>TRUE);
   } else {
-  	return array('success'=>FALSE,'msg'=>$MC->errorMessage);
+    return array('success'=>FALSE,'msg'=>$MC->errorMessage);
   }
 }
 
@@ -233,11 +232,11 @@ function os_mailchimp_form($state, $args=array()) {
   // Check for a logged in user.
   if ($user->uid != 0) {
     // Get their email.
-  	$mail = $user->mail;
-  	// At first, set their first name to their username
-  	// assuming we haven't yet added custom fields to the user account.
-  	$fn = $user->name;
-  	// Check if new fields have been added
+    $mail = $user->mail;
+    // At first, set their first name to their username
+    // assuming we haven't yet added custom fields to the user account.
+    $fn = $user->name;
+    // Check if new fields have been added
     $userLoad = user_load($user->uid);
 
     // Check for a first name
@@ -246,48 +245,48 @@ function os_mailchimp_form($state, $args=array()) {
     }
 
     // Check for a last name
-  	if(!empty($userLoad->field_last_name['und'][0]['value'])) {
+    if(!empty($userLoad->field_last_name['und'][0]['value'])) {
       $ln = $userLoad->field_last_name['und'][0]['value'];
-  	}
+    }
   }
 
   $form = array();
   $form['subscribe'] = array(
-   	'#type' => 'fieldset',
+     '#type' => 'fieldset',
     '#title' => check_plain($box->options['text']),
   );
 
   $form['subscribe']['email'] = array(
     '#type' =>  'textfield',
-  	'#title' => 'Email Address',
-  	'#weight' => -10,
-  	'#required' => TRUE,
-  	'#default_value' => $mail,
+    '#title' => 'Email Address',
+    '#weight' => -10,
+    '#required' => TRUE,
+    '#default_value' => $mail,
   );
 
   $form['subscribe']['fn'] = array(
     '#type' =>  'textfield',
-  	'#title' => 'First Name',
-  	'#weight' => -8,
-  	'#default_value' => $fn,
+    '#title' => 'First Name',
+    '#weight' => -8,
+    '#default_value' => $fn,
   );
 
   $form['subscribe']['ln'] = array(
     '#type' =>  'textfield',
-  	'#title' => 'Last Name',
-  	'#weight' => -6,
-  	'#default_value' => $ln,
+    '#title' => 'Last Name',
+    '#weight' => -6,
+    '#default_value' => $ln,
   );
 
   $form['subscribe']['submit'] = array(
     '#type' => 'submit',
-  	'#value' => 'Subscribe',
-  	'#weight' => -4,
+    '#value' => 'Subscribe',
+    '#weight' => -4,
   );
 
   $form['subscribe']['list'] = array(
     '#type' => 'value',
-	  '#value' => $box->options['list'],
+    '#value' => $box->options['list'],
   );
 
   return $form;
@@ -316,14 +315,14 @@ function os_mailchimp_form_submit($form, $form_state) {
   // Ctools no longer supports the ctools_ajax_render so in order to push the result message back to the user.
   // I'm using the commnd_display function...
   if (isset($form_state['use_ctools']) && $form_state['use_ctools']) {
-  	$commands = array();
-  	// dismiss the window
-  	$commands[] = ctools_modal_command_dismiss();
+    $commands = array();
+    // dismiss the window
+    $commands[] = ctools_modal_command_dismiss();
     // dismiss any current messages
     $commands[] = ajax_command_remove('#messages');
     // return the new message
-  	$commands[] = ajax_command_before('#columns', '<div id="messages" class="'.$status.'">' . $msg . '</div>');
-  	print ajax_render($commands);
+    $commands[] = ajax_command_before('#columns', '<div id="messages" class="'.$status.'">' . $msg . '</div>');
+    print ajax_render($commands);
 
     exit;
   } else {
@@ -366,8 +365,8 @@ function _os_mailchimp_get_lists($api) {
   $ret = array();
   if (($lists = $MC->lists()) != FALSE) {
     foreach ($lists['data'] as $delta => $list) {
-	    $ret[$list['id']] = $list['name'];
-	  }
+      $ret[$list['id']] = $list['name'];
+    }
   }
 
   return ($ret) ? $ret : FALSE;
@@ -391,7 +390,6 @@ function _os_mailchimp_get_list_info($api) {
  *   Mailchimp api connection or False
  */
 function _os_mailchimp_mailchimp_connect($api) {
-  include_once( drupal_get_path('module', 'os_mailchimp') . '/MCAPI.class.php');
   $MC = new MCAPI($api);
   return ($MC) ? $MC : FALSE;
 }

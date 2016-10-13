@@ -142,7 +142,6 @@ class os_sv_list extends os_boxes_default {
       ),
     );
 
-
     $form['content']['sort_by'] = array(
       '#type' => 'select',
       '#title' => 'Sorted By',
@@ -212,7 +211,7 @@ class os_sv_list extends os_boxes_default {
     $form['details']['number_of_items'] = array(
       '#title' => 'Number of items to display',
       '#type' => 'select',
-      '#options' => array_slice(range(0, 20), 1, NULL, TRUE),
+      '#options' => array_slice(range(0, 30), 1, NULL, TRUE),
       '#default_value' => $this->options['number_of_items'],
     );
 
@@ -265,6 +264,9 @@ class os_sv_list extends os_boxes_default {
           'pager_id' => $this->pager_element,
           'destination' => $_GET['q'],
         );
+        // Keep random query params on the page from impacting how the pager is rendered, by forcing it to our params only.
+        $query_pager = &drupal_static('pager_get_query_parameters');
+        $query_pager = $parameters;
 
         $use_pager = 'views_mini_pager';
 
@@ -273,6 +275,8 @@ class os_sv_list extends os_boxes_default {
           'element' => $this->pager_element,
           'quantity' => $this->options['number_of_items'],
         ));
+        // Reset back to defaults.
+        $query_pager = NULL;
 
         // If the pager is active, the more link needs its vars to know whether
         // or not to display.
@@ -333,7 +337,7 @@ class os_sv_list extends os_boxes_default {
       // If we have entities render them out, otherwise cache (null) as the content.
       if (!empty($entities)) {
 
-        if ($this->options['display'] == 'title') {
+        if (in_array($this->options['display'], array('title', 'os_files_title'))) {
           $render = $this->display_title($entities);
         }
         else {
@@ -439,6 +443,12 @@ class os_sv_list extends os_boxes_default {
     if (module_exists('vsite') && $space = spaces_get_space()) {
       $efq->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $space->id);
     }
+    // Drupal broke this and after two years has not fixed it.
+    // @see: https://www.drupal.org/node/1292930
+    // They made a new property, orderedResults, but still put the actual results in the old property, ordered_results
+    // So the documented variable is always empty and the undocumented variable is sometimes not present
+    // so I set the initial variable here.
+    $efq->ordered_results = array();
     return $efq;
   }
 

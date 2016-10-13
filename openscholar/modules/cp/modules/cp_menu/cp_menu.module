@@ -277,7 +277,7 @@ function cp_menu_form_node_form_alter(&$form, &$form_state, $form_id) {
 
   	// Set the title from the cache title and set the form title to the cache title if it exists.
     if (isset($cache['title'])) {
-  	  $title = check_plain($cache['title']);
+      $title = htmlspecialchars($cache['title'], ENT_NOQUOTES, 'UTF-8');
   	  // Check for the form title
   	  if(isset($form['title'])) {
     	    $form['title']['#default_value'] = $title;
@@ -290,7 +290,7 @@ function cp_menu_form_node_form_alter(&$form, &$form_state, $form_id) {
 	    $form['os_menu']['enabled']['#default_value'] = 1;
 	    $form['os_menu']['link']['parent']['#default_value'] = $menu;
 	    $form['os_menu']['link']['link_title']['#default_value'] = isset($title) ? $title : '' ;
-	    $form['os_menu']['link']['description']['#default_value'] = isset($cache['tooltip']) ? check_plain($cache['tooltip']) : '';
+	    $form['os_menu']['link']['description']['#default_value'] = isset($cache['tooltip']) ? htmlspecialchars($cache['tooltip'], ENT_NOQUOTES, 'UTF-8') : '';
     }
 
     if (isset($cache['new_window']) && $cache['new_window']) {
@@ -352,8 +352,24 @@ function cp_menu_node_validate($node, $form, &$form_state) {
   if ($os_menu = &$form_state['values']['os_menu']) {
     $os_menu['link_title'] = trim($os_menu['link_title']);
 
+    $vsite = vsite_get_vsite();
+    $item = array(
+      'menu_name' => $os_menu['parent'],
+      'title' => $os_menu['link_title'],
+      'url' => '',
+      'new_node_type' => 0,
+      'link_path' => '',
+      'tooltip' => $os_menu['description'],
+    );
+    if ($vsite) {
+      ctools_include('menu', 'os');
+      list(, $existing_menu) = _vsite_menu_prepare_menu_item($item, $vsite);
+    }
+
     if ($os_menu['enabled'] && strlen($os_menu['link_title']) == 0) {
       form_set_error('os_menu][link_title', t('Please provide a link title.'));
+    } elseif($vsite && $os_menu['enabled'] && strlen($os_menu['link_title']) > 0 && strlen(serialize($existing_menu)) > 65000) {
+      form_set_error('os_menu][link_title', t('You have reached the maximum number of items for this menu.'));
     }
   }
 }
@@ -488,8 +504,7 @@ function cp_menu_delete_link_form_submit($form, &$form_state) {
   if ($form_state['values']['op'] == t('Delete')) {
     os_menu_link_remove($link['menu_name'], $link['mlid']);
   }
-  overlay_close_dialog();
-  overlay_request_page_refresh();
+  overlay_close_dialog('cp/build/menu');
   $form_state['no_redirect'] = true;
 }
 

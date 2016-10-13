@@ -99,8 +99,8 @@ function _os_boxes_boxes_plugins() {
 
   // Publication Boxes
   $info['os_boxes_pub_ca'] = array(
-    'title' => 'Publications: Coauthors',
-    'description' => 'Displays a list of coauthors of your publications',
+    'title' => 'Publications: Authors',
+    'description' => 'Displays a list of authors of your publications',
     'tags' => array('Content'),
     'module dependencies' => array('os_publications'),
     'handler' => array(
@@ -218,6 +218,18 @@ function _os_boxes_boxes_plugins() {
       'class' => 'os_boxes_rand_widget',
       'file' => 'os_boxes_rand_widget.inc',
       'path' => $path .'/os_boxes_rand_widget',
+      'parent' => 'os_boxes_widget_collection',
+    ),
+  );
+
+  $info['os_boxes_widget_slider'] = array(
+    'title' => t('Widget Slider'),
+    'description' => t('Compile a list of widgets to display in a slider/slideshow format.'),
+    'tags' => array('Misc'),
+    'handler' => array(
+      'class' => 'os_boxes_widget_slider',
+      'file' => 'os_boxes_widget_slider.inc',
+      'path' => $path . '/os_boxes_widget_slider',
       'parent' => 'os_boxes_widget_collection',
     ),
   );

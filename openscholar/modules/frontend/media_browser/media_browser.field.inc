@@ -27,8 +27,12 @@ function media_browser_field_widget_info() {
 }
 
 function media_browser_file_load($files) {
+  // Setting icon directory for svg files
+  $icon_directory = variable_get('file_icon_directory', drupal_get_path('module', 'os_files') . '/icons');
   foreach ($files as $file) {
-    $file->icon = file_icon_url($file);
+    $file->icon = file_icon_url($file, $icon_directory);
+    // Replacing png icons with svg
+    $file->icon = str_replace('.png', '.svg', $file->icon);
   }
 }
 
@@ -96,12 +100,14 @@ function media_browser_field_widget_form(&$form, &$form_state, $field, $instance
         )
       ),
     ),
-    '#markup' => format_string('<div media-browser-field max-filesize="@filesize" types="@types" extensions="@extensions" upload-text="@upload-text" droppable-text="@droppable-text" files="[]"></div>', array(
+    '#markup' => format_string('<div media-browser-field max-filesize="@filesize" types="@types" extensions="@extensions" upload-text="@upload-text" droppable-text="@droppable-text" files="files" cardinality="@cardinality" @required></div>', array(
       '@filesize' => $max_size,
       '@types' => implode(',', array_filter($widget_settings['allowed_types'])),
       '@extensions' => isset($field_settings['file_extensions']) ? $field_settings['file_extensions'] : media_variable_get('file_extensions'),
       '@upload-text' => $widget_settings['upload_button_text'],
-      '@droppable-text' => $widget_settings['droppable_area_text']
+      '@droppable-text' => $widget_settings['droppable_area_text'],
+      '@cardinality' => $field['cardinality'],
+      //'@required' => $field['required']
     ))
   );
 
@@ -121,6 +127,7 @@ function media_browser_field_widget_media_draggable_file_form_alter(&$elements, 
 
   $elements['#attached']['library'][] = array('os_common', 'FileEditorModal');
   $elements['#attached']['library'][] = array('media', 'media_browser');
+  $elements['#attached']['library'][] = array('os_common', 'angular-ui-sortable');
   $elements['#attached']['js'][] = drupal_get_path('module', 'media_browser').'/misc/MediaBrowserField.js';
   $elements['#attached']['js'][] = array(
     'type' => 'setting',
@@ -137,12 +144,14 @@ function media_browser_field_widget_media_draggable_file_form_alter(&$elements, 
   $max_size = preg_replace('/^([\d]+)([^\d\s]).*/', '$1 $2B', $max_size);
 
   $elements['angularbrowser'] = array(
-    '#markup' => format_string('<div media-browser-field max-filesize="@filesize" types="@types" extensions="@extensions" upload-text="@upload-text" droppable-text="@droppable-text" files="[]"></div>', array(
+    '#markup' => format_string('<div media-browser-field max-filesize="@filesize" types="@types" extensions="@extensions" upload-text="@upload-text" droppable-text="@droppable-text" files="files" cardinality="@cardinality" @required></div>', array(
       '@filesize' => $max_size,
       '@types' => implode(',', array_filter($widget_settings['allowed_types'])),
       '@extensions' => !empty($field_settings['file_extensions']) ? $field_settings['file_extensions'] : media_variable_get('file_extensions'),
       '@upload-text' => $widget_settings['upload_button_text'],
-      '@droppable-text' => $widget_settings['droppable_area_text']
+      '@droppable-text' => $widget_settings['droppable_area_text'],
+      '@cardinality' => $elements['#field']['cardinality'],
+      '@required' => $elements['#instance']['required'] ? 'required' : '',
     ))
   );
 }

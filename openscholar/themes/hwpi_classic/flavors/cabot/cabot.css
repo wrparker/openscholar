@@ -12,10 +12,8 @@ body, #page-title,
 #content-column h2,
  #content-column h3,
   #content-column h4, 
-  #tinymce h2, 
-  #tinymce h3, 
-  #tinymce h4, 
   .block-boxes-os_taxonomy_fbt.navigation, 
+  .block-boxes-os_boxes_facetapi_vocabulary.navigation,
   #footer ul.menu li ul li a, 
   #layout_16_9_side .slide-copy h2, 
   #layout_3_1_overlay .slide-copy h2,
@@ -80,7 +78,10 @@ body, #page-title,
 
 .event-start-month {
 	color: #000;
-	padding: 12px 0 0;
+
+}
+.event-start .event-year {
+    padding: 8px 0 0;
 }
 
 #search-block-form .container-inline .form-item .form-text {

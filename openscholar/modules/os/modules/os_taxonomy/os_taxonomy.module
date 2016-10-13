@@ -473,7 +473,13 @@ function theme_os_taxonomy_vocabulary_item_list($variables) {
     }
 
     if (!empty($options['widget_type']) && $options['widget_type'] == 'select') {
-      $data[$tid] = '- ' . $term->name;
+      $data[$tid] = '' . $term->name;
+      // The attached number to the term name.
+      $number = NULL;
+      if ($options['show_count'] || !$options['show_empty_terms']) {
+        $number = os_taxonomy_count_term_tagged_items(array($term), $options['bundles']);
+      }
+      $data[$tid] .= $number ? ' (' . $number . ')' : '';
       $data += !empty($term->below) ? os_taxonomy_build_child_item($term->below, $term, $options) : array();
     }
     else {
@@ -650,7 +656,7 @@ function os_taxonomy_preprocess_page(&$page) {
   if (!empty($active['vid'])) {
 
     $ctxs = array_keys(context_active_contexts());
-    $section = array_diff($ctxs, array('os_taxonomy-term-' . $active['vid']));
+    $section = isset($active['tid']) ? array_diff($ctxs, array('os_taxonomy-term-' . $active['tid'])) : $ctxs;
 
     $section_links['section-header'] = array(
       'title' => t('This Vocabulary'),
@@ -936,11 +942,13 @@ function os_taxonomy_build_child_item($items, $parent, $options) {
     }
 
     if ($options['widget_type'] == 'select') {
-      $hierarchy = '-';
-      for ($i = 0; $i <= $item->depth; $i++) {
-        $hierarchy .= '-';
+      $hierarchy = '';
+      for ($i = 0; $i < $item->depth; $i++) {
+        $hierarchy .= '&nbsp;&nbsp;&nbsp;&nbsp;';
       }
-      $content[$item->tid] = $hierarchy . ' ' . $item->name;
+      $content[$item->tid] = $hierarchy . $item->name;
+      $content[$item->tid] .= $number ? ' (' . $number . ')' : '';
+
       if (!empty($item->below)) {
         $content += os_taxonomy_build_child_item($item->below, $item, $options);
       }
@@ -1261,7 +1269,7 @@ function os_taxonomy_count_attached_nodes_query_object($tid, $node_bundles = arr
  *
  * @return SelectQuery
  */
-function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array()) {
+function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array(), $list_all = FALSE) {
   $query = db_select('field_data_og_vocabulary', 'ogv');
   $query->condition('og_vocabulary_target_id', $tid, is_array($tid)?'IN':"=")
     ->distinct()
@@ -1287,8 +1295,8 @@ function os_taxonomy_count_attached_entities_query_object($tid, $bundles = array
     $query->condition($node_published);
   }
 
-  // In case the bundle is of the type "event", filter by the type of the event.
-  if (!empty($bundles) && is_array($bundles) && strpos(reset($bundles), 'event') !== FALSE && count($bundles) == 1) {
+  // In case the bundle is of the type "event" and not "All post" type, filter by the type of the event.
+  if (!empty($bundles) && is_array($bundles) && strpos(reset($bundles), 'event') !== FALSE && count($bundles) == 1 && $list_all == FALSE) {
     $query->leftJoin('field_data_field_date', 'fd', '(ogv.entity_id = fd.entity_id)');
     $event_type = reset($bundles);
 
@@ -1373,7 +1381,9 @@ function os_taxonomy_count_attached_entities($tid, $bundles = array()) {
  *    Array of tagged node IDs.
  */
 function os_taxonomy_list_attached_entities($tid, $bundles = array(), $range = NULL, $offset = NULL) {
-  $query = os_taxonomy_count_attached_entities_query_object($tid, $bundles);
+  // Showing all entities
+  $list_all = TRUE;
+  $query = os_taxonomy_count_attached_entities_query_object($tid, $bundles, $list_all);
 
   // Order by weight only if "nodeorder" is on and order has been set.
   if (module_exists('nodeorder') && _os_taxonomy_noderoder_exists($tid)) {
@@ -1773,6 +1783,8 @@ function os_taxonomy_taxonomy_vocabulary_update($vocabulary) {
       path_save($path);
     }
   }
+  // Clearing cache bin to render updated vocabulary data in search facets.
+  cache_clear_all('entity_info', 'cache', TRUE);
 }
 
 /**
@@ -1914,6 +1926,39 @@ function os_taxonomy_taxonomy_term_presave($term){
  * When creating a new vocabulary attach the right fields.
  */
 function os_taxonomy_field_attach_create_bundle($entity_type, $bundle) {
+
+  if ($entity_type == 'node') {
+    // Get the instance details for a entity_type
+    $instance = field_info_instance($entity_type, 'og_vocabulary', $bundle);
+    // Checking whether og_vocab is set in the teaser view
+    if (is_array($instance) && $instance['display']['teaser']['type'] != 'og_vocab') {
+      $instance['display']['teaser'] = Array ('label' => 'hidden',
+                                             'type' => 'og_vocab',
+                                             'weight' => 10,
+                                             'settings' => Array ('concatenate' => 1),
+                                             'module' => 'vsite_vocab',
+                                             );
+    // Display the teaser view of og_vocabulary like the default view
+      field_update_instance($instance);
+    }
+    // Added the same for profile slide_teaser and no_image_teaser
+    if($bundle == 'person') {
+      $profile_teasers = array('slide_teaser', 'no_image_teaser');
+      foreach ($profile_teasers as $profile_teaser) {
+        $instance = field_info_instance($entity_type, 'og_vocabulary', $bundle);
+        // Checking whether og_vocab is set in the teaser view
+        if (is_array($instance) && $instance['display'][$profile_teaser]['type'] != 'og_vocab') {
+          $instance['display'][$profile_teaser] = Array ('label' => 'hidden',
+                                                     'type' => 'og_vocab',
+                                                     'weight' => 10,
+                                                     'settings' => Array ('concatenate' => 1),
+                                                     'module' => 'vsite_vocab',
+                                                     );
+          field_update_instance($instance);
+        }
+      }
+    }
+  }
   if ($entity_type != 'taxonomy_term') {
     return;
   }
@@ -2055,4 +2100,93 @@ function os_taxonomy_og_fields_info() {
   );
 
   return $items;
+}
+
+/**
+ * Implements hook_cp_settings().
+ */
+function os_taxonomy_cp_settings() {
+  $form = array();
+  // Get active content types
+  $active_content_types = os_get_bundles(array(1,2));
+  $content_type_term_not_required = array('page' => 'Page',
+                                          'software_release' => 'Software Release',
+                                          'slideshow_slide' => 'Slideshow Image',
+                                          'class_material' => 'Class Material',
+                                          'feed_importer' => 'Feed importer',
+                                          );
+  $active_content_types = array_diff($active_content_types, $content_type_term_not_required);
+  foreach($active_content_types as $content_types_key => $content_types_val) {
+    ${'display_term_under_content_' . $content_types_key} = variable_get('os_taxonomy_display_term_under_content_' . $content_types_key, 0);
+    ${'default_value_' . $content_types_key} = isset(${'display_term_under_content_' . $content_types_key}) ? ${'display_term_under_content_' . $content_types_key} : 0;
+  }
+  $display_term_under_content = variable_get('os_taxonomy_display_term_under_content', 1);
+  $default_value = isset($display_term_under_content) ? $display_term_under_content : 1;
+
+  $form['os_taxonomy']['group'] = array(
+      '#id' => 'os_taxonomy',
+      '#title' => t('Taxonomy'),
+      '#weight' => 50,
+  );
+  $form['os_taxonomy']['form']['os_taxonomy_display_term_under_content'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Display terms under content on a page'),
+      '#default_value' => $default_value,
+  );
+
+  foreach($active_content_types as $content_types_key => $content_types_val) {
+      if($content_types_val === reset($active_content_types)) {
+        $active_content_types_prefix = '<p>Display see also terms under each item in list pages of content</p>';
+      } else {
+        $active_content_types_prefix = '';
+      }
+      $form['os_taxonomy']['form']['os_taxonomy_display_term_under_content_' . $content_types_key] = array(
+      '#prefix' => $active_content_types_prefix,
+      '#type' => 'checkbox',
+      '#title' => t($content_types_val),
+      '#default_value' => ${'default_value_' . $content_types_key},
+    );
+  }
+  $form['os_taxonomy']['submit'][] = 'os_taxonomy_cp_settings_node_submit';
+
+  return $form;
+}
+
+/**
+ * Submit callback for cp/settings form.
+ *
+ * Clears boxes cache if 'Display terms under content' checkbox settings is changed.
+ *
+ * @see os_taxonomy_cp_settings()
+ */
+function os_taxonomy_cp_settings_node_submit($form, &$form_state) {
+  // Get the current vsite.
+  $vsite = vsite_get_vsite();
+  $current_term_settings = variable_get('os_taxonomy_display_term_under_content', 1);
+  // Clearing os boxes cache if os_taxonomy_display_term_under_content field settings is changed.
+  if (isset($form_state['values']['os_taxonomy_display_term_under_content']) && $vsite && ($current_term_settings != $form_state['values']['os_taxonomy_display_term_under_content'])) {
+    cache_clear_all('os_boxes_cache:' . $vsite->id, 'cache_os_boxes', TRUE);
+  }
+  // Clearing os boxes cache if any of os_taxonomy_display_term_under_content content type field settings is changed.
+  $active_content_types = os_get_bundles(array(1,2));
+  foreach($active_content_types as $content_types_key => $content_types_val) {
+    $current_term_settings = variable_get('os_taxonomy_display_term_under_content_' . $content_types_key, 1);
+    if (isset($form_state['values']['os_taxonomy_display_term_under_content_' . $content_types_key]) && $vsite && ($current_term_settings != $form_state['values']['os_taxonomy_display_term_under_content_' . $content_types_key])) {
+      cache_clear_all('os_boxes_cache:' . $vsite->id, 'cache_os_boxes', TRUE);
+      break;
+    }
+  }
+}
+
+/**
+ * Implements hook_node_view_alter().
+ */
+function os_taxonomy_node_view_alter(&$build) {
+  if (!variable_get('os_taxonomy_display_term_under_content', 1) && $build['#view_mode'] == 'full') {
+    unset($build['og_vocabulary']);
+  }
+  // Unset og_vocabulary for unchecked bundles from cp/settings page for teaser view
+  if (!variable_get('os_taxonomy_display_term_under_content_' . $build['#node']->type, 0) && $build['#view_mode'] == 'teaser') {
+    unset($build['og_vocabulary']);
+  }
 }

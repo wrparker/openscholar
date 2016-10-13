@@ -82,6 +82,9 @@ class sv_list_node_event extends sv_list_plugin  {
     $events_to_show = $options['show'];
     switch ($events_to_show) {
       case 'all_events':
+
+        // force the date field to be added to the query
+        $efq->fieldDeltaCondition('field_date', NULL, 'IS NOT NULL');
         break;
       case 'past_events':
         // Show past events. For all sorts except for
@@ -113,7 +116,6 @@ class sv_list_node_event extends sv_list_plugin  {
   public function sort_event_asc($options, EntityFieldQuery $efq) {
     $efq->addTag('sv_list_events');
     $efq->addMetaData('sort_event', 'ASC');
-    $efq->fieldOrderBy('field_date', 'value', 'ASC');
 
     if ($options['show'] != 'upcoming_events') {
       $this->query = $efq;
@@ -137,6 +139,7 @@ class sv_list_node_event extends sv_list_plugin  {
         $efq->fieldCondition('field_date', 'value', gmdate('Y-m-d H:i:s', strtotime($str)), '>=', 'sv_list_events');
         $efq->fieldCondition('field_date', 'value2', gmdate('Y-m-d H:i:s'), '>=', 'sv_list_events');
     }
+    $efq->fieldOrderBy('field_date', 'value', 'ASC');
 
     $this->query = $efq;
   }
@@ -211,6 +214,10 @@ class sv_list_node_event extends sv_list_plugin  {
     // use this instead of a foreach because this query can have more results
     // than expected.
     for ($i=0; $i<$options['number_of_items']; $i++) {
+      if (empty($raw[$i])) {
+        continue;
+      }
+
       if ($row = $raw[$i]) {
         if (empty($entities[$row->entity_id])) {
           continue;

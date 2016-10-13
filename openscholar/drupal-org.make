@@ -3,9 +3,6 @@
 core = 7.x
 api = 2
 
-projects[admin_menu][subdir] = "contrib"
-projects[admin_menu][version] = 3.0-rc1
-
 projects[advagg][subdir] = "contrib"
 projects[advagg][version] = 2.6
 
@@ -76,7 +73,8 @@ projects[disqus][version] = 1.9
 projects[disqus][patch][] = "http://drupal.org/files/comment_sources-disqus-2120703-1.patch"
 
 projects[dragndrop_upload][subdir] = "contrib"
-projects[dragndrop_upload][version] = 1.0-alpha2
+projects[dragndrop_upload][version] = 1.x-dev
+projects[dragndrop_upload][revision] = f356772
 
 projects[dyntextfield][subdir] = "contrib"
 projects[dyntextfield][type] = module
@@ -85,12 +83,13 @@ projects[dyntextfield][download][tag] = 1.0
 projects[dyntextfield][download][url] = "git://github.com/amitaibu/dyntextfield.git"
 
 projects[entity][subdir] = "contrib"
-projects[entity][branch] = 7.x-1.x
+projects[entity][version] = 1.7
 projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
 projects[entity][patch][] = https://www.drupal.org/files/issues/2086225-entity-access-check-18.patch
 
 projects[entitycache][subdir] = "contrib"
-projects[entitycache][version] = 1.1
+projects[entitycache][version] = 1.5
+projects[entitycache][patch][] = https://www.drupal.org/files/issues/2516094-1-entitycache_fix_arry_flip.patch
 
 projects[entityreference][subdir] = "contrib"
 projects[entityreference][version] = 1.1
@@ -167,7 +166,9 @@ projects[html_title][subdir] = "contrib"
 projects[html_title][version] = 1.1
 
 projects[imageapi_optimize][subdir] = "contrib"
-projects[imageapi_optimize][version] = 1.0
+projects[imageapi_optimize][download][type] = git
+projects[imageapi_optimize][download][branch] = 7.x-1.x
+projects[imageapi_optimize][download][revision] = 234f208
 
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0
@@ -198,6 +199,7 @@ projects[libraries][patch][] = "http://drupal.org/files/0001-Fix-1938638-by-core
 ; projects[link][patch][] = "http://drupal.org/files/link-MigrateLinkFieldHandler-1010850-54.patch"
 projects[link][patch][] = "http://drupal.org/files/link-MigrateLinkFieldHandler-1010850-61.patch"
 projects[link][patch][] = "http://drupal.org/files/link-7.x-1.x-required_fields-1368616-11.patch"
+projects[link][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/831d1d024dfecafbfeeb410ac8c841f27175d912/patches/link-updated-tld-list-7947.patch"
 projects[link][subdir] = "contrib"
 projects[link][download][branch] = 7.x-1.x
 projects[link][download][type] = git
@@ -229,7 +231,7 @@ projects[media_gallery][patch][] = "https://raw.githubusercontent.com/openschola
 projects[media_gallery][patch][] = "https://www.drupal.org/files/issues/2585509-media_gallery-lost_files.patch"
 
 projects[message][subdir] = "contrib"
-projects[message][version] = 1.8
+projects[message][version] = 1.12
 
 projects[metatag][subdir] = "contrib"
 projects[metatag][version] = 1.0-beta9
@@ -253,10 +255,10 @@ projects[mollom][version] = 2.14
 projects[multiform][subdir] = "contrib"
 projects[multiform][version] = 1.0
 
-projects[nice_menus][patch][] = "http://drupal.org/files/translate-menu-item-1050352-17-v2.1.patch"
-projects[nice_menus][patch][] = "https://raw.github.com/openscholar/openscholar/b0cb4b6b2ee8d0e162c0a35527ca8d4dcbfc490b/patches/nice_menus.fatal_localized_options.patch"
 projects[nice_menus][subdir] = "contrib"
-projects[nice_menus][version] = 2.1
+projects[nice_menus][version] = 2.5
+; todo change the address of the patch once the PR is merged,
+projects[nice_menus][patch][] = "https://gist.githubusercontent.com/RoySegall/6118a03520c81ae4e012/raw/733e63036dd6d6ad4706f90569a6dc075f5ca0a3/nice_menus.fatal_localized_options.patch"
 
 projects[nodeformcols][subdir] = "contrib"
 projects[nodeformcols][version] = 1.0
@@ -275,6 +277,8 @@ projects[oembed][version] = 1.0-rc2
 projects[oembed][patch][] = "http://cgit.drupalcode.org/oembed/patch/?id=a27adf7c1afe763ee5f386f30f0aea73a6097ff1"
 projects[oembed][patch][] = "http://drupal.org/files/issues/oembed.2134415.wysiwyg_dimensions.patch"
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/514d6c636dc69ea76ea307a874c7cd9c3e0fb045/patches/oembed.alt_tags_no_escape.patch"
+projects[oembed][patch][] = "http://drupal.org/files/issues/split-up-regex-2739023-1.patch"
+projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/61b4675841580356481463f4780627bab619f197/patches/oembed.8762.uri_fragments.patch"
 
 projects[og][subdir] = "contrib"
 projects[og][version] = 2.6
@@ -319,7 +323,7 @@ projects[pinserver][subdir] = "contrib"
 projects[pinserver][type] = module
 projects[pinserver][download][type] = git
 projects[pinserver][download][url] = "git://github.com/openscholar/pinserver.git"
-projects[pinserver][download][tag] = 7.x-3.4.7
+projects[pinserver][download][tag] = 7.x-3.4.19
 
 projects[purl][subdir] = "contrib"
 ;: projects[purl][version] = 1.0-beta1+11-dev
@@ -358,6 +362,7 @@ projects[robotstxt][patch][] = "http://drupal.org/files/issues/send_cache_header
 projects[restws][subdir] = "contrib"
 projects[restws][version] = "2.0-alpha3"
 projects[restws][patch][] = "http://drupal.org/files/1806142-restws-property-exception.patch"
+projects[restws][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/6c679219a3259d682abb87e9b9f0f1834bc08ee9/patches/restws.security_fix.patch"
 
 projects[shorten][subdir] = "contrib"
 projects[shorten][version] = 1.2
@@ -404,7 +409,7 @@ projects[transliteration][version] = 3.1
 
 projects[twitter_pull][subdir] = "contrib"
 projects[twitter_pull][version] = 1.0-rc4
-projects[twitter_pull][patch][] = 'http://drupal.org/files/twitter_pull-twitter_api_php-1781024-40.patch'
+projects[twitter_pull][patch][] = "https://raw.github.com/openscholar/openscholar/cb4bfa4c382c3ef6d2c8a48c10d55695792c37d5/patches/twitter_pull-8577-retweet_option.patch"
 
 projects[views][subdir] = "contrib"
 projects[views][version] = 3.8
@@ -434,14 +439,20 @@ projects[web_widgets][subdir] = "contrib"
 projects[web_widgets][version] = 1.0-alpha2
 
 projects[wysiwyg][subdir] = "contrib"
-projects[wysiwyg][version] = 2.2
-projects[wysiwyg][patch][] = "http://drupal.org/files/wysiwyg-remove-breaks-1964806-2.patch"
+projects[wysiwyg][version] = "2.x-dev"
+projects[wysiwyg][revision] = "9490393"
 projects[wysiwyg][patch][] = "http://drupal.org/files/wysiwyg-table-format.patch"
 
 projects[wysiwyg_filter][subdir] = "contrib"
-projects[wysiwyg_filter][version] = 1.6-rc2
+projects[wysiwyg_filter][version] = 1.x-dev
+projects[wysiwyg_filter][revision] = "4848d306a2f7526f7eeaf22edb9268d3c96654fe"
+projects[wysiwyg_filter][patch][] = "https://www.drupal.org/files/issues/wysiwyg-filter-border-radius-support-2692163-1.patch"
 
 ; Libraries.
+libraries[jquery.bgiframe][type] = "libraries"
+libraries[jquery.bgiframe][download][type] = "git"
+libraries[jquery.bgiframe][download][url] = "https://github.com/brandonaaron/bgiframe.git"
+
 libraries[clippy][type] = "libraries"
 libraries[clippy][download][type] = "file"
 libraries[clippy][download][url] = "https://github.com/mojombo/clippy/archive/master.zip"
@@ -460,9 +471,13 @@ libraries[tinymce][type] = "libraries"
 libraries[tinymce][download][type] = "file"
 libraries[tinymce][download][url] = "http://github.com/downloads/tinymce/tinymce/tinymce_3.5.8.zip"
 
+libraries[ckeditor][type] = "libraries"
+libraries[ckeditor][download][type] = "get"
+libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.5.10/ckeditor_4.5.10_standard.zip"
+
 libraries[spyc][type] = "libraries"
 libraries[spyc][download][type] = "file"
-libraries[spyc][download][url] = "http://spyc.googlecode.com/files/spyc-0.5.zip"
+libraries[spyc][download][url] = "https://github.com/mustangostang/spyc/archive/0.5.1.zip"
 
 libraries[respondjs][type] = "libraries"
 libraries[respondjs][download][type] = "file"
@@ -476,7 +491,7 @@ libraries[responsiveslides][patch][] = "https://gist.githubusercontent.com/RoySe
 
 libraries[flexslider][type] = "libraries"
 libraries[flexslider][download][type] = "file"
-libraries[flexslider][download][url] = "https://github.com/woothemes/FlexSlider/archive/flexslider1.zip"
+libraries[flexslider][download][url] = "https://github.com/downloads/woothemes/FlexSlider/FlexSlider-2.0.zip"
 
 libraries[select2][type] = "libraries"
 libraries[select2][download][type] = "file"
@@ -484,7 +499,7 @@ libraries[select2][download][url] = "https://github.com/ivaynberg/select2/archiv
 
 libraries[twitter-api-php][type] = "libraries"
 libraries[twitter-api-php][download][type] = "file"
-libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/1.0.3.zip"
+libraries[twitter-api-php][download][url] = "https://github.com/J7mbo/twitter-api-php/archive/1.0.5.zip"
 
 libraries[autopager][type] = "libraries"
 libraries[autopager][download][type] = "file"
@@ -497,6 +512,61 @@ libraries[html5shiv][download][url] = "http://raw.github.com/aFarkas/html5shiv/m
 libraries[hopscotch][type] = "libraries"
 libraries[hopscotch][download][type] = "file"
 libraries[hopscotch][download][url] = "https://github.com/linkedin/hopscotch/archive/b41ab659507175264ab6347d0032f03e42b961d1.zip"
+
+libraries[jquery.bgiframe][type] = "libraries"
+libraries[jquery.bgiframe][download][type] = "git"
+libraries[jquery.bgiframe][download][url] = "https://github.com/brandonaaron/bgiframe.git"
+
+; CKEDITOR plugins
+libraries[colorbutton][type] = "libraries"
+libraries[colorbutton][subdir] = "ckeditor/plugins"
+libraries[colorbutton][download][type] = "file"
+libraries[colorbutton][download][url] = "http://download.ckeditor.com/colorbutton/releases/colorbutton_4.5.8.zip"
+
+libraries[panelbutton][type] = "libraries"
+libraries[panelbutton][subdir] = "ckeditor/plugins"
+libraries[panelbutton][download][type] = "file"
+libraries[panelbutton][download][url] = "http://download.ckeditor.com/panelbutton/releases/panelbutton_4.5.8.zip"
+
+libraries[mathjax][type] = "libraries"
+libraries[mathjax][subdir] = "ckeditor/plugins"
+libraries[mathjax][download][type] = "git"
+libraries[mathjax][download][url] = "https://github.com/RoySegall/mathjax.git"
+
+libraries[justify][type] = "libraries"
+libraries[justify][subdir] = "ckeditor/plugins"
+libraries[justify][download][type] = "file"
+libraries[justify][download][url] = "http://download.ckeditor.com/justify/releases/justify_4.5.8.zip"
+
+libraries[font][type] = "libraries"
+libraries[font][subdir] = "ckeditor/plugins"
+libraries[font][download][type] = "file"
+libraries[font][download][url] = "http://download.ckeditor.com/font/releases/font_4.5.8.zip"
+
+libraries[lineutils][type] = "libraries"
+libraries[lineutils][subdir] = "ckeditor/plugins"
+libraries[lineutils][download][type] = "file"
+libraries[lineutils][download][url] = "http://download.ckeditor.com/lineutils/releases/lineutils_4.5.9.zip"
+
+libraries[widget][type] = "libraries"
+libraries[widget][subdir] = "ckeditor/plugins"
+libraries[widget][download][type] = "file"
+libraries[widget][download][url] = "http://download.ckeditor.com/widget/releases/widget_4.5.9.zip"
+
+libraries[colordialog][type] = "libraries"
+libraries[colordialog][subdir] = "ckeditor/plugins"
+libraries[colordialog][download][type] = "file"
+libraries[colordialog][download][url] = "http://download.ckeditor.com/colordialog/releases/colordialog_4.5.10.zip"
+
+libraries[indentblock][type] = "libraries"
+libraries[indentblock][subdir] = "ckeditor/plugins"
+libraries[indentblock][download][type] = "file"
+libraries[indentblock][download][url] = "http://download.ckeditor.com/indentblock/releases/indentblock_4.5.10.zip"
+
+libraries[dragresize][type] = "libraries"
+libraries[dragresize][subdir] = "ckeditor/plugins"
+libraries[dragresize][download][type] = "git"
+libraries[dragresize][download][url] = "https://github.com/openscholar/ck-dragresize.git"
 
 ; Angular js libraries.
 libraries[angular_select2][type] = "libraries"

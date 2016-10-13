@@ -374,6 +374,19 @@ function os_pages_node_view_alter(&$build, $type) {
  */
 function os_pages_translated_menu_link_alter(&$link, $map) {
 
+  // Anons can never see unpublished page. Bail out early
+  if (user_is_anonymous()) {
+    return;
+  }
+
+  // Non-site members can never see unpublished page.
+  // User 1 should be able to though
+  if ($vsite = vsite_get_vsite()) {
+    if ($GLOBALS['user']->uid != 1 && !og_is_member('node', $vsite->group->id)) {
+      return;
+    }
+  }
+
   if ($link['router_path'] == 'node/%') {
     if (!$link['access']) {
       // The $map saves the pieces of the path as strings, while elements in
@@ -428,12 +441,13 @@ function _os_pages_get_link_children($link, $can_access = false) {
       'type',
       'description',
     ));
-    $query->condition('plid', $mlid)
-          ->condition('hidden', 0);
+    $query->condition('plid', $mlid);
 
     $links[$mlid] = array();
     foreach ($query->execute() as $item) {
-      $links[$mlid][] = $item;
+      if (!$item['hidden']) {
+        $links[$mlid][] = $item;
+      }
     }
   }
 
@@ -877,9 +891,9 @@ function os_pages_os_add_new_links_alter(&$links) {
   if (node_is_page($node) && $node->type == 'page') {
     if ((user_access('add content to books') || user_access('administer book outlines')) && node_access('create', 'page') && (!isset($node->book['depth']) || $node->book['depth'] < MENU_MAX_DEPTH)) {
       $links['book_add_child'] = array(
-        'title' => t('Page'),
+        'title' => t('Subpage') ,
         'href' => 'node/add/page',
-        'query' => isset($node->book['mlid']) ? array('parent' => $node->book['mlid'], 'destination' => 'node/' . $node->nid) : array('parent_node' => $node->nid, 'destination' => 'node/' . $node->nid),
+        'query' => isset($node->book['mlid']) ? array('parent' => $node->book['mlid']) : array('parent_node' => $node->nid, 'destination' => 'node/' . $node->nid),
       );
       $links['book_move_child'] = array(
         'title' => t('Existing Page to Section'),
@@ -909,7 +923,10 @@ function os_pages_add_subpage_form($form, &$form_state, $node) {
     '#title' =>  t('Select a Page'),
     '#maxlength' => 180,
     '#autocomplete_path' => 'os/pages/autocomplete/'.$node->nid,
-    '#element_validate' => array('vsite_node_autocomplete_validate'),
+    '#element_validate' => array(
+      'vsite_node_autocomplete_validate',
+      'os_pages_add_subpage_element_validate'
+    ),
     '#description' => t('Start typing the title of an existing page. If this page is part of a section already, it and
     all of its children pages will be moved to this section. '),
   );
@@ -936,6 +953,41 @@ function os_pages_add_subpage_form($form, &$form_state, $node) {
 }
 
 /**
+ * Makes sure the given node is a page and in our site.
+ */
+function os_pages_add_subpage_element_validate($element, &$form_state) {
+  // If Provided autocomplete text is not resolved to a valid node id, then early returning.
+  if (!isset($form_state['vsite_autocomplete_nid']) || !is_numeric($form_state['vsite_autocomplete_nid'])) {
+    return;
+  }
+  $nid = $form_state['vsite_autocomplete_nid'];
+  $node = node_load($nid);
+  // If provided nid is not returning a valid drupal node object, then exiting from validate handler, exeption will be handled 
+  // by vsite_node_autocomplete_validate callback
+  if (!$node) {
+    return;
+  }
+
+  if ($node->type != 'page') {
+    form_error($element, t('Selected post is not a page.'));
+  }
+
+  if ($vsite = vsite_get_vsite()) {
+    $sites = field_get_items('node', $node, OG_AUDIENCE_FIELD);
+    $pass = false;
+    foreach ($sites as $delta => $value) {
+      if ($vsite->og->nid == $value['target_id']) {
+        $pass = true;
+      }
+    }
+
+    if (!$pass) {
+      form_error($element, t('Selected post is not a part of this site.'));
+    }
+  }
+}
+
+/**
  * Adds the selected page to the given node as a child
  * Turns the given node into a section, if it isn't already
  * If the selected page is already in a section, moves it to its new parent
@@ -948,7 +1000,7 @@ function os_pages_add_subpage_submit($form, &$form_state) {
   os_pages_make_subpage($node, $parent->nid);
   node_save($node);
 
-  $form_state['redirect'] = 'node/'.$parent->nid;
+  $form_state['redirect'] = 'node/' . $node->nid;
 }
 
 /**

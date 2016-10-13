@@ -1,5 +1,7 @@
 <?php
 
+use Behat\Behat\Event\StepEvent;
+use Behat\Mink\Driver\Selenium2Driver;
 use Drupal\DrupalExtension\Context\DrupalContext;
 use Behat\Behat\Context\Step\Given;
 use Behat\Gherkin\Node\TableNode;
@@ -9,9 +11,22 @@ use Behat\Behat\Context\Step;
 require 'vendor/autoload.php';
 require_once 'RestfulTrait.php';
 
+// prevent behat from failing on PHP notification or warning
+define("BEHAT_ERROR_REPORTING", E_ALL ^ E_NOTICE ^ E_WARNING);
+
 class FeatureContext extends DrupalContext {
 
   use RestfulTrait;
+
+  public function beforeScenario($event) {
+    // Set up the browser width.
+
+    if ($this->getSession() instanceof Selenium2Driver) {
+      $this->getSession()->resizeWindow(1440, 1200, 'current');
+    }
+
+    parent::beforeScenario($event);
+  }
 
   /**
    * Variable for storing the random string we used in the text.
@@ -115,6 +130,40 @@ class FeatureContext extends DrupalContext {
     $element->fillField('Password', $password);
     $submit = $element->findButton('Log in');
     $submit->click();
+  }
+
+  /**
+   * @Given /^I am logging in as a user who "(can[^"]*)" "([^"]*)"$/
+   */
+  public function iAmLoggingInAsAUserWho($can, $permission) {
+    $can_flag = ($can == "can") ? true : false;
+
+    if ($this->loggedIn() && $can_flag && $this->assertLoggedInWithPermissions($permission)) {
+      return true;
+    }
+    else {
+      if ($can_flag) {
+        $operator = '=';
+      }
+      else {
+        $operator = '<>';
+      }
+      $query = db_select('og_users_roles', 'ogur');
+      $query->addField('u', 'uid');
+      $query->innerJoin('users', 'u', 'u.uid = ogur.uid and u.uid <> 1 and name <> :empty', array(':empty' => "''"));
+      $query->innerJoin('og_role_permission', 'ogrp', 'ogrp.rid = ogur.rid and permission ' . $operator . ' :permission', array(':permission' => $permission));
+      $query->innerJoin('og_role', 'ogr', 'ogur.rid = ogr.rid');
+      $uid = $query->range(0,1)->execute()->fetchField();
+
+      if($uid && $user = user_load($uid)) {
+        new Step\When('I am logging in as "' . $user->name . '"');
+      }
+      else {
+        if (!$this->assertAuthenticatedByRole("os report admin")) {
+          throw new Exception("Unable to log in as a user who $can $permission.");
+        }
+      }
+    }
   }
 
   /**
@@ -234,8 +283,27 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldPrintPage() {
     $element = $this->getSession()->getPage();
-    print_r($element->getContent());
+    $url = $this->createGist($element->getContent());
+    print_r('You asked to see the page content. Here is a gist contain the html: ' . $url . "\n");
   }
+
+  /**
+   * Creating public gist.
+   *
+   * @param array $file
+   *   List of files and the content.
+   */
+  public function createGist($file) {
+    $request = $this->invokeRestRequest('post', 'https://api.github.com/gists', [], [
+      'description' => 'http log',
+      'public' => TRUE,
+      'files' => ['file.html' => ['content' => $file]]]
+    );
+    $json = $request->json();
+
+    return $json['files']['file.html']['raw_url'];
+  }
+
   /**
    * @Then /^I should print page to "([^"]*)"$/
    */
@@ -786,8 +854,8 @@ class FeatureContext extends DrupalContext {
     // Hashing table, and define variables for later.
     $hash = $table->getRows();
 
-    if (isset($json->messages)) {
-      foreach ($json->messages as $message) {
+    if (isset($json->data)) {
+      foreach ($json->data->messages as $message) {
         $error = array();
         foreach ($hash as $table_row) {
           if (isset($message->arguments->{$table_row[0]})) {
@@ -842,8 +910,8 @@ class FeatureContext extends DrupalContext {
     // Hashing table, and define variables for later.
     $hash = $table->getRows();
 
-    if (isset($json->messages)) {
-      foreach ($json->messages as $message) {
+    if (isset($json->data)) {
+      foreach ($json->data as $message) {
         $error = array();
         foreach ($hash as $table_row) {
           if (isset($message->arguments->{$table_row[0]})) {
@@ -927,6 +995,13 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @When /^I delete the variable "([^"]*)"$/
+   */
+  public function iDeleteVariable($variable) {
+    variable_del($variable);
+  }
+
+  /**
    * @Then /^I should see a pager$/
    */
   public function iShouldSeeAPager() {
@@ -968,6 +1043,14 @@ class FeatureContext extends DrupalContext {
       ->propertyCondition('name', 'Harvard Graduate School of Design')
       ->range(0, 1)
       ->execute();
+
+    print_r($result);
+
+    $result = $query
+      ->entityCondition('entity_type', 'taxonomy_term')
+      ->execute();
+
+    print_r($result);
 
     $entity = entity_create('field_collection_item', array('field_name' => 'field_department_school'));
     $entity->setHostEntity('node', node_load(FeatureHelp::getNodeId('john')));
@@ -1215,10 +1298,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldSeeTheMetaTag($tag, $value) {
     $page = $this->getSession()->getPage();
-    if (!$text = $page->find('xpath', "//meta[@name='{$tag}']/@content")) {
-      throw new Exception("The meta tag {$tag} does not exist");
-    }
-    if ($text->getText() != $value) {
+    if (!$text = $page->find('xpath', "//meta[(@property='{$tag}' or @name='{$tag}') and @content='{$value}']")) {
       throw new Exception("The meta tag {$tag} value is not {$value}");
     }
   }
@@ -1287,7 +1367,7 @@ class FeatureContext extends DrupalContext {
     return array(
       new Step\When('I visit "' . $group . '/cp/users/add"'),
       new Step\When('I fill in "edit-name" with "' . $name . '"'),
-      new Step\When('I press "Add users"'),
+      new Step\When('I press "Add member"'),
       new Step\When('I visit "' . $group . '/cp/users/edit_membership/' . $uid . '"'),
       new Step\When('I select the radio button named "edit_role" with value "' . $role . '"'),
       new Step\When('I press "Save"'),
@@ -1487,13 +1567,17 @@ class FeatureContext extends DrupalContext {
    * @When /^I edit the node "([^"]*)" in the group "([^"]*)"$/
    */
   public function iEditTheNodeInGroup($title, $group) {
-    $nid = FeatureHelp::GetNodeIdInVsite($title, $group);
+    $nid = FeatureHelp::getNodeIdInVsite($title, $group);
     $purl = FeatureHelp::GetNodeVsitePurl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
+    $page = $purl . 'node/' . $nid . '/edit';
 
-    return array(
-      new Step\When('I visit "' . $purl . 'node/' . $nid . '/edit"'),
-    );
+    try {
+      $this->visit($page);
+    } catch (\Exception $e) {
+      print_r('An error: ' . $e->getMessage());
+      print_r('page: ' . $page);
+    }
   }
 
   /**
@@ -1679,7 +1763,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldSeeTheNewsPhoto($image_name) {
     $page = $this->getSession()->getPage();
-    $element = $page->find('xpath', "//div[contains(@class, 'field-name-field-photo')]//img[contains(@src, '{$image_name}')]");
+    $element = $page->find('xpath', "//div[contains(@class, 'field-name-field-photo')]//figure//img[contains(@src, '{$image_name}')]");
 
     if (!$element) {
       $this->iShouldPrintPage();
@@ -1691,7 +1775,9 @@ class FeatureContext extends DrupalContext {
    * @Given /^I display watchdog$/
    */
   public function iDisplayWatchdog() {
-    FeatureHelp::DisplayWatchdogs(NULL, TRUE);
+    $watchdog = FeatureHelp::DisplayWatchdogs();
+    $url = $this->createGist(implode("\n", $watchdog));
+    print_r('The watch dog url is: ' . $url . "\n");
   }
 
   /**
@@ -1914,7 +2000,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I update the node "([^"]*)" field "([^"]*)" to "([^"]*)"$/
    */
   public function iUpdateTheNodeFieldTo($title, $field, $value) {
-    $nid = FeatureHelp::GetNodeId($title);
+    $nid = FeatureHelp::getNodeId($title);
 
     $purl = FeatureHelp::GetNodeVsitePurl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
@@ -1933,7 +2019,7 @@ class FeatureContext extends DrupalContext {
     return array(
       new Step\When('I visit "' . $group . '/cp/users/add"'),
       new Step\When('I fill in "User" with "' . $username . '"'),
-      new Step\When('I press "Add users"'),
+      new Step\When('I press "Add member"'),
     );
   }
 
@@ -2401,7 +2487,7 @@ class FeatureContext extends DrupalContext {
       // Selenium has no support for <input type="file" multiple>. So instead, we use multiple input elements,
       // then dummy up a JS FilesList object to pass to the element.
       $driver = $this->getSession()->getDriver();
-      $inputs = [];
+      $inputs = array();
       foreach ($paths as $k => $path) {
         $inputId = 'elem_' . substr(md5(time()), 0, 7) . '_' . $k;
         $driver->executeScript("$inputId = window.jQuery('<input id=\"$inputId\" type=\"file\">').appendTo('body');");
@@ -2455,6 +2541,10 @@ class FeatureContext extends DrupalContext {
    * @Then /^I should see the media browser "([^"]*)" tab is active$/
    */
   public function iShouldSeeTabActive($tab) {
+    // Js is async may take up to 3 sec to appear. so we wait.
+    $duration = 5000;
+    $this->getSession()->wait($duration);
+    // In case element doesn't exists.
     if (!($elem = $this->getSession()->getPage()->find('css', '.media-browser-button.active'))) {
       throw new Exception('No Media Browser tab is active.');
     }
@@ -2694,7 +2784,10 @@ class FeatureContext extends DrupalContext {
       if ($file['filename'] == $filename) {
         continue;
       }
-      $new_files[] = $file;
+      $new_files[] = array(
+        'fid' => $file['fid'],
+        'display' => 1,
+      );
     }
 
     // Set the field again and save.
@@ -2727,8 +2820,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iClickOnTheTab($arg1) {
     $element = $this->getSession()->getPage()->find('xpath', "//*[.='{$arg1}']");
-    $element->click();
-
+    $element->press();
   }
 
   /**
@@ -2845,20 +2937,36 @@ class FeatureContext extends DrupalContext {
   /**
    * @AfterStep
    */
-   public function takeScreenshotAfterFailedStep($event)
-   {
-     if ($event->getResult() == 4) {
-       if ($this->getSession()->getDriver() instanceof
-       \Behat\Mink\Driver\Selenium2Driver) {
-         $stepText = $event->getStep()->getText();
-         $fileTitle = preg_replace("#[^a-zA-Z0-9\._-]#", '', $stepText);
-         $fileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR . $fileTitle . '.png';
-         $screenshot = $this->getSession()->getDriver()->getScreenshot();
-         file_put_contents($fileName, $screenshot);
-         print "Screenshot for '{$stepText}' placed in {$fileName}\n";
-       }
-     }
- }
+  public function dumpInfoAfterFailedStep(StepEvent $event) {
+    if ($event->getResult() == StepEvent::FAILED)  {
+      $this->iDisplayWatchdog();
+
+      try {
+        $this->iShouldPrintPage();
+      }
+      catch (\Exception $e) {
+
+      }
+    }
+  }
+
+  /**
+  * AfterStep
+  */
+  public function takeScreenshotAfterFailedStep($event)
+  {
+    if ($event->getResult() == 4) {
+      if ($this->getSession()->getDriver() instanceof
+      \Behat\Mink\Driver\Selenium2Driver) {
+        $stepText = $event->getStep()->getText();
+        $fileTitle = preg_replace("#[^a-zA-Z0-9\._-]#", '', $stepText);
+        $fileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR . $fileTitle . '.png';
+        $screenshot = $this->getSession()->getDriver()->getScreenshot();
+        file_put_contents($fileName, $screenshot);
+        print "Screenshot for '{$stepText}' placed in {$fileName}\n";
+      }
+    }
+  }
 
   /**
    * @When /^I change the date of "([^"]*)" in "([^"]*)"$/
@@ -2872,6 +2980,266 @@ class FeatureContext extends DrupalContext {
     $date[0]['value2'] = str_replace(date('Y'), date('Y') - 1, $date[0]['value2']);
     $wrapper->field_date->set($date);
     $wrapper->save();
+  }
+
+  /**
+   * @Given /^I run the "([^"]*)" report with "([^"]*)" <checked>:$/
+   */
+  public function iRunTheReportWithChecked($report, $multiValueFieldLabel, TableNode $table) {
+    $steps = array();
+    $steps[] = new Step\When('I visit "admin/reports/os/' . $report . '"');
+    $table_rows = $table->getRows();
+    // Iterate over each row, just so if there's an error we can supply
+    // the row number, or empty values.
+    foreach ($table_rows as $i => $checkbox) {
+      $steps[] = new Step\When('I check the box "' . $checkbox[0] . '"');
+    }
+    $steps[] = new Step\When('I press "Download CSV of Full Report"');
+    return $steps;
+  }
+
+  /**
+   * @Then /^I will see a report with content in the following <columns>:$/
+   */
+  public function iWillSeeAReportWithContentInTheFollowingColumns(TableNode $contentRequirements) {
+    $data = $this->getDataFromCSVFile($this->getSession()->getPage());
+    // get content requirements from test case
+    $requirements = array();
+    foreach($contentRequirements->getRows() as $row) {
+      $requirements[$row[0]] = ($row[1] == 'populated') ? 1 : 0;
+    }
+
+    // compare data to requirements
+    foreach($data as $count => $data_row) {
+      foreach($requirements as $header => $content) {
+        if((!isset($data_row[$header]) || !$data_row[$header]) && $requirements[$header]) {
+          throw new Exception(sprintf("Row #" . ($count + 1) . ", column '$header' should contain content but it doesn't."));
+        }
+      }
+    }
+  }
+
+  /**
+   * @Given /^I run the "([^"]*)" report with "([^"]*)" set to "([^"]*)" and <checkboxes> selected:$/
+   */
+  public function iRunTheReportWithSetToAndCheckboxesSelected($report, $fieldName, $fieldValue, TableNode $table) {
+    $steps = array();
+    $steps[] = new Step\When('I visit "admin/reports/os/' . $report . '"');
+    $steps[] = new Step\When('I fill in "' . $fieldName . '" with "' . $fieldValue. '"');
+    $table_rows = $table->getRows();
+
+    // Iterate over each row, just so if there's an error we can supply
+    // the row number, or empty values.
+    foreach ($table_rows as $i => $checkbox) {
+      $steps[] = new Step\When('I check the box "' . $checkbox[0] . '"');
+    }
+    $steps[] = new Step\When('I press "Download CSV of Full Report"');
+    return $steps;
+  }
+
+  /**
+   * @Then /^I will see a report with the following <rows>:$/
+   */
+  public function iWillSeeAReportWithTheFollowingRows(TableNode $requiredRows) {
+    global $base_url;
+    $url_parts = explode(".", str_replace("http://", "", $base_url));
+    $install = $url_parts[0];
+
+    $file_data = $this->getDataFromCSVFile($this->getSession()->getPage());
+    $required_data = $requiredRows->getRows();
+    $headers = array_splice($required_data, 0, 1);
+    foreach ($required_data as $num => $row) {
+      foreach ($row as $index => $value) {
+        $header = $headers[0][(int)$index];
+        if ($header == "os install") {
+          $required_data[(int)$num][$header] = $install;
+        }
+        elseif ($header == "site url") {
+          $required_data[(int)$num][$header] = $base_url . "/" . $value;
+        }
+        else {
+          $required_data[(int)$num][$header] = $value;
+        }
+        unset($required_data[(int)$num][(int)$index]);
+      }
+    }
+    foreach ($required_data as $index => $row) {
+      if (array_diff($row, $file_data[$index]) !== array()) {
+        throw new Exception(sprintf("Row #" . ($index + 1) . " does not match."));
+      }
+    }
+  }
+
+  /**
+   * @Then /^I will see a report with no results$/
+   */
+  public function iWillSeeAReportWithNoResults() {
+    return new Step\Then('I should see "No results in report."');
+  }
+
+  /**
+   * @Given /^I run the "([^"]*)" report with "([^"]*)" set to the "([^"]*)" of this "([^"]*)"$/
+   */
+  public function iRunTheReportWithSetToTheOfThis($report, $dateField, $dateParameter, $datePeriod) {
+    $steps = array();
+    $steps[] = new Step\When('I visit "admin/reports/os/' . $report . '"');
+
+    $beginning = "";
+    $end = "";
+    $now = time();
+    switch ($datePeriod) {
+      case "year":
+        $beginning = date("Y", $now) . "0101";
+        $end = date("Y", $now) . "1231";
+        break;
+    }
+    $fieldValue = ${$dateParameter};
+    if ($dateField == "Creation start") {
+      $steps[] = new Step\When('I fill in "edit-creationstart" with "' . $fieldValue . '"');
+    } elseif ($dateField == "Creation end") {
+      $steps[] = new Step\When('I fill in "edit-creationend" with "' . $fieldValue . '"');
+    } else {
+      $steps[] = new Step\When('I fill in "' . $dateField . '" with "' . $fieldValue . '"');
+    }
+    $steps[] = new Step\When('I select the radio button named "includesites" with value "content"');
+    $steps[] = new Step\When('I press "Download CSV of Full Report"');
+
+    return $steps;
+  }
+
+  /**
+   * @Then /^I will see a report with "([^"]*)" values "([^"]*)" to the "([^"]*)" of this "([^"]*)"$/
+   */
+  public function iWillSeeAReportWithValuesToTheOfThis($column, $operator, $dateParameter, $datePeriod) {
+    $beginning = "";
+    $end = "";
+    $now = time();
+    switch ($datePeriod) {
+      case "year":
+        $beginning = date("Y", $now) . "0101";
+        $end = date("Y", $now) . "1231";
+        break;
+    }
+    $submittedValue = ${$dateParameter};
+    switch ($operator) {
+      case "equal":
+        $operatorCode = "=";
+        break;
+      case "less than or equal":
+        $operatorCode = "<=";
+        break;
+      case "greater than or equal":
+        $operatorCode = ">=";
+        break;
+    }
+
+    $file_data = $this->getDataFromCSVFile($this->getSession()->getPage());
+    foreach ($file_data as $num => $row) {
+      $fileValue = $row[$column];
+      eval('$dateComparison = strtotime($fileValue) ' . $operatorCode . ' strtotime($submittedValue);');
+      if (!$dateComparison) {
+        throw new Exception(sprintf("Row #" . ($num + 1) . " has a '$column' value that is not $operator to $submittedValue."));
+      }
+    }
+  }
+
+  /**
+   * Helper function to convert CSV file to associative array
+   */
+  public function getDataFromCSVFile($source) {
+    $fileContent = $source->getContent();
+    if (strpos($fileContent, "html>") !== FALSE) {
+        throw new Exception(sprintf("CSV file was not created."));
+    }
+
+    $csv = array_map('str_getcsv', explode("\n", $fileContent));
+    array_walk($csv, function(&$a) use ($csv) {
+      $a = array_combine($csv[0], $a);
+    });
+    // remove column header
+    array_shift($csv);
+
+    return $csv;
+  }
+
+  /**
+   * @Then /^I validate the href attribute of metatags link from type$/
+   */
+  public function iValidateTheHrefAttributeOfMetatagsLinkFromType() {
+
+    // Getting the current node been viewed.
+    $node = node_load(FeatureHelp::getNodeIdInVsite('About', 'john'));
+
+    // Base path including the purl.
+    $vsite = vsite_get_vsite(2);
+    $base_url = variable_get('purl_base_domain');
+    $purl_base_path = $base_url . '/' . $vsite->group->purl;
+
+    // Expected urls.
+    $expected_tags_value = array(
+      'canonical' => url('node/' . $node->nid, array('absolute' => TRUE)),
+      'shortlink' => $purl_base_path . '/node/' . $node->nid,
+    );
+
+    // Iterate over each metatag and validate its "href" value accordingly.
+    foreach ($expected_tags_value as $metatag_name => $value) {
+
+      // Getting the metatag element.
+      $page = $this->getSession()->getPage();
+      if (!$metatag_element = $page->find('xpath', "//head/link[@rel='{$metatag_name}']")) {
+        throw new \Exception(format_string("Could not find the target metatag: '@metatag'", array('@metatag' => $metatag_name)));
+      }
+
+      // In case the metatag url in wrong.
+      $metatag_href = $metatag_element->getAttribute('href');
+      if ($metatag_href != $expected_tags_value[$metatag_name]) {
+        // In case the target element is not found.
+        $variables = array(
+          '@metatag' => $metatag_name,
+          '@metatag_given_url' => $metatag_href,
+          '@metatag_expected_url' => $expected_tags_value[$metatag_name],
+        );
+
+        throw new \Exception(format_string("The '@metatag' metatag expected url is: '@metatag_expected_url' but the given url is: '@metatag_given_url'", $variables));
+      }
+    }
+  }
+
+  /**
+   * @Given /^I adding the embedded video$/
+   */
+  public function iAddingTheEmbeddedVideo() {
+    $page = $this->getSession()->getPage();
+    $page->find('xpath', "//button[.='Insert']")->press();
+  }
+
+  /**
+   * @Given /^I logout$/
+   */
+  public function iLogout1() {
+    $this->getSession()->visit($this->locatePath('/user/logout'));
+  }
+
+  /**
+   * @Then /^I case sensitive check the text "([^"]*)"$/
+   */
+  public function iCaseSensitiveCheckTheText($text) {
+    $page = $this->getSession()->getPage();
+
+    if (!$page->find('xpath', '//*[.="' . $text . '"]')) {
+      throw new \Exception("The text '{$text}'' was not found in the screen");
+    }
+  }
+
+  /**
+   * @Given /^I case sensitive check the text "([^"]*)" not exists$/
+   */
+  public function iCaseSensitiveCheckTheTextNotExists($text) {
+    $page = $this->getSession()->getPage();
+
+    if ($page->find('xpath', '//*[.="' . $text . '"]')) {
+      throw new \Exception("The text '{$text}'' was not found in the screen");
+    }
   }
 
 }

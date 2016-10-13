@@ -8,6 +8,14 @@
 }
 
 /*
+ * This is the only file which being loaded in ckeditor. Adding a color to
+ * table cells.
+ */
+.cke_editable table th, .cke_editable table td {
+  border: 1px dashed #BBB;
+}
+
+/*
  * Dismiss button
  */
 .dismiss {
@@ -76,4 +84,7 @@
   box-shadow: 0 0 1px rgba(0,0,0,0.4);
   margin-top: 1px;
   margin-left: 1px;
+}
+#event-change-notify a.dismiss {
+    display: none;
 }

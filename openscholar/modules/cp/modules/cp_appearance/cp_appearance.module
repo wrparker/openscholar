@@ -15,7 +15,7 @@ use GitWrapper\GitException;
 function cp_appearance_menu() {
   $items = array();
   $items['cp/appearance'] = array(
-    'title' => 'Appearance',
+    'title' => 'Themes',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('cp_appearance_theme_picker_form'),
     'weight' => 20,
@@ -160,7 +160,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
     $info['theme_name'] = $theme->name;
 
     //Flavors is not shown for the featured themes
-    if (!in_array($theme->name, $featured_themes) || !count(os_theme_get_flavors($info['theme_name']))) {
+    if ((!in_array($theme->name, $featured_themes) || !count(os_theme_get_flavors($info['theme_name']))) && empty($theme->info['single'])) {
       //Add this theme to the list of theme options.
       $radio_options[$info['theme_name']] = $info['theme_name'];
       $themes_sorted[$info['theme_name']] = $theme;
@@ -197,6 +197,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
 
       $flavors = os_theme_get_flavors($info['theme_name']);
        foreach ($flavors as $flavor_name => $flav) {
+
         $flavor_theme = (object)array(
           'filename' => $flav['path'].'/'.$flav['file'],
           'name' => $info['theme_name'].'-os_featured_flavor-'.$flavor_name,
@@ -213,6 +214,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
           'engine' => 'phptemplate',
           'base_theme' => 'hwpi_basetheme',
           'is_flavor' => true,  // Indicate that this is a flavor not a full theme.
+          'single' => $theme->info['single'],
         );
         $flavor_theme->info['flavor_name'] = $flavor_theme->info['name'];
         $flavor_theme->info['name'] = $info['name'];
@@ -220,7 +222,12 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
 
         $flavor_theme->info['screenshot'] = $flav['path'].'/screenshot.png';
         $featured_themes[$info['theme_name'].'-os_featured_flavor-'.$flavor_name] = $info['theme_name'].'-os_featured_flavor-'.$flavor_name;
-        $themes_sorted[$info['theme_name'].'-os_featured_flavor-'.$flavor_name] = $flavor_theme;
+        if (empty($theme->info['single'])) {
+          $themes_sorted[$info['theme_name'].'-os_featured_flavor-'.$flavor_name] = $flavor_theme;
+        }
+        else {
+          $single_themes[$flavor_theme->name] = $flavor_theme;
+        }
         $radio_options[$info['theme_name'].'-os_featured_flavor-'.$flavor_name] = $flavor_theme->info['theme_flavor_name'];
       }
     }
@@ -245,6 +252,7 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
       'engine' => 'phptemplate',
       'base_theme' => 'hwpi_basetheme',
       'is_flavor' => true,  // Indicate that this is a flavor not a full theme.
+      'single' => $theme->info['single'],
     );
     $flavor_theme->info['flavor_name'] = $flavor_name;
     $flavor_theme->info['name'] = $flavor_name;
@@ -260,7 +268,9 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
 
   // Sorts featured themes to the front.
   $current_theme = os_theme_get();
+
   $current_flavor = variable_get('os_appearance_'.$current_theme.'_flavor','defualt');
+
   if (count($featured_themes)) {
     $first_themes = array();
     $other_themes = $themes;
@@ -276,6 +286,9 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
   if (!empty($first_themes)) {
     if (isset($first_themes[$current_theme.'-os_featured_flavor-'.$current_flavor])) {
       $current_theme = _cp_appearance_move_option_to_front($first_themes, $current_theme.'-os_featured_flavor-'.$current_flavor);
+    }
+    elseif (isset($single_themes[$current_theme.'-os_featured_flavor-'.$current_flavor])) {
+      $current_theme = _cp_appearance_move_option_to_front($single_themes, $current_theme.'-os_featured_flavor-'.$current_flavor);
     }
     elseif (isset($other_themes[$current_theme])) {
       $current_theme = _cp_appearance_move_option_to_front($other_themes, $current_theme);
@@ -857,7 +870,7 @@ function cp_appearance_manage_git($form, &$form_state, $type) {
 
   $branches = array();
 
-  if ($repository_address = !empty($form_state['values']['repository']) ? $form_state['values']['repository'] : FALSE) {
+  if ($repository_address = !empty($form_state['values']['repository']) ? trim($form_state['values']['repository']) : FALSE) {
     $wrapper = new GitWrapper();
     $wrapper->setPrivateKey('.');
 
@@ -1202,6 +1215,13 @@ function cp_appearance_pull_subtheme_submit($form, $form_state) {
       drupal_set_message($e->getMessage(), 'error');
       $success = FALSE;
     }
+
+    // When pulling a git updates or extracting the zip again clear the related
+    // cache.
+//    _drupal_flush_css_js();
+//
+//    registry_rebuild();
+//    drupal_clear_css_cache();
 
     if ($success) {
       drupal_set_message(t('The subtheme updated succesfully.'));

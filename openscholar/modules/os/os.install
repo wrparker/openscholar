@@ -54,13 +54,6 @@ function _os_date_formats() {
  * Allow access to node/%.json to all of the users.
  */
 function os_update_7005() {
-  //Only grant this if the module is installed
-  if (module_exists('restws')){
-    // Allow accessing resource node to all users.
-    foreach (array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID) as $rid) {
-      user_role_grant_permissions($rid, array('access resource node'));
-    }
-  }
 }
 
 /**
@@ -192,13 +185,6 @@ function os_update_7011() {
  * Allow access to file/*.json for all users
  */
 function os_update_7012() {
-  //Only grant this if the module is installed
-  if (module_exists('restws')){
-    // Allow accessing resource file to all users.
-    foreach (array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID) as $rid) {
-      user_role_grant_permissions($rid, array('access resource file'));
-    }
-  }
 }
 
 /**
@@ -887,4 +873,55 @@ function os_update_7041() {
   features_revert($modules);
 
   return t('Upgraded the Media Browser across the whole site.');
+}
+
+/**
+ * Setting the default jquery version
+ */
+function os_update_7042() {
+  variable_set('jquery_update_jquery_version', '1.8');
+
+  return t('Updated JQuery to 1.8.');
+}
+
+/**
+ * Install OS Reports module.
+ */
+function os_update_7043() {
+  module_enable(array('os_reports'));
+  return t('Enabled OS Reports module.');
+}
+
+/**
+ * Override redirect_passthrough_querystring var
+ */
+function os_update_7044() {
+  features_revert(array('os' => array('variable')));
+}
+
+/**
+ * Clear entity cache.
+ */
+function os_update_7045() {
+  // Empty update to clear entity cache.
+  return t('entity cache cleared.');
+}
+
+/**
+ * Set image toolkit variables.
+ */
+function os_update_7047() {
+  variable_set('imageapi_optimize_service', 'resmushit');
+  variable_set('image_toolkit', 'imageapi_optimize');
+
+  // Save the last file ID for the compressing images cron task.
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'file')
+    ->propertyCondition('type', 'image')
+    ->propertyOrderBy('fid', 'DESC')
+    ->range(0, 1)
+    ->execute();
+
+  variable_set('os_last_un_compress_fid', reset($result['file'])->fid);
 }

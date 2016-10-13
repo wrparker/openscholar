@@ -39,6 +39,13 @@ function os_wysiwyg_link_insert() {
       '#description' => t('The text of the link. Leave blank to use the url of the link itself.'),
       '#name' => 'link-text',
     ),
+    'title' => array(
+      '#type' => 'textfield',
+      '#id' => 'edit-link-title',
+      '#title' => t('Title Text'),
+      '#description' => t('This text will appear on mouse hover and is used by screen readers, however, it will not appear for keyboard-only users or touch-only users.'),
+      '#name' => 'link-title',
+    ),
     'tabs' => array(
       '#title' => t('Link To'),
       '#type' => 'vertical_tabs',
@@ -140,6 +147,13 @@ function _os_link_external_form($form, $form_state, $params) {
     '#description' => t('The URL of the web page. Can be a link to one of your own pages.'),
     '#maxlength' => 500,
     '#default_value' => isset($params['url'])?$params['url']:'',
+  );
+
+  $form['target_option'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Open this link in a new tab'),
+    '#description' => t('Note: depending on the usage, may cause accessibility concerns. <a href="@link" target="_blank">Learn more</a>', array('@link' => 'https://www.w3.org/TR/WCAG20-TECHS/G200.html')),
+    '#default_value' => 0,
   );
 
   $form['actions'] = array(

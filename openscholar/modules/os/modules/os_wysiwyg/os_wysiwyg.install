@@ -66,7 +66,7 @@ function os_wysiwyg_update_7004() {
   features_revert(array_fill_keys($modules, $reset));
 }
 
-/*
+/**
  * Revert os_wysiwyg filter component to allow <th> and <thead> tags.
  */
 function os_wysiwyg_update_7006() {
@@ -81,4 +81,18 @@ function os_wysiwyg_update_7007() {
   $types = array_unique(array_diff($types, array('document')));
   $types = array_combine($types, $types);
   media_variable_set('wysiwyg_allowed_types', $types);
+}
+
+/**
+ * Set back the wysiwyg handlers to tinymce.
+ */
+function os_wysiwyg_update_7008() {
+  features_revert(array('os_wysiwyg' => array('wysiwyg'), 'os_publications' => array('wysiwyg')));
+}
+
+/**
+ * Set back the wysiwyg handlers to tinymce(for production environment).
+ */
+function os_wysiwyg_update_7009() {
+  features_revert(array('os_wysiwyg' => array('wysiwyg'), 'os_publications' => array('wysiwyg')));
 }

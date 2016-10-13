@@ -7,6 +7,7 @@
     }).
     constant("FILEEDITOR_RESPONSES", {
       SAVED: "saved",
+      REPLACED: "replaced",
       NO_CHANGES: "no changes",
       CANCELED: "canceled"
     }).
@@ -18,15 +19,26 @@
         },
         templateUrl: libraryPath + '/file_edit_base.html?vers='+Drupal.settings.version.FileEditor,
         link: function (scope, elem, attr, c, trans) {
-          var fileService = new EntityService('files', 'id');
-          //fileService.fetch({});
+          var fileService = new EntityService('files', 'id'),
+              files = [],
+              file_replaced = false;
+
+          fileService.fetch().then(function (data) {
+            files = data;
+            return data;
+          });
 
           scope.fileEditAddt = '';
           scope.date = '';
-          scope.description_label = 'Description';
-
+          scope.description_label = 'Descriptive Text - will display under the filename';
+          scope.schema = '';
           scope.$watch('file', function (f) {
-            if (!f) return;
+
+            if (!f) {
+              return;
+            }
+
+            scope.schema = f.schema;
             scope.fileEditAddt = libraryPath+'/file_edit_'+f.type+'.html?vers='+Drupal.settings.version.FileEditor;
             scope.date = $filter('date')(f.timestamp+'000', 'short');
             scope.file.terms = scope.file.terms || [];
@@ -58,8 +70,13 @@
             }
           });
 
+          scope.invalidFileName = false;
           scope.$watch('file.filename', function (filename, old) {
-            if (typeof filename != 'string') {
+            if (typeof filename != 'string' || !scope.file) {
+              return;
+            }
+            if (scope.file.schema == 'oembed') {
+              scope.invalidFileName = false;
               return;
             }
             scope.invalidFileName = false;
@@ -73,7 +90,6 @@
             }
             var lower = filename.toLowerCase();
             if (lower != old) {
-              var files = fileService.getAll();
               for (var i in files) {
                 if (lower == files[i].filename && scope.file.id != files[i].id) {
                   scope.invalidFileName = true;
@@ -130,6 +146,9 @@
                 .success(function (result) {
                   scope.showWarning = false;
                   scope.replaceSuccess = true;
+                  file_replaced = true;
+
+                  fileService.register(result.data[0]);
 
                   $timeout(function () {
                     scope.replaceSuccess = false;
@@ -150,24 +169,27 @@
 
           scope.canSave = function () {
             return scope.invalidFileName || scope.invalidName;
-          }
+          };
 
           scope.save = function () {
-            fileService.edit(scope.file, ['preview', 'url']).then(function(result) {
-                if (result.data) {
+            fileService.edit(scope.file, ['preview', 'url', 'size', 'changed']).then(function(result) {
+                if (result.data || typeof scope.file.new != 'undefined') {
                   scope.onClose({saved: FER.SAVED});
                 }
+                else if (file_replaced) {
+                  scope.onClose({saved: FER.REPLACED});
+                }
                 else if (result.detail) {
-                  scope.onClose({saved: FER.NO_CHANGES})
+                  scope.onClose({saved: FER.NO_CHANGES});
                 }
                 else {
-                  scope.onClose({saved: FER.CANCELED})
+                  scope.onClose({saved: FER.CANCELED});
                 }
             },
             function(result) {
               switch (result.status) {
                 case 409:
-                  scope.errorMessages = 'This file has been changed since it was last retrieved from the server. Please wait while we get an updated version.';
+                  scope.errorMessages = 'Please wait. Another member of your website has updated this file since you last updated it, and we\'re retrieving an updated version. Once this message disappears, you\'ll need re-enter any changes you had made.<br><img src="'+Drupal.settings.paths.FileEditor+'/large-spin_loader.gif" class="file-retrieve-spinner">';
                   scope.showErrorMessages = true;
                   break;
                 case 410:
@@ -192,7 +214,7 @@
           });
 
           scope.cancel = function () {
-            scope.onClose({saved: FER.CANCELED});
+            scope.onClose({saved: file_replaced ? FER.REPLACED : FER.CANCELED});
           }
 
           scope.closeErrors = function () {
@@ -206,8 +228,42 @@
       }
     }]);
 
+  /**
+   * The regex contained within was tested against the following strings:
+   *
+   * #derp.txt?mtime=garbage
+   * derp.txt
+   * de?rp.txt
+   * de?rp.txt?mtime=garbage
+   * de#rp.txt
+   * de#4p.txt#herp
+   * de.rp.txt
+   * derp.txt?mtime=garbage#herp
+   * http://customdomain.com/sites/default/files/department/files/accordion_widget.png?m=1432822855
+   * http://hwpi.harvard.edu/os_fast/files/able/t-bill_rates.pdf  ((private files path))
+   * derp.txt?mtime=gar.bage
+   * de rp.txt
+   * de rp.txt?mtime=gar.bage
+   *
+   * Tested with regexr.com
+   */
   function getExtension(url) {
-    return url.slice(url.lastIndexOf('.')+1, (url.lastIndexOf('?') != -1)?url.lastIndexOf('?'):url.length).toLowerCase();
+    // patterns
+    // .?= (file with query params at the end) /\.([a-zA-Z0-9])*\?/
+    // ?. (file with ? in the middle for some reason) /$([a-zA-Z0-9?]
+    // .?. (file with multiple . and ? before the last one
+    // .?=. (file with . in query param
+
+    // ([a-z]+:\/\/[a-zA-Z0-9.\/-]+\/)? matches against http://something.com/a/b/ or nothing at all
+    // [a-zA-Z0-9.?#_-]+ matches against the filename without extension
+    // ([a-zA-Z0-9]+) matches the extension itself
+    // ($|[?#]) matches end of the string or a URL filename terminator (? or #)
+    var r = /^([a-z]+:\/\/[a-zA-Z0-9.\/_-]+\/)?[a-zA-Z0-9.?#_ -]+\.([a-zA-Z0-9]+)($|[?#])/,
+      result = r.exec(url);
+
+    if (result) {
+      return result[2].toLowerCase();
+    }
   }
 
 })(jQuery);

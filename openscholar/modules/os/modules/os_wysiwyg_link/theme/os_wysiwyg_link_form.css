@@ -7,20 +7,16 @@
 	border-right: 0;
 }
 
-div.form-item-link-text {
+div.form-item-link-text, div.form-item-link-title {
 	margin-left: 10px;
+	margin-top: 0.3em;
 	position: relative;
 	z-index: 2;
 }
 
-div.form-item-link-text {
-	margin-top: 0.3em;
-	margin-left: 10.5em;
-}
-
-div.form-item-link-text label {
+div.form-item-link-text label, div.form-item-link-title label {
 	float: left;
-	margin-left: -10em;
+	margin: 5px 5px 0 0;
 }
 
 div.vertical-tabs {
@@ -99,7 +95,7 @@ div.vertical-tabs .vertical-tabs-list {
 #file-entity-add-upload .form-help {
 	position: absolute;
 	top: 0;
-	right: 0;
+	right: -15px;
 }
 
 #file-entity-add-upload .description {
@@ -109,7 +105,7 @@ div.vertical-tabs .vertical-tabs-list {
 	border: 1px solid lightgray;
 	border-radius: 5px;
 	width: 200px;
-	bottom: -125px;
+	bottom: -146px;
 	left: 0;
 }
 
@@ -118,11 +114,11 @@ div.vertical-tabs .vertical-tabs-list {
 	width: 45%;
 }
 
-#file-entity-add-upload #edit-upload label {
+#file-entity-add-upload #edit-upload-ajax-wrapper label {
 	padding: 13px 13px;
 }
 
-#file-entity-add-upload #edit-upload .add-new {
+#file-entity-add-upload #edit-upload-ajax-wrapper .add-new {
   background: #A1D4A1;
   border-radius: 5px;
   border: 1px solid #8B8;

@@ -161,13 +161,13 @@ function cp_content_batch_alter(&$batch) {
 function cp_content_action_info() {
   return array(
     'cp_content_assign_taxonomy_action' => array(
-      'type' => 'node',
+      'type' => 'entity',
       'label' => t('Apply Taxonomy term'),
       'triggers' => array('any'),
       'configurable' => TRUE,
     ),
     'cp_content_remove_taxonomy_action' => array(
-      'type' => 'node',
+      'type' => 'entity',
       'label' => t('Remove Taxonomy term'),
       'triggers' => array('any'),
       'configurable' => TRUE,
@@ -181,8 +181,9 @@ function cp_content_action_info() {
 function cp_content_assign_taxonomy_action_form($form, $form_state) {
   $title = t('Apply Terms to Content');
   $list_title = t('The selected terms above will be applied to the following content:');
-  $action = t('apply_terms');
-  $form = _cp_content_build_taxonomy_action_form($title, $list_title,  $action, $form_state);
+  $action = 'apply_terms';
+  $vbo = _views_bulk_operations_get_field($form['view']);
+  $form = _cp_content_build_taxonomy_action_form($title, $list_title,  $action, $form_state, $vbo);
 
   return $form;
 }
@@ -193,8 +194,9 @@ function cp_content_assign_taxonomy_action_form($form, $form_state) {
 function cp_content_remove_taxonomy_action_form($form, $form_state) {
   $title = t('Remove Terms from Content');
   $list_title = t('The selected terms above will be removed from the following content:');
-  $action = t('remove_terms');
-  $form = _cp_content_build_taxonomy_action_form($title, $list_title, $action, $form_state);
+  $action = 'remove_terms';
+  $vbo = _views_bulk_operations_get_field($form['view']);
+  $form = _cp_content_build_taxonomy_action_form($title, $list_title, $action, $form_state, $vbo);
 
   return $form;
 }
@@ -202,7 +204,25 @@ function cp_content_remove_taxonomy_action_form($form, $form_state) {
 /**
  * Helper function; build the form for adding/removing taxonomy terms.
  */
-function _cp_content_build_taxonomy_action_form($title, $list_title, $action, $form_state) {
+function _cp_content_build_taxonomy_action_form($title, $list_title, $action, $form_state, $vbo) {
+  $view_name = $form_state['build_info']['args'][0]->name;
+  switch ($view_name) {
+    case 'os_files_private' :
+      $form_entity_type = 'file';
+      $file_indentification = 'filename';
+      break;
+    case 'cp_files' :
+      $form_entity_type = 'file';
+      $file_indentification = 'filename';
+      break;
+    case 'cp_content' :
+      $form_entity_type = 'node';
+      $file_indentification = 'title';
+      break;
+    default :
+      $form_entity_type = 'node';
+      $file_indentification = 'title';
+  }
   module_load_include('inc', 'vsite_vocab', 'includes/taxonomy');
   $vocabs = vsite_vocab_get_vocabularies();
 
@@ -213,9 +233,17 @@ function _cp_content_build_taxonomy_action_form($title, $list_title, $action, $f
 
   // Build a list of node titles to which we apply the action.
   $node_titles = array();
-  $nodes = node_load_multiple($form_state['selection']);
+
+  $load_function = $form_entity_type . "_load_multiple";
+  $nodes = $load_function($form_state['selection']);
   foreach ($nodes as $node) {
-    $node_titles[] = $node->title;
+    $node_titles[] = $node->$file_indentification;
+  }
+
+  // All rows on all pages have been selected, so show a count of additional items.
+  if ($form_state['select_all_pages']) {
+    $more_count = $vbo->view->total_rows - count($vbo->view->result);
+    $node_titles[] = t('...and <strong>!count</strong> more.', array('!count' => $more_count));
   }
 
   $form = array();
@@ -321,6 +349,11 @@ function cp_content_assign_taxonomy_action_submit($form, $form_state) {
  *  Contains information passed with the action's form submit handler.
  */
 function cp_content_assign_taxonomy_action(&$node, $context) {
+  if (isset($context['entity_type'])) {
+    $entity_type = $context['entity_type'];
+  } else {
+    $entity_type = 'node';
+  }
   $vocabulary = $context['vocab'];
   $terms = $context['terms'];
 
@@ -333,10 +366,9 @@ function cp_content_assign_taxonomy_action(&$node, $context) {
   }
 
   $selected_terms = is_array($terms) ? $terms : array($terms);
-
   $skipped_titles = array();
   $applied_titles = array();
-  $wrapper = entity_metadata_wrapper('node', $node);
+  $wrapper = entity_metadata_wrapper($entity_type, $node);
   // Check if the bundle of the node is associated with selected vocabulary.
   if (in_array($node->type, $bundle_names)) {
     // Assign the term(s) to the current node.
@@ -400,6 +432,11 @@ function cp_content_remove_taxonomy_action_submit($form, $form_state) {
  *  Contains information passed with the action's form submit handler.
  */
 function cp_content_remove_taxonomy_action(&$node, $context) {
+  if (isset($context['entity_type'])) {
+    $entity_type = $context['entity_type'];
+  } else {
+    $entity_type = 'node';
+  }
   $vocabulary = $context['vocab'];
   $terms = $context['terms'];
 
@@ -416,7 +453,7 @@ function cp_content_remove_taxonomy_action(&$node, $context) {
   $skipped_titles = array();
   $removed_titles = array();
 
-  $wrapper = entity_metadata_wrapper('node', $node);
+  $wrapper = entity_metadata_wrapper($entity_type, $node);
   $node_terms = $wrapper->{OG_VOCAB_FIELD}->value(array('identifier' => TRUE));
   $terms_to_remove = array_intersect($node_terms, $selected_terms);
   // Check if the bundle of the node is associated with selected vocabulary
@@ -496,10 +533,58 @@ function cp_content_form_views_form_cp_content_page_alter(&$form, &$form_state) 
  */
 function cp_content_preprocess_views_view(&$vars) {
   if ($vars['view']->name == 'cp_files') {
-    os_common_angular_app('cp-files');
+    os_common_angular_apps('cp-files');
     drupal_add_library('media', 'media_browser');
     drupal_add_library('os_common', 'FileEditorModal');
     drupal_add_js(drupal_get_path('module', 'cp_content').'/apps/cp_files.js');
     // $vars['attributes_array']['ng-controller'] = 'CpFilesController'; Reminder to myself that this doesn't work cause Views doesn't print attributes
   }
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function cp_content_views_query_alter(&$view, views_plugin_query_default &$query) {
+  if ($view->name != 'cp_content') {
+    return;
+  }
+
+  $filter = TRUE;
+
+  foreach ($query->where[1]['conditions'] as $condition) {
+
+    if ($condition['field'] == 'og_membership_node.group_type') {
+      $filter = FALSE;
+    }
+  }
+
+  $where = &$view->query->where[1]['conditions'];
+
+  if ($filter && $vsite = vsite_get_vsite()) {
+    // We have no filter in the view and we in a site context. We need to add the
+    // OG membership table and filter nodes that belong to the current group.
+    $join = new views_join();
+    $join->table = 'og_membership';
+    $join->field = 'etid';
+    $join->left_table = 'node';
+    $join->left_field = 'nid';
+    $join->type = 'left';
+
+    // Add the join the the view query.
+    $view->query->add_relationship('og_membership', $join, 'node');
+
+    // Filter by the current group ID and the entity type we display in the view.
+    $where[] = array(
+      'field' => 'og_membership.gid',
+      'value' => $vsite->id,
+      'operator' => '=',
+    );
+
+    $where[] = array(
+      'field' => 'og_membership.entity_type',
+      'value' => 'node',
+      'operator' => '=',
+    );
+  }
+
 }

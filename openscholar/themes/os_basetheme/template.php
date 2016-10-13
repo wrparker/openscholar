@@ -178,6 +178,7 @@ function os_basetheme_preprocess_node(&$vars) {
 
       $vars['event_start']['month'] = check_plain($date->format('M'));
       $vars['event_start']['day'] = check_plain($date->format('d'));
+      $vars['event_start']['year'] = check_plain($date->format('Y'));
       $vars['classes_array'][] = 'event-start';
 
       // For events with a repeat rule we add the delta to the query string.
@@ -454,7 +455,7 @@ function os_events_in_view_context($display_titles = array()) {
   return in_array($view->current_display, $display_names);
 }
 
-/**
+/*
  * Implements override for theme_date_repeat_display of contrib module date_repeat
  * @param array $vars
  * theme parameters
@@ -472,4 +473,178 @@ function os_basetheme_date_repeat_display($vars) {
     $output = '<div class="date-repeat-rule">' . $output . '</div>';
   }
   return $output;
+}
+
+/**
+ * Returns HTML for an image field.
+ *
+ * Output image fields as figure with figcaption for captioning.
+ */
+function os_basetheme_field__image($vars) {
+  global $theme_key;
+  $theme_name = $theme_key;
+  $output = '';
+
+  // Render the label, if it's not hidden.
+  if (!$vars['label_hidden']) {
+    $output .= '<h2 class="field-label"' . $vars['title_attributes'] . '>' . $vars['label'] . ':&nbsp;</h2>';
+  }
+
+  // Render the items.
+  $output .= '<div class="field-items"' . $vars['content_attributes'] . '>';
+
+  foreach ($vars['items'] as $delta => $item) {
+
+    $classes = 'field-item ' . ($delta % 2 ? 'odd' : 'even');
+    $output .= '<figure class="clearfix ' . $classes . '"' . $vars['item_attributes'][$delta] .'>';
+    $output .= drupal_render($item);
+
+    // Captions
+    if (isset($item['#item']['os_file_description'][LANGUAGE_NONE][0]['value'])) {
+      // Ouch this is ugly, please tell me how to get the image style width?
+      $styles = '';
+      $width = 'auto';
+      preg_match('/< *img[^>]*width *= *["\']?([^"\']*)/i', $item['#children'], $matches);
+      $width = $matches[1] . 'px';
+      $styles = 'style="width:' . $width . ';"';
+      $image_caption = strip_tags($item['#item']['os_file_description'][LANGUAGE_NONE][0]['value']);
+      if ($vars['field_view_mode'] == 'full') {
+        $output .= '<figcaption ' . $styles . '>' . $image_caption . '</figcaption>';
+      }
+    }
+
+    $output .= '</figure>';
+  }
+
+  $output .= '</div>';
+
+  // Render the top-level wrapper element.
+  $tag = $vars['tag'];
+  $output = "<$tag class=\"" . $vars['classes'] . '"' . $vars['attributes'] . '>' . $output . "</$tag>";
+
+  return $output;
+}
+
+/**
+ * Implements override for theme_pager_lite_next of contrib module views_litepager
+ * @param array $variables
+ * theme parameters
+ * @return string
+ * returning the output as HTML.
+ */
+function os_basetheme_pager_lite_next($variables) {
+  $text = $variables['text'];
+  $element = $variables['element'];
+  $interval = $variables['interval'];
+  $parameters = $variables['parameters'];
+
+  global $pager_page_array, $pager_total;
+  $output = '';
+
+  // If we are anywhere but the last page
+  if ($pager_page_array[$element] <= ($pager_total[$element] - 1) || $pager_page_array[$element] == 0) {
+    $page_new = pager_load_array($pager_page_array[$element] + $interval, $element, $pager_page_array);
+    // If the next page is the last page, mark the link as such.
+    if ($pager_page_array[$element] == $pager_total[$element]) {
+      $output = theme('pager_last', array('text' => $text, 'element' => $element, 'parameters' => $parameters));
+    }
+    // The next page is not the last page.
+    else {
+      $output = theme('pager_link', array('text' => $text, 'page_new' => $page_new, 'element' => $element, 'parameters' => $parameters));
+    }
+  }
+
+  return $output;
+}
+
+/**
+ * Override theme_facetapi_count
+ */
+function os_basetheme_facetapi_count($variables) {
+  return '<span class="facetapi-count">(' . (int) $variables['count'] . ')</span>';
+}
+
+/**
+ * Override theme_file_icon
+ */
+function os_basetheme_file_icon($variables) {
+  $file = $variables['file'];
+  $alt = $variables['alt'];
+  $icon_directory = $variables['icon_directory'];
+
+  // Setting icon directory for svg files
+  $icon_directory = variable_get('file_icon_directory', drupal_get_path('module', 'os_files') . '/icons');
+  $icon_url = file_icon_url($file, $icon_directory);
+
+   // Replacing png icons with svg
+  $svg_url = str_replace('.png', '.svg', $icon_url );
+  $mime = check_plain($file->filemime);
+  return '<img class="file-icon" alt="' . check_plain($alt) . '" title="' . $mime . '" src="' . $svg_url . '" />';
+}
+
+/**
+ * Override theme_views_mini_pager
+ */
+function os_basetheme_views_mini_pager($vars) {
+  global $pager_page_array, $pager_total;
+  $tags = $vars['tags'];
+  $element = $vars['element'];
+  $parameters = $vars['parameters'];
+
+  // current is the page we are currently paged to
+  $pager_current = $pager_page_array[$element] + 1;
+  // max is the maximum page number
+  $pager_max = $pager_total[$element];
+  // End of marker calculations.
+
+  if ($pager_total[$element] > 1) {
+
+    $li_previous = theme('pager_previous',
+      array(
+        'text' => t('«'),
+        'element' => $element,
+        'interval' => 1,
+        'parameters' => $parameters,
+      )
+    );
+    if (empty($li_previous)) {
+      $li_previous = "&nbsp;";
+    }
+
+    $li_next = theme('pager_next',
+      array(
+        'text' => t('»'),
+        'element' => $element,
+        'interval' => 1,
+        'parameters' => $parameters,
+      )
+    );
+
+    if (empty($li_next)) {
+      $li_next = "&nbsp;";
+    }
+
+    $items[] = array(
+      'class' => array('pager-previous'),
+      'data' => $li_previous,
+    );
+
+    $items[] = array(
+      'class' => array('pager-current'),
+      'data' => t('@current of @max', array('@current' => $pager_current, '@max' => $pager_max)),
+    );
+
+    $items[] = array(
+      'class' => array('pager-next'),
+      'data' => $li_next,
+    );
+    return theme('item_list',
+      array(
+        'items' => $items,
+        'title' => NULL,
+        'type' => 'ul',
+        'attributes' => array('class' => array('pager mini-pager')),
+      )
+    );
+  }
 }

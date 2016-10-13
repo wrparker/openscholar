@@ -384,8 +384,8 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['filters']['current']['table'] = 'spaces';
   $handler->display->display_options['filters']['current']['field'] = 'current';
 
-  /* Display: Co-Authors List */
-  $handler = $view->new_display('block', 'Co-Authors List', 'block');
+  /* Display: Authors List */
+  $handler = $view->new_display('block', 'Authors List', 'block');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $export['co_author_list'] = $view;
 
@@ -530,7 +530,7 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['pager']['type'] = 'mini';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['pager']['options']['id'] = '1';
+  $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['pager']['options']['tags']['previous'] = '«';
   $handler->display->display_options['pager']['options']['tags']['next'] = '»';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
@@ -697,7 +697,7 @@ if(module_exists(\'apachesolr_search\')){
   $handler->display->display_options['pager']['type'] = 'mini';
   $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['pager']['options']['id'] = '1';
+  $handler->display->display_options['pager']['options']['id'] = '5';
   $handler->display->display_options['pager']['options']['tags']['previous'] = '«';
   $handler->display->display_options['pager']['options']['tags']['next'] = '»';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;

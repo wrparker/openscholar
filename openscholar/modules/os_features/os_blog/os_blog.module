@@ -39,6 +39,7 @@ function os_blog_os_app_info() {
         'menu_item' => 'blog',
       ),
     ),
+    'has_settings' => TRUE,
   );
 
   return $apps;
@@ -53,12 +54,12 @@ function os_blog_process_node(&$vars) {
   if ($vars['type'] !== 'blog') {
     return;
   }
-  
+
   if ($vars['view_mode'] == 'title') {
     unset($vars['submitted']);
     return;
   }
-  
+
   // Builds the submitted variable used by default in node templates
   $pubdate = format_date($vars['created'], 'custom', 'F j, Y');
   // Publication date, formatted with time element
@@ -99,4 +100,19 @@ function os_blog_os_widget_alter(&$widget) {
   if ($widget['delta'] == 'os_blog-block') {
     $widget['info'] = 'Blog Archive';
   }
+}
+
+/**
+ * Implements hook_node_delete().
+ *
+ * Deletes data from os_feed_item when their node is deleted.
+ */
+function os_blog_node_delete($node) {
+  if($node->type != 'blog_import') {
+    return;
+  }
+  $nid = $node->nid;
+  db_delete('os_feed_item')
+  ->condition('importer_nid', $nid)
+  ->execute();
 }
