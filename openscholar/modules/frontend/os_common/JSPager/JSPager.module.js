@@ -208,3 +208,8 @@
     }
   }
 })();
+
+// Number.isInteger is not supported by IE11, below Polyfill enables IE 11 support with backward compatibility.
+Number.isInteger = Number.isInteger || function(value) {
+  return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
+};

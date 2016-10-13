@@ -2217,10 +2217,11 @@ function vsite_menu(){
   );
 
   // User autocomplete callback that allows for searching of name/email/login.
-  $items['vsite/autocomplete/user'] = array(
+  $items['vsite/autocomplete/user/%'] = array(
     'type' => MENU_CALLBACK,
     'title' => 'Vsite Autocomplete User',
     'page callback' => 'vsite_user_autocomplete',
+    'page arguments' => array(3),
     'access callback' => 'user_access',
     'access arguments' => array('access user profiles'),
   );
@@ -2774,7 +2775,7 @@ function vsite_os_settings_subsites_form_submit($form, &$form_state){
  * Autocomplete function to allow users to now search for users based on name, email or login.
  * Used the function spaces_user_autocomplete as the skeleton for this function.
  */
-function vsite_user_autocomplete($string = '') {
+function vsite_user_autocomplete($action = 'add', $string = '') {
   $space = spaces_get_space();
   $matches = array();
   if ($string) {
@@ -2794,6 +2795,12 @@ function vsite_user_autocomplete($string = '') {
     $query->fields('u', array('name'));
     // CONCAT the display, if there is no last name entered, show the username/email only, if there is a last name, show first/last/email.
     $query->addExpression("IF(ln.field_last_name_value = '' OR ln.field_last_name_value IS NULL, CONCAT(u.name, ' (', u.mail , ') '), CONCAT(IFNULL(fn.field_first_name_value,''), ' ', IFNULL(ln.field_last_name_value,''), ' (',u.name,', ', u.mail , ') '))", 'myname');
+
+    // limit matches to users with associated HUID, if pinserver is set up
+    if ($action == "register" && module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE)) {
+      $query->innerJoin('pinserver_users', 'pin', 'pin.uid = u.uid');
+    }
+
     $query->range(0, 10);
     $query->addTag('user_autocomplete');
 

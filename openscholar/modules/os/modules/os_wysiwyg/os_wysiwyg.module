@@ -80,7 +80,7 @@ function os_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
 
     // Adding the css of the current flavor.
     foreach ($flavor_info['css'] as $css) {
-      $settings['contentsCss'][] = $base_url . '/' . $flavor_info['path'] . '/css/' . $css;
+      $settings['contentsCss'][] = $base_url . '/' . $flavor_info['path'] . '/' . $css;
     }
   }
 
