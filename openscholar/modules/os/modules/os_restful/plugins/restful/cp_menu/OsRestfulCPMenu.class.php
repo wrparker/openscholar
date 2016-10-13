@@ -308,6 +308,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     };
     uasort($add_links, $labelcmp);
     uasort($import_links, $labelcmp);
+    uasort($feature_settings, $labelcmp);
 
     $structure = array(
       'content' => array(
