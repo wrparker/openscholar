@@ -57,7 +57,7 @@ class os_search_solr_search_box extends os_boxes_default {
     $form['vocab'] = array(
       '#type' => 'select',
       '#title' => t('Filter by: vocab'),
-      '#options' => array(NULL => t('----')),
+      '#options' => array('---' => t('----')),
       '#prefix' => '<div id="vocab">',
       '#suffix' => '</div>',
       '#ajax' => array(
@@ -149,6 +149,8 @@ class os_search_solr_search_box extends os_boxes_default {
 
     $form_state['box_settings'] = $this->options;
     $form = drupal_build_form('search_block_form', $form_state);
+    $form['#box_settings'] = $this->options;
+
     $return['content'] = render($form);
 
     return $return;
