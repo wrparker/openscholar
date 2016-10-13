@@ -1130,7 +1130,10 @@ display:block;
 ul.table-list {
     list-style-type: none;
     margin-left: 0;
-
+    border: 1px solid #CACACA;
+}
+ul.table-list:empty {
+    border: none;
 }
 ul.table-list li {
     padding: 10px;

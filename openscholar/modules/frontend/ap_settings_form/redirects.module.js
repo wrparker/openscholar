@@ -9,7 +9,7 @@
   m.directive('redirects', ['$http', function($http) {
     return {
       template: '<p>URL redirects allow you to send users from a URL on your site, to any other URL. You might want to use this to create a short link, or to transition users from an old URL to the new URL. Each site may only have a maximum of 15 of URL redirects.</p>' +
-      '<ul class="redirect-list table-list">' +
+      '<ul class="table-list">' +
         '<li class="redirect-item" ng-repeat="r in redirects">' +
           '<span class="redirect-path">{{r.path}}</span> &#8594; <span class="redirect-target">{{r.target}}</span> <a class="redirect-delete" ng-click="deleteRedirect(r.id)">delete</a>' +
         '</li>' +
