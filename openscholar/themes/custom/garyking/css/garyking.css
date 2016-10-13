@@ -38,6 +38,7 @@
   body,
   body.not-front {
       font-size: 16px;
+      color:#222;
   }
   #columns {
       margin-top: 0;
@@ -93,11 +94,37 @@ color: #545454;
 }
 
 /* fontpage blocks*/
- h2.block-title {
-   background:url('http://beta.scholar.harvard.edu/files/gking/files/sprite.png?m=1476223905') 55% -250px no-repeat;padding:60px 0 0 0 !important;-webkit-clip-path: inset(0% 0 10% 0);clip-path: inset(48% 0 0 0);
-height:60px;
-   }
+ .front-four-lops h2.block-title {
+    background: url('../images/sprite.png') no-repeat;
+    padding: 8px 0 0 0 !important;
+    height: 52px;
+    margin-bottom: 25px;
+    line-height: 5em;
+    background-size: 75px 375px;
+ }
 
+ .front-four-lops .front-lop-papers h2.block-title {
+
+    background-position: 54% -185px;
+
+ }
+
+ .front-four-lops .front-lop-books h2.block-title {
+    background-position: 54% -185px;
+
+ }
+ 
+  .front-four-lops .front-lop-presentations h2.block-title {
+
+    background-position: 54% -185px;
+
+ }
+
+
+
+#content-panels .front-lop-blockgrid .block-inner {
+    margin-top: 5px;
+}
 
   .tweet-divider,
   .tweet-authorphoto,
