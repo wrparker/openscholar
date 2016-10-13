@@ -50,8 +50,8 @@
 
           copy.attr('input-id', scope.id);
           copy.attr('value', 'value');
-          copy = $compile(copy)(scope);
           elem.find('span').replaceWith(copy);
+          copy = $compile(copy)(scope);
           if (scope.element.attached) {
             $t(function () {
               Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[0].data);

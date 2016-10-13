@@ -99,7 +99,7 @@
 
         ModalService.showModal({
           controller: 'apSettingsFormController',
-          template: '<form id="{{formId}}" ng-submit="submitForm()"><div class="form-wrapper"><div class="form-item" ng-repeat="(key, field) in formElements | weight">' +
+          template: '<form id="{{formId}}" name="settingsForm" ng-submit="submitForm()"><div class="form-wrapper"><div class="form-item" ng-repeat="(key, field) in formElements | weight">' +
             '<div form-element element="field" value="formData[key]"><span>placeholder</span></div>' +
           '</div>' +
           '<div class="help-link" ng-bind-html="help_link"></div></div>' +
@@ -164,10 +164,15 @@
     });
 
     function submitForm() {
-      apSettings.SaveSettings($s.formData).then(function (response) {
-        sessionStorage['messages'] = JSON.stringify(response.data.messages);
-        $s.close(true);
-      });
+      if ($s.settingsForm.$dirty) {
+        apSettings.SaveSettings($s.formData).then(function (response) {
+          sessionStorage['messages'] = JSON.stringify(response.data.messages);
+          $s.close(true);
+        });
+      }
+      else {
+        $s.close(false);
+      }
     }
     $s.submitForm = submitForm;
 
