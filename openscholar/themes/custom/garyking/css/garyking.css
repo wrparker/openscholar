@@ -74,7 +74,6 @@ color: #545454;
   #citation-wrapper,
   body.node-type-biblio .biblio-export ,
 .sidebar .block-boxes-os_search_solr_more_like_this,
-.contact-page-info,
 .os-files-other-list tr, .os-files-other-list td {
  
     background-color: #f6f6f6;
@@ -91,6 +90,14 @@ color: #545454;
   .sidebar h2.block-title {
 
   padding: 15px 0; 
+}
+
+
+
+
+.contact-page-info h2.block-title {
+
+  padding: 0; 
 }
 
 
