@@ -141,11 +141,8 @@ function os_faq_cp_settings() {
       '#description' => t('By default, clicking on an question will open the answer.
         By disabling slider behavior, you can force the answer to always appear.'),
       '#weight' => -1,
-      '#prefix' => '<div><h3>Choose how FAQs will display</h3></div>',
+      '#prefix' => '<label>Choose how FAQs will display</label><label>Question/Answer Slider Behavior</label>',
     ),
-    'rest_submit' => function($value) {         
-        variable_set('os_faq_disable_toggle', $value);
-    },
   );
   $settings['faq_sort'] =  array(
     'group' => array(
@@ -161,9 +158,6 @@ function os_faq_cp_settings() {
       '#default_value' => variable_get('faq_sort', 'created'),
       '#options' => array('created' => t('Creation date, descending'), 'created_asc' => t('Creation date, ascending'), 'title' => t('Alphanumeric, A-Z'), 'title_desc' => t('Alphanumeric, Z-A')),
     ),
-    'rest_submit' => function($value) {
-        variable_set('faq_sort', $value);
-    },
   );
   return $settings;
 }
