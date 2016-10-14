@@ -74,7 +74,6 @@ color: #545454;
   #citation-wrapper,
   body.node-type-biblio .biblio-export ,
 .sidebar .block-boxes-os_search_solr_more_like_this,
-.contact-page-info,
 .os-files-other-list tr, .os-files-other-list td {
  
     background-color: #f6f6f6;
@@ -91,6 +90,14 @@ color: #545454;
   .sidebar h2.block-title {
 
   padding: 15px 0; 
+}
+
+
+
+
+.contact-page-info h2.block-title {
+
+  padding: 0; 
 }
 
 
@@ -216,7 +223,7 @@ padding-right: 22px;
       border-top-style: solid;
       border-width: 4px;
       background-color: #fff;
-      min-height: 380px;
+      min-height: 400px;
       -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
       -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
       box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
@@ -225,6 +232,7 @@ padding-right: 22px;
       -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
       -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
       box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
+  background-color: #fff;
   }
   .front-four-lops section {
       padding: 10px;
