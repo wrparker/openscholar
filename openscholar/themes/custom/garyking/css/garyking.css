@@ -38,6 +38,7 @@
   body,
   body.not-front {
       font-size: 16px;
+      color:#222;
   }
   #columns {
       margin-top: 0;
@@ -56,7 +57,7 @@
   }
  h2.block-title{
 
-color: #666;
+color: #545454;
 }
   
   
@@ -73,7 +74,6 @@ color: #666;
   #citation-wrapper,
   body.node-type-biblio .biblio-export ,
 .sidebar .block-boxes-os_search_solr_more_like_this,
-.contact-page-info,
 .os-files-other-list tr, .os-files-other-list td {
  
     background-color: #f6f6f6;
@@ -81,18 +81,48 @@ color: #666;
 
 .sidebar .block-boxes-os_search_solr_more_like_this{
     padding: 0 12px 0 12px;
--webkit-transition: all .5s;
-      transition: all .5s;
+
 }
 
-.sidebar .block-boxes-os_search_solr_more_like_this:hover {
-background-color: #fff;
-}
+
 
 
   .sidebar h2.block-title {
 
   padding: 15px 0; 
+}
+
+
+
+
+.contact-page-info h2.block-title {
+
+  padding: 0; 
+}
+
+
+/* fontpage blocks*/
+ .front-four-lops h2.block-title {
+    background: url('../images/sprite.png?abc') no-repeat;
+    padding: 8px 0 0 0 !important;
+    height: 52px;
+    margin-bottom: 25px;
+    line-height: 5em;
+  
+ }
+
+ .front-four-lops .front-lop-papers h2.block-title {background-position: 56.5% -169px;}
+
+ .front-four-lops .front-lop-books h2.block-title {
+    background-position: 56.5% -245px;
+ }
+ 
+  .front-four-lops .front-lop-presentations h2.block-title {background-position: 56.5% -333px;}
+
+
+
+#content-panels .front-lop-blockgrid .block-inner {
+    margin-top: 5px;
 }
 
   .tweet-divider,
@@ -133,6 +163,7 @@ background-color: #fff;
       color: #fff;
       display: table;
   }
+  .front-top-featured h2.block-title,
   .front-top-cloumn .region-two-66-33-second a {
       color: #fff;
   }
@@ -161,16 +192,29 @@ background-color: #fff;
       color: #fff;
   }
   
-  
-   .front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html.top-bio-teaser a {
+  .front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html.top-bio-teaser a {
     font-size: .9em;
     text-decoration: none !important;
     border-bottom: 1px solid #fff;
     color: #fff;
-        background: url('../images/sprite.png') right -109px no-repeat;
-    padding-right: 20px;
 }
   
+  a.os-arrow:after {
+   content:'';
+   background: url('../images/sprite.png') 3px -111px no-repeat; 
+   padding-right: 20px; 
+   -webkit-transition: all .125s linear;
+  -moz-transition: all .125s linear;
+  -o-transition: all .125s linear;
+  transition: all .125s linear;
+  
+}
+
+     a.os-arrow:hover:after {
+    content:'';  background: url('../images/sprite.png') 6px -111px no-repeat; 
+padding-right: 22px;
+ 
+}
 
   
   
@@ -179,7 +223,7 @@ background-color: #fff;
       border-top-style: solid;
       border-width: 4px;
       background-color: #fff;
-      min-height: 380px;
+      min-height: 400px;
       -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
       -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
       box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
@@ -188,6 +232,7 @@ background-color: #fff;
       -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
       -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
       box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
+  background-color: #fff;
   }
   .front-four-lops section {
       padding: 10px;
@@ -223,11 +268,11 @@ background-color: #fff;
   }
   .ui-tabs ul.ui-tabs-nav li.ui-tabs-active a,
   .front .ui-tabs .ui-state-default a {
-       font-weight: 400;
+    font-weight: 400;
     letter-spacing: 0;
     padding: 17px 12px;
-    font-size: 1.4em;
-    color: #666;
+    font-size: 1.25em;
+    color: #545454;
   }
   .ui-tabs ul.ui-tabs-nav li.ui-tabs-active {
       border-top: 4px solid #ff884d;
