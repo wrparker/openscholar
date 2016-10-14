@@ -170,6 +170,10 @@ projects[imageapi_optimize][download][type] = git
 projects[imageapi_optimize][download][branch] = 7.x-1.x
 projects[imageapi_optimize][download][revision] = 234f208
 
+projects[imagemagick][subdir] = "contrib"
+projects[imagemagick][download][type] = git
+projects[imagemagick][download][branch] = 7.x-1.x
+
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0
 projects[imagefield_crop][download][type] = git
