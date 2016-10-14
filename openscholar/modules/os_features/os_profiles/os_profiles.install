@@ -96,7 +96,9 @@ function os_profiles_update_7050() {
 /**
  * Update sync URLs from the old %.json format to the new api\v1\profiles format
  */
-function os_profiles_update_7051(&$sandbox) {
+
+// EAM: INDEX INCREMENTED FOR TESTING PURPOSES ONLY.  REVERT TO _7051.
+function os_profiles_update_7052(&$sandbox) {
 
   $query = db_select('field_data_field_original_destination_url', 'u')
     ->fields('u')
