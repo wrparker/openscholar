@@ -43,7 +43,7 @@
     overflow: hidden;
     -o-text-overflow: ellipsis;
 }
-.field-name-field-upload img.file-icon {
+.field-type-file img.file-icon {
 width:16px;
 }
 .field-widget-media-draggable-file .file-list-single ul {
