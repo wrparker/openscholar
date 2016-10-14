@@ -7,7 +7,13 @@
   var data = {};
   Drupal.behaviors.os_sv_list = {
     attach: function (ctx) {
-    	
+
+      // Sets embedded iframe width same as the parent wrapper div width
+      $('.block-boxes-os_sv_list_file .os_sv_list_file .file-html-embed').each(function(i){
+        var width_parent = $(this).width();
+        $(this).find('iframe').css({width:width_parent});
+      });
+
       // add a click handler to lists of posts
       $('.os-sv-list', ctx).closest('.boxes-box-content').once('os-sv-list-pager').click(click_handler).each(function () {
         // save the current page to our cache
