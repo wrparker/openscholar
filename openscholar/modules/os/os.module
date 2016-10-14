@@ -213,9 +213,6 @@ function os_menu_alter(&$items) {
   $items['user/autocomplete']['access arguments'] = array(
     'access user autocomplete',
   );
-
-  // Apply CP theme for book revision page.
-  $items['node/%node/revisions']['theme callback'] = 'cp_theme_name';
 }
 
 function os_in_readonly_mode($page) {
