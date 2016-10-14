@@ -68,6 +68,10 @@
       throw "No form group with the id " + group_id + " exists.";
     }
 
+    this.IsSetting = function (var_name) {
+      return var_name in settings;
+    }
+
     this.SaveSettings = function (settings) {
       console.log(settings);
 
@@ -99,10 +103,16 @@
 
         ModalService.showModal({
           controller: 'apSettingsFormController',
-          template: '<form id="{{formId}}" name="settingsForm" ng-submit="submitForm()"><div class="form-wrapper"><div class="form-item" ng-repeat="(key, field) in formElements | weight">' +
-            '<div form-element element="field" value="formData[key]"><span>placeholder</span></div>' +
-          '</div>' +
-          '<div class="help-link" ng-bind-html="help_link"></div></div>' +
+          template: '<form id="{{formId}}" name="settingsForm" ng-submit="submitForm($event)">' +
+            '<div class="messages" ng-show="status.length || error.length">' +
+              '<div class="status" ng-show="status.length > 0"><div ng-repeat="m in status">{{m}}</div></div>' +
+              '<div class="error" ng-show="errors.length > 0"><div ng-repeat="m in errors">{{m}}</div></div></div>' +
+            '</div>' +
+            '<div class="form-wrapper">' +
+              '<div class="form-item" ng-repeat="(key, field) in formElements | weight">' +
+                '<div form-element element="field" value="formData[key]"><span>placeholder</span></div>' +
+              '</div>' +
+            '<div class="help-link" ng-bind-html="help_link"></div></div>' +
           '<div class="actions"><input type="submit" value="Save"><input type="button" value="Close" ng-click="close(false)"></div></form>',
           inputs: {
             form: scope.form
@@ -137,6 +147,9 @@
     $s.formElements = {};
     $s.formData = {};
 
+    $s.status = [];
+    $s.errors = [];
+
     apSettings.SettingsReady().then(function () {
       var settingsRaw = apSettings.GetFormDefinitions(form);
       console.log(settingsRaw);
@@ -163,11 +176,35 @@
       }
     });
 
-    function submitForm() {
-      if ($s.settingsForm.$dirty) {
+    function submitForm($event) {
+      var button = document.activeElement,
+        triggered = false;
+      if (apSettings.IsSetting(button.getAttribute('name'))) {
+        triggered = true;
+      }
+
+      if ($s.settingsForm.$dirty || triggered) {
         apSettings.SaveSettings($s.formData).then(function (response) {
-          sessionStorage['messages'] = JSON.stringify(response.data.messages);
-          $s.close(true);
+          var body = response.data;
+          sessionStorage['messages'] = JSON.stringify(body.data.messages);
+          $s.status = [];
+          $s.error = [];
+          var close = true;
+          var reload = true;
+          for (var i = 0; i < body.data.length; i++) {
+            switch (body.data[i].type) {
+              case 'no_close':
+                close = false;
+              case 'no_reload':
+                reload = false;
+                break;
+              case 'message':
+                $s[body.data[i].message_type].push(body.data[i].message)
+            }
+          }
+          if (close) {
+            $s.close(reload);
+          }
         });
       }
       else {

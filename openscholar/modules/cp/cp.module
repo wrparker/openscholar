@@ -524,9 +524,9 @@ function cp_cp_settings() {
     );
     $settings['cp_redirect_max'] = array(
       'group' => array(
-        '#title' => t('URL Redirects'),
-        '#id' => 'redirects',
-        '#help_link' => l(t('Learn more about redirects'), 'http://docs.openscholar.harvard.edu/site-settings', array('attributes' => array('target' => '_blank')))
+        '#title' => t('Max Redirects'),
+        '#id' => 'max-redirects',
+        '#help_link' => l(t('Learn more about redirects'), '', array('attributes' => array('target' => '_blank')))
       ),
       'form' => array(
         '#type' => 'textfield',
@@ -587,6 +587,16 @@ function cp_clear_site_cache() {
   os_remove_cache($wildcard);
 
   drupal_set_message(t('Site cache is clearing.'));
+
+  return array(
+    array('type' => 'no_close'),
+    array('type' => 'no_reload'),
+    array(
+      'type' => 'message',
+      'message_type' => 'status',
+      'message' => t('Site cache is clearing.'),
+    )
+  );
 }
 
 /**
