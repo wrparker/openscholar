@@ -94,15 +94,15 @@
     background-position: center;
   }
   .front-four-lops .front-lop-papers h2.block-title {
-         background-image: url('../images/icons/papers.svg');
+         background-image: url('../images/icons/papers.svg?123');
          background-size: 57px;
   }
   .front-four-lops .front-lop-books h2.block-title {
-     background-image: url('../images/icons/books.svg');
+     background-image: url('../images/icons/books.svg?123');
      background-size: 50px;
   }
   .front-four-lops .front-lop-presentations h2.block-title {
-      background-image: url('../images/icons/presentations.svg');
+      background-image: url('../images/icons/presentations.svg?123');
       background-size: 50px;
   }
   #content-panels .front-lop-blockgrid .block-inner {
