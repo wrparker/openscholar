@@ -171,8 +171,8 @@ projects[imageapi_optimize][download][branch] = 7.x-1.x
 projects[imageapi_optimize][download][revision] = 234f208
 
 projects[imagemagick][subdir] = "contrib"
-projects[imagemagick][download][type] = git
-projects[imagemagick][download][branch] = 7.x-1.x
+projects[imagemagick][download][type] = file
+projects[imagemagick][download][url] = "https://ftp.drupal.org/files/projects/imagemagick-7.x-1.0.zip"
 
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0
