@@ -50,29 +50,14 @@ function os_revisions_module_implements_alter(&$implementations, $hook) {
 }
 
 /**
- * Implements hook_menu().
+ * Implements hook_menu_alter().
  */
-function os_revisions_menu() {
-  $items = array();
-  $items['node/%node/revisions'] = array(
-    'title' => 'Revisions',
-    'page callback' => 'os_revisions_revision_overview',
-    'page arguments' => array(1),
-    'access callback' => '_node_revision_access',
-    'access arguments' => array(1),
-    'weight' => 2,
-    'type' => MENU_LOCAL_TASK,
-    'theme callback' => 'cp_theme_name',
-  );
-  $items['node/%node/revisions/%/view'] = array(
-    'page callback' => 'node_show',
-    'page arguments' => array(1, TRUE),
-    'access callback' => '_node_revision_access',
-    'access arguments' => array(1),
-    'theme callback' => 'cp_appearance_theme_default',
-  );
-  return $items;
+function os_revisions_menu_alter(&$items) {
+  $items['node/%node/revisions']['page callback'] = 'os_revisions_revision_overview';
+  $items['node/%node/revisions']['theme callback'] = 'cp_theme_name';
+  $items['node/%node/revisions/%/view']['theme callback'] = 'cp_appearance_theme_default';
 }
+
 
 /**
  * Re-write the list of revisions for a node
