@@ -96,7 +96,7 @@ function os_profiles_update_7050() {
 /**
  * Update sync URLs from the old %.json format to the new api\v1\profiles format
  */
-function os_profiles_update_7052(&$sandbox) {
+function os_profiles_update_7053(&$sandbox) {
 
   $query = db_select('field_data_field_original_destination_url', 'u')
     ->fields('u')
@@ -121,7 +121,7 @@ function os_profiles_update_7052(&$sandbox) {
   }
 }
 
-function os_profiles_update_7053(&$sandbox) {
+function os_profiles_update_7054(&$sandbox) {
   os_set_update_batch($sandbox, array(
     'batch' => 250,
     'entity' => 'node',
