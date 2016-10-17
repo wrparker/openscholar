@@ -181,7 +181,7 @@ function vsite_register_form($form, &$state) {
     // - give a site to a new account.
     $form['vicarious_user'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Create this OS Site on behalf of another user.'),
+      '#title' => t('Create this site on behalf of another user.'),
     );
 
     $form['user_fieldset'] = array(
@@ -192,18 +192,25 @@ function vsite_register_form($form, &$state) {
 
     // $ajax_link = l(t('create a new user'), 'javascript:void(0)', array('attributes'=>array('id'=>array('new-user-link'))));
     // @todo figure out l() later
-    $ajax_link = '<a href="javascript:void(0)" id="new-user-link">' . t('create a new user') . '</a>';
+    $ajax_link = '';
+    if (!module_exists('pinserver')) {
+      $ajax_link = '  or <a href="javascript:void(0)" id="new-user-link">' . t('create a new user') . '</a>';
+    }
 
     $form['user_fieldset']['existing_username'] = array(
       '#type' => 'textfield',
       '#title' => t('Find Existing User'),
-      '#description' => t('Enter the name of the user who will manage this new site or !create_new.',
+      '#description' => t('Enter the name of the user who will manage this new site!create_new.',
         array('!create_new' => $ajax_link)
       ),
-      '#autocomplete_path' => 'vsite/autocomplete/user',
+      '#autocomplete_path' => 'vsite/autocomplete/user/register',
     );
 
-    // Prepares flag for JS to set when create new user is clicked.
+    if (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE)) {
+      $form['user_fieldset']['existing_username']['#description'] .= ' ' . t('Only users who have linked their OpenScholar accounts to HarvardKey are listed.') . ' ' . l('Learn more about linking accounts', 'http://docs.openscholar.harvard.edu/logging-your-site#linking-your-harvardkey-to-your-openscholar-account', array('attributes' => array('target' => '_blank', 'rel' => 'noopener')));
+    }
+
+      // Prepares flag for JS to set when create new user is clicked.
     $form['user_fieldset']['create_new_user'] = array(
       '#type' => 'hidden',
       '#default_value' => FALSE,
@@ -213,7 +220,9 @@ function vsite_register_form($form, &$state) {
       '#markup' => '<div id="new_user_div">',
     );
 
-    $form['user_fieldset'] += _vsite_register_user_form();
+    if (!module_exists('pinserver') || !variable_get('pinserver_pin_url', FALSE)) {
+      $form['user_fieldset'] += _vsite_register_user_form();
+    }
 
     $form['user_fieldset']['huid'] = array();
 

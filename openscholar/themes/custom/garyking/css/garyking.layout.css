@@ -1,5 +1,9 @@
 /* Layout CSS */
 
+.sidebar    { 
+
+}
+
 h1#page-title
  {
     width: 980px;
@@ -11,6 +15,7 @@ h1#page-title
 
 .front .block-boxes-os_boxes_tabs {
 width: 104%;
+min-height: 425px;
 }
 
 .front-top-cloumn .region-two-66-33-second,
@@ -20,7 +25,8 @@ width: 104%;
   
   
 .front-top-cloumn .region-two-66-33-first {
-      width: 70%;
+       width: 69.7%;
+    border-right: 4px solid #fff;
   }
   .front-top-cloumn .region-two-66-33-second {
       width: 30%;
