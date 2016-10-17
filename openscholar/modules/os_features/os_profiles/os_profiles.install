@@ -97,34 +97,17 @@ function os_profiles_update_7050() {
  * Update sync URLs from the old %.json format to the new api\v1\profiles format
  */
 function os_profiles_update_7051() {
-
-  $query = db_select('field_data_field_original_destination_url', 'u')
-    ->fields('u')
-    ->condition('field_original_destination_url_value', '%node%.json', 'LIKE');
-
-  $result = $query->execute();
-
-  while ($row = $result->fetchAssoc()) {
-
-    $old_url = $row['field_original_destination_url_value'];
-    $url_pattern = '/node\/+(\d+)/';
-    if (preg_match($url_pattern, $old_url, $matches)) {
-      $host = parse_url($old_url)['host'];
-      $entity_id = $matches[1];
-      $new_url = "http://" . $host . "/" . OS_PROFILE_JSON_PREFIX . $entity_id;
-
-      db_update('field_data_field_original_destination_url')
-        ->fields(array('field_original_destination_url_value' => $new_url))
-        ->condition('entity_id', $row['entity_id'])
-        ->execute();
-    }
-  }
+  os_set_update_batch($sandbox, array(
+    'batch' => 250,
+    'entity' => 'node',
+    'path' => drupal_get_path('module', 'os_profiles') . '/updates/update7051.php',
+  ));
 }
 
 function os_profiles_update_7052(&$sandbox) {
   os_set_update_batch($sandbox, array(
     'batch' => 250,
     'entity' => 'node',
-    'path' => drupal_get_path('module', 'os_profiles') . '/updates/update7051.php',
+    'path' => drupal_get_path('module', 'os_profiles') . '/updates/update7052.php',
   ));
 }
