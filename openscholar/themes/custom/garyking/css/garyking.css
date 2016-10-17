@@ -51,8 +51,9 @@
   
   #main-content-header  {
     height: 205px;
-    margin-top: 18px;
+    margin-top: 10px;
     display: table;
+        width: 980px;
 }
   
   
