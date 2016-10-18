@@ -9,7 +9,7 @@
     attach: function (ctx) {
 
       // Sets embedded iframe width same as the parent wrapper div width
-      $('.block-boxes-os_sv_list_file .os_sv_list_file .file-html-embed').each(function(i){
+      $('.block-boxes-os_sv_list_file .os_sv_list_file .file').each(function(i){
         var width_parent = $(this).width();
         $(this).find('iframe').css({width:width_parent});
       });
