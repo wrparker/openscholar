@@ -156,7 +156,7 @@ function os_faq_cp_settings() {
       '#type' => 'radios',
       '#title' => t('Ordering'),
       '#default_value' => variable_get('faq_sort', 'created'),
-      '#options' => array('created' => t('Creation date, descending'), 'created_asc' => t('Creation date, ascending'), 'title' => t('Alphanumeric, A-Z'), 'title_desc' => t('Alphanumeric, Z-A')),
+      '#options' => array('created' => t('Creation date, newest first'), 'created_asc' => t('Creation date, oldest first'), 'title' => t('Alphanumeric, A-Z'), 'title_desc' => t('Alphanumeric, Z-A')),
     ),
   );
   return $settings;
