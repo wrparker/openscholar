@@ -7,8 +7,6 @@
 class OpenscholarProfilesTestCase extends DrupalTestCase {
 
   public static function getInfo() {
-    print "Entering getInfo()\n";
-
     return array(
       'name' => 'os_profiles module functionality',
       'description' => 'Tests hooks in the os_profiles module',
@@ -17,39 +15,28 @@ class OpenscholarProfilesTestCase extends DrupalTestCase {
   }
 
   public function setUp() {
-    print "Entering setUp()\n";
     $this->setup = TRUE;
   }
 
   /* 
+   * Test validity of synchronization URLs
+   *
    * Method must begin with "test"
    **/
   public function testOpenscholarProfilesSyncLinks() {
-    print "Entering OsProfilesSyncLinksTest()\n";
 
-    // Take a random sample of 5 rows
+    // Take a random sample of 10 URLs
     $result = db_select('field_data_field_original_destination_url', 'u')
       ->fields('u')
       ->orderBy('rand()')
       ->range(0, 10) 
       ->execute();
 
-    print "EAM line 34 result " . var_export($result, true);
-
     while ($row = $result->fetchAssoc()) {
-
-      $response = drupal_http_request($row['field_original_destination_url_value']);
-
-      print "EAM line 43 response = " . var_export($response, true);
-
-      // assertTrue();
-
-      if (isset($error)) {
-        return false;
-      }
+      $url = $row['field_original_destination_url_value'];
+      $response = drupal_http_request($url);
+      $this->assertEqual($response->code, 200, "HTTP response from $url is " . $response->code . ", not 200.");
     }
-
-    return true;
   }
 
   public function tearDown() {
