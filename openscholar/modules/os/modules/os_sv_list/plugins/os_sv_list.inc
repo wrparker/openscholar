@@ -81,7 +81,6 @@ class os_sv_list extends os_boxes_default {
 
     $form['#submit'] = array('os_sv_list_form_submit');
     $form['#after_build'][] = 'os_sv_list_after_build';
-    //dsm($form);
     $form['#attached'] = array(
       'css' => array(drupal_get_path('module', 'os_sv_list') . '/os_sv_list.css'),
     );
