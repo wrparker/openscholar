@@ -8,10 +8,12 @@
   Drupal.behaviors.os_sv_list = {
     attach: function (ctx) {
 
-      // Sets embedded iframe width same as the parent wrapper div width
+      // Sets embedded iframe width same as the parent wrapper div width if initial iframe width is greater than parent div width
       $('.block-boxes-os_sv_list_file .os_sv_list_file .file').each(function(i){
         var width_parent = $(this).width();
-        $(this).find('iframe').css({width:width_parent});
+        if (width_parent < $(this).find('iframe').attr('width')) {
+          $(this).find('iframe').attr('width', width_parent);
+        }
       });
 
       // add a click handler to lists of posts
