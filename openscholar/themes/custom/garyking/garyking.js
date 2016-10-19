@@ -1,5 +1,5 @@
   WebFontConfig = {
-    google: { families: [ 'Oswald:400,300,700:latin', 'Lora:400,700,400italic,700italic:latin' ] }
+    google: { families: [ 'Oswald:400,300,700:latin', 'Quattrocento' ] }
   };
   (function() {
     var wf = document.createElement('script');
@@ -19,9 +19,20 @@ jQuery(document).ready(function(){
       //  }
    // });    
   //  jQuery('.front-four-lops .front-lop-blockgrid, .front-lop-software-tabs').height(highestBox);
+  
+  
+   var classes = ["bg-one", "bg-two", "bg-three", "bg-four", "bg-five", "bg-six", "bg-seven", "bg-eight"];
+
+    jQuery("body.not-front").each(function(){
+        jQuery(this).addClass(classes[~~(Math.random()*classes.length)]);
+    });
 
 jQuery("#block-os-primary-menu .nice-menu li.last a").click(function() {
    jQuery(".block-os-search-solr").toggleClass('open');
     });
+    
+    
+     jQuery(".research-by-topic a").removeAttr("title");
+    
 
 });
