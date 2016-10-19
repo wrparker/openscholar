@@ -926,14 +926,3 @@ function os_update_7047() {
   variable_set('os_last_un_compress_fid', reset($result['file'])->fid);
 }
 
-/**
- * Set Image Magick variables.
- */
-function os_update_7048() {
-  variable_set('image_toolkit', 'imagemagick');
-  variable_set('imageapi_optimize_toolkit', 'imagemagick');
-  variable_set('imagemagick_convert', '/usr/bin/convert');
-  variable_set('imagemagick_debug', 1);
-  variable_set('imagemagick_gm', 0);
-  variable_set('imagemagick_quality', '75');
-}
