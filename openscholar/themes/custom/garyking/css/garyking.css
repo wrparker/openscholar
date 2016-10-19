@@ -1,8 +1,4 @@
-   .research-by-topic ul .item-list ul li:nth-child(5),
-    .research-by-topic ul .item-list ul li:nth-child(6),
-     .research-by-topic ul .item-list ul li:nth-child(7),
-      .research-by-topic ul .item-list ul li:nth-child(8), 
-      .research-by-topic ul .item-list ul li:nth-child(9),
+
 .tweet-divider,
   .tweet-authorphoto,
   .tweet-author,
@@ -91,6 +87,7 @@
       border-top-style: solid;
       border-width: 3px;
   }
+  .research-by-topic ul .item-list ul li,
   #menu-bar ul.nice-menu a.active,
   #menu-bar ul.nice-menu a:hover,
   #menu-bar ul.nice-menu .menuparent.over > a,
@@ -458,35 +455,25 @@
     height: 300px;
     overflow: hidden;
     margin-right: 20px;
-    background-color:#eee;
+   
 
 }
 
 .research-by-topic ul .item-list ul li a {
-  position:absolute;
-  background-color: #fff;
-  width:21%;
+  display: block;
+  background-color: #ccc;
+  /* width:21%; */
   height:10%;
   padding: 50px 10px;
-  transition:all .250s;
-  border-radius: 0px 0px 200px 200px;
-  -moz-border-radius: 0px 0px 200px 200px;
-  -webkit-border-radius: 0px 0px 200px 200px;
   font-size:1.1em;
+  z-index: 2;
+  position: relative;
 }
 
 .research-by-topic ul .item-list ul li a:hover {
-  
-  height:8%;
-  padding:10px 10px;
-  border-radius: 0;
--moz-border-radius: 0;
--webkit-border-radius: 0;
+
 }
 
-.research-by-topic ul .item-list ul li:nth-child(4) {
-    margin-right: 0;
-}
 
 
 .research-by-topic.block-boxes-os_taxonomy_fbt ul ul {
@@ -503,18 +490,16 @@
 }
 
 
-.research-by-topic .term-head a {
- 
-    color: #fff; 
-}
+
 
 .research-by-topic ul .item-list ul li .description {
    transition:all .250s;
-    padding: 10px;
-   
+   padding: 10px;
+   z-index: 1;
+   position: relative;
 }
 
-.research-by-topic ul .item-list ul li a:hover ~ .description {
+.research-by-topic ul .item-list ul li:hover .description {
    
     padding-top: 80px;
     height:auto;
