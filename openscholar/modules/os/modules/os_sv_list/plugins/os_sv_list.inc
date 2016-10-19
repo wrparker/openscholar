@@ -80,6 +80,8 @@ class os_sv_list extends os_boxes_default {
     $this->options = ($this->options) ? array_merge($this->options_defaults(), $this->options) : $this->options_defaults();
 
     $form['#submit'] = array('os_sv_list_form_submit');
+    $form['#after_build'][] = 'os_sv_list_after_build';
+    //dsm($form);
     $form['#attached'] = array(
       'css' => array(drupal_get_path('module', 'os_sv_list') . '/os_sv_list.css'),
     );
@@ -177,6 +179,7 @@ class os_sv_list extends os_boxes_default {
       '#title' => t('URL for the more link'),
       '#type' => 'textfield',
       '#default_value' => $this->options['more_link'],
+      '#required' => TRUE,
       '#size' => 15,
       '#states' => array(
         'visible' => array('input[name=more]' => array('checked' => TRUE)),
@@ -194,6 +197,7 @@ class os_sv_list extends os_boxes_default {
     $form['details']['more_div']['more_text'] = array(
       '#title' => 'Label of the more link (default: "more")',
       '#size' => 15,
+      '#required' => TRUE,
       '#type' => 'textfield',
       '#default_value' => $this->options['more_text'],
         '#states' => array(
