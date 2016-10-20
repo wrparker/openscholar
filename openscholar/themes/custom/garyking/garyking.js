@@ -24,11 +24,22 @@
           jQuery(".block-os-search-solr").toggleClass('expose');
       });
 
-jQuery(".research-by-topic ul .item-list ul li a" ).after( "<span></span>");
+jQuery(".research-by-topic ul .item-list ul li a").after("<span></span>");
+jQuery(".research-by-topic ul .item-list ul li .description a").after(" ");
 
-      jQuery(".research-by-topic ul .item-list ul li span").click(function() {
-          jQuery(".research-by-topic ul .item-list ul li").toggleClass('open');
-      });
+    //  jQuery(".research-by-topic ul .item-list ul li span").click(function() {
+      //    jQuery(".research-by-topic ul .item-list ul li").toggleClass('open');
+    //  });
+
+
+
+$('.research-by-topic ul .item-list ul li span').click(function() {
+    if ($('.research-by-topic ul .item-list ul li').hasClass('open')){
+        $('.research-by-topic ul .item-list ul li').removeClass('open');  
+    } else {
+        $('.research-by-topic ul .item-list ul li').addClass('open');
+      }
+});
 
 
 
