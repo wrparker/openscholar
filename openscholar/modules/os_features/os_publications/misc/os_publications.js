@@ -164,4 +164,45 @@ Drupal.behaviors.osPublications = {
     }
   };
 
+  /**
+   * Hide/shoe the year field when selection different publishing modes.
+   */
+  Drupal.behaviors.publishedYearHidden = {
+    attach: function () {
+
+      var showYear = function() {
+        $('.form-item-field-biblio-pub-month-und').show();
+        $('.field-name-field-biblio-pub-day').show();
+        $('.form-item-biblio-year').show();
+      };
+
+      var hideYear = function() {
+        $('.form-item-field-biblio-pub-month-und').hide();
+        $('.field-name-field-biblio-pub-day').hide();
+        $('.form-item-biblio-year').hide();
+      };
+
+      if ($('input[name=published]:checked').val() != undefined) {
+        // When selecting published mode we need to show the date input.
+        showYear();
+      }
+      else {
+        hideYear();
+      }
+
+      $('input[name=published]').click(function() {
+        // When clicking on the published mode disable the other modes and hide
+        // the other year input.
+        showYear();
+        $('#edit-biblio-year-coded input').prop('checked', false);
+        $('.form-item-biblio-year-coded-extrayear').hide();
+      });
+
+      $('#edit-biblio-year-coded input').click(function() {
+        hideYear();
+        $('input[name=published]').prop('checked', false);
+      });
+    }
+  };
+
 })(jQuery);

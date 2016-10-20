@@ -715,8 +715,19 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     unset($form['biblio_year']['#default_value']);
     $year_coded_value = _biblio_numeric_year($year_value);
   }
+
   // Modifying Title for Harvard - Chicago Author cititation
-  if (in_array($style, array('harvard-chicago-author-date.csl'))) {
+  $chicago_author_date = in_array($style, array('harvard-chicago-author-date.csl'));
+
+  $form['biblio_year_group'] = array(
+    '#type' => 'fieldset',
+    '#title' => $form['biblio_year']['#title'] . ' <span class="form-required" title="' . t('This field is required.') . '">*</span>',
+    '#collapsible' => FALSE,
+    '#weight' => $form['biblio_year']['#weight'],
+  );
+
+
+  if ($chicago_author_date) {
     $form['biblio_year']['#title'] = "Date of Publication&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
   }
 
@@ -741,6 +752,7 @@ function os_publications_alter_year_field(&$form, &$form_state) {
   }
   unset($form['field_biblio_pub_month']);
   unset($form['field_biblio_pub_day']);
+
   // Form element changes - wrap in a fieldset with the checkboxes element, and
   // fix additional attributes accordingly.
   $form['biblio_year_group']['biblio_year'] = $form['biblio_year'];
@@ -762,6 +774,28 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#default_value' => $year_coded_value,
   );
 
+  // Adding date and month fields for publication day for Harvard - Chicago
+  // Author citation.
+  if ($chicago_author_date) {
+    $form['biblio_year_group']['published'] = array(
+      '#type' => 'radio',
+      '#title' => t('Published'),
+    );
+  }
+  else {
+    $form['biblio_year_group'] = array(
+      '#type' => 'fieldset',
+      '#title' => $form['biblio_year']['#title'] . ' <span class="form-required" title="' . t('This field is required.') . '">*</span>',
+      '#collapsible' => FALSE,
+      '#weight' => $form['biblio_year']['#weight'],
+    );
+//    $form['biblio_year_group']['biblio_year'] = $form['biblio_year'];
+  }
+  dpm($form['biblio_year_group']);
+
+  unset($form['biblio_year_group']['biblio_year']['#title']);
+  unset($form['biblio_year_group']['biblio_year']['#description']);
+
   $form['biblio_year_coded_extrayear'] = array(
     '#type' => 'textfield',
     '#description' => 'e.g. 2015',
@@ -771,10 +805,15 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#weight' => $form['biblio_year_group']['#weight'] + 1,
   );
 
-  // Adding date and month validation message for Harvard - Chicago Author cititation
-  if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-    $form_validation_date_month = '<div id="biblio-month-group-validate">' . t(' Permitted date formats: 2/10/' . date('Y') . ', 2/' . date('Y') . ', ' . date('Y') . '.') . '</div>';
-  } else {
+  // Adding date and month validation message for Harvard - Chicago Author
+  // cititation.
+  if ($chicago_author_date) {
+    $params = array(
+      '@year' => date('Y'),
+    );
+    $form_validation_date_month = '<div id="biblio-month-group-validate">' . t(' Permitted date formats: 2/10/@year, 2/@year, @year.', $params) . '</div>';
+  }
+  else {
     $form_validation_date_month = '';
   }
   // Add validation message for validating the field via JS.
