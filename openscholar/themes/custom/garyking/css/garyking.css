@@ -135,7 +135,7 @@ body.node-type-biblio .biblio-export,
     -webkit-transition: all .5s;
     transition: all .5s;
 }
-.block-os-search-solr.open {
+.block-os-search-solr.expose {
     opacity: 9;
 }
 h1#page-title {
@@ -467,7 +467,12 @@ ul.nice-menu-down {
     position: relative;
     color: #fff;
     font-weight: bold;
-    /* top: -82px; */
+transition:all .5s;
+top: 0;
+}
+
+.research-by-topic ul .item-list ul li.open a {
+   top: -82px; 
 }
 
 
@@ -549,29 +554,37 @@ ul.nice-menu-down {
    -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
    transform: rotate(180deg);
    z-index: 2;
+   transition:all .250s;
 }
-.research-by-topic ul .item-list ul li:nth-child(1) a:after,
-.research-by-topic ul .item-list ul li:nth-child(8) a:after {
+.research-by-topic ul .item-list ul li.open span {
+    -ms-transform: rotate(0deg); /* IE 9 */
+   -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+   transform: rotate(0deg);
+   top: 1px;
+ 
+}
+.research-by-topic ul .item-list ul li:nth-child(1) span,
+.research-by-topic ul .item-list ul li:nth-child(8) span {
     /* #5AB899; */
    border: 1px solid rgba(90,184,153,0.7);
     
    
 }
 
-.research-by-topic ul .item-list ul li:nth-child(2) a:after,
-.research-by-topic ul .item-list ul li:nth-child(7) a:after {
+.research-by-topic ul .item-list ul li:nth-child(2) span,
+.research-by-topic ul .item-list ul li:nth-child(7) span {
     /* #3B4B69;*/
       border: 1px solid rgba(59,75,105,0.7);
     
 }
-.research-by-topic ul .item-list ul li:nth-child(3) a:after,
-.research-by-topic ul .item-list ul li:nth-child(6) a:after {
+.research-by-topic ul .item-list ul li:nth-child(3) span,
+.research-by-topic ul .item-list ul li:nth-child(6) span {
     /*  #ff884d;*/
      border: 1px solid  rgba(255,136,77,0.7);
     
 }
-.research-by-topic ul .item-list ul li:nth-child(4) a:after,
-.research-by-topic ul .item-list ul li:nth-child(5) a:after {
+.research-by-topic ul .item-list ul li:nth-child(4) span,
+.research-by-topic ul .item-list ul li:nth-child(5) span {
     /*  #81b9c3;*/
     border: 1px solid rgba(129,185,195,0.7);
     
@@ -594,7 +607,12 @@ ul.nice-menu-down {
     z-index: 1;
     position: relative;
     font-size:.95em;
-    
+    top:-100px;
+    transition:all .5s;
 }
+.research-by-topic ul .item-list ul li.open .description {
+ top: -75px;
+}
+
 
 
