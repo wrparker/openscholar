@@ -1880,6 +1880,12 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
   if (!empty($form['#attributes']['class']) && in_array('confirmation', $form['#attributes']['class'])) {
     $form['description']['#markup'] = t('Deleting a term  <span class="emphasize">will delete all of its child terms</span> if there are any. Reassigning child terms to a different parent term should be considered. This action cannot be undone.');
   }
+
+  $form['#attached']['js'][] = drupal_get_path('module', 'os_wysiwyg') . '/js/wrap_plugins.js';
+  $form['#attached']['js'][] = [
+    'data' => '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML',
+    'type' => 'external',
+  ];
 }
 
 /**
