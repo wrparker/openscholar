@@ -441,11 +441,12 @@ ul.nice-menu-down {
     height: 300px;
     overflow: hidden;
     margin: 0 20px 10px 0;
-      -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     -webkit-transition: all .250s;
     background-color:#f6f6f6;
+    position: relative;
 }
 .research-by-topic ul .item-list ul li:hover {
     background-color:#f8f8f8;
@@ -459,7 +460,6 @@ ul.nice-menu-down {
 
 .research-by-topic ul .item-list ul li a {
     display: block;
-   
     height: 50px;
     padding: 20px 15px 30px 15px;
     font-size: 1.1em;
@@ -467,8 +467,7 @@ ul.nice-menu-down {
     position: relative;
     color: #fff;
     font-weight: bold;
-    top: -82px;
-     
+    /* top: -82px; */
 }
 
 
@@ -533,22 +532,23 @@ ul.nice-menu-down {
 }
 
 
-.research-by-topic ul .item-list ul li a:after {
-    content: '';
-    height: 30px;
-    width: 30px;
-    line-height: 30px;
-    -moz-border-radius: 30px;
-    border-radius: 30px;
-    background-color: #fff;
-    position: absolute;
-    bottom: -14px;
-    left: 44%;
-    border: 1px solid #ccc;
-    background: url("../images//sprite.png?abcd") 8px -141px #fff  no-repeat;
-    -ms-transform: rotate(180deg); /* IE 9 */
-    -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
-    transform: rotate(180deg);
+.research-by-topic ul .item-list ul li span {
+   display:block;
+   height: 30px;
+   width: 30px;
+   line-height: 30px;
+   -moz-border-radius: 30px;
+   border-radius: 30px;
+   background-color: #fff;
+   position: absolute;
+   top: 82px;
+   left: 42%;
+   border: 1px solid #ccc;
+   background: url("../images//sprite.png?abcd") 8px -141px #fff  no-repeat;
+   -ms-transform: rotate(180deg); /* IE 9 */
+   -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+   transform: rotate(180deg);
+   z-index: 2;
 }
 .research-by-topic ul .item-list ul li:nth-child(1) a:after,
 .research-by-topic ul .item-list ul li:nth-child(8) a:after {
@@ -596,3 +596,5 @@ ul.nice-menu-down {
     font-size:.95em;
     
 }
+
+
