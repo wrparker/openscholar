@@ -31,6 +31,12 @@ jQuery("#block-os-primary-menu .nice-menu li.last a").click(function() {
    jQuery(".block-os-search-solr").toggleClass('open');
     });
     
+    jQuery(".research-by-topic ul .item-list ul li a:after").click(function() {
+   jQuery(".research-by-topic ul .item-list ul li").toggleClass('open');
+    });
+    
+    
+    
     
      jQuery(".research-by-topic a").removeAttr("title");
     
