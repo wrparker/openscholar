@@ -24,7 +24,7 @@
           jQuery(".block-os-search-solr").toggleClass('open');
       });
 
-jQuery(".research-by-topic ul .item-list ul li div:not(.description) a" ).after( "<span></span>");
+jQuery(".research-by-topic ul .item-list ul li + a" ).after( "<span></span>");
 
       jQuery(".research-by-topic ul .item-list ul li span").click(function() {
           jQuery(".research-by-topic ul .item-list ul li").toggleClass('open');
