@@ -441,6 +441,11 @@ ul.nice-menu-down {
     height: 300px;
     overflow: hidden;
     margin: 0 20px 10px 0;
+      -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
+    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
+    -webkit-transition: all .250s;
+   
 }
 .research-by-topic ul .item-list ul li:nth-child(4),
 .research-by-topic ul .item-list ul li:nth-child(8)
@@ -484,12 +489,17 @@ ul.nice-menu-down {
 
 .research-by-topic ul .item-list ul li a:after {
     content: '';
-    width: 20px;
-    height: 20px;
-    background-color: #0000ff;
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+    background-color: #fff;
     position: absolute;
-    bottom: -8px;
-    left: 45%;
+    bottom: -14px;
+    left: 44%;
+    border:1px solid #ccc;
+    background: url("https://cdn2.iconfinder.com/data/icons/navigation-set-arrows-part-two/32/Arrow_Download-20.png") #fff 5px no-repeat;
 }
 .research-by-topic ul .item-list ul li a:hover {
 	
@@ -507,9 +517,7 @@ ul.nice-menu-down {
     padding: 10px;
     z-index: 1;
     position: relative;
-    /* top: 0; */
-}
-.research-by-topic ul .item-list ul li:hover .description {
-    padding-top: 80px;
-    height: auto;
+    font-size:.95em;
+    
+ 
 }
