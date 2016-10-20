@@ -2829,22 +2829,38 @@ function os_set_update_batch(&$sandbox, $info) {
     $sandbox['progress'] = 0;
     // Get the total amounts of nodes.
     $query = call_user_func($info['query']);
-    $sandbox['max'] = $query
-      ->count()
-      ->execute();
+
+    if (method_exists($query, "count")) {
+      $sandbox['max'] = $query
+        ->count()
+        ->execute();
+    } else if (method_exists($query, "countQuery")) {
+        $result = $query->countQuery()->execute();
+        $count = $result->fetchAllAssoc('expression');
+        $sandbox['max'] = array_keys($count)[0];
+
+    } else {
+      drupal_set_message(t('Unable to get record count of query results.'));
+      return;
+    }
   }
-
   $id = empty($sandbox['id']) ? 0 : $sandbox['id'];
-
   $query_info = call_user_func($info['query'], $id);
   $result = $query_info
     ->range(0, $info['batch'])
     ->execute();
 
-  $ids_array = $result[$info['entity']];
+  // EntityFieldQuery
+  if (is_array($result)) {
+    $ids_array = $result[$info['entity']];
 
-  if (empty($ids_array)) {
-    return;
+    if (empty($ids_array)) {
+      return;
+    }
+
+  // SelectQuery
+  } else if (method_exists($result, "fetchAllAssoc")) {
+    $ids_array = $result->fetchAllAssoc('entity_id');
   }
 
   $entities = entity_load($info['entity'], array_keys($ids_array));
