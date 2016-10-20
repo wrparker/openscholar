@@ -24,8 +24,7 @@
           jQuery(".block-os-search-solr").toggleClass('expose');
       });
 
-jQuery(".research-by-topic ul .item-list ul li a").after("<span></span>");
-jQuery(".research-by-topic ul .item-list ul li .description a").after(" ");
+jQuery(".research-by-topic ul .item-list ul li a:first-of-type").after("<span></span>");
 
     //  jQuery(".research-by-topic ul .item-list ul li span").click(function() {
       //    jQuery(".research-by-topic ul .item-list ul li").toggleClass('open');
@@ -34,11 +33,8 @@ jQuery(".research-by-topic ul .item-list ul li .description a").after(" ");
 
 
 jQuery('.research-by-topic ul .item-list ul li span').click(function() {
-    if (jQuery('.research-by-topic ul .item-list ul li').hasClass('open')){
-        jQuery('.research-by-topic ul .item-list ul li').removeClass('open');  
-    } else {
-        jQuery('.research-by-topic ul .item-list ul li').addClass('open');
-      }
+   jQuery('.research-by-topic ul .item-list ul li').toggleClass('open');  
+   
 });
 
 
