@@ -22,9 +22,26 @@
        * Display warning message when user clicks link to view revisions before any changes
        * that have been made have been saved
        */
-      $("fieldset#edit-revision-information a#revisions-link").click(function(e) {
-        if (!confirm('Leaving this page will leave your changes unsaved.')) {
-          e.preventDefault();
+      $editform = 0;
+      $('form.node-form input,form.node-form select,form.node-form textarea').change(function() {
+        $editform = 1;
+        console.log('editform changed to 1');
+      });
+      if($('form.node-form').length) {
+        CKEDITOR.on('instanceReady', function(readyEvent) {
+          readyEvent.editor.on('blur', function(blurEvent) {
+            if(blurEvent.editor.checkDirty()) {
+              $editform = 1;
+            }
+          });
+        });
+      }
+      $('fieldset#edit-revision-information a#revisions-link').click(function(clickEvent) {
+        if($editform) {
+          if (!confirm('Leaving this page will leave your changes unsaved.')) {
+            clickEvent.preventDefault();
+            return false;
+          }
         }
       });
     }

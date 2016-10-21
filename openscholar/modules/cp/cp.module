@@ -22,6 +22,19 @@ function cp_theme_name() {
 }
 
 /**
+ * Theme callback for default theme.
+ */
+function cp_theme_default() {
+  $theme_names = array_keys(list_themes());
+  if (in_array('os_basetheme', $theme_names)) {
+    return 'os_basetheme';
+  }
+  else {
+    return variable_get('theme_default');
+  }
+}
+
+/**
  * Defines the default maximum number of allowed URL redirects per site.
  */
 define('CP_REDIRECT_MAX_DEFAULT', 15);

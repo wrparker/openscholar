@@ -55,7 +55,7 @@ function os_revisions_module_implements_alter(&$implementations, $hook) {
 function os_revisions_menu_alter(&$items) {
   $items['node/%node/revisions']['page callback'] = 'os_revisions_revision_overview';
   $items['node/%node/revisions']['theme callback'] = 'cp_theme_name';
-  $items['node/%node/revisions/%/view']['theme callback'] = 'cp_appearance_theme_default';
+  $items['node/%node/revisions/%/view']['theme callback'] = 'cp_theme_name';
 }
 
 
@@ -84,13 +84,13 @@ function os_revisions_revision_overview($node) {
 
     if ($revision->current_vid > 0) {
 
-      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid"), '!username' => theme('username', array('account' => $revision))))
+      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid"), '!username' => format_username(user_load($revision->uid))))
         . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
         'class' => array('revision-current'));
       $operations[] = array('data' => drupal_placeholder(t('Current revision')), 'class' => array('revision-current'), 'colspan' => 2);
     }
     else {
-      $row[] = t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'short'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => theme('username', array('account' => $revision))))
+      $row[] = t('!date by !username', array('!date' => l(t('View this revision') . ' - ' . format_date($revision->timestamp, 'short'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => format_username(user_load($revision->uid))))
         . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : '');
       if ($revert_permission) {
         $operations[] = l(t('Revert'), "node/$node->nid/revisions/$revision->vid/revert");
@@ -201,4 +201,20 @@ function os_revisions_admin_paths() {
   );
 
   return $paths;
+}
+
+/**
+ * Implements hook_node_view_alter().
+ *
+ * Add node revision review to admin paths
+ */
+function os_revisions_node_view_alter(&$build) {
+  if ($build['#view_mode'] == 'full') {
+    $current_version = $build['#node'];
+    $latest_version = node_load($build['#node']->nid);
+    // this is a revision, so remove contextual links
+    if ($current_version->vid != $latest_version->vid) {
+      $build['#contextual_links'] = array();
+    }
+  }
 }

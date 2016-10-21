@@ -1154,13 +1154,17 @@ body.cke_editable img.media-element.file-default[style*="float:"][style*="right;
 }
 /* REVISIONS */
 body.page-node-revisions table.sticky-table caption {
-margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 body.page-node-revisions table.sticky-table thead th:nth-of-type(2) {
-width: 15%;
+    width: 15%;
 }
 
 body.page-node-revisions table.sticky-table td.revision-current {
     background: #E0E4EA;
+}
+
+body.page-node fieldset#edit-revision-information span.summary {
+    display: none;
 }

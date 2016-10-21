@@ -350,19 +350,6 @@ function cp_appearance_theme_picker_form($form, &$form_state) {
 }
 
 /**
- * Theme callback for default theme.
- */
-function cp_appearance_theme_default() {
-  $theme_names = array_keys(list_themes());
-  if (in_array('os_basetheme', $theme_names)) {
-    return 'os_basetheme';
-  }
-  else {
-    return variable_get('admin_theme');
-  }
-}
-
-/**
  * Helper function for theme picker form.
  */
 function _cp_appearance_move_option_to_front(&$options, $key) {
