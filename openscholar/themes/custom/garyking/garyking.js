@@ -24,7 +24,8 @@
           jQuery(".block-os-search-solr").toggleClass('expose');
       });
 
-jQuery(".research-by-topic ul .item-list ul li a:first-of-type").after("<span></span>");
+jQuery(".research-by-topic ul .item-list ul li .description").after("<span></span>");
+
 
     //  jQuery(".research-by-topic ul .item-list ul li span").click(function() {
       //    jQuery(".research-by-topic ul .item-list ul li").toggleClass('open');

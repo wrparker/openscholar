@@ -353,6 +353,7 @@ h1#page-title {
 .tweets-pulled-listing li {
     margin-top: 10px;
 }
+.research-by-topic ul .item-list ul li span:after,
 .biblio-title a,
 a,
 a:visited {
@@ -481,6 +482,15 @@ ul.nice-menu-down {
    top: -320px;
  
 }
+
+.research-by-topic ul .item-list ul li.open a:after {
+   bottom: 5px;
+   right:5px;
+ content:'Tagged';
+ position:absolute;
+ font-size:.75em;
+}
+
 .research-by-topic ul .item-list ul li a {
  background-color: #f6f6f6;
  }
@@ -520,32 +530,25 @@ ul.nice-menu-down {
 
 
 
-.research-by-topic ul .item-list ul li span {
-   display:block;
-   height: 30px;
-   width: 30px;
-   line-height: 30px;
-   -moz-border-radius: 30px;
-   border-radius: 30px;
-   background-color: #fff;
-   position: absolute;
-   top: 90px;
-   left: 42%;
-   border: 1px solid #ccc;
-   background: url("../images//sprite.png?abcd") 8px -141px #fff  no-repeat;
-   -ms-transform: rotate(180deg); /* IE 9 */
-   -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
-   transform: rotate(180deg);
-   border: 1px solid #065DB2;
-   z-index: 2;
-   transition:all .250s;
+.research-by-topic ul .item-list ul li span:after {
+ content:'More';
+ width: 50px;
+ /* padding-right:15px; */
+ position: absolute;
+ top: 104px;
+ left: 41%;
+ background: url("../images/sprite.png?abcd") 36px -98px no-repeat;
+ font-size:.85em;
+ transition:all .250s;
+ z-index:2;
+ background-size:70px 350px;
 }
-.research-by-topic ul .item-list ul li.open span {
-    -ms-transform: rotate(0deg); /* IE 9 */
-   -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
-   transform: rotate(0deg);
-   top: 1px;
- 
+.research-by-topic ul .item-list ul li.open span:after {
+    content:'Less';
+   top: 8px;
+ left: 5%;
+  background-position: 29px -98px;
+
 }
 
 .research-by-topic ul .item-list ul li a:hover {
