@@ -11,10 +11,11 @@
         $("input#edit-revision").click(function () {
           if ($max && $current && $(this).prop('checked')) {
             if ($current - $max >= 0) {
-              if (!confirm('This content already has the maximum number of revisions saved (' + $max + '). By creating a new revision, you will be permanently deleting the oldest revision.\n\nAre you sure you want to create a new revision?')) {
-                $(this).removeAttr('checked');
-              }
+              $('#warning-text').html('<p>Are you sure you want to create a new revision?</p><p>This content already has the maximum number of revisions saved (' + $max + '). By creating a new revision, you will be permanently deleting the oldest revision. Learn how to manage your revisions on our <a href="#" target="_blank" rel="noopener"> documentation site</a>.</p>').show();
             }
+          }
+          else {
+            $('#warning-text').hide();
           }
         });
       }
@@ -25,7 +26,6 @@
       $editform = 0;
       $('form.node-form input,form.node-form select,form.node-form textarea').change(function() {
         $editform = 1;
-        console.log('editform changed to 1');
       });
       if($('form.node-form').length) {
         CKEDITOR.on('instanceReady', function(readyEvent) {

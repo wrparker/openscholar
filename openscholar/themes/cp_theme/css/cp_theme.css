@@ -1168,3 +1168,14 @@ body.page-node-revisions table.sticky-table td.revision-current {
 body.page-node fieldset#edit-revision-information span.summary {
     display: none;
 }
+
+body.page-node fieldset#edit-revision-information #warning-text {
+    display: none;
+    padding: 8px;
+    background-color: #fffce5;
+}
+body.page-node fieldset#edit-revision-information #warning-text p {
+    color: #840;
+    padding: 0px;
+    margin: 0.5em 0;
+}
