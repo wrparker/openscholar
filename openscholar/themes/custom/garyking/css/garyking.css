@@ -353,6 +353,7 @@ h1#page-title {
 .tweets-pulled-listing li {
     margin-top: 10px;
 }
+.research-by-topic ul .item-list ul li span:after,
 .biblio-title a,
 a,
 a:visited {
@@ -438,20 +439,26 @@ ul.nice-menu-down {
 .research-by-topic ul .item-list ul li {
     display: inline-block;
     width: 23.4%;
-    height: 300px;
+    height: 125px;
     overflow: hidden;
     margin: 0 20px 10px 0;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     -webkit-transition: all .250s;
-    background-color:#f6f6f6;
+    background-color: #fff;
     position: relative;
+    z-index:1;
 }
-.research-by-topic ul .item-list ul li:hover {
-    background-color:#f8f8f8;
-   
+
+.research-by-topic ul .item-list ul li.open {
+
+    height: 300px;
+  
 }
+
+.research-by-topic .term-head a {font-size: 1.1em;margin-top: 20px;display: block;}
+
 .research-by-topic ul .item-list ul li:nth-child(4),
 .research-by-topic ul .item-list ul li:nth-child(8)
  {
@@ -460,134 +467,88 @@ ul.nice-menu-down {
 
 .research-by-topic ul .item-list ul li a {
     display: block;
-    height: 50px;
+    height: 300px;
     padding: 20px 15px 30px 15px;
     font-size: 1.1em;
     z-index: 2;
     position: relative;
-    color: #fff;
-    font-weight: bold;
-transition:all .5s;
-top: 0;
+    /* color: #fff; */
+    /* font-weight: bold; */
+    transition:all .5s;
+    top: 0;
 }
 
 .research-by-topic ul .item-list ul li.open a {
-   top: -82px; 
+   top: -320px;
+ 
 }
 
+.research-by-topic ul .item-list ul li.open a:after {
+   bottom: 5px;
+   right:5px;
+ content:'Tagged';
+ position:absolute;
+ font-size:.75em;
+}
+
+.research-by-topic ul .item-list ul li a {
+ background-color: #f6f6f6;
+ }
 
 .research-by-topic ul .item-list ul li:nth-child(1) a,
 .research-by-topic ul .item-list ul li:nth-child(8) a {
-    /* #5AB899; */
-    background-color: rgba(90,184,153,0.8);
-    transition:all .250s;
-   
+
+ transition:all .250s;
+ border-top:5px solid #5AB899;
 }
 
 .research-by-topic ul .item-list ul li:nth-child(2) a,
 .research-by-topic ul .item-list ul li:nth-child(7) a {
     /* #3B4B69;*/
-     background-color: rgba(59,75,105,0.8);
-      transition:all .250s;
+   
+    transition:all .250s;
+    border-top:5px solid #3B4B69;
     
 }
 .research-by-topic ul .item-list ul li:nth-child(3) a,
 .research-by-topic ul .item-list ul li:nth-child(6) a {
     /*  #ff884d;*/
-     background-color: rgba(255,136,77,0.8);
-     transition:all .250s;
+  
+    transition:all .250s;
+    border-top:5px solid #ff884d;
     
 }
 .research-by-topic ul .item-list ul li:nth-child(4) a,
 .research-by-topic ul .item-list ul li:nth-child(5) a {
     /*  #81b9c3;*/
-    background-color: rgba(129,185,195,0.8);
-     transition:all .250s;
-    
-}
-
-
-/* hover */
-
-.research-by-topic ul .item-list ul li:hover:nth-child(1) a,
-.research-by-topic ul .item-list ul li:hover:nth-child(8) a {
-    /* #5AB899; */
-    background-color: rgba(90,184,153,1);
-    
-   
-}
-
-.research-by-topic ul .item-list ul li:hover:nth-child(2) a,
-.research-by-topic ul .item-list ul li:hover:nth-child(7) a {
-    /* #3B4B69;*/
-     background-color: rgba(59,75,105,1);
-    
-}
-.research-by-topic ul .item-list ul li:hover:nth-child(3) a,
-.research-by-topic ul .item-list ul li:hover:nth-child(6) a {
-    /*  #ff884d;*/
-     background-color: rgba(255,136,77,1);
-    
-}
-.research-by-topic ul .item-list ul li:hover:nth-child(4) a,
-.research-by-topic ul .item-list ul li:hover:nth-child(5) a {
-    /*  #81b9c3;*/
-    background-color: rgba(129,185,195,1);
-    
-}
-
-
-.research-by-topic ul .item-list ul li span {
-   display:block;
-   height: 30px;
-   width: 30px;
-   line-height: 30px;
-   -moz-border-radius: 30px;
-   border-radius: 30px;
-   background-color: #fff;
-   position: absolute;
-   top: 82px;
-   left: 42%;
-   border: 1px solid #ccc;
-   background: url("../images//sprite.png?abcd") 8px -141px #fff  no-repeat;
-   -ms-transform: rotate(180deg); /* IE 9 */
-   -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
-   transform: rotate(180deg);
-   z-index: 2;
-   transition:all .250s;
-}
-.research-by-topic ul .item-list ul li.open span {
-    -ms-transform: rotate(0deg); /* IE 9 */
-   -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
-   transform: rotate(0deg);
-   top: 1px;
  
-}
-.research-by-topic ul .item-list ul li:nth-child(1) span,
-.research-by-topic ul .item-list ul li:nth-child(8) span {
-    /* #5AB899; */
-   border: 1px solid rgba(90,184,153,0.7);
+    transition:all .250s;
+    border-top:5px solid #81b9c3;
     
-   
 }
 
-.research-by-topic ul .item-list ul li:nth-child(2) span,
-.research-by-topic ul .item-list ul li:nth-child(7) span {
-    /* #3B4B69;*/
-      border: 1px solid rgba(59,75,105,0.7);
-    
+
+
+
+.research-by-topic ul .item-list ul li span:after {
+ content:'More';
+ width: 50px;
+ /* padding-right:15px; */
+ position: absolute;
+ top: 104px;
+ left: 41%;
+ background: url("../images/sprite.png?abcd") 36px -98px no-repeat;
+ font-size:.85em;
+ transition:all .250s;
+ z-index:2;
+ background-size:70px 350px;
 }
-.research-by-topic ul .item-list ul li:nth-child(3) span,
-.research-by-topic ul .item-list ul li:nth-child(6) span {
-    /*  #ff884d;*/
-     border: 1px solid  rgba(255,136,77,0.7);
-    
-}
-.research-by-topic ul .item-list ul li:nth-child(4) span,
-.research-by-topic ul .item-list ul li:nth-child(5) span {
-    /*  #81b9c3;*/
-    border: 1px solid rgba(129,185,195,0.7);
-    
+.research-by-topic ul .item-list ul li.open span:after {
+    content:'Less';
+   top: 8px;
+ left: 5%;
+  background-position: 29px -98px;
+
 }
 
 .research-by-topic ul .item-list ul li a:hover {
@@ -607,11 +568,11 @@ top: 0;
     z-index: 1;
     position: relative;
     font-size:.95em;
-    top:-100px;
-    transition:all .5s;
+    top: 5px;
+    transition:all .250s;
 }
 .research-by-topic ul .item-list ul li.open .description {
- top: -75px;
+ top: -300px;
 }
 
 
