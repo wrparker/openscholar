@@ -211,7 +211,7 @@ a img {
 #content-column .sv-list-video.sv-list-view-teaser .file.file-video,
 #content-column .sv-list-image.sv-list-view-teaser .file.file-image {
     border-bottom: none;
-    margin-bottom: 100px;
+    margin-bottom: 10px;
 }
 #content-column .sv-list-video.sv-list-view-teaser.sv-list-layout-grid .file-video,
 #content-column .sv-list-image.sv-list-view-teaser .file.file-image {
