@@ -249,3 +249,46 @@ class OSWebTestCase extends OSProfileTestCase {
     $this->assertTrue(TRUE);
   }
 }
+
+
+class OSImageToolkitTestCase extends OSProfileTestCase {
+
+  public static function getInfo() {
+    // Note: getInfo() strings should not be translated.
+    return array(
+      'name' => 'Compare GD and ImageMagick',
+      'description' => 'Tests resizing functionality of GD and ImageMagick toolkits.',
+      'group' => 'Image toolkits',
+    );
+
+  }
+
+  public function _testImageImageToolkitsResizeHelper($filename, $width, $height) {
+    $img1 = image_load($filename, "gd");
+    $i1 = image_gd_resize($img1, $width, $height);
+
+    $img2 = image_load($filename, "imagemagick");
+    $i2 = image_imagemagick_resize($img2, $width, $height);
+
+    error_log("img1 = " . var_export($img1, true));
+    error_log("img2 = " . var_export($img2, true));
+  }
+
+  public function testImageImageToolkitsResize() {
+
+    require_once("./modules/system/image.gd.inc");
+    require_once("./sites/all/modules/imagemagick/imagemagick.module");
+    require_once("./includes/image.inc");
+    require_once("./includes/file.inc");
+
+    $width = 100;
+    $height = 100;
+
+    $filename = "smiley.gif";
+    $this->_testImageImageToolkitsResizeHelper($filename, $width, $height);
+    $filename = "balloons.JPG";
+    $this->_testImageImageToolkitsResizeHelper($filename, $width, $height);
+    $filename = "fish.png";
+    $this->_testImageImageToolkitsResizeHelper($filename, $width, $height);
+  }
+}
