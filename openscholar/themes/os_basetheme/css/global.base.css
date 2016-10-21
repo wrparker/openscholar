@@ -938,6 +938,9 @@ header[role=banner],
     overflow: visible;
     word-wrap: break-word;
 }
+.file div {
+    word-wrap: normal !important;
+}
 /* iframe padding when its floated left or right*/
 
 .lt-ie9 div[style*="FLOAT: LEFT;"] iframe,
