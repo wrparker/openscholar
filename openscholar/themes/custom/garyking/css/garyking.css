@@ -118,6 +118,19 @@ body.node-type-biblio .biblio-export,
 .sidebar .block-boxes-os_search_solr_more_like_this {
     padding: 0 12px 0 12px;
 }
+.sidebar-research-areas.block-boxes-os_taxonomy_fbt ul ul {
+    margin: 0;
+}
+.sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-head a {
+    font-weight: bold;
+}
+.sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-head:last-child {
+    margin-top: 20px;
+
+}
+
+
+
 .sidebar h2.block-title {
     padding: 15px 0;
 }
@@ -417,6 +430,9 @@ a:visited {
 .biblio-title a,
 .biblio-title-chicago a {
     font-weight: normal !important;
+}
+.field-name-field-biblio-image ~ .biblio-abstract-display {
+    margin-left: 0;
 }
 .front .region-content-second,
 #citation-wrapper,
