@@ -98,7 +98,7 @@ h2.block-title {
 #content-column h2,
 #content-column h3,
 #content-column h4 {
-    font-weight: normal;
+    font-weight: 300;
 }
 .sidebar .block {
     border-top-style: solid;
@@ -128,8 +128,8 @@ body.node-type-biblio .biblio-export,
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-head a {
     font-weight: bold;
 }
-.sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-head:last-child {
-    margin-top: 20px;
+.sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-research-methods .term-head {
+    margin-top: 15px;
 }
 .sidebar h2.block-title {
     padding: 15px 0;
@@ -353,6 +353,10 @@ h1#page-title {
 #main-content #content {
     margin-top: 20px;
 }
+.page-taxonomy-term #main-content #content {
+    margin-top: 30px;
+}
+
 .breadcrumb {
     position: relative;
     top: 70px;
@@ -614,7 +618,9 @@ ul.nice-menu-down {
     transition: all .250s;
 }
 .research-by-topic ul .item-list ul li.open .description {
-    top: -300px;
+        top: -320px;
+    height: 250px;
+    overflow-y: scroll;
 }
 .contextual-controls-wrapper {
     top: 255px;
