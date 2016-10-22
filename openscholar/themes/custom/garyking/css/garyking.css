@@ -29,7 +29,8 @@ body,
 .block-boxes-os_taxonomy_fbt.navigation,
 #footer ul.menu li ul li a,
 .date-nav h3,
-.front-top-featured h1.node-title {
+.front-top-featured h1.node-title, {
+	.node-title
     font-family: 'Quattrocento', sans-serif !important;
 }
 .node-type-page .breadcrumb,
@@ -97,6 +98,13 @@ body.not-front {
 h2.block-title {
     color: #545454;
 }
+#content-column h2,
+#content-column h3,
+#content-column h4 {
+    font-weight: normal;
+}
+
+
 .sidebar .block {
     border-top-style: solid;
     border-width: 3px;
@@ -374,6 +382,10 @@ h1#page-title {
 }
 .breadcrumb {
     position: relative;
+    top: 70px;
+}
+.page-node- .breadcrumb {
+ 
     top: 60px;
 }
 .bg-one {
