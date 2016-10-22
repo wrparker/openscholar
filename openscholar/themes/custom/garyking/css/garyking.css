@@ -580,4 +580,6 @@ ul.nice-menu-down {
 }
 
 
-
+.contextual-controls-wrapper {
+	top: 255px;
+}
