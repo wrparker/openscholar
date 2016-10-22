@@ -12,7 +12,8 @@
 #branding_footer,
 #branding_header,
 .contact-map a,
-.node-type-person .node-title {
+.node-type-person .node-title,
+.research-by-topic ul .item-list ul li .description a {
     display: none;
 }
 body,
@@ -314,6 +315,9 @@ a.os-arrow:hover:after {
 .ui-tabs {
     padding: 0;
 }
+.ui-tabs ul.ui-tabs-nav {
+    margin-bottom: 20px;
+}
 .ui-state-default:hover,
 .ui-widget-content .ui-state-default:hover,
 .ui-widget-header .ui-state-default:hover,
@@ -482,7 +486,7 @@ ul.nice-menu-down {
     background-color: #c7c7c7;
 }
 #search-block-form .form-item label {
-    text-indent: 100%;
+    font-size: 0;
     white-space: nowrap;
     overflow: hidden;
     position: absolute;
