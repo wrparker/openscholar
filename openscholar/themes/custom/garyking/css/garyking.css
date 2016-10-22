@@ -101,6 +101,9 @@ h2.block-title {
 #content-column h4 {
     font-weight: 300;
 }
+#content-column h2.block-title {
+    font-weight: 400;
+}
 .sidebar .block {
     border-top-style: solid;
     border-width: 3px;
