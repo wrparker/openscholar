@@ -35,6 +35,7 @@ jQuery('.research-by-topic ul .item-list ul li span').click(function() {
 
 
 
+
       jQuery(".research-by-topic a").removeAttr("title");
 
 
