@@ -27,16 +27,11 @@
 jQuery(".research-by-topic ul .item-list ul li .description").after("<span></span>");
 
 
-    //  jQuery(".research-by-topic ul .item-list ul li span").click(function() {
-      //    jQuery(".research-by-topic ul .item-list ul li").toggleClass('open');
-    //  });
-
-
 
 jQuery('.research-by-topic ul .item-list ul li span').click(function() {
-   jQuery('.research-by-topic ul .item-list ul li').toggleClass('open');  
-   
+  jQuery(this).parent('.research-by-topic ul .item-list ul li').toggleClass('open');
 });
+
 
 
 
