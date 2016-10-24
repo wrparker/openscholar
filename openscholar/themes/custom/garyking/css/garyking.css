@@ -138,6 +138,7 @@ body.node-type-biblio .biblio-export,
 .sidebar h2.block-title {
     padding: 15px 0;
 }
+.research-by-topic h2.block-title,
 .contact-page-info h2.block-title {
     padding: 0;
 }
@@ -252,6 +253,7 @@ a.os-arrow:hover:after {
 }
 #columns .all-apps-and-methods a {
     text-decoration: none;
+        font-size: 1.2em;
 }
 .all-apps-and-methods a.os-arrow:after {
     background: url('../images/sprite.png') 5px -211px no-repeat;
