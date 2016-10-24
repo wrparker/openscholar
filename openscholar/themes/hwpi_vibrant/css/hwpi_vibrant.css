@@ -238,6 +238,14 @@ ul.nice-menu-down li ul li ul {
 .cke_editable * {
     font-family: georgia;
 }
+
+.cke_editable h2,
+.cke_editable h3,
+.cke_editable h4 {
+	font-family: arial;
+}
+
+
 h1.node-title,.page-search .title a,.boxes-box-content h2 {
     font-weight: normal;
     font-size: 18px;
