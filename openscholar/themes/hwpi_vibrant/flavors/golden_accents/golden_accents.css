@@ -2,7 +2,8 @@
 
 body,
 .not-front .field-name-body, 
-#content-column p {
+#content-column p,
+.cke_editable * {
 font-family: 'Cabin', helvetica;
 }
 
