@@ -264,14 +264,44 @@ class OSImageToolkitTestCase extends OSProfileTestCase {
   }
 
   public function _testImageImageToolkitsResizeHelper($filename, $width, $height) {
-    $img1 = image_load($filename, "gd");
-    $i1 = image_gd_resize($img1, $width, $height);
 
-    $img2 = image_load($filename, "imagemagick");
-    $i2 = image_imagemagick_resize($img2, $width, $height);
+    $output_dir = "/tmp/test-output";
+    if (! mkdir($output_dir)) {
+      $output_dir = "/tmp/";
+    }
 
-    error_log("img1 = " . var_export($img1, true));
-    error_log("img2 = " . var_export($img2, true));
+    foreach (array("gd", "imagemagick") as $toolkit) {
+
+      if (! $img = image_load($filename, $toolkit)) {
+        error_log("Error loading '$filename' with toolkit '$toolkit'.");
+      }
+
+      $function_resize = "image_${toolkit}_resize";
+      if (function_exists($function_resize)) {
+        if (! $function_resize($img, $width, $height)) {
+          error_log("Error resizing $filename with toolkit '$toolkit'.");
+        }
+      } else {
+        error_log("function '$function_resize' does not exist.");
+        exit;
+      }
+
+      $filename_new = "$output_dir/" . str_replace(".", "_$toolkit.", $filename);
+
+      $function_save = "image_${toolkit}_save";
+      if (function_exists($function_save)) {
+        if (! $function_save($img, $filename_new)) {
+          error_log("Error saving to $filename_new.");
+        }
+      } else {
+        error_log("function '$function_save' does not exist.");
+        exit;
+      }
+
+      error_log("Toolkit: $toolkit");
+      error_log("-----------------");
+      error_log("img = " . var_export($img, true));
+    }
   }
 
   public function testImageImageToolkitsResize() {
