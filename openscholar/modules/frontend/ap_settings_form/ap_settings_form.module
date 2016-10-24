@@ -33,6 +33,7 @@ function ap_settings_form_library() {
     'dependencies' => array(
       array('os_common', 'angular-modal-service'),
       array('os_common', 'formElement'),
+      array('os_common', 'buttonSpinner'),
       array('ap_settings_form', 'redirect')
     )
   );

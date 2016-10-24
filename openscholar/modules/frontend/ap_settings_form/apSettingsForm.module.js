@@ -1,6 +1,6 @@
 (function () {
 
-  var m = angular.module('ApSettingsForm', ['angularModalService', 'redirectForm', 'MediaBrowserField', 'formElement']);
+  var m = angular.module('ApSettingsForm', ['angularModalService', 'redirectForm', 'MediaBrowserField', 'formElement', 'os-buttonSpinner']);
 
   /**
    * Fetches the settings forms from the server and makes them available directives and controllers
@@ -113,7 +113,7 @@
                 '<div form-element element="field" value="formData[key]"><span>placeholder</span></div>' +
               '</div>' +
             '<div class="help-link" ng-bind-html="help_link"></div></div>' +
-          '<div class="actions"><input type="submit" value="Save"><input type="button" value="Close" ng-click="close(false)"></div></form>',
+          '<div class="actions"><button type="submit" button-spinner="settings_form">Save</button><input type="button" value="Close" ng-click="close(false)"></div></form>',
           inputs: {
             form: scope.form
           }
@@ -141,7 +141,7 @@
   /**
    * The controller for the forms themselves
    */
-  m.controller('apSettingsFormController', ['$scope', '$sce', 'apSettings', 'form', 'close', function ($s, $sce, apSettings, form, close) {
+  m.controller('apSettingsFormController', ['$scope', '$sce', 'apSettings', 'buttonSpinnerStatus', 'form', 'close', function ($s, $sce, apSettings, bss, form, close) {
     var formSettings = {};
     $s.formId = form;
     $s.formElements = {};
@@ -184,6 +184,7 @@
       }
 
       if ($s.settingsForm.$dirty || triggered) {
+        bss.SetState('settings_form', true);
         apSettings.SaveSettings($s.formData).then(function (response) {
           var body = response.data;
           sessionStorage['messages'] = JSON.stringify(body.data.messages);
@@ -191,6 +192,7 @@
           $s.error = [];
           var close = true;
           var reload = true;
+          bss.SetState('settings_form', false);
           for (var i = 0; i < body.data.length; i++) {
             switch (body.data[i].type) {
               case 'no_close':
