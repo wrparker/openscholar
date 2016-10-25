@@ -172,6 +172,7 @@ projects[imageapi_optimize][download][revision] = 234f208
 
 projects[imagemagick][subdir] = "contrib"
 projects[imagemagick][version] = 7.x-1.x
+projects[imagemagick][revision] = e348bb6a17c799d48066c75c22e4b16ec7a329fa
 projects[imagemagick][download][type] = git
 projects[imagemagick][download][url] = "https://git.drupal.org/project/imagemagick.git"
 
