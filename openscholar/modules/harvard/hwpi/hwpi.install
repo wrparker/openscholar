@@ -106,6 +106,7 @@ function hwpi_update_7006() {
  * Set Image Magick variables.
  */
 function openscholar_update_7007() {
+  module_enable(array('imagemagick'));
   variable_set('image_toolkit', 'imagemagick');
   variable_set('imageapi_optimize_toolkit', 'imagemagick');
   variable_set('imagemagick_convert', '/usr/bin/convert');
