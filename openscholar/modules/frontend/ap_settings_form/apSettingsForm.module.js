@@ -210,7 +210,7 @@
         }, function (error) {
           $s.errors = [];
           $s.status = [];
-          $s.errors.push("Sorry, something went wrong. Please try a");
+          $s.errors.push("Sorry, something went wrong. Please try another time.");
           bss.SetState('settings_form', false);
         });
       }
