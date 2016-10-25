@@ -95,10 +95,11 @@ body.not-front {
 .front #content-panels .region-content-first {
     /*background-color: #fff;
     background: url('../images/relationships.png') center right no-repeat;
-    box-shadow: inset 0 0 0 1000px rgba(129, 185, 195, 1);*/
+    box-shadow: inset 0 0 0 1000px rgba(129, 185, 195, 1);
+    border-top:1px solid #fff;*/
     background-color:#3B4B69;
     padding-top: 17px;
-    border-top:1px solid #fff;
+    
 }
 .front #content-panels .region-content-first,
 .front #content-panels .region-content-first a,
@@ -120,6 +121,7 @@ h2.block-title {
 #content-column h2.block-title {
     font-weight: 400;
 }
+.bio-teaser-block2 h2.block-title,
 .research-by-topic h2.block-title,
 .front-four-lops h2.block-title {
     font-size: 1.5em;
@@ -241,7 +243,7 @@ h3 {
     background: url('../images/homepage-left.jpg') center right no-repeat;
     background-size: cover;
     display: table;
-    box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, .4);
+    box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, .5);
 }
 .front-top-cloumn .region-two-66-33-first .region-inner,
 .front-top-cloumn .region-two-66-33-second .region-inner {
@@ -644,6 +646,7 @@ ul.nice-menu-down {
 .research-by-topic ul .item-list ul li a:hover {} .research-by-topic.block-boxes-os_taxonomy_fbt ul ul {
     margin: 0 !important;
 }
+.bio-teaser-block2 p,
 .research-by-topic .term-head {
     text-align: center;
     font-size: 1.2em;
