@@ -170,6 +170,7 @@ body.node-type-biblio .biblio-export,
     background-repeat: no-repeat;
     margin: 0 auto 40px;
     background-position: center;
+    font-size:1.3em;
 }
 .front-four-lops .front-lop-papers h2.block-title {
     background-image: url('../images/icons/papers.svg?123');
