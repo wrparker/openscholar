@@ -1179,3 +1179,6 @@ body.page-node fieldset#edit-revision-information #warning-text p {
     padding: 0px;
     margin: 0.5em 0;
 }
+body.page-node-revisions ul.action-links a {
+    background-image: none;
+}
