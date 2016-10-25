@@ -652,6 +652,12 @@ ul.nice-menu-down {
     font-size: 1.2em;
     padding-bottom: 5px;
 }
+.bio-teaser-block2 p
+ {
+    font-size: 1.4em;
+    line-height: 1.2em;
+}
+
 .research-by-topic ul .item-list ul li .description {
     transition: all .250s;
     padding: 10px;
