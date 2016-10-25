@@ -123,6 +123,9 @@ h2.block-title {
 .front-four-lops h2.block-title {
     font-size: 1.5em;
 }
+.not-front .research-by-topic h2.block-title {
+   display: none;
+}
 .region-content-second h2.block-title:first-child {
     margin: 18px 0 23px;
 }
