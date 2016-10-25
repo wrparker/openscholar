@@ -2864,7 +2864,7 @@ function os_set_update_batch(&$sandbox, $info) {
     $sandbox['id'] = entity_id($info['entity'], $entity);
   }
 
-  if ($sandbox['progress'] > $sandbox['max']) {
+  if (($sandbox['progress'] > $sandbox['max']) || ($sandbox['max'] == 0)) {
     // The total results amount is smaller then the amount we processed in a
     // single batch. After a single batch we can set the finished to true.
     $sandbox['#finished'] = 1;

@@ -1074,20 +1074,6 @@ div.error:before {
 
 /* CKEDITOR - WYSIWYG */
 
-body.cke_editable {
-   font-family: inherit !important;
-    font-size: inherit !important;
-    padding: 0 10px;
-    font-weight:inherit !important;
-}
-
-body.cke_editable h1,
-body.cke_editable h2,
-body.cke_editabl h3 {
-   font-family: inherit !important;
-    font-weight:inherit !important;
-}
-
 
 body.cke_editable blockquote {
     border-left: 2px solid #807E6D;
