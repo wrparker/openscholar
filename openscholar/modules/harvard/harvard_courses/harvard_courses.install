@@ -209,3 +209,16 @@ function harvard_courses_update_7006(&$sandbox) {
 function harvard_courses_update_7007() {
   features_revert(array('harvard_courses' => array('feeds_importer')));
 }
+
+/**
+ * Update to API URL.
+ */
+function harvard_courses_update_7008() {
+  $importers = node_load_multiple(array(), array('type' => 'harvard_api_importer'));
+
+  foreach ($importers as $importer) {
+    $importer = entity_metadata_wrapper('node', $importer);
+    $importer->field_base_url->set('https://api.courses.harvard.edu/api/search');
+    $importer->save();
+  }
+}
