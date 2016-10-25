@@ -31,15 +31,20 @@
     return {
       restrict: 'A',
       scope: {
-        spinnerID: '@buttonSpinner'
+        spinnerID: '@buttonSpinner',
+        spinningText: '@'
       },
       transclude: true,
       template:
         "<ng-transclude></ng-transclude>" +
         '<span ng-show="spinning" class="spinner">',
       link: function (scope, elem, attr) {
+        var textElem = elem.find('ng-transclude').find('span')[0],
+          original = textElem.innerHTML;
+
         $bss.$observe(scope.spinnerID, function (state) {
           scope.spinning = state;
+          textElem.innerHTML = state ? scope.spinningText : original;
         })
       }
     }
