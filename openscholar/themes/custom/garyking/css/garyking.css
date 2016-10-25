@@ -13,7 +13,8 @@
 #branding_header,
 .contact-map a,
 .node-type-person .node-title,
-.research-by-topic ul .item-list ul li .description a {
+.research-by-topic ul .item-list ul li .description a,
+.not-front .research-by-topic h2.block-title {
     display: none;
 }
 body,
@@ -123,9 +124,7 @@ h2.block-title {
 .front-four-lops h2.block-title {
     font-size: 1.5em;
 }
-.not-front .research-by-topic h2.block-title {
-   display: none;
-}
+ 
 .region-content-second h2.block-title:first-child {
     margin: 18px 0 23px;
 }
