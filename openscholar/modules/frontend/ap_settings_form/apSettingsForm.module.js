@@ -104,7 +104,7 @@
         ModalService.showModal({
           controller: 'apSettingsFormController',
           template: '<form id="{{formId}}" name="settingsForm" ng-submit="submitForm($event)">' +
-            '<div class="messages" ng-show="status.length || error.length">' +
+            '<div class="messages" ng-show="status.length || errors.length"><div class="dismiss" ng-click="status.length = 0; errors.length = 0;">X</div>' +
               '<div class="status" ng-show="status.length > 0"><div ng-repeat="m in status">{{m}}</div></div>' +
               '<div class="error" ng-show="errors.length > 0"><div ng-repeat="m in errors">{{m}}</div></div></div>' +
             '</div>' +
@@ -207,6 +207,11 @@
           if (close) {
             $s.close(reload);
           }
+        }, function (error) {
+          $s.errors = [];
+          $s.status = [];
+          $s.errors.push(error.data.detail+ " " +error.data.title);
+          bss.SetState('settings_form', false);
         });
       }
       else {
