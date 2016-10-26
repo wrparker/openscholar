@@ -398,7 +398,8 @@ table th label {
     text-transform: none;
 }
 /* CP/BUILD MENU */
-
+#redirects .actions,
+#os-maintenanc .actions,
 .page-cp-build-menu table thead {
     display: none;
 }
