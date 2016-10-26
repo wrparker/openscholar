@@ -58,6 +58,10 @@ a.cite-pop {
   margin-left: 0;
 }
 
+.year-selection-wrapper {
+  padding-top: 10px;
+}
+
 h1.biblio-type-prefix {
   float: left;
   margin: 15px 10px 0px 0px;
