@@ -316,10 +316,6 @@ class os_sv_list extends os_boxes_default {
       $new_entities = array();
 
       foreach ($entities as $key => $entity) {
-        if ($this->options['display'] == 'teaser') {
-          // Unset meta description from  teaser view
-          unset($entity->body['und'][0]['summary']);
-        }
         if ($this->checkEntityAccess) {
           // Check the entity access.
           if (!entity_access('view', $this->entity_type, $entity, $account)) {
