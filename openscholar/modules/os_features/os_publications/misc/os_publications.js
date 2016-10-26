@@ -138,6 +138,8 @@ Drupal.behaviors.osPublications = {
       // In edit mode, if one radio button is selected.
       if ($('input[name="biblio_year_coded"]:checked').length > 0) {
         var selectedOption = $.trim($('input[name="biblio_year_coded"]:checked').next().html());
+        // todo: check the value and not the title. Could be different due to
+        // tranglation.
         if (selectedOption == 'Forthcoming' || selectedOption == 'Submitted') {
           target_extrayear.hide();
           target_date_published.show();
@@ -169,7 +171,6 @@ Drupal.behaviors.osPublications = {
    */
   Drupal.behaviors.publishedYearHidden = {
     attach: function () {
-
       var showYear = function() {
         $('.form-item-field-biblio-pub-month-und').show();
         $('.field-name-field-biblio-pub-day').show();
