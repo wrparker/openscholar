@@ -33,8 +33,25 @@ min-height: 425px;
   }
 
 
-.research-by-topic
- {
+.research-by-topic {
     width: 990px;
-    margin: 0 auto;
+ 
 }
+
+.front .block-boxes-os_boxes_twitterfeed {
+
+    width: 85%;
+  
+
+}
+.front .block-boxes-os_boxes_twitterfeed,
+.research-by-topic,
+.block-boxes-os_boxes_twitterfeed h2.block-title {
+
+ 
+    margin: 0 auto;
+
+}
+
+
+

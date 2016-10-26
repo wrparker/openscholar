@@ -67,3 +67,17 @@ function os_links_update_7004() {
 
   features_revert($revert);
 }
+
+/**
+ * Hide "Open in new tab" label
+ */
+function os_links_update_7005() {
+  $revert = array(
+    'os_links' => array(
+      'field_base',
+      'field_instance',
+    )
+  );
+
+  features_revert($revert);
+}

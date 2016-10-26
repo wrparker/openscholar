@@ -64,6 +64,7 @@ function os_links_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'list_boolean',
+    'hidden' => 1,
   );
 
   return $field_bases;
