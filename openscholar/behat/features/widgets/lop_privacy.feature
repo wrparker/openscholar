@@ -11,7 +11,7 @@ Feature:
      When I visit "john/news"
      Then I should see "John F. Kennedy: A Biography"
 
-  @api @widgets
+  @api @widgets @javascript
   Scenario: Verify that private bundles don't show up in the LOP.
     Given I am logging in as "john"
       And I set feature "edit-spaces-features-os-publications" to "Private" on "john"
