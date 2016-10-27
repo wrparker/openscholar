@@ -9,10 +9,15 @@
 .node-type-person .node-title,
 .research-by-topic ul .item-list ul li .description a,
 .not-front .research-by-topic h2.block-title,
-.front .field-name-field-biblio-image,
-.front .biblio-authors {
+.front-lop-papers .field-name-field-biblio-image,
+.front-lop-papers .biblio-authors  {
     display: none;
 }
+
+
+
+
+
 body,
 .page-search .title a,
 #content-column .block.block-boxes-os_boxes_manual_list .links.inline a,
@@ -164,26 +169,26 @@ body.node-type-biblio .biblio-export,
 /* fontpage blocks*/
 
 .front-four-lops .region h2.block-title {
-    padding: 0px 0 0 0;
-    height: 50px;
+       padding: 0px 0 0 0;
+    height: 42px;
     width: 150px;
-    line-height: 6.2em;
+    line-height: 5.5em;
     background-repeat: no-repeat;
     margin: 0 auto 40px;
     background-position: center;
-    font-size:1.3em;
+    font-size: 1.3em;
 }
 .front-four-lops .front-lop-papers h2.block-title {
     background-image: url('../images/icons/papers.svg?123');
-    background-size: 57px;
+    background-size: 50px;
 }
 .front-four-lops .front-lop-books h2.block-title {
     background-image: url('../images/icons/books.svg?123');
-    background-size: 50px;
+    background-size: 46px;
 }
 .front-four-lops .front-lop-presentations h2.block-title {
     background-image: url('../images/icons/presentations.svg?123');
-    background-size: 50px;
+    background-size: 46px;
 }
 #content-panels .front-lop-blockgrid .block-inner {
     margin-top: 5px;
