@@ -118,7 +118,7 @@ function os_reports_site_form($form, &$form_state) {
       'ng-model' => 'params.includesites',
       'value' => 'all',
       'ng-click' => 'updateValues(params.includesites)',
-   ),
+    ),
   );
   $form['content']['includesites']['content'] = array(
     '#name' => 'includesites',
