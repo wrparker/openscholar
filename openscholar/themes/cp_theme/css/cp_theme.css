@@ -145,7 +145,7 @@ html.js input.throbbing {
 a#edit-cancel,
 a.form-cancel {
     cursor: pointer;
-    padding: 5px 17px;
+    padding: 5px 12px;
     margin-bottom: 1em;
     margin-right: 1em;
     /* LTR */
@@ -160,36 +160,34 @@ a.form-cancel {
     border-left-color: #d2d2d2;
     border-right-color: #d2d2d2;
     background: url('/themes/seven/images/buttons.png') 0 0 repeat-x;
-    -moz-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    border-radius: 20px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
 }
 
 /* SAVE BUTTON SPINNER */
 .spinner,
 .spinner:after {
   border-radius: 50%;
-  width: 2em;
-  height: 2em;
+  width: 1.80em;
+  height: 1.80em;
 }
 .spinner {
-    
     display: inline-block;
     float: left;
-    
-
-  font-size: 7px;
-  position: relative;
-  text-indent: -9999em;
-  border-top: .5em solid rgba(255, 255, 255, 1);
-  border-right: .5em solid rgba(255, 255, 255, 0.2);
-  border-bottom: .5em solid rgba(255, 255, 255, 0.2);
-  border-left: .5em solid #ffffff;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-animation: load8 1s infinite linear;
-  animation: load8 1s infinite linear;
+    margin-right:6px;
+    font-size: 7px;
+    position: relative;
+    text-indent: -9999em;
+    border-top: .5em solid rgba(136, 136, 136, 1);
+    border-right: .5em solid rgba(136, 136, 136, 1);
+    border-bottom: .5em solid rgba(255, 255, 255, 1);
+    border-left: .5em solid #ffffff;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: load8 .750s infinite linear;
+    animation: load8 .750s infinite linear;
 }
 @-webkit-keyframes load8 {
   0% {
