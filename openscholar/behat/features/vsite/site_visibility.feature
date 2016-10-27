@@ -13,11 +13,12 @@ Feature:
     | "einstein/blog"                 | "Mileva Maric"                                      |
     | "einstein/blog/mileva-Maric"    | "Yesterday I met Mileva, what a nice girl :)."      |
 
-  @api @vsite
+  @api @vsite @javascript
   Scenario: Testing private vsite cannot be seen by anonymous users.
     Given I am logging in as "john"
      When I change privacy of the site "obama" to "Invite only during site creation. "
-      And I click "Log out"
+      And I open the user menu
+      And I click "Logout"
       And I go to "obama"
      Then I should get a "403" HTTP response
 
@@ -32,7 +33,8 @@ Feature:
     Given I am logging in as "bill"
       And I go to "obama"
       And I should get a "200" HTTP response
-      And I click "Support obama"
+      And I open the user menu"
+      And I click "Support this site"
       And I should see "Are you sure you want to join the web site"
       And I press "Join"
      Then I should see "Your subscription request was sent."
