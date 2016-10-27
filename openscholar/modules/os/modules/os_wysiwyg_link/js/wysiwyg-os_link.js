@@ -314,5 +314,24 @@ Drupal.wysiwyg.plugins['os_link'] = {
    */
   detach: function (content, settings, instanceId) {
     return content;
+  },
+
+  /**
+   * Parses attributes of the link element and returns an object representing
+   * the current state (data) of the link. This data format is a plain object
+   * accepted e.g. by the Link dialog window and {@link #getLinkAttributes}.
+   *
+   * **Note:** Data model format produced by the parser must be compatible with
+   * the Link plugin dialog because it is passed directly to
+   * {@link CKEDITOR.dialog#setupContent}.
+   *
+   * @since 4.4
+   * @param {CKEDITOR.editor} editor
+   * @param {CKEDITOR.dom.element} element
+   * @returns {Object} An object of link data.
+   */
+  parseLinkAttributes: function(editor, element) {
+    return CKEDITOR.plugins.original_link.parseLinkAttributes(editor, element);
   }
+
 };
