@@ -8,7 +8,9 @@
 .contact-map a,
 .node-type-person .node-title,
 .research-by-topic ul .item-list ul li .description a,
-.not-front .research-by-topic h2.block-title {
+.not-front .research-by-topic h2.block-title,
+.front .field-name-field-biblio-image,
+.front .biblio-authors {
     display: none;
 }
 body,
