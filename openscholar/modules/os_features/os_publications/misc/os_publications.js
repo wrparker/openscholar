@@ -171,6 +171,11 @@ Drupal.behaviors.osPublications = {
    */
   Drupal.behaviors.publishedYearHidden = {
     attach: function () {
+
+      if (!Drupal.settings.chicago_author_date) {
+        return;
+      }
+
       var showYear = function() {
         $('.form-item-field-biblio-pub-month-und').show();
         $('.field-name-field-biblio-pub-day').show();

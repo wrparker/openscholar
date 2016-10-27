@@ -718,6 +718,10 @@ function os_publications_alter_year_field(&$form, &$form_state) {
 
   // Modifying Title for Harvard - Chicago Author cititation
   $chicago_author_date = in_array($style, array('harvard-chicago-author-date.csl'));
+  $form['#attached']['js'][] = array(
+    'data' => array('chicago_author_date' => $chicago_author_date),
+    'type' => 'setting',
+  );
 
   $form['biblio_year_group'] = array(
     '#type' => 'fieldset',
@@ -757,52 +761,61 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     $form['biblio_year_group']['year_selection']['field_biblio_pub_month']['#weight'] = -2;
     $form['biblio_year_group']['year_selection']['field_biblio_pub_day']['#weight'] = -1;
 
+    // Form element changes - wrap in a fieldset with the checkboxes element,
+    // and fix additional attributes accordingly.
     unset($form['biblio_year_group']['year_selection']['field_biblio_pub_month']['und']['#title']);
     unset($form['biblio_year_group']['year_selection']['field_biblio_pub_day']['und']['#title']);
     $form['biblio_year_group']['year_selection']['biblio_year'] = $form['biblio_year'];
   }
   else {
-//    unset($form['field_biblio_pub_month']);
-//    unset($form['field_biblio_pub_day']);
-//    // Form element changes - wrap in a fieldset with the checkboxes element, and
-//    // fix additional attributes accordingly.
-//    $form['biblio_year_group']['biblio_year'] = $form['biblio_year'];
-//    unset($form['biblio_year_group']['biblio_year']['#title']);
-//    unset($form['biblio_year_group']['biblio_year']['#description']);
-//    $form['biblio_year_group']['biblio_year']['#size'] = 100;
-//    $form['biblio_year_group']['biblio_year']['#attributes'] = array('placeholder' => t('Year'));
-//    $form['biblio_year_group']['biblio_year']['#weight'] = 0;
-//    $form['biblio_year_group']['biblio_year_or'] = array(
-//      '#weight' => 10,
-//      '#markup' => t('or'),
-//    );
-//
-//    $form['biblio_year_group']['biblio_year_coded'] = array(
-//      '#type' => 'radios',
-//      '#options' => $years,
-//      '#multiple' => FALSE,
-//      '#weight' => 20,
-//      '#default_value' => $year_coded_value,
-//    );
-//
-//    $form['biblio_year_coded_extrayear'] = array(
-//      '#type' => 'textfield',
-//      '#description' => 'e.g. 2015',
-//      '#title' => 'Year',
-//      '#size' => 10,
-//      '#default_value' => $date_value,
-//      '#weight' => $form['biblio_year_group']['#weight'] + 1,
-//    );
+    $form['biblio_year_group'] = array(
+      '#type' => 'fieldset',
+      '#title' => $form['biblio_year']['#title'] . ' <span class="form-required" title="' . t('This field is required.') . '">*</span>',
+      '#collapsible' => FALSE,
+      '#weight' => $form['biblio_year']['#weight'],
+    );
+
+    unset($form['field_biblio_pub_month']);
+    unset($form['field_biblio_pub_day']);
+
+    // Form element changes - wrap in a fieldset with the checkboxes element,
+    // and fix additional attributes accordingly.
+    $form['biblio_year_group']['biblio_year'] = $form['biblio_year'];
+
+    unset($form['biblio_year_group']['biblio_year']['#title']);
+    unset($form['biblio_year_group']['biblio_year']['#description']);
+    $form['biblio_year_group']['biblio_year']['#size'] = 100;
+    $form['biblio_year_group']['biblio_year']['#attributes'] = array('placeholder' => t('Year'));
+    $form['biblio_year_group']['biblio_year']['#weight'] = 0;
+    $form['biblio_year_group']['biblio_year_or'] = array(
+      '#weight' => 10,
+      '#markup' => t('or'),
+    );
+
+    $form['biblio_year_group']['biblio_year_coded'] = array(
+      '#type' => 'radios',
+      '#options' => $years,
+      '#multiple' => FALSE,
+      '#weight' => 20,
+      '#default_value' => $year_coded_value,
+    );
+
+    $form['biblio_year_coded_extrayear'] = array(
+      '#type' => 'textfield',
+      '#description' => 'e.g. 2015',
+      '#title' => 'Year',
+      '#size' => 10,
+      '#default_value' => $date_value,
+      '#weight' => $form['biblio_year_group']['#weight'] + 1,
+    );
   }
 
   unset($form['field_biblio_pub_month']);
   unset($form['field_biblio_pub_day']);
 
-  // Form element changes - wrap in a fieldset with the checkboxes element, and
-  // fix additional attributes accordingly.
-  $form['biblio_year_group']['year_selection']['biblio_year'] = $form['biblio_year'];
   unset($form['biblio_year_group']['year_selection']['biblio_year']['#title']);
   unset($form['biblio_year_group']['year_selection']['biblio_year']['#description']);
+
   $form['biblio_year_group']['biblio_year']['#size'] = 100;
   $form['biblio_year_group']['biblio_year']['#attributes'] = array('placeholder' => t('Year'));
   $form['biblio_year_group']['biblio_year']['#weight'] = 0;
@@ -825,14 +838,6 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     $form['biblio_year_group']['published'] = array(
       '#type' => 'radio',
       '#title' => t('Published'),
-    );
-  }
-  else {
-    $form['biblio_year_group'] = array(
-      '#type' => 'fieldset',
-      '#title' => $form['biblio_year']['#title'] . ' <span class="form-required" title="' . t('This field is required.') . '">*</span>',
-      '#collapsible' => FALSE,
-      '#weight' => $form['biblio_year']['#weight'],
     );
   }
 
