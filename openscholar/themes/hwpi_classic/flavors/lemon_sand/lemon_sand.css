@@ -32,7 +32,8 @@ body,
 #layout_16_9_overlay .slide-copy h2,
 h2.block-title,
 .region-header-third ul.nice-menu a,
-#menu-bar ul.nice-menu a {
+#menu-bar ul.nice-menu a,
+.cke_editable * {
   font-family: 'Playfair Display', sans-serif, Georgia, serif !important;
 }
 

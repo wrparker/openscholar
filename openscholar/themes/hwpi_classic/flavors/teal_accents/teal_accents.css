@@ -45,7 +45,8 @@ h2.block-title,
 .region-header-third ul.nice-menu a,
 #boxes-box-site_info,
 #boxes-box-site_info a,
-#menu-bar ul.nice-menu a {
+#menu-bar ul.nice-menu a,
+.cke_editable * {
     font-family: 'Cardo', sans-serif, Georgia, serif !important;
 }
 #footer ul.menu a,

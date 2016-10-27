@@ -2019,7 +2019,7 @@ function vsite_mail_alter(&$message){
         );
 
         // Alter the body message.
-        $message['body'][0] = t("Dear !fullname, \n\n!site_owner, site owner of !site, has created a user account for you so that you may access this website. Log in by clicking on the following link or by pasting it into your browser: \n\n!login_url \n\nFor your security, this link can be used only once.  \n\nYour username is: !username \n\nAfter setting your password with the included link, you will be able to log in at !futurelogin in the future.  \n\n-The OpenScholar Team", $replacements);
+        $message['body'][0] = t("Dear !fullname, \n\n!site_owner, site owner of !site, has created a user account for you so that you may access this website. Log in by clicking on the following link or by pasting it into your browser: \n\n!login_url \n\nFor your security, this link can be used only once.  \n\nYour OpenScholar username is: !username \n\nAfter setting your OpenScholar user password with the included link, you can then <a href='http://docs.openscholar.harvard.edu/logging-your-site' target='_blank'>associate this user account with your HarvardKey</a>. \n\nOnce paired, you will be able to log in at !site in the future. Don't forget to bookmark the site and save this email for future reference.\n\nHere are some handy links for you:\n\n* <a href='http://docs.openscholar.harvard.edu/logging-your-site' target='_blank'>Logging in to your site</a>\n\n* <a href='http://hwp.harvard.edu/calendar/upcoming' target='_blank'>Sign up for training</a>\n\n* <a href='http://docs.openscholar.harvard.edu' target='_blank'>OpenScholar documentation</a>\n\n* <a href='http://hwp.harvard.edu/contact' target='_blank'>Need help with your project?</a>\n\n-The OpenScholar Team", $replacements);
 
         break;
 
@@ -2217,10 +2217,11 @@ function vsite_menu(){
   );
 
   // User autocomplete callback that allows for searching of name/email/login.
-  $items['vsite/autocomplete/user'] = array(
+  $items['vsite/autocomplete/user/%'] = array(
     'type' => MENU_CALLBACK,
     'title' => 'Vsite Autocomplete User',
     'page callback' => 'vsite_user_autocomplete',
+    'page arguments' => array(3),
     'access callback' => 'user_access',
     'access arguments' => array('access user profiles'),
   );
@@ -2774,7 +2775,7 @@ function vsite_os_settings_subsites_form_submit($form, &$form_state){
  * Autocomplete function to allow users to now search for users based on name, email or login.
  * Used the function spaces_user_autocomplete as the skeleton for this function.
  */
-function vsite_user_autocomplete($string = '') {
+function vsite_user_autocomplete($action = 'add', $string = '') {
   $space = spaces_get_space();
   $matches = array();
   if ($string) {
@@ -2794,6 +2795,12 @@ function vsite_user_autocomplete($string = '') {
     $query->fields('u', array('name'));
     // CONCAT the display, if there is no last name entered, show the username/email only, if there is a last name, show first/last/email.
     $query->addExpression("IF(ln.field_last_name_value = '' OR ln.field_last_name_value IS NULL, CONCAT(u.name, ' (', u.mail , ') '), CONCAT(IFNULL(fn.field_first_name_value,''), ' ', IFNULL(ln.field_last_name_value,''), ' (',u.name,', ', u.mail , ') '))", 'myname');
+
+    // limit matches to users with associated HUID, if pinserver is set up
+    if ($action == "register" && module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE)) {
+      $query->innerJoin('pinserver_users', 'pin', 'pin.uid = u.uid');
+    }
+
     $query->range(0, 10);
     $query->addTag('user_autocomplete');
 

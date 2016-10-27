@@ -36,7 +36,8 @@ body,
 #content-column h4, 
 #boxes-box-site_info, 
 #boxes-box-site_info a ,
-#menu-bar ul.nice-menu a {
+#menu-bar ul.nice-menu a,
+.cke_editable * {
 font-family: 'Raleway', Georgia, Baskerville, Palatino, 'Palatino Linotype', 'Book Antiqua', 'Times New Roman', serif;
 }
 

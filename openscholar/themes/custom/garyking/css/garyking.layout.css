@@ -1,5 +1,10 @@
 /* Layout CSS */
 
+.sidebar    { 
+    margin-top: 290px;
+}
+bio-teaser-block2,
+.front .block-boxes-os_boxes_twitterfeed,
 h1#page-title
  {
     width: 980px;
@@ -10,7 +15,8 @@ h1#page-title
 }
 
 .front .block-boxes-os_boxes_tabs {
-width: 104%;
+width: 106%;
+min-height: 425px;
 }
 
 .front-top-cloumn .region-two-66-33-second,
@@ -20,8 +26,27 @@ width: 104%;
   
   
 .front-top-cloumn .region-two-66-33-first {
-      width: 70%;
+           width: 69.9%;
+    border-right: 1px solid #fff;
   }
   .front-top-cloumn .region-two-66-33-second {
       width: 30%;
   }
+
+
+.research-by-topic {
+    width: 990px;
+ 
+}
+
+.front .block-boxes-os_boxes_twitterfeed,
+.research-by-topic,
+.block-boxes-os_boxes_twitterfeed h2.block-title {
+
+ 
+    margin: 0 auto;
+
+}
+
+
+
