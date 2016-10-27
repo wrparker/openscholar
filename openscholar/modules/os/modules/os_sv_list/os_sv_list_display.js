@@ -63,7 +63,7 @@
             page = page[args.pager_id];
             destination = args.destination;
           $.ajax({
-            url: s.basePath + (typeof s.pathPrefix != 'undefined'?s.pathPrefix:'') + 'os_sv_list/page/'+delta,
+            url: window.location.protocol + '//' + window.location.hostname + '/' + (typeof s.pathPrefix != 'undefined'?s.pathPrefix:'') + 'os_sv_list/page/'+delta,
             data: {
               page: page,
               destination: destination

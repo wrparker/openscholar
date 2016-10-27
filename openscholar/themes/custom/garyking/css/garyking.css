@@ -1,10 +1,4 @@
-.front .research-by-topic ul .item-list ul li:nth-child(9),
-.front .research-by-topic ul .item-list ul li:nth-child(10),
-.front .research-by-topic ul .item-list ul li:nth-child(11),
-.front .research-by-topic ul .item-list ul li:nth-child(12),
-.front .research-by-topic ul .item-list ul li:nth-child(13),
-.front .research-by-topic ul .item-list ul li:nth-child(14),
-.front .research-by-topic ul .item-list ul li:nth-child(15),
+
 .tweet-divider,
 .tweet-authorphoto,
 .tweet-author,
@@ -14,9 +8,16 @@
 .contact-map a,
 .node-type-person .node-title,
 .research-by-topic ul .item-list ul li .description a,
-.not-front .research-by-topic h2.block-title {
+.not-front .research-by-topic h2.block-title,
+.front-lop-papers .field-name-field-biblio-image,
+.front-lop-papers .biblio-authors  {
     display: none;
 }
+
+
+
+
+
 body,
 .page-search .title a,
 #content-column .block.block-boxes-os_boxes_manual_list .links.inline a,
@@ -67,9 +68,7 @@ body.not-front {
 .front-top-cloumn .region-two-66-33-second a {
     color: #ffffff;
 }
-#columns {
-    margin-top: 0;
-}
+
 .front .region-content-first {
 	
 	    border-top: 4px solid #fff;
@@ -170,26 +169,26 @@ body.node-type-biblio .biblio-export,
 /* fontpage blocks*/
 
 .front-four-lops .region h2.block-title {
-    padding: 0px 0 0 0;
-    height: 50px;
+       padding: 0px 0 0 0;
+    height: 42px;
     width: 150px;
-    line-height: 6.2em;
+    line-height: 5.5em;
     background-repeat: no-repeat;
     margin: 0 auto 40px;
     background-position: center;
-    font-size:1.3em;
+    font-size: 1.3em;
 }
 .front-four-lops .front-lop-papers h2.block-title {
     background-image: url('../images/icons/papers.svg?123');
-    background-size: 57px;
+    background-size: 50px;
 }
 .front-four-lops .front-lop-books h2.block-title {
     background-image: url('../images/icons/books.svg?123');
-    background-size: 50px;
+    background-size: 46px;
 }
 .front-four-lops .front-lop-presentations h2.block-title {
     background-image: url('../images/icons/presentations.svg?123');
-    background-size: 50px;
+    background-size: 46px;
 }
 #content-panels .front-lop-blockgrid .block-inner {
     margin-top: 5px;
@@ -212,6 +211,7 @@ h3 {
     font-weight: 300;
     font-size: 1.3em;
 }
+#columns,
 .node-person.node-teaser .field-name-field-person-photo,
 .block-boxes-os_boxes_tabs .ui-widget,
 .front .region-content-top .block-boxes-os_boxes_columns + .block-inner {
@@ -431,7 +431,6 @@ h1#page-title {
 }
 .front #content-panels .region-content-bottom {
     background: url('../images/front-page-twitter-bg3.jpg') center -30px no-repeat;
-    text-align: center;
     font-size: 1.3em;
     background-size: 100%;
 }
@@ -444,7 +443,7 @@ h1#page-title {
     height: 50px;
     width: 64px;
     padding: 0;
-    margin: 0 auto;
+ 
 }
 .tweets-pulled-listing li {
     margin-top: 10px;
@@ -537,8 +536,8 @@ ul.nice-menu-down {
     float: right
 }
 .research-by-topic ul .item-list ul li {
-    display: inline-block;
-    width: 23.4%;
+ 
+    width: 30%;
     height: 135px;
     overflow: hidden;
     margin: 0 20px 10px 0;
@@ -648,7 +647,6 @@ ul.nice-menu-down {
 }
 .bio-teaser-block2 p,
 .research-by-topic .term-head {
-    text-align: center;
     font-size: 1.2em;
     padding-bottom: 5px;
 }
@@ -676,3 +674,12 @@ ul.nice-menu-down {
 .contextual-controls-wrapper {
     top: 255px;
 }
+
+.twitter-followme {
+	text-align:center;
+}
+
+#footer {
+    padding: 10px 0 10px;
+}
+
