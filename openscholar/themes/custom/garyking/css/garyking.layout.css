@@ -3,7 +3,8 @@
 .sidebar    { 
     margin-top: 290px;
 }
-
+bio-teaser-block2,
+.front .block-boxes-os_boxes_twitterfeed,
 h1#page-title
  {
     width: 980px;
@@ -14,7 +15,7 @@ h1#page-title
 }
 
 .front .block-boxes-os_boxes_tabs {
-width: 104%;
+width: 106%;
 min-height: 425px;
 }
 
@@ -38,12 +39,6 @@ min-height: 425px;
  
 }
 
-.front .block-boxes-os_boxes_twitterfeed {
-
-    width: 85%;
-  
-
-}
 .front .block-boxes-os_boxes_twitterfeed,
 .research-by-topic,
 .block-boxes-os_boxes_twitterfeed h2.block-title {
