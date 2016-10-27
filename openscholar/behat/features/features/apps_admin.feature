@@ -59,6 +59,7 @@ Feature:
         And I press "Confirm"
         And I go to "john/cp/users/permissions"
        Then I should see the button "Save permissions"
+        And I press "Close Menu"
         And I remove from the role "content editor" in the group "john" the permission "edit-boxes"
         And I open the user menu
         And I click "Logout"
