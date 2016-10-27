@@ -58,6 +58,7 @@ textarea,
     padding: 6px 7px;
     background: url('../../os_basetheme/images/form-input-bg.gif') repeat-x scroll left top #FFFFFF;
     border: 1px solid #CDCDCD;
+    width:98%;
 }
 #og-vocabulary-add-more-wrapper select.form-select {
     height: 120px;
