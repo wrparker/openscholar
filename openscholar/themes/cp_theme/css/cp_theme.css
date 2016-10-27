@@ -139,6 +139,8 @@ html.js input.throbbing {
     color: #FFF;
     font-weight: bold;
 }
+input.form-submit, 
+a.button,
 .ui-dialog button,
 .ui-dialog input[type="button"],
 .ui-dialog input[type="submit"],
@@ -679,6 +681,7 @@ table.biblio-contributors tr:first-child input.form-submit {
 .form-item.form-type-radio {
     font-size: 1em;
     font-weight: normal;
+    margin-bottom: .5em;
 }
 #edit-biblio-year-coded .form-item.form-type-radio {
     margin-left: 0;
