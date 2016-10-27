@@ -164,6 +164,54 @@ a.form-cancel {
     -webkit-border-radius: 20px;
     border-radius: 20px;
 }
+
+/* SAVE BUTTON SPINNER */
+.spinner,
+.spinner:after {
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+}
+.spinner {
+    
+    display: inline-block;
+    float: left;
+    
+
+  font-size: 7px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: .5em solid rgba(255, 255, 255, 1);
+  border-right: .5em solid rgba(255, 255, 255, 0.2);
+  border-bottom: .5em solid rgba(255, 255, 255, 0.2);
+  border-left: .5em solid #ffffff;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1s infinite linear;
+  animation: load8 1s infinite linear;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
 a.form-cancel:hover {
     text-decoration: none;
 }
@@ -399,7 +447,7 @@ table th label {
 }
 /* CP/BUILD MENU */
 #redirects .actions,
-#os-maintenanc .actions,
+#os-maintenance .actions,
 .page-cp-build-menu table thead {
     display: none;
 }
