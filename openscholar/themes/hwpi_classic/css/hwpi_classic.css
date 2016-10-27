@@ -43,10 +43,14 @@ margin-top: 12px;
 .section-nav a,
 #content-column h2,
 #content-column h3,
-#content-column h4 {
+#content-column h4,
+.cke_editable * {
 	font-family: Georgia, Baskerville, Palatino, 'Palatino Linotype', 'Book Antiqua', 'Times New Roman', serif;
 }
 
+.cke_editable *  {
+	font-family: arial;
+}
 
 
 /*SECTION NAV OVERRIDES*/

@@ -29,7 +29,8 @@ h2.block-title,
 #menu-bar ul.nice-menu a,
 #boxes-box-site_info,
 #boxes-box-site_info a,
-.date-nav h3 {
+.date-nav h3,
+.cke_editable * {
     font-family: 'Montserrat', sans-serif !important;
 }
 
