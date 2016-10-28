@@ -591,7 +591,7 @@ li.term-applications {float:right;width:275px;}
 .research-by-topic ul .item-list ul li a {
     display: block;
     height: 300px;
-    padding: 20px 15px 30px 15px;
+    padding: 13px 15px 30px 15px;
     font-size: 1.1em;
     z-index: 2;
     position: relative;
@@ -605,7 +605,7 @@ li.term-applications {float:right;width:275px;}
     top: -320px;
 }
 .research-by-topic ul .item-list ul li.open a:after {
-    bottom: 5px;
+    bottom: 1px;
     right: 5px;
     content: 'Related content';
     position: absolute;
@@ -633,7 +633,7 @@ li.term-applications {float:right;width:275px;}
     /* padding-right:15px; */
     
     position: absolute;
-    top: 114px;
+    top: 70px;
     left: 41%;
     background: url("../images/sprite.png?abcdgfgg") 36px -98px no-repeat;
     font-size: .85em;
@@ -643,7 +643,7 @@ li.term-applications {float:right;width:275px;}
 }
 .research-by-topic ul .item-list ul li.open span:after {
     content: 'Less';
-    top: 8px;
+    top: 4px;
     left: 5%;
     background-position: 29px -122px;
 }
@@ -654,6 +654,7 @@ li.term-applications {float:right;width:275px;}
 .research-by-topic .term-head {
     font-size: 1.2em;
     padding-bottom: 5px;
+        text-align: center;
 }
 .bio-teaser-block2 p
  {
