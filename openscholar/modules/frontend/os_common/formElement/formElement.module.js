@@ -20,7 +20,7 @@
       '</div>',
       link: function (scope, elem, attr) {
         scope.id = $filter('idClean')(scope.element.name, 'edit');
-        scope.description = scope.element.description;
+        scope.description = $sce.trustAsHtml(scope.element.description);
         scope.label = scope.element.title;
         scope.access = scope.element.access;
         if (scope.access == undefined) {
