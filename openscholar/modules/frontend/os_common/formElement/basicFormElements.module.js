@@ -10,13 +10,15 @@
    */
   m.directive('feCheckbox', [function () {
     return {
+      require: 'ngModel',
       scope: {
         name: '@',
-        value: '=',
+        value: '=ngModel',
         element: '='
       },
       template: '<input type="checkbox" id="{{id}}" name="{{name}}" value="1" class="form-checkbox" ng-model="value" ng-true-value="1" ng-false-value="0"/><label class="option" for="{{id}}">{{title}}</label>',
-      link: function (scope, elem, attr) {
+      link: function (scope, elem, attr, ngModelController) {
+        console.log(scope);
         scope.id = attr['inputId'];
         scope.title = scope.element.title;
       }
@@ -30,7 +32,7 @@
     return {
       scope: {
         name: '@',
-        value: '=',
+        value: '=ngModel',
         element: '='
       },
       template: '<label for="{{id}}">{{title}}</label>' +
@@ -49,7 +51,7 @@
     return {
       scope: {
         name: '@',
-        value: '=',
+        value: '=ngModel',
         element: '='
       },
       template: '<label for="{{id}}">{{title}}</label>' +
@@ -68,7 +70,7 @@
     return {
       scope: {
         name: '@',
-        value: '=',
+        value: '=ngModel',
         element: '='
       },
       template: '<label for="{{id}}">{{title}}</label>' +
@@ -94,7 +96,7 @@
     return {
       scope: {
         name: '@',
-        value: '=',
+        value: '=ngModel',
         element: '='
       },
       template: '<label for="{{id}}">{{title}}<input type="submit" id="{{id}}" name="{{name}}" value="{{label}}" class="form-submit">',
@@ -119,7 +121,7 @@
     return {
       scope: {
         name: '@',
-        value: '=',
+        value: '=ngModel',
         element: '=',
       },
       template: '<div ng-bind-html="markup"></div>',

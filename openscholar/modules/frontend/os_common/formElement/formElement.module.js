@@ -49,7 +49,7 @@
           copy.attr('element', 'element');
 
           copy.attr('input-id', scope.id);
-          copy.attr('value', 'value');
+          copy.attr('ng-model', 'value');
           elem.find('span').replaceWith(copy);
           copy = $compile(copy)(scope);
           if (scope.element.attached) {
