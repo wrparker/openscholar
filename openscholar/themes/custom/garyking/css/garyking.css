@@ -8,7 +8,8 @@
 .contact-map a,
 .node-type-person .node-title,
 .research-by-topic ul .item-list ul li .description a,
-.not-front .research-by-topic h2.block-title {
+.not-front .research-by-topic h2.block-title,
+.front .field-name-field-biblio-image {
     display: none;
 }
 
@@ -187,6 +188,20 @@ body.node-type-biblio .biblio-export,
 .front-four-lops .front-lop-presentations h2.block-title {
     background-image: url('../images/icons/presentations.svg?123');
     background-size: 46px;
+}
+.front .sv-list-view-slide_teaser .os-slider {
+    
+    padding: 8px;
+    background-color: #f6f6f6 !important;
+}
+
+
+
+.front .sv-list-biblio.sv-list-view-slide_teaser .biblio-abstract-display.os-slider {
+ 
+    background: #f6f6f6 !important;
+    border: 1px solid #ddd;
+   
 }
 #content-panels .front-lop-blockgrid .block-inner {
     margin-top: 5px;
@@ -460,6 +475,10 @@ a:visited {
 .field-name-field-biblio-image ~ .biblio-abstract-display {
     margin-left: 0;
 }
+
+
+
+
 .front .region-content-second,
 #citation-wrapper,
 body.node-type-biblio .biblio-export {
