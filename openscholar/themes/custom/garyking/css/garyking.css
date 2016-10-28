@@ -202,8 +202,8 @@ body.node-type-biblio .biblio-export,
 
 .front .sv-list-biblio.sv-list-view-slide_teaser .biblio-abstract-display.os-slider {
  
-    background: #f6f6f6 !important;
-    border: 1px solid #ddd;
+       background: #eee !important;
+    border: none;
    
 }
 #content-panels .front-lop-blockgrid .block-inner {
@@ -462,7 +462,7 @@ h1#page-title {
  
 }
 .tweets-pulled-listing li {
-    margin-top: 10px;
+    margin: 10px 0 25px;
 }
 .research-by-topic ul .item-list ul li span:after,
 .front #content-panels .research-by-topic ul .item-list ul li a,
@@ -598,7 +598,7 @@ li.term-applications {float:right;width:275px;}
     /* color: #fff; */
     /* font-weight: bold; */
     
-    transition: all .5s;
+    transition: all .250s;
     top: 0;
 }
 .research-by-topic ul .item-list ul li.open a {
@@ -660,6 +660,23 @@ li.term-applications {float:right;width:275px;}
  {
     font-size: 1.4em;
     line-height: 1.2em;
+       margin-top: 1.2em !important;
+         text-align: left;
+}
+
+.bio-teaser-block2 a
+ {
+   text-decoration:none !important;
+   padding-right: 28px;
+   background: url("../images/sprite.png?abcdgfgg") 80px -207px no-repeat;
+   transition: all .250s;
+}
+.bio-teaser-block2 a:hover
+ {
+
+
+   background-position:  85px -207px;
+
 }
 
 .research-by-topic ul .item-list ul li .description {
