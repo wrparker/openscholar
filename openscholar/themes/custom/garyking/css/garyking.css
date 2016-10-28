@@ -8,9 +8,7 @@
 .contact-map a,
 .node-type-person .node-title,
 .research-by-topic ul .item-list ul li .description a,
-.not-front .research-by-topic h2.block-title,
-.front-lop-papers .field-name-field-biblio-image,
-.front-lop-papers .biblio-authors  {
+.not-front .research-by-topic h2.block-title {
     display: none;
 }
 
@@ -330,7 +328,7 @@ a.os-arrow:hover:after {
 .front-four-lops section {
     padding: 10px;
 }
-.front-lop-papers {
+ .front-lop-books {
     border-color: #5AB899;
 }
 .front-lop-presentations,
@@ -346,7 +344,7 @@ a.os-arrow:hover:after {
     border-color: #3A4B68;
 }
 .block-boxes-os_search_solr_more_like_this,
-.front-lop-books {
+.front-lop-papers {
     border-color: #E45947 !important;
 }
 .ui-tabs {
