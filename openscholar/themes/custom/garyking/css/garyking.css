@@ -556,14 +556,14 @@ ul.nice-menu-down {
     float: right
 }
 
-li.term-methods {float:left;width:275px;}
-li.term-applications {float:right;width:275px;}
+li.term-methods {float:left;width:280px;}
+li.term-applications {float:right;width:280px;}
 
 
 
 .research-by-topic ul .item-list ul li {
  width: 100%;
- height: 90px;
+ height: 88px;
  overflow: hidden;
  margin: 0 20px 7px 0;
  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
@@ -628,24 +628,26 @@ li.term-applications {float:right;width:275px;}
     border-top: 4px solid #81b9c3;
 }
 .research-by-topic ul .item-list ul li span:after {
-    content: 'More';
-    width: 50px;
+     content: 'More';
+    width: 100%;
     /* padding-right:15px; */
-    
     position: absolute;
-    top: 70px;
-    left: 41%;
-    background: url("../images/sprite.png?abcdgfgg") 36px -98px no-repeat;
+    top: 68px;
+    /* left: 41%; */
+    background: url("../images/sprite.png?abcdgfgg") 159px -99px #f6f6f6 no-repeat;
     font-size: .85em;
+    text-align:center;
     transition: all .250s;
     z-index: 2;
     background-size: 70px 350px;
 }
 .research-by-topic ul .item-list ul li.open span:after {
     content: 'Less';
+    width: 50%;
     top: 4px;
-    left: 5%;
-    background-position: 29px -122px;
+    left: 10px;
+    background-position: 30px -122px;
+    text-align: left;
 }
 .research-by-topic ul .item-list ul li a:hover {} .research-by-topic.block-boxes-os_taxonomy_fbt ul ul {
     margin: 0 !important;
