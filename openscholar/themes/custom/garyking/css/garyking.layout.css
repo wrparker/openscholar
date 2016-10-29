@@ -3,7 +3,7 @@
 .sidebar    { 
     margin-top: 290px;
 }
-
+.research-by-topic,
 .front .block-boxes-os_boxes_html.bio-teaser-block2,
 .front .block-boxes-os_boxes_twitterfeed,
 h1#page-title
@@ -13,6 +13,10 @@ h1#page-title
 
 .front .block.block-boxes-os_boxes_columns.front-top-cloumn {
     width: 100%;
+}
+
+.front-four-lops .region-two-66-33-first {
+    width: 61%;
 }
 
 .front .block-boxes-os_boxes_tabs {
@@ -35,11 +39,7 @@ min-height: 425px;
   }
 
 
-.research-by-topic {
-    width: 990px;
  
-}
-
 .front .block-boxes-os_boxes_twitterfeed,
 .research-by-topic,
 .block-boxes-os_boxes_twitterfeed h2.block-title {
