@@ -643,9 +643,23 @@ li.term-applications {float:right;width:280px;}
     background-position: 30px -122px;
     text-align: left;
 }
-.research-by-topic ul .item-list ul li a:hover {} .research-by-topic.block-boxes-os_taxonomy_fbt ul ul {
+.research-by-topic ul .item-list ul li:hover {
+	
+	margin-left:15px;
+	
+} 
+
+
+.research-by-topic.block-boxes-os_taxonomy_fbt ul ul {
     margin: 0 !important;
 }
+
+.research-by-topic {
+background-image: url('../images/reaearch_areas-bg.svg');
+ background-repeat:no-repeat;
+
+}
+
 .bio-teaser-block2 p,
 .research-by-topic .term-head {
     font-size: 1.2em;
