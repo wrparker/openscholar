@@ -35,6 +35,7 @@ Feature:
       And I should see "Obama" in an "h1" element
       And I open the user menu
       And I click "Support this site"
+      And the overlay opens
       And I should see "Are you sure you want to join the web site"
       And I press "Join"
      Then I should see "Your subscription request was sent."
@@ -53,7 +54,7 @@ Feature:
   Scenario: Testing public vsite can be viewed by anonymous users.
     Given I am logging in as "john"
      When I change privacy of the site "obama" to "Public on the web. "
-      And I click "Lo gout"
+      And I click "Log out"
       And I visit "obama"
      Then I should see "Obama" in an "h1" element
 
