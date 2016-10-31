@@ -25,6 +25,7 @@
   stylesheets[screen][] = css/garyking.css
   stylesheets[screen][] = css/responsive.garyking.css
   
+  
   scripts[] = garyking.js
 
 ;----------// Theme Settings
