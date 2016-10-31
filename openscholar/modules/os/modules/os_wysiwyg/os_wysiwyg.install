@@ -112,6 +112,6 @@ function os_wysiwyg_update_7011() {
 /**
  * Enable the Image2 plugin.
  */
-function os_wysiwyg_update_7011() {
+function os_wysiwyg_update_7012() {
   features_revert(array('os_wysiwyg' => array('wysiwyg')));
 }
