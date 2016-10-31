@@ -19,7 +19,7 @@ h1#page-title
 
 
 .front-top-featured {
-    width: auto;
+    width: auto !important;
 }
 
 
