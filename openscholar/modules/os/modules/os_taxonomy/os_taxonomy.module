@@ -1881,11 +1881,15 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
     $form['description']['#markup'] = t('Deleting a term  <span class="emphasize">will delete all of its child terms</span> if there are any. Reassigning child terms to a different parent term should be considered. This action cannot be undone.');
   }
 
+  os_common_angular_apps('standard-form');
   $form['#attached']['js'][] = drupal_get_path('module', 'os_wysiwyg') . '/js/wrap_plugins.js';
-  $form['#attached']['js'][] = [
+  $form['#attached']['js'][] = drupal_get_path('module', 'os_common') . '/modules/standard-form.js';
+  $form['#attached']['js'][] = array(
     'data' => '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML',
     'type' => 'external',
-  ];
+  );
+  $form['#attached']['library'][] = array('media', 'media_browser');
+  $form['#attached']['library'][] = array('os_common', 'FileEditorModal');
 }
 
 /**
