@@ -501,6 +501,7 @@ body.node-type-biblio .biblio-export {
     border-bottom: 3px solid #fff;
     padding: 16px 14px 13px 14px;
     transition: all .125s linear .125s;
+    -webkit-transition:all .125s linear .125s;
     font-size: 19px;
 }
 #menu-bar ul.nice-menu a.active,
@@ -568,6 +569,9 @@ li.term-applications {float:right;width:280px;}
  position: relative;
  z-index: 1;
  opacity: .94;
+ margin-left:0;
+ transition:all .5s;
+ -webkit-transition:all .5s;
 }
 .research-by-topic ul .item-list ul li.open {
     height: 300px;
@@ -591,7 +595,7 @@ li.term-applications {float:right;width:280px;}
     position: relative;
     /* color: #fff; */
     /* font-weight: bold; */
-    
+    -webkit-transition: all .250s;
     transition: all .250s;
     top: 0;
 }
@@ -610,7 +614,7 @@ li.term-applications {float:right;width:280px;}
 }
 .research-by-topic ul.termchild-applications li a {
     /* Green */
-    
+    -webkit-transition: all .250s;
     transition: all .250s;
     border-top: 4px solid #5AB899;
 }
@@ -645,7 +649,7 @@ li.term-applications {float:right;width:280px;}
 }
 .research-by-topic ul .item-list ul li:hover {
 	
-	margin-left:15px;
+	margin-left:10px;
 	
 } 
 
@@ -680,6 +684,7 @@ background-image: url('../images/reaearch_areas-bg.svg');
    padding-right: 28px;
    background: url("../images/sprite.png?abcdgfgg") 80px -207px no-repeat;
    transition: all .250s;
+    -webkit-transition:all .250s;
 }
 .bio-teaser-block2 a:hover
  {
@@ -691,6 +696,7 @@ background-image: url('../images/reaearch_areas-bg.svg');
 
 .research-by-topic ul .item-list ul li .description {
     transition: all .250s;
+    -webkit-transition:all .250s;
     padding: 10px;
     z-index: 1;
     position: relative;
