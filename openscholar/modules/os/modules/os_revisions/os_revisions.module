@@ -11,15 +11,22 @@
 define('OS_REVISIONS_DOCS_URL', 'http://docs.openscholar.harvard.edu');
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter() for node_form.
+ * Implements hook_form_BASE_FORM_ID_alter() for node_form to display revision fieldset in certain cases
+ * Add revision information in hidden fields and javascript to check if the user has reached the max # of revisions for the node
  */
 function os_revisions_form_node_form_alter(&$form, $form_state) {
   $content_type = $form['#node']->type;
 
-  if (!variable_get("enable_revisions_$content_type", FALSE)) {
+  if (!variable_get("enable_revisions_$content_type", FALSE) || !is_numeric($form['#node']->nid)) {
     $form['revision_information']['#access'] = FALSE;
   }
   else {
+    $max_revisions = (int)variable_get("restrict_node_revision_number_for_" . str_replace("-", "_", $form_state['node']->type), FALSE);
+    if ($max_revisions) {
+      $form['max_revisions'] = array('#type' => 'hidden', '#value' => $max_revisions);
+      $form['revisions'] =  array('#type' => 'hidden', '#value' => (count(node_revision_list(node_load($form_state['node']->nid))) - 1));
+      $form['#attached']['js'][] = drupal_get_path('module', 'os_revisions') . '/os_revisions.js';
+    }
     $form['revision_information']['revision']['#weight'] = 1;
     $form['revision_information']['revision']['#suffix'] = '<div id="warning-text"></div>';
     $form['revision_information']['log']['#weight'] = 2;
@@ -33,7 +40,6 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
       $form['revision_information']['info']['#markup'] = t('<p>There are currently <a href="@url" id="revisions-link">@num revisions</a>.</p>', array('@url' => url($revisions_url), '@num' => $num_revisions));
       $form['revision_information']['info']['#weight'] = 0;
     }
-
   }
 }
 
@@ -113,33 +119,6 @@ function os_revisions_revision_overview($node) {
   );
 
   return $build;
-}
-
-/**
- * Implements hook_form_alter().
- *
- * Add revision information in hidden fields and javascript to check if the user has reached the max # of revisions for the node
- */
-function os_revisions_form_alter(&$form, &$form_state, $form_id){
-  $node_edit_forms = array(
-    'biblio_node_form',
-    'blog_node_form',
-    'book_node_form',
-    'faq_node_form',
-    'link_node_form',
-    'news_node_form',
-    'page_node_form',
-    'person_node_form',
-  );
-
-  if (in_array($form_id, $node_edit_forms) && $form_state['node']->nid) {
-    $max_revisions = (int)variable_get("restrict_node_revision_number_for_" . str_replace("-", "_", $form_state['node']->type), FALSE);
-    if ($max_revisions) {
-      $form['max_revisions'] = array('#type' => 'hidden', '#value' => $max_revisions);
-      $form['revisions'] =  array('#type' => 'hidden', '#value' => (count(node_revision_list(node_load($form_state['node']->nid))) - 1));
-      $form['#attached']['js'][] = drupal_get_path('module', 'os_revisions') . '/os_revisions.js';
-    }
-  }
 }
 
 /**
