@@ -812,14 +812,6 @@ function os_publications_alter_year_field(&$form, &$form_state) {
       '#default_value' => $year_coded_value,
     );
 
-    $form['biblio_year_coded_extrayear'] = array(
-      '#type' => 'textfield',
-      '#description' => 'e.g. 2015',
-      '#title' => 'Year',
-      '#size' => 10,
-      '#default_value' => $date_value,
-      '#weight' => $form['biblio_year_group']['#weight'] + 1,
-    );
   }
 
   unset($form['field_biblio_pub_month']);
@@ -852,15 +844,6 @@ function os_publications_alter_year_field(&$form, &$form_state) {
 
   unset($form['biblio_year_group']['biblio_year']['#title']);
   unset($form['biblio_year_group']['biblio_year']['#description']);
-
-  $form['biblio_year_coded_extrayear'] = array(
-    '#type' => 'textfield',
-    '#description' => t('e.g. 2015'),
-    '#title' => t('Year'),
-    '#size' => 10,
-    '#default_value' => $date_value,
-    '#weight' => $form['biblio_year_group']['#weight'] + 1,
-  );
 
   // Adding date and month validation message for Harvard - Chicago Author
   // citation.
