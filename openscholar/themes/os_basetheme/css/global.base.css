@@ -1132,3 +1132,10 @@ ul.no-event-export {
 .block-boxes-os_boxes_widget_slider #layout_16_9_side .rslides li {
   list-style:none;
 }
+
+.morecontent span {
+    display: none;
+}
+.morelink {
+    display: inline;
+}

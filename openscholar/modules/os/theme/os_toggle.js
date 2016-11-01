@@ -1,8 +1,8 @@
 /**
  * Pairs a link and a block of content. The link will toggle the appearance of
  * that block content
- *
  */
+ 
 (function ($) {
   Drupal.behaviors.os_toggle = {
     attach: function (ctx) {
@@ -33,6 +33,33 @@
             slider.slideToggle("fast");
           }
         });
+      });
+    }
+  };
+
+  Drupal.behaviors.os_showterms = {
+  attach: function (ctx) {
+  // Configure/customize these variables.
+  var moretext = "And more...";
+  var lesstext = "Hide terms";
+
+    $('.more').each(function() {
+      var content = $(this).html();
+      var html = content + '&nbsp;&nbsp;<a  class="morelink">' + moretext + '</a>';
+      $(this).html(html);
+    });
+
+    $(".morelink").click(function(){
+        if($(this).hasClass("less")) {
+            $(this).removeClass("less");
+            $(this).html(moretext);
+        } else {
+            $(this).addClass("less");
+            $(this).html(lesstext);
+        }
+        //$(this).parent().prev(".more").toggle();
+        $(this).prev(".morecontent").children("span").toggle();
+        return false;
       });
     }
   };
