@@ -105,6 +105,7 @@ h2.block-title {
     border-top-style: solid;
     border-width: 3px;
 }
+.not-front .research-by-topic ul .item-list ul li,
 .research-by-topic ul .item-list ul li.open a,
 #menu-bar ul.nice-menu a.active,
 #menu-bar ul.nice-menu a:hover,
@@ -523,6 +524,9 @@ ul.nice-menu-down,
     transition: all .5s;
     -webkit-transition: all .5s;
 }
+.not-front .research-by-topic ul .item-list ul li {
+    border: 1px solid #ddd;
+}
 .research-by-topic ul .item-list ul li.open {
     height: 300px;
     opacity: 1;
@@ -592,6 +596,10 @@ ul.nice-menu-down,
     z-index: 2;
     background-size: 70px 350px;
 }
+.not-front .research-by-topic ul .item-list ul li span:after {
+    background: url("../images/sprite.png?abcdgfgg") 159px -99px #eee no-repeat;
+
+}
 .research-by-topic ul .item-list ul li.open span:after {
     content: 'Less';
     width: 50%;
@@ -611,6 +619,10 @@ ul.nice-menu-down,
     background-repeat: no-repeat;
     background-position: 220px 120px;
     background-size: 520px 740px;
+}
+.not-front .research-by-topic {
+    background-image: url('../images/reaearch_areas-bg_png2.png');
+
 }
 .bio-teaser-block2 p,
 .research-by-topic .term-head {
