@@ -306,6 +306,12 @@ form.confirmation span.emphasize {
 #overlay-content {
     padding: 2.5em 1em;
 }
+.page-node-revisions #overlay-content  {
+    padding: 0 1em 1.5em;
+}
+
+
+
 #overlay-tabs li a,
 #overlay-tabs li.active a,
 #overlay-tabs li.active a.active,
@@ -1168,3 +1174,13 @@ body.page-node fieldset#edit-revision-information #warning-text p {
 body.page-node-revisions ul.action-links a {
     background-image: none;
 }
+.page-node-revisions ul.action-links {
+  
+    padding: 0 20px 0 0;
+   
+}
+ul.action-links a {
+    padding-left: 0;
+ 
+}
+
