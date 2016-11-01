@@ -659,9 +659,10 @@ li.term-applications {float:right;width:280px;}
 }
 
 .research-by-topic {
-background-image: url('../images/reaearch_areas-bg_png1.png');
+background-image: url('../images/reaearch_areas-bg_png1.png?123');
  background-repeat:no-repeat;
-background-position: 180px 160px;
+   background-position: 220px 120px;
+background-size: 520px 740px;
 }
 
 .bio-teaser-block2 p,
