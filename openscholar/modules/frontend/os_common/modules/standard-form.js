@@ -1,5 +1,5 @@
 (function ($) {
 
-  angular.module('standart-form', ['mediaBrowser']);
+  angular.module('standard-form', ['mediaBrowser', 'FileEditorModal']);
 
 })(jQuery);
