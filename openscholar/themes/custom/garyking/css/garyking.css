@@ -105,6 +105,7 @@ h2.block-title {
     border-top-style: solid;
     border-width: 3px;
 }
+.not-front .research-by-topic ul .item-list ul li a,
 .not-front .research-by-topic ul .item-list ul li,
 .research-by-topic ul .item-list ul li.open a,
 #menu-bar ul.nice-menu a.active,
@@ -598,6 +599,7 @@ ul.nice-menu-down,
 }
 .not-front .research-by-topic ul .item-list ul li span:after {
     background: url("../images/sprite.png?abcdgfgg") 159px -99px #eee no-repeat;
+    background-size: 70px 350px;
 
 }
 .research-by-topic ul .item-list ul li.open span:after {
@@ -607,6 +609,12 @@ ul.nice-menu-down,
     left: 10px;
     background-position: 30px -122px;
     text-align: left;
+}
+
+
+
+.not-front .research-by-topic ul .item-list ul li.open a {
+    background-color: #eee;
 }
 .research-by-topic ul .item-list ul li:hover {
     margin-left: 10px;
