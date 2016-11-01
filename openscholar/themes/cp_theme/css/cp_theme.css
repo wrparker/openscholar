@@ -1175,7 +1175,7 @@ body.page-node-revisions ul.action-links a {
     background-image: none;
 }
 .page-node-revisions ul.action-links {
-  
+  margin: 0;
     padding: 0 20px 0 0;
    
 }
