@@ -61,13 +61,19 @@
           var s = Drupal.settings, 
             page = decodeURIComponent(args.page).split(',');
             page = page[args.pager_id];
-            destination = args.destination;
-          $.ajax({
-            url: window.location.protocol + '//' + window.location.hostname + '/' + (typeof s.pathPrefix != 'undefined'?s.pathPrefix:'') + 'os_sv_list/page/'+delta,
-            data: {
+            destination = args.destination,
+            queryArgs = {
               page: page,
               destination: destination
-            },
+            };
+
+          if (args.destination.indexOf("widget/embed") != -1) {
+            queryArgs.embed = 1;
+          }
+
+          $.ajax({
+            url: '//' + window.location.hostname + '/' + (s.basePath ? s.basePath : '') + (typeof s.pathPrefix != 'undefined'?s.pathPrefix:'') + 'os_sv_list/page/'+delta,
+            data: queryArgs,
             beforeSend: function (xhr, settings) {
               $(e.currentTarget).append('<div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>')
             },
