@@ -91,3 +91,11 @@ function os_image_gallery_update_7005() {
   );
   field_update_instance($instance);
 }
+
+/**
+ * Update the image file.
+ */
+function os_image_gallery_update_7006() {
+  features_revert(array('os_image_gallery' => array('views_view')));
+}
+

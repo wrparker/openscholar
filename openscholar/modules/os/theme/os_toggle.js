@@ -20,10 +20,7 @@
             }
           });
 
-          if ($.browser.msie == undefined) {
-            slider.slideToggle("fast");
-          }
-          else {
+          if (navigator.appName == 'Microsoft Internet Explorer' && navigator.userAgent.match(/msie 6/i)) {
             // IE8 Does not work with the slider.
             if ($(this).hasClass('expanded')) {
               slider.show();
@@ -31,6 +28,9 @@
             else {
               slider.hide();
             }
+          }
+          else {
+            slider.slideToggle("fast");
           }
         });
       });
