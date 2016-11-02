@@ -40,8 +40,8 @@
   Drupal.behaviors.os_showterms = {
   attach: function (ctx) {
   // Configure/customize these variables.
-  var moretext = "More terms <span>&#x25BC;</span>";
-  var lesstext = "Less terms <span>&#x25B2;</span>";
+  var moretext = "More <span>&#x25BC;</span>";
+  var lesstext = "Less <span>&#x25B2;</span>";
 
     $('.more').each(function() {
       var content = $(this).html();
