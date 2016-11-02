@@ -1141,3 +1141,6 @@ ul.no-event-export {
     font-style:italic;
     
 }
+.morelink span {
+    font-size: .8em;
+}
