@@ -1138,7 +1138,6 @@ ul.no-event-export {
 }
 .morelink {
     display: inline;
-}
-.togglemore, .toggleless {
-    font-weight: bold;
+    font-style:italic;
+    
 }

@@ -40,12 +40,12 @@
   Drupal.behaviors.os_showterms = {
   attach: function (ctx) {
   // Configure/customize these variables.
-  var moretext = "And more...";
-  var lesstext = "Hide terms";
+  var moretext = "More terms &#x25BC;";
+  var lesstext = "Less terms &#x25B2;";
 
     $('.more').each(function() {
       var content = $(this).html();
-      var html = content + '&nbsp;&nbsp;,<a  class="morelink togglemore">' + moretext + '</a>';
+      var html = content + ',&nbsp;&nbsp;<a  class="morelink togglemore">' + moretext + '</a>';
       $(this).html(html);
     });
 
