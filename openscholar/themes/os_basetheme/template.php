@@ -200,17 +200,23 @@ function os_basetheme_preprocess_node(&$vars) {
     // desired markup.
     $vars['node']->field_date['und'][0] = $vars['node']->field_date['und'][$delta];
 
-    // Get the repeat rule.
-    $rule = theme('date_repeat_display', array(
-      'item' => array('rrule' => $vars['content']['field_date']['#items'][0]['rrule']),
-      'field' => field_info_field('field_date'),
-    ));
+    if (empty($vars['sv_list'])) {
+      // Get the repeat rule.
+      $rule = theme('date_repeat_display', array(
+        'item' => array('rrule' => $vars['content']['field_date']['#items'][0]['rrule']),
+        'field' => field_info_field('field_date'),
+      ));
+    }
 
     // Get the date field. The delta we want to display will be returned.
     $field = field_view_field('node', $vars['node'], 'field_date', array('full'));
 
     // Rebuild the markup for the date field.
-    $vars['content']['field_date'][0]['#markup'] = $rule . ' ' . $field[0]['#markup'];
+    if (empty($vars['sv_list'])) {
+      $vars['content']['field_date'][0]['#markup'] = $rule . ' ' . $field[0]['#markup'];
+    } else {
+      $vars['content']['field_date'][0]['#markup'] = $field[0]['#markup'];
+    }
 
     // Don't display the repeats in full view mode.
     foreach ($vars['content']['field_date'] as $index => $repeat ) {
