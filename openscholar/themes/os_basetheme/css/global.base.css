@@ -1138,7 +1138,7 @@ ul.no-event-export {
 }
 .morelink {
     display: inline;
-    font-style:italic;
+    text-decoration:underline;
     
 }
 .morelink span {
