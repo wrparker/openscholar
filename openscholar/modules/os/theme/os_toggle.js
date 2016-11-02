@@ -45,16 +45,18 @@
 
     $('.more').each(function() {
       var content = $(this).html();
-      var html = content + '&nbsp;&nbsp;<a  class="morelink">' + moretext + '</a>';
+      var html = content + '&nbsp;&nbsp;,<a  class="morelink togglemore">' + moretext + '</a>';
       $(this).html(html);
     });
 
     $(".morelink").click(function(){
-        if($(this).hasClass("less")) {
-            $(this).removeClass("less");
+        if($(this).hasClass("toggleless")) {
+            $(this).removeClass("toggleless");
+            $(this).addClass("togglemore");
             $(this).html(moretext);
         } else {
-            $(this).addClass("less");
+            $(this).removeClass("togglemore");
+            $(this).addClass("toggleless");
             $(this).html(lesstext);
         }
         //$(this).parent().prev(".more").toggle();
