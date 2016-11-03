@@ -3009,8 +3009,11 @@ function os_html_head_alter(&$head_elements) {
   // Base path including the purl.
   $base_url_purl = $base_url . '/' . $vsite->group->purl;
 
-
   // Do nothing in case the shortlink value already contains the purl.
+  if (empty($head_elements['metatag_shortlink'])) {
+    return;
+  }
+
   if (strpos($head_elements['metatag_shortlink']['#value'], $base_url_purl) === 0) {
     return;
   }
