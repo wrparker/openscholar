@@ -86,7 +86,7 @@ html.js input.throbbing {
     bottom: 7px;
     right: 10px;
     padding: 2px 25px 2px 0;
-    background: url(../images/cp-sprite.png) no-repeat right -618px;
+    background: url(../images/cp-sprite.png) no-repeat right -637px;
     background-size: 21px 700px;
     font-size: .97em;
 }
@@ -1240,7 +1240,27 @@ form#os-maintenance .form-item .description {
 }
 
 .form-radios {
-	margin:15px 0;
+  margin: 15px 0;
+}
+
+/* CKEDITOR - WYSIWYG */
+
+
+body.cke_editable blockquote {
+    border-left: 2px solid #807E6D;
+    font-style: italic;
+    margin: 1em 3em;
+    padding-left: 1em;
+}
+
+span.cke_button__break_icon {
+    background-position-y: -1px;
+    background-size: 20px !important;
+    width: 18px;
+}
+
+.cke_ltr span.cke_button__anchor_icon {
+    background: url('/profiles/openscholar/themes/cp_theme/images/cp-sprite.png?123') no-repeat 0 -711px !important;
 }
 
 .view-content ~ .item-list ul.pager {
@@ -1279,6 +1299,13 @@ li.pager-previous + li.pager-ellipsis {
 	}
 
 .file img.file-icon {
-    width:16px;
+    width: 16px;
+}
+body.cke_editable img.media-element.file-default {
+    padding-right: 15px;
+}
 
+body.cke_editable img.media-element.file-default[style*="float:"][style*="right;"] {
+    padding-left: 15px;
+    padding-right: 0;
 }

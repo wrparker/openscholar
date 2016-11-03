@@ -36,6 +36,13 @@
      display: inline-block;
 	  	}
 
+.node-type-presentation .field-name-field-presentation-file.field-type-file .field-item {
+  display: block;
+}
+
+.node-presentation.node-teaser .field-name-field-presentation-file.field-type-file .field-item {
+  margin-right: 8px;
+}
 
 .field-type-file .field-item {display:inline;}
 

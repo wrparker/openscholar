@@ -706,7 +706,7 @@ function cp_user_form_og_ui_add_users_alter(&$form, $form_state) {
   if (module_exists('vsite')) {
     $form['og_user']['name']['#description'] = t('Type in a person\'s name, username, or e-mail address to search for their existing account.');
     // Add the new user autocomplete function.
-    $form['og_user']['name']['#autocomplete_path'] = 'vsite/autocomplete/user';
+    $form['og_user']['name']['#autocomplete_path'] = 'vsite/autocomplete/user/add';
   }
   $form['og_user']['link_text'] = array(
     '#type' => 'item',

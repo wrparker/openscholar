@@ -154,13 +154,6 @@ function os_profiles_views_default_views() {
   $handler->display->display_options['arguments']['field_last_name_value']['glossary'] = TRUE;
   $handler->display->display_options['arguments']['field_last_name_value']['limit'] = '1';
   $handler->display->display_options['arguments']['field_last_name_value']['break_phrase'] = TRUE;
-  $handler->display->display_options['path'] = 'people/glossary';
-  $handler->display->display_options['menu']['type'] = 'normal';
-  $handler->display->display_options['menu']['title'] = 'People';
-  $handler->display->display_options['menu']['description'] = 'List of people';
-  $handler->display->display_options['menu']['weight'] = '0';
-  $handler->display->display_options['menu']['name'] = 'primary-menu';
-  $handler->display->display_options['menu']['context'] = 0;
   $export['os_profiles'] = $view;
 
   return $export;

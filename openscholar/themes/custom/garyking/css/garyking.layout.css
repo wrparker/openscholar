@@ -1,0 +1,42 @@
+/* Layout CSS */
+
+.sidebar {
+    margin-top: 290px;
+}
+.research-by-topic,
+.front .block-boxes-os_boxes_html.bio-teaser-block2,
+.front .block-boxes-os_boxes_twitterfeed,
+h1#page-title {
+    width: 980px;
+}
+.front .block.block-boxes-os_boxes_columns.front-top-cloumn {
+    width: 100%;
+}
+#menu-bar nav,
+#menu-bar #block-os-primary-menu,
+.front-top-featured {
+    width: auto !important;
+}
+.front-four-lops .region-two-66-33-first {
+    width: 61%;
+}
+.front .block-boxes-os_boxes_tabs {
+    width: 106%;
+    min-height: 425px;
+}
+.front-top-cloumn .region-two-66-33-second,
+.front-top-cloumn .region-two-66-33-first {
+    height: 300px;
+}
+.front-top-cloumn .region-two-66-33-first {
+    width: 69.9%;
+    border-right: 1px solid #fff;
+}
+.front-top-cloumn .region-two-66-33-second {
+    width: 30%;
+}
+.front .block-boxes-os_boxes_twitterfeed,
+.research-by-topic,
+.block-boxes-os_boxes_twitterfeed h2.block-title {
+    margin: 0 auto;
+}
