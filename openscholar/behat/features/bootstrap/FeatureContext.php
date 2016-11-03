@@ -3318,7 +3318,10 @@ class FeatureContext extends DrupalContext {
     $output = $this->adminPanelOpen();
     $page = $this->getSession()->getPage();
 
-    $elem = $page->find('xpath', "//*[text() = '{$text}']/ancestor::li[contains(@key, '".strtolower($text)."')]");
+    $elem = $page->find('xpath', "//li[@admin-panel-menu-row]//*[text() = '{$text}']");
+    if (!$elem) {
+      throw new \Exception("The link $text cannot be found in the admin panel.");
+    }
     if (!$elem->hasClass('open')) {
       $output[] = new Step\When('I click on the "'.$text.'" control');
     }
