@@ -18,7 +18,7 @@
       '<div class="redirect-add-form" ng-show="showAddForm()">' +
         '<div class="display-inline"><label for="redirect-path">Redirect From</label> {{siteBaseUrl}}/<input type="text" id="redirect-path" class="redirect-new-element" ng-model="newRedirectPath" placeholder="Local path"><span class="description">(Example: my-path). Fragment anchors (e.g. #anchor) are not allowed.</span></div>' +
         '<div class="display-inline"><label for="redirect-target">Redirect To</label> <input type="text" id="redirect-target" class="redirect-new-element" ng-model="newRedirectTarget" placeholder="Target URL (i.e. http://www.google.com)"><span class="description">Enter any existing destination URL (like http://example.com) to redirect to.</span></div>' +
-        '<button type="button" value="Add Redirect" ng-click="addRedirect()">Add Redirect</button>' +
+        '<button type="button" value="Add Redirect" ng-click="addRedirect()" ng-show="showAddButton()">Add Redirect</button>' +
       '</div>',
       scope: {
         value: '=',
@@ -39,9 +39,13 @@
           showAddForm = !showAddForm;
         }
 
+        scope.showAddButton = function () {
+          return scope.redirects.length >= cp_redirect_max;
+        }
+
         scope.siteBaseUrl = Drupal.settings.paths.vsite_home;
 
-        var cp_redirect_max = 15;
+        var cp_redirect_max = scope.element.maximum_value_count;
         scope.$watch('redirects', function (val) {
           var count = val.length || 0;
           if (count < cp_redirect_max) {
@@ -51,7 +55,7 @@
             showAddLink = false;
           }
         })
-        scope.redirects = scope.element.value;
+        scope.redirects = scope.element.value || [];
 
         var restApi = Drupal.settings.paths.api + '/redirect/';
         var http_config = {
