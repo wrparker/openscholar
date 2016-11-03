@@ -29,7 +29,8 @@ h2.block-title,
 .region-header-third ul.nice-menu a,
 #boxes-box-site_info,
 #boxes-box-site_info a,
-#menu-bar ul.nice-menu a {
+#menu-bar ul.nice-menu a,
+.cke_editable * {
     font-family: 'Source Sans Pro', sans-serif, Georgia, serif !important;
 }
 .biblio-title a,

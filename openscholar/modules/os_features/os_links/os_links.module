@@ -128,8 +128,8 @@ function os_links_preprocess_node(&$variables) {
   }
 
   if (($variables['field_open_link_in_new_tab'][LANGUAGE_NONE][0]['value'] == 1) &&
-      isset($variables['field_links_link'][LANGUAGE_NONE][0]['url'])) {
-    $variables['title'] = l($variables['title'], $variables['field_links_link'][LANGUAGE_NONE][0]['url'], array('attributes' => array("target" => '_blank')));
+      !empty($variables['field_links_link'][LANGUAGE_NONE][0]['url'])) {
+    $variables['title'] = l($variables['title'], rawurldecode($variables['field_links_link'][LANGUAGE_NONE][0]['url']), array('attributes' => array("target" => '_blank')));
   }
 
   if (empty($variables['sv_list']) || $variables['view_mode'] != 'full') {
