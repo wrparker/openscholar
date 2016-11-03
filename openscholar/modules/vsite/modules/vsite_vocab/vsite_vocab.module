@@ -654,7 +654,6 @@ function vsite_vocab_html_cut($text, $max_length)
             $is_open   = false;
             $grab_open = false;
           }
-
           break;
         case ' ':
           if ($is_open)
@@ -684,8 +683,8 @@ function vsite_vocab_html_cut($text, $max_length)
       $i++;
     }
 
-    if ($tags) {
-      // Get the last term position in case of open tag
+    if ($tags || (substr(trim($result), -2) == '>,')) {
+      // Get the last term position in case of open tag or end of a term
       $trim_pos = strrpos($result, '>,');
       $result_trim = substr($result, 0, ($trim_pos + 1));
     } else {
