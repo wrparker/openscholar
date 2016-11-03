@@ -3334,7 +3334,10 @@ class FeatureContext extends DrupalContext {
    */
   public function iOpenUserMenu() {
     $page = $this->getSession()->getPage();
-    if ($elem = $page->find('css', '[right-menu-toggle]')) {
+    while (!$page->find('css', 'div[right-menu-toggle]')) {
+      usleep(100);
+    }
+    if ($elem = $page->find('css', 'div[right-menu-toggle]')) {
       $elem->click();
     }
     else {
