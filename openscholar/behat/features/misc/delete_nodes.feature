@@ -6,8 +6,8 @@ Feature: Testing that nodes can be deleted
       Given I am logging in as "admin"
         And I visit "john/classes"
         And I make sure admin panel is open
-        And I click on the "Site Content" control
-        And I click on the "Add" control
+        And I open the admin panel to "Site Content"
+        And I open the admin panel to "Add"
         And I click on the "Class" control in the "li[key='0_content-1_add-2_class']" element
         And the overlay opens
         And I fill in "Title" with "Dummy class"
