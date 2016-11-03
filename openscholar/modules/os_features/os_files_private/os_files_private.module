@@ -339,34 +339,31 @@ function os_files_private_cp_settings() {
   $settings = array();
   $vsite = vsite_get_vsite();
   $spaces_features = $vsite->controllers->variable->get('spaces_features');
-  // Private Files settings link won't appear in CP menu if Private files app is not enabled.
-  if (!$spaces_features['os_files_private']) {
-    return $settings;
-  }
-
   // Checks that the current vsite has a value for the pinserver app name variable.
   $pinserver_app_name = variable_get('pinserver_app_name', NULL);
 
-  if ($pinserver_app_name) {
-    $settings['os_files_private_pinserver'] = array(
-      'group' => array(
-        '#id' => 'feature_os_files_private',
-        '#title' => t('Private Files'),
-        '#weight' => 3,
-        '#menu_parent' => 'app_settings',
-        '#help_link' => l(t('Learn more about private files'), '', array('attributes' => array('target' => '_blank'))),
-      ),
-      'form' => array(
-        '#title' => t('Extend access to the Harvard Community'),
-        '#description' => t('This will enable anyone with a valid Harvard ID to log in using the Harvard Pinserver to access your private files. You must have a custom domain and pin application to choose this setting.'),
-        '#type' => 'checkbox',
-        '#default_value' => variable_get('os_files_private_pinserver', 0),
-        '#weight' => -1,
-        '#prefix' => '<label>Private files are only accessible to your site members.</label>',
-        '#disabled' => !(user_access('administer pinserver') && variable_get('vsite_domain_name', false)),
-      ),
-    );
+  // Private Files settings link won't appear in CP menu if Private files app is not enabled and pinserver app name is not setup.
+  if (!$spaces_features['os_files_private'] && $pinserver_app_name) {
+    return $settings;
   }
 
+  $settings['os_files_private_pinserver'] = array(
+    'group' => array(
+      '#id' => 'feature_os_files_private',
+      '#title' => t('Private Files'),
+      '#weight' => 3,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about private files'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#title' => t('Extend access to the Harvard Community'),
+      '#description' => t('This will enable anyone with a valid Harvard ID to log in using the Harvard Pinserver to access your private files. You must have a custom domain and pin application to choose this setting.'),
+      '#type' => 'checkbox',
+      '#default_value' => variable_get('os_files_private_pinserver', 0),
+      '#weight' => -1,
+      '#prefix' => '<label>Private files are only accessible to your site members.</label>',
+      '#disabled' => !(user_access('administer pinserver') && variable_get('vsite_domain_name', false)),
+    ),
+  );
   return $settings;
 }
