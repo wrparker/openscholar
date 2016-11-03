@@ -98,8 +98,8 @@
       })
 
       elem.bind('click', function (e) {
-        event.preventDefault();
-        event.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
 
         ModalService.showModal({
           controller: 'apSettingsFormController',
