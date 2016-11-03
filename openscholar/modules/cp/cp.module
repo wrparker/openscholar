@@ -515,7 +515,7 @@ function cp_cp_settings() {
       ),
       'form' => array(
         '#title' => t('Manage redirects'),
-        '#access' => cp_create_redirect_access(),
+        '#access' => module_exists('redirect') && redirect_access('create', 'redirect'),
         '#custom_directive' => 'redirects',
         '#value' => $redirect_values,
         '#maximum_value_count' => variable_get('cp_redirect_max', CP_REDIRECT_MAX_DEFAULT)
