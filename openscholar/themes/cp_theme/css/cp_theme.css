@@ -83,13 +83,14 @@ html.js input.throbbing {
     background: url("../images/cp-sprite.png") no-repeat 0 -170px;
 }
 .help-link.ng-binding {
-       position: absolute;
-    bottom: 7px;
+  position: absolute;
+    bottom: 20px;
     right: 10px;
     padding: 2px 25px 2px 0;
-    background: url(../images/cp-sprite.png) no-repeat right -637px;
+    background: url(../images/cp-sprite.png) no-repeat right -638px;
     background-size: 21px 700px;
     font-size: .97em;
+
 }
     
 
