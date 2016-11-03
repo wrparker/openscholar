@@ -3373,7 +3373,7 @@ function vsite_cp_settings() {
       '#title' => t('Author URL'),
       '#default_value' => variable_get('vsite_head_link_rel_author', ''),
       '#access' => $vsite->group->type == 'personal',
-      '#description' => t('Enter the URL to your permanent web address. Use a Google+ personal URL to display <a href="@href" target="_blank">Google Authorship</a> photos in search results.', array('@href' => 'http://www.google.com/insidesearch/features/authorship/')),
+      '#description' => t('Enter the URL to your permanent web address.'),
     ),
     'group' => array(
       '#id' => 'vsite-seo',
