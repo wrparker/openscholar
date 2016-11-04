@@ -364,6 +364,9 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     font-size: 24px;
     font-weight: normal;
 }
+.page-cp .ui-dialog-titlebar {
+    margin-bottom: 22px;
+}
 .ui-dialog {
     padding: 0;
     top:10% !important;
@@ -1233,13 +1236,9 @@ form#os-maintenance .form-item .description {
     text-align: center;
     white-space: nowrap;
    }
-   
-.ui-dialog #os_taxonomy .form-item {
-      margin: 12px 0;
-}
 
 .ui-dialog #os_taxonomy .os-taxonomy_label_heading {
- margin: 20px 0 8px 0;
+ margin: 0 0 8px 0;
 }
 
 .form-radios {
