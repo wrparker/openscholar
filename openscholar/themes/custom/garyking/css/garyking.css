@@ -78,8 +78,8 @@ body.not-front {
     vertical-align: middle;
 }
 .front #content-panels .region-content-first {
-    background-color: #d6e0dd;
-    padding-top: 17px;
+    background-color: #e2e2e2;
+    padding-top: 10px;
 }
 h2.block-title {
     color: #545454;
