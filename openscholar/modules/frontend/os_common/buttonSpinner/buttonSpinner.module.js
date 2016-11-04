@@ -32,7 +32,7 @@
       restrict: 'A',
       scope: {
         spinnerID: '@buttonSpinner',
-        spinningText: '@'
+        spinningText: '@?'
       },
       transclude: true,
       template:
@@ -44,7 +44,9 @@
 
         $bss.$observe(scope.spinnerID, function (state) {
           scope.spinning = state;
-          textElem.innerHTML = state ? scope.spinningText : original;
+          if (scope.spinningText) {
+            textElem.innerHTML = state ? scope.spinningText : original;
+          }
         })
       }
     }

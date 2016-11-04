@@ -6,19 +6,19 @@
     $depProvider.AddDependency('formElement', 'redirectForm');
   }]);
 
-  m.directive('redirects', ['$http', function($http) {
+  m.directive('redirects', ['$http', 'buttonSpinnerStatus', function($http, bss) {
     return {
       template: '<p>URL redirects allow you to send users from a URL on your site, to any other URL. You might want to use this to create a short link, or to transition users from an old URL to the new URL. Each site may only have a maximum of 15 of URL redirects.</p>' +
       '<ul class="table-list">' +
         '<li class="redirect-item" ng-repeat="r in redirects">' +
-          '<span class="redirect-path">{{r.path}}</span> &#8594; <span class="redirect-target">{{r.target}}</span> <a class="redirect-delete" ng-click="deleteRedirect(r.id)">delete</a>' +
+          '<span class="redirect-path">{{r.path}}</span> &#8594; <span class="redirect-target">{{r.target}}</span> <a class="redirect-delete" ng-click="deleteRedirect(r.id)" button-spinner="redirect_delete_{{r.id}}">delete</a>' +
         '</li>' +
       '</ul>' +
       '<a class="redirect-add" ng-show="showAddLink()" ng-click="toggleAddForm()">+ Add new redirect</a>' +
-      '<div class="redirect-add-form" ng-show="showAddForm()">' +
+      '<div class="redirect-add-form" ng-show="showAddForm">' +
         '<div class="display-inline"><label for="redirect-path">Redirect From</label> {{siteBaseUrl}}/<input type="text" id="redirect-path" class="redirect-new-element" ng-model="newRedirectPath" placeholder="Local path"><span class="description">(Example: my-path). Fragment anchors (e.g. #anchor) are not allowed.</span></div>' +
         '<div class="display-inline"><label for="redirect-target">Redirect To</label> <input type="text" id="redirect-target" class="redirect-new-element" ng-model="newRedirectTarget" placeholder="Target URL (i.e. http://www.google.com)"><span class="description">Enter any existing destination URL (like http://example.com) to redirect to.</span></div>' +
-        '<button type="button" value="Add Redirect" ng-click="addRedirect()" ng-show="showAddButton()">Add Redirect</button>' +
+        '<button type="button" value="Add Redirect" ng-click="addRedirect()"">Add Redirect</button>' +
       '</div>',
       scope: {
         value: '=',
@@ -30,17 +30,10 @@
           return showAddLink;
         }
 
-        var showAddForm = false;
-        scope.showAddForm = function () {
-          return showAddForm;
-        }
+        scope.showAddForm = false;
 
         scope.toggleAddForm = function () {
-          showAddForm = !showAddForm;
-        }
-
-        scope.showAddButton = function () {
-          return scope.redirects.length >= cp_redirect_max;
+          scope.showAddForm = !scope.showAddForm;
         }
 
         scope.siteBaseUrl = Drupal.settings.paths.vsite_home;
@@ -54,7 +47,7 @@
           else {
             showAddLink = false;
           }
-        })
+        }, true);
         scope.redirects = scope.element.value || [];
 
         var restApi = Drupal.settings.paths.api + '/redirect/';
@@ -86,25 +79,19 @@
         }
 
         scope.deleteRedirect = function (id) {
-          var k = 0;
+          bss.SetState('redirect_delete_'+id, true);
           $http.delete(restApi+'/'+id, http_config).then(function (r) {
               for (var i = 0; i < scope.redirects.length; i++) {
                 if (scope.redirects[i].id == id) {
                   scope.redirects.splice(i, 1);
+                  bss.SetState('redirect_delete_'+id, false);
                   break;
                 }
               }
           },
           function (e) {
-
+            bss.SetState('redirect_delete_'+id, false);
           });
-
-          for (var i = 0; i<scope.redirects.length; i++) {
-            if (scope.redirects[i].id == id) {
-              k = 0;
-              break;
-            }
-          }
         }
       }
     };
