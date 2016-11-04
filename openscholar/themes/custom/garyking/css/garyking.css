@@ -106,7 +106,6 @@ h2.block-title {
 }
 .not-front .research-by-topic ul .item-list ul li a,
 .not-front .research-by-topic ul .item-list ul li,
-.research-by-topic ul .item-list ul li.open a,
 #menu-bar ul.nice-menu a.active,
 #menu-bar ul.nice-menu a:hover,
 #menu-bar ul.nice-menu .menuparent.over > a,
@@ -120,6 +119,14 @@ body.node-type-biblio .biblio-export,
 .os-files-other-list td {
     background-color: #f6f6f6;
 }
+.research-by-topic ul .item-list ul li.open,
+.front-lop-software-tabs,
+.front-lop-blockgrid,
+.research-by-topic ul .item-list ul li.open .description {
+    background-color: #FFFFFF;
+}
+
+
 .sidebar .block-boxes-os_search_solr_more_like_this {
     padding: 0 12px 0 12px;
 }
@@ -278,7 +285,7 @@ a.os-arrow:hover:after {
     padding: 10px;
     border-top-style: solid;
     border-width: 4px;
-    background-color: #fff;
+   
     min-height: 400px;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
@@ -300,7 +307,7 @@ a.os-arrow:hover:after {
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
-    background-color: #fff;
+   
     -webkit-transition: all .250s;
     transition: all .250s;
     position: relative;
@@ -529,6 +536,7 @@ ul.nice-menu-down,
 .research-by-topic ul .item-list ul li.open {
     height: 300px;
     opacity: 1;
+   
 }
 .research-by-topic .term-head a {
  font-size: 1em;
@@ -555,45 +563,39 @@ ul.nice-menu-down,
 }
 .research-by-topic ul .item-list ul li.open a {
     top: -320px;
+      background-color:#4a5a77;
 }
 .research-by-topic ul .item-list ul li.open a:after {
-    bottom: 1px;
-    right: 5px;
-    content: 'Related content';
+  bottom: 0px;
+    right: 10px;
+    content: 'Related content ➞';
     position: absolute;
     font-size: .75em;
-    padding-right: 20px;
-    background: url("../images/sprite.png?abcdgfgg") 95px -143px no-repeat;
-    background-size: 70px 350px;
 }
-
+.research-by-topic ul .item-list ul li span {
+  font-family:arial;
+   font-size: 1.4em;
+}
 .research-by-topic ul .item-list ul li span:after {
-    content: '+';
+  content: '+';
     width: 100%;
-   
     color:#fff;
     position: absolute;
-    top: 48px;
-   
-    
-    background: url("../images/sprite.png?abc123") 222px -235px #4a5a77 no-repeat;
-    font-size: 1.75em;
+    top: 47px;
+    background-color:  #4a5a77;
+     
     text-align: center;
     transition: all .250s;
     z-index: 2;
    
 }
-.not-front .research-by-topic ul .item-list ul li span:after {
-    background: url("../images/sprite.png?abcdgfgg") 159px -99px #eee no-repeat;
-    background-size: 70px 350px;
 
-}
 .research-by-topic ul .item-list ul li.open span:after {
-    content: 'Less';
+    content: 'X';
     width: 50%;
-    top: 4px;
-    left: 10px;
-    background-position: 30px -122px;
+    top: 0px;
+       background-color:transparent;
+   padding-left:10px;
     text-align: left;
 }
 
