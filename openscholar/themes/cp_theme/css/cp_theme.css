@@ -16,6 +16,7 @@ body,
     background-color: #FFF;
 }
 /* GENERAL CP STYLES */
+.form-item {padding:0;}
 
 .ui-widget-content a,
 a {
@@ -223,6 +224,7 @@ a.form-cancel:hover {
 .form-actions #edit-delete--2 {
     display: inline-block;
 }
+.form-item label.option,
 .redirect-delete,
 .form-actions .os-delete-link {
 
