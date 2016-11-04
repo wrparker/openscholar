@@ -768,13 +768,7 @@ function _os_process_node_links_comment_add_class(&$vars) {
  */
 function os_preprocess_page(&$vars) {
   global $user;
-
-  // Adding a trailing slash ensures the v-site name is included in relative links
-  $request_uri = $_SERVER['REQUEST_URI'];
-  if (strpos($request_uri, "/", strlen($request_uri) - 1) === FALSE) {
-    $_SERVER['REQUEST_URI'] .= "/";
-  }
-
+  
   // Session timeout checking will be only for logged in users.
   if ($user->uid) {
     // Obtaining session lifetime value from php configuration.
