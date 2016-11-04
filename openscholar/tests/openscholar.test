@@ -249,3 +249,81 @@ class OSWebTestCase extends OSProfileTestCase {
     $this->assertTrue(TRUE);
   }
 }
+/**
+ *
+ */
+class OSMakeAbsoluteLinkTestCase extends DrupalWebTestCase {
+
+  public function getInfo() {
+    return array(
+      'name' => 'Test absolute-to-relative link convertor function',
+      'description' => 'Unit test make_absolute_link_link() function',
+      'group' => 'OpenScholar',
+    );
+  }
+
+  public function setUp() {
+    // $this->profile = 'openscholar';
+    parent::setUp();
+  }
+
+  public function testMakeAbsoluteLink() {
+
+    $vsite_names = array(null, "vsite_name");
+    $hostnames = array(null, "hostname");
+    $schemes = array(null, "http");
+    $urls = array(null,
+                  "foo",
+                  "/foo",
+                  "/foo/",
+                  "../foo/",
+                  "../../foo/",
+                  "/foo/..",
+                  "/foo/../bar",
+                  "/foo/../bar/",
+    );
+
+    foreach ($vsite_names as $vsite_name) {
+      foreach ($hostnames as $hostname) {
+        foreach ($schemes as $scheme) {
+          foreach ($urls as $url) {
+            $base = "$scheme://$hostname/$vsite_name";
+            $abs_url = os_make_absolute_link($url);
+            print "url: $url, base:$base ==> $abs_url\n";
+          }
+        }
+      }
+    }
+
+    # test 1
+    $markup = '
+      Some content.
+
+      <a href="foo">A link</a>.
+
+      More content.
+
+      <a other-attribute="moo" href="http://www.foo.com/">A second link</a>.
+
+      Yet more content.
+
+      <a href="javascript:do_not_touch();">A third link</a>.
+
+      The quick brown fox.
+
+      <a href="/foo">A link</a>.
+
+      - jumped over the lazy dog.
+
+      <a href="google.com/foo">A link</a>.
+    ';
+
+    # test 2
+    # $markup = '<a href="foo">A link</a>.';
+
+    $pattern = "/(<a [^>]*href\=\")([^\"]+)/im";
+    $markup = preg_replace_callback($pattern, 'os_make_absolute_link_callback', $markup);
+
+    print $markup;
+  }
+}
