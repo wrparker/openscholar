@@ -1,4 +1,5 @@
-body {
+body,
+.ui-dialog * {
     font-family: helvetica, arial, sans-serif;
 }
 #page {
@@ -15,7 +16,10 @@ body {
     background-color: #FFF;
 }
 /* GENERAL CP STYLES */
-
+.form-item {padding:0;}
+.page-cp .form-item {
+    padding: 2px 0;
+}
 .ui-widget-content a,
 a {
     color: #215990;
@@ -82,13 +86,14 @@ html.js input.throbbing {
     background: url("../images/cp-sprite.png") no-repeat 0 -170px;
 }
 .help-link.ng-binding {
-       position: absolute;
-    bottom: 7px;
+  position: absolute;
+    bottom: 20px;
     right: 10px;
     padding: 2px 25px 2px 0;
-    background: url(../images/cp-sprite.png) no-repeat right -637px;
+    background: url(../images/cp-sprite.png) no-repeat right -638px;
     background-size: 21px 700px;
     font-size: .97em;
+
 }
     
 
@@ -221,6 +226,7 @@ a.form-cancel:hover {
 .form-actions #edit-delete--2 {
     display: inline-block;
 }
+.page-cp .form-item span label,
 .redirect-delete,
 .form-actions .os-delete-link {
 
@@ -359,6 +365,9 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     color: #666;
     font-size: 24px;
     font-weight: normal;
+}
+.page-cp .ui-dialog-titlebar {
+    margin-bottom: 22px;
 }
 .ui-dialog {
     padding: 0;
@@ -1230,13 +1239,9 @@ form#os-maintenance .form-item .description {
     text-align: center;
     white-space: nowrap;
    }
-   
-.ui-dialog #os_taxonomy .form-item {
-      margin: 12px 0;
-}
 
 .ui-dialog #os_taxonomy .os-taxonomy_label_heading {
- margin: 20px 0 8px 0;
+ margin: 0 0 8px 0;
 }
 
 .form-radios {

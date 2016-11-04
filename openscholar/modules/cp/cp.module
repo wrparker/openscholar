@@ -545,7 +545,6 @@ function cp_cp_settings() {
       'group' => array(
         '#title' => t('Cache / Reindex'),
         '#id' => 'os-maintenance',
-        '#help_link' => l(t('Learn more about cache and search index'), '', array('attributes' => array('target' => '_blank')))
       ),
       'form' => array(
       	'#title' => t('Site Cache'),
