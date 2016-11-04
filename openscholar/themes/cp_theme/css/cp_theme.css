@@ -17,7 +17,9 @@ body,
 }
 /* GENERAL CP STYLES */
 .form-item {padding:0;}
-
+.page-cp .form-item {
+    padding: 2px 0;
+}
 .ui-widget-content a,
 a {
     color: #215990;
@@ -224,7 +226,7 @@ a.form-cancel:hover {
 .form-actions #edit-delete--2 {
     display: inline-block;
 }
-.form-item label.option,
+.page-cp .form-item span label,
 .redirect-delete,
 .form-actions .os-delete-link {
 
