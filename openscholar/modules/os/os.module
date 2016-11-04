@@ -3717,7 +3717,9 @@ function _os_make_absolute_link_callback($matches) {
 }
 
 /*
- * Convert an absolute link to a relative link
+ * Convert a relative link to an absolute link
+ *
+ *  Source: http://www.geekality.net/2011/05/12/php-dealing-with-absolute-and-relative-urls/
  */
 function _os_make_absolute_link($url) {
 
