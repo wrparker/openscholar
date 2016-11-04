@@ -568,20 +568,20 @@ ul.nice-menu-down,
 }
 
 .research-by-topic ul .item-list ul li span:after {
-    content: 'More';
+    content: '+';
     width: 100%;
-    /* padding-right:15px; */
-    
+   
+    color:#fff;
     position: absolute;
     top: 48px;
-    /* left: 41%; */
+   
     
-    background: url("../images/sprite.png?abcdgfgg") 159px -99px #4a5a77 no-repeat;
-    font-size: .85em;
+    background: url("../images/sprite.png?abcsss") 222px -235px #4a5a77 no-repeat;
+    font-size: 1.75em;
     text-align: center;
     transition: all .250s;
     z-index: 2;
-    background-size: 70px 350px;
+   
 }
 .not-front .research-by-topic ul .item-list ul li span:after {
     background: url("../images/sprite.png?abcdgfgg") 159px -99px #eee no-repeat;
