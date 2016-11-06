@@ -551,15 +551,21 @@ ul.nice-menu-down,
     transition: all .250s;
     top: 0;
 }
-@-moz-document url-prefix() {
-    .research-by-topic ul .item-list ul li a {
-        padding: 12px 5px 0 10px;
-    }
-}
+
 .research-by-topic ul .item-list ul li.open a {
     top: -320px;
     background-color: #4a5a77;
 }
+@-moz-document url-prefix() {
+.research-by-topic ul .item-list ul li.open a {
+  
+    top: -289px;
+}
+ .research-by-topic ul .item-list ul li a {
+        padding: 12px 5px 0 10px;
+    }
+}
+
 .research-by-topic ul .item-list ul li.open a:after {
     bottom: 0px;
     right: 10px;
