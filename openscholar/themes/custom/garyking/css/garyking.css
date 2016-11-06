@@ -1,6 +1,7 @@
 body {
     -moz-osx-font-smoothing: grayscale;
 }
+.not-front .research-by-topic h2.block-title,
 .tweet-divider,
 .tweet-authorphoto,
 .tweet-author,
