@@ -577,14 +577,15 @@ ul.nice-menu-down,
    font-size: 1.4em;
 }
 .research-by-topic ul .item-list ul li span:after {
-  content: '+';
+ content:'';
     width: 100%;
     color:#fff;
     position: absolute;
     top: 47px;
-    background-color:  #4a5a77;
-     
-    text-align: center;
+    background:url('../images/sprite.png?dfffgg') 60% -234px #4a5a77 no-repeat;
+     width:100%;
+     height:50px;
+   
     transition: all .250s;
     z-index: 2;
    
