@@ -1,5 +1,6 @@
-body {-moz-osx-font-smoothing: grayscale;}
-
+body {
+    -moz-osx-font-smoothing: grayscale;
+}
 .tweet-divider,
 .tweet-authorphoto,
 .tweet-author,
@@ -9,7 +10,6 @@ body {-moz-osx-font-smoothing: grayscale;}
 .contact-map a,
 .node-type-person .node-title,
 .research-by-topic ul .item-list ul li .description a,
-
 .front .field-name-field-biblio-image {
     display: none;
 }
@@ -106,7 +106,6 @@ h2.block-title {
     border-top-style: solid;
     border-width: 3px;
 }
-
 #menu-bar ul.nice-menu a.active,
 #menu-bar ul.nice-menu a:hover,
 #menu-bar ul.nice-menu .menuparent.over > a,
@@ -126,8 +125,6 @@ body.node-type-biblio .biblio-export,
 .research-by-topic ul .item-list ul li.open .description {
     background-color: #FFFFFF;
 }
-
-
 .sidebar .block-boxes-os_search_solr_more_like_this {
     padding: 0 12px 0 12px;
 }
@@ -286,7 +283,6 @@ a.os-arrow:hover:after {
     padding: 10px;
     border-top-style: solid;
     border-width: 4px;
-   
     min-height: 400px;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
@@ -308,7 +304,6 @@ a.os-arrow:hover:after {
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
-   
     -webkit-transition: all .250s;
     transition: all .250s;
     position: relative;
@@ -531,17 +526,14 @@ ul.nice-menu-down,
     transition: all .5s;
     -webkit-transition: all .5s;
 }
-
 .research-by-topic ul .item-list ul li.open {
     height: 300px;
     opacity: 1;
-   
 }
 .research-by-topic .term-head a {
- font-size: 1em;
+    font-size: 1em;
     margin-top: 20px;
     display: block;
- 
 }
 .research-by-topic ul .item-list ul li:nth-child(4),
 .research-by-topic ul .item-list ul li:nth-child(8) {
@@ -555,69 +547,54 @@ ul.nice-menu-down,
     z-index: 2;
     position: relative;
     font-weight: bold;
-    
     -webkit-transition: all .250s;
     transition: all .250s;
     top: 0;
 }
-@-moz-document url-prefix() { 
-.research-by-topic ul .item-list ul li a {
-
-    padding: 12px 5px 0 10px;
+@-moz-document url-prefix() {
+    .research-by-topic ul .item-list ul li a {
+        padding: 12px 5px 0 10px;
+    }
 }
-}
-   
-
 .research-by-topic ul .item-list ul li.open a {
     top: -320px;
-      background-color:#4a5a77;
+    background-color: #4a5a77;
 }
 .research-by-topic ul .item-list ul li.open a:after {
-  bottom: 0px;
+    bottom: 0px;
     right: 10px;
     content: 'Related content ➞';
     position: absolute;
     font-size: .75em;
 }
 .research-by-topic ul .item-list ul li span {
-  font-family:arial;
-   font-size: 1.4em;
+    font-family: arial;
+    font-size: 1.4em;
 }
 .research-by-topic ul .item-list ul li span:after {
- content:'';
+    content: '';
     width: 100%;
-    color:#fff;
+    color: #fff;
     position: absolute;
     top: 47px;
-    background:url('../images/sprite.png?xyz123') 60% -233px #4a5a77 no-repeat;
-     width:100%;
-     height:50px;
-   
+    background: url('../images/sprite.png?xyz123') 60% -233px #4a5a77 no-repeat;
+    width: 100%;
+    height: 50px;
     transition: all .250s;
     z-index: 2;
-   
 }
-
 .research-by-topic ul .item-list ul li.open span:after {
     content: '';
     width: 70%;
-   
     top: -27px;
-   background-position: 4% -234px;
-  
+    background-position: 4% -234px;
 }
-
-
-
-
-
 .research-by-topic ul .item-list ul li:hover {
     margin-left: 10px;
 }
 .research-by-topic.block-boxes-os_taxonomy_fbt ul ul {
     margin: 0 !important;
 }
-
 .bio-teaser-block2 p,
 .research-by-topic .term-head {
     font-size: 1.2em;
