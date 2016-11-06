@@ -1,3 +1,5 @@
+body {-moz-osx-font-smoothing: grayscale;}
+
 .tweet-divider,
 .tweet-authorphoto,
 .tweet-author,
@@ -7,7 +9,7 @@
 .contact-map a,
 .node-type-person .node-title,
 .research-by-topic ul .item-list ul li .description a,
-.not-front .research-by-topic h2.block-title,
+
 .front .field-name-field-biblio-image {
     display: none;
 }
@@ -60,7 +62,7 @@ body.not-front {
 #footer .footer-login,
 .front-top-featured h2.block-title,
 .front-top-cloumn .region-two-66-33-second a,
-.front #content-panels .research-by-topic ul .item-list ul li a {
+.research-by-topic ul .item-list ul li a {
     color: #ffffff;
 }
 .front #columns {
@@ -104,8 +106,7 @@ h2.block-title {
     border-top-style: solid;
     border-width: 3px;
 }
-.not-front .research-by-topic ul .item-list ul li a,
-.not-front .research-by-topic ul .item-list ul li,
+
 #menu-bar ul.nice-menu a.active,
 #menu-bar ul.nice-menu a:hover,
 #menu-bar ul.nice-menu .menuparent.over > a,
@@ -530,9 +531,7 @@ ul.nice-menu-down,
     transition: all .5s;
     -webkit-transition: all .5s;
 }
-.not-front .research-by-topic ul .item-list ul li {
-    border: 1px solid #ddd;
-}
+
 .research-by-topic ul .item-list ul li.open {
     height: 300px;
     opacity: 1;
@@ -561,6 +560,14 @@ ul.nice-menu-down,
     transition: all .250s;
     top: 0;
 }
+@-moz-document url-prefix() { 
+.research-by-topic ul .item-list ul li a {
+
+    padding: 12px 5px 0 10px;
+}
+}
+   
+
 .research-by-topic ul .item-list ul li.open a {
     top: -320px;
       background-color:#4a5a77;
@@ -603,9 +610,7 @@ ul.nice-menu-down,
 
 
 
-.not-front .research-by-topic ul .item-list ul li.open a {
-    background-color: #eee;
-}
+
 .research-by-topic ul .item-list ul li:hover {
     margin-left: 10px;
 }
