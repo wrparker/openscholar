@@ -210,7 +210,7 @@ h3 {
     margin-top: 0;
 }
 .front-top-cloumn .region-two-66-33-second {
-    background: url('../images/working-paper_image.jpg') center right no-repeat;
+    background: url('../images/working-paper_image.jpg?123') center right no-repeat;
     background-size: cover;
     margin: 0;
     box-shadow: inset 0 0 0 1000px rgba(0, 35, 45, .5);
