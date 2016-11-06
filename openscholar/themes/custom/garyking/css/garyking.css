@@ -508,10 +508,17 @@ ul.nice-menu-down,
 .research-by-topic li.term-methods {
     float: left;
     width: 460px;
+    background:url('../images/icons/flip-chart.svg') 195px 0 no-repeat;
+    background-size:70px;
+    padding-top:50px;
+ 
 }
 .research-by-topic li.term-applications {
     float: right;
     width: 460px;
+        background:url('../images/icons/cogs.svg') 195px 0 no-repeat;
+    background-size:70px;
+    padding-top:50px;
 }
 .research-by-topic ul .item-list ul li {
     width: 100%;
