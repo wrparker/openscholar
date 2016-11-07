@@ -52,9 +52,14 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
   }
 
   public function processForms($form) {
+    $access = spaces_access_admin();
     foreach ($form as $var => &$elem) {
       if (!isset($elem['form']['#id'])) {
         $elem['form']['#id'] = drupal_html_id('edit-' . $var);
+      }
+
+      if (!isset($elem['form']['#access'])) {
+        $elem['form']['#access'] = $access;
       }
       if (!empty($elem['form']['#states'])) {
         drupal_process_states($elem['form']);
