@@ -3372,7 +3372,7 @@ function vsite_cp_settings() {
       '#type' => 'textfield',
       '#title' => t('Author URL'),
       '#default_value' => variable_get('vsite_head_link_rel_author', ''),
-      '#access' => $vsite->group->type == 'personal',
+      '#access' => $vsite->group->type == 'personal' && spaces_access_admin(),
       '#description' => t('Enter the URL to your permanent web address.'),
     ),
     'group' => array(
