@@ -2013,6 +2013,7 @@ class FeatureContext extends DrupalContext {
     return array(
       new Step\When('I visit "' . $group . '"'),
       new Step\When('I open the admin panel to "Settings"'),
+      new Step\When('I sleep for "1"'),
       new Step\When('I click "Enable Apps"'),
       new Step\When('I select "' . $status . '" from "' . $feature . '"'),
       new Step\When('I press "edit-submit"'),
@@ -3302,6 +3303,7 @@ class FeatureContext extends DrupalContext {
     if ($page->find('css', '[left-menu].closed')) {
       return array(
         new Step\When('I press "Close Menu"'),
+        new Step\When('I sleep for "1"'),
       );
     }
     elseif (!$page->find('css', '[left-menu]')) {
