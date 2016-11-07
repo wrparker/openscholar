@@ -288,7 +288,7 @@ class OSMakeAbsoluteLinkTestCase extends DrupalWebTestCase {
         foreach ($schemes as $scheme) {
           foreach ($urls as $url) {
             $base = "$scheme://$hostname/$vsite_name";
-            $abs_url = os_make_absolute_link($url);
+            $abs_url = _os_make_absolute_link($url);
             print "url: $url, base:$base ==> $abs_url\n";
           }
         }
@@ -304,6 +304,7 @@ class OSMakeAbsoluteLinkTestCase extends DrupalWebTestCase {
       More content.
 
       <a other-attribute="moo" href="http://www.foo.com/">A second link</a>.
+      <a other-attribute="boo" href="the-quick-brown-fox">A rel link</a>.
 
       Yet more content.
 
@@ -316,14 +317,44 @@ class OSMakeAbsoluteLinkTestCase extends DrupalWebTestCase {
       - jumped over the lazy dog.
 
       <a href="google.com/foo">A link</a>.
+
+      <p><a href="../../blog">../../blog</a></p>
+      <p><a href="../../blog/">../../blog/</a></p>
+      <p><a href="../blog">../blog</a></p>
+      <p><a href="../blog/">../blog/</a></p>
+      <p><a href="blog">blog</a></p>
+      <p><a href="blog/">blog/</a></p>
+      <p><a href="/blog">/blog</a></p>
+      <p><a href="/blog/">/blog/</a></p>
+      <p><a href="./blog">./blog</a></p>
+      <p><a href="./blog/">./blog/</a></p>
+      <p><a href="http://absolute.com">http://absolute.com</a></p>
+      <p><a href="ftp://absolute.com">ftp://absolute.com</a></p>
+      <p><a href="gopher://absolute.com">gopher://absolute.com</a></p>
+      <p><a href="torrent://absolute.com">torrent://absolute.com</a></p>
+
+
+      <p><a someOtherAttribute="what-if-there is junk here"  href="../../blog">../../blog</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="../../blog/">../../blog/</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="../blog">../blog</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="../blog/">../blog/</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="blog">blog</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="blog/">blog/</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="/blog">/blog</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="/blog/">/blog/</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="./blog">./blog</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="./blog/">./blog/</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="http://absolute.com">http://absolute.com</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="ftp://absolute.com">ftp://absolute.com</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="gopher://absolute.com">gopher://absolute.com</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="torrent://absolute.com">torrent://absolute.com</a></p>
     ';
 
     # test 2
     # $markup = '<a href="foo">A link</a>.';
 
-    $pattern = "/(<a [^>]*href\=\")([^\"]+)/im";
-    $markup = preg_replace_callback($pattern, 'os_make_absolute_link_callback', $markup);
+    $ret = os_replace_relative_links_with_absolute_links($markup);
 
-    print $markup;
+    print $ret;
   }
 }
