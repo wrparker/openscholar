@@ -665,6 +665,8 @@ function os_process_node(&$vars) {
   // adds theme hook suggestion to load this template if it exists
   $vars['theme_hook_suggestions'][] = 'node__'.$vars['type'].'__'.$vars['view_mode'];
 
+  $vars['body'][0]['value'] = os_replace_relative_links_with_absolute_links($vars['body'][0]['value']);
+
   // Building "Read more" link for "No image teaser" for profiles
   if($vars['type'] == 'person' && $vars['content']['pic_bio']['body']['#view_mode'] == 'no_image_teaser') {
     $vars['content']['links']['node']['#links']['node-readmore'] = array(
@@ -3722,19 +3724,31 @@ function _os_make_absolute_link_callback($matches) {
  *  Source: http://www.geekality.net/2011/05/12/php-dealing-with-absolute-and-relative-urls/
  */
 function _os_make_absolute_link($url) {
-
     $base = base_path();
-    $host = $_SERVER[SERVER_NAME];
-    $scheme = $_SERVER[REQUEST_SCHEME];
+    $host = $_SERVER['SERVER_NAME'];
+    $scheme = $_SERVER['REQUEST_SCHEME'];
+    $space = spaces_get_space();
+
+    if ($space) {
+      $vsite = $space->group->purl;
+    }
+
+    if(! $scheme) $scheme = "https";
 
     // Return base if no url
-    if( ! $url) return $base;
+    if( ! $url) {
+      return $base;
+    }
 
     // Return if already absolute URL
-    if(parse_url($url, PHP_URL_SCHEME) != '') return $url;
+    if(parse_url($url, PHP_URL_SCHEME) != '') {
+      return $url;
+    }
 
     // Urls only containing query or anchor
-    if($url[0] == '#' || $url[0] == '?') return $base.$url;
+    if($url[0] == '#' || $url[0] == '?') {
+      return $base.$url;
+    }
 
     // Parse base URL and convert to local variables: $scheme, $host, $path
     extract(parse_url($base));
@@ -3749,7 +3763,7 @@ function _os_make_absolute_link($url) {
     if($url[0] == '/') $path = '';
 
     // Dirty absolute URL
-    $abs = "$host$path/$url";
+    $abs = "$host$path/$vsite/$url";
 
     // Replace '//' or '/./' or '/foo/../' with '/'
     $re = array('#(/\.?/)#', '#/(?!\.\.)[^/]+/\.\./#');
