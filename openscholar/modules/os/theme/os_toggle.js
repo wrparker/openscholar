@@ -43,13 +43,13 @@
   var moretext = "More <span>&#x25BC;</span>";
   var lesstext = "Less <span>&#x25B2;</span>";
 
-    $('.more').each(function() {
+    $('.more').once(function() {
       var content = $(this).html();
       var html = content + ',&nbsp;&nbsp;<a  class="morelink togglemore">' + moretext + '</a>';
       $(this).html(html);
     });
 
-    $(".morelink").click(function(){
+    $(".morelink").once().click(function(){
         if($(this).hasClass("toggleless")) {
             $(this).removeClass("toggleless");
             $(this).addClass("togglemore");
