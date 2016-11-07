@@ -509,7 +509,7 @@ ul.nice-menu-down,
 .research-by-topic li.term-methods {
     float: left;
     width: 460px;
-    background:url('../images/icons/flip-chart.svg') 195px 0 no-repeat;
+    background:url('../images/icons/formula-icon.png') 195px 0 no-repeat;
     background-size:70px;
     padding-top:50px;
  
@@ -569,7 +569,7 @@ ul.nice-menu-down,
 .research-by-topic ul .item-list ul li.open a:after {
     bottom: 0px;
     right: 10px;
-    content: 'Related content ➞';
+    content: 'Relevant content ➞';
     position: absolute;
     font-size: .75em;
 }
