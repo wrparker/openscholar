@@ -176,18 +176,6 @@ Drupal.behaviors.osPublications = {
         return;
       }
 
-      var showYear = function() {
-        $('.form-item-field-biblio-pub-month-und').show();
-        $('.field-name-field-biblio-pub-day').show();
-        $('.form-item-biblio-year').show();
-      };
-
-      var hideYear = function() {
-        $('.form-item-field-biblio-pub-month-und').hide();
-        $('.field-name-field-biblio-pub-day').hide();
-        $('.form-item-biblio-year').hide();
-      };
-
       $('input[name=published]').click(function() {
         // When clicking on the published mode disable the other modes and hide
         // the other year input.
