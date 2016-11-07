@@ -1225,6 +1225,11 @@ form#os-maintenance .form-item .description {
 .redirect-add-form div {
     margin:15px 0;
 }
+.redirect-add.ng-hide {
+    display: block !important;
+    width: 0;
+    font-size: 0;
+}
 
 .form-item .file-list-single ul {
     display: inline-block;
