@@ -25,7 +25,7 @@
 }
 
 #block-os-primary-menu .nice-menu li.last a {
-	display:none;
+	display:none !important;
 }
 
 .front #columns {
@@ -44,6 +44,16 @@
 
 
 }
+
+
+@media (max-width: 600px) {
+.research-by-topic li.term-applications,
+.research-by-topic li.term-methods {
+    float: none;
+    width: 100%;
+}
+}
+
 
 
 
