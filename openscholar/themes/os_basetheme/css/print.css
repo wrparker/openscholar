@@ -50,8 +50,7 @@
     /* Images */
     
     img {
-        float: left;
-        margin: 1em 1.5em 1.5em 0;
+        display: none;
     }
     a img {
         border: none;
@@ -105,7 +104,13 @@
     .sidebar .block,
     #footer,
     .block-os-search-db,
-    .block-boxes-os_slideshow_box {
+    .block-boxes-os_slideshow_box,
+    .field-name-body .photo,
+    .os-files-image-list,
+    .os-files-other-lis,
+    .media,
+    .media-element-container,
+    .media-element {
         display: none !important;
     }
     .sidebar .block.block-boxes-os_boxes_html {

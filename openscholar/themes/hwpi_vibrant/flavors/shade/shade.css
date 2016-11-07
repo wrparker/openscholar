@@ -18,12 +18,11 @@
 .field-name-body h4 #boxes-box-site_info,
 #boxes-box-site_info a,
 #content-column p,
-#tinymce {
+.cke_editable *
+{
     font-family: helvetica, arial, sans-serif;
 }
-#tinymce {
-    font-weight: normal;
-}
+
 .region-header-third ul.nice-menu a {
     color: #8A101E;
     font: 14px helvetica, arial, sans-serif;

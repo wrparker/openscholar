@@ -70,6 +70,9 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
 
       $valid = array();
 
+      // output back to the angular app
+      $flags = array();
+
       foreach ($this->request as $var => $value) {
         if (!isset($forms[$var])) continue;
 
@@ -99,7 +102,9 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
           }
           elseif (!empty($forms[$var]['rest_trigger']) && is_callable($forms[$var]['rest_trigger'])) {
             if ($value) {
-              $forms[$var]['rest_trigger']();
+              if ($f = $forms[$var]['rest_trigger']()) {
+                $flags = array_merge($flags, $f);
+              };
             }
           }
           else {
@@ -110,22 +115,30 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
             if (is_array($forms[$var]['rest_after_submit']) && !is_callable($forms[$var]['rest_after_submit'])) {
               foreach ($forms[$var]['rest_after_submit'] as $func) {
                 if (is_callable($func)) {
-                  $func($value, $var);
+                  if ($f = $func($value, $var)) {
+                    $flags = array_merge($flags, $f);
+                  }
                 }
               }
             }
             elseif (is_callable($forms[$var]['rest_after_submit'])) {
-              $forms[$var]['rest_after_submit']($value, $var);
+              if ($f = $forms[$var]['rest_after_submit']($value, $var)) {
+                $flags = array_merge($flags, $f);
+              }
             }
           }
         }
         else {
           // something about an error?
           watchdog("REST", "The value \"$value\" is not valid for \"$var\".");
+          $flags[] = array(
+            'type' => 'validation',
+            'var' => $var,
+          );
         }
       }
 
-      return array();
+      return $flags;
     }
 
     throw new RestfulForbiddenException("Vsite ID is required.");

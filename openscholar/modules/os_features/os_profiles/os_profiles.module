@@ -285,12 +285,9 @@ function os_profiles_process_node(&$vars) {
   // Display syncing information to administrators
   if (spaces_access_admin()) {
     if (isset($vars['field_original_destination_url'][LANGUAGE_NONE][0]['value'])) {
-
-      // The data is synced from the JSON web-service at api/, but we'll point to the themed page
-      $source_url_themed = preg_replace("/\bapi\/\w+\/\w+/", "node", $vars['field_original_destination_url'][LANGUAGE_NONE][0]['value']);
-
+      $url = $vars['field_original_destination_url'][LANGUAGE_NONE][0]['value'];
       $vars['content']['field_original_destination_url']['#markup'] =
-        "<p><i>" . t("This profile is " . l(t("synced from another source"), $source_url_themed )) . "</i></p>";
+        "<p><i>" . t("This profile is " . l(t("synced from another source"), _convert_json_endpoint_to_themed_url($url))) . "</i></p>";
       $vars['content']['field_original_destination_url']['#weight'] = -100;
     }
   }
@@ -698,18 +695,23 @@ function os_profiles_sync_profile_validate($form, &$form_state) {
  */
 function os_profiles_profiles_fields() {
   return array(
-    'title',
-    'body',
-    'field_prefix',
-    'field_first_name',
-    'field_last_name',
-    'field_address',
-    'field_phone',
-    'field_email',
-    'field_middle_name_or_initial',
-    'field_professional_title',
-    'field_website',
-    'field_person_photo',
+    'title' => 'label',
+    'body' => 'description',
+    'type' => 'type',
+    'field_prefix' => 'prefix',
+    'field_first_name' => 'first_name',
+    'field_last_name' => 'last_name',
+    'field_middle_name_or_initial' => 'middle_name',
+    'field_address' => 'address',
+    'field_phone' => 'phone',
+    'field_office_hours' => 'office_hours',
+    'field_email' => 'email',
+    'field_professional_title' => 'professional_title',
+    'field_website' => 'website',
+    'field_person_photo' => 'photo',
+    'field_uuid' => 'uuid',
+    'field_original_destination_url' => 'original_url',
+    'changed' => 'changed',
   );
 }
 
@@ -1413,11 +1415,6 @@ function os_profiles_node_view_alter(&$build) {
   if ($build['#bundle'] != 'person')
       return;
 
-  // Too many complaints about the "read more" feature.  Remove it from profiles.
-  if (isset($build['links']['node']['#links']['node-readmore'])) {
-    unset($build['links']['node']['#links']['node-readmore']);
-  }
-
   // If 'person' content type are displayed in slide_teaser view mode, then appending additional element for Full Profile link.
   if ($build['#bundle'] == 'person' && $build['#view_mode'] == 'slide_teaser') {
     $build['os_profile_link']['#markup'] = l('Full Profile', 'node/' . $build['#node']->nid, array('attributes' => array('class' => 'profile-link')));
@@ -1814,4 +1811,51 @@ function os_profile_feeds_set_target($source, $entity, $target, $value) {
     }
   }
   $entity->$field_name = $field;
+}
+
+/**
+ * Implements hook_js_alter().
+ *
+ * Override misc/autocomplete.js by /misc/os_autocomplete.js
+ */
+function os_profiles_js_alter(&$javascript) {
+  // Only for sync-profiles action
+  if (strpos($_GET['q'], 'sync-profiles') !== FALSE) {
+    foreach ($javascript as $url => $js) {
+      if (strpos($url, 'autocomplete.js') == TRUE) {
+        $file = drupal_get_path('module', 'os_profiles') . '/misc/os_autocomplete.js';
+        $javascript['misc/autocomplete.js']['data'] = $file;
+      }
+    }
+  }
+}
+
+/**
+ * Callback for preparing source URL for selected person.
+ *
+ * This will be called through ajax only from os_autocomplete.js.
+ * Source URL will be prepared for sync profile option.
+ */
+function os_profiles_get_profile_url($nid) {
+  // Make sure it is calling only through ajax
+  if (strpos($_GET['q'], 'ajax') !== FALSE) {
+    global $base_url;
+    $cutom_url = $base_url . '/' . drupal_get_path_alias('node/' . $nid);
+    $source_url = 'Profile will be sourced from: <a href="' . $cutom_url . '" target="_blank">' . $cutom_url . '</a>';
+    echo $source_url;
+  }
+}
+
+/*
+ * Extract node ID from URLs of the form api/v1/profiles/%
+ * and node/%.json.  Used to create links to the themed version
+ * of a user profile.
+ */
+function _convert_json_endpoint_to_themed_url($url) {
+  $url_pattern = "/(?:node|api.v1.profiles)\/(\d+)/";
+  if (preg_match($url_pattern, $url, $matches)) {
+    $host = parse_url($url)['host'];
+    $url = "http://" . $host . "/node/" . $matches[1];
+  }
+  return $url;
 }
