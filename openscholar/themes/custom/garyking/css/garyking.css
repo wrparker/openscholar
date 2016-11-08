@@ -612,8 +612,11 @@ top: 0;
     left: 0;
     background-position: 4% -234px;
 }
-.research-by-topic ul .item-list ul li:hover {
+.research-by-topic ul .item-list ul li a:hover {
     margin-left: 10px;
+}
+.research-by-topic ul .item-list ul li.open a:hover {
+    margin-left: 0;
 }
 .research-by-topic.block-boxes-os_taxonomy_fbt ul ul {
     margin: 0 !important;
@@ -643,7 +646,7 @@ top: 0;
 .research-by-topic ul .item-list ul li .description {
     transition: all .250s;
     -webkit-transition: all .250s;
-    padding: 10px;
+        padding: 10px 10px 10px 12px;
     z-index: 1;
     position: relative;
     font-size: .95em;
