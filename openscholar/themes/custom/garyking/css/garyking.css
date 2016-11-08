@@ -1,6 +1,9 @@
 body {
     -moz-osx-font-smoothing: grayscale;
 }
+.front-lop-presentations .location, 
+.front-lop-presentations .field-type-file,
+.front-lop-presentations .node-content,
 .not-front .research-by-topic h2.block-title,
 .tweet-divider,
 .tweet-authorphoto,
@@ -183,10 +186,12 @@ body.node-type-biblio .biblio-export,
     background: #eee !important;
     border: none;
 }
+
 #content-panels .front-lop-blockgrid .block-inner {
     margin-top: 5px;
     padding: 0 12px;
 }
+
 .block-os-search-solr {
     opacity: 0;
     -webkit-transition: all .5s;
@@ -431,6 +436,7 @@ a,
 a:visited {
     color: #065DB2;
 }
+.front-lop-presentations a,
 .biblio-title a,
 .biblio-title-chicago a {
     font-weight: normal !important;
@@ -592,7 +598,7 @@ top: 0;
     position: absolute;
     top: 0;
     right: 0;
-    background: url('../images/sprite.png?zyxabc') 10px -288px #4a5a77 no-repeat;
+    background: url('../images/sprite.png?zyxabc') 10px -282px #4a5a77 no-repeat;
     width: 30px;
     height: 100%;
     transition: all .250s;
