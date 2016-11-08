@@ -172,20 +172,39 @@ Drupal.behaviors.osPublications = {
   Drupal.behaviors.publishedYearHidden = {
     attach: function () {
 
-      if (!Drupal.settings.chicago_author_date) {
-        return;
-      }
+      var changeMonthAndDay = function(hide) {
+        var month = $("#edit-field-biblio-pub-month");
+        var day = $("#edit-field-biblio-pub-day");
+
+        if (hide) {
+          month.hide();
+          day.hide();
+        }
+        else {
+          month.show();
+          day.show();
+        }
+      };
 
       $('input[name=published]').click(function() {
         // When clicking on the published mode disable the other modes and hide
         // the other year input.
         $('#edit-biblio-year-coded input').prop('checked', false);
-        $('.form-item-biblio-year-coded-extrayear').hide();
+
+        if (Drupal.settings.chicago_author_date) {
+          changeMonthAndDay(false);
+        }
       });
 
       $('#edit-biblio-year-coded input').click(function() {
         $('input[name=published]').prop('checked', false);
+
+        if (Drupal.settings.chicago_author_date) {
+          changeMonthAndDay(true);
+        }
       });
+
+      changeMonthAndDay($('input[name=published]:checked').val() == undefined);
     }
   };
 

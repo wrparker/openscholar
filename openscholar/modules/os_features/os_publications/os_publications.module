@@ -730,7 +730,6 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#weight' => $form['biblio_year']['#weight'],
   );
 
-
   if ($chicago_author_date) {
     $form['biblio_year']['#title'] = t('Date of Publication');
   }
@@ -766,18 +765,6 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     unset($form['biblio_year_group']['year_selection']['field_biblio_pub_month']['und']['#title']);
     unset($form['biblio_year_group']['year_selection']['field_biblio_pub_day']['und']['#title']);
     $form['biblio_year_group']['year_selection']['biblio_year'] = $form['biblio_year'];
-
-    $selected_published = $form['field_biblio_pub_month'][LANGUAGE_NONE]['#default_value'][0] ||
-      $form['field_biblio_pub_day'][LANGUAGE_NONE]['#default_value'] ||
-      $form['biblio_year_group']['year_selection']['biblio_year']['#default_value'];
-
-    $form['biblio_year_group']['published'] = array(
-      '#type' => 'radio',
-      '#title' => t('Published'),
-      '#attributes' => array(
-        'checked' => $selected_published,
-      ),
-    );
   }
   else {
     $form['biblio_year_group'] = array(
@@ -796,9 +783,13 @@ function os_publications_alter_year_field(&$form, &$form_state) {
 
     unset($form['biblio_year_group']['biblio_year']['#title']);
     unset($form['biblio_year_group']['biblio_year']['#description']);
+
     $form['biblio_year_group']['biblio_year']['#size'] = 100;
     $form['biblio_year_group']['biblio_year']['#attributes'] = array('placeholder' => t('Year'));
     $form['biblio_year_group']['biblio_year']['#weight'] = 0;
+
+    $form['biblio_year_group']['biblio_year']['#prefix'] = '<div class="year-wrapper">';
+    $form['biblio_year_group']['biblio_year']['#suffix'] = '</div>';
     $form['biblio_year_group']['biblio_year_or'] = array(
       '#weight' => 10,
       '#markup' => t('or'),
@@ -812,6 +803,15 @@ function os_publications_alter_year_field(&$form, &$form_state) {
       '#default_value' => $year_coded_value,
     );
 
+  }
+
+  $form['biblio_year_group']['published'] = array(
+    '#type' => 'radio',
+    '#title' => t('Published'),
+  );
+
+  if (empty($year_coded_value)) {
+    $form['biblio_year_group']['published']['#attributes']['checked'] = TRUE;
   }
 
   unset($form['field_biblio_pub_month']);
@@ -836,11 +836,7 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#default_value' => $year_coded_value,
   );
 
-  // Adding date and month fields for publication day for Harvard - Chicago
-  // Author citation.
-  if ($chicago_author_date) {
-
-  }
+  $form['biblio_year_group']['biblio_year']['#weight'] = 30;
 
   unset($form['biblio_year_group']['biblio_year']['#title']);
   unset($form['biblio_year_group']['biblio_year']['#description']);
