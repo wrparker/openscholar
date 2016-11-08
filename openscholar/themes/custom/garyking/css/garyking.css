@@ -592,7 +592,7 @@ ul.nice-menu-down,
     position: absolute;
     top: 0;
     right: 0;
-    background: url('../images/sprite.png?zyx') 60% -233px #4a5a77 no-repeat;
+    background: url('../images/sprite.png?zyxabc') 10px -288px #4a5a77 no-repeat;
     width: 30px;
     height: 100%;
     transition: all .250s;
