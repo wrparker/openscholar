@@ -30,11 +30,7 @@
 
           scope.fileEditAddt = '';
           scope.date = '';
-          if (Drupal.settings.getQ.indexOf('cp/content/files') < 0 && scope.file.type == 'video') {
-            angular.element( document.querySelector( '#fe-file-description' ) ).remove();
-          } else {
-            scope.description_label = 'Descriptive Text - will display under the filename';
-          }
+          scope.description_label = 'Descriptive Text - will display under the filename';
           scope.schema = '';
           scope.$watch('file', function (f) {
 
