@@ -2020,7 +2020,8 @@ class FeatureContext extends DrupalContext {
   public function iSetFeatureStatus ($feature, $status, $group) {
     return array(
       new Step\When('I visit "' . $group . '"'),
-      new Step\When('I open the admin panel to "Settings"'),
+      new Step\When('I make sure admin panel is open'),
+      new Step\When('I click on the "Settings" control'),
       new Step\When('I sleep for "1"'),
       new Step\When('I click "Enable Apps"'),
       new Step\When('I select "' . $status . '" from "' . $feature . '"'),
