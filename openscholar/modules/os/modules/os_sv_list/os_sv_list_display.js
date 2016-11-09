@@ -72,7 +72,7 @@
           }
 
           $.ajax({
-            url: '//' + window.location.hostname + '/' + (s.basePath ? s.basePath : '') + (typeof s.pathPrefix != 'undefined'?s.pathPrefix:'') + 'os_sv_list/page/'+delta,
+            url: (s.basePath ? s.basePath : '') + (typeof s.pathPrefix != 'undefined'?s.pathPrefix:'') + 'os_sv_list/page/'+delta,
             data: queryArgs,
             beforeSend: function (xhr, settings) {
               $(e.currentTarget).append('<div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>')
