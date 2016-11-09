@@ -6,45 +6,6 @@
  */
 
 /**
- * Implements hook_media_token_to_markup_alter().
- */
-function os_wysiwyg_media_token_to_markup_alter(&$element, $tag_info, $settings) {
-  if (empty($settings['wysiwyg'])) {
-    unset($element['content']['#prefix'], $element['content']['#suffix']);
-  
-    if (isset($settings['width'])) {
-      $element['content']['file']['#attributes']['width'] = $settings['width'];
-    }
-    if (isset($settings['height'])) {
-      $element['content']['file']['#attributes']['height'] = $settings['height'];
-    }
-  
-    $container_settings = array();
-    foreach ($settings['attributes'] as $attr => $val) {
-      if ($attr != 'class' && $attr != 'height' && $attr != 'width') {
-        $container_settings[$attr] = $val;
-      }
-    }
-  
-    if (isset($container_settings['style'])) {
-      $s = &$container_settings['style'];
-      if (strpos($s, 'display: block;') !== FALSE &&
-          strpos($s, 'margin-left: auto;') !== FALSE &&
-          strpos($s, 'margin-right: auto;') !== FALSE) {
-        // This was supposed to be centered, and could be an image. Add
-        // text-align center so the image inside will be centered after all.
-        $s .= ' text-align: center;';
-      }
-    }
-  
-    $element += array(
-      '#prefix' => '<span '.drupal_attributes($container_settings).'>',
-      '#suffix' => '</span>',
-    );
-  }
-}
-
-/**
  * Implements hook_wysiwyg_editor_settings_alter().
  */
 function os_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
