@@ -1,3 +1,7 @@
+body {
+    -moz-osx-font-smoothing: grayscale;
+}
+.not-front .research-by-topic h2.block-title,
 .tweet-divider,
 .tweet-authorphoto,
 .tweet-author,
@@ -7,7 +11,6 @@
 .contact-map a,
 .node-type-person .node-title,
 .research-by-topic ul .item-list ul li .description a,
-.not-front .research-by-topic h2.block-title,
 .front .field-name-field-biblio-image {
     display: none;
 }
@@ -53,15 +56,14 @@ body.not-front {
     color: #222;
 }
 .front #content-panels .region-content-first,
-.front #content-panels .region-content-first a,
-.front #content-panels .region-content-first h2.block-title,
 .front #content-panels .region-content-bottom,
 .front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html.top-bio-teaser a,
 .front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html.top-bio-teaser,
 .front-top-cloumn .region-two-66-33-second,
 #footer .footer-login,
 .front-top-featured h2.block-title,
-.front-top-cloumn .region-two-66-33-second a {
+.front-top-cloumn .region-two-66-33-second a,
+.research-by-topic ul .item-list ul li a {
     color: #ffffff;
 }
 .front #columns {
@@ -79,8 +81,8 @@ body.not-front {
     vertical-align: middle;
 }
 .front #content-panels .region-content-first {
-    background-color: #3B4B69;
-    padding-top: 17px;
+    background-color: #e2e2e2;
+    padding-top: 10px;
 }
 h2.block-title {
     color: #545454;
@@ -105,9 +107,6 @@ h2.block-title {
     border-top-style: solid;
     border-width: 3px;
 }
-.not-front .research-by-topic ul .item-list ul li a,
-.not-front .research-by-topic ul .item-list ul li,
-.research-by-topic ul .item-list ul li.open a,
 #menu-bar ul.nice-menu a.active,
 #menu-bar ul.nice-menu a:hover,
 #menu-bar ul.nice-menu .menuparent.over > a,
@@ -120,6 +119,12 @@ body.node-type-biblio .biblio-export,
 .os-files-other-list tr,
 .os-files-other-list td {
     background-color: #f6f6f6;
+}
+.research-by-topic ul .item-list ul li.open,
+.front-lop-software-tabs,
+.front-lop-blockgrid,
+.research-by-topic ul .item-list ul li.open .description {
+    background-color: #FFFFFF;
 }
 .sidebar .block-boxes-os_search_solr_more_like_this {
     padding: 0 12px 0 12px;
@@ -205,7 +210,7 @@ h3 {
     margin-top: 0;
 }
 .front-top-cloumn .region-two-66-33-second {
-    background: url('../images/working-paper_image.jpg') center right no-repeat;
+    background: url('../images/working-paper_image.jpg?123') center right no-repeat;
     background-size: cover;
     margin: 0;
     box-shadow: inset 0 0 0 1000px rgba(0, 35, 45, .5);
@@ -279,7 +284,6 @@ a.os-arrow:hover:after {
     padding: 10px;
     border-top-style: solid;
     border-width: 4px;
-    background-color: #fff;
     min-height: 400px;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
@@ -301,7 +305,6 @@ a.os-arrow:hover:after {
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
-    background-color: #fff;
     -webkit-transition: all .250s;
     transition: all .250s;
     position: relative;
@@ -421,7 +424,6 @@ h1#page-title {
     margin: 10px 0 25px;
 }
 .research-by-topic ul .item-list ul li span:after,
-.front #content-panels .research-by-topic ul .item-list ul li a,
 .biblio-title a,
 a,
 a:visited {
@@ -506,18 +508,25 @@ ul.nice-menu-down,
 }
 .research-by-topic li.term-methods {
     float: left;
-    width: 280px;
+    width: 460px;
+    background:url('../images/icons/formula-icon.png') 195px 0 no-repeat;
+    background-size:70px;
+    padding-top:50px;
+ 
 }
 .research-by-topic li.term-applications {
     float: right;
-    width: 280px;
+    width: 460px;
+        background:url('../images/icons/cogs.svg') 195px 0 no-repeat;
+    background-size:70px;
+    padding-top:50px;
 }
 .research-by-topic ul .item-list ul li {
     width: 100%;
-    height: 88px;
+    height: 70px;
     overflow: hidden;
     margin: 0 20px 7px 0;
-    background-color: #fff;
+    background-color: #3B4B69;
     position: relative;
     z-index: 1;
     opacity: .94;
@@ -525,15 +534,12 @@ ul.nice-menu-down,
     transition: all .5s;
     -webkit-transition: all .5s;
 }
-.not-front .research-by-topic ul .item-list ul li {
-    border: 1px solid #ddd;
-}
 .research-by-topic ul .item-list ul li.open {
     height: 300px;
     opacity: 1;
 }
 .research-by-topic .term-head a {
-    font-size: 1.1em;
+    font-size: 1em;
     margin-top: 20px;
     display: block;
 }
@@ -545,92 +551,55 @@ ul.nice-menu-down,
     display: block;
     height: 300px;
     padding: 13px 15px 30px 15px;
-    font-size: 1.1em;
+    font-size: 1.05em;
     z-index: 2;
     position: relative;
-    /* color: #fff; */
-    /* font-weight: bold; */
-    
+    font-weight: bold;
     -webkit-transition: all .250s;
     transition: all .250s;
     top: 0;
 }
+
 .research-by-topic ul .item-list ul li.open a {
     top: -320px;
+    background-color: #4a5a77;
 }
+
+
 .research-by-topic ul .item-list ul li.open a:after {
-    bottom: 1px;
-    right: 5px;
-    content: 'Related content';
+    bottom: 0px;
+    right: 10px;
+    content: 'Relevant content ➞';
     position: absolute;
     font-size: .75em;
-    padding-right: 20px;
-    background: url("../images/sprite.png?abcdgfgg") 95px -143px no-repeat;
-    background-size: 70px 350px;
 }
-.research-by-topic ul.termchild-applications li a {
-    /* Green */
-    
-    -webkit-transition: all .250s;
-    transition: all .250s;
-    border-top: 4px solid #5AB899;
-}
-.research-by-topic ul.termchild-methods li a {
-    /*  #81b9c3; Light Blue*/
-    
-    transition: all .250s;
-    border-top: 4px solid #81b9c3;
+.research-by-topic ul .item-list ul li span {
+    font-family: arial;
+    font-size: 1.4em;
 }
 .research-by-topic ul .item-list ul li span:after {
-    content: 'More';
+    content: '';
     width: 100%;
-    /* padding-right:15px; */
-    
+    color: #fff;
     position: absolute;
-    top: 68px;
-    /* left: 41%; */
-    
-    background: url("../images/sprite.png?abcdgfgg") 159px -99px #f6f6f6 no-repeat;
-    font-size: .85em;
-    text-align: center;
+    top: 47px;
+    background: url('../images/sprite.png?xyz123') 60% -233px #4a5a77 no-repeat;
+    width: 100%;
+    height: 50px;
     transition: all .250s;
     z-index: 2;
-    background-size: 70px 350px;
-}
-.not-front .research-by-topic ul .item-list ul li span:after {
-    background: url("../images/sprite.png?abcdgfgg") 159px -99px #eee no-repeat;
-    background-size: 70px 350px;
-
 }
 .research-by-topic ul .item-list ul li.open span:after {
-    content: 'Less';
-    width: 50%;
-    top: 4px;
-    left: 10px;
-    background-position: 30px -122px;
-    text-align: left;
-}
-
-
-
-.not-front .research-by-topic ul .item-list ul li.open a {
-    background-color: #eee;
+    content: '';
+    width: 70%;
+    top: -27px;
+    background-position: 4% -234px;
 }
 .research-by-topic ul .item-list ul li:hover {
     margin-left: 10px;
 }
 .research-by-topic.block-boxes-os_taxonomy_fbt ul ul {
     margin: 0 !important;
-}
-.research-by-topic {
-    background-image: url('../images/reaearch_areas-bg_png1.png?456');
-    background-repeat: no-repeat;
-    background-position: 220px 120px;
-    background-size: 520px 740px;
-}
-.not-front .research-by-topic {
-    background-image: url('../images/reaearch_areas-bg_png2.png');
-
 }
 .bio-teaser-block2 p,
 .research-by-topic .term-head {
@@ -670,6 +639,8 @@ ul.nice-menu-down,
     height: 250px;
     overflow-y: scroll;
 }
+
+
 .contextual-controls-wrapper {
     top: 255px;
 }
@@ -679,3 +650,86 @@ ul.nice-menu-down,
 #footer {
     padding: 10px 0 10px;
 }
+
+@-moz-document url-prefix() {
+.research-by-topic ul .item-list ul li.open a {
+  
+    top: -289px;
+}
+ .research-by-topic ul .item-list ul li a {
+        padding: 12px 5px 0 10px;
+    }
+    .research-by-topic ul .item-list ul li.open .description {
+
+    top: -290px;
+}
+}
+
+
+/* RESPONSIVE CSS - UNTIL I CAN FIGURE OUT WHY GARYKING RESP CSS FILE WONT LOAD */
+@media (max-width: 1008px) {
+   #boxes-box-site_info h1 {
+    font-size: 28px;
+}
+
+#menu-bar ul.nice-menu a {
+  
+    font-size: 16.3px;
+}
+
+
+
+
+}
+/*--------------------------------------------------------*/
+
+@media (max-width: 768px) {
+#menu-bar {
+    position: relative !important;
+
+}
+
+#boxes-box-site_info h1 {
+    padding: 0;
+}
+
+#block-os-primary-menu .nice-menu li.last a {
+	display:none !important;
+}
+
+.front #columns {
+ 
+    margin-top: 0;
+}
+
+.front .content-left.content-right.content-bottom #content-panels .region {
+    margin-bottom: 2px;
+   
+}
+
+.sidebar {
+    margin-top: 0;
+}
+
+
+}
+
+
+@media (max-width: 600px) {
+.research-by-topic li.term-applications,
+.research-by-topic li.term-methods {
+    float: none;
+    width: 100%;
+}
+}
+
+
+
+
+@media (max-width: 479px) {
+
+
+}
+
+
+
