@@ -3326,6 +3326,7 @@ class FeatureContext extends DrupalContext {
     }
     if (!$elem->hasClass('open')) {
       $output[] = new Step\When('I click on the "'.$text.'" control');
+      $output[] = new Step\When('I sleep for "1"');
     }
 
     return $output;
