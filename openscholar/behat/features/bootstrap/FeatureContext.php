@@ -718,6 +718,13 @@ class FeatureContext extends DrupalContext {
         FeatureHelp::RemoveVsiteDomain($domain);
       }
     }
+
+
+    // make sure no support user has subscribed to a site after a scenario is over
+    $original = variable_get('vsite_support_expire');
+    variable_set('vsite_support_expire', '1 sec');
+    vsite_cron();
+    variable_set('vsite_support_expire', $original);
   }
 
   /**
@@ -1829,7 +1836,8 @@ class FeatureContext extends DrupalContext {
   public function iSetTheShareDomainNameTo($value) {
     $action = $value ? 'I checked "edit-vsite-domain-name-vsite-domain-shared"' : 'I uncheck "edit-vsite-domain-name-vsite-domain-shared"';
     return array(
-      new Step\When('I click "Settings"'),
+      new Step\When('I open the admin panel to "Settings"'),
+      new Step\When('I click "Advanced"'),
       new Step\When($action),
       new Step\When('I press "edit-submit"'),
     );
