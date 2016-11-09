@@ -119,7 +119,8 @@
               '<div class="form-item" ng-repeat="(key, field) in formElements | weight">' +
                 '<div form-element element="field" value="formData[key]"><span>placeholder</span></div>' +
               '</div>' +
-            '<div class="help-link" ng-bind-html="help_link"></div></div>' +
+            '</div>' +
+            '<div class="help-link" ng-bind-html="help_link"></div>' +
           '<div class="actions"><button type="submit" button-spinner="settings_form" spinning-text="Saving">Save</button><input type="button" value="Close" ng-click="close(false)"></div></form>',
           inputs: {
             form: scope.form
