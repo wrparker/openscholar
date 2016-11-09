@@ -31,7 +31,7 @@ function os_comments_cp_settings() {
       '#type' => 'textfield',
       '#title' => t('Disqus Shortname'),
       '#default_value' => $disqus_shortname,
-      '#description' => t('The website shortname that you registered Disqus with. If you registered http://example.disqus.com, you would enter "example" here. It is called "shortname" on the disqus site. You can <a href="http://disqus.com/" title="Disqus Signup">signup here</a> for a disqus account if you do not have one.'),
+      '#description' => t('The website shortname that you registered Disqus with. Disqus allows you to add visitor comments to your site. If you registered http://example.disqus.com, you would enter "example" here. It is called "shortname" on the disqus site. You can <a href="http://disqus.com/" title="Disqus Signup">signup here</a> for a disqus account if you do not have one.'),
     ),
   );
 
