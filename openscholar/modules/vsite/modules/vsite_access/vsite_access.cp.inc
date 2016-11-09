@@ -62,19 +62,16 @@ function vsite_access_cp_settings_node_submit($form, &$form_state) {
  */
 function vsite_access_cp_settings_save($val) {
   $space = spaces_get_space();
-  $current_vsite_access = $space->group->{VSITE_ACCESS_FIELD}[LANGUAGE_NONE][0]['value'];
+  $node = $space->group;
 
-  $space->group->{VSITE_ACCESS_FIELD}[LANGUAGE_NONE][0]['value'] = $val;
-  field_attach_presave('node', $space->group);
-  field_attach_update('node', $space->group);
+  $current_vsite_access = $node->{VSITE_ACCESS_FIELD}[LANGUAGE_NONE][0]['value'];
+  $node->{VSITE_ACCESS_FIELD}[LANGUAGE_NONE][0]['value'] = $val;
+  
+  node_save($node);
 
   // Clear the cache when we switch the privacy in ALL cases except toggling between invite only (value = 1) and Harvard (value = 4).
   // For toggling, the sum of previous and selected value will be always '5' for such case; other two radio buttons values are 0 and 2.
   if (($current_vsite_access + $val) != 5 && $current_vsite_access != $val) {
     cp_clear_site_cache();
   }
-
-  entity_get_controller('node')->resetCache(array($space->group->nid));
-  $cid = "field:node:$id";
-  cache_clear_all($cid, 'cache_field');
 }
