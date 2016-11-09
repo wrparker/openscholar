@@ -1680,6 +1680,7 @@ function os_publications_cp_settings() {
     }
   }*/
 
+  // Radio button set for Preferred bibliographic format
   $settings[$style] = array(
     'group' => array(
       '#id' => 'feature_os_publication',
@@ -1697,11 +1698,34 @@ function os_publications_cp_settings() {
     ),
   );
 
+  // Fetching publication types option from table 'biblio_types'.
+  $publication_types_options = array();
   $result = db_query('SELECT t.* FROM {biblio_types} as t WHERE tid > -1 AND visible = 1 ORDER BY t.name ASC');
   foreach ($result as $option) {
-    $results[$option->tid] = $option->name;
+    $publication_types_options[] = array(
+      'key' => $option->tid,
+      'val' => $option->name
+    );
   }
 
+  // Rendering Label and description above publication type checkbox set. This text will span accross 3 columns.
+  $settings['os_publications_filter_publication_types_label'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'markup',
+      '#weight' => 0,
+      '#prefix' => '<label>Display on Your Publication Page</label>',
+      '#description' => 'Selected publications types will appear on your Publications page. Unselected publication types can still be added to other locations on your site using widgets.'
+    ),
+  );
+
+  // Set of checkbox for publication type selection.
   $settings['os_publications_filter_publication_types'] = array(
     'group' => array(
       '#id' => 'feature_os_publication',
@@ -1712,88 +1736,112 @@ function os_publications_cp_settings() {
     ),
     'form' => array(
       '#type' => 'checkboxes',
-      '#default_value' => variable_get('os_publications_filter_publication_types', array_keys($results)),
-      '#options' => $results,
+      '#default_value' => 0,
+      '#options' => $publication_types_options,
       '#weight' => 0,
-      '#prefix' => '<label>Display on Your Publication Page</label>',
+      '#column' => 'left',
     ),
   );
 
-
-  return $settings;
-/*
-
-  $form['left'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'class' => array('column', 'column-left'),
+  // Note content checkbox option.
+  $settings['os_publications_note_in_teaser'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Show note content in teaser'),
+      '#default_value' => variable_get('os_publications_note_in_teaser', FALSE),      
+      '#weight' => 0,
+      '#column' => 'left',
+      '#prefix' => '<label>Notes</label>',
     ),
   );
-  $form['right'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'class' => array('column', 'column-right'),
+
+  // URL shortening option
+  $settings['os_publications_shorten_citations'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Include Short URLs in citations'),
+      '#default_value' => variable_get('os_publications_shorten_citations'),      
+      '#weight' => 0,
+      '#column' => 'right',
+      '#prefix' => '<label>Short URLs</label>',
     ),
   );
-  */
-  /*
-  $form['left'][$style] = array(
-    '#type' => 'radios',
-    '#title' => t('Select your preferred bibliographic format'),
-    //'#description' => t('This alters the bibliographic format of your publications.'),
-    '#default_value' => biblio_get_style(),
-    '#options' => $biblio_styles_hover,
-    '#attached' => array(
-      'css' => array(
-        drupal_get_path('module', 'os_publications') . '/misc/os_publications.css',
+
+  // Export Format option
+  $settings['biblio_export_links'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'checkboxes',
+      '#default_value' => variable_get('biblio_export_links', array('tagged', 'xml', 'bibtex')),
+      '#options' => array(
+        array('key' => 'tagged', 'val' => t('EndNote Tagged')),
+        array('key' => 'xml', 'val' => t('EndNote XML')),
+        array('key' => 'bibtex', 'val' => t('BibTex')),
       ),
-      'js' => array(
-        drupal_get_path('module', 'os_publications') . '/misc/os_publications_csl_hover.js',
-      )
+      '#weight' => 0,
+      '#column' => 'right',
+      '#prefix' => '<label>Export Formats</label>',
+      '#description' => t('Each selected format will appear in its own export link.'),
     ),
   );
-*/
-  $form['right']['biblio_export_links'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Select which export formats should accompany each bibliographic record'),
-    '#default_value' => variable_get('biblio_export_links', array('tagged', 'xml', 'bibtex')),
-    '#options' => array(
-      'tagged' => t('EndNote Tagged'),
-      'xml' => t('EndNote XML'),
-      'bibtex' => t('BibTex'),
+
+  // Sort by Category option
+  $settings['biblio_sort'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
     ),
-    '#description' => t('Each selected format will appear in its own export link.'),
+    'form' => array(
+      '#type' => 'select',
+      '#default_value' => variable_get('biblio_sort', 'year'),
+      '#options' => array('author' => t('Author'), 'title' => t('Title'), 'type' => t('Type'), 'year' => t('Year')),
+      '#weight' => 0,
+      '#column' => 'left',
+      '#prefix' => '<label>\'Sort By\' Category</label>',
+    ),
   );
 
-  $form['right']['os_publications_note_in_teaser'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Show the "note" content in teaser?'),
-    //'#description' => t('This alters the bibliographic format of your publications.'),
-    '#default_value' => variable_get('os_publications_note_in_teaser', FALSE),
-    '#description' => t('If this is checked and you add a note to a publication then it will show as part of a publications teaser.'),
+  // Sort order option
+  $settings['biblio_order'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'select',
+      '#default_value' => variable_get('biblio_order', 'DESC'),
+      '#options' => array('DESC' => t('Descending'), 'ASC' => t('Ascending')),
+      '#weight' => 0,
+      '#column' => 'left',
+      '#prefix' => '<label>Sort Order</label>',
+    ),
   );
 
-  $form['left']['biblio_sort'] = array(
-    '#type' => 'radios',
-    '#title' => t('By default, sort publications by which category'),
-    '#default_value' => variable_get('biblio_sort', 'year'),
-    '#options' => array('author' => t('Author'), 'title' => t('Title'), 'type' => t('Type'), 'year' => t('Year')),
-  );
-
-  $form['left']['biblio_order'] = array(
-    '#type' => 'radios',
-    '#title' => t('Select default order of the sort category'),
-    '#default_value' => variable_get('biblio_order', 'DESC'),
-    '#options' => array('DESC' => t('Descending'), 'ASC' => t('Ascending')),
-  );
-
-  
-  $form['right']['os_publications_shorten_citations'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Short URLs in citations'),
-    '#description' => t('When this is checked, a shortened URL will be included in the citation.'),
-    '#default_value' => variable_get('os_publications_shorten_citations'),
-  );
-
-  return system_settings_form($form);
+  return $settings;  
 }

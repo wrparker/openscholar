@@ -3,6 +3,29 @@
   var m = angular.module('basicFormElements', ['osHelpers', 'ngSanitize']);
 
   /**
+   * Select directive.
+   */
+  m.directive('feSelect', ['$sce', function ($sce) {
+    return {
+      scope: {
+        name: '@',
+        value: '=ngModel',
+        element: '='
+      },
+      template: '<label for="{{id}}">{{title}}</label>' +   
+        '<div class="form-item form-type-select"><select id="{{id}}" name="{{id}}" ng-model="value">' +
+          '<option value="">Select</option>' + 
+          '<option ng-repeat="(val, label) in options" value="{{val}}" ng-bind-html="label"></option>' +
+        '</select></div>',
+      link: function (scope, elem, attr) {
+        scope.id = attr['inputId'];
+        scope.options = scope.element.options;
+        scope.title = scope.element.title;
+      }
+    }
+  }]);
+
+  /**
    * Checkboxes directive.
    */
   m.directive('feCheckboxes', ['$sce', function ($sce) {
@@ -14,8 +37,8 @@
       },
       template: '<label for="{{id}}">{{title}}</label>' +
       '<div id="{{id}}" class="form-checkboxes">' +
-        '<div class="form-item form-type-checkbox" ng-repeat="(val, label) in options">' +
-          '<input type="checkbox" id="{{id}}-{{val}}" name="{{name}}" value="{{val}}" ng-model="value" class="form-checkbox" ng-disabled="element.disabled"><label class="option" for="{{id}}-{{val}}" ng-bind-html="label"></label>' +
+        '<div class="form-item form-type-checkbox" ng-repeat="(val, option) in options">' +
+          '<input ng-true-value="1" ng-false-value="0" type="checkbox" id="{{id}}-{{option.key}}" name="{{name}}" value="{{option.key}}" ng-model="value" class="form-checkbox" ng-disabled="element.disabled">&nbsp;<label class="option" for="{{id}}-{{option.key}}" ng-bind-html="option.val"></label>' +
         '</div>' +
       '</div> ',
       link: function (scope, elem, attr) {
