@@ -3,6 +3,30 @@
   var m = angular.module('basicFormElements', ['osHelpers', 'ngSanitize']);
 
   /**
+   * Checkboxes directive.
+   */
+  m.directive('feCheckboxes', ['$sce', function ($sce) {
+    return {
+      scope: {
+        name: '@',
+        value: '=ngModel',
+        element: '='
+      },
+      template: '<label for="{{id}}">{{title}}</label>' +
+      '<div id="{{id}}" class="form-checkboxes">' +
+        '<div class="form-item form-type-checkbox" ng-repeat="(val, label) in options">' +
+          '<input type="checkbox" id="{{id}}-{{val}}" name="{{name}}" value="{{val}}" ng-model="value" class="form-checkbox" ng-disabled="element.disabled"><label class="option" for="{{id}}-{{val}}" ng-bind-html="label"></label>' +
+        '</div>' +
+      '</div> ',
+      link: function (scope, elem, attr) {
+        scope.id = attr['inputId'];
+        scope.options = scope.element.options;
+        scope.title = scope.element.title;
+      }
+    }
+  }]);
+
+  /**
    * Checkbox directive.
    * Arguments:
    *   name - string - the name of the element as Drupal expects it
