@@ -3117,11 +3117,11 @@ function os_events_cp_settings() {
       '#help_link' => l(t('Learn more about Events'), '', array('attributes' => array('target' => '_blank'))),
     ),
     'form' => array(
-      '#title' => t('Do not display export options on event pages'),
+      '#title' => t('Disable export option on Event pages; don’t allow site Events to be shared to iCal, RSS or subscription.'),
       '#type' => 'checkbox',
       '#default_value' => variable_get('os_exporter_disable_event_export', 0),
       '#weight' => -1,
-      '#prefix' => '<label>Choose how Events will display</label>',
+      '#prefix' => '<label>Events export</label>',
     ),
   );
   return $settings;
