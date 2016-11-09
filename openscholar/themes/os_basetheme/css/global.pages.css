@@ -1120,11 +1120,13 @@ img.recent-images-list:hover {
 }
 .lightbox-stack .gallery-thumb-outer {
 display:table;
+height:100%;
 }
 
 
 .lightbox-stack .gallery-thumb-inner {
 display:table-cell;
+height:100%;
 }
 img.media-element.file-default {
     padding-right: 15px;
