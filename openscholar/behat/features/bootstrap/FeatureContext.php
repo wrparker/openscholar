@@ -3351,6 +3351,7 @@ class FeatureContext extends DrupalContext {
     }
     if ($elem = $page->find('css', 'div[right-menu-toggle]')) {
       $elem->click();
+      sleep(1);
     }
     else {
       $url = $this->getSession()->getCurrentUrl();
