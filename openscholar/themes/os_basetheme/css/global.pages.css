@@ -1118,6 +1118,14 @@ img.recent-images-list:hover {
 #cboxWrapper #cboxBottomRight {
     background: none;
 }
+.lightbox-stack .gallery-thumb-outer {
+display:table;
+}
+
+
+.lightbox-stack .gallery-thumb-inner {
+display:table-cell;
+}
 img.media-element.file-default {
     padding-right: 15px;
 }
