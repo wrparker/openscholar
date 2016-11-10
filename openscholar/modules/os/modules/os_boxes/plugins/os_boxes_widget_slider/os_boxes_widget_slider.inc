@@ -99,6 +99,8 @@ class os_boxes_widget_slider extends os_boxes_widget_collection {
     $block = parent::render();
     $defaults = $this->options_defaults();
     $slides = array();
+    // Sorting slides according to their weight
+    uasort($this->options['widgets'], 'drupal_sort_weight');
     // Iterating all selected widgets to be rendered.
     foreach ($this->options['widgets'] as $key => $widget) {
       list(, $delta) = explode('-', $widget['bid'], 2);

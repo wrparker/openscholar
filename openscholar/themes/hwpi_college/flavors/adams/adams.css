@@ -1,6 +1,3 @@
-/*@import url(https://fonts.googleapis.com/css?family=Open+Sans);
-@import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:700);
-@import url(https://fonts.googleapis.com/css?family=Oswald);*/
 body {
     overflow-x: initial;
 }
@@ -28,7 +25,8 @@ h2.block-title,
 .sidebar .boxes-box-content p,
 .ui-tabs,
 .slide-copy h2,
-#layout_3_1_overlay .slide-copy h2 {
+#layout_3_1_overlay .slide-copy h2,
+.cke_editable * {
     font-family: 'Open Sans', sans-serif !important;
 }
 .sidebar .block h2.block-title,

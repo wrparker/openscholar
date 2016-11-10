@@ -7,6 +7,7 @@ Drupal.wysiwyg.plugins['mathjax'] = CKEDITOR.plugins.get('mathjax');
 Drupal.wysiwyg.plugins['lineutils'] = CKEDITOR.plugins.get('lineutils');
 Drupal.wysiwyg.plugins['widget'] = CKEDITOR.plugins.get('widget');
 Drupal.wysiwyg.plugins['colordialog'] = CKEDITOR.plugins.get('colordialog');
+Drupal.wysiwyg.plugins['image2'] = CKEDITOR.plugins.get('image2');
 Drupal.wysiwyg.plugins['indentblock'] = CKEDITOR.plugins.get('indentblock');
 
 // Override the normal link functionality.

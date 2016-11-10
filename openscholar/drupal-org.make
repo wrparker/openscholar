@@ -170,6 +170,9 @@ projects[imageapi_optimize][download][type] = git
 projects[imageapi_optimize][download][branch] = 7.x-1.x
 projects[imageapi_optimize][download][revision] = 234f208
 
+projects[imagemagick][subdir] = "contrib"
+projects[imagemagick][version] = 1.0
+
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0
 projects[imagefield_crop][download][type] = git
@@ -522,6 +525,11 @@ libraries[colorbutton][type] = "libraries"
 libraries[colorbutton][subdir] = "ckeditor/plugins"
 libraries[colorbutton][download][type] = "file"
 libraries[colorbutton][download][url] = "http://download.ckeditor.com/colorbutton/releases/colorbutton_4.5.8.zip"
+
+libraries[image2][type] = "libraries"
+libraries[image2][subdir] = "ckeditor/plugins"
+libraries[image2][download][type] = "file"
+libraries[image2][download][url] = "http://download.ckeditor.com/image2/releases/image2_4.5.11.zip"
 
 libraries[panelbutton][type] = "libraries"
 libraries[panelbutton][subdir] = "ckeditor/plugins"
