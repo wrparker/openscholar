@@ -47,7 +47,7 @@ function vsite_cp_settings() {
       '#id' => 'vsite-seo',
       '#title' => t('Search Engine Optimization'),
       '#weight' => 30,
-      '#help_link' => l(t('Learn more about Search Engine Optimization'), 'http://docs.openscholar.harvard.edu/site-settings#search-engine-optimization', array('attributes' => array('target' => '_blank')))
+      '#help_link' => l(t('Learn more about Search Engine Optimization'), 'http://docs.openscholar.harvard.edu/global-site-settings#search-engine-optimization', array('attributes' => array('target' => '_blank')))
     ),
     'rest_submit' => 'vsite_rest_cp_settings_submit',
     'submit' => 'vsite_cp_settings_form_submit'
@@ -71,7 +71,7 @@ function vsite_cp_settings() {
       '#id' => 'vsite-seo',
       '#title' => t('Search Engine Optimization'),
       '#weight' => 30,
-      '#help_link' => l(t('Learn more about Search Engine Optimization'), 'http://docs.openscholar.harvard.edu/site-settings#search-engine-optimization', array('attributes' => array('target' => '_blank')))
+      '#help_link' => l(t('Learn more about Search Engine Optimization'), 'http://docs.openscholar.harvard.edu/global-site-settings#search-engine-optimization', array('attributes' => array('target' => '_blank')))
     ),
     'rest_submit' => 'vsite_rest_cp_settings_submit',
     'submit' => 'vsite_cp_settings_form_submit'
@@ -106,7 +106,7 @@ function vsite_cp_settings() {
       '#weight' => 30,
       '#menu_parent' => 'appearance',
       '#description' => t('A favicon is a 16x16 .ico file to be displayed in browser shortcut iocns and tabs for any page on your site. For help generatiing a favison, try <a href="http://www.favicon.cc/">http://www.favicon.cc/</a>.'),
-      '#help_link' => l(t('Learn more about favicon'), '', array('attributes' => array('target' => '_blank')))
+      '#help_link' => l(t('Learn more about favicon'), 'http://docs.openscholar.harvard.edu/global-site-settings#favicon', array('attributes' => array('target' => '_blank')))
     ),
     'submit' => 'vsite_cp_settings_form_submit',
   );
@@ -123,7 +123,7 @@ function vsite_cp_settings() {
       '#id' => 'vsite-seo',
       '#title' => t('Search Engine Optimization'),
       '#weight' => 30,
-      '#help_link' => l(t('Learn more about Search Engine Optimization'), 'http://docs.openscholar.harvard.edu/site-settings#search-engine-optimization', array('attributes' => array('target' => '_blank')))
+      '#help_link' => l(t('Learn more about Search Engine Optimization'), 'http://docs.openscholar.harvard.edu/global-site-settings#search-engine-optimization', array('attributes' => array('target' => '_blank')))
     ),
     'submit' => 'vsite_cp_settings_form_submit'
   );
@@ -141,7 +141,7 @@ function vsite_cp_settings() {
       '#id' => 'vsite-seo',
       '#title' => t('Search Engine Optimization'),
       '#weight' => 30,
-      '#help_link' => l(t('Learn more about Search Engine Optimization'), 'http://docs.openscholar.harvard.edu/site-settings#search-engine-optimization', array('attributes' => array('target' => '_blank')))
+      '#help_link' => l(t('Learn more about Search Engine Optimization'), 'http://docs.openscholar.harvard.edu/global-site-settings#search-engine-optimization', array('attributes' => array('target' => '_blank')))
     ),
     'submit' => 'vsite_cp_settings_form_submit',
   );
