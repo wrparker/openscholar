@@ -13,7 +13,7 @@
         element: '='
       },
       template: '<label for="{{id}}">{{title}}</label>' +   
-        '<div class="form-item form-type-select"><select id="{{id}}" name="{{id}}" ng-model="value">' +
+        '<div class="form-item form-type-select"><select id="{{id}}" name="{{name}}" ng-model="value">' +
           '<option value="">Select</option>' + 
           '<option ng-repeat="(val, label) in options" value="{{val}}" ng-bind-html="label"></option>' +
         '</select></div>',
