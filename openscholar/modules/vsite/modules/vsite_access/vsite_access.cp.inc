@@ -69,7 +69,9 @@ function vsite_access_cp_settings_save($val) {
   node_save($node);
   $cid = "field:node:$id";
   cache_clear_all($cid, 'cache_field');
-  node_load($space->id, NULL, TRUE);
+  // Restful by default doesn't allow sessions to be saved
+  drupal_save_session(true);
+  $_SESSION['os_restful']['cache_clear_all'][] = array('field:node:'.$space->group->nid, 'cache_field');
 
   // Clear the cache when we switch the privacy in ALL cases except toggling between invite only (value = 1) and Harvard (value = 4).
   // For toggling, the sum of previous and selected value will be always '5' for such case; other two radio buttons values are 0 and 2.
