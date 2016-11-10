@@ -36,7 +36,6 @@ function os_restful_init() {
     $calls = $_SESSION['os_restful'];
     foreach ($calls as $f => $arg_sets) {
       if (is_callable($f)) {
-        drupal_set_message($f);
         foreach ($arg_sets as $args) {
           call_user_func_array($f, $args);
         }
