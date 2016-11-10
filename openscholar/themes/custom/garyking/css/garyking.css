@@ -56,8 +56,15 @@ h2.block-title,
 body,
 body.not-front {
     font-size: 16px;
+  
+}
+body,
+body.not-front,
+.node-presentation.node-teaser .date-display-single,
+.research-by-topic ul .item-list ul li .description {
     color: #222;
 }
+
 .research-by-topic ul .item-list ul li.open a:after,
 .front #content-panels .region-content-first,
 .front #content-panels .region-content-bottom,
@@ -570,9 +577,9 @@ top: 0;
 
 .research-by-topic ul .item-list ul li.open a {
     top: 20px;
-    /* background-color: #4a5a77; */
+    background-color: #fff;
     height: 20px;
-    padding: 10px 12px 10px;
+   padding: 15px 12px 5px;
 }
 
 
@@ -581,7 +588,7 @@ top: 0;
     right: 0;
     content: 'Relevant content ➞';
     position: absolute;
-    font-size: .75em;
+    font-size: .8em;
     width: 30%;
     background-color: #4a5a77;
     text-align: right;
@@ -646,17 +653,17 @@ top: 0;
 .research-by-topic ul .item-list ul li .description {
     transition: all .250s;
     -webkit-transition: all .250s;
-        padding: 10px 10px 10px 12px;
+         padding: 0px 10px 10px 12px;
     z-index: 1;
     position: relative;
     font-size: .95em;
     top: 5px;
     transition: all .250s;
-    color: #222;
+  
 }
 .research-by-topic ul .item-list ul li.open .description {
-    top: 5px;
-    height: 250px;
+   top: 25px;
+    height: 228px;
     overflow-y: scroll;
 }
 
