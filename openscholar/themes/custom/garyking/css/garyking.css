@@ -522,9 +522,9 @@ ul.nice-menu-down,
     border-top: 4px solid #999;
 }
 .research-by-topic li.term-methods {
-    float: left;
+   float: left;
     width: 475px;
-    background:url('../images/icons/formula-icon.png') 195px 0 no-repeat;
+    background:url('../images/icons/curve.svg') 202px 10px no-repeat;
     background-size:70px;
     padding-top:50px;
  
