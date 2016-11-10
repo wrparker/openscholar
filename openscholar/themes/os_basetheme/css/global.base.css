@@ -941,6 +941,9 @@ header[role=banner],
 .file div {
     word-wrap: normal !important;
 }
+.block-boxes-os_boxes_columns .file div, .region-content-first .file div, .region-content-second .file div {
+    clear: both;
+}
 /* iframe padding when its floated left or right*/
 
 .lt-ie9 div[style*="FLOAT: LEFT;"] iframe,
