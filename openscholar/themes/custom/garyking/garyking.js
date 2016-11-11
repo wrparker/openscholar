@@ -37,13 +37,23 @@ jQuery('.research-by-topic ul .item-list ul li span').click(function() {
 
 
       jQuery(".research-by-topic a").removeAttr("title");
-      //  var highestBox = 0;
-     //   jQuery('.front-four-lops .front-lop-blockgrid').each(function(){  
-             //   if(jQuery(this).height() > highestBox){   
-            //    highestBox = jQuery(this).height();  
-      //  }
-   // });    
-  //  jQuery('.front-four-lops .front-lop-blockgrid, .front-lop-software-tabs').height(highestBox);
+
+
+
+jQuery.fn.textReplace = function(target, replacement) {
+				this.html(this.html().replace(target, replacement));
+				return this;
+			}
+			
+		
+		
+				
+														
+				// loops through the <li>s, perform a text replacement, then add a class
+				var lis = jQuery(".front-lop-presentations .node-presentation");
+				lis.each(function(index) {
+					jQuery(this).textReplace("at"," ");
+				});
 
 
   });
