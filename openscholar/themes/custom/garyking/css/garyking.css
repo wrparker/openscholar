@@ -524,7 +524,7 @@ ul.nice-menu-down,
 .research-by-topic li.term-methods {
    float: left;
     width: 475px;
-    background:url('../images/icons/curve.svg') 202px 10px no-repeat;
+    background:url('../images/icons/curve.svg?123') 203px 12px no-repeat;
     background-size:70px;
     padding-top:50px;
  
@@ -532,7 +532,7 @@ ul.nice-menu-down,
 .research-by-topic li.term-applications {
     float: right;
     width: 475px;
-        background:url('../images/icons/cogs.svg') 195px 0 no-repeat;
+        background:url('../images/icons/cogs.svg') 200px 0 no-repeat;
     background-size:70px;
     padding-top:50px;
 }
@@ -579,7 +579,7 @@ top: 0;
     top: 20px;
     background-color: #fff;
     height: 20px;
-   padding: 15px 12px 5px;
+   padding: 12px 12px 5px;
 }
 
 
@@ -620,7 +620,7 @@ top: 0;
     background-position: 4% -234px;
 }
 .research-by-topic ul .item-list ul li a:hover {
-    margin-left: 10px;
+    margin-left: 12px;
 }
 .research-by-topic ul .item-list ul li.open a:hover {
     margin-left: 0;
