@@ -13,7 +13,7 @@
         element: '='
       },
       template: '<label for="{{id}}">{{title}}</label>' +   
-        '<div class="form-item form-type-select"><select id="{{id}}" name="{{name}}" ng-model="value">' +
+        '<div class="form-item form-type-select"><select class="form-select" id="{{id}}" name="{{name}}" ng-model="value">' +
           '<option value="">Select</option>' + 
           '<option ng-repeat="(val, label) in options" value="{{val}}" ng-bind-html="label"></option>' +
         '</select></div>',
@@ -30,6 +30,7 @@
    */
   m.directive('feCheckboxes', ['$sce', function ($sce) {
     return {
+      require: 'ngModel',
       scope: {
         name: '@',
         value: '=ngModel',
@@ -37,8 +38,13 @@
       },
       template: '<label for="{{id}}">{{title}}</label>' +
       '<div id="{{id}}" class="form-checkboxes">' +
-        '<div class="form-item form-type-checkbox" ng-repeat="(val, option) in options">' +
-          '<input ng-true-value="1" ng-false-value="0" type="checkbox" id="{{id}}-{{option.key}}" name="{{name}}" value="{{option.key}}" ng-model="value" class="form-checkbox" ng-disabled="element.disabled">&nbsp;<label class="option" for="{{id}}-{{option.key}}" ng-bind-html="option.val"></label>' +
+        '<div ng-show="element.select_all">' +          
+          '<input ng-model="selectAll" type="checkbox" class="form-checkbox" ng-disabled="element.disabled">' + 
+          '&nbsp;<label class="option bold">Select All</label>' +
+        '</div>' +
+        '<div class="form-item form-type-checkbox" ng-repeat="(val, option) in options">' +          
+          '<input ng-model="value" ng-checked="selectAll || (element.default_values.length > 0 && element.default_values.indexOf(option.key) !== -1)" ng-true-value="1" ng-false-value="0" type="checkbox" id="{{id}}-{{option.key}}" name="{{name}}" value="{{option.key}}" class="form-checkbox" ng-disabled="element.disabled">' + 
+          '&nbsp;<label class="option" for="{{id}}-{{option.key}}" ng-bind-html="option.val"></label>' +
         '</div>' +
       '</div> ',
       link: function (scope, elem, attr) {

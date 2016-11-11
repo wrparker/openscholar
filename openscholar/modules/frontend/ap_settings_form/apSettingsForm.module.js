@@ -113,6 +113,7 @@
                 '<div class="form-item" ng-repeat="(key, field) in elements | weight">' +
                   '<div form-element element="field" value="formData[key]"><span>placeholder</span></div>' +
                 '</div>' +
+                '<div class="help-link" ng-bind-html="help_link"></div>' +
               '</div>' +
             '</div>' +
             '<div class="form-wrapper" ng-if="columnCount == 1">' +
