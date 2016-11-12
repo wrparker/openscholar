@@ -59,6 +59,14 @@ body.not-front {
     font-size: 16px;
   
 }
+
+.research-by-topic .term-head a h1.node-title,
+.front-lop-papers h1.node-title,
+.front-lop-books h1.node-title {
+    font-size: 1em;
+}
+
+
 body,
 body.not-front,
 .node-presentation.node-teaser .date-display-single,
@@ -555,7 +563,6 @@ ul.nice-menu-down,
     opacity: 1;
 }
 .research-by-topic .term-head a {
-    font-size: 1em;
     margin-top: 20px;
     display: block;
 }
