@@ -745,8 +745,8 @@ function os_publications_alter_year_field(&$form, &$form_state) {
   // Adding date and month fields for publication day for Harvard - Chicago
   // Author citation.
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-    $form['field_biblio_pub_month']['und']['#options']['_none'] = 'Month';
-    $form['field_biblio_pub_day']['und']['#options']['_none'] = 'Day';
+    $form['field_biblio_pub_month']['und']['#options']['_none'] = t('Month');
+    $form['field_biblio_pub_day']['und']['#options']['_none'] = t('Day');
 
     $form['biblio_year_group']['year_selection'] = array(
       '#weight' => 24,
@@ -764,6 +764,7 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     // and fix additional attributes accordingly.
     unset($form['biblio_year_group']['year_selection']['field_biblio_pub_month']['und']['#title']);
     unset($form['biblio_year_group']['year_selection']['field_biblio_pub_day']['und']['#title']);
+    $form['biblio_year']['#attributes'] = array('placeholder' => t('Year'));
     $form['biblio_year_group']['year_selection']['biblio_year'] = $form['biblio_year'];
   }
   else {
