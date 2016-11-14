@@ -3510,8 +3510,9 @@ function vsite_redirect_hash_alter(&$hash, $redirect) {
   // Integrates with module `redirect`.
   // Prevents redirect_validate() from finding false duplicate paths.
   // @see redirect_hash()
-  if ($vsite = vsite_get_vsite()) {
-    $hash['gid'] = $vsite->id;
+  if (!empty($redirect->redirect_options['purl'])) {
+    $gid = $redirect->redirect_options['purl']['add'][0]['id'];
+    $hash['gid'] = $gid;
   }
 }
 
