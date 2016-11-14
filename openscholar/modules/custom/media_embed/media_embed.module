@@ -113,7 +113,12 @@ function media_embed_check_src($html) {
     }
 
     $whitelist = media_embed_get_whitelist();
-    dpm($whitelist);
+    array_walk($whitelist, function(&$domain) {
+      // Remove any http and www from the domain.
+      $domain = str_replace(array('https://www.', 'http://www.', 'www.'), '', $domain);
+    });
+    $whitelist = array_unique($whitelist);
+
     foreach ($urls as $url) {
       // If the URL is too bad, parse will be false.
       $domain = array();
@@ -133,10 +138,8 @@ function media_embed_check_src($html) {
         // www.cga.harvard.edu
         $host = explode('.', $parse);
         $host = array_reverse($host);
-        dpm($host, 'host');
         foreach ($host as $part) {
           array_unshift($domain, $part);
-//          dpm(implode('.', $domain), 'domain');
           if (in_array(implode('.', $domain), $whitelist)) {
             $this_pass = true;
             break;
