@@ -702,7 +702,7 @@ top: 0;
 
 
 /* RESPONSIVE CSS - UNTIL I CAN FIGURE OUT WHY GARYKING RESP CSS FILE WONT LOAD */
-@media (max-width: 1008px) {
+@media (max-width: 1024px) {
    #boxes-box-site_info h1 {
     font-size: 28px;
 }
@@ -711,7 +711,11 @@ top: 0;
   
     font-size: 16.3px;
 }
-
+ #menu-bar #block-os-primary-menu a.active,
+ #menu-bar #block-os-primary-menu a:hover,
+    #menu-bar #block-os-primary-menu a:focus {
+        background-color: #303030!important;
+    }
 
 
 
@@ -719,6 +723,15 @@ top: 0;
 /*--------------------------------------------------------*/
 
 @media (max-width: 768px) {
+#main-content-header,
+.research-by-topic li.term-applications,
+.research-by-topic li.term-methods,
+h1#page-title	{
+	width: 100%;
+}
+	
+	
+	
 #menu-bar {
     position: relative !important;
 
@@ -732,6 +745,21 @@ top: 0;
 	display:none !important;
 }
 
+.research-by-topic li.term-applications,
+.research-by-topic li.term-methods
+ {
+ 	background-size: 70px;
+    float: right;
+    
+    background: url('../images/icons/cogs.svg') 320px 0 no-repeat;
+}
+.research-by-topic li.term-methods
+ {
+ 
+    background: url('../images/icons/curve.svg?123') 203px 12px no-repeat;
+}
+
+#main-content-header,
 .front #columns {
  
     margin-top: 0;
@@ -744,6 +772,19 @@ top: 0;
 
 .sidebar {
     margin-top: 0;
+}
+
+.front .block-boxes-os_sv_list_box.front-top-featured {
+	    width: auto !important;
+}
+
+.front #content-panels .region-content-bottom {
+
+    background-size: auto;
+}
+
+.page-node- .breadcrumb {
+    top: 30px;
 }
 
 
