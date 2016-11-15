@@ -234,9 +234,18 @@ ul.nice-menu-down li ul li ul {
 #page-title,.node-title,.page-search .title a,#content-column .block.block-boxes-os_boxes_manual_list .links.inline a,.more-link,.page-search #content-column p,.links a,#footer ul.menu a,.boxes-box-content h2,.view-os-events .views-field-colorbox,.field-name-body h2,.field-name-body h3,.field-name-body h4 {
     font-family: Arial, Helvetica, sans-serif;
 }
-.not-front .field-name-body,#content-column p {
+.not-front .field-name-body,#content-column p,
+.cke_editable * {
     font-family: georgia;
 }
+
+.cke_editable h2,
+.cke_editable h3,
+.cke_editable h4 {
+	font-family: arial;
+}
+
+
 h1.node-title,.page-search .title a,.boxes-box-content h2 {
     font-weight: normal;
     font-size: 18px;
@@ -257,16 +266,16 @@ h1#page-title {
     margin: 0;
     padding: 15px 0 30px;
 }
-#tinymce h2,#tinymce h3,#tinymce h4,#content-column .field-name-body h2, #content-column .field-name-body h3, #content-column .field-name-body h4 {
+#content-column .field-name-body h2, #content-column .field-name-body h3, #content-column .field-name-body h4 {
     margin-bottom: 16px;
 }
-#tinymce h2,#content-column .field-name-body h2 {
+#content-column .field-name-body h2 {
     font-size: 1.7em;
 }
-#tinymce h3,#content-column .field-name-body h3 {
+#content-column .field-name-body h3 {
     font-size: 1.4em;
 }
-#tinymce h4,#content-column .field-name-body h4 {
+#content-column .field-name-body h4 {
     font-size: 1.2em;
 }
 .node-type-person #content-column .node-person h1.node-title {

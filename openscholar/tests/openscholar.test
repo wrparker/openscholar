@@ -249,3 +249,224 @@ class OSWebTestCase extends OSProfileTestCase {
     $this->assertTrue(TRUE);
   }
 }
+/**
+ *
+ */
+class OSMakeAbsoluteLinkTestCase extends DrupalWebTestCase {
+
+  public function getInfo() {
+    return array(
+      'name' => 'Test absolute-to-relative link convertor function',
+      'description' => 'Unit test make_absolute_link_link() function',
+      'group' => 'OpenScholar',
+    );
+  }
+
+  public function setUp() {
+    // $this->profile = 'openscholar';
+    parent::setUp();
+  }
+
+  public function testMakeAbsoluteLink() {
+
+    $vsite_names = array(null, "vsite_name");
+    $hostnames = array(null, "hostname");
+    $schemes = array(null, "http");
+    $urls = array(null,
+                  "foo",
+                  "/foo",
+                  "/foo/",
+                  "../foo/",
+                  "../../foo/",
+                  "/foo/..",
+                  "/foo/../bar",
+                  "/foo/../bar/",
+    );
+
+    foreach ($vsite_names as $vsite_name) {
+      foreach ($hostnames as $hostname) {
+        foreach ($schemes as $scheme) {
+          foreach ($urls as $url) {
+            $base = "$scheme://$hostname/$vsite_name";
+            $abs_url = _os_make_absolute_link($url);
+            print "url: $url, base:$base ==> $abs_url\n";
+          }
+        }
+      }
+    }
+
+    # test 1
+    $markup = '
+      Some content.
+
+      <a href="foo">A link</a>.
+
+      More content.
+
+      <a other-attribute="moo" href="http://www.foo.com/">A second link</a>.
+      <a other-attribute="boo" href="the-quick-brown-fox">A rel link</a>.
+
+      Yet more content.
+
+      <a href="javascript:do_not_touch();">A third link</a>.
+
+      The quick brown fox.
+
+      <a href="/foo">A link</a>.
+
+      - jumped over the lazy dog.
+
+      <a href="google.com/foo">A link</a>.
+
+      <p><a href="../../blog">../../blog</a></p>
+      <p><a href="../../blog/">../../blog/</a></p>
+      <p><a href="../blog">../blog</a></p>
+      <p><a href="../blog/">../blog/</a></p>
+      <p><a href="blog">blog</a></p>
+      <p><a href="blog/">blog/</a></p>
+      <p><a href="/blog">/blog</a></p>
+      <p><a href="/blog/">/blog/</a></p>
+      <p><a href="./blog">./blog</a></p>
+      <p><a href="./blog/">./blog/</a></p>
+      <p><a href="http://absolute.com">http://absolute.com</a></p>
+      <p><a href="ftp://absolute.com">ftp://absolute.com</a></p>
+      <p><a href="gopher://absolute.com">gopher://absolute.com</a></p>
+      <p><a href="torrent://absolute.com">torrent://absolute.com</a></p>
+
+
+      <p><a someOtherAttribute="what-if-there is junk here"  href="../../blog">../../blog</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="../../blog/">../../blog/</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="../blog">../blog</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="../blog/">../blog/</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="blog">blog</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="blog/">blog/</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="/blog">/blog</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="/blog/">/blog/</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="./blog">./blog</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="./blog/">./blog/</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="http://absolute.com">http://absolute.com</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="ftp://absolute.com">ftp://absolute.com</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="gopher://absolute.com">gopher://absolute.com</a></p>
+      <p><a someOtherAttribute="what-if-there is junk here"  href="torrent://absolute.com">torrent://absolute.com</a></p>
+    ';
+
+    # test 2
+    # $markup = '<a href="foo">A link</a>.';
+    # $ret = os_replace_relative_links_with_absolute_links($markup);
+    # print $ret;
+  }
+
+
+  public function testOsWysiwygLinkFilter() {
+
+    $vsite_names = array(null, "vsite_name");
+    $hostnames = array(null, "hostname");
+    $schemes = array(null, "http");
+
+    $data_urls = array(null,
+                  "foo",
+                  "/foo",
+                  "/foo/",
+                  "../foo/",
+                  "../../foo/",
+                  "/foo/..",
+                  "/foo/../bar",
+                  "/foo/../bar/",
+    );
+
+    # foreach ($vsite_names as $vsite_name) {
+    #   foreach ($hostnames as $hostname) {
+    #     foreach ($schemes as $scheme) {
+    #       foreach ($data_urls as $data_url) {
+    #         foreach ($data_urls as $href) {
+
+    #           $attr1 = "href=\"$href\"";
+    #           $attr2 = "data-url=\"$data_url\"";
+    #           $a = "<a $attr1 $attr2> some text <a $attr2 $attr1>";
+
+    #           $found_links = _os_wysiwyg_link_find_links($a);
+    #           print "\na: $a => found_links: " . var_export($found_links, true);
+    #         }
+    #       }
+    #     }
+    #   }
+    # }
+
+    # test 1
+    $markup = '
+      Some content.
+
+      <a href="foo">A link</a>.
+
+      More content.
+
+      <a other-attribute="moo" href="http://www.foo.com/">A second link</a>.
+      <a other-attribute="boo" href="the-quick-brown-fox">A rel link</a>.
+
+      Yet more content.
+
+      <a href="javascript:do_not_touch();">A third link</a>.
+
+      The quick brown fox.
+
+      <a href="/foo">A link</a>.
+
+      - jumped over the lazy dog.
+
+      <a href="google.com/foo">A link</a>.
+
+      <p><a href="../../blog">../../blog</a></p>
+      <p><a href="../../blog/">../../blog/</a></p>
+      <p><a href="../blog">../blog</a></p>
+      <p><a href="../blog/">../blog/</a></p>
+      <p><a href="blog">blog</a></p>
+      <p><a href="blog/">blog/</a></p>
+      <p><a href="/blog">/blog</a></p>
+      <p><a href="/blog/">/blog/</a></p>
+      <p><a href="./blog">./blog</a></p>
+      <p><a href="./blog/">./blog/</a></p>
+      <p><a href="http://absolute.com">http://absolute.com</a></p>
+      <p><a href="ftp://absolute.com">ftp://absolute.com</a></p>
+      <p><a href="gopher://absolute.com">gopher://absolute.com</a></p>
+      <p><a href="torrent://absolute.com">torrent://absolute.com</a></p>
+
+      <p><a href="../../blog" data-url="../../blog">../../blog</a></p>
+      <p><a href="../../blog/" data-url="../../blog/">../../blog/</a></p>
+      <p><a href="../blog" data-url="../blog">../blog</a></p>
+      <p><a href="../blog/" data-url="../blog/">../blog/</a></p>
+      <p><a href="blog" data-url="blog">blog</a></p>
+      <p><a href="blog/" data-url="blog/">blog/</a></p>
+      <p><a href="/blog" data-url="/blog">/blog</a></p>
+      <p><a href="/blog/" data-url="/blog/">/blog/</a></p>
+      <p><a href="./blog" data-url="./blog">./blog</a></p>
+      <p><a href="./blog/" data-url="./blog/">./blog/</a></p>
+      <p><a href="http://absolute.com" data-url="http://absolute.com">http://absolute.com</a></p>
+      <p><a href="ftp://absolute.com" data-url="ftp://absolute.com">ftp://absolute.com</a></p>
+      <p><a href="gopher://absolute.com" data-url="gopher://absolute.com">gopher://absolute.com</a></p>
+      <p><a href="torrent://absolute.com" data-url="torrent://absolute.com">torrent://absolute.com</a></p>
+
+
+      <p><a href="../../blog" data-fid="../../blog">../../blog</a></p>
+      <p><a href="../../blog/" data-fid="../../blog/">../../blog/</a></p>
+      <p><a href="../blog" data-fid="../blog">../blog</a></p>
+      <p><a href="../blog/" data-fid="../blog/">../blog/</a></p>
+      <p><a href="blog" data-fid="blog">blog</a></p>
+      <p><a href="blog/" data-fid="blog/">blog/</a></p>
+      <p><a href="/blog" data-fid="/blog">/blog</a></p>
+      <p><a href="/blog/" data-fid="/blog/">/blog/</a></p>
+      <p><a href="./blog" data-fid="./blog">./blog</a></p>
+      <p><a href="./blog/" data-fid="./blog/">./blog/</a></p>
+      <p><a href="http://absolute.com" data-fid="http://absolute.com">http://absolute.com</a></p>
+      <p><a href="ftp://absolute.com" data-fid="ftp://absolute.com">ftp://absolute.com</a></p>
+      <p><a href="gopher://absolute.com" data-fid="gopher://absolute.com">gopher://absolute.com</a></p>
+      <p><a href="torrent://absolute.com" data-fid="torrent://absolute.com">torrent://absolute.com</a></p>
+    ';
+
+    # test 2
+    # $markup = '<a href="foo">A link</a>.';
+
+    $ret = os_wysiwyg_link_filter($markup);
+
+    print $ret;
+  }
+}
