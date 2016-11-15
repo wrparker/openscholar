@@ -6,7 +6,68 @@
     $depProvider.AddDependency('formElement', 'redirectForm');
   }]);
 
-  m.directive('redirects', ['$http', 'buttonSpinnerStatus', function($http, bss) {
+  m.service('RedirectService', ['$http', 'buttonSpinnerStatus', function ($http, bss) {
+    var redirects = {};
+
+    var restApi = Drupal.settings.paths.api + '/redirect/';
+    var http_config = {
+      params: {}
+    };
+
+    if (typeof Drupal.settings.spaces != 'undefined' && Drupal.settings.spaces.id) {
+      http_config.params.vsite = Drupal.settings.spaces.id;
+    }
+
+    this.Get = function () {
+      return redirects;
+    }
+
+    this.Register = function (existing) {
+      for (var i in existing) {
+        var id = existing[i].id;
+        if (typeof redirects[id] == 'undefined') {
+          this.Count++;
+        }
+        redirects[id] = existing[i];
+      }
+    }
+
+    this.Create = function (source, target) {
+      var vals = {
+        path: source,
+        target: target
+      };
+
+      return $http.post(restApi, vals, http_config).then(function (r) {
+        var newRedirect = r.data.data;
+        redirects[r.id] = newRedirect;
+        this.Count++;
+        return r;
+       },
+       function (e) {
+
+       });
+    }
+
+    this.Delete = function (id) {
+      bss.SetState('redirect_delete_'+id, true);
+      $http.delete(restApi+'/'+id, http_config).then(function (r) {
+        if (typeof redirects[id] != 'undefined') {
+          delete redirects[id];
+          this.Count--;
+          bss.SetState('redirect_delete_'+id, false);
+        }
+      },
+      function (e) {
+        bss.SetState('redirect_delete_'+id, false);
+      });
+    }
+
+    this.Count = 0;
+  }]);
+
+  m.directive('redirects', ['$http', 'RedirectService', 'buttonSpinnerStatus', function($http, rs, bss) {
+    var hasRegistered = false;
     return {
       template: '<p>URL redirects allow you to send users from a URL on your site, to any other URL. You might want to use this to create a short link, or to transition users from an old URL to the new URL. Each site may only have a maximum of 15 of URL redirects.</p>' +
       '<ul class="table-list">' +
@@ -27,7 +88,7 @@
       link: function (scope, elem, attr) {
         var showAddLink = false;
         scope.showAddLink = function() {
-          return showAddLink;
+          return cp_redirect_max > rs.Count;
         }
 
         scope.showAddForm = false;
@@ -39,59 +100,33 @@
         scope.siteBaseUrl = Drupal.settings.paths.vsite_home;
 
         var cp_redirect_max = scope.element.maximum_value_count;
-        scope.$watch('redirects', function (val) {
-          var count = val.length || 0;
-          if (count < cp_redirect_max) {
-            showAddLink = true;
-          }
-          else {
-            showAddLink = false;
-          }
-        }, true);
-        scope.redirects = scope.element.value || [];
-
-        var restApi = Drupal.settings.paths.api + '/redirect/';
-        var http_config = {
-          params: {}
-        };
-
-        if (typeof Drupal.settings.spaces != 'undefined' && Drupal.settings.spaces.id) {
-          http_config.params.vsite = Drupal.settings.spaces.id;
+        //scope.$watch('redirects', function (val) {
+        //  var count = val.length || 0;
+        //  if (count < cp_redirect_max) {
+        //    showAddLink = true;
+        //  }
+        //  else {
+        //    showAddLink = false;
+        //  }
+        //}, true);
+        if (!hasRegistered) {
+          rs.Register(scope.element.value);
+          hasRegistered = true;
         }
+        scope.redirects = rs.Get();
 
         scope.newRedirectPath = '';
         scope.newRedirectTarget = '';
         scope.addRedirect = function () {
-          var vals = {
-            path: scope.newRedirectPath,
-            target: scope.newRedirectTarget
-          };
-
-          $http.post(restApi, vals, http_config).then(function (r) {
-            scope.redirects.push(r.data.data);
+          rs.Create(scope.newRedirectPath, scope.newRedirectTarget).then(function (r) {
             scope.newRedirectPath = '';
-            scope.newRedirectTarget= '';
+            scope.newRedirectTarget = '';
             scope.showAddForm = false;
-          },
-          function (e) {
-
           });
         }
 
         scope.deleteRedirect = function (id) {
-          bss.SetState('redirect_delete_'+id, true);
-          $http.delete(restApi+'/'+id, http_config).then(function (r) {
-              for (var i = 0; i < scope.redirects.length; i++) {
-                if (scope.redirects[i].id == id) {
-                  scope.redirects.splice(i, 1);
-                  bss.SetState('redirect_delete_'+id, false);
-                  break;
-                }
-              }
-          },
-          function (e) {
-            bss.SetState('redirect_delete_'+id, false);
-          });
+          rs.Delete(id);
         }
       }
     };
