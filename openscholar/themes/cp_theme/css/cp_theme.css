@@ -181,7 +181,7 @@ a.form-cancel {
   height: 1.80em;
 }
 .spinner {
-    display: inline-block;
+ display: inline-block;
     float: left;
     margin-right:6px;
     font-size: 7px;
@@ -189,8 +189,8 @@ a.form-cancel {
     text-indent: -9999em;
     border-top: .5em solid rgba(136, 136, 136, 1);
     border-right: .5em solid rgba(136, 136, 136, 1);
-    border-bottom: .5em solid rgba(255, 255, 255, 1);
-    border-left: .5em solid #ffffff;
+    border-bottom: .5em solid transparent;
+    border-left: .5em solid transparent;
     -webkit-transform: translateZ(0);
     -ms-transform: translateZ(0);
     transform: translateZ(0);
