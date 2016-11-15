@@ -721,7 +721,7 @@ class FeatureContext extends DrupalContext {
 
 
     // make sure no support user has subscribed to a site after a scenario is over
-    $original = variable_get('vsite_support_expire');
+    $original = variable_get('vsite_support_expire', '3 days');
     variable_set('vsite_support_expire', '1 sec');
     vsite_cron();
     variable_set('vsite_support_expire', $original);

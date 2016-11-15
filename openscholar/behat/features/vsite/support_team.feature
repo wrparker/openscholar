@@ -3,7 +3,7 @@ Feature:
   that creates an expirable membership.
 
   @api @vsite @javascript
-  Scenario: Test subscribe for user with permission
+  Scenario: Test supporting a site, that the subscription stays after cron, and that cron can clear it
     Given I am logging in as "bill"
     When I visit "obama"
     And I open the user menu
@@ -13,19 +13,10 @@ Feature:
     And the overlay closes
     And I open the user menu
     Then I should see "Un-Subscribe from site"
-
-  @api @vsite @javascript
-  Scenario: Test user is still member after cron runs
-    Given I am logging in as "bill"
-    When I visit "obama"
     And I execute vsite cron
+    And I visit "obama"
     And I open the user menu
     Then I should not see "Support this site"
-
-  @api @vsite @javascript
-  Scenario: Test expiring membership on cron, of an existing member
-    Given I am logging in as "bill"
-    When I visit "obama"
     And I set the variable "vsite_support_expire" to "1 sec"
     And I execute vsite cron
     And I visit "obama"
