@@ -2021,7 +2021,7 @@ class FeatureContext extends DrupalContext {
     return array(
       new Step\When('I visit "' . $group . '"'),
       new Step\When('I make sure admin panel is open'),
-      new Step\When('I click on the "Settings" control'),
+      new Step\When('I open the admin panel to "Settings"'),
       new Step\When('I sleep for "1"'),
       new Step\When('I click "Enable Apps"'),
       new Step\When('I select "' . $status . '" from "' . $feature . '"'),
@@ -3329,7 +3329,7 @@ class FeatureContext extends DrupalContext {
     $output = $this->adminPanelOpen();
     $page = $this->getSession()->getPage();
 
-    $elem = $page->find('xpath', "//li[@admin-panel-menu-row]//*[text() = '{$text}']");
+    $elem = $page->find('xpath', "//*[text() = '{$text}']/ancestor::li[@admin-panel-menu-row]");
     if (!$elem) {
       throw new \Exception("The link $text cannot be found in the admin panel.");
     }
