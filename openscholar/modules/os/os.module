@@ -768,6 +768,7 @@ function _os_process_node_links_comment_add_class(&$vars) {
  */
 function os_preprocess_page(&$vars) {
   global $user;
+
   // Session timeout checking will be only for logged in users.
   if ($user->uid) {
     // Obtaining session lifetime value from php configuration.
