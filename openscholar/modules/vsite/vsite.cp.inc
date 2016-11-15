@@ -91,7 +91,7 @@ function vsite_cp_settings() {
         'extensions' => array('ico'),
         'types' => array('icon'),
       ),
-      '#title' => t('Upload Favicon'),
+      '#title' => t('Favicon'),
       '#description' => t('A 16x16 .ico file to be displayed in browser shortcut icons and tabs for any page on your site. For help generating a favicon file, try <a href="http://www.favicon.cc/" target="_blank">http://www.favicon.cc/</a>.'),
       '#default_value' => variable_get('site_favicon_fid', ''),
       '#upload_location' => $purl ? "public://{$purl}/files" : "public://",
@@ -102,11 +102,11 @@ function vsite_cp_settings() {
     ),
     'group' => array(
       '#id' => 'Favicon',
-      '#title' => t('Upload Favicon'),
+      '#title' => t('Favicon'),
       '#weight' => 30,
       '#menu_parent' => 'appearance',
       '#description' => t('A favicon is a 16x16 .ico file to be displayed in browser shortcut iocns and tabs for any page on your site. For help generatiing a favison, try <a href="http://www.favicon.cc/">http://www.favicon.cc/</a>.'),
-      '#help_link' => l(t('Learn more about favicon'), 'http://docs.openscholar.harvard.edu/global-site-settings#favicon', array('attributes' => array('target' => '_blank')))
+      '#help_link' => l(t('Learn more about favicon'), 'http://docs.openscholar.harvard.edu/adding-site-favicon', array('attributes' => array('target' => '_blank')))
     ),
     'submit' => 'vsite_cp_settings_form_submit',
   );
