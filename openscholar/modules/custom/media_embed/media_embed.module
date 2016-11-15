@@ -118,8 +118,6 @@ function media_embed_check_src($html) {
       // If the URL is too bad, parse will be false.
       $domain = array();
       $this_pass = false;
-      // handle protocol-relative urls, since PHP doesn't
-      // http://en.wikipedia.org/wiki/Uniform_resource_locator#Protocol-relative_URLs
 
       if ($parse = parse_url($url, PHP_URL_HOST)) {
         // construct the domain backwards and check it
