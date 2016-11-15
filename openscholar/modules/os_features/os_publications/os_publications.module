@@ -1658,27 +1658,26 @@ function os_publications_cp_settings() {
     return $settings;
   }
 
+  $cite_example_output = '';
   $style = module_exists('biblio_citeproc') ? 'biblio_citeproc_style' : 'biblio_style';
 
   // Attach extra HTML to the citation array to allow for a popup box that will display an example of the citation format.
   $biblio_styles = biblio_get_styles();
-  /*if(isset($biblio_styles) && is_array($biblio_styles)) {
+  module_load_include('inc', 'os_publications', 'os_publications.pages');
+  if(isset($biblio_styles) && is_array($biblio_styles)) {
     $biblio_styles_hover = array();
     $counter = 0;
     foreach($biblio_styles as $styles => $name) {
       $counter ++;
-      // Setup the new citation options to be wrapped for a popup.
-     // $cite_example_link = '<a href="#" class="cite-pop" data-popbox="pop'.$counter.'">' . t('@link_name', array('@link_name' => $name)) . '</a>';
       // Setup the h2.
-     // $cite_example_title = '<h2>' . t('@csl_title', array('@csl_title' => $name)) . '</h2>';
+      $cite_example_title = '<h2>' . t('@csl_title', array('@csl_title' => $name)) . '</h2>';
       // Setup the citation exmaple for the popup.
-      //$citation_example = _os_publications_build_citation_example($styles); //'test text';
-     // $cite_example_text = '<p>' . t('!cite_text', array('!cite_text' => $citation_example)) . '</p>';
+      $citation_example = _os_publications_build_citation_example($styles); //'test text';
+      $cite_example_text = '<p>' . t('!cite_text', array('!cite_text' => $citation_example)) . '</p>';
       // Concat it all together.
-      //$cite_example_output = $cite_example_link . '<div id="pop'.$counter.'" class="citebox">' . $cite_example_title . $cite_example_text . '</div>';
-      $biblio_styles_hover[$styles] = $name;
+      $cite_example_output .= '<div id="pop-' . $styles . '" class="citebox">' . $cite_example_title . $cite_example_text . '</div>';
     }
-  }*/
+  }
 
   // Radio button set for Preferred bibliographic format
   $settings[$style] = array(
@@ -1695,6 +1694,22 @@ function os_publications_cp_settings() {
       '#options' => $biblio_styles,
       '#weight' => -1,
       '#prefix' => '<label>Preferred bibliographic format</label>',
+    ),
+  );
+
+  // Citation Examples
+  $settings['os_publications_citation_examples'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'markup',
+      '#weight' => 0,
+      '#markup' => $cite_example_output
     ),
   );
 
@@ -1865,10 +1880,6 @@ function os_publications_cp_settings() {
       '#description' => t('Each selected format will appear in its own export link.'),
     ),
   );
-
-  
-  //print_r(variable_get('biblio_export_links'));
-  //print_r(array('tagged' => TRUE, 'xml' => TRUE, 'bibtex'  => TRUE));
 
   return $settings;
 }
