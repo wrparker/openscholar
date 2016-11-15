@@ -1703,10 +1703,7 @@ function os_publications_cp_settings() {
   $result = db_query('SELECT t.* FROM {biblio_types} as t WHERE tid > -1 AND visible = 1 ORDER BY t.name ASC');
 
   foreach ($result as $option) {
-    $publication_types_options[] = array(
-      'key' => $option->tid,
-      'val' => $option->name
-    );
+    $publication_types_options[$option->tid] = $option->name;
   }
 
   // Rendering Label and description above publication type checkbox set. This text will span accross 3 columns.
@@ -1738,7 +1735,7 @@ function os_publications_cp_settings() {
     'form' => array(
       '#type' => 'checkboxes',
       '#select_all' => TRUE,
-      '#default_values' => variable_get('os_publications_filter_publication_types', array()),
+      '#default_value' => variable_get('os_publications_filter_publication_types', array()),
       '#options' => $publication_types_options,
       '#weight' => 0
     ),
@@ -1806,7 +1803,7 @@ function os_publications_cp_settings() {
     $autoflags_options = array();
     foreach (_citation_distribute_plugins() as $plugin) {
       if (isset($plugin['title']) && _citation_distribute_is_service_configured($plugin)) {
-        $autoflags_options[] = array('key' => $plugin['class'], 'val' => $plugin['title']);
+        $autoflags_options[$plugin['class']] = $plugin['title'];
       }
     }
 
@@ -1820,7 +1817,7 @@ function os_publications_cp_settings() {
       ),
       'form' => array(
         '#type' => 'checkboxes',
-        '#default_values' => variable_get('citation_distribute_autoflags', array()),
+        '#default_value' => variable_get('citation_distribute_autoflags', array()),
         '#description' => t('New publications will automatically be flagged for distribution to the selected services.'),
         '#weight' => 0,
         '#options' => $autoflags_options,
@@ -1860,28 +1857,18 @@ function os_publications_cp_settings() {
     ),
     'form' => array(
       '#type' => 'checkboxes',
-      '#default_values' => variable_get('biblio_export_links', array('tagged', 'xml', 'bibtex')),
-      '#options' => array(
-        array('key' => 'tagged', 'val' => t('EndNote Tagged')),
-        array('key' => 'xml', 'val' => t('EndNote XML')),
-        array('key' => 'bibtex', 'val' => t('BibTex')),
-      ),
+      '#default_value' => variable_get('biblio_export_links', array('tagged' => TRUE, 'xml' => TRUE, 'bibtex'  => TRUE)),
+      '#options' => array('tagged' => 'EndNote Tagged', 'xml' => 'EndNote XML', 'bibtex' => 'BibTex'),        
       '#weight' => 2,
       '#column' => 'right',
       '#prefix' => '<label>Export Formats</label>',
       '#description' => t('Each selected format will appear in its own export link.'),
     ),
-    //'rest_submit' => 'os_publications_rest_cp_settings_submit',    
   );
 
-  return $settings;
-}
+  
+  //print_r(variable_get('biblio_export_links'));
+  //print_r(array('tagged' => TRUE, 'xml' => TRUE, 'bibtex'  => TRUE));
 
-// REST form submit handler for publication settings page in AngularJS
-function os_publications_rest_cp_settings_submit($value, $var) {
-  print_r($_POST);
-  print_r($value);
-  print_r($var);
-  //exit();
-  //print_r($value);
+  return $settings;
 }

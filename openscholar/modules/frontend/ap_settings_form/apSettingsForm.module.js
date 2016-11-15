@@ -201,6 +201,7 @@
 
       if ($s.settingsForm.$dirty || triggered) {
         bss.SetState('settings_form', true);
+
         apSettings.SaveSettings($s.formData).then(function (response) {
           var body = response.data;
           sessionStorage['messages'] = JSON.stringify(body.data.messages);

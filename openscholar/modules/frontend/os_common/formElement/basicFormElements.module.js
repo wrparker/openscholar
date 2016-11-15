@@ -42,9 +42,9 @@
           '<input ng-model="selectAll" type="checkbox" class="form-checkbox" ng-disabled="element.disabled">' + 
           '&nbsp;<label class="option bold">Select All</label>' +
         '</div>' +
-        '<div class="form-item form-type-checkbox" ng-repeat="(val, option) in options">' +          
-          '<input ng-model="value" ng-checked="selectAll || (element.default_values.length > 0 && element.default_values.indexOf(option.key) !== -1)" ng-true-value="1" ng-false-value="0" type="checkbox" id="{{id}}-{{option.key}}" name="{{name}}" value="{{option.key}}" class="form-checkbox" ng-disabled="element.disabled">' + 
-          '&nbsp;<label class="option" for="{{id}}-{{option.key}}" ng-bind-html="option.val"></label>' +
+        '<div class="form-item form-type-checkbox" ng-repeat="(val, label) in options">' +          
+          '<input ng-model="value[val]" ng-checked="selectAll || value[val]" type="checkbox" id="{{id}}-{{val}}" name="{{name}}" value="{{val}}" class="form-checkbox" ng-disabled="element.disabled">' + 
+          '&nbsp;<label class="option" for="{{id}}-{{val}}" ng-bind-html="label"></label>' +
         '</div>' +
       '</div> ',
       link: function (scope, elem, attr) {
