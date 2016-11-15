@@ -52,9 +52,14 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
   }
 
   public function processForms($form) {
+    $access = spaces_access_admin();
     foreach ($form as $var => &$elem) {
       if (!isset($elem['form']['#id'])) {
         $elem['form']['#id'] = drupal_html_id('edit-' . $var);
+      }
+
+      if (!isset($elem['form']['#access'])) {
+        $elem['form']['#access'] = $access;
       }
       if (!empty($elem['form']['#states'])) {
         drupal_process_states($elem['form']);
@@ -69,6 +74,9 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
       $forms = cp_get_setting_forms();
 
       $valid = array();
+
+      // output back to the angular app
+      $flags = array();
 
       foreach ($this->request as $var => $value) {
         if (!isset($forms[$var])) continue;
@@ -99,7 +107,9 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
           }
           elseif (!empty($forms[$var]['rest_trigger']) && is_callable($forms[$var]['rest_trigger'])) {
             if ($value) {
-              $forms[$var]['rest_trigger']();
+              if ($f = $forms[$var]['rest_trigger']()) {
+                $flags = array_merge($flags, $f);
+              };
             }
           }
           else {
@@ -110,22 +120,30 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
             if (is_array($forms[$var]['rest_after_submit']) && !is_callable($forms[$var]['rest_after_submit'])) {
               foreach ($forms[$var]['rest_after_submit'] as $func) {
                 if (is_callable($func)) {
-                  $func($value, $var);
+                  if ($f = $func($value, $var)) {
+                    $flags = array_merge($flags, $f);
+                  }
                 }
               }
             }
             elseif (is_callable($forms[$var]['rest_after_submit'])) {
-              $forms[$var]['rest_after_submit']($value, $var);
+              if ($f = $forms[$var]['rest_after_submit']($value, $var)) {
+                $flags = array_merge($flags, $f);
+              }
             }
           }
         }
         else {
           // something about an error?
           watchdog("REST", "The value \"$value\" is not valid for \"$var\".");
+          $flags[] = array(
+            'type' => 'validation',
+            'var' => $var,
+          );
         }
       }
 
-      return array();
+      return $flags;
     }
 
     throw new RestfulForbiddenException("Vsite ID is required.");

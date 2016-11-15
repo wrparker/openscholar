@@ -18,9 +18,6 @@ body,
 #content-column h2,
 #content-column h3,
 #content-column h4,
-#tinymce h2,
-#tinymce h3,
-#tinymce h4,
 .block-boxes-os_boxes_facetapi_vocabulary.navigation,
 .block-boxes-os_taxonomy_fbt.navigation,
 #footer ul.menu li ul li a,
@@ -32,7 +29,8 @@ h2.block-title,
 .region-header-third ul.nice-menu a,
 #boxes-box-site_info,
 #boxes-box-site_info a,
-#menu-bar ul.nice-menu a {
+#menu-bar ul.nice-menu a,
+.cke_editable * {
     font-family: 'Source Sans Pro', sans-serif, Georgia, serif !important;
 }
 .biblio-title a,
