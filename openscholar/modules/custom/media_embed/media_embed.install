@@ -71,7 +71,7 @@ function media_embed_update_7002(&$sandbox) {
 /**
  * Fix the white list embedded domains list.
  */
-function media_embed_update_7005() {
+function media_embed_update_7003() {
   // Clear all the http:// and https:// form the list of domains.
   $domains = variable_get('media_embed_whitelist');
   array_walk($domains, function(&$domain) {
