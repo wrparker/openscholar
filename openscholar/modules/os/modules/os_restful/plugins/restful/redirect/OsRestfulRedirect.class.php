@@ -19,6 +19,8 @@ class OsRestfulRedirect extends \RestfulBase implements \RestfulDataProviderInte
     ));
 
     if (!empty($_GET['vsite']) && $vsite = vsite_get_vsite($_GET['vsite'])) {
+      // force verify_purl to be run
+      $vsite->get_absolute_url();
       $redirect->redirect_options['purl'] = array(
         'add' => array(
           0 => array(

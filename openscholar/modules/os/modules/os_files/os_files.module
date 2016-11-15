@@ -1543,8 +1543,8 @@ function os_files_preprocess_node(&$vars) {
     return;
   }
 
-  preg_match_all('`<span alt="([^"]+)" title="[^"]+">(<iframe [^>]+></iframe>)`', $body, $trim_match, PREG_SET_ORDER);
-  preg_match_all('`<span alt="([^"]+)" title="[^"]+">(<iframe [^>]+></iframe>)`', $original, $orig_match, PREG_SET_ORDER);
+  preg_match_all('`<span(?: style="[^"]+")? alt="([^"]+)" title="[^"]+">(<iframe [^>]+></iframe>)`', $body, $trim_match, PREG_SET_ORDER);
+  preg_match_all('`<span(?: style="[^"]+")? alt="([^"]+)" title="[^"]+">(<iframe [^>]+></iframe>)`', $original, $orig_match, PREG_SET_ORDER);
 
   foreach ($trim_match as $m) {
     foreach ($orig_match as $om) {
@@ -1646,6 +1646,11 @@ function os_files_file_view($file, $view_mode, $langcode) {
     );
   }
 
+  if ($view_mode == 'teaser' && $file->filemime == 'video/oembed' && $file->os_file_description['und'][0]['value'] == '') {
+    // Remove file description field if it has an empty string to stop showing Read more link for embedded videos
+    unset($file->os_file_description);
+  }
+
   //teasers get read more link
   if ($view_mode == 'teaser' && $file->os_file_description) {
     $readmore = array(
@@ -1744,6 +1749,12 @@ function os_files_file_view($file, $view_mode, $langcode) {
     }
   }
 
+  if (!@$file->sv_list && $file->filemime == 'video/oembed' && $view_mode == 'teaser') {
+    // Changing display for the embedded videos in teaser view like sv_list
+    $content = array_merge(array('video_thumb' => _os_files_video_thumb($file)), $content);
+    $content['video_thumb']['#prefix'] = '<div class="list-view-teaser">' . $content['video_thumb']['#prefix'];
+    $content['video_thumb']['#suffix'] .= '</div>';
+  }
   $file->content['file'] = $content;
 }
 
@@ -2690,5 +2701,112 @@ function _os_file_invalidate_cache($file) {
   $nids = array_keys($result['node']);
   foreach ($nids as $nid) {
     cache_clear_all($nid, 'cache_entity_node');
+  }
+}
+
+function os_files_views_bulk_operations_form_alter(&$form, &$form_state, $vbo) {
+  if((strpos($_GET['q'], 'cp/content/files') !== FALSE || strpos($_GET['q'], 'cp/content/files-private') !== FALSE)  && ($_POST['operation'] == 'action::views_bulk_operations_delete_item')){
+    $form['actions']['submit']['#submit'][0] = 'os_files_bulk_delete_remove_reference';
+    $form['actions']['submit']['#submit'][1] = 'views_bulk_operations_form_submit';
+  }
+}
+
+/**
+ * When deleting a field through the CP files form we need to remove the
+ * reference for the files.
+ */
+function os_files_bulk_delete_remove_reference($form, $form_state) {
+
+  $submits = array_diff($form['actions']['submit']['#submit'], array('os_files_bulk_delete_remove_reference'));
+  if (isset($form_state['select_all_pages']) && $form_state['select_all_pages'] == 1) {
+    // If all files are selected
+    $all = views_get_view($form_state['build_info']['args'][0]->name);
+    $all->display['default']->display_options['pager'] = array(
+      'type' => 'none',
+      'options' => array(
+        'offset' => 0,
+      ),
+    );
+    $all->set_display('all_pager_display');
+    $all->display[$all->current_display]->display_options['pager'] = array(
+      'type' => 'none',
+      'options' => array(
+        'offset' => 0,
+      ),
+    );
+    $all->pre_execute();
+    $all->execute();
+    $fids = array();
+    foreach ($all->result as $result) {
+      $fids[] = (int) $result->fid;
+    }
+    $files = file_load_multiple($fids);
+  } else {
+    $files = file_load_multiple($form_state['selection']);
+  }
+
+  foreach ($files as $file) {
+    $usage = file_usage_list($file);
+    $fields = array(
+      'file',
+      'imagefield_crop',
+      'media',
+    );
+    $file_usage = array();
+    foreach ($usage as $module => $types) {
+      if (in_array($module, $fields)) {
+        foreach ($types['node'] as $id => $count) {
+          $file_usage[] = $id;
+        }
+      }
+    }
+
+    foreach (array_chunk($file_usage, 10) as $chunk) {
+      $operations[] = array('_os_files_delete_remove_reference_batch', array($chunk, $file));
+    }
+  }
+  if (count($operations) > 0) {
+    foreach ($submits as $f) {
+      if (function_exists($f)) {
+        $operations[] = array($f, array($form, $form_state));
+      }
+    }
+    $batch = array(
+      'operations' => $operations,
+      'finished' => 'os_files_delete_remove_reference_finished',
+      'title' => t('Removing the file references'),
+      'init_message' => t('The references removed procedure has started.'),
+      'progress_message' => t('Processed @current out of @total.'),
+      'error_message' => t('Example Batch has encountered an error.'),
+      'file' => drupal_get_path('module', 'file_entity').'/file_entity.pages.inc',
+    );
+    batch_set($batch);
+  }
+}
+
+/**
+ * Implements hook_file_delete().
+ */
+function os_files_file_delete($file) {
+  _os_file_invalidate_cache($file);
+}
+
+/**
+ * Implements hook_file_view_alter().
+ */
+function os_files_file_view_alter(&$build, $type) {
+  if ($build['#bundle'] == 'video' && in_array($build['#view_mode'], array('os_files_link', 'os_files_link_icon'))) {
+    $build['file']['link']['#path'] = 'file/' . $build['#file']->fid;
+  } else if (($build['#bundle'] == 'video' && in_array($build['#view_mode'], array('full', 'teaser')) ||
+             ($build['#bundle'] == 'html' && $build['#view_mode'] == 'teaser'))) {
+    $build['file']['link'] = array(
+      '#theme' => 'link',
+      '#href' => 'file/' . $build['#file']->fid,
+      '#path' => 'file/' . $build['#file']->fid,
+      '#text' => $build['#file']->media_title[LANGUAGE_NONE][0]['value'],
+      '#prefix' => '<div>',
+      '#suffix' => '</div>',
+      '#options' => array('html' => TRUE, 'attributes' => array())
+    );
   }
 }

@@ -44,17 +44,16 @@ margin-top: 12px;
 #content-column h2,
 #content-column h3,
 #content-column h4,
-#tinymce h2,
-#tinymce h3,
-#tinymce h4 {
+.cke_editable h2,
+.cke_editable h3,
+.cke_editable h4 {
 	font-family: Georgia, Baskerville, Palatino, 'Palatino Linotype', 'Book Antiqua', 'Times New Roman', serif;
 }
 
-#tinymce h2,
-#tinymce h3,
-#tinymce h4 {
-	 font-weight:normal;
+.cke_editable *  {
+	font-family: arial;
 }
+
 
 /*SECTION NAV OVERRIDES*/
 .section-nav a {
@@ -97,10 +96,9 @@ h1.node-title,
 
 	margin-bottom: 0;
 }
-
-#tinymce h2,
-#tinymce h3,
-#tinymce h4,
+.cke_editable h2,
+.cke_editable h3,
+.cke_editable h4,
 #content-column .field-name-body h2,
 #content-column .field-name-body h3,
 #content-column .field-name-body h4 {
@@ -109,17 +107,17 @@ h1.node-title,
 }
 
 
-#tinymce h2,
+
 #content-column .field-name-body h2 {
 	font-size: 25px;
 }
 
-#tinymce h3,
+
 #content-column .field-name-body h3 {
 	font-size: 22px;
 }
 
-#tinymce h4,
+
 #content-column .field-name-body h4 {
 	font-size: 19px;
 }

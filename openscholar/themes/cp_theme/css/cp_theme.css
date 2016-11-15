@@ -1,4 +1,5 @@
-body {
+body,
+.ui-dialog * {
     font-family: helvetica, arial, sans-serif;
 }
 #page {
@@ -15,7 +16,10 @@ body {
     background-color: #FFF;
 }
 /* GENERAL CP STYLES */
-
+.form-item {padding:0;}
+.page-cp .form-item {
+    padding: 2px 0;
+}
 .ui-widget-content a,
 a {
     color: #215990;
@@ -58,6 +62,7 @@ textarea,
     padding: 6px 7px;
     background: url('../../os_basetheme/images/form-input-bg.gif') repeat-x scroll left top #FFFFFF;
     border: 1px solid #CDCDCD;
+    width:98%;
 }
 #og-vocabulary-add-more-wrapper select.form-select {
     height: 120px;
@@ -81,13 +86,14 @@ html.js input.throbbing {
     background: url("../images/cp-sprite.png") no-repeat 0 -170px;
 }
 .help-link.ng-binding {
-       position: absolute;
-    bottom: 7px;
+  position: absolute;
+    bottom: 20px;
     right: 10px;
     padding: 2px 25px 2px 0;
-    background: url(../images/cp-sprite.png) no-repeat right -618px;
+    background: url(../images/cp-sprite.png) no-repeat right -638px;
     background-size: 21px 700px;
     font-size: .97em;
+
 }
     
 
@@ -139,13 +145,15 @@ html.js input.throbbing {
     color: #FFF;
     font-weight: bold;
 }
+input.form-submit, 
+a.button,
 .ui-dialog button,
 .ui-dialog input[type="button"],
 .ui-dialog input[type="submit"],
 a#edit-cancel,
 a.form-cancel {
     cursor: pointer;
-    padding: 5px 17px;
+    padding: 5px 12px;
     margin-bottom: 1em;
     margin-right: 1em;
     /* LTR */
@@ -160,10 +168,56 @@ a.form-cancel {
     border-left-color: #d2d2d2;
     border-right-color: #d2d2d2;
     background: url('/themes/seven/images/buttons.png') 0 0 repeat-x;
-    -moz-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    border-radius: 20px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
 }
+
+/* SAVE BUTTON SPINNER */
+.spinner,
+.spinner:after {
+  border-radius: 50%;
+  width: 1.80em;
+  height: 1.80em;
+}
+.spinner {
+ display: inline-block;
+    float: left;
+    margin-right:6px;
+    font-size: 7px;
+    position: relative;
+    text-indent: -9999em;
+    border-top: .5em solid rgba(136, 136, 136, 1);
+    border-right: .5em solid rgba(136, 136, 136, 1);
+    border-bottom: .5em solid transparent;
+    border-left: .5em solid transparent;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: load8 .750s infinite linear;
+    animation: load8 .750s infinite linear;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
 a.form-cancel:hover {
     text-decoration: none;
 }
@@ -172,6 +226,7 @@ a.form-cancel:hover {
 .form-actions #edit-delete--2 {
     display: inline-block;
 }
+.page-cp .form-item span label,
 .redirect-delete,
 .form-actions .os-delete-link {
 
@@ -311,6 +366,9 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     font-size: 24px;
     font-weight: normal;
 }
+.page-cp .ui-dialog-titlebar {
+    margin-bottom: 22px;
+}
 .ui-dialog {
     padding: 0;
     top:10% !important;
@@ -399,7 +457,7 @@ table th label {
 }
 /* CP/BUILD MENU */
 #redirects .actions,
-#os-maintenanc .actions,
+#os-maintenance .actions,
 .page-cp-build-menu table thead {
     display: none;
 }
@@ -633,6 +691,7 @@ table.biblio-contributors tr:first-child input.form-submit {
 .form-item.form-type-radio {
     font-size: 1em;
     font-weight: normal;
+    margin-bottom: .5em;
 }
 #edit-biblio-year-coded .form-item.form-type-radio {
     margin-left: 0;
@@ -1167,6 +1226,11 @@ form#os-maintenance .form-item .description {
 .redirect-add-form div {
     margin:15px 0;
 }
+.redirect-add.ng-hide {
+    display: block !important;
+    width: 0;
+    font-size: 0;
+}
 
 .form-item .file-list-single ul {
     display: inline-block;
@@ -1180,17 +1244,33 @@ form#os-maintenance .form-item .description {
     text-align: center;
     white-space: nowrap;
    }
-   
-.ui-dialog #os_taxonomy .form-item {
-      margin: 12px 0;
-}
 
 .ui-dialog #os_taxonomy .os-taxonomy_label_heading {
- margin: 20px 0 8px 0;
+ margin: 0 0 8px 0;
 }
 
 .form-radios {
-	margin:15px 0;
+  margin: 15px 0;
+}
+
+/* CKEDITOR - WYSIWYG */
+
+
+body.cke_editable blockquote {
+    border-left: 2px solid #807E6D;
+    font-style: italic;
+    margin: 1em 3em;
+    padding-left: 1em;
+}
+
+span.cke_button__break_icon {
+    background-position-y: -1px;
+    background-size: 20px !important;
+    width: 18px;
+}
+
+.cke_ltr span.cke_button__anchor_icon {
+    background: url('/profiles/openscholar/themes/cp_theme/images/cp-sprite.png?123') no-repeat 0 -711px !important;
 }
 
 .view-content ~ .item-list ul.pager {
@@ -1229,6 +1309,13 @@ li.pager-previous + li.pager-ellipsis {
 	}
 
 .file img.file-icon {
-    width:16px;
+    width: 16px;
+}
+body.cke_editable img.media-element.file-default {
+    padding-right: 15px;
+}
 
+body.cke_editable img.media-element.file-default[style*="float:"][style*="right;"] {
+    padding-left: 15px;
+    padding-right: 0;
 }
