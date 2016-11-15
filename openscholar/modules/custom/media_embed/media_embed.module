@@ -113,11 +113,6 @@ function media_embed_check_src($html) {
     }
 
     $whitelist = media_embed_get_whitelist();
-    array_walk($whitelist, function(&$domain) {
-      // Remove any http and www from the domain.
-      $domain = str_replace(array('https://www.', 'http://www.', 'www.'), '', $domain);
-    });
-    $whitelist = array_unique($whitelist);
 
     foreach ($urls as $url) {
       // If the URL is too bad, parse will be false.
@@ -125,9 +120,6 @@ function media_embed_check_src($html) {
       $this_pass = false;
       // handle protocol-relative urls, since PHP doesn't
       // http://en.wikipedia.org/wiki/Uniform_resource_locator#Protocol-relative_URLs
-      if (strpos($url, '//') === 0) {
-        $url = 'http:' . $url;
-      }
 
       if ($parse = parse_url($url, PHP_URL_HOST)) {
         // construct the domain backwards and check it
@@ -141,7 +133,7 @@ function media_embed_check_src($html) {
         foreach ($host as $part) {
           array_unshift($domain, $part);
           if (in_array(implode('.', $domain), $whitelist)) {
-            $this_pass = true;
+            $this_pass = TRUE;
             break;
           }
         }
