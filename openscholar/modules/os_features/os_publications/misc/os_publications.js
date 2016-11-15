@@ -26,49 +26,44 @@ Drupal.behaviors.osPublications = {
 
     // Publication year can be either given in a numerical value or by a coded
     // value ("in press", "submitted" and so on). If the user fills a numerical
-    // value the radio buttons are unchecked and disabled. Clearing the numerical
-    // value enables the radio buttons again.
+    // value the radio buttons are unchecked and disabled. Clearing the
+    // numerical value enables the radio buttons again.
     yearField.keyup(function() {
       if (this.value != '') {
-        // Uncheck all radio buttons.
-        codedYear.each(function () {
-          $(this).prop('checked', false);
-        });
-        codedYear.prop("disabled", true);
+
+        // When filling the year field unckech the pulbihsed types and show the
+        // years dropdown.
+        $("input[name='biblio_year_coded']:checked").removeProp('checked');
+        $("#edit-published").click();
 
         // Validate year input.
-        userInput = this.value;
+        var userInput = this.value;
         if ((userInput.length != 4 && userInput.match(numbers)) || !userInput.match(numbers)) {
           yearWarning.css('visibility', 'visible');
           yearField.addClass("error");
         }
-        else if (userInput.length == 4 && userInput.match(numbers)){
+        else if (userInput.length == 4 && userInput.match(numbers)) {
           yearWarning.css('visibility', 'hidden');
           yearField.removeClass("error");
         }
       }
       else {
-        codedYear.prop("disabled", false);
         yearWarning.css('visibility', 'hidden');
         yearField.removeClass("error");
       }
-    }).focus(function() {
-      if ((yearField.value == '' || yearField.value == undefined) && !yearField.hasClass('error') ) {
-        codedYear.prop("disabled", false);
-      }
-      else {
-        codedYear.prop("disabled", true);
-      }
     });
     codedYear.change(function() {
+      // Empty the year field.
+      yearField.val('');
+
       if (this.value != '') {
         // Empty year field.
-        yearField[0].value = '';
-        if($("#edit-field-biblio-pub-month-und").length) {
+        if ($("#edit-field-biblio-pub-month-und").length) {
           $('#edit-field-biblio-pub-month-und').val('_none');
           $('#s2id_edit-field-biblio-pub-month-und span:first').text('Month');
         }
-        if($("#edit-field-biblio-pub-day-und").length) {
+
+        if ($("#edit-field-biblio-pub-day-und").length) {
           $('#edit-field-biblio-pub-day-und').val('_none');
           $('#s2id_edit-field-biblio-pub-day-und span:first').text('Day');
         }
