@@ -18,6 +18,8 @@
       http_config.params.vsite = Drupal.settings.spaces.id;
     }
 
+    var self = this;
+
     this.Get = function () {
       return redirects;
     }
@@ -40,8 +42,8 @@
 
       return $http.post(restApi, vals, http_config).then(function (r) {
         var newRedirect = r.data.data;
-        redirects[r.id] = newRedirect;
-        this.Count++;
+        redirects[newRedirect.id] = newRedirect;
+        self.Count++;
         return r;
        },
        function (e) {
@@ -54,7 +56,7 @@
       $http.delete(restApi+'/'+id, http_config).then(function (r) {
         if (typeof redirects[id] != 'undefined') {
           delete redirects[id];
-          this.Count--;
+          self.Count--;
           bss.SetState('redirect_delete_'+id, false);
         }
       },
