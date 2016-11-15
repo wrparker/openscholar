@@ -29,7 +29,7 @@ function vsite_cp_settings() {
       ),
       'group' => array(
         '#id' => 'vsite-subsite',
-        '#title' => t('Subsite Themes'),
+        '#title' => t('Subsites'),
         '#weight' => 31,
         '#menu_parent' => 'appearance',
         '#help_link' => l(t('Learn more about subsite themes'), 'http://docs.openscholar.harvard.edu/global-site-settings#subsite-themes', array('attributes' => array('target' => '_blank')))
