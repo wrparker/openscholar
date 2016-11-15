@@ -598,7 +598,7 @@ function os_search_solr_settings_form($form, $form_state) {
 
   $form['search_subsites'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Subsites'),
+    '#title' => t('Subsite Themes'),
     '#description' => t('Should results from your subsites be included.'),
     '#default_value' => variable_get('os_search_solr_include_subsites', FALSE),
   );
@@ -676,22 +676,44 @@ function os_search_solr_vsites() {
 }
 
 /**
+ * Implements hook_cp_settings().
+ */
+function os_search_solr_cp_settings() {
+  if (!module_exists('vsite') || !vsite_get_vsite()) {
+    // Not inside a VSite.
+    return;
+  }
+
+  if (!user_access('administer search')) {
+    // No permission to administer search.
+    return;
+  }
+
+  $settings = array();
+
+  $settings['os_search_solr'] = array(
+    'group' => array(
+      '#title' => t('Maintenance'),
+      '#id' => 'os-maintenance',
+    ),
+    'form' => array(
+      '#type' => 'submit',
+      '#value' => t('Re-Index Search'),
+      '#suffix' => "<div class=\"description\">".t('(Re)Index the sites searchable content.')."</div>",
+      '#submit' => array('os_search_solr_reindex_site'),
+    ),
+  );
+
+  return $settings;
+}
+
+/**
  * Submit handler; Re-index a VSite.
  */
 function os_search_solr_reindex_site() {
   $vsite = vsite_get_vsite();
   os_search_solr_add_vsite_to_reindex($vsite->id);
   drupal_set_message(t('Site marked for indexing. It may take a few minutes until the site is fully indexed.'));
-
-  return array(
-    array('type' => 'no_close'),
-    array('type' => 'no_reload'),
-    array(
-      'type' => 'message',
-      'message_type' => 'status',
-      'message' => t('Site marked for indexing. It may take a few minutes until the site is fully indexed.'),
-    )
-  );
 }
 
 /**
