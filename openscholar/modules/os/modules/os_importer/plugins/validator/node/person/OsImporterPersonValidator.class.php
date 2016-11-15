@@ -45,5 +45,4 @@ class OsImporterPersonValidator extends OsImporterEntityValidateBase {
 
     parent::isNotEmpty($field_name, $value,  $wrapper, $property_wrapper);
   }
-
 }

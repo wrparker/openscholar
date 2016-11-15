@@ -1,19 +1,42 @@
 (function () {
 
   angular.module('MediaBrowserField', ['mediaBrowser', 'FileEditorModal', 'EntityService', 'ui.sortable'])
+    .config(['$injector', function ($injector) {
+      try {
+        depManager = $injector.get('DependenciesProvider');
+        depManager.AddDependency('formElement', 'mediaBrowserField');
+      }
+      catch (err) {
+      }
+    }])
     .directive('mediaBrowserField', ['mbModal', 'EntityService', function (mbModal, EntityService) {
 
-      function link(scope, elem, attr) {
+      function link(scope, elem, attr, ngModelController) {
         // everything to define
-        var field_root = elem.parent();
-        while (!field_root.attr('id')) {
-          field_root = field_root.parent();
-        }
         var service = new EntityService('files', 'id');
-        scope.field_name = field_root.attr('id').match(/edit-([\w-]*)/)[1].replace(/-/g, '_');
-        scope.field_id = field_root.attr('id');
+        var field_root_id = "";
+        if (scope.$parent.element) {
+          field_root_id = scope.$parent.element.id;
+          scope.title = scope.$parent.element.title;
+          scope.description = scope.$parent.description;
+        }
+        else {
+          var field_root = elem.parent();
+          while (!field_root.attr('id')) {
+            field_root = field_root.parent();
+          }
+          field_root_id = field_root.attr('id');
+        }
+
+        scope.field_name = field_root_id.match(/edit-([\w-]*)/)[1].replace(/-/g, '_');
+        scope.field_id = field_root_id;
         scope.showHelp = false;
-        scope.panes = ['upload', 'web', 'library'];
+        if (attr['panes']) {
+          scope.panes = attr['panes'].split(',');
+        }
+        else {
+          scope.panes = ['upload', 'web', 'library'];
+        }
         scope.required = attr['required'] == "";
 
         var types = {};
@@ -33,6 +56,13 @@
           handle: '.tabledrag-handle'
         };
 
+        var generateFunc = function (i) {
+          return function(file) {
+            scope.selectedFiles[i] = angular.copy(file);
+            return file;
+          }
+        };
+
         if (!store.isNew()) {
           scope.selectedFiles = store.fetchData(scope.field_name);
         }
@@ -40,14 +70,17 @@
           scope.selectedFiles = [];
         }
 
-        if (scope.selectedFiles.length == 0) {
-          var fids = Drupal.settings.mediaBrowserField[scope.field_id].selectedFiles,
-            generateFunc = function (i) {
-              return function(file) {
-                scope.selectedFiles[i] = angular.copy(file);
-                return file;
-              }
-            };
+        if (Array.isArray(scope.$parent.value)) {
+          for (i = 0; i < scope.$parent.value.length; i++) {
+            service.fetchOne(scope.$parent.value[i]).then(generateFunc(i));
+          }
+        }
+        else if (scope.$parent.value) {
+          service.fetchOne(scope.$parent.value).then(generateFunc(0));
+        }
+
+        if (scope.selectedFiles.length == 0 && Drupal.settings.mediaBrowserField != undefined) {
+          var fids = Drupal.settings.mediaBrowserField[scope.field_id].selectedFiles;
 
           for (var i = 0; i < fids.length; i++) {
             var fid = fids[i];
@@ -94,19 +127,50 @@
             }
             if (!found) {
               scope.selectedFiles.push($files[i]);
+              if (scope.cardinality == 1) {
+                scope.$parent.value = $files[i].id;
+              }
+              else {
+                scope.$parent.value = scope.$parent.value || [];
+                scope.$parent.value.push($files[i].id);
+              }
             }
           }
           store.setData(scope.field_name, scope.selectedFiles);
+          if (ngModelController) {
+            ngModelController.$setDirty();
+            ngModelController.$setTouched();
+          }
         }
 
         scope.removeFile = function ($index) {
           scope.selectedFiles.splice($index, 1);
+          if (scope.cardinality == 1) {
+            scope.$parent.value = 0;
+          }
+          else {
+            scope.$parent.value.splice($index, 1);
+          }
           store.setData(scope.field_name, scope.selectedFiles);
+          if (ngModelController) {
+            ngModelController.$setDirty();
+            ngModelController.$setTouched();
+          }
         }
 
         scope.replaceFile = function ($inserted, $index) {
           scope.selectedFiles.splice($index, 1, $inserted[0]);
+          if (scope.cardinality == 1) {
+            scope.$parent.value = $inserted[0].id;
+          }
+          else {
+            scope.$parent.value.splice($index, 1, $inserted[0]);
+          }
           store.setData(scope.field_name, scope.selectedFiles);
+          if (ngModelController) {
+            ngModelController.$setDirty();
+            ngModelController.$setTouched();
+          }
         }
 
         function highlightDupe(file, toHighlight) {
@@ -129,6 +193,7 @@
       if (mbModal.requirementsMet()) {
         return {
           link: link,
+          require: '?ngModel',
           templateUrl: function () {
             return Drupal.settings.paths.moduleRoot + '/templates/field.html?vers=' + Drupal.settings.version.mediaBrowser
           },
@@ -173,7 +238,13 @@
 
         inited = true;
         var old_id = sessionStorage['last_form'];
-        form_id = document.querySelector('form input[name="form_build_id"]').value;
+        form_id_input = document.querySelector('form input[name="form_build_id"]'),
+        form_id = form_id_input != null ? form_id_input.value: "";
+
+        if (!form_id) {
+          new_form = true;
+          return;
+        }
 
         if (form_id != old_id) {
           delete sessionStorage[old_id];

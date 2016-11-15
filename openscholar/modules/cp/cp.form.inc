@@ -35,7 +35,7 @@ function cp_settings_form($form_state) {
 
     // Merges any submit handler(s) into the existing value.
     if (isset($setting['submit'])) {
-      $form['#submit'] = array_merge($form['#submit'], $setting['submit']);
+      $form['#submit'] = array_unique(array_merge($form['#submit'], (array)$setting['submit']));
     }
     if (isset($setting['after_build'])) {
       $form['#after_build'] = array_merge($form['#after_build'], $setting['after_build']);

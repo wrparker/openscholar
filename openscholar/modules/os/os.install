@@ -54,6 +54,13 @@ function _os_date_formats() {
  * Allow access to node/%.json to all of the users.
  */
 function os_update_7005() {
+  //Only grant this if the module is installed
+  if (module_exists('restws')){
+    // Allow accessing resource node to all users.
+    foreach (array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID) as $rid) {
+      user_role_grant_permissions($rid, array('access resource node'));
+    }
+  }
 }
 
 /**
@@ -185,6 +192,13 @@ function os_update_7011() {
  * Allow access to file/*.json for all users
  */
 function os_update_7012() {
+  //Only grant this if the module is installed
+  if (module_exists('restws')){
+    // Allow accessing resource file to all users.
+    foreach (array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID) as $rid) {
+      user_role_grant_permissions($rid, array('access resource file'));
+    }
+  }
 }
 
 /**
@@ -908,9 +922,9 @@ function os_update_7045() {
 }
 
 /**
- * Set image toolkit variables.
+ *
  */
-function os_update_7047() {
+function os_update_7046() {
   variable_set('imageapi_optimize_service', 'resmushit');
   variable_set('image_toolkit', 'imageapi_optimize');
 
@@ -924,4 +938,12 @@ function os_update_7047() {
     ->execute();
 
   variable_set('os_last_un_compress_fid', reset($result['file'])->fid);
+}
+
+ /**
+ * Enable enhanced settings forms
+ */
+function os_update_7047() {
+  module_enable(array('ap_settings_form', 'restful_message'));
+  return t('Enhanced settings forms enabled.');
 }
