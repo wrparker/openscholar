@@ -1,89 +1,11 @@
 (function () {
 
-  var m = angular.module('ApSettingsForm', ['angularModalService', 'redirectForm', 'MediaBrowserField', 'formElement', 'os-buttonSpinner']);
-
-  /**
-   * Fetches the settings forms from the server and makes them available directives and controllers
-   */
-  m.service('apSettings', ['$http', '$q', function ($http, $q, $httpParamSerializer) {
-
-    var settingsForms = {};
-    var settings = {};
-    var groupInfo = {};
-    var promises = [];
-
-    var queryArgs = {};
-
-    if (Drupal.settings.spaces.id) {
-      queryArgs.vsite = Drupal.settings.spaces.id;
-    }
-
-    var baseUrl = Drupal.settings.paths.api;
-    var config = {
-      params: queryArgs
-    };
-
-    // fetch all the form data from the server
-    promises.push($http.get(baseUrl+'/settings', config).then(function (response) {
-      var data = response.data;
-
-      for (var varName in data.data) {
-        var varForm = data.data[varName];
-        var group = varForm.group['#id'];
-
-        settingsForms[group] = settingsForms[group] || {};
-        settingsForms[group][varName] = varForm.form;
-
-        groupInfo[group] = varForm.group;
-
-        settings[varName] = varForm.form['#default_value'];
-      }
-      return response;
-    }));
-
-    var allPromise = $q.all(promises);
-
-    this.SettingsReady = function() {
-      return allPromise;
-    }
-
-    this.GetFormDefinitions = function (group_id) {
-      if (typeof settingsForms[group_id] != 'undefined') {
-        return angular.copy(settingsForms[group_id]);
-      }
-      throw "No form group with id " + group_id + " exists.";
-    }
-
-    this.GetFormTitle = function (group_id) {
-      if (typeof groupInfo[group_id] != 'undefined') {
-        return groupInfo[group_id]['#title'];
-      }
-      throw "No form group with the id " + group_id + " exists.";
-    }
-
-    this.GetHelpLink = function (group_id) {
-      if (typeof groupInfo[group_id] != 'undefined') {
-        return groupInfo[group_id]['#help_link'];
-      }
-      throw "No form group with the id " + group_id + " exists.";
-    }
-
-    this.IsSetting = function (var_name) {
-      return var_name in settings;
-    }
-
-    this.SaveSettings = function (settings) {
-      console.log(settings);
-
-      return $http.put(baseUrl+'/settings', settings, config);
-    }
-
-  }]);
+  var m = angular.module('ApSettingsFormProfiles', ['angularModalService', 'redirectForm', 'MediaBrowserField', 'formElement', 'os-buttonSpinner']);
 
   /**
    * Open modals for the settings forms
    */
-  m.directive('apSettingsForm', ['ModalService', 'apSettings', function (ModalService, apSettings) {
+  m.directive('apSettingsFormProfiles', ['ModalService', 'apSettings', function (ModalService, apSettings) {
     var dialogOptions = {
       minWidth: 800,
       minHeight: 100,
@@ -95,14 +17,15 @@
     function link(scope, elem, attrs) {
       apSettings.SettingsReady().then(function () {
         scope.title = apSettings.GetFormTitle(scope.form);
-      })
+      });
 
       elem.bind('click', function (e) {
+        debugger;
         e.preventDefault();
         e.stopPropagation();
 
         ModalService.showModal({
-          controller: 'apSettingsFormController',
+          controller: 'ApSettingsFormProfilesController',
           template: '<form id="{{formId}}" name="settingsForm" ng-submit="submitForm($event)">' +
             '<div class="messages" ng-show="status.length || errors.length"><div class="dismiss" ng-click="status.length = 0; errors.length = 0;">X</div>' +
               '<div class="status" ng-show="status.length > 0"><div ng-repeat="m in status">{{m}}</div></div>' +
@@ -141,7 +64,7 @@
   /**
    * The controller for the forms themselves
    */
-  m.controller('apSettingsFormController', ['$scope', '$sce', 'apSettings', 'buttonSpinnerStatus', 'form', 'close', function ($s, $sce, apSettings, bss, form, close) {
+  m.controller('ApSettingsFormProfilesController', ['$scope', '$sce', 'apSettings', 'buttonSpinnerStatus', 'form', 'close', function ($s, $sce, apSettings, bss, form, close) {
     var formSettings = {};
     $s.formId = form;
     $s.formElements = {};
@@ -224,4 +147,4 @@
       close(arg);
     }
   }]);
-})()
+})();

@@ -129,10 +129,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
    * {@inheritdoc}
    */
   public function index() {
-
     $this->throwException('You must provide the id of the menu.');
-
-    return $return;
   }
 
   /**
@@ -290,11 +287,12 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       $access = !isset($f['form']['#access']) ? $space_access : $f['form']['#access'];
 
       if ($access) {
+        $directive = !empty($f['group']['#directive']) ? $f['group']['#directive'] : 'ap-settings-form';
         $settings_links[$id] = array(
           'label' => $group,
           'type' => 'directive',
           'directive' => array(
-            'ap-settings-form',
+            $directive,
             'form' => $f['group']['#id']
           ),
           'parent' => !empty($f['group']['#menu_parent']) ? $f['group']['#menu_parent'] : 'advanced'
