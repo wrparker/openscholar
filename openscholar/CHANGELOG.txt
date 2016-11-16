@@ -13,7 +13,7 @@ OpenScholar 3.52, 2016-10-24
 - Updated the text for new account emails
 
 ----------------------------
-OpenScholar 3.53, 2016-11-14
+OpenScholar 3.54, 2016-11-14
 ----------------------------
 - Changed to the Settings in the menu. There are now three sections under Settings:
 1.	Enable/ Disable Apps - to set the app views to public, disabled, or private
