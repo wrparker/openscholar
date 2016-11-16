@@ -68,7 +68,7 @@ function vsite_preset_spaces_presets() {
       ),
       'site_frontpage' => 'home',
       'theme_default' => 'hwpi_classic',
-      'os_breadcrumbs_show_breadcrumbs' => 0,
+      'os_breadcrumbs_show_breadcrumbs' => 1,
     ),
     'menus' => array(
       'primary-menu' => array(
@@ -235,7 +235,7 @@ function vsite_preset_spaces_presets() {
       ),
       'site_frontpage' => 'home',
       'theme_default' => 'hwpi_modern',
-      'os_breadcrumbs_show_breadcrumbs' => 0,
+      'os_breadcrumbs_show_breadcrumbs' => 1,
     ),
     'menus' => array(
       'primary-menu' => array(
@@ -429,7 +429,7 @@ function vsite_preset_spaces_presets() {
       ),
       'site_frontpage' => 'home',
       'theme_default' => 'hwpi_modern',
-      'os_breadcrumbs_show_breadcrumbs' => 0,
+      'os_breadcrumbs_show_breadcrumbs' => 1,
     ),
     'menus' => array(
       'primary-menu' => array(
@@ -586,7 +586,7 @@ function vsite_preset_spaces_presets() {
       'site_frontpage' => 'home',
       'theme_default' => 'hwpi_classic',
       'os_appearance_hwpi_classic_flavor' => 'classic_indigo',
-      'os_breadcrumbs_show_breadcrumbs' => 0,
+      'os_breadcrumbs_show_breadcrumbs' => 1,
     ),
     'context' => array(
       'os_public:reaction:block' => array(
@@ -707,7 +707,7 @@ function vsite_preset_spaces_presets() {
       ),
       'site_frontpage' => 'home',
       'theme_default' => 'hwpi_classic',
-      'os_breadcrumbs_show_breadcrumbs' => 1,
+      'os_breadcrumbs_show_breadcrumbs' => 0,
     ),
     'menus' => array(
       'primary-menu' => array(
