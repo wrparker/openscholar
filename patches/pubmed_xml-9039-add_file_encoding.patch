@@ -1,7 +1,7 @@
-diff --git a/biblio_pm.module b/biblio_pm.module
+diff --git a/modules/pubmed/biblio_pm.module b/modules/pubmed/biblio_pm.module
 index 7950c04..318e4ba 100644
---- a/biblio_pm.module
-+++ b/biblio_pm.module
+--- a/modules/pubmed/biblio_pm.module
++++ b/modules/pubmed/biblio_pm.module
 @@ -101,7 +101,8 @@ function biblio_pm_biblio_import($file, $terms = array(), $batch = FALSE, $sessi
  
  function biblio_pm_xml_biblio_import($file, $terms = array(), $batch = FALSE, $session_id = NULL) {
