@@ -15,7 +15,6 @@ function ap_settings_form_library() {
     'version' => AP_SETTINGS_FORM_VERSION,
     'js' => array(
       $self . '/apSettingsForm.module.js' => array(),
-      $self . '/apSettingsFormProfiles.module.js' => array(),
       array(
         'data' => array(
           'paths' => array(
@@ -39,6 +38,7 @@ function ap_settings_form_library() {
       array('os_common', 'formElement'),
       array('os_common', 'buttonSpinner'),
       array('ap_settings_form', 'redirect'),
+      array('ap_settings_form', 'display_type'),
     )
   );
 
@@ -47,6 +47,14 @@ function ap_settings_form_library() {
     'version' => '0.1',
     'js' => array(
       $self.'/redirects.module.js' => array()
+    )
+  );
+
+  $libs['display_type'] = array(
+    'title' => 'Display types',
+    'version' => '0.1',
+    'js' => array(
+      $self . '/os_profiles_display_type.module.js' => array()
     )
   );
 

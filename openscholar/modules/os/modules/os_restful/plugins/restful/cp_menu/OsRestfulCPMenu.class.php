@@ -287,12 +287,11 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       $access = !isset($f['form']['#access']) ? $space_access : $f['form']['#access'];
 
       if ($access) {
-        $directive = !empty($f['group']['#directive']) ? $f['group']['#directive'] : 'ap-settings-form';
         $settings_links[$id] = array(
           'label' => $group,
           'type' => 'directive',
           'directive' => array(
-            $directive,
+            'ap-settings-form',
             'form' => $f['group']['#id']
           ),
           'parent' => !empty($f['group']['#menu_parent']) ? $f['group']['#menu_parent'] : 'advanced'
