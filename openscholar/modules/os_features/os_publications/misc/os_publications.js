@@ -31,11 +31,6 @@ Drupal.behaviors.osPublications = {
     yearField.keyup(function() {
       if (this.value != '') {
 
-        // When filling the year field unckech the pulbihsed types and show the
-        // years dropdown.
-        $("input[name='biblio_year_coded']:checked").removeProp('checked');
-        $("#edit-published").click();
-
         // Validate year input.
         var userInput = this.value;
         if ((userInput.length != 4 && userInput.match(numbers)) || !userInput.match(numbers)) {
@@ -54,8 +49,6 @@ Drupal.behaviors.osPublications = {
     });
     codedYear.change(function() {
       // Empty the year field.
-      yearField.val('');
-
       if (this.value != '') {
         // Empty year field.
         if ($("#edit-field-biblio-pub-month-und").length) {
