@@ -20,7 +20,7 @@ jQuery(document).ready(function() {
 
 	});
 	
-	jQuery("block-boxes-os_search_solr_search_box").addClass("block-os-search-solr");
+	jQuery(".block-boxes-os_search_solr_search_box").addClass("block-os-search-solr");
 
     jQuery("figure img").each(function() {
         var imgwidth = jQuery(this).attr('width');
