@@ -29,6 +29,23 @@ function os_restful_cron() {
 }
 
 /**
+ * Implements hook_init().
+ */
+function os_restful_init() {
+  if (!empty($_SESSION['os_restful'])) {
+    $calls = $_SESSION['os_restful'];
+    foreach ($calls as $f => $arg_sets) {
+      if (is_callable($f)) {
+        foreach ($arg_sets as $args) {
+          call_user_func_array($f, $args);
+        }
+      }
+    }
+    $_SESSION['os_restful'] = array();
+  }
+}
+
+/**
  * Implements hook_entity_property_info_alter().
  */
 function os_restful_entity_property_info_alter(&$info) {

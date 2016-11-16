@@ -80,6 +80,7 @@ class os_sv_list extends os_boxes_default {
     $this->options = ($this->options) ? array_merge($this->options_defaults(), $this->options) : $this->options_defaults();
 
     $form['#submit'] = array('os_sv_list_form_submit');
+    $form['#after_build'][] = 'os_sv_list_after_build';
     $form['#attached'] = array(
       'css' => array(drupal_get_path('module', 'os_sv_list') . '/os_sv_list.css'),
     );
@@ -177,6 +178,7 @@ class os_sv_list extends os_boxes_default {
       '#title' => t('URL for the more link'),
       '#type' => 'textfield',
       '#default_value' => $this->options['more_link'],
+      '#required' => TRUE,
       '#size' => 15,
       '#states' => array(
         'visible' => array('input[name=more]' => array('checked' => TRUE)),
@@ -194,6 +196,7 @@ class os_sv_list extends os_boxes_default {
     $form['details']['more_div']['more_text'] = array(
       '#title' => 'Label of the more link (default: "more")',
       '#size' => 15,
+      '#required' => TRUE,
       '#type' => 'textfield',
       '#default_value' => $this->options['more_text'],
         '#states' => array(
@@ -337,7 +340,7 @@ class os_sv_list extends os_boxes_default {
       // If we have entities render them out, otherwise cache (null) as the content.
       if (!empty($entities)) {
 
-        if ($this->options['display'] == 'title') {
+        if (in_array($this->options['display'], array('title', 'os_files_title'))) {
           $render = $this->display_title($entities);
         }
         else {
@@ -353,6 +356,9 @@ class os_sv_list extends os_boxes_default {
 
         // Now render to html.
         $content = drupal_render($render);
+        if (module_exists('web_widgets')) {
+          $content = _web_widgets_rewrite_anchors($content);
+        }
         $delta = $this->delta;
         $class = strtolower(implode(' ', array(
           'os-sv-list',

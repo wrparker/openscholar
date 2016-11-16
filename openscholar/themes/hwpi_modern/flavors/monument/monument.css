@@ -2,7 +2,8 @@
 
 
 html,
-body {
+body,
+.cke_editable * {
   color: #545a5d;
     font-family: 'Open Sans', Arial,Helvetica,sans-serif;
     line-height: 24px;

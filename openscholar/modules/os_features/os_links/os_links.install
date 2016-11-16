@@ -52,3 +52,32 @@ function os_links_update_7003() {
 
   features_revert($revert);
 }
+
+
+/**
+ * Revert to enable "Open in new tab" checkbox option
+ */
+function os_links_update_7004() {
+  $revert = array(
+    'os_links' => array(
+      'field_base',
+      'field_instance',
+    )
+  );
+
+  features_revert($revert);
+}
+
+/**
+ * Hide "Open in new tab" label
+ */
+function os_links_update_7005() {
+  $revert = array(
+    'os_links' => array(
+      'field_base',
+      'field_instance',
+    )
+  );
+
+  features_revert($revert);
+}
