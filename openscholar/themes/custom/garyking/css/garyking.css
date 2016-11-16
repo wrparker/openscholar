@@ -639,12 +639,33 @@ top: 0;
     margin-top: 1.2em !important;
     text-align: left;
 }
+.region-content-top .bio-teaser-block2 p {
+    font-size: 1.3em;
+  
+    margin: 1.3em !important;
+   
+}
+
+.region-content-top .bio-teaser-block2 a {
+    text-decoration: none !important;
+    padding-right: 28px;
+    background: url("../images/sprite.png?zyx") 76px -109px no-repeat;
+ 
+}
+
+.region-content-top .bio-teaser-block2 a:hover {
+
+    background-position: 81px -109px;
+ 
+}
+
 .bio-teaser-block2 a {
     text-decoration: none !important;
     padding-right: 28px;
     background: url("../images/sprite.png?zyx") 80px -207px no-repeat;
     transition: all .250s;
     -webkit-transition: all .250s;
+    border-bottom:1px solid #fff;
 }
 .bio-teaser-block2 a:hover {
     background-position: 85px -207px;
