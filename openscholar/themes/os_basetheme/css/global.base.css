@@ -1170,6 +1170,6 @@ ul.no-event-export {
 .form-item label.option.bold{
   font-weight: bold;
 }
-.citebox {
-    display: none;
+.citebox.hidden {
+  display: none;
 }

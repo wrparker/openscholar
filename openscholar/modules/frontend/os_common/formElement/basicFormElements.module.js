@@ -128,13 +128,18 @@
       template: '<label for="{{id}}">{{title}}</label>' +
       '<div id="{{id}}" class="form-radios">' +
         '<div class="form-item form-type-radio" ng-repeat="(val, label) in options">' +
-          '<input type="radio" id="{{id}}-{{val}}" name="{{name}}" value="{{val}}" ng-model="$parent.value" class="form-radio" ng-disabled="element.disabled"><label class="option" for="{{id}}-{{val}}" ng-bind-html="label"></label>' +
+          '<input ng-click="radiosClick()" type="radio" id="{{id}}-{{val}}" name="{{name}}" value="{{val}}" ng-model="$parent.value" class="form-radio" ng-disabled="element.disabled"><label class="option" for="{{id}}-{{val}}" ng-bind-html="label"></label>' +
         '</div>' +
       '</div> ',
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];
         scope.options = scope.element.options;
         scope.title = scope.element.title;
+        scope.radiosClick = function () {
+          if (scope.element.onclick_callback) {
+            window[scope.element.onclick_callback](scope.value);
+          }
+        };   
       }
     }
   }]);

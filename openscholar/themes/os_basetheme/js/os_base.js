@@ -26,4 +26,11 @@ jQuery(document).ready(function() {
             "width" : + imgwidth
         });
     });
+
 });
+
+// Javascript callback for switching biblio format example output as per radio button selection.
+function display_biblio_format_example(val) {
+  jQuery('.citebox').addClass('hidden');
+  jQuery(".citebox[id='pop-" + val + "']").removeClass('hidden');  
+}
