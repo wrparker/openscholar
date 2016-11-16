@@ -32,7 +32,7 @@ function vsite_cp_settings() {
         '#title' => t('Subsite Themes'),
         '#weight' => 31,
         '#menu_parent' => 'appearance',
-        '#help_link' => l(t('Learn more about subsite themes'), 'http://docs.openscholar.harvard.edu/global-site-settings#subsite-themes', array('attributes' => array('target' => '_blank')))
+        '#help_link' => l(t('Learn more about subsite themes'), 'http://docs.openscholar.harvard.edu/subsite-themes', array('attributes' => array('target' => '_blank')))
       ),
     );
   }
