@@ -582,7 +582,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
               '@baseUrl' => $GLOBALS['base_url'],
             );
             $runOnce = true;
-            error_log(t("Constructed menu url was not complete. vsite: @vsite, vsite_object: @vsite_object, original url: @original, altered: @altered, base url: @baseUrl ", $watchdog_vars));
+            error_log(t("Constructed menu url was not complete. vsite: @vsite, purl provider: @purl_provider, original url: @original, altered: @altered, base url: @baseUrl ", $watchdog_vars));
           }
           $menu[$key]['href'] = 'http://' . $menu[$key]['href'];
         }
