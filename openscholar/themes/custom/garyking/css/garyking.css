@@ -513,7 +513,7 @@ ul.nice-menu-down,
 #boxes-box-site_info h1 {
     padding: 8px 0 8px 12px;
 }
-#block-os-search-solr-site-search {
+#block-boxes-solr-search-box {
     position: absolute;
     top: 60px;
     right: 0;
@@ -584,24 +584,15 @@ top: 0;
 }
 
 .research-by-topic ul .item-list ul li.open a {
-    top: 20px;
-    background-color: #fff;
-    height: 20px;
-   padding: 12px 12px 5px;
-}
-
-
-.research-by-topic ul .item-list ul li.open a:after {
-    top: -20px;
-    right: 0;
-    content: 'Relevant content ➞';
-    position: absolute;
-    font-size: .8em;
-    width: 30%;
+    top: -5px;
     background-color: #4a5a77;
-    text-align: right;
-    padding-right: 10px;
+    height: 20px;
+    padding: 10px 12px 7px;
+    color: #fff;
 }
+
+
+
 .research-by-topic ul .item-list ul li span {
     font-family: arial;
     font-size: 1.4em;
@@ -620,12 +611,12 @@ top: 0;
     z-index: 2;
 }
 .research-by-topic ul .item-list ul li.open span:after {
-    content: '';
-    width: 70%;
+       content: '';
+    width: 10%;
     height: 50px;
-    top: -27px;
-    left: 0;
-    background-position: 4% -234px;
+    top: -18px;
+    right: 0;
+    background-position: 18px -238px;
 }
 .research-by-topic ul .item-list ul li a:hover {
     margin-left: 12px;
@@ -648,12 +639,33 @@ top: 0;
     margin-top: 1.2em !important;
     text-align: left;
 }
+.region-content-top .bio-teaser-block2 p {
+    font-size: 1.3em;
+  
+    margin: 1.3em !important;
+   
+}
+
+.region-content-top .bio-teaser-block2 a {
+    text-decoration: none !important;
+    padding-right: 28px;
+    background: url("../images/sprite.png?zyx") 76px -109px no-repeat;
+ 
+}
+
+.region-content-top .bio-teaser-block2 a:hover {
+
+    background-position: 81px -109px;
+ 
+}
+
 .bio-teaser-block2 a {
     text-decoration: none !important;
     padding-right: 28px;
     background: url("../images/sprite.png?zyx") 80px -207px no-repeat;
     transition: all .250s;
     -webkit-transition: all .250s;
+    border-bottom:1px solid #fff;
 }
 .bio-teaser-block2 a:hover {
     background-position: 85px -207px;
@@ -661,7 +673,7 @@ top: 0;
 .research-by-topic ul .item-list ul li .description {
     transition: all .250s;
     -webkit-transition: all .250s;
-         padding: 0px 10px 10px 12px;
+         padding: 5px 10px 10px 12px;
     z-index: 1;
     position: relative;
     font-size: .95em;
@@ -670,8 +682,8 @@ top: 0;
   
 }
 .research-by-topic ul .item-list ul li.open .description {
-   top: 25px;
-    height: 228px;
+   top: 0;
+    height: 250px;
     overflow-y: scroll;
 }
 

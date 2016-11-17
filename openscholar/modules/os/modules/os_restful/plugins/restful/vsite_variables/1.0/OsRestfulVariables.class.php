@@ -66,11 +66,21 @@ class OsRestfulVariables extends OsRestfulSpaces {
     $this->checkGroupAccess();
 
     $controller = $this->space->controllers->{$this->objectType};
-    $controller->set($this->object->object_id, $this->object->value);
-    return array(
-      'name' => $this->object->object_id,
-      'value' => $controller->get($this->object->object_id),
-    );
+    if (!empty($this->object->object_id)) {
+      $controller->set($this->object->object_id, $this->object->value);
+      return array(
+        'name' => $this->object->object_id,
+        'value' => $controller->get($this->object->object_id),
+      );
+    }
+    else {
+      $output = array();
+      foreach ($this->request as $var => $val) {
+        $controller->set($var, $val);
+        $output[$var] = $val;
+      }
+      return $output;
+    }
   }
 
   /**

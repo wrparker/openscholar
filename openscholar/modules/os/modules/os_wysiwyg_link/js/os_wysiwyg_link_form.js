@@ -9,7 +9,6 @@ Drupal.behaviors.osLinkExternal = {
       if ($(this).filter(':visible').length > 0) {
         var value = $('#edit-external', this).val();
         var target_option = $('#edit-target-option', this).prop('checked');
-        var link_title = $('#edit-link-title').val();
         // Trims the leading slash from the raw input value.
         value = value.replace(/^\//, "");
         if (value.indexOf('http') == -1) {
@@ -17,6 +16,7 @@ Drupal.behaviors.osLinkExternal = {
         }
         Drupal.settings.osWysiwygLinkResult = value;
         Drupal.settings.osWysiwygLinkAttributes = {'data-url': Drupal.settings.osWysiwygLinkResult, 'title': link_title};
+
         if (target_option) {
           Drupal.settings.osWysiwygLinkAttributes.target = '_blank';
         }

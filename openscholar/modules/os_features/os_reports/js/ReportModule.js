@@ -51,9 +51,6 @@
         'display' : 'site type (preset)',
         'sort' : false,
       },
-      'site_owner_huid' : {
-        'display' : 'Site Owner has Associated HUID',
-      },
     };
 
     $scope.pager = function($direction) {

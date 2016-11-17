@@ -51,11 +51,8 @@ function os_events_field_default_field_instances() {
       ),
       'slide_teaser' => array(
         'label' => 'above',
-        'module' => 'text',
-        'settings' => array(
-          'trim_length' => 600,
-        ),
-        'type' => 'text_summary_or_trimmed',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 0,
       ),
       'teaser' => array(
@@ -326,28 +323,19 @@ function os_events_field_default_field_instances() {
         'weight' => 0,
       ),
       'slide_teaser' => array(
-        'label' => 'hidden',
-        'module' => 'registration',
-        'settings' => array(
-          'i18n_string_key' => 'node:event:slide_teaser:field_event_registration',
-          'label' => '',
-        ),
-        'type' => 'registration_link',
-        'weight' => 3,
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
       ),
       'teaser' => array(
         'label' => 'above',
-        'module' => 'registration',
-        'settings' => array(
-          'i18n_string_key' => 'node:event:teaser:field_event_registration',
-          'label' => 'Registration: ',
-        ),
-        'type' => 'registration_link',
+        'settings' => array(),
+        'type' => 'hidden',
         'weight' => 0,
       ),
       'title' => array(
         'label' => 'above',
-        'module' => 'registration',
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,

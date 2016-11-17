@@ -58,7 +58,7 @@ if (!class_exists('purl_vsite_domain')) {
     }
 
     public function description() {
-      return t('Enter a domain registered for this scholar site, such as "www.example.edu".  Do not include http://');
+      return t('Enter a domain registered for this site, such as "www.example.edu".');
     }
 
     private function remove_scholar_purl($path, &$options) {
