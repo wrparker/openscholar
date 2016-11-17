@@ -93,6 +93,7 @@ if (!class_exists('purl_vsite_path')) {
         error_log('One of these is wrong.');
         error_log(variable_get('purl_base_domain', 'no base domain variable'));
         error_log($base_url);
+        error_log($_ENV['AH_SITE_ENVIRONMENT']);
 
         if ($vsite_domain) {
           $options['base_url'] = "http://" . $vsite_domain;
