@@ -953,6 +953,8 @@ function cp_user_user_register_submit($form, &$form_state) {
  *       their RIDs as values.
  *    - 'rids-human': Returns array of roles with their RIDs as keys and their
  *       "human" names as values.
+ *    - 'rids-options': Returns array of roles with their RIDs as keys and their
+ *       "human" description as values.
  * @param $bundle
  *    (optional) The bundle of the group whose roles are to be returned. If not
  *    provided, $gid is mandatory and will be used to retrieve the bundle.
@@ -1042,7 +1044,7 @@ function _cp_user_list_roles($format, $bundle, $gid = 0) {
       break;
 
     case 'rids-options':
-      // Create array of roles with their RIDs as keys and their "human" names
+      // Create array of roles with their RIDs as keys and their "human" description
       // as values.
       foreach ($og_roles as $rid => $machine_name) {
         $human_name = !empty($system_roles[$machine_name]) ? $system_roles[$machine_name]['human_name'] : $machine_name;
