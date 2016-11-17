@@ -566,6 +566,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       if (!empty($value['href']) && $value['href'] != '#') {
         if ($vsite_object) {
           $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href'], !empty($value['options']) ? $value['options'] : array());
+          error_log('found the vsite');
         }
         else {
           $menu[$key]['href'] = url($value['href'], !empty($value['options']) ? $value['options'] : array());
@@ -575,7 +576,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
           if (!$runOnce) {
             $watchdog_vars = array(
               '@vsite' => $vsite,
-              '@vsite_object' => $vsite_object ? 'found' : 'not found',
+              '@purl_provider' => $vsite_object->purl_provider,
               '@original' => $store,
               '@altered' => $menu[$key]['href'],
               '@baseUrl' => $GLOBALS['base_url'],
