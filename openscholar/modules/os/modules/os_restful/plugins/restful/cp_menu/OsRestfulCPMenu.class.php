@@ -570,7 +570,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         else {
           $menu[$key]['href'] = url($value['href'], !empty($value['options']) ? $value['options'] : array());
         }
-        if (strpos($menu[$key]['href'], 'http://') != 0 && strpos($menu[$key]['href'], 'https://') != 0) {
+        if (strpos($menu[$key]['href'], 'http://') !== 0 && strpos($menu[$key]['href'], 'https://') !== 0) {
           $runOnce = &drupal_static(__FUNCTION__, false);
           if (!$runOnce) {
             $watchdog_vars = array(
