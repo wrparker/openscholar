@@ -417,10 +417,6 @@ projects[views][subdir] = "contrib"
 projects[views][version] = 3.8
 projects[views][patch][] = "https://drupal.org/files/issues/views-jquery_dialog-2125261-1.patch"
 
-projects[biblio][subdir] = "contrib"
-projects[biblio][version] = 1.0-rc4
-projects[biblio][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/7d687ddfa6832758b0efdbe04735af62b0b15560/patches/pubmed_xml-9039-add_file_encoding.patch"
-
 projects[views_bulk_operations][subdir] = "contrib"
 projects[views_bulk_operations][version] = 3.0
 
