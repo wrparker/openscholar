@@ -705,9 +705,7 @@ function os_publications_alter_year_field(&$form, &$form_state) {
   // and _biblio_text_year() are used to convert between code and numeric.
   $year_value = $form['biblio_year']['#default_value'];
 
-  //Get from the node since it may or may not be on the form.
-  $date_value = is_object($form['#node']) && !empty($form['#node']->biblio_date) ? $form['#node']->biblio_date : '';
-  $year_coded_value = '';
+  dpm($year_value);
 
   // If not a number then it was coded, so we want to show the value in the
   // checkboxes form element.
@@ -811,10 +809,6 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#title' => t('Published'),
   );
 
-  if (empty($year_coded_value)) {
-    $form['biblio_year_group']['published']['#attributes']['checked'] = TRUE;
-  }
-
   unset($form['field_biblio_pub_month']);
   unset($form['field_biblio_pub_day']);
 
@@ -828,6 +822,8 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#weight' => 10,
     '#markup' => t('or'),
   );
+
+  dpm($year_coded_value);
 
   $form['biblio_year_group']['biblio_year_coded'] = array(
     '#type' => 'radios',
