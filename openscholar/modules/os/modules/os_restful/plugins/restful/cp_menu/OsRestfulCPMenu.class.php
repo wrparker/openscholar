@@ -562,12 +562,27 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         $this->alterURLs($menu[$key]['children']);
       }
 
+      $store = $value['href'];
       if (!empty($value['href']) && $value['href'] != '#') {
         if ($vsite_object) {
           $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href'], !empty($value['options']) ? $value['options'] : array());
         }
         else {
           $menu[$key]['href'] = url($value['href'], !empty($value['options']) ? $value['options'] : array());
+        }
+        if (strpos($menu[$key]['href'], 'http://') != 0 && strpos($menu[$key]['href'], 'https://') != 0) {
+          $runOnce = &drupal_static(__FUNCTION__, false);
+          if (!$runOnce) {
+            $watchdog_vars = array(
+              'vsite' => $vsite,
+              'vsite_object' => $vsite_object ? 'found' : 'not found',
+              'original' => $store,
+              'altered' => $menu[$key]['href'],
+            );
+            $runOnce = true;
+            watchdog(WATCHDOG_ERROR, "Constructed menu url was not complete. vsite: @vsite, vsite_object: @vsite_object, original url: @original, altered: @altered ", $watchdog_vars);
+          }
+          $menu[$key]['href'] = 'http://' . $menu[$key]['href'];
         }
       }
     }
