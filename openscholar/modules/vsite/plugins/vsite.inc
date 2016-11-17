@@ -44,7 +44,6 @@ class vsite extends space_og {
       ),
       'absolute' => TRUE,
     ) + $options;
-    error_log(print_r($options, 1));
 
     return url($path, $options);
   }
