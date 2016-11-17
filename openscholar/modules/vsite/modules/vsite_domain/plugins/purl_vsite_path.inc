@@ -90,6 +90,9 @@ if (!class_exists('purl_vsite_path')) {
             $vsite_domain = $vsite->controllers->variable->get('vsite_domain_name','preset');
           }
         }
+        error_log('One of these is wrong.');
+        error_log(variable_get('purl_base_domain', 'no base domain variable'));
+        error_log($base_url);
 
         if ($vsite_domain) {
           $options['base_url'] = "http://" . $vsite_domain;
@@ -98,9 +101,6 @@ if (!class_exists('purl_vsite_path')) {
         else {
           global $base_url;
           $options['base_url'] = variable_get('purl_base_domain', $base_url);
-          error_log('One of these is wrong.');
-          error_log(variable_get('purl_base_domain', 'no base domain variable'));
-          error_log($base_url);
         }
       }
 
