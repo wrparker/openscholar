@@ -733,7 +733,7 @@ function cp_user_form_og_ui_add_users_alter(&$form, $form_state) {
 
   // Hide the option to select a user role for now.
   if (isset($form['og_user']['roles'])) {
-    $form['og_user']['roles']['#access'] = FALSE;
+    $form['og_user']['roles']['#access'] = true;
   }
 
   // Add a secondary submit function that redirects the users out of the
