@@ -37,13 +37,16 @@ class vsite extends space_og {
       self::verify_purl();
     }
 
-    return url($path, array(
-        'purl' => array(
-          'provider' => $this->purl_provider,
-          'id' => $this->id,
-        ),
-        'absolute' => TRUE,
-      ) + $options);
+    $options = array(
+      'purl' => array(
+        'provider' => $this->purl_provider,
+        'id' => $this->id,
+      ),
+      'absolute' => TRUE,
+    ) + $options;
+    error_log(print_r($options, 1));
+
+    return url($path, $options);
   }
 
   /**
