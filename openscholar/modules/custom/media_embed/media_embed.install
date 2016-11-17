@@ -76,7 +76,7 @@ function media_embed_update_7003() {
   $domains = variable_get('media_embed_whitelist');
   array_walk($domains, function(&$domain) {
     // Remove any http and www from the domain.
-    $domain = str_replace(array('https://', 'http://'), '', $domain);
+    $domain = str_replace(array('https://www.', 'http://www.'), '', $domain);
   });
 
   // Make sure we don't multiple domains.
