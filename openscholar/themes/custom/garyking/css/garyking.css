@@ -154,8 +154,15 @@ body.node-type-biblio .biblio-export,
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt ul ul {
     margin: 0;
 }
+.front-lop-presentations a,
+.biblio-title a,
+.biblio-title-chicago a {
+    font-weight: normal !important;
+}
+.front-lop-presentatifons .more-link,
+.research-by-topic ul .item-list ul li a,
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-head a {
-    font-weight: bold;
+    font-weight: bold !important;
 }
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-methods .term-head {
     margin-top: 15px;
@@ -452,11 +459,7 @@ a,
 a:visited {
     color: #065DB2;
 }
-.front-lop-presentations a,
-.biblio-title a,
-.biblio-title-chicago a {
-    font-weight: normal !important;
-}
+
 .field-name-field-biblio-image ~ .biblio-abstract-display {
     margin-left: 0;
 }
@@ -577,7 +580,6 @@ padding: 12px 28px 30px 12px;
 font-size: .94em;
 z-index: 2;
 position: relative;
-font-weight: bold;
 -webkit-transition: all .250s;
 transition: all .250s;
 top: 0;
@@ -642,7 +644,7 @@ top: 0;
 .region-content-top .bio-teaser-block2 p {
     font-size: 1.3em;
   
-    margin: 1.3em !important;
+    margin: 1.3em 1.3em 0 !important;
    
 }
 

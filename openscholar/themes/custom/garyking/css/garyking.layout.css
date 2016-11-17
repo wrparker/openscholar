@@ -1,5 +1,9 @@
 /* Layout CSS */
 
+.region region-content-second {
+padding-top: 40px;
+}
+
 .sidebar {
     margin-top: 290px;
 }
