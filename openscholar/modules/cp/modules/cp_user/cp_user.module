@@ -733,12 +733,13 @@ function cp_user_form_og_ui_add_users_alter(&$form, $form_state) {
 
   $space = spaces_get_space();
   $form['og_user']['roles'] = array(
-    '#type' => 'checkboxes',
+    '#type' => 'radios',
     '#access' => true,
     // Each option is themed and includes a description.
     '#options' => _cp_user_list_roles('rids-options', $space->group->type, $space->group->nid),
     '#default_value' => OS_USER_ROLE_BASIC,
     '#tree' => true,
+    '#value_callback' => '_cp_user_scalar_to_array',
   );
 
   // Add a secondary submit function that redirects the users out of the
@@ -747,6 +748,9 @@ function cp_user_form_og_ui_add_users_alter(&$form, $form_state) {
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Add member'));
 }
 
+function _cp_user_scalar_to_array($form, $selection) {
+  return array($selection => $selection);
+}
 /**
  * Submit handler; maybe grants a role, then redirects user back to "cp/users".
  */
@@ -758,6 +762,9 @@ function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
   if ($state) {
     // Associate the user with the group.
     og_group('node', $form_state['values']['gid'], array('entity' => $account->uid));
+
+    // Add user's role
+    og_ui_edit_membership_submit($form, $form_state);
 
     $vsite = vsite_get_vsite();
     // Loading logged in user's user object for full name.
@@ -771,11 +778,11 @@ function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
       ->condition('id', $vsite->group->nid, '=')
       ->execute()
       ->fetchField();
+
     // Setting up email parameters.
     $to = $account->mail;
     $from = variable_get('site_mail', ini_get('sendmail_from'));
-    // Newly added users is always added as Basic Member by default.
-    $params['!user-role'] = 'Basic member';
+    $params['!user-role'] = $form_state['input']['roles'];
     $params['!account-modifier'] = !empty($account_modifier_full_name) ? $account_modifier_full_name : $account_modifier->name;
     $params['!username'] = $account->name;
     $params['!site-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl;
