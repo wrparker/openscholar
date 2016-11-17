@@ -56,7 +56,7 @@ function os_profiles_cp_settings() {
     ),
   );
 
-  $profile_styles_hover = array();
+  $profile_preview = array();
   $profile_styles = array();
 
   $entity_info = entity_get_info('node');
@@ -68,21 +68,7 @@ function os_profiles_cp_settings() {
     }
 
     $profile_styles[$name] = $info['label'];
-  }
-
-  $counter = 0;
-
-  // Create markup for style examples when hovering over each style.
-  foreach ($profile_styles as $style => $name) {
-    $counter ++;
-    // Prepare the popup and the style name.
-    $profile_example_link = '<a href="#" class="profile-pop" data-popbox="pop'.$counter.'">' . check_plain($name) . '</a>';
-    $profile_example_title = '<h2>' . $name . '</h2>';
-    // Prepare the profile style example for the popup.
-    $profile_example = _os_profiles_build_display_style_example($style);
-    $profile_example_text = '<p>' . $profile_example . '</p>';
-    $profile_example_output = $profile_example_link . '<div id="pop'.$counter.'" class="stylebox">' . $profile_example_title . $profile_example_text . '</div>';
-    $profile_styles_hover[$style] = $profile_example_link;
+    $profile_preview[$name] = _os_profiles_build_display_style_example($name);
   }
 
   $settings['os_profiles_display_type'] = $template + array(
@@ -90,6 +76,7 @@ function os_profiles_cp_settings() {
       '#title' => t('Choose your profile display type'),
       '#value' => variable_get('os_profiles_display_type', 'teaser'),
       '#options' => $profile_styles,
+      '#previews' => $profile_preview,
       '#custom_directive' => 'display_type',
     ),
   );
