@@ -11,7 +11,7 @@ function media_embed_settings($form, &$form_state) {
     '#type' => 'textarea',
     '#title' => t('Domain Whitelist'),
     '#default_value' => implode("\n", $domains),
-    '#description' => t('Enter the list of domains that users may add iframe, object, embed and script tags from. One domain per line. <b>Do not add domains with http:// or https://</b>'),
+    '#description' => t('Enter the list of domains that users may add iframe, object, embed and script tags from. One domain per line. <b>Do not add domains with http://www or https://www</b>'),
   );
 
   $form['submit'] = array(
