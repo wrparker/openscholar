@@ -98,7 +98,9 @@ if (!class_exists('purl_vsite_path')) {
         else {
           global $base_url;
           $options['base_url'] = variable_get('purl_base_domain', $base_url);
-          error_log($options['base_url']);
+          error_log('One of these is wrong.');
+          error_log(variable_get('purl_base_domain', 'no base domain variable'));
+          error_log($base_url);
         }
       }
 
