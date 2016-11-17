@@ -10,9 +10,9 @@
     return {
       template:
 
-        '<ul class="table-list">' +
-          '<li class="redirect-item" ng-repeat="option in options">' +
-            '{{option}}' +
+        '<ul>' +
+          '<li class="redirect-item" ng-repeat="(option, label) in options">' +
+            '<input type="radio" name="os_profiles_display_type" value="{{option}}" /> {{label}}' +
           '</li>' +
         '</ul>',
 
