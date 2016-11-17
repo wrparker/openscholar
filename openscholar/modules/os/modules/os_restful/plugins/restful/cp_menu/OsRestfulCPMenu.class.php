@@ -577,9 +577,9 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
               '@vsite' => $vsite,
               '@purl_provider' => $vsite_object->purl_provider,
               '@original' => $store,
-              '@altered' => ['href'],
+              '@altered' => $menu[$key]['href'],
               '@baseUrl' => $GLOBALS['base_url'],
-              '@secondTry' => $vsite_object->get_absolute_url($tore, !empty($value['options']) ? $value['options'] : array())
+              '@secondTry' => $vsite_object->get_absolute_url($store, !empty($value['options']) ? $value['options'] : array())
             );
             $runOnce = true;
             error_log(t("Constructed menu url was not complete. vsite: @vsite, purl provider: @purl_provider, original url: @original, altered: @altered, base url: @baseUrl, try again: @secondTry ", $watchdog_vars));
