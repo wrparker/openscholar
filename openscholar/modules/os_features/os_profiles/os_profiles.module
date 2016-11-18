@@ -1310,8 +1310,8 @@ function os_profiles_node_update($node) {
 function os_profiles_profile_changed($node) {
   $wrapper = entity_metadata_wrapper('node', $node);
   $wrapper_original = entity_metadata_wrapper('node', $node->original);
-  foreach (os_profiles_profiles_fields() as $key => $field) {
-    if ($wrapper->{$key}->value() !== $wrapper_original->{$key}->value()) {
+  foreach (os_profiles_profiles_fields() as $field => $prop) {
+    if ($wrapper->$field->value() !== $wrapper_original->$field->value()) {
       return TRUE;
     }
   }
