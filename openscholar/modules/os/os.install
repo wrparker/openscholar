@@ -947,3 +947,32 @@ function os_update_7047() {
   module_enable(array('ap_settings_form', 'restful_message'));
   return t('Enhanced settings forms enabled.');
 }
+
+/**
+ * Update cp\/welcome page
+ */
+function os_update_7048() {
+  $nid = variable_get('vsite_register_welcome_message');
+  $node = node_load($nid);
+  $node->body[LANGUAGE_NONE][0]['value'] = "
+<h2>Have questions? Learn how to build your site from getting started to go-live on the
+<a href=\"http://docs.openscholar.harvard.edu/\" data-url=\"http://docs.openscholar.harvard.edu/\" target=\"_blank\">OpenScholar Documentation site</a>.
+</h2>
+
+<p><img src=\"https://cloud.githubusercontent.com/assets/867075/20278983/c36f6f10-aa74-11e6-9a87-38c05ede6ec4.png\"></p>
+
+<h2>Other Resources</h2>
+
+<p>Want an in-person training? Attend one of our regularly scheduled
+<a href=\"http://hwp.harvard.edu/calendar/upcoming\" target=\"_blank\">OpenScholar training sessions.
+</a>
+<br>Need help with your project? Contact the
+<a href=\"http://hwp.harvard.edu/contact\" target=\"_blank\">Harvard Web Publishing Team
+</a>.
+</p>
+<style>.page-cp-welcome.overlay #overlay { width: 400px; } .page-cp-welcome.overlay #overlay ol { font-size: 1.2em; } .vsite-welcome-okay { display:none; } p {font-size:1.1em;}
+</style>
+";
+
+  node_save($node);
+}
