@@ -640,7 +640,6 @@ ul ul ul ul {
     display: block;
 }
 /* Don't display the ical link in the floating box. */
-.block-boxes-os_boxes_media .file-icon,
 #cboxWrapper .node-event .links {
     display: none;
 }

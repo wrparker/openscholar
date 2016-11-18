@@ -1688,6 +1688,11 @@ function os_files_file_view($file, $view_mode, $langcode) {
     unset($file->os_file_description);
   }
 
+  if ($view_mode == 'full' && $file->filemime == 'html/embed') {
+    // Remove file icon in case its a embed widget with its content
+    unset($content['file-info']['icon']);
+  }
+
   //teasers get read more link
   if ($view_mode == 'teaser' && $file->os_file_description) {
     $readmore = array(
