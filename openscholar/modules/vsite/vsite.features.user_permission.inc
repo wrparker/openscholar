@@ -24,6 +24,7 @@ function vsite_user_default_permissions() {
     'name' => 'create department content',
     'roles' => array(
       'authenticated user' => 'authenticated user',
+      'web services' => 'web services',
     ),
     'module' => 'node',
   );
@@ -34,6 +35,7 @@ function vsite_user_default_permissions() {
     'roles' => array(
       'authenticated user' => 'authenticated user',
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
       'manager' => 'manager',
       'support team' => 'support team',
     ),
@@ -45,6 +47,7 @@ function vsite_user_default_permissions() {
     'name' => 'create project content',
     'roles' => array(
       'authenticated user' => 'authenticated user',
+      'web services' => 'web services',
     ),
     'module' => 'node',
   );

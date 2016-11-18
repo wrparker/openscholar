@@ -42,14 +42,14 @@
     color: #4E84C4;
 }
 .media-browser-button:hover {
-    cursor:pointer;
-    background-color:#eee;
+    cursor: pointer;
+    background-color: #eee;
 }
 .media-browser-button.active {
     border: 1px solid lightgray;
     border-bottom: 1px solid white;
     background-color: #FFFFFF;
-    color:#333;
+    color: #333;
 }
 .description.embedly {
     font-size: 1.04em;
@@ -299,6 +299,7 @@ button[ng-disabled="!pager.canPage(-1)"] {
     text-align: center;
     margin-right: 0 !important;
 }
+#edit-site_favicon_fid-und-drop .media-browser-drop-box span.ng-scope,
 #edit-field_upload-und-drop span.ng-binding.ng-scope,
 .media-browser-pane .file-clear button,
 .media-browser-pane #media-browser-file-select,
@@ -326,14 +327,20 @@ div[file-edit] .control button,
     border-radius: 20px;
 }
 .media-browser-pane #media-browser-file-select {
-left: 36%;
-   width: 160px; 
+    left: 36%;
+    width: 160px;
 }
 .field-widget-media-draggable-file span.ng-binding.ng-scope {
     width: 80px;
     top: 25%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+#edit-site_favicon_fid-und-drop .media-browser-drop-box span.ng-scope {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
 }
 #drag-text {
     position: absolute;
@@ -347,6 +354,10 @@ left: 36%;
     font-size: 1em;
     transform: translate(-50%, -50%);
 }
+#edit-site_favicon_fid-und-drop .media-browser-drop-box #drag-text {
+    top: 20%;
+    left: 40%;
+}
 .media-browser-drop-box {
     height: 450px;
     width: 99%;
@@ -354,6 +365,11 @@ left: 36%;
     border: 2px dashed #ccc;
     position: relative;
 }
+#edit-site_favicon_fid-und-drop .media-browser-drop-box {
+    height: 150px;
+  
+}
+
 .node-form .media-browser-drop-box {
     height: 180px;
     background-color: #FFF;
@@ -501,7 +517,7 @@ left: 36%;
  * Dialog stuff
  */
 
-.ui-dialog-titlebar {
+.ui-dialog.media-wrapper .ui-dialog-titlebar {
     display: none;
 }
 /**
@@ -529,13 +545,11 @@ left: 36%;
     animation-duration: 2s;
     animation-iteration-count: infinite;
 }
-
 /*Media browser position set to fixed to show media browser in same position inspite of page scrolling.*/
 
 .ui-dialog.media-wrapper {
-  position:fixed;
+    position: fixed;
 }
-
 #media-browser-file-select {
-  font-size: 14px !important;
+    font-size: 14px !important;
 }

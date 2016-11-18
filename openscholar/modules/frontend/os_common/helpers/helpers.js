@@ -6,7 +6,8 @@
 
   w.osCommonHelpers = {
     findLibraryPath: findLibraryPath,
-    findDomain: findDomain
+    findDomain: findDomain,
+    addDependency: addDependency
   };
 
   /**
@@ -38,5 +39,44 @@
 
     return parser.protocol+'//'+parser.hostname;
   }
+
+  /**
+   * Adds a dependency for a module. Use this to allow other modules to hook themselves into other modules without
+   * constantly updating the target module.
+   */
+  var deps = {};
+  function addDependency(module, dependency) {
+    if (typeof dependency != 'undefined') {
+      deps[module] = deps[module] || [];
+      deps[module].push(dependency);
+    }
+
+    return deps[module];
+  }
+
+
+
+  var m = angular.module('osHelpers', []);
+
+
+  /**
+   * Takes a string and cleans it for use in an id attribute.
+   */
+  m.filter('idClean', function () {
+    return function (input, prefix) {
+      if (input) {
+        input = input.replace(/_/g, '-');
+        input = input.replace(/\s/g, '-');
+        input = input.replace(/--/g, '-');
+
+        if (prefix) {
+          return prefix + '-' + input;
+        }
+        else {
+          return input;
+        }
+      }
+    };
+  });
 
 })(window);

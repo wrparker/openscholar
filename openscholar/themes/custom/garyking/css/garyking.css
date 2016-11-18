@@ -14,7 +14,8 @@ body {
 .contact-map a,
 .node-type-person .node-title,
 .research-by-topic ul .item-list ul li .description a,
-.front .field-name-field-biblio-image {
+.front .field-name-field-biblio-image,
+.locion {
     display: none;
 }
 body,
@@ -58,6 +59,14 @@ body.not-front {
     font-size: 16px;
   
 }
+
+.research-by-topic .term-head a h1.node-title,
+.front-lop-papers h1.node-title,
+.front-lop-books h1.node-title {
+    font-size: 1em;
+}
+
+
 body,
 body.not-front,
 .node-presentation.node-teaser .date-display-single,
@@ -145,8 +154,15 @@ body.node-type-biblio .biblio-export,
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt ul ul {
     margin: 0;
 }
+.front-lop-presentations a,
+.biblio-title a,
+.biblio-title-chicago a {
+    font-weight: normal !important;
+}
+.front-lop-presentatifons .more-link,
+.research-by-topic ul .item-list ul li a,
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-head a {
-    font-weight: bold;
+    font-weight: bold !important;
 }
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-methods .term-head {
     margin-top: 15px;
@@ -443,11 +459,7 @@ a,
 a:visited {
     color: #065DB2;
 }
-.front-lop-presentations a,
-.biblio-title a,
-.biblio-title-chicago a {
-    font-weight: normal !important;
-}
+
 .field-name-field-biblio-image ~ .biblio-abstract-display {
     margin-left: 0;
 }
@@ -504,7 +516,7 @@ ul.nice-menu-down,
 #boxes-box-site_info h1 {
     padding: 8px 0 8px 12px;
 }
-#block-os-search-solr-site-search {
+#block-boxes-solr-search-box {
     position: absolute;
     top: 60px;
     right: 0;
@@ -522,9 +534,9 @@ ul.nice-menu-down,
     border-top: 4px solid #999;
 }
 .research-by-topic li.term-methods {
-    float: left;
+   float: left;
     width: 475px;
-    background:url('../images/icons/formula-icon.png') 195px 0 no-repeat;
+    background:url('../images/icons/curve.svg?123') 203px 12px no-repeat;
     background-size:70px;
     padding-top:50px;
  
@@ -532,7 +544,7 @@ ul.nice-menu-down,
 .research-by-topic li.term-applications {
     float: right;
     width: 475px;
-        background:url('../images/icons/cogs.svg') 195px 0 no-repeat;
+        background:url('../images/icons/cogs.svg') 200px 0 no-repeat;
     background-size:70px;
     padding-top:50px;
 }
@@ -554,7 +566,6 @@ ul.nice-menu-down,
     opacity: 1;
 }
 .research-by-topic .term-head a {
-    font-size: 1em;
     margin-top: 20px;
     display: block;
 }
@@ -569,31 +580,24 @@ padding: 12px 28px 30px 12px;
 font-size: .94em;
 z-index: 2;
 position: relative;
-font-weight: bold;
 -webkit-transition: all .250s;
 transition: all .250s;
 top: 0;
 }
 
-.research-by-topic ul .item-list ul li.open a {
-    top: 20px;
-    background-color: #fff;
-    height: 20px;
-   padding: 15px 12px 5px;
-}
 
-
-.research-by-topic ul .item-list ul li.open a:after {
-    top: -20px;
-    right: 0;
-    content: 'Relevant content ➞';
-    position: absolute;
-    font-size: .8em;
-    width: 30%;
+  .research-by-topic ul .item-list ul li.open a {
+    top: -5px;
     background-color: #4a5a77;
-    text-align: right;
-    padding-right: 10px;
+    height: 20px;
+    padding: 10px 12px 7px;
+    color: #fff;
+    background:url('../images/link.png') 185px 12px no-repeat #4a5a77;
 }
+
+
+
+
 .research-by-topic ul .item-list ul li span {
     font-family: arial;
     font-size: 1.4em;
@@ -612,15 +616,15 @@ top: 0;
     z-index: 2;
 }
 .research-by-topic ul .item-list ul li.open span:after {
-    content: '';
-    width: 70%;
+       content: '';
+    width: 10%;
     height: 50px;
-    top: -27px;
-    left: 0;
-    background-position: 4% -234px;
+    top: -18px;
+    right: 0;
+    background-position: 18px -238px;
 }
 .research-by-topic ul .item-list ul li a:hover {
-    margin-left: 10px;
+    margin-left: 12px;
 }
 .research-by-topic ul .item-list ul li.open a:hover {
     margin-left: 0;
@@ -640,12 +644,33 @@ top: 0;
     margin-top: 1.2em !important;
     text-align: left;
 }
+.region-content-top .bio-teaser-block2 p {
+    font-size: 1.3em;
+  
+    margin: 1.3em 1.3em 0 !important;
+   
+}
+
+.region-content-top .bio-teaser-block2 a {
+    text-decoration: none !important;
+    padding-right: 28px;
+    background: url("../images/sprite.png?zyx") 76px -109px no-repeat;
+ 
+}
+
+.region-content-top .bio-teaser-block2 a:hover {
+
+    background-position: 81px -109px;
+ 
+}
+
 .bio-teaser-block2 a {
     text-decoration: none !important;
     padding-right: 28px;
     background: url("../images/sprite.png?zyx") 80px -207px no-repeat;
     transition: all .250s;
     -webkit-transition: all .250s;
+    border-bottom:1px solid #fff;
 }
 .bio-teaser-block2 a:hover {
     background-position: 85px -207px;
@@ -653,7 +678,7 @@ top: 0;
 .research-by-topic ul .item-list ul li .description {
     transition: all .250s;
     -webkit-transition: all .250s;
-         padding: 0px 10px 10px 12px;
+         padding: 5px 10px 10px 12px;
     z-index: 1;
     position: relative;
     font-size: .95em;
@@ -662,8 +687,8 @@ top: 0;
   
 }
 .research-by-topic ul .item-list ul li.open .description {
-   top: 25px;
-    height: 228px;
+   top: 0;
+    height: 250px;
     overflow-y: scroll;
 }
 
@@ -694,7 +719,7 @@ top: 0;
 
 
 /* RESPONSIVE CSS - UNTIL I CAN FIGURE OUT WHY GARYKING RESP CSS FILE WONT LOAD */
-@media (max-width: 1008px) {
+@media (max-width: 1024px) {
    #boxes-box-site_info h1 {
     font-size: 28px;
 }
@@ -703,7 +728,11 @@ top: 0;
   
     font-size: 16.3px;
 }
-
+ #menu-bar #block-os-primary-menu a.active,
+ #menu-bar #block-os-primary-menu a:hover,
+    #menu-bar #block-os-primary-menu a:focus {
+        background-color: #303030!important;
+    }
 
 
 
@@ -711,6 +740,15 @@ top: 0;
 /*--------------------------------------------------------*/
 
 @media (max-width: 768px) {
+#main-content-header,
+.research-by-topic li.term-applications,
+.research-by-topic li.term-methods,
+h1#page-title	{
+	width: 100%;
+}
+	
+	
+	
 #menu-bar {
     position: relative !important;
 
@@ -724,6 +762,21 @@ top: 0;
 	display:none !important;
 }
 
+.research-by-topic li.term-applications,
+.research-by-topic li.term-methods
+ {
+ 	background-size: 70px;
+    float: right;
+    
+    background: url('../images/icons/cogs.svg') 320px 0 no-repeat;
+}
+.research-by-topic li.term-methods
+ {
+ 
+    background: url('../images/icons/curve.svg?123') 203px 12px no-repeat;
+}
+
+#main-content-header,
 .front #columns {
  
     margin-top: 0;
@@ -736,6 +789,19 @@ top: 0;
 
 .sidebar {
     margin-top: 0;
+}
+
+.front .block-boxes-os_sv_list_box.front-top-featured {
+	    width: auto !important;
+}
+
+.front #content-panels .region-content-bottom {
+
+    background-size: auto;
+}
+
+.page-node- .breadcrumb {
+    top: 30px;
 }
 
 
