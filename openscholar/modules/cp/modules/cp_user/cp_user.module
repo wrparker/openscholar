@@ -765,33 +765,6 @@ function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
 
     // Add user's role
     og_ui_edit_membership_submit($form, $form_state);
-
-    $vsite = vsite_get_vsite();
-    // Loading logged in user's user object for full name.
-    $account_modifier = user_load($user->uid);
-    $account_modifier_full_name = $account_modifier->field_first_name[LANGUAGE_NONE][0]['value'] . ' ' . $account_modifier->field_last_name[LANGUAGE_NONE][0]['value'];
-    $purl_base_domain = variable_get('purl_base_domain');
-    // Checking if this is a custom domain site or not.
-    $custom_domain = db_select('purl', 'p')
-      ->fields('p', array('value'))
-      ->condition('provider', 'vsite_domain', '=')
-      ->condition('id', $vsite->group->nid, '=')
-      ->execute()
-      ->fetchField();
-
-    // Setting up email parameters.
-    $to = $account->mail;
-    $from = variable_get('site_mail', ini_get('sendmail_from'));
-    $params['!user-role'] = $form_state['input']['roles'];
-    $params['!account-modifier'] = !empty($account_modifier_full_name) ? $account_modifier_full_name : $account_modifier->name;
-    $params['!username'] = $account->name;
-    $params['!site-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl;
-    $params['!login-url'] = !empty($custom_domain) ? 'http://' . $custom_domain . '/user?destination=home' : $purl_base_domain . '/user?destination=' . $vsite->group->purl;
-    $params['!user-firstname'] = $account->field_first_name[LANGUAGE_NONE][0]['value'];
-    $params['!sitewide-name'] = variable_get('site_name', 'Harvard Web Publishing');
-    $params['headers']['Cc'] = $account_modifier->mail;
-    // Sending email notification to added user.
-    drupal_mail('cp_user', 'os_user_add_to_group', $to, $language, $params, $from);
   }
 
   $form_state['redirect'] = 'cp/users';
