@@ -1,6 +1,9 @@
 body {
     -moz-osx-font-smoothing: grayscale;
 }
+.front-lop-presentations .location, 
+.front-lop-presentations .field-type-file,
+.front-lop-presentations .node-content,
 .not-front .research-by-topic h2.block-title,
 .tweet-divider,
 .tweet-authorphoto,
@@ -11,7 +14,8 @@ body {
 .contact-map a,
 .node-type-person .node-title,
 .research-by-topic ul .item-list ul li .description a,
-.front .field-name-field-biblio-image {
+.front .field-name-field-biblio-image,
+.locion {
     display: none;
 }
 body,
@@ -53,8 +57,24 @@ h2.block-title,
 body,
 body.not-front {
     font-size: 16px;
+  
+}
+
+.research-by-topic .term-head a h1.node-title,
+.front-lop-papers h1.node-title,
+.front-lop-books h1.node-title {
+    font-size: 1em;
+}
+
+
+body,
+body.not-front,
+.node-presentation.node-teaser .date-display-single,
+.research-by-topic ul .item-list ul li .description {
     color: #222;
 }
+
+.research-by-topic ul .item-list ul li.open a:after,
 .front #content-panels .region-content-first,
 .front #content-panels .region-content-bottom,
 .front .block-boxes-os_boxes_columns .block-boxes-os_boxes_html.top-bio-teaser a,
@@ -182,10 +202,12 @@ body.node-type-biblio .biblio-export,
     background: #eee !important;
     border: none;
 }
+
 #content-panels .front-lop-blockgrid .block-inner {
     margin-top: 5px;
     padding: 0 12px;
 }
+
 .block-os-search-solr {
     opacity: 0;
     -webkit-transition: all .5s;
@@ -253,7 +275,7 @@ h3 {
 }
 a.os-arrow:after {
     content: '';
-    background: url('../images/sprite.png') 3px -111px no-repeat;
+    background: url('../images/sprite.png?zyx') 3px -111px no-repeat;
     padding-right: 20px;
     -webkit-transition: all .125s linear;
     -moz-transition: all .125s linear;
@@ -262,7 +284,7 @@ a.os-arrow:after {
 }
 a.os-arrow:hover:after {
     content: '';
-    background: url('../images/sprite.png') 6px -111px no-repeat;
+    background: url('../images/sprite.png?zyx') 6px -111px no-repeat;
     padding-right: 22px;
 }
 .all-apps-and-methods {
@@ -273,11 +295,11 @@ a.os-arrow:hover:after {
     font-size: 1.3em;
 }
 .all-apps-and-methods a.os-arrow:after {
-    background: url('../images/sprite.png') 5px -109px no-repeat;
+    background: url('../images/sprite.png?zyx') 5px -109px no-repeat;
     padding-right: 32px;
 }
 .all-apps-and-methods a.os-arrow:hover:after {
-    background: url('../images/sprite.png') 13px -109px no-repeat;
+    background: url('../images/sprite.png?zyx') 13px -109px no-repeat;
     padding-right: 32px;
 }
 .front-lop-blockgrid {
@@ -414,7 +436,7 @@ h1#page-title {
     color: #7cabd8;
 }
 .block-boxes-os_boxes_twitterfeed h2.block-title {
-    background: url('../images/sprite.png?m=1473xx') 0 -55px no-repeat;
+    background: url('../images/sprite.png?zyx') 0 -55px no-repeat;
     font-size: 0;
     height: 50px;
     width: 64px;
@@ -423,12 +445,14 @@ h1#page-title {
 .tweets-pulled-listing li {
     margin: 10px 0 25px;
 }
+.research-by-topic ul .item-list ul li.open a,
 .research-by-topic ul .item-list ul li span:after,
 .biblio-title a,
 a,
 a:visited {
     color: #065DB2;
 }
+.front-lop-presentations a,
 .biblio-title a,
 .biblio-title-chicago a {
     font-weight: normal !important;
@@ -470,14 +494,14 @@ body.node-type-biblio .biblio-export {
 }
 #block-os-primary-menu .nice-menu li.last a {
     padding: 16px 22px 13px 22px;
-    background: url('../images/sprite.png') no-repeat 3px 8px #065DB2;
+    background: url('../images/sprite.png?zyx') no-repeat 3px 8px #065DB2;
     font-size: 0;
     border-bottom: 3px solid #065DB2;
 }
 #block-os-primary-menu .nice-menu li.last a:hover {
     cursor: pointer;
 }
-.footer .block-boxes-os_boxes_addthis,
+
 ul.nice-menu-down,
 #block-os-primary-menu {
     float: right;
@@ -507,23 +531,23 @@ ul.nice-menu-down,
     border-top: 4px solid #999;
 }
 .research-by-topic li.term-methods {
-    float: left;
-    width: 460px;
-    background:url('../images/icons/formula-icon.png') 195px 0 no-repeat;
+   float: left;
+    width: 475px;
+    background:url('../images/icons/curve.svg?123') 203px 12px no-repeat;
     background-size:70px;
     padding-top:50px;
  
 }
 .research-by-topic li.term-applications {
     float: right;
-    width: 460px;
-        background:url('../images/icons/cogs.svg') 195px 0 no-repeat;
+    width: 475px;
+        background:url('../images/icons/cogs.svg') 200px 0 no-repeat;
     background-size:70px;
     padding-top:50px;
 }
 .research-by-topic ul .item-list ul li {
     width: 100%;
-    height: 70px;
+    height: 45px;
     overflow: hidden;
     margin: 0 20px 7px 0;
     background-color: #3B4B69;
@@ -539,7 +563,6 @@ ul.nice-menu-down,
     opacity: 1;
 }
 .research-by-topic .term-head a {
-    font-size: 1em;
     margin-top: 20px;
     display: block;
 }
@@ -549,54 +572,57 @@ ul.nice-menu-down,
 }
 .research-by-topic ul .item-list ul li a {
     display: block;
-    height: 300px;
-    padding: 13px 15px 30px 15px;
-    font-size: 1.05em;
-    z-index: 2;
-    position: relative;
-    font-weight: bold;
-    -webkit-transition: all .250s;
-    transition: all .250s;
-    top: 0;
+height: 300px;
+padding: 12px 28px 30px 12px;
+font-size: .94em;
+z-index: 2;
+position: relative;
+font-weight: bold;
+-webkit-transition: all .250s;
+transition: all .250s;
+top: 0;
 }
 
 .research-by-topic ul .item-list ul li.open a {
-    top: -320px;
+    top: -5px;
     background-color: #4a5a77;
+    height: 20px;
+    padding: 10px 12px 7px;
+    color: #fff;
 }
 
 
-.research-by-topic ul .item-list ul li.open a:after {
-    bottom: 0px;
-    right: 10px;
-    content: 'Relevant content ➞';
-    position: absolute;
-    font-size: .75em;
-}
+
 .research-by-topic ul .item-list ul li span {
     font-family: arial;
     font-size: 1.4em;
 }
 .research-by-topic ul .item-list ul li span:after {
     content: '';
-    width: 100%;
+   
     color: #fff;
     position: absolute;
-    top: 47px;
-    background: url('../images/sprite.png?xyz123') 60% -233px #4a5a77 no-repeat;
-    width: 100%;
-    height: 50px;
+    top: 0;
+    right: 0;
+    background: url('../images/sprite.png?zyxabc') 10px -282px #4a5a77 no-repeat;
+    width: 30px;
+    height: 100%;
     transition: all .250s;
     z-index: 2;
 }
 .research-by-topic ul .item-list ul li.open span:after {
-    content: '';
-    width: 70%;
-    top: -27px;
-    background-position: 4% -234px;
+       content: '';
+    width: 10%;
+    height: 50px;
+    top: -18px;
+    right: 0;
+    background-position: 18px -238px;
 }
-.research-by-topic ul .item-list ul li:hover {
-    margin-left: 10px;
+.research-by-topic ul .item-list ul li a:hover {
+    margin-left: 12px;
+}
+.research-by-topic ul .item-list ul li.open a:hover {
+    margin-left: 0;
 }
 .research-by-topic.block-boxes-os_taxonomy_fbt ul ul {
     margin: 0 !important;
@@ -616,7 +642,7 @@ ul.nice-menu-down,
 .bio-teaser-block2 a {
     text-decoration: none !important;
     padding-right: 28px;
-    background: url("../images/sprite.png?abcdgfgg") 80px -207px no-repeat;
+    background: url("../images/sprite.png?zyx") 80px -207px no-repeat;
     transition: all .250s;
     -webkit-transition: all .250s;
 }
@@ -626,16 +652,16 @@ ul.nice-menu-down,
 .research-by-topic ul .item-list ul li .description {
     transition: all .250s;
     -webkit-transition: all .250s;
-    padding: 10px;
+         padding: 5px 10px 10px 12px;
     z-index: 1;
     position: relative;
     font-size: .95em;
     top: 5px;
     transition: all .250s;
-    color: #222;
+  
 }
 .research-by-topic ul .item-list ul li.open .description {
-    top: -320px;
+   top: 0;
     height: 250px;
     overflow-y: scroll;
 }
@@ -667,7 +693,7 @@ ul.nice-menu-down,
 
 
 /* RESPONSIVE CSS - UNTIL I CAN FIGURE OUT WHY GARYKING RESP CSS FILE WONT LOAD */
-@media (max-width: 1008px) {
+@media (max-width: 1024px) {
    #boxes-box-site_info h1 {
     font-size: 28px;
 }
@@ -676,7 +702,11 @@ ul.nice-menu-down,
   
     font-size: 16.3px;
 }
-
+ #menu-bar #block-os-primary-menu a.active,
+ #menu-bar #block-os-primary-menu a:hover,
+    #menu-bar #block-os-primary-menu a:focus {
+        background-color: #303030!important;
+    }
 
 
 
@@ -684,6 +714,15 @@ ul.nice-menu-down,
 /*--------------------------------------------------------*/
 
 @media (max-width: 768px) {
+#main-content-header,
+.research-by-topic li.term-applications,
+.research-by-topic li.term-methods,
+h1#page-title	{
+	width: 100%;
+}
+	
+	
+	
 #menu-bar {
     position: relative !important;
 
@@ -697,6 +736,21 @@ ul.nice-menu-down,
 	display:none !important;
 }
 
+.research-by-topic li.term-applications,
+.research-by-topic li.term-methods
+ {
+ 	background-size: 70px;
+    float: right;
+    
+    background: url('../images/icons/cogs.svg') 320px 0 no-repeat;
+}
+.research-by-topic li.term-methods
+ {
+ 
+    background: url('../images/icons/curve.svg?123') 203px 12px no-repeat;
+}
+
+#main-content-header,
 .front #columns {
  
     margin-top: 0;
@@ -709,6 +763,19 @@ ul.nice-menu-down,
 
 .sidebar {
     margin-top: 0;
+}
+
+.front .block-boxes-os_sv_list_box.front-top-featured {
+	    width: auto !important;
+}
+
+.front #content-panels .region-content-bottom {
+
+    background-size: auto;
+}
+
+.page-node- .breadcrumb {
+    top: 30px;
 }
 
 

@@ -31,6 +31,8 @@ function vsite_cp_settings() {
         '#id' => 'vsite-subsite',
         '#title' => t('Subsites'),
         '#weight' => 31,
+        '#menu_parent' => 'appearance',
+        '#help_link' => l(t('Learn more about subsite themes'), 'http://docs.openscholar.harvard.edu/global-site-settings#subsite-themes', array('attributes' => array('target' => '_blank')))
       ),
     );
   }
@@ -102,11 +104,11 @@ function vsite_cp_settings() {
     ),
     'group' => array(
       '#id' => 'Favicon',
-      '#title' => t('Upload Favicon'),
+      '#title' => t('Favicon'),
       '#weight' => 30,
       '#menu_parent' => 'appearance',
       '#description' => t('A favicon is a 16x16 .ico file to be displayed in browser shortcut iocns and tabs for any page on your site. For help generatiing a favison, try <a href="http://www.favicon.cc/">http://www.favicon.cc/</a>.'),
-      '#help_link' => l(t('Learn more about favicon'), 'http://docs.openscholar.harvard.edu/global-site-settings#favicon', array('attributes' => array('target' => '_blank')))
+      '#help_link' => l(t('Learn more about favicon'), 'http://docs.openscholar.harvard.edu/adding-site-favicon', array('attributes' => array('target' => '_blank')))
     ),
     'submit' => 'vsite_cp_settings_form_submit',
   );
