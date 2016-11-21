@@ -3,7 +3,7 @@ Feature:
 
   @api @wip
   Scenario: Check activity stream page
-    Given I visit "/api/v1/activities"
+    Given I visit "/activity"
      Then I should see "John created Software Project: Windows 7"
 
   @api @misc_first
@@ -13,7 +13,7 @@ Feature:
       And I change privacy of the site "obama" to "Invite only during site creation. "
       And I create a new "blog" entry with the name "private different title" in the group "obama"
       And I click "Log out"
-     When I visit "api/v1.0/activities"
+     When I visit "activity.json"
      Then I should see the following message <json>:
           | !title | public unique title     |
       And I should not see the following message <json>:

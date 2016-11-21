@@ -59,14 +59,14 @@ class os_boxes_mailchimp extends os_boxes_default {
       $form['subscribe']['display'] = array(
         '#type' => 'radios', 
         '#title' => 'Display', 
-        '#options' => array('link' => t('Link'), 'form' => t('Basic Form'), 'mailchimp_form' => t('Mailchimp Form')), 
+        '#options' => array('link' => t('Link'), 'form' => t('Basic Form'), 'mailchimp_form' => t('MailChimp Form')), 
         '#default_value' => $this->options['display'], 
         '#description' => t('Show a link to subscription popup, simple form, or an advanced form customizable at mailchimp.com'),
       );
       
       $form['subscribe']['mailchimp_iframe_height'] = array(
         '#type' => 'textfield',
-        '#title' => t('Mailchimp form height.'),
+        '#title' => t('MailChimp form height.'),
         '#default_value' => (isset($this->options['mailchimp_iframe_height'])) ? $this->options['mailchimp_iframe_height'] : $defaults['mailchimp_iframe_height'],
         '#states' => array('visible' => array('input[name="display"]' => array('value' => 'mailchimp_form'))),
       );
