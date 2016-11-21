@@ -424,7 +424,7 @@ function media_embed_library_alter(&$libs) {
  */
 function media_embed_remove_domains_protocol(array $domains) {
   foreach ($domains as &$domain) {
-    $domain = str_replace(array('http://www.', 'https://www.', 'http://', 'https://'), '', $domain);
+    $domain = str_replace(array('http://www.', 'https://www.', 'http://', 'https://', 'www.'), '', $domain);
   }
 
   return $domains;
