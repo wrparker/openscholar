@@ -33,21 +33,7 @@ fieldset {
 .vertical-tabs-panes fieldset {
     background: #FFF;
 }
-.region-footer {
-    background: #000;
-    color: #FFFFFF;
-    height: 30px;
-    bottom: 0;
-    position: fixed;
-    width: 100%;
-    z-index: 10;
-    text-align: right;
-}
 
-.region-footer .region-inner {
-    padding: 10px 20px 0 15px;
-    z-index: 1;
-}
 h3 {
     margin: 0;
 }
@@ -372,6 +358,9 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 .ui-dialog {
     padding: 0;
     top:10% !important;
+}
+.ui-dialog .ui-dialog-content {
+    overflow: visible;
 }
 #overlay-tabs {
     margin: -30px 0 0;
