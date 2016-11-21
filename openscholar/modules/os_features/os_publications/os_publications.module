@@ -1870,7 +1870,7 @@ function os_publications_cp_settings() {
   // Export Format option
   $default_export_format_options = variable_get('biblio_export_links', array('tagged' => TRUE, 'xml' => TRUE, 'bibtex' => TRUE));
   foreach ($default_export_format_options as $key => $export_option) {
-  	$default_export_format_options[$key] = !empty($export_option) ? TRUE : FALSE;
+    $default_export_format_options[$key] = !empty($export_option) ? TRUE : FALSE;
   }
 
   $settings['biblio_export_links'] = array(
