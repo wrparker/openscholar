@@ -62,7 +62,7 @@ function hwpi_basetheme_page_alter(&$page) {
         'external' => true,
         'html' => true,
         'attributes' => array(
-          'data-target' => '#block-os-search-db-site-search, #block-os-search-solr-site-search',
+          'data-target' => '#block-os-search-db-site-search, #block-boxes-solr-search-box',
         )
       )
     )
