@@ -1718,10 +1718,10 @@ function os_publications_cp_settings() {
 
   // Fetching publication types option from table 'biblio_types'.
   $publication_types_options = array();
-  $result = db_query('SELECT t.* FROM {biblio_types} as t WHERE tid > -1 AND visible = 1 ORDER BY t.name ASC');
+  $result = db_query('SELECT t.* FROM {biblio_types} as t WHERE tid > -1 AND visible = 1');
 
   foreach ($result as $option) {
-    $publication_types_options[$option->tid] = $option->name;
+    $publication_types_options[] = array('key' => $option->tid, 'label' => $option->name);
   }
 
   // Rendering Label and description above publication type checkbox set. This text will span accross 3 columns.
@@ -1755,7 +1755,8 @@ function os_publications_cp_settings() {
       '#select_all' => TRUE,
       '#default_value' => variable_get('os_publications_filter_publication_types', array()),
       '#options' => $publication_types_options,
-      '#weight' => 0
+      '#weight' => 0,
+      '#sorted_options' => TRUE,
     ),
   );
 
@@ -1822,7 +1823,7 @@ function os_publications_cp_settings() {
     $default_autoflags = array();
     foreach (_citation_distribute_plugins() as $plugin) {
       if (isset($plugin['title']) && _citation_distribute_is_service_configured($plugin)) {
-        $autoflags_options[$plugin['class']] = $plugin['title'];
+        $autoflags_options[] = array('key' => $plugin['class'], 'label' => $plugin['title']);
         $default_autoflags[$plugin['class']] = FALSE;
       }
     }
@@ -1883,15 +1884,16 @@ function os_publications_cp_settings() {
     'form' => array(
       '#type' => 'checkboxes',
       '#default_value' => $default_export_format_options,
-      '#options' => array('tagged' => 'EndNote Tagged', 'xml' => 'EndNote XML', 'bibtex' => 'BibTex'),        
+      '#options' => array(
+      	array('key' => 'tagged', 'label' => 'EndNote Tagged'),
+      	array('key' => 'xml', 'label' => 'EndNote XML'),
+      	array('key' => 'bibtex', 'label' => 'BibTex'),
+      ),        
       '#weight' => 2,
       '#column' => 'right',
       '#prefix' => '<label>Export Formats</label>',
       '#description' => t('Each selected format will appear in its own export link.'),
     ),
   );
-
-  //print_r($default_export_format_options);
-
   return $settings;
 }

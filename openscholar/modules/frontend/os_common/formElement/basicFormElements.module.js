@@ -42,14 +42,18 @@
           '<input ng-model="selectAll" type="checkbox" class="form-checkbox" ng-disabled="element.disabled">' + 
           '&nbsp;<label class="option bold">Select All</label>' +
         '</div>' +
-        '<div class="form-item form-type-checkbox" ng-repeat="(val, label) in options">' +          
-          '<input ng-model="value[val]" ng-checked="selectAll || value[val]" type="checkbox" id="{{id}}-{{val}}" name="{{name}}" value="{{val}}" class="form-checkbox" ng-disabled="element.disabled">' + 
-          '&nbsp;<label class="option" for="{{id}}-{{val}}" ng-bind-html="label"></label>' +
+        '<div ng-if="element.sorted_options" class="form-item form-type-checkbox" ng-repeat="option in options | orderBy: \'label\'">' +
+          '<input ng-model="value[option.key]" ng-checked="selectAll || value[option.key]" type="checkbox" id="{{id}}-{{option.key}}" name="{{name}}" value="{{option.key}}" class="form-checkbox" ng-disabled="element.disabled">' + 
+          '&nbsp;<label class="option" for="{{id}}-{{option.key}}" ng-bind-html="option.label"></label>' +
+        '</div>' +
+        '<div ng-if="!element.sorted_options" class="form-item form-type-checkbox" ng-repeat="option in options">' +
+          '<input ng-model="value[option.key]" ng-checked="selectAll || value[option.key]" type="checkbox" id="{{id}}-{{option.key}}" name="{{name}}" value="{{option.key}}" class="form-checkbox" ng-disabled="element.disabled">' + 
+          '&nbsp;<label class="option" for="{{id}}-{{option.key}}" ng-bind-html="option.label"></label>' +
         '</div>' +
       '</div> ',
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];
-        scope.options = scope.element.options;
+        scope.options = scope.element.options;       
         scope.title = scope.element.title;
       }
     }
