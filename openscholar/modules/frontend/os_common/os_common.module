@@ -135,7 +135,7 @@ function os_common_library() {
         'data' => array(
           'paths' => array(
             'api' => $rest,
-            'vsite_home' => $vsite ? $vsite->get_absolute_url() : '',
+            'vsite_home' => $vsite ? trim($vsite->get_absolute_url(), '/') : '',
           )
         )
       )
