@@ -1145,3 +1145,6 @@ ul.no-event-export {
 .morelink span {
     font-size: .8em;
 }
+.web-widgets-iframe {
+    width: 100%;
+}
