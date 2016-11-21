@@ -322,6 +322,13 @@ a.os-arrow:hover:after {
     position: relative;
     top: 0;
 }
+
+.front-four-lops .mini-pager {
+    position: absolute;
+    bottom: 10px;
+    left: 45%;
+}
+
 .front-lop-software-tabs:hover,
 .front-lop-blockgrid:hover {
     position: relative;
