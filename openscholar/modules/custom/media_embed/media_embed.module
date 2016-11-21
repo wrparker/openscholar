@@ -412,3 +412,20 @@ function media_embed_library_alter(&$libs) {
   );
 
 }
+
+/**
+ * Clear the protocols from a list of domains.
+ *
+ * @param array $domains
+ *   List of domains.
+ *
+ * @return array
+ *   List of clean domains.
+ */
+function media_embed_remove_domains_protocol(array $domains) {
+  foreach ($domains as &$domain) {
+    $domain = str_replace(array('http://www.', 'https://www.', 'http://', 'https://'), '', $domain);
+  }
+
+  return $domains;
+}

@@ -40,7 +40,8 @@ function drush_media_embed_domain_add() {
     $domains[] = $d;
   }
 
-  // filter out duplicates
+  // Filter out duplicates.
+  $domains = media_embed_remove_domains_protocol($domains);
   $domains = array_unique($domains);
   variable_set('media_embed_whitelist', $domains);
 

@@ -22,18 +22,6 @@ function media_embed_settings($form, &$form_state) {
   return $form;
 }
 
-/**
- * Validate handler; Verify the domains matching to the correct format.
- */
-function media_embed_settings_validate($form, $form_state) {
-
-  $is_https = is_int(strpos($form_state['values']['whitelist'], 'https://www'));
-  $is_http = is_int(strpos($form_state['values']['whitelist'], 'http://www'));
-
-  if ($is_https || $is_http) {
-    form_set_error('whitelist', t('The domains cannot contains <b>https://</b> or <b>http://</b>'));
-  }
-}
 
 /**
  * Submit handler; Set the white listed domains.
@@ -42,5 +30,5 @@ function media_embed_settings_submit($form, $form_state) {
   $domains = $form_state['values']['whitelist'];
 
   $domains = array_merge(array_filter(preg_split("[\n\r|\n|\r]", $domains)));
-  variable_set('media_embed_whitelist', $domains);
+  variable_set('media_embed_whitelist', media_embed_remove_domains_protocol($domains));
 }
