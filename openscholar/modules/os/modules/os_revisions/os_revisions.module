@@ -12,7 +12,7 @@ define('OS_REVISIONS_DOCS_URL', 'http://docs.openscholar.harvard.edu');
 
 /**
  * Implements hook_form_BASE_FORM_ID_alter() for node_form to display revision fieldset in certain cases
- * Add revision information in hidden fields and javascript to check if the user has reached the max # of revisions for the node
+ * Add revision information in hidden fields and warning if the user has reached the max # of revisions for the node
  */
 function os_revisions_form_node_form_alter(&$form, $form_state) {
   $content_type = $form['#node']->type;
@@ -22,19 +22,20 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
   }
   else {
     $max_revisions = (int)variable_get("restrict_node_revision_number_for_" . str_replace("-", "_", $form_state['node']->type), FALSE);
+    $num_revisions = count(node_revision_list(node_load($form_state['node']->nid))) - 1;
     if ($max_revisions) {
       $form['max_revisions'] = array('#type' => 'hidden', '#value' => $max_revisions);
-      $form['revisions'] =  array('#type' => 'hidden', '#value' => (count(node_revision_list(node_load($form_state['node']->nid))) - 1));
+      $form['revisions'] =  array('#type' => 'hidden', '#value' => $num_revisions);
       $form['#attached']['js'][] = drupal_get_path('module', 'os_revisions') . '/os_revisions.js';
+      if ($num_revisions >= $max_revisions) {
+        $form['revision_information']['revision']['#suffix'] = '<div id="warning-text"><p>Are you sure you want to create a new revision?</p><p>This content already has the maximum number of revisions saved (' . $max_revisions . '). By creating a new revision, you will be permanently deleting the oldest revision. Learn how to manage your revisions on our <a href="' . OS_REVISIONS_DOCS_URL . '" target="_blank" rel="noopener"> documentation site</a>.</div>';
+      }
     }
     $form['revision_information']['revision']['#weight'] = 1;
-    $form['revision_information']['revision']['#suffix'] = '<div id="warning-text"></div>';
     $form['revision_information']['log']['#weight'] = 2;
     $form['revision_information']['log']['#title'] = t('Revision Notes');
     $form['revision_information']['log']['#description'] = t('Provide an explanation of the changes you are making.') . '<br><br>' . l(t('What’s being stored as a revision?'), OS_REVISIONS_DOCS_URL, array('attributes' => array('target' => '_blank', 'rel' => 'noopener')));
 
-    // if there are revisions, show them
-    $num_revisions = count(node_revision_list($form['#node'])) - 1;
     if ($num_revisions > 1) {
       $revisions_url = "node/" . $form['#node']->nid . "/revisions";
       $form['revision_information']['info']['#markup'] = t('<p>There are currently <a href="@url" id="revisions-link">@num revisions</a>.</p>', array('@url' => url($revisions_url), '@num' => $num_revisions));
@@ -46,7 +47,7 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
 /**
  * Implements hook_module_implements_alter().
  *
- * Put os_revisions at the beginning of the implementation list
+ * Put os_revisions at the beginning of the implementation list for form_node_form_alter
  *
  */
 function os_revisions_module_implements_alter(&$implementations, $hook) {

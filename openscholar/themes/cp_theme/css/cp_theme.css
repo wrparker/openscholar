@@ -1332,7 +1332,6 @@ body.page-node fieldset#edit-revision-information span.summary {
 }
 
 body.page-node fieldset#edit-revision-information #warning-text {
-    display: none;
     padding: 8px;
     background-color: #fffce5;
 }
@@ -1345,9 +1344,8 @@ body.page-node-revisions ul.action-links a {
     background-image: none;
 }
 .page-node-revisions ul.action-links {
-  margin: 0;
+    margin: 0;
     padding: 0 20px 0 0;
-   
 }
 ul.action-links a {
     padding-left: 0;
