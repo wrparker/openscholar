@@ -25,7 +25,7 @@ function vsite_cp_settings() {
         '#type' => 'checkbox',
         '#title' => t('Inherit parent site theme'),
         '#default_value' => $inherit_theme,
-        '#description' => t('Check to have newly created subsites start with this site\'s currently enabled theme by default.'),
+        '#description' => t('Check to have newly created subsites inherit this site\'s currently selected theme. This does not apply to custom themes.'),
       ),
       'group' => array(
         '#id' => 'vsite-subsite',
