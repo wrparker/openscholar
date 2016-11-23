@@ -1,7 +1,7 @@
 body {
     -moz-osx-font-smoothing: grayscale;
 }
-.front-lop-presentations .location, 
+.front-lop-presentations .location,
 .front-lop-presentations .field-type-file,
 .front-lop-presentations .node-content,
 .not-front .research-by-topic h2.block-title,
@@ -57,23 +57,18 @@ h2.block-title,
 body,
 body.not-front {
     font-size: 16px;
-  
 }
-
 .research-by-topic .term-head a h1.node-title,
 .front-lop-papers h1.node-title,
 .front-lop-books h1.node-title {
     font-size: 1em;
 }
-
-
 body,
 body.not-front,
 .node-presentation.node-teaser .date-display-single,
 .research-by-topic ul .item-list ul li .description {
     color: #222;
 }
-
 .research-by-topic ul .item-list ul li.open a:after,
 .front #content-panels .region-content-first,
 .front #content-panels .region-content-bottom,
@@ -209,12 +204,10 @@ body.node-type-biblio .biblio-export,
     background: #eee !important;
     border: none;
 }
-
 #content-panels .front-lop-blockgrid .block-inner {
     margin-top: 5px;
     padding: 0 12px;
 }
-
 .block-os-search-solr {
     opacity: 0;
     -webkit-transition: all .5s;
@@ -322,13 +315,11 @@ a.os-arrow:hover:after {
     position: relative;
     top: 0;
 }
-
 .front-four-lops .mini-pager {
     position: absolute;
     bottom: 10px;
     left: 45%;
 }
-
 .front-lop-software-tabs:hover,
 .front-lop-blockgrid:hover {
     position: relative;
@@ -512,7 +503,6 @@ body.node-type-biblio .biblio-export {
 #block-os-primary-menu .nice-menu li.last a:hover {
     cursor: pointer;
 }
-
 ul.nice-menu-down,
 #block-os-primary-menu {
     float: right;
@@ -542,23 +532,22 @@ ul.nice-menu-down,
     border-top: 4px solid #999;
 }
 .research-by-topic li.term-methods {
-   float: left;
+    float: left;
     width: 475px;
-    background:url('../images/icons/curve.svg?123') 203px 12px no-repeat;
-    background-size:70px;
-    padding-top:50px;
- 
+    background: url('../images/icons/curve.svg?123') 203px 12px no-repeat;
+    background-size: 70px;
+    padding-top: 50px;
 }
 .research-by-topic li.term-applications {
     float: right;
     width: 475px;
-        background:url('../images/icons/people.svg') 190px -18px no-repeat;
-    background-size:100px;
-    padding-top:50px;
+    background: url('../images/icons/people.svg') 190px -18px no-repeat;
+    background-size: 100px;
+    padding-top: 50px;
 }
 .research-by-topic ul .item-list ul li {
     width: 100%;
-    height: 45px;
+    height: 40px;
     overflow: hidden;
     margin: 0 20px 7px 0;
     background-color: #3B4B69;
@@ -583,59 +572,51 @@ ul.nice-menu-down,
 }
 .research-by-topic ul .item-list ul li a {
     display: block;
-
-padding: 12px 28px 30px 12px;
-font-size: .94em;
-z-index: 2;
-position: relative;
--webkit-transition: all .250s;
-transition: all .250s;
-top: 0;
-}
-
-
-  .research-by-topic ul .item-list ul li.open a {
-    top: -5px;
-    background-color: #4a5a77;
-    height: 20px;
-    padding: 10px 12px 7px;
-    color: #fff;
-    background:url('../images/link.png') 185px 12px no-repeat #4a5a77;
-}
-
-
-
-
-.research-by-topic ul .item-list ul li span {
-    font-family: arial;
-    font-size: 1.4em;
-}
-.research-by-topic ul .item-list ul li span:after {
-    content: '';
-   
-    color: #fff;
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: url('../images/sprite.png?zyxabc') 10px -282px #4a5a77 no-repeat;
-    width: 30px;
-    height: 45px;
-    transition: all .250s;
+    padding: 9px 28px 30px 12px;
+    font-size: .94em;
     z-index: 2;
-}
-.research-by-topic ul .item-list ul li.open span:after {
-       content: '';
-    width: 10%;
-    height: 50px;
-    top: -18px;
-    right: 0;
-    background-position: 18px -238px;
+    position: relative;
+    -webkit-transition: all .250s;
+    transition: all .250s;
+    top: 0;
 }
 .research-by-topic ul .item-list ul li a:hover {
     margin-left: 12px;
 }
 .research-by-topic ul .item-list ul li.open a:hover {
     margin-left: 0;
+}
+.research-by-topic ul .item-list ul li.open a {
+    top: -5px;
+    background-color: #4a5a77;
+    height: 20px;
+    padding: 10px 12px 7px;
+    color: #fff;
+    background: url('../images/link.png') 185px 12px no-repeat #4a5a77;
+}
+.research-by-topic ul .item-list ul li span {
+    font-family: arial;
+    font-size: 1.4em;
+}
+.research-by-topic ul .item-list ul li span:after {
+    content: '';
+    color: #fff;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: url('../images/sprite.png?zyxabc') 10px -284px #4a5a77 no-repeat;
+    width: 30px;
+    height: 45px;
+    transition: all .125s;
+    z-index: 2;
+}
+.research-by-topic ul .item-list ul li.open span:after {
+    content: '';
+    width: 10%;
+    height: 50px;
+    top: -18px;
+    right: 0;
+    background-position: 22px -238px;
 }
 .research-by-topic.block-boxes-os_taxonomy_fbt ul ul {
     margin: 0 !important;
@@ -654,31 +635,23 @@ top: 0;
 }
 .region-content-top .bio-teaser-block2 p {
     font-size: 1.3em;
-  
     margin: 1.3em 1.3em 0 !important;
-   
 }
-
 .region-content-top .bio-teaser-block2 a {
     text-decoration: none !important;
     padding-right: 28px;
     background: url("../images/sprite.png?zyx") 76px -109px no-repeat;
- 
 }
-
 .region-content-top .bio-teaser-block2 a:hover {
-
     background-position: 81px -109px;
- 
 }
-
 .bio-teaser-block2 a {
     text-decoration: none !important;
     padding-right: 28px;
     background: url("../images/sprite.png?zyx") 80px -207px no-repeat;
     transition: all .250s;
     -webkit-transition: all .250s;
-    border-bottom:1px solid #fff;
+    border-bottom: 1px solid #fff;
 }
 .bio-teaser-block2 a:hover {
     background-position: 85px -207px;
@@ -686,22 +659,19 @@ top: 0;
 .research-by-topic ul .item-list ul li .description {
     transition: all .250s;
     -webkit-transition: all .250s;
-         padding: 5px 10px 10px 12px;
+    padding: 5px 10px 10px 12px;
     z-index: 1;
     position: relative;
     font-size: .95em;
     top: 5px;
     transition: all .250s;
-  
 }
 .research-by-topic ul .item-list ul li.open .description {
-      top: 0;
+    top: 0;
     height: auto;
     overflow-y: scroll;
     max-height: 300px;
 }
-
-
 .contextual-controls-wrapper {
     top: 255px;
 }
@@ -711,127 +681,84 @@ top: 0;
 #footer {
     padding: 10px 0 10px;
 }
-
 @-moz-document url-prefix() {
-.research-by-topic ul .item-list ul li.open a {
-  
-    top: -289px;
-}
- .research-by-topic ul .item-list ul li a {
+    .research-by-topic ul .item-list ul li.open a {
+        top: -289px;
+    }
+    .research-by-topic ul .item-list ul li a {
         padding: 12px 5px 0 10px;
     }
     .research-by-topic ul .item-list ul li.open .description {
-
-    top: -290px;
+        top: -290px;
+    }
 }
-}
-
-
 /* RESPONSIVE CSS - UNTIL I CAN FIGURE OUT WHY GARYKING RESP CSS FILE WONT LOAD */
-@media (max-width: 1024px) {
-   #boxes-box-site_info h1 {
-    font-size: 28px;
-}
 
-#menu-bar ul.nice-menu a {
-  
-    font-size: 16.3px;
-}
- #menu-bar #block-os-primary-menu a.active,
- #menu-bar #block-os-primary-menu a:hover,
+@media (max-width: 1024px) {
+    #boxes-box-site_info h1 {
+        font-size: 28px;
+    }
+    #menu-bar ul.nice-menu a {
+        font-size: 16.3px;
+    }
+    #menu-bar #block-os-primary-menu a.active,
+    #menu-bar #block-os-primary-menu a:hover,
     #menu-bar #block-os-primary-menu a:focus {
         background-color: #303030!important;
     }
-
-
-
 }
 /*--------------------------------------------------------*/
 
 @media (max-width: 768px) {
-#main-content-header,
-.research-by-topic li.term-applications,
-.research-by-topic li.term-methods,
-h1#page-title	{
-	width: 100%;
+    #main-content-header,
+    .research-by-topic li.term-applications,
+    .research-by-topic li.term-methods,
+    h1#page-title {
+        width: 100%;
+    }
+    #menu-bar {
+        position: relative !important;
+    }
+    #boxes-box-site_info h1 {
+        padding: 0;
+    }
+    #block-os-primary-menu .nice-menu li.last a {
+        display: none !important;
+    }
+    .research-by-topic li.term-applications,
+    .research-by-topic li.term-methods {
+        background-size: 70px;
+        float: right;
+        background: url('../images/icons/cogs.svg') 320px 0 no-repeat;
+    }
+    .research-by-topic li.term-methods {
+        background: url('../images/icons/curve.svg?123') 203px 12px no-repeat;
+    }
+    #main-content-header,
+    .front #columns {
+        margin-top: 0;
+    }
+    .front .content-left.content-right.content-bottom #content-panels .region {
+        margin-bottom: 2px;
+    }
+    .sidebar {
+        margin-top: 0;
+    }
+    .front .block-boxes-os_sv_list_box.front-top-featured {
+        width: auto !important;
+    }
+    .front #content-panels .region-content-bottom {
+        background-size: auto;
+    }
+    .page-node- .breadcrumb {
+        top: 30px;
+    }
 }
-	
-	
-	
-#menu-bar {
-    position: relative !important;
-
-}
-
-#boxes-box-site_info h1 {
-    padding: 0;
-}
-
-#block-os-primary-menu .nice-menu li.last a {
-	display:none !important;
-}
-
-.research-by-topic li.term-applications,
-.research-by-topic li.term-methods
- {
- 	background-size: 70px;
-    float: right;
-    
-    background: url('../images/icons/cogs.svg') 320px 0 no-repeat;
-}
-.research-by-topic li.term-methods
- {
- 
-    background: url('../images/icons/curve.svg?123') 203px 12px no-repeat;
-}
-
-#main-content-header,
-.front #columns {
- 
-    margin-top: 0;
-}
-
-.front .content-left.content-right.content-bottom #content-panels .region {
-    margin-bottom: 2px;
-   
-}
-
-.sidebar {
-    margin-top: 0;
-}
-
-.front .block-boxes-os_sv_list_box.front-top-featured {
-	    width: auto !important;
-}
-
-.front #content-panels .region-content-bottom {
-
-    background-size: auto;
-}
-
-.page-node- .breadcrumb {
-    top: 30px;
-}
-
-
-}
-
-
 @media (max-width: 600px) {
-.research-by-topic li.term-applications,
-.research-by-topic li.term-methods {
-    float: none;
-    width: 100%;
+    .research-by-topic li.term-applications,
+    .research-by-topic li.term-methods {
+        float: none;
+        width: 100%;
+    }
 }
-}
-
-
-
-
-@media (max-width: 479px) {
-
-
-}
-
-
-
+@media (max-width: 479px) {}
