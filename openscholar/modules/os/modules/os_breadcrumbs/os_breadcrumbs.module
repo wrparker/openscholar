@@ -658,40 +658,8 @@ function os_breadcrumbs_preprocess_page(&$variables) {
 
   // Global settings for displaying/hiding breadcrumbs.
   if (variable_get('os_breadcrumbs_show_breadcrumbs', 1)) {
-    return;
+    $breadcrumb = os_breadcrumbs_setup_breadcrumbs(os_breadcrumbs_build_breadcrumbs());
+    $variables['breadcrumb'] = $breadcrumb;
   }
-
-
-  $breadcrumb = os_breadcrumbs_setup_breadcrumbs(os_breadcrumbs_build_breadcrumbs());
-  $variables['breadcrumb'] = $breadcrumb;
-}
-
-/**
- * Implements hook_cp_settings().
- */
-function os_breadcrumbs_cp_settings() {
-  $form = array();
-  $hide_breadcrumbs = variable_get('os_breadcrumbs_show_breadcrumbs', 1);
-  $default_value = isset($hide_breadcrumbs) ? $hide_breadcrumbs : 1;
-  $form['os_breadcrumbs_show_breadcrumbs'] = array(
-    'group' => array(
-      '#id' => 'breadcrumbs',
-      '#title' => t('Breadcrumbs'),
-      '#weight' => 50,
-    ),
-    'form' => array(
-      '#prefix' => '<p>'
-      . t('A breadcrumb trail is a navigation aid used for web interfaces. It allows visitors to keep track of their locations within sections your site, displaying links above the main content region that lead back to the home page and to the parent pages of the current page.')
-      . '</p>'
-      . '<p>'
-      . t('i.e. <strong><a name="breadcrumbs" href="#breadcrumbs">Home</a> / <a href="#breadcrumbs">About</a> / <a href="#breadcrumbs">Contact</a></strong>')
-      . '</p>',
-      '#type' => 'checkbox',
-      '#title' => t('Hide breadcrumbs from displaying on my site'),
-      '#default_value' => $default_value,
-    ),
-  );
-
-  return $form;
 }
 

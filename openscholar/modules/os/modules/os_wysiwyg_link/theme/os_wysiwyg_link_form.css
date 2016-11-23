@@ -7,16 +7,20 @@
 	border-right: 0;
 }
 
-div.form-item-link-text, div.form-item-link-title {
+div.form-item-link-text {
 	margin-left: 10px;
-	margin-top: 0.3em;
 	position: relative;
 	z-index: 2;
 }
 
-div.form-item-link-text label, div.form-item-link-title label {
+div.form-item-link-text {
+	margin-top: 0.3em;
+	margin-left: 10.5em;
+}
+
+div.form-item-link-text label {
 	float: left;
-	margin: 5px 5px 0 0;
+	margin-left: -10em;
 }
 
 div.vertical-tabs {

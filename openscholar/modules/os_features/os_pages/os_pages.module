@@ -956,17 +956,8 @@ function os_pages_add_subpage_form($form, &$form_state, $node) {
  * Makes sure the given node is a page and in our site.
  */
 function os_pages_add_subpage_element_validate($element, &$form_state) {
-  // If Provided autocomplete text is not resolved to a valid node id, then early returning.
-  if (!isset($form_state['vsite_autocomplete_nid']) || !is_numeric($form_state['vsite_autocomplete_nid'])) {
-    return;
-  }
   $nid = $form_state['vsite_autocomplete_nid'];
   $node = node_load($nid);
-  // If provided nid is not returning a valid drupal node object, then exiting from validate handler, exeption will be handled 
-  // by vsite_node_autocomplete_validate callback
-  if (!$node) {
-    return;
-  }
 
   if ($node->type != 'page') {
     form_error($element, t('Selected post is not a page.'));
@@ -1222,9 +1213,11 @@ function os_pages_apachesolr_index_document_build_node(ApacheSolrDocument $doc, 
     if (module_exists('vsite') && ($groups = og_get_entity_groups('node',$entity))) {
       if ($groups['node'] && count($groups['node'])) {
         $vsite = spaces_load('og', current($groups['node']));
-        $override = $vsite->controllers->context->get("os_pages-page-{$entity->nid}:reaction:block");
-        if (!is_null($override)) {
-          $ctx->reactions['block'] = $override;
+        if (!empty($vsite->controllers->context)) {
+          $override = $vsite->controllers->context->get("os_pages-page-{$entity->nid}:reaction:block");
+          if (!is_null($override)) {
+            $ctx->reactions['block'] = $override;
+          }
         }
       }
     }
