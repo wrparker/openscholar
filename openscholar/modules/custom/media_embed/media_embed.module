@@ -95,7 +95,7 @@ function media_embed_check_src($html) {
     $script = $dom->getElementsByTagName('script');
 
     foreach (array($iframes, $embed, $object, $param, $script) as $nodes) {
-      for ($i=0; $i<$nodes->length;$i++) {
+      for ($i=0; $i < $nodes->length; $i++) {
         $n = $nodes->item($i);
         if ($n->hasAttribute('src')) {
           $urls[] = $n->getAttribute('src');
@@ -113,15 +113,11 @@ function media_embed_check_src($html) {
     }
 
     $whitelist = media_embed_get_whitelist();
+
     foreach ($urls as $url) {
-      // if the URL is too bad, parse will be false
+      // If the URL is too bad, parse will be false.
       $domain = array();
       $this_pass = false;
-      // handle protocol-relative urls, since PHP doesn't
-      // http://en.wikipedia.org/wiki/Uniform_resource_locator#Protocol-relative_URLs
-      if (strpos($url, '//') === 0) {
-        $url = 'http:'.$url;
-      }
 
       if ($parse = parse_url($url, PHP_URL_HOST)) {
         // construct the domain backwards and check it
@@ -134,20 +130,28 @@ function media_embed_check_src($html) {
         $host = array_reverse($host);
         foreach ($host as $part) {
           array_unshift($domain, $part);
-          if (in_array(implode('.',$domain), $whitelist)) {
-            $this_pass = true;
+          if (in_array(implode('.', $domain), $whitelist)) {
+            $this_pass = TRUE;
             break;
           }
         }
-        if (!$this_pass) return FALSE;  // the URL's domain was not in the whitelist
+        if (!$this_pass) {
+          // the URL's domain was not in the whitelist.
+          return FALSE;
+        }
       }
       else {
-        return FALSE;  // the URL was malformed, which could lead anywhere
+        // The URL was malformed, which could lead anywhere.
+        return FALSE;
       }
     }
-    return TRUE;  // None of the URLS failed the domain check
+    // None of the URLS failed the domain check.
+    return TRUE;
   }
-  return FALSE;  // the HTML was malformed, which no real service would do. This requires a real feat to actually pull off.
+
+  // the HTML was malformed, which no real service would do. This requires a
+  // real feat to actually pull off.
+  return FALSE;
 }
 
 /**
@@ -407,4 +411,21 @@ function media_embed_library_alter(&$libs) {
     'type' => 'setting',
   );
 
+}
+
+/**
+ * Clear the protocols from a list of domains.
+ *
+ * @param array $domains
+ *   List of domains.
+ *
+ * @return array
+ *   List of clean domains.
+ */
+function media_embed_remove_domains_protocol(array $domains) {
+  foreach ($domains as &$domain) {
+    $domain = str_replace(array('http://www.', 'https://www.', 'http://', 'https://', 'www.'), '', $domain);
+  }
+
+  return $domains;
 }
