@@ -110,6 +110,7 @@ h2.block-title {
 #content-column h2.block-title {
     font-weight: 400;
 }
+.not-front .term-listing-heading h2:first-of-type,
 .bio-teaser-block2 h2.block-title,
 .research-by-topic h2.block-title,
 .front-four-lops h2.block-title {
@@ -457,6 +458,7 @@ a,
 a:visited {
     color: #065DB2;
 }
+.os-taxonomy-term.depth-2.gkplus-no-indent,
 .os-taxonomy-term.depth-2.gkplus-child-indent,
 .os-taxonomy-term.depth-1,
 .field-name-field-biblio-image ~ .biblio-abstract-display {
@@ -561,6 +563,7 @@ ul.nice-menu-down,
 .research-by-topic ul .item-list ul li.open {
     height: auto;
     opacity: 1;
+    background-color: #3B4B69;
 }
 .research-by-topic .term-head a {
     margin-top: 20px;
@@ -570,16 +573,7 @@ ul.nice-menu-down,
 .research-by-topic ul .item-list ul li:nth-child(8) {
     margin-right: 0;
 }
-.research-by-topic ul .item-list ul li a {
-    display: block;
-    padding: 9px 28px 30px 12px;
-    font-size: .94em;
-    z-index: 2;
-    position: relative;
-    -webkit-transition: all .250s;
-    transition: all .250s;
-    top: 0;
-}
+.research-by-topic ul .item-list ul li a {display: table;padding: 9px 28px 30px 12px;font-size: .94em;z-index: 2;position: relative;-webkit-transition: all .250s;transition: all .250s;}
 .research-by-topic ul .item-list ul li a:hover {
     margin-left: 12px;
 }
@@ -590,9 +584,10 @@ ul.nice-menu-down,
     top: -5px;
     background-color: #4a5a77;
     height: 20px;
-    padding: 10px 12px 7px;
+    padding: 12px 21px 5px 12px;
     color: #fff;
-    background: url('../images/link.png') 185px 12px no-repeat #4a5a77;
+    background: url('../images/link.png') right 14px no-repeat #4a5a77;
+    /* width: 100%; */
 }
 .research-by-topic ul .item-list ul li span {
     font-family: arial;
@@ -667,7 +662,7 @@ ul.nice-menu-down,
     transition: all .250s;
 }
 .research-by-topic ul .item-list ul li.open .description {
-    top: 0;
+    top: -5px;
     height: auto;
     overflow-y: scroll;
     max-height: 300px;
