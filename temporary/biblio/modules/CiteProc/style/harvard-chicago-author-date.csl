@@ -42,20 +42,10 @@
   <macro name="secondary-contributors">
     <choose>
       <if type="chapter paper-conference" match="none">
-        <choose>
-          <if variable="author" match="none">
-            <names variable="translator" delimiter=". ">
-              <label form="verb" text-case="capitalize-first" suffix=" "/>
-              <name and="text" delimiter=", "/>
-            </names>
-          </if>
-          <else>
-            <names variable="editor translator" delimiter=". ">
-              <label form="verb" text-case="capitalize-first" suffix=" "/>
-              <name and="text" delimiter=", "/>
-            </names>
-          </else>
-        </choose>
+        <names variable="editor translator" delimiter=". ">
+          <label form="verb" text-case="capitalize-first" suffix=" "/>
+          <name and="text" delimiter=", "/>
+        </names>
       </if>
     </choose>
   </macro>
@@ -67,33 +57,19 @@
             <label form="verb" suffix=" "/>
             <name and="text" delimiter=", "/>
           </names>
-          <choose>
-            <if variable="author" match="none">
-              <names variable="translator" delimiter=". ">
-                <label form="verb" suffix=" "/>
-                <name and="text" delimiter=", "/>
-              </names>
-            </if>
-            <else>
-              <names variable="editor translator" delimiter=". ">
-                <label form="verb" suffix=" "/>
-                <name and="text" delimiter=", "/>
-              </names>
-            </else>
-          </choose>
+          <names variable="editor translator" delimiter=", ">
+            <label form="verb" suffix=" "/>
+            <name and="text" delimiter=", "/>
+          </names>
         </group>
       </if>
     </choose>
   </macro>
   <macro name="editor">
-    <choose>
-      <if variable="author">
-        <names variable="editor">
-          <name name-as-sort-order="first" and="text" sort-separator=", " delimiter=", " delimiter-precedes-last="always"/>
-          <label form="short" prefix=", "/>
-        </names>
-      </if>
-    </choose>
+    <names variable="editor">
+      <name name-as-sort-order="first" and="text" sort-separator=", " delimiter=", " delimiter-precedes-last="always"/>
+      <label form="short" prefix=", "/>
+    </names>
   </macro>
   <macro name="translator">
     <names variable="translator">
@@ -212,7 +188,7 @@
         </choose>
       </if>
       <else-if type="bill book graphic legislation motion_picture report song" match="any">
-        <text variable="title" text-case="title"/>
+        <text variable="title" text-case="title" font-style="italic"/>
         <group prefix=" (" suffix=")" delimiter=" ">
           <text term="version"/>
           <text variable="version"/>
@@ -237,41 +213,18 @@
   </macro>
   <macro name="edition">
     <choose>
-      <if type="article article-magazine article-newspaper article-journal artwork bill book broadcast graphic legal_case legislation manuscript map motion_picture patent personal_communication report song thesis webpage" match="any">
-        <choose>
-          <if is-numeric="edition">
-            <group delimiter=" " prefix=". ">
-              <number variable="edition" form="ordinal"/>
-              <text term="edition" form="short" strip-periods="true"/>
-            </group>
-          </if>
-          <else>
-            <text variable="edition" prefix=". "/>
-          </else>
-        </choose>
-      </if>
-      <else-if type="chapter  paper-conference" match="any">
-        <choose>
-          <if is-numeric="edition">
-            <group delimiter=" " prefix=", ">
-              <number variable="edition" form="ordinal"/>
-              <text term="edition" form="short"/>
-            </group>
-          </if>
-          <else>
-            <text variable="edition" prefix=", "/>
-          </else>
-        </choose>
-      </else-if>
+      <if type="article bill book graphic legal_case legislation manuscript map patent personal_communication report song thesis webpage" match="any">
+        <text variable="edition" prefix=". "/>
+      </if>      
     </choose>
   </macro>
   <macro name="locators">
     <choose>
-      <if type="article article-magazine artwork audiovisual bill broadcast case chart classical database film government-report hearing journal legislation manuscript map miscellaneous miscellaneous-section patent personal\_communication proceedings-conference presentation software thesis unpublished webarticle webprojectpage webservice website" match="any">
+      <if type="article article-magazine artwork audiovisual bill broadcast chart classical government-report journal legislation manuscript map miscellaneous miscellaneous-section patent personal\_communication proceedings-conference presentation webprojectpage webservice website" match="any">
         <choose>
           <if variable="volume">
-            <text variable="volume" prefix=" "/>
-            <group prefix=" (" suffix=")">
+            <text variable="volume" prefix=", "/>
+            <group prefix=", " suffix="">
               <choose>
                 <if variable="issue">
                   <text variable="issue"/>
@@ -302,6 +255,16 @@
           </else>
         </choose>
       </if>
+      <else-if type="webarticle film thesis software hearing unpublished database" match="any">
+        <text variable="issue" prefix=", "/>
+      </else-if>
+      <else-if type="case" match="any">
+        <text variable="volume" prefix=", "/>
+        <text variable="issue" prefix=", "/>
+      </else-if>      
+      <else-if type="report book" match="any">
+        <text variable="page" prefix=", "/>
+      </else-if>
       <else-if type="legal_case">
         <text variable="volume" prefix=", "/>
         <text variable="container-title" prefix=" "/>
@@ -309,7 +272,7 @@
         <text variable="publisher-place" prefix=" "/>
         <text variable="publisher" prefix=", "/>
       </else-if>
-      <else-if type="book graphic legal_case motion_picture report song" match="any">
+      <else-if type="graphic legal_case motion_picture song" match="any">
         <group prefix=". " delimiter=". ">
           <group>
             <text term="volume" form="short" text-case="capitalize-first" suffix=" "/>
@@ -336,28 +299,26 @@
   </macro>
   <macro name="locators-chapter">
     <choose>
-      <if type="chapter paper-conference" match="any">
-        <choose>
-          <if variable="page">
-            <group prefix=", ">
-              <text variable="volume" suffix=":"/>
-              <text variable="page"/>
-            </group>
-          </if>
-        </choose>
+      <if type="paper-conference" match="any">
+        <text variable="volume" prefix=", "/>
+        <text variable="edition" prefix=", "/>
+        <text variable="page" prefix=", "/>
       </if>
+      <else-if type="chapter" match="any">
+        <text variable="volume" prefix=", "/>
+        <text variable="edition" prefix=", "/>
+        <text variable="page" prefix=", "/>
+      </else-if>
     </choose>
   </macro>
   <macro name="locators-article">
     <choose>
       <if type="article-newspaper">
-        <group prefix=", " delimiter=", ">
-          <group delimiter=" ">
-            <text variable="edition"/>
-            <text term="edition"/>
+        <group delimiter=", ">
+          <group delimiter="">            
             <text variable="volume" prefix=", "/>
             <text variable="issue" prefix=", "/>
-            <text variable="page" prefix=": "/>
+            <text variable="page" prefix=", "/>
           </group>
           <group>
             <text term="section" form="short" suffix=" "/>
@@ -368,9 +329,9 @@
       <else-if type="article-journal">
         <choose>
           <if variable="volume issue" match="any">
-            <text variable="issue" prefix=", "/>
             <text variable="volume" prefix=", "/>
-            <text variable="page" prefix=": "/>
+            <text variable="issue" prefix=", "/>
+            <text variable="page" prefix=", "/>
           </if>
           <else>
             <text variable="page" prefix=", "/>
@@ -423,7 +384,7 @@
     </choose>
     <choose>
       <if type="legal_case" match="none">
-        <text variable="container-title" text-case="title"/>
+        <text variable="container-title" text-case="title" font-style="italic"/>
       </if>
     </choose>
   </macro>

@@ -1602,3 +1602,16 @@ function os_publications_update_7049() {
     os_publications_revert_citeproc_style($citation);
   }
 }
+
+/**
+ * Update harvard chicago author date style for volume, issues, edition and pages field
+ */
+function os_publications_update_7050() {
+  $citations = array(
+    'harvard-chicago-author-date',
+  );
+
+  foreach ($citations as $citation) {
+    os_publications_revert_citeproc_style($citation);
+  }
+}
