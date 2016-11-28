@@ -1280,3 +1280,8 @@ li.pager-previous + li.pager-ellipsis {
     width:16px;
 
 }
+
+body.cke_editable {
+    background-color: #FFF;
+    background: #FFF;
+}
