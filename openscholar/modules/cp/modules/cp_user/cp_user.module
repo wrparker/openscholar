@@ -742,6 +742,17 @@ function cp_user_form_og_ui_add_users_alter(&$form, $form_state) {
     '#value_callback' => '_cp_user_scalar_to_array',
   );
 
+  $space = spaces_get_space();
+  $form['og_user']['roles'] = array(
+    '#type' => 'radios',
+    '#access' => true,
+    // Each option is themed and includes a description.
+    '#options' => _cp_user_list_roles('rids-options', $space->group->type, $space->group->nid),
+    '#default_value' => _cp_user_list_roles('rids', $space->group->type, $space->group->nid)[OS_USER_ROLE_BASIC],
+    '#tree' => true,
+    '#value_callback' => '_cp_user_scalar_to_array',
+  );
+
   // Add a secondary submit function that redirects the users out of the
   // admin overlay
   $form['#submit'][] = 'cp_user_og_ui_add_users_submit';
