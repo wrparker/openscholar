@@ -112,7 +112,7 @@ function os_pages_strongarm() {
       'region' => 'right',
       'weight' => '7',
       'has_required' => FALSE,
-      'title' => 'SEO',
+      'title' => 'Search Engine Optimization',
       'collapsed' => 1,
       'hidden' => 0,
     ),
