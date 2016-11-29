@@ -14,7 +14,7 @@
         value: '='
       },
       template: '<div class="form-wrapper">' +
-        '<span ng-if="element.prefix" ng-bind-html="element.prefix"></span>' +
+        '<span ng-if="element.prefix" ng-bind-html="to_trusted(element.prefix)"></span>' +
         '<span>Placeholder</span>' +
         '<div class="description" ng-bind-html="description"></div>' +
       '</div>',
@@ -23,6 +23,9 @@
         scope.description = $sce.trustAsHtml(scope.element.description);
         scope.label = scope.element.title;
         scope.access = scope.element.access;
+        scope.to_trusted = function(html_code) {
+          return $sce.trustAsHtml(html_code);
+        }
         if (scope.access == undefined) {
           scope.access = true;
         }
@@ -57,12 +60,11 @@
             for (x in scope.element.attached) {
               if (x == 'js') {
                 for (y in scope.element.attached.js) {
-                  if (scope.element.attached.js[y].indexOf('http') == 0) {
-                    jQuery.getScript(scope.element.attached.js[y]);
+                  if (scope.element.attached.js[y].data.indexOf('http') == 0) {
+                    jQuery.getScript(scope.element.attached.js[y].data);
                   }
                   else {
                     $t(function () {
-                      console.log(scope.element.attached.js[y]);
                       Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[y].data);
                     });
                   }

@@ -165,7 +165,7 @@
         value: '=ngModel',
         element: '=',
       },
-      template: '<div ng-bind-html="markup" id="getsat-widget-6760"></div>',
+      template: '<div ng-bind-html="markup"></div>',
       link: function (scope, elem, attr) {
         scope.markup = $sce.trustAsHtml(scope.element.markup);
         scope.title = scope.element.title;
