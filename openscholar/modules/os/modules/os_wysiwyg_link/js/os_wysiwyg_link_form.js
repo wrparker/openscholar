@@ -9,7 +9,7 @@ Drupal.behaviors.osLinkExternal = {
       if ($(this).filter(':visible').length > 0) {
         var value = $('#edit-external', this).val();
         var target_option = $('#edit-target-option', this).prop('checked');
-        var link_title = $('#edit-link-title').val();
+        var link_title = $('input[name="link-text"]').val();
         // Trims the leading slash from the raw input value.
         value = value.replace(/^\//, "");
         if (value.indexOf('http') == -1) {
