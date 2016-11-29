@@ -872,7 +872,14 @@ function cp_user_user_register_submit($form, &$form_state) {
   if (!empty($form_state['user']->uid)) {
     og_group('node', $space->id, array('entity' => $form_state['user']->uid));
 
+    $vsite_user_role_default = _cp_user_list_roles('rids', $space->group->type, $space->group->nid)[OS_USER_ROLE_BASIC];
     $vsite_user_role = $form_state['input']['roles'];
+
+    // og_group (called earlier) sets a default role.
+    // To overwrite the default role, we revoke it before granting the selected role
+    if ($vsite_user_role_default != $vsite_user_role) {
+      og_role_revoke('node', $space->id, $form_state['user']->uid, $vsite_user_role_default);
+    }
 
     // Grant them the vsite user role
     og_role_grant('node', $space->id, $form_state['user']->uid, $vsite_user_role);
