@@ -836,6 +836,20 @@ function cp_user_form_user_register_form_alter(&$form, &$form_state, $form_id) {
       unset($form['account']['roles']['#options'][$key]);
     }
   }
+
+  $space = spaces_get_space();
+  $form['account']['roles'] = array(
+    '#type' => 'radios',
+    '#access' => true,
+    // Each option is themed and includes a description.
+    '#options' => _cp_user_list_roles('rids-options', $space->group->type, $space->group->nid),
+    '#default_value' => _cp_user_list_roles('rids', $space->group->type, $space->group->nid)[OS_USER_ROLE_BASIC],
+    '#tree' => true,
+    '#value_callback' => '_cp_user_scalar_to_array',
+  );
+
+  $form['field_first_name']['#weight'] = -100;
+  $form['field_last_name']['#weight'] = -99;
 }
 
 /**
@@ -858,8 +872,7 @@ function cp_user_user_register_submit($form, &$form_state) {
   if (!empty($form_state['user']->uid)) {
     og_group('node', $space->id, array('entity' => $form_state['user']->uid));
 
-    $og_roles = og_roles('node', FALSE, $space->id);
-    $vsite_user_role = array_search('vsite user', $og_roles);
+    $vsite_user_role = $form_state['input']['roles'];
 
     // Grant them the vsite user role
     og_role_grant('node', $space->id, $form_state['user']->uid, $vsite_user_role);
