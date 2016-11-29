@@ -3,6 +3,29 @@
   var m = angular.module('basicFormElements', ['osHelpers', 'ngSanitize']);
 
   /**
+   * Select directive.
+   */
+  m.directive('feSelect', ['$sce', function ($sce) {
+    return {
+      scope: {
+        name: '@',
+        value: '=ngModel',
+        element: '='
+      },
+      template: '<label for="{{id}}">{{title}}</label>' +
+        '<div class="form-item form-type-select"><select class="form-select" id="{{id}}" name="{{name}}" ng-model="value">' +
+          '<option value="">Select</option>' +
+          '<option ng-repeat="(val, label) in options" value="{{val}}" ng-bind-html="label"></option>' +
+        '</select></div>',
+      link: function (scope, elem, attr) {
+        scope.id = attr['inputId'];
+        scope.options = scope.element.options;
+        scope.title = scope.element.title;
+      }
+    }
+  }]);
+
+  /**
    * Checkbox directive.
    * Arguments:
    *   name - string - the name of the element as Drupal expects it
@@ -126,6 +149,28 @@
       template: '<div ng-bind-html="markup"></div>',
       link: function (scope, elem, attr) {
         scope.markup = $sce.trustAsHtml(scope.element.markup);
+      }
+    }
+  }])
+
+    /**
+   * Help Markup directive.
+   *
+   * Just markup without submit and close buttons.
+   */
+  m.directive('feHelpmarkup', ['$sce', function ($sce) {
+    return {
+      scope: {
+        name: '@',
+        value: '=ngModel',
+        element: '=',
+      },
+      template: '<div ng-bind-html="markup" id="getsat-widget-6760"></div>',
+      link: function (scope, elem, attr) {
+        scope.markup = $sce.trustAsHtml(scope.element.markup);
+        scope.title = scope.element.title;
+        var actions = angular.element(document.querySelector('.actions'));
+        actions.empty();
       }
     }
   }])

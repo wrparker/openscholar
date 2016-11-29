@@ -51,11 +51,27 @@
           copy.attr('input-id', scope.id);
           copy.attr('ng-model', 'value');
           elem.find('span').replaceWith(copy);
+
           copy = $compile(copy)(scope);
           if (scope.element.attached) {
-            $t(function () {
-              Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[0].data);
-            });
+            for (x in scope.element.attached) {
+              if (x == 'js') {
+                for (y in scope.element.attached.js) {
+                  if (scope.element.attached.js[y].indexOf('http') == 0) {
+                    jQuery.getScript(scope.element.attached.js[y]);
+                  }
+                  else {
+                    $t(function () {
+                      console.log(scope.element.attached.js[y]);
+                      Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[y].data);
+                    });
+                  }
+                }
+              }
+              else if (x == 'css') {
+                // Load css
+              }
+            }
           }
         }
         else {
