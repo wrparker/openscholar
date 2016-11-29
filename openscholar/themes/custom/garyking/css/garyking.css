@@ -321,14 +321,7 @@ a.os-arrow:hover:after {
     bottom: 10px;
     left: 45%;
 }
-.front-lop-software-tabs:hover,
-.front-lop-blockgrid:hover {
-    position: relative;
-    top: -9px;
-    -webkit-box-shadow: 0 6px 6px rgba(0, 0, 0, 0.30), -1px 0 0 rgba(0, 0, 0, 0.10), 1px 0 0 rgba(0, 0, 0, 0.10), 0 1px 0 rgba(0, 0, 0, 0.12);
-    -moz-box-shadow: 0 6px 6px rgba(0, 0, 0, 0.30), -1px 0 0 rgba(0, 0, 0, 0.10), 1px 0 0 rgba(0, 0, 0, 0.10), 0 1px 0 rgba(0, 0, 0, 0.12);
-    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.30), -1px 0 0 rgba(0, 0, 0, 0.10), 1px 0 0 rgba(0, 0, 0, 0.10), 0 1px 0 rgba(0, 0, 0, 0.12);
-}
+
 .front-lop-software-tabs {
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
@@ -573,7 +566,11 @@ ul.nice-menu-down,
 .research-by-topic ul .item-list ul li:nth-child(8) {
     margin-right: 0;
 }
-.research-by-topic ul .item-list ul li a {display: table;padding: 9px 28px 30px 12px;font-size: .94em;z-index: 2;position: relative;-webkit-transition: all .250s;transition: all .250s;}
+.research-by-topic ul .item-list ul li a {
+    display: table;padding: 9px 28px 30px 12px;font-size: .94em;z-index: 2;position: relative;-webkit-transition: all .250s;transition: all .250s;
+background: url('../images/link.png') right -20px no-repeat;
+    }
+
 .research-by-topic ul .item-list ul li a:hover {
     margin-left: 12px;
 }
@@ -581,12 +578,12 @@ ul.nice-menu-down,
     margin-left: 0;
 }
 .research-by-topic ul .item-list ul li.open a {
-    top: -5px;
+    /* top: -5px; */
     background-color: #4a5a77;
     height: 20px;
-    padding: 12px 21px 5px 12px;
+    padding: 9px 22px 3px 12px;
     color: #fff;
-    background: url('../images/link.png') right 14px no-repeat #4a5a77;
+    background: url('../images/link.png') right 12px no-repeat;
     /* width: 100%; */
 }
 .research-by-topic ul .item-list ul li span {
@@ -602,16 +599,16 @@ ul.nice-menu-down,
     background: url('../images/sprite.png?zyxabc') 10px -284px #4a5a77 no-repeat;
     width: 30px;
     height: 45px;
-    transition: all .125s;
+    transition: all .250s;
     z-index: 2;
 }
 .research-by-topic ul .item-list ul li.open span:after {
     content: '';
-    width: 10%;
-    height: 50px;
-    top: -18px;
+    width: 6.5%;
+    height: 40px;
+    top: 0;
     right: 0;
-    background-position: 22px -238px;
+    background-position: 6px -252px;
 }
 .research-by-topic.block-boxes-os_taxonomy_fbt ul ul {
     margin: 0 !important;
@@ -662,7 +659,7 @@ ul.nice-menu-down,
     transition: all .250s;
 }
 .research-by-topic ul .item-list ul li.open .description {
-    top: -5px;
+    /* top: -5px; */
     height: auto;
     overflow-y: scroll;
     max-height: 300px;
