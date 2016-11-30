@@ -29,8 +29,15 @@ Drupal.behaviors.os_boxes_tabs = { attach: function (ctx) {
   // When there is embeded media inside tabs widget, iframe src attribute needs to be reloaded for corresponding tab click event to render scrolbars.
   $('.ui-tabs-anchor').on("click", function( event, ui ) {
     var container_id = $(this).parent().attr('aria-controls');
-    // Trumba calendars have empty HTML codes in its iframe src on page load, so their content cannot be refreshed after clicking on tab.
-    $('#' + container_id + ' iframe:not([id^="trumba.spud"])').attr("src", $('#' + container_id + ' iframe').attr("src"));
+
+    var container_id_src = $('#' + container_id + ' iframe:not([id^="trumba.spud"])').attr("src");
+
+    // Do not refresh the src attribute for Google Calendar embeds (G Cal)
+    if (/www.google.com\/calendar/.exec(container_id_src) === null) {
+
+      // Trumba calendars have empty HTML codes in its iframe src on page load, so their content cannot be refreshed after clicking on tab.
+      $('#' + container_id + ' iframe:not([id^="trumba.spud"])').attr("src", $('#' + container_id + ' iframe').attr("src"));
+    }
   });
 
   function clickHandle(e) {
