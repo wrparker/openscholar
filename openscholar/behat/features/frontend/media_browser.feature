@@ -59,7 +59,7 @@ Feature: Media Browser
       And I wait "1 second" for the media browser to open
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I click on the tab "Previously uploaded files"
-      And I should see "kitten-2.jpg" in a "div.media-row" element
+      And I should see "kitten-2.jpg" in a ".media-row" element
       And I click on the tab "Upload from your computer"
       And I drop the file "duplicate/kitten-2.jpg" onto the "Drag and drop files here." area
       And I sleep for "5"
@@ -134,10 +134,10 @@ Feature: Media Browser
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I drop the files "rubber-duck.jpg, conservatory_of_flowers3.jpg" onto the "Drag and drop files here." area
       And I sleep for "5"
-     Then I should see "A file with the name 'rubber-duck.jpg' already exists."
+     Then I should see "A file with the name 'conservatory_of_flowers3.jpg' already exists."
       And I should see "1/2"
      When I press the "Cancel" button
-     Then I should see "A file with the name 'conservatory_of_flowers3.jpg' already exists."
+     Then I should see "A file with the name 'rubber-duck.jpg' already exists."
       And I click on the "Cancel" control in the ".media-browser-dupe" element
      Then I should see the media browser "Upload from your computer" tab is active
 

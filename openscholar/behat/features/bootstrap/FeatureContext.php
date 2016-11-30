@@ -321,6 +321,7 @@ class FeatureContext extends DrupalContext {
     );
     $json = $request->json();
 
+    error_log($json['files']['file.html']['raw_url']);
     return $json['files']['file.html']['raw_url'];
   }
 
@@ -2566,7 +2567,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iWaitForDirective($directive, $appear) {
     $directive = strtolower(preg_replace('/([ ]+)/', '-', $directive));
-    $xpath = ".//*[@$directive]";
+    $xpath = "//*[@$directive]";
     $this->waitForXpathNode($xpath, $appear == 'appear');
   }
 
@@ -2664,6 +2665,8 @@ class FeatureContext extends DrupalContext {
    * Default implementation (in the "" element) does not work when multiple elements match selector
    */
   public function iShouldSeeInAElement($text, $selector) {
+    usleep(50);
+    error_log($this->getSession()->getPage()->getHtml());
     $elems = $this->getSession()->getPage()->findAll('css', $selector);
     foreach ($elems as $e) {
       if (stripos($e->getText(), $text) !== FALSE) {
@@ -2746,9 +2749,12 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldWaitForTheTextTo($text, $appear) {
     try {
-      $this->waitForXpathNode(".//*[contains(normalize-space(string(text())), \"$text\")]", $appear == 'appear');
+      $this->waitForXpathNode("//*[text()[contains(.,\"$text\")]]", $appear);
     }
     catch (Exception $e) {
+      if ($e->getMessage() == "waitFor timed out.") {
+        throw $e;
+      }
       throw new Exception("Text \"$text\" did not \"$appear\" after 5 seconds.");
     }
   }
@@ -2763,9 +2769,12 @@ class FeatureContext extends DrupalContext {
    *
    * @throws Exception
    */
-  private function waitForXpathNode($xpath, $appear = TRUE) {
-    $this->waitFor(function($context) use ($xpath, $appear) {
+  private function waitForXpathNode($xpath, $appear = 'appear') {
+    $appear = $appear == 'appear';
+    $this->waitFor(function(FeatureContext $context) use ($xpath, $appear) {
       try {
+        //$this->getSession()->getPage()->find()
+        //$nodes = $context->getSession()->getPage()->find('xpath', $xpath);
         $nodes = $context->getSession()->getDriver()->find($xpath);
         if (count($nodes) > 0) {
           $visible = $nodes[0]->isVisible();
@@ -2774,10 +2783,16 @@ class FeatureContext extends DrupalContext {
         return !$appear;
       }
       catch (WebDriver\Exception $e) {
+        error_log('exception');
         if ($e->getCode() == WebDriver\Exception::NO_SUCH_ELEMENT) {
+          error_log('exception. returning ' . (!$appear ? "true":"false"));
           return !$appear;
         }
-        throw $e;
+        error_log($e->getCode());
+        error_log($e->getMessage());
+        if ($appear) {
+          throw $e;
+        }
       }
     });
   }
@@ -2794,11 +2809,12 @@ class FeatureContext extends DrupalContext {
    */
   private function waitFor($fn, $timeout = 5000) {
     $start = microtime(true);
-    $end = $start + $timeout / 1000.0;
+    $end = $start + $timeout / 1000;
     while (microtime(true) < $end) {
       if ($fn($this)) {
         return;
       }
+      usleep(10);
     }
     throw new \Exception('waitFor timed out.');
   }
@@ -2868,6 +2884,7 @@ class FeatureContext extends DrupalContext {
   public function iClickOnTheTab($arg1) {
     if ($element = $this->getSession()->getPage()->find('xpath', "//*[.='{$arg1}']")) {
       $element->press();
+      usleep(50);
     }
     else {
       throw new ElementNotFoundException("No tab with text ($text) found on page.");
@@ -3270,7 +3287,12 @@ class FeatureContext extends DrupalContext {
    */
   public function iAddingTheEmbeddedVideo() {
     $page = $this->getSession()->getPage();
-    $page->find('xpath', "//button[.='Insert']")->press();
+    if ($elem = $page->find('xpath', "//button[.='Insert']")) {
+      $elem->press();
+    }
+    else {
+      throw new \Exception("No insert button found.");
+    }
   }
 
   /**
@@ -3330,7 +3352,7 @@ class FeatureContext extends DrupalContext {
     $page = $this->getSession()->getPage();
 
     //$elem = $page->find('xpath', "//*[text() = '{$text}']/ancestor::li[@admin-panel-menu-row]");
-    $elem = $page->find('xpath', "//li[@admin-panel-menu-row]//*[text() = '$text']");
+    $elem = $page->find('xpath', "//li[@admin-panel-menu-row]/descendant::span[text()='$text']/ancestor::li[@admin-panel-menu-row]");
     if (!$elem) {
       throw new \Exception("The link $text cannot be found in the admin panel.");
     }
