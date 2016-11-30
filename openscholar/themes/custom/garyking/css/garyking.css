@@ -89,7 +89,7 @@ body.not-front,
     height: 205px;
     margin-top: 10px;
     display: table;
-    width: 980px;
+  
 }
 #main-content-header h1#page-title {
     display: table-cell;
@@ -118,6 +118,15 @@ h2.block-title {
 }
 .region-content-second h2.block-title:first-child {
     margin: 18px 0 23px;
+}
+.more-link:after {
+    background-image: url(../images/sprite.png);
+    background-position: 0 -126px;
+    background-size: 60px auto;
+    height: 12px;
+    width: 20px;
+   
+    right: -12px;
 }
 .sidebar .block {
     border-top-style: solid;
@@ -155,7 +164,7 @@ body.node-type-biblio .biblio-export,
 .biblio-title-chicago a {
     font-weight: normal !important;
 }
-.front-lop-presentatifons .more-link,
+.front-lop-presentations .more-link,
 .research-by-topic ul .item-list ul li a,
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-head a {
     font-weight: bold !important;
@@ -320,6 +329,9 @@ a.os-arrow:hover:after {
     position: absolute;
     bottom: 10px;
     left: 45%;
+}
+.item-list .pager li {
+    padding: 0.2em;
 }
 
 .front-lop-software-tabs {
@@ -674,15 +686,10 @@ background: url('../images/link.png') right -20px no-repeat;
     padding: 10px 0 10px;
 }
 @-moz-document url-prefix() {
-    .research-by-topic ul .item-list ul li.open a {
-        top: -289px;
-    }
-    .research-by-topic ul .item-list ul li a {
-        padding: 12px 5px 0 10px;
-    }
-    .research-by-topic ul .item-list ul li.open .description {
-        top: -290px;
-    }
+  
+  
+  
+  
 }
 /* RESPONSIVE CSS - UNTIL I CAN FIGURE OUT WHY GARYKING RESP CSS FILE WONT LOAD */
 
