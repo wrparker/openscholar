@@ -43,19 +43,19 @@
     <choose>
       <if type="chapter paper-conference" match="none">
         <choose>
-           <if variable="author" match="none">
-             <names variable="translator" delimiter=". ">
-               <label form="verb" text-case="capitalize-first" suffix=" "/>
-               <name and="text" delimiter=", "/>
-             </names>
-           </if>
-           <else>
-             <names variable="editor translator" delimiter=". ">
-               <label form="verb" text-case="capitalize-first" suffix=" "/>
-               <name and="text" delimiter=", "/>
-             </names>
-           </else>
-         </choose>
+          <if variable="author" match="none">
+            <names variable="translator" delimiter=". ">
+              <label form="verb" text-case="capitalize-first" suffix=" "/>
+              <name and="text" delimiter=", "/>
+            </names>
+          </if>
+          <else>
+            <names variable="editor translator" delimiter=". ">
+              <label form="verb" text-case="capitalize-first" suffix=" "/>
+              <name and="text" delimiter=", "/>
+            </names>
+          </else>
+        </choose>
       </if>
     </choose>
   </macro>
@@ -68,32 +68,32 @@
             <name and="text" delimiter=", "/>
           </names>
           <choose>
-             <if variable="author" match="none">
-               <names variable="translator" delimiter=". ">
-                 <label form="verb" suffix=" "/>
-                 <name and="text" delimiter=", "/>
-               </names>
-             </if>
-             <else>
-               <names variable="editor translator" delimiter=". ">
-                 <label form="verb" suffix=" "/>
-                 <name and="text" delimiter=", "/>
-               </names>
-             </else>
-           </choose>
+            <if variable="author" match="none">
+              <names variable="translator" delimiter=". ">
+                <label form="verb" suffix=" "/>
+                <name and="text" delimiter=", "/>
+              </names>
+            </if>
+            <else>
+              <names variable="editor translator" delimiter=". ">
+                <label form="verb" suffix=" "/>
+                <name and="text" delimiter=", "/>
+              </names>
+            </else>
+          </choose>
         </group>
       </if>
     </choose>
   </macro>
   <macro name="editor">
     <choose>
-       <if variable="author">
-         <names variable="editor">
-           <name name-as-sort-order="first" and="text" sort-separator=", " delimiter=", " delimiter-precedes-last="always"/>
-           <label form="short" prefix=", "/>
-         </names>
-       </if>
-     </choose>
+      <if variable="author">
+        <names variable="editor">
+          <name name-as-sort-order="first" and="text" sort-separator=", " delimiter=", " delimiter-precedes-last="always"/>
+          <label form="short" prefix=", "/>
+        </names>
+      </if>
+    </choose>
   </macro>
   <macro name="translator">
     <names variable="translator">
@@ -212,7 +212,7 @@
         </choose>
       </if>
       <else-if type="bill book graphic legislation motion_picture report song" match="any">
-        <text variable="title" text-case="title" font-style="italic"/>
+        <text variable="title" text-case="title"/>
         <group prefix=" (" suffix=")" delimiter=" ">
           <text term="version"/>
           <text variable="version"/>
