@@ -730,10 +730,27 @@ function cp_user_form_og_ui_add_users_alter(&$form, $form_state) {
     '#value' => key($field_names),
   );
 
-  // Hide the option to select a user role for now.
-  if (isset($form['og_user']['roles'])) {
-    $form['og_user']['roles']['#access'] = FALSE;
-  }
+  $space = spaces_get_space();
+  $form['og_user']['roles'] = array(
+    '#type' => 'radios',
+    '#access' => true,
+    // Each option is themed and includes a description.
+    '#options' => _cp_user_list_roles('rids-options', $space->group->type, $space->group->nid),
+    '#default_value' => OS_USER_ROLE_BASIC,
+    '#tree' => true,
+    '#value_callback' => '_cp_user_scalar_to_array',
+  );
+
+  $space = spaces_get_space();
+  $form['og_user']['roles'] = array(
+    '#type' => 'radios',
+    '#access' => true,
+    // Each option is themed and includes a description.
+    '#options' => _cp_user_list_roles('rids-options', $space->group->type, $space->group->nid),
+    '#default_value' => _cp_user_list_roles('rids', $space->group->type, $space->group->nid)[OS_USER_ROLE_BASIC],
+    '#tree' => true,
+    '#value_callback' => '_cp_user_scalar_to_array',
+  );
 
   // Add a secondary submit function that redirects the users out of the
   // admin overlay
@@ -741,6 +758,9 @@ function cp_user_form_og_ui_add_users_alter(&$form, $form_state) {
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Add member'));
 }
 
+function _cp_user_scalar_to_array($form, $selection) {
+  return array($selection => $selection);
+}
 /**
  * Submit handler; maybe grants a role, then redirects user back to "cp/users".
  */
@@ -752,6 +772,9 @@ function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
   if ($state) {
     // Associate the user with the group.
     og_group('node', $form_state['values']['gid'], array('entity' => $account->uid));
+
+    // Add user's role
+    og_ui_edit_membership_submit($form, $form_state);
   }
 
   $form_state['redirect'] = 'cp/users';
@@ -872,6 +895,8 @@ function cp_user_user_register_submit($form, &$form_state) {
  *       their RIDs as values.
  *    - 'rids-human': Returns array of roles with their RIDs as keys and their
  *       "human" names as values.
+ *    - 'rids-options': Returns array of roles with their RIDs as keys and their
+ *       "human" description as values.
  * @param $bundle
  *    (optional) The bundle of the group whose roles are to be returned. If not
  *    provided, $gid is mandatory and will be used to retrieve the bundle.
@@ -957,6 +982,17 @@ function _cp_user_list_roles($format, $bundle, $gid = 0) {
       foreach ($og_roles as $rid => $machine_name) {
         $human_name = !empty($system_roles[$machine_name]) ? $system_roles[$machine_name]['human_name'] : $machine_name;
         $roles[$rid] = $human_name;
+      }
+      break;
+
+    case 'rids-options':
+      // Create array of roles with their RIDs as keys and their "human" description
+      // as values.
+      foreach ($og_roles as $rid => $machine_name) {
+        $human_name = !empty($system_roles[$machine_name]) ? $system_roles[$machine_name]['human_name'] : $machine_name;
+        $description = !empty($system_roles[$machine_name]) ? $system_roles[$machine_name]['description'] : '';
+        // Theme and create the array.
+        $roles[$rid] = _cp_user_role_option($human_name, $description);
       }
       break;
   }
