@@ -408,7 +408,7 @@
     </choose>
     <choose>
       <if type="legal_case" match="none">
-        <text variable="container-title" text-case="title" font-style="italic"/>
+        <text variable="container-title" text-case="title"/>
       </if>
     </choose>
   </macro>
