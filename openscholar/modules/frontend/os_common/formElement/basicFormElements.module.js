@@ -148,17 +148,19 @@
       },
       template: '<div ng-bind-html="markup"></div>',
       link: function (scope, elem, attr) {
+        scope.id = attr['inputId'];
         scope.markup = $sce.trustAsHtml(scope.element.markup);
+        scope.title = scope.element.title;
       }
     }
-  }])
+  }]);
 
-    /**
-   * Help Markup directive.
+  /**
+   * Help directive.
    *
-   * Just markup without submit and close buttons.
+   * Just markup that doesn't do anything.
    */
-  m.directive('feHelpmarkup', ['$sce', function ($sce) {
+  m.directive('feHelp', ['$timeout', function ($timeout) {
     return {
       scope: {
         name: '@',
@@ -167,12 +169,21 @@
       },
       template: '<div ng-bind-html="markup"></div>',
       link: function (scope, elem, attr) {
-        scope.markup = $sce.trustAsHtml(scope.element.markup);
-        scope.title = scope.element.title;
-        var actions = angular.element(document.querySelector('.actions'));
-        actions.empty();
+        console.log(attr);
+        scope.gsfnid = scope.element.gsfnId;
+        $timeout(function() {
+          if (typeof GSFN !== "undefined") {
+            GSFN.loadWidget(scope.gsfnid, {"containerId":"getsat-widget-" + scope.gsfnid});
+          }
+        }, 2000);
+        angular.element(document.querySelector('.ui-icon-closethick')).click(function () {
+          if (typeof GSFN !== "undefined") {
+            GSFN.WidgetShell.destroy();
+            GSFN.IframeCount = 0;
+          }
+          window.location.reload();
+        });
       }
     }
-  }])
-
+  }]);
 })();
