@@ -643,7 +643,6 @@ ul ul ul ul {
     display: block;
 }
 /* Don't display the ical link in the floating box. */
-.block-boxes-os_boxes_media .file-icon,
 #cboxWrapper .node-event .links {
     display: none;
 }
@@ -1144,4 +1143,7 @@ ul.no-event-export {
 }
 .morelink span {
     font-size: .8em;
+}
+.web-widgets-iframe {
+    width: 100%;
 }
