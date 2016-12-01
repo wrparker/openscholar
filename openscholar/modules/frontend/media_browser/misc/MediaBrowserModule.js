@@ -13,7 +13,7 @@
         e = e || event;
         e.preventDefault();
       });
-console.log('a');
+
       // if the File object is not supported by this browser, fallback to the
       // original media browser.
       if (mbModal.requirementsMet()) {

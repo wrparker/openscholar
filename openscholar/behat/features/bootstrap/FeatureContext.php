@@ -2665,9 +2665,12 @@ class FeatureContext extends DrupalContext {
    * Default implementation (in the "" element) does not work when multiple elements match selector
    */
   public function iShouldSeeInAElement($text, $selector) {
-    usleep(50);
+    usleep(100);
     //error_log($this->getSession()->getPage()->getHtml());
     $elems = $this->getSession()->getPage()->findAll('css', $selector);
+    if (count($elems) == 0) {
+      throw new Exception("No element matching selector \"$selector\" found.");
+    }
     foreach ($elems as $e) {
       if (stripos($e->getText(), $text) !== FALSE) {
         return;
