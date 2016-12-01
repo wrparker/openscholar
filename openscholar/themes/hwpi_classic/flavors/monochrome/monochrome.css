@@ -1,5 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro);
-body {
+#page {
     background: #F3F3F1;
 }
 .front #content-column {
