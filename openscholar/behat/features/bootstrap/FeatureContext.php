@@ -2666,7 +2666,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldSeeInAElement($text, $selector) {
     usleep(50);
-    error_log($this->getSession()->getPage()->getHtml());
+    //error_log($this->getSession()->getPage()->getHtml());
     $elems = $this->getSession()->getPage()->findAll('css', $selector);
     foreach ($elems as $e) {
       if (stripos($e->getText(), $text) !== FALSE) {
@@ -3352,7 +3352,7 @@ class FeatureContext extends DrupalContext {
     $page = $this->getSession()->getPage();
 
     //$elem = $page->find('xpath', "//*[text() = '{$text}']/ancestor::li[@admin-panel-menu-row]");
-    $elem = $page->find('xpath', "//li[@admin-panel-menu-row]/descendant::span[text()='$text']/ancestor::li[@admin-panel-menu-row]");
+    $elem = $page->find('xpath', "//li[@admin-panel-menu-row]/descendant::span[text()='$text']/ancestor::li[@admin-panel-menu-row][1]");
     if (!$elem) {
       throw new \Exception("The link $text cannot be found in the admin panel.");
     }
@@ -3386,9 +3386,9 @@ class FeatureContext extends DrupalContext {
    * @When /^the overlay opens$/
    */
   public function overlayOpens() {
-    sleep(4);
-    if ($overlay = $this->getSession()->getPage()->find('css', 'iframe.overlay-active')) {
-      $function = <<<JS
+    $this->waitFor(function (FeatureContext $context) {
+      if ($overlay = $context->getSession()->getPage()->find('css', 'iframe.overlay-active')) {
+        $function = <<<JS
         (function () {
           var old = document.getElementById("iframeSwitchTo");
           if (old) {
@@ -3403,12 +3403,12 @@ class FeatureContext extends DrupalContext {
           iframe.id = "iframeSwitchTo";
         })();
 JS;
-      $this->getSession()->executeScript($function);
-      $this->getSession()->switchToIframe("iframeSwitchTo");
-    }
-    else {
-      throw new \Exception("Overlay not found.");
-    }
+        $context->getSession()->executeScript($function);
+        $context->getSession()->switchToIframe("iframeSwitchTo");
+        return true;
+      }
+      return false;
+    }, 20000);
   }
 
   /**
