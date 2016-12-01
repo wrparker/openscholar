@@ -325,11 +325,15 @@ a.os-arrow:hover:after {
     position: relative;
     top: 0;
 }
-.front-four-lops .mini-pager {
+.front-four-lops .mini-pager,
+.front-four-lops .more-link {
     position: absolute;
     bottom: 10px;
-    
-}
+    }
+    .front-four-lops .more-link {
+
+    right:20px;
+    }
 .item-list .pager li {
     padding: 0.2em;
 }
