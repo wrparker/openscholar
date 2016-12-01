@@ -89,7 +89,6 @@ body.not-front,
     height: 205px;
     margin-top: 10px;
     display: table;
-  
 }
 #main-content-header h1#page-title {
     display: table-cell;
@@ -110,6 +109,8 @@ h2.block-title {
 #content-column h2.block-title {
     font-weight: 400;
 }
+.front-four-lops .pager-next a,
+.front-four-lops .pager-previous a,
 .not-front .term-listing-heading h2:first-of-type,
 .bio-teaser-block2 h2.block-title,
 .research-by-topic h2.block-title,
@@ -125,7 +126,6 @@ h2.block-title {
     background-size: 60px auto;
     height: 12px;
     width: 20px;
-   
     right: -12px;
 }
 .sidebar .block {
@@ -328,12 +328,11 @@ a.os-arrow:hover:after {
 .front-four-lops .mini-pager {
     position: absolute;
     bottom: 10px;
-    left: 45%;
+    
 }
 .item-list .pager li {
     padding: 0.2em;
 }
-
 .front-lop-software-tabs {
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
     -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), -1px 0 0 rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.12);
@@ -362,6 +361,7 @@ a.os-arrow:hover:after {
 .front-lop-papers {
     border-color: #E45947 !important;
 }
+.front-four-lops .os_sv_list_box,
 .ui-tabs ul.ui-tabs-nav {
     margin-bottom: 20px;
 }
@@ -579,10 +579,15 @@ ul.nice-menu-down,
     margin-right: 0;
 }
 .research-by-topic ul .item-list ul li a {
-    display: table;padding: 9px 28px 30px 12px;font-size: .94em;z-index: 2;position: relative;-webkit-transition: all .250s;transition: all .250s;
-background: url('../images/link.png') right -20px no-repeat;
-    }
-
+    display: table;
+    padding: 9px 28px 30px 12px;
+    font-size: .94em;
+    z-index: 2;
+    position: relative;
+    -webkit-transition: all .125s;
+    transition: all .250s;
+    background: url('../images/link.png') right -20px no-repeat;
+}
 .research-by-topic ul .item-list ul li a:hover {
     margin-left: 12px;
 }
@@ -591,6 +596,7 @@ background: url('../images/link.png') right -20px no-repeat;
 }
 .research-by-topic ul .item-list ul li.open a {
     /* top: -5px; */
+    
     background-color: #4a5a77;
     height: 20px;
     padding: 9px 22px 3px 12px;
@@ -611,7 +617,7 @@ background: url('../images/link.png') right -20px no-repeat;
     background: url('../images/sprite.png?zyxabc') 10px -284px #4a5a77 no-repeat;
     width: 30px;
     height: 45px;
-    transition: all .250s;
+    transition: all .125s;
     z-index: 2;
 }
 .research-by-topic ul .item-list ul li.open span:after {
@@ -672,6 +678,7 @@ background: url('../images/link.png') right -20px no-repeat;
 }
 .research-by-topic ul .item-list ul li.open .description {
     /* top: -5px; */
+    
     height: auto;
     overflow-y: scroll;
     max-height: 300px;
@@ -685,12 +692,15 @@ background: url('../images/link.png') right -20px no-repeat;
 #footer {
     padding: 10px 0 10px;
 }
-@-moz-document url-prefix() {
-  
-  
-  
-  
+/* LOGGED IN PUSH THE PAGE DOWN */
+
+.logged-in #menu-bar {
+    border-top: 38px #fff solid;
 }
+.logged-in #page {
+    margin-top: 84px;
+}
+@-moz-document url-prefix() {}
 /* RESPONSIVE CSS - UNTIL I CAN FIGURE OUT WHY GARYKING RESP CSS FILE WONT LOAD */
 
 @media (max-width: 1024px) {
