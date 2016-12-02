@@ -1,5 +1,10 @@
 /* Layout CSS */
 
+
+.front-lop-papers {
+min-height: 530px;
+}
+
 .front .region-content-second {
 padding-top: 40px;
 }
