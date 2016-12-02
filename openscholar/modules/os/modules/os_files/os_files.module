@@ -1643,26 +1643,22 @@ function os_files_file_download($uri){
  * @see http://community.openscholar.harvard.edu/openscholar/topics/better_files_media_management_and_display
  */
 function os_files_file_view($file, $view_mode, $langcode) {
-  if (!in_array($view_mode, array('os_files_title', 'teaser', 'full', 'os_files_thumbnail'))) {
+  if (!in_array($view_mode, array('os_files_link', 'os_files_title', 'teaser', 'full', 'os_files_thumbnail'))) {
     return;
   }
 
   $file->content['og_vocabulary'] = array(); //don't print this until it's useful.  terms only work with sv lists right now.
 
-  $icon = array(
-    '#theme' => 'os_file_icon',
-    '#file' => $file,
-    '#icon_directory' => drupal_get_path('module', 'os_files') . '/icons',
-  );
-
-  //icon, title, download
-  $content = array();
-  if ((!isset($file->oembed) || !$file->oembed) && $file->filemime != 'html/embed') {
+  if ($view_mode == 'os_files_link') {
+    // Customize default icon for unknown file types, see @os_basetheme_file_link()
+    $file->view_mode = 'os_files_link';
+    return;
+  } else {
+    //title, download
     $content = array(
       'file-info' => array(
         '#prefix' => '<div class="file-info">',
         '#suffix' => '</div>',
-        'icon' => $icon,
         'title' => array(
           '#theme' => 'link',
           '#path' => 'file/' . $file->fid,
@@ -1688,11 +1684,6 @@ function os_files_file_view($file, $view_mode, $langcode) {
     unset($file->os_file_description);
   }
 
-  if ($view_mode == 'full' && $file->filemime == 'html/embed') {
-    // Remove file icon in case its a embed widget with its content
-    unset($content['file-info']['icon']);
-  }
-
   //teasers get read more link
   if ($view_mode == 'teaser' && $file->os_file_description) {
     $readmore = array(
@@ -1706,7 +1697,6 @@ function os_files_file_view($file, $view_mode, $langcode) {
 
   //add thumbnail for list of images
   if (@$file->sv_list && @$file->sv_list_of_images) {
-    unset ($content['file-info']['icon']);
     switch ($view_mode) {
       case 'full':
         $img = $file->content['file'];
@@ -1746,7 +1736,6 @@ function os_files_file_view($file, $view_mode, $langcode) {
 
   //add thumb/colorbox for list of video/audio
   if (@$file->sv_list && (@$file->sv_list_of_videos || @$file->sv_list_of_audio)) {
-    unset ($content['file-info']['icon']);
 
     if (in_array($file->filemime, array('video/oembed', 'audio/oembed'))) {
       switch ($view_mode) {
@@ -1772,13 +1761,13 @@ function os_files_file_view($file, $view_mode, $langcode) {
       case 'image':
         $content['file-info']['file'] = $file->content['file']; //include embedded image
         $content['file-info']['file']['#style_name'] = 'os_files_xxlarge';
-        unset($content['file-info']['file']['#width'], $content['file-info']['file']['#height'], $content['file-info']['icon'], $content['file-info']['title']);
+        unset($content['file-info']['file']['#width'], $content['file-info']['file']['#height'], $content['file-info']['title']);
         break;
 
       case 'video':
         if (isset($file->oembed)) {
           $content['file-info']['file'] = $file->content['file']; //include thumbnail
-          unset($content['file-info']['icon'], $content['file-info']['title']);
+          unset($content['file-info']['title']);
         }
         break;
 
