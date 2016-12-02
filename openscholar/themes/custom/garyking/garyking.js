@@ -44,17 +44,4 @@
      });
      
 
-   var highestBox = 0;
-        jQuery('.front-four-lops section').each(function(){  
-                if(jQuery(this).height() > highestBox){   
-                highestBox = jQuery(this).height();  
-        }
-    });    
-    jQuery('.front-four-lops section, .front-lop-software-tabs').height(highestBox);
-
-jQuery("#block-os-primary-menu .nice-menu li.last a").click(function() {
-   jQuery(".block-os-search-solr").toggleClass('open');
-    });     
-
-
  });
