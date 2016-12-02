@@ -1,12 +1,12 @@
 /* Layout CSS */
 
 
-.front-lop-presentations {
+.front-lop-blockgrid.front-lop-presentations {
 min-height: 524px;
 }
 
 
-.front-lop-books {
+.front-lop-blockgrid.front-lop-books {
 min-height: 500px;
 }
 
