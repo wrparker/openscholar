@@ -1240,7 +1240,34 @@ form#os-maintenance .form-item .description {
 }
 
 .form-radios {
-	margin:15px 0;
+  margin: 15px 0;
+}
+
+span[name="faq_sort"] .form-radios {
+    margin: 0 15px 15px 0;
+}
+.margin-bottom{
+    margin-bottom: 15px;
+}
+
+/* CKEDITOR - WYSIWYG */
+
+
+body.cke_editable blockquote {
+    border-left: 2px solid #807E6D;
+    font-style: italic;
+    margin: 1em 3em;
+    padding-left: 1em;
+}
+
+span.cke_button__break_icon {
+    background-position-y: -1px;
+    background-size: 20px !important;
+    width: 18px;
+}
+
+.cke_ltr span.cke_button__anchor_icon {
+    background: url('/profiles/openscholar/themes/cp_theme/images/cp-sprite.png?123') no-repeat 0 -711px !important;
 }
 
 .view-content ~ .item-list ul.pager {
