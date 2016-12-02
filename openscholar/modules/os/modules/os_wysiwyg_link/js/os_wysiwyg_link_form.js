@@ -12,7 +12,8 @@ Drupal.behaviors.osLinkExternal = {
         var link_title = $('input[name="link-text"]').val();
         // Trims the leading slash from the raw input value.
         value = value.replace(/^\//, "");
-        if (value.indexOf('http') == -1) {
+        // If given URL is relative, i.e not have 'http' and do not have '#' at the beginning, i.e not a named anchor.
+        if (value.indexOf('http') != -1 && (value.indexOf('#') != 0) {
           value = Drupal.settings.basePath + Drupal.settings.pathPrefix + value;
         }
         Drupal.settings.osWysiwygLinkResult = value;
