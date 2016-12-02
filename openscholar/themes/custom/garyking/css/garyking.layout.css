@@ -1,6 +1,17 @@
 /* Layout CSS */
 
 
+.front-lop-presentations {
+min-height: 524px;
+}
+
+
+.front-lop-books {
+min-height: 500px;
+}
+
+
+
 .front .region-content-second {
 padding-top: 40px;
 }
