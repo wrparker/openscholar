@@ -2,7 +2,7 @@
 
 
 .front-lop-blockgrid.front-lop-presentations {
-min-height: 524px;
+min-height: 529px;
 }
 
 
@@ -10,7 +10,9 @@ min-height: 524px;
 min-height: 500px;
 }
 
-
+ .front-lop-software-tabs .block-boxes-os_sv_list_box {
+    min-height: 405px;
+}
 
 .front .region-content-second {
 padding-top: 40px;

@@ -348,6 +348,12 @@ a.os-arrow:hover:after {
     position: relative;
     top: 0;
 }
+
+.front-lop-software-tabs .ui-tabs .ui-tabs-panel {
+	padding: 10px 10px 0 10px;
+}
+
+
 .front-lop-books {
     border-color: #5AB899;
 }
