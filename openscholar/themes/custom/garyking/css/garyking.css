@@ -175,6 +175,7 @@ body.node-type-biblio .biblio-export,
 .sidebar h2.block-title {
     padding: 15px 0;
 }
+.block-boxes-os_boxes_addthis .boxes-box-content,
 .ui-tabs,
 .research-by-topic h2.block-title,
 .contact-page-info h2.block-title {
@@ -235,6 +236,7 @@ h3 {
     font-weight: 300;
     font-size: 1.3em;
 }
+#powerby-login,
 #columns,
 .node-person.node-teaser .field-name-field-person-photo,
 .block-boxes-os_boxes_tabs .ui-widget,
