@@ -188,12 +188,11 @@ function os_links_cp_settings() {
        '#help_link' => l(t('Learn more about links'), '', array('attributes' => array('target' => '_blank'))),
      ),
      'form' => array(
-       '#title' => t('Ordering'),
        '#type' => 'radios',
        '#default_value' => variable_get('os_links_ordering', 0),
        '#options' => array(0 => 'Creation date, descending', 1 => 'Creation date, ascending', 2 => 'Alphanumeric, A-Z', 3 => 'Alphanumeric, Z-A'),
        '#weight' => -1,
-       '#prefix' => '<label>Choose how links will display</label>',
+       '#prefix' => '<label>Choose how links are ordered</label>',
      ),
    );
 
