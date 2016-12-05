@@ -705,8 +705,6 @@ function os_publications_alter_year_field(&$form, &$form_state) {
   // and _biblio_text_year() are used to convert between code and numeric.
   $year_value = $form['biblio_year']['#default_value'];
 
-  dpm($year_value);
-
   // If not a number then it was coded, so we want to show the value in the
   // checkboxes form element.
   if (!is_numeric($year_value)) {
@@ -799,7 +797,7 @@ function os_publications_alter_year_field(&$form, &$form_state) {
       '#options' => $years,
       '#multiple' => FALSE,
       '#weight' => 20,
-      '#default_value' => $year_coded_value,
+      '#default_value' => $form['#node']->biblio_date,
     );
 
   }
@@ -823,14 +821,12 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#markup' => t('or'),
   );
 
-  dpm($year_coded_value);
-
   $form['biblio_year_group']['biblio_year_coded'] = array(
     '#type' => 'radios',
     '#options' => $years,
     '#multiple' => FALSE,
     '#weight' => 20,
-    '#default_value' => $year_coded_value,
+    '#default_value' => $form['#node']->biblio_date,
   );
 
   $form['biblio_year_group']['biblio_year']['#weight'] = 30;
@@ -890,16 +886,7 @@ function os_publications_validate_year_field($form, &$form_state) {
       return;
     }
   }
-
-  // Set the coded value as the year if exist.
-  if ($form_state['values']['biblio_year_coded'] && !$form_state['values']['biblio_year']) {
-    $form_state['values']['biblio_year'] = $form_state['values']['biblio_year_coded'];
-    if (!empty($form_state['values']['biblio_year_coded_extrayear'])) {
-      $form_state['values']['biblio_date'] = trim($form_state['values']['biblio_year_coded_extrayear']);
-    } else {
-      $form_state['values']['biblio_date'] = NULL;
-    }
-  }
+  $form_state['values']['biblio_date'] = trim($form_state['values']['biblio_year_coded']);
 }
 
 /**
