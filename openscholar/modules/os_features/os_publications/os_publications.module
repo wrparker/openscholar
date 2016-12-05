@@ -1013,11 +1013,7 @@ function os_publications_entity_prepare_view($entities, $type, $langcode) {
 }
 
 /**
- * Is given a render array representing the biblio node ready for rendering in the list view
- *
- * Adds any fields that may have been added to the node type
- *
- * @param unknown_type $entry
+ * Implements hook_biblio_entry_alter().
  */
 function os_publications_biblio_entry_alter(&$entry, $node) {
   unset($entry['export_links']);
@@ -1064,15 +1060,18 @@ function _os_publications_biblio_entry_alter($markup, $node) {
 
   $html = $markup;
   $style = variable_get('biblio_citeproc_style');
-  // Pushing day and month in those both are present in Publication for Harvard - Chicago Author cititation
+  // Pushing day and month in those both are present in Publication for
+  // Harvard - Chicago Author cititation.
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-    if (!empty($node->biblio_year) && strpos($html, $node->biblio_year.'. ') !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value'])) {
+
+    if (!empty($node->biblio_year) && strpos($html, $node->biblio_year . '. ') !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value'])) {
       // In case day value is present
       if(!empty($node->field_biblio_pub_day['und'][0]['value'])) {
         $day = $node->field_biblio_pub_day['und'][0]['value'] . '/';
       } else {
         $day = '';
       }
+
       $html = str_replace($node->biblio_year . '. ', $node->field_biblio_pub_month['und'][0]['value'] . '/' . $day . $node->biblio_year . '. ', $html);
     }
   }
@@ -1220,7 +1219,8 @@ function os_publications_node_view_alter(&$build, $type) {
 
   switch ($build['#view_mode'])  {
     case 'full':
-      // Remove the publication image as it's called in theme_os_publications_tabular instead.
+      // Remove the publication image as it's called in
+      // theme_os_publications_tabular instead.
       if (isset($build['field_biblio_image'])) {
         $build['field_biblio_image']['#access'] = FALSE;
       }
@@ -1238,7 +1238,8 @@ function os_publications_node_view_alter(&$build, $type) {
 
     case 'slide_teaser':
       $build['teaser']['#markup'] = theme('biblio_style', array('node' => $build['#node'], 'base' => variable_get('biblio_base', 'biblio'), 'style_name' => biblio_get_style()));
-      //FALLTHROUGH!  slide_teaser should run just like teaser, except we need to load up the markup from biblio_view().
+      //FALLTHROUGH!  slide_teaser should run just like teaser, except we need
+      // to load up the markup from biblio_view().
     case 'teaser':
       // Alter the teaser to remove the external URL as the URL title and
       // replace it with either the biblio_url_title or "website".
@@ -1249,10 +1250,12 @@ function os_publications_node_view_alter(&$build, $type) {
 
       // Add the abstract slider.
       _os_publications_attach_abstract($build, $build['#node'], 'teaser');
+
       // Add in notes.
-      if(isset($spaces) && is_object($spaces) && $spaces->controllers->variable->get('os_publications_note_in_teaser', 'space') == TRUE) {
+      if (isset($spaces) && is_object($spaces) && $spaces->controllers->variable->get('os_publications_note_in_teaser', 'space') == TRUE) {
         _os_publications_attach_notes($build, $build['#node']);
       }
+
       $build['teaser']['#weight'] = 1;
       $build['links']['#access'] = FALSE;
 
