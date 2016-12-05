@@ -598,23 +598,35 @@ ul.nice-menu-down,
     position: relative;
     -webkit-transition: all .125s;
     transition: all .250s;
-    background: url('../images/link.png') right -20px no-repeat;
+
 }
-.research-by-topic ul .item-list ul li a:hover {
+.research-by-topic ul .item-list ul li a:after {
+    background: url('../images/link.png') right -20px no-repeat;
+    width:20px;
+    height:30px;
+}
+.research-by-topic ul .item-list ul li:hover a {
     margin-left: 12px;
+     padding: 9px 22px 3px 12px;
+    background: url('../images/link.png') right 12px no-repeat;
 }
 .research-by-topic ul .item-list ul li.open a:hover {
     margin-left: 0;
 }
 .research-by-topic ul .item-list ul li.open a {
-    /* top: -5px; */
-    
+
+    margin-left: 0;
     background-color: #4a5a77;
     height: 20px;
     padding: 9px 22px 3px 12px;
     color: #fff;
+
+
+}
+.research-by-topic ul .item-list ul li.open a:after {
+
     background: url('../images/link.png') right 12px no-repeat;
-    /* width: 100%; */
+
 }
 .research-by-topic ul .item-list ul li span {
     font-family: arial;
