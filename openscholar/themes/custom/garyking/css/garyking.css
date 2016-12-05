@@ -109,9 +109,14 @@ h2.block-title {
 #content-column h2.block-title {
     font-weight: 400;
 }
+.not-front .gkplus-show-heading.depth-1 h2 {
+    font-size: 1.8em;
+    border-bottom:1px solid #ccc;
+display:block;
+}
 .front-four-lops .pager-next a,
 .front-four-lops .pager-previous a,
-.not-front .term-listing-heading h2:first-of-type,
+.not-front .gkplus-show-heading.depth-2 h2,
 .bio-teaser-block2 h2.block-title,
 .research-by-topic h2.block-title,
 .front-four-lops h2.block-title {
