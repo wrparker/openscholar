@@ -1,5 +1,5 @@
 body,
-.ui-dialog * {
+.ui-dialog.ap-settings-form * {
     font-family: helvetica, arial, sans-serif;
 }
 #page {
@@ -133,9 +133,10 @@ html.js input.throbbing {
 }
 input.form-submit, 
 a.button,
-.ui-dialog button,
-.ui-dialog input[type="button"],
-.ui-dialog input[type="submit"],
+
+.ui-dialog.ap-settings-form button,
+.ui-dialog.ap-settings-form input[type="button"],
+.ui-dialog.ap-settings-form input[type="submit"],
 a#edit-cancel,
 a.form-cancel {
     cursor: pointer;
@@ -311,7 +312,7 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 }
 /** OVERLAY MODAL OVERRIDES **/
 
-.ui-dialog button.ui-dialog-titlebar-close,
+.ui-dialog.ap-settings-form button.ui-dialog-titlebar-close,
 #overlay-close,
 #overlay-close:hover {
     background: url('../images/cp-sprite.png') no-repeat 0 -547px;
@@ -320,20 +321,22 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     position: relative;
     margin: -28px 10px;
 }
-.ui-dialog button.ui-dialog-titlebar-close {
+.ui-dialog.ap-settings-form button.ui-dialog-titlebar-close {
     float: right;
     margin: -8px 0;
     ;
     border: 0;
     cursor: pointer;
 }
+
 .ui-state-default .ui-icon,
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon,
 .ui-state-active .ui-icon {
     background-image: none;
 }
-.ui-dialog .ui-dialog-titlebar,
+
+.ui-dialog.ap-settings-form .ui-dialog-titlebar,
 #overlay-titlebar {
     padding: 7px 10px 17px;
     position: relative;
@@ -355,11 +358,11 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 .page-cp .ui-dialog-titlebar {
     margin-bottom: 22px;
 }
-.ui-dialog {
+.ui-dialog.ap-settings-form {
     padding: 0;
     top:10% !important;
 }
-.ui-dialog .ui-dialog-content {
+.ui-dialog.ap-settings-form .ui-dialog-content {
     overflow: visible;
 }
 #overlay-tabs {
@@ -1233,7 +1236,7 @@ form#os-maintenance .form-item .description {
     white-space: nowrap;
    }
 
-.ui-dialog #os_taxonomy .os-taxonomy_label_heading {
+.ui-dialog.ap-settings-form #os_taxonomy .os-taxonomy_label_heading {
  margin: 0 0 8px 0;
 }
 
