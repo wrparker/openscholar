@@ -598,13 +598,7 @@ ul.nice-menu-down,
     position: relative;
     -webkit-transition: all .125s;
     transition: all .250s;
-
-}
-.research-by-topic ul .item-list ul li a:after {
     background: url('../images/link.png') right -20px no-repeat;
-    width:20px;
-    height:30px;
-    position:absolute;
 }
 .research-by-topic ul .item-list ul li:hover a {
     margin-left: 12px;
@@ -621,11 +615,6 @@ ul.nice-menu-down,
     height: 20px;
     padding: 9px 22px 3px 12px;
     color: #fff;
-
-
-}
-.research-by-topic ul .item-list ul li.open a:after {
-
     background: url('../images/link.png') right 12px no-repeat;
 
 }
