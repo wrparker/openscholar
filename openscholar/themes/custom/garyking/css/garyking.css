@@ -604,6 +604,7 @@ ul.nice-menu-down,
     background: url('../images/link.png') right -20px no-repeat;
     width:20px;
     height:30px;
+    position:absolute;
 }
 .research-by-topic ul .item-list ul li:hover a {
     margin-left: 12px;
