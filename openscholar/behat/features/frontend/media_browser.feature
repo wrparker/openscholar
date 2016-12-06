@@ -24,7 +24,7 @@ Feature: Media Browser
      When I click on the tab "Embed from the web"
       And I should see "URL or HTML:"
 
-  @media_browser @javascript
+  @wip @media_browser @javascript @apparently_theres_bugs_in_selenium?
   Scenario: Verify files show up in the "Previously uploaded files" tab
     Given I am logging in as "john"
       And I wait for page actions to complete
