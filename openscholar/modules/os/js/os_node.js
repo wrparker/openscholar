@@ -46,4 +46,8 @@ Drupal.behaviors.nodeFieldsetSummaries = {
   }
 };
 
+<<<<<<< HEAD
 })(jQuery);
+=======
+})(jQuery);
+>>>>>>> Merging content from 8841 #9081
