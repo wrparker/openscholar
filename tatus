@@ -1,0 +1,164 @@
+[1mdiff --git a/openscholar/modules/cp/cp.install b/openscholar/modules/cp/cp.install[m
+[1mindex 36d99c3..d2e7d3c 100644[m
+[1m--- a/openscholar/modules/cp/cp.install[m
+[1m+++ b/openscholar/modules/cp/cp.install[m
+[36m@@ -124,3 +124,39 @@[m [mfunction cp_update_7003() {[m
+   $message = _os_update_strongarm($variables);[m
+   return $message;[m
+ }[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * Implements hook_schema().[m
+[32m+[m[32m */[m
+[32m+[m[32mfunction cp_schema() {[m
+[32m+[m[32m  $schema = array();[m
+[32m+[m
+[32m+[m[32m  $schema['node_noindex'] = array([m
+[32m+[m[32m    'fields' => array([m
+[32m+[m[32m      'nid' => array([m
+[32m+[m[32m        'type' => 'int',[m
+[32m+[m[32m        'not null' => TRUE,[m
+[32m+[m[32m        'disp-width' => '11',[m
+[32m+[m[32m      ),[m
+[32m+[m[32m      'noindex' => array([m
+[32m+[m[32m        'type' => 'int',[m
+[32m+[m[32m        'not null' => FALSE,[m
+[32m+[m[32m        'disp-width' => '1',[m
+[32m+[m[32m      ),[m
+[32m+[m[32m    ),[m
+[32m+[m[32m    'indexes' => array([m
+[32m+[m[32m      'noindex' => array('noindex'),[m
+[32m+[m[32m    ),[m
+[32m+[m[32m    'primary key' => array('nid'),[m
+[32m+[m[32m  );[m
+[32m+[m[32m  return $schema;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * Implements hook_update(). to add node_noindex table[m
+[32m+[m[32m */[m
+[32m+[m[32mfunction cp_update_7004() {[m
+[32m+[m[32m  if (!db_table_exists('node_noindex')) {[m
+[32m+[m[32m    drupal_install_schema('cp');[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/openscholar/modules/cp/cp.module b/openscholar/modules/cp/cp.module[m
+[1mindex 91ca573..ad39c3a 100644[m
+[1m--- a/openscholar/modules/cp/cp.module[m
+[1m+++ b/openscholar/modules/cp/cp.module[m
+[36m@@ -674,11 +674,110 @@[m [mfunction cp_form_redirect_edit_form_alter(&$form, &$form_state, $form_id) {[m
+  * Implmements hook_form_BASE_FORM_ID_alter() for node_edit_form.[m
+  */[m
+ function cp_form_node_form_alter(&$form, &$form_state, $form_id) {[m
+[32m+[m[32m  if (in_array($form['#bundle'], array_keys(os_get_bundles(array(1,2))))) {[m
+[32m+[m[32m    $default_noindex_value = 0;[m
+[32m+[m[32m    if (isset($form['nid']['#value']) && $form['nid']['#value'] != '') {[m
+[32m+[m[32m      $node_noindex = node_load($form['nid']['#value']);[m
+[32m+[m[32m      if (_cp_node_has_noindex($node_noindex)) {[m
+[32m+[m[32m        $default_noindex_value = 1;[m
+[32m+[m[32m      }[m
+[32m+[m[32m    }[m
+[32m+[m[32m    $form['options']['noindex'] = array([m
+[32m+[m[32m      '#type' => 'checkbox',[m
+[32m+[m[32m      '#title' => t("Prevent this page from appearing in search engine results"),[m
+[32m+[m[32m      '#default_value' => $default_noindex_value,[m
+[32m+[m[32m    );[m
+[32m+[m[32m  }[m[41m  [m
+   // Hides the default redirect form section from displaying.[m
+   _cp_form_alter_remove_redirect_element($form);[m
+ }[m
+ [m
+ /**[m
+[32m+[m[32m * Implements hook_node_view().[m
+[32m+[m[32m */[m
+[32m+[m[32mfunction cp_node_view($node, $view_mode = 'full') {[m
+[32m+[m[32m  // We make sure we are on the node page.[m
+[32m+[m[32m  if (_cp_node_has_noindex($node) && $view_mode == 'full') {[m
+[32m+[m[32m    $element = array([m
+[32m+[m[32m      '#tag' => 'meta',[m
+[32m+[m[32m      '#attributes' => array([m
+[32m+[m[32m        'name' => 'ROBOTS',[m
+[32m+[m[32m        'content' => 'NOINDEX, NOFOLLOW',[m
+[32m+[m[32m      ),[m
+[32m+[m[32m    );[m
+[32m+[m[32m    drupal_add_html_head($element, 'node_noindex');[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * Implements hook_node_insert().[m
+[32m+[m[32m */[m
+[32m+[m[32mfunction cp_node_insert($node) {[m
+[32m+[m[32m  _cp_node_set_noindex($node);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * Implements hook_node_update().[m
+[32m+[m[32m */[m
+[32m+[m[32mfunction cp_node_update($node) {[m
+[32m+[m[32m  _cp_node_set_noindex($node);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * Implements hook_node_delete().[m
+[32m+[m[32m */[m
+[32m+[m[32mfunction cp_node_delete($node) {[m
+[32m+[m[32m  _cp_node_delete_noindex($node);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * @return[m
+[32m+[m[32m *  true if the node has the noindex setting.[m
+[32m+[m[32m */[m
+[32m+[m[32mfunction _cp_node_has_noindex($node) {[m
+[32m+[m[32m  if (!isset($node->nid)) {[m
+[32m+[m[32m    return FALSE;[m
+[32m+[m[32m  }[m
+[32m+[m[32m  return db_query("SELECT noindex FROM {node_noindex} WHERE nid = :nid", array(':nid' => $node->nid))->fetchField();[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * Sets the noindex option to true on the node.[m
+[32m+[m[32m *[m
+[32m+[m[32m * @param[m
+[32m+[m[32m *  object $node[m
+[32m+[m[32m */[m
+[32m+[m[32mfunction _cp_node_set_noindex($node) {[m
+[32m+[m[32m  _cp_node_delete_noindex($node);[m
+[32m+[m[32m  if (isset($node->noindex) && $node->noindex) {[m
+[32m+[m[32m    $fields = array('nid' => $node->nid, 'noindex' => $node->noindex);[m
+[32m+[m[32m    db_insert('node_noindex')->fields($fields)->execute();[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * Removes the noindex option from the node.[m
+[32m+[m[32m *[m
+[32m+[m[32m * @param[m
+[32m+[m[32m *  object $node[m
+[32m+[m[32m */[m
+[32m+[m[32mfunction _cp_node_delete_noindex($node) {[m
+[32m+[m[32m  db_delete('node_noindex')[m
+[32m+[m[32m  ->condition('nid', $node->nid)[m
+[32m+[m[32m  ->execute();[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * Implements hook_js_alter().[m
+[32m+[m[32m */[m
+[32m+[m[32mfunction cp_js_alter(&$javascript) {[m
+[32m+[m[32m  // To overcome the display issue for adding noindex in form edit / add[m
+[32m+[m[32m  if (isset($javascript['modules/node/node.js'])) {[m
+[32m+[m[32m    $javascript['modules/node/node.js']['data'] = drupal_get_path('module', 'os') . '/js/os_node.js';[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m/**[m
+  * Implmements hook_form_FORM_ID_alter() for taxonomy_term_edit_form.[m
+  */[m
+ function cp_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {[m
+warning: LF will be replaced by CRLF in openscholar/modules/cp/cp.install.
+The file will have its original line endings in your working directory.
+warning: LF will be replaced by CRLF in openscholar/modules/cp/cp.module.
+The file will have its original line endings in your working directory.
