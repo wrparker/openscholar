@@ -24,7 +24,7 @@ Feature: Media Browser
      When I click on the tab "Embed from the web"
       And I should see "URL or HTML:"
 
-  @wip @media_browser @javascript @apparently_theres_bugs_in_selenium?
+  @wip @javascript @apparently_theres_bugs_in_selenium?
   Scenario: Verify files show up in the "Previously uploaded files" tab
     Given I am logging in as "john"
       And I wait for page actions to complete
@@ -135,10 +135,10 @@ Feature: Media Browser
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I drop the files "rubber-duck.jpg, conservatory_of_flowers3.jpg" onto the "Drag and drop files here." area
       And I sleep for "5"
-     Then I should see "A file with the name 'rubber-duck.jpg' already exists."
       And I should see "1/2"
      When I press the "Cancel" button
-     Then I should see "A file with the name 'conservatory_of_flowers3.jpg' already exists."
+     Then I should not see "1/2"
+     Then I should see "2/2"
       And I click on the "Cancel" control in the ".media-browser-dupe" element
      Then I should see the media browser "Upload from your computer" tab is active
 
