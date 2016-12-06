@@ -42,6 +42,6 @@
          jQuery(e).html(jQuery(e).html().replace(/at/g, ''));
          jQuery(e).html(jQuery(e).html().replace(/:/g, ''));
      });
-
+     
 
  });

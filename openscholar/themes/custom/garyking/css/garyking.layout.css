@@ -1,5 +1,19 @@
 /* Layout CSS */
 
+
+.front-lop-blockgrid.front-lop-presentations {
+min-height: 529px;
+}
+
+
+.front-lop-blockgrid.front-lop-books {
+min-height: 500px;
+}
+
+ .front-lop-software-tabs .block-boxes-os_sv_list_box {
+    min-height: 416px;
+}
+
 .front .region-content-second {
 padding-top: 40px;
 }

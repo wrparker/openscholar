@@ -124,3 +124,39 @@ function cp_update_7003() {
   $message = _os_update_strongarm($variables);
   return $message;
 }
+
+/**
+ * Implements hook_schema().
+ */
+function cp_schema() {
+  $schema = array();
+
+  $schema['node_noindex'] = array(
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'disp-width' => '11',
+      ),
+      'noindex' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'disp-width' => '1',
+      ),
+    ),
+    'indexes' => array(
+      'noindex' => array('noindex'),
+    ),
+    'primary key' => array('nid'),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_update(). to add node_noindex table
+ */
+function cp_update_7005() {
+  if (!db_table_exists('node_noindex')) {
+    drupal_install_schema('cp');
+  }
+}
