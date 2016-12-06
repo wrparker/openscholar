@@ -172,6 +172,10 @@
           };
 
           scope.save = function () {
+            if (scope.file.image_alt == null || scope.file.image_alt == "") {
+              return;
+            }
+
             fileService.edit(scope.file, ['preview', 'url', 'size', 'changed', 'mimetype']).then(function(result) {
                 if (result.data || typeof scope.file.new != 'undefined') {
                   scope.onClose({saved: FER.SAVED});
