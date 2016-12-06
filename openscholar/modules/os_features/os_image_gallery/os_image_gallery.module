@@ -524,3 +524,7 @@ function os_image_gallery_image_optimize($image, $dst) {
   watchdog('os_image_gallery', t('The image @name has been compressed.', $params));
   return TRUE;
 }
+
+function os_image_gallery_oembed_callback($plugin, $url, $matches, $parameters) {
+  dpm('a');
+}

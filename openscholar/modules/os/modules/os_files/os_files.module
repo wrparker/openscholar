@@ -1478,8 +1478,12 @@ function os_files_media_wysiwyg_allowed_view_modes_alter(&$view_modes, $file){
 /**
  * Adds wmode to oembed requests
  */
-function os_files_oembed_request_alter(&$attributes, $provider, $url) {
+function os_files_oembed_request_alter(&$attributes, &$provider, $url) {
   $attributes['wmode'] = 'opaque';
+
+  if ($provider['name'] == 'default:Qualtrics') {
+    $provider['callback'] = 'os_image_gallery_oembed_callback';
+  }
 }
 
 /**
