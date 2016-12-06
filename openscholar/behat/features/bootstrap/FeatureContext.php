@@ -2568,7 +2568,7 @@ class FeatureContext extends DrupalContext {
   public function iWaitForDirective($directive, $appear) {
     $directive = strtolower(preg_replace('/([ ]+)/', '-', $directive));
     $xpath = "//*[@$directive]";
-    $this->waitForXpathNode($xpath, $appear == 'appear');
+    $this->waitForXpathNode($xpath, $appear);
   }
 
   /**
