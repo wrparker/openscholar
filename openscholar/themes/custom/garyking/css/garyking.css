@@ -110,9 +110,11 @@ h2.block-title {
     font-weight: 400;
 }
 .not-front .gkplus-show-heading.depth-1 h2 {
-    font-size: 1.8em;
-    border-bottom:1px solid #ccc;
-display:block;
+     font-size: 1.8em;
+    border-bottom:1px solid #b5b4b4;
+    display:block;
+    padding-bottom:10px;
+    margin:30px 0;
 }
 .front-four-lops .pager-next a,
 .front-four-lops .pager-previous a,
@@ -218,7 +220,7 @@ body.node-type-biblio .biblio-export,
 }
 .front .sv-list-biblio.sv-list-view-slide_teaser .biblio-abstract-display.os-slider {
     background: #eee !important;
-    border: none;
+   
 }
 #content-panels .front-lop-blockgrid .block-inner {
     margin-top: 5px;
@@ -382,6 +384,11 @@ a.os-arrow:hover:after {
 .ui-tabs ul.ui-tabs-nav {
     margin-bottom: 20px;
 }
+.front .region-content-second,
+#citation-wrapper,
+body.node-type-biblio .biblio-export,
+.front .sv-list-biblio.sv-list-view-slide_teaser .biblio-abstract-display.os-slider,
+.not-front .gkplus-show-heading.depth-2 h2,
 .ui-state-default:hover,
 .ui-widget-content .ui-state-default:hover,
 .ui-widget-header .ui-state-default:hover,
@@ -393,6 +400,7 @@ a.os-arrow:hover:after {
 .ui-widget-header .ui-state-default {
     border-top: none;
     border-right: none;
+    border-bottom: none;
     border: none;
 }
 .ui-tabs ul.ui-tabs-nav li.ui-tabs-active a,
@@ -486,11 +494,7 @@ a:visited {
 .field-name-field-biblio-image ~ .biblio-abstract-display {
     margin-left: 0;
 }
-.front .region-content-second,
-#citation-wrapper,
-body.node-type-biblio .biblio-export {
-    border: none;
-}
+
 #menu-bar {
     position: fixed !important;
     background: url('../images/menu-bg.png?m=1470430593') repeat-x #FFF;
