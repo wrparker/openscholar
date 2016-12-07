@@ -14,7 +14,7 @@
           '<div class="first">' +
             '<div class="form-radios">' +
               '<div class="form-item form-type-radio" ng-repeat="(option, label) in options">' +
-                '<input type="radio" ng-click="changeDisplay(option)" name="os_profiles_display_type" value="{{option}}" ng-checked="{{option == default_value}}" /> {{label}}' +
+                '<input type="radio" ng-click="changeDisplay(option)" name="os_profiles_display_type" value="{{option}}" ng-checked="{{option == default_value}}" ng-model="value" /> {{label}}' +
               '</div>' +
             '</div>' +
           '</div>' +
@@ -38,6 +38,7 @@
         scope.changeDisplay = function(option) {
           scope.preview = scope.previews[option];
         };
+
       }
     };
   }]);
