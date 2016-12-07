@@ -1,5 +1,5 @@
 body,
-.ui-dialog.ap-settings-form * {
+.ui-dialog * {
     font-family: helvetica, arial, sans-serif;
 }
 #page {
@@ -324,7 +324,6 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 .ui-dialog.ap-settings-form button.ui-dialog-titlebar-close {
     float: right;
     margin: -8px 0;
-    ;
     border: 0;
     cursor: pointer;
 }
@@ -347,7 +346,7 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     height: 24px;
 }
 #overlay-title,
-.ui-dialog-title {
+.ap-settings-form .ui-dialog-title {
     float: left;
     margin: 0;
     padding: 0.3em 0;
