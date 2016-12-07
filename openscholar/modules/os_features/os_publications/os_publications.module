@@ -700,16 +700,12 @@ function os_publications_biblio_contributors_add_more_callback($form, &$form_sta
 function os_publications_alter_year_field(&$form, &$form_state) {
 
   $style = variable_get('biblio_citeproc_style');
-  // Biblio year value can be standard YYYY year number, or a coded number
-  // defined in the "biblio_years_text" variable. Both _biblio_numeric_year()
-  // and _biblio_text_year() are used to convert between code and numeric.
-  $year_value = $form['biblio_year']['#default_value'];
 
   // If not a number then it was coded, so we want to show the value in the
   // checkboxes form element.
-  if (!is_numeric($year_value)) {
+  if (!is_numeric($form['#node']->biblio_year)) {
     unset($form['biblio_year']['#default_value']);
-    $year_coded_value = _biblio_numeric_year($year_value);
+    $form['#node']->biblio_year = _biblio_numeric_year($form['#node']->biblio_year);
   }
 
   // Modifying Title for Harvard - Chicago Author cititation
@@ -741,6 +737,9 @@ function os_publications_alter_year_field(&$form, &$form_state) {
   // Adding date and month fields for publication day for Harvard - Chicago
   // Author citation.
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
+
+    $form['biblio_year']['#default_value'] = $form['#node']->biblio_date;
+
     $form['field_biblio_pub_month']['und']['#options']['_none'] = t('Month');
     $form['field_biblio_pub_day']['und']['#options']['_none'] = t('Day');
 
@@ -751,7 +750,6 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     );
     $form['biblio_year_group']['year_selection']['field_biblio_pub_month'] = $form['field_biblio_pub_month'];
     $form['biblio_year_group']['year_selection']['field_biblio_pub_day'] = $form['field_biblio_pub_day'];
-
 
     $form['biblio_year_group']['year_selection']['field_biblio_pub_month']['#weight'] = -2;
     $form['biblio_year_group']['year_selection']['field_biblio_pub_day']['#weight'] = -1;
@@ -799,7 +797,6 @@ function os_publications_alter_year_field(&$form, &$form_state) {
       '#weight' => 20,
       '#default_value' => $form['#node']->biblio_date,
     );
-
   }
 
   $form['biblio_year_group']['published'] = array(
@@ -826,7 +823,7 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#options' => $years,
     '#multiple' => FALSE,
     '#weight' => 20,
-    '#default_value' => $form['#node']->biblio_date,
+    '#default_value' => $form['#node']->biblio_year,
   );
 
   $form['biblio_year_group']['biblio_year']['#weight'] = 30;
@@ -887,6 +884,11 @@ function os_publications_validate_year_field($form, &$form_state) {
     }
   }
   $form_state['values']['biblio_date'] = trim($form_state['values']['biblio_year_coded']);
+
+  $values = &$form_state['values'];
+
+  // Swap the values.
+  list($values['biblio_date'], $values['biblio_year']) = array($values['biblio_year'], $values['biblio_date']);
 }
 
 /**
