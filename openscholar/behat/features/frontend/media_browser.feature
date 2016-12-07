@@ -186,7 +186,7 @@ Feature: Media Browser
       And I wait "1 second" for the media browser to open
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I click on the tab "Embed from the web"
-      And I fill in "URL or HTML" with "https://youtu.be/jNQXAC9IVRw"
+      And I fill in "URL or HTML" with "https://www.youtube.com/watch?v=jNQXAC9IVRw"
       And I press the "Submit" button
       And I should wait for "File Edit" directive to "appear"
      Then the "fe-file-name" field should contain "Me at the zoo"
