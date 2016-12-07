@@ -74,6 +74,7 @@ function os_profiles_cp_settings() {
   $settings['os_profiles_display_type'] = $template + array(
     'form' => array(
       '#title' => t('Choose your profile display type'),
+      '#type' => 'radios',
       '#value' => variable_get('os_profiles_display_type', 'teaser'),
       '#options' => $profile_styles,
       '#previews' => $profile_preview,
