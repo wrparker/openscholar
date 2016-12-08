@@ -15,13 +15,15 @@
           wrapper.html(scope.element.previews[key]);
         }
 
-        // This needs to be in a $timeout because the input elements haven't been cloned by this point.
+        // This needs to be in a $timeout because the input elements haven't
+        // been cloned by this point.
         $t(function () {
           var inputs = elem.find('input');
           inputs.bind('click', changeDisplay);
         });
 
         var wrapper = angular.element('<div id="os-profiles-preview"></div>');
+        wrapper.html(scope.element.previews[scope.value]);
         elem.append(wrapper);
       }
     };
