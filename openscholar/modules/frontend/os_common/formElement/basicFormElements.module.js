@@ -183,6 +183,15 @@
           }
           window.location.reload();
         });
+        angular.element(document.querySelector('body')).keydown(function (e) {
+          if (e.which == 27) {
+            if (typeof GSFN !== "undefined") {
+              GSFN.WidgetShell.destroy();
+              GSFN.IframeCount = 0;
+            }
+            window.location.reload();
+          }
+        })
       }
     }
   }]);
