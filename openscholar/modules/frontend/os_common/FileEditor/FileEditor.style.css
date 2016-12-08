@@ -123,8 +123,15 @@ div[file-edit] h4,
     z-index: 2;
 }
 
-#fe-file-name.error + div::before {
-    display: block;
+#fe-file-name.error {
+  display: block;
+}
+
+#fe-alt-text {
+  background-color: red;
+  border: 1px solid darkred;
+  display: none;
+  z-index: 2;
 }
 
 .select2-search-field,
