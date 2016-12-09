@@ -637,19 +637,25 @@ ul.nice-menu-down,
     position: absolute;
     top: 0;
     right: 0;
-    background: url('../images/sprite.png?zyxabc') 10px -284px #4a5a77 no-repeat;
+    background: url('../images/sprite.png?zyxabc') 6px -252px no-repeat;
     width: 30px;
     height: 45px;
-    transition: all .125s;
+    transition: all .250s;
     z-index: 2;
+    -webkit-transform: rotate(315deg);
+    -moz-transform: rotate(315deg);
+    -ms-transform: rotate(315deg);
+    -o-transform: rotate(315deg);
+    transform: rotate(315deg);
 }
 .research-by-topic ul .item-list ul li.open span:after {
-    content: '';
-    width: 6.5%;
-    height: 40px;
-    top: 0;
-    right: 0;
-    background-position: 6px -252px;
+     -webkit-transform: rotate(90deg);
+     -moz-transform: rotate(90deg);
+     -ms-transform: rotate(90deg);
+     -o-transform: rotate(90deg);
+     transform: rotate(90deg);
+     top: -3px;
+    right: 4px;
 }
 .research-by-topic.block-boxes-os_taxonomy_fbt ul ul {
     margin: 0 !important;
