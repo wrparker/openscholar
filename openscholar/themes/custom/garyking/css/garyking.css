@@ -637,16 +637,16 @@ ul.nice-menu-down,
     position: absolute;
     top: 0;
     right: 0;
-    background: url('../images/icons/close-x.png') no-repeat;
-    width: 30px;
-    height: 45px;
+    background: url('../images/icons/close-x.png') 10px 10px no-repeat;
+    width: 40px;
+    height: 40px;
     transition: all .250s;
     z-index: 2;
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    -ms-transform: rotate(90deg);
-    -o-transform: rotate(90deg);
-    transform: rotate(90deg);
+    -webkit-transform: rotate(225deg);
+    -moz-transform: rotate(225deg);
+    -ms-transform: rotate(225deg);
+    -o-transform: rotate(225deg);
+    transform: rotate(225deg);
 }
 .research-by-topic ul .item-list ul li.open span:after {
      -webkit-transform: rotate(0deg);
@@ -655,6 +655,7 @@ ul.nice-menu-down,
      -o-transform: rotate(0deg);
      transform: rotate(0deg);
  
+}
 .research-by-topic.block-boxes-os_taxonomy_fbt ul ul {
     margin: 0 !important;
 }
