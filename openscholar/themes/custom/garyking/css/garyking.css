@@ -148,13 +148,14 @@ h2.block-title {
 #menu-bar ul.nice-menu .menuparent a:hover,
 #menu-bar ul.nice-menu .menuparent a.active,
 .front .region-content-second,
-#citation-wrapper,
 body.node-type-biblio .biblio-export,
 .sidebar .block-boxes-os_search_solr_more_like_this,
 .os-files-other-list tr,
-.os-files-other-list td {
+.os-files-other-list td,
+#biblio-node {
     background-color: #f6f6f6;
 }
+#pub-cover-content-wrapper,
 .research-by-topic ul .item-list ul li.open,
 .front-lop-software-tabs,
 .front-lop-blockgrid,
@@ -179,6 +180,7 @@ body.node-type-biblio .biblio-export,
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-head a {
     font-weight: bold !important;
 }
+
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-methods .term-head {
     margin-top: 15px;
 }
@@ -441,28 +443,28 @@ body.node-type-biblio .biblio-export,
     top: 60px;
 }
 .bg-one {
-    background: url('../images/biocv-bg.jpg?12345') center 61px no-repeat;
+    background: url('../images/biocv-bg.jpg?12345') center 30px no-repeat;
 }
 .bg-two {
     background: url('../images/software-bg.jpg?12345') center 30px no-repeat;
 }
 .bg-three {
-    background: url('../images/dataverse-bg.jpg?12345') center 61px no-repeat;
+    background: url('../images/dataverse-bg.jpg?12345') center 30px no-repeat;
 }
 .bg-four {
-    background: url('../images/contact-bg.jpg?12345') center 61px no-repeat;
+    background: url('../images/contact-bg.jpg?12345') center 30px no-repeat;
 }
 .bg-five {
-    background: url('../images/miscellania-bg.jpg?12345') center 61px no-repeat;
+    background: url('../images/miscellania-bg.jpg?12345') center 30px no-repeat;
 }
 .bg-six {
-    background: url('../images/publications-bg.png?12345') center 61px no-repeat;
+    background: url('../images/publications-bg.png?12345') center 30px no-repeat;
 }
 .bg-seven {
-    background: url('../images/researchgroup-bg.jpg?12345') center 61px no-repeat;
+    background: url('../images/researchgroup-bg.jpg?12345') center 30px no-repeat;
 }
 .bg-eight {
-    background: url('../images/teaching-bg.jpg?12345') center 61px no-repeat;
+    background: url('../images/teaching-bg.jpg?12345') center 30px no-repeat;
 }
 .front #content-panels .region-content-bottom {
     background: url('../images/front-page-twitter-bg3.jpg?12345') center -30px no-repeat;
@@ -715,6 +717,25 @@ ul.nice-menu-down,
     overflow-y: scroll;
     max-height: 300px;
 }
+
+ #citation-wrapper {
+    float: left;
+    width: 70%;
+    border-right: 6px solid #fff;
+    margin-bottom: 0;
+}
+
+
+
+.biblio-upload-wrapper {
+        float: right;
+    width: 25%;
+    margin-top: 9%;
+ 
+}
+
+
+
 .contextual-controls-wrapper {
     top: 255px;
 }
