@@ -26,7 +26,6 @@ dependencies[] = path
 dependencies[] = search
 dependencies[] = shortcut
 dependencies[] = taxonomy
-dependencies[] = toolbar
 
 ; Contrib - core
 dependencies[] = biblio
