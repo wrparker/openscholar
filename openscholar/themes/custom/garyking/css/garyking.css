@@ -734,6 +734,11 @@ ul.nice-menu-down,
  
 }
 
+ #pub-cover-content-wrapper {
+    clear: both;
+    padding-top: 20px;
+}
+
 
 
 .contextual-controls-wrapper {
