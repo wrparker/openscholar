@@ -87,7 +87,7 @@ body.not-front,
     margin-top: 46px;
 }
 #main-content-header {
-    height: 205px;
+    height: 175px;
     margin-top: 10px;
     display: table;
 }
@@ -99,6 +99,8 @@ body.not-front,
     background-color: #e2e2e2;
     padding-top: 10px;
 }
+
+h1#page-title,
 h2.block-title {
     color: #545454;
 }
@@ -421,8 +423,7 @@ body.node-type-biblio .biblio-export,
 .node-type-page .breadcrumb,
 .breadcrumb,
 .breadcrumb span,
-.breadcrumb a,
-h1#page-title {
+.breadcrumb a {
     color: #fff !important;
 }
 .not-front #content-panels,
@@ -443,7 +444,7 @@ h1#page-title {
     background: url('../images/biocv-bg.jpg') center 61px no-repeat;
 }
 .bg-two {
-    background: url('../images/software-bg.jpg?fefrgr') center 61px no-repeat;
+    background: url('../images/software-bg.jpg?fefrgr') center 30px no-repeat;
 }
 .bg-three {
     background: url('../images/dataverse-bg.jpg') center 61px no-repeat;
