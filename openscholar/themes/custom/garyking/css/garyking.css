@@ -648,6 +648,9 @@ ul.nice-menu-down,
     -o-transform: rotate(225deg);
     transform: rotate(225deg);
 }
+.research-by-topic ul .item-list ul li span:hover:after{
+   cursor:pointer;
+}
 .research-by-topic ul .item-list ul li.open span:after {
      -webkit-transform: rotate(0deg);
      -moz-transform: rotate(0deg);
