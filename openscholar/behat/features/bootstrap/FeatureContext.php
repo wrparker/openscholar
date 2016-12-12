@@ -1,6 +1,6 @@
 <?php
 
-use Behat\Behat\Event\StepEvent;
+use Behat\Behat\Event\StepEvent;#forcing merge conflict
 use Behat\Mink\Driver\Selenium2Driver;
 use Drupal\DrupalExtension\Context\DrupalContext;
 use Behat\Behat\Context\Step\Given;
