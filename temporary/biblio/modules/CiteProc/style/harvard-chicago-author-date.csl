@@ -458,7 +458,7 @@
       </else-if>
     </choose>
   </macro>
-  <macro name="date">    
+  <macro name="date">
     <choose>
       <if variable="issued">
         <date variable="issued">
@@ -470,7 +470,7 @@
           <date-part name="year"/>
         </date>
       </else-if>
-    </choose>    
+    </choose>
   </macro>
   <macro name="additional-date">
      <choose>
