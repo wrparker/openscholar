@@ -1073,7 +1073,7 @@ function _os_publications_biblio_entry_alter($markup, $node) {
   // Harvard - Chicago Author cititation.
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
 
-    if (!empty($node->biblio_year) && strpos($html, $node->biblio_year . '. ') !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value'])) {
+    if (!empty($node->biblio_date) && strpos($html, $node->biblio_date . '.') !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value'])) {
       // In case day value is present
       if(!empty($node->field_biblio_pub_day['und'][0]['value'])) {
         $day = $node->field_biblio_pub_day['und'][0]['value'] . '/';
@@ -1081,7 +1081,7 @@ function _os_publications_biblio_entry_alter($markup, $node) {
         $day = '';
       }
 
-      $html = str_replace($node->biblio_year . '. ', $node->field_biblio_pub_month['und'][0]['value'] . '/' . $day . $node->biblio_year . '. ', $html);
+      $html = str_replace($node->biblio_date . '.', $node->field_biblio_pub_month['und'][0]['value'] . '/' . $day . $node->biblio_date . '. ', $html);
     }
   }
   $insert = strrpos($html, '</div>');
