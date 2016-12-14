@@ -875,3 +875,11 @@ function os_files_update_7023() {
   ctools_include('export');
   ctools_export_crud_delete('file_type', 'executable');
 }
+
+/**
+ * Adds new mimetypes to Icon file type.
+ */
+function os_files_update_7024() {
+  ctools_include('export');
+  ctools_export_crud_delete('file_type', 'icon');
+}

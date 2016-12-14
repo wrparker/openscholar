@@ -125,6 +125,7 @@
         background: none !important;
     }
     .menuparent ul span.open-submenu,
+    #menu-bar ul.nice-menu ul,
     #menu-bar ul.nice-menu ul ul {
         display: none !important;
     }

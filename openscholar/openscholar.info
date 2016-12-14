@@ -113,8 +113,10 @@ dependencies[] = cp_appearance
 dependencies[] = cp_content
 dependencies[] = cp_layout
 dependencies[] = cp_menu
-dependencies[] = cp_toolbar
 dependencies[] = cp_user
+dependencies[] = admin_panel
+dependencies[] = ap_settings_form
+dependencies[] = restful_messages
 
 ; Features
 dependencies[] = os_blog

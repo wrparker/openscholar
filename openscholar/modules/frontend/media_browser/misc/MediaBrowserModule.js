@@ -13,7 +13,7 @@
         e = e || event;
         e.preventDefault();
       });
-console.log('a');
+
       // if the File object is not supported by this browser, fallback to the
       // original media browser.
       if (mbModal.requirementsMet()) {
@@ -97,7 +97,8 @@ console.log('a');
       {label: 'Video', value: 'video'},
       {label: 'HTML', value: 'html'},
       {label: 'Executable', value: 'executable'},
-      {label: 'Audio', value: 'audio'}
+      {label: 'Audio', value: 'audio'},
+      {label: 'Icon', value: 'icon'}
     ];
 
     var defaultFilteredTypes = params.types;

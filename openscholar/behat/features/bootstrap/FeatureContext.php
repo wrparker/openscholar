@@ -1805,11 +1805,13 @@ class FeatureContext extends DrupalContext {
    * @Given /^I set the Share domain name to "([^"]*)"$/
    */
   public function iSetTheShareDomainNameTo($value) {
-    $action = $value ? 'I checked "edit-vsite-domain-name-vsite-domain-shared"' : 'I uncheck "edit-vsite-domain-name-vsite-domain-shared"';
+    $action = $value ? 'I checked "edit-vsite-domain-shared"' : 'I uncheck "edit-vsite-domain-shared"';
     return array(
-      new Step\When('I click "Settings"'),
+      new Step\When('I click on the "Settings" control'),
+      new Step\When('I click on the "Advanced" control'),
+      new Step\When('I click on the "Domain" control'),
       new Step\When($action),
-      new Step\When('I press "edit-submit"'),
+      new Step\When('I press "Submit"'),
     );
   }
 
@@ -3149,7 +3151,7 @@ class FeatureContext extends DrupalContext {
   public function getDataFromCSVFile($source) {
     $fileContent = $source->getContent();
     if (strpos($fileContent, "html>") !== FALSE) {
-        throw new Exception(sprintf("CSV file was not created."));
+      throw new Exception(sprintf("CSV file was not created."));
     }
 
     $csv = array_map('str_getcsv', explode("\n", $fileContent));
