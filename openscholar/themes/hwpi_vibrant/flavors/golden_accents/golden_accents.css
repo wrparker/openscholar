@@ -12,7 +12,7 @@ body.front #columns,
 background: #FFF;
 background-image: url('standard-body-gradient.png');
 background-repeat: repeat-x;
-background-position: 0 0;
+background-position: center top;
 }
 
 
