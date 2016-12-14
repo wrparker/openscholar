@@ -896,6 +896,10 @@ function os_publications_year_date_flip($form, &$form_state) {
   // Swap the values.
   $values = &$form_state['values'];
   list($values['biblio_date'], $values['biblio_year']) = array($values['biblio_year'], $values['biblio_date']);
+
+  if ($values['published'] == 'on') {
+    $values['biblio_year'] = 0;
+  }
 }
 
 /**
