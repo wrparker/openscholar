@@ -1602,3 +1602,16 @@ function os_publications_update_7049() {
     os_publications_revert_citeproc_style($citation);
   }
 }
+
+/**
+ * Fix CSL style to remove irrelevant fields for each publication types in harvard-chicago-author-date.csl style
+ */
+function os_publications_update_7050() {
+  $citations = array(
+    'harvard-chicago-author-date',
+  );
+
+  foreach ($citations as $citation) {
+    os_publications_revert_citeproc_style($citation);
+  }
+}
