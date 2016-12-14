@@ -849,6 +849,9 @@ function os_publications_alter_year_field(&$form, &$form_state) {
 
   // Year validation needs to happen before the standard validation.
   array_unshift($form['#validate'], 'os_publications_validate_year_field');
+
+  // Adding submit handler to flip between the year and the date field.
+  $form['#submit'][] = 'os_publications_year_date_flip';
 }
 
 /**
@@ -884,10 +887,14 @@ function os_publications_validate_year_field($form, &$form_state) {
     }
   }
   $form_state['values']['biblio_date'] = trim($form_state['values']['biblio_year_coded']);
+}
 
-  $values = &$form_state['values'];
-
+/**
+ * Adding submit handler to flip between the year and the date field.
+ */
+function os_publications_year_date_flip($form, &$form_state) {
   // Swap the values.
+  $values = &$form_state['values'];
   list($values['biblio_date'], $values['biblio_year']) = array($values['biblio_year'], $values['biblio_date']);
 }
 
