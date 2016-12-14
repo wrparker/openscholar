@@ -16,7 +16,8 @@ body {
 .node-type-person .node-title,
 .research-by-topic ul .item-list ul li .description a,
 .front .field-name-field-biblio-image,
-.locion {
+.locion,
+.ajax-progress .throbber  {
     display: none;
 }
 body,
