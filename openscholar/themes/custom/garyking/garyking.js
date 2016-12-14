@@ -43,5 +43,12 @@
          jQuery(e).html(jQuery(e).html().replace(/:/g, ''));
      });
      
+     
+  
+  if (jQuery('#biblio-node').find('div.biblio-upload-wrapper').length) {
+    jQuery('#citation-wrapper').addClass('has-attached');
+ 
+
+     
 
  });
