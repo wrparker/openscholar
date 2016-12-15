@@ -51,15 +51,15 @@
  });
  
 
- jQuery(document).ready(function() {
-  if (jQuery('#biblio-node').find('div.biblio-upload-wrapper').length) {
-    jQuery('#citation-wrapper').addClass('has-attached');
- }
+// jQuery(document).ready(function() {
+ // if (jQuery('#biblio-node').find('div.biblio-upload-wrapper').length) {
+   // jQuery('#citation-wrapper').addClass('has-attached');
+// }
  
- var setHeight = jQuery(".has-attached");
-jQuery(".biblio-upload-wrapper").css({height:setHeight.height()});
+ //var setHeight = jQuery(".has-attached");
+//jQuery(".biblio-upload-wrapper").css({height:setHeight.height()});
  
- });
+// });
  
 
 

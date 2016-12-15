@@ -171,7 +171,7 @@ body.node-type-biblio .biblio-export,
 .sidebar .block-boxes-os_search_solr_more_like_this,
 .os-files-other-list tr,
 .os-files-other-list td,
-#biblio-node {
+#citation-wrapper {
     background-color: #f6f6f6;
 }
 #pub-cover-content-wrapper,
@@ -189,6 +189,7 @@ body.node-type-biblio .biblio-export,
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt ul ul {
     margin: 0;
 }
+.sidebar h2.block-title,
 #footer ul.menu li a,
 .front-lop-presentations a,
 .biblio-title a,
@@ -721,40 +722,14 @@ ul.nice-menu-down,
     overflow-y: scroll;
     max-height: 300px;
 }
-#citation-wrapper.has-attached {
-    float: left;
-    width: 65%;
-    border-right: 6px solid #fff;
-    margin-bottom: 0;
-}
+
 .biblio-upload-wrapper {
-    float: right;
-    width: 30%;
-    line-height: 1em;
-        padding: 12px 2px 0;
-    display: table;
-}
-#pub-cover-content-wrapper {
-    clear: both;
-    padding-top: 20px;
-}
-table.os-files-other-list {
-	
-    display: table-cell;
-    vertical-align: middle;
-
-	
-}
-
-.os-files-other-list tr td.mime {
-    width: 10%;
-}
-
-
-.os-files-other-list td.mime {
-    vertical-align: top;
+  
+  
+  
   
 }
+
 .contextual-controls-wrapper {
     top: 255px;
 }
