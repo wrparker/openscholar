@@ -732,11 +732,23 @@ ul.nice-menu-down,
     width: 30%;
     line-height: 1em;
     padding-right: 2px;
+    display: table;
 }
 #pub-cover-content-wrapper {
     clear: both;
     padding-top: 20px;
 }
+table.os-files-other-list {
+	
+    display: table-cell;
+    vertical-align: middle;
+
+	
+}
+
+
+
+
 .os-files-other-list td.mime {
     vertical-align: top;
   
