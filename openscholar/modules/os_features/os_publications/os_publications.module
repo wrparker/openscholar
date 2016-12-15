@@ -799,10 +799,15 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     );
   }
 
+
   $form['biblio_year_group']['published'] = array(
     '#type' => 'radio',
     '#title' => t('Published'),
   );
+
+  if ($form['#node']->biblio_year == 0) {
+    $form['biblio_year_group']['published']['#attributes']['checked'] = TRUE;
+  }
 
   unset($form['field_biblio_pub_month']);
   unset($form['field_biblio_pub_day']);
