@@ -723,14 +723,15 @@ ul.nice-menu-down,
 }
 #citation-wrapper.has-attached {
     float: left;
-    width: 70%;
+    width: 65%;
     border-right: 6px solid #fff;
     margin-bottom: 0;
 }
 .biblio-upload-wrapper {
     float: right;
-    width: 25%;
+    width: 30%;
     line-height: 1em;
+    padding-right: 2px;
 }
 #pub-cover-content-wrapper {
     clear: both;
