@@ -16,7 +16,7 @@ body {
 .node-type-person .node-title,
 .research-by-topic ul .item-list ul li .description a,
 .front .field-name-field-biblio-image,
-.location,
+.locion,
 .ajax-progress .throbber {
     display: none;
 }
@@ -731,7 +731,7 @@ ul.nice-menu-down,
     float: right;
     width: 30%;
     line-height: 1em;
-    padding-right: 2px;
+        padding: 12px 2px 0;
     display: table;
 }
 #pub-cover-content-wrapper {
@@ -746,7 +746,9 @@ table.os-files-other-list {
 	
 }
 
-
+.os-files-other-list tr td.mime {
+    width: 10%;
+}
 
 
 .os-files-other-list td.mime {
