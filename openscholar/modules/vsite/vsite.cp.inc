@@ -25,14 +25,14 @@ function vsite_cp_settings() {
         '#type' => 'checkbox',
         '#title' => t('Inherit parent site theme'),
         '#default_value' => $inherit_theme,
-        '#description' => t('Check to have newly created subsites start with this site\'s currently enabled theme by default.'),
+        '#description' => t('Check to have newly created subsites inherit this site\'s currently selected theme. This does not apply to custom themes.'),
       ),
       'group' => array(
         '#id' => 'vsite-subsite',
-        '#title' => t('Subsites'),
+        '#title' => t('Subsite Themes'),
         '#weight' => 31,
         '#menu_parent' => 'appearance',
-        '#help_link' => l(t('Learn more about subsite themes'), 'http://docs.openscholar.harvard.edu/global-site-settings#subsite-themes', array('attributes' => array('target' => '_blank')))
+        '#help_link' => l(t('Learn more about subsite themes'), 'http://docs.openscholar.harvard.edu/subsite-themes', array('attributes' => array('target' => '_blank')))
       ),
     );
   }

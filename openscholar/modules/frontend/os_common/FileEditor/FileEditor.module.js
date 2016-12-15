@@ -109,6 +109,11 @@
             }
           });
 
+          scope.invalidAlt = true;
+          scope.$watch('file.image_alt', function (alt, old) {
+            scope.invalidAlt = !alt;
+          });
+
           scope.showWarning = false;
           scope.showSuccess = false;
           scope.replaceReject = false;
@@ -168,7 +173,7 @@
           };
 
           scope.canSave = function () {
-            return scope.invalidFileName || scope.invalidName;
+            return scope.invalidFileName || scope.invalidName || scope.invalidAlt;
           };
 
           scope.save = function () {
