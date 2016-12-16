@@ -169,8 +169,6 @@ h2.block-title {
 .front .region-content-second,
 body.node-type-biblio .biblio-export,
 .sidebar .block-boxes-os_search_solr_more_like_this,
-.os-files-other-list tr,
-.os-files-other-list td,
 #citation-wrapper {
     background-color: #f6f6f6;
 }
@@ -189,7 +187,7 @@ body.node-type-biblio .biblio-export,
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt ul ul {
     margin: 0;
 }
-.sidebar h2.block-title,
+
 #footer ul.menu li a,
 .front-lop-presentations a,
 .biblio-title a,
@@ -206,6 +204,7 @@ body.node-type-biblio .biblio-export,
 }
 .sidebar h2.block-title {
     padding: 15px 0;
+    font-weight:300;
 }
 .block-boxes-os_boxes_addthis .boxes-box-content,
 .ui-tabs,
@@ -442,7 +441,7 @@ body.node-type-biblio .biblio-export,
 }
 .not-front #content-panels,
 #main-content #content {
-    margin-top: 20px;
+    margin-top: 24px;
 }
 .page-taxonomy-term #main-content #content {
     margin-top: 30px;
@@ -723,11 +722,22 @@ ul.nice-menu-down,
     max-height: 300px;
 }
 
+#citation-wrapper {
+	    margin-bottom: 0;
+	  padding-bottom:0;
+	  border-top:3px solid #81b9c3;
+}
+
+.biblio-upload-wrapper .os-files-other-list tr {
+  
+    display: inline-block;
+}
+
+.os-files-other-list tr,
+.os-files-other-list td,
 .biblio-upload-wrapper {
-  
-  
-  
-  
+	background-color:#EAEAE6;
+	
 }
 
 .contextual-controls-wrapper {
