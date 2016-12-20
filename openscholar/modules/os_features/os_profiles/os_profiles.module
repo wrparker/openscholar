@@ -1420,6 +1420,10 @@ function os_profiles_node_view_alter(&$build) {
     $build['os_profile_link']['#markup'] = l('Full Profile', 'node/' . $build['#node']->nid, array('attributes' => array('class' => 'profile-link')));
     $build['os_profile_link']['#weight'] = 55;
   }
+
+  if (isset($build['field_email']['#items'][0]['value'])) {
+    $build['field_email'][0]['#markup'] = $build['field_email']['#items'][0]['value'];
+  }
 }
 
 /**
