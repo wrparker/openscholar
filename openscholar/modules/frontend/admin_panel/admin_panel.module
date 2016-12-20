@@ -13,6 +13,14 @@ function admin_panel_is_closed() {
 }
 
 /**
+ * Implements hook_page_alter().
+ */
+function admin_panel_page_alter(&$page) {
+  // No ned for the toolbar if the admin panel is enabled.
+  $page['page_top']['toolbar']['#access'] = FALSE;
+}
+
+/**
  * Implements hook_preprocess_page().
  *
  * Adds the user_panel angular library.

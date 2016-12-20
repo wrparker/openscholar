@@ -27,6 +27,7 @@ dependencies[] = search
 dependencies[] = spaces
 dependencies[] = strongarm
 dependencies[] = taxonomy
+dependencies[] = toolbar
 dependencies[] = transliteration
 dependencies[] = views
 dependencies[] = views_content
