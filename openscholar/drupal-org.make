@@ -570,6 +570,11 @@ libraries[indentblock][subdir] = "ckeditor/plugins"
 libraries[indentblock][download][type] = "file"
 libraries[indentblock][download][url] = "http://download.ckeditor.com/indentblock/releases/indentblock_4.5.10.zip"
 
+libraries[bidi][type] = "libraries"
+libraries[bidi][subdir] = "ckeditor/plugins"
+libraries[bidi][download][type] = "file"
+libraries[bidi][download][url] = "http://download.ckeditor.com/bidi/releases/bidi_4.5.10.zip"
+
 libraries[dragresize][type] = "libraries"
 libraries[dragresize][subdir] = "ckeditor/plugins"
 libraries[dragresize][download][type] = "git"
