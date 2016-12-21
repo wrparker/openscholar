@@ -1005,7 +1005,9 @@ function os_publications_biblio_entry_alter(&$entry, $node) {
  */
 function _os_publications_biblio_entry_alter($markup, $node) {
 
-  $html = $markup;
+  // Remove redundant "US" label(s) from patent title
+  $html = preg_replace("/United\s+States\s+of\s+America\s+patent(\s+US)+/", "United States of America patent", $markup);
+
   $style = variable_get('biblio_citeproc_style');
   // Pushing day and month in those both are present in Publication for Harvard - Chicago Author cititation
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
