@@ -299,7 +299,7 @@ function os_profiles_process_node(&$vars) {
 
   // Adding a header for determining the node ID.
   if($vars['view_mode'] == 'full') {
-    drupal_add_http_header('node_json', url('node/' . $vars['nid'] . '.json', array('absolute' => TRUE)));
+    drupal_add_http_header('node_json', url('api/v1.0/person/' . $vars['nid'], array('absolute' => TRUE)));
   }
 
   // Helps poor theme developers find these changes to $variables
