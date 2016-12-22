@@ -699,8 +699,9 @@ function os_profiles_sync_profile_validate($form, &$form_state) {
     // the importing side to get the JSON address of the node. It will be saved
     // in the field "field_original_destination_url".
     foreach ($headers as $header) {
-      if (strpos($header, 'X-SELF-JSON: ') === 0) {
-        $form_state['json_address'] = str_replace('X-SELF-JSON: ', '', $header);
+      if (strpos($header, 'X-SELF-JSON: ') === 0 || strpos($header, 'node_json: ') === 0) {
+        // Support OpenScholar sites with node_json in the header.
+        $form_state['json_address'] = str_replace(array('X-SELF-JSON: ', 'node_json:'), '', $header);
         return;
       }
     }
