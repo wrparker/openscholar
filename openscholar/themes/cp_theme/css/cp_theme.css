@@ -1303,7 +1303,8 @@ li.pager-previous + li.pager-ellipsis {
 	font-weight: bold;
 	}
 
-.file img.file-icon {
+.page-node-revisions table.os-files-other-list td.mime,
+.os-files-other-list img.file-icon {
     width:16px;
 }
 body.cke_editable img.media-element.file-default {
@@ -1348,12 +1349,17 @@ body.page-node fieldset#edit-revision-information #warning-text p {
 }
 body.page-node-revisions ul.action-links a {
     background-image: none;
+    text-decoration: underline;
 }
-.page-node-revisions ul.action-links {
+body.page-node-revisions ul.action-links {
     margin: 0;
     padding: 0 20px 0 0;
 }
 ul.action-links a {
     padding-left: 0;
  
+}
+
+.page-node-revisions ul.action-links span {
+    font-size: 1.5em;
 }
