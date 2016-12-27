@@ -3242,4 +3242,45 @@ class FeatureContext extends DrupalContext {
     }
   }
 
+  /**
+   * @Then /^I am verifying the date picker behaviour$/
+   */
+  public function iAmVerifyingTheDatePickerBehaviour() {
+    $page = $this->getSession()->getPage();
+    $page->find('xpath', '//input[@id="edit-published"]')->click();
+
+    $month_picker = $page->find('xpath', '//div[@id="edit-field-biblio-pub-month"]');
+    $day_picker = $page->find('xpath', '//div[@id="edit-field-biblio-pub-day"]');
+
+    if (!$month_picker->isVisible() || !$day_picker->isVisible()) {
+      throw new Exception('The day and/or month picker was not found on the page.');
+    }
+
+    $page->find('xpath', '//input[@id="edit-biblio-year-coded-10000"]')->click();
+
+    $this->iPrintPageScreenShot();
+
+    $month_picker = $page->find('xpath', '//div[@id="edit-field-biblio-pub-month"]');
+    $day_picker = $page->find('xpath', '//div[@id="edit-field-biblio-pub-day"]');
+
+    if ($month_picker->isVisible() || $day_picker->isVisible()) {
+      throw new Exception('The day and/or month picker found on the page but they not suppose to.');
+    }
+  }
+
+  /**
+   * @Given /^I print page screen shot$/
+   */
+  public function iPrintPageScreenShot() {
+    $driver = $this->getSession()->getDriver();
+    $screenshot = $driver->getScreenshot();
+    $client_id = 'f10ef45787db6fc';
+    $request = $this->invokeRestRequest('post', 'https://api.imgur.com/3/image.json',
+      ['Authorization' => 'Client-ID ' . $client_id],
+      ['image' => base64_encode($screenshot)]
+    );
+    $json = $request->json();
+    print_r($json['data']['link']);
+  }
+
 }
