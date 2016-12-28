@@ -29,3 +29,12 @@ jQuery(document).ready(function() {
         });
     });
 });
+
+function template_download_information(val) {
+ jQuery('.import-help').addClass('element-hidden');
+  if (val == 'csv') {
+    jQuery('.csv-help-wrapper').removeClass('element-hidden');
+  } else if (val == 'rss') {
+    jQuery('.rss-help-wrapper').removeClass('element-hidden');
+  }
+}

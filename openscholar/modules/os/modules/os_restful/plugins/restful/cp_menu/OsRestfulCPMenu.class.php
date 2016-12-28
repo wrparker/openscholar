@@ -225,16 +225,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'type' => 'link',
         'href' => "node/add/{$type_url_str}",
         'alt' => $type_info[$bundle]->description,
-      );
-
-      if (os_importer_importable_content($bundle)) {
-          $import_links["{$bundle}"] = array(
-          'label' => os_importer_importer_title($bundle),
-          'type' => 'link',
-          'href' => 'cp/os-importer/' . $bundle,
-          'alt' => t("One time bulk import of @type content.",array('@type' => $type_info[$bundle]->name)),
-        );
-      }
+      );      
     }
 
     # Files are a separate entity class, on the same level as nodes.
@@ -307,7 +298,6 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         return strnatcmp($a['label'], $b['label']);
     };
     uasort($add_links, $labelcmp);
-    uasort($import_links, $labelcmp);
     uasort($feature_settings, $labelcmp);
 
     $structure = array(
@@ -353,7 +343,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
             'label' => 'Import',
             'type' => 'heading',
             'default_state' => 'collapsed',
-            'children' => $import_links,
+            'children' => array(),
           ),
         ),
       ),

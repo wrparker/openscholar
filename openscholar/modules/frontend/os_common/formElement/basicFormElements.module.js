@@ -3,6 +3,28 @@
   var m = angular.module('basicFormElements', ['osHelpers', 'ngSanitize']);
 
   /**
+   * SelectOptGroup directive.
+   */
+  m.directive('feOptgroup', ['$sce', function ($sce) {
+    return {
+      scope: {
+        name: '@',
+        value: '=ngModel',
+        element: '='
+      },
+      template: '<label for="{{id}}">{{title}}</label>' +   
+        '<div class="form-item form-type-select" ng-controller="OptGroupController as opt">' + 
+        '<select ng-options="(item.id||item) as (item.text||item) group by item.groupName for item in opt.items" class="form-select" id="{{id}}" name="{{name}}" ng-model="opt.selected"></select>' + 
+        '</div>',
+      link: function (scope, elem, attr) {
+        scope.id = attr['inputId'];
+        scope.options = scope.element.options;
+        scope.title = scope.element.title;
+      }
+    }
+  }]);
+
+  /**
    * Checkbox directive.
    * Arguments:
    *   name - string - the name of the element as Drupal expects it
@@ -75,13 +97,18 @@
       template: '<label for="{{id}}">{{title}}</label>' +
       '<div id="{{id}}" class="form-radios">' +
         '<div class="form-item form-type-radio" ng-repeat="(val, label) in options">' +
-          '<input type="radio" id="{{id}}-{{val}}" name="{{name}}" value="{{val}}" ng-model="$parent.value" class="form-radio" ng-disabled="element.disabled"><label class="option" for="{{id}}-{{val}}" ng-bind-html="label"></label>' +
+          '<input ng-click="radiosClick()" type="radio" id="{{id}}-{{val}}" name="{{name}}" value="{{val}}" ng-model="$parent.value" class="form-radio" ng-disabled="element.disabled"><label class="option" for="{{id}}-{{val}}" ng-bind-html="label"></label>' +
         '</div>' +
       '</div> ',
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];
         scope.options = scope.element.options;
         scope.title = scope.element.title;
+        scope.radiosClick = function () {
+          if (scope.element.onclick_callback) {
+            window[scope.element.onclick_callback](scope.value);
+          }
+        };
       }
     }
   }]);
@@ -98,7 +125,7 @@
         value: '=ngModel',
         element: '='
       },
-      template: '<label for="{{id}}">{{title}}<input type="submit" id="{{id}}" name="{{name}}" value="{{label}}" class="form-submit" ng-disabled="element.disabled">',
+      template: '<label for="{{id}}">{{title}}<input button-spinner="settings_form" spinning-text="Submitting" type="submit" id="{{id}}" name="{{name}}" value="{{label}}" class="form-submit" ng-disabled="element.disabled">',
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];
         scope.label = scope.element.value;

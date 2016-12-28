@@ -121,7 +121,7 @@
               '</div>' +
             '</div>' +
             '<div class="help-link" ng-bind-html="help_link"></div>' +
-          '<div class="actions"><button type="submit" button-spinner="settings_form" spinning-text="Saving">Save</button><input type="button" value="Close" ng-click="close(false)"></div></form>',
+          '<div class="actions" ng-show="showSaveButton"><button type="submit" button-spinner="settings_form" spinning-text="Saving">Save</button><input type="button" value="Close" ng-click="close(false)"></div></form>',
           inputs: {
             form: scope.form
           }
@@ -145,6 +145,34 @@
       }
     };
   }]);
+  
+  /**
+   * The controller for the optgroup select dropdowns.
+   */
+  m.controller('OptGroupController', ['$scope', function($scope) {
+    var self = this;
+    var items = [];
+    angular.forEach($scope.$parent.element.options, function(value, key) {
+      if (angular.isObject(value)) {
+        angular.forEach(value, function(childOption, childKey) {
+          var data = {};
+          data.id = childKey;
+          data.text = childOption;
+          data.groupName = key;
+          items.push(data);
+        });
+      } else {
+        var data = {};
+        data.id = key;
+        data.text = value;
+        data.groupName = '';
+        items.push(data);
+      }
+    });
+    self.items = items;
+    // Assigning default selected value.
+    self.selected = $scope.$parent.value;
+  }]);
 
   /**
    * The controller for the forms themselves
@@ -159,6 +187,7 @@
     $s.errors = [];
     $s.columns = {};
     $s.columnCount = 0;
+    $s.showSaveButton = true;
 
     apSettings.SettingsReady().then(function () {
       var settingsRaw = apSettings.GetFormDefinitions(form);
@@ -189,6 +218,10 @@
         }
 
         $s.formElements[k] = $s.columns[col][k] = attributes;
+
+        if ($s.formElements[k].type == 'submit') {
+          $s.showSaveButton = false;
+        }
       }
     });
 

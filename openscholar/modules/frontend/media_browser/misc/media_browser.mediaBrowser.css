@@ -299,6 +299,18 @@ button[ng-disabled="!pager.canPage(-1)"] {
     text-align: center;
     margin-right: 0 !important;
 }
+#edit-os_importer_file_upload_presentation-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_biblio-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_software_project-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_person-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_page-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_news-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_media_gallery-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_link-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_faq-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_class-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_event-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_blog-und-drop .media-browser-drop-box span.ng-scope,
 #edit-site_favicon_fid-und-drop .media-browser-drop-box span.ng-scope,
 #edit-field_upload-und-drop span.ng-binding.ng-scope,
 .media-browser-pane .file-clear button,
@@ -336,6 +348,18 @@ div[file-edit] .control button,
     left: 50%;
     transform: translate(-50%, -50%);
 }
+#edit-os_importer_file_upload_biblio-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_presentation-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_software_project-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_person-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_news-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_page-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_media_gallery-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_link-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_faq-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_class-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_event-und-drop .media-browser-drop-box span.ng-scope,
+#edit-os_importer_file_upload_blog-und-drop .media-browser-drop-box span.ng-scope,
 #edit-site_favicon_fid-und-drop .media-browser-drop-box span.ng-scope {
     top: 50%;
     left: 50%;
@@ -354,6 +378,21 @@ div[file-edit] .control button,
     font-size: 1em;
     transform: translate(-50%, -50%);
 }
+#edit-os_importer_file_upload_biblio-und-drop .media-browser-drop-box #drag-text,
+#edit-os_importer_file_upload_presentation-und-drop .media-browser-drop-box #drag-text,
+#edit-os_importer_file_upload_software_project-und-drop .media-browser-drop-box #drag-text,
+#edit-os_importer_file_upload_person-und-drop .media-browser-drop-box #drag-text,
+#edit-os_importer_file_upload_news-und-drop .media-browser-drop-box #drag-text,
+#edit-os_importer_file_upload_page-und-drop .media-browser-drop-box #drag-text,
+#edit-os_importer_file_upload_media_gallery-und-drop .media-browser-drop-box #drag-text,
+#edit-os_importer_file_upload_link-und-drop .media-browser-drop-box #drag-text,
+#edit-os_importer_file_upload_faq-und-drop .media-browser-drop-box #drag-text,
+#edit-os_importer_file_upload_class-und-drop .media-browser-drop-box #drag-text,
+#edit-os_importer_file_upload_blog-und-drop .media-browser-drop-box #drag-text,
+#edit-os_importer_file_upload_event-und-drop .media-browser-drop-box #drag-text {
+    top: 20%;
+    left: 38%;
+}
 #edit-site_favicon_fid-und-drop .media-browser-drop-box #drag-text {
     top: 20%;
     left: 40%;
@@ -365,6 +404,18 @@ div[file-edit] .control button,
     border: 2px dashed #ccc;
     position: relative;
 }
+#edit-os_importer_file_upload_software_project-und-drop .media-browser-drop-box,
+#edit-os_importer_file_upload_biblio-und-drop .media-browser-drop-box,
+#edit-os_importer_file_upload_presentation-und-drop .media-browser-drop-box,
+#edit-os_importer_file_upload_person-und-drop .media-browser-drop-box,
+#edit-os_importer_file_upload_news-und-drop .media-browser-drop-box,
+#edit-os_importer_file_upload_page-und-drop .media-browser-drop-box,
+#edit-os_importer_file_upload_media_gallery-und-drop .media-browser-drop-box,
+#edit-os_importer_file_upload_link-und-drop .media-browser-drop-box,
+#edit-os_importer_file_upload_faq-und-drop .media-browser-drop-box,
+#edit-os_importer_file_upload_class-und-drop .media-browser-drop-box,
+#edit-os_importer_file_upload_event-und-drop .media-browser-drop-box,
+#edit-os_importer_file_upload_blog-und-drop .media-browser-drop-box,
 #edit-site_favicon_fid-und-drop .media-browser-drop-box {
     height: 150px;
   
