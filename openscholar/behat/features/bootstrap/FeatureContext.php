@@ -3243,7 +3243,7 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Then /^I am verifying the date picker behaviour$/
+   * @Then /^I verifying the date picker behaviour$/
    */
   public function iAmVerifyingTheDatePickerBehaviour() {
     $page = $this->getSession()->getPage();
@@ -3258,14 +3258,46 @@ class FeatureContext extends DrupalContext {
 
     $page->find('xpath', '//input[@id="edit-biblio-year-coded-10000"]')->click();
 
-    $this->iPrintPageScreenShot();
-
     $month_picker = $page->find('xpath', '//div[@id="edit-field-biblio-pub-month"]');
     $day_picker = $page->find('xpath', '//div[@id="edit-field-biblio-pub-day"]');
 
     if ($month_picker->isVisible() || $day_picker->isVisible()) {
       throw new Exception('The day and/or month picker found on the page but they not suppose to.');
     }
+  }
+
+  /**
+   * @Given /^I create a new publication with a type$/
+   */
+  public function iCreateANewPublicationWithADatePicker() {
+    $this->randomizeMe();
+    $this->getSession()->getDriver()->executeScript('CKEDITOR.instances["edit-title-field-und-0-value"].setData("' . $this->randomText . '");');
+    $this->getSession()->getPage()->find('xpath', '//input[@id="edit-biblio-year"]')->setValue('2010');
+    $this->getSession()->getPage()->pressButton('Save');
+    $this->assertTextVisible("Forthcoming. “{$this->randomText},” 2010.");
+  }
+
+  /**
+   * @Then /^I create a new publication with a date picker$/
+   */
+  public function iEditTheNewPublicationAndChooseAnotherValues() {
+    $page = $this->getSession()->getPage();
+    $this->randomizeMe();
+
+    $this->getSession()->getDriver()->executeScript('CKEDITOR.instances["edit-title-field-und-0-value"].setData("' . $this->randomText . '");');
+
+
+    $this->getSession()->getPage()->find('xpath', '//input[@id="edit-biblio-year"]')->setValue('2010');
+
+    $page->find('xpath', '//input[@id="edit-published"]')->click();
+    $page->find('xpath', '//div[@id="s2id_edit-field-biblio-pub-month-und"]//a[@class="select2-choice"]')->click();
+    $page->find('xpath', '//ul[@class="select2-results"]//li[contains(@class, "select2-result-selectable")][3]')->click();
+
+    $page->find('xpath', '//div[@id="s2id_edit-field-biblio-pub-day-und"]//a[@class="select2-choice"]')->click();
+    $page->find('xpath', '//ul[@class="select2-results"]//li[contains(@class, "select2-result-selectable")][3]')->click();
+
+    $this->getSession()->getPage()->pressButton('Save');
+    $this->assertTextVisible("“{$this->randomText},” 2010.");
   }
 
   /**
