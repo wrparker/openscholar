@@ -5,8 +5,8 @@
   var uid;
   var morphButton;
 
-    angular.module('AdminPanel', [ 'os-auth', 'ngCookies','ngStorage', 'RecursionHelper'])
-    .config(function () {
+    angular.module('AdminPanel', [ 'os-auth', 'ngCookies','ngStorage', 'RecursionHelper', 'ApSettingsForm'])
+    .config(function (){
        paths = Drupal.settings.paths
        vsite = typeof Drupal.settings.spaces != 'undefined' ? Drupal.settings.spaces.id : 0;
        cid = Drupal.settings.admin_panel.cid + Drupal.settings.version.adminPanel;
@@ -175,47 +175,69 @@
         },
       }
     })
-    .directive('adminPanelMenuRow', ['RecursionHelper', 'adminMenuStateService', function (RecursionHelper, $menuState) {
+    .directive('adminPanelMenuRow', ['$compile', 'RecursionHelper', function ($compile, RecursionHelper) {
 
-        function link(scope, elem, attrs) {
-          scope.getListStyle = function (id) {
-            if ($menuState.GetState(id)) {
-              return {'display':'block'};
-            }
-            return {};
-          };
+      function link(scope, elem, attrs) {
+        scope.getListStyle = function (id) {
+          if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
+            return {'display':'block'};
+          }
+          return {};
+        };
 
-          scope.isActive = function (row) {
-            if (row.children) {
-              for (var k in row.children) {
-                var c = row.children[k];
-                if (scope.isActive(c)) {
-                  return true;
-                }
+        scope.isActive = function (row) {
+          if (row.children) {
+            for (var k in row.children) {
+              var c = row.children[k];
+              if (scope.isActive(c)) {
+                return true;
               }
-              return false;
             }
-            else if (row.type == 'link' && row.href == location.href) {
-              return true;
-            }
-            else {
-              return false;
-            }
+            return false;
+          }
+          else if (row.type == 'link' && row.href == location.href) {
+            return true;
+          }
+          else {
+            return false;
           }
         }
+      }
 
+      return {
+        scope: {
+          menuRow: '=',
+          key: '@'
+        },
+        templateUrl: paths.adminPanelModuleRoot + '/templates/adminPanelMenuRow.template.html?vers=' + Drupal.settings.version.adminPanel,
+        compile: function (element) {
+          // workaround so directives can be nested
+          return RecursionHelper.compile(element, link);
+        }
+      };
+    }])
+    /**
+     * Allows directives to be added dynmically to this element at runtime
+     */
+    .directive('adminPanelDirectiveLink', ['$compile', function ($compile) {
         return {
-          scope: {
-            menuRow: '=',
-            key: '@'
-          },
-          templateUrl: paths.adminPanelModuleRoot + '/templates/adminPanelMenuRow.template.html?vers=' + Drupal.settings.version.adminPanel,
-          compile: function (element) {
-            // workaround so directives can be nested
-            return RecursionHelper.compile(element, link);
+          link: function (scope, elem, attrs) {
+            var copy = elem.find('span').clone();
+            var directives = scope.menuRow.directive;
+            for (var k in directives) {
+              if (!isNaN(parseFloat(k)) && isFinite(k)) {
+                copy.attr(directives[k], '');
+              }
+              else {
+                copy.attr(k, directives[k]);
+              }
+            }
+
+            copy = $compile(copy)(scope);
+            elem.find('span').replaceWith(copy);
           }
-        };
-      }]);
+        }
+    }]);
   
  
   

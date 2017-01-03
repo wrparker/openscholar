@@ -52,6 +52,19 @@ function cp_init() {
 }
 
 /**
+ * Implements hook_hook_info().
+ */
+function cp_hook_info() {
+  $hooks = array();
+
+  $hooks['cp_settings'] = array(
+    'group' => 'cp',
+  );
+
+  return $hooks;
+}
+
+/**
  * Implements hook_menu().
  */
 function cp_menu() {
@@ -67,7 +80,7 @@ function cp_menu() {
   );
 
   $items["cp/build"] = array(
-    'title' => 'Enable Apps',
+    'title' => 'Enable / Disable Apps',
     'page callback' => 'drupal_get_form',
     'page arguments' => array(
       'spaces_features_form',
@@ -79,7 +92,7 @@ function cp_menu() {
   );
 
   $items["cp/build/apps"] = array(
-    'title' => 'Enable Apps',
+    'title' => 'Enable / Disable Apps',
     'page callback' => 'drupal_get_form',
     'page arguments' => array(
       'spaces_features_form',
@@ -143,7 +156,7 @@ function cp_menu() {
   );
 
   $items["cp/apps"] = array(
-    'title' => 'Enable Apps',
+    'title' => 'Enable / Disable Apps',
     'page callback' => 'drupal_get_form',
     'page arguments' => array(
       'cp_app_settings_form',
@@ -487,66 +500,6 @@ function cp_get_setting_forms() {
 }
 
 /**
- * Implements hook_cp_settings().
- *
- * Allows user to switch between full and mini cp menus on the front view
- */
-function cp_cp_settings() {
-  $settings = array();
-
-  if (module_exists('redirect')) {
-    $settings['redirects'] = array(
-      'group' => array(
-        '#title' => t('URL Redirects'),
-        '#id' => 'redirects',
-      ),
-      'form' => array(
-        '#title' => t('Manage redirects'),
-      ),
-      'after_build' => array('_cp_settings_form_redirects_build'),
-    );
-    $settings['cp_redirect_max'] = array(
-      'group' => array(
-        '#title' => t('URL Redirects'),
-        '#id' => 'redirects',
-      ),
-      'form' => array(
-        '#type' => 'textfield',
-        '#title' => 'Number of maximum redirects',
-        '#size' => 15,
-        '#weight' => 2,
-        '#default_value' => variable_get('cp_redirect_max', CP_REDIRECT_MAX_DEFAULT),
-        '#element_validate' => array('element_validate_integer_positive'),
-        '#access' => user_access('set maximum redirects'),
-      ),
-    );
-  }
-
-  if (module_exists('vsite') && module_exists('expire')) {
-    $settings['cp_clear_cache'] = array(
-      'group' => array(
-        '#title' => t('Maintenance'),
-        '#id' => 'os-maintenance',
-      ),
-      'form' => array(
-        '#type' => 'submit',
-        '#value' => t('Clear site cache'),
-        '#suffix' => "<div class=\"description\">".t('Clear the cache to so anonymous users see the most recent updates. This removes the normal ~15 minute delay for new/updated posts to show up in lists but can slow the site down for your visitors.')."</div>",
-        '#submit' => array('cp_clear_site_cache'),
-        '#access' => user_access('clear vsite cache'),
-      ),
-    );
-
-    // Grant permission to those without it.
-    if ($vsite = vsite_get_vsite()) {
-    	$settings['cp_clear_cache']['form']['#access'] = ($settings['cp_clear_cache']['form']['#access'] || og_user_access('node', $vsite->group->nid, 'clear site cache', NULL, FALSE, TRUE));
-    }
-  }
-
-  return $settings;
-}
-
-/**
  * Submit handler; Clear a vsite's page cache.
  */
 function cp_clear_site_cache() {
@@ -566,6 +519,16 @@ function cp_clear_site_cache() {
   os_remove_cache($wildcard);
 
   drupal_set_message(t('Site cache is clearing.'));
+
+  return array(
+    array('type' => 'no_close'),
+    array('type' => 'no_reload'),
+    array(
+      'type' => 'message',
+      'message_type' => 'status',
+      'message' => t('Site cache is clearing.'),
+    )
+  );
 }
 
 /**

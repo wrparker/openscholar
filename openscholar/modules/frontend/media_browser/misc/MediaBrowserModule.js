@@ -97,7 +97,8 @@
       {label: 'Video', value: 'video'},
       {label: 'HTML', value: 'html'},
       {label: 'Executable', value: 'executable'},
-      {label: 'Audio', value: 'audio'}
+      {label: 'Audio', value: 'audio'},
+      {label: 'Icon', value: 'icon'}
     ];
 
     var defaultFilteredTypes = params.types;

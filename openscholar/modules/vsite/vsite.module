@@ -3241,45 +3241,6 @@ function vsite_get_entity_alias($entity_type, $entity, $alias = NULL) {
 }
 
 /**
- * Implements hook_cp_settings().
- *
- * Note: Site favicon settings are provided in a hook_form_FORM_ID_alter().
- *
- * @see vsite_form_cp_settings_form_alter()
- */
-function vsite_cp_settings() {
-  $vsite = vsite_get_vsite();
-  if (!$vsite || !isset($vsite->group->type)) {
-    return;
-  }
-  $settings = array();
-
-  $default = array('department', 'project');
-  $subsite_parents = variable_get('subsite_parents', $default);
-  if (!in_array($vsite->group->type, $subsite_parents)) {
-    return $settings;
-  }
-
-  $default = 0;
-  $inherit_theme = variable_get('vsite_subsite_inherit_theme', $default);
-  $settings['vsite_subsite_inherit_theme'] = array(
-    'form' => array(
-      '#type' => 'checkbox',
-      '#title' => t('Inherit parent site theme'),
-      '#default_value' => $inherit_theme,
-      '#description' => t('Check to have newly created subsites start with this site\'s currently enabled theme by default.'),
-    ),
-    'group' => array(
-      '#id' => 'vsite_subsite',
-      '#title' => t('Subsites'),
-      '#weight' => 31,
-    ),
-  );
-
-  return $settings;
-}
-
-/**
  * Implements hook_redirect_load_by_source_alter().
  *
  * Alter the redirect candidates before selecting the top one.
@@ -3551,8 +3512,9 @@ function vsite_redirect_hash_alter(&$hash, $redirect) {
   // Integrates with module `redirect`.
   // Prevents redirect_validate() from finding false duplicate paths.
   // @see redirect_hash()
-  if ($vsite = vsite_get_vsite()) {
-    $hash['gid'] = $vsite->id;
+  if (!empty($redirect->redirect_options['purl'])) {
+    $gid = $redirect->redirect_options['purl']['add'][0]['id'];
+    $hash['gid'] = $gid;
   }
 }
 
@@ -3591,10 +3553,10 @@ function vsite_redirect_parse_url_alter(&$parsed, $original_url) {
  * because the file field widget requires AJAX, which requires the form_state
  * to be modified. As of OpenScholar API version 7.x-3.10, we cannot modify
  * form_state in hook_cp_settings().
- */
+ *
 function vsite_form_cp_settings_form_alter(&$form, &$form_state, $form_id) {
   // Only continues if we have a purl (in order to save the favicon properly).
-  if (!($purl = vsite_get_purl()) || !$vsite = vsite_get_vsite()) {
+  if ( 1 || !($purl = vsite_get_purl()) || !$vsite = vsite_get_vsite()) {
     return;
   }
 

@@ -19,6 +19,17 @@ function os_search_solr_boxes_plugins() {
     ),
   );
 
+  $plugins['os_search_solr_search_box'] = array(
+    'title' => t('Search box'),
+    'tags' => array('Content'),
+    'handler' => array(
+      'class' => 'os_search_solr_search_box',
+      'file' => 'os_search_solr_search_box.inc',
+      'path' => drupal_get_path('module', 'os_search_solr') . '/plugins/os_search_solr_search_box',
+      'parent' => 'os_boxes_default',
+    ),
+  );
+
   return $plugins;
 }
 
@@ -203,9 +214,9 @@ function os_search_solr_block_view_alter(&$data, $block) {
     $data['title'] = 'Filter By Post Type';
 
     // Hide the Filter by Post Type block if there is only one filter.
-    if(isset($data['content']['bundle']) && isset($data['content']['bundle']['#items'])) {
+    if (isset($data['content']['bundle']) && isset($data['content']['bundle']['#items'])) {
       $type_array = $data['content']['bundle']['#items'];
-      if(is_array($type_array) && count($type_array) <= 1) {
+      if (is_array($type_array) && count($type_array) <= 1) {
         $data['content'] = NULL;
       }
     }
@@ -256,6 +267,7 @@ function os_search_solr_block_view_alter(&$data, $block) {
   if ($block->delta == $delta) {
     $data['title'] = t('Filter By Taxonomy');
   }
+
 }
 
 /**
@@ -272,7 +284,7 @@ function os_search_solr_apachesolr_entity_info_alter(&$entity_info) {
  */
 function os_search_solr_apachesolr_index_node_solr_document(ApacheSolrDocument $document, $node, $entity_type, $env_id) {
 
-  if($entity_type == 'node') {
+  if ($entity_type == 'node') {
     $document->bs_private = !os_search_solr_apachesolr_privacy_callback($node->nid, $entity_type);
   }
 
@@ -474,9 +486,9 @@ function os_search_solr_add_vsite_to_reindex($vsite_id, $bundles = array()) {
   $values = variable_get('os_search_solr_reindex_by_bundles', array());
 
   // If we already have an index in progress, merge the settings.
-  if(isset($values[$vsite_id]) && count($bundles)) {
+  if (isset($values[$vsite_id]) && count($bundles)) {
     // If only some nodes were being indexed, add the new bundles to the list.
-    if(count($values[$vsite_id]['bundles'])) {
+    if (count($values[$vsite_id]['bundles'])) {
       $bundles = array_merge($bundles, $values[$vsite_id]['bundles']);
     } else {
       // If all nodes were getting indexed, start over.
@@ -664,38 +676,6 @@ function os_search_solr_vsites() {
 }
 
 /**
- * Implements hook_cp_settings().
- */
-function os_search_solr_cp_settings() {
-  if (!module_exists('vsite') || !vsite_get_vsite()) {
-    // Not inside a VSite.
-    return;
-  }
-
-  if (!user_access('administer search')) {
-    // No permission to administer search.
-    return;
-  }
-
-  $settings = array();
-
-  $settings['os_search_solr'] = array(
-    'group' => array(
-      '#title' => t('Maintenance'),
-      '#id' => 'os-maintenance',
-    ),
-    'form' => array(
-      '#type' => 'submit',
-      '#value' => t('Re-Index Search'),
-      '#suffix' => "<div class=\"description\">".t('(Re)Index the sites searchable content.')."</div>",
-      '#submit' => array('os_search_solr_reindex_site'),
-    ),
-  );
-
-  return $settings;
-}
-
-/**
  * Submit handler; Re-index a VSite.
  */
 function os_search_solr_reindex_site() {
@@ -864,7 +844,7 @@ function os_search_solr_apachesolr_search_default_searchers() {
     $export[$page_id] = os_search_solr_setup_bundle_searcher($bundle_name, $bundle_info['title'], $bundle_info['url']);
 
     $solr_view_modes = variable_get('os_search_solr_display_mode', array());
-    if($solr_view_modes[$page_id] != $bundle_info['display_mode']) {
+    if ($solr_view_modes[$page_id] != $bundle_info['display_mode']) {
       // Set the default display mode for the searcher.
       os_search_solr_save_view_mode($page_id, $bundle_info['display_mode']);
     }
@@ -1047,7 +1027,7 @@ function os_search_solr_preprocess_search_results(&$variables) {
   $view_mode = !empty($solr_view_modes[$page_id]) ? $solr_view_modes[$page_id] : 'teaser';
 
   //Only alter 'search_results' and render node if it is a non-search view mode.
-  if(!in_array($view_mode, array('search_result', 'search_index'))){
+  if (!in_array($view_mode, array('search_result', 'search_index'))){
 
     // Reset Search Results, we are going to completely override
     $variables['search_results'] = '';
@@ -1257,4 +1237,59 @@ function os_search_solr_facet_time($timestamp, $gap) {
     default:
       return format_date($timestamp, 'custom', 'Y', 'UTC');
   }
+}
+
+/**
+ * Ajax form callback;
+ */
+function os_search_solr_terms_switch($form, $form_state)  {
+  return $form['options']['terms'];
+}
+
+/**
+ * Ajax form callback;
+ */
+function os_search_solr_vocabularies_switch($form, $form_state)  {
+  return $form['options']['vocab'];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_search_solr_form_search_block_form_alter(&$form, $form_state) {
+  $form['#submit'][] = 'os_search_solr_change_search_path';
+}
+
+/**
+ * Submit handler; Adding the settings of the search
+ */
+function os_search_solr_change_search_path($form, $form_state) {
+  $box_settings = $form_state['box_settings'];
+  $options = array('query' => array('f' => array()));
+  $filters = &$options['query'];
+
+  // Collect bundles.
+  if ($box_settings['bundle']) {
+    $filters['f'][] = 'bundle:' . $box_settings['bundle'];
+  }
+
+  // Collect terms.
+  if ($box_settings['terms']['terms']) {
+
+    foreach ($box_settings['terms']['terms'] as $term) {
+      if (!$term) {
+        continue;
+      }
+
+      $filters['f'][] = 'sm_og_vocabulary:taxonomy_term:' . $term;
+    }
+  }
+
+  // Add sort order
+  if ($box_settings['sort_property'] != 'relevancy') {
+    $filters['solrsort'] = $box_settings['sort_property'] . ' ' . $box_settings['sort_order'];
+  }
+
+  // Collect terms.
+  drupal_goto('search/site/' . $form_state['values']['search_block_form'], $options);
 }

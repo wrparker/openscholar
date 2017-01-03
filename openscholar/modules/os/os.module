@@ -153,31 +153,6 @@ function os_menu() {
 }
 
 /**
- * Implements hook_cp_settings().
- *
- * Add the option to choose between Infinite scrolling or Pagination display for long list of content.
- */
-function os_cp_settings() {
-  $setting = array();
-  $setting['long_list_content_pagination'] = array(
-    'group' => array(
-      '#title' => t('Content Display'),
-      '#id' => 'long-list-content-pagination',
-      '#weight' => 40
-    ),
-    'form' => array(
-      '#type' => 'radios',
-      '#title' => t('Display pages with long lists of content using'),
-      '#default_value' => variable_get('long_list_content_pagination', 'infinite_scroll'),
-      '#options' => array('infinite_scroll' => 'Infinite scrolling', 'pager' => 'Pagination'),
-      '#description' => t('<i>This applies only to blog, links, news, FAQs, publications and profiles.</i>')
-    ),
-  );
-
-  return $setting;
-}
-
-/**
  * Implements hook_menu_alter().
  */
 function os_menu_alter(&$items) {
@@ -768,6 +743,7 @@ function _os_process_node_links_comment_add_class(&$vars) {
  */
 function os_preprocess_page(&$vars) {
   global $user;
+
   // Session timeout checking will be only for logged in users.
   if ($user->uid) {
     // Obtaining session lifetime value from php configuration.

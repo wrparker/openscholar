@@ -138,6 +138,7 @@ body.overlay {
     background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') no-repeat 109px -983px;
     background-color: #444;
 }
+
 #cssmenu li.heading.parent,
 #cssmenu li.heading.parent.open {
     background-color: #6C7A89;
@@ -154,12 +155,15 @@ body.overlay {
     -o-transition: color .2s ease;
     transition: color .2s ease;
     box-shadow: inset 0 1px rgba(0, 0, 0, 0.1);
+        line-height: 1.1em;
 }
-[toggle-open] {
-    padding: 10px 10px 10px 8px !important;
+[toggle-open],
+[admin-panel-directive-link] span {
+    padding: 10px !important;
 }
 #cssmenu ul ul li span.close-siblings,
-#cssmenu ul ul li a {
+#cssmenu ul ul li a,
+#cssmenu ul ul li [admin-panel-directive-link] span {
     box-shadow: none;
     padding-left: 15px !important;
 }
@@ -173,7 +177,9 @@ body.overlay {
 #cssmenu .heading a.submenu_heading {
     background: #454545;
 }
-#cssmenu ul ul ul li a {
+#cssmenu ul ul ul li a,
+#cssmenu ul ul ul li span.close-siblings,
+#cssmenu ul ul ul li [admin-panel-directive-link] span {
     padding-left: 20px !important;
 }
 #rightMenuSlide {

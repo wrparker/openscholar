@@ -19,7 +19,7 @@ function os_basetheme_preprocess_html(&$vars) {
     $vars['classes_array'][] = 'navbar-off';
   }
 
-  $vars['use_responsive_behaviors'] = (bool) variable_get('enable_responsive', FALSE);
+  $vars['use_responsive_behaviors'] = (bool) variable_get('enable_responsive', true);
 }
 
 /**
@@ -646,5 +646,39 @@ function os_basetheme_views_mini_pager($vars) {
         'attributes' => array('class' => array('pager mini-pager')),
       )
     );
+  }
+}
+
+/**
+ * Override theme_file_link
+ */
+function os_basetheme_file_link($variables) {
+  $file = $variables['file'];
+  $icon_directory = $variables['icon_directory'];
+
+  $url = file_create_url($file->uri);
+  $icon = theme('file_icon', array('file' => $file, 'icon_directory' => $icon_directory));
+
+  // Set options as per anchor format described at
+  // http://microformats.org/wiki/file-format-examples
+  $options = array(
+    'attributes' => array(
+      'type' => $file->filemime . '; length=' . $file->filesize,
+    ),
+  );
+
+  // Use the description as the link text if available.
+  if (empty($file->description)) {
+    $link_text = $file->filename;
+  }
+  else {
+    $link_text = $file->description;
+    $options['attributes']['title'] = check_plain($file->filename);
+  }
+  if (isset($file->view_mode) && $file->view_mode == 'os_files_link') {
+    // If Link with no icon is selected for LOF widget
+    return '<span class="file">' . l($link_text, $url, $options) . '</span>';
+  } else{
+    return '<span class="file">' . $icon . ' ' . l($link_text, $url, $options) . '</span>';
   }
 }

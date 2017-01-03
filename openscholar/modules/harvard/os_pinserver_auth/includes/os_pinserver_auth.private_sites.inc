@@ -69,8 +69,8 @@ function _os_pinserver_auth_vsite_access_denied($vsite){
 function _os_pinserver_auth_vsite_access_privacy_values_alter(&$privacy_options){
   // Provides short human-friendly labels for the different options.
   if(variable_get('file_default_scheme', 'public') == 'private'){
-    $privacy_options[OS_PINSERVER_INTRANET_ACCESS] = t('Harvard Community') . "<br><span class='radio-description'>" . t("Only the Harvard community will be able to access your site. Sign-in via Harvard required.") . "</span>";
+    $privacy_options[OS_PINSERVER_INTRANET_ACCESS] = t('Harvard Community') . "<br><span class='description'>" . t("Only the Harvard community can access your site. Sign-in via HarvardKey required.") . "</span>";
   }else{
-    $privacy_options[OS_PINSERVER_ACCESS] = t('Harvard Community') . "<br><span class='radio-description'>" . t("Only the Harvard community will be able to access your site. Sign-in via Harvard required.") . "</span>";
+    $privacy_options[OS_PINSERVER_ACCESS] = t('Harvard Community') . "<br><span class='description'>" . t("Only the Harvard community can access your site. Sign-in via HarvardKey required.") . "</span>";
   }
 }

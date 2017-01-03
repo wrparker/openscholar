@@ -356,6 +356,9 @@ class os_sv_list extends os_boxes_default {
 
         // Now render to html.
         $content = drupal_render($render);
+        if (module_exists('web_widgets')) {
+          $content = _web_widgets_rewrite_anchors($content);
+        }
         $delta = $this->delta;
         $class = strtolower(implode(' ', array(
           'os-sv-list',

@@ -62,8 +62,8 @@
             page = decodeURIComponent(args.page).split(',');
             page = page[args.pager_id];
             destination = args.destination;
-          $.ajax({
-            url: window.location.protocol + '//' + window.location.hostname + '/' + (typeof s.pathPrefix != 'undefined'?s.pathPrefix:'') + 'os_sv_list/page/'+delta,
+            $.ajax({
+              url: window.location.protocol + '//' + window.location.hostname + '/' + (typeof s.pathPrefix != 'undefined'?s.pathPrefix:'') + 'os_sv_list/page/'+delta,
             data: {
               page: page,
               destination: destination
