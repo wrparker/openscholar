@@ -180,7 +180,7 @@ function os_comments_node_view($node, $view_mode) {
   $source = comment_sources_get_source($node->type);
 
   // Otherwise, makes some changes if we are using a 3rd party comment source.
-  if ($source) {
+  if ($source && $node->type != 'blog') {
     // Tells comment_node_view() to build an "Add new comment" link.
     $node->comment = COMMENT_NODE_OPEN;
     // Adds the source info to the node so we know to modify the node later.
@@ -287,7 +287,7 @@ function os_comments_form_node_form_alter(&$form, $form_state, $form_id) {
   $source = comment_sources_get_source($node);
 
   // If no sources - hide the form element.
-  if (!$source) {
+  if (!$source || !is_null($form['nid']['#value'])) {
     unset($form['comment_settings']);
     return;
   }
