@@ -68,7 +68,7 @@ function os_reports_menu() {
 function os_reports_assemble_header_row($headers, &$context) {
   $header_array = array();
   foreach ($headers as $header) {
-    $header_array[] = _make_csv_safe(ucfirst(str_replace("_", " ", $header)));
+    $header_array[] = _make_csv_safe(str_replace("_", " ", $header));
   }
   $context['results'] = array(implode(",", $header_array));
 }
