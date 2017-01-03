@@ -5,10 +5,7 @@ Drupal.wysiwyg.plugins['os_link'] = {
   url: '',
   iframeWindow: {},
   getWindow: function () {
-    var aid = Drupal.wysiwyg.activeId;
-
-    var selector = document.querySelector('#' + aid + ' iframe') == null ? '.cke iframe' : '#' + aid + '.cke iframe';
-    return document.querySelector(selector).contentWindow;
+    return document.querySelector('#cke_' + Drupal.wysiwyg.activeId + ' iframe').contentWindow;
   },
   getSelection: function () {
     var w = this.getWindow();
