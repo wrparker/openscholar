@@ -93,7 +93,7 @@ function vsite_cp_settings() {
         'extensions' => array('ico'),
         'types' => array('icon'),
       ),
-      '#title' => t('Upload Favicon'),
+      '#title' => t('Favicon'),
       '#description' => t('A 16x16 .ico file to be displayed in browser shortcut icons and tabs for any page on your site. For help generating a favicon file, try <a href="http://www.favicon.cc/" target="_blank">http://www.favicon.cc/</a>.'),
       '#default_value' => variable_get('site_favicon_fid', ''),
       '#upload_location' => $purl ? "public://{$purl}/files" : "public://",

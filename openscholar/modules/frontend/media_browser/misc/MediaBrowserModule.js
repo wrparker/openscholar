@@ -164,7 +164,9 @@ console.log('a');
 
     // Watch for changes in file list
     $scope.$on('EntityService.files.add', function (event, file) {
-      $scope.files.push(file);
+      if (file.changed == file.timestamp) {
+        $scope.files.push(file);
+      }
     });
 
     $scope.$on('EntityService.files.update', function (event, file) {
@@ -619,7 +621,7 @@ console.log('a');
       service.add(data).success(function (e) {
         if (e.data.length) {
           $scope.embed = '';
-          e.data[0].new = true;
+          e.data[0].new = e.data[0].changed == e.data[0].timestamp;
           $scope.setSelection(e.data[0].id);
           service.register(e.data[0]);
 

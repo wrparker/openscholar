@@ -1168,7 +1168,6 @@ div.error:before {
     font-weight: normal;
     height: 23px;
 }
-
 .description {
     margin: 5px 0;
     line-height: 1.231em;
@@ -1307,15 +1306,8 @@ li.pager-previous + li.pager-ellipsis {
 	}
 
 .file img.file-icon {
-    width: 16px;
-}
-body.cke_editable img.media-element.file-default {
-    padding-right: 15px;
-}
+    width:16px;
 
-body.cke_editable img.media-element.file-default[style*="float:"][style*="right;"] {
-    padding-left: 15px;
-    padding-right: 0;
 }
 
 body.cke_editable {
