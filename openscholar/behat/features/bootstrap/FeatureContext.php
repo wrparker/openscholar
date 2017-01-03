@@ -563,13 +563,16 @@ class FeatureContext extends DrupalContext {
   public function iChangePrivacyTo($vsite, $visibility) {
 
     $privacy_level = array(
-      'Public on the web ' => 0,
-      'Anyone with the link ' => 2,
-      'Invite-only ' => 1,
+      'Public on the web.' => 0,
+      'Anyone with the link.' => 2,
+      'Invite only during site creation.' => 1,
     );
 
     return array(
       new Step\When('I visit "' . $vsite . '/cp/settings"'),
+      new Step\When('I open the admin panel to "Settings"'),
+      new Step\When('I open the admin panel to "Global Settings"'),
+      new Step\When('I click on the "Site Visibility" control'),
       new Step\When('I select the radio button named "vsite_private" with value "' . $privacy_level[$visibility] . '"'),
       new Step\When('I press "edit-submit"'),
     );
