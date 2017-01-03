@@ -1244,6 +1244,13 @@ form#os-maintenance .form-item .description {
   margin: 15px 0;
 }
 
+span[name="faq_sort"] .form-radios {
+    margin: 0 15px 15px 0;
+}
+.margin-bottom{
+    margin-bottom: 15px;
+}
+
 /* CKEDITOR - WYSIWYG */
 
 
