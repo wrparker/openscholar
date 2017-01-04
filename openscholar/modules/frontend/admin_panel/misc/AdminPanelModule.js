@@ -119,7 +119,7 @@
 
               togglers.each(function() {
                 var sibling = angular.element(this),
-                  id = sibling.find("span").children().first().attr('id');
+                  id = sibling.children().first().find("span").attr('id');
                 $menuState.SetState(id, false);
                 closeLink(sibling);
               });
