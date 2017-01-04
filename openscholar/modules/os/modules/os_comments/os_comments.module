@@ -163,7 +163,7 @@ function os_comments_comment_save_vsite($comment_node_types) {
  */
 function os_comments_node_view($node, $view_mode) {
   // Does nothing unless the node's view mode is teaser.
-  if ($view_mode !== 'teaser') {
+  if ($view_mode !== 'teaser' && $node->type != 'blog') {
     return;
   }
 
@@ -173,19 +173,28 @@ function os_comments_node_view($node, $view_mode) {
   }
 
   // Does nothing if the Drupal comment settings are already set to open.
-  if ($node->comment == COMMENT_NODE_OPEN) {
+  if ($node->comment == COMMENT_NODE_OPEN && $node->type != 'blog') {
     return;
   }
   // Gets the current comment source for this node type.
   $source = comment_sources_get_source($node->type);
 
   // Otherwise, makes some changes if we are using a 3rd party comment source.
-  if ($source && $node->type != 'blog') {
+  if ($source) {
     // Tells comment_node_view() to build an "Add new comment" link.
     $node->comment = COMMENT_NODE_OPEN;
     // Adds the source info to the node so we know to modify the node later.
     // @see os_comments_preprocess_node()
     $node->os_comments = $source;
+    if ($node->type == 'blog') {
+      // checking comment count
+      $comment_count = isset($node->nid) ? db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() : 0;
+      $node->comment_count = $comment_count;
+    }
+  } else {
+    if ($node->type == 'blog') {
+      unset($node->comment);
+    }
   }
 }
 
@@ -286,8 +295,8 @@ function os_comments_form_node_form_alter(&$form, $form_state, $form_id) {
   $node = $form['#node'];
   $source = comment_sources_get_source($node);
 
-  // If no sources - hide the form element.
-  if (!$source || !is_null($form['nid']['#value'])) {
+  // If no sources or blog add / edit - hide the form element.
+  if (!$source || $node->type == 'blog') {
     unset($form['comment_settings']);
     return;
   }
