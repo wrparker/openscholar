@@ -51,63 +51,14 @@ function os_faq_vsite_og_node_type_info() {
 }
 
 /**
- * Implements hook_menu().
- */
-function os_faq_menu() {
-  $items = array();
-
-  $items['features/os_faq'] = array(
-    'title' => 'FAQ Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('os_faq_settings'),
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_CALLBACK,
-  );
-
-  return $items;
-}
-
-/**
- * App-specific settings for the FAQ app.
- */
-function os_faq_settings($form, $form_state) {
-  $form = array();
-
-  $form['os_faq_use_toggle'] = array(
-    '#title' => t('Enable Slider Behavior'),
-    '#type' => 'checkbox',
-    '#default_value' => variable_get('os_faq_use_toggle', TRUE),
-    '#description' => t('By default, clicking on a FAQ question will open the answer.
-    	By disabling slider behavior, you can force the answer to always appear.'),
-    '#weight' => -1
-  );
-
-  $form['faq_sort'] = array(
-    '#type' => 'radios',
-    '#title' => t('By default, sort FAQs by which category'),
-    '#default_value' => variable_get('faq_sort', 'created'),
-    '#options' => array('created' => t('Created date'), 'title' => t('Alphabetical')),
-  );
-
-  $form['faq_order'] = array(
-    '#type' => 'radios',
-    '#title' => t('Select default order of the sort category'),
-    '#default_value' => variable_get('faq_order', 'DESC'),
-    '#options' => array('DESC' => t('Descending'), 'ASC' => t('Ascending')),
-  );
-
-  return system_settings_form($form);
-}
-
-/**
  * Increases the teaser break for faq by a huge amount when the slider is active
  * @todo implement trim in node display settings.
  */
 function os_faq_field_attach_view_alter(&$output, &$context) {
-  // This is only here temporarially, once the variable 'os_faq_use_toggle' is
+  // This is only here temporarially, once the variable 'os_faq_disable_toggle' is
   // removed the trim length should be updated in the node teaser setttings so
   // that there is no trim.
-  if (isset($output['body']) && $output['body']['#object']->type == 'faq' && variable_get('os_faq_use_toggle', TRUE)) {
+  if (isset($output['body']) && $output['body']['#object']->type == 'faq' && variable_get('os_faq_disable_toggle', FALSE)) {
     $item = $output['body']['#items'][0];
 
     if ($context['view_mode'] != 'teaser') {
@@ -125,7 +76,7 @@ function os_faq_field_attach_view_alter(&$output, &$context) {
 function os_faq_preprocess_node(&$vars) {
   if ($vars['node']->type != 'faq') return;
 
-  if (!$vars['page'] && variable_get('os_faq_use_toggle', TRUE) && $vars['view_mode'] != 'title') {
+  if (!$vars['page'] && !variable_get('os_faq_disable_toggle', FALSE) && $vars['view_mode'] != 'title') {
     $vars['header_attributes_array']['class'][] = 'toggle';
     $vars['content_attributes_array']['class'][] = 'os-slider';
     $vars['links_attributes_array']['class'][] = 'os-slider';
@@ -147,7 +98,66 @@ function os_faq_os_entity_view_modes_alter(&$info) {
  */
 function os_faq_views_query_alter(&$view, &$query) {
   if ($view->name == 'os_faq' && $view->current_display == 'page') {
-    $query->orderby[1]['field'] = 'node.' . variable_get('faq_sort', 'created');
-    $query->orderby[1]['direction'] = variable_get('faq_order', 'DESC');
+    switch (variable_get('faq_sort', 'created')) {
+      case 'created':
+        $query->orderby[1]['field'] = 'node.created';
+        $query->orderby[1]['direction'] = 'DESC';
+        break;
+      case 'created_asc':
+        $query->orderby[1]['field'] = 'node.created';
+        $query->orderby[1]['direction'] = 'ASC';
+        break;
+      case 'title':
+        $query->orderby[1]['field'] = 'node.title';
+        $query->orderby[1]['direction'] = 'ASC';
+        break;
+      case 'title_desc':
+        $query->orderby[1]['field'] = 'node.title';
+        $query->orderby[1]['direction'] = 'DESC';
+        break;
+      default:
+        $query->orderby[1]['field'] = 'node.created';
+        $query->orderby[1]['direction'] = 'DESC';
+    }
   }
+}
+
+/**
+ * Implements hook_cp_settings().
+ */
+function os_faq_cp_settings() {
+  $settings['os_faq_disable_toggle'] = array(
+    'group' => array(
+      '#id' => 'feature_os_faq',
+      '#title' => t('FAQs'),
+      '#weight' => 3,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about FAQs'), 'http://docs.openscholar.harvard.edu/faq-app', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#title' => t('Disable'),
+      '#type' => 'checkbox',
+      '#default_value' => variable_get('os_faq_disable_toggle', FALSE),
+      '#description' => t('By default, clicking on an question will open the answer.
+        By disabling slider behavior, you can force the answer to always appear.'),
+      '#weight' => -1,
+      '#prefix' => '<label class="margin-bottom">Choose how FAQs will display</label><label>Question/Answer Slider Behavior</label>',
+    ),
+  );
+  $settings['faq_sort'] =  array(
+    'group' => array(
+      '#id' => 'feature_os_faq',
+      '#title' => t('FAQs'),
+      '#weight' => 3,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about FAQs'), 'http://docs.openscholar.harvard.edu/faq-app', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'radios',
+      '#title' => t('Ordering'),
+      '#default_value' => variable_get('faq_sort', 'created'),
+      '#options' => array('created' => t('Creation date, newest first'), 'created_asc' => t('Creation date, oldest first'), 'title' => t('Alphanumeric, A-Z'), 'title_desc' => t('Alphanumeric, Z-A')),
+    ),
+  );
+  return $settings;
 }

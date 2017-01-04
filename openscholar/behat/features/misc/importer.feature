@@ -70,3 +70,14 @@ Feature: Testing the importer.
       And I press "Delete"
      When I press "Delete"
      Then I should see "Deleted vocabulary bad_vocab."
+
+  @api @misc_first
+  Scenario: Verify that textarea length limits are respected when importing nodes from a file
+    Given I am logging in as "john"
+      And I set the variable "os_wysiwyg_maximum_length_body" to "50"
+      And I visit "john/cp/os-importer/faq"
+      And I attach the file "faq.csv" to "File"
+     When I press "Submit"
+     Then I should see "The value of the 'body' field can not be longer than '50' characters."
+      And I delete the variable "os_wysiwyg_maximum_length_body"
+
