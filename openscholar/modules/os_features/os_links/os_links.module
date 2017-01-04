@@ -190,7 +190,7 @@ function os_links_cp_settings() {
      'form' => array(
        '#type' => 'radios',
        '#default_value' => variable_get('os_links_ordering', 0),
-       '#options' => array(0 => 'Creation date, descending', 1 => 'Creation date, ascending', 2 => 'Alphanumeric, A-Z', 3 => 'Alphanumeric, Z-A'),
+       '#options' => array(0 => 'Creation date, newest first', 1 => 'Creation date, oldest first', 2 => 'Alphanumeric, A-Z', 3 => 'Alphanumeric, Z-A'),
        '#weight' => -1,
        '#prefix' => '<label>Choose how links are ordered</label>',
      ),
