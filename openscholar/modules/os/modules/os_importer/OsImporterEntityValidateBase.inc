@@ -26,10 +26,14 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
       if ($info['required']) {
         // Check if the 'isNotEmpty' validator is already assigned to the field
         // in the base class. Don't re-add it to avoid duplicated messages.
-        if (!empty($fields[$field_name]['validators']) && in_array('isNotEmpty', $fields[$field_name]['validators'])) {
-          continue;
+        if (!in_array('isNotEmpty', $fields[$field_name]['validators'])) {
+          $fields[$field_name]['validators'][] = array($this, 'isNotEmpty');
         }
-        $fields[$field_name]['validators'][] = array($this, 'isNotEmpty');
+      }
+
+      $field = field_info_field($field_name);
+      if ($field['type'] == 'text_with_summary') {
+        $fields[$field_name]['validators'][] = array($this, 'validateTextAreaLength');
       }
     }
 
@@ -68,6 +72,14 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
     }
 
     return $fields;
+  }
+
+  public function validateTextAreaLength($field_name, $value, EntityMetadataWrapper $wrapper, EntityMetadataWrapper $property_wrapper) {
+    $length = variable_get('os_wysiwyg_maximum_length_' . $field_name, 5 * 1000000);
+
+    if (strlen($value['value']) > $length) {
+      $this->setError($field_name, "The value of the '$field_name' field can not be longer than '$length' characters.");
+    }
   }
 
   /**
@@ -131,6 +143,11 @@ class OsImporterEntityValidateBase extends EntityValidateBase {
    * Validating the image minimum size.
    */
   public function validatorPhoto($field_name, $value, $min_width, $min_height) {
+    if (empty($value)) {
+      return;
+
+    }
+
     list($width, $height) = getimagesize($value);
 
     if ($width < $min_width || $height < $min_height) {

@@ -88,6 +88,10 @@ function os_help_get_variables_from_id($type, $id) {
         'os_boxes_widget_slider' => array('url' => 'http://docs.openscholar.harvard.edu/widget-slider', 'title' => 'Widget Slider Widget'),
         'os_boxes_columns' => array('url' => 'http://docs.openscholar.harvard.edu/columns-widget', 'title' => 'Columns Widget'),
         'os_boxes_facetapi_vocabulary' => array('url' => 'http://docs.openscholar.harvard.edu/filtering-content-faceted-taxonomy-widget', 'title' => 'Faceted Taxonomy Widget'),
+        'os_boxes_dataverse_dataset' => array('url' => 'http://docs.openscholar.harvard.edu/dataverse-dataset-widget', 'title' => 'Dataverse Dataset'),
+        'os_boxes_dataverse_dataset_citation' => array('url' => 'http://docs.openscholar.harvard.edu/dataverse-dataset-citation', 'title' => 'Dataverse Dataset Citation'),
+        'os_boxes_dataverse_list' => array('url' => 'http://docs.openscholar.harvard.edu/dataverse-list-widget', 'title' => 'Dataverse List'),
+        'os_boxes_dataverse_search' => array('url' => 'http://docs.openscholar.harvard.edu/dataverse-search-box', 'title' => 'Dataverse Search'),
       );
       break;
   }

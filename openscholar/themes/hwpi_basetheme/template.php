@@ -634,3 +634,83 @@ function hwpi_basetheme_process_pager_link($variables) {
   module_load_include('inc', 'os', 'includes/pager');
   _os_pager_add_html_head_link($variables);
 }
+
+// Overriding theme_nice_menus_build to add open-submenu span for menuparent's
+function hwpi_basetheme_nice_menus_build($variables) {
+  $menu = $variables['menu'];
+  $depth = $variables['depth'];
+  $trail = $variables['trail'];
+  $output = '';
+  // Prepare to count the links so we can mark first, last, odd and even.
+  $index = 0;
+  $count = 0;
+  foreach ($menu as $menu_count) {
+    if ($menu_count['link']['hidden'] == 0) {
+      $count++;
+    }
+  }
+  // Get to building the menu.
+  foreach ($menu as $menu_item) {
+    $mlid = $menu_item['link']['mlid'];
+    // Check to see if it is a visible menu item.
+    if (!isset($menu_item['link']['hidden']) || $menu_item['link']['hidden'] == 0) {
+      // Check our count and build first, last, odd/even classes.
+      $index++;
+      $first_class = $index == 1 ? ' first ' : '';
+      $oddeven_class = $index % 2 == 0 ? ' even ' : ' odd ';
+      $last_class = $index == $count ? ' last ' : '';
+      // Build class name based on menu path
+      // e.g. to give each menu item individual style.
+      // Strip funny symbols.
+      $clean_path = str_replace(array('http://', 'www', '<', '>', '&', '=', '?', ':', '.'), '', $menu_item['link']['href']);
+      // Convert slashes to dashes.
+      $clean_path = str_replace('/', '-', $clean_path);
+      $class = 'menu-path-' . $clean_path;
+      if ($trail && in_array($mlid, $trail)) {
+        $class .= ' active-trail';
+      }
+      // If it has children build a nice little tree under it.
+      if ((!empty($menu_item['link']['has_children'])) && (!empty($menu_item['below'])) && $depth != 0) {
+        // Keep passing children into the function 'til we get them all.
+        if ($menu_item['link']['depth'] <= $depth || $depth == -1) {
+          $children = array(
+            '#theme' => 'nice_menus_build',
+            '#prefix' => '<span class="open-submenu"></span><ul>',
+            '#suffix' => '</ul>',
+            '#menu' => $menu_item['below'],
+            '#depth' => $depth,
+            '#trail' => $trail,
+          );
+        } else {
+          $children = '';
+        }
+        // Set the class to parent only of children are displayed.
+        $parent_class = ($children && ($menu_item['link']['depth'] <= $depth || $depth == -1)) ? 'menuparent ' : '';
+        $element = array(
+          '#below' => $children,
+          '#title' => $menu_item['link']['title'],
+          '#href' => $menu_item['link']['href'],
+          '#localized_options' => $menu_item['link']['localized_options'],
+          '#attributes' => array(
+            'class' => array('menu-' . $mlid, $parent_class, $class, $first_class, $oddeven_class, $last_class),
+          ),
+        );
+        $variables['element'] = $element;
+        $output .= theme('menu_link', $variables);
+      } else {
+        $element = array(
+          '#below' => '',
+          '#title' => $menu_item['link']['title'],
+          '#href' => $menu_item['link']['href'],
+          '#localized_options' => isset($menu_item['link']['localized_options']) ? $menu_item['link']['localized_options'] : array(),
+          '#attributes' => array(
+            'class' => array('menu-' . $mlid, $class, $first_class, $oddeven_class, $last_class),
+          ),
+        );
+        $variables['element'] = $element;
+        $output .= theme('menu_link', $variables);
+      }
+    }
+  }
+  return $output;
+}

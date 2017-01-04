@@ -952,8 +952,17 @@ function os_pages_add_subpage_form($form, &$form_state, $node) {
  * Makes sure the given node is a page and in our site.
  */
 function os_pages_add_subpage_element_validate($element, &$form_state) {
+  // If Provided autocomplete text is not resolved to a valid node id, then early returning.
+  if (!isset($form_state['vsite_autocomplete_nid']) || !is_numeric($form_state['vsite_autocomplete_nid'])) {
+    return;
+  }
   $nid = $form_state['vsite_autocomplete_nid'];
   $node = node_load($nid);
+  // If provided nid is not returning a valid drupal node object, then exiting from validate handler, exeption will be handled 
+  // by vsite_node_autocomplete_validate callback
+  if (!$node) {
+    return;
+  }
 
   if ($node->type != 'page') {
     form_error($element, t('Selected post is not a page.'));

@@ -1,5 +1,6 @@
 <?php
 
+use Behat\Behat\Event\StepEvent;
 use Behat\Mink\Driver\Selenium2Driver;
 use Drupal\DrupalExtension\Context\DrupalContext;
 use Behat\Behat\Context\Step\Given;
@@ -498,16 +499,27 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldPrintPage() {
     $element = $this->getSession()->getPage();
+    $url = $this->createGist($element->getContent());
+    print_r('You asked to see the page content. Here is a gist contain the html: ' . $url . "\n");
+  }
+
+  /**
+   * Creating public gist.
+   *
+   * @param array $file
+   *   List of files and the content.
+   */
+  public function createGist($file) {
     $request = $this->invokeRestRequest('post', 'https://api.github.com/gists', [], [
       'description' => 'http log',
       'public' => TRUE,
-      'files' => [
-        'file.html' => ['content' => $element->getContent()],
-      ],
-    ]);
+      'files' => ['file.html' => ['content' => $file]]]
+    );
     $json = $request->json();
-    print_r('You asked to see the page content. Here is a gist contain the html: ' . $json['files']['file.html']['raw_url']);
+
+    return $json['files']['file.html']['raw_url'];
   }
+
   /**
    * @Then /^I should print page to "([^"]*)"$/
    */
@@ -1058,8 +1070,8 @@ class FeatureContext extends DrupalContext {
     // Hashing table, and define variables for later.
     $hash = $table->getRows();
 
-    if (isset($json->messages)) {
-      foreach ($json->messages as $message) {
+    if (isset($json->data)) {
+      foreach ($json->data->messages as $message) {
         $error = array();
         foreach ($hash as $table_row) {
           if (isset($message->arguments->{$table_row[0]})) {
@@ -1114,8 +1126,8 @@ class FeatureContext extends DrupalContext {
     // Hashing table, and define variables for later.
     $hash = $table->getRows();
 
-    if (isset($json->messages)) {
-      foreach ($json->messages as $message) {
+    if (isset($json->data)) {
+      foreach ($json->data as $message) {
         $error = array();
         foreach ($hash as $table_row) {
           if (isset($message->arguments->{$table_row[0]})) {
@@ -1196,6 +1208,13 @@ class FeatureContext extends DrupalContext {
    */
   public function iSetTheVariableTo($variable, $value) {
     FeatureHelp::variableSet($variable, $value);
+  }
+
+  /**
+   * @When /^I delete the variable "([^"]*)"$/
+   */
+  public function iDeleteVariable($variable) {
+    variable_del($variable);
   }
 
   /**
@@ -1764,13 +1783,17 @@ class FeatureContext extends DrupalContext {
    * @When /^I edit the node "([^"]*)" in the group "([^"]*)"$/
    */
   public function iEditTheNodeInGroup($title, $group) {
-    $nid = FeatureHelp::GetNodeIdInVsite($title, $group);
+    $nid = FeatureHelp::getNodeIdInVsite($title, $group);
     $purl = FeatureHelp::GetNodeVsitePurl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
+    $page = $purl . 'node/' . $nid . '/edit';
 
-    return array(
-      new Step\When('I visit "' . $purl . 'node/' . $nid . '/edit"'),
-    );
+    try {
+      $this->visit($page);
+    } catch (\Exception $e) {
+      print_r('An error: ' . $e->getMessage());
+      print_r('page: ' . $page);
+    }
   }
 
   /**
@@ -1957,7 +1980,9 @@ class FeatureContext extends DrupalContext {
    * @Given /^I display watchdog$/
    */
   public function iDisplayWatchdog() {
-    FeatureHelp::DisplayWatchdogs(NULL, TRUE);
+    $watchdog = FeatureHelp::DisplayWatchdogs();
+    $url = $this->createGist(implode("\n", $watchdog));
+    print_r('The watch dog url is: ' . $url . "\n");
   }
 
   /**
@@ -2182,7 +2207,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I update the node "([^"]*)" field "([^"]*)" to "([^"]*)"$/
    */
   public function iUpdateTheNodeFieldTo($title, $field, $value) {
-    $nid = FeatureHelp::GetNodeId($title);
+    $nid = FeatureHelp::getNodeId($title);
 
     $purl = FeatureHelp::GetNodeVsitePurl($nid);
     $purl = !empty($purl) ? $purl . '/' : '';
@@ -2458,7 +2483,7 @@ class FeatureContext extends DrupalContext {
   public function iFillInTheFieldWithTheNode($id, $title) {
     $nid = FeatureHelp::getNodeId($title);
     $element = $this->getSession()->getPage();
-    $value = $title . ' [' . $nid . ']';
+    $value = $title . ' (' . $nid . ')';
     $element->fillField($id, $value);
   }
 
@@ -3117,6 +3142,22 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @AfterStep
+   */
+  public function dumpInfoAfterFailedStep(StepEvent $event) {
+    if ($event->getResult() == StepEvent::FAILED)  {
+      $this->iDisplayWatchdog();
+
+      try {
+        $this->iShouldPrintPage();
+      }
+      catch (\Exception $e) {
+
+      }
+    }
+  }
+
+  /**
   * AfterStep
   */
   public function takeScreenshotAfterFailedStep($event)
@@ -3193,6 +3234,7 @@ class FeatureContext extends DrupalContext {
     $steps[] = new Step\When('I visit "admin/reports/os/' . $report . '"');
     $steps[] = new Step\When('I fill in "' . $fieldName . '" with "' . $fieldValue. '"');
     $table_rows = $table->getRows();
+
     // Iterate over each row, just so if there's an error we can supply
     // the row number, or empty values.
     foreach ($table_rows as $i => $checkbox) {
@@ -3316,23 +3358,15 @@ class FeatureContext extends DrupalContext {
     if (strpos($fileContent, "html>") !== FALSE) {
         throw new Exception(sprintf("CSV file was not created."));
     }
-    $contentArray = explode("\n", $fileContent);
 
-    $data = array();
-    $headers = array();
-    // get data from file
-    for ($count = 0; $count < count($contentArray); $count++) {
-      if ($count == 0) {
-        $headers = str_getcsv($contentArray[0]);
-      }
-      else {
-        $values = explode('", "', trim($contentArray[$count], '"'));
-        for ($column = 0; $column < count($values); $column++) {
-          $data[$count - 1][strtolower($headers[$column])] = $values[$column];
-        }
-      }
-    }
-    return $data;
+    $csv = array_map('str_getcsv', explode("\n", $fileContent));
+    array_walk($csv, function(&$a) use ($csv) {
+      $a = array_combine($csv[0], $a);
+    });
+    // remove column header
+    array_shift($csv);
+
+    return $csv;
   }
 
   /**

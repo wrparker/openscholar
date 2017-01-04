@@ -1624,18 +1624,6 @@ function os_system_info_alter(&$info, $file, $type) {
 function os_url_outbound_alter(&$path, &$options, $original) {
   global $user;
 
-  // Check if the user asked for any RESTWS services.
-  if (module_exists('restws')) {
-    foreach (array_keys(restws_get_format_info()) as $format) {
-      if (strpos($_GET['q'], $format) !== FALSE) {
-        // When accessing to any address the spaces module use purl_goto(). The
-        // purl_goto() use url() for knowing the path of the URL we accessing.
-        // url() will return eventually the path.
-        return;
-      }
-    }
-  }
-
   $loop_back_pages = array(
     'user',
     'user/pin',
@@ -2668,6 +2656,8 @@ function os_field_display_node_alter(&$display, $context) {
  *  Determine if an exception need to be thrown when the copy of the file
  *  failed. When set to false the reason for the failure will return as a text
  *  in the returned array.
+ * @param $vsite
+ *   The vsite which the file belong to.
  *
  * @throws Exception
  *  Throwing an error when the copy of the file failed and the $exception set to
@@ -2676,21 +2666,33 @@ function os_field_display_node_alter(&$display, $context) {
  *  Return array of the file or error if occurred and the type of the return
  *  data(file/text).
  */
-function os_copy_file($url, $exception = FALSE) {
+function os_copy_file($url, $exception = FALSE, $show_error = TRUE, $vsite = NULL) {
+
   if (empty($url)) {
-    return os_file_copy_set_error(t('You need to pass a url of the file.'), $exception);
+    return os_file_copy_set_error(t('You need to pass a url of the file.'), $exception, $show_error);
   }
 
   if (drupal_http_request($url)->code != 200) {
-    return os_file_copy_set_error(t("The file was not reachable."), $exception);
+    return os_file_copy_set_error(t("The file was not reachable."), $exception, $show_error);
   }
 
   if (!is_writeable('public://')) {
-    return os_file_copy_set_error(t("The file directory is not wrietable. Please check her permission."), $exception);
+    return os_file_copy_set_error(t("The file directory is not wrietable. Please check her permission."), $exception, $show_error);
   }
 
-  if (!$file = system_retrieve_file($url, 'public://', TRUE)) {
-    return os_file_copy_set_error(t('An error occurred due unknown reason.'), $exception);
+  $path = 'public://';
+
+  if (!empty($vsite)) {
+    $path .= '/' . $vsite . '/files';
+
+    if (!file_exists(drupal_realpath($path))) {
+      // The directory does not exists. We need to create the directory.
+      drupal_mkdir(variable_get('file_public_path', 'sites/default/files') . '/' . $vsite . '/files', NULL, TRUE);
+    }
+  }
+
+  if (!$file = system_retrieve_file($url, $path, TRUE)) {
+    return os_file_copy_set_error(t('An error occurred due unknown reason.'), $exception, $show_error);
   }
 
   return array(
@@ -2704,17 +2706,21 @@ function os_copy_file($url, $exception = FALSE) {
  *
  * @see os_copy_file().
  */
-function os_file_copy_set_error($message, $exception) {
+function os_file_copy_set_error($message, $exception, $show_error = TRUE) {
   watchdog('os', $message);
 
   if ($exception) {
     throw new Exception($message);
   }
 
-  return array(
-    'type' => 'error',
-    'message' => $message,
-  );
+  if ($show_error) {
+    return array(
+      'type' => 'error',
+      'message' => $message,
+    );
+  } else {
+    return TRUE;
+  }
 }
 
 /**

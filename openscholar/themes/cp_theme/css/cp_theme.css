@@ -1174,7 +1174,6 @@ div.error:before {
     font-weight: normal;
     height: 23px;
 }
-
 .description {
     margin: 5px 0;
     line-height: 1.231em;
@@ -1250,6 +1249,13 @@ form#os-maintenance .form-item .description {
   margin: 15px 0;
 }
 
+span[name="faq_sort"] .form-radios {
+    margin: 0 15px 15px 0;
+}
+.margin-bottom{
+    margin-bottom: 15px;
+}
+
 /* CKEDITOR - WYSIWYG */
 
 
@@ -1303,27 +1309,24 @@ li.pager-previous + li.pager-ellipsis {
 .view-content ~ .item-list ul.pager li.pager-next,
 .view-content ~ .item-list ul.pager li.pager-previous {
 	font-weight: bold;
-	}
-
-.page-node-revisions table.os-files-other-list td.mime,
-.os-files-other-list img.file-icon {
-    width:16px;
 }
 body.cke_editable img.media-element.file-default {
     padding-right: 15px;
 }
-
-body.cke_editable img.media-element.file-default[style*="float:"][style*="right;"] {
-    padding-left: 15px;
-    padding-right: 0;
-}
-
 body.cke_editable {
     background-color: #FFF;
     background: #FFF;
 }
+.file img.file-icon {
+    width:16px;
+}
+
 
 /* REVISIONS */
+.page-node-revisions table.os-files-other-list td.mime,
+.os-files-other-list img.file-icon {
+    width:16px;
+}
 body.page-node-revisions table.sticky-table caption {
     margin-bottom: 10px;
 }

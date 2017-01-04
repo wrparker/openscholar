@@ -19,7 +19,6 @@ dependencies[] = options
 dependencies[] = os
 dependencies[] = os_news
 dependencies[] = strongarm
-;dependencies[] = restws
 dependencies[] = views
 features[context][] = profiles_profiles
 features[ctools][] = context:context:3
