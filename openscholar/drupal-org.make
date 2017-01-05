@@ -172,6 +172,8 @@ projects[imageapi_optimize][download][revision] = 234f208
 
 projects[imagemagick][subdir] = "contrib"
 projects[imagemagick][version] = 1.0
+; projects[imagemagick][patch][] = "TBD"
+
 
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0

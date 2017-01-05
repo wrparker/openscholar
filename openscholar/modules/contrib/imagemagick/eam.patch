@@ -1,0 +1,243 @@
+--- ./openscholar/modules/contrib/imagemagick/imagemagick.module.orig	2017-01-05 11:23:09.000000000 -0500
++++ ./openscholar/modules/contrib/imagemagick/imagemagick.module	2017-01-05 11:23:14.000000000 -0500
+@@ -14,6 +14,9 @@
+  * Implements hook_image_toolkits().
+  */
+ function imagemagick_image_toolkits() {
++
++  error_log("EAM trace: Entering imagemagick_image_toolkits, line 18\n");
++
+   return array(
+     'imagemagick' => array(
+       'title' => t('ImageMagick'),
+@@ -26,6 +29,9 @@
+  * Retrieve settings for the ImageMagick toolkit.
+  */
+ function image_imagemagick_settings() {
++
++  error_log("EAM trace: Entering image_imagemagick_settings, line 33\n");
++
+   $form['imagemagick_quality'] = array(
+     '#type' => 'textfield',
+     '#title' => t('Image quality'),
+@@ -80,6 +86,9 @@
+  * Form element validation handler for image quality settings field.
+  */
+ function imagemagick_element_validate_quality($element, &$form_state) {
++
++  error_log("EAM trace: Entering imagemagick_element_validate_quality, line 90\n");
++
+   if (!is_numeric($element['#value']) || $element['#value'] < 0 || $element['#value'] > 100) {
+     form_error($element, t('!name must be a value between 0 and 100.', array('!name' => $element['#title'])));
+   }
+@@ -89,6 +98,9 @@
+  * Form element validation handler for convert executable path setting.
+  */
+ function imagemagick_element_validate_path($element, &$form_state) {
++
++  error_log("EAM trace: Entering imagemagick_element_validate_path, line 102\n");
++
+   if ($form_state['values']['image_toolkit'] == 'imagemagick') {
+     // During form validation, we want to prevent form submission, so regardless
+     // of whether _imagemagick_convert_exec() will trigger a user error (which
+@@ -107,6 +119,9 @@
+  * #after_build callback to output ImageMagick version or any errors in image toolkit settings form.
+  */
+ function _imagemagick_build_version($element, &$form_state) {
++
++  error_log("EAM trace: Entering _imagemagick_build_version, line 123\n");
++
+   // Do not attempt to output version information when the form is submitted.
+   // @see imagemagick_element_validate_path()
+   if ($form_state['process_input']) {
+@@ -144,6 +159,9 @@
+  *     be found or executed.
+  */
+ function _imagemagick_check_path($file) {
++
++  error_log("EAM trace: Entering _imagemagick_check_path, line 163\n");
++
+   $status = array(
+     'output' => '',
+     'errors' => array(),
+@@ -201,6 +219,9 @@
+  * @see image_resize()
+  */
+ function image_imagemagick_resize(stdClass $image, $width, $height) {
++
++  error_log("EAM trace: Entering image_imagemagick_resize, line 223\n");
++
+   $image->ops[] = '-resize ' . (int) $width . 'x' . (int) $height . '!';
+   $image->info['width'] = $width;
+   $image->info['height'] = $height;
+@@ -228,6 +249,9 @@
+  * @see image_rotate()
+  */
+ function image_imagemagick_rotate(stdClass $image, $degrees, $background = NULL) {
++
++  error_log("EAM trace: Entering image_imagemagick_rotate, line 253\n");
++
+   if (!isset($background)) {
+     $background = 'transparent';
+   }
+@@ -264,6 +288,9 @@
+  * @see image_crop()
+  */
+ function image_imagemagick_crop(stdClass $image, $x, $y, $width, $height) {
++
++  error_log("EAM trace: Entering image_imagemagick_crop, line 292\n");
++
+   // Even though the crop effect in Drupal core does not allow for negative
+   // offsets, ImageMagick supports them. Also note: if $x and $y are set to
+   // NULL then crop will create tiled images so we convert these to ints.
+@@ -285,6 +312,9 @@
+  * @see image_desaturate()
+  */
+ function image_imagemagick_desaturate(stdClass $image) {
++
++  error_log("EAM trace: Entering image_imagemagick_desaturate, line 316\n");
++
+   $image->ops[] = '-colorspace GRAY';
+   return TRUE;
+ }
+@@ -301,6 +331,9 @@
+  * @see image_load()
+  */
+ function image_imagemagick_load(stdClass $image) {
++
++  error_log("EAM trace: Entering image_imagemagick_load, line 335\n");
++
+   $image->ops = array();
+ 
+   drupal_alter('imagemagick_load', $image);
+@@ -322,6 +355,9 @@
+  * @see image_save()
+  */
+ function image_imagemagick_save(stdClass $image, $destination) {
++
++  error_log("EAM trace: Entering image_imagemagick_save, line 359\n");
++
+   $context = array(
+     'destination' => $destination,
+   );
+@@ -346,6 +382,9 @@
+  * @see image_get_info()
+  */
+ function image_imagemagick_get_info(stdClass $image) {
++
++  error_log("EAM trace: Entering image_imagemagick_get_info, line 386\n");
++
+   $details = FALSE;
+   $data = getimagesize(drupal_realpath($image->source));
+ 
+@@ -367,6 +406,9 @@
+  * Calls the convert executable with the specified filter.
+  */
+ function _imagemagick_convert($source, $destination, $args) {
++
++  error_log("EAM trace: Entering _imagemagick_convert, line 410\n");
++
+   // Backup original paths for alter hook context.
+   $source_original = $source;
+   $destination_original = $destination;
+@@ -441,15 +483,27 @@
+  *   - Error exit status code integer returned by the executable.
+  */
+ function _imagemagick_convert_exec($command_args, &$output = NULL, &$error = NULL, $convert_path = NULL) {
++
++    error_log("EAM trace: executing line www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:487\n");
++
++
++  error_log("EAM trace: Entering _imagemagick_convert_exec, line 487\n");
++
+   // $convert_path is only passed from the system-wide image toolkit form, on
+   // which the path to convert is configured.
+   // @see _imagemagick_check_path()
+   if (!isset($convert_path)) {
++
++    error_log("EAM trace: executing line www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:497\n");
++
+     // By using a default of NULL, we force users to setup the toolkit through
+     // the image toolkit administration UI. Sites enforcing a path via
+     // settings.php should know what they are doing.
+     $convert_path = variable_get('imagemagick_convert', NULL);
+     if (!isset($convert_path)) {
++
++    error_log("EAM trace: executing line www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:505\n");
++
+       return FALSE;
+     }
+   }
+@@ -458,6 +512,9 @@
+   $drupal_path = DRUPAL_ROOT;
+ 
+   if (strstr($_SERVER['SERVER_SOFTWARE'], 'Win32') || strstr($_SERVER['SERVER_SOFTWARE'], 'IIS')) {
++
++    error_log("EAM trace: executing line www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:516\n");
++
+     // Use Window's start command with the /B flag to make the process run in
+     // the background and avoid a shell command line window from showing up.
+     // @see http://us3.php.net/manual/en/function.exec.php#56599
+@@ -475,13 +532,23 @@
+     // stderr
+     2 => array('pipe', 'w'),
+   );
++      error_log("EAM trace: www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:535  command: $command \n");
+   if ($h = proc_open($command, $descriptors, $pipes, $drupal_path)) {
++
++    error_log("EAM trace: executing line www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:537\n");
++
+     $output = '';
+     while (!feof($pipes[1])) {
++
++    error_log("EAM trace: executing line www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:542\n");
++
+       $output .= fgets($pipes[1]);
+     }
+     $error = '';
+     while (!feof($pipes[2])) {
++
++    error_log("EAM trace: executing line www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:549\n");
++
+       $error .= fgets($pipes[2]);
+     }
+ 
+@@ -492,11 +559,20 @@
+ 
+     // Display debugging information to authorized users.
+     if (variable_get('imagemagick_debug', FALSE) && user_access('administer site configuration')) {
++
++    error_log("EAM trace: executing line www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:562\n");
++
+       debug($command, t('ImageMagick command'), TRUE);
+       if ($output !== '') {
++
++    error_log("EAM trace: executing line www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:567\n");
++
+         debug($output, t('ImageMagick output'), TRUE);
+       }
+       if ($error !== '') {
++
++    error_log("EAM trace: executing line www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:573\n");
++
+         debug($error, t('ImageMagick error'), TRUE);
+       }
+     }
+@@ -505,8 +581,17 @@
+     // be caught by Drupal's error handler, logged to the watchdog and
+     // eventually displayed to the user if configured to do so.
+     if ($return_code != 0) {
++
++      error_log("EAM trace: executing line www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:584\n");
++      error_log("EAM trace: www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:585  return_code: $return_code \n");
++      error_log("EAM trace: www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:585  error: $error \n");
++      error_log("EAM trace: www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:585  command: $command \n");
++
+       // If there is no error message, clarify this.
+       if ($error === '') {
++
++    error_log("EAM trace: executing line www/profiles/openscholar/modules/contrib/imagemagick/imagemagick.module:589\n");
++
+         $error = t('No error message.');
+       }
+       // Format $error with as full message, passed by reference.
