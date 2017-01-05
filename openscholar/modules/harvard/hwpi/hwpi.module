@@ -296,7 +296,7 @@ function hwpi_theme_picker_form_submit($form, &$form_state) {
 function hwpi_theme_set_defaults() {
   // Declares settings specific to HWPI themes.
   $settings = array(
-    'os_breadcrumbs_show_breadcrumbs' => 0,
+    'os_breadcrumbs_show_breadcrumbs' => 1,
     'enable_responsive' => 1,
   );
 

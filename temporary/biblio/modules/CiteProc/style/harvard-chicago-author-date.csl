@@ -165,7 +165,7 @@
         <if type="graphic report" match="any">
           <text macro="archive"/>
         </if>
-        <else-if type="article-journal bill book chapter legal_case legislation motion_picture paper-conference" match="none">
+        <else-if type="article-journal book chapter legal_case legislation motion_picture paper-conference" match="none">
           <text macro="archive"/>
         </else-if>
       </choose>
@@ -211,7 +211,7 @@
           </if>
         </choose>
       </if>
-      <else-if type="bill book graphic legislation motion_picture report song" match="any">
+      <else-if type="book graphic legislation motion_picture report song" match="any">
         <text variable="title" text-case="title"/>
         <group prefix=" (" suffix=")" delimiter=" ">
           <text term="version"/>
@@ -237,7 +237,7 @@
   </macro>
   <macro name="edition">
     <choose>
-      <if type="article article-magazine article-newspaper article-journal artwork bill book broadcast graphic legal_case legislation manuscript map motion_picture patent personal_communication report song thesis webpage" match="any">
+      <if type="article bill book graphic legal_case patent personal_communication report song webpage" match="any">
         <choose>
           <if is-numeric="edition">
             <group delimiter=" " prefix=". ">
@@ -250,7 +250,7 @@
           </else>
         </choose>
       </if>
-      <else-if type="chapter  paper-conference" match="any">
+      <else-if type="chapter paper-conference" match="any">
         <choose>
           <if is-numeric="edition">
             <group delimiter=" " prefix=", ">
@@ -267,7 +267,7 @@
   </macro>
   <macro name="locators">
     <choose>
-      <if type="article article-magazine artwork audiovisual bill broadcast case chart classical database film government-report hearing journal legislation manuscript map miscellaneous miscellaneous-section patent personal\_communication proceedings-conference presentation software thesis unpublished webarticle webprojectpage webservice website" match="any">
+      <if type="article article-magazine artwork audiovisual broadcast case chart classical government-report journal legislation manuscript map miscellaneous miscellaneous-section proceedings-conference presentation webprojectpage webservice website" match="any">
         <choose>
           <if variable="volume">
             <text variable="volume" prefix=" "/>
@@ -302,6 +302,27 @@
           </else>
         </choose>
       </if>
+      <else-if type="film software webarticle thesis hearing unpublished database" match="any">
+        <if variable="issue">
+          <text variable="issue" prefix=" (" suffix=")"/>
+        </if>
+      </else-if>      
+      <else-if type="patent" match="any">
+        <if variable="volume">
+          <text variable="volume" prefix=" "/>
+        </if>
+        <if variable="issue">
+          <text variable="issue" prefix=" (" suffix=")"/>          
+        </if>
+      </else-if>
+      <else-if type="bill personal\_communication" match="any">
+        <if variable="issue">
+          <text variable="issue" prefix=" (" suffix=")"/>
+        </if>
+        <if variable="page">
+          <text variable="page" prefix=", "/>
+        </if>
+      </else-if>
       <else-if type="legal_case">
         <text variable="volume" prefix=", "/>
         <text variable="container-title" prefix=" "/>
@@ -309,7 +330,7 @@
         <text variable="publisher-place" prefix=" "/>
         <text variable="publisher" prefix=", "/>
       </else-if>
-      <else-if type="book graphic legal_case motion_picture report song" match="any">
+      <else-if type="graphic legal_case motion_picture song" match="any">
         <group prefix=". " delimiter=". ">
           <group>
             <text term="volume" form="short" text-case="capitalize-first" suffix=" "/>
@@ -320,6 +341,9 @@
             <text term="volume" form="short" prefix=" " plural="true"/>
           </group>
         </group>
+        <text variable="page" prefix=", " form="short"/>
+      </else-if>
+      <else-if type="book report" match="any">
         <text variable="page" prefix=", " form="short"/>
       </else-if>
       <else-if type="chapter paper-conference" match="any">
@@ -351,18 +375,12 @@
   <macro name="locators-article">
     <choose>
       <if type="article-newspaper">
-        <group prefix=", " delimiter=", ">
-          <group delimiter=" ">
-            <text variable="edition"/>
-            <text term="edition"/>
+        <group delimiter=", ">
+          <group delimiter=" ">            
             <text variable="volume" prefix=", "/>
             <text variable="issue" prefix=", "/>
             <text variable="page" prefix=": "/>
-          </group>
-          <group>
-            <text term="section" form="short" suffix=" "/>
-            <text variable="section"/>
-          </group>
+          </group>          
         </group>
       </if>
       <else-if type="article-journal">
@@ -385,7 +403,7 @@
         <choose>
           <if locator="page" match="none">
             <choose>
-              <if type="bill book graphic legal_case legislation motion_picture report song" match="any">
+              <if type="book graphic legal_case legislation motion_picture song" match="any">
                 <choose>
                   <if variable="volume">
                     <group>
@@ -404,7 +422,7 @@
               </else>
             </choose>
           </if>
-          <else-if type="bill book graphic legal_case legislation motion_picture report song" match="any">
+          <else-if type="book graphic legal_case legislation motion_picture song" match="any">
             <number variable="volume" form="numeric" suffix=":"/>
           </else-if>
         </choose>
@@ -422,16 +440,23 @@
       </if>
     </choose>
     <choose>
-      <if type="legal_case" match="none">
+      <if type="chapter article-journal paper-conference proceedings-conference article-newspaper article-magazine webarticle thesis report film broadcast artwork software audiovisual hearing case legislation personal\_communication manuscript map chart unpublished database government-report classical miscellaneous miscellaneous-section journal website webservice webprojectpage presentation" match="any">
         <text variable="container-title" text-case="title"/>
       </if>
     </choose>
   </macro>
   <macro name="publisher">
-    <group delimiter=": ">
-      <text variable="publisher-place"/>
-      <text variable="publisher"/>
-    </group>
+    <choose>
+      <if type="chapter book paper-conference proceedings-conference report film artwork audiovisual bill" match="any">
+        <group delimiter=": ">
+          <text variable="publisher-place"/>
+          <text variable="publisher"/>
+        </group>
+      </if>
+      <else-if type="broadcast software case" match="any">
+        <text variable="publisher"/>
+      </else-if>
+    </choose>
   </macro>
   <macro name="date">
     <choose>
@@ -448,9 +473,11 @@
     </choose>
   </macro>
   <macro name="additional-date">
-    <if type="hearing report unpublished" match="any">
-      <text variable="container" prefix=", "/>
-    </if>
+     <choose>
+      <if type="hearing report unpublished article-journal article-newspaper article-magazine" match="any">
+        <text variable="container" prefix=", "/>
+      </if>
+    </choose>
   </macro>
   <macro name="day-month">
     <date variable="issued">
@@ -466,7 +493,7 @@
   </macro>
   <macro name="description">
     <choose>
-      <if type="interview">
+      <if type="interview" match="any">
         <group delimiter=". ">
           <text macro="interviewer"/>
           <text variable="medium" text-case="capitalize-first"/>
@@ -483,7 +510,7 @@
         <group delimiter=" " prefix=". ">
           <text variable="genre" text-case="capitalize-first"/>
           <choose>
-            <if type="report">
+            <if type="case" match="any">
               <text variable="number"/>
             </if>
           </choose>

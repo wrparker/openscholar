@@ -34,7 +34,7 @@
     #menu-bar #block-os-primary-menu {
         display: none;
     }
-    .region-header-third #block-os-search-solr-site-search.opened,
+    .region-header-third #block-boxes-solr-search-box.opened,
     .region-header-third #block-os-secondary-menu.opened,
     .region-header-third .os-custom-menu.opened,
     #menu-bar #block-os-primary-menu.opened {
@@ -99,6 +99,7 @@
         text-decoration: none;
         transition: none 0s ease 0s;
     }
+   
     /* KILL THE DOWN ARROWS IN THE MAIN MENU WHEN IN RESPONSIVE MODE */
     
     #menu-bar ul.nice-menu .menuparent > a:before {
@@ -123,7 +124,7 @@
     #menu-bar ul.nice-menu .menuparent a.active span {
         background: none !important;
     }
-    #menu-bar ul.nice-menu ul,
+    .menuparent ul span.open-submenu,
     #menu-bar ul.nice-menu ul ul {
         display: none !important;
     }
@@ -141,17 +142,34 @@
     #menu-bar #block-os-primary-menu a.active.active ~ ul li a:hover {
         background: none !important;
     }
+  .open-submenu {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: #efefef;
+    top: 0;
+    right: 0;
+}
+     .open-submenu:after {
+    content: url('../images/resp-menu-dwnarrw.png?123');
+   
+  
+}
+
+
+  
+    
     /*Secondary menu*/
     
     .at-panel.gpanel.panel-display.three-col.clearfix {
         padding-right: 15px;
     }
     .region-header-third #block-os-secondary-menu,
-    .region-header-third #block-os-search-solr-site-search,
+    .region-header-third #block-boxes-solr-search-box,
     .region-header-third .os-custom-menu {
         display: none;
     }
-    .region-header-third #block-os-search-solr-site-search.opened {
+    .region-header-third #block-boxes-solr-search-box.opened {
         background-color: #1E1E1E;
         display: block;
         padding: 12px 0;

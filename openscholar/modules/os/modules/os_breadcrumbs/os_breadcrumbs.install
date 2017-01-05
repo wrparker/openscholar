@@ -43,3 +43,10 @@ function os_breadcrumbs_update_7000() {
   $replacements = array('@count' => $count);
   return t($message, $replacements);
 }
+
+/**
+ * Update default breadcrumb variable in presets
+ */
+function os_breadcrumbs_update_7001() {
+  spaces_preset_load(null, null, true);
+}

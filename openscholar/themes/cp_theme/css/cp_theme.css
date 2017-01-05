@@ -33,21 +33,7 @@ fieldset {
 .vertical-tabs-panes fieldset {
     background: #FFF;
 }
-.region-footer {
-    background: #000;
-    color: #FFFFFF;
-    height: 30px;
-    bottom: 0;
-    position: fixed;
-    width: 100%;
-    z-index: 10;
-    text-align: right;
-}
 
-.region-footer .region-inner {
-    padding: 10px 20px 0 15px;
-    z-index: 1;
-}
 h3 {
     margin: 0;
 }
@@ -147,9 +133,10 @@ html.js input.throbbing {
 }
 input.form-submit, 
 a.button,
-.ui-dialog button,
-.ui-dialog input[type="button"],
-.ui-dialog input[type="submit"],
+
+.ui-dialog.ap-settings-form button,
+.ui-dialog.ap-settings-form input[type="button"],
+.ui-dialog.ap-settings-form input[type="submit"],
 a#edit-cancel,
 a.form-cancel {
     cursor: pointer;
@@ -325,7 +312,7 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 }
 /** OVERLAY MODAL OVERRIDES **/
 
-.ui-dialog button.ui-dialog-titlebar-close,
+.ui-dialog.ap-settings-form button.ui-dialog-titlebar-close,
 #overlay-close,
 #overlay-close:hover {
     background: url('../images/cp-sprite.png') no-repeat 0 -547px;
@@ -334,20 +321,21 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     position: relative;
     margin: -28px 10px;
 }
-.ui-dialog button.ui-dialog-titlebar-close {
+.ui-dialog.ap-settings-form button.ui-dialog-titlebar-close {
     float: right;
     margin: -8px 0;
-    ;
     border: 0;
     cursor: pointer;
 }
+
 .ui-state-default .ui-icon,
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon,
 .ui-state-active .ui-icon {
     background-image: none;
 }
-.ui-dialog .ui-dialog-titlebar,
+
+.ui-dialog.ap-settings-form .ui-dialog-titlebar,
 #overlay-titlebar {
     padding: 7px 10px 17px;
     position: relative;
@@ -358,7 +346,7 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     height: 24px;
 }
 #overlay-title,
-.ui-dialog-title {
+.ap-settings-form .ui-dialog-title {
     float: left;
     margin: 0;
     padding: 0.3em 0;
@@ -369,9 +357,12 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 .page-cp .ui-dialog-titlebar {
     margin-bottom: 22px;
 }
-.ui-dialog {
+.ui-dialog.ap-settings-form {
     padding: 0;
     top:10% !important;
+}
+.ui-dialog.ap-settings-form .ui-dialog-content {
+    overflow: visible;
 }
 #overlay-tabs {
     margin: -30px 0 0;
@@ -1177,7 +1168,6 @@ div.error:before {
     font-weight: normal;
     height: 23px;
 }
-
 .description {
     margin: 5px 0;
     line-height: 1.231em;
@@ -1245,12 +1235,19 @@ form#os-maintenance .form-item .description {
     white-space: nowrap;
    }
 
-.ui-dialog #os_taxonomy .os-taxonomy_label_heading {
+.ui-dialog.ap-settings-form #os_taxonomy .os-taxonomy_label_heading {
  margin: 0 0 8px 0;
 }
 
 .form-radios {
   margin: 15px 0;
+}
+
+span[name="faq_sort"] .form-radios {
+    margin: 0 15px 15px 0;
+}
+.margin-bottom{
+    margin-bottom: 15px;
 }
 
 /* CKEDITOR - WYSIWYG */
@@ -1309,13 +1306,11 @@ li.pager-previous + li.pager-ellipsis {
 	}
 
 .file img.file-icon {
-    width: 16px;
-}
-body.cke_editable img.media-element.file-default {
-    padding-right: 15px;
+    width:16px;
+
 }
 
-body.cke_editable img.media-element.file-default[style*="float:"][style*="right;"] {
-    padding-left: 15px;
-    padding-right: 0;
+body.cke_editable {
+    background-color: #FFF;
+    background: #FFF;
 }
