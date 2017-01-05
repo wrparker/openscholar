@@ -2829,8 +2829,8 @@ function os_files_file_delete($file) {
 function os_files_file_view_alter(&$build, $type) {
   if ($build['#bundle'] == 'video' && in_array($build['#view_mode'], array('os_files_link', 'os_files_link_icon'))) {
     $build['file']['link']['#path'] = 'file/' . $build['#file']->fid;
-  } else if (($build['#bundle'] == 'video' && in_array($build['#view_mode'], array('full', 'teaser')) ||
-             ($build['#bundle'] == 'html' && $build['#view_mode'] == 'teaser'))) {
+  } else if (($build['#bundle'] == 'video' && $build['#view_mode'] == 'full' && !isset($build['file']['file-info']['download']) && !isset($build['file']['file-info']['title'])) ||
+             ($build['#bundle'] == 'html' && $build['#view_mode'] == 'teaser')) {
     $build['file']['link'] = array(
       '#theme' => 'link',
       '#href' => 'file/' . $build['#file']->fid,
