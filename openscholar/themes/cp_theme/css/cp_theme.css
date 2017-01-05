@@ -1243,6 +1243,11 @@ form#os-maintenance .form-item .description {
   margin: 15px 0;
 }
 
+
+#edit-long-list-content-pagination.form-radios {
+  margin-bottom: 0;
+}
+
 span[name="faq_sort"] .form-radios {
     margin: 0 15px 15px 0;
 }
