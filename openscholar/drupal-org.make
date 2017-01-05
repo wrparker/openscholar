@@ -172,8 +172,7 @@ projects[imageapi_optimize][download][revision] = 234f208
 
 projects[imagemagick][subdir] = "contrib"
 projects[imagemagick][version] = 1.0
-; projects[imagemagick][patch][] = "TBD"
-
+projects[imagemagick][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/9160-Image-preview-not-showing-in-WYSIWYG/openscholar/modules/contrib/imagemagick/eam.patch"
 
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0

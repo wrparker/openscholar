@@ -118,7 +118,7 @@ function openscholar_update_7007() {
 /**
  * Reset Image Toolkit to GD (while ImageMagick issues are resolved)
  */
-function openscholar_update_7008() {
-  variable_set('image_toolkit', 'gd');
-  variable_set('imageapi_optimize_toolkit', 'gd');
-}
+//function openscholar_update_7008() {
+//  variable_set('image_toolkit', 'gd');
+//  variable_set('imageapi_optimize_toolkit', 'gd');
+//}
