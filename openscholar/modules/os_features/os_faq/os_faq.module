@@ -141,7 +141,7 @@ function os_faq_cp_settings() {
       '#description' => t('By default, clicking on an question will open the answer.
         By disabling slider behavior, you can force the answer to always appear.'),
       '#weight' => -1,
-      '#prefix' => '<label class="margin-bottom">Choose how FAQs will display</label>',
+      '#prefix' => '<label class="margin-bottom settings-form-heading">Choose how FAQs will display</label>',
     ),
   );
   $settings['faq_sort'] =  array(

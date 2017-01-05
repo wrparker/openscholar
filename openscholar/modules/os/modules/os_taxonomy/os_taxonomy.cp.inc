@@ -34,7 +34,7 @@ function os_taxonomy_cp_settings() {
   $form['os_taxonomy_display_term_under_content'] = $template + array(
       'form' => array(
         '#type' => 'checkbox',
-        '#prefix' => '<label class="os-taxonomy_label_heading">Choose where "See Also" terms display</label>',
+        '#prefix' => '<label class="os-taxonomy_label_heading settings-form-heading">Choose where "See Also" terms display</label>',
         '#title' => t('Under a page\'s main content area'),
         '#default_value' => variable_get('os_taxonomy_display_term_under_content', 1)
       )

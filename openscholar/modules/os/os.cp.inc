@@ -16,7 +16,7 @@ function os_cp_settings() {
     ),
     'form' => array(
       '#type' => 'radios',
-      '#title' => t('Choose how long lists of content will display'),
+      '#title' => t('<span class="settings-form-heading">Choose how long lists of content will display</span>'),
       '#default_value' => variable_get('long_list_content_pagination', 'infinite_scroll'),
       '#options' => array('infinite_scroll' => 'Infinite scrolling', 'pager' => 'Pagination'),
       '#description' => t('Pagination applies only to Blog, Links, News, FAQs, Publications and Profiles.')
