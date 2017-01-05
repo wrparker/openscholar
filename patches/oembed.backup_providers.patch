@@ -1,8 +1,8 @@
 diff --git a/oembedembedly/oembedembedly.module b/oembedembedly/oembedembedly.module
-index ba00d9d..699e60c 100644
+index ba00d9d..445fd5f 100644
 --- a/oembedembedly/oembedembedly.module
 +++ b/oembedembedly/oembedembedly.module
-@@ -27,11 +27,11 @@ function oembedembedly_menu() {
+@@ -27,17 +27,20 @@ function oembedembedly_menu() {
  /**
   * Calls and caches embed.ly services api.
   */
@@ -16,7 +16,16 @@ index ba00d9d..699e60c 100644
      $providers = $cache->data;
    }
    else {
-@@ -48,7 +48,13 @@ function oembedembedly_providers() {
+     $response = drupal_http_request('http://api.embed.ly/1/services');
+ 
+     if ($response->code == 200) {
++      if ($response->headers['content-encoding'] == 'gzip') {
++        $response->data = gzdecode($response->data);
++      }
+       $json = json_decode($response->data);
+       $providers = array();
+       foreach ($json as $provider) {
+@@ -48,7 +51,13 @@ function oembedembedly_providers() {
        $providers = FALSE;
      }
  
