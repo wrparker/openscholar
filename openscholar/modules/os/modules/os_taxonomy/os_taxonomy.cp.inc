@@ -42,7 +42,7 @@ function os_taxonomy_cp_settings() {
 
   foreach($active_content_types as $content_types_key => $content_types_val) {
     if ($content_types_val === reset($active_content_types)) {
-      $active_content_types_prefix = '<label class="os-taxonomy_label_heading">Under these content types when displayed in a list:</label>';
+      $active_content_types_prefix = '<label>Under these content types when displayed in a list:</label>';
     } else {
       $active_content_types_prefix = '';
     }
