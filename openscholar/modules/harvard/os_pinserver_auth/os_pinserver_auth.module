@@ -142,6 +142,20 @@ function os_pinserver_auth_form_cp_app_settings_form_alter(&$form, $form_state) 
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter() for user_profile_form.
+ */
+function os_pinserver_auth_form_user_profile_form_alter(&$form, $form_state) {
+  $user = $form_state['user'];
+
+  if (pinserver_user_has_associated_pin($user->uid)) {
+    $form['account']['#prefix'] = '<p>' . t('Your account is linked to HarvardKey.') . ' ' . l('Learn more about linking accounts', 'http://docs.openscholar.harvard.edu/logging-your-site#linking-your-harvardkey-to-your-openscholar-account', array('attributes' => array('target' => '_blank', 'rel' => 'noopener'))) . '.</p>';
+  }
+  else {
+    $form['account']['#prefix'] = '<p>' . t('Your account is not linked to HarvardKey.') . ' ' . l('Learn more about linking accounts', 'http://docs.openscholar.harvard.edu/logging-your-site#linking-your-harvardkey-to-your-openscholar-account', array('attributes' => array('target' => '_blank', 'rel' => 'noopener'))) . '.</p>';
+  }
+}
+
+/**
  * Implements hook_module_implements_alter().
  *
  * Adds pathauto support for core modules.

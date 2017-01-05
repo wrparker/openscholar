@@ -287,7 +287,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       $group = $f['group']['#title'];
       $id = $f['group']['#id'];
 
-      $access = !isset($f['form']['access']) ? $space_access : $f['form']['#access'];
+      $access = !isset($f['form']['#access']) ? $space_access : $f['form']['#access'];
 
       if ($access) {
         $settings_links[$id] = array(

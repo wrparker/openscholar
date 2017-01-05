@@ -10,13 +10,14 @@
    */
   m.directive('feCheckbox', [function () {
     return {
+      require: 'ngModel',
       scope: {
         name: '@',
-        value: '=',
+        value: '=ngModel',
         element: '='
       },
-      template: '<input type="checkbox" id="{{id}}" name="{{name}}" value="1" class="form-checkbox" ng-model="value" ng-true-value="1" ng-false-value="0"/><label class="option" for="{{id}}">{{title}}</label>',
-      link: function (scope, elem, attr) {
+      template: '<input type="checkbox" id="{{id}}" name="{{name}}" value="1" class="form-checkbox" ng-model="value" ng-disabled="element.disabled" ng-true-value="1" ng-false-value="0"/><label class="option" for="{{id}}">{{title}}</label>',
+      link: function (scope, elem, attr, ngModelController) {
         scope.id = attr['inputId'];
         scope.title = scope.element.title;
       }
@@ -30,11 +31,11 @@
     return {
       scope: {
         name: '@',
-        value: '=',
+        value: '=ngModel',
         element: '='
       },
       template: '<label for="{{id}}">{{title}}</label>' +
-      '<input type="textfield" id="{{id}}" name="{{name}}" ng-model="value" class="form-text">',
+      '<input type="textfield" id="{{id}}" name="{{name}}" ng-model="value" class="form-text" ng-disabled="element.disabled">',
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];
         scope.title = scope.element.title;
@@ -49,11 +50,11 @@
     return {
       scope: {
         name: '@',
-        value: '=',
+        value: '=ngModel',
         element: '='
       },
       template: '<label for="{{id}}">{{title}}</label>' +
-      '<textarea id="{{id}}" name="{{name}}" ng-model="value" class="form-textarea"></textarea>',
+      '<textarea id="{{id}}" name="{{name}}" ng-model="value" class="form-textarea" ng-disabled="element.disabled"></textarea>',
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];
         scope.title = scope.element.title;
@@ -68,13 +69,13 @@
     return {
       scope: {
         name: '@',
-        value: '=',
+        value: '=ngModel',
         element: '='
       },
       template: '<label for="{{id}}">{{title}}</label>' +
-      '<div id="{{id}}" class="form-radios">' +
+      '<div id="{{id}}" class="form-radios">' +   
         '<div ng-init="$parent.value=default_value" class="form-item form-type-radio" ng-repeat="(val, label) in options">' +
-          '<input type="radio" id="{{id}}-{{val}}" name="{{name}}" value="{{val}}" ng-model="$parent.value" class="form-radio"><label class="option" for="{{id}}-{{val}}" ng-bind-html="label"></label>' +
+          '<input type="radio" id="{{id}}-{{val}}" name="{{name}}" value="{{val}}" ng-model="$parent.value" class="form-radio" ng-disabled="element.disabled"><label class="option" for="{{id}}-{{val}}" ng-bind-html="label"></label>' +
         '</div>' +
       '</div> ',
       link: function (scope, elem, attr) {
@@ -95,10 +96,10 @@
     return {
       scope: {
         name: '@',
-        value: '=',
+        value: '=ngModel',
         element: '='
       },
-      template: '<label for="{{id}}">{{title}}<input type="submit" id="{{id}}" name="{{name}}" value="{{label}}" class="form-submit">',
+      template: '<label for="{{id}}">{{title}}<input type="submit" id="{{id}}" name="{{name}}" value="{{label}}" class="form-submit" ng-disabled="element.disabled">',
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];
         scope.label = scope.element.value;
@@ -120,7 +121,7 @@
     return {
       scope: {
         name: '@',
-        value: '=',
+        value: '=ngModel',
         element: '=',
       },
       template: '<div ng-bind-html="markup"></div>',

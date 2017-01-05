@@ -102,3 +102,15 @@ function hwpi_update_7006() {
     theme_enable(array('hwpi_onepage'));
 }
 
+/**
+ * Set Image Magick variables.
+ */
+function openscholar_update_7007() {
+  module_enable(array('imagemagick'));
+  variable_set('image_toolkit', 'imagemagick');
+  variable_set('imageapi_optimize_toolkit', 'imagemagick');
+  variable_set('imagemagick_convert', '/usr/bin/convert');
+  variable_set('imagemagick_debug', 1);
+  variable_set('imagemagick_gm', 0);
+  variable_set('imagemagick_quality', '75');
+}

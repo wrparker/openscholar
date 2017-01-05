@@ -1,17 +1,7 @@
-.mceEditor table.mceLayout.os-wysiwyg-collapsed {
-  border: 0;
-}
-
-.mceEditor table.mceLayout.os-wysiwyg-collapsed .mceIframeContainer {
-  border: 1px solid #CCC;
-}
-
-.mceEditor table.mceLayout.os-wysiwyg-collapsed > tbody > tr.mceFirst,
-.mceEditor table.mceLayout.os-wysiwyg-collapsed > tbody > tr.mceLast {
-  display: none;
-}
-
-textarea.os-wysiwyg-expandable + .wysiwyg-toggle-wrapper,
-textarea.os-wysiwyg-expandable + div.grippie + .wysiwyg-toggle-wrapper {
-  display: block !important;
+.cke_editable_inline {
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  padding-left: 8px;
+  height: 250px;
+  overflow-y: scroll;
 }

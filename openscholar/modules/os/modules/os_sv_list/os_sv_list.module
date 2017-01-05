@@ -300,6 +300,18 @@ function os_sv_list_terms_element_validate($element, &$form_state) {
 }
 
 /**
+ * Conditional field validation for show more link checkbox.
+ */
+function os_sv_list_after_build($form, &$form_state) {
+  // Removing field validation if Show "more" link checkbox is unchecked.
+  if ($form['details']['more_div']['more']['#value'] == 0) {
+    unset($form['details']['more_div']['more_link']['#needs_validation']);
+    unset($form['details']['more_div']['more_text']['#needs_validation']);
+  }
+  return $form;
+}
+
+/**
  * @function os_sv_list_vocabs_content_type
  *
  * AJAX callback for reload the vocabulary for the selected content type.

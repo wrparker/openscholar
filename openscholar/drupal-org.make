@@ -166,7 +166,12 @@ projects[html_title][subdir] = "contrib"
 projects[html_title][version] = 1.1
 
 projects[imageapi_optimize][subdir] = "contrib"
-projects[imageapi_optimize][version] = 1.0
+projects[imageapi_optimize][download][type] = git
+projects[imageapi_optimize][download][branch] = 7.x-1.x
+projects[imageapi_optimize][download][revision] = 234f208
+
+projects[imagemagick][subdir] = "contrib"
+projects[imagemagick][version] = 1.0
 
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0
@@ -436,12 +441,14 @@ projects[web_widgets][subdir] = "contrib"
 projects[web_widgets][version] = 1.0-alpha2
 
 projects[wysiwyg][subdir] = "contrib"
-projects[wysiwyg][version] = 2.2
-projects[wysiwyg][patch][] = "http://drupal.org/files/wysiwyg-remove-breaks-1964806-2.patch"
+projects[wysiwyg][version] = "2.x-dev"
+projects[wysiwyg][revision] = "9490393"
 projects[wysiwyg][patch][] = "http://drupal.org/files/wysiwyg-table-format.patch"
 
 projects[wysiwyg_filter][subdir] = "contrib"
-projects[wysiwyg_filter][version] = 1.6-rc2
+projects[wysiwyg_filter][version] = 1.x-dev
+projects[wysiwyg_filter][revision] = "4848d306a2f7526f7eeaf22edb9268d3c96654fe"
+projects[wysiwyg_filter][patch][] = "https://www.drupal.org/files/issues/wysiwyg-filter-border-radius-support-2692163-1.patch"
 
 ; Libraries.
 libraries[jquery.bgiframe][type] = "libraries"
@@ -465,6 +472,10 @@ libraries[jquery.cycle][download][url] = "https://raw.github.com/malsup/cycle/c2
 libraries[tinymce][type] = "libraries"
 libraries[tinymce][download][type] = "file"
 libraries[tinymce][download][url] = "http://github.com/downloads/tinymce/tinymce/tinymce_3.5.8.zip"
+
+libraries[ckeditor][type] = "libraries"
+libraries[ckeditor][download][type] = "get"
+libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.5.10/ckeditor_4.5.10_standard.zip"
 
 libraries[spyc][type] = "libraries"
 libraries[spyc][download][type] = "file"
@@ -507,6 +518,62 @@ libraries[hopscotch][download][url] = "https://github.com/linkedin/hopscotch/arc
 libraries[jquery.bgiframe][type] = "libraries"
 libraries[jquery.bgiframe][download][type] = "git"
 libraries[jquery.bgiframe][download][url] = "https://github.com/brandonaaron/bgiframe.git"
+
+; CKEDITOR plugins
+libraries[colorbutton][type] = "libraries"
+libraries[colorbutton][subdir] = "ckeditor/plugins"
+libraries[colorbutton][download][type] = "file"
+libraries[colorbutton][download][url] = "http://download.ckeditor.com/colorbutton/releases/colorbutton_4.5.8.zip"
+
+libraries[image2][type] = "libraries"
+libraries[image2][subdir] = "ckeditor/plugins"
+libraries[image2][download][type] = "file"
+libraries[image2][download][url] = "http://download.ckeditor.com/image2/releases/image2_4.5.11.zip"
+
+libraries[panelbutton][type] = "libraries"
+libraries[panelbutton][subdir] = "ckeditor/plugins"
+libraries[panelbutton][download][type] = "file"
+libraries[panelbutton][download][url] = "http://download.ckeditor.com/panelbutton/releases/panelbutton_4.5.8.zip"
+
+libraries[mathjax][type] = "libraries"
+libraries[mathjax][subdir] = "ckeditor/plugins"
+libraries[mathjax][download][type] = "git"
+libraries[mathjax][download][url] = "https://github.com/RoySegall/mathjax.git"
+
+libraries[justify][type] = "libraries"
+libraries[justify][subdir] = "ckeditor/plugins"
+libraries[justify][download][type] = "file"
+libraries[justify][download][url] = "http://download.ckeditor.com/justify/releases/justify_4.5.8.zip"
+
+libraries[font][type] = "libraries"
+libraries[font][subdir] = "ckeditor/plugins"
+libraries[font][download][type] = "file"
+libraries[font][download][url] = "http://download.ckeditor.com/font/releases/font_4.5.8.zip"
+
+libraries[lineutils][type] = "libraries"
+libraries[lineutils][subdir] = "ckeditor/plugins"
+libraries[lineutils][download][type] = "file"
+libraries[lineutils][download][url] = "http://download.ckeditor.com/lineutils/releases/lineutils_4.5.9.zip"
+
+libraries[widget][type] = "libraries"
+libraries[widget][subdir] = "ckeditor/plugins"
+libraries[widget][download][type] = "file"
+libraries[widget][download][url] = "http://download.ckeditor.com/widget/releases/widget_4.5.9.zip"
+
+libraries[colordialog][type] = "libraries"
+libraries[colordialog][subdir] = "ckeditor/plugins"
+libraries[colordialog][download][type] = "file"
+libraries[colordialog][download][url] = "http://download.ckeditor.com/colordialog/releases/colordialog_4.5.10.zip"
+
+libraries[indentblock][type] = "libraries"
+libraries[indentblock][subdir] = "ckeditor/plugins"
+libraries[indentblock][download][type] = "file"
+libraries[indentblock][download][url] = "http://download.ckeditor.com/indentblock/releases/indentblock_4.5.10.zip"
+
+libraries[dragresize][type] = "libraries"
+libraries[dragresize][subdir] = "ckeditor/plugins"
+libraries[dragresize][download][type] = "git"
+libraries[dragresize][download][url] = "https://github.com/openscholar/ck-dragresize.git"
 
 ; Angular js libraries.
 libraries[angular_select2][type] = "libraries"

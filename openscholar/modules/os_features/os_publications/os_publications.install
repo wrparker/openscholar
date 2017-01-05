@@ -1589,3 +1589,16 @@ function os_publications_update_7047() {
 function os_profiles_update_7048() {
   features_revert(array('os_publications' => array('field_base', 'field_instance')));
 }
+
+/**
+ * Fix CSL style to remove 'et al' for harvard-chicago-author-date.csl style
+ */
+function os_publications_update_7049() {
+  $citations = array(
+    'harvard-chicago-author-date',
+  );
+
+  foreach ($citations as $citation) {
+    os_publications_revert_citeproc_style($citation);
+  }
+}

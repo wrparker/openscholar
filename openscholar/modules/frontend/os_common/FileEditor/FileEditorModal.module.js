@@ -19,7 +19,32 @@
         loading = false;
       });
     }])
-    .directive('fileEditorModal', ['ModalService', function(ModalService) {
+    .service('FileEditorOpenModal', ['ModalService', function (ModalService) {
+
+      return {
+        open: function (fid, close) {
+          ModalService.showModal({
+            template: '<div><div class="file-entity-loading" ng-show="loading"><div class="file-entity-loading-message">Loading files...<br />' +
+                '<div class="progress-bar progress-striped"><div class="progress-bar-completed" style="width: 100%"></div></div></div></div>' +
+                '<div file-edit file="file" on-close="closeModal(saved)"></div></div>',
+            controller: 'FileEditorModalController',
+            inputs: {
+              fid: fid
+            }
+          })
+          .then (function (modal) {
+            modal.element.dialog(dialogParams);
+            modal.close.then(function(result) {
+              if (angular.isFunction(close)) {
+                close({result: result});
+              }
+            });
+          })
+        }
+      }
+
+    }])
+    .directive('fileEditorModal', ['FileEditorOpenModal', function(feom) {
 
       function link(scope, elem, attr) {
         var data = {
@@ -43,27 +68,10 @@
         event.preventDefault();
         event.stopPropagation();
         var fid = event.currentTarget.attributes.fid.value,
-          scope = event.data.scope;
+          scope = event.data.scope,
+          closer = scope.runViews ? scope.viewsClose : scope.onClose;
 
-        ModalService.showModal({
-          template: '<div><div class="file-entity-loading" ng-show="loading"><div class="file-entity-loading-message">Loading files...<br />' +
-            '<div class="progress-bar progress-striped"><div class="progress-bar-completed" style="width: 100%"></div></div></div></div>' +
-            '<div file-edit file="file" on-close="closeModal(saved)"></div></div>',
-          controller: 'FileEditorModalController',
-          inputs: {
-            fid: fid
-          }
-        }).then(function (modal) {
-          modal.element.dialog(dialogParams);
-          modal.close.then(function(result) {
-            if (scope.runViews) {
-              scope.viewsClose({result: result});
-            }
-            else {
-              scope.onClose({result: result});
-            }
-          })
-        });
+        feom.open(fid, closer);
 
         return false;
       }

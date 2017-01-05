@@ -11,13 +11,14 @@
     }])
     .directive('mediaBrowserField', ['mbModal', 'EntityService', function (mbModal, EntityService) {
 
-      function link(scope, elem, attr) {
+      function link(scope, elem, attr, ngModelController) {
         // everything to define
         var service = new EntityService('files', 'id');
         var field_root_id = "";
         if (scope.$parent.element) {
           field_root_id = scope.$parent.element.id;
           scope.title = scope.$parent.element.title;
+          scope.description = scope.$parent.description;
         }
         else {
           var field_root = elem.parent();
@@ -136,6 +137,10 @@
             }
           }
           store.setData(scope.field_name, scope.selectedFiles);
+          if (ngModelController) {
+            ngModelController.$setDirty();
+            ngModelController.$setTouched();
+          }
         }
 
         scope.removeFile = function ($index) {
@@ -147,6 +152,10 @@
             scope.$parent.value.splice($index, 1);
           }
           store.setData(scope.field_name, scope.selectedFiles);
+          if (ngModelController) {
+            ngModelController.$setDirty();
+            ngModelController.$setTouched();
+          }
         }
 
         scope.replaceFile = function ($inserted, $index) {
@@ -158,6 +167,10 @@
             scope.$parent.value.splice($index, 1, $inserted[0]);
           }
           store.setData(scope.field_name, scope.selectedFiles);
+          if (ngModelController) {
+            ngModelController.$setDirty();
+            ngModelController.$setTouched();
+          }
         }
 
         function highlightDupe(file, toHighlight) {
@@ -180,6 +193,7 @@
       if (mbModal.requirementsMet()) {
         return {
           link: link,
+          require: '?ngModel',
           templateUrl: function () {
             return Drupal.settings.paths.moduleRoot + '/templates/field.html?vers=' + Drupal.settings.version.mediaBrowser
           },

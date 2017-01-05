@@ -1213,9 +1213,11 @@ function os_pages_apachesolr_index_document_build_node(ApacheSolrDocument $doc, 
     if (module_exists('vsite') && ($groups = og_get_entity_groups('node',$entity))) {
       if ($groups['node'] && count($groups['node'])) {
         $vsite = spaces_load('og', current($groups['node']));
-        $override = $vsite->controllers->context->get("os_pages-page-{$entity->nid}:reaction:block");
-        if (!is_null($override)) {
-          $ctx->reactions['block'] = $override;
+        if (!empty($vsite->controllers->context)) {
+          $override = $vsite->controllers->context->get("os_pages-page-{$entity->nid}:reaction:block");
+          if (!is_null($override)) {
+            $ctx->reactions['block'] = $override;
+          }
         }
       }
     }

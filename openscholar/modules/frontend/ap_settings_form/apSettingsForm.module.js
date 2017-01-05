@@ -98,8 +98,8 @@
       })
 
       elem.bind('click', function (e) {
-        event.preventDefault();
-        event.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
 
         ModalService.showModal({
           controller: 'apSettingsFormController',
@@ -108,11 +108,19 @@
               '<div class="status" ng-show="status.length > 0"><div ng-repeat="m in status">{{m}}</div></div>' +
               '<div class="error" ng-show="errors.length > 0"><div ng-repeat="m in errors">{{m}}</div></div></div>' +
             '</div>' +
-            '<div class="form-wrapper">' +
+            '<div class="form-column-wrapper column-count-{{columnCount}}" ng-if="columnCount > 1">' +
+              '<div class="form-column column-{{column_key}}" ng-repeat="(column_key, elements) in columns">' +
+                '<div class="form-item" ng-repeat="(key, field) in elements | weight">' +
+                  '<div form-element element="field" value="formData[key]"><span>placeholder</span></div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="form-wrapper" ng-if="columnCount == 1">' +
               '<div class="form-item" ng-repeat="(key, field) in formElements | weight">' +
                 '<div form-element element="field" value="formData[key]"><span>placeholder</span></div>' +
               '</div>' +
-            '<div class="help-link" ng-bind-html="help_link"></div></div>' +
+            '</div>' +
+            '<div class="help-link" ng-bind-html="help_link"></div>' +
           '<div class="actions"><button type="submit" button-spinner="settings_form" spinning-text="Saving">Save</button><input type="button" value="Close" ng-click="close(false)"></div></form>',
           inputs: {
             form: scope.form
@@ -149,6 +157,8 @@
 
     $s.status = [];
     $s.errors = [];
+    $s.columns = {};
+    $s.columnCount = 0;
 
     apSettings.SettingsReady().then(function () {
       var settingsRaw = apSettings.GetFormDefinitions(form);
@@ -161,8 +171,14 @@
         var attributes = {
           name: k
         };
+
+        var col = settingsRaw[k]['#column'] || 'default';
+        if (typeof $s.columns[col] == 'undefined') {
+          $s.columns[col] = {};
+          $s.columnCount++;
+        }
         for (var j in settingsRaw[k]) {
-          if (j.indexOf('#') === 0 && j != '#default_value') {
+          if (j.indexOf('#') === 0 && (j != '#default_value' && j != '#column')) {
             var attr = j.substr(1, j.length);
             attributes[attr] = settingsRaw[k][j];
           }
@@ -171,8 +187,8 @@
         if (attributes.value) {
           attributes.origValue = attributes.value;
         }
-        //attributes.value = 'formData[' + k + ']';
-        $s.formElements[k] = attributes;
+
+        $s.formElements[k] = $s.columns[col][k] = attributes;
       }
     });
 

@@ -13,7 +13,8 @@ h1.page-title,
 }
 
 .not-front #content-column p,
-#content-column p {
+#content-column p,
+.cke_editable * {
 	font-family:georgia;
 }
 

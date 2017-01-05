@@ -1,11 +1,13 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto);
 
 
-body  {
+body,
+.cke_editable *  {
 	font-family: 'Roboto',Baskerville,Palatino,'Palatino Linotype','Book Antiqua','Times New Roman',serif;
     font-size: 14px;
  
 }
+
 
 h1#page-title {
     font-size: 32px;
@@ -126,9 +128,6 @@ border-top: none;
 #content-column h2, 
 #content-column h3, 
 #content-column h4, 
-#tinymce h2, 
-#tinymce h3, 
-#tinymce h4, 
 #content-column .field-name-body {
     font-family: 'Roboto',serif;
 }

@@ -879,6 +879,7 @@ ul.pager li.pager-item {
 /* Custom Person node style for /people page */
 .node-person.node-teaser .field-name-field-office-hours,
 .node-person.node-teaser .field-name-field-email,
+.node-person.node-teaser .field-name-og-vocabulary,
 .node-person.node-teaser .field-name-field-phone {
     clear: both;
     float: left;

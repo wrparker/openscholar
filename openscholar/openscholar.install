@@ -38,7 +38,7 @@ function openscholar_install() {
     'hwpi_modern',
     'hwpi_onepage',
     'hwpi_vibrant',
-	'weft',
+	  'weft',
     'os_basetheme',
     'os_default',
     'fairbanks_center',
@@ -93,10 +93,8 @@ function openscholar_install() {
   // Turn on the OG vocab term page access.
   variable_set('og_vocab_term_page_access', TRUE);
 
-  // Allow accessing resource node to all users.
-  foreach (array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID) as $rid) {
-    user_role_grant_permissions($rid, array('access resource node'));
-    user_role_grant_permissions($rid, array('access resource file'));
-  }
+  // Set image toolkit variables.
+  variable_set('imageapi_optimize_service', 'resmushit');
+  variable_set('image_toolkit', 'imageapi_optimize');
 }
 

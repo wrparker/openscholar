@@ -33,14 +33,14 @@ function os_wysiwyg_filter_default_formats() {
     p[align<center?justify?left?right],
     br,span,cite,code,blockquote,ul,ol,li,dl,dt,dd,img[!src|width|height|alt|title],
     sup,sub,
-    table[style|border|align<center?left?right|cellpadding|cellspacing|bgcolor],
-    tr[align<center?justify?left?right|valign],
-    td[colspan|rowspan|align<center?justify?left?right|valign],
-    th[colspan|rowspan|align<center?justify?left?right|valign],
-    thead,
-    caption,
+    table[scope|id|headers|style|border|align<center?left?right|cellpadding|cellspacing|bgcolor],
+    tr[scope|id|headers|align<center?justify?left?right|valign],
+    td[scope|id|headers|colspan|rowspan|align<center?justify?left?right|valign],
+    th[scope|id|headers|colspan|rowspan|align<center?justify?left?right|valign],
+    thead[scope|id|headers],
+    caption,figcaption,
     address,h2,h3,h4,h5,h6,pre,
-    strong/b,em/i,strike,u',
+    strong/b,em/i,strike,s,u,abbr[title]',
           'allow_comments' => 1,
           'nofollow_policy' => 'disabled',
           'nofollow_domains' => array(),
@@ -109,6 +109,7 @@ function os_wysiwyg_filter_default_formats() {
             'border-right-style' => 'border-right-style',
             'border-bottom-style' => 'border-bottom-style',
             'border-left-style' => 'border-left-style',
+            'border-radius' => 'border-radius',
           ),
           'style_dimension' => array(
             'height' => 'height',
@@ -120,13 +121,14 @@ function os_wysiwyg_filter_default_formats() {
             'min-width' => 0,
           ),
           'style_positioning' => array(
+            'vertical-align' => 'vertical-align',
+            'valign' => 'valign',
             'bottom' => 0,
             'clip' => 0,
             'left' => 0,
             'overflow' => 0,
             'right' => 0,
             'top' => 0,
-            'vertical-align' => 0,
             'z-index' => 0,
           ),
           'style_layout' => array(
@@ -145,9 +147,9 @@ function os_wysiwyg_filter_default_formats() {
           'style_table' => array(
             'border-collapse' => 'border-collapse',
             'border-spacing' => 'border-spacing',
+            'table-layout' => 'table-layout',
             'caption-side' => 0,
             'empty-cells' => 0,
-            'table-layout' => 'table-layout',
           ),
           'style_user' => array(
             'cursor' => 0,
@@ -158,7 +160,7 @@ function os_wysiwyg_filter_default_formats() {
             'zoom' => 0,
           ),
           'rule_valid_classes' => array(
-            0 => '*'
+            0 => '*',
           ),
           'rule_valid_ids' => array(
             0 => 'os-*',

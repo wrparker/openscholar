@@ -44,6 +44,46 @@ function os_image_gallery_os_app_info() {
 }
 
 /**
+ * Implements hook_cron().
+ */
+function os_image_gallery_cron() {
+  $last_fid = variable_get('os_last_un_compress_fid');
+  $recent_fid = variable_get('os_last_processed_fid', NULL);
+
+  if ($last_fid == $recent_fid) {
+    // We processed all the existing images before the image using resmushit.it.
+    return;
+  }
+
+  require_once drupal_get_path('module', 'imageapi_optimize') . '/services/resmushit.inc';
+
+  $query = new EntityFieldQuery();
+  $query
+    ->entityCondition('entity_type', 'file')
+    ->propertyCondition('type', 'image');
+
+  if ($recent_fid) {
+    $query->propertyCondition('fid', [$recent_fid, $last_fid], 'BETWEEN');
+  }
+  else {
+    $query->propertyCondition('fid', $last_fid, '<=');
+  }
+
+  $result = $query
+    ->propertyOrderBy('fid', 'ASC')
+    ->range(0, 25)
+    ->execute();
+
+  $files = file_load_multiple(array_keys($result['file']));
+
+  foreach ($files as $file) {
+    os_image_gallery_image_optimize(NULL, $file->uri);
+  }
+
+  variable_set('os_last_processed_fid', $file->fid);
+}
+
+/**
  * Implements hook_menu_alter().
  */
 function os_image_gallery_menu_alter(&$items) {
@@ -437,7 +477,7 @@ function os_image_gallery_remove_item_form_submit($form, &$form_state) {
  * Implements hook_views_pre_view() for os_image_gallery view.
  */
 function os_image_gallery_views_pre_view(&$view, &$display_id, &$args) {
-  if($view->name == 'os_image_gallery' && variable_get('os_taxonomy_display_term_under_content_media_gallery', 0)) {
+  if ($view->name == 'os_image_gallery' && variable_get('os_taxonomy_display_term_under_content_media_gallery', 0)) {
     $view->add_item($view->current_display, 'field', 'field_data_og_vocabulary', 'og_vocabulary', array(
       'table' => 'field_data_og_vocabulary',
       'label' => '',
@@ -447,6 +487,40 @@ function os_image_gallery_views_pre_view(&$view, &$display_id, &$args) {
       'element_default_classes' => 1,
       'settings' => array('concatenate' => 1),
     ), 'og_vocabulary');
-     drupal_add_js(drupal_get_path('module', 'os').'/theme/os_toggle.js');
+    drupal_add_js(drupal_get_path('module', 'os').'/theme/os_toggle.js');
   }
+}
+/**
+ * Implements hook_imageapi_optimize_info_alter().
+ */
+function os_image_gallery_imageapi_optimize_info_alter(&$info) {
+  $info['services']['resmushit']['callbacks']['process'] = 'os_image_gallery_image_optimize';
+}
+
+/**
+ * Overriding the original resmush.it callback function.
+ *
+ * @param $image
+ *   The name of the image.
+ * @param $dst
+ *   The destination.
+ *
+ * @return bool
+ */
+function os_image_gallery_image_optimize($image, $dst) {
+  // Call to the original function.
+  $results = imageapi_optimize_services_resmushit($image, $dst);
+
+  if (!$results) {
+    return false;
+  }
+
+  // Triggering a watchdog.
+  $explode = explode("/", $dst);
+  $params = array(
+    '@name' => end($explode),
+  );
+
+  watchdog('os_image_gallery', t('The image @name has been compressed.', $params));
+  return TRUE;
 }

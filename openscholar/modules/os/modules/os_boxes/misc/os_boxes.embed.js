@@ -15,6 +15,14 @@
         $(id).dialog('open');
         e.preventDefault();
       });
+      // Displaying widget embed link for widgets rendered within widgets on hover event for widgets, i.e columns, random etc.
+      $('.os-embed-link').closest('.block-boxes').each(function(i){
+        $(this).hover(function(){
+          $(this).find('.os-embed-link').show();
+        }, function(){
+          $(this).find('.os-embed-link').hide();
+        });
+      });
     }
   }
 
