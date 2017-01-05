@@ -22,7 +22,7 @@ function vsite_access_cp_settings() {
       ),
       'form' => array(
         '#type' => 'radios',
-        '#title' => t('<span class="settings-form-heading">Choose who can view your site. Visibility changes will take effect in 2 minutes.</span>'),
+        '#prefix' => '<label class="margin-bottom settings-form-heading">Choose who can view your site. Visibility changes will take effect in 2 minutes.</label>',
         '#default_value' => $wrapper->{VSITE_ACCESS_FIELD}->value(),
         '#options' => vsite_access_privacy_available_values(),
         '#attached' => array(
