@@ -45,11 +45,5 @@ function os_user_default_roles() {
     'weight' => '6',
   );
 
-  // Exported role: web services.
-  $roles['web services'] = array(
-    'name' => 'web services',
-    'weight' => 7,
-  );
-
   return $roles;
 }

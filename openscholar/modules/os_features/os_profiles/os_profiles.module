@@ -157,6 +157,10 @@ function os_profiles_init() {
       continue;
     }
 
+    // Get the node person file ID.
+    $wrapper = entity_metadata_wrapper('node', $node);
+    $original_photo = $wrapper->field_person_photo->value();
+
     $data = os_profiles_get_origin_node_values($node->field_original_destination_url[LANGUAGE_NONE][0]['value'], $fields);
 
     // Since using "put" will set NULL for missing fields we must send the original
@@ -184,11 +188,31 @@ function os_profiles_init() {
     // We need to replace the file ID in the field with the new file ID we got.
     $file = NULL;
     if ($person_photo) {
-      // If the file was updated within 2 min of the node then update it as well.
-      if (($changed - 120) < $person_photo['timestamp']) {
-        $copy_file = os_copy_file($person_photo['url'], TRUE);
+      // If the file was updated within 2 min of the node then update it as
+      // well.
+      $original_photo_dimension = image_get_info(drupal_realpath($original_photo['uri']));
 
-        if ($copy_file['type'] == 'file') {
+      if (($changed - 120) < $person_photo['timestamp']) {
+        $wrapper = entity_metadata_wrapper('node', $node);
+        $copy_file = os_copy_file($person_photo['url'], FALSE, FALSE, $wrapper->{OG_AUDIENCE_FIELD}->get(0)->value()->purl);
+
+        $new_photo_dimension = image_get_info(drupal_realpath($copy_file['file']->uri));
+
+        $identical_photos = TRUE;
+        foreach (array_keys($new_photo_dimension) as $key) {
+          if ($new_photo_dimension[$key] != $original_photo_dimension[$key]) {
+            $identical_photos = FALSE;
+          }
+        }
+
+        if ($identical_photos) {
+          // Delete the file.
+          if ($delete_file = file_load($copy_file['file']->fid)) {
+            file_delete($delete_file, TRUE);
+          }
+        }
+
+        if (!$identical_photos && $copy_file['type'] == 'file') {
           $file = $copy_file['file'];
         }
       }
@@ -261,6 +285,12 @@ function os_profiles_menu() {
     'access arguments' => module_exists('vsite') ? array() : array('administer site configuration'),
     'type' => MENU_CALLBACK,
     'file' => 'os_profiles.pages.inc',
+  );
+
+  $items['cp/people/get_profile_url/%'] = array(
+    'page callback' => 'os_profiles_get_profile_url',
+    'page arguments' => array(3),
+    'access callback' => TRUE,
   );
 
   return $items;
@@ -339,7 +369,7 @@ function os_profiles_process_node(&$vars) {
     //move the title inside
     $vars['content']['node_title'] = array(
       '#weight' => -50,
-      '#markup' => '<h1 ' . $vars['title_attributes'] . '><a href="' . $vars['node_url'] . '">' . $vars['title'] . '</a></h1>'
+      '#markup' => '<h1 ' . $vars['title_attributes'] . '><a href="' . $vars['node_url'] . '">' . $vars['title'] . '</a></h1>',
     );
     $vars['title'] = NULL;
   }
@@ -349,7 +379,7 @@ function os_profiles_process_node(&$vars) {
     // Move the title inside.
     $vars['content']['node_title'] = array(
       '#weight' => -99,
-      '#markup' => '<h1 ' . $vars['title_attributes'] . '><a href="' . $vars['node_url'] . '">' . $vars['title'] . '</a></h1>'
+      '#markup' => '<h1 ' . $vars['title_attributes'] . '><a href="' . $vars['node_url'] . '">' . $vars['title'] . '</a></h1>',
     );
     $vars['title'] = NULL;
   }
@@ -561,8 +591,8 @@ function os_profiles_sync_profile($form, $form_state) {
 
   $form['autocomplete'] = array(
     '#type' => 'textfield',
-    '#title' => '',
-    '#description' => t('Search the person by the first or last name.'),
+    '#title' => t('Search by first or last name'),
+    '#description' => '<span id="autocomplete-source-page"></span>',
     '#autocomplete_path' => 'cp/people/profile_autocomplete',
   );
 
@@ -573,8 +603,8 @@ function os_profiles_sync_profile($form, $form_state) {
 
   $form['url'] = array(
     '#type' => 'textfield',
-    '#title' => '',
-    '#description' => t('Enter the URL of the profile from another site. For example: http://www.example.com/people/john-doe'),
+    '#title' => t('Enter the URL of a profile from another site'),
+    '#description' => t('For example: http://www.example.com/people/john-doe'),
   );
 
   $form['actions'] = array(
@@ -823,7 +853,10 @@ function os_profiles_sync_profile_submit($form, $form_state) {
   // Retrieve the file from the original node.
   $file = NULL;
   if (!empty($file_url)) {
-    $copy_file = os_copy_file($file_url, TRUE);
+    if (empty($vsite)) {
+      $vsite = vsite_get_vsite();
+    }
+    $copy_file = os_copy_file($file_url, FALSE, FALSE, $vsite->group->purl);
 
     if ($copy_file['type'] == 'file') {
       $file = $copy_file['file'];
@@ -1143,20 +1176,6 @@ function os_profiles_manage_synced_profiles($url, $values) {
   if ($path) {
     drupal_http_request(url($path, array('query' => $values)));
   }
-}
-
-/**
- * Implements hook_restws_request_alter().
- *
- * Setting the person node UUID when accessing the node via JSON and the UUID
- * field is not populate.
- */
-function os_profiles_restws_request_alter(&$request) {
-  if ($request['resource']->resource() != 'node') {
-    return;
-  }
-
-  _os_profiles_restws_request_alter($request['id']);
 }
 
 /**
