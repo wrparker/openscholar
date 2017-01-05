@@ -73,7 +73,7 @@
       },
       template: '<label for="{{id}}">{{title}}</label>' +
       '<div id="{{id}}" class="form-radios">' +
-        '<div class="form-item form-type-radio" ng-repeat="(val, label) in options">' +
+        '<div ng-init="$parent.value=default_value" class="form-item form-type-radio" ng-repeat="(val, label) in options">' +
           '<input type="radio" id="{{id}}-{{val}}" name="{{name}}" value="{{val}}" ng-model="$parent.value" class="form-radio"><label class="option" for="{{id}}-{{val}}" ng-bind-html="label"></label>' +
         '</div>' +
       '</div> ',
@@ -81,6 +81,7 @@
         scope.id = attr['inputId'];
         scope.options = scope.element.options;
         scope.title = scope.element.title;
+        scope.default_value = scope.element.default;
       }
     }
   }]);
