@@ -175,15 +175,15 @@
         },
       }
     })
-    .directive('adminPanelMenuRow', ['RecursionHelper', 'adminMenuStateService', function (RecursionHelper, $menuState) {
+    .directive('adminPanelMenuRow', ['$compile', 'RecursionHelper', function ($compile, RecursionHelper) {
 
-        function link(scope, elem, attrs) {
-          scope.getListStyle = function (id) {
-            if ($menuState.GetState(id)) {
-              return {'display':'block'};
-            }
-            return {};
-          };
+      function link(scope, elem, attrs) {
+        scope.getListStyle = function (id) {
+          if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
+            return {'display':'block'};
+          }
+          return {};
+        };
 
         scope.isActive = function (row) {
           if (row.children) {
