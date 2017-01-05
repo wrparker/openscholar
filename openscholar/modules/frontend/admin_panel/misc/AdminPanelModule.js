@@ -75,7 +75,7 @@
         }); 
       
      
-    }]).directive('toggleOpen', ['$cookies', 'adminMenuStateService', function($cookies, $menuState) {
+    }]).directive('toggleOpen', ['$cookies', '$timeout', 'adminMenuStateService', function($cookies, $t, $menuState) {
       
       function openLink(elm) {
         elm.addClass('open');
@@ -106,7 +106,9 @@
           var parent = getAncestor(element, 'li');
 
           if ($menuState.GetState(attrs.id)) {
-            parent.addClass('open');
+            $t(function () {
+              openLink(parent);
+            });
           }
 
           element.bind('click', function() {
