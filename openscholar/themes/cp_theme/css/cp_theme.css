@@ -1250,6 +1250,10 @@ span[name="faq_sort"] .form-radios {
     margin-bottom: 15px;
 }
 
+.settings-form-heading {
+	font-size:1.2em;
+}
+
 /* CKEDITOR - WYSIWYG */
 
 
