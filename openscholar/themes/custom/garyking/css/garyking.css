@@ -530,6 +530,12 @@ a:visited {
     border-bottom: 3px solid #32526e;
     color: #444;
 }
+
+#menu-bar ul.nice-menu a:hover,
+#menu-bar ul.nice-menu .menuparent.over > a,
+#menu-bar ul.nice-menu .menuparent a:hover {
+    padding: 13px 14px 16px 14px;
+}
 #block-os-primary-menu .nice-menu li.last a {
     padding: 16px 22px 13px 22px;
     background: url('../images/sprite.png?456') no-repeat 3px 8px #065DB2;
@@ -570,7 +576,7 @@ ul.nice-menu-down,
 .research-by-topic li.term-methods {
     float: left;
     width: 475px;
-    background: url('../images/icons/curve.svg?1234') 203px 12px no-repeat;
+    background: url('../images/icons/curve.svg?1235') 203px 12px no-repeat;
     background-size: 70px;
     padding-top: 50px;
 }
