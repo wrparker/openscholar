@@ -28,3 +28,15 @@ Feature:
      When I visit "john/faq"
      Then I should see that the "faq" in the "LOP" are collapsed
 
+
+  @api @features_first
+  Scenario: Verify that body length limits are respected
+    Given I am logging in as "john"
+      And I set the variable "os_wysiwyg_maximum_length_body" to "50"
+      And I visit "john/node/add/faq"
+     When I fill in "edit-title" with "Gonna fail"
+      And I fill in "edit-body-und-0-value" with "01234567890123456789012345678901234567890123456789AAAAAA"
+      And I press "Save"
+     Then I should see "Answer cannot be longer than 50 characters but is currently 56 characters long."
+      And I delete the variable "os_wysiwyg_maximum_length_body"
+

@@ -1168,7 +1168,6 @@ div.error:before {
     font-weight: normal;
     height: 23px;
 }
-
 .description {
     margin: 5px 0;
     line-height: 1.231em;
@@ -1237,11 +1236,27 @@ form#os-maintenance .form-item .description {
    }
 
 .ui-dialog.ap-settings-form #os_taxonomy .os-taxonomy_label_heading {
- margin: 0 0 8px 0;
+ margin: 0 0 16px 0;
 }
 
 .form-radios {
   margin: 15px 0;
+}
+
+
+#edit-long-list-content-pagination.form-radios {
+  margin-bottom: 0;
+}
+
+span[name="faq_sort"] .form-radios {
+    margin: 0 15px 15px 0;
+}
+.margin-bottom{
+    margin-bottom: 15px;
+}
+
+.settings-form-heading {
+	font-size:1.2em;
 }
 
 /* CKEDITOR - WYSIWYG */
@@ -1300,15 +1315,8 @@ li.pager-previous + li.pager-ellipsis {
 	}
 
 .file img.file-icon {
-    width: 16px;
-}
-body.cke_editable img.media-element.file-default {
-    padding-right: 15px;
-}
+    width:16px;
 
-body.cke_editable img.media-element.file-default[style*="float:"][style*="right;"] {
-    padding-left: 15px;
-    padding-right: 0;
 }
 
 body.cke_editable {
