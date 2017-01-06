@@ -189,10 +189,10 @@ function os_links_cp_settings() {
      ),
      'form' => array(
        '#type' => 'radios',
-       '#default' => variable_get('os_links_ordering', 0),
-       '#options' => array(0 => 'Creation date, descending', 1 => 'Creation date, ascending', 2 => 'Alphanumeric, A-Z', 3 => 'Alphanumeric, Z-A'),
+       '#default_value' => variable_get('os_links_ordering', 1),
+       '#options' => array(1 => 'Creation date, descending', 2 => 'Creation date, ascending', 3 => 'Alphanumeric, A-Z', 4 => 'Alphanumeric, Z-A'),
        '#weight' => -1,
-       '#prefix' => '<label>Choose how links are ordered</label>',
+       '#prefix' => '<label class="settings-form-heading">Choose how links are ordered</label>',
      ),
    );
 
