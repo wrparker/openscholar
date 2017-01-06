@@ -73,7 +73,7 @@
         element: '='
       },
       template: '<label for="{{id}}">{{title}}</label>' +
-      '<div id="{{id}}" class="form-radios">' +   
+      '<div id="{{id}}" class="form-radios">' +
         '<div class="form-item form-type-radio" ng-repeat="(val, label) in options">' +
           '<input type="radio" id="{{id}}-{{val}}" name="{{name}}" value="{{val}}" ng-model="$parent.value" class="form-radio" ng-disabled="element.disabled"><label class="option" for="{{id}}-{{val}}" ng-bind-html="label"></label>' +
         '</div>' +
