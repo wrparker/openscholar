@@ -160,38 +160,32 @@
    *
    * Just markup that doesn't do anything.
    */
-  m.directive('feHelp', ['$timeout', function ($timeout) {
+  m.directive('feHelp', ['$timeout', '$sce', function ($timeout, $sce) {
     return {
       scope: {
         name: '@',
         value: '=ngModel',
         element: '=',
       },
-      template: '<div ng-bind-html="markup"></div>',
+      template: '<span class="gsfn-loading" ng-bind-html="markup">Loading...</span>',
       link: function (scope, elem, attr) {
-        console.log(attr);
         scope.gsfnid = scope.element.gsfnId;
-        $timeout(function() {
-          if (typeof GSFN !== "undefined") {
-            GSFN.loadWidget(scope.gsfnid, {"containerId":"getsat-widget-" + scope.gsfnid});
-          }
-        }, 2000);
-        angular.element(document.querySelector('.ui-icon-closethick')).click(function () {
-          if (typeof GSFN !== "undefined") {
-            GSFN.WidgetShell.destroy();
-            GSFN.IframeCount = 0;
-          }
-          window.location.reload();
-        });
-        angular.element(document.querySelector('body')).keydown(function (e) {
-          if (e.which == 27) {
+        scope.title = scope.element.title;
+        scope.markup = $sce.trustAsHtml(scope.element.markup);
+        if (localStorage.getItem('gsfnObject') !== null && localStorage.getItem('gsfnObject') != 'undefined') {
+          scope.markup = $sce.trustAsHtml(JSON.parse(localStorage.getItem('gsfnObject')));
+          angular.element(document.querySelectorAll(".gsfn-loading")).html('');
+        } else {
+          $timeout(function() {
             if (typeof GSFN !== "undefined") {
-              GSFN.WidgetShell.destroy();
-              GSFN.IframeCount = 0;
+              GSFN.loadWidget(scope.gsfnid, {"containerId":"getsat-widget-" + scope.gsfnid});
+              $timeout(function() {
+                var gsfnObjectHtml = JSON.stringify(angular.element(document.querySelectorAll(".getsat-widget")).children('iframe').wrap('<p/>').parent().html());
+                localStorage.setItem('gsfnObject', gsfnObjectHtml);
+              }, 2000);
             }
-            window.location.reload();
-          }
-        })
+          }, 1000);
+        }
       }
     }
   }]);
