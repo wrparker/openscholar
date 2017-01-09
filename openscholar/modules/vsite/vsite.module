@@ -4039,3 +4039,21 @@ function _vsite_cleanup_id_list($vsite_id_array) {
   }
   return $clean_array;
 }
+
+/**
+ * Implements hook_oembed_uri_directory().
+ *
+ * Adds the vsite purl to the url.
+ */
+function vsite_oembed_uri_fragments($uri) {
+  if ($vsite = vsite_get_vsite()) {
+    $url = 'oembed://' . drupal_encode_path($uri);
+    $file = file_uri_to_object($url);
+
+    // this is a new file or this file exists in another site already
+    // if this file exists in this vsite already, add nothing. We don't want to cause duplicates.
+    if (!isset($file->{OG_AUDIENCE_FIELD}) || $file->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id'] != $vsite->id) {
+      return array($vsite->group->purl);
+    }
+  }
+}

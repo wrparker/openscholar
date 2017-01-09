@@ -29,6 +29,9 @@
   #menu-bar #block-os-primary-menu a {
     color: #222 !important;
   }
+   #menu-bar #block-os-primary-menu a.active {
+    color: #FFF !important;
+ }
   #menu-bar #block-os-primary-menu li {
     border-bottom: 1px solid #f4f4f4!important;
     border-top: none!important;

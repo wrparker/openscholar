@@ -25,7 +25,7 @@ function vsite_cp_settings() {
         '#type' => 'checkbox',
         '#title' => t('Inherit parent site theme'),
         '#default_value' => $inherit_theme,
-        '#description' => t('Check to have newly created subsites start with this site\'s currently enabled theme by default.'),
+        '#description' => t('Check to have newly created subsites inherit this site\'s currently selected theme. This does not apply to custom themes.'),
       ),
       'group' => array(
         '#id' => 'vsite-subsite',
@@ -93,7 +93,7 @@ function vsite_cp_settings() {
         'extensions' => array('ico'),
         'types' => array('icon'),
       ),
-      '#title' => t('Upload Favicon'),
+      '#title' => t('Favicon'),
       '#description' => t('A 16x16 .ico file to be displayed in browser shortcut icons and tabs for any page on your site. For help generating a favicon file, try <a href="http://www.favicon.cc/" target="_blank">http://www.favicon.cc/</a>.'),
       '#default_value' => variable_get('site_favicon_fid', ''),
       '#upload_location' => $purl ? "public://{$purl}/files" : "public://",

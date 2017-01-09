@@ -9,14 +9,15 @@ Drupal.behaviors.osLinkExternal = {
       if ($(this).filter(':visible').length > 0) {
         var value = $('#edit-external', this).val();
         var target_option = $('#edit-target-option', this).prop('checked');
+        var link_title = $('input[name="link-text"]').val();
         // Trims the leading slash from the raw input value.
         value = value.replace(/^\//, "");
-        if (value.indexOf('http') == -1) {
+        // If given URL is relative, i.e not have 'http' and do not have '#' at the beginning, i.e not a named anchor.
+        if (value.indexOf('http') == -1 && value.indexOf('#') != 0) {
           value = Drupal.settings.basePath + Drupal.settings.pathPrefix + value;
         }
         Drupal.settings.osWysiwygLinkResult = value;
         Drupal.settings.osWysiwygLinkAttributes = {'data-url': Drupal.settings.osWysiwygLinkResult, 'title': link_title};
-
         if (target_option) {
           Drupal.settings.osWysiwygLinkAttributes.target = '_blank';
         }
