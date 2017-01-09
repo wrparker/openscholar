@@ -174,7 +174,6 @@
         scope.markup = $sce.trustAsHtml(scope.element.markup);
         if (localStorage.getItem('gsfnObject') !== null && localStorage.getItem('gsfnObject') != 'undefined') {
           scope.markup = $sce.trustAsHtml(JSON.parse(localStorage.getItem('gsfnObject')));
-          angular.element(document.querySelectorAll(".gsfn-loading")).html('');
         } else {
           $timeout(function() {
             if (typeof GSFN !== "undefined") {
