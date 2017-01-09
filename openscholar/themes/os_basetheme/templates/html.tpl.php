@@ -8,6 +8,7 @@
 <?php print $head; ?>
 <title><?php print $head_title; ?></title>
 <meta http-equiv="x-ua-compatible" content="IE=edge">
+<meta name="google-site-verification" content="PgCTgBVAKP67GuZByNaIcFBxCLBUa3xvMLIESlYGihY" />
   <?php if ($use_responsive_behaviors): ?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <?php else: ?>
