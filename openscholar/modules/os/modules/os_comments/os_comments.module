@@ -163,7 +163,7 @@ function os_comments_comment_save_vsite($comment_node_types) {
  */
 function os_comments_node_view($node, $view_mode) {
   // Does nothing unless the node's view mode is teaser.
-  if ($view_mode !== 'teaser' && $node->type != 'blog') {
+  if (!in_array($view_mode, array('teaser', 'full'))) {
     return;
   }
 
@@ -172,10 +172,6 @@ function os_comments_node_view($node, $view_mode) {
     return;
   }
 
-  // Does nothing if the Drupal comment settings are already set to open.
-  if ($node->comment == COMMENT_NODE_OPEN && $node->type != 'blog') {
-    return;
-  }
   // Gets the current comment source for this node type.
   $source = comment_sources_get_source($node->type);
 
@@ -186,15 +182,11 @@ function os_comments_node_view($node, $view_mode) {
     // Adds the source info to the node so we know to modify the node later.
     // @see os_comments_preprocess_node()
     $node->os_comments = $source;
-    if ($node->type == 'blog') {
       // checking comment count
-      $comment_count = isset($node->nid) ? db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() : 0;
-      $node->comment_count = $comment_count;
-    }
+    $comment_count = isset($node->nid) ? db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() : 0;
+    $node->comment_count = $comment_count;
   } else {
-    if ($node->type == 'blog') {
-      unset($node->comment);
-    }
+    unset($node->comment);
   }
 }
 
@@ -285,78 +277,11 @@ function os_comments_module_implements_alter(&$implementations, $hook) {
 
 /**
  * Implements hook_form_BASE_FORM_ID_alter() for node_form.
- *
- * Adds help text to customize comment settings.
- *
- * @see comment_sources_form_node_form_alter()
  */
 function os_comments_form_node_form_alter(&$form, $form_state, $form_id) {
-  // Hides settings for inappropriate comment types
-  $node = $form['#node'];
-  $source = comment_sources_get_source($node);
 
-  // If no sources or blog add / edit - hide the form element.
-  if (!$source || $node->type == 'blog') {
-    unset($form['comment_settings']);
-    return;
-  }
-
-  // Prepare description with link to app settings page for this app.
-  // If vsite is enabled and app can be determined from node type,
-  // then the link will go to the overlayed app settings form,
-  // Othewise, it will default to CP > Build > Apps.
-
-  // Default values in case we don't find the app info.
-  $app = '';
-  $settings = t('App settings');
-  $vsite = vsite_get_vsite();
-
-  if ($vsite) {
-    $app_settings_path = $vsite->get_absolute_url() . '/cp/build';
-  }
-  else {
-    $app_settings_path = url('/cp/build');
-  }
-
-  // Try to find this app's info...
-  $app_info = os_app_info();
-  foreach ($app_info as $app => $info) {
-    if (!empty($info['nodetypes']) && in_array($node->type, $info['nodetypes'])) {
-      // We found the app! Break now and $app is the module's machine name.
-      break;
-    }
-  }
-
-  // If we found the app, format a nice link for the end user.
-  if ($app) {
-    $settings_path = "cp/build/features/$app";
-    $menu_item = menu_get_item($settings_path);
-    // Include the App Settings page name if available
-    if (isset($menu_item['title']) && $menu_item['path'] == $settings_path) {
-      $settings = $menu_item['title'];
-    }
-    // Multi tenant
-    if ($vsite) {
-      $app_settings_path = $vsite->get_absolute_url() . "/cp/build/features/$app";
-    }
-    // Single tenant
-    else {
-      $app_settings_path = url("/cp/build/features/$app");
-    }
-  }
-
-  $change_settings_text = t('Go to <a href="@href" target="_blank">@settings</a> to change or disable comments on new posts.', array('@href' => $app_settings_path, '@settings' => $settings));
-  $form['comment_settings']['os_comments'] = array(
-    '#markup' => "<br/>$change_settings_text",
-    '#weight' => 10,
-  );
-
-  $form['comment_settings']['no_comment']['#options'] = empty($form['comment_settings']['no_comment']['#options']) ? array() : $form['comment_settings']['no_comment']['#options'];
-
-  // Change title to "Private comments".
-  if ($source == 'comment' && isset($form['comment_settings']['comment_status']['#title'])) {
-    $form['comment_settings']['comment_status']['#title'] = t('Private comments');
-  }
+  // Hide comment settings from blog add / edit page.
+  unset($form['comment_settings']);
 }
 
 /**
