@@ -1602,3 +1602,12 @@ function os_publications_update_7049() {
     os_publications_revert_citeproc_style($citation);
   }
 }
+
+/**
+ * Adding published as publication type.
+ */
+function os_publications_update_7051() {
+  $types = variable_get('biblio_years_text');
+  $types[0] = 'Published';
+  variable_set('biblio_years_text', $types);
+}
