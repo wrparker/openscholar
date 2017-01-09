@@ -1,5 +1,5 @@
 diff --git a/oembedembedly/oembedembedly.module b/oembedembedly/oembedembedly.module
-index ba00d9d..445fd5f 100644
+index ba00d9d..f72ef3f 100644
 --- a/oembedembedly/oembedembedly.module
 +++ b/oembedembedly/oembedembedly.module
 @@ -27,17 +27,20 @@ function oembedembedly_menu() {
@@ -12,7 +12,7 @@ index ba00d9d..445fd5f 100644
    $cache = cache_get('oembedly');
  
 -  if ($cache && isset($cache->data)) {
-+  if (!$reset || $cache && isset($cache->data)) {
++  if (!$reset && $cache && isset($cache->data)) {
      $providers = $cache->data;
    }
    else {
