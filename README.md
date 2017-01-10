@@ -26,6 +26,6 @@ For developers, see the [glossary](https://github.com/openscholar/openscholar/wi
 
 ## Utilities
 
-* [Scripts](https://github.com/openscholar/openscholar/wiki/Scripts)
+* [Scripts](https://github.com/openscholar/openscholar/wiki/Scripts) 
 
 
