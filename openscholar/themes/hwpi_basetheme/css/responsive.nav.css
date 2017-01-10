@@ -34,7 +34,7 @@
     #menu-bar #block-os-primary-menu {
         display: none;
     }
-    .region-header-third #block-os-search-solr-site-search.opened,
+    .region-header-third #block-boxes-solr-search-box.opened,
     .region-header-third #block-os-secondary-menu.opened,
     .region-header-third .os-custom-menu.opened,
     #menu-bar #block-os-primary-menu.opened {
@@ -165,11 +165,11 @@
         padding-right: 15px;
     }
     .region-header-third #block-os-secondary-menu,
-    .region-header-third #block-os-search-solr-site-search,
+    .region-header-third #block-boxes-solr-search-box,
     .region-header-third .os-custom-menu {
         display: none;
     }
-    .region-header-third #block-os-search-solr-site-search.opened {
+    .region-header-third #block-boxes-solr-search-box.opened {
         background-color: #1E1E1E;
         display: block;
         padding: 12px 0;

@@ -3,7 +3,7 @@
 /**
  * Perform any needed search setup functions
  */
-function os_search_solr_install(){
+function os_search_solr_install() {
 
   // Set the default search page to search/site
   variable_set('apachesolr_search_default_search_page', 'core_search');
@@ -18,6 +18,12 @@ function os_search_solr_install(){
 
   // Let the solr server parse/extract attachments
   variable_set('apachesolr_attachments_extract_using', 'solr');
+
+  // Change the facets terms hard limit to unlimited.
+  variable_set('apachesolr_query_class', array(
+    'file' => 'Solr_Base_Query',
+    'module' => 'apachesolr',
+    'class' => 'OsSolrBaseQuery'));
 
   // Enable the facets
   if(module_exists('facetapi')) {
@@ -60,7 +66,7 @@ function os_search_solr_install(){
 /**
  * Implements hook_uninstall().
  */
-function os_search_solr_uninstall(){
+function os_search_solr_uninstall() {
   variable_del('os_search_solr_reindex_by_bundles');
   variable_del('os_search_og_vocabulary_operator');
 }
@@ -75,5 +81,103 @@ function os_search_solr_update_7000() {
     $global_settings = $adapter->getFacetSettingsGlobal($realm);
     $global_settings->settings['hard_limit'] = -1;
     ctools_export_crud_save('facetapi', $global_settings);
+  }
+}
+
+/**
+ * Change the facetAPI handler.
+ */
+function os_search_solr_update_7001() {
+  variable_set('apachesolr_query_class', array(
+    'file' => 'Solr_Base_Query',
+    'module' => 'apachesolr',
+    'class' => 'OsSolrBaseQuery'));
+}
+
+/**
+ * Migrate search blocks to boxes.
+ */
+function os_search_solr_update_7002() {
+  if (!boxes_box::factory('os_search_solr_search_box', array())) {
+    throw new Exception('The new search plugin does not exist. Please clear the cache and re trigger this update path.');
+  }
+
+  $overrides = db_select('spaces_overrides', 'so')
+    ->fields('so', array('object_id', 'value', 'id'))
+    ->condition('object_type', 'context')
+    ->condition('object_id', '%reaction:block', 'LIKE')
+    ->condition('value', '%site-search%', 'LIKE')
+    ->orderBy('so.id')
+    ->execute();
+
+  foreach ($overrides as $override) {
+    $blocks = unserialize($override->value);
+
+    // In case the view is used, create a new block that will replace it.
+    unset($blocks['blocks']['os_search_db-site-search']);
+
+    $key = 'os_search_solr-site-search';
+    if (in_array($key, array_keys($blocks['blocks']))) {
+
+      // Replace the old one with the new instance.
+      $old_block = $blocks['blocks'][$key];
+      $blocks['blocks'][$key] = array(
+        'module' => 'boxes',
+        'delta' => 'solr_search_box',
+        'region' => $old_block['region'],
+        'weight' => $old_block['weight'],
+      );
+    }
+
+    $override->value = serialize($blocks);
+
+    db_update('spaces_overrides')
+      ->fields(array('value' => $override->value))
+      ->condition('id', $override->id)
+      ->condition('object_type', 'context')
+      ->condition('object_id', $override->object_id)
+      ->execute();
+
+    $text = t('Updating object id @object in vsite @id', array('@object' => $override->object_id, '@id' => $override->id));
+    if (drupal_is_cli()) {
+      drush_log($text, 'success');
+    }
+    else {
+      drupal_set_message($text);
+    }
+
+  }
+}
+
+/**
+ * Removing os_search_solr-site-search instances.
+ */
+function os_search_solr_update_7003() {
+
+  $overrides = db_select('spaces_overrides', 'so')
+    ->fields('so', array('object_id', 'value', 'id'))
+    ->condition('object_type', 'context')
+    ->condition('object_id', '%reaction:block', 'LIKE')
+    ->condition('value', '%site-search%', 'LIKE')
+    ->orderBy('so.id')
+    ->execute();
+
+  foreach ($overrides as $override) {
+    $blocks = unserialize($override->value);
+    $key = 'os_search_solr-site-search';
+    if (in_array($key, array_keys($blocks['blocks']))) {
+      if ($blocks['blocks'][$key]['module'] == 'boxes') {
+        // Replacing 'os_search_solr-site-search' key with 'boxes-solr_search_box' if those are alreadey migrated to boxes
+        $blocks['blocks']['boxes-solr_search_box'] = $blocks['blocks'][$key];
+        unset($blocks['blocks'][$key]);
+      }
+    }
+    $override->value = serialize($blocks);
+    db_update('spaces_overrides')
+      ->fields(array('value' => $override->value))
+      ->condition('id', $override->id)
+      ->condition('object_type', 'context')
+      ->condition('object_id', $override->object_id)
+      ->execute();
   }
 }

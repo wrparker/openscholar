@@ -165,6 +165,13 @@ Drupal.wysiwyg.plugins['os_link'] = {
       window = iframe.contentWindow,
       selected = '[Rich content. Click here to overwrite.]';
 
+    if ($('.form-item-external input', doc).val()) {
+      var osWysiwygLinkUrl = $('.form-item-external input', doc).val();
+      var urlRegex = new RegExp("^" + Drupal.settings.basePath + Drupal.settings.pathPrefix);
+      osWysiwygLinkUrl = osWysiwygLinkUrl.replace(urlRegex, "");
+      $('.form-item-external input', doc).val(osWysiwygLinkUrl.replace(/^\//, ""));
+    }
+
     if (this.selectLink(selection.node) && selection.content == '') {
       selection.content = selection.node.innerHTML;
     }

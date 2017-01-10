@@ -2,6 +2,13 @@
 
 
 /**
+ * Implements hook_enable().
+ */
+function admin_panel_enable() {
+  variable_set('admin_panel_enabled', 1);
+}
+
+/**
  * Enables the Admin Panel for all sites
  */
 function admin_panel_update_7001($ctx) {

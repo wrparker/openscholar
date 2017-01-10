@@ -5,6 +5,7 @@
       minHeight: 650,
       modal: true,
       position: 'center',
+      dialogClass: 'file-editor'
     },
     loading,
     fetchPromise;

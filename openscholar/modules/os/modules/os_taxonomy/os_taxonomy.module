@@ -2113,80 +2113,19 @@ function os_taxonomy_og_fields_info() {
 }
 
 /**
- * Implements hook_cp_settings().
- */
-function os_taxonomy_cp_settings() {
-  $form = array();
-  // Get active content types
-  $active_content_types = os_get_bundles(array(1,2));
-  $content_type_term_not_required = array('page' => 'Page',
-                                          'software_release' => 'Software Release',
-                                          'slideshow_slide' => 'Slideshow Image',
-                                          'class_material' => 'Class Material',
-                                          'feed_importer' => 'Feed importer',
-                                          );
-  $active_content_types = array_diff($active_content_types, $content_type_term_not_required);
-  foreach($active_content_types as $content_types_key => $content_types_val) {
-    ${'display_term_under_content_' . $content_types_key} = variable_get('os_taxonomy_display_term_under_content_' . $content_types_key, 0);
-    ${'default_value_' . $content_types_key} = isset(${'display_term_under_content_' . $content_types_key}) ? ${'display_term_under_content_' . $content_types_key} : 0;
-  }
-  $display_term_under_content = variable_get('os_taxonomy_display_term_under_content', 1);
-  $default_value = isset($display_term_under_content) ? $display_term_under_content : 1;
-
-  $form['os_taxonomy']['group'] = array(
-      '#id' => 'os_taxonomy',
-      '#title' => t('Taxonomy'),
-      '#weight' => 50,
-  );
-  $form['os_taxonomy']['form']['os_taxonomy_display_term_under_content'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Display terms under content on a page'),
-      '#default_value' => $default_value,
-  );
-
-  foreach($active_content_types as $content_types_key => $content_types_val) {
-      if($content_types_val === reset($active_content_types)) {
-        $active_content_types_prefix = '<p>Display see also terms under each item in list pages of content</p>';
-      } else {
-        $active_content_types_prefix = '';
-      }
-      $form['os_taxonomy']['form']['os_taxonomy_display_term_under_content_' . $content_types_key] = array(
-      '#prefix' => $active_content_types_prefix,
-      '#type' => 'checkbox',
-      '#title' => t($content_types_val),
-      '#default_value' => ${'default_value_' . $content_types_key},
-    );
-  }
-  $form['os_taxonomy']['submit'][] = 'os_taxonomy_cp_settings_node_submit';
-
-  return $form;
-}
-
-/**
- * Submit callback for cp/settings form.
+ * After submit for restful services.
  *
- * Clears boxes cache if 'Display terms under content' checkbox settings is changed.
- *
- * @see os_taxonomy_cp_settings()
+ * Clears box caches after taxonomy settings have been saved
  */
-function os_taxonomy_cp_settings_node_submit($form, &$form_state) {
-  // Get the current vsite.
-  $vsite = vsite_get_vsite();
-  $current_term_settings = variable_get('os_taxonomy_display_term_under_content', 1);
-  // Clearing os boxes cache if os_taxonomy_display_term_under_content field settings is changed.
-  if (isset($form_state['values']['os_taxonomy_display_term_under_content']) && $vsite && ($current_term_settings != $form_state['values']['os_taxonomy_display_term_under_content'])) {
+function os_taxonomy_clear_caches($value, $var) {
+  if ($vsite = vsite_get_vsite()) {
     cache_clear_all('os_boxes_cache:' . $vsite->id, 'cache_os_boxes', TRUE);
   }
-  // Clearing os boxes cache if any of os_taxonomy_display_term_under_content content type field settings is changed.
-  $active_content_types = os_get_bundles(array(1,2));
-  foreach($active_content_types as $content_types_key => $content_types_val) {
-    $current_term_settings = variable_get('os_taxonomy_display_term_under_content_' . $content_types_key, 1);
-    if (isset($form_state['values']['os_taxonomy_display_term_under_content_' . $content_types_key]) && $vsite && ($current_term_settings != $form_state['values']['os_taxonomy_display_term_under_content_' . $content_types_key])) {
-      cache_clear_all('os_boxes_cache:' . $vsite->id, 'cache_os_boxes', TRUE);
-      break;
-    }
+  else {
+    cache_clear_all('os_boxes_cache', 'cache_os_boxes', TRUE);
   }
 }
+
 
 /**
  * Implements hook_node_view_alter().

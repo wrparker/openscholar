@@ -1,3 +1,7 @@
+.ui-dialog.file-editor .ui-dialog-titlebar {
+  display: none;
+}
+
 div[file-edit] .full-url {
     float: left;
     padding: 5px 0;
