@@ -946,7 +946,17 @@ function os_publications_biblio_form_patent_validate(&$form, &$form_state) {
 function os_publications_entity_prepare_view($entities, $type, $langcode) {
   // Load a specific node into the user object for later theming.
   if ($type == 'node') {
+
     foreach ($entities as $nid => $entity) {
+
+      // Avoid redundancy in publication label, e.g., "United States patent US 123"
+      if (preg_match('/United\s+States(\s+of\s+America)?/i', $entity->biblio_edition) and ($entity->biblio_section == "US")) {
+        $entity->biblio_section = "";
+      }
+      if (preg_match('/United\s+States(\s+of\s+America)?/i', $entity->biblio_edition) and (preg_match('/US\s*/', $entity->biblio_volume))) {
+        $entity->biblio_volume = preg_replace('/US\s*/', "", $entity->biblio_volume);
+      }
+
       if($entity->type == 'biblio' && ($entity->biblio_year == 'In Press' || $entity->biblio_year == 'In Preparation' || $entity->biblio_year == 'Working Paper' ) && !empty($entity->biblio_date)) {
         $entity->biblio_year .= ", {$entity->biblio_date}";
         $entity->biblio_date = '';
@@ -1006,7 +1016,7 @@ function os_publications_biblio_entry_alter(&$entry, $node) {
 function _os_publications_biblio_entry_alter($markup, $node) {
 
   // Remove redundant "US" label(s) from patent title
-  $html = preg_replace("/United\s+States\s+of\s+America\s+patent(\s+US)+/", "United States of America patent", $markup);
+  $html = $markup;
 
   $style = variable_get('biblio_citeproc_style');
   // Pushing day and month in those both are present in Publication for Harvard - Chicago Author cititation
