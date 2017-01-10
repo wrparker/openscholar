@@ -785,10 +785,6 @@ function os_publications_alter_year_field(&$form, &$form_state) {
 
     $form['biblio_year_group']['biblio_year']['#prefix'] = '<div class="year-wrapper">';
     $form['biblio_year_group']['biblio_year']['#suffix'] = '</div>';
-    $form['biblio_year_group']['biblio_year_or'] = array(
-      '#weight' => 10,
-      '#markup' => t('or'),
-    );
 
     $form['biblio_year_group']['biblio_year_coded'] = array(
       '#type' => 'radios',
