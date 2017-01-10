@@ -174,25 +174,13 @@ Drupal.behaviors.osPublications = {
         }
       };
 
-      $('input[name=published]').click(function() {
-        // When clicking on the published mode disable the other modes and hide
-        // the other year input.
-        $('#edit-biblio-year-coded input').prop('checked', false);
-
-        if (Drupal.settings.chicago_author_date) {
-          changeMonthAndDay(false);
-        }
+      $("#edit-biblio-year-coded-0").click(function() {
+        changeMonthAndDay(false);
       });
 
-      $('#edit-biblio-year-coded input').click(function() {
-        $('input[name=published]').prop('checked', false);
-
-        if (Drupal.settings.chicago_author_date) {
-          changeMonthAndDay(true);
-        }
+      $("#edit-biblio-year-group input[type='radio']").not("#edit-biblio-year-coded-0").click(function() {
+        changeMonthAndDay(true);
       });
-
-      changeMonthAndDay($('input[name=published]:checked').val() == undefined);
     }
   };
 

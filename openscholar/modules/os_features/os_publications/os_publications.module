@@ -800,15 +800,6 @@ function os_publications_alter_year_field(&$form, &$form_state) {
   }
 
 
-  $form['biblio_year_group']['published'] = array(
-    '#type' => 'radio',
-    '#title' => t('Published'),
-  );
-
-  if ($form['#node']->biblio_year == 0) {
-    $form['biblio_year_group']['published']['#attributes']['checked'] = TRUE;
-  }
-
   unset($form['field_biblio_pub_month']);
   unset($form['field_biblio_pub_day']);
 
@@ -818,17 +809,13 @@ function os_publications_alter_year_field(&$form, &$form_state) {
   $form['biblio_year_group']['biblio_year']['#size'] = 100;
   $form['biblio_year_group']['biblio_year']['#attributes'] = array('placeholder' => t('Year'));
   $form['biblio_year_group']['biblio_year']['#weight'] = 0;
-  $form['biblio_year_group']['biblio_year_or'] = array(
-    '#weight' => 10,
-    '#markup' => t('or'),
-  );
 
   $form['biblio_year_group']['biblio_year_coded'] = array(
     '#type' => 'radios',
     '#options' => $years,
     '#multiple' => FALSE,
     '#weight' => 20,
-    '#default_value' => $form['#node']->biblio_year,
+    '#default_value' => 0,
   );
 
   $form['biblio_year_group']['biblio_year']['#weight'] = 30;
