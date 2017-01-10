@@ -80,6 +80,7 @@ function os_publications_install() {
       ->execute();
   }
 
+  $new_bibyears[0] = 'Published';
   variable_set('biblio_years_text', $new_bibyears);
 
   _reset_csl_map(FALSE);

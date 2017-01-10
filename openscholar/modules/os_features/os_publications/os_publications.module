@@ -840,6 +840,24 @@ function os_publications_alter_year_field(&$form, &$form_state) {
 
   // Adding submit handler to flip between the year and the date field.
   $form['#submit'][] = 'os_publications_year_date_flip';
+
+  // Change the element so we could place the published in the beginning of the
+  // row and separate it with an 'or' text.
+  $form['biblio_year_group']['biblio_year_coded']['#after_build'][] = 'os_publications_date_of_publication_alter';
+}
+
+/**
+ * After build callback.
+ *
+ * Change the element so we could place the published in the beginning of the
+ * row and separate it with an 'or' text
+ */
+function os_publications_date_of_publication_alter(&$element) {
+  // Since the published year type is 0 the key of the published radio is 0.
+  // Nothing special to wonder about.
+  $element[0]['#weight'] = 0;
+  $element[0]['#suffix'] = '&nbsp;<b>' . t('Or') . '</b>&nbsp;';
+  return $element;
 }
 
 /**
