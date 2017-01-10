@@ -1242,11 +1242,25 @@ form#os-maintenance .form-item .description {
    }
 
 .ui-dialog.ap-settings-form #os_taxonomy .os-taxonomy_label_heading {
- margin: 0 0 8px 0;
+ margin: 0 0 16px 0;
+}
+
+
+.ui-dialog.ap-settings-form #os_taxonomy .form-item {
+ margin: 12px 0;
+}
+
+.ui-dialog.ap-settings-form #os_taxonomy .form-item:last-of-type {
+ margin: 12px 0 18px;
 }
 
 .form-radios {
   margin: 15px 0;
+}
+
+
+#edit-long-list-content-pagination.form-radios {
+  margin-bottom: 0;
 }
 
 span[name="faq_sort"] .form-radios {
@@ -1254,6 +1268,10 @@ span[name="faq_sort"] .form-radios {
 }
 .margin-bottom{
     margin-bottom: 15px;
+}
+
+.settings-form-heading {
+	font-size:1.2em;
 }
 
 /* CKEDITOR - WYSIWYG */
