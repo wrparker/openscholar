@@ -189,6 +189,8 @@ Drupal.behaviors.osPublications = {
           $('#edit-biblio-year').hide();
         }
       });
+
+      changeMonthAndDay($('input[name=published]:checked').val() == undefined);
     }
   };
 

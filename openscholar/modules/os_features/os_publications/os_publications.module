@@ -737,6 +737,14 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#weight' => $form['biblio_year']['#weight'],
   );
 
+  $form['biblio_year_group']['biblio_year_coded'] = array(
+    '#type' => 'radios',
+    '#options' => $years,
+    '#multiple' => FALSE,
+    '#weight' => 20,
+    '#default_value' => in_array($node->biblio_year, array_keys($years)) ? $node->biblio_year : 0,
+  );
+
   // Adding date and month fields for publication day for Harvard - Chicago
   // Author citation.
   if ($chicago_author_date_mode) {
@@ -786,14 +794,6 @@ function os_publications_alter_year_field(&$form, &$form_state) {
 
     $form['biblio_year_group']['biblio_year']['#prefix'] = '<div class="year-wrapper">';
     $form['biblio_year_group']['biblio_year']['#suffix'] = '</div>';
-
-    $form['biblio_year_group']['biblio_year_coded'] = array(
-      '#type' => 'radios',
-      '#options' => $years,
-      '#multiple' => FALSE,
-      '#weight' => 20,
-      '#default_value' => in_array($node->biblio_year, array_keys($years)) ? $node->biblio_year : 0,
-    );
   }
 
   unset($form['field_biblio_pub_month']);
