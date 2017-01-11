@@ -94,7 +94,6 @@ CUR_DIR=$(pwd)
     cd $BUILD_ROOT/$DOCROOT/$OPSDIR
     $DRUSH make --no-core --contrib-destination $CUR_DIR/$BUILD_ROOT/openscholar/os-ops.make .
     cd $CUR_DIR
-    patch -p0 < scripts/trace.patch
   fi
 )
 
