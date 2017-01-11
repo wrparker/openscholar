@@ -1171,6 +1171,7 @@ function os_importer_round_hour($hour) {
 function os_importer_cp_settings() {
   $settings = array();
   $app_info = os_app_info();
+  $purl = vsite_get_purl();
   $importer_menu_title = array(
   	'blog' => 'Blog entry',
   	'biblio' => 'Publication',
@@ -1252,7 +1253,7 @@ function os_importer_cp_settings() {
         );
       }
 
-      $settings['os_importer_content_format_' . $node_type] = array(
+      $settings['os_importer_content_format-' . $node_type] = array(
         'group' => array(
           '#id' => 'os_importer_content_' . $node_type,
           '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
@@ -1263,9 +1264,9 @@ function os_importer_cp_settings() {
       );
 
       $template_markup = '<div class="import-help element-hidden rss-help-wrapper">' . $rss_feed_helptext . '</div>';
-      $template_markup .= '<div class="import-help csv-help-wrapper">' . l(t('Download a template'), 'cp/os-importer/' . $node_type . '/template') . '</div>';
+      $template_markup .= '<div class="import-help csv-help-wrapper">' . l(t('Download a template'), (isset($purl) ? $purl . '/' : '') . 'cp/os-importer/' . $node_type . '/template') . '</div>';
 
-      $settings['os_importer_download_template_' . $node_type] = array(
+      $settings['os_importer_download_template-' . $node_type] = array(
         'group' => array(
           '#id' => 'os_importer_content_' . $node_type,
           '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
@@ -1279,9 +1280,8 @@ function os_importer_cp_settings() {
           '#weight' => -5,
         ),
       );
-
-      $purl = vsite_get_purl();
-      $settings['os_importer_file_upload_' . $node_type] = array(
+      
+      $settings['os_importer_file_upload-' . $node_type] = array(
         'form' => array(
           '#type' => 'managed_file',
           '#custom_directive' => 'media-browser-field',
@@ -1306,10 +1306,9 @@ function os_importer_cp_settings() {
           '#weight' => 3,
           '#menu_parent' => 'import',
         ),
-        'submit' => 'os_importer_file_submit',
       );
 
-      $settings['os_importer_encode_' . $node_type] = array(
+      $settings['os_importer_encode-' . $node_type] = array(
         'group' => array(
           '#id' => 'os_importer_content_' . $node_type,
           '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
@@ -1326,7 +1325,7 @@ function os_importer_cp_settings() {
         ),
       );
 
-      $settings['os_importer_submit_' . $node_type] = array(
+      $settings['os_importer_submit-' . $node_type] = array(
         'group' => array(
           '#id' => 'os_importer_content_' . $node_type,
           '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
@@ -1338,9 +1337,48 @@ function os_importer_cp_settings() {
           '#type' => 'submit',
           '#weight' => 5,
         ),
+        'rest_submit' => 'os_importer_file_submit',
+        'submit_full_request' => TRUE,
       );
     }
   }  
   
   return $settings;
+}
+
+function os_importer_file_submit($request) {
+  foreach($request as $var => $value) {
+    if (strpos($var, 'os_importer_submit-') === 0) {
+      $node_type = end(explode('-', $var));
+    }
+  }
+
+  $import_file_fid = $request['os_importer_file_upload-' . $node_type];
+  $import_file = file_load($import_file_fid);
+  $encode = $request['os_importer_encode-' . $node_type];
+  $extension = end(explode('.', $import_file->uri));
+  $bundle = os_importer_importable_content($node_type);
+
+  if (in_array($extension, array('csv', 'ical'))) {
+    $source = feeds_source($bundle[$extension]);
+    $fetcher_config = $source->getConfigFor($source->importer->fetcher);
+    $fetcher_config['source'] = $import_file->uri;
+    $fetcher_config['file'] = $import_file;
+    $fetcher_config['encode'] = $encode;
+    $source->setConfigFor($source->importer->fetcher, $fetcher_config);
+    $source->save();
+    $source->startImport();
+  }
+  else {
+    $node_type = $form_state['type'] == 'blog' ? 'blog_import' : 'feed_importer';
+    $node = entity_create('node', array(
+      'title' => $values['title'],
+      'type' => $node_type,
+      'language' => $language->language,
+      'uid' => $user->uid,
+    ));
+    $wrapper = entity_metadata_wrapper('node', $node);
+    $wrapper->field_rss_url->set($values['url']);
+    $wrapper->save();
+  }
 }
