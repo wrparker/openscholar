@@ -37,9 +37,9 @@ class os_boxes_feedreader extends os_boxes_default {
 
     // TODO: Remove this once we have a replacement in place for Google Feeds.
     $form['shutdown_notice'] = array(
-      '#markup' => t('<span class="warning">Google Feeds has shut down as of December 15th, 2016. This widget will be unavailable until
+      '#markup' => t('<div class="warning">Google Feeds has shut down as of December 15th, 2016. This widget will be unavailable until
         a replacement has been found and implemented. As of yet, we have no ETA for when this will be completed. Thank
-        for your patience.</span>')
+        for your patience.</div>')
     );
 
     return $form;
@@ -128,9 +128,9 @@ class os_boxes_feedreader extends os_boxes_default {
     // TODO: Remove this once we have a replacement in place for Google Feeds.
     $vsite = vsite_get_vsite();
     if (og_user_access('node', $vsite->id, 'edit boxes')) {
-      $block['content'] = t('<span class="warning">Google Feeds has shut down as of December 15th, 2016. This widget will be unavailable until
+      $block['content'] = t('<div class="warning">Google Feeds has shut down as of December 15th, 2016. This widget will be unavailable until
       a replacement has been found and implemented. This message will not appear for site visitors. Thank for your
-      patience.</span>');
+      patience.</div>');
     }
 
     return $block;
