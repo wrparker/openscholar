@@ -455,9 +455,7 @@ body.node-type-biblio .biblio-export,
 #main-content #content {
     margin-top: 24px;
 }*/
-.page-taxonomy-term #main-content #content {
-    margin-top: 30px;
-}
+
 .breadcrumb {
     position: relative;
     top: 68px;
@@ -869,3 +867,8 @@ ul.nice-menu-down,
     }
 }
 @media (max-width: 479px) {}
+
+/* TO BE REMOVED */
+img.file-icon {
+	width:16px;
+}
