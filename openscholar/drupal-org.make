@@ -3,10 +3,6 @@
 core = 7.x
 api = 2
 
-projects[drupal][type] = core
-projects[drupal][version] = 7.53
-projects[drupal][patch][] = "https://www.dropbox.com/s/d5dtthvrevphhqe/trace.patch"
-
 projects[advagg][subdir] = "contrib"
 projects[advagg][version] = 2.6
 
