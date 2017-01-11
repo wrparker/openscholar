@@ -169,6 +169,7 @@ projects[imageapi_optimize][subdir] = "contrib"
 projects[imageapi_optimize][download][type] = git
 projects[imageapi_optimize][download][branch] = 7.x-1.x
 projects[imageapi_optimize][download][revision] = 234f208
+projects[imageapi_optimize][patch][] = "https://www.dropbox.com/s/1erse5e125b51wa/imageapi_optimize.module.patch"
 
 projects[imagemagick][subdir] = "contrib"
 projects[imagemagick][version] = 1.0
