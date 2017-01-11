@@ -63,7 +63,7 @@ cd $ROOT
 # Build core and move the profile in place.
 (
   # Build core.
-  $DRUSH -v make openscholar/drupal-org-core.make $BUILD_ROOT/www-build
+  $DRUSH -v --no-clean make openscholar/drupal-org-core.make $BUILD_ROOT/www-build
 
   # Check if sites/default exists, which means it is an existing installation.
   if [ -d $BUILD_ROOT/$DOCROOT/sites/default ]; then
