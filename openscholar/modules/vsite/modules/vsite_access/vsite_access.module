@@ -163,8 +163,8 @@ function vsite_access_privacy_available_values() {
   $suffix = '</span>';
   $descriptions = array(
     VSITE_ACCESS_PUBLIC => t('Anyone on the Internet can view your site. Your site will show in search results. No sign-in required.'),
-    VSITE_ACCESS_UNINDEXED => t('Only site members can view your site. Your site will not be indexed by search engines.'),
-    VSITE_ACCESS_PRIVATE => t('Anyone who has the URL to your site can view your site. Your site will not be indexed by search engines.'),
+    VSITE_ACCESS_UNINDEXED => t('Anyone who has the URL to your site can view your site. Your site will not be indexed by search engines.'),
+    VSITE_ACCESS_PRIVATE => t('Only site members can view your site. Your site will not be indexed by search engines.'),
     VSITE_ACCESS_INTRANET_PRIVATE => t('Perminantly private, only people explicitly granted permission can access. Sign-in required.'),
   );
 

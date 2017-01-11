@@ -14,6 +14,9 @@ include_once 'os_files.features.inc';
 define('OS_FILE_FILEPATH_MULTITENANT', '[vsite:site-purl]/files');
 define('OS_FILE_FILEPATH_SINGLETENANT', 'share');
 
+// To filter out media files in span elements
+define('MEDIA_TOKEN_REGEX_SPAN', '/<span.*?data-file_info=\"%7B.*?%7D\".*?<\/span>/s');
+
 /**
  * Implements hook_init.
  * Ensures oembed plugin types are available
@@ -717,7 +720,6 @@ function os_files_delete_remove_reference($form, $form_state) {
  */
 function _os_files_delete_remove_reference_batch($nids, $file) {
   $nodes = node_load_multiple($nids);
-
   foreach ($nodes as $node) {
     $fields = field_info_instances('node', $node->type);
 
@@ -726,7 +728,7 @@ function _os_files_delete_remove_reference_batch($nids, $file) {
       $info = field_info_field($field);
 
       // Verify the field type.
-      if (!in_array($info['type'], array('file', 'imagefield_crop', 'image'))) {
+      if (!in_array($info['type'], array('file', 'imagefield_crop', 'image', 'media'))) {
         continue;
       }
 
@@ -751,8 +753,39 @@ function _os_files_delete_remove_reference_batch($nids, $file) {
       }
     }
 
+    // Cleaning node body
+    if (isset($node->body['und'][0]['value'])) {
+      $body = $node->body['und'][0]['value'];
+      $file_references = array();
+      // Search for media elements with json format
+      preg_match_all(MEDIA_TOKEN_REGEX, $body, $matches);
+      foreach ($matches[0] as $tag) {
+        $tag_strip = str_replace(array('[[', ']]'), '', $tag);
+        $tag_info = drupal_json_decode($tag_strip);
+        if (isset($tag_info['fid']) && $tag_info['type'] == 'media' && $tag_info['fid'] == $file->fid) {
+          // Delete file reference
+          $body = str_replace($tag, '', $body);
+        }
+      }
+      // Search for media elements with html format
+      preg_match_all(MEDIA_TOKEN_REGEX_SPAN, $body, $matches_alt);
+      foreach ($matches_alt[0] as $tag_span) {
+          // Search for media elements inside the span
+          preg_match_all(MEDIA_TOKEN_REGEX_ALT, $tag_span, $matches_alt_inner);
+          foreach ($matches_alt_inner[0] as $tag) {
+            $tag_strip = urldecode($tag);
+            $tag_info = drupal_json_decode($tag_strip);
+            if (isset($tag_info['fid']) && $tag_info['type'] == 'media' && $tag_info['fid'] == $file->fid) {
+              // Delete file reference
+              $body = str_replace($tag_span, '', $body);
+          }
+        }
+      }
+      // Update node content
+      $node->body['und'][0]['value'] = $body;
+    }
+    // Save node
     node_save($node);
-
     _os_files_delete_delete_orphan_slide($node);
   }
 }
@@ -773,7 +806,7 @@ function _os_files_delete_delete_orphan_slide($node) {
  * Finish callback function of the batch API.
  */
 function os_files_delete_remove_reference_finished() {
-  drupal_set_message(t('The file has been removed.'));
+  drupal_set_message(t('The file(s) have been removed.'));
 }
 
 /**
@@ -1315,6 +1348,7 @@ function os_files_imagefield_crop_process($element, $form_state, $form) {
   }
 
   unset($element['upload']);
+  unset($element['filename']);
   $element['upload_button']['#submit'] = array(
     'os_files_no_func'
   );
@@ -1609,32 +1643,31 @@ function os_files_file_download($uri){
  * @see http://community.openscholar.harvard.edu/openscholar/topics/better_files_media_management_and_display
  */
 function os_files_file_view($file, $view_mode, $langcode) {
-  if (!in_array($view_mode, array('os_files_title', 'teaser', 'full', 'os_files_thumbnail'))) {
+  if (!in_array($view_mode, array('os_files_link', 'os_files_title', 'teaser', 'full', 'os_files_thumbnail'))) {
     return;
   }
 
   $file->content['og_vocabulary'] = array(); //don't print this until it's useful.  terms only work with sv lists right now.
 
-  $icon = array(
-    '#theme' => 'os_file_icon',
-    '#file' => $file,
-    '#icon_directory' => drupal_get_path('module', 'os_files') . '/icons',
-  );
-
-  //icon, title, download
-  $content = array(
-    'file-info' => array(
-      '#prefix' => '<div class="file-info">',
-      '#suffix' => '</div>',
-      'icon' => $icon,
-      'title' => array(
-        '#theme' => 'link',
-        '#path' => 'file/' . $file->fid,
-        '#text' => $file->filename,
-        '#options' => array('attributes' => array('class' => array('entity-link')), 'html' => FALSE),
+  if ($view_mode == 'os_files_link') {
+    // Customize default icon for unknown file types, see @os_basetheme_file_link()
+    $file->view_mode = 'os_files_link';
+    return;
+  } else {
+    //title, download
+    $content = array(
+      'file-info' => array(
+        '#prefix' => '<div class="file-info">',
+        '#suffix' => '</div>',
+        'title' => array(
+          '#theme' => 'link',
+          '#path' => 'file/' . $file->fid,
+          '#text' => $file->filename,
+          '#options' => array('attributes' => array('class' => array('entity-link')), 'html' => FALSE),
+        ),
       ),
-    ),
-  );
+    );
+  }
 
   // HTML embeded files will not have any Download link.
   if ((!isset($file->oembed) || !$file->oembed) && $file->filemime != 'html/embed') {
@@ -1651,11 +1684,6 @@ function os_files_file_view($file, $view_mode, $langcode) {
     unset($file->os_file_description);
   }
 
-  if ($view_mode == 'full' && $file->filemime == 'html/embed') {
-    // Remove file icon in case its a embed widget with its content
-    unset($content['file-info']['icon']);
-  }
-
   //teasers get read more link
   if ($view_mode == 'teaser' && $file->os_file_description) {
     $readmore = array(
@@ -1669,7 +1697,6 @@ function os_files_file_view($file, $view_mode, $langcode) {
 
   //add thumbnail for list of images
   if (@$file->sv_list && @$file->sv_list_of_images) {
-    unset ($content['file-info']['icon']);
     switch ($view_mode) {
       case 'full':
         $img = $file->content['file'];
@@ -1709,7 +1736,6 @@ function os_files_file_view($file, $view_mode, $langcode) {
 
   //add thumb/colorbox for list of video/audio
   if (@$file->sv_list && (@$file->sv_list_of_videos || @$file->sv_list_of_audio)) {
-    unset ($content['file-info']['icon']);
 
     if (in_array($file->filemime, array('video/oembed', 'audio/oembed'))) {
       switch ($view_mode) {
@@ -1735,13 +1761,13 @@ function os_files_file_view($file, $view_mode, $langcode) {
       case 'image':
         $content['file-info']['file'] = $file->content['file']; //include embedded image
         $content['file-info']['file']['#style_name'] = 'os_files_xxlarge';
-        unset($content['file-info']['file']['#width'], $content['file-info']['file']['#height'], $content['file-info']['icon'], $content['file-info']['title']);
+        unset($content['file-info']['file']['#width'], $content['file-info']['file']['#height'], $content['file-info']['title']);
         break;
 
       case 'video':
         if (isset($file->oembed)) {
           $content['file-info']['file'] = $file->content['file']; //include thumbnail
-          unset($content['file-info']['icon'], $content['file-info']['title']);
+          unset($content['file-info']['title']);
         }
         break;
 
@@ -2709,6 +2735,7 @@ function _os_file_invalidate_cache($file) {
   }
 }
 
+
 function os_files_views_bulk_operations_form_alter(&$form, &$form_state, $vbo) {
   if((strpos($_GET['q'], 'cp/content/files') !== FALSE || strpos($_GET['q'], 'cp/content/files-private') !== FALSE)  && ($_POST['operation'] == 'action::views_bulk_operations_delete_item')){
     $form['actions']['submit']['#submit'][0] = 'os_files_bulk_delete_remove_reference';
@@ -2802,8 +2829,8 @@ function os_files_file_delete($file) {
 function os_files_file_view_alter(&$build, $type) {
   if ($build['#bundle'] == 'video' && in_array($build['#view_mode'], array('os_files_link', 'os_files_link_icon'))) {
     $build['file']['link']['#path'] = 'file/' . $build['#file']->fid;
-  } else if (($build['#bundle'] == 'video' && in_array($build['#view_mode'], array('full', 'teaser')) ||
-             ($build['#bundle'] == 'html' && $build['#view_mode'] == 'teaser'))) {
+  } else if (($build['#bundle'] == 'video' && $build['#view_mode'] == 'full' && !isset($build['file']['file-info']['download']) && !isset($build['file']['file-info']['title'])) ||
+             ($build['#bundle'] == 'html' && $build['#view_mode'] == 'teaser')) {
     $build['file']['link'] = array(
       '#theme' => 'link',
       '#href' => 'file/' . $build['#file']->fid,
@@ -2814,4 +2841,41 @@ function os_files_file_view_alter(&$build, $type) {
       '#options' => array('html' => TRUE, 'attributes' => array())
     );
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_files_form_system_file_system_settings_alter(&$form, $form_state) {
+
+  $entity_info = entity_get_info('file');
+
+  $form['os_files_mtime_query'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Add update time to file link'),
+    '#description' => t('When viewing the files form the file control panel, each file will get the last update time of the file.'),
+    '#default_value' => variable_get('os_files_mtime_query', TRUE),
+  );
+
+  $types = array();
+  foreach ($entity_info['bundles'] as $type => $info) {
+    if ($type == 'undefined') {
+      continue;
+    }
+
+    $types[$type] = $info['label'];
+  }
+
+  $form['os_files_mtime_query_file_types'] = array(
+    '#type' => 'select',
+    '#title' => t('File types'),
+    '#multiple' => TRUE,
+    '#options' => $types,
+    '#default_value' => variable_get('os_files_mtime_query_file_types', array('image', 'icon')),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="os_files_mtime_query"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
 }

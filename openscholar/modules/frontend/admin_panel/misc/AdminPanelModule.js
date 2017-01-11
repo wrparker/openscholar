@@ -75,7 +75,7 @@
         }); 
       
      
-    }]).directive('toggleOpen', ['$cookies', 'adminMenuStateService', function($cookies, $menuState) {
+    }]).directive('toggleOpen', ['$cookies', '$timeout', 'adminMenuStateService', function($cookies, $t, $menuState) {
       
       function openLink(elm) {
         elm.addClass('open');
@@ -106,7 +106,9 @@
           var parent = getAncestor(element, 'li');
 
           if ($menuState.GetState(attrs.id)) {
-            parent.addClass('open');
+            $t(function () {
+              openLink(parent);
+            });
           }
 
           element.bind('click', function() {
@@ -119,7 +121,7 @@
 
               togglers.each(function() {
                 var sibling = angular.element(this),
-                  id = sibling.find("span").children().first().attr('id');
+                  id = sibling.children().first().find("span").attr('id');
                 $menuState.SetState(id, false);
                 closeLink(sibling);
               });
@@ -175,15 +177,15 @@
         },
       }
     })
-    .directive('adminPanelMenuRow', ['RecursionHelper', 'adminMenuStateService', function (RecursionHelper, $menuState) {
+    .directive('adminPanelMenuRow', ['$compile', 'RecursionHelper', function ($compile, RecursionHelper) {
 
-        function link(scope, elem, attrs) {
-          scope.getListStyle = function (id) {
-            if ($menuState.GetState(id)) {
-              return {'display':'block'};
-            }
-            return {};
-          };
+      function link(scope, elem, attrs) {
+        scope.getListStyle = function (id) {
+          if (typeof(menu_state) !== 'undefined' && typeof(menu_state[id]) !== 'undefined' && menu_state[id]) {
+            return {'display':'block'};
+          }
+          return {};
+        };
 
         scope.isActive = function (row) {
           if (row.children) {
