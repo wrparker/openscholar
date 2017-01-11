@@ -121,7 +121,7 @@ function biblio_pm_import_ids($pmids, $terms = array(), $batch = FALSE, $session
   $nids = array();
   $dups = array();
   while ($start < $resmax && ($result = $Eclient->fetchRecords($start))) {
-    $start += count($result->xpath('//PubmedArticle|Article'));
+    $start += count($result->xpath('//PubmedArticle|PubmedBookArticle'));
     list($nid, $dup) =  _biblio_pm_create_node_from_xml($result, $terms, $batch, $session_id);
     $nids = array_merge($nids, $nid);
     $dups = array_merge($dups, $dup);
@@ -137,7 +137,7 @@ function _biblio_pm_create_node_from_xml($xml, $terms, $batch, $session_id) {
   $node = new stdClass();
   $data = new BiblioEntrezPubmedArticle();
 
-  foreach ($xml->xpath('//PubmedArticle|Article') as $article) {
+  foreach ($xml->xpath('//PubmedArticle|PubmedBookArticle') as $article) {
     $node = $data->setArticle($article)->getBiblioAsObject();
     if (isset($node)) {
       $dup = biblio_pm_check_md5($node->biblio_pubmed_id, $node->biblio_pubmed_md5);
