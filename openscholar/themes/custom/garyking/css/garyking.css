@@ -105,9 +105,16 @@ body.not-front,
     margin-top: 50px;
     display: table;
 }
-.node-type-page #main-content-header {
-    margin-top: 20px;
+
+.page-node #main-content-header {
+    height: 120px;
+    margin-top: 42px;
+   
 }
+
+/*.node-type-page #main-content-header {
+    margin-top: 20px;
+}*/
 #main-content-header h1#page-title {
     display: table-cell;
     vertical-align: middle;
@@ -435,16 +442,16 @@ body.node-type-biblio .biblio-export,
 .breadcrumb a {
     color: #FFF !important;
 }
-.not-front #content-panels,
+/*.not-front #content-panels,
 #main-content #content {
     margin-top: 24px;
-}
+}*/
 .page-taxonomy-term #main-content #content {
     margin-top: 30px;
 }
 .breadcrumb {
     position: relative;
-    top: 70px;
+    top: 68px;
 }
 .page-node .breadcrumb {
     top: 57px;
