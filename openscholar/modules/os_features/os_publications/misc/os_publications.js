@@ -176,10 +176,18 @@ Drupal.behaviors.osPublications = {
 
       $("#edit-biblio-year-coded-0").click(function() {
         changeMonthAndDay(false);
+
+        if (Drupal.settings.chicago_author_date_mode == false) {
+          $('#edit-biblio-year').show();
+        }
       });
 
       $("#edit-biblio-year-group input[type='radio']").not("#edit-biblio-year-coded-0").click(function() {
         changeMonthAndDay(true);
+
+        if (Drupal.settings.chicago_author_date_mode == false) {
+          $('#edit-biblio-year').hide();
+        }
       });
     }
   };
