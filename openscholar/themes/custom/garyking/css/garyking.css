@@ -101,16 +101,23 @@ body.not-front,
     margin-top: 46px;
 }
 #main-content-header {
-    height: 100px;
+    height: 120px;
     margin-top: 50px;
     display: table;
 }
 
 .page-node #main-content-header {
-    height: 120px;
+    margin-top: 55px;
+   
+}
+
+.node-type-biblio #main-content-header {
+ 
     margin-top: 42px;
    
 }
+
+
 
 /*.node-type-page #main-content-header {
     margin-top: 20px;
@@ -202,6 +209,7 @@ body.node-type-biblio .biblio-export,
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-head a {
     font-weight: bold !important;
 }
+#pub-cover-content-wrapper,
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-methods .term-head {
     margin-top: 15px;
 }
@@ -432,6 +440,7 @@ body.node-type-biblio .biblio-export,
 .ui-tabs ul.ui-tabs-nav li.ui-tabs-active {
     border-top: 4px solid #ff884d;
 }
+.node-biblio table.os-files-other-list,
 #content-panels .block.front-top-cloumn,
 #content-panels .front-lop-software-tabs .block {
     margin-bottom: 0;
