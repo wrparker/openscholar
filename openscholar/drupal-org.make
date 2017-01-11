@@ -173,7 +173,7 @@ projects[imageapi_optimize][patch][] = "https://www.dropbox.com/s/1erse5e125b51w
 
 projects[imagemagick][subdir] = "contrib"
 projects[imagemagick][version] = 1.0
-; projects[imagemagick][patch][] = "https://www.dropbox.com/s/c7xgc4jjwc9zcy7/imagemagick.module.patch"
+;projects[imagemagick][patch][] = "https://www.dropbox.com/s/c7xgc4jjwc9zcy7/imagemagick.module.patch"
 
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0
