@@ -190,7 +190,13 @@ Drupal.behaviors.osPublications = {
         }
       });
 
-      changeMonthAndDay($('input[name=published]:checked').val() == undefined);
+      if ($("#edit-biblio-year-coded-0").is(':checked')) {
+        $('#edit-biblio-year').show();
+      }
+      else {
+        $('#edit-biblio-year').hide();
+      }
+
     }
   };
 
