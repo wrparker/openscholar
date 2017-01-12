@@ -51,6 +51,10 @@ function _os_importer_import_behalf_of_user(FeedsSource $source, $entity, $item,
   }
 
   $entity->uid = $account->uid;
+  // Assigning Organic group ID for created node.
+  if (!empty($id)) {
+    $entity->og_group_ref[LANGUAGE_NONE][0]['target_id'] = $id;
+  }
 }
 
 /**
