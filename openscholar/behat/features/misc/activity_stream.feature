@@ -20,4 +20,4 @@ Feature:
           | !title | private different title |
           # Make the VSite public again.
       And I am logging in as "john"
-      And I change privacy of the site "obama" to "Public on the web."
+      And I change privacy of the site "obama" to "Public on the web. "

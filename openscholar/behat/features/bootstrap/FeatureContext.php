@@ -569,11 +569,11 @@ class FeatureContext extends DrupalContext {
     );
 
     return array(
-      new Step\When('I visit "' . $vsite . '/cp/settings"'),
+      new Step\When('I visit "' . $vsite . '"'),
       new Step\When('I open the admin panel to "Settings"'),
       new Step\When('I open the admin panel to "Global Settings"'),
       new Step\When('I click on the "Site Visibility" control'),
-      new Step\When('I select the radio button named "vsite_private" with value "' . $privacy_level[$visibility] . '"'),
+      new Step\When('I select the radio button named "vsite_private" with value "' . $privacy_level[trim($visibility)] . '"'),
       new Step\When('I press "edit-submit"'),
     );
   }
@@ -879,7 +879,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldSeeTheFollowingMessageJson(TableNode $table) {
     // Get the json output and decode it.
-    $json_output = $this->getSession()->getPage()->getContent();
+    $json_output = $this->getSession()->getPage()->getText();
     $json = json_decode($json_output);
 
     // Hashing table, and define variables for later.
@@ -935,7 +935,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldNotSeeTheFollowingMessageJson(TableNode $table) {
     // Get the json output and decode it.
-    $json_output = $this->getSession()->getPage()->getContent();
+    $json_output = $this->getSession()->getPage()->getText();
     $json = json_decode($json_output);
 
     // Hashing table, and define variables for later.
