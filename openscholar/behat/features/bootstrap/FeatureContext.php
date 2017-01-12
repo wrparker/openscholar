@@ -301,6 +301,7 @@ class FeatureContext extends DrupalContext {
     $element = $this->getSession()->getPage();
     $url = $this->createGist($element->getContent());
     print_r('You asked to see the page content. Here is a gist contain the html: ' . $url . "\n");
+    $this->iShouldPrintPageTo(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR . time() . '.txt');
     $driver = $this->getSession()->getDriver();
     $screenshot = $driver->getScreenshot();
     $gistUrl = $this->createGist('<img src="data:image/png;base64,'.base64_encode($screenshot).'">');
@@ -2669,7 +2670,7 @@ class FeatureContext extends DrupalContext {
    * Default implementation (in the "" element) does not work when multiple elements match selector
    */
   public function iShouldSeeInAElement($text, $selector) {
-    usleep(100);
+    usleep(200);
     //error_log($this->getSession()->getPage()->getHtml());
     $elems = $this->getSession()->getPage()->findAll('css', $selector);
     if (count($elems) == 0) {

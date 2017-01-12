@@ -48,6 +48,7 @@ Feature: Media Browser
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I drop the file "kitten-2.jpg" onto the "Drag and drop files here." area
       And I should wait for "File Edit" directive to "appear"
+      And I fill in the field "Alt Text" with the node "A cute kitten"
      When I click on the "Save" control
       And I should see "kitten-2.jpg" in a ".file-list-single" element
 
@@ -87,6 +88,7 @@ Feature: Media Browser
      Then I should see the text "A file with the name 'kitten-2.jpg' already exists."
       And I press the "Rename" button
       And I should wait for "File Edit" directive to "appear"
+      And I fill in the field "Alt Text" with the node "A cute kitten"
      When I click on the "Save" control
       And I should see "kitten-2_01.jpg" in a ".file-list-single" element
 
