@@ -2894,7 +2894,7 @@ class FeatureContext extends DrupalContext {
       usleep(50);
     }
     else {
-      throw new ElementNotFoundException("No tab with text ($text) found on page.");
+      throw new ElementNotFoundException($this->getSession(), "No tab with text ($text) found on page.");
     }
   }
 
@@ -2906,7 +2906,7 @@ class FeatureContext extends DrupalContext {
       $element->click();
     }
     else {
-      throw new ElementNotFoundException("No element with text ($text) found on page.");
+      throw new ElementNotFoundException($this->getSession(), "No element with text ($text) found on page.");
     }
   }
 
@@ -2923,7 +2923,7 @@ class FeatureContext extends DrupalContext {
           $elem->click();
         }
         else {
-          throw new ElementNotFoundException("No $control found in $css element.");
+          throw new ElementNotFoundException($this->getSession(), "No $control found in $css element.");
         }
       }
     }
