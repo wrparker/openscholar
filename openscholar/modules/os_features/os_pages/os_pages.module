@@ -488,7 +488,7 @@ function os_pages_form_page_node_form_alter(&$form, &$form_state) {
   $path = drupal_get_path('module', 'os_pages');
   $form['os_seo'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Search Engine Optimization'),
+    '#title' => t('Search Engine Optimization (SEO)'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
