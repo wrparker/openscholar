@@ -1361,7 +1361,7 @@ function os_importer_file_submit($request) {
 
   if (in_array($extension, array('csv', 'ical'))) {
     $source = feeds_source($bundle[$extension]);
-    $fetcher_config = $source->getConfigFor($source->importer->fetcher);
+    $fetcher_config = $source->getConfigFor($source->importer->fetcher);    
     $fetcher_config['source'] = $import_file->uri;
     $fetcher_config['file'] = $import_file;
     $fetcher_config['encode'] = $encode;
@@ -1370,7 +1370,7 @@ function os_importer_file_submit($request) {
     $source->startImport();
   }
   else {
-    $node_type = $form_state['type'] == 'blog' ? 'blog_import' : 'feed_importer';
+    /*$node_type = $form_state['type'] == 'blog' ? 'blog_import' : 'feed_importer';
     $node = entity_create('node', array(
       'title' => $values['title'],
       'type' => $node_type,
@@ -1379,6 +1379,6 @@ function os_importer_file_submit($request) {
     ));
     $wrapper = entity_metadata_wrapper('node', $node);
     $wrapper->field_rss_url->set($values['url']);
-    $wrapper->save();
+    $wrapper->save();*/
   }
 }
