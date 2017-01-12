@@ -1840,11 +1840,11 @@ class FeatureContext extends DrupalContext {
   public function iSetTheShareDomainNameTo($value) {
     $action = $value ? 'I checked "edit-vsite-domain-shared"' : 'I uncheck "edit-vsite-domain-shared"';
     return array(
-      new Step\When('I click on the "Settings" control'),
-      new Step\When('I click on the "Advanced" control'),
-      new Step\When('I click on the "Domain" control'),
+      new Step\When('I open the admin panel to "Settings"'),
+      new Step\When('I open the admin panel to "Global Settings"'),
+      new Step\When('I click on the "Custom Domain" control'),
       new Step\When($action),
-      new Step\When('I press "Submit"'),
+      new Step\When('I press "Save"'),
     );
   }
 
