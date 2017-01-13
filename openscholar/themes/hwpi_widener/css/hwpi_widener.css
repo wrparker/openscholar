@@ -1,0 +1,56 @@
+
+
+#footer {
+    background:none;
+}
+	
+#header,
+#menu-bar,
+#footer,
+#menu-bar ul.nice-menu ul {
+    background-color: #000;
+}
+#footer,
+#footer a,
+.region-header-third ul.nice-menu a,
+#menu-bar ul.nice-menu .menuparent ul li a:hover,
+#menu-bar ul.nice-menu .menuparent ul li a.active,
+#menu-bar ul.nice-menu ul .menuparent.over > a,
+#menu-bar ul.nice-menu ul .menuparent a:hover,
+#menu-bar ul.nice-menu ul .menuparent a.active 
+#boxes-box-site_info, #boxes-box-site_info a, 
+#menu-bar ul.nice-menu a {
+    color: #FFFFFF;
+}
+
+#powered-by a {
+    background-position: -14px -533px transparent;
+ 
+}
+
+#menu-bar ul.nice-menu .menuparent a:before {
+  background-position: 0 -566px; /* White Arrow */
+}
+
+
+
+.sidebar .block, .front #content-column .block, .node-person .block-inner, .comment-wrapper {
+  border-top: none;
+}
+
+.front .region-content-top .block.block-boxes-os_slideshow_box {
+  border-top: 3px solid #D16103;
+}
+
+
+
+
+a.rslides_nav {
+    background-color: #D16103;
+}
+
+
+
+#search-block-form input.form-submit, #search-block-form #edit-submit, #search-form #edit-submit {
+    background-position: 2px -373px;
+}
