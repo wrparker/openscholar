@@ -8,6 +8,9 @@
     float: left;
     margin-right: 1em;
 }
+.node-person .field-name-field-address .field-item {
+    float: left;
+}
 #content .node-person .os-slider .field-name-field-email,
 #content .node-person .field-name-field-phone,
 #content .node-person .field-name-field-office-hours,
