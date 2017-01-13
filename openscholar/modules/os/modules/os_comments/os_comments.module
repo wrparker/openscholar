@@ -59,7 +59,7 @@ function os_comments_form_cp_app_settings_form_alter(&$form, &$form_state, $form
   // Uses a secondary validator.
   $form['#validate'][] = 'os_comments_cp_app_settings_form_validate';
   // Uses default comment_sources submit handler
-  $form['#submit'][] = 'comment_sources_save_admin_form';
+  $form['#submit'][] = 'os_comment_sources_save_admin_form';
 }
 
 /**
@@ -185,6 +185,19 @@ function os_comments_node_view($node, $view_mode) {
       // checking comment count
     $comment_count = isset($node->nid) ? db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() : 0;
     $node->comment_count = $comment_count;
+    if ($source != 'disqus' && isset($node->disqus)) {
+      unset($node->disqus);
+    } elseif ($source == 'disqus' && !isset($node->disqus)) {
+      // Prepare disqus element
+      $disqus = array(
+        'domain' => variable_get('disqus_domain', ''),
+        'url' => url(drupal_get_path_alias('node/' . $node->nid), array('absolute' => TRUE)),
+        'title' => $node->title,
+        'identifier' => 'node/' . $node->nid,
+        'status' => TRUE,
+      );
+      $node->disqus = $disqus;
+    }
   } else {
     unset($node->comment);
   }
@@ -313,4 +326,50 @@ function os_comments_form_comment_form_alter(&$form, &$form_state) {
 
   // Denies non-members from accessing the form.
   $form['#access'] = FALSE;
+}
+
+function os_comment_sources_save_admin_form($form, $form_state) {
+
+  // Creates an array for each comment source listing selected node types.
+  $type_settings = array();
+  if (isset($form_state['values'])) {
+    foreach ($form_state['values'] as $key => $value) {
+      $key = str_replace('comment_sources_', '', $key);
+      $type_settings[$key] = $value;
+    }
+  }
+
+  // If comment settings changes then remove all the previous comments
+  if ($form['comment_settings']['comment_sources_blog']['#default_value'] != $type_settings['blog']) {
+    // Get all blog node types.
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'blog');
+
+    // Only blog from this viste.
+    if ($vsite = vsite_get_vsite()) {
+      $query->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $vsite->id);
+    }
+    $result = $query->execute();
+
+    foreach ($result['node'] as $node) {
+      // Deletes any existing comment sources info for this node.
+      $cids = array();
+      $comments = db_select('comment', 'c')
+        ->fields('c', array('cid'))
+        ->condition('nid', $node->nid)
+        ->execute()
+        ->fetchAll();
+      foreach ($comments as $comment) {
+        $cids[] = $comment->cid;
+      }
+      if (count($cids) > 0) {
+        comment_delete_multiple($cids);
+      }
+      db_delete('comment_sources_comments')->condition('nid', $node->nid)->execute();
+      db_delete('disqus')->condition('nid', $node->nid)->execute();
+    }
+  }
+  comment_sources_save_type_settings($type_settings);
 }
