@@ -1,6 +1,12 @@
+.block-boxes-os_boxes_dataverse_list {
+    margin-left: -31.5px;
+}
 body {
     -moz-osx-font-smoothing: grayscale;
 }
+.page-node-249171 #block-os-pages-main-content,
+.page-node-107346 #block-os-pages-main-content,
+.page-node-3794 #block-os-pages-main-content,
 .biblio-download-links-label,
 .front-lop-presentations .location,
 .front-lop-presentations .field-type-file,
@@ -101,13 +107,27 @@ body.not-front,
     margin-top: 46px;
 }
 #main-content-header {
-    height: 175px;
-    margin-top: 8px;
+    height: 120px;
+    margin-top: 50px;
     display: table;
 }
-.node-type-page #main-content-header {
-    margin-top: 20px;
+
+.page-node #main-content-header {
+    margin-top: 55px;
+   
 }
+
+.node-type-biblio #main-content-header {
+ 
+    margin-top: 42px;
+   
+}
+
+
+
+/*.node-type-page #main-content-header {
+    margin-top: 20px;
+}*/
 #main-content-header h1#page-title {
     display: table-cell;
     vertical-align: middle;
@@ -195,6 +215,7 @@ body.node-type-biblio .biblio-export,
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-head a {
     font-weight: bold !important;
 }
+#pub-cover-content-wrapper,
 .sidebar-research-areas.block-boxes-os_taxonomy_fbt .term-methods .term-head {
     margin-top: 15px;
 }
@@ -425,6 +446,7 @@ body.node-type-biblio .biblio-export,
 .ui-tabs ul.ui-tabs-nav li.ui-tabs-active {
     border-top: 4px solid #ff884d;
 }
+.node-biblio table.os-files-other-list,
 #content-panels .block.front-top-cloumn,
 #content-panels .front-lop-software-tabs .block {
     margin-bottom: 0;
@@ -433,45 +455,43 @@ body.node-type-biblio .biblio-export,
 .breadcrumb,
 .breadcrumb span,
 .breadcrumb a {
-    color: #545454 !important;
+    color: #FFF !important;
 }
-.not-front #content-panels,
+/*.not-front #content-panels,
 #main-content #content {
     margin-top: 24px;
-}
-.page-taxonomy-term #main-content #content {
-    margin-top: 30px;
-}
+}*/
+
 .breadcrumb {
     position: relative;
-    top: 70px;
+    top: 68px;
 }
-.page-node- .breadcrumb {
-    top: 60px;
+.page-node .breadcrumb {
+    top: 57px;
 }
 .bg-one {
-    background: url('../images/biocv-bg.jpg?45') center 30px no-repeat;
+    background: url('../images/biocv-bg.jpg?457') center -110px no-repeat;
 }
 .bg-two {
-    background: url('../images/software-bg.jpg?45') center 30px no-repeat;
+    background: url('../images/software-bg.jpg?457') center -110px no-repeat;
 }
 .bg-three {
-    background: url('../images/dataverse-bg.jpg?45') center 30px no-repeat;
+    background: url('../images/dataverse-bg.jpg?457') center -110px no-repeat;
 }
 .bg-four {
-    background: url('../images/contact-bg.jpg?45') center 30px no-repeat;
+    background: url('../images/contact-bg.jpg?4567') center -110px no-repeat;
 }
 .bg-five {
-    background: url('../images/miscellania-bg.jpg?45') center 30px no-repeat;
+    background: url('../images/miscellania-bg.jpg?457') center -110px no-repeat;
 }
 .bg-six {
-    background: url('../images/publications-bg.png?45') center 30px no-repeat;
+    background: url('../images/publications-bg.jpg?457') center -110px no-repeat;
 }
 .bg-seven {
-    background: url('../images/researchgroup-bg.jpg?45') center 30px no-repeat;
+    background: url('../images/researchgroup-bg.jpg?457') center -110px no-repeat;
 }
 .bg-eight {
-    background: url('../images/teaching-bg.jpg?45') center 30px no-repeat;
+    background: url('../images/teaching-bg.jpg?457') center -110px no-repeat;
 }
 .front #content-panels .region-content-bottom {
     background: url('../images/front-page-twitter-bg3.jpg?12345') center -30px no-repeat;
@@ -853,3 +873,8 @@ ul.nice-menu-down,
     }
 }
 @media (max-width: 479px) {}
+
+/* TO BE REMOVED */
+img.file-icon {
+	width:16px;
+}

@@ -144,7 +144,7 @@ body.overlay {
     background-color: #6C7A89;
 }
 #cssmenu ul ul li a,
-#cssmenu ul ul li span,
+#cssmenu ul ul li div,
 #cssmenu .heading {
     cursor: pointer;
     z-index: 2;
