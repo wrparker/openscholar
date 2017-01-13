@@ -1126,18 +1126,16 @@ display:table;
 
 .mg-lightbox-detail,
 .mg-lightbox-description {
-	display:table;
+	display:table-cell;
 }
 
 .mg-lightbox-detail{
-	width:100%;
+	width:70%;
 }
 
-.lightbox-stack .gallery-thumb-inner {
-display:table-cell;
-height:100%;
+.mg-lightbox-description{
+	width:30%;
 }
-
 
 img.media-element.file-default {
     padding-right: 15px;
