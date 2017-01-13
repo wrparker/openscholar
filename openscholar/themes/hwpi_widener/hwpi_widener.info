@@ -1,7 +1,7 @@
 
 ;----------// Theme Information
 
-  name        = Windener
+  name        = Widener
   description = A classic looking theme for use by departments at Harvard.
   core        = 7.x
   base theme  = hwpi_classic
