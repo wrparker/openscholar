@@ -171,19 +171,15 @@
       link: function (scope, elem, attr) {
         scope.gsfnid = scope.element.gsfnId;
         scope.title = scope.element.title;
-        scope.markup = $sce.trustAsHtml(scope.element.markup);
-        if (localStorage.getItem('gsfnObject') !== null && localStorage.getItem('gsfnObject') != 'undefined') {
-          scope.markup = $sce.trustAsHtml(JSON.parse(localStorage.getItem('gsfnObject')));
+        if (typeof Drupal.settings.gsfn == 'object') {
+          scope.markup = $sce.trustAsHtml(Drupal.settings.gsfn.html());
         } else {
-          $timeout(function() {
-            if (typeof GSFN !== "undefined") {
-              GSFN.loadWidget(scope.gsfnid, {"containerId":"getsat-widget-" + scope.gsfnid});
-              $timeout(function() {
-                var gsfnObjectHtml = JSON.stringify(angular.element(document.querySelectorAll(".getsat-widget")).children('iframe').wrap('<p/>').parent().html());
-                localStorage.setItem('gsfnObject', gsfnObjectHtml);
-              }, 2000);
-            }
-          }, 1000);
+          if (typeof GSFN !== "undefined") {
+            GSFN.loadWidget(scope.gsfnid, {"containerId":"getsat-widget-" + scope.gsfnid});
+            $timeout(function() {
+              Drupal.settings.gsfn = angular.element(document.querySelectorAll(".getsat-widget")).children('iframe').wrap('<p/>').parent();
+            }, 1000);
+          }
         }
       }
     }
