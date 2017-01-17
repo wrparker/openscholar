@@ -1884,6 +1884,10 @@ function os_profiles_js_alter(&$javascript) {
   if (strpos($_GET['q'], 'sync-profiles') !== FALSE) {
     foreach ($javascript as $url => $js) {
       if (strpos($url, 'autocomplete.js') == TRUE) {
+        $vsite = vsite_get_vsite();
+        drupal_add_js(array('paths' => array(
+          'vsite_home' => $vsite ? trim($vsite->get_absolute_url(), '/') : '',
+          )), 'setting');
         $file = drupal_get_path('module', 'os_profiles') . '/misc/os_autocomplete.js';
         $javascript['misc/autocomplete.js']['data'] = $file;
       }
