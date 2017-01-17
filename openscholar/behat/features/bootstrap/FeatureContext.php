@@ -573,9 +573,13 @@ class FeatureContext extends DrupalContext {
       new Step\When('I visit "' . $vsite . '"'),
       new Step\When('I open the admin panel to "Settings"'),
       new Step\When('I open the admin panel to "Global Settings"'),
+      new Step\When('I scroll in the ".menu-container .simplebar-scroll-content" element until I find "Site Visibility"'),
       new Step\When('I click on the "Site Visibility" control'),
       new Step\When('I select the radio button named "vsite_private" with value "' . $privacy_level[trim($visibility)] . '"'),
-      new Step\When('I press "edit-submit"'),
+      new Step\When('I set the form "privacy" to "dirty"'),
+      new Step\When('I press "Save"'),
+      new Step\When('I wait for page actions to complete'),
+      new Step\When('I break'),
     );
   }
 
@@ -3444,7 +3448,6 @@ JS;
    * @When /^I click on "([^"]*)" in the tools for "([^"]*)"$/
    */
   public function iClickOnTools($link, $node) {
-    $driver = $this->getSession()->getDriver();
     $page = $this->getSession()->getPage();
     if ($elem = $page->find('xpath', "//*[normalize-space(text()) = '$node']/ancestor::section//article")) {
       $elem->mouseOver();
@@ -3464,5 +3467,47 @@ JS;
     else {
       throw new Exception("No node $node found on page.");
     }
+  }
+
+  /**
+   * @When /^I scroll in the "([^"]*)" element until I find "([^"]*)"$/
+   */
+  public function iScrollToAndClickOn($element, $text) {
+    $page = $this->getSession()->getPage();
+
+    $container = $page->find('css', $element);
+    $scrolltest = "var elem = document.querySelector($element);
+      return elem.scrollHeight == elem.scrollTop + elem.clientHeight";
+    if (!$container) {
+      throw new Exception("The element matching '$element' was not found.");
+    }
+    while (!$container->find('xpath', "//*[text() = '$text']") && $page->getSession()->evaluateScript($scrolltest)) {
+      $page->getSession()->getDriver()->executeScript("document.queryDocument($element).scrollDown += 100");
+    }
+
+    if (!$container->find('xpath', "//*[text() = '$text']")) {
+      throw new Exception("The text '$text' was not found in the '$element' element.");
+    }
+  }
+
+  /**
+   * @When /^I set the form "([^"]*)" to "([^"]*)"$/
+   */
+  public function iSetTheFormTo($form, $dirtiness) {
+    $dirty = $dirtiness == 'dirty' ? 'true' : 'false';
+
+    $this->getSession()->executeScript(sprintf('
+      var form = angular.element(document.getElementById("%s")).controller("form");
+      if (form) {
+        if (%s) {
+          form.$setDirty();
+        }
+        else {
+          form.$setPristine();
+        }
+      }
+      else {
+        throw "Form does not exist or have a controller assigned to it."
+      }', $form, $dirty));
   }
 }
