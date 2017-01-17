@@ -575,11 +575,9 @@ class FeatureContext extends DrupalContext {
       new Step\When('I open the admin panel to "Global Settings"'),
       new Step\When('I scroll in the ".menu-container .simplebar-scroll-content" element until I find "Site Visibility"'),
       new Step\When('I click on the "Site Visibility" control'),
-      new Step\When('I select the radio button named "vsite_private" with value "' . $privacy_level[trim($visibility)] . '"'),
-      new Step\When('I set the form "privacy" to "dirty"'),
+      new Step\When('I click on the "' . trim($visibility) . '" control'),
       new Step\When('I press "Save"'),
       new Step\When('I wait for page actions to complete'),
-      new Step\When('I break'),
     );
   }
 
@@ -1464,6 +1462,7 @@ class FeatureContext extends DrupalContext {
       throw new Exception("A radio button with the name {$name} and value {$value} was not found on the page");
     }
     $radiobutton->selectOption($value, FALSE);
+    $radiobutton->blur();
   }
 
   /**
@@ -2907,7 +2906,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I click on the "([^"]*)" control$/
    */
   public function iClickOnControl($text) {
-    if ($element = $this->getSession()->getPage()->find('xpath', "//*[text() = '{$text}']")) {
+    if ($element = $this->getSession()->getPage()->find('xpath', "//*[translate(text(), ' ', '') = translate('{$text}', ' ', '')]")) {
       $element->click();
     }
     else {
@@ -2928,7 +2927,7 @@ class FeatureContext extends DrupalContext {
           $elem->click();
         }
         else {
-          throw new ElementNotFoundException($this->getSession(), "No $control found in $css element.");
+          throw new ElementNotFoundException($this->getSession(), "No $text found in $css element.");
         }
       }
     }
