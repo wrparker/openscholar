@@ -52,9 +52,14 @@
           copy.attr('ng-model', 'value');
           elem.find('span').replaceWith(copy);
           copy = $compile(copy)(scope);
-          if (scope.element.attached) {
+          if (scope.element.attached && scope.element.attached.js) {
+            console.log(scope.element.attached);
             $t(function () {
-              Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[0].data);
+              for (var i in scope.element.attached.js) {
+                if (angular.isObject(scope.element.attached.js[i])) {
+                  Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[i].data);
+                }
+              }
             });
           }
         }
