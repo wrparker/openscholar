@@ -1,5 +1,5 @@
 ID,Title,Body,Timestamp,Site,Terms,UID,user2
-event1,John F. Kennedy birthday,John's 103rd birthday.,2020-05-29 20:00:00;2020-05-29 20:00:00,personal1,authorTerm2,user2
+event1,John F. Kennedy birthday,John's 103rd birthday.,2020-05-29 20:00:00;2020-05-29 20:00:00,personal1,,user2
 event2,Lou Gehrig birthday,Lou's 97th birthday,2020-06-19 21:00:00;2020-06-19 21:00:00,project1,,user2
 event3,2016 election day,The election day in 2016,2016-11-06 21:00:00;2016-11-06 21:00:00,personal2,,user2
 event4,Halleys Comet,Halley's Comet appearing,2062-05-29 21:00:00;2062-05-29 21:00:00,personal1,authorTerm1|authorTerm2|authorTerm3,user2
