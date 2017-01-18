@@ -362,6 +362,7 @@ function theme_os_media_gallery_media_item_lightbox($variables) {
   if ($gallery_node->getValue('media_gallery_allow_download') == TRUE) {
     $download_link = $element['#bundle'] == 'image' ? theme('media_gallery_download_link', array('file' => $file)) : l(t('View detail page'), $link_vars['link_path']);
   }
+
   else {
     // Very ugly fix: This prevents the license info from being either hidden
     // or causing scrollbars (depending on the browser) in cases where a
@@ -373,24 +374,18 @@ function theme_os_media_gallery_media_item_lightbox($variables) {
   $media_gallery_detail =
     '<div class="lightbox-stack">' .
     theme('media_gallery_item', $link_vars) .
-    '<div class="media-gallery-detail-info">';
-
-  $media_gallery_detail .= $download_link;
-
-  // Adding the image description.
-  $wrapper = entity_metadata_wrapper('file', $file);
-  if ($wrapper->os_file_description->value()) {
-    $media_gallery_detail .= '<div class="media-gallery-description">' . $wrapper->os_file_description->value->value() . '</div>';
-  }
-
-  $media_gallery_detail .= theme('media_gallery_license', array('element' => isset($element['field_license']) ? $element['field_license'] : array(), 'color' => 'medium', 'file' => $file)) .
+    '<div class="media-gallery-detail-info">' .
+    $download_link .
+    theme('media_gallery_license', array('element' => isset($element['field_license']) ? $element['field_license'] : array(), 'color' => 'medium', 'file' => $file)) .
     '</div></div>';
   // The license info has been themed already, keep it from being rendered as a child
   $element['field_license']['#access'] = FALSE;
 
   $output = 'Error';
-  // If the format is to have the description as well, we add it here
-  if (!empty($gallery_node->media_gallery_lightbox_extras[LANGUAGE_NONE][0]['value'])) {
+  // If the format is to have the description as well, we add it here.
+  // Adding the image description.
+  $wrapper = entity_metadata_wrapper('file', $file);
+  if ($wrapper->os_file_description->value()) {
     unset($element['file']); //already rendered in media_gallery_detail.
 
     $output =
@@ -399,7 +394,7 @@ function theme_os_media_gallery_media_item_lightbox($variables) {
       '<div class="mg-lightbox-detail">' .
       $media_gallery_detail .
       '</div><div class="mg-lightbox-description">' .
-      drupal_render_children($element) .
+      $wrapper->os_file_description->value->value() .
       '</div>' .
       '</div>';
   }
