@@ -36,6 +36,7 @@ projects[comment_sources][subdir] = "contrib"
 projects[comment_sources][version] = 2.0
 projects[comment_sources][patch][] = "https://drupal.org/files/issues/22086870-comment-source-wrong-query-field-1.patch"
 projects[comment_sources][patch][] = "https://drupal.org/files/issues/change-submit-handler-index-2513794-2.patch"
+projects[comment_sources][patch][] = "https://raw.github.com/openscholar/openscholar/bb0856af84a58881a0438cd32d9b6a21dcfd15ea/patches/comment_sources.9139.comment_settings.patch"
 
 projects[context][subdir] = "contrib"
 projects[context][version] = 3.0-beta4
