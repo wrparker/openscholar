@@ -9,8 +9,10 @@
     float: left;
     margin-right: 1em;
 }
+
 .node-person .field-name-field-address,
 .node-person .field-name-field-email,
+.node-person .field-name-og-vocabulary,
 .node-person .field-name-field-phone .field-item a {
     clear: both;
     float: left;
