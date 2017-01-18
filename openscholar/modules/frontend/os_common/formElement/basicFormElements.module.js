@@ -1,7 +1,6 @@
 (function () {
 
   var m = angular.module('basicFormElements', ['osHelpers', 'ngSanitize']);
-  var gsfnObj = {};
 
   /**
    * Select directive.
@@ -162,6 +161,7 @@
    * Just markup that doesn't do anything.
    */
   m.directive('feHelp', ['$timeout', '$sce', function ($timeout, $sce) {
+    var gsfnObj = {};
     return {
       scope: {
         name: '@',
@@ -172,15 +172,15 @@
       link: function (scope, elem, attr) {
         scope.gsfnid = scope.element.gsfnId;
         scope.title = scope.element.title;
-        if (angular.equals(gsfnObj, {})) {
+        if (typeof gsfnObj[scope.gsfnid] == 'undefined') {
           if (typeof GSFN !== "undefined") {
             GSFN.loadWidget(scope.gsfnid, {"containerId":"getsat-widget-" + scope.gsfnid});
             $timeout(function() {
-              gsfnObj = angular.element(document.querySelectorAll(".getsat-widget")).children('iframe').wrap('<p/>').parent();
+              gsfnObj[scope.gsfnid] = angular.element(document.querySelectorAll(".getsat-widget")).children('iframe').wrap('<p/>').parent();
             }, 1000);
           }
         } else {
-          scope.markup = $sce.trustAsHtml(gsfnObj.html());
+          scope.markup = $sce.trustAsHtml(gsfnObj[scope.gsfnid].html());
         }
       }
     }
