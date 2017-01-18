@@ -5,19 +5,26 @@
 #content-column .node-person .field-name-field-office-hours,
 #content .node-person .field-name-field-email,
 #content .node-person .field-name-og-vocabulary {
+    clear: both;
     float: left;
     margin-right: 1em;
 }
-.node-person .field-name-field-address .field-item {
+.node-person .field-name-field-address,
+.node-person .field-name-field-email,
+.node-person .field-name-field-phone .field-item a {
+    clear: both;
     float: left;
 }
 #content .node-person .os-slider .field-name-field-email,
 #content .node-person .field-name-field-phone,
 #content .node-person .field-name-field-office-hours,
 #content .node-person .field-name-og-vocabulary.view-mode-slide_teaser {
-    float: none;
+    clear: both;
+    float: left;
 }
-#content .node-person .os-slider .profile-link {
+.node-person .os-slider .profile-link {
+    clear: both;
+    float: left;
     display: block;
 }
 #content .node-person .field-name-field-email.view-mode-no_image_teaser {
