@@ -1462,7 +1462,6 @@ class FeatureContext extends DrupalContext {
       throw new Exception("A radio button with the name {$name} and value {$value} was not found on the page");
     }
     $radiobutton->selectOption($value, FALSE);
-    $radiobutton->blur();
   }
 
   /**
