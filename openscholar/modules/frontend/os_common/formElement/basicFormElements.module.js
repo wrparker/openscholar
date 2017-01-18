@@ -1,6 +1,7 @@
 (function () {
 
   var m = angular.module('basicFormElements', ['osHelpers', 'ngSanitize']);
+  var gsfnObj = {};
 
   /**
    * Select directive.
@@ -171,15 +172,15 @@
       link: function (scope, elem, attr) {
         scope.gsfnid = scope.element.gsfnId;
         scope.title = scope.element.title;
-        if (typeof Drupal.settings.gsfn == 'object') {
-          scope.markup = $sce.trustAsHtml(Drupal.settings.gsfn.html());
-        } else {
+        if (angular.equals(gsfnObj, {})) {
           if (typeof GSFN !== "undefined") {
             GSFN.loadWidget(scope.gsfnid, {"containerId":"getsat-widget-" + scope.gsfnid});
             $timeout(function() {
-              Drupal.settings.gsfn = angular.element(document.querySelectorAll(".getsat-widget")).children('iframe').wrap('<p/>').parent();
+              gsfnObj = angular.element(document.querySelectorAll(".getsat-widget")).children('iframe').wrap('<p/>').parent();
             }, 1000);
           }
+        } else {
+          scope.markup = $sce.trustAsHtml(gsfnObj.html());
         }
       }
     }
