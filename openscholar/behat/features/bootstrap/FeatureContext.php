@@ -3471,20 +3471,22 @@ JS;
   /**
    * @When /^I scroll in the "([^"]*)" element until I find "([^"]*)"$/
    */
-  public function iScrollToAndClickOn($element, $text) {
+  public function iScrollUntil($element, $text) {
     $page = $this->getSession()->getPage();
+    $driver = $this->getSession()->getDriver();
 
     $container = $page->find('css', $element);
-    $scrolltest = "var elem = document.querySelector($element);
+    $scrolltest = "var elem = document.querySelector('$element');
       return elem.scrollHeight == elem.scrollTop + elem.clientHeight";
     if (!$container) {
       throw new Exception("The element matching '$element' was not found.");
     }
-    while (!$container->find('xpath', "//*[text() = '$text']") && $page->getSession()->evaluateScript($scrolltest)) {
-      $page->getSession()->getDriver()->executeScript("document.queryDocument($element).scrollDown += 100");
+
+    while (!$driver->isVisible("//*[text() = '$text']") && !$page->getSession()->evaluateScript($scrolltest)) {
+      $page->getSession()->getDriver()->executeScript("document.querySelector('$element').scrollTop += 100");
     }
 
-    if (!$container->find('xpath', "//*[text() = '$text']")) {
+    if (!$driver->isVisible("//*[text() = '$text']")) {
       throw new Exception("The text '$text' was not found in the '$element' element.");
     }
   }
