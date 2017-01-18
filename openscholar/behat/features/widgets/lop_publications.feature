@@ -7,7 +7,7 @@ Feature:
             of Year.
     Given I am logging in as "john"
       And the widget "List of publications" is set in the "Publications" page with the following <settings>:
-          | Content Type               | Publication          | select list |
+          | Content Type               | Biblio               | select list |
           | Display style              | Title                | select list |
           | Sorted By                  | Year of Publication  | select list |
      When I visit "john/publications"
