@@ -1118,16 +1118,25 @@ img.recent-images-list:hover {
 #cboxWrapper #cboxBottomRight {
     background: none;
 }
-.lightbox-stack .gallery-thumb-outer {
+
+.mg-lightbox-wrapper {
 display:table;
-height:100%;
+
 }
 
-
-.lightbox-stack .gallery-thumb-inner {
-display:table-cell;
-height:100%;
+.mg-lightbox-detail,
+.mg-lightbox-description {
+	display:table-cell;
 }
+
+.mg-lightbox-detail{
+	width:70%;
+}
+
+.mg-lightbox-description{
+	width:30%;
+}
+
 img.media-element.file-default {
     padding-right: 15px;
 }
