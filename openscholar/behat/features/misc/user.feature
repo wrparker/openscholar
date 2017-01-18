@@ -41,7 +41,7 @@ Feature: User functionality testing.
      Then I should see "New Custom Role"
       And I give the role "New Custom Role" in the group "john" the permission "Create Blog entry content"
 
-  @api @misc_second @now2
+  @api @misc_second @now2 @javascript
   Scenario: Assign a custom role to a vsite member.
     Given I am logging in as "john"
      When I give the user "klark" the role "New Custom Role" in the group "john"
