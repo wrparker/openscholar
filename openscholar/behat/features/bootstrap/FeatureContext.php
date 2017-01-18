@@ -3481,11 +3481,13 @@ JS;
       throw new Exception("The element matching '$element' was not found.");
     }
 
-    while (!$driver->isVisible("//*[text() = '$text']") && !$page->getSession()->evaluateScript($scrolltest)) {
+    $attempts = 0;
+    while (!$driver->isVisible("//*[text() = '$text']") && !$page->getSession()->evaluateScript($scrolltest) && $attempts < 20) {
       $page->getSession()->getDriver()->executeScript("document.querySelector('$element').scrollTop += 100");
+      $attempts++;
     }
 
-    if (!$driver->isVisible("//*[text() = '$text']")) {
+    if (!$driver->isVisible("//*[text() = '$text']") || $attempts = 20) {
       throw new Exception("The text '$text' was not found in the '$element' element.");
     }
   }
