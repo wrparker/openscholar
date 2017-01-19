@@ -29,6 +29,39 @@ class FeatureContext extends DrupalContext {
     parent::beforeScenario($event);
   }
 
+  private $currentUrl;
+
+  /**
+   * @BeforeStep @javascript
+   */
+  public function urlChange(StepEvent $e) {
+    $this->currentUrl = $this->getSession()->getCurrentUrl();
+  }
+
+  /**
+   * @AfterStep @javascript
+   */
+  public function urlChangeHandler(StepEvent $e) {
+    if ($this->currentUrl != $this->getSession()->getCurrentUrl()) {
+      $script = "
+      (function () {
+        if (!window.BehatScriptRun) {
+          window.BehatScriptRun = true;
+          window.BehatConsoleErrors = [];
+
+          window.onerror = function (error, url, line) {
+            BehatConsoleErrors.push({error: error, url: url, line: line});
+          }
+        }
+      })();
+      ";
+      $this->getSession()->executeScript($script);
+    }
+    if ($jserrors = $this->getSession()->evaluateScript("return window.BehatConsoleErrors")) {
+      print_r($jserrors);
+    }
+  }
+
   /**
    * Variable for storing the random string we used in the text.
    */
@@ -3511,5 +3544,12 @@ JS;
       else {
         throw "Form does not exist or have a controller assigned to it."
       }', $form, $dirty));
+  }
+
+  /**
+   * @when /^Arbitrary script "([^"]*)"$/
+   */
+  public function arbitraryScript($script) {
+    $this->getSession()->evaluateScript($script);
   }
 }
