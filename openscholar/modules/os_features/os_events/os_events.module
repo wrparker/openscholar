@@ -3121,7 +3121,7 @@ function os_events_cp_settings() {
       '#type' => 'checkbox',
       '#default_value' => variable_get('os_exporter_disable_event_export', 0),
       '#weight' => -1,
-      '#prefix' => '<label>Events export</label>',
+      '#prefix' => '<label></label>',
     ),
   );
   return $settings;

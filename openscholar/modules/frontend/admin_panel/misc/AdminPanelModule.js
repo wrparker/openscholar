@@ -75,7 +75,7 @@
         }); 
       
      
-    }]).directive('toggleOpen', ['$cookies', 'adminMenuStateService', function($cookies, $menuState) {
+    }]).directive('toggleOpen', ['$cookies', '$timeout', 'adminMenuStateService', function($cookies, $t, $menuState) {
       
       function openLink(elm) {
         elm.addClass('open');
@@ -106,7 +106,9 @@
           var parent = getAncestor(element, 'li');
 
           if ($menuState.GetState(attrs.id)) {
-            parent.addClass('open');
+            $t(function () {
+              openLink(parent);
+            });
           }
 
           element.bind('click', function() {
@@ -119,7 +121,7 @@
 
               togglers.each(function() {
                 var sibling = angular.element(this),
-                  id = sibling.find("span").children().first().attr('id');
+                  id = sibling.children().first().find("span").attr('id');
                 $menuState.SetState(id, false);
                 closeLink(sibling);
               });
