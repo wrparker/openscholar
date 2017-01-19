@@ -63,6 +63,10 @@ function os_importer_cp_settings() {
       continue;
     }
 
+    if (!is_array($info['browse_pages'])) {
+      continue;
+    }
+
     foreach ($info['browse_pages'] as $node_type => $app) {
       $import_format_option = array();
 
@@ -102,8 +106,8 @@ function os_importer_cp_settings() {
         'form' => $form_settings,
       );
 
-      $template_markup = '<div class="import-help element-hidden rss-help-wrapper">' . $rss_feed_helptext . '</div>';
-      $template_markup .= '<div class="import-help csv-help-wrapper">' . l(t('Download a template'), (isset($purl) ? $purl . '/' : '') . 'cp/os-importer/' . $node_type . '/template') . '</div>';
+      $template_markup = '<div class="import-help element-hidden rss-import-fields">' . $rss_feed_helptext . '</div>';
+      $template_markup .= '<div class="import-help csv-import-fields">' . l(t('Download a template'), (isset($purl) ? $purl . '/' : '') . 'cp/os-importer/' . $node_type . '/template') . '</div>';
 
       $settings['os_importer_download_template-' . $node_type] = array(
         'group' => array(
@@ -133,6 +137,7 @@ function os_importer_cp_settings() {
             'extensions' => array('csv'),
             'types' => array('document'),
           ),
+          '#class' => array('csv-import-fields'),
           '#upload_location' => $purl ? "public://{$purl}/files" : "public://",
           '#upload_validators' => array(
             'file_validate_extensions' => array('csv'),
@@ -143,7 +148,7 @@ function os_importer_cp_settings() {
           '#id' => 'os_importer_content_' . $node_type,
           '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
           '#weight' => 3,
-          '#menu_parent' => 'import',
+          '#menu_parent' => 'import',          
         ),
       );
 
@@ -161,8 +166,44 @@ function os_importer_cp_settings() {
           '#default_value' => 'utf-8',
           '#description' => t('Select the encoding of your file. For a full list of encodings you can visit <a href="@wikipedia-url">this</a> Wikipedia page.', $params),
           '#weight' => 4,
+          '#class' => array('csv-import-fields'),
         ),
-      );
+      );      
+
+      // Only blog and news have RSS feed import option.
+      if (in_array($node_type, array('blog', 'news'))) {
+        $settings['os_importer_rss_title-' . $node_type] = array(
+          'group' => array(
+            '#id' => 'os_importer_content_' . $node_type,
+            '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
+            '#weight' => 4,
+            '#menu_parent' => 'import',
+          ),
+          'form' => array(
+            '#title' => t('Title'),
+            '#type' => 'textfield',
+            '#description' => t('Required field - The title of the feed source. E.g. "New York Times Sport".'),
+            '#weight' => 4,
+            '#class' => array('rss-import-fields', 'element-hidden'),
+          ),
+        );
+
+        $settings['os_importer_rss_url-' . $node_type] = array(
+          'group' => array(
+              '#id' => 'os_importer_content_' . $node_type,
+              '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
+              '#weight' => 4,
+             '#menu_parent' => 'import',
+          ),
+          'form' => array(
+            '#title' => t('URL'),
+            '#type' => 'textfield',
+            '#description' => t('The url of your feed. E.g. http://rss.cnn.com/rss/cnn_tech.rss'),
+            '#weight' => 4,
+            '#class' => array('rss-import-fields', 'element-hidden'),
+          ),
+        );
+      }
 
       $settings['os_importer_submit-' . $node_type] = array(
         'group' => array(
@@ -170,6 +211,7 @@ function os_importer_cp_settings() {
           '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
           '#weight' => 5,
           '#menu_parent' => 'import',
+          '#group_validate' => 'os_importer_import_validate',
         ),
         'form' => array(
           '#value' => t('Submit'),
@@ -178,11 +220,334 @@ function os_importer_cp_settings() {
         ),
         'rest_submit' => 'os_importer_file_submit',
         'submit_full_request' => TRUE,
-      );
+      );     
     }
   }  
   
   return $settings;
+}
+
+function os_importer_import_validate($values) {
+  $valid = TRUE;
+  // Determining node type from array key.
+  foreach($values as $var => $value) {
+    if (strpos($var, 'os_importer_submit-') === 0) {
+      $part = explode('-', $var);
+      $node_type = end($part);
+      break;
+    }
+  }
+  // Remove previous warnings and errors.
+  drupal_get_messages();
+  // For CSV import files.
+  if (empty($values['os_importer_content_format-' . $node_type]) || $values['os_importer_content_format-' . $node_type] == 'csv') {
+    // If no files have been selected.
+    if (empty($values['os_importer_file_upload-' . $node_type])) {
+      drupal_set_message(t('The file field is required.'), 'error');
+      $valid = FALSE;
+    } else if (!empty($values['os_importer_file_upload-' . $node_type])) {
+      $file = file_load($values['os_importer_file_upload-' . $node_type]);      
+      $part = !empty($file->filename) ? explode('.', $file->filename) : array();
+      $extension = end($part);
+      if ($extension != 'csv') {
+        drupal_set_message(t('Please select a CSV file.'), 'error');
+        $valid = FALSE;
+      } else {
+
+        if ($node_type == 'person') {
+          feeds_include_library('ParserCSV.inc', 'ParserCSV');
+          ini_set("auto_detect_line_endings", TRUE);
+          $parser = new ParserCSV();
+          $parser->setDelimiter(',');
+          $iterator = new ParserCSVIterator($file->uri);
+          $rows = $parser->parse($iterator);
+          // Iterate over the rows for field_website validation.
+          $valid_url = TRUE;
+          foreach ($rows as $key => $row) {
+            if ($key == 0) {
+              continue;
+            }
+
+            // If title is not empty but url is empty.
+            if (!empty($row[11]) && empty($row[12])) {
+              $valid_url = FALSE;        
+              break;
+            }
+            else if (!empty($row[13]) && empty($row[14])) {
+              $valid_url = FALSE;        
+              break;
+            }
+            else if (!empty($row[15]) && empty($row[16])) {
+              $valid_url = FALSE;        
+              break;
+            }
+          }
+
+          if (!$valid_url) {
+            drupal_set_message(t('The field Websites URL cannot be empty.'), 'error');
+            $valid = FALSE;
+          }
+        }
+
+        if ($node_type == 'event') {
+          // Parse uploaded file content with ParserCSV class.          
+          $file_content = file_get_contents($file->uri);
+          $file_content = str_replace("\r", "\n", $file_content);
+          file_put_contents($file->uri, $file_content);
+          feeds_include_library('ParserCSV.inc', 'ParserCSV');
+          $parser = new ParserCSV();
+          $parser->setDelimiter(',');
+          $iterator = new ParserCSVIterator($file->uri);
+          $rows = $parser->parse($iterator);
+          if (count($rows) < 2) {
+            drupal_set_message(t('The import file does not contain any events.'), 'error');
+            $valid = FALSE;
+          }
+        }
+        // Validating the mapping of CSV headers.
+        $bundle = os_importer_importable_content($node_type);
+        $source = feeds_source($bundle['csv']);
+        $config = $source->importer->getConfig();
+        // Get the mappings of the current importer.
+        $mappings_diff = array();
+        $mappings = array();
+        foreach ($config['processor']['config']['mappings'] as $mapping) {
+          $mappings_diff[] = strtolower($mapping['source']);
+          $mappings[] = $mapping['target'];
+        }
+
+        // Replace the \r with \n.
+        $file_content = file_get_contents($file->uri);
+        $file_content = str_replace("\r", "\n", $file_content);
+        $file_rows = explode("\n", $file_content);
+        file_put_contents($file->uri, $file_content);
+
+        feeds_include_library('ParserCSV.inc', 'ParserCSV');
+        $parser = new ParserCSV();
+        $parser->setDelimiter(',');
+        $iterator = new ParserCSVIterator($file->uri);
+
+        $rows = $parser->parse($iterator);
+
+        // Parse file's headers.
+        $header = _os_importer_parse_header($parser, $iterator, $mappings);
+
+        // Check what columns are missing from the uploaded CSV file and display
+        // message if needed.
+        if ($missing = array_diff($mappings_diff, $header)) {
+          $params = array('!missing' => theme('item_list', array('items' => $missing)));
+          drupal_set_message(t('The following columns are not present in the CSV file: !missing The structure of the your CSV file probably needs to be updated. Please download the template again.', $params), 'error');
+          $valid = FALSE;
+        }
+
+        // Iterate over the rows for field validation and removing empty rows.
+        foreach ($rows as $key => $row) {
+          if (!$key) {
+            // Check the header for bad vocabularies.
+            foreach (array_diff(array_map('strtolower', $row), $mappings_diff) as $vocab) {
+              if (!trim($vocab)) {
+                drupal_set_message(t('You cannot have a vocabulary without a name.'), 'error');
+                $valid = FALSE;
+                continue;
+              }
+              if (preg_match('@[^a-z0-9_]+@', $vocab) && !str_replace(array(' ', '.', '&', '-'), '', strtolower($vocab))) {
+                drupal_set_message(t('The vocabularies you want to import doesn\'t contain any text.'), 'error');
+                $valid = FALSE;
+                continue;
+              }
+            }
+            continue;
+          }
+
+          // Check if row is empty.
+          if (!implode("", $row)) {
+            unset($rows[$key]);
+            continue;
+          }
+
+          /** @var OsImporterEntityValidateBase $handler */
+          if (!$handler = entity_validator_get_validator_handler('node', $node_type)) {
+            continue;
+          }
+
+          $handler->rest = FALSE;
+
+          $node = array(
+            'type' => $node_type,
+          );
+          $node = entity_create('node', $node);
+          $wrapper = entity_metadata_wrapper('node', $node);
+          // Build the form values - break down the row.
+
+          foreach ($row as $delta => $value) {
+            // Check only the fields found in the mappings array. Columns after the
+            // last mapping column are used to create taxonomy terms.
+            // @see os_importer_feeds_presave().
+            if ($delta >= count($mappings)) {
+              break;
+            }
+
+            // Fail in case mapping does not exist.
+            if (!isset($mappings[$delta])) {
+              $params = array(
+                '@delta' => $delta,
+                '@value' => $value,
+              );
+              drupal_set_message(t('Mapping of CSV file is incorrect for delta @delta with value @value', $params), 'error');
+              $valid = FALSE;
+            }
+            $field = $mappings[$delta];
+
+            $field = str_replace(':', '__', $field);
+
+            // Do not validate file fields.
+            if ($field == 'file') {
+              continue;
+            }
+
+            if ($field == 'body') {
+              $value = array('value' => $value);
+            }
+
+            $info = $wrapper->{$field}->info();
+
+            if (!is_array($value) && $info['type'] == 'list<text>') {
+              $value = array($value);
+            }
+            elseif (!is_array($value) && $info['type'] == 'text_formatted') {
+              $value = array('value' => $value);
+            }
+            elseif (empty($value) && in_array($info['type'], array('integer', 'decimal'))) {
+              $value = 0;
+            }
+            elseif ($value && $info['type'] == 'integer') {
+              $value = intval($value);
+            }
+            elseif ($field == 'created' && is_string($value)) {
+              $orig_value_created = $value;
+              $value = strtotime($value);
+              // if strtotime() output is blank, then date format is not correct, displaying error message.
+              if(empty($value) || ($value < 0)) {                
+                drupal_set_message(t('Invalid date value entered for the field "!field" with value "!value".', array('!field' => $field, '!value' => $orig_value_created)), 'error');
+                $valid = FALSE;
+              }
+            }
+
+            try {
+              $wrapper->{$field}->set($value);
+            }
+            catch (EntityMetadataWrapperException $e) {
+              drupal_set_message(t('Settings the value of field "!field" with value "!value" failed.', array('!field' => $field, '!value' => $orig_value)));
+              $valid = FALSE;
+            }
+          }
+
+          if ($handler->validate($node, TRUE) === FALSE) {
+            $errors = $handler->getErrors(FALSE);
+
+            $return = array();
+
+            // Replace the messages' placeholders with the CSV column name for better
+            // validation error messages.
+            foreach ($errors as $field => $field_errors) {
+              foreach ($field_errors as $error) {
+                if (!isset($error['params']['@field'])) {
+                  continue;
+                }
+
+                // We take the label of the field (either the original label, or if
+                // it's a property we added, then the one defined in
+                // os_importer_entity_property_info_alter().
+                $field_info = $wrapper->{$field}->info();
+                $field_label = $field_info['label'];
+                $error['params']['@field'] = $field_label;
+
+                $return[] = format_string($error['message'], $error['params']) . '</br>';
+              }
+            }
+            $return = array(
+              '!errors' => implode("\n\r", $return),
+            );
+            drupal_set_message(t('Field validation errors:</br>!errors', $return));
+            $valid = FALSE;
+          }
+        }
+      }
+    }
+  } else if ($values['os_importer_content_format-' . $node_type] == 'ical') {
+    // If no files have been selected.
+    if (empty($values['os_importer_file_upload-' . $node_type])) {
+      drupal_set_message('The file field is required.', 'error');
+      $valid = FALSE;
+    } else if (!empty($values['os_importer_file_upload-' . $node_type])) {
+      $file = file_load($values['os_importer_file_upload-' . $node_type]);
+      $part = !empty($file->filename) ? explode('.', $file->filename) : array();
+      $extension = end($part);
+      if ($extension != 'ics') {
+        drupal_set_message('Please select an iCal file.', 'error');
+        $valid = FALSE;
+      } else {
+        // iCal file validation.
+        // Parsing ics file content with iCalcreator class.
+        $file_content = file_get_contents($file->uri);
+        $config = array(
+          'unique_id' => '',
+          'filename' => drupal_realpath($file->uri),
+        );
+        
+        module_load_include('php', 'os_events', 'iCalcreator/iCalcreator.class');
+        $calendar = new vcalendar($config);
+        if (!$calendar->parse($file_content)) {
+          drupal_set_message(t('The import file does not contain any events.'), 'error');
+          $valid = FALSE;
+        }
+      }
+    }
+  } else if ($values['os_importer_content_format-' . $node_type] == 'rss') {
+    if (empty($values['os_importer_rss_title-' . $node_type])) {
+      drupal_set_message('The Title field is required.', 'error');
+      $valid = FALSE;
+    }
+    if (empty($values['os_importer_rss_url-' . $node_type])) {
+      drupal_set_message('The URL field is required.', 'error');  
+      $valid = FALSE;
+    } else {
+      // Validate the url address.
+      $result = drupal_http_request($values['os_importer_rss_url-' . $node_type]);
+      if ($result->code != 200) {
+        drupal_set_message(t('The address @url is not a valid address.', array('@url' => check_plain($values['os_importer_rss_url-' . $node_type]))), 'error');
+        $valid = FALSE;
+      }
+
+      // Verify the user didn't enter that address.
+      if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
+        $importer_type = $node_type == 'blog' ? 'blog_import' : 'feed_importer';
+
+        // Check for existing nodes in the same VSite.
+        $query = new EntityFieldQuery();
+        $result = $query
+          ->entityCondition('entity_type', 'node')
+          ->entityCondition('bundle', $importer_type)
+          ->propertyCondition('status', NODE_PUBLISHED)
+          ->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $vsite->id)
+          ->fieldCondition('field_rss_url', 'value', $values['os_importer_rss_url-' . $node_type])
+          ->execute();
+
+        if (!empty($result['node'])) {
+          $row = reset($result['node']);
+          $node = node_load($row->nid);
+
+          $params = array(
+            '@url' => url('cp/os-importer/' . $node_type . '/manage/' . $node->nid),
+            '@title' => $node->title,
+          );
+          drupal_set_message(t('RSS url already exists in <a href="@url">@title</a>.', $params), 'error');
+          $valid = FALSE;
+        }
+      }
+    }
+  }
+  return $valid;
 }
 
 
@@ -190,16 +555,19 @@ function os_importer_cp_settings() {
  * Submit handler for os_importer_submit button for CSV/RSS/iCal import.
  */
  function os_importer_file_submit($request) {
+  global $user, $language;
   foreach($request as $var => $value) {
     if (strpos($var, 'os_importer_submit-') === 0) {
-      $node_type = end(explode('-', $var));
+      $part = explode('-', $var);
+      $node_type = end($part);
     }
   }
-
   $import_file_fid = $request['os_importer_file_upload-' . $node_type];
   $import_file = file_load($import_file_fid);
   $encode = $request['os_importer_encode-' . $node_type];
-  $extension = end(explode('.', $import_file->uri));
+  $part = !empty($import_file->uri) ? explode('.', $import_file->uri) : array();
+  $extension = end($part);
+
   $bundle = os_importer_importable_content($node_type);
 
   if (in_array($extension, array('csv', 'ical'))) {
@@ -213,15 +581,15 @@ function os_importer_cp_settings() {
     $source->startImport(); 
   }
   else {
-    /*$node_type = $form_state['type'] == 'blog' ? 'blog_import' : 'feed_importer';
+    $import_type = $node_type == 'blog' ? 'blog_import' : 'feed_importer';
     $node = entity_create('node', array(
-      'title' => $values['title'],
-      'type' => $node_type,
+      'title' => $request['os_importer_rss_title-' . $node_type],
+      'type' => $import_type,
       'language' => $language->language,
       'uid' => $user->uid,
     ));
     $wrapper = entity_metadata_wrapper('node', $node);
-    $wrapper->field_rss_url->set($values['url']);
-    $wrapper->save();*/
+    $wrapper->field_rss_url->set($request['os_importer_rss_url-' . $node_type]);
+    $wrapper->save();
   }
 }

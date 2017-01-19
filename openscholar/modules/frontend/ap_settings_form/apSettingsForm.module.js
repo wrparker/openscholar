@@ -105,8 +105,8 @@
           controller: 'apSettingsFormController',
           template: '<form id="{{formId}}" name="settingsForm" ng-submit="submitForm($event)">' +
             '<div class="messages" ng-show="status.length || errors.length"><div class="dismiss" ng-click="status.length = 0; errors.length = 0;">X</div>' +
-              '<div class="status" ng-show="status.length > 0"><div ng-repeat="m in status">{{m}}</div></div>' +
-              '<div class="error" ng-show="errors.length > 0"><div ng-repeat="m in errors">{{m}}</div></div></div>' +
+              '<div class="status" ng-show="status.length > 0"><div ng-repeat="m in status track by $index"><span ng-bind-html="m"></span></div></div>' +
+              '<div class="error" ng-show="errors.length > 0"><div ng-repeat="m in errors track by $index"><span ng-bind-html="m"></span></div></div></div>' +
             '</div>' +
             '<div class="form-column-wrapper column-count-{{columnCount}}" ng-if="columnCount > 1">' +
               '<div class="form-column column-{{column_key}}" ng-repeat="(column_key, elements) in columns">' +
@@ -253,8 +253,16 @@
                 $s[body.data[i].message_type].push(body.data[i].message)
             }
           }
-          if (close) {
+
+          if (close && !body.messages.error) {
             $s.close(reload);
+          } else if (body.messages.error) {
+            $s.errors = [];
+            angular.forEach(body.messages.error, function(value , key) {
+              $s.errors.push(value);
+            });
+
+            bss.SetState('settings_form', false);
           }
         }, function (error) {
           $s.errors = [];

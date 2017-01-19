@@ -13,7 +13,7 @@
         element: '=',
         value: '='
       },
-      template: '<div class="form-wrapper">' +
+      template: '<div class="form-wrapper {{classname}}">' +
         '<span ng-if="element.prefix" ng-bind-html="element.prefix"></span>' +
         '<span>Placeholder</span>' +
         '<div class="description" ng-bind-html="description"></div>' +
@@ -23,6 +23,12 @@
         scope.description = $sce.trustAsHtml(scope.element.description);
         scope.label = scope.element.title;
         scope.access = scope.element.access;
+        scope.classname = '';
+
+        angular.forEach(scope.element.class, function(classname, key) {
+          scope.classname += ' ' + classname;
+        });
+
         if (scope.access == undefined) {
           scope.access = true;
         }
