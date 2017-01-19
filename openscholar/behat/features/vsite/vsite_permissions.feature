@@ -63,7 +63,7 @@ Feature:
      Then I should not see the link "Links" under "ctools-dropdown-link-wrapper"
 
 # content editor
-  @api @vsite @javascript
+  @api @vsite
   Scenario: Testing content editor can edit any content on his group.
     Given I am logging in as "john"
      When I give the user "klark" the role "content editor" in the group "john"
