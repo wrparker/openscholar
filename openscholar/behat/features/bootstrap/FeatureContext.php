@@ -3517,11 +3517,15 @@ JS;
     $attempts = 0;
     while (!$driver->isVisible("//*[text() = '$text']") && !$page->getSession()->evaluateScript($scrolltest) && $attempts < 20) {
       $page->getSession()->getDriver()->executeScript("document.querySelector('$element').scrollTop += 100");
+      usleep(100);
       $attempts++;
     }
 
-    if (!$driver->isVisible("//*[text() = '$text']") || $attempts = 20) {
+    if (!$driver->isVisible("//*[text() = '$text']")) {
       throw new Exception("The text '$text' was not found in the '$element' element.");
+    }
+    elseif ($attempts == 20) {
+      throw new Exception("20 attempts were made and the element is still not visible.");
     }
   }
 
