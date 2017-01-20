@@ -95,8 +95,10 @@ function os_importer_cp_settings() {
           '#weight' => -6,
         );
       }
-
-      $settings['os_importer_content_format-' . $node_type] = array(
+	
+	// Import format option should be displayed for all content types except biblio/publication.
+      if ($node_type != 'biblio') {
+		$settings['os_importer_content_format-' . $node_type] = array(
         'group' => array(
           '#id' => 'os_importer_content_' . $node_type,
           '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
@@ -122,7 +124,8 @@ function os_importer_cp_settings() {
           '#markup' => $template_markup,
           '#weight' => -5,
         ),
-      );
+      );  
+	  }
       
       $settings['os_importer_file_upload-' . $node_type] = array(
         'form' => array(
@@ -151,24 +154,51 @@ function os_importer_cp_settings() {
           '#menu_parent' => 'import',          
         ),
       );
+		// Biblio specific select dropdown.
+      if ($node_type == 'biblio') {
+		$biblio_import_options = module_invoke_all('biblio_import_options');
+		asort($biblio_import_options);
+		$biblio_import_options = array_merge(array('0' => 'Select type'), $biblio_import_options);
 
-      $settings['os_importer_encode-' . $node_type] = array(
-        'group' => array(
-          '#id' => 'os_importer_content_' . $node_type,
-          '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
-          '#weight' => 4,
-          '#menu_parent' => 'import',
-        ),
-        'form' => array(
-          '#title' => t('Encoding'),
-          '#type' => 'optgroup',
-          '#options' => $encode_options,
-          '#default_value' => 'utf-8',
-          '#description' => t('Select the encoding of your file. For a full list of encodings you can visit <a href="@wikipedia-url">this</a> Wikipedia page.', $params),
-          '#weight' => 4,
-          '#class' => array('csv-import-fields'),
-        ),
-      );      
+		$settings['os_importer_filetype-' . $node_type] = array(
+			'group' => array(
+			  '#id' => 'os_importer_content_' . $node_type,
+			  '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
+			  '#weight' => 4,
+			  '#menu_parent' => 'import',
+			),
+			'form' => array(
+			  '#title' => t('File Type'),
+			  '#type' => 'optgroup',
+			  '#options' => $biblio_import_options,
+			  '#default_value' => '0',
+			  '#weight' => 4,
+			  '#access' => biblio_access('import'),
+			),
+		  );
+	  }
+		
+		
+	// Encoding option should be displayed for all content types except biblio/publication.
+      if ($node_type != 'biblio') {
+		  $settings['os_importer_encode-' . $node_type] = array(
+			'group' => array(
+			  '#id' => 'os_importer_content_' . $node_type,
+			  '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
+			  '#weight' => 4,
+			  '#menu_parent' => 'import',
+			),
+			'form' => array(
+			  '#title' => t('Encoding'),
+			  '#type' => 'optgroup',
+			  '#options' => $encode_options,
+			  '#default_value' => 'utf-8',
+			  '#description' => t('Select the encoding of your file. For a full list of encodings you can visit <a href="@wikipedia-url">this</a> Wikipedia page.', $params),
+			  '#weight' => 4,
+			  '#class' => array('csv-import-fields'),
+			),
+		  );
+	  }            
 
       // Only blog and news have RSS feed import option.
       if (in_array($node_type, array('blog', 'news'))) {
@@ -237,6 +267,20 @@ function os_importer_import_validate($values) {
       break;
     }
   }
+
+   // For biblio content types validation
+   if ($node_type == 'biblio') {
+	    // If no files have been selected.
+		if (empty($values['os_importer_file_upload-' . $node_type])) {
+		  drupal_set_message(t('The file field is required.'), 'error');
+		  $valid = FALSE;
+		} else if ($values['os_importer_filetype-' . $node_type] == '0') {
+		  // If no file type have been selected.
+		  drupal_set_message(t('You did not select the file type.'), 'error');
+		  $valid = FALSE;
+		}
+   }
+  
   // Remove previous warnings and errors.
   drupal_get_messages();
   // For CSV import files.
