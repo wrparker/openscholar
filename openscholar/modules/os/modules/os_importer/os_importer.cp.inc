@@ -154,51 +154,50 @@ function os_importer_cp_settings() {
           '#menu_parent' => 'import',          
         ),
       );
-		// Biblio specific select dropdown.
+      // Biblio specific select dropdown.
       if ($node_type == 'biblio') {
-		$biblio_import_options = module_invoke_all('biblio_import_options');
-		asort($biblio_import_options);
-		$biblio_import_options = array_merge(array('0' => 'Select type'), $biblio_import_options);
+        $biblio_import_options = module_invoke_all('biblio_import_options');
+        asort($biblio_import_options);
+        $biblio_import_options = array_merge(array('0' => 'Select type'), $biblio_import_options);
 
-		$settings['os_importer_filetype-' . $node_type] = array(
-			'group' => array(
-			  '#id' => 'os_importer_content_' . $node_type,
-			  '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
-			  '#weight' => 4,
-			  '#menu_parent' => 'import',
-			),
-			'form' => array(
-			  '#title' => t('File Type'),
-			  '#type' => 'optgroup',
-			  '#options' => $biblio_import_options,
-			  '#default_value' => '0',
-			  '#weight' => 4,
-			  '#access' => biblio_access('import'),
-			),
-		  );
-	  }
-		
-		
-	// Encoding option should be displayed for all content types except biblio/publication.
+        $settings['os_importer_filetype-' . $node_type] = array(
+            'group' => array(
+              '#id' => 'os_importer_content_' . $node_type,
+              '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
+              '#weight' => 4,
+              '#menu_parent' => 'import',
+            ),
+            'form' => array(
+              '#title' => t('File Type'),
+              '#type' => 'optgroup',
+              '#options' => $biblio_import_options,
+              '#default_value' => '0',
+              '#weight' => 4,
+              '#access' => biblio_access('import'),
+            ),
+          );
+      }
+
+      // Encoding option should be displayed for all content types except biblio/publication.
       if ($node_type != 'biblio') {
-		  $settings['os_importer_encode-' . $node_type] = array(
-			'group' => array(
-			  '#id' => 'os_importer_content_' . $node_type,
-			  '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
-			  '#weight' => 4,
-			  '#menu_parent' => 'import',
-			),
-			'form' => array(
-			  '#title' => t('Encoding'),
-			  '#type' => 'optgroup',
-			  '#options' => $encode_options,
-			  '#default_value' => 'utf-8',
-			  '#description' => t('Select the encoding of your file. For a full list of encodings you can visit <a href="@wikipedia-url">this</a> Wikipedia page.', $params),
-			  '#weight' => 4,
-			  '#class' => array('csv-import-fields'),
-			),
-		  );
-	  }            
+          $settings['os_importer_encode-' . $node_type] = array(
+            'group' => array(
+              '#id' => 'os_importer_content_' . $node_type,
+              '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
+              '#weight' => 4,
+              '#menu_parent' => 'import',
+            ),
+            'form' => array(
+              '#title' => t('Encoding'),
+              '#type' => 'optgroup',
+              '#options' => $encode_options,
+              '#default_value' => 'utf-8',
+              '#description' => t('Select the encoding of your file. For a full list of encodings you can visit <a href="@wikipedia-url">this</a> Wikipedia page.', $params),
+              '#weight' => 4,
+              '#class' => array('csv-import-fields'),
+            ),
+          );
+      }
 
       // Only blog and news have RSS feed import option.
       if (in_array($node_type, array('blog', 'news'))) {
@@ -250,7 +249,7 @@ function os_importer_cp_settings() {
         ),
         'rest_submit' => 'os_importer_file_submit',
         'submit_full_request' => TRUE,
-      );     
+      );
     }
   }  
   
@@ -270,15 +269,15 @@ function os_importer_import_validate($values) {
 
    // For biblio content types validation
    if ($node_type == 'biblio') {
-	    // If no files have been selected.
-		if (empty($values['os_importer_file_upload-' . $node_type])) {
-		  drupal_set_message(t('The file field is required.'), 'error');
-		  $valid = FALSE;
-		} else if ($values['os_importer_filetype-' . $node_type] == '0') {
-		  // If no file type have been selected.
-		  drupal_set_message(t('You did not select the file type.'), 'error');
-		  $valid = FALSE;
-		}
+        // If no files have been selected.
+        if (empty($values['os_importer_file_upload-' . $node_type])) {
+          drupal_set_message(t('The file field is required.'), 'error');
+          $valid = FALSE;
+        } else if ($values['os_importer_filetype-' . $node_type] == '0') {
+          // If no file type have been selected.
+          drupal_set_message(t('You did not select the file type.'), 'error');
+          $valid = FALSE;
+        }
    }
   
   // Remove previous warnings and errors.
@@ -471,7 +470,7 @@ function os_importer_import_validate($values) {
               $orig_value_created = $value;
               $value = strtotime($value);
               // if strtotime() output is blank, then date format is not correct, displaying error message.
-              if(empty($value) || ($value < 0)) {                
+              if(empty($value) || ($value < 0)) {
                 drupal_set_message(t('Invalid date value entered for the field "!field" with value "!value".', array('!field' => $field, '!value' => $orig_value_created)), 'error');
                 $valid = FALSE;
               }
