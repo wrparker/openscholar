@@ -267,18 +267,18 @@ function os_importer_import_validate($values) {
     }
   }
 
-   // For biblio content types validation
-   if ($node_type == 'biblio') {
-        // If no files have been selected.
-        if (empty($values['os_importer_file_upload-' . $node_type])) {
-          drupal_set_message(t('The file field is required.'), 'error');
-          $valid = FALSE;
-        } else if ($values['os_importer_filetype-' . $node_type] == '0') {
-          // If no file type have been selected.
-          drupal_set_message(t('You did not select the file type.'), 'error');
-          $valid = FALSE;
-        }
-   }
+  // For biblio content types validation
+  if ($node_type == 'biblio') {
+    // If no files have been selected.
+    if (empty($values['os_importer_file_upload-' . $node_type])) {
+      drupal_set_message(t('The file field is required.'), 'error');
+      $valid = FALSE;
+    } else if ($values['os_importer_filetype-' . $node_type] == '0') {
+      // If no file type have been selected.
+      drupal_set_message(t('You did not select the file type.'), 'error');
+      $valid = FALSE;
+    }
+  }
   
   // Remove previous warnings and errors.
   drupal_get_messages();
