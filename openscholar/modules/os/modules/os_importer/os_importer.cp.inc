@@ -95,37 +95,37 @@ function os_importer_cp_settings() {
           '#weight' => -6,
         );
       }
-	
-	// Import format option should be displayed for all content types except biblio/publication.
+    
+      // Import format option should be displayed for all content types except biblio/publication.
       if ($node_type != 'biblio') {
-		$settings['os_importer_content_format-' . $node_type] = array(
-        'group' => array(
-          '#id' => 'os_importer_content_' . $node_type,
-          '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
-          '#weight' => -6,
-          '#menu_parent' => 'import',
-        ),
-        'form' => $form_settings,
-      );
+        $settings['os_importer_content_format-' . $node_type] = array(
+          'group' => array(
+            '#id' => 'os_importer_content_' . $node_type,
+            '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
+            '#weight' => -6,
+            '#menu_parent' => 'import',
+          ),
+          'form' => $form_settings,
+        );
 
-      $template_markup = '<div class="import-help element-hidden rss-import-fields">' . $rss_feed_helptext . '</div>';
-      $template_markup .= '<div class="import-help csv-import-fields">' . l(t('Download a template'), (isset($purl) ? $purl . '/' : '') . 'cp/os-importer/' . $node_type . '/template') . '</div>';
+        $template_markup = '<div class="import-help element-hidden rss-import-fields">' . $rss_feed_helptext . '</div>';
+        $template_markup .= '<div class="import-help csv-import-fields">' . l(t('Download a template'), (isset($purl) ? $purl . '/' : '') . 'cp/os-importer/' . $node_type . '/template') . '</div>';
 
-      $settings['os_importer_download_template-' . $node_type] = array(
-        'group' => array(
-          '#id' => 'os_importer_content_' . $node_type,
-          '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
-          '#weight' => -5,
-          '#menu_parent' => 'import',
-        ),
-        'form' => array(
-          '#type' => 'markup',
-          '#default_value' => 'utf-8',
-          '#markup' => $template_markup,
-          '#weight' => -5,
-        ),
-      );  
-	  }
+        $settings['os_importer_download_template-' . $node_type] = array(
+          'group' => array(
+            '#id' => 'os_importer_content_' . $node_type,
+            '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
+            '#weight' => -5,
+            '#menu_parent' => 'import',
+          ),
+          'form' => array(
+            '#type' => 'markup',
+            '#default_value' => 'utf-8',
+            '#markup' => $template_markup,
+            '#weight' => -5,
+          ),
+        );
+      }
       
       $settings['os_importer_file_upload-' . $node_type] = array(
         'form' => array(
