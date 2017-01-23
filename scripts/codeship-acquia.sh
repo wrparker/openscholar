@@ -19,13 +19,13 @@ if ! test "$PR_BRANCH" = ""; then
 git push origin :$PR_BRANCH || echo "$PR_BRANCH not found on hwpi1"
 fi
 # Build this branch and push it to Acquia
-composer global require drush/drush-5.9.0
+composer global require drush/drush
 mkdir ~/.drush
 printf "disable_functions =\nmemory_limit = 256M" > ~/.drush/php.ini
 drush --version
 git clone git://github.com/apenwarr/git-subtree.git /tmp/subtree
 cd /tmp/subtree
-sudo bash install.sh
+bash install.sh
 git submodule init
 git submodule update
 composer --version
