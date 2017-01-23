@@ -19,9 +19,7 @@ if ! test "$PR_BRANCH" = ""; then
 git push origin :$PR_BRANCH || echo "$PR_BRANCH not found on hwpi1"
 fi
 # Build this branch and push it to Acquia
-pear upgrade
-pear channel-discover pear.drush.org
-pear install drush/drush-5.9.0
+composer global require drush/drush-5.9.0
 mkdir ~/.drush
 printf "disable_functions =\nmemory_limit = 256M" > ~/.drush/php.ini
 drush --version
