@@ -37,7 +37,9 @@ cp -f openscholar/openscholar/drupal-org-core.make /tmp/
 cp -f openscholar/openscholar/drupal-org.make /tmp/
 cp -f openscholar/openscholar/bower.json /tmp/
 echo "Beginning subtree pull."
-git subtree pull -d --prefix=openscholar git://github.com/openscholar/openscholar.git $CI_BRANCH
+#git subtree pull -d --prefix=openscholar git://github.com/openscholar/openscholar.git $CI_BRANCH
+rm -rf openscholar/openscholar
+cp ~/src/github.com/openscholar/openscholar /home/rof/acquia.com/hwpi1/openscholar
 echo "Subtree pull finished."
 #Only build if no build has ever happened, or if the make files have changed
 if [ ! -d openscholar/openscholar/modules/contrib ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org-core.make' '/tmp/drupal-org-core.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org.make' '/tmp/drupal-org.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/client/bower.json' '/tmp/bower.json')" != "" ]; then
