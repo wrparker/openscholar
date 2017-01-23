@@ -39,6 +39,7 @@ cp -f openscholar/openscholar/bower.json /tmp/
 echo "Beginning subtree pull."
 #git subtree pull -d --prefix=openscholar git://github.com/openscholar/openscholar.git $CI_BRANCH
 rm -rf openscholar/openscholar
+mkdir openscholar/openscholar
 cp -rf ~/src/github.com/openscholar/openscholar /home/rof/acquia.com/hwpi1/openscholar
 echo "Subtree pull finished."
 #Only build if no build has ever happened, or if the make files have changed
