@@ -85,8 +85,6 @@ cp -R openscholar/openscholar/modules/os_features/os_events/iCalcreator openscho
 # Download the git wrapper library using the composer.
 (
 cd openscholar/openscholar
-curl -s https://getcomposer.org/installer | php
-php composer.phar install
 rm -rf libraries/git/symfony/event-dispatcher/Symfony/Component/EventDispatcher/.git
 rm -f libraries/git/symfony/event-dispatcher/Symfony/Component/EventDispatcher/.gitignore
 git rm -r --cached libraries/git/symfony/event-dispatcher/Symfony/Component/EventDispatcher
@@ -97,13 +95,12 @@ cd ../..
 )
 # Get the angualr components
 (
-cd $BUILD_ROOT/openscholar/client
+cd $BUILD_ROOT/openscholar/libraries
 npm install
 bower install
 cd -
 )
 for DIR in openscholar/openscholar/libraries openscholar/openscholar/themes/contrib
-openscholar/openscholar/client/node_modules
 openscholar/openscholar/modules/contrib; do
 if [ -d "$DIR" ]; then
 git add --all -f $DIR
