@@ -25,13 +25,6 @@ composer global require drush/drush
 mkdir ~/.drush
 printf "disable_functions =\nmemory_limit = 256M" > ~/.drush/php.ini
 drush --version
-git clone git://github.com/apenwarr/git-subtree.git /tmp/subtree
-cd /tmp/subtree
-git subtree
-bash install.sh
-git submodule init
-git submodule update
-composer --version
 echo $CI_BRANCH
 # Drush executable.
 [[ $DRUSH && ${DRUSH-x} ]] || DRUSH=drush
