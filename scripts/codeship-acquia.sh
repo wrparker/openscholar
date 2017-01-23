@@ -35,8 +35,9 @@ preserve_files=( .htaccess robots_disallow.txt sites 404_fast.html favicon.ico )
 #Backup the make files
 cp -f openscholar/openscholar/drupal-org-core.make /tmp/
 cp -f openscholar/openscholar/drupal-org.make /tmp/
-cp -f openscholar/openscholar/client/bower.json /tmp/
+cp -f openscholar/openscholar/bower.json /tmp/
 git subtree pull --prefix=openscholar git://github.com/openscholar/openscholar.git $CI_BRANCH
+echo "Subtree pull finished."
 #Only build if no build has ever happened, or if the make files have changed
 if [ ! -d openscholar/openscholar/modules/contrib ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org-core.make' '/tmp/drupal-org-core.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org.make' '/tmp/drupal-org.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/client/bower.json' '/tmp/bower.json')" != "" ]; then
 # Chores.
