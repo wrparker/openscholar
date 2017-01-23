@@ -5,6 +5,8 @@ PR_BRANCH=$(git show -s --format=%B $CI_COMMIT_ID | grep -oP 'Merge pull request
 echo "'$PR_BRANCH' set as PR branch."
 # pull down the acquia branch
 mkdir -p ~/src/acquia.com/
+git config --global user.email "openscholar@swap.lists.harvard.edu"
+git config --global user.name "OpenScholar Auto Push Bot"
 if git ls-remote --heads hwpi1@svn-1745.prod.hosting.acquia.com:hwpi1.git | grep -sw "rb-test" 2>&1>/dev/null; then
 git clone -b $CI_BRANCH hwpi1@svn-1745.prod.hosting.acquia.com:hwpi1.git  ~/src/acquia.com/hwpi1;
 cd ~/src/acquia.com/hwpi1
@@ -25,6 +27,7 @@ printf "disable_functions =\nmemory_limit = 256M" > ~/.drush/php.ini
 drush --version
 git clone git://github.com/apenwarr/git-subtree.git /tmp/subtree
 cd /tmp/subtree
+git subtree
 bash install.sh
 git submodule init
 git submodule update
