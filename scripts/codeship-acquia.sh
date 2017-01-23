@@ -100,8 +100,7 @@ npm install
 bower install
 cd -
 )
-for DIR in openscholar/openscholar/libraries openscholar/openscholar/themes/contrib
-openscholar/openscholar/modules/contrib; do
+for DIR in openscholar/openscholar/libraries openscholar/openscholar/themes/contrib openscholar/openscholar/modules/contrib do
 if [ -d "$DIR" ]; then
 git add --all -f $DIR
 fi
