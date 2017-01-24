@@ -12,13 +12,18 @@ a,
 a:visited {
     color: #407cb5;
 }
-node-type-person #content-column .node-person h2.block-title,
-.sidebar .block h2.block-title,
+
+.node-type-person #content-column .node-person h2.block-title, 
+.sidebar .block h2.block-title {
+	color: #000;
+}
+
 #branding_footer,
 #branding_header,
 #footer {
     background: #000;
 }
+
 .region-header-third ul.nice-menu a,
 #footer .footer-login,
 #footer a,
