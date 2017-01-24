@@ -54,7 +54,7 @@ $DRUSH make openscholar/openscholar/drupal-org-core.make $BUILD_ROOT/www-build
 	if [ ! -d $BUILD_ROOT/openscholar/libraries ]; then 
 		mkdir $BUILD_ROOT/openscholar/libraries
 	fi
-	cd $BUILD_ROOT/openscholar/libraries
+	cd $BUILD_ROOT/openscholar
 	npm install -g bower
 	bower install
 	cd -
