@@ -1528,6 +1528,8 @@ class csl_bibliography  extends csl_format {
       $text = '<div class="bib-neg-indent">' . $text . '</div>';
     }
     $text = str_replace('?.', '?', str_replace('..', '.', $text));
+    // To remove the double period, one of which is from the input content itself
+    $text = str_replace('.</a></span>.', '.</a></span>', $text);
     return $this->format($text);
   }
 }
