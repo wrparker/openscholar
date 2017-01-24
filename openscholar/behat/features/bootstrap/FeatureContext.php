@@ -2903,18 +2903,6 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Then /^Show me a screenshot$/
-   */
-  public function showScreenshot() {
-    $image_data = $this->getSession()->getDriver()->getScreenshot();
-    $file_and_path = '/tmp/behat_screenshot.jpg';
-    file_put_contents($file_and_path, $image_data);
-    if (PHP_OS === "Linux" && PHP_SAPI === "cli") {
-      exec('display ' . $file_and_path);
-    }
-  }
-
-  /**
    * @When /^I click on "([^"]*)" button in the media browser$/
    */
   public function iClickOn($text) {
@@ -3062,30 +3050,15 @@ class FeatureContext extends DrupalContext {
       try {
         $this->iDisplayWatchdog();
         $this->iShouldPrintPage();
-        $this->takeScreenshotAfterFailedStep($event);
+
+        if ($this->getSession()->getDriver() instanceof \Behat\Mink\Driver\Selenium2Driver) {
+          $this->iPrintPageScreenShot();
+        }
       }
       catch (\Exception $e) {
 
       }
 
-    }
-  }
-
-  /**
-  * AfterStep
-  */
-  public function takeScreenshotAfterFailedStep($event)
-  {
-    if ($event->getResult() == 4) {
-      if ($this->getSession()->getDriver() instanceof
-      \Behat\Mink\Driver\Selenium2Driver) {
-        $stepText = $event->getStep()->getText();
-        $fileTitle = preg_replace("#[^a-zA-Z0-9\._-]#", '', $stepText);
-        $fileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR . $fileTitle . '.png';
-        $screenshot = $this->getSession()->getDriver()->getScreenshot();
-        file_put_contents($fileName, $screenshot);
-        print "Screenshot for '{$stepText}' placed in {$fileName}\n";
-      }
     }
   }
 
@@ -3570,6 +3543,7 @@ JS;
       ['image' => base64_encode($screenshot)]
     );
     $json = $request->json();
-    print_r($json['data']['link']);
+    print_r('The screen shot of the page is: ' . $json['data']['link']);
   }
+
 }
