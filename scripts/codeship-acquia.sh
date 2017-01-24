@@ -39,7 +39,7 @@ cp -f openscholar/openscholar/drupal-org.make /tmp/
 cp -f openscholar/openscholar/bower.json /tmp/
 echo "Beginning subtree pull."
 ls
-git subtree pull -d --prefix=openscholar git://github.com/openscholar/openscholar.git $CI_COMMIT_ID
+git subtree pull -d --prefix=openscholar git://github.com/openscholar/openscholar.git $CI_BRANCH
 #rm -rf openscholar/openscholar
 #mkdir openscholar/openscholar
 #cp -rf ~/src/github.com/openscholar/openscholar openscholar
