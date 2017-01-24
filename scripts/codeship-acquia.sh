@@ -51,11 +51,10 @@ cd ../..
 $DRUSH make openscholar/openscholar/drupal-org-core.make $BUILD_ROOT/www-build
 # Get the angualr components
 (
-	if [ ! -d $BUILD_ROOT/openscholar/libraries ]; then 
-		mkdir $BUILD_ROOT/openscholar/libraries
+	if [ ! -d $BUILD_ROOT/openscholar/openscholar/libraries ]; then 
+		mkdir $BUILD_ROOT/openscholar/openscholar/libraries
 	fi
-	cd $BUILD_ROOT/openscholar
-	ls
+	cd $BUILD_ROOT/openscholar/openscholar
 	npm install -g bower
 	bower install
 	cd -
