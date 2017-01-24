@@ -41,6 +41,7 @@ echo "Beginning subtree pull."
 rm -rf openscholar/openscholar
 mkdir openscholar/openscholar
 cp -rf ~/src/github.com/openscholar/openscholar openscholar
+ls openscholar
 echo "Subtree pull finished."
 #Only build if no build has ever happened, or if the make files have changed
 if [ ! -d openscholar/openscholar/modules/contrib ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org-core.make' '/tmp/drupal-org-core.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org.make' '/tmp/drupal-org.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/client/bower.json' '/tmp/bower.json')" != "" ]; then
