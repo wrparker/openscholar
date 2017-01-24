@@ -4,7 +4,7 @@
   name        = Widener
   description = A classic looking theme for use by departments at Harvard.
   core        = 7.x
-  base theme  = hwpi_classic
+  base theme  = hwpi_modern
   release     = 7.x-3.x
   engine      = phptemplate
   screenshot  = screenshot.png
