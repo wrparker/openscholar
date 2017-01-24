@@ -2,7 +2,7 @@
 
 # Get PR branch, default to empty string
 PR_BRANCH=$(git show -s --format=%B $CI_COMMIT_ID | grep -oP 'Merge pull request #[\d]* from openscholar/\K(.*)' || echo "")
-MANUAL_BUILD=$(git show -s --format=%B $CI_COMMIT_ID | grep -oP '[build'] && echo "yes" || echo "no")
+MANUAL_BUILD=$(git show -s --format=%B $CI_COMMIT_ID | grep -oP '[build]' && echo "yes" || echo "no")
 echo "'$PR_BRANCH' set as PR branch."
 echo "Manual Build: "$MANUAL_BUILD
 # pull down the acquia branch
