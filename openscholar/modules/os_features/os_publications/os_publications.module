@@ -635,7 +635,6 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
 
   // Change descriptions in node author fieldset.
   $form['author']['name']['#description'] = '';
-  //$form['author']['date']['#description'] = t('Date can be used to change the order in which content is displayed.');
   $form['author']['date']['#description'] = t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the time of form submission.', array('%time' => !empty($settings['open']) ? date_format(date_create($settings['open']), 'Y-m-d H:i:s O') : format_date(time(), 'custom', 'Y-m-d H:i:s O'), '%timezone' => !empty($settings['open']) ? date_format(date_create($settings['open']), 'O') : format_date(time(), 'custom', 'O'),));
     
   // Add description to Full Text field.
