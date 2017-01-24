@@ -57,20 +57,20 @@ $DRUSH make openscholar/openscholar/drupal-org-core.make $BUILD_ROOT/www-build
 	cd $BUILD_ROOT/openscholar/openscholar
 	npm install -g bower
 	bower install
-	cd -
 )
 # Backup files from existing installation.
+cd $BUILD_ROOT
 DOCROOT='docroot';
 for BACKUP_FILE in "${preserve_files[@]}"; do
 	rm -Rf www-build/$BACKUP_FILE
 	mv $DOCROOT/$BACKUP_FILE www-build/
 done
 # Move the profile in place.
-ln -s ../../openscholar/openscholar $BUILD_ROOT/www-build/profiles/openscholar
+ln -s openscholar/openscholar $BUILD_ROOT/www-build/profiles/openscholar
 # link up phpmyadmin
 # ln -s ../phpMyAdmin-3.5.2.2-english $BUILD_ROOT/www-build/phpmyadmin
 #link up js.php
-ln -s ../openscholar/openscholar/modules/contrib/js/js.php $BUILD_ROOT/www-build/js.php
+ln -s openscholar/openscholar/modules/contrib/js/js.php $BUILD_ROOT/www-build/js.php
 # Fix permisions before deleting.
 chmod -R +w $BUILD_ROOT/$DOCROOT/sites/* || true
 rm -Rf $BUILD_ROOT/$DOCROOT || true
