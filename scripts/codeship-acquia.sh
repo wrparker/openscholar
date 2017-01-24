@@ -58,10 +58,11 @@ cd ../..
 # Build core.
 $DRUSH make openscholar/openscholar/drupal-org-core.make $BUILD_ROOT/www-build
 # Install bower components
-find openscholar/modules/frontend -type f -name 'bower.json' | sed -r 's|[^/]+$||' | uniq | while read path; do
-bower install "./$path"
-done
+cd $BUILD_ROOT/openscholar
+bower install
+cd -
 # Backup files from existing installation.
+DOCROOT='docroot';
 for BACKUP_FILE in "${preserve_files[@]}"; do
 rm -Rf www-build/$BACKUP_FILE
 mv $DOCROOT/$BACKUP_FILE www-build/
