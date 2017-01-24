@@ -23,7 +23,7 @@ fi
 # Build this branch and push it to Acquia
 composer global require drush/drush
 mkdir ~/.drush
-printf "disable_functions =\nmemory_limit = 256M\ndate.timezone = \"America/New York\"" > ~/.drush/php.ini
+printf "disable_functions =\nmemory_limit = 256M\ndate.timezone = \"America/New_York\"" > ~/.drush/php.ini
 drush --version
 echo $CI_BRANCH
 echo $CI_COMMIT_ID
@@ -51,7 +51,7 @@ cd ../..
 $DRUSH make openscholar/openscholar/drupal-org-core.make $BUILD_ROOT/www-build
 # Get the angualr components
 (
-	if [ -d $BUILD_ROOT/openscholar/libraries ]; then 
+	if [ ! -d $BUILD_ROOT/openscholar/libraries ]; then 
 		mkdir $BUILD_ROOT/openscholar/libraries
 	fi
 	cd $BUILD_ROOT/openscholar/libraries
