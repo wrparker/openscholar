@@ -46,6 +46,7 @@ rm -Rf $DIR
 done
 cd openscholar/openscholar
 $DRUSH make --no-core --contrib-destination drupal-org.make .
+composer install
 cd ../..
 # Build core.
 $DRUSH make openscholar/openscholar/drupal-org-core.make $BUILD_ROOT/www-build
@@ -75,7 +76,7 @@ ln -s openscholar/openscholar $BUILD_ROOT/www-build/profiles/openscholar
 #link up js.php
 ln -s openscholar/openscholar/modules/contrib/js/js.php $BUILD_ROOT/www-build/js.php
 # Fix permisions before deleting.
-chmod -R +w $BUILD_ROOT/$DOCROOT/sites/* || true
+# chmod -R +w $BUILD_ROOT/$DOCROOT/sites/* || true
 rm -Rf $BUILD_ROOT/$DOCROOT || true
 #remove install.php
 rm -Rf $BUILD_ROOT/www-build/install.php || true
