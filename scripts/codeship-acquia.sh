@@ -49,10 +49,13 @@ $DRUSH make --no-core --contrib-destination drupal-org.make .
 cd ../..
 # Build core.
 $DRUSH make openscholar/openscholar/drupal-org-core.make $BUILD_ROOT/www-build
-# Install bower components
-cd $BUILD_ROOT/openscholar
-bower install
-cd -
+# Get the angualr components
+(
+	cd $BUILD_ROOT/openscholar/libraries
+	npm install -g bower
+	bower install
+	cd -
+)
 # Backup files from existing installation.
 DOCROOT='docroot';
 for BACKUP_FILE in "${preserve_files[@]}"; do
@@ -89,13 +92,6 @@ rm -rf libraries/git/symfony/process/Symfony/Component/Process/.git
 rm -f libraries/git/symfony/process/Symfony/Component/Process/.gitignore
 git rm -r --cached libraries/git/symfony/process/Symfony/Component/Process
 cd ../..
-)
-# Get the angualr components
-(
-cd $BUILD_ROOT/openscholar/libraries
-npm install
-bower install
-cd -
 )
 for DIR in openscholar/openscholar/libraries openscholar/openscholar/themes/contrib openscholar/openscholar/modules/contrib
 do
