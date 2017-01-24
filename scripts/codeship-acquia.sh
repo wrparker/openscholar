@@ -23,7 +23,7 @@ fi
 # Build this branch and push it to Acquia
 composer global require drush/drush
 mkdir ~/.drush
-printf "disable_functions =\nmemory_limit = 256M\ndate.timezone = 'America\New York'" > ~/.drush/php.ini
+printf "disable_functions =\nmemory_limit = 256M\ndate.timezone = 'America/New York'" > ~/.drush/php.ini
 drush --version
 echo $CI_BRANCH
 echo $CI_COMMIT_ID
