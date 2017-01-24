@@ -369,7 +369,10 @@ function os_files_private_cp_settings() {
   );
   
   // Allows administrators only to edit pinserver app name in spaces_overrides if they have a custom domain.
+  $pinserver_app_name_access = FALSE;
   if (user_access('administer pinserver') && variable_get('vsite_domain_name', FALSE)) {
+    $pinserver_app_name_access = module_exists('spaces') ? spaces_access_admin() : user_access('administer site configuration');
+  }
     $settings['pinserver_app_name'] = array(
       'group' => array(
         '#id' => 'feature_os_files_private',
@@ -384,11 +387,10 @@ function os_files_private_cp_settings() {
         '#type' => 'textfield',
         '#default_value' => variable_get('pinserver_app_name', ''),
         '#weight' => -1,
-        '#access' => module_exists('spaces') ? spaces_access_admin() : user_access('administer site configuration'),
+        '#access' => $pinserver_app_name_access,
       ),
       'rest_after_submit' => 'os_pinserver_auth_vsite_private_file_settings_submit',
     );
-  }
   return $settings;
 }
 
