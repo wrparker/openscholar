@@ -1,5 +1,5 @@
 # Quick codeship script to push builds to a pair of acquia repos as new branches are made.
-
+ 
 # Get PR branch, default to empty string
 PR_BRANCH=$(git show -s --format=%B $CI_COMMIT_ID | grep -oP 'Merge pull request #[\d]* from openscholar/\K(.*)' || echo "")
 MANUAL_BUILD=$([git show -s --format=%B $CI_COMMIT_ID | grep -oP '\[build\]'] && echo "yes" || echo "no")
