@@ -61,7 +61,9 @@ $DRUSH make openscholar/openscholar/drupal-org-core.make $BUILD_ROOT/www-build
 # Backup files from existing installation.
 cd $BUILD_ROOT
 DOCROOT='docroot';
+cd $DOCROOT
 ls
+cd ../
 for BACKUP_FILE in "${preserve_files[@]}"; do
 	rm -Rf www-build/$BACKUP_FILE
 	mv $DOCROOT/$BACKUP_FILE www-build/
