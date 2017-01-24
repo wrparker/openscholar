@@ -2,7 +2,9 @@
 
 # Get PR branch, default to empty string
 PR_BRANCH=$(git show -s --format=%B $CI_COMMIT_ID | grep -oP 'Merge pull request #[\d]* from openscholar/\K(.*)' || echo "")
+MANUAL_BUILD=$(git show -s --format=%B $CI_COMMIT_ID | grep -oP '[build'] && echo "yes" || echo "no")
 echo "'$PR_BRANCH' set as PR branch."
+echo "Manual Build: "$MANUAL_BUILD
 # pull down the acquia branch
 mkdir -p ~/src/acquia.com/
 git config --global user.email "openscholar@swap.lists.harvard.edu"
@@ -39,7 +41,7 @@ cp -f openscholar/openscholar/drupal-org.make /tmp/
 cp -f openscholar/openscholar/bower.json /tmp/
 git subtree pull -m "subtree merge in codeship" --prefix=openscholar git://github.com/openscholar/openscholar.git $CI_BRANCH
 #Only build if no build has ever happened, or if the make files have changed
-if [ ! -d openscholar/openscholar/modules/contrib ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org-core.make' '/tmp/drupal-org-core.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org.make' '/tmp/drupal-org.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/bower.json' '/tmp/bower.json')" != "" ]; then
+if [ ! -d openscholar/openscholar/modules/contrib ] || [ $MANUAL_BUILD = "yes" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org-core.make' '/tmp/drupal-org-core.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org.make' '/tmp/drupal-org.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/bower.json' '/tmp/bower.json')" != "" ]; then
 # Chores.
 for DIR in $BUILD_ROOT/www-build $BUILD_ROOT/www-backup openscholar/openscholar/1 openscholar/openscholar/modules/contrib openscholar/openscholar/themes/contrib openscholar/openscholar/libraries; do
 rm -Rf $DIR
