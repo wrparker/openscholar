@@ -151,6 +151,7 @@ class FeatureContext extends DrupalContext {
     $element->fillField('Password', $password);
     $submit = $element->findButton('Log in');
     $submit->click();
+    sleep(3);
   }
 
   /**
@@ -3555,5 +3556,20 @@ JS;
    */
   public function arbitraryScript($script) {
     $this->getSession()->evaluateScript($script);
+  }
+
+  /**
+   * @Given /^I print page screen shot$/
+   */
+  public function iPrintPageScreenShot() {
+    $driver = $this->getSession()->getDriver();
+    $screenshot = $driver->getScreenshot();
+    $client_id = 'f10ef45787db6fc';
+    $request = $this->invokeRestRequest('post', 'https://api.imgur.com/3/image.json',
+      ['Authorization' => 'Client-ID ' . $client_id],
+      ['image' => base64_encode($screenshot)]
+    );
+    $json = $request->json();
+    print_r($json['data']['link']);
   }
 }
