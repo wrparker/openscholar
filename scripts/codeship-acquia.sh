@@ -26,6 +26,7 @@ mkdir ~/.drush
 printf "disable_functions =\nmemory_limit = 256M" > ~/.drush/php.ini
 drush --version
 echo $CI_BRANCH
+echo $CI_COMMIT_ID
 # Drush executable.
 [[ $DRUSH && ${DRUSH-x} ]] || DRUSH=drush
 BUILD_ROOT='/home/rof/src/acquia.com/hwpi1'
