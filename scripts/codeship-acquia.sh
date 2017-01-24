@@ -23,7 +23,7 @@ fi
 # Build this branch and push it to Acquia
 composer global require drush/drush
 mkdir ~/.drush
-printf "disable_functions =\nmemory_limit = 256M\ndate.timezone = \"America\New York\"" > ~/.drush/php.ini
+printf "disable_functions =\nmemory_limit = 256M\ndate.timezone = \"America/New York\"" > ~/.drush/php.ini
 drush --version
 echo $CI_BRANCH
 echo $CI_COMMIT_ID
@@ -51,16 +51,19 @@ cd ../..
 $DRUSH make openscholar/openscholar/drupal-org-core.make $BUILD_ROOT/www-build
 # Get the angualr components
 (
+	if [ -d $BUILD_ROOT/openscholar/libraries ]; then 
+		mkdir $BUILD_ROOT/openscholar/libraries
+	fi
 	cd $BUILD_ROOT/openscholar/libraries
-	npm install bower
+	npm install -g bower
 	bower install
 	cd -
 )
 # Backup files from existing installation.
 DOCROOT='docroot';
 for BACKUP_FILE in "${preserve_files[@]}"; do
-rm -Rf www-build/$BACKUP_FILE
-mv $DOCROOT/$BACKUP_FILE www-build/
+	rm -Rf www-build/$BACKUP_FILE
+	mv $DOCROOT/$BACKUP_FILE www-build/
 done
 # Move the profile in place.
 ln -s ../../openscholar/openscholar $BUILD_ROOT/www-build/profiles/openscholar
