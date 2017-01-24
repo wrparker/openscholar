@@ -55,6 +55,7 @@ $DRUSH make openscholar/openscholar/drupal-org-core.make $BUILD_ROOT/www-build
 		mkdir $BUILD_ROOT/openscholar/libraries
 	fi
 	cd $BUILD_ROOT/openscholar
+	ls
 	npm install -g bower
 	bower install
 	cd -
