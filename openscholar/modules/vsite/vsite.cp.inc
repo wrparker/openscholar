@@ -47,7 +47,7 @@ function vsite_cp_settings() {
     ),
     'group' => array(
       '#id' => 'vsite-seo',
-      '#title' => t('Search Engine Optimization'),
+      '#title' => t('Search Engine Optimization (SEO)'),
       '#weight' => 30,
       '#help_link' => l(t('Learn more about Search Engine Optimization'), 'http://docs.openscholar.harvard.edu/global-site-settings#search-engine-optimization', array('attributes' => array('target' => '_blank')))
     ),
@@ -71,7 +71,7 @@ function vsite_cp_settings() {
     ),
     'group' => array(
       '#id' => 'vsite-seo',
-      '#title' => t('Search Engine Optimization'),
+      '#title' => t('Search Engine Optimization (SEO)'),
       '#weight' => 30,
       '#help_link' => l(t('Learn more about Search Engine Optimization'), 'http://docs.openscholar.harvard.edu/global-site-settings#search-engine-optimization', array('attributes' => array('target' => '_blank')))
     ),
@@ -123,7 +123,7 @@ function vsite_cp_settings() {
     ),
     'group' => array(
       '#id' => 'vsite-seo',
-      '#title' => t('Search Engine Optimization'),
+      '#title' => t('Search Engine Optimization (SEO)'),
       '#weight' => 30,
       '#help_link' => l(t('Learn more about Search Engine Optimization'), 'http://docs.openscholar.harvard.edu/global-site-settings#search-engine-optimization', array('attributes' => array('target' => '_blank')))
     ),
@@ -141,7 +141,7 @@ function vsite_cp_settings() {
     ),
     'group' => array(
       '#id' => 'vsite-seo',
-      '#title' => t('Search Engine Optimization'),
+      '#title' => t('Search Engine Optimization (SEO)'),
       '#weight' => 30,
       '#help_link' => l(t('Learn more about Search Engine Optimization'), 'http://docs.openscholar.harvard.edu/global-site-settings#search-engine-optimization', array('attributes' => array('target' => '_blank')))
     ),

@@ -18,11 +18,11 @@ function vsite_access_cp_settings() {
         '#id' => 'privacy',
         '#title' => t('Site Visibility'),
         '#weight' => 10,
-        '#help_link' => l(t('Learn more about site visibility'), 'http://docs.openscholar.harvard.edu/site-settings#privacy', array('attributes' => array('target' => '_blank')))
+        '#help_link' => l(t('Learn more about site visibility'), 'http://docs.openscholar.harvard.edu/global-site-settings#site-visibility', array('attributes' => array('target' => '_blank')))
       ),
       'form' => array(
         '#type' => 'radios',
-        '#title' => t('Choose who can view your site. Visibility changes will take effect in 2 minutes.'),
+        '#prefix' => '<label class="margin-bottom settings-form-heading">Choose who can view your site. Visibility changes will take effect in 2 minutes.</label>',
         '#default_value' => $wrapper->{VSITE_ACCESS_FIELD}->value(),
         '#options' => vsite_access_privacy_available_values(),
         '#attached' => array(
@@ -40,6 +40,7 @@ function vsite_access_cp_settings() {
 
   return $form;
 }
+
 
 /**
  * Submit callback for cp/settings form.
@@ -79,3 +80,4 @@ function vsite_access_cp_settings_save($val) {
     cp_clear_site_cache();
   }
 }
+
