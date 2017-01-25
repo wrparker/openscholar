@@ -578,9 +578,15 @@ function os_reader_get_news_by_feed_item($feed_id, $vsite_id) {
  */
 function os_reader_process_node(&$variables) {
   if ($variables['type'] == 'news') {
-    if ($variables['view_mode'] == 'teaser' && !$variables['page']) {
-      // On the news page allow the next HTML tags in the body field.
-      $variables['content']['body'][0]['#markup'] = preg_replace("/<img[^>]+\>/i", " ", $variables['content']['body'][0]['#markup']);
+
+    if (!empty($variables['field_photo'])) {
+      // When importing news form external source, the image is saved and the
+      // field photo is referencing to the image. There is an image inside the
+      // body, checks if it's the same image as the image in the photo field.
+      if ($variables['view_mode'] == 'teaser' && !$variables['page']) {
+        // On the news page allow the next HTML tags in the body field.
+        $variables['content']['body'][0]['#markup'] = preg_replace("/<img[^>]+\>/i", " ", $variables['content']['body'][0]['#markup']);
+      }
     }
 
     if (os_reader_get_feed_item_by_nid($variables['node']->nid)) {
