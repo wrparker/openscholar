@@ -64,6 +64,10 @@ $DRUSH make --no-core --contrib-destination drupal-org.make .
 	# Get the angular components
 	bower -q install
 )
+
+cd ../../
+$DRUSH make openscholar/openscholar/drupal-org-core.make $BUILD_ROOT/www-build
+
 # Backup files from existing installation.
 cd $BUILD_ROOT
 DOCROOT='docroot';
@@ -107,7 +111,7 @@ cp -R openscholar/temporary/* openscholar/openscholar/modules/contrib/
 git commit -a -m "Update Temporary Modules." || echo 'Nothing to commit.'
 fi
 git push origin $CI_BRANCH
-echo -e "\033[1;36mFINISHED BUILDING $CI_BRANCH ON HWPI1"
+echo -e "\033[1;36mFINISHED BUILDING $CI_BRANCH ON HWPI1\e[0m"
 # space so I can see where one ends and another begins
 
 
@@ -161,7 +165,6 @@ $DRUSH make --no-core --contrib-destination drupal-org.make .
 	git rm -r --cached libraries/git/symfony/process/Symfony/Component/Process
 	
 	# Get the angular components
-	npm install -g bower
 	bower -q install
 )
 cd ../..
