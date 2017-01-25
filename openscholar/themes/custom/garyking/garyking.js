@@ -13,35 +13,53 @@
  })();
 
  jQuery(document).ready(function() {
-
+// ADDS A RANDOM CLASS TO THE BODY - APPLY BG IMAGES
      var classes = ["bg-one", "bg-two", "bg-three", "bg-four", "bg-five", "bg-six", "bg-seven", "bg-eight"];
 
      jQuery("body.not-front").each(function() {
          jQuery(this).addClass(classes[~~(Math.random() * classes.length)]);
      });
-
+// TOGGLES THE SEARCH BLOCK
      jQuery("#block-os-primary-menu .nice-menu li.last a").click(function() {
          jQuery(".block-os-search-solr").toggleClass('expose');
      });
-
+// ADDS A SPAN TAG AFTER THE DESCRIPTION DIV IN THE AREAS OF RESEARCH WIDGET
      jQuery(".research-by-topic ul .item-list ul li .description").after("<span></span>");
 
 
-
+// TOGGLECLASS OPEN ON LIS IN AREAS OF RESEARCH WIDGET
      jQuery('.research-by-topic ul .item-list ul li span').click(function() {
          jQuery(this).parent('.research-by-topic ul .item-list ul li').toggleClass('open');
      });
 
 
 
-
+// KILL THE TITLE ATTR IN THE ANCHORS IN THE AREAS OF RESEARCH WIDGET
      jQuery(".research-by-topic a").removeAttr("title");
 
-
+// KILL THE WORD AT AND THE COLON IN THE PRESENATIONS BLOCK ON THE HOMEPAGE
      jQuery.each(jQuery('.front-lop-presentations .node-presentation'), function(i, e) {
          jQuery(e).html(jQuery(e).html().replace(/at/g, ''));
          jQuery(e).html(jQuery(e).html().replace(/:/g, ''));
-     })
+     });
+     
+     
+  
 
+     
 
  });
+ 
+
+// jQuery(document).ready(function() {
+ // if (jQuery('#biblio-node').find('div.biblio-upload-wrapper').length) {
+   // jQuery('#citation-wrapper').addClass('has-attached');
+// }
+ 
+ //var setHeight = jQuery(".has-attached");
+//jQuery(".biblio-upload-wrapper").css({height:setHeight.height()});
+ 
+// });
+ 
+
+

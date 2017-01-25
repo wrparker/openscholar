@@ -350,6 +350,8 @@ function os_links_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Attach Files');
   t('Description');
+  t('Note: depending on the usage, may cause accessibility concerns. <a href="https://www.w3.org/TR/WCAG20-TECHS/G200.html" target="_blank">Learn more</a>.');
+  t('Open this link in a new tab');
   t('The web address of the link. Starts with: http://');
   t('URL (Web address)');
 
