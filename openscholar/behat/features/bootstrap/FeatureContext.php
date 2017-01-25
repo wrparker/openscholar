@@ -585,11 +585,12 @@ class FeatureContext extends DrupalContext {
    * @When /^I create a new "([^"]*)" entry with the name "([^"]*)" in the group "([^"]*)"$/
    */
   public function iCreateANewEntryWithTheNameInGroup($type, $name, $group) {
-    return array(
-      new Step\When('I visit "' . $group . '/node/add/' . $type . '"'),
-      new Step\When('I fill in "Title" with "'. $name . '"'),
-      new Step\When('I press "edit-submit"'),
-    );
+    $node = new stdClass();
+    $node->title = $name;
+    $node->type = $type;
+    $node->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id'] = FeatureHelp::getNodeId($group);
+    node_save($node);
+    $this->visit('john/node/' . $node->nid);
   }
 
   /**
