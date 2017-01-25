@@ -1,7 +1,7 @@
 Feature: Testing that nodes can be deleted
   Test that nodes can be deleted from contextual tools
 
-  @api @misc_first @javascript
+  @misc_first @javascript
   Scenario: Verify that nodes can be deleted
       Given I am logging in as "admin"
         And I visit "john/classes"
