@@ -38,7 +38,7 @@ function os_wysiwyg_filter_default_formats() {
     td[scope|id|headers|colspan|rowspan|align<center?justify?left?right|valign],
     th[scope|id|headers|colspan|rowspan|align<center?justify?left?right|valign],
     thead[scope|id|headers],
-    caption,
+    caption,figcaption,
     address,h2,h3,h4,h5,h6,pre,
     strong/b,em/i,strike,s,u,abbr[title]',
           'allow_comments' => 1,

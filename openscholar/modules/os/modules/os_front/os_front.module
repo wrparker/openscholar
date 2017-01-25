@@ -37,8 +37,6 @@ function os_front_context_default_contexts_alter($contexts) {
   );
 
   // Positions existing SOLR and drupal search widget.
-  $blocks['os_search_solr-site-search']['region'] = 'footer';
-  $blocks['os_search_solr-site-search']['weight'] = 0;
   $blocks['os_search_db-site-search']['region'] = 'footer';
   $blocks['os_search_db-site-search']['weight'] = 0;
 

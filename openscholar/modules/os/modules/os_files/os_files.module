@@ -1643,26 +1643,22 @@ function os_files_file_download($uri){
  * @see http://community.openscholar.harvard.edu/openscholar/topics/better_files_media_management_and_display
  */
 function os_files_file_view($file, $view_mode, $langcode) {
-  if (!in_array($view_mode, array('os_files_title', 'teaser', 'full', 'os_files_thumbnail'))) {
+  if (!in_array($view_mode, array('os_files_link', 'os_files_title', 'teaser', 'full', 'os_files_thumbnail'))) {
     return;
   }
 
   $file->content['og_vocabulary'] = array(); //don't print this until it's useful.  terms only work with sv lists right now.
 
-  $icon = array(
-    '#theme' => 'os_file_icon',
-    '#file' => $file,
-    '#icon_directory' => drupal_get_path('module', 'os_files') . '/icons',
-  );
-
-  //icon, title, download
-  $content = array();
-  if ((!isset($file->oembed) || !$file->oembed) && $file->filemime != 'html/embed') {
+  if ($view_mode == 'os_files_link') {
+    // Customize default icon for unknown file types, see @os_basetheme_file_link()
+    $file->view_mode = 'os_files_link';
+    return;
+  } else {
+    //title, download
     $content = array(
       'file-info' => array(
         '#prefix' => '<div class="file-info">',
         '#suffix' => '</div>',
-        'icon' => $icon,
         'title' => array(
           '#theme' => 'link',
           '#path' => 'file/' . $file->fid,
@@ -1701,7 +1697,6 @@ function os_files_file_view($file, $view_mode, $langcode) {
 
   //add thumbnail for list of images
   if (@$file->sv_list && @$file->sv_list_of_images) {
-    unset ($content['file-info']['icon']);
     switch ($view_mode) {
       case 'full':
         $img = $file->content['file'];
@@ -1741,7 +1736,6 @@ function os_files_file_view($file, $view_mode, $langcode) {
 
   //add thumb/colorbox for list of video/audio
   if (@$file->sv_list && (@$file->sv_list_of_videos || @$file->sv_list_of_audio)) {
-    unset ($content['file-info']['icon']);
 
     if (in_array($file->filemime, array('video/oembed', 'audio/oembed'))) {
       switch ($view_mode) {
@@ -1767,13 +1761,13 @@ function os_files_file_view($file, $view_mode, $langcode) {
       case 'image':
         $content['file-info']['file'] = $file->content['file']; //include embedded image
         $content['file-info']['file']['#style_name'] = 'os_files_xxlarge';
-        unset($content['file-info']['file']['#width'], $content['file-info']['file']['#height'], $content['file-info']['icon'], $content['file-info']['title']);
+        unset($content['file-info']['file']['#width'], $content['file-info']['file']['#height'], $content['file-info']['title']);
         break;
 
       case 'video':
         if (isset($file->oembed)) {
           $content['file-info']['file'] = $file->content['file']; //include thumbnail
-          unset($content['file-info']['icon'], $content['file-info']['title']);
+          unset($content['file-info']['title']);
         }
         break;
 
@@ -2139,6 +2133,7 @@ function os_files_file_default_types() {
       'application/ico',
       'application/x-ico',
       'image/vnd.microsoft.icon',
+      'image/x-icon'
     ),
     'streams' => array(
       'public'
@@ -2149,12 +2144,6 @@ function os_files_file_default_types() {
 }
 
 function os_files_file_default_types_alter(&$types){
-  $image = array(
-    // *.ico files
-    'application/x-win-bitmap',
-    'image/x-win-bitmap'
-  );
-  $types['image']->mimetypes = (empty($types['image']->mimetypes)) ? $image : array_merge($types['image']->mimetypes, $image);
 
   $video = array(
     // *.mov files
@@ -2462,7 +2451,12 @@ function os_files_file_mimetype_mapping_alter(&$mimes) {
     'application/vnd.ms-powerpoint' => 'pot',
     'application/vnd.openxmlformats-officedocument.presentationml.template' => 'potx',
     'text/csv' => 'csv',
-    'application/x-rar-compressed' => 'rar'
+    'application/x-rar-compressed' => 'rar',
+    'image/ico' => 'ico',
+    'application/ico' => 'ico',
+    'application/x-ico' => 'ico',
+    'image/vnd.microsoft.icon' => 'ico',
+    'image/x-icon' => 'ico'
   );
 
   foreach ($types as $mime => $ext) {
@@ -2835,7 +2829,8 @@ function os_files_file_delete($file) {
 function os_files_file_view_alter(&$build, $type) {
   if ($build['#bundle'] == 'video' && in_array($build['#view_mode'], array('os_files_link', 'os_files_link_icon'))) {
     $build['file']['link']['#path'] = 'file/' . $build['#file']->fid;
-  } else if (in_array($build['#bundle'], array('video', 'html')) && in_array($build['#view_mode'], array('full', 'teaser'))) {
+  } else if (($build['#bundle'] == 'video' && $build['#view_mode'] == 'full' && !isset($build['file']['file-info']['download']) && !isset($build['file']['file-info']['title'])) ||
+             ($build['#bundle'] == 'html' && $build['#view_mode'] == 'teaser')) {
     $build['file']['link'] = array(
       '#theme' => 'link',
       '#href' => 'file/' . $build['#file']->fid,
@@ -2846,4 +2841,41 @@ function os_files_file_view_alter(&$build, $type) {
       '#options' => array('html' => TRUE, 'attributes' => array())
     );
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_files_form_system_file_system_settings_alter(&$form, $form_state) {
+
+  $entity_info = entity_get_info('file');
+
+  $form['os_files_mtime_query'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Add update time to file link'),
+    '#description' => t('When viewing the files form the file control panel, each file will get the last update time of the file.'),
+    '#default_value' => variable_get('os_files_mtime_query', TRUE),
+  );
+
+  $types = array();
+  foreach ($entity_info['bundles'] as $type => $info) {
+    if ($type == 'undefined') {
+      continue;
+    }
+
+    $types[$type] = $info['label'];
+  }
+
+  $form['os_files_mtime_query_file_types'] = array(
+    '#type' => 'select',
+    '#title' => t('File types'),
+    '#multiple' => TRUE,
+    '#options' => $types,
+    '#default_value' => variable_get('os_files_mtime_query_file_types', array('image', 'icon')),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="os_files_mtime_query"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
 }

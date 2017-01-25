@@ -1,10 +1,23 @@
 <?php
 
 /**
+ * Force the localStorage cache to be cleared whenever we want.
+ */
+const AdminPanelMenuVersion = '1.2';
+
+/**
  * Returns true if the admin panel should default to being closed
  */
 function admin_panel_is_closed() {
   return isset($_COOKIE['AdminMenuState']) && !$_COOKIE['AdminMenuState'];
+}
+
+/**
+ * Implements hook_page_alter().
+ */
+function admin_panel_page_alter(&$page) {
+  // No ned for the toolbar if the admin panel is enabled.
+  $page['page_top']['toolbar']['#access'] = FALSE;
 }
 
 /**
@@ -82,7 +95,7 @@ function admin_panel_library() {
 
   $perms = isset($perm[$user->uid]) ? $perm[$user->uid] : array();
   // Create a unique cid based on user permissions and enabled features.
-  $cid = drupal_hash_base64(implode("",array_merge(array_filter($spaces_features),$perms)));
+  $cid = drupal_hash_base64(implode("",array_merge(array_filter($spaces_features),$perms)) . AdminPanelMenuVersion);
 
   $libs['admin_panel']['js'] = array(
     $path . '/misc/modernizr.custom.js' => array(),

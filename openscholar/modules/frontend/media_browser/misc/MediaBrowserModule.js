@@ -7,13 +7,15 @@
        rootPath = Drupal.settings.paths.moduleRoot;
     })
     .run(['mbModal', 'FileEditorOpenModal', function (mbModal, feom) {
-      // Disable drag and drop behaviors on the window object, to prevent files from
+      // Disable drag and drop behaviors on the window object, to prevent files
+      // from.
       angular.element(window).on('dragover drop', function(e) {
         e = e || event;
         e.preventDefault();
       });
 
-      // if the File object is not supported by this browser, fallback to the original media browser
+      // if the File object is not supported by this browser, fallback to the
+      // original media browser.
       if (mbModal.requirementsMet()) {
         Drupal = Drupal || {};
         Drupal.media = Drupal.media || {};
@@ -27,14 +29,14 @@
           options.widget = $.extend({}, options.widget, widgetOptions);
 
 
-          // Params to send along to the iframe.  WIP.
+          // Params to send along to the iframe. WIP.
           var params = {};
           $.extend(params, options.global);
           params.plugins = options.plugins;
           params.onSelect = onSelect;
 
           mbModal.open(params);
-        }
+        };
 
         for (var k in oldPopup) {
           if (!Drupal.media.popups.mediaBrowser[k]) {
@@ -52,7 +54,7 @@
           else {
             oldStyleSelector(file, onSelect, options);
           }
-        }
+        };
 
         for (var k in oldStyleSelector) {
           Drupal.media.popups.mediaStyleSelector[k] = oldStyleSelector[k];
@@ -85,7 +87,7 @@
     $scope.loadingMessage = '';
     $scope.sortType = 'timestamp';
     $scope.sortReverse = true;
-    $scope.button_text = params.replace ? 'Select Replacement File' : 'Select files to Add'
+    $scope.button_text = params.replace ? 'Select Replacement File' : 'Select files to Add';
 
     $scope.toInsert = [];
 
@@ -95,7 +97,8 @@
       {label: 'Video', value: 'video'},
       {label: 'HTML', value: 'html'},
       {label: 'Executable', value: 'executable'},
-      {label: 'Audio', value: 'audio'}
+      {label: 'Audio', value: 'audio'},
+      {label: 'Icon', value: 'icon'}
     ];
 
     var defaultFilteredTypes = params.types;
@@ -193,7 +196,8 @@
     });
 
     $scope.$on('EntityService.files.delete', function (event, id) {
-      // Don't want to worry about what happens when you modify an array you're looping over
+      // Don't want to worry about what happens when you modify an array you're
+      // looping over.
       if ($scope.selected_file.id == id) {
         $scope.selected_file = null;
       }
@@ -218,9 +222,10 @@
         $scope.numFiles = $scope.files.length;
         $scope.loading = false;
       }, function (error) {
-        // there was an error getting results. We should tell the user and advise them.
+        // there was an error getting results. We should tell the user and
+        // advise them.
       }, function (message) {
-        // notification received
+        // notification received.
         $scope.loadingMessage = message;
       });
 

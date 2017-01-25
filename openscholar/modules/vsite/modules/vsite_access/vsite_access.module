@@ -134,69 +134,6 @@ function vsite_access_node_access($node, $op, $account) {
 }
 
 /**
- * Implements hook_cp_settings().
- *
- * Add the vsite privacy/publicity form element to CP settings.
- */
-function vsite_access_cp_settings() {
-  $form = array();
-  $space = spaces_get_space();
-
-  if (!empty($space)) {
-    // Gets the vsite_users_contact_form_anonymous variable.
-    $wrapper = entity_metadata_wrapper('node', $space->group);
-
-    $form['vsite_private'] = array(
-      'group' => array(
-        '#id' => 'privacy',
-        '#title' => t('Privacy'),
-        '#weight' => 10,
-        '#attached' => array(
-          'js' => array(drupal_get_path('module', 'vsite_access') . '/vsite_access.js'
-          )
-        ),
-      ),
-      'form' => array(
-        '#type' => 'radios',
-        '#title' => t('Site visibility') . '<span id="site-visibility-help-text">' . t('The visibility change will take effect in 2 minutes') . '</span>',
-        '#default_value' => $wrapper->{VSITE_ACCESS_FIELD}->value(),
-        '#options' => vsite_access_privacy_available_values(),
-        '#description' => t('Choose who has access to view your site.'),
-      ),
-      'submit' => array(
-        'vsite_access_cp_settings_node_submit',
-      ),
-    );
-  }
-
-  return $form;
-}
-
-/**
- * Submit callback for cp/settings form.
- *
- * Sets vsite_privacy value for the node.
- *
- * @see vsite_cp_settings()
- */
-function vsite_access_cp_settings_node_submit($form, &$form_state) {
-  // Get the current vsite.
-  $space = spaces_get_space();
-  // Get the vsite_privacy value.
-  if (isset($form_state['values']['vsite_private']) && $space) {
-    $wrapper = entity_metadata_wrapper('node', $space->group);
-    $current_vsite_access = $space->group->group_access[LANGUAGE_NONE][0]['value'];
-    $wrapper->{VSITE_ACCESS_FIELD}->set($form_state['values']['vsite_private']);
-    $wrapper->save();
-    // Clear the cache when we switch the privacy in ALL cases except toggling between invite only (value = 1) and Harvard (value = 4).
-    // For toggling, the sum of previous and selected value will be always '5' for such case; other two radio buttons values are 0 and 2.
-    if (($current_vsite_access + $form_state['values']['vsite_private']) != 5 && $current_vsite_access != $form_state['values']['vsite_private']) {
-      cp_clear_site_cache();
-    }
-  }
-}
-
-/**
  * Return available privacy types.
  *
  * @return array $options
@@ -222,12 +159,12 @@ function vsite_access_privacy_available_values() {
   // @fixme Labels shouldn't contain a period at the end.
   // Once this function has the option to return just labels, vs. labels AND
   // descriptions, the period should be removed from the label-only return vals.
-  $prefix = '. <br><span class="radio-description">';
+  $prefix = '. <br><span class="description">';
   $suffix = '</span>';
   $descriptions = array(
-    VSITE_ACCESS_PUBLIC => t('Anyone on the Internet can find and access. No sign-in required.'),
-    VSITE_ACCESS_UNINDEXED => t('Anyone who has the link can access. Not listed in Google. No sign-in required.'),
-    VSITE_ACCESS_PRIVATE => t('Private during construction, only people explicitly granted permission can access. Sign-in required.'),
+    VSITE_ACCESS_PUBLIC => t('Anyone on the Internet can view your site. Your site will show in search results. No sign-in required.'),
+    VSITE_ACCESS_UNINDEXED => t('Anyone who has the URL to your site can view your site. Your site will not be indexed by search engines.'),
+    VSITE_ACCESS_PRIVATE => t('Only site members can view your site. Your site will not be indexed by search engines.'),
     VSITE_ACCESS_INTRANET_PRIVATE => t('Perminantly private, only people explicitly granted permission can access. Sign-in required.'),
   );
 
@@ -504,4 +441,12 @@ function vsite_access_preprocess_page(&$vars) {
   if (_vsite_access_denied()) {
     $vars['is_front'] = false;
   }
+}
+
+/**
+ * Implements hook_cp_settings_alter().
+ */
+function vsite_access_cp_settings_alter(&$settings, &$form_state) {
+  // Notify Drupal where the validate and submit handlers are located.
+  $form_state['build_info']['files'][] = drupal_get_path('module', 'vsite_access') . '/vsite_access.cp.inc';
 }

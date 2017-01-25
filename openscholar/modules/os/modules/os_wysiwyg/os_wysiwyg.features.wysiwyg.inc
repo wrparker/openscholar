@@ -55,7 +55,6 @@ function os_wysiwyg_wysiwyg_default_profiles() {
           'colordialog' => 1,
           'dragresize' => 1,
           'font' => 1,
-          'image2' => 1,
           'indentblock' => 1,
           'justify' => 1,
           'lineutils' => 1,

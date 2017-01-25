@@ -44,7 +44,9 @@ margin-top: 12px;
 #content-column h2,
 #content-column h3,
 #content-column h4,
-.cke_editable * {
+.cke_editable h2,
+.cke_editable h3,
+.cke_editable h4 {
 	font-family: Georgia, Baskerville, Palatino, 'Palatino Linotype', 'Book Antiqua', 'Times New Roman', serif;
 }
 
@@ -94,7 +96,9 @@ h1.node-title,
 
 	margin-bottom: 0;
 }
-
+.cke_editable h2,
+.cke_editable h3,
+.cke_editable h4,
 #content-column .field-name-body h2,
 #content-column .field-name-body h3,
 #content-column .field-name-body h4 {

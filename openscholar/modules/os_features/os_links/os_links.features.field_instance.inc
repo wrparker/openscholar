@@ -169,10 +169,11 @@ function os_links_field_default_field_instances() {
       ),
     ),
     'deleted' => 0,
+    'hidden' => 1,
     'description' => 'Note: depending on the usage, may cause accessibility concerns. <a href="https://www.w3.org/TR/WCAG20-TECHS/G200.html" target="_blank">Learn more</a>.',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',

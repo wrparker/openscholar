@@ -138,7 +138,7 @@ class HarvardFetcher extends FeedsFetcher {
       else {
         $param = $this->url_param . '"' . implode('" OR "', $values);
       }
-      return $this->baseUrl . urlencode('?' . $param . '&rows=' . $rows . '&start=' . $start);
+      return $this->baseUrl . '?' . urlencode( $param . '&rows=' . $rows . '&start=' . $start);
     }
   }
 
