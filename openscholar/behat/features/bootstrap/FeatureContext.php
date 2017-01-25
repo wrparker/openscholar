@@ -562,11 +562,10 @@ class FeatureContext extends DrupalContext {
    * @When /^I create a new "([^"]*)" entry with the name "([^"]*)"$/
    */
   public function iCreateANewEntryWithTheName($type, $name) {
-    return array(
-      new Step\When('I visit "john/node/add/' . $type . '"'),
-      new Step\When('I fill in "Title" with "'. $name . '"'),
-      new Step\When('I press "edit-submit"'),
-    );
+    $node = new stdClass();
+    $node->title = $name;
+    $node->type = $type;
+    node_save($node);
   }
 
   /**
