@@ -864,6 +864,10 @@ ul.nice-menu-down,
     .page-node- .breadcrumb {
         top: 30px;
     }
+    .research-by-topic li.term-applications,
+.research-by-topic li.term-methods {
+    padding-top: 0;
+}
 }
 @media (max-width: 600px) {
     .research-by-topic li.term-applications,
