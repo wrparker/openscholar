@@ -566,6 +566,7 @@ class FeatureContext extends DrupalContext {
     $node->title = $name;
     $node->type = $type;
     node_save($node);
+    $this->visit('john/node/' . $node->nid);
   }
 
   /**
