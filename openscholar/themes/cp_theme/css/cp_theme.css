@@ -1323,7 +1323,7 @@ li.pager-previous + li.pager-ellipsis {
 	font-weight: bold;
 	}
 
-.file img.file-icon {
+img.file-icon {
     width:16px;
 
 }

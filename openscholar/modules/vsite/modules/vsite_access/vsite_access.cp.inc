@@ -41,6 +41,7 @@ function vsite_access_cp_settings() {
   return $form;
 }
 
+
 /**
  * Submit callback for cp/settings form.
  *
@@ -79,3 +80,4 @@ function vsite_access_cp_settings_save($val) {
     cp_clear_site_cache();
   }
 }
+

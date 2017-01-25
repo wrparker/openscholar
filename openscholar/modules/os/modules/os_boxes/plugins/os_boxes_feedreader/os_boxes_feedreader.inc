@@ -33,6 +33,17 @@ class os_boxes_feedreader extends os_boxes_default {
   public function options_form(&$form_state){
     $options = array();
 
+    $form = parent::options_form($form_state);
+
+    // TODO: Remove this once we have a replacement in place for Google Feeds.
+    $form['shutdown_notice'] = array(
+      '#markup' => t('<div class="warning">Google Feeds has shut down as of December 15th, 2016. This widget will be unavailable until
+        a replacement has been found and implemented. As of yet, we have no ETA for when this will be completed. Thank
+        for your patience.</div>')
+    );
+
+    return $form;
+
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')->propertyCondition('status', 1)->propertyCondition('type', 'feed')->propertyOrderBy('title');
 
@@ -42,8 +53,6 @@ class os_boxes_feedreader extends os_boxes_default {
     }
 
     $result = $query->execute();
-
-    $form = parent::options_form($form_state);
 
     if (! isset($result['node']) || ! count($result['node'])) {
       $form['error'] = array(
@@ -115,6 +124,18 @@ class os_boxes_feedreader extends os_boxes_default {
     }
 
     $block = parent::render();
+
+    // TODO: Remove this once we have a replacement in place for Google Feeds.
+    $vsite = vsite_get_vsite();
+    if (og_user_access('node', $vsite->id, 'edit boxes')) {
+      $block['content'] = t('<div class="warning">Google Feeds has shut down as of December 15th, 2016. This widget will be unavailable until
+      a replacement has been found and implemented. This message will not appear for site visitors. Thank for your
+      patience.</div>');
+    }
+
+    return $block;
+
+
     if (! $this->options['feed'] || ! ($node = node_load($this->options['feed']))) {
       return $block;
     }
