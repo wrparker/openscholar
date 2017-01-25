@@ -21,10 +21,14 @@ if ! test "$PR_BRANCH" = ""; then
 git push origin :$PR_BRANCH || echo "$PR_BRANCH not found on hwpi1"
 fi
 # Build this branch and push it to Acquia
+
+# Set up global configuration and install tools needed to build
 composer global require drush/drush
 mkdir ~/.drush
 printf "disable_functions =\nmemory_limit = 256M\ndate.timezone = \"America/New_York\"" > ~/.drush/php.ini
 drush --version
+npm install -g bower
+
 echo $CI_BRANCH
 echo $CI_COMMIT_ID
 # Drush executable.
@@ -42,29 +46,27 @@ git subtree pull -m "subtree merge in codeship" --prefix=openscholar git://githu
 if [ ! -d openscholar/openscholar/modules/contrib ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org-core.make' '/tmp/drupal-org-core.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org.make' '/tmp/drupal-org.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/bower.json' '/tmp/bower.json')" != "" ]; then
 # Chores.
 for DIR in $BUILD_ROOT/www-build $BUILD_ROOT/www-backup openscholar/openscholar/1 openscholar/openscholar/modules/contrib openscholar/openscholar/themes/contrib openscholar/openscholar/libraries; do
-rm -Rf $DIR
+	rm -Rf $DIR
 done
 cd openscholar/openscholar
+
 $DRUSH make --no-core --contrib-destination drupal-org.make .
-composer install
-cd ../..
-# Build core.
-$DRUSH make openscholar/openscholar/drupal-org-core.make $BUILD_ROOT/www-build
-# Get the angualr components
 (
-	if [ ! -d $BUILD_ROOT/openscholar/openscholar/libraries ]; then 
-		mkdir $BUILD_ROOT/openscholar/openscholar/libraries
-	fi
-	cd $BUILD_ROOT/openscholar/openscholar
-	npm install -g bower
+	# Download composer components
+	composer install
+	rm -rf libraries/git/symfony/event-dispatcher/Symfony/Component/EventDispatcher/.git
+	rm -f libraries/git/symfony/event-dispatcher/Symfony/Component/EventDispatcher/.gitignore
+	git rm -r --cached libraries/git/symfony/event-dispatcher/Symfony/Component/EventDispatcher
+	rm -rf libraries/git/symfony/process/Symfony/Component/Process/.git
+	rm -f libraries/git/symfony/process/Symfony/Component/Process/.gitignore
+	git rm -r --cached libraries/git/symfony/process/Symfony/Component/Process
+	
+	# Get the angular components
 	bower -q install
 )
 # Backup files from existing installation.
 cd $BUILD_ROOT
 DOCROOT='docroot';
-cd $DOCROOT
-ls
-cd ../
 for BACKUP_FILE in "${preserve_files[@]}"; do
 	rm -Rf www-build/$BACKUP_FILE
 	mv $DOCROOT/$BACKUP_FILE www-build/
@@ -90,16 +92,7 @@ cp -R openscholar/temporary/* openscholar/openscholar/modules/contrib/
 # so we have the library inside os_events directory and we copy it to libraries.
 cp -R openscholar/openscholar/modules/os_features/os_events/iCalcreator openscholar/openscholar/libraries/
 # Download the git wrapper library using the composer.
-(
-cd openscholar/openscholar
-rm -rf libraries/git/symfony/event-dispatcher/Symfony/Component/EventDispatcher/.git
-rm -f libraries/git/symfony/event-dispatcher/Symfony/Component/EventDispatcher/.gitignore
-git rm -r --cached libraries/git/symfony/event-dispatcher/Symfony/Component/EventDispatcher
-rm -rf libraries/git/symfony/process/Symfony/Component/Process/.git
-rm -f libraries/git/symfony/process/Symfony/Component/Process/.gitignore
-git rm -r --cached libraries/git/symfony/process/Symfony/Component/Process
-cd ../..
-)
+
 for DIR in openscholar/openscholar/libraries openscholar/openscholar/themes/contrib openscholar/openscholar/modules/contrib
 do
 if [ -d "$DIR" ]; then
@@ -114,7 +107,16 @@ cp -R openscholar/temporary/* openscholar/openscholar/modules/contrib/
 git commit -a -m "Update Temporary Modules." || echo 'Nothing to commit.'
 fi
 git push origin $CI_BRANCH
-echo "FINISHED BUILDING $CI_BRANCH ON HWPI1"
+echo -e "\033[1;36mFINISHED BUILDING $CI_BRANCH ON HWPI1"
+# space so I can see where one ends and another begins
+
+
+
+
+
+
+
+
 # pull down the acquia branch
 mkdir -p /home/rof/src/acquia.com/
 if git ls-remote --heads hwpi2@svn-1745.prod.hosting.acquia.com:hwpi2.git | grep -sw $CI_BRANCH 2>&1>/dev/null; then
@@ -144,21 +146,32 @@ git subtree pull -m "subtree merge in codeship" --prefix=openscholar git://githu
 if [ ! -d openscholar/openscholar/modules/contrib ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org-core.make' '/tmp/drupal-org-core.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org.make' '/tmp/drupal-org.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/bower.json' '/tmp/bower.json')" != "" ]; then
 # Chores.
 for DIR in $BUILD_ROOT/www-build $BUILD_ROOT/www-backup openscholar/openscholar/1 openscholar/openscholar/modules/contrib openscholar/openscholar/themes/contrib openscholar/openscholar/libraries; do
-rm -Rf $DIR
+	rm -Rf $DIR
 done
 cd openscholar/openscholar
 $DRUSH make --no-core --contrib-destination drupal-org.make .
+(
+	# Download composer components
+	composer install
+	rm -rf libraries/git/symfony/event-dispatcher/Symfony/Component/EventDispatcher/.git
+	rm -f libraries/git/symfony/event-dispatcher/Symfony/Component/EventDispatcher/.gitignore
+	git rm -r --cached libraries/git/symfony/event-dispatcher/Symfony/Component/EventDispatcher
+	rm -rf libraries/git/symfony/process/Symfony/Component/Process/.git
+	rm -f libraries/git/symfony/process/Symfony/Component/Process/.gitignore
+	git rm -r --cached libraries/git/symfony/process/Symfony/Component/Process
+	
+	# Get the angular components
+	npm install -g bower
+	bower -q install
+)
 cd ../..
 # Build core.
 $DRUSH make openscholar/openscholar/drupal-org-core.make $BUILD_ROOT/www-build
-# Install bower components
-find openscholar/modules/frontend -type f -name 'bower.json' | sed -r 's|[^/]+$||' | uniq | while read path; do
-bower install "./$path"
-done
 # Backup files from existing installation.
+cd $BUILD_ROOT
 for BACKUP_FILE in "${preserve_files[@]}"; do
-rm -Rf www-build/$BACKUP_FILE
-mv $DOCROOT/$BACKUP_FILE www-build/
+	rm -Rf www-build/$BACKUP_FILE
+	mv $DOCROOT/$BACKUP_FILE www-build/
 done
 # Move the profile in place.
 ln -s ../../openscholar/openscholar $BUILD_ROOT/www-build/profiles/openscholar
@@ -180,44 +193,24 @@ cp -R openscholar/temporary/* openscholar/openscholar/modules/contrib/
 # iCalcreator cannot be downloaded via make because a temporary token is needed,
 # so we have the library inside os_events directory and we copy it to libraries.
 cp -R openscholar/openscholar/modules/os_features/os_events/iCalcreator openscholar/openscholar/libraries/
-# Download the git wrapper library using the composer.
-(
-cd openscholar/openscholar
-curl -s https://getcomposer.org/installer | php
-php composer.phar install
-rm -rf libraries/git/symfony/event-dispatcher/Symfony/Component/EventDispatcher/.git
-rm -f libraries/git/symfony/event-dispatcher/Symfony/Component/EventDispatcher/.gitignore
-git rm -r --cached libraries/git/symfony/event-dispatcher/Symfony/Component/EventDispatcher
-rm -rf libraries/git/symfony/process/Symfony/Component/Process/.git
-rm -f libraries/git/symfony/process/Symfony/Component/Process/.gitignore
-git rm -r --cached libraries/git/symfony/process/Symfony/Component/Process
-cd ../..
-)
 #Build the ops profile
 (
-if [ -n "$OPSDIR" ] && [ -d $BUILD_ROOT/$DOCROOT/$OPSDIR ] ; then
-cd $BUILD_ROOT/$DOCROOT/$OPSDIR
-$DRUSH make --no-core --contrib-destination $BUILD_ROOT/openscholar/openscholar/os-ops.make .
-fi
+	if [ -n "$OPSDIR" ] && [ -d $BUILD_ROOT/$DOCROOT/$OPSDIR ] ; then
+	cd $BUILD_ROOT/$DOCROOT/$OPSDIR
+	$DRUSH make --no-core --contrib-destination $BUILD_ROOT/openscholar/openscholar/os-ops.make .
+	fi
 )
-# Get the angualr components
-(
-cd $BUILD_ROOT/openscholar/client
-npm install
-bower install
-cd -
-)
-for DIR in openscholar/openscholar/libraries openscholar/openscholar/themes/contrib openscholar/openscholar/client/node_modules  openscholar/openscholar/modules/contrib; do
-if [ -d "$DIR" ]; then
-git add --all -f $DIR
-fi
+for DIR in openscholar/openscholar/libraries openscholar/openscholar/themes/contrib openscholar/openscholar/modules/contrib; do
+	if [ -d "$DIR" ]; then
+		git add --all -f $DIR
+	fi
 done
 git commit -a -m "Make File Update."
 #END BUILD PROCESS
 else
 #Copy unmakable modules, when we don’t build
-cp -R openscholar/temporary/* openscholar/openscholar/modules/contrib/
-git commit -a -m "Update Temporary Modules."  || echo 'Nothing to commit.'
+	cp -R openscholar/temporary/* openscholar/openscholar/modules/contrib/
+	git commit -a -m "Update Temporary Modules."  || echo 'Nothing to commit.'
 fi
 git push origin $CI_BRANCH
 echo "FINISHED BUILDING $CI_BRANCH ON HWPI2"
