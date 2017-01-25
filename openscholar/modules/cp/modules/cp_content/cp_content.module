@@ -161,13 +161,13 @@ function cp_content_batch_alter(&$batch) {
 function cp_content_action_info() {
   return array(
     'cp_content_assign_taxonomy_action' => array(
-      'type' => 'node',
+      'type' => 'entity',
       'label' => t('Apply Taxonomy term'),
       'triggers' => array('any'),
       'configurable' => TRUE,
     ),
     'cp_content_remove_taxonomy_action' => array(
-      'type' => 'node',
+      'type' => 'entity',
       'label' => t('Remove Taxonomy term'),
       'triggers' => array('any'),
       'configurable' => TRUE,
@@ -205,6 +205,24 @@ function cp_content_remove_taxonomy_action_form($form, $form_state) {
  * Helper function; build the form for adding/removing taxonomy terms.
  */
 function _cp_content_build_taxonomy_action_form($title, $list_title, $action, $form_state, $vbo) {
+  $view_name = $form_state['build_info']['args'][0]->name;
+  switch ($view_name) {
+    case 'os_files_private' :
+      $form_entity_type = 'file';
+      $file_indentification = 'filename';
+      break;
+    case 'cp_files' :
+      $form_entity_type = 'file';
+      $file_indentification = 'filename';
+      break;
+    case 'cp_content' :
+      $form_entity_type = 'node';
+      $file_indentification = 'title';
+      break;
+    default :
+      $form_entity_type = 'node';
+      $file_indentification = 'title';
+  }
   module_load_include('inc', 'vsite_vocab', 'includes/taxonomy');
   $vocabs = vsite_vocab_get_vocabularies();
 
@@ -215,9 +233,11 @@ function _cp_content_build_taxonomy_action_form($title, $list_title, $action, $f
 
   // Build a list of node titles to which we apply the action.
   $node_titles = array();
-  $nodes = node_load_multiple($form_state['selection']);
+
+  $load_function = $form_entity_type . "_load_multiple";
+  $nodes = $load_function($form_state['selection']);
   foreach ($nodes as $node) {
-    $node_titles[] = $node->title;
+    $node_titles[] = $node->$file_indentification;
   }
 
   // All rows on all pages have been selected, so show a count of additional items.
@@ -329,6 +349,11 @@ function cp_content_assign_taxonomy_action_submit($form, $form_state) {
  *  Contains information passed with the action's form submit handler.
  */
 function cp_content_assign_taxonomy_action(&$node, $context) {
+  if (isset($context['entity_type'])) {
+    $entity_type = $context['entity_type'];
+  } else {
+    $entity_type = 'node';
+  }
   $vocabulary = $context['vocab'];
   $terms = $context['terms'];
 
@@ -341,10 +366,9 @@ function cp_content_assign_taxonomy_action(&$node, $context) {
   }
 
   $selected_terms = is_array($terms) ? $terms : array($terms);
-
   $skipped_titles = array();
   $applied_titles = array();
-  $wrapper = entity_metadata_wrapper('node', $node);
+  $wrapper = entity_metadata_wrapper($entity_type, $node);
   // Check if the bundle of the node is associated with selected vocabulary.
   if (in_array($node->type, $bundle_names)) {
     // Assign the term(s) to the current node.
@@ -408,6 +432,11 @@ function cp_content_remove_taxonomy_action_submit($form, $form_state) {
  *  Contains information passed with the action's form submit handler.
  */
 function cp_content_remove_taxonomy_action(&$node, $context) {
+  if (isset($context['entity_type'])) {
+    $entity_type = $context['entity_type'];
+  } else {
+    $entity_type = 'node';
+  }
   $vocabulary = $context['vocab'];
   $terms = $context['terms'];
 
@@ -424,7 +453,7 @@ function cp_content_remove_taxonomy_action(&$node, $context) {
   $skipped_titles = array();
   $removed_titles = array();
 
-  $wrapper = entity_metadata_wrapper('node', $node);
+  $wrapper = entity_metadata_wrapper($entity_type, $node);
   $node_terms = $wrapper->{OG_VOCAB_FIELD}->value(array('identifier' => TRUE));
   $terms_to_remove = array_intersect($node_terms, $selected_terms);
   // Check if the bundle of the node is associated with selected vocabulary

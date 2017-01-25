@@ -173,7 +173,13 @@
           };
 
           scope.canSave = function () {
-            return scope.invalidFileName || scope.invalidName || scope.invalidAlt;
+            var can_save = scope.invalidFileName || scope.invalidName;
+
+            if (scope.file.type == 'image') {
+              return can_save || scope.invalidAlt;
+            }
+
+            return can_save;
           };
 
           scope.save = function () {

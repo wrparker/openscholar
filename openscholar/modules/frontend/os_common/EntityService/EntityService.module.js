@@ -215,12 +215,18 @@
           return $http.post(restPath + '/' + entityType, entity)
             .success(function (resp) {
               var entity = resp.data[0];
-              ents[entity[idProp]] = entity;
 
-              weSaved[entity[idProp]] = entity.timestamp;
+              weSaved[entity[idProp]] = entity.changed;
               addToCaches(entityType, idProp, entity);
 
-              $rootScope.$broadcast(eventName + '.add', entity);
+              if (typeof ents[entity[idProp]] == 'undefined') {
+                $rootScope.$broadcast(eventName + '.add', entity);
+              }
+              // this file already existed on the server
+              else {
+                $rootScope.$broadcast(eventName + '.update', entity);
+              }
+              ents[entity[idProp]] = entity;
             })
         };
 
@@ -802,6 +808,11 @@
     }
     else if (typeof(prop1) == typeof(prop2)) {
       return prop1 == prop2;
+    }
+    // if one property is undefined, its usually a meta property the client uses
+    // it shouldn't be used at all
+    else if (typeof(prop1) == 'undefined' || typeof(prop2) == 'undefined') {
+      return true;
     }
     else {
       return prop1.toString() == prop2.toString();

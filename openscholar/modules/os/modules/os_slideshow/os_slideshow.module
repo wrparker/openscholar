@@ -661,7 +661,7 @@ function _os_slideshow_image_aspect_ratios() {
  */
 function _os_slideshow_layouts() {
   return array(
-    '3_1_overlay'  => array('ratio' => array('3:1' => 3/1), 'name' => 'Widescreen Overlay'),
+    '3_1_overlay'  => array('ratio' => array('3:1' => 3/1), 'name' => 'Wide Overlay'),
     '16_9_overlay' => array('ratio' => array('16:9' => 16/9), 'name' => 'Standard Overlay'),
     '16_9_below'   => array('ratio' => array('16:9' => 16/9), 'name' => 'Standard Below'),
     '16_9_side'    => array('ratio' => array('16:9' => 16/9), 'name' => 'Standard Side'),

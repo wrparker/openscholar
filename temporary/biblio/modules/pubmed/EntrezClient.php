@@ -462,7 +462,9 @@ class BiblioEntrezClient
     else {
       $this->query = self::BASE_URL . 'efetch.fcgi?' . http_build_query($params);
     }
-    $request_options = array('method' => 'POST');
+    // This needs to be GET or the server throws errors.
+    // I guess someone figured out POST shouldn't be accepted for requests that don't have bodies
+    $request_options = array('method' => 'GET');
     $result = drupal_http_request($this->query, $request_options);
 
     if ($result->code != 200) {
@@ -481,7 +483,7 @@ class BiblioEntrezClient
     $params['db'] = $this->getDatabase();
     $params['id'] = implode(',', $uids);
     $this->query = self::BASE_URL . 'epost.fcgi?' . http_build_query($params);
-    $request_options = array('method' => 'POST');
+    $request_options = array('method' => 'GET');  // This needs to be GET or the server throws errors.
     $result = drupal_http_request($this->query, $request_options);
 
     if ($result->code != 200) {

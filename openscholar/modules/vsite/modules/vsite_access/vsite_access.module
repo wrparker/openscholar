@@ -163,8 +163,8 @@ function vsite_access_privacy_available_values() {
   $suffix = '</span>';
   $descriptions = array(
     VSITE_ACCESS_PUBLIC => t('Anyone on the Internet can view your site. Your site will show in search results. No sign-in required.'),
-    VSITE_ACCESS_UNINDEXED => t('Only site members can view your site. Your site will not be indexed by search engines.'),
-    VSITE_ACCESS_PRIVATE => t('Anyone who has the URL to your site can view your site. Your site will not be indexed by search engines.'),
+    VSITE_ACCESS_UNINDEXED => t('Anyone who has the URL to your site can view your site. Your site will not be indexed by search engines.'),
+    VSITE_ACCESS_PRIVATE => t('Only site members can view your site. Your site will not be indexed by search engines.'),
     VSITE_ACCESS_INTRANET_PRIVATE => t('Perminantly private, only people explicitly granted permission can access. Sign-in required.'),
   );
 
@@ -441,4 +441,12 @@ function vsite_access_preprocess_page(&$vars) {
   if (_vsite_access_denied()) {
     $vars['is_front'] = false;
   }
+}
+
+/**
+ * Implements hook_cp_settings_alter().
+ */
+function vsite_access_cp_settings_alter(&$settings, &$form_state) {
+  // Notify Drupal where the validate and submit handlers are located.
+  $form_state['build_info']['files'][] = drupal_get_path('module', 'vsite_access') . '/vsite_access.cp.inc';
 }

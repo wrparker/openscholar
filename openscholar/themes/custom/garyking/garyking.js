@@ -43,5 +43,23 @@
          jQuery(e).html(jQuery(e).html().replace(/:/g, ''));
      });
      
+     
+  
+
+     
 
  });
+ 
+
+// jQuery(document).ready(function() {
+ // if (jQuery('#biblio-node').find('div.biblio-upload-wrapper').length) {
+   // jQuery('#citation-wrapper').addClass('has-attached');
+// }
+ 
+ //var setHeight = jQuery(".has-attached");
+//jQuery(".biblio-upload-wrapper").css({height:setHeight.height()});
+ 
+// });
+ 
+
+
