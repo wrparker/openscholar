@@ -3490,6 +3490,7 @@ JS;
 
     $attempts = 0;
     while (!$driver->isVisible("//*[text() = '$text']") && !$page->getSession()->evaluateScript($scrolltest) && $attempts < 20) {
+      echo $attempts;
       $page->getSession()->getDriver()->executeScript("document.querySelector('$element').scrollTop += 100");
       usleep(100);
       $attempts++;
