@@ -442,3 +442,11 @@ function vsite_access_preprocess_page(&$vars) {
     $vars['is_front'] = false;
   }
 }
+
+/**
+ * Implements hook_cp_settings_alter().
+ */
+function vsite_access_cp_settings_alter(&$settings, &$form_state) {
+  // Notify Drupal where the validate and submit handlers are located.
+  $form_state['build_info']['files'][] = drupal_get_path('module', 'vsite_access') . '/vsite_access.cp.inc';
+}
