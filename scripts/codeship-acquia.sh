@@ -43,7 +43,7 @@ cp -f openscholar/openscholar/drupal-org.make /tmp/
 cp -f openscholar/openscholar/bower.json /tmp/
 git subtree pull -m "subtree merge in codeship" --prefix=openscholar git://github.com/openscholar/openscholar.git $CI_BRANCH
 #Only build if no build has ever happened, or if the make files have changed
-if [ ! -d openscholar/openscholar/modules/contrib ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org-core.make' '/tmp/drupal-org-core.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org.make' '/tmp/drupal-org.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/bower.json' '/tmp/bower.json')" != "" ]; then
+if [ ! -d openscholar/openscholar/modules/contrib ] || [ $FORCE_REBUILD == "1" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org-core.make' '/tmp/drupal-org-core.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org.make' '/tmp/drupal-org.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/bower.json' '/tmp/bower.json')" != "" ]; then
 # Chores.
 for DIR in $BUILD_ROOT/www-build $BUILD_ROOT/www-backup openscholar/openscholar/1 openscholar/openscholar/modules/contrib openscholar/openscholar/themes/contrib openscholar/openscholar/libraries; do
 	rm -Rf $DIR
@@ -60,7 +60,7 @@ $DRUSH make --no-core --contrib-destination drupal-org.make .
 	rm -rf libraries/git/symfony/process/Symfony/Component/Process/.git
 	rm -f libraries/git/symfony/process/Symfony/Component/Process/.gitignore
 	git rm -r --cached libraries/git/symfony/process/Symfony/Component/Process
-	
+
 	# Get the angular components
 	bower -q install
 )
@@ -76,11 +76,11 @@ for BACKUP_FILE in "${preserve_files[@]}"; do
 	mv $DOCROOT/$BACKUP_FILE www-build/
 done
 # Move the profile in place.
-ln -s openscholar/openscholar $BUILD_ROOT/www-build/profiles/openscholar
+ln -s ../../openscholar/openscholar $BUILD_ROOT/www-build/profiles/openscholar
 # link up phpmyadmin
 # ln -s ../phpMyAdmin-3.5.2.2-english $BUILD_ROOT/www-build/phpmyadmin
 #link up js.php
-ln -s openscholar/openscholar/modules/contrib/js/js.php $BUILD_ROOT/www-build/js.php
+ln -s ../openscholar/openscholar/modules/contrib/js/js.php $BUILD_ROOT/www-build/js.php
 # Fix permisions before deleting.
 # chmod -R +w $BUILD_ROOT/$DOCROOT/sites/* || true
 rm -Rf $BUILD_ROOT/$DOCROOT || true
@@ -147,7 +147,7 @@ cp -f openscholar/openscholar/drupal-org.make /tmp/
 cp -f openscholar/openscholar/bower.json /tmp/
 git subtree pull -m "subtree merge in codeship" --prefix=openscholar git://github.com/openscholar/openscholar.git $CI_BRANCH
 #Only build if no build has ever happened, or if the make files have changed
-if [ ! -d openscholar/openscholar/modules/contrib ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org-core.make' '/tmp/drupal-org-core.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org.make' '/tmp/drupal-org.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/bower.json' '/tmp/bower.json')" != "" ]; then
+if [ ! -d openscholar/openscholar/modules/contrib ] || [ $FORCE_REBUILD == "1" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org-core.make' '/tmp/drupal-org-core.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org.make' '/tmp/drupal-org.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/bower.json' '/tmp/bower.json')" != "" ]; then
 # Chores.
 for DIR in $BUILD_ROOT/www-build $BUILD_ROOT/www-backup openscholar/openscholar/1 openscholar/openscholar/modules/contrib openscholar/openscholar/themes/contrib openscholar/openscholar/libraries; do
 	rm -Rf $DIR
@@ -163,7 +163,7 @@ $DRUSH make --no-core --contrib-destination drupal-org.make .
 	rm -rf libraries/git/symfony/process/Symfony/Component/Process/.git
 	rm -f libraries/git/symfony/process/Symfony/Component/Process/.gitignore
 	git rm -r --cached libraries/git/symfony/process/Symfony/Component/Process
-	
+
 	# Get the angular components
 	bower -q install
 )
