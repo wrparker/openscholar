@@ -234,7 +234,7 @@ projects[media_gallery][patch][] = "https://raw.githubusercontent.com/openschola
 projects[media_gallery][patch][] = "https://www.drupal.org/files/issues/2585509-media_gallery-lost_files.patch"
 
 projects[message][subdir] = "contrib"
-projects[message][version] = 1.11
+projects[message][version] = 1.12
 
 projects[metatag][subdir] = "contrib"
 projects[metatag][version] = 1.0-beta9
@@ -281,6 +281,8 @@ projects[oembed][patch][] = "http://cgit.drupalcode.org/oembed/patch/?id=a27adf7
 projects[oembed][patch][] = "http://drupal.org/files/issues/oembed.2134415.wysiwyg_dimensions.patch"
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/514d6c636dc69ea76ea307a874c7cd9c3e0fb045/patches/oembed.alt_tags_no_escape.patch"
 projects[oembed][patch][] = "http://drupal.org/files/issues/split-up-regex-2739023-1.patch"
+projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/61b4675841580356481463f4780627bab619f197/patches/oembed.8762.uri_fragments.patch"
+projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/6d4ccf7f26124a57a3483b2e1197017a95d4b026/patches/oembed.backup_providers.patch"
 
 projects[og][subdir] = "contrib"
 projects[og][version] = 2.6
@@ -347,12 +349,10 @@ projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
 
 projects[restful][subdir] = "contrib"
-projects[restful][download][type] = git
-projects[restful][download][url] = "https://github.com/RoySegall/restful.git"
-projects[restful][download][branch] = 444
+projects[restful][version] = "1.6"
+# Patch to be able to update a taxonomy term.
+projects[restful][patch][] = "https://patch-diff.githubusercontent.com/raw/RESTful-Drupal/restful/pull/445.diff"
 projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/839d0cc214f2422e924e35d33133d1268b8cc1cd/patches/restful.put_file.patch"
-;projects[restful][download][branch] = "7.x-1.x"
-;projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
 
 projects[redirect][subdir] = "contrib"
 projects[redirect][version] = 1.0-rc1

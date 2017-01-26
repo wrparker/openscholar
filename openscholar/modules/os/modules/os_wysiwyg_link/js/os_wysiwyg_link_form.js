@@ -18,7 +18,6 @@ Drupal.behaviors.osLinkExternal = {
         }
         Drupal.settings.osWysiwygLinkResult = value;
         Drupal.settings.osWysiwygLinkAttributes = {'data-url': Drupal.settings.osWysiwygLinkResult, 'title': link_title};
-
         if (target_option) {
           Drupal.settings.osWysiwygLinkAttributes.target = '_blank';
         }

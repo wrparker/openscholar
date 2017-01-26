@@ -490,11 +490,16 @@ function cp_sort_features_by_human_name(&$form) {
  *
  * There aren't enough of to have its own page.
  *
+ * @param $form_sate
+ *   The form state variable.
+ * @return array
+ *   The form array.
+ *
  * @see cp_settings_form()
  */
-function cp_get_setting_forms() {
+function cp_get_setting_forms(&$form_sate = NULL) {
   $settings = module_invoke_all('cp_settings');
-  drupal_alter('cp_settings', $settings);
+  drupal_alter('cp_settings', $settings, $form_sate);
 
   return $settings;
 }

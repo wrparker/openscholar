@@ -6,16 +6,15 @@
   }]);
 
   m.factory('messageFetcher', ['$sessionStorage', function ($ss) {
-    var messageFetcher = {
+    return {
       response: function (response) {
         if (response.data && response.data.messages) {
           $ss.messages = response.data.messages;
         }
         return response;
       }
-    }
+    };
 
-    return messageFetcher;
   }]);
 
   m.controller('messageController', ['$scope', '$sessionStorage', function ($s, $ss) {
@@ -26,4 +25,4 @@
       delete $s.messages;
     }
   }]);
-})()
+})();
