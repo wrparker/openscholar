@@ -109,7 +109,15 @@ node-type-person #content-column .node-person h2.block-title,
 .event-start .event-year {
     padding: 14px 0 0;
 }
-
+#menu-bar ul.nice-menu .menuparent.over > a:before,
+#menu-bar ul.nice-menu .menuparent a:hover:before,
+#menu-bar ul.nice-menu .menuparent a.active:before,
 #menu-bar ul.nice-menu .menuparent a:before {
-    background-position: 0 -613px;
+    background-position: 0px -613px;
+    width: 20px;
+    height: 20px;
+}
+#menu-bar ul.nice-menu .menuparent a {
+    padding-right: 27px;
+    font-size: 18px;
 }
