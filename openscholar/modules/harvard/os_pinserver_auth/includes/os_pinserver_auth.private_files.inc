@@ -247,43 +247,6 @@ function _os_pinserver_auth_vsite_private_file_settings(&$form, $form_state) {
 }
 
 /**
- * Process private file settings for a vsite.
- */
-function os_pinserver_auth_vsite_private_file_settings_submit(&$form, &$form_state){
-
-  $vsite = spaces_get_space();
-  if(!$vsite){
-    return;
-  }
-
-  $domain_pin_apps = variable_get('os_fastpath_domain_pinapps',array());
-  $vsite_domain = false;
-  if (variable_get('vsite_domain_name', false)){
-    $vsite_domain = "http://".variable_get('vsite_domain_name', false);
-  }
-
-  // Set or Unset a custom pinserver app.
-  if($form_state['values']['pinserver_app_name'] && $form_state['values']['pinserver_app_name'] != $vsite->controllers->variable->get('pinserver_app_name','original')){
-    // The pinserver domain should match the site's custom domain.
-    $vsite->controllers->variable->set('os_pinserver_custom_domain', $vsite_domain);
-    //Store pin settings for this domain for use on the os_fast callback outside a space.
-    $domain_pin_apps[$vsite_domain] = array(
-      'pinserver_app_name' => $form_state['values']['pinserver_app_name'],
-      'os_files_private_pinserver' => variable_get('os_files_private_pinserver', 0),
-      'os_pinserver_custom_domain' => $vsite_domain,
-    );
-  }else{
-    // Remove the custom pinserver domain if they do not have their own app.
-    $vsite->controllers->variable->del('os_pinserver_custom_domain');
-    if(isset($domain_pin_apps[$vsite_domain])){
-      unset($domain_pin_apps[$vsite_domain]);
-    }
-  }
-
-  variable_set('os_fastpath_domain_pinapps', $domain_pin_apps);
-}
-
-/**
  * Initilize domain specific pin variables that need to either be loaded early or can
  * not be handled via the standard overrides mechinisims.
  *
