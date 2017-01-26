@@ -5,10 +5,11 @@ body * {
 #boxes-box-site_info,
 #boxes-box-site_info a {
     font-family: 'EB Garamond', serif !important;
-    font-size: 1.3em;
 }
-.section-nav .expanded.menu-depth-2 > a {
-    font-size: 1.1em;
+#boxes-box-site_info,
+#boxes-box-site_info a,
+.section-nav .menu-depth-1 > a {
+    font-size: 1.2em;
 }
 a,
 a:visited {
@@ -21,7 +22,6 @@ a:visited {
 .node-type-person #content-column .node-person h2.block-title {
     margin-bottom: 17px;
 }
-
 #menu-bar,
 #header,
 #branding_footer,
@@ -29,6 +29,12 @@ a:visited {
 #footer {
     background: #000;
 }
+#header,
+#branding_footer
+{
+    border-top: 1px solid #333;
+}
+
 #search-block-form input.form-submit,
 #search-block-form #edit-submit,
 #search-form #edit-submit {
@@ -68,7 +74,7 @@ a:visited {
     color: #407cb5 !important;
 }
 .section-nav .expanded.menu-depth-2 > a,
-.section-nav .menu-depth-1 > a.active.active,
+/*.section-nav .menu-depth-1 > a.active.active,*/
 .section-nav .expanded.menu-depth-2 .menu-depth-3 > a,
 .section-nav .expanded.menu-depth-2 .menu-depth-4 > a,
 .section-nav .expanded.menu-depth-2 .menu-depth-5 > a,
@@ -94,7 +100,7 @@ a:visited {
 .section-nav .leaf.menu-depth-6 > a:hover,
 .section-nav .expanded.menu-depth-2 > a:hover,
 .section-nav a:hover,
-.section-nav a.active.active {
+.section-nav a.active-trail.active.active {
     background-color: #F3F2F1 !important;
 }
 .section-nav .menu-depth-1 .collapsed > a:before,
