@@ -115,5 +115,5 @@ function os_wysiwyg_update_7011() {
  * Add bi directional widget.
  */
 function os_wysiwyg_update_7012() {
-  features_revert(array('os_wysiwyg' => array('filter')));
+  features_revert(array('os_wysiwyg' => array('filter', 'wysiwyg')));
 }
