@@ -221,6 +221,7 @@ function os_wysiwyg_field_widget_form(&$form, &$form_state, $field, $instance, $
   $element += array(
     '#type' => 'text_format',
     '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
+    '#maxlength' => variable_get('os_wysiwyg_maximum_length_' . $instance['field_name'], 5 * 1000000),
     '#rows' => 5,
     '#attributes' => array(
       'class' => array(

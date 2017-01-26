@@ -244,17 +244,9 @@ a img {
 .block-boxes-os_sv_list_file .file img.file-icon {
     display: inline;
 }
-
 img.file-icon {
     width:16px;
 }
-.media-gallery-carousal.file-icon {
-    width:100%;
-    margin-top: 2px;
-}
-.media-gallery-media-item-thumbnail img.file-icon {
-	width:100%;
-	}
 	
 .block-boxes-os_sv_list_file .file-info iframe {
     display: block;
@@ -1146,4 +1138,8 @@ ul.no-event-export {
 }
 .web-widgets-iframe {
     width: 100%;
+}
+.os-sv-list iframe {
+    width: 100% !important;
+    height:auto !important;
 }
