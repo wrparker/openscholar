@@ -23,6 +23,27 @@ Feature:
 
   @api @features_second
   Scenario: When syncing the same node we need to check we updated the copied
+  node and create a new one.
+#    Given I am logging in as "john"
+    # try to solve with john later on.
+    Given I am logging in as "john"
+    Given I am logging in as "john"
+      And I edit the node "Hillary Diane Rodham Clinton" in the group "obama"
+      And I fill in "Address" with "White house"
+      And I press "Save"
+      And I visit "john/cp/people/sync-profiles"
+      And I fill in the field "autocomplete" with the node "Hillary Diane Rodham Clinton"
+      And I press "Submit"
+      And I should see "The person Hillary Diane Rodham Clinton has updated. You can visit their page."
+     When I click "visit"
+     Then I should see "Hillary Diane Rodham Clinton"
+      And I should see "67th United States Secretary of State"
+    # Verify the user is in john's vsite and the source node vsite.
+      And I should see "John"
+      And I should see "White house"
+
+  @api @features_second
+  Scenario: When syncing the same node we need to check we updated the copied
             node and create a new one.
 #    Given I am logging in as "john"
     # try to solve with john later on.
