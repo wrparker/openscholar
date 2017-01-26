@@ -10,7 +10,7 @@
 
       // Sets embedded iframe width same as the parent wrapper div width if initial iframe width is greater than parent div width
       $('.block-boxes-os_sv_list_file .os_sv_list_file .file').each(function(i){
-        var width_parent = $(this).width();
+        var width_parent = $(this).parent().width();
         if (width_parent < $(this).find('iframe').attr('width')) {
           $(this).find('iframe').attr('width', width_parent);
         }
