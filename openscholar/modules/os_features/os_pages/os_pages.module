@@ -484,7 +484,7 @@ function os_pages_form_page_node_form_alter(&$form, &$form_state) {
   $path = drupal_get_path('module', 'os_pages');
   $form['os_seo'] = array(
     '#type' => 'fieldset',
-    '#title' => t('SEO'),
+    '#title' => t('Search Engine Optimization (SEO)'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
@@ -1222,9 +1222,11 @@ function os_pages_apachesolr_index_document_build_node(ApacheSolrDocument $doc, 
     if (module_exists('vsite') && ($groups = og_get_entity_groups('node',$entity))) {
       if ($groups['node'] && count($groups['node'])) {
         $vsite = spaces_load('og', current($groups['node']));
-        $override = $vsite->controllers->context->get("os_pages-page-{$entity->nid}:reaction:block");
-        if (!is_null($override)) {
-          $ctx->reactions['block'] = $override;
+        if (!empty($vsite->controllers->context)) {
+          $override = $vsite->controllers->context->get("os_pages-page-{$entity->nid}:reaction:block");
+          if (!is_null($override)) {
+            $ctx->reactions['block'] = $override;
+          }
         }
       }
     }

@@ -46,6 +46,16 @@ function os_blog_os_app_info() {
 }
 
 /**
+ * Implements hook_os_restful_cp_menu_admin_panel_alter().
+ */
+function os_blog_os_restful_cp_menu_admin_panel_alter(&$menu) {
+  $parent = &$menu['settings']['children']['app_settings']['children'];
+  if (isset($parent['feature_os_blog'])) {
+    $parent['feature_os_blog']['label'] = t('Blog Comments');
+  }
+}
+
+/**
  * Implements hook_process_hook() for node.
  *
  * Removes the username from $submitted info on blog type nodes.

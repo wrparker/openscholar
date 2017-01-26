@@ -111,7 +111,8 @@ abstract class OsRestfulSpaces extends \OsRestfulDataProvider {
    */
   public function checkGroupAccess() {
     $this->getObject();
-    if (!$this->space = spaces_load('og', $this->object->vsite)) {
+    $vsite_id = !empty($this->object->vsite) ? $this->object->vsite : $_GET['vsite'];
+    if (!$this->space = spaces_load('og', $vsite_id)) {
       // No vsite context.
       $this->throwException('The vsite ID is missing.');
     }

@@ -46,6 +46,9 @@ ul.nice-menu ul {
 .comment-wrapper {
     border-top: 3px solid #78777B;
 }
+.cke_editable h2,
+.cke_editable h3,
+.cke_editable h4,
 #content-column .field-name-body h2,
 h2.block-title {
     color: #A51C30;

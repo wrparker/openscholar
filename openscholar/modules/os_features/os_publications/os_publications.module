@@ -316,6 +316,24 @@ function os_publications_theme_registry_alter(&$theme_registry) {
   $theme_registry['views_view_summary__publication_years__block']['preprocess functions'][] = 'theme_os_publications_biblio_year_row';
 }
 
+function _os_publications_get_patent_country_codes() {
+  return array('AP' => 'ARIPO (African Reg Ind Prop Org)', 'AL' => 'Albania', 'DZ' => 'Algeria', 'AR' => 'Argentina',
+    'AU' => 'Australia', 'AT' => 'Austria', 'BE' => 'Belgium', 'BX' => 'Benelux', 'BR' => 'Brazil', 'BG' => 'Bulgaria', 'CA' => 'Canada',
+    'CL' => 'Chile', 'CN' => 'China', 'CO' => 'Columbia', 'HR' => 'Croatia', 'CU' => 'Cuba','CY' => 'Cyprus', 'CZ' => 'Czech Republic (CS before 1993)',
+    'CS' => 'Czechoslovakia (CZ or SK after 1992)', 'DK' => 'Denmark', 'EG' => 'Egypt', 'EA' => 'Eurasian Patent Organization',
+    'EP' => 'European Patent Office', 'DE' => 'Germany', 'DD' => 'Germany, East (DE after 1990)', 'FI' => 'Finland', 'FR' => 'France', 'GB' => 'Great Britain',
+    'GR' => 'Greece', 'HK' => 'Hong Kong', 'HU' => 'Hungary', 'IS' => 'Iceland', 'IN' => 'India', 'ID' => 'Indonesia', 'IB' => 'International Patent Institute',
+    'TP' => 'International Technology Disclosure', 'IR' => 'Iran', 'IQ' => 'Iraq', 'IE' => 'Ireland', 'IL' => 'Israel', 'IT' => 'Italy', 'JP' => 'Japan', 'JO' => 'Jordan',
+    'KE' => 'Kenya', 'KP' => 'Korea (North)', 'KR' => 'Korea (South)', 'LV' => 'Latvia', 'LT' => 'Lithuania', 'LU' => 'Luxembourg',
+    'MW' => 'Malawi', 'MY' => 'Malaysia', 'MX' => 'Mexico', 'MD' => 'Moldova', 'MC' => 'Monaco',
+    'MN' => 'Mongolia', 'MA' => 'Morocco', 'NL' => 'Netherlands', 'NZ' => 'New Zealand', 'NG' => 'Nigeria', 'NO' => 'Norway', 'OA' => 'OAPI',
+    'WO' => 'PCT', 'PE' => 'Peru', 'PH' => 'Philippines', 'PL' => 'Poland', 'PT' => 'Portugal', 'RD' => 'Research Disclosure', 'RO' => 'Romania',
+    'RU' => 'Russia (SU before 1993)', 'SA' => 'Saudi Arabia', 'SG' => 'Singapore', 'SK' => 'Slovakia (CS before 1993)', 'SI' => 'Slovenia', 'ZA' => 'South Africa',
+    'SU' => 'Soviet Union (RU after 1992)', 'ES' => 'Spain', 'LK' => 'Sri Lanka', 'SE' => 'Sweden', 'CH' => 'Switzerland', 'TW' => 'Taiwan', 'TH' => 'Thailand', 'TT' => 'Trinidad',
+    'TN' => 'Tunisia', 'TR' => 'Turkey', 'UA' => 'Ukranian Republic', 'GB' => 'United Kingdom', 'US' => 'United States of America', 'UY' => 'Uruguay',
+    'VE' => 'Venezuela', 'VN' => 'Viet Nam, Socialist Rep.', 'WO' => 'WIPO (World Intellectual Prop Org)', 'YU' => 'Yugoslavia', 'ZM' => 'Zambia', 'ZW' => 'Zimbabwe',
+  );
+}
 /**
  * Alters the biblio form to do a lot of things
  */
@@ -376,22 +394,7 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
   }
 
   // Patent Country Code array.
-  $patent_country_codes = array('AP' => 'ARIPO (African Reg Ind Prop Org)', 'AL' => 'Albania', 'DZ' => 'Algeria', 'AR' => 'Argentina',
-    'AU' => 'Australia', 'AT' => 'Austria', 'BE' => 'Belgium', 'BX' => 'Benelux', 'BR' => 'Brazil', 'BG' => 'Bulgaria', 'CA' => 'Canada',
-    'CL' => 'Chile', 'CN' => 'China', 'CO' => 'Columbia', 'HR' => 'Croatia', 'CU' => 'Cuba','CY' => 'Cyprus', 'CZ' => 'Czech Republic (CS before 1993)',
-    'CS' => 'Czechoslovakia (CZ or SK after 1992)', 'DK' => 'Denmark', 'EG' => 'Egypt', 'EA' => 'Eurasian Patent Organization',
-    'EP' => 'European Patent Office', 'DE' => 'Germany', 'DD' => 'Germany, East (DE after 1990)', 'FI' => 'Finland', 'FR' => 'France', 'GB' => 'Great Britain',
-    'GR' => 'Greece', 'HK' => 'Hong Kong', 'HU' => 'Hungary', 'IS' => 'Iceland', 'IN' => 'India', 'ID' => 'Indonesia', 'IB' => 'International Patent Institute',
-    'TP' => 'International Technology Disclosure', 'IR' => 'Iran', 'IQ' => 'Iraq', 'IE' => 'Ireland', 'IL' => 'Israel', 'IT' => 'Italy', 'JP' => 'Japan', 'JO' => 'Jordan',
-    'KE' => 'Kenya', 'KP' => 'Korea (North)', 'KR' => 'Korea (South)', 'LV' => 'Latvia', 'LT' => 'Lithuania', 'LU' => 'Luxembourg',
-    'MW' => 'Malawi', 'MY' => 'Malaysia', 'MX' => 'Mexico', 'MD' => 'Moldova', 'MC' => 'Monaco',
-    'MN' => 'Mongolia', 'MA' => 'Morocco', 'NL' => 'Netherlands', 'NZ' => 'New Zealand', 'NG' => 'Nigeria', 'NO' => 'Norway', 'OA' => 'OAPI',
-    'WO' => 'PCT', 'PE' => 'Peru', 'PH' => 'Philippines', 'PL' => 'Poland', 'PT' => 'Portugal', 'RD' => 'Research Disclosure', 'RO' => 'Romania',
-    'RU' => 'Russia (SU before 1993)', 'SA' => 'Saudi Arabia', 'SG' => 'Singapore', 'SK' => 'Slovakia (CS before 1993)', 'SI' => 'Slovenia', 'ZA' => 'South Africa',
-    'SU' => 'Soviet Union (RU after 1992)', 'ES' => 'Spain', 'LK' => 'Sri Lanka', 'SE' => 'Sweden', 'CH' => 'Switzerland', 'TW' => 'Taiwan', 'TH' => 'Thailand', 'TT' => 'Trinidad',
-    'TN' => 'Tunisia', 'TR' => 'Turkey', 'UA' => 'Ukranian Republic', 'GB' => 'United Kingdom', 'US' => 'United States of America', 'UY' => 'Uruguay',
-    'VE' => 'Venezuela', 'VN' => 'Viet Nam, Socialist Rep.', 'WO' => 'WIPO (World Intellectual Prop Org)', 'YU' => 'Yugoslavia', 'ZM' => 'Zambia', 'ZW' => 'Zimbabwe',
-  );
+  $patent_country_codes = _os_publications_get_patent_country_codes();
 
   //Hide the extra and cover fields if there is no TID
   if(!$tid) {
@@ -1011,6 +1014,8 @@ function os_publications_biblio_form_patent_validate(&$form, &$form_state) {
 }
 
 function os_publications_entity_prepare_view($entities, $type, $langcode) {
+  global $user;
+
   $style = variable_get('biblio_citeproc_style');
   // Adding extra validation for date and month for Harvard - Chicago Author
   // cititation.
@@ -1022,9 +1027,31 @@ function os_publications_entity_prepare_view($entities, $type, $langcode) {
   // Load a specific node into the user object for later theming.
   if ($type == 'node') {
     foreach ($entities as $nid => $entity) {
-      if($entity->type == 'biblio' && ($entity->biblio_year == 'In Press' || $entity->biblio_year == 'In Preparation' || $entity->biblio_year == 'Working Paper' ) && !empty($entity->biblio_date)) {
-        $entity->biblio_year .= ", {$entity->biblio_date}";
-        $entity->biblio_date = '';
+
+      // Avoid redundancy in publication label, e.g., "United States patent US 123".
+      // If country code and country name are both displayed, remove the country code.
+      $biblio_style = $user->data['biblio_user_style'];
+      if (($biblio_style == null) or ($biblio_style == "system")) {
+        $biblio_style = variable_get('biblio_citeproc_style');
+      }
+
+      if (in_array($biblio_style, array('harvard-chicago-author-date.csl', 'cse.csl', 'nlm.csl')) and ($entity->biblio_type_name == "Patent")) {
+
+        $patent_country_codes = _os_publications_get_patent_country_codes();
+        $country_code = $entity->biblio_section;
+        $country_name = $entity->biblio_edition;
+
+        if (($patent_country_codes[$country_code] == $country_name) and (array_flip($patent_country_codes)[$country_name] == $country_code)) {
+          $entity->biblio_section = "";
+        }
+        if (($patent_country_codes[$country_code] == $country_name) and (preg_match('/' . $country_code . '\s*/', $entity->biblio_volume))) {
+          $entity->biblio_volume = preg_replace('/' . $country_code . '\s*/', "", $entity->biblio_volume);
+        }
+
+        if($entity->type == 'biblio' && ($entity->biblio_year == 'In Press' || $entity->biblio_year == 'In Preparation' || $entity->biblio_year == 'Working Paper' ) && !empty($entity->biblio_date)) {
+          $entity->biblio_year .= ", {$entity->biblio_date}";
+          $entity->biblio_date = '';
+        }
       }
     }
   }
@@ -1430,7 +1457,7 @@ function os_publications_preprocess_page(&$variables) {
   // If long list content pagination type is set as infinite scroll, then attaching infinite scroll libraries instead of default pager of biblio module.
   if (variable_get('long_list_content_pagination', 'infinite_scroll') == 'infinite_scroll') {
     ctools_include('infinite_scroll', 'os');
-    _os_add_infinite_scroll('os_publications', '#content li.pager-next a', '#content>.biblio-category-section', array('pager' => '#content ul.pager', 'hide_biblio_categories' => TRUE));
+    _os_add_infinite_scroll('os_publications', '#content li.pager-next a', '#content', array('pager' => '#content ul.pager', 'hide_biblio_categories' => TRUE));
   }
   // Hide the numbers of results found for anonymous users.
   if (user_is_anonymous()) {

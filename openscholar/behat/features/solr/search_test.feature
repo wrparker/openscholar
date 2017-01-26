@@ -39,7 +39,7 @@ Feature:
      Then I should see "John F. Kennedy"
       And I should not see "John F.kendy music"
 
-  @api @solr
+  @wip
   Scenario: Test the "Filter by post date" display facet UTC format.
     Given I visit ""
       And I fill in "search_block_form" with "\"Tesla's Blog\""

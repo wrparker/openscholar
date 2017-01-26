@@ -247,13 +247,6 @@ a img {
 img.file-icon {
     width:16px;
 }
-.media-gallery-carousal.file-icon {
-    width:100%;
-    margin-top: 2px;
-}
-.media-gallery-media-item-thumbnail img.file-icon {
-	width:100%;
-	}
 	
 .block-boxes-os_sv_list_file .file-info iframe {
     display: block;
@@ -642,7 +635,6 @@ ul ul ul ul {
     display: block;
 }
 /* Don't display the ical link in the floating box. */
-
 #cboxWrapper .node-event .links {
     display: none;
 }
@@ -1131,4 +1123,23 @@ ul.no-event-export {
 
 .block-boxes-os_boxes_widget_slider #layout_16_9_side .rslides li {
   list-style:none;
+}
+
+.morecontent span {
+    display: none;
+}
+.morelink {
+    display: inline;
+    text-decoration:underline;
+    
+}
+.morelink span {
+    font-size: .8em;
+}
+.web-widgets-iframe {
+    width: 100%;
+}
+.os-sv-list iframe {
+    width: 100% !important;
+    height:auto !important;
 }

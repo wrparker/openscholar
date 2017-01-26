@@ -282,6 +282,7 @@ projects[oembed][patch][] = "http://drupal.org/files/issues/oembed.2134415.wysiw
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/514d6c636dc69ea76ea307a874c7cd9c3e0fb045/patches/oembed.alt_tags_no_escape.patch"
 projects[oembed][patch][] = "http://drupal.org/files/issues/split-up-regex-2739023-1.patch"
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/61b4675841580356481463f4780627bab619f197/patches/oembed.8762.uri_fragments.patch"
+projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/6d4ccf7f26124a57a3483b2e1197017a95d4b026/patches/oembed.backup_providers.patch"
 
 projects[og][subdir] = "contrib"
 projects[og][version] = 2.6
@@ -326,7 +327,7 @@ projects[pinserver][subdir] = "contrib"
 projects[pinserver][type] = module
 projects[pinserver][download][type] = git
 projects[pinserver][download][url] = "git://github.com/openscholar/pinserver.git"
-projects[pinserver][download][tag] = 7.x-3.4.19
+projects[pinserver][download][tag] = 7.x-3.4.20
 
 projects[purl][subdir] = "contrib"
 ;: projects[purl][version] = 1.0-beta1+11-dev

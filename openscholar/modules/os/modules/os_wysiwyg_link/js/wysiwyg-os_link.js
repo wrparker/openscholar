@@ -5,12 +5,7 @@ Drupal.wysiwyg.plugins['os_link'] = {
   url: '',
   iframeWindow: {},
   getWindow: function () {
-    var aid = Drupal.wysiwyg.activeId;
-    if (this.iframeWindow[aid] == undefined) {
-      this.iframeWindow[aid] = document.querySelector('#'+aid+' + .cke iframe').contentWindow;
-    }
-
-    return this.iframeWindow[aid];
+    return document.querySelector('#cke_' + Drupal.wysiwyg.activeId + ' iframe').contentWindow;
   },
   getSelection: function () {
     var w = this.getWindow();
@@ -164,6 +159,13 @@ Drupal.wysiwyg.plugins['os_link'] = {
       doc = $(iframe.contentDocument),
       window = iframe.contentWindow,
       selected = '[Rich content. Click here to overwrite.]';
+
+    if ($('.form-item-external input', doc).val()) {
+      var osWysiwygLinkUrl = $('.form-item-external input', doc).val();
+      var urlRegex = new RegExp("^" + Drupal.settings.basePath + Drupal.settings.pathPrefix);
+      osWysiwygLinkUrl = osWysiwygLinkUrl.replace(urlRegex, "");
+      $('.form-item-external input', doc).val(osWysiwygLinkUrl.replace(/^\//, ""));
+    }
 
     if (this.selectLink(selection.node) && selection.content == '') {
       selection.content = selection.node.innerHTML;

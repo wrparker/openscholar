@@ -7,13 +7,12 @@
 /**
  * Form builder; merges various site settings into a single "Settings" form.
  */
-function cp_settings_form($form_state) {
-  $form = array();
+function cp_settings_form($form, &$form_state) {
   $form['#submit'] = array();
   $form['#after_build'] = array();
 
   // Loops over all implementations of hook_cp_settings().
-  $settings = cp_get_setting_forms();
+  $settings = cp_get_setting_forms($form_state);
   foreach ($settings as $key => $setting) {
     if (!isset($setting['form'])) {
       continue;
@@ -35,7 +34,7 @@ function cp_settings_form($form_state) {
 
     // Merges any submit handler(s) into the existing value.
     if (isset($setting['submit'])) {
-      $form['#submit'] = array_merge($form['#submit'], $setting['submit']);
+      $form['#submit'] = array_unique(array_merge($form['#submit'], (array)$setting['submit']));
     }
     if (isset($setting['after_build'])) {
       $form['#after_build'] = array_merge($form['#after_build'], $setting['after_build']);

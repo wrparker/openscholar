@@ -62,13 +62,13 @@ function hwpi_basetheme_page_alter(&$page) {
         'external' => true,
         'html' => true,
         'attributes' => array(
-          'data-target' => '#block-os-search-db-site-search, #block-os-search-solr-site-search',
+          'data-target' => '#block-os-search-db-site-search, #block-boxes-solr-search-box',
         )
       )
     )
   );
 
-  if (context_isset('context', 'os_public') && variable_get('enable_responsive', false)) {
+  if (context_isset('context', 'os_public') && variable_get('enable_responsive', true)) {
     $path = drupal_get_path('theme', 'hwpi_basetheme').'/css/';
     drupal_add_css($path.'responsive.base.css');
     drupal_add_css($path.'responsive.layout.css');
@@ -681,16 +681,15 @@ function hwpi_basetheme_nice_menus_build($variables) {
             '#depth' => $depth,
             '#trail' => $trail,
           );
-        }
-        else {
+        } else {
           $children = '';
         }
         // Set the class to parent only of children are displayed.
         $parent_class = ($children && ($menu_item['link']['depth'] <= $depth || $depth == -1)) ? 'menuparent ' : '';
-         $element = array(
+        $element = array(
           '#below' => $children,
           '#title' => $menu_item['link']['title'],
-          '#href' =>  $menu_item['link']['href'],
+          '#href' => $menu_item['link']['href'],
           '#localized_options' => $menu_item['link']['localized_options'],
           '#attributes' => array(
             'class' => array('menu-' . $mlid, $parent_class, $class, $first_class, $oddeven_class, $last_class),
@@ -698,13 +697,12 @@ function hwpi_basetheme_nice_menus_build($variables) {
         );
         $variables['element'] = $element;
         $output .= theme('menu_link', $variables);
-      }
-      else {
+      } else {
         $element = array(
           '#below' => '',
           '#title' => $menu_item['link']['title'],
-          '#href' =>  $menu_item['link']['href'],
-          '#localized_options' => isset($menu_item['link']['localized_options'])?$menu_item['link']['localized_options']:array(),
+          '#href' => $menu_item['link']['href'],
+          '#localized_options' => isset($menu_item['link']['localized_options']) ? $menu_item['link']['localized_options'] : array(),
           '#attributes' => array(
             'class' => array('menu-' . $mlid, $class, $first_class, $oddeven_class, $last_class),
           ),
