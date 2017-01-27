@@ -96,7 +96,7 @@ function os_news_feeds_importer_default() {
     'import_period' => 1800,
     'expire_period' => 3600,
     'import_on_create' => TRUE,
-    'process_in_background' => 1,
+    'process_in_background' => FALSE,
   );
   $export['os_news'] = $feeds_importer;
 

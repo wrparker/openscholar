@@ -81,7 +81,7 @@ function os_blog_feeds_importer_default() {
     'import_period' => 1800,
     'expire_period' => 3600,
     'import_on_create' => TRUE,
-    'process_in_background' => 1,
+    'process_in_background' => FALSE,
   );
   $export['os_blog_csv'] = $feeds_importer;
 

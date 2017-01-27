@@ -14,7 +14,7 @@
       },
       template: '<label for="{{id}}">{{title}}</label>' +   
         '<div class="form-item form-type-select" ng-controller="OptGroupController as opt">' + 
-        '<select ng-options="(item.id||item) as (item.text||item) group by item.groupName for item in opt.items" class="form-select" id="{{id}}" name="{{name}}" ng-model="opt.selected"></select>' + 
+        '<select ng-options="(item.id||item) as (item.text||item) group by item.groupName for item in opt.items track by item.id" class="form-select" id="{{id}}" name="{{name}}" ng-model="opt.selected"></select>' + 
         '</div>',
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];

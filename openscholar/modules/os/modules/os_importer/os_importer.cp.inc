@@ -12,7 +12,6 @@ function os_importer_cp_settings() {
   $app_info = os_app_info();
   $purl = vsite_get_purl();
   $importer_menu_title = array(
-    'blog' => 'Blog entry',
     'biblio' => 'Publication',
     'media_gallery' => 'Media Gallery',
     'faq' => 'FAQ',
@@ -26,14 +25,8 @@ function os_importer_cp_settings() {
   );
 
   $params = array(
-    '!new-york-times' => l(t('New York Times'), 'http://www.nytimes.com/services/xml/rss/index.html'),
     '@wikipedia-url' => 'http://en.wikipedia.org/wiki/Character_encoding',
   );
-
-  $rss_feed_helptext = 'Importing content from RSS feeds supports only news and blog content. ';
-  $rss_feed_helptext .= 'For example: you can import a feed item from the !new-york-times rss news feeds.<br />';
-  $rss_feed_helptext .= "When submitting the form, the import process will begin. After that, you can choose which news items you want to import into your site.";
-  $rss_feed_helptext = t($rss_feed_helptext, $params);
 
   $encode_options = array(
     'utf-8' => t('UTF-8'),
@@ -59,6 +52,11 @@ function os_importer_cp_settings() {
   );
 
   foreach ($app_info as $type => $info) {
+  	// Bypassing apps which have RSS feeds as import source.
+    if (in_array($type, array('os_blog', 'os_news'))) {
+      continue;
+    }
+
     if (empty($info['importers'])) {
       continue;
     }
@@ -108,8 +106,7 @@ function os_importer_cp_settings() {
           'form' => $form_settings,
         );
 
-        $template_markup = '<div class="import-help element-hidden rss-import-fields">' . $rss_feed_helptext . '</div>';
-        $template_markup .= '<div class="import-help csv-import-fields">' . l(t('Download a template'), (isset($purl) ? $purl . '/' : '') . 'cp/os-importer/' . $node_type . '/template') . '</div>';
+        $template_markup = '<div class="import-help csv-import-fields">' . l(t('Download a template'), (isset($purl) ? $purl . '/' : '') . 'cp/os-importer/' . $node_type . '/template') . '</div>';
 
         $settings['os_importer_download_template-' . $node_type] = array(
           'group' => array(
@@ -140,7 +137,7 @@ function os_importer_cp_settings() {
             'extensions' => array('csv'),
             'types' => array('document'),
           ),
-          '#class' => array('csv-import-fields'),
+          '#class' => array('csv-import-fields', 'os-importer-file-upload-wrapper'),
           '#upload_location' => $purl ? "public://{$purl}/files" : "public://",
           '#upload_validators' => array(
             'file_validate_extensions' => array('csv'),
@@ -199,48 +196,13 @@ function os_importer_cp_settings() {
           );
       }
 
-      // Only blog and news have RSS feed import option.
-      if (in_array($node_type, array('blog', 'news'))) {
-        $settings['os_importer_rss_title-' . $node_type] = array(
-          'group' => array(
-            '#id' => 'os_importer_content_' . $node_type,
-            '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
-            '#weight' => 4,
-            '#menu_parent' => 'import',
-          ),
-          'form' => array(
-            '#title' => t('Title'),
-            '#type' => 'textfield',
-            '#description' => t('Required field - The title of the feed source. E.g. "New York Times Sport".'),
-            '#weight' => 4,
-            '#class' => array('rss-import-fields', 'element-hidden'),
-          ),
-        );
-
-        $settings['os_importer_rss_url-' . $node_type] = array(
-          'group' => array(
-              '#id' => 'os_importer_content_' . $node_type,
-              '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
-              '#weight' => 4,
-             '#menu_parent' => 'import',
-          ),
-          'form' => array(
-            '#title' => t('URL'),
-            '#type' => 'textfield',
-            '#description' => t('The url of your feed. E.g. http://rss.cnn.com/rss/cnn_tech.rss'),
-            '#weight' => 4,
-            '#class' => array('rss-import-fields', 'element-hidden'),
-          ),
-        );
-      }
-
       $settings['os_importer_submit-' . $node_type] = array(
         'group' => array(
           '#id' => 'os_importer_content_' . $node_type,
           '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
           '#weight' => 5,
           '#menu_parent' => 'import',
-          '#group_validate' => 'os_importer_import_validate',
+          '#group_validate' => 'os_importer_import_group_validate',
         ),
         'form' => array(
           '#value' => t('Submit'),
@@ -251,12 +213,12 @@ function os_importer_cp_settings() {
         'submit_full_request' => TRUE,
       );
     }
-  }  
+  }
   
   return $settings;
 }
 
-function os_importer_import_validate($values) {
+function os_importer_import_group_validate($values) {
   $valid = TRUE;
   // Determining node type from array key.
   foreach($values as $var => $value) {
@@ -278,6 +240,7 @@ function os_importer_import_validate($values) {
       drupal_set_message(t('You did not select the file type.'), 'error');
       $valid = FALSE;
     }
+    return $valid;
   }
   
   // Remove previous warnings and errors.
@@ -542,49 +505,6 @@ function os_importer_import_validate($values) {
         $calendar = new vcalendar($config);
         if (!$calendar->parse($file_content)) {
           drupal_set_message(t('The import file does not contain any events.'), 'error');
-          $valid = FALSE;
-        }
-      }
-    }
-  } else if ($values['os_importer_content_format-' . $node_type] == 'rss') {
-    if (empty($values['os_importer_rss_title-' . $node_type])) {
-      drupal_set_message('The Title field is required.', 'error');
-      $valid = FALSE;
-    }
-    if (empty($values['os_importer_rss_url-' . $node_type])) {
-      drupal_set_message('The URL field is required.', 'error');  
-      $valid = FALSE;
-    } else {
-      // Validate the url address.
-      $result = drupal_http_request($values['os_importer_rss_url-' . $node_type]);
-      if ($result->code != 200) {
-        drupal_set_message(t('The address @url is not a valid address.', array('@url' => check_plain($values['os_importer_rss_url-' . $node_type]))), 'error');
-        $valid = FALSE;
-      }
-
-      // Verify the user didn't enter that address.
-      if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
-        $importer_type = $node_type == 'blog' ? 'blog_import' : 'feed_importer';
-
-        // Check for existing nodes in the same VSite.
-        $query = new EntityFieldQuery();
-        $result = $query
-          ->entityCondition('entity_type', 'node')
-          ->entityCondition('bundle', $importer_type)
-          ->propertyCondition('status', NODE_PUBLISHED)
-          ->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $vsite->id)
-          ->fieldCondition('field_rss_url', 'value', $values['os_importer_rss_url-' . $node_type])
-          ->execute();
-
-        if (!empty($result['node'])) {
-          $row = reset($result['node']);
-          $node = node_load($row->nid);
-
-          $params = array(
-            '@url' => url('cp/os-importer/' . $node_type . '/manage/' . $node->nid),
-            '@title' => $node->title,
-          );
-          drupal_set_message(t('RSS url already exists in <a href="@url">@title</a>.', $params), 'error');
           $valid = FALSE;
         }
       }

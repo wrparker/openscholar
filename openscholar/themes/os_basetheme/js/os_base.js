@@ -34,13 +34,7 @@ function template_download_information(val) {
  jQuery('.import-help').addClass('element-hidden');
   if (val == 'csv') {
     jQuery('.csv-import-fields').removeClass('element-hidden');
-    jQuery('.rss-import-fields').addClass('element-hidden');
-    //jQuery('span[name^="os_importer_encode-"]').parent().removeClass('element-hidden');
-    //jQuery('div[id^="edit-os_importer_file_upload_"]').removeClass('element-hidden');
   } else if (val == 'rss') {
-    jQuery('.rss-import-fields').removeClass('element-hidden');
     jQuery('.csv-import-fields').addClass('element-hidden');
-    //jQuery('span[name^="os_importer_encode-"]').parent().addClass('element-hidden');
-    //jQuery('div[id^="edit-os_importer_file_upload_"]').addClass('element-hidden');
   }
 }
