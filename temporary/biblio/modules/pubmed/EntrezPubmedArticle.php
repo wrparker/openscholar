@@ -90,6 +90,11 @@ class BiblioEntrezPubmedArticle
           $journal = (string)$this->article->Article->Journal->Title;
         }
 
+        $title = (string)$this->article->Article->ArticleTitle;
+        // Removing the trailing period
+        if (substr($title, -1) == '.') {
+          $title = substr($title, 0, -1);
+        }
         $this->biblio = array(
         'title'           => (string)$this->article->Article->ArticleTitle,
         'biblio_citekey'  => $citekey,
