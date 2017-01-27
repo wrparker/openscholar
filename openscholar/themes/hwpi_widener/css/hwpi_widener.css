@@ -99,8 +99,7 @@ a:visited {
 .section-nav .leaf.menu-depth-5 > a:hover,
 .section-nav .leaf.menu-depth-6 > a:hover,
 .section-nav .expanded.menu-depth-2 > a:hover,
-.section-nav a:hover,
-.section-nav a.active-trail.active.active {
+.section-nav a:hover {
     background-color: #F3F2F1 !important;
 }
 .section-nav .menu-depth-1 .collapsed > a:before,
