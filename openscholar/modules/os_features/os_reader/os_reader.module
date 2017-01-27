@@ -461,9 +461,16 @@ function os_reader_copy_feed_item_to_news($feed, $vsite) {
         if ($images && method_exists($images, 'getAttribute') && $src = $images->getAttribute('src')) {
           // 16 pixels is a decent image size we can import.
           list($width, $height) = getimagesize($src);
-          if ($width * $height >= 16 && in_array(pathinfo($src, PATHINFO_EXTENSION), $extenstions)) {
+          $extension = pathinfo($src, PATHINFO_EXTENSION);
+
+          if (strpos($extension, '?') !== FALSE) {
+            list($extension) = explode('?', $extension);
+          }
+
+          if ($width * $height >= 16 && in_array($extension, $extenstions)) {
             $file = system_retrieve_file($src, 'public://', TRUE);
           }
+
           // Images are found so delete the tags from the description before
           // assigning it to the body of the node.
           $new_description = preg_replace('/<img[^>]+\>/i', '', $new_description);
@@ -578,10 +585,6 @@ function os_reader_get_news_by_feed_item($feed_id, $vsite_id) {
  */
 function os_reader_process_node(&$variables) {
   if ($variables['type'] == 'news') {
-    if ($variables['view_mode'] == 'teaser' && !$variables['page']) {
-      // On the news page allow the next HTML tags in the body field.
-      $variables['content']['body'][0]['#markup'] = preg_replace("/<img[^>]+\>/i", " ", $variables['content']['body'][0]['#markup']);
-    }
 
     if (os_reader_get_feed_item_by_nid($variables['node']->nid)) {
       // When watching an imported news item - don't apply the site time zone.
