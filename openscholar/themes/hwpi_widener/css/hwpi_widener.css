@@ -74,7 +74,7 @@ a:visited {
     color: #407cb5 !important;
 }
 .section-nav .expanded.menu-depth-2 > a,
-/*.section-nav .menu-depth-1 > a.active.active,*/
+.section-nav .menu-depth-1 > a,
 .section-nav .expanded.menu-depth-2 .menu-depth-3 > a,
 .section-nav .expanded.menu-depth-2 .menu-depth-4 > a,
 .section-nav .expanded.menu-depth-2 .menu-depth-5 > a,
