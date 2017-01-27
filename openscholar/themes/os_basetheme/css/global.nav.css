@@ -917,5 +917,5 @@ ul li.leaf {
     word-wrap: break-word;
 }
 .accordion h3:focus {
-outline: thin dotted;
+    outline: thin dotted;
 }
