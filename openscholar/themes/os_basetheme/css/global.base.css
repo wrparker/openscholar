@@ -244,14 +244,9 @@ a img {
 .block-boxes-os_sv_list_file .file img.file-icon {
     display: inline;
 }
-#edit-site_favicon_fid-und-drop img.file-icon,
-.block .file img.file-icon,
-.block .file .file-info img.file-icon,
-.field-type-file .file-list-single img,
-.biblio_file_links img.file-icon,
-.node-inner .field-type-file img.file-icon {
-	width:16px;
-	}
+img.file-icon {
+    width:16px;
+}
 	
 .block-boxes-os_sv_list_file .file-info iframe {
     display: block;
@@ -1143,4 +1138,8 @@ ul.no-event-export {
 }
 .web-widgets-iframe {
     width: 100%;
+}
+.os-sv-list iframe {
+    width: 100% !important;
+    height:auto !important;
 }

@@ -21,6 +21,10 @@ padding-top: 40px;
 .sidebar {
     margin-top: 260px;
 }
+.node-type-biblio .sidebar {
+    margin-top: 215px;
+}
+
 #main-content-header,
 .research-by-topic,
 .front .block-boxes-os_boxes_html.bio-teaser-block2,
