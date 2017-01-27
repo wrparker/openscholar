@@ -633,6 +633,9 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
   $form['os_menu']['#title'] = t('Menu options');
   $form['os_menu']['enabled']['#title'] = t('Place it in a menu');
 
+  // Change descriptions in node author fieldset.
+  $form['author']['name']['#description'] = '';
+
   // Add description to Full Text field.
   $form['publication_extras']['biblio_tabs']['biblio_full_text']['#suffix'] = '<div class="description">' . t('You can enter the full text of your article here, although most people upload PDFs instead.') . '</div>';
 
