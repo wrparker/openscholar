@@ -46,6 +46,14 @@ a:visited {
 #footer {
     color: #fff;
 }
+.region-header-third ul.nice-menu a,
+.node-type-page .breadcrumb, 
+.breadcrumb, 
+.breadcrumb a {
+ text-transform:none;
+ 
+}
+
 #footer .footer-login:after {
     background-image: none;
 }
