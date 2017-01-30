@@ -361,7 +361,11 @@ function os_files_private_cp_settings() {
       '#type' => 'checkbox',
       '#default_value' => variable_get('os_files_private_pinserver', 0),
       '#weight' => -1,
+<<<<<<< HEAD
+      '#prefix' => '<label>Private files are only accessible to your site members.</label>',
+=======
       '#prefix' => '<label class="margin-bottom settings-form-heading">Private files are only accessible to your site members.</label>',
+>>>>>>> SCHOLAR-3.x
       '#disabled' => !(user_access('administer pinserver') && variable_get('vsite_domain_name', FALSE)),
       '#access' => module_exists('spaces') ? spaces_access_admin() : user_access('administer site configuration'),
     ),
