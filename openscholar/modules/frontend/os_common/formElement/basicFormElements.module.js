@@ -12,14 +12,40 @@
         value: '=ngModel',
         element: '='
       },
-      template: '<label for="{{id}}">{{title}}</label>' +   
-        '<div class="form-item form-type-select" ng-controller="OptGroupController as opt">' + 
-        '<select ng-options="(item.id||item) as (item.text||item) group by item.groupName for item in opt.items track by item.id" class="form-select" id="{{id}}" name="{{name}}" ng-model="opt.selected"></select>' + 
+      template: '<label for="{{id}}">{{title}}</label>' +
+        '<div class="form-item form-type-select">' +
+        '<select class="form-select" id="{{id}}" name="{{name}}" ng-model="value">' +
+        '<option ng-repeat="category in categories | filterWithItems:false" value="{{category.id}}">{{category.name}}</option>' +
+        '<optgroup ng-repeat="category in categories | filterWithItems:true" label="{{category.name}}">' +
+        '<option ng-repeat="subCat in category.items" value="{{subCat.id}}">{{subCat.name}}</option>' +
+        '</optgroup>' +
+        '</select>' +
         '</div>',
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];
-        scope.options = scope.element.options;
         scope.title = scope.element.title;
+        var items = [];
+        angular.forEach(scope.element.options, function(value, key) {
+          if (angular.isObject(value)) {
+            var data = {};        
+            data.id = key;
+            data.name = key;
+            data.items = [];
+            angular.forEach(value, function(childOption, childKey) {
+              var subcat = {};
+              subcat.id = childKey;
+              subcat.name = childOption;
+              data.items.push(subcat);
+            });
+            items.push(data);
+          } else {
+            var data = {};
+            data.id = key;
+            data.name = value;
+            items.push(data);
+          }
+        });
+        scope.categories = items;
       }
     }
   }]);

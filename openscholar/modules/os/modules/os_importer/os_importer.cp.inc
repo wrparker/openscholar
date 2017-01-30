@@ -133,7 +133,7 @@ function os_importer_cp_settings() {
             'panes' => array('upload', 'library'),
             'droppable_text' => t('Drag and drop file here.'),
             'upload_text' => t('Select file to Add'),
-            'max-filesize' => '100kb',
+            'max-filesize' => '500kb',
             'extensions' => array('csv'),
             'types' => array('document'),
           ),
@@ -229,6 +229,9 @@ function os_importer_import_group_validate($values) {
     }
   }
 
+  // Remove previous warnings and errors.
+  drupal_get_messages();
+
   // For biblio content types validation
   if ($node_type == 'biblio') {
     // If no files have been selected.
@@ -242,9 +245,7 @@ function os_importer_import_group_validate($values) {
     }
     return $valid;
   }
-  
-  // Remove previous warnings and errors.
-  drupal_get_messages();
+
   // For CSV import files.
   if (empty($values['os_importer_content_format-' . $node_type]) || $values['os_importer_content_format-' . $node_type] == 'csv') {
     // If no files have been selected.
@@ -375,9 +376,7 @@ function os_importer_import_group_validate($values) {
           if (!$handler = entity_validator_get_validator_handler('node', $node_type)) {
             continue;
           }
-
           $handler->rest = FALSE;
-
           $node = array(
             'type' => $node_type,
           );
@@ -474,7 +473,8 @@ function os_importer_import_group_validate($values) {
             $return = array(
               '!errors' => implode("\n\r", $return),
             );
-            drupal_set_message(t('Field validation errors:</br>!errors', $return));
+            // Remove previous warnings and errors.
+            drupal_set_message(t('Field validation errors:</br>!errors', $return), 'error');
             $valid = FALSE;
           }
         }
@@ -513,9 +513,8 @@ function os_importer_import_group_validate($values) {
   return $valid;
 }
 
-
 /**
- * Submit handler for os_importer_submit button for CSV/RSS/iCal import.
+ * Submit handler for os_importer_submit button for CSV/iCal import.
  */
  function os_importer_file_submit($request) {
   global $user, $language;
@@ -526,33 +525,30 @@ function os_importer_import_group_validate($values) {
     }
   }
   $import_file_fid = $request['os_importer_file_upload-' . $node_type];
-  $import_file = file_load($import_file_fid);
-  $encode = $request['os_importer_encode-' . $node_type];
+  $import_file = file_load($import_file_fid);  
   $part = !empty($import_file->uri) ? explode('.', $import_file->uri) : array();
-  $extension = end($part);
+  $extension = end($part);  
 
-  $bundle = os_importer_importable_content($node_type);
-
-  if (in_array($extension, array('csv', 'ical'))) {
+  if ($node_type != 'biblio' && in_array($extension, array('csv', 'ical'))) {
+    $bundle = os_importer_importable_content($node_type);
     $source = feeds_source($bundle[$extension]);
-    $fetcher_config = $source->getConfigFor($source->importer->fetcher);    
+    $fetcher_config = $source->getConfigFor($source->importer->fetcher);
     $fetcher_config['source'] = $import_file->uri;
     $fetcher_config['file'] = $import_file;
-    $fetcher_config['encode'] = $encode;
+    $fetcher_config['encode'] = isset($request['os_importer_encode-' . $node_type])? $request['os_importer_encode-' . $node_type] : 'csv';
     $source->setConfigFor($source->importer->fetcher, $fetcher_config);
     $source->save();
     $source->startImport(); 
+  } else if ($node_type == 'biblio') {
+    $userid = $user->uid;
+    $filetype = $request['os_importer_filetype-biblio'];
+    $session_id = microtime();
+    $context = array();
+    $terms = array();
+    biblio_import($import_file, $filetype, $userid, $terms, FALSE, $session_id, $context);
+    biblio_import_finalize(TRUE, $context['results']);
   }
-  else {
-    $import_type = $node_type == 'blog' ? 'blog_import' : 'feed_importer';
-    $node = entity_create('node', array(
-      'title' => $request['os_importer_rss_title-' . $node_type],
-      'type' => $import_type,
-      'language' => $language->language,
-      'uid' => $user->uid,
-    ));
-    $wrapper = entity_metadata_wrapper('node', $node);
-    $wrapper->field_rss_url->set($request['os_importer_rss_url-' . $node_type]);
-    $wrapper->save();
-  }
+  // Setting uploaded file status as temporary and will be deleted after the time defined in DRUPAL_MAXIMUM_TEMP_FILE_AGE constant in system.module.
+  $import_file->status = 0;
+  file_save($import_file);
 }
