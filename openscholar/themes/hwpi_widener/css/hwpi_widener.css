@@ -22,6 +22,14 @@ a:visited {
 .node-type-person #content-column .node-person h2.block-title {
     margin-bottom: 17px;
 }
+.node-type-page .breadcrumb {
+    padding-bottom: 2em;
+}
+
+.breadcrumb span {
+    margin: 0 3px;
+}
+
 #menu-bar,
 #header,
 #branding_footer,
