@@ -77,12 +77,7 @@ function vsite_domain_cp_settings_domain_submit(&$form, &$form_state) {
 
   // Checks to see if there is a new group path field value for the vsite node.
   $vsite = vsite_get_vsite();
-  $form_state['values']['vsite_domain_name']['value'] = $form_state['input']['vsite_domain_name']['value'];  
   $new_values = _vsite_domain_process_new_values($form, $form_state, $vsite);
-
-  // Saves new "vsite_domain_name" & "vsite_domain_shared" variable overrides.
-  $form_state['values']['vsite_domain_shared'] = $form_state['values']['vsite_domain_name']['vsite_domain_shared'];
-  $form_state['values']['vsite_domain_name'] = $form_state['values']['vsite_domain_name']['value'];
 
   // Does nothing else if there is no change to the existing values.
   if ($new_values) {
@@ -461,9 +456,9 @@ function vsite_domain_set_group_path($group_path, $vsite = NULL) {
  * @see vsite_domain_cp_settings_domain_submit()
  */
 function _vsite_domain_check_shared($form, $form_state) {
-  $original_path = array('vsite_domain_name', 'vsite_domain_shared', '#default_value');
-  $new_path = array('values', 'vsite_domain_name', 'vsite_domain_shared');
-  return _vsite_domain_form_value_modified($form['domain'], $form_state, $original_path, $new_path);
+  $original_path = array('domain', 'vsite_domain_shared', '#default_value');
+  $new_path = array('values', 'vsite_domain_shared');
+  return _vsite_domain_form_value_modified($form, $form_state, $original_path, $new_path);
 }
 
 /**
@@ -474,8 +469,8 @@ function _vsite_domain_check_shared($form, $form_state) {
  * @see vsite_domain_cp_settings_domain_submit()
  */
 function _vsite_domain_check_domain(&$form, &$form_state) {
-  $original_path = array('domain', 'vsite_domain_name', 'value', '#default_value');
-  $new_path = array('input', 'vsite_domain_name', 'value');
+  $original_path = array('domain', 'vsite_domain_name', '#default_value');
+  $new_path = array('values', 'vsite_domain_name');
   return _vsite_domain_form_value_modified($form, $form_state, $original_path, $new_path);
 }
 
