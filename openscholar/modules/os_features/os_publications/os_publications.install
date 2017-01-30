@@ -1615,24 +1615,3 @@ function os_publications_update_7050() {
     os_publications_revert_citeproc_style($citation);
   }
 }
-
-/**
- * Remove trailing periods at the publication titles
- */
-function os_publications_update_7051() {
-  $q = db_select('biblio', 'b');
-  $q->join('field_data_title_field', 'tf', 'b.nid = tf.entity_id AND b.vid = tf.revision_id');
-  $q = $q->fields('b', array('nid'))
-    ->fields('tf', array('title_field_value'))
-    ->execute();
-
-  while ($result = $q->fetchAssoc()) {
-   $title = strip_tags($result['title_field_value']);
-    if (substr($title, -1) == '.') {
-      $title = substr($title, 0, -1);
-      $node = node_load($result['nid']);
-      $node->title = $title;
-      node_save($node);
-    }
-  }
-}
