@@ -90,6 +90,7 @@ function os_image_gallery_menu_alter(&$items) {
   // The media gallery path when removing an image from the gallery.
   $menu_path = 'media-gallery/detail/%media_gallery_mg_node/%media_gallery_mg_item/remove';
   $items[$menu_path]['theme callback'] = 'cp_theme_name';
+  $items['media-gallery/detail/%media_gallery_mg_node/%media_gallery_mg_item']['page callback'] = 'os_image_gallery_media_gallery_detail_page';
 }
 
 /**
@@ -523,4 +524,18 @@ function os_image_gallery_image_optimize($image, $dst) {
 
   watchdog('os_image_gallery', t('The image @name has been compressed.', $params));
   return TRUE;
+}
+
+/**
+ * Overriding the page callback for displaying a single image item.
+ */
+function os_image_gallery_media_gallery_detail_page($gallery_node, $file) {
+  $content = media_gallery_detail_page($gallery_node, $file);
+
+  // The original function "Replace non letters or numbers with a single space"
+  // and much more which remove special characters and a white space. Setting
+  // the default file name is what we would like to display in that case.
+  drupal_set_title($file->filename);
+
+  return $content;
 }
