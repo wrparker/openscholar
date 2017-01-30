@@ -33,7 +33,6 @@ function vsite_domain_cp_settings() {
       '#title' => t('Domain'),
       '#weight' => 0,
     ),
-    //'submit' => array('vsite_domain_cp_settings_domain_submit'),
   ));
   $domain = variable_get('vsite_domain_name', '');
   $shared = variable_get('vsite_domain_shared', '');
@@ -89,6 +88,7 @@ function vsite_domain_cp_settings() {
 
   $s['vsite_domain_name'] = $template + array(
       'form' => $form['value'],
+      'submit' => array('vsite_domain_cp_settings_domain_submit'),
       'rest_submit' => function ($value) {
         vsite_domain_cp_settings_submit('vsite_domain_name', $value);
       },

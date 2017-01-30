@@ -244,17 +244,9 @@ a img {
 .block-boxes-os_sv_list_file .file img.file-icon {
     display: inline;
 }
-
 img.file-icon {
     width:16px;
 }
-.media-gallery-carousal.file-icon {
-    width:100%;
-    margin-top: 2px;
-}
-.media-gallery-media-item-thumbnail img.file-icon {
-	width:100%;
-	}
 	
 .block-boxes-os_sv_list_file .file-info iframe {
     display: block;
@@ -600,6 +592,12 @@ ul ul ul ul {
 .view-os-events ul li {
     list-style-type: none;
     border-bottom: 1px solid #D9D9D9;
+}
+.view-os-events .view-mode-teaser ul li {
+    list-style-type: disc;
+}
+.view-os-events .view-mode-teaser ol li {
+    list-style-type: decimal;
 }
 .view-os-events ul li .node {
     margin: 20px 0 0 0;
@@ -1146,4 +1144,8 @@ ul.no-event-export {
 }
 .web-widgets-iframe {
     width: 100%;
+}
+.os-sv-list iframe {
+    width: 100% !important;
+    height:auto !important;
 }
