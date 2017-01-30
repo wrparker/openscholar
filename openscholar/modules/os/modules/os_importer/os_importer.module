@@ -211,8 +211,6 @@ function os_importer_menu() {
     }
 
     foreach ($info['importers'] as $node_type => $importer) {
-
-
       $items['cp/os-importer/' . $node_type] = array(
         'title callback' => 'os_importer_importer_title',
         'title arguments' => array(2),
