@@ -1680,3 +1680,43 @@ function os_publications_views_pre_render(&$view) {
     }
   }
 }
+
+/**
+ * Implements hook_apachesolr_search_page_alter().
+ */
+function os_publications_apachesolr_search_page_alter(array &$build, array $search_page) {
+  $map = array(
+    'biblio_author' => 'author',
+    'biblio_sort_title' => 'title',
+    'biblio_type' => 'type',
+    'biblio_year' => 'year'
+  );
+
+  $nids = array();
+  foreach ($build['search_results']['#results'] as $k => $r) {
+    $nids['result_'.$k] = $r['node']->entity_id;
+  }
+
+  $field = array_search(variable_get('biblio_sort', 'year'), $map);
+  $order = variable_get('biblio_order', variable_get('biblio_sort', 'year') == 'year' ? 'DESC' : 'ASC');
+
+  $query = 'SELECT
+        nid,
+          (SELECT lastname
+            FROM biblio_contributor_data bcd
+              INNER JOIN biblio_contributor bc ON bcd.cid = bc.cid
+            ORDER BY lastname ASC
+            LIMIT 1) as biblio_author
+      FROM biblio b WHERE nid IN ('.implode(',', $nids).')
+      ORDER BY '.$field.' '.$order;
+
+  $q = db_query($query);
+  $results = array();
+  foreach ($q as $r) {
+    $key = array_search($r->nid, $nids);
+    $okey = str_replace('result_', '', $key);
+    $results[] = $build['search_results']['#results'][$okey];
+  }
+
+  $build['search_results']['#results'] = $results;
+}
