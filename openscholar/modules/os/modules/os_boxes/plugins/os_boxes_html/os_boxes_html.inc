@@ -97,12 +97,18 @@ class os_boxes_html extends os_boxes_default {
   /**
    * {@inheritdoc}
    */
-  public function validate(&$values) {
-    if (strlen($values['text']['value']) < 65000) {
+   public function validate(&$values) {
+    if (empty($values['text']['value'])) {
+		form_set_error('', t('If the content is empty, you may have difficulties displaying the widget.'));
+	}
+	else{
+		
+	    if (strlen($values['text']['value']) < 65000) {
       return;
     }
-    // Notify the users his text was trimmed.
+	    // Notify the users his text was trimmed.
     form_set_error('', t('The text you entered is more than 65,000 characters. Please shorten the text before re-submitting the form.'));
+  }
   }
 
   public function render() {
