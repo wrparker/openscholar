@@ -163,14 +163,17 @@ Drupal.behaviors.osPublications = {
       var changeMonthAndDay = function(hide) {
         var month = $("#edit-field-biblio-pub-month");
         var day = $("#edit-field-biblio-pub-day");
+        var help_text = $("#biblio-month-group-validate");
 
         if (hide) {
           month.hide();
           day.hide();
+          help_text.hide();
         }
         else {
           month.show();
           day.show();
+          help_text.show();
         }
       };
 
