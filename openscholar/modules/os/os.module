@@ -1770,6 +1770,15 @@ function os_node_view_alter(&$build) {
       $build['body'][$c]['#markup'] = _filter_htmlcorrector($build['body'][$c]['#markup']);
     }
   }
+
+  if (!empty($node->sv_list) && $build['#view_mode'] == 'slide_teaser') {
+    // When using the slide teaser view mode, the users cannot go into the node
+    // since the title is expanding the item and reveal the body. Adding a read
+    // more link will do the trick.
+    $build['read_more'] = array(
+      '#markup' => l(t('Read more'), 'node/' . $node->nid),
+    );
+  }
 }
 
 /**
