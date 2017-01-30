@@ -22,6 +22,8 @@ os[theme_access] = 'public'
 
   
   stylesheets[screen][] = css/hwpi_widener.css
+  
+  scripts[] = js/widener.js
 
 
 
