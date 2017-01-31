@@ -147,6 +147,11 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
     if ($query->hasFilter('bs_private', 1, TRUE) && (user_access('administer group') || og_is_member('node', $group_wrapper->getIdentifier()))) {
        $query->removeFilter('bs_private');
     }
+
+    if (strpos($_GET['q'], 'browse/') === 0) {
+      // Looking on content which to a bundle. Check from where we need to pull
+      // the sort settings.
+    }
   }
   elseif (variable_get('file_default_scheme', 'public') == 'private') {
     // We are not in a vsite, and we are in a private install.
