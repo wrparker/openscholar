@@ -49,6 +49,10 @@ class os_boxes_facetapi_vocabulary extends os_boxes_default {
     }
 
     $bundles = os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP));
+
+    // Remove redundant bundles.
+    unset($bundles['slideshow_slide'], $bundles['feed_importer']);
+
     // Use first bundle of the list in case none was selected before.
     if (!$bundle) {
       $bundle = reset(array_keys($bundles));
