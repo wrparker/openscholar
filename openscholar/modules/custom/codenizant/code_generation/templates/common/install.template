@@ -1,0 +1,19 @@
+<?php
+/**
+ * @file
+ * Created with http://drupal.org/project/code_gen
+ */
+
+/**
+ * Implentation of the hook_install().
+ */
+ function %module_name_install() {
+ }
+
+/**
+ * Implentation of the hook_uninstall().
+ */
+ function %module_name_uninstall() {
+ }
+
+?>

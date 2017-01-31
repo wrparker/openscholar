@@ -1,0 +1,49 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the code_generation module.
+ *
+ */
+
+/**
+ * Implentation of the hook_schema().
+ */
+function code_generation_schema() {
+  $schema['code_generation'] = array(
+    'description' => "Table required to store created modules",
+    'fields' => array(
+      'id' => array(
+        'description' => 'Primary key: unique ID.',
+        'type' => 'serial',
+        'length' => 11,
+        'not null' => TRUE,
+      ),
+      'module_name' => array(
+        'description' => 'Module name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'module_path' => array(
+        'description' => 'Module path.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'created_on' => array(
+        'description' => 'Creation date.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'indexes' => array('module_name' => array('module_name')),
+    'primary key' => array('id'),
+  );
+
+  return $schema;
+}
+?>

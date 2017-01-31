@@ -1,0 +1,6 @@
+/**
+ * Implementation of hook_node_insert().
+ */
+function %module_name_node_insert($node) {
+   //Code here...
+}

@@ -1,0 +1,182 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the coder module.
+ *
+ */
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function coder_uninstall() {
+  variable_del('coder_cache');
+  variable_del('coder_reviews');
+  variable_del('coder_severity');
+  variable_del('coder_active_modules');
+  variable_del('coder_core');
+  variable_del('coder_includes');
+  variable_del('coder_includes_exclusions');
+  variable_del('coder_modules');
+  variable_del('coder_themes');
+}
+
+
+function coder_schema() {
+  $schema['cache_coder'] = array(
+  'description' => 'Coder cache table for improving display of result sets...',
+  'fields' => array(
+    'cid' => array(
+      'description' => 'Primary Key: Unique cache ID.',
+      'type' => 'varchar',
+      'length' => '255',
+      'not null' => TRUE,
+      'default' => '',
+    ),
+    'data' => array(
+      'description' => 'A collection of data to cache.',
+      'type' => 'blob',
+      'size' => 'big',
+      'not null' => FALSE,
+    ),
+    'expire' => array(
+      'description' => 'A Unix timestamp indicating when the cache entry should expire, or 0 for never.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+    'created' => array(
+      'description' => 'A Unix timestamp indicating when the cache entry was created.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+    'headers' => array(
+      'description' => 'Any custom HTTP headers to be added to cached data.',
+      'type' => 'text',
+      'not null' => FALSE,
+    ),
+    'serialized' => array(
+      'description' => 'A flag to indicate whether content is serialized (1) or not (0).',
+      'type' => 'int',
+      'size' => 'small',
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+  ),
+  'primary key' => array('cid'),
+  'indexes' => array(
+    'expire' => array('expire'),
+  ),
+);
+  
+  $schema['coder_archieve'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+    'archieve_id' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'serial',
+      'not null' => TRUE,
+    ),
+    'project' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '30',
+      'not null' => TRUE,
+    ),
+    'module_num' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'files_num' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'critical_num' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'normal_num' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'date' => array(
+      'description' => 'TODO: please describe this field!',      
+	  'type' => 'varchar',
+	  'length' => '30',
+      'not null' => TRUE,
+    ),
+    'report_html' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'blob',
+      'size' => 'big',
+      'not null' => TRUE,
+    ),
+    'timestamp' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+  ),
+  'primary key' => array('archieve_id'),
+);
+  return $schema;  
+}
+
+
+
+
+
+
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function coder_update_1() {
+  $ret = array();
+  // This update adds a theming function, so we need to clear the entire cache.
+  // TODO update_sql has been removed. Use the database API for any schema or data changes.
+  $ret[] = array() /* update_sql("DELETE FROM {cache}") */;
+  // hook_update_N() no longer returns a $ret array. Instead, return
+  // nothing or a translated string indicating the update ran successfully.
+  // See http://drupal.org/node/224333#update_sql.
+  return t('TODO Add a descriptive string here to show in the UI.') /* $ret */;
+}
+
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function coder_update_2() {
+  $ret = array();
+  // Create the new coder cache table.
+  db_create_table('cache_coder', _coder_cache_schema());
+  // Clear coder entries from the default cache.
+  cache_clear_all('coder:', 'cache', TRUE);
+  // hook_update_N() no longer returns a $ret array. Instead, return
+  // nothing or a translated string indicating the update ran successfully.
+  // See http://drupal.org/node/224333#update_sql.
+  return t('TODO Add a descriptive string here to show in the UI.') /* $ret */;
+}
+
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function coder_update_3() {
+  $ret = array();
+  // TODO update_sql has been removed. Use the database API for any schema or data changes.
+  $ret[] = array() /* update_sql("DELETE FROM {variable} WHERE name LIKE 'coder_modules-%' OR name LIKE 'coder_themes-%'") */;
+  cache_clear_all('variables', 'cache');
+  // hook_update_N() no longer returns a $ret array. Instead, return
+  // nothing or a translated string indicating the update ran successfully.
+  // See http://drupal.org/node/224333#update_sql.
+  return t('TODO Add a descriptive string here to show in the UI.') /* $ret */;
+}

@@ -1,0 +1,15 @@
+/*
+ * Implementation of hook_permission()
+ */
+function %module_name_permission() {  
+  return array(
+    'access %module_name' => array(
+      'title' => t('Access %module_name'),
+      'description' => t('Perform tasks for %module_name.'),
+    ),
+	'admin %module_name' => array(
+      'title' => t('Administer %module_name'),
+      'description' => t('Perform administration tasks for %module_name.'),
+    ),
+  );
+}

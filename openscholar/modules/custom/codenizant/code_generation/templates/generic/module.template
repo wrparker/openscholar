@@ -1,0 +1,9 @@
+<?php
+/**
+ * @file
+ * Created with http://drupal.org/project/code_gen
+ */
+
+%hook_implementations
+
+?>

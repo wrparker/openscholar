@@ -1,0 +1,61 @@
+<?php
+
+
+/*
+ * Implementation of hook_menu()
+ */
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function code_profiling_menu() {
+  $items = array();
+  $items['admin/code_profiling'] = array(
+    'title' => 'Code profiling',
+    'description' => 'Autogenerate modules.',
+    'page callback' => 'code_profiling_callback',
+    'access arguments' => array('view code review'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function code_profiling_theme() {
+  return array(
+    'code_profiling' => array('variables' => array('data' => NULL), 'template' => 'code_profile_main'),
+  );
+}
+
+function wrong_function() {
+
+db_query("select * from sdfsdf where ds = '$dfd'");
+}
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function code_profiling_callback() {
+  
+  global $base_url;
+  if(!function_exists('xdebug_get_code_coverage')) {
+	drupal_set_message('xDebug extension not installed in php binary. Please install xDebug extension to use this module.','error');
+	return theme('links');
+  } else {  
+	//building the engine url
+	$data->webgrind_url = $base_url . '/' . drupal_get_path('module','code_profiling') . '/engine/index.php';	
+	return theme('code_profiling', array('data' => $data));
+  }
+
+
+  
+}
+
+
+
+?>

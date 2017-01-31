@@ -1,0 +1,2 @@
+php_flag xdebug.profiler_enable 1
+php_flag xdebug.profiler_enable_trigger 1

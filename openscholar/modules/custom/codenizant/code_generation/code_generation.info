@@ -1,0 +1,19 @@
+name = Drupal Code generation
+core = "7.x"
+description = "Collection of tools for autogenerate code for Drupal."
+files[] = code_generation.module
+files[] = code_generation.install
+files[] = code_generation.inc
+files[] = code_generation.generic.inc
+files[] = code_generation.common.inc
+files[] = code_generation_loc_theme.tpl.php
+files[] = code_generation_loc_module.tpl.php
+files[] = code_generation_loc_custom.tpl.php
+files[] = define.inc.php
+package = "Drupal code analysis suite"
+
+; Information added by drupal.org packaging script on 2011-02-25
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "code_generation"
+datestamp = "1298618992"

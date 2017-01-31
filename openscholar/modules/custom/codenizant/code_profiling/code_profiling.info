@@ -1,0 +1,20 @@
+; $Id:
+name = Drupal Code Profiling
+description = Collection of tools for code profiling for Drupal.
+package = Drupal code analysis suite
+
+core = 7.x
+project = "code_profiling"
+
+
+; Information added by drupal.org packaging script on 2011-02-25
+version = "7.x-1.x-dev"
+core = 7.x
+project = "code_profiling"
+datestamp = "1298618992"
+
+
+files[] = engine/config.php
+files[] = engine/library/FileHandler.php
+files[] = engine/library/Preprocessor.php
+files[] = engine/library/Reader.php

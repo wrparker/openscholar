@@ -1,0 +1,22 @@
+name = Coder
+description = Developer Module that assists with code review and version upgrade
+package = Drupal code analysis suite
+core = 7.x
+
+; Information added by drupal.org packaging script on 2011-07-21
+version = "7.x-1.x-dev"
+core = 7.x
+project = "coder"
+datestamp = "1311282416"
+
+
+files[] = scripts/coder_format/tests/CoderTestCase.php
+files[] = scripts/coder_format/tests/CoderTestFile.php
+files[] = scripts/coder_format/tests/all.test
+files[] = simplehtmldom/simple_html_dom.php
+files[] = tests/coder_6x.test
+files[] = tests/coder_comment.test
+files[] = tests/coder_i18n.test
+files[] = tests/coder_security.test
+files[] = tests/coder_sql.test
+files[] = tests/coder_style.test

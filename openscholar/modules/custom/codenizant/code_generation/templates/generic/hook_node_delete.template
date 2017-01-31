@@ -1,0 +1,6 @@
+/**
+ * Implementation of hook_node_delete().
+ */
+function %module_name_node_delete($node) {
+   //Code here...
+}

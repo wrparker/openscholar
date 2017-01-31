@@ -1,0 +1,6 @@
+/**
+ * Implementation of hook_node_update().
+ */
+function %module_name_node_update($node) {
+   //Code here...
+}

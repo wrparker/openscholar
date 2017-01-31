@@ -1,0 +1,9 @@
+/**
+ * Implementation of hook_form_alter().
+ */
+function %module_name_form_alter(&$form, &$form_state, $form_id) {
+  //Check for wanted form id this piece of code is called for every form displayed so quick bail out needed
+  if ($form_id == 'TODO') {
+    //Alter form here
+  }
+}

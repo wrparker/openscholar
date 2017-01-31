@@ -1,0 +1,26 @@
+/* CSS Document */
+
+.dv_class {
+  font-family:Verdana, Arial, Helvetica, sans-serif;
+  font-size:12px;
+}
+
+.dv_table_td_class_b {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.dv_table_td_class {
+  font-family:"Courier New", Courier, monospace;
+  font-size:12px;
+}
+
+.dv_clear {
+  clear: both;
+}
+
+.chart_div {
+  width: 900px; 
+  height: 500px;
+}

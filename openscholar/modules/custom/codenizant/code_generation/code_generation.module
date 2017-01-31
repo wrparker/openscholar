@@ -1,0 +1,130 @@
+<?php
+/**
+ * @file
+ * @Name: code_generation.module
+ * @created: 02/01/2013
+ * @Author: Cognizant
+ * @Version: 1.0
+ *
+ * Proprietary and Confidential
+ * Copyright (C) 2013 Cognizant Technology Solutions. All Rights Reserved.
+ **/
+
+
+/*
+ * Implementation of hook_menu()
+ */
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function code_generation_init() {
+  global $base_path;	
+  drupal_add_css( drupal_get_path('module', 'code_generation') . '/css/code_generation.css' );  
+  require_once (drupal_get_path('module', 'code_generation') . '/define.inc.php');
+}
+
+
+/*
+ * Implementation of hook_permission()
+ */
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function code_generation_permission() {
+  return array(
+    'access code generation' => array(
+      'title' => t('access code generation'),
+      'description' => t('Access Code generation module'),
+    ),
+  );
+}
+
+
+/*
+ * Implementation of hook_menu()
+ */
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function code_generation_menu() {
+  $items = array();
+   
+  $items['admin/code_generation'] = array(
+    'title' => 'Code generation',
+    'description' => 'Autogenerate modules.',
+    'position' => 'right',
+    'weight' => -10,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access code generation'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+    'type' => MENU_NORMAL_ITEM,
+    '#tree' => TRUE,
+  );
+  $items['admin/code_generation/download'] = array(
+    'title' => 'Download module',
+    'page callback' => 'code_generation_download_module',
+    'access callback' => 'user_access',
+    'access arguments' => array('access code generation'),
+    'type' => MENU_CALLBACK,
+    'file' => 'code_generation.inc',
+    'weight' => -1,
+  );
+  $items['admin/code_generation/loc_module'] = array(
+    'title' => 'LOC :: module',
+    'description' => ALLOWED_FILE_EXTENSIONS,
+    'page callback' => 'code_generation_lines_of_code_module',
+    'access callback' => 'user_access',
+    'access arguments' => array('access code generation'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'code_generation.inc',
+    'weight' => 0,
+  );
+  $items['admin/code_generation/loc_theme'] = array(
+    'title' => 'LOC :: theme',
+    'description' => ALLOWED_FILE_EXTENSIONS,
+    'page callback' => 'code_generation_lines_of_code_theme',
+    'access callback' => 'user_access',
+    'access arguments' => array('access code generation'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'code_generation.inc',
+    'weight' => 1,
+  );
+  $items['admin/code_generation/loc_custom'] = array(
+    'title' => 'LOC :: detailed list',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('code_generation_lines_of_code_custom'),
+    'access callback' => 'user_access',
+    'access arguments' => array('access code generation'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'code_generation.inc',
+    'weight' => 2,
+  );
+
+  return $items;
+}
+
+
+/**
+ * Implements hook_theme()
+().
+ */
+function code_generation_theme() {
+  return array(
+    'code_generation_loc_module' => array(
+      'template' => 'code_generation_loc_module',
+      'render element' => 'form',
+    ),
+    'code_generation_loc_theme' => array(
+      'template' => 'code_generation_loc_theme',
+      'render element' => 'form',
+    ),
+    'code_generation_lines_of_code_custom' => array(
+      'template' => 'code_generation_loc_custom',
+      'render element' => 'form',
+    ),
+  );
+}

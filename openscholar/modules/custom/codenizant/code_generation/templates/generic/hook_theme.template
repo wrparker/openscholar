@@ -1,0 +1,11 @@
+/**
+ * Implementation of hook_theme().
+ */
+function %module_name_theme() {
+  $hooks['%module_name_TODO'] = array(
+    'arguments' => array('content' => NULL),
+    'template' => '%module_name_TODO',
+  );
+
+  return $hooks;
+}
