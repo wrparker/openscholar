@@ -1,4 +1,4 @@
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           (function () {
+(function () {
 
   var m = angular.module('basicFormElements', ['osHelpers', 'ngSanitize']);
 
