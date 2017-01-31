@@ -1205,3 +1205,7 @@ LIST OF POSTS - PERSON TEASER IN SIDEBAR
     border-bottom: none !important;
     clear: both;
 }
+
+.block-element {
+    display: block;
+}

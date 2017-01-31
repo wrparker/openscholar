@@ -1776,7 +1776,12 @@ function os_node_view_alter(&$build) {
     // since the title is expanding the item and reveal the body. Adding a read
     // more link will do the trick.
     $build['read_more'] = array(
-      '#markup' => l(t('Read more'), 'node/' . $node->nid),
+      '#markup' => l(t('Read more'), 'node/' . $node->nid, array(
+        'attributes' => array(
+          'class' => array('block-element'),
+          ),
+        )),
+      '#weight' => 1000,
     );
   }
 }
