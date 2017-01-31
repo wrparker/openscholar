@@ -27,6 +27,7 @@ function os_help_cp_settings() {
   );
 
   $id = variable_get('cp_support_getsatisfaction_widget');
+  $id = 6760;
   if ($id) {
     $loading = drupal_get_path('theme', 'os_basetheme') . '/images/throbber.gif';
     $image = theme('image', array('path' => $loading));
@@ -35,12 +36,13 @@ function os_help_cp_settings() {
         '#id' => 'support',
         '#title' => t('Support'),
         '#weight' => 51,
-        '#menu_parent' => 'help'
+        '#menu_parent' => 'help',
+        '#help_link' => l(t('Get Support'), 'http://hwp.harvard.edu/pages/support#main-content', array('attributes' => array('target' => '_blank'))),
       ),
       'form' => array(
-        '#prefix' => '<p class="helpClass">Every question you ask adds to the power of our OpenScholar Community. Type your question below and click the Continue button. You will need to login or create an account to finish posting.</p><p>If you don\'t want to post publicly to the community, click Send Privately</p><div class="getsat-widget" id="getsat-widget-'.$id.'"><span class="description">'. $description . '</span></div>',
+        '#prefix' => '<p class="helpClass">Every question you ask adds to the power of our OpenScholar Community. Type your question below and click the Continue button. You will need to login or create an account to finish posting.</p><p>If you don\'t want to post publicly to the community, click Send Privately</p>',
         '#type' => 'markup',
-        '#image' => $image,
+        '#loading' => $loading,
       ),
     );
     $form['os_support_gsfn_js'] = array(
@@ -48,11 +50,13 @@ function os_help_cp_settings() {
         '#id' => 'support',
         '#title' => t('Support'),
         '#weight' => 52,
-        '#menu_parent' => 'help'
+        '#menu_parent' => 'help',
+        '#help_link' => l(t('Get Support'), 'http://hwp.harvard.edu/pages/support#main-content', array('attributes' => array('target' => '_blank'))),
       ),
       'form' => array(
         '#type' => 'help',
-        '#gsfnId' => $id
+        '#gsfnId' => $id,
+        '#loading' => $loading,
       ),
     );
   } else {

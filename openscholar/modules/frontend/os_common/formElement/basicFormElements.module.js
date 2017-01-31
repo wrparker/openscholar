@@ -1,4 +1,4 @@
-(function () {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           (function () {
 
   var m = angular.module('basicFormElements', ['osHelpers', 'ngSanitize']);
 
@@ -161,27 +161,23 @@
    * Just markup that doesn't do anything.
    */
   m.directive('feHelp', ['$timeout', '$sce', function ($timeout, $sce) {
-    var gsfnObj = {};
+    var gsfnCounter = 0;
     return {
       scope: {
         name: '@',
         value: '=ngModel',
         element: '=',
       },
-      template: '<span class="gsfn-loading" ng-bind-html="markup">Loading...</span>',
+      template: '<div class="getsat-widget" id="getsat-widget-{{counter}}-{{gsfnid}}"><span class="description"></span><span class="gsfn-loading">Loading...<img src="{{loading}}"></span></div>',
       link: function (scope, elem, attr) {
         scope.gsfnid = scope.element.gsfnId;
         scope.title = scope.element.title;
-        if (typeof gsfnObj[scope.gsfnid] == 'undefined') {
-          if (typeof GSFN !== "undefined") {
-            GSFN.loadWidget(scope.gsfnid, {"containerId":"getsat-widget-" + scope.gsfnid});
-            $timeout(function() {
-              gsfnObj[scope.gsfnid] = angular.element(document.querySelectorAll(".getsat-widget")).children('iframe').wrap('<p/>').parent();
-            }, 1000);
-          }
-        } else {
-          scope.markup = $sce.trustAsHtml(gsfnObj[scope.gsfnid].html());
-        }
+        scope.counter = gsfnCounter;
+        scope.loading = scope.element.loading;
+        gsfnCounter = gsfnCounter + 1;
+        $timeout(function() {
+          GSFN.loadWidget(scope.gsfnid, {"containerId":"getsat-widget-" + scope.counter + "-" + scope.gsfnid});
+        }, 2000);
       }
     }
   }]);
