@@ -1705,16 +1705,19 @@ function os_publications_apachesolr_search_page_alter(array &$build, array $sear
           (SELECT lastname
             FROM biblio_contributor_data bcd
               INNER JOIN biblio_contributor bc ON bcd.cid = bc.cid
+            WHERE bc.nid = b.nid
             ORDER BY lastname ASC
             LIMIT 1) as biblio_author
       FROM biblio b
         INNER JOIN node n ON b.nid = n.nid
       WHERE b.nid IN ('.implode(',', $nids).')
       ORDER BY n.sticky DESC, '.$field.' '.$order;
+  dpm($query);
 
   $q = db_query($query);
   $results = array();
   foreach ($q as $r) {
+    dpm($r->biblio_author);
     $key = array_search($r->nid, $nids);
     $okey = str_replace('result_', '', $key);
     $results[] = $build['search_results']['#results'][$okey];
