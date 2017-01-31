@@ -634,6 +634,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I add a comment "([^"]*)" using the comment form$/
    */
   public function iAddACommentUsingTheCommentForm($comment) {
+    FeatureHelp::
     return array(
       new Step\When('I fill in "Comment" with "' . $comment . '"'),
       new Step\When('I press "Save"'),
@@ -3459,6 +3460,7 @@ JS;
       $elem->mouseOver();
       if ($clink = $elem->find('xpath', "//a[contains(@class, 'contextual-links-trigger')]")) {
         $clink->click();
+        usleep(100);
         if ($target = $elem->find('xpath', "//ul[contains(@class, 'contextual-links')]//a[text() = '$link']")) {
           $target->click();
         }
