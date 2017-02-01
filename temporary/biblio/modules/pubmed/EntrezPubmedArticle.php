@@ -90,7 +90,6 @@ class BiblioEntrezPubmedArticle
           $journal = (string)$this->article->Article->Journal->Title;
         }
 
-        $title = (string)$this->article->Article->ArticleTitle;
         $this->biblio = array(
         'title'           => (string)$this->article->Article->ArticleTitle,
         'biblio_citekey'  => $citekey,
