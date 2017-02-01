@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css?family=EB+Garamond|Montserrat');
+body * {
+    font-family: 'Montserrat', sans-serif !important;
+}
+#boxes-box-site_info,
+#boxes-box-site_info a {
+    font-family: 'EB Garamond', serif !important;
+}
+#boxes-box-site_info,
+#boxes-box-site_info a,
+.section-nav .menu-depth-1 > a {
+    font-size: 1.2em;
+}
+a,
+a:visited {
+    color: #407cb5;
+}
+.node-type-person #content-column .node-person h2.block-title,
+.sidebar .block h2.block-title {
+    color: #000;
+}
+.node-type-person #content-column .node-person h2.block-title {
+    margin-bottom: 17px;
+}
+.node-type-page .breadcrumb {
+    padding-bottom: 2em;
+}
+
+.breadcrumb span {
+    margin: 0 3px;
+}
+
+#menu-bar,
+#header,
+#branding_footer,
+#branding_header,
+#footer {
+    background: #000;
+}
+#header,
+#branding_footer
+{
+    border-top: 1px solid #333;
+}
+
+#search-block-form input.form-submit,
+#search-block-form #edit-submit,
+#search-form #edit-submit {
+    background-color: #000;
+}
+.region-header-third ul.nice-menu a,
+#footer .footer-login,
+#footer a,
+#footer {
+    color: #fff;
+}
+.region-header-third ul.nice-menu a,
+.node-type-page .breadcrumb, 
+.breadcrumb, 
+.breadcrumb a {
+ text-transform:none;
+ 
+}
+
+#footer .footer-login:after {
+    background-image: none;
+}
+#powered-by a {
+    background-position: -14px -533px;
+}
+#search-block-form input.form-submit,
+#search-block-form #edit-submit,
+#search-form #edit-submit {
+    background-position: 2px -441px;
+}
+#footer .footer-login {
+    background: none;
+    box-shadow: none;
+    text-shadow: none;
+}
+.node-type-person #content-column .node-person h2.block-title,
+.sidebar .block h2.block-title {
+    font-size: 1.2em;
+    padding: 0;
+    background-color: #fff;
+    letter-spacing: 0;
+}
+.section-nav .menu-depth-2 > a,
+.section-nav .menu-depth-1 > a {
+    color: #407cb5 !important;
+}
+
+.section-nav a[class~="active active"]{   
+ 
+    color: #333 !important;
+}
+
+
+.section-nav .expanded.menu-depth-2 > a,
+.section-nav .menu-depth-1 > a,
+.section-nav .expanded.menu-depth-2 .menu-depth-3 > a,
+.section-nav .expanded.menu-depth-2 .menu-depth-4 > a,
+.section-nav .expanded.menu-depth-2 .menu-depth-5 > a,
+.section-nav .expanded.menu-depth-2 .menu-depth-6 > a,
+.section-nav .leaf.menu-depth-3 > a,
+.section-nav .leaf.menu-depth-4 > a,
+.section-nav .leaf.menu-depth-5 > a,
+.section-nav .leaf.menu-depth-6 > a {
+    background-color: #FFF !important;
+}
+#boxes-box-os_pages_section_nav,
+.section-nav ul.menu li a {
+    border-color: #fff;
+    font-weight: normal;
+}
+.section-nav .expanded.menu-depth-2 .menu-depth-3 > a:hover,
+.section-nav .expanded.menu-depth-2 .menu-depth-4 > a:hover,
+.section-nav .expanded.menu-depth-2 .menu-depth-5 > a:hover,
+.section-nav .expanded.menu-depth-2 .menu-depth-6 > a:hover,
+.section-nav .leaf.menu-depth-3 > a:hover,
+.section-nav .leaf.menu-depth-4 > a:hover,
+.section-nav .leaf.menu-depth-5 > a:hover,
+.section-nav .leaf.menu-depth-6 > a:hover,
+.section-nav .expanded.menu-depth-2 > a:hover,
+.section-nav a:hover {
+    background-color: #F3F2F1 !important;
+}
+.section-nav .menu-depth-1 .collapsed > a:before,
+.section-nav .menu-depth-1 .expanded > a:before {
+    -webkit-filter: contrast(1%);
+    filter: contrast(1%);
+}
+.event-start .event-start {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #999;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+    width: 60px;
+}
+.event-start .event-year {
+    padding: 14px 0 0;
+}
+#menu-bar ul.nice-menu .menuparent.over > a:before,
+#menu-bar ul.nice-menu .menuparent a:hover:before,
+#menu-bar ul.nice-menu .menuparent a.active:before,
+#menu-bar ul.nice-menu .menuparent a:before {
+    background-position: 0px -613px;
+    width: 20px;
+    height: 20px;
+}
+#menu-bar ul.nice-menu .menuparent a {
+    padding-right: 27px;
+    font-size: 18px;
+}

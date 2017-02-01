@@ -307,7 +307,7 @@ function os_booklets_cp_settings() {
         '0' => 'Display as a widget (default)',
         '1' => 'Display inline at the top of book page content',
       ),
-      '#default_value' => variable_get('os_booklets_toc_position', 0),
+      '#default_value' => variable_get('os_booklets_toc_position', '0'),
       '#required' => FALSE,
     ),
   );

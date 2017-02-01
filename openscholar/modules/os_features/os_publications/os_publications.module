@@ -635,20 +635,9 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
 
   // Change descriptions in node author fieldset.
   $form['author']['name']['#description'] = '';
-  $form['author']['date']['#description'] = t('Date can be used to change the order in which content is displayed.');
 
   // Add description to Full Text field.
   $form['publication_extras']['biblio_tabs']['biblio_full_text']['#suffix'] = '<div class="description">' . t('You can enter the full text of your article here, although most people upload PDFs instead.') . '</div>';
-
-  // Add a datepicker to "Posted on" field. We do this only if the user has
-  // access to this field to avoid date_popup to end up with a wrong value
-  // in date_popup_element_value_callback().
-  if ($form['author']['#access']) {
-    $form['author']['date']['#type'] = 'date_popup';
-  }
-  $form['author']['date']['#date_format'] = 'm/d/Y';
-  // Decide on the default value. If it's a new publication use today's date.
-  $form['author']['date']['#default_value'] = isset($form['#node']->nid) ?  date("Y-m-d", $form['#node']->created) : date("Y-m-d", time());
 
   // Set the element max length to NULL won't trigger the normal form validation
   // for of standard element.
