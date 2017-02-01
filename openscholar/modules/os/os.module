@@ -758,6 +758,25 @@ function os_preprocess_page(&$vars) {
     drupal_add_js(drupal_get_path('module', 'os') . '/js/os_session_timeout.js');
   }
 
+  // Add an Open Graph meta tag for the first image in the content body
+  if (isset($vars['node']->nid)) {
+    $nid = $vars['node']->nid;
+    if (isset($vars['page']['content']['system_main']['nodes'][$nid]['body']['#object']->body[LANGUAGE_NONE]['0']['safe_value'])) {
+      $body = $vars['page']['content']['system_main']['nodes'][$nid]['body']['#object']->body[LANGUAGE_NONE]['0']['safe_value'];
+      if (preg_match("/<img\s+[^>]+src=\"([^\"]+?)(?:\"|\?)/", $body, $matches)) {
+        $img_url = $matches[1];
+        $og_image = array(
+          '#tag' => 'meta',
+          '#attributes' => array(
+            'property' => 'og:image',
+            'content' => $img_url,
+          ),
+        );
+        drupal_add_html_head($og_image, 'og_image');
+      }
+    }
+  }
+
   // Add the dismiss messages JS.
   drupal_add_js(drupal_get_path('module', 'os') . "/theme/os_dismiss.js", "file");
   // Add JS to initialize window.tinyMCEPreInit object before tinymce loading to work with static domain. 
