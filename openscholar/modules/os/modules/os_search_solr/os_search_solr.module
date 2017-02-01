@@ -154,7 +154,7 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
       // the sort settings.
       list(,$bundle) = explode('/', $_GET['q']);
       if (in_array($bundle, array('faq', 'links'))) {
-        $settings = $bundle == 'faq' ? os_faq_get_order_settings() : os_links_get_order_settings();
+        $settings = call_user_func('os_' . $bundle . '_get_order_settings');
         $settings['field'] = str_replace(['node.title', 'node.created'], ['sort_label', 'ds_created'], $settings['field']);
       }
       else {
