@@ -81,6 +81,9 @@ html.js input.throbbing {
     font-size: .97em;
 
 }
+#support .help-link.ng-binding {
+    bottom: 2px;
+}
     
 
 .view-os-files-private ul {
