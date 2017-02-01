@@ -143,7 +143,8 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
       $query->removeFilter('bs_private');
     }
 
-    // There may be private features, this user is a member and should get access to private features in search.
+    // There may be private features, this user is a member and should get
+    // access to private features in search.
     if ($query->hasFilter('bs_private', 1, TRUE) && (user_access('administer group') || og_is_member('node', $group_wrapper->getIdentifier()))) {
        $query->removeFilter('bs_private');
     }
@@ -151,6 +152,21 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
     if (strpos($_GET['q'], 'browse/') === 0) {
       // Looking on content which to a bundle. Check from where we need to pull
       // the sort settings.
+      list(,$bundle) = explode('/', $_GET['q']);
+      if (in_array($bundle, array('faq', 'link'))) {
+        if ($bundle == 'faq') {
+          $settings = os_faq_get_order_settings();
+          $settings['field'] = str_replace(['node.title', 'node.created'], ['sort_label', 'ds_created'], $settings['field']);
+        }
+        else {
+          $settings = array();
+        }
+      }
+      else {
+        $settings = array();
+      }
+
+      $query->setSolrsort($settings['field'], strtolower($settings['direction']));
     }
   }
   elseif (variable_get('file_default_scheme', 'public') == 'private') {

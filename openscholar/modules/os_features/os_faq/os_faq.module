@@ -98,27 +98,30 @@ function os_faq_os_entity_view_modes_alter(&$info) {
  */
 function os_faq_views_query_alter(&$view, &$query) {
   if ($view->name == 'os_faq' && $view->current_display == 'page') {
-    switch (variable_get('faq_sort', 'created')) {
-      case 'created':
-        $query->orderby[1]['field'] = 'node.created';
-        $query->orderby[1]['direction'] = 'DESC';
-        break;
-      case 'created_asc':
-        $query->orderby[1]['field'] = 'node.created';
-        $query->orderby[1]['direction'] = 'ASC';
-        break;
-      case 'title':
-        $query->orderby[1]['field'] = 'node.title';
-        $query->orderby[1]['direction'] = 'ASC';
-        break;
-      case 'title_desc':
-        $query->orderby[1]['field'] = 'node.title';
-        $query->orderby[1]['direction'] = 'DESC';
-        break;
-      default:
-        $query->orderby[1]['field'] = 'node.created';
-        $query->orderby[1]['direction'] = 'DESC';
-    }
+    $order_settings = os_faq_get_order_settings();
+    $query->orderby[1]['field'] = $order_settings['field'];
+    $query->orderby[1]['direction'] = $order_settings['direction'];
+  }
+}
+
+/**
+ * Return the setting on how to order the FAQ entries.
+ *
+ * @return array
+ *   An array with the order settings.
+ */
+function os_faq_get_order_settings() {
+  switch (variable_get('faq_sort', 'created')) {
+    case 'created':
+      return array('field' => 'node.created', 'direction' => 'DESC');
+    case 'created_asc':
+      return array('field' => 'node.created', 'direction' => 'ASC');
+    case 'title':
+      return array('field' => 'node.title', 'direction' => 'ASC');
+    case 'title_desc':
+      return array('field' => 'node.title', 'direction' => 'DESC');
+    default:
+      return array('field' => 'node.created', 'direction' => 'DESC');
   }
 }
 
