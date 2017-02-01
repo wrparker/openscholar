@@ -1451,7 +1451,7 @@ class csl_layout extends csl_format {
           $secondtolastchar = mb_substr($prevpart, mb_strlen($prevpart) - 1);
           // get first character of current part
           $firstchar = mb_substr($part, 0, 1);
-          if (in_array($lastchar, $quotes) && in_array($firstchar, $punctuation) && !in_array($secondtolastchar, $punctuation)) {
+          if (in_array($lastchar, $quotes) && in_array($firstchar, $punctuation) && !in_array($secondtolastchar, $punctuation) && strstr($prevpart, "biblio-title") === FALSE) {
             $part = mb_substr($part, 1);
             $parts[$counter - 1] = mb_substr($prevpart, 0, mb_strlen($prevpart) - 1) . "$firstchar$lastchar";
           }
