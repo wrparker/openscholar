@@ -1255,6 +1255,9 @@ form#os-maintenance .form-item .description {
   margin: 15px 0;
 }
 
+form#documentation img {
+	    margin-top: 30px;
+}
 
 #edit-long-list-content-pagination.form-radios {
   margin-bottom: 0;
