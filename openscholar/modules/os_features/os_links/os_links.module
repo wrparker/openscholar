@@ -204,8 +204,29 @@ function os_links_cp_settings() {
  */
 function os_links_views_query_alter(&$view, &$query) {
   if ($view->name == 'os_links' && $view->current_display == 'page') {
-    $links_order = variable_get('os_links_ordering', 1);
-    $query->orderby[1]['field'] = ($links_order == 1 || $links_order == 2) ? 'node.created' : 'node.title';
-    $query->orderby[1]['direction'] = ($links_order == 1 || $links_order == 4) ? 'DESC' : 'ASC';
+    $settings = os_links_get_order_settings();
+    $query->orderby[1]['field'] = $settings['field'];
+    $query->orderby[1]['direction'] = $settings['direction'];
+  }
+}
+
+/**
+ * Return the setting on how to order the links entries.
+ *
+ * @return array
+ *   An array with the order settings.
+ */
+function os_links_get_order_settings() {
+  switch (variable_get('os_links_ordering', 1)) {
+    case 1:
+      return array('field' => 'node.created', 'direction' => 'DESC');
+    case 2:
+      return array('field' => 'node.created', 'direction' => 'ASC');
+    case 3:
+      return array('field' => 'node.title', 'direction' => 'ASC');
+    case 4:
+      return array('field' => 'node.title', 'direction' => 'DESC');
+    default:
+      return array('field' => 'node.created', 'direction' => 'DESC');
   }
 }
