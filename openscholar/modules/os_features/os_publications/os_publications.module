@@ -1687,7 +1687,7 @@ function os_publications_views_pre_render(&$view) {
 function os_publications_apachesolr_search_page_alter(array &$build, array $search_page) {
   $map = array(
     'biblio_author' => 'author',
-    'biblio_sort_title' => 'title',
+    'biblio_sort_title_char' => 'title',
     'biblio_type_name' => 'type',
     'biblio_year' => 'year'
   );
@@ -1708,11 +1708,12 @@ function os_publications_apachesolr_search_page_alter(array &$build, array $sear
             WHERE bc.nid = b.nid
             ORDER BY lastname ASC
             LIMIT 1) as biblio_author,
-          (SELECT name FROM biblio_types WHERE tid = b.biblio_type) as biblio_type_name
+          (SELECT name FROM biblio_types WHERE tid = b.biblio_type) as biblio_type_name,
+          LEFT(biblio_sort_title, 1) as biblio_sort_title_char
       FROM biblio b
         INNER JOIN node n ON b.nid = n.nid
       WHERE b.nid IN ('.implode(',', $nids).')
-      ORDER BY n.sticky DESC, '.$field.' '.$order;
+      ORDER BY '.$field.' '.$order.', n.sticky DESC';
 
   $q = db_query($query);
   $results = array();
