@@ -24,3 +24,4 @@
 
 
 
+jQuery('.active').addClass('active-on').removeClass('active');
