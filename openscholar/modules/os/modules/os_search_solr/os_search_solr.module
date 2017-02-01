@@ -153,12 +153,12 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
       // Looking on content which to a bundle. Check from where we need to pull
       // the sort settings.
       list(,$bundle) = explode('/', $_GET['q']);
-      if (in_array($bundle, array('faq', 'link'))) {
+      if (in_array($bundle, array('faq', 'links'))) {
         $settings = $bundle == 'faq' ? os_faq_get_order_settings() : os_links_get_order_settings();
         $settings['field'] = str_replace(['node.title', 'node.created'], ['sort_label', 'ds_created'], $settings['field']);
       }
       else {
-        $settings = array();
+        $settings = array('field' => 'sort_label', 'direction' => 'desc');
       }
 
       $query->setSolrsort($settings['field'], strtolower($settings['direction']));
