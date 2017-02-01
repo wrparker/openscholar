@@ -89,15 +89,12 @@ a:visited {
 .section-nav .menu-depth-1 > a {
     color: #407cb5 !important;
 }
-.section-nav .menu-depth-1 > a.active,
-.section-nav .menu-depth-2 > a.active,
-.section-nav .menu-depth-3 > a.active,
-.section-nav .menu-depth-4 > a.active,
-.section-nav .menu-depth-5 > a.active,
-.section-nav .menu-depth-6 > a.active
- {
+
+.section-nav a[class~="active active"]{   
+ 
     color: #333 !important;
 }
+
 
 .section-nav .expanded.menu-depth-2 > a,
 .section-nav .menu-depth-1 > a,

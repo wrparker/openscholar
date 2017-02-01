@@ -1208,3 +1208,7 @@ LIST OF POSTS - PERSON TEASER IN SIDEBAR
 #support .actions, #documentation .actions {
     display: none;
 }
+
+.block-element {
+    display: block;
+}
