@@ -806,7 +806,7 @@ fieldset#edit-biblio-authors .fieldset-legend {
  */
 
 .ui-front {
-    z-index: 101;
+    z-index: 301;
 }
 .ui-widget-overlay {
     background: #000;
