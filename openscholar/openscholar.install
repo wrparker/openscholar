@@ -37,6 +37,7 @@ function openscholar_install() {
     'hwpi_college',
     'hwpi_modern',
     'hwpi_onepage',
+    'hwpi_widener',
     'hwpi_vibrant',
 	  'weft',
     'os_basetheme',

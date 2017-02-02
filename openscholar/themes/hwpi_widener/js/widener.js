@@ -16,3 +16,12 @@
 //$('a').attr('class', function(index, src) {
  //   return src.replace('../', '/')
 //})
+
+
+//jQuery(document).ready(function () {
+ //jQuery('a.active-trail.active.active').addClass('nav-on').removeClass('active');
+//});
+
+
+
+//jQuery('.active .active').addClass('active-on').removeClass('active');

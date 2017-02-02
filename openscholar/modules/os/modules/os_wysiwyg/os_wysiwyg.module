@@ -279,7 +279,7 @@ function os_wysiwyg_field_widget_form(&$form, &$form_state, $field, $instance, $
       ),
       'css' => array( drupal_get_path('module', 'os_wysiwyg').'/os_wysiwyg.widget.css'),
     )
-  );
+  ); 
 
   return $element;
 }
