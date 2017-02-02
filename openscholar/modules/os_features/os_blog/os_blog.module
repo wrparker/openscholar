@@ -147,7 +147,7 @@ function os_blog_cp_settings() {
   $settings_form['comment_sources_blog']['#title'] = t('Choose which comment type you\'d like to use');
   $settings_form['comment_sources_blog']['#options'] = array(
     'nc' => t('No comments'),
-    'comment' => t('Private comments (only site members can see them2)'),
+    'comment' => t('Private comments (only site members can see theme)'),
     'disqus' => t('Disqus comments'),
   );
 
