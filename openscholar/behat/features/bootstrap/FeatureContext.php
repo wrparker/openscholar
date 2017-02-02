@@ -3459,7 +3459,7 @@ JS;
       $elem->mouseOver();
       if ($clink = $elem->find('xpath', "//a[contains(@class, 'contextual-links-trigger')]")) {
         $clink->click();
-        usleep(100);
+        usleep(200);
         if ($target = $elem->find('xpath', "//ul[contains(@class, 'contextual-links')]//a[text() = '$link']")) {
           $target->click();
         }
