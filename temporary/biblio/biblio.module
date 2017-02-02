@@ -1503,8 +1503,22 @@ function biblio_node_form_validate($form, &$form_state) {
   }
 
   if (isset($form_state['values']['biblio_year'])) {
-    if (!_biblio_numeric_year($form_state['values']['biblio_year'])) {
-      form_set_error('biblio_year', t('The year @year is not valid. Please enter a valid year.', array('@year' => $form_state['values']['biblio_year'])));
+
+    $validate_year_field = function() use($form_state) {
+      if (!_biblio_numeric_year($form_state['values']['biblio_year'])) {
+        form_set_error('biblio_year', t('The year @year is not valid. Please enter a valid year.', array('@year' => $form_state['values']['biblio_year'])));
+      }
+    };
+
+    if (intval($form_state['values']['biblio_year_coded']) !== 0) {
+      // The user did not selected the published year. Check if not empty and
+      // the value of the year.
+      if (!empty($form_state['values']['biblio_year'])) {
+        $validate_year_field();
+      }
+    }
+    else {
+      $validate_year_field();
     }
   }
 
