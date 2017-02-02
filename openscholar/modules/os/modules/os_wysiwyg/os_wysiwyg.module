@@ -327,5 +327,5 @@ function os_wysiwyg_preprocess_field(&$variables) {
     if ($element['#field_name'] == 'body') {
         // Adding the latex JS library.
         drupal_add_js('//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML', 'external');
-    }
+    } 
 }
