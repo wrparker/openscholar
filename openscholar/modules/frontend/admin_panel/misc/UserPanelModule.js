@@ -83,10 +83,6 @@
       };
        
   }).service('notificationService', [function () {
-    //check for google and hopscotch
-    if (typeof google == 'undefined' || typeof hopscotch == 'undefined') {
-      return;
-    }
 
     function handleNotificationStepEvent(num_remaining) {
       count--;
@@ -246,6 +242,8 @@
           notificationService.MakeTarget(link);
         }
         element.append(count_element);
+        // assume there's nothing
+        count_element.hide();
 
         notificationService.AddHandler('load', function () {
           var n = notificationService.Count();
