@@ -1069,6 +1069,8 @@ div.error:before {
     background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
     background-position: 0px -859px;
 }
+
+#support .form-wrapper,
 .form-item-create-as-subsite {
     margin-bottom: 35px;
 }
