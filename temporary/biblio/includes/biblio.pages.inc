@@ -338,6 +338,7 @@ function biblio_build_query($arg_list) {
       //$sortby = "ORDER BY bt.name %s, b.biblio_year DESC ";
       $query->addField('n', 'title');
       $query->orderBy($type_name, $arg_list['o']);
+      $query->orderBy('n.sticky', 'DESC');
       $query->orderBy('biblio_year', 'DESC');
       $query->orderBy('biblio_date', 'DESC');
       $query->orderBy('biblio_sort_title', $arg_list['o']);
@@ -346,6 +347,7 @@ function biblio_build_query($arg_list) {
     case 'title':
       $query->addField('n', 'title');
       $query->orderBy('biblio_sort_title', $arg_list['o']);
+      $query->orderBy('n.sticky', 'DESC');
 
       break;
     case 'author':
@@ -354,6 +356,7 @@ function biblio_build_query($arg_list) {
       $query->condition('bc.rank', 0);
       $query->addField('bcd', 'lastname');
       $query->orderBy('bcd.lastname', $arg_list['o']);
+      $query->orderBy('n.sticky', 'DESC');
 
       break;
     case 'keyword':
@@ -363,6 +366,7 @@ function biblio_build_query($arg_list) {
       $query->addField('b', 'biblio_year');
       $query->addField('b', 'biblio_date');
       $query->orderBy('biblio_year', $arg_list['o']);
+      $query->orderBy('n.sticky', 'DESC');
       $query->orderBy('biblio_sort_title');
   } //end switch
 
