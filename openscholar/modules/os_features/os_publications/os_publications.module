@@ -1669,3 +1669,13 @@ function os_publications_views_pre_render(&$view) {
     }
   }
 }
+
+/**
+  Implement hook_biblio_pm_node_alter
+*/
+function os_publications_biblio_pm_node_alter($node, $article) {
+  // Trim the trailing period while importing
+  if (substr($node->title, -1) == '.') {
+    $node->title = substr($node->title, 0, -1);
+  }
+}
