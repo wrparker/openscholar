@@ -36,6 +36,7 @@ projects[comment_sources][subdir] = "contrib"
 projects[comment_sources][version] = 2.0
 projects[comment_sources][patch][] = "https://drupal.org/files/issues/22086870-comment-source-wrong-query-field-1.patch"
 projects[comment_sources][patch][] = "https://drupal.org/files/issues/change-submit-handler-index-2513794-2.patch"
+projects[comment_sources][patch][] = "https://raw.github.com/openscholar/openscholar/bb0856af84a58881a0438cd32d9b6a21dcfd15ea/patches/comment_sources.9139.comment_settings.patch"
 
 projects[context][subdir] = "contrib"
 projects[context][version] = 3.0-beta4
@@ -350,12 +351,10 @@ projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
 
 projects[restful][subdir] = "contrib"
-projects[restful][download][type] = git
-projects[restful][download][url] = "https://github.com/RoySegall/restful.git"
-projects[restful][download][branch] = 444
+projects[restful][version] = "1.6"
+# Patch to be able to update a taxonomy term.
+projects[restful][patch][] = "https://patch-diff.githubusercontent.com/raw/RESTful-Drupal/restful/pull/445.diff"
 projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/839d0cc214f2422e924e35d33133d1268b8cc1cd/patches/restful.put_file.patch"
-;projects[restful][download][branch] = "7.x-1.x"
-;projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
 
 projects[redirect][subdir] = "contrib"
 projects[redirect][version] = 1.0-rc1

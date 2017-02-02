@@ -1763,6 +1763,20 @@ function os_node_view_alter(&$build) {
       $build['body'][$c]['#markup'] = _filter_htmlcorrector($build['body'][$c]['#markup']);
     }
   }
+
+  if (!empty($node->sv_list) && $build['#view_mode'] == 'slide_teaser') {
+    // When using the slide teaser view mode, the users cannot go into the node
+    // since the title is expanding the item and reveal the body. Adding a read
+    // more link will do the trick.
+    $build['read_more'] = array(
+      '#markup' => l(t('Read more'), 'node/' . $node->nid, array(
+        'attributes' => array(
+          'class' => array('block-element'),
+          ),
+        )),
+      '#weight' => 1000,
+    );
+  }
 }
 
 /**
@@ -2243,11 +2257,26 @@ function os_user_login_validate($form, &$form_state) {
 function os_library() {
   $libraries = array();
 
+  // Extending hook_library for Get Satidfaction data of cp/support section
+  $libraries['gsfn'] = array(
+    'title' => 'GSFN support form',
+    'version' => '1.0',
+    'js' => array(
+      'https://loader.engage.gsfn.us/loader.js' => array('group' => JS_LIBRARY)
+    ),
+    'css' => array(
+      drupal_get_path('module', 'cp') . '/theme/cp-support.css' => array('group' => JS_LIBRARY)
+    ),
+  );
+
   $libraries['os.ajax-fix'] = array(
     'title' => 'Ajax Termination Fix',
     'version' => '1.0',
     'js' => array(
       drupal_get_path('module', 'os').'/theme/os_ajaxterminate.js' => array('group' => JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('os', 'gsfn'),
     ),
   );
 
