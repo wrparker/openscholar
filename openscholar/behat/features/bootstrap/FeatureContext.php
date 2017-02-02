@@ -3549,4 +3549,11 @@ JS;
     print_r('The screen shot of the page is: ' . $json['data']['link']);
   }
 
+  /**
+   * @When /^I set the variable "([^"]*)" to "([^"]*)" in the vsite "([^"]*)"$/
+   */
+  public function iSetVariableInVsite($name, $val, $vsite) {
+    FeatureHelp::variableSetSpace($name, $val, $vsite);
+  }
+
 }
