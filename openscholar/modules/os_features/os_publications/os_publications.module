@@ -1226,6 +1226,10 @@ function os_publications_node_view_alter(&$build, $type) {
       $build['teaser']['#weight'] = 1;
       $build['links']['#access'] = FALSE;
 
+      // We add this manually in _os_publications_biblio_entry_alter()
+      // We do this here to prevent terms from appearing twice on search pages
+      $build['og_vocabulary']['#access'] = FALSE;
+
       break;
 
     default:
