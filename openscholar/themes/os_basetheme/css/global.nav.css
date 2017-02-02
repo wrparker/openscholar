@@ -489,6 +489,8 @@ ul.contextual-links li a:hover {
     border-radius: 4px;
     background: rgb(61, 155, 19);
     text-decoration: none !important;
+    top: 0px;
+    z-index: 3;
 }
 .contextual-controls-wrapper .add_new:hover {
     color: rgb(230, 230, 230);
