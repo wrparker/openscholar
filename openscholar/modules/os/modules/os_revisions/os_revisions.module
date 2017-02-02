@@ -31,6 +31,10 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
         $form['revision_information']['revision']['#suffix'] = '<div id="warning-text"><p>Are you sure you want to create a new revision?</p><p>This content already has the maximum number of revisions saved (' . $max_revisions . '). By creating a new revision, you will be permanently deleting the oldest revision. Learn how to manage your revisions on our <a href="' . OS_REVISIONS_DOCS_URL . '" target="_blank" rel="noopener"> documentation site</a>.</div>';
       }
     }
+    // remove state-based revision checkbox and make checked by default
+    unset($form['revision_information']['revision']['#states']);
+    $form['revision_information']['revision']['#attributes']['checked'] = 'checked';
+
     $form['revision_information']['revision']['#weight'] = 1;
     $form['revision_information']['log']['#weight'] = 2;
     $form['revision_information']['log']['#title'] = t('Revision Notes');
