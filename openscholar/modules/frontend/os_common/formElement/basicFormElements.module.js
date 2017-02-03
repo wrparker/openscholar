@@ -3,6 +3,29 @@
   var m = angular.module('basicFormElements', ['osHelpers', 'ngSanitize']);
 
   /**
+   * Select directive.
+   */
+  m.directive('feSelect', ['$sce', function ($sce) {
+    return {
+      scope: {
+        name: '@',
+        value: '=ngModel',
+        element: '='
+      },
+      template: '<label for="{{id}}">{{title}}</label>' +
+        '<div class="form-item form-type-select"><select class="form-select" id="{{id}}" name="{{name}}" ng-model="value">' +
+          '<option value="">Select</option>' +
+          '<option ng-repeat="(val, label) in options" value="{{val}}" ng-bind-html="label"></option>' +
+        '</select></div>',
+      link: function (scope, elem, attr) {
+        scope.id = attr['inputId'];
+        scope.options = scope.element.options;
+        scope.title = scope.element.title;
+      }
+    }
+  }]);
+
+  /**
    * Checkbox directive.
    * Arguments:
    *   name - string - the name of the element as Drupal expects it
@@ -125,9 +148,37 @@
       },
       template: '<div ng-bind-html="markup"></div>',
       link: function (scope, elem, attr) {
+        scope.id = attr['inputId'];
         scope.markup = $sce.trustAsHtml(scope.element.markup);
+        scope.title = scope.element.title;
       }
     }
-  }])
+  }]);
 
+  /**
+   * Help directive.
+   *
+   * Just markup that doesn't do anything.
+   */
+  m.directive('feHelp', ['$timeout', '$sce', function ($timeout, $sce) {
+    var gsfnCounter = 0;
+    return {
+      scope: {
+        name: '@',
+        value: '=ngModel',
+        element: '=',
+      },
+      template: '<div class="getsat-widget" id="getsat-widget-{{counter}}-{{gsfnid}}"><span class="description"></span><span class="gsfn-loading">Loading...<img src="{{loading}}"></span></div>',
+      link: function (scope, elem, attr) {
+        scope.gsfnid = scope.element.gsfnId;
+        scope.title = scope.element.title;
+        scope.counter = gsfnCounter;
+        scope.loading = scope.element.loading;
+        gsfnCounter = gsfnCounter + 1;
+        $timeout(function() {
+          GSFN.loadWidget(scope.gsfnid, {"containerId":"getsat-widget-" + scope.counter + "-" + scope.gsfnid});
+        }, 2000);
+      }
+    }
+  }]);
 })();
