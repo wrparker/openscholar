@@ -144,7 +144,7 @@ function os_blog_cp_settings() {
   module_load_include('admin.inc', 'comment_sources');
   $params['build_info']['args'][] = 'os_blog';
   $settings_form = drupal_retrieve_form('comment_sources_admin_settings_form', $params);
-  $settings_form['comment_sources_blog']['#title'] = t('<span class="settings-form-heading">Choose which comment type you\'d like to use</span>');
+  $settings_form['comment_sources_blog']['#title'] = ('<span class="settings-form-heading">Choose which comment type you\'d like to use</span>');
   $settings_form['comment_sources_blog']['#options'] = array(
     'nc' => t('No comments'),
     'comment' => t('Private comments (only site members can see theme)'),
