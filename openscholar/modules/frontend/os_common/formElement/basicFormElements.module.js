@@ -130,11 +130,6 @@
         scope.id = attr['inputId'];
         scope.options = scope.element.options;
         scope.title = scope.element.title;
-        scope.radiosClick = function () {
-          if (scope.element.onclick_callback) {
-            window[scope.element.onclick_callback](scope.value);
-          }
-        };
       }
     }
   }]);
@@ -179,6 +174,26 @@
       template: '<div ng-bind-html="markup"></div>',
       link: function (scope, elem, attr) {
         scope.markup = $sce.trustAsHtml(scope.element.markup);
+      }
+    }
+  }])
+
+  /**
+   * Container directive.
+   *
+   * Just markup along with a container id.
+   */
+  m.directive('feContainer', ['$sce', function ($sce) {
+    return {
+      scope: {
+        name: '@',
+        value: '=ngModel',
+        element: '=',
+      },
+      template: '<div ng-bind-html="markup" id="{{cid}}"></div>',
+      link: function (scope, elem, attr) {
+        scope.markup = $sce.trustAsHtml(scope.element.markup);
+        scope.cid = scope.element.cid;
       }
     }
   }])

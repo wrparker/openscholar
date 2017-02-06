@@ -83,7 +83,7 @@ function os_importer_cp_settings() {
           '#options' => $import_format_option,
           '#weight' => -6,
           '#default_value' => 'csv',
-          '#onclick_callback' => 'template_download_information',
+          //'#onclick_callback' => 'template_download_information',
         );
       } else {
         $single_option = array_values($import_format_option);
@@ -106,7 +106,7 @@ function os_importer_cp_settings() {
           'form' => $form_settings,
         );
 
-        $template_markup = '<div class="import-help csv-import-fields">' . l(t('Download a template'), (isset($purl) ? $purl . '/' : '') . 'cp/os-importer/' . $node_type . '/template') . '</div>';
+        $template_markup = '<div class="import-help csv-import-fields">' . l(t('Download a template'), (isset($purl) ? $purl . '/' : '') . 'cp/os-importer/' . $node_type . '/template', array('attributes' => array('target' => '_blank'))) . '</div>';
 
         $settings['os_importer_download_template-' . $node_type] = array(
           'group' => array(
@@ -116,10 +116,13 @@ function os_importer_cp_settings() {
             '#menu_parent' => 'import',
           ),
           'form' => array(
-            '#type' => 'markup',
-            '#default_value' => 'utf-8',
+            '#type' => 'container',
             '#markup' => $template_markup,
+            '#cid' => 'edit-os-importer-download-template-' . $node_type,
             '#weight' => -5,
+            '#states' => array(
+              'visible' => array(':input[name="os_importer_content_format-' . $node_type . '"]' => array('value' => 'csv')),
+            ),
           ),
         );
       }
