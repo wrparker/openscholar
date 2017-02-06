@@ -419,7 +419,7 @@ table td.mini .mini-day-on a {
 .block-boxes-os_slideshow_box .add_new {
     left: 0;
     position: absolute;
-    top: -23px;
+    /* top: -23px; */
 }
 .block-boxes-os_slideshow_box .field-content {
     display: block;
