@@ -1108,7 +1108,10 @@ function os_form_node_form_alter(&$form, $form_state) {
   unset($form['additional_settings']);
   foreach (element_children($form) as $c) {
     if (isset($form[$c]['#type']) && $form[$c]['#type'] == 'fieldset' && isset($form[$c]['#group'])) {
-      $form[$c]['#collapsed'] = true;
+      // exception to collapsed settings for fieldsets
+      if ($c != "revision_information") {
+        $form[$c]['#collapsed'] = true;
+      }
     }
     unset($form[$c]['#group']);
   }
