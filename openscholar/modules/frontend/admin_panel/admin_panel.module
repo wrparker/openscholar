@@ -3,13 +3,21 @@
 /**
  * Force the localStorage cache to be cleared whenever we want.
  */
-const AdminPanelMenuVersion = '1.1';
+const AdminPanelMenuVersion = '1.2';
 
 /**
  * Returns true if the admin panel should default to being closed
  */
 function admin_panel_is_closed() {
   return isset($_COOKIE['AdminMenuState']) && !$_COOKIE['AdminMenuState'];
+}
+
+/**
+ * Implements hook_page_alter().
+ */
+function admin_panel_page_alter(&$page) {
+  // No ned for the toolbar if the admin panel is enabled.
+  $page['page_top']['toolbar']['#access'] = FALSE;
 }
 
 /**
@@ -153,7 +161,6 @@ function admin_panel_library() {
   );
   $libs['user_panel']['dependencies'] = array(
     array('admin_panel', 'admin_panel'),
-    array('google_feedapi', 'google_jsapi_feeds'),
     array('os_tour', 'hopscotch'),
     array('os_tour', 'os_tour'),
   );

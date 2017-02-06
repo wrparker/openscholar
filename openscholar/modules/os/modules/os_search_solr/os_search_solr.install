@@ -148,3 +148,36 @@ function os_search_solr_update_7002() {
 
   }
 }
+
+/**
+ * Removing os_search_solr-site-search instances.
+ */
+function os_search_solr_update_7003() {
+
+  $overrides = db_select('spaces_overrides', 'so')
+    ->fields('so', array('object_id', 'value', 'id'))
+    ->condition('object_type', 'context')
+    ->condition('object_id', '%reaction:block', 'LIKE')
+    ->condition('value', '%site-search%', 'LIKE')
+    ->orderBy('so.id')
+    ->execute();
+
+  foreach ($overrides as $override) {
+    $blocks = unserialize($override->value);
+    $key = 'os_search_solr-site-search';
+    if (in_array($key, array_keys($blocks['blocks']))) {
+      if ($blocks['blocks'][$key]['module'] == 'boxes') {
+        // Replacing 'os_search_solr-site-search' key with 'boxes-solr_search_box' if those are alreadey migrated to boxes
+        $blocks['blocks']['boxes-solr_search_box'] = $blocks['blocks'][$key];
+        unset($blocks['blocks'][$key]);
+      }
+    }
+    $override->value = serialize($blocks);
+    db_update('spaces_overrides')
+      ->fields(array('value' => $override->value))
+      ->condition('id', $override->id)
+      ->condition('object_type', 'context')
+      ->condition('object_id', $override->object_id)
+      ->execute();
+  }
+}

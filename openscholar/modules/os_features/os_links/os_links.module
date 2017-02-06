@@ -185,14 +185,14 @@ function os_links_cp_settings() {
        '#title' => t('Links'),
        '#weight' => 3,
        '#menu_parent' => 'app_settings',
-       '#help_link' => l(t('Learn more about links'), 'http://docs.openscholar.harvard.edu/links-app', array('attributes' => array('target' => '_blank'))),
+       '#help_link' => l(t('Learn more about links'), 'http://docs.openscholar.harvard.edu/links-app#link-app-settings', array('attributes' => array('target' => '_blank'))),
      ),
      'form' => array(
        '#type' => 'radios',
-       '#default_value' => variable_get('os_links_ordering', 0),
-       '#options' => array(0 => 'Creation date, descending', 1 => 'Creation date, ascending', 2 => 'Alphanumeric, A-Z', 3 => 'Alphanumeric, Z-A'),
+       '#default_value' => variable_get('os_links_ordering', 1),
+       '#options' => array(1 => 'Creation date, descending', 2 => 'Creation date, ascending', 3 => 'Alphanumeric, A-Z', 4 => 'Alphanumeric, Z-A'),
        '#weight' => -1,
-       '#prefix' => '<label>Choose how links are ordered</label>',
+       '#prefix' => '<label class="settings-form-heading">Choose how links are ordered</label>',
      ),
    );
 
@@ -204,8 +204,8 @@ function os_links_cp_settings() {
  */
 function os_links_views_query_alter(&$view, &$query) {
   if ($view->name == 'os_links' && $view->current_display == 'page') {
-    $links_order = variable_get('os_links_ordering', 0);
-    $query->orderby[1]['field'] = ($links_order == 0 || $links_order == 1) ? 'node.created' : 'node.title';
-    $query->orderby[1]['direction'] = ($links_order == 0 || $links_order == 3) ? 'DESC' : 'ASC';
+    $links_order = variable_get('os_links_ordering', 1);
+    $query->orderby[1]['field'] = ($links_order == 1 || $links_order == 2) ? 'node.created' : 'node.title';
+    $query->orderby[1]['direction'] = ($links_order == 1 || $links_order == 4) ? 'DESC' : 'ASC';
   }
 }

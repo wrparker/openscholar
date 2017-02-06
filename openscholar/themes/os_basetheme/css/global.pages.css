@@ -889,7 +889,7 @@ div[id^=event-popover] .event-title a {
     background: none !important;
 }
 .ui-dialog.ui-front {
-    z-index: 101;
+    z-index: 301;
 }
 /** OS LOGIN CONTAINER STYLES **/
 /** SLIDER **/
@@ -1204,4 +1204,11 @@ LIST OF POSTS - PERSON TEASER IN SIDEBAR
     display: block;
     border-bottom: none !important;
     clear: both;
+}
+#support .actions, #documentation .actions {
+    display: none;
+}
+
+.block-element {
+    display: block;
 }

@@ -17,4 +17,4 @@ function hook_cp_settings() {}
  * Allows modules to alter setting forms from other modules before they're added to the settings form
  * All data should be in the same structure as above.
  */
-function hook_cp_settings_alter(&$settings) {}
+function hook_cp_settings_alter(&$settings, &$form_state) {}
