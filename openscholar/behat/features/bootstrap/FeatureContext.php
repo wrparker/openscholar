@@ -29,6 +29,39 @@ class FeatureContext extends DrupalContext {
     parent::beforeScenario($event);
   }
 
+  private $currentUrl;
+
+  /**
+   * @BeforeStep @javascript
+   */
+  public function urlChange(StepEvent $e) {
+    $this->currentUrl = $this->getSession()->getCurrentUrl();
+  }
+
+  /**
+   * @AfterStep @javascript
+   */
+  public function urlChangeHandler(StepEvent $e) {
+    if ($this->currentUrl != $this->getSession()->getCurrentUrl()) {
+      $script = "
+      (function () {
+        if (!window.BehatScriptRun) {
+          window.BehatScriptRun = true;
+          window.BehatConsoleErrors = [];
+
+          window.onerror = function (error, url, line) {
+            BehatConsoleErrors.push({error: error, url: url, line: line});
+          }
+        }
+      })();
+      ";
+      $this->getSession()->executeScript($script);
+    }
+    if ($jserrors = $this->getSession()->evaluateScript("return window.BehatConsoleErrors")) {
+      print_r($jserrors);
+    }
+  }
+
   /**
    * Variable for storing the random string we used in the text.
    */
@@ -118,6 +151,7 @@ class FeatureContext extends DrupalContext {
     $element->fillField('Password', $password);
     $submit = $element->findButton('Log in');
     $submit->click();
+    sleep(3);
   }
 
   /**
@@ -301,6 +335,7 @@ class FeatureContext extends DrupalContext {
     $element = $this->getSession()->getPage();
     $url = $this->createGist($element->getContent());
     print_r('You asked to see the page content. Here is a gist contain the html: ' . $url . "\n");
+    $this->iShouldPrintPageTo(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR . time() . '.txt');
     $driver = $this->getSession()->getDriver();
     $screenshot = $driver->getScreenshot();
     $gistUrl = $this->createGist('<img src="data:image/png;base64,'.base64_encode($screenshot).'">');
@@ -527,11 +562,11 @@ class FeatureContext extends DrupalContext {
    * @When /^I create a new "([^"]*)" entry with the name "([^"]*)"$/
    */
   public function iCreateANewEntryWithTheName($type, $name) {
-    return array(
-      new Step\When('I visit "john/node/add/' . $type . '"'),
-      new Step\When('I fill in "Title" with "'. $name . '"'),
-      new Step\When('I press "edit-submit"'),
-    );
+    $node = new stdClass();
+    $node->title = $name;
+    $node->type = $type;
+    node_save($node);
+    $this->visit('john/node/' . $node->nid);
   }
 
   /**
@@ -550,11 +585,12 @@ class FeatureContext extends DrupalContext {
    * @When /^I create a new "([^"]*)" entry with the name "([^"]*)" in the group "([^"]*)"$/
    */
   public function iCreateANewEntryWithTheNameInGroup($type, $name, $group) {
-    return array(
-      new Step\When('I visit "' . $group . '/node/add/' . $type . '"'),
-      new Step\When('I fill in "Title" with "'. $name . '"'),
-      new Step\When('I press "edit-submit"'),
-    );
+    $node = new stdClass();
+    $node->title = $name;
+    $node->type = $type;
+    $node->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id'] = FeatureHelp::getNodeId($group);
+    node_save($node);
+    $this->visit('john/node/' . $node->nid);
   }
 
   /**
@@ -569,12 +605,14 @@ class FeatureContext extends DrupalContext {
     );
 
     return array(
-      new Step\When('I visit "' . $vsite . '/cp/settings"'),
+      new Step\When('I visit "' . $vsite . '"'),
       new Step\When('I open the admin panel to "Settings"'),
       new Step\When('I open the admin panel to "Global Settings"'),
+      new Step\When('I scroll in the ".menu-container .simplebar-scroll-content" element until I find "Site Visibility"'),
       new Step\When('I click on the "Site Visibility" control'),
-      new Step\When('I select the radio button named "vsite_private" with value "' . $privacy_level[$visibility] . '"'),
-      new Step\When('I press "edit-submit"'),
+      new Step\When('I click on the "' . trim($visibility) . '" control'),
+      new Step\When('I press "Save"'),
+      new Step\When('I wait for page actions to complete'),
     );
   }
 
@@ -879,7 +917,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldSeeTheFollowingMessageJson(TableNode $table) {
     // Get the json output and decode it.
-    $json_output = $this->getSession()->getPage()->getContent();
+    $json_output = $this->getSession()->getPage()->getText();
     $json = json_decode($json_output);
 
     // Hashing table, and define variables for later.
@@ -935,7 +973,7 @@ class FeatureContext extends DrupalContext {
    */
   public function iShouldNotSeeTheFollowingMessageJson(TableNode $table) {
     // Get the json output and decode it.
-    $json_output = $this->getSession()->getPage()->getContent();
+    $json_output = $this->getSession()->getPage()->getText();
     $json = json_decode($json_output);
 
     // Hashing table, and define variables for later.
@@ -1840,11 +1878,11 @@ class FeatureContext extends DrupalContext {
   public function iSetTheShareDomainNameTo($value) {
     $action = $value ? 'I checked "edit-vsite-domain-shared"' : 'I uncheck "edit-vsite-domain-shared"';
     return array(
-      new Step\When('I click on the "Settings" control'),
-      new Step\When('I click on the "Advanced" control'),
-      new Step\When('I click on the "Domain" control'),
+      new Step\When('I open the admin panel to "Settings"'),
+      new Step\When('I open the admin panel to "Global Settings"'),
+      new Step\When('I click on the "Custom Domain" control'),
       new Step\When($action),
-      new Step\When('I press "Submit"'),
+      new Step\When('I press "Save"'),
     );
   }
 
@@ -2669,7 +2707,7 @@ class FeatureContext extends DrupalContext {
    * Default implementation (in the "" element) does not work when multiple elements match selector
    */
   public function iShouldSeeInAElement($text, $selector) {
-    usleep(100);
+    usleep(200);
     //error_log($this->getSession()->getPage()->getHtml());
     $elems = $this->getSession()->getPage()->findAll('css', $selector);
     if (count($elems) == 0) {
@@ -2866,18 +2904,6 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Then /^Show me a screenshot$/
-   */
-  public function showScreenshot() {
-    $image_data = $this->getSession()->getDriver()->getScreenshot();
-    $file_and_path = '/tmp/behat_screenshot.jpg';
-    file_put_contents($file_and_path, $image_data);
-    if (PHP_OS === "Linux" && PHP_SAPI === "cli") {
-      exec('display ' . $file_and_path);
-    }
-  }
-
-  /**
    * @When /^I click on "([^"]*)" button in the media browser$/
    */
   public function iClickOn($text) {
@@ -2894,7 +2920,7 @@ class FeatureContext extends DrupalContext {
       usleep(50);
     }
     else {
-      throw new ElementNotFoundException("No tab with text ($text) found on page.");
+      throw new ElementNotFoundException($this->getSession(), "No tab with text ($text) found on page.");
     }
   }
 
@@ -2902,11 +2928,11 @@ class FeatureContext extends DrupalContext {
    * @When /^I click on the "([^"]*)" control$/
    */
   public function iClickOnControl($text) {
-    if ($element = $this->getSession()->getPage()->find('xpath', "//*[text() = '{$text}']")) {
+    if ($element = $this->getSession()->getPage()->find('xpath', "//*[translate(text(), ' ', '') = translate('{$text}', ' ', '')]")) {
       $element->click();
     }
     else {
-      throw new ElementNotFoundException("No element with text ($text) found on page.");
+      throw new ElementNotFoundException($this->getSession(), "No element with text ($text) found on page.");
     }
   }
 
@@ -2923,7 +2949,7 @@ class FeatureContext extends DrupalContext {
           $elem->click();
         }
         else {
-          throw new ElementNotFoundException("No $control found in $css element.");
+          throw new ElementNotFoundException($this->getSession(), "No $text found in $css element.");
         }
       }
     }
@@ -3025,30 +3051,15 @@ class FeatureContext extends DrupalContext {
       try {
         $this->iDisplayWatchdog();
         $this->iShouldPrintPage();
-        $this->takeScreenshotAfterFailedStep($event);
+
+        if ($this->getSession()->getDriver() instanceof \Behat\Mink\Driver\Selenium2Driver) {
+          $this->iPrintPageScreenShot();
+        }
       }
       catch (\Exception $e) {
 
       }
 
-    }
-  }
-
-  /**
-  * AfterStep
-  */
-  public function takeScreenshotAfterFailedStep($event)
-  {
-    if ($event->getResult() == 4) {
-      if ($this->getSession()->getDriver() instanceof
-      \Behat\Mink\Driver\Selenium2Driver) {
-        $stepText = $event->getStep()->getText();
-        $fileTitle = preg_replace("#[^a-zA-Z0-9\._-]#", '', $stepText);
-        $fileName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR . $fileTitle . '.png';
-        $screenshot = $this->getSession()->getDriver()->getScreenshot();
-        file_put_contents($fileName, $screenshot);
-        print "Screenshot for '{$stepText}' placed in {$fileName}\n";
-      }
     }
   }
 
@@ -3443,12 +3454,12 @@ JS;
    * @When /^I click on "([^"]*)" in the tools for "([^"]*)"$/
    */
   public function iClickOnTools($link, $node) {
-    $driver = $this->getSession()->getDriver();
     $page = $this->getSession()->getPage();
     if ($elem = $page->find('xpath', "//*[normalize-space(text()) = '$node']/ancestor::section//article")) {
       $elem->mouseOver();
       if ($clink = $elem->find('xpath', "//a[contains(@class, 'contextual-links-trigger')]")) {
         $clink->click();
+        usleep(200);
         if ($target = $elem->find('xpath', "//ul[contains(@class, 'contextual-links')]//a[text() = '$link']")) {
           $target->click();
         }
@@ -3464,4 +3475,85 @@ JS;
       throw new Exception("No node $node found on page.");
     }
   }
+
+  /**
+   * @When /^I scroll in the "([^"]*)" element until I find "([^"]*)"$/
+   */
+  public function iScrollUntil($element, $text) {
+    $page = $this->getSession()->getPage();
+    $driver = $this->getSession()->getDriver();
+
+    $container = $page->find('css', $element);
+    $scrolltest = "var elem = document.querySelector('$element');
+      return elem.scrollHeight == elem.scrollTop + elem.clientHeight";
+    if (!$container) {
+      throw new Exception("The element matching '$element' was not found.");
+    }
+
+    $attempts = 0;
+    while (!$driver->isVisible("//*[text() = '$text']") && !$page->getSession()->evaluateScript($scrolltest) && $attempts < 20) {
+      echo $attempts;
+      $page->getSession()->getDriver()->executeScript("document.querySelector('$element').scrollTop += 100");
+      usleep(100);
+      $attempts++;
+    }
+
+    if (!$driver->isVisible("//*[text() = '$text']")) {
+      throw new Exception("The text '$text' was not found in the '$element' element.");
+    }
+    elseif ($attempts == 20) {
+      throw new Exception("20 attempts were made and the element is still not visible.");
+    }
+  }
+
+  /**
+   * @When /^I set the form "([^"]*)" to "([^"]*)"$/
+   */
+  public function iSetTheFormTo($form, $dirtiness) {
+    $dirty = $dirtiness == 'dirty' ? 'true' : 'false';
+
+    $this->getSession()->executeScript(sprintf('
+      var form = angular.element(document.getElementById("%s")).controller("form");
+      if (form) {
+        if (%s) {
+          form.$setDirty();
+        }
+        else {
+          form.$setPristine();
+        }
+      }
+      else {
+        throw "Form does not exist or have a controller assigned to it."
+      }', $form, $dirty));
+  }
+
+  /**
+   * @when /^Arbitrary script "([^"]*)"$/
+   */
+  public function arbitraryScript($script) {
+    $this->getSession()->evaluateScript($script);
+  }
+
+  /**
+   * @Given /^I print page screen shot$/
+   */
+  public function iPrintPageScreenShot() {
+    $driver = $this->getSession()->getDriver();
+    $screenshot = $driver->getScreenshot();
+    $client_id = 'f10ef45787db6fc';
+    $request = $this->invokeRestRequest('post', 'https://api.imgur.com/3/image.json',
+      ['Authorization' => 'Client-ID ' . $client_id],
+      ['image' => base64_encode($screenshot)]
+    );
+    $json = $request->json();
+    print_r('The screen shot of the page is: ' . $json['data']['link']);
+  }
+
+  /**
+   * @When /^I set the variable "([^"]*)" to "([^"]*)" in the vsite "([^"]*)"$/
+   */
+  public function iSetVariableInVsite($name, $val, $vsite) {
+    FeatureHelp::variableSetSpace($name, $val, $vsite);
+  }
+
 }

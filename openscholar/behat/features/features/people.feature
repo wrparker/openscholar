@@ -48,6 +48,7 @@ Feature:
 #    Given I am logging in as "john"
     # try to solve with john later on.
     Given I am logging in as "john"
+    Given I am logging in as "john"
       And I edit the node "Hillary Diane Rodham Clinton" in the group "obama"
       And I fill in "Address" with "White house"
       And I press "Save"

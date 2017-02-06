@@ -12,7 +12,7 @@ Feature: Testing the importer.
     | import-address                            | address                                   | title                   | body                          |
     | "john/os-importer-demo/blog"              | "john/blog"                               | "Blog from csv"         | "Testing import of blog"      |
     | "john/os-importer-demo/news"              | "john/news"                               | "News from csv"         | "Testing import of news"      |
-    | "john/os-importer-demo/event"             | "john/calendar?type=day&day=2013-10-17"   | "Event from csv"        | ""                            |
+    | "john/os-importer-demo/event"             | "john/calendar?type=day&day=2020-10-17"   | "Event from csv"        | ""                            |
     | "john/os-importer-demo/page"              | "john/page-csv"                           | "Page from csv"         | "Testing import of page"      |
     | "john/os-importer-demo/class"             | "john/classes"                            | "Class from csv"        | "Testing import of class"     |
     | "john/os-importer-demo/faq"               | "john/faq"                                | "FAQ from csv"          | ""                            |

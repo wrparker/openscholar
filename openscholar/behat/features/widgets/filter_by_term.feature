@@ -155,7 +155,7 @@ Feature:
   Scenario: Verify past tagged events link to the past events view.
     Given I am logging in as "john"
       And I bind the content type "event" with "science"
-      And I assign the node "John F. Kennedy birthday" with the type "event" to the term "air"
+      And I assign the node "Past event" with the type "event" to the term "air"
       And the widget "Filter by term" is set in the "News" page with the following <settings>:
         | Post types    | Select post type   | select list |
         | Vocabularies  | science            | select list |
@@ -164,8 +164,8 @@ Feature:
       And I should see "Air (1)"
       And I click "Air (1)"
           # Verify only tagged events show up.
-     Then I should see "John's 96th birthday"
-      And I should not see "Past event body"
+     Then I should see "Past event body"
+      And I should not see "More recent past event body"
 
   @api @widgets
   Scenario: Verify past tagged events link to the upcoming events view.
