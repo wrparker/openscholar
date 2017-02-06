@@ -112,7 +112,7 @@ function os_wysiwyg_update_7011() {
 }
 
 /**
- * Revert os_wysiwyg filter component to allow <figcaption> tag.
+ * Remove the font size and family.
  */
 function os_wysiwyg_update_7012() {
   features_revert(array('os_wysiwyg' => array('wysiwyg')));
