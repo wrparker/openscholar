@@ -110,3 +110,10 @@ function os_wysiwyg_update_7010() {
 function os_wysiwyg_update_7011() {
   features_revert(array('os_wysiwyg' => array('filter')));
 }
+
+/**
+ * Revert os_wysiwyg filter component to allow <figcaption> tag.
+ */
+function os_wysiwyg_update_7012() {
+  features_revert(array('os_wysiwyg' => array('wysiwyg')));
+}
