@@ -914,3 +914,10 @@ function os_update_7046() {
   module_enable(array('ap_settings_form', 'restful_message'));
   return t('Enhanced settings forms enabled.');
 }
+
+/**
+ * Change registration "From:" email
+ */
+function os_update_7047() {
+  variable_set('vsite_register_admin_mail', 'swap@lists.iq.harvard.edu, hwp@openscholar.harvard.edu');
+}
