@@ -34,7 +34,7 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
     // remove state-based revision checkbox and make checked by default
     unset($form['revision_information']['revision']['#states']);
     $form['revision_information']['revision']['#attributes']['checked'] = 'checked';
-    $form['revision_information']['#collapsed'] => FALSE;
+    $form['revision_information']['#collapsed'] = FALSE;
     $form['revision_information']['revision']['#weight'] = 1;
     $form['revision_information']['log']['#weight'] = 2;
     $form['revision_information']['log']['#title'] = t('Revision Notes');
