@@ -1530,6 +1530,11 @@ function biblio_node_form_validate($form, &$form_state) {
     }
 
     foreach ($form_state['biblio_fields'] as $key => $fld) {
+      if ($key == 'biblio_year') {
+        // Don't check if biblio year is empty or not. It's handled above.
+        continue;
+      }
+
       if ($fld['required'] && isset($form_state['values'][$key]) && empty($form_state['values'][$key])) {
         $tab = $tabs[$fld['vtab']];
         form_set_error($key, t('The <b><u>@fld</u></b> field (on the <b><i>@tab</i></b> tab) is required', array('@fld' => $fld['title'], '@tab' => $tab)));
