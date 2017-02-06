@@ -1006,11 +1006,10 @@ function os_form_alter(&$form, &$form_state, $form_id) {
 
     // Obtaining destination parameter from URL
     $query = drupal_get_destination();
-    $destination_menu_object = menu_get_item($query['destination']);
 
     // If destination is the deleted node itself, then redirecting to default app path
     // Also if no destination parameter is found in URL, then redirecting to default app path
-    if(($destination_menu_object['path'] == 'node/%' || empty($_GET['destination'])) && isset($paths[$form['#node']->type])) {
+    if((preg_match("/node\/\d+/", $query['destination']) || empty($_GET['destination'])) && isset($paths[$form['#node']->type])) {
       $_GET['destination'] = $paths[$form['#node']->type];
     }
   }
