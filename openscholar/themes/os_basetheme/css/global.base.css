@@ -1145,7 +1145,10 @@ ul.no-event-export {
 .web-widgets-iframe {
     width: 100%;
 }
-.os-sv-list iframe {
+
+.os-sv-list.sv-list-view-sidebar_teaser iframe,
+.os-sv-list.sv-list-view-slide_teaser iframe,
+.os-sv-list.sv-list-view-teaser iframe  {
     width: 100% !important;
     height:auto !important;
 }
