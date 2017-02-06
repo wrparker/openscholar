@@ -1009,11 +1009,10 @@ function os_form_alter(&$form, &$form_state, $form_id) {
 
     // Obtaining destination parameter from URL
     $query = drupal_get_destination();
-    $destination_menu_object = menu_get_item($query['destination']);
 
     // If destination is the deleted node itself, then redirecting to default app path
     // Also if no destination parameter is found in URL, then redirecting to default app path
-    if(($destination_menu_object['path'] == 'node/%' || empty($_GET['destination'])) && isset($paths[$form['#node']->type])) {
+    if((preg_match("/node\/\d+/", $query['destination']) || empty($_GET['destination'])) && isset($paths[$form['#node']->type])) {
       $_GET['destination'] = $paths[$form['#node']->type];
     }
   }
@@ -2264,11 +2263,26 @@ function os_user_login_validate($form, &$form_state) {
 function os_library() {
   $libraries = array();
 
+  // Extending hook_library for Get Satidfaction data of cp/support section
+  $libraries['gsfn'] = array(
+    'title' => 'GSFN support form',
+    'version' => '1.0',
+    'js' => array(
+      'https://loader.engage.gsfn.us/loader.js' => array('group' => JS_LIBRARY)
+    ),
+    'css' => array(
+      drupal_get_path('module', 'cp') . '/theme/cp-support.css' => array('group' => JS_LIBRARY)
+    ),
+  );
+
   $libraries['os.ajax-fix'] = array(
     'title' => 'Ajax Termination Fix',
     'version' => '1.0',
     'js' => array(
       drupal_get_path('module', 'os').'/theme/os_ajaxterminate.js' => array('group' => JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('os', 'gsfn'),
     ),
   );
 

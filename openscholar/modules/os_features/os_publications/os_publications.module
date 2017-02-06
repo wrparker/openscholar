@@ -1215,6 +1215,10 @@ function os_publications_node_view_alter(&$build, $type) {
       $build['teaser']['#weight'] = 1;
       $build['links']['#access'] = FALSE;
 
+      // We add this manually in _os_publications_biblio_entry_alter()
+      // We do this here to prevent terms from appearing twice on search pages
+      $build['og_vocabulary']['#access'] = FALSE;
+
       break;
 
     default:
@@ -1667,5 +1671,60 @@ function os_publications_views_pre_render(&$view) {
 
       $i++;
     }
+  }
+}
+
+/**
+ * Implements hook_apachesolr_search_page_alter().
+ */
+function os_publications_apachesolr_search_page_alter(array &$build, array $search_page) {
+  $map = array(
+    'biblio_author' => 'author',
+    'biblio_sort_title_char' => 'title',
+    'biblio_type_name' => 'type',
+    'biblio_year' => 'year'
+  );
+
+  $nids = array();
+  foreach ($build['search_results']['#results'] as $k => $r) {
+    $nids['result_' . $k] = $r['node']->entity_id;
+  }
+
+  $field = array_search(variable_get('biblio_sort', 'year'), $map);
+  $order = variable_get('biblio_order', variable_get('biblio_sort', 'year') == 'year' ? 'DESC' : 'ASC');
+
+  $query = 'SELECT
+        b.nid,
+          (SELECT lastname
+            FROM biblio_contributor_data bcd
+              INNER JOIN biblio_contributor bc ON bcd.cid = bc.cid
+            WHERE bc.nid = b.nid
+            ORDER BY lastname ASC
+            LIMIT 1) as biblio_author,
+          (SELECT name FROM biblio_types WHERE tid = b.biblio_type) as biblio_type_name,
+          LEFT(biblio_sort_title, 1) as biblio_sort_title_char
+      FROM biblio b
+        INNER JOIN node n ON b.nid = n.nid
+      WHERE b.nid IN (' . implode(',', $nids) . ')
+      ORDER BY ' . $field . ' ' . $order . ', n.sticky DESC';
+
+  $q = db_query($query);
+  $results = array();
+  foreach ($q as $r) {
+    $key = array_search($r->nid, $nids);
+    $okey = str_replace('result_', '', $key);
+    $results[] = $build['search_results']['#results'][$okey];
+  }
+
+  $build['search_results']['#results'] = $results;
+}
+
+/**
+  Implement hook_biblio_pm_node_alter
+*/
+function os_publications_biblio_pm_node_alter($node, $article) {
+  // Trim the trailing period while importing
+  if (substr($node->title, -1) == '.') {
+    $node->title = substr($node->title, 0, -1);
   }
 }

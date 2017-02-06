@@ -14,7 +14,7 @@
         value: '='
       },
       template: '<div class="form-wrapper {{classname}}">' +
-        '<span ng-if="element.prefix" ng-bind-html="element.prefix"></span>' +
+        '<span ng-if="element.prefix" ng-bind-html="to_trusted(element.prefix)"></span>' +
         '<span>Placeholder</span>' +
         '<div class="description" ng-bind-html="description"></div>' +
       '</div>',
@@ -24,7 +24,9 @@
         scope.label = scope.element.title;
         scope.access = scope.element.access;
         scope.classname = '';
-
+		scope.to_trusted = function(html_code) {
+          return $sce.trustAsHtml(html_code);
+        }
         angular.forEach(scope.element.class, function(classname, key) {
           scope.classname += ' ' + classname;
         });
@@ -59,9 +61,18 @@
           elem.find('span').replaceWith(copy);
           copy = $compile(copy)(scope);
           if (scope.element.attached) {
+            for (x in scope.element.attached) {
+              if (x == 'js') {
+                for (y in scope.element.attached.js) {
             $t(function () {
-              Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[0].data);
+                    Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[y].data);
             });
+                }
+              }
+              else if (x == 'css') {
+                // Load css
+              }
+            }
           }
         }
         else {

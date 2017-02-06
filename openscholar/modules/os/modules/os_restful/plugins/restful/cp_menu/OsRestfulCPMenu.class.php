@@ -420,18 +420,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'label' => 'Help',
         'type' => 'heading',
         'default_state' => 'collapsed',
-        'children' => array(
-          'documentation' => array(
-            'label' => 'Documentation',
-            'type' => 'link',
-            'href' => 'cp/welcome'
-          ),
-          'support' => array(
-            'label' => 'Support',
-            'type' => 'link',
-            'href' => 'cp/support'
-          ),
-        ),
+        'children' => array(),
       ),
     );
 
