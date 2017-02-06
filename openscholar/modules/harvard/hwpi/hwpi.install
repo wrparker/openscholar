@@ -114,3 +114,10 @@ function openscholar_update_7007() {
   variable_set('imagemagick_gm', 0);
   variable_set('imagemagick_quality', '75');
 }
+
+/**
+ * Change registration "From:" email
+ */
+function os_update_7008() {
+  variable_set('vsite_register_admin_mail', 'swap@lists.iq.harvard.edu, hwp@openscholar.harvard.edu');
+}
