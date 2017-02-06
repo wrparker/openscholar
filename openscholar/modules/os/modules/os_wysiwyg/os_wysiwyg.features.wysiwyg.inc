@@ -45,8 +45,6 @@ function os_wysiwyg_wysiwyg_default_profiles() {
           'PasteFromWord' => 1,
           'RemoveFormat' => 1,
           'Format' => 1,
-          'Font' => 1,
-          'FontSize' => 1,
           'Table' => 1,
         ),
         'drupal' => array(
