@@ -665,7 +665,7 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
 
   // Locate the URL redirect field under the biblio URL field.
   $form['field_biblio_redirect']['#weight'] = $form['url']['#weight'] + 0.1;
-  
+
   // Define after_build callback for altering empty vocabulary values on submit.
   $form['og_vocabulary'][LANGUAGE_NONE]['#after_build'][] = '_os_publications_vocabulary_after_build';
 }
@@ -1622,7 +1622,7 @@ function _os_publications_vocabulary_after_build(&$elements) {
       unset($elements[0][$key]['#value']);
     }
   }
-  
+
   return $elements;
 }
 
@@ -1672,51 +1672,6 @@ function os_publications_views_pre_render(&$view) {
       $i++;
     }
   }
-}
-
-/**
- * Implements hook_apachesolr_search_page_alter().
- */
-function os_publications_apachesolr_search_page_alter(array &$build, array $search_page) {
-  $map = array(
-    'biblio_author' => 'author',
-    'biblio_sort_title_char' => 'title',
-    'biblio_type_name' => 'type',
-    'biblio_year' => 'year'
-  );
-
-  $nids = array();
-  foreach ($build['search_results']['#results'] as $k => $r) {
-    $nids['result_' . $k] = $r['node']->entity_id;
-  }
-
-  $field = array_search(variable_get('biblio_sort', 'year'), $map);
-  $order = variable_get('biblio_order', variable_get('biblio_sort', 'year') == 'year' ? 'DESC' : 'ASC');
-
-  $query = 'SELECT
-        b.nid,
-          (SELECT lastname
-            FROM biblio_contributor_data bcd
-              INNER JOIN biblio_contributor bc ON bcd.cid = bc.cid
-            WHERE bc.nid = b.nid
-            ORDER BY lastname ASC
-            LIMIT 1) as biblio_author,
-          (SELECT name FROM biblio_types WHERE tid = b.biblio_type) as biblio_type_name,
-          LEFT(biblio_sort_title, 1) as biblio_sort_title_char
-      FROM biblio b
-        INNER JOIN node n ON b.nid = n.nid
-      WHERE b.nid IN (' . implode(',', $nids) . ')
-      ORDER BY ' . $field . ' ' . $order . ', n.sticky DESC';
-
-  $q = db_query($query);
-  $results = array();
-  foreach ($q as $r) {
-    $key = array_search($r->nid, $nids);
-    $okey = str_replace('result_', '', $key);
-    $results[] = $build['search_results']['#results'][$okey];
-  }
-
-  $build['search_results']['#results'] = $results;
 }
 
 /**
