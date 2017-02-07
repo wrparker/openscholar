@@ -759,22 +759,6 @@ function cp_user_form_og_ui_add_users_alter(&$form, $form_state) {
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Add member'));
 }
 
-
-function os_form_user_register_form_alter(&$form, &$form_state, $form_id) {
-  $space = spaces_get_space();
-  $form['og_user']['roles'] = array(
-    '#type' => 'radios',
-    '#access' => true,
-    // Each option is themed and includes a description.
-    '#options' => _cp_user_list_roles('rids-options', $space->group->type, $space->group->nid),
-    '#default_value' => _cp_user_list_roles('rids', $space->group->type, $space->group->nid)[OS_USER_ROLE_BASIC],
-    '#tree' => true,
-    '#value_callback' => '_cp_user_scalar_to_array',
-  );
-  $form['field_first_name']['#weight'] = -100;
-  $form['field_last_name']['#weight'] = -99;
-}
-
 function _cp_user_scalar_to_array($form, $selection) {
   return array($selection => $selection);
 }
@@ -905,6 +889,19 @@ function cp_user_form_user_register_form_alter(&$form, &$form_state, $form_id) {
       unset($form['account']['roles']['#options'][$key]);
     }
   }
+
+  $space = spaces_get_space();
+  $form['og_user']['roles'] = array(
+    '#type' => 'radios',
+    '#access' => true,
+    // Each option is themed and includes a description.
+    '#options' => _cp_user_list_roles('rids-options', $space->group->type, $space->group->nid),
+    '#default_value' => _cp_user_list_roles('rids', $space->group->type, $space->group->nid)[OS_USER_ROLE_BASIC],
+    '#tree' => true,
+    '#value_callback' => '_cp_user_scalar_to_array',
+  );
+  $form['field_first_name']['#weight'] = -100;
+  $form['field_last_name']['#weight'] = -99;
 }
 
 /**
