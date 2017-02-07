@@ -928,9 +928,23 @@ function cp_user_user_register_submit($form, &$form_state) {
     og_group('node', $space->id, array('entity' => $form_state['user']->uid));
 
     $og_roles = og_roles('node', FALSE, $space->id);
-    $vsite_user_role = array_search('vsite user', $og_roles);
+    $vsite_user_role_constant = array_search('vsite user', $og_roles);
 
-    // Grant them the vsite user role
+    // Role is selected by the user via radio button in the input form,
+    // or defaults to plain 'vsite user'
+    if (isset($form_state['input']['roles'])) {
+      $vsite_user_role = $form_state['input']['roles'];
+    } else {
+      $vsite_user_role = $vsite_user_role_constant;
+    }
+
+    // If needed, overwrite the default role (which gets set above in og_group()),
+    // otherwise the user is assigned two roles.
+    if (isset($form_state['input']['roles']) && $vsite_user_role_constant != $vsite_user_role) {
+      og_role_revoke('node', $space->id, $form_state['user']->uid, $vsite_user_role_constant);
+    }
+
+    // Role is selected via radio button or it defaults to 'vsite user'
     og_role_grant('node', $space->id, $form_state['user']->uid, $vsite_user_role);
 
     // drupal_set_message to inform the user has been added to the group.
