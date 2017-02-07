@@ -80,6 +80,7 @@ function os_publications_install() {
       ->execute();
   }
 
+  $new_bibyears[0] = 'Published';
   variable_set('biblio_years_text', $new_bibyears);
 
   _reset_csl_map(FALSE);
@@ -1614,4 +1615,15 @@ function os_publications_update_7050() {
   foreach ($citations as $citation) {
     os_publications_revert_citeproc_style($citation);
   }
+}
+
+/**
+ * Adding published as publication type.
+ */
+function os_publications_update_7051() {
+  $types = variable_get('biblio_years_text');
+  $types[0] = 'Published';
+  variable_set('biblio_years_text', $types);
+}
+=======
 }

@@ -46,9 +46,23 @@ a.cite-pop {
   cursor: default;
 }
 
-
-#edit-biblio-year-coded, .form-item-biblio-year-coded, .form-item-biblio-year, #edit-field-biblio-pub-month, .form-item-field-biblio-pub-month-und, #edit-field-biblio-pub-day, .form-item-field-biblio-pub-day-und {
+#edit-biblio-year-coded, .form-item-published, .form-item-biblio-year-coded,
+.form-item-biblio-year, #edit-field-biblio-pub-month,
+.form-item-field-biblio-pub-month-und, #edit-field-biblio-pub-day,
+.form-item-field-biblio-pub-day-und {
   display: inline;
+}
+
+.year-wrapper {
+  padding-top: 10px;
+}
+
+.form-item.form-type-radio.form-item-published {
+  margin-left: 0;
+}
+
+.year-selection-wrapper {
+  padding-top: 10px;
 }
 
 h1.biblio-type-prefix {
