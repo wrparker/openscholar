@@ -32,6 +32,8 @@ function os_wysiwyg_wysiwyg_default_profiles() {
           'JustifyRight' => 1,
           'BulletedList' => 1,
           'NumberedList' => 1,
+          'BidiLtr' => 1,
+          'BidiRtl' => 1,
           'Outdent' => 1,
           'Indent' => 1,
           'Unlink' => 1,
@@ -48,6 +50,7 @@ function os_wysiwyg_wysiwyg_default_profiles() {
           'Table' => 1,
         ),
         'drupal' => array(
+          'bidi' => 1,
           'media' => 1,
           'colorbutton' => 1,
           'colordialog' => 1,
