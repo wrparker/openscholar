@@ -128,10 +128,16 @@
     #menu-bar ul.nice-menu ul ul {
         display: none !important;
     }
+    
     #menu-bar #block-os-primary-menu a.active.active ~ ul {
         display: block !important;
         visibility: visible !important;
         background: none !important;
+    }
+     #menu-bar #block-os-primary-menu li.menuparent ul[style*="visibility: hidden"] {
+     
+        visibility: visible !important;
+    
     }
     #menu-bar #block-os-primary-menu a.active.active ~ ul li {
         border: none !important;
