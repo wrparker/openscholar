@@ -353,7 +353,7 @@ function os_files_private_cp_settings() {
       '#title' => t('Private Files'),
       '#weight' => 3,
       '#menu_parent' => 'app_settings',
-      '#help_link' => l(t('Learn more about private files'), 'http://docs.openscholar.harvard.edu/private-files', array('attributes' => array('target' => '_blank'))),
+      '#help_link' => l(t('Learn more about private files'), 'http://docs.openscholar.harvard.edu/private-files#setting-options', array('attributes' => array('target' => '_blank'))),
     ),
     'form' => array(
       '#title' => t('Extend access to the Harvard Community'),
@@ -361,7 +361,7 @@ function os_files_private_cp_settings() {
       '#type' => 'checkbox',
       '#default_value' => variable_get('os_files_private_pinserver', 0),
       '#weight' => -1,
-      '#prefix' => '<label>Private files are only accessible to your site members.</label>',
+      '#prefix' => '<label class="margin-bottom settings-form-heading">Private files are only accessible to your site members.</label>',
       '#disabled' => !(user_access('administer pinserver') && variable_get('vsite_domain_name', FALSE)),
       '#access' => module_exists('spaces') ? spaces_access_admin() : user_access('administer site configuration'),
     ),
@@ -379,7 +379,7 @@ function os_files_private_cp_settings() {
         '#title' => t('Private Files'),
         '#weight' => 3,
         '#menu_parent' => 'app_settings',
-        '#help_link' => l(t('Learn more about private files'), 'http://docs.openscholar.harvard.edu/private-files', array('attributes' => array('target' => '_blank'))),
+        '#help_link' => l(t('Learn more about private files'), 'http://docs.openscholar.harvard.edu/private-files#setting-options', array('attributes' => array('target' => '_blank'))),
       ),
       'form' => array(
         '#title' => t('Harvard PIN server application name'),

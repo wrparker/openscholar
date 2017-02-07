@@ -635,20 +635,9 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
 
   // Change descriptions in node author fieldset.
   $form['author']['name']['#description'] = '';
-  $form['author']['date']['#description'] = t('Date can be used to change the order in which content is displayed.');
 
   // Add description to Full Text field.
   $form['publication_extras']['biblio_tabs']['biblio_full_text']['#suffix'] = '<div class="description">' . t('You can enter the full text of your article here, although most people upload PDFs instead.') . '</div>';
-
-  // Add a datepicker to "Posted on" field. We do this only if the user has
-  // access to this field to avoid date_popup to end up with a wrong value
-  // in date_popup_element_value_callback().
-  if ($form['author']['#access']) {
-    $form['author']['date']['#type'] = 'date_popup';
-  }
-  $form['author']['date']['#date_format'] = 'm/d/Y';
-  // Decide on the default value. If it's a new publication use today's date.
-  $form['author']['date']['#default_value'] = isset($form['#node']->nid) ?  date("Y-m-d", $form['#node']->created) : date("Y-m-d", time());
 
   // Set the element max length to NULL won't trigger the normal form validation
   // for of standard element.
@@ -676,7 +665,7 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
 
   // Locate the URL redirect field under the biblio URL field.
   $form['field_biblio_redirect']['#weight'] = $form['url']['#weight'] + 0.1;
-  
+
   // Define after_build callback for altering empty vocabulary values on submit.
   $form['og_vocabulary'][LANGUAGE_NONE]['#after_build'][] = '_os_publications_vocabulary_after_build';
 }
@@ -1304,6 +1293,10 @@ function os_publications_node_view_alter(&$build, $type) {
       $build['teaser']['#weight'] = 1;
       $build['links']['#access'] = FALSE;
 
+      // We add this manually in _os_publications_biblio_entry_alter()
+      // We do this here to prevent terms from appearing twice on search pages
+      $build['og_vocabulary']['#access'] = FALSE;
+
       break;
 
     default:
@@ -1707,7 +1700,7 @@ function _os_publications_vocabulary_after_build(&$elements) {
       unset($elements[0][$key]['#value']);
     }
   }
-  
+
   return $elements;
 }
 
@@ -1756,5 +1749,15 @@ function os_publications_views_pre_render(&$view) {
 
       $i++;
     }
+  }
+}
+
+/**
+  Implement hook_biblio_pm_node_alter
+*/
+function os_publications_biblio_pm_node_alter($node, $article) {
+  // Trim the trailing period while importing
+  if (substr($node->title, -1) == '.') {
+    $node->title = substr($node->title, 0, -1);
   }
 }

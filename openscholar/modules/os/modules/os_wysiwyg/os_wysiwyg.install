@@ -110,3 +110,17 @@ function os_wysiwyg_update_7010() {
 function os_wysiwyg_update_7011() {
   features_revert(array('os_wysiwyg' => array('filter')));
 }
+
+/**
+ * Add bi directional widget.
+ */
+function os_wysiwyg_update_7012() {
+  features_revert(array('os_wysiwyg' => array('filter', 'wysiwyg')));
+}
+
+/**
+ * Add bi directional widget(retry).
+ */
+function os_wysiwyg_update_7013() {
+  os_wysiwyg_update_7012();
+}

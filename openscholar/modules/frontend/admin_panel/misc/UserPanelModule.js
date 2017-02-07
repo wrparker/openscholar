@@ -83,10 +83,6 @@
       };
        
   }).service('notificationService', [function () {
-    //check for google and hopscotch
-    if (typeof google == 'undefined' || typeof hopscotch == 'undefined') {
-      return;
-    }
 
     function handleNotificationStepEvent(num_remaining) {
       count--;
@@ -111,6 +107,8 @@
     var loaded = false;
 
     // @TODO: Add support for multiple feeds.
+      /**
+       * None of this works anymore.
     var feed = new google.feeds.Feed(notify_settings.url);
     feed.setNumEntries(notify_settings.max);
     feed.load(function (result) {
@@ -134,7 +132,7 @@
         }
       }
 
-      /* Add a permanent "stop" node to the end of the list. */
+      /* Add a permanent "stop" node to the end of the list. *
       var lastEntryContent = "There are no new announcements. Click here to view the <a href=\"http://hwp.harvard.edu/os-alerts/announcement\" target=\"_blank\">archive</a>.";
       var lastEntry = {
         author: "scholar",
@@ -181,6 +179,7 @@
         handlers.load[i]();
       }
     });
+     */
 
     this.Count = function () {
       return count;
@@ -243,6 +242,8 @@
           notificationService.MakeTarget(link);
         }
         element.append(count_element);
+        // assume there's nothing
+        count_element.hide();
 
         notificationService.AddHandler('load', function () {
           var n = notificationService.Count();
