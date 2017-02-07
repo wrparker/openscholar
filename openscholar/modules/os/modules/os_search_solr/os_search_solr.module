@@ -1272,5 +1272,30 @@ function os_search_solr_change_search_path($form, $form_state) {
   }
 
   // Collect terms.
-  drupal_goto('search/site/' . $form_state['values']['search_block_form'], $options);
+  drupal_goto('search/site/' . $form_state['input']['search_block_form'], $options);
+}
+
+/**
+ * Implements hook_forms().
+ */
+function os_search_solr_forms($form_id, $args) {
+  $forms = array();
+
+  if (strpos($form_id, 'os_solr_search_box') === 0) {
+    list(, $delta) = explode('___', $form_id);
+    $forms[$form_id] = array(
+      'callback' => 'os_search_solr_search_box',
+      'callback arguments' => array($delta),
+    );
+  }
+
+  return $forms;
+}
+
+/**
+ * Form callback; Return the original search box for duplicate search widgets.
+ */
+function os_search_solr_search_box($form, $form_state) {
+  $form = drupal_build_form('search_block_form', $form_state);
+  return $form;
 }

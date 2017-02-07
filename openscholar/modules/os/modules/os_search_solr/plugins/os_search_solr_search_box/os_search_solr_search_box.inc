@@ -148,8 +148,10 @@ class os_search_solr_search_box extends os_boxes_default {
     }
 
     $form_state['box_settings'] = $this->options;
-    $form = drupal_build_form('search_block_form', $form_state);
-    $form['#box_settings'] = $this->options;
+
+    // In case we have two search box widgets we need to give a dynamic name to
+    // the forms thus prevent overriding the form settings.
+    $form = drupal_build_form('os_solr_search_box___' . $this->delta, $form_state);
 
     $return['content'] = render($form);
 
