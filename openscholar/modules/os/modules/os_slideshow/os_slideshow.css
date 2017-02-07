@@ -15,3 +15,6 @@
 #media-format-form fieldset .fieldset-wrapper {
     padding-top:10px;
 }
+.media-gallery-detail-info {
+    display: block !important;
+}
