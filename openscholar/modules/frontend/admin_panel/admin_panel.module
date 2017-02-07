@@ -159,7 +159,6 @@ function admin_panel_library() {
   );
   $libs['user_panel']['dependencies'] = array(
     array('admin_panel', 'admin_panel'),
-    array('google_feedapi', 'google_jsapi_feeds'),
     array('os_tour', 'hopscotch'),
     array('os_tour', 'os_tour'),
   );
