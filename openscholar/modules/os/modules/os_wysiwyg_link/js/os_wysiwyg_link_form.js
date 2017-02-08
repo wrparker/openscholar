@@ -6,10 +6,20 @@
 Drupal.behaviors.osLinkExternal = {
   attach: function (ctx) {
     $('#-os-link-external-form').submit(function (e) {
+
+      var escape_html = function (unsafe) {
+        return unsafe
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      };
+
       if ($(this).filter(':visible').length > 0) {
         var value = $('#edit-external', this).val();
         var target_option = $('#edit-target-option', this).prop('checked');
-        var link_title = $('input[name="link-text"]').val();
+        var link_title = escape_html($('input[name="link-text"]').val());
         // Trims the leading slash from the raw input value.
         value = value.replace(/^\//, "");
         // If given URL is relative, i.e not have 'http' and do not have '#' at the beginning, i.e not a named anchor.
