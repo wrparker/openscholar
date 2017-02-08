@@ -665,7 +665,7 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
 
   // Locate the URL redirect field under the biblio URL field.
   $form['field_biblio_redirect']['#weight'] = $form['url']['#weight'] + 0.1;
-  
+
   // Define after_build callback for altering empty vocabulary values on submit.
   $form['og_vocabulary'][LANGUAGE_NONE]['#after_build'][] = '_os_publications_vocabulary_after_build';
 }
@@ -692,27 +692,25 @@ function os_publications_biblio_contributors_add_more_callback($form, &$form_sta
 function os_publications_alter_year_field(&$form, &$form_state) {
 
   $style = variable_get('biblio_citeproc_style');
-  // Biblio year value can be standard YYYY year number, or a coded number
-  // defined in the "biblio_years_text" variable. Both _biblio_numeric_year()
-  // and _biblio_text_year() are used to convert between code and numeric.
-  $year_value = $form['biblio_year']['#default_value'];
-
-  //Get from the node since it may or may not be on the form.
-  $date_value = is_object($form['#node']) && !empty($form['#node']->biblio_date) ? $form['#node']->biblio_date : '';
-  $year_coded_value = '';
+  $chicago_author_date_mode = in_array($style, array('harvard-chicago-author-date.csl'));
+  $years = variable_get('biblio_years_text', array(9999 => t('Submitted'), 9998 => t('In Press')));
 
   // If not a number then it was coded, so we want to show the value in the
   // checkboxes form element.
-  if (!is_numeric($year_value)) {
+  $node = $form['#node'];
+  if (!is_numeric($node->biblio_year)) {
     unset($form['biblio_year']['#default_value']);
-    $year_coded_value = _biblio_numeric_year($year_value);
-  }
-  // Modifying Title for Harvard - Chicago Author cititation
-  if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-    $form['biblio_year']['#title'] = "Date of Publication&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    $node->biblio_year = _biblio_numeric_year($node->biblio_year);
   }
 
-  $years = variable_get('biblio_years_text', array(9999 => t('Submitted'), 9998 => t('In Press')));
+  $form['biblio_year']['#default_value'] = in_array($node->biblio_year, array_keys($years)) ? $node->biblio_date : $node->biblio_year;
+
+  // Modifying Title for Harvard - Chicago Author citation.
+  $form['#attached']['js'][] = array(
+    'data' => array('chicago_author_date_mode' => $chicago_author_date_mode),
+    'type' => 'setting',
+  );
+
   $form['biblio_year_group'] = array(
     '#type' => 'fieldset',
     '#title' => $form['biblio_year']['#title'] . ' <span class="form-required" title="' . t('This field is required.') . '">*</span>',
@@ -720,64 +718,127 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#weight' => $form['biblio_year']['#weight'],
   );
 
-  // Adding date and month fields for publication day for Harvard - Chicago Author cititation
-  if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-    $form['field_biblio_pub_month']['und']['#options']['_none'] = 'Month';
-    $form['field_biblio_pub_day']['und']['#options']['_none'] = 'Day';
-    $form['biblio_year_group']['field_biblio_pub_month'] = $form['field_biblio_pub_month'];
-    $form['biblio_year_group']['field_biblio_pub_day'] = $form['field_biblio_pub_day'];
-    $form['biblio_year_group']['field_biblio_pub_month']['#weight'] = -2;
-    $form['biblio_year_group']['field_biblio_pub_day']['#weight'] = -1;
-    unset($form['biblio_year_group']['field_biblio_pub_month']['und']['#title']);
-    unset($form['biblio_year_group']['field_biblio_pub_day']['und']['#title']);
+  if ($chicago_author_date_mode) {
+    $form['biblio_year']['#title'] = t('Date of Publication');
   }
+
+  $form['biblio_year_group'] = array(
+    '#type' => 'fieldset',
+    '#title' => $form['biblio_year']['#title'] . ' <span class="form-required" title="' . t('This field is required.') . '">*</span>',
+    '#collapsible' => FALSE,
+    '#weight' => $form['biblio_year']['#weight'],
+  );
+
+  // Adding date and month fields for publication day for Harvard - Chicago
+  // Author citation.
+  if ($chicago_author_date_mode) {
+
+    $form['field_biblio_pub_month']['und']['#options']['_none'] = t('Month');
+    $form['field_biblio_pub_day']['und']['#options']['_none'] = t('Day');
+
+    $form['biblio_year_group']['year_selection'] = array(
+      '#weight' => 24,
+      '#prefix' => '<div class="year-selection-wrapper">',
+      '#suffix' => '</div>',
+    );
+    $form['biblio_year_group']['year_selection']['field_biblio_pub_month'] = $form['field_biblio_pub_month'];
+    $form['biblio_year_group']['year_selection']['field_biblio_pub_day'] = $form['field_biblio_pub_day'];
+
+    $form['biblio_year_group']['year_selection']['field_biblio_pub_month']['#weight'] = -2;
+    $form['biblio_year_group']['year_selection']['field_biblio_pub_day']['#weight'] = -1;
+
+    // Form element changes - wrap in a fieldset with the checkboxes element,
+    // and fix additional attributes accordingly.
+    unset($form['biblio_year_group']['year_selection']['field_biblio_pub_month']['und']['#title']);
+    unset($form['biblio_year_group']['year_selection']['field_biblio_pub_day']['und']['#title']);
+    $form['biblio_year']['#attributes'] = array('placeholder' => t('Year'));
+    $form['biblio_year_group']['year_selection']['biblio_year'] = $form['biblio_year'];
+  }
+  else {
+    $form['biblio_year_group'] = array(
+      '#type' => 'fieldset',
+      '#title' => $form['biblio_year']['#title'] . ' <span class="form-required" title="' . t('This field is required.') . '">*</span>',
+      '#collapsible' => FALSE,
+      '#weight' => $form['biblio_year']['#weight'],
+    );
+
+    unset($form['field_biblio_pub_month']);
+    unset($form['field_biblio_pub_day']);
+
+    // Form element changes - wrap in a fieldset with the checkboxes element,
+    // and fix additional attributes accordingly.
+    $form['biblio_year_group']['biblio_year'] = $form['biblio_year'];
+
+    unset($form['biblio_year_group']['biblio_year']['#title']);
+    unset($form['biblio_year_group']['biblio_year']['#description']);
+
+    $form['biblio_year_group']['biblio_year']['#size'] = 100;
+    $form['biblio_year_group']['biblio_year']['#attributes'] = array('placeholder' => t('Year'));
+    $form['biblio_year_group']['biblio_year']['#weight'] = 0;
+
+    $form['biblio_year_group']['biblio_year']['#prefix'] = '<div class="year-wrapper">';
+    $form['biblio_year_group']['biblio_year']['#suffix'] = '</div>';
+  }
+
   unset($form['field_biblio_pub_month']);
   unset($form['field_biblio_pub_day']);
-  // Form element changes - wrap in a fieldset with the checkboxes element, and
-  // fix additional attributes accordingly.
-  $form['biblio_year_group']['biblio_year'] = $form['biblio_year'];
-  unset($form['biblio_year_group']['biblio_year']['#title']);
-  unset($form['biblio_year_group']['biblio_year']['#description']);
+
+  unset($form['biblio_year_group']['year_selection']['biblio_year']['#title']);
+  unset($form['biblio_year_group']['year_selection']['biblio_year']['#description']);
+
   $form['biblio_year_group']['biblio_year']['#size'] = 100;
   $form['biblio_year_group']['biblio_year']['#attributes'] = array('placeholder' => t('Year'));
   $form['biblio_year_group']['biblio_year']['#weight'] = 0;
-  $form['biblio_year_group']['biblio_year_or'] = array(
-    '#weight' => 10,
-    '#markup' => t('or'),
-  );
 
-  $form['biblio_year_group']['biblio_year_coded'] = array(
-    '#type' => 'radios',
-    '#options' => $years,
-    '#multiple' => FALSE,
-    '#weight' => 20,
-    '#default_value' => $year_coded_value,
-  );
+  $form['biblio_year_group']['biblio_year']['#weight'] = 30;
 
-  $form['biblio_year_coded_extrayear'] = array(
-    '#type' => 'textfield',
-    '#description' => 'e.g. 2015',
-    '#title' => 'Year',
-    '#size' => 10,
-    '#default_value' => $date_value,
-    '#weight' => $form['biblio_year_group']['#weight'] + 1,
-  );
+  unset($form['biblio_year_group']['biblio_year']['#title']);
+  unset($form['biblio_year_group']['biblio_year']['#description']);
 
-  // Adding date and month validation message for Harvard - Chicago Author cititation
-  if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-    $form_validation_date_month = '<div id="biblio-month-group-validate">' . t(' Permitted date formats: 2/10/' . date('Y') . ', 2/' . date('Y') . ', ' . date('Y') . '.') . '</div>';
-  } else {
+  // Adding date and month validation message for Harvard - Chicago Author
+  // citation.
+  if ($chicago_author_date_mode) {
+    $params['@year'] = date('Y');
+    $form_validation_date_month = '<div id="biblio-month-group-validate">' . t(' Permitted date formats: 2/10/@year, 2/@year, @year.', $params) . '</div>';
+  }
+  else {
     $form_validation_date_month = '';
   }
+
   // Add validation message for validating the field via JS.
   $form['biblio_year_group']['#suffix'] =  $form_validation_date_month . '<div id="biblio-year-group-validate">' . t('Year must be in the form YYYY. Only numerical digits are allowed.') .  '</div>';
 
   // Remove original form element.
   unset($form['biblio_year']);
 
-
   // Year validation needs to happen before the standard validation.
   array_unshift($form['#validate'], 'os_publications_validate_year_field');
+
+  // Adding submit handler to flip between the year and the date field.
+  $form['#submit'][] = 'os_publications_year_date_flip';
+
+  $form['biblio_year_group']['biblio_year_coded'] = array(
+    '#type' => 'radios',
+    '#options' => $years,
+    '#multiple' => FALSE,
+    '#weight' => 20,
+    '#default_value' => in_array($node->biblio_year, array_keys($years)) ? $node->biblio_year : 0,
+    '#after_build' => array('os_publications_date_of_publication_alter'),
+  );
+}
+
+/**
+ * After build callback.
+ *
+ * Change the element so we could place the published in the beginning of the
+ * row and separate it with an 'or' text
+ */
+function os_publications_date_of_publication_alter(&$element) {
+  // Since the published year type is 0 the key of the published radio is 0.
+  // Nothing special to wonder about.
+  $element[0]['#weight'] = 0;
+  $element[0]['#suffix'] = '&nbsp;<b>' . t('Or') . '</b>&nbsp;';
+  return $element;
 }
 
 /**
@@ -805,22 +866,28 @@ function os_publications_validate_year_field($form, &$form_state) {
       form_set_error('biblio_year');
       return;
     }
-  } else {
-      // Validate a year is numeric and that it's only four digits long.
+  }
+  else {
+    // Validate a year is numeric and that it's only four digits long.
     if ($form_state['values']['biblio_year'] && !is_numeric($form_state['values']['biblio_year']) || is_numeric($form_state['values']['biblio_year']) && ($form_state['values']['biblio_year'] < 1000 || $form_state['values']['biblio_year'] > 9999)) {
       form_set_error('biblio_year', t('Year value must be in a YYYY format.'));
       return;
     }
   }
 
-  // Set the coded value as the year if exist.
-  if ($form_state['values']['biblio_year_coded'] && !$form_state['values']['biblio_year']) {
-    $form_state['values']['biblio_year'] = $form_state['values']['biblio_year_coded'];
-    if (!empty($form_state['values']['biblio_year_coded_extrayear'])) {
-      $form_state['values']['biblio_date'] = trim($form_state['values']['biblio_year_coded_extrayear']);
-    } else {
-      $form_state['values']['biblio_date'] = NULL;
-    }
+  $form_state['values']['biblio_date'] = trim($form_state['values']['biblio_year_coded']);
+}
+
+/**
+ * Adding submit handler to flip between the year and the date field.
+ */
+function os_publications_year_date_flip($form, &$form_state) {
+  // Swap the values.
+  $values = &$form_state['values'];
+  list($values['biblio_date'], $values['biblio_year']) = array($values['biblio_year'], $values['biblio_date']);
+
+  if ($values['published'] == 'on') {
+    $values['biblio_year'] = 0;
   }
 }
 
@@ -938,6 +1005,14 @@ function os_publications_biblio_form_patent_validate(&$form, &$form_state) {
 function os_publications_entity_prepare_view($entities, $type, $langcode) {
   global $user;
 
+  $style = variable_get('biblio_citeproc_style');
+  // Adding extra validation for date and month for Harvard - Chicago Author
+  // cititation.
+
+  if (in_array($style, array('harvard-chicago-author-date.csl'))) {
+    return;
+  }
+
   // Load a specific node into the user object for later theming.
   if ($type == 'node') {
     foreach ($entities as $nid => $entity) {
@@ -972,11 +1047,7 @@ function os_publications_entity_prepare_view($entities, $type, $langcode) {
 }
 
 /**
- * Is given a render array representing the biblio node ready for rendering in the list view
- *
- * Adds any fields that may have been added to the node type
- *
- * @param unknown_type $entry
+ * Implements hook_biblio_entry_alter().
  */
 function os_publications_biblio_entry_alter(&$entry, $node) {
   unset($entry['export_links']);
@@ -1025,16 +1096,19 @@ function _os_publications_biblio_entry_alter($markup, $node) {
 
   $html = $markup;
   $style = variable_get('biblio_citeproc_style');
-  // Pushing day and month in those both are present in Publication for Harvard - Chicago Author cititation
+  // Pushing day and month in those both are present in Publication for
+  // Harvard - Chicago Author cititation.
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-    if (!empty($node->biblio_year) && strpos($html, $node->biblio_year.'. ') !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value'])) {
+
+    if (!empty($node->biblio_date) && strpos($html, $node->biblio_date . '.') !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value'])) {
       // In case day value is present
       if(!empty($node->field_biblio_pub_day['und'][0]['value'])) {
         $day = $node->field_biblio_pub_day['und'][0]['value'] . '/';
       } else {
         $day = '';
       }
-      $html = str_replace($node->biblio_year . '. ', $node->field_biblio_pub_month['und'][0]['value'] . '/' . $day . $node->biblio_year . '. ', $html);
+
+      $html = str_replace($node->biblio_date . '.', $node->field_biblio_pub_month['und'][0]['value'] . '/' . $day . $node->biblio_date . '. ', $html);
     }
   }
   $insert = strrpos($html, '</div>');
@@ -1181,7 +1255,8 @@ function os_publications_node_view_alter(&$build, $type) {
 
   switch ($build['#view_mode'])  {
     case 'full':
-      // Remove the publication image as it's called in theme_os_publications_tabular instead.
+      // Remove the publication image as it's called in
+      // theme_os_publications_tabular instead.
       if (isset($build['field_biblio_image'])) {
         $build['field_biblio_image']['#access'] = FALSE;
       }
@@ -1199,7 +1274,8 @@ function os_publications_node_view_alter(&$build, $type) {
 
     case 'slide_teaser':
       $build['teaser']['#markup'] = theme('biblio_style', array('node' => $build['#node'], 'base' => variable_get('biblio_base', 'biblio'), 'style_name' => biblio_get_style()));
-      //FALLTHROUGH!  slide_teaser should run just like teaser, except we need to load up the markup from biblio_view().
+      //FALLTHROUGH!  slide_teaser should run just like teaser, except we need
+      // to load up the markup from biblio_view().
     case 'teaser':
       // Alter the teaser to remove the external URL as the URL title and
       // replace it with either the biblio_url_title or "website".
@@ -1210,10 +1286,12 @@ function os_publications_node_view_alter(&$build, $type) {
 
       // Add the abstract slider.
       _os_publications_attach_abstract($build, $build['#node'], 'teaser');
+
       // Add in notes.
-      if(isset($spaces) && is_object($spaces) && $spaces->controllers->variable->get('os_publications_note_in_teaser', 'space') == TRUE) {
+      if (isset($spaces) && is_object($spaces) && $spaces->controllers->variable->get('os_publications_note_in_teaser', 'space') == TRUE) {
         _os_publications_attach_notes($build, $build['#node']);
       }
+
       $build['teaser']['#weight'] = 1;
       $build['links']['#access'] = FALSE;
 
@@ -1624,7 +1702,7 @@ function _os_publications_vocabulary_after_build(&$elements) {
       unset($elements[0][$key]['#value']);
     }
   }
-  
+
   return $elements;
 }
 
@@ -1674,51 +1752,6 @@ function os_publications_views_pre_render(&$view) {
       $i++;
     }
   }
-}
-
-/**
- * Implements hook_apachesolr_search_page_alter().
- */
-function os_publications_apachesolr_search_page_alter(array &$build, array $search_page) {
-  $map = array(
-    'biblio_author' => 'author',
-    'biblio_sort_title_char' => 'title',
-    'biblio_type_name' => 'type',
-    'biblio_year' => 'year'
-  );
-
-  $nids = array();
-  foreach ($build['search_results']['#results'] as $k => $r) {
-    $nids['result_' . $k] = $r['node']->entity_id;
-  }
-
-  $field = array_search(variable_get('biblio_sort', 'year'), $map);
-  $order = variable_get('biblio_order', variable_get('biblio_sort', 'year') == 'year' ? 'DESC' : 'ASC');
-
-  $query = 'SELECT
-        b.nid,
-          (SELECT lastname
-            FROM biblio_contributor_data bcd
-              INNER JOIN biblio_contributor bc ON bcd.cid = bc.cid
-            WHERE bc.nid = b.nid
-            ORDER BY lastname ASC
-            LIMIT 1) as biblio_author,
-          (SELECT name FROM biblio_types WHERE tid = b.biblio_type) as biblio_type_name,
-          LEFT(biblio_sort_title, 1) as biblio_sort_title_char
-      FROM biblio b
-        INNER JOIN node n ON b.nid = n.nid
-      WHERE b.nid IN (' . implode(',', $nids) . ')
-      ORDER BY ' . $field . ' ' . $order . ', n.sticky DESC';
-
-  $q = db_query($query);
-  $results = array();
-  foreach ($q as $r) {
-    $key = array_search($r->nid, $nids);
-    $okey = str_replace('result_', '', $key);
-    $results[] = $build['search_results']['#results'][$okey];
-  }
-
-  $build['search_results']['#results'] = $results;
 }
 
 /**
