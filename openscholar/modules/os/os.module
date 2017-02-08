@@ -51,7 +51,7 @@ function os_menu() {
     'weight' => -5,
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_settings_form'),
-    'access arguments' => array('administer content'),
+    'access arguments' => array('administer nodes'),
   );
 
   $items['admin/config/openscholar/frontend'] = array(
@@ -59,7 +59,7 @@ function os_menu() {
     'description' => 'Edit settings that affect general front end performance',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_settings_frontend_form'),
-    'access arguments' => array('administer content'),
+    'access arguments' => array('administer nodes'),
   );
 
   $items['page_not_found'] = array(
