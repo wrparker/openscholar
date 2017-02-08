@@ -1621,12 +1621,28 @@ function os_publications_apachesolr_index_document_build_node(ApacheSolrDocument
     foreach ($entity->biblio_contributors as $c) {
       $doc->addField('tm_contributors', $c['name']);
     }
+    
+    $doc->addField('ts_biblio_sort_title', $entity->biblio_sort_title);
+    $doc->addField('is_biblio_year', $entity->biblio_year);
+    $doc->addField('is_biblio_date', $entity->biblio_date);
   }
 }
 
 function os_publications_apachesolr_query_alter($query) {
   $params['qf']['tm_contributors'] = 'tm_contributors^30';
   $query->addParams($params);
+
+  $filter = $query->getFilters('bundle');
+  if (variable_get('biblio_sort', 'year') == 'year' && !empty($filter) && $filter[0]['#value'] == 'biblio') {
+
+    $order = strtolower(variable_get('biblio_order', 'desc'));
+
+    // Use addParam() rather than setSolrsort() for multiple.
+    $query->addParam('sort', 'is_biblio_year desc');
+    $query->addParam('sort', 'is_biblio_date desc');
+    $query->addParam('sort', 'bs_sticky asc');
+    $query->addParam('sort', 'ts_biblio_sort_title ' . $order);
+  }
 }
 
 /**
