@@ -104,12 +104,14 @@ class os_search_solr_search_box extends os_boxes_default {
         $taxonomies[$term->tid] = $term->name;
       }
 
-      $form['terms']['terms'] = array(
-        '#type' => 'checkboxes',
-        '#title' => t('Filter by: terms'),
-        '#options' => $taxonomies,
-        '#default_value' => $this->options['terms']['terms'],
-      );
+      if ($taxonomies) {
+        $form['terms']['terms'] = array(
+          '#type' => 'checkboxes',
+          '#title' => t('Filter by: terms'),
+          '#options' => $taxonomies,
+          '#default_value' => $this->options['terms']['terms'],
+        );
+      }
     }
 
     $form['sort_property'] = array(
