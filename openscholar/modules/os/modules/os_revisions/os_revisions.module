@@ -40,6 +40,12 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
     $form['revision_information']['log']['#title'] = t('Revision Notes');
     $form['revision_information']['log']['#description'] = t('Provide an explanation of the changes you are making.') . '<br><br>' . l(t('What’s being stored as a revision?'), OS_REVISIONS_DOCS_URL, array('attributes' => array('target' => '_blank', 'rel' => 'noopener')));
 
+    // disable revision log if new revision isn't being created
+    $form['revision_information']['log']['#states'] = array(
+      'disabled' => array(
+        ':input[name="revision"]' => array('checked' => FALSE),
+      ),
+    );
     if ($num_revisions > 1) {
       $revisions_url = "node/" . $form['#node']->nid . "/revisions";
       $form['revision_information']['info']['#markup'] = t('<p>There are currently <a href="@url" id="revisions-link">@num revisions</a>.</p>', array('@url' => url($revisions_url), '@num' => $num_revisions));
