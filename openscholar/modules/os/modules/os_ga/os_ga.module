@@ -241,26 +241,16 @@ function _os_ga_build_script($accounts = array()) {
   }
 
   // Starts the script.
-  $output = 'var _gaq = _gaq || [];';
+  $output =
+"(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments);console.log('running ga');},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');";
+
   // Adds each GA account to the script.
   foreach ($accounts as $account => $info) {
-    $output .= '_gaq.push(["_setAccount", ' . drupal_json_encode($account) . ']);';
-    // Adds 404 page tracking if enabled and this is a 404 page.
-    if (variable_get('os_ga_404', 0) && (drupal_get_http_header("Status") == '404 Not Found')) {
-      $url_custom = '\'/error-404/\'+document.location.pathname';
-    }
-    // Otherwise adds search tracking if this is a search page.
-    elseif (variable_get('os_ga_search', 0) && module_exists('search') && arg(0) == 'search' && $keys = _os_ga_search_get_keys()) {
-      $url_custom = '(window.os_ga_search_results) ? ' . drupal_json_encode(url('search/' . arg(1), array('query' => array('search' => $keys)))) . ' : ' . drupal_json_encode(url('search/' . arg(1), array('query' => array('search' => 'no-results:' . $keys, 'cat' => 'no-results'))));
-    }
-    // Adds any custom rewritten URL from above.
-    if (!empty($url_custom)) {
-      $output .= '_gaq.push([\'_trackPageview\',' . $url_custom . ']);';
-    }
-    // Otherwise uses GA default page tracking settings.
-    else {
-      $output .= '_gaq.push(["_trackPageview"]);';
-    }
+    $output .= "
+ga('create', '$account', 'auto');";
 
     // For global only, optionally adds a custom variable to report on vsite.
     // For classic google analytics.
@@ -283,7 +273,22 @@ function _os_ga_build_script($accounts = array()) {
   }
 
   // Finishes up the script.
-  $output .= '(function() {var ga = document.createElement("script");ga.type = "text/javascript";ga.async = true;ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(ga, s);})();';
+  // Adds 404 page tracking if enabled and this is a 404 page.
+  if (variable_get('os_ga_404', 0) && (drupal_get_http_header("Status") == '404 Not Found')) {
+    $url_custom = '\'/error-404/\'+document.location.pathname';
+  }
+  // Otherwise adds search tracking if this is a search page.
+  elseif (variable_get('os_ga_search', 0) && module_exists('search') && arg(0) == 'search' && $keys = _os_ga_search_get_keys()) {
+    $url_custom = '(window.os_ga_search_results) ? ' . url('search/' . arg(1), array('query' => array('search' => $keys))) . ' : ' . url('search/' . arg(1), array('query' => array('search' => 'no-results:' . $keys, 'cat' => 'no-results')));
+  }
+  // Adds any custom rewritten URL from above.
+  if (!empty($url_custom)) {
+    $output .= "\r\nga('send','pageview', '$url_custom']);";
+  }
+  // Otherwise uses GA default page tracking settings.
+  else {
+    $output .= "\r\nga('send', 'pageview')";
+  }
 
   // Integrates with AddThis.
   // Currently AddThis only supports one property per pageload.
@@ -348,5 +353,6 @@ function _os_ga_set_custom_var_snippet($index) {
   $value = rtrim($value, '/');
 
   // Sets a page-level custom variable at the given index.
-  return "_gaq.push(['_setCustomVar',{$index},'{$name}','{$value}',3]);";
+  return "
+  ga('set', 'dimension$index', '$value');";
 }
