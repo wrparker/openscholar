@@ -26,49 +26,37 @@ Drupal.behaviors.osPublications = {
 
     // Publication year can be either given in a numerical value or by a coded
     // value ("in press", "submitted" and so on). If the user fills a numerical
-    // value the radio buttons are unchecked and disabled. Clearing the numerical
-    // value enables the radio buttons again.
+    // value the radio buttons are unchecked and disabled. Clearing the
+    // numerical value enables the radio buttons again.
     yearField.keyup(function() {
       if (this.value != '') {
-        // Uncheck all radio buttons.
-        codedYear.each(function () {
-          $(this).prop('checked', false);
-        });
-        codedYear.prop("disabled", true);
 
         // Validate year input.
-        userInput = this.value;
+        var userInput = this.value;
         if ((userInput.length != 4 && userInput.match(numbers)) || !userInput.match(numbers)) {
           yearWarning.css('visibility', 'visible');
           yearField.addClass("error");
         }
-        else if (userInput.length == 4 && userInput.match(numbers)){
+        else if (userInput.length == 4 && userInput.match(numbers)) {
           yearWarning.css('visibility', 'hidden');
           yearField.removeClass("error");
         }
       }
       else {
-        codedYear.prop("disabled", false);
         yearWarning.css('visibility', 'hidden');
         yearField.removeClass("error");
       }
-    }).focus(function() {
-      if ((yearField.value == '' || yearField.value == undefined) && !yearField.hasClass('error') ) {
-        codedYear.prop("disabled", false);
-      }
-      else {
-        codedYear.prop("disabled", true);
-      }
     });
     codedYear.change(function() {
+      // Empty the year field.
       if (this.value != '') {
         // Empty year field.
-        yearField[0].value = '';
-        if($("#edit-field-biblio-pub-month-und").length) {
+        if ($("#edit-field-biblio-pub-month-und").length) {
           $('#edit-field-biblio-pub-month-und').val('_none');
           $('#s2id_edit-field-biblio-pub-month-und span:first').text('Month');
         }
-        if($("#edit-field-biblio-pub-day-und").length) {
+
+        if ($("#edit-field-biblio-pub-day-und").length) {
           $('#edit-field-biblio-pub-day-und').val('_none');
           $('#s2id_edit-field-biblio-pub-day-und span:first').text('Day');
         }
@@ -138,6 +126,8 @@ Drupal.behaviors.osPublications = {
       // In edit mode, if one radio button is selected.
       if ($('input[name="biblio_year_coded"]:checked').length > 0) {
         var selectedOption = $.trim($('input[name="biblio_year_coded"]:checked').next().html());
+        // todo: check the value and not the title. Could be different due to
+        // tranglation.
         if (selectedOption == 'Forthcoming' || selectedOption == 'Submitted') {
           target_extrayear.hide();
           target_date_published.show();
@@ -161,6 +151,41 @@ Drupal.behaviors.osPublications = {
           target_date_published.hide();
         }
       });
+    }
+  };
+
+  /**
+   * Hide/shoe the year field when selection different publishing modes.
+   */
+  Drupal.behaviors.publishedYearHidden = {
+    attach: function () {
+
+      var changeMonthAndDay = function(hide) {
+        var month = $("#edit-field-biblio-pub-month");
+        var day = $("#edit-field-biblio-pub-day");
+        var help_text = $("#biblio-month-group-validate");
+
+        if (hide) {
+          month.hide();
+          day.hide();
+          help_text.hide();
+        }
+        else {
+          month.show();
+          day.show();
+          help_text.show();
+        }
+      };
+
+      $("#edit-biblio-year-coded-0").click(function() {
+        changeMonthAndDay(false);
+      });
+
+      $("#edit-biblio-year-group input[type='radio']").not("#edit-biblio-year-coded-0").click(function() {
+        changeMonthAndDay(true);
+      });
+
+      changeMonthAndDay($("#edit-biblio-year-coded-0").is(':checked') == false);
     }
   };
 
