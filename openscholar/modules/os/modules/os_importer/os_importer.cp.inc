@@ -106,7 +106,7 @@ function os_importer_cp_settings() {
           'form' => $form_settings,
         );
 
-        $template_markup = '<div class="import-help csv-import-fields">' . l(t('Download a template'), (isset($purl) ? $purl . '/' : '') . 'cp/os-importer/' . $node_type . '/template', array('attributes' => array('target' => '_blank'))) . '</div>';
+        $template_markup = '<div class="import-help csv-import-fields">' . l(t('Download a template'), (isset($purl) ? $purl . '/' : '') . 'cp/os-importer/' . $node_type . '/template', array('attributes' => array('class' => 'overlay-exclude'))) . '</div>';
 
         $settings['os_importer_download_template-' . $node_type] = array(
           'group' => array(
