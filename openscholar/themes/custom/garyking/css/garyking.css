@@ -465,6 +465,9 @@ body.node-type-biblio .biblio-export,
 .breadcrumb {
     position: relative;
     top: 68px;
+  
+    z-index: 2;
+
 }
 .page-node .breadcrumb {
     top: 57px;
@@ -906,7 +909,7 @@ ul.nice-menu-down,
         width: auto !important;
     }
     .front #content-panels .region-content-bottom {
-        background-size: auto;
+            background-size: cover;
     }
  .breadcrumb {
         top: 30px;
@@ -922,11 +925,40 @@ ul.nice-menu-down,
 
 }
 @media (max-width: 600px) {
+	
+	
+	.bg-one,
+		.bg-two, 
+.bg-three, 
+.bg-four, 
+.bg-five, 
+.bg-six,
+.bg-seven,
+.bg-eight {
+    background-position: center 75px;
+    background-size: 100% 7%;
+}
+	
+
+	
     .research-by-topic li.term-applications,
     .research-by-topic li.term-methods {
         float: none;
         width: 100%;
     }
+    
+    .region.region-footer-first,
+    .region.region-footer {
+    width: 100% !important;
+
+}
+
+#footer ul.menu {
+    text-align: left;
+}
+
+
+    
 }
 @media (max-width: 479px) {}
 
