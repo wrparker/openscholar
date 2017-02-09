@@ -818,6 +818,25 @@ ul.nice-menu-down,
 /*--------------------------------------------------------*/
 
 @media (max-width: 768px) {
+	
+	
+	#boxes-box-site_info {
+     margin-left: 0; 
+}
+
+	.bg-one,
+		.bg-two, 
+.bg-three, 
+.bg-four, 
+.bg-five, 
+.bg-six,
+.bg-seven,
+.bg-eight {
+    background-position: center 75px;
+    background-size: 100% 3%;
+}
+	
+	
     .block-boxes-os_boxes_columns.front-top-cloumn .at-panel,
     .block-boxes-os_boxes_columns .at-panel {
         padding: 0;
@@ -889,9 +908,12 @@ ul.nice-menu-down,
     .front #content-panels .region-content-bottom {
         background-size: auto;
     }
-    .page-node- .breadcrumb {
+ .breadcrumb {
         top: 30px;
     }
+    .page-node .breadcrumb {
+    top: 32px;
+}
     .front .region-content-second,
     .research-by-topic li.term-applications,
 .research-by-topic li.term-methods {
