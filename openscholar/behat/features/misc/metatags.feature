@@ -25,18 +25,31 @@ Feature:
       And I should see "Publisher URL"
       And I should see "Author URL"
 
-  @api @misc_second
+  @javascript @misc_second
   Scenario: Testing metatags settings functionality in a personal site.
     Given I am logging in as "john"
-     When I go to "john/cp/settings"
+      And I visit "john"
+     When I open the admin panel to "Settings"
+      And I open the admin panel to "Global Settings"
+      And I click on the "Search Engine Optimization (SEO)" control
+     Then I should see "Publisher URL"
+      And I should see "Author URL"
       And I fill in "Meta description" with "meta description by john"
       And I fill in "Site title" with "John's site"
-      And I press "edit-submit"
+      And I press "Save"
+      And I wait for page actions to complete
       And I visit "john"
      Then I should see the meta tag "description" with value "meta description by john"
       And I should see "John's site"
           # Change site title back to "John"
       And I change site title to "John" in the site "john"
+
+  @javascsript @misc_second
+  Scenario: Does the favicon form open?
+    Given I am logging in as "john"
+     When I open the admin panel to "Appearance"
+      And I click on the "Favicon" control
+     Then I should see "A 16x16 .ico file to be displayed in brower shortcut icons"
 
   @api @misc_second
   Scenario: Testing metatags settings form in a department site.

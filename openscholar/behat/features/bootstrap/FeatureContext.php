@@ -1616,7 +1616,7 @@ class FeatureContext extends DrupalContext {
     // @todo ideally we would actually create a box of each kind and test each.
     $error = _os_boxes_test_load_all_boxes_outside_vsite_context();
     if ($error) {
-      throw new Exception(sprintf("At least one box returned output outside of a vsite: %s", $key));
+      throw new Exception(sprintf("At least one box returned output outside of a vsite: %s", $error));
     }
   }
 
@@ -2920,7 +2920,7 @@ class FeatureContext extends DrupalContext {
       usleep(50);
     }
     else {
-      throw new ElementNotFoundException($this->getSession(), "No tab with text ($text) found on page.");
+      throw new ElementNotFoundException($this->getSession(), "No tab with text ($arg1) found on page.");
     }
   }
 
@@ -3231,7 +3231,7 @@ class FeatureContext extends DrupalContext {
     $file_data = $this->getDataFromCSVFile($this->getSession()->getPage());
     foreach ($file_data as $num => $row) {
       $fileValue = $row[$column];
-      eval('$dateComparison = strtotime($fileValue) ' . $operatorCode . ' strtotime($submittedValue);');
+      $dateComparison = eval('return strtotime($fileValue) ' . $operatorCode . ' strtotime($submittedValue);');
       if (!$dateComparison) {
         throw new Exception(sprintf("Row #" . ($num + 1) . " has a '$column' value that is not $operator to $submittedValue."));
       }
@@ -3461,6 +3461,12 @@ JS;
       if ($clink = $elem->find('xpath', "//a[contains(@class, 'contextual-links-trigger')]")) {
         $clink->click();
         if ($target = $elem->find('xpath', "//ul[contains(@class, 'contextual-links')]//a[text() = '$link']")) {
+          $timeout = 0;
+          $start = microtime(true);
+          while (!$target->isVisible() && $timeout < 1000) {
+            usleep(100);
+            $timeout = (microtime(true) - $start * 1000);
+          }
           $target->click();
         }
         else {
@@ -3531,8 +3537,7 @@ JS;
    * @when /^Arbitrary script "([^"]*)"$/
    */
   public function arbitraryScript($script) {
-    $this->getSession()
-      ->evaluateScript($script);
+    $this->getSession()->evaluateScript($script);
   }
 
   /**
@@ -3606,6 +3611,13 @@ JS;
     );
     $json = $request->json();
     print_r('The screen shot of the page is: ' . $json['data']['link']);
+  }
+
+  /**
+   * @When /^I set the variable "([^"]*)" to "([^"]*)" in the vsite "([^"]*)"$/
+   */
+  public function iSetVariableInVsite($name, $val, $vsite) {
+    FeatureHelp::variableSetSpace($name, $val, $vsite);
   }
 
 }
