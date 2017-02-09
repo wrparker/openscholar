@@ -30,7 +30,7 @@ function os_wysiwyg_filter_default_formats() {
           'valid_elements' => '@[id|style|class],
     a[href|target<_blank|title|name],
     div[align<center?justify?left?right],
-    p[align<center?justify?left?right],
+    p[dir|align<center?justify?left?right],
     br,span,cite,code,blockquote,ul,ol,li,dl,dt,dd,img[!src|width|height|alt|title],
     sup,sub,
     table[scope|id|headers|style|border|align<center?left?right|cellpadding|cellspacing|bgcolor],
@@ -68,10 +68,10 @@ function os_wysiwyg_filter_default_formats() {
             'text-decoration' => 'text-decoration',
             'text-indent' => 'text-indent',
             'text-transform' => 'text-transform',
+            'direction' => 'direction',
             'letter-spacing' => 0,
             'word-spacing' => 0,
             'white-space' => 0,
-            'direction' => 0,
             'unicode-bidi' => 0,
           ),
           'style_box' => array(
@@ -122,7 +122,6 @@ function os_wysiwyg_filter_default_formats() {
           ),
           'style_positioning' => array(
             'vertical-align' => 'vertical-align',
-            'valign' => 'valign',
             'bottom' => 0,
             'clip' => 0,
             'left' => 0,

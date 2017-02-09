@@ -133,6 +133,7 @@ class os_boxes_feedreader extends os_boxes_default {
       patience.</div>');
     }
 
+    unset($block['assets']);
     return $block;
 
 

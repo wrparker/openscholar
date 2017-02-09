@@ -85,7 +85,7 @@
    */
   m.directive('apSettingsForm', ['ModalService', 'apSettings', function (ModalService, apSettings) {
     var dialogOptions = {
-      minWidth: 800,
+      minWidth: 850,
       minHeight: 100,
       modal: true,
       position: 'center',

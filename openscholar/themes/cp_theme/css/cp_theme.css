@@ -81,6 +81,9 @@ html.js input.throbbing {
     font-size: .97em;
 
 }
+#support .help-link.ng-binding {
+    bottom: 2px;
+}
     
 
 .view-os-files-private ul {
@@ -372,6 +375,9 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 .page-node-edit.node-type-biblio #overlay {
     max-width: 930px;
     min-width: 850px;
+}
+#person-node-form .field-name-body {
+    padding-bottom: 15px;
 }
 form.confirmation {
     margin-top: 20px;
@@ -803,7 +809,7 @@ fieldset#edit-biblio-authors .fieldset-legend {
  */
 
 .ui-front {
-    z-index: 101;
+    z-index: 301;
 }
 .ui-widget-overlay {
     background: #000;
@@ -831,7 +837,7 @@ form.node-form .form-region-right fieldset {
     background: none repeat scroll 0% 0% transparent;
     border: medium none;
     margin: 1em 0px;
-    padding: 2.7em 0px 0.1em;
+    padding: 3em 0px 0.1em;
     width: 100%;
 }
 form.node-form .form-region-right fieldset legend {
@@ -1066,6 +1072,8 @@ div.error:before {
     background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
     background-position: 0px -859px;
 }
+
+#support .form-wrapper,
 .form-item-create-as-subsite {
     margin-bottom: 35px;
 }
@@ -1252,6 +1260,9 @@ form#os-maintenance .form-item .description {
   margin: 15px 0;
 }
 
+form#documentation img {
+	    margin-top: 30px;
+}
 
 #edit-long-list-content-pagination.form-radios {
   margin-bottom: 0;
