@@ -44,7 +44,7 @@ Feature:
           # Change site title back to "John"
       And I change site title to "John" in the site "john"
 
-  @javascsript @misc_second
+  @javascript @misc_second
   Scenario: Does the favicon form open?
     Given I am logging in as "john"
      When I open the admin panel to "Appearance"
