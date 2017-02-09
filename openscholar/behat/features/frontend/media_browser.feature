@@ -32,6 +32,7 @@ Feature: Media Browser
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
+      And I sleep for "10"
      When I click on "Previously uploaded files" button in the media browser
       And I press ">>"
      Then I should see "slideshow1.jpg"
