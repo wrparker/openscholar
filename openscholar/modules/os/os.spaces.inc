@@ -76,7 +76,7 @@ function os_spaces_presets() {
     'menus' => array(
       'primary-menu' => array(
         900 => array(
-          'link_path' => 'home',
+          'link_path' => '<front>',
           'link_title' => 'HOME',
           'options' => array(),
           'mlid' => 900,
