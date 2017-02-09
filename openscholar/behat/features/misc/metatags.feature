@@ -47,9 +47,10 @@ Feature:
   @javascript @misc_second
   Scenario: Does the favicon form open?
     Given I am logging in as "john"
+      And I visit "john"
      When I open the admin panel to "Appearance"
       And I click on the "Favicon" control
-     Then I should see "A 16x16 .ico file to be displayed in brower shortcut icons"
+     Then I should see "A 16x16 .ico file to be displayed in browser shortcut icons"
 
   @api @misc_second
   Scenario: Testing metatags settings form in a department site.

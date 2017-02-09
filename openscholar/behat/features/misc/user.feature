@@ -45,6 +45,7 @@ Feature: User functionality testing.
   Scenario: Assign a custom role to a vsite member.
     Given I am logging in as "john"
      When I give the user "klark" the role "New Custom Role" in the group "john"
+      And I sleep for "5"
      Then I should verify that the user "klark" has a role of "New Custom Role" in the group "john"
 
   @api @misc_second @now2
