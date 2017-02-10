@@ -120,4 +120,5 @@ function openscholar_update_7007() {
  */
 function hwpi_update_7008() {
   variable_set('vsite_register_admin_mail', 'swap@lists.iq.harvard.edu, hwp@openscholar.harvard.edu');
+  variable_set('site_mail', 'hwp@openscholar.harvard.edu');
 }
