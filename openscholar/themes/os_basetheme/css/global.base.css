@@ -1152,7 +1152,8 @@ ul.no-event-export {
     width: 100% !important;
   
 }
-
+ .block-boxes-os_boxes_columns .os-sv-list.sv-list-view-teaser iframe,
+.sidebar .os-sv-list.sv-list-view-teaser iframe,
 .sidebar .os-sv-list.sv-list-view-slide_teaser iframe,
 .content-left.content-right #content-column .os-sv-list.sv-list-view-slide_teaser iframe,
 .content-left.content-bottom #content-column .os-sv-list.sv-list-view-slide_teaser iframe,
@@ -1160,4 +1161,6 @@ ul.no-event-export {
 .block-boxes-os_boxes_columns .os-sv-list.sv-list-view-slide_teaser iframe {
 height: auto;
 }
+
+
 
