@@ -23,7 +23,8 @@ body {
 .research-by-topic ul .item-list ul li .description a,
 .front .field-name-field-biblio-image,
 .locion,
-.ajax-progress .throbber {
+.ajax-progress .throbber,
+.link-count-mobi-util {
     display: none;
 }
 body,
@@ -817,6 +818,10 @@ ul.nice-menu-down,
 /*--------------------------------------------------------*/
 
 @media (max-width: 768px) {
+	body {
+	    overflow-y: hidden;
+	}
+	
     #boxes-box-site_info {
         margin-left: 0;
     }
@@ -948,8 +953,19 @@ ul.nice-menu-down,
 img.file-icon {
     width:16px;
 }
-@media (max-width: 384px) {
+@media (max-width: 414px) {
     .front-top-cloumn .region-two-66-33-first {
         background-position: 70% center;
+    }
+     .bg-one,
+    .bg-two,
+    .bg-three,
+    .bg-four,
+    .bg-five,
+    .bg-six,
+    .bg-seven,
+    .bg-eight {
+        background-position: center 60px;
+        background-size: 100% 5%;
     }
 }
