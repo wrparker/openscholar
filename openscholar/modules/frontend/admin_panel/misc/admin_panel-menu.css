@@ -46,6 +46,7 @@ body.overlay {
     transition-duration: .125s;
     transition-timing-function: ease-in-out;
     transition-delay: .125s;
+    padding-right: 75px;
 }
 /* PAGE WHEN MENU IS CLOSED */
 
