@@ -820,6 +820,9 @@ ul.nice-menu-down,
     #boxes-box-site_info {
         margin-left: 0;
     }
+    .sidebar {
+    margin-top: 0 !important;
+}
     .bg-one,
     .bg-two,
     .bg-three,
@@ -836,7 +839,7 @@ ul.nice-menu-down,
         padding: 0;
     }
     .front .block-boxes-os_boxes_twitterfeed {
-        padding: 10px;
+       padding: 10px 10px 20px 10px;
     }
     #main-content-header,
     .research-by-topic li.term-applications,
@@ -907,8 +910,8 @@ ul.nice-menu-down,
         padding-top: 0;
     }
 }
-@media (max-width: 600px) {
-    .bg-one,
+@media (max-width: 736px) {
+ .bg-one,
     .bg-two,
     .bg-three,
     .bg-four,
@@ -919,6 +922,12 @@ ul.nice-menu-down,
         background-position: center 75px;
         background-size: 100% 7%;
     }
+
+}
+
+
+@media (max-width: 600px) {
+   
     .research-by-topic li.term-applications,
     .research-by-topic li.term-methods {
         float: none;
