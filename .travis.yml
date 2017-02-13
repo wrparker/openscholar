@@ -1,138 +1,32 @@
+sudo: required
+
 language: php
 
-php:
-  - 5.4
+services:
+  - docker
 
-mysql:
-  database: drupal
-  username: root
-  encoding: utf8
-
-env:
-  global:
-    - secure: "kbYKhyQY0mHBRcMz82PQDkWSrAjGeQVyk/VC5TJkcGd06QW6ovK3Xyy1FvoyID8ktG56EAe2IOnSE3kt51h8mqGlR6SVfluBJobgWjgcY3+6kSWPNsVrZNUL+hwHytM+OhbacUXP/PedXP55DMMPP0GVQlPgdzaUjzzlScj3w3A="
-    - "ARTIFACTS_S3_BUCKET=travisos"
-    - "ARTIFACTS_AWS_REGION=us-east-1"
-    - secure: "J+GWGGesskpTxCNq/YJJaL+DRnNeFbF3vslBPd47OKQI5kaH5SHfVH70iBaB3taBadf9XuJOj/NdHTSwjSpcY17TROw7ajG0KAOySsgDdpeAQ6lNmPdTc3TPicB6dfv6weGPzJB/pGVZW/ZirOodJsInbUnY7y9KsxfePGUKn4A="
-    - secure: "HvsIfxg/7BaZepgsKc7s9LK/TEf75drUm+LlyE1BiO3HTq5wwOuyWYiJ5/40JhAGnGsU7dEoUqTR5JePjyQxlV6uyIc6suOsZJz4fOuukEPs/dG9B5W4eMP4cS2UoIb/QU2YEd6Uk0OZWCdZCsHlT1j1MFUiuRHWYSIcvrDFKkY="
-  matrix:
-    - TEST_SUITE=restful
-    - TEST_SUITE=features_first
-    - TEST_SUITE=features_second
-#    - TEST_SUITE=harvard
-    - TEST_SUITE=javscript
-    - TEST_SUITE=misc_first
-    - TEST_SUITE=misc_second
-    - TEST_SUITE=solr
-    - TEST_SUITE=taxonomy
-    - TEST_SUITE=vsite
-    - TEST_SUITE=widgets
-#    - TEST_SUITE=media_browser
-
-before_script:
-  - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  - composer global require drush/drush:8.0.5
-  - rvm 2.2.5 do gem install net-ssh -v 2.9.2
-  - rvm 2.2.5 do gem install mime-types -v 2.6.2
-  - "gem install travis-artifacts"
-
-  # Install apache
-  - sudo apt-get update
-  - sudo apt-get install apache2
-  - sudo a2enmod actions
-  - sudo a2enmod rewrite
-  - echo "export PATH=/home/vagrant/.phpenv/bin:$PATH" | sudo tee -a /etc/apache2/envvars > /dev/null
-  - echo "$(curl -fsSL https://gist.github.com/roderik/16d751c979fdeb5a14e3/raw/74f4fec92c064c4f683fef28a6098caf0f038de7/gistfile1.txt)" | sudo tee /etc/apache2/conf.d/phpconfig > /dev/null
-  - echo "$(curl -fsSL https://gist.github.com/roderik/2eb301570ed4a1f4c33d/raw/8066fda124b6c86f69ad32a010b8c22bbaf868e8/gistfile1.txt)" | sed -e "s,PATH,`pwd`/www,g" | sudo tee /etc/apache2/sites-available/default > /dev/null
-
-  # Install bower
-  - npm install -g bower
-
-  # Set up the lincoln virtual domain.
-  - sudo service apache2 restart
-  - sudo sh -c "echo 127.0.1.1	lincoln.local >> /etc/hosts"
-  - sudo sh -c "cat openscholar/behat/lincoln-vhost.txt > /etc/apache2/sites-available/lincoln"
-  - sudo a2ensite lincoln
-  - sudo service apache2 reload
-  - "mysql -e 'create database drupal;'"
-  - phpenv rehash
-  - bash scripts/setup
-  - bash scripts/build
-
-  # Configure MySQL.
-  - mysql -e "SHOW VARIABLES LIKE 'max_allowed_packet';"
-  - echo -e "[server]\nmax_allowed_packet=64M" | sudo tee -a /etc/mysql/conf.d/drupal.cnf
-  - sudo service mysql reload
-  - mysql -e "SET GLOBAL wait_timeout=300;"
-  - mysql -e "SHOW VARIABLES LIKE 'max_allowed_packet';"
-
-  # Download and install Apache solr
-  - wget https://archive.apache.org/dist/lucene/solr/3.6.2/apache-solr-3.6.2.zip
-  - unzip -o apache-solr-3.6.2.zip
-  - cd apache-solr-3.6.2/example/solr/conf
-
-  # Copy the solr config files from the apache solr module
-  - yes | cp /home/travis/build/openscholar/openscholar/www/profiles/openscholar/modules/contrib/apachesolr/solr-conf/solr-3.x/* .
-
-  # Copy the modified solrconfig.xml file to commit records every 20 seconds so items will show up in search sooner
-  - yes | cp /home/travis/build/openscholar/openscholar/www/profiles/openscholar/behat/solr/solrconfig.xml .
-  - cd ../../
-  - java -jar start.jar &
-  - sleep 10
-  - cd /home/travis/build/openscholar/openscholar
-
-  # Install a multi-tanent, development site.
-  - cd www
-  - pwd
-  - mkdir -p /tmp
-  - mkdir -p /tmp/devel-mails
-  - mkdir -p /tmp/screenshots
-  - mkdir -p sites/default/files
-  - sudo chmod 777 /tmp -R
-  - sudo chmod 777 sites/default -R
-  - time drush si openscholar --account-pass=admin --db-url=mysql://root:@127.0.0.1/drupal openscholar_flavor_form.os_profile_flavor=development openscholar_install_type.os_profile_type=vsite --yes
-  - drush vset purl_base_domain http://127.0.0.1
-
-  # Migrate, enable harvard courses and index data.
-  - drush en os_migrate_demo os_reports -y
-  - drush mi --all --user=1
-#  - drush en harvard_courses -y
-  - drush cc all
-  - drush search-index
-
-  # Index site using Apache solr
-  - drush en os_search_solr -y
-  - drush solr-mark-all
-  - drush solr-index
-  - drush vset oembedembedly_api_key $EMBEDLYAPIKEY
-
-  # Trying to execute the internal solr commit
-  - sleep 10
-  - wget http://localhost:8983/solr/update?commit=true
-
-  # Copy Behat configuration file.
-  - cd profiles/openscholar/behat
-  - cp behat.local.yml.travis behat.local.yml
-  - curl -s https://getcomposer.org/installer | php
-  - php composer.phar install --prefer-source
-  - sudo cat /var/log/apache2/error.log
+#env:
+#  global:
+#    - secure: "kbYKhyQY0mHBRcMz82PQDkWSrAjGeQVyk/VC5TJkcGd06QW6ovK3Xyy1FvoyID8ktG56EAe2IOnSE3kt51h8mqGlR6SVfluBJobgWjgcY3+6kSWPNsVrZNUL+hwHytM+OhbacUXP/PedXP55DMMPP0GVQlPgdzaUjzzlScj3w3A="
+#    - "ARTIFACTS_S3_BUCKET=travisos"
+#    - "ARTIFACTS_AWS_REGION=us-east-1"
+#    - secure: "J+GWGGesskpTxCNq/YJJaL+DRnNeFbF3vslBPd47OKQI5kaH5SHfVH70iBaB3taBadf9XuJOj/NdHTSwjSpcY17TROw7ajG0KAOySsgDdpeAQ6lNmPdTc3TPicB6dfv6weGPzJB/pGVZW/ZirOodJsInbUnY7y9KsxfePGUKn4A="
+#    - secure: "HvsIfxg/7BaZepgsKc7s9LK/TEf75drUm+LlyE1BiO3HTq5wwOuyWYiJ5/40JhAGnGsU7dEoUqTR5JePjyQxlV6uyIc6suOsZJz4fOuukEPs/dG9B5W4eMP4cS2UoIb/QU2YEd6Uk0OZWCdZCsHlT1j1MFUiuRHWYSIcvrDFKkY="
+#  matrix:
+#    - TEST_SUITE=restful
+#    - TEST_SUITE=features_first
+#    - TEST_SUITE=features_second
+##    - TEST_SUITE=harvard
+#    - TEST_SUITE=javscript
+#    - TEST_SUITE=misc_first
+#    - TEST_SUITE=misc_second
+#    - TEST_SUITE=solr
+#    - TEST_SUITE=taxonomy
+#    - TEST_SUITE=vsite
+#    - TEST_SUITE=widgets
+##    - TEST_SUITE=media_browser
 
 script:
 
-  # Run selenium.
-  - sudo apt-get install xvfb -y
-  - sudo apt-get install openjdk-7-jre-headless -y
-  - sh -e /etc/init.d/xvfb start
-  - export DISPLAY=:99.0
-  - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
-#  - DISPLAY=:1 xvfb-run
-  - nohup java -jar selenium-server-standalone-2.53.0.jar -p 4444 &
-  - sleep 5
-
-  - ./bin/behat --tags=$TEST_SUITE
-
-after_script:
-  - sudo cat /var/log/apache2/error.log
-
-after_failure: # this will of course run only on failure
-  - "travis-artifacts upload --path /tmp/screenshots"
+  - cd /home/travis/build/openscholar/openscholar
+  - bash docker.sh
