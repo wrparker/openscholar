@@ -1451,7 +1451,7 @@ class FeatureContext extends DrupalContext {
    * @Given /^I give the role "([^"]*)" in the group "([^"]*)" the permission "([^"]*)"$/
    */
   public function iGiveTheRoleThePermissionInTheGroup($role, $group, $permission) {
-    $nid = FeatureHelp::GetNodeId($group);
+    $nid = FeatureHelp::idFromPath($group);
     $rid = FeatureHelp::GetRoleByName($role, $nid);
 
     return array(

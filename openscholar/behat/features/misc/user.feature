@@ -20,6 +20,7 @@ Feature: User functionality testing.
      When I visit "john/cp/users/add"
       And I fill in "Member" with "michelle"
       And I press "Add member"
+      And I sleep for "5"
      Then I should see "michelle has been added to the group John."
 
   @api @misc_second @now2
