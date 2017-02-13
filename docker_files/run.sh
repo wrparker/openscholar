@@ -21,7 +21,7 @@ source /root/.bashrc
 
 # Install Drupal
 echo -e "\n # Install Drupal"
-
+bash docker.install.sh
 
 # Install Firefox (iceweasel).
 echo -e "\n${BGCYAN}[RUN] Install firefox. ${RESTORE}"
