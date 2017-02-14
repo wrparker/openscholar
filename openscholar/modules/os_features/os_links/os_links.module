@@ -173,6 +173,10 @@ function os_links_preprocess_field(&$variables, $hook) {
 function os_links_cp_settings() {
   $settings = array();
   $vsite = vsite_get_vsite();
+  if (!isset($vsite->controllers->variable)) {
+    return $settings;
+  }
+
   $spaces_features = $vsite->controllers->variable->get('spaces_features');
   // Links settings link won't appear in CP menu if links app is not enabled.
   if (!$spaces_features['os_links']) {
