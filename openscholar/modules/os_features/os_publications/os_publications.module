@@ -1002,6 +1002,9 @@ function os_publications_biblio_form_patent_validate(&$form, &$form_state) {
   $form_state['values']['biblio_edition'] = $form['biblio_section']['#options'][$patent_key];
 }
 
+/**
+ * Implements hook_entity_prepare_view().
+ */
 function os_publications_entity_prepare_view($entities, $type, $langcode) {
   global $user;
 
@@ -1014,34 +1017,40 @@ function os_publications_entity_prepare_view($entities, $type, $langcode) {
   }
 
   // Load a specific node into the user object for later theming.
-  if ($type == 'node') {
-    foreach ($entities as $nid => $entity) {
+  if ($type != 'node') {
+    return;
+  }
 
-      // Avoid redundancy in publication label, e.g., "United States patent US 123".
-      // If country code and country name are both displayed, remove the country code.
-      $biblio_style = $user->data['biblio_user_style'];
-      if (($biblio_style == null) or ($biblio_style == "system")) {
-        $biblio_style = variable_get('biblio_citeproc_style');
+  foreach ($entities as $nid => $node) {
+    // Avoid redundancy in publication label, e.g.,
+    // "United States patent US 123". If country code and country name are
+    // both displayed, remove the country code.
+    $biblio_style = $user->data['biblio_user_style'];
+    if (($biblio_style == NULL) || ($biblio_style == 'system')) {
+      $biblio_style = variable_get('biblio_citeproc_style');
+    }
+
+    $csls = array('harvard-chicago-author-date.csl', 'cse.csl', 'nlm.csl');
+    if (in_array($biblio_style, $csls) && ($node->biblio_type_name == 'Patent')) {
+
+      $patent_country_codes = _os_publications_get_patent_country_codes();
+      $country_code = $node->biblio_section;
+      $country_name = $node->biblio_edition;
+
+      if (($patent_country_codes[$country_code] == $country_name) && (array_flip($patent_country_codes)[$country_name] == $country_code)) {
+        $node->biblio_section = '';
       }
 
-      if (in_array($biblio_style, array('harvard-chicago-author-date.csl', 'cse.csl', 'nlm.csl')) and ($entity->biblio_type_name == "Patent")) {
-
-        $patent_country_codes = _os_publications_get_patent_country_codes();
-        $country_code = $entity->biblio_section;
-        $country_name = $entity->biblio_edition;
-
-        if (($patent_country_codes[$country_code] == $country_name) and (array_flip($patent_country_codes)[$country_name] == $country_code)) {
-          $entity->biblio_section = "";
-        }
-        if (($patent_country_codes[$country_code] == $country_name) and (preg_match('/' . $country_code . '\s*/', $entity->biblio_volume))) {
-          $entity->biblio_volume = preg_replace('/' . $country_code . '\s*/', "", $entity->biblio_volume);
-        }
-
-        if($entity->type == 'biblio' && ($entity->biblio_year == 'In Press' || $entity->biblio_year == 'In Preparation' || $entity->biblio_year == 'Working Paper' ) && !empty($entity->biblio_date)) {
-          $entity->biblio_year .= ", {$entity->biblio_date}";
-          $entity->biblio_date = '';
-        }
+      if (($patent_country_codes[$country_code] == $country_name) && (preg_match('/' . $country_code . '\s*/', $node->biblio_volume))) {
+        $node->biblio_volume = preg_replace('/' . $country_code . '\s*/', '', $node->biblio_volume);
       }
+    }
+
+    $types = array('In Press', 'In Preparation', 'Working Paper');
+    // Adding the biblo year next to the publication year type.
+    if ($node->type == 'biblio' && in_array($node->biblio_year, $types) && !empty($node->biblio_date)) {
+      $node->biblio_year .= ", {$node->biblio_date}";
+      $node->biblio_date = '';
     }
   }
 }
