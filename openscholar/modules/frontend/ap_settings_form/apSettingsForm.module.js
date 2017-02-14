@@ -264,12 +264,7 @@
     }
     $s.submitForm = submitForm;
 
-    $rootScope.$on("close", function(){
-       $s.close();
-    });
-
     $s.close = function (arg) {
-      console.log('Here');
       close(arg);
     }
   }]);

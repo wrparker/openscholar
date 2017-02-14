@@ -64,9 +64,9 @@
             for (x in scope.element.attached) {
               if (x == 'js') {
                 for (y in scope.element.attached.js) {
-            $t(function () {
-                    Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[y].data);
-            });
+                  $t(function () {
+                          Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[y].data);
+                  });
                 }
               }
               else if (x == 'css') {

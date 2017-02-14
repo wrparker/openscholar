@@ -209,7 +209,7 @@ function os_importer_cp_settings() {
         ),
         'form' => array(
           '#value' => t('Submit'),
-          '#type' => 'submitcancel',
+          '#type' => 'submit',
           '#weight' => 5,
         ),
         'rest_submit' => 'os_importer_file_submit',

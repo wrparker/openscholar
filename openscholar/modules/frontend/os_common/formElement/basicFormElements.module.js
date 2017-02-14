@@ -182,31 +182,6 @@
     }
   }]);
 
-    /**
-   * Submit button directive with cancel button
-   *
-   * This type of form element should always have some kind of handler on the server end to take care of whatever this needs to do.
-   */
-  m.directive('feSubmitcancel', [function ($rootScope) {
-    return {
-      scope: {
-        name: '@',
-        value: '=ngModel',
-        element: '='
-      },
-      template: '<label for="{{id}}">{{title}}<input button-spinner="settings_form" spinning-text="Submitting" type="submit" id="{{id}}" name="{{name}}" value="{{label}}" class="form-submit" ng-disabled="element.disabled"><input type="button" value="Close" ng-click="close(false)">',
-      link: function (scope, elem, attr) {
-        scope.id = attr['inputId'];
-        scope.label = scope.element.value;
-        scope.title = scope.element.title;
-
-        elem.click(function (click) {
-          scope.value = (scope.value + 1)%2;
-        });
-      }
-    }
-  }]);
-
   /**
    * Markup directive.
    *
