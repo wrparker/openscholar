@@ -21,29 +21,29 @@ $(document).ready(function() {
         if (os_ga.trackDownload && isDownload.test(this.href)) {
           // Download link clicked.
           var extension = isDownload.exec(this.href);
-          _gaq.push(["_trackEvent", "Downloads", extension[1].toUpperCase(), this.href.replace(isInternal, '')]);
+          ga('send', 'event', 'Downloads', extension[1].toUpperCase(), this.href.replace(isInternal, ''))
         }
       }
       else {
         if (os_ga.trackMailto && $(this).is("a[href^='mailto:'],area[href^='mailto:']")) {
           // Mailto link clicked.
-          _gaq.push(["_trackEvent", "Mails", "Click", this.href.substring(7)]);
+          ga('send', 'event', "Mails", "Click", this.href.substring(7));
         }
         else if (os_ga.trackOutbound && this.href.match(/^\w+:\/\//i)) {
         // External link clicked.
-        _gaq.push(["_trackEvent", "Outbound links", "Click", this.href]);
+        ga('send', 'event', "Outbound links", "Click", this.href);
         }
       }
       // Is this link in a main menu?
       if (os_ga.trackNavigation) {
-      if ($(this).closest('#block-os-secondary-menu').length) {
-        var navType = "Secondary Nav";
+        if ($(this).closest('#block-os-secondary-menu').length) {
+          var navType = "Secondary Nav";
         }
         if ($(this).closest('#block-os-primary-menu').length) {
           var navType = "Primary Nav";
         }
         if (navType) {
-          _gaq.push(["_trackEvent", navType, "Click", this.href]);
+          ga('send', 'event', navType, "Click", this.href);
         }
       }
     });
