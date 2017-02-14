@@ -934,7 +934,7 @@ header[role=banner],
 .region-tertiary-content,
 .region-footer {
     overflow: visible;
-    //word-wrap: break-word;
+    word-wrap: break-word;
 }
 /* iframe padding when its floated left or right*/
 

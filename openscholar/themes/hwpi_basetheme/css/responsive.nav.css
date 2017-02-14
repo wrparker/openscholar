@@ -324,6 +324,9 @@
         width: 100%!important;
         float: left!important;
     }
+	.view-content ~ .item-list ul.pager li {
+		line-height: 3em;
+	}
 }
 /*--------------------------------------------------------*/
 
