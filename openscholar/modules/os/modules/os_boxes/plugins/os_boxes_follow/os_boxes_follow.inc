@@ -355,6 +355,11 @@ function os_follow_default_networks() {
       'domain' => 'linkedin.com',
       'offset' => 1952,
     ),
+    'delicious' => array(
+      'title' => t('Delicious'),
+      'domain' => 'delicious.com',
+      'offset' => 704,
+    ),
     'tumblr'    => array(
       'title' => t('Tumblr'),
       'domain' => 'tumblr.com',
