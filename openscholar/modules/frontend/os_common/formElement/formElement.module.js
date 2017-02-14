@@ -56,19 +56,15 @@
           elem.find('span').replaceWith(copy);
 
           copy = $compile(copy)(scope);
-          if (scope.element.attached) {
-            for (x in scope.element.attached) {
-              if (x == 'js') {
-                for (y in scope.element.attached.js) {
-                  $t(function () {
-                    Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[y].data);
-                  });
+          if (scope.element.attached && scope.element.attached.js) {
+            console.log(scope.element.attached);
+            $t(function () {
+              for (var i in scope.element.attached.js) {
+                if (angular.isObject(scope.element.attached.js[i])) {
+                  Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[i].data);
                 }
               }
-              else if (x == 'css') {
-                // Load css
-              }
-            }
+            });
           }
         }
         else {
