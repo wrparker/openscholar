@@ -1045,13 +1045,6 @@ function os_publications_entity_prepare_view($entities, $type, $langcode) {
         $node->biblio_volume = preg_replace('/' . $country_code . '\s*/', '', $node->biblio_volume);
       }
     }
-
-    $types = array('In Press', 'In Preparation', 'Working Paper');
-    // Adding the biblo year next to the publication year type.
-    if ($node->type == 'biblio' && in_array($node->biblio_year, $types) && !empty($node->biblio_date)) {
-      $node->biblio_year .= ", {$node->biblio_date}";
-      $node->biblio_date = '';
-    }
   }
 }
 
