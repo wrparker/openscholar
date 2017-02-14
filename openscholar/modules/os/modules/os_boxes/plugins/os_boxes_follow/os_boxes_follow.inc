@@ -345,11 +345,6 @@ function os_follow_default_networks() {
       'domain' => 'vimeo.com',
       'offset' => 3200,
     ),
-    'bliptv'    => array(
-      'title' => t('blip.tv'),
-      'domain' => 'blip.tv',
-      'offset' => 352,
-    ),
     'lastfm'    => array(
       'title' => t('last.fm'),
       'domain' => 'last.fm',
@@ -359,11 +354,6 @@ function os_follow_default_networks() {
       'title' => t('LinkedIn'),
       'domain' => 'linkedin.com',
       'offset' => 1952,
-    ),
-    'delicious' => array(
-      'title' => t('Delicious'),
-      'domain' => 'delicious.com',
-      'offset' => 704,
     ),
     'tumblr'    => array(
       'title' => t('Tumblr'),
@@ -379,6 +369,11 @@ function os_follow_default_networks() {
       'title' => t('Instagram'),
       'domain' => 'instagram.com',
      'offset' => 427,
+    ),
+    'soundcloud'    => array(
+      'title' => t('soundcloud'),
+      'domain' => 'soundcloud.com',
+     'offset' => 1889,
     ),
   );
 
