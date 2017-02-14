@@ -3721,6 +3721,19 @@ function vsite_metatag_metatags_view_alter(&$output, $instance) {
     // Separate the meta tags.
     $metatags = isset($vsite->group->metatags) ? $vsite->group->metatags : array();
 
+    $meta_google_site_verification = array(
+      '#type' => 'html_tag',
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'name' => 'google-site-verification',
+        'content' => '2CGylLUM6AHym2aC7qKnaDWwnGpQRDWQ7xlsG84M2_I',
+      ),
+      '#weight' => '-99999',
+     );
+
+    // Add header meta tag to head.
+    drupal_add_html_head($meta_google_site_verification, 'meta_google_site_verification');
+
     // Build options for meta tag rendering.
     $options = array(
       'entity' => $vsite->group,
