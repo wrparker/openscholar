@@ -1621,10 +1621,10 @@ function os_publications_apachesolr_index_document_build_node(ApacheSolrDocument
     foreach ($entity->biblio_contributors as $c) {
       $doc->addField('tm_contributors', $c['name']);
     }
-    
+
     $doc->addField('ts_biblio_sort_title', $entity->biblio_sort_title);
-    $doc->addField('is_biblio_year', $entity->biblio_year);
-    $doc->addField('is_biblio_date', $entity->biblio_date);
+    $doc->addField('is_biblio_year', intval($entity->biblio_year));
+    $doc->addField('is_biblio_date', intval($entity->biblio_date));
   }
 }
 
