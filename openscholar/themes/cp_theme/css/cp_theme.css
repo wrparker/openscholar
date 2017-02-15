@@ -1255,6 +1255,52 @@ form#os-maintenance .form-item .description {
   margin: 15px 0;
 }
 
+
+/* PUBLICATION SETTINGS */
+#edit-os-publications-filter-publication-types {
+  -webkit-column-count: 3;
+  -moz-column-count: 3;
+  column-count: 3;
+
+  -webkit-column-gap: 0px;
+  -moz-column-gap: 0px;
+  column-gap: 0px;
+}
+
+#feature_os_publication .column-left,
+#feature_os_publication .column-middle,
+#feature_os_publication .column-right {
+  float: left;
+  display: block;
+  width: 33.3%;
+}
+#feature_os_publication .actions {
+  display: block;
+  clear: both;
+}
+.form-item label.option.bold{
+  font-weight: bold;
+}
+.citebox.hidden {
+  display: none;
+}
+/* PUBLICATION SETTINGS CITATION PREVIEW */
+
+.os_publications_citation_examples .ng-binding {
+    position: absolute;
+    right: 15px;
+    top: 30px;
+    width: 350px;
+    background-color: #f1f1f1;
+    padding: 10px;
+}
+
+.os_publications_citation_examples .citebox h2 {
+font-size: 1.3em;
+}
+
+
+
 /* CKEDITOR - WYSIWYG */
 
 

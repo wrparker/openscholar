@@ -1146,30 +1146,3 @@ ul.no-event-export {
     font-size: .8em;
 }
 
-#edit-os-publications-filter-publication-types {
-  -webkit-column-count: 3;
-  -moz-column-count: 3;
-  column-count: 3;
-
-  -webkit-column-gap: 0px;
-  -moz-column-gap: 0px;
-  column-gap: 0px;
-}
-
-#feature_os_publication .column-left,
-#feature_os_publication .column-middle,
-#feature_os_publication .column-right {
-  float: left;
-  display: block;
-  width: 33.3%;
-}
-#feature_os_publication .actions {
-  display: block;
-  clear: both;
-}
-.form-item label.option.bold{
-  font-weight: bold;
-}
-.citebox.hidden {
-  display: none;
-}
