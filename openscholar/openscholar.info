@@ -26,7 +26,6 @@ dependencies[] = path
 dependencies[] = search
 dependencies[] = shortcut
 dependencies[] = taxonomy
-dependencies[] = toolbar
 
 ; Contrib - core
 dependencies[] = biblio
@@ -138,6 +137,7 @@ dependencies[] = os_stats
 dependencies[] = os_taxonomy
 
 ; other
+dependencies[] = admin_panel
 dependencies[] = entity_validator
 dependencies[] = metatag
 dependencies[] = metatag_opengraph
@@ -153,5 +153,3 @@ dependencies[] = views_infinite_scroll
 dependencies[] = web_widgets
 
 files[] = openscholar.profile
-
-
