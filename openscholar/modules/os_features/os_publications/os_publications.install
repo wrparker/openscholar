@@ -1625,5 +1625,4 @@ function os_publications_update_7051() {
   $types[0] = 'Published';
   variable_set('biblio_years_text', $types);
 }
-=======
-}
+
