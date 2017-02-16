@@ -128,6 +128,9 @@
         })
         .then(function (modal) {
           dialogOptions.title = scope.title;
+          dialogOptions.close = function (event, ui) {
+            modal.element.remove();
+          }
           modal.element.dialog(dialogOptions);
           modal.close.then(function (result) {
             if (result) {

@@ -1675,7 +1675,8 @@ function os_publications_cp_settings() {
       $citation_example = _os_publications_build_citation_example($styles); //'test text';
       $cite_example_text = '<p>' . t('!cite_text', array('!cite_text' => $citation_example)) . '</p>';
       // Concat it all together.
-      $cite_example_output .= '<div data-example-id="' . $styles . '" id="pop-' . $styles . '" class="citebox hidden">' . $cite_example_title . $cite_example_text . '</div>';
+      $hidden = ($styles != biblio_get_style()) ? 'hidden' : '';
+      $cite_example_output .= '<div data-example-id="' . $styles . '" id="pop-' . $styles . '" class="citebox ' . $hidden . '">' . $cite_example_title . $cite_example_text . '</div>';
     }
   }
 
