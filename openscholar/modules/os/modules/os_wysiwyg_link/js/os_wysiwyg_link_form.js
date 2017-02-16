@@ -7,9 +7,13 @@ Drupal.behaviors.osLinkExternal = {
   attach: function (ctx) {
 
     $('.form-item-link-text input').keyup(function(event) {
+      var notes = $('.form-item-link-text .notes');
+      notes.remove();
+
       var string = event.currentTarget.value;
       var regex = /<[a-z]*>/g;
       var matches;
+      var tags = [];
 
       while ((matches = regex.exec(string)) !== null) {
         if (matches.index === regex.lastIndex) {
@@ -18,13 +22,17 @@ Drupal.behaviors.osLinkExternal = {
 
         var clean_tag = matches[0].replace('<', '').replace('>', '');
 
-        if (string.indexOf('</' + clean_tag + '>') != -1) {
+        if (string.indexOf('</' + clean_tag + '>') == -1) {
           tags.push(clean_tag);
         }
       }
 
       if (tags.length > 0) {
-        console.log('You need to close the tags ' + tags.join(', ') + ' for keeping a valid HTML markup');
+        var text = 'You need to close the tags ' + tags.join(', ') + ' for keeping a valid HTML markup';
+        $('.form-item-link-text .description').append('<span class="notes" style="color: red; font-weight: bold;"><br/>' + text + '</span>')
+      }
+      else {
+        notes.remove();
       }
     });
 
@@ -32,11 +40,11 @@ Drupal.behaviors.osLinkExternal = {
 
       var escape_html = function (unsafe) {
         return unsafe
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
+          .replace(/&/g, '')
+          .replace(/</g, '')
+          .replace(/>/g, '')
+          .replace(/"/g, '')
+          .replace(/'/g, '');
       };
 
       if ($(this).filter(':visible').length > 0) {
