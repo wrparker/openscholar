@@ -325,9 +325,9 @@ function os_follow_default_networks() {
       'domain' => 'twitter.com',
       'offset' => 3104
     ),
-    'picasa'    => array(
-      'title' => t('Picasa'),
-      'domain' => 'picasaweb.google.com',
+    'google_photos'    => array(
+      'title' => t('google_photos'),
+      'domain' => 'photos.google.com',
       'offset' => 2368,
     ),
     'flickr'    => array(
@@ -357,7 +357,7 @@ function os_follow_default_networks() {
     ),
     'delicious' => array(
       'title' => t('Delicious'),
-      'domain' => 'delicious.com',
+      'domain' => 'del.icio.us',
       'offset' => 704,
     ),
     'tumblr'    => array(
