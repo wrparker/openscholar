@@ -5,6 +5,29 @@
 
 Drupal.behaviors.osLinkExternal = {
   attach: function (ctx) {
+
+    $('.form-item-link-text input').keyup(function(event) {
+      var string = event.currentTarget.value;
+      var regex = /<[a-z]*>/g;
+      var matches;
+
+      while ((matches = regex.exec(string)) !== null) {
+        if (matches.index === regex.lastIndex) {
+          regex.lastIndex++;
+        }
+
+        var clean_tag = matches[0].replace('<', '').replace('>', '');
+
+        if (string.indexOf('</' + clean_tag + '>') != -1) {
+          tags.push(clean_tag);
+        }
+      }
+
+      if (tags.length > 0) {
+        console.log('You need to close the tags ' + tags.join(', ') + ' for keeping a valid HTML markup');
+      }
+    });
+
     $('#-os-link-external-form').submit(function (e) {
 
       var escape_html = function (unsafe) {
