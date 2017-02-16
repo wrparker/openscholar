@@ -1009,11 +1009,10 @@ function os_form_alter(&$form, &$form_state, $form_id) {
 
     // Obtaining destination parameter from URL
     $query = drupal_get_destination();
-    $destination_menu_object = menu_get_item($query['destination']);
 
     // If destination is the deleted node itself, then redirecting to default app path
     // Also if no destination parameter is found in URL, then redirecting to default app path
-    if(($destination_menu_object['path'] == 'node/%' || empty($_GET['destination'])) && isset($paths[$form['#node']->type])) {
+    if((preg_match("/node\/\d+/", $query['destination']) || empty($_GET['destination'])) && isset($paths[$form['#node']->type])) {
       $_GET['destination'] = $paths[$form['#node']->type];
     }
   }
@@ -1802,6 +1801,19 @@ function os_contextual_links_view_alter(&$element, $items) {
   if (empty($element['#element']['#entity_type']) || $element['#element']['#entity_type'] != 'node') {
     // Not a node element.
     return;
+  }
+
+  if (isset($element['#links']['node-delete'])) {
+    $link = &$element['#links']['node-delete'];
+    $bundle = $element['#element']['#bundle'];
+    $app = os_get_app_by_bundle($bundle);
+    $app = os_app_info($app);
+
+    $redirect = "<front>";
+    if (!empty($app['path'])) {
+      $redirect = $app['path'];
+    }
+    $link['query']['destination'] = $redirect;
   }
 
   if (!user_access('view revisions')) {
@@ -3007,7 +3019,7 @@ function os_html_head_alter(&$head_elements) {
 
   // Exit early in case we have no shortlink metatag and we are not on a "vsite".
   $vsite = module_exists('vsite') ? vsite_get_vsite() : FALSE;
-  if (!isset($head_elements['metatag_shortlink']) && !$vsite) {
+  if (!isset($head_elements['metatag_shortlink']) || !$vsite) {
     return;
   }
 

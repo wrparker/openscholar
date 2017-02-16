@@ -26,8 +26,8 @@ DESCRIPTION:Testing the import from a iCal file \n  \n -------- DATE:  ----
  \, October 17\\, 2013\\, 3:30pm \n  \n subscribe [1] iCal [2] \n  \n [1] w
  ebcal://localhost/OpenScholarMake/www/john/calendar/export.ics/85 \n [2] h
  ttp://localhost/OpenScholarMake/www/john/calendar/export.ics/85
-DTSTART;TZID=Europe/Helsinki:20131017T153000
-DTEND;TZID=Europe/Helsinki:20131017T153000
+DTSTART;TZID=Europe/Helsinki:20201017T153000
+DTEND;TZID=Europe/Helsinki:20201017T153000
 LAST-MODIFIED:20131017T123058Z
 SUMMARY:Event from csv
 URL;TYPE=URI:http://localhost/OpenScholarMake/www/john/event/testing-import

@@ -255,7 +255,7 @@ function os_comments_node_view($node, $view_mode) {
 
     if ($view_mode == 'full') {
       // Unset comment section in full view mode
-      unset($node->comment);
+      $node->comment = COMMENT_NODE_HIDDEN;
     } elseif ($view_mode == 'teaser') {
       // Tells comment_node_view() to build an "Add new comment" link.
       $node->comment = COMMENT_NODE_OPEN;
@@ -265,7 +265,7 @@ function os_comments_node_view($node, $view_mode) {
 
   } else {
     // Unset comment section in No comments settings
-    unset($node->comment);
+    $node->comment = COMMENT_NODE_HIDDEN;
   }
 }
 

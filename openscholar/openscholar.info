@@ -26,7 +26,6 @@ dependencies[] = path
 dependencies[] = search
 dependencies[] = shortcut
 dependencies[] = taxonomy
-dependencies[] = toolbar
 
 ; Contrib - core
 dependencies[] = biblio
@@ -137,6 +136,7 @@ dependencies[] = os_stats
 dependencies[] = os_taxonomy
 
 ; other
+dependencies[] = admin_panel
 dependencies[] = diff
 dependencies[] = entity_validator
 dependencies[] = metatag

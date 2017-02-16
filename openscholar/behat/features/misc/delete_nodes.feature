@@ -1,15 +1,21 @@
-Feature: Testing the tagged items.
-  Testing that two nodes tagged to one term and only one node tagged to another
-  term.
+Feature: Testing that nodes can be deleted
+  Test that nodes can be deleted from contextual tools
 
-  @api @misc_first
-  Scenario: verify that the tagged items filter work as expected.
+  @misc_first @javascript
+  Scenario: Verify that nodes can be deleted
       Given I am logging in as "admin"
         And I visit "john/classes"
-        And I click "Add New"
-        And I click "Class"
+        And I make sure admin panel is open
+        And I open the admin panel to "Site Content"
+        And I open the admin panel to "Add"
+        And I click on the "Class" control in the "li[key='0_content-1_add-2_class']" element
+        And the overlay opens
         And I fill in "Title" with "Dummy class"
         And I press "Save"
-        And I click "Delete"
+        And the overlay closes
+        And I mouse over "Dummy class"
+        And I click on "Delete" in the tools for "Dummy class"
+        And the overlay opens
        When I press "Delete"
+        And the overlay closes
        Then I should verify i am at "john/classes"

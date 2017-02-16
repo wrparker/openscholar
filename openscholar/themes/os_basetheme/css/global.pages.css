@@ -889,7 +889,7 @@ div[id^=event-popover] .event-title a {
     background: none !important;
 }
 .ui-dialog.ui-front {
-    z-index: 101;
+    z-index: 301;
 }
 /** OS LOGIN CONTAINER STYLES **/
 /** SLIDER **/
