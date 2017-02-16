@@ -885,10 +885,6 @@ function os_publications_year_date_flip($form, &$form_state) {
   // Swap the values.
   $values = &$form_state['values'];
   list($values['biblio_date'], $values['biblio_year']) = array($values['biblio_year'], $values['biblio_date']);
-
-  if ($values['published'] == 'on') {
-    $values['biblio_year'] = 0;
-  }
 }
 
 /**
@@ -1045,7 +1041,14 @@ function os_publications_entity_prepare_view($entities, $type, $langcode) {
         $node->biblio_volume = preg_replace('/' . $country_code . '\s*/', '', $node->biblio_volume);
       }
     }
+
+    // In case the year set to 'Published' we need to present the year from the 
+    // field date.
+    if ($node->biblio_year == 'Published') {
+      $node->biblio_year = $node->biblio_date;
+    }
   }
+
 }
 
 /**
