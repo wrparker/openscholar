@@ -795,7 +795,7 @@ function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
     // Setting up email parameters.
     $to = $account->mail;
     $from = variable_get('site_mail', ini_get('sendmail_from'));
-    $params['!user-role'] = $form['og_user']['roles']['#options'][$form_state['input']['roles']];
+    $params['!user-role'] = _cp_user_list_roles('rids-human', NULL, $form['gid']['#value'])[$form_state['input']['roles']];
     $params['!account-modifier'] = !empty($account_modifier_full_name) ? $account_modifier_full_name : $account_modifier->name;
     $params['!site-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl;
     $params['!account-modifier-email'] = $account_modifier->mail;
