@@ -19,7 +19,9 @@ function os_revisions_uninstall() {
 
 /**
  * Implements hook_enable().
- * disable diff module if it's there and enabled.
+ *  - disable diff module if it's there and enabled.
+ *  - make sure the new revision-based variables are registered
+ *  - add revision permissions
  */
 function os_revisions_enable() {
   if (module_exists('diff')) {
@@ -45,4 +47,5 @@ function os_revisions_enable() {
     $to_revert = array_fill_keys($apps, array('variable'));
     features_revert($to_revert);
   }
+  features_revert(array('os' => array('user_permission')));
 }
