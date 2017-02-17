@@ -1035,7 +1035,6 @@ function os_publications_entity_prepare_view($entities, $type, $langcode) {
  * Implements hook_biblio_entry_alter().
  */
 function os_publications_biblio_entry_alter(&$entry, $node) {
-  dpm(__FUNCTION__);
   unset($entry['export_links']);
   if (!empty($node->field_biblio_image[LANGUAGE_NONE][0])) {
     $content = field_attach_view('node', $node, 'teaser');
@@ -1082,7 +1081,6 @@ function _os_publications_biblio_entry_alter($markup, $node) {
   $style = variable_get('biblio_citeproc_style');
   // Pushing day and month in those both are present in Publication for
   // Harvard - Chicago Author cititation.
-  dpm($style);
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
     if (!empty($node->biblio_year) && strpos($html, $node->biblio_year . '.') !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value'])) {
       // In case day value is present
