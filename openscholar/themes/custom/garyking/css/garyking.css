@@ -799,6 +799,11 @@ ul.nice-menu-down,
     padding-bottom: 10px;
 }
 
+.field-name-field-biblio-image {
+  
+    width: 55px;
+}
+
 
 @-moz-document url-prefix() {}
 /* RESPONSIVE CSS - UNTIL I CAN FIGURE OUT WHY GARYKING RESP CSS FILE WONT LOAD */
