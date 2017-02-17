@@ -830,10 +830,14 @@ function os_publications_validate_year_field($form, &$form_state) {
   $style = variable_get('biblio_citeproc_style');
   // Adding extra validation for date and month for Harvard - Chicago Author cititation
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
+    $years = variable_get('biblio_years_text', array(9999 => t('Submitted'), 9998 => t('In Press')));
+    if (isset($years[$form_state['values']['biblio_year']])) {
+      return;
+    }
     $pub_month = $form_state['values']['field_biblio_pub_month']['und'][0]['value'];
     $pub_day = $form_state['values']['field_biblio_pub_day']['und'][0]['value'];
     if(($pub_month || $pub_day) &&  !$form_state['values']['biblio_year']) {
-      form_set_error('biblio_year', t('Year is mandetory'));
+      form_set_error('biblio_year', t('Year is mandatory'));
       return;
     }
     else if ($form_state['values']['biblio_year'] && !is_numeric($form_state['values']['biblio_year']) || is_numeric($form_state['values']['biblio_year']) && ($form_state['values']['biblio_year'] < 1000 || $form_state['values']['biblio_year'] > 9999)) {
