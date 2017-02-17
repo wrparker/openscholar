@@ -699,11 +699,11 @@ function os_publications_alter_year_field(&$form, &$form_state) {
   // checkboxes form element.
   $node = $form['#node'];
   if (!is_numeric($node->biblio_year)) {
-    $form['biblio_year']['#default_value'] = $node->biblio_year = _biblio_numeric_year($node->biblio_year);
-    //$node->biblio_year = _biblio_numeric_year($node->biblio_year);
+    $form['biblio_year']['#default_value'] = '';
+    $node->biblio_year = _biblio_numeric_year($node->biblio_year);
   }
 
-  //$form['biblio_year']['#default_value'] = in_array($node->biblio_year, array_keys($years)) ? $node->biblio_date : $node->biblio_year;
+  //$form['biblio_year']['#default_value'] = array_search($years[$node->biblio_year]) ? $node->biblio_date : $node->biblio_year;
 
   // Modifying Title for Harvard - Chicago Author citation.
   $form['#attached']['js'][] = array(
