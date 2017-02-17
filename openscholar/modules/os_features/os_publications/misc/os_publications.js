@@ -161,16 +161,19 @@ Drupal.behaviors.osPublications = {
     attach: function () {
 
       var changeMonthAndDay = function(hide) {
+        var year = $('.form-item-biblio-year');
         var month = $("#edit-field-biblio-pub-month");
         var day = $("#edit-field-biblio-pub-day");
         var help_text = $("#biblio-month-group-validate");
 
         if (hide) {
+          year.hide();
           month.hide();
           day.hide();
           help_text.hide();
         }
         else {
+          year.show();
           month.show();
           day.show();
           help_text.show();
