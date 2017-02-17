@@ -28,6 +28,7 @@ Drupal.behaviors.osPublications = {
     // value ("in press", "submitted" and so on). If the user fills a numerical
     // value the radio buttons are unchecked and disabled. Clearing the
     // numerical value enables the radio buttons again.
+    validate = !codedYear.val();
     yearField.keyup(function() {
       if (this.value != '') {
 
@@ -60,6 +61,13 @@ Drupal.behaviors.osPublications = {
           $('#edit-field-biblio-pub-day-und').val('_none');
           $('#s2id_edit-field-biblio-pub-day-und span:first').text('Day');
         }
+      }
+
+      if (this.value == "0") {
+        validate = true;
+      }
+      else {
+        validate = false;
       }
     });
   }
