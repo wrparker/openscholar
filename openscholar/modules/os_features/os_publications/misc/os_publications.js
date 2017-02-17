@@ -30,7 +30,7 @@ Drupal.behaviors.osPublications = {
     // numerical value enables the radio buttons again.
     validate = !codedYear.val();
     yearField.keyup(function() {
-      if (this.value != '') {
+      if (this.value != '' && validate) {
 
         // Validate year input.
         var userInput = this.value;
