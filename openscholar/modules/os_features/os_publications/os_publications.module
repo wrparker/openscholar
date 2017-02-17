@@ -718,20 +718,10 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#weight' => $form['biblio_year']['#weight'],
   );
 
-  if ($chicago_author_date_mode) {
-    $form['biblio_year']['#title'] = t('Date of Publication');
-  }
-
-  $form['biblio_year_group'] = array(
-    '#type' => 'fieldset',
-    '#title' => $form['biblio_year']['#title'] . ' <span class="form-required" title="' . t('This field is required.') . '">*</span>',
-    '#collapsible' => FALSE,
-    '#weight' => $form['biblio_year']['#weight'],
-  );
-
   // Adding date and month fields for publication day for Harvard - Chicago
   // Author citation.
   if ($chicago_author_date_mode) {
+    $form['biblio_year']['#title'] = t('Date of Publication');
 
     $form['field_biblio_pub_month']['und']['#options']['_none'] = t('Month');
     $form['field_biblio_pub_day']['und']['#options']['_none'] = t('Day');
@@ -884,11 +874,9 @@ function os_publications_validate_year_field($form, &$form_state) {
 function os_publications_year_date_flip($form, &$form_state) {
   // Swap the values.
   $values = &$form_state['values'];
-  list($values['biblio_date'], $values['biblio_year']) = array($values['biblio_year'], $values['biblio_date']);
-
-  if ($values['published'] == 'on') {
-    $values['biblio_year'] = 0;
-  }
+  // wtf were we doing here? Why? What was the point? Someone explain or this will stay commented out.
+  //$values['biblio_date'] = $values['biblio_year'];
+  //list($values['biblio_date'], $values['biblio_year']) = array($values['biblio_year'], $values['biblio_date']);
 }
 
 /**
