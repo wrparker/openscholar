@@ -91,8 +91,13 @@ h2.block-title,
 .sidebar .block h2.block-title {
     font-size: 1.2em;
     padding: 0;
-    /* background-color: #fff; */
+  background-color: #fff; 
     letter-spacing: 0;
+}
+.sidebar .block h2.block-title {
+
+  background-color: transparent; 
+   
 }
 .section-nav a.active,
 .section-nav .menu-depth-1 > a {

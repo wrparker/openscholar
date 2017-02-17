@@ -1,6 +1,17 @@
+.region-sidebar-second ,
+.region-sidebar-first {
+    width: 190px;
+
+}
+
+
 .one-sidebar.sidebar-second .region-sidebar-second {
     width: 270px;
  
+}
+
+.one-sidebar.sidebar-first .region-sidebar-first {
+    width: 205px;
 }
 
 .sidebar {
