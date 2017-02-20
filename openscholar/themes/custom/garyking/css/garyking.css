@@ -773,6 +773,10 @@ ul.nice-menu-down,
     top: 80px;
 }
 
+.page-node.node-type-biblio {
+    top: 50px;
+}
+
 .front .contextual-controls-wrapper {
 	top: 300px;
 }
@@ -993,4 +997,8 @@ img.file-icon {
         background-position: center 60px;
         background-size: 100% 5%;
     }
+    #block-boxes-solr-search-box.opened.opened {
+
+    width: 99% !important;
+}
 }
