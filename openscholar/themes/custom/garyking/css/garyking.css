@@ -812,6 +812,10 @@ ul.nice-menu-down,
     width: 55px;
 }
 
+.logged-in .view-content ~ .item-list ul.pager li {
+	border:none !important;
+}
+
 
 @-moz-document url-prefix() {}
 /* RESPONSIVE CSS - UNTIL I CAN FIGURE OUT WHY GARYKING RESP CSS FILE WONT LOAD */
