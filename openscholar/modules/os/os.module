@@ -51,7 +51,7 @@ function os_menu() {
     'weight' => -5,
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_settings_form'),
-    'access arguments' => array('administer content'),
+    'access arguments' => array('administer nodes'),
   );
 
   $items['admin/config/openscholar/frontend'] = array(
@@ -59,7 +59,7 @@ function os_menu() {
     'description' => 'Edit settings that affect general front end performance',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_settings_frontend_form'),
-    'access arguments' => array('administer content'),
+    'access arguments' => array('administer nodes'),
   );
 
   $items['page_not_found'] = array(
@@ -1803,6 +1803,19 @@ function os_contextual_links_view_alter(&$element, $items) {
     return;
   }
 
+  if (isset($element['#links']['node-delete'])) {
+    $link = &$element['#links']['node-delete'];
+    $bundle = $element['#element']['#bundle'];
+    $app = os_get_app_by_bundle($bundle);
+    $app = os_app_info($app);
+
+    $redirect = "<front>";
+    if (!empty($app['path'])) {
+      $redirect = $app['path'];
+    }
+    $link['query']['destination'] = $redirect;
+  }
+
   if (!user_access('view revisions')) {
     // User can't view revisions.
     return;
@@ -3006,7 +3019,7 @@ function os_html_head_alter(&$head_elements) {
 
   // Exit early in case we have no shortlink metatag and we are not on a "vsite".
   $vsite = module_exists('vsite') ? vsite_get_vsite() : FALSE;
-  if (!isset($head_elements['metatag_shortlink']) && !$vsite) {
+  if (!isset($head_elements['metatag_shortlink']) || !$vsite) {
     return;
   }
 

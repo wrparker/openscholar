@@ -102,7 +102,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     $this->activateRoles();
 
     $access = false;
-    if ($menuItem['children']) {
+    if (!empty($menuItem['children'])) {
       foreach ($menuItem['children'] as &$c) {
         $access = $this->menuAccess($c) || $access;
       }
@@ -320,12 +320,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
             'label' => 'Browse',
             'type' => 'heading',
             'default_state' => 'collapsed',
-            'children' => array(
-              'comments' => array(
-                'label' => 'Comments',
-                'type' => 'link',
-                'href' => 'cp/content/comments'
-              ),
+            'children' => array(              
               'content' => array(
                 'label' => 'Content',
                 'type' => 'link',
@@ -543,20 +538,21 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
    */
   protected function alterURLs(&$menu) {
 
-    $vsite = $this->request['vsite'];
-    $vsite_object = vsite_get_vsite($vsite);
+    if (!empty($this->request['vsite'])) {
+      $vsite = $this->request['vsite'];
+      $vsite_object = vsite_get_vsite($vsite);
 
-    foreach ($menu as $key => $value) {
-      if (!empty($value['children'])) {
-        $this->alterURLs($menu[$key]['children']);
-      }
-
-      if (!empty($value['href']) && $value['href'] != '#') {
-        if ($vsite_object) {
-          $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href'], !empty($value['options']) ? $value['options'] : array());
+      foreach ($menu as $key => $value) {
+        if (!empty($value['children'])) {
+          $this->alterURLs($menu[$key]['children']);
         }
-        else {
-          $menu[$key]['href'] = url($value['href'], !empty($value['options']) ? $value['options'] : array());
+
+        if (!empty($value['href']) && $value['href'] != '#') {
+          if ($vsite_object) {
+            $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href'], !empty($value['options']) ? $value['options'] : array());
+          } else {
+            $menu[$key]['href'] = url($value['href'], !empty($value['options']) ? $value['options'] : array());
+          }
         }
       }
     }
