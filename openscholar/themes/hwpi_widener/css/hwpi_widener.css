@@ -198,3 +198,12 @@ h2.block-title,
  
     text-shadow: 1px 1px 2px #000;
 }
+
+@-moz-document url-prefix() { 
+#menu-bar ul.nice-menu .menuparent.over > a::before, #menu-bar ul.nice-menu .menuparent a:hover::before, #menu-bar ul.nice-menu .menuparent a.active::before, #menu-bar ul.nice-menu .menuparent a::before {
+    background-position: 0 -609px;
+
+}
+}
+
+
