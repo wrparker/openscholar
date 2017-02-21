@@ -1634,5 +1634,6 @@ function os_publications_update_7052() {
     ->expression('biblio_year', 'biblio_date')
     ->expression('biblio_date', "''")
     ->condition('biblio_year', 0)
+    ->isNotNull('biblio_date')
     ->execute();
 }
