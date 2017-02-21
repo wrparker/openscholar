@@ -9,6 +9,7 @@ Drupal.wysiwyg.plugins['widget'] = CKEDITOR.plugins.get('widget');
 Drupal.wysiwyg.plugins['colordialog'] = CKEDITOR.plugins.get('colordialog');
 Drupal.wysiwyg.plugins['image2'] = CKEDITOR.plugins.get('image2');
 Drupal.wysiwyg.plugins['indentblock'] = CKEDITOR.plugins.get('indentblock');
+Drupal.wysiwyg.plugins['bidi'] = CKEDITOR.plugins.get('bidi');
 
 // Override the normal link functionality.
 CKEDITOR.plugins.original_link = CKEDITOR.plugins.link;

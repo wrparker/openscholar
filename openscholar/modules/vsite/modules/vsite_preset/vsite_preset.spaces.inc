@@ -68,12 +68,12 @@ function vsite_preset_spaces_presets() {
       ),
       'site_frontpage' => 'home',
       'theme_default' => 'hwpi_classic',
-      'os_breadcrumbs_show_breadcrumbs' => 0,
+      'os_breadcrumbs_show_breadcrumbs' => 1,
     ),
     'menus' => array(
       'primary-menu' => array(
         900 => array(
-          'link_path' => 'home',
+          'link_path' => '<front>',
           'link_title' => 'HOME',
           'options' => array(),
           'mlid' => 900,
@@ -235,12 +235,12 @@ function vsite_preset_spaces_presets() {
       ),
       'site_frontpage' => 'home',
       'theme_default' => 'hwpi_modern',
-      'os_breadcrumbs_show_breadcrumbs' => 0,
+      'os_breadcrumbs_show_breadcrumbs' => 1,
     ),
     'menus' => array(
       'primary-menu' => array(
         900 => array(
-          'link_path' => 'home',
+          'link_path' => '<front>',
           'link_title' => 'HOME',
           'options' => array(),
           'mlid' => 900,
@@ -429,12 +429,12 @@ function vsite_preset_spaces_presets() {
       ),
       'site_frontpage' => 'home',
       'theme_default' => 'hwpi_modern',
-      'os_breadcrumbs_show_breadcrumbs' => 0,
+      'os_breadcrumbs_show_breadcrumbs' => 1,
     ),
     'menus' => array(
       'primary-menu' => array(
         900 => array(
-          'link_path' => 'home',
+          'link_path' => '<front>',
           'link_title' => 'HOME',
           'options' => array(),
           'mlid' => 900,
@@ -586,7 +586,7 @@ function vsite_preset_spaces_presets() {
       'site_frontpage' => 'home',
       'theme_default' => 'hwpi_classic',
       'os_appearance_hwpi_classic_flavor' => 'classic_indigo',
-      'os_breadcrumbs_show_breadcrumbs' => 0,
+      'os_breadcrumbs_show_breadcrumbs' => 1,
     ),
     'context' => array(
       'os_public:reaction:block' => array(
@@ -707,12 +707,12 @@ function vsite_preset_spaces_presets() {
       ),
       'site_frontpage' => 'home',
       'theme_default' => 'hwpi_classic',
-      'os_breadcrumbs_show_breadcrumbs' => 1,
+      'os_breadcrumbs_show_breadcrumbs' => 0,
     ),
     'menus' => array(
       'primary-menu' => array(
         900 => array(
-          'link_path' => 'home',
+          'link_path' => '<front>',
           'link_title' => 'HOME',
           'options' => array(),
           'mlid' => 900,

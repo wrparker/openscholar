@@ -14,7 +14,7 @@
         value: '='
       },
       template: '<div class="form-wrapper">' +
-        '<span ng-if="element.prefix" ng-bind-html="element.prefix"></span>' +
+        '<span ng-if="element.prefix" ng-bind-html="to_trusted(element.prefix)"></span>' +
         '<span>Placeholder</span>' +
         '<div class="description" ng-bind-html="description"></div>' +
       '</div>',
@@ -23,6 +23,9 @@
         scope.description = $sce.trustAsHtml(scope.element.description);
         scope.label = scope.element.title;
         scope.access = scope.element.access;
+        scope.to_trusted = function(html_code) {
+          return $sce.trustAsHtml(html_code);
+        }
         if (scope.access == undefined) {
           scope.access = true;
         }
@@ -51,10 +54,16 @@
           copy.attr('input-id', scope.id);
           copy.attr('ng-model', 'value');
           elem.find('span').replaceWith(copy);
+
           copy = $compile(copy)(scope);
-          if (scope.element.attached) {
+          if (scope.element.attached && scope.element.attached.js) {
+            console.log(scope.element.attached);
             $t(function () {
-              Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[0].data);
+              for (var i in scope.element.attached.js) {
+                if (angular.isObject(scope.element.attached.js[i])) {
+                  Drupal.behaviors.states.attach(jQuery(elem), scope.element.attached.js[i].data);
+                }
+              }
             });
           }
         }

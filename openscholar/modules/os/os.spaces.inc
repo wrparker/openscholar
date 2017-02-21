@@ -71,12 +71,12 @@ function os_spaces_presets() {
       ),
       'site_frontpage' => 'home',
       'theme_default' => 'hwpi_classic',
-      'os_breadcrumbs_show_breadcrumbs' => 0,
+      'os_breadcrumbs_show_breadcrumbs' => 1,
     ),
     'menus' => array(
       'primary-menu' => array(
         900 => array(
-          'link_path' => 'home',
+          'link_path' => '<front>',
           'link_title' => 'HOME',
           'options' => array(),
           'mlid' => 900,
@@ -215,7 +215,7 @@ function os_spaces_presets() {
       ),
       'site_frontpage' => 'home',
       'theme_default' => 'hwpi_classic',
-      'os_breadcrumbs_show_breadcrumbs' => 0,
+      'os_breadcrumbs_show_breadcrumbs' => 1,
     ),
   );
 
@@ -264,7 +264,7 @@ function os_spaces_presets() {
       ),
       'site_frontpage' => 'home',
       'theme_default' => 'hwpi_classic',
-      'os_breadcrumbs_show_breadcrumbs' => 0,
+      'os_breadcrumbs_show_breadcrumbs' => 1,
     ),
   );
 
@@ -322,7 +322,7 @@ function os_spaces_presets() {
       ),
       'site_frontpage' => 'home',
       'theme_default' => 'hwpi_classic',
-      'os_breadcrumbs_show_breadcrumbs' => 0,
+      'os_breadcrumbs_show_breadcrumbs' => 1,
     ),
   );
 

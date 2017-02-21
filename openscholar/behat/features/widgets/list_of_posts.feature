@@ -5,7 +5,7 @@ Feature:
   @api @widgets
   Scenario: Verify that the user sees terms in the filter by term widget.
     Given I am logging in as "john"
-      And I create a new "page" entry with the name "parent page"
+      And I create a new "page" entry with the name "parent page" in the group "john"
       And I assign the page "parent page" to the term "Lake"
       And I create a sub page named "child page" under the page "parent page"
       And I assign the page "child page" to the term "Lake"

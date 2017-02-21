@@ -9,23 +9,6 @@
 include_once ('os_links.features.inc');
 
 /**
- * Implements hook_menu().
- */
-function os_links_menu() {
-  $items = array();
-
-  $items['features/os_links'] = array(
-    'title' => 'Links Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('os_links_settings'),
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_CALLBACK,
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_os_app_info().
  */
 function os_links_os_app_info() {
@@ -187,24 +170,32 @@ function os_links_preprocess_field(&$variables, $hook) {
 /**
  * App-specific settings for the Links app.
  */
-function os_links_settings($form, $form_state) {
-  $form = array();
+function os_links_cp_settings() {
+  $settings = array();
+  $spaces_features = variable_get('spaces_features');
+  // Links settings link won't appear in CP menu if links app is not enabled.
+  if (!$spaces_features['os_links']) {
+    return $settings;
+  }
 
-  $form['link_sort'] = array(
-    '#type' => 'radios',
-    '#title' => t('By default, sort Links by which category'),
-    '#default_value' => variable_get('link_sort', 'created'),
-    '#options' => array('created' => t('Created date'), 'title' => t('Alphabetical')),
-  );
+  $settings['os_links_ordering'] = array(
+     'group' => array(
+       '#id' => 'feature_os_links',
+       '#title' => t('Links'),
+       '#weight' => 3,
+       '#menu_parent' => 'app_settings',
+       '#help_link' => l(t('Learn more about links'), 'http://docs.openscholar.harvard.edu/links-app#link-app-settings', array('attributes' => array('target' => '_blank'))),
+     ),
+     'form' => array(
+       '#type' => 'radios',
+       '#default_value' => variable_get('os_links_ordering', 1),
+       '#options' => array(1 => 'Creation date, descending', 2 => 'Creation date, ascending', 3 => 'Alphanumeric, A-Z', 4 => 'Alphanumeric, Z-A'),
+       '#weight' => -1,
+       '#prefix' => '<label class="settings-form-heading">Choose how links are ordered</label>',
+     ),
+   );
 
-  $form['links_order'] = array(
-    '#type' => 'radios',
-    '#title' => t('Select default order of the sort category'),
-    '#default_value' => variable_get('links_order', 'DESC'),
-    '#options' => array('DESC' => t('Descending'), 'ASC' => t('Ascending')),
-  );
-
-  return system_settings_form($form);
+  return $settings;
 }
 
 /**
@@ -212,7 +203,8 @@ function os_links_settings($form, $form_state) {
  */
 function os_links_views_query_alter(&$view, &$query) {
   if ($view->name == 'os_links' && $view->current_display == 'page') {
-    $query->orderby[1]['field'] = 'node.' . variable_get('link_sort', 'created');
-    $query->orderby[1]['direction'] = variable_get('links_order', 'DESC');
+    $links_order = variable_get('os_links_ordering', 1);
+    $query->orderby[1]['field'] = ($links_order == 1 || $links_order == 2) ? 'node.created' : 'node.title';
+    $query->orderby[1]['direction'] = ($links_order == 1 || $links_order == 4) ? 'DESC' : 'ASC';
   }
 }

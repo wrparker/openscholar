@@ -42,11 +42,11 @@ body.overlay {
     transition-delay: .125s;
 }
 #branding ul.primary {
-    margin: 0 15% 0 !important;
     transition-property: margin;
     transition-duration: .125s;
     transition-timing-function: ease-in-out;
     transition-delay: .125s;
+    padding-right: 15%;
 }
 /* PAGE WHEN MENU IS CLOSED */
 
@@ -57,9 +57,7 @@ body.overlay {
 .admin-menu-closed.page-cp #branding {
     margin-left: 20px;
 }
-.admin-menu-closed #branding ul.primary {
-    margin: 0 6% 0 !important;
-}
+
 .admin-menu-homeicon {
     display: block;
     width: 55px;
@@ -144,7 +142,7 @@ body.overlay {
     background-color: #6C7A89;
 }
 #cssmenu ul ul li a,
-#cssmenu ul ul li span,
+#cssmenu ul ul li div,
 #cssmenu .heading {
     cursor: pointer;
     z-index: 2;
@@ -157,10 +155,9 @@ body.overlay {
     box-shadow: inset 0 1px rgba(0, 0, 0, 0.1);
         line-height: 1.1em;
 }
-
 [toggle-open],
 [admin-panel-directive-link] span {
-    padding: 10px 10px 10px 8px !important;
+    padding: 10px !important;
 }
 #cssmenu ul ul li span.close-siblings,
 #cssmenu ul ul li a,

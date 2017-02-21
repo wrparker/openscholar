@@ -406,6 +406,35 @@ class FeatureHelp {
   }
 
   /**
+   * Get vsite id for purl path
+   */
+  static public function idFromPath($path) {
+    $q = db_select('purl', 'p')
+      ->fields('p', array('id'))
+      ->condition('value', $path)
+      ->condition('provider', 'spaces_og')
+      ->execute();
+
+    return $q->fetchField();
+  }
+
+  /**
+   * Set variable for vsite only
+   * @param $vsite - the purl id of the vsite
+   */
+  static public function variableSetSpace($name, $value, $vsite) {
+    $id = self::idFromPath($vsite);
+
+    if ($vs = vsite_get_vsite($id)) {
+      $vs->controllers->variable->set($name, $value);
+      $conf[$name] = $value;
+    }
+    else {
+      throw new Exception("No vsite $vsite found.");
+    }
+  }
+
+  /**
    * Set term under a term.
    */
   static public function setTermUnderTerm($child, $parent) {
@@ -488,7 +517,7 @@ class FeatureHelp {
    */
   static public function getNodeIdInVsite($title, $vsite) {
     $gid = self::GetNodeId($vsite, TRUE);
-    $query = new entityFieldQuery();
+    $query = new \entityFieldQuery();
     $result = $query
       ->entityCondition('entity_type', 'node')
       ->propertyCondition('title', $title)
@@ -995,6 +1024,32 @@ class FeatureHelp {
     }
 
     return array_keys($result['file']);
+  }
+
+  /**
+   * Return list of watchdog messages.
+   */
+  public static function DisplayWatchdogs() {
+    $query = db_select('watchdog', 'w');
+    $result = $query
+      ->fields('w', array('wid', 'uid', 'severity', 'type', 'timestamp', 'message', 'variables', 'link'))
+      ->orderBy('w.timestamp', 'DESC')
+      ->range(0, 200)
+      ->execute();
+
+    $messages = [];
+    foreach ($result as $dblog) {
+      $params = unserialize($dblog->variables);
+
+      if (!is_array($params)) {
+        $params = [];
+      }
+
+      $string = format_string($dblog->message, $params);
+      $messages[] = strip_tags($string);
+    }
+
+    return $messages;
   }
 
 }

@@ -118,7 +118,7 @@ function os_reports_site_form($form, &$form_state) {
       'ng-model' => 'params.includesites',
       'value' => 'all',
       'ng-click' => 'updateValues(params.includesites)',
-   ),
+    ),
   );
   $form['content']['includesites']['content'] = array(
     '#name' => 'includesites',
@@ -205,6 +205,17 @@ function os_reports_site_form($form, &$form_state) {
       'value' => 'vsite_id',
     ),
   );
+  if (module_exists('os_pinserver_auth') && variable_get('pinserver_pin_url', FALSE)) {
+    $form['columns_set']['columns']['site_owner_huid'] = array(
+      '#title' => 'Site owner HUID',
+      '#type' => 'checkbox',
+      '#attributes' => array(
+        'ng-model' => 'queryform.columns.site_owner_huid',
+        'ng-click' => "updateCheckedValues('columns', 'site_owner_huid')",
+        'value' => 'site_owner_huid',
+      ),
+    );
+  }
   $form['columns_set']['columns']['site_created'] = array(
     '#title' => 'Creation date',
     '#type' => 'checkbox',
@@ -224,7 +235,7 @@ function os_reports_site_form($form, &$form_state) {
     ),
   );
   $form['columns_set']['columns']['content_last_updated'] = array(
-    '#title' => 'Date of last content update',
+    '#title' => 'Last content update',
     '#type' => 'checkbox',
     '#attributes' => array(
       'ng-model' => 'queryform.columns.content_last_updated',

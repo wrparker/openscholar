@@ -191,6 +191,9 @@ class OsRestfulSiteReport extends \OsRestfulReports {
          // field is converted to expression to satisfy sql_mode ONLY_FULL_GROUP_BY
        $query->addExpression("'N'", 'custom_domain');
       }
+      if (isset($fields['site_owner_huid'])) {
+        $query->addField('u', 'uid', 'site_owner_huid');
+      }
       if (isset($fields['preset'])) {
         $query->addField('n', 'type', 'preset');
       }
@@ -255,6 +258,11 @@ class OsRestfulSiteReport extends \OsRestfulReports {
       // don't display site configuration changes if it's only variable settings
       if (isset($new_row['other_site_changes']) && $new_row['other_site_changes'] == "variable") {
         $new_row['other_site_changes'] = "";
+      }
+
+      // check for site owner HUID
+      if (isset($row->site_owner_huid)) {
+        $new_row['site_owner_huid'] = (pinserver_user_has_associated_pin($row->site_owner_huid)) ? 'Y' : 'N';
       }
 
       // check for custom domain

@@ -12,11 +12,11 @@ function os_cp_settings() {
       '#title' => t('Long List Display'),
       '#id' => 'long-list-content-pagination',
       '#weight' => 40,
-      '#help_link' => l(t('Learn more about Long list display'), 'http://docs.openscholar.harvard.edu/global-site-settings#content-display', array('attributes' => array('target' => '_blank')))
+      '#help_link' => l(t('Learn more about Long list display'), 'http://docs.openscholar.harvard.edu/global-site-settings#long-list-display', array('attributes' => array('target' => '_blank')))
     ),
     'form' => array(
       '#type' => 'radios',
-      '#title' => t('Choose how long lists of content will display'),
+      '#prefix' => '<label class="margin-bottom settings-form-heading">Choose how long lists of content will display</label>',
       '#default_value' => variable_get('long_list_content_pagination', 'infinite_scroll'),
       '#options' => array('infinite_scroll' => 'Infinite scrolling', 'pager' => 'Pagination'),
       '#description' => t('Pagination applies only to Blog, Links, News, FAQs, Publications and Profiles.')

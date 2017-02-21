@@ -244,17 +244,9 @@ a img {
 .block-boxes-os_sv_list_file .file img.file-icon {
     display: inline;
 }
-
 img.file-icon {
     width:16px;
 }
-.media-gallery-carousal.file-icon {
-    width:100%;
-    margin-top: 2px;
-}
-.media-gallery-media-item-thumbnail img.file-icon {
-	width:100%;
-	}
 	
 .block-boxes-os_sv_list_file .file-info iframe {
     display: block;
@@ -601,6 +593,12 @@ ul ul ul ul {
     list-style-type: none;
     border-bottom: 1px solid #D9D9D9;
 }
+.view-os-events .view-mode-teaser ul li {
+    list-style-type: disc;
+}
+.view-os-events .view-mode-teaser ol li {
+    list-style-type: decimal;
+}
 .view-os-events ul li .node {
     margin: 20px 0 0 0;
 }
@@ -643,7 +641,6 @@ ul ul ul ul {
     display: block;
 }
 /* Don't display the ical link in the floating box. */
-
 #cboxWrapper .node-event .links {
     display: none;
 }
@@ -1145,4 +1142,22 @@ ul.no-event-export {
 .morelink span {
     font-size: .8em;
 }
+.web-widgets-iframe {
+    width: 100%;
+}
 
+.os-sv-list.sv-list-view-sidebar_teaser iframe,
+.os-sv-list.sv-list-view-slide_teaser iframe,
+.os-sv-list.sv-list-view-teaser iframe  {
+    width: 100% !important;
+  
+}
+ .block-boxes-os_boxes_columns .os-sv-list.sv-list-view-teaser iframe,
+.sidebar .os-sv-list.sv-list-view-teaser iframe,
+.sidebar .os-sv-list.sv-list-view-slide_teaser iframe,
+.content-left.content-right #content-column .os-sv-list.sv-list-view-slide_teaser iframe,
+.content-left.content-bottom #content-column .os-sv-list.sv-list-view-slide_teaser iframe,
+.content-right.content-bottom #content-column .os-sv-list.sv-list-view-slide_teaser iframe,
+.block-boxes-os_boxes_columns .os-sv-list.sv-list-view-slide_teaser iframe {
+height: auto;
+}
