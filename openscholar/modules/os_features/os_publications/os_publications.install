@@ -1625,3 +1625,15 @@ function os_publications_update_7051() {
   $types[0] = 'Published';
   variable_set('biblio_years_text', $types);
 }
+
+/**
+ * Fix publications that are missing their year information
+ */
+function os_publications_update_7052() {
+  db_update('biblio')
+    ->expression('biblio_year', 'biblio_date')
+    ->expression('biblio_date', "''")
+    ->condition('biblio_year', 0)
+    ->isNotNull('biblio_date')
+    ->execute();
+}
