@@ -45,8 +45,8 @@
 }
 .region-header-third .os-custom-menu li,
 .region-header-third #block-os-secondary-menu li{
-    border-bottom: 696259 !important;
-    border-top: 696259 !important;
+    border-bottom: #696259 !important;
+    border-top: #696259 !important;
     margin-left:0!important;
 }
 }
