@@ -1626,8 +1626,8 @@ function os_publications_apachesolr_query_alter($query) {
     $order = strtolower(variable_get('biblio_order', 'desc'));
 
     // Use addParam() rather than setSolrsort() for multiple.
-    $query->addParam('sort', 'is_biblio_year desc');
-    $query->addParam('sort', 'is_biblio_date desc');
+    $query->addParam('sort', 'is_biblio_year ' . $order);
+    $query->addParam('sort', 'is_biblio_date ' . $order);
     $query->addParam('sort', 'bs_sticky asc');
     $query->addParam('sort', 'ts_biblio_sort_title ' . $order);
   }
