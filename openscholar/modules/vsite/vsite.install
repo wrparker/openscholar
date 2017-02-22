@@ -845,3 +845,117 @@ function vsite_update_7035() {
     }
   }
 }
+/**
+ * Replace invalid links from body content.
+ */
+function vsite_update_7036() {
+  $query = db_select('node', 'n');
+  $query->fields('n', array('nid'));
+  $results = $query->execute();
+  $url_regex = '/<a\s+(?:[^>]*?\s+)?href="([^"]*)"/';
+  foreach($results as $result) {
+    $nid = $result->nid;
+    $node = node_load($nid);
+    $content = $node->body['und'][0]['value'];
+    if ($content != "") {
+      if (preg_match_all($url_regex, $content, $matches)) {
+        if (is_array($matches) && count($matches[1])>0) {
+          foreach ($matches[1] as $match) {
+            $url = $match;
+            // Checking for internal links only
+            if (strpos($url, 'http') === FALSE) {
+              // Checking for invalid links
+              if (!_vsite_update_7036_check_valid_url($url)) {
+                $newurl = _vsite_update_7036_fix_invalid_url($url);
+                // Updating the body content
+                if ($newurl) {
+                  $content = str_replace($url, $newurl, $content);
+                }
+              }
+            }
+          }
+          // Save the content into node
+          $node->body['und'][0]['value'] = $content;
+          node_save($node);
+        }
+      }
+    }
+  }
+
+  // For widgets
+$query = db_select('spaces_overrides', 's')
+    ->condition('value', '%href%', 'LIKE')
+    ->fields('s', array('object_id', 'value'));
+  $results = $query->execute();
+  $url_regex = '/<a\s+(?:[^>]*?\s+)?href="([^"]*)"/';
+  foreach($results as $result) {
+    $c = $result->value;
+    $ct = unserialize($c);
+    $content = $ct->options['text']['value'];
+    if ($content != "") {
+      if (preg_match_all($url_regex, $content, $matches)) {
+        if (is_array($matches) && count($matches[1])>0) {
+          foreach ($matches[1] as $match) {
+            $url = $match;
+            // Checking for internal links only
+            if (strpos($url, 'http') === FALSE) {
+              // Checking for invalid links
+              if (!_vsite_update_7036_check_valid_url($url)) {
+                $newurl = _vsite_update_7036_fix_invalid_url($url);
+                // Updating the body content
+                if ($newurl) {
+                  $content = str_replace($url, $newurl, $content);
+                }
+              }
+            }
+          }
+          $ct->options['text']['value'] = $content;
+          $c = serialize($ct);
+          // Save the content into node
+          db_update('spaces_overrides')
+            ->fields(array('value' => $c))
+            ->condition('object_id', $result->object_id)
+            ->execute();
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Function to check valid URL
+ */
+function _vsite_update_7036_check_valid_url($url) {
+  $url = str_replace('\\','/', $url);
+  $url = trim($url, '/');
+  // Check from url_alias db table
+  $query = db_select('url_alias', 'u')
+    ->condition('alias', $url)
+    ->fields('u', array('pid'));
+  $result = $query->execute();
+  $count = $result->rowCount();
+  if ($count > 0) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Function to fix URL
+ */
+function _vsite_update_7036_fix_invalid_url($url) {
+  $url_chunk = explode('/', $url);
+  $valid_url_array = array();
+  foreach ($url_chunk as $key=>$chunk) {
+    if (!in_array($chunk, $valid_url_array)) {
+      array_push($valid_url_array, $chunk);
+    }
+  }
+  $valid_url = implode('/', $valid_url_array);
+  if ($valid_url != '') {
+    if (_vsite_update_7036_check_valid_url($valid_url)) {
+      return $valid_url;
+    }
+  }
+  return FALSE;
+}
