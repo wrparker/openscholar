@@ -1611,7 +1611,7 @@ function os_publications_apachesolr_index_document_build_node(ApacheSolrDocument
     }
 
     $doc->addField('ts_biblio_sort_title', $entity->biblio_sort_title);
-    $doc->addField('is_biblio_year', intval($entity->biblio_year));
+    $doc->addField('is_biblio_year', _biblio_numeric_year($entity->biblio_year));
     $doc->addField('is_biblio_date', intval($entity->biblio_date));
   }
 }
