@@ -17,6 +17,7 @@ Feature: User functionality testing.
   @api @misc_second @now2
   Scenario: Adding a user to a vsite.
     Given I am logging in as "john"
+      And I change site title to "John" in the site "john"
      When I visit "john/cp/users/add"
       And I fill in "Member" with "michelle"
       And I press "Add member"
