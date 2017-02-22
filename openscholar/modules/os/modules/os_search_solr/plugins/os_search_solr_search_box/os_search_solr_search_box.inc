@@ -120,7 +120,6 @@ class os_search_solr_search_box extends os_boxes_default {
       '#options' => array(
         'relevancy' => t('Relevancy (default)'),
         'sort_label' => t('Title'),
-        'bundle' => t('Type'),
         'ds_created' => t('Date'),
       ),
       '#default_value' => $this->options['sort_property'],
