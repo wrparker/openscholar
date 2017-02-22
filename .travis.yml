@@ -50,10 +50,12 @@ before_script:
 
   # Set up the lincoln virtual domain.
   - sudo service apache2 restart
-  - sudo sh -c "echo 127.0.0.1	lincoln.local >> /etc/hosts"
+  - sudo sh -c "echo 127.0.1.1	lincoln.local >> /etc/hosts"
   - sudo sh -c "cat openscholar/behat/lincoln-vhost.txt > /etc/apache2/sites-available/lincoln"
   - sudo a2ensite lincoln
-  - sudo service apache2 reload
+  - sudo service apache2 restart
+
+  # Build OpenScholar
   - "mysql -e 'create database drupal;'"
   - phpenv rehash
   - bash scripts/setup
@@ -81,7 +83,7 @@ before_script:
   - sleep 10
   - cd /home/travis/build/openscholar/openscholar
 
-  # Install a multi-tanent, development site.
+  # Install a multi-tenent, development site.
   - cd www
   - pwd
   - mkdir -p /tmp
