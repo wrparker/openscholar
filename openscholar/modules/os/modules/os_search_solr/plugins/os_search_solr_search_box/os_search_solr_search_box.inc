@@ -133,6 +133,11 @@ class os_search_solr_search_box extends os_boxes_default {
         'desc' => t('Descending'),
       ),
       '#default_value' => $this->options['sort_order'],
+      '#states' => array(
+        'invisible' => array(
+          ':input[name="sort_property"]' => array('value' => 'relevancy'),
+        ),
+      ),
     );
 
     return $form;
