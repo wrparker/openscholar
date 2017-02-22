@@ -1629,7 +1629,7 @@ function os_publications_apachesolr_query_alter($query) {
     $query->addParam('sort', 'is_biblio_year ' . $order);
     $query->addParam('sort', 'bs_sticky desc');
     $query->addParam('sort', 'is_biblio_date ' . $order);
-    $query->addParam('sort', 'ts_biblio_sort_title ' . $order);
+    $query->addParam('sort', 'ts_biblio_sort_title asc');
   }
 }
 
