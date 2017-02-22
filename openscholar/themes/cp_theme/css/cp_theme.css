@@ -1299,11 +1299,19 @@ span[name="os_publications_citation_examples"] .ng-binding {
     width: 350px;
     background-color: #f1f1f1;
     padding: 10px;
+    font-size: 14px;
 }
 
-.os_publications_citation_examples .citebox h2 {
-font-size: 1.3em;
+.page-cp span[name="os_publications_citation_examples"] .ng-binding {
+   
+    top: 10px;
+ 
 }
+
+span[name="os_publications_citation_examples"] .citebox h2 {font-size: 1.3em;margin: 0;}
+
+.citation-example {margin: 10px 0 0 0;}
+
 
 form#documentation img {
 	    margin-top: 30px;
