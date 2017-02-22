@@ -35,7 +35,8 @@ fieldset {
 .vertical-tabs-panes fieldset {
     background: #FFF;
 }
-
+#feature_os_publication span[name="biblio_sort"] .form-item,
+#feature_os_publication span[name="biblio_order"] .form-item,
 h3 {
     margin: 0;
 }
