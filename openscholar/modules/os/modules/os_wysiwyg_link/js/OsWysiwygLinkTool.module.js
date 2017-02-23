@@ -23,7 +23,7 @@
           '<uib-tabset active="active">' +
             '<uib-tab index="href" id="href-link">' +
               '<div class="form-item">' +
-                '<label for="owl-url">Website URL</label><input type="text" id="owl-url" ng-model="arg">' +
+                '<label for="owl-url">Website URL</label><input type="text" id="owl-url" ng-model="url">' +
                 '<div class="description">The URL of the web page. Can be a link to one of your own pages.</div>' +
               '</div>' +
             '</uib-tab>' +
@@ -31,12 +31,18 @@
               '<label for="owl-email">E-mail</label><input type="text" id="owl-email" ng-model="arg">' +
             '</uib-tab>' +
             '<uib-tab index="file" id="file-link">' +
-              '<div class="add_new">Add New' +
-                '<div class="form-help">?</div>' +
-                '<div class="description">Files must be less than <strong>{{filesize}}</strong>.<br />Allowed file types: {{extensionStr}}</div>' +
+              '<div class="owl-file-controls">'+
+                '<div class="add_new">Add New' +
+                  '<div class="form-help">?</div>' +
+                  '<div class="description">Files must be less than <strong>{{filesize}}</strong>.<br />Allowed file types: {{extensionStr}}</div>' +
+                '</div>' +
+                'Or' +
+                '<div class="search"></div>' +
               '</div>' +
-              'Or' +
-
+              '<div class="owl-file-list">' +
+                '<div js-pager="f in files" ng-class="{selected: f.id == arg" ng-click="">{{f.name}}' +
+                '</div>' +
+              '</div>' +
             '</uib-tab>' +
           '</uib-tabset></div>',
           controller: 'OWLModalController',
@@ -59,8 +65,15 @@
     }
   }]);
 
-  m.controller('OWLModalController', ['EntityService', function (EntityService) {
+  m.controller('OWLModalController', ['$scope', 'EntityService', 'params', 'close', function ($s, EntityService, params, close) {
+    var files = new EntityService('files', 'id');
 
+    $s.text = params.text;
+    $s.arg = params.arg;
+    $s.title = params.title;
+    $s.newWindow = params.newWindow;
+
+    $s.files = files.
   }]);
 
 })();
