@@ -1,11 +1,11 @@
 (function () {
 
-  var m = angular.module('OsWysiwygLinkTool', ['MediaBrowser']);
+  var m = angular.module('OsWysiwygLinkTool', ['EntityService', 'JSPager', 'angularModalService']);
 
   m.service('OWLModal', ['ModalService', function () {
 
     return {
-      open: function (text, urlArgument, titleText, newWindow, close) {
+      open: function (text, type, urlArgument, titleText, newWindow, close) {
         ModalService.showModal({
           template: '<div>' +
           '<div class="form-item">' +
@@ -40,14 +40,20 @@
                 '<div class="search"></div>' +
               '</div>' +
               '<div class="owl-file-list">' +
-                '<div js-pager="f in files" ng-class="{selected: f.id == arg" ng-click="">{{f.name}}' +
+                '<div js-pager="f in files" class="owl-file-item" ng-class="{selected: f.id == arg}" ng-click="arg = f.id">{{f.name}}' +
                 '</div>' +
               '</div>' +
             '</uib-tab>' +
-          '</uib-tabset></div>',
+          '</uib-tabset>' +
+          '<div class="form-actions">' +
+            '<button ng-click="close(true)">Insert</button>' +
+            '<button ng-click="close(false)">Close</button>' +
+          '</div>' +
+          '</div>',
           controller: 'OWLModalController',
           inputs: {
             text: text,
+            type: type,
             arg: urlArgument,
             title: titleText,
             newWindow: newWindow,
@@ -72,8 +78,42 @@
     $s.arg = params.arg;
     $s.title = params.title;
     $s.newWindow = params.newWindow;
+    $s.active = params.type;
 
-    $s.files = files.
+    var params = {
+      schema: 'public'
+    };
+
+    files.fetch(params).then(function (result) {
+      $s.files = result;
+    });
+
+    $s.close = function (insert) {
+      ret = {
+        type: $s.active,
+        arg: $s.arg,
+        text: $s.text,
+        title: $s.title,
+        newWindow: $s.newWindow,
+        insert: insert
+      }
+
+      close(ret);
+    }
+  }]);
+
+  m.run(['OWLModal', '$timeout', function (modal, $t) {
+
+    function replacement() {
+        modal.open()
+    }
+
+    try {
+      Drupal.wysiwyg.plugins.os_link.openModal = replacement;
+    }
+    catch (e) {
+      console.log("Attempting to access plugin too early.");
+    }
   }]);
 
 })();
