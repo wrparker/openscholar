@@ -689,11 +689,11 @@ function os_publications_alter_year_field(&$form, &$form_state) {
   // checkboxes form element.
   $node = $form['#node'];
   if (!is_numeric($node->biblio_year)) {
-    unset($form['biblio_year']['#default_value']);
+    $form['biblio_year']['#default_value'] = '';
     $node->biblio_year = _biblio_numeric_year($node->biblio_year);
   }
 
-  $form['biblio_year']['#default_value'] = in_array($node->biblio_year, array_keys($years)) ? $node->biblio_date : $node->biblio_year;
+  //$form['biblio_year']['#default_value'] = array_search($years[$node->biblio_year]) ? $node->biblio_date : $node->biblio_year;
 
   // Modifying Title for Harvard - Chicago Author citation.
   $form['#attached']['js'][] = array(
@@ -708,20 +708,10 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#weight' => $form['biblio_year']['#weight'],
   );
 
-  if ($chicago_author_date_mode) {
-    $form['biblio_year']['#title'] = t('Date of Publication');
-  }
-
-  $form['biblio_year_group'] = array(
-    '#type' => 'fieldset',
-    '#title' => $form['biblio_year']['#title'] . ' <span class="form-required" title="' . t('This field is required.') . '">*</span>',
-    '#collapsible' => FALSE,
-    '#weight' => $form['biblio_year']['#weight'],
-  );
-
   // Adding date and month fields for publication day for Harvard - Chicago
   // Author citation.
   if ($chicago_author_date_mode) {
+    $form['biblio_year']['#title'] = t('Date of Publication');
 
     $form['field_biblio_pub_month']['und']['#options']['_none'] = t('Month');
     $form['field_biblio_pub_day']['und']['#options']['_none'] = t('Day');
@@ -752,19 +742,9 @@ function os_publications_alter_year_field(&$form, &$form_state) {
       '#weight' => $form['biblio_year']['#weight'],
     );
 
-    unset($form['field_biblio_pub_month']);
-    unset($form['field_biblio_pub_day']);
-
     // Form element changes - wrap in a fieldset with the checkboxes element,
     // and fix additional attributes accordingly.
     $form['biblio_year_group']['biblio_year'] = $form['biblio_year'];
-
-    unset($form['biblio_year_group']['biblio_year']['#title']);
-    unset($form['biblio_year_group']['biblio_year']['#description']);
-
-    $form['biblio_year_group']['biblio_year']['#size'] = 100;
-    $form['biblio_year_group']['biblio_year']['#attributes'] = array('placeholder' => t('Year'));
-    $form['biblio_year_group']['biblio_year']['#weight'] = 0;
 
     $form['biblio_year_group']['biblio_year']['#prefix'] = '<div class="year-wrapper">';
     $form['biblio_year_group']['biblio_year']['#suffix'] = '</div>';
@@ -812,7 +792,7 @@ function os_publications_alter_year_field(&$form, &$form_state) {
     '#options' => $years,
     '#multiple' => FALSE,
     '#weight' => 20,
-    '#default_value' => in_array($node->biblio_year, array_keys($years)) ? $node->biblio_year : 0,
+    '#default_value' => isset($years[$node->biblio_year]) ? $node->biblio_year : 0,
     '#after_build' => array('os_publications_date_of_publication_alter'),
   );
 }
@@ -840,10 +820,14 @@ function os_publications_validate_year_field($form, &$form_state) {
   $style = variable_get('biblio_citeproc_style');
   // Adding extra validation for date and month for Harvard - Chicago Author cititation
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
+    $years = variable_get('biblio_years_text', array(9999 => t('Submitted'), 9998 => t('In Press')));
+    if (isset($years[$form_state['values']['biblio_year']])) {
+      return;
+    }
     $pub_month = $form_state['values']['field_biblio_pub_month']['und'][0]['value'];
     $pub_day = $form_state['values']['field_biblio_pub_day']['und'][0]['value'];
     if(($pub_month || $pub_day) &&  !$form_state['values']['biblio_year']) {
-      form_set_error('biblio_year', t('Year is mandetory'));
+      form_set_error('biblio_year', t('Year is mandatory'));
       return;
     }
     else if ($form_state['values']['biblio_year'] && !is_numeric($form_state['values']['biblio_year']) || is_numeric($form_state['values']['biblio_year']) && ($form_state['values']['biblio_year'] < 1000 || $form_state['values']['biblio_year'] > 9999)) {
@@ -865,7 +849,7 @@ function os_publications_validate_year_field($form, &$form_state) {
     }
   }
 
-  $form_state['values']['biblio_date'] = trim($form_state['values']['biblio_year_coded']);
+  //$form_state['values']['biblio_date'] = trim($form_state['values']['biblio_year_coded']);
 }
 
 /**
@@ -874,11 +858,16 @@ function os_publications_validate_year_field($form, &$form_state) {
 function os_publications_year_date_flip($form, &$form_state) {
   // Swap the values.
   $values = &$form_state['values'];
-  list($values['biblio_date'], $values['biblio_year']) = array($values['biblio_year'], $values['biblio_date']);
-
-  if ($values['published'] == 'on') {
-    $values['biblio_year'] = 0;
+  $years = variable_get('biblio_years_text', array(9999 => t('Submitted'), 9998 => t('In Press')));
+  if ($values['biblio_year_coded'] && isset($years[$values['biblio_year_coded']])) {
+    $values['biblio_year'] = $values['biblio_year_coded'];
   }
+  if (!isset($years[$values['biblio_year']])) {
+
+  }
+  // wtf were we doing here? Why? What was the point? Someone explain or this will stay commented out.
+  //$values['biblio_date'] = $values['biblio_year'];
+  //list($values['biblio_date'], $values['biblio_year']) = array($values['biblio_year'], $values['biblio_date']);
 }
 
 /**
@@ -1087,8 +1076,7 @@ function _os_publications_biblio_entry_alter($markup, $node) {
   // Pushing day and month in those both are present in Publication for
   // Harvard - Chicago Author cititation.
   if (in_array($style, array('harvard-chicago-author-date.csl'))) {
-
-    if (!empty($node->biblio_date) && strpos($html, $node->biblio_date . '.') !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value'])) {
+    if (!empty($node->biblio_year) && strpos($html, $node->biblio_year . '.') !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value'])) {
       // In case day value is present
       if(!empty($node->field_biblio_pub_day['und'][0]['value'])) {
         $day = $node->field_biblio_pub_day['und'][0]['value'] . '/';
@@ -1096,7 +1084,7 @@ function _os_publications_biblio_entry_alter($markup, $node) {
         $day = '';
       }
 
-      $html = str_replace($node->biblio_date . '.', $node->field_biblio_pub_month['und'][0]['value'] . '/' . $day . $node->biblio_date . '. ', $html);
+      $html = str_replace($node->biblio_year . '.', $node->field_biblio_pub_month['und'][0]['value'] . '/' . $day . $node->biblio_year . '. ', $html);
     }
   }
   $insert = strrpos($html, '</div>');
@@ -1611,12 +1599,28 @@ function os_publications_apachesolr_index_document_build_node(ApacheSolrDocument
     foreach ($entity->biblio_contributors as $c) {
       $doc->addField('tm_contributors', $c['name']);
     }
+
+    $doc->addField('ts_biblio_sort_title', $entity->biblio_sort_title);
+    $doc->addField('is_biblio_year', _biblio_numeric_year($entity->biblio_year));
+    $doc->addField('is_biblio_date', intval($entity->biblio_date));
   }
 }
 
 function os_publications_apachesolr_query_alter($query) {
   $params['qf']['tm_contributors'] = 'tm_contributors^30';
   $query->addParams($params);
+
+  $filter = $query->getFilters('bundle');
+  if (variable_get('biblio_sort', 'year') == 'year' && !empty($filter) && $filter[0]['#value'] == 'biblio') {
+
+    $order = strtolower(variable_get('biblio_order', 'desc'));
+
+    // Use addParam() rather than setSolrsort() for multiple.
+    $query->addParam('sort', 'is_biblio_year ' . $order);
+    $query->addParam('sort', 'bs_sticky desc');
+    $query->addParam('sort', 'is_biblio_date ' . $order);
+    $query->addParam('sort', 'ts_biblio_sort_title asc');
+  }
 }
 
 /**
@@ -1684,10 +1688,12 @@ function os_publications_restore_field($field_name, $publication_name, array $se
  * After build callback for og_vocabulary field in publications.
  */
 function _os_publications_vocabulary_after_build(&$elements) {
-  foreach ($elements[0] as $key => $element) {
-    // If no term is selected per vocabulary, #value property to be unset.
-    if (is_numeric($key) && isset($element['#value']['null'])) {
-      unset($elements[0][$key]['#value']);
+  if (!empty($elements[0])) {
+    foreach ($elements[0] as $key => $element) {
+      // If no term is selected per vocabulary, #value property to be unset.
+      if (is_numeric($key) && isset($element['#value']['null'])) {
+        unset($elements[0][$key]['#value']);
+      }
     }
   }
 
