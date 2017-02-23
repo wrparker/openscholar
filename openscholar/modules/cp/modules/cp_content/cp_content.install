@@ -62,12 +62,12 @@ function cp_content_update_7007() {
  * Removes comment admin screen.
  */
 function cp_content_update_7008() {
-  features_revert(array('cp_content' => array('views')));
+  features_revert(array('cp_content' => array('views_view')));
 }
 
 /**
  * Disable selecting files from other pages when selecting all the files.
  */
 function cp_content_update_7009() {
-  features_revert(array('cp_content' => array('views')));
+  features_revert(array('cp_content' => array('views_view')));
 }
