@@ -18,6 +18,33 @@ function os_wysiwyg_link_menu() {
 }
 
 /**
+ * Implements hook_library().
+ */
+/**
+ * Implements hook_library().
+ */
+function os_wysiwyg_link_library() {
+  $libs = array();
+
+  $path = drupal_get_path('module', 'os_wysiwyg_link');
+
+  $libs['linking_form'] = array(
+    'title' => 'OS Wysiwyg Link Form',
+    'version' => '0.1',
+    'js' => array(
+      $path . '/js/OsWysiwygLinkTool.module.js'
+    ),
+    'dependencies' => array(
+      array('os_common', 'angularjs'),
+      array('os_common', 'EntityService'),
+      array('os_common', 'JSPager'),
+    )
+  );
+
+  return $libs;
+}
+
+/**
  * Implements hook_wysiwyg_include_directory().
  */
 function os_wysiwyg_link_wysiwyg_include_directory($type) {
