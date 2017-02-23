@@ -346,6 +346,11 @@ function os_files_private_cp_settings() {
 
   $spaces_features = $vsite->controllers->variable->get('spaces_features');
 
+  // Private files settings link won't appear in CP menu if private files app is not enabled.
+  if (!$spaces_features['os_files_private']) {
+    return $settings;
+  }
+
   // Checks that the current vsite has a value for the pinserver app name variable.
   $pinserver_app_name = variable_get('pinserver_app_name', NULL);
 
