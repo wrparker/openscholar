@@ -293,6 +293,15 @@ function os_booklets_os_add_new_links_alter(&$links) {
  */
 function os_booklets_cp_settings() {
 
+  $settings = array();
+  $vsite = vsite_get_vsite();
+  $spaces_features = $vsite->controllers->variable->get('spaces_features');
+
+  // Booklets settings link won't appear in CP menu if booklets app is not enabled.
+  if (!$spaces_features['os_booklets']) {
+    return $settings;
+  }
+
   $settings['os_booklets_toc_position'] = array(
     'group' => array(
       '#id' => 'feature_os_booklets',
