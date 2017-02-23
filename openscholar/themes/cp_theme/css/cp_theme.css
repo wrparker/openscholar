@@ -1415,7 +1415,7 @@ ul.action-links a {
     border: 1px solid #e1e1e1;
     margin: 0 0 10px 0;
     padding: 10px;
-    width: 97.5%;
+    width: 98.5%;
 }
 
 
@@ -1424,23 +1424,31 @@ ul.action-links a {
 }
 
 
-.page-node-revisions .os-files-other-list tr{
+.page-node-revisions .os-files-other-list tr {
     border-width: 0;
     background-color: #F3F3F1;
   
 }
 
+.page-node-revisions .os-files-other-list tr td:last-child {
+    border-right: none;
+}
 
 .page-node-revisions .os-files-other-list:before,
 .page-node-revisions .jcarousel-skin-default:before {
   content: 'Attached files';
   font-weight:bold;
-
+display: block;
+    width: 100px;
 }
 
  .page-node-revisions  .jcarousel-skin-default ~ .os-files-other-list:before {
   content: '';
 
 
+}
+
+.jcarousel-skin-default {
+    text-align: left;
 }
 
