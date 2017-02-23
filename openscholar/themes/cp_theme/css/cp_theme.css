@@ -461,7 +461,10 @@ table th label {
 /* CP/BUILD MENU */
 #redirects .actions,
 #os-maintenance .actions,
-.page-cp-build-menu table thead {
+.page-cp-build-menu table thead,
+.page-node-revisions .comment-wrapper,
+.page-node-revisions .ctools-dropdown,
+.page-node-revisions .biblio-download-links-label {
     display: none;
 }
 #edit-menu-table,
@@ -1388,13 +1391,14 @@ body.page-node fieldset#edit-revision-information #warning-text p {
     margin: 0.5em 0;
 }
 body.page-node-revisions ul.action-links a {
-   
-    background-color: #215990;
+      background-color: #215990;
     color: #fff;
     border-radius: 3px;
-    padding: 3px 5px;
+    padding: 0px 5px;
     text-decoration: none;
-    /* margin: 0 0 20px 0; */
+    margin: 0 0 20px 0;
+    display: list-item;
+    background-image: none;
 
 }
 body.page-node-revisions ul.action-links {
@@ -1434,12 +1438,33 @@ ul.action-links a {
     border-right: none;
 }
 
+
+.page-node-revisions .publication-cover-container:before,
+.page-node-revisions .node-news .photo .field-type-image:before,
 .page-node-revisions .os-files-other-list:before,
 .page-node-revisions .jcarousel-skin-default:before {
-  content: 'Attached files';
+
   font-weight:bold;
 display: block;
     width: 100px;
+}
+
+.page-node-revisions .os-files-other-list:before,
+.page-node-revisions .jcarousel-skin-default:before {
+  content: 'Attached files';
+}
+
+.node-news .photo .field-type-image:before {
+ 
+  content:'News Photo';
+ 
+}
+
+.page-node-revisions .publication-cover-container:before {
+ content: 'Book Cover';
+  
+ 
+   
 }
 
  .page-node-revisions  .jcarousel-skin-default ~ .os-files-other-list:before {
@@ -1448,7 +1473,48 @@ display: block;
 
 }
 
-.jcarousel-skin-default {
+.page-node-revisions .jcarousel-skin-default {
     text-align: left;
+}
+
+
+
+
+.page-node-revisions.node-type-biblio h3 {
+    font-size: 1em;
+}
+
+
+.page-node-revisions #citation-wrapper,
+.page-node-revisions .publication-cover-container,
+.page-node-revisions .pubcontent-wrapper p {
+	
+	
+    margin: 0 0 20px 0;
+
+}
+
+
+
+.page-node-revisions #pub-cover-content-wrapper {
+	display:table;
+}
+
+
+
+
+.page-node-revisions .publication-cover-container,
+.page-node-revisions .pubcontent-wrapper {
+	display:table-cell;
+	    padding-right: 30px;
+}
+
+
+.page-node-revisions .media-element[float="left"] {
+	padding-right:15px;
+}
+
+.page-node-revisions .media-element[float="right"] {
+	padding-left:15px;
 }
 
