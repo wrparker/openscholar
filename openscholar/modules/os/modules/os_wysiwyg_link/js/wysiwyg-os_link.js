@@ -64,8 +64,6 @@ Drupal.wysiwyg.plugins['os_link'] = {
   },
 
   invoke: function (selection, settings, editorId) {
-    var self = this;
-    var info;
     if (selection.node == null) {
       selection = this.getSelection();
     }
@@ -77,23 +75,23 @@ Drupal.wysiwyg.plugins['os_link'] = {
       if (link.length == 0) {
         link = jQuery(selection.node).parents('a');
       }
-      info = this.parseAnchor(link[0]);
-      settings['global'].active = info.type;
-      settings['global'].url = info.url;
+
+      this.openModal(this.parseAnchor(link));
     }
     else {
       var selectedLink = jQuery.selectLink != null && typeof(jQuery.selectLink) == 'object';
       if (selectedLink) {
-        info = this.parseAnchor(jQuery.selectLink[0]);
-        settings['global'].active = info.type;
-        settings['global'].url = info.url;
+        this.openModal(this.parseAnchor(jquery.selectLink[0]));
       }
-      else {
-        delete settings['global'].active;
-        delete settings['global'].url;
-      }
-
     }
+  },
+
+  openModal: function (info) {
+    var self = this;
+
+    settings['global'].active = info.type;
+    settings['global'].url = info.url;
+
     Drupal.media.popups.mediaBrowserOld(function (insert) {
       self.insertLink();
     }, settings['global'], {}, {
