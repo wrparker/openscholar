@@ -9,6 +9,11 @@ echo -e "\n # Configure apache2."
 cp docker_files/default.apache2.conf /etc/apache2/apache2.conf
 service apache2 restart
 
+# Install Bower.
+echo -e "\n # Install Bower."
+npm install -g bower
+echo '{ "allow_root": true }' > /root/.bowerrc
+
 # Install drush.
 echo -e "\n # Install drush."
 export PATH="$HOME/.composer/vendor/bin:$PATH"
@@ -28,7 +33,8 @@ echo -e "\n${BGCYAN}[RUN] Install firefox. ${RESTORE}"
 apt-get update
 apt-get -qq -y install iceweasel > /dev/null
 
-# Install headless GUI for browser.'Xvfb is a display server that performs graphical operations in memory'
+# Install headless GUI for browser.'Xvfb is a display server that performs
+# graphical operations in memory'.
 echo -e "\n [RUN] Installing XVFB (headless GUI for Firefox).\n"
 apt-get install xvfb -y
 apt-get install openjdk-7-jre-headless -y
