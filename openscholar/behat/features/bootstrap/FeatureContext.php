@@ -1810,11 +1810,10 @@ class FeatureContext extends DrupalContext {
    * @Then /^I change site title to "([^"]*)" in the site "([^"]*)"$/
    */
   public function iChangeSiteTitleTo($title, $vsite) {
-    return array(
-      new Step\When('I visit "' . $vsite . '/cp/settings"'),
-      new Step\When('I fill in "Site title" with "' . $title . '"'),
-      new Step\When('I press "edit-submit"'),
-    );
+    $nid = FeatureHelp::idFromPath($vsite);
+    $node = node_load($nid);
+    $node->title = $title;
+    node_save($node);
   }
 
   /**
