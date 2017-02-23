@@ -3,8 +3,8 @@
 # Modify the MySQL settings below so they will match your own.
 MYSQL_USERNAME="root"
 MYSQL_PASSWORD=""
-MYSQL_HOST="localhost"
-MYSQL_DB_NAME="openscholar"
+MYSQL_HOST="127.0.0.1"
+MYSQL_DB_NAME="drupal"
 
 # Modify the URL below to match your OpenScholar base domain URL.
 BASE_DOMAIN_URL="http://localhost/openscholar/www"
