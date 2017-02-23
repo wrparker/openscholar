@@ -40,13 +40,14 @@ function os_wysiwyg_link_include_browser_js() {
     return;
   }
   $included = TRUE;
+//
+//  $settings = array(
+//    'browserUrl' => url('os/wysiwyg/link/insert', array(
+//        'query' => array('render' => 'media-popup'))),
+//  );
 
-  $settings = array(
-    'browserUrl' => url('os/wysiwyg/link/insert', array(
-        'query' => array('render' => 'media-popup'))),
-  );
-
-  $js = array('osWysiwygLink' => $settings);
-  drupal_add_library('media', 'media_browser');
-  drupal_add_js($js, 'setting');
+//  $js = array('osWysiwygLink' => $settings);
+  //drupal_add_library('media', 'media_browser');
+  drupal_add_library('os_wysiwyg_link', 'linking_form');
+//  drupal_add_js($js, 'setting');
 }
