@@ -503,6 +503,27 @@ function os_pages_form_page_node_form_alter(&$form, &$form_state) {
       ),
     ),
   );
+
+  $form['os_css_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Apply css'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#group' => 'additional_settings',
+    '#attributes' => array(
+      'class' => array(
+        'field-os-css',
+        'os-javascript-load',
+      ),
+    ),
+    '#attached' => array(
+      'js' => array(
+        "$path/os_pages.field_os_css.js",
+      ),
+    ),
+    '#access' => og_user_access('node', $vsite->group->nid, 'add widget custom class', NULL, FALSE, TRUE),
+  );
+
   $form['#validate'][] = '_os_pages_node_form_summary_submit';
 
   // Adds JS and CSS to display ajax node alias (pathauto) preview.
