@@ -16,7 +16,7 @@ function os_search_solr_default_box() {
   $box->delta = 'solr_search_box';
   $box->plugin_key = 'os_search_solr_search_box';
   $box->title = '';
-  $box->description = 'Search box';
+  $box->description = 'Site search';
   $box->options = array();
   $export['solr_search_box'] = $box;
 
