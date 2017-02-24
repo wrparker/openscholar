@@ -4,6 +4,7 @@
 body {
     -moz-osx-font-smoothing: grayscale;
 }
+.page-node-362571  #block-os-pages-main-content,
 .page-node-249171 #block-os-pages-main-content,
 .page-node-107346 #block-os-pages-main-content,
 .page-node-3794 #block-os-pages-main-content,
@@ -529,10 +530,10 @@ a:visited {
     z-index: 1;
     opacity: 1;
     transition: all .250s linear .250s;
-    border-bottom: 1px solid transparent;
+    border-bottom: 1px solid transarent;
 }
 #menu-bar.fixed {
-    border-bottom: 1px solid #666;
+    border-bottom: 1px solid #32526e;
 }
 #menu-bar ul.nice-menu a {
     color: #444;
@@ -707,15 +708,15 @@ ul.nice-menu-down,
 .region-content-top .bio-teaser-block2 p {
     margin: 1.3em 1.3em 0 !important;
 }
-.region-content-top .bio-teaser-block2 a {
+.region-content-top .bio-teaser-block2 a.os-front-bio_link {
     text-decoration: none !important;
     padding-right: 28px;
     background: url("../images/sprite.png?456") 145px -109px no-repeat;
 }
-.region-content-top .bio-teaser-block2 a:hover {
+.region-content-top .bio-teaser-block2 a.os-front-bio_link:hover {
     background-position:150px -109px;
 }
-.bio-teaser-block2 a {
+.bio-teaser-block2 a.os-front-bio_link {
     text-decoration: none !important;
     padding-right: 28px;
     background: url("../images/sprite.png?456") 80px -207px no-repeat;
@@ -723,9 +724,7 @@ ul.nice-menu-down,
     -webkit-transition: all .125s;
     border-bottom: 1px solid #fff;
 }
-.bio-teaser-block2 a:hover {
-    background-position: 85px -207px;
-}
+
 .os-cvlink {
     color: #fff !important;
   
@@ -771,8 +770,17 @@ ul.nice-menu-down,
     text-align: center;
 }
 .contextual-controls-wrapper {
-    top: 255px;
+    top: 80px;
 }
+
+.page-node.node-type-biblio {
+    top: 50px;
+}
+
+.front .contextual-controls-wrapper {
+	top: 300px;
+}
+
 .twitter-followme {
     text-align: center;
 }
@@ -799,6 +807,15 @@ ul.nice-menu-down,
     padding-bottom: 10px;
 }
 
+.field-name-field-biblio-image {
+  
+    width: 55px;
+}
+
+.logged-in .view-content ~ .item-list ul.pager li {
+	border:none !important;
+}
+
 
 @-moz-document url-prefix() {}
 /* RESPONSIVE CSS - UNTIL I CAN FIGURE OUT WHY GARYKING RESP CSS FILE WONT LOAD */
@@ -819,6 +836,12 @@ ul.nice-menu-down,
     .region-content-top .bio-teaser-block2 p {
         font-size: 1.24em;
     }
+    
+    #block-boxes-solr-search-box.opened.opened {
+    	    opacity: 1;
+    width: 40% !important;
+    	
+    }
 }
 /*--------------------------------------------------------*/
 
@@ -829,6 +852,11 @@ ul.nice-menu-down,
 	
     #boxes-box-site_info {
         margin-left: 0;
+    }
+    
+    #block-boxes-solr-search-box {
+    
+    top: 38px;
     }
     
     .sidebar {
@@ -973,4 +1001,8 @@ img.file-icon {
         background-position: center 60px;
         background-size: 100% 5%;
     }
+    #block-boxes-solr-search-box.opened.opened {
+
+    width: 99% !important;
+}
 }
