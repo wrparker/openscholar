@@ -1,4 +1,5 @@
-body {
+body,
+.ui-dialog * {
     font-family: helvetica, arial, sans-serif;
 }
 #page {
@@ -15,9 +16,13 @@ body {
     background-color: #FFF;
 }
 /* GENERAL CP STYLES */
-
+.form-item {padding:0;}
+.page-cp .form-item {
+    padding: 2px 0;
+}
+.ui-widget-content a,
 a {
-    color: #4E84C4;
+    color: #215990;
 }
 strong {
     color: #444;
@@ -28,23 +33,7 @@ fieldset {
 .vertical-tabs-panes fieldset {
     background: #FFF;
 }
-.region-footer {
-    background: #000;
-    color: #FFFFFF;
-    height: 30px;
-    bottom: 0;
-    position: fixed;
-    width: 100%;
-    z-index: 10;
-    text-align: right;
-}
-region-footer a {
-    color: #FFFFFF;
-}
-.region-footer .region-inner {
-    padding: 10px 20px 0 15px;
-    z-index: 1;
-}
+
 h3 {
     margin: 0;
 }
@@ -52,12 +41,14 @@ table {
     font-size: 1em;
 }
 input.form-text,
-textarea {
+textarea,
+.redirect-add-form input {
     font-size: 13px;
     height: auto;
     padding: 6px 7px;
     background: url('../../os_basetheme/images/form-input-bg.gif') repeat-x scroll left top #FFFFFF;
     border: 1px solid #CDCDCD;
+    width:98%;
 }
 #og-vocabulary-add-more-wrapper select.form-select {
     height: 120px;
@@ -80,6 +71,21 @@ html.js input.throbbing {
 .os-help-link:hover {
     background: url("../images/cp-sprite.png") no-repeat 0 -170px;
 }
+.help-link.ng-binding {
+  position: absolute;
+    bottom: 20px;
+    right: 10px;
+    padding: 2px 25px 2px 0;
+    background: url(../images/cp-sprite.png) no-repeat right -638px;
+    background-size: 21px 700px;
+    font-size: .97em;
+
+}
+#support .help-link.ng-binding {
+    bottom: 2px;
+}
+    
+
 .view-os-files-private ul {
     list-style-type: none !important;
     list-style: none !important;
@@ -128,10 +134,16 @@ html.js input.throbbing {
     color: #FFF;
     font-weight: bold;
 }
+input.form-submit, 
+a.button,
+
+.ui-dialog.ap-settings-form button,
+.ui-dialog.ap-settings-form input[type="button"],
+.ui-dialog.ap-settings-form input[type="submit"],
 a#edit-cancel,
 a.form-cancel {
     cursor: pointer;
-    padding: 5px 17px;
+    padding: 5px 12px;
     margin-bottom: 1em;
     margin-right: 1em;
     /* LTR */
@@ -146,10 +158,56 @@ a.form-cancel {
     border-left-color: #d2d2d2;
     border-right-color: #d2d2d2;
     background: url('/themes/seven/images/buttons.png') 0 0 repeat-x;
-    -moz-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    border-radius: 20px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
 }
+
+/* SAVE BUTTON SPINNER */
+.spinner,
+.spinner:after {
+  border-radius: 50%;
+  width: 1.80em;
+  height: 1.80em;
+}
+.spinner {
+ display: inline-block;
+    float: left;
+    margin-right:6px;
+    font-size: 7px;
+    position: relative;
+    text-indent: -9999em;
+    border-top: .5em solid rgba(136, 136, 136, 1);
+    border-right: .5em solid rgba(136, 136, 136, 1);
+    border-bottom: .5em solid transparent;
+    border-left: .5em solid transparent;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: load8 .750s infinite linear;
+    animation: load8 .750s infinite linear;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
 a.form-cancel:hover {
     text-decoration: none;
 }
@@ -158,9 +216,10 @@ a.form-cancel:hover {
 .form-actions #edit-delete--2 {
     display: inline-block;
 }
+.page-cp .form-item span label,
+.redirect-delete,
 .form-actions .os-delete-link {
-    color: #f83535;
-    text-decoration: underline;
+
     font-size: 1.1em;
 }
 /* CTools MODAL OVERRIDES */
@@ -256,6 +315,7 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 }
 /** OVERLAY MODAL OVERRIDES **/
 
+.ui-dialog.ap-settings-form button.ui-dialog-titlebar-close,
 #overlay-close,
 #overlay-close:hover {
     background: url('../images/cp-sprite.png') no-repeat 0 -547px;
@@ -264,22 +324,48 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     position: relative;
     margin: -28px 10px;
 }
+.ui-dialog.ap-settings-form button.ui-dialog-titlebar-close {
+    float: right;
+    margin: -8px 0;
+    border: 0;
+    cursor: pointer;
+}
+
+.ui-state-default .ui-icon,
+.ui-state-hover .ui-icon,
+.ui-state-focus .ui-icon,
+.ui-state-active .ui-icon {
+    background-image: none;
+}
+
+.ui-dialog.ap-settings-form .ui-dialog-titlebar,
 #overlay-titlebar {
     padding: 7px 10px 17px;
     position: relative;
     white-space: nowrap;
     z-index: 100;
-    background: #EFEFEF;
+    background: #EFEFEF !important;
     border-bottom: 2px solid #C4C2C2;
     height: 24px;
 }
-#overlay-title {
+#overlay-title,
+.ap-settings-form .ui-dialog-title {
     float: left;
     margin: 0;
     padding: 0.3em 0;
     color: #666;
     font-size: 24px;
     font-weight: normal;
+}
+.page-cp .ui-dialog-titlebar {
+    margin-bottom: 22px;
+}
+.ui-dialog.ap-settings-form {
+    padding: 0;
+    top:10% !important;
+}
+.ui-dialog.ap-settings-form .ui-dialog-content {
+    overflow: visible;
 }
 #overlay-tabs {
     margin: -30px 0 0;
@@ -289,6 +375,9 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 .page-node-edit.node-type-biblio #overlay {
     max-width: 930px;
     min-width: 850px;
+}
+#person-node-form .field-name-body {
+    padding-bottom: 15px;
 }
 form.confirmation {
     margin-top: 20px;
@@ -364,7 +453,8 @@ table th label {
     text-transform: none;
 }
 /* CP/BUILD MENU */
-
+#redirects .actions,
+#os-maintenance .actions,
 .page-cp-build-menu table thead {
     display: none;
 }
@@ -596,11 +686,19 @@ table.biblio-contributors tr:first-child input.form-submit {
     width: 35px;
 }
 .form-item.form-type-radio {
-    margin-left: 10px;
     font-size: 1em;
     font-weight: normal;
+    margin-bottom: .5em;
 }
 #edit-biblio-year-coded .form-item.form-type-radio {
+    margin-left: 0;
+}
+span[fe-checkbox] input[type="checkbox"],
+span[fe-radios] input[type="radio"] {
+    vertical-align: initial;
+    margin-right: 5px;
+}
+span[radios] .form-type-radio {
     margin-left: 0;
 }
 #edit-biblio-year-coded .form-item label.option {
@@ -711,7 +809,12 @@ fieldset#edit-biblio-authors .fieldset-legend {
  */
 
 .ui-front {
-    z-index: 1000;
+    z-index: 301;
+}
+.ui-widget-overlay {
+    background: #000;
+    opacity: .7;
+    filter: Alpha(Opacity=70);
 }
 /** STYLE IMPROVEMENTS BASED ON MOCKUP https://d2r1vs3d9006ap.cloudfront.net/s3_images/1010882/pubform_expanded.png **/
 
@@ -734,7 +837,7 @@ form.node-form .form-region-right fieldset {
     background: none repeat scroll 0% 0% transparent;
     border: medium none;
     margin: 1em 0px;
-    padding: 2.7em 0px 0.1em;
+    padding: 3em 0px 0.1em;
     width: 100%;
 }
 form.node-form .form-region-right fieldset legend {
@@ -969,6 +1072,8 @@ div.error:before {
     background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
     background-position: 0px -859px;
 }
+
+#support .form-wrapper,
 .form-item-create-as-subsite {
     margin-bottom: 35px;
 }
@@ -1071,22 +1176,116 @@ div.error:before {
     font-weight: normal;
     height: 23px;
 }
+.description {
+    margin: 5px 0;
+    line-height: 1.231em;
+    font-size: 0.923em !important;
+    color: #666 !important;
+}
+form#os-maintenance #edit-os-search-solr,
+form#os-maintenance #edit-cp-clear-cache {
+display:block;
+}
+ul.table-list {
+    list-style-type: none;
+    margin-left: 0;
+    border: 1px solid #CACACA;
+}
+ul.table-list:empty {
+    border: none;
+}
+ul.table-list li {
+    padding: 10px;
+}
+ul.table-list li:nth-child(odd) {
+    background-color: #FFF;
+}
+ul.table-list li:nth-child(even) {
+    background-color: #EFEFEF;
+}
+.redirect-delete {
+    float: right;
+}
+
+form#os-maintenance .form-item:first-child {
+    margin-bottom: 0; 
+}
+
+form#os-maintenance .form-item .description {
+    margin-top: 0; 
+}
+
+
+
+.redirect-add-form input {
+       width: 98%;
+}
+
+.redirect-add-form div {
+    margin:15px 0;
+}
+.redirect-add.ng-hide {
+    display: block !important;
+    width: 0;
+    font-size: 0;
+}
+
+.form-item .file-list-single ul {
+    display: inline-block;
+    width: 34%;
+    margin: 0;
+}
+
+.form-item .file-list-single ul li {
+    display: inline-block;
+    width: 32%;
+    text-align: center;
+    white-space: nowrap;
+   }
+
+.ui-dialog.ap-settings-form #os_taxonomy .os-taxonomy_label_heading {
+ margin: 0 0 16px 0;
+}
+
+
+.ui-dialog.ap-settings-form #os_taxonomy .form-item {
+ margin: 12px 0;
+}
+
+.ui-dialog.ap-settings-form #os_taxonomy .form-item:last-of-type {
+ margin: 12px 0 18px;
+}
+
+.form-radios {
+  margin: 15px 0;
+}
+
+form#documentation img {
+	    margin-top: 30px;
+}
+
+#edit-long-list-content-pagination.form-radios {
+  margin-bottom: 0;
+}
+
+span[name="faq_sort"] .form-radios {
+    margin: 0 15px 15px 0;
+}
+.margin-bottom{
+    margin-bottom: 15px;
+}
+
+
+label[for="edit-blog-comments-settings"],
+label[for="edit-os-booklets-toc-position"],
+.page-cp label[for="edit-blog-comments-settings"],
+.page-cp label[for="edit-os-booklets-toc-position"],
+.page-cp .settings-form-heading,
+.settings-form-heading {
+	font-size:1.2em;
+}
 
 /* CKEDITOR - WYSIWYG */
-
-body.cke_editable {
-   font-family: inherit !important;
-    font-size: inherit !important;
-    padding: 0 10px;
-    font-weight:inherit !important;
-}
-
-body.cke_editable h1,
-body.cke_editable h2,
-body.cke_editabl h3 {
-   font-family: inherit !important;
-    font-weight:inherit !important;
-}
 
 
 body.cke_editable blockquote {
@@ -1106,14 +1305,47 @@ span.cke_button__break_icon {
     background: url('/profiles/openscholar/themes/cp_theme/images/cp-sprite.png?123') no-repeat 0 -711px !important;
 }
 
-.file img.file-icon {
-    width: 16px;
+.view-content ~ .item-list ul.pager {
+    margin-top: 30px !important;
+    letter-spacing: -1em;
 }
-body.cke_editable img.media-element.file-default {
-    padding-right: 15px;
+.view-content ~ .item-list ul.pager li.pager-current,
+.view-content ~ .item-list ul.pager li:hover {
+    background-color: #efefef;
+}
+.view-content ~ .item-list ul.pager li a:hover {
+    text-decoration: none;
+}
+li.pager-previous + li.pager-ellipsis {
+    display: none;
+}
+.view-content ~ .item-list ul.pager li {
+    border-left: 1px solid #dededc !important;
+    border-top: 1px solid #dededc !important;
+    border-bottom: 1px solid #dededc !important;
+    letter-spacing: normal;
+    padding: 0.7em !important;
+}
+.view-content ~ .item-list ul.pager li.pager-first {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.view-content ~ .item-list ul.pager li.pager-last {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-right: 1px solid #dededc !important;
+}
+.view-content ~ .item-list ul.pager li.pager-next,
+.view-content ~ .item-list ul.pager li.pager-previous {
+	font-weight: bold;
+	}
+
+img.file-icon {
+    width:16px;
+
 }
 
-body.cke_editable img.media-element.file-default[style*="float:"][style*="right;"] {
-    padding-left: 15px;
-    padding-right: 0;
+body.cke_editable {
+    background-color: #FFF;
+    background: #FFF;
 }

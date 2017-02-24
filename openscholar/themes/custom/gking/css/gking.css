@@ -345,12 +345,22 @@ div.tweets-pulled-listing div.tweet-divider {
 .block .item-list .pager li {
   margin-bottom: 0;
   }
-
+.view-content ~ .item-list ul.pager li.pager-current,
 .item-list ul.pager li.pager-current {
     background-color: #DB7002;
     font-weight:normal;
     color:#fff;
+    margin: 0 5px;
+    padding: .3em !important;
    }
+   
+.view-content ~ .item-list ul.pager li {
+    border-left: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    padding: 0 !important;
+}
+   
 
 .boxes-box .item-list ul.pager li a, .boxes-box .item-list ul.pager li a.active {
     font-size:1.5em;

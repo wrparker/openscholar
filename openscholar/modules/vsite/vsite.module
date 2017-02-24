@@ -1968,107 +1968,106 @@ function vsite_preprocess_page(&$vars) {
 function vsite_mail_alter(&$message){
   global $base_url;
 
-  $vsite = spaces_get_space();
-  $site_owner = user_load($vsite->group->uid);
-  if ($site_owner->field_first_name['und'][0]['value']) {
-    $site_owner_first_name = $site_owner->field_first_name['und'][0]['value'];
-  }
-  if ($site_owner->field_last_name['und'][0]['value']) {
-    $site_owner_last_name = $site_owner->field_last_name['und'][0]['value'];
-  }
-  if (!$site_owner->field_first_name['und'][0]['value'] && ! $site_owner->field_last_name['und'][0]['value']) {
-    $site_owner_first_name = $site_owner->name;
-  }
+  if ($vsite = spaces_get_space()) {
+    $site_owner = user_load($vsite->group->uid);
+    if ($site_owner->field_first_name['und'][0]['value']) {
+      $site_owner_first_name = $site_owner->field_first_name['und'][0]['value'];
+    }
+    if ($site_owner->field_last_name['und'][0]['value']) {
+      $site_owner_last_name = $site_owner->field_last_name['und'][0]['value'];
+    }
+    if (!$site_owner->field_first_name['und'][0]['value'] && !$site_owner->field_last_name['und'][0]['value']) {
+      $site_owner_first_name = $site_owner->name;
+    }
 
-  $site_owner_full_name = trim(join(" ", array($site_owner_first_name, $site_owner_last_name)));
+    $site_owner_full_name = trim(join(" ", array($site_owner_first_name, $site_owner_last_name)));
 
-  switch ($message['id']) {
-    // Account created during "Create this OS Site on behalf of another user".
-    case 'user_register_no_approval_required' :
-      // Gets the user id we just created.
-      $uid = $message['params']['account']->uid;
-      // Loads the user.
-      $user = user_load($uid);
-      // Grab their first name, if it doesnt exist, use their user name.
-      if (! empty($user->field_first_name['und'][0]['value'])) {
-        $first_name = $user->field_first_name['und'][0]['value'];
-      }
-      else {
-        $first_name = $user->name;
-      }
+    switch ($message['id']) {
+      // Account created during "Create this OS Site on behalf of another user".
+      case 'user_register_no_approval_required' :
+        // Gets the user id we just created.
+        $uid = $message['params']['account']->uid;
+        // Loads the user.
+        $user = user_load($uid);
+        // Grab their first name, if it doesnt exist, use their user name.
+        if (!empty($user->field_first_name['und'][0]['value'])) {
+          $first_name = $user->field_first_name['und'][0]['value'];
+        } else {
+          $first_name = $user->name;
+        }
 
-      if (! empty($user->field_last_name['und'][0]['value'])) {
-        $last_name = $user->field_last_name['und'][0]['value'];
-      }
+        if (!empty($user->field_last_name['und'][0]['value'])) {
+          $last_name = $user->field_last_name['und'][0]['value'];
+        }
 
-      $full_name = trim(join(" ", array($first_name, $last_name)));
+        $full_name = trim(join(" ", array($first_name, $last_name)));
 
-      // Alter the subject.
-      $message['subject'] = t('An OpenScholar account has been created for you at !site_name', array(
-        '!site_name' => $vsite->group->title
-      ));
-      $replacements = array(
-        '!site' => $base_url . "/" . $vsite->group->purl,
-        '!site_owner' => $site_owner_full_name,
-        '!login_url' => user_pass_reset_url($user),
-        '!mailto' => $user->mail,
-        '!firstname' => $first_name,
-        '!lastname' => $last_name,
-        '!fullname' => $full_name,
-        '!username' => $user->name,
-        '!futurelogin' => $base_url . '/user/'
-      );
+        // Alter the subject.
+        $message['subject'] = t('An OpenScholar account has been created for you at !site_name', array(
+          '!site_name' => $vsite->group->title
+        ));
+        $replacements = array(
+          '!site' => $base_url . "/" . $vsite->group->purl,
+          '!site_owner' => $site_owner_full_name,
+          '!login_url' => user_pass_reset_url($user),
+          '!mailto' => $user->mail,
+          '!firstname' => $first_name,
+          '!lastname' => $last_name,
+          '!fullname' => $full_name,
+          '!username' => $user->name,
+          '!futurelogin' => $base_url . '/user/'
+        );
 
-      // Alter the body message.
-      $message['body'][0] = t("Dear !fullname, \n\n!site_owner, site owner of !site, has created a user account for you so that you may access this website. Log in by clicking on the following link or by pasting it into your browser: \n\n!login_url \n\nFor your security, this link can be used only once.  \n\nYour username is: !username \n\nAfter setting your password with the included link, you will be able to log in at !futurelogin in the future.  \n\n-The OpenScholar Team", $replacements);
+        // Alter the body message.
+        $message['body'][0] = t("Dear !fullname, \n\n!site_owner, site owner of !site, has created a user account for you so that you may access this website. Log in by clicking on the following link or by pasting it into your browser: \n\n!login_url \n\nFor your security, this link can be used only once.  \n\nYour OpenScholar username is: !username \n\nAfter setting your OpenScholar user password with the included link, you can then <a href='http://docs.openscholar.harvard.edu/logging-your-site' target='_blank'>associate this user account with your HarvardKey</a>. \n\nOnce paired, you will be able to log in at !site in the future. Don't forget to bookmark the site and save this email for future reference.\n\nHere are some handy links for you:\n\n* <a href='http://docs.openscholar.harvard.edu/logging-your-site' target='_blank'>Logging in to your site</a>\n\n* <a href='http://hwp.harvard.edu/calendar/upcoming' target='_blank'>Sign up for training</a>\n\n* <a href='http://docs.openscholar.harvard.edu' target='_blank'>OpenScholar documentation</a>\n\n* <a href='http://hwp.harvard.edu/contact' target='_blank'>Need help with your project?</a>\n\n-The OpenScholar Team", $replacements);
 
-      break;
+        break;
 
-    // Account created by admin in the admin/people panel.
-    case 'user_register_admin_created' :
-      // Get the user id we just created.
-      $uid = $message['params']['account']->uid;
-      // Load the user data.
-      $user = user_load($uid);
-      // Grab their first name, if it doesnt exist, use their user name.
-      if (! empty($user->field_first_name['und'][0]['value'])) {
-        $first_name = $user->field_first_name['und'][0]['value'];
-      }
-      else {
-        $first_name = $user->name;
-      }
+      // Account created by admin in the admin/people panel.
+      case 'user_register_admin_created' :
+        // Get the user id we just created.
+        $uid = $message['params']['account']->uid;
+        // Load the user data.
+        $user = user_load($uid);
+        // Grab their first name, if it doesnt exist, use their user name.
+        if (!empty($user->field_first_name['und'][0]['value'])) {
+          $first_name = $user->field_first_name['und'][0]['value'];
+        } else {
+          $first_name = $user->name;
+        }
 
-      // Grab their last name, if it doesnt exist, use their user name.
-      if (! empty($user->field_last_name['und'][0]['value'])) {
-        $last_name = $user->field_last_name['und'][0]['value'];
-      }
+        // Grab their last name, if it doesnt exist, use their user name.
+        if (!empty($user->field_last_name['und'][0]['value'])) {
+          $last_name = $user->field_last_name['und'][0]['value'];
+        }
 
-      $full_name = trim(join(" ", array($first_name, $last_name)));
+        $full_name = trim(join(" ", array($first_name, $last_name)));
 
-      // Alter the email subject.
-      $message['subject'] = t('An OpenScholar account has been created for you at !site_name', array(
-        '!site_name' => $vsite->group->title
-      ));
-      $replacements = array(
-        '!site' => $base_url . "/" . $vsite->group->purl,
-        '!site_owner' => $site_owner_full_name,
-        '!login_url' => user_pass_reset_url($user),
-        '!mailto' => $user->mail,
-        '!firstname' => $first_name,
-        '!lastname' => $last_name,
-        '!fullname' => $full_name,
-        '!username' => $user->name,
-        '!futurelogin' => $base_url . '/user/'
-      );
-      // Alter the message body.
-      // Alter the body message.
-      $message['body'][0] = t("Dear !fullname, \n\n!site_owner, site owner of !site, has created a user account for you so that you may access this website. Log in by clicking on the following link or by pasting it into your browser: \n\n!login_url \n\nFor your security, this link can be used only once.  \n\nYour username is: !username \n\nAfter setting your password with the included link, you will be able to log in at !futurelogin in the future.  \n\n-The OpenScholar Team", $replacements);
+        // Alter the email subject.
+        $message['subject'] = t('An OpenScholar account has been created for you at !site_name', array(
+          '!site_name' => $vsite->group->title
+        ));
+        $replacements = array(
+          '!site' => $base_url . "/" . $vsite->group->purl,
+          '!site_owner' => $site_owner_full_name,
+          '!login_url' => user_pass_reset_url($user),
+          '!mailto' => $user->mail,
+          '!firstname' => $first_name,
+          '!lastname' => $last_name,
+          '!fullname' => $full_name,
+          '!username' => $user->name,
+          '!futurelogin' => $base_url . '/user/'
+        );
+        // Alter the message body.
+        // Alter the body message.
+        $message['body'][0] = t("Dear !fullname, \n\n!site_owner, site owner of !site, has created a user account for you so that you may access this website. Log in by clicking on the following link or by pasting it into your browser: \n\n!login_url \n\nFor your security, this link can be used only once.  \n\nYour username is: !username \n\nAfter setting your password with the included link, you will be able to log in at !futurelogin in the future.  \n\n-The OpenScholar Team", $replacements);
 
-      break;
+        break;
 
-    case 'contact_page_mail':
-      $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
-      break;
+      case 'contact_page_mail':
+        $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
+        break;
+    }
   }
 }
 
@@ -2218,10 +2217,11 @@ function vsite_menu(){
   );
 
   // User autocomplete callback that allows for searching of name/email/login.
-  $items['vsite/autocomplete/user'] = array(
+  $items['vsite/autocomplete/user/%'] = array(
     'type' => MENU_CALLBACK,
     'title' => 'Vsite Autocomplete User',
     'page callback' => 'vsite_user_autocomplete',
+    'page arguments' => array(3),
     'access callback' => 'user_access',
     'access arguments' => array('access user profiles'),
   );
@@ -2775,7 +2775,7 @@ function vsite_os_settings_subsites_form_submit($form, &$form_state){
  * Autocomplete function to allow users to now search for users based on name, email or login.
  * Used the function spaces_user_autocomplete as the skeleton for this function.
  */
-function vsite_user_autocomplete($string = '') {
+function vsite_user_autocomplete($action = 'add', $string = '') {
   $space = spaces_get_space();
   $matches = array();
   if ($string) {
@@ -2795,6 +2795,12 @@ function vsite_user_autocomplete($string = '') {
     $query->fields('u', array('name'));
     // CONCAT the display, if there is no last name entered, show the username/email only, if there is a last name, show first/last/email.
     $query->addExpression("IF(ln.field_last_name_value = '' OR ln.field_last_name_value IS NULL, CONCAT(u.name, ' (', u.mail , ') '), CONCAT(IFNULL(fn.field_first_name_value,''), ' ', IFNULL(ln.field_last_name_value,''), ' (',u.name,', ', u.mail , ') '))", 'myname');
+
+    // limit matches to users with associated HUID, if pinserver is set up
+    if ($action == "register" && module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE)) {
+      $query->innerJoin('pinserver_users', 'pin', 'pin.uid = u.uid');
+    }
+
     $query->range(0, 10);
     $query->addTag('user_autocomplete');
 
@@ -3235,45 +3241,6 @@ function vsite_get_entity_alias($entity_type, $entity, $alias = NULL) {
 }
 
 /**
- * Implements hook_cp_settings().
- *
- * Note: Site favicon settings are provided in a hook_form_FORM_ID_alter().
- *
- * @see vsite_form_cp_settings_form_alter()
- */
-function vsite_cp_settings() {
-  $vsite = vsite_get_vsite();
-  if (!$vsite || !isset($vsite->group->type)) {
-    return;
-  }
-  $settings = array();
-
-  $default = array('department', 'project');
-  $subsite_parents = variable_get('subsite_parents', $default);
-  if (!in_array($vsite->group->type, $subsite_parents)) {
-    return $settings;
-  }
-
-  $default = 0;
-  $inherit_theme = variable_get('vsite_subsite_inherit_theme', $default);
-  $settings['vsite_subsite_inherit_theme'] = array(
-    'form' => array(
-      '#type' => 'checkbox',
-      '#title' => t('Inherit parent site theme'),
-      '#default_value' => $inherit_theme,
-      '#description' => t('Check to have newly created subsites start with this site\'s currently enabled theme by default.'),
-    ),
-    'group' => array(
-      '#id' => 'vsite_subsite',
-      '#title' => t('Subsites'),
-      '#weight' => 31,
-    ),
-  );
-
-  return $settings;
-}
-
-/**
  * Implements hook_redirect_load_by_source_alter().
  *
  * Alter the redirect candidates before selecting the top one.
@@ -3522,15 +3489,17 @@ function vsite_og_permission_alter(&$perms) {
  */
 function vsite_og_role_change_permissions($role, $grant, $revoke) {
   $content_types = og_get_all_group_content_bundle('node');
-  foreach ($content_types as $k => $v) {
-    $plist = array();
-    $plist[] = 'create '.$k.' content';
-    $plist[] = 'update own '.$k.' content';
-    $plist[] = 'update any '.$k.' content';
-    foreach ($plist as $p) {
-      if (isset($grant[$p])) {
-        og_role_grant_permissions($role->rid, array('create files', 'add media from remote sources', 'edit any files', 'delete any files'));
-        return;
+  if (is_array($content_types)) {
+    foreach ($content_types as $k => $v) {
+      $plist = array();
+      $plist[] = 'create ' . $k . ' content';
+      $plist[] = 'update own ' . $k . ' content';
+      $plist[] = 'update any ' . $k . ' content';
+      foreach ($plist as $p) {
+        if (isset($grant[$p])) {
+          og_role_grant_permissions($role->rid, array('create files', 'add media from remote sources', 'edit any files', 'delete any files'));
+          return;
+        }
       }
     }
   }
@@ -3543,8 +3512,9 @@ function vsite_redirect_hash_alter(&$hash, $redirect) {
   // Integrates with module `redirect`.
   // Prevents redirect_validate() from finding false duplicate paths.
   // @see redirect_hash()
-  if ($vsite = vsite_get_vsite()) {
-    $hash['gid'] = $vsite->id;
+  if (!empty($redirect->redirect_options['purl'])) {
+    $gid = $redirect->redirect_options['purl']['add'][0]['id'];
+    $hash['gid'] = $gid;
   }
 }
 
@@ -3583,10 +3553,10 @@ function vsite_redirect_parse_url_alter(&$parsed, $original_url) {
  * because the file field widget requires AJAX, which requires the form_state
  * to be modified. As of OpenScholar API version 7.x-3.10, we cannot modify
  * form_state in hook_cp_settings().
- */
+ *
 function vsite_form_cp_settings_form_alter(&$form, &$form_state, $form_id) {
   // Only continues if we have a purl (in order to save the favicon properly).
-  if (!($purl = vsite_get_purl()) || !$vsite = vsite_get_vsite()) {
+  if ( 1 || !($purl = vsite_get_purl()) || !$vsite = vsite_get_vsite()) {
     return;
   }
 

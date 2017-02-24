@@ -79,7 +79,7 @@ function os_profiles_preprocess_views_view_summary(&$vars) {
       'K-O' => range('k', 'o'),
       'P-T' => range('p', 't'),
       'U-Z' => range('u', 'z'),
-    );    
+    );
     // Building the glossary links as A-E, F-J etc.
     foreach ($result as $letter) {
       $rendered[] = strtolower($letter->field_last_name_value_truncated);
@@ -324,6 +324,16 @@ function os_profiles_process_node(&$vars) {
   }
 
   module_load_include('inc', 'os', 'includes/os');
+
+  // Display syncing information to administrators
+  if (spaces_access_admin()) {
+    if (isset($vars['field_original_destination_url'][LANGUAGE_NONE][0]['value'])) {
+      $url = $vars['field_original_destination_url'][LANGUAGE_NONE][0]['value'];
+      $vars['content']['field_original_destination_url']['#markup'] =
+        "<p><i>" . t("This profile is " . l(t("synced from another source"), _convert_json_endpoint_to_themed_url($url))) . "</i></p>";
+      $vars['content']['field_original_destination_url']['#weight'] = -100;
+    }
+  }
 
   // Adding the prefix value to the title of the person.
   if (!empty($vars['field_prefix'])) {
@@ -702,8 +712,8 @@ function os_profiles_sync_profile_validate($form, &$form_state) {
     }
 
     $request = drupal_http_request($form_state['values']['url']);
-      if ($request->code == 403) {
-        form_set_error('url', t('The profile cannot be synced: it seems that the profile you are trying to sync belong to a private site or is set to private on a public site.'));
+    if ($request->code == 403) {
+      form_set_error('url', t('The profile cannot be synced: it seems that the profile you are trying to sync belong to a private site or is set to private on a public site.'));
       return;
     }
 
@@ -719,8 +729,9 @@ function os_profiles_sync_profile_validate($form, &$form_state) {
     // the importing side to get the JSON address of the node. It will be saved
     // in the field "field_original_destination_url".
     foreach ($headers as $header) {
-      if (strpos($header, 'X-SELF-JSON: ') === 0) {
-        $form_state['json_address'] = str_replace('X-SELF-JSON: ', '', $header);
+      if (strpos($header, 'X-SELF-JSON: ') === 0 || strpos($header, 'node_json: ') === 0) {
+        // Support OpenScholar sites with node_json in the header.
+        $form_state['json_address'] = str_replace(array('X-SELF-JSON: ', 'node_json:'), '', $header);
         return;
       }
     }
@@ -765,6 +776,7 @@ function os_profiles_profiles_fields() {
     'field_middle_name_or_initial' => 'middle_name',
     'field_address' => 'address',
     'field_phone' => 'phone',
+    'field_office_hours' => 'office_hours',
     'field_email' => 'email',
     'field_professional_title' => 'professional_title',
     'field_website' => 'website',
@@ -1460,15 +1472,14 @@ function os_profiles_node_view_alter(&$build) {
   if ($build['#bundle'] != 'person')
       return;
 
-  // Too many complaints about the "read more" feature.  Remove it from profiles.
-  if (isset($build['links']['node']['#links']['node-readmore'])) {
-    unset($build['links']['node']['#links']['node-readmore']);
-  }
-
   // If 'person' content type are displayed in slide_teaser view mode, then appending additional element for Full Profile link.
   if ($build['#bundle'] == 'person' && $build['#view_mode'] == 'slide_teaser') {
-    $build['os_profile_link']['#markup'] = l('Full Profile', 'node/' . $build['#node']->nid, array('attributes' => array('class' => 'profile-link')));
-    $build['os_profile_link']['#weight'] = 10;
+    $build['os_profile_link']['#markup'] = l('Full Profile', 'node/' . $build['#node']->nid, array('attributes' => array('class' => array('profile-link'))));
+    $build['os_profile_link']['#weight'] = 55;
+  }
+
+  if (isset($build['field_email']['#items'][0]['value'])) {
+    $build['field_email'][0]['#markup'] = $build['field_email']['#items'][0]['value'];
   }
 }
 
@@ -1873,6 +1884,10 @@ function os_profiles_js_alter(&$javascript) {
   if (strpos($_GET['q'], 'sync-profiles') !== FALSE) {
     foreach ($javascript as $url => $js) {
       if (strpos($url, 'autocomplete.js') == TRUE) {
+        $vsite = vsite_get_vsite();
+        drupal_add_js(array('paths' => array(
+          'vsite_home' => $vsite ? trim($vsite->get_absolute_url(), '/') : '',
+          )), 'setting');
         $file = drupal_get_path('module', 'os_profiles') . '/misc/os_autocomplete.js';
         $javascript['misc/autocomplete.js']['data'] = $file;
       }
@@ -1894,4 +1909,18 @@ function os_profiles_get_profile_url($nid) {
     $source_url = 'Profile will be sourced from: <a href="' . $cutom_url . '" target="_blank">' . $cutom_url . '</a>';
     echo $source_url;
   }
+}
+
+/*
+ * Extract node ID from URLs of the form api/v1/profiles/%
+ * and node/%.json.  Used to create links to the themed version
+ * of a user profile.
+ */
+function _convert_json_endpoint_to_themed_url($url) {
+  $url_pattern = "/(?:node|api.v1.profiles)\/(\d+)/";
+  if (preg_match($url_pattern, $url, $matches)) {
+    $host = parse_url($url)['host'];
+    $url = "http://" . $host . "/node/" . $matches[1];
+  }
+  return $url;
 }

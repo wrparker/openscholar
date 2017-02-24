@@ -44,7 +44,8 @@ h2.block-title,
 #footer ul.menu a,
 #footer a,
 .region-header-third ul.nice-menu a,
-.date-nav h3 {
+.date-nav h3,
+.cke_editable * {
     font-family: 'Droid Sans', sans-serif !important;
 }
 .front #content-panels .region-content-first {

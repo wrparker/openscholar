@@ -264,6 +264,7 @@ function cp_user_remove_membership_confirm_submit($form, &$form_state) {
  * Builds the "Change site owner" form.
  */
 function cp_user_change_site_owner_form($form_state) {
+  global $user;
   $vsite = vsite_get_vsite();
   $site_name = $vsite->group->title;
 
@@ -274,7 +275,7 @@ function cp_user_change_site_owner_form($form_state) {
 
   $form['title'] = array(
     '#type' => 'markup',
-    '#markup' => '<h2>' . t('Make an existing member the site owner') . '</h2>',
+    '#markup' => '<h2>' . t('Choose a new site owner for the @site site', array('@site' => $site_name)) . '</h2>',
   );
 
   // Get all VSite members UIDs.
@@ -287,25 +288,28 @@ function cp_user_change_site_owner_form($form_state) {
     $accounts = user_load_multiple($members_uids);
 
     foreach ($accounts as $account) {
-      $options[$account->uid] = $account->name;
+      // If the pinserver module is enabled, don't show users who don't have an associated HUID
+      if ($user->uid == 1 || !module_exists('pinserver') || (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE) && pinserver_user_has_associated_pin($account->uid))) {
+        $options[$account->uid] = $account->name;
+      }
     }
+  }
+
+  $description = "";
+  if (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE)) {
+    $description .= t('Only users who have linked their OpenScholar accounts to HarvardKey are listed.') . ' ' . l('Learn more about linking accounts', 'http://docs.openscholar.harvard.edu/logging-your-site#linking-your-harvardkey-to-your-openscholar-account', array('attributes' => array('target' => '_blank', 'rel' => 'noopener'))) . '.';
   }
 
   $form['new_site_owner'] = array(
     '#type' => 'select',
-    '#title' => t('User name'),
+    '#title' => t('Username'),
     '#required' => TRUE,
-    '#description' => t('Select the site member.'),
+    '#description' => $description,
     '#options' => $options,
   );
 
-
-  $params = array(
-    '@site' => $site_name,
-  );
-
   // Builds and returns a confirmation form.
-  return confirm_form($form, t('Change the owner of the site <em>@site</em>', $params), 'cp/users', '', t('Save'), t('Cancel'));
+  return confirm_form($form, t('Change Site Ownership'), 'cp/users', '', t('Save'), t('Cancel'));
 }
 
 /**
@@ -400,17 +404,24 @@ function cp_user_edit_membership_form($form_state, $user_load) {
     '#default_value' => _cp_user_get_role($group_user->uid, $space->group->nid),
   );
 
-  // Show the option to change site owner only for the current owner or
-  // a support team member.
+  // Show the option to change site owner only for the current owner or a support team member with an associated HUID if the pinserver module is enabled
   global $user;
+  if ($user->uid == 1 || !module_exists('pinserver') || (module_exists('pinserver') && variable_get('pinserver_pin_url', FALSE) && pinserver_user_has_associated_pin($group_user->uid))) {
 
-  $form['edit_membership']['group_manager'] = array(
-    '#type' => 'checkbox',
-    // Theme the checkbox label to look like the radio options.
-    '#title' => _cp_user_role_option(t('Set as site owner'), t('Make <em>@name</em> the site owner.', array('@name' => $name))),
-    '#default_value' => $space->group->uid == $group_user->uid,
-    '#access' => in_array('support team', $user->roles) || $space->group->uid == $user->uid,
-  );
+    $form['edit_membership']['group_manager'] = array(
+      '#type' => 'checkbox',
+      // Theme the checkbox label to look like the radio options.
+      '#title' => _cp_user_role_option(t('Set as site owner'), t('Make <em>@name</em> the site owner.', array('@name' => $name))),
+      '#default_value' => $space->group->uid == $group_user->uid,
+      '#access' => in_array('support team', $user->roles) || ($space->group->uid == $user->uid) || ($user->uid == 1),
+    );
+  }
+  else {
+    $form['edit_membership']['group_manager'] = array(
+      '#type' => 'markup',
+      '#markup' => '<p>' . t('@name\'s OpenScholar account is not linked to HarvardKey, so this user cannot be made site owner.', array('@name' => $name)) . ' ' . l('Learn more about linking accounts', 'http://docs.openscholar.harvard.edu/logging-your-site#linking-your-harvardkey-to-your-openscholar-account', array('attributes' => array('target' => '_blank', 'rel' => 'noopener'))) . '.</p>',
+    );
+  }
 
   // Builds and returns a confirmation form.
   $question = t('Editing members for site <em>@site</em>', array('@name' => $name, '@site' => $site));

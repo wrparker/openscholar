@@ -37,8 +37,6 @@ function os_front_context_default_contexts_alter($contexts) {
   );
 
   // Positions existing SOLR and drupal search widget.
-  $blocks['os_search_solr-site-search']['region'] = 'footer';
-  $blocks['os_search_solr-site-search']['weight'] = 0;
   $blocks['os_search_db-site-search']['region'] = 'footer';
   $blocks['os_search_db-site-search']['weight'] = 0;
 
@@ -91,11 +89,11 @@ function os_front_block_view($delta) {
             '#suffix' => '</span>',
             'text-anon' => array(
               '#markup' => variable_get('os_front_site_title', 'Change Me'),
-              '#access' => !user_access('administer content'),
+              '#access' => !user_access('administer nodes'),
             ),
             'text-auth' => array(
               '#markup' => l(variable_get('os_front_site_title', 'Change Me'), 'admin/config/openscholar/site-title'),
-              '#access' => user_access('administer content'),
+              '#access' => user_access('administer nodes'),
             )
           )
         ),

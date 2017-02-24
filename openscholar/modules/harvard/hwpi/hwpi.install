@@ -90,7 +90,7 @@ function hwpi_update_7005() {
 
   // Sets the themes to use as featured themes.
   $name = 'cp_appearance_featured_themes';
-  $value = drupal_map_assoc(array('hwpi_classic', 'hwpi_modern', 'hwpi_vibrant', 'hwpi_college'));
+  $value = drupal_map_assoc(array('hwpi_classic', 'hwpi_modern', 'hwpi_vibrant', 'hwpi_college', 'hwpi_widener'));
   variable_set($name, $value);
 }
 
@@ -102,3 +102,29 @@ function hwpi_update_7006() {
     theme_enable(array('hwpi_onepage'));
 }
 
+/**
+ * Set Image Magick variables.
+ */
+function openscholar_update_7007() {
+  module_enable(array('imagemagick'));
+  variable_set('image_toolkit', 'imagemagick');
+  variable_set('imageapi_optimize_toolkit', 'imagemagick');
+  variable_set('imagemagick_convert', '/usr/bin/convert');
+  variable_set('imagemagick_debug', 1);
+  variable_set('imagemagick_gm', 0);
+  variable_set('imagemagick_quality', '75');
+}
+
+/**
+ * Change Help Documenation screenshot
+ */
+function hwpi_update_7008() {
+  $nid = variable_get('vsite_register_welcome_message', 0);
+   if ($nid > 0) {
+    $node = node_load($nid);
+    if ($node) {
+      $node->body['und'][0]['value'] = str_replace('https://cloud.githubusercontent.com/assets/867075/13850911/66ce079a-ec32-11e5-80cc-5cb577f96d19.png', 'https://cloud.githubusercontent.com/assets/867075/22668310/48267e28-ec8e-11e6-95cc-0eb13240eeda.png', $node->body['und'][0]['value']);
+      node_save($node);
+    }
+  }
+}

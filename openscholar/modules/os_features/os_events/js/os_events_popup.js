@@ -11,7 +11,7 @@
       $('.view-item-os_events .contents a').on('click', function(e) {
         e.preventDefault();
         var itemId = $(this).closest('div[data-item-id]').data('item-id');
-        var delta = $(this).attr("href").match(/delta=(\d)*/);
+        var delta = $(this).attr("href").match(/delta=(\d+)*/);
         var popOver = $('#event-popover-' + itemId + "-" + delta[1]);
         var isOpen = popOver.dialog("isOpen");
 

@@ -80,6 +80,10 @@ class OsProfilesResource extends RestfulEntityBaseNode {
       'sub_property' => 'uid',
     );
 
+    $public_fields['office_hours'] = array(
+      'property' => 'field_office_hours',
+    );
+
     $public_fields['changed'] = array(
       'property' => 'changed',
     );

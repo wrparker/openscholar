@@ -39,10 +39,20 @@ function os_blog_os_app_info() {
         'menu_item' => 'blog',
       ),
     ),
-    'has_settings' => TRUE,
+    'has_settings' => FALSE,
   );
 
   return $apps;
+}
+
+/**
+ * Implements hook_os_restful_cp_menu_admin_panel_alter().
+ */
+function os_blog_os_restful_cp_menu_admin_panel_alter(&$menu) {
+  $parent = &$menu['settings']['children']['app_settings']['children'];
+  if (isset($parent['feature_os_blog'])) {
+    $parent['feature_os_blog']['label'] = t('Blog Comments');
+  }
 }
 
 /**
@@ -115,4 +125,50 @@ function os_blog_node_delete($node) {
   db_delete('os_feed_item')
   ->condition('importer_nid', $nid)
   ->execute();
+}
+
+/**
+ * Implements hook_cp_settings().
+ */
+function os_blog_cp_settings() {
+  $settings = array();
+
+  $vsite = vsite_get_vsite();
+  $spaces_features = $vsite->controllers->variable->get('spaces_features');
+  // Blog settings link won't appear in CP menu if blog app is not enabled.
+  if (!$spaces_features['os_blog']) {
+    return $settings;
+  }
+
+  // Includes the admin form inc file.
+  module_load_include('admin.inc', 'comment_sources');
+  $params['build_info']['args'][] = 'os_blog';
+  $settings_form = drupal_retrieve_form('comment_sources_admin_settings_form', $params);
+  $settings_form['comment_sources_blog']['#title'] = t('Choose which comment type you\'d like to use');
+  $settings_form['comment_sources_blog']['#options'] = array(
+    'nc' => t('No comments'),
+    'comment' => t('Private comments (only site members can see theme)'),
+    'disqus' => t('Disqus comments'),
+  );
+
+  if (empty($settings_form['comment_sources_blog']['#default_value'])) {
+    $settings_form['comment_sources_blog']['#default_value'] = 'nc';
+  }
+
+  $settings['blog_comments_settings'] = array(
+      'group' => array(
+        '#id' => 'blog_comments',
+        '#title' => t('Blog Comments'),
+        '#weight' => 1,
+        '#menu_parent' => 'app_settings',
+        '#help_link' => l(t('Learn more about blog comments'), '', array('attributes' => array('target' => '_blank')))
+      ),
+      'form' => $settings_form['comment_sources_blog'],      
+      'rest_submit' => function($value) {
+        $type_settings['blog'] = ($value == 'nc') ? '' : $value;
+        comment_sources_save_type_settings($type_settings);
+      },
+    );
+
+  return $settings;
 }

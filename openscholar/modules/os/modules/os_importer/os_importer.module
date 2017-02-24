@@ -820,7 +820,7 @@ function os_importer_verify_uploaded_file($form, $form_state) {
         $orig_value_created = $value;
         $value = strtotime($value);
         // if strtotime() output is blank, then date format is not correct, displaying error message.
-        if(empty($value)) {
+        if(empty($value) || ($value < 0)) {
           form_set_error('created', t('Invalid date value entered for the field "!field" with value "!value".', array('!field' => $field, '!value' => $orig_value_created)));
         }
       }

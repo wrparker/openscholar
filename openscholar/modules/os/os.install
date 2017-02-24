@@ -906,3 +906,11 @@ function os_update_7045() {
   // Empty update to clear entity cache.
   return t('entity cache cleared.');
 }
+
+/**
+ * Enable enhanced settings forms
+ */
+function os_update_7046() {
+  module_enable(array('ap_settings_form', 'restful_message'));
+  return t('Enhanced settings forms enabled.');
+}

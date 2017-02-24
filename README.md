@@ -1,4 +1,7 @@
-[![Build Status](https://secure.travis-ci.org/openscholar/openscholar.png?branch=SCHOLAR-3.x)](https://travis-ci.org/openscholar/openscholar)
+
+Automated Testing [![Travis Build Status](https://secure.travis-ci.org/openscholar/openscholar.png?branch=SCHOLAR-3.x)](https://travis-ci.org/openscholar/openscholar)
+
+QA Builds [ ![Codeship Status for openscholar](https://app.codeship.com/projects/6e604f40-c3b4-0134-5376-0a2f93ab4c55/status?branch=SCHOLAR-3.x)](https://app.codeship.com/projects/197702)
 
 ## OpenScholar: web site-creation package
 * full-featured
@@ -28,4 +31,5 @@ For developers, see the [glossary](https://github.com/openscholar/openscholar/wi
 
 * [Scripts](https://github.com/openscholar/openscholar/wiki/Scripts)
 
-
+## Quality Assurance by
+![browser-stack](https://cloud.githubusercontent.com/assets/867075/23173035/da708a06-f825-11e6-85e3-77c30f832f23.png)

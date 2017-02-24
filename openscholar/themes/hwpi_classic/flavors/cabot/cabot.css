@@ -20,7 +20,8 @@ body, #page-title,
    #layout_16_9_below .slide-copy h2, 
    #layout_16_9_overlay .slide-copy h2, 
    h2.block-title, 
-   .region-header-third ul.nice-menu a {
+   .region-header-third ul.nice-menu a,
+   .cke_editable * {
 	font-family: 'Noto Serif', Georgia, serif !important;
 }
 

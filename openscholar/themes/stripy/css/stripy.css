@@ -8,7 +8,8 @@
 	display: none;
 }
 
-body {
+body,
+.cke_editable * {
 	background: #FFF;
 	color: #282828;
 	font-family: georgia, Arial, Verdana, sans-serif;

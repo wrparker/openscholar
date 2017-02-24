@@ -37,8 +37,9 @@ function openscholar_install() {
     'hwpi_college',
     'hwpi_modern',
     'hwpi_onepage',
+    'hwpi_widener',
     'hwpi_vibrant',
-	'weft',
+	  'weft',
     'os_basetheme',
     'os_default',
     'fairbanks_center',
@@ -92,5 +93,9 @@ function openscholar_install() {
 
   // Turn on the OG vocab term page access.
   variable_set('og_vocab_term_page_access', TRUE);
+
+  // Set image toolkit variables.
+  variable_set('imageapi_optimize_service', 'resmushit');
+  variable_set('image_toolkit', 'imageapi_optimize');
 }
 

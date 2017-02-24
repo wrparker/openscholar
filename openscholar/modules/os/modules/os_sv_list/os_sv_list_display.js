@@ -7,7 +7,15 @@
   var data = {};
   Drupal.behaviors.os_sv_list = {
     attach: function (ctx) {
-    	
+
+      // Sets embedded iframe width same as the parent wrapper div width if initial iframe width is greater than parent div width
+      $('.block-boxes-os_sv_list_file .os_sv_list_file .file').each(function(i){
+        var width_parent = $(this).parent().width();
+        if (width_parent < $(this).find('iframe').attr('width')) {
+          $(this).find('iframe').attr('width', width_parent);
+        }
+      });
+
       // add a click handler to lists of posts
       $('.os-sv-list', ctx).closest('.boxes-box-content').once('os-sv-list-pager').click(click_handler).each(function () {
         // save the current page to our cache
@@ -36,7 +44,7 @@
         }
 
         // After clicking on next/prev page ajax link, page will be slowly scrolled to the position where respective 'List of Post' widget markup starts.
-        $("html, body").animate({ scrollTop: $("#block-boxes-" + delta).offset().top }, "slow");
+        $("html, body").animate({ scrollTop: $("#block-boxes-" + delta.replace(/\_/g, '-')).offset().top }, "slow");
 
         // if there's no page set in the query, assume its the first page
         if (typeof args.page == 'undefined') {
@@ -54,8 +62,8 @@
             page = decodeURIComponent(args.page).split(',');
             page = page[args.pager_id];
             destination = args.destination;
-          $.ajax({
-            url: s.basePath + (typeof s.pathPrefix != 'undefined'?s.pathPrefix:'') + 'os_sv_list/page/'+delta,
+            $.ajax({
+              url: window.location.protocol + '//' + window.location.hostname + '/' + (typeof s.pathPrefix != 'undefined'?s.pathPrefix:'') + 'os_sv_list/page/'+delta,
             data: {
               page: page,
               destination: destination

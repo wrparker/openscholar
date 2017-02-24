@@ -20,14 +20,20 @@ body,
 #layout_3_1_overlay .slide-copy h2,
 #layout_16_9_below .slide-copy h2,
 #layout_16_9_overlay .slide-copy h2,
+#layout_16_9_side .slide-copy p,
+#layout_3_1_overlay .slide-copy p,
+#layout_16_9_below .slide-copy p,
+#layout_16_9_overlay .slide-copy p,
 h2.block-title,
 .region-header-third ul.nice-menu a,
 #menu-bar ul.nice-menu a,
 #boxes-box-site_info,
 #boxes-box-site_info a,
-.date-nav h3 {
+.date-nav h3,
+.cke_editable * {
     font-family: 'Montserrat', sans-serif !important;
 }
+
 /* Main wrappers */
 
 html,
@@ -400,6 +406,11 @@ h2.block-title {
 #footer ul.menu li a.menu-heading {
     font-size: .9em;
 }
+
+#footer a {
+    color: #FFF;
+}
+
 .page-news .view .node-teaser {
     padding: 10px 0 30px;
 }

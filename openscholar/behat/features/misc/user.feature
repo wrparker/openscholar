@@ -20,6 +20,7 @@ Feature: User functionality testing.
      When I visit "john/cp/users/add"
       And I fill in "Member" with "michelle"
       And I press "Add member"
+      And I sleep for "5"
      Then I should see "michelle has been added to the group John."
 
   @api @misc_second @now2
@@ -41,10 +42,11 @@ Feature: User functionality testing.
      Then I should see "New Custom Role"
       And I give the role "New Custom Role" in the group "john" the permission "Create Blog entry content"
 
-  @api @misc_second @now2
+  @api @misc_second @now2 @javascript
   Scenario: Assign a custom role to a vsite member.
     Given I am logging in as "john"
      When I give the user "klark" the role "New Custom Role" in the group "john"
+      And I sleep for "5"
      Then I should verify that the user "klark" has a role of "New Custom Role" in the group "john"
 
   @api @misc_second @now2

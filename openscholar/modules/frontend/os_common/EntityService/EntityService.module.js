@@ -489,6 +489,11 @@
         .upgradeDatabase(3, function (event, db, tx) {
             var store = tx.objectStore('entities');
             store.createIndex('vsite', 'vsite', { unique: false });
+        })
+        .upgradeDatabase(4, function (event, db, tx) {
+          var store = tx.objectStore('entities');
+          store.deleteIndex('vsite');
+          store.createIndex('vsite', 'params.vsite', { unique: false });
         });
     }])
   .service('EntityCacheUpdater', ['$http', '$q', '$indexedDB', '$rootScope', 'EntityConfig', function ($http, $q, $idb, $rs, EntityConfig) {
@@ -525,7 +530,7 @@
           url = nextUrl;
         }
 
-        if (Drupal.settings.spaces.id) {
+        if (Drupal.settings.spaces && Drupal.settings.spaces.id) {
           if (url.indexOf('?') == -1) {
             url += '?vsite=' + Drupal.settings.spaces.id;
           }

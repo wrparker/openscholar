@@ -1,7 +1,13 @@
+.field-name-field-address {
+    clear: both;
+
+}
+
 #content .node-person .field-name-field-person-photo,
 #content .node-person .no-default-image,
 .block-boxes-os_boxes_manual_list .node-person .field-name-field-person-photo,
 #content-column .node-person .field-name-field-phone,
+#content-column .node-person .field-name-field-office-hours,
 #content .node-person .field-name-field-email,
 #content .node-person .field-name-og-vocabulary {
     float: left;
@@ -9,6 +15,7 @@
 }
 #content .node-person .os-slider .field-name-field-email,
 #content .node-person .field-name-field-phone,
+#content .node-person .field-name-field-office-hours,
 #content .node-person .field-name-og-vocabulary.view-mode-slide_teaser {
     float: none;
 }

@@ -5,12 +5,7 @@ Drupal.wysiwyg.plugins['os_link'] = {
   url: '',
   iframeWindow: {},
   getWindow: function () {
-    var aid = Drupal.wysiwyg.activeId;
-    if (this.iframeWindow[aid] == undefined) {
-      this.iframeWindow[aid] = document.querySelector('#'+aid+' + .cke iframe').contentWindow;
-    }
-
-    return this.iframeWindow[aid];
+    return document.querySelector('#cke_' + Drupal.wysiwyg.activeId + ' iframe').contentWindow;
   },
   getSelection: function () {
     var w = this.getWindow();
@@ -26,14 +21,30 @@ Drupal.wysiwyg.plugins['os_link'] = {
     }
     else if (selection.type == "Range" || selection.isCollapsed == false) {
       var range = document.createRange();
-      range.setStart(selection.anchorNode, selection.anchorOffset);
-      range.setEnd(selection.focusNode, selection.focusOffset);
+      if (selection.anchorOffset > selection.focusOffset) {
+        range.setStart(selection.focusNode, selection.focusOffset);
+        range.setEnd(selection.anchorNode, selection.anchorOffset);
+      }
+      else {
+        range.setStart(selection.anchorNode, selection.anchorOffset);
+        range.setEnd(selection.focusNode, selection.focusOffset);
+      }
       current = range.commonAncestorContainer;
       text = range.toString();
     }
     else {
       return;
     }
+
+    var trav = current;
+    while (trav.nodeName != 'BODY') {
+      trav = trav.parentNode;
+      if (trav.nodeName == 'A') {
+        current = trav;
+        break;
+      }
+    }
+
 
     var output = {
       content: text,
@@ -71,6 +82,9 @@ Drupal.wysiwyg.plugins['os_link'] = {
       var link = jQuery(selection.node);
       if (link[0].nodeName != 'A') {
         link = link.find('a');
+        if (!link) {
+          link = link.closest('a');
+        }
       }
       if (link.length == 0) {
         link = jQuery(selection.node).parents('a');
@@ -144,50 +158,51 @@ Drupal.wysiwyg.plugins['os_link'] = {
       window = iframe.contentWindow,
       selected = '[Rich content. Click here to overwrite.]';
 
-    // The user selected a link and not double clicked on a link.
-    var selectedLink = jQuery.selectLink != null && typeof(jQuery.selectLink) == 'object';
+    if ($('.form-item-external input', doc).val()) {
+      var osWysiwygLinkUrl = $('.form-item-external input', doc).val();
+      var urlRegex = new RegExp("^" + Drupal.settings.basePath + Drupal.settings.pathPrefix);
+      osWysiwygLinkUrl = osWysiwygLinkUrl.replace(urlRegex, "");
+      $('.form-item-external input', doc).val(osWysiwygLinkUrl.replace(/^\//, ""));
+    }
 
     if (this.selectLink(selection.node) && selection.content == '') {
       selection.content = selection.node.innerHTML;
     }
 
-    if (selectedLink) {
-      $('.form-item-external input', doc).val(jQuery.selectLink.attr('href'));
+    if (selection.content.indexOf('<') != -1) {
+      $('.form-item-link-text input', doc).val(selected);
     }
-
-    if (selection.node != null && selection.node.text != null) {
+    else if (selection.node != null && selection.node.text != null) {
       $('.form-item-link-text input', doc).val(selection.node.text);
     }
     else {
-      if (selectedLink) {
-        $('.form-item-link-text input', doc).val(jQuery.selectLink.text());
-      }
-      else if(typeof(jQuery.selectLink) == 'string') {
-        $('.form-item-link-text input', doc).val(jQuery.selectLink);
-      }
+      $('.form-item-link-text input', doc).val(selection.content);
     }
 
-    // If the link is set to be opened in a new window, then the checkbox will be in checked state.
-    if (selection.node && selection.node.nodeType == Node.ELEMENT_NODE && (selection.node.getAttribute('target') == '_blank')) {
-      $('#edit-target-option', doc).prop('checked', 'checked');
-    }
-    else {
-      if (selectedLink && jQuery.selectLink.attr('target') == "_blank") {
+    if (selection.node && selection.node.nodeType == Node.ELEMENT_NODE) {
+      if (selection.node.nodeName != 'A') {
+        var trav = selection.node,
+          link = selection.node;
+        while (trav.nodeName != 'BODY') {
+          trav = trav.parentNode;
+          if (trav.nodeName == 'A') {
+            link = trav;
+            break;
+          }
+        }
+      }
+      else {
+        var link = selection.node;
+      }
+
+      // If the link is set to be opened in a new window, then the checkbox will be in checked state.
+      if (link.getAttribute('target') == '_blank') {
         $('#edit-target-option', doc).prop('checked', 'checked');
       }
-    }
 
-    // If the link has a title attribute.
-    if (selection.node && selection.node.nodeType == Node.ELEMENT_NODE && selection.node.getAttribute('title') != '') {
-      $('#edit-link-title', doc).val(selection.node.getAttribute('title'));
-    }
-    else {
-      if (selectedLink) {
-        var title = jQuery.selectLink.attr('title');
-
-        if (title != null) {
-          $('#edit-link-title', doc).val(title);
-        }
+      // If the link has a title attribute.
+      if (link.getAttribute('title') != '') {
+        $('#edit-link-title', doc).val(link.getAttribute('title'));
       }
     }
 

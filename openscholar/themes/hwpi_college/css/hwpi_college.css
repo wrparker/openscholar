@@ -234,14 +234,16 @@ margin-top:-2px;
 .links a,
 #footer ul.menu a,
 .boxes-box-content h2,
-.view-os-events .views-field-colorbox {
+.view-os-events .views-field-colorbox,
+.cke_editable p  {
   font-family: Arial,sans-serif;
 }
 
 #page-title,
 #content-column h2,
 #content-column h3,
-#content-column h4 {
+#content-column h4,
+.cke_editable *  {
     font-family: georgia,sans-serif;
     font-weight: normal;
 }
@@ -726,12 +728,14 @@ padding: 20px 0;
 
 .section-nav .expanded.menu-depth-2 > a:hover,
 .section-nav .expanded.menu-depth-2 > a[class="active-trail active active"],
-.section-nav .menu-depth-1 > a[class="active-trail active active"],
 .section-nav a[class="active-trail active active"],
 .section-nav a:hover {
   background-color: #E6E5E3 !important;
 }
 
+.section-nav .menu-depth-1 > a {
+  background-color: #ececec !important;
+}
 
 .section-nav .expanded.menu-depth-2 > a[class="active-trail active active"],
 .section-nav a[class="active-trail active active"] {

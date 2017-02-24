@@ -78,3 +78,43 @@ function os_profiles_update_7007() {
 function os_profiles_update_7008() {
  features_revert(array('os_profiles' => array('field_instance')));
 }
+
+/**
+ * Adding office hours field.
+ */
+function os_profiles_update_7049() {
+  features_revert(array('os_profiles' => array('field', 'field_base', 'field_instance')));
+}
+
+/**
+ * Removing extra People link from primary menu
+ */
+function os_profiles_update_7050() {
+ features_revert(array('os_profiles' => array('views_view')));
+}
+
+/**
+ * Update sync URLs from the old %.json format to the new api\v1\profiles format
+ */
+function os_profiles_update_7051() {
+  os_set_update_batch($sandbox, array(
+    'batch' => 250,
+    'entity' => 'node',
+    'path' => drupal_get_path('module', 'os_profiles') . '/updates/update7051.php',
+  ));
+}
+
+function os_profiles_update_7052(&$sandbox) {
+  os_set_update_batch($sandbox, array(
+    'batch' => 250,
+    'entity' => 'node',
+    'path' => drupal_get_path('module', 'os_profiles') . '/updates/update7052.php',
+  ));
+}
+
+/**
+ * Order the fields in the profile forms to match the profile view.
+ */
+function os_profiles_update_7053() {
+  features_revert(array('os_profiles' => array('variable')));
+}

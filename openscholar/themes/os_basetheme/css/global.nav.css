@@ -155,6 +155,7 @@ ul.menu li a:active {} ul.menu li.active a {} ul.menu li.active-trail a {} ul.me
     padding: 0;
     /* this class (if it exists) could be a problem so reset the padding */
 }
+
 /* Breadcrumbs as an ordered list */
 
 .breadcrumb {
@@ -180,26 +181,58 @@ ul.menu li a:active {} ul.menu li.active a {} ul.menu li.active-trail a {} ul.me
 #breadcrumb a:active {}
 /* Pager */
 
-ul.pager {
-    clear: both;
-    margin: 0;
-    text-align: center;
+.view-content ~ .item-list ul.pager {
+    margin-top: 30px !important;
+    letter-spacing: -1em;
 }
-.item-list ul.pager li {
-    margin: 0;
+.view-content ~ .item-list ul.pager li.pager-current,
+.view-content ~ .item-list ul.pager li:hover {
+    background-color: #efefef;
 }
-ul.pager li {
-    background-image: none;
-    display: inline;
-    list-style-type: none;
-    padding: .5em;
+.view-content ~ .item-list ul.pager li a:hover {
+    text-decoration: none;
 }
-ul.pager li.pager-current {
-    font-weight: 700;
+li.pager-previous + li.pager-ellipsis {
+    display: none;
 }
-.block ul.pager li {
-    margin: 0;
+.view-content ~ .item-list ul.pager li {
+    border-left: 1px solid #dededc;
+    border-top: 1px solid #dededc;
+    border-bottom: 1px solid #dededc;
+    letter-spacing: normal;
+    padding: 0.7em;
 }
+.view-content ~ .item-list ul.pager li.pager-first {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.view-content ~ .item-list ul.pager li.pager-last {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-right: 1px solid #dededc;
+}
+.view-content ~ .item-list ul.pager li.pager-next,
+.view-content ~ .item-list ul.pager li.pager-previous {
+	font-weight: bold;
+	}
+
+ul.mini-pager > li {
+    border: none !important;
+}
+ul.mini-pager li.pager-next,
+ul.mini-pager li.pager-previous {
+    font-weight: normal !important;
+}
+ul.mini-pager li.pager-current, 
+ul.mini-pager li:hover {
+    background-color: transparent !important;
+}
+
+ul.mini-pager li.pager-next,
+ul.mini-pager li.pager-previous {
+	padding:0 !important;
+}
+
 /* Throbber */
 
 .ajax-progress {
@@ -441,7 +474,8 @@ ul.contextual-links li a:hover {
     color: #293352;
     text-decoration: none;
 }
-.contextual-controls-wrapper .add_new {
+.contextual-controls-wrapper .add_new,
+.block-boxes-os_slideshow_box .add_new {
     line-height: 15px !important;
     display: inline-block;
     padding: 5px 10px;
@@ -455,6 +489,8 @@ ul.contextual-links li a:hover {
     border-radius: 4px;
     background: rgb(61, 155, 19);
     text-decoration: none !important;
+    top: 0px;
+    z-index: 3;
 }
 .contextual-controls-wrapper .add_new:hover {
     color: rgb(230, 230, 230);
@@ -882,4 +918,7 @@ ul li.leaf {
 #footer ul li li a {
     font-weight: normal;
     word-wrap: break-word;
+}
+.accordion h3:focus {
+    outline: thin dotted;
 }

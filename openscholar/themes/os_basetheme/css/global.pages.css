@@ -517,6 +517,32 @@ ul.class_material_field_class a.class_material_field_class_anchor {
     bottom: 0;
     right: 0;
 }
+.file-video {
+    clear: both;
+}
+.file-video-oembed {
+    clear: both;
+}
+.file-video-oembed .list-view-teaser .oembed {
+    position: relative;
+    float: left;
+}
+.file-video-oembed .list-view-teaser .oembed img {
+    width: 200px;
+    margin-right: 15px;
+    display: block;
+    margin-bottom: 20px;
+}
+.file-video-oembed .view-mode-teaser p {
+    display: inline;
+}
+.file-video-oembed .view-mode-teaser .read-more {
+    margin-left: 5px;
+    font-size: 13px;
+}
+.list-view-teaser .oembed .video-indicator {
+    bottom: 20px;
+}
 .media-gallery-item:hover .video-indicator {
     background-position: -44px -133px;
 }
@@ -863,7 +889,7 @@ div[id^=event-popover] .event-title a {
     background: none !important;
 }
 .ui-dialog.ui-front {
-    z-index: 101;
+    z-index: 301;
 }
 /** OS LOGIN CONTAINER STYLES **/
 /** SLIDER **/
@@ -1178,4 +1204,11 @@ LIST OF POSTS - PERSON TEASER IN SIDEBAR
     display: block;
     border-bottom: none !important;
     clear: both;
+}
+#support .actions, #documentation .actions {
+    display: none;
+}
+
+.block-element {
+    display: block;
 }

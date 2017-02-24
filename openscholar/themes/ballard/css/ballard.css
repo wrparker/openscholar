@@ -8,6 +8,10 @@ body {
 	font-family: helvetica, arial, sans-serif;
 }
 
+.cke_editable * {
+	font-family: helvetica, arial, sans-serif;
+}
+
 /* LAYOUT ELEMENTS */
 
 #page {

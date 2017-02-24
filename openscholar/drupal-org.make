@@ -36,6 +36,7 @@ projects[comment_sources][subdir] = "contrib"
 projects[comment_sources][version] = 2.0
 projects[comment_sources][patch][] = "https://drupal.org/files/issues/22086870-comment-source-wrong-query-field-1.patch"
 projects[comment_sources][patch][] = "https://drupal.org/files/issues/change-submit-handler-index-2513794-2.patch"
+projects[comment_sources][patch][] = "https://raw.github.com/openscholar/openscholar/bb0856af84a58881a0438cd32d9b6a21dcfd15ea/patches/comment_sources.9139.comment_settings.patch"
 
 projects[context][subdir] = "contrib"
 projects[context][version] = 3.0-beta4
@@ -83,7 +84,7 @@ projects[dyntextfield][download][tag] = 1.0
 projects[dyntextfield][download][url] = "git://github.com/amitaibu/dyntextfield.git"
 
 projects[entity][subdir] = "contrib"
-projects[entity][branch] = 7.x-1.x
+projects[entity][version] = 1.7
 projects[entity][patch][] = http://drupal.org/files/1972668-file-delete-1.patch
 projects[entity][patch][] = https://www.drupal.org/files/issues/2086225-entity-access-check-18.patch
 
@@ -166,7 +167,12 @@ projects[html_title][subdir] = "contrib"
 projects[html_title][version] = 1.1
 
 projects[imageapi_optimize][subdir] = "contrib"
-projects[imageapi_optimize][version] = 1.0
+projects[imageapi_optimize][download][type] = git
+projects[imageapi_optimize][download][branch] = 7.x-1.x
+projects[imageapi_optimize][download][revision] = 234f208
+
+projects[imagemagick][subdir] = "contrib"
+projects[imagemagick][version] = 1.0
 
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0
@@ -277,6 +283,7 @@ projects[oembed][patch][] = "http://drupal.org/files/issues/oembed.2134415.wysiw
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/514d6c636dc69ea76ea307a874c7cd9c3e0fb045/patches/oembed.alt_tags_no_escape.patch"
 projects[oembed][patch][] = "http://drupal.org/files/issues/split-up-regex-2739023-1.patch"
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/61b4675841580356481463f4780627bab619f197/patches/oembed.8762.uri_fragments.patch"
+projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/6d4ccf7f26124a57a3483b2e1197017a95d4b026/patches/oembed.backup_providers.patch"
 
 projects[og][subdir] = "contrib"
 projects[og][version] = 2.6
@@ -321,7 +328,7 @@ projects[pinserver][subdir] = "contrib"
 projects[pinserver][type] = module
 projects[pinserver][download][type] = git
 projects[pinserver][download][url] = "git://github.com/openscholar/pinserver.git"
-projects[pinserver][download][tag] = 7.x-3.4.19
+projects[pinserver][download][tag] = 7.x-3.4.20
 
 projects[purl][subdir] = "contrib"
 ;: projects[purl][version] = 1.0-beta1+11-dev
@@ -343,12 +350,10 @@ projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
 
 projects[restful][subdir] = "contrib"
-projects[restful][download][type] = git
-projects[restful][download][url] = "https://github.com/RoySegall/restful.git"
-projects[restful][download][branch] = 444
+projects[restful][version] = "1.6"
+# Patch to be able to update a taxonomy term.
+projects[restful][patch][] = "https://patch-diff.githubusercontent.com/raw/RESTful-Drupal/restful/pull/445.diff"
 projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/839d0cc214f2422e924e35d33133d1268b8cc1cd/patches/restful.put_file.patch"
-;projects[restful][download][branch] = "7.x-1.x"
-;projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
 
 projects[redirect][subdir] = "contrib"
 projects[redirect][version] = 1.0-rc1
@@ -521,6 +526,11 @@ libraries[colorbutton][subdir] = "ckeditor/plugins"
 libraries[colorbutton][download][type] = "file"
 libraries[colorbutton][download][url] = "http://download.ckeditor.com/colorbutton/releases/colorbutton_4.5.8.zip"
 
+libraries[image2][type] = "libraries"
+libraries[image2][subdir] = "ckeditor/plugins"
+libraries[image2][download][type] = "file"
+libraries[image2][download][url] = "http://download.ckeditor.com/image2/releases/image2_4.5.11.zip"
+
 libraries[panelbutton][type] = "libraries"
 libraries[panelbutton][subdir] = "ckeditor/plugins"
 libraries[panelbutton][download][type] = "file"
@@ -561,10 +571,15 @@ libraries[indentblock][subdir] = "ckeditor/plugins"
 libraries[indentblock][download][type] = "file"
 libraries[indentblock][download][url] = "http://download.ckeditor.com/indentblock/releases/indentblock_4.5.10.zip"
 
+libraries[bidi][type] = "libraries"
+libraries[bidi][subdir] = "ckeditor/plugins"
+libraries[bidi][download][type] = "file"
+libraries[bidi][download][url] = "http://download.ckeditor.com/bidi/releases/bidi_4.5.10.zip"
+
 libraries[dragresize][type] = "libraries"
 libraries[dragresize][subdir] = "ckeditor/plugins"
 libraries[dragresize][download][type] = "git"
-libraries[dragresize][download][url] = "https://github.com/sstur/ck-dragresize.git"
+libraries[dragresize][download][url] = "https://github.com/openscholar/ck-dragresize.git"
 
 ; Angular js libraries.
 libraries[angular_select2][type] = "libraries"

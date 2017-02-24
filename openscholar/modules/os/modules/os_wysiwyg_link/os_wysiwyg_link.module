@@ -137,7 +137,7 @@ function os_wysiwyg_link_filter($text) {
         // set defaults so no notices appear
         if ($comps) {
           $comps += array('query' => '', 'fragment' => '');
-          $page = str_replace(array('?'.$comps['query'], '#'.$comps['fragment']), '', $m[3]);
+          $_page = str_replace(array('?'.$comps['query'], '#'.$comps['fragment']), '', $m[3]);
           // query string is in var=val&var=val format. parse it into an array for drupal
           parse_str(htmlspecialchars_decode($comps['query']), $query);
           $options = array(
@@ -146,8 +146,11 @@ function os_wysiwyg_link_filter($text) {
           );
         }
         else {
-          $page = $m[3];
+          $_page = $m[3];
         }
+
+        $page = _os_wysiwyg_fix_path($_page);
+
         if (url_is_external($page)) {
           $url = url($page, $options + array('external' => TRUE));
         }
@@ -175,4 +178,55 @@ function _os_wysiwyg_link_find_links($str) {
   $matches = array();
   preg_match_all('~<a[^>]+href="([^"]+)"[^>]+data-(fid|url)="([^"]*)">~', $str, $matches, PREG_SET_ORDER);
   return $matches;
+}
+
+/*
+ * Remove extra slashes, dots; add vsite
+ *
+ *  Source: http://www.geekality.net/2011/05/12/php-dealing-with-absolute-and-relative-urls/
+ */
+function _os_wysiwyg_fix_path($url) {
+    $base = base_path();
+    $space = spaces_get_space();
+
+    if ($space) {
+      $vsite = $space->group->purl;
+    }
+
+    // Return base if no url
+    if (! $url) {
+      return $base;
+    }
+
+    // Return if already absolute URL
+    if (parse_url($url, PHP_URL_SCHEME) != '') {
+      return $url;
+    }
+
+    // Urls only containing query or anchor
+    if ($url[0] == '#' || $url[0] == '?') {
+      return $base.$url;
+    }
+
+    // Parse base URL and convert to local variables: $path
+    extract(parse_url($base));
+
+    // If no path, use /
+    if ( ! isset($path)) $path = '/';
+
+    // Remove non-directory element from path
+    $path = preg_replace('#/[^/]*$#', '', $path);
+
+    // Destroy path if relative url points to root
+    if ($url[0] == '/') $path = '';
+
+    // Dirty absolute URL
+    $abs = "/$vsite/$url";
+
+    // Replace '//' or '/./' or '/foo/../' with '/'
+    $re = array('#(/\.?/)#', '#/(?!\.\.)[^/]+/\.\./#');
+    for ($n = 1; $n > 0; $abs = preg_replace($re, '/', $abs, -1, $n)) {}
+
+    // Absolute URL is ready!
+    return $abs;
 }

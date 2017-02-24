@@ -1,4 +1,4 @@
-name = FAQ
+name = FAQs
 description = Create and maintain frequently asked questions for your site.
 core = 7.x
 package = Features

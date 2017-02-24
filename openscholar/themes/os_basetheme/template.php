@@ -19,7 +19,7 @@ function os_basetheme_preprocess_html(&$vars) {
     $vars['classes_array'][] = 'navbar-off';
   }
 
-  $vars['use_responsive_behaviors'] = (bool) variable_get('enable_responsive', FALSE);
+  $vars['use_responsive_behaviors'] = (bool) variable_get('enable_responsive', true);
 }
 
 /**
@@ -580,4 +580,105 @@ function os_basetheme_file_icon($variables) {
   $svg_url = str_replace('.png', '.svg', $icon_url );
   $mime = check_plain($file->filemime);
   return '<img class="file-icon" alt="' . check_plain($alt) . '" title="' . $mime . '" src="' . $svg_url . '" />';
+}
+
+/**
+ * Override theme_views_mini_pager
+ */
+function os_basetheme_views_mini_pager($vars) {
+  global $pager_page_array, $pager_total;
+  $tags = $vars['tags'];
+  $element = $vars['element'];
+  $parameters = $vars['parameters'];
+
+  // current is the page we are currently paged to
+  $pager_current = $pager_page_array[$element] + 1;
+  // max is the maximum page number
+  $pager_max = $pager_total[$element];
+  // End of marker calculations.
+
+  if ($pager_total[$element] > 1) {
+
+    $li_previous = theme('pager_previous',
+      array(
+        'text' => t('«'),
+        'element' => $element,
+        'interval' => 1,
+        'parameters' => $parameters,
+      )
+    );
+    if (empty($li_previous)) {
+      $li_previous = "&nbsp;";
+    }
+
+    $li_next = theme('pager_next',
+      array(
+        'text' => t('»'),
+        'element' => $element,
+        'interval' => 1,
+        'parameters' => $parameters,
+      )
+    );
+
+    if (empty($li_next)) {
+      $li_next = "&nbsp;";
+    }
+
+    $items[] = array(
+      'class' => array('pager-previous'),
+      'data' => $li_previous,
+    );
+
+    $items[] = array(
+      'class' => array('pager-current'),
+      'data' => t('@current of @max', array('@current' => $pager_current, '@max' => $pager_max)),
+    );
+
+    $items[] = array(
+      'class' => array('pager-next'),
+      'data' => $li_next,
+    );
+    return theme('item_list',
+      array(
+        'items' => $items,
+        'title' => NULL,
+        'type' => 'ul',
+        'attributes' => array('class' => array('pager mini-pager')),
+      )
+    );
+  }
+}
+
+/**
+ * Override theme_file_link
+ */
+function os_basetheme_file_link($variables) {
+  $file = $variables['file'];
+  $icon_directory = $variables['icon_directory'];
+
+  $url = file_create_url($file->uri);
+  $icon = theme('file_icon', array('file' => $file, 'icon_directory' => $icon_directory));
+
+  // Set options as per anchor format described at
+  // http://microformats.org/wiki/file-format-examples
+  $options = array(
+    'attributes' => array(
+      'type' => $file->filemime . '; length=' . $file->filesize,
+    ),
+  );
+
+  // Use the description as the link text if available.
+  if (empty($file->description)) {
+    $link_text = $file->filename;
+  }
+  else {
+    $link_text = $file->description;
+    $options['attributes']['title'] = check_plain($file->filename);
+  }
+  if (isset($file->view_mode) && $file->view_mode == 'os_files_link') {
+    // If Link with no icon is selected for LOF widget
+    return '<span class="file">' . l($link_text, $url, $options) . '</span>';
+  } else{
+    return '<span class="file">' . $icon . ' ' . l($link_text, $url, $options) . '</span>';
+  }
 }

@@ -80,6 +80,7 @@ function os_publications_install() {
       ->execute();
   }
 
+  $new_bibyears[0] = 'Published';
   variable_set('biblio_years_text', $new_bibyears);
 
   _reset_csl_map(FALSE);
@@ -1588,4 +1589,52 @@ function os_publications_update_7047() {
  */
 function os_profiles_update_7048() {
   features_revert(array('os_publications' => array('field_base', 'field_instance')));
+}
+
+/**
+ * Fix CSL style to remove 'et al' for harvard-chicago-author-date.csl style
+ */
+function os_publications_update_7049() {
+  $citations = array(
+    'harvard-chicago-author-date',
+  );
+
+  foreach ($citations as $citation) {
+    os_publications_revert_citeproc_style($citation);
+  }
+}
+
+/**
+ * Fix CSL style to remove irrelevant fields for each publication types in harvard-chicago-author-date.csl style
+ */
+function os_publications_update_7050() {
+  $citations = array(
+    'harvard-chicago-author-date',
+  );
+
+  foreach ($citations as $citation) {
+    os_publications_revert_citeproc_style($citation);
+  }
+}
+
+/**
+ * Adding published as publication type.
+ */
+function os_publications_update_7051() {
+  $types = variable_get('biblio_years_text');
+  $types[0] = 'Published';
+  variable_set('biblio_years_text', $types);
+}
+
+/**
+ * Fix publications that are missing their year information
+ */
+function os_publications_update_7052() {
+  db_update('biblio')
+    ->expression('biblio_year', 'biblio_date')
+    ->expression('biblio_date', "''")
+    ->condition('biblio_year', 0)
+    ->isNotNull('biblio_date')
+    ->where("concat('',biblio_date*1) = biblio_date")
+    ->execute();
 }

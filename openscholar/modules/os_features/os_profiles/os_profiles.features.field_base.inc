@@ -248,6 +248,35 @@ function os_profiles_field_default_field_bases() {
     'type' => 'text_long',
   );
 
+  // Exported field_base: 'field_office_hours'
+  $field_bases['field_office_hours'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_office_hours',
+    'foreign keys' => array(
+      'format' => array(
+        'columns' => array(
+          'format' => 'format',
+        ),
+        'table' => 'filter_format',
+      ),
+    ),
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(
+      'max_length' => 255,
+    ),
+    'translatable' => 0,
+    'type' => 'text',
+  );  
+
   // Exported field_base: 'field_person_photo'
   $field_bases['field_person_photo'] = array(
     'active' => 1,

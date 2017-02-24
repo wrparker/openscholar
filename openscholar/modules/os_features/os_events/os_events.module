@@ -40,6 +40,10 @@ function os_events_os_app_info() {
     ),
   );
 
+  if (module_exists('os_exporter')) {
+    $apps['os_events']['has_settings'] = true;
+  }
+
   return $apps;
 }
 
@@ -58,6 +62,20 @@ function os_events_theme() {
       'path' => drupal_get_path('module', 'os_events') . '/template',
     ),
   );
+}
+
+/**
+ * Implements settings form for events pages
+ */
+function os_events_settings() {
+  $form = array();
+  $form['os_exporter_disable_event_export'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Do not display export options on event pages.'),
+    '#default_value' => variable_get('os_exporter_disable_event_export', 0),
+  );
+
+  return system_settings_form($form);
 }
 
 /**
@@ -123,9 +141,13 @@ function os_events_node_update($node) {
     return;
   }
   // For non-recurring events.
-  if (empty($node->field_date[LANGUAGE_NONE][0]['rrule'])) {
+  if (!empty($node->field_date) && !empty($node->original->field_date) && empty($node->field_date[LANGUAGE_NONE][0]['rrule'])) {
     // If event start date or location has been altered, then registrants should be notified.
-    if ($node->field_date[LANGUAGE_NONE][0]['value'] != $node->original->field_date[LANGUAGE_NONE][0]['value'] || $node->field_event_location[LANGUAGE_NONE][0]['value'] != $node->original->field_event_location[LANGUAGE_NONE][0]['value']) {
+    $date = $node->field_date[LANGUAGE_NONE][0]['value'];
+    $original_date = $node->original->field_date[LANGUAGE_NONE][0]['value'];
+    $location = !empty($node->field_event_location) ? $node->field_event_location[LANGUAGE_NONE][0]['value'] : "";
+    $original_location = !empty($node->original->field_event_location) ? $node->original->field_event_location[LANGUAGE_NONE][0]['value'] : '';
+    if ($date != $original_date || $location != $original_location) {
       // Initializing EntityFieldQuery to obtain all registration entities with a certain event node id
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'registration')
@@ -257,6 +279,14 @@ function os_events_menu() {
     'access arguments' => array(0, 1),
     'page arguments' => array(1),
     'page callback' => 'os_events_export_to_csv',
+  );
+
+  $items['features/os_events'] = array(
+    'title' => 'Event Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os_events_settings'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_CALLBACK,
   );
 
   return $items;
@@ -2324,6 +2354,7 @@ function os_events_mail_alter(&$message) {
  * event node form.
  */
 function os_events_form_event_node_form_alter(&$form, &$form_state) {
+
   $form['#attached']['js'][] = drupal_get_path('module', 'os_events') . '/js/os_events.js';
   $form['#validate'][] = 'os_events_validate_repeat_on_checkbox';
   // Attaching form state behavior to show the checkbox only when signup and repeat checkboxes are with checked state.
@@ -2432,6 +2463,28 @@ function os_events_validate_repeat_on_checkbox($form, $form_state) {
     // Formatting repeat rules in structured array.
     $parts = date_repeat_split_rrule($repeating);
     $rrule = $parts[0];
+    $parsed_exceptions = (array) $parts[1];
+    $exception_count = 0;
+    foreach ($parsed_exceptions as $exception) {
+      $date = date_ical_date($exception, 'UTC');
+      date_timezone_set($date, date_default_timezone_object());
+      $exceptions = date_format($date, 'Y-m-d');
+      if (isset($form_state['values']['field_date'][LANGUAGE_NONE][0]['value'])) {
+        $event_start_date = date('Y-m-d', strtotime($form_state['values']['field_date'][LANGUAGE_NONE][0]['value']));
+        if ($exceptions <= $event_start_date) {
+          form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][exceptions][EXDATE][' . $exception_count . '][datetime][date', t('The first occurrence of a repeating event cannot be an exception.'));
+        }
+      }
+      if (isset($rrule['UNTIL'])) {
+        $end_date = date_ical_date($rrule['UNTIL'], 'UTC');
+        date_timezone_set($end_date, date_default_timezone_object());
+        $end_date = date_format($end_date, 'Y-m-d');
+        if ($exceptions >= $end_date) {
+          form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][exceptions][EXDATE][' . $exception_count . '][datetime][date', t('The first occurrence of a repeating event cannot be an exception.'));
+        }
+      }
+      $exception_count++;
+    }
     // Validation for weekly, monthly and yearly repeating events.
     if (!isset($rrule['BYDAY']) && $rrule['FREQ'] == 'WEEKLY') {
       form_set_error('field_date][' . LANGUAGE_NONE . '][0][rrule][FREQ', t('You must select at least one day.'));
@@ -3053,4 +3106,27 @@ function os_events_field_create_field($field) {
 
   db_add_index('field_data_field_date', 'date_start', array('field_date_value'));
   db_add_index('field_data_field_date', 'date_end', array('field_date_value2'));
+}
+
+/**
+* Implements hook_cp_settings().
+*/
+function os_events_cp_settings() {
+  $settings['os_exporter_disable_event_export'] = array(
+    'group' => array(
+      '#id' => 'feature_os_events',
+      '#title' => t('Events'),
+      '#weight' => 4,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about Events'), 'http://docs.openscholar.harvard.edu/events-app#events-app-settings', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#title' => t('Disable export option on Event pages; don\'t allow site Events to be shared to iCal, RSS or subscription.'),
+      '#type' => 'checkbox',
+      '#default_value' => variable_get('os_exporter_disable_event_export', 0),
+      '#weight' => -1,
+      '#prefix' => '<label></label>',
+    ),
+  );
+  return $settings;
 }

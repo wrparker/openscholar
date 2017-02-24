@@ -299,11 +299,9 @@ function vsite_vocab_field_attach_view_alter(&$output, $context) {
     return;
   }
   $original = $output[OG_VOCAB_FIELD][0]['#markup'];
-
-  if (count($output[OG_VOCAB_FIELD]['#items']) > 3) {
-    // Show links collapsed.
-    $output[OG_VOCAB_FIELD][0]['#markup'] = '<a href="#" class="toggle" >' . t('See also:') . '</a><div class="os-slider">'. $original .'</div>';
-
+  $trim_terms_length = 94;
+  if (strlen(strip_tags($original)) > $trim_terms_length) {
+    $output[OG_VOCAB_FIELD][0]['#markup'] = '<div class="more">'. t('See also: !terms', array('!terms' => vsite_vocab_html_cut($original, $trim_terms_length))) .'</div>';
     $output['#attached']['js'][] = drupal_get_path('module', 'os').'/theme/os_toggle.js';
   }
   else {
@@ -610,3 +608,88 @@ function vsite_vocab_sort_weight_alpha($terms) {
   return $ordered_terms;
 }
 
+/**
+ * Helper function to generate terms markup text for more / less toggle
+ *  - markup text
+ *  - lenght of characters will be visible
+ */
+function vsite_vocab_html_cut($text, $max_length)
+{
+    $tags   = array();
+    $result = "";
+
+    $is_open   = false;
+    $grab_open = false;
+    $is_close  = false;
+    $in_double_quotes = false;
+    $in_single_quotes = false;
+    $tag = "";
+
+    $i = 0;
+    $stripped = 0;
+    $stripped_text = strip_tags($text);
+    while ($i < strlen($text) && $stripped < strlen($stripped_text) && $stripped < $max_length) {
+      $symbol  = $text{$i};
+      $result .= $symbol;
+      switch ($symbol) {
+       case '<':
+          $is_open   = true;
+          $grab_open = true;
+          break;
+       case '"':
+         if ($in_double_quotes)
+             $in_double_quotes = false;
+         else
+             $in_double_quotes = true;
+          break;
+        case "'":
+          if ($in_single_quotes)
+              $in_single_quotes = false;
+          else
+              $in_single_quotes = true;
+          break;
+        case '/':
+          if ($is_open && !$in_double_quotes && !$in_single_quotes) {
+            $is_close  = true;
+            $is_open   = false;
+            $grab_open = false;
+          }
+          break;
+        case ' ':
+          if ($is_open)
+              $grab_open = false;
+          else
+              $stripped++;
+          break;
+        case '>':
+          if ($is_open) {
+            $is_open   = false;
+            $grab_open = false;
+            array_push($tags, $tag);
+            $tag = "";
+          }
+          else if ($is_close) {
+            $is_close = false;
+            array_pop($tags);
+            $tag = "";
+          }
+          break;
+        default:
+          if ($grab_open || $is_close)
+              $tag .= $symbol;
+          if (!$is_open && !$is_close)
+              $stripped++;
+      }
+      $i++;
+    }
+
+    if ($tags || (substr(trim($result), -2) == '>,')) {
+      // Get the last term position in case of open tag or end of a term
+      $trim_pos = strrpos($result, '>,');
+      $result_trim = substr($result, 0, ($trim_pos + 1));
+    } else {
+      $result_trim = $result;
+    }
+    $result = $result_trim . '<span class="morecontent"><span>' . str_replace($result_trim, '', $text) .  '</span></span>';
+    return $result;
+}

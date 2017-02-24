@@ -51,6 +51,21 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
   }
 
   /**
+   * Activate user roles
+   */
+  public function activateRoles() {
+    static $vsiteActivated = false;
+    if (!$vsiteActivated) {
+      if (module_exists('vsite') && $vsite = vsite_get_vsite($this->request['vsite'])) {
+        spaces_set_space($vsite);
+        $vsite->activate_user_roles();
+        $vsite->init_overrides();
+      }
+      $vsiteActivated = true;
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function access() {
@@ -83,17 +98,11 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
    * Check access for the given user against a single menu path
    */
   public function menuAccess(&$menuItem) {
-    static $vsiteActivated = false;
-    if (!$vsiteActivated) {
-      if (module_exists('vsite') && $vsite = vsite_get_vsite($this->request['vsite'])) {
-        spaces_set_space($vsite);
-        $vsite->activate_user_roles();
-      }
-      $vsiteActivated = true;
-    }
+
+    $this->activateRoles();
 
     $access = false;
-    if ($menuItem['children']) {
+    if (!empty($menuItem['children'])) {
       foreach ($menuItem['children'] as &$c) {
         $access = $this->menuAccess($c) || $access;
       }
@@ -135,6 +144,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
   public function getMenu($name_string) {
 
     $output = array();
+    $this->activateRoles();
 
     $function = "get_$name_string";
     if (method_exists($this, $function)) {
@@ -190,6 +200,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     $user = $this->getAccount();
     $vsite = $this->request['vsite'];
     $vsite_object = vsite_get_vsite($vsite);
+    spaces_set_space($vsite_object);
 
     $bundles = os_app_info_declared_node_bundle();
     $type_info = node_type_get_types();
@@ -268,12 +279,36 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'href' => 'cp/content/files-private'
     )):array();
 
+    $settings_forms = cp_get_setting_forms();
+
+    $settings_links = array();
+    $space_access = spaces_access_admin();
+    foreach ($settings_forms as $f) {
+      $group = $f['group']['#title'];
+      $id = $f['group']['#id'];
+
+      $access = !isset($f['form']['#access']) ? $space_access : $f['form']['#access'];
+
+      if ($access) {
+        $settings_links[$id] = array(
+          'label' => $group,
+          'type' => 'directive',
+          'directive' => array(
+            'ap-settings-form',
+            'form' => $f['group']['#id']
+          ),
+          'parent' => !empty($f['group']['#menu_parent']) ? $f['group']['#menu_parent'] : 'advanced'
+        );
+      }
+    }
+
     //Order alphabetically
     $labelcmp = function ($a, $b) {
         return strnatcmp($a['label'], $b['label']);
     };
     uasort($add_links, $labelcmp);
     uasort($import_links, $labelcmp);
+    uasort($feature_settings, $labelcmp);
 
     $structure = array(
       'content' => array(
@@ -285,12 +320,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
             'label' => 'Browse',
             'type' => 'heading',
             'default_state' => 'collapsed',
-            'children' => array(
-              'comments' => array(
-                'label' => 'Comments',
-                'type' => 'link',
-                'href' => 'cp/content/comments'
-              ),
+            'children' => array(              
               'content' => array(
                 'label' => 'Content',
                 'type' => 'link',
@@ -360,16 +390,20 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'default_state' => 'collapsed',
         'children' => array(
           'app' => array(
-            'label' => 'Enable Apps',
+            'label' => 'Enable / Disable Apps',
             'type' => 'link',
             'href' => 'cp/apps'
-          )
-        ) + $feature_settings +
-        array(
+          ),
+          'app_settings' => array(
+            'label' => 'App Settings',
+            'type' => 'heading',
+            'default_state' => 'collapsed',
+            'children' => $feature_settings
+          ),
           'advanced' => array(
-            'label' => 'Advanced',
-            'type' => 'link',
-            'href' => 'cp/settings'
+            'label' => 'Global Settings',
+            'type' => 'heading',
+            'default_state' => 'collapsed',
           )
         ),
       ),
@@ -382,20 +416,16 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'label' => 'Help',
         'type' => 'heading',
         'default_state' => 'collapsed',
-        'children' => array(
-          'documentation' => array(
-            'label' => 'Documentation',
-            'type' => 'link',
-            'href' => 'cp/welcome'
-          ),
-          'support' => array(
-            'label' => 'Support',
-            'type' => 'link',
-            'href' => 'cp/support'
-          ),
-        ),
+        'children' => array(),
       ),
     );
+
+    foreach ($settings_links as $k => $sl) {
+      $elem = &$this->findMenuElement($structure, (array)$sl['parent']);
+      unset($sl['parent']);
+      $elem['children'][$k] = $sl;
+      uasort($elem['children'], $labelcmp);
+    }
 
     //Should we show this user the admin links?
     if (user_access('access toolbar',$user)) {
@@ -427,6 +457,42 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
     }
 
     return $structure;
+  }
+
+  /**
+   * @param $menu - The menu to search
+   * @param $identifier - An array of keys in the menu array that will lead to the target element
+   * Ex.
+   *      findMenuParent('browse', 'content')
+   *      findMenuParent('appearance')
+   */
+  private function &findMenuElement(&$menu, $args) {
+    $element = $args[0];//TODO::
+    if (isset($menu[$element])) {
+      if (count($args) == 1) {
+        return $menu[$element];
+      }
+      else if (empty($element['children'])) {
+        return false;
+      }
+      else {
+        array_shift($args);
+        $target = &$this->findMenuElement($menu[$element]['children'], $args);
+        return $target;
+      }
+    }
+    else {
+      foreach ($menu as &$m) {
+        if (empty($m['children'])) {
+          continue;
+        }
+        else {
+          if ($target = &$this->findMenuElement($m['children'], $args)) {
+            return $target;
+          }
+        }
+      }
+    }
   }
 
   protected function getVariableController($vsite) {
@@ -472,20 +538,21 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
    */
   protected function alterURLs(&$menu) {
 
-    $vsite = $this->request['vsite'];
-    $vsite_object = vsite_get_vsite($vsite);
+    if (!empty($this->request['vsite'])) {
+      $vsite = $this->request['vsite'];
+      $vsite_object = vsite_get_vsite($vsite);
 
-    foreach ($menu as $key => $value) {
-      if (!empty($value['children'])) {
-        $this->alterURLs($menu[$key]['children']);
-      }
-
-      if (!empty($value['href']) && $value['href'] != '#') {
-        if ($vsite_object) {
-          $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href'], !empty($value['options']) ? $value['options'] : array());
+      foreach ($menu as $key => $value) {
+        if (!empty($value['children'])) {
+          $this->alterURLs($menu[$key]['children']);
         }
-        else {
-          $menu[$key]['href'] = url($value['href'], !empty($value['options']) ? $value['options'] : array());
+
+        if (!empty($value['href']) && $value['href'] != '#') {
+          if ($vsite_object) {
+            $menu[$key]['href'] = $vsite_object->get_absolute_url($value['href'], !empty($value['options']) ? $value['options'] : array());
+          } else {
+            $menu[$key]['href'] = url($value['href'], !empty($value['options']) ? $value['options'] : array());
+          }
         }
       }
     }

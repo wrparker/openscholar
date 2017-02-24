@@ -13,7 +13,8 @@ h1.page-title,
 }
 
 .not-front #content-column p,
-#content-column p {
+#content-column p,
+.cke_editable * {
 	font-family:georgia;
 }
 
@@ -129,7 +130,7 @@ border-top: 1px dotted #999;
 
 }
 
-
+#footer ul.menu li a.menu-heading,
 h2.block-title {
 font-size: 1.14em;
 }
