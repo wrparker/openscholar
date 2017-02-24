@@ -1509,11 +1509,21 @@ display: block;
 	    padding-right: 30px;
 }
 
+.page-node-revisions .node-link .field-name-field-upload .field-items div {
+	float:left;
+}
 
-.page-node-revisions .media-element[float="left"] {
+
+.page-node-revisions .node-link .field-name-field-upload {
+	margin-top: 20px;
+}
+
+
+.page-node-revisions .media-element[style*="float: left"] {
 	padding-right:15px;
 }
 
-.page-node-revisions .media-element[float="right"] {
+.page-node-revisions .media-element[style*="float: right"] {
 	padding-left:15px;
 }
+
