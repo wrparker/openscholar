@@ -215,8 +215,12 @@ function os_boxes_remove_widget($module, $delta, $region = FALSE) {
 
   $bid = $module . '-' . $delta;
 
-  $blocks[$bid]['region'] = $region;
-  os_layout_set_multiple($contexts, $blocks);
+  $regions = system_region_list(variable_get('theme_default'));
+
+  if (isset($regions[$region]) || $region === FALSE) {
+    $blocks[$bid]['region'] = $region;
+    os_layout_set_multiple($contexts, $blocks);
+  }
 }
 
 /**

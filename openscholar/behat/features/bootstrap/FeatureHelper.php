@@ -537,7 +537,7 @@ class FeatureHelp {
    */
   static public function checkUserRoleInGroup($name, $role, $group) {
     drupal_static_reset();
-    $gid = self::GetNodeId($group);
+    $gid = self::idFromPath($group);
     $user = user_load_by_name($name);
 
     if (!og_is_member('node', $gid, 'user', $user)) {
