@@ -293,12 +293,9 @@ function os_booklets_os_add_new_links_alter(&$links) {
  */
 function os_booklets_cp_settings() {
 
-  $settings = array();
-  $vsite = vsite_get_vsite();
-  $spaces_features = $vsite->controllers->variable->get('spaces_features');
-
+  $spaces_features = variable_get('spaces_features');
   // Booklets settings link won't appear in CP menu if booklets app is not enabled.
-  if (!$spaces_features['os_booklets']) {
+  if (empty($spaces_features['os_booklets'])) {
     return $settings;
   }
 

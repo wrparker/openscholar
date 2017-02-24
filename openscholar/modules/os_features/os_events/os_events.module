@@ -3113,12 +3113,9 @@ function os_events_field_create_field($field) {
 */
 function os_events_cp_settings() {
 
-  $settings = array();
-  $vsite = vsite_get_vsite();
-  $spaces_features = $vsite->controllers->variable->get('spaces_features');
-
+  $spaces_features = variable_get('spaces_features');
   // Event settings link won't appear in CP menu if event app is not enabled.
-  if (!$spaces_features['os_events']) {
+  if (empty($spaces_features['os_events'])) {
     return $settings;
   }
 

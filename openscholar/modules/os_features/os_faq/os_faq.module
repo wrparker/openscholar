@@ -127,12 +127,9 @@ function os_faq_views_query_alter(&$view, &$query) {
  */
 function os_faq_cp_settings() {
 
-  $settings = array();
-  $vsite = vsite_get_vsite();
-  $spaces_features = $vsite->controllers->variable->get('spaces_features');
-
+  $spaces_features = variable_get('spaces_features');
   // FAQ settings link won't appear in CP menu if FAQ app is not enabled.
-  if (!$spaces_features['os_faq']) {
+  if (empty($spaces_features['os_faq'])) {
     return $settings;
   }
 
