@@ -31,6 +31,11 @@
         scope.field_name = field_root_id.match(/edit-([\w-]*)/)[1].replace(/-/g, '_');
         scope.field_id = field_root_id;
         scope.showHelp = false;
+        if (scope.$parent.element.custom_directive_parameters.hide_helpicon) {
+          scope.hideHelpicon = scope.$parent.element.custom_directive_parameters.hide_helpicon;
+        } else {
+          scope.hideHelpicon = false;
+        }
         if (attr['panes']) {
           scope.panes = attr['panes'].split(',');
         }

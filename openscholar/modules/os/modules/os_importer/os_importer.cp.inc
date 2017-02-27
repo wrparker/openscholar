@@ -134,6 +134,7 @@ function os_importer_cp_settings() {
           '#custom_directive_parameters' => array(
             'cardinality' => 1,
             'panes' => array('upload', 'library'),
+            'hide_helpicon' => true,
             'droppable_text' => t('Drag and drop file here.'),
             'upload_text' => t('Select file to Add'),
             'max-filesize' => '500kb',
