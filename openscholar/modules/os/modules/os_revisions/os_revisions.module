@@ -21,6 +21,7 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
     $form['revision_information']['#access'] = FALSE;
   }
   else {
+    $form['revision_information']['revision']['#access'] = FALSE;
     $max_revisions = (int)variable_get("restrict_node_revision_number_for_" . str_replace("-", "_", $form_state['node']->type), FALSE);
     $num_revisions = count(node_revision_list(node_load($form_state['node']->nid))) - 1;
     if ($max_revisions) {
@@ -75,7 +76,6 @@ function os_revisions_menu_alter(&$items) {
   $items['node/%node/revisions']['theme callback'] = 'cp_theme_name';
   $items['node/%node/revisions/%/view']['theme callback'] = 'cp_theme_name';
 }
-
 
 /**
  * Re-write the list of revisions for a node
