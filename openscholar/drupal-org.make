@@ -171,6 +171,7 @@ projects[imageapi_optimize][download][revision] = 234f208
 
 projects[imagemagick][subdir] = "contrib"
 projects[imagemagick][version] = 1.0
+projects[imagemagick][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/53169db65764686c511972619fdeb902704731d6/patches/imagemagick.no-resize-for-animated-gifs.patch"
 
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0
