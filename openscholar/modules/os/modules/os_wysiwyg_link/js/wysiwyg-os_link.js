@@ -90,17 +90,20 @@ Drupal.wysiwyg.plugins['os_link'] = {
         link = jQuery(selection.node).parents('a');
       }
 
-      this.openModal(this.parseAnchor(link));
+      this.openModal(editorId, this.parseAnchor(link), this.insertLink);
     }
     else {
       var selectedLink = jQuery.selectLink != null && typeof(jQuery.selectLink) == 'object';
       if (selectedLink) {
-        this.openModal(this.parseAnchor(jquery.selectLink[0]));
+        this.openModal(editorId, this.parseAnchor(jquery.selectLink[0]), this.insertLink);
+      }
+      else {
+        this.openModal(editorId, this.parseAnchor(), this.insertLink);
       }
     }
   },
 
-  openModal: function (info) {
+  openModal: function (editorId, info, callback) {
     var self = this;
 
     settings['global'].active = info.type;
@@ -243,10 +246,18 @@ Drupal.wysiwyg.plugins['os_link'] = {
    */
   parseAnchor: function (a) {
     var ret = {
-      text: a.innerHTML,
+      text: '',
       url: '',
-      type: ''
+      type: '',
+      title: '',
+      newWindow: false
     };
+
+    if (a == undefined) {
+      return ret;
+    }
+
+    ret.text = a.innerHTML;
     if (a.hasAttribute('data-fid')) {
       ret.url = a.getAttribute('data-fid');
       ret.type = 'file';
@@ -273,7 +284,10 @@ Drupal.wysiwyg.plugins['os_link'] = {
         ret.url = a.href.replace(home, '');
         ret.type = 'external';
       }
+    }
 
+    if (a.getAttribute('target')) {
+      ret.newWindow = true;
     }
     return ret;
   },

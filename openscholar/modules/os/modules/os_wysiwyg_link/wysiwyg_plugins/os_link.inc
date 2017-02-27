@@ -49,5 +49,6 @@ function os_wysiwyg_link_include_browser_js() {
 //  $js = array('osWysiwygLink' => $settings);
   //drupal_add_library('media', 'media_browser');
   drupal_add_library('os_wysiwyg_link', 'linking_form');
+  os_common_angular_apps('OsWysiwygLinkTool');
 //  drupal_add_js($js, 'setting');
 }

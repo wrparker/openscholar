@@ -2,7 +2,27 @@
 
   var m = angular.module('OsWysiwygLinkTool', ['EntityService', 'JSPager', 'angularModalService']);
 
-  m.service('OWLModal', ['ModalService', function () {
+  m.service('OWLModal', ['ModalService', function (ModalService) {
+    var dialogParams = {
+      buttons: {},
+      //dialogClass: 'media-wrapper',
+      modal: true,
+      draggable: false,
+      resizable: false,
+      minWidth: 600,
+      width: 800,
+      height: 650,
+      position: 'center',
+      title: undefined,
+      overlay: {
+        backgroundColor: '#000000',
+        opacity: 0.4
+      },
+      zIndex: 10000,
+      close: function (event, ui) {
+        $(event.target).remove();
+      }
+    };
 
     return {
       open: function (text, type, urlArgument, titleText, newWindow, close) {
@@ -52,14 +72,16 @@
           '</div>',
           controller: 'OWLModalController',
           inputs: {
-            text: text,
-            type: type,
-            arg: urlArgument,
-            title: titleText,
-            newWindow: newWindow,
+            params: {
+              text: text,
+              type: type,
+              arg: urlArgument,
+              title: titleText,
+              newWindow: newWindow,
+            }
           }
         })
-          .then (function (modal) {
+        .then (function (modal) {
           modal.element.dialog(dialogParams);
           modal.close.then(function(result) {
             if (angular.isFunction(close)) {
@@ -104,8 +126,16 @@
 
   m.run(['OWLModal', '$timeout', function (modal, $t) {
 
-    function replacement() {
-        modal.open()
+    function replacement(editorId, info, callback) {
+      function closeHandler() {
+        console.log(arguments);
+        var body = '',
+          target = '',
+          attributes = {};
+
+        callback(editorId, body, target, attributes);
+      }
+      modal.open(info.text, info.type, info.url, info.title, info.newWindow, closeHandler)
     }
 
     try {
