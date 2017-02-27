@@ -562,6 +562,18 @@ a:visited {
     font-size: 0;
     border-bottom: 3px solid #065DB2;
 }
+
+
+@media all and (-ms-high-contrast:none)
+     {
+ 
+     *::-ms-backdrop, #block-os-primary-menu .nice-menu li.last a {
+    padding: 16px 22px 36px 22px;
+
+}
+     }
+
+
 #block-os-primary-menu .nice-menu li.last a:hover {
     cursor: pointer;
 }
