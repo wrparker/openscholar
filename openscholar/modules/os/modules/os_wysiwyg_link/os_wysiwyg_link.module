@@ -31,8 +31,19 @@ function os_wysiwyg_link_library() {
   $libs['linking_form'] = array(
     'title' => 'OS Wysiwyg Link Form',
     'version' => '0.1',
+    'css' => array(
+      $path . '/theme/OsWysiwygLinkTool.css' => array(),
+    ),
     'js' => array(
-      $path . '/js/OsWysiwygLinkTool.module.js' => array()
+      $path . '/js/OsWysiwygLinkTool.module.js' => array(),
+      array(
+        'data' => array(
+          'paths' => array(
+            'owl' => url($path, array('alias' => TRUE))
+          )
+        ),
+        'type' => 'setting',
+      )
     ),
     'dependencies' => array(
       array('os_common', 'angularjs'),
