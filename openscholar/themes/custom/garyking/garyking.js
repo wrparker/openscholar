@@ -47,9 +47,10 @@
 
              // Only show the title and the date in the presentation teaser.
              $('.front-lop-presentations .node-presentation .node-inner').each(function () {
-                 var title = $('this').find('.title').clone();
-                 var date = $('this').find('.date-display-single').clone();
-                 $('this').html('').append(title).append(date);
+                 var title = $(this).find('.title').clone();
+                 var contextual = $(this).find('.contextual-links-wrapper').clone();
+                 var date = $(this).find('.date-display-single').clone();
+                 $(this).html(' ').append(title).append(contextual).append(date);
              });
          }
      };
