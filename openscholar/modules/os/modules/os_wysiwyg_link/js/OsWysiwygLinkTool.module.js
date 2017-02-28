@@ -60,9 +60,7 @@
     $s.newWindow = params.newWindow;
     $s.active = params.type || 'url';
 
-    var params = {
-      schema: 'public'
-    };
+    var params = {};
 
     files.fetch(params).then(function (result) {
       $s.files = result;
