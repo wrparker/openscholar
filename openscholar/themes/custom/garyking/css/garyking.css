@@ -562,6 +562,18 @@ a:visited {
     font-size: 0;
     border-bottom: 3px solid #065DB2;
 }
+
+
+@media all and (-ms-high-contrast:none)
+     {
+ 
+     *::-ms-backdrop, #block-os-primary-menu .nice-menu li.last a {
+    padding: 16px 22px 36px 22px;
+
+}
+     }
+
+
 #block-os-primary-menu .nice-menu li.last a:hover {
     cursor: pointer;
 }
@@ -797,7 +809,7 @@ ul.nice-menu-down,
 #footer ul.menu li.last a {
     border-right: none;
     padding-right: 22px;
-    background: url("../images/sprite.png?456") 82px -250px no-repeat;
+    background: url("../images/sprite.png?456") 80px -250px no-repeat;
 }
 #footer ul.menu {
     text-align: right;
@@ -1005,4 +1017,7 @@ img.file-icon {
 
     width: 99% !important;
 }
+.front .block-boxes-os_sv_list_box {
+        width: 94% !important;
+    }
 }
