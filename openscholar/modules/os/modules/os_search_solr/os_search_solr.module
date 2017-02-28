@@ -20,7 +20,7 @@ function os_search_solr_boxes_plugins() {
   );
 
   $plugins['os_search_solr_search_box'] = array(
-    'title' => t('Custom search box'),
+    'title' => preg_match("/\bsolr_search_box\b/", $_GET[q]) ? t('Site Search') : t('Custom search box'),
     'tags' => array('Content'),
     'handler' => array(
       'class' => 'os_search_solr_search_box',
