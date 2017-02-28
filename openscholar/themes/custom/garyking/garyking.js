@@ -38,10 +38,10 @@
      jQuery(".research-by-topic a").removeAttr("title");
 
 // KILL THE WORD AT AND THE COLON IN THE PRESENATIONS BLOCK ON THE HOMEPAGE
-     jQuery.each(jQuery('.front-lop-presentations .node-presentation'), function(i, e) {
-         jQuery(e).html(jQuery(e).html().replace(/at/g, ''));
-         jQuery(e).html(jQuery(e).html().replace(/:/g, ''));
-     });
+   //  jQuery.each(jQuery('.front-lop-presentations .node-presentation'), function(i, e) {
+      //   jQuery(e).html(jQuery(e).html().replace(/at/g, ''));
+      //   jQuery(e).html(jQuery(e).html().replace(/:/g, ''));
+   //  });
      
      
   
