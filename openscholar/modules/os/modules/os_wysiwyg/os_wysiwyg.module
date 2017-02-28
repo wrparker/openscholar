@@ -6,6 +6,52 @@
  */
 
 /**
+ * Implements hook_filter_info_alter().
+ */
+function os_wysiwyg_filter_info_alter(&$info) {
+  $info['wysiwyg']['process callback'] = 'os_wysiwyg_filter_filter_wysiwyg_process';
+}
+
+/**
+ * overriding the original wysiwyg filter callback.
+ *
+ * The original callback invoked a regex filter callback with messed the HTML in
+ * case there was a > in the one of the attributes.
+ *
+ * @see wysiwyg_filter_filter_wysiwyg_process().
+ */
+function os_wysiwyg_filter_filter_wysiwyg_process($text, $filter, $format, $langcode = NULL, $cache = NULL, $cache_id = NULL) {
+  // Only operate on valid UTF-8 strings. This is necessary to prevent cross
+  // site scripting issues on Internet Explorer 6.
+  if (!drupal_validate_utf8($text)) {
+    return '';
+  }
+
+  // Load common functions.
+  module_load_include('inc', 'wysiwyg_filter');
+
+  // Store input filter options.
+  _wysiwyg_filter_xss_split(wysiwyg_filter_get_filter_options($format->format, $filter->settings), TRUE);
+
+  // Remove NUL characters (ignored by some browsers).
+  $text = str_replace(chr(0), '', $text);
+  // Remove Netscape 4 JS entities.
+  $text = preg_replace('%&\s*\{[^}]*(\}\s*;?|$)%', '', $text);
+
+  // Defuse all HTML entities.
+  $text = str_replace('&', '&amp;', $text);
+  // Change back only well-formed entities in our whitelist
+  // Decimal numeric entities.
+  $text = preg_replace('/&amp;#([0-9]+;)/', '&#\1', $text);
+  // Hexadecimal numeric entities.
+  $text = preg_replace('/&amp;#[Xx]0*((?:[0-9A-Fa-f]{2})+;)/', '&#x\1', $text);
+  // Named entities.
+  $text = preg_replace('/&amp;([A-Za-z][A-Za-z0-9]*;)/', '&\1', $text);
+
+  return $text;
+}
+
+/**
  * Implements hook_media_token_to_markup_alter().
  */
 function os_wysiwyg_media_token_to_markup_alter(&$element, $tag_info, $settings) {
