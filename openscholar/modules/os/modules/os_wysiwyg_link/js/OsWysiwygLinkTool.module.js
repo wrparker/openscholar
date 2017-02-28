@@ -43,7 +43,7 @@
           modal.element.dialog(dialogParams);
           modal.close.then(function(result) {
             if (angular.isFunction(close)) {
-              close({result: result});
+              close(result);
             }
           });
         })
@@ -83,13 +83,37 @@
   m.run(['OWLModal', '$timeout', function (modal, $t) {
 
     function replacement(editorId, info, callback) {
-      function closeHandler() {
-        console.log(arguments);
-        var body = '',
-          target = '',
-          attributes = {};
+      function closeHandler(linkInfo) {
+        console.log(linkInfo);
 
-        callback(editorId, body, target, attributes);
+        if (linkInfo.insert) {
+          var body = linkInfo.text,
+            target = '',
+            attributes = {};
+
+          switch (linkInfo.type) {
+            case 'url':
+              target = linkInfo.arg;
+              attributes['data-url'] = linkInfo.arg;
+              break;
+            case 'e-mail':
+              target = 'mailto:' + linkInfo.arg;
+              break;
+            case 'file':
+              attributes['data-fid'] = linkInfo.arg;
+              break;
+          }
+
+          if (linkInfo.newWindow) {
+            attributes.target = '_blank';
+          }
+
+          if (linkInfo.title) {
+            attributes.title = linkInfo.title;
+          }
+
+          callback(editorId, body, target, attributes);
+        }
       }
       modal.open(info.text, info.type, info.url, info.title, info.newWindow, closeHandler)
     }

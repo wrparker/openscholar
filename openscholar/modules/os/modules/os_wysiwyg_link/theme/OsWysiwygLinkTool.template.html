@@ -21,12 +21,12 @@
     <div id="owl-panes" ng-switch="active">
         <div index="href" id="href-link" ng-switch-when="url">
             <div class="form-item">
-                <label for="owl-url">Website URL</label><input type="text" id="owl-url" ng-model="arg" class="form-text">
+                <label for="owl-url">Website URL</label><input type="text" id="owl-url" ng-model="$parent.arg" class="form-text">
                 <div class="description">The URL of the web page. Can be a link to one of your own pages.</div>
             </div>
         </div>
         <div index="email" id="email-link" ng-switch-when="email">
-            <label for="owl-email">E-mail</label><input type="text" id="owl-email" ng-model="arg" class="form-text">
+            <label for="owl-email">E-mail</label><input type="text" id="owl-email" ng-model="$parent.arg" class="form-text">
         </div>
         <div index="file" id="file-link" ng-switch-when="file">
             <div class="owl-file-controls">
@@ -39,7 +39,7 @@
             </div>
             <div class="owl-file-list">
                 <div js-pager="f in files | filter:'public':true:'schema' | filter:search:filename track by f.id">
-                    <div class="owl-file-item media-row" ng-class="{selected: f.id == arg}" ng-click="arg = f.id">{{f.name}}</div>
+                    <div class="owl-file-item media-row" ng-class="{selected: f.id == $parent.arg}" ng-click="$parent.arg = f.id">{{f.name}}</div>
                 </div>
             </div>
         </div>
