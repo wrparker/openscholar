@@ -37,7 +37,6 @@ class os_search_solr_search_box extends os_boxes_default {
     $bundles = os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP));
 
     unset($bundles['feed'], $bundles['link']);
-
     unset($bundles['slideshow_slide'], $bundles['feed_importer']);
 
     $form['bundle'] = array(
@@ -56,7 +55,7 @@ class os_search_solr_search_box extends os_boxes_default {
 
     $form['vocab'] = array(
       '#type' => 'select',
-      '#title' => t('Filter by: vocab'),
+      '#title' => t('Filter by: vocabulary'),
       '#options' => array('---' => t('----')),
       '#prefix' => '<div id="vocab">',
       '#suffix' => '</div>',
@@ -107,7 +106,7 @@ class os_search_solr_search_box extends os_boxes_default {
       if ($taxonomies) {
         $form['terms']['terms'] = array(
           '#type' => 'checkboxes',
-          '#title' => t('Filter by: terms'),
+          '#title' => t('Filter by any of the following terms'),
           '#options' => $taxonomies,
           '#default_value' => $this->options['terms']['terms'],
         );
