@@ -90,12 +90,14 @@ Drupal.wysiwyg.plugins['os_link'] = {
         link = jQuery(selection.node).parents('a');
       }
 
-      this.openModal(editorId, this.parseAnchor(link), this.insertLink);
+      this.openModal(editorId, this.parseAnchor(link[0]), this.insertLink);
+      this.selectLink(link[0]);
     }
     else {
       var selectedLink = jQuery.selectLink != null && typeof(jQuery.selectLink) == 'object';
       if (selectedLink) {
-        this.openModal(editorId, this.parseAnchor(jquery.selectLink[0]), this.insertLink);
+        this.openModal(editorId, this.parseAnchor(jQuery.selectLink[0]), this.insertLink);
+        this.selectLink(jQuery.selectLink[0])
       }
       else {
         this.openModal(editorId, this.parseAnchor(), this.insertLink);

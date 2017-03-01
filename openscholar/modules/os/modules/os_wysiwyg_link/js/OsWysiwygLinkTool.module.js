@@ -66,6 +66,10 @@
       $s.files = result;
     });
 
+    $s.setLinkTarget = function (arg) {
+      $s.arg = arg;
+    }
+
     $s.close = function (insert) {
       ret = {
         type: $s.active,
@@ -96,7 +100,7 @@
               target = linkInfo.arg;
               attributes['data-url'] = linkInfo.arg;
               break;
-            case 'e-mail':
+            case 'email':
               target = 'mailto:' + linkInfo.arg;
               break;
             case 'file':
