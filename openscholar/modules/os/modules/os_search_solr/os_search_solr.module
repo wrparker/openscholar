@@ -10,7 +10,7 @@ function os_search_solr_form_boxes_box_form_alter(&$form, &$form_state) {
     return;
   }
 
-  $form['description']['#prefix'] = t('<span class="os-search-solr-description">Display filtered results based on content type and/or taxonomy.</span>');
+ 
 }
 
 /**

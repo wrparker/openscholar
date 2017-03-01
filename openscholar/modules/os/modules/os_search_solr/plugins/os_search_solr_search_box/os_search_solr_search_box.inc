@@ -41,7 +41,7 @@ class os_search_solr_search_box extends os_boxes_default {
 
     $form['bundle'] = array(
       '#type' => 'select',
-      '#description' => t('Which bundle would you like to use.'),
+      '#description' => t('Which content type would you like to search.'),
       '#title' => t('Content type'),
       '#options' => array(NULL => t('All')) + $bundles,
       '#default_value' => !empty($bundle) ? $bundle : '-none-',
@@ -55,7 +55,7 @@ class os_search_solr_search_box extends os_boxes_default {
 
     $form['vocab'] = array(
       '#type' => 'select',
-      '#title' => t('Filter by: vocabulary'),
+      '#title' => t('Filter by vocabulary'),
       '#options' => array('---' => t('----')),
       '#prefix' => '<div id="vocab">',
       '#suffix' => '</div>',
@@ -106,7 +106,7 @@ class os_search_solr_search_box extends os_boxes_default {
       if ($taxonomies) {
         $form['terms']['terms'] = array(
           '#type' => 'checkboxes',
-          '#title' => t('Filter by any of the following terms'),
+          '#title' => t('Filter by all of the following selected terms'),
           '#options' => $taxonomies,
           '#default_value' => $this->options['terms']['terms'],
         );
