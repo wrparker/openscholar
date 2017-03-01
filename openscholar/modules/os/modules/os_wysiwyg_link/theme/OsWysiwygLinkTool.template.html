@@ -38,8 +38,8 @@
                 <div class="search"></div>
             </div>
             <div class="owl-file-list">
-                <div js-pager="f in files | filter:'public':true:'schema' | filter:search:filename track by f.id">
-                    <div class="owl-file-item media-row" ng-class="{selected: f.id == $parent.arg}" ng-click="$parent.arg = f.id">{{f.name}}</div>
+                <div js-pager="f in files | filter:'public':true:'schema' | filter:search:filename track by f.id starting with arg">
+                    <div class="owl-file-item media-row" ng-class="{selected: f.id == arg}" ng-click="setLinkTarget(f.id)">{{f.name}}</div>
                 </div>
             </div>
         </div>
