@@ -21,6 +21,10 @@ function os_boxes_edit_widget($box, $source = '') {
   }
   else {
     drupal_set_title(t('Edit "@plugin" Widget - !info', array('@plugin' => $info['title'], '!info' => $box->description)));
+
+    if ($box->description == "Site search") {
+      drupal_set_title(t('Edit "@plugin" Widget - !info', array('@plugin' => $box->description, '!info' => $box->description)));
+    }
   }
 
   $form_state = array(
