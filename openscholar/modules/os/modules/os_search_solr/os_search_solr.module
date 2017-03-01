@@ -169,6 +169,21 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
     // Limit searches to just this OpenScholar install in shared indexes.
     $query->addFilter('hash', apachesolr_site_hash());
   }
+
+  // Set the terms conjunctions as an OR and not AND.
+  $query2 = apachesolr_drupal_subquery();
+
+  foreach ($query->getFilters() as $filter) {
+    if ($filter['#name'] != 'sm_og_vocabulary') {
+      continue;
+    }
+
+    // Remove the filter form the original query and move as a sub query.
+    $query->removeFilter('sm_og_vocabulary', $filter['#value']);
+    $query2->addFilter('sm_og_vocabulary', $filter['#value']);
+  }
+
+  $query->addFilterSubQuery($query2);
 }
 
 /**
