@@ -93,6 +93,9 @@ Drupal.wysiwyg.plugins['os_link'] = {
       this.openModal(editorId, this.parseAnchor(link[0]), this.insertLink);
       this.selectLink(link[0]);
     }
+    else if (selection.content) {
+      this.openModal(editorId, {text: selection.content}, this.insertLink);
+    }
     else {
       var selectedLink = jQuery.selectLink != null && typeof(jQuery.selectLink) == 'object';
       if (selectedLink) {
