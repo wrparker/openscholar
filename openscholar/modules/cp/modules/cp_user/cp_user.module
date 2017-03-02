@@ -796,13 +796,16 @@ function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
     $to = $account->mail;
     $from = variable_get('site_mail', ini_get('sendmail_from'));
     $params['!user-role'] = _cp_user_list_roles('rids-human', NULL, $form['gid']['#value'])[$form_state['input']['roles']];
+    $params['!username'] = $account->name;
     $params['!account-modifier'] = !empty($account_modifier_full_name) ? $account_modifier_full_name : $account_modifier->name;
     $params['!site-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl;
+    $params['!login-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl . "/user/login";
     $params['!account-modifier-email'] = $account_modifier->mail;
     $params['!user-firstname'] = $account->field_first_name[LANGUAGE_NONE][0]['value'];
     $params['!sitewide-name'] = variable_get('site_name', 'Harvard Web Publishing');
+
     $params['headers']['Cc'] = $account_modifier->mail;
-    drupal_mail('cp_user', 'os_user_role_change', $to, LANGUAGE_NONE, $params, $from);
+    drupal_mail('cp_user', 'os_user_add_to_group', $to, LANGUAGE_NONE, $params, $from);
   }
 
   $form_state['redirect'] = 'cp/users';
