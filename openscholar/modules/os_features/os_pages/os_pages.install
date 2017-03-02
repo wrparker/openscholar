@@ -156,4 +156,17 @@ function os_pages_update_7008() {
     ),
   );
   features_revert($revert);
+
+  // "Revert" just one variable value using variable API.
+  $name = 'nodeformscols_field_placements_page_default';
+  $value = variable_get($name, array());
+  $value['os_css_class_fieldset'] = array(
+    'region' => 'right',
+    'weight' => '8',
+    'has_required' => FALSE,
+    'title' => 'Apply css',
+    'collapsed' => 1,
+    'hidden' => 0,
+  );
+  variable_set($name, $value);
 }

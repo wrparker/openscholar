@@ -148,7 +148,7 @@ function os_pages_field_default_field_instances() {
     'bundle' => 'page',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Warning: this is to be used for custom themeing purpose only.',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -329,6 +329,7 @@ function os_pages_field_default_field_instances() {
   t('Best if 150 characters or less. Used as a meta description tag and instead of trimmed body in certain lists.');
   t('Body');
   t('Summary description');
+  t('Warning: this is to be used for custom themeing purpose only.');
 
   return $field_instances;
 }
