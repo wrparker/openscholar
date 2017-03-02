@@ -376,6 +376,9 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     max-width: 930px;
     min-width: 850px;
 }
+#person-node-form .field-name-body {
+    padding-bottom: 15px;
+}
 form.confirmation {
     margin-top: 20px;
 }
@@ -1271,6 +1274,12 @@ span[name="faq_sort"] .form-radios {
 .margin-bottom{
     margin-bottom: 15px;
 }
+
+
+label[for="edit-blog-comments-settings"],
+label[for="edit-os-booklets-toc-position"],
+.page-cp label[for="edit-blog-comments-settings"],
+.page-cp label[for="edit-os-booklets-toc-position"],
 .page-cp .settings-form-heading,
 .settings-form-heading {
 	font-size:1.2em;

@@ -173,6 +173,7 @@ projects[imageapi_optimize][download][revision] = 234f208
 
 projects[imagemagick][subdir] = "contrib"
 projects[imagemagick][version] = 1.0
+projects[imagemagick][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/53169db65764686c511972619fdeb902704731d6/patches/imagemagick.no-resize-for-animated-gifs.patch"
 
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0
@@ -570,6 +571,11 @@ libraries[indentblock][type] = "libraries"
 libraries[indentblock][subdir] = "ckeditor/plugins"
 libraries[indentblock][download][type] = "file"
 libraries[indentblock][download][url] = "http://download.ckeditor.com/indentblock/releases/indentblock_4.5.10.zip"
+
+libraries[bidi][type] = "libraries"
+libraries[bidi][subdir] = "ckeditor/plugins"
+libraries[bidi][download][type] = "file"
+libraries[bidi][download][url] = "http://download.ckeditor.com/bidi/releases/bidi_4.5.10.zip"
 
 libraries[dragresize][type] = "libraries"
 libraries[dragresize][subdir] = "ckeditor/plugins"
