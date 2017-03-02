@@ -3,7 +3,7 @@
 /**
  * Force the localStorage cache to be cleared whenever we want.
  */
-const AdminPanelMenuVersion = '1.2';
+const AdminPanelMenuVersion = '1.3';
 
 /**
  * Returns true if the admin panel should default to being closed
@@ -85,7 +85,9 @@ function admin_panel_library() {
   $path = drupal_get_path('module', 'admin_panel');
   $perm = drupal_static('user_access');
   $spaces_features = variable_get('spaces_features', array());
-  $vsite = vsite_get_vsite();
+  if (module_exists('vsite')) {
+    $vsite = vsite_get_vsite();
+  }
 
   // Includes resources needed to create the admin panel.
   $libs['admin_panel'] = array(

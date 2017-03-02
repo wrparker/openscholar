@@ -12,9 +12,7 @@ Feature:
   @api @features_first
   Scenario: Testing the migration of FAQ
     Given I am logging in as "john"
-      And I visit "john/faq"
-      And I click "Add New"
-      And I click "FAQ"
+      And I visit "john/node/add/faq"
       And I fill "edit-title" with random text
       And I press "Save"
      Then I should see the random string
