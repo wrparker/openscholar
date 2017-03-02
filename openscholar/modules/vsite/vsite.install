@@ -6,6 +6,7 @@
  * Implements hook_install().
  */
 function vsite_install() {
+  drupal_static_reset('og_fields_info');
   og_create_field(OG_AUDIENCE_FIELD, 'user', 'user');
   // Add "Support expire" field to allow support team to auto-subscribe to
   // a group to a set interval.

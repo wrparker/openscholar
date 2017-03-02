@@ -4,6 +4,7 @@
 body {
     -moz-osx-font-smoothing: grayscale;
 }
+.page-node-362571  #block-os-pages-main-content,
 .page-node-249171 #block-os-pages-main-content,
 .page-node-107346 #block-os-pages-main-content,
 .page-node-3794 #block-os-pages-main-content,
@@ -529,10 +530,10 @@ a:visited {
     z-index: 1;
     opacity: 1;
     transition: all .250s linear .250s;
-    border-bottom: 1px solid transparent;
+    border-bottom: 1px solid transarent;
 }
 #menu-bar.fixed {
-    border-bottom: 1px solid #666;
+    border-bottom: 1px solid #32526e;
 }
 #menu-bar ul.nice-menu a {
     color: #444;
@@ -561,6 +562,18 @@ a:visited {
     font-size: 0;
     border-bottom: 3px solid #065DB2;
 }
+
+
+@media all and (-ms-high-contrast:none)
+     {
+ 
+     *::-ms-backdrop, #block-os-primary-menu .nice-menu li.last a {
+    padding: 16px 22px 36px 22px;
+
+}
+     }
+
+
 #block-os-primary-menu .nice-menu li.last a:hover {
     cursor: pointer;
 }
@@ -707,25 +720,34 @@ ul.nice-menu-down,
 .region-content-top .bio-teaser-block2 p {
     margin: 1.3em 1.3em 0 !important;
 }
-.region-content-top .bio-teaser-block2 a {
+.region-content-top .bio-teaser-block2 a.os-front-bio_link {
     text-decoration: none !important;
     padding-right: 28px;
-    background: url("../images/sprite.png?456") 76px -109px no-repeat;
+    background: url("../images/sprite.png?456") 145px -109px no-repeat;
 }
-.region-content-top .bio-teaser-block2 a:hover {
-    background-position: 81px -109px;
+.region-content-top .bio-teaser-block2 a.os-front-bio_link:hover {
+    background-position:150px -109px;
 }
-.bio-teaser-block2 a {
+.bio-teaser-block2 a.os-front-bio_link {
     text-decoration: none !important;
     padding-right: 28px;
     background: url("../images/sprite.png?456") 80px -207px no-repeat;
     transition: all .250s;
-    -webkit-transition: all .250s;
+    -webkit-transition: all .125s;
     border-bottom: 1px solid #fff;
 }
-.bio-teaser-block2 a:hover {
-    background-position: 85px -207px;
+
+.os-cvlink {
+    color: #fff !important;
+  
+    padding: 2px 7px;
+    border-radius: 3px;
+    text-decoration: none !important;
+    display: block;
+    width: 150px;
+    background: url("../images/sprite.png?456") 138px -109px no-repeat #065DB2;
 }
+
 .research-by-topic ul .item-list ul li .description {
     transition: all .250s;
     -webkit-transition: all .250s;
@@ -760,8 +782,17 @@ ul.nice-menu-down,
     text-align: center;
 }
 .contextual-controls-wrapper {
-    top: 255px;
+    top: 80px;
 }
+
+.page-node.node-type-biblio {
+    top: 50px;
+}
+
+.front .contextual-controls-wrapper {
+	top: 300px;
+}
+
 .twitter-followme {
     text-align: center;
 }
@@ -778,7 +809,7 @@ ul.nice-menu-down,
 #footer ul.menu li.last a {
     border-right: none;
     padding-right: 22px;
-    background: url("../images/sprite.png?456") 82px -250px no-repeat;
+    background: url("../images/sprite.png?456") 80px -250px no-repeat;
 }
 #footer ul.menu {
     text-align: right;
@@ -787,14 +818,17 @@ ul.nice-menu-down,
     padding-top: 10px;
     padding-bottom: 10px;
 }
-/* LOGGED IN PUSH THE PAGE DOWN */
 
-.logged-in #menu-bar {
-    border-top: 38px #fff solid;
+.field-name-field-biblio-image {
+  
+    width: 55px;
 }
-.logged-in #page {
-    margin-top: 84px;
+
+.logged-in .view-content ~ .item-list ul.pager li {
+	border:none !important;
 }
+
+
 @-moz-document url-prefix() {}
 /* RESPONSIVE CSS - UNTIL I CAN FIGURE OUT WHY GARYKING RESP CSS FILE WONT LOAD */
 
@@ -814,6 +848,12 @@ ul.nice-menu-down,
     .region-content-top .bio-teaser-block2 p {
         font-size: 1.24em;
     }
+    
+    #block-boxes-solr-search-box.opened.opened {
+    	    opacity: 1;
+    width: 40% !important;
+    	
+    }
 }
 /*--------------------------------------------------------*/
 
@@ -824,6 +864,11 @@ ul.nice-menu-down,
 	
     #boxes-box-site_info {
         margin-left: 0;
+    }
+    
+    #block-boxes-solr-search-box {
+    
+    top: 38px;
     }
     
     .sidebar {
@@ -967,5 +1012,12 @@ img.file-icon {
     .bg-eight {
         background-position: center 60px;
         background-size: 100% 5%;
+    }
+    #block-boxes-solr-search-box.opened.opened {
+
+    width: 99% !important;
+}
+.front .block-boxes-os_sv_list_box {
+        width: 94% !important;
     }
 }
