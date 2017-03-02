@@ -288,6 +288,10 @@ Drupal.wysiwyg.plugins['os_link'] = {
       }
     }
 
+    if (a.hasAttribute('title')) {
+      ret.title = a.getAttribute('title');
+    }
+
     if (a.getAttribute('target')) {
       ret.newWindow = true;
     }
