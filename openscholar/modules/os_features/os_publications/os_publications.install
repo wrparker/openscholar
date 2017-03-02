@@ -1640,11 +1640,11 @@ function os_publications_update_7052() {
 }
 
 /**
- * Changes on sites having none publication types selected to all types selected
+ * Converts none publication types selected to all types selected
  */
 function os_publications_update_7053() {
-    $results = db_select('spaces_overrides', 's')
-    ->fields('s',array('value'))
+      $results = db_select('spaces_overrides', 's')
+    ->fields('s',array('value','id'))
     ->condition('object_type', 'variable')
     ->condition('object_id', 'os_publications_filter_publication_types')
     ->execute();
@@ -1694,7 +1694,7 @@ function os_publications_update_7053() {
     if (is_array($value)) {
       $is_unchecked_all = TRUE;
       foreach ($value as $key => $val) {
-        if ($val !== FALSE) {
+        if ($val === TRUE) {
           $is_unchecked_all = FALSE;
           break;
         }
@@ -1705,6 +1705,7 @@ function os_publications_update_7053() {
           ->fields(array('value' => serialize($all_true)))
           ->condition('object_type', 'variable')
           ->condition('object_id', 'os_publications_filter_publication_types')
+          ->condition('id', $result->id)
           ->execute();
       }
     }
