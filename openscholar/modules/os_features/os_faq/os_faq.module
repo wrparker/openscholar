@@ -173,7 +173,10 @@ function os_faq_process_node(&$vars) {
     # Ensure node has a CSS class and title (for WCAG 2.4.4 compliance)
     $pattern = "/(.*)(<a\s+[^>]+)>(\s*read.?more[^<]*)(.*)/im";
     if (preg_match($pattern, $node_content_body_markup, $matches)) {
-      $node_content_body_markup = $matches[1] . $matches[2] . " title=\"$node_title\" class=\"node-readmore\"" . '>' . $matches[3] . $matches[4];
+      $node_content_body_markup = $matches[1] . $matches[2] . " class=\"node-readmore\"" . '>' .
+        $matches[3] .
+        "<span class=\"element-invisible\">$node_title</span>" .
+        $matches[4];
       $vars['content']['body'][0]['#markup'] = $node_content_body_markup;
     }
   }
