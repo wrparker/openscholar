@@ -37,29 +37,23 @@
 // KILL THE TITLE ATTR IN THE ANCHORS IN THE AREAS OF RESEARCH WIDGET
      jQuery(".research-by-topic a").removeAttr("title");
 
-// KILL THE WORD AT AND THE COLON IN THE PRESENATIONS BLOCK ON THE HOMEPAGE
-   //  jQuery.each(jQuery('.front-lop-presentations .node-presentation'), function(i, e) {
-      //   jQuery(e).html(jQuery(e).html().replace(/at/g, ''));
-      //   jQuery(e).html(jQuery(e).html().replace(/:/g, ''));
-   //  });
-     
-     
-  
-
-     
-
  });
- 
-
-// jQuery(document).ready(function() {
- // if (jQuery('#biblio-node').find('div.biblio-upload-wrapper').length) {
-   // jQuery('#citation-wrapper').addClass('has-attached');
-// }
- 
- //var setHeight = jQuery(".has-attached");
-//jQuery(".biblio-upload-wrapper").css({height:setHeight.height()});
- 
-// });
- 
 
 
+ (function ($) {
+
+     Drupal.behaviors.gkingTheme = {
+         attach: function (context) {
+
+             // Only show the title and the date in the presentation teaser.
+             $('.front-lop-presentations .node-presentation .node-inner').each(function () {
+                 var title = $(this).find('.title').clone();
+                 var contextual = $(this).find('.contextual-links-wrapper').clone();
+                 var date = $(this).find('.date-display-single').clone();
+                 $(this).html(' ').append(title).append(contextual).append(date);
+             });
+         }
+     };
+
+ })(jQuery);
+ 
