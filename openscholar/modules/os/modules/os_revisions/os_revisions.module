@@ -75,7 +75,11 @@ function os_revisions_module_implements_alter(&$implementations, $hook) {
 function os_revisions_menu_alter(&$items) {
   $items['node/%node/revisions']['page callback'] = 'os_revisions_revision_overview';
   $items['node/%node/revisions']['theme callback'] = 'cp_theme_name';
+  $items['node/%node/revisions']['access callback'] = 'node_access';
+  $items['node/%node/revisions']['access arguments'] = array('update', 1);
   $items['node/%node/revisions/%/view']['theme callback'] = 'cp_theme_name';
+  $items['node/%node/revisions/%/view']['access callback'] = 'node_access';
+  $items['node/%node/revisions/%/view']['access arguments'] = array('update', 1);
 }
 
 /**
@@ -103,13 +107,13 @@ function os_revisions_revision_overview($node) {
 
     if ($revision->current_vid > 0) {
 
-      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'custom', 'm/d/Y - h:i a'), "node/$node->nid"), '!username' => format_username(user_load($revision->uid))))
+      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp), "node/$node->nid"), '!username' => format_username(user_load($revision->uid))))
         . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
         'class' => array('revision-current'));
       $operations[] = array('data' => drupal_placeholder(t('Current revision')), 'class' => array('revision-current'), 'colspan' => 2);
     }
     else {
-      $row[] = t('!date by !username', array('!date' => l(t('View this revision') . ' - ' . format_date($revision->timestamp, 'custom', 'm/d/Y - h:i a'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => format_username(user_load($revision->uid))))
+      $row[] = t('!date by !username', array('!date' => l(t('View this revision') . ' - ' . format_date($revision->timestamp), "node/$node->nid/revisions/$revision->vid/view"), '!username' => format_username(user_load($revision->uid))))
         . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : '');
       if ($revert_permission) {
         $operations[] = l(t('Revert'), "node/$node->nid/revisions/$revision->vid/revert");
@@ -139,7 +143,7 @@ function os_revisions_revision_overview($node) {
  * Change title/text in confirm_form when user selects to revert to an older revision
  */
 function os_revisions_form_node_revision_revert_confirm_alter(&$form, &$form_state, $form_id) {
-  $text = t('Are you sure you want to revert to the revision from') . drupal_placeholder(format_date($form['#node_revision']->revision_timestamp, 'custom', ' D, m/d/Y - h:i a'), 'date') . '?';
+  $text = t('Are you sure you want to revert to the revision from') . drupal_placeholder(format_date($form['#node_revision']->revision_timestamp), 'date') . '?';
   drupal_set_title(t('Confirm Revert'));
 
   $form['description'] = array(
@@ -158,7 +162,7 @@ function os_revisions_form_node_revision_revert_confirm_alter(&$form, &$form_sta
  * Change title/text in confirm_form when user selects to delete a revision
  */
 function os_revisions_form_node_revision_delete_confirm_alter(&$form, &$form_state, $form_id) {
-  $text = t('Are you sure you want to delete the revision from') . drupal_placeholder(format_date($form['#node_revision']->revision_timestamp, 'custom', ' D, m/d/Y - h:i a'), 'date') . '?';
+  $text = t('Are you sure you want to delete the revision from') . drupal_placeholder(format_date($form['#node_revision']->revision_timestamp), 'date') . '?';
   drupal_set_title(t('Confirm Delete'));
   $form['description'] = array(
     '#markup' => "<p>$text</p>",
@@ -173,12 +177,12 @@ function os_revisions_add_revert_notes($form, &$form_state) {
   $node_revision = $form['#node_revision'];
   $node_revision->revision = 1;
   $old_log = $node_revision->log;
-  $node_revision->log = t('Copy of the revision from %date: %log.', array('%date' => format_date($node_revision->revision_timestamp, 'custom', 'm/d/Y - h:i a'), '%log' => $old_log));
+  $node_revision->log = t('Copy of the revision from %date: %log.', array('%date' => format_date($node_revision->revision_timestamp), '%log' => $old_log));
 
   node_save($node_revision);
 
   watchdog('content', '@type: reverted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
-  drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_type_get_name($node_revision), '%title' => $node_revision->title, '%revision-date' => format_date($node_revision->revision_timestamp, 'custom', 'm/d/Y - h:i a'))));
+  drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_type_get_name($node_revision), '%title' => $node_revision->title, '%revision-date' => format_date($node_revision->revision_timestamp))));
   $form_state['redirect'] = 'node/' . $node_revision->nid . '/revisions';
 }
 

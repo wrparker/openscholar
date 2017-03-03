@@ -42,10 +42,12 @@ function os_revisions_enable() {
       'os_news',
       'os_pages',
       'os_profiles',
-      'os_publications'
+      'os_publications',
     );
     $to_revert = array_fill_keys($apps, array('variable'));
     features_revert($to_revert);
   }
   features_revert(array('os' => array('user_permission')));
+
+  variable_set('date_format_medium', 'm/d/Y - h:i a');
 }
