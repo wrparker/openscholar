@@ -809,7 +809,7 @@ ul.nice-menu-down,
 #footer ul.menu li.last a {
     border-right: none;
     padding-right: 22px;
-    background: url("../images/sprite.png?456") 82px -250px no-repeat;
+    background: url("../images/sprite.png?456") 80px -250px no-repeat;
 }
 #footer ul.menu {
     text-align: right;
