@@ -302,10 +302,7 @@ ul.pager li.pager-current {
     text-align: center;
     text-decoration: none;
 }
-#skip-link a:focus,
-#skip-link a:active {
-    outline: 0;
-}
+
 /* Tabs */
 
 #tasks {
