@@ -71,6 +71,10 @@ function os_revisions_module_implements_alter(&$implementations, $hook) {
 
 /**
  * Implements hook_menu_alter().
+ *
+ * set up theme for revision pages and make sure permissions are the same as the ability
+ * to modify content
+ *
  */
 function os_revisions_menu_alter(&$items) {
   $items['node/%node/revisions']['page callback'] = 'os_revisions_revision_overview';
@@ -80,6 +84,10 @@ function os_revisions_menu_alter(&$items) {
   $items['node/%node/revisions/%/view']['theme callback'] = 'cp_theme_name';
   $items['node/%node/revisions/%/view']['access callback'] = 'node_access';
   $items['node/%node/revisions/%/view']['access arguments'] = array('update', 1);
+  $items['node/%node/revisions/%/delete']['access callback'] = 'node_access';
+  $items['node/%node/revisions/%/delete']['access arguments'] = array('update', 1);
+  $items['node/%node/revisions/%/revert']['access callback'] = 'node_access';
+  $items['node/%node/revisions/%/revert']['access arguments'] = array('update', 1);
 }
 
 /**
@@ -93,14 +101,8 @@ function os_revisions_revision_overview($node) {
   $revisions = node_revision_list($node);
 
   $rows = array();
-  $revert_permission = FALSE;
-  if ((user_access('revert revisions') || user_access('administer nodes')) && node_access('update', $node)) {
-    $revert_permission = TRUE;
-  }
-  $delete_permission = FALSE;
-  if ((user_access('delete revisions') || user_access('administer nodes')) && node_access('delete', $node)) {
-    $delete_permission = TRUE;
-  }
+  $revert_permission = $delete_permission = node_access('update', $node);
+
   foreach ($revisions as $revision) {
     $row = array();
     $operations = array();
