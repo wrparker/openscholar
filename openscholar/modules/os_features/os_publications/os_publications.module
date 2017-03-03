@@ -1964,37 +1964,6 @@ function os_publications_cp_settings() {
     ),
   );
 
-  // Distribute to Repository option
-  if (module_exists('citation_distribute')) {
-    $autoflags_options = array();
-    $default_autoflags = array();
-    foreach (_citation_distribute_plugins() as $plugin) {
-      if (isset($plugin['title']) && _citation_distribute_is_service_configured($plugin)) {
-        $autoflags_options[] = array('key' => $plugin['class'], 'label' => $plugin['title']);
-        $default_autoflags[$plugin['class']] = FALSE;
-      }
-    }
-
-    $settings['citation_distribute_autoflags'] = array(
-      'group' => array(
-        '#id' => 'feature_os_publication',
-        '#title' => t('Publications'),
-        '#weight' => 0,
-        '#menu_parent' => 'app_settings',
-        '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
-      ),
-      'form' => array(
-        '#type' => 'checkboxes',
-        '#default_value' => variable_get('citation_distribute_autoflags', $default_autoflags),
-        '#description' => t('New publications will automatically be flagged for distribution to the selected services.'),
-        '#weight' => 0,
-        '#options' => $autoflags_options,
-        '#column' => 'middle',
-        '#prefix' => '<label>Distribute to repositories</label>',
-      ),
-    );
-  }
-
   // URL shortening option
   $settings['os_publications_shorten_citations'] = array(
     'group' => array(
@@ -2009,7 +1978,7 @@ function os_publications_cp_settings() {
       '#title' => t('Include Short URLs in citations'),
       '#default_value' => variable_get('os_publications_shorten_citations'),      
       '#weight' => 2,
-      '#column' => 'right',
+      '#column' => 'middle',
       '#prefix' => '<label>Short URLs</label>',
     ),
   );
@@ -2037,7 +2006,7 @@ function os_publications_cp_settings() {
       	array('key' => 'bibtex', 'label' => 'BibTex'),
       ),        
       '#weight' => 2,
-      '#column' => 'right',
+      '#column' => 'middle',
       '#prefix' => '<label>Export Formats</label>',
       '#description' => t('Each selected format will appear in its own export link.'),
     ),
