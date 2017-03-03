@@ -283,11 +283,11 @@ Drupal.wysiwyg.plugins['os_link'] = {
       }
       else if (a.hasAttribute('data-url')) {
         ret.url = a.getAttribute('data-url');
-        ret.type = 'external';
+        ret.type = 'url';
       }
       else {
         ret.url = a.href.replace(home, '');
-        ret.type = 'external';
+        ret.type = 'url';
       }
     }
 

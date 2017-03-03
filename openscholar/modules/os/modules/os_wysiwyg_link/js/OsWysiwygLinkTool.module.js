@@ -104,6 +104,7 @@
               target = 'mailto:' + linkInfo.arg;
               break;
             case 'file':
+              target = linkInfo.arg;
               attributes['data-fid'] = linkInfo.arg;
               break;
           }
