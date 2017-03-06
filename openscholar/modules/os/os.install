@@ -914,3 +914,43 @@ function os_update_7046() {
   module_enable(array('ap_settings_form', 'restful_message'));
   return t('Enhanced settings forms enabled.');
 }
+
+/**
+ * Update has_children field of parent menus having 0 children
+ */
+function os_update_7047() {
+
+  # Find menus with children
+  $r1 = db_select('menu_links', 'ml')
+    ->fields('ml', array('mlid'))
+    ->condition('has_children', 0, '>')
+    ->execute();
+
+  $count = 0;
+  foreach ($r1 as $record) {
+
+    # Find child menus whose parents we found above
+    $r2 = db_select('menu_links', 'ml')
+      ->fields('ml', array('mlid'))
+      ->condition('plid', $record->mlid)
+      ->execute()
+      ->rowCount();
+
+    # If the parent menu does not - in fact - have children,
+    # update the has_children field to 0
+    if ($r2 == 0) {
+
+      $r3 = db_update('menu_links')
+        ->fields(array('has_children' => 0))
+        ->condition('mlid', $record->mlid)
+        ->execute();
+
+      if ($r3) {
+        $count++;
+      }
+    }
+  }
+
+  $message = t('@count parent menus with no children links have been updated.', array('@count' => $count));
+  drupal_set_message($message);
+}
