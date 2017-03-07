@@ -147,16 +147,14 @@ function os_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'securepages_pages';
-  $strongarm->value = 'user
-user/login
-pinserver/auth';
+  $strongarm->value = '';
   $export['securepages_pages'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'securepages_secure';
-  $strongarm->value = '1';
+  $strongarm->value = '0';
   $export['securepages_secure'] = $strongarm;
 
   $strongarm = new stdClass();
