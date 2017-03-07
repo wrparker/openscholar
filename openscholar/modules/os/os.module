@@ -1597,6 +1597,7 @@ function os_system_info_alter(&$info, $file, $type) {
       $types = array_keys(os_get_bundles(true));  // All OS Nodes
       foreach ($types as $type) {
         $info['features_exclude']['field_instance']['node-' . $type . '-og_group_ref'] = 'node-' . $type . '-og_group_ref';
+        $info['features_exclude']['field_instance']['node-' . $type . '-og_vocabulary'] = 'node-' . $type . '-og_vocabulary';
       }
 
       $info['dependencies'][] = 'poll';
