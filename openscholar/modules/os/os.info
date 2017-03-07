@@ -28,7 +28,6 @@ dependencies[] = os_wysiwyg_link
 dependencies[] = overlay
 dependencies[] = password_policy
 dependencies[] = pathauto
-dependencies[] = poll
 dependencies[] = rbuild
 dependencies[] = search
 dependencies[] = spaces
