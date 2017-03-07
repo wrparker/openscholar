@@ -245,11 +245,12 @@
         angular.element(document.querySelectorAll(scope.element.mouseover_element)).find('div').on(scope.element.mouseover_event, function (e) {
           e.stopPropagation();
           if (scope.element.hide_element) {
-            angular.element(document.querySelectorAll(scope.element.hide_element)).hide(); 
+            angular.element(document.querySelectorAll(scope.element.hide_element)).hide();
           }
-          if (scope.element.show_element) {      
+          if (scope.element.show_element) {
             if (scope.element.show_element == 'this.id') {
-              angular.element(document.querySelectorAll('#' + angular.element(this).find('input').attr('id'))).show();
+              var pop_id = angular.element(this).find('input').attr('value').replace('.','');
+              angular.element(document.querySelectorAll('#' + pop_id)).show();
             } else {
               angular.element(document.querySelectorAll(scope.element.show_element)).show();
             }

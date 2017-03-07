@@ -1772,17 +1772,18 @@ function os_publications_cp_settings() {
     $counter = 0;
     foreach($biblio_styles as $styles => $name) {
       $counter ++;
+      // Setup the new citation options to be wrapped for a popup.
+      $cite_example_link = '<a href="#" class="cite-pop" data-popbox="pop'.$counter.'">' . t('@link_name', array('@link_name' => $name)) . '</a>';
       // Setup the h2.
       $cite_example_title = '<h2>' . t('@csl_title', array('@csl_title' => $name)) . '</h2>';
       // Setup the citation exmaple for the popup.
       $citation_example = _os_publications_build_citation_example($styles); //'test text';
       $cite_example_text = '<p>' . t('!cite_text', array('!cite_text' => $citation_example)) . '</p>';
       // Concat it all together.
-      $biblio_get_style = str_replace('.csl', '', biblio_get_style());
-      $styles_name = str_replace('.csl', '', $styles);
-      $hidden = ($styles_name != $biblio_get_style) ? 'hidden' : '';
-      $cite_example_output .= '<div data-example-id="' . $styles . '" id="edit-biblio-citeproc-style-' . $styles_name . '" class="citebox ' . $hidden . '">' . $cite_example_title . $cite_example_text . '</div>';
-      $biblio_styles_options[$styles_name] = $name;
+      $hidden = ($styles != biblio_get_style()) ? 'hidden' : '';
+      $cite_example_output .= '<div data-example-id="' . $styles . '" id="' . str_replace('.', '', $styles) . '" class="citebox ' . $hidden . '">' . $cite_example_title . $cite_example_text . '</div>';
+      //$biblio_styles_options[$styles_name] = $name;
+      $biblio_styles_hover[$styles] = $cite_example_link;
     }
   }
 
@@ -1797,8 +1798,8 @@ function os_publications_cp_settings() {
     ),
     'form' => array(
       '#type' => 'radios',
-      '#default_value' => $biblio_get_style,
-      '#options' => $biblio_styles_options,
+      '#default_value' => biblio_get_style(),
+      '#options' => $biblio_styles_hover,
       '#weight' => -1,
       '#prefix' => '<label>Preferred bibliographic format</label>',
       '#onclick_callback' => 'display_biblio_format_example',
@@ -1858,7 +1859,7 @@ function os_publications_cp_settings() {
       '#mouseover_element' => '#edit-biblio-citeproc-style',
       '#mouseover_event' => 'mouseout',
       '#hide_element' => '.citebox',
-      '#show_element' => '#edit-biblio-citeproc-style-' . str_replace('.csl', '', biblio_get_style()),
+      '#show_element' => '#' . str_replace('.', '', biblio_get_style()),
       '#column' => 'top_right',
     ),
   );
