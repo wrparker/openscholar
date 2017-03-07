@@ -1812,21 +1812,16 @@ function os_contextual_links_view_alter(&$element, $items) {
     $link['query']['destination'] = $redirect;
   }
 
-  if (!user_access('view revisions')) {
-    // User can't view revisions.
+  $node = $element['#element']['#node'];
+
+  if (!node_access('update', $node)) {
+    // User doesn't have access to revisions.
     return;
   }
-
-  $node = $element['#element']['#node'];
 
   if (count(node_revision_list($node)) == 1) {
     // Do not display the revisions tab if the node doesn't have any revisions.
     return FALSE;
-  }
-
-  if (!og_moderation_node_revision_access($node)) {
-    // User has no access to the revisions.
-    return;
   }
 
   $element['#links']['node-revisions'] = array(

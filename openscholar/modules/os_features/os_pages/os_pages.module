@@ -209,6 +209,10 @@ function os_pages_menu_contextual_links_alter(&$links, $router_item, $root_path)
       if ($link['access']) {
         $links['os_pages-edit'] = $link;
       }
+      $link = menu_get_item('node/' . $node->nid . '/revisions');
+      if ((count(node_revision_list($node)) > 1) && $link['access']) {
+        $links['page-revisions'] = $link;
+      }
     }
   }
 }
