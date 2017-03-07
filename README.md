@@ -8,7 +8,7 @@ QA Builds [ ![Codeship Status for openscholar](https://app.codeship.com/projects
 * open-source
 * designed for the academic community
 
-For a non-technical overview, see the [User Documentation](http://scholar.harvard.edu/help/vsitehelp/User-Documentation)
+For a non-technical overview, see the [User Documentation](http://docs.openscholar.harvard.edu)
 
 For developers, see the [glossary](https://github.com/openscholar/openscholar/wiki/Glossary).
 ## Getting Started
