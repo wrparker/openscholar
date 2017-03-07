@@ -19,4 +19,4 @@ OpenScholar 3.54, 2016-11-14
 1.	Enable/ Disable Apps - to set the app views to public, disabled, or private
 2.	App Settings -  to change the settings on your enabled apps
 3.	Global Settings - to change site-wide settings
-All the screens under Global settings are now in AngularJS.
+All the screens under Global settings are now in AngularJS. 
