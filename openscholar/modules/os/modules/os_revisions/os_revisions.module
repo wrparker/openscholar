@@ -48,7 +48,7 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
         ':input[name="revision"]' => array('checked' => FALSE),
       ),
     );
-    if ($num_revisions > 1) {
+    if ($num_revisions >= 1) {
       $revisions_url = "node/" . $form['#node']->nid . "/revisions";
       $form['revision_information']['info']['#markup'] = t('<p>There are currently <a href="@url" id="revisions-link">@num revisions</a>.</p>', array('@url' => url($revisions_url), '@num' => $num_revisions));
       $form['revision_information']['info']['#weight'] = 0;
