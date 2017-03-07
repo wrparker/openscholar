@@ -21,7 +21,7 @@ For developers, see the [glossary](https://github.com/openscholar/openscholar/wi
 ## Get Involved
 
 * [Issues (Github)](https://github.com/openscholar/openscholar/issues)
-* [@OpenScholarApp](http://twitter.com/OpenScholarApp)
+* [@OpenScholarOrg](http://twitter.com/OpenScholarOrg)
 
 ## Tutorials
 
