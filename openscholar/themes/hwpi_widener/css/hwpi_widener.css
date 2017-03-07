@@ -2,6 +2,10 @@
 body * {
     font-family: 'Montserrat', sans-serif !important;
 }
+
+body {
+    font-weight: 300;
+} 
 #boxes-box-site_info,
 #boxes-box-site_info a {
     font-family: 'EB Garamond', serif !important;
@@ -46,10 +50,12 @@ a:visited {
 #header {
     background: #857b6f;
 }
+.rslides_tabs li,
+#layout_16_9_side .slide,
 .sidebar .block h2.block-title,
 .sidebar,
 #footer {
-    background: #f3f2f1;
+    background: #f3f2f1 !important;
 }
 
 .front #content-column .block, .node-person .block-inner, .comment-wrapper {
@@ -61,7 +67,7 @@ a:visited {
 {
     border-top: 1px solid #333;
 }
-
+a.rslides_nav,
 #search-block-form input.form-submit,
 #search-block-form #edit-submit,
 #search-form #edit-submit {
@@ -101,6 +107,7 @@ h2.block-title,
     padding: 0;
   background-color: #fff; 
     letter-spacing: 0;
+    font-weight: 500;
 }
 .sidebar .block h2.block-title {
 
@@ -130,6 +137,9 @@ h2.block-title,
 .section-nav .leaf.menu-depth-6 > a {
     background-color: #f9f8f6 !important;
 }
+
+
+
 #boxes-box-os_pages_section_nav,
 .section-nav ul.menu li a {
     border-color: transparent;
