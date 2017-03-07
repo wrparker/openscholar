@@ -914,3 +914,15 @@ function os_update_7046() {
   module_enable(array('ap_settings_form', 'restful_message'));
   return t('Enhanced settings forms enabled.');
 }
+
+/**
+ * Revert feature variables
+ */
+function os_update_7049() {
+  // Update the secure_pages settings.
+  $features = array(
+    'os' => array('variable'),
+  );
+
+  features_revert($features);
+}
