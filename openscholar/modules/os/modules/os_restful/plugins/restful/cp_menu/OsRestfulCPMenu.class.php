@@ -279,7 +279,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'href' => 'cp/content/files-private'
     )) : array();
 
-    $settings_forms = $vsite_object ? cp_get_setting_forms() : array();
+    $settings_forms = cp_get_setting_forms();
 
     $settings_links = array();
     $space_access = spaces_access_admin();
