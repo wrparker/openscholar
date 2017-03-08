@@ -1802,7 +1802,6 @@ function os_publications_cp_settings() {
       '#options' => $biblio_styles_hover,
       '#weight' => -1,
       '#prefix' => '<label>Preferred bibliographic format</label>',
-      '#onclick_callback' => 'display_biblio_format_example',
       '#column' => 'top_left',
     ),
   );
