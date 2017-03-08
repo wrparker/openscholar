@@ -66,14 +66,14 @@ function os_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
 
   $theme_info = os_get_themes($theme);
 
-//  if ($theme_info->stylesheets) {
-//    // Adding the css of the theme.
-//    foreach ($theme_info->stylesheets as $stylesheets) {
-//      foreach ($stylesheets as $stylesheet) {
-//        $settings['contentsCss'][] = $base_url . '/' . $stylesheet;
-//      }
-//    }
-//  }
+  if ($theme_info->stylesheets) {
+    // Adding the css of the theme.
+    foreach ($theme_info->stylesheets as $stylesheets) {
+      foreach ($stylesheets as $stylesheet) {
+        $settings['contentsCss'][] = $base_url . '/' . $stylesheet;
+      }
+    }
+  }
 
   if ($flavor_name = variable_get('os_appearance_' . $theme . '_flavor')) {
     $flavor_info = $flavors[$flavor_name];
