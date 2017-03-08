@@ -1063,7 +1063,7 @@ div.error:before {
 }
 */
 div.status {
-background-image: url('/profiles/openscholar/themes/cp_theme/images/cp-sprite.png?xyz');
+background-image: url('/profiles/openscholar/themes/cp_theme/images/cp-sprite.png?123');
 background-position: 0 -90px;
 background-repeat: no-repeat;
 color: #008000;
@@ -1091,7 +1091,7 @@ div.status .dismiss {
     -ms-transition: none;
     -o-transition: none;
     transition: none;
-     background: url(/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png) 0 -926px no-repeat;
+     background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') 0 -926px no-repeat;
     width: 20px;
     height: 20px;
     background-color: #49505a;
