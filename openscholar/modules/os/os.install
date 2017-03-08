@@ -920,34 +920,21 @@ function os_update_7046() {
  */
 function os_update_7047() {
 
-  # Find menus with children
-  $r1 = db_select('menu_links', 'ml')
-    ->fields('ml', array('mlid'))
-    ->condition('has_children', 0, '>')
-    ->execute();
+  # Select menus labeled as parents, but for which no menus reference as parents
+  $childless_parent_menus = db_query('SELECT mlid FROM menu_links m ' .
+      'WHERE (has_children > 0) AND ' .
+      '(NOT EXISTS (SELECT * FROM menu_links m2 WHERE m.mlid = m2.plid))');
 
-  $count = 0;
-  foreach ($r1 as $record) {
+  foreach ($childless_parent_menus as $childless_parent_menu) {
 
-    # Find child menus whose parents we found above
-    $r2 = db_select('menu_links', 'ml')
-      ->fields('ml', array('mlid'))
-      ->condition('plid', $record->mlid)
-      ->execute()
-      ->rowCount();
+    # Update the childless parent menus to not have children
+    $db_update_result = db_update('menu_links')
+      ->fields(array('has_children' => 0))
+      ->condition('mlid', $childless_parent_menu->mlid)
+      ->execute();
 
-    # If the parent menu does not - in fact - have children,
-    # update the has_children field to 0
-    if ($r2 == 0) {
-
-      $r3 = db_update('menu_links')
-        ->fields(array('has_children' => 0))
-        ->condition('mlid', $record->mlid)
-        ->execute();
-
-      if ($r3) {
-        $count++;
-      }
+    if ($db_update_result) {
+      $count++;
     }
   }
 
