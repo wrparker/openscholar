@@ -1036,7 +1036,7 @@ ul.term-reference-tree-level {
 .view-cp-content #edit-vocab {
     padding: 5px;
 }
-/** Message icon overrides */
+/** Message icon overrides 
 
 div.status,
 div.warning,
@@ -1061,6 +1061,42 @@ div.warning:before {
 div.error:before {
     background-position: -72px -231px;
 }
+*/
+div.status {
+background-image: url('/profiles/openscholar/themes/cp_theme/images/cp-sprite.png?xyz');
+background-position: 0 -90px;
+background-repeat: no-repeat;
+color: #008000;
+background-color:#dff0d8;
+padding:8px 0 8px 40px;
+
+}
+
+div.status .dismiss {
+    display: block;
+    position: absolute;
+    top: .4em;
+    right: .4em;
+    width: 1.4em;
+    background:transparent;
+ 
+    text-shadow: none;
+    text-decoration: none;
+    border-radius: none;
+    box-shadow: none;
+    opacity: none;
+    cursor: pointer;
+    -webkit-transition: none;
+    -moz-transition: none;
+    -ms-transition: none;
+    -o-transition: none;
+    transition: none;
+     background: url(/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png) 0 -926px no-repeat;
+    width: 20px;
+    height: 20px;
+    background-color: #49505a;
+}
+
 /** Toolbar overrides */
 
 #toolbar-home a span {
