@@ -8,7 +8,7 @@
 function vsite_access_cp_settings() {
   $form = array();
 
-  if ($space = spaces_get_space()) {
+  if (!$space = spaces_get_space()) {
     return;
   }
 
