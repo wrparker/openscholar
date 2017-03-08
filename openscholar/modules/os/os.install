@@ -920,24 +920,17 @@ function os_update_7046() {
  */
 function os_update_7047() {
 
-  # Select menus labeled as parents, but for which no menus reference as parents
   $childless_parent_menus = db_query('SELECT mlid FROM menu_links m ' .
       'WHERE (has_children > 0) AND ' .
       '(NOT EXISTS (SELECT * FROM menu_links m2 WHERE m.mlid = m2.plid))');
 
-  foreach ($childless_parent_menus as $childless_parent_menu) {
+  $mlids = array_keys($childless_parent_menus->fetchAllKeyed());
 
-    # Update the childless parent menus to not have children
-    $db_update_result = db_update('menu_links')
-      ->fields(array('has_children' => 0))
-      ->condition('mlid', $childless_parent_menu->mlid)
-      ->execute();
+  $db_update_result = db_update('menu_links')
+    ->fields(array('has_children' => 0))
+    ->condition('mlid', $mlids, 'IN')
+    ->execute();
 
-    if ($db_update_result) {
-      $count++;
-    }
-  }
-
-  $message = t('@count parent menus with no children links have been updated.', array('@count' => $count));
+  $message = t('@count parent menus with no children links have been updated.', array('@count' => sizeof($mlids)));
   drupal_set_message($message);
 }
