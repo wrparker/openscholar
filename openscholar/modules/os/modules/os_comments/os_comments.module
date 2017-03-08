@@ -179,7 +179,7 @@ function os_comments_cp_settings() {
     $disqus_shortname = $vsite->controllers->variable->get('disqus_domain', 'space');
   }
   else {
-    $disqus_shortname = variable_get('disqus_domain', 'space');
+    $disqus_shortname = variable_get('disqus_domain');
   }
 
   $settings['disqus_domain'] = array(
