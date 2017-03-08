@@ -504,7 +504,7 @@ function os_pages_form_page_node_form_alter(&$form, &$form_state) {
     ),
   );
 
-  if (isset($form['field_os_css_class']) && module_exists('vsite') && $vsite = vsite_get_vsite()) {
+  if (isset($form['field_os_css_class'])) {
     $form['os_css_class_fieldset'] = array(
       '#type' => 'fieldset',
       '#title' => t('Apply css'),
@@ -518,7 +518,7 @@ function os_pages_form_page_node_form_alter(&$form, &$form_state) {
           'os-javascript-load',
         ),
       ),
-      '#access' => og_user_access('node', $vsite->group->nid, 'add widget custom class', NULL, FALSE, TRUE),
+      '#access' => user_access('add page custom class'),
     );
 
     $form['os_css_class_fieldset']['field_os_css_class'] = $form['field_os_css_class'];
@@ -1350,4 +1350,17 @@ function _os_pages_reindex_context($context_name) {
       apachesolr_entity_update($node, 'node');
     }
   }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function os_pages_permission() {
+  return array(
+    'add page custom class' => array(
+      'title' => t('Add specific css class names to basic pages'),
+      'description' => t('For custom theming purposes only.'),
+      'restrict access' => TRUE,
+    ),
+  );
 }
