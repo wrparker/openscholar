@@ -776,6 +776,36 @@ function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
 
     // Add user's role
     og_ui_edit_membership_submit($form, $form_state);
+
+    // Copied from cp_user.pages.inc function cp_user_change_site_owner_form_submit()
+    $vsite = vsite_get_vsite();
+    // Loading logged in user's user object for full name.
+    $account_modifier = user_load($user->uid);
+    $account_modifier_full_name = $account_modifier->field_first_name[LANGUAGE_NONE][0]['value'] . ' ' . $account_modifier->field_last_name[LANGUAGE_NONE][0]['value'];
+    $purl_base_domain = variable_get('purl_base_domain');
+
+    // Checking if this vsite has a custom domain or not.
+    $custom_domain = db_select('purl', 'p')
+      ->fields('p', array('value'))
+      ->condition('provider', 'vsite_domain', '=')
+      ->condition('id', $vsite->group->nid, '=')
+      ->execute()
+      ->fetchField();
+
+    // Setting up email parameters.
+    $to = $account->mail;
+    $from = variable_get('site_mail', ini_get('sendmail_from'));
+    $params['!user-role'] = _cp_user_list_roles('rids-human', NULL, $form['gid']['#value'])[$form_state['input']['roles']];
+    $params['!username'] = $account->name;
+    $params['!account-modifier'] = !empty($account_modifier_full_name) ? $account_modifier_full_name : $account_modifier->name;
+    $params['!site-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl;
+    $params['!login-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl . "/user/login";
+    $params['!account-modifier-email'] = $account_modifier->mail;
+    $params['!user-firstname'] = $account->field_first_name[LANGUAGE_NONE][0]['value'];
+    $params['!sitewide-name'] = variable_get('site_name', 'Harvard Web Publishing');
+
+    $params['headers']['Cc'] = $account_modifier->mail;
+    drupal_mail('cp_user', 'os_user_add_to_group', $to, LANGUAGE_NONE, $params, $from);
   }
 
   $form_state['redirect'] = 'cp/users';
