@@ -103,17 +103,20 @@ function _vsite_register_welcome_page() {
 
   // Prepares the page content markup.
   $nid = variable_get('vsite_register_welcome_message');
-  $node = node_load($nid);
-  $items = field_get_items('node', $node, 'body');
-  if (is_array($items) && count($items)) {
-    $body = array_shift($items);
-    if (isset($body['value']) && !empty($body['value'])) {
-      $build['welcome_page']['#markup'] = $body['value'];
+  if ($node = node_load($nid)) {
+    $items = field_get_items('node', $node, 'body');
+    if (is_array($items) && count($items)) {
+      $body = array_shift($items);
+      if (isset($body['value']) && !empty($body['value'])) {
+        $build['welcome_page']['#markup'] = $body['value'];
+      } // Returns an empty string if no body value found.
+      else {
+        return $build;
+      }
     }
-    // Returns an empty string if no body value found.
-    else {
-      return $build;
-    }
+  }
+  else {
+    return $build;
   }
 
   // Optionally prepares a button "Okay" to dismiss the overlay.

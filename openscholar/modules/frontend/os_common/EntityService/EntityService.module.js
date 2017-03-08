@@ -530,7 +530,7 @@
           url = nextUrl;
         }
 
-        if (Drupal.settings.spaces.id) {
+        if (Drupal.settings.spaces && Drupal.settings.spaces.id) {
           if (url.indexOf('?') == -1) {
             url += '?vsite=' + Drupal.settings.spaces.id;
           }

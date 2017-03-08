@@ -67,7 +67,7 @@ Feature:
   Scenario: Testing content editor can edit any content on his group.
     Given I am logging in as "john"
      When I give the user "klark" the role "content editor" in the group "john"
-      And I click "Log out"
+      And I logout
       And I am logging in as "klark"
       And I edit the node "First blog"
      Then I should get a "200" HTTP response
