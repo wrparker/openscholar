@@ -1098,6 +1098,11 @@ div.status .dismiss {
     background-color: #transparent;
 }
 
+
+.messages.status .dismiss {
+    top: 4px;
+}
+
 /** Toolbar overrides */
 
 #toolbar-home a span {
