@@ -202,7 +202,7 @@ function cp_menu_contextual_links_view_alter(&$element, $items) {
 	        $menu = $link[1];
 
 	        if (in_array($menu, $menus)) {
-	          $element['#links']['menu-add'] = array('title' => t('Add menu item'), 'href' => $fragment . $menu, 'attributes' => array('class' => array('ctools-use-modal')));
+	          $element['#links']['menu-add'] = array('title' => t('Add menu item'), 'href' => $fragment . $menu);
 	        }
 	      }
 	    }

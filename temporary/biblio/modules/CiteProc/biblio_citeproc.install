@@ -342,3 +342,16 @@ function biblio_citeproc_update_7002() {
 	$csl = str_replace('<bibliography hanging-indent="true"', '<bibliography hanging-indent="false"', $csl);
   biblio_citeproc_install_style($style_file, $csl);
 }
+
+/**
+ *
+ * Update Harvard Chicago Author Date schema
+ * and remove some extra date-year information from the citation styles
+ */
+function biblio_citeproc_update_7003() {
+  $style_file = 'harvard-chicago-author-date.csl';
+  $path = drupal_get_path('module', 'biblio_citeproc') . "/style/$style_file";
+  $csl = file_get_contents($path);
+  biblio_citeproc_install_style($style_file, $csl);
+}
+
