@@ -874,7 +874,12 @@ function vsite_update_7036(&$sandbox) {
                  ->range(0, $batch);
   $results = $query->execute();
 
+  //Checking for Bad url
+  //Bad URL http://openscholar.dd/asm/abcd3/abcd3
+  //will return
+  //Correct URL http://openscholar.dd/asm/abcd3
   $url_regex = '/<a\s+(?:[^>]*?\s+)?href="([^"]*)"/';
+  $count=0;
   foreach($results as $result) {
     $nid = $result->nid;
     $node = node_load($nid);
@@ -892,6 +897,7 @@ function vsite_update_7036(&$sandbox) {
                 // Updating the body content
                 if ($newurl) {
                   $content = str_replace($url, $newurl, $content);
+                  $count++;
                 }
               }
             }
@@ -908,7 +914,7 @@ function vsite_update_7036(&$sandbox) {
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 
   if ($sandbox['#finished']) {
-    return t('Wrong links in nodes are replaced successfully.');
+    return t('!count wrong links in nodes are replaced successfully.', array('!count' => $count));
   }
 }
 
@@ -941,6 +947,7 @@ function vsite_update_7037(&$sandbox) {
   $results = $query->execute();
 
   $url_regex = '/<a\s+(?:[^>]*?\s+)?href="([^"]*)"/';
+  $count=0;
   foreach($results as $result) {
     $c = $result->value;
     $ct = unserialize($c);
@@ -958,6 +965,7 @@ function vsite_update_7037(&$sandbox) {
                 // Updating the body content
                 if ($newurl) {
                   $content = str_replace($url, $newurl, $content);
+                  $count++;
                 }
               }
             }
@@ -979,7 +987,7 @@ function vsite_update_7037(&$sandbox) {
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 
   if ($sandbox['#finished']) {
-    return t('Wrong links in widgets are replaced successfully.');
+    return t('!count wrong links in nodes are replaced successfully.', array('!count' => $count));
   }
 }
 
