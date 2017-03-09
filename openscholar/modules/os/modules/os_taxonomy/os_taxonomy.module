@@ -1890,6 +1890,14 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
   );
   $form['#attached']['library'][] = array('media', 'media_browser');
   $form['#attached']['library'][] = array('os_common', 'FileEditorModal');
+
+  unset($form['relations']['weight']);
+  $form['relations']['parent']['#options'][0] = "<Top most level>";
+  $form['relations']['parent']['#multiple'] = false;
+  $form['show_description'][LANGUAGE_NONE]['#description'] = "The above named term is positioned here in the vocabulary.";
+
+  $form['parent'] = $form['relations']['parent'];
+  unset($form['relations']);
 }
 
 /**
