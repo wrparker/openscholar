@@ -875,9 +875,6 @@ function vsite_update_7036(&$sandbox) {
   $results = $query->execute();
 
   //Checking for Bad url
-  //Bad URL http://openscholar.dd/asm/abcd3/abcd3
-  //will return
-  //Correct URL http://openscholar.dd/asm/abcd3
   $url_regex = '/<a\s+(?:[^>]*?\s+)?href="([^"]*)"/';
   $count=0;
   foreach($results as $result) {
