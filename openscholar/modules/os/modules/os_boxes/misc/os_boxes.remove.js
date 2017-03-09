@@ -14,7 +14,8 @@ Drupal.behaviors.osBoxesRemove = {
 };
 
 var removed_widgets = {},
-  template = 'This widget has been removed from this section. You can <a href="os/widget/{module}/{delta}/remove/{region}/{query}">undo this action</a>';
+  template = 'This widget has been removed from this section. You can <a href="os/widget/{module}/{delta}/remove/{region}/{query}">undo this action</a>',
+  error_template = 'This widget has been removed from this section. You must visit the <a href="cp/build/layout/{context}">Layout Form</a> to undo this action.';
 
 function removeWidget(widget, query) {
   var id = widget.attr('id'),
@@ -23,20 +24,28 @@ function removeWidget(widget, query) {
       module = widget.attr('module'),
       html = template;
 
-  html = html.replace('{delta}', delta);
-  html = html.replace('{region}', region);
-  html = html.replace('{query}', query);
-  html = html.replace('{module}', module);
+  if (region) {
+    html = html.replace('{delta}', delta);
+    html = html.replace('{region}', region);
+    html = html.replace('{query}', query);
+    html = html.replace('{module}', module);
 
-  removed_widgets[id] = widget.children().detach();
-  widget.html(html);
-  widget.find('a').click(function (e) {
-    var widget = $(this).closest('.block');
-    undoRemoveWidget(widget);
-    $.ajax(this.href);
-    e.preventDefault();
-    e.stopPropagation();
-  });
+    removed_widgets[id] = widget.children().detach();
+    widget.html(html);
+    widget.find('a').click(function (e) {
+      var widget = $(this).closest('.block');
+      undoRemoveWidget(widget);
+      $.ajax(this.href);
+      e.preventDefault();
+      e.stopPropagation();
+    });
+  }
+  else {
+    var matches = query.match(/=[^&]*&/);
+    var context = matches[0].replace('=', '');
+    html = error_template.replace('{context}', context);
+    widget.html(html)
+  }
 }
 
 function undoRemoveWidget(widget) {

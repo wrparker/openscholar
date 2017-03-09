@@ -406,6 +406,35 @@ class FeatureHelp {
   }
 
   /**
+   * Get vsite id for purl path
+   */
+  static public function idFromPath($path) {
+    $q = db_select('purl', 'p')
+      ->fields('p', array('id'))
+      ->condition('value', $path)
+      ->condition('provider', 'spaces_og')
+      ->execute();
+
+    return $q->fetchField();
+  }
+
+  /**
+   * Set variable for vsite only
+   * @param $vsite - the purl id of the vsite
+   */
+  static public function variableSetSpace($name, $value, $vsite) {
+    $id = self::idFromPath($vsite);
+
+    if ($vs = vsite_get_vsite($id)) {
+      $vs->controllers->variable->set($name, $value);
+      $conf[$name] = $value;
+    }
+    else {
+      throw new Exception("No vsite $vsite found.");
+    }
+  }
+
+  /**
    * Set term under a term.
    */
   static public function setTermUnderTerm($child, $parent) {
@@ -508,7 +537,7 @@ class FeatureHelp {
    */
   static public function checkUserRoleInGroup($name, $role, $group) {
     drupal_static_reset();
-    $gid = self::GetNodeId($group);
+    $gid = self::idFromPath($group);
     $user = user_load_by_name($name);
 
     if (!og_is_member('node', $gid, 'user', $user)) {

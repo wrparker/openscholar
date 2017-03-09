@@ -5,6 +5,10 @@ body,
 #page {
     padding: 0;
 }
+body:not(.overlay) .node-form {
+    margin-left:50px;
+}
+
 #branding h1.page-title {
     color: #555;
     font-size: 2.3em;
@@ -1274,6 +1278,12 @@ span[name="faq_sort"] .form-radios {
 .margin-bottom{
     margin-bottom: 15px;
 }
+
+
+label[for="edit-blog-comments-settings"],
+label[for="edit-os-booklets-toc-position"],
+.page-cp label[for="edit-blog-comments-settings"],
+.page-cp label[for="edit-os-booklets-toc-position"],
 .page-cp .settings-form-heading,
 .settings-form-heading {
 	font-size:1.2em;

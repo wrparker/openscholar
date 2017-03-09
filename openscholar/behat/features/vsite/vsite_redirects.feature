@@ -34,7 +34,7 @@ Feature:
     Given I visit "http://lincoln.local/john/blog/first-blog"
      Then I should be on "john/blog/first-blog"
 
-  @api @vsite
+  @api @vsite @javascript
   Scenario: Verifying redirect of sites without a share domain.
     Given I login as "admin" in "Abraham"
       And I set the Share domain name to "0"

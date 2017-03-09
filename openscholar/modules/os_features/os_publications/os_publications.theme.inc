@@ -222,12 +222,12 @@ function _os_publications_plain_citation($node) {
     // Pushing day and month in those both are present in Publication for Harvard - Chicago Author cititation
     if (!empty($node->biblio_year) && strpos($citation, $node->biblio_date . '.') !== FALSE && !empty($node->field_biblio_pub_month['und'][0]['value'])) {
       // In case day value is present
-      if(!empty($node->field_biblio_pub_day['und'][0]['value'])) {
+      if (!empty($node->field_biblio_pub_day['und'][0]['value'])) {
         $day = $node->field_biblio_pub_day['und'][0]['value'] . '/';
       } else {
         $day = '';
       }
-      $citation = str_replace($node->biblio_date . '.', $node->field_biblio_pub_month['und'][0]['value'] . '/' . $day . $node->biblio_date . '. ', $citation);
+      $citation = str_replace($node->biblio_year . '.', $node->field_biblio_pub_month['und'][0]['value'] . '/' . $day . $node->biblio_year . '. ', $citation);
     }
 
     $fields = array(
