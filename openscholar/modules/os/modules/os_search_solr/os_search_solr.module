@@ -145,9 +145,14 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
 
     // There may be private features, this user is a member and should get access to private features in search.
     if ($query->hasFilter('bs_private', 1, TRUE) && (user_access('administer group') || og_is_member('node', $group_wrapper->getIdentifier()))) {
-       $query->removeFilter('bs_private');
+      $query->removeFilter('bs_private');
     }
-  }
+
+    // Bundles which belong for disabled apps should appear in the search.
+    if ($bundles = array_keys(os_get_bundles(array(OS_DISABLED_APP)))) {
+      $query->addFilter('bundle', '(' . implode(' OR ', $bundles) . ')', TRUE);
+    }
+ }
   elseif (variable_get('file_default_scheme', 'public') == 'private') {
     // We are not in a vsite, and we are in a private install.
     drupal_access_denied();
