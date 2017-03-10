@@ -1894,6 +1894,7 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
   unset($form['relations']['weight']);
   $form['relations']['parent']['#options'][0] = "Keep at top";
   $form['relations']['parent']['#multiple'] = false;
+  $form['relations']['parent']['#description'] = "Place the term in the name field under an existing term in the dropdown.";
 
   $form['parent'] = $form['relations']['parent'];
   unset($form['relations']);
