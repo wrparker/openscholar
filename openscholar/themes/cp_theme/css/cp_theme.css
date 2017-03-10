@@ -1036,34 +1036,10 @@ ul.term-reference-tree-level {
 .view-cp-content #edit-vocab {
     padding: 5px;
 }
-/** Message icon overrides 
-
-div.status,
-div.warning,
-div.error {
-    background-image: none;
-}
-div.messages:before {
-    position: absolute;
-    content: '';
-    background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
-    height: 24px;
-    width: 24px;
-    top: 8px;
-    left: 8px;
-}
-div.status:before {
-    background-position: -38px -231px;
-}
-div.warning:before {
-    background-position: -38px -262px;
-}
-div.error:before {
-    background-position: -72px -231px;
-}
-*/
+/** Message icon overrides */
+	
 div.messages {
-margin: 0 0 20px;
+margin: 0 0 10px;
     padding: 0;
     border:none;
 }
