@@ -1894,8 +1894,7 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
   unset($form['relations']['weight']);
   $form['relations']['parent']['#options'][0] = "<Top most level>";
   $form['relations']['parent']['#multiple'] = false;
-    $form['relations']['parent']['#description'] = "The above named term is positioned here in the vocabulary.";
-  $form['show_description'][LANGUAGE_NONE]['#description'] = "The above named term is positioned here in the vocabulary.";
+  $form['relations']['parent']['#description'] = "The above named term is positioned here in the vocabulary.";
 
   $form['parent'] = $form['relations']['parent'];
   unset($form['relations']);
