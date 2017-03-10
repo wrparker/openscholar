@@ -5,6 +5,10 @@ body,
 #page {
     padding: 0;
 }
+body:not(.overlay) .node-form {
+    margin-left:50px;
+}
+
 #branding h1.page-title {
     color: #555;
     font-size: 2.3em;

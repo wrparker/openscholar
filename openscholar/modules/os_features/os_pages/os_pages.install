@@ -146,9 +146,35 @@ function os_pages_update_7007() {
 }
 
 /**
- * Revert strongarm variables to register enable_revisions setting
+ * Features revert to remove page css class part.
  */
 function os_pages_update_7008() {
+  $revert = array(
+    'os_pages' => array(
+      'field_base',
+      'field_instance',
+    ),
+  );
+  features_revert($revert);
+
+  // "Revert" just one variable value using variable API.
+  $name = 'nodeformscols_field_placements_page_default';
+  $value = variable_get($name, array());
+  $value['os_css_class_fieldset'] = array(
+    'region' => 'right',
+    'weight' => '8',
+    'has_required' => FALSE,
+    'title' => 'Apply css',
+    'collapsed' => 1,
+    'hidden' => 0,
+  );
+  variable_set($name, $value);
+}
+
+/**
+ * Revert strongarm variables to register enable_revisions setting
+ */
+function os_pages_update_7009() {
   $revert = array(
     'os_pages' => array(
       'variable',
