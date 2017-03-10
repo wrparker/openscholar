@@ -145,7 +145,7 @@ function os_revisions_revision_overview($node) {
  * Change title/text in confirm_form when user selects to revert to an older revision
  */
 function os_revisions_form_node_revision_revert_confirm_alter(&$form, &$form_state, $form_id) {
-  $text = t('Are you sure you want to revert to the revision from') . drupal_placeholder(format_date($form['#node_revision']->revision_timestamp), 'date') . '?';
+  $text = t('Are you sure you want to revert to the revision from ') . drupal_placeholder(format_date($form['#node_revision']->revision_timestamp), 'date') . '?';
   drupal_set_title(t('Confirm Revert'));
 
   $form['description'] = array(
@@ -164,7 +164,7 @@ function os_revisions_form_node_revision_revert_confirm_alter(&$form, &$form_sta
  * Change title/text in confirm_form when user selects to delete a revision
  */
 function os_revisions_form_node_revision_delete_confirm_alter(&$form, &$form_state, $form_id) {
-  $text = t('Are you sure you want to delete the revision from') . drupal_placeholder(format_date($form['#node_revision']->revision_timestamp), 'date') . '?';
+  $text = t('Are you sure you want to delete the revision from ') . drupal_placeholder(format_date($form['#node_revision']->revision_timestamp), 'date') . '?';
   drupal_set_title(t('Confirm Delete'));
   $form['description'] = array(
     '#markup' => "<p>$text</p>",
