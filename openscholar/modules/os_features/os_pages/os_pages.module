@@ -202,7 +202,7 @@ function os_pages_menu_contextual_links_alter(&$links, $router_item, $root_path)
     $node = $router_item['page_arguments'][2];
 
     // we don't want to mess with the links for other content types by accident
-    // only pages are editted at the node/nid/edit paths.
+    // only pages are edited at the node/nid/edit paths.
     if ($node->type == 'page') {
       $links = array();
       $link = menu_get_item('node/'.$node->nid.'/edit');

@@ -179,7 +179,7 @@ function os_revisions_add_revert_notes($form, &$form_state) {
   $node_revision = $form['#node_revision'];
   $node_revision->revision = 1;
   $old_log = $node_revision->log;
-  $node_revision->log = t('Copy of the revision from %date: %log.', array('%date' => format_date($node_revision->revision_timestamp), '%log' => $old_log));
+  $node_revision->log = t('Copy of the revision from %date: %log.', array('%date' => format_date($node_revision->revision_timestamp), '%log' => strip_tags($old_log)));
 
   node_save($node_revision);
 
