@@ -19,4 +19,13 @@ OpenScholar 3.54, 2016-11-14
 1.	Enable/ Disable Apps - to set the app views to public, disabled, or private
 2.	App Settings -  to change the settings on your enabled apps
 3.	Global Settings - to change site-wide settings
+
 All the screens under Global settings are now in AngularJS.
+
+----------------------------
+OpenScholar 3.57, 2016-01-30
+----------------------------
+- Bug fixes with the People Sync functionality
+- New settings AngularJS screens for Private files, Booklets in left nav
+- New AngularJS screens for Help in left nav
+- Faceted Taxonomy in Publications will now honor the Publications Settings sort order

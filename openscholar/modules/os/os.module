@@ -51,7 +51,7 @@ function os_menu() {
     'weight' => -5,
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_settings_form'),
-    'access arguments' => array('administer content'),
+    'access arguments' => array('administer nodes'),
   );
 
   $items['admin/config/openscholar/frontend'] = array(
@@ -59,7 +59,7 @@ function os_menu() {
     'description' => 'Edit settings that affect general front end performance',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_settings_frontend_form'),
-    'access arguments' => array('administer content'),
+    'access arguments' => array('administer nodes'),
   );
 
   $items['page_not_found'] = array(
@@ -1009,11 +1009,10 @@ function os_form_alter(&$form, &$form_state, $form_id) {
 
     // Obtaining destination parameter from URL
     $query = drupal_get_destination();
-    $destination_menu_object = menu_get_item($query['destination']);
 
     // If destination is the deleted node itself, then redirecting to default app path
     // Also if no destination parameter is found in URL, then redirecting to default app path
-    if(($destination_menu_object['path'] == 'node/%' || empty($_GET['destination'])) && isset($paths[$form['#node']->type])) {
+    if((preg_match("/node\/\d+/", $query['destination']) || empty($_GET['destination'])) && isset($paths[$form['#node']->type])) {
       $_GET['destination'] = $paths[$form['#node']->type];
     }
   }
@@ -1631,18 +1630,6 @@ function os_system_info_alter(&$info, $file, $type) {
 function os_url_outbound_alter(&$path, &$options, $original) {
   global $user;
 
-  // Check if the user asked for any RESTWS services.
-  if (module_exists('restws')) {
-    foreach (array_keys(restws_get_format_info()) as $format) {
-      if (strpos($_GET['q'], $format) !== FALSE) {
-        // When accessing to any address the spaces module use purl_goto(). The
-        // purl_goto() use url() for knowing the path of the URL we accessing.
-        // url() will return eventually the path.
-        return;
-      }
-    }
-  }
-
   $loop_back_pages = array(
     'user',
     'user/pin',
@@ -1782,6 +1769,20 @@ function os_node_view_alter(&$build) {
       $build['body'][$c]['#markup'] = _filter_htmlcorrector($build['body'][$c]['#markup']);
     }
   }
+
+  if (!empty($node->sv_list) && $build['#view_mode'] == 'slide_teaser') {
+    // When using the slide teaser view mode, the users cannot go into the node
+    // since the title is expanding the item and reveal the body. Adding a read
+    // more link will do the trick.
+    $build['read_more'] = array(
+      '#markup' => l(t('Read more'), 'node/' . $node->nid, array(
+        'attributes' => array(
+          'class' => array('block-element'),
+          ),
+        )),
+      '#weight' => 1000,
+    );
+  }
 }
 
 /**
@@ -1800,6 +1801,19 @@ function os_contextual_links_view_alter(&$element, $items) {
   if (empty($element['#element']['#entity_type']) || $element['#element']['#entity_type'] != 'node') {
     // Not a node element.
     return;
+  }
+
+  if (isset($element['#links']['node-delete'])) {
+    $link = &$element['#links']['node-delete'];
+    $bundle = $element['#element']['#bundle'];
+    $app = os_get_app_by_bundle($bundle);
+    $app = os_app_info($app);
+
+    $redirect = "<front>";
+    if (!empty($app['path'])) {
+      $redirect = $app['path'];
+    }
+    $link['query']['destination'] = $redirect;
   }
 
   if (!user_access('view revisions')) {
@@ -2262,11 +2276,26 @@ function os_user_login_validate($form, &$form_state) {
 function os_library() {
   $libraries = array();
 
+  // Extending hook_library for Get Satidfaction data of cp/support section
+  $libraries['gsfn'] = array(
+    'title' => 'GSFN support form',
+    'version' => '1.0',
+    'js' => array(
+      'https://loader.engage.gsfn.us/loader.js' => array('group' => JS_LIBRARY)
+    ),
+    'css' => array(
+      drupal_get_path('module', 'cp') . '/theme/cp-support.css' => array('group' => JS_LIBRARY)
+    ),
+  );
+
   $libraries['os.ajax-fix'] = array(
     'title' => 'Ajax Termination Fix',
     'version' => '1.0',
     'js' => array(
       drupal_get_path('module', 'os').'/theme/os_ajaxterminate.js' => array('group' => JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('os', 'gsfn'),
     ),
   );
 
@@ -2675,6 +2704,8 @@ function os_field_display_node_alter(&$display, $context) {
  *  Determine if an exception need to be thrown when the copy of the file
  *  failed. When set to false the reason for the failure will return as a text
  *  in the returned array.
+ * @param $vsite
+ *   The vsite which the file belong to.
  *
  * @throws Exception
  *  Throwing an error when the copy of the file failed and the $exception set to
@@ -2683,21 +2714,33 @@ function os_field_display_node_alter(&$display, $context) {
  *  Return array of the file or error if occurred and the type of the return
  *  data(file/text).
  */
-function os_copy_file($url, $exception = FALSE) {
+function os_copy_file($url, $exception = FALSE, $show_error = TRUE, $vsite = NULL) {
+
   if (empty($url)) {
-    return os_file_copy_set_error(t('You need to pass a url of the file.'), $exception);
+    return os_file_copy_set_error(t('You need to pass a url of the file.'), $exception, $show_error);
   }
 
   if (drupal_http_request($url)->code != 200) {
-    return os_file_copy_set_error(t("The file was not reachable."), $exception);
+    return os_file_copy_set_error(t("The file was not reachable."), $exception, $show_error);
   }
 
   if (!is_writeable('public://')) {
-    return os_file_copy_set_error(t("The file directory is not wrietable. Please check her permission."), $exception);
+    return os_file_copy_set_error(t("The file directory is not wrietable. Please check her permission."), $exception, $show_error);
   }
 
-  if (!$file = system_retrieve_file($url, 'public://', TRUE)) {
-    return os_file_copy_set_error(t('An error occurred due unknown reason.'), $exception);
+  $path = 'public://';
+
+  if (!empty($vsite)) {
+    $path .= '/' . $vsite . '/files';
+
+    if (!file_exists(drupal_realpath($path))) {
+      // The directory does not exists. We need to create the directory.
+      drupal_mkdir(variable_get('file_public_path', 'sites/default/files') . '/' . $vsite . '/files', NULL, TRUE);
+    }
+  }
+
+  if (!$file = system_retrieve_file($url, $path, TRUE)) {
+    return os_file_copy_set_error(t('An error occurred due unknown reason.'), $exception, $show_error);
   }
 
   return array(
@@ -2711,17 +2754,21 @@ function os_copy_file($url, $exception = FALSE) {
  *
  * @see os_copy_file().
  */
-function os_file_copy_set_error($message, $exception) {
+function os_file_copy_set_error($message, $exception, $show_error = TRUE) {
   watchdog('os', $message);
 
   if ($exception) {
     throw new Exception($message);
   }
 
-  return array(
-    'type' => 'error',
-    'message' => $message,
-  );
+  if ($show_error) {
+    return array(
+      'type' => 'error',
+      'message' => $message,
+    );
+  } else {
+    return TRUE;
+  }
 }
 
 /**
@@ -2972,7 +3019,7 @@ function os_html_head_alter(&$head_elements) {
 
   // Exit early in case we have no shortlink metatag and we are not on a "vsite".
   $vsite = module_exists('vsite') ? vsite_get_vsite() : FALSE;
-  if (!isset($head_elements['metatag_shortlink']) && !$vsite) {
+  if (!isset($head_elements['metatag_shortlink']) || !$vsite) {
     return;
   }
 

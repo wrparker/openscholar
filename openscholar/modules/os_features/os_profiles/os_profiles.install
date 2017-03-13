@@ -111,3 +111,10 @@ function os_profiles_update_7052(&$sandbox) {
     'path' => drupal_get_path('module', 'os_profiles') . '/updates/update7052.php',
   ));
 }
+
+/**
+ * Order the fields in the profile forms to match the profile view.
+ */
+function os_profiles_update_7053() {
+  features_revert(array('os_profiles' => array('variable')));
+}

@@ -206,6 +206,7 @@ function cp_user_vsite_toggle_roles_permissions_confirm($form, &$form_state, $va
     // Changing to custom permissions.
     $title = t('Edit roles and permissions in %vsite', array('%vsite' => $vsite->group->title));
     $description = t('Are you sure you want to override the default roles and permissions in %vsite?', array('%vsite' => $vsite->group->title));
+    drupal_set_message("Changing the default roles and permissions is not recommended. Try creating a custom role instead.", $type = 'warning');
   }
   else {
     // Changing to default permissions.
@@ -765,7 +766,7 @@ function _cp_user_scalar_to_array($form, $selection) {
  * Submit handler; maybe grants a role, then redirects user back to "cp/users".
  */
 function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
-
+  global $user;
   $state = $form_state['values']['state'];
   $account = user_load_by_name($form_state['values']['name']);
 
@@ -775,9 +776,51 @@ function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
 
     // Add user's role
     og_ui_edit_membership_submit($form, $form_state);
-  }
+
+   }
 
   $form_state['redirect'] = 'cp/users';
+}
+
+/**
+ * Implements hook_mail().
+ */
+function cp_user_mail($key, &$message, $params){
+  switch ($key) {
+    case 'os_user_add_to_group' :
+      $message['subject'] = t("You have been added as a member to the !site-url website", $params);
+      $message['body'] = array();
+      $message['body'][] = t("Hi !user-firstname,", $params);
+      $message['body'][] = t("!account-modifier has added you as a member to the website !site-url with the role of !user-role. You can log in at !login-url with the username !username.", $params);
+      $message['body'][] = t("Don't forget to bookmark the site and save this email for future reference.");
+      $message['body'][] = t("Here are some handy links for you:");
+      $links = array();
+      $links[] = " * Sign up for training: http://hwp.harvard.edu/calendar/upcoming\n";
+      $links[] = " * OpenScholar documentation: http://docs.openscholar.harvard.edu\n";
+      $links[] = " * Need help with your project? http://hwp.harvard.edu/contact";
+      $message['body'][] = implode("", $links);
+      $message['body'][] = t("Sincerely,\n!sitewide-name", $params);
+      $message['headers'] += $params['headers'];
+      break;
+
+    case 'os_user_delete_from_group' :
+      $message['subject'] = t("You have been removed from the !site-url website", $params);
+      $message['body'] = array();
+      $message['body'][] = t("Hi !user-firstname,", $params);
+      $message['body'][] = t("!account-modifier has removed you as a member with the role of !user-role from the website !site-url. If you feel this was in error or have any questions, please contact them at !account-modifier-email", $params);
+      $message['body'][] = t("Sincerely,\n!sitewide-name", $params);
+      $message['headers'] += $params['headers'];
+      break;
+
+    case 'os_user_role_change' :
+      $message['subject'] = t("Your role on the !site-url website has changed", $params);
+      $message['body'] = array();
+      $message['body'][] = t("Hi !user-firstname,", $params);
+      $message['body'][] = t("!account-modifier has changed your role to !user-role on the website !site-url. If you feel this was in error or have any questions, please contact them at !account-modifier-email", $params);
+      $message['body'][] = t("Sincerely,\n!sitewide-name", $params);
+      $message['headers'] += $params['headers'];
+      break; 
+  }
 }
 
 /**
@@ -847,6 +890,19 @@ function cp_user_form_user_register_form_alter(&$form, &$form_state, $form_id) {
       unset($form['account']['roles']['#options'][$key]);
     }
   }
+
+  $space = spaces_get_space();
+  $form['og_user']['roles'] = array(
+    '#type' => 'radios',
+    '#access' => true,
+    // Each option is themed and includes a description.
+    '#options' => _cp_user_list_roles('rids-options', $space->group->type, $space->group->nid),
+    '#default_value' => _cp_user_list_roles('rids', $space->group->type, $space->group->nid)[OS_USER_ROLE_BASIC],
+    '#tree' => true,
+    '#value_callback' => '_cp_user_scalar_to_array',
+  );
+  $form['field_first_name']['#weight'] = -100;
+  $form['field_last_name']['#weight'] = -99;
 }
 
 /**
@@ -870,9 +926,23 @@ function cp_user_user_register_submit($form, &$form_state) {
     og_group('node', $space->id, array('entity' => $form_state['user']->uid));
 
     $og_roles = og_roles('node', FALSE, $space->id);
-    $vsite_user_role = array_search('vsite user', $og_roles);
+    $vsite_user_role_constant = array_search('vsite user', $og_roles);
 
-    // Grant them the vsite user role
+    // Role is selected by the user via radio button in the input form,
+    // or defaults to plain 'vsite user'
+    if (isset($form_state['input']['roles'])) {
+      $vsite_user_role = $form_state['input']['roles'];
+    } else {
+      $vsite_user_role = $vsite_user_role_constant;
+    }
+
+    // If needed, overwrite the default role (which gets set above in og_group()),
+    // otherwise the user is assigned two roles.
+    if (isset($form_state['input']['roles']) && $vsite_user_role_constant != $vsite_user_role) {
+      og_role_revoke('node', $space->id, $form_state['user']->uid, $vsite_user_role_constant);
+    }
+
+    // Role is selected via radio button or it defaults to 'vsite user'
     og_role_grant('node', $space->id, $form_state['user']->uid, $vsite_user_role);
 
     // drupal_set_message to inform the user has been added to the group.

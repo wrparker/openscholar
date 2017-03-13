@@ -30,6 +30,16 @@ a:visited {
 #columns .block.block-boxes-twitter ul {
     list-style: none;
 }
+#columns .block-boxes-os_boxes_manual_list .field-name-body ul {
+    list-style: disc;
+}
+#columns .block-boxes-os_boxes_manual_list .field-name-body ul ul {
+    list-style: circle;
+}
+#columns .block-boxes-os_boxes_manual_list .field-name-body ul ul ul {
+    list-style: square;
+}
+
 p:empty {
     display: none;
 }
@@ -147,6 +157,9 @@ table caption {
 }
 #content-column .block ul ul {
     list-style: circle;
+}
+#content-column .block ul ul ul {
+    list-style: square;
 }
 .block .node:last-child {
     margin-bottom: 0;
@@ -799,53 +812,7 @@ table.os-files-other-list {
     width: 80px;
     font-size: 12px;
 }
-/* HWPI Custom message handling */
 
-div.messages {
-    border: 0 none;
-    margin: 0 90px 0;
-    padding: 15px 0;
-}
-#modal-content div.messages {
-    margin: 0;
-}
-.messages h2 {
-    font-size: 1.1em;
-    margin: 0;
-    padding: 0;
-}
-.message-wrapper {
-    padding: 0 0 0 40px;
-    background-position: 0 0;
-    background-repeat: no-repeat;
-    position: relative;
-}
-div.status,
-div.error,
-div.warning {
-    background-image: none;
-}
-div.messages:before {
-    content: normal;
-}
-div.messages .message-wrapper:before {
-    position: absolute;
-    content: '';
-    background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
-    height: 24px;
-    width: 24px;
-    top: 0px;
-    left: 0px;
-}
-div.status .message-wrapper:before {
-    background-position: -38px -231px;
-}
-div.error .message-wrapper:before {
-    background-position: -72px -231px;
-}
-div.warning .message-wrapper:before {
-    background-position: -38px -260px;
-}
 
 /* Pagers */
 

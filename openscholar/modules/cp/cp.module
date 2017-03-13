@@ -490,11 +490,16 @@ function cp_sort_features_by_human_name(&$form) {
  *
  * There aren't enough of to have its own page.
  *
+ * @param $form_sate
+ *   The form state variable.
+ * @return array
+ *   The form array.
+ *
  * @see cp_settings_form()
  */
-function cp_get_setting_forms() {
+function cp_get_setting_forms(&$form_sate = NULL) {
   $settings = module_invoke_all('cp_settings');
-  drupal_alter('cp_settings', $settings);
+  drupal_alter('cp_settings', $settings, $form_sate);
 
   return $settings;
 }
@@ -674,8 +679,107 @@ function cp_form_redirect_edit_form_alter(&$form, &$form_state, $form_id) {
  * Implmements hook_form_BASE_FORM_ID_alter() for node_edit_form.
  */
 function cp_form_node_form_alter(&$form, &$form_state, $form_id) {
+  if (in_array($form['#bundle'], array_keys(os_get_bundles(array(1,2))))) {
+    $default_noindex_value = 0;
+    if (isset($form['nid']['#value']) && $form['nid']['#value'] != '') {
+      $node_noindex = node_load($form['nid']['#value']);
+      if (_cp_node_has_noindex($node_noindex)) {
+        $default_noindex_value = 1;
+      }
+    }
+    $form['options']['noindex'] = array(
+      '#type' => 'checkbox',
+      '#title' => t("Prevent this page from appearing in search engine results"),
+      '#default_value' => $default_noindex_value,
+    );
+  }
   // Hides the default redirect form section from displaying.
   _cp_form_alter_remove_redirect_element($form);
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function cp_node_view($node, $view_mode = 'full') {
+  // We make sure we are on the node page.
+  if (_cp_node_has_noindex($node) && $view_mode == 'full') {
+    $element = array(
+      '#tag' => 'meta',
+      '#attributes' => array(
+        'name' => 'ROBOTS',
+        'content' => 'NOINDEX, NOFOLLOW',
+      ),
+    );
+    drupal_add_html_head($element, 'node_noindex');
+  }
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function cp_node_insert($node) {
+  _cp_node_set_noindex($node);
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function cp_node_update($node) {
+  _cp_node_set_noindex($node);
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function cp_node_delete($node) {
+  _cp_node_delete_noindex($node);
+}
+
+/**
+ * @return
+ *  true if the node has the noindex setting.
+ */
+function _cp_node_has_noindex($node) {
+  if (!isset($node->nid)) {
+    return FALSE;
+  }
+  return db_query("SELECT noindex FROM {node_noindex} WHERE nid = :nid", array(':nid' => $node->nid))->fetchField();
+}
+
+/**
+ * Sets the noindex option to true on the node.
+ *
+ * @param
+ *  object $node
+ */
+function _cp_node_set_noindex($node) {
+  _cp_node_delete_noindex($node);
+  if (isset($node->noindex) && $node->noindex) {
+    $fields = array('nid' => $node->nid, 'noindex' => $node->noindex);
+    db_insert('node_noindex')->fields($fields)->execute();
+  }
+}
+
+/**
+ * Removes the noindex option from the node.
+ *
+ * @param
+ *  object $node
+ */
+function _cp_node_delete_noindex($node) {
+  db_delete('node_noindex')
+  ->condition('nid', $node->nid)
+  ->execute();
+}
+
+/**
+ * Implements hook_js_alter().
+ */
+function cp_js_alter(&$javascript) {
+  // To overcome the display issue for adding noindex in form edit / add
+  if (isset($javascript['modules/node/node.js'])) {
+    $javascript['modules/node/node.js']['data'] = drupal_get_path('module', 'os') . '/js/os_node.js';
+  }
 }
 
 /**

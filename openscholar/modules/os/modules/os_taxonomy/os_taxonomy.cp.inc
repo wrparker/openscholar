@@ -34,7 +34,7 @@ function os_taxonomy_cp_settings() {
   $form['os_taxonomy_display_term_under_content'] = $template + array(
       'form' => array(
         '#type' => 'checkbox',
-        '#prefix' => '<label class="os-taxonomy_label_heading">Choose where "See Also" terms display</label>',
+        '#prefix' => '<label class="os-taxonomy_label_heading settings-form-heading">Choose where "See Also" terms display</label>',
         '#title' => t('Under a page\'s main content area'),
         '#default_value' => variable_get('os_taxonomy_display_term_under_content', 1)
       )
@@ -42,7 +42,7 @@ function os_taxonomy_cp_settings() {
 
   foreach($active_content_types as $content_types_key => $content_types_val) {
     if ($content_types_val === reset($active_content_types)) {
-      $active_content_types_prefix = '<label class="os-taxonomy_label_heading">Under these content types when displayed in a list:</label>';
+      $active_content_types_prefix = '<label>Under these content types when displayed in a list:</label>';
     } else {
       $active_content_types_prefix = '';
     }

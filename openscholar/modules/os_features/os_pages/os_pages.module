@@ -484,7 +484,7 @@ function os_pages_form_page_node_form_alter(&$form, &$form_state) {
   $path = drupal_get_path('module', 'os_pages');
   $form['os_seo'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Search Engine Optimization'),
+    '#title' => t('Search Engine Optimization (SEO)'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#group' => 'additional_settings',
@@ -503,6 +503,28 @@ function os_pages_form_page_node_form_alter(&$form, &$form_state) {
       ),
     ),
   );
+
+  if (isset($form['field_os_css_class']) && module_exists('vsite') && $vsite = vsite_get_vsite()) {
+    $form['os_css_class_fieldset'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Apply css'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'additional_settings',
+      '#region' => 'right',
+      '#attributes' => array(
+        'class' => array(
+          'field-os-css',
+          'os-javascript-load',
+        ),
+      ),
+      '#access' => og_user_access('node', $vsite->group->nid, 'add widget custom class', NULL, FALSE, TRUE),
+    );
+
+    $form['os_css_class_fieldset']['field_os_css_class'] = $form['field_os_css_class'];
+    unset($form['field_os_css_class']);
+  }
+
   $form['#validate'][] = '_os_pages_node_form_summary_submit';
 
   // Adds JS and CSS to display ajax node alias (pathauto) preview.
@@ -956,8 +978,17 @@ function os_pages_add_subpage_form($form, &$form_state, $node) {
  * Makes sure the given node is a page and in our site.
  */
 function os_pages_add_subpage_element_validate($element, &$form_state) {
+  // If Provided autocomplete text is not resolved to a valid node id, then early returning.
+  if (!isset($form_state['vsite_autocomplete_nid']) || !is_numeric($form_state['vsite_autocomplete_nid'])) {
+    return;
+  }
   $nid = $form_state['vsite_autocomplete_nid'];
   $node = node_load($nid);
+  // If provided nid is not returning a valid drupal node object, then exiting from validate handler, exeption will be handled 
+  // by vsite_node_autocomplete_validate callback
+  if (!$node) {
+    return;
+  }
 
   if ($node->type != 'page') {
     form_error($element, t('Selected post is not a page.'));

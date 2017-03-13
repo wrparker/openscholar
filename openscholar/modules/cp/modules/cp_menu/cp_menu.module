@@ -202,7 +202,7 @@ function cp_menu_contextual_links_view_alter(&$element, $items) {
 	        $menu = $link[1];
 
 	        if (in_array($menu, $menus)) {
-	          $element['#links']['menu-add'] = array('title' => t('Add menu item'), 'href' => $fragment . $menu, 'attributes' => array('class' => array('ctools-use-modal')));
+	          $element['#links']['menu-add'] = array('title' => t('Add menu item'), 'href' => $fragment . $menu);
 	        }
 	      }
 	    }
@@ -352,8 +352,24 @@ function cp_menu_node_validate($node, $form, &$form_state) {
   if ($os_menu = &$form_state['values']['os_menu']) {
     $os_menu['link_title'] = trim($os_menu['link_title']);
 
+    $vsite = vsite_get_vsite();
+    $item = array(
+      'menu_name' => $os_menu['parent'],
+      'title' => $os_menu['link_title'],
+      'url' => '',
+      'new_node_type' => 0,
+      'link_path' => '',
+      'tooltip' => $os_menu['description'],
+    );
+    if ($vsite) {
+      ctools_include('menu', 'os');
+      list(, $existing_menu) = _vsite_menu_prepare_menu_item($item, $vsite);
+    }
+
     if ($os_menu['enabled'] && strlen($os_menu['link_title']) == 0) {
       form_set_error('os_menu][link_title', t('Please provide a link title.'));
+    } elseif($vsite && $os_menu['enabled'] && strlen($os_menu['link_title']) > 0 && strlen(serialize($existing_menu)) > 65000) {
+      form_set_error('os_menu][link_title', t('You have reached the maximum number of items for this menu.'));
     }
   }
 }

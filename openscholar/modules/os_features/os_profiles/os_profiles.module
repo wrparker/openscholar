@@ -9,6 +9,11 @@
 include_once 'os_profiles.features.inc';
 
 /**
+ * Store the prefix of the json output of the node
+ */
+define('OS_PROFILE_JSON_PREFIX', 'api/v1/profiles/');
+
+/**
  * Implements hook_os_app_info().
  */
 function os_profiles_os_app_info() {
@@ -74,7 +79,7 @@ function os_profiles_preprocess_views_view_summary(&$vars) {
       'K-O' => range('k', 'o'),
       'P-T' => range('p', 't'),
       'U-Z' => range('u', 'z'),
-    );    
+    );
     // Building the glossary links as A-E, F-J etc.
     foreach ($result as $letter) {
       $rendered[] = strtolower($letter->field_last_name_value_truncated);
@@ -96,12 +101,12 @@ function os_profiles_preprocess_views_view_summary(&$vars) {
  * Implements hook_init().
  */
 function os_profiles_init() {
-  if (variable_get('os_profiles_no_restws', FALSE) || !module_exists('restws')) {
+  if (!module_exists('restful')) {
     // No RestWS.
     return;
   }
 
-  if (!($uuid = variable_get('os_profiles_nodes_uuid'))) {
+  if (!$uuid = variable_get('os_profiles_nodes_uuid')) {
     // Return if no UUID is set that is, no profile nodes need to be updated.
     return;
   }
@@ -145,46 +150,78 @@ function os_profiles_init() {
   $nids = array_keys($result['node']);
   $nodes = node_load_multiple($nids);
   $fields = os_profiles_profiles_fields();
-  $handler = restws_resource_controller('node');
+  $handler = restful_get_restful_handler('profiles');
 
   foreach ($nodes as $node) {
     if (empty($node->field_original_destination_url)) {
       continue;
     }
 
+    // Get the node person file ID.
+    $wrapper = entity_metadata_wrapper('node', $node);
+    $original_photo = $wrapper->field_person_photo->value();
+
     $data = os_profiles_get_origin_node_values($node->field_original_destination_url[LANGUAGE_NONE][0]['value'], $fields);
 
-    // The field person is an array. Remove him for the update method but keep
-    // it for later.
-    $person_photo = $data->values['field_person_photo'];
-    unset($data->values['field_person_photo']);
+    // Since using "put" will set NULL for missing fields we must send the original
+    // url too. Otherwise it will be cleared.
+    $data->values['original_url'] = $node->field_original_destination_url[LANGUAGE_NONE][0]['value'];
+
+    // Get the changed timestamp of the node.
+    $changed = $data->values['changed'];
+
+    // Remove so the child won't get the same value.
+    unset($data->values['changed']);
+
+    $person_photo = !empty($data->values['photo']) ? $data->values['photo'] : '';
     try {
-      $handler->update($node->nid, $data->values);
-    }
-    catch (RestWSException $e) {
+      // The field person is an array. Remove him for the update method but keep
+      // it for later.
+      unset($data->values['photo']);
+      $handler->patch($node->nid, $data->values);
+    } catch(\Exception $e) {
       variable_del('os_profiles_nodes_uuid');
       variable_del('os_profiles_nodes_uuid_time');
       lock_release('os_profile_sync');
-      return;
     }
 
-    // We need to replace the field ID in the field with the new file ID we got.
+    // We need to replace the file ID in the field with the new file ID we got.
     $file = NULL;
     if ($person_photo) {
-      $file_info = os_profiles_get_origin_node_values($person_photo['file']['uri'] . '.json', array('url'));
-      // If the file was updated within 2 min of the node then update it as well.
-      if (($data->values['changed'] - 120) < $file_info->values['timestamp']) {
-        $copy_file = os_copy_file($file_info->values['url'], FALSE);
+      // If the file was updated within 2 min of the node then update it as
+      // well.
+      $original_photo_dimension = image_get_info(drupal_realpath($original_photo['uri']));
 
-        if ($copy_file['type'] == 'file') {
+      if (($changed - 120) < $person_photo['timestamp']) {
+        $wrapper = entity_metadata_wrapper('node', $node);
+        $copy_file = os_copy_file($person_photo['url'], FALSE, FALSE, $wrapper->{OG_AUDIENCE_FIELD}->get(0)->value()->purl);
+
+        $new_photo_dimension = image_get_info(drupal_realpath($copy_file['file']->uri));
+
+        $identical_photos = TRUE;
+        foreach (array_keys($new_photo_dimension) as $key) {
+          if ($new_photo_dimension[$key] != $original_photo_dimension[$key]) {
+            $identical_photos = FALSE;
+          }
+        }
+
+        if ($identical_photos) {
+          // Delete the file.
+          if ($delete_file = file_load($copy_file['file']->fid)) {
+            file_delete($delete_file, TRUE);
+          }
+        }
+
+        if (!$identical_photos && $copy_file['type'] == 'file') {
           $file = $copy_file['file'];
         }
       }
     }
 
-    if ($file || !isset($file_info)) {
-      os_profiles_insert_image($node, $file, $data->data['person_photo_dimension']);
-    } else {
+    if ($file) {
+      os_profiles_insert_image($node, $file, $data->data['photo']);
+    }
+    else {
       node_save($node);
     }
   }
@@ -250,6 +287,12 @@ function os_profiles_menu() {
     'file' => 'os_profiles.pages.inc',
   );
 
+  $items['cp/people/get_profile_url/%'] = array(
+    'page callback' => 'os_profiles_get_profile_url',
+    'page arguments' => array(3),
+    'access callback' => TRUE,
+  );
+
   return $items;
 }
 
@@ -299,17 +342,18 @@ function os_profiles_process_node(&$vars) {
 
   // Adding a header for determining the node ID.
   if($vars['view_mode'] == 'full') {
-    drupal_add_http_header('node_json', url('node/' . $vars['nid'] . '.json', array('absolute' => TRUE)));
+    drupal_add_http_header('X-SELF-JSON', url('api/v1/profiles/' . $vars['nid'], array('absolute' => TRUE)));
   }
 
   // Helps poor theme developers find these changes to $variables
   $vars['classes'] .= ' modified-in-os_profiles_process_node';
 
-  // Moves the profile photo thumbnail before teaser title (full name)
+  // Moves the profile photo thumbnail before teaser title (full name).
   if (isset($vars['content']['field_person_photo'])) {
     if ($vars['view_mode'] != 'slide_teaser') {
       $vars['title_prefix'] += $vars['content']['field_person_photo'];
     }
+
     unset($vars['content']['field_person_photo']);
   }
 
@@ -325,7 +369,7 @@ function os_profiles_process_node(&$vars) {
     //move the title inside
     $vars['content']['node_title'] = array(
       '#weight' => -50,
-      '#markup' => '<h1 ' . $vars['title_attributes'] . '><a href="' . $vars['node_url'] . '">' . $vars['title'] . '</a></h1>'
+      '#markup' => '<h1 ' . $vars['title_attributes'] . '><a href="' . $vars['node_url'] . '">' . $vars['title'] . '</a></h1>',
     );
     $vars['title'] = NULL;
   }
@@ -335,7 +379,7 @@ function os_profiles_process_node(&$vars) {
     // Move the title inside.
     $vars['content']['node_title'] = array(
       '#weight' => -99,
-      '#markup' => '<h1 ' . $vars['title_attributes'] . '><a href="' . $vars['node_url'] . '">' . $vars['title'] . '</a></h1>'
+      '#markup' => '<h1 ' . $vars['title_attributes'] . '><a href="' . $vars['node_url'] . '">' . $vars['title'] . '</a></h1>',
     );
     $vars['title'] = NULL;
   }
@@ -442,6 +486,33 @@ function os_profiles_field_access($op, $field, $entity_type, $entity, $account) 
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Hide fields for a listener node.
+ */
+function os_profiles_form_person_node_form_alter(&$form, $form_state) {
+  $fields = array(
+    'field_original_destination_url' => 'field_original_destination_url',
+    'field_destination_url' => 'field_destination_url',
+    'field_child_site' => 'field_child_site',
+    'original_url' => 'original_url',
+    'field_uuid' => 'field_uuid',
+  );
+
+  // When the node is listening to other node, hide the field we syncing.
+  $wrapper = entity_metadata_wrapper('node', $form['#entity']);
+  if ($wrapper->field_original_destination_url->value()) {
+    $fields = array_merge($fields, os_profiles_profiles_fields());
+  }
+
+  foreach ($form as $element => &$info) {
+    if (!empty($fields[$element]) && in_array($fields[$element], $fields)) {
+      $info['#access'] = FALSE;
+    }
+  }
+}
+
+/**
  * Prepares the node title for person nodes.
  */
 function _os_profiles_person_node_title($node) {
@@ -520,8 +591,8 @@ function os_profiles_sync_profile($form, $form_state) {
 
   $form['autocomplete'] = array(
     '#type' => 'textfield',
-    '#title' => '',
-    '#description' => t('Search the person by the first or last name.'),
+    '#title' => t('Search by first or last name'),
+    '#description' => '<span id="autocomplete-source-page"></span>',
     '#autocomplete_path' => 'cp/people/profile_autocomplete',
   );
 
@@ -532,8 +603,8 @@ function os_profiles_sync_profile($form, $form_state) {
 
   $form['url'] = array(
     '#type' => 'textfield',
-    '#title' => '',
-    '#description' => t('Enter the URL of the profile from another site. For example: http://www.example.com/people/john-doe'),
+    '#title' => t('Enter the URL of a profile from another site'),
+    '#description' => t('For example: http://www.example.com/people/john-doe'),
   );
 
   $form['actions'] = array(
@@ -641,8 +712,8 @@ function os_profiles_sync_profile_validate($form, &$form_state) {
     }
 
     $request = drupal_http_request($form_state['values']['url']);
-      if ($request->code == 403) {
-        form_set_error('url', t('The profile cannot be synced: it seems that the profile you are trying to sync belong to a private site or is set to private on a public site.'));
+    if ($request->code == 403) {
+      form_set_error('url', t('The profile cannot be synced: it seems that the profile you are trying to sync belong to a private site or is set to private on a public site.'));
       return;
     }
 
@@ -654,12 +725,13 @@ function os_profiles_sync_profile_validate($form, &$form_state) {
     //}
 
     // When addressing the URL of the profile that is imported, an http header
-    // named "node_json" is added to the response. This is done in order for the
-    // importing side to get the JSON address of the node. It will be saved in
-    // the field "field_original_destination_url".
+    // named "X-SELF-JSON" is added to the response. This is done in order for
+    // the importing side to get the JSON address of the node. It will be saved
+    // in the field "field_original_destination_url".
     foreach ($headers as $header) {
-      if (strpos($header, 'node_json: ') === 0) {
-        $form_state['json_address'] = str_replace('node_json: ', '', $header);
+      if (strpos($header, 'X-SELF-JSON: ') === 0 || strpos($header, 'node_json: ') === 0) {
+        // Support OpenScholar sites with node_json in the header.
+        $form_state['json_address'] = str_replace(array('X-SELF-JSON: ', 'node_json:'), '', $header);
         return;
       }
     }
@@ -719,8 +791,8 @@ function os_profiles_profiles_fields() {
  * Submit handler; Importing person profile from external source.
  */
 function os_profiles_sync_profile_submit($form, $form_state) {
-  if (variable_get('os_profiles_no_restws', FALSE) || !module_exists('restws')) {
-    // No RestWS.
+  if (!module_exists('restful')) {
+    // No restful.
     return;
   }
 
@@ -735,51 +807,56 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $data = $origin->data;
 
     // Get the URL of the original node.
-    $url = str_replace('/node/' . $data['nid'] . '.json', '', $form_state['json_address']);
-
-    // Get the original node's UUID.
-    $values['field_uuid'] = $data['field_uuid'];
+    $url = str_replace('/' . OS_PROFILE_JSON_PREFIX . $data['id'], '', $form_state['json_address']);
 
     // Save the original address of the JSON.
-    $values['field_original_destination_url'] = $form_state['json_address'];
+    $values['original_url'] = $form_state['json_address'];
+
+    // Get the url of the file.
+    $file_url = $data['photo']['url'] ? $data['photo']['url'] : '';
 
     // Set the file JSON url.
-    $file_json_url = !empty($values['field_person_photo']) ? $values['field_person_photo']['file']['uri'] . '.json' : '';
-    $photo_dimension = $data['person_photo_dimension'];
+    $photo_dimension = $data['photo'];
   }
   else {
     // Import a person node using the auto-complete field.
     $wrapper = entity_metadata_wrapper('node', $form_state['autocomplete_nid']);
-    foreach ($keys as $key) {
+    foreach (array_keys($keys) as $key) {
       if (isset($wrapper->{$key}) && $value = $wrapper->{$key}->value()) {
-        $values[$key] = $value;
+        $values[$keys[$key]] = $value;
       }
     }
+
+    // Send in the request only the value of the body.
+    $values['description'] = !empty($values['description']['value']) ? $values['description']['value'] : '';
 
     // Get the URL of the original node.
     $vsite = vsite_get_vsite($wrapper->og_group_ref->get(0)->value()->nid);
     $url = $vsite->get_absolute_url();
 
     // Get the original node's UUID if it exist. Else, generate it.
-    $values['field_uuid'] = isset($wrapper->field_uuid) && $wrapper->field_uuid->value() ? $wrapper->field_uuid->value() : md5($form_state['autocomplete_nid']);
+    $values['uuid'] = isset($wrapper->field_uuid) && $wrapper->field_uuid->value() ? $wrapper->field_uuid->value() : md5($form_state['autocomplete_nid']);
 
     // Set the UUID for the original node as well.
-    _os_profiles_restws_request_alter($form_state['autocomplete_nid']);
+    _os_profiles_restful_request_alter($form_state['autocomplete_nid']);
 
     // Save the original address of the JSON.
-    $values['field_original_destination_url'] = $url . '/node/' . $form_state['autocomplete_nid'] . '.json';
+    $values['original_url'] = $url . '/' . OS_PROFILE_JSON_PREFIX . $form_state['autocomplete_nid'];
 
-    // Set the file JSON url.
-    $file_json_url = !empty($values['field_person_photo']) ? $base_url . '/file/' . $values['field_person_photo']['fid'] . '.json' : '';
+    // Get the url of the file.
+    $file = !empty($values['photo']['fid']) ? file_load($values['photo']['fid']) : FALSE;
+    $file_url = $file ? file_create_url($file->uri) : '';
 
     $photo_dimension = $wrapper->person_photo_dimension->value();
   }
 
   // Retrieve the file from the original node.
   $file = NULL;
-  if (!empty($file_json_url)) {
-    $file_info = os_profiles_get_origin_node_values($file_json_url, array('url'));
-    $copy_file = os_copy_file($file_info->values['url'], FALSE);
+  if (!empty($file_url)) {
+    if (empty($vsite)) {
+      $vsite = vsite_get_vsite();
+    }
+    $copy_file = os_copy_file($file_url, FALSE, FALSE, $vsite->group->purl);
 
     if ($copy_file['type'] == 'file') {
       $file = $copy_file['file'];
@@ -788,7 +865,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
       form_set_error('', $copy_file['message']);
     }
 
-    unset($values['field_person_photo']);
+    unset($values['photo']);
   }
 
   // Set up default values.
@@ -805,7 +882,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     $query = new EntityFieldQuery();
     $result = $query
       ->entityCondition('entity_type', 'node')
-      ->propertyCondition('title', $values['title'])
+      ->propertyCondition('title', $values['label'])
       ->propertyCondition('type', 'person')
       ->fieldCondition(OG_AUDIENCE_FIELD, 'target_id', $vsite->id)
       ->range(0, 1)
@@ -817,9 +894,12 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     }
   }
 
-  $handler = restws_resource_controller('node');
+  // Remove changed property.
+  unset($values['changed']);
 
-  $nid = call_user_func_array(array($handler, $method), $arguments);
+  $handler = restful_get_restful_handler('profiles');
+  $result = $handler->post('', $values);
+  $nid = $result[0]['id'];
 
   if ($method == 'update') {
     $nid = $arguments[0];
@@ -828,7 +908,7 @@ function os_profiles_sync_profile_submit($form, $form_state) {
     // Write the current site as a listener in the node's origin site.
     $arguments = array(
       'action' => 'insert_person',
-      'UUID' => $values['field_uuid'],
+      'UUID' => $values['uuid'],
       'listener' => $base_url,
     );
     os_profiles_manage_synced_profiles($url, $arguments);
@@ -900,27 +980,18 @@ function os_profiles_get_origin_node_values($address, $fields) {
   // data. This won't allow us to pull the updated data of the node. In order
   // to get un-cached node we need to add the time stamp to the query string.
   $request = drupal_http_request(url($address, array('query' => array('REST_CALL' => 1, 'override_cache' => time()))));
-  $data = drupal_json_decode($request->data);
+  $response = drupal_json_decode($request->data);
+  $data = $response['data'][0];
   $values = array();
 
-  foreach ($fields as $field) {
-    if (!in_array($field, array_keys($data))) {
-      continue;
-    }
-
-    $info = field_info_field($field);
-    if (empty($data[$field])) {
-      // The field value in the original node is empty. Entity metadata wrapper
-      // need NULL to delete the field. Multiple cardinality field need array
-      // and because the field empty we need to pass array(NULL).
-      $value = $info['cardinality'] == 1 ? NULL : array(NULL);
-    }
-    else {
-      $value = empty($data[$field]) ? NULL : $data[$field];
-    }
-
-    $values[$field] = $value;
+  foreach ($fields as $key => $field) {
+    $field_name = isset($data['restful']) ? $field : $key;
+    $values[$field] = $data[$field_name];
   }
+
+  // Get the changed values of the node.
+  $changed = $values['changed'];
+  unset($values['changed']);
 
   return (object) array(
     'values' => $values,
@@ -1108,26 +1179,12 @@ function os_profiles_manage_synced_profiles($url, $values) {
 }
 
 /**
- * Implements hook_restws_request_alter().
- *
- * Setting the person node UUID when accessing the node via JSON and the UUID
- * field is not populate.
- */
-function os_profiles_restws_request_alter(&$request) {
-  if ($request['resource']->resource() != 'node') {
-    return;
-  }
-
-  _os_profiles_restws_request_alter($request['id']);
-}
-
-/**
  * Setting the UUID field of the node.
  *
  * @param $nid
  *  The node ID.
  */
-function _os_profiles_restws_request_alter($nid) {
+function _os_profiles_restful_request_alter($nid) {
   $wrapper = entity_metadata_wrapper('node', $nid);
 
   if (isset($wrapper->field_uuid) && !$wrapper->field_uuid->value()) {
@@ -1254,8 +1311,8 @@ function os_profiles_node_update($node) {
 function os_profiles_profile_changed($node) {
   $wrapper = entity_metadata_wrapper('node', $node);
   $wrapper_original = entity_metadata_wrapper('node', $node->original);
-  foreach (os_profiles_profiles_fields() as $field => $prop) {
-    if ($wrapper->$field->value() !== $wrapper_original->$field->value()) {
+  foreach (os_profiles_profiles_fields() as $key => $field) {
+    if ($wrapper->{$key}->value() !== $wrapper_original->{$key}->value()) {
       return TRUE;
     }
   }
@@ -1296,10 +1353,10 @@ function os_profiles_node_delete($node) {
     // The destination to be removed.
     $arguments['remove_destination'] = $base_url;
 
-    // $destination is the JSON address that is,
-    // http://www.example.com/vsite/node/1.json and we need just the
+    // $destination address is in the form of:
+    // http://www.example.com/vsite/api/v1/profiles/1 and we need just the
     // http://www.example.com/vsite part of that address.
-    $destination = preg_replace("/\/node\/\d{1,}\.json/", "", $destination);
+    $destination = preg_replace("/\/api\/v1\/profiles\/\d{1,}/", "", $destination);
     os_profiles_manage_synced_profiles($destination, $arguments);
   }
 
@@ -1312,7 +1369,7 @@ function os_profiles_node_delete($node) {
   }
   else {
     $arguments['origin_deleted'] = TRUE;
-    $arguments['origin_url'] = url('node/' . $node->nid . '.json', array('absolute' => TRUE));
+    $arguments['origin_url'] = url(OS_PROFILE_JSON_PREFIX . $node->nid, array('absolute' => TRUE));
     foreach ($destinations as $destination) {
       os_profiles_manage_synced_profiles($destination, $arguments);
     }
@@ -1417,8 +1474,12 @@ function os_profiles_node_view_alter(&$build) {
 
   // If 'person' content type are displayed in slide_teaser view mode, then appending additional element for Full Profile link.
   if ($build['#bundle'] == 'person' && $build['#view_mode'] == 'slide_teaser') {
-    $build['os_profile_link']['#markup'] = l('Full Profile', 'node/' . $build['#node']->nid, array('attributes' => array('class' => 'profile-link')));
+    $build['os_profile_link']['#markup'] = l('Full Profile', 'node/' . $build['#node']->nid, array('attributes' => array('class' => array('profile-link'))));
     $build['os_profile_link']['#weight'] = 55;
+  }
+
+  if (isset($build['field_email']['#items'][0]['value'])) {
+    $build['field_email'][0]['#markup'] = $build['field_email']['#items'][0]['value'];
   }
 }
 
@@ -1823,6 +1884,10 @@ function os_profiles_js_alter(&$javascript) {
   if (strpos($_GET['q'], 'sync-profiles') !== FALSE) {
     foreach ($javascript as $url => $js) {
       if (strpos($url, 'autocomplete.js') == TRUE) {
+        $vsite = vsite_get_vsite();
+        drupal_add_js(array('paths' => array(
+          'vsite_home' => $vsite ? trim($vsite->get_absolute_url(), '/') : '',
+          )), 'setting');
         $file = drupal_get_path('module', 'os_profiles') . '/misc/os_autocomplete.js';
         $javascript['misc/autocomplete.js']['data'] = $file;
       }

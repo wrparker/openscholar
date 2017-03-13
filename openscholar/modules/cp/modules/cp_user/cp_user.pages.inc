@@ -216,15 +216,47 @@ function cp_user_remove_membership_confirm($form_state, $user_load) {
  * Submit callback; removes the specified member after user confirms action.
  */
 function cp_user_remove_membership_confirm_submit($form, &$form_state) {
+  global $user;
   // Ungroup the user from the node
   $gid = $form_state['values']['gid'];
   $uid = $form_state['values']['uid'];
+  // Obtaining delete user's og role, e.g.Basic member / Content editor / Administrator / Viewer.
+  $deleted_member_rid = array_keys(og_get_user_roles('node', $gid, $uid, FALSE));
+  $roles_human_names = _cp_user_list_roles('rids-human', NULL, $gid);
   og_ungroup('node', $gid, 'user', $uid);
 
   $user_name = $form_state['values']['user_name'];
   $site_name = $form_state['values']['site_name'];
   // Set the message and redirect back to the cp/users page
   drupal_set_message(t('Member <em>@user</em> has been removed from <em>@site</em>', array('@user' => $user_name, '@site' => $site_name)));
+
+  $vsite = vsite_get_vsite();
+  // Loading logged in user's user object for full name.
+  $account_modifier = user_load($user->uid);
+  $account_modifier_full_name = $account_modifier->field_first_name[LANGUAGE_NONE][0]['value'] . ' ' . $account_modifier->field_last_name[LANGUAGE_NONE][0]['value'];
+  $purl_base_domain = variable_get('purl_base_domain');
+  $account = user_load($form_state['values']['uid']);
+  // Checking if this vsite has a custom domain or not.
+  $custom_domain = db_select('purl', 'p')
+    ->fields('p', array('value'))
+    ->condition('provider', 'vsite_domain', '=')
+    ->condition('id', $vsite->group->nid, '=')
+    ->execute()
+    ->fetchField();
+
+  // Setting up email parameters.
+  $to = $account->mail;
+  $from = variable_get('site_mail', ini_get('sendmail_from'));
+  $params['!user-role'] = $roles_human_names[$deleted_member_rid[0]];
+  $params['!account-modifier'] = !empty($account_modifier_full_name) ? $account_modifier_full_name : $account_modifier->name;
+  $params['!site-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl;
+  $params['!account-modifier-email'] = $account_modifier->mail;
+  $params['!user-firstname'] = $account->field_first_name[LANGUAGE_NONE][0]['value'];
+  $params['!sitewide-name'] = variable_get('site_name', 'Harvard Web Publishing');
+  $params['headers']['Cc'] = $account_modifier->mail;
+  // Send email notification to deleted user.
+  drupal_mail('cp_user', 'os_user_delete_from_group', $to, $language, $params, $from);
+
   drupal_goto('cp/users');
 }
 
@@ -284,6 +316,7 @@ function cp_user_change_site_owner_form($form_state) {
  * Submit callback; Changes owner of the site after confirmation.
  */
 function cp_user_change_site_owner_form_submit($form, &$form_state) {
+  global $user;
   // Accesses values from the form.
   $bundle = $form_state['values']['bundle'];
   $gid = $form_state['values']['gid'];
@@ -304,6 +337,33 @@ function cp_user_change_site_owner_form_submit($form, &$form_state) {
   // Set the message and redirect back to the cp/users page
   $site_name = $form_state['values']['site_name'];
   drupal_set_message(t('The user %user is now the owner of the site %site.', array('%user' => $account->name, '%site' => $site_name)));
+
+  $vsite = vsite_get_vsite();
+  // Loading logged in user's user object for full name.
+  $account_modifier = user_load($user->uid);
+  $account_modifier_full_name = $account_modifier->field_first_name[LANGUAGE_NONE][0]['value'] . ' ' . $account_modifier->field_last_name[LANGUAGE_NONE][0]['value'];
+  $purl_base_domain = variable_get('purl_base_domain');  
+
+  // Checking if this vsite has a custom domain or not.
+  $custom_domain = db_select('purl', 'p')
+    ->fields('p', array('value'))
+    ->condition('provider', 'vsite_domain', '=')
+    ->condition('id', $vsite->group->nid, '=')
+    ->execute()
+    ->fetchField();
+  // Setting up email parameters.
+  $to = $account->mail;
+  $from = variable_get('site_mail', ini_get('sendmail_from'));
+  $params['!user-role'] = 'Site Owner';
+  $params['!account-modifier'] = !empty($account_modifier_full_name) ? $account_modifier_full_name : $account_modifier->name;
+  $params['!site-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl;
+  $params['!account-modifier-email'] = $account_modifier->mail;
+  $params['!user-firstname'] = $account->field_first_name[LANGUAGE_NONE][0]['value'];
+  $params['!sitewide-name'] = variable_get('site_name', 'Harvard Web Publishing');
+  $params['headers']['Cc'] = $account_modifier->mail;
+  // Sending email notification to modified user.
+  drupal_mail('cp_user', 'os_user_role_change', $to, $language, $params, $from);
+
   drupal_goto('cp/users');
 }
 
@@ -376,12 +436,14 @@ function cp_user_edit_membership_form($form_state, $user_load) {
  * Submit callback; updates roles after user confirms action.
  */
 function cp_user_edit_membership_form_submit($form, &$form_state) {
+  global $user;
   // Accesses values from the form.
   $bundle = $form_state['values']['bundle'];
   $new_role = $form_state['values']['edit_role'];
   $group_manager = $form_state['values']['group_manager'];
   $gid = $form_state['values']['gid'];
   $uid = $form_state['values']['uid'];
+  $member_rid_before_modification = array_keys(og_get_user_roles('node', $gid, $uid, FALSE));
 
   // Grants the new role and revokes other roles.
   _cp_user_set_role($uid, $gid, $new_role, $bundle);
@@ -401,9 +463,49 @@ function cp_user_edit_membership_form_submit($form, &$form_state) {
   }
 
   // Set the message and redirect back to the cp/users page
-  $user = $form_state['values']['user_name'];
+  $user_name = $form_state['values']['user_name'];
   $site = $form_state['values']['site_name'];
-  drupal_set_message(t('User <em>@user\'s</em> role on site <em>@site</em> was updated successfully.', array('@user' => $user, '@site' => $site)));
+  drupal_set_message(t('User <em>@user\'s</em> role on site <em>@site</em> was updated successfully.', array('@user' => $user_name, '@site' => $site)));
+
+  $modified_member_rid = array_keys(og_get_user_roles('node', $gid, $uid, FALSE));
+  // If the changed role is not same as previously saved role, or the user role is set as 'Site Owner' then only the email will be sent.
+  if (!array_intersect($modified_member_rid, $member_rid_before_modification) || $group_manager) {
+    $vsite = vsite_get_vsite();
+    // Loading logged in user's user object for full name.
+    $account_modifier = user_load($user->uid);
+    $account_modifier_full_name = $account_modifier->field_first_name[LANGUAGE_NONE][0]['value'] . ' ' . $account_modifier->field_last_name[LANGUAGE_NONE][0]['value'];
+    $purl_base_domain = variable_get('purl_base_domain');
+
+    // Role will be 'Site Owner' is site owner checkbox is selected.
+    if ($group_manager) {
+      $new_role_name = 'Site Owner';
+    } else {
+      $roles_human_names = _cp_user_list_roles('rids-human', NULL, $gid);
+      $new_role_name = $roles_human_names[$modified_member_rid[0]];
+    }
+
+    $account = user_load($uid);
+    // Checking if this vsite has a custom domain or not.
+    $custom_domain = db_select('purl', 'p')
+      ->fields('p', array('value'))
+      ->condition('provider', 'vsite_domain', '=')
+      ->condition('id', $vsite->group->nid, '=')
+      ->execute()
+      ->fetchField();
+    // Setting up email parameters.
+    $to = $account->mail;
+    $from = variable_get('site_mail', ini_get('sendmail_from'));
+    $params['!user-role'] = $new_role_name;
+    $params['!account-modifier'] = !empty($account_modifier_full_name) ? $account_modifier_full_name : $account_modifier->name;
+    $params['!site-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl;
+    $params['!account-modifier-email'] = $account_modifier->mail;
+    $params['!user-firstname'] = $account->field_first_name[LANGUAGE_NONE][0]['value'];
+    $params['!sitewide-name'] = variable_get('site_name', 'Harvard Web Publishing');
+    $params['headers']['Cc'] = $account_modifier->mail;
+    // Sending email notification to modified user.
+    drupal_mail('cp_user', 'os_user_role_change', $to, $language, $params, $from);
+  }
+
   drupal_goto('cp/users');
 }
 

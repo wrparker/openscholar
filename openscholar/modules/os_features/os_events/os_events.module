@@ -65,6 +65,20 @@ function os_events_theme() {
 }
 
 /**
+ * Implements settings form for events pages
+ */
+function os_events_settings() {
+  $form = array();
+  $form['os_exporter_disable_event_export'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Do not display export options on event pages.'),
+    '#default_value' => variable_get('os_exporter_disable_event_export', 0),
+  );
+
+  return system_settings_form($form);
+}
+
+/**
  * Helper function to send notification emails to event registrants if there is any cancellations or change in event timings.
  *
  * @param $registration
@@ -127,9 +141,13 @@ function os_events_node_update($node) {
     return;
   }
   // For non-recurring events.
-  if (empty($node->field_date[LANGUAGE_NONE][0]['rrule'])) {
+  if (!empty($node->field_date) && !empty($node->original->field_date) && empty($node->field_date[LANGUAGE_NONE][0]['rrule'])) {
     // If event start date or location has been altered, then registrants should be notified.
-    if ($node->field_date[LANGUAGE_NONE][0]['value'] != $node->original->field_date[LANGUAGE_NONE][0]['value'] || $node->field_event_location[LANGUAGE_NONE][0]['value'] != $node->original->field_event_location[LANGUAGE_NONE][0]['value']) {
+    $date = $node->field_date[LANGUAGE_NONE][0]['value'];
+    $original_date = $node->original->field_date[LANGUAGE_NONE][0]['value'];
+    $location = !empty($node->field_event_location) ? $node->field_event_location[LANGUAGE_NONE][0]['value'] : "";
+    $original_location = !empty($node->original->field_event_location) ? $node->original->field_event_location[LANGUAGE_NONE][0]['value'] : '';
+    if ($date != $original_date || $location != $original_location) {
       // Initializing EntityFieldQuery to obtain all registration entities with a certain event node id
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'registration')
@@ -2561,6 +2579,65 @@ function os_events_show_register_by_node($node, $date = FALSE) {
  */
 function os_events_theme_registry_alter(&$theme_registry) {
   $theme_registry['registration_link']['function'] = 'os_events_registration_link';
+  $theme_registry['date_display_range']['function'] = 'os_events_date_display_range';
+}
+
+/**
+ * Returns HTML for a date element formatted as a range.
+ */
+function os_events_date_display_range($variables) {
+  $date1 = $variables['date1'];
+  $date2 = $variables['date2'];
+  $timezone = $variables['timezone'];
+  $attributes_start = $variables['attributes_start'];
+  $attributes_end = $variables['attributes_end'];
+
+  $start_date = '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . $date1 . '</span>';
+  $end_date = '<span class="date-display-end"' . drupal_attributes($attributes_end) . '>' . $date2 . $timezone . '</span>';
+
+  // Prepend the days of the week for a multi-day event, and append the start and end time
+  // (this amounts to a sort of short-hand for a recurring event)
+  $multi_day_prefix = "";
+  if (strtotime($date2) - strtotime($date1) > (24 * 60 * 60)) {
+
+    // e.g., Mon - Fri
+    $day_of_the_week1 = '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . date('D', strtotime($variables['date1'])) . '</span>';
+    $day_of_the_week2 = '<span class="date-display-end"' . drupal_attributes($attributes_start) . '>' . date('D', strtotime($variables['date2'])) . '</span>';
+
+    $multi_day_prefix = t('!start-date-day - !end-date-day, ', array(
+      '!start-date-day' => $day_of_the_week1,
+      '!end-date-day' => $day_of_the_week2,
+    ));
+
+    // e.g., Aug 18 to Aug 22
+    $date1 = date('M j', strtotime($variables['date1']));
+    $date2 = date('M j', strtotime($variables['date2']));
+    $start_date = '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . $date1 . '</span>';
+    $end_date = '<span class="date-display-end"' . drupal_attributes($attributes_end) . '>' . $date2 . $timezone . '</span>, ';
+
+    // e.g., 8:30am - 4:30pm
+    $start_time = '<span class="date-display-start"' . drupal_attributes($attributes_start) . '>' . date('g:ia', strtotime($variables['date1'])) . '</span>';
+    $end_time = '<span class="date-display-end"' . drupal_attributes($attributes_start) . '>' . date('g:ia', strtotime($variables['date2'])) . '</span>';
+
+    $multi_day_suffix = t('!start-time - !end-time', array(
+      '!start-time' => $start_time,
+      '!end-time' => $end_time,
+    ));
+  }
+
+  // If microdata attributes for the start date property have been passed in,
+  // add the microdata in meta tags.
+  if (!empty($variables['add_microdata'])) {
+    $start_date .= '<meta' . drupal_attributes($variables['microdata']['value']['#attributes']) . '/>';
+    $end_date .= '<meta' . drupal_attributes($variables['microdata']['value2']['#attributes']) . '/>';
+  }
+
+  return t('!multi-day-prefix !start-date to !end-date !multi-day-suffix', array(
+      '!multi-day-prefix' => $multi_day_prefix,
+      '!start-date' => $start_date,
+      '!end-date' => $end_date,
+      '!multi-day-suffix' => $multi_day_suffix,
+  ));
 }
 
 /**
@@ -3035,6 +3112,13 @@ function os_events_field_create_field($field) {
 * Implements hook_cp_settings().
 */
 function os_events_cp_settings() {
+
+  $spaces_features = variable_get('spaces_features');
+  // Event settings link won't appear in CP menu if event app is not enabled.
+  if (empty($spaces_features['os_events'])) {
+    return $settings;
+  }
+
   $settings['os_exporter_disable_event_export'] = array(
     'group' => array(
       '#id' => 'feature_os_events',
@@ -3048,7 +3132,7 @@ function os_events_cp_settings() {
       '#type' => 'checkbox',
       '#default_value' => variable_get('os_exporter_disable_event_export', 0),
       '#weight' => -1,
-      '#prefix' => '<label>Events export</label>',
+      '#prefix' => '<label></label>',
     ),
   );
   return $settings;

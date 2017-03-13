@@ -54,13 +54,6 @@ function _os_date_formats() {
  * Allow access to node/%.json to all of the users.
  */
 function os_update_7005() {
-  //Only grant this if the module is installed
-  if (module_exists('restws')){
-    // Allow accessing resource node to all users.
-    foreach (array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID) as $rid) {
-      user_role_grant_permissions($rid, array('access resource node'));
-    }
-  }
 }
 
 /**
@@ -192,13 +185,6 @@ function os_update_7011() {
  * Allow access to file/*.json for all users
  */
 function os_update_7012() {
-  //Only grant this if the module is installed
-  if (module_exists('restws')){
-    // Allow accessing resource file to all users.
-    foreach (array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID) as $rid) {
-      user_role_grant_permissions($rid, array('access resource file'));
-    }
-  }
 }
 
 /**
@@ -922,28 +908,29 @@ function os_update_7045() {
 }
 
 /**
- *
- */
-function os_update_7046() {
-  variable_set('imageapi_optimize_service', 'resmushit');
-  variable_set('image_toolkit', 'imageapi_optimize');
-
-  // Save the last file ID for the compressing images cron task.
-  $query = new EntityFieldQuery();
-  $result = $query
-    ->entityCondition('entity_type', 'file')
-    ->propertyCondition('type', 'image')
-    ->propertyOrderBy('fid', 'DESC')
-    ->range(0, 1)
-    ->execute();
-
-  variable_set('os_last_un_compress_fid', reset($result['file'])->fid);
-}
-
- /**
  * Enable enhanced settings forms
  */
-function os_update_7047() {
+function os_update_7046() {
   module_enable(array('ap_settings_form', 'restful_message'));
   return t('Enhanced settings forms enabled.');
+}
+
+/**
+ * Update has_children field of parent menus having 0 children
+ */
+function os_update_7047() {
+
+  $childless_parent_menus = db_query('SELECT mlid FROM menu_links m ' .
+      'WHERE (has_children > 0) AND ' .
+      '(NOT EXISTS (SELECT * FROM menu_links m2 WHERE m.mlid = m2.plid))');
+
+  $mlids = array_keys($childless_parent_menus->fetchAllKeyed());
+
+  $db_update_result = db_update('menu_links')
+    ->fields(array('has_children' => 0))
+    ->condition('mlid', $mlids, 'IN')
+    ->execute();
+
+  $message = t('@count parent menus with no children links have been updated.', array('@count' => sizeof($mlids)));
+  drupal_set_message($message);
 }

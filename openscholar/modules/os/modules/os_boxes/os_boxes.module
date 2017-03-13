@@ -478,7 +478,7 @@ function os_boxes_preprocess_block(&$vars) {
 function os_boxes_og_permission() {
   return array(
     'add widget custom class' => array(
-      'title' => t('Add specific css class names to widgets'),
+      'title' => t('Add specific css class names to widgets and basic pages'),
       'description' => t('For custom theming purposes only.'),
       'os_override' => TRUE,
     ),
@@ -684,4 +684,17 @@ function _os_boxes_test_load_all_boxes_outside_vsite_context() {
 
   // Only gets to this point if all boxes displayed no content.
   return '';
+}
+
+/**
+ * Implements hook_library_alter().
+ *
+ * Emergency shutdown.
+ */
+function os_boxes_library_alter(&$libs) {
+  if (isset($libs['google_feedapi'])) {
+    $libs['google_feedapi']['js'] = array();
+    $libs['google_feedapi']['css'] = array();
+    $libs['google_feedapi']['dependencies'] = array();
+  }
 }

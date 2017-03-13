@@ -99,6 +99,7 @@
         text-decoration: none;
         transition: none 0s ease 0s;
     }
+   
     /* KILL THE DOWN ARROWS IN THE MAIN MENU WHEN IN RESPONSIVE MODE */
     
     #menu-bar ul.nice-menu .menuparent > a:before {
@@ -123,14 +124,20 @@
     #menu-bar ul.nice-menu .menuparent a.active span {
         background: none !important;
     }
-    #menu-bar ul.nice-menu ul,
+    .menuparent ul span.open-submenu,
     #menu-bar ul.nice-menu ul ul {
         display: none !important;
     }
+    
     #menu-bar #block-os-primary-menu a.active.active ~ ul {
         display: block !important;
         visibility: visible !important;
         background: none !important;
+    }
+     #menu-bar #block-os-primary-menu li.menuparent ul[style*="visibility: hidden"] {
+     
+        visibility: visible !important;
+    
     }
     #menu-bar #block-os-primary-menu a.active.active ~ ul li {
         border: none !important;
@@ -141,6 +148,23 @@
     #menu-bar #block-os-primary-menu a.active.active ~ ul li a:hover {
         background: none !important;
     }
+  .open-submenu {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: #efefef;
+    top: 0;
+    right: 0;
+}
+     .open-submenu:after {
+    content: url('../images/resp-menu-dwnarrw.png?123');
+   
+  
+}
+
+
+  
+    
     /*Secondary menu*/
     
     .at-panel.gpanel.panel-display.three-col.clearfix {
@@ -299,6 +323,9 @@
         margin-left: 15px!important;
         width: 100%!important;
         float: left!important;
+    }
+    .view-content ~ .item-list ul.pager li {
+        line-height: 3em;
     }
 }
 /*--------------------------------------------------------*/

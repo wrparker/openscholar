@@ -22,7 +22,7 @@ function restful_messages_page_build(&$page) {
     os_common_angular_apps('Messages');
     drupal_add_library('restful_messages', 'messages');
     $page['page_bottom']['messages'] = array(
-      '#markup' => '<div id="messages" ng-controller="messageController">
+      '#markup' => '<div id="messages" ng-controller="messageController" ng-if="messages">
   <div class="close-button" ng-click="close()"></div>
   <div class="error" ng-if="messages.errors.length">
     <ul>
