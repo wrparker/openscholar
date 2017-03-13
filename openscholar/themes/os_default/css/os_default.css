@@ -652,10 +652,9 @@ margin: 0 0 10px;
 }
 
 .page-user div.messages {
-margin: 25px 0 10px;
-
+margin: 25px auto 10px auto;
+width:980px;
 }
-
 
 div.status {
 background-image: none;

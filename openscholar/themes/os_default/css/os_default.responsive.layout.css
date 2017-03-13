@@ -122,3 +122,9 @@ div.sidebar {
 .region-header-second {
     width: 100%;
 }
+@media (max-width: 1024px) {
+.page-user div.messages {
+
+    width: 100%;
+}
+}
