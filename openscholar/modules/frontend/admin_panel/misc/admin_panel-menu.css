@@ -33,6 +33,7 @@ body.overlay {
     transition-timing-function: ease-in-out;
     transition-delay: .125s;
 }
+#branding,
 .page-cp #branding {
     position: relative;
     margin-left: 110px;
