@@ -76,7 +76,7 @@ body.not-logged-in.page-user {
 .logged-in.no-sidebars.page-user #columns,
 .not-logged-in.page-user #columns {
     width: 573px;
-    margin: 100px auto 7px;
+    margin: 100px auto 7px auto;
     border: 1px solid #e1e1e1;
     border-bottom: 4px solid #e1e1e1;
     background: #FFF;
