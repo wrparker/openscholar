@@ -1,6 +1,7 @@
 .container {
     width: 980px
 }
+.denied .container,
 .page-user .container {
     width: auto;
 }
