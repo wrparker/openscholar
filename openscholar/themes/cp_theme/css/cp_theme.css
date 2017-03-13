@@ -1037,29 +1037,37 @@ ul.term-reference-tree-level {
     padding: 5px;
 }
 
-
 /** Messages - success, error style overrides */
 	
 div.messages {
 margin: 0 0 10px;
     padding: 0;
     border:none;
-    font-size: 16px;
+    font-size: 15px;
     line-height:20px;
 }
 
-.page-user div.messages {
-margin: 25px 0 10px;
+:not(form) div.messages {
+margin: 0;
 
 }
 
+div.messages h2 {
+    clear: both;
+}
 
+.messages.acquia_purge_messages,
 div.status {
 background-image: none;
 color: #008000;
 background-color:#dff0d8;
 padding:10px 30px 10px 20px;
     border-left:5px solid #008000;
+}
+
+.messages.acquia_purge_messages {
+
+    border-top:2px solid #fff;
 }
 
 .error .dismiss,
@@ -1103,7 +1111,6 @@ background-image:none;
     padding:10px 30px 10px 20px;
     border-left:5px solid #a94442;
 }
-
 /** Toolbar overrides */
 
 #toolbar-home a span {
