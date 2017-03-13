@@ -118,6 +118,9 @@ body.not-logged-in.page-user.no-sidebars #content-column {
 .page-user-password #columns h1 {
     margin: 0 0 1em !important;
 }
+.page-user-password #main-content-header {
+margin-bottom:20px;
+}
 .denied #powerby-login,
 .page-site-register #powerby-login,
 .logged-in.no-sidebars.page-user #powerby-login,
