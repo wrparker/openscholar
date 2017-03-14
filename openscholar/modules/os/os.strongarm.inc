@@ -153,6 +153,16 @@ function os_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'securepages_roles';
+  $strongarm->value = array(
+    1 => 1,
+    2 => 1,
+  );
+  $export['securepages_roles'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'securepages_secure';
   $strongarm->value = '0';
   $export['securepages_secure'] = $strongarm;
