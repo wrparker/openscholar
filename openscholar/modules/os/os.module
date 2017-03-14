@@ -1637,7 +1637,14 @@ function os_system_info_alter(&$info, $file, $type) {
  * Rewrites path to add a return destination wherever it is clicked from.
  */
 function os_url_outbound_alter(&$path, &$options, $original) {
-  global $user;
+  global $user, $is_https;
+
+  // Add support for HTTPS
+  if (!empty($options['base_url'])) {
+    $secure = ((!isset($options['https']) && $is_https) || !empty($options['https']));
+    $options['base_url'] = preg_replace('/http[s]?:\/\//i', ($secure ? 'https://' : 'http://'), $options['base_url'], 1);
+  }
+  // End HTTPS
 
   $loop_back_pages = array(
     'user',
