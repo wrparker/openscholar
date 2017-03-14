@@ -1,5 +1,5 @@
---- twitter_pull.class.inc
-+++ twitter_pull.class.inc
+--- a/twitter_pull.class.inc
++++ b/twitter_pull.class.inc
 @@ -142,6 +142,8 @@
            $obj->text = filter_xss($item->retweeted_status->text);
            //-- Convert date to unix timestamp so themer can easily work with it.
