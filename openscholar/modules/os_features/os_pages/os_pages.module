@@ -1351,3 +1351,21 @@ function _os_pages_reindex_context($context_name) {
     }
   }
 }
+
+/**
+ * Implements hook_entity_load().
+ */
+function os_pages_entity_load($entities, $type) {
+  if ($type != 'node') {
+    return;
+  }
+  foreach($entities as $entity) {
+    if ($entity->type != 'page') {
+      return;
+    } else{
+      if (is_array($entity->metatags[LANGUAGE_NONE]['description']) && empty($entity->metatags[LANGUAGE_NONE]['description']['value'])) {
+        $entity->metatags = array();
+      }
+    }
+  }
+}
