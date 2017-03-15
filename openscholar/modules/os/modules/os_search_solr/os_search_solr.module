@@ -20,7 +20,7 @@ function os_search_solr_boxes_plugins() {
   );
 
   $plugins['os_search_solr_search_box'] = array(
-    'title' => t('Search box'),
+    'title' => t('Filtered search'),
     'tags' => array('Content'),
     'handler' => array(
       'class' => 'os_search_solr_search_box',
@@ -145,9 +145,14 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
 
     // There may be private features, this user is a member and should get access to private features in search.
     if ($query->hasFilter('bs_private', 1, TRUE) && (user_access('administer group') || og_is_member('node', $group_wrapper->getIdentifier()))) {
-       $query->removeFilter('bs_private');
+      $query->removeFilter('bs_private');
     }
-  }
+
+    // Bundles which belong for disabled apps should appear in the search.
+    if ($bundles = array_keys(os_get_bundles(array(OS_DISABLED_APP)))) {
+      $query->addFilter('bundle', '(' . implode(' OR ', $bundles) . ')', TRUE);
+    }
+ }
   elseif (variable_get('file_default_scheme', 'public') == 'private') {
     // We are not in a vsite, and we are in a private install.
     drupal_access_denied();
@@ -158,6 +163,7 @@ function os_search_solr_apachesolr_query_alter(DrupalSolrQueryInterface $query) 
     // Limit searches to just this OpenScholar install in shared indexes.
     $query->addFilter('hash', apachesolr_site_hash());
   }
+
 }
 
 /**
@@ -1272,5 +1278,38 @@ function os_search_solr_change_search_path($form, $form_state) {
   }
 
   // Collect terms.
-  drupal_goto('search/site/' . $form_state['values']['search_block_form'], $options);
+  drupal_goto('search/site/' . $form_state['input']['search_block_form'], $options);
+}
+
+/**
+ * Implements hook_forms().
+ */
+function os_search_solr_forms($form_id, $args) {
+  $forms = array();
+
+  if (strpos($form_id, 'os_solr_search_box') === 0) {
+    list(, $delta) = explode('___', $form_id);
+    $forms[$form_id] = array(
+      'callback' => 'os_search_solr_search_box',
+      'callback arguments' => array($delta),
+    );
+  }
+
+  return $forms;
+}
+
+/**
+ * Form callback; Return the original search box for duplicate search widgets.
+ */
+function os_search_solr_search_box($form, $form_state) {
+  $form = drupal_build_form('search_block_form', $form_state);
+
+  // Removing the original submit handler due to:
+  // 1. We don't need it any more. The submit handler will redirect the user to
+  // the right place.
+  // 2. The submit handler looks for a key that doesn't exists. Removing it will
+  // prevent the errors.
+  $key = array_search('search_box_form_submit', $form['#submit']);
+  unset($form['#submit'][$key]);
+  return $form;
 }
