@@ -181,3 +181,44 @@ function os_search_solr_update_7003() {
       ->execute();
   }
 }
+
+/**
+ * Remove any trace to the old search box.
+ */
+function os_search_solr_update_7004() {
+  features_revert(array('vsite' => array('context', 'spaces_presets')));
+  features_revert(array('os' => array('context',  'spaces_presets')));
+}
+
+/**
+ * Removing os_search_solr-site-search instances.
+ */
+function os_search_solr_update_7006() {
+
+  $overrides = db_select('spaces_overrides', 'so')
+    ->fields('so', array('object_id', 'value', 'id'))
+    ->condition('object_type', 'context')
+    ->condition('object_id', '%reaction:block', 'LIKE')
+    ->condition('value', '%solr_search_box%', 'LIKE')
+    ->orderBy('so.id')
+    ->execute();
+
+  foreach ($overrides as $override) {
+    $blocks = unserialize($override->value);
+    if (!in_array('boxes-solr_search_box', array_keys($blocks['blocks']))) {
+      continue;
+    }
+
+    // Removing 'os_search_solr-site-search'.
+    unset($blocks['blocks']['boxes-solr_search_box']);
+
+    $override->value = serialize($blocks);
+
+    db_update('spaces_overrides')
+      ->fields(array('value' => $override->value))
+      ->condition('id', $override->id)
+      ->condition('object_type', 'context')
+      ->condition('object_id', $override->object_id)
+      ->execute();
+  }
+}

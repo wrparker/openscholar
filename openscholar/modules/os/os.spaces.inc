@@ -158,14 +158,6 @@ function os_spaces_presets() {
             'status' => 0,
             'title' => '',
           ),
-          'boxes-solr_search_box' => array(
-            'module' => 'boxes',
-            'delta' => 'solr_search_box',
-            'region' => 'header_third',
-            'weight' => '-10',
-            'status' => 0,
-            'title' => '',
-          ),
         ),
       ),
       'os_front:reaction:block' => array(

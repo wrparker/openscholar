@@ -74,12 +74,6 @@ function vsite_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'boxes-solr_search_box' => array(
-          'module' => 'boxes',
-          'delta' => 'solr_search_box',
-          'region' => 'header_third',
-          'weight' => '-10',
-        ),
         'os_search_db-site-search' => array(
           'module' => 'os_search_db',
           'delta' => 'site-search',
