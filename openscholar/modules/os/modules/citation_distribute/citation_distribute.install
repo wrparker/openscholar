@@ -132,3 +132,15 @@ function citation_distribute_update_7000() {
   }
 }
 
+/**
+ * Add Citation distribute flags to publication settings form.
+ */
+function citation_distribute_update_7001() {
+
+  // place it behind os_publications modules
+  db_update('system')
+    ->fields(array('weight' => 99))
+    ->condition('name', 'citation_distribute', '=')
+    ->condition('type', 'module', '=')
+    ->execute();
+}

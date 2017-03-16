@@ -2,6 +2,7 @@
 // $Id$
 
 function os_publications_overview() {
+
   $args = func_get_args();
 
   if (count($args) == 0) {
@@ -13,6 +14,8 @@ function os_publications_overview() {
 
     if (count(array_filter($defaults))) {
       $args = array('type', array_filter($defaults));
+    } else{
+      $args = array('type', 0);
     }
   }
 
