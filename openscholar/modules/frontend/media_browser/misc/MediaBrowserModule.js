@@ -2,13 +2,14 @@
   var rootPath,
     open = angular.noop;
 
-  angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'angularFileUpload', 'angularModalService', 'FileEditor', 'mediaBrowser.filters', 'locationFix'])
+  angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'angularFileUpload',
+      'angularModalService', 'FileEditor', 'mediaBrowser.filters', 'locationFix', 'FileHandler'])
     .config(function (){
        rootPath = Drupal.settings.paths.moduleRoot;
     })
     .run(['mbModal', 'FileEditorOpenModal', function (mbModal, feom) {
       // Disable drag and drop behaviors on the window object, to prevent files
-      // from.
+      // from replacing the window.
       angular.element(window).on('dragover drop', function(e) {
         e = e || event;
         e.preventDefault();
@@ -61,8 +62,9 @@
         }
       }
     }])
-  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', 'EntityConfig', '$sce', '$q', '$upload', '$timeout', 'FILEEDITOR_RESPONSES', 'params', 'close',
-      function ($scope, $filter, $http, EntityService, config, $sce, $q, $upload, $timeout, FER, params, close) {
+  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', 'EntityConfig', '$sce', '$q', '$upload',
+      '$timeout', 'FILEEDITOR_RESPONSES', 'FileHandlers', 'params', 'close',
+      function ($scope, $filter, $http, EntityService, config, $sce, $q, $upload, $timeout, FER, FileHandlers, params, close) {
 
     // Initialization
     var service = new EntityService('files', 'id'),
@@ -141,6 +143,46 @@
     else {
       $scope.maxFilesize = Drupal.settings.maximumFileSize;
     }
+
+    $scope.fh = FileHandlers.getInstance($scope.extensions,
+      $scope.maxFilesize,
+      params.max_filesize_raw || Drupal.settings.maximumFileSizeRaw,
+      function ($files, messages) {
+        for (var i = 0; i < $files.length; i++) {
+          service.register($files[i]);
+          var found = false;
+          // check to see if this file exists
+          for (var j = 0; j < $scope.files.length; j++) {
+            if ($scope.files[j].id == $files[i].id) {
+              // we just replaced an existing file.
+              $files[i].replaced = true;
+              $scope.files[j] = $files[i];
+              found = true;
+            }
+          }
+          if (!found) {
+            // This is a brand-new file. Set the true flag and add it to the list.
+            $files[i].new = true;
+            $scope.files.push($files[i]);
+          }
+        }
+
+        if (!$scope.fh.hasDuplicates()) {
+          if (toEditForm) {
+            // there's only one file. Go to the edit page automatically
+            $scope.setSelection($files[0].id);
+            $scope.changePanes('edit');
+          }
+          else {
+            if (directInsert) {
+              $scope.insert();
+            }
+            else {
+              $scope.changePanes('library');
+            }
+          }
+        }
+      });
 
     $scope.filteredTypes = [];
     $scope.isFiltered = function () {
@@ -240,31 +282,6 @@
       }
     }
 
-    $scope.validate = function($file) {
-      var file = $file;
-      if (file && file instanceof File) {
-        // TODO: Get validating properties from somewhere and check the file against them
-
-        var maxFilesize = params.max_filesize_raw || Drupal.settings.maximumFileSizeRaw;
-        var size = maxFilesize > file.size,   // file is smaller than max
-          ext = file.name.slice(file.name.lastIndexOf('.')+1).toLowerCase(),
-          extension = $scope.extensions.indexOf(ext) !== -1,    // extension is found
-          id;
-
-        if (!size) {
-          addMessage(file.name + ' is larger than the maximum filesize of ' + (params.max_filesize || Drupal.settings.maximumFileSize));
-        }
-        if (!extension) {
-          addMessage(file.name + ' is not an accepted file type.');
-        }
-        // if file is image and params specify max dimensions
-        if (file.type.indexOf('image/') !== -1) {
-        }
-
-        return size && extension;
-      }
-    }
-
     function addMessage(message) {
       var id = $scope.messages.next++;
       $scope.messages[id] = {
@@ -277,40 +294,12 @@
       delete this.messages[id];
     }
 
-    // filter out weird characters that look like normal characters, like –, which gets converted to â€“
-    function cleanPaths(text) {
-      var s = text;
-      // smart single quotes and apostrophe
-      s = s.replace(/[\u2018\u2019\u201A]/g, "\'");
-      // smart double quotes
-      s = s.replace(/[\u201C\u201D\u201E]/g, "\"");
-      // ellipsis
-      s = s.replace(/\u2026/g, "...");
-      // dashes
-      s = s.replace(/[\u2013\u2014]/g, "-");
-      // circumflex
-      s = s.replace(/\u02C6/g, "^");
-      // open angle bracket
-      s = s.replace(/\u2039/g, "<");
-      // close angle bracket
-      s = s.replace(/\u203A/g, ">");
-      // spaces
-      s = s.replace(/[\u02DC\u00A0]/g, " ");
-
-      return s;
-    }
-
-    // looks for any files with a similar basename and extension to this file
-    // if it finds any, it adds it to a list of dupes, then scans every file to find what the new name should be
-    $scope.checkForDupes = function($files, $event, $rejected) {
+    $scope.handleFileChange = function ($files, $event, $rejected) {
       if ($files.length == 1) {
         toEditForm = true;
       }
-      var toBeUploaded = [];
-      $scope.dupes = [];
-      $scope.toInsert = [];
-      var promises = [];
-      $scope.checkingFilenames = true;
+
+      var passAlong = [];
       for (var i = 0; i < $files.length; i++) {
         if (params.replace) {
           if (params.replace.filename == $files[i].name) {
@@ -320,265 +309,15 @@
             $files[i].replacing = params.replace;
             toEditForm = false;
             directInsert = true;
-            $scope.upload([$files[i]]);
+            $scope.fh.upload([$files[i]]);
             continue;
           }
         }
 
-        // replace # in filenames cause they will break filename detection
-        var newName = $files[i].name.replace(/[#|\?]/g, '_').replace(/__/g, '_').replace(/_\./g, '.');
-        var hadHashtag = newName != $files[i].name;
-        $files[i].sanitized = newName;
-
-        var url = Drupal.settings.paths.api + '/files/filename/' + $files[i].sanitized;
-
-        if (Drupal.settings.spaces) {
-          url += '?vsite=' + Drupal.settings.spaces.id;
-        }
-        var config = {
-          originalFile: $files[i]
-        };
-        promises.push($http.get(url, config).then(function (response) {
-            var file = response.config.originalFile;
-            var data = response.data.data;
-            file.filename = file.sanitized;
-            if (data.collision) {
-              file.newName = data.expectedFileName;
-              $scope.dupes.push(file);
-            }
-            else {
-              if (data.invalidChars || hadHashtag) {
-                addMessage("This file was renamed from \"" + file.name + "\" due to having invalid characters in its name. The new file will replace any file with the same name.");
-              }
-              toBeUploaded.push(file);
-            }
-          },
-          function (errorResponse) {
-            console.log(errorResponse);
-          }));
+        passAlong.push($files[i]);
       }
-
-      var promise = $q.all(promises).then(function () {
-          $scope.checkingFilenames = false;
-          $scope.upload(toBeUploaded);
-        },
-        function () {
-          $scope.checkingFilenames = false;
-          console.log('Error happened with all promises');
-        })
+      $scope.fh.checkForDupes(passAlong, $event, $rejected);
     }
-
-/*
-        var similar = [],
-            basename = $files[i].name.replace(/\.[a-zA-Z0-9]*$/, ''),   // remove extension from filename
-            extension = $files[i].name.replace(basename, ''),           // remove filename from filename to get extension
-            dupeFound = false;
-
-        // rewrite the filename the same way PHP will
-        basename = cleanPaths(basename);
-        basename = basename.toLowerCase().replace(/ /g, '_').replace(/[^a-zA-Z0-9-_.~]/g, '');
-        $files[i].filename = basename + extension;
-
-        for (var j=0; j<$scope.files.length; j++) {
-          // find any file with a name that matches "basename{_dd}.ext" and add it to list of similar files
-          if ($scope.files[j].filename.indexOf(basename) !== -1 && $scope.files[j].filename.indexOf(extension) !== -1) {
-            similar.push($scope.files[j]);
-            // also check if there is a file with the full filename and save this fact for later
-            // this allows file.jpg to be uploaded when file_01.jpg already exists
-            if ($scope.files[j].filename == $files[i].filename) {
-              dupeFound = true;
-            }
-          }
-        }
-
-        if (dupeFound) {
-          // only one similar file found, drop _01 at the end
-          if (similar.length == 1) {
-            $files[i].newName = basename + '_01' + extension;
-          }
-          else {
-            // lots of them found, look through all of them, find the highest number at the end, and add it
-            // to the end of the original file name
-            var max = 0;
-            for (j=0; j<similar.length; j++) {
-              var rem = similar[j].filename.replace(basename, '').replace(extension, '').replace('_', ''),
-                num = rem ? parseInt(rem) : 0;
-
-              if (num > max) {
-                max = num;
-              };
-            }
-            var num = max + 1;
-            // convert num to a 2 digit string
-            num = num < 10 ? '0'+num : num
-            // and make the new file name
-            $files[i].newName = basename+'_'+num+extension;
-          }
-          // with the new name complete, we can push this onto the list of dupes
-          $scope.dupes.push($files[i]);
-        }
-        else {
-          if ($files[i].filename != $files[i].name) {
-            addMessage("This file was renamed from \"" + $files[i].name + "\" due to having invalid characters in its name.")
-          }
-          // not a dupe, just upload it silently
-          toBeUploaded.push($files[i]);
-        }
-      }
-
-      $scope.upload(toBeUploaded);
-    }*/
-
-    // renames the file before uploading
-    $scope.rename = function ($index, $last) {
-      $scope.dupes[$index].processed = true;
-
-      if ($last) {
-        finalizeDupes();
-      }
-    }
-
-    // tells the server to replace the old file on disk with this new one
-    // (just performs a swap on the hard drive)
-    $scope.replace = function ($index, $last) {
-      $scope.dupes[$index].processed = true;
-      delete $scope.dupes[$index].newName;
-
-      if ($last) {
-        finalizeDupes();
-      }
-    }
-
-    // cancels the upload process for this file
-    $scope.cancelUpload = function ($index, $last) {
-      $scope.dupes[$index].doNotUpload = true;
-      $scope.dupes[$index].processed = true;
-
-      if ($last) {
-        finalizeDupes();
-      }
-    }
-
-    function finalizeDupes() {
-      var toBeUploaded = [];
-      for (var i in $scope.dupes) {
-        if (!$scope.dupes[i].doNotUpload) {
-          toBeUploaded.push($scope.dupes[i]);
-        }
-      }
-
-      $scope.upload(toBeUploaded);
-      $scope.dupes = [];
-    }
-
-    (function () {
-      var toBeUploaded = [],
-        uploading = false,
-        progress = null,
-        currentlyUploading = 0;
-
-      $scope.upload = function ($files) {
-        for (var i=0; i<$files.length; i++) {
-          toBeUploaded.push($files[i]);
-        }
-
-        if (!uploading && toBeUploaded.length) {
-          uploading = true;
-          $file = toBeUploaded[currentlyUploading];
-          uploadOne($file);
-        }
-      }
-
-      function uploadNext(firstId) {
-        currentlyUploading++;
-        if (currentlyUploading < toBeUploaded.length) {
-          $file = toBeUploaded[currentlyUploading];
-          uploadOne($file);
-        }
-        else {
-          toBeUploaded = [];
-          uploading = false;
-          progress = null;
-          currentlyUploading = 0;
-          if ($scope.dupes.length == 0) {
-            if (toEditForm && firstId) {
-              // there's only one file, we can assume it's this one
-              $scope.setSelection(firstId);
-              $scope.changePanes('edit');
-            }
-            //else if (typeof $scope.messages[$scope.messages.next-1] != 'undefined') {
-            //  // do nothing. This usually means there was an error during upload.
-            //}
-            else {
-              if (directInsert) {
-                $scope.insert();
-              }
-              else {
-                $scope.changePanes('library');
-              }
-            }
-          }
-        }
-      }
-
-      function uploadOne($file) {
-        var fields = {};
-        if (Drupal.settings.spaces) {
-          fields.vsite = Drupal.settings.spaces.id;
-        }
-        if (config.files) {
-          for (var k in config.files.fields) {
-            fields[k] = config.files.fields[k];
-          }
-        }
-        $upload.upload({
-          url: Drupal.settings.paths.api+'/files',
-          file: $file,
-          data: $file,
-          fileFormDataName: 'files[upload]',
-          headers: {'Content-Type': $file.type},
-          method: 'POST',
-          fields: fields,
-          fileName: $file.newName || null
-        }).progress(function (e) {
-          progress = e;
-        }).success(function (e) {
-          for (var i = 0; i< e.data.length; i++) {
-            service.register(e.data[i]);
-            var found = false;
-            // check to see if this file exists
-            for (var j = 0; j < $scope.files.length; j++) {
-              if ($scope.files[j].id == e.data[i].id) {
-                // we just replaced an existing file.
-                e.data[i].replaced = true;
-                $scope.files[j] = e.data[i];
-                found = true;
-              }
-            }
-            if (!found) {
-              // This is a brand-new file. Set the true flag and add it to the list.
-              e.data[i].new = true;
-              $scope.files.push(e.data[i]);
-            }
-            $scope.toInsert.push(e.data[i]);
-          }
-          uploadNext(e.data[0].id);
-        }).error(function (e) {
-          addMessage(e.title);
-          uploadNext();
-        });
-      }
-
-      $scope.uploadProgress = function () {
-        return {
-          uploading: uploading,
-          filename: uploading ? toBeUploaded[currentlyUploading].filename : '',
-          progressBar: (uploading && progress) ? parseInt(100.0 * progress.loaded / progress.total) : 0,
-          index: currentlyUploading+1,
-          numFiles: toBeUploaded.length
-        }
-      }
-    })();
 
     function getKeyForFile(fid) {
       for (var i=0; i<$scope.files.length; i++) {
@@ -691,7 +430,7 @@
             rejected.push(params.files[i]);
           }
         }
-        $scope.checkForDupes(accepted, {}, rejected);
+        $scope.fh.checkForDupes(accepted, {}, rejected);
       });
     }
   }])
