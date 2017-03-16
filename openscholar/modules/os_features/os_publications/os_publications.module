@@ -1428,10 +1428,6 @@ function os_publications_preprocess_page(&$variables) {
     ctools_include('infinite_scroll', 'os');
     _os_add_infinite_scroll('os_publications', '#content li.pager-next a', '#content', array('pager' => '#content ul.pager', 'hide_biblio_categories' => TRUE));
   }
-  // Hide the numbers of results found for anonymous users.
-  if (user_is_anonymous()) {
-    unset($variables['page']['content']['system_main']['biblio_page']['header']['export_links']);
-  }
 
   // Make sure both filters are there.
   if(!isset($menu['map'][1]) || !isset($menu['map'][2])) {

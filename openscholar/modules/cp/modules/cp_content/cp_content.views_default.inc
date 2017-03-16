@@ -22,75 +22,6 @@ function cp_content_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Comments';
-  $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'spaces_feature';
-  $handler->display->display_options['access']['spaces_feature'] = 'os_blog';
-  $handler->display->display_options['cache']['type'] = 'none';
-  $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['query']['options']['query_comment'] = FALSE;
-  $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'full';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '25';
-  $handler->display->display_options['style_plugin'] = 'table';
-  /* Relationship: Comment: Comments of the node */
-  $handler->display->display_options['relationships']['cid']['id'] = 'cid';
-  $handler->display->display_options['relationships']['cid']['table'] = 'node';
-  $handler->display->display_options['relationships']['cid']['field'] = 'cid';
-  $handler->display->display_options['relationships']['cid']['required'] = TRUE;
-  /* Field: Content: Title */
-  $handler->display->display_options['fields']['title']['id'] = 'title';
-  $handler->display->display_options['fields']['title']['table'] = 'node';
-  $handler->display->display_options['fields']['title']['field'] = 'title';
-  $handler->display->display_options['fields']['title']['label'] = '';
-  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
-  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Comment: Author */
-  $handler->display->display_options['fields']['name']['id'] = 'name';
-  $handler->display->display_options['fields']['name']['table'] = 'comment';
-  $handler->display->display_options['fields']['name']['field'] = 'name';
-  $handler->display->display_options['fields']['name']['relationship'] = 'cid';
-  /* Field: Comment: Title */
-  $handler->display->display_options['fields']['subject']['id'] = 'subject';
-  $handler->display->display_options['fields']['subject']['table'] = 'comment';
-  $handler->display->display_options['fields']['subject']['field'] = 'subject';
-  $handler->display->display_options['fields']['subject']['relationship'] = 'cid';
-  /* Field: Comment: Post date */
-  $handler->display->display_options['fields']['created']['id'] = 'created';
-  $handler->display->display_options['fields']['created']['table'] = 'comment';
-  $handler->display->display_options['fields']['created']['field'] = 'created';
-  $handler->display->display_options['fields']['created']['relationship'] = 'cid';
-  $handler->display->display_options['fields']['created']['date_format'] = 'long';
-  /* Field: Comment: Comment */
-  $handler->display->display_options['fields']['comment_body']['id'] = 'comment_body';
-  $handler->display->display_options['fields']['comment_body']['table'] = 'field_data_comment_body';
-  $handler->display->display_options['fields']['comment_body']['field'] = 'comment_body';
-  $handler->display->display_options['fields']['comment_body']['relationship'] = 'cid';
-  /* Sort criterion: Content: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'node';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
-  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
-  /* Filter criterion: Content: Published */
-  $handler->display->display_options['filters']['status']['id'] = 'status';
-  $handler->display->display_options['filters']['status']['table'] = 'node';
-  $handler->display->display_options['filters']['status']['field'] = 'status';
-  $handler->display->display_options['filters']['status']['value'] = 1;
-  $handler->display->display_options['filters']['status']['group'] = 1;
-  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Spaces: Content in current space */
-  $handler->display->display_options['filters']['current']['id'] = 'current';
-  $handler->display->display_options['filters']['current']['table'] = 'spaces';
-  $handler->display->display_options['filters']['current']['field'] = 'current';
-  /* Filter criterion: Comment: Approved */
-  $handler->display->display_options['filters']['status_1']['id'] = 'status_1';
-  $handler->display->display_options['filters']['status_1']['table'] = 'comment';
-  $handler->display->display_options['filters']['status_1']['field'] = 'status';
-  $handler->display->display_options['filters']['status_1']['relationship'] = 'cid';
-  $handler->display->display_options['filters']['status_1']['value'] = '1';
-  
-  /* Display: Master */
-  $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Content';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
@@ -441,19 +372,7 @@ function cp_content_views_default_views() {
   $handler->display->display_options['tab_options']['title'] = 'Content';
   $handler->display->display_options['tab_options']['weight'] = '0';
   $handler->display->display_options['tab_options']['name'] = 'cp';
-
-  /* Display: Page */
-  $handler = $view->new_display('page', 'Page', 'page_1');
-  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
-  $handler->display->display_options['path'] = 'cp/content/content';
-  $handler->display->display_options['menu']['type'] = 'normal';
-  $handler->display->display_options['menu']['title'] = 'Posts';
-  $handler->display->display_options['menu']['description'] = 'Find and manage the content of your site.';
-  $handler->display->display_options['menu']['weight'] = '0';
-  $handler->display->display_options['menu']['name'] = 'cp';
-  $handler->display->display_options['menu']['context'] = 0;
-  $handler->display->display_options['tab_options']['weight'] = '0';
-  $export['cp_content'] = $view;
+  $export['cp_comments'] = $view;
 
   $view = new view();
   $view->name = 'cp_files';
