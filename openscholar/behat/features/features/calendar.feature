@@ -42,62 +42,62 @@ Feature: Testing OpenScholar calendar page.
 
   @api @features_first
   Scenario: Test the 'Day' Calendar tab
-    Given I visit "john/calendar?type=day&day=2013-05-29"
+    Given I visit "john/calendar?type=day&day=2020-05-29"
      Then I should see the text "John F. Kennedy birthday" under "view-display-id-page_1"
       And I should not see the link "Export" under "view-os-events"
-     When I visit "john/calendar/event-type/birthday?type=day&day=2013-05-29"
+     When I visit "john/calendar/event-type/birthday?type=day&day=2020-05-29"
      Then I should see the text "John F. Kennedy birthday" under "view-display-id-page_1"
       And I should not see the link "Export" under "view-os-events"
-     When I visit "john/calendar/event-type/astronomy?type=day&day=2013-05-29"
+     When I visit "john/calendar/event-type/astronomy?type=day&day=2020-05-29"
      Then I should not see the text "John F. Kennedy birthday" under "view-display-id-page_1"
 
   @api @features_first
   Scenario: Test the 'Week' Calendar tab
-    Given I visit "john/calendar?week=2013-W22&type=week"
+    Given I visit "john/calendar?week=2020-W22&type=week"
      Then I should see the text "John F. Kennedy birthday" under "view-display-id-page_1"
       And I should not see the link "Export" under "view-os-events"
-     When I visit "john/calendar/event-type/birthday?week=2013-W22&type=week"
+     When I visit "john/calendar/event-type/birthday?week=2020-W22&type=week"
      Then I should see the text "John F. Kennedy birthday" under "view-display-id-page_1"
       And I should not see the link "Export" under "view-os-events"
-     When I visit "john/calendar/event-type/astronomy?week=2013-W22&type=week"
+     When I visit "john/calendar/event-type/astronomy?week=2020-W22&type=week"
      Then I should not see the text "John F. Kennedy birthday" under "view-display-id-page_1"
 
   @api @features_first
   Scenario: Test the 'Month' Calendar tab
-    Given I visit "john/calendar?type=month&month=2013-05"
+    Given I visit "john/calendar?type=month&month=2020-05"
      Then I should see the link "John F. Kennedy birthday" under "view-display-id-page_1"
       And I should not see the link "Export" under "view-os-events"
-     When I visit "john/calendar/event-type/birthday?type=month&month=2013-05"
+     When I visit "john/calendar/event-type/birthday?type=month&month=2020-05"
      Then I should see the link "John F. Kennedy birthday" under "view-display-id-page_1"
       And I should not see the link "Export" under "view-os-events"
-     When I visit "john/calendar/event-type/astronomy?type=month&month=2013-05"
+     When I visit "john/calendar/event-type/astronomy?type=month&month=2020-05"
      Then I should not see the text "John F. Kennedy birthday" under "view-display-id-page_1"
 
   @api @features_first
   Scenario: Test the 'Year' Calendar tab
-    Given I visit "john/calendar?type=year&year=2013"
+    Given I visit "john/calendar?type=year&year=2020"
      Then I should see the link "29" under "has-events"
       And I should not see the link "Export" under "view-os-events"
-     When I visit "john/calendar/event-type/birthday?type=year&year=2013"
+     When I visit "john/calendar/event-type/birthday?type=year&year=2020"
      Then I should see the link "29" under "view-display-id-page_1"
       And I should not see the link "Export" under "view-os-events"
-     When I visit "john/calendar/event-type/astronomy?type=year&year=2013"
+     When I visit "john/calendar/event-type/astronomy?type=year&year=2020"
      Then I should not see the link "29" under "view-display-id-page_1"
       
   @api @features_first
   Scenario: Testing the Past Events list
     Given I visit "john/calendar/past_events"
-     Then I should see the link "John F. Kennedy birthday" under "view-os-events"
+     Then I should see the link "Past event" under "view-os-events"
       And I should not see the link "Export" under "view-os-events"
       
   @api @features_first
   Scenario: Testing the Upcoming Events list
     Given I visit "john/calendar/upcoming"
-     Then I should see the link "Someone" under "view-os-events"
-      And I should not see the link "John F. Kennedy birthday" under "view-os-events"
+     Then I should see the link "Future event" under "view-os-events"
+      And I should not see the link "Past event" under "view-os-events"
      When I click on link "iCal" under "content"
      Then I should find the text "SUMMARY:Halleys Comet" in the file
-      And I should not find the text "John F. Kennedy birthday" in the file
+      And I should not find the text "Past event" in the file
       
   @api @features_first
   Scenario: Testing the Upcoming Events list limited by term

@@ -36,6 +36,7 @@ projects[comment_sources][subdir] = "contrib"
 projects[comment_sources][version] = 2.0
 projects[comment_sources][patch][] = "https://drupal.org/files/issues/22086870-comment-source-wrong-query-field-1.patch"
 projects[comment_sources][patch][] = "https://drupal.org/files/issues/change-submit-handler-index-2513794-2.patch"
+projects[comment_sources][patch][] = "https://raw.github.com/openscholar/openscholar/bb0856af84a58881a0438cd32d9b6a21dcfd15ea/patches/comment_sources.9139.comment_settings.patch"
 
 projects[context][subdir] = "contrib"
 projects[context][version] = 3.0-beta4
@@ -172,6 +173,7 @@ projects[imageapi_optimize][download][revision] = 234f208
 
 projects[imagemagick][subdir] = "contrib"
 projects[imagemagick][version] = 1.0
+projects[imagemagick][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/53169db65764686c511972619fdeb902704731d6/patches/imagemagick.no-resize-for-animated-gifs.patch"
 
 projects[imagefield_crop][subdir] = "contrib"
 ;projects[imagefield_crop][version] = 2.0
@@ -349,12 +351,10 @@ projects[respondjs][subdir] = "contrib"
 projects[respondjs][version] = 1.1
 
 projects[restful][subdir] = "contrib"
-projects[restful][download][type] = git
-projects[restful][download][url] = "https://github.com/RoySegall/restful.git"
-projects[restful][download][branch] = 444
+projects[restful][version] = "1.6"
+# Patch to be able to update a taxonomy term.
+projects[restful][patch][] = "https://patch-diff.githubusercontent.com/raw/RESTful-Drupal/restful/pull/445.diff"
 projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/839d0cc214f2422e924e35d33133d1268b8cc1cd/patches/restful.put_file.patch"
-;projects[restful][download][branch] = "7.x-1.x"
-;projects[restful][download][revision] = 3504dd54ade1b226fbde51784460d37858dad367
 
 projects[redirect][subdir] = "contrib"
 projects[redirect][version] = 1.0-rc1
@@ -414,6 +414,7 @@ projects[transliteration][version] = 3.1
 projects[twitter_pull][subdir] = "contrib"
 projects[twitter_pull][version] = 1.0-rc4
 projects[twitter_pull][patch][] = "https://raw.github.com/openscholar/openscholar/cb4bfa4c382c3ef6d2c8a48c10d55695792c37d5/patches/twitter_pull-8577-retweet_option.patch"
+projects[twitter_pull][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/64dfc3710e7fb2494a69dad4013a14283afdcde2/patches/twitter_pull.class.inc_get-media_url.patch"
 
 projects[views][subdir] = "contrib"
 projects[views][version] = 3.8
@@ -571,6 +572,11 @@ libraries[indentblock][type] = "libraries"
 libraries[indentblock][subdir] = "ckeditor/plugins"
 libraries[indentblock][download][type] = "file"
 libraries[indentblock][download][url] = "http://download.ckeditor.com/indentblock/releases/indentblock_4.5.10.zip"
+
+libraries[bidi][type] = "libraries"
+libraries[bidi][subdir] = "ckeditor/plugins"
+libraries[bidi][download][type] = "file"
+libraries[bidi][download][url] = "http://download.ckeditor.com/bidi/releases/bidi_4.5.10.zip"
 
 libraries[dragresize][type] = "libraries"
 libraries[dragresize][subdir] = "ckeditor/plugins"

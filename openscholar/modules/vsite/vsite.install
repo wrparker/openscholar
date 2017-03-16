@@ -6,6 +6,7 @@
  * Implements hook_install().
  */
 function vsite_install() {
+  drupal_static_reset('og_fields_info');
   og_create_field(OG_AUDIENCE_FIELD, 'user', 'user');
   // Add "Support expire" field to allow support team to auto-subscribe to
   // a group to a set interval.
@@ -815,4 +816,32 @@ function vsite_update_7033(&$sandbox) {
 */
 function vsite_update_7034() {
   variable_set('vsite_register_welcome_message', '57421');
+}
+
+/**
+ * Modify existing primary menu presets with home as link_path
+ */
+function vsite_update_7035() {
+  $result = db_select('spaces_overrides', 'so')
+    ->fields('so')
+    ->condition('object_type', 'menus')
+    ->condition('object_id', 'primary-menu')
+    ->execute();
+
+  $reversed = array();
+  foreach ($result as $m) {
+    $m->value = unserialize($m->value);
+    $home_menu = $m->value[900]['link_path'];
+    if ($home_menu == 'home') {
+      $m->value[900]['link_path'] = '<front>';
+      $m_value = serialize($m->value);
+
+      db_update('spaces_overrides')
+        ->fields(array('value' => $m_value))
+        ->condition('object_type', 'menus')
+        ->condition('object_id', 'primary-menu')
+        ->condition('id', $m->id)
+        ->execute();
+    }
+  }
 }

@@ -293,12 +293,19 @@ function os_booklets_os_add_new_links_alter(&$links) {
  */
 function os_booklets_cp_settings() {
 
+  $spaces_features = variable_get('spaces_features');
+  // Booklets settings link won't appear in CP menu if booklets app is not enabled.
+  if (empty($spaces_features['os_booklets'])) {
+    return $settings;
+  }
+
   $settings['os_booklets_toc_position'] = array(
     'group' => array(
       '#id' => 'feature_os_booklets',
       '#title' => t('Booklets'),
       '#weight' => 0,
       '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about Booklets'), 'http://docs.openscholar.harvard.edu/booklet#booklet-app-settings', array('attributes' => array('target' => '_blank'))),
     ),
     'form' => array(
       '#type' => 'radios',
@@ -307,7 +314,7 @@ function os_booklets_cp_settings() {
         '0' => 'Display as a widget (default)',
         '1' => 'Display inline at the top of book page content',
       ),
-      '#default_value' => variable_get('os_booklets_toc_position', 0),
+      '#default_value' => variable_get('os_booklets_toc_position', '0'),
       '#required' => FALSE,
     ),
   );

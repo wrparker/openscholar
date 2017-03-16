@@ -593,6 +593,12 @@ ul ul ul ul {
     list-style-type: none;
     border-bottom: 1px solid #D9D9D9;
 }
+.view-os-events .view-mode-teaser ul li {
+    list-style-type: disc;
+}
+.view-os-events .view-mode-teaser ol li {
+    list-style-type: decimal;
+}
 .view-os-events ul li .node {
     margin: 20px 0 0 0;
 }
@@ -1007,27 +1013,7 @@ td img {
 .entity-registration .field-label {
     padding-right: 5px;
 }
-/** Message icon overrides */
 
-div.status,
-div.error {
-    background-image: none;
-}
-div.messages:before {
-    position: absolute;
-    content: '';
-    background-image: url('../images/scholarbase-sprite.png');
-    height: 24px;
-    width: 24px;
-    top: 8px;
-    left: 8px;
-}
-div.status:before {
-    background-position: -38px -231px;
-}
-div.error:before {
-    background-position: -72px -231px;
-}
 /** Toolbar overrides */
 
 #toolbar-home a span {
@@ -1139,7 +1125,22 @@ ul.no-event-export {
 .web-widgets-iframe {
     width: 100%;
 }
-.os-sv-list iframe {
+
+.os-sv-list.sv-list-view-sidebar_teaser iframe,
+.os-sv-list.sv-list-view-slide_teaser iframe,
+.os-sv-list.sv-list-view-teaser iframe  {
     width: 100% !important;
-    height:auto !important;
+  
 }
+ .block-boxes-os_boxes_columns .os-sv-list.sv-list-view-teaser iframe,
+.sidebar .os-sv-list.sv-list-view-teaser iframe,
+.sidebar .os-sv-list.sv-list-view-slide_teaser iframe,
+.content-left.content-right #content-column .os-sv-list.sv-list-view-slide_teaser iframe,
+.content-left.content-bottom #content-column .os-sv-list.sv-list-view-slide_teaser iframe,
+.content-right.content-bottom #content-column .os-sv-list.sv-list-view-slide_teaser iframe,
+.block-boxes-os_boxes_columns .os-sv-list.sv-list-view-slide_teaser iframe {
+height: auto;
+}
+
+
+
