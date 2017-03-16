@@ -360,6 +360,28 @@ function os_common_library() {
     )
   );
 
+  $info['FileHandler'] = array(
+    'title' => 'Common File Handling Behaviors',
+    'version' => '1.0',
+    'css' => array(
+      $path.'/FileHandler/FileUploadHandler.css' => array(),
+    ),
+    'js' => array(
+      $path.'/FileHandler/FileHandler.module.js' => array(),
+      array(
+        'data' => array(
+          'paths' => array(
+            'FileHandler' => url($path.'/FileHandler', $disable),
+          ),
+          'version' => array(
+            'FileHandler' => '0.0.1',
+          )
+        ),
+        'type' => 'setting',
+      )
+    ),
+  );
+
   return $info;
 }
 
