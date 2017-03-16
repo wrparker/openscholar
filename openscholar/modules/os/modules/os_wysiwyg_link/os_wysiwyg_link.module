@@ -49,6 +49,7 @@ function os_wysiwyg_link_library() {
       array('os_common', 'angularjs'),
       array('os_common', 'EntityService'),
       array('os_common', 'JSPager'),
+      array('os_common', 'FileHandler'),
     )
   );
 

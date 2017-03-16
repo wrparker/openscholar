@@ -1,6 +1,6 @@
 (function () {
 
-  var m = angular.module('OsWysiwygLinkTool', ['EntityService', 'JSPager', 'angularModalService', 'ui.bootstrap']);
+  var m = angular.module('OsWysiwygLinkTool', ['EntityService', 'FileHandler', 'FileEditor', 'JSPager', 'angularModalService', 'ui.bootstrap']);
 
   m.service('OWLModal', ['ModalService', function (ModalService) {
     var dialogParams = {
@@ -51,8 +51,28 @@
     }
   }]);
 
-  m.controller('OWLModalController', ['$scope', 'EntityService', 'params', 'close', function ($s, EntityService, params, close) {
+  m.controller('OWLModalController', ['$scope', 'EntityService', 'FileHandlers', 'params', 'close', function ($s, EntityService, FileHandlers, params, close) {
     var files = new EntityService('files', 'id');
+    var editting = false;
+    var extensions = [];
+    for (var k in Drupal.settings.extensionMap) {
+      extensions = extensions.concat(Drupal.settings.extensionMap[k]);
+    }
+
+    $s.fh = FileHandlers.getInstance(
+      extensions,
+      Drupal.settings.maxFileSize,
+      Drupal.settings.maxFileSizeRaw,
+      function ($files) {
+        for (var i = 0; i < $files.length; i++) {
+          files.register($files[i]);
+        }
+
+        if ($files.length == 1) {
+          $s.arg = $files[0].id;
+          editing = true;
+        }
+    });
 
     $s.text = params.text;
     $s.arg = params.arg;

@@ -30,7 +30,9 @@
         </div>
         <div index="file" id="file-link" ng-switch-when="file">
             <div class="owl-file-controls">
-                <div class="add_new">Add New
+                <div class="add_new">
+                    <label for="owl-file-add">Add New</label>
+                    <input type="file" id="owl-file-add" ng-file-change="">
                     <div class="form-help">?</div>
                     <div class="description">Files must be less than <strong>{{filesize}}</strong>.<br />Allowed file types: {{extensionStr}}</div>
                     </div>
@@ -39,8 +41,10 @@
             </div>
             <div class="owl-file-list">
                 <div js-pager="f in files | filter:'public':true:'schema' | filter:search:filename track by f.id starting with arg">
-                    <div class="owl-file-item media-row" ng-class="{selected: f.id == arg}" ng-click="setLinkTarget(f.id)">{{f.name}}</div>
+                    <div class="owl-file-item media-row" ng-class="{selected: f.id == arg, new: f.new}" ng-click="setLinkTarget(f.id)">{{f.name}}</div>
                 </div>
+                <div file-upload-handler fh="fh"></div>
+                <div file-edit file="file_edit" ng-if="editing" on-close="fileEditClose(saved)"></div>
             </div>
         </div>
     </div>
