@@ -1013,27 +1013,7 @@ td img {
 .entity-registration .field-label {
     padding-right: 5px;
 }
-/** Message icon overrides */
 
-div.status,
-div.error {
-    background-image: none;
-}
-div.messages:before {
-    position: absolute;
-    content: '';
-    background-image: url('../images/scholarbase-sprite.png');
-    height: 24px;
-    width: 24px;
-    top: 8px;
-    left: 8px;
-}
-div.status:before {
-    background-position: -38px -231px;
-}
-div.error:before {
-    background-position: -72px -231px;
-}
 /** Toolbar overrides */
 
 #toolbar-home a span {
