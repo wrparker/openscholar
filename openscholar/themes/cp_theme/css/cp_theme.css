@@ -1458,3 +1458,6 @@ body.cke_editable {
     background-color: #FFF;
     background: #FFF;
 }
+.form-type-radio label {
+  cursor: pointer
+}

@@ -367,7 +367,7 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
   // The current publication type isn't displaying in the publications page. We need
   // to notify the user.
   $shown_types = variable_get('os_publications_filter_publication_types', array());
-  if (count($shown_types) && !in_array($tid, $shown_types)) {
+  if (!in_array($tid, $shown_types) || $shown_types[$tid] === FALSE) {
     $link = menu_get_item('cp/build/publication/settings');
     $params = array(
       '@url' => url('cp/build/publication/settings'),
@@ -1769,7 +1769,7 @@ function os_publications_cp_settings() {
     foreach($biblio_styles as $styles => $name) {
       $counter ++;
       // Setup the new citation options to be wrapped for a popup.
-      $cite_example_link = '<a href="#" class="cite-pop" data-popbox="pop'.$counter.'">' . t('@link_name', array('@link_name' => $name)) . '</a>';
+      $cite_example_link =  t('@link_name', array('@link_name' => $name));
       // Setup the h2.
       $cite_example_title = '<h2>' . t('@csl_title', array('@csl_title' => $name)) . '</h2>';
       // Setup the citation exmaple for the popup.
