@@ -194,17 +194,9 @@ function os_search_solr_update_7004() {
  * Removing os_search_solr-site-search instances.
  */
 function os_search_solr_update_7005() {
-  // testing stuff.
-  $vsite = vsite_get_vsite(6622);
-
-  foreach (['os_front', 'os_public'] as $context) {
-    $blocks = os_layout_get($context, TRUE, TRUE, $vsite);
-
-    if (!in_array('boxes-solr_search_box', array_keys($blocks))){
-      continue;
-    }
-
-    unset($blocks['boxes-solr_search_box']);
-    os_layout_set($context, $blocks, $vsite);
-  }
+  os_set_update_batch($sandbox, array(
+    'batch' => 250,
+    'entity' => 'node',
+    'path' => drupal_get_path('module', 'os_search_solr') . '/updates/update7005.php',
+  ));
 }
