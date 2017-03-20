@@ -128,3 +128,30 @@ function hwpi_update_7008() {
     }
   }
 }
+
+/**
+ * Convert tables to utf8mb4 to support all Unicode characters
+ */
+function hwpi_update_7009(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $schema = drupal_get_schema();
+    $table_names = array_keys($schema);
+    $sandbox['max'] = count($table_names);
+  }
+  $limit = 10;
+  module_load_include('inc', 'hwpi', 'includes/utf8mb4_convert');
+  $charset = 'utf8mb4';
+  $collation = 'utf8mb4_general_ci';
+  $converter = new DrupalCharsetConverter($charset, $collation);
+  global $databases;
+  $success = $converter->convert($databases, $sandbox['progress'], $limit);
+  $sandbox['progress'] = $sandbox['progress'] + $limit;
+  $sandbox['#finished'] = ($sandbox['progress'] >= $sandbox['max']) ? TRUE : ($sandbox['progress'] / $sandbox['max']);
+  if ($sandbox['#finished']) {
+    if ($success) {
+      $final_message = "All tables converted successfully";
+    }
+    return t('@message', array('@message' => $final_message));
+  }
+}
