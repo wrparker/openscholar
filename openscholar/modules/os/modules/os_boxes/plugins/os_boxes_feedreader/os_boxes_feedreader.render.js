@@ -32,9 +32,9 @@ Drupal.behaviors.osBoxesFeedReader = {
                 date = "<span class='date'>" + date + "</span>";
               }
             }
-            var content = entry.description;
-            if (feed_settings.content_summary && typeof entry.contentSnippet != 'undefined') {
-              content = entry.contentSnippet;
+            var content = '';
+            if (feed_settings.show_content) {
+              content = entry.description;
             }
             var feed_markup = "<div class='feed_item'>";
 
@@ -46,9 +46,7 @@ Drupal.behaviors.osBoxesFeedReader = {
             //Add Title
             feed_markup = feed_markup + "<a class='title' href='" + entry.link + "' target='_blank'>" + entry.title + "</a>";
             if (feed_settings.show_content) {
-              feed_markup = feed_markup + "<br />" + date + "<span class='description'>" +
-                content +
-                "<span/>";
+              feed_markup = feed_markup + "<br />" + date + "<span class='description'>" + content + "<span/>";
             }
             feed_markup = feed_markup + "</div>";
             var div = $(feed_markup);

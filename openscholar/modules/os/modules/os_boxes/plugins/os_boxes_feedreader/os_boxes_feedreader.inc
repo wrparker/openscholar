@@ -111,57 +111,43 @@ class os_boxes_feedreader extends os_boxes_default {
     if (module_exists('vsite') && !vsite_get_vsite()) {
       return;
     }
-
     $output = parent::render();
 
     if (! $this->options['feed'] || ! ($node = node_load($this->options['feed']))) {
       return $block;
     }
 
-    $this->set_cache_id('node:feed');
-    // disable caching for this block for now
-//    if (($block['content'] = $this->get_cache()) === FALSE) {
-      field_attach_prepare_view('node', array(
-        $node->nid => $node,
-      ), 'teaser');
-      entity_prepare_view('node', array(
-        $node->nid => $node,
-      ));
+    field_attach_prepare_view('node', array($node->nid => $node), 'teaser');
+    entity_prepare_view('node', array($node->nid => $node));
 
-      $instance = field_info_instance('node', 'field_url', 'feed');
-      $display = field_get_display($instance, 'teaser', $node);
-      $display['settings']['num_to_show'] = $this->options['number_of_items'];
+    $instance = field_info_instance('node', 'field_url', 'feed');
+    $display = field_get_display($instance, 'teaser', $node);
+    $display['settings']['num_to_show'] = $this->options['number_of_items'];
 
-      // Just display the title and no content summary.
-      $display['settings']['show_content'] = (isset($this->options['feed_display']) && ($this->options['feed_display'] == 'content'));
+    // Just display the title and no content summary.
+    $display['settings']['show_content'] = (isset($this->options['feed_display']) && ($this->options['feed_display'] == 'content'));
 
-      // How should the time be displayed.
-      $display['settings']['time_display'] = 'formal';
-      if (isset($this->options['time_display'])) {
-        $display['settings']['time_display'] = $this->options['time_display'];
-      }
+    // How should the time be displayed.
+    $display['settings']['time_display'] = 'formal';
+    if (isset($this->options['time_display'])) {
+      $display['settings']['time_display'] = $this->options['time_display'];
+    }
 
-//      $result = google_feedapi_field_formatter_view('node', $node, $field, $instance, 'und', $node->field_url['und'], $display);
-//      $block['content'] = render($result);
+    // Here we prepare the required JS for displaying the feed.
+    $feed_div_id = implode("_", array(
+      "fr",
+      'node',
+      $node->nid,
+      key($node->field_url['und']),
+      $display['settings']['num_to_show'],
+      $display['settings']['show_content'],
+      $display['settings']['time_display']
+    ));
 
-      // Here we prepare the required JS for displaying the feed.
-      // This data will be cached as an asset as it is needed to theme the feed.
-      // @see theme_google_feedapi_formatter_google_feedapi().
-      $feed_div_id = implode("_", array(
-        "fr",
-        'node',
-        $node->nid,
-        key($node->field_url['und']),
-        $display['settings']['num_to_show'],
-        $display['settings']['content_summary'],
-        $display['settings']['show_content'],
-        $display['settings']['time_display']
-      ));
-
-      $url_options = array('external' => true);
-      if (isset($node->field_url['und']['query'])){
-        $url_options['query'] = $node->field_url['und']['query'];
-      }
+    $url_options = array('external' => true);
+    if (isset($node->field_url['und']['query'])){
+      $url_options['query'] = $node->field_url['und']['query'];
+    }
 
     $content = array(
       '#prefix' => '<div id="' . $feed_div_id . '">',
@@ -177,7 +163,6 @@ class os_boxes_feedreader extends os_boxes_default {
                 $feed_div_id => array(
                   'url' => url($node->field_url['und'][0]['url'], $url_options),
                   'num_feeds' => $display['settings']['num_to_show'],
-                  'content_summary' => $display['settings']['content_summary'],
                   'show_content' => $display['settings']['show_content'],
                   'time_display' => $display['settings']['time_display'],
                 )
@@ -188,10 +173,7 @@ class os_boxes_feedreader extends os_boxes_default {
       )
     );
 
-      $output['content'] = drupal_render($content);
-//      $this->set_cache($block['content'], $attached);
-//    }
-
+    $output['content'] = drupal_render($content);
     return $output;
   }
 }
