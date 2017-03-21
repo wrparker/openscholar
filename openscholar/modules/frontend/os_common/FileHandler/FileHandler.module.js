@@ -179,7 +179,7 @@
         checkingFilenames: function () {
           return checkingFilenames;
         },
-        hasDuplicates() {
+        hasDuplicates: function () {
           return this.dupes.length > 0;
         },
         rename: function ($index, $last) {
