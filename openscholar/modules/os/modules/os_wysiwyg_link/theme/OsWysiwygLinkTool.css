@@ -3,3 +3,7 @@
   padding: 3px 10px;
   background-color: #cccccc;
 }
+
+#owl-panes {
+  position: relative;
+}
