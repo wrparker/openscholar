@@ -153,9 +153,6 @@ projects[filefield_paths][download][revision] = 84fb637
 projects[flag][subdir] = "contrib"
 projects[flag][version] = 2.0
 
-projects[google_feedapi][subdir] = "contrib"
-projects[google_feedapi][version] = 1.2
-
 projects[hierarchical_taxonomy][subdir] = "contrib"
 projects[hierarchical_taxonomy][download][type] = git
 projects[hierarchical_taxonomy][download][url] = "http://git.drupal.org/project/hierarchical_taxonomy.git"
