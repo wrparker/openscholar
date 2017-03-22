@@ -69,7 +69,7 @@
     // Initialization
     var service = new EntityService('files', 'id'),
       toEditForm = false,
-      directInsert = false;
+      directInsert = true;
     $scope.files = [];
     $scope.numFiles = 0;
     $scope.templatePath = rootPath;
@@ -175,7 +175,7 @@
           }
           else {
             if (directInsert) {
-              $scope.insert();
+              $scope.insert($files);
             }
             else {
               $scope.changePanes('library');
@@ -297,11 +297,6 @@
     $scope.handleFileChange = function ($files, $event, $rejected) {
       if ($files.length == 1) {
         toEditForm = true;
-        directInsert = true;
-      }
-      else {
-        directInsert = false;
-        toEditForm = false;
       }
 
       var passAlong = [];
@@ -392,7 +387,7 @@
       }
       else if ((result == FER.NO_CHANGES || result == FER.SAVED) && ($scope.selected_file.new || $scope.selected_file.replaced)) {
         if (directInsert) {
-          $scope.insert();
+          $scope.insert([$scope.selected_file]);
         }
         else {
           $scope.changePanes('library', result);
@@ -402,20 +397,13 @@
       $scope.changePanes('library', result);
     }
 
-    $scope.insert = function () {
+    $scope.insert = function ($files) {
       var results = [];
-      if ($scope.toInsert.length) {
-        for (var i = 0; i < $scope.toInsert.length; i++) {
-          $scope.toInsert[i].fid = $scope.toInsert[i].id;
-          results.push($scope.toInsert[i]);
-        }
-      }
-      else {
-        $scope.selected_file.fid = $scope.selected_file.id; // hack to prevent rewriting a lot of Media's code.
-        results.push($scope.selected_file);
+      for (var i = 0; i < $files.length; i++) {
+        $files[i].fid = $files[i].id;
       }
 
-      close(results);
+      close($files);
     }
 
     $scope.cancel = function () {
