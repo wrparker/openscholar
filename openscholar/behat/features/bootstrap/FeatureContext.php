@@ -3646,7 +3646,7 @@ JS;
   }
 
   /**
-   * @When /^I change publication type to "([^"]*)"$/
+   * @When /^I change publication citation style to "([^"]*)"$/
    */
   public function iChangePublicationType($type) {
 
@@ -3656,7 +3656,7 @@ JS;
   }
 
   /**
-   * @When /^I uncheck the box "([^"]*)" with id "([^"]*)" publication filter$/
+   * @When /^I uncheck the box "([^"]*)" with id "([^"]*)" publication citation filter$/
    */
   public function iChangePublicationFilter($type, $id) {
 

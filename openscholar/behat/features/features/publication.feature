@@ -72,7 +72,7 @@ Feature:
             print 'In' correctly and doesn't capitalize unneeded words.
     Given I am logging in as "john"
       And I navigate to "Publications" cp settings of the site "john"
-      And I change publication type to "Harvard chicago author-date"
+      And I change publication citation style to "Harvard chicago author-date"
       And I submit cp settings of the site
       And I visit "john/publications/confpapers-tests"
      Then I should see "“Confpapers Tests.”"
@@ -92,7 +92,7 @@ Feature:
             in the publication form.
     Given I am logging in as "john"
       And I navigate to "Publications" cp settings of the site "john"
-      And I uncheck the box "Journal Article" with id "edit-os-publications-filter-publication-types-102" publication filter
+      And I uncheck the box "Journal Article" with id "edit-os-publications-filter-publication-types-102" publication citation filter
       And I submit cp settings of the site
       And I visit "john/node/add/biblio"
      Then I should see "Note: The publication type Journal Article is not currently shown in publication lists."
@@ -123,7 +123,7 @@ Feature:
   Scenario: Verify we don't get html tags in the publication title.
     Given I am logging in as "john"
       And I navigate to "Publications" cp settings of the site "john"
-      And I change publication type to "Harvard chicago author-date"
+      And I change publication citation style to "Harvard chicago author-date"
       And I submit cp settings of the site
       And I visit "john/publications/reevaluation-Chinas-Co2-Emissions"
      Then I should not see "<sub>2</sub>"
