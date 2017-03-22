@@ -69,7 +69,7 @@
     // Initialization
     var service = new EntityService('files', 'id'),
       toEditForm = false,
-      directInsert = true;
+      directInsert = false;
     $scope.files = [];
     $scope.numFiles = 0;
     $scope.templatePath = rootPath;
@@ -297,6 +297,11 @@
     $scope.handleFileChange = function ($files, $event, $rejected) {
       if ($files.length == 1) {
         toEditForm = true;
+        directInsert = true;
+      }
+      else {
+        directInsert = false;
+        toEditForm = false;
       }
 
       var passAlong = [];
