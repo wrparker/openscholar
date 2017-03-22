@@ -6,14 +6,16 @@
 
   var m = ng.module('FileHandler', []);
 
-  m.service('FileHandlers', ['$upload', '$http', '$q', 'EntityConfig', function ($upload, $http, $q, config) {
+  m.service('FileHandlers', ['$upload', '$http', '$q', 'EntityConfig', '$timeout', function ($upload, $http, $q, config, $t) {
     this.getInstance = function (accepts, maxSizeStr, maxSizeRaw, uploadCallback) {
       var extensions = accepts,
           typeList,
           upload = [],
           validationErrors = [],
           checkingFilenames = false,
-          upload, uploadProgress;
+          upload, uploadProgress,
+          messages = {},
+          lastMessId = 0;
 
       function finalizeDupes(duplicates) {
         var toBeUploaded = [];
@@ -167,14 +169,29 @@
               extension = extensions.indexOf(ext) !== -1;    // extension is found
 
             if (!size) {
-              validationErrors.push(file.name + ' is larger than the maximum filesize of ' + (maxSizeStr));
+              var sizeId = lastMessId++;
+              messages[sizeId] = {
+                text: file.name + ' is larger than the maximum filesize of ' + (maxSizeStr)
+              };
+              $t(function () {
+                delete messages[sizeId];
+              }, 5000);
             }
             if (!extension) {
-              validationErrors.push(file.name + ' is not an accepted file type.');
+              var extId = lastMessId;
+              messages[extId] = {
+                text: file.name + ' is not an accepted file type.'
+              }
+              $t(function () {
+                delete messages[extId];
+              }, 5000);
             }
 
             return size && extension;
           }
+        },
+        messages: function () {
+          return angular.copy(messages);
         },
         checkingFilenames: function () {
           return checkingFilenames;

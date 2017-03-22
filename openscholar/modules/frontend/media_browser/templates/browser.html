@@ -19,6 +19,9 @@
                 </div>
             </div>
             <div file-upload-handler fh="fh"></div>
+            <div id="media-browser-rejected">
+                <div ng-repeat="m in fh.messages()" class="message" ng-bind-html="m.text"></div>
+            </div>
             <div class="actions">
                 <button value="cancel" ng-click="cancel()">Cancel</button>
             </div>
