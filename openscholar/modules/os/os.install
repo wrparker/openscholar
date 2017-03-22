@@ -926,3 +926,22 @@ function os_update_7049() {
 
   features_revert($features);
 }
+/**
+ * Update has_children field of parent menus having 0 children
+ */
+function os_update_7047() {
+
+  $childless_parent_menus = db_query('SELECT mlid FROM menu_links m ' .
+      'WHERE (has_children > 0) AND ' .
+      '(NOT EXISTS (SELECT * FROM menu_links m2 WHERE m.mlid = m2.plid))');
+
+  $mlids = array_keys($childless_parent_menus->fetchAllKeyed());
+
+  $db_update_result = db_update('menu_links')
+    ->fields(array('has_children' => 0))
+    ->condition('mlid', $mlids, 'IN')
+    ->execute();
+
+  $message = t('@count parent menus with no children links have been updated.', array('@count' => sizeof($mlids)));
+  drupal_set_message($message);
+}

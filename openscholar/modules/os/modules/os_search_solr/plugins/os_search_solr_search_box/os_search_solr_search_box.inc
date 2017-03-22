@@ -37,12 +37,11 @@ class os_search_solr_search_box extends os_boxes_default {
     $bundles = os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP));
 
     unset($bundles['feed'], $bundles['link']);
-
     unset($bundles['slideshow_slide'], $bundles['feed_importer']);
 
     $form['bundle'] = array(
       '#type' => 'select',
-      '#description' => t('Which bundle would you like to use.'),
+      '#description' => t('Which content type would you like to search.'),
       '#title' => t('Content type'),
       '#options' => array(NULL => t('All')) + $bundles,
       '#default_value' => !empty($bundle) ? $bundle : '-none-',
@@ -56,7 +55,7 @@ class os_search_solr_search_box extends os_boxes_default {
 
     $form['vocab'] = array(
       '#type' => 'select',
-      '#title' => t('Filter by: vocab'),
+      '#title' => t('Filter by vocabulary'),
       '#options' => array('---' => t('----')),
       '#prefix' => '<div id="vocab">',
       '#suffix' => '</div>',
@@ -104,12 +103,14 @@ class os_search_solr_search_box extends os_boxes_default {
         $taxonomies[$term->tid] = $term->name;
       }
 
-      $form['terms']['terms'] = array(
-        '#type' => 'checkboxes',
-        '#title' => t('Filter by: terms'),
-        '#options' => $taxonomies,
-        '#default_value' => $this->options['terms']['terms'],
-      );
+      if ($taxonomies) {
+        $form['terms']['terms'] = array(
+          '#type' => 'checkboxes',
+          '#title' => t('Filter by all of the following selected terms'),
+          '#options' => $taxonomies,
+          '#default_value' => $this->options['terms']['terms'],
+        );
+      }
     }
 
     $form['sort_property'] = array(
@@ -118,7 +119,6 @@ class os_search_solr_search_box extends os_boxes_default {
       '#options' => array(
         'relevancy' => t('Relevancy (default)'),
         'sort_label' => t('Title'),
-        'bundle' => t('Type'),
         'ds_created' => t('Date'),
       ),
       '#default_value' => $this->options['sort_property'],
@@ -132,6 +132,11 @@ class os_search_solr_search_box extends os_boxes_default {
         'desc' => t('Descending'),
       ),
       '#default_value' => $this->options['sort_order'],
+      '#states' => array(
+        'invisible' => array(
+          ':input[name="sort_property"]' => array('value' => 'relevancy'),
+        ),
+      ),
     );
 
     return $form;
@@ -148,8 +153,10 @@ class os_search_solr_search_box extends os_boxes_default {
     }
 
     $form_state['box_settings'] = $this->options;
-    $form = drupal_build_form('search_block_form', $form_state);
-    $form['#box_settings'] = $this->options;
+
+    // In case we have two search box widgets we need to give a dynamic name to
+    // the forms thus prevent overriding the form settings.
+    $form = drupal_build_form('os_solr_search_box___' . $this->delta, $form_state);
 
     $return['content'] = render($form);
 

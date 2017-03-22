@@ -6,92 +6,50 @@
  */
 
 /**
- * Implements hook_media_token_to_markup_alter().
- */
-function os_wysiwyg_media_token_to_markup_alter(&$element, $tag_info, $settings) {
-    if (empty($settings['wysiwyg'])) {
-        unset($element['content']['#prefix'], $element['content']['#suffix']);
-
-        if (isset($settings['width'])) {
-            $element['content']['file']['#attributes']['width'] = $settings['width'];
-        }
-        if (isset($settings['height'])) {
-            $element['content']['file']['#attributes']['height'] = $settings['height'];
-        }
-
-        $container_settings = array();
-        foreach ($settings['attributes'] as $attr => $val) {
-            if ($attr != 'class' && $attr != 'height' && $attr != 'width') {
-                $container_settings[$attr] = $val;
-            }
-        }
-
-        if (isset($container_settings['style'])) {
-            $s = &$container_settings['style'];
-            if (strpos($s, 'display: block;') !== FALSE &&
-                strpos($s, 'margin-left: auto;') !== FALSE &&
-                strpos($s, 'margin-right: auto;') !== FALSE) {
-                // This was supposed to be centered, and could be an image. Add
-                // text-align center so the image inside will be centered after all.
-                $s .= ' text-align: center;';
-            }
-        }
-
-        $element += array(
-            '#prefix' => '<span '.drupal_attributes($container_settings).'>',
-            '#suffix' => '</span>',
-        );
-    }
-}
-
-/**
  * Implements hook_wysiwyg_editor_settings_alter().
  */
 function os_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
-   global $base_url;
+  global $base_url;
 
-   // Settings there are no UI options for.
-   $settings['gecko_spellcheck'] = true;
-   $settings['theme_advanced_path'] = false;
-   $settings['theme_advanced_statusbar'] = false;
-   drupal_add_css(drupal_get_path('module', 'os_wysiwyg') . '/os_wysiwyg.css');
+  // Settings there are no UI options for.
+  $settings['gecko_spellcheck'] = true;
+  $settings['theme_advanced_path'] = false;
+  $settings['theme_advanced_statusbar'] = false;
+  drupal_add_css(drupal_get_path('module', 'os_wysiwyg') . '/os_wysiwyg.css');
 
-   $settings['contentsCss'] = [
-       $base_url . '/' . drupal_get_path('theme', 'hwpi_basetheme') . '/css/hwpi.base.css',
-   ];
+  $settings['contentsCss'] = array(
+   $base_url . '/' . drupal_get_path('theme', 'hwpi_basetheme') . '/css/hwpi.base.css',
+  );
 
-   ctools_include('themes', 'os');
-   $flavors = os_theme_get_flavors();
-   $theme = os_theme_get();
+  ctools_include('themes', 'os');
+  $flavors = os_theme_get_flavors();
+  $theme = os_theme_get();
 
-   $theme_info = os_get_themes($theme);
+  $theme_info = os_get_themes($theme);
 
-   if ($theme_info->stylesheets) {
-        // Adding the css of the theme.
-        foreach ($theme_info->stylesheets as $stylesheets) {
-            foreach ($stylesheets as $stylesheet) {
-                $settings['contentsCss'][] = $base_url . '/' . $stylesheet;
-            }
-        }
+  if ($theme_info->stylesheets) {
+    // Adding the css of the theme.
+    foreach ($theme_info->stylesheets as $stylesheets) {
+      foreach ($stylesheets as $stylesheet) {
+        $settings['contentsCss'][] = $base_url . '/' . $stylesheet;
+      }
     }
+  }
 
-    if ($flavor_name = variable_get('os_appearance_' . $theme . '_flavor')) {
-        $flavor_info = $flavors[$flavor_name];
+  if ($flavor_name = variable_get('os_appearance_' . $theme . '_flavor')) {
+    $flavor_info = $flavors[$flavor_name];
 
-        // Adding the css of the current flavor.
-        foreach ($flavor_info['css'] as $css) {
-            $settings['contentsCss'][] = $base_url . '/' . $flavor_info['path'] . '/' . $css;
-        }
+    // Adding the css of the current flavor.
+    foreach ($flavor_info['css'] as $css) {
+      $settings['contentsCss'][] = $base_url . '/' . $flavor_info['path'] . '/' . $css;
     }
+  }
 
-    $settings['contentsCss'][] = $base_url . '/' . drupal_get_path('theme', 'cp_theme') . '/css/cp_theme.css';
+  _os_wysiwyg_add_public_css($settings, $context);
+  if ($context['profile']->format == 'filtered_html') {
 
-    _os_wysiwyg_add_public_css($settings, $context);
-    if ($context['profile']->format == 'filtered_html') {
-
-        // Reorder buttons.
-        // TODO: remove when WYSIWYG module can do this for us
-
+    // Reorder buttons.
+    // TODO: remove when WYSIWYG module can do this for us
 
     // Format select buttons.
     if (is_array($settings['toolbar']) && $btns = reset($settings['toolbar'])) {
@@ -135,23 +93,24 @@ function os_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
     $buttons = $settings['toolbar'][0];
 
 
-        foreach ($buttons as $button) {
+    foreach ($buttons as $button) {
 
-            if (in_array($button, array('Unlink', 'os_link'))) {
-                continue;
-            }
+      if (in_array($button, array('Unlink', 'os_link'))) {
+          continue;
+      }
 
-            $new_buttons[] = $button;
-        }
-        $new_buttons[] = 'Unlink';
-        $new_buttons[] = 'os_link';
-
-        $settings['toolbar'][0] = $new_buttons;
-
-        // PDW settings
-        $settings['pdw_toggle_toolbars'] = '2,3,4';
-        $settings['pdw_toggle_on'] = 1;
+      $new_buttons[] = $button;
     }
+
+    $new_buttons[] = 'Unlink';
+    $new_buttons[] = 'os_link';
+
+    $settings['toolbar'][0] = $new_buttons;
+
+    // PDW settings
+    $settings['pdw_toggle_toolbars'] = '2,3,4';
+    $settings['pdw_toggle_on'] = 1;
+  }
 }
 
 /**
