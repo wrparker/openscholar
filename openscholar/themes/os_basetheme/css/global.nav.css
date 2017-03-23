@@ -915,6 +915,7 @@ ul li.leaf {
     font-weight: normal;
     word-wrap: break-word;
 }
+iframe:focus,
 .accordion h3:focus {
     outline: thin dotted;
 }

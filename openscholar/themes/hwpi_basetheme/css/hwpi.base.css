@@ -854,3 +854,11 @@ ul.pager li.pager-item {
 .two-sidebars .sidebar .node-person.node-teaser .field-name-field-email {
     float: none;
 }
+
+.cke_editable img[style*="float: left"] {
+padding-right:15px;
+}
+
+.cke_editable img[style*="float: right"] {
+padding-left:15px;
+}
