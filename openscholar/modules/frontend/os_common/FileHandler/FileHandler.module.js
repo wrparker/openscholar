@@ -160,6 +160,9 @@
               console.log('Error happened with all promises');
             });
         },
+        acceptString: function () {
+          return '.' + extensions.join(',.');
+        },
         validate: function (file) {
           if (file && file instanceof File) {
             // TODO: Get validating properties from somewhere and check the file against them
@@ -191,7 +194,7 @@
           }
         },
         messages: function () {
-          return angular.copy(messages);
+          return messages;
         },
         checkingFilenames: function () {
           return checkingFilenames;
