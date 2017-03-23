@@ -1695,9 +1695,9 @@ function os_publications_update_7053() {
     if (is_array($value)) {
       $is_unchecked_all = TRUE;
       foreach ($value as $key => $val) {
-        if ($val === TRUE) {
+        if ($val > 0) {
           $is_unchecked_all = FALSE;
-          break;
+          $value[$key] = TRUE;
         }
       }
       if ($is_unchecked_all) {
@@ -1708,8 +1708,14 @@ function os_publications_update_7053() {
           ->condition('object_id', 'os_publications_filter_publication_types')
           ->condition('id', $result->id)
           ->execute();
+      } else {
+        $query = db_update('spaces_overrides')
+          ->fields(array('value' => serialize($value)))
+          ->condition('object_type', 'variable')
+          ->condition('object_id', 'os_publications_filter_publication_types')
+          ->condition('id', $result->id)
+          ->execute();
       }
     }
   }
 }
-
