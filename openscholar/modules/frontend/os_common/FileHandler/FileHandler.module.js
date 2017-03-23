@@ -24,6 +24,7 @@
             toBeUploaded.push(duplicates[i]);
           }
         }
+        this.dupes = [];
 
         upload(toBeUploaded);
       }
@@ -206,8 +207,7 @@
           this.dupes[$index].processed = true;
 
           if ($last) {
-            finalizeDupes(this.dupes);
-            this.dupes = [];
+            finalizeDupes.call(this, this.dupes);
           }
         },
         replace: function ($index, $last) {
@@ -215,8 +215,7 @@
           delete this.dupes[$index].newName;
 
           if ($last) {
-            finalizeDupes(this.dupes);
-            this.dupes = [];
+            finalizeDupes.call(this, this.dupes);
           }
         },
         cancel: function ($index, $last) {
@@ -224,8 +223,7 @@
           this.dupes[$index].processed = true;
 
           if ($last) {
-            finalizeDupes(this.dupes);
-            this.dupes = [];
+            finalizeDupes.call(this, this.dupes);
           }
         },
         uploadProgress: uploadProgress

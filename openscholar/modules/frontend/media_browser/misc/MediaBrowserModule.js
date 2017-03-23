@@ -144,6 +144,7 @@
       $scope.maxFilesize = Drupal.settings.maximumFileSize;
     }
 
+    var uploadBatch = [];
     $scope.fh = FileHandlers.getInstance($scope.extensions,
       $scope.maxFilesize,
       params.max_filesize_raw || Drupal.settings.maximumFileSizeRaw,
@@ -166,7 +167,7 @@
             $scope.files.push($files[i]);
           }
         }
-
+        uploadBatch = uploadBatch.concat($files);
         if (!$scope.fh.hasDuplicates()) {
           if (toEditForm) {
             // there's only one file. Go to the edit page automatically
@@ -175,12 +176,13 @@
           }
           else {
             if (directInsert) {
-              $scope.insert($files);
+              $scope.insert(uploadBatch);
             }
             else {
               $scope.changePanes('library');
             }
           }
+          uploadBatch = [];
         }
       });
 
