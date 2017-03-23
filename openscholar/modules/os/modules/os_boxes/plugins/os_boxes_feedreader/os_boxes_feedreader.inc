@@ -154,7 +154,7 @@ class os_boxes_feedreader extends os_boxes_default {
       '#suffix' => '</div>',
       '#attached' => array(
         'js' => array(
-          'http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js',
+          '//yui.yahooapis.com/3.18.1/build/yui/yui-min.js',
           drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_feedreader/os_boxes_feedreader.render.js',
           array(
             'type' => 'setting',
