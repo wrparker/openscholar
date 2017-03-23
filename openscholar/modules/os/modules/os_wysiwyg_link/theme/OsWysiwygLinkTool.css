@@ -7,3 +7,28 @@
 #owl-panes {
   position: relative;
 }
+
+#owl-file-messages {
+  display: block;
+  position: absolute;
+  background-color: red;
+  color: white;
+  padding: 5px;
+}
+
+#owl-file-messages:empty {
+  display: none;
+}
+
+.form-help .description {
+  position: absolute;
+  width: 300px;
+  display: none;
+  background-color: white;
+  border-color: #808080;
+}
+
+.form-help:hover .description,
+.form-help .desscription:hover {
+  display: block;
+}
