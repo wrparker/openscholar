@@ -190,7 +190,7 @@ function os_publications_query_biblio_alter(QueryAlterableInterface $query) {
     $biblio_year_sort = $space->controllers->variable->get('biblio_order','space');
     $order = &$query->getOrderBy();
 
-    // check if style is Harvard chicago author-date
+    // if style is Harvard chicago author-date, add in fields for month and date to query
     if(variable_get('biblio_citeproc_style','') == 'harvard-chicago-author-date.csl') {
       $query->leftJoin('field_data_field_biblio_pub_month', 'field_month', 'field_month.entity_id = n.nid AND field_month.revision_id = n.vid');
       $query->leftJoin('field_data_field_biblio_pub_day', 'field_day', 'field_day.entity_id = n.nid AND field_day.revision_id = n.vid');
@@ -217,6 +217,8 @@ function os_publications_query_biblio_alter(QueryAlterableInterface $query) {
     // Sort by year, and after that create another sorting by the node's
     // "sticky" property, the creation date of the node, the Biblio date, and
     // the Biblio title.
+    // If style is Harvard chicago author-date, add in order by month and day
+    // and ignore node creation date
     $order['n.sticky'] = 'DESC';
     $order['biblio_year'] = isset($biblio_year_sort) ? $biblio_year_sort : 'DESC';
     if(variable_get('biblio_citeproc_style','') == 'harvard-chicago-author-date.csl') {
@@ -224,7 +226,7 @@ function os_publications_query_biblio_alter(QueryAlterableInterface $query) {
       $order['field_biblio_pub_day_value'] = isset($biblio_year_sort) ? $biblio_year_sort : 'DESC';
       $order['biblio_sort_title'] = (isset($biblio_sort_title)) ? $biblio_sort_title : 'ASC';
     }
-    if(variable_get('biblio_citeproc_style','') != 'harvard-chicago-author-date.csl') {
+    else {
       $order['n.created'] = 'DESC';
       $order['biblio_sort_title'] = (isset($biblio_sort_title)) ? $biblio_sort_title : 'ASC';
     }
