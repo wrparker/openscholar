@@ -74,6 +74,9 @@
         }
     });
 
+    $s.extensionStr = extensions.join(', ');
+    $s.filesize = Drupal.settings.maxFileSize;
+
     $s.text = params.text;
     $s.arg = params.arg;
     $s.title = params.title;
