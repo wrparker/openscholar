@@ -8,51 +8,54 @@ Drupal.behaviors.osBoxesFeedReader = {
   attach: function (context, settings) {
     //Loop through the feeds that are on this page
     $.each(settings.osBoxesFeedReader, function(div_id, feed_settings) {
-      //Run the feed processing only once per feed
-      YUI().use('yql', function(Y) {
-        //Load Feed
-        var query = 'select * from rss(0,' + feed_settings.num_feeds + ') where url = "'+ feed_settings.url + '"';
-        var q = Y.YQL(query, function(r) {
-          for (var i = 0; i < r.query.results.item.length; i++) {
-            var entry = r.query.results.item[i];
-            var date = "";
-            if (typeof entry.pubDate != 'undefined' && entry.pubDate != '') {
-              if (feed_settings.time_display == 'relative') {
-                //@todo find a good way to do FuzzyTime in js
-                date = fuzzyDate(entry.pubDate);
+      // run only once for each feed
+      $('div#' + div_id, context).once('osBoxesFeedReader', function () {
+        //Run the feed processing only once per feed
+        YUI().use('yql', function (Y) {
+          //Load Feed
+          var query = 'select * from rss(0,' + feed_settings.num_feeds + ') where url = "' + feed_settings.url + '"';
+          var q = Y.YQL(query, function (r) {
+            for (var i = 0; i < r.query.results.item.length; i++) {
+              var entry = r.query.results.item[i];
+              var date = "";
+              if (typeof entry.pubDate != 'undefined' && entry.pubDate != '') {
+                if (feed_settings.time_display == 'relative') {
+                  //@todo find a good way to do FuzzyTime in js
+                  date = fuzzyDate(entry.pubDate);
+                }
+
+                if (feed_settings.time_display == 'formal') {
+                  date = formalDate(entry.pubDate);
+                }
+
+                if (typeof date == 'undefined') {
+                  date = "";
+                } else {
+                  date = "<span class='date'>" + date + "</span>";
+                }
+              }
+              var content = '';
+              if (feed_settings.show_content) {
+                content = entry.description;
+              }
+              var feed_markup = "<div class='feed_item'>";
+
+              // Put time before title if there is no content
+              if (!feed_settings.show_content) {
+                feed_markup = feed_markup + date;
               }
 
-              if (feed_settings.time_display == 'formal') {
-                date = formalDate(entry.pubDate);
+              //Add Title
+              feed_markup = feed_markup + "<a class='title' href='" + entry.link + "' target='_blank'>" + entry.title + "</a>";
+              if (feed_settings.show_content) {
+                feed_markup = feed_markup + "<br />" + date + "<span class='description'>" + content + "<span/>";
               }
+              feed_markup = feed_markup + "</div>";
+              var div = $(feed_markup);
 
-              if (typeof date == 'undefined') {
-                date = "";
-              } else {
-                date = "<span class='date'>" + date + "</span>";
-              }
+              $('div#' + div_id).append(div);
             }
-            var content = '';
-            if (feed_settings.show_content) {
-              content = entry.description;
-            }
-            var feed_markup = "<div class='feed_item'>";
-
-            // Put time before title if there is no content
-            if (!feed_settings.show_content) {
-              feed_markup = feed_markup + date;
-            }
-
-            //Add Title
-            feed_markup = feed_markup + "<a class='title' href='" + entry.link + "' target='_blank'>" + entry.title + "</a>";
-            if (feed_settings.show_content) {
-              feed_markup = feed_markup + "<br />" + date + "<span class='description'>" + content + "<span/>";
-            }
-            feed_markup = feed_markup + "</div>";
-            var div = $(feed_markup);
-
-            $('div#'+div_id).append(div);
-          }
+          });
         });
       });
     });
