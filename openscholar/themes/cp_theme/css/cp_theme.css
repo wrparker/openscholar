@@ -139,9 +139,10 @@ html.js input.throbbing {
     color: #FFF;
     font-weight: bold;
 }
+
+body.page-node-revisions ul.action-links a,
 input.form-submit, 
 a.button,
-
 .ui-dialog.ap-settings-form button,
 .ui-dialog.ap-settings-form input[type="button"],
 .ui-dialog.ap-settings-form input[type="submit"],
@@ -1453,28 +1454,21 @@ body.page-node fieldset#edit-revision-information #warning-text p {
     padding: 0px;
     margin: 0.5em 0;
 }
-body.page-node-revisions ul.action-links a {
-      background-color: #215990;
-    color: #fff;
-    border-radius: 3px;
-    padding: 0px 5px;
-    text-decoration: none;
-    margin: 0 0 20px 0;
-    display: list-item;
-    background-image: none;
+body.page-node-revisions ul.action-links a:hover {
+
+text-decoration:none;
 
 }
 body.page-node-revisions ul.action-links {
     margin: 0;
     padding: 0 20px 0 0;
-}
-ul.action-links a {
-    padding-left: 0;
- 
+    
 }
 
+
 .page-node-revisions ul.action-links span {
-    font-size: 1.5em;
+    font-size: 1.3em;
+    padding-right: 5px;
 }
 
 .page-node-revisions .jcarousel-container {
