@@ -90,7 +90,7 @@ function hwpi_update_7005() {
 
   // Sets the themes to use as featured themes.
   $name = 'cp_appearance_featured_themes';
-  $value = drupal_map_assoc(array('hwpi_classic', 'hwpi_modern', 'hwpi_vibrant', 'hwpi_college', 'hwpi_widener'));
+  $value = drupal_map_assoc(array('hwpi_classic', 'hwpi_modern', 'hwpi_vibrant', 'hwpi_college', 'hwpi_widener', 'hwpi_stark'));
   variable_set($name, $value);
 }
 
