@@ -221,15 +221,9 @@ openscholar/modules/contrib/services/includes/services.runtime.inc services_erro
       openscholar/modules/contrib/services/servers/rest_server/includes/RESTServer.inc handle
         openscholar/modules/contrib/services/servers/rest_server/rest_server.module rest_server_server
   openscholar/modules/contrib/services/servers/rest_server/includes/RESTServer.inc parseXML
-    openscholar/modules/contrib/mollom/includes/mollom.class.inc parseXML
-      openscholar/modules/contrib/mollom/includes/mollom.class.inc parseXML
-        openscholar/modules/contrib/mollom/includes/mollom.class.inc parseXML
-          openscholar/modules/contrib/mollom/includes/mollom.class.inc parseXML
-            openscholar/modules/contrib/mollom/includes/mollom.class.inc parseXML
-              openscholar/modules/contrib/mollom/includes/mollom.class.inc parseXML
-                openscholar/modules/contrib/mollom/includes/mollom.class.inc parseXML
-                  openscholar/modules/contrib/mollom/includes/mollom.class.inc parseXML
-                    openscholar/modules/contrib/mollom/includes/mollom.class.inc parseXML
+
+[snip]  cscope mishandles PHP class methods
+
   openscholar/modules/contrib/services/servers/xmlrpc_server/xmlrpc_server.module xmlrpc_server_call_wrapper
   openscholar/modules/contrib/services/services.module services_resource_execute_index_query
     openscholar/modules/contrib/services/resources/comment_resource.inc _comment_resource_index
@@ -391,5 +385,201 @@ openscholar/modules/contrib/services/servers/rest_server/lib/bencode.php bencode
       openscholar/modules/contrib/services/servers/rest_server/includes/RESTServer.inc renderFormatterView  <== added manually
         openscholar/modules/contrib/services/servers/rest_server/includes/RESTServer.inc handle
           openscholar/modules/contrib/services/servers/rest_server/rest_server.module rest_server_server
-
-[graph generation interrupted!]
+openscholar/modules/contrib/services/servers/rest_server/rest_server.api.php hook_rest_server_request_parsers_alter
+openscholar/modules/contrib/services/servers/rest_server/rest_server.api.php hook_rest_server_response_formatters_alter
+openscholar/modules/contrib/services/servers/rest_server/rest_server.api.php hook_rest_server_execute_errors_alter
+openscholar/modules/contrib/services/servers/rest_server/rest_server.inc _rest_server_settings
+openscholar/modules/contrib/services/servers/rest_server/rest_server.inc _rest_server_settings_checkboxes_attributes
+  openscholar/modules/contrib/services/servers/rest_server/rest_server.inc _rest_server_settings
+  openscholar/modules/contrib/services/servers/rest_server/rest_server.inc _rest_server_settings
+openscholar/modules/contrib/services/servers/rest_server/rest_server.inc _rest_server_settings_submit
+openscholar/modules/contrib/services/servers/rest_server/rest_server.inc _rest_server_settings_not_zero
+openscholar/modules/contrib/services/servers/rest_server/rest_server.module rest_server_server_info
+openscholar/modules/contrib/services/servers/rest_server/rest_server.module rest_server_server
+openscholar/modules/contrib/services/servers/rest_server/rest_server.module rest_server_request_parsers
+  openscholar/modules/contrib/services/servers/rest_server/includes/RESTServer.inc requestParser
+    openscholar/modules/contrib/services/servers/rest_server/includes/RESTServer.inc parseRequest
+      openscholar/behat/vendor/guzzle/http/Guzzle/Http/Curl/CurlHandle.php updateRequestFromTransfer
+      openscholar/behat/vendor/guzzle/http/Guzzle/Http/Message/RequestFactory.php fromMessage
+      openscholar/behat/vendor/guzzlehttp/guzzle/src/Message/MessageFactory.php fromMessage
+      openscholar/modules/contrib/services/servers/rest_server/includes/RESTServer.inc getControllerArguments
+        openscholar/modules/contrib/services/servers/rest_server/includes/RESTServer.inc handle
+          openscholar/behat/vendor/symfony/css-selector/Parser/Tokenizer/Tokenizer.php tokenize
+          openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/AbstractHandlerTest.php testHandleValue
+          openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/AbstractHandlerTest.php testHandleValue
+          openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/AbstractHandlerTest.php testDontHandleValue
+          openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/CommentHandlerTest.php testHandleValue
+          openscholar/modules/contrib/services/servers/rest_server/rest_server.module rest_server_server
+openscholar/modules/contrib/services/servers/rest_server/rest_server.module rest_server_response_formatters
+  openscholar/modules/contrib/services/servers/rest_server/includes/RESTServer.inc responseFormatters
+    openscholar/modules/contrib/services/servers/rest_server/includes/RESTServer.inc handle
+      openscholar/behat/vendor/symfony/css-selector/Parser/Tokenizer/Tokenizer.php tokenize
+      openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/AbstractHandlerTest.php testHandleValue
+      openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/AbstractHandlerTest.php testHandleValue
+      openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/AbstractHandlerTest.php testDontHandleValue
+      openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/CommentHandlerTest.php testHandleValue
+      openscholar/modules/contrib/services/servers/rest_server/rest_server.module rest_server_server
+openscholar/modules/contrib/services/servers/rest_server/rest_server.module rest_server_setup_settings
+  openscholar/modules/contrib/services/servers/rest_server/rest_server.inc _rest_server_settings
+openscholar/modules/contrib/services/servers/rest_server/rest_server.module _rest_server_add_default_and_remove_unknown
+openscholar/modules/contrib/services/servers/rest_server/rest_server.module rest_server_services_resources_alter
+openscholar/modules/contrib/services/servers/rest_server/rest_server.module rest_server_libraries_info
+openscholar/modules/contrib/services/servers/xmlrpc_server/xmlrpc_server.module xmlrpc_server_server_info
+openscholar/modules/contrib/services/servers/xmlrpc_server/xmlrpc_server.module xmlrpc_server_server
+openscholar/modules/contrib/services/servers/xmlrpc_server/xmlrpc_server.module xmlrpc_server_xmlrpc
+  openscholar/modules/contrib/services/servers/xmlrpc_server/xmlrpc_server.module xmlrpc_server_server
+openscholar/modules/contrib/services/servers/xmlrpc_server/xmlrpc_server.module xmlrpc_server_call_wrapper
+openscholar/modules/contrib/services/services.admin.inc theme_services_resource_table
+openscholar/modules/contrib/services/services.module services_help
+openscholar/modules/contrib/services/services.module services_permission
+openscholar/modules/contrib/services/services.module services_hook_info
+openscholar/modules/contrib/services/services.module services_menu
+openscholar/modules/contrib/services/services.module services_ctools_plugin_api
+openscholar/modules/contrib/services/services.module services_ctools_plugin_directory
+openscholar/modules/contrib/services/services.module services_access_menu
+openscholar/modules/contrib/services/services.module services_theme
+openscholar/modules/contrib/services/services.module services_get_servers
+  openscholar/modules/contrib/services/plugins/export_ui/services_ctools_export_ui.class.php services_edit_form_endpoint_server
+  openscholar/modules/contrib/services/plugins/export_ui/services_ctools_export_ui.class.php services_edit_form_endpoint_server_submit
+  openscholar/modules/contrib/services/plugins/export_ui/services_ctools_export_ui.inc services_ctools_export_ui_form
+openscholar/modules/contrib/services/services.module services_endpoint_callback
+openscholar/modules/contrib/services/services.module services_endpoint_new
+openscholar/modules/contrib/services/services.module services_endpoint_load
+  openscholar/modules/contrib/services/includes/services.runtime.inc _services_controller_execute_internals
+  openscholar/modules/contrib/services/includes/services.runtime.inc services_resource_uri
+    openscholar/modules/contrib/services/resources/comment_resource.inc _comment_resource_create
+    openscholar/modules/contrib/services/resources/file_resource.inc _file_resource_create
+    openscholar/modules/contrib/services/resources/file_resource.inc _file_resource_create_raw
+    openscholar/modules/contrib/services/resources/node_resource.inc _node_resource_create
+    openscholar/modules/contrib/services/resources/node_resource.inc _node_resource_update
+    openscholar/modules/contrib/services/resources/user_resource.inc _user_resource_create
+    openscholar/modules/contrib/services/services.module services_resource_build_index_list
+      openscholar/modules/contrib/services/resources/comment_resource.inc _comment_resource_index
+      openscholar/modules/contrib/services/resources/file_resource.inc _file_resource_index
+      openscholar/modules/contrib/services/resources/node_resource.inc _node_resource_index
+      openscholar/modules/contrib/services/resources/taxonomy_resource.inc _taxonomy_term_resource_index
+      openscholar/modules/contrib/services/resources/taxonomy_resource.inc _taxonomy_vocabulary_resource_index
+      openscholar/modules/contrib/services/resources/user_resource.inc _user_resource_index
+  openscholar/modules/contrib/services/plugins/export_ui/services_ctools_export_ui.class.php services_edit_endpoint_resources
+  openscholar/modules/contrib/services/services.module services_endpoint_callback
+openscholar/modules/contrib/services/services.module services_endpoint_load_all
+  openscholar/modules/contrib/services/services.module services_menu
+openscholar/modules/contrib/services/services.module services_endpoint_save
+  openscholar/modules/contrib/services/plugins/export_ui/services_ctools_export_ui.class.php services_edit_form_endpoint_authentication_submit
+  openscholar/modules/contrib/services/plugins/export_ui/services_ctools_export_ui.class.php services_edit_form_endpoint_server_submit
+  openscholar/modules/contrib/services/plugins/export_ui/services_ctools_export_ui.class.php services_edit_form_endpoint_resources_submit
+  openscholar/modules/contrib/services/plugins/export_ui/services_ctools_export_ui.inc services_ctools_export_ui_form_submit
+openscholar/modules/contrib/services/services.module services_endpoint_delete
+openscholar/modules/contrib/services/services.module services_endpoint_export
+openscholar/modules/contrib/services/services.module services_get_resources
+  openscholar/modules/contrib/services/servers/rest_server/includes/RESTServer.inc handle
+    openscholar/behat/vendor/symfony/css-selector/Parser/Tokenizer/Tokenizer.php tokenize
+    openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/AbstractHandlerTest.php testHandleValue
+    openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/AbstractHandlerTest.php testHandleValue
+    openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/AbstractHandlerTest.php testDontHandleValue
+    openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/CommentHandlerTest.php testHandleValue
+    openscholar/modules/contrib/services/servers/rest_server/rest_server.module rest_server_server
+  openscholar/modules/contrib/services/servers/xmlrpc_server/xmlrpc_server.module xmlrpc_server_xmlrpc
+    openscholar/modules/contrib/services/servers/xmlrpc_server/xmlrpc_server.module xmlrpc_server_server
+  openscholar/modules/contrib/services/services.module services_controllers_list
+  openscholar/modules/contrib/services/services.module services_controller_get
+    openscholar/modules/contrib/services/servers/xmlrpc_server/xmlrpc_server.module xmlrpc_server_call_wrapper
+openscholar/modules/contrib/services/services.module services_resource_api_version_info
+  openscholar/modules/contrib/services/includes/services.resource_build.inc _services_resource_upgrade
+openscholar/modules/contrib/services/services.module services_services_resources
+openscholar/modules/contrib/services/services.module services_services_authentication_info
+openscholar/modules/contrib/services/services.module _services_sessions_authenticate_call
+openscholar/modules/contrib/services/services.module services_operation_class_info
+  openscholar/modules/contrib/services/includes/services.resource_build.inc _services_apply_endpoint
+    openscholar/modules/contrib/services/servers/rest_server/includes/RESTServer.inc handle
+      openscholar/behat/vendor/symfony/css-selector/Parser/Tokenizer/Tokenizer.php tokenize
+      openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/AbstractHandlerTest.php testHandleValue
+      openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/AbstractHandlerTest.php testHandleValue
+      openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/AbstractHandlerTest.php testDontHandleValue
+      openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/CommentHandlerTest.php testHandleValue
+      openscholar/modules/contrib/services/servers/rest_server/rest_server.module rest_server_server
+  openscholar/modules/contrib/services/plugins/export_ui/services_ctools_export_ui.class.php services_edit_form_endpoint_resources
+  openscholar/modules/contrib/services/plugins/export_ui/services_ctools_export_ui.class.php services_edit_form_endpoint_resources_submit
+  openscholar/modules/contrib/services/services.module services_controllers_list
+  openscholar/modules/contrib/services/services.module services_controller_get
+    openscholar/modules/contrib/services/servers/xmlrpc_server/xmlrpc_server.module xmlrpc_server_call_wrapper
+  openscholar/modules/contrib/services/services.module services_get_resource_api_version
+  openscholar/modules/contrib/services/services.module services_resources_as_procedures
+    openscholar/modules/contrib/services/servers/xmlrpc_server/xmlrpc_server.module xmlrpc_server_xmlrpc
+      openscholar/modules/contrib/services/servers/xmlrpc_server/xmlrpc_server.module xmlrpc_server_server
+openscholar/modules/contrib/services/services.module services_controllers_list
+openscholar/modules/contrib/services/services.module services_controller_get
+  openscholar/modules/contrib/services/servers/xmlrpc_server/xmlrpc_server.module xmlrpc_server_call_wrapper
+openscholar/modules/contrib/services/services.module services_get_updates
+  openscholar/modules/contrib/services/plugins/export_ui/services_ctools_export_ui.class.php services_get_update_versions
+    openscholar/modules/contrib/services/plugins/export_ui/services_ctools_export_ui.class.php services_edit_form_endpoint_resources
+  openscholar/modules/contrib/services/services.module _services_version_header_options
+    openscholar/modules/contrib/services/includes/services.runtime.inc _services_controller_execute_internals
+    openscholar/modules/contrib/services/services.module services_get_resource_api_version
+openscholar/modules/contrib/services/services.module _services_version_header_options
+  openscholar/modules/contrib/services/includes/services.runtime.inc _services_controller_execute_internals
+  openscholar/modules/contrib/services/services.module services_get_resource_api_version
+openscholar/modules/contrib/services/services.module services_get_resource_api_version
+openscholar/modules/contrib/services/services.module services_request_apply_version
+  openscholar/modules/contrib/services/includes/services.runtime.inc _services_controller_execute_internals
+  openscholar/modules/contrib/services/servers/rest_server/includes/RESTServer.inc resolveController
+    openscholar/modules/contrib/services/servers/rest_server/includes/RESTServer.inc handle
+      openscholar/behat/vendor/symfony/css-selector/Parser/Tokenizer/Tokenizer.php tokenize
+      openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/AbstractHandlerTest.php testHandleValue
+      openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/AbstractHandlerTest.php testHandleValue
+      openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/AbstractHandlerTest.php testDontHandleValue
+      openscholar/behat/vendor/symfony/css-selector/Tests/Parser/Handler/CommentHandlerTest.php testHandleValue
+      openscholar/modules/contrib/services/servers/rest_server/rest_server.module rest_server_server
+openscholar/modules/contrib/services/services.module services_resources_as_procedures
+  openscholar/modules/contrib/services/servers/xmlrpc_server/xmlrpc_server.module xmlrpc_server_xmlrpc
+    openscholar/modules/contrib/services/servers/xmlrpc_server/xmlrpc_server.module xmlrpc_server_server
+openscholar/modules/contrib/services/services.module services_resource_build_index_query
+  openscholar/modules/contrib/services/resources/comment_resource.inc _comment_resource_index
+  openscholar/modules/contrib/services/resources/file_resource.inc _file_resource_index
+  openscholar/modules/contrib/services/resources/node_resource.inc _node_resource_index
+  openscholar/modules/contrib/services/resources/taxonomy_resource.inc _taxonomy_term_resource_index
+  openscholar/modules/contrib/services/resources/taxonomy_resource.inc _taxonomy_vocabulary_resource_index
+  openscholar/modules/contrib/services/resources/user_resource.inc _user_resource_index
+openscholar/modules/contrib/services/services.module services_str_getcsv
+  openscholar/modules/contrib/services/services.module services_resource_build_index_query
+    openscholar/modules/contrib/services/resources/comment_resource.inc _comment_resource_index
+    openscholar/modules/contrib/services/resources/file_resource.inc _file_resource_index
+    openscholar/modules/contrib/services/resources/node_resource.inc _node_resource_index
+    openscholar/modules/contrib/services/resources/taxonomy_resource.inc _taxonomy_term_resource_index
+    openscholar/modules/contrib/services/resources/taxonomy_resource.inc _taxonomy_vocabulary_resource_index
+    openscholar/modules/contrib/services/resources/user_resource.inc _user_resource_index
+openscholar/modules/contrib/services/services.module services_resource_build_index_list
+  openscholar/modules/contrib/services/resources/comment_resource.inc _comment_resource_index
+  openscholar/modules/contrib/services/resources/file_resource.inc _file_resource_index
+  openscholar/modules/contrib/services/resources/node_resource.inc _node_resource_index
+  openscholar/modules/contrib/services/resources/taxonomy_resource.inc _taxonomy_term_resource_index
+  openscholar/modules/contrib/services/resources/taxonomy_resource.inc _taxonomy_vocabulary_resource_index
+  openscholar/modules/contrib/services/resources/user_resource.inc _user_resource_index
+openscholar/modules/contrib/services/services.module services_remove_user_data
+  openscholar/modules/contrib/services/resources/system_resource.inc _system_resource_connect
+  openscholar/modules/contrib/services/resources/user_resource.inc _user_resource_retrieve
+  openscholar/modules/contrib/services/resources/user_resource.inc _user_resource_update
+  openscholar/modules/contrib/services/resources/user_resource.inc _user_resource_login
+  openscholar/modules/contrib/services/services.module services_resource_build_index_list
+    openscholar/modules/contrib/services/resources/comment_resource.inc _comment_resource_index
+    openscholar/modules/contrib/services/resources/file_resource.inc _file_resource_index
+    openscholar/modules/contrib/services/resources/node_resource.inc _node_resource_index
+    openscholar/modules/contrib/services/resources/taxonomy_resource.inc _taxonomy_term_resource_index
+    openscholar/modules/contrib/services/resources/taxonomy_resource.inc _taxonomy_vocabulary_resource_index
+    openscholar/modules/contrib/services/resources/user_resource.inc _user_resource_index
+openscholar/modules/contrib/services/services.module services_resource_execute_index_query
+  openscholar/modules/contrib/services/resources/comment_resource.inc _comment_resource_index
+  openscholar/modules/contrib/services/resources/file_resource.inc _file_resource_index
+  openscholar/modules/contrib/services/resources/node_resource.inc _node_resource_index
+  openscholar/modules/contrib/services/resources/taxonomy_resource.inc _taxonomy_term_resource_index
+  openscholar/modules/contrib/services/resources/user_resource.inc _user_resource_index
+openscholar/modules/contrib/services/tests/services_test_resource/services_test_resource.module services_test_resource_services_resources
+openscholar/modules/contrib/services/tests/services_test_resource/services_test_resource.module _services_test_resource_retrieve
+openscholar/modules/contrib/services/tests/services_test_resource/services_test_resource.module _services_test_resource_retrieve_update_1_1
+openscholar/modules/contrib/services/tests/services_test_resource/services_test_resource.module _services_test_resource_retrieve_update_1_2
+openscholar/modules/contrib/services/tests/services_test_resource/services_test_resource.module _services_test_resource_retrieve_callback_1_2
+openscholar/modules/contrib/services/tests/services_test_resource/services_test_resource.module _services_test_resource_action_retrieve
+openscholar/modules/contrib/services/tests/services_test_resource/services_test_resource.module _services_test_resource_targeted_action_test
+openscholar/modules/contrib/services/tests/services_test_resource/services_test_resource.module _services_test_resource_access
+openscholar/modules/contrib/services/tests/services_test_resource/services_test_resource.module _services_arguments_test_resource_retrieve
+09:44:41-hmdcadministrator /Library/WebServer/Documents/openscholar-10 (9386-Disable-and-Uninstall-Services-module)$
