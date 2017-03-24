@@ -1,5 +1,5 @@
---- www/index.php
-+++ www/index.php
+--- index.php
++++ index.php
 @@ -16,6 +16,8 @@
   */
  define('DRUPAL_ROOT', getcwd());
