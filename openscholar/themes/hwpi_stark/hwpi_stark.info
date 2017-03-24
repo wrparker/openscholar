@@ -1,14 +1,13 @@
 ;----------// Theme Information
 
-  name        = Crimson
-  description = A modern looking theme for use by departments at Harvard.
+  name        = Stark
+  description = A stark looking theme for use by departments at Harvard.
   core        = 7.x
   base theme  = hwpi_basetheme
   release     = 7.x-3.x
   engine      = phptemplate
   screenshot  = screenshot.png
-   flavor_name = "Crimson"
-  plugins[os][flavor] = flavors
+   flavor_name = "Stark"
 
 
 ;----------// OpenScholar
@@ -21,7 +20,7 @@
 
 ;----------// Stylesheets
 
-  stylesheets[screen][] = css/hwpi_modern.css
+  stylesheets[screen][] = css/hwpi_stark.css
 
 
 
