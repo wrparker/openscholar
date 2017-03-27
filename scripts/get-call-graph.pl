@@ -16,8 +16,6 @@ my $symbol_hash;
 sub get_call_graph {
   my ($funcs, $depth) = @_;
 
-  # print "\nfuncs = " . Dumper($funcs);
-
   if (!$funcs or ($depth > 10)) {
     # print "\n--\n";
     return;
@@ -51,16 +49,12 @@ sub get_cscope_L3 {
 
     if ($l =~ /(\S+\s+\w+)/) {
 
-      # print "\n+ = " . Dumper($+);
-
       # Skip "__construct" and "array"
       if ($+ !~ /\b(__construct|array)\b/) {
         push(@$ret, $+);
       }
     }
   }
-
-  # print "\nret = " . Dumper($ret);
 
   return $ret;
 }
