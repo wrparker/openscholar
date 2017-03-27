@@ -510,6 +510,18 @@ function os_profiles_form_person_node_form_alter(&$form, $form_state) {
       $info['#access'] = FALSE;
     }
   }
+
+  // Validate email address
+  $form['field_email'][LANGUAGE_NONE][0]['#element_validate'] = array('os_profiles_validate_mail');
+}
+
+/*
+ * Form element validator for email addresses
+ */
+function os_profiles_validate_mail($element) {
+  if (isset($element['value']['#value']) && !valid_email_address($element['value']['#value'])) {
+    form_error($element, t('The e-mail address %mail is not valid.', array('%mail' => $element['value']['#value'])));
+  }
 }
 
 /**
