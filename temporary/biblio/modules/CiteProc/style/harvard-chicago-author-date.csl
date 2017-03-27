@@ -472,13 +472,6 @@
       </else-if>
     </choose>
   </macro>
-  <macro name="additional-date">
-     <choose>
-      <if type="hearing report unpublished article-journal article-newspaper article-magazine" match="any">
-        <text variable="container" prefix=", "/>
-      </if>
-    </choose>
-  </macro>
   <macro name="day-month">
     <date variable="issued">
       <date-part name="month"/>
@@ -580,7 +573,6 @@
       <text macro="issue"/>
       <text macro="locators-article"/>
       <text macro="access" prefix=". "/>
-      <text macro="additional-date"/>
     </layout>
   </bibliography>
 </style>
