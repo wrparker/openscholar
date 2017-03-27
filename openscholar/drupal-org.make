@@ -378,7 +378,6 @@ projects[services][subdir] = "contrib"
 ;projects[services][version] = 3.3+42-dev
 projects[services][download][branch] = 7.x-3.x
 projects[services][download][revision] = 761e620
-projects[services][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/0bf77a44a8152b6995f74e87a09cc411375dca2b/patches/services.add_traces.patch"
 
 projects[services_basic_auth][subdir] = "contrib"
 projects[services_basic_auth][version] = "1.3"
