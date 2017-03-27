@@ -126,7 +126,11 @@ function os_importer_cp_settings() {
           ),
         );
       }
-      
+      if ($node_type == 'biblio') {
+        $extension_types = array('csv', 'ris', 'bib', 'tex', 'xml', 'txt', 'mrc');
+      } else {
+        $extension_types = array('csv');
+      }
       $settings['os_importer_file_upload-' . $node_type] = array(
         'form' => array(
           '#type' => 'managed_file',
@@ -138,8 +142,7 @@ function os_importer_cp_settings() {
             'droppable_text' => t('Drag and drop file here.'),
             'upload_text' => t('Select file to Add'),
             'max-filesize' => '500kb',
-            'extensions' => array('csv'),
-            'types' => array('document'),
+            'types' => $extension_types,
           ),
           '#class' => array('csv-import-fields', 'os-importer-file-upload-wrapper'),
           '#upload_location' => $purl ? "public://{$purl}/files" : "public://",
