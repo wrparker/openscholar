@@ -585,3 +585,28 @@ libraries[angular_select2][type] = "libraries"
 libraries[angular_select2][download][type] = "get"
 libraries[angular_select2][download][url] = "https://github.com/angular-ui/ui-select/archive/v0.12.0.zip"
 libraries[angular_select2][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/ad2fd2d198e91ac9a77eacbae996579e55510a3a/patches/angular_select-7024-async.patch"
+
+; YUI js libraries
+libraries[yui][type] = "libraries"
+libraries[yui][download][type] = "file"
+libraries[yui][download][url] = "http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js"
+
+libraries[yql][type] = "libraries"
+libraries[yql][download][type] = "file"
+libraries[yql][download][url] = "https://raw.githubusercontent.com/yui/yui3/v3.18.1/build/yql/yql-min.js"
+
+libraries[jsonp-url][type] = "libraries"
+libraries[jsonp-url][download][type] = "file"
+libraries[jsonp-url][download][url] = "https://raw.githubusercontent.com/yui/yui3/v3.18.1/build/jsonp-url/jsonp-url-min.js"
+
+libraries[oop][type] = "libraries"
+libraries[oop][download][type] = "file"
+libraries[oop][download][url] = "https://raw.githubusercontent.com/yui/yui3/v3.18.1/build/oop/oop-min.js"
+
+libraries[jsonp][type] = "libraries"
+libraries[jsonp][download][type] = "file"
+libraries[jsonp][download][url] = "https://raw.githubusercontent.com/yui/yui3/v3.18.1/build/jsonp/jsonp-min.js"
+
+libraries[yql-jsonp][type] = "libraries"
+libraries[yql-jsonp][download][type] = "file"
+libraries[yql-jsonp][download][url] = "https://raw.githubusercontent.com/yui/yui3/v3.18.1/build/yql-jsonp/yql-jsonp-min.js"
