@@ -27,7 +27,6 @@ function os_help_cp_settings() {
   );
 
   $id = variable_get('cp_support_getsatisfaction_widget');
-  $id = 6760;
   if ($id) {
     $loading = drupal_get_path('theme', 'os_basetheme') . '/images/throbber.gif';
     $image = theme('image', array('path' => $loading));

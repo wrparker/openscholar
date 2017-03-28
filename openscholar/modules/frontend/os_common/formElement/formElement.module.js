@@ -24,7 +24,7 @@
         scope.label = scope.element.title;
         scope.access = scope.element.access;
         scope.classname = '';
-		scope.to_trusted = function(html_code) {
+        scope.to_trusted = function(html_code) {
           return $sce.trustAsHtml(html_code);
         }
         angular.forEach(scope.element.class, function(classname, key) {

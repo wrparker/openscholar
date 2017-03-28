@@ -167,7 +167,7 @@
   /**
    * The controller for the forms themselves
    */
-  m.controller('apSettingsFormController', ['$scope', '$sce', 'apSettings', 'buttonSpinnerStatus', 'form', 'close', '$rootScope', function ($s, $sce, apSettings, bss, form, close, $rootScope) {
+  m.controller('apSettingsFormController', ['$scope', '$sce', 'apSettings', 'buttonSpinnerStatus', 'form', 'close', function ($s, $sce, apSettings, bss, form, close) {
     var formSettings = {};
     $s.formId = form;
     $s.formElements = {};
