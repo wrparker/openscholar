@@ -88,7 +88,7 @@ Feature: Media Browser
       And I drop the file "duplicate/kitten-2.jpg" onto the "Drag and drop files here." area
       And I sleep for "5"
      Then I should see the text "A file with the name 'kitten-2.jpg' already exists."
-      And I click on the "Rename" button
+      And I press the "Rename" button
       And I should wait for "File Edit" directive to "appear"
       And I fill in the field "Alt Text" with the node "A cute kitten"
      When I click on the "Save" control
