@@ -62,7 +62,7 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
  * Put os_revisions at the beginning of the implementation list for form_node_form_alter
  *
  */
-function os_revisions_module_implements_alter(&$implementations, $hook) {
+function _os_revisions_module_implements_alter(&$implementations, $hook) {
   if ($hook == 'form_node_form_alter') {
     unset($implementations['os_revisions']);
     $implementations = array_merge(array('os_revisions' => FALSE), $implementations);

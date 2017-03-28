@@ -939,6 +939,6 @@ function os_update_7047() {
  * Install OS Revisions module
  */
 function os_update_7048() {
-  module_enable(array('os_revisions'));
+  module_enable(array('os_revisions', 'node_revision_restrict'));
   return t('Enabled OS content revisions module.');
 }

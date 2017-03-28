@@ -23,13 +23,7 @@ function os_revisions_uninstall() {
  *  - make sure the new revision-based variables are registered
  *  - add revision permissions
  */
-function os_revisions_enable() {
-  if (module_exists('diff')) {
-    module_disable(array('diff'));
-  }
-
-  module_enable(array('node_revision_restrict'));
-
+function _os_revisions_enable() {
   if (module_exists('registration')) {
     registry_rebuild();
   }

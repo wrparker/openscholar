@@ -74,6 +74,9 @@ dependencies[] = os_mailchimp
 dependencies[] = os_slideshow
 dependencies[] = views_slideshow_cycle
 
+; misc
+dependencies[] = node_revision_restrict
+
 ; OS
 dependencies[] = citation_distribute
 dependencies[] = media_browser
