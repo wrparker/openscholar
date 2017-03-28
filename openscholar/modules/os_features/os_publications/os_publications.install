@@ -1640,8 +1640,9 @@ function os_publications_update_7052() {
 }
 
 /**
- * Disable 'services' module
+ * Disable and uninstall 'services' module
  */
 function os_publications_update_7053() {
   module_disable(array('services'));
+  drupal_uninstall_modules(array('services'), FALSE);
 }
