@@ -23,7 +23,7 @@ function os_revisions_uninstall() {
  *  - make sure the new revision-based variables are registered
  *  - add revision permissions
  */
-function _os_revisions_enable() {
+function _os_revisions_enable_tasks() {
   if (module_exists('registration')) {
     registry_rebuild();
   }
