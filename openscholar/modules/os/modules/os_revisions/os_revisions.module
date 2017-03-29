@@ -96,7 +96,7 @@ function os_revisions_menu_alter(&$items) {
 function os_revisions_revision_overview($node) {
   drupal_set_title(t('Revisions for %title', array('%title' => $node->title)), PASS_THROUGH);
 
-  $header = array(t('Revision'), array('data' => t('Manage'), 'colspan' => 2));
+  $header = array(t('Revision'), t('Revision Notes'), array('data' => t('Manage'), 'colspan' => 2));
 
   $revisions = node_revision_list($node);
 
@@ -109,14 +109,14 @@ function os_revisions_revision_overview($node) {
 
     if ($revision->current_vid > 0) {
 
-      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp), "node/$node->nid"), '!username' => format_username(user_load($revision->uid))))
-        . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
+      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp), "node/$node->nid"), '!username' => format_username(user_load($revision->uid)))),
         'class' => array('revision-current'));
-      $operations[] = array('data' => drupal_placeholder(t('Current revision')), 'class' => array('revision-current'), 'colspan' => 2);
+      $row[] = array('data' => filter_xss($revision->log),'class' => array('revision-current'));
+      $operations[] = array('data' => drupal_placeholder(t('Current version')), 'class' => array('revision-current'), 'colspan' => 2);
     }
     else {
-      $row[] = t('!date by !username', array('!date' => l(t('View this revision') . ' - ' . format_date($revision->timestamp), "node/$node->nid/revisions/$revision->vid/view"), '!username' => format_username(user_load($revision->uid))))
-        . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : '');
+      $row[] = t('!date by !username', array('!date' => l(t('View this revision') . ' - ' . format_date($revision->timestamp), "node/$node->nid/revisions/$revision->vid/view"), '!username' => format_username(user_load($revision->uid))));
+      $row[] = array('data' => filter_xss($revision->log));
       if ($revert_permission) {
         $operations[] = l(t('Revert'), "node/$node->nid/revisions/$revision->vid/revert");
       }
@@ -133,7 +133,7 @@ function os_revisions_revision_overview($node) {
     '#theme' => 'table',
     '#rows' => $rows,
     '#header' => $header,
-    '#caption' => t('NOTE: When you revert to a prior revision, a new copy is created based on that revision. Maximum of @limit revisions allowed.', array('@limit' => $limit)) . ' ' . l(t('Learn more about revisions'), OS_REVISIONS_DOCS_URL),
+    '#caption' => t('NOTE: When you revert to a prior revision, a new copy is created based on that revision. There are currently ') . '<span class="num-revisions">' . count($revisions) .'</span>' . t(' of the @limit revisions allowed.', array('@limit' => $limit)) . ' ' . l(t('Learn more about revisions'), OS_REVISIONS_DOCS_URL),
   );
 
   return $build;
