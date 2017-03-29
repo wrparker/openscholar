@@ -116,6 +116,18 @@
               $transclude.remove();
             }
 
+            function setCollectionLength(collection) {
+              $scope.collectionLength = 0;
+              if (Array.isArray(collection)) {
+                $scope.collectionLength = collection.length;
+              }
+              else {
+                for (var key in collection) {
+                  $scope.collectionLength++;
+                }
+              }
+            }
+
             pagerLink($scope, $element, $attr, _c);
 
             // Determine the starting page
@@ -127,12 +139,13 @@
                 argValue = $parse(starting)($scope.$parent);
 
               if (argValue) {
+                setCollectionLength(dataset);
                 var found = false;
                 do {
                   pagerCopy.setPage(page++);
                   var results = $filter('PagerCurrentPage')(dataset, pagerCopy)
                   for (var i = 0; i < results.length; i++) {
-                    found = found || (results[indexKey] == argValue);
+                    found = found || (results[i][indexKey] == argValue);
                   }
                 } while (!found && pagerCopy.currentPage() < pagerCopy.numPages());
 
@@ -142,17 +155,7 @@
               }
             }
 
-            $scope.$watchCollection(collection, function(collection) {
-              $scope.collectionLength = 0;
-              if (Array.isArray(collection)) {
-                $scope.collectionLength = collection.length;
-              }
-              else {
-                for (var key in collection) {
-                  $scope.collectionLength++;
-                }
-              }
-            });
+            $scope.$watchCollection(collection, setCollectionLength);
 
             $scope.$watchCollection(collection + ' | PagerCurrentPage:pager', function(collection) {
               var i, block, childScope;
@@ -235,8 +238,8 @@
     }
 
     function setPage(num) {
-      if (0 <= num && num < numPages()) {
-        curent = num;
+      if (0 <= num && num <= numPages()) {
+        current = num;
       }
     }
   }
