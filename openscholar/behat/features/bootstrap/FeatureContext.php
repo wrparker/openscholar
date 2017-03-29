@@ -151,6 +151,7 @@ class FeatureContext extends DrupalContext {
     $element->fillField('Password', $password);
     $submit = $element->findButton('Log in');
     $submit->click();
+    $this->user = user_load_by_name($username);
     sleep(3);
   }
 
@@ -266,39 +267,14 @@ class FeatureContext extends DrupalContext {
    * @Then /^I should not be permitted to "([^"]*)" revisions for "([^"]*)"$/
    */
   public function iShouldNotBePermittedToRevisionsFor($action, $node_title) {
-    $query = db_select('node', 'n')
-      ->fields('n', array('nid'))
-      ->fields('p', array('id','value'))
-      ->condition('n.title', $node_title, '=');
-    $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
-    $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
-    $node_rows = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
-
-    if (!count($node_rows)) {
-      throw new Exception(sprintf("Could not find node with title of '%s'.", $node_title));
-    }
-    $node_row = array_pop($node_rows);
-
-    // check to make sure the "revisions" list won't have any "revert" or "delete" links
-    $url = "/". $node_row['value'] . "/node/" . $node_row['nid'] . "/revisions";
-    $this->visit($url);
-    $xpath = "//div[@id='content']//table/tbody/tr";
-    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
-    $actual_number_of_revisions = count(node_revision_list(node_load($node_row['nid'])));
-
-    // make sure we are actually on the revisions page
-    if (!count($elements) || (count($elements) != $actual_number_of_revisions)) {
-      throw new Exception(sprintf("%s revision page shows %d revisions instead of %d", $node_title, count($elements), $actual_number_of_revisions));
+    if (!in_array($action, ['Delete', 'Revert'])) {
+      throw new Exception('The action ' . $action . ' does not supported by the step.');
     }
 
-    // make sure we can't revert or delete revisions
-    $action_xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='" . $action . "']";
-    $action_elements = $this->getSession()->getPage()->findAll('xpath', $action_xpath);
-    if (count($action_elements)) {
-      throw new Exception(sprintf("%s revision page contains %d links.", $node_title, count($action_elements)));
+    if (node_access('update', FeatureHelp::getNodeId($node_title), $this->user)) {
+      throw new Exception('The user is not forbidden from revision page of the node');
     }
   }
-
 
   /**
    * @Given /^I revert "([^"]*)" to revision "(\d+)"$/
