@@ -61,8 +61,8 @@
 
     $s.fh = FileHandlers.getInstance(
       extensions,
-      Drupal.settings.maxFileSize,
-      Drupal.settings.maxFileSizeRaw,
+      Drupal.settings.maximumFileSize,
+      Drupal.settings.maximumFileSizeRaw,
       function ($files) {
         for (var i = 0; i < $files.length; i++) {
           files.register($files[i]);
