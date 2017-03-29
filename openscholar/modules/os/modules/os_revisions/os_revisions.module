@@ -133,7 +133,7 @@ function os_revisions_revision_overview($node) {
     '#theme' => 'table',
     '#rows' => $rows,
     '#header' => $header,
-    '#caption' => t('NOTE: When you revert to a prior revision, a new copy is created based on that revision. There are currently ') . '<span class="num-revisions">' . count($revisions) .'</span>' . t(' of the @limit revisions allowed.', array('@limit' => $limit)) . ' ' . l(t('Learn more about revisions'), OS_REVISIONS_DOCS_URL),
+    '#caption' => t('NOTE: When you revert to a prior revision, a new copy is created based on that revision. You have created ') . '<span class="num-revisions">' . count($revisions) .'</span>' . t(' of the @limit revisions allowed.', array('@limit' => $limit)) . ' ' . l(t('Learn more about revisions'), OS_REVISIONS_DOCS_URL),
   );
 
   return $build;
