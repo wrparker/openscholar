@@ -16,32 +16,3 @@ function os_revisions_uninstall() {
   }
   module_disable(array('node_revision_restrict'));
 }
-
-/**
- * Implements hook_enable().
- *  - disable diff module if it's there and enabled.
- *  - make sure the new revision-based variables are registered
- *  - add revision permissions
- */
-function _os_revisions_enable_tasks() {
-  if (module_exists('registration')) {
-    registry_rebuild();
-  }
-  else {
-    $apps = array(
-      'os_blog',
-      'os_booklets',
-      'os_faq',
-      'os_links',
-      'os_news',
-      'os_pages',
-      'os_profiles',
-      'os_publications',
-    );
-    $to_revert = array_fill_keys($apps, array('variable'));
-    features_revert($to_revert);
-  }
-  features_revert(array('os' => array('user_permission')));
-
-  variable_set('date_format_medium', 'm/d/Y - h:i a');
-}

@@ -940,10 +940,24 @@ function os_update_7047() {
  */
 function os_update_7048() {
   module_enable(array('os_revisions', 'node_revision_restrict'));
+  module_disable(array('diff'));
 
   // One time os_revisions init tasks.
   module_load_include('install', 'os_revisions');
-  _os_revisions_enable_tasks();
+
+  $features = array(
+    'os_blog' => array('variable'),
+    'os_booklets' => array('variable'),
+    'os_faq' => array('variable'),
+    'os_links' => array('variable'),
+    'os_news' => array('variable'),
+    'os_pages' => array('variable'),
+    'os_profiles' => array('variable'),
+    'os_publications' => array('variable'),
+    'os' => array('user_permission'),
+  );
+  features_revert($features);
+  variable_set('date_format_medium', 'm/d/Y - h:i a');
 
   return t('Enabled OS content revisions module.');
 }
