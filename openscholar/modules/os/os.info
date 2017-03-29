@@ -2,6 +2,7 @@ name = OpenScholar Core
 description = OpenScholar
 core = 7.x
 package = OpenScholar
+dependencies[] = number
 dependencies[] = biblio
 dependencies[] = comment
 dependencies[] = context
