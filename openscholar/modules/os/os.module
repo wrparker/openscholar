@@ -674,6 +674,9 @@ function os_process_node(&$vars) {
   }
   $body_shortened = (bool)(strlen($body_full) > strlen($body_display));
 
+  // Remove title attribute to improve screen reader accessibility
+  unset($link['attributes']['title']);
+
   // Checks if there is a break tag inserted at the end of the content.
   // If this is the case, there is no need to add a "read more" link.
   $trailing_break_tag = FALSE;
