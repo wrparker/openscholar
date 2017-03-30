@@ -3,5 +3,4 @@ description = Provides tools to highlight features and notify users from externa
 package = "OpenScholar"
 dependencies[] = "os"
 dependencies[] = "cp"
-dependencies[] = "google_feedapi"
 core = 7.x
