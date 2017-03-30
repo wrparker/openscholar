@@ -1387,7 +1387,7 @@ function os_taxonomy_list_attached_entities($tid, $bundles = array(), $range = N
 
   // Order by weight only if "nodeorder" is on and order has been set.
   if (module_exists('nodeorder') && _os_taxonomy_noderoder_exists($tid)) {
-    $query->leftJoin('taxonomy_index', 't', '(ogv.entity_type = :node_order_type AND ogv.entity_id = t.nid)', array(':node_order_type' => 'node'));
+    $query->leftJoin('taxonomy_index', 't', '(ogv.entity_type = :node_order_type AND ogv.entity_id = t.nid AND t.tid = ogv.og_vocabulary_target_id)', array(':node_order_type' => 'node'));
     $query->orderBy('t.weight', 'ASC');
   }
   else {
