@@ -1725,7 +1725,7 @@ function os_publications_update_7053() {
 /**
  * Makes "Distribute to repositories auto flags" to new angular screen compatible
  */
-function os_publications_update_7055() {
+function os_publications_update_7054() {
   $results = db_select('spaces_overrides', 's')
     ->fields('s',array('value','id'))
     ->condition('object_type', 'variable')
