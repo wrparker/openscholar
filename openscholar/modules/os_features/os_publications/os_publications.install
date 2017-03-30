@@ -1644,7 +1644,7 @@ function os_publications_update_7052() {
  * Converts none publication types selected to all types selected
  */
 function os_publications_update_7053() {
-      $results = db_select('spaces_overrides', 's')
+  $results = db_select('spaces_overrides', 's')
     ->fields('s',array('value','id'))
     ->condition('object_type', 'variable')
     ->condition('object_id', 'os_publications_filter_publication_types')
@@ -1715,6 +1715,40 @@ function os_publications_update_7053() {
           ->fields(array('value' => serialize($value)))
           ->condition('object_type', 'variable')
           ->condition('object_id', 'os_publications_filter_publication_types')
+          ->condition('id', $result->id)
+          ->execute();
+      }
+    }
+  }
+}
+
+/**
+ * Makes "Distribute to repositories auto flags" to new angular screen compatible
+ */
+function os_publications_update_7055() {
+  $results = db_select('spaces_overrides', 's')
+    ->fields('s',array('value','id'))
+    ->condition('object_type', 'variable')
+    ->condition('object_id', 'citation_distribute_autoflags')
+    ->execute();
+
+  foreach ($results as $result) {
+    $value = $result->value;
+    $value = unserialize($value);
+    if (is_array($value)) {
+      $is_change_required = FALSE;
+      foreach ($value as $default_autoflags_key => $default_autoflags_value) {
+        if ($default_autoflags_key == $default_autoflags_value) {
+          $is_change_required = TRUE;
+          $value[$default_autoflags_key] = true;
+        }
+      }
+      if ($is_change_required) {
+        // Updating the auto flags
+        $query = db_update('spaces_overrides')
+          ->fields(array('value' => serialize($value)))
+          ->condition('object_type', 'variable')
+          ->condition('object_id', 'citation_distribute_autoflags')
           ->condition('id', $result->id)
           ->execute();
       }
