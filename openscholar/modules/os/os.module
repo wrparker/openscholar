@@ -3693,7 +3693,7 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
         // 'Read more' links.
         if (strlen($item['value']) != strlen($text) && $delimiter === FALSE) {
           $uri = entity_uri($entity_type, $entity);
-          $text .= '… ' . l(t('Read more'), $uri['path']);
+          $text .= '… ' . l(t('Read more <span class="element-invisible"> about @title</span>', array('@title' => entity_label($entity_type, $entity))), $uri['path'], array('html' => true));
         }
 
         $element[$delta] = array('#markup' => $text);
