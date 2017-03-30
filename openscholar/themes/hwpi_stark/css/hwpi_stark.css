@@ -33,3 +33,8 @@ body *,
 ul.nice-menu ul {
     top: 2.82em !important;
 }
+
+
+h2.block-title {
+    margin-bottom:15px;
+}
