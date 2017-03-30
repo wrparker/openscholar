@@ -1,18 +1,35 @@
+@import url('https://fonts.googleapis.com/css?family=Vollkorn');
+
 body *,
 .region-header-third ul.nice-menu a,
 #menu-bar ul.nice-menu a,
-#boxes-box-site_info, #boxes-box-site_info a
- {font-family:helvetica;}
- 
- 
- #menu-bar ul.nice-menu .menuparent.over > a, #menu-bar ul.nice-menu .menuparent a:hover, #menu-bar ul.nice-menu .menuparent a.active{
- 	    color: #215990;
-
- }
- 
-
-#menu-bar ul.nice-menu .menuparent.over > a, #menu-bar ul.nice-menu .menuparent a:hover, #menu-bar ul.nice-menu .menuparent a.active,
+#boxes-box-site_info,
+#boxes-box-site_info a {
+    font-family: 'Vollkorn';
+        font-weight: 300;
+}
+#menu-bar ul.nice-menu a.active,
+#menu-bar ul.nice-menu a:hover,
+#menu-bar ul.nice-menu .menuparent.over > a,
+#menu-bar ul.nice-menu .menuparent a:hover,
+#menu-bar ul.nice-menu .menuparent a.active {
+    color: #215990;
+}
+#menu-bar ul.nice-menu a.active,
+#menu-bar ul.nice-menu a:hover,
+#menu-bar ul.nice-menu .menuparent.over > a,
+#menu-bar ul.nice-menu .menuparent a:hover,
+#menu-bar ul.nice-menu .menuparent a.active,
 #footer,
 #menu-bar ul.nice-menu ul {
-  background-color:#f7f7f7;
+    background-color: #f7f7f7;
+}
+
+#menu-bar ul.nice-menu .menuparent.over > a:before, #menu-bar ul.nice-menu .menuparent a:hover:before, #menu-bar ul.nice-menu .menuparent a.active:before {
+    background-position: -12px -566px;
+}
+
+
+ul.nice-menu ul {
+    top: 2.82em !important;
 }
