@@ -22,7 +22,6 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
   }
   else {
     $form['revision_information']['#access'] = TRUE;
-    $form['revision_information']['revision']['#access'] = TRUE;
     $max_revisions = (int)variable_get("restrict_node_revision_number_for_" . str_replace("-", "_", $form_state['node']->type), FALSE);
     $num_revisions = count(node_revision_list(node_load($form_state['node']->nid))) - 1;
     if ($max_revisions) {
@@ -36,8 +35,12 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
     // remove state-based revision checkbox and make checked by default
     unset($form['revision_information']['revision']['#states']);
     $form['revision_information']['revision']['#attributes']['checked'] = 'checked';
-    $form['revision_information']['#collapsed'] = FALSE;
+    $form['revision_information']['revision']['#access'] = TRUE;
+    $form['revision_information']['revision']['#title'] = "When checked, a new version of this content will be created";
     $form['revision_information']['revision']['#weight'] = 1;
+
+    $form['revision_information']['#collapsed'] = FALSE;
+
     $form['revision_information']['log']['#weight'] = 2;
     $form['revision_information']['log']['#title'] = t('Revision Notes');
     $form['revision_information']['log']['#description'] = t('Provide an explanation of the changes you are making.') . '<br><br>' . l(t('What’s being stored as a revision?'), OS_REVISIONS_DOCS_URL, array('attributes' => array('target' => '_blank', 'rel' => 'noopener')));
@@ -133,7 +136,7 @@ function os_revisions_revision_overview($node) {
     '#theme' => 'table',
     '#rows' => $rows,
     '#header' => $header,
-    '#caption' => t('NOTE: When you revert to a prior revision, a new copy is created based on that revision. You have created ') . '<span class="num-revisions">' . count($revisions) .'</span>' . t(' of the @limit revisions allowed.', array('@limit' => $limit)) . ' ' . l(t('Learn more about revisions'), OS_REVISIONS_DOCS_URL),
+    '#caption' => t('NOTE: When you revert to a prior revision, a new copy is created based on that revision. You have created ') . '<span class="num-revisions">' . (count($revisions) - 1) .'</span>' . t(' of the @limit revisions allowed.', array('@limit' => $limit)) . ' ' . l(t('Learn more about revisions'), OS_REVISIONS_DOCS_URL),
   );
 
   return $build;
