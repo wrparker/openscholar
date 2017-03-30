@@ -688,7 +688,7 @@ function os_process_node(&$vars) {
   // 1. There is a break tag in the body.
   // 2. There is HTML text after the break tag.
   if (isset($split_break_tag[1])) {
-    $text_after_break = strip_tags($split_break_tag[1]);
+    $text_after_break = strip_tags($split_break_tag[1], '<img><iframe><embed><object><param>');
     $trailing_break_tag = (bool) strlen($text_after_break) == 0;
   }
 
