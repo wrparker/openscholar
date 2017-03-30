@@ -83,13 +83,13 @@ function os_reader_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'hidden',
-        'module' => 'google_feedapi',
+        'module' => 'text',
         'settings' => array(
           'content_summary' => FALSE,
           'num_to_show' => 10,
           'show_content' => TRUE,
         ),
-        'type' => 'google_feedapi',
+        'type' => 'text_default',
         'weight' => 1,
       ),
       'links' => array(
@@ -106,13 +106,13 @@ function os_reader_field_default_field_instances() {
       ),
       'teaser' => array(
         'label' => 'hidden',
-        'module' => 'google_feedapi',
+        'module' => 'text',
         'settings' => array(
           'content_summary' => 1,
           'num_to_show' => 3,
           'show_content' => TRUE,
         ),
-        'type' => 'google_feedapi',
+        'type' => 'text_default',
         'weight' => 1,
       ),
       'title' => array(
