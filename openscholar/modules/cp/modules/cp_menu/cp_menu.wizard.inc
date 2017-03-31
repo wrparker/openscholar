@@ -315,9 +315,9 @@ function cp_menu_url_validate(&$form, &$state) {
 
   //for internal urls, figure out if we're in the same vsite or an external vsite.
   if (isset($vsite_domain) && $vsite_domain) {
-    $our_domain = 'http://' . (variable_get('vsite_domain_shared')) ? $vsite_domain . '/' . $vsite->og->purl : $vsite_domain;
+    $our_domain = 'http://' . (variable_get('vsite_domain_shared')) ? $vsite_domain . '/' . $vsite->og->purl . '/' : $vsite_domain;
   } else {
-    $our_domain = variable_get('purl_base_domain') . '/' . $vsite->og->purl;
+    $our_domain = variable_get('purl_base_domain') . '/' . $vsite->og->purl . '/';
   }
   $external_vsite = (strpos($url, $our_domain) !== 0);
   
