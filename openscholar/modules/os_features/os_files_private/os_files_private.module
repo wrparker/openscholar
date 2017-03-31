@@ -336,6 +336,7 @@ function os_files_private_entity_view_alter(&$build, $type) {
  * Implements hook_cp_settings().
  */
 function os_files_private_cp_settings() {
+  $settings = array();
   $spaces_features = variable_get('spaces_features');
 
   // Private files settings link won't appear in CP menu if private files app is not enabled.
