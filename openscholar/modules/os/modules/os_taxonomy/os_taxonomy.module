@@ -1386,11 +1386,11 @@ function os_taxonomy_list_attached_entities($tid, $bundles = array(), $range = N
   $query = os_taxonomy_count_attached_entities_query_object($tid, $bundles, $list_all);
 
   // Order by weight only if "nodeorder" is on and order has been set.
-  if (module_exists('nodeorder') && _os_taxonomy_noderoder_exists($tid)) {
-    $query->leftJoin('taxonomy_index', 't', '(ogv.entity_type = :node_order_type AND ogv.entity_id = t.nid AND t.tid = ogv.og_vocabulary_target_id)', array(':node_order_type' => 'node'));
-    $query->orderBy('t.weight', 'ASC');
-  }
-  else {
+//  if (module_exists('nodeorder') && _os_taxonomy_noderoder_exists($tid)) {
+//    $query->leftJoin('taxonomy_index', 't', '(ogv.entity_type = :node_order_type AND ogv.entity_id = t.nid AND t.tid = ogv.og_vocabulary_target_id)', array(':node_order_type' => 'node'));
+//    $query->orderBy('t.weight', 'ASC');
+//  }
+//  else {
     if (count($bundles) == 1){
       switch(current($bundles)){
         case 'biblio':
@@ -1433,7 +1433,7 @@ function os_taxonomy_list_attached_entities($tid, $bundles = array(), $range = N
         $query->orderBy('entity_date', 'DESC');
         break;
     }
-  }
+//  }
 
   if ($range) {
     $query->range($offset, $range);
