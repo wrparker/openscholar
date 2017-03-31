@@ -72,8 +72,10 @@ function os_importer_cp_settings() {
         continue;
       }
 
-      foreach ($info['importers'][$node_type] as $import_type => $feature) {
-        $import_format_option[$import_type] = $importer_formats[$import_type];
+      if (isset($info['importers'][$node_type])) {
+        foreach ($info['importers'][$node_type] as $import_type => $feature) {
+          $import_format_option[$import_type] = $importer_formats[$import_type];
+        }
       }
 
       if (count($import_format_option) > 1) {
@@ -89,7 +91,7 @@ function os_importer_cp_settings() {
         $single_option = array_values($import_format_option);
         $form_settings = array(
           '#type' => 'markup',
-          '#markup' => '<label>Format</label>' . $single_option[0] . ' only',
+          '#markup' => '<label>Format</label>' . (isset($single_option[0]) ? $single_option[0] : '') . ' only',
           '#weight' => -6,
         );
       }
