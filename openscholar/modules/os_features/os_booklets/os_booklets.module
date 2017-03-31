@@ -292,7 +292,7 @@ function os_booklets_os_add_new_links_alter(&$links) {
  * Implements hook_cp_settings().
  */
 function os_booklets_cp_settings() {
-
+  $settings = array();
   $spaces_features = variable_get('spaces_features');
   // Booklets settings link won't appear in CP menu if booklets app is not enabled.
   if (empty($spaces_features['os_booklets'])) {
