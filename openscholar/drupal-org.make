@@ -285,6 +285,7 @@ projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/opens
 projects[oembed][patch][] = "http://drupal.org/files/issues/split-up-regex-2739023-1.patch"
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/61b4675841580356481463f4780627bab619f197/patches/oembed.8762.uri_fragments.patch"
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/6d4ccf7f26124a57a3483b2e1197017a95d4b026/patches/oembed.backup_providers.patch"
+projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/56c5f68a45a6ce8d49be722bf7dfdb10da5cf60f/patches/oembed.9433.youtube_https_schema.patch"
 
 projects[og][subdir] = "contrib"
 projects[og][version] = 2.6
