@@ -29,7 +29,7 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
       $form['revisions'] =  array('#type' => 'hidden', '#value' => $num_revisions);
       $form['#attached']['js'][] = drupal_get_path('module', 'os_revisions') . '/os_revisions.js';
       if ($num_revisions >= $max_revisions) {
-        $form['revision_information']['revision']['#suffix'] = '<div id="warning-text"><p>Are you sure you want to create a new revision?</p><p>This content already has the maximum number of revisions saved (' . $max_revisions . '). By creating a new revision, you will be permanently deleting the oldest revision. Learn how to manage your revisions on our <a href="' . OS_REVISIONS_DOCS_URL . '" target="_blank" rel="noopener"> documentation site</a>.</div>';
+        $form['revision_information']['revision']['#suffix'] = '<div id="warning-text"><p>Are you sure you want to create a new revision?</p><p>This content already has the maximum number of revisions saved (' . $max_revisions . '). By creating a new revision, you will be permanently deleting the oldest revision. <a href="' . OS_REVISIONS_DOCS_URL . '" target="_blank" rel="noopener">Learn more about managing revisions</a>.</div>';
       }
     }
     // remove state-based revision checkbox and make checked by default
