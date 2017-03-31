@@ -22,6 +22,7 @@ define('MEDIA_TOKEN_REGEX_SPAN', '/<span.*?data-file_info=\"%7B.*?%7D\".*?<\/spa
  * Ensures oembed plugin types are available
  */
 function os_files_init() {
+  oembed_get_provider('https://youtu.be/8UCHsiy8ZHo');
   $plugins = ctools_get_plugins('oembed', 'providers');
   if (!isset($plugins['embedly'])) {
     $info = ctools_plugin_get_plugin_type_info();
@@ -205,8 +206,8 @@ function os_files_ctools_plugin_post_alter(&$plugin) {
       'node' => 0,
       'file' => 1,
       'box' => 2,
-      'embedly' => 3,
-      'default' => 4
+      'default' => 4,
+      'embedly'=> 5
     );
     if (isset($weights[$plugin['name']])) {
       $plugin['weight'] = $weights[$plugin['name']];
