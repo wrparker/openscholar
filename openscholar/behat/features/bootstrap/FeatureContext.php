@@ -3389,10 +3389,10 @@ class FeatureContext extends DrupalContext {
    */
   public function iOpenUserMenu() {
     $page = $this->getSession()->getPage();
-    while (!$page->find('css', 'div[right-menu-toggle]')) {
+    while (!$page->find('xpath', '//div[@id="topRightMenu"]')) {
       usleep(100);
     }
-    if ($elem = $page->find('css', 'div[right-menu-toggle]')) {
+    if ($elem = $page->find('xpath', '//div[@id="topRightMenu"]')) {
       $elem->click();
       sleep(1);
     }
