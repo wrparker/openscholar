@@ -233,7 +233,7 @@ function os_revisions_menu_local_tasks_alter(&$data, $router_item, $root_path) {
     $data['actions']['output'][] = array(
       '#theme' => 'menu_local_action',
       '#link' => array(
-        'title' => '<span>←</span>' . t('Back to revisions'),
+        'title' => '' . t('Back to revisions'),
         'href' => 'node/' . $revision->nid . '/revisions',
         'localized_options' => array('html' => true),
       ),
