@@ -916,6 +916,17 @@ function os_update_7046() {
 }
 
 /**
+ * Revert feature variables
+ */
+function os_update_7049() {
+  // Update the secure_pages settings.
+  $features = array(
+    'os' => array('variable'),
+  );
+
+  features_revert($features);
+}
+/**
  * Update has_children field of parent menus having 0 children
  */
 function os_update_7047() {

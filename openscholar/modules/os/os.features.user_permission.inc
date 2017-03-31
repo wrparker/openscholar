@@ -63,11 +63,11 @@ function os_user_default_permissions() {
     'name' => 'access overlay',
     'roles' => array(
       'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
       'content editor' => 'content editor',
       'manager' => 'manager',
       'vsite admin' => 'vsite admin',
       'vsite user' => 'vsite user',
-      'authenticated user' => 'authenticated user',
     ),
     'module' => 'overlay',
   );
@@ -87,6 +87,7 @@ function os_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'manager' => 'manager',
+      'os report admin' => 'os report admin',
     ),
     'module' => 'system',
   );
@@ -97,6 +98,7 @@ function os_user_default_permissions() {
     'roles' => array(
       'administrator' => 'administrator',
       'manager' => 'manager',
+      'os report admin' => 'os report admin',
     ),
     'module' => 'toolbar',
   );
@@ -350,6 +352,16 @@ function os_user_default_permissions() {
       'manager' => 'manager',
     ),
     'module' => 'system',
+  );
+
+  // Exported permission: 'bypass node access'.
+  $permissions['bypass node access'] = array(
+    'name' => 'bypass node access',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'web services' => 'web services',
+    ),
+    'module' => 'node',
   );
 
   // Exported permission: 'cancel account'.
