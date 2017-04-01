@@ -91,7 +91,7 @@ function os_importer_cp_settings() {
         $single_option = array_values($import_format_option);
         $form_settings = array(
           '#type' => 'markup',
-          '#markup' => '<label>Format</label>' . $single_option[0] . ' only',
+          '#markup' => '<label>Format</label>' . (isset($single_option[0]) ? $single_option[0] : '') . ' only',
           '#weight' => -6,
         );
       }
