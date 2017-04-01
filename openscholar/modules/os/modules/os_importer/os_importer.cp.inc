@@ -72,8 +72,10 @@ function os_importer_cp_settings() {
         continue;
       }
 
-      foreach ($info['importers'][$node_type] as $import_type => $feature) {
-        $import_format_option[$import_type] = $importer_formats[$import_type];
+      if (isset($info['importers'][$node_type])) {
+        foreach ($info['importers'][$node_type] as $import_type => $feature) {
+          $import_format_option[$import_type] = $importer_formats[$import_type];
+        }
       }
 
       if (count($import_format_option) > 1) {
