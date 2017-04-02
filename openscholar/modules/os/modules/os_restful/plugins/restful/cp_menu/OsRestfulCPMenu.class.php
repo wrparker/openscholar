@@ -99,9 +99,14 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
    */
   public function menuAccess(&$menuItem) {
 
+    $access = false;
+    if (isset($menuItem['access'])) {
+      // The menu item item already have an access property. Return that one.
+      $access = $menuItem['access'];
+    }
+
     $this->activateRoles();
 
-    $access = false;
     if (!empty($menuItem['children'])) {
       foreach ($menuItem['children'] as &$c) {
         $access = $this->menuAccess($c) || $access;
@@ -295,7 +300,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
           'type' => 'directive',
           'directive' => array(
             'ap-settings-form',
-            'form' => $f['group']['#id']
+            'form' => $f['group']['#id'],
           ),
           'parent' => !empty($f['group']['#menu_parent']) ? $f['group']['#menu_parent'] : 'advanced'
         );
@@ -417,6 +422,8 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'type' => 'heading',
         'default_state' => 'collapsed',
         'children' => array(),
+        // Grant access and by pass access checking.
+        'access' => TRUE,
       ),
     );
 
@@ -449,6 +456,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'type' => 'heading',
         'default_state' => 'collapsed',
         'children' => $admin_links,
+
       );
     }
 

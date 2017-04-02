@@ -22,7 +22,8 @@ function os_help_cp_settings() {
     ),
     'form' => array(
       '#prefix' => $document_prefix,
-      '#type' => 'markup'
+      '#type' => 'markup',
+      '#access' => TRUE,
     ),
   );
 
@@ -42,6 +43,7 @@ function os_help_cp_settings() {
         '#prefix' => '<p class="helpClass">Every question you ask adds to the power of our OpenScholar Community. Type your question below and click the Continue button. You will need to login or create an account to finish posting.</p><p>If you don\'t want to post publicly to the community, click Send Privately</p>',
         '#type' => 'markup',
         '#loading' => $loading,
+        '#access' => TRUE,
       ),
     );
     $form['os_support_gsfn_js'] = array(
@@ -56,6 +58,7 @@ function os_help_cp_settings() {
         '#type' => 'help',
         '#gsfnId' => $id,
         '#loading' => $loading,
+        '#access' => TRUE,
       ),
     );
   }
@@ -124,7 +127,8 @@ function os_help_cp_settings() {
         '#title' => t('Your name'),
         '#default_value' => $user->uid ? format_username($user) : '',
         '#required' => TRUE,
-        '#attributes' => array('class' => array('contact-form'))
+        '#attributes' => array('class' => array('contact-form')),
+        '#access' => TRUE,
       ),
       'rest_validate' => 'os_help_contact_form_validate'
     );
@@ -140,6 +144,7 @@ function os_help_cp_settings() {
         '#title' => t('Your e-mail address'),
         '#default_value' => $user->uid ? $user->mail : '',
         '#required' => TRUE,
+        '#access' => TRUE,
       ),
       'rest_validate' => 'os_help_contact_form_validate'
     );
@@ -154,6 +159,7 @@ function os_help_cp_settings() {
         '#type' => 'textfield',
         '#title' => t('Subject'),
         '#required' => TRUE,
+        '#access' => TRUE,
       ),
       'rest_validate' => 'os_help_contact_form_validate'
     );
@@ -170,6 +176,7 @@ function os_help_cp_settings() {
         '#default_value' => $default_category,
         '#options' => $categories,
         '#required' => TRUE,
+        '#access' => TRUE,
       ),
       'rest_validate' => 'os_help_contact_form_validate'
     );
@@ -184,6 +191,7 @@ function os_help_cp_settings() {
         '#type' => 'textarea',
         '#title' => t('Message'),
         '#required' => TRUE,
+        '#access' => TRUE,
       ),
       'rest_validate' => 'os_help_contact_form_validate'
     );
@@ -208,7 +216,8 @@ function os_help_cp_settings() {
       ),
       'form' => array(
         '#type' => 'submit',
-        '#value' => t('Send Message')
+        '#value' => t('Send Message'),
+        '#access' => TRUE,
       ),
       'rest_submit' => 'os_help_rest_cp_settings_submit'
     );
