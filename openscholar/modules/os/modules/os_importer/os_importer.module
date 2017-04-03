@@ -1067,11 +1067,9 @@ function os_importer_entity_property_info_alter(&$info) {
 /**
  * round up the hour. If the hour is 15:53 the return value will be 15:55.
  * If the hour is 15:56 the hour will be 16:00.
- *
  * @param $hour
  *   The hour in a time format of HH:MM
- *
- * @return
+ * @return $hour
  *   The new hour.
  */
 function os_importer_round_hour($hour) {
