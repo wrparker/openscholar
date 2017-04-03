@@ -6,12 +6,20 @@ body *,
 #boxes-box-site_info a {
     font-family: 'Lora';
 }
+
+#columns {
+ 
+    font-size: 1.1em;
+}
+
+h1.node-title,
 h1#page-title,
 h2.block-title {
     color: #454545;
 }
 h2.block-title {
     margin-bottom: 15px;
+    font-size: 1.2em;
 }
 
 #menu-bar {
