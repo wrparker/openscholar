@@ -37,12 +37,7 @@ function os_user_default_roles() {
   // Exported role: vsite user.
   $roles['vsite user'] = array(
     'name' => 'vsite user',
-    'weight' => '5',
-  );
-  // Exported role: content editor.
-  $roles['content editor'] = array(
-    'name' => 'content editor',
-    'weight' => '6',
+    'weight' => 5,
   );
 
   return $roles;

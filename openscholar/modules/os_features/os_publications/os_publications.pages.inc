@@ -2,6 +2,7 @@
 // $Id$
 
 function os_publications_overview() {
+
   $args = func_get_args();
 
   if (count($args) == 0) {
@@ -13,6 +14,8 @@ function os_publications_overview() {
 
     if (count(array_filter($defaults))) {
       $args = array('type', array_filter($defaults));
+    } else{
+      $args = array('type', 0);
     }
   }
 
@@ -180,136 +183,6 @@ function os_publications_export($format = "tagged", $nid = NULL, $popup = FALSE)
     ob_end_clean();
     return $output;
   }
-}
-
-function os_publications_settings() {
-  $style_name = biblio_get_style();
-
-  $form['left'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'class' => array('column', 'column-left'),
-    ),
-  );
-  $form['right'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'class' => array('column', 'column-right'),
-    ),
-  );
-  $style = module_exists('biblio_citeproc') ? 'biblio_citeproc_style' : 'biblio_style';
-  // Attach extra HTML to the citation array to allow for a popup box that will display an example of the citation format.
-  $biblio_styles = biblio_get_styles();
-  if(isset($biblio_styles) && is_array($biblio_styles)) {
-    $biblio_styles_hover = array();
-    $counter = 0;
-    foreach($biblio_styles as $styles => $name) {
-      $counter ++;
-      // Setup the new citation options to be wrapped for a popup.
-      $cite_example_link = '<a href="#" class="cite-pop" data-popbox="pop'.$counter.'">' . t('@link_name', array('@link_name' => $name)) . '</a>';
-      // Setup the h2.
-      $cite_example_title = '<h2>' . t('@csl_title', array('@csl_title' => $name)) . '</h2>';
-      // Setup the citation exmaple for the popup.
-      $citation_example = _os_publications_build_citation_example($styles); //'test text';
-      $cite_example_text = '<p>' . t('!cite_text', array('!cite_text' => $citation_example)) . '</p>';
-      // Concat it all together.
-      $cite_example_output = $cite_example_link . '<div id="pop'.$counter.'" class="citebox">' . $cite_example_title . $cite_example_text . '</div>';
-      $biblio_styles_hover[$styles] = $cite_example_output;
-    }
-  }
-  $form['left'][$style] = array(
-    '#type' => 'radios',
-    '#title' => t('Select your preferred bibliographic format'),
-    //'#description' => t('This alters the bibliographic format of your publications.'),
-    '#default_value' => biblio_get_style(),
-    '#options' => $biblio_styles_hover,
-    '#attached' => array(
-      'css' => array(
-        drupal_get_path('module', 'os_publications') . '/misc/os_publications.css',
-      ),
-      'js' => array(
-        drupal_get_path('module', 'os_publications') . '/misc/os_publications_csl_hover.js',
-      )
-    ),
-  );
-
-  $form['right']['biblio_export_links'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Select which export formats should accompany each bibliographic record'),
-    '#default_value' => variable_get('biblio_export_links', array('tagged', 'xml', 'bibtex')),
-    '#options' => array(
-      'tagged' => t('EndNote Tagged'),
-      'xml' => t('EndNote XML'),
-      'bibtex' => t('BibTex'),
-    ),
-    '#description' => t('Each selected format will appear in its own export link.'),
-  );
-
-  //citation distribute plugins
-  /*
-   $form['right']['citation_distribute_autoflags'] = array(
-     '#title' => t('Automatic Node Flagging'),
-     '#type' => 'checkboxes',
-     '#description' => t('New publications will automatically be flagged for distribution to the selected services.'),
-     '#default_value' => variable_get('citation_distribute_autoflags', array()),
-     '#options' => array(),
-   );
-   foreach (_citation_distribute_plugins() as $plugin) {
-     if (isset($plugin['title'])) {
-       $form['citation_distribute_autoflags']['#options'] += array($plugin['handler']['class'] => $plugin['title']);
-     }
-   }*/
-
-  $form['right']['os_publications_note_in_teaser'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Show the "note" content in teaser?'),
-    //'#description' => t('This alters the bibliographic format of your publications.'),
-    '#default_value' => variable_get('os_publications_note_in_teaser', FALSE),
-    '#description' => t('If this is checked and you add a note to a publication then it will show as part of a publications teaser.'),
-  );
-
-  $form['left']['biblio_sort'] = array(
-    '#type' => 'radios',
-    '#title' => t('By default, sort publications by which category'),
-    '#default_value' => variable_get('biblio_sort', 'year'),
-    '#options' => array('author' => t('Author'), 'title' => t('Title'), 'type' => t('Type'), 'year' => t('Year')),
-  );
-
-  $form['left']['biblio_order'] = array(
-    '#type' => 'radios',
-    '#title' => t('Select default order of the sort category'),
-    '#default_value' => variable_get('biblio_order', 'DESC'),
-    '#options' => array('DESC' => t('Descending'), 'ASC' => t('Ascending')),
-  );
-
-  $result = db_query('SELECT t.* FROM {biblio_types} as t WHERE tid > -1 AND visible = 1');
-  foreach ($result as $option) {
-    $results[$option->tid] = $option->name;
-  }
-  asort($results);
-
-  $form['right']['os_publications_filter_publication_types'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Show only publications of type'),
-    '#default_value' => variable_get('os_publications_filter_publication_types', array_keys($results)),
-    '#options' => $results,
-    '#description' => t('The main list of publications on your publications page will list the types selected here.'),
-    '#attributes' => array('class' => array('form-checkboxes-scrolling')),
-  );
-
-  //Should urls in citations be shortened?
-/*  $form['scholar_publications'] = array(
-  '#type' => 'fieldset',
-  );
-*/
-  $form['right']['os_publications_shorten_citations'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Short URLs in citations'),
-    '#description' => t('When this is checked, a shortened URL will be included in the citation.'),
-    '#default_value' => variable_get('os_publications_shorten_citations'),
-  );
-
-  return system_settings_form($form);
 }
 
 function os_publications_reset(&$form, &$form_state) {

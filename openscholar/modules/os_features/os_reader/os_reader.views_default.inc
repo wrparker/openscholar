@@ -272,7 +272,6 @@ function os_reader_views_default_views() {
   $handler->display->display_options['fields']['field_url']['label'] = '';
   $handler->display->display_options['fields']['field_url']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_url']['click_sort_column'] = 'url';
-  $handler->display->display_options['fields']['field_url']['type'] = 'google_feedapi';
   $handler->display->display_options['fields']['field_url']['settings'] = array(
     'num_to_show' => '3',
   );

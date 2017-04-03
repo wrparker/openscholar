@@ -395,43 +395,6 @@ function citation_distribute_form_biblio_node_form_alter(&$form, &$form_state, $
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
- *
- * Adds autoflag settings to publication settings form.
- */
-function citation_distribute_form_os_publications_settings_alter(&$form, &$form_state, $form_id) {
-  if (isset($form['right']['biblio_google_link'])) {
-    unset($form['right']['biblio_google_link']);
-  }
-
-  $form['right']['citation_distribute_autoflags'] = array(
-    '#title' => t('Distribute to repositories'),
-    '#type' => 'checkboxes',
-    '#description' => t('New publications will automatically be flagged for distribution to the selected services.'),
-    '#default_value' => variable_get('citation_distribute_autoflags', array()),
-    '#options' => array(),
-   );
-
-  foreach (_citation_distribute_plugins() as $plugin) {
-    if (isset($plugin['title']) && _citation_distribute_is_service_configured($plugin)) {
-      $form['right']['citation_distribute_autoflags']['#options'][$plugin['class']] = $plugin['title'];
-    }
-  }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter() for cp_app_settings.
- *
- * When publications settings is loaded in a modal, it gets a different form id.  In that case we should
- * still use the form alter to add CD autoflags.
- */
-function citation_distribute_form_cp_app_settings_form_alter(&$form, &$state, $id) {
-  if ($form['#feature'] == 'os_publications') {
-    citation_distribute_form_os_publications_settings_alter($form, $state, $id);
-  }
-}
-
-/**
  * Implements hook_flag_default_flags().
  */
 function citation_distribute_flag_default_flags() {
@@ -834,4 +797,41 @@ function _citation_distribute_get_query($plugin, $nid) {
   } else {
     return db_insert('citation_distribute');
   }
+}
+
+/*
+ * Implements hook_cp_settings
+ */
+function citation_distribute_cp_settings() {
+
+  $settings = array();
+  // Distribute to Repository option
+  $autoflags_options = array();
+  $default_autoflags = array();
+  foreach (_citation_distribute_plugins() as $plugin) {
+    if (isset($plugin['title']) && _citation_distribute_is_service_configured($plugin)) {
+      $autoflags_options[] = array('key' => $plugin['class'], 'label' => $plugin['title']);
+      $default_autoflags[$plugin['class']] = FALSE;
+    }
+  }
+
+  $settings['citation_distribute_autoflags'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'checkboxes',
+      '#default_value' => variable_get('citation_distribute_autoflags', $default_autoflags),
+      '#description' => t('New publications will automatically be flagged for distribution to the selected services.'),
+      '#weight' => 1,
+      '#options' => $autoflags_options,
+      '#column' => 'right',
+      '#prefix' => '<label>Distribute to repositories</label>',
+    ),
+  );
+  return $settings;
 }
