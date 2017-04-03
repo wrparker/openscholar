@@ -1639,11 +1639,18 @@ function os_publications_update_7052() {
     ->execute();
 }
 
+/**
+ * Disable and uninstall 'services' module
+ */
+function os_publications_update_7054() {
+  module_disable(array('services'));
+  drupal_uninstall_modules(array('services'), FALSE);
+}
 
 /**
  * Converts none publication types selected to all types selected
  */
-function os_publications_update_7053() {
+function os_publications_update_7055() {
   $results = db_select('spaces_overrides', 's')
     ->fields('s',array('value','id'))
     ->condition('object_type', 'variable')

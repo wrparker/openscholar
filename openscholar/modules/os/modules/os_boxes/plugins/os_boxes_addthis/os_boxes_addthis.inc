@@ -102,7 +102,7 @@ class os_boxes_addthis extends os_boxes_default {
     $block = parent::render();
     $block['content'] = $html;
     drupal_add_css(drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_addthis/os_boxes_addthis.css');
-    drupal_add_js('http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4e9eeefa6983da55', 'external');
+    drupal_add_js('//s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4e9eeefa6983da55', 'external');
 
     //after removing and readding this widget, page needs a reload.  trigger it with js
     if (preg_match('/os\/widget\/boxes\/[^\/]*\/remove\/\w/', $_GET['q'])) {
