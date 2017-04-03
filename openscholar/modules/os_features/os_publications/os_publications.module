@@ -32,7 +32,7 @@ function os_publications_os_app_info() {
         'menu_item' => 'publications',
       ),
     ),
-    'has_settings' => TRUE,
+    'has_settings' => FALSE,
   );
 
   return $apps;
@@ -67,16 +67,6 @@ function os_publications_menu_alter(&$items) {
     'access arguments' => 'administer nodes',
     'file' => drupal_get_path('module', 'os_publications'). '/os_publications.pages.inc',
     'type' => MENU_CALLBACK,
-  );
-
-  $items['features/os_publications'] = array(
-    'title' => 'Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('os_publications_settings'),
-    'access callback' => module_exists('vsite') ? 'spaces_access_admin' : 'user_access',
-    'access arguments' => module_exists('vsite') ? array() : array('administer site configuration'),
-    'type' => MENU_CALLBACK,
-    'file' => drupal_get_path('module', 'os_publications') . '/os_publications.pages.inc',
   );
 
   // for the toolbar
@@ -377,7 +367,7 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
   // The current publication type isn't displaying in the publications page. We need
   // to notify the user.
   $shown_types = variable_get('os_publications_filter_publication_types', array());
-  if (count($shown_types) && !in_array($tid, $shown_types)) {
+  if (!in_array($tid, $shown_types) || $shown_types[$tid] === FALSE) {
     $link = menu_get_item('cp/build/publication/settings');
     $params = array(
       '@url' => url('cp/build/publication/settings'),
@@ -1752,6 +1742,274 @@ function os_publications_views_pre_render(&$view) {
   }
 }
 
+/*
+ * Implements hook_cp_settings
+ */
+function os_publications_cp_settings() {
+
+  $settings = array();
+  $vsite = vsite_get_vsite();
+  $spaces_features = $vsite->controllers->variable->get('spaces_features');
+
+  // Publication settings link won't appear in CP menu if publication app is not enabled.
+  if (!$spaces_features['os_publications']) {
+    return $settings;
+  }
+
+  $cite_example_output = '';
+  $style = module_exists('biblio_citeproc') ? 'biblio_citeproc_style' : 'biblio_style';
+
+  // Attach extra HTML to the citation array to allow for a popup box that will display an example of the citation format.
+  $biblio_styles = biblio_get_styles();
+  $biblio_styles_option = array();
+  module_load_include('inc', 'os_publications', 'os_publications.pages');
+  if(isset($biblio_styles) && is_array($biblio_styles)) {
+    $biblio_styles_hover = array();
+    $counter = 0;
+    foreach($biblio_styles as $styles => $name) {
+      $counter ++;
+      // Setup the new citation options to be wrapped for a popup.
+      $cite_example_link =  t('@link_name', array('@link_name' => $name));
+      // Setup the h2.
+      $cite_example_title = '<h2>' . t('@csl_title', array('@csl_title' => $name)) . '</h2>';
+      // Setup the citation exmaple for the popup.
+      $citation_example = _os_publications_build_citation_example($styles); //'test text';
+      $cite_example_text = '<p>' . t('!cite_text', array('!cite_text' => $citation_example)) . '</p>';
+      // Concat it all together.
+      $hidden = ($styles != biblio_get_style()) ? 'hidden' : '';
+      $cite_example_output .= '<div data-example-id="' . $styles . '" id="' . str_replace('.', '', $styles) . '" class="citebox ' . $hidden . '">' . $cite_example_title . $cite_example_text . '</div>';
+      //$biblio_styles_options[$styles_name] = $name;
+      $biblio_styles_hover[$styles] = $cite_example_link;
+    }
+  }
+
+  // Radio button set for Preferred bibliographic format
+  $settings[$style] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 3,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'radios',
+      '#default_value' => biblio_get_style(),
+      '#options' => $biblio_styles_hover,
+      '#weight' => -1,
+      '#prefix' => '<label>Preferred bibliographic format</label>',
+      '#column' => 'top_left',
+    ),
+  );
+
+  // Citation Examples
+  $settings['os_publications_citation_examples'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'markup',
+      '#weight' => 0,
+      '#markup' => $cite_example_output,
+      '#column' => 'top_right',
+    ),
+  );
+
+    // Citation Examples Mouseover
+  $settings['os_publications_citation_mouseover'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'pubjsevent',
+      '#weight' => 0,
+      '#mouseover_element' => '#edit-biblio-citeproc-style',
+      '#mouseover_event' => 'mouseover',
+      '#hide_element' => '.citebox',
+      '#show_element' => 'this.id',
+      '#column' => 'top_right',
+    ),
+  );
+
+  // Citation Examples Mouseout
+  $settings['os_publications_citation_mouseout'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'pubjsevent',
+      '#weight' => 0,
+      '#mouseover_element' => '#edit-biblio-citeproc-style',
+      '#mouseover_event' => 'mouseout',
+      '#hide_element' => '.citebox',
+      '#show_element' => '#' . str_replace('.', '', biblio_get_style()),
+      '#column' => 'top_right',
+    ),
+  );
+
+  // Fetching publication types option from table 'biblio_types'.
+  $publication_types_options = array();
+  $result = db_query('SELECT t.* FROM {biblio_types} as t WHERE tid > -1 AND visible = 1');
+
+  foreach ($result as $option) {
+    $publication_types_options[] = array('key' => $option->tid, 'label' => $option->name);
+  }
+
+  // Rendering Label and description above publication type checkbox set. This text will span accross 3 columns.
+  $settings['os_publications_filter_publication_types_label'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'markup',
+      '#weight' => 0,
+      '#prefix' => '<label>Display on Your Publication Page</label>',
+      '#description' => 'Selected publications types will appear on your Publications page. Unselected publication types can still be added to other locations on your site using widgets.'
+    ),
+  );
+
+  // Set of checkbox for publication type selection.
+  $settings['os_publications_filter_publication_types'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'checkboxes',
+      '#select_all' => TRUE,
+      '#default_value' => variable_get('os_publications_filter_publication_types', array()),
+      '#options' => $publication_types_options,
+      '#weight' => 0,
+      '#sorted_options' => TRUE,
+    ),
+  );
+
+  // Note content checkbox option.
+  $settings['os_publications_note_in_teaser'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Show note content in teaser'),
+      '#default_value' => variable_get('os_publications_note_in_teaser', FALSE),      
+      '#weight' => 0,
+      '#column' => 'left',
+      '#prefix' => '<label>Notes</label>',
+    ),
+  );
+
+  // Sort by Category option
+  $settings['biblio_sort'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'select',
+      '#title' => t('\'Sort By\' Category'),
+      '#default_value' => variable_get('biblio_sort', 'year'),
+      '#options' => array('author' => t('Author'), 'title' => t('Title'), 'type' => t('Type'), 'year' => t('Year')),
+      '#weight' => 0,
+      '#column' => 'left',
+    ),
+  );
+
+  // Sort order option
+  $settings['biblio_order'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'select',
+      '#default_value' => variable_get('biblio_order', 'DESC'),
+      '#options' => array('DESC' => t('Descending'), 'ASC' => t('Ascending')),
+      '#weight' => 0,
+      '#column' => 'left',
+      '#title' => t('Sort Order'),
+    ),
+  );
+
+  // URL shortening option
+  $settings['os_publications_shorten_citations'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Include Short URLs in citations'),
+      '#default_value' => variable_get('os_publications_shorten_citations'),      
+      '#weight' => 2,
+      '#column' => 'middle',
+      '#prefix' => '<label>Short URLs</label>',
+    ),
+  );
+
+  // Export Format option
+  $default_export_format_options = variable_get('biblio_export_links', array('tagged' => TRUE, 'xml' => TRUE, 'bibtex' => TRUE));
+  foreach ($default_export_format_options as $key => $export_option) {
+    $default_export_format_options[$key] = !empty($export_option) ? TRUE : FALSE;
+  }
+
+  $settings['biblio_export_links'] = array(
+    'group' => array(
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
+    ),
+    'form' => array(
+      '#type' => 'checkboxes',
+      '#default_value' => $default_export_format_options,
+      '#options' => array(
+      	array('key' => 'tagged', 'label' => 'EndNote Tagged'),
+      	array('key' => 'xml', 'label' => 'EndNote XML'),
+      	array('key' => 'bibtex', 'label' => 'BibTex'),
+      ),        
+      '#weight' => 2,
+      '#column' => 'middle',
+      '#prefix' => '<label>Export Formats</label>',
+      '#description' => t('Each selected format will appear in its own export link.'),
+    ),
+  );
+  return $settings;
+}
+
 /**
   Implement hook_biblio_pm_node_alter
 */
@@ -1760,4 +2018,4 @@ function os_publications_biblio_pm_node_alter($node, $article) {
   if (substr($node->title, -1) == '.') {
     $node->title = substr($node->title, 0, -1);
   }
-}
+} 
