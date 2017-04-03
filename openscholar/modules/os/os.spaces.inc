@@ -109,6 +109,8 @@ function os_spaces_presets() {
         133 => true,
         134 => true,
         135 => true,
+        1000 => true,
+        1001 => true,
       ),
     ),
     'menus' => array(
@@ -291,6 +293,8 @@ function os_spaces_presets() {
         133 => true,
         134 => true,
         135 => true,
+        1000 => true,
+        1001 => true,
       ),
     ),
   );
@@ -378,6 +382,8 @@ function os_spaces_presets() {
         133 => true,
         134 => true,
         135 => true,
+        1000 => true,
+        1001 => true,
       ),
     ),
   );
@@ -474,6 +480,8 @@ function os_spaces_presets() {
         133 => true,
         134 => true,
         135 => true,
+        1000 => true,
+        1001 => true,
       ),
     ),
   );

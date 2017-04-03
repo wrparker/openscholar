@@ -1745,7 +1745,7 @@ function os_publications_update_7055() {
     if (is_array($value)) {
       $is_change_required = FALSE;
       foreach ($value as $default_autoflags_key => $default_autoflags_value) {
-        if ($default_autoflags_key == $default_autoflags_value) {
+        if (strcmp($default_autoflags_key, $default_autoflags_value) === 0) {
           $is_change_required = TRUE;
           $value[$default_autoflags_key] = true;
         }
