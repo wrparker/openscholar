@@ -2,6 +2,9 @@
 
 define('AP_SETTINGS_FORM_VERSION', '1.0.0');
 
+/**
+ * Implements hook_library().
+ */
 function ap_settings_form_library() {
   $libs = array();
   $self = drupal_get_path('module', 'ap_settings_form');
@@ -11,7 +14,7 @@ function ap_settings_form_library() {
     'title' => 'Settings Form',
     'version' => AP_SETTINGS_FORM_VERSION,
     'js' => array(
-      $self.'/apSettingsForm.module.js' => array(),
+      $self . '/apSettingsForm.module.js' => array(),
       array(
         'data' => array(
           'paths' => array(
@@ -28,13 +31,15 @@ function ap_settings_form_library() {
       drupal_get_path('theme', 'cp_theme') . '/css/cp_theme.css' => array(
         'group' => CSS_THEME,
         'every_page' => TRUE,
-        'media' => 'screen'),
+        'media' => 'screen',
+      ),
     ),
     'dependencies' => array(
       array('os_common', 'angular-modal-service'),
       array('os_common', 'formElement'),
       array('os_common', 'buttonSpinner'),
-      array('ap_settings_form', 'redirect')
+      array('ap_settings_form', 'redirect'),
+      array('ap_settings_form', 'display_type'),
     )
   );
 
@@ -46,9 +51,20 @@ function ap_settings_form_library() {
     )
   );
 
+  $libs['display_type'] = array(
+    'title' => 'Display types',
+    'version' => '0.1',
+    'js' => array(
+      $self . '/os_profiles_display_type.module.js' => array()
+    )
+  );
+
   return $libs;
 }
 
+/**
+ * Implements hook_library_alter().
+ */
 function ap_settings_form_library_alter(&$libs) {
   if (isset($libs['admin_panel'])) {
     $libs['admin_panel']['dependencies'][] = array('ap_settings_form', 'module');

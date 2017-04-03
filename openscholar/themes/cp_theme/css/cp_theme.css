@@ -369,6 +369,24 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     padding: 0;
     top:10% !important;
 }
+.ui-dialog .profiles-display-types .first {
+    float: left;
+}
+
+.ui-dialog .profiles-display-types .second {
+    float: right;
+    width: 60%;
+}
+
+.ui-dialog .profiles-display-types .second .dummy-person-photo {
+    float: left;
+    padding-right: 20px;
+}
+
+.ui-dialog .profiles-display-types .second .preview {
+    height: 200px;
+}
+
 .ui-dialog.ap-settings-form .ui-dialog-content {
     overflow: visible;
 }

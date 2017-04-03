@@ -129,10 +129,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
    * {@inheritdoc}
    */
   public function index() {
-
-    $this->throwException('You must provide the id of the menu.');
-
-    return $return;
+    throw new \Exception('You must provide the id of the menu.');
   }
 
   /**

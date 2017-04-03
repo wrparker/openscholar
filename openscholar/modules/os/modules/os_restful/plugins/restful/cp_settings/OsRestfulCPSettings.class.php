@@ -11,12 +11,12 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
         // If they don't pass a menu-id then display nothing.
         \RestfulInterface::GET => 'getAllForms',
         \RestfulInterface::HEAD => 'getAllForms',
-        \RestfulInterface::PUT => 'saveSettings'
+        \RestfulInterface::PUT => 'saveSettings',
       ),
       // We don't know what the ID looks like, assume that everything is the ID.
       '^.*$' => array(
         \RestfulInterface::GET => 'getForms',
-        \RestfulInterface::HEAD => 'getForms'
+        \RestfulInterface::HEAD => 'getForms',
       ),
     );
   }

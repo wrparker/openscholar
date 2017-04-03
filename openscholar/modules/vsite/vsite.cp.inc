@@ -99,7 +99,7 @@ function vsite_cp_settings() {
       '#upload_location' => $purl ? "public://{$purl}/files" : "public://",
       '#upload_validators' => array(
         'file_validate_extensions' => array('ico'),
-        'file_validate_size' => array(2*1024*1024),
+        'file_validate_size' => array(2 * 1024 * 1024),
       ),
     ),
     'group' => array(

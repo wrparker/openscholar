@@ -40,10 +40,94 @@ function os_profiles_os_app_info() {
         'menu_item' => 'people',
       ),
     ),
-    'has_settings' => TRUE,
+    'has_settings' => FALSE,
   );
 
   return $apps;
+}
+
+/**
+ * Implements hook_cp_settings().
+ */
+function os_profiles_cp_settings() {
+  $settings = array();
+
+  $template = array(
+    'group' => array(
+      '#id' => 'features_os_profiles',
+      '#title' => t('Profiles'),
+      '#weight' => 0,
+      '#menu_parent' => 'app_settings',
+    ),
+  );
+
+  $profile_preview = array();
+  $profile_styles = array();
+
+  $entity_info = entity_get_info('node');
+  foreach ($entity_info['view modes'] as $name => $info) {
+    if (!$info['custom settings'] || $name == 'links') {
+      // Display only display modes the user turned on. The "links" view mode is
+      // disabled in the case of a "person" content type.
+      continue;
+    }
+
+    $profile_styles[$name] = $info['label'];
+    $profile_preview[$name] = _os_profiles_build_display_style_example($name);
+  }
+
+  $settings['os_profiles_display_type'] = $template + array(
+      'form' => array(
+        '#title' => t('Choose your profile display type'),
+        '#type' => 'radios',
+        '#default_value' => variable_get('os_profiles_display_type', 'teaser'),
+        '#options' => $profile_styles,
+        '#previews' => $profile_preview,
+        '#custom_directive' => 'display_type',
+      ),
+    );
+
+  $settings['os_profiles_disable_default_image'] = $template + array(
+      'form' => array(
+        '#type' => 'radios',
+        '#title' => t('Would you like to display it if a profile has no image?'),
+        '#default_value' => variable_get('os_profiles_disable_default_image', 'default'),
+        '#description' => t('If checked no image will be used when viewing the "/people" page.'),
+        '#options' => array(
+          TRUE => t('No image'),
+          FALSE => t('Default image - Harvard Shield'),
+          'upload' => t('Upload your own default image'),
+        ),
+      ),
+    );
+
+  $purl = vsite_get_purl();
+
+  $allowed_file_types = array('gif png jpg jpeg');
+  $settings['os_profiles_default_image_file'] = $template + array(
+      'form' => array(
+        '#type' => 'managed_file',
+        '#custom_directive' => 'media-browser-field',
+        '#custom_directive_parameters' => array(
+          'cardinality' => 1,
+          'panes' => array('upload', 'library'),
+          'droppable_text' => t('Drag your file here'),
+          'upload_text' => t('Upload file.'),
+          'max-filesize' => '100kb',
+          'extensions' => $allowed_file_types,
+          'types' => $allowed_file_types,
+        ),
+        '#title' => t(''),
+        '#description' => t('The default image will be used if a profile photo is not available. Instead, you can upload your own default image.<br/>Position the cropping tool over it if necessary. Allowed file types: <strong> @allowed_file_types </strong>', array('@allowed_file_types' => $allowed_file_types)),
+        '#default_value' => variable_get('os_profiles_default_image_file', NULL),
+        '#upload_location' => $purl ? "public://{$purl}/files" : "public://",
+        '#upload_validators' => array(
+          'file_validate_extensions' => $allowed_file_types,
+        ),
+      ),
+    );
+
+  return $settings;
 }
 
 /**
@@ -275,16 +359,6 @@ function os_profiles_menu() {
     'access callback' => 'os_profiles_can_create_site_from_profile',
     'access arguments' => array(2),
     'theme callback' => 'cp_theme_name',
-  );
-
-  $items['features/os_profiles'] = array(
-    'title' => 'Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('os_profiles_settings'),
-    'access callback' => module_exists('vsite') ? 'spaces_access_admin' : 'user_access',
-    'access arguments' => module_exists('vsite') ? array() : array('administer site configuration'),
-    'type' => MENU_CALLBACK,
-    'file' => 'os_profiles.pages.inc',
   );
 
   $items['cp/people/get_profile_url/%'] = array(
