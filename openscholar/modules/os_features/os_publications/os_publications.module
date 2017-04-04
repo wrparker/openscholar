@@ -1860,12 +1860,16 @@ function os_publications_cp_settings() {
   );
 
   // Fetching publication types option from table 'biblio_types'.
+  $defaults_raw = variable_get('os_publications_filter_publication_types', array());
   $publication_types_options = array();
+  $defaults = array();
   $result = db_query('SELECT t.* FROM {biblio_types} as t WHERE tid > -1 AND visible = 1');
 
   foreach ($result as $option) {
     $publication_types_options[] = array('key' => $option->tid, 'label' => $option->name);
-    $defaults[] = $option->tid;
+    if (empty($defaults_raw) || $defaults_raw[$option->tid] == $option->tid) {
+      $defaults[$option->tid] = true;
+    }
   }
 
   // Rendering Label and description above publication type checkbox set. This text will span accross 3 columns.
@@ -1897,7 +1901,7 @@ function os_publications_cp_settings() {
     'form' => array(
       '#type' => 'checkboxes',
       '#select_all' => TRUE,
-      '#default_value' => variable_get('os_publications_filter_publication_types', $defaults),
+      '#default_value' => $defaults,
       '#options' => $publication_types_options,
       '#weight' => 0,
       '#sorted_options' => TRUE,
