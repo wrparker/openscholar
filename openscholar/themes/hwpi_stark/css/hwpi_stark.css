@@ -38,6 +38,8 @@ h2 a {
     border-top: 1px solid #ececec;
     border-bottom: 1px solid #ececec;
 }
+.section-nav .expanded.menu-depth-2 > a,
+.section-nav .menu-depth-1 > a,
 #menu-bar ul.nice-menu a.active,
 #menu-bar ul.nice-menu a:hover,
 #menu-bar ul.nice-menu .menuparent.over > a,
@@ -55,6 +57,9 @@ h2 a {
 #menu-bar ul.nice-menu ul {
     background-color: #ececec;
 }
+.section-nav .expanded.menu-depth-2 li > a {
+    background-color: #fbfbfb;
+}
 #menu-bar ul.nice-menu .menuparent.over > a:before,
 #menu-bar ul.nice-menu .menuparent a:hover:before,
 #menu-bar ul.nice-menu .menuparent a.active:before {
@@ -68,4 +73,8 @@ ul.nice-menu ul {
 }
 #boxes-box-site_info h1 {
     font-size: 2.6em;
+}
+.section-nav .menu-depth-1 > a {
+    background-color: #ececec !important;
+   
 }
