@@ -126,22 +126,27 @@ function hwpi_basetheme_preprocess_node(&$vars) {
  *  The markup of the image.
  */
 function hwpi_basetheme_profile_default_image($size = 'small') {
+  $image_mode = variable_get('os_profiles_disable_default_image', FALSE);
 
-  if (variable_get('os_profiles_disable_default_image', FALSE)) {
+  if ($image_mode === '1') {
     return '<div class="no-default-image"></div>';
   }
 
-  if ($custom_default_image = variable_get('os_profiles_default_image_file', 0)) {
-    // Use custom default image.
-    $image_file = file_load($custom_default_image);
-    $path = $image_file->uri;
-    $options = array(
-      'path' => $path,
-      'style_name' => 'profile_thumbnail',
-    );
+  if ($image_mode == 'upload') {
 
-    return '<div class="field-name-field-person-photo">' . theme('image_style',  $options) . '</div>';
+    if ($custom_default_image = variable_get('os_profiles_default_image_file', 0)) {
+      // Use custom default image.
+      $image_file = file_load($custom_default_image);
+      $path = $image_file->uri;
+      $options = array(
+        'path' => $path,
+        'style_name' => 'profile_thumbnail',
+      );
+
+      return '<div class="field-name-field-person-photo">' . theme('image_style',  $options) . '</div>';
+    }
   }
+
 
   // Use default image.
   $image = $size == 'small' ? 'person-default-image.png' : 'person-default-image-big.png';
