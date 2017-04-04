@@ -14,8 +14,6 @@ function os_publications_overview() {
 
     if (count(array_filter($defaults))) {
       $args = array('type', array_filter($defaults));
-    } else{
-      $args = array('type', 0);
     }
   }
 
