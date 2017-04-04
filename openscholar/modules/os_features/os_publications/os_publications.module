@@ -367,7 +367,7 @@ function os_publications_form_biblio_node_form_alter(&$form, &$form_state) {
   // The current publication type isn't displaying in the publications page. We need
   // to notify the user.
   $shown_types = variable_get('os_publications_filter_publication_types', array());
-  if (!in_array($tid, $shown_types) || $shown_types[$tid] === FALSE) {
+  if (count($shown_types) && !in_array($tid, $shown_types) || $shown_types[$tid] === FALSE) {
     $link = menu_get_item('cp/build/publication/settings');
     $params = array(
       '@url' => url('cp/build/publication/settings'),
@@ -1859,11 +1859,16 @@ function os_publications_cp_settings() {
   );
 
   // Fetching publication types option from table 'biblio_types'.
+  $defaults_raw = variable_get('os_publications_filter_publication_types', array());
   $publication_types_options = array();
+  $defaults = array();
   $result = db_query('SELECT t.* FROM {biblio_types} as t WHERE tid > -1 AND visible = 1');
 
   foreach ($result as $option) {
     $publication_types_options[] = array('key' => $option->tid, 'label' => $option->name);
+    if (empty($defaults_raw) || $defaults_raw[$option->tid] == $option->tid) {
+      $defaults[$option->tid] = true;
+    }
   }
 
   // Rendering Label and description above publication type checkbox set. This text will span accross 3 columns.
@@ -1895,7 +1900,7 @@ function os_publications_cp_settings() {
     'form' => array(
       '#type' => 'checkboxes',
       '#select_all' => TRUE,
-      '#default_value' => variable_get('os_publications_filter_publication_types', array()),
+      '#default_value' => $defaults,
       '#options' => $publication_types_options,
       '#weight' => 0,
       '#sorted_options' => TRUE,
