@@ -893,6 +893,8 @@ function os_files_update_7025() {
     $pattern = array('src="http://', 'src=\'http://', 'value="http://', 'value=\'http://');
     $replacement = array('src="//', 'src=\'//', 'value="//', 'value=\'//');
     $output = str_replace($pattern, $replacement, $result->field_html_code_value);
-    db_query("UPDATE field_data_field_html_code SET field_html_code_value = '" . addslashes($output) . "' WHERE entity_id = '" . $result->entity_id . "' AND revision_id = '" . $result->revision_id . "'");
+    if (strcmp($output, $result->field_html_code_value) !== 0) {
+      db_query("UPDATE field_data_field_html_code SET field_html_code_value = '" . addslashes($output) . "' WHERE entity_id = '" . $result->entity_id . "' AND revision_id = '" . $result->revision_id . "'");
+    }
   }
 }
