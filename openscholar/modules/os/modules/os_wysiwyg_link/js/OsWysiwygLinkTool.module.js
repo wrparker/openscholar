@@ -5,7 +5,7 @@
   m.service('OWLModal', ['ModalService', function (ModalService) {
     var dialogParams = {
       buttons: {},
-      //dialogClass: 'media-wrapper',
+      dialogClass: 'wysiwyg-link-tool-wrapper',
       modal: true,
       draggable: false,
       resizable: false,
