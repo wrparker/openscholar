@@ -14,8 +14,10 @@
 
     var queryArgs = {};
 
-    if (Drupal.settings.spaces.id) {
-      queryArgs.vsite = Drupal.settings.spaces.id;
+    if (Drupal.settings.spaces != undefined) {
+      if (Drupal.settings.spaces.id) {
+        queryArgs.vsite = Drupal.settings.spaces.id;
+      }
     }
 
     var baseUrl = Drupal.settings.paths.api;
@@ -95,7 +97,7 @@
     function link(scope, elem, attrs) {
       apSettings.SettingsReady().then(function () {
         scope.title = apSettings.GetFormTitle(scope.form);
-      })
+      });
 
       elem.bind('click', function (e) {
         e.preventDefault();
