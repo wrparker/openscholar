@@ -996,8 +996,11 @@ function os_publications_entity_prepare_view($entities, $type, $langcode) {
 
       // Avoid redundancy in publication label, e.g., "United States patent US 123".
       // If country code and country name are both displayed, remove the country code.
-      $biblio_style = $user->data['biblio_user_style'];
-      if (($biblio_style == null) or ($biblio_style == "system")) {
+      $biblio_style = '';
+      if (isset($user->data['biblio_user_style'])) {
+        $biblio_style = $user->data['biblio_user_style'];
+      }
+      elseif (!$biblio_style || $biblio_style == "system") {
         $biblio_style = variable_get('biblio_citeproc_style');
       }
 
