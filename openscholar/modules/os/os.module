@@ -3701,7 +3701,7 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
           $text .= '… ' . l(t('Read more <span class="element-invisible"> about @title</span>', array('@title' => entity_label($entity_type, $entity))), $uri['path'], array('html' => true));
         }
 
-        $element[$delta] = array('#markup' => $text);
+        $element[$delta] = array('#markup' => '<div class="os-trim-text">' . $text . '</div>');
       }
 
       break;
