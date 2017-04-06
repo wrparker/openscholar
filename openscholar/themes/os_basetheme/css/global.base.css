@@ -1099,6 +1099,7 @@ ul.no-event-export {
 }
 .block-boxes-os_boxes_widget_slider #layout_16_9_side .slide img {
     position: relative;
+    width:auto;
 }
 .morecontent span {
     display: none;
