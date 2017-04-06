@@ -4,55 +4,71 @@
     background-color: #FFF;
     color: #FFFFFF;
 }
-.link-count-mobi-util a {
-    background-color: #FFF;
 
-}
-.link-count-mobi-search a {
-       background-color: #FFF;
 
+.region-header-third ul.nice-menu a {
+    color: #215990 !important;
 }
+
+
+#menu-bar #block-os-primary-menu a {
+    color: #333;
+  
+}
+
+
 /*Dropdown menu*/
-#menu-bar {
-    background: none!important;
-}
-#menu-bar #block-os-primary-menu{
-    background: none repeat scroll 0 0 #A23338;
 
-}
-#menu-bar ul.nice-menu a.active, 
-#menu-bar ul.nice-menu a:hover {
-    background: none repeat scroll 0 0 #1E1E1E;
+.region-header-third .os-custom-menu.opened,
+.region-header-third #block-os-secondary-menu.opened,
 
-}
+#menu-bar ul.nice-menu ul,
 #menu-bar #block-os-primary-menu a:hover,
-#menu-bar #block-os-primary-menu a:focus{
-	background-color:#303030!important;
+#menu-bar #block-os-primary-menu a:focus,
+#menu-bar ul.nice-menu a.active, 
+#menu-bar ul.nice-menu a:hover,
+#menu-bar #block-os-primary-menu{
+    background: #FFF;
 }
-#menu-bar {
-    background: none repeat scroll 0 0 #303030;
-    padding: 0;
-}
-#menu-bar ul.nice-menu ul {
-    background: none repeat scroll 0 0 #80282C!important;
-}
+ 
+
+
 
 #menu-bar #block-os-primary-menu li {
-    border-bottom: 1px solid #80282C!important;
-    border-top: 1px solid #AB383E!important;
+    border-bottom: 1px solid #CCC !important;
+  border-left:1px solid #CCC !important;
         display: block;
 }
 
-.region-header-third .os-custom-menu.opened,
-.region-header-third #block-os-secondary-menu.opened {
-    background-color: #80282C!important;
-}
+
 .region-header-third .os-custom-menu li,
 .region-header-third #block-os-secondary-menu li{
-    border-bottom: 1px solid #662023!important;
-    border-top: 1px solid #8D2C30!important;
-    margin-left:0!important;
+    border-bottom: 1px solid #CCC !important;
+    border-top: 1px solid #fff !important;
+    margin-left:0 !important;
+    border-left:1px solid #CCC !important;
 }
+
+
+.link-count-mobi-main a {
+  background-position: 0 -521px;
+}
+
+.link-count-mobi-util a {
+  background-position: -52px -400px;
+}
+
+
+
+
+.link-count-mobi-util a {
+    background-color: #fff;
+}
+
+
+
+
+
 }
 
 /*--------------------------------------------------------*/
