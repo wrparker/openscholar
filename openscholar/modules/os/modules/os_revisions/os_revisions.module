@@ -28,35 +28,35 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
       $form['max_revisions'] = array('#type' => 'hidden', '#value' => $max_revisions);
       $form['revisions'] =  array('#type' => 'hidden', '#value' => $num_revisions);
       $form['#attached']['js'][] = drupal_get_path('module', 'os_revisions') . '/os_revisions.js';
+      // remove state-based revision checkbox and make checked by default
+      unset($form['revision_information']['revision']['#states']);
+      $form['revision_information']['revision']['#attributes']['checked'] = 'checked';
+      $form['revision_information']['revision']['#access'] = TRUE;
+      $form['revision_information']['revision']['#title'] = "When checked, a new version of this content will be created";
+      $form['revision_information']['revision']['#weight'] = 1;
+
+      $form['revision_information']['#collapsed'] = FALSE;
+
+      $form['revision_information']['log']['#weight'] = 2;
+      $form['revision_information']['log']['#title'] = t('Revision Notes');
+      $form['revision_information']['log']['#description'] = t('Provide an explanation of the changes you are making.') . '<br><br>' . l(t('What’s being stored as a revision?'), OS_REVISIONS_DOCS_URL, array('attributes' => array('target' => '_blank', 'rel' => 'noopener')));
+
+      // disable revision log if new revision isn't being created
+      $form['revision_information']['log']['#states'] = array(
+        'disabled' => array(
+          ':input[name="revision"]' => array('checked' => FALSE),
+        ),
+      );
+      if ($num_revisions >= 1) {
+        $revisions_url = "node/" . $form['#node']->nid . "/revisions";
+        $form['revision_information']['info']['#markup'] = t('<p>There are currently <a href="@url" id="revisions-link">@num revisions</a>.</p>', array('@url' => url($revisions_url), '@num' => $num_revisions));
+        $form['revision_information']['info']['#weight'] = 0;
+      }
       if ($num_revisions >= $max_revisions) {
         $form['revision_information']['revision']['#suffix'] = '<div id="warning-text"><p>Are you sure you want to create a new revision?</p><p>This content already has the maximum number of revisions saved (' . $max_revisions . '). By creating a new revision, you will be permanently deleting the oldest revision. <a href="' . OS_REVISIONS_DOCS_URL . '" target="_blank" rel="noopener">Learn more about managing revisions</a>.</div>';
       }
     }
-    // remove state-based revision checkbox and make checked by default
-    unset($form['revision_information']['revision']['#states']);
-    $form['revision_information']['revision']['#attributes']['checked'] = 'checked';
-    $form['revision_information']['revision']['#access'] = TRUE;
-    $form['revision_information']['revision']['#title'] = "When checked, a new version of this content will be created";
-    $form['revision_information']['revision']['#weight'] = 1;
-
-    $form['revision_information']['#collapsed'] = FALSE;
-
-    $form['revision_information']['log']['#weight'] = 2;
-    $form['revision_information']['log']['#title'] = t('Revision Notes');
-    $form['revision_information']['log']['#description'] = t('Provide an explanation of the changes you are making.') . '<br><br>' . l(t('What’s being stored as a revision?'), OS_REVISIONS_DOCS_URL, array('attributes' => array('target' => '_blank', 'rel' => 'noopener')));
-
-    // disable revision log if new revision isn't being created
-    $form['revision_information']['log']['#states'] = array(
-      'disabled' => array(
-        ':input[name="revision"]' => array('checked' => FALSE),
-      ),
-    );
-    if ($num_revisions >= 1) {
-      $revisions_url = "node/" . $form['#node']->nid . "/revisions";
-      $form['revision_information']['info']['#markup'] = t('<p>There are currently <a href="@url" id="revisions-link">@num revisions</a>.</p>', array('@url' => url($revisions_url), '@num' => $num_revisions));
-      $form['revision_information']['info']['#weight'] = 0;
-    }
-  }
+   }
 }
 
 /**
