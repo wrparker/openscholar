@@ -1,6 +1,6 @@
 ;----------// Theme Information
 
-  name        = Stark
+  name        = Sterling
   description = A stark looking theme for use by departments at Harvard.
   core        = 7.x
   base theme  = hwpi_basetheme
@@ -20,7 +20,7 @@
 
 ;----------// Stylesheets
 
-  stylesheets[screen][] = css/hwpi_stark.css
+  stylesheets[screen][] = css/hwpi_sterling.css
 
 
 

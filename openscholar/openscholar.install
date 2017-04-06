@@ -38,7 +38,7 @@ function openscholar_install() {
     'hwpi_modern',
     'hwpi_onepage',
     'hwpi_widener',
-    'hwpi_stark',
+    'hwpi_sterling',
     'hwpi_vibrant',
 	  'weft',
     'os_basetheme',
