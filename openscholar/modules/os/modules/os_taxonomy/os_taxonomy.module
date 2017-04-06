@@ -1899,9 +1899,7 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
   $form['parent'] = $form['relations']['parent'];
   unset($form['relations']);
 
-  if ($form['#term']['tid']) {
-    $form['#submit'][] = '_os_taxonomy_close_overlay_after_save';
-  }
+  $form['#submit'][] = '_os_taxonomy_close_overlay_after_save';
 }
 
 /**
@@ -1909,8 +1907,10 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
  */
 function _os_taxonomy_close_overlay_after_save(&$form, &$form_state) {
   // Form API will re-render the current page and pass the redirect information to the overlay JavaScript.
-  overlay_close_dialog();
-  $form_state['redirect'] = FALSE;
+  if (($form_state['values']['op'] == 'Save') && $form['#term']['tid']) {
+    overlay_close_dialog();
+    $form_state['redirect'] = FALSE;
+  }
 }
 
 /**
