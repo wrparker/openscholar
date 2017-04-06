@@ -52,17 +52,19 @@ java -jar selenium-server-standalone-2.53.0.jar > /dev/null 2>&1 &
 sleep 10
 
 # Install behat
-#echo -e "\n # Install behat"
-#cd behat
-#curl -sS https://getcomposer.org/installer | php
-#php composer.phar install
-#cp behat.local.yml.travis behat.local.yml
+echo -e "\n # Install behat"
+cd openscholar/behat
+pwd
+ls -al
+curl -sS https://getcomposer.org/installer | php
+php composer.phar install
+cp behat.local.yml.travis behat.local.yml
 
 # Run tests
-#echo -e "\n # Run tests"
-#./bin/behat --tags=~@wip
-#
-#if [ $? -ne 0 ]; then
-#  echo "Behat failed"
-#  exit 1
-#fi
+echo -e "\n # Run tests"
+./bin/behat --tags=~@wip
+
+if [ $? -ne 0 ]; then
+  echo "Behat failed"
+  exit 1
+fi
