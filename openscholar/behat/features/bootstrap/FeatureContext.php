@@ -3801,4 +3801,52 @@ JS;
   public function iSetVariableInVsite($name, $val, $vsite) {
     FeatureHelp::variableSetSpace($name, $val, $vsite);
   }
+
+  /**
+   * @When /^I navigate to "([^"]*)" cp settings of the site "([^"]*)"$/
+   */
+  public function iNavigateCpSettings($type, $vsite) {
+
+    return array(
+      new Step\When('I visit "' . $vsite . '"'),
+      new Step\When('I open the admin panel to "Settings"'),
+      new Step\When('I open the admin panel to "App Settings"'),
+      new Step\When('I click on the "' . trim($type) . '" control in the ".menu-container .simplebar-scroll-content" element'),
+    );
+  }
+
+  /**
+   * @When /^I submit cp settings of the site$/
+   */
+  public function iSubmitCpSettings() {
+
+    return array(
+      new Step\When('I press "Save"'),
+      new Step\When('I wait for page actions to complete'),
+    );
+  }
+
+  /**
+   * @When /^I change publication citation style to "([^"]*)"$/
+   */
+  public function iChangePublicationType($type) {
+
+    return array(
+      new Step\When('I click on the "' . trim($type) . '" control'),
+    );
+  }
+
+  /**
+   * @When /^I uncheck the box "([^"]*)" with id "([^"]*)" publication citation filter$/
+   */
+  public function iChangePublicationFilter($type, $id) {
+
+    $page = $this->getSession()->getPage();
+    $element = $page->find('xpath', "//input[@id='{$id}']");
+    if ($element->isChecked()) {
+        return array(
+        new Step\When('I click on the "' . trim($type) . '" control'),
+      );
+    }
+  }
 }

@@ -36,7 +36,7 @@ class os_search_solr_search_box extends os_boxes_default {
     $bundle = $this->options['bundle'];
     $bundles = os_get_bundles(array(OS_PUBLIC_APP, OS_PRIVATE_APP));
 
-    unset($bundles['feed'], $bundles['link']);
+    unset($bundles['feed']);
     unset($bundles['slideshow_slide'], $bundles['feed_importer']);
 
     $form['bundle'] = array(

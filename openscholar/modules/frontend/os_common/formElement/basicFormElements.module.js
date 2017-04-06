@@ -26,6 +26,52 @@
   }]);
 
   /**
+   * Checkboxes directive.
+   */
+  m.directive('feCheckboxes', ['$sce', function ($sce) {
+    return {
+      require: 'ngModel',
+      scope: {
+        name: '@',
+        value: '=ngModel',
+        element: '='
+      },
+      template: '<label for="{{id}}">{{title}}</label>' +
+      '<div id="{{id}}" class="form-checkboxes">' +
+        '<div ng-show="element.select_all">' +          
+          '<input ng-model="selectAll" type="checkbox" class="form-checkbox" ng-disabled="element.disabled" ng-change="masterChange()">' + 
+          '&nbsp;<label class="option bold">Select All</label>' +
+        '</div>' +
+        '<div ng-if="element.sorted_options" class="form-item form-type-checkbox" ng-repeat="option in options | orderBy: \'label\'">' +
+          '<input ng-model="value[option.key]" ng-checked="value[option.key]" type="checkbox" id="{{id}}-{{option.key}}" name="{{name}}" value="{{option.key}}" class="form-checkbox" ng-disabled="element.disabled">' + 
+          '&nbsp;<label class="option" for="{{id}}-{{option.key}}" ng-bind-html="option.label"></label>' +
+        '</div>' +
+        '<div ng-if="!element.sorted_options" class="form-item form-type-checkbox" ng-repeat="option in options">' +
+          '<input ng-model="value[option.key]" ng-checked="value[option.key]" type="checkbox" id="{{id}}-{{option.key}}" name="{{name}}" value="{{option.key}}" class="form-checkbox" ng-disabled="element.disabled">' + 
+          '&nbsp;<label class="option" for="{{id}}-{{option.key}}" ng-bind-html="option.label"></label>' +
+        '</div>' +
+      '</div> ',
+      link: function (scope, elem, attr) {
+        scope.id = attr['inputId'];
+        scope.options = scope.element.options;       
+        scope.title = scope.element.title;
+
+        scope.masterChange = function () {
+          if (scope.selectAll) {
+            angular.forEach(scope.options, function (cb) {
+              scope.value[cb.key] = true;
+            });
+          } else {   
+            angular.forEach(scope.options, function (cb) {
+              scope.value[cb.key] = false;
+            });
+          }
+        };
+      }
+    }
+  }]);
+
+  /**
    * Checkbox directive.
    * Arguments:
    *   name - string - the name of the element as Drupal expects it
@@ -181,4 +227,37 @@
       }
     }
   }]);
+
+  /**
+   * Publication cititation js directive.
+   *
+   * .
+   */
+  m.directive('fePubjsevent', [function () {
+    return {
+      scope: {
+        name: '@',
+        value: '=ngModel',
+        element: '=',
+      },
+      template: '<div ng-bind-html="markup"></div>',
+      link: function (scope, elem, attr) {
+        angular.element(document.querySelectorAll(scope.element.mouseover_element)).find('div').on(scope.element.mouseover_event, function (e) {
+          e.stopPropagation();
+          if (scope.element.hide_element) {
+            angular.element(document.querySelectorAll(scope.element.hide_element)).hide();
+          }
+          if (scope.element.show_element) {
+            if (scope.element.show_element == 'this.id') {
+              var pop_id = angular.element(this).find('input').attr('value').replace('.','');
+              angular.element(document.querySelectorAll('#' + pop_id)).show();
+            } else {
+              angular.element(document.querySelectorAll(scope.element.show_element)).show();
+            }
+          }
+        });
+      }
+    }
+  }])
+
 })();
