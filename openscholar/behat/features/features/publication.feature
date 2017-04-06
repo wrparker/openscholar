@@ -67,33 +67,33 @@ Feature:
       And I click "Cancel"
      Then I should see "Delete this biblio"
 
-  @api @features_second
+  @api @features_second @javascript
   Scenario: Test that Conference Papers using the Chicago-Author-Date style
             print 'In' correctly and doesn't capitalize unneeded words.
     Given I am logging in as "john"
-     When I go to the "os_publications" app settings in the vsite "john"
-      And I select the radio button named "biblio_citeproc_style" with value "chicago-author-date.csl"
-      And I press "Save configuration"
+      And I navigate to "Publications" cp settings of the site "john"
+      And I change publication citation style to "Harvard chicago author-date"
+      And I submit cp settings of the site
       And I visit "john/publications/confpapers-tests"
      Then I should see "“Confpapers Tests.”"
       And I visit "john/publications/journal-article-title"
       And I should see "Journal of Publications"
       And I should not find the text "Journal Of Publications"
 
-  @api @features_second
+  @api @features_second @javascript
   Scenario: Verify that the publication citations contain the indent CSS class
             when format is Chicago Author-Date style.
     Given I am logging in as "john"
-      And I visit "john/cp/build/features/os_publications"
+      And I navigate to "Publications" cp settings of the site "john"
      Then I should see "div" element with the class "bib-neg-indent"
 
-  @api @features_second
+  @api @features_second @javascript
   Scenario: Verify the user can see message the the publication won't display
             in the publication form.
     Given I am logging in as "john"
-      And I visit "john/cp/build/features/os_publications"
-      And I uncheck the box "os_publications_filter_publication_types[102]"
-      And I press "edit-submit"
+      And I navigate to "Publications" cp settings of the site "john"
+      And I uncheck the box "Journal Article" with id "edit-os-publications-filter-publication-types-102" publication citation filter
+      And I submit cp settings of the site
       And I visit "john/node/add/biblio"
      Then I should see "Note: The publication type Journal Article is not currently shown in publication lists."
 
@@ -119,13 +119,13 @@ Feature:
       And I visit "john/publications/year/1943"
      Then I should see "Publications by Year: 1943"
 
-  @api @features_second
+  @api @features_second @javascript
   Scenario: Verify we don't get html tags in the publication title.
     Given I am logging in as "john"
-      And I go to the "os_publications" app settings in the vsite "john"
-      And I select the radio button named "biblio_citeproc_style" with value "chicago-author-date.csl"
-      And I press "Save configuration"
-     When I visit "john/publications/reevaluation-Chinas-Co2-Emissions"
+      And I navigate to "Publications" cp settings of the site "john"
+      And I change publication citation style to "Harvard chicago author-date"
+      And I submit cp settings of the site
+      And I visit "john/publications/reevaluation-Chinas-Co2-Emissions"
      Then I should not see "<sub>2</sub>"
 
   @api @features_second

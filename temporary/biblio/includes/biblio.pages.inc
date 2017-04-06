@@ -453,7 +453,11 @@ function biblio_build_query($arg_list) {
         case 'type':
           if (is_array($value)) {
             foreach ($value as $k => $v) {
-              $k = ucwords(strtolower(str_replace(array('-', '_'), ' ', $v)));
+              if (is_int($k) && is_bool($v)) {
+                $value[$k] = $k;
+              } else {
+                $value[$k] = ucwords(strtolower(str_replace(array('-', '_'), ' ', $v)));
+              }
             }
           }
           else {
