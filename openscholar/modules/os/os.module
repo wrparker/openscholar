@@ -3688,6 +3688,11 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
         $text = text_summary($item['value'], $item['format'], $display['settings']['trim_length']);
         $delimiter = strpos($item['value'], '<!--break-->');
 
+        // Remove the ellipsis we got from the text summary.
+        if (strpos($text, '…') !== 0) {
+          $text = str_replace('…', '', $text);
+        }
+
         // Check the if the text was trimmed and we don't have the break tag.
         // The break tag will be handled in another place thus give us two
         // 'Read more' links.
