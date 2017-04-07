@@ -1,0 +1,28 @@
+diff --git a/includes/database/database.inc b/includes/database/database.inc
+index 6879f69..881b5ee 100644
+--- a/includes/database/database.inc
++++ b/includes/database/database.inc
+@@ -1,6 +1,14 @@
+ <?php
+ 
+ /**
+++ * Sorry to patch core; fixes known APC "cannot redeclare class" bug.
+++ *
+++ * @see https://drupal.org/node/838744
+++ * @see http://goo.gl/JZi05
+++ */
++if (!class_exists('insertquery_mysql')) {
++
++/**
+  * @file
+  * Core systems for the database layer.
+  *
+@@ -3096,3 +3104,8 @@ function db_ignore_slave() {
+     $_SESSION['ignore_slave_server'] = REQUEST_TIME + $duration;
+   }
+ }
++
++/**
++ * @see top of this file.
++ */
++}

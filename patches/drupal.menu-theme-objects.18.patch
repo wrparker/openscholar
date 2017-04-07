@@ -1,0 +1,42 @@
+diff --git a/modules/block/block.module b/modules/block/block.module
+index 73e1162..0c6d0df 100644
+--- a/modules/block/block.module
++++ b/modules/block/block.module
+@@ -149,7 +149,7 @@ function block_menu() {
+       'type' => $key == $default_theme ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+       'weight' => $key == $default_theme ? -10 : 0,
+       'access callback' => '_block_themes_access',
+-      'access arguments' => array($theme),
++      'access arguments' => array($key),
+       'file' => 'block.admin.inc',
+     );
+     if ($key != $default_theme) {
+@@ -168,7 +168,7 @@ function block_menu() {
+       'page arguments' => array($key),
+       'type' => MENU_CALLBACK,
+       'access callback' => '_block_themes_access',
+-      'access arguments' => array($theme),
++      'access arguments' => array($key),
+       'theme callback' => '_block_custom_theme',
+       'theme arguments' => array($key),
+       'file' => 'block.admin.inc',
+diff --git a/modules/system/system.module b/modules/system/system.module
+index 53844d8..a5c9d41 100644
+--- a/modules/system/system.module
++++ b/modules/system/system.module
+@@ -649,13 +649,13 @@ function system_menu() {
+     'weight' => -1,
+   );
+ 
+-  foreach (list_themes() as $theme) {
++  foreach (list_themes() as $key => $theme) {
+     $items['admin/appearance/settings/' . $theme->name] = array(
+       'title' => $theme->info['name'],
+       'page arguments' => array('system_theme_settings', $theme->name),
+       'type' => MENU_LOCAL_TASK,
+       'access callback' => '_system_themes_access',
+-      'access arguments' => array($theme),
++      'access arguments' => array($key),
+       'file' => 'system.admin.inc',
+     );
+   }
