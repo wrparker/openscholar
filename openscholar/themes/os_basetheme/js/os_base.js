@@ -29,4 +29,8 @@ jQuery(document).ready(function() {
         });
     });
 
+    jQuery('[id^="os-importer-content-"]').click(function(){
+    	var cp_ctrl_id = jQuery(this).attr('id').replace(/-/g, '_');
+    	jQuery('#' + cp_ctrl_id).click();
+	});
 });
