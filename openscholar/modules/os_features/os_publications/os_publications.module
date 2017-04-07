@@ -205,7 +205,10 @@ function os_publications_query_biblio_alter(QueryAlterableInterface $query) {
     // and ignore node creation date
     $order['biblio_year'] = isset($biblio_year_sort) ? $biblio_year_sort : 'DESC';
     $order['n.sticky'] = 'DESC';
-    if(variable_get('biblio_citeproc_style','') == 'harvard-chicago-author-date.csl') {
+
+    $style = variable_get('biblio_citeproc_style');
+    $chicago_author_date_mode = in_array($style, array('harvard-chicago-author-date.csl'));
+    if($chicago_author_date_mode) {
       $query->leftJoin('field_data_field_biblio_pub_month', 'field_month', "field_month.entity_id = n.nid AND field_month.revision_id = n.vid AND field_month.entity_type = 'node'");
       $query->leftJoin('field_data_field_biblio_pub_day', 'field_day', "field_day.entity_id = n.nid AND field_day.revision_id = n.vid AND field_day.entity_type = 'node'");
       $order['field_biblio_pub_month_value'] = isset($biblio_year_sort) ? $biblio_year_sort : 'DESC';
@@ -1621,11 +1624,13 @@ function os_publications_apachesolr_query_alter($query) {
   if (variable_get('biblio_sort', 'year') == 'year' && !empty($filter) && $filter[0]['#value'] == 'biblio') {
 
     $order = strtolower(variable_get('biblio_order', 'desc'));
+    $style = variable_get('biblio_citeproc_style');
+    $chicago_author_date_mode = in_array($style, array('harvard-chicago-author-date.csl'));
 
     // Use addParam() rather than setSolrsort() for multiple.
     $query->addParam('sort', 'is_biblio_year ' . $order);
     $query->addParam('sort', 'bs_sticky desc');
-    if (variable_get('biblio_citeproc_style', '') == 'harvard-chicago-author-date.csl') {
+    if ($chicago_author_date_mode) {
       $query->addParam('sort', 'is_biblio_month ' . $order);
       $query->addParam('sort', 'is_biblio_day ' . $order);
     }
