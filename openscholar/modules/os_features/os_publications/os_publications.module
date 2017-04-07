@@ -1611,6 +1611,8 @@ function os_publications_apachesolr_index_document_build_node(ApacheSolrDocument
     $doc->addField('ts_biblio_sort_title', $entity->biblio_sort_title);
     $doc->addField('is_biblio_year', _biblio_numeric_year($entity->biblio_year));
     $doc->addField('is_biblio_date', intval($entity->biblio_date));
+    $doc->addField('is_biblio_month', intval($entity->field_biblio_pub_month[LANGUAGE_NONE][0]['value']));
+    $doc->addField('is_biblio_day', intval($entity->field_biblio_pub_day[LANGUAGE_NONE][0]['value']));
   }
 }
 
@@ -1622,11 +1624,19 @@ function os_publications_apachesolr_query_alter($query) {
   if (variable_get('biblio_sort', 'year') == 'year' && !empty($filter) && $filter[0]['#value'] == 'biblio') {
 
     $order = strtolower(variable_get('biblio_order', 'desc'));
+    $style = variable_get('biblio_citeproc_style');
+    $chicago_author_date_mode = in_array($style, array('harvard-chicago-author-date.csl'));
 
     // Use addParam() rather than setSolrsort() for multiple.
     $query->addParam('sort', 'is_biblio_year ' . $order);
     $query->addParam('sort', 'bs_sticky desc');
-    $query->addParam('sort', 'ds_created desc');
+    if ($chicago_author_date_mode) {
+      $query->addParam('sort', 'is_biblio_month ' . $order);
+      $query->addParam('sort', 'is_biblio_day ' . $order);
+    }
+    else {
+      $query->addParam('sort', 'ds_created desc');
+    }
     $query->addParam('sort', 'ts_biblio_sort_title asc');
   }
 }
