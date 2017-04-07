@@ -22,6 +22,7 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
   }
   else {
     $form['revision_information']['#access'] = TRUE;
+    $form['revision_information']['#collapsed'] = FALSE;
     $max_revisions = (int)variable_get("restrict_node_revision_number_for_" . str_replace("-", "_", $form_state['node']->type), FALSE);
     $num_revisions = count(node_revision_list(node_load($form_state['node']->nid))) - 1;
     if ($max_revisions) {
@@ -34,8 +35,6 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
       $form['revision_information']['revision']['#access'] = TRUE;
       $form['revision_information']['revision']['#title'] = "When checked, a new version of this content will be created";
       $form['revision_information']['revision']['#weight'] = 1;
-
-      $form['revision_information']['#collapsed'] = FALSE;
 
       $form['revision_information']['log']['#weight'] = 2;
       $form['revision_information']['log']['#title'] = t('Revision Notes');
@@ -99,44 +98,43 @@ function os_revisions_menu_alter(&$items) {
 function os_revisions_revision_overview($node) {
   drupal_set_title(t('Revisions for %title', array('%title' => $node->title)), PASS_THROUGH);
 
-  $header = array(t('Revision'), t('Revision Notes'), array('data' => t('Manage'), 'colspan' => 2));
-
   $revisions = node_revision_list($node);
-
-  $rows = array();
+  $revision_limit = variable_get("restrict_node_revision_number_for_" . str_replace("-", "_", $node->type), FALSE);
+  $revision_num = count($revisions) - 1;
   $revert_permission = $delete_permission = node_access('update', $node);
 
+  $rows = array();
   foreach ($revisions as $revision) {
     $row = array();
     $operations = array();
 
     if ($revision->current_vid > 0) {
-
-      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp), "node/$node->nid"), '!username' => format_username(user_load($revision->uid)))),
+      $row[] = array('data' => t('Current Revision') . '<br>' . format_date($revision->timestamp) . '<br>' .  t('by !username', array('!username' => format_username(user_load($revision->uid)))),
         'class' => array('revision-current'));
       $row[] = array('data' => filter_xss($revision->log),'class' => array('revision-current'));
-      $operations[] = array('data' => drupal_placeholder(t('Current version')), 'class' => array('revision-current'), 'colspan' => 2);
+      $operations[] = array('data' => l(t('View'), "node/$node->nid"), 'class' => array('revision-current'), 'colspan' => 3);
     }
     else {
-      $row[] = t('!date by !username', array('!date' => l(t('View this revision') . ' - ' . format_date($revision->timestamp), "node/$node->nid/revisions/$revision->vid/view"), '!username' => format_username(user_load($revision->uid))));
-      $row[] = array('data' => filter_xss($revision->log));
+      $row[] = t('Revision ') . "$revision_num<br>" . format_date($revision->timestamp) . '<br>' .  t('by !username', array('!username' => format_username(user_load($revision->uid))));
+      $row[] =  filter_xss($revision->log);
+      $operations[] = l(t('View'), "node/$node->nid/revisions/$revision->vid/view");
       if ($revert_permission) {
         $operations[] = l(t('Revert'), "node/$node->nid/revisions/$revision->vid/revert");
       }
       if ($delete_permission) {
         $operations[] = l(t('Delete'), "node/$node->nid/revisions/$revision->vid/delete");
       }
+      $revision_num--;
     }
     $rows[] = array_merge($row, $operations);
   }
 
-  $limit = variable_get("restrict_node_revision_number_for_" . str_replace("-", "_", $node->type), FALSE);
-
   $build['node_revisions_table'] = array(
     '#theme' => 'table',
     '#rows' => $rows,
-    '#header' => $header,
-    '#caption' => t('NOTE: When you revert to a prior revision, a new copy is created based on that revision. You have created ') . '<span class="num-revisions">' . (count($revisions) - 1) .'</span>' . t(' of the @limit revisions allowed.', array('@limit' => $limit)) . ' ' . l(t('Learn more about revisions'), OS_REVISIONS_DOCS_URL),
+    '#header' => array(t('Revision'), t('Revision Notes'), array('data' => t('Manage'), 'colspan' => 3)),
+    '#caption' => t('NOTE: When you revert to a prior revision, a new copy is created based on that revision. You have created ') . '<span class="num-revisions">' . (count($revisions) - 1) .'</span>' . t(' of the @limit revisions allowed.', array('@limit' => $revision_limit)),
+    '#suffix' => '<p class="revision-suffix">' . l(t('Learn more about revisions'), OS_REVISIONS_DOCS_URL) . '</p>',
   );
 
   return $build;
