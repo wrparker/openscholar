@@ -3707,7 +3707,10 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
         }
         else {
           // No break tag but the original text is longer than the trimmed text.
-          if (strlen($item['value']) != strlen($text)) {
+          // In case we have a break tag, even in the trimmed text, we will not
+          // provide a read more link since another function will handle that
+          // for us.
+          if (strlen($item['value']) != strlen($text) && strpos($text, '<!--break-->') === FALSE) {
             $read_more($entity_type, $entity, $text);
           }
         }
