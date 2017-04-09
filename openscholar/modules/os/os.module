@@ -3686,19 +3686,30 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
 
       foreach ($items as $delta => $item) {
         $text = text_summary($item['value'], $item['format'], $display['settings']['trim_length']);
-        $delimiter = strpos($item['value'], '<!--break-->');
 
         // Remove the ellipsis we got from the text summary.
         if (strpos($text, '…') !== 0) {
           $text = str_replace('…', '', $text);
         }
 
-        // Check the if the text was trimmed and we don't have the break tag.
-        // The break tag will be handled in another place thus give us two
-        // 'Read more' links.
-        if (strlen($item['value']) != strlen($text) && $delimiter === FALSE) {
+        $read_more = function($entity_type, $entity, &$text) {
           $uri = entity_uri($entity_type, $entity);
           $text .= '… ' . l(t('Read more <span class="element-invisible"> about @title</span>', array('@title' => entity_label($entity_type, $entity))), $uri['path'], array('html' => true));
+        };
+
+        $delimiter = strpos($item['value'], '<!--break-->') !== FALSE && strpos($text, '<!--break-->') === FALSE;
+
+        if ($delimiter) {
+          // We have a break tag in the original value but the trimmed text
+          // function removed the break tag. In that case show the read more
+          // button.
+          $read_more($entity_type, $entity, $text);
+        }
+        else {
+          // No break tag but the original text is longer than the trimmed text.
+          if (strlen($item['value']) != strlen($text)) {
+            $read_more($entity_type, $entity, $text);
+          }
         }
 
         $element[$delta] = array('#markup' => '<div class="os-trim-text">' . $text . '</div>');
