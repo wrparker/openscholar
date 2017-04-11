@@ -916,17 +916,6 @@ function os_update_7046() {
 }
 
 /**
- * Revert feature variables
- */
-function os_update_7049() {
-  // Update the secure_pages settings.
-  $features = array(
-    'os' => array('variable'),
-  );
-
-  features_revert($features);
-}
-/**
  * Update has_children field of parent menus having 0 children
  */
 function os_update_7047() {
@@ -947,9 +936,21 @@ function os_update_7047() {
 }
 
 /**
- * Install OS Revisions module
+ * Revert feature variables
  */
 function os_update_7048() {
+  // Update the secure_pages settings.
+  $features = array(
+    'os' => array('variable'),
+  );
+
+  features_revert($features);
+}
+
+/**
+ * Install OS Revisions module
+ */
+function os_update_7049() {
   module_enable(array('os_revisions', 'node_revision_restrict'));
   module_disable(array('diff'));
 

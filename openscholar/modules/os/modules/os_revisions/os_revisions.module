@@ -21,10 +21,12 @@ function os_revisions_form_node_form_alter(&$form, $form_state) {
     $form['revision_information']['#access'] = FALSE;
   }
   else {
-    $form['revision_information']['#access'] = TRUE;
-    $form['revision_information']['#collapsed'] = FALSE;
     $max_revisions = (int)variable_get("restrict_node_revision_number_for_" . str_replace("-", "_", $form_state['node']->type), FALSE);
     $num_revisions = count(node_revision_list(node_load($form_state['node']->nid))) - 1;
+
+    $form['revision_information']['#access'] = empty($form['#node']->nid) ? FALSE : TRUE;
+    $form['revision_information']['#collapsed'] = FALSE;
+
     if ($max_revisions) {
       $form['max_revisions'] = array('#type' => 'hidden', '#value' => $max_revisions);
       $form['revisions'] =  array('#type' => 'hidden', '#value' => $num_revisions);
