@@ -61,11 +61,11 @@ function os_importer_cp_settings() {
       continue;
     }
 
-    if (!is_array($info['browse_pages'])) {
+    if (!is_array($info['nodetypes'])) {
       continue;
     }
 
-    foreach ($info['browse_pages'] as $node_type => $app) {
+    foreach ($info['nodetypes'] as $node_type) {
       $import_format_option = array();
 
       if (!os_importer_importable_content($node_type)) {
