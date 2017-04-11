@@ -945,3 +945,10 @@ function os_update_7047() {
   $message = t('@count parent menus with no children links have been updated.', array('@count' => sizeof($mlids)));
   drupal_set_message($message);
 }
+
+/**
+ * Disable the deprecated os_tours module.
+ */
+function os_update_7048() {
+  module_disable(array('os_tour'));
+}
