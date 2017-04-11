@@ -1908,7 +1908,7 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
 function _os_taxonomy_operations(&$form, &$form_state) {
   //Get the parent vocabulary name for redirect after delete operation.
   $vocab = $form['vocabulary_machine_name']['#value'];
-  $path = 'cp/build/taxonomy/'.$vocab;
+  $path = 'cp/build/taxonomy/' . $vocab;
 
   // Form API will re-render the current page and pass the redirect information to the overlay JavaScript.
   if (($form_state['values']['op'] == 'Save') && $form['#term']['tid']) {
