@@ -148,11 +148,20 @@ function os_revisions_revision_overview($node) {
  * Change title/text in confirm_form when user selects to revert to an older revision
  */
 function os_revisions_form_node_revision_revert_confirm_alter(&$form, &$form_state, $form_id) {
+  $node = node_load($form['#node_revision']->nid);
+  $revisions = node_revision_list($node);
+  $revision_limit = variable_get("restrict_node_revision_number_for_" . str_replace("-", "_", $node->type), FALSE);
+  $revision_num = count($revisions) - 1;
+  $warning = "";
+  if ($revision_num >= $revision_limit) {
+    $warning = '<p class="revision-warning warning">This content already has the maximum number of revisions saved (' . $revision_limit . '). By creating a new revision, you will be permanently deleting the oldest revision. <a href="' . OS_REVISIONS_DOCS_URL . '" target="_blank" rel="noopener">Learn more about managing revisions</a>.</p>';
+  }
+
   $text = t('Are you sure you want to revert to the revision from ') . drupal_placeholder(format_date($form['#node_revision']->revision_timestamp), 'date') . '?';
   drupal_set_title(t('Confirm Revert'));
 
   $form['description'] = array(
-    '#markup' => "<p>$text</p>",
+    '#markup' => "$warning<p>$text</p>",
   );
 
   // replace existing submit handler that creates the revert revision log with one that maintains revision log message
