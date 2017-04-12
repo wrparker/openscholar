@@ -156,9 +156,9 @@ div.contextual-links-wrapper a,.contextual-controls-wrapper div.ctools-dropdown.
 #menu-bar nav > ul.menu {
     padding: 0 8px 0 0;
 }
-#menu-bar ul.nice-menu a.active, 
-#menu-bar ul.nice-menu a:hover,
-#menu-bar ul.nice-menu a.active:hover {
+#menu-bar #block-os-primary-menu ul.nice-menu a.active, 
+#menu-bar #block-os-primary-menu ul.nice-menu a:hover,
+#menu-bar #block-os-primary-menu ul.nice-menu a.active:hover {
     background: #303030;
     color: #FFFFFF;
 }
@@ -184,9 +184,9 @@ div.contextual-links-wrapper a,.contextual-controls-wrapper div.ctools-dropdown.
 }
 #menu-bar #block-os-primary-menu ul > li > a:hover,
 #menu-bar #block-os-primary-menu ul > li > a.active,
-#menu-bar ul.nice-menu a:hover,
-#menu-bar ul.nice-menu li.menuparent:hover a,
-#menu-bar ul.nice-menu .menuparent a.active {
+#menu-bar #block-os-primary-menu ul.nice-menu a:hover,
+#menu-bar #block-os-primary-menu ul.nice-menu li.menuparent:hover a,
+#menu-bar #block-os-primary-menu ul.nice-menu .menuparent a.active {
     background: #282828;
     background: -moz-linear-gradient(top, #313131 0%, #282828 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#313131), color-stop(100%,#282828));
@@ -196,9 +196,9 @@ div.contextual-links-wrapper a,.contextual-controls-wrapper div.ctools-dropdown.
     background: linear-gradient(to bottom, #313131 0%,#282828 100%);
     filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#313131', endColorstr='#282828',GradientType=0 );
 }
-#menu-bar ul.nice-menu a:hover,
+#menu-bar #block-os-primary-menu ul.nice-menu a:hover,
 #menu-bar #block-os-primary-menu ul > li > a:hover,
-#menu-bar ul.nice-menu li.menuparent:hover a {
+#menu-bar #block-os-primary-menu ul.nice-menu li.menuparent:hover a {
     color: #fff;
     -webkit-border-radius: 3px 3px 0 0;
     border-radius: 3px 3px 0 0;
