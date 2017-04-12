@@ -144,7 +144,7 @@ html.js input.throbbing {
 }
 input.form-submit, 
 a.button,
-
+.wysiwyg-link-tool-wrapper .form-actions button,
 .ui-dialog.ap-settings-form button,
 .ui-dialog.ap-settings-form input[type="button"],
 .ui-dialog.ap-settings-form input[type="submit"],
@@ -154,8 +154,6 @@ a.form-cancel {
     padding: 5px 12px;
     margin-bottom: 1em;
     margin-right: 1em;
-    /* LTR */
-    
     color: #5a5a5a;
     text-align: center;
     font-weight: normal;
@@ -426,6 +424,26 @@ form.confirmation span.emphasize {
     margin-bottom: -1px;
     padding-bottom: 0px;
 }
+
+.media-browser-button {
+    width: 175px;
+    height: 20px;
+    display: inline-block;
+    text-align: center;
+    padding: 5px;
+    color: #4E84C4;
+}
+.media-browser-button:hover {
+    cursor: pointer;
+    background-color: #eee;
+}
+.media-browser-button.active {
+    border: 1px solid lightgray;
+    border-bottom: 1px solid white;
+    background-color: #FFFFFF;
+    color: #333;
+}
+
 /** CP TABLE STYLES **/
 
 table.spaces td.option,
@@ -1076,7 +1094,7 @@ padding:10px 30px 10px 20px;
 
     border-top:2px solid #fff;
 }
-
+.ui-dialog-titlebar-close,
 .error .dismiss,
 .messages .dismiss,
 div.status .dismiss {

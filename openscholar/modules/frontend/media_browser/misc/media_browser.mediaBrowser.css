@@ -33,24 +33,7 @@
 .media-browser-buttons {
     margin: 0 3px -1px 3px;
 }
-.media-browser-button {
-    width: 175px;
-    height: 20px;
-    display: inline-block;
-    text-align: center;
-    padding: 5px;
-    color: #4E84C4;
-}
-.media-browser-button:hover {
-    cursor: pointer;
-    background-color: #eee;
-}
-.media-browser-button.active {
-    border: 1px solid lightgray;
-    border-bottom: 1px solid white;
-    background-color: #FFFFFF;
-    color: #333;
-}
+
 .description.embedly {
     font-size: 1.04em;
     line-height: 1.3;
