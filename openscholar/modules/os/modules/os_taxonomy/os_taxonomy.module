@@ -1899,7 +1899,15 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
   $form['parent'] = $form['relations']['parent'];
   unset($form['relations']);
 
+  if ($form_state['values']['op'] == 'Delete') {
+    unset($form['actions']['cancel']['#type']);
+    unset($form['actions']['cancel']['#title']);
+    $form['actions']['cancel']['#type'] = 'submit';
+    $form['actions']['cancel']['#value'] = 'Cancel';
+  }
+
   $form['#submit'][] = '_os_taxonomy_operations';
+  $form['actions']['cancel']['#submit'][] = '_os_taxonomy_custom_form_cancel';
 }
 
 /**
@@ -1920,6 +1928,19 @@ function _os_taxonomy_operations(&$form, &$form_state) {
   if ($form_state['values']['op'] == 'Delete') {
     $form_state['redirect'] = url($path);
   }
+}
+
+/**
+ * Callback for custom cancel redirection.
+ */
+function _os_taxonomy_custom_form_cancel(&$form, &$form_state) {
+  //Get the parent vocabulary name.
+  $vocab = $form['vocabulary_machine_name']['#value'];
+  //Get the parent vocabulary name.
+  $term =  $form['name']['#value'];
+  $path_term = $vocab . '/' . $term;
+  //Redirection to the term page after cancellation.
+  $form_state['redirect'] = url($path_term);
 }
 
 /**
