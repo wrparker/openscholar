@@ -6,12 +6,7 @@
 .display_inline.two_blocks {
     width: 48%;
 }
-.media-browser-panes {
-    border-top: 1px solid lightgray;
-    margin: 3px;
-    margin-top: 0;
-    padding: 20px 5px 0;
-}
+
 .media-browser-panes .loading {
     position: absolute;
     top: 35px;
