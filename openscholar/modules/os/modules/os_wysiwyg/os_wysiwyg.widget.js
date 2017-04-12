@@ -42,6 +42,18 @@
           // Get the text that the user selected.
           jQuery.selectLink = this.getSelection().getSelectedText();
         });
+
+        // Improve formatting issues for HTML code.
+        var dtd = CKEDITOR.dtd;
+        for (var e in CKEDITOR.tools.extend({}, dtd.$nonBodyContent, dtd.$block, dtd.$listItem, dtd.$tableContent)) {
+          editor.dataProcessor.writer.setRules( e, {
+            indent: true,
+            breakBeforeOpen: true,
+            breakAfterOpen: true,
+            breakBeforeClose: true,
+            breakAfterClose: true
+          });
+        }
       });
     }
   };
