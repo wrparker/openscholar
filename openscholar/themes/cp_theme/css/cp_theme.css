@@ -425,6 +425,7 @@ form.confirmation span.emphasize {
     padding-bottom: 0px;
 }
 
+.owl-tab-button,
 .media-browser-button {
     width: 175px;
     height: 20px;
@@ -433,10 +434,12 @@ form.confirmation span.emphasize {
     padding: 5px;
     color: #4E84C4;
 }
+.owl-tab-button:hover,
 .media-browser-button:hover {
     cursor: pointer;
     background-color: #eee;
 }
+.owl-tab-button.active,
 .media-browser-button.active {
     border: 1px solid lightgray;
     border-bottom: 1px solid white;
