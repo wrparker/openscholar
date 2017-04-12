@@ -1363,7 +1363,7 @@ function os_pages_entity_load($entities, $type) {
     if ($entity->type != 'page') {
       return;
     } else{
-      if (is_array($entity->metatags[LANGUAGE_NONE]['description']) && empty($entity->metatags[LANGUAGE_NONE]['description']['value'])) {
+      if (isset($entity->metatags[LANGUAGE_NONE]) && is_array($entity->metatags[LANGUAGE_NONE]['description']) && empty($entity->metatags[LANGUAGE_NONE]['description']['value'])) {
         $entity->metatags = array();
       }
     }
