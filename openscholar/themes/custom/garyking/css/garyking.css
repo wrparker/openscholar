@@ -28,6 +28,10 @@ body {
 .link-count-mobi-util {
     display: none;
 }
+
+iframe[id^="oauth2relay"] {visibility:hidden;}
+
+
 body,
 .page-search .title a,
 #content-column .block.block-boxes-os_boxes_manual_list .links.inline a,
@@ -144,7 +148,7 @@ h2.block-title {
     font-weight: 400;
 }
 .not-front .gkplus-show-heading.depth-1 h2 {
-    font-size: 1.8em;
+    font-size: 1.4em;
     border-bottom: 1px solid #b5b4b4;
     display: block;
     padding-bottom: 10px;
@@ -460,7 +464,7 @@ body.node-type-biblio .biblio-export,
 .breadcrumb {
     position: relative;
     top: 68px;
-    z-index: 2;
+    z-index: 1;
 }
 .page-node .breadcrumb {
     top: 57px;
@@ -530,7 +534,7 @@ a:visited {
     z-index: 1;
     opacity: 1;
     transition: all .250s linear .250s;
-    border-bottom: 1px solid transarent;
+   
 }
 #menu-bar.fixed {
     border-bottom: 1px solid #32526e;
@@ -1020,4 +1024,22 @@ img.file-icon {
 .front .block-boxes-os_sv_list_box {
         width: 94% !important;
     }
+}
+
+@media (max-width: 320px) {
+ 
+ .bg-one,
+    .bg-two,
+    .bg-three,
+    .bg-four,
+    .bg-five,
+    .bg-six,
+    .bg-seven,
+    .bg-eight {
+        background-position: center 65px;
+     
+    }
+ 
+ 
+ 
 }
