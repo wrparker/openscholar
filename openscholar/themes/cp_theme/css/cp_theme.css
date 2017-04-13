@@ -132,6 +132,7 @@ html.js input.throbbing {
     text-decoration: none !important;
     float: right;
 }
+.wysiwyg-link-tool-wrapper .add_new_button,
 .view-os-files-private .cp-controls-wrapper .add_new {
     background: #2C890D !important;
     padding: 5px 10px !important;
@@ -141,6 +142,7 @@ html.js input.throbbing {
     text-decoration: none !important;
     color: #FFF;
     font-weight: bold;
+    display: inline;
 }
 input.form-submit, 
 a.button,
