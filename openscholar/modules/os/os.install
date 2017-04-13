@@ -948,9 +948,16 @@ function os_update_7048() {
 }
 
 /**
+ * Disable the deprecated os_tours module.
+ */
+function os_update_7050() {
+  module_disable(array('os_tour'));
+}
+
+/**
  * Install OS Revisions module
  */
-function os_update_7049() {
+function os_update_7051() {
   module_enable(array('os_revisions', 'node_revision_restrict'));
   module_disable(array('diff'));
 

@@ -91,7 +91,6 @@ dependencies[] = os_files_private
 dependencies[] = os_taxonomy
 dependencies[] = os_ga
 dependencies[] = os_wysiwyg_link
-dependencies[] = os_tour
 dependencies[] = os_importer
 dependencies[] = os_exporter
 dependencies[] = os_front
