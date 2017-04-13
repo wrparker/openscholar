@@ -452,6 +452,9 @@ form.confirmation span.emphasize {
     margin-top: 0;
     padding: 20px 5px 0;
 }
+#owl-panes {
+ 	padding: 20px 0;
+}
 /** CP TABLE STYLES **/
 
 table.spaces td.option,

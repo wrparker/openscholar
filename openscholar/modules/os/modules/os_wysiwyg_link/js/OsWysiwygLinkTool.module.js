@@ -11,7 +11,6 @@
       resizable: false,
       minWidth: 600,
       width: 800,
-      height: 650,
       position: 'center',
       title: undefined,
       overlay: {
