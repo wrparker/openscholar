@@ -115,7 +115,7 @@ function os_profiles_cp_settings() {
         'upload_text' => t('Upload file.'),
         'max-filesize' => '100kb',
         'extensions' => $allowed_file_types,
-        'types' => $allowed_file_types,
+        'types' => 'image',
       ),
       '#title' => t(''),
       '#description' => t('The default image will be used if a profile photo is not available. Instead, you can upload your own default image.<br/>Position the cropping tool over it if necessary. Allowed file types: <strong> @allowed_file_types </strong>', array('@allowed_file_types' => $allowed_file_types)),
