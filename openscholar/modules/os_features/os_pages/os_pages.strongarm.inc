@@ -116,6 +116,14 @@ function os_pages_strongarm() {
       'collapsed' => 1,
       'hidden' => 0,
     ),
+     'os_css_class_fieldset' => array(
+      'region' => 'right',
+      'weight' => '8',
+      'has_required' => FALSE,
+      'title' => 'Apply css',
+      'collapsed' => 1,
+      'hidden' => 0,
+    ),
     'author' => array(
       'region' => 'right',
       'weight' => '4',

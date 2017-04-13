@@ -28,4 +28,5 @@ jQuery(document).ready(function() {
             "width" : + imgwidth
         });
     });
+
 });

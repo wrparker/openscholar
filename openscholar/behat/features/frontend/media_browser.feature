@@ -32,6 +32,7 @@ Feature: Media Browser
      When I click on the "Upload" control
       And I wait "1 second" for the media browser to open
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
+      And I sleep for "10"
      When I click on "Previously uploaded files" button in the media browser
       And I should see "jfk_2.jpg" in a ".media-row" element
       And I press ">>"
@@ -218,11 +219,11 @@ Feature: Media Browser
       And I wait "1 second" for the media browser to open
       And I should wait for the text "Please wait while we get information on your files." to "disappear"
       And I click on the tab "Embed from the web"
-      And I fill in "URL or HTML" with "<iframe src=\"http://untrusted.domain\"></iframe>"
+      And I fill in "URL or HTML" with "<iframe src=\"https://untrusted.domain\"></iframe>"
       And I press the "Submit" button
       And I wait "1 seconds"
      Then I should see "URL(s) not from accepted domain!"
      When I whitelist the domain "trusted.domain"
-      And I fill in "URL or HTML" with "<iframe src=\"http://trusted.domain\"></iframe>"
+      And I fill in "URL or HTML" with "<iframe src=\"https://trusted.domain\"></iframe>"
       And I press the "Submit" button
       And I should wait for "File Edit" directive to "appear"

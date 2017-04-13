@@ -776,7 +776,8 @@ function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
 
     // Add user's role
     og_ui_edit_membership_submit($form, $form_state);
-  }
+
+   }
 
   $form_state['redirect'] = 'cp/users';
 }

@@ -33,6 +33,7 @@ body.overlay {
     transition-timing-function: ease-in-out;
     transition-delay: .125s;
 }
+#branding,
 .page-cp #branding {
     position: relative;
     margin-left: 110px;
@@ -91,9 +92,10 @@ body.overlay {
 #cssmenu ul li span {
     line-height: 1;
 }
-#cssmenu {
+#cssmenu * {
     font-family: helvetica;
     color: #ffffff;
+    font-weight:normal;
 }
 #cssmenu ul {
     z-index: 2;

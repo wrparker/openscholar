@@ -23,6 +23,16 @@ function os_default_elysia_cron_rules() {
   $cron_rule = new stdClass;
   $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
   $cron_rule->api_version = 1;
+  $cron_rule->name = ':default';
+  $cron_rule->disable = FALSE;
+  $cron_rule->rule = '35 */6 * * *';
+  $cron_rule->weight = NULL;
+  $cron_rule->context = NULL;
+  $cron_rules[':default'] = $cron_rule;
+
+  $cron_rule = new stdClass;
+  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
+  $cron_rule->api_version = 1;
   $cron_rule->name = ':External Service';
   $cron_rule->disable = FALSE;
   $cron_rule->rule = '50 1 * * 0';
@@ -33,12 +43,12 @@ function os_default_elysia_cron_rules() {
   $cron_rule = new stdClass;
   $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
   $cron_rule->api_version = 1;
-  $cron_rule->name = ':default';
+  $cron_rule->name = ':Infrequent';
   $cron_rule->disable = FALSE;
-  $cron_rule->rule = '35 */6 * * *';
+  $cron_rule->rule = '45 0 * * *';
   $cron_rule->weight = NULL;
   $cron_rule->context = NULL;
-  $cron_rules[':default'] = $cron_rule;
+  $cron_rules[':Infrequent'] = $cron_rule;
 
   $cron_rule = new stdClass;
   $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
@@ -73,19 +83,9 @@ function os_default_elysia_cron_rules() {
   $cron_rule = new stdClass;
   $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
   $cron_rule->api_version = 1;
-  $cron_rule->name = ':Infrequent';
-  $cron_rule->disable = FALSE;
-  $cron_rule->rule = '45 0 * * *';
-  $cron_rule->weight = NULL;
-  $cron_rule->context = NULL;
-  $cron_rules[':Infrequent'] = $cron_rule;
-
-  $cron_rule = new stdClass;
-  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
-  $cron_rule->api_version = 1;
   $cron_rule->name = ':Search';
   $cron_rule->disable = FALSE;
-  $cron_rule->rule = '*/30 * * * *';
+  $cron_rule->rule = '*/10 * * * *';
   $cron_rule->weight = NULL;
   $cron_rule->context = NULL;
   $cron_rules[':Search'] = $cron_rule;
@@ -209,16 +209,6 @@ function os_default_elysia_cron_rules() {
   $cron_rule->weight = NULL;
   $cron_rule->context = 'Infrequent';
   $cron_rules['oembedcore_cron'] = $cron_rule;
-
-  $cron_rule = new stdClass;
-  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
-  $cron_rule->api_version = 1;
-  $cron_rule->name = 'os_search_solr_cron';
-  $cron_rule->disable = NULL;
-  $cron_rule->rule = NULL;
-  $cron_rule->weight = NULL;
-  $cron_rule->context = 'Search';
-  $cron_rules['apachesolr_cron'] = $cron_rule;
 
   $cron_rule = new stdClass;
   $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */

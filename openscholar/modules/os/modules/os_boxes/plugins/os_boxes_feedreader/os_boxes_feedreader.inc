@@ -32,18 +32,7 @@ class os_boxes_feedreader extends os_boxes_default {
    */
   public function options_form(&$form_state){
     $options = array();
-
     $form = parent::options_form($form_state);
-
-    // TODO: Remove this once we have a replacement in place for Google Feeds.
-    $form['shutdown_notice'] = array(
-      '#markup' => t('<div class="warning">Google Feeds has shut down as of December 15th, 2016. This widget will be unavailable until
-        a replacement has been found and implemented. As of yet, we have no ETA for when this will be completed. Thank
-        for your patience.</div>')
-    );
-
-    return $form;
-
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')->propertyCondition('status', 1)->propertyCondition('type', 'feed')->propertyOrderBy('title');
 
@@ -122,81 +111,58 @@ class os_boxes_feedreader extends os_boxes_default {
     if (module_exists('vsite') && !vsite_get_vsite()) {
       return;
     }
-
-    $block = parent::render();
-
-    // TODO: Remove this once we have a replacement in place for Google Feeds.
-    $vsite = vsite_get_vsite();
-    if (og_user_access('node', $vsite->id, 'edit boxes')) {
-      $block['content'] = t('<div class="warning">Google Feeds has shut down as of December 15th, 2016. This widget will be unavailable until
-      a replacement has been found and implemented. This message will not appear for site visitors. Thank for your
-      patience.</div>');
-    }
-
-    unset($block['assets']);
-    return $block;
-
+    $output = parent::render();
 
     if (! $this->options['feed'] || ! ($node = node_load($this->options['feed']))) {
       return $block;
     }
 
-    $this->set_cache_id('node:feed');
-    if (($block['content'] = $this->get_cache()) === FALSE) {
-      field_attach_prepare_view('node', array(
-        $node->nid => $node,
-      ), 'teaser');
-      entity_prepare_view('node', array(
-        $node->nid => $node,
-      ));
+    field_attach_prepare_view('node', array($node->nid => $node), 'teaser');
+    entity_prepare_view('node', array($node->nid => $node));
 
-      $instance = field_info_instance('node', 'field_url', 'feed');
-      $display = field_get_display($instance, 'teaser', $node);
-      $display['settings']['num_to_show'] = $this->options['number_of_items'];
+    $instance = field_info_instance('node', 'field_url', 'feed');
+    $display = field_get_display($instance, 'teaser', $node);
+    $display['settings']['num_to_show'] = $this->options['number_of_items'];
 
-      // Just display the title and no content summary.
-      $display['settings']['show_content'] = (isset($this->options['feed_display']) && ($this->options['feed_display'] == 'content'));
+    // Just display the title and no content summary.
+    $display['settings']['show_content'] = (isset($this->options['feed_display']) && ($this->options['feed_display'] == 'content'));
 
-      // How should the time be displayed.
-      $display['settings']['time_display'] = 'formal';
-      if (isset($this->options['time_display'])) {
-        $display['settings']['time_display'] = $this->options['time_display'];
-      }
+    // How should the time be displayed.
+    $display['settings']['time_display'] = 'formal';
+    if (isset($this->options['time_display'])) {
+      $display['settings']['time_display'] = $this->options['time_display'];
+    }
 
-      $field = field_info_field_by_id($instance['field_id']);
-      $result = google_feedapi_field_formatter_view('node', $node, $field, $instance, 'und', $node->field_url['und'], $display);
+    // Here we prepare the required JS for displaying the feed.
+    $feed_div_id = implode("_", array(
+      "fr",
+      'node',
+      $node->nid,
+      key($node->field_url['und']),
+      $display['settings']['num_to_show'],
+      $display['settings']['show_content'],
+      $display['settings']['time_display']
+    ));
 
-      $block['content'] = render($result);
+    $url_options = array('external' => true);
+    if (isset($node->field_url['und']['query'])){
+      $url_options['query'] = $node->field_url['und']['query'];
+    }
 
-      // Here we prepare the required JS for displaying the feed.
-      // This data will be cached as an asset as it is needed to theme the feed.
-      // @see theme_google_feedapi_formatter_google_feedapi().
-      $feed_div_id = implode("_", array(
-        "gf",
-        'node',
-        $node->nid,
-        key($node->field_url['und']),
-        $display['settings']['num_to_show'],
-        $display['settings']['content_summary'],
-        $display['settings']['show_content'],
-        $display['settings']['time_display']
-      ));
-
-      $url_options = array('external' => true);
-      if (isset($node->field_url['und']['query'])){
-        $url_options['query'] = $node->field_url['und']['query'];
-      }
-
-      $attached = array(
+    $content = array(
+      '#prefix' => '<div id="' . $feed_div_id . '">',
+      '#suffix' => '</div>',
+      '#attached' => array(
         'js' => array(
+          libraries_get_path('yui') . '/yui-min.js',
+          drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_feedreader/os_boxes_feedreader.render.js',
           array(
-            'data' => array(
             'type' => 'setting',
-              'googleFeedAPI' => array(
+            'data' => array(
+              'osBoxesFeedReader' => array(
                 $feed_div_id => array(
                   'url' => url($node->field_url['und'][0]['url'], $url_options),
                   'num_feeds' => $display['settings']['num_to_show'],
-                  'content_summary' => $display['settings']['content_summary'],
                   'show_content' => $display['settings']['show_content'],
                   'time_display' => $display['settings']['time_display'],
                 )
@@ -204,14 +170,10 @@ class os_boxes_feedreader extends os_boxes_default {
             ),
           ),
         ),
-        'library' => array(
-          array('google_feedapi', 'google_feedapi'),
-        ),
-      );
+      )
+    );
 
-      $this->set_cache($block['content'], $attached);
-    }
-
-    return $block;
+    $output['content'] = drupal_render($content);
+    return $output;
   }
 }

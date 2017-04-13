@@ -1638,3 +1638,126 @@ function os_publications_update_7052() {
     ->where("concat('',biblio_date*1) = biblio_date")
     ->execute();
 }
+
+/**
+ * Disable and uninstall 'services' module
+ */
+function os_publications_update_7053() {
+  module_disable(array('services'));
+  drupal_uninstall_modules(array('services'), FALSE);
+}
+
+/**
+ * Converts none publication types selected to all types selected
+ */
+function os_publications_update_7054() {
+  $results = db_select('spaces_overrides', 's')
+    ->fields('s',array('value','id'))
+    ->condition('object_type', 'variable')
+    ->condition('object_id', 'os_publications_filter_publication_types')
+    ->execute();
+
+  $all_true = array (
+    100 => "100",
+    101 => "101",
+    102 => "102",
+    103 => "103",
+    104 => "104",
+    105 => "105",
+    106 => "106",
+    107 => "107",
+    108 => "108",
+    109 => "109",
+    110 => "110",
+    111 => "111",
+    112 => "112",
+    113 => "113",
+    114 => "114",
+    115 => "115",
+    116 => "116",
+    117 => "117",
+    118 => "118",
+    119 => "119",
+    120 => "120",
+    121 => "121",
+    122 => "122",
+    123 => "123",
+    124 => "124",
+    125 => "125",
+    126 => "126",
+    127 => "127",
+    128 => "128",
+    129 => "129",
+    130 => "130",
+    131 => "131",
+    132 => "132",
+    133 => "133",
+    134 => "134",
+    135 => "135",
+    1000 => "1000",
+    1001 => "1001",
+  );
+
+  foreach ($results as $result) {
+    $value = $result->value;
+    $value = unserialize($value);
+    if (is_array($value)) {
+      $is_unchecked_all = TRUE;
+      foreach ($value as $key => $val) {
+        if ($val > 0) {
+          $is_unchecked_all = FALSE;
+        }
+      }
+      if ($is_unchecked_all) {
+        // Updating the types with all selected
+        $query = db_update('spaces_overrides')
+          ->fields(array('value' => serialize($all_true)))
+          ->condition('object_type', 'variable')
+          ->condition('object_id', 'os_publications_filter_publication_types')
+          ->condition('id', $result->id)
+          ->execute();
+      } else {
+        $query = db_update('spaces_overrides')
+          ->fields(array('value' => serialize($value)))
+          ->condition('object_type', 'variable')
+          ->condition('object_id', 'os_publications_filter_publication_types')
+          ->condition('id', $result->id)
+          ->execute();
+      }
+    }
+  }
+}
+
+/**
+ * Makes "Distribute to repositories auto flags" to new angular screen compatible
+ */
+function os_publications_update_7055() {
+  $results = db_select('spaces_overrides', 's')
+    ->fields('s',array('value','id'))
+    ->condition('object_type', 'variable')
+    ->condition('object_id', 'citation_distribute_autoflags')
+    ->execute();
+
+  foreach ($results as $result) {
+    $value = $result->value;
+    $value = unserialize($value);
+    if (is_array($value)) {
+      $is_change_required = FALSE;
+      foreach ($value as $default_autoflags_key => $default_autoflags_value) {
+        if (strcmp($default_autoflags_key, $default_autoflags_value) === 0) {
+          $is_change_required = TRUE;
+          $value[$default_autoflags_key] = true;
+        }
+      }
+      if ($is_change_required) {
+        // Updating the auto flags
+        $query = db_update('spaces_overrides')
+          ->fields(array('value' => serialize($value)))
+          ->condition('object_type', 'variable')
+          ->condition('object_id', 'citation_distribute_autoflags')
+          ->condition('id', $result->id)
+          ->execute();
+      }
+    }
+  }
+}

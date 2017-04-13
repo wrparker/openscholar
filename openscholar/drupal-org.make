@@ -153,9 +153,6 @@ projects[filefield_paths][download][revision] = 84fb637
 projects[flag][subdir] = "contrib"
 projects[flag][version] = 2.0
 
-projects[google_feedapi][subdir] = "contrib"
-projects[google_feedapi][version] = 1.2
-
 projects[hierarchical_taxonomy][subdir] = "contrib"
 projects[hierarchical_taxonomy][download][type] = git
 projects[hierarchical_taxonomy][download][url] = "http://git.drupal.org/project/hierarchical_taxonomy.git"
@@ -414,6 +411,7 @@ projects[transliteration][version] = 3.1
 projects[twitter_pull][subdir] = "contrib"
 projects[twitter_pull][version] = 1.0-rc4
 projects[twitter_pull][patch][] = "https://raw.github.com/openscholar/openscholar/cb4bfa4c382c3ef6d2c8a48c10d55695792c37d5/patches/twitter_pull-8577-retweet_option.patch"
+projects[twitter_pull][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/64dfc3710e7fb2494a69dad4013a14283afdcde2/patches/twitter_pull.class.inc_get-media_url.patch"
 
 projects[views][subdir] = "contrib"
 projects[views][version] = 3.8
@@ -587,3 +585,28 @@ libraries[angular_select2][type] = "libraries"
 libraries[angular_select2][download][type] = "get"
 libraries[angular_select2][download][url] = "https://github.com/angular-ui/ui-select/archive/v0.12.0.zip"
 libraries[angular_select2][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/ad2fd2d198e91ac9a77eacbae996579e55510a3a/patches/angular_select-7024-async.patch"
+
+; YUI js libraries
+libraries[yui][type] = "libraries"
+libraries[yui][download][type] = "file"
+libraries[yui][download][url] = "http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js"
+
+libraries[yql][type] = "libraries"
+libraries[yql][download][type] = "file"
+libraries[yql][download][url] = "https://raw.githubusercontent.com/yui/yui3/v3.18.1/build/yql/yql-min.js"
+
+libraries[jsonp-url][type] = "libraries"
+libraries[jsonp-url][download][type] = "file"
+libraries[jsonp-url][download][url] = "https://raw.githubusercontent.com/yui/yui3/v3.18.1/build/jsonp-url/jsonp-url-min.js"
+
+libraries[oop][type] = "libraries"
+libraries[oop][download][type] = "file"
+libraries[oop][download][url] = "https://raw.githubusercontent.com/yui/yui3/v3.18.1/build/oop/oop-min.js"
+
+libraries[jsonp][type] = "libraries"
+libraries[jsonp][download][type] = "file"
+libraries[jsonp][download][url] = "https://raw.githubusercontent.com/yui/yui3/v3.18.1/build/jsonp/jsonp-min.js"
+
+libraries[yql-jsonp][type] = "libraries"
+libraries[yql-jsonp][download][type] = "file"
+libraries[yql-jsonp][download][url] = "https://raw.githubusercontent.com/yui/yui3/v3.18.1/build/yql-jsonp/yql-jsonp-min.js"

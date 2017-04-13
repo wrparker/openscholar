@@ -1,10 +1,17 @@
+/* update */
 body,
 .ui-dialog * {
     font-family: helvetica, arial, sans-serif;
+    
 }
+
 #page {
     padding: 0;
 }
+body:not(.overlay) .node-form {
+    margin-left:50px;
+}
+
 #branding h1.page-title {
     color: #555;
     font-size: 2.3em;
@@ -33,7 +40,8 @@ fieldset {
 .vertical-tabs-panes fieldset {
     background: #FFF;
 }
-
+#feature_os_publication span[name="biblio_sort"] .form-item,
+#feature_os_publication span[name="biblio_order"] .form-item,
 h3 {
     margin: 0;
 }
@@ -1035,30 +1043,88 @@ ul.term-reference-tree-level {
 .view-cp-content #edit-vocab {
     padding: 5px;
 }
-/** Message icon overrides */
 
-div.status,
-div.warning,
+/** Messages - success, error style overrides */
+	
+div.messages {
+margin: 0 0 10px;
+    padding: 0;
+    border:none;
+    font-size: 15px;
+    line-height:20px;
+}
+
+:not(form) div.messages {
+margin: 0;
+
+}
+
+div.messages h2 {
+    clear: both;
+}
+
+.messages.acquia_purge_messages,
+div.status {
+background-image: none;
+color: #008000;
+background-color:#dff0d8;
+padding:10px 30px 10px 20px;
+    border-left:5px solid #008000;
+}
+
+.messages.acquia_purge_messages {
+
+    border-top:2px solid #fff;
+}
+
+.error .dismiss,
+.messages .dismiss,
+div.status .dismiss {
+      border: none;
+     display: block;
+     position: absolute;
+     top: 5px;
+    right: 4px;
+     font-size:0;
+     background:transparent;
+     text-shadow: none;
+     text-decoration: none;
+     border-radius: none;
+     box-shadow: none;
+     opacity: none;
+     cursor: pointer;
+     -webkit-transition: none;
+     -moz-transition: none;
+     -ms-transition: none;
+     -o-transition: none;
+     transition: none;
+     background: url('/profiles/openscholar/themes/os_basetheme/images/scholarbase-sprite.png') 0 -926px no-repeat transparent;
+     width: 20px;
+     height: 20px;
+     background-color: transparent;
+}
+
+
+.messages.status .dismiss {
+    top: 4px;
+}
+
+
 div.error {
+    border: none;
+background-image:none;
+    background-color: #f2dede;
+    color: #a94442;
+    padding:10px 30px 10px 20px;
+    border-left:5px solid #a94442;
+}
+div.warning {
+    border: none;
     background-image: none;
-}
-div.messages:before {
-    position: absolute;
-    content: '';
-    background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
-    height: 24px;
-    width: 24px;
-    top: 8px;
-    left: 8px;
-}
-div.status:before {
-    background-position: -38px -231px;
-}
-div.warning:before {
-    background-position: -38px -262px;
-}
-div.error:before {
-    background-position: -72px -231px;
+    background-color: #fcf8e3;
+    color: #8a6d3b;
+    padding: 10px 30px 10px 20px;
+    border-left: 5px solid #8a6d3b;
 }
 /** Toolbar overrides */
 
@@ -1260,6 +1326,57 @@ form#os-maintenance .form-item .description {
   margin: 15px 0;
 }
 
+/* PUBLICATION SETTINGS */
+#edit-os-publications-filter-publication-types {
+  -webkit-column-count: 3;
+  -moz-column-count: 3;
+  column-count: 3;
+
+  -webkit-column-gap: 0px;
+  -moz-column-gap: 0px;
+  column-gap: 0px;
+}
+
+#feature_os_publication .column-left,
+#feature_os_publication .column-middle,
+#feature_os_publication .column-right {
+  float: left;
+  display: block;
+  width: 33.3%;
+}
+#feature_os_publication .actions {
+  display: block;
+  clear: both;
+}
+.form-item label.option.bold{
+  font-weight: bold;
+}
+.citebox.hidden {
+  display: none;
+}
+/* PUBLICATION SETTINGS CITATION PREVIEW */
+
+span[name="os_publications_citation_examples"] .ng-binding {
+    position: absolute;
+    right: 15px;
+    top: 30px;
+    width: 350px;
+    background-color: #f1f1f1;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.page-cp span[name="os_publications_citation_examples"] .ng-binding {
+   
+    top: 10px;
+ 
+}
+
+span[name="os_publications_citation_examples"] .citebox h2 {font-size: 1.3em;margin: 0;}
+
+.citation-example {margin: 10px 0 0 0;}
+
+
 form#documentation img {
 	    margin-top: 30px;
 }
@@ -1348,4 +1465,7 @@ img.file-icon {
 body.cke_editable {
     background-color: #FFF;
     background: #FFF;
+}
+.form-type-radio label {
+  cursor: pointer
 }

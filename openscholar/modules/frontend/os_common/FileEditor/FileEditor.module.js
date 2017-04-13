@@ -143,7 +143,7 @@
 
               var config = {
                 headers: {
-                  'Content-Type': file.type
+                  'Content-Type': (getExtension(file.name) == 'csv') ? 'text/csv' : file.type
                 }
               };
 
