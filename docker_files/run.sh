@@ -62,7 +62,7 @@ cp behat.local.yml.travis behat.local.yml
 
 # Run tests
 echo -e "\n # Run tests"
-./bin/behat --tags=~@wip
+./bin/behat --tags=$TEST_SUITE
 
 if [ $? -ne 0 ]; then
   echo "Behat failed"
