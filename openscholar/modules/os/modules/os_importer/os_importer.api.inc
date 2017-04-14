@@ -28,6 +28,10 @@ function _os_importer_parse_header(ParserCSV $parser, ParserCSVIterator $iterato
 function _os_importer_import_behalf_of_user(FeedsSource $source, $entity, $item, $id) {
   global $user;
 
+  // Assigning Organic group ID for created node.
+  if (!empty($id)) {
+    $entity->og_group_ref[LANGUAGE_NONE][0]['target_id'] = $id;
+  }
   // When importing an iCal don't search for the author, just use the current
   // user UID.
   if ($source->importer->id == 'os_ical') {
@@ -51,10 +55,6 @@ function _os_importer_import_behalf_of_user(FeedsSource $source, $entity, $item,
   }
 
   $entity->uid = $account->uid;
-  // Assigning Organic group ID for created node.
-  if (!empty($id)) {
-    $entity->og_group_ref[LANGUAGE_NONE][0]['target_id'] = $id;
-  }
 }
 
 /**
