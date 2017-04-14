@@ -1276,10 +1276,12 @@ function os_search_solr_change_search_path($form, $form_state) {
   if ($box_settings['sort_property'] != 'relevancy') {
     $filters['solrsort'] = $box_settings['sort_property'] . ' ' . $box_settings['sort_order'];
   }
+
   // Collect terms.
- //die(url('search/site/test'));
-  //die('search/site/' . $form_state['input']['search_block_form']);
-  //drupal_goto('search/site/' . $form_state['input']['search_block_form'], $options);
+  _custom_funtion('search/site/' . $form_state['input']['search_block_form'], $options);
+}
+
+function _custom_funtion($path = '', array $options = array(), $http_response_code = 302) {
   // A destination in $_GET always overrides the function arguments.
   // We do not allow absolute URLs to be passed via $_GET, as this can be an attack vector.
   if (isset($_GET['destination']) && !url_is_external($_GET['destination'])) {
@@ -1310,7 +1312,6 @@ function os_search_solr_change_search_path($form, $form_state) {
   // some cases this can be wrong, so we make sure none of the code below the
   // drupal_goto() call gets executed upon redirection.
   drupal_exit($url);
- //header('Location: http://openscholar.dd/asmi/search/site/test3');
 }
 
 /**
