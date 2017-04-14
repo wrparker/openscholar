@@ -457,6 +457,18 @@ form.confirmation span.emphasize {
 #owl-panes {
  	padding: 20px 0;
 }
+
+.wysiwyg-link-tool-wrapper .link-form-left,
+.wysiwyg-link-tool-wrapper .link-form-right {
+    width: 47%;
+    display: inline-block;
+}
+
+.wysiwyg-link-tool-wrapper .link-form-left {
+    margin-right: 30px;
+}
+
+
 /** CP TABLE STYLES **/
 
 table.spaces td.option,
@@ -715,6 +727,7 @@ table.biblio-contributors tr:first-child input.form-submit {
 #edit-biblio-abst-e-value {
     height: 60px;
 }
+.link-form-newwindow,
 .form-item-biblio-abst-e-value ~ .description {
     margin-bottom: 20px;
 }
@@ -1011,26 +1024,7 @@ ul.term-reference-tree-level {
 .no-term-reference-tree-button {
     background: none;
 }
-/** I think these aren't used anymore, but I'd need someone who remembers what they're used for to confirm
-.term-reference-tree-button {
-  background: url('../../os_basetheme/images/scholarbase-sprite.png') 2px -449px no-repeat;
-}
 
-.term-reference-tree-button.term-reference-tree-collapsed {
-  background: url('../../os_basetheme/images/scholarbase-sprite.png') 6px -433px no-repeat;
-}
-
-.field-widget-og-vocab-complex .expand {
-	 background: url('../../os_basetheme/images/scholarbase-sprite.png') 0 -509px no-repeat;
-	 padding-left:14px;
-}
-
-.field-widget-og-vocab-complex .collapse {
-	 background: url('../../os_basetheme/images/scholarbase-sprite.png') 0 -529px no-repeat;
-	 padding-left:14px;
-	 margin-left:10px;
-}
- */
 /* PUB FORM EXTERNAL URL SECTIONON */
 
 #edit-url .form-item-biblio-url-title {
