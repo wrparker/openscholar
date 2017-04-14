@@ -1278,10 +1278,10 @@ function os_search_solr_change_search_path($form, $form_state) {
   }
 
   // Collect terms.
-  die(url('search/site/test'));
+ //die(url('search/site/test'));
   //die('search/site/' . $form_state['input']['search_block_form']);
   //drupal_goto('search/site/' . $form_state['input']['search_block_form'], $options);
-  drupal_goto(url('search/site/test'));
+  drupal_goto('<front>');
 }
 
 /**
