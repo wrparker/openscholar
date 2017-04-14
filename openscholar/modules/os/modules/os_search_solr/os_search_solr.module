@@ -1281,7 +1281,7 @@ function os_search_solr_change_search_path($form, $form_state) {
  //die(url('search/site/test'));
   //die('search/site/' . $form_state['input']['search_block_form']);
   //drupal_goto('search/site/' . $form_state['input']['search_block_form'], $options);
-  header('Location: search/site/test', TRUE);
+  header('Location: https://dev.hwpi.harvard.edu/tormanhc2/search/site/test');
 }
 
 /**
