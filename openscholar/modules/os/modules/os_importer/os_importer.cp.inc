@@ -130,7 +130,9 @@ function os_importer_cp_settings() {
       }
       if ($node_type == 'biblio') {
         $extension_types = array('csv', 'ris', 'bib', 'tex', 'xml', 'txt', 'mrc');
-      } else {
+      } else if ($node_type == 'event') {
+        $extension_types = array('csv', 'ics');
+      } else{
         $extension_types = array('csv');
       }
       $settings['os_importer_file_upload-' . $node_type] = array(
@@ -510,7 +512,9 @@ function os_importer_import_group_validate($values) {
           'filename' => drupal_realpath($file->uri),
         );
         
-        module_load_include('php', 'os_events', 'iCalcreator/iCalcreator.class');
+        $creator_path = libraries_get_path('iCalcreator');
+        require_once($creator_path . '/iCalcreator.class.php');
+        //module_load_include('php', 'os_events', 'iCalcreator/iCalcreator.class');
         $calendar = new vcalendar($config);
         if (!$calendar->parse($file_content)) {
           drupal_set_message(t('The import file does not contain any events.'), 'error');
@@ -536,7 +540,10 @@ function os_importer_import_group_validate($values) {
   $import_file_fid = $request['os_importer_file_upload-' . $node_type];
   $import_file = file_load($import_file_fid);  
   $part = !empty($import_file->uri) ? explode('.', $import_file->uri) : array();
-  $extension = end($part);  
+  $extension = end($part);
+  if ($extension == 'ics') {
+    $extension = 'ical';
+  }
 
   if ($node_type != 'biblio' && in_array($extension, array('csv', 'ical'))) {
     $bundle = os_importer_importable_content($node_type);
