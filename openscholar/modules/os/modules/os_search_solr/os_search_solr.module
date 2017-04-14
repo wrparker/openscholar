@@ -1251,7 +1251,7 @@ function os_search_solr_form_search_block_form_alter(&$form, $form_state) {
  * Submit handler; Adding the settings of the search
  */
 function os_search_solr_change_search_path($form, $form_state) {
-  die("Test");
+  //die("Test");
   $box_settings = $form_state['box_settings'];
   $options = array('query' => array('f' => array()));
   $filters = &$options['query'];
@@ -1279,6 +1279,7 @@ function os_search_solr_change_search_path($form, $form_state) {
   }
 
   // Collect terms.
+  die('aa');
   drupal_goto('search/site/' . $form_state['input']['search_block_form'], $options);
 }
 
