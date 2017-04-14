@@ -94,7 +94,7 @@ html.js input.throbbing {
 .os-help-link:hover {
     background: url("../images/cp-sprite.png") no-repeat 0 -170px;
 }
-
+.page-node-revisions .help-link,
 .help-link.ng-binding {
   position: absolute;
     bottom: 20px;
@@ -1681,8 +1681,13 @@ body.page-node-revisions table.sticky-table caption .num-revisions {
     font-size:1.5em;
 }
 
+body.page-node-revisions table.sticky-table thead th:nth-of-type(1) {
+    width: 3%;
+}
+
+body.page-node-revisions table.sticky-table thead th:nth-of-type(2),
 body.page-node-revisions table.sticky-table thead th:nth-of-type(4) {
-    width: 10%;
+    width: 15%;
 }
 
 body.page-node-revisions table.sticky-table td.revision-current {
@@ -1709,13 +1714,16 @@ text-decoration:none;
 }
 
 body.page-node-revisions ul.action-links {
-    margin: 0 0 0 85%;
+      margin: 0;
     padding: 0;
+    white-space: nowrap;
+    float: right;
 }
 
-.page-node-revisions ul.action-links span {
-    font-size: 1.3em;
-    padding-right: 5px;
+body.page-node-revisions .node {
+    display: block;
+    clear: both;
+    padding-top: 15px;
 }
 
 .page-node-revisions .jcarousel-container {

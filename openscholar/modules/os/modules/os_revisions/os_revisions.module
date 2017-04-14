@@ -138,7 +138,7 @@ function os_revisions_revision_overview($node) {
     '#rows' => $rows,
     '#header' => array('', t('Revision'), t('Revision Notes'), array('data' => t('Manage'), 'colspan' => 3)),
     '#caption' => t('NOTE: When you revert to a prior revision, a copy is created which becomes the current version. The prior current version is then moved into the list. You have created ') . '<span class="num-revisions">' . (count($revisions) - 1) .'</span>' . t(' of the @limit revisions allowed.', array('@limit' => $revision_limit)),
-    '#suffix' => '<p class="revision-suffix">' . l(t('Learn more about revisions'), OS_REVISIONS_DOCS_URL) . '</p>',
+    '#suffix' => '<div class="revision-suffix help-link">' . l(t('Learn more about revisions'), OS_REVISIONS_DOCS_URL) . '</div>',
   );
 
   return $build;
