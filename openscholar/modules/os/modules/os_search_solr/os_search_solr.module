@@ -1291,6 +1291,8 @@ function _custom_funtion($path = '', array $options = array(), $http_response_co
     $options['fragment'] = $destination['fragment'];
   }
 
+  die($destination . $path . $options['query'] . $options['fragment']);
+
   // In some cases modules call drupal_goto(current_path()). We need to ensure
   // that such a redirect is not to an external URL.
   if ($path === current_path() && empty($options['external']) && url_is_external($path)) {
@@ -1304,7 +1306,7 @@ function _custom_funtion($path = '', array $options = array(), $http_response_co
   $options['absolute'] = TRUE;
 
   $url = url($path, $options);
-  die($url);
+  //die($url);
 
   header('Location: ' . $url, TRUE, $http_response_code);
 
