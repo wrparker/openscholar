@@ -15,47 +15,53 @@ Drupal.behaviors.osBoxesFeedReader = {
           //Load Feed
           var query = 'select * from rss(0,' + feed_settings.num_feeds + ') where url = "' + feed_settings.url + '"';
           var q = Y.YQL(query, function (r) {
-            for (var i = 0; i < r.query.results.item.length; i++) {
-              var entry = r.query.results.item[i];
-              var date = "";
-              var dateToFormat = getDateFromEntry(entry);
+            // check for results, if there are none, hide the whole feed reader widget
+            if (r.query.results != null && r.query.results.item != null && r.query.results.item.length) {
+              for (var i = 0; i < r.query.results.item.length; i++) {
+                var entry = r.query.results.item[i];
+                var date = "";
+                var dateToFormat = getDateFromEntry(entry);
 
-              if (dateToFormat != null) {
-                if (feed_settings.time_display == 'relative') {
-                  //@todo find a good way to do FuzzyTime in js
-                  date = fuzzyDate(dateToFormat);
+                if (dateToFormat != null) {
+                  if (feed_settings.time_display == 'relative') {
+                    //@todo find a good way to do FuzzyTime in js
+                    date = fuzzyDate(dateToFormat);
+                  }
+
+                  if (feed_settings.time_display == 'formal') {
+                    date = formalDate(dateToFormat);
+                  }
+
+                  if (typeof date == 'undefined') {
+                    date = "";
+                  } else {
+                    date = "<span class='date'>" + date + "</span>";
+                  }
+                }
+                var content = '';
+                if (feed_settings.show_content) {
+                  content = getStringValue(entry.description);
+                }
+                var feed_markup = "<div class='feed_item'>";
+
+                // Put time before title if there is no content
+                if (!feed_settings.show_content) {
+                  feed_markup = feed_markup + date;
                 }
 
-                if (feed_settings.time_display == 'formal') {
-                  date = formalDate(dateToFormat);
+                //Add Title
+                feed_markup = feed_markup + "<a class='title' href='" + getStringValue(entry.link) + "' target='_blank'>" + getStringValue(entry.title) + "</a>";
+                if (feed_settings.show_content) {
+                  feed_markup = feed_markup + "<br />" + date + "<span class='description'>" + content + "<span/>";
                 }
+                feed_markup = feed_markup + "</div>";
+                var div = $(feed_markup);
 
-                if (typeof date == 'undefined') {
-                  date = "";
-                } else {
-                  date = "<span class='date'>" + date + "</span>";
-                }
+                $('div#' + div_id).append(div);
               }
-              var content = '';
-              if (feed_settings.show_content) {
-                content = getStringValue(entry.description);
-              }
-              var feed_markup = "<div class='feed_item'>";
-
-              // Put time before title if there is no content
-              if (!feed_settings.show_content) {
-                feed_markup = feed_markup + date;
-              }
-
-              //Add Title
-              feed_markup = feed_markup + "<a class='title' href='" + entry.link + "' target='_blank'>" + getStringValue(entry.title) + "</a>";
-              if (feed_settings.show_content) {
-                feed_markup = feed_markup + "<br />" + date + "<span class='description'>" + content + "<span/>";
-              }
-              feed_markup = feed_markup + "</div>";
-              var div = $(feed_markup);
-
-              $('div#' + div_id).append(div);
+            }
+            else {
+              $('div#' + div_id).parents('section.block-boxes-os_boxes_feedreader').hide();
             }
           });
         });
