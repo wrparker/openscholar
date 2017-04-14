@@ -1294,8 +1294,7 @@ function _custom_funtion($path = '', array $options = array(), $http_response_co
     $options['fragment'] = $destination['fragment'];
     echo '##2##';
   }
-
-  die('##3##' . $path);
+  die('##3##' . $path); 
 
   // In some cases modules call drupal_goto(current_path()). We need to ensure
   // that such a redirect is not to an external URL.
