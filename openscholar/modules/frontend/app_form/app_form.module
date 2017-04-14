@@ -1,0 +1,30 @@
+<?php
+
+function app_form_library() {
+  $libs = array();
+
+  $path = drupal_get_path('module', 'app_form');
+
+  $libs['module'] = array(
+    'name' => 'Angular Apps Form',
+    'version' => '0.1',
+    'js' => array(
+      $path . '/app_form.module.js' => array(),
+      0 => array(
+        'type' => 'setting',
+        'data' => array(
+          'version' => '0.1'
+        )
+      )
+    ),
+    'css' => array(),
+  );
+
+  return $libs;
+}
+
+function app_form_library_alter(&$libs) {
+  if (isset($libs['admin_panel'])) {
+    $libs['admin_panel']['dependencies'][] = array('app_form', 'module');
+  }
+}
