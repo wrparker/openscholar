@@ -1681,7 +1681,7 @@ body.page-node-revisions table.sticky-table caption .num-revisions {
     font-size:1.5em;
 }
 
-body.page-node-revisions table.sticky-table thead th:nth-of-type(3) {
+body.page-node-revisions table.sticky-table thead th:nth-of-type(4) {
     width: 10%;
 }
 
