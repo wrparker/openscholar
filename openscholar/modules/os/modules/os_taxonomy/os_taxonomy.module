@@ -1934,11 +1934,9 @@ function _os_taxonomy_operations(&$form, &$form_state) {
  * Callback for custom cancel redirection.
  */
 function _os_taxonomy_custom_form_cancel(&$form, &$form_state) {
-  //Get the parent vocabulary name.
-  $vocab = $form['vocabulary_machine_name']['#value'];
-  //Get the parent vocabulary name.
-  $term =  $form['name']['#value'];
-  $path_term = $vocab . '/' . $term;
+  //Get the term ID.
+  $tid = $form['#term']->tid;
+  $path_term = 'taxonomy/term/' . $tid;
   //Redirection to the term page after cancellation.
   $form_state['redirect'] = url($path_term);
 }
