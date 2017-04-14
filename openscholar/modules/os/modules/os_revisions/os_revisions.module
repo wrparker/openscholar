@@ -137,7 +137,7 @@ function os_revisions_revision_overview($node) {
     '#theme' => 'table',
     '#rows' => $rows,
     '#header' => array('', t('Revision'), t('Revision Notes'), array('data' => t('Manage'), 'colspan' => 3)),
-    '#caption' => t('NOTE: When you revert to a prior revision, a new copy is created based on that revision. You have created ') . '<span class="num-revisions">' . (count($revisions) - 1) .'</span>' . t(' of the @limit revisions allowed.', array('@limit' => $revision_limit)),
+    '#caption' => t('NOTE: When you revert to a prior revision, a copy is created which becomes the current version. The prior current version is then moved into the list. You have created ') . '<span class="num-revisions">' . (count($revisions) - 1) .'</span>' . t(' of the @limit revisions allowed.', array('@limit' => $revision_limit)),
     '#suffix' => '<p class="revision-suffix">' . l(t('Learn more about revisions'), OS_REVISIONS_DOCS_URL) . '</p>',
   );
 
@@ -156,7 +156,7 @@ function os_revisions_form_node_revision_revert_confirm_alter(&$form, &$form_sta
   $revision_num = count($revisions) - 1;
   $warning = "";
   if ($revision_num >= $revision_limit) {
-    $warning = '<p class="revision-warning warning">This content already has the maximum number of revisions saved (' . $revision_limit . '). By creating a new revision, you will be permanently deleting the oldest revision. <a href="' . OS_REVISIONS_DOCS_URL . '" target="_blank" rel="noopener">Learn more about managing revisions</a>.</p>';
+    $warning = '<div class="warning">This content already has the maximum number of revisions saved (' . $revision_limit . '). By creating a new revision, you will be permanently deleting the oldest revision. <a href="' . OS_REVISIONS_DOCS_URL . '" target="_blank" rel="noopener">Learn more about managing revisions</a>.</div>';
   }
 
   $text = t('Are you sure you want to revert to the revision from ') . drupal_placeholder(format_date($form['#node_revision']->revision_timestamp), 'date') . '?';
