@@ -105,6 +105,11 @@ html.js input.throbbing {
     font-size: .97em;
 }
 
+.page-node-revisions .help-link {
+    bottom: -7px;
+    right: 15px;
+}
+
 #support .help-link.ng-binding {
     bottom: 2px;
 }
@@ -1724,6 +1729,9 @@ body.page-node-revisions .node {
     display: block;
     clear: both;
     padding-top: 15px;
+}
+.page-node-revisions .sticky-table {
+    margin-bottom: 30px;
 }
 
 .page-node-revisions .jcarousel-container {
