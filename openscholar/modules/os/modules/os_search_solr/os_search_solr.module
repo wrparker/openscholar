@@ -1287,6 +1287,7 @@ function _custom_funtion($path = '', array $options = array(), $http_response_co
   echo '<pre>';
   echo '##1##' . $path;
   echo '##1.1##' . $_GET['destination'];
+  
   if (isset($_GET['destination']) && !url_is_external($_GET['destination'])) {
     $destination = drupal_parse_url($_GET['destination']);
     $path = $destination['path'];
