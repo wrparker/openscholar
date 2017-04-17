@@ -1282,23 +1282,7 @@ function os_search_solr_change_search_path($form, $form_state) {
 }
 
 function _custom_funtion($path = '', array $options = array(), $http_response_code = 302) {
-  // A destination in $_GET always overrides the function arguments.
-  // We do not allow absolute URLs to be passed via $_GET, as this can be an attack vector.
- // echo '<pre>';
- // echo '##1##' . $path;
- // echo '##1.1##' . $_GET['destination'];
- // echo '##1.2##' . url_is_external($_GET['destination']);
-
-
-  /*if (isset($_GET['destination']) && !url_is_external($_GET['destination'])) {
-    $destination = drupal_parse_url($_GET['destination']);
-    $path = $destination['path'];
-    $options['query'] = $destination['query'];
-    $options['fragment'] = $destination['fragment'];
-    echo '##2##';
-  }*/
- // die('##3##' . $path); 
-
+  
   // In some cases modules call drupal_goto(current_path()). We need to ensure
   // that such a redirect is not to an external URL.
   if ($path === current_path() && empty($options['external']) && url_is_external($path)) {
