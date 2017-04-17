@@ -244,15 +244,23 @@
             }
           }
 
-          if (close && !body.messages.error) {
-            $s.close(reload);
-          } else if (body.messages.error) {
-            $s.errors = [];
-            angular.forEach(body.messages.error, function(value , key) {
-              $s.errors.push($sce.trustAsHtml(value));
-            });
+          if (body.messages.status) {
+            for (var i = 0; i < body.messages.status.length; i++) {
+              if (body.messages.status[i] == 'Your updates will go live within the next 15 minutes.') {
+                $s.close(reload);
+              }
+            }
+          } else {
+            if (close && !body.messages.error) {
+              $s.close(reload);
+            } else if (body.messages.error) {
+              $s.errors = [];
+              angular.forEach(body.messages.error, function(value , key) {
+                $s.errors.push($sce.trustAsHtml(value));
+              });
 
-            bss.SetState('settings_form', false);
+              bss.SetState('settings_form', false);
+            }
           }
         }, function (error) {
           $s.errors = [];

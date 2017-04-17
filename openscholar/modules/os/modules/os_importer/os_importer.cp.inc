@@ -129,7 +129,7 @@ function os_importer_cp_settings() {
         );
       }
       if ($node_type == 'biblio') {
-        $extension_types = array('csv', 'ris', 'bib', 'tex', 'xml', 'txt', 'mrc');
+        $extension_types = array('csv', 'ris', 'bib', 'tex', 'xml', 'txt', 'mrc', 'enw');
       } else if ($node_type == 'event') {
         $extension_types = array('csv', 'ics');
       } else{
@@ -561,6 +561,7 @@ function os_importer_import_group_validate($values) {
     $session_id = microtime();
     $context = array();
     $terms = array();
+    module_load_include('inc', 'biblio', 'includes/biblio.import.export');
     biblio_import($import_file, $filetype, $userid, $terms, FALSE, $session_id, $context);
     biblio_import_finalize(TRUE, $context['results']);
   }
