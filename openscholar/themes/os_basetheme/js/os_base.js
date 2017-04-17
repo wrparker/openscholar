@@ -33,4 +33,9 @@ jQuery(document).ready(function() {
     	var cp_ctrl_id = jQuery(this).attr('id').replace(/-/g, '_');
     	jQuery('#' + cp_ctrl_id).click();
 	});
+
+	jQuery("div.ctools-dropdown-container span").hover(
+		function() { jQuery(this).addClass('ctools-dropdown-hover'); },
+		function() { jQuery(this).removeClass('ctools-dropdown-hover'); }
+	);
 });
