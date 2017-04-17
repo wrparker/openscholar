@@ -148,7 +148,7 @@ function admin_panel_library() {
           ),
         ),
         'version' => array(
-          'userPanel' => '0.0.1'
+          'userPanel' => '0.0.2'
         ),
         'paths' => array(
           'support_subscribe' => ($vsite) ? $vsite->get_absolute_url('group/node/' . $vsite->id . '/subscribe/vsite_support_expire') : '',
@@ -161,8 +161,6 @@ function admin_panel_library() {
   );
   $libs['user_panel']['dependencies'] = array(
     array('admin_panel', 'admin_panel'),
-    array('os_tour', 'hopscotch'),
-    array('os_tour', 'os_tour'),
   );
 
   return $libs;
