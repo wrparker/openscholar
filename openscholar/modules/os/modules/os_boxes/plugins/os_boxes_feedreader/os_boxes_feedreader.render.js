@@ -15,45 +15,53 @@ Drupal.behaviors.osBoxesFeedReader = {
           //Load Feed
           var query = 'select * from rss(0,' + feed_settings.num_feeds + ') where url = "' + feed_settings.url + '"';
           var q = Y.YQL(query, function (r) {
-            for (var i = 0; i < r.query.results.item.length; i++) {
-              var entry = r.query.results.item[i];
-              var date = "";
-              if (typeof entry.pubDate != 'undefined' && entry.pubDate != '') {
-                if (feed_settings.time_display == 'relative') {
-                  //@todo find a good way to do FuzzyTime in js
-                  date = fuzzyDate(entry.pubDate);
+            // check for results, if there are none, hide the whole feed reader widget
+            if (r.query.results != null && r.query.results.item != null && r.query.results.item.length) {
+              for (var i = 0; i < r.query.results.item.length; i++) {
+                var entry = r.query.results.item[i];
+                var date = "";
+                var dateToFormat = getDateFromEntry(entry);
+
+                if (dateToFormat != null) {
+                  if (feed_settings.time_display == 'relative') {
+                    //@todo find a good way to do FuzzyTime in js
+                    date = fuzzyDate(dateToFormat);
+                  }
+
+                  if (feed_settings.time_display == 'formal') {
+                    date = formalDate(dateToFormat);
+                  }
+
+                  if (typeof date == 'undefined') {
+                    date = "";
+                  } else {
+                    date = "<span class='date'>" + date + "</span>";
+                  }
+                }
+                var content = '';
+                if (feed_settings.show_content) {
+                  content = getStringValue(entry.description);
+                }
+                var feed_markup = "<div class='feed_item'>";
+
+                // Put time before title if there is no content
+                if (!feed_settings.show_content) {
+                  feed_markup = feed_markup + date;
                 }
 
-                if (feed_settings.time_display == 'formal') {
-                  date = formalDate(entry.pubDate);
+                //Add Title
+                feed_markup = feed_markup + "<a class='title' href='" + getStringValue(entry.link) + "' target='_blank'>" + getStringValue(entry.title) + "</a>";
+                if (feed_settings.show_content) {
+                  feed_markup = feed_markup + "<br />" + date + "<span class='description'>" + content + "<span/>";
                 }
+                feed_markup = feed_markup + "</div>";
+                var div = $(feed_markup);
 
-                if (typeof date == 'undefined') {
-                  date = "";
-                } else {
-                  date = "<span class='date'>" + date + "</span>";
-                }
+                $('div#' + div_id).append(div);
               }
-              var content = '';
-              if (feed_settings.show_content) {
-                content = entry.description;
-              }
-              var feed_markup = "<div class='feed_item'>";
-
-              // Put time before title if there is no content
-              if (!feed_settings.show_content) {
-                feed_markup = feed_markup + date;
-              }
-
-              //Add Title
-              feed_markup = feed_markup + "<a class='title' href='" + entry.link + "' target='_blank'>" + entry.title + "</a>";
-              if (feed_settings.show_content) {
-                feed_markup = feed_markup + "<br />" + date + "<span class='description'>" + content + "<span/>";
-              }
-              feed_markup = feed_markup + "</div>";
-              var div = $(feed_markup);
-
-              $('div#' + div_id).append(div);
+            }
+            else {
+              $('div#' + div_id).append('<p class="feed-message">There are currently no items in this feed. Please check again soon.</p>');
             }
           });
         });
@@ -72,7 +80,7 @@ function fuzzyDate(time){
     diff = (((new Date()).getTime() - date.getTime()) / 1000),
     day_diff = Math.floor(diff / 86400);
       
-  if ( isNaN(day_diff) || day_diff < 0 || day_diff >= 31 ) {
+  if ( isNaN(day_diff) || day_diff < 0 || day_diff > 365) {
     return;
   }
 
@@ -84,7 +92,7 @@ function fuzzyDate(time){
     diff < 86400 && Math.floor( diff / 3600 ) + " hours ago") ||
     day_diff == 1 && "Yesterday" ||
     day_diff < 7 && day_diff + " days ago" ||
-    day_diff < 31 && Math.ceil( day_diff / 7 ) + " weeks ago";
+    Math.ceil( day_diff / 7 ) + " weeks ago";
 }
 
 //Takes an ISO time and returns a string representing how
@@ -96,4 +104,52 @@ function formalDate(time){
   var year = date.getFullYear();
   var montharray=new Array("January","February","March","April","May","June", "July","August","September","October","November","December");
   return montharray[month]+" "+day+", "+year;
+}
+
+function getDateFromEntry(entry){
+  if (entry.pubDate != null) {
+    if (typeof entry.pubDate === 'string') {
+      return entry.pubDate;
+    }
+    else if (typeof entry.pubDate === 'object') {
+      if (entry.pubDate.content != null && typeof entry.pubDate.content == 'string') {
+        return entry.pubDate.content;
+      }
+      else if (entry.pubDate.time != null && typeof entry.pubDate.time == 'object') {
+        if (entry.pubDate.time.content != null && typeof entry.pubDate.time.content == 'string') {
+          return entry.pubDate.time.content;
+        }
+      }
+    }
+  }
+  else if (entry.publicationDate != null) {
+    if (typeof entry.publicationDate === 'string') {
+      return entry.publicationDate;
+    }
+    else if (typeof entry.publicationDate === 'object') {
+      if (entry.publicationDate.content != null && typeof entry.publicationDate.content == 'string') {
+        return entry.publicationDate.content;
+      }
+      else if (entry.publicationDate.time != null && typeof entry.publicationDate.time == 'object') {
+        if (entry.publicationDate.time.content != null && typeof entry.publicationDate.time.content == 'string') {
+          return entry.publicationDate.time.content;
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+function getStringValue(variable){
+  if (typeof variable === 'string') {
+    return variable;
+  }
+  else if (typeof variable == 'object' && 'length' in variable && typeof variable.length === 'number') {
+    return variable[0];
+  }
+  else if (typeof variable == 'number') {
+    return variable.toString();
+  }
+  return '';
 }
