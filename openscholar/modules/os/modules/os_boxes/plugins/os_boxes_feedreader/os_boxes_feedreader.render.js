@@ -61,7 +61,7 @@ Drupal.behaviors.osBoxesFeedReader = {
               }
             }
             else {
-              $('div#' + div_id).parents('section.block-boxes-os_boxes_feedreader').hide();
+              $('div#' + div_id).append('<p class="feed-message">There are currently no items in this feed. Please check again soon.</p>');
             }
           });
         });
