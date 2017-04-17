@@ -20,7 +20,11 @@
   width: 300px;
   display: none;
   background-color: white;
-  border-color: #808080;
+  border: 1px solid #d3d3d3;
+  padding: 8px;
+  -webkit-box-shadow: 10px 10px 15px -5px rgba(204,204,204,1);
+-moz-box-shadow: 10px 10px 15px -5px rgba(204,204,204,1);
+box-shadow: 10px 10px 15px -5px rgba(204,204,204,1);
 }
 
 .form-help:hover .description,
