@@ -1900,8 +1900,6 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
   unset($form['relations']);
 
   if ($form_state['values']['op'] == 'Delete') {
-    unset($form['actions']['cancel']['#type']);
-    unset($form['actions']['cancel']['#title']);
     $form['actions']['cancel']['#type'] = 'submit';
     $form['actions']['cancel']['#value'] = 'Cancel';
   }
