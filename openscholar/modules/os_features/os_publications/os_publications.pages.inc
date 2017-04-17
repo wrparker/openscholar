@@ -14,8 +14,16 @@ function os_publications_overview() {
 
     if (count(array_filter($defaults))) {
       $args = array('type', array_filter($defaults));
-    } else{
-      $args = array('type', 0);
+    }
+    else {
+      // Fetching publication types option from table 'biblio_types'.
+      $defaults = array();
+      $result = db_query('SELECT t.* FROM {biblio_types} as t WHERE tid > -1 AND visible = 1');
+
+      foreach ($result as $option) {
+        $defaults[$option->tid] = true;
+      }
+      $args = array('type', $defaults);
     }
   }
 

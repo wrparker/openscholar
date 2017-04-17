@@ -2465,7 +2465,10 @@ function os_files_file_mimetype_mapping_alter(&$mimes) {
   );
 
   foreach ($types as $mime => $ext) {
-    $key = max(array_keys($mimes['mimetypes'])) + 1;
+    $key = array_search($mime, $mimes['mimetypes']);
+    if ($key === FALSE) {
+      $key = max(array_keys($mimes['mimetypes'])) + 1;
+    }
     $mimes['mimetypes'][$key] = $mime;
     $mimes['extensions'][$ext] = $key;
   }
