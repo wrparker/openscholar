@@ -1278,29 +1278,24 @@ function os_search_solr_change_search_path($form, $form_state) {
   }
 
   // Collect terms.
-  _custom_funtion('search/site/' . $form_state['input']['search_block_form'], $options);
+  _os_search_solr_custom_404_redirect('search/site/' . $form_state['input']['search_block_form'], $options);
 }
-function _custom_funtion($path = '', array $options = array(), $http_response_code = 302) {
-    // In some cases modules call drupal_goto(current_path()). We need to ensure
-  // that such a redirect is not to an external URL.
-  if ($path === current_path() && empty($options['external']) && url_is_external($path)) {
+
+/**
+ * Custom funtion for Search Box
+ * 404_page
+ */
+function _os_search_solr_custom_404_redirect($path = '', array $options = array(), $http_response_code = 302) {
+    if ($path === current_path() && empty($options['external']) && url_is_external($path)) {
     // Force url() to generate a non-external URL.
     $options['external'] = FALSE;
   }
 
   drupal_alter('drupal_goto', $path, $options, $http_response_code);
-
   // The 'Location' HTTP header must be absolute.
   $options['absolute'] = TRUE;
-
   $url = url($path, $options);
-  //die($url);
-
   header('Location: ' . $url, TRUE, $http_response_code);
-
-  // The "Location" header sends a redirect status code to the HTTP daemon. In
-  // some cases this can be wrong, so we make sure none of the code below the
-  // drupal_goto() call gets executed upon redirection.
   drupal_exit($url);
 }
 
