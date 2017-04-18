@@ -68,3 +68,7 @@ if [ $? -ne 0 ]; then
   echo "Behat failed"
   exit 1
 fi
+
+if [ -v $DOCKER_DEBUG ]; then
+  bash
+fi

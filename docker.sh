@@ -2,8 +2,14 @@
 #!/bin/sh
 set -e
 
+# If we want to debug the tests suite that fails we would change this variable.
+TEST_SUITE="restful"
+
+# If we want to debug the failing tests, set the variable to 1.
+DEBUG=0
+
 docker build -t openscholar .
-docker run -it -p 8080:80 -e TEST_SUITE=restful openscholar bash
+docker run -it -p 8080:80 -e TEST_SUITE=${TEST_SUITE} DOCKER_DEBUG=${DEBUG} openscholar
 
 # After the docker will finish the command above it will terminate it self.
 # In order to keep docker up and running you need to:
