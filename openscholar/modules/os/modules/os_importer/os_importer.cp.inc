@@ -514,7 +514,6 @@ function os_importer_import_group_validate($values) {
         
         $creator_path = libraries_get_path('iCalcreator');
         require_once($creator_path . '/iCalcreator.class.php');
-        //module_load_include('php', 'os_events', 'iCalcreator/iCalcreator.class');
         $calendar = new vcalendar($config);
         if (!$calendar->parse($file_content)) {
           drupal_set_message(t('The import file does not contain any events.'), 'error');
