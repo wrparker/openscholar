@@ -1436,14 +1436,7 @@ class FeatureContext extends DrupalContext {
     $uid = FeatureHelp::GetUserByName($name);
 
     return array(
-      new Step\When('I visit "' . $group . '/cp/users/add"'),
-      new Step\When('I fill in "edit-name" with "' . $name . '"'),
-      new Step\When('I press "Add member"'),
-      new Step\When('I sleep for "5"'),
       new Step\When('I visit "' . $group . '/cp/users/edit_membership/' . $uid . '"'),
-      new Step\When('I sleep for "5"'),
-      new Step\When('I select the radio button named "edit_role" with value "' . $role . '"'),
-      new Step\When('I press "Save"'),
     );
   }
 

@@ -198,8 +198,6 @@ function os_importer_importable_content($type = '') {
     return $types;
   } else if ($type && isset($types[$type])) {
     return $types[$type];
-  } else {
-    return $types;
   }
 }
 
