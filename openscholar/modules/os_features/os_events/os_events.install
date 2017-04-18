@@ -143,14 +143,14 @@ function os_events_update_7007() {
  * Revert views to fix display of upcoming events.
  */
 function os_events_update_7008() {
-  features_revert(array('os_events' => array('views')));
+  features_revert(array('os_events' => array('views_view')));
 }
 
 /**
  * Remove the NID argument from the view for export events to ICS file.
  */
 function os_events_update_7009() {
-  features_revert(array('os_events' => array('views')));
+  features_revert(array('os_events' => array('views_view')));
 }
 
 /**
@@ -201,7 +201,7 @@ function os_events_update_7011() {
  * Revert views to add the delta to event links.
  */
 function os_events_update_7012() {
-  features_revert(array('os_events' => array('views')));
+  features_revert(array('os_events' => array('views_view')));
 }
 
 function os_events_update_7013() {
@@ -223,7 +223,7 @@ function os_events_update_7015() {
  * Create a single event export.
  */
 function os_events_update_7016() {
-  features_revert(array('os_events' => array('views')));
+  features_revert(array('os_events' => array('views_view')));
 }
 
 /**
@@ -232,14 +232,14 @@ function os_events_update_7016() {
  */
 function os_events_update_7017() {
   og_create_field(OG_AUDIENCE_FIELD, 'registration', 'event_signup_simple');
-  features_revert(array('os_events' => array('views')));
+  features_revert(array('os_events' => array('views_view')));
 }
 
 /*
  * When exporting events, export the last 40 and not the 30 days backwards.
  */
 function os_events_update_7018() {
-  features_revert(array('os_events' => array('views')));
+  features_revert(array('os_events' => array('views_view')));
 }
 
 /**
@@ -269,7 +269,7 @@ function os_events_update_7019() {
  * Simple View for repeating events should only export the single date's event
  */
 function os_events_update_7020() {
-  features_revert(array('os_events' => array('field','views')));
+  features_revert(array('os_events' => array('field','views_view')));
 }
 
 /*
@@ -289,7 +289,7 @@ function os_events_update_7022() {
  * Reverting OS events views.
  */
 function os_events_update_7023() {
-  features_revert(array('os_events' => array('field_instance', 'views')));
+  features_revert(array('os_events' => array('field_instance', 'views_view')));
 }
 
 /**
@@ -313,4 +313,11 @@ function os_events_update_7025() {
  */
 function os_events_update_7026() {
   features_revert(array('os_events' => array('field_instance')));
+}
+
+/**
+ * Display links in the past events view.
+ */
+function os_events_update_7027() {
+  features_revert(array('os_events' => array('views_views')));
 }
