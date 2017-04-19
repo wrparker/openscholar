@@ -1,15 +1,14 @@
 
 (function ($) {
 
-  $(document).ready(function(){
+  /*$(document).ready(function(){
 
     if($('article.node').find("iframe").length){
       var floatValue = $('article.node').find("iframe").parents(".media-element-container").css('float');
-      alert(floatValue);
       $('article.node').find("iframe").wrap("<span></span>");
       $('article.node').find("iframe").parent().css({"float" : floatValue});
     }
-  });
+  });*/
 
 Drupal.behaviors.osBoxesRemove = {
   attach: function (ctx) {
