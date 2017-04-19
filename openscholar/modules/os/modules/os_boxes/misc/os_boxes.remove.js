@@ -7,7 +7,7 @@
       alert("2");
       alert($('article.node').find("iframe").parents(".media-element-container").attr('style'));
       var floatValue = $('article.node').find("iframe").parents(".media-element-container").attr('style');
-      $('article.node').find("iframe").wrap("<span id='inline-style'></span>");
+      $('article.node').find("iframe").wrap("<span id='inline-style'></span>");
       $('article.node').find("#inline-style").css("float" : "left");
     }
   });
