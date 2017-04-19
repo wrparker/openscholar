@@ -9,13 +9,12 @@ TEST_SUITE="restful"
 DEBUG=0
 
 docker build -t openscholar .
-docker run -it -p 8080:80 -e TEST_SUITE=${TEST_SUITE} DOCKER_DEBUG=${DEBUG} openscholar
+docker run -it -p 8080:80 -e TEST_SUITE=${TEST_SUITE} -e DOCKER_DEBUG=${DEBUG} openscholar
 
 # After the docker will finish the command above it will terminate it self.
 # In order to keep docker up and running you need to:
 # 1. Run docker ps -a -q
 # 2. Run docker start HASH
-#
 #
 # Docker will not delete the living containers. Docker containers takes space on
 # your HDD. In order to remove them type:

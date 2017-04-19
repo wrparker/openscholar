@@ -69,6 +69,9 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-if [ -v $DOCKER_DEBUG ]; then
+echo $DOCKER_DEBUG
+echo $TEST_SUITE
+
+if [ $DOCKER_DEBUG -eq 1 ]; then
   bash
 fi
