@@ -3,13 +3,13 @@
 
   $(document).ready(function(){
     alert("1");
-    /*if($('article.node').find("iframe").length){
+    if($('article.node').find("iframe").length){
       alert("2");
-      alert($('article.node').find("iframe").parents(".media-element-container").attr('style'));
-      var floatValue = $('article.node').find("iframe").parents(".media-element-container").attr('style');
-      $('article.node').find("iframe").wrap("<span id='inline-style'></span>");
-      $('article.node').find("#inline-style").css("float" : "left");
-    }*/
+      //alert($('article.node').find("iframe").parents(".media-element-container").attr('style'));
+      //var floatValue = $('article.node').find("iframe").parents(".media-element-container").attr('style');
+      //$('article.node').find("iframe").wrap("<span id='inline-style'></span>");
+      //$('article.node').find("#inline-style").css("float" : "left");
+    }
   });
 
 Drupal.behaviors.osBoxesRemove = {
