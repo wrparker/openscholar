@@ -4,7 +4,7 @@
   $(document).ready(function(){
 
     if($('article.node').find("iframe").length){
-      var floatValue = $('article.node').find("iframe").parents(".media-element-container").attr('style');
+      var floatValue = $('article.node').find("iframe").parents(".media-element-container").position();
       alert(floatValue);
       $('article.node').find("iframe").wrap("<span></span>");
       $('article.node').find("iframe").parent().css(floatValue);
