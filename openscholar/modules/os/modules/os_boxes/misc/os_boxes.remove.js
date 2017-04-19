@@ -1,7 +1,7 @@
 
 (function ($) {
 
-  Drupal.behaviors.osBase_appendSpanIframe = {
+  /*Drupal.behaviors.osBase_appendSpanIframe = {
   attach : function(ctx) {
     if($('article.node').find("iframe").length){
       var floatValue = $('article.node').find("iframe").parents(".media-element-container").css('float');
@@ -9,7 +9,16 @@
             $('article.node').find("iframe").parent().css({"float" : floatValue});
         }
     }
-};
+};*/
+
+$(document).ready(function(){
+
+    if($('article.node').find("iframe").length){
+      var floatValue = $('article.node').find("iframe").parents(".media-element-container").css('float');
+      $('article.node').find("iframe").wrap("<span></span>");
+      $('article.node').find("iframe").parent().css({"float" : floatValue});
+    }
+  });
 
 Drupal.behaviors.osBoxesRemove = {
   attach: function (ctx) {
