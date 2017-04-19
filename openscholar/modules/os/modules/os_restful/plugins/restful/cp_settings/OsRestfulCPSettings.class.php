@@ -26,6 +26,7 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
   }
 
   public function getAllForms() {
+    $this->activateSpace();
     return $this->processForms(cp_get_setting_forms());
   }
 
