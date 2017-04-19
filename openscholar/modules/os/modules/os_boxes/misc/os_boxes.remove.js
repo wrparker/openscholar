@@ -4,10 +4,12 @@
   $(document).ready(function(){
 
     if($('article.node').find("iframe").length){
-      var floatValue = $('article.node').find("iframe").parents(".media-element-container").position();
+      var floatValue = $('article.node').find("iframe").parents(".media-element-container").attr('style');
       alert(floatValue);
+      var result = floatValue.split(':');
+      alert(result[1]);
       $('article.node').find("iframe").wrap("<span></span>");
-      $('article.node').find("iframe").parent().css(floatValue);
+      $('article.node').find("iframe").parent().css({"float" : result[1]});
     }
   });
 
