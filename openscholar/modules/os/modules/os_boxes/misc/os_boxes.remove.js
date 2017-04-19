@@ -6,9 +6,9 @@
     if($('article.node').find("iframe").length){
       var floatValue = $('article.node').find("iframe").parents(".media-element-container").attr('style');
       alert(floatValue);
-      var parent_class = $('article.node').find("iframe").parent().attr('class');
-      alert(parent_class);
-      $("iframe").wrap("<span class ='inline-style'></span>");
+      $('article.node').find("iframe").parent().wrapInner("<span class ='inline-style'></span>");
+      //alert(parent_class);
+     // $("."+parent_class).wrap("<span class ='inline-style'></span>");
       //$('article.node').find("#inline-style").css("float" : "left");
     }
   });
