@@ -67,6 +67,7 @@ html.js input.form-autocomplete {
 html.js input.throbbing {
     background-position: 100% -15px !important;
 }
+.wysiwyg-link-tool-wrapper .form-help,
 .os-help-link {
     background: url("../images/cp-sprite.png") no-repeat 0 -150px;
     display: block;
@@ -75,6 +76,9 @@ html.js input.throbbing {
     padding: 0;
     height: 19px;
     width: 19px;
+}
+.wysiwyg-link-tool-wrapper .form-help {
+    float: none;
 }
 .os-help-link:hover {
     background: url("../images/cp-sprite.png") no-repeat 0 -170px;
@@ -219,6 +223,8 @@ a.form-cancel {
 a.form-cancel:hover {
     text-decoration: none;
 }
+.wysiwyg-link-tool-wrapper .add_new_button,
+.wysiwyg-link-tool-wrapper .form-help,
 .form-actions .form-submit,
 .form-actions #edit-delete,
 .form-actions #edit-delete--2 {
