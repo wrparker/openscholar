@@ -60,7 +60,8 @@ Feature:
        Then I should see the button "Save permissions"
         And I press "Close Menu"
         And I remove from the role "content editor" in the group "john" the permission "edit-boxes"
-        And I visit "john/user/logout"
+        And I open the user menu
+        And I click "Logout"
         And I am logging in as "klark"
         And I go to "john/os/widget/boxes/os_addthis/edit"
        Then I should not see the text "AddThis"
@@ -74,7 +75,8 @@ Feature:
         And I wait for the overlay to open
         And I press "Confirm"
         And the overlay closes
-        And I visit "john/user/logout"
+        And I open the user menu
+        And I click "Logout"
         And I am logging in as "klark"
         And I go to "john/os/widget/boxes/os_addthis/edit"
        Then I should see "AddThis" in an "h1" element
