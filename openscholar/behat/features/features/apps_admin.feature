@@ -43,14 +43,9 @@ Feature:
   @api @features_first @javascript
     Scenario: Check content editor can edit widgets by default
       Given I am logging in as "john"
-       When I visit "john/cp/users/add"
-        And I fill in "edit-name" with "klark"
-        And I press "Add member"
-        And I sleep for "5"
-        And I give the user "klark" the role "content editor" in the group "john"
-        And I sleep for "5"
-        And I select the radio button named "edit_role" with value "content editor"
-        And I press the "Save" button
+       When I give the user "klark" the role "content editor" in the group "john"
+        And I visit "john/user/logout"
+        And I am logging in as "klark"
         And I go to "john/os/widget/boxes/os_addthis/edit"
        Then I should see "AddThis" in an "h1" element
 
