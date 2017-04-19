@@ -211,7 +211,7 @@ function vsite_domain_cp_settings_submit($var, $value) {
     module_load_include('inc', 'vsite_domain', 'includes/form');
 
     if ($processed['vsite_domain_name'] == "") {
-      $new_values['group_path'] = '[site:url]' . '/' . $vsite->og->purl;
+      $new_values['group_path'] = variable_get('purl_base_domain', '[site:url]') . '/' . $vsite->og->purl;
       $new_values['shared']['new'] = 0;
     }
     else {
