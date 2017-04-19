@@ -51,9 +51,6 @@ Feature:
         And I sleep for "5"
         And I select the radio button named "edit_role" with value "content editor"
         And I press the "Save" button
-        And I open the user menu
-        And I click "Logout"
-        And I am logging in as "klark"
         And I go to "john/os/widget/boxes/os_addthis/edit"
        Then I should see "AddThis" in an "h1" element
 
