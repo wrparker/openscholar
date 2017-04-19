@@ -6,7 +6,7 @@
     if($('article.node').find("iframe").length){
       var floatValue = $('article.node').find("iframe").parents(".media-element-container").attr('style');
       alert(floatValue);
-      $('article.node').find("iframe").addClass("inline_iframe");
+      $("iframe").wrap("<span class ='inline-style'></span>");
       //$('article.node').find("#inline-style").css("float" : "left");
     }
   });
