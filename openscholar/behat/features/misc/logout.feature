@@ -6,6 +6,5 @@ Feature:
             he were in.
     Given I am logging in as "john"
      When I visit "john/classes"
-      And I open the user menu
-      And I click "Logout"
+      And I visit "john/user/logout"
      Then I should verify i am at "john/classes"
