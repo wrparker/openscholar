@@ -862,3 +862,7 @@ padding-right:15px;
 .cke_editable img[style*="float: right"] {
 padding-left:15px;
 }
+body.cke_editable {
+    background:#fff;
+    background-color:#fff;
+}
