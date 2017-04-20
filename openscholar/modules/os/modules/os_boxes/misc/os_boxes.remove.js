@@ -1,6 +1,15 @@
 
 (function ($) {
 
+$(document).ready(function(){
+
+  if($('article.node').find("iframe").length){
+    var floatValue = $('article.node').find("iframe").parents(".media-element-container").css('float');
+    $('article.node').find("iframe").wrap("<span></span>");
+    $('article.node').find("iframe").parent().css({"float" : floatValue});
+  }
+});
+
 Drupal.behaviors.osBoxesRemove = {
   attach: function (ctx) {
     $('li.link-count-widget-remove a').once('os-boxes-remove').click(function (e) {
