@@ -13,7 +13,12 @@ function app_form_library() {
       0 => array(
         'type' => 'setting',
         'data' => array(
-          'version' => '0.1'
+          'versions' => array(
+            'app_form' => '0.1'
+          ),
+          'paths' => array(
+            'app_form' => url(drupal_get_path('module', 'app_form'), array('alias' => true)),
+          )
         )
       )
     ),
@@ -26,5 +31,14 @@ function app_form_library() {
 function app_form_library_alter(&$libs) {
   if (isset($libs['admin_panel'])) {
     $libs['admin_panel']['dependencies'][] = array('app_form', 'module');
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function app_form_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'restful') {
+    return 'plugins/' . $plugin;
   }
 }
