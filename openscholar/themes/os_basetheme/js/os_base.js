@@ -1,3 +1,17 @@
+(function ($) {
+
+Drupal.behaviors.osBaseWrapIframe = {
+    attach: function (ctx) {
+        if($('article.node').find("iframe").length){
+            var floatValue = $('article.node').find("iframe").parents(".media-element-container").css('float');
+            $('article.node').find("iframe").wrap("<span></span>");
+            $('article.node').find("iframe").parent().css({"float" : floatValue});
+        }
+    }
+};
+
+})(jQuery);
+
 // Fixes tab behavior after using the skip link in IE or Chrome
 Drupal.behaviors.osBase_skipLinkFocus = {
 	attach : function(ctx) {
