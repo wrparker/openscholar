@@ -1,25 +1,6 @@
 
 (function ($) {
-
- /* $(document).ready(function(){
-
-    if($('article.node').find("iframe").length){
-      var floatValue = $('article.node').find("iframe").parents(".media-element-container").css('float');
-      $('article.node').find("iframe").wrap("<span></span>");
-      $('article.node').find("iframe").parent().css({"float" : floatValue});
-    }
-  });*/
-
-/*Drupal.behaviors.osBoxeswrapIframe = {
-  attach: function (ctx) {
-    if($('article.node').find("iframe").length){
-      var floatValue = $('article.node').find("iframe").parents(".media-element-container").css('float');
-      $('article.node').find("iframe").wrap("<span></span>");
-      $('article.node').find("iframe").parent().css({"float" : floatValue});
-    }
-  }
-};*/
-
+ 
 Drupal.behaviors.osBoxesRemove = {
   attach: function (ctx) {
     $('li.link-count-widget-remove a').once('os-boxes-remove').click(function (e) {
@@ -31,7 +12,6 @@ Drupal.behaviors.osBoxesRemove = {
     })
   }
 };
-
 var removed_widgets = {},
   template = 'This widget has been removed from this section. You can <a href="os/widget/{module}/{delta}/remove/{region}/{query}">undo this action</a>',
   error_template = 'This widget has been removed from this section. You must visit the <a href="cp/build/layout/{context}">Layout Form</a> to undo this action.';
