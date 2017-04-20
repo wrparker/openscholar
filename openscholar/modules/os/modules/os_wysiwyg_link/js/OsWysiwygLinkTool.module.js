@@ -84,8 +84,13 @@
 
     var params = {};
 
+    $s.ready = false;
     files.fetch(params).then(function (result) {
       $s.files = result;
+      $s.ready = true;
+    }, function (e) {
+      console.log(e);
+      $s.ready = true;
     });
 
     $s.setLinkTarget = function (arg) {
