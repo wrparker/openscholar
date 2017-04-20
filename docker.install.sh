@@ -7,7 +7,7 @@ MYSQL_HOST="127.0.0.1"
 MYSQL_DB_NAME="drupal"
 
 # Modify the URL below to match your OpenScholar base domain URL.
-BASE_DOMAIN_URL="http://localhost/openscholar/www"
+BASE_DOMAIN_URL="http://127.0.0.1/openscholar/www"
 
 # Modify the login details below to be the desired login details for the Administrator account.
 ADMIN_USERNAME="admin"

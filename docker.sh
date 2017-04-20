@@ -3,7 +3,7 @@
 set -e
 
 # If we want to debug the tests suite that fails we would change this variable.
-TEST_SUITE="restful"
+#TEST_SUITE="restful"
 
 # If we want to debug the failing tests, set the variable to 1.
 DEBUG=0
