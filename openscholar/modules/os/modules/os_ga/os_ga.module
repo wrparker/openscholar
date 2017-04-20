@@ -337,9 +337,19 @@ function _os_ga_set_custom_var_snippet($index) {
 
   // First tries to get a vsite-level home page URL.
   if (function_exists('vsite_get_vsite') && $vsite = vsite_get_vsite()) {
-    $wrapper = entity_metadata_wrapper('node', $vsite->group);
-    $value = $wrapper->field_group_path->value();
-    $value = $value['url'];
+    $domain = variable_get('vsite_domain_name', '');
+    $shared = variable_get('vsite_domain_shared', '');
+
+    if ($shared != '' && $domain != '') {
+      $value = 'http://' . $domain . '/' . $vsite->group->purl;
+    }
+    elseif ($domain != '') {
+      $value = $domain;
+    }
+    else {
+      global $base_url;
+      $value = $base_url . '/' . $vsite->group->purl;
+    }
   }
   // Defaults to the sitewide home page URL if none found.
   else {

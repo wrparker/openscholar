@@ -436,6 +436,10 @@ function vsite_domain_set_group_path($group_path, $vsite = NULL) {
     $vsite = vsite_get_vsite();
   }
 
+  // Stores purl_base_domain as a token '[site:url]' in the field.
+  $purl_base_domain = variable_get('purl_base_domain', '');
+  $group_path = str_replace($purl_base_domain, '[site:url]', $group_path);
+
   // Saves the Group path field value on the vsite node.
   $wrapper = entity_metadata_wrapper('node', $vsite->group);
   $field_value = $wrapper->field_group_path->value();
