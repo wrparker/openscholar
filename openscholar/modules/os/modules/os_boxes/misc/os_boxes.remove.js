@@ -10,7 +10,7 @@
     }
   });*/
 
-Drupal.behaviors.osBoxeswrapIframe = {
+/*Drupal.behaviors.osBoxeswrapIframe = {
   attach: function (ctx) {
     if($('article.node').find("iframe").length){
       var floatValue = $('article.node').find("iframe").parents(".media-element-container").css('float');
@@ -18,7 +18,7 @@ Drupal.behaviors.osBoxeswrapIframe = {
       $('article.node').find("iframe").parent().css({"float" : floatValue});
     }
   }
-};
+};*/
 
 Drupal.behaviors.osBoxesRemove = {
   attach: function (ctx) {
