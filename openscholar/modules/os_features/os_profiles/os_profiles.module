@@ -598,7 +598,7 @@ function os_profiles_form_person_node_form_alter(&$form, $form_state) {
  * Form element validator for email addresses
  */
 function os_profiles_validate_mail($element) {
-  if (isset($element['value']['#value']) && !valid_email_address($element['value']['#value'])) {
+  if (isset($element['value']['#value']) && ($element['value']['#value'] != "" || $element['value']['#value'] != null) && !valid_email_address($element['value']['#value'])) {
     form_error($element, t('The e-mail address %mail is not valid.', array('%mail' => $element['value']['#value'])));
   }
 }

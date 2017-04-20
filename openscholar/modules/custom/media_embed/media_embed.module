@@ -119,6 +119,11 @@ function media_embed_check_src($html) {
       $domain = array();
       $this_pass = false;
 
+      // Check for http entry
+      if (strpos($url, 'http://') !== FALSE) {
+        return FALSE;
+      }
+
       if ($parse = parse_url($url, PHP_URL_HOST)) {
         // construct the domain backwards and check it
         // ie. www.cga.harvard.edu will check against:

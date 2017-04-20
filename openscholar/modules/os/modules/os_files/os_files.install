@@ -883,3 +883,16 @@ function os_files_update_7024() {
   ctools_include('export');
   ctools_export_crud_delete('file_type', 'icon');
 }
+
+/**
+ * Converts embedded media URLs with http.
+ */
+function os_files_update_7025() {
+  $results = db_query("SELECT f.entity_id, f.revision_id, f.field_html_code_value FROM field_data_field_html_code f WHERE field_html_code_value LIKE '%http://%'");
+  foreach ($results as $result) {
+    $output = str_replace('http://', '//', $result->field_html_code_value);
+    if (strcmp($output, $result->field_html_code_value) !== 0) {
+      db_query("UPDATE field_data_field_html_code SET field_html_code_value = '" . addslashes($output) . "' WHERE entity_id = '" . $result->entity_id . "' AND revision_id = '" . $result->revision_id . "'");
+    }
+  }
+}
