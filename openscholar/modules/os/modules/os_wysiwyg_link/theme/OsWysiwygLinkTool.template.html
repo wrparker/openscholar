@@ -38,7 +38,7 @@
                         <div class="description">Files must be less than <strong>{{filesize}}</strong>.<br />Allowed file types: {{extensionStr}}</div></div>
                     </div>
                 Or
-                <div class="search"></div>
+                <div class="search"><input type="text" class="form-text" ng-model="search"></div>
             </div>
             <div id="owl-file-messages" ng-show="fh.messages()"><div ng-repeat="m in fh.messages()" ng-bind-html="m.text"></div></div>
             <div class="owl-file-list">
