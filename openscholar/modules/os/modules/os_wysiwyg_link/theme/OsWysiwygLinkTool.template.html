@@ -44,6 +44,9 @@
             <div class="owl-file-loading" ng-if="!ready">
                 Loading files. Please wait.
             </div>
+            <div class="owl-file-error" ng-if="error">
+                There was an error fetching your files. Please save any changes and reload the page.
+            </div>
             <div class="owl-file-list" ng-if="ready">
                 <div js-pager="f in files | filter:'public':true:'schema' | orderBy:'timestamp':true | filter:search:filename track by f.id starting with arg">
                     <div id="file-{{f.id}}" class="owl-file-item media-row" ng-class="{selected: f.id == arg, new: f.new}" ng-click="setLinkTarget(f.id)">{{f.name}}</div>

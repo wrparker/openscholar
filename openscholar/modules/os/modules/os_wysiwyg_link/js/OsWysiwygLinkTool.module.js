@@ -90,7 +90,7 @@
       $s.ready = true;
     }, function (e) {
       console.log(e);
-      $s.ready = true;
+      $s.error = true;
     });
 
     $s.setLinkTarget = function (arg) {
