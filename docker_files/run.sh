@@ -64,9 +64,9 @@ cp behat.local.yml.travis behat.local.yml
 echo -e "\n # Run tests"
 ./bin/behat --tags=$TEST_SUITE
 
-if [ $DOCKER_DEBUG -eq 1 ]; then
-  bash
-fi
+#if [ $DOCKER_DEBUG -eq 1 ]; then
+#  bash
+#fi
 
 if [ $? -ne 0 ]; then
   echo "Behat failed"
