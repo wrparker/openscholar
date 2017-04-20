@@ -2,38 +2,50 @@
 
   var m = angular.module('AppForm', ['angularModalService']);
 
-  m.directive('appFormModal', ['ModalService', function (modal) {
+  m.directive('appFormModal', ['ModalService', function (ModalService) {
     var dialogOptions = {
       minWidth: 850,
       minHeight: 100,
       modal: true,
       position: 'center',
-      dialogClass: 'ap-settings-form'
+      dialogClass: 'app-form'
     };
 
     function clickHandler(e) {
       e.preventDefault();
       e.stopPropagation();
 
-      modal.openModal({
-        controller: 'appformController',
-        templateUrl: 'app_form.template.html',
+      ModalService.showModal({
+        controller: 'appFormController',
+        templateUrl: Drupal.settings.paths.app_form + '/app_form.template.html',
+      })
+      .then(function (modal) {
+        dialogOptions.close = function (event, ui) {
+          modal.element.remove();
+        }
+        modal.element.dialog(dialogOptions);
+        modal.close.then(function (result) {
+          if (result) {
+            window.location.reload();
+          }
+        });
       });
     }
     return {
       link: function (scope, elem, attr) {
-        elem.bind('click', function (e) {
-
-        })
+        elem.bind('click', clickHandler);
       }
     }
   }]);
 
-  m.controller('appFormController', ['$scope', function ($s) {
-
+  m.controller('appFormController', ['$scope', 'appFormService', function ($s, afs) {
+    afs.fetch().then(function (r) {
+      console.log(r);
+    })
   }]);
 
   m.service('appFormService', ['$http', '$q', function ($http, $q) {
+    var fetchDefered = $q.defer();
     function fetch() {
       var queryArgs = {};
       if (Drupal.settings.spaces.id) {
@@ -47,10 +59,17 @@
 
       $http.get(baseUrl + '/apps', config).then(function (r) {
         console.log(r);
+        fetchDefered.resolve(r.data);
       },
       function (e) {
-
+        fetchDefered.reject(e);
       });
+
+      return fetchDefered.promise;
+    }
+
+    return {
+      fetch: fetch,
     }
   }]);
 
