@@ -1,6 +1,6 @@
 <?php
 
-class RestfulAppform extends RestfulBase {
+class RestfulAppform extends RestfulBase implements \RestfulDataProviderInterface {
 
   /**
    * Overrides \RestfulBase::controllersInfo().
@@ -12,6 +12,31 @@ class RestfulAppform extends RestfulBase {
         \RestfulInterface::PUT => 'setApPStates'
       ),
     );
+  }
+
+  /**
+   * Overrides \RestfulInterface::publicFieldsInfo().
+   *
+   * Empty function to fulfill interface requirements.
+   */
+  public function publicFieldsInfo() {
+    return array();
+  }
+
+  /**
+   * Handle activating the space for access and variable override purposes
+   * @return bool - TRUE if the space activated
+   */
+  protected function activateSpace() {
+    if ($_GET['vsite'] && $vsite = vsite_get_vsite($_GET['vsite'])) {
+      // Make sure the Drupal $user account is the account Restful authenticated
+      $account = $this->getAccount();
+      spaces_set_space($vsite);
+      $vsite->activate_user_roles();
+      $vsite->init_overrides();
+      return true;
+    }
+    return false;
   }
 
   public function getAppStates() {
