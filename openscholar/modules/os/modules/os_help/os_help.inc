@@ -92,6 +92,7 @@ function os_help_get_variables_from_id($type, $id) {
         'os_boxes_dataverse_dataset_citation' => array('url' => 'http://docs.openscholar.harvard.edu/dataverse-dataset-citation', 'title' => 'Dataverse Dataset Citation'),
         'os_boxes_dataverse_list' => array('url' => 'http://docs.openscholar.harvard.edu/dataverse-list-widget', 'title' => 'Dataverse List'),
         'os_boxes_dataverse_search' => array('url' => 'http://docs.openscholar.harvard.edu/dataverse-search-box', 'title' => 'Dataverse Search'),
+        'os_search_solr_search_box' => array('url' => 'http://docs.openscholar.harvard.edu/filtered-search-widget', 'title' => 'Filtered Search Widget'),
       );
       break;
   }
