@@ -22,7 +22,8 @@ function os_help_cp_settings() {
     ),
     'form' => array(
       '#prefix' => $document_prefix,
-      '#type' => 'markup'
+      '#type' => 'markup',
+      '#access' => TRUE,
     ),
   );
 
@@ -42,6 +43,7 @@ function os_help_cp_settings() {
         '#prefix' => '<p class="helpClass">Every question you ask adds to the power of our OpenScholar Community. Type your question below and click the Continue button. You will need to login or create an account to finish posting.</p><p>If you don\'t want to post publicly to the community, click Send Privately</p>',
         '#type' => 'markup',
         '#loading' => $loading,
+        '#access' => TRUE,
       ),
     );
     $form['os_support_gsfn_js'] = array(
@@ -56,24 +58,32 @@ function os_help_cp_settings() {
         '#type' => 'help',
         '#gsfnId' => $id,
         '#loading' => $loading,
+        '#access' => TRUE,
       ),
     );
-  } else {
+  }
+  else {
     module_load_include('inc', 'contact', 'contact.pages');
     // Check to make sure the site email address are set.
-    $results = db_query('SELECT cid, recipients FROM {contact} WHERE category = :category',array(':category'=>'Website feedback'))->fetchAssoc();
-    if ($results['recipients'] == '') {
+
+    $results = db_select('contact', 'c')
+      ->fields('c', array('cid', 'recipients'))
+      ->condition('c.category', 'Website feedback')
+      ->execute()
+      ->fetchAssoc();
+
+    if (empty($results['recipients'])) {
       // The recipient email isn't set, set them.
       $query = db_select('contact', 'c');
       $query->fields('c', array('cid', 'recipients'));
       $contact_result = $query->execute();
       while ($contact = $contact_result->fetchAssoc()) {
         if ($contact['recipients'] == '') {
-            // Update the record.
-            db_update('contact') // Table name no longer needs {}
-              ->fields(array('recipients' => variable_get('site_mail','')))
-              ->condition('cid', $contact['cid'], '=')
-              ->execute();
+          // Update the record.
+          db_update('contact')
+            ->fields(array('recipients' => variable_get('site_mail', '')))
+            ->condition('cid', $contact['cid'])
+            ->execute();
         }
       }
     }
@@ -87,7 +97,11 @@ function os_help_cp_settings() {
       ->orderBy('category')
       ->execute()
       ->fetchAllKeyed();
-    $default_category = db_query("SELECT cid FROM {contact} WHERE selected = 1")->fetchField();
+    $default_category = db_select('contact', 'c')
+      ->fields('c', array('selected'))
+      ->condition('c.selected', 1)
+      ->execute()
+      ->fetchField();
 
     // If there is more than one category available and no default category has
     // been selected, prepend a default placeholder value.
@@ -113,7 +127,8 @@ function os_help_cp_settings() {
         '#title' => t('Your name'),
         '#default_value' => $user->uid ? format_username($user) : '',
         '#required' => TRUE,
-        '#attributes' => array('class' => array('contact-form'))
+        '#attributes' => array('class' => array('contact-form')),
+        '#access' => TRUE,
       ),
       'rest_validate' => 'os_help_contact_form_validate'
     );
@@ -129,6 +144,7 @@ function os_help_cp_settings() {
         '#title' => t('Your e-mail address'),
         '#default_value' => $user->uid ? $user->mail : '',
         '#required' => TRUE,
+        '#access' => TRUE,
       ),
       'rest_validate' => 'os_help_contact_form_validate'
     );
@@ -143,6 +159,7 @@ function os_help_cp_settings() {
         '#type' => 'textfield',
         '#title' => t('Subject'),
         '#required' => TRUE,
+        '#access' => TRUE,
       ),
       'rest_validate' => 'os_help_contact_form_validate'
     );
@@ -159,6 +176,7 @@ function os_help_cp_settings() {
         '#default_value' => $default_category,
         '#options' => $categories,
         '#required' => TRUE,
+        '#access' => TRUE,
       ),
       'rest_validate' => 'os_help_contact_form_validate'
     );
@@ -173,6 +191,7 @@ function os_help_cp_settings() {
         '#type' => 'textarea',
         '#title' => t('Message'),
         '#required' => TRUE,
+        '#access' => TRUE,
       ),
       'rest_validate' => 'os_help_contact_form_validate'
     );
@@ -197,7 +216,8 @@ function os_help_cp_settings() {
       ),
       'form' => array(
         '#type' => 'submit',
-        '#value' => t('Send Message')
+        '#value' => t('Send Message'),
+        '#access' => TRUE,
       ),
       'rest_submit' => 'os_help_rest_cp_settings_submit'
     );
