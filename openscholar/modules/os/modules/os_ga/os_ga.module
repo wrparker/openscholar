@@ -343,10 +343,10 @@ function _os_ga_set_custom_var_snippet($index) {
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
     if ($shared != '' && $domain != '') {
-      $value = $protocol . '://' . $domain . '/' . $vsite->group->purl;
+      $value = $protocol . $domain . '/' . $vsite->group->purl;
     }
     elseif ($domain != '') {
-      $value = $protocol . '://' . $domain;
+      $value = $protocol . $domain;
     }
     else {
       global $base_url;
