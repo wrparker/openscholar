@@ -341,10 +341,10 @@ function _os_ga_set_custom_var_snippet($index) {
     $shared = variable_get('vsite_domain_shared', '');
 
     if ($shared != '' && $domain != '') {
-      $value = 'http://' . $domain . '/' . $vsite->group->purl;
+      $value = $_SERVER['REQUEST_SCHEME'] . '://' . $domain . '/' . $vsite->group->purl;
     }
     elseif ($domain != '') {
-      $value = $domain;
+      $value = $_SERVER['REQUEST_SCHEME'] . '://' . $domain;
     }
     else {
       global $base_url;
