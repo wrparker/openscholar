@@ -340,11 +340,13 @@ function _os_ga_set_custom_var_snippet($index) {
     $domain = variable_get('vsite_domain_name', '');
     $shared = variable_get('vsite_domain_shared', '');
 
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+
     if ($shared != '' && $domain != '') {
-      $value = $_SERVER['REQUEST_SCHEME'] . '://' . $domain . '/' . $vsite->group->purl;
+      $value = $protocol . '://' . $domain . '/' . $vsite->group->purl;
     }
     elseif ($domain != '') {
-      $value = $_SERVER['REQUEST_SCHEME'] . '://' . $domain;
+      $value = $protocol . '://' . $domain;
     }
     else {
       global $base_url;
