@@ -1858,7 +1858,6 @@ class vcalendar {
           $this->components[$ckey]->parse();
         }
       }
-      watchdog('iCalcreator', serialize($this->components));
     }
     else
       return FALSE;                   /* err 91 or something.. . */

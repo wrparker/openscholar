@@ -13,7 +13,7 @@
         element: '=',
         value: '='
       },
-      template: '<div class="form-wrapper {{classname}}">' +
+      template: '<div class="form-wrapper" ng-class="classname">' +
         '<span ng-if="element.prefix" ng-bind-html="to_trusted(element.prefix)"></span>' +
         '<span>Placeholder</span>' +
         '<div class="description" ng-bind-html="description"></div>' +
