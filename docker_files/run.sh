@@ -60,15 +60,16 @@ curl -sS https://getcomposer.org/installer | php
 php composer.phar install
 cp behat.local.yml.travis behat.local.yml
 
-# Run tests
-echo -e "\n # Run tests"
-./bin/behat --tags=$TEST_SUITE
+if [ $DOCKER_DEBUG -eq 1 ]; then
+  bash
+else
+  # Run tests
+  echo -e "\n # Run tests"
+  ./bin/behat --tags=$TEST_SUITE
 
-#if [ $DOCKER_DEBUG -eq 1 ]; then
-#  bash
-#fi
 
-if [ $? -ne 0 ]; then
-  echo "Behat failed"
-  exit 1
+  if [ $? -ne 0 ]; then
+    echo "Behat failed"
+    exit 1
+  fi
 fi
