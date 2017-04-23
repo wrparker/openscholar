@@ -14,4 +14,4 @@ Feature:
      Then I "delete" the variable "name" as "john" with the value "john(new)" in "john"
       And I "delete" the variable "name" as "john" with the value "obama(new)" in "obama"
       And I should see "empty" in "john/variable/name"
-      And I should see "emptדדדדy" in "obama/variable/name"
+      And I should see "empty" in "obama/variable/name"
