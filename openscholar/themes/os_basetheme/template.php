@@ -12,6 +12,7 @@
  * add classes to the body of a page
  */
 function os_basetheme_preprocess_html(&$vars) {
+  watchdog('html',print_r($vars, TRUE));
   if ($node = menu_get_object('node')) {
    if ($node->type == 'page' && isset($node->field_os_css_class)) {
       // Add custom css class
@@ -26,6 +27,14 @@ function os_basetheme_preprocess_html(&$vars) {
   }
 
   $vars['use_responsive_behaviors'] = (bool) variable_get('enable_responsive', true);
+
+  /*if($node->type == 'article') {
+    $doc = new DOMDocument();
+    if(doc->getElementById("iframe")) {
+      var floatValue = $('article.node').doc->getElementById("iframe").parents(".media-element-container").css('float');
+      return '<span float=' . floatValue . '>' . doc->getElementById("iframe") . '</span>';
+    }
+  }*/
 }
 
 /**
