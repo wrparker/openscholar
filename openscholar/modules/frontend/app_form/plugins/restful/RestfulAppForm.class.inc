@@ -47,8 +47,9 @@ class RestfulAppform extends RestfulBase implements \RestfulDataProviderInterfac
 
     $output = array();
     foreach ($info as $name => $i) {
-      $output[$name] = array(
+      $output[] = array(
         'title' => $i->info['name'],
+        'machine_name' => $name,
         'description' => $i->info['description'],
         'enabled' => $features[$name] ? 1 : 0,
         'private' => $features[$name] ? $features[$name] - 1 : 0
