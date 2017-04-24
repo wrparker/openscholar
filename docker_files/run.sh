@@ -30,6 +30,7 @@ source /root/.bashrc
 # Install Drupal
 echo -e "\n # Install Drupal"
 bash docker.install.sh
+chmod -R 777 /var/www/html/openscholar/www/sites/default/files/
 
 # Install Firefox (iceweasel).
 echo -e "\n${BGCYAN}[RUN] Install firefox. ${RESTORE}"
