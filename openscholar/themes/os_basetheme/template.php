@@ -12,7 +12,8 @@
  * add classes to the body of a page
  */
 function os_basetheme_preprocess_html(&$vars) {
-  watchdog('html',print_r($vars, TRUE));
+
+  die(print_r($vars));
   if ($node = menu_get_object('node')) {
    if ($node->type == 'page' && isset($node->field_os_css_class)) {
       // Add custom css class
