@@ -1,4 +1,4 @@
-/* update */
+owl/* update */
 body,
 .ui-dialog * {
     font-family: helvetica, arial, sans-serif;
@@ -477,6 +477,23 @@ form.confirmation span.emphasize {
     margin-right: 30px;
 }
 
+.wysiwyg-link-tool-wrapper .results {
+    width:768px;
+   
+
+}
+
+.wysiwyg-link-tool-wrapper .results div {
+  width:23%;
+    display:inline-block;
+    padding:6px;
+    background-color:#efefef;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 25ch;
+    cursor:pointer;
+}
 
 /** CP TABLE STYLES **/
 
