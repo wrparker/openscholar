@@ -1,18 +1,45 @@
-<div>these settings pertain to individual apps. If you are looking for visibility for your entire site, go to Global Settings > Site Visibility.</div>
-<table class="apps-table enabled">
-    <th>
-        <tr>
-            <td colspan="2">Apps this website is using</td>
-            <td>Who can see this?</td>
-            <td>Enable</td>
-        </tr>
-    </th>
-    <tbody>
-        <tr ng-repeat="a in apps | filter:1:enabled" ng-class="{even: $even}">
-            <td>{{a.title}}</td>
-            <td><a href="{[a.help}}" class="apps-help-link">Help Link</a></td>
-            <td>{{a.private ? 'Site Members' : 'Everyone'}} <span app-privacy-selector ng-model="a.private"></span></td>
-            <td><input type="checkbox" ng-model="a.enabled"></td>
-        </tr>
-    </tbody>
-</table>
+<div>
+    <div>These settings pertain to individual apps. If you are looking for visibility for your entire site, go to Global Settings > Site Visibility.</div>
+    <table class="apps-table enabled">
+        <thead>
+            <tr>
+                <th width="60%">Apps this website is using</th>
+                <th width="10%">&nbsp;</th>
+                <th width="20%">Who can see this?</th>
+                <th width="10%">Disable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="a in apps | filter:{enabled: 1}" ng-class="{even: $even}">
+                <td>{{a.title}}</td>
+                <td><a href="{[a.help}}" class="apps-help-link">Help Link</a></td>
+                <td>{{a.private ? 'Site Members' : 'Everyone'}} <span app-privacy-selector ng-model="a.privacyLevel"></span></td>
+                <td><input type="checkbox" ng-model="a.disable"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="apps-table disabled">
+        <thead>
+            <tr>
+                <th>Apps not currently used by this website</th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+                <th>Enable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="(k, a) in apps | filter:{enabled: 0}" ng-class="{even: $even}">
+                <td>{{a.title}}</td>
+                <td><a href="{{a.help}}" class="apps-help-link">Help Link</a></td>
+                <td>&nbsp;</td>
+                <td><input type="checkbox" ng-model="a.enable"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="actions form-actions">
+        <input type="submit" value="Save" ng-click="submit()">
+        <input type="submit" value="Cancel" ng-click="close()">
+    </div>
+</div>
