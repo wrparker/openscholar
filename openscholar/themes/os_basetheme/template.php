@@ -13,7 +13,7 @@
  */
 function os_basetheme_preprocess_html(&$vars) {
 
-  die(print_r($vars));
+  //die(print_r($vars));
   if ($node = menu_get_object('node')) {
    if ($node->type == 'page' && isset($node->field_os_css_class)) {
       // Add custom css class
