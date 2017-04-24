@@ -431,7 +431,11 @@ form.confirmation span.emphasize {
     margin-bottom: -1px;
     padding-bottom: 0px;
 }
-
+.wysiwyg-link-tool-wrapper #owl-nav-buttons {
+    margin: 0 3px -1px 3px;
+    z-index: 1;
+    position: relative;
+}
 .owl-tab-button,
 .media-browser-button {
     display: inline-block;
