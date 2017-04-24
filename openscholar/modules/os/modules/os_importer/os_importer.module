@@ -982,7 +982,8 @@ function os_importer_feeds_presave(FeedsSource $source, $entity, $item) {
   }
 
   // Only import vocabularies, if not disallowed explicitly.
-  if (empty($source->importer()->getConfig()['skip_vocabularies'])) {
+  $importer_config = $source->importer()->getConfig();
+  if (empty($importer_config['skip_vocabularies'])) {
     _os_importer_import_vocab($source, $entity, $item, $id);
   }
 
