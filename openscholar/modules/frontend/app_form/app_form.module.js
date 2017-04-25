@@ -1,6 +1,6 @@
 (function () {
 
-  var m = angular.module('AppForm', ['angularModalService']);
+  var m = angular.module('AppForm', ['angularModalService', 'os-buttonSpinner']);
 
   m.directive('appFormModal', ['ModalService', function (ModalService) {
     var dialogOptions = {
@@ -38,7 +38,7 @@
     }
   }]);
 
-  m.controller('appFormController', ['$scope', 'appFormService', 'close', function ($s, afs, close) {
+  m.controller('appFormController', ['$scope', 'appFormService', 'buttonSpinnerStatus', 'close', function ($s, afs, bfs, close) {
     $s.apps = [];
     afs.fetch().then(function (r) {
       console.log(r);
@@ -49,6 +49,7 @@
     });
 
     $s.submit = function () {
+      bfs.SetState('app-form', true);
       for (var i = 0; i < $s.apps.length; i++) {
         $s.apps[i].private = $s.apps[i].privacyLevel;
         if ($s.apps[i].disable) {
@@ -66,6 +67,7 @@
         else {
           close();
         }
+        bfs.SetState('app-form', false);
       })
     }
 

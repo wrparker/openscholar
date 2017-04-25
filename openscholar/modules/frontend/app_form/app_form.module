@@ -22,7 +22,13 @@ function app_form_library() {
         )
       )
     ),
-    'css' => array(),
+    'css' => array(
+      $path . '/app_form.style.css',
+    ),
+    'dependencies' => array(
+      array('os_common', 'angularjs'),
+      array('os_common', 'buttonSpinner'),
+    )
   );
 
   return $libs;
