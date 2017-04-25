@@ -1,4 +1,4 @@
-owl/* update */
+/* update */
 body,
 .ui-dialog * {
     font-family: helvetica, arial, sans-serif;
@@ -497,6 +497,28 @@ form.confirmation span.emphasize {
     text-overflow: ellipsis;
     max-width: 25ch;
     cursor:pointer;
+}
+.wysiwyg-link-tool-wrapper .results div:hover {
+
+    background-color:#e1e1e1;
+ 
+}
+
+.wysiwyg-link-tool-wrapper .results div.selected {
+
+    background-color:#E0E4EA;
+ 
+}
+
+.wysiwyg-link-tool-wrapper .search {
+    width: 656px;
+    margin-left: 10px;
+}
+.wysiwyg-link-tool-wrapper label[for="search-files"] {
+    width: 23%;
+}
+.wysiwyg-link-tool-wrapper #search-files {
+    width: 74%;
 }
 
 /** CP TABLE STYLES **/
@@ -1443,6 +1465,7 @@ form#documentation img {
 span[name="faq_sort"] .form-radios {
     margin: 0 15px 15px 0;
 }
+.owl-file-controls,
 .margin-bottom{
     margin-bottom: 15px;
 }
