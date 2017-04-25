@@ -49,7 +49,6 @@
     $s.submit = function () {
       bfs.SetState('app-form', true);
       for (var i = 0; i < $s.apps.length; i++) {
-        console.log($s.apps[i].color);
         if ($s.apps[i].disable) {
           $s.apps[i].enabled = false;
         }
@@ -81,9 +80,7 @@
     }
 
     function subClickHandler(e) {
-      console.log(this.val);
       this.val = angular.element(e.currentTarget).attr('data-value');
-      console.log(this.val);
       this.show = false;
       this.$apply();
       e.stopPropagation();
