@@ -222,6 +222,10 @@ a.form-cancel {
 a.form-cancel:hover {
     text-decoration: none;
 }
+.wysiwyg-link-tool-wrapper .add_new,
+.wysiwyg-link-tool-wrapper .search,
+.wysiwyg-link-tool-wrapper #search-files,
+.wysiwyg-link-tool-wrapper label[for="search-files"],
 .wysiwyg-link-tool-wrapper .add_new_button,
 .wysiwyg-link-tool-wrapper .form-help,
 .form-actions .form-submit,
