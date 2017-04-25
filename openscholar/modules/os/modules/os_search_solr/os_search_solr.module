@@ -1278,7 +1278,25 @@ function os_search_solr_change_search_path($form, $form_state) {
   }
 
   // Collect terms.
-  drupal_goto('search/site/' . $form_state['input']['search_block_form'], $options);
+  _os_search_solr_custom_404_redirect('search/site/' . $form_state['input']['search_block_form'], $options);
+}
+
+/**
+ * Custom funtion for Search Box
+ * 404_page
+ */
+function _os_search_solr_custom_404_redirect($path = '', array $options = array(), $http_response_code = 302) {
+  if ($path === current_path() && empty($options['external']) && url_is_external($path)) {
+    // Force url() to generate a non-external URL.
+    $options['external'] = FALSE;
+  }
+
+  drupal_alter('drupal_goto', $path, $options, $http_response_code);
+  // The 'Location' HTTP header must be absolute.
+  $options['absolute'] = TRUE;
+  $url = url($path, $options);
+  header('Location: ' . $url, TRUE, $http_response_code);
+  drupal_exit($url);
 }
 
 /**

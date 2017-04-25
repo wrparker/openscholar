@@ -161,12 +161,12 @@ function os_comments_comment_save_vsite($comment_node_types) {
  * Adds field "Disqus shortname" to the CP > Settings form.
  */
 function os_comments_cp_settings() {
+
   $settings = array();
 
-  $vsite = vsite_get_vsite();
-  $spaces_features = $vsite->controllers->variable->get('spaces_features');
-  // Blog settings link won't appear in CP menu if blog app is not enabled.
-  if (!$spaces_features['os_blog']) {
+  $spaces_features = variable_get('spaces_features');
+  // The app won't appear in CP menu if not enabled.
+  if (empty($spaces_features['os_blog'])) {
     return $settings;
   }
 
@@ -175,11 +175,11 @@ function os_comments_cp_settings() {
     return $settings;
   }
 
-  if ($vsite) {
+  if ($vsite = vsite_get_vsite()) {
     $disqus_shortname = $vsite->controllers->variable->get('disqus_domain', 'space');
   }
   else {
-    $disqus_shortname = variable_get('disqus_domain', '');
+    $disqus_shortname = variable_get('disqus_domain');
   }
 
   $settings['disqus_domain'] = array(
