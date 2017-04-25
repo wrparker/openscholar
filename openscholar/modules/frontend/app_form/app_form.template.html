@@ -12,8 +12,8 @@
         <tbody>
             <tr ng-repeat="a in apps | filter:{enabled: 1}" ng-class="{even: $even}">
                 <td>{{a.title}}</td>
-                <td><a href="{[a.help}}" class="apps-help-link">Help Link</a></td>
-                <td>{{a.private ? 'Site Members' : 'Everyone'}} <span app-privacy-selector ng-model="a.privacyLevel"></span></td>
+                <td><a href="{{a.help}}" class="apps-help-link">Help Link</a></td>
+                <td><span app-privacy-selector ng-model="a.private"></span></td>
                 <td><input type="checkbox" ng-model="a.disable"></td>
             </tr>
         </tbody>
@@ -29,7 +29,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="(k, a) in apps | filter:{enabled: 0}" ng-class="{even: $even}">
+            <tr ng-repeat="a in apps | filter:{enabled: 0}" ng-class="{even: $even}">
                 <td>{{a.title}}</td>
                 <td><a href="{{a.help}}" class="apps-help-link">Help Link</a></td>
                 <td>&nbsp;</td>

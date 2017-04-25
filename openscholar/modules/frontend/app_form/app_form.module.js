@@ -41,9 +41,7 @@
   m.controller('appFormController', ['$scope', 'appFormService', 'buttonSpinnerStatus', 'close', function ($s, afs, bfs, close) {
     $s.apps = [];
     afs.fetch().then(function (r) {
-      console.log(r);
       for (var k in r.data) {
-        r.data[k].privacyLevel = r.data[k].private;
         $s.apps.push(r.data[k]);
       };
     });
@@ -51,7 +49,7 @@
     $s.submit = function () {
       bfs.SetState('app-form', true);
       for (var i = 0; i < $s.apps.length; i++) {
-        $s.apps[i].private = $s.apps[i].privacyLevel;
+        console.log($s.apps[i].color);
         if ($s.apps[i].disable) {
           $s.apps[i].enabled = false;
         }
@@ -73,6 +71,34 @@
 
     $s.close = function () {
       close();
+    }
+  }]);
+
+  m.directive('appPrivacySelector', [function () {
+    function mainClickHandler(e) {
+      this.show = true;
+      this.$digest();
+    }
+
+    function subClickHandler(e) {
+      console.log(this.val);
+      this.val = angular.element(e.currentTarget).attr('data-value');
+      console.log(this.val);
+      this.show = false;
+      this.$apply();
+      e.stopPropagation();
+      e.preventDefault();
+    }
+    return {
+      template: '{{ val == "1" ? "Site Members" : "Everyone" }} <div class="privacy-popup" ng-show="show"><div class="privacy-popup-selector private" data-value="1" ng-class="{selected: val == 1}">Site Members</div><div class="privacy-popup-selector everyone" data-value="0" ng-class="{selected: val == 0}">Everyone</div></div>',
+      scope: {
+        val: '=ngModel',
+      },
+      link: function (scope, elem, attr) {
+        scope.show = false;
+        elem.bind('click', angular.bind(scope, mainClickHandler));
+        angular.element(elem[0].querySelectorAll('.privacy-popup-selector')).bind('click', angular.bind(scope, subClickHandler))
+      }
     }
   }]);
 
