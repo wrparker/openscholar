@@ -77,29 +77,32 @@
   m.service('appFormService', ['$http', '$q', '$timeout', function ($http, $q, $t) {
     var pristine = [];
     var map = {};
-    var fetchDefered = $q.defer();
+    var fetchDefered;
     function fetch() {
-      var queryArgs = {};
-      if (Drupal.settings.spaces.id) {
-        queryArgs.vsite = Drupal.settings.spaces.id;
-      }
+      if (!fetchDefered) {
+        fetchDefered = $q.defer();
+        var queryArgs = {};
+        if (Drupal.settings.spaces.id) {
+          queryArgs.vsite = Drupal.settings.spaces.id;
+        }
 
-      var baseUrl = Drupal.settings.paths.api;
-      var config = {
-        params: queryArgs
-      };
+        var baseUrl = Drupal.settings.paths.api;
+        var config = {
+          params: queryArgs
+        };
 
-      $http.get(baseUrl + '/apps', config).then(function (r) {
-        pristine = angular.copy(r.data);
-        fetchDefered.resolve(r.data);
+        $http.get(baseUrl + '/apps', config).then(function (r) {
+          pristine = angular.copy(r.data.data);
+          fetchDefered.resolve(r.data);
 
-          for (var i = 0; i < r.data.length; i++) {
-            map[r.data[i].machine_name] = i;
+          for (var i = 0; i < r.data.data.length; i++) {
+            map[r.data.data[i].machine_name] = i;
           }
-      },
-      function (e) {
-        fetchDefered.reject(e);
-      });
+        },
+        function (e) {
+          fetchDefered.reject(e);
+        });
+      }
 
       return fetchDefered.promise;
     }
@@ -145,7 +148,7 @@
         });
       }
       else {
-        $http.patch(baseUrl + '/apps', send, config).then(function (r) {
+        $http.patch(baseUrl + '/apps', dirty, config).then(function (r) {
           // success
           saveDefer.resolve('success');
         }, function (e) {

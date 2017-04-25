@@ -9,7 +9,7 @@ class RestfulAppform extends RestfulBase implements \RestfulDataProviderInterfac
     return array(
       '' => array(
         \RestfulInterface::GET => 'getAppStates',
-        \RestfulInterface::PUT => 'setApPStates'
+        \RestfulInterface::PATCH => 'setAppStates'
       ),
     );
   }
@@ -60,6 +60,31 @@ class RestfulAppform extends RestfulBase implements \RestfulDataProviderInterfac
   }
 
   public function setAppStates() {
-    $values = $this->request['values'];
+    $this->activateSpace();
+
+    $original = variable_get('spaces_features', array());
+    foreach ($this->request as $key => $val) {
+      if (is_numeric($key)) {
+        $name = $val['machine_name'];
+        if ($val['enabled']) {
+          if ($val['private']) {
+            $original[$name] = 2;
+          }
+          else {
+            $original[$name] = 1;
+          }
+        }
+        else {
+          $original[$name] = 0;
+        }
+      }
+    }
+
+    if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
+      $vsite->controllers->variable->set('spaces_features', $original);
+    }
+    else {
+      variable_set('spaces_features', $original);
+    }
   }
 }
