@@ -41,14 +41,14 @@ function os_files_private_views_default_views() {
     'nothing' => 'nothing',
     'filemime' => 'filemime',
     'filesize' => 'filesize',
-    'timestamp' => 'timestamp',
+    'changed' => 'changed',
     'id' => 'id',
     'title' => 'title',
     'edit' => 'edit',
     'delete' => 'delete',
     'nothing_1' => 'nothing_1',
   );
-  $handler->display->display_options['style_options']['default'] = 'timestamp';
+  $handler->display->display_options['style_options']['default'] = 'changed';
   $handler->display->display_options['style_options']['info'] = array(
     'fid' => array(
       'sortable' => 0,
@@ -88,7 +88,7 @@ function os_files_private_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'timestamp' => array(
+    'changed' => array(
       'sortable' => 1,
       'default_sort_order' => 'desc',
       'align' => '',
@@ -178,12 +178,13 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['fields']['filesize']['table'] = 'file_managed';
   $handler->display->display_options['fields']['filesize']['field'] = 'filesize';
   $handler->display->display_options['fields']['filesize']['element_label_colon'] = FALSE;
-  /* Field: File: Upload date */
-  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['timestamp']['date_format'] = 'long';
+  /* Field: File: Changed */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['label'] = 'Updated Date';
+  $handler->display->display_options['fields']['changed']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['changed']['date_format'] = 'long';
   /* Field: File Usage: Entity ID */
   $handler->display->display_options['fields']['id']['id'] = 'id';
   $handler->display->display_options['fields']['id']['table'] = 'file_usage';
@@ -218,12 +219,12 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['fields']['nothing_1']['label'] = 'Manage';
   $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<a file-editor-modal fid="[fid]" href="#" views-close="reload(result)">Edit</a> [delete]';
   $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
-  
+
   /* Filter criterion: Spaces: Content in current space */
   $handler->display->display_options['filters']['current']['id'] = 'current';
   $handler->display->display_options['filters']['current']['table'] = 'spaces';
   $handler->display->display_options['filters']['current']['field'] = 'current';
-  
+
   /* Filter criterion: File: File name or title */
   $handler->display->display_options['filters']['file_name_title']['id'] = 'file_name_title';
   $handler->display->display_options['filters']['file_name_title']['table'] = 'file_managed';
@@ -289,14 +290,14 @@ function os_files_private_views_default_views() {
     'nothing' => 'nothing',
     'filemime' => 'filemime',
     'filesize' => 'filesize',
-    'timestamp' => 'timestamp',
+    'changed' => 'changed',
     'id' => 'id',
     'title' => 'title',
     'edit' => 'edit',
     'delete' => 'delete',
     'nothing_1' => 'nothing_1',
   );
-  $handler->display->display_options['style_options']['default'] = 'timestamp';
+  $handler->display->display_options['style_options']['default'] = 'changed';
   $handler->display->display_options['style_options']['info'] = array(
     'fid' => array(
       'sortable' => 0,
@@ -336,7 +337,7 @@ function os_files_private_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'timestamp' => array(
+    'changed' => array(
       'sortable' => 1,
       'default_sort_order' => 'desc',
       'align' => '',
@@ -506,13 +507,13 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['fields']['filesize']['table'] = 'file_managed';
   $handler->display->display_options['fields']['filesize']['field'] = 'filesize';
   $handler->display->display_options['fields']['filesize']['element_label_colon'] = FALSE;
-  /* Field: File: Upload date */
-  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['timestamp']['date_format'] = 'medium';
-  $handler->display->display_options['fields']['timestamp']['second_date_format'] = 'os_time';
+  /* Field: File: Changed */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['label'] = 'Updated Date';
+  $handler->display->display_options['fields']['changed']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['changed']['date_format'] = 'long';
   /* Field: File Usage: Entity ID */
   $handler->display->display_options['fields']['id']['id'] = 'id';
   $handler->display->display_options['fields']['id']['table'] = 'file_usage';
