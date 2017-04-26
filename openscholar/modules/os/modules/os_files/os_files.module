@@ -27,7 +27,7 @@ function os_files_init() {
     $info = ctools_plugin_get_plugin_type_info();
 
     // If the ctools plugin data is not present do not clear the cache.
-    if (isset($info['oembed']['providers']['cache table'])) {
+    if (isset($info['oembed']) && isset($info['oembed']['providers']['cache table'])) {
       cache_clear_all('plugins:oembed:providers', $info['oembed']['providers']['cache table']);
       ctools_get_plugins_reset();
     }
@@ -205,8 +205,8 @@ function os_files_ctools_plugin_post_alter(&$plugin) {
       'node' => 0,
       'file' => 1,
       'box' => 2,
-      'embedly' => 3,
-      'default' => 4
+      'default' => 4,
+      'embedly'=> 5
     );
     if (isset($weights[$plugin['name']])) {
       $plugin['weight'] = $weights[$plugin['name']];
