@@ -564,7 +564,5 @@ function os_importer_import_group_validate($values) {
     biblio_import($import_file, $filetype, $userid, $terms, FALSE, $session_id, $context);
     biblio_import_finalize(TRUE, $context['results']);
   }
-  // Setting uploaded file status as temporary and will be deleted after the time defined in DRUPAL_MAXIMUM_TEMP_FILE_AGE constant in system.module.
-  $import_file->status = 0;
   file_save($import_file);
 }
