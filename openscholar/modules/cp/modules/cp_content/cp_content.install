@@ -71,10 +71,20 @@ function cp_content_update_7008() {
 function cp_content_update_7009() {
   features_revert(array('cp_content' => array('views_view')));
 }
+
 /**
  * Reverts cp_content views to delete cp comments.
  */
 function cp_content_update_7010() {
   features_revert(array('cp_content' => array('views_view')));
   return t('CP Comments Views has been deleted.');
+}
+
+/**
+ * Updated date field added for cp files.
+ */
+function cp_content_update_7011() {
+  features_revert(array('cp_content' => array('views_view')));
+  return t('Updated date field added for cp files.');
+
 }

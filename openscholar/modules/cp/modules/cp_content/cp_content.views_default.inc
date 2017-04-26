@@ -406,13 +406,13 @@ function cp_content_views_default_views() {
     'nothing' => 'nothing',
     'filemime' => 'filemime',
     'filesize' => 'filesize',
-    'timestamp' => 'timestamp',
+    'changed' => 'changed',
     'referencing_nodes' => 'referencing_nodes',
     'edit' => 'edit',
     'delete' => 'delete',
     'nothing_1' => 'nothing_1',
   );
-  $handler->display->display_options['style_options']['default'] = 'timestamp';
+  $handler->display->display_options['style_options']['default'] = 'changed';
   $handler->display->display_options['style_options']['info'] = array(
     'fid' => array(
       'sortable' => 0,
@@ -452,7 +452,7 @@ function cp_content_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'timestamp' => array(
+    'changed' => array(
       'sortable' => 1,
       'default_sort_order' => 'desc',
       'align' => '',
@@ -628,12 +628,13 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['filesize']['table'] = 'file_managed';
   $handler->display->display_options['fields']['filesize']['field'] = 'filesize';
   $handler->display->display_options['fields']['filesize']['element_label_colon'] = FALSE;
-  /* Field: File: Upload date */
-  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['timestamp']['date_format'] = 'medium';
+   /* Field: File: Changed */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'file_managed';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['label'] = 'Updated Date';
+  $handler->display->display_options['fields']['changed']['date_format'] = 'medium';
+  $handler->display->display_options['fields']['changed']['second_date_format'] = 'os_time';
   /* Field: File: Edit link */
   $handler->display->display_options['fields']['edit']['id'] = 'edit';
   $handler->display->display_options['fields']['edit']['table'] = 'file_managed';
