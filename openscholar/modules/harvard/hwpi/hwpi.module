@@ -4,11 +4,11 @@
  * Implements hook_init
  */
 function hwpi_init() {
-  global $conf;
+  global $conf, $is_https;
 
   // Is securepages enabled?
   // If we are not on a harvard domain turn it off.
-  if (FALSE && variable_get('securepages_enable', 0)) {
+  if (variable_get('securepages_enable', 0)) {
 
     //Turn SSL off for pages that don't match the wildcard certificate
     $conf['securepages_enable'] = 0;
@@ -23,6 +23,12 @@ function hwpi_init() {
         $conf['securepages_enable'] = 1;
         break;
       }
+    }
+
+    // We were unable to find a domain that matches our SSL cert.
+    if (!$conf['securepages_enable'] && $is_https) {
+      // Redirect to insecure.
+      securepages_goto(FALSE);
     }
   }
 }
