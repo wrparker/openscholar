@@ -27,10 +27,12 @@ mkdir ~/.drush/
 cp docker_files/aliases.drushrc.php ~/.drush/aliases.drushrc.php
 source /root/.bashrc
 
-# Install Drupal
-echo -e "\n # Install Drupal"
-bash docker.install.sh
-chmod -R 777 /var/www/html/openscholar/www/sites/default/files/
+# Install custom domains
+service apache2 restart
+sh -c "echo 127.0.0.1	lincoln.local >> /etc/hosts"
+sh -c "cat openscholar/behat/lincoln-vhost.txt > /etc/apache2/sites-available/lincoln.conf"
+a2ensite lincoln
+service apache2 restart
 
 # Install Firefox (iceweasel).
 echo -e "\n${BGCYAN}[RUN] Install firefox. ${RESTORE}"
