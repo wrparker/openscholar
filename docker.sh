@@ -3,10 +3,11 @@
 set -e
 
 # If we want to debug the tests suite that fails we would change this variable.
-#TEST_SUITE="restful"
+#TEST_SUITE="solr"
+#EMBEDLYAPIKEY=""
 
 # If we want to debug the failing tests, set the variable to 1.
-DEBUG=0
+#DEBUG=1
 
 docker build -t openscholar .
 docker run -it -p 8080:80 -e TEST_SUITE=${TEST_SUITE} -e DOCKER_DEBUG=${DEBUG} openscholar
