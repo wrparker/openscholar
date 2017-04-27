@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_uninstall().
+ *
+ * Set variable default if not exist.
+ */
+function os_orcid_uninstall() {
+
+    // Delete the orcid id from each users space.
+    _os_orcid_delete_orcid_id();
+}
+
+/**
+ * Helper function.
+ *
+ * Delete the orcid id.
+ */
+function _os_orcid_delete_orcid_id() {
+    variable_del('orcidId');
+}
