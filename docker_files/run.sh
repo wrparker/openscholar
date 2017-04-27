@@ -56,6 +56,12 @@ java -jar start.jar &
 sleep 10
 cd /var/www/html/openscholar
 
+# Index site using Apache solr
+drush en os_search_solr -y
+drush solr-mark-all
+drush solr-index
+drush vset oembedembedly_api_key $EMBEDLYAPIKEY
+
 # Install Firefox (iceweasel).
 echo -e "\n${BGCYAN}[RUN] Install firefox. ${RESTORE}"
 apt-get update
