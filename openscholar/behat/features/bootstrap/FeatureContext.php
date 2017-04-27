@@ -2062,12 +2062,18 @@ class FeatureContext extends DrupalContext {
    * @Given /^I set feature "([^"]*)" to "([^"]*)" on "([^"]*)"$/
    */
   public function iSetFeatureStatus ($feature, $status, $group) {
-    return array(
+    $opening = array(
       new Step\When('I visit "' . $group . '"'),
       new Step\When('I make sure admin panel is open'),
       new Step\When('I open the admin panel to "Settings"'),
       new Step\When('I sleep for "1"'),
-      new Step\When('I click "Enable / Disable Apps"'),
+      new Step\When('I click on the "Enable / Disable Apps" control'),
+    );
+
+    $vsite_id = FeatureHelp::getNodeId($group);
+    $features = FeatureHelp::GetNodeAlias()
+
+    return array(
       new Step\When('I select "' . $status . '" from "' . $feature . '"'),
       new Step\When('I press "edit-submit"'),
     );

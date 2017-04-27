@@ -8,7 +8,7 @@ Feature:
       And I visit "john"
       And I make sure admin panel is open
       And I open the admin panel to "Settings"
-     When I click "Enable / Disable Apps"
+     When I click on the "Enable / Disable Apps" control
       #And I should see "Apps"
      Then I should see the "spaces" table with the following <contents>:
       | Blog          | Public |
