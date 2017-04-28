@@ -18,7 +18,7 @@ function os_boxes_box_provider($plugin, $url, $matches, $parameters) {
   $result = FALSE;
   if ($matches[1] == $GLOBALS['base_url']) {
     $m = array();
-    preg_match('/os\/box(\/([a-zA-Z0-9]*))?\/([a-zA-Z0-9-]*)(#([a-zA-Z0-9]*))?$/', $matches[0], $m);
+    preg_match('/\/box(\/([a-zA-Z0-9]*))?\/([a-zA-Z0-9-]*)(#([a-zA-Z0-9]*))?$/', $matches[0], $m);
     list(,,$purl, $delta) = $m;
     if (!$delta) {
       // single tenant site
